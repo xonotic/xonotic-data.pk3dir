@@ -16,9 +16,7 @@ REGISTER_NET_TEMP(net_debug)
 		Net_Accept(net_debug);
 		this.sv_entnum = ReadShort();
 		if (ReadByte()) make_pure(this);
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 		this.debug = true;  // identify server entities by this
 		this.classname = strzone(ReadString());
@@ -40,13 +38,14 @@ REGISTER_NET_TEMP(net_debug)
 			o = (this.absmin + this.absmax) / 2;
 		if (this.tag_entity)
 			o += this.tag_entity.origin;
-		WriteCoord(channel, o.x); WriteCoord(channel, o.y); WriteCoord(channel, o.z);
+		WriteVector(channel, o);
 		WriteString(channel, this.classname);
 		WriteString(channel, this.sourceLoc);
 		return true;
 	}
 #endif
 
+#if ENABLE_DEBUGDRAW
 #ifdef GAMEQC
 /**
  * 0: off
@@ -169,18 +168,19 @@ bool autocvar_debugdraw;
 					e.debug = true;
 					--rem;
 				}
-				LOG_INFOF("%d server entities sent\n", n - rem);
+				LOG_INFOF("%d server entities sent", n - rem);
 				return;
 			}
 
 			default:
 			case CMD_REQUEST_USAGE:
 			{
-				LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv"));
+				LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
 				return;
 			}
 		}
 	}
+#endif
 #endif
 
 GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
@@ -192,14 +192,14 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 			int bufhandle = stof(argv(1));
 			int string_index = stof(argv(2));
 			string s = bufstr_get(bufhandle, string_index);
-			LOG_INFOF("%s\n", s);
+			LOG_INFOF("%s", s);
 			return;
 		}
 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index");
 			return;
 		}
 	}
@@ -211,13 +211,13 @@ GENERIC_COMMAND(version, "Print the current version")
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			LOG_INFO(WATERMARK "\n");
+			LOG_INFO(WATERMARK);
 			return;
 		}
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " version"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " version");
 			return;
 		}
 	}
@@ -251,12 +251,13 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges");
 			return;
 		}
 	}
 }
 
+#if ENABLE_DEBUGTRACE
 REGISTER_STAT(TRACE_ENT, int)
 #ifdef SVQC
 bool autocvar_debugtrace;
@@ -280,7 +281,7 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
 		MAKEVECTORS(makevectors, it.v_angle, forward, right, up);
 		vector pos = it.origin + it.view_ofs;
-		traceline(pos, pos + forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, it);
+		traceline(pos, pos + forward * max_shot_distance, MOVE_NORMAL, it);
 		FOREACH_ENTITY(true, {
 		    it.solid = it.solid_prev;
             it.solid_prev = 0;
@@ -312,6 +313,7 @@ STATIC_INIT(TRACE_ENT)
 	IL_PUSH(g_drawables_2d, e);
 }
 #endif
+#endif
 
 GENERIC_COMMAND(find, "Search through entities for matching classname")
 {
@@ -319,18 +321,25 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
+			int entcnt = 0;
+			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
+			{
+				LOG_INFOF("%i (%s)", it, it.classname);
+				++entcnt;
+			});
+			if(entcnt)
+				LOG_INFOF("Found %d entities", entcnt);
 			return;
 		}
 
 		default:
 		{
-			LOG_INFO("Incorrect parameters for ^2find^7\n");
+			LOG_INFO("Incorrect parameters for ^2find^7");
         }
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 " GetProgramCommandPrefix() " find classname\n");
-			LOG_INFO("  Where 'classname' is the classname to search for.\n");
+			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " find classname");
+			LOG_INFO("  Where 'classname' is the classname to search for.");
 			return;
 		}
 	}
@@ -343,15 +352,15 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin")
 		case CMD_REQUEST_COMMAND:
 		{
 		    vector match = stov(argv(1));
-		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)\n", it, it.classname));
+		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)", it, it.classname));
 			return;
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2findat^7\n");
+			LOG_INFO("Incorrect parameters for ^2findat^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"\n");
+			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"");
 			return;
 		}
 	}

@@ -1,5 +1,9 @@
 #include "gamemode_keepaway.qh"
 
+#include <common/effects/all.qh>
+
+.entity ballcarried;
+
 int autocvar_g_keepaway_ballcarrier_effects;
 float autocvar_g_keepaway_ballcarrier_damage;
 float autocvar_g_keepaway_ballcarrier_force;
@@ -38,10 +42,9 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 }
 
 void ka_TouchEvent(entity this, entity toucher);
-void ka_RespawnBall(entity this);
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
-	if(gameover) { return; }
+	if(game_stopped) return;
 	vector oldballorigin = this.origin;
 
 	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
@@ -59,6 +62,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	settouch(this, ka_TouchEvent);
 	setthink(this, ka_RespawnBall);
 	this.nextthink = time + autocvar_g_keepawayball_respawntime;
+	navigation_dynamicgoal_set(this);
 
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
@@ -74,17 +78,17 @@ void ka_TimeScoring(entity this)
 	if(this.owner.ballcarried)
 	{ // add points for holding the ball after a certain amount of time
 		if(autocvar_g_keepaway_score_timepoints)
-			PlayerScore_Add(this.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
+			GameRules_scoring_add(this.owner, SCORE, autocvar_g_keepaway_score_timepoints);
 
-		PlayerScore_Add(this.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
+		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
 		this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
 }
 
 void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
 {
-	if(gameover) { return; }
-	if(!this) { return; }
+	if(game_stopped) return;
+	if(!this) return;
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The ball fell off the map, respawn it since players can't get to it
 		ka_RespawnBall(this);
@@ -103,6 +107,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	// attach the ball to the player
 	this.owner = toucher;
 	toucher.ballcarried = this;
+	GameRules_scoring_vip(toucher, true);
 	setattachment(this, toucher, "");
 	setorigin(this, '0 0 0');
 
@@ -114,6 +119,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	setthink(this, ka_TimeScoring);
 	this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	this.takedamage = DAMAGE_NO;
+	navigation_dynamicgoal_unset(this);
 
 	// apply effects to player
 	toucher.glow_color = autocvar_g_keepawayball_trail_color;
@@ -128,7 +134,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	sound(this.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
-	PlayerScore_Add(toucher, SP_KEEPAWAY_PICKUPS, 1);
+	GameRules_scoring_add(toucher, KEEPAWAY_PICKUPS, 1);
 
 	// waypoints
 	WaypointSprite_AttachCarrier(WP_KaBallCarrier, toucher, RADARICON_FLAGCARRIER);
@@ -156,8 +162,10 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	ball.owner.ballcarried = world; // I hope nothing checks to see if the world has the ball in the rest of my code :P
-	ball.owner = NULL;
+	entity e = ball.owner; ball.owner = NULL;
+	e.ballcarried = NULL;
+	GameRules_scoring_vip(e, false);
+	navigation_dynamicgoal_set(ball);
 
 	// reset the player effects
 	plyr.glow_trail = false;
@@ -170,7 +178,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
-	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
+	// GameRules_scoring_add(plyr, KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
 
 	// waypoints
 	WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
@@ -224,21 +232,21 @@ void havocbot_role_ka_carrier(entity this)
 	if (IS_DEAD(this))
 		return;
 
-	if (time > this.bot_strategytime)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
-		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 
 	if (!this.ballcarried)
 	{
 		this.havocbot_role = havocbot_role_ka_collector;
-		this.bot_strategytime = 0;
+		navigation_goalrating_timeout_expire(this, 2);
 	}
 }
 
@@ -247,21 +255,21 @@ void havocbot_role_ka_collector(entity this)
 	if (IS_DEAD(this))
 		return;
 
-	if (time > this.bot_strategytime)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 1000, this.origin, 10000);
 		havocbot_goalrating_ball(this, 20000, this.origin);
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 
 	if (this.ballcarried)
 	{
 		this.havocbot_role = havocbot_role_ka_carrier;
-		this.bot_strategytime = 0;
+		navigation_goalrating_timeout_expire(this, 2);
 	}
 }
 
@@ -278,16 +286,16 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
-			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);
+			GameRules_scoring_add(frag_attacker, KEEPAWAY_CARRIERKILLS, 1);
 			if(autocvar_g_keepaway_score_bckill) // add bckills to the score
-				PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_bckill);
+				GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_bckill);
 		}
 		else if(!frag_attacker.ballcarried)
 			if(autocvar_g_keepaway_noncarrier_warn)
 				Send_Notification(NOTIF_ONE_ONLY, frag_attacker, MSG_CENTER, CENTER_KEEPAWAY_WARN);
 
 		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
-			PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_killac);
+			GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_killac);
 	}
 
 	if(frag_target.ballcarried) { ka_DropEvent(frag_target); } // a player with the ball has died, drop it
@@ -323,7 +331,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -388,18 +396,14 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
 		player.effects |= autocvar_g_keepaway_ballcarrier_effects;
 }
 
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
 
-MUTATOR_HOOKFUNCTION(ka, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(ka, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.ballcarried)
-	{
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
-		player.stat_sv_maxspeed *= autocvar_g_keepaway_ballcarrier_highspeed;
-	}
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_keepaway_ballcarrier_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)
@@ -437,12 +441,12 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 // Initialization
 // ==============
 
+MODEL(KA_BALL, "models/orbs/orbblue.md3");
+
 void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
 {
 	entity e = new(keepawayball);
-	e.model = "models/orbs/orbblue.md3";
-	precache_model(e.model);
-	_setmodel(e, e.model);
+	setmodel(e, MDL_KA_BALL);
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
@@ -457,21 +461,12 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	settouch(e, ka_TouchEvent);
 	e.owner = NULL;
 	ka_ball = e;
+	navigation_dynamicgoal_init(ka_ball, false);
 
 	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
 }
 
-void ka_ScoreRules()
-{
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, true); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,		"pickups",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,   "bckills",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,		    "bctime",		SFL_SORT_PRIO_SECONDARY);
-	ScoreRules_basics_end();
-}
-
 void ka_Initialize() // run at the start of a match, initiates game mode
 {
-	ka_ScoreRules();
 	ka_SpawnBall();
 }

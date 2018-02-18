@@ -60,7 +60,7 @@ void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
 	{
 		angles_face = vectoangles(this.moveto - this.origin);
 		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
-		Damage(toucher, this, this, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_ZOMBIE_JUMP.m_id, toucher.origin, angles_face);
+		Damage(toucher, this, this, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_ZOMBIE_JUMP.m_id, DMG_NOWEP, toucher.origin, angles_face);
 		settouch(this, Monster_Touch); // instantly turn it off to stop damage spam
 		this.state = 0;
 	}
@@ -94,7 +94,7 @@ bool M_Zombie_Defend_Block(entity this)
 	return true;
 }
 
-bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
+bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{
@@ -192,7 +192,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
-    actor.monster_loot = spawnfunc_item_health_medium;
+    actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Zombie_Attack;
     actor.spawnshieldtime = actor.spawn_time;
     actor.respawntime = 0.2;
@@ -201,12 +201,6 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
     setanim(actor, actor.anim_spawn, false, true, true);
     actor.spawn_time = actor.animstate_endtime;
 
-    return true;
-}
-
-METHOD(Zombie, mr_precache, bool(Zombie this))
-{
-    TC(Zombie, this);
     return true;
 }
 #endif

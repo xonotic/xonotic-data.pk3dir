@@ -1,6 +1,7 @@
 #include "sv_vampirehook.qh"
 
-REGISTER_MUTATOR(vh, cvar("g_vampirehook"));
+string autocvar_g_vampirehook;
+REGISTER_MUTATOR(vh, expr_evaluate(autocvar_g_vampirehook));
 
 bool autocvar_g_vampirehook_teamheal;
 float autocvar_g_vampirehook_damage;
@@ -25,7 +26,7 @@ MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
 	{
 		thehook.last_dmg = time + autocvar_g_vampirehook_damagerate;
 		thehook.owner.damage_dealt += autocvar_g_vampirehook_damage;
-		Damage(dmgent, thehook, thehook.owner, autocvar_g_vampirehook_damage, WEP_HOOK.m_id, thehook.origin, '0 0 0');
+		Damage(dmgent, thehook, thehook.owner, autocvar_g_vampirehook_damage, WEP_HOOK.m_id, DMG_NOWEP, thehook.origin, '0 0 0');
 		if(SAME_TEAM(thehook.owner, thehook.aiment))
 			thehook.aiment.health = min(thehook.aiment.health + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
 		else

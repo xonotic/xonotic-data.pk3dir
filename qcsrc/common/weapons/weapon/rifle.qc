@@ -1,69 +1,14 @@
 #include "rifle.qh"
-#ifndef IMPLEMENTATION
-CLASS(Rifle, Weapon)
-/* ammotype  */ ATTRIB(Rifle, ammo_field, .int, ammo_nails);
-/* impulse   */ ATTRIB(Rifle, impulse, int, 7);
-/* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
-/* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
-/* color     */ ATTRIB(Rifle, wpcolor, vector, '0.5 1 0');
-/* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);
-#endif
-/* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");
-/* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
-/* refname   */ ATTRIB(Rifle, netname, string, "rifle");
-/* wepname   */ ATTRIB(Rifle, m_name, string, _("Rifle"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, BOTH) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bullethail, float, BOTH) \
-		P(class, prefix, burstcost, float, BOTH) \
-		P(class, prefix, bursttime, float, NONE) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, reload, float, SEC) \
-		P(class, prefix, reload_ammo, float, NONE) \
-    	P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, shots, float, BOTH) \
-		P(class, prefix, solidpenetration, float, BOTH) \
-		P(class, prefix, spread, float, BOTH) \
-    	P(class, prefix, switchdelay_drop, float, NONE) \
-    	P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, tracer, float, BOTH) \
-    	P(class, prefix, weaponreplace, string, NONE) \
-    	P(class, prefix, weaponstartoverride, float, NONE) \
-    	P(class, prefix, weaponstart, float, NONE) \
-    	P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Rifle, rifle)
-#undef X
-ENDCLASS(Rifle)
-REGISTER_WEAPON(RIFLE, rifle, NEW(Rifle));
-
 
 #ifdef SVQC
-.float rifle_accumulator;
-#endif
-#endif
-#ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(this, WEP_RIFLE); }
-spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
-spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 
 void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
 {
 	float i;
 
-	W_DecreaseAmmo(thiswep, actor, pAmmo);
+	W_DecreaseAmmo(thiswep, actor, pAmmo, weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
+	W_SetupShot(actor, weaponentity, true, 2, pSound, CH_WEAPON_A, pDamage * pShots, deathtype);
 
 	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
@@ -74,7 +19,7 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 	}
 
 	for(i = 0; i < pShots; ++i)
-		fireBullet(actor, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
 
 	if(autocvar_g_casings >= 2)
     {
@@ -101,14 +46,14 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 {
 	float r, af;
 
-	Weapon sw = PS(actor).m_switchweapon; // make it not detect weapon changes as reason to abort firing
+	Weapon sw = actor.(weaponentity).m_switchweapon; // make it not detect weapon changes as reason to abort firing
 	int slot = weaponslot(weaponentity);
 	af = ATTACK_FINISHED(actor, slot);
-	PS(actor).m_switchweapon = PS(actor).m_weapon;
+	actor.(weaponentity).m_switchweapon = actor.(weaponentity).m_weapon;
 	ATTACK_FINISHED(actor, slot) = time;
 	r = weapon_prepareattack(thiswep, actor, weaponentity, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
-	if(PS(actor).m_switchweapon == PS(actor).m_weapon)
-		PS(actor).m_switchweapon = sw;
+	if(actor.(weaponentity).m_switchweapon == actor.(weaponentity).m_weapon)
+		actor.(weaponentity).m_switchweapon = sw;
 	if(r)
 	{
 		actor.rifle_bullethail_attackfunc(actor, weaponentity);
@@ -142,7 +87,7 @@ void W_Rifle_BulletHail(entity actor, .entity weaponentity, float mode, void(ent
 
 .float bot_secondary_riflemooth;
 
-METHOD(Rifle, wr_aim, void(entity thiswep, entity actor))
+METHOD(Rifle, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
@@ -150,7 +95,7 @@ METHOD(Rifle, wr_aim, void(entity thiswep, entity actor))
         actor.bot_secondary_riflemooth = 0;
     if(actor.bot_secondary_riflemooth == 0)
     {
-        if(bot_aim(actor, 1000000, 0, 0.001, false))
+        if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false))
         {
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
             if(random() < 0.01) actor.bot_secondary_riflemooth = 1;
@@ -158,7 +103,7 @@ METHOD(Rifle, wr_aim, void(entity thiswep, entity actor))
     }
     else
     {
-        if(bot_aim(actor, 1000000, 0, 0.001, false))
+        if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false))
         {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
             if(random() < 0.03) actor.bot_secondary_riflemooth = 0;
@@ -167,18 +112,18 @@ METHOD(Rifle, wr_aim, void(entity thiswep, entity actor))
 }
 METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_rifle_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
+    if(autocvar_g_balance_rifle_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else
     {
-        actor.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), actor.rifle_accumulator, time);
+        actor.(weaponentity).rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), actor.(weaponentity).rifle_accumulator, time);
         if(fire & 1)
         if(weapon_prepareattack_check(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(rifle, refire)))
-        if(time >= actor.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
+        if(time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
         {
             weapon_prepareattack_do(actor, weaponentity, false, WEP_CVAR_PRI(rifle, refire));
             W_Rifle_BulletHail(actor, weaponentity, WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
-            actor.rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
+            actor.(weaponentity).rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
         }
         if(fire & 2)
         {
@@ -189,27 +134,27 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
                 } else
                 {
                     if(weapon_prepareattack_check(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(rifle, refire)))
-                    if(time >= actor.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
+                    if(time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
                     {
                         weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(rifle, refire));
                         W_Rifle_BulletHail(actor, weaponentity, WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
-                        actor.rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
+                        actor.(weaponentity).rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
                     }
                 }
             }
         }
     }
 }
-METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(rifle, ammo);
-    ammo_amount += actor.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(rifle, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
     return ammo_amount;
 }
-METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(rifle, ammo);
-    ammo_amount += actor.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(rifle, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_resetplayer, void(entity thiswep, entity actor))
@@ -241,6 +186,10 @@ METHOD(Rifle, wr_killmessage, Notification(entity thiswep))
             return WEAPON_RIFLE_MURDER;
     }
 }
+METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
+{
+    return PHYS_INPUT_BUTTON_ATCK2(actor) && WEP_CVAR(rifle, secondary) == 0;
+}
 
 #endif
 #ifdef CSQC
@@ -262,11 +211,10 @@ METHOD(Rifle, wr_init, void(entity thiswep))
         precache_pic("gfx/reticle_nex");
     }
 }
-METHOD(Rifle, wr_zoomreticle, bool(entity thiswep))
+METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
 {
     if(button_zoom || zoomscript_caught)
     {
-        reticle_image = "gfx/reticle_nex";
         return true;
     }
     else
@@ -275,6 +223,9 @@ METHOD(Rifle, wr_zoomreticle, bool(entity thiswep))
         return false;
     }
 }
+METHOD(Rifle, wr_zoomdir, bool(entity thiswep))
+{
+    return button_attack2 && !WEP_CVAR(rifle, secondary);
+}
 
-#endif
 #endif

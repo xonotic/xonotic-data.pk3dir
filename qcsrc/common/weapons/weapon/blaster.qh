@@ -1,1 +1,80 @@
 #pragma once
+
+CLASS(Blaster, Weapon)
+/* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
+/* ammotype  */ //ATTRIB(Blaster, ammo_type, int, RESOURCE_NONE);
+/* impulse   */ ATTRIB(Blaster, impulse, int, 1);
+/* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
+/* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
+/* modelname */ ATTRIB(Blaster, mdl, string, "laser");
+#ifdef GAMEQC
+/* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
+#endif
+/* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
+/* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
+/* refname   */ ATTRIB(Blaster, netname, string, "blaster");
+/* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, delay, float, BOTH) \
+		P(class, prefix, edgedamage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, force_zscale, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, radius, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, shotangle, float, BOTH) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, spread, float, BOTH) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Blaster, blaster)
+#undef X
+
+ENDCLASS(Blaster)
+REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
+
+SPAWNFUNC_WEAPON(weapon_blaster, WEP_BLASTER)
+SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER)
+
+CLASS(OffhandBlaster, OffhandWeapon)
+ENDCLASS(OffhandBlaster)
+OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+
+#ifdef SVQC
+.float blaster_damage;
+.float blaster_edgedamage;
+.float blaster_radius;
+.float blaster_force;
+.float blaster_lifetime;
+
+// Will be demacroed after WEP_CVAR macros are also demacroed.
+#define BLASTER_SECONDARY_ATTACK(weapon_name, actor, weaponentity) \
+	makevectors(actor.v_angle); \
+	W_Blaster_Attack( \
+		actor, \
+		weaponentity, \
+		WEP_BLASTER.m_id | HITTYPE_SECONDARY, \
+		WEP_CVAR_SEC(weapon_name, shotangle), \
+		WEP_CVAR_SEC(weapon_name, damage), \
+		WEP_CVAR_SEC(weapon_name, edgedamage), \
+		WEP_CVAR_SEC(weapon_name, radius), \
+		WEP_CVAR_SEC(weapon_name, force), \
+		WEP_CVAR_SEC(weapon_name, speed), \
+		WEP_CVAR_SEC(weapon_name, spread), \
+		WEP_CVAR_SEC(weapon_name, delay), \
+		WEP_CVAR_SEC(weapon_name, lifetime) \
+	);
+
+#endif

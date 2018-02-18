@@ -1,153 +1,121 @@
 #include "utility.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "pathlib.qh"
 
-float location_isok(vector point, float water_isok, float air_isok)
+bool location_isok(vector point, bool waterok, bool air_isok)
 {
-    float pc,pc2;
-
     if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-        return 0;
+        return false;
 
-    pc  = pointcontents(point);
-    pc2 = pointcontents(point - '0 0 1');
+    int pc = pointcontents(point);
+    int pc2 = pointcontents(point - '0 0 1');
 
-    switch(pc)
-    {
-        case CONTENT_SOLID:
-            break;
-
-        case CONTENT_SLIME:
-            break;
-
-        case CONTENT_LAVA:
-            break;
-
-        case CONTENT_SKY:
-            break;
-
-        case CONTENT_EMPTY:
-            if (pc2 == CONTENT_SOLID)
-                return 1;
-
-            if (pc2 == CONTENT_EMPTY)
-                if(air_isok)
-                    return 1;
-
-            if (pc2 == CONTENT_WATER)
-                if(water_isok)
-                    return 1;
-
-            break;
-
-        case CONTENT_WATER:
-            if (water_isok)
-                return 1;
-
-            break;
-    }
-
-    return 0;
+    if(pc == CONTENT_EMPTY && pc2 == CONTENT_SOLID)
+        return true;
+    if(pc == CONTENT_EMPTY && pc2 == CONTENT_WATER && waterok)
+        return true;
+    if(pc == CONTENT_EMPTY && pc2 == CONTENT_EMPTY && air_isok)
+        return true;
+    if(pc == CONTENT_WATER && waterok)
+        return true;
+    return false;
 }
 
 entity pathlib_nodeatpoint(vector where)
 {
-    entity node;
-
     ++pathlib_searched_cnt;
 
     where.x = fsnap(where.x,pathlib_gridsize);
     where.y = fsnap(where.y,pathlib_gridsize);
 
-    node = findradius(where,pathlib_gridsize * 0.5);
-    while(node)
+    entity found = NULL; // TODO: using FOREACH_ENTITY_RADIUS here causes mutex loop warnings, this may need a proper fix!
+    IL_EACH(g_pathlib_nodes, it.is_path_node && vdist(it.origin - where, <, pathlib_gridsize * 0.5),
     {
-        if(node.is_path_node == true)
-            return node;
+    	found = it;
+        break;
+    });
 
-        node = node.chain;
-    }
-
-    return NULL;
+    return found;
 }
 
-float tile_check_cross(entity this, vector where)
+bool tile_check_cross(entity this, vector where)
 {
-    vector p,f,r;
-
-    f = PLIB_FORWARD * tile_check_size;
-    r = PLIB_RIGHT   * tile_check_size;
+	vector p;
+    vector f = PLIB_FORWARD * tile_check_size;
+    vector r = PLIB_RIGHT   * tile_check_size;
 
 
     // forward-right
     p = where + f + r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (!location_isok(trace_endpos, 1, 0))
-        return 0;
+        return false;
 
     // Forward-left
     p = where + f - r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (!location_isok(trace_endpos, 1, 0))
-        return 0;
+        return false;
 
     // Back-right
     p = where - f + r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (!location_isok(trace_endpos, 1 ,0))
-        return 0;
+        return false;
 
     //Back-left
     p = where - f - r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (!location_isok(trace_endpos, 1, 0))
-        return 0;
+        return false;
 
-    return 1;
+    return true;
 }
 
-float tile_check_plus(entity this, vector where)
+bool tile_check_plus(entity this, vector where)
 {
-    vector p,f,r;
+    vector p;
 
-    f = PLIB_FORWARD * tile_check_size;
-    r = PLIB_RIGHT   * tile_check_size;
+    vector f = PLIB_FORWARD * tile_check_size;
+    vector r = PLIB_RIGHT   * tile_check_size;
 
     // forward
     p = where + f;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (!location_isok(trace_endpos,1,0))
-        return 0;
+        return false;
 
 
     //left
     p = where - r;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (!location_isok(trace_endpos,1,0))
-        return 0;
+        return false;
 
     // Right
     p = where + r;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (!location_isok(trace_endpos,1,0))
-        return 0;
+        return false;
 
     //Back
     p = where - f;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (!location_isok(trace_endpos,1,0))
-        return 0;
+        return false;
 
-    return 1;
+    return true;
 }
 
 float tile_check_plus2(entity this, vector where)
 {
-    vector p,f,r;
-    float i = 0, e = 0;
+    vector p;
+    int j = 0, e = 0;
 
-    f = PLIB_FORWARD * pathlib_gridsize;
-    r = PLIB_RIGHT   * pathlib_gridsize;
+    vector f = PLIB_FORWARD * pathlib_gridsize;
+    vector r = PLIB_RIGHT   * pathlib_gridsize;
 
 //#define pathlib_node_edgeflag_left    2
 //#define pathlib_node_edgeflag_right   4
@@ -159,7 +127,7 @@ float tile_check_plus2(entity this, vector where)
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (location_isok(trace_endpos,1,0))
     {
-       ++i;
+       ++j;
        e |= pathlib_node_edgeflag_forward;
     }
 
@@ -169,7 +137,7 @@ float tile_check_plus2(entity this, vector where)
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (location_isok(trace_endpos,1,0))
     {
-       ++i;
+       ++j;
        e |= pathlib_node_edgeflag_left;
     }
 
@@ -179,7 +147,7 @@ float tile_check_plus2(entity this, vector where)
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (location_isok(trace_endpos,1,0))
     {
-       ++i;
+       ++j;
        e |= pathlib_node_edgeflag_right;
     }
 
@@ -188,7 +156,7 @@ float tile_check_plus2(entity this, vector where)
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (location_isok(trace_endpos,1,0))
     {
-       ++i;
+       ++j;
        e |= pathlib_node_edgeflag_back;
     }
 
@@ -197,7 +165,7 @@ float tile_check_plus2(entity this, vector where)
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (location_isok(trace_endpos, 1, 0))
     {
-       ++i;
+       ++j;
        e |= pathlib_node_edgeflag_forwardright;
     }
 
@@ -206,7 +174,7 @@ float tile_check_plus2(entity this, vector where)
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (location_isok(trace_endpos, 1, 0))
     {
-       ++i;
+       ++j;
        e |= pathlib_node_edgeflag_forwardleft;
     }
 
@@ -215,7 +183,7 @@ float tile_check_plus2(entity this, vector where)
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (location_isok(trace_endpos, 1 ,0))
     {
-       ++i;
+       ++j;
        e |= pathlib_node_edgeflag_backright;
     }
 
@@ -224,22 +192,22 @@ float tile_check_plus2(entity this, vector where)
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (location_isok(trace_endpos, 1, 0))
     {
-       ++i;
+       ++j;
        e |= pathlib_node_edgeflag_backleft;
     }
 
 
-    if(i == 0)
+    if(j == 0)
         e = pathlib_node_edgeflag_none;
 
     return e;
 }
 
-float tile_check_star(entity this, vector where)
+bool tile_check_star(entity this, vector where)
 {
     if(tile_check_plus(this, where))
         return tile_check_cross(this, where);
 
-    return 0;
+    return false;
 }
 

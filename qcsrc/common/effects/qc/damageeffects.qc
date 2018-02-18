@@ -1,18 +1,15 @@
 #include "damageeffects.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_NET_LINKED(ENT_CLIENT_DAMAGEINFO)
 
 #ifdef SVQC
 
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
+	vector org = vec3(floor(this.origin.x), floor(this.origin.y), floor(this.origin.z));
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, this.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(this.origin.x));
-	WriteCoord(MSG_ENTITY, floor(this.origin.y));
-	WriteCoord(MSG_ENTITY, floor(this.origin.z));
+	WriteVector(MSG_ENTITY, org);
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
@@ -189,9 +186,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	w_issilent = (w_deathtype & 0x8000);
 	w_deathtype = (w_deathtype & 0x7FFF);
 
-	w_org.x = ReadCoord();
-	w_org.y = ReadCoord();
-	w_org.z = ReadCoord();
+	w_org = ReadVector();
 
 	thedamage = ReadByte();
 	rad = ReadByte();
@@ -244,7 +239,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		if(it.damageforcescale)
 			if(vdist(thisforce, !=, 0))
 			{
-				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, autocvar_g_balance_damagepush_speedfactor);
+				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, damagepush_speedfactor);
 				UNSET_ONGROUND(it);
 			}
 
@@ -390,6 +385,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		}
 	}
 
+	MUTATOR_CALLHOOK(DamageInfo, this, w_deathtype, w_org);
+
 	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
@@ -411,7 +408,5 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		}
 	}
 }
-
-#endif
 
 #endif

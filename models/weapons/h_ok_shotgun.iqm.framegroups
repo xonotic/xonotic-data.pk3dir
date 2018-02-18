@@ -1,9 +1,9 @@
 /*
-Generated framegroups file for h_shotgun
+Generated framegroups file for h_ok_shotgun
 Used by DarkPlaces to simulate frame groups in DPM models.
 */
 
-1 22 30 0 // h_shotgun sghmesh_fire
-23 31 30 0 // h_shotgun sghmesh_fire2
-54 201 5 1 // h_shotgun sghmesh_idle
-255 61 30 1 // h_shotgun sghmesh_reload
+1 36 50 0 // h_ok_shotgun fire
+37 36 30 0 // h_ok_shotgun fire
+73 121 5 1 // h_ok_shotgun idle
+194 61 30 0 // h_ok_shotgun reload

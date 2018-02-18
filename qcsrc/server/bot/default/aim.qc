@@ -1,5 +1,7 @@
 #include "aim.qh"
 
+#include <server/defs.qh>
+
 #include "cvars.qh"
 
 #include "bot.qh"
@@ -130,9 +132,8 @@ bool bot_shouldattack(entity this, entity targ)
 		if(targ.team==0)
 			return false;
 	}
-	else if(bot_ignore_bots)
-		if(IS_BOT_CLIENT(targ))
-			return false;
+	else if (autocvar_bot_ignore_bots && IS_BOT_CLIENT(targ))
+		return false;
 
 	if (!targ.takedamage)
 		return false;
@@ -157,7 +158,7 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 		return;
 	}
 	this.bot_aimtarg = e1;
-	this.bot_aimlatency = this.ping; // FIXME?  Shouldn't this be in the lag item?
+	this.bot_aimlatency = CS(this).ping; // FIXME?  Shouldn't this be in the lag item?
 	//this.bot_aimorigin = v1;
 	//this.bot_aimvelocity = v2;
 	this.bot_aimtargorigin = v3;
@@ -172,7 +173,7 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 		this.bot_canfire = 1;
 }
 
-float bot_aimdir(entity this, vector v, float maxfiredeviation)
+void bot_aimdir(entity this, vector v, float maxfiredeviation)
 {
 	float dist, delta_t, blend;
 	vector desiredang, diffang;
@@ -181,6 +182,9 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	// make sure v_angle is sane first
 	this.v_angle_y = this.v_angle.y - floor(this.v_angle.y / 360) * 360;
 	this.v_angle_z = 0;
+
+	// invalid aim dir (can happen when bot overlaps target)
+	if(!v) return;
 
 	// get the desired angles to aim at
 	//dprint(" at:", vtos(v));
@@ -229,7 +233,7 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	this.bot_5th_order_aimfilter= this.bot_5th_order_aimfilter
 		+ (this.bot_4th_order_aimfilter - this.bot_5th_order_aimfilter) * bound(0, autocvar_bot_ai_aimskill_order_filter_5th,1);
 
-	//blend = (bound(0,skill,10)*0.1)*pow(1-bound(0,skill,10)*0.05,2.5)*5.656854249; //Plot formule before changing !
+	//blend = (bound(0,skill,10)*0.1)*((1-bound(0,skill,10)*0.05) ** 2.5)*5.656854249; //Plot formule before changing !
 	blend = bound(0,skill+this.bot_aimskill,10)*0.1;
 	desiredang = desiredang + blend *
 	(
@@ -281,7 +285,7 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	blendrate = autocvar_bot_ai_aimskill_blendrate;
 	r = max(fixedrate, blendrate);
 	//this.v_angle = this.v_angle + diffang * bound(frametime, r * frametime * (2+skill*skill*0.05-random()*0.05*(10-skill)), 1);
-	this.v_angle = this.v_angle + diffang * bound(delta_t, r * delta_t * (2+pow(skill+this.bot_mouseskill,3)*0.005-random()), 1);
+	this.v_angle = this.v_angle + diffang * bound(delta_t, r * delta_t * (2 + ((skill + this.bot_mouseskill) ** 3) * 0.005 - random()), 1);
 	this.v_angle = this.v_angle * bound(0,autocvar_bot_ai_aimskill_mouse,1) + desiredang * bound(0,(1-autocvar_bot_ai_aimskill_mouse),1);
 	//this.v_angle = this.v_angle + diffang * bound(0, r * frametime * (skill * 0.5 + 2), 1);
 	//this.v_angle = this.v_angle + diffang * (1/ blendrate);
@@ -305,16 +309,14 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
 	// decide whether to fire this time
-	// note the maxfiredeviation is in degrees so this has to convert to radians first
-	//if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
-	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
+	if (v * shotdir >= cos(maxfiredeviation * DEG2RAD))
 	if(vdist(trace_endpos-shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10)) || random()*random()>bound(0,(skill+this.bot_aggresskill)*0.05,1))
 		this.bot_firetimer = time + bound(0.1, 0.5-(skill+this.bot_aggresskill)*0.05, 0.5);
 	//traceline(shotorg,shotorg+shotdir*1000,false,NULL);
 	//dprint(ftos(maxfiredeviation),"\n");
 	//dprint(" diff:", vtos(diffang), "\n");
 
-	return this.bot_canfire && (time < this.bot_firetimer);
+	//return this.bot_canfire && (time < this.bot_firetimer);
 }
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay)
@@ -323,9 +325,9 @@ vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, flo
 	return targorigin + targvelocity * (shotdelay + vlen(targorigin - shotorg) / shotspeed);
 }
 
-bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity)
+bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity)
 {
-	float f, r, hf, distanceratio;
+	float r, hf, distanceratio;
 	vector v;
 	/*
 	eprint(this);
@@ -343,12 +345,12 @@ bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshott
 	shotspeedupward *= W_WeaponSpeedFactor(this);
 	if (!shotspeed)
 	{
-		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " shotspeed is zero!");
+		LOG_TRACE("bot_aim: WARNING: weapon ", this.(weaponentity).m_weapon.m_name, " shotspeed is zero!");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " maxshottime is zero!");
+		LOG_TRACE("bot_aim: WARNING: weapon ", this.(weaponentity).m_weapon.m_name, " maxshottime is zero!");
 		maxshottime = 1;
 	}
 	makevectors(this.v_angle);
@@ -367,11 +369,11 @@ bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshott
 			return false;
 		}
 
-		f = bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', r);
+		bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', r);
 	}
 	else
 	{
-		f = bot_aimdir(this, v - shotorg, r);
+		bot_aimdir(this, v - shotorg, r);
 		//dprint("AIM: ");dprint(vtos(this.bot_aimtargorigin));dprint(" + ");dprint(vtos(this.bot_aimtargvelocity));dprint(" * ");dprint(ftos(this.bot_aimlatency + vlen(this.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
 		//traceline(shotorg, shotorg + shotdir * 10000, false, this);
 		//if (trace_ent.takedamage)

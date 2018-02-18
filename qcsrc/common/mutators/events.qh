@@ -65,6 +65,7 @@ MUTATOR_HOOKABLE(IsFlying, EV_IsFlying);
     /**/ i(string, MUTATOR_ARGV_1_string) \
     /**/ o(vector, MUTATOR_ARGV_2_vector) \
     /**/ o(string, MUTATOR_ARGV_3_string) \
+    /**/ o(string, MUTATOR_ARGV_4_string) \
     /**/
 MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
 
@@ -95,6 +96,14 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
     /** tick rate */    i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
+
+/** called when a weapon sound is about to be played, allows custom paths etc. */
+#define EV_WeaponSound(i, o) \
+    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
+    /** output      */ i(string, MUTATOR_ARGV_1_string) \
+    /**/               o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
 
 /** called when a weapon model is about to be set, allows custom paths etc. */
 #define EV_WeaponModel(i, o) \

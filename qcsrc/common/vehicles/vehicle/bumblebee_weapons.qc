@@ -1,7 +1,5 @@
 #include "bumblebee_weapons.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
 
 #ifdef SVQC
@@ -29,16 +27,12 @@ bool bumble_raygun_send(entity this, entity to, float sf)
 
     if(sf & BRG_START)
     {
-        WriteCoord(MSG_ENTITY, this.hook_start_x);
-        WriteCoord(MSG_ENTITY, this.hook_start_y);
-        WriteCoord(MSG_ENTITY, this.hook_start_z);
+        WriteVector(MSG_ENTITY, this.hook_start);
     }
 
     if(sf & BRG_END)
     {
-        WriteCoord(MSG_ENTITY, this.hook_end_x);
-        WriteCoord(MSG_ENTITY, this.hook_end_y);
-        WriteCoord(MSG_ENTITY, this.hook_end_z);
+        WriteVector(MSG_ENTITY, this.hook_end);
     }
 
     return true;
@@ -60,9 +54,9 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
     {
         this.cnt  = ReadByte();
         this.team = ReadByte();
-        this.cnt  = ReadByte();
+        this.count  = ReadByte();
 
-        if(this.cnt)
+        if(this.count)
             this.colormod = '1 0 0';
         else
             this.colormod = '0 1 0';
@@ -77,17 +71,13 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
 
     if(sf & BRG_START)
     {
-        this.origin_x = ReadCoord();
-        this.origin_y = ReadCoord();
-        this.origin_z = ReadCoord();
+        this.origin = ReadVector();
         setorigin(this, this.origin);
     }
 
     if(sf & BRG_END)
     {
-        this.bumble_origin_x = ReadCoord();
-        this.bumble_origin_y = ReadCoord();
-        this.bumble_origin_z = ReadCoord();
+        this.bumble_origin = ReadVector();
     }
     return true;
 }
@@ -130,7 +120,5 @@ void bumble_raygun_draw(entity this)
         Draw_CylindricLine(_vtmp1, this.bumble_origin +  randomvec() * 32, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
     }
 }
-
-#endif
 
 #endif

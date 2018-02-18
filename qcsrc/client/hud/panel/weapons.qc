@@ -1,5 +1,10 @@
 #include "weapons.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
+#include <client/view.qh>
+#include <common/wepent.qh>
 
 // Weapons (#0)
 
@@ -373,10 +378,12 @@ void HUD_Weapons()
 		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
-	if(switchweapon == WEP_Null)
+	entity wepent = viewmodels[0]; // TODO: unhardcode
+
+	if(wepent.switchweapon == WEP_Null)
 		panel_switchweapon = NULL;
 	else if(!panel_switchweapon)
-		panel_switchweapon = switchweapon;
+		panel_switchweapon = wepent.switchweapon;
 
 	// draw background behind currently selected weapon
 	// do it earlier to make sure bg is drawn behind every weapon icons while it's moving
@@ -405,7 +412,7 @@ void HUD_Weapons()
 		}
 
 		// figure out the drawing position of weapon
-		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
+		weapon_pos = panel_pos + vec2(column * weapon_size.x, row * weapon_size.y);
 
 		// update position of the currently selected weapon
 		if(it == panel_switchweapon)
@@ -472,21 +479,21 @@ void HUD_Weapons()
 			}
 
 			// draw ammo status bar
-			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_field != ammo_none))
+			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RESOURCE_NONE))
 			{
 				float ammo_full;
-				a = getstati(GetAmmoStat(it.ammo_field)); // how much ammo do we have?
+				a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
 
 				if(a > 0)
 				{
-					switch(it.ammo_field)
+					switch (it.ammo_type)
 					{
-						case ammo_shells:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
-						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
-						case ammo_rockets: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
-						case ammo_cells:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
-						case ammo_plasma:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
-						case ammo_fuel:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
+						case RESOURCE_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
+						case RESOURCE_BULLETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
+						case RESOURCE_ROCKETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case RESOURCE_CELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case RESOURCE_PLASMA:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
+						case RESOURCE_FUEL:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
 

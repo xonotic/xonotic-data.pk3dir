@@ -20,6 +20,7 @@
     #include <server/anticheat.qh>
 #endif
 
+#ifdef SVQC
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
 	if (IS_PLAYER(player) && !IS_DEAD(player))
@@ -37,8 +38,6 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	return 0;
 }
 
-#ifdef SVQC
-
 void trigger_teleport_link(entity this);
 
 void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax)
@@ -52,11 +51,11 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						++tdeath_hit;
-				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, head.origin, '0 0 0');
+				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, DMG_NOWEP, head.origin, '0 0 0');
 			}
 		}
 		else // dead bodies and monsters gib themselves instead of telefragging
-			Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, telefragger.origin, '0 0 0');
+			Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, DMG_NOWEP, telefragger.origin, '0 0 0');
 	}
 }
 
@@ -64,7 +63,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 {
 	tdeath(e, e, e, '0 0 0', '0 0 0');
 }
-
 #endif
 
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
@@ -167,6 +165,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		}
 
 		player.lastteleporttime = time;
+		player.lastteleport_origin = from;
 	}
 #endif
 }
@@ -174,8 +173,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 entity Simple_TeleportPlayer(entity teleporter, entity player)
 {
 	vector locout;
-	entity e;
-	float p;
+	entity e = NULL;
 
 	// Find the output teleporter
 	if(teleporter.enemy)
@@ -184,10 +182,12 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	}
 	else
 	{
+		// sorry CSQC, random stuff ain't gonna happen
+#ifdef SVQC
 		RandomSelection_Init();
 		FOREACH_ENTITY_STRING(targetname, teleporter.target,
 		{
-			p = 1;
+			bool p = true;
 			if(STAT(TELEPORT_TELEFRAG_AVOID, player))
 			{
 			#ifdef SVQC
@@ -196,17 +196,18 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 				locout = it.origin + '0 0 1' * (1 - player.mins.z - 24);
 			#endif
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
-					p = 0;
+					p = false;
 			}
 			RandomSelection_AddEnt(it, (it.cnt ? it.cnt : 1), p);
 		});
 		e = RandomSelection_chosen_ent;
+#endif
 	}
 
 #ifdef SVQC
 	if(!e) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
 #elif defined(CSQC)
-	if(!e) { LOG_INFO("Teleport destination could not be found from CSQC.\n"); }
+	if(!e) { LOG_INFO("Teleport destination could not be found from CSQC."); }
 #endif
 
 	makevectors(e.mangle);
@@ -228,16 +229,23 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 
 void teleport_findtarget(entity this)
 {
+	bool istrigger = (this.solid == SOLID_TRIGGER);
+
 	int n = 0;
-	entity e;
-	for(e = NULL; (e = find(e, targetname, this.target)); )
+	for(entity e = NULL; (e = find(e, targetname, this.target)); )
 	{
 		++n;
 #ifdef SVQC
 		if(e.move_movetype == MOVETYPE_NONE)
-			waypoint_spawnforteleporter(this, e.origin, 0);
+		{
+			entity tracetest_ent = spawn();
+			setsize(tracetest_ent, PL_MIN_CONST, PL_MAX_CONST);
+			tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+			waypoint_spawnforteleporter(this, e.origin, 0, tracetest_ent);
+			delete(tracetest_ent);
+		}
 		if(e.classname != "info_teleport_destination")
-			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
+			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.");
 #endif
 	}
 
@@ -250,7 +258,7 @@ void teleport_findtarget(entity this)
 	else if(n == 1)
 	{
 		// exactly one dest - bots love that
-		this.enemy = find(e, targetname, this.target);
+		this.enemy = find(NULL, targetname, this.target);
 	}
 	else
 	{
@@ -259,9 +267,11 @@ void teleport_findtarget(entity this)
 	}
 
 	// now enable touch
-	settouch(this, Teleport_Touch);
+	if(istrigger)
+		settouch(this, Teleport_Touch);
 #ifdef SVQC
-	trigger_teleport_link(this);
+	if(istrigger)
+		trigger_teleport_link(this);
 #endif
 }
 
@@ -292,7 +302,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	#elif defined(CSQC)
 		if(!(pl.flags & BIT(15))) // FL_PROJECTILE
 	#endif
-			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
+			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".");
 		pl.owner = NULL;
 	}
 	if(IS_PLAYER(pl))
@@ -301,7 +311,5 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	#ifdef SVQC
 		pl.oldvelocity = pl.velocity;
 	#endif
-		// reset teleport time tracking too (or multijump can cause insane speeds)
-		pl.lastteleporttime = time;
 	}
 }

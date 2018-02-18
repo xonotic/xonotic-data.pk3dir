@@ -1,13 +1,16 @@
 #include "sv_campcheck.qh"
 
+string autocvar_g_campcheck;
 float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;
 
-REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
+REGISTER_MUTATOR(campcheck, expr_evaluate(autocvar_g_campcheck));
 
 .float campcheck_nextcheck;
 .float campcheck_traveled_distance;
+
+.vector campcheck_prevorigin;
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
 {
@@ -16,7 +19,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
 	Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CPID_CAMPCHECK);
 }
 
-MUTATOR_HOOKFUNCTION(campcheck, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(campcheck, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -33,23 +36,19 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerDamage_Calculate)
 MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
+	bool checked = false;
 
-	if(!gameover)
-	if(!warmup_stage) // don't consider it camping during warmup?
-	if(time >= game_starttime)
+	if(autocvar_g_campcheck_interval)
+	if(!game_stopped && !warmup_stage && time >= game_starttime)
 	if(IS_PLAYER(player))
-	if(IS_REAL_CLIENT(player)) // bots may camp, but that's no reason to constantly kill them
 	if(!IS_DEAD(player))
-	if(!forbidWeaponUse(player))
 	if(!STAT(FROZEN, player))
 	if(!PHYS_INPUT_BUTTON_CHAT(player))
-	if(autocvar_g_campcheck_interval)
+	if(IS_REAL_CLIENT(player)) // bots may camp, but that's no reason to constantly kill them
+	if(!forbidWeaponUse(player))
 	{
-		vector dist;
-
 		// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
-		dist = player.prevorigin - player.origin;
-		dist.z = 0;
+		vector dist = vec2(player.campcheck_prevorigin - player.origin);
 		player.campcheck_traveled_distance += fabs(vlen(dist));
 
 		if((autocvar_g_campaign && !campaign_bots_may_start) || (time < game_starttime) || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
@@ -64,18 +63,29 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 			{
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CAMPCHECK);
 				if(player.vehicle)
-					Damage(player.vehicle, NULL, NULL, autocvar_g_campcheck_damage * 2, DEATH_CAMP.m_id, player.vehicle.origin, '0 0 0');
+					Damage(player.vehicle, NULL, NULL, autocvar_g_campcheck_damage * 2, DEATH_CAMP.m_id, DMG_NOWEP, player.vehicle.origin, '0 0 0');
 				else
-					Damage(player, NULL, NULL, bound(0, autocvar_g_campcheck_damage, player.health + player.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP.m_id, player.origin, '0 0 0');
+					Damage(player, NULL, NULL, bound(0, autocvar_g_campcheck_damage, GetResourceAmount(player, RESOURCE_HEALTH) + GetResourceAmount(player, RESOURCE_ARMOR) * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP.m_id, DMG_NOWEP, player.origin, '0 0 0');
 			}
 			player.campcheck_nextcheck = time + autocvar_g_campcheck_interval;
 			player.campcheck_traveled_distance = 0;
 		}
 
-		return;
+		checked = true;
 	}
 
-	player.campcheck_nextcheck = time + autocvar_g_campcheck_interval; // one of the above checks failed, so keep the timer up to date
+	if(!checked)
+		player.campcheck_nextcheck = time + autocvar_g_campcheck_interval; // one of the above checks failed, so keep the timer up to date
+
+	player.campcheck_prevorigin = player.origin;
+}
+
+MUTATOR_HOOKFUNCTION(campcheck, CopyBody)
+{
+	entity player = M_ARGV(0, entity);
+	entity clone = M_ARGV(1, entity);
+
+	clone.campcheck_prevorigin = player.campcheck_prevorigin;
 }
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerSpawn)

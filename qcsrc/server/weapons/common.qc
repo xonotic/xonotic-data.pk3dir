@@ -1,13 +1,30 @@
 #include "common.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include <common/t_items.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/deathtypes/all.qh>
 #include <common/notifications/all.qh>
+#include <common/state.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <common/wepent.qh>
 #include <common/items/_mod.qh>
+
+bool W_DualWielding(entity player)
+{
+	int held_weapons = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(player.(weaponentity) && player.(weaponentity).m_switchweapon != WEP_Null)
+			++held_weapons;
+	}
+
+	return held_weapons > 1;
+}
 
 void W_GiveWeapon(entity e, int wep)
 {
@@ -20,16 +37,18 @@ void W_GiveWeapon(entity e, int wep)
     }
 }
 
-void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
+void W_PlayStrengthSound(entity player)
 {
+	entity store = IS_PLAYER(player) ? PS(player) : player; // because non-player entities can fire, but can they have items? TODO
+
 	if((player.items & ITEM_Strength.m_itemid)
-		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+		&& ((time > store.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+		|| (time > store.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
 			sound(player, CH_TRIGGER, SND_STRENGTH_FIRE, VOL_BASE, ATTEN_NORM);
-			player.prevstrengthsound = time;
+			store.prevstrengthsound = time;
 		}
-		player.prevstrengthsoundattempt = time;
+		store.prevstrengthsoundattempt = time;
 }
 
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception)
@@ -79,13 +98,13 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 	this.takedamage = DAMAGE_NO;
 	this.event_damage = func_null;
 
+	MUTATOR_CALLHOOK(PrepareExplosionByDamage, this, attacker);
+
 	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
 		this.owner = attacker;
 		this.realowner = attacker;
 	}
-
-	MUTATOR_CALLHOOK(PrepareExplosionByDamage, this, attacker);
 
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed

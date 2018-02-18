@@ -7,6 +7,7 @@
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
+#include "../common/triggers/target/spawnpoint.qh"
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
@@ -16,9 +17,7 @@ bool SpawnPoint_Send(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, this.team);
-	WriteCoord(MSG_ENTITY, this.origin.x);
-	WriteCoord(MSG_ENTITY, this.origin.y);
-	WriteCoord(MSG_ENTITY, this.origin.z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	return true;
 }
@@ -32,9 +31,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 	if(autocvar_g_spawn_alloweffects)
 	{
 		WriteByte(MSG_ENTITY, etof(this.owner));
-		WriteCoord(MSG_ENTITY, this.owner.origin.x);
-		WriteCoord(MSG_ENTITY, this.owner.origin.y);
-		WriteCoord(MSG_ENTITY, this.owner.origin.z);
+		WriteVector(MSG_ENTITY, this.owner.origin);
 		send = true;
 	}
 	else if((to == this.owner) || (IS_SPEC(to) && (to.enemy == this.owner)) )
@@ -64,7 +61,7 @@ void spawnpoint_use(entity this, entity actor, entity trigger)
 	if(have_team_spawns > 0)
 	{
 		this.team = actor.team;
-		some_spawn_has_been_used = 1;
+		some_spawn_has_been_used = true;
 	}
 	//LOG_INFO("spawnpoint was used!\n");
 }
@@ -83,14 +80,15 @@ void relocate_spawnpoint(entity this)
         this.maxs = PL_MAX_CONST;
         if (!move_out_of_solid(this))
             objerror(this, "could not get out of solid at all!");
-        LOG_INFO("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
-        LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(this.origin.x - o.x));
-        LOG_INFO(" ", ftos(this.origin.y - o.y));
-        LOG_INFO(" ", ftos(this.origin.z - o.z), "'\n");
+        LOG_INFOF(
+            "^1NOTE: this map needs FIXING. Spawnpoint at %s needs to be moved out of solid, e.g. by %s",
+            vtos(o - '0 0 1'),
+            vtos(this.origin - o)
+        );
         if (autocvar_g_spawnpoints_auto_move_out_of_solid)
         {
             if (!spawnpoint_nag)
-                LOG_INFO("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
+                LOG_INFO("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)");
             spawnpoint_nag = 1;
         }
         else
@@ -106,13 +104,14 @@ void relocate_spawnpoint(entity this)
     setthink(this, spawnpoint_think);
     this.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
     this.team_saved = this.team;
+    IL_PUSH(g_saved_team, this);
     if (!this.cnt)
         this.cnt = 1;
 
     if (have_team_spawns != 0)
         if (this.team)
             have_team_spawns = 1;
-    have_team_spawns_forteam[this.team] = 1;
+    have_team_spawns_forteams |= BIT(this.team);
 
     if (autocvar_r_showbboxes)
     {
@@ -240,11 +239,11 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	}
 
 	shortest = vlen(world.maxs - world.mins);
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 		thisdist = vlen(it.origin - spot.origin);
 		if (thisdist < shortest)
 			shortest = thisdist;
-	));
+	});
 	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
@@ -318,7 +317,7 @@ entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exp
 
 	RandomSelection_Init();
 	for(spot = firstspot; spot; spot = spot.chain)
-		RandomSelection_AddEnt(spot, pow(bound(lower, spot.spawnpoint_score.y, upper), exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
+		RandomSelection_AddEnt(spot, (bound(lower, spot.spawnpoint_score.y, upper) ** exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
 
 	return RandomSelection_chosen_ent;
 }
@@ -339,15 +338,18 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	if (spot)
 		return spot;
 
+	if(this.spawnpoint_targ)
+		return this.spawnpoint_targ;
+
 	if(anypoint || autocvar_g_spawn_useallspawns)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
 	{
-		if(have_team_spawns_forteam[this.team] == 0)
+		if(!(have_team_spawns_forteams & BIT(this.team)))
 		{
 			// we request a spawn for a team, and we have team
 			// spawns, but that team has no spawns?
-			if(have_team_spawns_forteam[0])
+			if(have_team_spawns_forteams & BIT(0))
 				// try noteam spawns
 				teamcheck = 0;
 			else
@@ -357,7 +359,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 		else
 			teamcheck = this.team; // MUST be team
 	}
-	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
+	else if(have_team_spawns == 0 && (have_team_spawns_forteams & BIT(0)))
 		teamcheck = 0; // MUST be noteam
 	else
 		teamcheck = -1;

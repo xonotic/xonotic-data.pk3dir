@@ -1,5 +1,10 @@
 #include "bgmscript.qh"
 
+#include <common/util.qh>
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/main.qh>
+
 #define CONSTANT_SPEED_DECAY
 
 float bgmscriptbuf;
@@ -133,7 +138,7 @@ void BGMScript_InitEntity(entity e)
 		e.bgmscriptline = e.bgmscriptline0 = i;
 		if(i >= bgmscriptbufsize)
 		{
-			LOG_INFOF("ERROR: bgmscript does not define %s\n", e.bgmscript);
+			LOG_INFOF("ERROR: bgmscript does not define %s", e.bgmscript);
 			strunzone(e.bgmscript);
 			e.bgmscript = string_null;
 		}

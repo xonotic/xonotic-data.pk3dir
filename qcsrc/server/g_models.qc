@@ -1,5 +1,7 @@
 #include "g_models.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "g_subs.qh"
 #include <common/net_linked.qh>
 #include "../common/triggers/subs.qh"
@@ -99,13 +101,12 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	{
 		if(sf & 0x40)
 			WriteShort(MSG_ENTITY, this.colormap);
+		WriteByte(MSG_ENTITY, this.skin);
 	}
 
 	if(sf & BIT(1))
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 
 	if(sf & BIT(2))
@@ -134,12 +135,8 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 		WriteShort(MSG_ENTITY, floor(this.scale * 256));
 		if(sf & 0x20)
 		{
-			WriteCoord(MSG_ENTITY, this.mins.x);
-			WriteCoord(MSG_ENTITY, this.mins.y);
-			WriteCoord(MSG_ENTITY, this.mins.z);
-			WriteCoord(MSG_ENTITY, this.maxs.x);
-			WriteCoord(MSG_ENTITY, this.maxs.y);
-			WriteCoord(MSG_ENTITY, this.maxs.z);
+			WriteVector(MSG_ENTITY, this.mins);
+			WriteVector(MSG_ENTITY, this.maxs);
 		}
 		WriteString(MSG_ENTITY, this.bgmscript);
 		if(this.bgmscript != "")
@@ -148,9 +145,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 			WriteByte(MSG_ENTITY, floor(this.bgmscriptdecay * 64));
 			WriteByte(MSG_ENTITY, floor(this.bgmscriptsustain * 255));
 			WriteByte(MSG_ENTITY, floor(this.bgmscriptrelease * 64));
-			WriteCoord(MSG_ENTITY, this.movedir.x);
-			WriteCoord(MSG_ENTITY, this.movedir.y);
-			WriteCoord(MSG_ENTITY, this.movedir.z);
+			WriteVector(MSG_ENTITY, this.movedir);
 			WriteByte(MSG_ENTITY, floor(this.lip * 255));
 		}
 		WriteByte(MSG_ENTITY, this.fade_start);

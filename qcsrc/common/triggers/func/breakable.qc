@@ -42,7 +42,7 @@
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
 //   want that!
 
-void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
 //
 // func_breakable
@@ -67,7 +67,8 @@ void LaunchDebris (entity this, string debrisname, vector force)
 	dbr.velocity_x = this.debrisvelocity.x + this.debrisvelocityjitter.x * crandom();
 	dbr.velocity_y = this.debrisvelocity.y + this.debrisvelocityjitter.y * crandom();
 	dbr.velocity_z = this.debrisvelocity.z + this.debrisvelocityjitter.z * crandom();
-	this.velocity = this.velocity + force * this.debrisdamageforcescale;
+	dbr.velocity = dbr.velocity + force * this.debrisdamageforcescale;
+	dbr.angles = this.angles;
 	dbr.avelocity_x = random()*this.debrisavelocityjitter.x;
 	dbr.avelocity_y = random()*this.debrisavelocityjitter.y;
 	dbr.avelocity_z = random()*this.debrisavelocityjitter.z;
@@ -178,7 +179,7 @@ void func_breakable_behave_restore(entity this)
 
 void func_breakable_init_for_player(entity this, entity player)
 {
-	if (this.noise1 && this.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
+	if (this.noise1 && this.state == 0 && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
 		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
@@ -222,7 +223,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
 	if(this.dmg)
-		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, NULL, this.dmg_force, DEATH_HURTTRIGGER.m_id, NULL);
+		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, NULL, this.dmg_force, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, NULL);
 
 	if(this.cnt) // TODO
 		__pointparticles(this.cnt, this.absmin * 0.5 + this.absmax * 0.5, '0 0 0', this.count);
@@ -245,7 +246,7 @@ void func_breakable_destroy_self(entity this)
 	func_breakable_destroy(this, NULL, NULL);
 }
 
-void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.state == 1)
 		return;
@@ -271,7 +272,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
 
-		if(IS_CLIENT(attacker) && this.classname == "func_assault_destructible")
+		if(IS_CLIENT(attacker)) //&& this.classname == "func_assault_destructible")
 		{
 			this.owner = attacker;
 			this.realowner = attacker;
@@ -353,6 +354,7 @@ spawnfunc(func_breakable)
 		precache_sound(this.noise1);
 
 	this.team_saved = this.team;
+	IL_PUSH(g_saved_team, this);
 	this.dropped_origin = this.origin;
 
 	this.reset = func_breakable_reset;

@@ -1,9 +1,10 @@
 #include "walljump.qh"
 
+#ifdef GAMEQC
 #ifdef CSQC
 REGISTER_MUTATOR(walljump, true);
 #elif defined(SVQC)
-REGISTER_MUTATOR(walljump, cvar("g_walljump"));
+REGISTER_MUTATOR(walljump, autocvar_g_walljump);
 #endif
 
 #define PHYS_WALLJUMP(s) 						STAT(WALLJUMP, s)
@@ -43,7 +44,7 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 	if(!IS_DEAD(player))
 	{
 		vector plane_normal = PlayerTouchWall(player);
-		
+
 		if(plane_normal != '0 0 0')
 		{
 			float wj_force = PHYS_WALLJUMP_FORCE(player);
@@ -68,3 +69,5 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 		}
 	}
 }
+
+#endif

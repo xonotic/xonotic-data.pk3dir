@@ -1,5 +1,6 @@
 #include "teamradar.qh"
 
+#include "autocvars.qh"
 #include "hud/_mod.qh"
 
 #include <common/mutators/mutator/waypoints/all.qh>
@@ -20,7 +21,7 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	vector out;
 	in -= teamradar_origin3d_in_texcoord;
 
-	out = rotate(in, teamradar_angle * DEG2RAD);
+	out = Rotate(in, teamradar_angle * DEG2RAD);
 	out.y = - out.y; // screen space is reversed
 
 	out = out * teamradar_size;
@@ -42,7 +43,7 @@ vector teamradar_2dcoord_to_texcoord(vector in)
 	out = out / teamradar_size;
 
 	out_y = - out_y; // screen space is reversed
-	out = rotate(out, -teamradar_angle * DEG2RAD);
+	out = Rotate(out, -teamradar_angle * DEG2RAD);
 
 	out += teamradar_origin3d_in_texcoord;
 
@@ -186,7 +187,7 @@ void teamradar_loadcvars()
 	hud_panel_radar_maximized_zoommode = autocvar_hud_panel_radar_maximized_zoommode;
 
 	// others default to 0
-	// match this to defaultXonotic.cfg!
+	// match this to default hud cfg file!
 	if(!hud_panel_radar_scale) hud_panel_radar_scale = 4096;
 	if(!hud_panel_radar_foreground_alpha) hud_panel_radar_foreground_alpha = 0.8 * panel_fg_alpha;
 	if(!hud_panel_radar_size.x) hud_panel_radar_size.x = 128;
@@ -207,17 +208,13 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 
 	if(sendflags & 1)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
 
 	if(sendflags & 2)
 	{
-		this.velocity_x = ReadCoord();
-		this.velocity_y = ReadCoord();
-		this.velocity_z = ReadCoord();
+		this.velocity = ReadVector();
 	}
 
 	if(sendflags & 4)

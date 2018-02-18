@@ -1,7 +1,8 @@
 #include "sv_spawn_near_teammate.qh"
 
-const float FLOAT_MAX = 340282346638528859811704183484516925440.0f;
+#include <lib/float.qh>
 
+string autocvar_g_spawn_near_teammate;
 float autocvar_g_spawn_near_teammate_distance;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint_max;
@@ -10,7 +11,7 @@ float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health;
 bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath;
 
-REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
+REGISTER_MUTATOR(spawn_near_teammate, expr_evaluate(autocvar_g_spawn_near_teammate));
 
 .entity msnt_lookat;
 
@@ -20,20 +21,19 @@ REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 {
+	if (!teamplay) return;
+
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 	vector spawn_score = M_ARGV(2, vector);
 
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS(player).cvar_cl_spawn_near_teammate))
 		return;
 
 	spawn_spot.msnt_lookat = NULL;
 
-	if(!teamplay)
-		return;
-
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it != player && SAME_TEAM(it, player) && !IS_DEAD(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != player && SAME_TEAM(it, player) && !IS_DEAD(it), {
 		if(vdist(spawn_spot.origin - it.origin, >, autocvar_g_spawn_near_teammate_distance))
 			continue;
 		if(vdist(spawn_spot.origin - it.origin, <, 48))
@@ -41,7 +41,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 		if(!checkpvs(spawn_spot.origin, it))
 			continue;
 		RandomSelection_AddEnt(it, 1, 1);
-	));
+	});
 
 	if(RandomSelection_chosen_ent)
 	{
@@ -56,7 +56,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {
-	if(!teamplay) { return; }
+	if (!teamplay) return;
+
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 
@@ -76,7 +77,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		return; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
 
 	// Note: when entering this, fixangle is already set.
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS(player).cvar_cl_spawn_near_teammate))
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			player.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
@@ -85,7 +86,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		vector best_pos = '0 0 0';
 		float best_dist2 = FLOAT_MAX;
 		int tested = 0;
-		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), {
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_max && tested >= autocvar_g_spawn_near_teammate_ignore_spawnpoint_max) break;
 
 			if (PHYS_INPUT_BUTTON_CHAT(it)) continue;
@@ -116,22 +117,22 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				switch(i)
 				{
 					case 0:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 64 + v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_forward * 64 + v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 1:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 64 - v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_forward * 64 - v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 2:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin + v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 3:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 4:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128 + v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_forward * 128 + v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 5:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128 - v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_forward * 128 - v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 				}
 
@@ -141,17 +142,17 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 				// 400 is about the height of a typical laser jump (in overkill)
 				// not traceline because we need space for the whole player, not just his origin
-				tracebox(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
+				tracebox(horizontal_trace_endpos, STAT(PL_MIN, player), STAT(PL_MAX, player), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
 				vector vectical_trace_endpos = trace_endpos;
 				//te_lightning1(NULL, horizontal_trace_endpos, vectical_trace_endpos);
 				if (trace_startsolid) goto skip; // inside another player
 				if (trace_fraction == 1.0) goto skip; // above void or too high
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) goto skip;
 				if (pointcontents(vectical_trace_endpos) != CONTENT_EMPTY) goto skip; // no lava or slime (or water which i assume would be annoying anyway)
-				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), vectical_trace_endpos)) goto skip;
+				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, player), STAT(PL_MAX, player), vectical_trace_endpos)) goto skip;
 
 				// make sure the spawned player will have floor ahead (or at least a wall - he shouldn't fall as soon as he starts moving)
-				vector floor_test_start = vectical_trace_endpos + v_up * STAT(PL_MAX, NULL).z + v_forward * STAT(PL_MAX, NULL).x; // top front of player's bbox - highest point we know is not inside solid
+				vector floor_test_start = vectical_trace_endpos + v_up * STAT(PL_MAX, player).z + v_forward * STAT(PL_MAX, player).x; // top front of player's bbox - highest point we know is not inside solid
 				traceline(floor_test_start, floor_test_start + v_forward * 100 - v_up * 128, MOVE_NOMONSTERS, it);
 				//te_beam(NULL, floor_test_start, trace_endpos);
 				if (trace_fraction == 1.0) goto skip;
@@ -196,7 +197,7 @@ LABEL(skip)
 					break; // don't test the other spots near this teammate, go to the next one
 				}
 			}
-		));
+		});
 
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 		if(best_mate)

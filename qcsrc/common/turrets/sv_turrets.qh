@@ -1,5 +1,7 @@
 #pragma once
 
+#include <server/miscfunctions.qh>
+
 entity turret_projectile(entity actor, Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim);
 void turret_projectile_explode(entity this);
 float turret_validate_target(entity e_turret, entity e_target, float validate_flags);
@@ -93,6 +95,8 @@ bool turret_initialize(entity this, Turret tur);
 .bool(entity this, entity e_target,entity e_sender) turret_addtarget;
 
 .entity pathcurrent;
+
+.entity pathgoal;
 
 float turret_count;
 

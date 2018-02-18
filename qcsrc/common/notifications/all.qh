@@ -6,6 +6,10 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 
+#ifdef CSQC
+#include <client/autocvars.qh>
+#endif
+
 /** main types/groups of notifications */
 ENUMCLASS(MSG)
 	/** "Global" AND "personal" announcer messages */
@@ -109,7 +113,8 @@ void Create_Notification_Entity(entity notif,
 	float var_default,
 	float var_cvar,
 	MSG typeId,
-	string namestring);
+	string namestring,
+	int teamnum);
 void Create_Notification_Entity_Annce(entity notif,
 										float var_cvar,
 										string namestring,
@@ -176,25 +181,25 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 			if (fh >= 0)
 			{
 				Dump_Notifications(fh, alsoprint);
-				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
+				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.", filename);
 				fclose(fh);
 			}
 			else
 			{
-				LOG_INFOF("^1Error: ^7Could not open file '%s'!\n", filename);
+				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
 			}
 			#else
-			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
+			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd."));
 			#endif
 			return;
 		}
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
-			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),\n");
-			LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-			LOG_INFO("  if left blank, it will only write to default.\n");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]");
+			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),");
+			LOG_INFO("  if supplied with '-' output to console as well as default,");
+			LOG_INFO("  if left blank, it will only write to default.");
 			return;
 		}
 	}
@@ -401,14 +406,14 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
 	ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
 	ARG_CASE(ARG_CS_SV,     "f4",            ftos(f4)) \
-	ARG_CASE(ARG_CS_SV,     "f1p2dec",       ftos_decimals(f1/100, 2)) \
-	ARG_CASE(ARG_CS_SV,     "f2p2dec",       ftos_decimals(f2/100, 2)) \
+	ARG_CASE(ARG_CS_SV,     "f1dtime",       ftos_decimals(TIME_DECODE(f1), 2)) \
+	ARG_CASE(ARG_CS_SV,     "f2dtime",       ftos_decimals(TIME_DECODE(f2), 2)) \
 	ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \
 	ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("point") : _("points"))) \
 	ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
-	ARG_CASE(ARG_CS,        "f1time",        process_time(2, f1)) \
+	ARG_CASE(ARG_CS_SV,     "f1time",        process_time(2, f1)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   mmssss(f1)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   mmssss(f2)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   mmssss(f3)) \
@@ -469,11 +474,11 @@ string notif_arg_frag_stats(float fhealth, float farmor, float fping)
 
 string notif_arg_missing_teams(float f1)
 {
-	return sprintf("%s%s%s%s",
-		((f1 & BIT(0)) ? sprintf("%s%s", Team_ColoredFullName(NUM_TEAM_1), (f1 & (BIT(1) | BIT(2) | BIT(3)) ? ", " : "")) : ""),
-		((f1 & BIT(1)) ? sprintf("%s%s", Team_ColoredFullName(NUM_TEAM_2), (f1 & (         BIT(2) | BIT(3)) ? ", " : "")) : ""),
-		((f1 & BIT(2)) ? sprintf("%s%s", Team_ColoredFullName(NUM_TEAM_3), (f1 & (                  BIT(3)) ? ", " : "")) : ""),
-		((f1 & BIT(3)) ?                 Team_ColoredFullName(NUM_TEAM_4)                                                 : "")
+	return strcat(
+		((f1 & BIT(0)) ? strcat(Team_ColoredFullName(NUM_TEAM_1), (f1 >> 1) ? ", " : "") : ""),
+		((f1 & BIT(1)) ? strcat(Team_ColoredFullName(NUM_TEAM_2), (f1 >> 2) ? ", " : "") : ""),
+		((f1 & BIT(2)) ? strcat(Team_ColoredFullName(NUM_TEAM_3), (f1 >> 3) ? ", " : "") : ""),
+		((f1 & BIT(3)) ?        Team_ColoredFullName(NUM_TEAM_4)                         : "")
 	);
 }
 
@@ -630,6 +635,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 .string nent_name;
 .int nent_stringcount;
 .int nent_floatcount;
+.int nent_teamnum;
 
 // MSG_ANNCE entity values
 .int nent_channel;
@@ -689,6 +695,13 @@ STATIC_INIT_LATE(Notif_Choices) {
 	}
 }
 
+string Get_Notif_CvarName(Notification notif)
+{
+	if(!notif.nent_teamnum)
+		return notif.nent_name;
+	return substring(notif.nent_name, 0, -strlen(Static_Team_ColorName(notif.nent_teamnum)) - 2);
+}
+
 Notification Get_Notif_Ent(MSG net_type, int net_name)
 {
 	Notification it = _Notifications_from(net_name, NULL);
@@ -703,26 +716,34 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	return it;
 }
 
+#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, default, sound, channel, volume, position) \
+	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, default, sound, channel, volume, position)
+
 #define MSG_ANNCE_NOTIF(name, default, sound, channel, volume, position) \
-	MSG_ANNCE_NOTIF_(ANNCE_##name, default, sound, channel, volume, position)
-#define MSG_ANNCE_NOTIF_(name, default, sound, channel, volume, position) \
-	NOTIF_ADD_AUTOCVAR(name, default) \
+	NOTIF_ADD_AUTOCVAR(ANNCE_##name, default) \
+	MSG_ANNCE_NOTIF_(0, ANNCE_##name, ANNCE_##name, default, sound, channel, volume, position)
+
+#define MSG_ANNCE_NOTIF_(teamnum, name, cvarname, default, sound, channel, volume, position) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_annce_notification)) { \
-		Create_Notification_Entity      (this, default, ACVNN(name), MSG_ANNCE, strtoupper(#name)); \
-		Create_Notification_Entity_Annce(this, ACVNN(name), strtoupper(#name), \
+		Create_Notification_Entity      (this, default, ACVNN(cvarname), MSG_ANNCE, strtoupper(#name), teamnum); \
+		Create_Notification_Entity_Annce(this, ACVNN(cvarname), strtoupper(#name), \
 			channel,   /* channel  */ \
 			sound,     /* snd      */ \
 			volume,    /* vol      */ \
 			position); /* position */ \
 	}
 
+#define MSG_INFO_NOTIF_TEAM(teamnum, name, cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
+	MSG_INFO_NOTIF_(teamnum, INFO_##name, INFO_##cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle)
+
 #define MSG_INFO_NOTIF(name, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
-	MSG_INFO_NOTIF_(INFO_##name, default, strnum, flnum, args, hudargs, icon, normal, gentle)
-#define MSG_INFO_NOTIF_(name, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
-	NOTIF_ADD_AUTOCVAR(name, default) \
+	NOTIF_ADD_AUTOCVAR(INFO_##name, default) \
+	MSG_INFO_NOTIF_(0, INFO_##name, INFO_##name, default, strnum, flnum, args, hudargs, icon, normal, gentle)
+
+#define MSG_INFO_NOTIF_(teamnum, name, cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_info_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(name), MSG_INFO, strtoupper(#name)); \
-		Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, \
+		Create_Notification_Entity           (this, default, ACVNN(cvarname), MSG_INFO, strtoupper(#name), teamnum); \
+		Create_Notification_Entity_InfoCenter(this, ACVNN(cvarname), strtoupper(#name), strnum, flnum, \
 			args,     /* args    */ \
 			hudargs,  /* hudargs */ \
 			icon,     /* icon    */ \
@@ -738,7 +759,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 #define MULTIICON_INFO_(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_info_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(name), MSG_INFO, strtoupper(#name)); \
+		Create_Notification_Entity           (this, default, ACVNN(name), MSG_INFO, strtoupper(#name), 0); \
 		Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, \
 			args,     /* args    */ \
 			hudargs,  /* hudargs */ \
@@ -750,13 +771,17 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 		this.nent_iconargs = iconargs; \
 	}
 
+#define MSG_CENTER_NOTIF_TEAM(teamnum, name, cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
+	MSG_CENTER_NOTIF_(teamnum, CENTER_##name, CENTER_##cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
+
 #define MSG_CENTER_NOTIF(name, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	MSG_CENTER_NOTIF_(CENTER_##name, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
-#define MSG_CENTER_NOTIF_(name, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	NOTIF_ADD_AUTOCVAR(name, default) \
+	NOTIF_ADD_AUTOCVAR(CENTER_##name, default) \
+	MSG_CENTER_NOTIF_(0, CENTER_##name, CENTER_##name, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
+
+#define MSG_CENTER_NOTIF_(teamnum, name, cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_center_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(name), MSG_CENTER, strtoupper(#name)); \
-		Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, \
+		Create_Notification_Entity           (this, default, ACVNN(cvarname), MSG_CENTER, strtoupper(#name), teamnum); \
+		Create_Notification_Entity_InfoCenter(this, ACVNN(cvarname), strtoupper(#name), strnum, flnum, \
 			args,    /* args    */ \
 			"",      /* hudargs */ \
 			"",      /* icon    */ \
@@ -769,24 +794,28 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 #define MSG_MULTI_NOTIF(name, default, anncename, infoname, centername) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_multi_notification)) { \
-		Create_Notification_Entity      (this, default, ACVNN(name), MSG_MULTI, strtoupper(#name)); \
+		Create_Notification_Entity      (this, default, ACVNN(name), MSG_MULTI, strtoupper(#name), 0); \
 		Create_Notification_Entity_Multi(this, ACVNN(name), strtoupper(#name), \
 			anncename,   /* anncename  */ \
 			infoname,    /* infoname   */ \
 			centername); /* centername */ \
 	}
 
+#define MSG_CHOICE_NOTIF_TEAM(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) \
+	MSG_CHOICE_NOTIF_(teamnum, CHOICE_##name, CHOICE_##cvarname, default, challow, chtype, optiona, optionb)
+
 #define MSG_CHOICE_NOTIF(name, default, challow, chtype, optiona, optionb) \
-	MSG_CHOICE_NOTIF_(CHOICE_##name, default, challow, chtype, optiona, optionb)
-#define MSG_CHOICE_NOTIF_(name, default, challow, chtype, optiona, optionb) \
-	NOTIF_ADD_AUTOCVAR(name, default) \
-	NOTIF_ADD_AUTOCVAR(name##_ALLOWED, challow) \
+	NOTIF_ADD_AUTOCVAR(CHOICE_##name, default) \
+	NOTIF_ADD_AUTOCVAR(CHOICE_##name##_ALLOWED, challow) \
+	MSG_CHOICE_NOTIF_(0, CHOICE_##name, CHOICE_##name, default, challow, chtype, optiona, optionb)
+
+#define MSG_CHOICE_NOTIF_(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_choice_notification)) { \
 		this.nent_choice_idx = nent_choice_count++; \
-		Create_Notification_Entity       (this, default, ACVNN(name), MSG_CHOICE, strtoupper(#name)); \
-		Create_Notification_Entity_Choice(this, ACVNN(name), strtoupper(#name), \
+		Create_Notification_Entity       (this, default, ACVNN(cvarname), MSG_CHOICE, strtoupper(#name), teamnum); \
+		Create_Notification_Entity_Choice(this, ACVNN(cvarname), strtoupper(#name), \
 			challow,                                 /* challow_def */ \
-			autocvar_notification_##name##_ALLOWED,  /* challow_var */ \
+			autocvar_notification_##cvarname##_ALLOWED,  /* challow_var */ \
 			chtype,                                  /* chtype      */ \
 			optiona,                                 /* optiona     */ \
 			optionb);                                /* optionb     */ \

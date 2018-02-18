@@ -2,6 +2,8 @@
 
 #include "scoreboard.qh"
 #include <common/notifications/all.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 
 // CenterPrint (#16)
 
@@ -161,16 +163,16 @@ void HUD_CenterPrint ()
 		if (hud_panel_radar_bottom >= 0.96 * vid_conheight)
 			return;
 
-		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
-		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
+		panel_pos.x = 0.5 * (vid_conwidth - panel_size.x);
+		panel_pos.y = hud_panel_radar_bottom;
+		panel_size.y = min(panel_size.y, vid_conheight - hud_panel_radar_bottom);
 	}
 	else if(!autocvar__hud_configure && scoreboard_fade_alpha)
 	{
 		// move the panel below the scoreboard
 		if (scoreboard_bottom >= 0.96 * vid_conheight)
 			return;
-		vector target_pos;
-		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size.x);
+		vector target_pos = vec2(0.5 * (vid_conwidth - panel_size.x), scoreboard_bottom);
 		if(target_pos.y > panel_pos.y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);

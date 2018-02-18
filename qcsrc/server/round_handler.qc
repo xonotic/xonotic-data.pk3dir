@@ -1,26 +1,27 @@
 #include "round_handler.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "campaign.qh"
 #include "command/vote.qh"
 #include "../common/util.qh"
 
 void round_handler_Think(entity this)
 {
-	if (time < game_starttime)
-	{
-		round_handler_Reset(game_starttime);
-		return;
-	}
-
-	if (gameover)
-		gameover = false;
-
 	if (intermission_running)
 	{
 		round_handler_Reset(0);
 		round_handler_Remove();
 		return;
 	}
+
+	if (time < game_starttime)
+	{
+		round_handler_Reset(game_starttime);
+		return;
+	}
+
+	game_stopped = false;
 
 	if (this.wait)
 	{
@@ -59,7 +60,6 @@ void round_handler_Think(entity this)
 			// schedule a new round
 			this.wait = true;
 			this.nextthink = time + this.delay;
-			gameover = true;
 		}
 		else
 		{
@@ -78,7 +78,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 }
 
 // NOTE: this is only needed because if round_handler spawns at time 1
-// gamestarttime isn't initialized yet
+// game_starttime isn't initialized yet
 void round_handler_FirstThink(entity this)
 {
 	round_starttime = max(time, game_starttime) + this.count;

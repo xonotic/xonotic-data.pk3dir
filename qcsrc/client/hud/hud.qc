@@ -1,5 +1,7 @@
 #include "hud.qh"
 
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 #include "panel/scoreboard.qh"
 #include "hud_config.qh"
 #include "../mapvoting.qh"
@@ -7,6 +9,7 @@
 #include <common/minigames/cl_minigames.qh>
 #include <common/t_items.qh>
 #include <common/deathtypes/all.qh>
+#include <common/ent_cs.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/vehicles/all.qh>
@@ -109,10 +112,7 @@ vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspe
 		rows = ceil(item_count/columns);
 	}
 
-	if(vertical)
-		return eX * best_rows + eY * best_columns;
-	else
-		return eX * best_columns + eY * best_rows;
+	return (vertical) ? vec2(best_rows, best_columns) : vec2(best_columns, best_rows);
 }
 
 /*
@@ -490,8 +490,9 @@ void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {
 	vector ofs = '0 0 0';
-	hud_scale = '1 1 0';
-	hud_shift = '0 0 0';
+	hud_scale_current = '1 1 0';
+	hud_shift_current = '0 0 0';
+
 	if (autocvar_hud_dynamic_follow)
 	{
 		entity view = CSQCModel_server2csqc(player_localentnum - 1);
@@ -508,12 +509,12 @@ void Hud_Dynamic_Frame()
 		ofs.y = bound(-0.1, ofs.y, 0.1);
 		ofs.z = bound(-0.1, ofs.z, 0.1);
 
-		hud_shift.x = ofs.y * vid_conwidth;
-		hud_shift.y = ofs.z * vid_conheight;
-		hud_shift.z = ofs.x;
+		hud_shift_current.x = ofs.y * vid_conwidth;
+		hud_shift_current.y = ofs.z * vid_conheight;
+		hud_shift_current.z = ofs.x;
 
-		hud_scale.x = (1 + hud_shift.z);
-		hud_scale.y = hud_scale.x;
+		hud_scale_current.x = (1 + hud_shift_current.z);
+		hud_scale_current.y = hud_scale_current.x;
 	}
 
 	if(autocvar_hud_dynamic_shake > 0)
@@ -550,16 +551,15 @@ void Hud_Dynamic_Frame()
 
 		if(hud_dynamic_shake_factor > 0)
 		{
-			hud_shift.x += hud_dynamic_shake_realofs.x;
-			hud_shift.y += hud_dynamic_shake_realofs.y;
+			hud_shift_current.x += hud_dynamic_shake_realofs.x;
+			hud_shift_current.y += hud_dynamic_shake_realofs.y;
 		}
 	}
 
 	hud_scale_center.x = 0.5 * vid_conwidth;
 	hud_scale_center.y = 0.5 * vid_conheight;
 
-	hud_scale_current = hud_scale;
-	hud_shift_current = hud_shift;
+	HUD_Scale_Disable();
 }
 
 void HUD_Main()
@@ -571,8 +571,6 @@ void HUD_Main()
 		hud_fade_alpha = 1 - autocvar__menu_alpha;
 
 	HUD_Configure_Frame();
-
-	Hud_Dynamic_Frame();
 
 	if(scoreboard_fade_alpha == 1)
 		if(autocvar__menu_alpha == 1)

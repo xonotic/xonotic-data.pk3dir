@@ -1,10 +1,13 @@
 #pragma once
 
+#include <common/weapons/all.qh>
+
 CLASS(RocketPropelledChainsaw, Weapon)
-/* ammotype  */ ATTRIB(RocketPropelledChainsaw, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(RocketPropelledChainsaw, impulse, int, 7);
+/* spawnfunc */ ATTRIB(RocketPropelledChainsaw, m_canonical_spawnfunc, string, "weapon_rpc");
+/* ammotype  */ ATTRIB(RocketPropelledChainsaw, ammo_type, int, RESOURCE_ROCKETS);
+/* impulse   */ ATTRIB(RocketPropelledChainsaw, impulse, int, 9);
 /* flags     */ ATTRIB(RocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
-/* rating    */ ATTRIB(RocketPropelledChainsaw, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* rating    */ ATTRIB(RocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);
 /* color     */ ATTRIB(RocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
 /* modelname */ ATTRIB(RocketPropelledChainsaw, mdl, string, "ok_rl");
 #ifdef GAMEQC
@@ -45,3 +48,5 @@ CLASS(RocketPropelledChainsaw, Weapon)
 
 ENDCLASS(RocketPropelledChainsaw)
 REGISTER_WEAPON(RPC, rpc, NEW(RocketPropelledChainsaw));
+
+SPAWNFUNC_WEAPON(weapon_rpc, WEP_RPC)

@@ -5,30 +5,14 @@ void ons_Initialize();
 
 REGISTER_MUTATOR(ons, false)
 {
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_g_onslaught_point_limit);
+
 		ons_Initialize();
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_onslaught_point_limit, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
-		have_team_spawns = -1; // request team spawns
 	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ons_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return false;
 }
 
@@ -70,11 +54,8 @@ bool ons_stalemate;
 
 .float teleport_antispam;
 
-// waypoint sprites
-.entity bot_basewaypoint; // generator waypointsprite
-
-.bool isgenneighbor[17];
-.bool iscpneighbor[17];
+.int aregensneighbor;
+.int arecpsneighbor;
 float ons_notification_time[17];
 
 .float ons_overtime_damagedelay;

@@ -1,7 +1,5 @@
 #include "tesla_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 entity toast(entity actor, entity from, float range, float damage);
@@ -12,7 +10,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_TeslaCoilTurretAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_TeslaCoilTurretAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_TESLA.m_id);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -42,55 +40,45 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
 
         }
 
-        FOREACH_ENTITY_FLOAT(railgunhit, 1,
+        IL_EACH(g_railgunhit, it.railgunhit,
         {
-            it.railgunhit = 0;
+            it.railgunhit = false;
         });
+        IL_CLEAR(g_railgunhit);
     }
 }
 
 entity toast(entity actor, entity from, float range, float damage)
 {
-    entity e;
+    float dd = range + 1;
     entity etarget = NULL;
-    float d,dd;
-    float r;
-
-    dd = range + 1;
-
-    e = findradius(from.origin,range);
-    while (e)
+    FOREACH_ENTITY_RADIUS(from.origin, range, it != from && !it.railgunhit,
     {
-        if ((e.railgunhit != 1) && (e != from))
+        float r = turret_validate_target(actor, it, actor.target_validate_flags);
+        if(r > 0)
         {
-            r = turret_validate_target(actor,e,actor.target_validate_flags);
-            if (r > 0)
+            traceline(from.origin, 0.5 * (it.absmin + it.absmax), MOVE_WORLDONLY, from);
+            if(trace_fraction == 1.0)
             {
-                traceline(from.origin,0.5 * (e.absmin + e.absmax),MOVE_WORLDONLY,from);
-                if (trace_fraction == 1.0)
+                float d = vlen(it.origin - from.origin);
+                if(d < dd)
                 {
-                    d = vlen(e.origin - from.origin);
-                    if (d < dd)
-                    {
-                        dd = d;
-                        etarget = e;
-                    }
+                    dd = d;
+                    etarget = it;
                 }
             }
         }
-        e = e.chain;
-    }
+    });
 
     if (etarget)
     {
-        te_csqc_lightningarc(from.origin,etarget.origin);
-        Damage(etarget, actor, actor, damage, DEATH_TURRET_TESLA.m_id, etarget.origin, '0 0 0');
-        etarget.railgunhit = 1;
+        te_csqc_lightningarc(from.origin, etarget.origin);
+        Damage(etarget, actor, actor, damage, DEATH_TURRET_TESLA.m_id, DMG_NOWEP, etarget.origin, '0 0 0');
+        etarget.railgunhit = true;
+        IL_PUSH(g_railgunhit, etarget);
     }
 
     return etarget;
 }
-
-#endif
 
 #endif

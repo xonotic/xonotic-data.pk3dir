@@ -39,7 +39,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 
 	if (this.noise1 != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 0.1;
+	this.nextthink = this.ltime + 0.1;
 
 	temp = 1 - (this.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
 	makevectors(this.mangle);
@@ -66,7 +66,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
 }
 
-void fd_secret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void fd_secret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	fd_secret_use(this, NULL, NULL);
 }
@@ -74,7 +74,7 @@ void fd_secret_damage(entity this, entity inflictor, entity attacker, float dama
 // Wait after first movement...
 void fd_secret_move1(entity this)
 {
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 1.0;
+	this.nextthink = this.ltime + 1.0;
 	setthink(this, fd_secret_move2);
 	if (this.noise3 != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
@@ -95,7 +95,7 @@ void fd_secret_move3(entity this)
 		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
 	if (!(this.spawnflags & SECRET_OPEN_ONCE))
 	{
-		this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+		this.nextthink = this.ltime + this.wait;
 		setthink(this, fd_secret_move4);
 	}
 }
@@ -111,7 +111,7 @@ void fd_secret_move4(entity this)
 // Wait 1 second...
 void fd_secret_move5(entity this)
 {
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 1.0;
+	this.nextthink = this.ltime + 1.0;
 	setthink(this, fd_secret_move6);
 	if (this.noise3 != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
@@ -179,7 +179,7 @@ void secret_reset(entity this)
 	}
 	setorigin(this, this.oldorigin);
 	setthink(this, func_null);
-	this.SUB_NEXTTHINK = 0;
+	this.nextthink = 0;
 }
 
 /*QUAKED spawnfunc_func_door_secret (0 .5 .8) ? open_once 1st_left 1st_down no_shoot always_shoot
@@ -228,6 +228,7 @@ spawnfunc(func_door_secret)
 
 	if (this.spawnflags & SECRET_YES_SHOOT)
 	{
+		//this.canteamdamage = true; // TODO
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = fd_secret_damage;

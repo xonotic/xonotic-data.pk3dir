@@ -13,13 +13,37 @@ REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC_TRIGGER)
 
 void viewloc_think(entity this)
 {
-	entity e;
-
 	// we abuse this method, rather than using normal .touch, because touch isn't reliable with multiple clients inside the same trigger, and can't "untouch" entities
 
 	// set myself as current viewloc where possible
+#if 1
+	FOREACH_CLIENT(IS_PLAYER(it) && it.viewloc == this,
+	{
+		it.viewloc = NULL;
+	});
+#else
+	entity e;
 	for(e = NULL; (e = findentity(e, viewloc, this)); )
 		e.viewloc = NULL;
+#endif
+
+#if 1
+	FOREACH_CLIENT(!it.viewloc && IS_PLAYER(it),
+	{
+		vector emin = it.absmin;
+		vector emax = it.absmax;
+		if(this.solid == SOLID_BSP)
+		{
+			emin -= '1 1 1';
+			emax += '1 1 1';
+		}
+		if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+		{
+			if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
+				it.viewloc = this;
+		}
+	});
+#else
 
 		for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
 			if(!e.viewloc)
@@ -37,6 +61,7 @@ void viewloc_think(entity this)
 						if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
 							e.viewloc = this;
 				}
+#endif
 
 	this.nextthink = time;
 }
@@ -46,12 +71,12 @@ bool trigger_viewloc_send(entity this, entity to, int sf)
 	// CSQC doesn't need to know our origin (yet), as we're only available for referencing
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_VIEWLOC_TRIGGER);
 
+	WriteByte(MSG_ENTITY, this.spawnflags);
+
 	WriteEntity(MSG_ENTITY, this.enemy);
 	WriteEntity(MSG_ENTITY, this.goalentity);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	return true;
 }
@@ -72,7 +97,7 @@ void viewloc_init(entity this)
 			break;
 		}
 
-	if(!this.enemy) { LOG_INFO("^1FAIL!\n"); delete(this); return; }
+	if(!this.enemy) { LOG_INFO("^1FAIL!"); delete(this); return; }
 
 	if(!this.goalentity)
 		this.goalentity = this.enemy; // make them match so CSQC knows what to do
@@ -86,7 +111,7 @@ void viewloc_init(entity this)
 spawnfunc(trigger_viewlocation)
 {
 	// we won't check target2 here yet, as it may not even need to exist
-	if(this.target == "") { LOG_INFO("^1FAIL!\n"); delete(this); return; }
+	if(this.target == "") { LOG_INFO("^1FAIL!"); delete(this); return; }
 
 	EXACTTRIGGER_INIT;
 	InitializeEntity(this, viewloc_init, INITPRIO_FINDTARGET);
@@ -98,9 +123,7 @@ bool viewloc_send(entity this, entity to, int sf)
 
 	WriteByte(MSG_ENTITY, this.cnt);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	WriteAngle(MSG_ENTITY, this.angles_x);
 	WriteAngle(MSG_ENTITY, this.angles_y);
@@ -143,15 +166,15 @@ void trigger_viewloc_updatelink(entity this)
 
 NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
 {
+	this.spawnflags = ReadByte();
+
 	float point1 = ReadShort();
 	float point2 = ReadShort();
 
 	this.enemy = findfloat(NULL, entnum, point1);
 	this.goalentity = findfloat(NULL, entnum, point2);
 
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
+	this.origin = ReadVector();
 
 	return = true;
 
@@ -171,9 +194,7 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC, bool isnew)
 {
 	this.cnt = ReadByte();
 
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
+	this.origin = ReadVector();
 	setorigin(this, this.origin);
 
 	this.movedir_x = ReadAngle();

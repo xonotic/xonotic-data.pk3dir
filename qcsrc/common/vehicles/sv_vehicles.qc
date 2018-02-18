@@ -9,9 +9,7 @@ bool SendAuxiliaryXhair(entity this, entity to, int sf)
 
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 
 	if(sf & 4)
@@ -22,6 +20,13 @@ bool SendAuxiliaryXhair(entity this, entity to, int sf)
 	}
 
 	return true;
+}
+
+bool AuxiliaryXhair_customize(entity this, entity client)
+{
+	entity e = WaypointSprite_getviewentity(client);
+	entity axh = e.(AuxiliaryXhair[this.cnt]);
+	return axh.owner == this.owner; // cheaply check if the client's axh owner is the same as our real owner
 }
 
 .vector axh_prevorigin;
@@ -39,7 +44,8 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 	{
 		axh = new(auxiliary_xhair);
 		axh.cnt = axh_id;
-		axh.drawonlytoclient = own;
+		//axh.drawonlytoclient = own; // not spectatable
+		setcefc(axh, AuxiliaryXhair_customize);
 		axh.owner = own;
 		Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
 	}
@@ -68,6 +74,18 @@ void CSQCVehicleSetup(entity own, int vehicle_id)
 
 	WriteHeader(MSG_ONE, TE_CSQC_VEHICLESETUP);
 	WriteByte(MSG_ONE, vehicle_id);
+
+	if(vehicle_id == 0 || vehicle_id == HUD_NORMAL)
+	{
+		for(int i = 0; i < MAX_AXH; ++i)
+		{
+			entity axh = own.(AuxiliaryXhair[i]);
+			own.(AuxiliaryXhair[i]) = NULL;
+
+			if(axh.owner == own && axh != NULL && !wasfreed(axh))
+				delete(axh);
+		}
+	}
 }
 
 void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
@@ -181,7 +199,7 @@ vector vehicles_force_fromtag_maglev(entity this, string tag_name, float spring_
 }
 
 // projectile handling
-void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	// Ignore damage from oterh projectiles from my owner (dont mess up volly's)
 	if(inflictor.owner == this.owner)
@@ -212,9 +230,9 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, toucher);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, DMG_NOWEP, toucher);
 
-	delete (this);
+	delete(this);
 }
 
 void vehicles_projectile_explode_think(entity this)
@@ -349,7 +367,7 @@ bool vehicle_addplayerslot(	entity _owner,
 	_slot.PlayerPhysplug = _framefunc;
 	_slot.vehicle_exit = _exitfunc;
 	_slot.vehicle_enter = _enterfunc;
-	_slot.hud = _hud;
+	STAT(HUD, _slot) = _hud;
 	_slot.vehicle_flags = VHF_PLAYERSLOT;
 	_slot.vehicle_viewport = spawn();
 	_slot.vehicle_hudmodel = spawn();
@@ -383,12 +401,14 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	return vtag;
 }
 
-void vehicles_reset_colors(entity this)
+void vehicles_reset_colors(entity this, entity player)
 {
 	int eff = 0, cmap;
 	const vector cmod = '0 0 0';
 	if(this.team && teamplay)
 		cmap = 1024 + (this.team - 1) * 17;
+	else if(player)
+		cmap = player.colormap;
 	else
 		cmap = 1024;
 	if(autocvar_g_nodepthtestplayers)
@@ -399,25 +419,25 @@ void vehicles_reset_colors(entity this)
 	// Find all ents attacked to main model and setup effects, colormod etc.
 	FOREACH_ENTITY_ENT(tag_entity, this,
 	{
-		if(it != this.vehicle_shieldent)
-		{
-			it.effects = eff;
-			it.colormod = cmod;
-			it.colormap = cmap;
-			it.alpha = 1;
-		}
+		if(it == this.vehicle_shieldent)
+			continue;
+
+		it.effects = eff;
+		it.colormod = cmod;
+		it.colormap = cmap;
+		it.alpha = 1;
 	});
 
 	// Also check head tags
 	FOREACH_ENTITY_ENT(tag_entity, this.tur_head,
 	{
-		if(it != this.vehicle_shieldent)
-		{
-			it.effects = eff;
-			it.colormod = cmod;
-			it.colormap = cmap;
-			it.alpha = 1;
-		}
+		if(it == this.vehicle_shieldent)
+			continue;
+
+		it.effects = eff;
+		it.colormod = cmod;
+		it.colormap = cmap;
+		it.alpha = 1;
 	});
 
 	this.vehicle_hudmodel.effects  = this.effects  = eff; // | EF_LOWPRECISION;
@@ -429,6 +449,9 @@ void vehicles_reset_colors(entity this)
 	this.avelocity = '0 0 0';
 	this.velocity  = '0 0 0';
 	this.effects   = eff;
+
+	Vehicle info = Vehicles_from(this.vehicleid);
+	info.vr_setcolors(info, this);
 }
 
 void vehicles_clearreturn(entity veh)
@@ -497,6 +520,7 @@ void vehicles_showwp(entity this)
 	else
 		rgb = '1 1 1';
 	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, ent, '0 0 64', NULL, 0, ent, waypointsprite_attached, true, RADARICON_Vehicle);
+	wp.wp_extra = ent.wp00.vehicleid;
 	wp.colormod = rgb;
 	if(ent.waypointsprite_attached)
 	{
@@ -541,7 +565,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 	else
 		this.active = ACTIVE_ACTIVE;
 
-	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !gameover)
+	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !game_stopped)
 	{
 		LOG_DEBUG("Respawning vehicle: ", this.netname);
 		if(this.effects & EF_NODRAW)
@@ -552,7 +576,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 		else
 		{
 			vehicles_setreturn(this);
-			vehicles_reset_colors(this);
+			vehicles_reset_colors(this, actor);
 		}
 	}
 }
@@ -614,7 +638,7 @@ void vehicles_frame(entity this, entity actor)
 	vehicles_painframe(this);
 }
 
-void vehicles_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void vehicles_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	this.dmg_time = time;
 
@@ -666,11 +690,11 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 			this.vehicle_shieldent.alpha = 0.75;
 
 			if(sound_allowed(MSG_BROADCAST, attacker))
-				spamsound (this, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);   // FIXME: PLACEHOLDER
+				spamsound (this, CH_PAIN, SND_ONS_HIT2, VOL_BASE, ATTEN_NORM);   // FIXME: PLACEHOLDER
 		}
 		else
 			if(sound_allowed(MSG_BROADCAST, attacker))
-				spamsound (this, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+				spamsound (this, CH_PAIN, SND_ONS_ELECTRICITY_EXPLODE, VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	}
 	else
@@ -678,7 +702,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 		this.vehicle_health -= damage;
 
 		if(sound_allowed(MSG_BROADCAST, attacker))
-			spamsound (this, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+			spamsound (this, CH_PAIN, SND_ONS_HIT2, VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 	}
 
 	if(this.damageforcescale < 1 && this.damageforcescale > 0)
@@ -727,7 +751,7 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 		if(_minspeed < wc)
 		{
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.play_time = time + 0.25;
 
 			//dprint("wc: ", ftos(wc), "\n");
@@ -737,9 +761,10 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 }
 
 // vehicle enter/exit handling
-vector vehicles_findgoodexit(entity this, vector prefer_spot)
+vector vehicles_findgoodexit(entity this, entity player, vector prefer_spot)
 {
-	tracebox(this.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, this.owner);
+	// TODO: we actually want the player's size here
+	tracebox(this.origin + '0 0 32', PL_MIN_CONST, PL_MAX_CONST, prefer_spot, MOVE_NORMAL, player);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
@@ -751,7 +776,7 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, this.owner);
+		tracebox(v2, PL_MIN_CONST, PL_MAX_CONST, v, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -759,6 +784,7 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 	return this.origin;
 }
 
+.int old_vehicle_flags;
 void vehicles_exit(entity vehic, bool eject)
 {
 	entity player = vehic.owner;
@@ -793,20 +819,25 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
 		set_movetype(player, MOVETYPE_WALK);
 		player.effects		   &= ~EF_NODRAW;
-		player.teleportable	= TELEPORT_NORMAL;
+		player.teleportable		= TELEPORT_NORMAL;
 		player.alpha			= 1;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
-		player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
-		player.event_damage	= PlayerDamage;
-		player.hud				= HUD_NORMAL;
-		PS(player).m_switchweapon = vehic.m_switchweapon;
+		player.view_ofs			= STAT(PL_VIEW_OFS, player);
+		player.event_damage		= PlayerDamage;
+		STAT(HUD, player)		= HUD_NORMAL;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++ slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			player.(weaponentity).m_switchweapon = vehic.(weaponentity).m_switchweapon;
+			delete(vehic.(weaponentity)); // no longer needed
+		}
 		player.last_vehiclecheck = time + 3;
 		player.vehicle_enter_delay = time + 2;
 
@@ -832,6 +863,10 @@ void vehicles_exit(entity vehic, bool eject)
 
 	vehic.team = vehic.tur_head.team;
 
+	if(vehic.old_vehicle_flags & VHF_SHIELDREGEN)
+		vehic.vehicle_flags |= VHF_SHIELDREGEN;
+	vehic.old_vehicle_flags = 0;
+
 	sound (vehic, CH_TRIGGER_SINGLE, SND_Null, 1, ATTEN_NORM);
 	vehic.vehicle_hudmodel.viewmodelforclient = vehic;
 	vehic.phase = time + 1;
@@ -839,10 +874,13 @@ void vehicles_exit(entity vehic, bool eject)
 	vehic.vehicle_exit(vehic, eject);
 
 	vehicles_setreturn(vehic);
-	vehicles_reset_colors(vehic);
+	vehicles_reset_colors(vehic, NULL);
 	vehic.owner = NULL;
 
 	CSQCMODEL_AUTOINIT(vehic);
+
+	if(player)
+		player.oldorigin = player.origin; // player's location is set by the exit functions, so we need to do this after everything
 
 	vehicles_exit_running = false;
 }
@@ -861,7 +899,7 @@ void vehicles_touch(entity this, entity toucher)
 		if(vehicles_crushable(toucher))
 		{
 			if(vdist(this.velocity, >=, 30))
-				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
+				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, DMG_NOWEP, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
@@ -935,6 +973,10 @@ void vehicles_enter(entity pl, entity veh)
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
+		veh.vehicle_shield = 0;
+		veh.old_vehicle_flags = veh.vehicle_flags; // make a backup just so we're not permanently crippling this vehicle
+		veh.vehicle_flags &= ~VHF_SHIELDREGEN;
+
 		if (autocvar_g_vehicles_steal_show_waypoint) {
 			entity wp = WaypointSprite_Spawn(WP_VehicleIntruder, 0, 0, pl, '0 0 68', NULL, veh.team, veh, wps_intruder, true, RADARICON_DANGER);
 			wp.colormod = Team_ColorRGB(pl.team);
@@ -942,7 +984,7 @@ void vehicles_enter(entity pl, entity veh)
 	}
 	else return;
 
-	RemoveGrapplingHook(pl);
+	RemoveGrapplingHooks(pl);
 
 	veh.vehicle_ammo1 = 0;
 	veh.vehicle_ammo2 = 0;
@@ -959,11 +1001,12 @@ void vehicles_enter(entity pl, entity veh)
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
 	pl.crouch = false;
-	pl.view_ofs = STAT(PL_VIEW_OFS, NULL);
-	setsize (pl, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
+	setsize(pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
+	pl.items &= ~IT_USING_JETPACK;
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
@@ -976,8 +1019,13 @@ void vehicles_enter(entity pl, entity veh)
 	veh.colormap		= pl.colormap;
 	if(veh.tur_head)
 		veh.tur_head.colormap = pl.colormap;
-	veh.m_switchweapon = PS(pl).m_switchweapon;
-	pl.hud = veh.vehicleid;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		veh.(weaponentity) = new(temp_wepent);
+		veh.(weaponentity).m_switchweapon = pl.(weaponentity).m_switchweapon;
+	}
+	STAT(HUD, pl) = veh.vehicleid;
 	pl.PlayerPhysplug = veh.PlayerPhysplug;
 
 	pl.vehicle_ammo1 = veh.vehicle_ammo1;
@@ -995,6 +1043,8 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.team = pl.team;
 	veh.flags -= FL_NOTARGET;
+
+	vehicles_reset_colors(veh, pl);
 
 	if (IS_REAL_CLIENT(pl))
 	{
@@ -1036,7 +1086,7 @@ void vehicles_think(entity this)
 	this.nextthink = time + autocvar_g_vehicles_thinkrate;
 
 	if(this.owner)
-		this.owner.vehicle_weapon2mode = this.vehicle_weapon2mode;
+		STAT(VEHICLESTAT_W2MODE, this.owner) = STAT(VEHICLESTAT_W2MODE, this);
 
 	Vehicle info = Vehicles_from(this.vehicleid);
 	info.vr_think(info, this);
@@ -1099,12 +1149,21 @@ void vehicles_spawn(entity this)
 	if(this.vehicle_controller)
 		this.team = this.vehicle_controller.team;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == this, RemoveGrapplingHook(it));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == this)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
-	vehicles_reset_colors(this);
 
 	Vehicle info = Vehicles_from(this.vehicleid);
 	info.vr_spawn(info, this);
+
+	vehicles_reset_colors(this, NULL);
 
 	CSQCMODEL_AUTOINIT(this);
 }
@@ -1203,14 +1262,14 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		setattachment(this.vehicle_viewport, this.vehicle_hudmodel, info.tag_view);
 	}
 
-	setsize(this, info.mins, info.maxs);
+	setsize(this, info.m_mins, info.m_maxs);
 
 	info.vr_setup(info, this);
 
 	if(!nodrop)
 	{
 		setorigin(this, this.origin);
-		tracebox(this.origin + '0 0 100', info.mins, info.maxs, this.origin - '0 0 10000', MOVE_WORLDONLY, this);
+		tracebox(this.origin + '0 0 100', info.m_mins, info.m_maxs, this.origin - '0 0 10000', MOVE_WORLDONLY, this);
 		setorigin(this, trace_endpos);
 	}
 

@@ -24,6 +24,12 @@
 	#define bool float
 #endif
 
+#ifndef QCC_SUPPORT_ERASEABLE
+	#define ERASEABLE
+#else
+	#define ERASEABLE [[eraseable]]
+#endif
+
 #include <dpdefs/pre.qh>
 
 #if defined(CSQC)
@@ -61,18 +67,20 @@
 	MACRO_END
 #endif
 
-#define   is_float(this) (true || ftoe(this))
-#define isnt_float(this)
-#define   is_vector(this) (true || vtos(this))
-#define isnt_vector(this)
-#define   is_string(this) (true || stof(this))
-#define isnt_string(this)
-#define   is_entity(this) (true || etof(this))
-#define isnt_entity(this)
-bool      is_int(float this) { return this == floor(this); }
-void    isnt_int(float this) { print(ftos(this)); }
-bool      is_bool(float this) { return this == true || this == false; }
-void    isnt_bool(float this) { print(ftos(this)); }
+#if !(NDEBUG)
+	#define   is_float(this) (true || ftoe(this))
+	#define isnt_float(this)
+	#define   is_vector(this) (true || vtos(this))
+	#define isnt_vector(this)
+	#define   is_string(this) (true || stof(this))
+	#define isnt_string(this)
+	#define   is_entity(this) (true || etof(this))
+	#define isnt_entity(this)
+	bool      is_int(float this) { return this == floor(this); }
+	void    isnt_int(float this) { print(ftos(this)); }
+	bool      is_bool(float this) { return this == true || this == false; }
+	void    isnt_bool(float this) { print(ftos(this)); }
+#endif
 
 #include "warpzone/mathlib.qc"
 
@@ -122,7 +130,9 @@ void    isnt_bool(float this) { print(ftos(this)); }
 #include "vector.qh"
 #include "yenc.qh"
 
-#include "matrix/_mod.inc"
+#if XONOTIC
+	#include "matrix/_mod.inc"
+#endif
 
 #ifndef SVQC
 #define objerror_safe(e)
@@ -172,7 +182,17 @@ void make_safe_for_remove(entity this);
 	#define SV_Shutdown _SV_Shutdown
 
 	void _StartFrame();
-	void StartFrame() { if (_StartFrame) _StartFrame(); }
+	bool _StartFrame_init;
+	void spawnfunc_worldspawn(entity);
+	void StartFrame() {
+		if (!_StartFrame_init) {
+			_StartFrame_init = true;
+			float oldtime = time; time = 1;
+			__spawnfunc_expecting = 2; NULL.__spawnfunc_constructor(NULL);
+			time = oldtime;
+        }
+        if (_StartFrame) _StartFrame();
+	}
 	#define StartFrame _StartFrame
 
 	void _SetNewParms();
@@ -221,7 +241,8 @@ void make_safe_for_remove(entity this);
 	void SV_OnEntityPreSpawnFunction()
 	{
 		ENGINE_EVENT();
-		if (_SV_OnEntityPreSpawnFunction) _SV_OnEntityPreSpawnFunction(this);
+		__spawnfunc_expecting = true;
+		__spawnfunc_expect = this;
 	}
 	#define SV_OnEntityPreSpawnFunction _SV_OnEntityPreSpawnFunction
 

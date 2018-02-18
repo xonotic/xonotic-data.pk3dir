@@ -1,4 +1,9 @@
-1 8 20 0 // fire
-9 5 20 0 // fire2
-15 200 20 1 // idle
-215 40 20 0 // reload
+/*
+Generated framegroups file for h_rl
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 31 30 0 // h_rl fire
+32 31 30 0 // h_rl fire
+63 101 3 1 // h_rl idle
+164 101 3 1 // h_rl idle

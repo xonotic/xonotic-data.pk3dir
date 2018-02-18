@@ -5,7 +5,7 @@
  */
 
 .float havocbot_keyboardskill;
-.float facingwalltime, ignoregoaltime;
+.float ignoregoaltime;
 .float lastfiredweapon;
 .float lastcombotime;
 .float havocbot_blockhead;
@@ -23,6 +23,7 @@
 .float havocbot_stickenemy;
 .float havocbot_role_timeout;
 
+.float bot_tracewalk_time;
 .entity ignoregoal;
 .entity bot_lastseengoal;
 .entity havocbot_personal_waypoint;
@@ -39,7 +40,7 @@ void havocbot_setupbot(entity this);
 void havocbot_movetogoal(entity this);
 void havocbot_chooserole(entity this);
 void havocbot_chooseenemy(entity this);
-void havocbot_chooseweapon(entity this);
+void havocbot_chooseweapon(entity this, .entity weaponentity);
 void havocbot_bunnyhop(entity this, vector dir);
 void havocbot_keyboard_movement(entity this, vector destorg);
 

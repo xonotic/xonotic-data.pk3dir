@@ -405,7 +405,7 @@ REGISTER_GAMETYPE(NEXBALL, NEW(NexBall));
 CLASS(FreezeTag, Gametype)
     INIT(FreezeTag)
     {
-        this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill enemies to freeze them, stand next to teammates to revive them, freeze the most enemies to win"));
+        this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win"));
     }
     METHOD(FreezeTag, m_parse_mapinfo, bool(string k, string v))
     {
@@ -458,13 +458,16 @@ REGISTER_GAMETYPE(KEEPAWAY, NEW(Keepaway));
 CLASS(Invasion, Gametype)
     INIT(Invasion)
     {
-        this.gametype_init(this, _("Invasion"),"inv","g_invasion",false,"","pointlimit=50 teams=0",_("Survive against waves of monsters"));
+        this.gametype_init(this, _("Invasion"),"inv","g_invasion",false,"","pointlimit=50 teams=0 type=0",_("Survive against waves of monsters"));
     }
     METHOD(Invasion, m_parse_mapinfo, bool(string k, string v))
     {
         switch (k) {
             case "teams":
                 cvar_set("g_invasion_teams", v);
+                return true;
+            case "type":
+                cvar_set("g_invasion_type", v);
                 return true;
         }
         return false;

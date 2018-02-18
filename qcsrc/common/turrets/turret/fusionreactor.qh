@@ -2,8 +2,8 @@
 
 CLASS(FusionReactor, Turret)
 /* spawnflags */ ATTRIB(FusionReactor, spawnflags, int, TUR_FLAG_SUPPORT | TUR_FLAG_AMMOSOURCE);
-/* mins       */ ATTRIB(FusionReactor, mins, vector, '-34 -34 0');
-/* maxs       */ ATTRIB(FusionReactor, maxs, vector, '34 34 90');
+/* mins       */ ATTRIB(FusionReactor, m_mins, vector, '-34 -34 0');
+/* maxs       */ ATTRIB(FusionReactor, m_maxs, vector, '34 34 90');
 /* modelname  */ ATTRIB(FusionReactor, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(FusionReactor, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(FusionReactor, head_model, string, strcat("models/turrets/", "reactor.md3"));

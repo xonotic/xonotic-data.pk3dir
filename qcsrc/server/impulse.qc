@@ -60,7 +60,13 @@
 			this.impulse = IMP_weapon_group_##slot.impulse; \
 			return; \
 		} \
-		W_NextWeaponOnImpulse(this, slot); \
+		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
+		{ \
+			.entity weaponentity = weaponentities[wepslot]; \
+			W_NextWeaponOnImpulse(this, slot, weaponentity); \
+			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
+				break; \
+		} \
 	}
 X(1)
 X(2)
@@ -88,7 +94,13 @@ X(0)
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
-		W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir); \
+		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
+		{ \
+			.entity weaponentity = weaponentities[wepslot]; \
+			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[slot], dir, weaponentity); \
+			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
+				break; \
+		} \
 	}
 X(0, prev)
 X(1, prev)
@@ -135,7 +147,13 @@ X(9, next)
 			this.impulse = IMP_weapon_byid_##i.impulse; \
 			return; \
 		} \
-		W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i)); \
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
+		{ \
+			.entity weaponentity = weaponentities[slot]; \
+			W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i), weaponentity); \
+			if(slot == 0 && autocvar_g_weaponswitch_debug != 1) \
+				break; \
+		} \
 	}
 X(0)
 X(1)
@@ -171,7 +189,14 @@ IMPULSE(weapon_next_byid)
 		this.impulse = IMP_weapon_next_byid.impulse;
 		return;
 	}
-	W_NextWeapon(this, 0);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_NextWeapon(this, 0, weaponentity);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_prev_byid)
@@ -182,7 +207,14 @@ IMPULSE(weapon_prev_byid)
 		this.impulse = IMP_weapon_prev_byid.impulse;
 		return;
 	}
-	W_PreviousWeapon(this, 0);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_PreviousWeapon(this, 0, weaponentity);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_next_bygroup)
@@ -193,7 +225,14 @@ IMPULSE(weapon_next_bygroup)
 		this.impulse = IMP_weapon_next_bygroup.impulse;
 		return;
 	}
-	W_NextWeapon(this, 1);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_NextWeapon(this, 1, weaponentity);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_prev_bygroup)
@@ -204,7 +243,14 @@ IMPULSE(weapon_prev_bygroup)
 		this.impulse = IMP_weapon_prev_bygroup.impulse;
 		return;
 	}
-	W_PreviousWeapon(this, 1);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_PreviousWeapon(this, 1, weaponentity);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_next_bypriority)
@@ -215,7 +261,14 @@ IMPULSE(weapon_next_bypriority)
 		this.impulse = IMP_weapon_next_bypriority.impulse;
 		return;
 	}
-	W_NextWeapon(this, 2);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_NextWeapon(this, 2, weaponentity);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_prev_bypriority)
@@ -226,28 +279,56 @@ IMPULSE(weapon_prev_bypriority)
 		this.impulse = IMP_weapon_prev_bypriority.impulse;
 		return;
 	}
-	W_PreviousWeapon(this, 2);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_PreviousWeapon(this, 2, weaponentity);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_last)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	W_LastWeapon(this);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_LastWeapon(this, weaponentity);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	W_SwitchWeapon(this, w_getbestweapon(this));
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	W_ThrowWeapon(this, weaponentities[0], W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
+
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 IMPULSE(weapon_reload)
@@ -255,22 +336,26 @@ IMPULSE(weapon_reload)
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
 	if (forbidWeaponUse(this)) return;
-	Weapon w = PS(this).m_weapon;
 	entity actor = this;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
+		Weapon w = this.(weaponentity).m_weapon;
 		w.wr_reload(w, actor, weaponentity);
+
+		// allow reloading all active slots?
+		//if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			//break;
 	}
 }
 
 void ImpulseCommands(entity this)
 {
-	if (gameover) return;
+	if (game_stopped) return;
 
-	int imp = this.impulse;
+	int imp = CS(this).impulse;
 	if (!imp) return;
-	this.impulse = 0;
+	CS(this).impulse = 0;
 
 	if (MinigameImpulse(this, imp)) return;
 
@@ -467,6 +552,9 @@ IMPULSE(waypoint_clear_personal)
 	{
 		delete(this.personal);
 		this.personal = NULL;
+
+		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+			ClientKill(this);
 	}
 	sprint(this, "personal waypoint cleared\n");
 }
@@ -478,6 +566,8 @@ IMPULSE(waypoint_clear)
 	{
 		delete(this.personal);
 		this.personal = NULL;
+		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+			ClientKill(this);
 	}
 	sprint(this, "all waypoints cleared\n");
 }
@@ -485,18 +575,13 @@ IMPULSE(waypoint_clear)
 IMPULSE(navwaypoint_spawn)
 {
 	if (!autocvar_g_waypointeditor) return;
-	waypoint_schedulerelink(waypoint_spawn(this.origin, this.origin, 0));
-	bprint(strcat("Waypoint spawned at ", vtos(this.origin), "\n"));
+	waypoint_spawn_fromeditor(this);
 }
 
 IMPULSE(navwaypoint_remove)
 {
 	if (!autocvar_g_waypointeditor) return;
-	entity e = navigation_findnearestwaypoint(this, false);
-	if (!e) return;
-	if (e.wpflags & WAYPOINTFLAG_GENERATED) return;
-	bprint(strcat("Waypoint removed at ", vtos(e.origin), "\n"));
-	waypoint_remove(e);
+	waypoint_remove_fromeditor(this);
 }
 
 IMPULSE(navwaypoint_relink)
@@ -514,93 +599,5 @@ IMPULSE(navwaypoint_save)
 IMPULSE(navwaypoint_unreachable)
 {
 	if (!autocvar_g_waypointeditor) return;
-	IL_EACH(g_waypoints, true,
-	{
-		it.colormod = '0.5 0.5 0.5';
-		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
-	});
-	entity e2 = navigation_findnearestwaypoint(this, false);
-	navigation_markroutes(this, e2);
-
-	int j, m;
-
-	j = 0;
-	m = 0;
-	IL_EACH(g_waypoints, it.wpcost >= 10000000,
-	{
-		LOG_INFO("unreachable: ", etos(it), " ", vtos(it.origin), "\n");
-		it.colormod_z = 8;
-		it.effects |= EF_NODEPTHTEST | EF_BLUE;
-		++j;
-		++m;
-	});
-	if (j) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)\n", j);
-	navigation_markroutes_inverted(e2);
-
-	j = 0;
-	IL_EACH(g_waypoints, it.wpcost >= 10000000,
-	{
-		LOG_INFO("cannot reach me: ", etos(it), " ", vtos(it.origin), "\n");
-		it.colormod_x = 8;
-		if (!(it.effects & EF_NODEPTHTEST))  // not already reported before
-			++m;
-		it.effects |= EF_NODEPTHTEST | EF_RED;
-		++j;
-	});
-	if (j) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)\n", j);
-	if (m) LOG_INFOF("%d waypoints have been marked total\n", m);
-
-	j = 0;
-	IL_EACH(g_spawnpoints, true,
-	{
-		vector org = it.origin;
-		tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
-		setorigin(it, trace_endpos);
-		if (navigation_findnearestwaypoint(it, false))
-		{
-			setorigin(it, org);
-			it.effects &= ~EF_NODEPTHTEST;
-			it.model = "";
-		}
-		else
-		{
-			setorigin(it, org);
-			LOG_INFO("spawn without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
-			it.effects |= EF_NODEPTHTEST;
-			_setmodel(it, this.model);
-			it.frame = this.frame;
-			it.skin = this.skin;
-			it.colormod = '8 0.5 8';
-			setsize(it, '0 0 0', '0 0 0');
-			++j;
-		}
-	});
-	if (j) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)\n", j);
-
-	j = 0;
-	IL_EACH(g_items, true,
-	{
-		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
-		it.colormod = '0.5 0.5 0.5';
-	});
-	IL_EACH(g_items, true,
-	{
-		if (navigation_findnearestwaypoint(it, false)) continue;
-		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
-		it.effects |= EF_NODEPTHTEST | EF_RED;
-		it.colormod_x = 8;
-		++j;
-	});
-	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)\n", j);
-
-	j = 0;
-	IL_EACH(g_items, true,
-	{
-		if (navigation_findnearestwaypoint(it, true)) continue;
-		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
-		it.effects |= EF_NODEPTHTEST | EF_BLUE;
-		it.colormod_z = 8;
-		++j;
-	});
-	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
+	waypoint_unreachable(this);
 }

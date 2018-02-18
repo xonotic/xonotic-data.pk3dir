@@ -1,6 +1,5 @@
 #pragma once
 
-float warmup_limit;
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
@@ -13,6 +12,10 @@ float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
 float g_jetpack;
+
+bool sv_ready_restart;
+bool sv_ready_restart_after_countdown;
+bool sv_ready_restart_repeatable;
 
 float sv_clones;
 float sv_foginterval;
@@ -31,7 +34,7 @@ float server_is_dedicated;
 
 // Fields
 
-.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
+.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 
 //.string	wad;
 //.string	map;
@@ -47,15 +50,12 @@ float server_is_dedicated;
 .float	pain_frame;			//"
 .float  crouch;	// Crouching or not?
 
-.float	strength_finished = _STAT(STRENGTH_FINISHED);
-.float	invincible_finished = _STAT(INVINCIBLE_FINISHED);
 .float	superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
 
 .float cnt; // used in too many places
 .float count;
 //.float cnt2;
 
-.float play_time;
 .int respawn_flags;
 .float respawn_time;
 .float respawn_time_max;
@@ -88,7 +88,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float		dmg;
 
 // for railgun damage (hitting multiple enemies)
-.float railgunhit;
+.bool railgunhit;
 .float railgunhitsolidbackup;
 .vector railgunhitloc;
 
@@ -96,7 +96,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float		dmgtime;
 
 .float		killcount;
-.float damage_dealt, typehitsound;
+.float damage_dealt, typehitsound, killsound;
 
 .float watersound_finished;
 .float iscreature;
@@ -116,7 +116,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 // WEAPONTODO
 .float autoswitch;
-bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain);
+bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain);
 void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
@@ -133,8 +133,6 @@ float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
 
-.float version;
-
 // footstep interval
 .float nextstep;
 
@@ -144,7 +142,8 @@ void checkSpectatorBlock(entity this);
 
 float game_completion_ratio; // 0 at start, 1 near end
 .float winning;
-.float jointime; // time of joining
+.float jointime; // time of connecting
+.float startplaytime; // time of switching from spectator to player
 .float alivetime; // time of being alive
 .float motd_actived_time; // used for both motd and campaign_message
 
@@ -167,7 +166,7 @@ float default_weapon_alpha;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
 .float cvar_cl_jetpack_jump;
-.float cvar_cl_movement_track_canjump = _STAT(MOVEVARS_CL_TRACK_CANJUMP);
+.float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 
 .string cvar_g_xonoticversion;
@@ -181,8 +180,6 @@ float default_weapon_alpha;
 .float cvar_cl_allow_uidtracking;
 .string stored_netname;
 
-.float version_nagtime;
-
 string gamemode_name;
 
 float startitem_failed;
@@ -193,7 +190,7 @@ void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
 // WEAPONTODO: remove this
-WepSet weaponsInMap;
+//WepSet weaponsInMap;
 
 #define weapons _STAT(WEAPONS)
 
@@ -208,7 +205,7 @@ float bot_waypoints_for_items;
 #else
 #define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
 #endif
-#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, PS(ent).m_weapon.m_id, slot)
+#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, ent.(weaponentity).m_weapon.m_id, slot)
 
 // assault game mode: Which team is attacking in this round?
 float assault_attacker_team;
@@ -222,19 +219,22 @@ float TemporaryDB;
 
 .float team_saved;
 
-float some_spawn_has_been_used;
-float have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
-float have_team_spawns_forteam[17]; // 0 = this team has no spawns, 1 = this team has spawns; team 0 is the "no-team"
+bool some_spawn_has_been_used;
+int have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
+int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it has no spawns; team 0 is the "no-team"
 
 // set when showing a kill countdown
 .entity killindicator;
-.float killindicator_teamchange;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+.bool canteamdamage;
+
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
+
+// WEAPONTODO
+#define DMG_NOWEP (weaponentities[0])
 
 float lockteams;
 
-.float parm_idlesince;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 int sv_maxidle_slots;
@@ -248,8 +248,6 @@ float next_pingtime;
 .float cvar_cl_autotaunt;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
-
-.float version_mismatch;
 
 int autocvar__independent_players;
 bool independent_players;
@@ -267,8 +265,8 @@ string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
 
-float game_starttime; //point in time when the countdown to game start is over
-float round_starttime; //point in time when the countdown to round start is over
+//float game_starttime; //point in time when the countdown to game start is over
+//float round_starttime; //point in time when the countdown to round start is over
 
 void W_Porto_Remove (entity p);
 
@@ -281,7 +279,6 @@ void W_Porto_Remove (entity p);
 .float bulletcounter;
 
 // Nexball
-.entity ballcarried; // Also used for keepaway
 float g_nexball_meter_period;
 
 void SUB_DontUseTargets(entity this, entity actor, entity trigger);
@@ -294,13 +291,11 @@ void ClientData_Touch(entity e);
 
 //vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
-.float wasplayer;
+.bool wasplayer;
 
 float servertime, serverprevtime, serverframetime;
 
 .float ammo_fuel;
-
-.vector prevorigin;
 
 //flood fields
 .float nickspamtime; // time of last nick change
@@ -311,16 +306,7 @@ float servertime, serverprevtime, serverframetime;
 .float floodcontrol_voice;
 .float floodcontrol_voiceteam;
 
-.float stat_shotorg = _STAT(SHOTORG); // networked stat for trueaim HUD
-
 string matchid;
-
-.float last_pickup = _STAT(LAST_PICKUP);
-
-.float hit_time = _STAT(HIT_TIME);
-.float typehit_time = _STAT(TYPEHIT_TIME);
-
-.float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
 
 bool radar_showennemies;
 
@@ -331,15 +317,15 @@ float client_cefc_accumulatortime;
 
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
-.float clip_load = _STAT(WEAPON_CLIPLOAD);
+.float clip_load;
 .float old_clip_load;
-.float clip_size = _STAT(WEAPON_CLIPSIZE);
+.float clip_size;
 
-.float minelayer_mines = _STAT(LAYED_MINES);
-.float vortex_charge = _STAT(VORTEX_CHARGE);
+.int minelayer_mines;
+.float vortex_charge;
 .float vortex_charge_rottime;
-.float vortex_chargepool_ammo = _STAT(VORTEX_CHARGEPOOL);
-.float hagar_load = _STAT(HAGAR_LOAD);
+.float vortex_chargepool_ammo;
+.int hagar_load;
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
@@ -377,9 +363,7 @@ const float ACTIVE_TOGGLE 	= 3;
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float player_blocked;
-.float weapon_blocked; // weapon use disabled
 
-.float revive_progress = _STAT(REVIVE_PROGRESS);
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
 .entity iceblock;
@@ -388,7 +372,7 @@ const float ACTIVE_TOGGLE 	= 3;
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
-.float stat_respawn_time = _STAT(RESPAWN_TIME); // shows respawn time, and is negative when awaiting respawn
+.int killindicator_teamchange;
 
 void PlayerUseKey(entity this);
 
@@ -419,6 +403,8 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 .string cvar_cl_physics;
 
 .void(entity this, entity player) init_for_player;
+
+.WepSet dual_weapons;
 
 IntrusiveList g_monsters;
 STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
@@ -467,3 +453,21 @@ STATIC_INIT(g_bot_dodge) { g_bot_dodge = IL_NEW(); }
 
 IntrusiveList g_damagedbycontents;
 STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
+
+IntrusiveList g_railgunhit;
+STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
+
+IntrusiveList g_ladders;
+STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }
+
+IntrusiveList g_locations;
+STATIC_INIT(g_locations) { g_locations = IL_NEW(); }
+
+IntrusiveList g_saved_team;
+STATIC_INIT(g_saved_team) { g_saved_team = IL_NEW(); }
+
+IntrusiveList g_monster_targets;
+STATIC_INIT(g_monster_targets) { g_monster_targets = IL_NEW(); }
+
+IntrusiveList g_pathlib_nodes;
+STATIC_INIT(g_pathlib_nodes) { g_pathlib_nodes = IL_NEW(); }

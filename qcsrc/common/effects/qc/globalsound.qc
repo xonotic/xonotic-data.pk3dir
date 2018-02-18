@@ -2,7 +2,6 @@
 
 #include <common/ent_cs.qh>
 
-#ifdef IMPLEMENTATION
 	#include <common/animdecide.qh>
 
 	#ifdef SVQC
@@ -11,8 +10,6 @@
 
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
-
-	string GlobalSound_sample(string pair, float r);
 
 	#ifdef SVQC
 		/**
@@ -45,9 +42,7 @@
 			WriteByte(channel, floor(_atten * 64));
 			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
-			WriteCoord(channel, o.x);
-			WriteCoord(channel, o.y);
-			WriteCoord(channel, o.z);
+			WriteVector(channel, o);
 		}
 
 		/**
@@ -82,9 +77,7 @@
 			WriteByte(channel, floor(_atten * 64));
 			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
-			WriteCoord(channel, o.x);
-			WriteCoord(channel, o.y);
-			WriteCoord(channel, o.z);
+			WriteVector(channel, o);
 		}
 	#endif
 
@@ -100,10 +93,7 @@
 			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
-			vector o;
-			o.x = ReadCoord();
-			o.y = ReadCoord();
-			o.z = ReadCoord();
+			vector o = ReadVector();
 			// TODO: is this really what we want to be doing? Footsteps that follow the player at head height?
 			if (who == player_currententnum) e = findfloat(NULL, entnum, who);  // play at camera position for full volume
 			else if (e) e.origin = o;
@@ -132,10 +122,7 @@
 			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
-			vector o;
-			o.x = ReadCoord();
-			o.y = ReadCoord();
-			o.z = ReadCoord();
+			vector o = ReadVector();
 			if (who == player_currententnum) e = findfloat(NULL, entnum, who);  // play at camera position for full volume
 			else if (e) e.origin = o;
 			if (e)
@@ -333,7 +320,7 @@
 						msg_entity = this.pusher;
 						if (IS_REAL_CLIENT(msg_entity))
 						{
-							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
+							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten);
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten);
 							else soundto(MSG_ONE, this, chan, sample, vol, atten);
@@ -354,7 +341,7 @@
 					#define X() \
 						MACRO_BEGIN \
 						{ \
-							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
+							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
 							else soundto(MSG_ONE, this, chan, sample, vol, atten); \
@@ -384,10 +371,10 @@
 					#define X() \
 						MACRO_BEGIN \
 						{ \
-							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt) \
+							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < CS(msg_entity).cvar_cl_autotaunt) \
 							{ \
-								float atten = (msg_entity.cvar_cl_voice_directional >= 1) \
-								    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, \
+								float atten = (CS(msg_entity).cvar_cl_voice_directional >= 1) \
+								    ? bound(ATTEN_MIN, CS(msg_entity).cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
 								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
@@ -436,4 +423,3 @@
 		}
 
 	#endif
-#endif

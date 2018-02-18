@@ -1,14 +1,17 @@
 #pragma once
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 .float savenextthink;
 void thrown_wep_think(entity this);
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
+string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity);
 
 bool W_IsWeaponThrowable(entity this, int w);
 
 // toss current weapon
 void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta, float doreduce);
 
-void SpawnThrownWeapon(entity this, vector org, float w);
+void SpawnThrownWeapon(entity this, vector org, Weapon wep, .entity weaponentity);

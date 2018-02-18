@@ -1,16 +1,4 @@
 #include "movetypes.qh"
-#include "../player.qh"
-
-#if defined(CSQC)
-	#include <client/defs.qh>
-	#include <common/stats.qh>
-	#include <common/util.qh>
-	#include <lib/csqcmodel/common.qh>
-	#include <common/t_items.qh>
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include <server/autocvars.qh>
-#endif
 
 #ifdef SVQC
 void set_movetype(entity this, int mt)
@@ -48,7 +36,7 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 vector planes[MAX_CLIP_PLANES];
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
 {
-	int blocked = 0, bumpcount;
+	int blocked = 0;
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
@@ -73,7 +61,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 
 	original_velocity = primal_velocity = restore_velocity = this.velocity;
 
-	for(bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
+	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
 	{
 		if(this.velocity == '0 0 0')
 			break;
@@ -138,7 +126,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 				break;
 			}
 			float trace2_fraction = trace_fraction;
-			steppush = '0 0 1' * (org_z - this.origin_z);
+			steppush = '0 0 1' * (org.z - this.origin_z);
 			_Movetype_PushEntity(this, steppush, true);
 			if(trace_startsolid)
 			{
@@ -147,7 +135,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			}
 
 			// accept the new position if it made some progress...
-			if(fabs(this.origin_x - org_x) >= 0.03125 || fabs(this.origin_y - org_y) >= 0.03125)
+			if(fabs(this.origin_x - org.x) >= 0.03125 || fabs(this.origin_y - org.y) >= 0.03125)
 			{
 				trace_endpos = this.origin;
 				time_left *= 1 - trace2_fraction;
@@ -382,21 +370,13 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 
 	if(this.flags & FL_ITEM)
 	{
-		mi.x -= 15;
-		mi.y -= 15;
-		mi.z -= 1;
-		ma.x += 15;
-		ma.y += 15;
-		ma.z += 1;
+		mi -= '15 15 1';
+		ma += '15 15 1';
 	}
 	else
 	{
-		mi.x -= 1;
-		mi.y -= 1;
-		mi.z -= 1;
-		ma.x += 1;
-		ma.y += 1;
-		ma.z += 1;
+		mi -= '1 1 1';
+		ma += '1 1 1';
 	}
 
 	this.absmin = mi;
@@ -505,60 +485,6 @@ float _Movetype_PushEntity(entity this, vector push, bool failonstartsolid)  // 
 
 .float ltime;
 .void() blocked;
-// matrix version of makevectors, sets v_forward, v_right and v_up
-void makevectors_matrix(vector myangles)  // AngleVectorsFLU
-{
-	v_forward = v_right = v_up = '0 0 0';
-
-	float yy = myangles.y * (M_PI * 2 / 360);
-	float sy = sin(yy);
-	float cy = cos(yy);
-	float p = myangles.x * (M_PI * 2 / 360);
-	float sp = sin(p);
-	float cp = cos(p);
-	if(v_forward)
-	{
-		v_forward.x = cp * cy;
-		v_forward.y = cp * sy;
-		v_forward.z = -sp;
-	}
-	if(v_right || v_up)
-	{
-		if(myangles.z)
-		{
-			float r = myangles.z * (M_PI * 2 / 360);
-			float sr = sin(r);
-			float cr = cos(r);
-			if(v_right)
-			{
-				v_right.x = sr * sp * cy + cr * -sy;
-				v_right.y = sr * sp * sy + cr * cy;
-				v_right.z = sr * cp;
-			}
-			if(v_up)
-			{
-				v_up.x = cr * sp * cy + -sr * -sy;
-				v_up.y = cr * sp * sy + -sr * cy;
-				v_up.z = cr * cp;
-			}
-		}
-		else
-		{
-			if(v_right)
-			{
-				v_right.x = -sy;
-				v_right.y = cy;
-				v_right.z = 0;
-			}
-			if(v_up)
-			{
-				v_up.x = sp * cy;
-				v_up.y = sp * sy;
-				v_up.z = cp;
-			}
-		}
-	}
-}
 
 void _Movetype_Physics_Frame(entity this, float movedt)
 {
@@ -618,7 +544,6 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			_Movetype_CheckWater(this);
 			this.origin = this.origin + movedt * this.velocity;
 			this.angles = this.angles + movedt * this.avelocity;
-			_Movetype_LinkEdict(this, false);
 			break;
 		case MOVETYPE_STEP:
 			_Movetype_Physics_Step(this, movedt);
@@ -637,6 +562,12 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 		case MOVETYPE_PHYSICS:
 			break;
 	}
+
+	//_Movetype_CheckVelocity(this);
+
+	_Movetype_LinkEdict(this, true);
+
+	//_Movetype_CheckVelocity(this);
 }
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient)  // to be run every move frame

@@ -4,8 +4,8 @@
 
 CLASS(MLRSTurret, Turret)
 /* spawnflags */ ATTRIB(MLRSTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
-/* mins       */ ATTRIB(MLRSTurret, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(MLRSTurret, maxs, vector, '32 32 64');
+/* mins       */ ATTRIB(MLRSTurret, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(MLRSTurret, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(MLRSTurret, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(MLRSTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(MLRSTurret, head_model, string, strcat("models/turrets/", "mlrs.md3"));

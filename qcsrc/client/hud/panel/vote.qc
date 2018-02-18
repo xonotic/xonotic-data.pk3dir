@@ -1,5 +1,8 @@
 #include "vote.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 #include <common/mapinfo.qh>
 
 // Vote (#9)
@@ -21,7 +24,7 @@ void HUD_Vote()
 		{
 			vote_yescount = 0;
 			vote_nocount = 0;
-			LOG_INFO(_("^1You must answer before entering hud configure mode\n"));
+			LOG_INFO(_("^1You must answer before entering hud configure mode"));
 			cvar_set("_hud_configure", "0");
 		}
 		if(vote_called_vote)
@@ -74,8 +77,8 @@ void HUD_Vote()
 
 	if(uid2name_dialog)
 	{
-		panel_pos = eX * 0.3 * vid_conwidth + eY * 0.1 * vid_conheight;
-		panel_size = eX * 0.4 * vid_conwidth + eY * 0.3 * vid_conheight;
+		panel_pos = vec2(0.3 * vid_conwidth, 0.1 * vid_conheight);
+		panel_size = vec2(0.4 * vid_conwidth, 0.3 * vid_conheight);
 	}
 
 	vector pos, mySize;
@@ -115,20 +118,20 @@ void HUD_Vote()
 	s = _("A vote has been called for:");
 	if(uid2name_dialog)
 		s = _("Allow servers to store and display your name?");
-	drawstring_aspect(pos, s, eX * mySize.x + eY * (2/8) * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	s = textShortenToWidth(vote_called_vote, mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
+	drawstring_aspect(pos, s, vec2(mySize.x, (2/8) * mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	s = textShortenToWidth(ColorTranslateRGB(vote_called_vote), mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)
 		s = _("^1Configure the HUD");
-	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, eX * mySize.x + eY * (1.75/8) * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, vec2(mySize.x, (1.75/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
 	s = sprintf("^2%s ^7(%d)", getcommandkey_forcename(_("Yes"), "vyes"), vote_yescount);
-	drawcolorcodedstring_aspect(pos + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring_aspect(pos + eY * (4/8) * mySize.y, s, vec2(0.5 * mySize.x, (1.5/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 	s = sprintf("^1%s ^7(%d)", getcommandkey_forcename(_("No"), "vno"), vote_nocount);
-	drawcolorcodedstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring_aspect(pos + vec2(0.5 * mySize.x, (4/8) * mySize.y), s, vec2(0.5 * mySize.x, (1.5/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	pos.y += (5/8) * mySize.y;
-	vector tmp_size = eX * mySize.x + eY * (3/8) * mySize.y;
+	vector tmp_size = vec2(mySize.x, (3/8) * mySize.y);
 	// draw the progress bar backgrounds
 	drawpic_skin(pos, "voteprogress_back", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 

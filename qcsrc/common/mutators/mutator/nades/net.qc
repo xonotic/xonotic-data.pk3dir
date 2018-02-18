@@ -50,13 +50,9 @@ NET_HANDLE(Nade_Orb, bool isNew)
 	Net_Accept(Nade_Orb);
 	int sf = ReadByte();
 	if (sf & 1) {
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
-		this.colormod_x = ReadCoord();
-		this.colormod_y = ReadCoord();
-		this.colormod_z = ReadCoord();
+		this.colormod = ReadVector();
 		this.orb_lifetime = ReadByte();
 		this.orb_radius = ReadShort();
 		this.ltime = time + ReadByte()/10.0;
@@ -74,13 +70,9 @@ bool orb_send(entity this, entity to, int sf)
 	WriteHeader(channel, Nade_Orb);
 	WriteByte(channel, sf);
 	if (sf & 1) {
-		WriteCoord(channel, this.origin.x);
-		WriteCoord(channel, this.origin.y);
-		WriteCoord(channel, this.origin.z);
+		WriteVector(channel, this.origin);
 
-		WriteCoord(channel, this.colormod.x);
-		WriteCoord(channel, this.colormod.y);
-		WriteCoord(channel, this.colormod.z);
+		WriteVector(channel, this.colormod);
 
 		WriteByte(channel, this.orb_lifetime);
 		//WriteByte(MSG_ENTITY, this.ltime - time + 1);

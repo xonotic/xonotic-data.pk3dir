@@ -146,8 +146,8 @@ spawnfunc(func_vectormamamam)
 		return;
 
 	// wait for targets to spawn
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
-	SUB_THINK(this, SUB_NullThink); // for PushMove
+	this.nextthink = this.ltime + 999999999;
+	setthink(this, SUB_NullThink); // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	this.effects |= EF_LOWPRECISION;

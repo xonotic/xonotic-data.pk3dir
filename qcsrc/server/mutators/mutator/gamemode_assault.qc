@@ -1,5 +1,7 @@
 #include "gamemode_assault.qh"
 
+#include <lib/float.qh>
+
 .entity sprite;
 #define AS_ROUND_DELAY 5
 
@@ -53,17 +55,17 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 	{
 		if(this.enemy.health - this.dmg > 0.5)
 		{
-			PlayerTeamScore_Add(actor, SP_SCORE, ST_SCORE, this.dmg);
+			GameRules_scoring_add_team(actor, SCORE, this.dmg);
 			this.enemy.health = this.enemy.health - this.dmg;
 		}
 		else
 		{
-			PlayerTeamScore_Add(actor, SP_SCORE, ST_SCORE, this.enemy.health);
-			PlayerTeamScore_Add(actor, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
+			GameRules_scoring_add_team(actor, SCORE, this.enemy.health);
+			GameRules_scoring_add_team(actor, ASSAULT_OBJECTIVES, 1);
 			this.enemy.health = -1;
 
 			if(this.enemy.message)
-				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(centerprint(it, this.enemy.message)));
+				FOREACH_CLIENT(IS_PLAYER(it), { centerprint(it, this.enemy.message); });
 
 			SUB_UseTargets(this.enemy, this, trigger);
 		}
@@ -106,7 +108,7 @@ void target_objective_decrease_activate(entity this)
 				it.sprite = NULL; // TODO: just unsetting it?!
 		}
 
-		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
+		spr = WaypointSprite_SpawnFixed(WP_AssaultDefend, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
 		spr.assault_decreaser = this;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
@@ -193,13 +195,12 @@ void assault_new_round(entity this)
 	else
 		assault_attacker_team = NUM_TEAM_1;
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
+	IL_EACH(g_saved_team, !IS_CLIENT(it),
 	{
-		if(IS_CLIENT(it))
-			continue;
-
-		if (it.team_saved == NUM_TEAM_1) it.team_saved = NUM_TEAM_2;
-		else if (it.team_saved == NUM_TEAM_2) it.team_saved = NUM_TEAM_1;
+		if(it.team_saved == NUM_TEAM_1)
+			it.team_saved = NUM_TEAM_2;
+		else if(it.team_saved == NUM_TEAM_2)
+			it.team_saved = NUM_TEAM_1;
 	});
 
 	// reset the level with a countdown
@@ -211,7 +212,7 @@ entity as_round;
 .entity ent_winning;
 void as_round_think()
 {
-	gameover = false;
+	game_stopped = false;
 	assault_new_round(as_round.ent_winning);
 	delete(as_round);
 	as_round = NULL;
@@ -259,7 +260,7 @@ int WinningCondition_Assault()
 				as_round.think = as_round_think;
 				as_round.ent_winning = ent;
 				as_round.nextthink = time + AS_ROUND_DELAY;
-				gameover = true;
+				game_stopped = true;
 
 				// make sure timelimit isn't hit while the game is blocked
 				if(autocvar_timelimit > 0)
@@ -428,8 +429,8 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 
 			this.havocbot_attack_time = 0;
 
-			if(checkpvs(this.view_ofs,it))
-			if(checkpvs(this.view_ofs,best))
+			if(checkpvs(this.origin + this.view_ofs, it))
+			if(checkpvs(this.origin + this.view_ofs, best))
 			{
 			//	dprint("increasing attack time for this target\n");
 				this.havocbot_attack_time = time + 2;
@@ -460,7 +461,7 @@ void havocbot_role_ast_offense(entity this)
 	if(this.havocbot_attack_time>time)
 		return;
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 650);
@@ -468,7 +469,7 @@ void havocbot_role_ast_offense(entity this)
 		havocbot_goalrating_items(this, 15000, this.origin, 10000);
 		navigation_goalrating_end(this);
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -494,7 +495,7 @@ void havocbot_role_ast_defense(entity this)
 	if(this.havocbot_attack_time>time)
 		return;
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 3000);
@@ -502,7 +503,7 @@ void havocbot_role_ast_defense(entity this)
 		havocbot_goalrating_items(this, 15000, this.origin, 10000);
 		navigation_goalrating_end(this);
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -549,7 +550,7 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 {
 	entity turret = M_ARGV(0, entity);
 
-	if(!turret.team || turret.team == MAX_SHOT_DISTANCE)
+	if(!turret.team || turret.team == FLOAT_MAX)
 		turret.team = 5; // this gets reversed when match starts?
 }
 
@@ -590,8 +591,9 @@ MUTATOR_HOOKFUNCTION(as, CheckRules_World)
 
 MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
 {
-	// no assault warmups
+	// incompatible
 	warmup_stage = 0;
+	sv_ready_restart_after_countdown = 0;
 }
 
 MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
@@ -608,15 +610,8 @@ MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 	}
 }
 
-// scoreboard setup
-void assault_ScoreRules()
+MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 {
-	int teams = 0;
-	teams |= BIT(0);
-	teams |= BIT(1); // always red vs blue
-
-	ScoreRules_basics(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, true);
-	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreRules_basics_end();
+	// readyrestart not supported (yet)
+	return true;
 }

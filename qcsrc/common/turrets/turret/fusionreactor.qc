@@ -1,32 +1,25 @@
 #include "fusionreactor.qh"
 
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 bool turret_fusionreactor_firecheck(entity this)
 {
-    if (this.attack_finished_single[0] > time)
-        return false;
+    entity targ = this.enemy;
 
-    if (IS_DEAD(this.enemy))
-        return false;
+    switch(MUTATOR_CALLHOOK(FusionReactor_ValidTarget, this, targ))
+    {
+        case MUT_FUSREAC_TARG_VALID: { return true; }
+        case MUT_FUSREAC_TARG_INVALID: { return false; }
+    }
 
-    if (this.enemy == NULL)
-        return false;
-
-    if (this.ammo < this.shot_dmg)
-        return false;
-
-    if (this.enemy.ammo >= this.enemy.ammo_max)
-        return false;
-
-    if(vdist(this.enemy.origin - this.origin, >, this.target_range))
-        return false;
-
-    if(this.team != this.enemy.team)
-        return false;
-
-    if(!(this.enemy.ammo_flags & TFL_AMMO_ENERGY))
-        return false;
+    if((this.attack_finished_single[0] > time)
+    || (!targ)
+    || (IS_DEAD(targ))
+    || (this.ammo < this.shot_dmg)
+    || (targ.ammo >= targ.ammo_max)
+    || (vdist(targ.origin - this.origin, >, this.target_range))
+    || (this.team != targ.team)
+    || (!(targ.ammo_flags & TFL_AMMO_ENERGY))
+    ) { return false; }
 
     return true;
 }
@@ -58,5 +51,4 @@ METHOD(FusionReactor, tr_setup, void(FusionReactor this, entity it))
     it.turret_firecheckfunc = turret_fusionreactor_firecheck;
 }
 
-#endif
 #endif

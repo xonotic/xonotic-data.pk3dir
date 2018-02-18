@@ -1,5 +1,8 @@
 #include "physics.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 #include <client/main.qh>
 #include <common/mapinfo.qh>
 #include <lib/csqcmodel/cl_player.qh>
@@ -82,15 +85,17 @@ void HUD_Physics()
 		}
 	}
 
-	int acc_decimals = 2;
+	const int acc_decimals = 2;
 	if(time > physics_update_time)
 	{
-		// workaround for ftos_decimals returning a negative 0
-		if(discrete_acceleration > -1 / pow(10, acc_decimals) && discrete_acceleration < 0)
-			discrete_acceleration = 0;
 		discrete_acceleration = acceleration;
+		// workaround for ftos_decimals returning a negative 0
+		if(discrete_acceleration > -1 / (10 ** acc_decimals) && discrete_acceleration < 0)
+			discrete_acceleration = 0;
 		discrete_speed = speed;
 		physics_update_time += autocvar_hud_panel_physics_update_interval;
+		if(physics_update_time < time)
+			physics_update_time = time + autocvar_hud_panel_physics_update_interval;
 	}
 
 	//compute layout

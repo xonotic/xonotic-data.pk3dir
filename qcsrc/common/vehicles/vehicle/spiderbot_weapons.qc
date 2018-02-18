@@ -1,7 +1,5 @@
 #include "spiderbot_weapons.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 void spiderbot_rocket_artillery(entity this)
@@ -143,7 +141,7 @@ void spiderbot_rocket_do(entity this)
 
     if (this.wait != -10)
     {
-        if (PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.vehicle_weapon2mode == SBRM_GUIDE)
+        if (PHYS_INPUT_BUTTON_ATCK2(this.owner) && STAT(VEHICLESTAT_W2MODE, this) == SBRM_GUIDE)
         {
             if (this.wait == 1)
             if (this.tur_head.frame == 9 || this.tur_head.frame == 1)
@@ -182,7 +180,7 @@ void spiderbot_rocket_do(entity this)
 
     v = gettaginfo(this.tur_head,gettagindex(this.tur_head,"tag_fire"));
 
-    switch(this.vehicle_weapon2mode)
+    switch(STAT(VEHICLESTAT_W2MODE, this))
     {
         case SBRM_VOLLY:
             rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
@@ -221,11 +219,11 @@ void spiderbot_rocket_do(entity this)
             rocket.pos1	   = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
             rocket.pos1_z	   = trace_endpos_z;
 
-            traceline(v, v + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, this);
+            traceline(v, v + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
             float h1 = 0.75 * vlen(v - trace_endpos);
 
             //v = trace_endpos;
-            traceline(v , rocket.pos1 + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, this);
+            traceline(v , rocket.pos1 + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
             float h2 = 0.75 * vlen(rocket.pos1 - v);
 
             rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));
@@ -242,11 +240,9 @@ void spiderbot_rocket_do(entity this)
     if (this.tur_head.frame == 9)
         this.attack_finished_single[0] = autocvar_g_vehicle_spiderbot_rocket_reload;
     else
-        this.attack_finished_single[0] = ((this.vehicle_weapon2mode ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
+        this.attack_finished_single[0] = ((STAT(VEHICLESTAT_W2MODE, this) ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
 
     this.gun2.cnt = time + this.attack_finished_single[0];
 }
-
-#endif
 
 #endif

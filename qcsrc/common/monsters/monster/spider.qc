@@ -18,16 +18,12 @@ void M_Spider_Attack_Web(entity this);
 
 REGISTER_MUTATOR(spiderweb, true);
 
-MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics_UpdateStats)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
-	if (time >= player.spider_slowness)
-		return false;
-	PHYS_MAXSPEED(player) *= 0.5; // half speed while slow from spider
-	PHYS_MAXAIRSPEED(player) *= 0.5;
-	PHYS_AIRSPEEDLIMIT_NONQW(player) *= 0.5;
-	PHYS_AIRSTRAFEACCELERATE(player) *= 0.5;
+	if(time < player.spider_slowness)
+		STAT(MOVEVARS_HIGHSPEED, player) *= 0.5;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
@@ -70,7 +66,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 			actor.anim_finished = time + 1;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_SPIDER.m_id);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web(actor);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -105,7 +101,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 	if(this)
 	{
 		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
-		RadiusDamage(this, this.realowner, 0, 0, 25, NULL, NULL, 25, this.projectiledeathtype, NULL);
+		RadiusDamage(this, this.realowner, 0, 0, 25, NULL, NULL, 25, this.projectiledeathtype, DMG_NOWEP, NULL);
 
 		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && it.health > 0 && it.monsterid != MON_SPIDER.monsterid,
 		{
@@ -170,9 +166,8 @@ void M_Spider_Attack_Web(entity this)
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, true);
 }
 
-bool M_Spider_Attack(int attack_type, entity actor, entity targ)
+bool M_Spider_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-    .entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		Weapon wep = WEP_SPIDER_ATTACK;
@@ -229,7 +224,6 @@ METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 }
 #endif
 #ifdef SVQC
-spawnfunc(item_health_medium);
 METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 {
     TC(Spider, this);
@@ -239,15 +233,9 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
-    actor.monster_loot = spawnfunc_item_health_medium;
+    actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Spider_Attack;
 
-    return true;
-}
-
-METHOD(Spider, mr_precache, bool(Spider this))
-{
-    TC(Spider, this);
     return true;
 }
 #endif

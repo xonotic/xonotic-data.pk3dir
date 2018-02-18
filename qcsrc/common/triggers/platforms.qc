@@ -6,13 +6,13 @@ void generic_plat_blocked(entity this, entity blocker)
 	{
 		if(this.dmgtime2 < time)
 		{
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 			this.dmgtime2 = time + this.dmgtime;
 		}
 
 		// Gib dead/dying stuff
 		if(IS_DEAD(blocker))
-			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 	}
 #endif
 }
@@ -63,8 +63,8 @@ void plat_hit_top(entity this)
 	_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	this.state = 1;
 
-	SUB_THINK(this, plat_go_down);
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 3;
+	setthink(this, plat_go_down);
+	this.nextthink = this.ltime + 3;
 }
 
 void plat_hit_bottom(entity this)
@@ -105,7 +105,7 @@ void plat_center_touch(entity this, entity toucher)
 	if (this.enemy.state == 2) {
 		plat_go_up(this.enemy);
 	} else if (this.enemy.state == 1)
-		this.enemy.SUB_NEXTTHINK = this.enemy.SUB_LTIME + 1;
+		this.enemy.nextthink = this.enemy.ltime + 1;
 }
 
 void plat_outside_touch(entity this, entity toucher)
@@ -140,7 +140,7 @@ void plat_crush(entity this, entity blocker)
 	if((this.spawnflags & 4) && (blocker.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 	}
 	else
@@ -148,10 +148,10 @@ void plat_crush(entity this, entity blocker)
 #ifdef SVQC
 		if((this.dmg) && (blocker.takedamage != DAMAGE_NO))
 		{   // Shall we bite?
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 			// Gib dead/dying stuff
 			if(IS_DEAD(blocker))
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
 

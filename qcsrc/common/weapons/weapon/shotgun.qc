@@ -1,71 +1,14 @@
 #include "shotgun.qh"
-#ifndef IMPLEMENTATION
-CLASS(Shotgun, Weapon)
-/* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells);
-/* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
-/* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
-/* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
-/* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');
-/* modelname */ ATTRIB(Shotgun, mdl, string, "shotgun");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Shotgun, m_model, Model, MDL_SHOTGUN_ITEM);
-#endif
-/* crosshair */ ATTRIB(Shotgun, w_crosshair, string, "gfx/crosshairshotgun");
-/* crosshair */ ATTRIB(Shotgun, w_crosshair_size, float, 0.65);
-/* wepimg    */ ATTRIB(Shotgun, model2, string, "weaponshotgun");
-/* refname   */ ATTRIB(Shotgun, netname, string, "shotgun");
-/* wepname   */ ATTRIB(Shotgun, m_name, string, _("Shotgun"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, alt_animtime, float, SEC) \
-		P(class, prefix, alt_refire, float, SEC) \
-		P(class, prefix, ammo, float, PRI) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bullets, float, PRI) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, melee_delay, float, SEC) \
-		P(class, prefix, melee_multihit, float, SEC) \
-		P(class, prefix, melee_nonplayerdamage, float, SEC) \
-		P(class, prefix, melee_no_doubleslap, float, SEC) \
-		P(class, prefix, melee_range, float, SEC) \
-		P(class, prefix, melee_swing_side, float, SEC) \
-		P(class, prefix, melee_swing_up, float, SEC) \
-		P(class, prefix, melee_time, float, SEC) \
-		P(class, prefix, melee_traces, float, SEC) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, solidpenetration, float, PRI) \
-		P(class, prefix, spread, float, PRI) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Shotgun, shotgun)
-#undef X
-
-ENDCLASS(Shotgun)
-REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
-
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(this, WEP_SHOTGUN); }
 
 void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary)
 {
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets), WEP_SHOTGUN.m_id);
 	for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
-		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
@@ -125,7 +68,7 @@ void W_Shotgun_Melee_Think(entity this)
 			+ (v_up * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_side)));
 
-		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
+		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -148,7 +91,7 @@ void W_Shotgun_Melee_Think(entity this)
 			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 			Damage(target_victim, this.realowner, this.realowner,
-				swing_damage, WEP_SHOTGUN.m_id | HITTYPE_SECONDARY,
+				swing_damage, WEP_SHOTGUN.m_id | HITTYPE_SECONDARY, this.weaponentity_fld,
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR_SEC(shotgun, force));
 
@@ -193,16 +136,17 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shotgun_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
+	meleetemp.weaponentity_fld = weaponentity;
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range), WEP_SHOTGUN.m_id | HITTYPE_SECONDARY);
 }
 
 // alternate secondary weapon frames
 void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (!thiswep.wr_checkammo2(thiswep, actor))
+	if (!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -213,10 +157,10 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (!thiswep.wr_checkammo2(thiswep, actor))
+	if (!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -225,18 +169,18 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
-.float shotgun_primarytime[MAX_WEAPONSLOTS];
+.float shotgun_primarytime;
 
-METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor))
+METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
     else
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 }
 METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(shotgun, reload_ammo) && actor.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
+    if(WEP_CVAR(shotgun, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
     {
         // don't force reload an empty shotgun if its melee attack is active
         if(WEP_CVAR(shotgun, secondary) < 2) {
@@ -247,51 +191,45 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     {
         if(fire & 1)
         {
-        	int slot = weaponslot(weaponentity);
-            if(time >= actor.shotgun_primarytime[slot]) // handle refire separately so the secondary can be fired straight after a primary
+            if(time >= actor.(weaponentity).shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
                 {
                     W_Shotgun_Attack(thiswep, actor, weaponentity, true);
-                    actor.shotgun_primarytime[slot] = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
+                    actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
                 }
             }
         }
         else if((fire & 2) && WEP_CVAR(shotgun, secondary) == 2)
         {
-        	int slot = weaponslot(weaponentity);
-            if(time >= actor.shotgun_primarytime[slot]) // handle refire separately so the secondary can be fired straight after a primary
+            if(time >= actor.(weaponentity).shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
                 {
                     W_Shotgun_Attack(thiswep, actor, weaponentity, false);
-                    actor.shotgun_primarytime[slot] = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
+                    actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
                 }
             }
         }
     }
-    if(actor.clip_load >= 0) // we are not currently reloading
+    if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     if(WEP_CVAR(shotgun, secondary) == 1)
-    if(((fire & 1) && actor.(thiswep.ammo_field) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (fire & 2))
+    if(((fire & 1) && GetResourceAmount(actor, thiswep.ammo_type) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (fire & 2))
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(shotgun, refire)))
     {
         // attempt forcing playback of the anim by switching to another anim (that we never play) here...
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
     }
 }
-METHOD(Shotgun, wr_setup, void(entity thiswep, entity actor))
+METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    actor.ammo_field = ammo_none;
-}
-METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
-{
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
-    ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(shotgun, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
     return ammo_amount;
 }
-METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(IS_BOT_CLIENT(actor))
     if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
@@ -301,8 +239,8 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor))
         case 1: return true; // melee does not use ammo
         case 2: // secondary triple shot
         {
-            float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
-            ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+            float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(shotgun, ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
             return ammo_amount;
         }
         default: return false; // secondary unavailable
@@ -340,5 +278,4 @@ METHOD(Shotgun, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

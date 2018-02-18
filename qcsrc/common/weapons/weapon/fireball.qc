@@ -1,67 +1,6 @@
 #include "fireball.qh"
-#ifndef IMPLEMENTATION
-CLASS(Fireball, Weapon)
-/* ammotype  */ //ATTRIB(Fireball, ammo_field, .int, ammo_none);
-/* impulse   */ ATTRIB(Fireball, impulse, int, 9);
-/* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
-/* color     */ ATTRIB(Fireball, wpcolor, vector, '1 0.5 0');
-/* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Fireball, m_model, Model, MDL_FIREBALL_ITEM);
-#endif
-/* crosshair */ ATTRIB(Fireball, w_crosshair, string, "gfx/crosshairfireball");
-/* crosshair */ //ATTRIB(Fireball, w_crosshair_size, float, 0.65);
-/* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
-/* refname   */ ATTRIB(Fireball, netname, string, "fireball");
-/* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bfgdamage, float, PRI) \
-		P(class, prefix, bfgforce, float, PRI) \
-		P(class, prefix, bfgradius, float, PRI) \
-		P(class, prefix, damageforcescale, float, BOTH) \
-		P(class, prefix, damagetime, float, SEC) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, edgedamage, float, PRI) \
-		P(class, prefix, force, float, PRI) \
-		P(class, prefix, health, float, PRI) \
-		P(class, prefix, laserburntime, float, BOTH) \
-		P(class, prefix, laserdamage, float, BOTH) \
-		P(class, prefix, laseredgedamage, float, BOTH) \
-		P(class, prefix, laserradius, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, radius, float, PRI) \
-		P(class, prefix, refire2, float, PRI) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, speed_up, float, SEC) \
-		P(class, prefix, speed_z, float, SEC) \
-		P(class, prefix, spread, float, BOTH) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Fireball, fireball)
-#undef X
-
-ENDCLASS(Fireball)
-REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
 
 #ifdef SVQC
-.float bot_primary_fireballmooth; // whatever a mooth is
-.vector fireball_impactvec;
-.float fireball_primarytime[MAX_WEAPONSLOTS];
-#endif
-#endif
-#ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_fireball) { weapon_defaultspawnfunc(this, WEP_FIREBALL); }
 
 void W_Fireball_Explode(entity this, entity directhitentity)
 {
@@ -76,7 +15,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 
 	// 1. dist damage
 	d = (this.realowner.health + this.realowner.armorvalue);
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 	if(this.realowner.health + this.realowner.armorvalue >= d)
 	if(!this.cnt)
 	{
@@ -105,7 +44,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 			if(accuracy_isgooddamage(this.realowner, e))
 				accuracy_add(this.realowner, WEP_FIREBALL.m_id, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
-			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
+			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, this.weaponentity_fld, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
 			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
 		}
 	}
@@ -178,7 +117,7 @@ void W_Fireball_Think(entity this)
 	this.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -196,7 +135,7 @@ void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float dam
 
 void W_Fireball_Attack1(entity actor, .entity weaponentity)
 {
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage), WEP_FIREBALL.m_id);
 
 	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -215,6 +154,8 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	proj.damageforcescale = WEP_CVAR_PRI(fireball, damageforcescale);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_FIREBALL.m_id;
+	proj.weaponentity_fld = weaponentity;
+	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	set_movetype(proj, MOVETYPE_FLY);
@@ -234,7 +175,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 
 void W_Fireball_AttackEffect(entity actor, .entity weaponentity, float i, vector f_diff)
 {
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0, WEP_FIREBALL.m_id); // TODO: probably doesn't need deathtype, just a prefire effect
 	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
@@ -314,7 +255,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	vector f_diff;
 	float c;
 
-	c = actor.bulletcounter % 4;
+	c = actor.(weaponentity).bulletcounter % 4;
 	switch(c)
 	{
 		case 0:
@@ -331,7 +272,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage), WEP_FIREBALL.m_id | HITTYPE_SECONDARY);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, actor);
 	w_shotorg = trace_endpos;
 
@@ -364,13 +305,13 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-METHOD(Fireball, wr_aim, void(entity thiswep, entity actor))
+METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(actor.bot_primary_fireballmooth == 0)
     {
-        if(bot_aim(actor, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
         {
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
             if(random() < 0.02) actor.bot_primary_fireballmooth = 0;
@@ -378,7 +319,7 @@ METHOD(Fireball, wr_aim, void(entity thiswep, entity actor))
     }
     else
     {
-        if(bot_aim(actor, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
         {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
             if(random() < 0.01) actor.bot_primary_fireballmooth = 1;
@@ -389,12 +330,11 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 {
     if(fire & 1)
     {
-    	int slot = weaponslot(weaponentity);
-        if(time >= actor.fireball_primarytime[slot])
+        if(time >= actor.(weaponentity).fireball_primarytime)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(fireball, refire)))
         {
             W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
-            actor.fireball_primarytime[slot] = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor(actor);
+            actor.(weaponentity).fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor(actor);
         }
     }
     else if(fire & 2)
@@ -406,22 +346,21 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
         }
     }
 }
-METHOD(Fireball, wr_setup, void(entity thiswep, entity actor))
-{
-    actor.ammo_field = ammo_none;
-}
-METHOD(Fireball, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Fireball, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // infinite ammo
 }
-METHOD(Fireball, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Fireball, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // fireball has infinite ammo
 }
 METHOD(Fireball, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    	actor.fireball_primarytime[slot] = time;
+	{
+		.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).fireball_primarytime = time;
+	}
 }
 METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -457,5 +396,4 @@ METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

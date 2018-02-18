@@ -47,9 +47,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     if (sendflags & 64)
     {
-        WriteCoord(MSG_ENTITY, this.origin.x);
-        WriteCoord(MSG_ENTITY, this.origin.y);
-        WriteCoord(MSG_ENTITY, this.origin.z);
+        WriteVector(MSG_ENTITY, this.origin);
     }
 
     if (sendflags & 1)
@@ -159,9 +157,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
     if (sendflags & 64)
     {
         // unfortunately, this needs to be exact (for the 3D display)
-        this.origin_x = ReadCoord();
-        this.origin_y = ReadCoord();
-        this.origin_z = ReadCoord();
+        this.origin = ReadVector();
         setorigin(this, this.origin);
     }
 
@@ -249,6 +245,8 @@ vector spritelookupcolor(entity this, string s, vector def)
 
 string spritelookuptext(entity this, string s)
 {
+	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
+		return "Spam"; // no need to translate this debug string
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_name;
     if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint;
@@ -259,9 +257,29 @@ string spritelookuptext(entity this, string s)
     }
 
     // need to loop, as our netname could be one of three
-    FOREACH(Waypoints, it.netname == s, LAMBDA(
+    FOREACH(Waypoints, it.netname == s, {
         return it.m_name;
-    ));
+    });
+
+    return s;
+}
+
+string spritelookupicon(entity this, string s)
+{
+    // TODO: needs icons! //if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
+    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
+    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_icon;
+    if (s == WP_Vehicle.netname) return Vehicles_from(this.wp_extra).m_icon;
+    //if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_icon;
+    if (MUTATOR_CALLHOOK(WP_Format, this, s))
+    {
+        return M_ARGV(4, string);
+    }
+
+    // need to loop, as our netname could be one of three
+    FOREACH(Waypoints, it.netname == s, {
+        return it.m_icon;
+    });
 
     return s;
 }
@@ -282,10 +300,10 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
     // rotate them, and make them absolute
     rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-    v1 = rotate(v1, rot) + org;
-    v2 = rotate(v2, rot) + org;
-    v3 = rotate(v3, rot) + org;
-    v4 = rotate(v4, rot) + org;
+    v1 = Rotate(v1, rot) + org;
+    v2 = Rotate(v2, rot) + org;
+    v3 = Rotate(v3, rot) + org;
+    v4 = Rotate(v4, rot) + org;
 
     // draw them
     R_BeginPolygon(pic, f);
@@ -319,9 +337,9 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
     up = '0 1 0';
 
     rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-    o = rotate(o, rot) + org;
-    ri = rotate(ri, rot);
-    up = rotate(up, rot);
+    o = Rotate(o, rot) + org;
+    ri = Rotate(ri, rot);
+    up = Rotate(up, rot);
 
     owidth = width + 2 * border;
     o = o - up * (margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
@@ -348,34 +366,38 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 
     R_BeginPolygon("", DRAWFLAG_NORMAL);
     R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
     R_EndPolygon();
 
     R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-    R_PolygonVertex(o + rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
     R_EndPolygon();
 
-    return o + rotate(eY * (borderDiag+size+margin), ang);
+    return o + Rotate(eY * (borderDiag+size+margin), ang);
 }
 
 // returns location of sprite healthbar
-vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s)
+vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str)
 {
     float algnx, algny;
     float sw, w, h;
     float aspect, sa, ca;
 
-    sw = stringwidth(s, false, fontsize);
+    if (is_text)
+        sw = stringwidth(str, false, sz);
+    else
+        sw = sz.x;
+
     if (sw > minwidth)
         w = sw;
     else
         w = minwidth;
-    h = fontsize.y;
+    h = sz.y;
 
     // how do corners work?
     aspect = vid_conwidth / vid_conheight;
@@ -406,11 +428,14 @@ vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, 
     if (o.x > vid_conwidth - w)
         o.x = vid_conwidth - w;
     if (o.y > vid_conheight - h)
-        o.x = vid_conheight - h;
+        o.y = vid_conheight - h;
 
     o.x += 0.5 * (w - sw);
 
-    drawstring(o, s, fontsize, rgb, a, DRAWFLAG_NORMAL);
+    if (is_text)
+        drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+    else
+        drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
 
     o.x += 0.5 * sw;
     o.y += 0.5 * h;
@@ -460,7 +485,7 @@ vector fixrgbexcess(vector rgb)
 void Draw_WaypointSprite(entity this)
 {
     if (this.lifetime > 0)
-        this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
+        this.alpha = (bound(0, (this.fadetime - time) / this.lifetime, 1) ** waypointsprite_timealphaexponent);
     else
         this.alpha = 1;
 
@@ -475,13 +500,13 @@ void Draw_WaypointSprite(entity this)
 
     InterpolateOrigin_Do(this);
 
+    float t = entcs_GetTeam(player_localnum) + 1;
     string spriteimage = "";
 
     // choose the sprite
     switch (this.rule)
     {
         case SPRITERULE_SPECTATOR:
-            float t = entcs_GetTeam(player_localnum) + 1;
             if (!(
                 (autocvar_g_waypointsprite_itemstime == 1 && t == NUM_SPECTATOR + 1)
             ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage || STAT(ITEMSTIME) == 2))
@@ -492,7 +517,7 @@ void Draw_WaypointSprite(entity this)
         case SPRITERULE_DEFAULT:
             if (this.team)
             {
-                if (this.team == myteam + 1)
+                if (this.team == t)
                     spriteimage = this.netname;
                 else
                     spriteimage = "";
@@ -501,9 +526,9 @@ void Draw_WaypointSprite(entity this)
                 spriteimage = this.netname;
             break;
         case SPRITERULE_TEAMPLAY:
-            if (myteam == NUM_SPECTATOR)
+            if (t == NUM_SPECTATOR + 1)
                 spriteimage = this.netname3;
-            else if (this.team == myteam + 1)
+            else if (this.team == t)
                 spriteimage = this.netname2;
             else
                 spriteimage = this.netname;
@@ -522,15 +547,15 @@ void Draw_WaypointSprite(entity this)
     float a = this.alpha * autocvar_hud_panel_fg_alpha;
 
     if (this.maxdistance > waypointsprite_normdistance)
-        a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
+        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent);
     else if (this.maxdistance > 0)
-        a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+        a *= (bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
     vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')
     {
         this.teamradar_color = '1 0 1';
-        LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
+        LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
     }
 
     if (time - floor(time) > 0.5)
@@ -611,9 +636,9 @@ void Draw_WaypointSprite(entity this)
     (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o.x,
     (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o.y);
 
-    float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
+    float crosshairdistance = sqrt( ((o.x - vid_conwidth/2) ** 2) + ((o.y - vid_conheight/2) ** 2) );
 
-    float t = waypointsprite_scale;
+    t = waypointsprite_scale;
     a *= waypointsprite_alpha;
 
     {
@@ -646,30 +671,63 @@ void Draw_WaypointSprite(entity this)
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
 
-    string txt;
-    if (autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-        txt = _("Spam");
-    else
+	string pic = "";
+	bool is_text = true;
+	if (!autocvar_g_waypointsprite_text)
+	{
+		string spr_icon = spritelookupicon(this, spriteimage);
+		pic = spr_icon;
+		bool icon_found = !(!spr_icon || spr_icon == "");
+		if (icon_found) // it's valid, but let's make sure it exists!
+		{
+			pic = strcat(hud_skin_path, "/", spr_icon);
+			if(precache_pic(pic) == "")
+			{
+				pic = strcat("gfx/hud/default/", spr_icon);
+				if(!precache_pic(pic))
+					icon_found = false;
+			}
+		}
+		if (icon_found)
+			is_text = false;
+	}
+
+	vector sz;
+	vector txt_color;
+    string txt = string_null;
+    if (is_text)
+    {
         txt = spritelookuptext(this, spriteimage);
-    if (this.helpme && time < this.helpme)
-        txt = sprintf(_("%s needing help!"), txt);
-    if (autocvar_g_waypointsprite_uppercase)
-        txt = strtoupper(txt);
+        if (this.helpme && time < this.helpme)
+            txt = sprintf(_("%s needing help!"), txt);
+        if (autocvar_g_waypointsprite_uppercase)
+            txt = strtoupper(txt);
+        txt_color = rgb;
+        sz = waypointsprite_fontsize * '1 1 0';
+    }
+    else
+    {
+        // for convenience icon path and color are saved to txt and txt_color
+        txt = pic;
+        txt_color = ((autocvar_g_waypointsprite_iconcolor) ? '1 1 1' : rgb);
+        sz = autocvar_g_waypointsprite_iconsize * '1 1 0';
+    }
 
     draw_beginBoldFont();
     if (this.health >= 0)
     {
-        o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
-
-        float align, marg;
+        float align = 0, marg;
         if (this.build_finished)
             align = 0.5;
         else
             align = 0;
         if (cos(ang) > 0)
-            marg = -(SPRITE_HEALTHBAR_MARGIN + SPRITE_HEALTHBAR_HEIGHT + 2 * SPRITE_HEALTHBAR_BORDER) * t - 0.5 * waypointsprite_fontsize;
+            marg = -(SPRITE_HEALTHBAR_MARGIN + SPRITE_HEALTHBAR_HEIGHT + 2 * SPRITE_HEALTHBAR_BORDER) * t - 0.5 * sz.y;
         else
-            marg = SPRITE_HEALTHBAR_MARGIN * t + 0.5 * waypointsprite_fontsize;
+            marg = SPRITE_HEALTHBAR_MARGIN * t + 0.5 * sz.y;
+
+        float minwidth = (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t;
+        o = drawsprite_TextOrIcon(is_text, o, ang, minwidth, txt_color, a, sz, txt);
         drawhealthbar(
                 o,
                 0,
@@ -690,8 +748,9 @@ void Draw_WaypointSprite(entity this)
     }
     else
     {
-        o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+        drawsprite_TextOrIcon(is_text, o, ang, 0, txt_color, a, sz, txt);
     }
+
     draw_endBoldFont();
 }
 

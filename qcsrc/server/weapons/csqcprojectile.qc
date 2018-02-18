@@ -1,5 +1,7 @@
 #include "csqcprojectile.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include <common/t_items.qh>
 
 #include "../command/common.qh"
@@ -40,15 +42,11 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 
 	if(sf & 1)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 
 		if(sf & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, this.velocity.x);
-			WriteCoord(MSG_ENTITY, this.velocity.y);
-			WriteCoord(MSG_ENTITY, this.velocity.z);
+			WriteVector(MSG_ENTITY, this.velocity);
 			if(sf & 0x10)
 				WriteCoord(MSG_ENTITY, this.gravity);
 		}
@@ -59,7 +57,10 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 			WriteByte(MSG_ENTITY, fr);
 		}
 
-		WriteByte(MSG_ENTITY, this.realowner.team);
+		if(teamplay)
+			WriteByte(MSG_ENTITY, this.realowner.team);
+		else
+			WriteByte(MSG_ENTITY, this.realowner.clientcolors); // NOTE: doesn't work on non-clients
 	}
 
 	if(sf & 2)

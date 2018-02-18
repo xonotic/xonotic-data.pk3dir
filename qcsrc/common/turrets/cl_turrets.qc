@@ -67,12 +67,13 @@ void turret_draw2d(entity this)
 		return;
 
 	float dist = vlen(this.origin - view_origin);
+	float t = (entcs_GetTeam(player_localnum) + 1);
 
 	vector o;
 	string txt;
 
 	if(autocvar_cl_vehicles_hud_tactical)
-	if(dist < 10240 && (myteam + 1 != this.team))
+	if(dist < 10240 && t != this.team)
 	{
 		// TODO: Vehicle tactical hud
 		o = project_3d_to_2d(this.origin + '0 0 32');
@@ -104,23 +105,19 @@ void turret_draw2d(entity this)
 
 
 	if(this.maxdistance > waypointsprite_normdistance)
-		a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
+		a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent);
 	else if(this.maxdistance > 0)
-		a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+		a *= (bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
 	if(rgb == '0 0 0')
 	{
 		this.teamradar_color = '1 0 1';
-		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
+		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
 	}
 
-	txt = this.netname;
-	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-		txt = _("Spam");
-	else
-		txt = spritelookuptext(this, spriteimage);
+	txt = spritelookuptext(this, spriteimage);
 
-	if(time - floor(time) > 0.5 && (myteam + 1 == this.team))
+	if(time - floor(time) > 0.5 && t == this.team)
 	{
 		if(this.helpme && time < this.helpme)
 		{
@@ -160,9 +157,9 @@ void turret_draw2d(entity this)
 	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
-	float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
+	float crosshairdistance = sqrt( ((o.x - vid_conwidth/2) ** 2) + ((o.y - vid_conheight/2) ** 2) );
 
-	float t = waypointsprite_scale;
+	t = waypointsprite_scale;
 	a *= waypointsprite_alpha;
 
 	{
@@ -179,7 +176,7 @@ void turret_draw2d(entity this)
 	}
 
 	o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
-	o = drawspritetext(o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+	o = drawsprite_TextOrIcon(true, o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 	drawhealthbar(
 			o,
 			0,
@@ -211,7 +208,7 @@ void turret_construct(entity this, bool isnew)
 	setorigin(this, this.origin);
 	_setmodel(this, tur.model);
 	_setmodel(this.tur_head, tur.head_model);
-	setsize(this, tur.mins, tur.maxs);
+	setsize(this, tur.m_mins, tur.m_maxs);
 	setsize(this.tur_head, '0 0 0', '0 0 0');
 
 	if(this.m_id == TUR_EWHEEL.m_id)
@@ -364,9 +361,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 	{
 		this.m_id = ReadByte();
 
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
 		this.angles_x = ReadAngle();
@@ -400,14 +395,10 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 	if(sf & TNSF_MOVE)
 	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.velocity_x = ReadShort();
-		this.velocity_y = ReadShort();
-		this.velocity_z = ReadShort();
+		this.velocity = ReadVector();
 
 		this.angles_y = ReadShort();
 

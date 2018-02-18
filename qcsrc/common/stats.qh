@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef SVQC
+#include <server/autocvars.qh>
 #include <server/client.qh>
 #endif
 
@@ -41,57 +42,51 @@ const int MAX_CL_STATS = 256;
     #define stat_VIEWHEIGHT view_ofs_z
 #endif
 
+#ifdef SVQC
+vector weaponsInMap;
+#endif
 REGISTER_STAT(WEAPONS, vectori)
-REGISTER_STAT(WEAPONSINMAP, vectori)
+REGISTER_STAT(WEAPONSINMAP, vectori, weaponsInMap)
 
-REGISTER_STAT(PL_VIEW_OFS, vector, autocvar_sv_player_viewoffset)
-REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector, autocvar_sv_player_crouch_viewoffset)
+REGISTER_STAT(PL_VIEW_OFS, vector)
+REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector)
 
-REGISTER_STAT(PL_MIN, vector, autocvar_sv_player_mins)
-REGISTER_STAT(PL_CROUCH_MIN, vector, autocvar_sv_player_crouch_mins)
+REGISTER_STAT(PL_MIN, vector)
+REGISTER_STAT(PL_CROUCH_MIN, vector)
 
-REGISTER_STAT(PL_MAX, vector, autocvar_sv_player_maxs)
-REGISTER_STAT(PL_CROUCH_MAX, vector, autocvar_sv_player_crouch_maxs)
+REGISTER_STAT(PL_MAX, vector)
+REGISTER_STAT(PL_CROUCH_MAX, vector)
 
 REGISTER_STAT(KH_KEYS, int)
 
-/** weapon requested to switch to; next WANTED weapon (for HUD) */
-REGISTER_STAT(SWITCHWEAPON, int)
-/** weapon currently being switched to (is copied from switchweapon once switch is possible) */
-REGISTER_STAT(SWITCHINGWEAPON, int)
-REGISTER_STAT(WEAPON_NEXTTHINK, float)
 #ifdef SVQC
-SPECTATE_COPYFIELD(_STAT(WEAPON_NEXTTHINK))
 float W_WeaponRateFactor(entity this);
-float gameover;
+float game_stopped;
+float game_starttime;
+float round_starttime;
+bool autocvar_g_allow_oldvortexbeam;
+int autocvar_leadlimit;
 #endif
 REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor(this))
-REGISTER_STAT(GAMEOVER, int, gameover)
-REGISTER_STAT(GAMESTARTTIME, float)
+REGISTER_STAT(GAME_STOPPED, int, game_stopped)
+REGISTER_STAT(GAMESTARTTIME, float, game_starttime)
 REGISTER_STAT(STRENGTH_FINISHED, float)
 REGISTER_STAT(INVINCIBLE_FINISHED, float)
 /** arc heat in [0,1] */
-REGISTER_STAT(ARC_HEAT, float)
 REGISTER_STAT(PRESSED_KEYS, int)
 /** this stat could later contain some other bits of info, like, more server-side particle config */
-REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool)
+REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool, autocvar_g_allow_oldvortexbeam)
 REGISTER_STAT(FUEL, int)
 REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
 REGISTER_STAT(SHOTORG, int)
-REGISTER_STAT(LEADLIMIT, float)
-REGISTER_STAT(WEAPON_CLIPLOAD, int)
-REGISTER_STAT(WEAPON_CLIPSIZE, int)
+REGISTER_STAT(LEADLIMIT, float, autocvar_leadlimit)
 
-REGISTER_STAT(VORTEX_CHARGE, float)
 REGISTER_STAT(LAST_PICKUP, float)
 REGISTER_STAT(HUD, int)
-REGISTER_STAT(VORTEX_CHARGEPOOL, float)
 REGISTER_STAT(HIT_TIME, float)
 REGISTER_STAT(DAMAGE_DEALT_TOTAL, int)
 REGISTER_STAT(TYPEHIT_TIME, float)
-REGISTER_STAT(LAYED_MINES, int)
-REGISTER_STAT(HAGAR_LOAD, int)
 REGISTER_STAT(SUPERWEAPONS_FINISHED, float)
 REGISTER_STAT(VEHICLESTAT_HEALTH, int)
 REGISTER_STAT(VEHICLESTAT_SHIELD, int)
@@ -105,7 +100,7 @@ REGISTER_STAT(NADE_TIMER, float)
 REGISTER_STAT(SECRETS_TOTAL, float)
 REGISTER_STAT(SECRETS_FOUND, float)
 REGISTER_STAT(RESPAWN_TIME, float)
-REGISTER_STAT(ROUNDSTARTTIME, float)
+REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
 REGISTER_STAT(MONSTERS_TOTAL, int)
 REGISTER_STAT(MONSTERS_KILLED, int)
 REGISTER_STAT(BUFFS, int)
@@ -115,8 +110,6 @@ REGISTER_STAT(NADE_BONUS_SCORE, float)
 REGISTER_STAT(HEALING_ORB, float)
 REGISTER_STAT(HEALING_ORB_ALPHA, float)
 REGISTER_STAT(PLASMA, int)
-REGISTER_STAT(OK_AMMO_CHARGE, float)
-REGISTER_STAT(OK_AMMO_CHARGEPOOL, float)
 REGISTER_STAT(FROZEN, int)
 REGISTER_STAT(REVIVE_PROGRESS, float)
 REGISTER_STAT(ROUNDLOST, int)
@@ -126,6 +119,12 @@ REGISTER_STAT(CAPTURE_PROGRESS, float)
 REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
+REGISTER_STAT(KILL_TIME, float)
+
+#ifdef SVQC
+bool autocvar_g_ctf_leaderboard;
+#endif
+REGISTER_STAT(CTF_SHOWLEADERBOARD, bool, autocvar_g_ctf_leaderboard)
 
 #ifdef SVQC
 int autocvar_g_multijump;
@@ -211,28 +210,40 @@ float autocvar_sv_dodging_wall_distance_threshold;
 bool autocvar_sv_dodging_frozen;
 bool autocvar_sv_dodging_frozen_doubletap;
 float autocvar_sv_dodging_height_threshold;
-float autocvar_sv_dodging_horiz_speed;
-float autocvar_sv_dodging_horiz_speed_frozen;
+float autocvar_sv_dodging_horiz_speed_min;
+float autocvar_sv_dodging_horiz_speed_max;
+float autocvar_sv_dodging_horiz_force_slowest;
+float autocvar_sv_dodging_horiz_force_fastest;
+float autocvar_sv_dodging_horiz_force_frozen;
 float autocvar_sv_dodging_ramp_time;
 float autocvar_sv_dodging_up_speed;
 bool autocvar_sv_dodging_wall_dodging;
 bool autocvar_sv_dodging_air_dodging;
+float autocvar_sv_dodging_maxspeed;
+float autocvar_sv_dodging_air_maxspeed;
 #endif
 
+#if 0
 REGISTER_STAT(DODGING, int, g_dodging)
 REGISTER_STAT(DODGING_DELAY, float, autocvar_sv_dodging_delay)
 REGISTER_STAT(DODGING_DISTANCE_THRESHOLD, float, autocvar_sv_dodging_wall_distance_threshold)
-REGISTER_STAT(DODGING_FROZEN, int, autocvar_sv_dodging_frozen)
-REGISTER_STAT(DODGING_FROZEN_NO_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
+REGISTER_STAT(DODGING_FROZEN_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
 REGISTER_STAT(DODGING_HEIGHT_THRESHOLD, float, autocvar_sv_dodging_height_threshold)
-REGISTER_STAT(DODGING_HORIZ_SPEED, float, autocvar_sv_dodging_horiz_speed)
-REGISTER_STAT(DODGING_HORIZ_SPEED_FROZEN, float, autocvar_sv_dodging_horiz_speed_frozen)
+REGISTER_STAT(DODGING_HORIZ_SPEED_MIN, float, autocvar_sv_dodging_horiz_speed_min)
+REGISTER_STAT(DODGING_HORIZ_SPEED_MAX, float, autocvar_sv_dodging_horiz_speed_max)
+REGISTER_STAT(DODGING_HORIZ_FORCE_SLOWEST, float, autocvar_sv_dodging_horiz_force_slowest)
+REGISTER_STAT(DODGING_HORIZ_FORCE_FASTEST, float, autocvar_sv_dodging_horiz_force_fastest)
+REGISTER_STAT(DODGING_HORIZ_FORCE_FROZEN, float, autocvar_sv_dodging_horiz_force_frozen)
 REGISTER_STAT(DODGING_RAMP_TIME, float, autocvar_sv_dodging_ramp_time)
-/** cvar loopback */
-REGISTER_STAT(DODGING_TIMEOUT, float)
 REGISTER_STAT(DODGING_UP_SPEED, float, autocvar_sv_dodging_up_speed)
 REGISTER_STAT(DODGING_WALL, bool, autocvar_sv_dodging_wall_dodging)
 REGISTER_STAT(DODGING_AIR, bool, autocvar_sv_dodging_air_dodging)
+REGISTER_STAT(DODGING_MAXSPEED, float, autocvar_sv_dodging_maxspeed)
+REGISTER_STAT(DODGING_AIR_MAXSPEED, float, autocvar_sv_dodging_air_maxspeed)
+#endif
+/** cvar loopback */
+REGISTER_STAT(DODGING_FROZEN, int, autocvar_sv_dodging_frozen)
+REGISTER_STAT(DODGING_TIMEOUT, float)
 
 REGISTER_STAT(JETPACK_ACCEL_SIDE, float, autocvar_g_jetpack_acceleration_side)
 REGISTER_STAT(JETPACK_ACCEL_UP, float, autocvar_g_jetpack_acceleration_up)
@@ -242,7 +253,7 @@ REGISTER_STAT(JETPACK_MAXSPEED_SIDE, float, autocvar_g_jetpack_maxspeed_side)
 REGISTER_STAT(JETPACK_MAXSPEED_UP, float, autocvar_g_jetpack_maxspeed_up)
 REGISTER_STAT(JETPACK_REVERSE_THRUST, float, autocvar_g_jetpack_reverse_thrust)
 
-REGISTER_STAT(MOVEVARS_HIGHSPEED, float, autocvar_g_movement_highspeed)
+REGISTER_STAT(MOVEVARS_HIGHSPEED, float)
 
 #ifdef SVQC
 AUTOCVAR(g_walljump, bool, false, "Enable wall jumping mutator");
@@ -285,6 +296,7 @@ REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
+float warmup_limit;
 #endif
 
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)
@@ -293,6 +305,7 @@ REGISTER_STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, float)
 REGISTER_STAT(MOVEVARS_AIRSTRAFEACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_POWER, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_BACKWARDS, bool)
+REGISTER_STAT(MOVEVARS_AIRCONTROL_SIDEWARDS, bool)
 noref bool autocvar_sv_gameplayfix_nogravityonground;
 REGISTER_STAT(MOVEFLAGS, int, MOVEFLAG_VALID
                               | (autocvar_sv_gameplayfix_q2airaccelerate ? MOVEFLAG_Q2AIRACCELERATE : 0)
@@ -327,10 +340,12 @@ REGISTER_STAT(MOVEVARS_AIRACCELERATE, float)
 // FIXME: Was 0 on server, 1 on client. Still want that?
 REGISTER_STAT(MOVEVARS_ENTGRAVITY, float, (this.gravity) ? this.gravity : 1)
 REGISTER_STAT(MOVEVARS_JUMPVELOCITY, float)
+REGISTER_STAT(MOVEVARS_JUMPVELOCITY_CROUCH, float)
 REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
 REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
+REGISTER_STAT(MOVEVARS_SPECIALCOMMAND, bool)
 
 
 #ifdef CSQC
@@ -340,7 +355,7 @@ noref int autocvar_cl_gunalign;
 .int cvar_cl_gunalign;
 REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 #endif
-REGISTER_STAT(GUNALIGN, int, this.cvar_cl_gunalign)
+REGISTER_STAT(GUNALIGN, int)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))
 #endif

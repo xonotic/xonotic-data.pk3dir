@@ -10,8 +10,9 @@
 
 void secrets_setstatus(entity this)
 {
-	this.stat_secrets_total = secrets_total;
-	this.stat_secrets_found = secrets_found;
+	// TODO: use global stats!
+	STAT(SECRETS_TOTAL, this) = secrets_total;
+	STAT(SECRETS_FOUND, this) = secrets_found;
 }
 
 /**
@@ -34,7 +35,9 @@ void trigger_secret_touch(entity this, entity toucher)
 
 	// handle normal trigger features
 	multi_touch(this, toucher);
-	delete(this);
+	// we can't just delete(this) here, because this is a touch function
+	// called while C code is looping through area links...
+	//delete(this);
 }
 
 /*QUAKED trigger_secret (.5 .5 .5) ?
@@ -76,7 +79,7 @@ spawnfunc(trigger_secret)
 	this.delay = 0;
 
 	// convert this trigger to trigger_once
-	this.classname = "trigger_once";
+	//this.classname = "trigger_once";
 	spawnfunc_trigger_once(this);
 
 	// take over the touch() function, so we can mark secret as found

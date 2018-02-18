@@ -1,6 +1,6 @@
 #include "gamemode_lms.qh"
 
-#include <common/mutators/mutator/instagib/items.qc>
+#include <common/mutators/mutator/instagib/items.qh>
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
 
@@ -35,25 +35,29 @@ void ClearWinners();
 // limit.
 int WinningCondition_LMS()
 {
-	entity head, head2;
-	bool have_player = false;
-	bool have_players = false;
+	entity first_player = NULL;
+	int total_players = 0;
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		if (!total_players)
+			first_player = it;
+		++total_players;
+	});
 
-	int l = LMS_NewPlayerLives();
-
-	head = find(NULL, classname, STR_PLAYER);
-	if(head)
-		have_player = true;
-	head2 = find(head, classname, STR_PLAYER);
-	if(head2)
-		have_players = true;
-
-	if(have_player)
+	if (total_players)
 	{
-		// we have at least one player
-		if(have_players)
+		if (total_players > 1)
 		{
 			// two or more active players - continue with the game
+
+			if (autocvar_g_campaign)
+			{
+				FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+					float pl_lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+					if (!pl_lives)
+						return WINNING_YES; // human player lost, game over
+					break;
+				});
+			}
 		}
 		else
 		{
@@ -62,7 +66,7 @@ int WinningCondition_LMS()
 			ClearWinners();
 			SetWinners(winning, 0); // NOTE: exactly one player is still "player", so this works out
 
-			if(l)
+			if (LMS_NewPlayerLives())
 			{
 				// game still running (that is, nobody got removed from the game by a frag yet)? then continue
 				return WINNING_NO;
@@ -71,7 +75,7 @@ int WinningCondition_LMS()
 			{
 				// a winner!
 				// and assign him his first place
-				PlayerScore_Add(head, SP_LMS_RANK, 1);
+				GameRules_scoring_add(first_player, LMS_RANK, 1);
 				if(warmup_stage)
 					return WINNING_NO;
 				else
@@ -82,7 +86,7 @@ int WinningCondition_LMS()
 	else
 	{
 		// nobody is playing at all...
-		if(l)
+		if (LMS_NewPlayerLives())
 		{
 			// wait for players...
 		}
@@ -120,7 +124,7 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 	FOREACH_CLIENT(true, {
 		TRANSMUTE(Player, it);
 		it.frags = FRAGS_PLAYER;
-		PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives());
+		GameRules_scoring_add(it, LMS_LIVES, LMS_NewPlayerLives());
 		PutClientInServer(it);
 	});
 }
@@ -133,13 +137,13 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 		TRANSMUTE(Observer, player);
 	else
 	{
-		float tl = PlayerScore_Add(player, SP_LMS_LIVES, 0);
+		float tl = GameRules_scoring_add(player, LMS_LIVES, 0);
 		if(tl < lms_lowest_lives)
 			lms_lowest_lives = tl;
 		if(tl <= 0)
 			TRANSMUTE(Observer, player);
 		if(warmup_stage)
-			PlayerScore_Add(player, SP_LMS_RANK, -PlayerScore_Add(player, SP_LMS_RANK, 0));
+			GameRules_scoring_add(player, LMS_RANK, -GameRules_scoring_add(player, LMS_RANK, 0));
 	}
 }
 
@@ -151,7 +155,7 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 		return false;
 	if(player.frags == FRAGS_SPECTATOR)
 		return true;
-	if(PlayerScore_Add(player, SP_LMS_LIVES, 0) <= 0)
+	if(GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
 		return true;
@@ -169,7 +173,7 @@ MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 void lms_RemovePlayer(entity player)
 {
 	static int quitters = 0;
-	float player_rank = PlayerScore_Add(player, SP_LMS_RANK, 0);
+	float player_rank = GameRules_scoring_add(player, LMS_RANK, 0);
 	if (!player_rank)
 	{
 		int pl_cnt = 0;
@@ -179,7 +183,7 @@ void lms_RemovePlayer(entity player)
 			if(IS_BOT_CLIENT(player))
 				bot_clear(player);
 			player.frags = FRAGS_LMS_LOSER;
-			PlayerScore_Add(player, SP_LMS_RANK, pl_cnt + 1);
+			GameRules_scoring_add(player, LMS_RANK, pl_cnt + 1);
 		}
 		else
 		{
@@ -187,22 +191,22 @@ void lms_RemovePlayer(entity player)
 			FOREACH_CLIENT(true, {
 				if (it.frags == FRAGS_LMS_LOSER)
 				{
-					float it_rank = PlayerScore_Add(it, SP_LMS_RANK, 0);
+					float it_rank = GameRules_scoring_add(it, LMS_RANK, 0);
 					if (it_rank > player_rank && it_rank <= 256)
-						PlayerScore_Add(it, SP_LMS_RANK, -1);
+						GameRules_scoring_add(it, LMS_RANK, -1);
 					lms_lowest_lives = 0;
 				}
 				else if (it.frags != FRAGS_SPECTATOR)
 				{
-					float tl = PlayerScore_Add(it, SP_LMS_LIVES, 0);
+					float tl = GameRules_scoring_add(it, LMS_LIVES, 0);
 					if(tl < lms_lowest_lives)
 						lms_lowest_lives = tl;
 				}
 			});
-			PlayerScore_Add(player, SP_LMS_RANK, 665 - quitters); // different from 666
+			GameRules_scoring_add(player, LMS_RANK, 665 - quitters); // different from 666
 			if(!warmup_stage)
 			{
-				PlayerScore_Add(player, SP_LMS_LIVES, -PlayerScore_Add(player, SP_LMS_LIVES, 0));
+				GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
 				++quitters;
 			}
 			player.frags = FRAGS_LMS_LOSER;
@@ -212,8 +216,8 @@ void lms_RemovePlayer(entity player)
 			lms_lowest_lives = 0; // end the game now!
 	}
 
-	if(player.killcount != FRAGS_SPECTATOR)
-		if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
+	if(CS(player).killcount != FRAGS_SPECTATOR)
+		if(GameRules_scoring_add(player, LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_FORFEIT, player.netname);
@@ -241,9 +245,9 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 	TRANSMUTE(Player, player);
 	campaign_bots_may_start = true;
 
-	if(PlayerScore_Add(player, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
+	if(GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
-		PlayerScore_Add(player, SP_LMS_RANK, 666); // mark as forced spectator for the hud code
+		GameRules_scoring_add(player, LMS_RANK, 666); // mark as forced spectator for the hud code
 		player.frags = FRAGS_SPECTATOR;
 	}
 }
@@ -276,7 +280,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 	if (!warmup_stage)
 	{
 		// remove a life
-		int tl = PlayerScore_Add(frag_target, SP_LMS_LIVES, -1);
+		int tl = GameRules_scoring_add(frag_target, LMS_LIVES, -1);
 		if(tl < lms_lowest_lives)
 			lms_lowest_lives = tl;
 		if(tl <= 0)
@@ -286,7 +290,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 			if(IS_BOT_CLIENT(frag_target))
 				bot_clear(frag_target);
 			frag_target.frags = FRAGS_LMS_LOSER;
-			PlayerScore_Add(frag_target, SP_LMS_RANK, pl_cnt);
+			GameRules_scoring_add(frag_target, LMS_RANK, pl_cnt);
 		}
 	}
 	M_ARGV(2, float) = 0; // frag score
@@ -358,7 +362,7 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 	if(item.itemdef == ITEM_ExtraLife)
 	{
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
-		PlayerScore_Add(toucher, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
+		GameRules_scoring_add(toucher, LMS_LIVES, autocvar_g_lms_extra_lives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
@@ -367,10 +371,10 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		++M_ARGV(0, int); // activerealplayers
 		++M_ARGV(1, int); // realplayers
-	));
+	});
 
 	return true;
 }
@@ -414,23 +418,12 @@ MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 
 MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 {
-	if(gameover)
+	if(game_stopped)
 	if(M_ARGV(0, entity) == SP_LMS_RANK) // score field
 		return true; // allow writing to this field in intermission as it is needed for newly joining players
-}
-
-// scoreboard stuff
-void lms_ScoreRules()
-{
-	ScoreRules_basics(0, 0, 0, false);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_LIVES,    "lives",     SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_RANK,     "rank",      SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
-	ScoreRules_basics_end();
 }
 
 void lms_Initialize()
 {
 	lms_lowest_lives = 9999;
-
-	lms_ScoreRules();
 }

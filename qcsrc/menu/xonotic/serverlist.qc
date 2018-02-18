@@ -45,7 +45,7 @@ void RegisterSLCategories()
 				else \
 				{ \
 					LOG_INFOF( \
-						"RegisterSLCategories(): Improper override '%s' for category '%s'!\n", \
+						"RegisterSLCategories(): Improper override '%s' for category '%s'!", \
 						s, \
 						categories[i].cat_name \
 					); \
@@ -761,7 +761,7 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnPlayersOrigin = me.columnTypeOrigin + me.columnTypeSize + me.realFontSize.x;
 
 	me.positionSortButton(me, me.sortButton1, me.columnPingOrigin, me.columnPingSize, _("Ping"), ServerList_PingSort_Click);
-	me.positionSortButton(me, me.sortButton2, me.columnNameOrigin, me.columnNameSize, _("Host name"), ServerList_NameSort_Click);
+	me.positionSortButton(me, me.sortButton2, me.columnNameOrigin, me.columnNameSize, _("Hostname"), ServerList_NameSort_Click);
 	me.positionSortButton(me, me.sortButton3, me.columnMapOrigin, me.columnMapSize, _("Map"), ServerList_MapSort_Click);
 	me.positionSortButton(me, me.sortButton4, me.columnTypeOrigin, me.columnTypeSize, _("Type"), ServerList_TypeSort_Click);
 	me.positionSortButton(me, me.sortButton5, me.columnPlayersOrigin, me.columnPlayersSize, _("Players"), ServerList_PlayerSort_Click);

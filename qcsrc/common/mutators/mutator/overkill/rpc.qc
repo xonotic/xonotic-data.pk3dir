@@ -1,16 +1,15 @@
 #include "rpc.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(this, WEP_RPC); }
 
 void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
-	delete (this);
+	delete(this);
 }
 
 void W_RocketPropelledChainsaw_Explode_think(entity this)
@@ -27,7 +26,7 @@ void W_RocketPropelledChainsaw_Touch (entity this, entity toucher)
 	W_RocketPropelledChainsaw_Explode(this, toucher);
 }
 
-void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if (this.health <= 0)
 		return;
@@ -49,15 +48,15 @@ void W_RocketPropelledChainsaw_Think(entity this)
 		return;
 	}
 
-	this.cnt = vlen(this.velocity);
-	this.wait = this.cnt * sys_frametime;
-	this.pos1 = normalize(this.velocity);
+	float myspeed = vlen(this.velocity);
+	float myspeed_accel = myspeed * sys_frametime;
+	vector mydir = normalize(this.velocity);
 
-	tracebox(this.origin, this.mins, this.maxs, this.origin + this.pos1 * (2 * this.wait), MOVE_NORMAL, this);
+	tracebox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
 	if(IS_PLAYER(trace_ent))
-		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - other.origin) * WEP_CVAR(rpc, force));
+		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.weaponentity_fld, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
 
-	this.velocity = this.pos1 * (this.cnt + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
+	this.velocity = mydir * (myspeed + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
 
 	UpdateCSQCProjectile(this);
 	this.nextthink = time;
@@ -68,8 +67,8 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
 	entity flash = spawn ();
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo));
-	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo), weaponentity);
+	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage), WEP_RPC.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -86,6 +85,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	set_movetype(missile, MOVETYPE_FLY);
 
 	missile.projectiledeathtype = WEP_RPC.m_id;
+	missile.weaponentity_fld = weaponentity;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
@@ -106,19 +106,18 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
-	missile.pos1 = missile.velocity;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor))
+METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 }
 
 METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
+    if(WEP_CVAR(rpc, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(rpc, ammo)) {
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else
     {
@@ -138,14 +137,14 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
     }
 }
 
-METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
-    ammo_amount += actor.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(rpc, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
     return ammo_amount;
 }
 
-METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return false;
 }

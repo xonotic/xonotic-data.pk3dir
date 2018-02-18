@@ -4,8 +4,11 @@
 
 #include "item.qh"
 
-REGISTRY(Items, BITS(5))
+REGISTRY(Items, BITS(7))
 #define Items_from(i) _Items_from(i, NULL)
+#ifdef GAMEQC
+REGISTRY_DEPENDS(Items, Models)
+#endif
 REGISTER_REGISTRY(Items)
 #define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
 
@@ -23,7 +26,7 @@ GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
         }
         default:
         case CMD_REQUEST_USAGE: {
-            LOG_INFOF("\nUsage:^3 %s dumpitems", GetProgramCommandPrefix());
+            LOG_INFOF("Usage:^3 %s dumpitems", GetProgramCommandPrefix());
             return;
         }
     }

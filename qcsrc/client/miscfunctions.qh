@@ -31,7 +31,7 @@ vector HUD_GetFontsize(string cvarname);
 
 float PreviewExists(string name);
 
-vector rotate(vector v, float a);
+vector Rotate(vector v, float a);
 
 
 #define IS_DEAD(s) (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : ((s).health <= 0))
@@ -45,8 +45,8 @@ float cvar_or(string cv, float v);
 vector project_3d_to_2d(vector vec);
 
 vector drawfontscale;
-#define draw_beginBoldFont()    MACRO_BEGIN { drawfont = FONT_USER + 2; } MACRO_END
-#define draw_endBoldFont()      MACRO_BEGIN { drawfont = FONT_USER + 1; } MACRO_END
+#define draw_beginBoldFont() drawfont = FONT_USER + 2
+#define draw_endBoldFont() drawfont = FONT_USER + 1
 
 float expandingbox_sizefactor_from_fadelerp(float fadelerp);
 
@@ -119,12 +119,12 @@ string _drawpic_picpath;
 				_drawpic_oldsz = _drawpic_sz.x;\
 				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;\
 				if(_drawpic_sz.x)\
-					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz.x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+					drawpic(pos + eX * 0.5 * (_drawpic_oldsz - _drawpic_sz.x), pic, _drawpic_sz, color, theAlpha, drawflag);\
 			} else {\
 				_drawpic_oldsz = _drawpic_sz.y;\
 				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;\
 				if(_drawpic_sz.y)\
-					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz.y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+					drawpic(pos + eY * 0.5 * (_drawpic_oldsz - _drawpic_sz.y), pic, _drawpic_sz, color, theAlpha, drawflag);\
 			}\
 		}\
 	} MACRO_END

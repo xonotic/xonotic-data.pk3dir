@@ -1,5 +1,7 @@
 #include "mainwindow.qh"
 
+#include "../mutators/events.qh"
+
 #include "nexposee.qh"
 #include "inputbox.qh"
 #include "dialog_firstrun.qh"
@@ -232,6 +234,8 @@ void MainWindow_configureMainWindow(entity me)
 	i = NEW(XonoticMonsterToolsDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z * SKINALPHA_DIALOG_SANDBOXTOOLS);
+
+	MUTATOR_CALLHOOK(ConfigureDialogs, me);
 
 
 	// main dialogs/windows

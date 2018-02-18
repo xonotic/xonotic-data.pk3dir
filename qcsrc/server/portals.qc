@@ -1,5 +1,6 @@
 #include "portals.qh"
 
+#include <common/effects/all.qh>
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
 #include "../common/constants.qh"
@@ -148,7 +149,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		LOG_INFO("'safe' teleport location is not safe!\n");
+		LOG_INFO("'safe' teleport location is not safe!");
 		// FAIL TODO why does this happen?
 		return 0;
 	}
@@ -156,7 +157,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		LOG_INFO("trace_endpos in solid, this can't be!\n");
+		LOG_INFO("trace_endpos in solid, this can't be!");
 		// FAIL TODO why does this happen? (reported by MrBougo)
 		return 0;
 	}
@@ -208,14 +209,14 @@ float Portal_FindSafeOrigin(entity portal)
 {
 	vector o;
 	o = portal.origin;
-	portal.mins = STAT(PL_MIN, NULL) - SAFERNUDGE;
-	portal.maxs = STAT(PL_MAX, NULL) + SAFERNUDGE;
+	portal.mins = PL_MIN_CONST - SAFERNUDGE;
+	portal.maxs = PL_MAX_CONST + SAFERNUDGE;
 	fixedmakevectors(portal.mangle);
 	portal.origin += 16 * v_forward;
 	if(!move_out_of_solid(portal))
 	{
 #ifdef DEBUG
-		LOG_INFO("NO SAFE ORIGIN\n");
+		LOG_INFO("NO SAFE ORIGIN");
 #endif
 		return 0;
 	}
@@ -428,7 +429,7 @@ void Portal_Remove(entity portal, float killed)
 	}
 }
 
-void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(deathtype == DEATH_TELEFRAG.m_id)
 		return;
@@ -473,7 +474,7 @@ void Portal_Think(entity this)
 
 	fixedmakevectors(this.mangle);
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(it != o)
 			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
@@ -481,9 +482,13 @@ void Portal_Think(entity this)
 		if(it != o || time >= this.portal_activatetime)
 			Portal_Think_TryTeleportPlayer(this, it, g);
 
-		if(it.hook)
-			Portal_Think_TryTeleportPlayer(this, it.hook, g);
-	));
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook)
+	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g);
+	    }
+	});
 	this.solid = SOLID_TRIGGER;
 	this.aiment = o;
 #endif
