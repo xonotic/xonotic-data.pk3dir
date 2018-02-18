@@ -152,7 +152,7 @@ enum {
 
 USING(mutatorfunc_t, bool(int));
 
-CLASS(Mutator, Object)
+CLASS(Mutator, RealObject)
     ATTRIB(Mutator, m_id, int, 0);
     ATTRIB(Mutator, m_name, string);
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);

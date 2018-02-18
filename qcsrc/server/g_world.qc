@@ -556,7 +556,7 @@ void RandomSeed_Think(entity this)
 }
 void RandomSeed_Spawn()
 {
-	randomseed = new_pure(randomseed);
+	randomseed = new(randomseed);
 	setthink(randomseed, RandomSeed_Think);
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 

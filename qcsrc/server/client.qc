@@ -139,7 +139,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 void ClientData_Attach(entity this)
 {
-	Net_LinkEntity(CS(this).clientdata = new_pure(clientdata), false, 0, ClientData_Send);
+	Net_LinkEntity(CS(this).clientdata = new(clientdata), false, 0, ClientData_Send);
 	CS(this).clientdata.drawonlytoclient = this;
 	CS(this).clientdata.owner = this;
 }
@@ -835,7 +835,7 @@ void ClientInit_CheckUpdate(entity this)
 
 void ClientInit_Spawn()
 {
-	entity e = new_pure(clientinit);
+	entity e = new(clientinit);
 	setthink(e, ClientInit_CheckUpdate);
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 

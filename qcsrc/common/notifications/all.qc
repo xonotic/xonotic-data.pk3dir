@@ -1646,7 +1646,7 @@ void Send_Notification(
 	}
 	else
 	{
-		entity net_notif = new_pure(net_notification);
+		entity net_notif = new(net_notification);
 		IL_PUSH(g_notifications, net_notif);
 		net_notif.owner = notif;
 		net_notif.nent_broadcast = broadcast;

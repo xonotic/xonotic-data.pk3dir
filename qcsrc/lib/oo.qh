@@ -25,7 +25,7 @@
 entity _spawn();
 
 #ifndef SPAWN_PURE
-#define SPAWN_PURE 0
+#define SPAWN_PURE 1
 #endif
 
 // pure entities: need no .origin
@@ -42,12 +42,14 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 	this.sourceLoc = _sourceLoc;
 	if (pure) {
 		make_pure(this);
-		#ifdef CSQC
-		setorigin(this, (world.mins + world.maxs) * 0.5);
-		#endif
-		#ifdef SVQC
+#if !SPAWN_PURE
+#ifdef CSQC
         setorigin(this, (world.mins + world.maxs) * 0.5);
-        #endif
+#endif
+#ifdef SVQC
+        setorigin(this, (world.mins + world.maxs) * 0.5);
+#endif
+#endif
 	}
 	return this;
 }
@@ -111,7 +113,7 @@ void clearentity(entity e)
 // Macros to hide this implementation detail:
 #ifdef __STDC__
 	#define NEW(cname, ...) \
-		OVERLOAD_(spawn##cname, new_pure(cname) P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+		OVERLOAD_(spawn##cname, (spawn##cname##Pure ? new_pure(cname) : new(cname)) P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 
     #define _TRANSMUTE(cname, this, ...) \
         OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
@@ -120,7 +122,7 @@ void clearentity(entity e)
 		OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 #else
 	#define NEW(cname, ...) \
-		OVERLOAD(spawn##cname, new_pure(cname),##__VA_ARGS__)
+		OVERLOAD(spawn##cname, (spawn##cname##Pure ? new_pure(cname) : new(cname)),##__VA_ARGS__)
 
     #define _TRANSMUTE(cname, this, ...) \
         OVERLOAD(spawn##cname, this,##__VA_ARGS__)
@@ -181,6 +183,7 @@ STATIC_INIT(RegisterClasses)
 
 
 #define CLASS(cname, base)                  \
+    const bool spawn##cname##Pure = spawn##base##Pure; \
 	entityclass(cname, base);               \
 	class(cname).bool instanceOf##cname;    \
 	DEBUG_STUFF(cname)                      \
@@ -286,12 +289,15 @@ STATIC_INIT(RegisterClasses)
 
 #define SUPER(cname) (cname##_vtbl.vtblbase)
 
+#define remove(this) delete(this)
+
 #define spawn_static(this)
 #define spawn_1(this)
 #define _vtbl NULL
+
+#define spawnPure true
 CLASS(Object, );
     DESTRUCTOR(Object) { builtin_remove(this); }
-    #define remove(this) delete(this)
 	METHOD(Object, describe, string(Object this))
 	{
 	    TC(Object, this);
@@ -312,6 +318,13 @@ CLASS(Object, );
 		returns(sprintf("entity %i", this), "nopreview_map");
 	}
 ENDCLASS(Object)
+#undef spawnpure
+
+#define spawnObjectPure false
+CLASS(RealObject, Object);
+ENDCLASS(RealObject)
+#undef spawnObjectPure
+
 #undef spawn_static
 #undef spawn_1
 #undef _vtbl

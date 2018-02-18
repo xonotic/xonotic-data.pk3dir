@@ -40,7 +40,7 @@ bool accuracy_send(entity this, entity to, int sf)
 // init/free
 void accuracy_init(entity e)
 {
-	entity a = CS(e).accuracy = new_pure(accuracy);
+	entity a = CS(e).accuracy = new(accuracy);
 	a.owner = e;
 	a.drawonlytoclient = e;
 	Net_LinkEntity(a, false, 0, accuracy_send);
