@@ -1005,6 +1005,29 @@ void Surv_UpdateAliveStats()
 	Surv_UpdateDefenderHealthStat();
 }
 
+/// \brief Spawns a monster.
+void Surv_SpawnMonster()
+{
+	entity spawn_point = SelectSpawnPoint(NULL, true);
+	RandomSelection_Init();
+	FOREACH(Monsters, it != MON_Null,
+	{
+		if ((it.spawnflags & MON_FLAG_HIDDEN) ||
+			(it.spawnflags & MONSTER_TYPE_PASSIVE) ||
+			(it.spawnflags & MONSTER_TYPE_FLY) ||
+			(it.spawnflags & MONSTER_TYPE_SWIM) ||
+			(it.spawnflags & MONSTER_SIZE_QUAKE))
+		{
+			continue;
+		}
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+	entity monster = spawnmonster(spawn(), RandomSelection_chosen_ent.netname,
+		RandomSelection_chosen_ent.monsterid, NULL, NULL, spawn_point.origin,
+		false, false, 2);
+	monster.team = surv_attackerteam;
+}
+
 /// \brief Updates defender health on the HUD.
 /// \return No return.
 void Surv_UpdateDefenderHealthStat()
@@ -1467,6 +1490,10 @@ void Surv_RoundStart()
 			});
 			break;
 		}
+	}
+	for (int i = 0; i < 8; ++i)
+	{
+		Surv_SpawnMonster();
 	}
 	if (autocvar_g_surv_stealth)
 	{
