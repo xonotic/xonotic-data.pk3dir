@@ -2760,6 +2760,8 @@ void PlayerPostThink (entity this)
 	if (IS_PLAYER(this)) {
 		if(this.death_time == time && IS_DEAD(this))
 		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
 			this.maxs.z = 5;
 			setsize(this, this.mins, this.maxs);
 		}

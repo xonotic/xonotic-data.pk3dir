@@ -627,15 +627,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		else
 			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD2, true);
 
-		/* // postpone resize until frame end so that dead player can still
-		// properly get hit by all the projectiles fired in this frame (shotgun)
-		if (this.maxs.z > 5)
-		{
-			this.maxs_z = 5;
-			setsize(this, this.mins, this.maxs);
-		}
-		*/
-
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
