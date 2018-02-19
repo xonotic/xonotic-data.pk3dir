@@ -36,10 +36,10 @@
 		if (pos.y >= 1) me.pressed = 0;
 		return 1;
 	}
-	float Button_mousePress(entity me, vector pos)
+	METHOD(Button, mousePress, bool(Button this, vector pos))
 	{
-		me.mouseDrag(me, pos);  // verify coordinates
-		return 1;
+		this.mouseDrag(this, pos);  // verify coordinates
+		return true;
 	}
 	float Button_mouseRelease(entity me, vector pos)
 	{
