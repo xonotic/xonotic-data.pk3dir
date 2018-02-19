@@ -1,0 +1,24 @@
+#pragma once
+
+#include "listbox.qh"
+#include "tab.qh"
+CLASS(XonoticScrollPanel, XonoticListBox)
+	/** container for single child panel */
+	ATTRIB(XonoticScrollPanel, currentPanel, entity, NEW(XonoticTab));
+	ATTRIB(XonoticScrollPanel, nItems, int, 1);
+	ATTRIB(XonoticScrollPanel, selectionDoesntMatter, bool, true);
+	ATTRIB(XonoticScrollPanel, itemHeight, float, 1);
+	/** number of rows to show at once */
+	ATTRIB(XonoticScrollPanel, viewportHeight, float, 12);
+	ATTRIB(XonoticScrollPanel, alphaBG, float, 0);
+
+	METHOD(XonoticScrollPanel, getItemAtPos, float(XonoticScrollPanel this, float pos)) { return 0; }
+	METHOD(XonoticScrollPanel, getItemHeight, float(XonoticScrollPanel this, int i)) { return this.itemHeight; }
+	METHOD(XonoticScrollPanel, getItemStart, float(XonoticScrollPanel this, int i)) { return 0; }
+	METHOD(XonoticScrollPanel, getTotalHeight, float(XonoticScrollPanel this)) { return this.itemHeight; }
+	METHOD(XonoticScrollPanel, setFocus, void(XonoticScrollPanel this, entity other)) { Container_setFocus(this, other); }
+	METHOD(XonoticScrollPanel, setSelected, void(XonoticScrollPanel this, int i)) { }
+
+	METHOD(XonoticScrollPanel, drawListBoxItem, void(XonoticScrollPanel this, int i, vector absSize, bool isSelected, bool isFocused));
+	METHOD(XonoticScrollPanel, resizeNotify, void(XonoticScrollPanel this, vector relOrigin, vector relSize, vector absOrigin, vector absSize));
+ENDCLASS(XonoticScrollPanel)

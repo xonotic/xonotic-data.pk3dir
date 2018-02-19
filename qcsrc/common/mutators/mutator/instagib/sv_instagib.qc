@@ -17,17 +17,25 @@ float autocvar_g_instagib_speed_highspeed;
 
 #include <common/items/_mod.qh>
 
-REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball);
-
-spawnfunc(item_minst_cells)
+REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
 {
-	if (!g_instagib) { delete(this); return; }
-	StartItem(this, ITEM_VaporizerCells);
+	MUTATOR_ONADD
+	{
+		ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Invisibility.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Speed.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+	}
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Invisibility.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Speed.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+	}
 }
 
 void instagib_invisibility(entity this)
 {
-	this.strength_finished = autocvar_g_balance_powerup_strength_time;
+	this.strength_finished = autocvar_g_instagib_invisibility_time;
 	StartItem(this, ITEM_Invisibility);
 }
 
@@ -38,7 +46,7 @@ void instagib_extralife(entity this)
 
 void instagib_speed(entity this)
 {
-	this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	this.invincible_finished = autocvar_g_instagib_speed_time;
 	StartItem(this, ITEM_Speed);
 }
 
@@ -76,59 +84,59 @@ void instagib_ammocheck(entity this)
 		this.instagib_needammo = true;
 		if (hp <= 5)
 		{
-			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
 		}
 		else if (hp <= 10)
 		{
-			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_1);
 		}
 		else if (hp <= 20)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_2);
 		}
 		else if (hp <= 30)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_3);
 		}
 		else if (hp <= 40)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_4);
 		}
 		else if (hp <= 50)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_5);
 		}
 		else if (hp <= 60)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_6);
 		}
 		else if (hp <= 70)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_7);
 		}
 		else if (hp <= 80)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_8);
 		}
 		else if (hp <= 90)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_9);
 		}
 		else
 		{
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, MULTI_INSTAGIB_FINDAMMO);
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 	}
 	this.instagib_nextthink = time + 1;
@@ -168,6 +176,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	instagib_stop_countdown(player);
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidRandomStartWeapons)
+{
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
@@ -240,14 +253,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 }
 
-.float stat_sv_maxspeed;
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.items & ITEM_Speed.m_itemid)
-		player.stat_sv_maxspeed = player.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_instagib_speed_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
@@ -377,13 +389,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 
 void replace_with_insta_cells(entity item)
 {
-	entity e = spawn();
+	entity e = new(item_vaporizer_cells);
 	setorigin(e, item.origin);
-	e.noalign = item.noalign;
+	e.noalign = Item_ShouldKeepPosition(item);
 	e.cnt = item.cnt;
 	e.team = item.team;
 	e.spawnfunc_checked = true;
-	spawnfunc_item_minst_cells(e);
+	spawnfunc_item_vaporizer_cells(e);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
@@ -423,7 +435,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon")
+	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item))
 	{
 		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;
@@ -439,7 +451,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return false;
 
 	float cells = GetResourceAmount(item, RESOURCE_CELLS);
-	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells")
+	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
 		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 
 	if(cells && !item.weapon)
@@ -508,18 +520,27 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
+	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_health_mega"))
 		return;
 
 	entity e = spawn();
 
 	float r = random();
 	if (r < 0.3)
+	{
+		e.classname = "item_invisibility";
 		setthink(e, instagib_invisibility);
+	}
 	else if (r < 0.6)
+	{
+		e.classname = "item_extralife";
 		setthink(e, instagib_extralife);
+	}
 	else
+	{
+		e.classname = "item_speed";
 		setthink(e, instagib_speed);
+	}
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = ent.spawnflags;

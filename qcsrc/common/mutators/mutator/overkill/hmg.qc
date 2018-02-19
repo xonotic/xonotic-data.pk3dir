@@ -10,8 +10,6 @@ MUTATOR_HOOKFUNCTION(hmg_nadesupport, Nade_Damage)
 	M_ARGV(3, float) /* damage */ = (M_ARGV(0, entity)).max_health * 0.1;
 }
 
-spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
-
 void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	if (!PHYS_INPUT_BUTTON_ATCK(actor))
@@ -29,7 +27,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	W_DecreaseAmmo(WEP_HMG, actor, WEP_CVAR(hmg, ammo), weaponentity);
 
-	W_SetupShot (actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage), WEP_HMG.m_id);
 
 	if(!autocvar_g_norecoil)
 	{

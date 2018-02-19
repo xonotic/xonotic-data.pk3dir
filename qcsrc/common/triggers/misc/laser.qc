@@ -118,7 +118,7 @@ void misc_laser_think(entity this)
 			if(((this.spawnflags & 8) == 0) == (this.team != hitent.team))
 				return;
 		if(hitent.takedamage)
-			Damage(hitent, this, this, ((this.dmg < 0) ? 100000 : (this.dmg * frametime)), DEATH_HURTTRIGGER.m_id, hitloc, '0 0 0');
+			Damage(hitent, this, this, ((this.dmg < 0) ? 100000 : (this.dmg * frametime)), DEATH_HURTTRIGGER.m_id, DMG_NOWEP, hitloc, '0 0 0');
 	}
 }
 
@@ -137,9 +137,7 @@ bool laser_SendEntity(entity this, entity to, float fl)
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 	if(fl & 8)
 	{
@@ -160,9 +158,7 @@ bool laser_SendEntity(entity this, entity to, float fl)
 	{
 		if(fl & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, this.enemy.origin_x);
-			WriteCoord(MSG_ENTITY, this.enemy.origin_y);
-			WriteCoord(MSG_ENTITY, this.enemy.origin_z);
+			WriteVector(MSG_ENTITY, this.enemy.origin);
 		}
 		else
 		{
@@ -331,9 +327,7 @@ NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 
 	if(f & 1)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
 	if(f & 8)
@@ -361,9 +355,7 @@ NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 	{
 		if(f & 0x80)
 		{
-			this.velocity_x = ReadCoord();
-			this.velocity_y = ReadCoord();
-			this.velocity_z = ReadCoord();
+			this.velocity = ReadVector();
 		}
 		else
 		{

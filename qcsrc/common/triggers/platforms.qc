@@ -6,13 +6,13 @@ void generic_plat_blocked(entity this, entity blocker)
 	{
 		if(this.dmgtime2 < time)
 		{
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 			this.dmgtime2 = time + this.dmgtime;
 		}
 
 		// Gib dead/dying stuff
 		if(IS_DEAD(blocker))
-			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 	}
 #endif
 }
@@ -140,7 +140,7 @@ void plat_crush(entity this, entity blocker)
 	if((this.spawnflags & 4) && (blocker.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 	}
 	else
@@ -148,10 +148,10 @@ void plat_crush(entity this, entity blocker)
 #ifdef SVQC
 		if((this.dmg) && (blocker.takedamage != DAMAGE_NO))
 		{   // Shall we bite?
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 			// Gib dead/dying stuff
 			if(IS_DEAD(blocker))
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
 

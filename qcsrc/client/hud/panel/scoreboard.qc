@@ -96,6 +96,7 @@ string TranslateScoresLabel(string l)
 		case "kd": return CTX(_("SCO^k/d"));
 		case "kdr": return CTX(_("SCO^kdr"));
 		case "kills": return CTX(_("SCO^kills"));
+		case "teamkills": return CTX(_("SCO^teamkills"));
 		case "laps": return CTX(_("SCO^laps"));
 		case "lives": return CTX(_("SCO^lives"));
 		case "losses": return CTX(_("SCO^losses"));
@@ -312,6 +313,7 @@ void Cmd_Scoreboard_Help()
 	LOG_INFO(_("^3deaths^7                   Number of deaths"));
 	LOG_INFO(_("^3suicides^7                 Number of suicides"));
 	LOG_INFO(_("^3frags^7                    kills - suicides"));
+	LOG_INFO(_("^3teamkills^7                Number of teamkills"));
 	LOG_INFO(_("^3kd^7                       The kill-death ratio"));
 	LOG_INFO(_("^3dmg^7                      The total damage done"));
 	LOG_INFO(_("^3dmgtaken^7                 The total damage taken"));
@@ -360,15 +362,18 @@ void Cmd_Scoreboard_Help()
 "ping pl name |" \
 " -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
 " -teams,lms/deaths +ft,tdm/deaths" \
+" +tdm/sum" \
 " -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
 " -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
+" +tdm,ft,dom,ons,as/teamkills"\
 " -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
-" +ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes" \
+" +ctf/pickups +ctf/fckills +ctf/returns +ctf/caps +ons/takes +ons/caps" \
 " +lms/lives +lms/rank" \
-" +kh/caps +kh/pushes +kh/destroyed" \
+" +kh/kckills +kh/losses +kh/caps" \
 " ?+rc/laps ?+rc/time +rc,cts/fastest" \
 " +as/objectives +nb/faults +nb/goals" \
 " +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
+" +dom/ticks +dom/takes" \
 " -lms,rc,cts,inv,nb/score"
 
 void Cmd_Scoreboard_SetFields(int argc)
@@ -1135,6 +1140,11 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
+		if(it.spawnflags & WEP_TYPE_OTHER)
+		{
+			++nHidden;
+			continue;
+		}
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 		{
 			if (((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)))
@@ -1214,6 +1224,8 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
+			continue;
+		if (it.spawnflags & WEP_TYPE_OTHER)
 			continue;
 
 		float weapon_alpha;

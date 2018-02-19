@@ -1574,11 +1574,13 @@ void GameCommand_trace(float request, float argc)
 
 				case "walk":
 				{
-					if (argc == 4)
+					if (argc == 4 || argc == 5)
 					{
 						e = nextent(NULL);
-						if (tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), MOVE_NORMAL)) LOG_INFO("can walk");
-						else LOG_INFO("cannot walk");
+						if (tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), stof(argv(4)), MOVE_NORMAL))
+							LOG_INFO("can walk");
+						else
+							LOG_INFO("cannot walk");
 						return;
 					}
 				}
@@ -1604,7 +1606,9 @@ void GameCommand_trace(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2trace^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd trace command (startpos endpos)");
+			LOG_INFO("Usage:^3 sv_cmd trace command [startpos endpos] [endpos_height]");
+			LOG_INFO("  Where startpos and endpos are parameters for 'walk' and 'showline' commands,");
+			LOG_INFO("  'endpos_height' is an optional parameter for 'walk' command,");
 			LOG_INFO("  Full list of commands here: \"debug, debug2, walk, showline.\"");
 			LOG_INFO("See also: ^2bbox, gettaginfo^7");
 			return;

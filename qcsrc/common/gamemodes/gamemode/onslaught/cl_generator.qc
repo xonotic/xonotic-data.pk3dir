@@ -192,9 +192,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 
 	if(sf & GSF_SETUP)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
 		this.health = ReadByte();

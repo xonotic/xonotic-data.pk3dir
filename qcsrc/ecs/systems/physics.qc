@@ -48,7 +48,7 @@ void sys_phys_update(entity this, float dt)
 
 	if (!IS_PLAYER(this)) {
 		sys_phys_spectator_control(this);
-		maxspeed_mod = this.spectatorspeed;
+		maxspeed_mod = STAT(SPECTATORSPEED, this);
 	}
 	sys_phys_fixspeed(this, maxspeed_mod);
 
@@ -108,6 +108,7 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_water = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_water = false;
+		this.jumppadcount = 0;
 	} else if (time < this.ladder_time) {
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;

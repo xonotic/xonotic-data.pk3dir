@@ -66,7 +66,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
 }
 
-void fd_secret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void fd_secret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	fd_secret_use(this, NULL, NULL);
 }
@@ -228,6 +228,7 @@ spawnfunc(func_door_secret)
 
 	if (this.spawnflags & SECRET_YES_SHOOT)
 	{
+		//this.canteamdamage = true; // TODO
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = fd_secret_damage;

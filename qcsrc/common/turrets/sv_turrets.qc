@@ -212,7 +212,7 @@ void turret_die(entity this)
 	}
 }
 
-void turret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
+void turret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
 	// Enough already!
 	if(this.deadflag == DEAD_DEAD)
@@ -313,9 +313,7 @@ bool turret_send(entity this, entity to, float sf)
 	{
 		WriteByte(MSG_ENTITY, this.m_id);
 
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 
 		WriteAngle(MSG_ENTITY, this.angles_x);
 		WriteAngle(MSG_ENTITY, this.angles_y);
@@ -335,13 +333,9 @@ bool turret_send(entity this, entity to, float sf)
 
 	if(sf & TNSF_MOVE)
 	{
-		WriteShort(MSG_ENTITY, rint(this.origin_x));
-		WriteShort(MSG_ENTITY, rint(this.origin_y));
-		WriteShort(MSG_ENTITY, rint(this.origin_z));
+		WriteVector(MSG_ENTITY, this.origin);
 
-		WriteShort(MSG_ENTITY, rint(this.velocity_x));
-		WriteShort(MSG_ENTITY, rint(this.velocity_y));
-		WriteShort(MSG_ENTITY, rint(this.velocity_z));
+		WriteVector(MSG_ENTITY, this.velocity);
 
 		WriteShort(MSG_ENTITY, rint(this.angles_y));
 	}
@@ -439,11 +433,11 @@ void turret_projectile_explode(entity this)
 	this.event_damage = func_null;
 #ifdef TURRET_DEBUG
 	float d;
-	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
+	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, DMG_NOWEP, NULL);
 	this.owner.tur_debug_dmg_t_h = this.owner.tur_debug_dmg_t_h + d;
 	this.owner.tur_debug_dmg_t_f = this.owner.tur_debug_dmg_t_f + this.owner.shot_dmg;
 #else
-	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
+	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, DMG_NOWEP, NULL);
 #endif
 	delete(this);
 }
@@ -454,7 +448,7 @@ void turret_projectile_touch(entity this, entity toucher)
 	turret_projectile_explode(this);
 }
 
-void turret_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
+void turret_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
 	this.velocity  += vforce;
 	this.health	-= damage;

@@ -705,7 +705,7 @@ void checkpoint_passed(entity this, entity player)
 	else
 	{
 		if(this.spawnflags & 4)
-			Damage (player, this, this, 10000, DEATH_HURTTRIGGER.m_id, player.origin, '0 0 0');
+			Damage (player, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, player.origin, '0 0 0');
 	}
 }
 

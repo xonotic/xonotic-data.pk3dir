@@ -1,7 +1,6 @@
 #include "electro.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_electro) { weapon_defaultspawnfunc(this, WEP_ELECTRO); }
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
@@ -66,6 +65,7 @@ void W_Electro_ExplodeCombo(entity this)
 		NULL,
 		WEP_CVAR(electro, combo_force),
 		WEP_ELECTRO.m_id | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
+		this.weaponentity_fld,
 		NULL
 	);
 
@@ -96,6 +96,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 			NULL,
 			WEP_CVAR_SEC(electro, force),
 			this.projectiledeathtype,
+			this.weaponentity_fld,
 			directhitentity
 		);
 	}
@@ -112,6 +113,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 			NULL,
 			WEP_CVAR_PRI(electro, force),
 			this.projectiledeathtype,
+			this.weaponentity_fld,
 			directhitentity
 		);
 	}
@@ -202,7 +204,8 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 		2,
 		SND_ELECTRO_FIRE,
 		CH_WEAPON_A,
-		WEP_CVAR_PRI(electro, damage)
+		WEP_CVAR_PRI(electro, damage),
+		WEP_ELECTRO.m_id
 	);
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -217,6 +220,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.ltime = time + WEP_CVAR_PRI(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO.m_id;
+	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	// if (IS_CSQC)
@@ -262,6 +266,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 
 	set_movetype(newproj, MOVETYPE_NONE); // lock the orb in place
 	newproj.projectiledeathtype = this.projectiledeathtype;
+	newproj.weaponentity_fld = this.weaponentity_fld;
 
 	settouch(newproj, func_null);
 	setthink(newproj, getthink(this));
@@ -282,7 +287,7 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 	if(toucher.takedamage == DAMAGE_AIM)
 		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(this, toucher); } }
-	else
+	else if(toucher.owner != this.owner && toucher.classname != this.classname) // don't stick to player's other projectiles!
 	{
 		//UpdateCSQCProjectile(this);
 		spamsound(this, CH_SHOTS, SND_ELECTRO_BOUNCE, VOL_BASE, ATTEN_NORM);
@@ -293,7 +298,7 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 	}
 }
 
-void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -348,7 +353,8 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 		2,
 		SND_ELECTRO_FIRE2,
 		CH_WEAPON_A,
-		WEP_CVAR_SEC(electro, damage)
+		WEP_CVAR_SEC(electro, damage),
+		WEP_ELECTRO.m_id | HITTYPE_SECONDARY
 	);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -364,6 +370,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.nextthink = time + WEP_CVAR_SEC(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_SECONDARY;
+	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	//proj.glow_size = 50;

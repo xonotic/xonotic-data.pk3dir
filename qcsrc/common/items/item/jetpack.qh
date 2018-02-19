@@ -23,8 +23,14 @@ void powerup_jetpack_init(entity item)
         item.ammo_fuel = g_pickup_fuel_jetpack;
 }
 #endif
+
+CLASS(Jetpack, Powerup)
+ENDCLASS(Jetpack)
+
 REGISTER_ITEM(Jetpack, Powerup) {
+    this.m_canonical_spawnfunc = "item_jetpack";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_Jetpack_ITEM;
     this.m_itemid               =   IT_JETPACK;
 #endif
@@ -41,6 +47,8 @@ REGISTER_ITEM(Jetpack, Powerup) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_jetpack, ITEM_Jetpack)
+
 #ifdef GAMEQC
 MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
 #endif
@@ -54,7 +62,9 @@ void ammo_fuel_init(entity item)
 }
 #endif
 REGISTER_ITEM(JetpackFuel, Ammo) {
+    this.m_canonical_spawnfunc = "item_fuel";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model    =   MDL_JetpackFuel_ITEM;
 #endif
     this.netname    =   "fuel";
@@ -67,12 +77,19 @@ REGISTER_ITEM(JetpackFuel, Ammo) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_fuel, ITEM_JetpackFuel)
+
 #ifdef GAMEQC
 MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
 #endif
 
-REGISTER_ITEM(JetpackRegen, Powerup) {
+CLASS(JetpackRegen, Powerup)
+ENDCLASS(JetpackRegen)
+
+REGISTER_ITEM(JetpackRegen, JetpackRegen) {
+    this.m_canonical_spawnfunc = "item_fuel_regen";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_JetpackRegen_ITEM;
 #endif
     this.netname                =   "fuel_regen";
@@ -87,3 +104,5 @@ REGISTER_ITEM(JetpackRegen, Powerup) {
     this.m_pickupevalfunc       =   ammo_pickupevalfunc;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_fuel_regen, ITEM_JetpackRegen)
