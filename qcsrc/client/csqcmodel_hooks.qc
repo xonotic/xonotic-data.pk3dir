@@ -79,7 +79,7 @@ void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
 	}
 	else
 	{
-		float distance = vlen(this.origin - view_origin);
+		float distance = vlen(((isplayer) ? this.origin : NearestPointOnBox(this, view_origin)) - view_origin); // TODO: perhaps it should just use NearestPointOnBox all the time, player hitbox can potentially be huge
 		float f = (distance * current_viewzoom + 100.0) * detailreduction;
 		f *= 1.0 / bound(0.01, view_quality, 1);
 		if(f > autocvar_cl_loddistance2)
