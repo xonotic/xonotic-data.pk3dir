@@ -51,11 +51,11 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						++tdeath_hit;
-				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, head.origin, '0 0 0');
+				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, DMG_NOWEP, head.origin, '0 0 0');
 			}
 		}
 		else // dead bodies and monsters gib themselves instead of telefragging
-			Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, telefragger.origin, '0 0 0');
+			Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, DMG_NOWEP, telefragger.origin, '0 0 0');
 	}
 }
 

@@ -591,8 +591,9 @@ MUTATOR_HOOKFUNCTION(as, CheckRules_World)
 
 MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
 {
-	// no assault warmups
+	// incompatible
 	warmup_stage = 0;
+	sv_ready_restart_after_countdown = 0;
 }
 
 MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)

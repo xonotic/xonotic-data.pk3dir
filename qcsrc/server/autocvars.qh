@@ -79,6 +79,7 @@ float autocvar_g_balance_pause_health_rot_spawn;
 float autocvar_g_balance_portal_health;
 float autocvar_g_balance_portal_lifetime;
 float autocvar_g_balance_powerup_invincible_takedamage;
+float autocvar_g_balance_powerup_invincible_takeforce = 0.33;
 //float autocvar_g_balance_powerup_invincible_time;
 float autocvar_g_balance_powerup_strength_damage;
 float autocvar_g_balance_powerup_strength_force;
@@ -324,9 +325,6 @@ string autocvar_sv_motd;
 bool autocvar_sv_precacheplayermodels;
 //float autocvar_sv_precacheweapons; // WEAPONTODO?
 bool autocvar_sv_q3acompat_machineshotgunswap;
-bool autocvar_sv_ready_restart;
-bool autocvar_sv_ready_restart_after_countdown;
-bool autocvar_sv_ready_restart_repeatable;
 bool autocvar_sv_servermodelsonly;
 int autocvar_sv_spectate;
 float autocvar_sv_spectator_speed_multiplier;

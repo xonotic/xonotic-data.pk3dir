@@ -42,7 +42,7 @@
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
 //   want that!
 
-void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
 //
 // func_breakable
@@ -223,7 +223,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
 	if(this.dmg)
-		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, NULL, this.dmg_force, DEATH_HURTTRIGGER.m_id, NULL);
+		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, NULL, this.dmg_force, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, NULL);
 
 	if(this.cnt) // TODO
 		__pointparticles(this.cnt, this.absmin * 0.5 + this.absmax * 0.5, '0 0 0', this.count);
@@ -246,7 +246,7 @@ void func_breakable_destroy_self(entity this)
 	func_breakable_destroy(this, NULL, NULL);
 }
 
-void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.state == 1)
 		return;

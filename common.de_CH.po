@@ -248,7 +248,7 @@ msgstr "Fortfahren…"
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Chat"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -9502,6 +9502,9 @@ msgstr "Teamfarbe:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Panel aktivieren"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "Chat"
 
 #~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
 #~ msgstr "^BG%s%s^K1 kam ^BG%s^K1s Rakete zu nahe%s%s"

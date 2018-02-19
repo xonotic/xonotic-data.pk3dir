@@ -6,7 +6,7 @@
 # Jisoo Lim <liminj0719@gmail.com>, 2017
 # Kyf Lee (coughingmouse) <coughingmouse@gmail.com>, 2016
 # Kyf Lee (coughingmouse) <coughingmouse@gmail.com>, 2016-2017
-# Kyf Lee (coughingmouse) <coughingmouse@gmail.com>, 2017
+# Kyf Lee (coughingmouse) <coughingmouse@gmail.com>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
@@ -233,7 +233,7 @@ msgstr "계속..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "채팅"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -9186,3 +9186,6 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "제어반 활성화"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^채팅"

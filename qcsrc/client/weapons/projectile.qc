@@ -236,15 +236,11 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 	if (f & 1)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 		if (this.count & 0x80)
 		{
-			this.velocity_x = ReadCoord();
-			this.velocity_y = ReadCoord();
-			this.velocity_z = ReadCoord();
+			this.velocity = ReadVector();
 			if (f & 0x10)
 				this.gravity = ReadCoord();
 			else
