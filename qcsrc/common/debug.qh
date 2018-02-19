@@ -69,6 +69,7 @@ bool autocvar_debugdraw;
 		static int debugdraw_frame;
 		++debugdraw_frame;
 		const int sz = 8;
+		// *INDENT-OFF* too dumb to tell appart indentation and alignemnt inside macros
 		FOREACH_ENTITY(true, {
 			if (it.debugdraw_last == debugdraw_frame) continue;
 			int ofs = 0;
@@ -93,7 +94,6 @@ bool autocvar_debugdraw;
 				{
 					bool flag = true;
 					do {
-						// *INDENT-OFF* too dumb to tell appart indentation and alignemnt inside macros
 						//if (it.modelindex) break;
 						//if (it.absmin) break;
 						//if (it.absmax) break;
@@ -126,7 +126,6 @@ bool autocvar_debugdraw;
 						//if (it.flags) break;
 						//if (it.colormap) break;
 						//if (it.owner) break;
-						// *INDENT-ON*
 						flag = false;
 					} while (0);
 					if (!flag) continue;
@@ -148,8 +147,9 @@ bool autocvar_debugdraw;
 					it.classname, it.sourceLoc),
 					sz * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
 				++ofs;
-            });
+			});
 		});
+		// *INDENT-ON*
 	}
 #endif
 
