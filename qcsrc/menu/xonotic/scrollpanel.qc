@@ -18,16 +18,16 @@ METHOD(XonoticScrollPanel, resizeNotify, void(XonoticScrollPanel this, vector re
 	p.resizeNotify(p, relOrigin, relSize, absOrigin, absSize);
 }
 
-#define X(x) \
-METHOD(XonoticScrollPanel, x, bool(XonoticScrollPanel this, vector pos)) \
+#define X(mouseFunc) \
+METHOD(XonoticScrollPanel, mouseFunc, bool(XonoticScrollPanel this, vector pos)) \
 { \
-	SUPER(XonoticScrollPanel).x(this, pos); \
+	SUPER(XonoticScrollPanel).mouseFunc(this, pos); \
 	XonoticTab p = this.currentPanel; \
 	this.setFocus(this, p); \
 	\
 	vector o = -eY * this.scrollPos; \
 	vector s = eX * (1 - this.controlWidth) + eY * this.itemHeight; \
-	return p.x(p, globalToBox(pos, o, s)); \
+	return p.mouseFunc(p, globalToBox(pos, o, s)); \
 }
 X(mouseMove)
 X(mousePress)
@@ -35,11 +35,11 @@ X(mouseDrag)
 X(mouseRelease)
 #undef X
 
-#define X(x) \
-METHOD(XonoticScrollPanel, x, bool(XonoticScrollPanel this, int key, int ascii, bool shift)) \
+#define X(keyFunc) \
+METHOD(XonoticScrollPanel, keyFunc, bool(XonoticScrollPanel this, int key, int ascii, bool shift)) \
 { \
 	XonoticTab p = this.currentPanel; \
-	return p.x(p, key, ascii, shift) || SUPER(XonoticScrollPanel).x(this, key, ascii, shift); \
+	return p.keyFunc(p, key, ascii, shift) || SUPER(XonoticScrollPanel).keyFunc(this, key, ascii, shift); \
 }
 X(keyDown)
 X(keyUp)
