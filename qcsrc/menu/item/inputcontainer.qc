@@ -89,11 +89,10 @@
 		if (e && !e.focusable) e = NULL;
 		entity prev = this.mouseFocusedChild;
 		this.mouseFocusedChild = e;
-		if (!e) return false;  // keep focus when hovering over non-focusable elements
 		if (e != prev)
 		{
 			this.setFocus(this, e);
-			if (e.instanceOfInputContainer)
+			if (e && e.instanceOfInputContainer)
 			{
 				e.focusedChild = NULL;
 				e._changeFocusXY(e, globalToBox(pos, e.Container_origin, e.Container_size));

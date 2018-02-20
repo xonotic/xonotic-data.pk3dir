@@ -308,7 +308,8 @@
 				me.focusedChild.focused = 1;
 				me.focusedChild.focusEnter(me.focusedChild);
 
-				if (me.focusedChild.instanceOfContainer) me.focusedChild.setFocus(me.focusedChild, me.focusedChild.savedFocus);
+				if (me.focusedChild.instanceOfContainer)
+					me.focusedChild.setFocus(me.focusedChild, me.focusedChild.savedFocus);
 			}
 			else
 			{
