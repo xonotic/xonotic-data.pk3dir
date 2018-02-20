@@ -1020,7 +1020,7 @@ float MapHasRightSize(string map)
 			LOG_TRACE("not enough");
 			return false;
 		}
-		if(player_count > mapmax)
+		if(mapmax && player_count > mapmax)
 		{
 			LOG_TRACE("too many");
 			return false;
