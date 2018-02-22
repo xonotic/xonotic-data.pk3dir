@@ -5,7 +5,7 @@
 #include "../item/image.qh"
 CLASS(XonoticColorpickerString, Image)
 	METHOD(XonoticColorpickerString, configureXonoticColorpickerString, void(entity, string, string));
-	METHOD(XonoticColorpickerString, mousePress, float(entity, vector));
+	METHOD(XonoticColorpickerString, mousePress, bool(XonoticColorpickerString this, vector pos));
 	METHOD(XonoticColorpickerString, mouseRelease, float(entity, vector));
 	METHOD(XonoticColorpickerString, mouseDrag, float(entity, vector));
 

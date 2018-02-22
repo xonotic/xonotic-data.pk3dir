@@ -873,18 +873,13 @@ MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 	return false;
 }
 
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
-
-MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(nb, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.ballcarried)
-	{
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_nexball_basketball_carrier_highspeed;
-		player.stat_sv_maxspeed *= autocvar_g_nexball_basketball_carrier_highspeed;
-	}
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nexball_basketball_carrier_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)

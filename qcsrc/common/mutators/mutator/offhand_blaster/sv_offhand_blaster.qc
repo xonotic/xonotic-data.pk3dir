@@ -1,4 +1,4 @@
-string autocvar_g_offhand_blaster;
+string autocvar_g_offhand_blaster = "0";
 
 REGISTER_MUTATOR(offhand_blaster, expr_evaluate(autocvar_g_offhand_blaster));
 
