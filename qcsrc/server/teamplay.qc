@@ -190,7 +190,7 @@ void KillPlayerForTeamChange(entity player)
 	{
 		return;
 	}
-	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, player.origin,
+	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, DMG_NOWEP, player.origin,
 		'0 0 0');
 }
 

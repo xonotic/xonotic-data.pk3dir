@@ -183,18 +183,6 @@ void NIX_GiveCurrentWeapon(entity this)
 			}
 		}
 
-		// vortex too
-		if(WEP_CVAR(vortex, charge))
-		{
-			if(WEP_CVAR_SEC(vortex, chargepool))
-				this.vortex_chargepool_ammo = 1;
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			{
-				.entity weaponentity = weaponentities[slot];
-				this.(weaponentity).vortex_charge = WEP_CVAR(vortex, charge_start);
-			}
-		}
-
 		// set last change info
 		this.nix_lastchange_id = nix_nextchange;
 	}
