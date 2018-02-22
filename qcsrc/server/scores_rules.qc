@@ -65,10 +65,7 @@ void ScoreRules_generic()
     int teams = 0;
 	if (teamplay) {
 		CheckAllowedTeams(NULL);
-		if (c1 >= 0) teams |= BIT(0);
-		if (c2 >= 0) teams |= BIT(1);
-		if (c3 >= 0) teams |= BIT(2);
-		if (c4 >= 0) teams |= BIT(3);
+		teams = GetAllowedTeams();
 	}
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {});
 }

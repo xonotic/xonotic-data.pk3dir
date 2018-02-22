@@ -1256,11 +1256,7 @@ void ClientConnect(entity this)
 	if (teamplay)
 	{
 		CheckAllowedTeams(this);
-		int t = 0;
-		if (c1 >= 0) t |= BIT(0);
-		if (c2 >= 0) t |= BIT(1);
-		if (c3 >= 0) t |= BIT(2);
-		if (c4 >= 0) t |= BIT(3);
+		int t = GetAllowedTeams();
 		stuffcmd(this, sprintf("set _teams_available %d\n", t));
 	}
 	else

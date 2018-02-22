@@ -465,12 +465,9 @@ void bot_removefromlargestteam()
 
 		int thiscount = 0;
 
-		switch(it.team)
+		if (Team_IsValidTeam(it.team))
 		{
-			case NUM_TEAM_1: thiscount = c1; break;
-			case NUM_TEAM_2: thiscount = c2; break;
-			case NUM_TEAM_3: thiscount = c3; break;
-			case NUM_TEAM_4: thiscount = c4; break;
+			thiscount = Team_GetNumberOfPlayers(Team_GetTeam(it.team));
 		}
 
 		if(thiscount > bestcount)

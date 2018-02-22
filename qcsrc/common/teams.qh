@@ -143,12 +143,12 @@ bool Team_IsValidTeam(int team_)
 	return false;
 }
 
-/// \brief Returns whether team number is valid.
-/// \param[in] number Team number to check.
-/// \return True if team number is valid, false otherwise.
-bool Team_IsValidNumber(int number)
+/// \brief Returns whether the team index is valid.
+/// \param[in] index Team index to check.
+/// \return True if team index is valid, false otherwise.
+bool Team_IsValidIndex(int index)
 {
-	switch (number)
+	switch (index)
 	{
 		case 1:
 		case 2:

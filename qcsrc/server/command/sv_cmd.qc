@@ -1073,7 +1073,7 @@ void GameCommand_moveplayer(float request, float argc)
 								else if (team_id == 0)  // auto team
 								{
 									CheckAllowedTeams(client);
-									team_id = Team_NumberToTeam(FindSmallestTeam(client, false));
+									team_id = Team_NumberToTeam(FindBestTeam(client, false));
 								}
 								else
 								{
@@ -1084,10 +1084,10 @@ void GameCommand_moveplayer(float request, float argc)
 								// Check to see if the destination team is even available
 								switch (team_id)
 								{
-									case NUM_TEAM_1: if (c1 == -1) { LOG_INFO("Sorry, can't move player to red team if it doesn't exist."); return; } break;
-									case NUM_TEAM_2: if (c2 == -1) { LOG_INFO("Sorry, can't move player to blue team if it doesn't exist."); return; } break;
-									case NUM_TEAM_3: if (c3 == -1) { LOG_INFO("Sorry, can't move player to yellow team if it doesn't exist."); return; } break;
-									case NUM_TEAM_4: if (c4 == -1) { LOG_INFO("Sorry, can't move player to pink team if it doesn't exist."); return; } break;
+									case NUM_TEAM_1: if (Team_IsAllowed(Team_GetTeamFromIndex(1))) { LOG_INFO("Sorry, can't move player to red team if it doesn't exist."); return; } break;
+									case NUM_TEAM_2: if (Team_IsAllowed(Team_GetTeamFromIndex(2))) { LOG_INFO("Sorry, can't move player to blue team if it doesn't exist."); return; } break;
+									case NUM_TEAM_3: if (Team_IsAllowed(Team_GetTeamFromIndex(3))) { LOG_INFO("Sorry, can't move player to yellow team if it doesn't exist."); return; } break;
+									case NUM_TEAM_4: if (Team_IsAllowed(Team_GetTeamFromIndex(4))) { LOG_INFO("Sorry, can't move player to pink team if it doesn't exist."); return; } break;
 
 									default: LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
 										return;
@@ -1367,10 +1367,13 @@ void GameCommand_shuffleteams(float request)
 
 			int number_of_teams = 0;
 			CheckAllowedTeams(NULL);
-			if (c1 >= 0) number_of_teams = max(1, number_of_teams);
-			if (c2 >= 0) number_of_teams = max(2, number_of_teams);
-			if (c3 >= 0) number_of_teams = max(3, number_of_teams);
-			if (c4 >= 0) number_of_teams = max(4, number_of_teams);
+			for (int i = 1; i < 5; ++i)
+			{
+				if (Team_IsAllowed(Team_GetTeamFromIndex(i)))
+				{
+					number_of_teams = max(i, number_of_teams);
+				}
+			}
 
 			int team_index = 0;
 			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {

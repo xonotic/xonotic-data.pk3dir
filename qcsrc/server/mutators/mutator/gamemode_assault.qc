@@ -579,7 +579,7 @@ MUTATOR_HOOKFUNCTION(as, PlayHitsound)
 MUTATOR_HOOKFUNCTION(as, CheckAllowedTeams)
 {
 	// assault always has 2 teams
-	c1 = c2 = 0;
+	M_ARGV(0, float) = BIT(0) | BIT(1);
 	return true;
 }
 

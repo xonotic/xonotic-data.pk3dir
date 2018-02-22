@@ -1690,10 +1690,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(teamplay)
 	{
-		team1_score = TeamScore_GetCompareValue(NUM_TEAM_1);
-		team2_score = TeamScore_GetCompareValue(NUM_TEAM_2);
-		team3_score = TeamScore_GetCompareValue(NUM_TEAM_3);
-		team4_score = TeamScore_GetCompareValue(NUM_TEAM_4);
+		for (int i = 1; i < 5; ++i)
+		{
+			Team_SetTeamScore(Team_GetTeamFromIndex(i),
+				TeamScore_GetCompareValue(Team_NumberToTeam(i)));
+		}
 	}
 
 	ClearWinners();
@@ -1763,30 +1764,32 @@ float WinningCondition_RanOutOfSpawns()
 	if(!some_spawn_has_been_used)
 		return WINNING_NO;
 
-	team1_score = team2_score = team3_score = team4_score = 0;
-
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-		switch(it.team)
+	for (int i = 1; i < 5; ++i)
+	{
+		Team_SetTeamScore(Team_GetTeamFromIndex(i), 0);
+	}
+	
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+	{
+		if (Team_IsValidTeam(it.team))
 		{
-			case NUM_TEAM_1: team1_score = 1; break;
-			case NUM_TEAM_2: team2_score = 1; break;
-			case NUM_TEAM_3: team3_score = 1; break;
-			case NUM_TEAM_4: team4_score = 1; break;
+			Team_SetTeamScore(Team_GetTeam(it.team), 1);
 		}
 	});
 
 	IL_EACH(g_spawnpoints, true,
 	{
-		switch(it.team)
+		if (Team_IsValidTeam(it.team))
 		{
-			case NUM_TEAM_1: team1_score = 1; break;
-			case NUM_TEAM_2: team2_score = 1; break;
-			case NUM_TEAM_3: team3_score = 1; break;
-			case NUM_TEAM_4: team4_score = 1; break;
+			Team_SetTeamScore(Team_GetTeam(it.team), 1);
 		}
 	});
 
 	ClearWinners();
+	float team1_score = Team_GetTeamScore(Team_GetTeamFromIndex(1));
+	float team2_score = Team_GetTeamScore(Team_GetTeamFromIndex(2));
+	float team3_score = Team_GetTeamScore(Team_GetTeamFromIndex(3));
+	float team4_score = Team_GetTeamScore(Team_GetTeamFromIndex(4));
 	if(team1_score + team2_score + team3_score + team4_score == 0)
 	{
 		checkrules_equality = true;
@@ -1796,20 +1799,28 @@ float WinningCondition_RanOutOfSpawns()
 	{
 		float t, i;
 		if(team1_score)
-			t = NUM_TEAM_1;
+			t = 1;
 		else if(team2_score)
-			t = NUM_TEAM_2;
+			t = 2;
 		else if(team3_score)
-			t = NUM_TEAM_3;
+			t = 3;
 		else // if(team4_score)
-			t = NUM_TEAM_4;
+			t = 4;
 		CheckAllowedTeams(NULL);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			if(t != NUM_TEAM_1) if(c1 >= 0) TeamScore_AddToTeam(NUM_TEAM_1, i, -1000);
-			if(t != NUM_TEAM_2) if(c2 >= 0) TeamScore_AddToTeam(NUM_TEAM_2, i, -1000);
-			if(t != NUM_TEAM_3) if(c3 >= 0) TeamScore_AddToTeam(NUM_TEAM_3, i, -1000);
-			if(t != NUM_TEAM_4) if(c4 >= 0) TeamScore_AddToTeam(NUM_TEAM_4, i, -1000);
+			for (int j = 1; j < 5; ++j)
+			{
+				if (t == j)
+				{
+					continue;
+				}
+				if (!Team_IsAllowed(Team_GetTeamFromIndex(j)))
+				{
+					continue;
+				}
+				TeamScore_AddToTeam(Team_NumberToTeam(j), i, -1000);
+			}
 		}
 
 		AddWinners(team, t);

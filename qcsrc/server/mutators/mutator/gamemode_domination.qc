@@ -426,12 +426,9 @@ MUTATOR_HOOKFUNCTION(dom, CheckAllowedTeams)
 	{
 		if(head.netname != "")
 		{
-			switch(head.team)
+			if (Team_IsValidTeam(head.team))
 			{
-				case NUM_TEAM_1: c1 = 0; break;
-				case NUM_TEAM_2: c2 = 0; break;
-				case NUM_TEAM_3: c3 = 0; break;
-				case NUM_TEAM_4: c4 = 0; break;
+				M_ARGV(0, float) |= BIT(Team_TeamToNumber(head.team) - 1);
 			}
 		}
 
@@ -643,13 +640,7 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	}
 
 	CheckAllowedTeams(NULL);
-	//domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
-
-	int teams = 0;
-	if(c1 >= 0) teams |= BIT(0);
-	if(c2 >= 0) teams |= BIT(1);
-	if(c3 >= 0) teams |= BIT(2);
-	if(c4 >= 0) teams |= BIT(3);
+	int teams = GetAllowedTeams();
 	domination_teams = teams;
 
 	domination_roundbased = autocvar_g_domination_roundbased;

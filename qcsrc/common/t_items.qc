@@ -631,11 +631,15 @@ float adjust_respawntime(float normal_respawntime) {
 	CheckAllowedTeams(NULL);
 	GetTeamCounts(NULL);
 	int players = 0;
-	if (c1 != -1) players += c1;
-	if (c2 != -1) players += c2;
-	if (c3 != -1) players += c3;
-	if (c4 != -1) players += c4;
-
+	for (int i = 1; i < 5; ++i)
+	{
+		entity team_ = Team_GetTeamFromIndex(i);
+		if (Team_IsAllowed(team_))
+		{
+			players += Team_GetNumberOfPlayers(team_);
+		}
+	}
+	
 	if (players >= 2) {
 		return normal_respawntime * (r / (players + o) + l);
 	} else {

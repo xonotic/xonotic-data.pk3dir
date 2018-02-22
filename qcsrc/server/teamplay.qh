@@ -3,33 +3,85 @@
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
-// The following variables are used for balancing. They are not updated
-// automatically. You need to call CheckAllowedTeams and GetTeamCounts to get
-// proper values.
+/// \brief Returns the global team entity at the given index.
+/// \param[in] index Index of the team.
+/// \return Global team entity at the given index.
+entity Team_GetTeamFromIndex(int index);
 
-// These four have 2 different states. If they are equal to -1, it means that
-// the player can't join the team. Zero or positive value means that player can
-// join the team and means the number of players on that team.
-float c1;
-float c2;
-float c3;
-float c4;
-float num_bots_team1; ///< Number of bots in the first team.
-float num_bots_team2; ///< Number of bots in the second team.
-float num_bots_team3; ///< Number of bots in the third team.
-float num_bots_team4; ///< Number of bots in the fourth team.
-entity lowest_human_team1; ///< Human with the lowest score in the first team.
-entity lowest_human_team2; ///< Human with the lowest score in the second team.
-entity lowest_human_team3; ///< Human with the lowest score in the third team.
-entity lowest_human_team4; ///< Human with the lowest score in the fourth team.
-entity lowest_bot_team1; ///< Bot with the lowest score in the first team.
-entity lowest_bot_team2; ///< Bot with the lowest score in the second team.
-entity lowest_bot_team3; ///< Bot with the lowest score in the third team.
-entity lowest_bot_team4; ///< Bot with the lowest score in the fourth team.
+/// \brief Returns the global team entity that corresponds to the given TEAM_NUM
+/// value.
+/// \param[in] team_num Team value. See TEAM_NUM constants.
+/// \return Global team entity that corresponds to the given TEAM_NUM value.
+entity Team_GetTeam(int team_num);
+
+/// \brief Returns the score of the team.
+/// \param[in] team_ Team entity.
+/// \return Score of the team.
+float Team_GetTeamScore(entity team_);
+
+/// \brief Sets the score of the team.
+/// \param[in,out] team_ Team entity.
+/// \param[in] score Score to set.
+void Team_SetTeamScore(entity team_, float score);
+
+/// \brief Checks whether the player can join teams according to global
+/// configuration and mutator settings.
+/// \param[in] for_whom Player to check for. Pass NULL for global rules.
+/// \note This function sets various internal variables and is required to be
+/// called before several other functions.
+void CheckAllowedTeams(entity for_whom);
+
+/// \brief Returns the bitmask of allowed teams.
+/// \return Bitmask of allowed teams.
+/// \note You need to call CheckAllowedTeams before calling this function.
+int GetAllowedTeams();
+
+/// \brief Returns whether the team is allowed.
+/// \param[in] team_ Team entity.
+/// \return True if team is allowed, false otherwise.
+/// \note You need to call CheckAllowedTeams before calling this function.
+bool Team_IsAllowed(entity team_);
+
+/// \brief Counts the number of players and various other information about
+/// each team.
+/// \param[in] ignore Player to ignore. This is useful if you plan to switch the
+/// player's team. Pass NULL for global information.
+/// \note You need to call CheckAllowedTeams before calling this function.
+/// \note This function sets many internal variables and is required to be
+/// called before several other functions.
+void GetTeamCounts(entity ignore);
+
+/// \brief Returns the number of players (both humans and bots) in a team.
+/// \param[in] team_ Team entity.
+/// \return Number of player (both humans and bots) in a team.
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
+int Team_GetNumberOfPlayers(entity team_);
+
+/// \brief Returns the number of bots in a team.
+/// \param[in] team_ Team entity.
+/// \return Number of bots in a team.
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
+int Team_GetNumberOfBots(entity team_);
+
+/// \brief Returns the human with the lowest score in a team or NULL if there is
+/// none.
+/// \param[in] team_ Team entity.
+/// \return Human with the lowest score in a team or NULL if there is none.
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
+entity Team_GetLowestHuman(entity team_);
+
+/// \brief Returns the bot with the lowest score in a team or NULL if there is
+/// none.
+/// \param[in] team_ Team entity.
+/// \return Bot with the lowest score in a team or NULL if there is none.
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
+entity Team_GetLowestBot(entity team_);
 
 int redowned, blueowned, yellowowned, pinkowned;
-
-//float audit_teams_time;
 
 void TeamchangeFrags(entity e);
 
@@ -43,11 +95,12 @@ string GetClientVersionMessage(entity this);
 
 string getwelcomemessage(entity this);
 
+void setcolor(entity this, int clr);
+
 void SetPlayerColors(entity player, float _color);
 
 /// \brief Kills player as a result of team change.
 /// \param[in,out] player Player to kill.
-/// \return No return.
 void KillPlayerForTeamChange(entity player);
 
 /// \brief Sets the team of the player.
@@ -58,63 +111,55 @@ bool SetPlayerTeamSimple(entity player, int team_num);
 
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
-/// \param[in] destination_team Team to set.
-/// \param[in] source_team Previous team of the player.
+/// \param[in] destination_team_index Index of the team to set.
+/// \param[in] source_team_index Previous index of the team of the player.
 /// \param[in] no_print Whether to print this event to players' console.
 /// \return True if team switch was successful, false otherwise.
-bool SetPlayerTeam(entity player, int destination_team, int source_team,
-	bool no_print);
-
-// set c1...c4 to show what teams are allowed
-void CheckAllowedTeams(entity for_whom);
-
-float PlayerValue(entity p);
-
-// c1...c4 should be set to -1 (not allowed) or 0 (allowed).
-// teams that are allowed will now have their player counts stored in c1...c4
-void GetTeamCounts(entity ignore);
+bool SetPlayerTeam(entity player, int destination_team_index,
+	int source_team_index, bool no_print);
 
 /// \brief Returns whether one team is smaller than the other.
-/// \param[in] team_a First team.
-/// \param[in] team_b Second team.
+/// \param[in] team_index_a Index of the first team.
+/// \param[in] team_index_b Index of the second team.
 /// \param[in] player Player to check.
 /// \param[in] use_score Whether to take into account team scores.
 /// \return True if first team is smaller than the second one, false otherwise.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
-/// been called.
-bool IsTeamSmallerThanTeam(int team_a, int team_b, entity player,
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
+bool IsTeamSmallerThanTeam(int team_index_a, int team_index_b, entity player,
 	bool use_score);
 
 /// \brief Returns whether one team is equal to the other.
-/// \param[in] team_a First team.
-/// \param[in] team_b Second team.
+/// \param[in] team_index_a Index of the first team.
+/// \param[in] team_index_b Index of the second team.
 /// \param[in] player Player to check.
 /// \param[in] use_score Whether to take into account team scores.
 /// \return True if first team is equal to the second one, false otherwise.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
-/// been called.
-bool IsTeamEqualToTeam(int team_a, int team_b, entity player, bool use_score);
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
+bool IsTeamEqualToTeam(int team_index_a, int team_index_b, entity player,
+	bool use_score);
 
 /// \brief Returns the bitmask of the best teams for the player to join.
 /// \param[in] player Player to check.
 /// \param[in] use_score Whether to take into account team scores.
 /// \return Bitmask of the best teams for the player to join.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
-/// been called.
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
 int FindBestTeams(entity player, bool use_score);
 
-// returns # of smallest team (1, 2, 3, 4)
-// NOTE: Assumes CheckAllowedTeams has already been called!
-int FindSmallestTeam(entity player, float ignore_player);
+/// \brief Finds the best team for the player.
+/// \param[in] player Player to check.
+/// \param[in] ignore_player ???
+/// \return Index of the best team for the player. If there are several equally
+/// good teams available, the function will pick a random one.
+int FindBestTeam(entity player, float ignore_player);
 
 void JoinBestTeam(entity this, bool force_best_team);
 
 /// \brief Auto balances bots in teams after the player has changed team.
-/// \param[in] source_team Previous team of the player (1, 2, 3, 4).
-/// \param[in] destination_team Current team of the player (1, 2, 3, 4).
-/// \return No return.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
-/// been called.
-void AutoBalanceBots(int source_team, int destination_team);
-
-void setcolor(entity this, int clr);
+/// \param[in] source_team_index Previous index of the team of the player.
+/// \param[in] destination_team_index Current index of the team of the player.
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
+void AutoBalanceBots(int source_team_index, int destination_team_index);
