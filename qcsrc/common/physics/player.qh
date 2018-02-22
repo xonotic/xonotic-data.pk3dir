@@ -255,10 +255,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 
 	void PM_UpdateButtons(entity this, entity store);
 
-	// TODO: modify maxspeed_mod and get rid of these!
-	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
-	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
-
 	/** Not real stats */
 	.string jumpspeedcap_min;
 	.string jumpspeedcap_max;

@@ -1315,15 +1315,13 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(nades, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
-	if (STAT(ENTRAP_ORB, player) > time)
-	{
-		player.stat_sv_maxspeed *= autocvar_g_nades_entrap_speed;
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_nades_entrap_speed;
-	}
+	if(STAT(ENTRAP_ORB, player) > time)
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nades_entrap_speed;
 }
 
 MUTATOR_HOOKFUNCTION(nades, MonsterMove)
