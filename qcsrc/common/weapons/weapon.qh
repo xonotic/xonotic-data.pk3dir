@@ -195,10 +195,10 @@ const int WEP_FLAG_RELOADABLE     =  BIT(6); // can has reload
 const int WEP_FLAG_SUPERWEAPON    =  BIT(7); // powerup timer
 const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
-const int WEP_TYPE_MELEE_SEC      =  BIT(12); // secondary attack is melee swing (for animation)
-const int WEP_FLAG_DUALWIELD      =  BIT(13); // weapon can be dual wielded
-const int WEP_FLAG_NODUAL         =  BIT(14); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
-const int WEP_FLAG_PENETRATEWALLS =  BIT(15); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
+const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
+const int WEP_FLAG_DUALWIELD      =  BIT(11); // weapon can be dual wielded
+const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
+const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
 
 // variables:
 string weaponorder_byid;

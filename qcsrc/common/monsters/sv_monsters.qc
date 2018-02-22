@@ -1151,20 +1151,20 @@ void Monster_Frozen_Think(entity this)
 {
 	if(STAT(FROZEN, this) == 2)
 	{
-		this.revive_progress = bound(0, this.revive_progress + this.ticrate * this.revive_speed, 1);
-		this.health = max(1, this.revive_progress * this.max_health);
-		this.iceblock.alpha = bound(0.2, 1 - this.revive_progress, 1);
+		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
+		this.health = max(1, STAT(REVIVE_PROGRESS, this) * this.max_health);
+		this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
 			WaypointSprite_UpdateHealth(this.sprite, this.health);
 
-		if(this.revive_progress >= 1)
+		if(STAT(REVIVE_PROGRESS, this) >= 1)
 			Unfreeze(this);
 	}
 	else if(STAT(FROZEN, this) == 3)
 	{
-		this.revive_progress = bound(0, this.revive_progress - this.ticrate * this.revive_speed, 1);
-		this.health = max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * this.revive_progress );
+		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - this.ticrate * this.revive_speed, 1);
+		this.health = max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this) );
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
 			WaypointSprite_UpdateHealth(this.sprite, this.health);
@@ -1177,7 +1177,7 @@ void Monster_Frozen_Think(entity this)
 				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 
-		else if ( this.revive_progress <= 0 )
+		else if ( STAT(REVIVE_PROGRESS, this) <= 0 )
 			Unfreeze(this);
 	}
 	// otherwise, no revival!

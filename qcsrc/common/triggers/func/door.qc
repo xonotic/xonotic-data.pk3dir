@@ -628,16 +628,10 @@ float door_send(entity this, entity to, float sf)
 
 		trigger_common_write(this, true);
 
-		WriteCoord(MSG_ENTITY, this.pos1_x);
-		WriteCoord(MSG_ENTITY, this.pos1_y);
-		WriteCoord(MSG_ENTITY, this.pos1_z);
-		WriteCoord(MSG_ENTITY, this.pos2_x);
-		WriteCoord(MSG_ENTITY, this.pos2_y);
-		WriteCoord(MSG_ENTITY, this.pos2_z);
+		WriteVector(MSG_ENTITY, this.pos1);
+		WriteVector(MSG_ENTITY, this.pos2);
 
-		WriteCoord(MSG_ENTITY, this.size_x);
-		WriteCoord(MSG_ENTITY, this.size_y);
-		WriteCoord(MSG_ENTITY, this.size_z);
+		WriteVector(MSG_ENTITY, this.size);
 
 		WriteShort(MSG_ENTITY, this.wait);
 		WriteShort(MSG_ENTITY, this.speed);
@@ -653,16 +647,10 @@ float door_send(entity this, entity to, float sf)
 
 	if(sf & SF_TRIGGER_UPDATE)
 	{
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 
-		WriteCoord(MSG_ENTITY, this.pos1_x);
-		WriteCoord(MSG_ENTITY, this.pos1_y);
-		WriteCoord(MSG_ENTITY, this.pos1_z);
-		WriteCoord(MSG_ENTITY, this.pos2_x);
-		WriteCoord(MSG_ENTITY, this.pos2_y);
-		WriteCoord(MSG_ENTITY, this.pos2_z);
+		WriteVector(MSG_ENTITY, this.pos1);
+		WriteVector(MSG_ENTITY, this.pos2);
 	}
 
 	return true;
@@ -798,22 +786,10 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 
 		trigger_common_read(this, true);
 
-		vector v;
+		this.pos1 = ReadVector();
+		this.pos2 = ReadVector();
 
-		v.x = ReadCoord();
-		v.y = ReadCoord();
-		v.z = ReadCoord();
-		this.pos1 = v;
-
-		v.x = ReadCoord();
-		v.y = ReadCoord();
-		v.z = ReadCoord();
-		this.pos2 = v;
-
-		v.x = ReadCoord();
-		v.y = ReadCoord();
-		v.z = ReadCoord();
-		this.size = v;
+		this.size = ReadVector();
 
 		this.wait = ReadShort();
 		this.speed = ReadShort();
@@ -841,17 +817,11 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 
 	if(sf & SF_TRIGGER_UPDATE)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.pos1_x = ReadCoord();
-		this.pos1_y = ReadCoord();
-		this.pos1_z = ReadCoord();
-		this.pos2_x = ReadCoord();
-		this.pos2_y = ReadCoord();
-		this.pos2_z = ReadCoord();
+		this.pos1 = ReadVector();
+		this.pos2 = ReadVector();
 	}
 	return true;
 }

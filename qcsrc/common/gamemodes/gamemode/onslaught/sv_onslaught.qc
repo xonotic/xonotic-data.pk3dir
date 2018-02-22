@@ -38,9 +38,7 @@ bool clientcamera_send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	WriteAngle(MSG_ENTITY, this.angles_x);
 	WriteAngle(MSG_ENTITY, this.angles_y);
@@ -272,15 +270,11 @@ bool ons_Link_Send(entity this, entity to, int sendflags)
 	WriteByte(MSG_ENTITY, sendflags);
 	if(sendflags & 1)
 	{
-		WriteCoord(MSG_ENTITY, this.goalentity.origin_x);
-		WriteCoord(MSG_ENTITY, this.goalentity.origin_y);
-		WriteCoord(MSG_ENTITY, this.goalentity.origin_z);
+		WriteVector(MSG_ENTITY, this.goalentity.origin);
 	}
 	if(sendflags & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.enemy.origin_x);
-		WriteCoord(MSG_ENTITY, this.enemy.origin_y);
-		WriteCoord(MSG_ENTITY, this.enemy.origin_z);
+		WriteVector(MSG_ENTITY, this.enemy.origin);
 	}
 	if(sendflags & 4)
 	{

@@ -140,15 +140,11 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.hook_start.x);
-		WriteCoord(MSG_ENTITY, this.hook_start.y);
-		WriteCoord(MSG_ENTITY, this.hook_start.z);
+		WriteVector(MSG_ENTITY, this.hook_start);
 	}
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, this.hook_end.x);
-		WriteCoord(MSG_ENTITY, this.hook_end.y);
-		WriteCoord(MSG_ENTITY, this.hook_end.z);
+		WriteVector(MSG_ENTITY, this.hook_end);
 	}
 	return true;
 }

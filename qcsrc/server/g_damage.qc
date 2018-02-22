@@ -262,7 +262,6 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 	return MUTATOR_CALLHOOK(FragCenterMessage, attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target);
 }
 
-.int buffs = _STAT(BUFFS); // TODO: remove
 entity buff_FirstFromFlags(int _buffs);
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity)
 {
@@ -443,7 +442,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			int f3 = 0;
 			if(deathtype == DEATH_BUFF.m_id)
-				f3 = buff_FirstFromFlags(attacker.buffs).m_id;
+				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
@@ -530,7 +529,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
 	STAT(FROZEN, targ) = frozen_type;
-	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
+	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == 3) ? 1 : 0);
 	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
 	targ.revive_speed = freeze_time;
 	if(targ.bot_attack)
@@ -581,7 +580,7 @@ void Unfreeze (entity targ)
 	}
 
 	STAT(FROZEN, targ) = 0;
-	targ.revive_progress = 0;
+	STAT(REVIVE_PROGRESS, targ) = 0;
 	targ.revival_time = time;
 	if(!targ.bot_attack)
 		IL_PUSH(g_bot_targets, targ);

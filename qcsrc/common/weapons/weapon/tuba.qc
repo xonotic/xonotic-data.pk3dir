@@ -223,9 +223,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	}
 	if (sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 	return true;
 }
@@ -553,9 +551,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 	}
 
 	if (f & 2) {
-		this.enemy.origin_x = ReadCoord();
-		this.enemy.origin_y = ReadCoord();
-		this.enemy.origin_z = ReadCoord();
+		this.enemy.origin = ReadVector();
 		setorigin(this.enemy, this.enemy.origin);
 		if (this.enemy.enemy) {
 			setorigin(this.enemy.enemy, this.enemy.origin);

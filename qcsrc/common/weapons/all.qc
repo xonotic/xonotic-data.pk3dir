@@ -531,7 +531,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	// make them match perfectly
 #ifdef SVQC
     // null during init
-    if (this.owner) this.owner.stat_shotorg = compressed_shotorg;
+    if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
 	this.movedir = decompressShotOrigin(compressed_shotorg);
 #else
 	this.movedir = decompressShotOrigin(compressed_shotorg);
@@ -554,10 +554,7 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	vector a;
-	a.x = ReadCoord();
-    a.y = ReadCoord();
-    a.z = ReadCoord();
+	vector a = ReadVector();
     int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
@@ -590,9 +587,7 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	int channel = MSG_ONE;
 	msg_entity = actor;
 	WriteHeader(channel, wframe);
-	WriteCoord(channel, a.x);
-	WriteCoord(channel, a.y);
-	WriteCoord(channel, a.z);
+	WriteVector(channel, a);
 	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);

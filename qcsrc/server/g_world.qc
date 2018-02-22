@@ -990,45 +990,43 @@ float GetMaplistPosition()
 	return idx;
 }
 
-float MapHasRightSize(string map)
+bool MapHasRightSize(string map)
 {
-	float fh;
 	if(currentbots || autocvar_bot_number || player_count < autocvar_minplayers)
 	if(autocvar_g_maplist_check_waypoints)
 	{
-		LOG_TRACE("checkwp "); LOG_TRACE(map);
+		string checkwp_msg = strcat("checkwp ", map);
 		if(!fexists(strcat("maps/", map, ".waypoints")))
 		{
-			LOG_TRACE(": no waypoints");
+			LOG_TRACE(checkwp_msg, ": no waypoints");
 			return false;
 		}
-		LOG_TRACE(": has waypoints");
+		LOG_TRACE(checkwp_msg, ": has waypoints");
 	}
 
 	// open map size restriction file
-	LOG_TRACE("opensize "); LOG_TRACE(map);
-	fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
+	string opensize_msg = strcat("opensize ", map);
+	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
 	if(fh >= 0)
 	{
-		float mapmin, mapmax;
-		LOG_TRACE(": ok, ");
-		mapmin = stof(fgets(fh));
-		mapmax = stof(fgets(fh));
+		opensize_msg = strcat(opensize_msg, ": ok, ");
+		int mapmin = stoi(fgets(fh));
+		int mapmax = stoi(fgets(fh));
 		fclose(fh);
 		if(player_count < mapmin)
 		{
-			LOG_TRACE("not enough");
+			LOG_TRACE(opensize_msg, "not enough");
 			return false;
 		}
-		if(player_count > mapmax)
+		if(mapmax && player_count > mapmax)
 		{
-			LOG_TRACE("too many");
+			LOG_TRACE(opensize_msg, "too many");
 			return false;
 		}
-		LOG_TRACE("right size");
+		LOG_TRACE(opensize_msg, "right size");
 		return true;
 	}
-	LOG_TRACE(": not found");
+	LOG_TRACE(opensize_msg, ": not found");
 	return true;
 }
 
@@ -2069,12 +2067,12 @@ void EndFrame()
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		entity e = IS_SPEC(it) ? it.enemy : it;
 		if (e.typehitsound) {
-			it.typehit_time = time;
+			STAT(TYPEHIT_TIME, it) = time;
 		} else if (e.killsound) {
-			it.kill_time = time;
+			STAT(KILL_TIME, it) = time;
 		} else if (e.damage_dealt) {
-			it.hit_time = time;
-			it.damage_dealt_total += ceil(e.damage_dealt);
+			STAT(HIT_TIME, it) = time;
+			STAT(DAMAGE_DEALT_TOTAL, it) += ceil(e.damage_dealt);
 		}
 	});
 	// add 1 frametime because after this, engine SV_Physics

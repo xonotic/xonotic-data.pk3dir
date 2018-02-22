@@ -8,9 +8,7 @@ bool corner_send(entity this, entity to, int sf)
 
 	WriteString(MSG_ENTITY, this.platmovetype);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	WriteString(MSG_ENTITY, this.target);
 	WriteString(MSG_ENTITY, this.target2);
@@ -64,9 +62,7 @@ NET_HANDLE(ENT_CLIENT_CORNER, bool isnew)
 {
 	this.platmovetype = strzone(ReadString());
 
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
+	this.origin = ReadVector();
 	setorigin(this, this.origin);
 
 	this.target = strzone(ReadString());
