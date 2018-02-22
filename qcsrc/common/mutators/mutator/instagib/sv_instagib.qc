@@ -253,14 +253,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 }
 
-.float stat_sv_maxspeed;
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.items & ITEM_Speed.m_itemid)
-		player.stat_sv_maxspeed = player.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_instagib_speed_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
