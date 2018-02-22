@@ -22,6 +22,7 @@
 #include <common/mutators/mutator/nades/_mod.inc>
 #include <common/mutators/mutator/new_toys/_mod.inc>
 #include <common/mutators/mutator/nix/_mod.inc>
+#include <common/mutators/mutator/offhand_blaster/_mod.inc>
 #include <common/mutators/mutator/overkill/_mod.inc>
 #include <common/mutators/mutator/physical_items/_mod.inc>
 #include <common/mutators/mutator/pinata/_mod.inc>

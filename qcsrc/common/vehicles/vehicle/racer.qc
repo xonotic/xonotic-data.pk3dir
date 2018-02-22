@@ -462,7 +462,7 @@ void racer_blowup(entity this)
 					autocvar_g_vehicle_racer_blowup_edgedamage,
 					autocvar_g_vehicle_racer_blowup_radius, NULL, NULL,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
-					DEATH_VH_WAKI_DEATH.m_id, NULL);
+					DEATH_VH_WAKI_DEATH.m_id, DMG_NOWEP, NULL);
 
 	this.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
 	setthink(this, vehicles_spawn);

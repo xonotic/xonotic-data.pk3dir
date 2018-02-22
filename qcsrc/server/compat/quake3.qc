@@ -3,6 +3,7 @@
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
+#include <server/resources.qh>
 #include <common/weapons/_all.qh>
 
 spawnfunc(target_items);
@@ -82,11 +83,55 @@ void target_init_verify(entity this)
 			}
 }
 
+void target_init_use(entity this, entity actor, entity trigger)
+{
+	if (!(this.spawnflags & 1))
+	{
+		SetResourceAmount(actor, RESOURCE_ARMOR, start_armorvalue);
+		actor.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot;
+	}
+
+	if (!(this.spawnflags & 2))
+	{
+		SetResourceAmount(actor, RESOURCE_HEALTH, start_health);
+		actor.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot;
+		actor.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+	}
+
+	if (!(this.spawnflags & 4))
+	{
+		SetResourceAmount(actor, RESOURCE_SHELLS, start_ammo_shells);
+		SetResourceAmount(actor, RESOURCE_BULLETS, start_ammo_nails);
+		SetResourceAmount(actor, RESOURCE_ROCKETS, start_ammo_rockets);
+		SetResourceAmount(actor, RESOURCE_CELLS, start_ammo_cells);
+		SetResourceAmount(actor, RESOURCE_PLASMA, start_ammo_plasma);
+		SetResourceAmount(actor, RESOURCE_FUEL, start_ammo_fuel);
+
+		actor.weapons = start_weapons;
+		if (this.spawnflags & 32)
+		{
+			// TODO
+		}
+	}
+
+	if (!(this.spawnflags & 8))
+	{
+		actor.strength_finished = 0;
+		actor.invincible_finished = 0;
+		STAT(BUFFS, actor) = 0;
+	}
+
+	if (!(this.spawnflags & 16))
+	{
+		// We don't have holdables.
+	}
+
+	SUB_UseTargets(this, actor, trigger);
+}
+
 spawnfunc(target_init)
 {
-	this.spawnflags = 0; // remove all weapons except the ones listed below
-	this.netname = "shotgun"; // keep these weapons through the remove trigger
-	spawnfunc_target_items(this);
+	this.use = target_init_use;
 	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }
 

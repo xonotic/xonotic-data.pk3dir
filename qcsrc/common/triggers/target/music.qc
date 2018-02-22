@@ -103,28 +103,20 @@ bool trigger_music_SendEntity(entity this, entity to, float sf)
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 	if(sf & 1)
 	{
 		if(this.model != "null")
 		{
 			WriteShort(MSG_ENTITY, this.modelindex);
-			WriteCoord(MSG_ENTITY, this.mins.x);
-			WriteCoord(MSG_ENTITY, this.mins.y);
-			WriteCoord(MSG_ENTITY, this.mins.z);
-			WriteCoord(MSG_ENTITY, this.maxs.x);
-			WriteCoord(MSG_ENTITY, this.maxs.y);
-			WriteCoord(MSG_ENTITY, this.maxs.z);
+			WriteVector(MSG_ENTITY, this.mins);
+			WriteVector(MSG_ENTITY, this.maxs);
 		}
 		else
 		{
 			WriteShort(MSG_ENTITY, 0);
-			WriteCoord(MSG_ENTITY, this.maxs.x);
-			WriteCoord(MSG_ENTITY, this.maxs.y);
-			WriteCoord(MSG_ENTITY, this.maxs.z);
+			WriteVector(MSG_ENTITY, this.maxs);
 		}
 		WriteByte(MSG_ENTITY, this.volume * 255.0);
 		WriteByte(MSG_ENTITY, this.fade_time * 16.0);
@@ -280,28 +272,20 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 	int f = ReadByte();
 	if(f & 4)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 	}
 	if(f & 1)
 	{
 		this.modelindex = ReadShort();
 		if(this.modelindex)
 		{
-			this.mins_x = ReadCoord();
-			this.mins_y = ReadCoord();
-			this.mins_z = ReadCoord();
-			this.maxs_x = ReadCoord();
-			this.maxs_y = ReadCoord();
-			this.maxs_z = ReadCoord();
+			this.mins = ReadVector();
+			this.maxs = ReadVector();
 		}
 		else
 		{
 			this.mins    = '0 0 0';
-			this.maxs_x = ReadCoord();
-			this.maxs_y = ReadCoord();
-			this.maxs_z = ReadCoord();
+			this.maxs = ReadVector();
 		}
 
 		this.volume = ReadByte() / 255.0;
