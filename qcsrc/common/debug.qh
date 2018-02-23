@@ -445,19 +445,11 @@ NET_HANDLE(debug_text_3d, bool is_new) {
 
 #ifdef SVQC
 
-AUTOCVAR(debug_text_3d_default_duration, float, 10, "Default duration for debug_text_3d()");
-AUTOCVAR(debug_text_3d_default_velocity, vector, '0 -10 0', "Default velocity for debug_text_3d() in screen coords (X and Y from top left)");
-
-STATIC_INIT(debug_text_3d) {
-	// HACK: these cvars are only used in macros so they give unused warning unless the macros are expanded
-	autocvar_debug_text_3d_default_duration = autocvar_debug_text_3d_default_duration;
-	autocvar_debug_text_3d_default_velocity = autocvar_debug_text_3d_default_velocity;
-}
-
+// can't use autocvars because they give unused warning unless the macros are expanded
 #define debug_text_3d(...) EVAL(OVERLOAD(debug_text_3d, __VA_ARGS__))
-#define debug_text_3d_2(pos, msg) debug_text_3d_3(pos, msg, autocvar_debug_text_3d_default_duration);
-#define debug_text_3d_3(pos, msg, dur) debug_text_3d_4(pos, msg, dur, autocvar_debug_text_3d_default_velocity);
-#define debug_text_3d_4(pos, msg, dur, vel) debug_text_3d_fn(pos, msg, dur, vel);
+#define debug_text_3d_2(pos, msg) debug_text_3d_3(pos, msg, cvar("debug_text_3d_default_duration"))
+#define debug_text_3d_3(pos, msg, dur) debug_text_3d_4(pos, msg, dur, stov(cvar_string("debug_text_3d_default_velocity")))
+#define debug_text_3d_4(pos, msg, dur, vel) debug_text_3d_fn(pos, msg, dur, vel)
 
 void debug_text_3d_fn(vector pos, string msg, float duration, vector velocity) {
 	WriteHeader(MSG_BROADCAST, debug_text_3d);
