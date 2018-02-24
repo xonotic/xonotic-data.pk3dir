@@ -7,6 +7,7 @@
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
+#include "../common/triggers/target/spawnpoint.qh"
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
@@ -16,9 +17,7 @@ bool SpawnPoint_Send(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, this.team);
-	WriteCoord(MSG_ENTITY, this.origin.x);
-	WriteCoord(MSG_ENTITY, this.origin.y);
-	WriteCoord(MSG_ENTITY, this.origin.z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	return true;
 }
@@ -32,9 +31,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 	if(autocvar_g_spawn_alloweffects)
 	{
 		WriteByte(MSG_ENTITY, etof(this.owner));
-		WriteCoord(MSG_ENTITY, this.owner.origin.x);
-		WriteCoord(MSG_ENTITY, this.owner.origin.y);
-		WriteCoord(MSG_ENTITY, this.owner.origin.z);
+		WriteVector(MSG_ENTITY, this.owner.origin);
 		send = true;
 	}
 	else if((to == this.owner) || (IS_SPEC(to) && (to.enemy == this.owner)) )
@@ -340,6 +337,9 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	spot = find(NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
+
+	if(this.spawnpoint_targ)
+		return this.spawnpoint_targ;
 
 	if(anypoint || autocvar_g_spawn_useallspawns)
 		teamcheck = -1;

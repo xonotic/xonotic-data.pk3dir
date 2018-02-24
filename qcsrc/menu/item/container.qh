@@ -7,7 +7,7 @@ CLASS(Container, Item)
 	METHOD(Container, keyUp, float(entity, float, float, float));
 	METHOD(Container, keyDown, float(entity, float, float, float));
 	METHOD(Container, mouseMove, float(entity, vector));
-	METHOD(Container, mousePress, float(entity, vector));
+	METHOD(Container, mousePress, bool(Container this, vector pos));
 	METHOD(Container, mouseDrag, float(entity, vector));
 	METHOD(Container, mouseRelease, float(entity, vector));
 	METHOD(Container, focusLeave, void(entity));

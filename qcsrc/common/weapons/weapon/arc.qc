@@ -30,21 +30,17 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 	}
 	if(sf & ARC_SF_START) // starting location
 	{
-		WriteCoord(MSG_ENTITY, this.beam_start.x);
-		WriteCoord(MSG_ENTITY, this.beam_start.y);
-		WriteCoord(MSG_ENTITY, this.beam_start.z);
+		WriteVector(MSG_ENTITY, this.beam_start);
 	}
 	if(sf & ARC_SF_WANTDIR) // want/aim direction
 	{
-		WriteCoord(MSG_ENTITY, this.beam_wantdir.x);
-		WriteCoord(MSG_ENTITY, this.beam_wantdir.y);
-		WriteCoord(MSG_ENTITY, this.beam_wantdir.z);
+		WriteVector(MSG_ENTITY, this.beam_wantdir);
 	}
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		WriteCoord(MSG_ENTITY, this.beam_dir.x);
-		WriteCoord(MSG_ENTITY, this.beam_dir.y);
-		WriteCoord(MSG_ENTITY, this.beam_dir.z);
+		WriteAngle(MSG_ENTITY, this.beam_dir.x);
+		WriteAngle(MSG_ENTITY, this.beam_dir.y);
+		WriteAngle(MSG_ENTITY, this.beam_dir.z);
 	}
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
@@ -87,14 +83,14 @@ float Arc_GetHeat_Percent(entity player, .entity weaponentity)
 }
 void Arc_Player_SetHeat(entity player, .entity weaponentity)
 {
-	player.arc_heat_percent = Arc_GetHeat_Percent(player, weaponentity);
+	player.(weaponentity).arc_heat_percent = Arc_GetHeat_Percent(player, weaponentity);
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
 }
 
 void W_Arc_Bolt_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -104,7 +100,7 @@ void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 	W_Arc_Bolt_Explode(this, trigger);
 }
 
-void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -131,7 +127,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(arc, bolt_ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage), WEP_ARC.m_id | HITTYPE_SECONDARY);
 
 	Send_Effect(EFFECT_ARC_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -154,6 +150,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_ARC.m_id | HITTYPE_SECONDARY;
+	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -274,7 +271,8 @@ void W_Arc_Beam_Think(entity this)
 		SND_Null,
 		0,
 		WEP_CVAR(arc, beam_damage) * coefficient,
-		WEP_CVAR(arc, beam_range)
+		WEP_CVAR(arc, beam_range),
+		WEP_ARC.m_id
 	);
 
 	// After teleport, "lock" the beam until the teleport is confirmed.
@@ -504,6 +502,7 @@ void W_Arc_Beam_Think(entity this)
 					own,
 					rootdamage * coefficient * falloff,
 					WEP_ARC.m_id,
+					weaponentity,
 					hitorigin,
 					WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
 				);
@@ -560,12 +559,12 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 void Arc_Smoke(entity actor, .entity weaponentity)
 {
 	makevectors(actor.v_angle);
-	W_SetupShot_Range(actor,weaponentity,true,0,SND_Null,0,0,0);
+	W_SetupShot_Range(actor,weaponentity,true,0,SND_Null,0,0,0,WEP_ARC.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
 
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )
 	{
-		if ( random() < actor.arc_heat_percent )
+		if ( random() < actor.(weaponentity).arc_heat_percent )
 			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
 		if ( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) )
 		{
@@ -1224,9 +1223,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(sf & ARC_SF_START) // starting location
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 	}
 	else if(this.beam_usevieworigin) // infer the location from player location
 	{
@@ -1246,16 +1243,14 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(sf & ARC_SF_WANTDIR) // want/aim direction
 	{
-		this.v_angle_x = ReadCoord();
-		this.v_angle_y = ReadCoord();
-		this.v_angle_z = ReadCoord();
+		this.v_angle = ReadVector();
 	}
 
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		this.angles_x = ReadCoord();
-		this.angles_y = ReadCoord();
-		this.angles_z = ReadCoord();
+		this.angles_x = ReadAngle();
+		this.angles_y = ReadAngle();
+		this.angles_z = ReadAngle();
 	}
 
 	if(sf & ARC_SF_BEAMTYPE) // beam type
@@ -1281,6 +1276,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
 				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);

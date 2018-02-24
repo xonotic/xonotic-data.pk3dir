@@ -13,9 +13,7 @@ bool teleport_dest_send(entity this, entity to, int sf)
 		WriteByte(MSG_ENTITY, this.cnt);
 		WriteCoord(MSG_ENTITY, this.speed);
 		WriteString(MSG_ENTITY, this.targetname);
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 
 		WriteAngle(MSG_ENTITY, this.mangle_x);
 		WriteAngle(MSG_ENTITY, this.mangle_y);
@@ -78,9 +76,7 @@ NET_HANDLE(ENT_CLIENT_TELEPORT_DEST, bool isnew)
 		this.cnt = ReadByte();
 		this.speed = ReadCoord();
 		this.targetname = strzone(ReadString());
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 
 		this.mangle_x = ReadAngle();
 		this.mangle_y = ReadAngle();

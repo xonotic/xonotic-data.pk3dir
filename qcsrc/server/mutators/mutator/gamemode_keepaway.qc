@@ -232,21 +232,21 @@ void havocbot_role_ka_carrier(entity this)
 	if (IS_DEAD(this))
 		return;
 
-	if (time > this.bot_strategytime)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 
 	if (!this.ballcarried)
 	{
 		this.havocbot_role = havocbot_role_ka_collector;
-		this.bot_strategytime = 0;
+		navigation_goalrating_timeout_expire(this, 2);
 	}
 }
 
@@ -255,21 +255,21 @@ void havocbot_role_ka_collector(entity this)
 	if (IS_DEAD(this))
 		return;
 
-	if (time > this.bot_strategytime)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 1000, this.origin, 10000);
 		havocbot_goalrating_ball(this, 20000, this.origin);
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 
 	if (this.ballcarried)
 	{
 		this.havocbot_role = havocbot_role_ka_carrier;
-		this.bot_strategytime = 0;
+		navigation_goalrating_timeout_expire(this, 2);
 	}
 }
 
@@ -396,18 +396,14 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
 		player.effects |= autocvar_g_keepaway_ballcarrier_effects;
 }
 
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
 
-MUTATOR_HOOKFUNCTION(ka, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(ka, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.ballcarried)
-	{
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
-		player.stat_sv_maxspeed *= autocvar_g_keepaway_ballcarrier_highspeed;
-	}
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_keepaway_ballcarrier_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)

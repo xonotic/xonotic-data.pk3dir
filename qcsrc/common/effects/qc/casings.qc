@@ -20,9 +20,7 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 
     WriteHeader(MSG_ALL, casings);
     WriteByte(MSG_ALL, casingtype);
-    WriteCoord(MSG_ALL, org.x);
-    WriteCoord(MSG_ALL, org.y);
-    WriteCoord(MSG_ALL, org.z);
+    WriteVector(MSG_ALL, org);
     WriteShort(MSG_ALL, compressShortVector(vel)); // actually compressed velocity
     WriteByte(MSG_ALL, ang.x * 256 / 360);
     WriteByte(MSG_ALL, ang.y * 256 / 360);
@@ -123,10 +121,7 @@ void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector t
 NET_HANDLE(casings, bool isNew)
 {
     int _state = ReadByte();
-    vector org;
-    org_x = ReadCoord();
-    org_y = ReadCoord();
-    org_z = ReadCoord();
+    vector org = ReadVector();
     vector vel = decompressShortVector(ReadShort());
     vector ang;
     ang_x = ReadByte() * 360 / 256;

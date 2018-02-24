@@ -546,7 +546,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	// make them match perfectly
 #ifdef SVQC
     // null during init
-    if (this.owner) this.owner.stat_shotorg = compressed_shotorg;
+    if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
 	this.movedir = decompressShotOrigin(compressed_shotorg);
 #else
 	this.movedir = decompressShotOrigin(compressed_shotorg);

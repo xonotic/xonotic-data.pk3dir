@@ -49,7 +49,6 @@ bool kh_no_radar_circles;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.int kh_state = _STAT(KH_KEYS);
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
 
@@ -133,12 +132,12 @@ void kh_update_state()
 		s |= (32 ** key.count) * f;
 	}
 
-	FOREACH_CLIENT(true, { it.kh_state = s; });
+	FOREACH_CLIENT(true, { STAT(KH_KEYS, it) = s; });
 
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
-			key.owner.kh_state |= (32 ** key.count) * 31;
+			STAT(KH_KEYS, key.owner) |= (32 ** key.count) * 31;
 	}
 	//print(ftos((nextent(NULL)).kh_state), "\n");
 }
@@ -418,7 +417,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 	}
 }
 
-void kh_Key_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void kh_Key_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.owner)
 		return;
@@ -1071,9 +1070,8 @@ void havocbot_role_kh_carrier(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		if(kh_Key_AllOwnedByWhichTeam() == this.team)
@@ -1082,6 +1080,8 @@ void havocbot_role_kh_carrier(entity this)
 			havocbot_goalrating_kh(this, 4, 4, 1); // play defensively
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1108,10 +1108,9 @@ void havocbot_role_kh_defense(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		float key_owner_team;
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1123,6 +1122,8 @@ void havocbot_role_kh_defense(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1149,11 +1150,10 @@ void havocbot_role_kh_offense(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		float key_owner_team;
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1165,6 +1165,8 @@ void havocbot_role_kh_offense(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK! EMERGENCY!
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1199,9 +1201,8 @@ void havocbot_role_kh_freelancer(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		int key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1213,6 +1214,8 @@ void havocbot_role_kh_freelancer(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1269,7 +1272,7 @@ MUTATOR_HOOKFUNCTION(kh, SpectateCopy)
 	entity spectatee = M_ARGV(0, entity);
 	entity client = M_ARGV(1, entity);
 
-	client.kh_state = spectatee.kh_state;
+	STAT(KH_KEYS, client) = STAT(KH_KEYS, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
