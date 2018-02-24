@@ -394,14 +394,16 @@ CLASS(DebugText3d, Object)
 	// reusing existing fields
 	ATTRIB(DebugText3d, origin, vector);
 	ATTRIB(DebugText3d, message, string); // the text (i wanted to use the .text field but then this whole macro-based-inheritance thing shat itself)
+	ATTRIB(DebugText3d, health, float); // text alignment (recycled field)
 	ATTRIB(DebugText3d, hit_time, float); // when it was created
 	ATTRIB(DebugText3d, fade_rate, float); // how fast is should disappear
 	ATTRIB(DebugText3d, velocity, vector);
 
-	CONSTRUCTOR(DebugText3d, vector pos, string msg, float fade_rate_, vector vel) {
+	CONSTRUCTOR(DebugText3d, vector pos, string msg, float align, float fade_rate_, vector vel) {
 		CONSTRUCT(DebugText3d);
 		this.origin = pos;
 		this.message = strzone(msg);
+		this.health = align;
 		this.hit_time = time;
 		this.fade_rate = fade_rate_;
 		this.velocity = vel;
@@ -421,12 +423,15 @@ CLASS(DebugText3d, Object)
 			return;
 		}
 
+		int size = 8;
 		vector screen_pos = project_3d_to_2d(this.origin) + since_created * this.velocity;
+		float align = this.health;
+		if (align > 0)
+			screen_pos.x -= stringwidth(this.message, true, size * '1 1 0') * min(1, align);
 		if (screen_pos.z < 0) return; // behind camera
 		screen_pos.z = 0;
 
 		vector rgb = '1 1 0';
-		int size = 8;
 		drawcolorcodedstring2_builtin(screen_pos, this.message, size * '1 1 0', rgb, alpha_, DRAWFLAG_NORMAL);
 	}
 	ATTRIB(DebugText3d, draw2d, void(DebugText3d), DebugText3d_draw2d);
@@ -435,9 +440,10 @@ ENDCLASS(DebugText3d)
 NET_HANDLE(debug_text_3d, bool is_new) {
 	vector pos = ReadVector();
 	string msg = ReadString();
+	float align = ReadFloat();
 	float duration = ReadFloat();
 	vector vel = ReadVector();
-	make_impure(NEW(DebugText3d, pos, msg, 1 / duration, vel));
+	make_impure(NEW(DebugText3d, pos, msg, align, 1 / duration, vel));
 	return true;
 }
 
@@ -447,14 +453,17 @@ NET_HANDLE(debug_text_3d, bool is_new) {
 
 // can't use autocvars because they give unused warning unless the macros are expanded
 #define debug_text_3d(...) EVAL(OVERLOAD(debug_text_3d, __VA_ARGS__))
-#define debug_text_3d_2(pos, msg) debug_text_3d_3(pos, msg, cvar("debug_text_3d_default_duration"))
-#define debug_text_3d_3(pos, msg, dur) debug_text_3d_4(pos, msg, dur, stov(cvar_string("debug_text_3d_default_velocity")))
-#define debug_text_3d_4(pos, msg, dur, vel) debug_text_3d_fn(pos, msg, dur, vel)
+#define debug_text_3d_2(pos, msg) debug_text_3d_3(pos, msg, cvar("debug_text_3d_default_align"))
+#define debug_text_3d_3(pos, msg, align) debug_text_3d_4(pos, msg, align, cvar("debug_text_3d_default_duration"))
+#define debug_text_3d_4(pos, msg, align, dur) debug_text_3d_5(pos, msg, align, dur, stov(cvar_string("debug_text_3d_default_velocity")))
+#define debug_text_3d_5(pos, msg, align, dur, vel) debug_text_3d_fn(pos, msg, align, dur, vel)
 
-void debug_text_3d_fn(vector pos, string msg, float duration, vector velocity) {
+ERASEABLE
+void debug_text_3d_fn(vector pos, string msg, float align, float duration, vector velocity) {
 	WriteHeader(MSG_BROADCAST, debug_text_3d);
 	WriteVector(MSG_BROADCAST, pos);
 	WriteString(MSG_BROADCAST, msg);
+	WriteFloat(MSG_BROADCAST, align);
 	WriteFloat(MSG_BROADCAST, duration);
 	WriteVector(MSG_BROADCAST, velocity);
 }
