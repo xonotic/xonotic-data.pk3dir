@@ -173,9 +173,6 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	// damage resistance (ignore most of the damage from a bullet or similar)
-	damage = max(damage - 5, 1);
-
 	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
@@ -629,11 +626,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD1, true);
 		else
 			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD2, true);
-		if (this.maxs.z > 5)
-		{
-			this.maxs_z = 5;
-			setsize(this, this.mins, this.maxs);
-		}
+
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
@@ -652,7 +645,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(autocvar_sv_gentle > 0 || autocvar_ekg || this.classname == "body") {
 			// remove corpse
 			// clones don't run any animation code any more, so we must gib them when they die :(
-			PlayerCorpseDamage(this, inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, weaponentity, hitloc, force);
+			this.event_damage(this, inflictor, attacker, autocvar_sv_gibhealth + 1, deathtype, weaponentity, hitloc, force);
 		}
 
 		// reset fields the weapons may use just in case
