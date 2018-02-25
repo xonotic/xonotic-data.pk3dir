@@ -1347,6 +1347,7 @@ void ClientDisconnect(entity this)
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	if (CS(this).weaponorder_byimpulse) strunzone(CS(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1367,7 +1368,6 @@ void ClientDisconnect(entity this)
 	bot_relinkplayerlist();
 
 	if (this.clientstatus) strunzone(this.clientstatus);
-	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
