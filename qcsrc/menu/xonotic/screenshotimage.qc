@@ -27,9 +27,9 @@ void XonoticScreenshotImage_load(entity me, string theImage)
 	me.setZoom(me, 0, 0);
 }
 
-float XonoticScreenshotImage_mousePress(entity me, vector coords)
+METHOD(XonoticScreenshotImage, mousePress, bool(XonoticScreenshotImage this, vector pos))
 {
-	return me.drag_setStartPos(me, coords);
+	return this.drag_setStartPos(this, pos);
 }
 
 float XonoticScreenshotImage_mouseDrag(entity me, vector coords)
