@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-02-23 16:21+0000\n"
+"PO-Revision-Date: 2018-02-25 21:17+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -2573,7 +2573,7 @@ msgstr "^BGВы уронили усилитель %s^BG!"
 #: qcsrc/common/notifications/all.inc:693
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr "^BGВы забрали усилитель %s^BG!"
+msgstr "^BGВы подняли усилитель %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:696
@@ -3295,11 +3295,11 @@ msgstr "^BGВы передали флаг %s"
 
 #: qcsrc/common/notifications/all.inc:569
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr "^BGВы забрали ^TC^TT^BG флаг!"
+msgstr "^BGВы подняли ^TC^TT^BG флаг!"
 
 #: qcsrc/common/notifications/all.inc:570
 msgid "^BGYou got the flag!"
-msgstr "^BGВы забрали флаг!"
+msgstr "^BGВы подняли флаг!"
 
 #: qcsrc/common/notifications/all.inc:571
 #, c-format
@@ -4136,7 +4136,7 @@ msgstr "%s^K1 высвободил свою ЯРОСТЬ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:445
 msgid "RAGE! "
-msgstr "ЯРОСТЬ! "
+msgstr "ЯРОСТЬ!"
 
 #: qcsrc/common/notifications/all.qh:446
 #, c-format
