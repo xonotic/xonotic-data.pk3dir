@@ -30,8 +30,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid = ent.dphitcontentsmask;
 	Weapon wep = DEATH_WEAPONOF(deathtype);
-    if (wep == WEP_Null)
-    	wep = ent.(weaponentity).m_weapon; // TODO: don't fall back, if the attack isn't a weapon we don't want it to affect the user's held weapon!
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
 	if (IS_PLAYER(ent) && (wep.spawnflags & WEP_FLAG_PENETRATEWALLS))

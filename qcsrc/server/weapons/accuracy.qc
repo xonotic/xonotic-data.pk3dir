@@ -67,6 +67,7 @@ void accuracy_add(entity this, int w, int fired, int hit)
 	entity a = CS(this).accuracy;
 	if (!a) return;
 	if (!hit && !fired) return;
+	if (w == WEP_Null.m_id) return;
 	w -= WEP_FIRST;
 	int b = accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w]);
 	if (hit)    a.accuracy_hit  [w] += hit;
