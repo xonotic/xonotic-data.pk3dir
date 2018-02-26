@@ -220,7 +220,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 
 void calculate_player_respawn_time(entity this)
 {
-	if(g_ca)
+	if(MUTATOR_CALLHOOK(CalculateRespawnTime, this))
 		return;
 
 	float gametype_setting_tmp;
