@@ -1138,6 +1138,12 @@ void VoteCommand_macro_help(entity caller, float argc)
 
 		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
 #undef VOTE_COMMAND
+
+		string cvarname = strcat("sv_vote_command_help_", argv(2));
+		if(cvar_type(cvarname) & CVAR_TYPEFLAG_EXISTS)
+			wordwrap_sprint(caller, cvar_string(cvarname), 1000);
+		else
+			print_to(caller, "No documentation exists for this vote");
 	}
 }
 

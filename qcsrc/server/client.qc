@@ -1347,6 +1347,7 @@ void ClientDisconnect(entity this)
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	if (CS(this).weaponorder_byimpulse) strunzone(CS(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1367,7 +1368,6 @@ void ClientDisconnect(entity this)
 	bot_relinkplayerlist();
 
 	if (this.clientstatus) strunzone(this.clientstatus);
-	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
@@ -2758,6 +2758,13 @@ void PlayerPostThink (entity this)
 	}
 
 	if (IS_PLAYER(this)) {
+		if(this.death_time == time && IS_DEAD(this))
+		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
+			this.maxs.z = 5;
+			setsize(this, this.mins, this.maxs);
+		}
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
