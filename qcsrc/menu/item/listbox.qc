@@ -182,10 +182,10 @@
 		if (me.pressed == 1)
 		{
 			hit = 1;
-			if (pos.x < 1 - me.controlWidth - me.tolerance.y * me.controlWidth) hit = 0;
-			if (pos.y < 0 - me.tolerance.x) hit = 0;
-			if (pos.x >= 1 + me.tolerance.y * me.controlWidth) hit = 0;
-			if (pos.y >= 1 + me.tolerance.x) hit = 0;
+			if (pos.x < 1 - me.controlWidth - me.tolerance.x * me.controlWidth) hit = 0;
+			if (pos.y < 0 - me.tolerance.y) hit = 0;
+			if (pos.x >= 1 + me.tolerance.x * me.controlWidth) hit = 0;
+			if (pos.y >= 1 + me.tolerance.y) hit = 0;
 			if (hit)
 			{
 				// calculate new pos to v
