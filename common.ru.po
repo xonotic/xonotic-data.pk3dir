@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-02-27 03:28+0000\n"
+"PO-Revision-Date: 2018-02-27 23:25+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -550,7 +550,7 @@ msgstr "SCO^время"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:80
 msgid "SCO^caps"
-msgstr "SCO^захваты"
+msgstr "SCO^захватов"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:81
 msgid "SCO^captime"
@@ -913,7 +913,7 @@ msgstr "Н/Д"
 #: qcsrc/client/hud/panel/scoreboard.qc:1156
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr "Статистика точности (средняя %d%%)"
+msgstr "Точность попаданий (средняя %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1295
 msgid "Map stats:"
@@ -3415,7 +3415,7 @@ msgstr "^K1%sВы сожжены игроком ^BG%s"
 #: qcsrc/common/notifications/all.inc:608
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr "^K3%sВы заморозили ^BG%s"
+msgstr "^K3%s Вы заморозили ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
