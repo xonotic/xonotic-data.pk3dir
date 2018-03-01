@@ -752,6 +752,7 @@ METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponent
 #endif
 #ifdef CSQC
 bool autocvar_cl_arcbeam_teamcolor = true;
+bool autocvar_cl_arcbeam_simple = true;
 
 METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 {
@@ -802,32 +803,37 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
 	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
-	R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
-	R_PolygonVertex(
-		top,
-		'0 0.5 0' + ('0 0.5 0' * (thickness / beam.beam_thickness)),
-		beam.beam_color,
-		beam.beam_alpha
-	);
-	R_PolygonVertex(
-		last_top,
-		'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
-		beam.beam_color,
-		beam.beam_alpha
-	);
-	R_PolygonVertex(
-		last_bottom,
-		'0 0.5 0' * (1 - (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
-		beam.beam_color,
-		beam.beam_alpha
-	);
-	R_PolygonVertex(
-		bottom,
-		'0 0.5 0' * (1 - (thickness / beam.beam_thickness)),
-		beam.beam_color,
-		beam.beam_alpha
-	);
-	R_EndPolygon();
+	if(autocvar_cl_arcbeam_simple)
+		Draw_CylindricLine(start, end, thickness, beam.beam_image, 0.25, -time * 3, beam.beam_color, beam.beam_alpha, DRAWFLAG_NORMAL, transformed_view_org);
+	else
+	{
+		R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
+		R_PolygonVertex(
+			top,
+			'0 0.5 0' + ('0 0.5 0' * (thickness / beam.beam_thickness)),
+			beam.beam_color,
+			beam.beam_alpha
+		);
+		R_PolygonVertex(
+			last_top,
+			'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
+			beam.beam_color,
+			beam.beam_alpha
+		);
+		R_PolygonVertex(
+			last_bottom,
+			'0 0.5 0' * (1 - (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
+			beam.beam_color,
+			beam.beam_alpha
+		);
+		R_PolygonVertex(
+			bottom,
+			'0 0.5 0' * (1 - (thickness / beam.beam_thickness)),
+			beam.beam_color,
+			beam.beam_alpha
+		);
+		R_EndPolygon();
+	}
 
 	// draw trailing particles
 	// NOTES:
@@ -1271,7 +1277,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
@@ -1282,7 +1288,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1297,7 +1303,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; // (EFFECT_GRENADE_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null; // (EFFECT_GRENADE_MUZZLEFLASH);
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
@@ -1308,7 +1314,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1323,7 +1329,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
@@ -1334,7 +1340,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1349,7 +1355,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 0;
 				this.beam_hitlight[3] = 0;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 50;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 0;
@@ -1360,7 +1366,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1375,7 +1381,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
@@ -1386,7 +1392,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1401,7 +1407,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
@@ -1412,7 +1418,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1427,7 +1433,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
@@ -1438,7 +1444,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1453,7 +1459,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
@@ -1464,7 +1470,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1481,7 +1487,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
@@ -1492,7 +1498,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
