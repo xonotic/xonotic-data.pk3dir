@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-02-27 23:25+0000\n"
+"PO-Revision-Date: 2018-03-01 04:25+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -120,7 +120,7 @@ msgstr "^1Матч уже начался"
 
 #: qcsrc/client/hud/panel/infomessages.qc:126
 msgid "^1You have no more lives left"
-msgstr "^1У Вас закончились жизни"
+msgstr "^1У вас закончились жизни"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
@@ -136,7 +136,7 @@ msgstr "прыжок"
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1Старт игры через ^3%d^1 секунд"
+msgstr "^1Старт игры через ^3%d^1 секунд(ы)"
 
 #: qcsrc/client/hud/panel/infomessages.qc:145
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -781,7 +781,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "^3captime^7                  Time of fastest cap (CTF)\n"
-msgstr "^3captime^7 Время наибыстрейшего захвата(CTF)\n"
+msgstr "^3captime^7 Время быстрейшего захвата (CTF)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "^3fckills^7                  Number of flag carrier kills\n"
@@ -789,7 +789,7 @@ msgstr "^3фубийств^7 Число убитых флагоносцев\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:320
 msgid "^3returns^7                  Number of flag returns\n"
-msgstr "^3returns^7 Число возращённых флагов\n"
+msgstr "^3returns^7 Число возвращённых флагов\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:321
 msgid "^3drops^7                    Number of flag drops\n"
@@ -1113,7 +1113,7 @@ msgstr "Голосование за карту"
 #: qcsrc/client/mapvoting.qc:382
 #, c-format
 msgid "%d seconds left"
-msgstr "Осталось %d секунд"
+msgstr "Осталось %d секунд(ы)"
 
 #: qcsrc/client/mapvoting.qc:497
 msgid ""
@@ -3381,7 +3381,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr "^K3%s Вы фрагнули ^BG%s"
+msgstr "^K3%sВы фрагнули ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:591
 #: qcsrc/common/notifications/all.inc:600
@@ -3415,7 +3415,7 @@ msgstr "^K1%sВы сожжены игроком ^BG%s"
 #: qcsrc/common/notifications/all.inc:608
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr "^K3%s Вы заморозили ^BG%s"
+msgstr "^K3%sВы заморозили ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
@@ -3425,7 +3425,7 @@ msgstr "^K1%sВы были заморожены игроком ^BG%s"
 #: qcsrc/common/notifications/all.inc:617
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr "^K1%s Вы фрагнули ^BG%s, пока он писал"
+msgstr "^K1%sВы фрагнули ^BG%s, пока он писал"
 
 #: qcsrc/common/notifications/all.inc:618
 #, c-format
@@ -4087,7 +4087,7 @@ msgstr "основной"
 
 #: qcsrc/common/notifications/all.qh:407 qcsrc/common/notifications/all.qh:408
 msgid "secondary"
-msgstr "Вторичный"
+msgstr "вторичный"
 
 #: qcsrc/common/notifications/all.qh:410
 msgid "point"
@@ -4122,7 +4122,7 @@ msgstr "%s^K1 набрал ТРИ ОЧКА! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:444
 msgid "TRIPLE FRAG! "
-msgstr "ТРОЙНОЕ УБИЙСТВО!"
+msgstr "ТРОЙНОЕ УБИЙСТВО! "
 
 #: qcsrc/common/notifications/all.qh:445
 #, c-format
@@ -4136,7 +4136,7 @@ msgstr "%s^K1 высвободил свою ЯРОСТЬ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:445
 msgid "RAGE! "
-msgstr "ЯРОСТЬ!"
+msgstr "ЯРОСТЬ! "
 
 #: qcsrc/common/notifications/all.qh:446
 #, c-format
@@ -4150,7 +4150,7 @@ msgstr "%s^K1 начал РЕЗНЮ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:446
 msgid "MASSACRE! "
-msgstr "РЕЗНЯ!"
+msgstr "РЕЗНЯ! "
 
 #: qcsrc/common/notifications/all.qh:447
 #, c-format
@@ -4164,7 +4164,7 @@ msgstr "%s^K1 набрал ПЯТНАДЦАТЬ ОЧКОВ ПОДРЯД! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:447
 msgid "MAYHEM! "
-msgstr "БЕСПРЕДЕЛ!"
+msgstr "БЕСПРЕДЕЛ! "
 
 #: qcsrc/common/notifications/all.qh:448
 #, c-format
@@ -4178,7 +4178,7 @@ msgstr "%s^K1 набрал ДВАДЦАТЬ ОЧКОВ ПОДРЯД! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:448
 msgid "BERSERKER! "
-msgstr "БЕРСЕРК!"
+msgstr "БЕРСЕРК! "
 
 #: qcsrc/common/notifications/all.qh:449
 #, c-format
@@ -4192,7 +4192,7 @@ msgstr "%s^K1 набрал ДВАДЦАТЬ ПЯТЬ ОЧКОВ ПОДРЯД! %s
 
 #: qcsrc/common/notifications/all.qh:449
 msgid "CARNAGE! "
-msgstr "БОЙНЯ!"
+msgstr "БОЙНЯ! "
 
 #: qcsrc/common/notifications/all.qh:450
 #, c-format
@@ -4206,7 +4206,7 @@ msgstr "%s^K1 предрекает АРМАГЕДДОН! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:450
 msgid "ARMAGEDDON! "
-msgstr "АРМАГЕДДОН!"
+msgstr "АРМАГЕДДОН! "
 
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
@@ -4248,7 +4248,7 @@ msgstr "%d убийств подряд! "
 
 #: qcsrc/common/notifications/all.qh:514
 msgid "First blood! "
-msgstr "Первая кровь!"
+msgstr "Первая кровь! "
 
 #: qcsrc/common/notifications/all.qh:514
 msgid "First score! "
@@ -4256,11 +4256,11 @@ msgstr "Первое очко! "
 
 #: qcsrc/common/notifications/all.qh:518
 msgid "First casualty! "
-msgstr "Первая смерть!"
+msgstr "Первая смерть! "
 
 #: qcsrc/common/notifications/all.qh:518
 msgid "First victim! "
-msgstr "Первая жертва!"
+msgstr "Первая жертва! "
 
 #: qcsrc/common/notifications/all.qh:559
 #, c-format
@@ -4376,7 +4376,7 @@ msgstr "GENERATOR^Розовый"
 
 #: qcsrc/common/turrets/all.qh:51
 msgid "Turrets dump command only works with sv_cmd.\n"
-msgstr "Команда выгрузки туреток работает только с sv_cmd.\n"
+msgstr "Команда выгрузки турелей работает только с sv_cmd.\n"
 
 #: qcsrc/common/turrets/cl_turrets.qc:129
 #, c-format
@@ -4906,7 +4906,7 @@ msgstr "Код игры"
 
 #: qcsrc/menu/xonotic/credits.qc:116
 msgid "Marketing / PR"
-msgstr "Маркетинг / Cвязи с общественностью"
+msgstr "Маркетинг / Связи с общественностью"
 
 #: qcsrc/menu/xonotic/credits.qc:122
 msgid "Legal"
@@ -5445,7 +5445,7 @@ msgstr "Ускорение:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:67
 msgid "Include vertical acceleration"
-msgstr "С вертикальним ускорением"
+msgstr "С вертикальным ускорением"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
@@ -5535,19 +5535,19 @@ msgstr "Режим увел.:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr "Приближён"
+msgstr "Приближен"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr "Не приближён"
+msgstr "Не приближен"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr "Всегда приближён"
+msgstr "Всегда приближен"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr "Никогда не приближён"
+msgstr "Никогда не приближен"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -5897,7 +5897,7 @@ msgstr "Предел фрагов:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:66
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:78
 msgid "The amount of frags needed before the match will end"
-msgstr "Количество фрагов, необходимых для завершения состязания"
+msgstr "Количество фрагов, необходимых для завершения матча"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:67
 msgid "Capture limit:"
@@ -5905,7 +5905,7 @@ msgstr "Предел захватов:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:67
 msgid "The amount of captures needed before the match will end"
-msgstr "Количество захватов, необходимых для завершения состязания"
+msgstr "Количество захватов, необходимых для завершения матча"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:68
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:69
@@ -5921,7 +5921,7 @@ msgstr "Предел очков:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:69
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:77
 msgid "The amount of points needed before the match will end"
-msgstr "Количество очков, необходимых для завершения состязания"
+msgstr "Количество очков, необходимых для завершения матча"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:70
 msgid "Lives:"
@@ -5937,7 +5937,7 @@ msgstr "Цели:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:72
 msgid "The amount of goals needed before the match will end"
-msgstr "Количество голов, необходимых для завершения состязания"
+msgstr "Количество голов, необходимых для завершения матча"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:97
 msgid "Gametype"
@@ -5949,8 +5949,7 @@ msgstr "Предел времени:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:104
 msgid "Timelimit in minutes that when hit, will end the match"
-msgstr ""
-"Ограничение времени в минутах, состязание закончится при его достижении"
+msgstr "Ограничение времени в минутах, после которого закончится матч"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:105
 #, c-format
@@ -6180,7 +6179,7 @@ msgstr "Полёт на ракете"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Invincible Projectiles"
-msgstr "Неразрушимые cнаряды"
+msgstr "Неразрушимые снаряды"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:282
@@ -6305,7 +6304,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:230
 msgid "Weapons stay after they are picked up"
-msgstr "Всё собранное оружие остаётся после возрождений"
+msgstr "Пушки остаются после подбора"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "Regular (no arena)"
@@ -6355,9 +6354,9 @@ msgid ""
 "weapon. After some time, a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
-"Xonotic без предметов — вместо подбора предметов, каждый играет с тем же "
-"оружием. Через некоторое время начнётся обратный отчёт, после чего "
-"переключится на другое оружие."
+"Xonotic без предметов — вместо подбора предметов, каждый играет одним и тем "
+"же оружием. Через некоторое время начнётся обратный отчёт, после чего "
+"произойдёт переключение на другое оружие."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:277
 msgid "with blaster"
@@ -6399,7 +6398,8 @@ msgstr "Пауза"
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
-"Приостановить обновление списка серверов для предотвращения их скакания"
+"Приостановить обновление списка серверов для закрепления серверов на одном "
+"месте"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Reload the server list"
@@ -8172,7 +8172,7 @@ msgstr "Отключить системное ускорение мыши"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:79
 msgid "Make use of DGA mouse input"
-msgstr "Использовать DGA ввод для мыши"
+msgstr "Использовать ввод с мыши через DGA"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:93
 msgid "Pressing \"enter console\" key also closes it"
@@ -8184,7 +8184,7 @@ msgstr "Использовать клавишу для открытия конс
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:96
 msgid "Automatically repeat jumping if holding jump"
-msgstr "Повторять прыжок автоматически при удержании"
+msgstr "Повторять прыжок автоматически при удержании нажатия"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:99
 msgid "Jetpack on jump:"
@@ -8569,9 +8569,9 @@ msgid ""
 "Enable vertical synchronization to prevent tearing, will cap your fps to the "
 "screen refresh rate (default: disabled)"
 msgstr ""
-"Включить вертикальную синхронизацию для предотвращения образования трещин, "
-"ограничит частоту кадров в секунду частотой обновления экрана (по умолчанию: "
-"откл.)"
+"Включить вертикальную синхронизацию для предотвращения разрывов кадров, это "
+"ограничит частоту кадров в секунду частотой обновления монитора (по "
+"умолчанию: откл.)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "Flip view horizontally"
