@@ -1393,8 +1393,8 @@ void SpecialCommand()
 		vector slot = specialcommand_slots[j];
 		if(slot.y)
 			slot.y += SPECIALCOMMAND_SPEED * frametime;
-		if(slot.z)
-			slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
+		//if(slot.z)
+			//slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
 		if(slot.y >= vid_conheight)
 			slot = '0 0 0';
 
@@ -1404,7 +1404,7 @@ void SpecialCommand()
 			{
 				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
 				slot.y = 1; // start it off 0 so we can use it
-				slot.z = random();
+				slot.z = floor(random() * Weapons_MAX);
 				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
 				vector newcolor = randomvec() * 2;
 				newcolor.x = bound(0.4, newcolor.x, 1);
@@ -1418,7 +1418,11 @@ void SpecialCommand()
 			vector splash_size = '0 0 0';
 			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
 			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
-			drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			entity wep = Weapons_from(slot.z);
+			if(wep == WEP_Null)
+				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			else
+				drawpic_skin(vec2(slot), wep.model2, vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
 			//drawrotpic(vec2(slot), slot.z, "gfx/smile", vec2(splash_size), vec2(splash_size) / 2, specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
 		}
 
