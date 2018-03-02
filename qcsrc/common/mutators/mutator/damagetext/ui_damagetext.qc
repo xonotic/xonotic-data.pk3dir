@@ -29,7 +29,8 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
         this.TR(this);
             this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Accumulate range:")));
                 setDependent(e, "cl_damagetext", 1, 1);
-            this.TD(this, 1, 2, e = makeXonoticSlider(0, 500, 1, "cl_damagetext_accumulate_range"));
+            // 1 as min because shotgun sends damagetext per pellet (see https://gitlab.com/xonotic/xonotic-data.pk3dir/issues/1994)
+            this.TD(this, 1, 2, e = makeXonoticSlider(1, 500, 1, "cl_damagetext_accumulate_range"));
                 setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
             this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Lifetime:")));
