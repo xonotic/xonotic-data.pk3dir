@@ -99,7 +99,7 @@ bool Monster_ValidTarget(entity this, entity targ)
 	}
 
 	vector targ_origin = ((targ.absmin + targ.absmax) * 0.5);
-	traceline(this.origin + this.view_ofs, targ_origin, MOVE_NOMONSTERS, this);
+	traceline(this.origin + this.view_ofs, targ_origin, MOVE_NOMONSTERS, this); // TODO: maybe we can rely a bit on PVS data instead?
 
 	if(trace_fraction < 1 && trace_ent != targ)
 		return false; // solid
