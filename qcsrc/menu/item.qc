@@ -74,9 +74,9 @@
 		return 0;  // unhandled
 	}
 
-	METHOD(Item, mousePress, float(Item this, vector pos))
+	METHOD(Item, mousePress, bool(Item this, vector pos))
 	{
-		return 0;  // unhandled
+		return false;  // unhandled
 	}
 
 	METHOD(Item, mouseDrag, float(Item this, vector pos))

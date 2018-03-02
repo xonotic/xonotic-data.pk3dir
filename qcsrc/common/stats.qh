@@ -299,6 +299,13 @@ REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 float warmup_limit;
 #endif
 
+#ifdef SVQC
+bool autocvar_g_shootfromcenter;
+bool autocvar_g_shootfromeye;
+#endif
+REGISTER_STAT(SHOOTFROMEYE, bool, autocvar_g_shootfromeye)
+REGISTER_STAT(SHOOTFROMCENTER, bool, autocvar_g_shootfromcenter)
+
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_PENALTY, float)
 REGISTER_STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, float)

@@ -293,24 +293,21 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
 {
-#ifdef SVQC
 	string s;
-#endif
 	if (visual)
 	{
 		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
 	}
-#ifdef SVQC
-	else if (autocvar_g_shootfromeye)
+	else if (STAT(SHOOTFROMEYE))
 	{
 		vecs.y = vecs.z = 0;
 	}
-	else if (autocvar_g_shootfromcenter)
+	else if (STAT(SHOOTFROMCENTER))
 	{
 		vecs.y = 0;
 		vecs.z -= 2;
 	}
-	else if ((s = autocvar_g_shootfromfixedorigin) != "")
+	else if ((s = G_SHOOTFROMFIXEDORIGIN) != "")
 	{
 		vector v = stov(s);
 		if (y_is_right) v.y = -v.y;
@@ -318,7 +315,6 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
 		vecs.y = v.y;
 		vecs.z = v.z;
 	}
-#endif
 	else  // just do the same as top
 	{
 		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);

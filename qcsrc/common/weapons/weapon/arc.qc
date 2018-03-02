@@ -1276,6 +1276,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
 				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);

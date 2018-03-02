@@ -154,35 +154,35 @@ LABEL(have_overlap)
 		SUPER(Nexposee).draw(me);
 	}
 
-	float Nexposee_mousePress(entity me, vector pos)
+	METHOD(Nexposee, mousePress, bool(Nexposee this, vector pos))
 	{
-		if (me.animationState == 0)
+		if (this.animationState == 0)
 		{
-			me.mouseFocusedChild = NULL;
-			Nexposee_mouseMove(me, pos);
-			if (me.mouseFocusedChild)
+			this.mouseFocusedChild = NULL;
+			Nexposee_mouseMove(this, pos);
+			if (this.mouseFocusedChild)
 			{
 				m_play_click_sound(MENU_SOUND_OPEN);
-				me.animationState = 1;
-				SUPER(Nexposee).setFocus(me, NULL);
+				this.animationState = 1;
+				SUPER(Nexposee).setFocus(this, NULL);
 			}
 			else
 			{
-				me.close(me);
+				this.close(this);
 			}
-			return 1;
+			return true;
 		}
-		else if (me.animationState == 2)
+		else if (this.animationState == 2)
 		{
-			if (!(SUPER(Nexposee).mousePress(me, pos)))
+			if (!(SUPER(Nexposee).mousePress(this, pos)))
 			{
 				m_play_click_sound(MENU_SOUND_CLOSE);
-				me.animationState = 3;
-				SUPER(Nexposee).setFocus(me, NULL);
+				this.animationState = 3;
+				SUPER(Nexposee).setFocus(this, NULL);
 			}
-			return 1;
+			return true;
 		}
-		return 0;
+		return false;
 	}
 
 	float Nexposee_mouseRelease(entity me, vector pos)
