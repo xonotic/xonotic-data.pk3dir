@@ -38,7 +38,7 @@ AUTOCVAR_SAVE(cl_damagetext_2d_size_lifetime,       float,  3,          "2D dama
 AUTOCVAR_SAVE(cl_damagetext_2d_velocity,            vector, '-25 0 0',  "2D damage text move direction (screen coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_2d_overlap_offset,      vector, '0 -15 0',  "Offset 2D damage text by this much to prevent overlapping (screen coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_2d_close_range,         float,  125,        "Always use 2D damagetext for hits closer that this");
-AUTOCVAR_SAVE(cl_damagetext_2d_out_of_view,         bool,   true,       "Always use 2D damagetext for hits that occured off-screen");
+AUTOCVAR_SAVE(cl_damagetext_2d_out_of_view,         bool,   true,       "Always use 2D damagetext for hits that occurred off-screen");
 
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color);
