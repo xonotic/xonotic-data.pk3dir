@@ -1,10 +1,13 @@
+ko    "Korean" "한국의"
 ast   Asturian "Asturianu" 73%
+zh_CN "Chinese (China)" "中文"
 de    German "Deutsch" 99%
 de_CH German "Deutsch (Schweiz)" 99%
 en    English "English"
 en_AU English "English (Australia)" 86%
 es    Spanish "Español" 99%
 fr    French "Français" 99%
+ga    Irish "Irish"
 it    Italian "Italiano" 99%
 hu    Hungarian "Magyar" 55%
 nl    Dutch "Nederlands" 70%
