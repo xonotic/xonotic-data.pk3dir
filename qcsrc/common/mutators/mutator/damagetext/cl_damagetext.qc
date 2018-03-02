@@ -21,8 +21,8 @@ AUTOCVAR_SAVE(cl_damagetext_size_max,               float,  16,         "Damage 
 AUTOCVAR_SAVE(cl_damagetext_size_max_damage,        float,  140,        "How much damage is considered large");
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
-AUTOCVAR_SAVE(cl_damagetext_velocity_screen,        vector, '0 -20 0',  "Damage text move direction (screen coordinates)");
-AUTOCVAR_SAVE(cl_damagetext_velocity_world,         vector, '0 0 0',    "Damage text move direction (world coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_velocity_screen,        vector, '0 0 0',    "Damage text move direction (screen coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_velocity_world,         vector, '0 0 20',   "Damage text move direction (world coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_offset_screen,          vector, '0 -40 0',  "Damage text offset (screen coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_offset_world,           vector, '0 0 0',    "Damage text offset (world coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage text spawned within this range is accumulated");
