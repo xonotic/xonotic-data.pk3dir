@@ -24,14 +24,15 @@
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range, int deathtype)
 {
 	TC(Sound, snd);
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid = ent.dphitcontentsmask;
+	Weapon wep = DEATH_WEAPONOF(deathtype);
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
-	if (IS_PLAYER(ent) && (ent.(weaponentity).m_weapon.spawnflags & WEP_FLAG_PENETRATEWALLS))
+	if (IS_PLAYER(ent) && (wep.spawnflags & WEP_FLAG_PENETRATEWALLS))
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -57,10 +58,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
-		accuracy_add(ent, ent.(weaponentity).m_weapon.m_id, maxdamage, 0);
+		accuracy_add(ent, wep.m_id, maxdamage, 0);
 
 	if(IS_PLAYER(ent))
-		W_HitPlotAnalysis(ent, weaponentity, v_forward, v_right, v_up);
+		W_HitPlotAnalysis(ent, wep, v_forward, v_right, v_up);
 
 	vector md = ent.(weaponentity).movedir;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
@@ -303,7 +304,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 		// apply the damage
 		if (it.takedamage)
-			Damage (it, this, this, bdamage * foff, deathtype, hitloc, it.railgunforce * ffs);
+			Damage (it, this, this, bdamage * foff, deathtype, weaponentity, hitloc, it.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin(explosion, hitloc);
@@ -415,10 +416,10 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			yoda = 0;
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
-			float g = accuracy_isgooddamage(this, hit);
-			Damage(hit, this, this, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
+			bool gooddamage = accuracy_isgooddamage(this, hit);
+			Damage(hit, this, this, damage * solid_penetration_left, dtype, weaponentity, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons
-			if(g)
+			if(gooddamage)
 			{
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);

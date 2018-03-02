@@ -293,24 +293,21 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
 {
-#ifdef SVQC
 	string s;
-#endif
 	if (visual)
 	{
 		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
 	}
-#ifdef SVQC
-	else if (autocvar_g_shootfromeye)
+	else if (STAT(SHOOTFROMEYE))
 	{
 		vecs.y = vecs.z = 0;
 	}
-	else if (autocvar_g_shootfromcenter)
+	else if (STAT(SHOOTFROMCENTER))
 	{
 		vecs.y = 0;
 		vecs.z -= 2;
 	}
-	else if ((s = autocvar_g_shootfromfixedorigin) != "")
+	else if ((s = G_SHOOTFROMFIXEDORIGIN) != "")
 	{
 		vector v = stov(s);
 		if (y_is_right) v.y = -v.y;
@@ -318,7 +315,6 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
 		vecs.y = v.y;
 		vecs.z = v.z;
 	}
-#endif
 	else  // just do the same as top
 	{
 		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
@@ -531,7 +527,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	// make them match perfectly
 #ifdef SVQC
     // null during init
-    if (this.owner) this.owner.stat_shotorg = compressed_shotorg;
+    if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
 	this.movedir = decompressShotOrigin(compressed_shotorg);
 #else
 	this.movedir = decompressShotOrigin(compressed_shotorg);
@@ -554,10 +550,7 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	vector a;
-	a.x = ReadCoord();
-    a.y = ReadCoord();
-    a.z = ReadCoord();
+	vector a = ReadVector();
     int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
@@ -590,9 +583,7 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	int channel = MSG_ONE;
 	msg_entity = actor;
 	WriteHeader(channel, wframe);
-	WriteCoord(channel, a.x);
-	WriteCoord(channel, a.y);
-	WriteCoord(channel, a.z);
+	WriteVector(channel, a);
 	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);

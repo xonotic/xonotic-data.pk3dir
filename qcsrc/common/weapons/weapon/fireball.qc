@@ -15,7 +15,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 
 	// 1. dist damage
 	d = (this.realowner.health + this.realowner.armorvalue);
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 	if(this.realowner.health + this.realowner.armorvalue >= d)
 	if(!this.cnt)
 	{
@@ -44,7 +44,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 			if(accuracy_isgooddamage(this.realowner, e))
 				accuracy_add(this.realowner, WEP_FIREBALL.m_id, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
-			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
+			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, this.weaponentity_fld, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
 			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
 		}
 	}
@@ -117,7 +117,7 @@ void W_Fireball_Think(entity this)
 	this.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -135,7 +135,7 @@ void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float dam
 
 void W_Fireball_Attack1(entity actor, .entity weaponentity)
 {
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage), WEP_FIREBALL.m_id);
 
 	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -154,6 +154,8 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	proj.damageforcescale = WEP_CVAR_PRI(fireball, damageforcescale);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_FIREBALL.m_id;
+	proj.weaponentity_fld = weaponentity;
+	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	set_movetype(proj, MOVETYPE_FLY);
@@ -173,7 +175,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 
 void W_Fireball_AttackEffect(entity actor, .entity weaponentity, float i, vector f_diff)
 {
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0, WEP_FIREBALL.m_id); // TODO: probably doesn't need deathtype, just a prefire effect
 	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
@@ -270,7 +272,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage), WEP_FIREBALL.m_id | HITTYPE_SECONDARY);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, actor);
 	w_shotorg = trace_endpos;
 

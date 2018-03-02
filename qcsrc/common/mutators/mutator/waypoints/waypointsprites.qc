@@ -47,9 +47,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     if (sendflags & 64)
     {
-        WriteCoord(MSG_ENTITY, this.origin.x);
-        WriteCoord(MSG_ENTITY, this.origin.y);
-        WriteCoord(MSG_ENTITY, this.origin.z);
+        WriteVector(MSG_ENTITY, this.origin);
     }
 
     if (sendflags & 1)
@@ -159,9 +157,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
     if (sendflags & 64)
     {
         // unfortunately, this needs to be exact (for the 3D display)
-        this.origin_x = ReadCoord();
-        this.origin_y = ReadCoord();
-        this.origin_z = ReadCoord();
+        this.origin = ReadVector();
         setorigin(this, this.origin);
     }
 

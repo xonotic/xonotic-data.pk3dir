@@ -102,12 +102,8 @@ void trigger_common_write(entity this, bool withtarget)
 		WriteVector(MSG_ENTITY, this.angles);
 
 	WriteShort(MSG_ENTITY, this.modelindex);
-	WriteCoord(MSG_ENTITY, this.mins.x);
-	WriteCoord(MSG_ENTITY, this.mins.y);
-	WriteCoord(MSG_ENTITY, this.mins.z);
-	WriteCoord(MSG_ENTITY, this.maxs.x);
-	WriteCoord(MSG_ENTITY, this.maxs.y);
-	WriteCoord(MSG_ENTITY, this.maxs.z);
+	WriteVector(MSG_ENTITY, this.mins);
+	WriteVector(MSG_ENTITY, this.maxs);
 	WriteByte(MSG_ENTITY, bound(1, this.scale * 16, 255));
 }
 
@@ -162,12 +158,8 @@ void trigger_common_read(entity this, bool withtarget)
 		this.angles = '0 0 0';
 
 	this.modelindex = ReadShort();
-	this.mins_x = ReadCoord();
-	this.mins_y = ReadCoord();
-	this.mins_z = ReadCoord();
-	this.maxs_x = ReadCoord();
-	this.maxs_y = ReadCoord();
-	this.maxs_z = ReadCoord();
+	this.mins = ReadVector();
+	this.maxs = ReadVector();
 	this.scale = ReadByte() / 16;
 	setsize(this, this.mins, this.maxs);
 }

@@ -34,7 +34,7 @@ float server_is_dedicated;
 
 // Fields
 
-.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
+.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 
 //.string	wad;
 //.string	map;
@@ -228,7 +228,10 @@ int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it
 
 .bool canteamdamage;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
+
+// WEAPONTODO
+#define DMG_NOWEP (weaponentities[0])
 
 float lockteams;
 
@@ -303,17 +306,7 @@ float servertime, serverprevtime, serverframetime;
 .float floodcontrol_voice;
 .float floodcontrol_voiceteam;
 
-.float stat_shotorg = _STAT(SHOTORG); // networked stat for trueaim HUD
-
 string matchid;
-
-.float last_pickup = _STAT(LAST_PICKUP);
-
-.float hit_time = _STAT(HIT_TIME);
-.float typehit_time = _STAT(TYPEHIT_TIME);
-.float kill_time = _STAT(KILL_TIME);
-
-.float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
 
 bool radar_showennemies;
 
@@ -324,15 +317,15 @@ float client_cefc_accumulatortime;
 
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
-.float clip_load = _STAT(WEAPON_CLIPLOAD);
+.float clip_load;
 .float old_clip_load;
-.float clip_size = _STAT(WEAPON_CLIPSIZE);
+.float clip_size;
 
-.float minelayer_mines = _STAT(LAYED_MINES);
-.float vortex_charge = _STAT(VORTEX_CHARGE);
+.int minelayer_mines;
+.float vortex_charge;
 .float vortex_charge_rottime;
-.float vortex_chargepool_ammo = _STAT(VORTEX_CHARGEPOOL);
-.float hagar_load = _STAT(HAGAR_LOAD);
+.float vortex_chargepool_ammo;
+.int hagar_load;
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
@@ -371,16 +364,14 @@ const float ACTIVE_TOGGLE 	= 3;
 
 .float player_blocked;
 
-.float revive_progress = _STAT(REVIVE_PROGRESS);
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.float freeze_time;
 .entity iceblock;
 .entity frozen_by; // for ice fields
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
-
-.float stat_respawn_time = _STAT(RESPAWN_TIME); // shows respawn time, and is negative when awaiting respawn
 
 .int killindicator_teamchange;
 
