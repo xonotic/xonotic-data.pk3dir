@@ -2833,3 +2833,10 @@ void PM_UpdateButtons(entity this, entity store)
 	store.v_angle = this.v_angle;
 	store.movement = this.movement;
 }
+
+NET_HANDLE(fpsreport, bool)
+{
+	int fps = ReadShort();
+	PlayerScore_Set(sender, SP_FPS, fps);
+	return true;
+}

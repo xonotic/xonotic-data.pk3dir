@@ -353,6 +353,28 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	return s.(scores(scorefield));
 }
 
+float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score)
+{
+	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
+	entity s = CS(player).scorekeeper;
+	if(!s)
+	{
+		if(game_stopped)
+			return 0;
+		LOG_WARN("Setting score of unknown player!");
+		return 0;
+	}
+
+	float oldscore = s.(scores(scorefield));
+	if(oldscore == score)
+		return oldscore;
+
+	if(scores_label(scorefield) != "")
+		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+	s.(scores(scorefield)) = score;
+	return s.(scores(scorefield));
+}
+
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score)
 {
 	float r;
