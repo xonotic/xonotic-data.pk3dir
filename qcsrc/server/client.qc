@@ -308,6 +308,9 @@ void PutObserverInServer(entity this)
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
+	if(this.monster_attack)
+		IL_REMOVE(g_monster_targets, this);
+	this.monster_attack = false;
     STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
@@ -340,6 +343,7 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
+	this.dphitcontentsmask = 0;
 	this.pushltime = 0;
 	this.istypefrag = 0;
 	setthink(this, func_null);
