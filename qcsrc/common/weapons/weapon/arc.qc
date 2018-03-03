@@ -754,6 +754,8 @@ METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponent
 bool autocvar_cl_arcbeam_teamcolor = true;
 bool autocvar_cl_arcbeam_simple = true;
 
+.int beam_slot;
+
 METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 {
     if(w_deathtype & HITTYPE_SECONDARY)
@@ -915,6 +917,9 @@ void Draw_ArcBeam(entity this)
 		// un-adjust trueaim if shotend is too close
 		if(vdist(end_pos - start_pos, <, g_trueaim_minrange))
 			end_pos = start_pos + (forward * g_trueaim_minrange);
+
+		entity wepent = viewmodels[this.beam_slot];
+		this.beam_shotorigin = wepent.movedir;
 
 		// move shot origin to the actual gun muzzle origin
 		vector origin_offset =
@@ -1166,11 +1171,13 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 	int slot = ReadByte();
 	entity flash;
 
+	this.beam_slot = slot;
+
 	if(isnew)
 	{
 		int gunalign = W_GunAlign(viewmodels[slot], STAT(GUNALIGN)) - 1;
 
-		this.beam_shotorigin = arc_shotorigin[gunalign];
+		this.beam_shotorigin = arc_shotorigin[gunalign]; // get a starting point
 
 		// set other main attributes of the beam
 		this.draw = Draw_ArcBeam;
