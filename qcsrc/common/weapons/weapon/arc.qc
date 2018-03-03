@@ -898,15 +898,22 @@ void Draw_ArcBeam(entity this)
 		vector up = v_up;
 		entity wepent = viewmodels[this.beam_slot];
 
+		if(autocvar_chase_active)
+			this.beam_usevieworigin = 1;
+		else
+			this.beam_usevieworigin = 2;
+
 		// decide upon start position
 		if(this.beam_usevieworigin == 2)
 			{ start_pos = warpzone_save_view_origin; }
+		else if(csqcplayer)
+			{ start_pos = csqcplayer.origin + csqcplayer.view_ofs; }
 		else
 			{ start_pos = this.origin; }
 
 		int v_shot_idx;  // used later
 		(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
-		if(v_shot_idx)
+		if(v_shot_idx && this.beam_usevieworigin == 2)
 			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
 
 		// trace forward with an estimation
@@ -926,7 +933,7 @@ void Draw_ArcBeam(entity this)
 
 		// move shot origin to the actual gun muzzle origin
 		vector origin_offset = '0 0 0';
-		if(!v_shot_idx)
+		if(!v_shot_idx || this.beam_usevieworigin != 2)
 		{
 			this.beam_shotorigin = wepent.movedir;
 			origin_offset =
@@ -1140,7 +1147,7 @@ void Draw_ArcBeam(entity this)
 			)
 		);
 	}
-	if(this.beam_muzzleeffect)
+	if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 	{
 		pointparticles(
 			this.beam_muzzleeffect,
@@ -1300,7 +1307,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
@@ -1326,7 +1333,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
@@ -1352,7 +1359,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
@@ -1378,7 +1385,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 0;
 				this.beam_muzzlelight[3] = 0;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
@@ -1404,7 +1411,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
@@ -1430,7 +1437,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
@@ -1456,7 +1463,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
@@ -1482,7 +1489,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
@@ -1510,7 +1517,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
