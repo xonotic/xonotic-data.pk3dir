@@ -892,7 +892,7 @@ void Draw_ArcBeam(entity this)
 		// into a weapon system for client code.
 
 		// find where we are aiming
-		makevectors(view_angles);
+		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
 		vector forward = v_forward;
 		vector right = v_right;
 		vector up = v_up;
