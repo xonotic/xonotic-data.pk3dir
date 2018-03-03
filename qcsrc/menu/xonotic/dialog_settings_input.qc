@@ -24,6 +24,7 @@ void CheckBox_Click_Redisplay(entity me, entity checkbox)
 	cmd("\ndefer 0.2 \"togglemenu 1\"\n");
 	//m_display();
 }
+
 void XonoticInputSettingsTab_fill(entity me)
 {
 	entity e;
@@ -31,8 +32,17 @@ void XonoticInputSettingsTab_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Key Bindings")));
+	me.gotoRC(me, 1, 0);
+		me.TD(me, 1, 1, e = makeXonoticButton(_("<<"), '0 0 0'));
+			e.onClick = KeyBinder_Bindmap_Down;
+			e.onClickEntity = kb;
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("0")));
+			e.textEntity = kb;
+		me.TD(me, 1, 1, e = makeXonoticButton(_(">>"), '0 0 0'));
+			e.onClick = KeyBinder_Bindmap_Up;
+			e.onClickEntity = kb;
 	me.TR(me);
-		me.TD(me, me.rows - 3, 3, kb);
+		me.TD(me, me.rows - 4, 3, kb);
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Change key..."), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Change;

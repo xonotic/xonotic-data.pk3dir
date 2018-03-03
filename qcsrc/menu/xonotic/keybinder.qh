@@ -1,7 +1,13 @@
 #pragma once
 
 #include "listbox.qh"
+
+// WARNING: Keep this lower than or equal with the engine limit
+const int MAX_BINDMAPS = 5;
+
 CLASS(XonoticKeyBinder, XonoticListBox)
+	ATTRIB(XonoticKeyBinder, bindmap, int, 0);
+	METHOD(XonoticKeyBinder, toString, string(entity));
 	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity));
 	ATTRIB(XonoticKeyBinder, rowsPerItem, int, 1);
 	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, int, vector, bool, bool));
@@ -12,6 +18,7 @@ CLASS(XonoticKeyBinder, XonoticListBox)
 	METHOD(XonoticKeyBinder, keyDown, float(entity, float, float, float));
 	METHOD(XonoticKeyBinder, keyGrabbed, void(entity, float, float));
 	METHOD(XonoticKeyBinder, destroy, void(entity));
+	METHOD(XonoticKeyBinder, changeBindmap, void(entity, int));
 
 	ATTRIB(XonoticKeyBinder, realFontSize, vector, '0 0 0');
 	ATTRIB(XonoticKeyBinder, realUpperMargin, float, 0);
@@ -34,3 +41,5 @@ void KeyBinder_Bind_Change(entity btn, entity me);
 void KeyBinder_Bind_Clear(entity btn, entity me);
 void KeyBinder_Bind_Edit(entity btn, entity me);
 void KeyBinder_Bind_Reset_All(entity btn, entity me);
+void KeyBinder_Bindmap_Up(entity btn, entity me);
+void KeyBinder_Bindmap_Down(entity btn, entity me);

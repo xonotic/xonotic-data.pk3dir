@@ -122,16 +122,16 @@ entity makeXonoticKeyBinder()
 	me.configureXonoticKeyBinder(me);
 	return me;
 }
-void replace_bind(string from, string to)
+void replace_bind(string from, string to, int bindmap)
 {
 	int n, j;
 	float k; // not sure if float or int
-	n = tokenize(findkeysforcommand(from, 0)); // uses '...' strings
+	n = tokenize(findkeysforcommand(from, bindmap)); // uses '...' strings
 	for(j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
 		if(k != -1)
-			localcmd("\nbind \"", keynumtostring(k), "\" \"", to, "\"\n");
+			localcmd("\nin_bind \"", itos(bindmap), "\" \"", keynumtostring(k), "\" \"", to, "\"\n");
 	}
 	if(n)
 		cvar_set("_hud_showbinds_reload", "1");
@@ -140,19 +140,47 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
 	me.configureXonoticListBox(me);
 	me.nItems = 0;
+	vector temp = getbindmaps();
+	me.bindmap = temp.x;
 
 	// TEMP: Xonotic 0.1 to later
-	replace_bind("impulse 1", "weapon_group_1");
-	replace_bind("impulse 2", "weapon_group_2");
-	replace_bind("impulse 3", "weapon_group_3");
-	replace_bind("impulse 4", "weapon_group_4");
-	replace_bind("impulse 5", "weapon_group_5");
-	replace_bind("impulse 6", "weapon_group_6");
-	replace_bind("impulse 7", "weapon_group_7");
-	replace_bind("impulse 8", "weapon_group_8");
-	replace_bind("impulse 9", "weapon_group_9");
-	replace_bind("impulse 14", "weapon_group_0");
+	// Do we still need this?
+	replace_bind("impulse 1", "weapon_group_1", me.bindmap);
+	replace_bind("impulse 2", "weapon_group_2", me.bindmap);
+	replace_bind("impulse 3", "weapon_group_3", me.bindmap);
+	replace_bind("impulse 4", "weapon_group_4", me.bindmap);
+	replace_bind("impulse 5", "weapon_group_5", me.bindmap);
+	replace_bind("impulse 6", "weapon_group_6", me.bindmap);
+	replace_bind("impulse 7", "weapon_group_7", me.bindmap);
+	replace_bind("impulse 8", "weapon_group_8", me.bindmap);
+	replace_bind("impulse 9", "weapon_group_9", me.bindmap);
+	replace_bind("impulse 14", "weapon_group_0", me.bindmap);
 }
+
+void XonoticKeyBinder_changeBindmap(entity me, int num)
+{
+	if (num < 0 || num >= MAX_BINDMAPS)
+	{
+		LOG_WARNF("Invalid bindmap number specified: %d", num);
+		return;
+	}
+	me.bindmap = num;
+	// bindmap bg is always 0
+	setbindmaps(vec2(me.bindmap, 0));
+	me.showNotify(me);
+}
+
+string XonoticKeyBinder_toString(entity me)
+{
+	string b = itos(me.bindmap);
+	string name = strcat("_keybinder_mapname", b);
+	if (cvar_string(name) != "")
+	{
+		return cvar_string(name);
+	}
+	return itos(me.bindmap);
+}
+
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
 	bool force_initial_selection = false;
@@ -163,6 +191,17 @@ void XonoticKeyBinder_loadKeyBinds(entity me)
 	if(force_initial_selection)
 		me.setSelected(me, 0);
 }
+
+void KeyBinder_Bindmap_Up(entity btn, entity me)
+{
+	me.changeBindmap(me, (me.bindmap + 1)%MAX_BINDMAPS);
+}
+
+void KeyBinder_Bindmap_Down(entity btn, entity me)
+{
+	me.changeBindmap(me, (me.bindmap + MAX_BINDMAPS - 1)%MAX_BINDMAPS);
+}
+
 void XonoticKeyBinder_showNotify(entity me)
 {
 	me.destroy(me);
@@ -216,7 +255,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 	if(func == "")
 		return;
 
-	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
+	n = tokenize(findkeysforcommand(func, me.bindmap)); // uses '...' strings
 	nvalid = 0;
 	for(j = 0; j < n; ++j)
 	{
@@ -231,11 +270,11 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 			k = stof(argv(j));
 			if(k != -1)
 				//localcmd("\nunbind \"", keynumtostring(k), "\"\n");
-				localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
+				localcmd("\nin_bind \"", itos(me.bindmap), "\" \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 		}
 	}
 	m_play_click_sound(MENU_SOUND_SELECT);
-	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
+	localcmd("\nin_bind \"", itos(me.bindmap), "\" \"", keynumtostring(key), "\" \"", func, "\"\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
 }
@@ -306,13 +345,13 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	if(func == "")
 		return;
 
-	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
+	n = tokenize(findkeysforcommand(func, me.bindmap)); // uses '...' strings
 	for(j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
 		if(k != -1)
 			//localcmd("\nunbind \"", keynumtostring(k), "\"\n");
-			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
+			localcmd("\nin_bind \"", itos(me.bindmap), "\" \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 	}
 	m_play_click_sound(MENU_SOUND_CLEAR);
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
@@ -432,7 +471,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	if(func != "")
 	{
-		n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
+		n = tokenize(findkeysforcommand(func, me.bindmap)); // uses '...' strings
 		s = "";
 		for(j = 0; j < n; ++j)
 		{
