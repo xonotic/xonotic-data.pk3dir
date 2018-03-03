@@ -896,12 +896,18 @@ void Draw_ArcBeam(entity this)
 		vector forward = v_forward;
 		vector right = v_right;
 		vector up = v_up;
+		entity wepent = viewmodels[this.beam_slot];
 
 		// decide upon start position
 		if(this.beam_usevieworigin == 2)
 			{ start_pos = warpzone_save_view_origin; }
 		else
 			{ start_pos = this.origin; }
+
+		int v_shot_idx;  // used later
+		(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
+		if(v_shot_idx)
+			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
 
 		// trace forward with an estimation
 		WarpZone_TraceLine(
@@ -918,13 +924,17 @@ void Draw_ArcBeam(entity this)
 		if(vdist(end_pos - start_pos, <, g_trueaim_minrange))
 			end_pos = start_pos + (forward * g_trueaim_minrange);
 
-		entity wepent = viewmodels[this.beam_slot];
-		this.beam_shotorigin = wepent.movedir;
-
 		// move shot origin to the actual gun muzzle origin
-		vector origin_offset =
-			  right * -this.beam_shotorigin.y
-			+ up * this.beam_shotorigin.z;
+		vector origin_offset = '0 0 0';
+		if(!v_shot_idx)
+		{
+			this.beam_shotorigin = wepent.movedir;
+			origin_offset =
+			 	 right * -this.beam_shotorigin.y
+				+ up * this.beam_shotorigin.z;
+		}
+		else
+			this.beam_shotorigin = '0 0 0';
 
 		start_pos = start_pos + origin_offset;
 
