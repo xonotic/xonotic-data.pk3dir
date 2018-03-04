@@ -44,14 +44,14 @@ void SUB_VanishOrRemove (entity ent);
 #ifdef CSQC
 // this stuff is defined in the server side engine VM, so we must define it separately here
 .float takedamage;
-const float DAMAGE_NO	= 0;
-const float DAMAGE_YES	= 1;
-const float DAMAGE_AIM	= 2;
+const int DAMAGE_NO = 0;
+const int DAMAGE_YES = 1;
+const int DAMAGE_AIM = 2;
 
-float	STATE_TOP		= 0;
-float	STATE_BOTTOM	= 1;
-float	STATE_UP		= 2;
-float	STATE_DOWN		= 3;
+const int STATE_TOP = 0;
+const int STATE_BOTTOM = 1;
+const int STATE_UP = 2;
+const int STATE_DOWN = 3;
 
 .string		noise, noise1, noise2, noise3;	// contains names of wavs to play
 

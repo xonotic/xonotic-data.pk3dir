@@ -60,7 +60,10 @@ spawnfunc(func_plat)
 {
 	if (this.sounds == 0) this.sounds = 2;
 
-    if (this.spawnflags & 4) this.dmg = 10000;
+	if (this.spawnflags & PLAT_CRUSH)
+	{
+		this.dmg = 10000;
+	}
 
     if (this.dmg && (this.message == "")) this.message = "was squished";
     if (this.dmg && (this.message2 == "")) this.message2 = "was squished by";
