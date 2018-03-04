@@ -41,6 +41,8 @@ void SUB_VanishOrRemove (entity ent);
 
 .vector dest1, dest2;
 
+.entity move_controller;
+
 #ifdef CSQC
 // this stuff is defined in the server side engine VM, so we must define it separately here
 .float takedamage;
