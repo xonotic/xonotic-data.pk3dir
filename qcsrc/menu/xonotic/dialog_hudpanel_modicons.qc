@@ -7,5 +7,7 @@ void XonoticHUDModIconsDialog_fill(entity me)
 	entity e;
 	string panelname = "modicons";
 
-	DIALOG_HUDPANEL_COMMON();
+	dialog_hudpanel_main_checkbox(me, panelname);
+
+	dialog_hudpanel_main_settings(me, panelname);
 }

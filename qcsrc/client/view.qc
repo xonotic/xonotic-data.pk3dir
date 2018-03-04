@@ -370,6 +370,35 @@ STATIC_INIT(viewmodel) {
     	viewmodels[slot] = new(viewmodel);
 }
 
+float showfps_prevfps;
+float showfps_prevfps_time;
+int showfps_framecounter;
+
+void fpscounter_update()
+{
+	if(!STAT(SHOWFPS))
+		return;
+
+	float currentTime = gettime(GETTIME_REALTIME);
+	showfps_framecounter += 1;
+	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
+	{
+		showfps_prevfps = showfps_framecounter/(currentTime - showfps_prevfps_time);
+		showfps_framecounter = 0;
+		showfps_prevfps_time = currentTime;
+
+		int channel = MSG_C2S;
+		WriteHeader(channel, fpsreport);
+		WriteShort(channel, bound(0, rint(showfps_prevfps), 65535)); // prevent insane fps values
+	}
+}
+
+STATIC_INIT(fpscounter_init)
+{
+	float currentTime = gettime(GETTIME_REALTIME);
+	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
+}
+
 void Porto_Draw(entity this);
 STATIC_INIT(Porto)
 {
@@ -1866,6 +1895,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	TargetMusic_Advance();
 	Fog_Force();
+	fpscounter_update();
 
 	if(drawtime == 0)
 		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps
