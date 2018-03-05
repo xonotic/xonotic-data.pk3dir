@@ -52,9 +52,9 @@ spawnfunc(func_door_rotating)
 	//	this.deathtype = " got in the way";
 
 	// I abuse "movedir" for denoting the axis for now
-	if (this.spawnflags & 64) // X (untested)
+	if (this.spawnflags & DOOR_ROTATING_XAXIS)
 		this.movedir = '0 0 1';
-	else if (this.spawnflags & 128) // Y (untested)
+	else if (this.spawnflags & DOOR_ROTATING_YAXIS)
 		this.movedir = '1 0 0';
 	else // Z
 		this.movedir = '0 1 0';
@@ -75,20 +75,23 @@ spawnfunc(func_door_rotating)
 	setblocked(this, door_blocked);
 	this.use = door_use;
 
-    if(this.spawnflags & 8)
-        this.dmg = 10000;
-
     if(this.dmg && (this.message == ""))
 		this.message = "was squished";
     if(this.dmg && (this.message2 == ""))
 		this.message2 = "was squished by";
 
-    if (this.sounds > 0)
+	if (this.sounds > 0)
 	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
 		this.noise2 = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
+	}
+	if(this.noise1 && this.noise1 != "")
+	{
+		precache_sound(this.noise1);
+	}
+	if(this.noise2 && this.noise2 != "")
+	{
+		precache_sound(this.noise2);
 	}
 
 	if (!this.speed)

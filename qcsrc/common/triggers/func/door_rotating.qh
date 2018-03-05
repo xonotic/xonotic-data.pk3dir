@@ -1,1 +1,5 @@
 #pragma once
+
+
+const int DOOR_ROTATING_XAXIS = BIT(6);
+const int DOOR_ROTATING_YAXIS = BIT(7);
