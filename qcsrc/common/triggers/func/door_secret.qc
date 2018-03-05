@@ -8,12 +8,6 @@ void fd_secret_move5(entity this);
 void fd_secret_move6(entity this);
 void fd_secret_done(entity this);
 
-const float SECRET_OPEN_ONCE = 1;		// stays open
-const float SECRET_1ST_LEFT = 2;		// 1st move is left of arrow
-const float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
-const float SECRET_NO_SHOOT = 8;		// only opened by trigger
-const float SECRET_YES_SHOOT = 16;	// shootable even if targeted
-
 void fd_secret_use(entity this, entity actor, entity trigger)
 {
 	float temp;
@@ -93,7 +87,7 @@ void fd_secret_move3(entity this)
 {
 	if (this.noise3 != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
-	if (!(this.spawnflags & SECRET_OPEN_ONCE))
+	if (!(this.spawnflags & SECRET_OPEN_ONCE) && this.wait >= 0)
 	{
 		this.nextthink = this.ltime + this.wait;
 		setthink(this, fd_secret_move4);
@@ -204,7 +198,10 @@ spawnfunc(func_door_secret)
 	/*if (!this.deathtype) // map makers can override this
 		this.deathtype = " got in the way";*/
 
-	if (!this.dmg) this.dmg = 2;
+	if (!this.dmg)
+	{
+		this.dmg = 2;
+	}
 
 	// Magic formula...
 	this.mangle = this.angles;
@@ -213,8 +210,35 @@ spawnfunc(func_door_secret)
 	if (!InitMovingBrushTrigger(this)) return;
 	this.effects |= EF_LOWPRECISION;
 
-	if (this.noise == "") this.noise = "misc/talk.wav";
+	// TODO: other soundpacks
+	if (this.sounds > 0)
+	{
+		this.noise1 = "plats/medplat1.wav";
+		this.noise2 = "plats/medplat1.wav";
+		this.noise3 = "plats/medplat2.wav";
+	}
+
+	// sound on touch
+	if (this.noise == "")
+	{
+		this.noise = "misc/talk.wav";
+	}
 	precache_sound(this.noise);
+	// sound while moving backwards
+	if (this.noise1 && this.noise1 != "")
+	{
+		precache_sound(this.noise1);
+	}
+	// sound while moving sideways
+	if (this.noise2 && this.noise2 != "")
+	{
+		precache_sound(this.noise2);
+	}
+	// sound when door stops moving
+	if (this.noise3 && this.noise3 != "")
+	{
+		precache_sound(this.noise3);
+	}
 
 	settouch(this, secret_touch);
 	setblocked(this, secret_blocked);
