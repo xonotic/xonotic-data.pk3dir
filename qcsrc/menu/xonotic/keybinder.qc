@@ -174,7 +174,7 @@ string XonoticKeyBinder_toString(entity me)
 {
 	string b = itos(me.bindmap);
 	string name = strcat("_keybinder_mapname", b);
-	if (cvar_string(name) != "")
+	if ((cvar_type(name) & CVAR_TYPEFLAG_EXISTS) && cvar_string(name) != "")
 	{
 		return cvar_string(name);
 	}
