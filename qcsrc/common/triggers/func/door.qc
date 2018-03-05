@@ -178,7 +178,7 @@ bool door_check_keys(entity door, entity player)
 	if(!door.itemkeys)
 	{
 #ifdef SVQC
-		play2(player, SND(TALK));
+		play2(player, door.noise);
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_UNLOCKED);
 #endif
 		return true;
@@ -629,6 +629,75 @@ void door_reset(entity this)
 
 #ifdef SVQC
 
+// common code for func_door and func_door_rotating spawnfuncs
+void door_init_shared(entity this)
+{
+	this.max_health = this.health;
+
+	// unlock sound
+	if(this.noise == "")
+	{
+		this.noise = "misc/talk.wav";
+	}
+	// door still locked sound
+	if(this.noise3 == "")
+	{
+		this.noise3 = "misc/talk.wav";
+	}
+	precache_sound(this.noise);
+	precache_sound(this.noise3);
+
+	if((this.dmg || (this.spawnflags & DOOR_CRUSH)) && (this.message == ""))
+	{
+		this.message = "was squished";
+	}
+	if((this.dmg || (this.spawnflags & DOOR_CRUSH)) && (this.message2 == ""))
+	{
+		this.message2 = "was squished by";
+	}
+
+	// TODO: other soundpacks
+	if (this.sounds > 0)
+	{
+		this.noise2 = "plats/medplat1.wav";
+		this.noise1 = "plats/medplat2.wav";
+	}
+
+	// sound when door stops moving
+	if(this.noise1 && this.noise1 != "")
+	{
+		precache_sound(this.noise1);
+	}
+	// sound when door is moving
+	if(this.noise2 && this.noise2 != "")
+	{
+		precache_sound(this.noise2);
+	}
+
+	if (!this.wait)
+	{
+		this.wait = 3;
+	}
+	if (!this.lip)
+	{
+		this.lip = 8;
+	}
+
+	this.state = STATE_BOTTOM;
+
+	if (this.health)
+	{
+		//this.canteamdamage = true; // TODO
+		this.takedamage = DAMAGE_YES;
+		this.event_damage = door_damage;
+	}
+
+	if (this.items)
+	{
+		this.wait = -1;
+	}
+}
+
 // spawnflags require key (for now only func_door)
 spawnfunc(func_door)
 {
@@ -640,42 +709,13 @@ spawnfunc(func_door)
 
 	SetMovedir(this);
 
-	this.max_health = this.health;
 	if (!InitMovingBrushTrigger(this))
 		return;
 	this.effects |= EF_LOWPRECISION;
 	this.classname = "door";
 
-	if(this.noise == "")
-		this.noise = "misc/talk.wav";
-	if(this.noise3 == "")
-		this.noise3 = "misc/talk.wav";
-	precache_sound(this.noise);
-	precache_sound(this.noise3);
-
 	setblocked(this, door_blocked);
 	this.use = door_use;
-
-	if(this.dmg && (this.message == ""))
-		this.message = "was squished";
-	if(this.dmg && (this.message2 == ""))
-		this.message2 = "was squished by";
-
-	if (this.sounds > 0)
-	{
-		this.noise2 = "plats/medplat1.wav";
-		this.noise1 = "plats/medplat2.wav";
-	}
-
-	if(this.noise1 && this.noise1 != "") { precache_sound(this.noise1); }
-	if(this.noise2 && this.noise2 != "") { precache_sound(this.noise2); }
-
-	if (!this.speed)
-		this.speed = 100;
-	if (!this.wait)
-		this.wait = 3;
-	if (!this.lip)
-		this.lip = 8;
 
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
@@ -688,17 +728,12 @@ spawnfunc(func_door)
 	if (this.spawnflags & DOOR_START_OPEN)
 		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
 
-	this.state = STATE_BOTTOM;
+	door_init_shared(this);
 
-	if (this.health)
+	if (!this.speed)
 	{
-		//this.canteamdamage = true; // TODO
-		this.takedamage = DAMAGE_YES;
-		this.event_damage = door_damage;
+		this.speed = 100;
 	}
-
-	if (this.items)
-		this.wait = -1;
 
 	settouch(this, door_touch);
 

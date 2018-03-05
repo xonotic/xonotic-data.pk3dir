@@ -107,9 +107,6 @@ void door_rotating_init_startopen(entity this)
 
 spawnfunc(func_door_rotating)
 {
-	// possible TODO: support for Quake1 keys (like func_door)
-	// however SPAWNFLAGS_GOLD_KEY (==8) has the same value as BIDIR_IN_DOWN
-
 	//if (!this.deathtype) // map makers can override this
 	//	this.deathtype = " got in the way";
 
@@ -126,7 +123,6 @@ spawnfunc(func_door_rotating)
 	this.movedir = this.movedir * this.angles_y;
 	this.angles = '0 0 0';
 
-	this.max_health = this.health;
 	this.avelocity = this.movedir;
 	if (!InitMovingBrushTrigger(this))
 		return;
@@ -137,31 +133,6 @@ spawnfunc(func_door_rotating)
 	setblocked(this, door_blocked);
 	this.use = door_use;
 
-    if(this.dmg && (this.message == ""))
-		this.message = "was squished";
-    if(this.dmg && (this.message2 == ""))
-		this.message2 = "was squished by";
-
-	if (this.sounds > 0)
-	{
-		this.noise2 = "plats/medplat1.wav";
-		this.noise1 = "plats/medplat2.wav";
-	}
-	if(this.noise1 && this.noise1 != "")
-	{
-		precache_sound(this.noise1);
-	}
-	if(this.noise2 && this.noise2 != "")
-	{
-		precache_sound(this.noise2);
-	}
-
-	if (!this.speed)
-		this.speed = 50;
-	if (!this.wait)
-		this.wait = 1;
-	this.lip = 0; // this.lip is used to remember reverse opening direction for door_rotating
-
 	this.pos1 = '0 0 0';
 	this.pos2 = this.movedir;
 
@@ -170,17 +141,12 @@ spawnfunc(func_door_rotating)
 	if (this.spawnflags & DOOR_START_OPEN)
 		InitializeEntity(this, door_rotating_init_startopen, INITPRIO_SETLOCATION);
 
-	this.state = STATE_BOTTOM;
-
-	if (this.health)
+	door_init_shared(this);
+	if (!this.speed)
 	{
-		//this.canteamdamage = true; // TODO
-		this.takedamage = DAMAGE_YES;
-		this.event_damage = door_damage;
+		this.speed = 50;
 	}
-
-	if (this.items)
-		this.wait = -1;
+	this.lip = 0; // this.lip is used to remember reverse opening direction for door_rotating
 
 	settouch(this, door_touch);
 
