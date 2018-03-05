@@ -2259,8 +2259,8 @@ bool PlayerThink(entity this)
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if (have_hook) {
 		do_crouch = false;
-	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		do_crouch = false;
+	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
+		//do_crouch = false;
 	} else if (this.vehicle) {
 		do_crouch = false;
 	} else if (STAT(FROZEN, this)) {
