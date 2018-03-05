@@ -24,8 +24,6 @@ THINK FUNCTIONS
 
 void door_go_down(entity this);
 void door_go_up(entity this, entity actor, entity trigger);
-void door_rotating_go_down(entity this);
-void door_rotating_go_up(entity this, entity oth);
 
 void door_blocked(entity this, entity blocker)
 {
@@ -350,66 +348,6 @@ void door_generic_plat_blocked(entity this, entity blocker)
 #endif
 	}
 }
-
-void door_rotating_hit_top(entity this)
-{
-	if (this.noise1 != "")
-		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
-	this.state = STATE_TOP;
-	if (this.spawnflags & DOOR_TOGGLE)
-		return;		// don't come down automatically
-	setthink(this, door_rotating_go_down);
-	this.nextthink = this.ltime + this.wait;
-}
-
-void door_rotating_hit_bottom(entity this)
-{
-	if (this.noise1 != "")
-		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
-	if (this.lip==666) // this.lip is used to remember reverse opening direction for door_rotating
-	{
-		this.pos2 = '0 0 0' - this.pos2;
-		this.lip = 0;
-	}
-	this.state = STATE_BOTTOM;
-}
-
-void door_rotating_go_down(entity this)
-{
-	if (this.noise2 != "")
-		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
-	if (this.max_health)
-	{
-		this.takedamage = DAMAGE_YES;
-		this.health = this.max_health;
-	}
-
-	this.state = STATE_DOWN;
-	SUB_CalcAngleMove (this, this.pos1, TSPEED_LINEAR, this.speed, door_rotating_hit_bottom);
-}
-
-void door_rotating_go_up(entity this, entity oth)
-{
-	if (this.state == STATE_UP)
-		return;		// already going up
-
-	if (this.state == STATE_TOP)
-	{	// reset top wait time
-		this.nextthink = this.ltime + this.wait;
-		return;
-	}
-	if (this.noise2 != "")
-		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
-	this.state = STATE_UP;
-	SUB_CalcAngleMove (this, this.pos2, TSPEED_LINEAR, this.speed, door_rotating_hit_top);
-
-	string oldmessage;
-	oldmessage = this.message;
-	this.message = "";
-	SUB_UseTargets(this, NULL, oth); // TODO: is oth needed here?
-	this.message = oldmessage;
-}
-
 
 /*
 =========================================
