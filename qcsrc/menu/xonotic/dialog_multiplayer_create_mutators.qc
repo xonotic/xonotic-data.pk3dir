@@ -20,7 +20,7 @@ string weaponarenastring_cvar;
 string WeaponArenaString()
 {
 	string s;
-	float n, i;
+	float n;
 	s = cvar_string("g_weaponarena");
 	if(s == "0")
 		return "";
@@ -39,14 +39,14 @@ string WeaponArenaString()
 
 	n = tokenize_console(s);
 	s = "";
-	for(i = 0; i < n; ++i)
+	for(int j = 0; j < n; ++j)
 	{
 		FOREACH(Weapons, it != WEP_Null, {
-			if(argv(i) == it.netname)
-				s = strcat(s, " & ", it.m_name);
+			if(argv(j) == it.netname)
+				s = cons_mid(s, " & ", it.m_name);
 		});
 	}
-	s = sprintf(_("%s Arena"), substring(s, 3, strlen(s) - 3));
+	s = sprintf(_("%s Arena"), s);
 
 	weaponarenastring = strzone(s);
 

@@ -113,8 +113,8 @@ void PM_ClientMovement_UpdateStatus(entity this)
 			break; // don't bother checking the others
 		}
 	}
-	if(this.waterlevel >= WATERLEVEL_SWIMMING)
-		do_crouch = false;
+	//if(this.waterlevel >= WATERLEVEL_SWIMMING)
+		//do_crouch = false;
 	if(hud != HUD_NORMAL)
 		do_crouch = false;
 	if(STAT(FROZEN, this))

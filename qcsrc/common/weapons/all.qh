@@ -359,6 +359,13 @@ ENUMCLASS_END(WFRAME)
 
 .WFRAME wframe;
 
+#ifdef SVQC
+    #define G_SHOOTFROMFIXEDORIGIN autocvar_g_shootfromfixedorigin
+#elif defined(CSQC)
+    string autocvar_cl_shootfromfixedorigin;
+    #define G_SHOOTFROMFIXEDORIGIN autocvar_cl_shootfromfixedorigin
+#endif
+
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 #endif

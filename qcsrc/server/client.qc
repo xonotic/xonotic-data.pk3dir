@@ -308,6 +308,9 @@ void PutObserverInServer(entity this)
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
+	if(this.monster_attack)
+		IL_REMOVE(g_monster_targets, this);
+	this.monster_attack = false;
     STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
@@ -340,6 +343,7 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
+	this.dphitcontentsmask = 0;
 	this.pushltime = 0;
 	this.istypefrag = 0;
 	setthink(this, func_null);
@@ -1093,6 +1097,8 @@ void FixClientCvars(entity e)
 
 	stuffcmd(e, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
 	stuffcmd(e, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
+
+	stuffcmd(e, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
 
 	MUTATOR_CALLHOOK(FixClientCvars, e);
 }
@@ -2144,6 +2150,7 @@ bool joinAllowed(entity this)
 }
 
 .int items_added;
+.string shootfromfixedorigin;
 bool PlayerThink(entity this)
 {
 	if (game_stopped || intermission_running) {
@@ -2277,6 +2284,11 @@ bool PlayerThink(entity this)
 	}
 
 	FixPlayermodel(this);
+
+	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
+		this.shootfromfixedorigin = autocvar_g_shootfromfixedorigin;
+		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
+	}
 
 	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 	//if(frametime)
@@ -2824,4 +2836,11 @@ void PM_UpdateButtons(entity this, entity store)
 
 	store.v_angle = this.v_angle;
 	store.movement = this.movement;
+}
+
+NET_HANDLE(fpsreport, bool)
+{
+	int fps = ReadShort();
+	PlayerScore_Set(sender, SP_FPS, fps);
+	return true;
 }
