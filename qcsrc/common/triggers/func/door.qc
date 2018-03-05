@@ -27,7 +27,7 @@ void door_go_up(entity this, entity actor, entity trigger);
 
 void door_blocked(entity this, entity blocker)
 {
-	if((this.spawnflags & PLAT_CRUSH)
+	if((this.spawnflags & DOOR_CRUSH)
 #ifdef SVQC
 		&& (blocker.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
@@ -314,7 +314,7 @@ void door_touch(entity this, entity toucher)
 
 void door_generic_plat_blocked(entity this, entity blocker)
 {
-	if((this.spawnflags & PLAT_CRUSH) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
+	if((this.spawnflags & DOOR_CRUSH) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
 #ifdef SVQC
 		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
