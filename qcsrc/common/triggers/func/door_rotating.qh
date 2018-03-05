@@ -1,5 +1,8 @@
 #pragma once
 
 
+const int BIDIR = BIT(1);
+const int BIDIR_IN_DOWN = BIT(3);
+
 const int DOOR_ROTATING_XAXIS = BIT(6);
 const int DOOR_ROTATING_YAXIS = BIT(7);

@@ -1,4 +1,5 @@
 #include "door.qh"
+#include "door_rotating.qh"
 /*
 
 Doors are similar to buttons, but can spawn a fat trigger field around them
@@ -28,7 +29,7 @@ void door_rotating_go_up(entity this, entity oth);
 
 void door_blocked(entity this, entity blocker)
 {
-	if((this.spawnflags & 8)
+	if((this.spawnflags & PLAT_CRUSH)
 #ifdef SVQC
 		&& (blocker.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
@@ -240,12 +241,12 @@ void door_fire(entity this, entity actor, entity trigger)
 			door_go_up(e, actor, trigger);
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
-			if ((e.spawnflags & 2) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
+			if ((e.spawnflags & BIDIR) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
 				e.lip = 666; // e.lip is used to remember reverse opening direction for door_rotating
 				e.pos2 = '0 0 0' - e.pos2;
 			}
 			// if BIDIR_IN_DOWN (==8) is set, prevent the door from reoping during closing if it is triggered from the wrong side
-			if (!((e.spawnflags & 2) &&  (e.spawnflags & 8) && e.state == STATE_DOWN
+			if (!((e.spawnflags & BIDIR) &&  (e.spawnflags & BIDIR_IN_DOWN) && e.state == STATE_DOWN
 				&& (((e.lip == 666) && (trigger.trigger_reverse == 0)) || ((e.lip != 666) && (trigger.trigger_reverse != 0)))))
 			{
 				door_rotating_go_up(e, trigger);
@@ -315,7 +316,7 @@ void door_touch(entity this, entity toucher)
 
 void door_generic_plat_blocked(entity this, entity blocker)
 {
-	if((this.spawnflags & 8) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
+	if((this.spawnflags & PLAT_CRUSH) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
 #ifdef SVQC
 		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
@@ -467,7 +468,7 @@ LinkDoors
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & 4) || cur.enemy))
+	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & DOOR_DONT_LINK) || cur.enemy))
 	{
 	}
 	return cur;
@@ -500,7 +501,7 @@ void LinkDoors(entity this)
 
 	if (this.enemy)
 		return;		// already linked by another door
-	if (this.spawnflags & 4)
+	if (this.spawnflags & DOOR_DONT_LINK)
 	{
 		this.owner = this.enemy = this;
 

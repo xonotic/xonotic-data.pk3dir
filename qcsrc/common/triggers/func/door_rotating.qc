@@ -47,6 +47,8 @@ void door_rotating_init_startopen(entity this)
 
 spawnfunc(func_door_rotating)
 {
+	// possible TODO: support for Quake1 keys (like func_door)
+	// however SPAWNFLAGS_GOLD_KEY (==8) has the same value as BIDIR_IN_DOWN
 
 	//if (!this.deathtype) // map makers can override this
 	//	this.deathtype = " got in the way";
