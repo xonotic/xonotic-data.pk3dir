@@ -1,11 +1,5 @@
 #pragma once
-
-const float SF_TRIGGER_INIT = 1;
-const float SF_TRIGGER_UPDATE = 2;
-const float SF_TRIGGER_RESET = 4;
-
-const float	SPAWNFLAG_NOMESSAGE = 1;
-const float	SPAWNFLAG_NOTOUCH = 1;
+#include "spawnflags.qh"
 
 .bool pushable;
 

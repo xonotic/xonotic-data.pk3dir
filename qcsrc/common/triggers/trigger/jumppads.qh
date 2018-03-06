@@ -1,10 +1,8 @@
 #pragma once
+#include "../spawnflags.qh"
 
 IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
-
-const float PUSH_ONCE		= 1;
-const float PUSH_SILENT		= 2;
 
 .float pushltime;
 .float istypefrag;

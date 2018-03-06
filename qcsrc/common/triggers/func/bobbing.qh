@@ -1,1 +1,2 @@
 #pragma once
+#include "../spawnflags.qh"

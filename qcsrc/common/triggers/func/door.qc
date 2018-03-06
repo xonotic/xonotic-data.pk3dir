@@ -239,12 +239,12 @@ void door_fire(entity this, entity actor, entity trigger)
 			door_go_up(e, actor, trigger);
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
-			if ((e.spawnflags & BIDIR) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
+			if ((e.spawnflags & DOOR_ROTATING_BIDIR) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
 				e.lip = 666; // e.lip is used to remember reverse opening direction for door_rotating
 				e.pos2 = '0 0 0' - e.pos2;
 			}
 			// if BIDIR_IN_DOWN (==8) is set, prevent the door from reoping during closing if it is triggered from the wrong side
-			if (!((e.spawnflags & BIDIR) &&  (e.spawnflags & BIDIR_IN_DOWN) && e.state == STATE_DOWN
+			if (!((e.spawnflags & DOOR_ROTATING_BIDIR) &&  (e.spawnflags & DOOR_ROTATING_BIDIR_IN_DOWN) && e.state == STATE_DOWN
 				&& (((e.lip == 666) && (trigger.trigger_reverse == 0)) || ((e.lip != 666) && (trigger.trigger_reverse != 0)))))
 			{
 				door_rotating_go_up(e, trigger);

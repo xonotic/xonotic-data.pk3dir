@@ -1,7 +1,6 @@
 #include "jumppads.qh"
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
-#include "jumppads.qh"
 #include <common/physics/movetypes/movetypes.qh>
 
 void trigger_push_use(entity this, entity actor, entity trigger)
