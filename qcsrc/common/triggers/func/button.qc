@@ -123,11 +123,7 @@ When a button is touched, it moves some distance in the direction of it's angle,
 "wait"		override the default 1 second wait (-1 = never return)
 "lip"		override the default 4 pixel lip remaining at end of move
 "health"	if set, the button must be killed instead of touched. If set to -1, the button will fire on ANY attack, even damageless ones like the InstaGib laser
-"sounds"
-0) steam metal
-1) wooden clunk
-2) metallic click
-3) in-out
+"noise"		sound that is played when the button is activated
 */
 spawnfunc(func_button)
 {
