@@ -15,6 +15,9 @@ const int BREAKABLE_NODAMAGE = BIT(2);
 // button
 const int BUTTON_DONTACCUMULATEDMG = BIT(7);
 
+// conveyor
+const int CONVEYOR_START_ENABLED = BIT(0);
+
 // door, door_rotating and door_secret
 const int DOOR_START_OPEN = BIT(0);
 const int DOOR_DONT_LINK = BIT(2);

@@ -1,5 +1,4 @@
 #include "button.qh"
-#include "../spawnflags.qh"
 #ifdef SVQC
 // button and multiple button
 
