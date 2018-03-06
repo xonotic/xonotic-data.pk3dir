@@ -749,7 +749,7 @@ string GameType_GetIcon(int cnt)
 .void(entity) TR;
 .void(entity, float, float, entity) TD;
 .void(entity, float) TDempty;
-.void(entity, float, float) gotRC;
+.void(entity, float, float) gotoRC;
 entity makeXonoticTextLabel(float theAlign, string theText);
 entity makeXonoticTextSlider(string);
 .void(entity, string, string) addValue;
