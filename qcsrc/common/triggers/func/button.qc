@@ -92,7 +92,7 @@ void button_touch(entity this, entity toucher)
 
 void button_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	if (this.spawnflags & BUTTON_DONTACCUMULATEDMG)

@@ -1,8 +1,16 @@
 #pragma once
 
+// generic usage
+const int NOSPLASH = BIT(8); // generic anti-splashdamage spawnflag
+
 // bobbing
 const int BOBBING_XAXIS = BIT(0);
 const int BOBBING_YAXIS = BIT(1);
+
+// breakable
+const int BREAKABLE_START_DISABLED = BIT(0);
+const int BREAKABLE_INDICATE_DAMAGE = BIT(1);
+const int BREAKABLE_NODAMAGE = BIT(2);
 
 // button
 const int BUTTON_DONTACCUMULATEDMG = BIT(7);
@@ -13,8 +21,6 @@ const int DOOR_DONT_LINK = BIT(2);
 const int SPAWNFLAGS_GOLD_KEY = BIT(3); // Quake 1 compat, can only be used with func_door!
 const int SPAWNFLAGS_SILVER_KEY = BIT(4); // Quake 1 compat, can only be used with func_door!
 const int DOOR_TOGGLE = BIT(5);
-
-const int DOOR_NOSPLASH = BIT(8); // generic anti-splashdamage spawnflag
 
 const int DOOR_NONSOLID = BIT(10);
 const int DOOR_CRUSH = BIT(11); // can't use PLAT_CRUSH cause that is the same as DOOR_DONT_LINK

@@ -264,7 +264,7 @@ void door_use(entity this, entity actor, entity trigger)
 
 void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	this.health = this.health - damage;

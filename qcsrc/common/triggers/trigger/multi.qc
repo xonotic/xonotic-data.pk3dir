@@ -101,7 +101,7 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 {
 	if(!this.takedamage)
 		return;
-	if(this.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	if(this.team)
