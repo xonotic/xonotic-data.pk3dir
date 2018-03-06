@@ -136,7 +136,7 @@ void func_breakable_behave_destroyed(entity this)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
 	this.event_damage = func_null;
-	this.state = 1;
+	this.state = STATE_BROKEN;
 	if(this.spawnflags & BREAKABLE_NODAMAGE)
 		this.use = func_null;
 	func_breakable_colormod(this);
@@ -169,7 +169,7 @@ void func_breakable_behave_restore(entity this)
 	}
 	if(this.spawnflags & BREAKABLE_NODAMAGE)
 		this.use = func_breakable_destroy; // don't need to set it usually, as .use isn't reset
-	this.state = 0;
+	this.state = STATE_ALIVE;
 	//this.nextthink = 0; // cancel auto respawn
 	setthink(this, func_breakable_think);
 	this.nextthink = time + 0.1;
@@ -180,7 +180,7 @@ void func_breakable_behave_restore(entity this)
 
 void func_breakable_init_for_player(entity this, entity player)
 {
-	if (this.noise1 && this.state == 0 && IS_REAL_CLIENT(player))
+	if (this.noise1 && this.state == STATE_ALIVE && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
 		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
@@ -249,7 +249,7 @@ void func_breakable_destroy_self(entity this)
 
 void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.state == 1)
+	if(this.state == STATE_BROKEN)
 		return;
 	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
