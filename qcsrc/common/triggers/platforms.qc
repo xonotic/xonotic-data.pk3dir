@@ -173,6 +173,8 @@ void plat_use(entity this, entity actor, entity trigger)
 	plat_go_down(this);
 }
 
+// WARNING: backwards compatibility because people don't use already existing fields :(
+// TODO: Check if any maps use these fields and remove these fields if it doesn't break maps
 .string sound1, sound2;
 
 void plat_reset(entity this)
