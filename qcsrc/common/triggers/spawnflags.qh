@@ -2,6 +2,7 @@
 
 // generic usage
 const int NOSPLASH = BIT(8); // generic anti-splashdamage spawnflag
+const int START_ENABLED = BIT(0);
 
 // bobbing
 const int BOBBING_XAXIS = BIT(0);
@@ -14,9 +15,6 @@ const int BREAKABLE_NODAMAGE = BIT(2);
 
 // button
 const int BUTTON_DONTACCUMULATEDMG = BIT(7);
-
-// conveyor
-const int CONVEYOR_START_ENABLED = BIT(0);
 
 // door, door_rotating and door_secret
 const int DOOR_START_OPEN = BIT(0);
@@ -40,6 +38,10 @@ const int DOOR_SECRET_1ST_DOWN = BIT(2); // 1st move is down from arrow
 const int DOOR_SECRET_NO_SHOOT = BIT(3); // only opened by trigger
 const int DOOR_SECRET_YES_SHOOT = BIT(4); // shootable even if targeted
 
+// particles
+const int PARTICLES_IMPULSE = BIT(1);
+const int PARTICLES_VISCULLING = BIT(2);
+
 // jumppads
 const int PUSH_ONCE = BIT(0);
 const int PUSH_SILENT = BIT(1); // not used?
@@ -60,9 +62,18 @@ const int TELEPORT_FLAG_TDEATH = BIT(2);
 const int TELEPORT_FLAG_FORCE_TDEATH = BIT(3);
 
 // triggers
+const int SPAWNFLAG_NOMESSAGE = BIT(0);
+const int SPAWNFLAG_NOTOUCH = BIT(0); // why are these the same?
+
+//----------
+// SENDFLAGS
+//----------
 const int SF_TRIGGER_INIT = BIT(0);
 const int SF_TRIGGER_UPDATE = BIT(1);
 const int SF_TRIGGER_RESET = BIT(2);
 
-const int SPAWNFLAG_NOMESSAGE = BIT(0);
-const int SPAWNFLAG_NOTOUCH = BIT(0); // why are these the same?
+// pointparticles
+const int SF_POINTPARTICLES_IMPULSE = BIT(4);
+const int SF_POINTPARTICLES_MOVING = BIT(5); // Send velocity and movedir
+const int SF_POINTPARTICLES_JITTER_AND_COUNT = BIT(6); // Send waterlevel (=jitter) and count
+const int SF_POINTPARTICLES_BOUNDS = BIT(7); // Send min and max of the brush

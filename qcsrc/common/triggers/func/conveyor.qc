@@ -63,54 +63,6 @@ void conveyor_think(entity this)
 
 #ifdef SVQC
 
-void conveyor_setactive(entity this, int act)
-{
-	int old_status = this.active;
-	if(act == ACTIVE_TOGGLE)
-	{
-		if(this.active == ACTIVE_ACTIVE)
-		{
-			this.active = ACTIVE_NOT;
-		}
-		else
-		{
-			this.active = ACTIVE_ACTIVE;
-		}
-	}
-	else
-	{
-		this.active = act;
-	}
-
-	if (this.active != old_status)
-	{
-		this.SendFlags |= SF_TRIGGER_UPDATE;
-	}
-}
-
-// Compatibility with old maps
-void conveyor_use(entity this, entity actor, entity trigger)
-{
-	conveyor_setactive(this, ACTIVE_TOGGLE);
-}
-
-void conveyor_reset(entity this)
-{
-	IFTARGETED
-	{
-		if(this.spawnflags & CONVEYOR_START_ENABLED)
-		{
-			this.active = ACTIVE_ACTIVE;
-		}
-	}
-	else
-	{
-		this.active = ACTIVE_ACTIVE;
-	}
-
-	this.SendFlags |= SF_TRIGGER_UPDATE;
-}
-
 bool conveyor_send(entity this, entity to, int sendflags)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
@@ -145,13 +97,13 @@ void conveyor_init(entity this)
 	this.movedir *= this.speed;
 	setthink(this, conveyor_think);
 	this.nextthink = time;
-	this.setactive = conveyor_setactive;
+	this.setactive = generic_netlinked_setactive;
 	IFTARGETED
 	{
 		// backwards compatibility
-		this.use = conveyor_use;
+		this.use = generic_netlinked_legacy_use;
 	}
-	this.reset = conveyor_reset;
+	this.reset = generic_netlinked_reset;
 	this.reset(this);
 
 	FixSize(this);
