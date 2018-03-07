@@ -1,4 +1,5 @@
 #include "util.qh"
+#include "dialog.qh"
 
 #include "../item.qh"
 
