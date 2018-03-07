@@ -995,7 +995,7 @@ spawnfunc(target_checkpoint) // defrag entity
 	defrag_ents = 1;
 
 	// if this is targeted, then it probably isn't a trigger
-	bool is_trigger = !boolean(!this.nottargeted && this.targetname != "");
+	bool is_trigger = this.targetname == "";
 
 	if(is_trigger)
 		EXACTTRIGGER_INIT;

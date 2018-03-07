@@ -8,8 +8,7 @@
 
 .float height;
 
-.float nottargeted;
-#define IFTARGETED if(!this.nottargeted && this.targetname != "")
+#define IFTARGETED if(this.targetname && this.targetname != "")
 
 .float lip;
 

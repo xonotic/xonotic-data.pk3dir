@@ -7581,6 +7581,15 @@ effect arc_lightning
 	underwater
 	velocityjitter 250 250 250
 	velocitymultiplier 20
+effect arc_lightning
+	type smoke
+	alpha 40 40 350
+	color 0x80C0FF 0x80C0FF
+	countabsolute 1
+	sizeincrease 400
+	size 4 4
+	tex 38 38
+	velocitymultiplier 100
 effect arc_beam
 	type spark
 	airfriction -10
