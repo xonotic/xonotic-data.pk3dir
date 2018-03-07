@@ -55,56 +55,59 @@ string WeaponArenaString()
 
 string XonoticMutatorsDialog_toString(entity me)
 {
-	string s;
-	s = "";
+	string s = "";
 	if(cvar("g_dodging"))
-		s = strcat(s, ", ", _("Dodging"));
+		s = cons_mid(s, ", ", _("Dodging"));
 	if(cvar("g_instagib"))
-		s = strcat(s, ", ", _("InstaGib"));
+		s = cons_mid(s, ", ", _("InstaGib"));
 	if(cvar("g_new_toys"))
-		s = strcat(s, ", ", _("New Toys"));
+		s = cons_mid(s, ", ", _("New Toys"));
 	if(cvar("g_nix"))
-		s = strcat(s, ", ", _("NIX"));
+		s = cons_mid(s, ", ", _("NIX"));
 	if(cvar("g_rocket_flying"))
-		s = strcat(s, ", ", _("Rocket Flying"));
+		s = cons_mid(s, ", ", _("Rocket Flying"));
 	if(cvar("g_invincible_projectiles"))
-		s = strcat(s, ", ", _("Invincible Projectiles"));
+		s = cons_mid(s, ", ", _("Invincible Projectiles"));
 	if(cvar_string("g_weaponarena") != "0")
-		s = strcat(s, ", ", WeaponArenaString());
+		s = cons_mid(s, ", ", WeaponArenaString());
 	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
-		s = strcat(s, ", ", _("No start weapons"));
+		s = cons_mid(s, ", ", _("No start weapons"));
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
-		s = strcat(s, ", ", _("Low gravity"));
+		s = cons_mid(s, ", ", _("Low gravity"));
 	if(cvar("g_cloaked"))
-		s = strcat(s, ", ", _("Cloaked"));
+		s = cons_mid(s, ", ", _("Cloaked"));
 	if(cvar("g_grappling_hook"))
-		s = strcat(s, ", ", _("Hook"));
+		s = cons_mid(s, ", ", _("Hook"));
 	if(cvar("g_midair"))
-		s = strcat(s, ", ", _("Midair"));
+		s = cons_mid(s, ", ", _("Midair"));
+	if(cvar("g_melee_only"))
+		s = cons_mid(s, ", ", _("Melee only"));
 	if(cvar("g_vampire"))
-		s = strcat(s, ", ", _("Vampire"));
+		s = cons_mid(s, ", ", _("Vampire"));
 	if(cvar("g_pinata"))
-		s = strcat(s, ", ", _("Piñata"));
+		s = cons_mid(s, ", ", _("Piñata"));
 	if(cvar("g_weapon_stay"))
-		s = strcat(s, ", ", _("Weapons stay"));
+		s = cons_mid(s, ", ", _("Weapons stay"));
 	if(cvar("g_bloodloss") > 0)
-		s = strcat(s, ", ", _("Blood loss"));
+		s = cons_mid(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
-		s = strcat(s, ", ", _("Jet pack"));
+		s = cons_mid(s, ", ", _("Jet pack"));
 	if(cvar("g_buffs") > 0)
-		s = strcat(s, ", ", _("Buffs"));
+		s = cons_mid(s, ", ", _("Buffs"));
 	if(cvar("g_overkill"))
-		s = strcat(s, ", ", _("Overkill"));
+		s = cons_mid(s, ", ", _("Overkill"));
 	if(cvar("g_powerups") == 0)
-		s = strcat(s, ", ", _("No powerups"));
+		s = cons_mid(s, ", ", _("No powerups"));
 	if(cvar("g_powerups") > 0)
-		s = strcat(s, ", ", _("Powerups"));
+		s = cons_mid(s, ", ", _("Powerups"));
 	if(cvar("g_touchexplode") > 0)
-		s = strcat(s, ", ", _("Touch explode"));
+		s = cons_mid(s, ", ", _("Touch explode"));
+	if(cvar("g_walljump"))
+		s = cons_mid(s, ", ", _("Wall jumping"));
 	if(s == "")
 		return ZCTX(_("MUT^None"));
 	else
-		return substring(s, 2, strlen(s) - 2);
+		return s;
 }
 
 float checkCompatibility_pinata(entity me)
@@ -112,6 +115,10 @@ float checkCompatibility_pinata(entity me)
 	if(cvar("g_instagib"))
 		return 0;
 	if(cvar("g_nix"))
+		return 0;
+	if(cvar("g_overkill"))
+		return 0;
+	if(cvar("g_melee_only"))
 		return 0;
 	if(cvar_string("g_weaponarena") != "0")
 		return 0;
@@ -168,10 +175,11 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_buffs", _("Buffs")));
+			e.cvarOffValue = "-1"; // TODO: make this a radio button?
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_midair", _("Midair"),
-			_("Only possible to inflict damage on your enemy while he's airborne")));
+			_("Only possible to inflict damage on your enemy while they're airborne")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_vampire", _("Vampire"),
