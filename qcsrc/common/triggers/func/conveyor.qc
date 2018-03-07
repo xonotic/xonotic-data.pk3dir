@@ -17,9 +17,9 @@ void conveyor_think(entity this)
 		IL_REMOVE(g_conveyed, it);
 	});
 
-	if(this.state)
+	if(this.active)
 	{
-		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, !it.conveyor.state && isPushable(it),
+		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, !it.conveyor.active && isPushable(it),
 		{
 			vector emin = it.absmin;
 			vector emax = it.absmax;
@@ -63,18 +63,49 @@ void conveyor_think(entity this)
 
 #ifdef SVQC
 
+void conveyor_setactive(entity this, int act)
+{
+	int old_status = this.active;
+	if(act == ACTIVE_TOGGLE)
+	{
+		if(this.active == ACTIVE_ACTIVE)
+		{
+			this.active = ACTIVE_NOT;
+		}
+		else
+		{
+			this.active = ACTIVE_ACTIVE;
+		}
+	}
+	else
+	{
+		this.active = act;
+	}
+
+	if (this.active != old_status)
+	{
+		this.SendFlags |= SF_TRIGGER_UPDATE;
+	}
+}
+
+// Compatibility with old maps
 void conveyor_use(entity this, entity actor, entity trigger)
 {
-	this.state = !this.state;
-
-	this.SendFlags |= SF_TRIGGER_UPDATE;
+	conveyor_setactive(this, ACTIVE_TOGGLE);
 }
 
 void conveyor_reset(entity this)
 {
-	if(this.spawnflags & CONVEYOR_START_ENABLED)
+	IFTARGETED
 	{
-		this.state = STATE_ON;
+		if(this.spawnflags & CONVEYOR_START_ENABLED)
+		{
+			this.active = ACTIVE_ACTIVE;
+		}
+	}
+	else
+	{
+		this.active = ACTIVE_ACTIVE;
 	}
 
 	this.SendFlags |= SF_TRIGGER_UPDATE;
@@ -96,14 +127,14 @@ bool conveyor_send(entity this, entity to, int sendflags)
 		WriteVector(MSG_ENTITY, this.movedir);
 
 		WriteByte(MSG_ENTITY, this.speed);
-		WriteByte(MSG_ENTITY, this.state);
+		WriteByte(MSG_ENTITY, this.active);
 
 		WriteString(MSG_ENTITY, this.targetname);
 		WriteString(MSG_ENTITY, this.target);
 	}
 
 	if(sendflags & SF_TRIGGER_UPDATE)
-		WriteByte(MSG_ENTITY, this.state);
+		WriteByte(MSG_ENTITY, this.active);
 
 	return true;
 }
@@ -114,14 +145,14 @@ void conveyor_init(entity this)
 	this.movedir *= this.speed;
 	setthink(this, conveyor_think);
 	this.nextthink = time;
+	this.setactive = conveyor_setactive;
 	IFTARGETED
 	{
+		// backwards compatibility
 		this.use = conveyor_use;
-		this.reset = conveyor_reset;
-		this.reset(this);
 	}
-	else
-		this.state = STATE_ON;
+	this.reset = conveyor_reset;
+	this.reset(this);
 
 	FixSize(this);
 
@@ -179,7 +210,7 @@ NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 		this.movedir = ReadVector();
 
 		this.speed = ReadByte();
-		this.state = ReadByte();
+		this.active = ReadByte();
 
 		this.targetname = strzone(ReadString());
 		this.target = strzone(ReadString());
@@ -188,7 +219,7 @@ NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 	}
 
 	if(sendflags & SF_TRIGGER_UPDATE)
-		this.state = ReadByte();
+		this.active = ReadByte();
 
 	return true;
 }
