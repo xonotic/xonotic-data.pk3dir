@@ -128,24 +128,18 @@ spawnfunc(func_pointparticles)
 
 spawnfunc(func_sparks)
 {
-	// this.cnt is the amount of sparks that one burst will spawn
-	if(this.cnt < 1) {
-		this.cnt = 25.0; // nice default value
+	if(this.count < 1) {
+		this.count = 25.0; // nice default value
 	}
 
-	// this.wait is the probability that a sparkthink will spawn a spark shower
-	// range: 0 - 1, but 0 makes little sense, so...
-	if(this.wait < 0.05) {
-		this.wait = 0.25; // nice default value
+	if(this.impulse < 0.5) {
+		this.impulse = 2.5; // nice default value
 	}
 
-	this.count = this.cnt;
 	this.mins = '0 0 0';
 	this.maxs = '0 0 0';
 	this.velocity = '0 0 -1';
 	this.mdl = "TE_SPARK";
-	this.impulse = 10 * this.wait; // by default 2.5/sec
-	this.wait = 0;
 	this.cnt = 0; // use mdl
 
 	spawnfunc_func_pointparticles(this);
