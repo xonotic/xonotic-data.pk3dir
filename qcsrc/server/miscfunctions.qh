@@ -29,7 +29,6 @@ float cvar_normal(string n)
 #define cvar_set_normal builtin_cvar_set
 
 .vector dropped_origin;
-.float nottargeted;
 
 entity eliminatedPlayers;
 void EliminatedPlayers_Init(float(entity) isEliminated_func);

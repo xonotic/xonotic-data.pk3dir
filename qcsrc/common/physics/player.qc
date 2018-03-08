@@ -119,8 +119,8 @@ void PM_ClientMovement_UpdateStatus(entity this)
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if (have_hook) {
 		do_crouch = false;
-	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		do_crouch = false;
+	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
+		//do_crouch = false;
 	} else if (PHYS_INVEHICLE(this)) {
 		do_crouch = false;
 	} else if (STAT(FROZEN, this)) {

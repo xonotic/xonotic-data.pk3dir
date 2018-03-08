@@ -9,7 +9,10 @@ void XonoticHUDQuickMenuDialog_fill(entity me)
 	entity e;
 	string panelname = "quickmenu";
 
-	DIALOG_HUDPANEL_COMMON_NOTOGGLE();
+	// this panel has no main cvar
+	//dialog_hudpanel_main_checkbox(me, panelname);
+
+	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Text alignment:")));
