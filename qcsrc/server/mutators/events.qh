@@ -1065,3 +1065,9 @@ MUTATOR_HOOKABLE(PlayerPhysics_UpdateStats, EV_PlayerPhysics_UpdateStats);
     /** bot */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(HavocBot_Aim, EV_HavocBot_Aim);
+
+/** return true to skip respawn time calculations */
+#define EV_CalculateRespawnTime(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(CalculateRespawnTime, EV_CalculateRespawnTime);
