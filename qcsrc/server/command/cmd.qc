@@ -396,7 +396,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 			{
 				CheckAllowedTeams(caller);
 				GetTeamCounts(caller);
-				if ((BIT(Team_TeamToNumber(selection) - 1) & FindBestTeams(caller, false)) == 0)
+				if ((BIT(Team_TeamToNumber(selection) - 1) & FindBestTeamsForBalance(caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 					return;

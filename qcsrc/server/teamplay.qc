@@ -595,6 +595,161 @@ bool SetPlayerTeam(entity player, int destination_team_index,
 	return true;
 }
 
+int FindBestTeamsForBalance(entity player, bool use_score)
+{
+	if (MUTATOR_CALLHOOK(FindBestTeams, player) == true)
+	{
+		return M_ARGV(1, float);
+	}
+	int team_bits = 0;
+	int previous_team = 0;
+	if (Team_IsAllowed(g_team_entities[0]))
+	{
+		team_bits = BIT(0);
+		previous_team = 1;
+	}
+	if (Team_IsAllowed(g_team_entities[1]))
+	{
+		if (previous_team == 0)
+		{
+			team_bits = BIT(1);
+			previous_team = 2;
+		}
+		else if (IsTeamSmallerThanTeam(2, previous_team, player, use_score))
+		{
+			team_bits = BIT(1);
+			previous_team = 2;
+		}
+		else if (IsTeamEqualToTeam(2, previous_team, player, use_score))
+		{
+			team_bits |= BIT(1);
+			previous_team = 2;
+		}
+	}
+	if (Team_IsAllowed(g_team_entities[2]))
+	{
+		if (previous_team == 0)
+		{
+			team_bits = BIT(2);
+			previous_team = 3;
+		}
+		else if (IsTeamSmallerThanTeam(3, previous_team, player, use_score))
+		{
+			team_bits = BIT(2);
+			previous_team = 3;
+		}
+		else if (IsTeamEqualToTeam(3, previous_team, player, use_score))
+		{
+			team_bits |= BIT(2);
+			previous_team = 3;
+		}
+	}
+	if (Team_IsAllowed(g_team_entities[3]))
+	{
+		if (previous_team == 0)
+		{
+			team_bits = BIT(3);
+		}
+		else if (IsTeamSmallerThanTeam(4, previous_team, player, use_score))
+		{
+			team_bits = BIT(3);
+		}
+		else if (IsTeamEqualToTeam(4, previous_team, player, use_score))
+		{
+			team_bits |= BIT(3);
+		}
+	}
+	return team_bits;
+}
+
+int FindBestTeamForBalance(entity player, float ignore_player)
+{
+	// count how many players are in each team
+	if (ignore_player)
+	{
+		GetTeamCounts(player);
+	}
+	else
+	{
+		GetTeamCounts(NULL);
+	}
+	int team_bits = FindBestTeamsForBalance(player, true);
+	if (team_bits == 0)
+	{
+		LOG_FATALF("FindBestTeam: No teams available for %s\n",
+			MapInfo_Type_ToString(MapInfo_CurrentGametype()));
+	}
+	RandomSelection_Init();
+	if ((team_bits & BIT(0)) != 0)
+	{
+		RandomSelection_AddFloat(1, 1, 1);
+	}
+	if ((team_bits & BIT(1)) != 0)
+	{
+		RandomSelection_AddFloat(2, 1, 1);
+	}
+	if ((team_bits & BIT(2)) != 0)
+	{
+		RandomSelection_AddFloat(3, 1, 1);
+	}
+	if ((team_bits & BIT(3)) != 0)
+	{
+		RandomSelection_AddFloat(4, 1, 1);
+	}
+	return RandomSelection_chosen_float;
+}
+
+void JoinBestTeamForBalance(entity this, bool force_best_team)
+{
+	// don't join a team if we're not playing a team game
+	if (!teamplay)
+	{
+		return;
+	}
+
+	// find out what teams are available
+	CheckAllowedTeams(this);
+
+	// if we don't care what team they end up on, put them on whatever team they entered as.
+	// if they're not on a valid team, then let other code put them on the smallest team
+	if (!force_best_team)
+	{
+		int selected_team_num = -1;
+		for (int i = 0; i < 4; ++i)
+		{
+			if (Team_IsAllowed(g_team_entities[i]) && (this.team ==
+				Team_NumberToTeam(i)))
+			{
+				selected_team_num = this.team;
+				break;
+			}
+		}
+		
+		if (Team_IsValidTeam(selected_team_num))
+		{
+			SetPlayerTeamSimple(this, selected_team_num);
+			LogTeamchange(this.playerid, this.team, 99);
+			return;
+		}
+	}
+	// otherwise end up on the smallest team (handled below)
+	if (this.bot_forced_team)
+	{
+		return;
+	}
+	int best_team_index = FindBestTeamForBalance(this, true);
+	int best_team_num = Team_NumberToTeam(best_team_index);
+	int old_team_index = Team_TeamToNumber(this.team);
+	TeamchangeFrags(this);
+	SetPlayerTeamSimple(this, best_team_num);
+	LogTeamchange(this.playerid, this.team, 2); // log auto join
+	if ((old_team_index != -1) && !IS_BOT_CLIENT(this))
+	{
+		AutoBalanceBots(old_team_index, best_team_index);
+	}
+	KillPlayerForTeamChange(this);
+}
+
 bool IsTeamSmallerThanTeam(int team_index_a, int team_index_b, entity player,
 	bool use_score)
 {
@@ -681,161 +836,6 @@ bool IsTeamEqualToTeam(int team_index_a, int team_index_b, entity player,
 	return team_a.m_team_score == team_b.m_team_score;
 }
 
-int FindBestTeams(entity player, bool use_score)
-{
-	if (MUTATOR_CALLHOOK(FindBestTeams, player) == true)
-	{
-		return M_ARGV(1, float);
-	}
-	int team_bits = 0;
-	int previous_team = 0;
-	if (Team_IsAllowed(g_team_entities[0]))
-	{
-		team_bits = BIT(0);
-		previous_team = 1;
-	}
-	if (Team_IsAllowed(g_team_entities[1]))
-	{
-		if (previous_team == 0)
-		{
-			team_bits = BIT(1);
-			previous_team = 2;
-		}
-		else if (IsTeamSmallerThanTeam(2, previous_team, player, use_score))
-		{
-			team_bits = BIT(1);
-			previous_team = 2;
-		}
-		else if (IsTeamEqualToTeam(2, previous_team, player, use_score))
-		{
-			team_bits |= BIT(1);
-			previous_team = 2;
-		}
-	}
-	if (Team_IsAllowed(g_team_entities[2]))
-	{
-		if (previous_team == 0)
-		{
-			team_bits = BIT(2);
-			previous_team = 3;
-		}
-		else if (IsTeamSmallerThanTeam(3, previous_team, player, use_score))
-		{
-			team_bits = BIT(2);
-			previous_team = 3;
-		}
-		else if (IsTeamEqualToTeam(3, previous_team, player, use_score))
-		{
-			team_bits |= BIT(2);
-			previous_team = 3;
-		}
-	}
-	if (Team_IsAllowed(g_team_entities[3]))
-	{
-		if (previous_team == 0)
-		{
-			team_bits = BIT(3);
-		}
-		else if (IsTeamSmallerThanTeam(4, previous_team, player, use_score))
-		{
-			team_bits = BIT(3);
-		}
-		else if (IsTeamEqualToTeam(4, previous_team, player, use_score))
-		{
-			team_bits |= BIT(3);
-		}
-	}
-	return team_bits;
-}
-
-int FindBestTeam(entity player, float ignore_player)
-{
-	// count how many players are in each team
-	if (ignore_player)
-	{
-		GetTeamCounts(player);
-	}
-	else
-	{
-		GetTeamCounts(NULL);
-	}
-	int team_bits = FindBestTeams(player, true);
-	if (team_bits == 0)
-	{
-		LOG_FATALF("FindBestTeam: No teams available for %s\n",
-			MapInfo_Type_ToString(MapInfo_CurrentGametype()));
-	}
-	RandomSelection_Init();
-	if ((team_bits & BIT(0)) != 0)
-	{
-		RandomSelection_AddFloat(1, 1, 1);
-	}
-	if ((team_bits & BIT(1)) != 0)
-	{
-		RandomSelection_AddFloat(2, 1, 1);
-	}
-	if ((team_bits & BIT(2)) != 0)
-	{
-		RandomSelection_AddFloat(3, 1, 1);
-	}
-	if ((team_bits & BIT(3)) != 0)
-	{
-		RandomSelection_AddFloat(4, 1, 1);
-	}
-	return RandomSelection_chosen_float;
-}
-
-void JoinBestTeam(entity this, bool force_best_team)
-{
-	// don't join a team if we're not playing a team game
-	if (!teamplay)
-	{
-		return;
-	}
-
-	// find out what teams are available
-	CheckAllowedTeams(this);
-
-	// if we don't care what team they end up on, put them on whatever team they entered as.
-	// if they're not on a valid team, then let other code put them on the smallest team
-	if (!force_best_team)
-	{
-		int selected_team_num = -1;
-		for (int i = 0; i < 4; ++i)
-		{
-			if (Team_IsAllowed(g_team_entities[i]) && (this.team ==
-				Team_NumberToTeam(i)))
-			{
-				selected_team_num = this.team;
-				break;
-			}
-		}
-		
-		if (Team_IsValidTeam(selected_team_num))
-		{
-			SetPlayerTeamSimple(this, selected_team_num);
-			LogTeamchange(this.playerid, this.team, 99);
-			return;
-		}
-	}
-	// otherwise end up on the smallest team (handled below)
-	if (this.bot_forced_team)
-	{
-		return;
-	}
-	int best_team_index = FindBestTeam(this, true);
-	int best_team_num = Team_NumberToTeam(best_team_index);
-	int old_team_index = Team_TeamToNumber(this.team);
-	TeamchangeFrags(this);
-	SetPlayerTeamSimple(this, best_team_num);
-	LogTeamchange(this.playerid, this.team, 2); // log auto join
-	if ((old_team_index != -1) && !IS_BOT_CLIENT(this))
-	{
-		AutoBalanceBots(old_team_index, best_team_index);
-	}
-	KillPlayerForTeamChange(this);
-}
-
 void SV_ChangeTeam(entity this, float _color)
 {
 	int source_color, destination_color;
@@ -889,7 +889,7 @@ void SV_ChangeTeam(entity this, float _color)
 	if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 	{
 		GetTeamCounts(this);
-		if ((BIT(destination_team_index - 1) & FindBestTeams(this, false)) == 0)
+		if ((BIT(destination_team_index - 1) & FindBestTeamsForBalance(this, false)) == 0)
 		{
 			Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;

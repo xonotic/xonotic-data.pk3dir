@@ -1073,7 +1073,7 @@ void GameCommand_moveplayer(float request, float argc)
 								else if (team_id == 0)  // auto team
 								{
 									CheckAllowedTeams(client);
-									team_id = Team_NumberToTeam(FindBestTeam(client, false));
+									team_id = Team_NumberToTeam(FindBestTeamForBalance(client, false));
 								}
 								else
 								{

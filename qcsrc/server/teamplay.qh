@@ -118,6 +118,27 @@ bool SetPlayerTeamSimple(entity player, int team_num);
 bool SetPlayerTeam(entity player, int destination_team_index,
 	int source_team_index, bool no_print);
 
+/// \brief Returns the bitmask of the teams that will make the game most
+/// balanced if the player joins any of them.
+/// \param[in] player Player to check.
+/// \param[in] use_score Whether to take into account team scores.
+/// \return Bitmask of the teams that will make the game most balanced if the
+/// player joins any of them.
+/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
+/// this function.
+int FindBestTeamsForBalance(entity player, bool use_score);
+
+/// \brief Finds the team that will make the game most balanced if the player
+/// joins it.
+/// \param[in] player Player to check.
+/// \param[in] ignore_player ???
+/// \return Index of the team that will make the game most balanced if the
+/// player joins it. If there are several equally good teams available, the
+/// function will pick a random one.
+int FindBestTeamForBalance(entity player, float ignore_player);
+
+void JoinBestTeamForBalance(entity this, bool force_best_team);
+
 /// \brief Returns whether one team is smaller than the other.
 /// \param[in] team_index_a Index of the first team.
 /// \param[in] team_index_b Index of the second team.
@@ -139,23 +160,6 @@ bool IsTeamSmallerThanTeam(int team_index_a, int team_index_b, entity player,
 /// this function.
 bool IsTeamEqualToTeam(int team_index_a, int team_index_b, entity player,
 	bool use_score);
-
-/// \brief Returns the bitmask of the best teams for the player to join.
-/// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
-/// \return Bitmask of the best teams for the player to join.
-/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
-/// this function.
-int FindBestTeams(entity player, bool use_score);
-
-/// \brief Finds the best team for the player.
-/// \param[in] player Player to check.
-/// \param[in] ignore_player ???
-/// \return Index of the best team for the player. If there are several equally
-/// good teams available, the function will pick a random one.
-int FindBestTeam(entity player, float ignore_player);
-
-void JoinBestTeam(entity this, bool force_best_team);
 
 /// \brief Auto balances bots in teams after the player has changed team.
 /// \param[in] source_team_index Previous index of the team of the player.

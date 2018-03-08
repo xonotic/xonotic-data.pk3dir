@@ -438,7 +438,7 @@ void bot_clientconnect(entity this)
 	else if(this.bot_forced_team==4)
 		this.team = NUM_TEAM_4;
 	else
-		JoinBestTeam(this, true);
+		JoinBestTeamForBalance(this, true);
 
 	havocbot_setupbot(this);
 }
