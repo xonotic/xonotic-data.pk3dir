@@ -19,13 +19,13 @@ noref bool require_spawnfunc_prefix;
 	}
 
 	#define _spawnfunc_checktypes(fld) \
-		if (fieldname == #fld) \
-			if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted", fieldname);
+		if (s == #fld) \
+			if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted", s);
 #else
 	#define _spawnfunc_checktypes(fld)
 #endif
 	#define _spawnfunc_check(fld) \
-		if (fieldname == #fld) continue;
+		if (s == #fld) continue;
 
 	noref int __spawnfunc_expecting;
 	noref entity __spawnfunc_expect;
@@ -111,13 +111,13 @@ noref bool require_spawnfunc_prefix;
 			if (!this.spawnfunc_checked) { \
 				for (int i = 0, n = numentityfields(); i < n; ++i) { \
 					string value = getentityfieldstring(i, this); \
-					string fieldname = entityfieldname(i); \
+					string s = entityfieldname(i); \
 					whitelist(_spawnfunc_checktypes) \
 					if (value == "") continue; \
-					if (fieldname == "") continue; \
+					if (s == "") continue; \
 					FIELDS_COMMON(_spawnfunc_check) \
 					whitelist(_spawnfunc_check) \
-					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), #id, fieldname, value); \
+					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), #id, s, value); \
 				} \
 				this.spawnfunc_checked = true; \
 				if (this) { \
