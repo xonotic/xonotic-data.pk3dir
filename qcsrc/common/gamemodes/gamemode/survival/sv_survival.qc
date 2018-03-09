@@ -1597,13 +1597,14 @@ MUTATOR_HOOKFUNCTION(surv, SV_StartFrame)
 
 /// \brief Hook that determines which team player can join. This is called
 /// before ClientConnect.
-MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(surv, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	entity player = M_ARGV(2, entity);
 	LOG_TRACE("Survival: CheckAllowedTeams, player = ", player.netname);
 	if (player == NULL)
 	{
-		return SURVIVAL_TEAM_BITS;
+		M_ARGV(0, float) = SURVIVAL_TEAM_BITS;
+		return true;
 	}
 	if (IS_BOT_CLIENT(player))
 	{
@@ -1614,7 +1615,7 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 			teambits |= surv_defenderteambit;
 		}
 		M_ARGV(0, float) = teambits;
-		return;
+		return true;
 	}
 	if (surv_type == SURVIVAL_TYPE_COOP)
 	{
@@ -1624,7 +1625,7 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 			return;
 		}
 		M_ARGV(0, float) = 0;
-		return;
+		return true;
 	}
 	int teambits = 0;
 	if (surv_numattackerhumans < autocvar_g_surv_team_size)
@@ -1638,17 +1639,17 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 		teambits |= surv_defenderteambit;
 	}
 	M_ARGV(0, float) = teambits;
-	return;
+	return true;
 }
 
 /// \brief Hook that override team counts.
-MUTATOR_HOOKFUNCTION(surv, GetTeamCounts, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCounts, CBC_ORDER_EXCLUSIVE)
 {
 	return true;
 }
 
 /// \brief Hook that sets the team count.
-MUTATOR_HOOKFUNCTION(surv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	float teamnum = M_ARGV(0, float);
 	entity ignore = M_ARGV(1, entity);
@@ -1746,7 +1747,7 @@ MUTATOR_HOOKFUNCTION(surv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 }
 
 /// \brief Hook that determines the best teams for the player to join.
-MUTATOR_HOOKFUNCTION(surv, FindBestTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(surv, TeamBalance_FindBestTeams, CBC_ORDER_EXCLUSIVE)
 {
 	if (surv_type == SURVIVAL_TYPE_COOP)
 	{
@@ -1757,22 +1758,22 @@ MUTATOR_HOOKFUNCTION(surv, FindBestTeams, CBC_ORDER_EXCLUSIVE)
 	{
 		return false;
 	}
-	int numattackerhumans = surv_numattackerhumans;
-	int numdefenderhumans = surv_numdefenderhumans;
+	int num_attacker_humans = surv_numattackerhumans;
+	int num_defender_humans = surv_numdefenderhumans;
 	if (player.team == surv_attackerteam)
 	{
-		--numattackerhumans;
+		--num_attacker_humans;
 	}
 	else if (player.team == surv_defenderteam)
 	{
-		--numdefenderhumans;
+		--num_defender_humans;
 	}
-	if (numattackerhumans < numdefenderhumans)
+	if (num_attacker_humans < num_defender_humans)
 	{
 		M_ARGV(1, float) = BIT(Team_TeamToNumber(surv_attackerteam) - 1);
 		return true;
 	}
-	if (numattackerhumans > numdefenderhumans)
+	if (num_attacker_humans > num_defender_humans)
 	{
 		M_ARGV(1, float) = BIT(Team_TeamToNumber(surv_defenderteam) - 1);
 		return true;
