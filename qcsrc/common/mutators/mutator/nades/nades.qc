@@ -372,11 +372,11 @@ void nade_napalm_boom(entity this)
 	CSQCProjectile(fountain, true, PROJECTILE_NAPALM_FOUNTAIN, true);
 }
 
-void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
+void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 {
 	frost_target.frozen_by = freezefield.realowner;
 	Send_Effect(EFFECT_ELECTRO_IMPACT, frost_target.origin, '0 0 0', 1);
-	Freeze(frost_target, 1/freeze_time, 3, false);
+	Freeze(frost_target, 1 / freezetime, 3, false);
 
 	Drop_Special_Items(frost_target);
 }

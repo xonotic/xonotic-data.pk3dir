@@ -230,9 +230,10 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(ca, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = ca_teams;
+	return true;
 }
 
 entity ca_LastPlayerForTeam(entity this)
@@ -371,6 +372,12 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
 		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+}
+
+MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
+{
+	// no respawn calculations needed, player is forced to spectate anyway
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerRegen)

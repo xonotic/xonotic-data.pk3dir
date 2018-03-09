@@ -546,9 +546,10 @@ MUTATOR_HOOKFUNCTION(inv, CheckRules_World)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(inv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(inv, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = invasion_teams;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
@@ -559,7 +560,7 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 
 void invasion_ScoreRules(int inv_teams)
 {
-	if(inv_teams) { CheckAllowedTeams(NULL); }
+	//if(inv_teams) { CheckAllowedTeams(NULL); } // Another bug?
 	GameRules_score_enabled(false);
 	GameRules_scoring(inv_teams, 0, 0, {
 	    if (inv_teams) {

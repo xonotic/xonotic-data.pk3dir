@@ -310,6 +310,9 @@ void PutObserverInServer(entity this)
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
+	if(this.monster_attack)
+		IL_REMOVE(g_monster_targets, this);
+	this.monster_attack = false;
     STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
@@ -342,6 +345,7 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
+	this.dphitcontentsmask = 0;
 	this.pushltime = 0;
 	this.istypefrag = 0;
 	setthink(this, func_null);
@@ -514,7 +518,7 @@ void PutPlayerInServer(entity this)
 	accuracy_resend(this);
 
 	if (this.team < 0)
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this, true);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -901,7 +905,7 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if(this.killindicator_teamchange == -1)
 	{
-		JoinBestTeam( this, true );
+		TeamBalance_JoinBestTeam(this, true);
 	}
 	else if(this.killindicator_teamchange == -2)
 	{
@@ -1096,6 +1100,8 @@ void FixClientCvars(entity e)
 	stuffcmd(e, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
 	stuffcmd(e, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
 
+	stuffcmd(e, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
+
 	MUTATOR_CALLHOOK(FixClientCvars, e);
 }
 
@@ -1212,7 +1218,7 @@ void ClientConnect(entity this)
 
 	int playerid_save = this.playerid;
 	this.playerid = 0; // silent
-	JoinBestTeam(this, false); // if the team number is valid, keep it
+	TeamBalance_JoinBestTeam(this, false); // if the team number is valid, keep it
 	this.playerid = playerid_save;
 
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
@@ -1257,12 +1263,9 @@ void ClientConnect(entity this)
 	// notify about available teams
 	if (teamplay)
 	{
-		CheckAllowedTeams(this);
-		int t = 0;
-		if (c1 >= 0) t |= BIT(0);
-		if (c2 >= 0) t |= BIT(1);
-		if (c3 >= 0) t |= BIT(2);
-		if (c4 >= 0) t |= BIT(3);
+		entity balance = TeamBalance_CheckAllowedTeams(this);
+		int t = TeamBalance_GetAllowedTeams(balance);
+		TeamBalance_Destroy(balance);
 		stuffcmd(this, sprintf("set _teams_available %d\n", t));
 	}
 	else
@@ -1349,6 +1352,7 @@ void ClientDisconnect(entity this)
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	if (CS(this).weaponorder_byimpulse) strunzone(CS(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1369,7 +1373,6 @@ void ClientDisconnect(entity this)
 	bot_relinkplayerlist();
 
 	if (this.clientstatus) strunzone(this.clientstatus);
-	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
@@ -2006,7 +2009,7 @@ void Join(entity this)
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this, true);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
@@ -2146,6 +2149,7 @@ bool joinAllowed(entity this)
 }
 
 .int items_added;
+.string shootfromfixedorigin;
 bool PlayerThink(entity this)
 {
 	if (game_stopped || intermission_running) {
@@ -2254,8 +2258,8 @@ bool PlayerThink(entity this)
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if (have_hook) {
 		do_crouch = false;
-	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		do_crouch = false;
+	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
+		//do_crouch = false;
 	} else if (this.vehicle) {
 		do_crouch = false;
 	} else if (STAT(FROZEN, this)) {
@@ -2279,6 +2283,11 @@ bool PlayerThink(entity this)
 	}
 
 	FixPlayermodel(this);
+
+	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
+		this.shootfromfixedorigin = autocvar_g_shootfromfixedorigin;
+		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
+	}
 
 	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 	//if(frametime)
@@ -2760,6 +2769,13 @@ void PlayerPostThink (entity this)
 	}
 
 	if (IS_PLAYER(this)) {
+		if(this.death_time == time && IS_DEAD(this))
+		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
+			this.maxs.z = 5;
+			setsize(this, this.mins, this.maxs);
+		}
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
@@ -2819,4 +2835,11 @@ void PM_UpdateButtons(entity this, entity store)
 
 	store.v_angle = this.v_angle;
 	store.movement = this.movement;
+}
+
+NET_HANDLE(fpsreport, bool)
+{
+	int fps = ReadShort();
+	PlayerScore_Set(sender, SP_FPS, fps);
+	return true;
 }

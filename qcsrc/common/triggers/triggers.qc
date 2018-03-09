@@ -125,20 +125,12 @@ void trigger_common_read(entity this, bool withtarget)
 
 		int targbits = ReadByte();
 
-		#define X(xs,b) MACRO_BEGIN { \
-			if(targbits & BIT(b)) \
-				xs = strzone(ReadString()); \
-			else \
-				xs = string_null; \
-		} MACRO_END
-
-		X(this.target, 0);
-		X(this.target2, 1);
-		X(this.target3, 2);
-		X(this.target4, 3);
-		X(this.targetname, 4);
-		X(this.killtarget, 5);
-		#undef X
+		this.target = ((targbits & BIT(0)) ? strzone(ReadString()) : string_null);
+		this.target2 = ((targbits & BIT(1)) ? strzone(ReadString()) : string_null);
+		this.target3 = ((targbits & BIT(2)) ? strzone(ReadString()) : string_null);
+		this.target4 = ((targbits & BIT(3)) ? strzone(ReadString()) : string_null);
+		this.targetname = ((targbits & BIT(4)) ? strzone(ReadString()) : string_null);
+		this.killtarget = ((targbits & BIT(5)) ? strzone(ReadString()) : string_null);
 	}
 
 	if(f & 4)

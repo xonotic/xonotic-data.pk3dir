@@ -920,7 +920,7 @@ MUTATOR_HOOKFUNCTION(nb, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(nb, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(nb, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(1, string) = "nexball_team";
 	return true;

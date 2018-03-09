@@ -27,8 +27,6 @@ float bots_would_leave;
 void UpdateFrags(entity player, int f);
 .float totalfrags;
 
-float team1_score, team2_score, team3_score, team4_score;
-
 // flag set on worldspawn so that the code knows if it is dedicated or not
 float server_is_dedicated;
 
@@ -369,6 +367,7 @@ const float ACTIVE_TOGGLE 	= 3;
 
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.float freeze_time;
 .entity iceblock;
 .entity frozen_by; // for ice fields
 

@@ -371,6 +371,35 @@ STATIC_INIT(viewmodel) {
     	viewmodels[slot] = new(viewmodel);
 }
 
+float showfps_prevfps;
+float showfps_prevfps_time;
+int showfps_framecounter;
+
+void fpscounter_update()
+{
+	if(!STAT(SHOWFPS))
+		return;
+
+	float currentTime = gettime(GETTIME_REALTIME);
+	showfps_framecounter += 1;
+	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
+	{
+		showfps_prevfps = showfps_framecounter/(currentTime - showfps_prevfps_time);
+		showfps_framecounter = 0;
+		showfps_prevfps_time = currentTime;
+
+		int channel = MSG_C2S;
+		WriteHeader(channel, fpsreport);
+		WriteShort(channel, bound(0, rint(showfps_prevfps), 65535)); // prevent insane fps values
+	}
+}
+
+STATIC_INIT(fpscounter_init)
+{
+	float currentTime = gettime(GETTIME_REALTIME);
+	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
+}
+
 void Porto_Draw(entity this);
 STATIC_INIT(Porto)
 {
@@ -1417,8 +1446,8 @@ void SpecialCommand()
 		vector slot = specialcommand_slots[j];
 		if(slot.y)
 			slot.y += SPECIALCOMMAND_SPEED * frametime;
-		if(slot.z)
-			slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
+		//if(slot.z)
+			//slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
 		if(slot.y >= vid_conheight)
 			slot = '0 0 0';
 
@@ -1428,7 +1457,7 @@ void SpecialCommand()
 			{
 				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
 				slot.y = 1; // start it off 0 so we can use it
-				slot.z = random();
+				slot.z = floor(random() * Weapons_MAX);
 				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
 				vector newcolor = randomvec() * 2;
 				newcolor.x = bound(0.4, newcolor.x, 1);
@@ -1442,7 +1471,11 @@ void SpecialCommand()
 			vector splash_size = '0 0 0';
 			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
 			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
-			drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			entity wep = Weapons_from(slot.z);
+			if(wep == WEP_Null)
+				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			else
+				drawpic_skin(vec2(slot), wep.model2, vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
 			//drawrotpic(vec2(slot), slot.z, "gfx/smile", vec2(splash_size), vec2(splash_size) / 2, specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
 		}
 
@@ -1886,6 +1919,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	TargetMusic_Advance();
 	Fog_Force();
+	fpscounter_update();
 
 	if(drawtime == 0)
 		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps

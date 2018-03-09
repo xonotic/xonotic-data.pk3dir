@@ -1,5 +1,7 @@
 #pragma once
 
+const int NUM_TEAMS = 4; ///< Number of teams in the game.
+
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
 const int NUM_TEAM_1 = 1;  // red
 const int NUM_TEAM_2 = 2; // blue
@@ -143,12 +145,12 @@ bool Team_IsValidTeam(int team_)
 	return false;
 }
 
-/// \brief Returns whether team number is valid.
-/// \param[in] number Team number to check.
-/// \return True if team number is valid, false otherwise.
-bool Team_IsValidNumber(int number)
+/// \brief Returns whether the team index is valid.
+/// \param[in] index Team index to check.
+/// \return True if team index is valid, false otherwise.
+bool Team_IsValidIndex(int index)
 {
-	switch (number)
+	switch (index)
 	{
 		case 1:
 		case 2:
@@ -185,6 +187,14 @@ float Team_TeamToNumber(float teamid)
 	}
 
 	return -1;
+}
+
+/// \brief Converts team index into bit value that is used in team bitmasks.
+/// \param[in] index Team index to convert.
+/// \return Team bit.
+int Team_IndexToBit(int index)
+{
+	return BIT(index - 1);
 }
 
 
