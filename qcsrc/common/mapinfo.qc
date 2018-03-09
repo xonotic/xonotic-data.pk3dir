@@ -940,7 +940,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
 			else if(!autocvar_g_mapinfo_ignore_warnings)
-				LOG_WARN("Map ", pFilename, " supports unknown game type ", t, ", ignored");
+				LOG_DEBUG("Map ", pFilename, " supports unknown game type ", t, ", ignored");
 		}
 		else if(t == "gametype")
 		{
@@ -949,7 +949,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			if(f)
 				_MapInfo_Map_ApplyGametypeEx (s, pGametypeToSet, f);
 			else if(!autocvar_g_mapinfo_ignore_warnings)
-				LOG_WARN("Map ", pFilename, " supports unknown game type ", t, ", ignored");
+				LOG_DEBUG("Map ", pFilename, " supports unknown game type ", t, ", ignored");
 		}
 		else if(t == "size")
 		{
@@ -996,7 +996,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			}
 			else
 			{
-				LOG_WARN("Map ", pFilename, " has a setting for unknown game type ", t, ", ignored");
+				LOG_DEBUG("Map ", pFilename, " has a setting for unknown game type ", t, ", ignored");
 			}
 		}
 		else if(t == "clientsettemp_for_type")
@@ -1013,7 +1013,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			}
 			else
 			{
-				LOG_WARN("Map ", pFilename, " has a client setting for unknown game type ", t, ", ignored");
+				LOG_DEBUG("Map ", pFilename, " has a client setting for unknown game type ", t, ", ignored");
 			}
 		}
 		else if(t == "fog")

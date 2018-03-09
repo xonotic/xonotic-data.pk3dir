@@ -368,12 +368,12 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo
 {
 	string o;
 	o = W_FixWeaponOrder_ForceComplete(wo);
-	if(this.weaponorder_byimpulse)
+	if(CS(this).weaponorder_byimpulse)
 	{
-		strunzone(this.weaponorder_byimpulse);
-		this.weaponorder_byimpulse = string_null;
+		strunzone(CS(this).weaponorder_byimpulse);
+		CS(this).weaponorder_byimpulse = string_null;
 	}
-	this.weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
+	CS(this).weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
 
