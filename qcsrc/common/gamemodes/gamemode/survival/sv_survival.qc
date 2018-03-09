@@ -242,12 +242,28 @@ void Surv_Initialize()
 	GameRules_limit_lead(autocvar_g_surv_point_leadlimit);
 }
 
+/// \brief Returns whether player is an attacker.
+/// \param[in] player Player to check.
+/// \return True if player is an attacker, false otherwise.
+bool Surv_IsPlayerAttacker(entity player)
+{
+	return Entity_GetTeamIndex(player) == surv_attacker_team;
+}
+
+/// \brief Returns whether player is a defender.
+/// \param[in] player Player to check.
+/// \return True if player is a defender, false otherwise.
+bool Surv_IsPlayerDefender(entity player)
+{
+	return Entity_GetTeamIndex(player) == surv_defender_team;
+}
+
 /// \brief Returns the name of the template of the given player.
 /// \param[in] player Player to inspect.
 /// \return Name of the template of the given player.
 string Surv_GetPlayerTemplate(entity player)
 {
-	switch (Team_TeamToIndex(player.team))
+	switch (Entity_GetTeamIndex(player))
 	{
 		case surv_attacker_team:
 		{
@@ -321,8 +337,7 @@ entity Surv_FindLowestAttacker(bool bot)
 	float score = FLOAT_MAX;
 	FOREACH_CLIENT(bot ? IS_BOT_CLIENT(it) : true,
 	{
-		if ((Team_TeamToIndex(it.team) == surv_attacker_team) &&
-			(it.surv_role == SURVIVAL_ROLE_PLAYER))
+		if (Surv_IsPlayerAttacker(it) && (it.surv_role == SURVIVAL_ROLE_PLAYER))
 		{
 			float temp_score = PlayerScore_Get(it, SP_SCORE);
 			if (temp_score < score)
@@ -345,8 +360,7 @@ entity Surv_FindLowestDefender(bool bot, bool alive)
 	float score = FLOAT_MAX;
 	FOREACH_CLIENT(bot ? IS_BOT_CLIENT(it) : true,
 	{
-		if ((Team_TeamToIndex(it.team) == surv_defender_team) && (alive ?
-			!IS_DEAD(it) : true))
+		if (Surv_IsPlayerDefender(it) && (alive ? !IS_DEAD(it) : true))
 		{
 			float temp_score = PlayerScore_Get(it, SP_SCORE);
 			if (temp_score < score)
@@ -417,7 +431,7 @@ void Surv_ChangeNumberOfAlivePlayers(int team_index, int delta)
 		{
 			surv_num_defenders_alive += delta;
 			LOG_TRACEF("Number of alive defenders = %f was = %f",
-				surv_numdefendersalive, surv_numdefendersalive - delta);
+				surv_num_defenders_alive, surv_num_defenders_alive - delta);
 			break;
 		}
 	}
@@ -554,7 +568,7 @@ bool Surv_AddPlayerToTeam(entity player, int team_index)
 				}
 				LOG_TRACE("No space for defender, switching to attacker");
 				SetPlayerTeamSimple(player, Team_IndexToTeam(
-					surv_attacker_team);
+					surv_attacker_team));
 				return false;
 			}
 			LOG_TRACE("Client is not a bot");
@@ -669,7 +683,7 @@ void Surv_RemovePlayerFromTeam(entity player, int team_index)
 			entity lowest_player = Surv_FindCannonFodder();
 			if (lowest_player != NULL)
 			{
-				LOG_TRACE("Changing ", lowestplayer.netname,
+				LOG_TRACE("Changing ", lowest_player.netname,
 					" from cannon fodder to attacker.");
 				Surv_SetPlayerRole(lowest_player, SURVIVAL_ROLE_PLAYER);
 				Surv_ChangeNumberOfPlayers(team_index, +1);
@@ -733,7 +747,7 @@ void Surv_RemovePlayerFromTeam(entity player, int team_index)
 			entity lowest_player = Surv_FindCannonFodder();
 			if (lowest_player != NULL)
 			{
-				LOG_TRACE("Changing ", lowestplayer.netname,
+				LOG_TRACE("Changing ", lowest_player.netname,
 					" from cannon fodder to defender.");
 				if (!IS_DEAD(player))
 				{
@@ -804,8 +818,8 @@ void Surv_UpdateTeamStats()
 	}
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(YELLOWALIVE, it) = yellow_alive;
-		STAT(PINKALIVE, it) = pink_alive;
+		STAT(YELLOWALIVE, it) = yellowalive;
+		STAT(PINKALIVE, it) = pinkalive;
 	});
 }
 
@@ -876,7 +890,7 @@ void Surv_RemovePlayerFromAliveList(entity player, int team_index)
 						VOL_BASE, ATTEN_NONE);
 					FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 					{
-						if (Team_TeamToIndex(it.team) == surv_defender_team)
+						if (Surv_IsPlayerDefender(it))
 						{
 							Send_Notification(NOTIF_ONE, it, MSG_CENTER,
 								CENTER_ALONE);
@@ -914,7 +928,7 @@ void Surv_CountAlivePlayers()
 	surv_num_defenders_alive = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		switch (Team_TeamToIndex(it.team))
+		switch (Entity_GetTeamIndex(it))
 		{
 			case surv_attacker_team:
 			{
@@ -936,8 +950,8 @@ void Surv_CountAlivePlayers()
 	});
 	Surv_UpdateAliveStats();
 	eliminatedPlayers.SendFlags |= 1;
-	if (warmup_stage || surv_allowed_to_spawn || (savednumdefenders <=
-		surv_numdefendersalive))
+	if (warmup_stage || surv_allowed_to_spawn || (saved_num_defenders <=
+		surv_num_defenders_alive))
 	{
 		return;
 	}
@@ -948,7 +962,7 @@ void Surv_CountAlivePlayers()
 			sound(NULL, CH_TRIGGER, SND_SURV_1_FRAG_LEFT, VOL_BASE, ATTEN_NONE);
 			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 			{
-				if (Team_TeamToIndex(it.team) == surv_defender_team)
+				if (Surv_IsPlayerDefender(it))
 				{
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ALONE);
 					return;
@@ -975,7 +989,7 @@ void Surv_CountAlivePlayers()
 void Surv_UpdateAliveStats()
 {
 	// Debug stuff
-	if (surv_attackerteam == 1)
+	if (surv_attacker_team == 1)
 	{
 		redalive = surv_num_attackers_alive;
 		bluealive = surv_num_defenders_alive;
@@ -1028,7 +1042,7 @@ void Surv_UpdateDefenderHealthStat()
 			"surv_defender", "start_armor") + 1);
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if (Team_TeamToIndex(it.team) == surv_defender_team)
+			if (Surv_IsPlayerDefender(it))
 			{
 				total_health += GetResourceAmount(it, RESOURCE_ARMOR) + 1;
 			}
@@ -1041,7 +1055,7 @@ void Surv_UpdateDefenderHealthStat()
 			"surv_defender", "start_armor"));
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if (Team_TeamToIndex(it.team) == surv_defender_team)
+			if (Surv_IsPlayerDefender(it))
 			{
 				total_health += GetResourceAmount(it, RESOURCE_HEALTH);
 				total_health += GetResourceAmount(it, RESOURCE_ARMOR);
@@ -1068,8 +1082,7 @@ void Surv_UpdateDefenderHealthStat()
 /// \return True if the player can spawn, false otherwise.
 bool Surv_CanPlayerSpawn(entity player)
 {
-	if ((Team_TeamToIndex(player.team) == surv_attacker_team) ||
-		(player.surv_savedplayerstate != NULL))
+	if (Surv_IsPlayerAttacker(player) || (player.surv_savedplayerstate != NULL))
 	{
 		return true;
 	}
@@ -1143,10 +1156,10 @@ void Surv_SwapTeams()
 	surv_num_defender_humans = temp;
 	FOREACH_CLIENT(true,
 	{
-		if ((Team_TeamToIndex(it.team) == surv_defender_team) &&
-			(it.surv_role == SURVIVAL_ROLE_CANNON_FODDER))
+		if (Surv_IsPlayerDefender(it) && (it.surv_role ==
+			SURVIVAL_ROLE_CANNON_FODDER))
 		{
-			SetPlayerTeamSimple(it, Team_IndexToTeam(surv_attackerteam));
+			SetPlayerTeamSimple(it, Team_IndexToTeam(surv_attacker_team));
 		}
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
@@ -1159,9 +1172,9 @@ void Surv_SwapTeams()
 /// \param[in,out] player Player to force the model of.
 void Surv_ForceOverkillPlayerModel(entity player)
 {
-	switch (player.team)
+	switch (Entity_GetTeamIndex(player))
 	{
-		case NUM_TEAM_1:
+		case 1:
 		{
 			switch (floor(random() * 4))
 			{
@@ -1188,7 +1201,7 @@ void Surv_ForceOverkillPlayerModel(entity player)
 			}
 			return;
 		}
-		case NUM_TEAM_2:
+		case 2:
 		{
 			switch (floor(random() * 4))
 			{
@@ -1222,7 +1235,7 @@ void Surv_ForceOverkillPlayerModel(entity player)
 /// \param[in,out] player Player to determine the model of.
 void Surv_DeterminePlayerModel(entity player)
 {
-	switch (Team_TeamToIndex(player.team))
+	switch (Entity_GetTeamIndex(player))
 	{
 		case surv_attacker_team:
 		{
@@ -1416,7 +1429,7 @@ void Surv_RoundStart()
 		{
 			FOREACH_CLIENT(IS_PLAYER(it),
 			{
-				if (Team_TeamToIndex(it.team) == surv_attacker_team)
+				if (Surv_IsPlayerAttacker(it))
 				{
 					Send_Notification(NOTIF_TEAM, it, MSG_CENTER,
 						CENTER_SURVIVAL_1ST_ROUND_ATTACKER);
@@ -1427,7 +1440,7 @@ void Surv_RoundStart()
 			});
 			FOREACH_CLIENT(IS_PLAYER(it),
 			{
-				if (Team_TeamToIndex(it.team) == surv_defender_team)
+				if (Surv_IsPlayerDefender(it))
 				{
 					if (surv_type == SURVIVAL_TYPE_COOP)
 					{
@@ -1450,7 +1463,7 @@ void Surv_RoundStart()
 		{
 			FOREACH_CLIENT(IS_PLAYER(it),
 			{
-				if (Team_TeamToIndex(it.team) == surv_attacker_team)
+				if (Surv_IsPlayerAttacker(it))
 				{
 					Send_Notification(NOTIF_TEAM, it, MSG_CENTER,
 						CENTER_SURVIVAL_2ND_ROUND_ATTACKER, surv_timetobeat);
@@ -1461,7 +1474,7 @@ void Surv_RoundStart()
 			});
 			FOREACH_CLIENT(IS_PLAYER(it),
 			{
-				if (Team_TeamToIndex(it.team) == surv_defender_team)
+				if (Surv_IsPlayerDefender(it))
 				{
 					Send_Notification(NOTIF_TEAM, it, MSG_CENTER,
 						CENTER_SURVIVAL_2ND_ROUND_DEFENDER, surv_timetobeat);
@@ -1483,7 +1496,7 @@ void Surv_RoundStart()
 	}
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		switch (Team_TeamToIndex(it.team))
+		switch (Entity_GetTeamIndex(it))
 		{
 			case surv_defender_team:
 			{
@@ -1512,8 +1525,8 @@ bool Surv_IsEliminated(entity player)
 				// A hack until proper scoreboard is done.
 				return true;
 			}
-			if ((Team_TeamToIndex(player.team) == surv_defender_team) &&
-				(IS_DEAD(player) || IS_OBSERVER(player)))
+			if (Surv_IsPlayerDefender(player) && (IS_DEAD(player) ||
+				IS_OBSERVER(player)))
 			{
 				return true;
 			}
@@ -1591,8 +1604,8 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 	if (IS_BOT_CLIENT(player))
 	{
 		int team_bits = surv_attacker_team_bit;
-		if ((Team_TeamToIndex(player.team) == surv_defender_team) ||
-			(surv_numdefenders < autocvar_g_surv_team_size))
+		if (Surv_IsPlayerDefender(player) || (surv_num_defenders <
+			autocvar_g_surv_team_size))
 		{
 			team_bits |= surv_defender_team_bit;
 		}
@@ -1633,15 +1646,15 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCounts, CBC_ORDER_EXCLUSIVE)
 /// \brief Hook that sets the team count.
 MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	float teamnum = M_ARGV(0, float);
+	int team_index = M_ARGV(0, float);
 	entity ignore = M_ARGV(1, entity);
-	switch (teamnum)
+	switch (team_index)
 	{
-		case surv_attackerteam:
+		case surv_attacker_team:
 		{
-			M_ARGV(2, float) = surv_numattackers;
-			M_ARGV(3, float) = surv_numattackers - surv_numattackerhumans;
-			if (ignore.team == surv_attackerteam)
+			M_ARGV(2, float) = surv_num_attackers;
+			M_ARGV(3, float) = surv_num_attackers - surv_num_attacker_humans;
+			if (Surv_IsPlayerAttacker(ignore))
 			{
 				--M_ARGV(2, float);
 				if (IS_BOT_CLIENT(ignore))
@@ -1649,11 +1662,11 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCount, CBC_ORDER_EXCLUSIVE)
 					--M_ARGV(3, float);
 				}
 			}
-			entity lowestplayer = NULL;
-			float lowestplayerscore = FLOAT_MAX;
-			entity lowestbot = NULL;
-			float lowestbotscore = FLOAT_MAX;
-			FOREACH_CLIENT((it.team == surv_attackerteam) && (it.surv_role ==
+			entity lowest_player = NULL;
+			float lowest_player_score = FLOAT_MAX;
+			entity lowest_bot = NULL;
+			float lowest_bot_score = FLOAT_MAX;
+			FOREACH_CLIENT(Surv_IsPlayerAttacker(it) && (it.surv_role ==
 				SURVIVAL_ROLE_PLAYER),
 			{
 				if (it == ignore)
@@ -1662,30 +1675,30 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCount, CBC_ORDER_EXCLUSIVE)
 				}
 				if (IS_BOT_CLIENT(it))
 				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < lowestbotscore)
+					float temp_score = PlayerScore_Get(it, SP_SCORE);
+					if (temp_score < lowest_bot_score)
 					{
-						lowestbot = it;
-						lowestbotscore = tempscore;
+						lowest_bot = it;
+						lowest_bot_score = temp_score;
 						continue;
 					}
 				}
-				float tempscore = PlayerScore_Get(it, SP_SCORE);
-				if (tempscore < lowestplayerscore)
+				float temp_score = PlayerScore_Get(it, SP_SCORE);
+				if (temp_score < lowest_player_score)
 				{
-					lowestplayer = it;
-					lowestplayerscore = tempscore;
+					lowest_player = it;
+					lowest_player_score = temp_score;
 				}
 			});
-			M_ARGV(4, entity) = lowestplayer;
-			M_ARGV(5, entity) = lowestbot;
+			M_ARGV(4, entity) = lowest_player;
+			M_ARGV(5, entity) = lowest_bot;
 			break;
 		}
-		case surv_defenderteam:
+		case surv_defender_team:
 		{
-			M_ARGV(2, float) = surv_numdefenders;
-			M_ARGV(3, float) = surv_numdefenders - surv_numdefenderhumans;
-			if (ignore.team == surv_defenderteam)
+			M_ARGV(2, float) = surv_num_defenders;
+			M_ARGV(3, float) = surv_num_defenders - surv_num_defender_humans;
+			if (Surv_IsPlayerDefender(ignore))
 			{
 				--M_ARGV(2, float);
 				if (IS_BOT_CLIENT(ignore))
@@ -1693,11 +1706,11 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCount, CBC_ORDER_EXCLUSIVE)
 					--M_ARGV(3, float);
 				}
 			}
-			entity lowestplayer = NULL;
-			float lowestplayerscore = FLOAT_MAX;
-			entity lowestbot = NULL;
-			float lowestbotscore = FLOAT_MAX;
-			FOREACH_CLIENT((it.team == surv_defenderteam),
+			entity lowest_player = NULL;
+			float lowest_player_score = FLOAT_MAX;
+			entity lowest_bot = NULL;
+			float lowest_bot_score = FLOAT_MAX;
+			FOREACH_CLIENT(Surv_IsPlayerDefender(it),
 			{
 				if (it == ignore)
 				{
@@ -1705,23 +1718,23 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCount, CBC_ORDER_EXCLUSIVE)
 				}
 				if (IS_BOT_CLIENT(it))
 				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < lowestbotscore)
+					float temp_score = PlayerScore_Get(it, SP_SCORE);
+					if (temp_score < lowest_bot_score)
 					{
-						lowestbot = it;
-						lowestbotscore = tempscore;
+						lowest_bot = it;
+						lowest_bot_score = temp_score;
 						continue;
 					}
 				}
-				float tempscore = PlayerScore_Get(it, SP_SCORE);
-				if (tempscore < lowestplayerscore)
+				float temp_score = PlayerScore_Get(it, SP_SCORE);
+				if (temp_score < lowest_player_score)
 				{
-					lowestplayer = it;
-					lowestplayerscore = tempscore;
+					lowest_player = it;
+					lowest_player_score = temp_score;
 				}
 			});
-			M_ARGV(4, entity) = lowestplayer;
-			M_ARGV(5, entity) = lowestbot;
+			M_ARGV(4, entity) = lowest_player;
+			M_ARGV(5, entity) = lowest_bot;
 			break;
 		}
 	}
@@ -1740,24 +1753,24 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_FindBestTeams, CBC_ORDER_EXCLUSIVE)
 	{
 		return false;
 	}
-	int num_attacker_humans = surv_numattackerhumans;
-	int num_defender_humans = surv_numdefenderhumans;
-	if (player.team == surv_attackerteam)
+	int num_attacker_humans = surv_num_attacker_humans;
+	int num_defender_humans = surv_num_defender_humans;
+	if (Surv_IsPlayerAttacker(player))
 	{
 		--num_attacker_humans;
 	}
-	else if (player.team == surv_defenderteam)
+	else if (Surv_IsPlayerDefender(player))
 	{
 		--num_defender_humans;
 	}
 	if (num_attacker_humans < num_defender_humans)
 	{
-		M_ARGV(1, float) = BIT(Team_TeamToNumber(surv_attackerteam) - 1);
+		M_ARGV(1, float) = surv_attacker_team_bit;
 		return true;
 	}
 	if (num_attacker_humans > num_defender_humans)
 	{
-		M_ARGV(1, float) = BIT(Team_TeamToNumber(surv_defenderteam) - 1);
+		M_ARGV(1, float) = surv_defender_team_bit;
 		return true;
 	}
 	M_ARGV(1, float) = SURVIVAL_TEAM_BITS;
@@ -1768,25 +1781,26 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_FindBestTeams, CBC_ORDER_EXCLUSIVE)
 MUTATOR_HOOKFUNCTION(surv, Player_ChangedTeam)
 {
 	entity player = M_ARGV(0, entity);
-	int old_team = M_ARGV(1, float);
-	int new_team = M_ARGV(2, float);
+	int old_team_index = M_ARGV(1, float);
+	int new_team_index = M_ARGV(2, float);
 	string message = strcat("Survival: Player_ChangedTeam, ", player.netname,
-		", old team = ", ftos(old_team), " new team = ", ftos(new_team));
+		", old team = ", ftos(old_team_index), " new team = ", ftos(
+		new_team_index));
 	LOG_TRACE(message);
 	DebugPrintToChatAll(message);
-	if ((old_team != -1) && IS_PLAYER(player) && !IS_DEAD(player))
+	if ((old_team_index != -1) && IS_PLAYER(player) && !IS_DEAD(player))
 	{
-		Surv_RemovePlayerFromAliveList(player, old_team);
+		Surv_RemovePlayerFromAliveList(player, old_team_index);
 	}
-	Surv_RemovePlayerFromTeam(player, old_team);
-	if (Surv_AddPlayerToTeam(player, new_team) == false)
+	Surv_RemovePlayerFromTeam(player, old_team_index);
+	if (Surv_AddPlayerToTeam(player, new_team_index) == false)
 	{
 		return;
 	}
 	//Surv_CountAlivePlayers();
-	if ((old_team != -1) && IS_PLAYER(player) && !IS_DEAD(player))
+	if ((old_team_index != -1) && IS_PLAYER(player) && !IS_DEAD(player))
 	{
-		Surv_AddPlayerToAliveList(player, new_team);
+		Surv_AddPlayerToAliveList(player, new_team_index);
 	}
 }
 
@@ -1795,7 +1809,7 @@ MUTATOR_HOOKFUNCTION(surv, Player_ChangedTeam)
 MUTATOR_HOOKFUNCTION(surv, Player_ChangeTeamKill)
 {
 	entity player = M_ARGV(0, entity);
-	if (player.team != surv_defenderteam)
+	if (!Surv_IsPlayerDefender(player))
 	{
 		return false;
 	}
@@ -1814,7 +1828,7 @@ MUTATOR_HOOKFUNCTION(surv, Player_ChangeTeamKill)
 MUTATOR_HOOKFUNCTION(surv, ClientKill_Now)
 {
 	entity player = M_ARGV(0, entity);
-	if (player.team == surv_defenderteam)
+	if (Surv_IsPlayerDefender(player))
 	{
 		// Deny suicide.
 		return true;
@@ -1829,8 +1843,8 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 	player.surv_savedplayermodel = player.playermodel;
 	if (IS_REAL_CLIENT(player))
 	{
-		STAT(SURV_DEFENDER_TEAM, player) = Team_TeamToNumber(surv_defenderteam);
-		STAT(SURV_DEFENDERS_ALIVE, player) = surv_numdefendersalive;
+		STAT(SURV_DEFENDER_TEAM, player) = surv_defender_team;
+		STAT(SURV_DEFENDERS_ALIVE, player) = surv_num_defenders_alive;
 		STAT(REDALIVE, player) = redalive;
 		STAT(BLUEALIVE, player) = bluealive;
 		STAT(YELLOWALIVE, player) = yellowalive;
@@ -1838,7 +1852,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 	}
 	if (player.surv_role == SURVIVAL_ROLE_NONE)
 	{
-		Surv_AddPlayerToTeam(player, player.team);
+		Surv_AddPlayerToTeam(player, Entity_GetTeamIndex(player));
 	}
 	return true;
 }
@@ -1847,11 +1861,12 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)
 {
     entity player = M_ARGV(0, entity);
+	int team_index = Entity_GetTeamIndex(player);
 	if (!IS_DEAD(player))
 	{
-		Surv_RemovePlayerFromAliveList(player, player.team);
+		Surv_RemovePlayerFromAliveList(player, team_index);
 	}
-	Surv_RemovePlayerFromTeam(player, player.team);
+	Surv_RemovePlayerFromTeam(player, team_index);
 	//Surv_CountAlivePlayers();
 }
 
@@ -1912,8 +1927,8 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 {
 	LOG_TRACE("Survival: reset_map_players");
-	surv_numattackersalive = 0;
-	surv_numdefendersalive = 0;
+	surv_num_attackers_alive = 0;
+	surv_num_defenders_alive = 0;
 	if (surv_warmup)
 	{
 		surv_warmup = false;
@@ -1958,9 +1973,9 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	{
 		PlayerTemplateHook_PlayerSpawn(player, Surv_GetPlayerTemplate(player));
 	}
-	switch (player.team)
+	switch (Entity_GetTeamIndex(player))
 	{
-		case surv_attackerteam:
+		case surv_attacker_team:
 		{
 			if (player.surv_role == SURVIVAL_ROLE_PLAYER)
 			{
@@ -1969,7 +1984,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 			}
 			break;
 		}
-		case surv_defenderteam:
+		case surv_defender_team:
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER,
 				CENTER_ASSAULT_DEFENDING);
@@ -1977,7 +1992,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 		}
 	}
 	//Surv_CountAlivePlayers();
-	Surv_AddPlayerToAliveList(player, player.team);
+	Surv_AddPlayerToAliveList(player, Entity_GetTeamIndex(player));
 }
 
 /// \brief UGLY HACK. This is called every frame to keep player model correct.
@@ -2000,7 +2015,7 @@ MUTATOR_HOOKFUNCTION(surv, ForbidThrowCurrentWeapon)
 MUTATOR_HOOKFUNCTION(surv, PlayerRegen)
 {
 	entity player = M_ARGV(0, entity);
-	if (player.team == surv_defenderteam)
+	if (Surv_IsPlayerDefender(player))
 	{
 		return true;
 	}
@@ -2019,14 +2034,14 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 {
 	entity item = M_ARGV(0, entity);
 	entity player = M_ARGV(1, entity);
-	switch (player.team)
+	switch (Entity_GetTeamIndex(player))
 	{
-		case surv_attackerteam:
+		case surv_attacker_team:
 		{
 			return PlayerTemplateHook_ItemTouch(player, item,
 				Surv_GetPlayerTemplate(player));
 		}
-		case surv_defenderteam:
+		case surv_defender_team:
 		{
 			switch (item.classname)
 			{
@@ -2080,13 +2095,13 @@ MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 {
 	entity target = M_ARGV(1, entity);
-	if (target.team != surv_defenderteam)
+	if (!Surv_IsPlayerDefender(target))
 	{
 		return;
 	}
 	Surv_UpdateDefenderHealthStat();
 	entity attacker = M_ARGV(0, entity);
-	if ((attacker.team == surv_attackerteam) && (attacker.surv_role ==
+	if (Surv_IsPlayerAttacker(attacker) && (attacker.surv_role ==
 		SURVIVAL_ROLE_PLAYER))
 	{
 		float health = M_ARGV(2, float);
@@ -2116,8 +2131,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies, CBC_ORDER_FIRST)
 	entity attacker = M_ARGV(1, entity);
 	entity victim = M_ARGV(2, entity);
 	PlayerTemplateHook_PlayerDies(victim, Surv_GetPlayerTemplate(victim));
-	if ((attacker.team == surv_defenderteam) &&
-		(victim.team == surv_attackerteam))
+	if (Surv_IsPlayerDefender(attacker) && (Entity_GetTeamIndex(victim) ==
+		surv_attacker_team))
 	{
 		switch (victim.surv_role)
 		{
@@ -2179,7 +2194,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 {
 	//DebugPrintToChatAll("PlayerDied");
 	entity player = M_ARGV(0, entity);
-	Surv_RemovePlayerFromAliveList(player, player.team);
+	Surv_RemovePlayerFromAliveList(player, Entity_GetTeamIndex(player));
 	//Surv_CountAlivePlayers();
 }
 
@@ -2191,15 +2206,15 @@ MUTATOR_HOOKFUNCTION(surv, GiveFragsForKill, CBC_ORDER_FIRST)
 		return true;
 	}
 	entity attacker = M_ARGV(0, entity);
-	if ((attacker.team == surv_defenderteam) || (attacker.surv_role ==
-		SURVIVAL_ROLE_CANNON_FODDER))
+	if (Surv_IsPlayerDefender(attacker) || attacker.surv_role ==
+		SURVIVAL_ROLE_CANNON_FODDER)
 	{
 		M_ARGV(2, float) = 0;
 		return true;
 	}
 	entity target = M_ARGV(1, entity);
-	if ((attacker.surv_role == SURVIVAL_ROLE_PLAYER) && (target.team ==
-		surv_defenderteam))
+	if ((attacker.surv_role == SURVIVAL_ROLE_PLAYER) && Surv_IsPlayerDefender(
+		target))
 	{
 		M_ARGV(2, float) = autocvar_g_surv_attacker_frag_score;
 	}
