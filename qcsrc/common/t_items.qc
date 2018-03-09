@@ -628,17 +628,17 @@ float adjust_respawntime(float normal_respawntime) {
 		return normal_respawntime;
 	}
 
-	CheckAllowedTeams(NULL);
-	GetTeamCounts(NULL);
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	TeamBalance_GetTeamCounts(balance, NULL);
 	int players = 0;
-	for (int i = 1; i < 5; ++i)
+	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
-		entity team_ = Team_GetTeamFromIndex(i);
-		if (Team_IsAllowed(team_))
+		if (TeamBalance_IsTeamAllowed(balance, i))
 		{
-			players += Team_GetNumberOfPlayers(team_);
+			players += TeamBalance_GetNumberOfPlayers(balance, i);
 		}
 	}
+	TeamBalance_Destroy(balance);
 	
 	if (players >= 2) {
 		return normal_respawntime * (r / (players + o) + l);

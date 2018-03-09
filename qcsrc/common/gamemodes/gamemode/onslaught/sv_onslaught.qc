@@ -1922,7 +1922,7 @@ MUTATOR_HOOKFUNCTION(ons, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ons, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(ons, TeamBalance_CheckAllowedTeams)
 {
 	// onslaught is special
 	for(entity tmp_entity = ons_worldgeneratorlist; tmp_entity; tmp_entity = tmp_entity.ons_worldgeneratornext)
@@ -2159,8 +2159,9 @@ spawnfunc(onslaught_generator)
 // scoreboard setup
 void ons_ScoreRules()
 {
-	CheckAllowedTeams(NULL);
-	int teams = GetAllowedTeams();
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	int teams = TeamBalance_GetAllowedTeams(balance);
+	TeamBalance_Destroy(balance);
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
 	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
 	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);

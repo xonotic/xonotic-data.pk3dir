@@ -1806,16 +1806,16 @@ float WinningCondition_RanOutOfSpawns()
 			t = 3;
 		else // if(team4_score)
 			t = 4;
-		CheckAllowedTeams(NULL);
+		entity balance = TeamBalance_CheckAllowedTeams(NULL);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			for (int j = 1; j < 5; ++j)
+			for (int j = 1; j <= NUM_TEAMS; ++j)
 			{
 				if (t == j)
 				{
 					continue;
 				}
-				if (!Team_IsAllowed(Team_GetTeamFromIndex(j)))
+				if (!TeamBalance_IsTeamAllowed(balance, j))
 				{
 					continue;
 				}

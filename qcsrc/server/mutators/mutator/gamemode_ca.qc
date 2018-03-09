@@ -230,9 +230,10 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(ca, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = ca_teams;
+	return true;
 }
 
 entity ca_LastPlayerForTeam(entity this)

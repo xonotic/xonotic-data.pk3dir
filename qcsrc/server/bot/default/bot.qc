@@ -438,15 +438,15 @@ void bot_clientconnect(entity this)
 	else if(this.bot_forced_team==4)
 		this.team = NUM_TEAM_4;
 	else
-		JoinBestTeamForBalance(this, true);
+		TeamBalance_JoinBestTeam(this, true);
 
 	havocbot_setupbot(this);
 }
 
 void bot_removefromlargestteam()
 {
-	CheckAllowedTeams(NULL);
-	GetTeamCounts(NULL);
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	TeamBalance_GetTeamCounts(balance, NULL);
 
 	entity best = NULL;
 	float besttime = 0;
@@ -467,7 +467,8 @@ void bot_removefromlargestteam()
 
 		if (Team_IsValidTeam(it.team))
 		{
-			thiscount = Team_GetNumberOfPlayers(Team_GetTeam(it.team));
+			thiscount = TeamBalance_GetNumberOfPlayers(balance,
+				Team_TeamToNumber(it.team));
 		}
 
 		if(thiscount > bestcount)
@@ -482,6 +483,7 @@ void bot_removefromlargestteam()
 			best = it;
 		}
 	});
+	TeamBalance_Destroy(balance);
 	if(!bcount)
 		return; // no bots to remove
 	currentbots = currentbots - 1;

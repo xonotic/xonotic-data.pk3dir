@@ -415,7 +415,7 @@ void havocbot_role_dom(entity this)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(dom, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(dom, TeamBalance_CheckAllowedTeams)
 {
 	// fallback?
 	M_ARGV(0, float) = domination_teams;
@@ -639,8 +639,9 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 		dom_spawnteams(domination_teams);
 	}
 
-	CheckAllowedTeams(NULL);
-	int teams = GetAllowedTeams();
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	int teams = TeamBalance_GetAllowedTeams(balance);
+	TeamBalance_Destroy(balance);
 	domination_teams = teams;
 
 	domination_roundbased = autocvar_g_domination_roundbased;
