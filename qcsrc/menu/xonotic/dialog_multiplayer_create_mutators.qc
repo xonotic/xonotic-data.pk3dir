@@ -241,9 +241,9 @@ void XonoticMutatorsDialog_fill(entity me)
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
+	string weaponarena_tooltip = strzone(_("Players will be given a set of weapons at spawn as well as unlimited ammo, without weapon pickups"));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton_T(1, "g_weaponarena", "menu_weaponarena", _("Weapon arenas:"),
-			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
+		me.TD(me, 1, 2, e = makeXonoticRadioButton_T(1, "g_weaponarena", "menu_weaponarena", _("Weapon arenas:"), weaponarena_tooltip));
 			e.cvarValueIsAnotherCvar = true;
 			e.cvarOffValue = "0";
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
@@ -260,13 +260,11 @@ void XonoticMutatorsDialog_fill(entity me)
 	}
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "most", _("Most weapons"),
-			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "most", _("Most weapons"), weaponarena_tooltip));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "all", _("All weapons"),
-			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "all", _("All weapons"), weaponarena_tooltip));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
