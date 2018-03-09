@@ -37,14 +37,14 @@ const int TEAM_NOT_ALLOWED = -1;
 .entity m_lowest_human; ///< Human with the lowest score in a team.
 .entity m_lowest_bot; ///< Bot with the lowest score in a team.
 
-entity g_team_entities[4]; ///< Holds global team entities.
+entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
 STATIC_INIT(g_team_entities)
 {
-	g_team_entities[0] = spawn();
-	g_team_entities[1] = spawn();
-	g_team_entities[2] = spawn();
-	g_team_entities[3] = spawn();
+	for (int i = 0; i < NUM_TEAMS; ++i)
+	{
+		g_team_entities[i] = spawn();
+	}
 }
 
 entity Team_GetTeamFromIndex(int index)
@@ -299,8 +299,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	entity balance = spawn();
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		balance.(m_team_balance_team[i]) = spawn();
-		entity team_ = balance.(m_team_balance_team[i]);
+		entity team_ = balance.m_team_balance_team[i] = spawn();
 		team_.m_team_score = g_team_entities[i].m_team_score;
 		team_.m_num_players = TEAM_NOT_ALLOWED;
 		team_.m_num_bots = 0;
@@ -320,7 +319,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		{
 			if (teams_mask & BIT(i))
 			{
-				balance.(m_team_balance_team[i]).m_num_players = 0;
+				balance.m_team_balance_team[i].m_num_players = 0;
 			}
 		}
 	}
@@ -615,7 +614,7 @@ int TeamBalance_GetNumberOfPlayers(entity balance, int index)
 		LOG_FATALF("TeamBalance_GetNumberOfPlayers: Team index is invalid: %f",
 			index);
 	}
-	return balance.(m_team_balance_team[index - 1]).m_num_players;
+	return balance.m_team_balance_team[index - 1].m_num_players;
 }
 
 int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
@@ -835,7 +834,7 @@ void TeamBalance_AutoBalanceBots(entity balance, int source_team_index,
 
 bool TeamBalance_IsTeamAllowedInternal(entity balance, int index)
 {
-	return balance.(m_team_balance_team[index - 1]).m_num_players !=
+	return balance.m_team_balance_team[index - 1].m_num_players !=
 		TEAM_NOT_ALLOWED;
 }
 
@@ -845,8 +844,7 @@ void TeamBalance_BanTeamsExcept(entity balance, int index)
 	{
 		if (i != index)
 		{
-			balance.(m_team_balance_team[i - 1]).m_num_players =
-				TEAM_NOT_ALLOWED;
+			balance.m_team_balance_team[i - 1].m_num_players = TEAM_NOT_ALLOWED;
 		}
 	}
 }
