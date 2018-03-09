@@ -1,1 +1,5 @@
 #pragma once
+#include "../spawnflags.qh"
+
+
+const float vectormamamam_timestep = 0.1;

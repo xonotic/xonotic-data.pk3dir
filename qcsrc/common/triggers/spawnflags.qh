@@ -61,6 +61,12 @@ const int VIEWLOC_NOSIDESCROLL = BIT(0); // NOTE: currently unimplemented
 const int VIEWLOC_FREEAIM = BIT(1);
 const int VIEWLOC_FREEMOVE = BIT(2);
 
+// vectormamamam
+const int PROJECT_ON_TARGETNORMAL = BIT(0);
+const int PROJECT_ON_TARGET2NORMAL = BIT(1);
+const int PROJECT_ON_TARGET3NORMAL = BIT(2);
+const int PROJECT_ON_TARGET4NORMAL = BIT(3);
+
 // platforms
 const int PLAT_LOW_TRIGGER = BIT(0);
 const int PLAT_CRUSH = BIT(2);
