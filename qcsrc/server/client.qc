@@ -516,7 +516,7 @@ void PutPlayerInServer(entity this)
 	accuracy_resend(this);
 
 	if (this.team < 0)
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this, true);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -903,7 +903,7 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if(this.killindicator_teamchange == -1)
 	{
-		JoinBestTeam( this, true );
+		TeamBalance_JoinBestTeam(this, true);
 	}
 	else if(this.killindicator_teamchange == -2)
 	{
@@ -1216,7 +1216,7 @@ void ClientConnect(entity this)
 
 	int playerid_save = this.playerid;
 	this.playerid = 0; // silent
-	JoinBestTeam(this, false); // if the team number is valid, keep it
+	TeamBalance_JoinBestTeam(this, false); // if the team number is valid, keep it
 	this.playerid = playerid_save;
 
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
@@ -1261,12 +1261,9 @@ void ClientConnect(entity this)
 	// notify about available teams
 	if (teamplay)
 	{
-		CheckAllowedTeams(this);
-		int t = 0;
-		if (c1 >= 0) t |= BIT(0);
-		if (c2 >= 0) t |= BIT(1);
-		if (c3 >= 0) t |= BIT(2);
-		if (c4 >= 0) t |= BIT(3);
+		entity balance = TeamBalance_CheckAllowedTeams(this);
+		int t = TeamBalance_GetAllowedTeams(balance);
+		TeamBalance_Destroy(balance);
 		stuffcmd(this, sprintf("set _teams_available %d\n", t));
 	}
 	else
@@ -2010,7 +2007,7 @@ void Join(entity this)
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this, true);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
