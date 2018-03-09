@@ -396,7 +396,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
 				TeamBalance_GetTeamCounts(balance, caller);
-				if ((Team_IndexToBit(Team_TeamToNumber(selection)) &
+				if ((Team_IndexToBit(Team_TeamToIndex(selection)) &
 					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);

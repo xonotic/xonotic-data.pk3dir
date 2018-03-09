@@ -1693,7 +1693,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		for (int i = 1; i < 5; ++i)
 		{
 			Team_SetTeamScore(Team_GetTeamFromIndex(i),
-				TeamScore_GetCompareValue(Team_NumberToTeam(i)));
+				TeamScore_GetCompareValue(Team_IndexToTeam(i)));
 		}
 	}
 
@@ -1819,7 +1819,7 @@ float WinningCondition_RanOutOfSpawns()
 				{
 					continue;
 				}
-				TeamScore_AddToTeam(Team_NumberToTeam(j), i, -1000);
+				TeamScore_AddToTeam(Team_IndexToTeam(j), i, -1000);
 			}
 		}
 

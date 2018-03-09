@@ -1074,7 +1074,7 @@ void GameCommand_moveplayer(float request, float argc)
 								else if (team_id == 0)  // auto team
 								{
 									balance = TeamBalance_CheckAllowedTeams(client);
-									team_id = Team_NumberToTeam(TeamBalance_FindBestTeam(balance, client, false));
+									team_id = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
 								}
 								else
 								{
@@ -1421,7 +1421,7 @@ void GameCommand_shuffleteams(float request)
 
 			int team_index = 0;
 			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
-				int target_team_number = Team_NumberToTeam(team_index + 1);
+				int target_team_number = Team_IndexToTeam(team_index + 1);
 				if (it.team != target_team_number) MoveToTeam(it, target_team_number, 6);
 				team_index = (team_index + 1) % number_of_teams;
 			});

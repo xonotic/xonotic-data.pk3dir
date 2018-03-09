@@ -428,7 +428,7 @@ MUTATOR_HOOKFUNCTION(dom, TeamBalance_CheckAllowedTeams)
 		{
 			if (Team_IsValidTeam(head.team))
 			{
-				M_ARGV(0, float) |= BIT(Team_TeamToNumber(head.team) - 1);
+				M_ARGV(0, float) |= Team_TeamToBit(head.team);
 			}
 		}
 
