@@ -12,7 +12,7 @@ bool rainsnow_SendEntity(entity this, entity to, float sf)
 	WriteVector(MSG_ENTITY, mysize);
 	WriteShort(MSG_ENTITY, compressShortVector(this.dest));
 	WriteShort(MSG_ENTITY, this.count);
-	WriteByte(MSG_ENTITY, this.cnt);
+	WriteByte(MSG_ENTITY, this.colormap);
 	return true;
 }
 
@@ -22,7 +22,7 @@ This is an invisible area like a trigger, which rain falls inside of.
 Keys:
 "velocity"
  falling direction (should be something like '0 0 -700', use the X and Y velocity for wind)
-"cnt"
+"colormap"
  sets color of rain (default 12 - white)
 "count"
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
@@ -37,18 +37,29 @@ spawnfunc(func_rain)
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this);
-	if (!this.cnt)
-		this.cnt = 12;
+	if (!this.colormap)
+	{
+		// backwards compatibility
+		if (this.cnt)
+		{
+			LOG_WARN("func_rain uses deprecated field cnt, please use colormap instead");
+			this.colormap = this.cnt;
+		}
+		else
+		{
+			this.colormap = 12;
+		}
+	}
 	if (!this.count)
 		this.count = 2000;
-	this.count = 0.01 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
+	// relative to absolute particle count
+	this.count = this.count * (this.size_x / 1024) * (this.size_y / 1024);
 	if (this.count < 1)
 		this.count = 1;
 	if(this.count > 65535)
 		this.count = 65535;
 
-	this.state = 1; // 1 is rain, 0 is snow
-	this.Version = 1;
+	this.state = RAINSNOW_RAIN;
 
 	Net_LinkEntity(this, false, 0, rainsnow_SendEntity);
 }
@@ -60,7 +71,7 @@ This is an invisible area like a trigger, which snow falls inside of.
 Keys:
 "velocity"
  falling direction (should be something like '0 0 -300', use the X and Y velocity for wind)
-"cnt"
+"colormap"
  sets color of rain (default 12 - white)
 "count"
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
@@ -75,18 +86,29 @@ spawnfunc(func_snow)
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this);
-	if (!this.cnt)
-		this.cnt = 12;
+	if (!this.colormap)
+	{
+		// backwards compatibility
+		if (this.cnt)
+		{
+			LOG_WARN("func_snow uses deprecated field cnt, please use colormap instead");
+			this.colormap = this.cnt;
+		}
+		else
+		{
+			this.colormap = 12;
+		}
+	}
 	if (!this.count)
 		this.count = 2000;
-	this.count = 0.01 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
+	// relative to absolute particle count
+	this.count = this.count * (this.size_x / 1024) * (this.size_y / 1024);
 	if (this.count < 1)
 		this.count = 1;
 	if(this.count > 65535)
 		this.count = 65535;
 
-	this.state = 0; // 1 is rain, 0 is snow
-	this.Version = 1;
+	this.state = RAINSNOW_SNOW;
 
 	Net_LinkEntity(this, false, 0, rainsnow_SendEntity);
 }
@@ -113,11 +135,11 @@ void Draw_Snow(entity this)
 
 NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 {
-	this.impulse = ReadByte(); // Rain, Snow, or Whatever
+	this.state = ReadByte(); // Rain, Snow, or Whatever
 	this.origin = ReadVector();
 	this.maxs = ReadVector();
 	this.velocity = decompressShortVector(ReadShort());
-	this.count = ReadShort() * 10;
+	this.count = ReadShort();
 	this.glow_color = ReadByte(); // color
 
 	return = true;
@@ -130,7 +152,7 @@ NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 	setsize(this, this.mins, this.maxs);
 	this.solid = SOLID_NOT;
 	if (isnew) IL_PUSH(g_drawables, this);
-	if(this.impulse)
+	if(this.state == RAINSNOW_RAIN)
 		this.draw = Draw_Rain;
 	else
 		this.draw = Draw_Snow;
