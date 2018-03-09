@@ -12,7 +12,7 @@ bool rainsnow_SendEntity(entity this, entity to, float sf)
 	WriteVector(MSG_ENTITY, mysize);
 	WriteShort(MSG_ENTITY, compressShortVector(this.dest));
 	WriteShort(MSG_ENTITY, this.count);
-	WriteByte(MSG_ENTITY, this.colormap);
+	WriteByte(MSG_ENTITY, this.cnt);
 	return true;
 }
 
@@ -22,7 +22,7 @@ This is an invisible area like a trigger, which rain falls inside of.
 Keys:
 "velocity"
  falling direction (should be something like '0 0 -700', use the X and Y velocity for wind)
-"colormap"
+"cnt"
  sets color of rain (default 12 - white)
 "count"
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
@@ -37,18 +37,9 @@ spawnfunc(func_rain)
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this);
-	if (!this.colormap)
+	if (!this.cnt)
 	{
-		// backwards compatibility
-		if (this.cnt)
-		{
-			LOG_WARN("func_rain uses deprecated field cnt, please use colormap instead");
-			this.colormap = this.cnt;
-		}
-		else
-		{
-			this.colormap = 12;
-		}
+		this.cnt = 12;
 	}
 	if (!this.count)
 		this.count = 2000;
@@ -71,7 +62,7 @@ This is an invisible area like a trigger, which snow falls inside of.
 Keys:
 "velocity"
  falling direction (should be something like '0 0 -300', use the X and Y velocity for wind)
-"colormap"
+"cnt"
  sets color of rain (default 12 - white)
 "count"
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
@@ -86,18 +77,9 @@ spawnfunc(func_snow)
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this);
-	if (!this.colormap)
+	if (!this.cnt)
 	{
-		// backwards compatibility
-		if (this.cnt)
-		{
-			LOG_WARN("func_snow uses deprecated field cnt, please use colormap instead");
-			this.colormap = this.cnt;
-		}
-		else
-		{
-			this.colormap = 12;
-		}
+		this.cnt = 12;
 	}
 	if (!this.count)
 		this.count = 2000;
