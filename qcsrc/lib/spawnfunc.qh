@@ -262,7 +262,6 @@ noref bool require_spawnfunc_prefix;
 		FIELD_VEC(fld, color) \
 		FIELD_VEC(fld, mangle) \
 		FIELD_VEC(fld, maxs) \
-		FIELD_VEC(fld, maxs) \
 		FIELD_VEC(fld, mins) \
 		FIELD_VEC(fld, modelscale_vec) \
 		FIELD_VEC(fld, velocity) \
