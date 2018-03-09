@@ -263,15 +263,17 @@ bool SetPlayerTeamSimple(entity player, int team_num)
 		SetPlayerColors(player, team_num - 1);
 		return true;
 	}
-	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, Team_TeamToIndex(
-		player.team), Team_TeamToIndex(team_num)) == true)
+	int old_team_index = Team_TeamToIndex(player.team);
+	int new_team_index = Team_TeamToIndex(team_num);
+	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, old_team_index,
+		new_team_index) == true)
 	{
 		// Mutator has blocked team change.
 		return false;
 	}
-	int old_team_num = player.team;
 	SetPlayerColors(player, team_num - 1);
-	MUTATOR_CALLHOOK(Player_ChangedTeam, player, old_team_num, player.team);
+	MUTATOR_CALLHOOK(Player_ChangedTeam, player, old_team_index,
+		new_team_index);
 	return true;
 }
 
