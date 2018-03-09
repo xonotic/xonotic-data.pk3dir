@@ -30,8 +30,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid = ent.dphitcontentsmask;
 	Weapon wep = DEATH_WEAPONOF(deathtype);
-    if (wep == WEP_Null)
-    	wep = ent.(weaponentity).m_weapon; // TODO: don't fall back, if the attack isn't a weapon we don't want it to affect the user's held weapon!
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
 	if (IS_PLAYER(ent) && (wep.spawnflags & WEP_FLAG_PENETRATEWALLS))
@@ -418,10 +416,10 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			yoda = 0;
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
-			float g = accuracy_isgooddamage(this, hit);
+			bool gooddamage = accuracy_isgooddamage(this, hit);
 			Damage(hit, this, this, damage * solid_penetration_left, dtype, weaponentity, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons
-			if(g)
+			if(gooddamage)
 			{
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);

@@ -304,7 +304,7 @@ void W_NextWeapon(entity this, int list, .entity weaponentity)
 	if(list == 0)
 		W_CycleWeapon(this, weaponorder_byid, -1, weaponentity);
 	else if(list == 1)
-		W_CycleWeapon(this, this.weaponorder_byimpulse, -1, weaponentity);
+		W_CycleWeapon(this, CS(this).weaponorder_byimpulse, -1, weaponentity);
 	else if(list == 2)
 		W_CycleWeapon(this, CS(this).cvar_cl_weaponpriority, -1, weaponentity);
 }
@@ -315,7 +315,7 @@ void W_PreviousWeapon(entity this, float list, .entity weaponentity)
 	if(list == 0)
 		W_CycleWeapon(this, weaponorder_byid, +1, weaponentity);
 	else if(list == 1)
-		W_CycleWeapon(this, this.weaponorder_byimpulse, +1, weaponentity);
+		W_CycleWeapon(this, CS(this).weaponorder_byimpulse, +1, weaponentity);
 	else if(list == 2)
 		W_CycleWeapon(this, CS(this).cvar_cl_weaponpriority, +1, weaponentity);
 }

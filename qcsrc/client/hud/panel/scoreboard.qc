@@ -309,6 +309,7 @@ void Cmd_Scoreboard_Help()
 	LOG_INFO(_("^3ping^7                     Ping time"));
 	LOG_INFO(_("^3pl^7                       Packet loss"));
 	LOG_INFO(_("^3elo^7                      Player ELO"));
+	LOG_INFO(_("^3fps^7                      Player FPS"));
 	LOG_INFO(_("^3kills^7                    Number of kills"));
 	LOG_INFO(_("^3deaths^7                   Number of deaths"));
 	LOG_INFO(_("^3suicides^7                 Number of suicides"));
@@ -359,7 +360,7 @@ void Cmd_Scoreboard_Help()
 // otherwise the previous exclusive rule warns anyway
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
-"ping pl name |" \
+"ping pl fps name |" \
 " -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
 " -teams,lms/deaths +ft,tdm/deaths" \
 " +tdm/sum" \
@@ -464,6 +465,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 			case "elo": sbt_field[sbt_num_fields] = SP_ELO; break;
 			case "dmg": case "damage": sbt_field[sbt_num_fields] = SP_DMG; break;
 			case "dmgtaken": case "damagetaken": sbt_field[sbt_num_fields] = SP_DMGTAKEN; break;
+			case "fps": sbt_field[sbt_num_fields] = SP_FPS; break;
 			default:
 			{
 				FOREACH(Scores, true, {
@@ -677,6 +679,19 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 				case -2: return _("N/A");
 				default: return ftos(elo);
 			}
+		}
+
+		case SP_FPS:
+		{
+			float fps = pl.(scores(SP_FPS));
+			if(fps == 0)
+			{
+				sbt_field_rgb = '1 1 1';
+				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
+			}
+			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200);
+			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, fps, 60) / 60);
+			return ftos(fps);
 		}
 
 		case SP_DMG: case SP_DMGTAKEN:

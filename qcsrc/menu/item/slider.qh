@@ -39,7 +39,7 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, pressed, float, 0);
 	ATTRIB(Slider, pressOffset, float, 0);
 	ATTRIB(Slider, previousValue, float, 0);
-	ATTRIB(Slider, tolerance, vector, '0 0 0');
+	ATTRIB(Slider, tolerance, vector, '0 0 0'); // drag tolerance
 	ATTRIB(Slider, disabled, float, 0);
 	ATTRIB(Slider, color, vector, '1 1 1');
 	ATTRIB(Slider, color2, vector, '1 1 1');
