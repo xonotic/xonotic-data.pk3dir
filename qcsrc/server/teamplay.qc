@@ -226,6 +226,11 @@ void setcolor(entity this, int clr)
 #endif
 }
 
+int Entity_GetTeamIndex(entity this)
+{
+	return Team_TeamToIndex(this.team);
+}
+
 void SetPlayerColors(entity player, float _color)
 {
 	float pants = _color & 0x0F;
