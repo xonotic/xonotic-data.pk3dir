@@ -62,7 +62,7 @@ entity Team_GetTeam(int team_num)
 	{
 		LOG_FATALF("Team_GetTeam: Value is invalid: %f", team_num);
 	}
-	return g_team_entities[Team_TeamToNumber(team_num) - 1];
+	return g_team_entities[Team_TeamToIndex(team_num) - 1];
 }
 
 float Team_GetTeamScore(entity team_)
@@ -263,22 +263,24 @@ bool SetPlayerTeamSimple(entity player, int team_num)
 		SetPlayerColors(player, team_num - 1);
 		return true;
 	}
-	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, Team_TeamToNumber(
-		player.team), Team_TeamToNumber(team_num)) == true)
+	int old_team_index = Team_TeamToIndex(player.team);
+	int new_team_index = Team_TeamToIndex(team_num);
+	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, old_team_index,
+		new_team_index) == true)
 	{
 		// Mutator has blocked team change.
 		return false;
 	}
-	int old_team_num = player.team;
 	SetPlayerColors(player, team_num - 1);
-	MUTATOR_CALLHOOK(Player_ChangedTeam, player, old_team_num, player.team);
+	MUTATOR_CALLHOOK(Player_ChangedTeam, player, old_team_index,
+		new_team_index);
 	return true;
 }
 
 bool SetPlayerTeam(entity player, int destination_team_index,
 	int source_team_index, bool no_print)
 {
-	int team_num = Team_NumberToTeam(destination_team_index);
+	int team_num = Team_IndexToTeam(destination_team_index);
 	if (!SetPlayerTeamSimple(player, team_num))
 	{
 		return false;
@@ -289,8 +291,8 @@ bool SetPlayerTeam(entity player, int destination_team_index,
 		return true;
 	}
 	bprint(playername(player, false), "^7 has changed from ",
-		Team_NumberToColoredFullName(source_team_index), "^7 to ",
-		Team_NumberToColoredFullName(destination_team_index), "\n");
+		Team_IndexToColoredFullName(source_team_index), "^7 to ",
+		Team_IndexToColoredFullName(destination_team_index), "\n");
 	return true;
 }
 
@@ -424,7 +426,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	// if player has a forced team, ONLY allow that one
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
-		if (for_whom.team_forced == Team_NumberToTeam(i) &&
+		if (for_whom.team_forced == Team_IndexToTeam(i) &&
 			TeamBalance_IsTeamAllowedInternal(balance, i))
 		{
 			TeamBalance_BanTeamsExcept(balance, i);
@@ -508,7 +510,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			entity team_ = TeamBalance_GetTeamFromIndex(balance, i);
 			if (TeamBalanceTeam_IsAllowed(team_))
 			{
-				MUTATOR_CALLHOOK(TeamBalance_GetTeamCount, Team_NumberToTeam(i),
+				MUTATOR_CALLHOOK(TeamBalance_GetTeamCount, Team_IndexToTeam(i),
 					ignore, team_.m_num_players, team_.m_num_bots,
 					team_.m_lowest_human, team_.m_lowest_bot);
 				team_.m_num_players = M_ARGV(2, float);
@@ -719,7 +721,7 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 		for (int i = 1; i <= NUM_TEAMS; ++i)
 		{
 			if (TeamBalance_IsTeamAllowedInternal(balance, i) && (this.team ==
-				Team_NumberToTeam(i)))
+				Team_IndexToTeam(i)))
 			{
 				selected_team_num = this.team;
 				break;
@@ -741,8 +743,8 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 		return;
 	}
 	int best_team_index = TeamBalance_FindBestTeam(balance, this, true);
-	int best_team_num = Team_NumberToTeam(best_team_index);
-	int old_team_index = Team_TeamToNumber(this.team);
+	int best_team_num = Team_IndexToTeam(best_team_index);
+	int old_team_index = Team_TeamToIndex(this.team);
 	TeamchangeFrags(this);
 	SetPlayerTeamSimple(this, best_team_num);
 	LogTeamchange(this.playerid, this.team, 2); // log auto join
@@ -828,7 +830,7 @@ void TeamBalance_AutoBalanceBots(entity balance, int source_team_index,
 		return;
 	}
 	SetPlayerTeamSimple(destination_team.m_lowest_bot,
-		Team_NumberToTeam(source_team_index));
+		Team_IndexToTeam(source_team_index));
 	KillPlayerForTeamChange(destination_team.m_lowest_bot);
 }
 
@@ -860,7 +862,7 @@ entity TeamBalance_GetTeamFromIndex(entity balance, int index)
 
 entity TeamBalance_GetTeam(entity balance, int team_num)
 {
-	return TeamBalance_GetTeamFromIndex(balance, Team_TeamToNumber(team_num));
+	return TeamBalance_GetTeamFromIndex(balance, Team_TeamToIndex(team_num));
 }
 
 bool TeamBalanceTeam_IsAllowed(entity team_)
@@ -952,8 +954,8 @@ void SV_ChangeTeam(entity this, float _color)
 	source_color = this.clientcolors & 0x0F;
 	destination_color = _color & 0x0F;
 
-	source_team_index = Team_TeamToNumber(source_color + 1);
-	destination_team_index = Team_TeamToNumber(destination_color + 1);
+	source_team_index = Team_TeamToIndex(source_color + 1);
+	destination_team_index = Team_TeamToIndex(destination_color + 1);
 
 	if (destination_team_index == -1)
 	{

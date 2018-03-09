@@ -468,7 +468,7 @@ void bot_removefromlargestteam()
 		if (Team_IsValidTeam(it.team))
 		{
 			thiscount = TeamBalance_GetNumberOfPlayers(balance,
-				Team_TeamToNumber(it.team));
+				Team_TeamToIndex(it.team));
 		}
 
 		if(thiscount > bestcount)

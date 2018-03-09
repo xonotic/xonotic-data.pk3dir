@@ -282,9 +282,9 @@ void PutObserverInServer(entity this)
 	if (mutator_returnvalue) {
 	    // mutator prevents resetting teams+score
 	} else {
-		int oldteam = this.team;
+		int old_team_index = Team_TeamToIndex(this.team);
 		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
-		MUTATOR_CALLHOOK(Player_ChangedTeam, this, oldteam, this.team);
+		MUTATOR_CALLHOOK(Player_ChangedTeam, this, old_team_index, -1);
         this.frags = FRAGS_SPECTATOR;
         PlayerScore_Clear(this);  // clear scores when needed
     }
