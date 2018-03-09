@@ -16,7 +16,7 @@ void train_wait(entity this)
 		entity targ, cp;
 		vector ang;
 		targ = this.future_target;
-		if((this.spawnflags & 1) && targ.curvetarget)
+		if((this.spawnflags & TRAIN_CURVE) && targ.curvetarget)
 			cp = find(NULL, targetname, targ.curvetarget);
 		else
 			cp = NULL;
@@ -43,7 +43,7 @@ void train_wait(entity this)
 
 #ifdef SVQC
 	entity tg = this.future_target;
-	if(tg.spawnflags & 4)
+	if(tg.spawnflags & TRAIN_NEEDACTIVATION)
 	{
 		this.use = train_use;
 		setthink(this, func_null);
@@ -91,7 +91,7 @@ void train_next(entity this)
 	this.target_random = targ.target_random;
 	this.future_target = train_next_find(targ);
 
-	if (this.spawnflags & 1)
+	if (this.spawnflags & TRAIN_CURVE)
 	{
 		if(targ.curvetarget)
 		{
@@ -195,7 +195,7 @@ void train_use(entity this, entity actor, entity trigger)
 {
 	this.nextthink = this.ltime + 1;
 	setthink(this, train_next);
-	this.use = func_null; // not again
+	this.use = func_null; // not again, next target can set it again if needed
 	if(trigger.target2 && trigger.target2 != "")
 		this.future_target = find(NULL, targetname, trigger.target2);
 }
@@ -211,7 +211,7 @@ void func_train_find(entity this)
 		objerror(this, "func_train_find: no next target");
 	setorigin(this, targ.origin - this.view_ofs);
 
-	if(!(this.spawnflags & 4))
+	if(!(this.spawnflags & TRAIN_NEEDACTIVATION))
 	{
 		this.nextthink = this.ltime + 1;
 		setthink(this, train_next);
@@ -242,10 +242,10 @@ spawnfunc(func_train)
 		return;
 	this.effects |= EF_LOWPRECISION;
 
-	if(this.spawnflags & 4)
+	if(this.spawnflags & TRAIN_NEEDACTIVATION)
 		this.use = train_use;
 
-	if (this.spawnflags & 2)
+	if (this.spawnflags & TRAIN_TURN)
 	{
 		this.platmovetype_turn = true;
 		this.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
