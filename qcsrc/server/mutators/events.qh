@@ -145,7 +145,7 @@ MUTATOR_HOOKABLE(TeamBalance_GetTeamCounts, EV_NO_ARGS);
 
 /** allow overriding of team counts */
 #define EV_TeamBalance_GetTeamCount(i, o) \
-    /** team to count                   */ i(float, MUTATOR_ARGV_0_float) \
+    /** team index to count             */ i(float, MUTATOR_ARGV_0_float) \
     /** player to ignore                */ i(entity, MUTATOR_ARGV_1_entity) \
     /** number of players in a team     */ i(float, MUTATOR_ARGV_2_float) \
     /**/                                   o(float, MUTATOR_ARGV_2_float) \

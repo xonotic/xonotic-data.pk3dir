@@ -510,9 +510,9 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			entity team_ = TeamBalance_GetTeamFromIndex(balance, i);
 			if (TeamBalanceTeam_IsAllowed(team_))
 			{
-				MUTATOR_CALLHOOK(TeamBalance_GetTeamCount, Team_IndexToTeam(i),
-					ignore, team_.m_num_players, team_.m_num_bots,
-					team_.m_lowest_human, team_.m_lowest_bot);
+				MUTATOR_CALLHOOK(TeamBalance_GetTeamCount, i, ignore,
+					team_.m_num_players, team_.m_num_bots, team_.m_lowest_human,
+					team_.m_lowest_bot);
 				team_.m_num_players = M_ARGV(2, float);
 				team_.m_num_bots = M_ARGV(3, float);
 				team_.m_lowest_human = M_ARGV(4, entity);
