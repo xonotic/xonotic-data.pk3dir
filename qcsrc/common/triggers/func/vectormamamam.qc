@@ -98,12 +98,45 @@ void func_vectormamamam_findtarget(entity this)
 	setthink(controller, func_vectormamamam_controller_think);
 }
 
+void func_vectormamamam_setactive(entity this, int astate)
+{
+	if (astate == ACTIVE_TOGGLE)
+	{
+		if(this.active == ACTIVE_ACTIVE)
+			this.active = ACTIVE_NOT;
+		else
+			this.active = ACTIVE_ACTIVE;
+	}
+	else
+		this.active = astate;
+
+	if(this.active  == ACTIVE_NOT)
+	{
+		stopsound(this, CH_TRIGGER_SINGLE);
+	}
+	else
+	{
+		if(this.noise && this.noise != "")
+		{
+			_sound(this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+		}
+	}
+}
+
+void func_vectormamamam_init_for_player(entity this, entity player)
+{
+	if (this.noise && this.noise != "" && this.active == ACTIVE_ACTIVE && IS_REAL_CLIENT(player))
+	{
+		msg_entity = player;
+		soundto(MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+	}
+}
+
 spawnfunc(func_vectormamamam)
 {
 	if (this.noise != "")
 	{
 		precache_sound(this.noise);
-		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
 	if(!this.targetfactor)
@@ -149,7 +182,12 @@ spawnfunc(func_vectormamamam)
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	this.effects |= EF_LOWPRECISION;
 
-	this.active = ACTIVE_ACTIVE;
+	this.setactive = func_vectormamamam_setactive;
+	this.setactive(this, ACTIVE_ACTIVE);
+
+	// maybe send sound to new players
+	IL_PUSH(g_initforplayer, this);
+	this.init_for_player = func_vectormamamam_init_for_player;
 
 	InitializeEntity(this, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }
