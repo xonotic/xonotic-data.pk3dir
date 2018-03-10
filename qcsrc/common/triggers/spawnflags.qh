@@ -71,6 +71,11 @@ const int PROJECT_ON_TARGET4NORMAL = BIT(3);
 const int FOLLOW_ATTACH = BIT(0);
 const int FOLLOW_LOCAL = BIT(1);
 
+// laser
+const int LASER_FINITE = BIT(1);
+const int LASER_NOTRACE = BIT(2);
+const int LASER_INVERT_TEAM = BIT(3);
+
 // platforms
 const int PLAT_LOW_TRIGGER = BIT(0);
 const int PLAT_CRUSH = BIT(2);
@@ -97,3 +102,14 @@ const int SF_POINTPARTICLES_IMPULSE = BIT(4);
 const int SF_POINTPARTICLES_MOVING = BIT(5); // Send velocity and movedir
 const int SF_POINTPARTICLES_JITTER_AND_COUNT = BIT(6); // Send waterlevel (=jitter) and count
 const int SF_POINTPARTICLES_BOUNDS = BIT(7); // Send min and max of the brush
+
+// laser
+const int SF_LASER_UPDATE_ORIGIN = BIT(0);
+const int SF_LASER_UPDATE_TARGET = BIT(1);
+const int SF_LASER_UPDATE_ACTIVE = BIT(2);
+const int SF_LASER_UPDATE_EFFECT = BIT(3);
+
+const int SF_LASER_NOTRACE = BIT(4);
+const int SF_LASER_SCALE = BIT(5);
+const int SF_LASER_ALPHA = BIT(6);
+const int SF_LASER_FINITE = BIT(7);

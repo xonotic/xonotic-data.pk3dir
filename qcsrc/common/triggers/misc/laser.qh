@@ -1,1 +1,9 @@
 #pragma once
+#include "../spawnflags.qh"
+
+
+.vector beam_color;
+
+const float LASER_BEAM_MAXLENGTH = 32768; // maximum length of a beam trace
+// TODO: find a better way to do this
+const float LASER_BEAM_MAXWORLDSIZE = 1048576; // to make sure the endpoint of the beam is not visible inside
