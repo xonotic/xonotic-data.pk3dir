@@ -67,6 +67,10 @@ const int PROJECT_ON_TARGET2NORMAL = BIT(1);
 const int PROJECT_ON_TARGET3NORMAL = BIT(2);
 const int PROJECT_ON_TARGET4NORMAL = BIT(3);
 
+// follow
+const int FOLLOW_ATTACH = BIT(0);
+const int FOLLOW_LOCAL = BIT(1);
+
 // platforms
 const int PLAT_LOW_TRIGGER = BIT(0);
 const int PLAT_CRUSH = BIT(2);
