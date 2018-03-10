@@ -243,21 +243,31 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
 	string weaponarena_tooltip = strzone(_("Players will be given a set of weapons at spawn as well as unlimited ammo, without weapon pickups"));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton_T(1, "g_weaponarena", "menu_weaponarena", _("Weapon arenas:"), weaponarena_tooltip));
+		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon arenas:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "menu_weaponarena", _("Custom weapons"), weaponarena_tooltip));
 			e.cvarValueIsAnotherCvar = true;
 			e.cvarOffValue = "0";
+
+		me.TDempty(me, 0.1); // fix initial position
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
 		w = Weapons_from(i);
 		if(w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
 		if((j & 1) == 0)
+			me.TDempty(me, 0.2);
+		else
+		{
 			me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.m_name)));
+			me.TDempty(me, 0.4);
+		}
+		me.TD(me, 1, 1.7, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.m_name)));
 			setDependentWeird(e, checkCompatibility_weaponarena_weapon);
 		++j;
 	}
+
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "most", _("Most weapons"), weaponarena_tooltip));
