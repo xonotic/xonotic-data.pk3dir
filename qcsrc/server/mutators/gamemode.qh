@@ -105,4 +105,3 @@
 
 .float lastground;
 float total_players;
-float redalive, bluealive, yellowalive, pinkalive;

@@ -24,6 +24,20 @@ float Team_GetTeamScore(entity team_);
 /// \param[in] score Score to set.
 void Team_SetTeamScore(entity team_, float score);
 
+/// \brief Returns the number of alive players in a team.
+/// \param[in] team_ Team entity.
+/// \return Number of alive players in a team.
+int Team_GetNumberOfAlivePlayers(entity team_);
+
+/// \brief Sets the number of alive players in a team.
+/// \param[in,out] team_ Team entity.
+/// \param[in] number Number of players to set.
+void Team_SetNumberOfAlivePlayers(entity team_, int number);
+
+/// \brief Returns the number of alive teams.
+/// \return Number of alive teams.
+int Team_GetNumberOfAliveTeams();
+
 int redowned, blueowned, yellowowned, pinkowned;
 
 void TeamchangeFrags(entity e);
@@ -40,10 +54,20 @@ string getwelcomemessage(entity this);
 
 void setcolor(entity this, int clr);
 
-/// \brief Returns the team index of the entity.
+/// \brief Returns whether the given entity belongs to a valid team.
+/// \param[in] this Entity to check.
+/// \return True if entity belongs to a valid team, false otherwise.
+bool Entity_HasValidTeam(entity this);
+
+/// \brief Returns the team index of the given entity.
 /// \param[in] this Entity to check.
 /// \return Team index of the entity.
 int Entity_GetTeamIndex(entity this);
+
+/// \brief Returns the team entity of the given entity.
+/// \param[in] this Entity to check.
+/// \return Team entity of the given entity.
+entity Entity_GetTeam(entity this);
 
 void SetPlayerColors(entity player, float _color);
 
