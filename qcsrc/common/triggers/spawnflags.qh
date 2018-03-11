@@ -100,6 +100,9 @@ const int TELEPORT_FLAG_FORCE_TDEATH = BIT(3);
 const int SPAWNFLAG_NOMESSAGE = BIT(0);
 const int SPAWNFLAG_NOTOUCH = BIT(0); // why are these the same?
 
+// counter
+const int COUNTER_FIRE_AT_COUNT = BIT(2);
+
 //----------
 // SENDFLAGS
 //----------
