@@ -245,48 +245,31 @@ void SetPlayerColors(entity player, float _color)
 	}
 }
 
-void KillPlayerForTeamChange(entity player)
+bool Player_SetTeamIndex(entity player, int index)
 {
-	if (IS_DEAD(player))
-	{
-		return;
-	}
-	if (MUTATOR_CALLHOOK(Player_ChangeTeamKill, player) == true)
-	{
-		return;
-	}
-	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, DMG_NOWEP,
-		player.origin, '0 0 0');
-}
-
-bool SetPlayerTeamSimple(entity player, int team_num)
-{
-	if (player.team == team_num)
+	int new_team = Team_IndexToTeam(index);
+	if (player.team == new_team)
 	{
 		// This is important when players join the game and one of their color
 		// matches the team color while other doesn't. For example [BOT]Lion.
-		SetPlayerColors(player, team_num - 1);
+		SetPlayerColors(player, new_team - 1);
 		return true;
 	}
-	int old_team_index = Team_TeamToIndex(player.team);
-	int new_team_index = Team_TeamToIndex(team_num);
-	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, old_team_index,
-		new_team_index) == true)
+	int old_index = Team_TeamToIndex(player.team);
+	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, old_index, index) == true)
 	{
 		// Mutator has blocked team change.
 		return false;
 	}
-	SetPlayerColors(player, team_num - 1);
-	MUTATOR_CALLHOOK(Player_ChangedTeam, player, old_team_index,
-		new_team_index);
+	SetPlayerColors(player, new_team - 1);
+	MUTATOR_CALLHOOK(Player_ChangedTeam, player, old_index, index);
 	return true;
 }
 
 bool SetPlayerTeam(entity player, int destination_team_index,
 	int source_team_index, bool no_print)
 {
-	int team_num = Team_IndexToTeam(destination_team_index);
-	if (!SetPlayerTeamSimple(player, team_num))
+	if (!Player_SetTeamIndex(player, destination_team_index))
 	{
 		return false;
 	}
@@ -299,6 +282,20 @@ bool SetPlayerTeam(entity player, int destination_team_index,
 		Team_IndexToColoredFullName(source_team_index), "^7 to ",
 		Team_IndexToColoredFullName(destination_team_index), "\n");
 	return true;
+}
+
+void KillPlayerForTeamChange(entity player)
+{
+	if (IS_DEAD(player))
+	{
+		return;
+	}
+	if (MUTATOR_CALLHOOK(Player_ChangeTeamKill, player) == true)
+	{
+		return;
+	}
+	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, DMG_NOWEP,
+		player.origin, '0 0 0');
 }
 
 entity TeamBalance_CheckAllowedTeams(entity for_whom)
@@ -722,20 +719,20 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 	// if they're not on a valid team, then let other code put them on the smallest team
 	if (!force_best_team)
 	{
-		int selected_team_num = -1;
+		int selected_team_index = -1;
 		for (int i = 1; i <= NUM_TEAMS; ++i)
 		{
-			if (TeamBalance_IsTeamAllowedInternal(balance, i) && (this.team ==
-				Team_IndexToTeam(i)))
+			if (TeamBalance_IsTeamAllowedInternal(balance, i) &&
+				(Team_TeamToIndex(this.team) == i))
 			{
-				selected_team_num = this.team;
+				selected_team_index = i;
 				break;
 			}
 		}
 		
-		if (Team_IsValidTeam(selected_team_num))
+		if (Team_IsValidIndex(selected_team_index))
 		{
-			SetPlayerTeamSimple(this, selected_team_num);
+			Player_SetTeamIndex(this, selected_team_index);
 			LogTeamchange(this.playerid, this.team, 99);
 			TeamBalance_Destroy(balance);
 			return;
@@ -748,10 +745,9 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 		return;
 	}
 	int best_team_index = TeamBalance_FindBestTeam(balance, this, true);
-	int best_team_num = Team_IndexToTeam(best_team_index);
 	int old_team_index = Team_TeamToIndex(this.team);
 	TeamchangeFrags(this);
-	SetPlayerTeamSimple(this, best_team_num);
+	Player_SetTeamIndex(this, best_team_index);
 	LogTeamchange(this.playerid, this.team, 2); // log auto join
 	if ((old_team_index != -1) && !IS_BOT_CLIENT(this))
 	{
@@ -834,8 +830,7 @@ void TeamBalance_AutoBalanceBots(entity balance, int source_team_index,
 	{
 		return;
 	}
-	SetPlayerTeamSimple(destination_team.m_lowest_bot,
-		Team_IndexToTeam(source_team_index));
+	Player_SetTeamIndex(destination_team.m_lowest_bot, source_team_index);
 	KillPlayerForTeamChange(destination_team.m_lowest_bot);
 }
 

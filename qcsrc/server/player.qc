@@ -669,11 +669,11 @@ bool MoveToTeam(entity client, int team_colour, int type)
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
 	TeamchangeFrags(client);  // move the players frags
-	if (!SetPlayerTeamSimple(client, team_colour))
+	if (!Player_SetTeamIndex(client, Team_TeamToIndex(team_colour)))
 	{
 		return false;
 	}
-	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, DMG_NOWEP, client.origin, '0 0 0');  // kill the player
+	KillPlayerForTeamChange(client);
 	lockteams = lockteams_backup;  // restore the team lock
 	LogTeamchange(client.playerid, client.team, type);
 	return true;
