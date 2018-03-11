@@ -1,8 +1,9 @@
 #pragma once
 
 // generic usage
-const int NOSPLASH = BIT(8); // generic anti-splashdamage spawnflag
 const int START_ENABLED = BIT(0);
+const int ON_MAPLOAD = BIT(1);
+const int NOSPLASH = BIT(8); // generic anti-splashdamage spawnflag
 
 // bobbing
 const int BOBBING_XAXIS = BIT(0);
