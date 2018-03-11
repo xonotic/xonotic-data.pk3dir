@@ -84,6 +84,12 @@ const int PLAT_CRUSH = BIT(2);
 // changelevel
 const int CHANGELEVEL_MULTIPLAYER = BIT(1);
 
+// speaker
+const int SPEAKER_LOOPED_ON = BIT(0);
+const int SPEAKER_LOOPED_OFF = BIT(1);
+const int SPEAKER_GLOBAL = BIT(2); // legacy, set speaker atten to -1 instead
+const int SPEAKER_ACTIVATOR = BIT(3);
+
 // teleport
 const int TELEPORT_FLAG_SOUND = BIT(0);
 const int TELEPORT_FLAG_PARTICLES = BIT(1);
