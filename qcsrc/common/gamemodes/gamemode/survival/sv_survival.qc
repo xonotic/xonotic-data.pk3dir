@@ -537,8 +537,7 @@ bool Surv_AddPlayerToTeam(entity player, int team_index)
 			{
 				bool saved_autobalance = surv_autobalance;
 				surv_autobalance = false;
-				SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-					surv_defender_team));
+				Player_SetTeamIndex(lowest_player, surv_defender_team);
 				surv_autobalance = saved_autobalance;
 				return true;
 			}
@@ -547,8 +546,7 @@ bool Surv_AddPlayerToTeam(entity player, int team_index)
 			{
 				bool saved_autobalance = surv_autobalance;
 				surv_autobalance = false;
-				SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-					surv_defender_team));
+				Player_SetTeamIndex(lowest_player, surv_defender_team);
 				surv_autobalance = saved_autobalance;
 			}
 			return true;
@@ -567,8 +565,7 @@ bool Surv_AddPlayerToTeam(entity player, int team_index)
 					return true;
 				}
 				LOG_TRACE("No space for defender, switching to attacker");
-				SetPlayerTeamSimple(player, Team_IndexToTeam(
-					surv_attacker_team));
+				Player_SetTeamIndex(player, surv_attacker_team);
 				return false;
 			}
 			LOG_TRACE("Client is not a bot");
@@ -598,7 +595,7 @@ bool Surv_AddPlayerToTeam(entity player, int team_index)
 				bool saved_autobalance = surv_autobalance;
 				surv_autobalance = false;
 				surv_announcefrags = false;
-				SetPlayerTeamSimple(bot, Team_IndexToTeam(surv_attacker_team));
+				Player_SetTeamIndex(bot, surv_attacker_team);
 				surv_autobalance = saved_autobalance;
 				surv_announcefrags = true;
 				LOG_TRACE("Removed bot");
@@ -617,8 +614,7 @@ bool Surv_AddPlayerToTeam(entity player, int team_index)
 			{
 				bool saved_autobalance = surv_autobalance;
 				surv_autobalance = false;
-				SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-					surv_attacker_team));
+				Player_SetTeamIndex(lowest_player, surv_attacker_team);
 				surv_autobalance = saved_autobalance;
 				return true;
 			}
@@ -627,8 +623,7 @@ bool Surv_AddPlayerToTeam(entity player, int team_index)
 			{
 				bool saved_autobalance = surv_autobalance;
 				surv_autobalance = false;
-				SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-					surv_attacker_team));
+				Player_SetTeamIndex(lowest_player, surv_attacker_team);
 				surv_autobalance = saved_autobalance;
 			}
 			return true;
@@ -698,8 +693,7 @@ void Surv_RemovePlayerFromTeam(entity player, int team_index)
 			{
 				bool saved_autobalance = surv_autobalance;
 				surv_autobalance = false;
-				SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-					surv_attacker_team));
+				Player_SetTeamIndex(lowest_player, surv_attacker_team);
 				surv_autobalance = saved_autobalance;
 				return;
 			}
@@ -710,8 +704,7 @@ void Surv_RemovePlayerFromTeam(entity player, int team_index)
 			}
 			bool saved_autobalance = surv_autobalance;
 			surv_autobalance = false;
-			SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-				surv_attacker_team));
+			Player_SetTeamIndex(lowest_player, surv_attacker_team);
 			surv_autobalance = saved_autobalance;
 			return;
 		}
@@ -757,8 +750,7 @@ void Surv_RemovePlayerFromTeam(entity player, int team_index)
 				bool saved_autobalance = surv_autobalance;
 				surv_autobalance = false;
 				surv_announcefrags = false;
-				SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-					surv_defender_team));
+				Player_SetTeamIndex(lowest_player, surv_defender_team);
 				surv_autobalance = saved_autobalance;
 				surv_announcefrags = true;					
 				return;
@@ -769,8 +761,7 @@ void Surv_RemovePlayerFromTeam(entity player, int team_index)
 				bool saved_autobalance = surv_autobalance;
 				surv_autobalance = false;
 				surv_announcefrags = false;
-				SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-					surv_defender_team));
+				Player_SetTeamIndex(lowest_player, surv_defender_team);
 				surv_autobalance = saved_autobalance;
 				surv_announcefrags = true;
 				return;
@@ -783,8 +774,7 @@ void Surv_RemovePlayerFromTeam(entity player, int team_index)
 			bool saved_autobalance = surv_autobalance;
 			surv_autobalance = false;
 			surv_announcefrags = false;
-			SetPlayerTeamSimple(lowest_player, Team_IndexToTeam(
-				surv_defender_team));
+			Player_SetTeamIndex(lowest_player, surv_defender_team);
 			surv_autobalance = saved_autobalance;
 			surv_announcefrags = true;
 			return;
@@ -1159,7 +1149,7 @@ void Surv_SwapTeams()
 		if (Surv_IsPlayerDefender(it) && (it.surv_role ==
 			SURVIVAL_ROLE_CANNON_FODDER))
 		{
-			SetPlayerTeamSimple(it, Team_IndexToTeam(surv_attacker_team));
+			Player_SetTeamIndex(it, surv_attacker_team);
 		}
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
