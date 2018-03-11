@@ -33,7 +33,7 @@ CLASS(Nade, Object)
     ATTRIB(Nade, m_color, vector, '0 0 0');
     ATTRIB(Nade, m_name, string, _("Grenade"));
     ATTRIB(Nade, m_icon, string, "nade_normal");
-    ATTRIB(Nade, m_alpha, float, 0); // 0 is actually the same as 1
+    ATTRIB(Nade, m_alpha, float, 1);
     ATTRIBARRAY(Nade, m_projectile, int, 2);
     ATTRIBARRAY(Nade, m_trail, entity, 2);
     METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
