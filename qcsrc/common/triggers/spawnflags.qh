@@ -80,6 +80,9 @@ const int LASER_INVERT_TEAM = BIT(3);
 const int PLAT_LOW_TRIGGER = BIT(0);
 const int PLAT_CRUSH = BIT(2);
 
+// changelevel
+const int CHANGELEVEL_MULTIPLAYER = BIT(1);
+
 // teleport
 const int TELEPORT_FLAG_SOUND = BIT(0);
 const int TELEPORT_FLAG_PARTICLES = BIT(1);

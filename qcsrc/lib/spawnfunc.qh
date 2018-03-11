@@ -163,6 +163,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, bgmscriptsustain) \
 		FIELD_SCALAR(fld, bgmscript) \
 		FIELD_SCALAR(fld, button0) \
+		FIELD_SCALAR(fld, chmap) \
 		FIELD_SCALAR(fld, cnt) \
 		FIELD_SCALAR(fld, colormap) \
 		FIELD_SCALAR(fld, count) \
@@ -186,6 +187,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, fog) \
 		FIELD_SCALAR(fld, frags) \
 		FIELD_SCALAR(fld, frame) \
+		FIELD_SCALAR(fld, gametype) \
 		FIELD_SCALAR(fld, gametypefilter) \
 		FIELD_SCALAR(fld, geomtype) \
 		FIELD_SCALAR(fld, gravity) \
