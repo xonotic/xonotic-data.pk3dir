@@ -145,7 +145,7 @@ MUTATOR_HOOKABLE(TeamBalance_GetTeamCounts, EV_NO_ARGS);
 
 /** allow overriding of team counts */
 #define EV_TeamBalance_GetTeamCount(i, o) \
-    /** team to count                   */ i(float, MUTATOR_ARGV_0_float) \
+    /** team index to count             */ i(float, MUTATOR_ARGV_0_float) \
     /** player to ignore                */ i(entity, MUTATOR_ARGV_1_entity) \
     /** number of players in a team     */ i(float, MUTATOR_ARGV_2_float) \
     /**/                                   o(float, MUTATOR_ARGV_2_float) \
@@ -968,9 +968,9 @@ MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
  * Called before player changes their team. Return true to block team change.
  */
 #define EV_Player_ChangeTeam(i, o) \
-    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
-	/** current team */   i(float, MUTATOR_ARGV_1_float) \
-	/** new team */       i(float, MUTATOR_ARGV_2_float) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** current team index */ i(float, MUTATOR_ARGV_1_float) \
+    /** new team index */     i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
 
@@ -978,9 +978,9 @@ MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
  * Called after player has changed their team.
  */
 #define EV_Player_ChangedTeam(i, o) \
-    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
-	/** old team */       i(float, MUTATOR_ARGV_1_float) \
-	/** current team */   i(float, MUTATOR_ARGV_2_float) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** old team index */     i(float, MUTATOR_ARGV_1_float) \
+    /** current team index */ i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Player_ChangedTeam, EV_Player_ChangedTeam);
 

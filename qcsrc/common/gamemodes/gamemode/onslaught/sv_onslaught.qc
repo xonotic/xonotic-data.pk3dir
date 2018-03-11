@@ -1929,7 +1929,7 @@ MUTATOR_HOOKFUNCTION(ons, TeamBalance_CheckAllowedTeams)
 	{
 		if (Team_IsValidTeam(tmp_entity.team))
 		{
-			M_ARGV(0, float) |= BIT(Team_TeamToNumber(tmp_entity.team) - 1);
+			M_ARGV(0, float) |= Team_TeamToBit(tmp_entity.team);
 		}
 	}
 
