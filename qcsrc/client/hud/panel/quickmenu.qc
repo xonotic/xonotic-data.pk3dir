@@ -335,28 +335,32 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), "");
 			QuickMenu_skip_submenu(substring(s, 1, -1));
 		}
-		else if(entry_num >= first_entry && substring(s, 0, 1) == QM_TAG_TITLE)
+		else if(substring(s, 0, 1) == QM_TAG_TITLE)
 		{
 			++QuickMenu_Buffer_Index;
-			cmd = QuickMenu_Buffer_Get();
-			string command_code = substring(cmd, 0, 1);
-			if(command_code == QM_TAG_COMMAND)
-				cmd = substring(cmd, 1, -1);
-			else if(command_code == QM_TAG_PLCOMMAND)
+			if(entry_num >= first_entry)
 			{
-				// throw away the current quickmenu buffer and load a new one
-				cmd = substring(cmd, 1, -1);
-				strunzone(z_submenu);
-				if(HUD_Quickmenu_PlayerListEntries_Create(cmd, stof(substring(s, 1, 1)), stof(substring(s, 2, 1))))
-					return QuickMenu_Page_Load("", 0);
-				QuickMenu_Close();
-				return false;
+				cmd = QuickMenu_Buffer_Get();
+				string command_code = substring(cmd, 0, 1);
+				if(command_code == QM_TAG_COMMAND)
+					cmd = substring(cmd, 1, -1);
+				else if(command_code == QM_TAG_PLCOMMAND)
+				{
+					// throw away the current quickmenu buffer and load a new one
+					cmd = substring(cmd, 1, -1);
+					strunzone(z_submenu);
+					if(HUD_Quickmenu_PlayerListEntries_Create(cmd, stof(substring(s, 1, 1)), stof(substring(s, 2, 1))))
+						return QuickMenu_Page_Load("", 0);
+					QuickMenu_Close();
+					return false;
+				}
+
+				tokenize_console(cmd);
+				QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = (argv(1) && argv(0) == "toggle");
+
+				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
 			}
 
-			tokenize_console(cmd);
-			QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = (argv(1) && argv(0) == "toggle");
-
-			QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
 		}
 
 		++entry_num;
