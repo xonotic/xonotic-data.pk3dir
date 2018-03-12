@@ -1,5 +1,7 @@
 #include "gamemode_freezetag.qh"
 
+#include <server/resources.qh>
+
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
