@@ -44,7 +44,7 @@ float QuickMenu_TimeOut;
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
     TC(int, i);
-	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
+	//LOG_INFOF("^xc80 entry %d: %s, %s\n", i, s, s1);
 	if (QuickMenu_Page_Description[i])
 		strunzone(QuickMenu_Page_Description[i]);
 	QuickMenu_Page_Description[i] = strzone(s);
@@ -289,11 +289,11 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 			s = QuickMenu_Buffer_Get();
 			if(substring(s, 0, 1) == QM_TAG_SUBMENU && substring(s, 1, -1) == z_submenu)
 			{
-				// printf("^3 beginning of %s\n", z_submenu);
+				//LOG_INFOF("^3 beginning of %s\n", z_submenu);
 				++QuickMenu_Buffer_Index;
 				break; // target_submenu found!
 			}
-			// printf("^1 skipping %s\n", s);
+			//LOG_INFOF("^1 skipping %s\n", s);
 		}
 		if(QuickMenu_Buffer_Index == QuickMenu_Buffer_Size)
 			LOG_WARNF("Couldn't find submenu \"%s\"", z_submenu);
@@ -310,7 +310,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 
 		if(z_submenu != "" && substring(s, 1, -1) == z_submenu)
 		{
-			// printf("^3 end of %s\n", z_submenu);
+			//LOG_INFOF("^3 end of %s\n", z_submenu);
 			break;
 		}
 
@@ -880,9 +880,9 @@ void QuickMenu_Default(string target_submenu)
 
 	if(target_submenu != "" && !target_submenu_found)
 	{
-		LOG_WARNF("Couldn't find submenu \"%s\"", target_submenu);
+		LOG_INFOF("Couldn't find submenu \"%s\"", target_submenu);
 		if(prvm_language != "en")
-			LOG_WARNF("^3Warning: submenu must be in English", target_submenu);
+			LOG_INFOF("^3Warning: submenu title must be in English", target_submenu);
 		QuickMenu_Buffer_Size = 0;
 	}
 }
