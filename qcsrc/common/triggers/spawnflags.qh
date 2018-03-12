@@ -111,6 +111,9 @@ const int GRAVITY_START_DISABLED = BIT(1);
 // heal
 const int HEAL_SOUND_ALWAYS = BIT(2);
 
+// impulse
+const int IMPULSE_DIRECTIONAL_SPEEDTARGET = BIT(6);
+
 //----------
 // SENDFLAGS
 //----------
