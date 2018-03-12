@@ -523,10 +523,10 @@ void QuickMenu_Mouse()
 
 	if (mousepos.x >= panel_pos.x && mousepos.y >= first_entry_pos && mousepos.x <= panel_pos.x + panel_size.x && mousepos.y <= first_entry_pos + entries_height)
 	{
-		float entry_num;
-		entry_num = floor((mousepos.y - first_entry_pos) / fontsize.y);
+		int entry_num = min(QuickMenu_Page_Entries - 1, floor((mousepos.y - first_entry_pos) / fontsize.y));
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
+			// recycling panel_pos as entry_pos
 			panel_pos.y = first_entry_pos + entry_num * fontsize.y;
 			vector color;
 			if(mouseClicked & S_MOUSE1)
