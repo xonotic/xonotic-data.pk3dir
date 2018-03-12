@@ -21,9 +21,8 @@ void FixSize(entity e)
 }
 
 #ifdef SVQC
-void generic_netlinked_setactive(entity this, int act)
+void generic_setactive(entity this, int act)
 {
-	int old_status = this.active;
 	if(act == ACTIVE_TOGGLE)
 	{
 		if(this.active == ACTIVE_ACTIVE)
@@ -39,6 +38,12 @@ void generic_netlinked_setactive(entity this, int act)
 	{
 		this.active = act;
 	}
+}
+
+void generic_netlinked_setactive(entity this, int act)
+{
+	int old_status = this.active;
+	generic_setactive(this, act);
 
 	if (this.active != old_status)
 	{

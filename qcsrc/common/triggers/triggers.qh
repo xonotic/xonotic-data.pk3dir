@@ -23,6 +23,7 @@ void target_voicescript_clear(entity pl);
 
 void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger);
 
+void generic_setactive(entity this, int act);
 // generic methods for netlinked entities
 void generic_netlinked_reset(entity this);
 void generic_netlinked_setactive(entity this, int act);
