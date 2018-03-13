@@ -126,6 +126,9 @@ const int MAGICEAR_NODECOLORIZE = BIT(7);
 const int MAGICEAR_TUBA  = BIT(8);
 const int MAGICEAR_TUBA_EXACTPITCH = BIT(9);
 
+// monoflop
+const int MONOFLOP_FIXED = BIT(0);
+
 //----------
 // SENDFLAGS
 //----------
