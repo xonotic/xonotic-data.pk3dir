@@ -406,8 +406,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
 		else if(argv(2) == "all")
 		{
-			string s;
-			s = "ping pl name |";
+			string s = "ping pl elo name |"; // scores without a label
 			FOREACH(Scores, true, {
 				if(it != ps_primary)
 				if(it != ps_secondary)
@@ -428,10 +427,8 @@ void Cmd_Scoreboard_SetFields(int argc)
 
 	for(i = 1; i < argc - 1; ++i)
 	{
-		float nocomplain;
 		str = argv(i+1);
-
-		nocomplain = false;
+		bool nocomplain = false;
 		if(substring(str, 0, 1) == "?")
 		{
 			nocomplain = true;
