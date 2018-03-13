@@ -406,7 +406,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
 		else if(argv(2) == "all")
 		{
-			string s = "ping pl elo name |"; // scores without a label
+			string s = "ping pl name |"; // scores without a label
 			FOREACH(Scores, true, {
 				if(it != ps_primary)
 				if(it != ps_secondary)
