@@ -80,12 +80,12 @@ spawnfunc(trigger_hurt)
 	trigger_hurt_last = this;
 }
 
-bool tracebox_hits_trigger_hurt(vector start, vector min, vector max, vector end)
+bool tracebox_hits_trigger_hurt(vector start, vector e_min, vector e_max, vector end)
 {
 	entity th;
 
 	for(th = trigger_hurt_first; th; th = th.trigger_hurt_next)
-		if(tracebox_hits_box(start, min, max, end, th.absmin, th.absmax))
+		if(tracebox_hits_box(start, e_min, e_max, end, th.absmin, th.absmax))
 			return true;
 
 	return false;
