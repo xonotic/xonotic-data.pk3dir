@@ -59,7 +59,7 @@ const int TRAIN_TURN = BIT(1);
 const int TRAIN_NEEDACTIVATION = BIT(2);
 
 // jumppads
-const int PUSH_ONCE = BIT(0);
+const int PUSH_ONCE = BIT(0); // legacy, deactivate with relay instead
 const int PUSH_SILENT = BIT(1); // not used?
 
 // viewloc
