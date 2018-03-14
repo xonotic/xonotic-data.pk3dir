@@ -318,7 +318,7 @@ void Cmd_Scoreboard_Help()
 	LOG_INFO(strcat("^3kd^7                       ", _("The kill-death ratio")));
 	LOG_INFO(strcat("^3dmg^7                      ", _("The total damage done")));
 	LOG_INFO(strcat("^3dmgtaken^7                 ", _("The total damage taken")));
-	LOG_INFO(strcat("^3sum^7                      ", _("frags - deaths")));
+	LOG_INFO(strcat("^3sum^7                      ", _("kills - deaths")));
 	LOG_INFO(strcat("^3caps^7                     ", _("How often a flag (CTF) or a key (KeyHunt) was captured")));
 	LOG_INFO(strcat("^3pickups^7                  ", _("How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up")));
 	LOG_INFO(strcat("^3captime^7                  ", _("Time of fastest cap (CTF)")));
