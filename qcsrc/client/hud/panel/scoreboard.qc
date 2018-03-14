@@ -300,8 +300,8 @@ void Cmd_Scoreboard_Help()
 	LOG_INFO(_("Usage:"));
 	LOG_INFO("^2scoreboard_columns_set default");
 	LOG_INFO(_("^2scoreboard_columns_set ^7field1 field2 ..."));
-	LOG_INFO(_("The following field names are recognized (case insensitive):"));
 	LOG_INFO(_("You can use a ^3|^7 to start the right-aligned fields."));
+	LOG_INFO(_("The following field names are recognized (case insensitive):"));
 	LOG_INFO("");
 
 	LOG_INFO(strcat("^3name^7                     ", _("Name of a player")));
