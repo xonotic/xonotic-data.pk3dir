@@ -2,9 +2,11 @@
 
 // generic usage
 const int START_ENABLED = BIT(0);
+const int ALL_ENTITIES = BIT(1);
 const int ON_MAPLOAD = BIT(1);
 const int INVERT_TEAMS = BIT(2);
 const int NOSPLASH = BIT(8); // generic anti-splashdamage spawnflag
+const int ONLY_PLAYERS = BIT(14);
 
 // triggers
 const int SPAWNFLAG_NOMESSAGE = BIT(0);
