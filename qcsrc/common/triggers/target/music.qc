@@ -199,9 +199,9 @@ void TargetMusic_Advance()
 		if (vol != vol0)
 		{
 			if(vol0 < 0)
-				_sound(it, CH_BGM_SINGLE, it.noise, vol, ATTEN_NONE); // restart
+				sound7(it, CH_BGM_SINGLE, it.noise, vol, ATTEN_NONE, 0, BIT(4)); // restart
 			else
-				_sound(it, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
+				sound7(it, CH_BGM_SINGLE, "", vol, ATTEN_NONE, 0, BIT(4));
 			it.lastvol = vol;
 		}
 	});
@@ -271,11 +271,11 @@ void Net_TargetMusic()
 
 void Ent_TriggerMusic_Think(entity this)
 {
-	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, this, NULL))
+	vector org = (csqcplayer) ? csqcplayer.origin : view_origin;
+	if(WarpZoneLib_BoxTouchesBrush(org + STAT(PL_MIN), org + STAT(PL_MAX), this, NULL))
 	{
 		music_trigger = this;
 	}
-	this.nextthink = time;
 }
 
 void Ent_TriggerMusic_Remove(entity this)
@@ -316,7 +316,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 		if(this.noise != s)
 		{
 			precache_sound(this.noise);
-			_sound(this, CH_BGM_SINGLE, this.noise, 0, ATTEN_NONE);
+			sound7(this, CH_BGM_SINGLE, this.noise, 0, ATTEN_NONE, 0, BIT(4));
 			if(getsoundtime(this, CH_BGM_SINGLE) < 0)
 			{
 				LOG_WARNF("Cannot initialize sound %s", this.noise);
@@ -329,8 +329,12 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 	setorigin(this, this.origin);
 	setsize(this, this.mins, this.maxs);
 	this.cnt = 1;
-	setthink(this, Ent_TriggerMusic_Think);
-	this.nextthink = time;
+	this.draw = Ent_TriggerMusic_Think;
+	if(isnew)
+	{
+		LL_PUSH(TargetMusic_list, this);
+		IL_PUSH(g_drawables, this);
+	}
 	return true;
 }
 
