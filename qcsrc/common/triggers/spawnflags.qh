@@ -2,6 +2,7 @@
 
 // generic usage
 const int START_ENABLED = BIT(0);
+const int START_DISABLED = BIT(0);
 const int ALL_ENTITIES = BIT(1);
 const int ON_MAPLOAD = BIT(1);
 const int INVERT_TEAMS = BIT(2);
@@ -17,7 +18,6 @@ const int BOBBING_XAXIS = BIT(0);
 const int BOBBING_YAXIS = BIT(1);
 
 // breakable
-const int BREAKABLE_START_DISABLED = BIT(0);
 const int BREAKABLE_INDICATE_DAMAGE = BIT(1);
 const int BREAKABLE_NODAMAGE = BIT(2);
 
@@ -161,3 +161,6 @@ const int SF_LASER_NOTRACE = BIT(4);
 const int SF_LASER_SCALE = BIT(5);
 const int SF_LASER_ALPHA = BIT(6);
 const int SF_LASER_FINITE = BIT(7);
+
+// music
+const int SF_MUSIC_ORIGIN = BIT(2);

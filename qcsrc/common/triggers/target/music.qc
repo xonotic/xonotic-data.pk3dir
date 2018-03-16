@@ -14,7 +14,10 @@ REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_MUSIC)
 #ifdef SVQC
 
 IntrusiveList g_targetmusic_list;
-STATIC_INIT(g_targetmusic_list) { g_targetmusic_list = IL_NEW(); }
+STATIC_INIT(g_targetmusic_list)
+{
+	g_targetmusic_list = IL_NEW();
+}
 
 // values:
 //   volume
@@ -37,7 +40,10 @@ void target_music_sendto(entity this, int to, bool is)
 }
 void target_music_reset(entity this)
 {
-	if (this.targetname == "") target_music_sendto(this, MSG_ALL, 1);
+	if (this.targetname == "")
+	{
+		target_music_sendto(this, MSG_ALL, true);
+	}
 }
 void target_music_kill()
 {
@@ -45,9 +51,9 @@ void target_music_kill()
 	{
 		it.volume = 0;
         if (it.targetname == "")
-            target_music_sendto(it, MSG_ALL, 1);
+            target_music_sendto(it, MSG_ALL, true);
         else
-            target_music_sendto(it, MSG_ALL, 0);
+            target_music_sendto(it, MSG_ALL, false);
 	});
 }
 void target_music_use(entity this, entity actor, entity trigger)
@@ -57,11 +63,11 @@ void target_music_use(entity this, entity actor, entity trigger)
 	if(IS_REAL_CLIENT(actor))
 	{
 		msg_entity = actor;
-		target_music_sendto(this, MSG_ONE, 1);
+		target_music_sendto(this, MSG_ONE, true);
 	}
 	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == actor, {
 		msg_entity = it;
-		target_music_sendto(this, MSG_ONE, 1);
+		target_music_sendto(this, MSG_ONE, true);
 	});
 }
 spawnfunc(target_music)
@@ -72,18 +78,18 @@ spawnfunc(target_music)
 		this.volume = 1;
 	IL_PUSH(g_targetmusic_list, this);
 	if(this.targetname == "")
-		target_music_sendto(this, MSG_INIT, 1);
+		target_music_sendto(this, MSG_INIT, true);
 	else
-		target_music_sendto(this, MSG_INIT, 0);
+		target_music_sendto(this, MSG_INIT, false);
 }
 void TargetMusic_RestoreGame()
 {
 	IL_EACH(g_targetmusic_list, true,
 	{
 		if(it.targetname == "")
-			target_music_sendto(it, MSG_INIT, 1);
+			target_music_sendto(it, MSG_INIT, true);
 		else
-			target_music_sendto(it, MSG_INIT, 0);
+			target_music_sendto(it, MSG_INIT, false);
 	});
 }
 // values:
@@ -92,20 +98,20 @@ void TargetMusic_RestoreGame()
 //   targetname
 //   fade_time
 // spawnflags:
-//   1 = START_OFF
+//   START_DISABLED
 // when triggered, it is disabled/enabled for everyone
-bool trigger_music_SendEntity(entity this, entity to, float sf)
+bool trigger_music_SendEntity(entity this, entity to, int sendflags)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
-	sf &= ~0x80;
+	sendflags &= ~0x80;
 	if(this.cnt)
-		sf |= 0x80;
-	WriteByte(MSG_ENTITY, sf);
-	if(sf & 4)
+		sendflags |= 0x80;
+	WriteByte(MSG_ENTITY, sendflags);
+	if(sendflags & SF_MUSIC_ORIGIN)
 	{
 		WriteVector(MSG_ENTITY, this.origin);
 	}
-	if(sf & 1)
+	if(sendflags & SF_TRIGGER_INIT)
 	{
 		if(this.model != "null")
 		{
@@ -123,11 +129,11 @@ bool trigger_music_SendEntity(entity this, entity to, float sf)
 		WriteByte(MSG_ENTITY, this.fade_rate * 16.0);
 		WriteString(MSG_ENTITY, this.noise);
 	}
-	return 1;
+	return true;
 }
 void trigger_music_reset(entity this)
 {
-	this.cnt = !(this.spawnflags & 1);
+	this.cnt = !(this.spawnflags & START_DISABLED);
 	this.SendFlags |= 0x80;
 }
 void trigger_music_use(entity this, entity actor, entity trigger)
@@ -137,8 +143,14 @@ void trigger_music_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(trigger_music)
 {
-	if(this.model != "") _setmodel(this, this.model);
-	if(!this.volume) this.volume = 1;
+	if(this.model != "")
+	{
+		_setmodel(this, this.model);
+	}
+	if(!this.volume)
+	{
+		this.volume = 1;
+	}
 	if(!this.modelindex)
 	{
 		setorigin(this, this.origin + this.mins);
@@ -163,8 +175,14 @@ void TargetMusic_Advance()
 {
 	// run AFTER all the thinks!
 	entity best = music_default;
-	if (music_target && time < music_target.lifetime) best = music_target;
-	if (music_trigger) best = music_trigger;
+	if (music_target && time < music_target.lifetime)
+	{
+		best = music_target;
+	}
+	if (music_trigger)
+	{
+		best = music_trigger;
+	}
 	LL_EACH(TargetMusic_list, it.noise, {
 		const float vol0 = (getsoundtime(it, CH_BGM_SINGLE) >= 0) ? it.lastvol : -1;
 		if (it == best)
@@ -269,12 +287,12 @@ void Ent_TriggerMusic_Remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 {
-	int f = ReadByte();
-	if(f & 4)
+	int sendflags = ReadByte();
+	if(sendflags & SF_MUSIC_ORIGIN)
 	{
 		this.origin = ReadVector();
 	}
-	if(f & 1)
+	if(sendflags & SF_TRIGGER_INIT)
 	{
 		this.modelindex = ReadShort();
 		if(this.modelindex)
@@ -301,7 +319,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 			_sound(this, CH_BGM_SINGLE, this.noise, 0, ATTEN_NONE);
 			if(getsoundtime(this, CH_BGM_SINGLE) < 0)
 			{
-				LOG_TRACEF("Cannot initialize sound %s", this.noise);
+				LOG_WARNF("Cannot initialize sound %s", this.noise);
 				strunzone(this.noise);
 				this.noise = string_null;
 			}

@@ -34,7 +34,7 @@
 //   target = targets to trigger when broken
 //   health = amount of damage it can take
 //   spawnflags:
-//     BREAKABLE_START_DISABLED: needs to be triggered to activate
+//     START_DISABLED: needs to be triggered to activate
 //     BREAKABLE_INDICATE_DAMAGE: indicate damage
 //     BREAKABLE_NODAMAGE: don't take direct damage (needs to be triggered to 'explode', then triggered again to restore)
 //     NOSPLASH: don't take splash damage
@@ -291,7 +291,7 @@ void func_breakable_reset(entity this)
 {
 	this.team = this.team_saved;
 	func_breakable_look_restore(this);
-	if(this.spawnflags & BREAKABLE_START_DISABLED)
+	if(this.spawnflags & START_DISABLED)
 		func_breakable_behave_destroyed(this);
 	else
 		func_breakable_behave_restore(this);
