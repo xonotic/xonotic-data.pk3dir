@@ -183,6 +183,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, dmg_force) \
 		FIELD_SCALAR(fld, dmg_radius) \
 		FIELD_SCALAR(fld, effects) \
+		FIELD_SCALAR(fld, falloff) \
 		FIELD_SCALAR(fld, flags) \
 		FIELD_SCALAR(fld, fog) \
 		FIELD_SCALAR(fld, frags) \
