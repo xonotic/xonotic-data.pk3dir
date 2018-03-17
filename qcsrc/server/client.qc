@@ -2807,8 +2807,8 @@ void PM_UpdateButtons(entity this, entity store)
 
 	bool typing = this.buttonchat;
 
-	store.button0 = this.button0;
-	store.button1 = (typing) ? 0 : this.button1;
+	store.button0 = (typing) ? 0 : this.button0;
+	//button1?!
 	store.button2 = (typing) ? 0 : this.button2;
 	store.button3 = (typing) ? 0 : this.button3;
 	store.button4 = this.button4;
