@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-03-04 20:57+0000\n"
+"PO-Revision-Date: 2018-03-16 06:43+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -8360,11 +8360,11 @@ msgstr "Беречь время процессора для других при�
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:129
 msgid "Show frames per second"
-msgstr "Показывать кол-во кадров в секунду (FPS)"
+msgstr "Показывать счётчик кадров (FPS)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:130
 msgid "Show your rendered frames per second"
-msgstr "Показывать кол-во отрисованных кадров в секунду"
+msgstr "Показывать количество отрисованных кадров в секунду"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:135
 msgid "Menu tooltips:"
