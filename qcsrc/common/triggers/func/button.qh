@@ -1,2 +1,4 @@
 #pragma once
-#include "../spawnflags.qh"
+
+
+const int BUTTON_DONTACCUMULATEDMG = BIT(7);

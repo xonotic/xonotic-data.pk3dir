@@ -1,5 +1,7 @@
 #pragma once
-#include "spawnflags.qh"
+
+
+const int PLAT_LOW_TRIGGER = BIT(0);
 
 .float dmgtime2;
 

@@ -137,7 +137,7 @@ void plat_trigger_use(entity this, entity actor, entity trigger)
 
 void plat_crush(entity this, entity blocker)
 {
-	if((this.spawnflags & PLAT_CRUSH) && (blocker.takedamage != DAMAGE_NO))
+	if((this.spawnflags & CRUSH) && (blocker.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
 		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');

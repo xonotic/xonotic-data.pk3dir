@@ -1,5 +1,5 @@
 #pragma once
-#include "spawnflags.qh"
+#include "defs.qh"
 
 .bool pushable;
 
@@ -46,10 +46,4 @@ void trigger_remove_generic(entity this);
 .float active;
 .string target;
 .string targetname;
-
-const int ACTIVE_NOT 		= 0;
-const int ACTIVE_ACTIVE 	= 1;
-const int ACTIVE_IDLE 		= 2;
-const int ACTIVE_BUSY 		= 2;
-const int ACTIVE_TOGGLE		= 3;
 #endif

@@ -2,6 +2,8 @@
 
 .float lifetime;
 
+const int SF_MUSIC_ORIGIN = BIT(2);
+
 #ifdef CSQC
 float music_disabled;
 entity music_default;

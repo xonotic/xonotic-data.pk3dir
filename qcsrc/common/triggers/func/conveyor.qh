@@ -1,6 +1,5 @@
 #pragma once
-#include "../spawnflags.qh"
-#include "../states.qh"
+#include "../defs.qh"
 
 IntrusiveList g_conveyed;
 STATIC_INIT(g_conveyed) { g_conveyed = IL_NEW(); }

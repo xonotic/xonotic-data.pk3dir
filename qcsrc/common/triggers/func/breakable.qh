@@ -1,7 +1,11 @@
 #pragma once
-#include "../spawnflags.qh"
-#include "../states.qh"
 
+
+const int BREAKABLE_INDICATE_DAMAGE = BIT(1);
+const int BREAKABLE_NODAMAGE = BIT(2);
+
+const int STATE_ALIVE = 0;
+const int STATE_BROKEN = 1;
 
 #ifdef SVQC
 spawnfunc(func_breakable);

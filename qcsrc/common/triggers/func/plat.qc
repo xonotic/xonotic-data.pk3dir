@@ -58,7 +58,7 @@ void plat_link(entity this)
 
 spawnfunc(func_plat)
 {
-	if (this.spawnflags & PLAT_CRUSH)
+	if (this.spawnflags & CRUSH)
 	{
 		this.dmg = 10000;
 	}

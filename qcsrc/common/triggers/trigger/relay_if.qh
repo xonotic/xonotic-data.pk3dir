@@ -1,1 +1,4 @@
 #pragma once
+
+
+const int RELAYIF_NEGATE = BIT(0);
