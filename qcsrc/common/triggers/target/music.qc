@@ -99,13 +99,10 @@ void TargetMusic_RestoreGame()
 //   fade_time
 // spawnflags:
 //   START_DISABLED
-// when triggered, it is disabled/enabled for everyone
+// can be disabled/enabled for everyone with relays
 bool trigger_music_SendEntity(entity this, entity to, int sendflags)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
-	sendflags &= ~0x80;
-	if(this.cnt)
-		sendflags |= 0x80;
 	WriteByte(MSG_ENTITY, sendflags);
 	if(sendflags & SF_MUSIC_ORIGIN)
 	{
@@ -129,18 +126,24 @@ bool trigger_music_SendEntity(entity this, entity to, int sendflags)
 		WriteByte(MSG_ENTITY, this.fade_rate * 16.0);
 		WriteString(MSG_ENTITY, this.noise);
 	}
+	if(sendflags & SF_TRIGGER_UPDATE)
+	{
+		WriteByte(MSG_ENTITY, this.active);
+	}
 	return true;
 }
 void trigger_music_reset(entity this)
 {
-	this.cnt = !(this.spawnflags & START_DISABLED);
-	this.SendFlags |= 0x80;
+	if(this.spawnflags & START_DISABLED)
+	{
+		this.setactive(this, ACTIVE_NOT);
+	}
+	else
+	{
+		this.setactive(this, ACTIVE_ACTIVE);
+	}
 }
-void trigger_music_use(entity this, entity actor, entity trigger)
-{
-	this.cnt = !this.cnt;
-	this.SendFlags |= 0x80;
-}
+
 spawnfunc(trigger_music)
 {
 	if(this.model != "")
@@ -156,10 +159,11 @@ spawnfunc(trigger_music)
 		setorigin(this, this.origin + this.mins);
 		setsize(this, '0 0 0', this.maxs - this.mins);
 	}
-	trigger_music_reset(this);
 
-	this.use = trigger_music_use;
+	this.setactive = generic_netlinked_setactive;
+	this.use = generic_netlinked_legacy_use; // backwards compatibility
 	this.reset = trigger_music_reset;
+	this.reset(this);
 
 	Net_LinkEntity(this, false, 0, trigger_music_SendEntity);
 }
@@ -271,6 +275,10 @@ void Net_TargetMusic()
 
 void Ent_TriggerMusic_Think(entity this)
 {
+	if(this.active == ACTIVE_NOT)
+	{
+		return;
+	}
 	vector org = (csqcplayer) ? csqcplayer.origin : view_origin;
 	if(WarpZoneLib_BoxTouchesBrush(org + STAT(PL_MIN), org + STAT(PL_MAX), this, NULL))
 	{
@@ -325,10 +333,13 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 			}
 		}
 	}
+	if(sendflags & SF_TRIGGER_UPDATE)
+	{
+		this.active = ReadByte();
+	}
 
 	setorigin(this, this.origin);
 	setsize(this, this.mins, this.maxs);
-	this.cnt = 1;
 	this.draw = Ent_TriggerMusic_Think;
 	if(isnew)
 	{
