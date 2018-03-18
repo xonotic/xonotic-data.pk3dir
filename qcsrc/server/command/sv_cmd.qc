@@ -1138,7 +1138,7 @@ void GameCommand_moveplayer(float request, float argc)
 
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
-								if (MoveToTeam(client, team_id, 6))
+								if (MoveToTeam(client, Team_TeamToIndex(team_id), 6))
 								{
 									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
 									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
@@ -1421,8 +1421,11 @@ void GameCommand_shuffleteams(float request)
 
 			int team_index = 0;
 			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
-				int target_team_number = Team_IndexToTeam(team_index + 1);
-				if (it.team != target_team_number) MoveToTeam(it, target_team_number, 6);
+				int target_team_index = team_index + 1;
+				if (Entity_GetTeamIndex(it) != target_team_index)
+				{
+					MoveToTeam(it, target_team_index, 6);
+				}
 				team_index = (team_index + 1) % number_of_teams;
 			});
 

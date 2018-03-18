@@ -222,6 +222,22 @@ bool SetPlayerTeam(entity player, int destination_team_index,
 	return true;
 }
 
+bool MoveToTeam(entity client, int team_index, int type)
+{
+	int lockteams_backup = lockteams;  // backup any team lock
+	lockteams = 0;  // disable locked teams
+	TeamchangeFrags(client);  // move the players frags
+	if (!Player_SetTeamIndex(client, team_index))
+	{
+		lockteams = lockteams_backup;  // restore the team lock
+		return false;
+	}
+	KillPlayerForTeamChange(client);
+	lockteams = lockteams_backup;  // restore the team lock
+	LogTeamchange(client.playerid, client.team, type);
+	return true;
+}
+
 void KillPlayerForTeamChange(entity player)
 {
 	if (IS_DEAD(player))
