@@ -34,6 +34,7 @@ const int TEAM_NOT_ALLOWED = -1;
 .float m_team_score; ///< The score of the team.
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_bots; ///< Number of bots in a team.
+.int m_num_players_alive; ///< Number of alive players in a team.
 .entity m_lowest_human; ///< Human with the lowest score in a team.
 .entity m_lowest_bot; ///< Bot with the lowest score in a team.
 
@@ -73,6 +74,29 @@ float Team_GetTeamScore(entity team_)
 void Team_SetTeamScore(entity team_, float score)
 {
 	team_.m_team_score = score;
+}
+
+int Team_GetNumberOfAlivePlayers(entity team_)
+{
+	return team_.m_num_players_alive;
+}
+
+void Team_SetNumberOfAlivePlayers(entity team_, int number)
+{
+	team_.m_num_players_alive = number;
+}
+
+int Team_GetNumberOfAliveTeams()
+{
+	int result = 0;
+	for (int i = 0; i < NUM_TEAMS; ++i)
+	{
+		if (g_team_entities[i].m_num_players_alive > 0)
+		{
+			++result;
+		}
+	}
+	return result;
 }
 
 void TeamchangeFrags(entity e)
@@ -226,9 +250,24 @@ void setcolor(entity this, int clr)
 #endif
 }
 
+bool Entity_HasValidTeam(entity this)
+{
+	return Team_IsValidTeam(this.team);
+}
+
 int Entity_GetTeamIndex(entity this)
 {
 	return Team_TeamToIndex(this.team);
+}
+
+entity Entity_GetTeam(entity this)
+{
+	int index = Entity_GetTeamIndex(this);
+	if (!Team_IsValidIndex(index))
+	{
+		return NULL;
+	}
+	return Team_GetTeamFromIndex(index);
 }
 
 void SetPlayerColors(entity player, float _color)
