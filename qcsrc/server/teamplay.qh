@@ -1,8 +1,5 @@
 #pragma once
 
-string cache_mutatormsg;
-string cache_lastmutatormsg;
-
 /// \brief Returns the global team entity at the given index.
 /// \param[in] index Index of the team.
 /// \return Global team entity at the given index.
@@ -55,14 +52,6 @@ int Team_GetNumberOfTeamsWithControlPoints();
 void TeamchangeFrags(entity e);
 
 void LogTeamchange(float player_id, float team_number, float type);
-
-void default_delayedinit(entity this);
-
-void InitGameplayMode();
-
-string GetClientVersionMessage(entity this);
-
-string getwelcomemessage(entity this);
 
 void setcolor(entity this, int clr);
 
