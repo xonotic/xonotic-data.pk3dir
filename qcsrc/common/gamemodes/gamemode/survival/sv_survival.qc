@@ -796,20 +796,24 @@ void Surv_RemovePlayerFromTeam(entity player, int team_index)
 void Surv_UpdateTeamStats()
 {
 	// Debug stuff
+	int yellow_alive;
+	int pink_alive;
 	if (surv_attacker_team == 1)
 	{
-		yellowalive = surv_num_attackers;
-		pinkalive = surv_num_defenders;
+		yellow_alive = surv_num_attackers;
+		pink_alive = surv_num_defenders;
 	}
 	else
 	{
-		pinkalive = surv_num_attackers;
-		yellowalive = surv_num_defenders;
+		pink_alive = surv_num_attackers;
+		yellow_alive = surv_num_defenders;
 	}
+	Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(3), yellow_alive);
+	Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(4), pink_alive);
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(YELLOWALIVE, it) = yellowalive;
-		STAT(PINKALIVE, it) = pinkalive;
+		STAT(YELLOWALIVE, it) = yellow_alive;
+		STAT(PINKALIVE, it) = pink_alive;
 	});
 }
 
@@ -979,21 +983,25 @@ void Surv_CountAlivePlayers()
 void Surv_UpdateAliveStats()
 {
 	// Debug stuff
+	int red_alive;
+	int blue_alive;
 	if (surv_attacker_team == 1)
 	{
-		redalive = surv_num_attackers_alive;
-		bluealive = surv_num_defenders_alive;
+		red_alive = surv_num_attackers_alive;
+		blue_alive = surv_num_defenders_alive;
 	}
 	else
 	{
-		bluealive = surv_num_attackers_alive;
-		redalive = surv_num_defenders_alive;
+		blue_alive = surv_num_attackers_alive;
+		red_alive = surv_num_defenders_alive;
 	}
+	Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(1), red_alive);
+	Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(2), blue_alive);
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
 		STAT(SURV_DEFENDERS_ALIVE, it) = surv_num_defenders_alive;
-		STAT(REDALIVE, it) = redalive;
-		STAT(BLUEALIVE, it) = bluealive;
+		STAT(REDALIVE, it) = red_alive;
+		STAT(BLUEALIVE, it) = blue_alive;
 	});
 	Surv_UpdateDefenderHealthStat();
 }
@@ -1835,10 +1843,14 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 	{
 		STAT(SURV_DEFENDER_TEAM, player) = surv_defender_team;
 		STAT(SURV_DEFENDERS_ALIVE, player) = surv_num_defenders_alive;
-		STAT(REDALIVE, player) = redalive;
-		STAT(BLUEALIVE, player) = bluealive;
-		STAT(YELLOWALIVE, player) = yellowalive;
-		STAT(PINKALIVE, player) = pinkalive;
+		STAT(REDALIVE, player) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(1));
+		STAT(BLUEALIVE, player) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, player) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, player) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(4));
 	}
 	if (player.surv_role == SURVIVAL_ROLE_NONE)
 	{
