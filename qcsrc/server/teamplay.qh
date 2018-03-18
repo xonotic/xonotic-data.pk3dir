@@ -38,7 +38,19 @@ void Team_SetNumberOfAlivePlayers(entity team_, int number);
 /// \return Number of alive teams.
 int Team_GetNumberOfAliveTeams();
 
-int redowned, blueowned, yellowowned, pinkowned;
+/// \brief Returns the number of control points owned by a team.
+/// \param[in] team_ Team entity.
+/// \return Number of control points owned by a team.
+int Team_GetNumberOfControlPoints(entity team_);
+
+/// \brief Sets the number of control points owned by a team.
+/// \param[in,out] team_ Team entity.
+/// \param[in] number Number of control points to set.
+void Team_SetNumberOfControlPoints(entity team_, int number);
+
+/// \brief Returns the number of teams that own control points.
+/// \return Number of teams that own control points.
+int Team_GetNumberOfTeamsWithControlPoints();
 
 void TeamchangeFrags(entity e);
 

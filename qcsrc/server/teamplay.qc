@@ -35,6 +35,7 @@ const int TEAM_NOT_ALLOWED = -1;
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_bots; ///< Number of bots in a team.
 .int m_num_players_alive; ///< Number of alive players in a team.
+.int m_num_control_points; ///< Number of control points owned by a team.
 .entity m_lowest_human; ///< Human with the lowest score in a team.
 .entity m_lowest_bot; ///< Bot with the lowest score in a team.
 
@@ -92,6 +93,29 @@ int Team_GetNumberOfAliveTeams()
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
 		if (g_team_entities[i].m_num_players_alive > 0)
+		{
+			++result;
+		}
+	}
+	return result;
+}
+
+int Team_GetNumberOfControlPoints(entity team_)
+{
+	return team_.m_num_control_points;
+}
+
+void Team_SetNumberOfControlPoints(entity team_, int number)
+{
+	team_.m_num_control_points = number;
+}
+
+int Team_GetNumberOfTeamsWithControlPoints()
+{
+	int result = 0;
+	for (int i = 0; i < NUM_TEAMS; ++i)
+	{
+		if (g_team_entities[i].m_num_control_points > 0)
 		{
 			++result;
 		}

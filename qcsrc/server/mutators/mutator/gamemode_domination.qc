@@ -295,47 +295,51 @@ void dom_controlpoint_setup(entity this)
 	WaypointSprite_SpawnFixed(WP_DomNeut, this.origin + '0 0 32', this, sprite, RADARICON_DOMPOINT);
 }
 
-float total_controlpoints;
+int total_control_points;
 void Domination_count_controlpoints()
 {
-	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
+	total_control_points = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfControlPoints(Team_GetTeamFromIndex(i), 0);
+	}
 	IL_EACH(g_dompoints, true,
 	{
-		++total_controlpoints;
-		redowned += (it.goalentity.team == NUM_TEAM_1);
-		blueowned += (it.goalentity.team == NUM_TEAM_2);
-		yellowowned += (it.goalentity.team == NUM_TEAM_3);
-		pinkowned += (it.goalentity.team == NUM_TEAM_4);
+		++total_control_points;
+		entity team_ = Entity_GetTeam(it.goalentity);
+		int num_control_points = Team_GetNumberOfControlPoints(team_);
+		++num_control_points;
+		Team_SetNumberOfControlPoints(team_, num_control_points);
 	});
 }
 
-float Domination_GetWinnerTeam()
+int Domination_GetWinnerTeam()
 {
-	float winner_team = 0;
-	if(redowned == total_controlpoints)
+	int winner_team = 0;
+	if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(1)) ==
+		total_control_points)
+	{
 		winner_team = NUM_TEAM_1;
-	if(blueowned == total_controlpoints)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
 	}
-	if(yellowowned == total_controlpoints)
+	for (int i = 2; i <= NUM_TEAMS; ++i)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
+		if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(i)) ==
+			total_control_points)
+		{
+			if (winner_team != 0)
+			{
+				return 0;
+			}
+			winner_team = Team_IndexToTeam(i);
+		}
 	}
-	if(pinkowned == total_controlpoints)
+	if (winner_team)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
 		return winner_team;
+	}
 	return -1; // no control points left?
 }
 
-#define DOM_OWNED_CONTROLPOINTS() ((redowned > 0) + (blueowned > 0) + (yellowowned > 0) + (pinkowned > 0))
-#define DOM_OWNED_CONTROLPOINTS_OK() (DOM_OWNED_CONTROLPOINTS() < total_controlpoints)
 float Domination_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
