@@ -55,10 +55,6 @@ void Team_SetNumberOfControlPoints(entity team_, int number);
 /// \return Number of teams that own control points.
 int Team_GetNumberOfTeamsWithControlPoints();
 
-void TeamchangeFrags(entity e);
-
-void LogTeamchange(float player_id, float team_number, float type);
-
 // ======================= Entity specific API ================================
 
 void setcolor(entity this, int clr);
@@ -100,11 +96,22 @@ bool SetPlayerTeam(entity player, int destination_team_index,
 /// \param[in] team_index Index of the team.
 /// \param[in] type ???
 /// \return True on success, false otherwise.
-bool MoveToTeam(entity client, int team_index, float type);
+bool MoveToTeam(entity client, int team_index, int type);
 
 /// \brief Kills player as a result of team change.
 /// \param[in,out] player Player to kill.
 void KillPlayerForTeamChange(entity player);
+
+enum
+{
+	TEAM_CHANGE_CONNECT = 1,
+	TEAM_CHANGE_AUTO = 2,
+	TEAM_CHANGE_MANUAL = 3,
+	TEAM_CHANGE_SPECTATOR = 4,
+	TEAM_CHANGE_AUTO_RELAXED = 99
+};
+
+void LogTeamchange(float player_id, float team_number, int type);
 
 // ========================= Team balance API =================================
 

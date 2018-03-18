@@ -123,22 +123,6 @@ int Team_GetNumberOfTeamsWithControlPoints()
 	return result;
 }
 
-void TeamchangeFrags(entity e)
-{
-	PlayerScore_Clear(e);
-}
-
-void LogTeamchange(float player_id, float team_number, float type)
-{
-	if(!autocvar_sv_eventlog)
-		return;
-
-	if(player_id < 1)
-		return;
-
-	GameLogEcho(strcat(":team:", ftos(player_id), ":", ftos(team_number), ":", ftos(type)));
-}
-
 void setcolor(entity this, int clr)
 {
 #if 0
@@ -211,7 +195,7 @@ bool SetPlayerTeam(entity player, int destination_team_index,
 	{
 		return false;
 	}
-	LogTeamchange(player.playerid, player.team, 3);  // log manual team join
+	LogTeamchange(player.playerid, player.team, TEAM_CHANGE_MANUAL);
 	if (no_print)
 	{
 		return true;
@@ -226,7 +210,7 @@ bool MoveToTeam(entity client, int team_index, int type)
 {
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
-	TeamchangeFrags(client);  // move the players frags
+	PlayerScore_Clear(client);
 	if (!Player_SetTeamIndex(client, team_index))
 	{
 		lockteams = lockteams_backup;  // restore the team lock
@@ -250,6 +234,17 @@ void KillPlayerForTeamChange(entity player)
 	}
 	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, DMG_NOWEP,
 		player.origin, '0 0 0');
+}
+
+void LogTeamchange(float player_id, float team_number, int type)
+{
+	if(!autocvar_sv_eventlog)
+		return;
+
+	if(player_id < 1)
+		return;
+
+	GameLogEcho(strcat(":team:", ftos(player_id), ":", ftos(team_number), ":", ftos(type)));
 }
 
 entity TeamBalance_CheckAllowedTeams(entity for_whom)
@@ -687,7 +682,7 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 		if (Team_IsValidIndex(selected_team_index))
 		{
 			Player_SetTeamIndex(this, selected_team_index);
-			LogTeamchange(this.playerid, this.team, 99);
+			LogTeamchange(this.playerid, this.team, TEAM_CHANGE_AUTO_RELAXED);
 			TeamBalance_Destroy(balance);
 			return;
 		}
@@ -700,9 +695,9 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 	}
 	int best_team_index = TeamBalance_FindBestTeam(balance, this, true);
 	int old_team_index = Team_TeamToIndex(this.team);
-	TeamchangeFrags(this);
+	PlayerScore_Clear(this);
 	Player_SetTeamIndex(this, best_team_index);
-	LogTeamchange(this.playerid, this.team, 2); // log auto join
+	LogTeamchange(this.playerid, this.team, TEAM_CHANGE_AUTO);
 	if ((old_team_index != -1) && !IS_BOT_CLIENT(this))
 	{
 		TeamBalance_AutoBalanceBots(balance, old_team_index, best_team_index);
@@ -967,7 +962,7 @@ void SV_ChangeTeam(entity this, float _color)
 	if (IS_PLAYER(this) && source_team_index != destination_team_index)
 	{
 		// reduce frags during a team change
-		TeamchangeFrags(this);
+		PlayerScore_Clear(this);
 	}
 	if (!SetPlayerTeam(this, destination_team_index, source_team_index,
 		!IS_CLIENT(this)))
