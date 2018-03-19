@@ -148,6 +148,19 @@ void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 	{
 		return;
 	}
+	bool forbid = MUTATOR_CALLHOOK(GiveResourceWithLimit, receiver,
+		resource_type, amount, limit);
+	if (forbid)
+	{
+		return;
+	}
+	resource_type = M_ARGV(1, int);
+	amount = M_ARGV(2, float);
+	limit = M_ARGV(3, float);
+	if (amount <= 0)
+	{
+		return;
+	}
 	float current_amount = GetResourceAmount(receiver, resource_type);
 	if (current_amount + amount > limit)
 	{

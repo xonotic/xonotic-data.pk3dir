@@ -690,6 +690,19 @@ for resource types. Return true to forbid giving. */
 	/**/
 MUTATOR_HOOKABLE(GiveResource, EV_GiveResource);
 
+/** Called when entity is being given some resource with specified limit. See
+RESOURCE_* constants for resource types. Return true to forbid giving. */
+#define EV_GiveResourceWithLimit(i, o) \
+	/** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
+	/** resource type */ i(int, MUTATOR_ARGV_1_int) \
+	/**/                 o(int, MUTATOR_ARGV_1_int) \
+	/** amount */        i(float, MUTATOR_ARGV_2_float) \
+	/**/                 o(float, MUTATOR_ARGV_2_float) \
+	/** limit */         i(float, MUTATOR_ARGV_3_float) \
+	/**/                 o(float, MUTATOR_ARGV_3_float) \
+	/**/
+MUTATOR_HOOKABLE(GiveResourceWithLimit, EV_GiveResourceWithLimit);
+
 /** called at when a player connect */
 #define EV_ClientConnect(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
