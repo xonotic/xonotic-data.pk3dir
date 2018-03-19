@@ -6,6 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include "g_subs.qh"
+#include "mutators/events.qh"
 #include <common/weapons/all.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
