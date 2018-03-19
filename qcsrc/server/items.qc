@@ -13,6 +13,34 @@
 /// this item is on the ground.
 .bool m_isexpiring;
 
+entity Item_FindDefinition(string class_name)
+{
+	FOREACH(Items, it.m_canonical_spawnfunc == class_name,
+	{
+		return it;
+	});
+	FOREACH(Weapons, it.m_canonical_spawnfunc == class_name,
+	{
+		return it.m_pickup;
+	});
+	return NULL;
+}
+
+bool Item_IsAllowed(string class_name)
+{
+	entity definition = Item_FindDefinition(class_name);
+	if (definition == NULL)
+	{
+		return false;
+	}
+	return Item_IsDefinitionAllowed(definition);
+}
+
+bool Item_IsDefinitionAllowed(entity definition)
+{
+	return !MUTATOR_CALLHOOK(FilterItemDefinition, definition);
+}
+
 entity Item_Create(string class_name, vector position, bool no_align)
 {
 	entity item = spawn();

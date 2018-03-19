@@ -172,7 +172,8 @@ string RandomItems_GetRandomVanillaItemClassName(string prefix)
 string RandomItems_GetRandomInstagibItemClassName(string prefix)
 {
 	RandomSelection_Init();
-	FOREACH(Items, it.spawnflags & ITEM_FLAG_INSTAGIB,
+	FOREACH(Items, it.spawnflags & ITEM_FLAG_INSTAGIB &&
+		Item_IsDefinitionAllowed(it),
 	{
 		string cvar_name = sprintf("g_%s_%s_probability", prefix,
 			it.m_canonical_spawnfunc);
@@ -190,7 +191,8 @@ string RandomItems_GetRandomOverkillItemClassName(string prefix)
 {
 	RandomSelection_Init();
 	FOREACH(Items, (it.spawnflags & ITEM_FLAG_OVERKILL) &&
-		!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED),
+		!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED) &&
+		Item_IsDefinitionAllowed(it),
 	{
 		string cvar_name = sprintf("g_%s_overkill_%s_probability", prefix,
 			it.m_canonical_spawnfunc);
@@ -242,7 +244,8 @@ string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 	.bool item_property)
 {
 	RandomSelection_Init();
-	FOREACH(Items, it.item_property && (it.spawnflags & ITEM_FLAG_NORMAL),
+	FOREACH(Items, it.item_property && (it.spawnflags & ITEM_FLAG_NORMAL) &&
+		Item_IsDefinitionAllowed(it),
 	{
 		string cvar_name = sprintf("g_%s_%s_probability", prefix,
 			it.m_canonical_spawnfunc);

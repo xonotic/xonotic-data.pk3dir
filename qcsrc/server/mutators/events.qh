@@ -229,6 +229,14 @@ MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
 
+/** Check if items having the given definition are allowed to spawn.
+ *  Return true to disallow spawning.
+ */
+#define EV_FilterItemDefinition(i, o) \
+    /** item        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(FilterItemDefinition, EV_FilterItemDefinition);
+
 /**
  * checks if the current item may be spawned (.items and .weapons may be read and written to, as well as the ammo_ fields)
  * return error to request removal
