@@ -182,8 +182,6 @@ float default_weapon_alpha;
 
 string gamemode_name;
 
-float startitem_failed;
-
 string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
