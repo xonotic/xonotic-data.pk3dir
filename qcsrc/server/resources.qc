@@ -157,7 +157,7 @@ void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
 	limit = M_ARGV(3, float);
-	if (amount <= 0)
+	if (amount == 0)
 	{
 		return;
 	}
