@@ -8,6 +8,7 @@
 #endif
 
 #ifdef SVQC
+#include <server/defs.qh>
 #include <server/items.qh>
 #endif
 
@@ -56,7 +57,7 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 	{ \
 		if (!Item_IsDefinitionAllowed(item)) \
 		{ \
-			startitem_failed = true; \
+			/*startitem_failed = true;*/ \
 			delete(this); \
 			return; \
 		} \
