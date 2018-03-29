@@ -680,11 +680,13 @@ constants for resource types. Return true to forbid the change. */
 MUTATOR_HOOKABLE(SetResourceAmount, EV_SetResourceAmount);
 
 /** Called after the amount of resource of an entity has changed. See RESOURCE_*
-constants for resource types. */
+constants for resource types. Amount wasted is the amount of resource that is
+above resource limit so it was not given. */
 #define EV_ResourceAmountChanged(i, o) \
 	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
 	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
 	/** amount */         i(float, MUTATOR_ARGV_2_float) \
+	/** amount wasted */  i(float, MUTATOR_ARGV_3_float) \
 	/**/
 MUTATOR_HOOKABLE(ResourceAmountChanged, EV_ResourceAmountChanged);
 
