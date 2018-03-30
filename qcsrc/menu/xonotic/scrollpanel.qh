@@ -4,13 +4,19 @@
 #include "tab.qh"
 CLASS(XonoticScrollPanel, XonoticListBox)
 	/** container for single child panel */
-	ATTRIB(XonoticScrollPanel, currentPanel, entity, NEW(XonoticTab));
+	ATTRIB(XonoticScrollPanel, currentPanel, entity);
 	ATTRIB(XonoticScrollPanel, nItems, int, 1);
 	ATTRIB(XonoticScrollPanel, selectionDoesntMatter, bool, true);
 	ATTRIB(XonoticScrollPanel, itemHeight, float, 1);
 	/** number of rows to show at once */
 	ATTRIB(XonoticScrollPanel, viewportHeight, float, 12);
 	ATTRIB(XonoticScrollPanel, alphaBG, float, 0);
+
+	INIT(XonoticScrollPanel) {
+		entity p = NEW(XonoticTab);
+		this.currentPanel = p;
+		Container_addItem(this, p, '0 0 0', '1 1 0', 1);
+	}
 
 	METHOD(XonoticScrollPanel, getItemAtPos, float(XonoticScrollPanel this, float pos)) { return 0; }
 	METHOD(XonoticScrollPanel, getItemHeight, float(XonoticScrollPanel this, int i)) { return this.itemHeight; }
