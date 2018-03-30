@@ -15,6 +15,7 @@
 #include <server/ipban.qh>
 #include <server/item_key.qh>
 #include <server/items.qh>
+#include <server/map_background.qh>
 #include <server/mapvoting.qh>
 #include <server/matrix.qh>
 #include <server/miscfunctions.qh>

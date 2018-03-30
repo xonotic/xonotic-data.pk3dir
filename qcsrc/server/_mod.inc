@@ -15,6 +15,7 @@
 #include <server/ipban.qc>
 #include <server/item_key.qc>
 #include <server/items.qc>
+#include <server/map_background.qc>
 #include <server/mapvoting.qc>
 #include <server/matrix.qc>
 #include <server/miscfunctions.qc>

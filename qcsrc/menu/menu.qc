@@ -245,6 +245,10 @@ void m_keyup(float key, float ascii)
 	if (key == K_SHIFT) menuShiftState &= ~S_SHIFT;
 }
 
+string autocvar_map_background, map_background;
+int autocvar_map_background_state;
+#define map_background_active (map_background && autocvar_map_background_state && (gamestatus & GAME_ISSERVER))
+
 void m_keydown(float key, float ascii)
 {
 	if (!menuInitialized) return;
@@ -276,8 +280,15 @@ void m_keydown(float key, float ascii)
 		{
 			// disable menu on unhandled ESC
 			if (key == K_ESCAPE)
-				if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))  // don't back out to console only
-					m_hide();
+            {
+                if (map_background_active) {
+                    // prevent playing the background map
+                } else if (!(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))) {
+                    // don't back out to console only
+                } else {
+                    m_hide();
+                }
+            }
 		}
 	}
 	if (key >= K_MOUSE1 && key <= K_MOUSE3)
@@ -678,6 +689,22 @@ void m_tooltip(vector pos)
 float autocvar_menu_force_on_disconnection;
 void m_draw(float width, float height)
 {
+    bool map_background_change = false;
+    if (autocvar_map_background != map_background) {
+        map_background_change = true;
+        map_background && strunzone(map_background);
+        map_background = strzone(autocvar_map_background);
+    }
+    if (map_background_change || !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))) {
+        if (map_background) {
+            cvar_set("map_background_state", "2");
+            localcmd(sprintf("\nmap %s\n", map_background));
+        }
+    }
+    if (map_background_active) {
+        m_toggle(true);
+    }
+
 	if (autocvar_menu_force_on_disconnection > 0)
 	{
 		static float connected_time;
