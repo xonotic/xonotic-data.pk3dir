@@ -110,6 +110,7 @@ METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this))
         adding.resizeNotify(adding, '0 0 0', c.size, '0 0 0', c.size);
         c.addItem(c, adding, '0 0 0', '1 1 0', 1);
 		s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
+		s.showNotify(s);
     }
 }
 METHOD(XonoticGameSettingsTab, fill, void(entity this))

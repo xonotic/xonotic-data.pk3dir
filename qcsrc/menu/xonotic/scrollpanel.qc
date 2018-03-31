@@ -6,6 +6,12 @@ METHOD(XonoticScrollPanel, drawListBoxItem, void(XonoticScrollPanel this, int i,
 	p.draw(p);
 }
 
+METHOD(XonoticScrollPanel, showNotify, void(XonoticScrollPanel this))
+{
+	XonoticTab p = this.currentPanel;
+	p.showNotify(p);
+}
+
 METHOD(XonoticScrollPanel, resizeNotify, void(XonoticScrollPanel this, vector relOrigin, vector relSize, vector absOrigin, vector absSize))
 {
 	SUPER(XonoticScrollPanel).resizeNotify(this, relOrigin, relSize, absOrigin, absSize);
