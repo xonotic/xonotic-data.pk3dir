@@ -92,6 +92,14 @@ CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source) {
     this.refilter(this);
 }
 
+METHOD(XonoticGameSettingsTab, itemFromPoint, entity(entity this, vector pos))
+{
+	entity it = SUPER(XonoticGameSettingsTab).itemFromPoint(this, pos);
+	if (it == this.currentPanel)
+		return it.currentPanel; // skip XonoticScrollPanel and XonoticTab, return XonoticGameXxxSettingsTab
+	return it;
+}
+
 METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this))
 {
     entity s = this.currentPanel;
