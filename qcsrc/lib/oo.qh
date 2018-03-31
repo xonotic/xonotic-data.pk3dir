@@ -237,7 +237,7 @@ STATIC_INIT(RegisterClasses)
 
 #define ATTRIB(...) EVAL_ATTRIB(OVERLOAD_(ATTRIB, __VA_ARGS__))
 #define EVAL_ATTRIB(...) __VA_ARGS__
-#define ATTRIB_3(cname, name, type) INIT(cname) {} class(cname) .type name
+#define ATTRIB_3(cname, name, type) class(cname) .type name
 #define ATTRIB_4(cname, name, type, val) \
 	ATTRIB_3(cname, name, type); \
 	INIT(cname) \
