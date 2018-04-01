@@ -5,7 +5,7 @@
 // ==============================================
 
 #include <common/command/_mod.qh>
-#include "cl_cmd.qh"
+#include "impulse.qh"
 
 #include "../autocvars.qh"
 #include "../defs.qh"
@@ -655,6 +655,9 @@ bool CSQC_ConsoleCommand(string command)
 {
 	int argc = tokenize_console(command);
 	string s = strtolower(argv(0));
+	if (s == "impulse" && impulse_handle(argv(1))) {
+		return true;
+	}
 	// Return value should be true if CSQC handled the command, otherwise return false to have the engine handle it.
 	return ConsoleCommand_macro_normal(s, argc)
 	       || ConsoleCommand_macro_movement(s, argc)

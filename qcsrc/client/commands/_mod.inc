@@ -2,3 +2,4 @@
 #ifdef CSQC
     #include <client/commands/cl_cmd.qc>
 #endif
+#include <client/commands/impulse.qc>

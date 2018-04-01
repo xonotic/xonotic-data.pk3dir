@@ -1,0 +1,10 @@
+#pragma once
+
+/** impulse is an extra byte sent in input packets */
+int impulse_var;
+
+bool impulse_handle(string arg);
+
+void impulse_set(int value);
+
+void impulse_frame_end();

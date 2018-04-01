@@ -1,11 +1,12 @@
 #include "view.qh"
 
-#include "autocvars.qh"
-#include "miscfunctions.qh"
 #include "announcer.qh"
-#include "hud/_mod.qh"
+#include "autocvars.qh"
 #include "mapvoting.qh"
+#include "miscfunctions.qh"
 #include "shownames.qh"
+#include "commands/impulse.qh"
+#include "hud/_mod.qh"
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 
@@ -2438,6 +2439,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	cl_notice_run();
 	unpause_update();
+	impulse_frame_end();
 	Net_Flush();
 
 	// let's reset the view back to normal for the end
