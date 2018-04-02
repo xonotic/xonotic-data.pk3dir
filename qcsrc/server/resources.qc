@@ -91,9 +91,16 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 		amount = max_amount;
 	}
 	.float resource_field = GetResourceField(resource_type);
-	e.(resource_field) = amount;
-	MUTATOR_CALLHOOK(ResourceAmountChanged, e, resource_type, amount,
-		amount_wasted);
+	if (e.(resource_field) != amount)
+	{
+		e.(resource_field) = amount;
+		MUTATOR_CALLHOOK(ResourceAmountChanged, e, resource_type, amount);
+	}
+	if (amount_wasted == 0)
+	{
+		return;
+	}
+	MUTATOR_CALLHOOK(ResourceWasted, e, resource_type, amount_wasted);
 }
 
 void GiveResource(entity receiver, int resource_type, float amount)
