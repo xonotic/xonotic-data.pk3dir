@@ -12,7 +12,7 @@ void W_HLAC_Touch(entity this, entity toucher)
 
 	isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), 
+	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius),
 						NULL, NULL, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, this.weaponentity_fld, toucher);
 
 	delete(this);

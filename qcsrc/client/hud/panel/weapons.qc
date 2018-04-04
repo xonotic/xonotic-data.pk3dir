@@ -30,7 +30,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 	int nHidden = 0; \
 	FOREACH(Weapons, it != WEP_Null, { \
 		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
-		if (it.spawnflags & WEP_FLAG_HIDDEN || it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1; \
+		if ((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) nHidden += 1; \
 	}); \
 	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
 	columns = table_size.x; \
@@ -407,7 +407,7 @@ void HUD_Weapons()
 		}
 		else
 		{
-			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED && !(weapons_stat & WepSet_FromWeapon(it)))
+			if (((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) && !(weapons_stat & WepSet_FromWeapon(it)))
 				continue;
 		}
 
