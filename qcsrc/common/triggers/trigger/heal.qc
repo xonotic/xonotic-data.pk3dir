@@ -13,7 +13,7 @@ void trigger_heal_touch(entity this, entity toucher)
 		if (!IS_DEAD(toucher))
 		if (toucher.triggerhealtime < time)
 		{
-			bool is_trigger = !boolean(!this.nottargeted && this.targetname != "");
+			bool is_trigger = this.targetname == "";
 			if(is_trigger)
 				EXACTTRIGGER_TOUCH(this, toucher);
 			if(this.delay > 0)

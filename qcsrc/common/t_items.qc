@@ -663,8 +663,6 @@ void Item_ScheduleRespawn(entity e)
 AUTOCVAR(g_pickup_respawntime_initial_random, int, 1,
 	"For items that don't start spawned: 0: spawn after their normal respawntime; 1: spawn after `random * respawntime` with the *same* random; 2: same as 1 but each item has separate random");
 
-float shared_random;
-STATIC_INIT(shared_random) { shared_random = random(); }
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
@@ -675,18 +673,26 @@ void Item_ScheduleInitialRespawn(entity e)
 		// range: respawntime .. respawntime + respawntimejitter
 		spawn_in = e.respawntime + random() * e.respawntimejitter;
 	}
-	else if (autocvar_g_pickup_respawntime_initial_random == 1)
+	else
 	{
+		float rnd;
+		if (autocvar_g_pickup_respawntime_initial_random == 1)
+		{
+			static float shared_random = 0;
+			// NOTE this code works only if items are scheduled at the same time (normal case)
+			// NOTE2 random() can't return exactly 1 so this check always work as intended
+			if (!shared_random || floor(time) > shared_random)
+				shared_random = floor(time) + random();
+			rnd = shared_random - floor(time);
+		}
+		else
+			rnd = random();
+
 		// range:
 		// if respawntime >= ITEM_RESPAWN_TICKS: ITEM_RESPAWN_TICKS .. respawntime + respawntimejitter
 		// else: 0 .. ITEM_RESPAWN_TICKS
 		// this is to prevent powerups spawning unexpectedly without waypoints
-		spawn_in = ITEM_RESPAWN_TICKS + shared_random * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
-	}
-	else
-	{
-		// range: same as 1
-		spawn_in = ITEM_RESPAWN_TICKS + random() * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
+		spawn_in = ITEM_RESPAWN_TICKS + rnd * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
 	}
 
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : spawn_in));
