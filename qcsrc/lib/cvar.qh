@@ -31,6 +31,27 @@ string MakeConsoleSafe(string input)
 }
 
 ERASEABLE
+string console_encode(string input)
+{
+	input = strreplace("$", "$$", input);
+	input = strreplace("\r", "\\r", input);
+	input = strreplace("\n", "\\n", input);
+	input = strreplace("\"", "\\\"", input);
+	input = sprintf("\"%s\"", input);
+	return input;
+}
+
+ERASEABLE
+string console_decode(string input)
+{
+	input = substring(input, 1, -2);
+	input = strreplace("\\r", "\r", input);
+	input = strreplace("\\n", "\n", input);
+	input = strreplace("\\\"", "\"", input);
+	return input;
+}
+
+ERASEABLE
 void cvar_describe(string name, string desc)
 {
 	localcmd(sprintf("\nset %1$s \"$%1$s\" \"%2$s\"\n", name, MakeConsoleSafe(desc)));

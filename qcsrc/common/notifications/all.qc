@@ -1259,7 +1259,12 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 
 		case MSG_INFO:
 		{
-			print(
+			#ifdef CSQC
+			void(string) echo = CSQC_Parse_Print;
+			#else
+			void(string, ...) echo = print;
+			#endif
+			echo(
 				Local_Notification_sprintf(
 					notif.nent_string,
 					notif.nent_args,
