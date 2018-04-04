@@ -3,7 +3,7 @@ CPP=${CPP:-cpp}
 QCC=${QCC:-$PWD/../../gmqcc/gmqcc${CMAKE_EXECUTABLE_SUFFIX}}
 case $1 in
     compile)
-        ${CPP} ${@:3} | sed 's/^#\(line\)\? \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\3)\n#pragma line(\2)/g' > $2
+        ${CPP} ${@:3} | sed -E 's/^#(line)? ([[:digit:]]+) "(.*)".*/'$'\\\n''#pragma file(\3)'$'\\\n''#pragma line(\2)/g' > $2
     ;;
     link)
         ${QCC} \

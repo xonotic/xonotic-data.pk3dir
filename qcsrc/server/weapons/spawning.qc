@@ -88,6 +88,13 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 	}
 
+	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
+	{
+		delete(this);
+		startitem_failed = true;
+		return;
+	}
+
 	if (!this.respawntime)
 	{
 		if (wpn.spawnflags & WEP_FLAG_SUPERWEAPON)

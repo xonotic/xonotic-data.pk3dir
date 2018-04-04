@@ -1,3 +1,5 @@
+#include "sv_items.qh"
+
 #include "items.qh"
 
 /// \brief Time of ivisibility powerup in seconds.
