@@ -373,6 +373,12 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
 }
 
+MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
+{
+	// no respawn calculations needed, player is forced to spectate anyway
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(ca, PlayerRegen)
 {
 	// no regeneration in CA

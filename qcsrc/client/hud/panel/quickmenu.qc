@@ -44,7 +44,7 @@ float QuickMenu_TimeOut;
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
     TC(int, i);
-	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
+	//LOG_INFOF("^xc80 entry %d: %s, %s\n", i, s, s1);
 	if (QuickMenu_Page_Description[i])
 		strunzone(QuickMenu_Page_Description[i]);
 	QuickMenu_Page_Description[i] = strzone(s);
@@ -289,11 +289,11 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 			s = QuickMenu_Buffer_Get();
 			if(substring(s, 0, 1) == QM_TAG_SUBMENU && substring(s, 1, -1) == z_submenu)
 			{
-				// printf("^3 beginning of %s\n", z_submenu);
+				//LOG_INFOF("^3 beginning of %s\n", z_submenu);
 				++QuickMenu_Buffer_Index;
 				break; // target_submenu found!
 			}
-			// printf("^1 skipping %s\n", s);
+			//LOG_INFOF("^1 skipping %s\n", s);
 		}
 		if(QuickMenu_Buffer_Index == QuickMenu_Buffer_Size)
 			LOG_WARNF("Couldn't find submenu \"%s\"", z_submenu);
@@ -310,7 +310,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 
 		if(z_submenu != "" && substring(s, 1, -1) == z_submenu)
 		{
-			// printf("^3 end of %s\n", z_submenu);
+			//LOG_INFOF("^3 end of %s\n", z_submenu);
 			break;
 		}
 
@@ -335,28 +335,32 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), "");
 			QuickMenu_skip_submenu(substring(s, 1, -1));
 		}
-		else if(entry_num >= first_entry && substring(s, 0, 1) == QM_TAG_TITLE)
+		else if(substring(s, 0, 1) == QM_TAG_TITLE)
 		{
 			++QuickMenu_Buffer_Index;
-			cmd = QuickMenu_Buffer_Get();
-			string command_code = substring(cmd, 0, 1);
-			if(command_code == QM_TAG_COMMAND)
-				cmd = substring(cmd, 1, -1);
-			else if(command_code == QM_TAG_PLCOMMAND)
+			if(entry_num >= first_entry)
 			{
-				// throw away the current quickmenu buffer and load a new one
-				cmd = substring(cmd, 1, -1);
-				strunzone(z_submenu);
-				if(HUD_Quickmenu_PlayerListEntries_Create(cmd, stof(substring(s, 1, 1)), stof(substring(s, 2, 1))))
-					return QuickMenu_Page_Load("", 0);
-				QuickMenu_Close();
-				return false;
+				cmd = QuickMenu_Buffer_Get();
+				string command_code = substring(cmd, 0, 1);
+				if(command_code == QM_TAG_COMMAND)
+					cmd = substring(cmd, 1, -1);
+				else if(command_code == QM_TAG_PLCOMMAND)
+				{
+					// throw away the current quickmenu buffer and load a new one
+					cmd = substring(cmd, 1, -1);
+					strunzone(z_submenu);
+					if(HUD_Quickmenu_PlayerListEntries_Create(cmd, stof(substring(s, 1, 1)), stof(substring(s, 2, 1))))
+						return QuickMenu_Page_Load("", 0);
+					QuickMenu_Close();
+					return false;
+				}
+
+				tokenize_console(cmd);
+				QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = (argv(1) && argv(0) == "toggle");
+
+				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
 			}
 
-			tokenize_console(cmd);
-			QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = (argv(1) && argv(0) == "toggle");
-
-			QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
 		}
 
 		++entry_num;
@@ -519,10 +523,10 @@ void QuickMenu_Mouse()
 
 	if (mousepos.x >= panel_pos.x && mousepos.y >= first_entry_pos && mousepos.x <= panel_pos.x + panel_size.x && mousepos.y <= first_entry_pos + entries_height)
 	{
-		float entry_num;
-		entry_num = floor((mousepos.y - first_entry_pos) / fontsize.y);
+		int entry_num = min(QuickMenu_Page_Entries - 1, floor((mousepos.y - first_entry_pos) / fontsize.y));
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
+			// recycling panel_pos as entry_pos
 			panel_pos.y = first_entry_pos + entry_num * fontsize.y;
 			vector color;
 			if(mouseClicked & S_MOUSE1)
@@ -798,6 +802,8 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
+		if(prvm_language != "en")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Send in English")), "toggle hud_panel_quickmenu_translatecommands 0 1; quickmenu; wait; quickmenu default Chat")
 	QUICKMENU_SMENU(_("Chat"), "Chat")
 
 	if(teamplay)
@@ -858,8 +864,6 @@ void QuickMenu_Default(string target_submenu)
 		}
 
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Fullscreen")), "toggle vid_fullscreen; vid_restart")
-		if(prvm_language != "en")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Translate chat messages")), "toggle hud_panel_quickmenu_translatecommands")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
@@ -876,9 +880,9 @@ void QuickMenu_Default(string target_submenu)
 
 	if(target_submenu != "" && !target_submenu_found)
 	{
-		LOG_WARNF("Couldn't find submenu \"%s\"", target_submenu);
+		LOG_INFOF("Couldn't find submenu \"%s\"", target_submenu);
 		if(prvm_language != "en")
-			LOG_WARNF("^3Warning: submenu must be in English", target_submenu);
+			LOG_INFOF("^3Warning: submenu title must be in English", target_submenu);
 		QuickMenu_Buffer_Size = 0;
 	}
 }

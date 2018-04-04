@@ -55,8 +55,8 @@ MACRO_END
 	{ (viewmodels[this.m_wepent_slot]).minelayer_mines = ReadByte(); }) \
     \
     PROP(false, arc_heat_percent, WEPENT_SET_NORMAL, \
-	{ WriteByte(chan, this.arc_heat_percent * 16); }, \
-	{ (viewmodels[this.m_wepent_slot]).arc_heat_percent = ReadByte() / 16; }) \
+	{ WriteByte(chan, this.arc_heat_percent * 255); }, \
+	{ (viewmodels[this.m_wepent_slot]).arc_heat_percent = ReadByte() / 255; }) \
     \
     PROP(false, vortex_chargepool_ammo, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.vortex_chargepool_ammo * 16); }, \
