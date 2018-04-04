@@ -576,7 +576,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				key_pressed = false;
 
 			Weapon off = actor.offhand;
-			if (off && !(actor.weapons & WEPSET(HOOK)))
+			if (off && (!(actor.weapons & WEPSET(HOOK)) || off != OFFHAND_HOOK))
 			{
 				if (off.offhand_think) off.offhand_think(off, actor, key_pressed);
 			}

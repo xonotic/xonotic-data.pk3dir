@@ -7,15 +7,6 @@
 
 //============================ Constants ======================================
 
-enum
-{
-	RANDOM_ITEM_TYPE_HEALTH = 1,
-	RANDOM_ITEM_TYPE_ARMOR,
-	RANDOM_ITEM_TYPE_RESOURCE,
-	RANDOM_ITEM_TYPE_WEAPON,
-	RANDOM_ITEM_TYPE_POWERUP
-};
-
 //======================= Global variables ====================================
 
 // Replace cvars
@@ -72,99 +63,137 @@ string RandomItems_GetRandomItemClassName(string prefix)
 	{
 		return RandomItems_GetRandomOverkillItemClassName(prefix);
 	}
-	return RandomItems_GetRandomVanillaItemClassName(prefix);
+	return RandomItems_GetRandomVanillaItemClassName(prefix,
+		RANDOM_ITEM_TYPE_ALL);
 }
 
-string RandomItems_GetRandomVanillaItemClassName(string prefix)
+string RandomItems_GetRandomVanillaItemClassName(string prefix, int types)
 {
-	RandomSelection_Init();
-	string cvar_name = sprintf("g_%s_health_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	if (types == 0)
 	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+		return "";
 	}
-	else
+	while (types != 0)
 	{
-		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH, cvar(cvar_name), 1);
-	}
-	cvar_name = sprintf("g_%s_armor_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-	}
-	else
-	{
-		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_ARMOR, cvar(cvar_name), 1);
-	}
-	cvar_name = sprintf("g_%s_resource_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-	}
-	else
-	{
-		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_RESOURCE, cvar(cvar_name), 1);
-	}
-	cvar_name = sprintf("g_%s_weapon_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-	}
-	else
-	{
-		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_WEAPON, cvar(cvar_name), 1);
-	}
-	cvar_name = sprintf("g_%s_powerup_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-	}
-	else
-	{
-		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_POWERUP, cvar(cvar_name), 1);
-	}
-	int item_type = RandomSelection_chosen_float;
-	switch (item_type)
-	{
-		case RANDOM_ITEM_TYPE_HEALTH:
+		string cvar_name;
+		RandomSelection_Init();
+		if (types & RANDOM_ITEM_TYPE_HEALTH)
 		{
-			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
-				instanceOfHealth);
-		}
-		case RANDOM_ITEM_TYPE_ARMOR:
-		{
-			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
-				instanceOfArmor);
-		}
-		case RANDOM_ITEM_TYPE_RESOURCE:
-		{
-			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
-				instanceOfAmmo);
-		}
-		case RANDOM_ITEM_TYPE_WEAPON:
-		{
-			RandomSelection_Init();
-			FOREACH(Weapons, it != WEP_Null &&
-				!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+			cvar_name = sprintf("g_%s_health_probability", prefix);
+			if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
 			{
-				cvar_name = sprintf("g_%s_%s_probability", prefix,
-					it.m_canonical_spawnfunc);
-				if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-				{
-					LOG_WARNF("Random items: cvar %s doesn't exist.",
-						cvar_name);
-					continue;
-				}
-				RandomSelection_AddString(it.m_canonical_spawnfunc,
+				LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			}
+			else
+			{
+				RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
 					cvar(cvar_name), 1);
-			});
-			return RandomSelection_chosen_string;
+			}
 		}
-		case RANDOM_ITEM_TYPE_POWERUP:
+		if (types & RANDOM_ITEM_TYPE_ARMOR)
 		{
-			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
-				instanceOfPowerup);
+			cvar_name = sprintf("g_%s_armor_probability", prefix);
+			if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+			{
+				LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			}
+			else
+			{
+				RandomSelection_AddFloat(RANDOM_ITEM_TYPE_ARMOR,
+					cvar(cvar_name), 1);
+			}
 		}
+		if (types & RANDOM_ITEM_TYPE_RESOURCE)
+		{
+			cvar_name = sprintf("g_%s_resource_probability", prefix);
+			if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+			{
+				LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			}
+			else
+			{
+				RandomSelection_AddFloat(RANDOM_ITEM_TYPE_RESOURCE,
+					cvar(cvar_name), 1);
+			}
+		}
+		if (types & RANDOM_ITEM_TYPE_WEAPON)
+		{
+			cvar_name = sprintf("g_%s_weapon_probability", prefix);
+			if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+			{
+				LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			}
+			else
+			{
+				RandomSelection_AddFloat(RANDOM_ITEM_TYPE_WEAPON, cvar(cvar_name), 1);
+			}
+		}
+		if (types & RANDOM_ITEM_TYPE_POWERUP)
+		{
+			cvar_name = sprintf("g_%s_powerup_probability", prefix);
+			if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+			{
+				LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			}
+			else
+			{
+				RandomSelection_AddFloat(RANDOM_ITEM_TYPE_POWERUP, cvar(cvar_name), 1);
+			}
+		}
+		int item_type = RandomSelection_chosen_float;
+		string class_name = "";
+		switch (item_type)
+		{
+			case RANDOM_ITEM_TYPE_HEALTH:
+			{
+				class_name = RandomItems_GetRandomItemClassNameWithProperty(
+					prefix, instanceOfHealth);
+				break;
+			}
+			case RANDOM_ITEM_TYPE_ARMOR:
+			{
+				class_name = RandomItems_GetRandomItemClassNameWithProperty(
+					prefix, instanceOfArmor);
+				break;
+			}
+			case RANDOM_ITEM_TYPE_RESOURCE:
+			{
+				class_name = RandomItems_GetRandomItemClassNameWithProperty(
+					prefix, instanceOfAmmo);
+				break;
+			}
+			case RANDOM_ITEM_TYPE_WEAPON:
+			{
+				RandomSelection_Init();
+				FOREACH(Weapons, it != WEP_Null &&
+					!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+				{
+					cvar_name = sprintf("g_%s_%s_probability", prefix,
+						it.m_canonical_spawnfunc);
+					if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+					{
+						LOG_WARNF("Random items: cvar %s doesn't exist.",
+							cvar_name);
+						continue;
+					}
+					RandomSelection_AddString(it.m_canonical_spawnfunc,
+						cvar(cvar_name), 1);
+				});
+				class_name = RandomSelection_chosen_string;
+				break;
+			}
+			case RANDOM_ITEM_TYPE_POWERUP:
+			{
+				class_name = RandomItems_GetRandomItemClassNameWithProperty(
+					prefix, instanceOfPowerup);
+				break;
+			}
+		}
+		if (class_name != "")
+		{
+			return class_name;
+		}
+		types &= ~item_type;
 	}
 	return "";
 }
@@ -172,7 +201,8 @@ string RandomItems_GetRandomVanillaItemClassName(string prefix)
 string RandomItems_GetRandomInstagibItemClassName(string prefix)
 {
 	RandomSelection_Init();
-	FOREACH(Items, it.spawnflags & ITEM_FLAG_INSTAGIB,
+	FOREACH(Items, it.spawnflags & ITEM_FLAG_INSTAGIB &&
+		Item_IsDefinitionAllowed(it),
 	{
 		string cvar_name = sprintf("g_%s_%s_probability", prefix,
 			it.m_canonical_spawnfunc);
@@ -190,7 +220,8 @@ string RandomItems_GetRandomOverkillItemClassName(string prefix)
 {
 	RandomSelection_Init();
 	FOREACH(Items, (it.spawnflags & ITEM_FLAG_OVERKILL) &&
-		!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED),
+		!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED) &&
+		Item_IsDefinitionAllowed(it),
 	{
 		string cvar_name = sprintf("g_%s_overkill_%s_probability", prefix,
 			it.m_canonical_spawnfunc);
@@ -242,7 +273,8 @@ string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 	.bool item_property)
 {
 	RandomSelection_Init();
-	FOREACH(Items, it.item_property && (it.spawnflags & ITEM_FLAG_NORMAL),
+	FOREACH(Items, it.item_property && (it.spawnflags & ITEM_FLAG_NORMAL) &&
+		Item_IsDefinitionAllowed(it),
 	{
 		string cvar_name = sprintf("g_%s_%s_probability", prefix,
 			it.m_canonical_spawnfunc);

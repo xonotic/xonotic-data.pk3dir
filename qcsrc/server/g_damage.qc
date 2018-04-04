@@ -518,7 +518,7 @@ void Ice_Think(entity this)
 	this.nextthink = time;
 }
 
-void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
+void Freeze (entity targ, float revivespeed, float frozen_type, float show_waypoint)
 {
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
@@ -531,10 +531,11 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	STAT(FROZEN, targ) = frozen_type;
 	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == 3) ? 1 : 0);
 	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
-	targ.revive_speed = freeze_time;
+	targ.revive_speed = revivespeed;
 	if(targ.bot_attack)
 		IL_REMOVE(g_bot_targets, targ);
 	targ.bot_attack = false;
+	targ.freeze_time = time;
 
 	entity ice = new(ice);
 	ice.owner = targ;
@@ -906,7 +907,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	}
 }
 
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, 
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
 								float inflictorselfdamage, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 	// Returns total damage applies to creatures
 {
