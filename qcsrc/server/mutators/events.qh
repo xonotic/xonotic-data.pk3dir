@@ -3,6 +3,9 @@
 #include <common/mutators/base.qh>
 
 // register all possible hooks here
+ 
+// to use a hook, first register your mutator using REGISTER_MUTATOR
+// then create your function using MUTATOR_HOOKFUNCTION
 
 /** called when a player becomes observer, after shared setup */
 #define EV_MakePlayerObserver(i, o) \
@@ -228,6 +231,14 @@ MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
     /** player; other.enemy = spectator */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
+
+/** Check if items having the given definition are allowed to spawn.
+ *  Return true to disallow spawning.
+ */
+#define EV_FilterItemDefinition(i, o) \
+    /** item        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(FilterItemDefinition, EV_FilterItemDefinition);
 
 /**
  * checks if the current item may be spawned (.items and .weapons may be read and written to, as well as the ammo_ fields)

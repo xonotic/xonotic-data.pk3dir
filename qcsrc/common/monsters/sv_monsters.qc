@@ -82,6 +82,7 @@ bool Monster_ValidTarget(entity this, entity targ)
 	|| (IS_VEHICLE(targ) && !((Monsters_from(this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| (time < game_starttime) // monsters do nothing before match has started
 	|| (targ.takedamage == DAMAGE_NO)
+	|| (game_stopped)
 	|| (targ.items & IT_INVISIBILITY)
 	|| (IS_SPEC(targ) || IS_OBSERVER(targ)) // don't attack spectators
 	|| (!IS_VEHICLE(targ) && (IS_DEAD(targ) || IS_DEAD(this) || targ.health <= 0 || this.health <= 0))

@@ -907,7 +907,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	}
 }
 
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, 
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
 								float inflictorselfdamage, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 	// Returns total damage applies to creatures
 {
