@@ -916,16 +916,17 @@ void CSQC_Parse_Print(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")", strMessage);
 	if (autocvar__cl_hook_print != "") {
-		int flags = 0;
+		int flags = NOTICE_SILENT;
 		string s = substring(strMessage, 0, -2); // remove trailing \n
 		int c = str2chr(s, 0);
 		if (c == 1 || c == 2 || c == 3) {
 			s = substring(s, 1, -1);
-			if (c != 1) {
-				flags |= NOTICE_SILENT;
-			} else if (str2chr(s, 0) == '\r') {
-				s = substring(s, 1, -1);
-				flags |= NOTICE_PRIVATE;
+			if (c == 1) {
+				flags &= ~NOTICE_SILENT;
+				if (str2chr(s, 0) == '\r') {
+					s = substring(s, 1, -1);
+					flags |= NOTICE_PRIVATE;
+				}
 			}
 			if (c != 2) {
 				flags |= NOTICE_CHAT;
