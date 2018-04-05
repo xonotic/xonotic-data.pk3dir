@@ -4,6 +4,13 @@
 
 noref string autocvar__cl_hook_print = "menu_cmd notice";
 
+int notice_buffer;
+int notice_buffer_idx;
+
+STATIC_INIT(notice_buffer) {
+    notice_buffer = buf_create();
+}
+
 GENERIC_COMMAND(notice, "Append a notice to chat")
 {
     switch(request)
@@ -18,6 +25,7 @@ GENERIC_COMMAND(notice, "Append a notice to chat")
                 entity snd = (flags & NOTICE_PRIVATE) ? SND_TALK2 : SND_TALK;
                 localsound(Sound_fixpath(snd));
             }
+            bufstr_set(notice_buffer, notice_buffer_idx++, s);
             print(prefix, "^7", s, "\n");
             return;
         }
