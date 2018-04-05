@@ -660,6 +660,14 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 	if (!VoteCommand_checkargs(startpos, argc)) return 0;
 
+	switch (MUTATOR_CALLHOOK(VoteCommand_Parse, caller, first_command, vote_command, startpos, argc))
+	{
+		case MUT_VOTEPARSE_CONTINUE: { break; }
+		case MUT_VOTEPARSE_SUCCESS: { return 1; }
+		case MUT_VOTEPARSE_INVALID: { return -1; }
+		case MUT_VOTEPARSE_UNACCEPTABLE: { return 0; }
+	}
+
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
 		case "kick":
