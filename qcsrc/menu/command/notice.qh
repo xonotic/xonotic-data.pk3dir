@@ -1,1 +1,7 @@
 #pragma once
+
+enum {
+    NOTICE_CHAT = BIT(0),
+    NOTICE_SILENT = BIT(1),
+    NOTICE_PRIVATE = BIT(2),
+};

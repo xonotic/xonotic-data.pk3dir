@@ -29,6 +29,7 @@
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>
 #include <lib/warpzone/client.qh>
+#include <menu/command/notice.qh>
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS
@@ -915,7 +916,23 @@ void CSQC_Parse_Print(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")", strMessage);
 	if (autocvar__cl_hook_print != "") {
-		localcmd("\n", autocvar__cl_hook_print, " ", console_encode(strMessage), "\n");
+		int flags = 0;
+		string s = substring(strMessage, 0, -2); // remove trailing \n
+		int c = str2chr(s, 0);
+		if (c == 1 || c == 2 || c == 3) {
+			s = substring(s, 1, -1);
+			if (c != 1) {
+				flags |= NOTICE_SILENT;
+			} else if (str2chr(s, 0) == '\r') {
+				s = substring(s, 1, -1);
+				flags |= NOTICE_PRIVATE;
+			}
+			if (c != 2) {
+				flags |= NOTICE_CHAT;
+			}
+			s = strcat("^3", s);
+		}
+		localcmd("\n", autocvar__cl_hook_print, " ", itos(flags), " ", console_encode(s), "\n");
 	} else {
 		print(ColorTranslateRGB(strMessage));
 	}

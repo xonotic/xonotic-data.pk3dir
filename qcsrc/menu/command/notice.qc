@@ -10,31 +10,15 @@ GENERIC_COMMAND(notice, "Append a notice to chat")
     {
         case CMD_REQUEST_COMMAND:
         {
-            string s = console_decode(substring(command, argv_start_index(1), argv_end_index(-1)));
-            for (int i = 0, n = tokenizebyseparator(s, "\n"); i < n; ++i)
-            {
-                string s = ColorTranslateRGB(argv(i));
-                int c = str2chr(s, 0);
-                if (c == 1 || c == 3) {
-                    // visible in chat
-                    s = substring(s, 1, -1);
-                    if (c == 1) {
-                        entity snd;
-                        if (str2chr(s, 0) == '\r') {
-                            s = substring(s, 1, -1);
-                            snd = SND_TALK2;
-                        } else {
-                            snd = SND_TALK;
-                        }
-                        localsound(Sound_fixpath(snd));
-                    }
-                    s = strcat("^3", s);
-                } else {
-                    // not visible in chat
-                    s = strcat("^7", s);
-                }
-                print(s, "\n");
+            int flags = stoi(argv(1));
+            string s = console_decode(substring(command, argv_start_index(2), argv_end_index(-1)));
+            s = ColorTranslateRGB(s);
+            string prefix = (flags & NOTICE_CHAT) ? "\{3}" : "";
+            if (!(flags & NOTICE_SILENT)) {
+                entity snd = (flags & NOTICE_PRIVATE) ? SND_TALK2 : SND_TALK;
+                localsound(Sound_fixpath(snd));
             }
+            print(prefix, "^7", s, "\n");
             return;
         }
 
