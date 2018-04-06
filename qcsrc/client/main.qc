@@ -917,23 +917,25 @@ void CSQC_Parse_Print(string strMessage)
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")", strMessage);
 	if (autocvar__cl_hook_print != "") {
 		int flags = NOTICE_SILENT;
-		string s = substring(strMessage, 0, -2); // remove trailing \n
-		int c = str2chr(s, 0);
-		if (c == 1 || c == 2 || c == 3) {
-			s = substring(s, 1, -1);
-			if (c == 1) {
-				flags &= ~NOTICE_SILENT;
-				if (str2chr(s, 0) == '\r') {
-					s = substring(s, 1, -1);
-					flags |= NOTICE_PRIVATE;
+		for (int i = 0, n = tokenizebyseparator(strMessage, "\n"); i < n; ++i) {
+			string s = substring(argv(i), 0, -1);
+			int c = str2chr(s, 0);
+			if (c == 1 || c == 2 || c == 3) {
+				s = substring(s, 1, -1);
+				if (c == 1) {
+					flags &= ~NOTICE_SILENT;
+					if (str2chr(s, 0) == '\r') {
+						s = substring(s, 1, -1);
+						flags |= NOTICE_PRIVATE;
+					}
 				}
+				if (c != 2) {
+					flags |= NOTICE_CHAT;
+				}
+				s = strcat("^3", s);
 			}
-			if (c != 2) {
-				flags |= NOTICE_CHAT;
-			}
-			s = strcat("^3", s);
+			localcmd("\n", autocvar__cl_hook_print, " ", console_encode(s), " ", itos(flags), "\n");
 		}
-		localcmd("\n", autocvar__cl_hook_print, " ", console_encode(s), " ", itos(flags), "\n");
 	} else {
 		print(ColorTranslateRGB(strMessage));
 	}
