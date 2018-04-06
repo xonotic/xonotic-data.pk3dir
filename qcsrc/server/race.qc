@@ -705,7 +705,7 @@ void checkpoint_passed(entity this, entity player)
 	else
 	{
 		if(this.spawnflags & 4)
-			Damage (player, this, this, 10000, DEATH_HURTTRIGGER.m_id, player.origin, '0 0 0');
+			Damage (player, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, player.origin, '0 0 0');
 	}
 }
 
@@ -995,7 +995,7 @@ spawnfunc(target_checkpoint) // defrag entity
 	defrag_ents = 1;
 
 	// if this is targeted, then it probably isn't a trigger
-	bool is_trigger = !boolean(!this.nottargeted && this.targetname != "");
+	bool is_trigger = this.targetname == "";
 
 	if(is_trigger)
 		EXACTTRIGGER_INIT;

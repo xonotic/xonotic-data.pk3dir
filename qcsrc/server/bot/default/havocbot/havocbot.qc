@@ -885,17 +885,17 @@ void havocbot_movetogoal(entity this)
 
 	diff = destorg - this.origin;
 
-	if (fabs(diff.x) < 10 && fabs(diff.y) < 10
-		&& this.goalcurrent == this.goalentity && time < this.goalentity_lock_timeout)
+	// 1. stop if too close to target player (even if frozen)
+	// 2. stop if the locked goal has been reached
+	if ((IS_PLAYER(this.goalcurrent) && vdist(diff, <, 80))
+		|| (this.goalcurrent == this.goalentity && time < this.goalentity_lock_timeout && vdist(diff, <, 10)))
 	{
 		destorg = this.origin;
-		diff.x = 0;
-		diff.y = 0;
+		diff = '0 0 0';
 	}
 
 	dir = normalize(diff);
-	flatdir = diff;flatdir.z = 0;
-	flatdir = normalize(flatdir);
+	flatdir = (diff.z == 0) ? dir : normalize(vec2(diff));
 
 	//if (this.bot_dodgevector_time < time)
 	{

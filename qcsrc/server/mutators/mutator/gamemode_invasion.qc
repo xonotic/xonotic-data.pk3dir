@@ -6,13 +6,14 @@
 #include <server/teamplay.qh>
 
 IntrusiveList g_invasion_roundends;
-STATIC_INIT(g_invasion_roundends) { g_invasion_roundends = IL_NEW(); }
-
 IntrusiveList g_invasion_waves;
-STATIC_INIT(g_invasion_waves) { g_invasion_waves = IL_NEW(); }
-
 IntrusiveList g_invasion_spawns;
-STATIC_INIT(g_invasion_spawns) { g_invasion_spawns = IL_NEW(); }
+STATIC_INIT(g_invasion)
+{
+	g_invasion_roundends = IL_NEW();
+	g_invasion_waves = IL_NEW();
+	g_invasion_spawns = IL_NEW();
+}
 
 float autocvar_g_invasion_round_timelimit;
 float autocvar_g_invasion_spawnpoint_spawn_delay;

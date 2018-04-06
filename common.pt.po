@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-12-21 15:23+0000\n"
+"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pt/)\n"
 "Language: pt\n"
@@ -35,7 +35,7 @@ msgstr "^1Não foi possível escrever para %s\n"
 
 #: qcsrc/client/hud/panel/chat.qc:82
 msgid "^3Player^7: This is the chat area."
-msgstr "^3Jogador^7: Isto é a área do chat."
+msgstr "^3Jogador^7: Isto é a área do bate-papo."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:69
 #, c-format
@@ -54,17 +54,17 @@ msgstr "^1Assistindo: ^7%s"
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Pressione ^3%s^1 para assistir"
+msgstr "^1Aperte ^3%s^1 para assistir"
 
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr "fogo primário"
+msgstr "disparo primário"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr "^1Pressione ^3%s^1 ou ^3%s^1 para o jogador seguinte ou anterior"
+msgstr "^1Aperte ^3%s^1 ou ^3%s^1 para o jogador seguinte ou anterior"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
@@ -84,8 +84,7 @@ msgstr "^1Use ^3%s^1 ou ^3%s^1 para alterar a velocidade"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
-"^1Pressione ^3%s^1 para observar e ^3%s^1 para alterar o modo da câmera"
+msgstr "^1Aperte ^3%s^1 para observar e ^3%s^1 para alterar o modo da câmera"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:192
@@ -100,7 +99,7 @@ msgstr "disparo secundário"
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Pressione ^3%s^1 para ver as informações do modo de jogo"
+msgstr "^1Aperte ^3%s^1 para ver as informações do modo de jogo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #: qcsrc/menu/xonotic/keybinder.qc:94
@@ -119,12 +118,12 @@ msgstr "^1Você não tem mais vidas sobrando"
 #: qcsrc/client/hud/panel/infomessages.qc:131
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Pressione ^3%s^1 para entrar no jogo"
+msgstr "^1Aperte ^3%s^1 para entrar no jogo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr "pular"
+msgstr "saltar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -138,7 +137,7 @@ msgstr "^2Atualmente em fase de ^1aquecimento^2!"
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%sPressione ^3%s%s para terminar o aquecimento"
+msgstr "%sAperte ^3%s%s para terminar o aquecimento"
 
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #: qcsrc/client/hud/panel/infomessages.qc:162
@@ -150,7 +149,7 @@ msgstr "pronto"
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%sPressione ^3%s%s assim que estiver pronto"
+msgstr "%sAperte ^3%s%s assim que estiver pronto"
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -165,7 +164,7 @@ msgstr "^2Esperando que os outros jogadores estejam prontos..."
 #: qcsrc/client/hud/panel/infomessages.qc:175
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2Pressione ^3%s^2 para terminar o aquecimento"
+msgstr "^2Aperte ^3%s^2 para terminar o aquecimento"
 
 #: qcsrc/client/hud/panel/infomessages.qc:196
 msgid "Teamnumbers are unbalanced!"
@@ -174,7 +173,7 @@ msgstr "As equipes estão desequilibradas!"
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr " Pressione ^3%s%s para ajustar"
+msgstr " Aperte ^3%s%s para ajustar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #: qcsrc/menu/xonotic/keybinder.qc:102
@@ -191,7 +190,7 @@ msgstr "^1Assistindo você:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Pressione ^3ESC ^7para exibir as opções de HUD."
+msgstr "^7Aperte ^3ESC ^7para exibir as opções de HUD."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -239,7 +238,7 @@ msgstr "Continuar..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Chat"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -264,7 +263,7 @@ msgstr "Olá / Boa sorte e divirta-se"
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^Team chat"
-msgstr "Chat da equipe"
+msgstr "Bate-papo de equipe"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^quad soon"
@@ -348,7 +347,7 @@ msgstr "Portador da bandeira aniquilado (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "Portador da bandeira aniquilado, ícone"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
@@ -361,11 +360,11 @@ msgstr "Bandeira largada, ícone"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "Largar arma, ícone"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "Arma solta %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
@@ -424,7 +423,7 @@ msgstr "Som de acerto"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^Chat sound"
-msgstr "Som do chat"
+msgstr "Som do bate-papo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 #: qcsrc/client/hud/panel/quickmenu.qc:844
@@ -470,7 +469,7 @@ msgstr "Tela cheia"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^Translate chat messages"
-msgstr "Traduzir mensagens de chat"
+msgstr "Traduzir mensagens do bate-papo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 #: qcsrc/client/hud/panel/quickmenu.qc:872
@@ -743,7 +742,7 @@ msgstr "^3suicídios^7 Número de suicídios\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid "^3frags^7                    kills - suicides\n"
-msgstr "^3frags^7 vítimas - suicídios\n"
+msgstr "^3execuções^7 vítimas - suicídios\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:312
 msgid "^3kd^7                       The kill-death ratio\n"
@@ -759,7 +758,7 @@ msgstr "^3dano recebido^7 O dano total recebido\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid "^3sum^7                      frags - deaths\n"
-msgstr "^3soma^7 frags - mortes\n"
+msgstr "^3soma^7 execuções - mortes\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid ""
@@ -823,15 +822,15 @@ msgstr "^3perdas^7 Número de vezes em que uma chave foi perdida\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:328
 msgid "^3laps^7                     Number of laps finished (race/cts)\n"
-msgstr "^3voltas^7 Número de voltas concluídas (race/cts)\n"
+msgstr "^3voltas^7 Número de voltas concluídas (corrida/cts)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:329
 msgid "^3time^7                     Total time raced (race/cts)\n"
-msgstr "^3tempo^7 Tempo total de corrida (race/cts)\n"
+msgstr "^3tempo^7 Tempo total de corrida (corrida/cts)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:330
 msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
-msgstr "^3mais rápida^7 Tempo da volta mais rápida (race/cts)\n"
+msgstr "^3mais rápida^7 Tempo da volta mais rápida (corrida/cts)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid "^3ticks^7                    Number of ticks (DOM)\n"
@@ -1002,17 +1001,17 @@ msgstr " até uma vantagem de ^3%s %s^7"
 #: qcsrc/client/hud/panel/scoreboard.qc:1688
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr "^1Renascendo em ^3%s^1..."
+msgstr "^1Ressurgindo em ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1698
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr "Você está morto, espere ^3%s^7 antes de renascer"
+msgstr "Você morreu. Espere ^3%s^7 antes de ressurgir"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1707
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr "Você está morto, pressione ^2%s^7 para renascer"
+msgstr "Você morreu. Aperte ^2%s^7 para ressurgir"
 
 #: qcsrc/client/hud/panel/vote.qc:24
 msgid "^1You must answer before entering hud configure mode\n"
@@ -1200,11 +1199,11 @@ msgstr "@!#%'n Tuba Throwing"
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Deathmatch"
-msgstr "Deathmatch"
+msgstr "Mata-mata"
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Score as many frags as you can"
-msgstr "Consiga o máximo de frags que puder"
+msgstr "Consiga o máximo de execuções que puder"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Last Man Standing"
@@ -1216,7 +1215,7 @@ msgstr "Sobreviva e mate até que os inimigos não tenham vidas sobrando"
 
 #: qcsrc/common/mapinfo.qh:126
 msgid "Race"
-msgstr "Race"
+msgstr "Corrida"
 
 #: qcsrc/common/mapinfo.qh:126
 msgid "Race against other players to the finish line"
@@ -1224,7 +1223,7 @@ msgstr "Corra contra outros jogadores até a linha de chegada"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race CTS"
-msgstr "Race CTS"
+msgstr "Corrida CTS"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race for fastest time."
@@ -1232,15 +1231,15 @@ msgstr "Corra pelo melhor tempo."
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Help your team score the most frags against the enemy team"
-msgstr "Ajude sua equipe a conseguir mais frags do que a equipe inimiga"
+msgstr "Ajude sua equipe a conseguir mais execuções do que a equipe inimiga"
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Team Deathmatch"
-msgstr "Team Deathmatch"
+msgstr "Mata-mata por Equipe"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid "Capture the Flag"
-msgstr "Capture the Flag"
+msgstr "Capture a Bandeira"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid ""
@@ -1379,7 +1378,7 @@ msgstr "Enfeitiçado! Clique em \"Próximo Mapa\" para continuar!"
 #: qcsrc/common/minigames/minigame/bd.qc:1177
 msgid "Press the space bar to change your currently selected tile"
 msgstr ""
-"Pressione a barra de espaço para alterar a sua imagem de equipe atualmente "
+"Aperte a barra de espaço para alterar a sua imagem de equipe atualmente "
 "selecionada"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1180
@@ -1458,7 +1457,7 @@ msgstr "IA"
 #: qcsrc/common/minigames/minigame/pong.qc:587
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
-"Pressione ^1Iniciar Partida^7 para iniciar a partida com os jogadores atuais"
+"Aperte ^1Iniciar Partida^7 para iniciar a partida com os jogadores atuais"
 
 #: qcsrc/common/minigames/minigame/pong.qc:651
 msgid "Start Match"
@@ -1601,7 +1600,7 @@ msgstr "Vingança"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:86
 msgid "Jump"
-msgstr "Pular"
+msgstr "Saltar"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:95
 msgid "Invisible"
@@ -1886,8 +1885,8 @@ msgstr "^1Avisos do servidor:"
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
-"^F4NOTA: ^BGMensagens no chat de espectador não serão enviadas aos jogadores "
-"durante a partida"
+"^F4NOTA: ^BGMensagens no bate-papo de espectador não serão enviadas aos "
+"jogadores durante a partida"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
@@ -2943,8 +2942,8 @@ msgstr "^BG%s%s^K1 comeu o foguete de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 chegou muito perto do foguete de ^BG%s^K1%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -3303,7 +3302,7 @@ msgstr "^BGVocê recebeu a bandeira de %s"
 #: qcsrc/common/notifications/all.inc:565
 #, c-format
 msgid "^BGPress ^F2%s^BG to receive the flag from %s^BG"
-msgstr "^BGPressione ^F2%s^BG para receber a bandeira de %s^BG"
+msgstr "^BGAperte ^F2%s^BG para receber a bandeira de %s^BG"
 
 #: qcsrc/common/notifications/all.inc:566
 #, c-format
@@ -3411,7 +3410,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr "^K3%sVocê matou ^BG%s"
+msgstr "^K3%sVocê executou ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:591
 #: qcsrc/common/notifications/all.inc:600
@@ -3423,7 +3422,7 @@ msgstr "^K3%sVocê pontuou contra ^BG%s"
 #: qcsrc/common/notifications/all.inc:592
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr "^K1%sVocê foi morto por ^BG%s"
+msgstr "^K1%sVocê foi executado por ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:593
 #: qcsrc/common/notifications/all.inc:602
@@ -3455,7 +3454,7 @@ msgstr "^K1%sVocê foi congelado por ^BG%s"
 #: qcsrc/common/notifications/all.inc:617
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr "^K1%sVocê matou ^BG%s enquanto digitava"
+msgstr "^K1%sVocê executou ^BG%s enquanto digitava"
 
 #: qcsrc/common/notifications/all.inc:618
 #, c-format
@@ -3465,7 +3464,7 @@ msgstr "^K1%sVocê pontuou contra ^BG%s^K1 enquanto estavam digitando"
 #: qcsrc/common/notifications/all.inc:619
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s"
-msgstr "^K1%sVocê foi morto enquanto digitava por ^BG%s"
+msgstr "^K1%sVocê foi executado enquanto digitava por ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:620
 #, c-format
@@ -3475,7 +3474,7 @@ msgstr "^K1%sVocê foi pontuado contra enquanto digitava por ^BG%s^K1"
 #: qcsrc/common/notifications/all.inc:626
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr "^BGPressione ^F2%s^BG de novo para lançar a granada!"
+msgstr "^BGAperte ^F2%s^BG de novo para lançar a granada!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
@@ -3577,7 +3576,7 @@ msgstr "^K1Sua Granada de Cura está um pouco defeituosa"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You are respawning for running out of ammo..."
-msgstr "^K1Você está renascendo por ficar sem munição..."
+msgstr "^K1Você está ressurgindo por ficar sem munição..."
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You were killed for running out of ammo..."
@@ -3626,7 +3625,7 @@ msgstr "^K1Você teve um encontro lamentável com uma sentinela!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1You were fragged by a turret!"
-msgstr "^K1Você foi morto por uma sentinela!"
+msgstr "^K1Você foi executado por uma sentinela!"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
@@ -3634,7 +3633,7 @@ msgstr "^K1Você teve um encontro lamentável com uma sentinela eWheel!"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr "^K1Você foi morto por uma sentinela eWheel!"
+msgstr "^K1Você foi executado por uma sentinela eWheel!"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid "^K1You had an unfortunate run in with a Walker turret!"
@@ -3642,7 +3641,7 @@ msgstr "^K1Você teve um encontro lamentável com uma sentinela Walker!"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid "^K1You were fragged by a Walker turret!"
-msgstr "^K1Você foi morto por uma sentinela Walker!"
+msgstr "^K1Você foi executado por uma sentinela Walker!"
 
 #: qcsrc/common/notifications/all.inc:655
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
@@ -3683,7 +3682,7 @@ msgstr "^K1Cuidado onde pisa!"
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
 msgid "^K1Moron! You fragged ^BG%s^K1, a team mate!"
-msgstr "^K1Idiota! Você matou ^BG%s^K1, um colega de equipe!"
+msgstr "^K1Idiota! Você executou ^BG%s^K1, um colega de equipe!"
 
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
@@ -3693,7 +3692,7 @@ msgstr "^K1Idiota! Você foi contra ^BG%s^K1, um colega de equipe!"
 #: qcsrc/common/notifications/all.inc:666
 #, c-format
 msgid "^K1You were fragged by ^BG%s^K1, a team mate"
-msgstr "^K1Você foi morto por ^BG%s^K1, um colega de equipe"
+msgstr "^K1Você foi executado por ^BG%s^K1, um colega de equipe"
 
 #: qcsrc/common/notifications/all.inc:666
 #, c-format
@@ -3759,7 +3758,7 @@ msgstr "^K1Você se congelou"
 
 #: qcsrc/common/notifications/all.inc:688
 msgid "^K1Round already started, you spawn as frozen"
-msgstr "^K1A rodada já começou, você nasceu congelado"
+msgstr "^K1A rodada já começou, você surgiu congelado"
 
 #: qcsrc/common/notifications/all.inc:690
 #, c-format
@@ -3779,8 +3778,8 @@ msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
 msgstr ""
-"^K1Não há pontos de nascimento disponíveis!\n"
-"Tomara que sua equipe conserte isso..."
+"^K1Não há pontos de surgimento disponíveis!\n"
+"Tomara que sua equipe consiga consertar isso..."
 
 #: qcsrc/common/notifications/all.inc:704
 msgid ""
@@ -3925,7 +3924,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:739
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
-msgstr "^BGPressione ^F2%s^BG para se teletransportar"
+msgstr "^BGAperte ^F2%s^BG para se teletransportar"
 
 #: qcsrc/common/notifications/all.inc:740
 #, c-format
@@ -3938,7 +3937,7 @@ msgid ""
 "Keep fragging until we have a winner!"
 msgstr ""
 "^F2Jogando agora nos ^F4ACRÉSCIMOS^F2!\n"
-"Continue matando até que tenhamos um vencedor!"
+"Continue executando até que tenhamos um vencedor!"
 
 #: qcsrc/common/notifications/all.inc:742
 msgid ""
@@ -4079,17 +4078,17 @@ msgstr "^K1Não foi possível entrar na sessão de mini jogo fornecida!"
 #: qcsrc/common/notifications/all.inc:784
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
-msgstr "^BGPressione ^F2%s^BG para entrar/sair do veículo"
+msgstr "^BGAperte ^F2%s^BG para entrar/sair do veículo"
 
 #: qcsrc/common/notifications/all.inc:785
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
-msgstr "^BGPressione ^F2%s^BG para usar a arma do veículo"
+msgstr "^BGAperte ^F2%s^BG para usar a arma do veículo"
 
 #: qcsrc/common/notifications/all.inc:786
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
-msgstr "^BGPressione ^F2%s^BG para roubar este veículo"
+msgstr "^BGAperte ^F2%s^BG para roubar este veículo"
 
 #: qcsrc/common/notifications/all.inc:787
 msgid ""
@@ -4101,7 +4100,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:788
 msgid "^F2Intruder detected, disabling shields!"
-msgstr ""
+msgstr "^F2Intruso detectado, desativando escudos!"
 
 #: qcsrc/common/notifications/all.qh:188
 msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
@@ -4145,7 +4144,7 @@ msgstr " com %s"
 #: qcsrc/common/notifications/all.qh:444
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
-msgstr "%s^K1 fez um FRAG TRIPLO! %s^BG"
+msgstr "%s^K1 fez uma EXECUÇÃO TRIPLA! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:444
 #, c-format
@@ -4154,7 +4153,7 @@ msgstr "%s^K1 fez uma PONTUAÇÃO TRIPLA! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:444
 msgid "TRIPLE FRAG! "
-msgstr "FRAG TRIPLO! "
+msgstr "EXECUÇÃO TRIPLA! "
 
 #: qcsrc/common/notifications/all.qh:445
 #, c-format
@@ -4276,7 +4275,7 @@ msgstr "%d pontuações seguidas!"
 #: qcsrc/common/notifications/all.qh:501
 #, c-format
 msgid "%d frag spree! "
-msgstr "%d frags seguidos!"
+msgstr "%d execuções seguidas!"
 
 #: qcsrc/common/notifications/all.qh:514
 msgid "First blood! "
@@ -4297,7 +4296,7 @@ msgstr "Primeira vítima!"
 #: qcsrc/common/notifications/all.qh:559
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr "%s^K1 tem %d frags seguidos! %s^BG"
+msgstr "%s^K1 tem %d execuções seguidas! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:560
 #, c-format
@@ -4317,7 +4316,7 @@ msgstr "%s^K1 foi o primeiro a pontuar! %s^BG"
 #: qcsrc/common/notifications/all.qh:595
 #, c-format
 msgid ", ending their %d frag spree"
-msgstr ", finalizando sua cadeia de %d frags"
+msgstr ", finalizando sua cadeia de %d execuções"
 
 #: qcsrc/common/notifications/all.qh:596
 #, c-format
@@ -4327,7 +4326,7 @@ msgstr ", finalizando sua cadeia de %d pontuações"
 #: qcsrc/common/notifications/all.qh:610
 #, c-format
 msgid ", losing their %d frag spree"
-msgstr ", perdendo sua cadeia de %d frags"
+msgstr ", perdendo sua cadeia de %d execuções"
 
 #: qcsrc/common/notifications/all.qh:611
 #, c-format
@@ -4511,7 +4510,7 @@ msgstr "Walker"
 #: qcsrc/common/vehicles/cl_vehicles.qc:192
 #, c-format
 msgid "Press %s"
-msgstr "Pressione %s"
+msgstr "Aperte %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:950
 msgid "No right gunner!"
@@ -4998,7 +4997,7 @@ msgstr "Holandês"
 
 #: qcsrc/menu/xonotic/credits.qc:192
 msgid "English (Australia)"
-msgstr "Inglês (Australia)"
+msgstr "Inglês (Austrália)"
 
 #: qcsrc/menu/xonotic/credits.qc:197
 msgid "Finnish"
@@ -5022,7 +5021,7 @@ msgstr "Húngaro"
 
 #: qcsrc/menu/xonotic/credits.qc:231
 msgid "Irish"
-msgstr ""
+msgstr "Irlandês"
 
 #: qcsrc/menu/xonotic/credits.qc:234
 msgid "Italian"
@@ -5054,7 +5053,7 @@ msgstr "Russo"
 
 #: qcsrc/menu/xonotic/credits.qc:279
 msgid "Scottish Gaelic"
-msgstr ""
+msgstr "Gaélico Escocês"
 
 #: qcsrc/menu/xonotic/credits.qc:282
 msgid "Serbian"
@@ -5123,9 +5122,9 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"Bem-vindo ao Xonotic! Por favor, escolha o seu idioma de preferência e "
-"insira o seu apelido para começar. Você pode alterar essas configurações "
-"mais tarde pelo menu."
+"Bem-vindo ao Xonotic! Escolha o seu idioma de preferência e insira o seu "
+"apelido para começar. Você pode alterar essas configurações mais tarde pelo "
+"menu."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -5241,23 +5240,23 @@ msgstr "Painel Central"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:15
 msgid "Chat entries:"
-msgstr "Entradas do chat:"
+msgstr "Entradas do bate-papo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:18
 msgid "Chat size:"
-msgstr "Tamanho do chat:"
+msgstr "Tamanho do bate-papo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:22
 msgid "Chat lifetime:"
-msgstr "Tempo de vida do chat:"
+msgstr "Tempo de vida do bate-papo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:26
 msgid "Chat beep sound"
-msgstr "Som de aviso do chat"
+msgstr "Som de aviso do bate-papo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
-msgstr "Painel do Chat"
+msgstr "Painel do Bate-papo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:14
 msgid "Engine info:"
@@ -5279,12 +5278,12 @@ msgstr "Combinar saúde e armadura"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:15
 msgid "Enable status bar"
-msgstr "Habilitar barra de estado"
+msgstr "Habilitar barra de status"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Status bar alignment:"
-msgstr "Alinhar barra de estado:"
+msgstr "Alinhamento da barra de status:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:37
@@ -5405,11 +5404,11 @@ msgstr "Painel habilitado enquanto estiver observando"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Panel enabled only in Race/CTS"
-msgstr "Painel habilitado apenas em Race/CTS"
+msgstr "Painel habilitado apenas em Corrida/CTS"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
-msgstr "Barra de estado"
+msgstr "Barra de status"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
@@ -5487,7 +5486,7 @@ msgstr "Painel de Física"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
-msgstr "Painel de Poderes"
+msgstr "Painel de Potencializadores"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Panel enabled when spectating"
@@ -5512,7 +5511,7 @@ msgstr "Painel de Menu Instantâneo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
-msgstr "Painel do Cronômetro de Race"
+msgstr "Painel do Cronômetro de Corrida"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Panel enabled in teamgames"
@@ -5593,7 +5592,7 @@ msgstr "Pontuação:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:18
 msgid "Rankings:"
-msgstr "Tabela Classficativa:"
+msgstr "Classificações:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:19
 msgid "Off"
@@ -5837,7 +5836,7 @@ msgstr "Monstro:"
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
 msgid "Spawn"
-msgstr "Nascer"
+msgstr "Surgir"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:23
 #: qcsrc/menu/xonotic/serverlist.qc:268
@@ -5858,7 +5857,7 @@ msgstr "Vaguear"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:28
 msgid "Spawnpoint"
-msgstr "Ponto de nascimento"
+msgstr "Ponto de surgimento"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:29
 msgid "No moving"
@@ -5927,13 +5926,13 @@ msgstr "Ilimitado"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:78
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:128
 msgid "Frag limit:"
-msgstr "Limite de frags:"
+msgstr "Limite de execuções:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:65
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:66
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:78
 msgid "The amount of frags needed before the match will end"
-msgstr "A quantidade de frags necessária para acabar a partida"
+msgstr "A quantidade de execuções necessária para acabar a partida"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:67
 msgid "Capture limit:"
@@ -6111,9 +6110,8 @@ msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
 msgstr ""
-"Clique aqui ou pressione Ctrl+F para digitar uma palavra chave e buscar o "
-"mapa desejado. Você pode pressionar Ctrl+Delete para apagar e Enter para "
-"confirmar."
+"Clique aqui ou aperte Ctrl+F para digitar uma palavra chave e buscar o mapa "
+"desejado. Você pode apertar Ctrl+Delete para apagar e Enter para confirmar."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:207
 msgid "Add shown"
@@ -6274,11 +6272,11 @@ msgstr "Exagero"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "No powerups"
-msgstr "Sem poderes"
+msgstr "Sem potencializadores"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:101
 msgid "Powerups"
-msgstr "Poderes (powerups)"
+msgstr "Potencializadores"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:103
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:163
@@ -6333,11 +6331,11 @@ msgstr "Gancho (grappling hook)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:205
 msgid "Players spawn with the grappling hook"
-msgstr "Jogadores nascem com o gancho"
+msgstr "Jogadores surgem com o gancho"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:209
 msgid "Players spawn with the jetpack"
-msgstr "Jogadores nascem com a mochila a jato"
+msgstr "Jogadores surgem com a mochila a jato"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid "Players will drop all weapons they possessed when they are killed"
@@ -6364,7 +6362,7 @@ msgid ""
 "as unlimited ammo, and disable all other weapon pickups."
 msgstr ""
 "Selecionar uma arena de armas concederá a todos os jogadores a arma "
-"selecionada ao nascerem bem como munição ilimitada. Todas as outras armas "
+"selecionada ao surgirem bem como munição ilimitada. Todas as outras armas "
 "ficarão indisponíveis no mapa."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:255
@@ -6389,8 +6387,8 @@ msgstr ""
 "Os jogadores terão uma arma, a qual pode instantaneamente matar o oponente "
 "com um único disparo. Se o jogador ficar sem munição, ele terá 10 segundos "
 "para encontrar alguma e se não conseguir fazer isso, irá morrer. O modo de "
-"fogo secundário não causa nenhum dano, mas é útil para executar \"trickjumps"
-"\"."
+"disparo secundário não causa nenhum dano, mas é útil para executar truques "
+"de movimento."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:273
 msgid ""
@@ -6765,7 +6763,7 @@ msgstr "Gênero"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
-msgstr "Tem certeza que deseja sair?"
+msgstr "Tem certeza de que deseja sair?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 msgid "Back to work..."
@@ -6773,7 +6771,7 @@ msgstr "De volta ao trabalho..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:17
 msgid "I got some more fragging to do!"
-msgstr "Está na hora dos frags!"
+msgstr "Está na hora das execuções!"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
@@ -7098,7 +7096,7 @@ msgstr "Reproduzuz um som indicando que você acertou um inimigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:147
 msgid "Chat message sound"
-msgstr "Som de mensagem do chat"
+msgstr "Som de mensagem do bate-papo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "Menu sounds"
@@ -7138,7 +7136,7 @@ msgstr "Provocações automáticas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:166
 msgid "Automatically taunt enemies after fragging them"
-msgstr "Provocar inimigos automaticamente depois de matá-los"
+msgstr "Provocar inimigos automaticamente depois de executá-los"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:168
 msgid "Sometimes"
@@ -7531,7 +7529,7 @@ msgid ""
 "using a powerup (default: disabled)"
 msgstr ""
 "Habilita efeitos especiais de pós-processamento para quando receber dano, "
-"estar debaixo d'água ou ao usar poderes (padrão: desabilitado)"
+"estar debaixo d'água ou ao usar potencializadores (padrão: desabilitado)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Motion blur strength - 0.4 recommended"
@@ -7547,12 +7545,12 @@ msgstr "Partículas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
 msgid "Spawnpoint effects"
-msgstr "Efeitos de ponto de nascimento"
+msgstr "Efeitos de ponto de surgimento"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 msgid "Particles effects at all spawn points and whenever a player spawns"
 msgstr ""
-"Efeitos de partículas em todos os pontos de nascimento e sempre que um "
+"Efeitos de partículas em todos os pontos de surgimento e sempre que um "
 "jogador nascer"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
@@ -7600,7 +7598,7 @@ msgstr "Por saúde"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:76
 msgid "Use rings to indicate weapon status"
-msgstr "Usa anéis para indicar estado da arma"
+msgstr "Usar anéis para indicar status da arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:93
 msgid "Enable center crosshair dot"
@@ -7670,7 +7668,7 @@ msgstr "Habilitar destacamento de fileiras/colunas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show decimals in respawn countdown"
-msgstr "Exibir decimais na contagem de renascimento"
+msgstr "Exibir decimais na contagem de ressurgimento"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid "Show accuracy underneath scoreboard"
@@ -7785,7 +7783,7 @@ msgstr "Quer iniciar um jogo local para personalizar o HUD?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
-msgstr "Informações de Frags"
+msgstr "Informações de Execuções"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
 msgid "Display information about killing sprees"
@@ -7830,11 +7828,13 @@ msgstr "Imprimir numa linha separada"
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
 msgid "Add extra frag information to centerprint when available"
 msgstr ""
-"Adicionar informações extras de frag à impressão central quando disponível"
+"Adicionar informações extras de execução à impressão central quando "
+"disponível"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
-msgstr "Adicionar localização de frag nas mensagens de morte quando disponível"
+msgstr ""
+"Adicionar localização de execução nas mensagens de morte quando disponível"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
@@ -7842,11 +7842,11 @@ msgstr "Configurações do Modo de Jogo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Display capture times in Capture The Flag"
-msgstr "Exibir tempos de captura em Capture The Flag"
+msgstr "Exibir tempos de captura em Capture a Bandeira"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 msgid "Display name of flag stealer in Capture The Flag"
-msgstr "Exibir nome do ladrão da bandeira em Capture The Flag"
+msgstr "Exibir nome do ladrão da bandeira em Capture a Bandeira"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:91
@@ -7860,15 +7860,15 @@ msgstr "Exibir mensagens de console no canto superior esquerdo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
 msgid "Display all info messages in the chatbox"
-msgstr "Exibir todas as mensagens de informação no chat"
+msgstr "Exibir todas as mensagens de informação no bate-papo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display player statuses in the chatbox"
-msgstr "Exibir estados de jogadores no chat"
+msgstr "Exibir status de jogadores no bate-papo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:86
 msgid "Powerup notifications"
-msgstr "Notificações de poderes"
+msgstr "Notificações de potencializador"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Weapon centerprint notifications"
@@ -7884,7 +7884,7 @@ msgstr "Locutores"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:98
 msgid "Respawn countdown sounds"
-msgstr "Sons da contagem de renascimento"
+msgstr "Sons da contagem de ressurgimento"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:101
 msgid "Killstreak sounds"
@@ -8082,7 +8082,7 @@ msgstr "Exibe uma sobreposição reticular em 2D durante o zoom"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:116
 msgid "Release zoom when you die or respawn"
-msgstr "Soltar o zoom quando você morre ou renasce"
+msgstr "Soltar o zoom quando você morre ou ressurge"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:120
 msgid "Release zoom when you switch weapons"
@@ -8239,11 +8239,11 @@ msgstr "Permite que o atalho para abrir o console também feche-o"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:96
 msgid "Automatically repeat jumping if holding jump"
-msgstr " Pular continuamente ao segurar o botão de pular"
+msgstr " Saltar continuamente ao segurar o botão de saltar"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:99
 msgid "Jetpack on jump:"
-msgstr "Mochila a jato ao pular:"
+msgstr "Mochila a jato ao saltar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:101
 msgid "JPJUMP^Disabled"
@@ -8504,7 +8504,8 @@ msgstr "Configurações avançadas"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr "Tem certeza que deseja redefinir todas as configurações para o padrão?"
+msgstr ""
+"Tem certeza de que deseja redefinir todas as configurações para o padrão?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
@@ -8969,7 +8970,7 @@ msgstr "Mover-se para a direita"
 
 #: qcsrc/menu/xonotic/keybinder.qc:34
 msgid "jump / swim"
-msgstr "pular / nadar"
+msgstr "saltar / nadar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:35
 msgid "crouch / sink"
@@ -9045,15 +9046,15 @@ msgstr "Comunicação"
 
 #: qcsrc/menu/xonotic/keybinder.qc:86
 msgid "public chat"
-msgstr "chat público"
+msgstr "Bate-papo público"
 
 #: qcsrc/menu/xonotic/keybinder.qc:87 qcsrc/menu/xonotic/keybinder.qc:100
 msgid "team chat"
-msgstr "chat de equipe"
+msgstr "Bate-papo de equipe"
 
 #: qcsrc/menu/xonotic/keybinder.qc:88
 msgid "show chat history"
-msgstr "exibir histórico do chat"
+msgstr "exibir histórico do bate-papo"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "vote YES"
@@ -9105,7 +9106,7 @@ msgstr "Definido pelo usuário"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:64 qcsrc/menu/xonotic/mainwindow.qc:67
 msgid "Do not press this button again!"
-msgstr "Não pressione este botão novamente!"
+msgstr "Não aperte este botão novamente!"
 
 #: qcsrc/menu/xonotic/maplist.qc:291
 msgid ""
@@ -9456,3 +9457,9 @@ msgstr "Cor de Equipe:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Habilitar painel"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "Bate-papo"
+
+#~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+#~ msgstr "^BG%s%s^K1 chegou muito perto do foguete de ^BG%s^K1%s%s"

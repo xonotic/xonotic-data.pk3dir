@@ -59,41 +59,52 @@ void trigger_common_write(entity this, bool withtarget)
 		BITSET_ASSIGN(f, 1);
 	if(this.origin != '0 0 0')
 		BITSET_ASSIGN(f, 4);
+	if(this.movedir != '0 0 0')
+		BITSET_ASSIGN(f, 8);
+	if(this.angles != '0 0 0')
+		BITSET_ASSIGN(f, 16);
 	WriteByte(MSG_ENTITY, f);
 
 	if(withtarget)
 	{
-		WriteString(MSG_ENTITY, this.target);
-		WriteString(MSG_ENTITY, this.target2);
-		WriteString(MSG_ENTITY, this.target3);
-		WriteString(MSG_ENTITY, this.target4);
-		WriteString(MSG_ENTITY, this.targetname);
-		WriteString(MSG_ENTITY, this.killtarget);
+		// probably some way to clean this up...
+		int targbits = 0;
+		if(this.target && this.target != "") targbits |= BIT(0);
+		if(this.target2 && this.target2 != "") targbits |= BIT(1);
+		if(this.target3 && this.target3 != "") targbits |= BIT(2);
+		if(this.target4 && this.target4 != "") targbits |= BIT(3);
+		if(this.targetname && this.targetname != "") targbits |= BIT(4);
+		if(this.killtarget && this.killtarget != "") targbits |= BIT(5);
+
+		WriteByte(MSG_ENTITY, targbits);
+
+		if(targbits & BIT(0))
+			WriteString(MSG_ENTITY, this.target);
+		if(targbits & BIT(1))
+			WriteString(MSG_ENTITY, this.target2);
+		if(targbits & BIT(2))
+			WriteString(MSG_ENTITY, this.target3);
+		if(targbits & BIT(3))
+			WriteString(MSG_ENTITY, this.target4);
+		if(targbits & BIT(4))
+			WriteString(MSG_ENTITY, this.targetname);
+		if(targbits & BIT(5))
+			WriteString(MSG_ENTITY, this.killtarget);
 	}
 
 	if(f & 4)
-	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
-	}
+		WriteVector(MSG_ENTITY, this.origin);
+
+	if(f & 8)
+		WriteVector(MSG_ENTITY, this.movedir);
+
+	if(f & 16)
+		WriteVector(MSG_ENTITY, this.angles);
 
 	WriteShort(MSG_ENTITY, this.modelindex);
-	WriteCoord(MSG_ENTITY, this.mins.x);
-	WriteCoord(MSG_ENTITY, this.mins.y);
-	WriteCoord(MSG_ENTITY, this.mins.z);
-	WriteCoord(MSG_ENTITY, this.maxs.x);
-	WriteCoord(MSG_ENTITY, this.maxs.y);
-	WriteCoord(MSG_ENTITY, this.maxs.z);
+	WriteVector(MSG_ENTITY, this.mins);
+	WriteVector(MSG_ENTITY, this.maxs);
 	WriteByte(MSG_ENTITY, bound(1, this.scale * 16, 255));
-
-	WriteCoord(MSG_ENTITY, this.movedir_x);
-	WriteCoord(MSG_ENTITY, this.movedir_y);
-	WriteCoord(MSG_ENTITY, this.movedir_z);
-
-	WriteCoord(MSG_ENTITY, this.angles_x);
-	WriteCoord(MSG_ENTITY, this.angles_y);
-	WriteCoord(MSG_ENTITY, this.angles_z);
 }
 
 #elif defined(CSQC)
@@ -106,46 +117,43 @@ void trigger_common_read(entity this, bool withtarget)
 	if(withtarget)
 	{
 		if(this.target) { strunzone(this.target); }
-		this.target = strzone(ReadString());
 		if(this.target2) { strunzone(this.target2); }
-		this.target2 = strzone(ReadString());
 		if(this.target3) { strunzone(this.target3); }
-		this.target3 = strzone(ReadString());
 		if(this.target4) { strunzone(this.target4); }
-		this.target4 = strzone(ReadString());
 		if(this.targetname) { strunzone(this.targetname); }
-		this.targetname = strzone(ReadString());
 		if(this.killtarget) { strunzone(this.killtarget); }
-		this.killtarget = strzone(ReadString());
+
+		int targbits = ReadByte();
+
+		this.target = ((targbits & BIT(0)) ? strzone(ReadString()) : string_null);
+		this.target2 = ((targbits & BIT(1)) ? strzone(ReadString()) : string_null);
+		this.target3 = ((targbits & BIT(2)) ? strzone(ReadString()) : string_null);
+		this.target4 = ((targbits & BIT(3)) ? strzone(ReadString()) : string_null);
+		this.targetname = ((targbits & BIT(4)) ? strzone(ReadString()) : string_null);
+		this.killtarget = ((targbits & BIT(5)) ? strzone(ReadString()) : string_null);
 	}
 
 	if(f & 4)
-	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
-	}
+		this.origin = ReadVector();
 	else
 		this.origin = '0 0 0';
 	setorigin(this, this.origin);
 
+	if(f & 8)
+		this.movedir = ReadVector();
+	else
+		this.movedir = '0 0 0';
+
+	if(f & 16)
+		this.angles = ReadVector();
+	else
+		this.angles = '0 0 0';
+
 	this.modelindex = ReadShort();
-	this.mins_x = ReadCoord();
-	this.mins_y = ReadCoord();
-	this.mins_z = ReadCoord();
-	this.maxs_x = ReadCoord();
-	this.maxs_y = ReadCoord();
-	this.maxs_z = ReadCoord();
+	this.mins = ReadVector();
+	this.maxs = ReadVector();
 	this.scale = ReadByte() / 16;
 	setsize(this, this.mins, this.maxs);
-
-	this.movedir_x = ReadCoord();
-	this.movedir_y = ReadCoord();
-	this.movedir_z = ReadCoord();
-
-	this.angles_x = ReadCoord();
-	this.angles_y = ReadCoord();
-	this.angles_z = ReadCoord();
 }
 
 void trigger_remove_generic(entity this)
@@ -293,8 +301,3 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 
 void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false); }
 void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true); }
-
-void SUB_UseTargets_self(entity this)
-{
-	SUB_UseTargets(this, NULL, NULL);
-}

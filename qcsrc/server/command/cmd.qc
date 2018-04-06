@@ -239,9 +239,9 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 		{
 			if (IS_CLIENT(caller))
 			{
-				if (warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
+				if (warmup_stage || sv_ready_restart || g_race_qualifying == 2)
 				{
-					if (!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
+					if (!readyrestart_happened || sv_ready_restart_repeatable)
 					{
 						if (time < game_starttime) // game is already restarting
 							return;
@@ -614,8 +614,10 @@ void ClientCommand_voice(entity caller, float request, float argc, string comman
 					sprint(caller, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 					return;
 				}
-				if (argc >= 3) VoiceMessage(caller, e, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
-				else VoiceMessage(caller, e, "");
+				string msg = "";
+				if (argc >= 3)
+					msg = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
+				VoiceMessage(caller, e, msg);
 
 				return;
 			}

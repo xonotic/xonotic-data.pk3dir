@@ -25,11 +25,11 @@ MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
+MUTATOR_HOOKFUNCTION(melee_only, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	switch (item.itemdef)
+	switch (definition)
 	{
 		case ITEM_HealthSmall:
 		case ITEM_ArmorSmall:

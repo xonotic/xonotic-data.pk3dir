@@ -7,7 +7,7 @@ CLASS(ListBox, Item)
 	METHOD(ListBox, draw, void(entity));
 	METHOD(ListBox, keyDown, float(entity, float, float, float));
 	METHOD(ListBox, mouseMove, float(entity, vector));
-	METHOD(ListBox, mousePress, float(entity, vector));
+	METHOD(ListBox, mousePress, bool(ListBox this, vector pos));
 	METHOD(ListBox, mouseDrag, float(entity, vector));
 	METHOD(ListBox, mouseRelease, float(entity, vector));
 	METHOD(ListBox, focusLeave, void(entity));

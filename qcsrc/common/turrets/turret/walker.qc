@@ -62,7 +62,7 @@ void walker_melee_do_dmg(entity this)
     {
         if (turret_validate_target(this, e, this.target_validate_flags))
             if (e != this && e.owner != this)
-                Damage(e, this, this, (autocvar_g_turrets_unit_walker_melee_damage), DEATH_TURRET_WALK_MELEE.m_id, '0 0 0', v_forward * (autocvar_g_turrets_unit_walker_melee_force));
+                Damage(e, this, this, (autocvar_g_turrets_unit_walker_melee_damage), DEATH_TURRET_WALK_MELEE.m_id, DMG_NOWEP, '0 0 0', v_forward * (autocvar_g_turrets_unit_walker_melee_force));
 
         e = e.chain;
     }
@@ -75,7 +75,7 @@ void walker_setnoanim(entity this)
 }
 void walker_rocket_explode(entity this)
 {
-    RadiusDamage (this, this.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), this, NULL, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET.m_id, NULL);
+    RadiusDamage (this, this.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), this, NULL, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET.m_id, DMG_NOWEP, NULL);
     delete(this);
 }
 
@@ -84,7 +84,7 @@ void walker_rocket_touch(entity this, entity toucher)
     walker_rocket_explode(this);
 }
 
-void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
     this.health = this.health - damage;
     this.velocity = this.velocity + vforce;

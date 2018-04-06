@@ -134,6 +134,8 @@ void CSQC_Init()
 	registercvar("cl_jumpspeedcap_min", "");
 	registercvar("cl_jumpspeedcap_max", "");
 
+	registercvar("cl_shootfromfixedorigin", "");
+
 	registercvar("cl_multijump", "1");
 
 	registercvar("cl_spawn_near_teammate", "1");
@@ -697,10 +699,7 @@ void Spawn_PreDraw(entity this)
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 {
 	float teamnum = (ReadByte() - 1);
-	vector spn_origin;
-	spn_origin.x = ReadCoord();
-	spn_origin.y = ReadCoord();
-	spn_origin.z = ReadCoord();
+	vector spn_origin = ReadVector();
 
 	this.team = (teamnum + 1);
 
@@ -757,9 +756,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 	if(entnum)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 
 		if(is_new)
 		{

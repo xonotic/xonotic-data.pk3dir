@@ -158,9 +158,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_LOCATION)
     {
-        this.origin_x = ReadCoord();
-        this.origin_y = ReadCoord();
-        this.origin_z = ReadCoord();
+        this.origin = ReadVector();
         setorigin(this, this.origin);
         this.oldorigin = this.origin;
     }
@@ -267,9 +265,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.pushable = true;
         //this.angles = '0 0 0';
         set_movetype(this, MOVETYPE_TOSS);
-        this.velocity_x = ReadCoord();
-        this.velocity_y = ReadCoord();
-        this.velocity_z = ReadCoord();
+        this.velocity = ReadVector();
         setorigin(this, this.oldorigin);
 
         if(!this.move_time)
@@ -311,9 +307,7 @@ bool ItemSend(entity this, entity to, int sf)
 	//WriteByte(MSG_ENTITY, this.cnt);
 	if(sf & ISF_LOCATION)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 
 	if(sf & ISF_ANGLES)
@@ -356,9 +350,7 @@ bool ItemSend(entity this, entity to, int sf)
 
 	if(sf & ISF_DROP)
 	{
-		WriteCoord(MSG_ENTITY, this.velocity.x);
-		WriteCoord(MSG_ENTITY, this.velocity.y);
-		WriteCoord(MSG_ENTITY, this.velocity.z);
+		WriteVector(MSG_ENTITY, this.velocity);
 	}
 
 	return true;
@@ -626,6 +618,7 @@ AUTOCVAR(g_pickup_respawntime_scaling_reciprocal, float, 0.0, "Multiply respawn 
 AUTOCVAR(g_pickup_respawntime_scaling_offset, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `offset` offsets the curve left or right - the results are not intuitive and I recommend plotting the respawn time and the number of items per player to see what's happening");
 AUTOCVAR(g_pickup_respawntime_scaling_linear, float, 1.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `linear` can be used to simply scale the respawn time linearly");
 
+/// Adjust respawn time according to the number of players.
 float adjust_respawntime(float normal_respawntime) {
 	float r = autocvar_g_pickup_respawntime_scaling_reciprocal;
 	float o = autocvar_g_pickup_respawntime_scaling_offset;
@@ -660,17 +653,49 @@ void Item_ScheduleRespawn(entity e)
 		//LOG_INFOF("item %s will respawn in %f", e.classname, adjusted_respawntime);
 
 		// range: adjusted_respawntime - respawntimejitter .. adjusted_respawntime + respawntimejitter
-		float actual_time = adjusted_respawntime + crandom() * e.respawntimejitter;
-		Item_ScheduleRespawnIn(e, actual_time);
+		float respawn_in = adjusted_respawntime + crandom() * e.respawntimejitter;
+		Item_ScheduleRespawnIn(e, respawn_in);
 	}
 	else // if respawntime is -1, this item does not respawn
 		Item_Show(e, -1);
 }
 
+AUTOCVAR(g_pickup_respawntime_initial_random, int, 1,
+	"For items that don't start spawned: 0: spawn after their normal respawntime; 1: spawn after `random * respawntime` with the *same* random; 2: same as 1 but each item has separate random");
+
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
-	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
+
+	float spawn_in;
+	if (autocvar_g_pickup_respawntime_initial_random == 0)
+	{
+		// range: respawntime .. respawntime + respawntimejitter
+		spawn_in = e.respawntime + random() * e.respawntimejitter;
+	}
+	else
+	{
+		float rnd;
+		if (autocvar_g_pickup_respawntime_initial_random == 1)
+		{
+			static float shared_random = 0;
+			// NOTE this code works only if items are scheduled at the same time (normal case)
+			// NOTE2 random() can't return exactly 1 so this check always work as intended
+			if (!shared_random || floor(time) > shared_random)
+				shared_random = floor(time) + random();
+			rnd = shared_random - floor(time);
+		}
+		else
+			rnd = random();
+
+		// range:
+		// if respawntime >= ITEM_RESPAWN_TICKS: ITEM_RESPAWN_TICKS .. respawntime + respawntimejitter
+		// else: 0 .. ITEM_RESPAWN_TICKS
+		// this is to prevent powerups spawning unexpectedly without waypoints
+		spawn_in = ITEM_RESPAWN_TICKS + rnd * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
+	}
+
+	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : spawn_in));
 }
 
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
@@ -915,7 +940,7 @@ void Item_Touch(entity this, entity toucher)
 
 LABEL(pickup)
 
-	toucher.last_pickup = time;
+	STAT(LAST_PICKUP, toucher) = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
@@ -1141,7 +1166,7 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 	return rating;
 }
 
-void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 		RemoveItem(this);
@@ -1492,7 +1517,7 @@ spawnfunc(target_items)
 					s = Buff_UndeprecateName(argv(j));
 					if(s == it.m_name)
 					{
-						this.buffs |= (it.m_itemid);
+						STAT(BUFFS, this) |= (it.m_itemid);
 						break;
 					}
 				});
@@ -1552,7 +1577,7 @@ spawnfunc(target_items)
 		if(this.ammo_fuel != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_fuel), "fuel");
 		if(this.health != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.health), "health");
 		if(this.armorvalue != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.armorvalue), "armor");
-		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.buffs & (it.m_itemid)), it.m_name));
+		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(BUFFS, this) & (it.m_itemid)), it.m_name));
 		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.weapons & (it.m_wepset)), it.netname));
 	}
 	this.netname = strzone(this.netname);
@@ -1601,30 +1626,30 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 
 bool GiveBuff(entity e, Buff thebuff, int op, int val)
 {
-	bool had_buff = (e.buffs & thebuff.m_itemid);
+	bool had_buff = (STAT(BUFFS, e) & thebuff.m_itemid);
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				e.buffs |= thebuff.m_itemid;
+				STAT(BUFFS, e) |= thebuff.m_itemid;
 			else
-				e.buffs &= ~thebuff.m_itemid;
+				STAT(BUFFS, e) &= ~thebuff.m_itemid;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				e.buffs |= thebuff.m_itemid;
+				STAT(BUFFS, e) |= thebuff.m_itemid;
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.buffs &= ~thebuff.m_itemid;
+				STAT(BUFFS, e) &= ~thebuff.m_itemid;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.buffs &= ~thebuff.m_itemid;
+				STAT(BUFFS, e) &= ~thebuff.m_itemid;
 			break;
 	}
-	bool have_buff = (e.buffs & thebuff.m_itemid);
+	bool have_buff = (STAT(BUFFS, e) & thebuff.m_itemid);
 	return (had_buff != have_buff);
 }
 

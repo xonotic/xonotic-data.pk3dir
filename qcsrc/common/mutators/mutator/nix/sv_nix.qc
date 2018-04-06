@@ -183,18 +183,6 @@ void NIX_GiveCurrentWeapon(entity this)
 			}
 		}
 
-		// vortex too
-		if(WEP_CVAR(vortex, charge))
-		{
-			if(WEP_CVAR_SEC(vortex, chargepool))
-				this.vortex_chargepool_ammo = 1;
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			{
-				.entity weaponentity = weaponentities[slot];
-				this.(weaponentity).vortex_charge = WEP_CVAR(vortex, charge_start);
-			}
-		}
-
 		// set last change info
 		this.nix_lastchange_id = nix_nextchange;
 	}
@@ -256,15 +244,15 @@ MUTATOR_HOOKFUNCTION(nix, BuildMutatorsPrettyString)
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", NIX");
 }
 
-MUTATOR_HOOKFUNCTION(nix, FilterItem)
+MUTATOR_HOOKFUNCTION(nix, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	if(item.itemdef.instanceOfHealth || item.itemdef.instanceOfArmor)
+	if (definition.instanceOfHealth || definition.instanceOfArmor)
 	{
 		return !autocvar_g_nix_with_healtharmor;
 	}
-	else if(item.itemdef.instanceOfPowerup)
+	else if (definition.instanceOfPowerup)
 	{
 		return !autocvar_g_nix_with_powerups;
 	}
