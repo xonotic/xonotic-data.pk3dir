@@ -17,7 +17,7 @@ void conveyor_think(entity this)
 		IL_REMOVE(g_conveyed, it);
 	});
 
-	if(this.active)
+	if(this.active == ACTIVE_ACTIVE)
 	{
 		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, !it.conveyor.active && isPushable(it),
 		{
