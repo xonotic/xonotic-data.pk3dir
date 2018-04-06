@@ -2563,7 +2563,7 @@ void PlayerPreThink (entity this)
 	if (IS_REAL_CLIENT(this))
 		PrintWelcomeMessage(this);
 
-	#define MIN_SPEC_TIME 1
+	local const int MIN_SPEC_TIME = 1;
 	if (IS_PLAYER(this)) {
 		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)
 			error("Client can't be spawned as player on connection!");
@@ -2575,20 +2575,18 @@ void PlayerPreThink (entity this)
 			IntermissionThink(this);
 		return;
 	}
-	else if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME + 1)
+	else if (IS_REAL_CLIENT(this) && !CS(this).autojoin_checked && time >= CS(this).jointime + MIN_SPEC_TIME)
 	{
+		CS(this).autojoin_checked = true;
 		// don't do this in ClientConnect
 		// many things can go wrong if a client is spawned as player on connection
-		if (time > CS(this).jointime + MIN_SPEC_TIME)
+		if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
+			|| (!(autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0)
+				&& (!teamplay || autocvar_g_balance_teams)))
 		{
-			if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
-				|| (!(autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0)
-					&& (!teamplay || autocvar_g_balance_teams)))
-			{
-				campaign_bots_may_start = true;
-				Join(this);
-				return;
-			}
+			campaign_bots_may_start = true;
+			Join(this);
+			return;
 		}
 	}
 	else if (IS_OBSERVER(this)) {
