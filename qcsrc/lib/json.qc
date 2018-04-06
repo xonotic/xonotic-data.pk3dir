@@ -299,6 +299,67 @@ void json_dump(int buf)
 #undef JSON_FAIL
 #undef JSON_END
 
+ERASEABLE
+string json_stringify_string(string s)
+{
+    string buf = "\"";
+    FOREACH_CHAR(s, true, {
+        switch (it) {
+            default:
+                buf = strcat(buf, chr2str(it));
+                break;
+            case '\b':
+            case '\f':
+            case '\n':
+            case '\r':
+            case '\t':
+            case '\"':
+            case '\\':
+                buf = strcat(buf, chr2str('\\', it));
+                break;
+        }
+    });
+    return strcat(buf, "\"");
+}
+
+ERASEABLE
+string json_parse_string(string s)
+{
+    s = substring(s, 1, -2);
+    string buf = "";
+    bool parseEscape = false;
+    FOREACH_CHAR(s, true, {
+    switch (it) {
+        default:
+            if (!parseEscape) {
+                buf = strcat(buf, chr2str(it));
+            } else {
+                switch (it) {
+                    // do something sane for invalid escape sequences
+                    default: buf = strcat(buf, "\\", chr2str(it)); break;
+                    case 'b': buf = strcat(buf, "\b"); break;
+                    case 'f': buf = strcat(buf, "\f"); break;
+                    case 'n': buf = strcat(buf, "\n"); break;
+                    case 'r': buf = strcat(buf, "\r"); break;
+                    case 't': buf = strcat(buf, "\t"); break;
+                    case '"': buf = strcat(buf, "\""); break;
+                }
+                parseEscape = false;
+            }
+            break;
+        case '\\':
+            if (!parseEscape) {
+                parseEscape = true;
+            } else {
+                buf = strcat(buf, "\\");
+                parseEscape = false;
+            }
+            break;
+        }
+    });
+    return buf;
+}
+
 TEST(json, Parse)
 {
     string s = "{\n\

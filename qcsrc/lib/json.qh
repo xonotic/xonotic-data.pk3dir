@@ -1,1 +1,4 @@
 #pragma once
+
+string json_stringify_string(string s);
+string json_parse_string(string s);
