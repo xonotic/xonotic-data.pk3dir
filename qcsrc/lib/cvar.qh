@@ -34,6 +34,7 @@ ERASEABLE
 string console_encode(string input)
 {
 	input = strreplace("$", "$$", input);
+	input = strreplace("\\", "\\\\", input);
 	input = strreplace("\r", "\\r", input);
 	input = strreplace("\n", "\\n", input);
 	input = strreplace("\"", "\\\"", input);
@@ -48,6 +49,7 @@ string console_decode(string input)
 	input = strreplace("\\r", "\r", input);
 	input = strreplace("\\n", "\n", input);
 	input = strreplace("\\\"", "\"", input);
+	input = strreplace("\\\\", "\\", input);
 	return input;
 }
 
