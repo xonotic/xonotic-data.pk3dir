@@ -933,7 +933,7 @@ void CSQC_Parse_Print(string strMessage)
 			}
 			s = strcat("^3", s);
 		}
-		localcmd("\n", autocvar__cl_hook_print, " ", itos(flags), " ", console_encode(s), "\n");
+		localcmd("\n", autocvar__cl_hook_print, " ", console_encode(s), " ", itos(flags), "\n");
 	} else {
 		print(ColorTranslateRGB(strMessage));
 	}

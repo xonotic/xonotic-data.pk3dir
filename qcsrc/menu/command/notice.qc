@@ -17,8 +17,8 @@ GENERIC_COMMAND(notice, "Append a notice to chat")
     {
         case CMD_REQUEST_COMMAND:
         {
-            int flags = stoi(argv(1));
-            string s = console_decode(substring(command, argv_start_index(2), argv_end_index(-1)));
+            string s = console_decode(substring(command, argv_start_index(1), argv_end_index(1) - argv_start_index(1)));
+            int flags = stoi(argv(2));
             s = ColorTranslateRGB(s);
             string prefix = (flags & NOTICE_CHAT) ? "\{3}" : "";
             if (!(flags & NOTICE_SILENT)) {
