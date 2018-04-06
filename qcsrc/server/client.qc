@@ -2130,9 +2130,11 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
+const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
+	if (time < CS(this).jointime + MIN_SPEC_TIME) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
 	if (ShowTeamSelection(this)) return false;
@@ -2563,7 +2565,6 @@ void PlayerPreThink (entity this)
 	if (IS_REAL_CLIENT(this))
 		PrintWelcomeMessage(this);
 
-	local const int MIN_SPEC_TIME = 1;
 	if (IS_PLAYER(this)) {
 		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)
 			error("Client can't be spawned as player on connection!");
