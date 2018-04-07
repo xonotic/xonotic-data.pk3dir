@@ -261,18 +261,14 @@ STATIC_INIT(RegisterClasses)
 	class(cname).type name;                \
 	INIT(cname) \
 	{ \
-		if (this.name) \
-			strunzone(this.name); \
-		this.name = strzone(val); \
+		strcpy(this.name, val); \
 	}
 
 #define STATIC_ATTRIB_STRZONE(cname, name, type, val) \
 	type cname##_##name; \
 	_INIT_STATIC(cname) \
 	{ \
-        if (cname##_##name) \
-            strunzone(cname##_##name); \
-		cname##_##name = val; \
+		strcpy(cname##_##name, val); \
 	}
 
 #define ATTRIBARRAY(cname, name, type, cnt) \

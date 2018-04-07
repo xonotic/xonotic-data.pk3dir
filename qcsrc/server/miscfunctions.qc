@@ -306,9 +306,7 @@ void GetCvars_handleString(entity this, entity store, string thisname, float f, 
 	{
 		if (thisname == name)
 		{
-			if (store.(field))
-				strunzone(store.(field));
-			store.(field) = strzone(argv(f + 1));
+			strcpy(store.(field), argv(f + 1));
 		}
 	}
 	else
@@ -323,8 +321,7 @@ void GetCvars_handleString_Fixup(entity this, entity store, string thisname, flo
 			string s = func(this, strcat1(store.(field)));
 			if (s != store.(field))
 			{
-				strunzone(store.(field));
-				store.(field) = strzone(s);
+				strcpy(store.(field), s);
 			}
 		}
 }

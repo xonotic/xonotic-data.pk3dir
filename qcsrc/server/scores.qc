@@ -535,9 +535,7 @@ void WinningConditionHelper(entity this)
 		}
 	}
 
-	if(worldstatus)
-		strunzone(worldstatus);
-	worldstatus = strzone(s);
+	strcpy(worldstatus, s);
 
 	FOREACH_CLIENT(true, {
 		string s = "";
@@ -556,9 +554,7 @@ void WinningConditionHelper(entity this)
 				s = "-666";
 		}
 
-		if(it.clientstatus)
-			strunzone(it.clientstatus);
-		it.clientstatus = strzone(s);
+		strcpy(it.clientstatus, s);
 	});
 }
 

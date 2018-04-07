@@ -323,17 +323,13 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 			this.waterlevel = 0;
 			this.count = 1;
 		}
-		if(this.noise)
-			strunzone(this.noise);
-		if(this.bgmscript)
-			strunzone(this.bgmscript);
-		this.noise = strzone(ReadString());
+		strcpy(this.noise, ReadString());
 		if(this.noise != "")
 		{
 			this.atten = ReadByte() / 64.0;
 			this.volume = ReadByte() / 255.0;
 		}
-		this.bgmscript = strzone(ReadString());
+		strcpy(this.bgmscript, ReadString());
 		if(this.bgmscript != "")
 		{
 			this.bgmscriptattack = ReadByte() / 64.0;

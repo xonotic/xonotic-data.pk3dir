@@ -2481,8 +2481,7 @@ void PlayerPreThink (entity this)
 		}
 		if (!assume_unchanged && autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
-		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
-		CS(this).netname_previous = strzone(this.netname);
+		strcpy(CS(this).netname_previous, this.netname);
 	}
 
 	// version nagging

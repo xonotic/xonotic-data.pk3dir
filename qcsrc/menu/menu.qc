@@ -550,8 +550,7 @@ void m_tooltip(vector pos)
 			{
 				// fade out if tooltip of a certain item has changed
 				menuTooltipState = 3;
-				if (prev_tooltip) strunzone(prev_tooltip);
-				prev_tooltip = strzone(it.tooltip);
+				strcpy(prev_tooltip, it.tooltip);
 			}
 			else if (menuTooltipItem && !m_testmousetooltipbox(pos))
 			{
@@ -584,8 +583,7 @@ void m_tooltip(vector pos)
 
 					menuTooltipOrigin.x = -1;  // unallocated
 
-					if (menuTooltipText) strunzone(menuTooltipText);
-					menuTooltipText = strzone(gettooltip());
+					strcpy(menuTooltipText, gettooltip());
 
 					int i = 0;
 					float w = 0;
@@ -953,8 +951,7 @@ void m_goto(string itemname)
 {
 	if (!menuInitialized)
 	{
-		if (m_goto_buffer) strunzone(m_goto_buffer);
-		m_goto_buffer = strzone(itemname);
+		strcpy(m_goto_buffer, itemname);
 		return;
 	}
 	if (itemname == "")  // this can be called by GameCommand

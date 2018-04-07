@@ -70,12 +70,8 @@ void XonoticCampaignList_destroy(entity me)
 void XonoticCampaignList_loadCvars(entity me)
 {
 	// read campaign cvars
-	if(campaign_name)
-		strunzone(campaign_name);
-	if(me.cvarName)
-		strunzone(me.cvarName);
-	campaign_name = strzone(cvar_string("g_campaign_name"));
-	me.cvarName = strzone(strcat("g_campaign", campaign_name, "_index"));
+	strcpy(campaign_name, cvar_string("g_campaign_name"));
+	strcpy(me.cvarName, strcat("g_campaign", campaign_name, "_index"));
 	registercvar(me.cvarName, "", 0); // saved by server QC anyway
 	CampaignFile_Unload();
 	CampaignFile_Load(0, CAMPAIGN_MAX_ENTRIES);

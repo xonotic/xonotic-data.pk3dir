@@ -264,9 +264,7 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO         
 			}                                                                                                       \
 		}                                                                                                           \
 	}                                                                                                               \
-	if (panel.current_panel_bg)                                                                                     \
-		strunzone(panel.current_panel_bg);                                                                          \
-	panel.current_panel_bg = strzone(panel_bg);                                                                     \
+	strcpy(panel.current_panel_bg, panel_bg);                                                                       \
 } MACRO_END
 
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.

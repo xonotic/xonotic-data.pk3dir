@@ -309,8 +309,7 @@ bool bd_move_dozer(entity minigame, entity dozer)
 				case BD_TILE_BRICK1: return false;
 			}
 
-			if(hit.netname) { strunzone(hit.netname); }
-			hit.netname = strzone(testpos);
+			strcpy(hit.netname, testpos);
 			minigame_server_sendflags(hit,MINIG_SF_UPDATE);
 			break;
 		}
@@ -330,8 +329,7 @@ bool bd_move_dozer(entity minigame, entity dozer)
 		case BD_TILE_BRICK1: return false;
 	}
 
-	if(dozer.netname) { strunzone(dozer.netname); }
-	dozer.netname = strzone(newpos);
+	strcpy(dozer.netname, newpos);
 
 	return true;
 }
@@ -598,8 +596,7 @@ void bd_do_next_match(entity minigame, entity player)
 
 	if(minigame.bd_nextlevel && minigame.bd_nextlevel != "")
 	{
-		if(minigame.bd_levelname) { strunzone(minigame.bd_levelname); }
-		minigame.bd_levelname = strzone(minigame.bd_nextlevel);
+		strcpy(minigame.bd_levelname, minigame.bd_nextlevel);
 	}
 
 	bd_setup_pieces(minigame);
@@ -609,8 +606,7 @@ void bd_do_next_match(entity minigame, entity player)
 
 void bd_set_next_match(entity minigame, string next)
 {
-	if(minigame.bd_nextlevel) { strunzone(minigame.bd_nextlevel); }
-	minigame.bd_nextlevel = strzone(next);
+	strcpy(minigame.bd_nextlevel, next);
 }
 
 void bd_next_match(entity minigame, entity player, string next)
@@ -678,8 +674,7 @@ void bd_set_nextlevel(entity minigame, string s)
 {
 	tokenize_console(s);
 
-	if(minigame.bd_nextlevel) { strunzone(minigame.bd_nextlevel); }
-	minigame.bd_nextlevel = strzone(argv(2));
+	strcpy(minigame.bd_nextlevel, argv(2));
 }
 
 int bd_fix_dir(vector dir)
@@ -854,8 +849,7 @@ int bd_server_event(entity minigame, string event, ...)
 	{
 		case "start":
 		{
-			if(minigame.bd_levelname) { strunzone(minigame.bd_levelname); }
-			minigame.bd_levelname = strzone(autocvar_sv_minigames_bulldozer_startlevel);
+			strcpy(minigame.bd_levelname, autocvar_sv_minigames_bulldozer_startlevel);
 			bd_setup_pieces(minigame);
 			minigame.minigame_flags = BD_TURN_MOVE;
 
@@ -1386,8 +1380,7 @@ int bd_client_event(entity minigame, string event, ...)
 				{
 					int letter = ReadByte();
 					int number = ReadByte();
-					if(sent.netname) { strunzone(sent.netname); }
-					sent.netname = strzone(minigame_tile_buildname(letter, number));
+					strcpy(sent.netname, minigame_tile_buildname(letter, number));
 
 					sent.bd_tiletype = ReadByte();
 

@@ -27,6 +27,13 @@
 	}
 #endif
 
+#define strcpy(this, s) MACRO_BEGIN \
+	if (this) { \
+		strunzone(this); \
+	} \
+	this = strzone(s); \
+MACRO_END
+
 ERASEABLE
 string seconds_tostring(float sec)
 {

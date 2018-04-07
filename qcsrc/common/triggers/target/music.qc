@@ -215,9 +215,7 @@ void Net_TargetMusic()
 	}
 	if(e.noise != noi)
 	{
-		if(e.noise)
-			strunzone(e.noise);
-		e.noise = strzone(noi);
+		strcpy(e.noise, noi);
 		precache_sound(e.noise);
 		_sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
@@ -292,9 +290,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 		this.fade_time = ReadByte() / 16.0;
 		this.fade_rate = ReadByte() / 16.0;
 		string s = this.noise;
-		if(this.noise)
-			strunzone(this.noise);
-		this.noise = strzone(ReadString());
+		strcpy(this.noise, ReadString());
 		if(this.noise != s)
 		{
 			precache_sound(this.noise);

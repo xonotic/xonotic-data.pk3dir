@@ -612,8 +612,7 @@ void preMenuDraw()
 	}
 	else
 	{
-		strunzone(campaign_name_previous);
-		campaign_name_previous = strzone(campaign_name);
+		strcpy(campaign_name_previous, campaign_name);
 		campaign_won_previous = cvar(strcat("g_campaign", campaign_name, "_won"));
 	}
 }

@@ -155,8 +155,7 @@ CLASS(DamageText, Object)
             );
         }
 
-        if (this.text) strunzone(this.text);
-        this.text = strzone(s);
+        strcpy(this.text, s);
 
         this.m_size = map_bound_ranges(potential,
             autocvar_cl_damagetext_size_min_damage, autocvar_cl_damagetext_size_max_damage,
