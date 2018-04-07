@@ -19,7 +19,7 @@ void conveyor_think(entity this)
 
 	if(this.active == ACTIVE_ACTIVE)
 	{
-		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, !it.conveyor.active && isPushable(it),
+		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, it.conveyor.active == ACTIVE_NOT && isPushable(it),
 		{
 			vector emin = it.absmin;
 			vector emax = it.absmax;
