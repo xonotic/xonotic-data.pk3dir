@@ -1,5 +1,7 @@
 #pragma once
 
+#include <menu/modules/extensions/interface.qh>
+
 string chat_command;
 string chat_text;
 
@@ -8,3 +10,5 @@ int chat_lines_count();
 string chat_lines_get(int i);
 
 void chat_lines_push(string s);
+
+AUTOEXTENSION(chat, "org.xonotic:chat:1");

@@ -41,6 +41,9 @@ GENERIC_COMMAND(commandmode, "input a console command")
     {
         case CMD_REQUEST_COMMAND:
         {
+            if (!autoextension_chat) {
+                return;
+            }
             string prefix = arguments > 1 ? strcat(substring(command, argv_start_index(1), argv_end_index(-1)), " ") : "";
             chat_command = "";
             strcpy(chat_text, prefix);
@@ -65,6 +68,9 @@ GENERIC_COMMAND(messagemode, "input a chat message to say to everyone")
     {
         case CMD_REQUEST_COMMAND:
         {
+            if (!autoextension_chat) {
+                return;
+            }
             string prefix = arguments > 1 ? strcat(substring(command, argv_start_index(1), argv_end_index(-1)), " ") : "";
             chat_command = "say ";
             strcpy(chat_text, prefix);
@@ -89,6 +95,9 @@ GENERIC_COMMAND(messagemode2, "input a chat message to say to only your team")
     {
         case CMD_REQUEST_COMMAND:
         {
+            if (!autoextension_chat) {
+                return;
+            }
             string prefix = arguments > 1 ? strcat(substring(command, argv_start_index(1), argv_end_index(-1)), " ") : "";
             chat_command = "say_team ";
             strcpy(chat_text, prefix);

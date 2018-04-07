@@ -1,3 +1,4 @@
 // generated file; do not modify
 
 #include <menu/modules/chat/_mod.qh>
+#include <menu/modules/extensions/_mod.qh>

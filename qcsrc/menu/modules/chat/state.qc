@@ -8,7 +8,7 @@ STATIC_INIT(chat_buffer) {
 }
 
 int chat_lines_count() {
-    return chat_buffer_idx + 1;
+    return chat_buffer_idx;
 }
 
 string chat_lines_get(int i) {

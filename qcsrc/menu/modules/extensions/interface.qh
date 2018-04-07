@@ -1,0 +1,24 @@
+#pragma once
+
+#ifdef MENUQC
+void extensions_register(string id, void(bool) set);
+#endif
+
+#define AUTOEXTENSION(var, id) \
+    bool autoextension_##var; \
+    void autoextension_##var##_set(bool val) { \
+        autoextension_##var = val; \
+    } \
+    STATIC_INIT(autoextension_##var) \
+    { \
+        extensions_register(id, autoextension_##var##_set); \
+    }
+
+noref string autocvar__cl_extensions;
+STATIC_INIT(extensions)
+{
+    cvar_set("_cl_extensions", "");
+}
+
+#define extensions_report(id) \
+    cvar_set("_cl_extensions", cons(cvar_string("_cl_extensions"), id))

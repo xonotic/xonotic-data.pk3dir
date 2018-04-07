@@ -1,0 +1,16 @@
+#pragma once
+
+int extensions_count();
+
+enum {
+    EXTENSIONS_NAME,
+    EXTENSIONS_SETTER,
+    _EXTENSIONS_FIELDS,
+};
+
+string extensions_get(int i, int fld);
+
+#define extensions_get_name(i) extensions_get(i, EXTENSIONS_NAME)
+
+#define extensions_get_setter(i) reinterpret_cast(func_bool_v, FTOI(stof(extensions_get(i, EXTENSIONS_SETTER))))
+
