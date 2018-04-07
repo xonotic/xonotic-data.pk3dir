@@ -1,6 +1,9 @@
 #include "dialog.qh"
 
 #include <menu/xonotic/inputbox.qh>
+#include <menu/xonotic/listbox.qh>
+
+#include "state.qh"
 
 CLASS(XonoticChatList, XonoticListBox)
     ATTRIB(XonoticChatList, rowsPerItem, int, 1);

@@ -35,6 +35,8 @@ GENERIC_COMMAND(notice, "Append a notice to chat")
     }
 }
 
+void m_goto(string name);
+
 GENERIC_COMMAND(commandmode, "input a console command")
 {
     switch(request)

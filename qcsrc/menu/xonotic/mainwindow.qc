@@ -1,6 +1,7 @@
 #include "mainwindow.qh"
 
 #include "../mutators/events.qh"
+#include <menu/modules/chat/dialog.qh>
 
 #include "nexposee.qh"
 #include "inputbox.qh"
