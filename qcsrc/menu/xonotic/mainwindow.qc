@@ -235,6 +235,10 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z * SKINALPHA_DIALOG_SANDBOXTOOLS);
 
+	i = NEW(XonoticChatDialog);
+	i.configureDialog(i);
+	me.addItem(me, i, vec2(0, 1 - i.intendedHeight), vec2(i.intendedWidth, i.intendedHeight), SKINALPHAS_MAINMENU_z);
+
 	MUTATOR_CALLHOOK(ConfigureDialogs, me);
 
 

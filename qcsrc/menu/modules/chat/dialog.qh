@@ -1,0 +1,16 @@
+#pragma once
+
+#include <menu/xonotic/rootdialog.qh>
+
+CLASS(XonoticChatDialog, XonoticRootDialog)
+	ATTRIB(XonoticChatDialog, name, string, "Chat");
+	ATTRIB(XonoticChatDialog, requiresConnection, bool, true);
+
+	ATTRIB(XonoticChatDialog, title, string, _("Chat"));
+	ATTRIB(XonoticChatDialog, color, vector, '1 1 1');
+	ATTRIB(XonoticChatDialog, intendedWidth, float, 0.5);
+	ATTRIB(XonoticChatDialog, rows, float, 5);
+	ATTRIB(XonoticChatDialog, columns, float, 4);
+
+	METHOD(XonoticChatDialog, fill, void(entity));
+ENDCLASS(XonoticChatDialog)

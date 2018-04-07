@@ -104,13 +104,14 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 // vector vec2(vector v); // returns a vector with just the x and y components of the given vector
 // vector vec2(float x, float y); // returns a vector with the given x and y components
 
-noref vector _vec2;
-#define vec2(...) EVAL(OVERLOAD(vec2, __VA_ARGS__))
-#define vec2_1(v) (_vec2 = (v), _vec2.z = 0, _vec2)
-#define vec2_2(x, y) (_vec2_x = (x), _vec2_y = (y), _vec2)
+noref vector _vec_zero;
+noref vector _vec2_tmp;
+noref vector _vec3_tmp;
 
-noref vector _vec3;
-#define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
+#define vec2(...) EVAL(OVERLOAD(vec2, __VA_ARGS__))
+#define vec2_1(v) (_vec2_tmp = (v), _vec2_tmp.z = 0, _vec2_tmp + _vec_zero)
+#define vec2_2(_x, _y) (_vec2_tmp.x = (_x), _vec2_tmp.y = (_y), _vec2_tmp + _vec_zero)
+#define vec3(_x, _y, _z) (_vec3_tmp.x = (_x), _vec3_tmp.y = (_y), _vec3_tmp.z = (_z), _vec3_tmp + _vec_zero)
 
 ERASEABLE
 vector Rotate(vector v, float a)
