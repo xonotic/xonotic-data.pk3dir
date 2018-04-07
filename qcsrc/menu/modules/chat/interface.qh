@@ -1,0 +1,5 @@
+#pragma once
+
+#include "commands.qh"
+
+string autocvar__cl_hook_print;

@@ -1,4 +1,4 @@
-#include "notice.qh"
+#include "commands.qh"
 
 #include <common/sounds/all.qh>
 
