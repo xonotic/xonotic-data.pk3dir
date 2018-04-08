@@ -4,6 +4,25 @@
 #include "sort.qh"
 #include "oo.qh"
 
+// string logic
+//
+// true: is truthy
+// == "": is equal to ""
+// is "": has the same string index as the string constant ""
+// strunzone: can be strunzoned
+//
+// |              | true | == "" | is "" | strunzone |
+// | :----------: | :--: | :---: | :---: | :-------: |
+// | nil          |      | yes   |       |           |
+// | strcat(nil)  | yes  | yes   |       |           |
+// | strzone(nil) | yes  | yes   |       | yes       |
+// | ""           | yes  | yes   | yes   |           |
+// | strcat("")   | yes  | yes   |       |           |
+// | strzone("")  | yes  | yes   |       | yes       |
+// | "s"          | yes  |       |       |           |
+// | strcat("s")  | yes  |       |       |           |
+// | strzone("s") | yes  |       |       | yes       |
+
 #ifdef CSQC
 	float stringwidth_colors(string s, vector theSize)
 	{
