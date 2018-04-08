@@ -298,9 +298,7 @@ void GetCvars_handleString(entity this, entity store, string thisname, float f, 
 {
 	if (f < 0)
 	{
-		if (store.(field))
-			strunzone(store.(field));
-		store.(field) = string_null;
+		strfree(store.(field));
 	}
 	else if (f > 0)
 	{
@@ -363,14 +361,8 @@ void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float 
 }
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
 {
-	string o;
-	o = W_FixWeaponOrder_ForceComplete(wo);
-	if(CS(this).weaponorder_byimpulse)
-	{
-		strunzone(CS(this).weaponorder_byimpulse);
-		CS(this).weaponorder_byimpulse = string_null;
-	}
-	CS(this).weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
+	string o = W_FixWeaponOrder_ForceComplete(wo);
+	strcpy(CS(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
 

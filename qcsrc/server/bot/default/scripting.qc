@@ -1168,8 +1168,7 @@ void bot_resetqueues()
 		it.bot_barrier = 0;
 		for(int i = 0; i < it.bot_places_count; ++i)
 		{
-			strunzone(it.(bot_placenames[i]));
-			it.(bot_placenames[i]) = string_null;
+			strfree(it.(bot_placenames[i]));
 		}
 		it.bot_places_count = 0;
 	});

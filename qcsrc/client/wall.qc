@@ -111,9 +111,7 @@ void Ent_Wall_Draw(entity this)
 
 void Ent_Wall_Remove(entity this)
 {
-	if(this.bgmscript)
-		strunzone(this.bgmscript);
-	this.bgmscript = string_null;
+	strfree(this.bgmscript);
 }
 
 NET_HANDLE(ENT_CLIENT_WALL, bool isnew)

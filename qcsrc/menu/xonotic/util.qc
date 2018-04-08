@@ -267,8 +267,7 @@ void setZonedTooltip(entity e, string theTooltip, string theCvar)
 		theTooltip = string_null;
 	}
 
-	if(e.tooltip)
-		strunzone(e.tooltip);
+	strfree(e.tooltip);
 	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
 }
 

@@ -217,8 +217,7 @@ void m_init_delayed()
 	if (m_goto_buffer)
 	{
 		m_goto(m_goto_buffer);
-		strunzone(m_goto_buffer);
-		m_goto_buffer = string_null;
+		strfree(m_goto_buffer);
 	}
 
 	if (Menu_Active) m_display();  // delayed menu display
@@ -633,11 +632,7 @@ void m_tooltip(vector pos)
 
 	if (menuTooltipItem == NULL)
 	{
-		if (menuTooltipText)
-		{
-			strunzone(menuTooltipText);
-			menuTooltipText = string_null;
-		}
+		strfree(menuTooltipText);
 		return;
 	}
 	else

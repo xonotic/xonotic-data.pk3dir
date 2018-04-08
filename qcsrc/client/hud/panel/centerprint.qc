@@ -110,9 +110,7 @@ void reset_centerprint_messages()
 		centerprint_expire_time[i] = 0;
 		centerprint_time[i] = 1;
 		centerprint_msgID[i] = 0;
-		if(centerprint_messages[i])
-			strunzone(centerprint_messages[i]);
-		centerprint_messages[i] = string_null;
+		strfree(centerprint_messages[i]);
 	}
 }
 float hud_configure_cp_generation_time;

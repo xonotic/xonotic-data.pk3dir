@@ -253,15 +253,9 @@ void Draw_PointParticles(entity this)
 
 void Ent_PointParticles_Remove(entity this)
 {
-	if(this.noise)
-		strunzone(this.noise);
-	this.noise = string_null;
-	if(this.bgmscript)
-		strunzone(this.bgmscript);
-	this.bgmscript = string_null;
-	if(this.mdl)
-		strunzone(this.mdl);
-	this.mdl = string_null;
+    strfree(this.noise);
+    strfree(this.bgmscript);
+    strfree(this.mdl);
 }
 
 NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)

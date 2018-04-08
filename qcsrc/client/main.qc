@@ -555,9 +555,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 
 	if(!(nags & BIT(2)))
 	{
-		if(vote_called_vote)
-			strunzone(vote_called_vote);
-		vote_called_vote = string_null;
+		strfree(vote_called_vote);
 		vote_active = 0;
 	}
 	else
@@ -1163,9 +1161,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				for (i=pos-1; i<= RANKINGS_CNT-1; ++i) {
 					if (i == RANKINGS_CNT-1) { // clear out last record
 						grecordtime[i] = 0;
-						if (grecordholder[i])
-							strunzone(grecordholder[i]);
-						grecordholder[i] = string_null;
+						strfree(grecordholder[i]);
 					}
 					else {
 						grecordtime[i] = grecordtime[i+1];
@@ -1180,9 +1176,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			}
 
 			// store new ranking
-			if(grecordholder[pos-1] != "")
-				strunzone(grecordholder[pos-1]);
-			grecordholder[pos-1] = strzone(ReadString());
+			strcpy(grecordholder[pos-1], ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
 			if(strdecolorize(grecordholder[pos-1]) == strdecolorize(entcs_GetName(player_localnum)))
 				race_myrank = pos;

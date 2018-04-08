@@ -19,14 +19,13 @@
 	#define REPLICATE_string(fld, var, func) \
 		REPLICATE_7(fld, string, var, , \
 	{ strcpy(field, it); }, \
-	{ if (field) strunzone(field); field = string_null; }, \
+	{ strfree(field); }, \
 	{ \
 		/* also initialize to the default value of func when requesting cvars */ \
 		string s = func(field); \
 		if (s != field) \
 		{ \
-		    strunzone(field); \
-		    field = strzone(s); \
+		    strcpy(field, s); \
 		} \
 	})
 	#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func,  { field = stof(it); },          , )

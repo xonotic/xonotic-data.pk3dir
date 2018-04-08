@@ -1395,8 +1395,7 @@ void execute_next_frame()
 	if(to_execute_next_frame)
 	{
 		localcmd("\n", to_execute_next_frame, "\n");
-		strunzone(to_execute_next_frame);
-		to_execute_next_frame = string_null;
+		strfree(to_execute_next_frame);
 	}
 }
 void queue_to_execute_next_frame(string s)

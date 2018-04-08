@@ -276,7 +276,7 @@ void Monster_Sounds_Precache(entity this)
 
 void Monster_Sounds_Clear(entity this)
 {
-#define _MSOUND(m) if(this.monstersound_##m) { strunzone(this.monstersound_##m); this.monstersound_##m = string_null; }
+#define _MSOUND(m) strfree(this.monstersound_##m);
 	ALLMONSTERSOUNDS
 #undef _MSOUND
 }

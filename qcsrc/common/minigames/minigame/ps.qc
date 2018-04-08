@@ -139,7 +139,7 @@ bool ps_move_piece(entity minigame, entity piece, string pos, int leti, int numb
 	if(!middle)
 		return false;
 
-	if(middle.netname) { strunzone(middle.netname); }
+	strfree(middle.netname);
 	delete(middle);
 
 	strcpy(piece.netname, pos);
@@ -231,7 +231,7 @@ int ps_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			return false;
@@ -513,8 +513,7 @@ void ps_make_move(entity minigame)
 
 void ps_set_curr_pos(string s)
 {
-	if ( ps_curr_pos )
-		strunzone(ps_curr_pos);
+	strfree(ps_curr_pos);
 	if ( s )
 		s = strzone(s);
 	ps_curr_pos = s;

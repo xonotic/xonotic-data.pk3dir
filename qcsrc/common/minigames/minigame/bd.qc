@@ -420,7 +420,7 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 				if(!piece)
 					return; // how?!
 
-				if(piece.netname) { strunzone(piece.netname); }
+				strfree(piece.netname);
 				delete(piece);
 				minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 				return;
@@ -486,12 +486,12 @@ void bd_unfill_recurse(entity minigame, entity player, int thetype, int letter, 
 
 	if(targ && thetype == targ.bd_tiletype)
 	{
-		if(targ.netname) { strunzone(targ.netname); }
+		strfree(targ.netname);
 		delete(targ);
 	}
 	else if(piece && thetype == piece.bd_tiletype)
 	{
-		if(piece.netname) { strunzone(piece.netname); }
+		strfree(piece.netname);
 		delete(piece);
 	}
 	else return;
@@ -566,7 +566,7 @@ void bd_setup_pieces(entity minigame)
 	while( (e = findentity(e, owner, minigame)) )
 		if(e.classname == "minigame_board_piece")
 		{
-			if(e.netname) { strunzone(e.netname); }
+			strfree(e.netname);
 			delete(e);
 		}
 	e = NULL;
@@ -861,7 +861,7 @@ int bd_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			e = NULL;
@@ -871,8 +871,8 @@ int bd_server_event(entity minigame, string event, ...)
 				delete(e);
 			}
 
-			if(minigame.bd_nextlevel) { strunzone(minigame.bd_nextlevel); }
-			if(minigame.bd_levelname) { strunzone(minigame.bd_levelname); }
+			strfree(minigame.bd_nextlevel);
+			strfree(minigame.bd_levelname);
 			return false;
 		}
 		case "join":
@@ -1203,8 +1203,7 @@ void bd_editor_fill(entity minigame)
 
 void bd_set_curr_pos(string s)
 {
-	if ( bd_curr_pos )
-		strunzone(bd_curr_pos);
+	strfree(bd_curr_pos);
 	if ( s )
 		s = strzone(s);
 	bd_curr_pos = s;
