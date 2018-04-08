@@ -373,6 +373,7 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 	}
 	return r;
 }
+
 void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
@@ -437,7 +438,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 			{
 				if(s != "")
 					s = strcat(s, ", ");
-				s = strcat(s, keynumtostring(k));
+				s = strcat(s, translate_key(keynumtostring(k)));
 			}
 		}
 		s = draw_TextShortenToWidth(s, me.columnKeysSize, 0, me.realFontSize);
