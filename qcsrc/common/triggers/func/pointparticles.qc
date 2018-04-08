@@ -169,17 +169,17 @@ spawnfunc(func_sparks)
 .int dphitcontentsmask;
 
 entityclass(PointParticles);
-class(PointParticles) .int cnt; // effect number
-class(PointParticles) .vector velocity; // particle velocity
-class(PointParticles) .float waterlevel; // direction jitter
-class(PointParticles) .int count; // count multiplier
-class(PointParticles) .int impulse; // density
-class(PointParticles) .string noise; // sound
-class(PointParticles) .float atten;
-class(PointParticles) .float volume;
-class(PointParticles) .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
-class(PointParticles) .vector movedir; // trace direction
-class(PointParticles) .float glow_color; // palette index
+classfield(PointParticles) .int cnt; // effect number
+classfield(PointParticles) .vector velocity; // particle velocity
+classfield(PointParticles) .float waterlevel; // direction jitter
+classfield(PointParticles) .int count; // count multiplier
+classfield(PointParticles) .int impulse; // density
+classfield(PointParticles) .string noise; // sound
+classfield(PointParticles) .float atten;
+classfield(PointParticles) .float volume;
+classfield(PointParticles) .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
+classfield(PointParticles) .vector movedir; // trace direction
+classfield(PointParticles) .float glow_color; // palette index
 
 void Draw_PointParticles(entity this)
 {
