@@ -45,12 +45,8 @@ void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
     TC(int, i);
 	//LOG_INFOF("^xc80 entry %d: %s, %s\n", i, s, s1);
-	if (QuickMenu_Page_Description[i])
-		strunzone(QuickMenu_Page_Description[i]);
-	QuickMenu_Page_Description[i] = strzone(s);
-	if (QuickMenu_Page_Command[i])
-		strunzone(QuickMenu_Page_Command[i]);
-	QuickMenu_Page_Command[i] = strzone(s1);
+	strcpy(QuickMenu_Page_Description[i], s);
+	strcpy(QuickMenu_Page_Command[i], s1);
 }
 
 void QuickMenu_Page_ClearEntry(int i)
@@ -273,9 +269,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 		++QuickMenu_Page;
 
 	z_submenu = strzone(target_submenu);
-	if (QuickMenu_CurrentSubMenu)
-		strunzone(QuickMenu_CurrentSubMenu);
-	QuickMenu_CurrentSubMenu = strzone(z_submenu);
+	strcpy(QuickMenu_CurrentSubMenu, z_submenu);
 
 	QuickMenu_IsLastPage = true;
 	QuickMenu_Page_Entries = 0;

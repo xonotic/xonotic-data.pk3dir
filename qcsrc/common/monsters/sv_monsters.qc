@@ -311,9 +311,7 @@ bool Monster_Sounds_Load(entity this, string f, int first)
 		field = Monster_Sound_SampleField(argv(0));
 		if(GetMonsterSoundSampleField_notFound)
 			continue;
-		if (this.(field))
-			strunzone(this.(field));
-		this.(field) = strzone(strcat(argv(1), " ", argv(2)));
+		strcpy(this.(field), strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
 	return true;

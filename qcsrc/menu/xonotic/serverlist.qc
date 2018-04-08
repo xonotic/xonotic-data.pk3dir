@@ -308,9 +308,7 @@ void XonoticServerList_setSelected(entity me, int i)
 	if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
 		return; // sorry, it would be wrong
 
-	if(me.selectedServer)
-		strunzone(me.selectedServer);
-	me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+	strcpy(me.selectedServer, gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 
 	me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
 	me.ipAddressBox.cursorPos = strlen(me.selectedServer);
@@ -559,9 +557,7 @@ void XonoticServerList_draw(entity me)
 		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem) != me.selectedServer)
 			{
-				if(me.selectedServer)
-					strunzone(me.selectedServer);
-				me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+				strcpy(me.selectedServer, gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 			}
 			found = true;
 		}
@@ -586,9 +582,7 @@ void XonoticServerList_draw(entity me)
 			// selected server disappeared, select the last server (scrolling to it)
 			if(me.selectedItem >= me.nItems)
 				SUPER(XonoticServerList).setSelected(me, me.nItems - 1);
-			if(me.selectedServer)
-				strunzone(me.selectedServer);
-			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+			strcpy(me.selectedServer, gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 		}
 	}
 

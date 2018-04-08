@@ -142,8 +142,7 @@ bool ps_move_piece(entity minigame, entity piece, string pos, int leti, int numb
 	if(middle.netname) { strunzone(middle.netname); }
 	delete(middle);
 
-	if(piece.netname) { strunzone(piece.netname); }
-	piece.netname = strzone(pos);
+	strcpy(piece.netname, pos);
 
 	minigame_server_sendflags(piece,MINIG_SF_ALL);
 

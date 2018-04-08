@@ -1199,9 +1199,7 @@ void Maplist_Init()
 		error("empty maplist, cannot select a new map");
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	if(Map_Current_Name)
-		strunzone(Map_Current_Name);
-	Map_Current_Name = strzone(argv(Map_Current)); // will be automatically freed on exit thanks to DP
+	strcpy(Map_Current_Name, argv(Map_Current)); // will be automatically freed on exit thanks to DP
 	// this may or may not be correct, but who cares, in the worst case a map
 	// isn't chosen in the first pass that should have been
 }

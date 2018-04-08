@@ -30,12 +30,8 @@ string WeaponArenaString()
 		return _("Most Weapons Arena");
 	if(s == weaponarenastring_cvar)
 		return weaponarenastring;
-	if(weaponarenastring)
-		strunzone(weaponarenastring);
-	if(weaponarenastring_cvar)
-		strunzone(weaponarenastring_cvar);
 
-	weaponarenastring_cvar = strzone(s);
+	strcpy(weaponarenastring_cvar, s);
 
 	n = tokenize_console(s);
 	s = "";
@@ -48,7 +44,7 @@ string WeaponArenaString()
 	}
 	s = sprintf(_("%s Arena"), s);
 
-	weaponarenastring = strzone(s);
+	strcpy(weaponarenastring, s);
 
 	return weaponarenastring;
 }

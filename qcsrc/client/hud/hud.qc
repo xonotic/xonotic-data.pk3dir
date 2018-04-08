@@ -579,12 +579,8 @@ void HUD_Main()
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
 	{
-		if (hud_skin_path)
-			strunzone(hud_skin_path);
-		hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
-		if (hud_skin_prev)
-			strunzone(hud_skin_prev);
-		hud_skin_prev = strzone(autocvar_hud_skin);
+		strcpy(hud_skin_path, strcat("gfx/hud/", autocvar_hud_skin));
+		strcpy(hud_skin_prev, autocvar_hud_skin);
 	}
 
 	// draw the dock
@@ -659,9 +655,7 @@ void HUD_Main()
 			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder");
 
 		cvar_set("_hud_panelorder", s);
-		if(hud_panelorder_prev)
-			strunzone(hud_panelorder_prev);
-		hud_panelorder_prev = strzone(s);
+		strcpy(hud_panelorder_prev, s);
 
 		//now properly set panel_order
 		tokenize_console(s);

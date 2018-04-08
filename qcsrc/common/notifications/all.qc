@@ -1063,8 +1063,7 @@ void Local_Notification_sound(int soundchannel, string soundfile, float soundvol
 
 		_sound(NULL, soundchannel, AnnouncerFilename(soundfile), soundvolume, soundposition);
 
-		if (prev_soundfile) strunzone(prev_soundfile);
-		prev_soundfile = strzone(soundfile);
+		strcpy(prev_soundfile, soundfile);
 		prev_soundtime = time;
 	}
 	else

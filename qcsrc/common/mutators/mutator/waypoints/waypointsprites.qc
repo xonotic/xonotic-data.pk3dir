@@ -169,23 +169,17 @@ void Ent_WaypointSprite(entity this, bool isnew)
 
     if (sendflags & 2)
     {
-        if (this.netname)
-            strunzone(this.netname);
-        this.netname = strzone(ReadString());
+        strcpy(this.netname, ReadString());
     }
 
     if (sendflags & 4)
     {
-        if (this.netname2)
-            strunzone(this.netname2);
-        this.netname2 = strzone(ReadString());
+        strcpy(this.netname2, ReadString());
     }
 
     if (sendflags & 8)
     {
-        if (this.netname3)
-            strunzone(this.netname3);
-        this.netname3 = strzone(ReadString());
+        strcpy(this.netname3, ReadString());
     }
 
     if (sendflags & 16)
