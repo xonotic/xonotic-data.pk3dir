@@ -67,24 +67,24 @@ entity Team_GetTeam(int team_num)
 	return g_team_entities[Team_TeamToIndex(team_num) - 1];
 }
 
-float Team_GetTeamScore(entity team_)
+float Team_GetTeamScore(entity team_ent)
 {
-	return team_.m_team_score;
+	return team_ent.m_team_score;
 }
 
-void Team_SetTeamScore(entity team_, float score)
+void Team_SetTeamScore(entity team_ent, float score)
 {
-	team_.m_team_score = score;
+	team_ent.m_team_score = score;
 }
 
-int Team_GetNumberOfAlivePlayers(entity team_)
+int Team_GetNumberOfAlivePlayers(entity team_ent)
 {
-	return team_.m_num_players_alive;
+	return team_ent.m_num_players_alive;
 }
 
-void Team_SetNumberOfAlivePlayers(entity team_, int number)
+void Team_SetNumberOfAlivePlayers(entity team_ent, int number)
 {
-	team_.m_num_players_alive = number;
+	team_ent.m_num_players_alive = number;
 }
 
 int Team_GetNumberOfAliveTeams()
@@ -100,14 +100,14 @@ int Team_GetNumberOfAliveTeams()
 	return result;
 }
 
-int Team_GetNumberOfControlPoints(entity team_)
+int Team_GetNumberOfControlPoints(entity team_ent)
 {
-	return team_.m_num_control_points;
+	return team_ent.m_num_control_points;
 }
 
-void Team_SetNumberOfControlPoints(entity team_, int number)
+void Team_SetNumberOfControlPoints(entity team_ent, int number)
 {
-	team_.m_num_control_points = number;
+	team_ent.m_num_control_points = number;
 }
 
 int Team_GetNumberOfTeamsWithControlPoints()
@@ -252,12 +252,12 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	entity balance = spawn();
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		entity team_ = balance.m_team_balance_team[i] = spawn();
-		team_.m_team_score = g_team_entities[i].m_team_score;
-		team_.m_num_players = TEAM_NOT_ALLOWED;
-		team_.m_num_bots = 0;
-		team_.m_lowest_human = NULL;
-		team_.m_lowest_bot = NULL;
+		entity team_ent = balance.m_team_balance_team[i] = spawn();
+		team_ent.m_team_score = g_team_entities[i].m_team_score;
+		team_ent.m_num_players = TEAM_NOT_ALLOWED;
+		team_ent.m_num_bots = 0;
+		team_ent.m_lowest_human = NULL;
+		team_ent.m_lowest_bot = NULL;
 	}
 	
 	int teams_mask = 0;	
@@ -458,16 +458,16 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 		// Mutator has overriden the configuration.
 		for (int i = 1; i <= NUM_TEAMS; ++i)
 		{
-			entity team_ = TeamBalance_GetTeamFromIndex(balance, i);
-			if (TeamBalanceTeam_IsAllowed(team_))
+			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
+			if (TeamBalanceTeam_IsAllowed(team_ent))
 			{
 				MUTATOR_CALLHOOK(TeamBalance_GetTeamCount, i, ignore,
-					team_.m_num_players, team_.m_num_bots, team_.m_lowest_human,
-					team_.m_lowest_bot);
-				team_.m_num_players = M_ARGV(2, float);
-				team_.m_num_bots = M_ARGV(3, float);
-				team_.m_lowest_human = M_ARGV(4, entity);
-				team_.m_lowest_bot = M_ARGV(5, entity);
+					team_ent.m_num_players, team_ent.m_num_bots,
+					team_ent.m_lowest_human, team_ent.m_lowest_bot);
+				team_ent.m_num_players = M_ARGV(2, float);
+				team_ent.m_num_bots = M_ARGV(3, float);
+				team_ent.m_lowest_human = M_ARGV(4, entity);
+				team_ent.m_lowest_bot = M_ARGV(5, entity);
 			}
 		}
 	}
@@ -497,39 +497,39 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			{
 				continue;
 			}
-			entity team_ = TeamBalance_GetTeam(balance, team_num);
-			if (!TeamBalanceTeam_IsAllowed(team_))
+			entity team_ent = TeamBalance_GetTeam(balance, team_num);
+			if (!TeamBalanceTeam_IsAllowed(team_ent))
 			{
 				continue;
 			}
-			++team_.m_num_players;
+			++team_ent.m_num_players;
 			if (IS_BOT_CLIENT(it))
 			{
-				++team_.m_num_bots;
+				++team_ent.m_num_bots;
 			}
 			float temp_score = PlayerScore_Get(it, SP_SCORE);
 			if (!IS_BOT_CLIENT(it))
 			{
-				if (team_.m_lowest_human == NULL)
+				if (team_ent.m_lowest_human == NULL)
 				{
-					team_.m_lowest_human = it;
+					team_ent.m_lowest_human = it;
 					continue;
 				}
-				if (temp_score < PlayerScore_Get(team_.m_lowest_human,
+				if (temp_score < PlayerScore_Get(team_ent.m_lowest_human,
 					SP_SCORE))
 				{
-					team_.m_lowest_human = it;
+					team_ent.m_lowest_human = it;
 				}
 				continue;
 			}
-			if (team_.m_lowest_bot == NULL)
+			if (team_ent.m_lowest_bot == NULL)
 			{
-				team_.m_lowest_bot = it;
+				team_ent.m_lowest_bot = it;
 				continue;
 			}
-			if (temp_score < PlayerScore_Get(team_.m_lowest_bot, SP_SCORE))
+			if (temp_score < PlayerScore_Get(team_ent.m_lowest_bot, SP_SCORE))
 			{
-				team_.m_lowest_bot = it;
+				team_ent.m_lowest_bot = it;
 			}
 		});
 	}
@@ -539,11 +539,11 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 	{
 		if (Team_IsValidIndex(autocvar_g_campaign_forceteam))
 		{
-			entity team_ = TeamBalance_GetTeamFromIndex(balance,
+			entity team_ent = TeamBalance_GetTeamFromIndex(balance,
 				autocvar_g_campaign_forceteam);
-			if (team_.m_num_players == team_.m_num_bots)
+			if (team_ent.m_num_players == team_ent.m_num_bots)
 			{
-				++team_.m_num_players;
+				++team_ent.m_num_players;
 			}
 		}
 	}
@@ -814,29 +814,29 @@ entity TeamBalance_GetTeam(entity balance, int team_num)
 	return TeamBalance_GetTeamFromIndex(balance, Team_TeamToIndex(team_num));
 }
 
-bool TeamBalanceTeam_IsAllowed(entity team_)
+bool TeamBalanceTeam_IsAllowed(entity team_ent)
 {
-	return team_.m_num_players != TEAM_NOT_ALLOWED;
+	return team_ent.m_num_players != TEAM_NOT_ALLOWED;
 }
 
-int TeamBalanceTeam_GetNumberOfPlayers(entity team_)
+int TeamBalanceTeam_GetNumberOfPlayers(entity team_ent)
 {
-	return team_.m_num_players;
+	return team_ent.m_num_players;
 }
 
-int TeamBalanceTeam_GetNumberOfBots(entity team_)
+int TeamBalanceTeam_GetNumberOfBots(entity team_ent)
 {
-	return team_.m_num_bots;
+	return team_ent.m_num_bots;
 }
 
-entity TeamBalanceTeam_GetLowestHuman(entity team_)
+entity TeamBalanceTeam_GetLowestHuman(entity team_ent)
 {
-	return team_.m_lowest_human;
+	return team_ent.m_lowest_human;
 }
 
-entity TeamBalanceTeam_GetLowestBot(entity team_)
+entity TeamBalanceTeam_GetLowestBot(entity team_ent)
 {
-	return team_.m_lowest_bot;
+	return team_ent.m_lowest_bot;
 }
 
 int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,

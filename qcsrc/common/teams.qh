@@ -179,11 +179,11 @@ int Team_IndexToTeam(int index)
 }
 
 /// \brief Converts team value into team index.
-/// \param[in] team_ Team value to convert.
+/// \param[in] team_num Team value to convert.
 /// \return Team index.
-int Team_TeamToIndex(int team_)
+int Team_TeamToIndex(int team_num)
 {
-	switch (team_)
+	switch (team_num)
 	{
 		case NUM_TEAM_1: return 1;
 		case NUM_TEAM_2: return 2;
