@@ -396,9 +396,9 @@ void TeamBalance_Destroy(entity balance)
 	}
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
-		remove(balance.(m_team_balance_team[i]));
+		delete(balance.(m_team_balance_team[i]));
 	}
-	remove(balance);
+	delete(balance);
 }
 
 int TeamBalance_GetAllowedTeams(entity balance)
