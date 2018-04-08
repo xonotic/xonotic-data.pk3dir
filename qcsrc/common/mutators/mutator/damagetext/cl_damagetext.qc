@@ -179,7 +179,7 @@ CLASS(DamageText, Object)
     }
 
     DESTRUCTOR(DamageText) {
-        if (this.text) strunzone(this.text);
+        strfree(this.text);
         if (this == DamageText_screen_first) {
             // start from 0 offset again, hopefully, others (if any) will have faded away by now
             DamageText_screen_first = NULL;

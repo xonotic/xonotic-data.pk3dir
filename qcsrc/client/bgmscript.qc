@@ -139,8 +139,7 @@ void BGMScript_InitEntity(entity e)
 		if(i >= bgmscriptbufsize)
 		{
 			LOG_INFOF("ERROR: bgmscript does not define %s", e.bgmscript);
-			strunzone(e.bgmscript);
-			e.bgmscript = string_null;
+			strfree(e.bgmscript);
 		}
 	}
 }

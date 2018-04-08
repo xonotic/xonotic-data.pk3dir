@@ -107,8 +107,7 @@ void XonoticCvarList_setSelected(entity me, float i)
 	if(me.nItems == 0)
 		return;
 
-	if(me.cvarType)
-		strunzone(me.cvarType);
+	strfree(me.cvarType);
 	strcpy(me.cvarName, bufstr_get(me.handle, me.selectedItem));
 	strcpy(me.cvarDescription, cvar_description(me.cvarName));
 	strcpy(me.cvarDefault, cvar_defstring(me.cvarName));

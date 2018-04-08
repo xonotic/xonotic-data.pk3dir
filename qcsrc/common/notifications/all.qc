@@ -1466,7 +1466,7 @@ void Net_Notification_Remove(entity this)
 		this.owner.nent_name
 	));
 	#endif
-	for (int i = 0; i < this.nent_stringcount; ++i) { if (this.nent_strings[i]) strunzone(this.nent_strings[i]); }
+	for (int i = 0; i < this.nent_stringcount; ++i) { strfree(this.nent_strings[i]); }
 	delete(this);
 }
 

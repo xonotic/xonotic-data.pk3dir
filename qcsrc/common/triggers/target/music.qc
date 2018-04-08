@@ -221,8 +221,7 @@ void Net_TargetMusic()
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
 			LOG_TRACEF("Cannot initialize sound %s", e.noise);
-			strunzone(e.noise);
-			e.noise = string_null;
+			strfree(e.noise);
 		}
 	}
 	e.volume = vol;
@@ -260,9 +259,7 @@ void Ent_TriggerMusic_Think(entity this)
 
 void Ent_TriggerMusic_Remove(entity this)
 {
-	if(this.noise)
-		strunzone(this.noise);
-	this.noise = string_null;
+    strfree(this.noise);
 }
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
@@ -298,8 +295,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 			if(getsoundtime(this, CH_BGM_SINGLE) < 0)
 			{
 				LOG_TRACEF("Cannot initialize sound %s", this.noise);
-				strunzone(this.noise);
-				this.noise = string_null;
+				strfree(this.noise);
 			}
 		}
 	}

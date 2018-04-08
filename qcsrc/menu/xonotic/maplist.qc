@@ -215,12 +215,9 @@ void XonoticMapList_refilterCallback(entity me, entity cb)
 
 void MapList_StringFilterBox_Change(entity box, entity me)
 {
-	if(me.stringFilter)
-		strunzone(me.stringFilter);
+	strfree(me.stringFilter);
 	if(box.text != "")
 		me.stringFilter = strzone(box.text);
-	else
-		me.stringFilter = string_null;
 
 	me.refilter(me);
 }

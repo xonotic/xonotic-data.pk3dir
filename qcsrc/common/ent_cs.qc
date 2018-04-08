@@ -167,10 +167,8 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		int n = this.sv_entnum;
 		entity e = entcs_receiver(n);
 		entcs_receiver(n, NULL);
-		if (e.netname) strunzone(e.netname);
-		e.netname = string_null;
-		if (e.model) strunzone(e.model);
-		e.model = string_null;
+		strfree(e.netname);
+		strfree(e.model);
 		if (e != this) delete(e);
 	}
 

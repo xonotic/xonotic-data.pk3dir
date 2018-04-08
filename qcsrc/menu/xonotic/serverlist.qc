@@ -37,8 +37,7 @@ void RegisterSLCategories()
 				} } \
 				if(catnum) \
 				{ \
-					strunzone(categories[i].override_string); \
-					categories[i].override_string = string_null; \
+					strfree(categories[i].override_string); \
 					categories[i].override_field = catnum; \
 					continue; \
 				} \
@@ -51,8 +50,7 @@ void RegisterSLCategories()
 					); \
 				} \
 			} \
-			strunzone(categories[i].override_string); \
-			categories[i].override_string = string_null; \
+			strfree(categories[i].override_string); \
 			categories[i].override_field = 0; \
 		}
 	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
@@ -660,12 +658,9 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 }
 void ServerList_Filter_Change(entity box, entity me)
 {
-	if(me.filterString)
-		strunzone(me.filterString);
+	strfree(me.filterString);
 	if(box.text != "")
 		me.filterString = strzone(box.text);
-	else
-		me.filterString = string_null;
 	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
@@ -711,9 +706,7 @@ void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 	me.sortButton4.forcePressed = 0;
 	me.sortButton5.forcePressed = (fld == SLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
-	if(me.selectedServer)
-		strunzone(me.selectedServer);
-	me.selectedServer = string_null;
+	strfree(me.selectedServer);
 	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 }
 void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)

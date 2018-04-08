@@ -14,8 +14,7 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 	for(i = 0; i < campaign_entries; ++i)
 	{
 		l = l0;
-		if(campaign_longdesc_wrapped[i])
-			strunzone(campaign_longdesc_wrapped[i]);
+		strfree(campaign_longdesc_wrapped[i]);
 		n = tokenizebyseparator(campaign_longdesc[i], "\n");
 		r = "";
 		for(j = 0; j < n; ++j)

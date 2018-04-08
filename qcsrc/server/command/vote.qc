@@ -128,18 +128,14 @@ void VoteReset()
 
 	if (vote_called)
 	{
-		strunzone(vote_called_command);
-		strunzone(vote_called_display);
-		strunzone(vote_caller_name);
+		strfree(vote_called_command);
+		strfree(vote_called_display);
+		strfree(vote_caller_name);
 	}
 
 	vote_called = VOTE_NULL;
 	vote_caller = NULL;
-	vote_caller_name = string_null;
 	vote_endtime = 0;
-
-	vote_called_command = string_null;
-	vote_called_display = string_null;
 
 	vote_parsed_command = string_null;
 	vote_parsed_display = string_null;

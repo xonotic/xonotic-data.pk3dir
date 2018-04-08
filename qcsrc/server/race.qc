@@ -1083,9 +1083,7 @@ void race_ClearRecords()
 	for(int j = 0; j < MAX_CHECKPOINTS; ++j)
 	{
 		race_checkpoint_records[j] = 0;
-		if(race_checkpoint_recordholders[j])
-			strunzone(race_checkpoint_recordholders[j]);
-		race_checkpoint_recordholders[j] = string_null;
+		strfree(race_checkpoint_recordholders[j]);
 	}
 
 	FOREACH_CLIENT(true, {

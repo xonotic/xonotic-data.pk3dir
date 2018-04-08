@@ -237,8 +237,7 @@
 				.string fld = it.m_playersoundfld;
 				if (this.(fld))
 				{
-					strunzone(this.(fld));
-					this.(fld) = string_null;
+					strfree(this.(fld));
 				}
 			});
 		}
