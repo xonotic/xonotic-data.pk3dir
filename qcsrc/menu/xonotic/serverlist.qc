@@ -547,9 +547,9 @@ void XonoticServerList_draw(entity me)
 	}
 	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
 
-	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
-	me.infoButton.disabled = ((me.nItems == 0) || !owned);
-	me.favoriteButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
+	me.connectButton.disabled = (me.lockedSelectedItem || (me.nItems == 0 && me.ipAddressBox.text == ""));
+	me.infoButton.disabled = (me.lockedSelectedItem || me.nItems == 0 || !owned);
+	me.favoriteButton.disabled = (me.lockedSelectedItem || (me.nItems == 0 && me.ipAddressBox.text == ""));
 
 	if(me.lockedSelectedItem)
 	{
@@ -769,11 +769,10 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 }
 void ServerList_Connect_Click(entity btn, entity me)
 {
-	localcmd(sprintf("connect %s\n",
-		((me.ipAddressBox.text != "") ?
-			me.ipAddressBox.text : me.selectedServer
-		)
-	));
+	if (me.lockedSelectedItem)
+		return;
+	string sv = (me.ipAddressBox.text != "") ? me.ipAddressBox.text : me.selectedServer;
+	localcmd(sprintf("connect %s\n", sv));
 }
 void ServerList_Favorite_Click(entity btn, entity this)
 {
@@ -851,7 +850,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		}
 	}
 
-	if(isSelected)
+	if(isSelected && !me.lockedSelectedItem)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	else if(isFocused)
 	{
