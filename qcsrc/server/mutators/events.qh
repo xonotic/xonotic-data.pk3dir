@@ -3,7 +3,7 @@
 #include <common/mutators/base.qh>
 
 // register all possible hooks here
- 
+
 // to use a hook, first register your mutator using REGISTER_MUTATOR
 // then create your function using MUTATOR_HOOKFUNCTION
 
@@ -441,6 +441,8 @@ MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
 #define EV_W_DecreaseAmmo(i, o) \
     /** actor */            i(entity, MUTATOR_ARGV_0_entity) \
     /** weapon entity */    i(entity, MUTATOR_ARGV_1_entity) \
+    /** ammo to take */     i(float, MUTATOR_ARGV_2_float) \
+    /**/                    o(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(W_DecreaseAmmo, EV_W_DecreaseAmmo);
 
@@ -1121,3 +1123,20 @@ MUTATOR_HOOKABLE(HavocBot_Aim, EV_HavocBot_Aim);
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(CalculateRespawnTime, EV_CalculateRespawnTime);
+
+/** called when parsing a vote command. */
+#define EV_VoteCommand_Parse(i, o) \
+    /** caller */                           i(entity, MUTATOR_ARGV_0_entity) \
+    /** first command */                    i(string, MUTATOR_ARGV_1_string) \
+    /** vote command */                     i(string, MUTATOR_ARGV_2_string) \
+    /** start position of vote command */   i(float, MUTATOR_ARGV_3_float) \
+    /** argument count */                   i(float, MUTATOR_ARGV_4_float) \
+    /**/
+MUTATOR_HOOKABLE(VoteCommand_Parse, EV_VoteCommand_Parse);
+
+enum {
+    MUT_VOTEPARSE_CONTINUE, // return this flag to make the function continue as normal
+    MUT_VOTEPARSE_SUCCESS, // return 1 (vote parsed)
+    MUT_VOTEPARSE_INVALID, // return -1 (vote parsed but counted as invalid, no action or vote)
+    MUT_VOTEPARSE_UNACCEPTABLE // return 0 (vote parameter counted as unacceptable, warns caller)
+};

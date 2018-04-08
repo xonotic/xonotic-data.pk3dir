@@ -86,7 +86,7 @@ noref bool require_spawnfunc_prefix;
 	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
 	#define spawnfunc_2(id, whitelist) \
 		void __spawnfunc_##id(entity this); \
-		[[accumulate]] void spawnfunc_##id(entity this) \
+		ACCUMULATE void spawnfunc_##id(entity this) \
 		{ \
 		    if (!__spawnfunc_first) { \
                 __spawnfunc_first = true; \
