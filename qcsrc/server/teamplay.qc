@@ -950,7 +950,6 @@ void SV_ChangeTeam(entity this, float _color)
 	if (!SetPlayerTeam(this, destination_team_index, source_team_index,
 		!IS_CLIENT(this)))
 	{
-		
 		return;
 	}
 	TeamBalance_AutoBalanceBots(destination_team_index, source_team_index);

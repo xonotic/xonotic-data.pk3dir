@@ -164,7 +164,7 @@ MUTATOR_HOOKABLE(TeamBalance_GetTeamCount, EV_TeamBalance_GetTeamCount);
     /**/
 MUTATOR_HOOKABLE(TeamBalance_FindBestTeams, EV_TeamBalance_FindBestTeams);
 
-/** Called during autobalance. Return true to override the player that will
+/** Called during autobalance. Return true to override the player that will be
 switched. */
 #define EV_TeamBalance_GetPlayerForTeamSwitch(i, o) \
     /** source team index      */ i(int, MUTATOR_ARGV_0_int) \
