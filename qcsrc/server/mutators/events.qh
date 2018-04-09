@@ -146,18 +146,12 @@ MUTATOR_HOOKABLE(TeamBalance_CheckAllowedTeams,
 /** return true to manually override team counts */
 MUTATOR_HOOKABLE(TeamBalance_GetTeamCounts, EV_NO_ARGS);
 
-/** allow overriding of team counts */
+/** allows overriding of team counts */
 #define EV_TeamBalance_GetTeamCount(i, o) \
     /** team index to count             */ i(float, MUTATOR_ARGV_0_float) \
     /** player to ignore                */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** number of players in a team     */ i(float, MUTATOR_ARGV_2_float) \
-    /**/                                   o(float, MUTATOR_ARGV_2_float) \
-    /** number of bots in a team        */ i(float, MUTATOR_ARGV_3_float) \
-    /**/                                   o(float, MUTATOR_ARGV_3_float) \
-    /** lowest scoring human in a team  */ i(entity, MUTATOR_ARGV_4_entity) \
-    /**/                                   o(entity, MUTATOR_ARGV_4_entity) \
-    /** lowest scoring bot in a team    */ i(entity, MUTATOR_ARGV_5_entity) \
-    /**/                                   o(entity, MUTATOR_ARGV_5_entity) \
+    /** number of players in a team     */ o(float, MUTATOR_ARGV_2_float) \
+    /** number of bots in a team        */ o(float, MUTATOR_ARGV_3_float) \
     /**/
 MUTATOR_HOOKABLE(TeamBalance_GetTeamCount, EV_TeamBalance_GetTeamCount);
 
@@ -169,6 +163,17 @@ MUTATOR_HOOKABLE(TeamBalance_GetTeamCount, EV_TeamBalance_GetTeamCount);
     /** bitmask of teams */ o(float, MUTATOR_ARGV_1_float) \
     /**/
 MUTATOR_HOOKABLE(TeamBalance_FindBestTeams, EV_TeamBalance_FindBestTeams);
+
+/** Called during autobalance. Return true to override the player that will
+switched. */
+#define EV_TeamBalance_GetPlayerForTeamSwitch(i, o) \
+    /** source team index      */ i(int, MUTATOR_ARGV_0_int) \
+    /** destination team index */ i(int, MUTATOR_ARGV_1_int) \
+    /** is looking for bot     */ i(bool, MUTATOR_ARGV_2_bool) \
+    /** player to switch       */ o(entity, MUTATOR_ARGV_3_entity) \
+    /**/
+MUTATOR_HOOKABLE(TeamBalance_GetPlayerForTeamSwitch,
+	EV_TeamBalance_GetPlayerForTeamSwitch);
 
 /** copies variables for spectating "spectatee" to "this" */
 #define EV_SpectateCopy(i, o) \

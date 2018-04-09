@@ -199,13 +199,10 @@ enum
 int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 	entity player, bool use_score);
 
-/// \brief Auto balances bots in teams after the player has changed team.
-/// \param[in] balance Team balance entity.
-/// \param[in] source_team_index Previous index of the team of the player.
-/// \param[in] destination_team_index Current index of the team of the player.
-/// \note You need to call CheckAllowedTeams and GetTeamCounts before calling
-/// this function.
-void TeamBalance_AutoBalanceBots(entity balance, int source_team_index,
+/// \brief Switches a bot from one team to another if teams are not balanced.
+/// \param[in] source_team_index Index of the team to switch from.
+/// \param[in] destination_team_index Index of the team to switch to.
+void TeamBalance_AutoBalanceBots(int source_team_index,
 	int destination_team_index);
 
 // ============================ Internal API ==================================
@@ -256,22 +253,6 @@ int TeamBalanceTeam_GetNumberOfPlayers(entity team_ent);
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
 int TeamBalanceTeam_GetNumberOfBots(entity team_ent);
-
-/// \brief Returns the human with the lowest score in a team or NULL if there is
-/// none.
-/// \param[in] team_ent Team entity.
-/// \return Human with the lowest score in a team or NULL if there is none.
-/// \note You need to call TeamBalance_GetTeamCounts before calling this
-/// function.
-entity TeamBalanceTeam_GetLowestHuman(entity team_ent);
-
-/// \brief Returns the bot with the lowest score in a team or NULL if there is
-/// none.
-/// \param[in] team_ent Team entity.
-/// \return Bot with the lowest score in a team or NULL if there is none.
-/// \note You need to call TeamBalance_GetTeamCounts before calling this
-/// function.
-entity TeamBalanceTeam_GetLowestBot(entity team_ent);
 
 /// \brief Compares two teams for the purposes of game balance.
 /// \param[in] team_a First team.
