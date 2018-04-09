@@ -164,23 +164,12 @@ spawnfunc(trigger_keylock)
 #elif defined(CSQC)
 void keylock_remove(entity this)
 {
-	if(this.target) { strunzone(this.target); }
-	this.target = string_null;
-
-	if(this.target2) { strunzone(this.target2); }
-	this.target2 = string_null;
-
-	if(this.target3) { strunzone(this.target3); }
-	this.target3 = string_null;
-
-	if(this.target4) { strunzone(this.target4); }
-	this.target4 = string_null;
-
-	if(this.killtarget) { strunzone(this.killtarget); }
-	this.killtarget = string_null;
-
-	if(this.targetname) { strunzone(this.targetname); }
-	this.targetname = string_null;
+	strfree(this.target);
+	strfree(this.target2);
+	strfree(this.target3);
+	strfree(this.target4);
+	strfree(this.killtarget);
+	strfree(this.targetname);
 }
 
 NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)

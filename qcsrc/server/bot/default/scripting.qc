@@ -308,9 +308,7 @@ float bot_decodecommand(string cmdstring)
 				bot_cmd.bot_cmd_parm_float = stof(parm);
 				break;
 			case BOT_CMD_PARAMETER_STRING:
-				if(bot_cmd.bot_cmd_parm_string)
-					strunzone(bot_cmd.bot_cmd_parm_string);
-				bot_cmd.bot_cmd_parm_string = strzone(parm);
+				strcpy(bot_cmd.bot_cmd_parm_string, parm);
 				break;
 			case BOT_CMD_PARAMETER_VECTOR:
 				if(substring(parm, 0, 1) != "\'")
@@ -1170,8 +1168,7 @@ void bot_resetqueues()
 		it.bot_barrier = 0;
 		for(int i = 0; i < it.bot_places_count; ++i)
 		{
-			strunzone(it.(bot_placenames[i]));
-			it.(bot_placenames[i]) = string_null;
+			strfree(it.(bot_placenames[i]));
 		}
 		it.bot_places_count = 0;
 	});

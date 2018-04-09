@@ -201,7 +201,7 @@ int c4_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			return false;
@@ -399,8 +399,7 @@ void c4_make_move(entity minigame)
 
 void c4_set_curr_pos(string s)
 {
-	if ( c4_curr_pos )
-		strunzone(c4_curr_pos);
+	strfree(c4_curr_pos);
 	if ( s )
 		s = strzone(s);
 	c4_curr_pos = s;

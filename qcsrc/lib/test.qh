@@ -5,7 +5,7 @@
 /** Use UpperCamelCase for suite and test only */
 #define TEST(suite, test) \
 	void _TEST_##suite##_##test(); \
-	[[accumulate]] int TEST_RunAll_accumulated(int f) { \
+	ACCUMULATE int TEST_RunAll_accumulated(int f) { \
 		if (!TEST_Run(#suite "_" #test)) ++f; \
 		return = f; \
 	} \
