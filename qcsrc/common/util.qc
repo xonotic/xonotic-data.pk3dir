@@ -1308,6 +1308,8 @@ float get_model_parameters(string m, float sk)
 
 string translate_key(string key)
 {
+	if (prvm_language == "en") return key;
+
 	switch(key)
 	{
 		case "TAB":				return _("TAB");
