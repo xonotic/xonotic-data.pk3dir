@@ -151,6 +151,16 @@ void ItemRemove(entity this)
 	strfree(this.mdl);
 }
 
+HashMap ENT_CLIENT_ITEM_simple;
+STATIC_INIT(ENT_CLIENT_ITEM_simple)
+{
+	HM_NEW(ENT_CLIENT_ITEM_simple);
+}
+SHUTDOWN(CTX_cache)
+{
+	HM_DELETE(ENT_CLIENT_ITEM_simple);
+}
+
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 {
     int sf = ReadByte();
@@ -212,7 +222,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 		strfree(this.mdl);
 
-        this.mdl = "";
         string _fn = ReadString();
         this.item_simple = false; // reset it!
 
@@ -221,27 +230,35 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             this.item_simple = true;
 
-            if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
-            else
-            {
-                this.item_simple = false;
-                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it");
-            }
+			#define extensions(x) \
+				x(md3) \
+				x(dpm) \
+				x(iqm) \
+				x(mdl) \
+				/**/
+			#define tryext(ext) { \
+				string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); \
+				string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); \
+				if (cached == "") { \
+					HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); \
+				} \
+				if (cached != "0") { \
+					strcpy(this.mdl, s); \
+					break; \
+				} \
+			}
+			do {
+				extensions(tryext);
+				this.item_simple = false;
+                LOG_TRACEF("Simple item requested for %s but no model exists for it", _fn);
+			} while (0);
         }
 
         if(!this.item_simple)
-            this.mdl = strzone(_fn);
-
+            strcpy(this.mdl, _fn);
 
         if(this.mdl == "")
-            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!");
+            LOG_WARNF("this.mdl is unset for item %s", this.classname);
 
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
