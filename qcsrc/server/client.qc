@@ -282,10 +282,8 @@ void PutObserverInServer(entity this)
 	if (mutator_returnvalue) {
 	    // mutator prevents resetting teams+score
 	} else {
-		int old_team_index = Team_TeamToIndex(this.team);
-		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
-		MUTATOR_CALLHOOK(Player_ChangedTeam, this, old_team_index, -1);
-        this.frags = FRAGS_SPECTATOR;
+		Player_SetTeamIndex(this, -1);
+		this.frags = FRAGS_SPECTATOR;
         PlayerScore_Clear(this);  // clear scores when needed
     }
 
@@ -2088,7 +2086,9 @@ void Join(entity this)
 
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+	{
+		//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;

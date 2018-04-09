@@ -170,9 +170,13 @@ bool Player_SetTeamIndex(entity player, int index)
 	int new_team = Team_IndexToTeam(index);
 	if (player.team == new_team)
 	{
-		// This is important when players join the game and one of their color
-		// matches the team color while other doesn't. For example [BOT]Lion.
-		SetPlayerColors(player, new_team - 1);
+		if (new_team != -1)
+		{
+			// This is important when players join the game and one of their
+			// color matches the team color while other doesn't. For example
+			// [BOT]Lion.
+			SetPlayerColors(player, new_team - 1);
+		}
 		return true;
 	}
 	int old_index = Team_TeamToIndex(player.team);
@@ -181,42 +185,43 @@ bool Player_SetTeamIndex(entity player, int index)
 		// Mutator has blocked team change.
 		return false;
 	}
-	SetPlayerColors(player, new_team - 1);
+	if (new_team != -1)
+	{
+		SetPlayerColors(player, new_team - 1);
+	}
 	MUTATOR_CALLHOOK(Player_ChangedTeam, player, old_index, index);
 	return true;
 }
 
-bool SetPlayerTeam(entity player, int destination_team_index,
-	int source_team_index, bool no_print)
+bool SetPlayerTeam(entity player, int team_index, int type)
 {
-	if (!Player_SetTeamIndex(player, destination_team_index))
+	int old_team_index = Entity_GetTeamIndex(player);
+	if (!Player_SetTeamIndex(player, team_index))
 	{
 		return false;
 	}
-	LogTeamchange(player.playerid, player.team, TEAM_CHANGE_MANUAL);
-	if (no_print)
+	LogTeamchange(player.playerid, player.team, type);
+	if (team_index != old_team_index)
 	{
-		return true;
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team,
+			INFO_JOIN_PLAY_TEAM), player.netname);
+		KillPlayerForTeamChange(player);
 	}
-	bprint(playername(player, false), "^7 has changed from ",
-		Team_IndexToColoredFullName(source_team_index), "^7 to ",
-		Team_IndexToColoredFullName(destination_team_index), "\n");
 	return true;
 }
 
 bool MoveToTeam(entity client, int team_index, int type)
 {
+	//PrintToChatAll(sprintf("MoveToTeam: %s, %f", client.netname, team_index));
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
 	PlayerScore_Clear(client);
-	if (!Player_SetTeamIndex(client, team_index))
+	if (!SetPlayerTeam(client, team_index, type))
 	{
 		lockteams = lockteams_backup;  // restore the team lock
 		return false;
 	}
-	KillPlayerForTeamChange(client);
 	lockteams = lockteams_backup;  // restore the team lock
-	LogTeamchange(client.playerid, client.team, type);
 	return true;
 }
 
@@ -623,6 +628,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 
 void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 {
+	//PrintToChatAll(sprintf("JoinBestTeam: %s, %f", this.netname, force_best_team));
 	// don't join a team if we're not playing a team game
 	if (!teamplay)
 	{
@@ -649,8 +655,7 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 		
 		if (Team_IsValidIndex(selected_team_index))
 		{
-			Player_SetTeamIndex(this, selected_team_index);
-			LogTeamchange(this.playerid, this.team, TEAM_CHANGE_AUTO_RELAXED);
+			SetPlayerTeam(this, selected_team_index, TEAM_CHANGE_AUTO_RELAXED);
 			TeamBalance_Destroy(balance);
 			return;
 		}
@@ -665,13 +670,14 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 	int old_team_index = Team_TeamToIndex(this.team);
 	TeamBalance_Destroy(balance);
 	PlayerScore_Clear(this);
-	Player_SetTeamIndex(this, best_team_index);
-	LogTeamchange(this.playerid, this.team, TEAM_CHANGE_AUTO);
+	if (!SetPlayerTeam(this, best_team_index, TEAM_CHANGE_AUTO))
+	{
+		return;
+	}
 	if ((old_team_index != -1) && !IS_BOT_CLIENT(this))
 	{
 		TeamBalance_AutoBalanceBots(best_team_index, old_team_index);
 	}
-	KillPlayerForTeamChange(this);	
 }
 
 int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
@@ -863,10 +869,11 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
 	return TEAMS_COMPARE_EQUAL;
 }
 
+// Called when the player connects or when they change their color with "color"
+// command.
 void SV_ChangeTeam(entity this, float _color)
 {
-	int source_color, destination_color;
-	int source_team_index, destination_team_index;
+	//PrintToChatAll(sprintf("SV_ChangeTeam: %s, %f", this.netname, _color));
 
 	// in normal deathmatch we can just apply the color and we're done
 	if(!teamplay)
@@ -881,6 +888,9 @@ void SV_ChangeTeam(entity this, float _color)
 
 	if(!teamplay)
 		return;
+
+	int source_color, destination_color;
+	int source_team_index, destination_team_index;
 
 	source_color = this.clientcolors & 0x0F;
 	destination_color = _color & 0x0F;
@@ -919,7 +929,7 @@ void SV_ChangeTeam(entity this, float _color)
 	// not changing teams
 	if (source_color == destination_color)
 	{
-		SetPlayerTeam(this, destination_team_index, source_team_index, true);
+		SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL);
 		TeamBalance_Destroy(balance);
 		return;
 	}
@@ -947,15 +957,9 @@ void SV_ChangeTeam(entity this, float _color)
 		// reduce frags during a team change
 		PlayerScore_Clear(this);
 	}
-	if (!SetPlayerTeam(this, destination_team_index, source_team_index,
-		!IS_CLIENT(this)))
+	if (!SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL))
 	{
 		return;
 	}
 	TeamBalance_AutoBalanceBots(destination_team_index, source_team_index);
-	if (!IS_PLAYER(this) || (source_team_index == destination_team_index))
-	{
-		return;
-	}
-	KillPlayerForTeamChange(this);
 }
