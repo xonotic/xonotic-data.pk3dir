@@ -94,13 +94,8 @@ void HUD_Weapons()
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
 	{
 		int weapon_cnt;
-		if(weaponorder_bypriority)
-			strunzone(weaponorder_bypriority);
-		if(weaponorder_byimpulse)
-			strunzone(weaponorder_byimpulse);
-
-		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
-		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
+		strcpy(weaponorder_bypriority, autocvar_cl_weaponpriority);
+		strcpy(weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
 		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
 
 		weapon_cnt = 0;

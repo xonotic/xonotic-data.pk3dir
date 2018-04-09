@@ -664,21 +664,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 }
 
-bool MoveToTeam(entity client, int team_colour, int type)
-{
-	int lockteams_backup = lockteams;  // backup any team lock
-	lockteams = 0;  // disable locked teams
-	TeamchangeFrags(client);  // move the players frags
-	if (!Player_SetTeamIndex(client, Team_TeamToIndex(team_colour)))
-	{
-		return false;
-	}
-	KillPlayerForTeamChange(client);
-	lockteams = lockteams_backup;  // restore the team lock
-	LogTeamchange(client.playerid, client.team, type);
-	return true;
-}
-
 /** print(), but only print if the server is not local */
 void dedicated_print(string input)
 {

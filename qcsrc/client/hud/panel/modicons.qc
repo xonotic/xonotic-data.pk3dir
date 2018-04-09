@@ -583,9 +583,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
 		race_status_time = time + 5;
 		race_status_prev = race_status;
-		if (race_status_name_prev)
-			strunzone(race_status_name_prev);
-		race_status_name_prev = strzone(race_status_name);
+		strcpy(race_status_name_prev, race_status_name);
 	}
 
 	// race "awards"
@@ -621,12 +619,8 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	if (race_status_time - time <= 0) {
 		race_status_prev = -1;
 		race_status = -1;
-		if(race_status_name)
-			strunzone(race_status_name);
-		race_status_name = string_null;
-		if(race_status_name_prev)
-			strunzone(race_status_name_prev);
-		race_status_name_prev = string_null;
+		strfree(race_status_name);
+		strfree(race_status_name_prev);
 	}
 }
 

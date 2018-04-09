@@ -297,7 +297,7 @@ void PutObserverInServer(entity this)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 		if(!CS(this).just_joined)
-			LogTeamchange(this.playerid, -1, 4);
+			LogTeamchange(this.playerid, -1, TEAM_CHANGE_SPECTATOR);
 		else
 			CS(this).just_joined = false;
 	}
@@ -1161,6 +1161,76 @@ void ClientPreConnect(entity this)
 }
 #endif
 
+string GetClientVersionMessage(entity this)
+{
+	if (CS(this).version_mismatch) {
+		if(CS(this).version < autocvar_gameversion) {
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
+		} else {
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8");
+		}
+	} else {
+		return strcat("Welcome to Xonotic ", autocvar_g_xonoticversion);
+	}
+}
+
+string getwelcomemessage(entity this)
+{
+	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
+	string modifications = M_ARGV(0, string);
+
+	if(g_weaponarena)
+	{
+		if(g_weaponarena_random)
+			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena");
+		else
+			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
+	}
+	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
+		modifications = strcat(modifications, ", No start weapons");
+	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
+		modifications = strcat(modifications, ", Low gravity");
+	if(g_weapon_stay && !g_cts)
+		modifications = strcat(modifications, ", Weapons stay");
+	if(g_jetpack)
+		modifications = strcat(modifications, ", Jet pack");
+	if(autocvar_g_powerups == 0)
+		modifications = strcat(modifications, ", No powerups");
+	if(autocvar_g_powerups > 0)
+		modifications = strcat(modifications, ", Powerups");
+	modifications = substring(modifications, 2, strlen(modifications) - 2);
+
+	string versionmessage = GetClientVersionMessage(this);
+	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
+
+	if(modifications != "")
+		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
+
+	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
+	{
+		strcpy(cache_lastmutatormsg, autocvar_g_mutatormsg);
+		strcpy(cache_mutatormsg, cache_lastmutatormsg);
+	}
+
+	if (cache_mutatormsg != "") {
+		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
+	}
+
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = M_ARGV(0, string);
+
+	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
+
+	string motd = autocvar_sv_motd;
+	if (motd != "") {
+		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
+	}
+	return s;
+}
+
 /**
 =============
 ClientConnect
@@ -1241,7 +1311,7 @@ void ClientConnect(entity this)
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
 
-	LogTeamchange(this.playerid, this.team, 1);
+	LogTeamchange(this.playerid, this.team, TEAM_CHANGE_CONNECT);
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
@@ -1349,8 +1419,8 @@ void ClientDisconnect(entity this)
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
-	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
-	if (CS(this).weaponorder_byimpulse) strunzone(CS(this).weaponorder_byimpulse);
+	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	strfree(CS(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1370,7 +1440,7 @@ void ClientDisconnect(entity this)
 
 	bot_relinkplayerlist();
 
-	if (this.clientstatus) strunzone(this.clientstatus);
+	strfree(this.clientstatus);
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
@@ -2243,43 +2313,6 @@ bool PlayerThink(entity this)
 		return false;
 	}
 
-	bool have_hook = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).hook.state)
-		{
-			have_hook = true;
-			break;
-		}
-	}
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-	if (have_hook) {
-		do_crouch = false;
-	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		//do_crouch = false;
-	} else if (this.vehicle) {
-		do_crouch = false;
-	} else if (STAT(FROZEN, this)) {
-		do_crouch = false;
-    }
-
-	if (do_crouch) {
-		if (!this.crouch) {
-			this.crouch = true;
-			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
-			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
-			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
-		}
-	} else if (this.crouch) {
-        tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
-        if (!trace_startsolid) {
-            this.crouch = false;
-            this.view_ofs = STAT(PL_VIEW_OFS, this);
-            setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
-        }
-	}
-
 	FixPlayermodel(this);
 
 	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
@@ -2515,8 +2548,7 @@ void PlayerPreThink (entity this)
 		}
 		if (!assume_unchanged && autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
-		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
-		CS(this).netname_previous = strzone(this.netname);
+		strcpy(CS(this).netname_previous, this.netname);
 	}
 
 	// version nagging

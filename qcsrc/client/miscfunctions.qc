@@ -577,9 +577,7 @@ void Accuracy_LoadLevels()
 {
 	if(autocvar_accuracy_color_levels != acc_color_levels)
 	{
-		if(acc_color_levels)
-			strunzone(acc_color_levels);
-		acc_color_levels = strzone(autocvar_accuracy_color_levels);
+		strcpy(acc_color_levels, autocvar_accuracy_color_levels);
 		acc_levels = tokenize_console(acc_color_levels);
 		if(acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;

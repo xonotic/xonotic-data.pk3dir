@@ -325,8 +325,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 		if(player.stored_netname != player.netname)
 		{
 			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
-			strunzone(player.stored_netname);
-			player.stored_netname = strzone(player.netname);
+			strcpy(player.stored_netname, player.netname);
 		}
 	}
 

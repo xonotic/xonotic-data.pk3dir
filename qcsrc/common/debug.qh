@@ -411,7 +411,7 @@ CLASS(DebugText3d, Object)
 	}
 
 	DESTRUCTOR(DebugText3d) {
-		strunzone(this.message);
+		strfree(this.message);
 	}
 
 	void DebugText3d_draw2d(DebugText3d this) {
