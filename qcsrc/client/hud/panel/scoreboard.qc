@@ -448,8 +448,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 				continue;
 		}
 
-		strunzone(sbt_field_title[sbt_num_fields]);
-		sbt_field_title[sbt_num_fields] = strzone(TranslateScoresLabel(str));
+		strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(str));
 		sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 		str = strtolower(str);
 
@@ -540,8 +539,7 @@ LABEL(found)
 		}
 		else if(!have_separator)
 		{
-			strunzone(sbt_field_title[sbt_num_fields]);
-			sbt_field_title[sbt_num_fields] = strzone("|");
+			strcpy(sbt_field_title[sbt_num_fields], "|");
 			sbt_field_size[sbt_num_fields] = stringwidth("|", false, hud_fontsize);
 			sbt_field[sbt_num_fields] = SP_SEPARATOR;
 			++sbt_num_fields;
@@ -549,8 +547,7 @@ LABEL(found)
 		}
 		if(!have_secondary)
 		{
-			strunzone(sbt_field_title[sbt_num_fields]);
-			sbt_field_title[sbt_num_fields] = strzone(TranslateScoresLabel(scores_label(ps_secondary)));
+			strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(scores_label(ps_secondary)));
 			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 			sbt_field[sbt_num_fields] = ps_secondary;
 			++sbt_num_fields;
@@ -558,8 +555,7 @@ LABEL(found)
 		}
 		if(!have_primary)
 		{
-			strunzone(sbt_field_title[sbt_num_fields]);
-			sbt_field_title[sbt_num_fields] = strzone(TranslateScoresLabel(scores_label(ps_primary)));
+			strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(scores_label(ps_primary)));
 			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 			sbt_field[sbt_num_fields] = ps_primary;
 			++sbt_num_fields;
@@ -1489,9 +1485,7 @@ void Scoreboard_Draw()
 			{
 				hud_fontsize = HUD_GetFontsize("hud_fontsize");
 				Scoreboard_initFieldSizes();
-				if(hud_fontsize_str)
-					strunzone(hud_fontsize_str);
-				hud_fontsize_str = strzone(autocvar_hud_fontsize);
+				strcpy(hud_fontsize_str, autocvar_hud_fontsize);
 			}
 		}
 		else {

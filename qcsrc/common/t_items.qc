@@ -148,8 +148,7 @@ void Item_PreDraw(entity this)
 
 void ItemRemove(entity this)
 {
-	if(this.mdl)
-		strunzone(this.mdl);
+	strfree(this.mdl);
 }
 
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
@@ -211,8 +210,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         if(!warpzone_warpzones_exist && this.fade_start && !autocvar_cl_items_nofade)
         	setpredraw(this, Item_PreDraw);
 
-        if(this.mdl)
-            strunzone(this.mdl);
+		strfree(this.mdl);
 
         this.mdl = "";
         string _fn = ReadString();

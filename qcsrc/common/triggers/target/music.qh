@@ -10,8 +10,8 @@ entity music_trigger;
 // FIXME also control bgmvolume here, to not require a target_music for the default track.
 
 entityclass(TargetMusic);
-class(TargetMusic) .int state;
-class(TargetMusic) .float lastvol;
+classfield(TargetMusic) .int state;
+classfield(TargetMusic) .float lastvol;
 
 void TargetMusic_Advance();
 

@@ -57,21 +57,19 @@ void door_blocked(entity this, entity blocker)
 			if (this.wait >= 0)
 			{
 				if (this.state == STATE_DOWN)
-			if (this.classname == "door")
-			{
-				door_go_up (this, NULL, NULL);
-			} else
-			{
-				door_rotating_go_up(this, blocker);
-			}
+				{
+					if (this.classname == "door")
+						door_go_up(this, NULL, NULL);
+					else
+						door_rotating_go_up(this, blocker);
+				}
 				else
-			if (this.classname == "door")
-			{
-				door_go_down (this);
-			} else
-			{
-				door_rotating_go_down (this);
-			}
+				{
+					if (this.classname == "door")
+						door_go_down(this);
+					else
+						door_rotating_go_down(this);
+				}
 			}
 		}
 #ifdef SVQC

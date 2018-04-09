@@ -1660,36 +1660,6 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCount, CBC_ORDER_EXCLUSIVE)
 					--M_ARGV(3, float);
 				}
 			}
-			entity lowest_player = NULL;
-			float lowest_player_score = FLOAT_MAX;
-			entity lowest_bot = NULL;
-			float lowest_bot_score = FLOAT_MAX;
-			FOREACH_CLIENT(Surv_IsPlayerAttacker(it) && (it.surv_role ==
-				SURVIVAL_ROLE_PLAYER),
-			{
-				if (it == ignore)
-				{
-					continue;
-				}
-				if (IS_BOT_CLIENT(it))
-				{
-					float temp_score = PlayerScore_Get(it, SP_SCORE);
-					if (temp_score < lowest_bot_score)
-					{
-						lowest_bot = it;
-						lowest_bot_score = temp_score;
-						continue;
-					}
-				}
-				float temp_score = PlayerScore_Get(it, SP_SCORE);
-				if (temp_score < lowest_player_score)
-				{
-					lowest_player = it;
-					lowest_player_score = temp_score;
-				}
-			});
-			M_ARGV(4, entity) = lowest_player;
-			M_ARGV(5, entity) = lowest_bot;
 			break;
 		}
 		case surv_defender_team:
@@ -1704,35 +1674,6 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetTeamCount, CBC_ORDER_EXCLUSIVE)
 					--M_ARGV(3, float);
 				}
 			}
-			entity lowest_player = NULL;
-			float lowest_player_score = FLOAT_MAX;
-			entity lowest_bot = NULL;
-			float lowest_bot_score = FLOAT_MAX;
-			FOREACH_CLIENT(Surv_IsPlayerDefender(it),
-			{
-				if (it == ignore)
-				{
-					continue;
-				}
-				if (IS_BOT_CLIENT(it))
-				{
-					float temp_score = PlayerScore_Get(it, SP_SCORE);
-					if (temp_score < lowest_bot_score)
-					{
-						lowest_bot = it;
-						lowest_bot_score = temp_score;
-						continue;
-					}
-				}
-				float temp_score = PlayerScore_Get(it, SP_SCORE);
-				if (temp_score < lowest_player_score)
-				{
-					lowest_player = it;
-					lowest_player_score = temp_score;
-				}
-			});
-			M_ARGV(4, entity) = lowest_player;
-			M_ARGV(5, entity) = lowest_bot;
 			break;
 		}
 	}
@@ -1772,6 +1713,52 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_FindBestTeams, CBC_ORDER_EXCLUSIVE)
 		return true;
 	}
 	M_ARGV(1, float) = SURVIVAL_TEAM_BITS;
+	return true;
+}
+
+/// \brief Hook that determines players to switch during autobalance.
+MUTATOR_HOOKFUNCTION(surv, TeamBalance_GetPlayerForTeamSwitch,
+	CBC_ORDER_EXCLUSIVE)
+{
+	int source_team_index = M_ARGV(0, int);
+	bool is_bot = M_ARGV(2, bool);
+	entity lowest_player = NULL;
+	switch (source_team_index)
+	{
+		case surv_attacker_team:
+		{
+			float lowest_score = FLOAT_MAX;
+			FOREACH_CLIENT(Surv_IsPlayerAttacker(it) && (it.surv_role ==
+				SURVIVAL_ROLE_PLAYER) && (IS_BOT_CLIENT(it) == is_bot),
+			{
+				float temp_score = PlayerScore_Get(it, SP_SCORE);
+				if (temp_score >= lowest_score)
+				{
+					continue;
+				}
+				lowest_player = it;
+				lowest_score = temp_score;
+			});
+			break;
+		}
+		case surv_defender_team:
+		{
+			float lowest_score = FLOAT_MAX;
+			FOREACH_CLIENT(Surv_IsPlayerDefender(it) && (IS_BOT_CLIENT(it) ==
+				is_bot),
+			{
+				float temp_score = PlayerScore_Get(it, SP_SCORE);
+				if (temp_score >= lowest_score)
+				{
+					continue;
+				}
+				lowest_player = it;
+				lowest_score = temp_score;
+			});
+			break;
+		}
+	}
+	M_ARGV(3, entity) = lowest_player;
 	return true;
 }
 

@@ -145,12 +145,8 @@ void cvar_changes_init()
 	string k, v, d;
 	float n, i, adding, pureadding;
 
-	if(cvar_changes)
-		strunzone(cvar_changes);
-	cvar_changes = string_null;
-	if(cvar_purechanges)
-		strunzone(cvar_purechanges);
-	cvar_purechanges = string_null;
+	strfree(cvar_changes);
+	strfree(cvar_purechanges);
 	cvar_purechanges_count = 0;
 
 	h = buf_create();
@@ -613,6 +609,57 @@ STATIC_INIT_EARLY(maxclients)
 	for (entity head = nextent(NULL); head; head = nextent(head)) {
 		++maxclients;
 	}
+}
+
+void default_delayedinit(entity this)
+{
+	if(!scores_initialized)
+		ScoreRules_generic();
+}
+
+void InitGameplayMode()
+{
+	VoteReset();
+
+	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
+	get_mi_min_max(1);
+	// assign reflectively to avoid "assignment to world" warning
+	int done = 0; for (int i = 0, n = numentityfields(); i < n; ++i) {
+	    string k = entityfieldname(i); vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
+	    if (v) {
+            putentityfieldstring(i, world, sprintf("%v", v));
+            if (++done == 2) break;
+        }
+	}
+	// currently, NetRadiant's limit is 131072 qu for each side
+	// distance from one corner of a 131072qu cube to the opposite corner is approx. 227023 qu
+	// set the distance according to map size but don't go over the limit to avoid issues with float precision
+	// in case somebody makes extremely large maps
+	max_shot_distance = min(230000, vlen(world.maxs - world.mins));
+
+	MapInfo_LoadMapSettings(mapname);
+	GameRules_teams(false);
+
+	if (!cvar_value_issafe(world.fog))
+	{
+		LOG_INFO("The current map contains a potentially harmful fog setting, ignored");
+		world.fog = string_null;
+	}
+	if(MapInfo_Map_fog != "")
+		if(MapInfo_Map_fog == "none")
+			world.fog = string_null;
+		else
+			world.fog = strzone(MapInfo_Map_fog);
+	clientstuff = strzone(MapInfo_Map_clientstuff);
+
+	MapInfo_ClearTemps();
+
+	gamemode_name = MapInfo_Type_ToText(MapInfo_LoadedGametype);
+
+	cache_mutatormsg = strzone("");
+	cache_lastmutatormsg = strzone("");
+
+	InitializeEntity(NULL, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
 
 void Map_MarkAsRecent(string m);
@@ -1201,9 +1248,7 @@ void Maplist_Init()
 		error("empty maplist, cannot select a new map");
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	if(Map_Current_Name)
-		strunzone(Map_Current_Name);
-	Map_Current_Name = strzone(argv(Map_Current)); // will be automatically freed on exit thanks to DP
+	strcpy(Map_Current_Name, argv(Map_Current)); // will be automatically freed on exit thanks to DP
 	// this may or may not be correct, but who cares, in the worst case a map
 	// isn't chosen in the first pass that should have been
 }

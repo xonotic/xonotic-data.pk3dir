@@ -1075,46 +1075,52 @@ int total_generators;
 void Onslaught_count_generators()
 {
 	entity e;
-	total_generators = redowned = blueowned = yellowowned = pinkowned = 0;
+	total_generators = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfControlPoints(Team_GetTeamFromIndex(i), 0);
+	}
 	for(e = ons_worldgeneratorlist; e; e = e.ons_worldgeneratornext)
 	{
 		++total_generators;
-		redowned += (e.team == NUM_TEAM_1 && e.health > 0);
-		blueowned += (e.team == NUM_TEAM_2 && e.health > 0);
-		yellowowned += (e.team == NUM_TEAM_3 && e.health > 0);
-		pinkowned += (e.team == NUM_TEAM_4 && e.health > 0);
+		if (GetResourceAmount(e, RESOURCE_HEALTH) < 1)
+		{
+			continue;
+		}
+		entity team_ = Entity_GetTeam(e);
+		int num_control_points = Team_GetNumberOfControlPoints(team_);
+		++num_control_points;
+		Team_SetNumberOfControlPoints(team_, num_control_points);
 	}
 }
 
 int Onslaught_GetWinnerTeam()
 {
 	int winner_team = 0;
-	if(redowned > 0)
+	if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(1)) >= 1)
+	{
 		winner_team = NUM_TEAM_1;
-	if(blueowned > 0)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
 	}
-	if(yellowowned > 0)
+	for (int i = 2; i <= NUM_TEAMS; ++i)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
+		if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(i)) >= 1)
+		{
+			if (winner_team != 0)
+			{
+				return 0;
+			}
+			winner_team = Team_IndexToTeam(i);
+		}
 	}
-	if(pinkowned > 0)
+	if (winner_team)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
 		return winner_team;
+	}
 	return -1; // no generators left?
 }
 
 void nades_Clear(entity e);
 
-#define ONS_OWNED_GENERATORS() ((redowned > 0) + (blueowned > 0) + (yellowowned > 0) + (pinkowned > 0))
-#define ONS_OWNED_GENERATORS_OK() (ONS_OWNED_GENERATORS() > 1)
 bool Onslaught_CheckWinner()
 {
 	if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
@@ -1160,8 +1166,10 @@ bool Onslaught_CheckWinner()
 
 	Onslaught_count_generators();
 
-	if(ONS_OWNED_GENERATORS_OK())
+	if (Team_GetNumberOfTeamsWithControlPoints() > 1)
+	{
 		return 0;
+	}
 
 	int winner_team = Onslaught_GetWinnerTeam();
 

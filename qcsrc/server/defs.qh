@@ -229,8 +229,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 // WEAPONTODO
 #define DMG_NOWEP (weaponentities[0])
 
-float lockteams;
-
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 int sv_maxidle_slots;

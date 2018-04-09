@@ -111,9 +111,7 @@ void Ent_Wall_Draw(entity this)
 
 void Ent_Wall_Remove(entity this)
 {
-	if(this.bgmscript)
-		strunzone(this.bgmscript);
-	this.bgmscript = string_null;
+	strfree(this.bgmscript);
 }
 
 NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
@@ -186,17 +184,15 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 			this.mins = this.maxs = '0 0 0';
 		setsize(this, this.mins, this.maxs);
 
-		if(this.bgmscript)
-			strunzone(this.bgmscript);
-		this.bgmscript = ReadString();
-		if(substring(this.bgmscript, 0, 1) == "<")
+		string s = ReadString();
+		if(substring(s, 0, 1) == "<")
 		{
-			this.bgmscript = strzone(substring(this.bgmscript, 1, -1));
+			strcpy(this.bgmscript, substring(s, 1, -1));
 			this.bgmscriptangular = 1;
 		}
 		else
 		{
-			this.bgmscript = strzone(this.bgmscript);
+			strcpy(this.bgmscript, s);
 			this.bgmscriptangular = 0;
 		}
 		if(this.bgmscript != "")
