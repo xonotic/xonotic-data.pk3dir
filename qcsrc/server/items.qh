@@ -4,6 +4,28 @@
 /// \brief Header file that describes the functions related to game items.
 /// \copyright GNU GPLv2 or any later version.
 
+bool startitem_failed;
+
+/// \brief Returns the item definition corresponding to the given class name.
+/// \param[in] class_name Class name to search for.
+/// \return Item definition corresponding to the given class name or NULL is not
+/// found.
+entity Item_FindDefinition(string class_name);
+
+/// \brief Checks whether the items with the specified class name are allowed to
+/// spawn.
+/// \param[in] class_name Item class name to check.
+/// \return True items with the specified class name are allowed to spawn, false
+/// otherwise.
+bool Item_IsAllowed(string class_name);
+
+/// \brief Checks whether the items with the specified definition are allowed to
+/// spawn.
+/// \param[in] definition Item definition to check.
+/// \return True items with the specified definition are allowed to spawn, false
+/// otherwise.
+bool Item_IsDefinitionAllowed(entity definition);
+
 /// \brief Creates a new item.
 /// \param[in] class_name Class name of the item.
 /// \param[in] position Position of the item.
@@ -12,7 +34,7 @@
 /// \return Item on success, NULL otherwise.
 entity Item_Create(string class_name, vector position, bool no_align);
 
-/// \brief Initializes the item according to classname.
+/// \brief Initializes the item according to class name.
 /// \param[in,out] item Item to initialize.
 /// \param[in] class_name Class name to use.
 /// \return No return.

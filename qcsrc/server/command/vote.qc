@@ -128,18 +128,14 @@ void VoteReset()
 
 	if (vote_called)
 	{
-		strunzone(vote_called_command);
-		strunzone(vote_called_display);
-		strunzone(vote_caller_name);
+		strfree(vote_called_command);
+		strfree(vote_called_display);
+		strfree(vote_caller_name);
 	}
 
 	vote_called = VOTE_NULL;
 	vote_caller = NULL;
-	vote_caller_name = string_null;
 	vote_endtime = 0;
-
-	vote_called_command = string_null;
-	vote_called_display = string_null;
 
 	vote_parsed_command = string_null;
 	vote_parsed_display = string_null;
@@ -659,6 +655,14 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 	if (!VoteCommand_checkinlist(first_command, vote_list)) return 0;
 
 	if (!VoteCommand_checkargs(startpos, argc)) return 0;
+
+	switch (MUTATOR_CALLHOOK(VoteCommand_Parse, caller, first_command, vote_command, startpos, argc))
+	{
+		case MUT_VOTEPARSE_CONTINUE: { break; }
+		case MUT_VOTEPARSE_SUCCESS: { return 1; }
+		case MUT_VOTEPARSE_INVALID: { return -1; }
+		case MUT_VOTEPARSE_UNACCEPTABLE: { return 0; }
+	}
 
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{

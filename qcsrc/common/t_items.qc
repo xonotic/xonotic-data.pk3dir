@@ -148,8 +148,17 @@ void Item_PreDraw(entity this)
 
 void ItemRemove(entity this)
 {
-	if(this.mdl)
-		strunzone(this.mdl);
+	strfree(this.mdl);
+}
+
+HashMap ENT_CLIENT_ITEM_simple;
+STATIC_INIT(ENT_CLIENT_ITEM_simple)
+{
+	HM_NEW(ENT_CLIENT_ITEM_simple);
+}
+SHUTDOWN(ENT_CLIENT_ITEM_simple)
+{
+	HM_DELETE(ENT_CLIENT_ITEM_simple);
 }
 
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
@@ -211,10 +220,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         if(!warpzone_warpzones_exist && this.fade_start && !autocvar_cl_items_nofade)
         	setpredraw(this, Item_PreDraw);
 
-        if(this.mdl)
-            strunzone(this.mdl);
+		strfree(this.mdl);
 
-        this.mdl = "";
         string _fn = ReadString();
         this.item_simple = false; // reset it!
 
@@ -223,27 +230,35 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             this.item_simple = true;
 
-            if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
-            else
-            {
-                this.item_simple = false;
-                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it");
-            }
+			#define extensions(x) \
+				x(md3) \
+				x(dpm) \
+				x(iqm) \
+				x(mdl) \
+				/**/
+			#define tryext(ext) { \
+				string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); \
+				string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); \
+				if (cached == "") { \
+					HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); \
+				} \
+				if (cached != "0") { \
+					strcpy(this.mdl, s); \
+					break; \
+				} \
+			}
+			do {
+				extensions(tryext);
+				this.item_simple = false;
+                LOG_TRACEF("Simple item requested for %s but no model exists for it", _fn);
+			} while (0);
         }
 
         if(!this.item_simple)
-            this.mdl = strzone(_fn);
-
+            strcpy(this.mdl, _fn);
 
         if(this.mdl == "")
-            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!");
+            LOG_WARNF("this.mdl is unset for item %s", this.classname);
 
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
@@ -663,8 +678,6 @@ void Item_ScheduleRespawn(entity e)
 AUTOCVAR(g_pickup_respawntime_initial_random, int, 1,
 	"For items that don't start spawned: 0: spawn after their normal respawntime; 1: spawn after `random * respawntime` with the *same* random; 2: same as 1 but each item has separate random");
 
-float shared_random;
-STATIC_INIT(shared_random) { shared_random = random(); }
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
@@ -675,18 +688,26 @@ void Item_ScheduleInitialRespawn(entity e)
 		// range: respawntime .. respawntime + respawntimejitter
 		spawn_in = e.respawntime + random() * e.respawntimejitter;
 	}
-	else if (autocvar_g_pickup_respawntime_initial_random == 1)
+	else
 	{
+		float rnd;
+		if (autocvar_g_pickup_respawntime_initial_random == 1)
+		{
+			static float shared_random = 0;
+			// NOTE this code works only if items are scheduled at the same time (normal case)
+			// NOTE2 random() can't return exactly 1 so this check always work as intended
+			if (!shared_random || floor(time) > shared_random)
+				shared_random = floor(time) + random();
+			rnd = shared_random - floor(time);
+		}
+		else
+			rnd = random();
+
 		// range:
 		// if respawntime >= ITEM_RESPAWN_TICKS: ITEM_RESPAWN_TICKS .. respawntime + respawntimejitter
 		// else: 0 .. ITEM_RESPAWN_TICKS
 		// this is to prevent powerups spawning unexpectedly without waypoints
-		spawn_in = ITEM_RESPAWN_TICKS + shared_random * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
-	}
-	else
-	{
-		// range: same as 1
-		spawn_in = ITEM_RESPAWN_TICKS + random() * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
+		spawn_in = ITEM_RESPAWN_TICKS + rnd * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
 	}
 
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : spawn_in));

@@ -57,13 +57,8 @@ spawnfunc(misc_teleporter_dest)
 
 void teleport_dest_remove(entity this)
 {
-	//if(this.classname)
-		//strunzone(this.classname);
-	//this.classname = string_null;
-
-	if(this.targetname)
-		strunzone(this.targetname);
-	this.targetname = string_null;
+    // strfree(this.classname);
+    strfree(this.targetname);
 }
 
 NET_HANDLE(ENT_CLIENT_TELEPORT_DEST, bool isnew)

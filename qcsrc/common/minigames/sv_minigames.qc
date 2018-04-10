@@ -248,7 +248,7 @@ void end_minigame(entity minigame_session)
 		delete(e);
 	}
 
-	strunzone(minigame_session.netname);
+	strfree(minigame_session.netname);
 	delete(minigame_session);
 }
 

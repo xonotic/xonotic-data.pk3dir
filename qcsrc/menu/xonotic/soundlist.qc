@@ -104,13 +104,10 @@ void SoundList_Menu_Track_Reset(entity box, entity me)
 
 void SoundList_Filter_Change(entity box, entity me)
 {
-	if(me.filterString)
-		strunzone(me.filterString);
+	strfree(me.filterString);
 
 	if(box.text != "")
 		me.filterString = strzone(box.text);
-	else
-		me.filterString = string_null;
 
 	me.getSounds(me);
 }

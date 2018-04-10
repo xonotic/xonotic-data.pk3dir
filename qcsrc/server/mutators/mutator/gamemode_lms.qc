@@ -317,14 +317,14 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms, FilterItem)
+MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	if(autocvar_g_lms_extra_lives)
-	if(item.itemdef == ITEM_ExtraLife)
+	if (autocvar_g_lms_extra_lives && definition == ITEM_ExtraLife)
+	{
 		return false;
-
+	}
 	return true;
 }
 

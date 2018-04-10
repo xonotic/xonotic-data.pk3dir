@@ -98,42 +98,51 @@ float GeomLerp(float a, float _lerp, float b)
 
 void PM_ClientMovement_UpdateStatus(entity this)
 {
-#ifdef CSQC
 	if(!IS_PLAYER(this))
 		return;
 
-	// set crouched
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		entity wep = viewmodels[slot];
-		if(wep.hook && !wasfreed(wep.hook))
+	#if defined(CSQC)
+		entity wepent = viewmodels[slot];
+	#elif defined(SVQC)
+		.entity weaponentity = weaponentities[slot];
+		entity wepent = this.(weaponentity);
+	#endif
+		if(wepent.hook && !wasfreed(wepent.hook))
 		{
-			do_crouch = false;
-			break; // don't bother checking the others
+			have_hook = true;
+			break;
 		}
 	}
-	//if(this.waterlevel >= WATERLEVEL_SWIMMING)
+	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	if (have_hook) {
+		do_crouch = false;
+	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
 		//do_crouch = false;
-	if(hud != HUD_NORMAL)
+	} else if (PHYS_INVEHICLE(this)) {
 		do_crouch = false;
-	if(STAT(FROZEN, this))
+	} else if (STAT(FROZEN, this)) {
 		do_crouch = false;
+    }
 
-	if (do_crouch)
-	{
-		// wants to crouch, this always works
-		if (!IS_DUCKED(this)) SET_DUCKED(this);
-	}
-	else
-	{
-		// wants to stand, if currently crouching we need to check for a low ceiling first
-		if (IS_DUCKED(this))
-		{
-			tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
-			if (!trace_startsolid) UNSET_DUCKED(this);
+	if (do_crouch) {
+		if (!IS_DUCKED(this)) {
+			SET_DUCKED(this);
+			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
+			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
+			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 		}
+	} else if (IS_DUCKED(this)) {
+        tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
+        if (!trace_startsolid) {
+            UNSET_DUCKED(this);
+            this.view_ofs = STAT(PL_VIEW_OFS, this);
+            setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
+        }
 	}
+#ifdef CSQC
 
 	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_WATERJUMP_TIME(this) <= 0)
 		PHYS_WATERJUMP_TIME(this) = 0;
