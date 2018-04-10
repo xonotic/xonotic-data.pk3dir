@@ -213,11 +213,6 @@ spawnfunc(info_player_team4)
 //   _y: weight
 vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 {
-	float shortest, thisdist;
-	float prio;
-
-	prio = 0;
-
 	// filter out spots for the wrong team
 	if(teamcheck >= 0)
 		if(spot.team != teamcheck)
@@ -238,9 +233,10 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 			return '-1 0 0';
 	}
 
-	shortest = vlen(world.maxs - world.mins);
+	float prio = 0;
+	float shortest = vlen(world.maxs - world.mins);
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		thisdist = vlen(it.origin - spot.origin);
+		float thisdist = vlen(it.origin - spot.origin);
 		if (thisdist < shortest)
 			shortest = thisdist;
 	});

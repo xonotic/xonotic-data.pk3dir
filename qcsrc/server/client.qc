@@ -308,6 +308,9 @@ void PutObserverInServer(entity this)
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
+	if(this.monster_attack)
+		IL_REMOVE(g_monster_targets, this);
+	this.monster_attack = false;
     STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
@@ -340,6 +343,7 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
+	this.dphitcontentsmask = 0;
 	this.pushltime = 0;
 	this.istypefrag = 0;
 	setthink(this, func_null);
@@ -1094,6 +1098,8 @@ void FixClientCvars(entity e)
 	stuffcmd(e, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
 	stuffcmd(e, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
 
+	stuffcmd(e, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
+
 	MUTATOR_CALLHOOK(FixClientCvars, e);
 }
 
@@ -1346,7 +1352,8 @@ void ClientDisconnect(entity this)
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
-	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	strfree(CS(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1366,8 +1373,7 @@ void ClientDisconnect(entity this)
 
 	bot_relinkplayerlist();
 
-	if (this.clientstatus) strunzone(this.clientstatus);
-	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
+	strfree(this.clientstatus);
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
@@ -2144,6 +2150,7 @@ bool joinAllowed(entity this)
 }
 
 .int items_added;
+.string shootfromfixedorigin;
 bool PlayerThink(entity this)
 {
 	if (game_stopped || intermission_running) {
@@ -2239,44 +2246,12 @@ bool PlayerThink(entity this)
 		return false;
 	}
 
-	bool have_hook = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).hook.state)
-		{
-			have_hook = true;
-			break;
-		}
-	}
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-	if (have_hook) {
-		do_crouch = false;
-	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		do_crouch = false;
-	} else if (this.vehicle) {
-		do_crouch = false;
-	} else if (STAT(FROZEN, this)) {
-		do_crouch = false;
-    }
-
-	if (do_crouch) {
-		if (!this.crouch) {
-			this.crouch = true;
-			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
-			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
-			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
-		}
-	} else if (this.crouch) {
-        tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
-        if (!trace_startsolid) {
-            this.crouch = false;
-            this.view_ofs = STAT(PL_VIEW_OFS, this);
-            setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
-        }
-	}
-
 	FixPlayermodel(this);
+
+	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
+		this.shootfromfixedorigin = autocvar_g_shootfromfixedorigin;
+		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
+	}
 
 	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 	//if(frametime)
@@ -2506,8 +2481,7 @@ void PlayerPreThink (entity this)
 		}
 		if (!assume_unchanged && autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
-		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
-		CS(this).netname_previous = strzone(this.netname);
+		strcpy(CS(this).netname_previous, this.netname);
 	}
 
 	// version nagging
@@ -2758,6 +2732,13 @@ void PlayerPostThink (entity this)
 	}
 
 	if (IS_PLAYER(this)) {
+		if(this.death_time == time && IS_DEAD(this))
+		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
+			this.maxs.z = 5;
+			setsize(this, this.mins, this.maxs);
+		}
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
@@ -2786,11 +2767,14 @@ void PM_UpdateButtons(entity this, entity store)
 		store.impulse = this.impulse;
 	this.impulse = 0;
 
-	store.button0 = this.button0;
-	store.button2 = this.button2;
-	store.button3 = this.button3;
+	bool typing = this.buttonchat;
+
+	store.button0 = (typing) ? 0 : this.button0;
+	//button1?!
+	store.button2 = (typing) ? 0 : this.button2;
+	store.button3 = (typing) ? 0 : this.button3;
 	store.button4 = this.button4;
-	store.button5 = this.button5;
+	store.button5 = (typing) ? 0 : this.button5;
 	store.button6 = this.button6;
 	store.button7 = this.button7;
 	store.button8 = this.button8;
@@ -2816,5 +2800,12 @@ void PM_UpdateButtons(entity this, entity store)
 	store.ping_movementloss = this.ping_movementloss;
 
 	store.v_angle = this.v_angle;
-	store.movement = this.movement;
+	store.movement = (typing) ? '0 0 0' : this.movement;
+}
+
+NET_HANDLE(fpsreport, bool)
+{
+	int fps = ReadShort();
+	PlayerScore_Set(sender, SP_FPS, fps);
+	return true;
 }

@@ -396,18 +396,10 @@ void bot_clientdisconnect(entity this)
 	if (!IS_BOT_CLIENT(this))
 		return;
 	bot_clearqueue(this);
-	if(this.cleanname)
-		strunzone(this.cleanname);
-	if(this.netname_freeme)
-		strunzone(this.netname_freeme);
-	if(this.playermodel_freeme)
-		strunzone(this.playermodel_freeme);
-	if(this.playerskin_freeme)
-		strunzone(this.playerskin_freeme);
-	this.cleanname = string_null;
-	this.netname_freeme = string_null;
-	this.playermodel_freeme = string_null;
-	this.playerskin_freeme = string_null;
+	strfree(this.cleanname);
+	strfree(this.netname_freeme);
+	strfree(this.playermodel_freeme);
+	strfree(this.playerskin_freeme);
 	if(this.bot_cmd_current)
 		delete(this.bot_cmd_current);
 	if(bot_waypoint_queue_owner == this)

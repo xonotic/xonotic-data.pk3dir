@@ -22,7 +22,7 @@
 
 	void InputBox_setText(entity me, string txt)
 	{
-		if (me.text) strunzone(me.text);
+		strfree(me.text);
 		SUPER(InputBox).setText(me, strzone(txt));
 	}
 

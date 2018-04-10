@@ -116,29 +116,21 @@ void trigger_common_read(entity this, bool withtarget)
 
 	if(withtarget)
 	{
-		if(this.target) { strunzone(this.target); }
-		if(this.target2) { strunzone(this.target2); }
-		if(this.target3) { strunzone(this.target3); }
-		if(this.target4) { strunzone(this.target4); }
-		if(this.targetname) { strunzone(this.targetname); }
-		if(this.killtarget) { strunzone(this.killtarget); }
+		strfree(this.target);
+		strfree(this.target2);
+		strfree(this.target3);
+		strfree(this.target4);
+		strfree(this.targetname);
+		strfree(this.killtarget);
 
 		int targbits = ReadByte();
 
-		#define X(xs,b) MACRO_BEGIN { \
-			if(targbits & BIT(b)) \
-				xs = strzone(ReadString()); \
-			else \
-				xs = string_null; \
-		} MACRO_END
-
-		X(this.target, 0);
-		X(this.target2, 1);
-		X(this.target3, 2);
-		X(this.target4, 3);
-		X(this.targetname, 4);
-		X(this.killtarget, 5);
-		#undef X
+		this.target = ((targbits & BIT(0)) ? strzone(ReadString()) : string_null);
+		this.target2 = ((targbits & BIT(1)) ? strzone(ReadString()) : string_null);
+		this.target3 = ((targbits & BIT(2)) ? strzone(ReadString()) : string_null);
+		this.target4 = ((targbits & BIT(3)) ? strzone(ReadString()) : string_null);
+		this.targetname = ((targbits & BIT(4)) ? strzone(ReadString()) : string_null);
+		this.killtarget = ((targbits & BIT(5)) ? strzone(ReadString()) : string_null);
 	}
 
 	if(f & 4)
@@ -166,23 +158,12 @@ void trigger_common_read(entity this, bool withtarget)
 
 void trigger_remove_generic(entity this)
 {
-	if(this.target) { strunzone(this.target); }
-	this.target = string_null;
-
-	if(this.target2) { strunzone(this.target2); }
-	this.target2 = string_null;
-
-	if(this.target3) { strunzone(this.target3); }
-	this.target3 = string_null;
-
-	if(this.target4) { strunzone(this.target4); }
-	this.target4 = string_null;
-
-	if(this.targetname) { strunzone(this.targetname); }
-	this.target = string_null;
-
-	if(this.killtarget) { strunzone(this.killtarget); }
-	this.killtarget = string_null;
+	strfree(this.target);
+	strfree(this.target2);
+	strfree(this.target3);
+	strfree(this.target4);
+	strfree(this.targetname);
+	strfree(this.killtarget);
 }
 #endif
 

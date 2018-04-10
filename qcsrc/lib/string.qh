@@ -4,6 +4,25 @@
 #include "sort.qh"
 #include "oo.qh"
 
+// string logic
+//
+// true: is truthy
+// == "": is equal to ""
+// is "": has the same string index as the string constant ""
+// strunzone: can be strunzoned
+//
+// |              | true | == "" | is "" | strunzone |
+// | :----------: | :--: | :---: | :---: | :-------: |
+// | nil          |      | yes   |       |           |
+// | strcat(nil)  | yes  | yes   |       |           |
+// | strzone(nil) | yes  | yes   |       | yes       |
+// | ""           | yes  | yes   | yes   |           |
+// | strcat("")   | yes  | yes   |       |           |
+// | strzone("")  | yes  | yes   |       | yes       |
+// | "s"          | yes  |       |       |           |
+// | strcat("s")  | yes  |       |       |           |
+// | strzone("s") | yes  |       |       | yes       |
+
 #ifdef CSQC
 	float stringwidth_colors(string s, vector theSize)
 	{
@@ -26,6 +45,20 @@
 		return stringwidth(s, false, theSize);
 	}
 #endif
+
+#define strcpy(this, s) MACRO_BEGIN \
+	if (this) { \
+		strunzone(this); \
+	} \
+	this = strzone(s); \
+MACRO_END
+
+#define strfree(this) MACRO_BEGIN \
+	if (this) { \
+		strunzone(this); \
+	} \
+	this = string_null; \
+MACRO_END
 
 ERASEABLE
 string seconds_tostring(float sec)
@@ -159,6 +192,14 @@ string cons(string a, string b)
 	if (a == "") return b;
 	if (b == "") return a;
 	return strcat(a, " ", b);
+}
+
+ERASEABLE
+string cons_mid(string a, string mid, string b)
+{
+	if (a == "") return b;
+	if (b == "") return a;
+	return strcat(a, mid, b);
 }
 
 ERASEABLE

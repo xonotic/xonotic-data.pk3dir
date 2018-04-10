@@ -30,10 +30,10 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 
 #ifdef CSQC
 entityclass(Casing);
-class(Casing) .float alpha;
-class(Casing) .bool silent;
-class(Casing) .int state;
-class(Casing) .float cnt;
+classfield(Casing) .float alpha;
+classfield(Casing) .bool silent;
+classfield(Casing) .int state;
+classfield(Casing) .float cnt;
 
 void Casing_Delete(entity this)
 {

@@ -169,17 +169,17 @@ spawnfunc(func_sparks)
 .int dphitcontentsmask;
 
 entityclass(PointParticles);
-class(PointParticles) .int cnt; // effect number
-class(PointParticles) .vector velocity; // particle velocity
-class(PointParticles) .float waterlevel; // direction jitter
-class(PointParticles) .int count; // count multiplier
-class(PointParticles) .int impulse; // density
-class(PointParticles) .string noise; // sound
-class(PointParticles) .float atten;
-class(PointParticles) .float volume;
-class(PointParticles) .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
-class(PointParticles) .vector movedir; // trace direction
-class(PointParticles) .float glow_color; // palette index
+classfield(PointParticles) .int cnt; // effect number
+classfield(PointParticles) .vector velocity; // particle velocity
+classfield(PointParticles) .float waterlevel; // direction jitter
+classfield(PointParticles) .int count; // count multiplier
+classfield(PointParticles) .int impulse; // density
+classfield(PointParticles) .string noise; // sound
+classfield(PointParticles) .float atten;
+classfield(PointParticles) .float volume;
+classfield(PointParticles) .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
+classfield(PointParticles) .vector movedir; // trace direction
+classfield(PointParticles) .float glow_color; // palette index
 
 void Draw_PointParticles(entity this)
 {
@@ -253,15 +253,9 @@ void Draw_PointParticles(entity this)
 
 void Ent_PointParticles_Remove(entity this)
 {
-	if(this.noise)
-		strunzone(this.noise);
-	this.noise = string_null;
-	if(this.bgmscript)
-		strunzone(this.bgmscript);
-	this.bgmscript = string_null;
-	if(this.mdl)
-		strunzone(this.mdl);
-	this.mdl = string_null;
+    strfree(this.noise);
+    strfree(this.bgmscript);
+    strfree(this.mdl);
 }
 
 NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
@@ -323,17 +317,13 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 			this.waterlevel = 0;
 			this.count = 1;
 		}
-		if(this.noise)
-			strunzone(this.noise);
-		if(this.bgmscript)
-			strunzone(this.bgmscript);
-		this.noise = strzone(ReadString());
+		strcpy(this.noise, ReadString());
 		if(this.noise != "")
 		{
 			this.atten = ReadByte() / 64.0;
 			this.volume = ReadByte() / 255.0;
 		}
-		this.bgmscript = strzone(ReadString());
+		strcpy(this.bgmscript, ReadString());
 		if(this.bgmscript != "")
 		{
 			this.bgmscriptattack = ReadByte() / 64.0;

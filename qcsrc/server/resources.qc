@@ -83,17 +83,24 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 	}
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
+	float max_amount = GetResourceLimit(e, resource_type);
+	float amount_wasted = 0;
+	if (amount > max_amount)
+	{
+		amount_wasted = amount - max_amount;
+		amount = max_amount;
+	}
 	.float resource_field = GetResourceField(resource_type);
-	if (e.(resource_field) == amount)
+	if (e.(resource_field) != amount)
+	{
+		e.(resource_field) = amount;
+		MUTATOR_CALLHOOK(ResourceAmountChanged, e, resource_type, amount);
+	}
+	if (amount_wasted == 0)
 	{
 		return;
 	}
-	float max_amount = GetResourceLimit(e, resource_type);
-	if (amount > max_amount)
-	{
-		amount = max_amount;
-	}
-	e.(resource_field) = amount;
+	MUTATOR_CALLHOOK(ResourceWasted, e, resource_type, amount_wasted);
 }
 
 void GiveResource(entity receiver, int resource_type, float amount)
@@ -144,6 +151,19 @@ void GiveResource(entity receiver, int resource_type, float amount)
 void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 	float limit)
 {
+	if (amount == 0)
+	{
+		return;
+	}
+	bool forbid = MUTATOR_CALLHOOK(GiveResourceWithLimit, receiver,
+		resource_type, amount, limit);
+	if (forbid)
+	{
+		return;
+	}
+	resource_type = M_ARGV(1, int);
+	amount = M_ARGV(2, float);
+	limit = M_ARGV(3, float);
 	if (amount == 0)
 	{
 		return;

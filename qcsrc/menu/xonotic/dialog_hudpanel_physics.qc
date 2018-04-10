@@ -12,13 +12,13 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_physics"));
-			e.addValue(e, _("Panel disabled"), "0");
-			e.addValue(e, _("Panel enabled"), "1");
-			e.addValue(e, _("Panel enabled even observing"), "2");
-			e.addValue(e, _("Panel enabled only in Race/CTS"), "3");
+			e.addValue(e, _("Disable"), "0");
+			e.addValue(e, _("Enable"), "1");
+			e.addValue(e, _("Enable even observing"), "2");
+			e.addValue(e, _("Enable only in Race/CTS"), "3");
 			e.configureXonoticTextSliderValues(e);
 
-	DIALOG_HUDPANEL_COMMON_NOTOGGLE();
+	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticCheckBox(0, "hud_panel_physics_progressbar", _("Status bar")));

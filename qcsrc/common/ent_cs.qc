@@ -39,8 +39,7 @@ MACRO_END
 
 /** the engine player name strings are mutable! */
 #define ENTCS_SET_MUTABLE_STRING(var, x) MACRO_BEGIN \
-	if (var) strunzone(var); \
-	var = strzone(x); \
+	strcpy(var, x); \
 MACRO_END
 
 ENTCS_PROP(ENTNUM, false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
@@ -63,11 +62,11 @@ ENTCS_PROP(ARMOR, false, armorvalue, ENTCS_SET_NORMAL,
 
 ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,
 	{ WriteString(chan, ent.netname); },
-	{ if (ent.netname) strunzone(ent.netname); ent.netname = strzone(ReadString()); })
+	{ strcpy(ent.netname, ReadString()); })
 
 ENTCS_PROP(MODEL, true, model, ENTCS_SET_NORMAL,
 	{ WriteString(chan, ent.model); },
-	{ if (ent.model) strunzone(ent.model); ent.model = strzone(ReadString()); })
+	{ strcpy(ent.model, ReadString()); })
 
 ENTCS_PROP(SKIN, true, skin, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.skin); },
@@ -168,10 +167,8 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		int n = this.sv_entnum;
 		entity e = entcs_receiver(n);
 		entcs_receiver(n, NULL);
-		if (e.netname) strunzone(e.netname);
-		e.netname = string_null;
-		if (e.model) strunzone(e.model);
-		e.model = string_null;
+		strfree(e.netname);
+		strfree(e.model);
 		if (e != this) delete(e);
 	}
 
@@ -188,8 +185,7 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		// `cl_forceplayermodels 1` sounds will be wrong until the player has been in the PVS, but so be it
 		if (this.model != e.model)
 		{
-			if (this.model) strunzone(this.model);
-			this.model = strzone(e.model);
+			strcpy(this.model, e.model);
 		}
 	}
 
