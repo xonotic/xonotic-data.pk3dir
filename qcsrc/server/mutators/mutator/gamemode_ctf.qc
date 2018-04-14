@@ -1966,6 +1966,10 @@ void havocbot_role_ctf_middle(entity this)
 
 		navigation_goalrating_end(this);
 
+		entity goal = this.goalentity;
+		if (havocbot_ctf_is_basewaypoint(goal) && vdist(goal.origin - this.origin, <, 100))
+			this.goalentity_lock_timeout = time + 2;
+
 		navigation_goalrating_timeout_set(this);
 	}
 }
