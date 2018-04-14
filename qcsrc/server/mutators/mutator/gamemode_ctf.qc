@@ -1518,12 +1518,14 @@ void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 
 void havocbot_goalrating_ctf_enemybase(entity this, float ratingscale)
 {
+	// disabled because we always spawn waypoints for flags with waypoint_spawnforitem_force
+	/*
 	if (!bot_waypoints_for_items)
 	{
 		havocbot_goalrating_ctf_enemyflag(this, ratingscale);
 		return;
 	}
-
+	*/
 	entity head;
 
 	head = havocbot_ctf_find_enemy_flag(this);
@@ -1579,7 +1581,6 @@ void havocbot_goalrating_ctf_carrieritems(entity this, float ratingscale, vector
 		if (it.health || it.armorvalue)
 		if (vdist(it.origin - org, <, sradius))
 		{
-			// get the value of the item
 			float t = it.bot_pickupevalfunc(this, it) * 0.0001;
 			if (t > 0)
 				navigation_routerating(this, it, t * ratingscale, 500);
@@ -1648,6 +1649,21 @@ void havocbot_ctf_reset_role(entity this)
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_MIDDLE);
 }
 
+bool havocbot_ctf_is_basewaypoint(entity item)
+{
+	if (item.classname != "waypoint")
+		return false;
+
+	entity head = ctf_worldflaglist;
+	while (head)
+	{
+		if (item == head.bot_basewaypoint)
+			return true;
+		head = head.ctf_worldflagnext;
+	}
+	return false;
+}
+
 void havocbot_role_ctf_carrier(entity this)
 {
 	if(IS_DEAD(this))
@@ -1678,18 +1694,11 @@ void havocbot_role_ctf_carrier(entity this)
 
 		navigation_goalrating_timeout_set(this);
 
-		entity head = ctf_worldflaglist;
-		while (head)
-		{
-			if (this.goalentity == head.bot_basewaypoint)
-			{
-				this.goalentity_lock_timeout = time + 5;
-				break;
-			}
-			head = head.ctf_worldflagnext;
-		}
+		entity goal = this.goalentity;
+		if (havocbot_ctf_is_basewaypoint(goal) && vdist(goal.origin - this.origin, <, 100))
+			this.goalentity_lock_timeout = time + 5;
 
-		if (this.goalentity)
+		if (goal)
 			this.havocbot_cantfindflag = time + 10;
 		else if (time > this.havocbot_cantfindflag)
 		{
@@ -1723,6 +1732,11 @@ void havocbot_role_ctf_escort(entity this)
 	{
 		this.havocbot_role = this.havocbot_previous_role;
 		this.havocbot_role_timeout = 0;
+		return;
+	}
+	if (ef.ctf_status == FLAG_DROPPED)
+	{
+		navigation_goalrating_timeout_expire(this, 1);
 		return;
 	}
 
