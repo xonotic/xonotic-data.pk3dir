@@ -72,7 +72,7 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 	float enemy_distance = FLOAT_MAX;
 	float dist;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !(IS_DEAD(it) || STAT(FROZEN, it)),
 	{
 		if (it.team == this.team)
 		{
