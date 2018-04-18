@@ -801,10 +801,14 @@ void havocbot_movetogoal(entity this)
 
 	navigation_shortenpath(this);
 
+	bool goalcurrent_can_be_removed = false;
 	if (IS_MOVABLE(this.goalcurrent))
 	{
-		if (IS_DEAD(this.goalcurrent))
+		// if is movable  =>  not frozen
+		if (IS_DEAD(this.goalcurrent) || (this.goalentity_shouldbefrozen && this.goalentity == this.goalcurrent))
 		{
+			goalcurrent_can_be_removed = true;
+			// don't remove if not visible
 			if (checkpvs(this.origin + this.view_ofs, this.goalcurrent))
 			{
 				navigation_goalrating_timeout_force(this);
@@ -832,7 +836,7 @@ void havocbot_movetogoal(entity this)
 		{
 			if (this.goalcurrent)
 			{
-				if (IS_MOVABLE(this.goalcurrent) && IS_DEAD(this.goalcurrent))
+				if (goalcurrent_can_be_removed)
 				{
 					// remove even if not visible
 					navigation_goalrating_timeout_force(this);

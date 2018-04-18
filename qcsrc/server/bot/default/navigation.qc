@@ -731,6 +731,7 @@ void navigation_clearroute(entity this)
 	this.goalcurrent_distance_z = FLOAT_MAX;
 	this.goalcurrent_distance_time = 0;
 	this.goalentity_lock_timeout = 0;
+	this.goalentity_shouldbefrozen = false;
 	this.goalentity = NULL;
 	this.goalcurrent = NULL;
 	this.goalstack01 = NULL;
@@ -1770,6 +1771,7 @@ void navigation_goalrating_end(entity this)
 			this.aistatus |= AI_STATUS_STUCK;
 		}
 	}
+	this.goalentity_shouldbefrozen = boolean(STAT(FROZEN, this.goalentity));
 }
 
 void botframe_updatedangerousobjects(float maxupdate)

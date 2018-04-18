@@ -30,6 +30,7 @@ entity navigation_bestgoal;
 .float goalcurrent_distance_time;
 
 .float goalentity_lock_timeout;
+.bool goalentity_shouldbefrozen;
 
 .entity nearestwaypoint;
 .float nearestwaypointtimeout;
