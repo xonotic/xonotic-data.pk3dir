@@ -112,7 +112,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 {
 	float rating;
 	vector o;
-	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
+	ratingscale = ratingscale * 0.0001;
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
@@ -190,7 +190,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 	if(this.waterlevel>WATERLEVEL_WETFEET)
 		return;
 
-	ratingscale = ratingscale * 0.00005; // enemies are rated around 20000 already
+	ratingscale = ratingscale * 0.0001;
 
 	float t;
 	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), {
@@ -234,7 +234,7 @@ void havocbot_role_generic(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 

@@ -236,7 +236,7 @@ void havocbot_role_ka_carrier(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 
@@ -259,7 +259,7 @@ void havocbot_role_ka_collector(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 1000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 500, this.origin, 10000);
 		havocbot_goalrating_ball(this, 20000, this.origin);
 		navigation_goalrating_end(this);
 

@@ -1959,7 +1959,7 @@ void havocbot_role_ctf_middle(entity this)
 
 		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
 		havocbot_goalrating_ctf_droppedflags(this, 30000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 10000, org, havocbot_middlepoint_radius * 0.5);
+		havocbot_goalrating_enemyplayers(this, 5000, org, havocbot_middlepoint_radius * 0.5);
 		havocbot_goalrating_items(this, 5000, org, havocbot_middlepoint_radius * 0.5);
 		havocbot_goalrating_items(this, 2500, this.origin, 10000);
 		havocbot_goalrating_ctf_enemybase(this, 2500);
@@ -2032,7 +2032,7 @@ void havocbot_role_ctf_defense(entity this)
 
 		havocbot_goalrating_ctf_ourstolenflag(this, 20000);
 		havocbot_goalrating_ctf_droppedflags(this, 20000, org, havocbot_middlepoint_radius);
-		havocbot_goalrating_enemyplayers(this, 15000, org, havocbot_middlepoint_radius);
+		havocbot_goalrating_enemyplayers(this, 7500, org, havocbot_middlepoint_radius);
 		havocbot_goalrating_items(this, 10000, org, havocbot_middlepoint_radius);
 		havocbot_goalrating_items(this, 5000, this.origin, 10000);
 

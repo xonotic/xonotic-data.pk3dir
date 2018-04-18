@@ -1485,7 +1485,7 @@ void havocbot_role_ons_offense(entity this)
 	if (navigation_goalrating_timeout(this))
 	{
 		navigation_goalrating_start(this);
-		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 650);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 650);
 		if(!havocbot_goalrating_ons_generator_attack(this, 20000))
 			havocbot_goalrating_ons_controlpoints_attack(this, 20000);
 		havocbot_goalrating_ons_offenseitems(this, 10000, this.origin, 10000);
