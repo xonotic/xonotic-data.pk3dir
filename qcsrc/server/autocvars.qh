@@ -167,7 +167,7 @@ int autocvar_g_maxplayers;
 float autocvar_g_maxplayers_spectator_blocktime;
 float autocvar_g_maxpushtime;
 float autocvar_g_maxspeed;
-bool autocvar_g_instagib;
+#define autocvar_g_instagib cvar("g_instagib")
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 bool autocvar_g_mirrordamage_onlyweapons;
