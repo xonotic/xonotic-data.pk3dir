@@ -11,7 +11,7 @@ bool autocvar_g_overkill_itemwaypoints = true;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
-REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
+REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !autocvar_g_instagib && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
 {
 	MUTATOR_ONADD
 	{

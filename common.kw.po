@@ -3,7 +3,8 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Nicky Rowe <nickyrowe@gmail.com>, 2016
+# Nicky Rowe <nickyrowe688@gmail.com>, 2016
+# Nicky Rowe <nickyrowe688@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"

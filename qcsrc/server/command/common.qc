@@ -391,7 +391,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 						break;
 					});
 
-					if (!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
+					if (!found && arg_lower != "random" && arg_lower != "anyrandom") { print_to(caller, "Invalid monster"); return; }
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);

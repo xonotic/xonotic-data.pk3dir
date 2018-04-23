@@ -76,7 +76,7 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 
 	entity own = this.realowner;
 
-	RadiusDamage(this, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, 
+	RadiusDamage(this, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force,
 						NULL, NULL, autocvar_g_monster_wyvern_attack_fireball_radius, this.projectiledeathtype, DMG_NOWEP, NULL);
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_wyvern_attack_fireball_radius, it.takedamage == DAMAGE_AIM,

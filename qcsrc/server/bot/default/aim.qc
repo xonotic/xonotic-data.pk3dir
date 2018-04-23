@@ -139,7 +139,7 @@ bool bot_shouldattack(entity this, entity targ)
 		return false;
 	if (IS_DEAD(targ))
 		return false;
-	if (PHYS_INPUT_BUTTON_CHAT(targ))
+	if (PHYS_INPUT_BUTTON_CHAT(targ) && !autocvar_bot_typefrag)
 		return false;
 	if(targ.flags & FL_NOTARGET)
 		return false;

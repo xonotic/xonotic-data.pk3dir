@@ -29,7 +29,6 @@ float cvar_normal(string n)
 #define cvar_set_normal builtin_cvar_set
 
 .vector dropped_origin;
-.float nottargeted;
 
 entity eliminatedPlayers;
 void EliminatedPlayers_Init(float(entity) isEliminated_func);
@@ -222,8 +221,6 @@ void readlevelcvars()
 {
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
-
-	g_instagib = cvar("g_instagib");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
