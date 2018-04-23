@@ -253,6 +253,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
                 LOG_TRACEF("Simple item requested for %s but no model exists for it", _fn);
 			} while (0);
 			#undef tryext
+			#undef extensions
         }
 
         if(!this.item_simple)
