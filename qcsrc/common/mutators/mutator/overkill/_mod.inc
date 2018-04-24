@@ -8,5 +8,5 @@
 #include <common/mutators/mutator/overkill/okhmg.qc>
 #include <common/mutators/mutator/overkill/okmachinegun.qc>
 #include <common/mutators/mutator/overkill/oknex.qc>
+#include <common/mutators/mutator/overkill/okrpc.qc>
 #include <common/mutators/mutator/overkill/okshotgun.qc>
-#include <common/mutators/mutator/overkill/rpc.qc>

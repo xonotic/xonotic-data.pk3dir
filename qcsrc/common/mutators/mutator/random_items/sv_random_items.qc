@@ -241,14 +241,14 @@ string RandomItems_GetRandomOverkillItemClassName(string prefix)
 	{
 		RandomSelection_AddString("weapon_okhmg", cvar(cvar_name), 1);
 	}
-	cvar_name = sprintf("g_%s_overkill_weapon_rpc_probability", prefix);
+	cvar_name = sprintf("g_%s_overkill_weapon_okrpc_probability", prefix);
 	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
 	{
 		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
 	}
 	else
 	{
-		RandomSelection_AddString("weapon_rpc", cvar(cvar_name), 1);
+		RandomSelection_AddString("weapon_okrpc", cvar(cvar_name), 1);
 	}
 	return RandomSelection_chosen_string;
 }

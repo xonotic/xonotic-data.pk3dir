@@ -2,7 +2,7 @@
 
 #include "okshotgun.qh"
 #include "okhmg.qh"
-#include "rpc.qh"
+#include "okrpc.qh"
 
 string autocvar_g_overkill;
 
@@ -35,7 +35,7 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !autocvar_g_instagib 
 			ITEM_ArmorMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		}
 
-		WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 		WEP_OVERKILL_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
 		//WEP_SHOTGUN.mdl = "ok_shotgun";
@@ -50,7 +50,7 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !autocvar_g_instagib 
 		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 
-		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 		WEP_OVERKILL_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 }
@@ -170,7 +170,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 			Weapon newwep = player.ok_lastwep[slot];
 			if(player.ok_lastwep[slot] == WEP_OVERKILL_HMG)
 				newwep = WEP_OVERKILL_MACHINEGUN;
-			if(player.ok_lastwep[slot] == WEP_RPC)
+			if(player.ok_lastwep[slot] == WEP_OVERKILL_RPC)
 				newwep = WEP_OVERKILL_NEX;
 			thiswep.m_switchweapon = newwep;
 			player.ok_lastwep[slot] = WEP_Null;
@@ -241,7 +241,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	}
 	else if (item.classname == "item_shield")
 	{
-		entity wep = new(weapon_rpc);
+		entity wep = new(weapon_okrpc);
 		setorigin(wep, item.origin);
 		wep.ok_item = true;
 		wep.noalign = Item_ShouldKeepPosition(item);
@@ -250,7 +250,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_rpc");
+		Item_Initialize(wep, "weapon_okrpc");
 		return true;
 	}
 	return true;
@@ -260,7 +260,7 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 {
 	WepSet ok_start_items = (WEPSET(OVERKILL_MACHINEGUN) | WEPSET(OVERKILL_NEX) | WEPSET(OVERKILL_SHOTGUN));
 
-	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET(RPC); }
+	if(WEP_OVERKILL_RPC.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_RPC); }
 	if(WEP_OVERKILL_HMG.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_HMG); }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
