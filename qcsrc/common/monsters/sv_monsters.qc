@@ -60,7 +60,13 @@ bool monster_facing(entity this, entity targ)
 {
 	// relies on target having an origin
 	makevectors(this.angles);
-	float dot = normalize(targ.origin - this.origin) * v_forward;
+	vector targ_org = targ.origin, my_org = this.origin;
+	if(autocvar_g_monsters_target_infront_2d)
+	{
+		targ_org = vec2(targ_org);
+		my_org = vec2(my_org);
+	}
+	float dot = normalize(targ_org - my_org) * v_forward;
 
 	return !(dot <= autocvar_g_monsters_target_infront_range);
 }

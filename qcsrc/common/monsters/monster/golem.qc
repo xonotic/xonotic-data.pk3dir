@@ -4,7 +4,8 @@
 float autocvar_g_monster_golem_health;
 float autocvar_g_monster_golem_damageforcescale = 0.1;
 float autocvar_g_monster_golem_attack_smash_damage;
-float autocvar_g_monster_golem_attack_smash_range;
+float autocvar_g_monster_golem_attack_smash_force = 100;
+float autocvar_g_monster_golem_attack_smash_range = 200;
 float autocvar_g_monster_golem_attack_claw_damage;
 float autocvar_g_monster_golem_attack_lightning_damage;
 float autocvar_g_monster_golem_attack_lightning_damage_zap = 15;
@@ -37,12 +38,14 @@ void M_Golem_Attack_Smash(entity this)
 	Send_Effect(EFFECT_EXPLOSION_MEDIUM, (this.origin + (v_forward * 150)) - ('0 0 1' * this.maxs.z), '0 0 0', 1);
 	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
-	// RadiusDamage does NOT support custom starting location, which means we must use this hack...
+	vector loc = this.origin + v_forward * 50;
 
-	tracebox(this.origin + v_forward * 50, this.mins * 0.5, this.maxs * 0.5, this.origin + v_forward * autocvar_g_monster_golem_attack_smash_range, MOVE_NORMAL, this);
-
-	if(trace_ent.takedamage)
-		Damage(trace_ent, this, this, (autocvar_g_monster_golem_attack_smash_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_GOLEM_SMASH.m_id, DMG_NOWEP, trace_ent.origin, normalize(trace_ent.origin - this.origin));
+	entity dmgent = spawn();
+	dmgent.owner = dmgent.realowner = this;
+	setorigin(dmgent, loc);
+	RadiusDamage (dmgent, this, (autocvar_g_monster_golem_attack_smash_damage) * MONSTER_SKILLMOD(this), (autocvar_g_monster_golem_attack_smash_damage * 0.5) * MONSTER_SKILLMOD(this), 
+					autocvar_g_monster_golem_attack_smash_range, this, NULL, autocvar_g_monster_golem_attack_smash_force, DEATH_MONSTER_GOLEM_SMASH.m_id, DMG_NOWEP, NULL);
+	delete(dmgent);
 }
 
 void M_Golem_Attack_Swing(entity this)
@@ -175,7 +178,7 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 			if(IS_ONGROUND(actor))
 			if(randomness <= 0.5 && vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_golem_attack_smash_range))
 			{
-				setanim(actor, actor.anim_melee1, true, true, false);
+				setanim(actor, actor.anim_melee1, false, true, true);
 				Monster_Delay(actor, 1, 1.1, M_Golem_Attack_Smash);
 				if(actor.animstate_endtime > time)
 					actor.anim_finished = actor.animstate_endtime;
@@ -220,7 +223,7 @@ METHOD(Golem, mr_pain, float(Golem this, entity actor, float damage_take, entity
 {
     TC(Golem, this);
     actor.pain_finished = time + 0.5;
-    setanim(actor, actor.anim_pain1, true, true, false);
+    setanim(actor, ((random() >= 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
     return damage_take;
 }
 
