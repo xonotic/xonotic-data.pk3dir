@@ -56,6 +56,15 @@ void monster_dropitem(entity this, entity attacker)
 	}
 }
 
+bool monster_facing(entity this, entity targ)
+{
+	// relies on target having an origin
+	makevectors(this.angles);
+	float dot = normalize(targ.origin - this.origin) * v_forward;
+
+	return !(dot <= autocvar_g_monsters_target_infront_range);
+}
+
 void monster_makevectors(entity this, entity targ)
 {
 	if(IS_MONSTER(this))
@@ -72,14 +81,12 @@ void monster_makevectors(entity this, entity targ)
 // Target handling
 // ===============
 
-bool Monster_ValidTarget(entity this, entity targ)
+bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
 {
 	// ensure we're not checking nonexistent monster/target
 	if(!this || !targ) { return false; }
 
 	if((targ == this)
-	|| (autocvar_g_monsters_lineofsight && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
-	|| (IS_VEHICLE(targ) && !((Monsters_from(this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| (time < game_starttime) // monsters do nothing before match has started
 	|| (targ.takedamage == DAMAGE_NO)
 	|| (game_stopped)
@@ -89,9 +96,11 @@ bool Monster_ValidTarget(entity this, entity targ)
 	|| (this.monster_follow == targ || targ.monster_follow == this)
 	|| (!IS_VEHICLE(targ) && (targ.flags & FL_NOTARGET))
 	|| (!autocvar_g_monsters_typefrag && PHYS_INPUT_BUTTON_CHAT(targ))
+	|| (IS_VEHICLE(targ) && !((Monsters_from(this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| (SAME_TEAM(targ, this))
 	|| (STAT(FROZEN, targ))
 	|| (targ.alpha != 0 && targ.alpha < 0.5)
+	|| (autocvar_g_monsters_lineofsight && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
 	|| (MUTATOR_CALLHOOK(MonsterValidTarget, this, targ))
 	)
 	{
@@ -105,13 +114,11 @@ bool Monster_ValidTarget(entity this, entity targ)
 	if(trace_fraction < 1 && trace_ent != targ)
 		return false; // solid
 
-	if(autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT))
+	if(!skipfacing && (autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT)))
 	if(this.enemy != targ)
 	{
-		makevectors (this.angles);
-		float dot = normalize (targ.origin - this.origin) * v_forward;
-
-		if(dot <= autocvar_g_monsters_target_infront_range) { return false; }
+		if(!monster_facing(this, targ))
+			return false;
 	}
 
 	return true; // this target is valid!
@@ -133,7 +140,7 @@ entity Monster_FindTarget(entity this)
 		vector theirmid = (it.absmin + it.absmax) * 0.5;
 		if(vdist(theirmid - this.origin, >, trange))
 			continue;
-		if(!Monster_ValidTarget(this, it))
+		if(!Monster_ValidTarget(this, it, false))
 			continue;
 
 		// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
@@ -201,7 +208,8 @@ void monster_changeteam(entity this, int newteam)
 .void(entity) monster_delayedfunc;
 void Monster_Delay_Action(entity this)
 {
-	if(Monster_ValidTarget(this.owner, this.owner.enemy)) { this.monster_delayedfunc(this.owner); }
+	// TODO: maybe do check for facing here
+	if(Monster_ValidTarget(this.owner, this.owner.enemy, false)) { this.monster_delayedfunc(this.owner); }
 
 	if(this.cnt > 1)
 	{
@@ -432,6 +440,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 	if((!this || !targ)
 	|| (!this.monster_attackfunc)
 	|| (time < this.attack_finished_single[slot])
+	|| ((autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT)) && !monster_facing(this, targ))
 	) { return; }
 
 	if(vdist(targ.origin - this.origin, <=, this.attack_range))
@@ -481,10 +490,8 @@ void Monster_Touch(entity this, entity toucher)
 {
 	if(toucher == NULL) { return; }
 
-	if(toucher.monster_attack)
-	if(this.enemy != toucher)
-	if(!IS_MONSTER(toucher))
-	if(Monster_ValidTarget(this, toucher))
+	if(toucher.monster_attack && this.enemy != toucher && !IS_MONSTER(toucher) && time >= this.spawn_time)
+	if(Monster_ValidTarget(this, toucher, true))
 		this.enemy = toucher;
 }
 
@@ -556,7 +563,7 @@ void Monster_Dead_Fade(entity this)
 
 void Monster_Use(entity this, entity actor, entity trigger)
 {
-	if(Monster_ValidTarget(this, actor)) { this.enemy = actor; }
+	if(Monster_ValidTarget(this, actor, true)) { this.enemy = actor; }
 }
 
 .float pass_distance;
@@ -1273,6 +1280,7 @@ bool Monster_Spawn_Setup(entity this)
 
 	this.max_health = this.health;
 	this.pain_finished = this.nextthink;
+	this.last_enemycheck = this.spawn_time + random(); // slight delay
 
 	if(IS_PLAYER(this.monster_follow))
 		this.effects |= EF_DIMLIGHT;

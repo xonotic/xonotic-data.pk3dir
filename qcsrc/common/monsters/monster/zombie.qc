@@ -141,7 +141,8 @@ METHOD(Zombie, mr_pain, float(Zombie this, entity actor, float damage_take, enti
 {
     TC(Zombie, this);
     actor.pain_finished = time + 0.34;
-    setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
+    if(time >= actor.spawn_time)
+    	setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
     return damage_take;
 }
 
