@@ -19,9 +19,7 @@ void XonoticScreenshotImage_load(entity me, string theImage)
 {
 	me.screenshotTime = time;
 	me.src = theImage;
-	if (me.screenshotTitle)
-		strunzone(me.screenshotTitle);
-	me.screenshotTitle = strzone(substring(me.src, 13, strlen(theImage) - 13)); //strip "/screenshots/"
+	strcpy(me.screenshotTitle, substring(me.src, 13, strlen(theImage) - 13)); //strip "/screenshots/"
 
 	me.initZoom(me); // this image may have a different size
 	me.setZoom(me, 0, 0);

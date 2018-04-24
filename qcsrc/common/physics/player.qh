@@ -231,6 +231,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define SET_DUCKED(s)                       ((s).flags |= FL_DUCKED)
 	#define UNSET_DUCKED(s)                     ((s).flags &= ~FL_DUCKED)
 
+	#define PHYS_INVEHICLE(s) 					(boolean(hud != HUD_NORMAL))
+
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_cl_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_cl_jumpspeedcap_max
 
@@ -282,6 +284,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define IS_DUCKED(s)                        ((s).crouch)
 	#define SET_DUCKED(s)                       ((s).crouch = true)
 	#define UNSET_DUCKED(s)                     ((s).crouch = false)
+
+	#define PHYS_INVEHICLE(s) 					(boolean((s).vehicle != NULL))
 
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max
