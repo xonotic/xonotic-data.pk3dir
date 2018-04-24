@@ -10,6 +10,7 @@ float autocvar_g_monster_spider_attack_web_damagetime;
 float autocvar_g_monster_spider_attack_web_speed;
 float autocvar_g_monster_spider_attack_web_speed_up;
 float autocvar_g_monster_spider_attack_web_delay;
+float autocvar_g_monster_spider_attack_web_range = 800;
 
 float autocvar_g_monster_spider_attack_bite_damage;
 float autocvar_g_monster_spider_attack_bite_delay;
@@ -58,12 +59,15 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
     TC(SpiderAttack, thiswep);
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_spider_attack_web_delay)) {
+    if ((!isPlayer && time >= actor.spider_web_delay) || (isPlayer && weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_spider_attack_web_delay))) {
 		if (!isPlayer) {
-			actor.spider_web_delay = time + 3;
+			actor.spider_web_delay = time + autocvar_g_monster_spider_attack_web_delay;
 			setanim(actor, actor.anim_shoot, true, true, true);
-			actor.attack_finished_single[0] = time + (autocvar_g_monster_spider_attack_web_delay);
-			actor.anim_finished = time + 1;
+			if(actor.animstate_endtime > time)
+				actor.anim_finished = actor.animstate_endtime;
+			else
+				actor.anim_finished = time + 1;
+			actor.attack_finished_single[0] = actor.anim_finished + 0.2;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
         W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_SPIDER.m_id);
@@ -178,8 +182,11 @@ bool M_Spider_Attack(int attack_type, entity actor, entity targ, .entity weapone
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			wep.wr_think(wep, actor, weaponentity, 1);
-			return true;
+			if(vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_spider_attack_web_range))
+			{
+				wep.wr_think(wep, actor, weaponentity, 1);
+				return true;
+			}
 		}
 	}
 
