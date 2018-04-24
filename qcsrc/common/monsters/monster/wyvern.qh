@@ -8,7 +8,7 @@ MODEL(MON_WYVERN, M_Model("dragon.dpm"));
 
 CLASS(Wyvern, Monster)
     ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED | MON_FLAG_RIDE);
-    ATTRIB(Wyvern, m_mins, vector, '-30 -30 -24');
+    ATTRIB(Wyvern, m_mins, vector, '-30 -30 -48');
     ATTRIB(Wyvern, m_maxs, vector, '30 30 30');
 #ifdef GAMEQC
     ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);

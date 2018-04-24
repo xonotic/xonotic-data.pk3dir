@@ -46,6 +46,8 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
     /** (SERVER) logic to run every frame */
     METHOD(Monster, mr_think, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+    /** (SERVER) logic to run every frame after the monster has died */
+    METHOD(Monster, mr_deadthink, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
     /** (SERVER) called when monster dies */
     METHOD(Monster, mr_death, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
     /** (SERVER) called when monster is damaged */

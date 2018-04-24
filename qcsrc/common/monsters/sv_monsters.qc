@@ -886,6 +886,9 @@ void Monster_Dead_Think(entity this)
 {
 	this.nextthink = time + this.ticrate;
 
+	Monster mon = Monsters_from(this.monsterid);
+	mon.mr_deadthink(mon, this);
+
 	if(this.monster_lifetime != 0)
 	if(time >= this.monster_lifetime)
 	{
@@ -992,6 +995,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	this.state			= 0;
 	this.attack_finished_single[0] = 0;
 	this.effects = 0;
+	this.dphitcontentsmask &= ~DPCONTENTS_BODY;
 
 	if(!((this.flags & FL_FLY) || (this.flags & FL_SWIM)))
 		this.velocity = '0 0 0';
@@ -1394,7 +1398,6 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.monster_attackfunc	= mon.monster_attackfunc;
 	this.monster_name		= mon.monster_name;
 	this.candrop			= true;
-	this.view_ofs			= '0 0 0.7' * (this.maxs_z * 0.5);
 	this.oldtarget2			= this.target2;
 	//this.pass_distance		= 0;
 	this.deadflag			= DEAD_NO;
@@ -1424,6 +1427,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 		this.scale *= 1.3;
 
 	setsize(this, mon.m_mins * this.scale, mon.m_maxs * this.scale);
+	this.view_ofs			= '0 0 0.7' * (this.maxs_z * 0.5);
 
 	this.ticrate = bound(sys_frametime, ((!this.ticrate) ? autocvar_g_monsters_think_delay : this.ticrate), 60);
 
