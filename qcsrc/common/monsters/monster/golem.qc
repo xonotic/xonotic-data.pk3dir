@@ -175,10 +175,13 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 			if(IS_ONGROUND(actor))
 			if(randomness <= 0.5 && vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_golem_attack_smash_range))
 			{
-				setanim(actor, actor.anim_melee2, true, true, false);
-				Monster_Delay(actor, 1, 0.7, M_Golem_Attack_Smash);
-				actor.attack_finished_single[0] = time + 1.1;
-				actor.anim_finished = time + 1.1;
+				setanim(actor, actor.anim_melee1, true, true, false);
+				Monster_Delay(actor, 1, 1.1, M_Golem_Attack_Smash);
+				if(actor.animstate_endtime > time)
+					actor.anim_finished = actor.animstate_endtime;
+				else
+					actor.anim_finished = time + 1.2;
+				actor.attack_finished_single[0] = actor.anim_finished + 0.2;
 				actor.state = MONSTER_ATTACK_MELEE; // kinda a melee attack
 				actor.golem_lastattack = time + 3 + random() * 1.5;
 				return true;
@@ -236,10 +239,11 @@ METHOD(Golem, mr_anim, bool(Golem this, entity actor))
     actor.anim_idle = animfixfps(actor, '0 1 1', none);
     actor.anim_walk = animfixfps(actor, '1 1 1', none);
     actor.anim_run = animfixfps(actor, '2 1 1', none);
-    actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+    //actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
     actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
     actor.anim_melee3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
     //actor.anim_melee4 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+    actor.anim_melee1 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
     actor.anim_pain1 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
     actor.anim_pain2 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
     //actor.anim_pain3 = animfixfps(actor, '9 1 2', none); // 0.5 seconds
@@ -247,8 +251,9 @@ METHOD(Golem, mr_anim, bool(Golem this, entity actor))
     //actor.anim_pain5 = animfixfps(actor, '11 1 2', none); // 0.5 seconds
     //actor.anim_sight = animfixfps(actor, '12 1 5', none); // analyze models and set framerate
     actor.anim_die1 = animfixfps(actor, '13 1 0.5', none); // 2 seconds
-    actor.anim_die2 = animfixfps(actor, '14 1 0.5', none); // 2 seconds
-    //actor.anim_dead = animfixfps(actor, '15 1 0.5', none); // 2 seconds
+    //actor.anim_dead = animfixfps(actor, '14 1 0.5', none); // 2 seconds
+    actor.anim_die2 = animfixfps(actor, '15 1 0.5', none); // 2 seconds
+    // dead2 16
     //actor.anim_dieback = animfixfps(actor, '16 1 0.5', none); // 2 seconds
     //actor.anim_deadback = animfixfps(actor, '17 1 0.5', none); // 2 seconds
     //actor.anim_dead2 = animfixfps(actor, '18 1 0.5', none); // 2 seconds
