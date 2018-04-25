@@ -1,4 +1,5 @@
 #include "door.qh"
+#include "door_rotating.qh"
 /*
 
 Doors are similar to buttons, but can spawn a fat trigger field around them
@@ -23,12 +24,10 @@ THINK FUNCTIONS
 
 void door_go_down(entity this);
 void door_go_up(entity this, entity actor, entity trigger);
-void door_rotating_go_down(entity this);
-void door_rotating_go_up(entity this, entity oth);
 
 void door_blocked(entity this, entity blocker)
 {
-	if((this.spawnflags & 8)
+	if((this.spawnflags & DOOR_CRUSH)
 #ifdef SVQC
 		&& (blocker.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
@@ -177,7 +176,7 @@ bool door_check_keys(entity door, entity player)
 	if(!door.itemkeys)
 	{
 #ifdef SVQC
-		play2(player, SND(TALK));
+		play2(player, door.noise);
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_UNLOCKED);
 #endif
 		return true;
@@ -238,12 +237,12 @@ void door_fire(entity this, entity actor, entity trigger)
 			door_go_up(e, actor, trigger);
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
-			if ((e.spawnflags & 2) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
+			if ((e.spawnflags & DOOR_ROTATING_BIDIR) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
 				e.lip = 666; // e.lip is used to remember reverse opening direction for door_rotating
 				e.pos2 = '0 0 0' - e.pos2;
 			}
 			// if BIDIR_IN_DOWN (==8) is set, prevent the door from reoping during closing if it is triggered from the wrong side
-			if (!((e.spawnflags & 2) &&  (e.spawnflags & 8) && e.state == STATE_DOWN
+			if (!((e.spawnflags & DOOR_ROTATING_BIDIR) &&  (e.spawnflags & DOOR_ROTATING_BIDIR_IN_DOWN) && e.state == STATE_DOWN
 				&& (((e.lip == 666) && (trigger.trigger_reverse == 0)) || ((e.lip != 666) && (trigger.trigger_reverse != 0)))))
 			{
 				door_rotating_go_up(e, trigger);
@@ -263,7 +262,7 @@ void door_use(entity this, entity actor, entity trigger)
 
 void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	this.health = this.health - damage;
@@ -313,7 +312,7 @@ void door_touch(entity this, entity toucher)
 
 void door_generic_plat_blocked(entity this, entity blocker)
 {
-	if((this.spawnflags & 8) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
+	if((this.spawnflags & DOOR_CRUSH) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
 #ifdef SVQC
 		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
@@ -347,66 +346,6 @@ void door_generic_plat_blocked(entity this, entity blocker)
 #endif
 	}
 }
-
-void door_rotating_hit_top(entity this)
-{
-	if (this.noise1 != "")
-		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
-	this.state = STATE_TOP;
-	if (this.spawnflags & DOOR_TOGGLE)
-		return;		// don't come down automatically
-	setthink(this, door_rotating_go_down);
-	this.nextthink = this.ltime + this.wait;
-}
-
-void door_rotating_hit_bottom(entity this)
-{
-	if (this.noise1 != "")
-		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
-	if (this.lip==666) // this.lip is used to remember reverse opening direction for door_rotating
-	{
-		this.pos2 = '0 0 0' - this.pos2;
-		this.lip = 0;
-	}
-	this.state = STATE_BOTTOM;
-}
-
-void door_rotating_go_down(entity this)
-{
-	if (this.noise2 != "")
-		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
-	if (this.max_health)
-	{
-		this.takedamage = DAMAGE_YES;
-		this.health = this.max_health;
-	}
-
-	this.state = STATE_DOWN;
-	SUB_CalcAngleMove (this, this.pos1, TSPEED_LINEAR, this.speed, door_rotating_hit_bottom);
-}
-
-void door_rotating_go_up(entity this, entity oth)
-{
-	if (this.state == STATE_UP)
-		return;		// already going up
-
-	if (this.state == STATE_TOP)
-	{	// reset top wait time
-		this.nextthink = this.ltime + this.wait;
-		return;
-	}
-	if (this.noise2 != "")
-		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
-	this.state = STATE_UP;
-	SUB_CalcAngleMove (this, this.pos2, TSPEED_LINEAR, this.speed, door_rotating_hit_top);
-
-	string oldmessage;
-	oldmessage = this.message;
-	this.message = "";
-	SUB_UseTargets(this, NULL, oth); // TODO: is oth needed here?
-	this.message = oldmessage;
-}
-
 
 /*
 =========================================
@@ -465,7 +404,7 @@ LinkDoors
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & 4) || cur.enemy))
+	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & DOOR_DONT_LINK) || cur.enemy))
 	{
 	}
 	return cur;
@@ -498,7 +437,7 @@ void LinkDoors(entity this)
 
 	if (this.enemy)
 		return;		// already linked by another door
-	if (this.spawnflags & 4)
+	if (this.spawnflags & DOOR_DONT_LINK)
 	{
 		this.owner = this.enemy = this;
 
@@ -688,6 +627,75 @@ void door_reset(entity this)
 
 #ifdef SVQC
 
+// common code for func_door and func_door_rotating spawnfuncs
+void door_init_shared(entity this)
+{
+	this.max_health = this.health;
+
+	// unlock sound
+	if(this.noise == "")
+	{
+		this.noise = "misc/talk.wav";
+	}
+	// door still locked sound
+	if(this.noise3 == "")
+	{
+		this.noise3 = "misc/talk.wav";
+	}
+	precache_sound(this.noise);
+	precache_sound(this.noise3);
+
+	if((this.dmg || (this.spawnflags & DOOR_CRUSH)) && (this.message == ""))
+	{
+		this.message = "was squished";
+	}
+	if((this.dmg || (this.spawnflags & DOOR_CRUSH)) && (this.message2 == ""))
+	{
+		this.message2 = "was squished by";
+	}
+
+	// TODO: other soundpacks
+	if (this.sounds > 0)
+	{
+		this.noise2 = "plats/medplat1.wav";
+		this.noise1 = "plats/medplat2.wav";
+	}
+
+	// sound when door stops moving
+	if(this.noise1 && this.noise1 != "")
+	{
+		precache_sound(this.noise1);
+	}
+	// sound when door is moving
+	if(this.noise2 && this.noise2 != "")
+	{
+		precache_sound(this.noise2);
+	}
+
+	if (!this.wait)
+	{
+		this.wait = 3;
+	}
+	if (!this.lip)
+	{
+		this.lip = 8;
+	}
+
+	this.state = STATE_BOTTOM;
+
+	if (this.health)
+	{
+		//this.canteamdamage = true; // TODO
+		this.takedamage = DAMAGE_YES;
+		this.event_damage = door_damage;
+	}
+
+	if (this.items)
+	{
+		this.wait = -1;
+	}
+}
+
 // spawnflags require key (for now only func_door)
 spawnfunc(func_door)
 {
@@ -699,42 +707,13 @@ spawnfunc(func_door)
 
 	SetMovedir(this);
 
-	this.max_health = this.health;
 	if (!InitMovingBrushTrigger(this))
 		return;
 	this.effects |= EF_LOWPRECISION;
 	this.classname = "door";
 
-	if(this.noise == "")
-		this.noise = "misc/talk.wav";
-	if(this.noise3 == "")
-		this.noise3 = "misc/talk.wav";
-	precache_sound(this.noise);
-	precache_sound(this.noise3);
-
 	setblocked(this, door_blocked);
 	this.use = door_use;
-
-	if(this.dmg && (this.message == ""))
-		this.message = "was squished";
-	if(this.dmg && (this.message2 == ""))
-		this.message2 = "was squished by";
-
-	if (this.sounds > 0)
-	{
-		this.noise2 = "plats/medplat1.wav";
-		this.noise1 = "plats/medplat2.wav";
-	}
-
-	if(this.noise1 && this.noise1 != "") { precache_sound(this.noise1); }
-	if(this.noise2 && this.noise2 != "") { precache_sound(this.noise2); }
-
-	if (!this.speed)
-		this.speed = 100;
-	if (!this.wait)
-		this.wait = 3;
-	if (!this.lip)
-		this.lip = 8;
 
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
@@ -747,17 +726,12 @@ spawnfunc(func_door)
 	if (this.spawnflags & DOOR_START_OPEN)
 		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
 
-	this.state = STATE_BOTTOM;
+	door_init_shared(this);
 
-	if (this.health)
+	if (!this.speed)
 	{
-		//this.canteamdamage = true; // TODO
-		this.takedamage = DAMAGE_YES;
-		this.event_damage = door_damage;
+		this.speed = 100;
 	}
-
-	if (this.items)
-		this.wait = -1;
 
 	settouch(this, door_touch);
 

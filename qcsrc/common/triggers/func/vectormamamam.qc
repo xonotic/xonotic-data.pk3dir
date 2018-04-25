@@ -6,20 +6,20 @@
 .float targetfactor, target2factor, target3factor, target4factor;
 .vector targetnormal, target2normal, target3normal, target4normal;
 
-vector func_vectormamamam_origin(entity o, float t)
+vector func_vectormamamam_origin(entity o, float timestep)
 {
 	vector v, p;
-	float f;
+	float flags;
 	entity e;
 
-	f = o.spawnflags;
+	flags = o.spawnflags;
 	v = '0 0 0';
 
 	e = o.wp00;
 	if(e)
 	{
-		p = e.origin + t * e.velocity;
-		if(f & 1)
+		p = e.origin + timestep * e.velocity;
+		if(flags & PROJECT_ON_TARGETNORMAL)
 			v = v + (p * o.targetnormal) * o.targetnormal * o.targetfactor;
 		else
 			v = v + (p - (p * o.targetnormal) * o.targetnormal) * o.targetfactor;
@@ -28,8 +28,8 @@ vector func_vectormamamam_origin(entity o, float t)
 	e = o.wp01;
 	if(e)
 	{
-		p = e.origin + t * e.velocity;
-		if(f & 2)
+		p = e.origin + timestep * e.velocity;
+		if(flags & PROJECT_ON_TARGET2NORMAL)
 			v = v + (p * o.target2normal) * o.target2normal * o.target2factor;
 		else
 			v = v + (p - (p * o.target2normal) * o.target2normal) * o.target2factor;
@@ -38,8 +38,8 @@ vector func_vectormamamam_origin(entity o, float t)
 	e = o.wp02;
 	if(e)
 	{
-		p = e.origin + t * e.velocity;
-		if(f & 4)
+		p = e.origin + timestep * e.velocity;
+		if(flags & PROJECT_ON_TARGET3NORMAL)
 			v = v + (p * o.target3normal) * o.target3normal * o.target3factor;
 		else
 			v = v + (p - (p * o.target3normal) * o.target3normal) * o.target3factor;
@@ -48,8 +48,8 @@ vector func_vectormamamam_origin(entity o, float t)
 	e = o.wp03;
 	if(e)
 	{
-		p = e.origin + t * e.velocity;
-		if(f & 8)
+		p = e.origin + timestep * e.velocity;
+		if(flags & PROJECT_ON_TARGET4NORMAL)
 			v = v + (p * o.target4normal) * o.target4normal * o.target4factor;
 		else
 			v = v + (p - (p * o.target4normal) * o.target4normal) * o.target4factor;
@@ -60,7 +60,7 @@ vector func_vectormamamam_origin(entity o, float t)
 
 void func_vectormamamam_controller_think(entity this)
 {
-	this.nextthink = time + 0.1;
+	this.nextthink = time + vectormamamam_timestep;
 
 	if(this.owner.active != ACTIVE_ACTIVE)
 	{
@@ -69,7 +69,7 @@ void func_vectormamamam_controller_think(entity this)
 	}
 
 	if(this.owner.classname == "func_vectormamamam") // don't brake stuff if the func_vectormamamam was killtarget'ed
-		this.owner.velocity = (this.owner.destvec + func_vectormamamam_origin(this.owner, 0.1) - this.owner.origin) * 10;
+		this.owner.velocity = (this.owner.destvec + func_vectormamamam_origin(this.owner, vectormamamam_timestep) - this.owner.origin) * 10;
 }
 
 void func_vectormamamam_findtarget(entity this)
@@ -98,12 +98,45 @@ void func_vectormamamam_findtarget(entity this)
 	setthink(controller, func_vectormamamam_controller_think);
 }
 
+void func_vectormamamam_setactive(entity this, int astate)
+{
+	if (astate == ACTIVE_TOGGLE)
+	{
+		if(this.active == ACTIVE_ACTIVE)
+			this.active = ACTIVE_NOT;
+		else
+			this.active = ACTIVE_ACTIVE;
+	}
+	else
+		this.active = astate;
+
+	if(this.active  == ACTIVE_NOT)
+	{
+		stopsound(this, CH_TRIGGER_SINGLE);
+	}
+	else
+	{
+		if(this.noise && this.noise != "")
+		{
+			_sound(this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+		}
+	}
+}
+
+void func_vectormamamam_init_for_player(entity this, entity player)
+{
+	if (this.noise && this.noise != "" && this.active == ACTIVE_ACTIVE && IS_REAL_CLIENT(player))
+	{
+		msg_entity = player;
+		soundto(MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+	}
+}
+
 spawnfunc(func_vectormamamam)
 {
 	if (this.noise != "")
 	{
 		precache_sound(this.noise);
-		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
 	if(!this.targetfactor)
@@ -139,9 +172,6 @@ spawnfunc(func_vectormamamam)
 		this.dmgtime = 0.25;
 	this.dmgtime2 = time;
 
-	if(this.netname == "")
-		this.netname = "1 0 0 0 1";
-
 	if (!InitMovingBrushTrigger(this))
 		return;
 
@@ -152,7 +182,12 @@ spawnfunc(func_vectormamamam)
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	this.effects |= EF_LOWPRECISION;
 
-	this.active = ACTIVE_ACTIVE;
+	this.setactive = func_vectormamamam_setactive;
+	this.setactive(this, ACTIVE_ACTIVE);
+
+	// maybe send sound to new players
+	IL_PUSH(g_initforplayer, this);
+	this.init_for_player = func_vectormamamam_init_for_player;
 
 	InitializeEntity(this, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }

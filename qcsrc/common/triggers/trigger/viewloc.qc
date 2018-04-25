@@ -154,7 +154,10 @@ spawnfunc(target_viewlocation_end)
 }
 
 // compatibility
-spawnfunc(target_viewlocation) { spawnfunc_target_viewlocation_start(this); }
+spawnfunc(target_viewlocation)
+{
+	spawnfunc_target_viewlocation_start(this);
+}
 
 #elif defined(CSQC)
 
