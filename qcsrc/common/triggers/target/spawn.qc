@@ -12,8 +12,7 @@
 // "classname" "target_spawn"
 // "message" "fieldname value fieldname value ..."
 // "spawnflags"
-//   1 = call the spawn function
-//   2 = trigger on map load
+//   ON_MAPLOAD = trigger on map load
 
 float target_spawn_initialized;
 .void(entity this) target_spawn_spawnfunc;
@@ -298,7 +297,7 @@ void target_spawn_use(entity this, entity actor, entity trigger)
 void target_spawn_spawnfirst(entity this)
 {
 	entity act = this.target_spawn_activator;
-	if(this.spawnflags & 2)
+	if(this.spawnflags & ON_MAPLOAD)
 		target_spawn_use(this, act, NULL);
 }
 

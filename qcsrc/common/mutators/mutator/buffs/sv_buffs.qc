@@ -926,7 +926,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONADD(BUFF_INVISIBLE)
 		{
-			if(time < player.strength_finished && g_instagib)
+			if(time < player.strength_finished && autocvar_g_instagib)
 				player.buff_invisible_prev_alpha = default_player_alpha; // we don't want to save the powerup's alpha, as player may lose the powerup while holding the buff
 			else
 				player.buff_invisible_prev_alpha = player.alpha;
@@ -935,7 +935,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONREM(BUFF_INVISIBLE)
 		{
-			if(time < player.strength_finished && g_instagib)
+			if(time < player.strength_finished && autocvar_g_instagib)
 				player.alpha = autocvar_g_instagib_invis_alpha;
 			else
 				player.alpha = player.buff_invisible_prev_alpha;

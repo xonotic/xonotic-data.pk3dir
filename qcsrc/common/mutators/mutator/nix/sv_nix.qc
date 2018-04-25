@@ -1,6 +1,6 @@
 #include "sv_nix.qh"
 
-string autocvar_g_nix;
+//string autocvar_g_nix;
 int autocvar_g_balance_nix_ammo_cells;
 int autocvar_g_balance_nix_ammo_plasma;
 int autocvar_g_balance_nix_ammo_fuel;
@@ -36,7 +36,7 @@ float nix_nextweapon;
 
 bool NIX_CanChooseWeapon(int wpn);
 
-REGISTER_MUTATOR(nix, expr_evaluate(autocvar_g_nix) && !cvar("g_instagib") && !cvar("g_overkill"))
+REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !autocvar_g_instagib && !cvar("g_overkill"))
 {
 	MUTATOR_ONADD
 	{

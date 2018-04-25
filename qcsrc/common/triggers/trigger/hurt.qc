@@ -15,7 +15,7 @@ void trigger_hurt_touch(entity this, entity toucher)
 		return;
 
 	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (this.team != toucher.team))
+		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != toucher.team))
 			return;
 
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
@@ -53,7 +53,7 @@ void trigger_hurt_touch(entity this, entity toucher)
 /*QUAKED spawnfunc_trigger_hurt (.5 .5 .5) ?
 Any object touching this will be hurt
 set dmg to damage amount
-defalt dmg = 5
+default dmg = 1000
 */
 .entity trigger_hurt_next;
 entity trigger_hurt_last;
@@ -80,12 +80,12 @@ spawnfunc(trigger_hurt)
 	trigger_hurt_last = this;
 }
 
-float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
+bool tracebox_hits_trigger_hurt(vector start, vector e_min, vector e_max, vector end)
 {
 	entity th;
 
 	for(th = trigger_hurt_first; th; th = th.trigger_hurt_next)
-		if(tracebox_hits_box(start, mi, ma, end, th.absmin, th.absmax))
+		if(tracebox_hits_box(start, e_min, e_max, end, th.absmin, th.absmax))
 			return true;
 
 	return false;

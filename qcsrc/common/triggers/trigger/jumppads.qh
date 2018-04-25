@@ -1,10 +1,11 @@
 #pragma once
 
+
+const int PUSH_ONCE = BIT(0); // legacy, deactivate with relay instead
+const int PUSH_SILENT = BIT(1); // not used?
+
 IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
-
-const float PUSH_ONCE		= 1;
-const float PUSH_SILENT		= 2;
 
 .float pushltime;
 .float istypefrag;

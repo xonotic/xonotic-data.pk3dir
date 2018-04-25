@@ -1,7 +1,7 @@
 #include "sv_pinata.qh"
 
 string autocvar_g_pinata;
-REGISTER_MUTATOR(pinata, expr_evaluate(autocvar_g_pinata) && !cvar("g_instagib") && !cvar("g_overkill"));
+REGISTER_MUTATOR(pinata, expr_evaluate(autocvar_g_pinata) && !autocvar_g_instagib && !cvar("g_overkill"));
 
 MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {
