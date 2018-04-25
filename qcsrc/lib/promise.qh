@@ -1,0 +1,19 @@
+#pragma once
+
+entityclass(Promise);
+
+Promise promise_new();
+
+/**
+ * notify all Promise_then subscribers that this promise has resolved
+ */
+int promise_resolve(Promise this);
+
+Promise promise_then(Promise this, int(Promise ret, entity result, entity userdata) handler, entity userdata);
+
+/**
+ * notify all Promise_catch subscribers that this promise has rejected
+ */
+int promise_reject(Promise this);
+
+Promise promise_catch(Promise this, int(Promise ret, entity err, entity userdata) handler, entity userdata);

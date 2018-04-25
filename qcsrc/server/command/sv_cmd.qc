@@ -1852,3 +1852,7 @@ void GameCommand(string command)
 	// nothing above caught the command, must be invalid
 	LOG_INFO(((command != "") ? strcat("Unknown server command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try sv_cmd help.");
 }
+
+SERVER_COMMAND(test, "Test Promises") {
+	promise_test();
+}
