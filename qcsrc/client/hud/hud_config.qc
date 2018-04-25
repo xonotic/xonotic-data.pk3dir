@@ -1029,9 +1029,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 		s = strcat(s, ftos(panel_order[i]), " ");
 	}
 	cvar_set("_hud_panelorder", s);
-	if(hud_panelorder_prev)
-		strunzone(hud_panelorder_prev);
-	hud_panelorder_prev = strzone(autocvar__hud_panelorder); // prevent HUD_Main from doing useless update, we already updated here
+	strcpy(hud_panelorder_prev, autocvar__hud_panelorder); // prevent HUD_Main from doing useless update, we already updated here
 }
 
 void HUD_Panel_Highlight(float allow_move)

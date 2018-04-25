@@ -1,6 +1,6 @@
 #include "sv_nix.qh"
 
-string autocvar_g_nix;
+//string autocvar_g_nix;
 int autocvar_g_balance_nix_ammo_cells;
 int autocvar_g_balance_nix_ammo_plasma;
 int autocvar_g_balance_nix_ammo_fuel;
@@ -36,7 +36,7 @@ float nix_nextweapon;
 
 bool NIX_CanChooseWeapon(int wpn);
 
-REGISTER_MUTATOR(nix, expr_evaluate(autocvar_g_nix) && !cvar("g_instagib") && !cvar("g_overkill"))
+REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !autocvar_g_instagib && !cvar("g_overkill"))
 {
 	MUTATOR_ONADD
 	{
@@ -244,15 +244,15 @@ MUTATOR_HOOKFUNCTION(nix, BuildMutatorsPrettyString)
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", NIX");
 }
 
-MUTATOR_HOOKFUNCTION(nix, FilterItem)
+MUTATOR_HOOKFUNCTION(nix, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	if(item.itemdef.instanceOfHealth || item.itemdef.instanceOfArmor)
+	if (definition.instanceOfHealth || definition.instanceOfArmor)
 	{
 		return !autocvar_g_nix_with_healtharmor;
 	}
-	else if(item.itemdef.instanceOfPowerup)
+	else if (definition.instanceOfPowerup)
 	{
 		return !autocvar_g_nix_with_powerups;
 	}

@@ -80,10 +80,10 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 #ifdef CSQC
 
 entityclass(ModelEffect);
-class(ModelEffect) .float frame1time;
-class(ModelEffect) .float lifetime, fadetime;
-class(ModelEffect) .float teleport_time;
-class(ModelEffect) .float scale1, scale2;
+classfield(ModelEffect) .float frame1time;
+classfield(ModelEffect) .float lifetime, fadetime;
+classfield(ModelEffect) .float teleport_time;
+classfield(ModelEffect) .float scale1, scale2;
 
 .float cnt;
 .float scale;

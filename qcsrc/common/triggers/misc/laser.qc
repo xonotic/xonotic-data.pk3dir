@@ -295,14 +295,14 @@ spawnfunc(misc_laser)
 // it has color 'beam_color'
 // and stops when something is in the way
 entityclass(Laser);
-class(Laser) .int cnt; // end effect
-class(Laser) .vector beam_color;
-class(Laser) .int active; // on-off
-class(Laser) .int count; // flags for the laser
-class(Laser) .vector velocity; // laser endpoint if it is FINITE
-class(Laser) .float alpha;
-class(Laser) .float scale; // scaling factor of the thickness
-class(Laser) .float modelscale; // scaling factor of the dlight
+classfield(Laser) .int cnt; // end effect
+classfield(Laser) .vector colormod;
+classfield(Laser) .int state; // on-off
+classfield(Laser) .int count; // flags for the laser
+classfield(Laser) .vector velocity; // laser endpoint if it is FINITE
+classfield(Laser) .float alpha;
+classfield(Laser) .float scale; // scaling factor of the thickness
+classfield(Laser) .float modelscale; // scaling factor of the dlight
 
 void Draw_Laser(entity this)
 {

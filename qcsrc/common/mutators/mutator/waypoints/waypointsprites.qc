@@ -106,9 +106,9 @@ NET_HANDLE(waypointsprites, bool isnew) {
 
 void Ent_RemoveWaypointSprite(entity this)
 {
-    if (this.netname) strunzone(this.netname);
-    if (this.netname2) strunzone(this.netname2);
-    if (this.netname3) strunzone(this.netname3);
+    strfree(this.netname);
+    strfree(this.netname2);
+    strfree(this.netname3);
 }
 
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
@@ -169,23 +169,17 @@ void Ent_WaypointSprite(entity this, bool isnew)
 
     if (sendflags & 2)
     {
-        if (this.netname)
-            strunzone(this.netname);
-        this.netname = strzone(ReadString());
+        strcpy(this.netname, ReadString());
     }
 
     if (sendflags & 4)
     {
-        if (this.netname2)
-            strunzone(this.netname2);
-        this.netname2 = strzone(ReadString());
+        strcpy(this.netname2, ReadString());
     }
 
     if (sendflags & 8)
     {
-        if (this.netname3)
-            strunzone(this.netname3);
-        this.netname3 = strzone(ReadString());
+        strcpy(this.netname3, ReadString());
     }
 
     if (sendflags & 16)

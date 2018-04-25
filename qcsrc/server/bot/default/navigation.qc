@@ -1573,7 +1573,7 @@ void navigation_shortenpath(entity this)
 		if (trace_ent == this || tracewalk(this, this.origin, this.mins, this.maxs,
 			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
 		{
-			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue"); 
+			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
 			navigation_poproute(this);
 		}
 	}

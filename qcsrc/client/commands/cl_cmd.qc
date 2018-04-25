@@ -418,7 +418,7 @@ void LocalCommand_sendcvar(int request, int argc)
 			if (argv(1))
 			{
 				// W_FixWeaponOrder will trash argv, so save what we need.
-				string thiscvar = strzone(argv(1));
+				string thiscvar = string_null; strcpy(thiscvar, argv(1));
 				string s = cvar_string(thiscvar);
 
 				if (thiscvar == "cl_weaponpriority")
@@ -427,7 +427,7 @@ void LocalCommand_sendcvar(int request, int argc)
 					s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
 
 				localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
-				strunzone(thiscvar);
+				strfree(thiscvar);
 				return;
 			}
 		}
