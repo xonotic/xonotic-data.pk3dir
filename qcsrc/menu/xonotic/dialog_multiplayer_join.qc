@@ -5,6 +5,7 @@
 #include "textlabel.qh"
 #include "inputbox.qh"
 #include "checkbox.qh"
+#include "commandbutton.qh"
 #include "button.qh"
 
 entity makeXonoticServerListTab()
