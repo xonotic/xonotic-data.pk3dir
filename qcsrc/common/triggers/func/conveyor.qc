@@ -17,9 +17,9 @@ void conveyor_think(entity this)
 		IL_REMOVE(g_conveyed, it);
 	});
 
-	if(this.state)
+	if(this.active == ACTIVE_ACTIVE)
 	{
-		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, !it.conveyor.state && isPushable(it),
+		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, it.conveyor.active == ACTIVE_NOT && isPushable(it),
 		{
 			vector emin = it.absmin;
 			vector emax = it.absmax;
@@ -63,26 +63,12 @@ void conveyor_think(entity this)
 
 #ifdef SVQC
 
-void conveyor_use(entity this, entity actor, entity trigger)
-{
-	this.state = !this.state;
-
-	this.SendFlags |= 2;
-}
-
-void conveyor_reset(entity this)
-{
-	this.state = (this.spawnflags & 1);
-
-	this.SendFlags |= 2;
-}
-
-bool conveyor_send(entity this, entity to, int sf)
+bool conveyor_send(entity this, entity to, int sendflags)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
-	WriteByte(MSG_ENTITY, sf);
+	WriteByte(MSG_ENTITY, sendflags);
 
-	if(sf & 1)
+	if(sendflags & SF_TRIGGER_INIT)
 	{
 		WriteByte(MSG_ENTITY, this.warpzone_isboxy);
 		WriteVector(MSG_ENTITY, this.origin);
@@ -93,14 +79,14 @@ bool conveyor_send(entity this, entity to, int sf)
 		WriteVector(MSG_ENTITY, this.movedir);
 
 		WriteByte(MSG_ENTITY, this.speed);
-		WriteByte(MSG_ENTITY, this.state);
+		WriteByte(MSG_ENTITY, this.active);
 
 		WriteString(MSG_ENTITY, this.targetname);
 		WriteString(MSG_ENTITY, this.target);
 	}
 
-	if(sf & 2)
-		WriteByte(MSG_ENTITY, this.state);
+	if(sendflags & SF_TRIGGER_UPDATE)
+		WriteByte(MSG_ENTITY, this.active);
 
 	return true;
 }
@@ -111,20 +97,20 @@ void conveyor_init(entity this)
 	this.movedir *= this.speed;
 	setthink(this, conveyor_think);
 	this.nextthink = time;
+	this.setactive = generic_netlinked_setactive;
 	IFTARGETED
 	{
-		this.use = conveyor_use;
-		this.reset = conveyor_reset;
-		this.reset(this);
+		// backwards compatibility
+		this.use = generic_netlinked_legacy_use;
 	}
-	else
-		this.state = 1;
+	this.reset = generic_netlinked_reset;
+	this.reset(this);
 
 	FixSize(this);
 
 	Net_LinkEntity(this, 0, false, conveyor_send);
 
-	this.SendFlags |= 1;
+	this.SendFlags |= SF_TRIGGER_INIT;
 }
 
 spawnfunc(trigger_conveyor)
@@ -161,9 +147,9 @@ void conveyor_init(entity this, bool isnew)
 
 NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 {
-	int sf = ReadByte();
+	int sendflags = ReadByte();
 
-	if(sf & 1)
+	if(sendflags & SF_TRIGGER_INIT)
 	{
 		this.warpzone_isboxy = ReadByte();
 		this.origin = ReadVector();
@@ -176,7 +162,7 @@ NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 		this.movedir = ReadVector();
 
 		this.speed = ReadByte();
-		this.state = ReadByte();
+		this.active = ReadByte();
 
 		this.targetname = strzone(ReadString());
 		this.target = strzone(ReadString());
@@ -184,8 +170,8 @@ NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 		conveyor_init(this, isnew);
 	}
 
-	if(sf & 2)
-		this.state = ReadByte();
+	if(sendflags & SF_TRIGGER_UPDATE)
+		this.active = ReadByte();
 
 	return true;
 }

@@ -12,8 +12,10 @@ void flipflop_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_flipflop)
 {
-    if(this.spawnflags & 1)
-        this.state = 1;
+    if(this.spawnflags & START_ENABLED)
+    {
+        this.state = true;
+    }
     this.use = flipflop_use;
     this.reset = spawnfunc_trigger_flipflop; // perfect resetter
 }

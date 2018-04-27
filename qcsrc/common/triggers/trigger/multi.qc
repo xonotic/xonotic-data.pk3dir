@@ -24,10 +24,12 @@ void multi_trigger(entity this)
 		return;		// allready been triggered
 	}
 
-	if(this.spawnflags & 16384)
-	if(!IS_PLAYER(this.enemy))
+	if(this.spawnflags & ONLY_PLAYERS && !IS_PLAYER(this.enemy))
+	{
 		return; // only players
+	}
 
+	// TODO: restructure this so that trigger_secret is more independent
 	if (this.classname == "trigger_secret")
 	{
 		if (!IS_PLAYER(this.enemy))
@@ -37,9 +39,11 @@ void multi_trigger(entity this)
 	}
 
 	if (this.noise)
+	{
 		_sound (this.enemy, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+	}
 
-// don't trigger again until reset
+	// don't trigger again until reset
 	this.takedamage = DAMAGE_NO;
 
 	SUB_UseTargets(this, this.enemy, this.goalentity);
@@ -69,15 +73,20 @@ void multi_use(entity this, entity actor, entity trigger)
 
 void multi_touch(entity this, entity toucher)
 {
-	if(!(this.spawnflags & 2))
-	if(!toucher.iscreature)
-			return;
+	if(!(this.spawnflags & ALL_ENTITIES) && !toucher.iscreature)
+	{
+		return;
+	}
 
 	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (this.team != toucher.team))
+	{
+		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != toucher.team))
+		{
 			return;
+		}
+	}
 
-// if the trigger has an angles field, check player's facing direction
+	// if the trigger has an angles field, check player's facing direction
 	if (this.movedir != '0 0 0')
 	{
 		makevectors (toucher.angles);
@@ -87,8 +96,12 @@ void multi_touch(entity this, entity toucher)
 
 	// if the trigger has pressed keys, check that the player is pressing those keys
 	if(this.pressedkeys && IS_PLAYER(toucher)) // only for players
-	if(!(CS(toucher).pressedkeys & this.pressedkeys))
-		return;
+	{
+		if(!(CS(toucher).pressedkeys & this.pressedkeys))
+		{
+			return;
+		}
+	}
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
@@ -101,11 +114,11 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 {
 	if(!this.takedamage)
 		return;
-	if(this.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (this.team != attacker.team))
+		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != attacker.team))
 			return;
 	this.health = this.health - damage;
 	if (this.health <= 0)
