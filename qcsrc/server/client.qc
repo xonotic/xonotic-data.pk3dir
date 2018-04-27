@@ -1565,7 +1565,7 @@ void player_powerups(entity this)
 	Fire_ApplyDamage(this);
 	Fire_ApplyEffect(this);
 
-	if (!g_instagib)
+	if (!autocvar_g_instagib)
 	{
 		if (this.items & ITEM_Strength.m_itemid)
 		{

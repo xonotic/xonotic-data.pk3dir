@@ -222,8 +222,6 @@ void readlevelcvars()
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
-	g_instagib = cvar("g_instagib");
-
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
 	g_footsteps = cvar("g_footsteps");

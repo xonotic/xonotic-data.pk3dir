@@ -54,7 +54,7 @@ void target_speaker_use_on(entity this, entity actor, entity trigger)
 	else
 		snd = this.noise;
 	_sound(this, CH_TRIGGER_SINGLE, snd, VOL_BASE * this.volume, this.atten);
-	if(this.spawnflags & 3)
+	if(this.spawnflags & (SPEAKER_LOOPED_ON + SPEAKER_LOOPED_OFF))
 		this.use = target_speaker_use_off;
 }
 void target_speaker_use_off(entity this, entity actor, entity trigger)
@@ -64,12 +64,12 @@ void target_speaker_use_off(entity this, entity actor, entity trigger)
 }
 void target_speaker_reset(entity this)
 {
-	if(this.spawnflags & 1) // LOOPED_ON
+	if(this.spawnflags & SPEAKER_LOOPED_ON)
 	{
 		if(this.use == target_speaker_use_on)
 			target_speaker_use_on(this, NULL, NULL);
 	}
-	else if(this.spawnflags & 2)
+	else if(this.spawnflags & SPEAKER_LOOPED_OFF)
 	{
 		if(this.use == target_speaker_use_off)
 			target_speaker_use_off(this, NULL, NULL);
@@ -83,7 +83,13 @@ spawnfunc(target_speaker)
 	if(this.noise)
 		precache_sound (this.noise);
 
-	if(!this.atten && !(this.spawnflags & 4))
+	if(!this.atten && (this.spawnflags & SPEAKER_GLOBAL))
+	{
+		LOG_WARN("target_speaker uses legacy spawnflag GLOBAL (BIT(2)), please set atten to -1 instead");
+		this.atten = -1;
+	}
+
+	if(!this.atten)
 	{
 		IFTARGETED
 			this.atten = ATTEN_NORM;
@@ -98,14 +104,14 @@ spawnfunc(target_speaker)
 
 	IFTARGETED
 	{
-		if(this.spawnflags & 8) // ACTIVATOR
+		if(this.spawnflags & SPEAKER_ACTIVATOR)
 			this.use = target_speaker_use_activator;
-		else if(this.spawnflags & 1) // LOOPED_ON
+		else if(this.spawnflags & SPEAKER_LOOPED_ON)
 		{
 			target_speaker_use_on(this, NULL, NULL);
 			this.reset = target_speaker_reset;
 		}
-		else if(this.spawnflags & 2) // LOOPED_OFF
+		else if(this.spawnflags & SPEAKER_LOOPED_OFF)
 		{
 			this.use = target_speaker_use_on;
 			this.reset = target_speaker_reset;
@@ -113,12 +119,12 @@ spawnfunc(target_speaker)
 		else
 			this.use = target_speaker_use_on;
 	}
-	else if(this.spawnflags & 1) // LOOPED_ON
+	else if(this.spawnflags & SPEAKER_LOOPED_ON)
 	{
 		ambientsound (this.origin, this.noise, VOL_BASE * this.volume, this.atten);
 		delete(this);
 	}
-	else if(this.spawnflags & 2) // LOOPED_OFF
+	else if(this.spawnflags & SPEAKER_LOOPED_OFF)
 	{
 		objerror(this, "This sound entity can never be activated");
 	}
