@@ -240,6 +240,7 @@ float autocvar_g_turrets_targetscan_mindelay;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_waypointeditor;
 bool autocvar_g_waypointeditor_symmetrical;
+bool autocvar_g_waypointeditor_symmetrical_allowload = true;
 vector autocvar_g_waypointeditor_symmetrical_origin;
 int autocvar_g_waypointeditor_symmetrical_order;
 vector autocvar_g_waypointeditor_symmetrical_axis;

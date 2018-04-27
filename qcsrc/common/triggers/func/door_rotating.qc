@@ -1,5 +1,4 @@
 #include "door_rotating.qh"
-#ifdef SVQC
 /*QUAKED spawnfunc_func_door_rotating (0 .5 .8) ? START_OPEN BIDIR DOOR_DONT_LINK BIDIR_IN_DOWN x TOGGLE X_AXIS Y_AXIS
 if two doors touch, they are assumed to be connected and operate as a unit.
 
@@ -28,6 +27,68 @@ START_OPEN causes the door to move to its destination when spawned, and operate 
 FIXME: only one sound set available at the time being
 */
 
+#ifdef GAMEQC
+void door_rotating_hit_top(entity this)
+{
+	if (this.noise1 != "")
+		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+	this.state = STATE_TOP;
+	if (this.spawnflags & DOOR_TOGGLE)
+		return;		// don't come down automatically
+	setthink(this, door_rotating_go_down);
+	this.nextthink = this.ltime + this.wait;
+}
+
+void door_rotating_hit_bottom(entity this)
+{
+	if (this.noise1 != "")
+		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+	if (this.lip==666) // this.lip is used to remember reverse opening direction for door_rotating
+	{
+		this.pos2 = '0 0 0' - this.pos2;
+		this.lip = 0;
+	}
+	this.state = STATE_BOTTOM;
+}
+
+void door_rotating_go_down(entity this)
+{
+	if (this.noise2 != "")
+		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
+	if (this.max_health)
+	{
+		this.takedamage = DAMAGE_YES;
+		this.health = this.max_health;
+	}
+
+	this.state = STATE_DOWN;
+	SUB_CalcAngleMove (this, this.pos1, TSPEED_LINEAR, this.speed, door_rotating_hit_bottom);
+}
+
+void door_rotating_go_up(entity this, entity oth)
+{
+	if (this.state == STATE_UP)
+		return;		// already going up
+
+	if (this.state == STATE_TOP)
+	{	// reset top wait time
+		this.nextthink = this.ltime + this.wait;
+		return;
+	}
+	if (this.noise2 != "")
+		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
+	this.state = STATE_UP;
+	SUB_CalcAngleMove (this, this.pos2, TSPEED_LINEAR, this.speed, door_rotating_hit_top);
+
+	string oldmessage;
+	oldmessage = this.message;
+	this.message = "";
+	SUB_UseTargets(this, NULL, oth); // TODO: is oth needed here?
+	this.message = oldmessage;
+}
+#endif
+
+#ifdef SVQC
 void door_rotating_reset(entity this)
 {
 	this.angles = this.pos1;
@@ -44,17 +105,15 @@ void door_rotating_init_startopen(entity this)
 	this.pos1 = this.movedir;
 }
 
-
 spawnfunc(func_door_rotating)
 {
-
 	//if (!this.deathtype) // map makers can override this
 	//	this.deathtype = " got in the way";
 
 	// I abuse "movedir" for denoting the axis for now
-	if (this.spawnflags & 64) // X (untested)
+	if (this.spawnflags & DOOR_ROTATING_XAXIS)
 		this.movedir = '0 0 1';
-	else if (this.spawnflags & 128) // Y (untested)
+	else if (this.spawnflags & DOOR_ROTATING_YAXIS)
 		this.movedir = '1 0 0';
 	else // Z
 		this.movedir = '0 1 0';
@@ -64,7 +123,6 @@ spawnfunc(func_door_rotating)
 	this.movedir = this.movedir * this.angles_y;
 	this.angles = '0 0 0';
 
-	this.max_health = this.health;
 	this.avelocity = this.movedir;
 	if (!InitMovingBrushTrigger(this))
 		return;
@@ -75,28 +133,6 @@ spawnfunc(func_door_rotating)
 	setblocked(this, door_blocked);
 	this.use = door_use;
 
-    if(this.spawnflags & 8)
-        this.dmg = 10000;
-
-    if(this.dmg && (this.message == ""))
-		this.message = "was squished";
-    if(this.dmg && (this.message2 == ""))
-		this.message2 = "was squished by";
-
-    if (this.sounds > 0)
-	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
-		this.noise2 = "plats/medplat1.wav";
-		this.noise1 = "plats/medplat2.wav";
-	}
-
-	if (!this.speed)
-		this.speed = 50;
-	if (!this.wait)
-		this.wait = 1;
-	this.lip = 0; // this.lip is used to remember reverse opening direction for door_rotating
-
 	this.pos1 = '0 0 0';
 	this.pos2 = this.movedir;
 
@@ -105,17 +141,12 @@ spawnfunc(func_door_rotating)
 	if (this.spawnflags & DOOR_START_OPEN)
 		InitializeEntity(this, door_rotating_init_startopen, INITPRIO_SETLOCATION);
 
-	this.state = STATE_BOTTOM;
-
-	if (this.health)
+	door_init_shared(this);
+	if (!this.speed)
 	{
-		//this.canteamdamage = true; // TODO
-		this.takedamage = DAMAGE_YES;
-		this.event_damage = door_damage;
+		this.speed = 50;
 	}
-
-	if (this.items)
-		this.wait = -1;
+	this.lip = 0; // this.lip is used to remember reverse opening direction for door_rotating
 
 	settouch(this, door_touch);
 

@@ -29,10 +29,10 @@ void follow_init(entity this)
 		objerror(this, "follow: could not find target/killtarget");
 		return;
 	}
-	else if(this.spawnflags & 1)
+	else if(this.spawnflags & FOLLOW_ATTACH)
 	{
 		// attach
-		if(this.spawnflags & 2)
+		if(this.spawnflags & FOLLOW_LOCAL)
 		{
 			setattachment(dst, src, this.message);
 		}
@@ -46,7 +46,7 @@ void follow_init(entity this)
 	}
 	else
 	{
-		if(this.spawnflags & 2)
+		if(this.spawnflags & FOLLOW_LOCAL)
 		{
 			set_movetype(dst, MOVETYPE_FOLLOW);
 			dst.aiment = src;
