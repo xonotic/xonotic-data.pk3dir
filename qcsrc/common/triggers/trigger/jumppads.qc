@@ -1,7 +1,6 @@
 #include "jumppads.qh"
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
-#include "jumppads.qh"
 #include <common/physics/movetypes/movetypes.qh>
 
 void trigger_push_use(entity this, entity actor, entity trigger)
@@ -9,7 +8,7 @@ void trigger_push_use(entity this, entity actor, entity trigger)
 	if(teamplay)
 	{
 		this.team = actor.team;
-		this.SendFlags |= 2;
+		this.SendFlags |= SF_TRIGGER_UPDATE;
 	}
 }
 #endif
@@ -254,7 +253,7 @@ void trigger_push_touch(entity this, entity toucher)
 		return;
 
 	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, toucher)))
+		if(((this.spawnflags & INVERT_TEAMS) == 0) == (DIFF_TEAM(this, toucher)))
 			return;
 
 	EXACTTRIGGER_TOUCH(this, toucher);
@@ -317,7 +316,7 @@ bool trigger_push_test(entity this, entity item)
 {
 	// first calculate a typical start point for the jump
 	vector org = (this.absmin + this.absmax) * 0.5;
-	org.z = this.absmax.z - PL_MIN_CONST.z - 10;
+	org.z = this.absmax.z - PL_MIN_CONST.z - 7;
 
 	if (this.target)
 	{
@@ -481,7 +480,7 @@ float trigger_push_send(entity this, entity to, float sf)
 
 void trigger_push_updatelink(entity this)
 {
-	this.SendFlags |= 1;
+	this.SendFlags |= SF_TRIGGER_INIT;
 }
 
 void trigger_push_link(entity this)
@@ -577,16 +576,30 @@ void target_push_init2(entity this)
 	target_push_init(this); // normal push target behaviour can be combined with a legacy pusher?
 }
 
-spawnfunc(target_push) { target_push_init2(this); }
-spawnfunc(info_notnull) { target_push_init(this); }
-spawnfunc(target_position) { target_push_init(this); }
+spawnfunc(target_push)
+{
+	target_push_init2(this);
+}
+
+spawnfunc(info_notnull)
+{
+	target_push_init(this);
+}
+spawnfunc(target_position)
+{
+	target_push_init(this);
+}
 
 #elif defined(CSQC)
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
 	this.classname = "jumppad";
-	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
+	int mytm = ReadByte();
+	if(mytm)
+	{
+		this.team = mytm - 1;
+	}
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();
 	this.height = ReadCoord();

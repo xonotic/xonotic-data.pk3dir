@@ -5,7 +5,7 @@
 
 void target_changelevel_use(entity this, entity actor, entity trigger)
 {
-	if(this.spawnflags & 2)
+	if(this.spawnflags & CHANGELEVEL_MULTIPLAYER)
 	{
 		// simply don't react if a non-player triggers it
 		if(!IS_PLAYER(actor)) { return; }
@@ -33,10 +33,23 @@ void target_changelevel_use(entity this, entity actor, entity trigger)
 		localcmd(strcat("changelevel ", this.chmap, "\n"));
 }
 
+/*target_changelevel
+Target to change/end level
+KEYS:
+chmap: map to switch to, leave empty for endmatch
+gametype: gametype for the next map
+count: fraction of real players that need to trigger this entity for levelchange
+SPAWNFLAGS:
+CHANGELEVEL_MULTIPLAYER: multiplayer support
+*/
+
 spawnfunc(target_changelevel)
 {
 	this.use = target_changelevel_use;
 
-	if(!this.count) { this.count = 0.7; }
+	if(!this.count)
+	{
+		this.count = 0.7;
+	}
 }
 #endif

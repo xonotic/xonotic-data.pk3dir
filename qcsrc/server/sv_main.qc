@@ -360,7 +360,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 	return;
 LABEL(cleanup)
-    builtin_remove(this);
+    delete(this);
 }
 
 void WarpZone_PostInitialize_Callback()
