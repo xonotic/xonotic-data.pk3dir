@@ -11,7 +11,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	magicear_matched = false;
 
 	dotrigger = ((IS_PLAYER(source)) && (!IS_DEAD(source)) && ((ear.radius == 0) || (vdist(source.origin - ear.origin, <=, ear.radius))));
-	domatch = ((ear.spawnflags & 32) || dotrigger);
+	domatch = ((ear.spawnflags & MAGICEAR_REPLACE_OUTSIDE) || dotrigger);
 
 	if (!domatch)
 		return msgin;
@@ -19,13 +19,13 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	if (!msgin)
 	{
 		// we are in TUBA mode!
-		if (!(ear.spawnflags & 256))
+		if (!(ear.spawnflags & MAGICEAR_TUBA))
 			return msgin;
 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(!W_Tuba_HasPlayed(source, weaponentity, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
+			if(!W_Tuba_HasPlayed(source, weaponentity, ear.message, ear.movedir_x, !(ear.spawnflags & MAGICEAR_TUBA_EXACTPITCH), ear.movedir_y, ear.movedir_z))
 				return msgin;
 		}
 
@@ -45,31 +45,31 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		return msgin;
 	}
 
-	if(ear.spawnflags & 256) // ENOTUBA
+	if(ear.spawnflags & MAGICEAR_TUBA) // ENOTUBA
 		return msgin;
 
 	if(privatesay)
 	{
-		if(ear.spawnflags & 4)
+		if(ear.spawnflags & MAGICEAR_IGNORE_TELL)
 			return msgin;
 	}
 	else
 	{
 		if(!teamsay)
-			if(ear.spawnflags & 1)
+			if(ear.spawnflags & MAGICEAR_IGNORE_SAY)
 				return msgin;
 		if(teamsay > 0)
-			if(ear.spawnflags & 2)
+			if(ear.spawnflags & MAGICEAR_IGNORE_TEAMSAY)
 				return msgin;
 		if(teamsay < 0)
-			if(ear.spawnflags & 8)
+			if(ear.spawnflags & MAGICEAR_IGNORE_INVALIDTELL)
 				return msgin;
 	}
 
 	matchstart = -1;
 	l = strlen(ear.message);
 
-	if(ear.spawnflags & 128)
+	if(ear.spawnflags & MAGICEAR_NODECOLORIZE)
 		msg = msgin;
 	else
 		msg = strdecolorize(msgin);
@@ -126,7 +126,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		ear.message = savemessage;
 	}
 
-	if(ear.spawnflags & 16)
+	if(ear.spawnflags & MAGICEAR_REPLACE_WHOLE_MESSAGE)
 	{
 		return ear.netname;
 	}
@@ -153,7 +153,7 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 	for(ear = magicears; ear; ear = ear.enemy)
 	{
 		msgout = trigger_magicear_processmessage(ear, source, teamsay, privatesay, msgin);
-		if(!(ear.spawnflags & 64))
+		if(!(ear.spawnflags & MAGICEAR_CONTINUE))
 		if(magicear_matched)
 			return msgout;
 		msgin = msgout;

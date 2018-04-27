@@ -316,9 +316,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 	}
 
 	race_SendRankings(newpos, player_prevpos, 0, MSG_ALL);
-	if(rankings_reply)
-		strunzone(rankings_reply);
-	rankings_reply = strzone(getrankings());
+	strcpy(rankings_reply, getrankings());
 
 	if(newpos == player_prevpos)
 	{
@@ -366,9 +364,7 @@ void race_deleteTime(string map, float pos)
 	if(pos == 1)
 		race_send_recordtime(MSG_ALL);
 
-	if(rankings_reply)
-		strunzone(rankings_reply);
-	rankings_reply = strzone(getrankings());
+	strcpy(rankings_reply, getrankings());
 }
 
 void race_SendTime(entity e, float cp, float t, float tvalid)
@@ -442,9 +438,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				if(t < recordtime || recordtime == 0)
 				{
 					race_checkpoint_records[cp] = t;
-					if(race_checkpoint_recordholders[cp])
-						strunzone(race_checkpoint_recordholders[cp]);
-					race_checkpoint_recordholders[cp] = strzone(e.netname);
+					strcpy(race_checkpoint_recordholders[cp], e.netname);
 					if(g_race_qualifying)
 						FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.race_checkpoint == cp, { race_SendNextCheckpoint(it, 0); });
 				}
@@ -1089,9 +1083,7 @@ void race_ClearRecords()
 	for(int j = 0; j < MAX_CHECKPOINTS; ++j)
 	{
 		race_checkpoint_records[j] = 0;
-		if(race_checkpoint_recordholders[j])
-			strunzone(race_checkpoint_recordholders[j]);
-		race_checkpoint_recordholders[j] = string_null;
+		strfree(race_checkpoint_recordholders[j]);
 	}
 
 	FOREACH_CLIENT(true, {

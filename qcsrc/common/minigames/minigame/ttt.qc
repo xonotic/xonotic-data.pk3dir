@@ -147,7 +147,7 @@ int ttt_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			return false;
@@ -540,8 +540,7 @@ void ttt_make_move(entity minigame)
 
 void ttt_set_curr_pos(string s)
 {
-	if ( ttt_curr_pos )
-		strunzone(ttt_curr_pos);
+	strfree(ttt_curr_pos);
 	if ( s )
 		s = strzone(s);
 	ttt_curr_pos = s;

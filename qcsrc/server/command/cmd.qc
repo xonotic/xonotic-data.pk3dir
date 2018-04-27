@@ -614,8 +614,10 @@ void ClientCommand_voice(entity caller, float request, float argc, string comman
 					sprint(caller, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 					return;
 				}
-				if (argc >= 3) VoiceMessage(caller, e, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
-				else VoiceMessage(caller, e, "");
+				string msg = "";
+				if (argc >= 3)
+					msg = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
+				VoiceMessage(caller, e, msg);
 
 				return;
 			}

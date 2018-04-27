@@ -145,6 +145,8 @@ void SUB_CalcMove_controller_think (entity this)
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
 		entity own = this.owner;
 		setthink(own, this.think1);
+		// set the owner's reference to this entity to NULL
+		own.move_controller = NULL;
 		delete(this);
 		getthink(own)(own);
 	}
@@ -220,8 +222,14 @@ void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspe
 		return;
 	}
 
+	// delete the previous controller, otherwise changing movement midway is glitchy
+	if (this.move_controller != NULL)
+	{
+		delete(this.move_controller);
+	}
 	controller = new(SUB_CalcMove_controller);
 	controller.owner = this;
+	this.move_controller = controller;
 	controller.platmovetype = this.platmovetype;
 	controller.platmovetype_start = this.platmovetype_start;
 	controller.platmovetype_end = this.platmovetype_end;

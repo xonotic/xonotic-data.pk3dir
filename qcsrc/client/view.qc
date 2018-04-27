@@ -1375,12 +1375,8 @@ void HUD_Crosshair(entity this)
 		wcross_scale_goal_prev = 0;
 		wcross_alpha_goal_prev = 0;
 		wcross_changedonetime = 0;
-		if(wcross_name_goal_prev)
-			strunzone(wcross_name_goal_prev);
-		wcross_name_goal_prev = string_null;
-		if(wcross_name_goal_prev_prev)
-			strunzone(wcross_name_goal_prev_prev);
-		wcross_name_goal_prev_prev = string_null;
+		strfree(wcross_name_goal_prev);
+		strfree(wcross_name_goal_prev_prev);
 		wcross_name_changestarttime = 0;
 		wcross_name_changedonetime = 0;
 		wcross_name_alpha_goal_prev = 0;

@@ -1,6 +1,5 @@
 #include "rotating.qh"
 #ifdef SVQC
-const int FUNC_ROTATING_STARTOFF = BIT(4);
 
 void func_rotating_setactive(entity this, int astate)
 {
@@ -15,9 +14,18 @@ void func_rotating_setactive(entity this, int astate)
 		this.active = astate;
 
 	if(this.active  == ACTIVE_NOT)
+	{
 		this.avelocity = '0 0 0';
+		stopsound(this, CH_AMBIENT_SINGLE);
+	}
 	else
+	{
 		this.avelocity = this.pos1;
+		if(this.noise && this.noise != "")
+		{
+			_sound(this, CH_AMBIENT_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+		}
+	}
 }
 
 void func_rotating_reset(entity this)
@@ -26,13 +34,20 @@ void func_rotating_reset(entity this)
 
 	if(this.spawnflags & FUNC_ROTATING_STARTOFF)
 	{
-		this.avelocity = '0 0 0';
-		this.active = ACTIVE_NOT;
+		this.setactive(this, ACTIVE_NOT);
 	}
 	else
 	{
-		this.avelocity = this.pos1;
-		this.active = ACTIVE_ACTIVE;
+		this.setactive(this, ACTIVE_ACTIVE);
+	}
+}
+
+void func_rotating_init_for_player(entity this, entity player)
+{
+	if (this.noise && this.noise != "" && this.active == ACTIVE_ACTIVE && IS_REAL_CLIENT(player))
+	{
+		msg_entity = player;
+		soundto (MSG_ONE, this, CH_AMBIENT_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 }
 
@@ -46,36 +61,23 @@ dmgtime : See above.
 
 spawnfunc(func_rotating)
 {
-	if (this.noise != "")
+	if (this.noise && this.noise != "")
 	{
 		precache_sound(this.noise);
-		ambientsound(this.origin, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
 	this.setactive = func_rotating_setactive;
 
 	if (!this.speed)
 		this.speed = 100;
-	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
-	if (this.spawnflags & BIT(2)) // X (untested)
+	if (this.spawnflags & FUNC_ROTATING_XAXIS)
 		this.avelocity = '0 0 1' * this.speed;
-	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
-	else if (this.spawnflags & BIT(3)) // Y (untested)
+	else if (this.spawnflags & FUNC_ROTATING_YAXIS)
 		this.avelocity = '1 0 0' * this.speed;
-	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
 	else // Z
 		this.avelocity = '0 1 0' * this.speed;
 
 	this.pos1 = this.avelocity;
-
-	// do this after setting pos1, so we can safely reactivate the func_rotating
-	if(this.spawnflags & FUNC_ROTATING_STARTOFF)
-	{
-		this.avelocity = '0 0 0';
-		this.active = ACTIVE_NOT;
-	}
-	else
-		this.active = ACTIVE_ACTIVE;
 
     if(this.dmg && (this.message == ""))
         this.message = " was squished";
@@ -99,5 +101,10 @@ spawnfunc(func_rotating)
 	setthink(this, SUB_NullThink); // for PushMove
 
 	this.reset = func_rotating_reset;
+	this.reset(this);
+
+	// maybe send sound to new players
+	IL_PUSH(g_initforplayer, this);
+	this.init_for_player = func_rotating_init_for_player;
 }
 #endif

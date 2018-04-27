@@ -131,12 +131,8 @@ string getwelcomemessage(entity this)
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
-		if(cache_lastmutatormsg)
-			strunzone(cache_lastmutatormsg);
-		if(cache_mutatormsg)
-			strunzone(cache_mutatormsg);
-		cache_lastmutatormsg = strzone(autocvar_g_mutatormsg);
-		cache_mutatormsg = strzone(cache_lastmutatormsg);
+		strcpy(cache_lastmutatormsg, autocvar_g_mutatormsg);
+		strcpy(cache_mutatormsg, cache_lastmutatormsg);
 	}
 
 	if (cache_mutatormsg != "") {

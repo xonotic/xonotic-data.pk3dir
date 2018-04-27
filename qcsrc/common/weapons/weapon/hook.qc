@@ -261,11 +261,11 @@ float autocvar_cl_grapplehook_alpha = 1;
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg);
 
 entityclass(Hook);
-class(Hook) .entity HookType; // ENT_CLIENT_*
-class(Hook) .vector origin;
-class(Hook) .vector velocity;
-class(Hook) .float HookSilent;
-class(Hook) .float HookRange;
+classfield(Hook) .entity HookType; // ENT_CLIENT_*
+classfield(Hook) .vector origin;
+classfield(Hook) .vector velocity;
+classfield(Hook) .float HookSilent;
+classfield(Hook) .float HookRange;
 
 string Draw_GrapplingHook_trace_callback_tex;
 float Draw_GrapplingHook_trace_callback_rnd;
@@ -281,7 +281,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
-class(Hook) .float teleport_time;
+classfield(Hook) .float teleport_time;
 void Draw_GrapplingHook(entity this)
 {
 	vector a, b, atrans;

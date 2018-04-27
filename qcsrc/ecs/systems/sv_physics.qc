@@ -4,6 +4,7 @@ void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
 	Physics_UpdateStats(this);
+	PM_ClientMovement_UpdateStatus(this);
 }
 
 bool sys_phys_override(entity this, float dt)

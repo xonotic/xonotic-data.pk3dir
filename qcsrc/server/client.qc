@@ -1352,8 +1352,8 @@ void ClientDisconnect(entity this)
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
-	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
-	if (CS(this).weaponorder_byimpulse) strunzone(CS(this).weaponorder_byimpulse);
+	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	strfree(CS(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1373,7 +1373,7 @@ void ClientDisconnect(entity this)
 
 	bot_relinkplayerlist();
 
-	if (this.clientstatus) strunzone(this.clientstatus);
+	strfree(this.clientstatus);
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
@@ -1496,7 +1496,7 @@ void player_powerups(entity this)
 	Fire_ApplyDamage(this);
 	Fire_ApplyEffect(this);
 
-	if (!g_instagib)
+	if (!autocvar_g_instagib)
 	{
 		if (this.items & ITEM_Strength.m_itemid)
 		{
@@ -2246,43 +2246,6 @@ bool PlayerThink(entity this)
 		return false;
 	}
 
-	bool have_hook = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).hook.state)
-		{
-			have_hook = true;
-			break;
-		}
-	}
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-	if (have_hook) {
-		do_crouch = false;
-	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		//do_crouch = false;
-	} else if (this.vehicle) {
-		do_crouch = false;
-	} else if (STAT(FROZEN, this)) {
-		do_crouch = false;
-    }
-
-	if (do_crouch) {
-		if (!this.crouch) {
-			this.crouch = true;
-			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
-			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
-			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
-		}
-	} else if (this.crouch) {
-        tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
-        if (!trace_startsolid) {
-            this.crouch = false;
-            this.view_ofs = STAT(PL_VIEW_OFS, this);
-            setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
-        }
-	}
-
 	FixPlayermodel(this);
 
 	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
@@ -2518,8 +2481,7 @@ void PlayerPreThink (entity this)
 		}
 		if (!assume_unchanged && autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
-		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
-		CS(this).netname_previous = strzone(this.netname);
+		strcpy(CS(this).netname_previous, this.netname);
 	}
 
 	// version nagging

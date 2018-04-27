@@ -126,9 +126,9 @@ void nmm_kill_tiles(entity minig)
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_nmm_tile" )
 		{
-			strunzone(e.netname);
-			strunzone(e.nmm_tile_hmill);
-			strunzone(e.nmm_tile_vmill);
+			strfree(e.netname);
+			strfree(e.nmm_tile_hmill);
+			strfree(e.nmm_tile_vmill);
 			delete(e);
 		}
 }

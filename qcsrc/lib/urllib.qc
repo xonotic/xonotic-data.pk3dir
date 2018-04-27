@@ -55,7 +55,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 		{
 			LOG_INFO("url_URI_Get_Callback: out of memory in buf_create");
 			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
-			strunzone(e.url_url);
+			strfree(e.url_url);
 			delete(e);
 			return 1;
 		}
@@ -64,7 +64,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 		{
 			LOG_INFO("url_URI_Get_Callback: out of memory in buf_create");
 			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
-			strunzone(e.url_url);
+			strfree(e.url_url);
 			delete(e);
 			return 1;
 		}
@@ -77,7 +77,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 	{
 		// an ERROR
 		e.url_ready(e, e.url_ready_pass, -fabs(status));
-		strunzone(e.url_url);
+		strfree(e.url_url);
 		delete(e);
 		return 1;
 	}
@@ -108,7 +108,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				{
 					LOG_INFO("url_single_fopen: out of memory in buf_create");
 					rdy(e, pass, URL_READY_ERROR);
-					strunzone(e.url_url);
+					strfree(e.url_url);
 					delete(e);
 					return;
 				}
@@ -231,7 +231,7 @@ void url_fclose(entity e)
 					LOG_INFO("url_fclose: too many concurrent requests");
 					e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 					buf_del(e.url_wbuf);
-					strunzone(e.url_url);
+					strfree(e.url_url);
 					delete(e);
 					return;
 				}
@@ -243,7 +243,7 @@ void url_fclose(entity e)
 				LOG_INFO("url_fclose: failure in crypto_uri_postbuf");
 				e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 				buf_del(e.url_wbuf);
-				strunzone(e.url_url);
+				strfree(e.url_url);
 				delete(e);
 				return;
 			}
@@ -264,7 +264,7 @@ void url_fclose(entity e)
 			// we have READ all data, just close
 			e.url_ready(e, e.url_ready_pass, URL_READY_CLOSED);
 			buf_del(e.url_rbuf);
-			strunzone(e.url_url);
+			strfree(e.url_url);
 			delete(e);
 		}
 	}
@@ -341,7 +341,7 @@ void url_multi_ready(entity fh, entity me, float status)
 		{
 			LOG_INFO("uri_multi_ready: got HTTP error 422, data is in unusable format - not continuing");
 			me.url_ready(fh, me.url_ready_pass, status);
-			strunzone(me.url_url);
+			strfree(me.url_url);
 			delete(me);
 			return;
 		}
@@ -350,7 +350,7 @@ void url_multi_ready(entity fh, entity me, float status)
 		if (n <= me.url_attempt)
 		{
 			me.url_ready(fh, me.url_ready_pass, status);
-			strunzone(me.url_url);
+			strfree(me.url_url);
 			delete(me);
 			return;
 		}

@@ -34,9 +34,10 @@
 //   target = targets to trigger when broken
 //   health = amount of damage it can take
 //   spawnflags:
-//     1 = start disabled (needs to be triggered to activate)
-//     2 = indicate damage
-//     4 = don't take direct damage (needs to be triggered to 'explode', then triggered again to restore)
+//     START_DISABLED: needs to be triggered to activate
+//     BREAKABLE_INDICATE_DAMAGE: indicate damage
+//     BREAKABLE_NODAMAGE: don't take direct damage (needs to be triggered to 'explode', then triggered again to restore)
+//     NOSPLASH: don't take splash damage
 // notes:
 //   for mdl_dead to work, origin must be set (using a common/origin brush).
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
@@ -81,7 +82,7 @@ void LaunchDebris (entity this, string debrisname, vector force)
 void func_breakable_colormod(entity this)
 {
 	float h;
-	if (!(this.spawnflags & 2))
+	if (!(this.spawnflags & BREAKABLE_INDICATE_DAMAGE))
 		return;
 	h = this.health / this.max_health;
 	if(h < 0.25)
@@ -135,8 +136,8 @@ void func_breakable_behave_destroyed(entity this)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
 	this.event_damage = func_null;
-	this.state = 1;
-	if(this.spawnflags & 4)
+	this.state = STATE_BROKEN;
+	if(this.spawnflags & BREAKABLE_NODAMAGE)
 		this.use = func_null;
 	func_breakable_colormod(this);
 	if (this.noise1)
@@ -158,7 +159,7 @@ void func_breakable_behave_restore(entity this)
 		WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
 		WaypointSprite_UpdateHealth(this.sprite, this.health);
 	}
-	if(!(this.spawnflags & 4))
+	if(!(this.spawnflags & BREAKABLE_NODAMAGE))
 	{
 		this.takedamage = DAMAGE_AIM;
 		if(!this.bot_attack)
@@ -166,9 +167,9 @@ void func_breakable_behave_restore(entity this)
 		this.bot_attack = true;
 		this.event_damage = func_breakable_damage;
 	}
-	if(this.spawnflags & 4)
+	if(this.spawnflags & BREAKABLE_NODAMAGE)
 		this.use = func_breakable_destroy; // don't need to set it usually, as .use isn't reset
-	this.state = 0;
+	this.state = STATE_ALIVE;
 	//this.nextthink = 0; // cancel auto respawn
 	setthink(this, func_breakable_think);
 	this.nextthink = time + 0.1;
@@ -179,7 +180,7 @@ void func_breakable_behave_restore(entity this)
 
 void func_breakable_init_for_player(entity this, entity player)
 {
-	if (this.noise1 && this.state == 0 && IS_REAL_CLIENT(player))
+	if (this.noise1 && this.state == STATE_ALIVE && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
 		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
@@ -248,9 +249,9 @@ void func_breakable_destroy_self(entity this)
 
 void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.state == 1)
+	if(this.state == STATE_BROKEN)
 		return;
-	if(this.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	if(this.team)
@@ -290,7 +291,7 @@ void func_breakable_reset(entity this)
 {
 	this.team = this.team_saved;
 	func_breakable_look_restore(this);
-	if(this.spawnflags & 1)
+	if(this.spawnflags & START_DISABLED)
 		func_breakable_behave_destroyed(this);
 	else
 		func_breakable_behave_restore(this);
@@ -330,12 +331,12 @@ spawnfunc(func_breakable)
 	this.mdl = this.model;
 	SetBrushEntityModel(this);
 
-	if(this.spawnflags & 4)
+	if(this.spawnflags & BREAKABLE_NODAMAGE)
 		this.use = func_breakable_destroy;
 	else
 		this.use = func_breakable_restore;
 
-	if(this.spawnflags & 4)
+	if(this.spawnflags & BREAKABLE_NODAMAGE)
 	{
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
