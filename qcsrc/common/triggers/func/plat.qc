@@ -58,12 +58,19 @@ void plat_link(entity this)
 
 spawnfunc(func_plat)
 {
-	if (this.sounds == 0) this.sounds = 2;
+	if (this.spawnflags & CRUSH)
+	{
+		this.dmg = 10000;
+	}
 
-    if (this.spawnflags & 4) this.dmg = 10000;
-
-    if (this.dmg && (this.message == "")) this.message = "was squished";
-    if (this.dmg && (this.message2 == "")) this.message2 = "was squished by";
+    if (this.dmg && (this.message == ""))
+	{
+		this.message = "was squished";
+	}
+    if (this.dmg && (this.message2 == ""))
+	{
+		this.message2 = "was squished by";
+	}
 
 	if (this.sounds == 1)
 	{
@@ -77,13 +84,20 @@ spawnfunc(func_plat)
 		this.noise1 = "plats/medplat2.wav";
 	}
 
+	// WARNING: backwards compatibility because people don't use already existing fields :(
 	if (this.sound1)
 		this.noise = this.sound1;
 	if (this.sound2)
 		this.noise1 = this.sound2;
 
-	if(this.noise && this.noise != "") { precache_sound(this.noise); }
-	if(this.noise1 && this.noise1 != "") { precache_sound(this.noise1); }
+	if(this.noise && this.noise != "")
+	{
+		precache_sound(this.noise);
+	}
+	if(this.noise1 && this.noise1 != "")
+	{
+		precache_sound(this.noise1);
+	}
 
 	this.mangle = this.angles;
 	this.angles = '0 0 0';

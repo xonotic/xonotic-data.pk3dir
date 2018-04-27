@@ -8,7 +8,7 @@ void counter_use(entity this, entity actor, entity trigger)
 	if (this.count < 0)
 		return;
 
-	bool doactivate = (this.spawnflags & 4);
+	bool doactivate = (this.spawnflags & COUNTER_FIRE_AT_COUNT);
 
 	if (this.count == 0)
 	{
@@ -45,14 +45,15 @@ void counter_reset(entity this)
 	this.count = this.cnt;
 }
 
-/*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage
+/*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage COUNTER_FIRE_AT_COUNT
 Acts as an intermediary for an action that takes multiple inputs.
 
 If nomessage is not set, it will print "1 more.. " etc when triggered and "sequence complete" when finished.
+If COUNTER_FIRE_AT_COUNT is set, it will also fire all of its targets at countdown, making it behave like trigger_mulitple with limited shots
 
 If respawntime is set, it will re-enable itself after the time once the sequence has been completed
 
-After the counter has been triggered "count" times (default 2), it will fire all of it's targets and remove itself.
+After the counter has been triggered "count" times (default 2), it will fire all of its targets.
 */
 spawnfunc(trigger_counter)
 {

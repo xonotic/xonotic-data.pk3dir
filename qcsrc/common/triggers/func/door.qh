@@ -1,16 +1,15 @@
 #pragma once
 
-// door constants
-const int DOOR_START_OPEN = 1;
-const int DOOR_DONT_LINK = 4;
-const int DOOR_TOGGLE = 32;
 
-const int DOOR_NOSPLASH = 256; // generic anti-splashdamage spawnflag
+const int DOOR_START_OPEN = BIT(0);
+const int DOOR_DONT_LINK = BIT(2);
+const int SPAWNFLAGS_GOLD_KEY = BIT(3); // Quake 1 compat, can only be used with func_door!
+const int SPAWNFLAGS_SILVER_KEY = BIT(4); // Quake 1 compat, can only be used with func_door!
+const int DOOR_TOGGLE = BIT(5);
 
-const int DOOR_NONSOLID = 1024;
+const int DOOR_NONSOLID = BIT(10);
+const int DOOR_CRUSH = BIT(11); // can't use CRUSH cause that is the same as DOOR_DONT_LINK
 
-const int SPAWNFLAGS_GOLD_KEY = 8;
-const int SPAWNFLAGS_SILVER_KEY = 16;
 
 #ifdef CSQC
 // stuff for preload

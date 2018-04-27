@@ -36,7 +36,7 @@ bool Teleport_Active(entity this, entity player)
 		return false;
 
 	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, player)))
+		if(((this.spawnflags & INVERT_TEAMS) == 0) == (DIFF_TEAM(this, player)))
 			return false;
 
 	return true;
@@ -83,7 +83,10 @@ void target_teleport_use(entity this, entity actor, entity trigger)
 
 	string s = this.target; this.target = string_null;
 	SUB_UseTargets(this, player, player); // TODO: should we be using toucher for trigger too?
-	if (!this.target) this.target = s;
+	if (!this.target)
+	{
+		this.target = s;
+	}
 
 	SUB_UseTargets(e, player, player);
 }
@@ -157,7 +160,11 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 	this.classname = "trigger_teleport";
 	if(isnew)
 		IL_PUSH(g_teleporters, this);
-	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
+	int mytm = ReadByte();
+	if(mytm)
+	{
+		this.team = mytm - 1;
+	}
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();
 	this.speed = ReadCoord();

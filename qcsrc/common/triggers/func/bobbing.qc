@@ -59,9 +59,9 @@ spawnfunc(func_bobbing)
 	this.dmgtime2 = time;
 
 	// how far to bob
-	if (this.spawnflags & 1) // X
+	if (this.spawnflags & BOBBING_XAXIS)
 		this.movedir = '1 0 0' * this.height;
-	else if (this.spawnflags & 2) // Y
+	else if (this.spawnflags & BOBBING_YAXIS)
 		this.movedir = '0 1 0' * this.height;
 	else // Z
 		this.movedir = '0 0 1' * this.height;

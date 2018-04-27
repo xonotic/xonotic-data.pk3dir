@@ -4,7 +4,7 @@
 #
 # Translators:
 # Ivan Paulos Tomé <greylica@gmail.com>, 2016
-# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015-2017
+# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015-2018
 # Mirio <opivy@hotmail.de>, 2017
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-12-21 15:23+0000\n"
+"PO-Revision-Date: 2018-04-17 20:43+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pt/)\n"
@@ -765,16 +765,16 @@ msgid ""
 "^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was "
 "captured\n"
 msgstr ""
-"^3capturas^7 Quão frequente uma bandeira (CTF) ou uma chave (KeyHunt) foi "
-"capturada\n"
+"^3capturas^7 Quão frequente uma bandeira (CTF) ou uma chave (Caça a Chaves) "
+"foi capturada\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:317
 msgid ""
 "^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
 "ball (Keepaway) was picked up\n"
 msgstr ""
-"^3coletas^7. Quão frequente uma bandeira (CTF), uma chave (KeyHunt) ou uma "
-"bola (Keepaway) foi coletada\n"
+"^3coletas^7. Quão frequente uma bandeira (CTF), uma chave (Caça a Chaves) ou "
+"uma bola (Keepaway) foi coletada\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "^3captime^7                  Time of fastest cap (CTF)\n"
@@ -1207,7 +1207,7 @@ msgstr "Consiga o máximo de execuções que puder"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Last Man Standing"
-msgstr "Last Man Standing"
+msgstr "Último Homem de Pé"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Survive and kill until the enemies have no lives left"
@@ -1251,7 +1251,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Clan Arena"
-msgstr "Clan Arena"
+msgstr "Clã Arena"
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Kill all enemy teammates to win the round"
@@ -1263,7 +1263,7 @@ msgstr "Capture e defenda todos os pontos de controle para vencer"
 
 #: qcsrc/common/mapinfo.qh:287
 msgid "Domination"
-msgstr "Domination"
+msgstr "Dominação"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Gather all the keys to win the round"
@@ -1271,11 +1271,11 @@ msgstr "Colete todas as chaves para vencer a rodada"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Key Hunt"
-msgstr "Key Hunt"
+msgstr "Caça a Chaves"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid "Assault"
-msgstr "Assault"
+msgstr "Assalto"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid ""
@@ -1291,11 +1291,11 @@ msgstr "Capture pontos de controle para alcançar e destruir o gerador inimigo"
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Onslaught"
-msgstr "Onslaught"
+msgstr "Massacre"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Nexball"
-msgstr "Nexball"
+msgstr "Bola Nex"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
@@ -1303,7 +1303,7 @@ msgstr "Atire e chute a bola no gol inimigo e mantenha seu gol limpo"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid "Freeze Tag"
-msgstr "Freeze Tag"
+msgstr "Congela"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid ""
@@ -1323,7 +1323,7 @@ msgstr "Keepaway"
 
 #: qcsrc/common/mapinfo.qh:461
 msgid "Invasion"
-msgstr "Invasion"
+msgstr "Invasão"
 
 #: qcsrc/common/mapinfo.qh:461
 msgid "Survive against waves of monsters"
@@ -5217,7 +5217,7 @@ msgstr "Tempo de desaparecimento:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
 msgid "Flip messages order"
-msgstr "Trocar ordem de notificações"
+msgstr "Trocar ordem de mensagens"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:15
@@ -5704,7 +5704,7 @@ msgstr "Exibir munições"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:68
 msgid "Ammo bar alpha:"
-msgstr "Cor da barra de munições:"
+msgstr "Transparência da barra de munições:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:74
 msgid "Ammo bar color:"
@@ -6327,7 +6327,7 @@ msgstr "Modificadores de armas e itens:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:204
 msgid "Grappling hook"
-msgstr "Gancho (grappling hook)"
+msgstr "Gancho de escalada"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:205
 msgid "Players spawn with the grappling hook"
