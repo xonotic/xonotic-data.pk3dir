@@ -1388,7 +1388,6 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		nwp = e.nearestwaypoint;
 	}
 
-	LOG_DEBUG("-- checking ", e.classname, " (with cost ", ftos(nwp.wpcost), ")");
 	if (nwp && nwp.wpcost < 10000000)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
@@ -1398,12 +1397,12 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		else
 			nwptoitem_cost = waypoint_gettravelcost(nwp.wpnearestpoint, goal_org, nwp, e);
 		float cost = nwp.wpcost + nwptoitem_cost;
-		LOG_DEBUG(e.classname, " ", ftos(f), "/(1+", ftos(cost), "/", ftos(rangebias), ") = ");
+		LOG_DEBUG("checking ^5", e.classname, "^7 with base rating ^xf04", ftos(f), "^7 and rangebias ^xf40", ftos(rangebias));
 		f = f * rangebias / (rangebias + cost);
-		LOG_DEBUG("considering ", e.classname, " (with rating ", ftos(f), ")");
+		LOG_DEBUG("         ^5", e.classname, "^7 with cost ^6", ftos(cost), "^7 and final rating ^2", ftos(f));
 		if (navigation_bestrating < f)
 		{
-			LOG_DEBUG("ground path: added goal ", e.classname, " (with rating ", ftos(f), ")");
+			LOG_DEBUG(" ground path: ^3added goal ^5", e.classname);
 			navigation_bestrating = f;
 			navigation_bestgoal = e;
 		}
