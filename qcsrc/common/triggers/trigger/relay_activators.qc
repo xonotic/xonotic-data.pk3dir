@@ -9,13 +9,7 @@ void relay_activators_use(entity this, entity actor, entity trigger)
 		else
 		{
 			//bprint("Not using setactive\n");
-			if(this.cnt == ACTIVE_TOGGLE)
-				if(trg.active == ACTIVE_ACTIVE)
-					trg.active = ACTIVE_NOT;
-				else
-					trg.active = ACTIVE_ACTIVE;
-			else
-				trg.active = this.cnt;
+			generic_setactive(trg, this.cnt);
 		}
 	}
 }

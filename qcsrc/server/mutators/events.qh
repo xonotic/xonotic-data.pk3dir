@@ -1106,6 +1106,13 @@ MUTATOR_HOOKABLE(Item_ScheduleRespawn, EV_Item_ScheduleRespawn);
     /**/
 MUTATOR_HOOKABLE(PlayerPhysics_UpdateStats, EV_PlayerPhysics_UpdateStats);
 
+/** called after physics stats are set on a player, allows post-initialization modifications */
+#define EV_PlayerPhysics_PostUpdateStats(i, o) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** maxspeed_mod */       i(float, MUTATOR_ARGV_1_float) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPhysics_PostUpdateStats, EV_PlayerPhysics_PostUpdateStats);
+
 /** return true to use your own aim target (or none at all) */
 #define EV_HavocBot_Aim(i, o) \
     /** bot */ i(entity, MUTATOR_ARGV_0_entity) \

@@ -61,7 +61,7 @@ void plat_spawn_inside_trigger(entity this)
 void plat_hit_top(entity this)
 {
 	_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
-	this.state = 1;
+	this.state = STATE_TOP;
 
 	setthink(this, plat_go_down);
 	this.nextthink = this.ltime + 3;
@@ -70,20 +70,20 @@ void plat_hit_top(entity this)
 void plat_hit_bottom(entity this)
 {
 	_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
-	this.state = 2;
+	this.state = STATE_BOTTOM;
 }
 
 void plat_go_down(entity this)
 {
 	_sound (this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_NORM);
-	this.state = 3;
+	this.state = STATE_DOWN;
 	SUB_CalcMove (this, this.pos2, TSPEED_LINEAR, this.speed, plat_hit_bottom);
 }
 
 void plat_go_up(entity this)
 {
 	_sound (this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_NORM);
-	this.state = 4;
+	this.state = STATE_UP;
 	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, plat_hit_top);
 }
 
@@ -102,9 +102,9 @@ void plat_center_touch(entity this, entity toucher)
 		return;
 #endif
 
-	if (this.enemy.state == 2) {
+	if (this.enemy.state == STATE_BOTTOM) {
 		plat_go_up(this.enemy);
-	} else if (this.enemy.state == 1)
+	} else if (this.enemy.state == STATE_TOP)
 		this.enemy.nextthink = this.enemy.ltime + 1;
 }
 
@@ -121,7 +121,7 @@ void plat_outside_touch(entity this, entity toucher)
 		return;
 #endif
 
-	if (this.enemy.state == 1) {
+	if (this.enemy.state == STATE_TOP) {
 	    entity e = this.enemy;
 		plat_go_down(e);
     }
@@ -137,7 +137,7 @@ void plat_trigger_use(entity this, entity actor, entity trigger)
 
 void plat_crush(entity this, entity blocker)
 {
-	if((this.spawnflags & 4) && (blocker.takedamage != DAMAGE_NO))
+	if((this.spawnflags & CRUSH) && (blocker.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
 		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
@@ -155,9 +155,9 @@ void plat_crush(entity this, entity blocker)
 		}
 #endif
 
-		if (this.state == 4)
+		if (this.state == STATE_UP)
 			plat_go_down (this);
-		else if (this.state == 3)
+		else if (this.state == STATE_DOWN)
 			plat_go_up (this);
 	// when in other states, then the plat_crush event came delayed after
 	// plat state already had changed
@@ -168,11 +168,13 @@ void plat_crush(entity this, entity blocker)
 void plat_use(entity this, entity actor, entity trigger)
 {
 	this.use = func_null;
-	if (this.state != 4)
+	if (this.state != STATE_UP)
 		objerror (this, "plat_use: not in up state");
 	plat_go_down(this);
 }
 
+// WARNING: backwards compatibility because people don't use already existing fields :(
+// TODO: Check if any maps use these fields and remove these fields if it doesn't break maps
 .string sound1, sound2;
 
 void plat_reset(entity this)
@@ -180,13 +182,13 @@ void plat_reset(entity this)
 	IFTARGETED
 	{
 		setorigin(this, this.pos1);
-		this.state = 4;
+		this.state = STATE_UP;
 		this.use = plat_use;
 	}
 	else
 	{
 		setorigin(this, this.pos2);
-		this.state = 2;
+		this.state = STATE_BOTTOM;
 		this.use = plat_trigger_use;
 	}
 

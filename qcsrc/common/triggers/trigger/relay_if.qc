@@ -6,7 +6,7 @@ void trigger_relay_if_use(entity this, entity actor, entity trigger)
 
 	// TODO make this generic AND faster than nextent()ing through all, if somehow possible
 	n = (cvar_string(this.netname) == cvar_string(this.message));
-	if(this.spawnflags & 1)
+	if(this.spawnflags & RELAYIF_NEGATE)
 		n = !n;
 
 	if(n)

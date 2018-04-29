@@ -9,9 +9,7 @@ void trigger_heal_touch(entity this, entity toucher)
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (toucher.iscreature)
 	{
-		if (toucher.takedamage)
-		if (!IS_DEAD(toucher))
-		if (toucher.triggerhealtime < time)
+		if (toucher.takedamage && !IS_DEAD(toucher) && toucher.triggerhealtime < time)
 		{
 			bool is_trigger = this.targetname == "";
 			if(is_trigger)
@@ -19,7 +17,7 @@ void trigger_heal_touch(entity this, entity toucher)
 			if(this.delay > 0)
 				toucher.triggerhealtime = time + this.delay;
 
-			bool playthesound = (this.spawnflags & 4);
+			bool playthesound = (this.spawnflags & HEAL_SOUND_ALWAYS);
 			if (toucher.health < this.max_health)
 			{
 				playthesound = true;
