@@ -336,19 +336,18 @@ STATIC_INIT(compressShortVector)
 
 	if(cvar("developer"))
 	{
-		LOG_INFO("Verifying vector compression table...");
+		LOG_TRACE("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				LOG_INFOF(
+				LOG_FATALF(
 				    "BROKEN vector compression: %s -> %s -> %s",
 				    ftos(i),
 				    vtos(decompressShortVector(i)),
 				    ftos(compressShortVector(decompressShortVector(i)))
                 );
-				error("b0rk");
 			}
-		LOG_INFO("Done.");
+		LOG_TRACE("Done.");
 	}
 }
 
