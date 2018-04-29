@@ -120,8 +120,6 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		// NOTE: this code assumes each bot rates items in a different frame
 		if(it.bot_ratingscale_time == time && ratingscale < it.bot_ratingscale)
 			continue;
-		it.bot_ratingscale_time = time;
-		it.bot_ratingscale = ratingscale;
 
 		if(!it.solid)
 		{
@@ -174,6 +172,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		if(!havocbot_goalrating_item_pickable_check_players(this, org, it, o))
 			continue;
 
+		it.bot_ratingscale_time = time;
+		it.bot_ratingscale = ratingscale;
 		rating = it.bot_pickupevalfunc(this, it);
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
