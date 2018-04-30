@@ -5,11 +5,10 @@
 /// \copyright GNU GPLv3 or any later version.
 
 #include <common/items/item.qh>
+#include <common/weapons/all.qh>
 #include "autocvars.qh"
 #include "resources.qh"
 #include "mutators/events.qh"
-#include <common/mutators/mutator/overkill/hmg.qh>
-#include <common/mutators/mutator/overkill/rpc.qh>
 
 const string playertemplate_cvar_prefix = "g_player_template_";
 
