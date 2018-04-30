@@ -2,22 +2,22 @@
 
 #include <common/weapons/all.qh>
 
-CLASS(RocketPropelledChainsaw, Weapon)
-/* spawnfunc */ ATTRIB(RocketPropelledChainsaw, m_canonical_spawnfunc, string, "weapon_rpc");
-/* ammotype  */ ATTRIB(RocketPropelledChainsaw, ammo_type, int, RESOURCE_ROCKETS);
-/* impulse   */ ATTRIB(RocketPropelledChainsaw, impulse, int, 9);
-/* flags     */ ATTRIB(RocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
-/* rating    */ ATTRIB(RocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(RocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
-/* modelname */ ATTRIB(RocketPropelledChainsaw, mdl, string, "ok_rl");
+CLASS(OverkillRocketPropelledChainsaw, Weapon)
+/* spawnfunc */ ATTRIB(OverkillRocketPropelledChainsaw, m_canonical_spawnfunc, string, "weapon_okrpc");
+/* ammotype  */ ATTRIB(OverkillRocketPropelledChainsaw, ammo_type, int, RESOURCE_ROCKETS);
+/* impulse   */ ATTRIB(OverkillRocketPropelledChainsaw, impulse, int, 9);
+/* flags     */ ATTRIB(OverkillRocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
+/* rating    */ ATTRIB(OverkillRocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);
+/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
+/* modelname */ ATTRIB(OverkillRocketPropelledChainsaw, mdl, string, "ok_rl");
 #ifdef GAMEQC
-/* model     */ ATTRIB(RocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
+/* model     */ ATTRIB(OverkillRocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
 #endif
-/* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair, string, "gfx/crosshairrocketlauncher");
-/* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(RocketPropelledChainsaw, model2, string, "weaponrpc");
-/* refname   */ ATTRIB(RocketPropelledChainsaw, netname, string, "rpc");
-/* wepname   */ ATTRIB(RocketPropelledChainsaw, m_name, string, _("Rocket Propelled Chainsaw"));
+/* crosshair */ ATTRIB(OverkillRocketPropelledChainsaw, w_crosshair, string, "gfx/crosshairrocketlauncher");
+/* crosshair */ ATTRIB(OverkillRocketPropelledChainsaw, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(OverkillRocketPropelledChainsaw, model2, string, "weaponrpc");
+/* refname   */ ATTRIB(OverkillRocketPropelledChainsaw, netname, string, "okrpc");
+/* wepname   */ ATTRIB(OverkillRocketPropelledChainsaw, m_name, string, _("Overkill Rocket Propelled Chainsaw"));
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
@@ -56,10 +56,11 @@ CLASS(RocketPropelledChainsaw, Weapon)
         P(class, prefix, weaponstart, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
     END()
-    W_PROPS(X, RocketPropelledChainsaw, rpc)
+    W_PROPS(X, OverkillRocketPropelledChainsaw, okrpc)
 #undef X
 
-ENDCLASS(RocketPropelledChainsaw)
-REGISTER_WEAPON(RPC, rpc, NEW(RocketPropelledChainsaw));
+ENDCLASS(OverkillRocketPropelledChainsaw)
+REGISTER_WEAPON(OVERKILL_RPC, okrpc, NEW(OverkillRocketPropelledChainsaw));
 
-SPAWNFUNC_WEAPON(weapon_rpc, WEP_RPC)
+SPAWNFUNC_WEAPON(weapon_okrpc, WEP_OVERKILL_RPC)
+SPAWNFUNC_WEAPON(weapon_rpc, WEP_OVERKILL_RPC)
