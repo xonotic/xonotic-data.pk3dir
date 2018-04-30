@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Nicky Rowe <nicky@kernowlingo.com>, 2018
+# Nicky Rowe <nicky@kernowlingo.com>, 2016,2018
 # Nicky Rowe <nicky@kernowlingo.com>, 2016
 # Nicky Rowe <nicky@kernowlingo.com>, 2016
 msgid ""
