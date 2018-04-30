@@ -228,42 +228,36 @@ METHOD(Client, m_unwind, bool(Client this))
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 
-/// \brief Print the string to player's chat.
-/// \param[in] player Player to print to.
+/// \brief Print the string to the client's chat.
+/// \param[in] client Client to print to.
 /// \param[in] text Text to print.
-/// \return No return.
-void PrintToChat(entity player, string text);
+void PrintToChat(entity client, string text);
 
-/// \brief Print the string to player's chat if the server cvar "developer" is
-/// not 0.
-/// \param[in] player Player to print to.
+/// \brief Print the string to the client's chat if the server cvar "developer"
+/// is not 0.
+/// \param[in] client Client to print to.
 /// \param[in] text Text to print.
-/// \return No return.
-void DebugPrintToChat(entity player, string text);
+void DebugPrintToChat(entity client, string text);
 
-/// \brief Prints the string to all players' chat.
+/// \brief Prints the string to all clients' chat.
 /// \param[in] text Text to print.
-/// \return No return.
 void PrintToChatAll(string text);
 
-/// \brief Prints the string to all players' chat if the server cvar "developer"
+/// \brief Prints the string to all clients' chat if the server cvar "developer"
 /// is not 0.
 /// \param[in] text Text to print.
-/// \return No return.
 void DebugPrintToChatAll(string text);
 
-/// \brief Print the string to chat of all players of the specified team.
-/// \param[in] teamnum Team to print to. See NUM_TEAM constants.
+/// \brief Print the string to chat of all clients of the specified team.
+/// \param[in] team_num Team to print to. See NUM_TEAM constants.
 /// \param[in] text Text to print.
-/// \return No return.
-void PrintToChatTeam(int teamnum, string text);
+void PrintToChatTeam(int team_num, string text);
 
-/// \brief Print the string to chat of all players of the specified team if the
+/// \brief Print the string to chat of all clients of the specified team if the
 /// server cvar "developer" is not 0.
-/// \param[in] teamnum Team to print to. See NUM_TEAM constants.
+/// \param[in] team_num Team to print to. See NUM_TEAM constants.
 /// \param[in] text Text to print.
-/// \return No return.
-void DebugPrintToChatTeam(int teamnum, string text);
+void DebugPrintToChatTeam(int team_num, string text);
 
 void play_countdown(entity this, float finished, Sound samp);
 

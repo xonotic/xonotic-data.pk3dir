@@ -1474,17 +1474,17 @@ void dedicated_print(string input)
 	if (server_is_dedicated) print(input);
 }
 
-void PrintToChat(entity player, string text)
+void PrintToChat(entity client, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
-	sprint(player, text);
+	sprint(client, text);
 }
 
-void DebugPrintToChat(entity player, string text)
+void DebugPrintToChat(entity client, string text)
 {
 	if (autocvar_developer)
 	{
-		PrintToChat(player, text);
+		PrintToChat(client, text);
 	}
 }
 
@@ -1502,23 +1502,23 @@ void DebugPrintToChatAll(string text)
 	}
 }
 
-void PrintToChatTeam(int teamnum, string text)
+void PrintToChatTeam(int team_num, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		if (it.team == teamnum)
+		if (it.team == team_num)
 		{
 			sprint(it, text);
 		}
 	});
 }
 
-void DebugPrintToChatTeam(int teamnum, string text)
+void DebugPrintToChatTeam(int team_num, string text)
 {
 	if (autocvar_developer)
 	{
-		PrintToChatTeam(teamnum, text);
+		PrintToChatTeam(team_num, text);
 	}
 }
 
