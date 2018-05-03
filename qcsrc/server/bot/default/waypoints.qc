@@ -190,6 +190,16 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			return it;
 		});
 	}
+	// spawn only one destination waypoint for teleports teleporting player to the exact same spot
+	// otherwise links loaded from file would be applied only to the first destination
+	// waypoint since link format doesn't specify waypoint entities but just positions
+	if((f & WAYPOINTFLAG_GENERATED) && !(f & WAYPOINTFLAG_NORELINK) && m1 == m2)
+	{
+		IL_EACH(g_waypoints, boxesoverlap(m1, m2, it.absmin, it.absmax),
+		{
+			return it;
+		});
+	}
 
 	entity w = new(waypoint);
 	IL_PUSH(g_waypoints, w);
