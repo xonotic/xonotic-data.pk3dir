@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-05-01 18:55+0000\n"
+"PO-Revision-Date: 2018-05-02 10:52+0000\n"
 "Last-Translator: Rui <xymarior@yandex.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -6248,7 +6248,7 @@ msgstr "Piñata"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:229
 msgid "Weapons stay"
-msgstr "Armas permanescentes "
+msgstr "Armas permanescentes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
@@ -6578,7 +6578,7 @@ msgstr "Demos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:26
 msgid "Screenshots"
-msgstr "Screenshots"
+msgstr "Capturas de tela"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:27
 msgid "Music Player"
@@ -6674,7 +6674,7 @@ msgstr "Remover todas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:43
 msgid "Auto screenshot scoreboard"
-msgstr "Tirar screenshot automaticamente do placar"
+msgstr "Tirar capturas de tela automaticamente do placar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:63
 msgid "Open in the viewer"
@@ -7091,7 +7091,7 @@ msgstr "Som indicador de disparo acertado"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Play a hit indicator sound when your shot hits an enemy"
-msgstr "Reproduzuz um som indicando que você acertou um inimigo"
+msgstr "Reproduz um som indicando que você acertou um inimigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:147
 msgid "Chat message sound"
@@ -7515,7 +7515,7 @@ msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance. (default: disabled)"
 msgstr ""
-"Habilita o efeito bloom, o qual ilumina os pixels próximos de pixels muito "
+"Habilita o efeito bloom, o qual ilumina os pixeis próximos de pixeis muito "
 "brilhantes. Causa um grande impacto no desempenho (padrão: desabilitado)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:226
@@ -7622,7 +7622,7 @@ msgid ""
 "enlarge the crosshair when you would hit an enemy"
 msgstr ""
 "Nenhum: não realiza testes de acerto para a mira; Mira Real: desfoca a mira "
-"quando há uma obstáculo entre a sua arma e o alvo; Inimigos: a mira também é "
+"quando há um obstáculo entre a sua arma e o alvo; Inimigos: a mira também é "
 "ampliada quando você acertaria um inimigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
@@ -7732,7 +7732,7 @@ msgstr "Distância máxima:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Decolorize:"
-msgstr "Descolorização:"
+msgstr "Descoloração:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:140
 #: qcsrc/menu/xonotic/keybinder.qc:99
@@ -8061,7 +8061,7 @@ msgid ""
 "sensitivity change)"
 msgstr ""
 "Como o zoom altera a sensibilidade, a partir do valor 0 (sensibilidade mais "
-"baixa) para 1 (sem alterações na sensibilidade)"
+"baixa) até 1 (sem alterações na sensibilidade)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "Velocity zoom"
@@ -8305,7 +8305,7 @@ msgstr "Porta UDP do cliente:"
 msgid "Force client to use chosen port unless it is set to 0"
 msgstr ""
 "Força os clientes a utilizarem as portas escolhidas a menos que esteja "
-"definido como 0 "
+"definido como 0"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
 msgid "Bandwidth:"
@@ -8453,7 +8453,7 @@ msgstr "Exibir data e hora atual"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:144
 msgid "Show current date and time of day, useful on screenshots"
-msgstr "Exibe a data e hora atual do dia, útil para screenshots"
+msgstr "Exibe a data e hora atual do dia, útil para capturas de tela"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:147
 msgid "Enable developer mode"
@@ -9025,7 +9025,7 @@ msgstr "exibir pontuações"
 
 #: qcsrc/menu/xonotic/keybinder.qc:80
 msgid "screen shot"
-msgstr "tirar screenshot"
+msgstr "tirar captura de tela"
 
 #: qcsrc/menu/xonotic/keybinder.qc:81
 msgid "maximize radar"
@@ -9037,7 +9037,7 @@ msgstr "visão em 3ª pessoa"
 
 #: qcsrc/menu/xonotic/keybinder.qc:83
 msgid "enter spectator mode"
-msgstr "entrar no modo de expectador"
+msgstr "entrar no modo de espectador"
 
 #: qcsrc/menu/xonotic/keybinder.qc:85
 msgid "Communicate"
