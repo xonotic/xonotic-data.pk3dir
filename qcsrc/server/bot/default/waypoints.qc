@@ -456,7 +456,7 @@ float waypoint_getlinearcost(float dist)
 }
 float waypoint_getlinearcost_underwater(float dist)
 {
-	// NOTE: this value is hardcoded on the engine too, see SV_WaterMove
+	// NOTE: underwater speed factor is hardcoded in the engine too, see SV_WaterMove
 	return dist / (autocvar_sv_maxspeed * 0.7);
 }
 
@@ -1355,6 +1355,8 @@ void botframe_showwaypointlinks()
 	{
 		int display_type = 0;
 		entity head = navigation_findnearestwaypoint(it, false);
+		it.nearestwaypoint = head; // mainly useful for debug
+		it.nearestwaypointtimeout = time + 2; // while I'm at it...
 		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
 			display_type = 1; // default
 		else if(head && (head.wphardwired))
