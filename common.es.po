@@ -8,15 +8,15 @@
 # Ari_tent <xonotic@outlook.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
-# starfire24680 <starfire24680@gmail.com>, 2017
+# Damian Kurek <starfire24680@gmail.com>, 2017
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
 # Simon <inactive+0000simon@transifex.com>, 2014-2015
-# starfire24680 <starfire24680@gmail.com>, 2017
-# starfire24680 <starfire24680@gmail.com>, 2017
+# Damian Kurek <starfire24680@gmail.com>, 2017
+# Damian Kurek <starfire24680@gmail.com>, 2017
 # Vitama Piru Leta <vitamanrules@gmail.com>, 2017
 # Ari_tent <xonotic@outlook.com>, 2014
 # Yllelder, 2016
