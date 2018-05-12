@@ -551,7 +551,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 }
 
 /** engine callback */
-void URI_Get_Callback(int id, int status, string data)
+EXPORT void URI_Get_Callback(int id, int status, string data)
 {
     TC(int, id); TC(int, status);
 	if(url_URI_Get_Callback(id, status, data))

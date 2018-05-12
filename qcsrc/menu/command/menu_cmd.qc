@@ -38,7 +38,7 @@ void _dumptree_close(entity pass, entity me)
 
 float updateConwidths(float width, float height, float pixelheight);
 
-void GameCommand(string theCommand)
+EXPORT void GameCommand(string theCommand)
 {
 	int argc = tokenize_console(theCommand);
 	string ss = strtolower(argv(0));

@@ -1112,7 +1112,7 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 }
 
 /** engine callback */
-void URI_Get_Callback(float id, float status, string data)
+EXPORT void URI_Get_Callback(float id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
 	{

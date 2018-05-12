@@ -149,7 +149,7 @@ void Pause_TryPause(bool ispaused)
 	setpause(ispaused);
 }
 
-void SV_PausedTic(float elapsedtime)
+EXPORT void SV_PausedTic(float elapsedtime)
 {
 	if (!server_is_dedicated) Pause_TryPause(false);
 }

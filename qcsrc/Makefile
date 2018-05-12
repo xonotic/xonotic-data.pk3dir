@@ -57,6 +57,7 @@ QCCFLAGS ?= \
 	$(QCCFLAGS_WTFS) \
 	-flno -futf8 -fno-bail-on-werror \
 	-frelaxed-switch -freturn-assignments \
+	-fdefault-eraseable \
 	$(QCCFLAGS_EXTRA)
 
 

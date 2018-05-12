@@ -285,7 +285,7 @@ string _Nex_ExtResponseSystem_Packs;
 float _Nex_ExtResponseSystem_PacksStep;
 
 /** engine callback */
-void URI_Get_Callback(float id, float status, string data)
+EXPORT void URI_Get_Callback(float id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
 	{

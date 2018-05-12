@@ -31,10 +31,10 @@
 	#define ACCUMULATE [[accumulate]]
 #endif
 
-#ifndef QCC_SUPPORT_ERASEABLE
-	#define ERASEABLE
+#ifndef QCC_SUPPORT_NOERASE
+	#define EXPORT
 #else
-	#define ERASEABLE [[eraseable]]
+	#define EXPORT [[noerase]]
 #endif
 
 #ifndef QCC_SUPPORT_ALIAS
@@ -173,39 +173,39 @@ void make_safe_for_remove(entity this);
 
 #ifdef MENUQC
 	void _m_init();
-	void m_init() { if (_m_init) _m_init(); }
+	EXPORT void m_init() { if (_m_init) _m_init(); }
 	#define m_init _m_init
 
 	void _m_shutdown();
-	void m_shutdown() { if (_m_shutdown) _m_shutdown(); }
+	EXPORT void m_shutdown() { if (_m_shutdown) _m_shutdown(); }
 	#define m_shutdown _m_shutdown
 
 	void _m_draw(float width, float height);
-	void m_draw(float width, float height) { if (_m_draw) _m_draw(width, height); }
+	EXPORT void m_draw(float width, float height) { if (_m_draw) _m_draw(width, height); }
 	#define m_draw _m_draw
 
 	void _m_keydown(int keynr, int ascii);
-	void m_keydown(int keynr, int ascii) { if (_m_keydown) _m_keydown(keynr, ascii); }
+	EXPORT void m_keydown(int keynr, int ascii) { if (_m_keydown) _m_keydown(keynr, ascii); }
 	#define m_keydown _m_keydown
 
 	void _m_toggle(int mode);
-	void m_toggle(int mode) { if (_m_toggle) _m_toggle(mode); }
+	EXPORT void m_toggle(int mode) { if (_m_toggle) _m_toggle(mode); }
 	#define m_toggle _m_toggle
 #endif
 
 #ifdef SVQC
 	void _main();
-	void main() { if (_main) _main(); }
+	EXPORT void main() { if (_main) _main(); }
 	#define main _main
 
 	void _SV_Shutdown();
-	void SV_Shutdown() { if (_SV_Shutdown) _SV_Shutdown(); }
+	EXPORT void SV_Shutdown() { if (_SV_Shutdown) _SV_Shutdown(); }
 	#define SV_Shutdown _SV_Shutdown
 
 	void _StartFrame();
 	bool _StartFrame_init;
 	void spawnfunc_worldspawn(entity);
-	void StartFrame() {
+	EXPORT void StartFrame() {
 		if (!_StartFrame_init) {
 			_StartFrame_init = true;
 			float oldtime = time; time = 1;
@@ -217,49 +217,49 @@ void make_safe_for_remove(entity this);
 	#define StartFrame _StartFrame
 
 	void _SetNewParms();
-	void SetNewParms() { if (_SetNewParms) _SetNewParms(); }
+	EXPORT void SetNewParms() { if (_SetNewParms) _SetNewParms(); }
 	#define SetNewParms _SetNewParms
 
 	void _SetChangeParms(entity this);
-	void SetChangeParms() { ENGINE_EVENT(); if (_SetChangeParms) _SetChangeParms(this); }
+	EXPORT void SetChangeParms() { ENGINE_EVENT(); if (_SetChangeParms) _SetChangeParms(this); }
 	#define SetChangeParms _SetChangeParms
 
 #ifdef DP_EXT_PRECONNECT
 	void _ClientPreConnect(entity this);
-	void ClientPreConnect() { ENGINE_EVENT(); if (_ClientPreConnect) _ClientPreConnect(this); }
+	EXPORT void ClientPreConnect() { ENGINE_EVENT(); if (_ClientPreConnect) _ClientPreConnect(this); }
 	#define ClientPreConnect _ClientPreConnect
 #endif
 
 	void _ClientConnect(entity this);
-	void ClientConnect() { ENGINE_EVENT(); if (_ClientConnect) _ClientConnect(this); }
+	EXPORT void ClientConnect() { ENGINE_EVENT(); if (_ClientConnect) _ClientConnect(this); }
 	#define ClientConnect _ClientConnect
 
 	void _ClientDisconnect(entity this);
-	void ClientDisconnect() { ENGINE_EVENT(); if (_ClientDisconnect) _ClientDisconnect(this); }
+	EXPORT void ClientDisconnect() { ENGINE_EVENT(); if (_ClientDisconnect) _ClientDisconnect(this); }
 	#define ClientDisconnect _ClientDisconnect
 
 	void _PutClientInServer(entity this);
-	void PutClientInServer() { ENGINE_EVENT(); if (_PutClientInServer) _PutClientInServer(this); }
+	EXPORT void PutClientInServer() { ENGINE_EVENT(); if (_PutClientInServer) _PutClientInServer(this); }
 	#define PutClientInServer _PutClientInServer
 
 	void _ClientKill(entity this);
-	void ClientKill() { ENGINE_EVENT(); if (_ClientKill) _ClientKill(this); }
+	EXPORT void ClientKill() { ENGINE_EVENT(); if (_ClientKill) _ClientKill(this); }
 	#define ClientKill _ClientKill
 
 	void _PlayerPreThink(entity this);
-	void PlayerPreThink() { ENGINE_EVENT(); if (_PlayerPreThink) _PlayerPreThink(this); }
+	EXPORT void PlayerPreThink() { ENGINE_EVENT(); if (_PlayerPreThink) _PlayerPreThink(this); }
 	#define PlayerPreThink _PlayerPreThink
 
 	void _PlayerPostThink(entity this);
-	void PlayerPostThink() { ENGINE_EVENT(); if (_PlayerPostThink) _PlayerPostThink(this); }
+	EXPORT void PlayerPostThink() { ENGINE_EVENT(); if (_PlayerPostThink) _PlayerPostThink(this); }
 	#define PlayerPostThink _PlayerPostThink
 
 	void _SV_PlayerPhysics(entity this);
-	void SV_PlayerPhysics() { ENGINE_EVENT(); if (_SV_PlayerPhysics) _SV_PlayerPhysics(this); }
+	EXPORT void SV_PlayerPhysics() { ENGINE_EVENT(); if (_SV_PlayerPhysics) _SV_PlayerPhysics(this); }
 	#define SV_PlayerPhysics _SV_PlayerPhysics
 
 	void _SV_OnEntityPreSpawnFunction(entity this);
-	void SV_OnEntityPreSpawnFunction()
+	EXPORT void SV_OnEntityPreSpawnFunction()
 	{
 		ENGINE_EVENT();
 		__spawnfunc_expecting = true;
@@ -268,11 +268,11 @@ void make_safe_for_remove(entity this);
 	#define SV_OnEntityPreSpawnFunction _SV_OnEntityPreSpawnFunction
 
 	void _SV_ChangeTeam(entity this, int _color);
-	void SV_ChangeTeam(int _color) { ENGINE_EVENT(); if (_SV_ChangeTeam) _SV_ChangeTeam(this, _color); }
+	EXPORT void SV_ChangeTeam(int _color) { ENGINE_EVENT(); if (_SV_ChangeTeam) _SV_ChangeTeam(this, _color); }
 	#define SV_ChangeTeam _SV_ChangeTeam
 
 	void _SV_ParseClientCommand(entity this, string command);
-	void SV_ParseClientCommand(string command)
+	EXPORT void SV_ParseClientCommand(string command)
 	{
 		ENGINE_EVENT();
 		if (_SV_ParseClientCommand) _SV_ParseClientCommand(this, command);
@@ -282,34 +282,34 @@ void make_safe_for_remove(entity this);
 
 #ifdef CSQC
 	void _CSQC_Init();
-	void CSQC_Init() { if (_CSQC_Init) _CSQC_Init(); }
+	EXPORT void CSQC_Init() { if (_CSQC_Init) _CSQC_Init(); }
 	#define CSQC_Init _CSQC_Init
 
 	void _CSQC_Shutdown();
-	void CSQC_Shutdown() { if (_CSQC_Shutdown) _CSQC_Shutdown(); }
+	EXPORT void CSQC_Shutdown() { if (_CSQC_Shutdown) _CSQC_Shutdown(); }
 	#define CSQC_Shutdown _CSQC_Shutdown
 
 	void _CSQC_UpdateView(entity this, float w, float h);
-	void CSQC_UpdateView(float w, float h) { ENGINE_EVENT(); if (_CSQC_UpdateView) _CSQC_UpdateView(this, w, h); }
+	EXPORT void CSQC_UpdateView(float w, float h) { ENGINE_EVENT(); if (_CSQC_UpdateView) _CSQC_UpdateView(this, w, h); }
 	#define CSQC_UpdateView _CSQC_UpdateView
 
 	bool _CSQC_InputEvent(int inputType, float nPrimary, float nSecondary);
-	bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
+	EXPORT bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 	{
 		return _CSQC_InputEvent ? _CSQC_InputEvent(inputType, nPrimary, nSecondary) : false;
 	}
 	#define CSQC_InputEvent _CSQC_InputEvent
 
 	bool _CSQC_ConsoleCommand(string s);
-	bool CSQC_ConsoleCommand(string s) { return _CSQC_ConsoleCommand ? _CSQC_ConsoleCommand(s) : false; }
+	EXPORT bool CSQC_ConsoleCommand(string s) { return _CSQC_ConsoleCommand ? _CSQC_ConsoleCommand(s) : false; }
 	#define CSQC_ConsoleCommand _CSQC_ConsoleCommand
 
 	void _CSQC_Ent_Update(entity this, bool isNew);
-	void CSQC_Ent_Update(bool isNew) { ENGINE_EVENT(); if (_CSQC_Ent_Update) _CSQC_Ent_Update(this, isNew); }
+	EXPORT void CSQC_Ent_Update(bool isNew) { ENGINE_EVENT(); if (_CSQC_Ent_Update) _CSQC_Ent_Update(this, isNew); }
 	#define CSQC_Ent_Update _CSQC_Ent_Update
 
 	void _CSQC_Ent_Remove(entity this);
-	void CSQC_Ent_Remove() { ENGINE_EVENT(); if (_CSQC_Ent_Remove) _CSQC_Ent_Remove(this); }
+	EXPORT void CSQC_Ent_Remove() { ENGINE_EVENT(); if (_CSQC_Ent_Remove) _CSQC_Ent_Remove(this); }
 	#define CSQC_Ent_Remove _CSQC_Ent_Remove
 #endif
 #undef ENGINE_EVENT

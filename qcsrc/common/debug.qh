@@ -458,7 +458,6 @@ NET_HANDLE(debug_text_3d, bool is_new) {
 #define debug_text_3d_4(pos, msg, align, dur) debug_text_3d_5(pos, msg, align, dur, stov(cvar_string("debug_text_3d_default_velocity")))
 #define debug_text_3d_5(pos, msg, align, dur, vel) debug_text_3d_fn(pos, msg, align, dur, vel)
 
-ERASEABLE
 void debug_text_3d_fn(vector pos, string msg, float align, float duration, vector vel) {
 	WriteHeader(MSG_BROADCAST, debug_text_3d);
 	WriteVector(MSG_BROADCAST, pos);

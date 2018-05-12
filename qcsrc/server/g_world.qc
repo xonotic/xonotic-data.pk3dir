@@ -2053,7 +2053,7 @@ void Physics_Frame()
 }
 
 void systems_update();
-void EndFrame()
+EXPORT void EndFrame()
 {
 	anticheat_endframe();
 
@@ -2143,7 +2143,7 @@ float RedirectionThink()
 }
 
 void TargetMusic_RestoreGame();
-void RestoreGame()
+EXPORT void RestoreGame()
 {
 	// Loaded from a save game
 	// some things then break, so let's work around them...

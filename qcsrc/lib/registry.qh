@@ -146,9 +146,7 @@ REGISTRY(Registries, BITS(8))
 
 #define REGISTRY_HASH(id) Registry_hash_##id
 
-ERASEABLE
 ACCUMULATE void Registry_check(string r, string server) { }
-ERASEABLE
 ACCUMULATE void Registry_send_all() { }
 
 #ifdef SVQC

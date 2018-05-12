@@ -898,20 +898,20 @@ void Gamemode_Init()
 	}
 }
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
-void CSQC_Parse_StuffCmd(string strMessage)
+EXPORT void CSQC_Parse_StuffCmd(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")", strMessage);
 	localcmd(strMessage);
 }
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
-void CSQC_Parse_Print(string strMessage)
+EXPORT void CSQC_Parse_Print(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")", strMessage);
 	print(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
-void CSQC_Parse_CenterPrint(string strMessage)
+EXPORT void CSQC_Parse_CenterPrint(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
 	centerprint_hud(strMessage);
@@ -920,7 +920,7 @@ void CSQC_Parse_CenterPrint(string strMessage)
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
-bool CSQC_Parse_TempEntity()
+EXPORT bool CSQC_Parse_TempEntity()
 {
 	// Acquire TE ID
 	int nTEID = ReadByte();

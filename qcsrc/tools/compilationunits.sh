@@ -38,11 +38,13 @@ QCCDEFS="${QCCDEFS[@]}"
 
 declare -a QCCFLAGS=(
     -std=gmqcc
-    -Wall -Werror
-    -futf8
-    -freturn-assignments
-    -frelaxed-switch
     -Ooverlap-locals
+    -Werror
+    -Wall
+    -futf8
+    -frelaxed-switch
+    -freturn-assignments
+    -fdefault-eraseable
 )
 declare -a NOWARN=(
     -Wno-field-redeclared

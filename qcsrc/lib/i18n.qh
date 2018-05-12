@@ -10,7 +10,6 @@ string prvm_language;
 /**
  * @deprecated prefer _("translated")
  */
-ERASEABLE
 string language_filename(string s)
 {
 	string fn = prvm_language;
@@ -41,7 +40,6 @@ string language_filename(string s)
 	}
 #endif
 
-ERASEABLE
 string CTX(string s)
 {
 #if CTX_CACHE

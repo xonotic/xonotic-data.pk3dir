@@ -8,13 +8,11 @@ classfield(Noise).float noise_paccum2;
 classfield(Noise).float noise_paccum3;
 classfield(Noise).float noise_bstate;
 
-ERASEABLE
 float Noise_Brown(entity e, float dt)
 {
 	e.noise_baccum += random() * sqrt(dt);  // same stddev for all dt
 	return e.noise_baccum;
 }
-ERASEABLE
 float Noise_Pink(entity e, float dt)
 {
 	float f;
@@ -25,13 +23,11 @@ float Noise_Pink(entity e, float dt)
 	if (random() > (0.9613 ** f)) e.noise_paccum3 = 0.43488 * (2 * random() - 1);
 	return e.noise_paccum + e.noise_paccum2 + e.noise_paccum3;
 }
-ERASEABLE
 float Noise_White(entity e, float dt)
 {
 	return random() * 2 - 1;
 }
 /** +1 or -1 */
-ERASEABLE
 float Noise_Burst(entity e, float dt, float p)
 {
 	if (random() > (p ** dt)) e.noise_bstate = !e.noise_bstate;

@@ -128,7 +128,7 @@ float IsServerInList(string list, string srv);
 entity RetrieveCategoryEnt(float catnum);
 
 float CheckCategoryOverride(float cat);
-float m_gethostcachecategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
+EXPORT float m_gethostcachecategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
 
 
 // fields for category entities

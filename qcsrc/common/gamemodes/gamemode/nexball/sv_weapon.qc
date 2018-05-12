@@ -44,7 +44,7 @@ METHOD(BallStealer, wr_setup, void(BallStealer this, entity actor, .entity weapo
 
 METHOD(BallStealer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    TC(BallStealer, this);
+    TC(BallStealer, thiswep);
 }
 
 METHOD(BallStealer, wr_checkammo1, bool(BallStealer this, entity actor, .entity weaponentity))

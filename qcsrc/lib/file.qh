@@ -1,6 +1,5 @@
 #pragma once
 
-ERASEABLE
 bool fexists(string f)
 {
 	int fh = fopen(f, FILE_READ);

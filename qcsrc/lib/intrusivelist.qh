@@ -4,11 +4,8 @@
 
 const int IL_MAX = 128;
 
-ERASEABLE
 void IL_INIT(entity this);
-ERASEABLE
 void IL_DTOR(entity this);
-ERASEABLE
 void IL_ENDFRAME();
 
 /**
@@ -40,7 +37,6 @@ ENDCLASS(IntrusiveList)
 #define IL_LAST(this) (this.il_tail)
 #define IL_PEEK(this) (this.il_tail)
 
-ERASEABLE
 bool IL_CONTAINS(IntrusiveList this, entity it)
 {
 	assert(this, return false);
@@ -50,7 +46,6 @@ bool IL_CONTAINS(IntrusiveList this, entity it)
 /**
  * Push to tail
  */
-ERASEABLE
 entity IL_PUSH(IntrusiveList this, entity it)
 {
 	assert(this, return NULL);
@@ -69,7 +64,6 @@ entity IL_PUSH(IntrusiveList this, entity it)
 /**
  * Push to head
  */
-ERASEABLE
 entity IL_UNSHIFT(IntrusiveList this, entity it)
 {
 	assert(this, return NULL);
@@ -88,7 +82,6 @@ entity IL_UNSHIFT(IntrusiveList this, entity it)
 /**
  * Pop from tail
  */
-ERASEABLE
 entity IL_POP(IntrusiveList this)
 {
 	assert(this, return NULL);
@@ -106,7 +99,6 @@ entity IL_POP(IntrusiveList this)
 /**
  * Pop from head
  */
-ERASEABLE
 entity IL_SHIFT(IntrusiveList this)
 {
 	assert(this, return NULL);
@@ -124,7 +116,6 @@ entity IL_SHIFT(IntrusiveList this)
 /**
  * Remove any element, anywhere in the list
  */
-ERASEABLE
 void IL_REMOVE(IntrusiveList this, entity it)
 {
 	assert(this, return);
@@ -189,7 +180,6 @@ int il_links_ptr;
 
 #define IL_LISTS_PER_BIT IL_CEIL(IL_MAX / (3 * 24))
 
-ERASEABLE
 void IL_INIT(IntrusiveList this)
 {
 	.entity nextfld, prevfld;
@@ -218,14 +208,12 @@ void IL_INIT(IntrusiveList this)
 	LOG_WARNF("IntrusiveList overflow");
 }
 
-ERASEABLE
 void IL_DTOR(IntrusiveList this)
 {
 	IL_CLEAR(this);
 	il_links[this.il_id] = NULL;
 }
 
-ERASEABLE
 void IL_ENDFRAME()
 {
 #if 0
@@ -245,7 +233,6 @@ void IL_ENDFRAME()
 #endif
 }
 
-ERASEABLE
 void ONREMOVE(entity this)
 {
 	if (this.il_lists) {

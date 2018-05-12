@@ -520,7 +520,7 @@ void LocalCommand_macro_write_aliases(int fh)
 // =========================================
 // If this function exists, client code handles gamecommand instead of the engine code.
 
-void GameCommand(string command)
+EXPORT void GameCommand(string command)
 {
 	int argc = tokenize_console(command);
 

@@ -1,7 +1,7 @@
 #pragma once
 
 /** If this global exists, only functions with spawnfunc_ name prefix qualify as spawn functions */
-noref bool require_spawnfunc_prefix;
+EXPORT noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
 
 // Optional type checking; increases compile time too much to be enabled by default
@@ -86,7 +86,7 @@ noref bool require_spawnfunc_prefix;
 	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
 	#define spawnfunc_2(id, whitelist) \
 		void __spawnfunc_##id(entity this); \
-		ACCUMULATE void spawnfunc_##id(entity this) \
+		EXPORT ACCUMULATE void spawnfunc_##id(entity this) \
 		{ \
 		    if (!__spawnfunc_first) { \
                 __spawnfunc_first = true; \

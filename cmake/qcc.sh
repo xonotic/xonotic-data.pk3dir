@@ -23,6 +23,7 @@ case $1 in
         -Wno-field-redeclared \
         -flno -futf8 -fno-bail-on-werror \
         -frelaxed-switch -freturn-assignments \
+        -fdefault-eraseable \
         ${@:2}
     ;;
 esac

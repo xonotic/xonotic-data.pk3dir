@@ -12,9 +12,9 @@
 	#endif
 #endif
 
-#ifndef QCC_SUPPORT_ERASEABLE
+#ifndef QCC_SUPPORT_NOERASE
 	#ifdef GMQCC
-		#define QCC_SUPPORT_ERASEABLE
+		#define QCC_SUPPORT_NOERASE
 	#endif
 #endif
 

@@ -309,8 +309,8 @@ STATIC_INIT(RegisterClasses)
 	#define DEBUG_STUFF(cname)
 #else
 	#define DEBUG_STUFF(cname) \
-		ERASEABLE bool is_##cname(entity e) { return e.instanceOf##cname; } \
-		ERASEABLE void isnt_##cname(entity e) { eprint(e); }
+		bool is_##cname(entity e) { return e.instanceOf##cname; } \
+		void isnt_##cname(entity e) { eprint(e); }
 #endif
 
 #define METHOD_REFERENCE(cname, name) \

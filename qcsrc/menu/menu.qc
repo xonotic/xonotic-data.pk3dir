@@ -223,7 +223,7 @@ void m_init_delayed()
 	if (Menu_Active) m_display();  // delayed menu display
 }
 
-void m_keyup(float key, float ascii)
+EXPORT void m_keyup(float key, float ascii)
 {
 	if (!menuInitialized) return;
 	if (!Menu_Active) return;
