@@ -16,7 +16,7 @@
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
 # Simon <inactive+0000simon@transifex.com>, 2014-2015
 # starfire24680 <starfire24680@gmail.com>, 2018
-# starfire24680 <starfire24680@gmail.com>, 2017
+# starfire24680 <starfire24680@gmail.com>, 2017-2018
 # starfire24680 <starfire24680@gmail.com>, 2017
 # Vitama Piru Leta <vitamanrules@gmail.com>, 2017
 # Ari_tent <xonotic@outlook.com>, 2014

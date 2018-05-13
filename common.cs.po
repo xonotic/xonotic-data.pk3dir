@@ -6,15 +6,15 @@
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # NONE <nechtom@gmail.com>, 2015
-# Tomáš Volavka <czheron@gmail.com>, 2015
+# Tomáš Volavka <czheron@gmail.com>, 2015,2018
 # Tomáš Volavka <czheron@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-09-19 23:01+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-05-12 12:20+0000\n"
+"Last-Translator: Tomáš Volavka <czheron@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -59,7 +59,7 @@ msgstr "^1Stiskni ^3%s^1 pro sledování"
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr ""
+msgstr "primární střelba"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
@@ -69,12 +69,12 @@ msgstr "^1Stiskni ^3%s^1 nebo ^3%s^1 pro dalšího nebo předchozího hráče"
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "další zbraň"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "předchozí zbraň"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -94,7 +94,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr ""
+msgstr "sekundární střelba"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
