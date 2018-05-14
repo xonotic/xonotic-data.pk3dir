@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-05-12 12:20+0000\n"
+"PO-Revision-Date: 2018-05-13 08:23+0000\n"
 "Last-Translator: Tomáš Volavka <czheron@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
@@ -31,7 +31,7 @@ msgstr "^2Úspěšně exportováno do %s! (Pozn.: Uloženo v data/data/)\n"
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^1Couldn't write to %s\n"
-msgstr ""
+msgstr "^1Nelze zapisovat do %s\n"
 
 #: qcsrc/client/hud/panel/chat.qc:82
 msgid "^3Player^7: This is the chat area."
@@ -84,12 +84,12 @@ msgstr "^1Použij ^3%s^1 nebo ^3%s^1 pro změnu rychlosti"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Stskni ^3%s^1 pro sledování, ^3%s^1 pro změnu kamery"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:192
 msgid "drop weapon"
-msgstr ""
+msgstr "odhodit zbraň"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
@@ -123,7 +123,7 @@ msgstr "^1Stiskni ^3%s^1 pro připojení"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "skok"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
