@@ -7,7 +7,7 @@ WORKDIR ?= ../.tmp
 QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='~')
 VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
 NDEBUG ?= 1
-XONOTIC ?= 1
+XONOTIC ?= 0
 ENABLE_EFFECTINFO ?= 0
 ENABLE_DEBUGDRAW ?= 0
 ENABLE_DEBUGTRACE ?= 0
@@ -52,7 +52,6 @@ QCCFLAGS ?= \
 	-std=gmqcc \
 	-Ooverlap-locals \
 	-O3 \
-	$(QCCFLAGS_WERROR) \
 	-Wall \
 	$(QCCFLAGS_WTFS) \
 	-flno -futf8 -fno-bail-on-werror \

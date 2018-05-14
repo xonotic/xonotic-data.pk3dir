@@ -2,4 +2,12 @@
 
 #include "lib.qh"
 
+REGISTER_NET_LINKED(ENT_OBJECT);
+
+#define serialize_ENT_OBJECT(stream, this) \
+	MACRO_BEGIN \
+	serialize_vector(stream, this.origin); \
+	serialize_vector(stream, this.angles); \
+	MACRO_END
+
 void systems_update();

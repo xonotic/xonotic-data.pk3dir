@@ -1,3 +1,6 @@
 #pragma once
 
 EVENT(phys_land, (entity this));
+
+EVENT(phys_stepfall, (entity this));
+EVENT(phys_stepland, (entity this));

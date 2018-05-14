@@ -1,5 +1,6 @@
 #include "physics.qh"
 
+#if XONOTIC
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
@@ -121,3 +122,4 @@ STATIC_INIT(sys_phys)
 	entity listener = new_pure(sys_phys);
 	subscribe(listener, phys_land, sys_phys_land);
 }
+#endif

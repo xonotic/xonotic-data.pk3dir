@@ -24,3 +24,9 @@ COMPONENT(phys);
 .bool com_phys_water;
 .bool com_phys_friction_air;
 .bool move_qcphysics;
+
+.bool com_phys_nogravityonground;
+.float com_phys_stepheight;
+.float com_phys_jumpvel;
+.float com_phys_bounce;
+.bool com_phys_noclip;

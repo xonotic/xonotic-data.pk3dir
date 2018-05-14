@@ -1,5 +1,6 @@
 #include "physics.qh"
 
+#if XONOTIC
 void sys_phys_fix(entity this, float dt)
 {
 	this.team = myteam + 1; // is this correct?
@@ -26,3 +27,4 @@ void sys_phys_pregame_hold(entity this) {}
 void sys_phys_spectator_control(entity this) {}
 
 void sys_phys_fixspeed(entity this, float maxspeed_mod) {}
+#endif

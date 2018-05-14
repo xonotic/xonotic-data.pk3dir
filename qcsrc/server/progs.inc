@@ -14,8 +14,8 @@
 #include <lib/warpzone/server.qc>
 #include <lib/warpzone/util_server.qc>
 
-#include <ecs/_mod.inc>
 #endif
+#include <ecs/_mod.inc>
 
 #ifdef BUILD_MOD
 #include <mod/server/progs.inc>
