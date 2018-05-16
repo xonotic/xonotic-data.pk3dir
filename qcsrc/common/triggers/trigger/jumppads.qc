@@ -388,6 +388,8 @@ bool trigger_push_test(entity this, entity item)
 				vector flatdir = normalize(dist - eZ * dist.z);
 				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmax.y - this.absmin.y));
 				new_org = org + ofs;
+
+				LABEL(new_test)
 				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
 				if (item)
 				{
@@ -410,28 +412,10 @@ bool trigger_push_test(entity this, entity item)
 						valid_best_target = true;
 					}
 				}
-				new_org = org - ofs;
-				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
-				if (item)
+				if (ofs && new_org != org - ofs)
 				{
-					if (!trigger_push_testorigin_for_item(e, item, new_org))
-					{
-						delete(e);
-						return false;
-					}
-				}
-				else
-				{
-					vel = e.velocity;
-					if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
-						e.velocity = autocvar_sv_maxspeed * flatdir;
-					if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
-					{
-						best_target = trace_endpos;
-						best_org = new_org;
-						best_vel = vel;
-						valid_best_target = true;
-					}
+					new_org = org - ofs;
+					goto new_test;
 				}
 			}
 
