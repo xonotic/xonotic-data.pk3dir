@@ -422,7 +422,8 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor, EV_PlayerDamage_SplitHealthArmor
     /** mirrordamage    */ i(float,  MUTATOR_ARGV_5_float) \
     /** mirrordamage 	*/ o(float,  MUTATOR_ARGV_5_float) \
     /** force           */ i(vector, MUTATOR_ARGV_6_vector) \
-    /** force 			*/ o(vector, MUTATOR_ARGV_6_vector) \
+    /** force           */ o(vector, MUTATOR_ARGV_6_vector) \
+    /** weapon entity 	*/ i(entity, MUTATOR_ARGV_7_entity) \
     /**/
 MUTATOR_HOOKABLE(Damage_Calculate, EV_Damage_Calculate);
 

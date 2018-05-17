@@ -664,58 +664,19 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 }
 
-/** print(), but only print if the server is not local */
-void dedicated_print(string input)
+bool MoveToTeam(entity client, int team_colour, int type)
 {
-	if (server_is_dedicated) print(input);
-}
-
-void PrintToChat(entity player, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	sprint(player, text);
-}
-
-void DebugPrintToChat(entity player, string text)
-{
-	if (autocvar_developer)
+	int lockteams_backup = lockteams;  // backup any team lock
+	lockteams = 0;  // disable locked teams
+	TeamchangeFrags(client);  // move the players frags
+	if (!SetPlayerTeamSimple(client, team_colour))
 	{
-		PrintToChat(player, text);
+		return false;
 	}
-}
-
-void PrintToChatAll(string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	bprint(text);
-}
-
-void DebugPrintToChatAll(string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatAll(text);
-	}
-}
-
-void PrintToChatTeam(int teamnum, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		if (it.team == teamnum)
-		{
-			sprint(it, text);
-		}
-	});
-}
-
-void DebugPrintToChatTeam(int teamnum, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatTeam(teamnum, text);
-	}
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, DMG_NOWEP, client.origin, '0 0 0');  // kill the player
+	lockteams = lockteams_backup;  // restore the team lock
+	LogTeamchange(client.playerid, client.team, type);
+	return true;
 }
 
 /**
@@ -954,7 +915,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (privatesay && source && !IS_PLAYER(source))
 	{
 		if (!game_stopped)
-		if ((privatesay && !IS_PLAYER(privatesay)) || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+		if ((privatesay && IS_PLAYER(privatesay)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
 			ret = -1; // just hide the message completely
 	}
 

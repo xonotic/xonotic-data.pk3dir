@@ -713,7 +713,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		MUTATOR_CALLHOOK(Damage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
+		MUTATOR_CALLHOOK(Damage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force, attacker.(weaponentity));
 		damage = M_ARGV(4, float);
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);

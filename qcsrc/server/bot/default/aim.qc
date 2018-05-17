@@ -143,6 +143,8 @@ bool bot_shouldattack(entity this, entity targ)
 		return false;
 	if(targ.flags & FL_NOTARGET)
 		return false;
+	if(targ.alpha <= 0.25 && targ.alpha != 0)
+		return false; // invisible via alpha
 
 	if(MUTATOR_CALLHOOK(BotShouldAttack, this, targ))
 		return false;
