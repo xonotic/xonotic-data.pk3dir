@@ -19,6 +19,7 @@ const int NUM_JUMPPADSUSED = 3;
 void SUB_UseTargets(entity this, entity actor, entity trigger);
 void trigger_push_use(entity this, entity actor, entity trigger);
 bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vector org);
+bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector org);
 #endif
 
 /*
