@@ -6,6 +6,7 @@
 
 #include <common/items/item.qh>
 #include <common/weapons/all.qh>
+#include <common/deathtypes/all.qh>
 #include "autocvars.qh"
 #include "resources.qh"
 #include "mutators/events.qh"
