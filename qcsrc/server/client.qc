@@ -1469,6 +1469,59 @@ void respawn(entity this)
 	PutClientInServer(this);
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
+
+void PrintToChat(entity client, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	sprint(client, text);
+}
+
+void DebugPrintToChat(entity client, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChat(client, text);
+	}
+}
+
+void PrintToChatAll(string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	bprint(text);
+}
+
+void DebugPrintToChatAll(string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatAll(text);
+	}
+}
+
+void PrintToChatTeam(int team_num, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		if (it.team == team_num)
+		{
+			sprint(it, text);
+		}
+	});
+}
+
+void DebugPrintToChatTeam(int team_num, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatTeam(team_num, text);
+	}
+}
+
 void play_countdown(entity this, float finished, Sound samp)
 {
     TC(Sound, samp);
