@@ -53,7 +53,6 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 /// \brief Setups the player during spawn according to the given template.
 /// \param[in,out] player Player to setup.
 /// \param[in] template Name of the template.
-/// \return No return.
 void PlayerTemplateHook_PlayerSpawn(entity player, string template);
 
 /// \brief Forbids weapon dropping according to the given template.
@@ -76,20 +75,19 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template);
 
 /// \brief Changes the damage done using templates' attack and defense scales.
 /// \param[in] attacke Attacker entity.
-/// \param[in] attackertemplate Template of the attacker.
+/// \param[in] attacker_template Template of the attacker.
 /// \param[in] victim Victim entity.
-/// \param[in] victimtemplate Template of the victim.
-/// \param[in] deathtype Type of the damage.
+/// \param[in] victim_template Template of the victim.
+/// \param[in] death_type Type of the damage.
 /// \param[in] damage Damage to adjust.
 /// \return Adjusted damage.
 float PlayerTemplateHook_Damage_Calculate(entity attacker,
-	string attackertemplate, entity victim, string victimtemplate,
-	float deathtype, float damage);
+	string attacker_template, entity victim, string victim_template,
+	float death_type, float damage);
 
 /// \brief Strips the player of their weapons if the player is not allowed to
 /// drop them.
 /// \param[in,out] player Player to work with.
 /// \param[in] template Name of the template.
-/// \return No return.
 /// \note You must hook with CBC_ORDER_FIRST in order for this to be effective.
 void PlayerTemplateHook_PlayerDies(entity player, string template);
