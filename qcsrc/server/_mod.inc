@@ -20,7 +20,7 @@
 #include <server/miscfunctions.qc>
 #include <server/player.qc>
 #include <server/playerdemo.qc>
-#include <server/playertemplates.qc>
+#include <server/player_templates.qc>
 #include <server/portals.qc>
 #include <server/race.qc>
 #include <server/resources.qc>
