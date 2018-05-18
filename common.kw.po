@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Nicky Rowe <nicky@kernowlingo.com>, 2018
+# Nicky Rowe <nicky@kernowlingo.com>, 2016,2018
 # Nicky Rowe <nicky@kernowlingo.com>, 2016
 # Nicky Rowe <nicky@kernowlingo.com>, 2016
 msgid ""
@@ -19,8 +19,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n == 3) ? 2 : "
-"3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 ? 1: n==2 ? 2);\n"
 
 #: qcsrc/client/hud/hud_config.qc:239
 #, c-format
