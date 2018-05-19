@@ -109,10 +109,14 @@ bool IsFlying(entity a);
 #define PHYS_INPUT_BUTTON_ZOOMSCRIPT(s)     PHYS_INPUT_BUTTON_BUTTON9(s)
 #define PHYS_INPUT_BUTTON_JETPACK(s)        PHYS_INPUT_BUTTON_BUTTON10(s)
 #define PHYS_INPUT_BUTTON_DODGE(s)			PHYS_INPUT_BUTTON_BUTTON11(s)
+#define PHYS_INPUT_BUTTON_SPRINT(s)			PHYS_INPUT_BUTTON_BUTTON12(s)
 
 #ifdef CSQC
 STATIC_INIT(PHYS_INPUT_BUTTON)
 {
+	localcmd("alias +sprint +button12\n");
+	localcmd("alias -sprint -button12\n");
+
 	localcmd("alias +hook +button6\n");
 	localcmd("alias -hook -button6\n");
 

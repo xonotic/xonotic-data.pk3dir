@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(sprint, SetStartItems)
 MUTATOR_HOOKFUNCTION(sprint, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
-	if (PHYS_INPUT_BUTTON_DODGE(player))
+	if (PHYS_INPUT_BUTTON_SPRINT(player))
 	{
 		player.m_is_sprinting = true;
 	}
