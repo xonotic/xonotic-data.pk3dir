@@ -1079,11 +1079,15 @@ void havocbot_movetogoal(entity this)
 		}
 
 		dodge = havocbot_dodge(this);
-		dodge = dodge * bound(0,0.5+(skill+this.bot_dodgeskill)*0.1,1);
+		if (dodge)
+			dodge *= bound(0, 0.5 + (skill + this.bot_dodgeskill) * 0.1, 1);
 		evadelava = evadelava * bound(1,3-(skill+this.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
-		traceline(this.origin, ( ( this.enemy.absmin + this.enemy.absmax ) * 0.5 ), true, NULL);
-		if(IS_PLAYER(trace_ent))
-			dir = dir * bound(0,(skill+this.bot_dodgeskill)/7,1);
+		if (this.enemy)
+		{
+			traceline(this.origin, (this.enemy.absmin + this.enemy.absmax) * 0.5, true, NULL);
+			if (IS_PLAYER(trace_ent))
+				dir = dir * bound(0, (skill + this.bot_dodgeskill) / 7, 1);
+		}
 
 		dir = normalize(dir + dodge + evadeobstacle + evadelava);
 	//	this.bot_dodgevector = dir;
