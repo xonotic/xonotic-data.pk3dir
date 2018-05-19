@@ -1,4 +1,6 @@
-//#include <server/resources.qh>
+/// \file
+/// \brief Source file that contains implementation of Sprint mutator.
+/// \copyright GNU GPLv2 or any later version.
 
 string autocvar_g_sprint = "0"; ///< Whether to enable sprint.
 float autocvar_g_sprint_speed_multiplier; ///< Speed multiplier of sprinting.
@@ -22,7 +24,7 @@ MUTATOR_HOOKFUNCTION(sprint, BuildMutatorsPrettyString)
 
 MUTATOR_HOOKFUNCTION(sprint, BuildGameplayTipsString)
 {
-    M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3Sprint^8 is enabled, press the dodge button to sprint\n");
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3Sprint^8 is enabled, press the sprint button to sprint\n");
 }
 
 MUTATOR_HOOKFUNCTION(sprint, SetStartItems)
@@ -66,7 +68,6 @@ MUTATOR_HOOKFUNCTION(sprint, PlayerPhysics_UpdateStats)
 			player.m_is_sprinting = false;
 			return;
 		}
-		
 	}
 	if (!IS_ONGROUND(player) && !autocvar_g_sprint_in_air)
 	{
