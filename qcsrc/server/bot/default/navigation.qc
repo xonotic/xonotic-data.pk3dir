@@ -264,8 +264,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	int nav_action;
 
 	// Analyze starting point
-	traceline(start, start, MOVE_NORMAL, e);
-	if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+	if (IN_LAVA(start))
 		ignorehazards = true;
 
 	tracebox(start, m1, m2, start, MOVE_NOMONSTERS, e);
