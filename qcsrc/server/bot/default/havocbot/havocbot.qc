@@ -1069,6 +1069,18 @@ void havocbot_movetogoal(entity this)
 				if(IS_PLAYER(this.goalcurrent))
 					unreachable = true;
 			}
+
+			// slow down if bot is in the air and goal is under it
+			if (!this.goalcurrent.wphardwired
+				&& vdist(flat_diff, <, 250) && this.origin.z - destorg.z > 120
+				&& (!IS_ONGROUND(this) || vdist(vec2(this.velocity), >, maxspeed * 0.3)))
+			{
+				// tracebox wouldn't work when bot is still on the ledge
+				traceline(this.origin, this.origin - '0 0 200', true, this);
+				if (this.origin.z - trace_endpos.z > 120)
+					evadeobstacle = normalize(this.velocity) * -1;
+			}
+
 			if(unreachable)
 			{
 				navigation_clearroute(this);
