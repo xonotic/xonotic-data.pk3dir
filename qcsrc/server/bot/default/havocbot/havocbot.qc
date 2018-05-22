@@ -980,7 +980,10 @@ void havocbot_movetogoal(entity this)
 				if (trace_plane_normal.z < 0.7)
 				{
 					s = trace_fraction;
-					tracebox(this.origin + jumpstepheightvec, this.mins, this.maxs, actual_destorg + jumpstepheightvec, false, this);
+					// don't artificially reduce max jump height in real-time
+					// (jumpstepheightvec is reduced a bit to make the jumps easy in tracewalk)
+					vector jump_height = (IS_ONGROUND(this)) ? stepheightvec + jumpheight_vec : jumpstepheightvec;
+					tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
 					if (trace_fraction > s)
 						PHYS_INPUT_BUTTON_JUMP(this) = true;
 				}
