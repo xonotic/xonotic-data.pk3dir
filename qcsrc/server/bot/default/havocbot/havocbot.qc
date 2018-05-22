@@ -986,6 +986,13 @@ void havocbot_movetogoal(entity this)
 					tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
 					if (trace_fraction > s)
 						PHYS_INPUT_BUTTON_JUMP(this) = true;
+					else
+					{
+						jump_height = stepheightvec + jumpheight_vec / 2;
+						tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
+						if (trace_fraction > s)
+							PHYS_INPUT_BUTTON_JUMP(this) = true;
+					}
 				}
 			}
 
