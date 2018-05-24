@@ -948,7 +948,7 @@ void havocbot_movetogoal(entity this)
 			vector flat_diff = vec2(diff);
 			offset = max(32, vlen(vec2(this.velocity)) * cos(deviation.y * DEG2RAD) * 0.2) * flatdir;
 			vector actual_destorg = this.origin + offset;
-			if (!this.goalstack01 || this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+			if (!this.goalstack01 || this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER))
 			{
 				if (vlen2(flat_diff) < vlen2(offset))
 				{
@@ -965,9 +965,15 @@ void havocbot_movetogoal(entity this)
 			{
 				vector next_goal_org = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
 				vector next_dir = normalize(vec2(next_goal_org - destorg));
-				float next_dist = vlen(vec2(this.origin + offset - destorg));
-				actual_destorg = vec2(destorg) + next_dist * next_dir;
+				float dist = vlen(vec2(this.origin + offset - destorg));
+				// if current and next goal are close to each other make sure
+				// actual_destorg isn't set beyond next_goal_org
+				if (dist ** 2 > vlen2(vec2(next_goal_org - destorg)))
+					actual_destorg = next_goal_org;
+				else
+					actual_destorg = vec2(destorg) + dist * next_dir;
 				actual_destorg.z = this.origin.z;
+
 			}
 
 			tracebox(this.origin, this.mins, this.maxs, actual_destorg, false, this);
