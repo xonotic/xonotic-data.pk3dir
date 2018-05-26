@@ -44,7 +44,7 @@ spawnfunc(func_rain)
 	if (!this.count)
 		this.count = 2000;
 	// relative to absolute particle count
-	this.count = this.count * (this.size_x / 1024) * (this.size_y / 1024);
+	this.count = 0.1 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
 	if (this.count < 1)
 		this.count = 1;
 	if(this.count > 65535)
@@ -84,7 +84,7 @@ spawnfunc(func_snow)
 	if (!this.count)
 		this.count = 2000;
 	// relative to absolute particle count
-	this.count = this.count * (this.size_x / 1024) * (this.size_y / 1024);
+	this.count = 0.1 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
 	if (this.count < 1)
 		this.count = 1;
 	if(this.count > 65535)
