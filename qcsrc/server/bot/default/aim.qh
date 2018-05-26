@@ -59,6 +59,7 @@ vector shotdir;
 .vector lag5_vec3;
 .vector lag5_vec4;
 
+.bool bot_aimdir_executed;
 .float bot_badaimtime;
 .float bot_aimthinktime;
 .float bot_prevaimtime;

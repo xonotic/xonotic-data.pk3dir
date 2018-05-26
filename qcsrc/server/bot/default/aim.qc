@@ -180,6 +180,8 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	float dist, delta_t, blend;
 	vector desiredang, diffang;
 
+	this.bot_aimdir_executed = true;
+
 	//dprint("aim ", this.netname, ": old:", vtos(this.v_angle));
 	// make sure v_angle is sane first
 	this.v_angle_y = this.v_angle.y - floor(this.v_angle.y / 360) * 360;
