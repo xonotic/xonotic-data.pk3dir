@@ -1572,22 +1572,6 @@ void havocbot_goalrating_ctf_droppedflags(entity this, float ratingscale, vector
 	}
 }
 
-void havocbot_goalrating_ctf_carrieritems(entity this, float ratingscale, vector org, float sradius)
-{
-	IL_EACH(g_items, it.bot_pickup,
-	{
-		// gather health and armor only
-		if (it.solid)
-		if (it.health || it.armorvalue)
-		if (vdist(it.origin - org, <, sradius))
-		{
-			float t = it.bot_pickupevalfunc(this, it) * 0.0001;
-			if (t > 0)
-				navigation_routerating(this, it, t * ratingscale, 500);
-		}
-	});
-}
-
 void havocbot_ctf_reset_role(entity this)
 {
 	float cdefense, cmiddle, coffense;
@@ -1682,13 +1666,20 @@ void havocbot_role_ctf_carrier(entity this)
 	{
 		navigation_goalrating_start(this);
 
+		// role: carrier
+		entity mf = havocbot_ctf_find_flag(this);
+		vector base_org = mf.dropped_origin;
+		float base_rating = (mf.ctf_status == FLAG_BASE) ? 10000 : (vdist(this.origin - base_org, >, 100) ? 2000 : 1000);
 		if(ctf_oneflag)
-			havocbot_goalrating_ctf_enemybase(this, 50000);
+			havocbot_goalrating_ctf_enemybase(this, base_rating);
 		else
-			havocbot_goalrating_ctf_ourbase(this, 50000);
+			havocbot_goalrating_ctf_ourbase(this, base_rating);
 
-		if(this.health<100)
-			havocbot_goalrating_ctf_carrieritems(this, 1000, this.origin, 1000);
+		// start collecting items very close to the bot but only inside of own base radius
+		if (vdist(this.origin - base_org, <, havocbot_middlepoint_radius))
+			havocbot_goalrating_items(this, 15000, this.origin, min(500, havocbot_middlepoint_radius * 0.5));
+
+		havocbot_goalrating_items(this, 10000, base_org, havocbot_middlepoint_radius * 0.5);
 
 		navigation_goalrating_end(this);
 
