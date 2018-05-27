@@ -156,7 +156,7 @@ STATIC_INIT(ENT_CLIENT_ITEM_simple)
 {
 	HM_NEW(ENT_CLIENT_ITEM_simple);
 }
-SHUTDOWN(CTX_cache)
+SHUTDOWN(ENT_CLIENT_ITEM_simple)
 {
 	HM_DELETE(ENT_CLIENT_ITEM_simple);
 }
@@ -252,6 +252,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 				this.item_simple = false;
                 LOG_TRACEF("Simple item requested for %s but no model exists for it", _fn);
 			} while (0);
+			#undef tryext
+			#undef extensions
         }
 
         if(!this.item_simple)

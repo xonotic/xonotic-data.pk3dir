@@ -411,7 +411,8 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor, EV_PlayerDamage_SplitHealthArmor
     /** mirrordamage    */ i(float,  MUTATOR_ARGV_5_float) \
     /** mirrordamage 	*/ o(float,  MUTATOR_ARGV_5_float) \
     /** force           */ i(vector, MUTATOR_ARGV_6_vector) \
-    /** force 			*/ o(vector, MUTATOR_ARGV_6_vector) \
+    /** force           */ o(vector, MUTATOR_ARGV_6_vector) \
+    /** weapon entity 	*/ i(entity, MUTATOR_ARGV_7_entity) \
     /**/
 MUTATOR_HOOKABLE(Damage_Calculate, EV_Damage_Calculate);
 
@@ -1105,6 +1106,13 @@ MUTATOR_HOOKABLE(Item_ScheduleRespawn, EV_Item_ScheduleRespawn);
     /** player */             i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(PlayerPhysics_UpdateStats, EV_PlayerPhysics_UpdateStats);
+
+/** called after physics stats are set on a player, allows post-initialization modifications */
+#define EV_PlayerPhysics_PostUpdateStats(i, o) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** maxspeed_mod */       i(float, MUTATOR_ARGV_1_float) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPhysics_PostUpdateStats, EV_PlayerPhysics_PostUpdateStats);
 
 /** return true to use your own aim target (or none at all) */
 #define EV_HavocBot_Aim(i, o) \
