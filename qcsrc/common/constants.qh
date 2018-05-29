@@ -1,6 +1,6 @@
 #pragma once
 
-const int RANKINGS_CNT = 15;
+const int RANKINGS_CNT = 100;
 
 ///////////////////////////
 // keys pressed
