@@ -1576,7 +1576,6 @@ void havocbot_ctf_reset_role(entity this)
 {
 	float cdefense, cmiddle, coffense;
 	entity mf, ef;
-	float c;
 
 	if(IS_DEAD(this))
 		return;
@@ -1605,11 +1604,12 @@ void havocbot_ctf_reset_role(entity this)
 		return;
 	}
 
-	// if there is only me on the team switch to offense
-	c = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this), { ++c; });
+	// if there is no one else on the team switch to offense
+	int count = 0;
+	// don't check if this bot is a player since it isn't true when the bot is added to the server
+	FOREACH_CLIENT(it != this && IS_PLAYER(it) && SAME_TEAM(it, this), { ++count; });
 
-	if(c==1)
+	if (count == 0)
 	{
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_OFFENSE);
 		return;
