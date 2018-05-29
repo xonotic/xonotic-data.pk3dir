@@ -540,8 +540,8 @@ void havocbot_movetogoal(entity this)
 		if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 		{
 			this.aistatus |= AI_STATUS_OUT_JUMPPAD;
-			navigation_poptouchedgoals(this);
-			return;
+			if(navigation_poptouchedgoals(this))
+				return;
 		}
 		else if(this.aistatus & AI_STATUS_OUT_JUMPPAD)
 		{
@@ -849,11 +849,14 @@ void havocbot_movetogoal(entity this)
 
 	bool bunnyhop_forbidden = false;
 	vector destorg = get_closer_dest(this.goalcurrent, this.origin);
-
-	// in case bot ends up inside the teleport waypoint without touching
-	// the teleport itself, head to the teleport origin
-	if(this.goalcurrent.wpisbox && boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin + eZ * this.mins.z, this.origin + eZ * this.maxs.z))
+	if (this.jumppadcount && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
+		// if bot used the jumppad, push towards jumppad origin until jumppad waypoint gets removed
+		destorg = this.goalcurrent.origin;
+	}
+	else if (this.goalcurrent.wpisbox && boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin + eZ * this.mins.z, this.origin + eZ * this.maxs.z))
+	{
+		// if bot is inside the teleport waypoint, head to teleport origin until teleport gets used
 		bunnyhop_forbidden = true;
 		destorg = this.goalcurrent.origin;
 		if(destorg.z > this.origin.z)

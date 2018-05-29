@@ -1599,6 +1599,16 @@ int navigation_poptouchedgoals(entity this)
 				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			}
+			if(this.jumppadcount)
+			{
+				// remove jumppad waypoint after a random delay to prevent bots getting
+				// stuck on certain jumppads that require an extra initial horizontal speed
+				float max_delay = 0.1;
+				if (vdist(vec2(this.velocity), >, 2 * autocvar_sv_maxspeed))
+					max_delay = 0.05;
+				if (time - this.lastteleporttime < random() * max_delay)
+					return removed_goals;
+			}
 			navigation_poproute(this);
 			this.lastteleporttime = 0;
 			++removed_goals;
