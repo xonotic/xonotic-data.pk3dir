@@ -1821,13 +1821,6 @@ void havocbot_role_ctf_offense(entity this)
 		}
 	}
 
-	// About to fail, switch to middlefield
-	if(this.health<50)
-	{
-		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_MIDDLE);
-		return;
-	}
-
 	// Set the role timeout if necessary
 	if (!this.havocbot_role_timeout)
 		this.havocbot_role_timeout = time + 120;
@@ -1842,10 +1835,10 @@ void havocbot_role_ctf_offense(entity this)
 	{
 		navigation_goalrating_start(this);
 
-		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
-		havocbot_goalrating_ctf_enemybase(this, 20000);
-		havocbot_goalrating_items(this, 5000, this.origin, 1000);
-		havocbot_goalrating_items(this, 1000, this.origin, 10000);
+		// role: offense
+		havocbot_goalrating_ctf_ourstolenflag(this, 10000);
+		havocbot_goalrating_ctf_enemybase(this, 10000);
+		havocbot_goalrating_items(this, 22000, this.origin, 10000);
 
 		navigation_goalrating_end(this);
 
