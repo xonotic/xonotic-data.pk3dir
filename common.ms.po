@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-05-27 18:08+0000\n"
+"PO-Revision-Date: 2018-05-29 04:59+0000\n"
 "Last-Translator: Muhammad Nur Hidayat Yasuyoshi <mnh48mail@gmail.com>\n"
 "Language-Team: Malay (http://www.transifex.com/team-xonotic/xonotic/language/"
 "ms/)\n"
@@ -492,21 +492,21 @@ msgstr ""
 #: qcsrc/client/hud/panel/racetimer.qc:37
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr " (-%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:42
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 msgid "Start line"
-msgstr ""
+msgstr "Garisan pemula"
 
 #: qcsrc/client/hud/panel/racetimer.qc:63
 #: qcsrc/client/hud/panel/racetimer.qc:67
 msgid "Finish line"
-msgstr ""
+msgstr "Garisan penamat"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -677,18 +677,20 @@ msgstr ""
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
+"Anda boleh mengubah papan markah menggunakan perintah "
+"^2scoreboard_columns_set .\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:296
 msgid "^3|---------------------------------------------------------------|\n"
-msgstr ""
+msgstr "^3|---------------------------------------------------------------|\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:297
 msgid "Usage:\n"
-msgstr ""
+msgstr "Kegunaan:\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:298
 msgid "^2scoreboard_columns_set default\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set default\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:299
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
@@ -879,117 +881,117 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:208
 msgid "N/A"
-msgstr ""
+msgstr "Tiada"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1156
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "Statistik ketepatan (puratanya %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1295
 msgid "Map stats:"
-msgstr ""
+msgstr "Statistik peta:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1325
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Raksasa dibunuh:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1332
 msgid "Secrets found:"
-msgstr ""
+msgstr "Rahsia dijumpai:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Kedudukan masa tangkapan"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Rankings"
-msgstr ""
+msgstr "Kedudukan"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1519
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
-msgstr ""
+msgstr "Papan markah"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Anugerah kelajuan: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1588
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Terlaju sepanjang masa: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1604
 #, c-format
 msgid "Spectators"
-msgstr ""
+msgstr "Penonton"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1619
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
-msgstr ""
+msgstr "bermain ^3%s^7 di ^2%s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1626
 #: qcsrc/client/hud/panel/scoreboard.qc:1631
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr ""
+msgstr " sehingga ^1%1.0f minit^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1635
 #: qcsrc/client/hud/panel/scoreboard.qc:1654
 msgid " or"
-msgstr ""
+msgstr "atau"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1638
 #: qcsrc/client/hud/panel/scoreboard.qc:1645
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr ""
+msgstr " sehingga ^3%s %s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1639
 #: qcsrc/client/hud/panel/scoreboard.qc:1646
 #: qcsrc/client/hud/panel/scoreboard.qc:1658
 #: qcsrc/client/hud/panel/scoreboard.qc:1665
 msgid "SCO^points"
-msgstr ""
+msgstr "SCO^mata"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1640
 #: qcsrc/client/hud/panel/scoreboard.qc:1647
 #: qcsrc/client/hud/panel/scoreboard.qc:1659
 #: qcsrc/client/hud/panel/scoreboard.qc:1666
 msgid "SCO^is beaten"
-msgstr ""
+msgstr "SCO^dikalahkan"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1657
 #: qcsrc/client/hud/panel/scoreboard.qc:1664
 #, c-format
 msgid " until a lead of ^3%s %s^7"
-msgstr ""
+msgstr " sehingga pimpinan ^3%s %s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1688
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr ""
+msgstr "^1Lahir semula dalam ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1698
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Anda dah mati, tunggu ^3%s^7 sebelum lahir semula"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1707
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Anda dah mati, tekan ^2%s^7 untuk lahir semula"
 
 #: qcsrc/client/hud/panel/vote.qc:24
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr ""
+msgstr "^1Anda mesti jawab sebelum memasuki mod susunan hud\n"
 
 #: qcsrc/client/hud/panel/vote.qc:29
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2Nama ^7menggantikan \"^1Pemain tidak bernama^7\" dalam statistik"
 
 #: qcsrc/client/hud/panel/vote.qc:115
 msgid "A vote has been called for:"
@@ -997,11 +999,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:117
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Benarkan pelayan untuk menyimpan dan memaparkan nama anda?"
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Susun HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:125 qcsrc/menu/xonotic/dialog_firstrun.qc:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
@@ -1011,7 +1013,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Ya"
 
 #: qcsrc/client/hud/panel/vote.qc:127 qcsrc/menu/xonotic/dialog_firstrun.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1021,39 +1023,39 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Tidak"
 
 #: qcsrc/client/hud/panel/weapons.qc:530
 msgid "Out of ammo"
-msgstr ""
+msgstr "Kehabisan peluru"
 
 #: qcsrc/client/hud/panel/weapons.qc:534
 msgid "Don't have"
-msgstr ""
+msgstr "Tiada"
 
 #: qcsrc/client/hud/panel/weapons.qc:538
 msgid "Unavailable"
-msgstr ""
+msgstr "Tak wujud"
 
 #: qcsrc/client/main.qc:1014
 msgid " qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: qcsrc/client/main.qc:1016
 msgid " m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/client/main.qc:1018
 msgid " km/h"
-msgstr ""
+msgstr "km/j"
 
 #: qcsrc/client/main.qc:1020
 msgid " mph"
-msgstr ""
+msgstr "b/j"
 
 #: qcsrc/client/main.qc:1022
 msgid " knots"
-msgstr ""
+msgstr "knot"
 
 #: qcsrc/client/main.qc:1264
 #, c-format
@@ -1062,34 +1064,35 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:49
 msgid " (1 vote)"
-msgstr ""
+msgstr "(1 undi)"
 
 #: qcsrc/client/mapvoting.qc:51
 #, c-format
 msgid " (%d votes)"
-msgstr ""
+msgstr " (%d undi)"
 
 #: qcsrc/client/mapvoting.qc:271
 msgid "Don't care"
-msgstr ""
+msgstr "Tak kisah"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Decide the gametype"
-msgstr ""
+msgstr "Tentukan jenis permainan"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Vote for a map"
-msgstr ""
+msgstr "Undi peta"
 
 #: qcsrc/client/mapvoting.qc:382
 #, c-format
 msgid "%d seconds left"
-msgstr ""
+msgstr "Tinggal %d saat"
 
 #: qcsrc/client/mapvoting.qc:497
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
 msgstr ""
+"mv_mapdownload: ^3Anda tidak patut guna perintah ini dengan sendirinya!\n"
 
 #: qcsrc/client/mapvoting.qc:507
 msgid "^1Error:^7 Couldn't find pak index.\n"
@@ -1097,7 +1100,7 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:516
 msgid "Requesting preview...\n"
-msgstr ""
+msgstr "Meminta pratonton...\n"
 
 #: qcsrc/client/miscfunctions.qc:109
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1166,103 +1169,110 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Deathmatch"
-msgstr ""
+msgstr "Kalah Mati"
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Score as many frags as you can"
-msgstr ""
+msgstr "Dominasi kawasan sebanyak mana yang anda boleh"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Last Man Standing"
-msgstr ""
+msgstr "Orang Terakhir Berdiri"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Survive and kill until the enemies have no lives left"
-msgstr ""
+msgstr "Kekal hidup dan bunuh semua musuh sehingga mereka kehabisan nyawa"
 
 #: qcsrc/common/mapinfo.qh:126
 msgid "Race"
-msgstr ""
+msgstr "Lumba"
 
 #: qcsrc/common/mapinfo.qh:126
 msgid "Race against other players to the finish line"
-msgstr ""
+msgstr "Berlumba dengan pemain lain ke garisan penamat"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race CTS"
-msgstr ""
+msgstr "Lumba CTS"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race for fastest time."
-msgstr ""
+msgstr "Lumba untuk masa terpantas."
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Help your team score the most frags against the enemy team"
 msgstr ""
+"Bantu pasukan anda untuk mendominasi kebanyakan kawasan berbanding pasukan "
+"lawan"
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Team Deathmatch"
-msgstr ""
+msgstr "Kalah Mati Berpasukan"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid "Capture the Flag"
-msgstr ""
+msgstr "Curi Bendera"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Cari dan bawa balik bendera musuh ke tapak anda, pertahankan tapak anda "
+"daripada pasukan lain"
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Clan Arena"
-msgstr ""
+msgstr "Arena Suku"
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "Bunuh semua ahli pasukan musuh untuk memenangi pusingan tersebut"
 
 #: qcsrc/common/mapinfo.qh:287
 msgid "Capture and defend all the control points to win"
-msgstr ""
+msgstr "Ambil alih dan pertahankan semua titik kawalan untuk menang"
 
 #: qcsrc/common/mapinfo.qh:287
 msgid "Domination"
-msgstr ""
+msgstr "Dominasi"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Gather all the keys to win the round"
-msgstr ""
+msgstr "Kumpul semua kunci untuk memenangi pusingan"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Key Hunt"
-msgstr ""
+msgstr "Pencarian Kunci"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid "Assault"
-msgstr ""
+msgstr "Serangan"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
+"Musnahkan halangan untuk mencari dan memusnahkan teras kuasa musuh sebelum "
+"masa tamat"
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Capture control points to reach and destroy the enemy generator"
 msgstr ""
+"Ambil alih titik kawalan untuk sampai ke dan musnahkan penjana kuasa musuh"
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Onslaught"
-msgstr ""
+msgstr "Serangan Hebat"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Nexball"
-msgstr ""
+msgstr "Bola Nex"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
-msgstr ""
+msgstr "Tembak dan tendang bola ke dalam gol musuh, biar kosong gol anda"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid "Freeze Tag"
