@@ -267,8 +267,7 @@ void setZonedTooltip(entity e, string theTooltip, string theCvar)
 		theTooltip = string_null;
 	}
 
-	if(e.tooltip)
-		strunzone(e.tooltip);
+	strfree(e.tooltip);
 	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
 }
 
@@ -459,21 +458,18 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 void updateCheck()
 {
-	if(cvar("menu_updatecheck"))
+	if(!_Nex_ExtResponseSystem_Queried)
 	{
-		if(!_Nex_ExtResponseSystem_Queried)
-		{
-			_Nex_ExtResponseSystem_Queried = 1;
-			float startcnt;
-			string uri;
+		_Nex_ExtResponseSystem_Queried = 1;
+		float startcnt;
+		string uri;
 
-			cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
+		cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
 
-			// for privacy, munge the start count a little
-			startcnt = floor((floor(startcnt / 10) + random()) * 10);
-			uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-			uri_get(uri, URI_GET_UPDATENOTIFICATION);
-		}
+		// for privacy, munge the start count a little
+		startcnt = floor((floor(startcnt / 10) + random()) * 10);
+		uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
+		uri_get(uri, URI_GET_UPDATENOTIFICATION);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
@@ -566,7 +562,7 @@ void preMenuDraw()
 
 	updateCheck();
 
-	if(_Nex_ExtResponseSystem_UpdateTo != "")
+	if(_Nex_ExtResponseSystem_UpdateTo != "" && !(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
 	{
 		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale.x) * eX + (1/draw_scale.y) * eY) * 12;
@@ -612,8 +608,7 @@ void preMenuDraw()
 	}
 	else
 	{
-		strunzone(campaign_name_previous);
-		campaign_name_previous = strzone(campaign_name);
+		strcpy(campaign_name_previous, campaign_name);
 		campaign_won_previous = cvar(strcat("g_campaign", campaign_name, "_won"));
 	}
 }

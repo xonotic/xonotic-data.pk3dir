@@ -77,6 +77,8 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
 	STAT(MOVEVARS_JUMPVELOCITY_CROUCH, this) = Physics_ClientOption(this, "jumpvelocity_crouch", autocvar_sv_jumpvelocity_crouch);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
+
+	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
 #endif
 

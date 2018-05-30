@@ -1,10 +1,10 @@
 #pragma once
 
 entityclass(ShowNames);
-class(ShowNames) .float healthvalue;
-class(ShowNames) .float armorvalue;
-class(ShowNames) .float sameteam;
-class(ShowNames) .float fadedelay;
-class(ShowNames) .float pointtime;
+classfield(ShowNames) .float healthvalue;
+classfield(ShowNames) .float armorvalue;
+classfield(ShowNames) .float sameteam;
+classfield(ShowNames) .float fadedelay;
+classfield(ShowNames) .float pointtime;
 
 void Draw_ShowNames_All();

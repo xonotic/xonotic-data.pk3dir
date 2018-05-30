@@ -1,0 +1,31 @@
+#pragma once
+
+entityclass(Promise);
+
+#define Promise_new() Promise_new_(new_pure(Promise))
+Promise Promise_new_(Promise this);
+
+/**
+ * notify all Promise_then subscribers that this promise has resolved
+ */
+void Promise_resolve(Promise this);
+
+#define Promise_then(this, handler, userdata) Promise_then_(this, Promise_new(), handler, userdata)
+Promise Promise_then_(Promise this, Promise ret, Promise(Promise ret, entity result, entity userdata) handler, entity userdata);
+
+/**
+ * notify all Promise_catch subscribers that this promise has rejected
+ */
+void Promise_reject(Promise this);
+
+#define Promise_catch(this, handler, userdata) Promise_catch_(this, Promise_new(), handler, userdata)
+Promise Promise_catch_(Promise this, Promise ret, Promise(Promise ret, entity err, entity userdata) handler, entity userdata);
+
+// utils
+
+#ifndef MENUQC
+
+// TODO: support menu
+Promise Promise_sleep(float n);
+
+#endif

@@ -145,12 +145,8 @@ void cvar_changes_init()
 	string k, v, d;
 	float n, i, adding, pureadding;
 
-	if(cvar_changes)
-		strunzone(cvar_changes);
-	cvar_changes = string_null;
-	if(cvar_purechanges)
-		strunzone(cvar_purechanges);
-	cvar_purechanges = string_null;
+	strfree(cvar_changes);
+	strfree(cvar_purechanges);
 	cvar_purechanges_count = 0;
 
 	h = buf_create();
@@ -253,6 +249,7 @@ void cvar_changes_init()
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
 		BADCVAR("sv_muteban_list");
+		BADCVAR("sv_voteban_list");
 		BADCVAR("sv_allow_customplayermodels_idlist");
 		BADCVAR("sv_allow_customplayermodels_speciallist");
 
@@ -1199,9 +1196,7 @@ void Maplist_Init()
 		error("empty maplist, cannot select a new map");
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	if(Map_Current_Name)
-		strunzone(Map_Current_Name);
-	Map_Current_Name = strzone(argv(Map_Current)); // will be automatically freed on exit thanks to DP
+	strcpy(Map_Current_Name, argv(Map_Current)); // will be automatically freed on exit thanks to DP
 	// this may or may not be correct, but who cares, in the worst case a map
 	// isn't chosen in the first pass that should have been
 }

@@ -8,11 +8,11 @@
 #include "../common/triggers/triggers.qh"
 
 entityclass(BGMScript);
-class(BGMScript) .string bgmscript;
-class(BGMScript) .float bgmscriptattack;
-class(BGMScript) .float bgmscriptdecay;
-class(BGMScript) .float bgmscriptsustain;
-class(BGMScript) .float bgmscriptrelease;
+classfield(BGMScript) .string bgmscript;
+classfield(BGMScript) .float bgmscriptattack;
+classfield(BGMScript) .float bgmscriptdecay;
+classfield(BGMScript) .float bgmscriptsustain;
+classfield(BGMScript) .float bgmscriptrelease;
 
 #include "../common/constants.qh"
 #include "../lib/csqcmodel/sv_model.qh"

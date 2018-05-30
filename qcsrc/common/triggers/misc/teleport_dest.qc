@@ -3,12 +3,12 @@ REGISTER_NET_LINKED(ENT_CLIENT_TELEPORT_DEST)
 
 #ifdef SVQC
 
-bool teleport_dest_send(entity this, entity to, int sf)
+bool teleport_dest_send(entity this, entity to, int sendflags)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TELEPORT_DEST);
-	WriteByte(MSG_ENTITY, sf);
+	WriteByte(MSG_ENTITY, sendflags);
 
-	if(sf & 1)
+	if(sendflags & SF_TRIGGER_INIT)
 	{
 		WriteByte(MSG_ENTITY, this.cnt);
 		WriteCoord(MSG_ENTITY, this.speed);
@@ -26,7 +26,7 @@ bool teleport_dest_send(entity this, entity to, int sf)
 void teleport_dest_link(entity this)
 {
 	Net_LinkEntity(this, false, 0, teleport_dest_send);
-	this.SendFlags |= 1; // update
+	this.SendFlags |= SF_TRIGGER_INIT;
 }
 
 spawnfunc(info_teleport_destination)
@@ -57,20 +57,15 @@ spawnfunc(misc_teleporter_dest)
 
 void teleport_dest_remove(entity this)
 {
-	//if(this.classname)
-		//strunzone(this.classname);
-	//this.classname = string_null;
-
-	if(this.targetname)
-		strunzone(this.targetname);
-	this.targetname = string_null;
+    // strfree(this.classname);
+    strfree(this.targetname);
 }
 
 NET_HANDLE(ENT_CLIENT_TELEPORT_DEST, bool isnew)
 {
-	int sf = ReadByte();
+	int sendflags = ReadByte();
 
-	if(sf & 1)
+	if(sendflags & SF_TRIGGER_INIT)
 	{
 		this.classname = "info_teleport_destination";
 		this.cnt = ReadByte();

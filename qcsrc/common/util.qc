@@ -336,19 +336,18 @@ STATIC_INIT(compressShortVector)
 
 	if(cvar("developer"))
 	{
-		LOG_INFO("Verifying vector compression table...");
+		LOG_TRACE("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				LOG_INFOF(
+				LOG_FATALF(
 				    "BROKEN vector compression: %s -> %s -> %s",
 				    ftos(i),
 				    vtos(decompressShortVector(i)),
 				    ftos(compressShortVector(decompressShortVector(i)))
                 );
-				error("b0rk");
 			}
-		LOG_INFO("Done.");
+		LOG_TRACE("Done.");
 	}
 }
 
@@ -453,14 +452,12 @@ void get_mi_min_max(float mode)
 {
 	vector mi, ma;
 
-	if(mi_shortname)
-		strunzone(mi_shortname);
-	mi_shortname = mapname;
-	if(!strcasecmp(substring(mi_shortname, 0, 5), "maps/"))
-		mi_shortname = substring(mi_shortname, 5, strlen(mi_shortname) - 5);
-	if(!strcasecmp(substring(mi_shortname, strlen(mi_shortname) - 4, 4), ".bsp"))
-		mi_shortname = substring(mi_shortname, 0, strlen(mi_shortname) - 4);
-	mi_shortname = strzone(mi_shortname);
+	string s = mapname;
+	if(!strcasecmp(substring(s, 0, 5), "maps/"))
+		s = substring(s, 5, strlen(s) - 5);
+	if(!strcasecmp(substring(s, strlen(s) - 4, 4), ".bsp"))
+		s = substring(s, 0, strlen(s) - 4);
+	strcpy(mi_shortname, s);
 
 #ifdef CSQC
 	mi = world.mins;
@@ -1397,8 +1394,7 @@ void execute_next_frame()
 	if(to_execute_next_frame)
 	{
 		localcmd("\n", to_execute_next_frame, "\n");
-		strunzone(to_execute_next_frame);
-		to_execute_next_frame = string_null;
+		strfree(to_execute_next_frame);
 	}
 }
 void queue_to_execute_next_frame(string s)
@@ -1406,9 +1402,8 @@ void queue_to_execute_next_frame(string s)
 	if(to_execute_next_frame)
 	{
 		s = strcat(s, "\n", to_execute_next_frame);
-		strunzone(to_execute_next_frame);
 	}
-	to_execute_next_frame = strzone(s);
+	strcpy(to_execute_next_frame, s);
 }
 
 .float FindConnectedComponent_processing;

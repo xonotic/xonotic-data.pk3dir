@@ -126,8 +126,7 @@ spawnfunc(func_water)
 
 void func_ladder_remove(entity this)
 {
-	if(this.classname) { strunzone(this.classname); }
-	this.classname = string_null;
+	strfree(this.classname);
 }
 
 NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)

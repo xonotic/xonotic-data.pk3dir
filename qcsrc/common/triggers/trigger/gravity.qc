@@ -33,29 +33,31 @@ void trigger_gravity_check_think(entity this)
 	}
 }
 
+// legacy
 void trigger_gravity_use(entity this, entity actor, entity trigger)
 {
-	this.state = !this.state;
+	this.setactive(this, ACTIVE_TOGGLE);
 }
 
 void trigger_gravity_touch(entity this, entity toucher)
 {
 	float g;
 
-	if(this.state != true)
+	if(this.active == ACTIVE_NOT)
 		return;
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 	g = this.gravity;
 
-	if (!(this.spawnflags & 1))
+	if (!(this.spawnflags & GRAVITY_STICKY))
 	{
 		if(toucher.trigger_gravity_check)
 		{
 			if(this == toucher.trigger_gravity_check.enemy)
 			{
 				// same?
+				// NOTE: see explanation in trigger_gravity_check_think
 				toucher.trigger_gravity_check.count = 2; // gravity one more frame...
 				return;
 			}
@@ -96,12 +98,14 @@ spawnfunc(trigger_gravity)
 	if(this.noise != "")
 		precache_sound(this.noise);
 
-	this.state = true;
+	this.active = ACTIVE_ACTIVE;
+	this.setactive = generic_setactive;
 	IFTARGETED
 	{
+		// legacy use
 		this.use = trigger_gravity_use;
-		if(this.spawnflags & 2)
-			this.state = false;
+		if(this.spawnflags & GRAVITY_START_DISABLED)
+			this.active = ACTIVE_NOT;
 	}
 }
 #endif

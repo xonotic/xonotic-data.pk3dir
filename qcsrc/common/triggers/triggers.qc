@@ -21,6 +21,63 @@ void FixSize(entity e)
 }
 
 #ifdef SVQC
+void generic_setactive(entity this, int act)
+{
+	if(act == ACTIVE_TOGGLE)
+	{
+		if(this.active == ACTIVE_ACTIVE)
+		{
+			this.active = ACTIVE_NOT;
+		}
+		else
+		{
+			this.active = ACTIVE_ACTIVE;
+		}
+	}
+	else
+	{
+		this.active = act;
+	}
+}
+
+void generic_netlinked_setactive(entity this, int act)
+{
+	int old_status = this.active;
+	generic_setactive(this, act);
+
+	if (this.active != old_status)
+	{
+		this.SendFlags |= SF_TRIGGER_UPDATE;
+	}
+}
+
+void generic_netlinked_reset(entity this)
+{
+	IFTARGETED
+	{
+		if(this.spawnflags & START_ENABLED)
+		{
+			this.active = ACTIVE_ACTIVE;
+		}
+		else
+		{
+			this.active = ACTIVE_NOT;
+		}
+	}
+	else
+	{
+		this.active = ACTIVE_ACTIVE;
+	}
+
+	this.SendFlags |= SF_TRIGGER_UPDATE;
+}
+
+// Compatibility with old maps
+void generic_netlinked_legacy_use(entity this, entity actor, entity trigger)
+{
+	LOG_WARNF("Entity %s was (de)activated by a trigger, please update map to use relays", this.targetname);
+	this.setactive(this, ACTIVE_TOGGLE);
+}
 
 bool autocvar_g_triggers_debug = true;
 
@@ -116,12 +173,12 @@ void trigger_common_read(entity this, bool withtarget)
 
 	if(withtarget)
 	{
-		if(this.target) { strunzone(this.target); }
-		if(this.target2) { strunzone(this.target2); }
-		if(this.target3) { strunzone(this.target3); }
-		if(this.target4) { strunzone(this.target4); }
-		if(this.targetname) { strunzone(this.targetname); }
-		if(this.killtarget) { strunzone(this.killtarget); }
+		strfree(this.target);
+		strfree(this.target2);
+		strfree(this.target3);
+		strfree(this.target4);
+		strfree(this.targetname);
+		strfree(this.killtarget);
 
 		int targbits = ReadByte();
 
@@ -158,23 +215,12 @@ void trigger_common_read(entity this, bool withtarget)
 
 void trigger_remove_generic(entity this)
 {
-	if(this.target) { strunzone(this.target); }
-	this.target = string_null;
-
-	if(this.target2) { strunzone(this.target2); }
-	this.target2 = string_null;
-
-	if(this.target3) { strunzone(this.target3); }
-	this.target3 = string_null;
-
-	if(this.target4) { strunzone(this.target4); }
-	this.target4 = string_null;
-
-	if(this.targetname) { strunzone(this.targetname); }
-	this.target = string_null;
-
-	if(this.killtarget) { strunzone(this.killtarget); }
-	this.killtarget = string_null;
+	strfree(this.target);
+	strfree(this.target2);
+	strfree(this.target3);
+	strfree(this.target4);
+	strfree(this.targetname);
+	strfree(this.killtarget);
 }
 #endif
 

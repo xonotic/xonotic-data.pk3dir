@@ -45,23 +45,15 @@ void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
     TC(int, i);
 	//LOG_INFOF("^xc80 entry %d: %s, %s\n", i, s, s1);
-	if (QuickMenu_Page_Description[i])
-		strunzone(QuickMenu_Page_Description[i]);
-	QuickMenu_Page_Description[i] = strzone(s);
-	if (QuickMenu_Page_Command[i])
-		strunzone(QuickMenu_Page_Command[i]);
-	QuickMenu_Page_Command[i] = strzone(s1);
+	strcpy(QuickMenu_Page_Description[i], s);
+	strcpy(QuickMenu_Page_Command[i], s1);
 }
 
 void QuickMenu_Page_ClearEntry(int i)
 {
     TC(int, i);
-	if (QuickMenu_Page_Description[i])
-		strunzone(QuickMenu_Page_Description[i]);
-	QuickMenu_Page_Description[i] = string_null;
-	if (QuickMenu_Page_Command[i])
-		strunzone(QuickMenu_Page_Command[i]);
-	QuickMenu_Page_Command[i] = string_null;
+	strfree(QuickMenu_Page_Description[i]);
+	strfree(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command_Type[i] = 0;
 }
 
@@ -197,9 +189,7 @@ void QuickMenu_Buffer_Close()
 
 void QuickMenu_Close()
 {
-	if (QuickMenu_CurrentSubMenu)
-		strunzone(QuickMenu_CurrentSubMenu);
-	QuickMenu_CurrentSubMenu = string_null;
+	strfree(QuickMenu_CurrentSubMenu);
 	int i;
 	for (i = 0; i < QUICKMENU_MAXLINES; ++i)
 		QuickMenu_Page_ClearEntry(i);
@@ -217,18 +207,17 @@ void QuickMenu_Close()
 // It assumes submenu open tag is already detected
 void QuickMenu_skip_submenu(string submenu)
 {
-	string s, z_submenu;
-	z_submenu = strzone(submenu);
+	string z_submenu = string_null; strcpy(z_submenu, submenu);
 	for(++QuickMenu_Buffer_Index ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
 	{
-		s = QuickMenu_Buffer_Get();
+		string s = QuickMenu_Buffer_Get();
 		if(substring(s, 0, 1) != QM_TAG_SUBMENU)
 			continue;
 		if(substring(s, 1, -1) == z_submenu) // submenu end
 			break;
 		QuickMenu_skip_submenu(substring(s, 1, -1));
 	}
-	strunzone(z_submenu);
+	strfree(z_submenu);
 }
 
 bool QuickMenu_IsOpened()
@@ -273,9 +262,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 		++QuickMenu_Page;
 
 	z_submenu = strzone(target_submenu);
-	if (QuickMenu_CurrentSubMenu)
-		strunzone(QuickMenu_CurrentSubMenu);
-	QuickMenu_CurrentSubMenu = strzone(z_submenu);
+	strcpy(QuickMenu_CurrentSubMenu, z_submenu);
 
 	QuickMenu_IsLastPage = true;
 	QuickMenu_Page_Entries = 0;
