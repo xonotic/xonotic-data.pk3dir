@@ -38,6 +38,10 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !autocvar_g_instagib 
 		WEP_OVERKILL_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 		WEP_OVERKILL_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
+		WEP_OVERKILL_SHOTGUN.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_MACHINEGUN.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_NEX.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+
 		//WEP_SHOTGUN.mdl = "ok_shotgun";
 		//WEP_MACHINEGUN.mdl = "ok_mg";
 		//WEP_VORTEX.mdl = "ok_sniper";
@@ -52,6 +56,10 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !autocvar_g_instagib 
 
 		WEP_OVERKILL_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 		WEP_OVERKILL_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+
+		WEP_OVERKILL_SHOTGUN.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_MACHINEGUN.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_NEX.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 }
 
@@ -236,7 +244,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_okhmg");
+		Item_Initialize(wep, "weapon_okhmg"); // doesn't actually use spawnfunc
 		return true;
 	}
 	else if (item.classname == "item_shield")
@@ -250,7 +258,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_okrpc");
+		Item_Initialize(wep, "weapon_okrpc"); // doesn't actually use spawnfunc
 		return true;
 	}
 	return true;
