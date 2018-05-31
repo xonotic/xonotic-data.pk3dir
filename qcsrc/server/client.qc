@@ -154,10 +154,15 @@ void ClientData_Detach(entity this)
 
 void ClientData_Touch(entity e)
 {
-	CS(e).clientdata.SendFlags = 1;
+	entity cd = CS(e).clientdata;
+	if (cd) { cd.SendFlags = 1; }
 
 	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, { CS(it).clientdata.SendFlags = 1; });
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
+	{
+		entity cd = CS(it).clientdata;
+		if (cd) { cd.SendFlags = 1; }
+	});
 }
 
 void SetSpectatee(entity this, entity spectatee);

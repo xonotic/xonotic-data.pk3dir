@@ -50,13 +50,8 @@ void Item_SetAlpha(entity this)
 	}
 	else
 	{
-		if (autocvar_cl_ghost_items_color)
-		{
-			this.alpha = autocvar_cl_ghost_items;
-			this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
-		}
-		else
-			this.alpha = -1;
+		this.alpha = autocvar_cl_ghost_items;
+		this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
 	}
 
 	if((!veh_hud) && (this.ItemStatus & ITS_STAYWEP))
