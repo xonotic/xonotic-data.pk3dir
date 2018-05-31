@@ -62,6 +62,8 @@
 
 #include "../lib/warpzone/server.qh"
 
+#include <common/mutators/mutator/overkill/oknex.qh>
+
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
     ClientConnect(this);
