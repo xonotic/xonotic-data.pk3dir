@@ -14,7 +14,7 @@ CLASS(OverkillNex, Weapon)
 /* crosshair */ ATTRIB(OverkillNex, w_crosshair, string, "gfx/crosshairnex");
 /* crosshair */ ATTRIB(OverkillNex, w_crosshair_size, float, 0.65);
 /* reticle   */ ATTRIB(OverkillNex, w_reticle, string, "gfx/reticle_nex");
-/* wepimg    */ ATTRIB(OverkillNex, model2, string, "weaponoknex");
+/* wepimg    */ ATTRIB(OverkillNex, model2, string, "weaponnex");
 /* refname   */ ATTRIB(OverkillNex, netname, string, "oknex");
 /* wepname   */ ATTRIB(OverkillNex, m_name, string, _("Overkill Nex"));
 
