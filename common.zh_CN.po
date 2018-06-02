@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-05-30 15:53+0000\n"
+"PO-Revision-Date: 2018-06-02 05:22+0000\n"
 "Last-Translator: Losier Blackheath <losier.cc@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
@@ -341,7 +341,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^killed flagcarrier (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier, icon"
@@ -652,7 +652,7 @@ msgstr "SCO^排名"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^returns"
-msgstr ""
+msgstr "SCO^带回数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^revivals"
@@ -995,7 +995,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:29
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2名字^7而不是“^1匿名玩家^7”在统计信息中"
 
 #: qcsrc/client/hud/panel/vote.qc:115
 msgid "A vote has been called for:"
@@ -1123,7 +1123,7 @@ msgstr "重生进度"
 
 #: qcsrc/common/command/generic.qc:157
 msgid "error creating curl handle\n"
-msgstr ""
+msgstr "创建下载描述符错误\n"
 
 #: qcsrc/common/command/generic.qc:403
 msgid "Notification restart command only works with cl_cmd and sv_cmd.\n"
@@ -1159,7 +1159,7 @@ msgstr "恢复燃料"
 
 #: qcsrc/common/items/item/powerup.qh:44
 msgid "Strength"
-msgstr "加强"
+msgstr "神力"
 
 #: qcsrc/common/items/item/powerup.qh:76
 msgid "Shield"
@@ -1756,7 +1756,7 @@ msgstr "粉红军基地"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr ""
+msgstr "把旗帜带回这里"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -1817,7 +1817,7 @@ msgstr "载具"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
-msgstr ""
+msgstr "入侵者！"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Tagged"
@@ -1839,12 +1839,12 @@ msgstr "^1服务器提示:"
 
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
-msgstr ""
+msgstr "^F4注意：^BG比赛过程中观众聊天不会被发送给玩家"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG捕获了^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -1852,16 +1852,17 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
+"^BG%s^BG捕获^TC^TT^BG旗帜用了^F1%s^BG秒，打破了原来^BG%s^BG的^F2%s^BG秒的记录"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr ""
+msgstr "^BG%s^BG捕获旗帜"
 
 #: qcsrc/common/notifications/all.inc:244
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr ""
+msgstr "^BG%s^BG捕获^TC^TT^BG旗帜用了^F1%s^BG秒"
 
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
@@ -1869,66 +1870,68 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
+"^BG%s^BG捕获^TC^TT^BG旗帜用了^F2%s^BG秒，未能打破原来^BG%s^BG的^F1%s^BG秒的记"
+"录"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr ""
+msgstr "^BG^TC^TT^BG旗帜被它的所有者带回基地"
 
 #: qcsrc/common/notifications/all.inc:247
 msgid "^BGThe flag was returned by its owner"
-msgstr ""
+msgstr "^BG旗帜被它的所有者带回"
 
 #: qcsrc/common/notifications/all.inc:248
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BG^TC^TT^BG旗帜被摧毁并回到基地"
 
 #: qcsrc/common/notifications/all.inc:249
 msgid "^BGThe flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BG旗帜被摧毁并回到基地"
 
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BG^TC^TT^BG旗帜掉落在基地并自己返回"
 
 #: qcsrc/common/notifications/all.inc:251
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BG旗帜掉落在基地并自己返回"
 
 #: qcsrc/common/notifications/all.inc:252
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
-msgstr ""
+msgstr "^BG^TC^TT^BG旗帜掉落在无法到达的地方而自动回到基地"
 
 #: qcsrc/common/notifications/all.inc:253
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
-msgstr ""
+msgstr "^BG旗帜掉落在无法到达的地方而自动回到基地"
 
 #: qcsrc/common/notifications/all.inc:254
 #, c-format
 msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
-msgstr ""
+msgstr "^BG^TC^TT^BG旗帜在^F1%.2f^BG秒后失去耐心而自动返回基地"
 
 #: qcsrc/common/notifications/all.inc:255
 #, c-format
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
-msgstr ""
+msgstr "^BG旗帜在 ^F1%.2f^BG秒后失去耐心而自动返回基地"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr ""
+msgstr "^BG^TC^TT^BG旗帜已回到基地"
 
 #: qcsrc/common/notifications/all.inc:257
 msgid "^BGThe flag has returned to the base"
-msgstr ""
+msgstr "^BG旗帜已回到基地"
 
 #: qcsrc/common/notifications/all.inc:258
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG失去了^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:259
 #, c-format
@@ -1938,24 +1941,24 @@ msgstr "^BG%s^BG 丢掉了旗帜"
 #: qcsrc/common/notifications/all.inc:260
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG拿到了^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:261
 #, c-format
 msgid "^BG%s^BG got the flag"
-msgstr ""
+msgstr "^BG%s^BG拿到了旗帜"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:263
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG带回^TC^TT^BG旗帜"
 
 #: qcsrc/common/notifications/all.inc:265
 #: qcsrc/common/notifications/all.inc:553
 #, c-format
 msgid "^F2Throwing coin... Result: %s^F2!"
-msgstr ""
+msgstr "^F2丢硬币……结果：%s^F2！"
 
 #: qcsrc/common/notifications/all.inc:267
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
@@ -1967,11 +1970,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:271
 msgid "^F1Round already started, you will join the game in the next round"
-msgstr ""
+msgstr "^F1这轮比赛已经开始，你将在下一轮加入游戏"
 
 #: qcsrc/common/notifications/all.inc:272
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2你将在下一轮旁观"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
@@ -2011,7 +2014,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:279
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
@@ -2128,17 +2131,17 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1被 ^BG%s^K1的火箭弹给炸飞了%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1给^BG%s^K1的火箭枪炸翻了%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1来不及躲闪^BG%s^K1的火箭弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
@@ -2243,12 +2246,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
 msgid "^BG%s^K1 joins the Zombies%s%s"
-msgstr ""
+msgstr "^BG%s^K1参演行尸走肉%s%s"
 
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr ""
+msgstr "^K1僵尸给^BG%s^K1上了一节功夫课%s%s"
 
 #: qcsrc/common/notifications/all.inc:323
 #: qcsrc/common/notifications/all.inc:325
@@ -2285,7 +2288,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
 msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?"
-msgstr ""
+msgstr "^BG%s^K1卒%s%s。与其没有弹药的苟活，不如轰轰烈烈的牺牲"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
@@ -2370,7 +2373,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被炮台发出的高温离子弹教会做人%s%s"
 
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
@@ -2425,12 +2428,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Racer explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1被爆炸的火箭弹打中了%s%s"
 
 #: qcsrc/common/notifications/all.inc:356
 #, c-format
 msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1来不及躲闪火箭弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
@@ -2677,7 +2680,7 @@ msgstr "^BG%s^K1 捡到了加速"
 #: qcsrc/common/notifications/all.inc:420
 #, c-format
 msgid "^BG%s^K1 picked up Strength"
-msgstr "^BG%s^K1 捡到了力量"
+msgstr "^BG%s^K1 捡到了神力"
 
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
@@ -2839,12 +2842,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
 msgid "^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 感受到 ^BG%s^K1手里的紫电的强大推力%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s"
-msgstr ""
+msgstr "^BG%s^K1 感受到自己手里的紫电的强大推力%s%s"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
@@ -2986,22 +2989,22 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:489
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1离^BG%s^K1打出的榴弹太近了%s%s"
 
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 吃了一记 ^BG%s^K1的榴弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 没看到他们自己的榴弹%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
 msgid "^BG%s^K1 blew themself up with their own Mortar%s%s"
-msgstr ""
+msgstr "^BG%s^K1 被他们自己的榴弹枪炸成碎尸%s%s"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
@@ -3222,12 +3225,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:571
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr ""
+msgstr "^BG你拿到你们 %s队^BG的旗帜，带回它！"
 
 #: qcsrc/common/notifications/all.inc:572
 #, c-format
 msgid "^BGYou got the %senemy^BG's flag, return it!"
-msgstr ""
+msgstr "^BG你拿到敌人%s队^BG的旗帜，带回它！"
 
 #: qcsrc/common/notifications/all.inc:573
 #, c-format
@@ -3285,7 +3288,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:584
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BG你带回了^TC^TT^BG旗帜！"
 
 #: qcsrc/common/notifications/all.inc:585
 msgid "^BGStalemate! Enemies can now see you on radar!"
@@ -3555,11 +3558,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:661
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr ""
+msgstr "^K1你被爆炸的火箭弹给打中了！"
 
 #: qcsrc/common/notifications/all.inc:662
 msgid "^K1You couldn't find shelter from a Racer rocket!"
-msgstr ""
+msgstr "^K1你没能躲过火箭弹！"
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^K1Watch your step!"
@@ -3838,11 +3841,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:750
 msgid "^F2Strength infuses your weapons with devastating power"
-msgstr ""
+msgstr "^F2神力给你的武器融入毁灭性的力量"
 
 #: qcsrc/common/notifications/all.inc:751
 msgid "^F2Strength has worn off"
-msgstr ""
+msgstr "^F2神力已失效"
 
 #: qcsrc/common/notifications/all.inc:753
 msgid "^F2Shield surrounds you"
@@ -4319,7 +4322,7 @@ msgstr "MLRS"
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
-msgstr ""
+msgstr "飞射炮"
 
 #: qcsrc/common/turrets/turret/phaser_weapon.qh:7
 msgid "Phaser"
@@ -4327,19 +4330,19 @@ msgstr "飞射"
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
-msgstr ""
+msgstr "离子炮"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:7
 msgid "Dual plasma"
-msgstr ""
+msgstr "双离子枪"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:19
 msgid "Dual Plasma Cannon"
-msgstr ""
+msgstr "双离子炮"
 
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr "紫电"
+msgstr "离子枪"
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
@@ -4373,11 +4376,11 @@ msgstr "黄蜂"
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:19
 msgid "Racer"
-msgstr "雷射"
+msgstr "火箭枪"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
-msgstr ""
+msgstr "火箭炮"
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:19
 msgid "Raptor"
@@ -4413,7 +4416,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/crylink.qc:17
 msgid "Crylink"
-msgstr "鬼灵"
+msgstr "紫电"
 
 #: qcsrc/common/weapons/weapon/devastator.qc:17
 msgid "Devastator"
@@ -4449,7 +4452,7 @@ msgstr "地雷放置者"
 
 #: qcsrc/common/weapons/weapon/mortar.qc:17
 msgid "Mortar"
-msgstr "魔泰"
+msgstr "榴弹枪"
 
 #: qcsrc/common/weapons/weapon/porto.qc:17
 msgid "Port-O-Launch"
@@ -4780,11 +4783,11 @@ msgstr "游戏编码"
 
 #: qcsrc/menu/xonotic/credits.qc:116
 msgid "Marketing / PR"
-msgstr ""
+msgstr "销售 / 人力资源"
 
 #: qcsrc/menu/xonotic/credits.qc:122
 msgid "Legal"
-msgstr ""
+msgstr "法律信息"
 
 #: qcsrc/menu/xonotic/credits.qc:127
 msgid "Game Engine"
@@ -4820,7 +4823,7 @@ msgstr "保加利亚语"
 
 #: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
-msgstr "中文(中国)"
+msgstr "中文（中国）"
 
 #: qcsrc/menu/xonotic/credits.qc:172
 msgid "Chinese (Taiwan)"
@@ -7629,11 +7632,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
 msgid "Display all info messages in the chatbox"
-msgstr ""
+msgstr "在聊天盒中显示所有信息"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display player statuses in the chatbox"
-msgstr ""
+msgstr "在聊天盒中显示玩家状态"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:86
 msgid "Powerup notifications"
