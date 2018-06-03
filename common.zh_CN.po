@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-06-02 05:22+0000\n"
+"PO-Revision-Date: 2018-06-02 05:39+0000\n"
 "Last-Translator: Losier Blackheath <losier.cc@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
@@ -2438,27 +2438,27 @@ msgstr "^BG%s^K1来不及躲闪火箭弹%s%s"
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
 msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s^K1被^BG%s^K1背叛%s%s"
 
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
 msgid "^BG%s^BG%s^BG (%s %s every %s seconds)"
-msgstr ""
+msgstr "^BG%s^BG%s^BG（%s %s每%s秒）"
 
 #: qcsrc/common/notifications/all.inc:363
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K1被^BG%s^K1封冻"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K3被^BG%s^K3复活"
 
 #: qcsrc/common/notifications/all.inc:365
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr ""
+msgstr "^BG%s^K3由于跌落而复活"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
@@ -2478,23 +2478,23 @@ msgstr "^BG%s^K1 把自己冰冻了"
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:684
 msgid "^TC^TT^BG team wins the round"
-msgstr ""
+msgstr "^TC^TT^BG赢了这一局"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^BG%s^BG wins the round"
-msgstr ""
+msgstr "^BG%s^BG赢了这一局"
 
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:548
 msgid "^BGRound tied"
-msgstr ""
+msgstr "^BG平局"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGRound over, there's no winner"
-msgstr ""
+msgstr "^BG这一局结束，没有赢家"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
@@ -3112,11 +3112,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:539
 msgid "^BGYou are attacking!"
-msgstr ""
+msgstr "^BG你是攻击方！"
 
 #: qcsrc/common/notifications/all.inc:540
 msgid "^BGYou are defending!"
-msgstr ""
+msgstr "^BG你是防守方！"
 
 #: qcsrc/common/notifications/all.inc:541
 #, c-format
@@ -3125,15 +3125,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:543
 msgid "^F4Begin!"
-msgstr ""
+msgstr "^F4开始！"
 
 #: qcsrc/common/notifications/all.inc:544
 msgid "^F4Game starts in ^COUNT"
-msgstr ""
+msgstr "^F4游戏开始倒计时^COUNT"
 
 #: qcsrc/common/notifications/all.inc:545
 msgid "^F4Round starts in ^COUNT"
-msgstr ""
+msgstr "^F4下一局开始倒计时^COUNT"
 
 #: qcsrc/common/notifications/all.inc:546
 msgid "^F4Round cannot start"
@@ -4241,19 +4241,19 @@ msgstr "FLAG^粉"
 
 #: qcsrc/common/teams.qh:45
 msgid "GENERATOR^Red"
-msgstr ""
+msgstr "GENERATOR^红"
 
 #: qcsrc/common/teams.qh:46
 msgid "GENERATOR^Blue"
-msgstr ""
+msgstr "GENERATOR^蓝"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Yellow"
-msgstr ""
+msgstr "GENERATOR^黄"
 
 #: qcsrc/common/teams.qh:48
 msgid "GENERATOR^Pink"
-msgstr ""
+msgstr "GENERATOR^粉"
 
 #: qcsrc/common/turrets/all.qh:51
 msgid "Turrets dump command only works with sv_cmd.\n"
@@ -4306,7 +4306,7 @@ msgstr "猎手"
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr ""
+msgstr "机枪炮台"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
@@ -4424,7 +4424,7 @@ msgstr "灭世"
 
 #: qcsrc/common/weapons/weapon/electro.qc:17
 msgid "Electro"
-msgstr ""
+msgstr "电射枪"
 
 #: qcsrc/common/weapons/weapon/fireball.qc:17
 msgid "Fireball"
@@ -4468,7 +4468,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/shockwave.qc:17
 msgid "Shockwave"
-msgstr ""
+msgstr "脉冲波枪"
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:17
 msgid "Shotgun"
@@ -5227,17 +5227,17 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
-msgstr ""
+msgstr "通知面板"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
 msgid "Panel disabled"
-msgstr ""
+msgstr "面板已禁用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 msgid "Panel enabled"
-msgstr ""
+msgstr "面板已启用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Panel enabled even observing"
@@ -5254,20 +5254,20 @@ msgstr "状态栏"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
 msgid "Left align"
-msgstr ""
+msgstr "向左对齐"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:74
 msgid "Right align"
-msgstr ""
+msgstr "向右对齐"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 msgid "Inward align"
-msgstr ""
+msgstr "向内对齐"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "Outward align"
-msgstr ""
+msgstr "向外对齐"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
