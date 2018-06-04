@@ -2151,8 +2151,8 @@ bool joinAllowed(entity this)
 	if (CS(this).version_mismatch) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
-	if (ShowTeamSelection(this)) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
+	if (ShowTeamSelection(this)) return false;
 	return true;
 }
 
