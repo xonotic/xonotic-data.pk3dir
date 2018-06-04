@@ -2228,7 +2228,9 @@ MUTATOR_HOOKFUNCTION(ctf, ClientConnect)
 
 	if(IS_REAL_CLIENT(player))
 	{
-		for(int i = 1; i <= RANKINGS_CNT; ++i)
+		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
+		race_send_rankings_cnt(MSG_ONE);
+		for (int i = 1; i <= m; ++i)
 		{
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}

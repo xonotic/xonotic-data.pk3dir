@@ -199,7 +199,9 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 		race_send_speedaward_alltimebest(MSG_ONE);
 
 		float i;
-		for (i = 1; i <= RANKINGS_CNT; ++i)
+		int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
+		race_send_rankings_cnt(MSG_ONE);
+		for (i = 1; i <= m; ++i)
 		{
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}
