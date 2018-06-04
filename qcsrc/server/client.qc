@@ -2302,6 +2302,7 @@ bool PlayerThink(entity this)
 	return true;
 }
 
+.bool would_spectate;
 void ObserverThink(entity this)
 {
 	if ( CS(this).impulse )
@@ -2314,7 +2315,7 @@ void ObserverThink(entity this)
 		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch || this.would_spectate) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
@@ -2374,12 +2375,19 @@ void SpectatorThink(entity this)
 			}
 			CS(this).impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(this)) {
+			this.would_spectate = false;
 			this.flags &= ~FL_JUMPRELEASED;
 			TRANSMUTE(Observer, this);
 			PutClientInServer(this);
 		} else {
 			if(!SpectateUpdate(this))
-				PutObserverInServer(this);
+			{
+				if(!SpectateNext(this))
+				{
+					PutObserverInServer(this);
+					this.would_spectate = true;
+				}
+			}
 		}
 	} else {
 		if (!(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this))) {
