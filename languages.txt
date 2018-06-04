@@ -1,6 +1,6 @@
 ko    Korean "한국의" 33%
 ast   Asturian "Asturianu" 73%
-zh_CN "Chinese (China)" "中文" 49%
+zh_CN "Chinese (China)" "中文" 62%
 de    German "Deutsch"
 de_CH German "Deutsch (Schweiz)"
 en    English "English"

@@ -62,6 +62,8 @@
 
 #include "../lib/warpzone/server.qh"
 
+#include <common/mutators/mutator/overkill/oknex.qh>
+
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
     ClientConnect(this);
@@ -152,10 +154,15 @@ void ClientData_Detach(entity this)
 
 void ClientData_Touch(entity e)
 {
-	CS(e).clientdata.SendFlags = 1;
+	entity cd = CS(e).clientdata;
+	if (cd) { cd.SendFlags = 1; }
 
 	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, { CS(it).clientdata.SendFlags = 1; });
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
+	{
+		entity cd = CS(it).clientdata;
+		if (cd) { cd.SendFlags = 1; }
+	});
 }
 
 void SetSpectatee(entity this, entity spectatee);
@@ -2144,8 +2151,8 @@ bool joinAllowed(entity this)
 	if (CS(this).version_mismatch) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
-	if (ShowTeamSelection(this)) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
+	if (ShowTeamSelection(this)) return false;
 	return true;
 }
 
@@ -2295,6 +2302,7 @@ bool PlayerThink(entity this)
 	return true;
 }
 
+.bool would_spectate;
 void ObserverThink(entity this)
 {
 	if ( CS(this).impulse )
@@ -2307,7 +2315,7 @@ void ObserverThink(entity this)
 		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch || this.would_spectate) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
@@ -2367,12 +2375,19 @@ void SpectatorThink(entity this)
 			}
 			CS(this).impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(this)) {
+			this.would_spectate = false;
 			this.flags &= ~FL_JUMPRELEASED;
 			TRANSMUTE(Observer, this);
 			PutClientInServer(this);
 		} else {
 			if(!SpectateUpdate(this))
-				PutObserverInServer(this);
+			{
+				if(!SpectateNext(this))
+				{
+					PutObserverInServer(this);
+					this.would_spectate = true;
+				}
+			}
 		}
 	} else {
 		if (!(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this))) {
