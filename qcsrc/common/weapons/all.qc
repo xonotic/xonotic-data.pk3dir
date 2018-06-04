@@ -123,6 +123,8 @@ string W_UndeprecateName(string s)
 		case "minstanex": return "vaporizer";
 		case "grenadelauncher": return "mortar";
 		case "uzi": return "machinegun";
+		case "hmg": return "okhmg";
+		case "rpc": return "okrpc";
 		default: return s;
 	}
 }

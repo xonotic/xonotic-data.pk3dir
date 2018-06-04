@@ -1,7 +1,8 @@
 #include "sv_overkill.qh"
 
-#include "hmg.qh"
-#include "rpc.qh"
+#include "okshotgun.qh"
+#include "okhmg.qh"
+#include "okrpc.qh"
 
 string autocvar_g_overkill;
 
@@ -34,12 +35,16 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !autocvar_g_instagib 
 			ITEM_ArmorMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		}
 
-		WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-		WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
-		WEP_SHOTGUN.mdl = "ok_shotgun";
-		WEP_MACHINEGUN.mdl = "ok_mg";
-		WEP_VORTEX.mdl = "ok_sniper";
+		WEP_OVERKILL_SHOTGUN.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_MACHINEGUN.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_NEX.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+
+		//WEP_SHOTGUN.mdl = "ok_shotgun";
+		//WEP_MACHINEGUN.mdl = "ok_mg";
+		//WEP_VORTEX.mdl = "ok_sniper";
 	}
 
 	MUTATOR_ONREMOVE
@@ -49,8 +54,12 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !autocvar_g_instagib 
 		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 
-		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		WEP_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+
+		WEP_OVERKILL_SHOTGUN.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_MACHINEGUN.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_OVERKILL_NEX.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 }
 
@@ -122,32 +131,31 @@ MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 {
-	if(game_stopped)
-		return;
-
-	entity player = M_ARGV(0, entity);
-
-	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
-		return;
-
-	if(PHYS_INPUT_BUTTON_ATCK2(player) && time >= player.jump_interval)
-	if( !forbidWeaponUse(player)
-		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
+	if (game_stopped)
 	{
-		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
-		makevectors(player.v_angle);
-
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-
-			if(player.(weaponentity).m_weapon == WEP_Null && slot != 0)
-				continue;
-
-			BLASTER_SECONDARY_ATTACK(vaporizer, player, weaponentity);
-		}
+		return;
 	}
-
+	entity player = M_ARGV(0, entity);
+	if (!IS_PLAYER(player) || IS_DEAD(player) || STAT(FROZEN, player))
+	{
+		return;
+	}
+	if (!PHYS_INPUT_BUTTON_ATCK2(player) || forbidWeaponUse(player) ||
+		!(round_handler_IsActive() && !round_handler_IsRoundStarted()))
+	{
+		return;
+	}
+	// Allow secondary blaster during countdown.
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		Weapon weapon = player.(weaponentity).m_weapon;
+		if (weapon == WEP_Null && slot != 0)
+		{
+			continue;
+		}
+		weapon.wr_think(weapon, player, weaponentity, 2);
+	}
 	PHYS_INPUT_BUTTON_ATCK2(player) = false;
 }
 
@@ -168,10 +176,10 @@ MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 		if(player.ok_lastwep[slot] && player.ok_lastwep[slot] != WEP_Null)
 		{
 			Weapon newwep = player.ok_lastwep[slot];
-			if(player.ok_lastwep[slot] == WEP_HMG)
-				newwep = WEP_MACHINEGUN;
-			if(player.ok_lastwep[slot] == WEP_RPC)
-				newwep = WEP_VORTEX;
+			if(player.ok_lastwep[slot] == WEP_OVERKILL_HMG)
+				newwep = WEP_OVERKILL_MACHINEGUN;
+			if(player.ok_lastwep[slot] == WEP_OVERKILL_RPC)
+				newwep = WEP_OVERKILL_NEX;
 			thiswep.m_switchweapon = newwep;
 			player.ok_lastwep[slot] = WEP_Null;
 		}
@@ -227,7 +235,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	}
 	if (item.classname == "item_strength")
 	{
-		entity wep = new(weapon_hmg);
+		entity wep = new(weapon_okhmg);
 		setorigin(wep, item.origin);
 		wep.ok_item = true;
 		wep.noalign = Item_ShouldKeepPosition(item);
@@ -236,12 +244,12 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_hmg");
+		Item_Initialize(wep, "weapon_okhmg"); // doesn't actually use spawnfunc
 		return true;
 	}
 	else if (item.classname == "item_shield")
 	{
-		entity wep = new(weapon_rpc);
+		entity wep = new(weapon_okrpc);
 		setorigin(wep, item.origin);
 		wep.ok_item = true;
 		wep.noalign = Item_ShouldKeepPosition(item);
@@ -250,7 +258,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_rpc");
+		Item_Initialize(wep, "weapon_okrpc"); // doesn't actually use spawnfunc
 		return true;
 	}
 	return true;
@@ -258,10 +266,10 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 
 MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 {
-	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
+	WepSet ok_start_items = (WEPSET(OVERKILL_MACHINEGUN) | WEPSET(OVERKILL_NEX) | WEPSET(OVERKILL_SHOTGUN));
 
-	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET(RPC); }
-	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET(HMG); }
+	if(WEP_OVERKILL_RPC.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_RPC); }
+	if(WEP_OVERKILL_HMG.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_HMG); }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
@@ -288,3 +296,4 @@ MUTATOR_HOOKFUNCTION(ok, SetModname)
 	M_ARGV(0, string) = "Overkill";
 	return true;
 }
+

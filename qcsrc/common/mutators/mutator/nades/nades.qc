@@ -1,5 +1,7 @@
 #include "nades.qh"
 
+#include "../overkill/okmachinegun.qh"
+
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
 float autocvar_g_nades_spread = 0.04;
@@ -881,12 +883,12 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		force *= 0.5; // too much
 		damage = 0;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_NEX))
 	{
 		force *= 6;
 		damage = this.max_health * 0.55;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_MACHINEGUN))
 		damage = this.max_health * 0.1;
 	else if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	{
