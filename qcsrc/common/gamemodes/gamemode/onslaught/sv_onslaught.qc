@@ -1248,7 +1248,7 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 	{
 		// gather health and armor only
 		if (it.solid)
-		if ( ((it.health || it.armorvalue) && needarmor) || (it.weapons && needweapons ) )
+		if ( ((it.health || it.armorvalue) && needarmor) || (STAT(WEAPONS, it) && needweapons ) )
 		if (vdist(it.origin - org, <, sradius))
 		{
 			int t = it.bot_pickupevalfunc(this, it);

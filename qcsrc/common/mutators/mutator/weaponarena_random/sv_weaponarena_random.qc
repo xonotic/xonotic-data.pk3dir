@@ -9,6 +9,6 @@ MUTATOR_HOOKFUNCTION(weaponarena_random, PlayerSpawn)
     entity player = M_ARGV(0, entity);
 
     if (g_weaponarena_random_with_blaster) STAT(WEAPONS, player) &= ~WEPSET(BLASTER);
-    W_RandomWeapons(player, g_weaponarena_random);
+    STAT(WEAPONS, player) = W_RandomWeapons(player, STAT(WEAPONS, player), g_weaponarena_random);
     if (g_weaponarena_random_with_blaster) STAT(WEAPONS, player) |= WEPSET(BLASTER);
 }

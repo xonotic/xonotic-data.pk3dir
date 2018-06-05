@@ -194,13 +194,8 @@ string W_FixWeaponOrder_ForceComplete(string order)
 	return W_FixWeaponOrder(order, 1);
 }
 
-void W_RandomWeapons(entity e, int n)
+WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 {
-#ifdef SVQC
-	WepSet remaining = STAT(WEAPONS, e);
-#else
-	WepSet remaining = e.weapons;
-#endif
 	WepSet result = '0 0 0';
 	for (int j = 0; j < n; ++j)
 	{
@@ -213,11 +208,7 @@ void W_RandomWeapons(entity e, int n)
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);
 	}
-#ifdef SVQC
-	STAT(WEAPONS, e) = result;
-#else
-	e.weapons = result;
-#endif
+	return result;
 }
 
 string GetAmmoPicture(int ammotype)

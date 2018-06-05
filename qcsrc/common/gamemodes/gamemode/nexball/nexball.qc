@@ -195,7 +195,7 @@ void GiveBall(entity plyr, entity ball)
 		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
 	}
 
-	plyr.(weaponentity).weapons = STAT(WEAPONS, plyr);
+	STAT(WEAPONS, plyr.(weaponentity)) = STAT(WEAPONS, plyr);
 	plyr.m_switchweapon = plyr.(weaponentity).m_weapon;
 	STAT(WEAPONS, plyr) = WEPSET(NEXBALL);
 	Weapon w = WEP_NEXBALL;
@@ -828,15 +828,15 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 			{
 				.entity weaponentity = weaponentities[slot];
 
-				if(player.(weaponentity).weapons)
+				if(STAT(WEAPONS, player.(weaponentity)))
 				{
-					STAT(WEAPONS, player) = player.(weaponentity).weapons;
+					STAT(WEAPONS, player) = STAT(WEAPONS, player.(weaponentity));
 					Weapon w = WEP_NEXBALL;
 					w.wr_resetplayer(w, player);
 					player.(weaponentity).m_switchweapon = player.m_switchweapon;
 					W_SwitchWeapon(player, player.(weaponentity).m_switchweapon, weaponentity);
 
-					player.(weaponentity).weapons = '0 0 0';
+					STAT(WEAPONS, player.(weaponentity)) = '0 0 0';
 				}
 			}
 		}
@@ -862,7 +862,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		player.(weaponentity).weapons = '0 0 0';
+		STAT(WEAPONS, player.(weaponentity)) = '0 0 0';
 	}
 
 	if (nexball_mode & NBM_BASKETBALL)

@@ -396,7 +396,7 @@ bool have_pickup_item(entity this)
 		if(autocvar_g_pickup_items == 0)
 			return false;
 		if(g_weaponarena)
-			if(this.weapons || this.itemdef.instanceOfAmmo) // no item or ammo pickups in weaponarena
+			if(STAT(WEAPONS, this) || this.itemdef.instanceOfAmmo) // no item or ammo pickups in weaponarena
 				return false;
 	}
 	return true;
@@ -425,7 +425,7 @@ void Item_Show (entity e, float mode)
 	}
 	else
 	{
-		bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.weapons & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
+		bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.m_wepset & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
 			|| e.team // weapon stay isn't supported for teamed weapons
 			;
 		if(def.instanceOfWeaponPickup && !nostay && g_weapon_stay)
@@ -485,7 +485,7 @@ void Item_Respawn (entity this)
 	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin(this, this.origin);
 
-    if (Item_ItemsTime_Allow(this.itemdef) || (this.weapons & WEPSET_SUPERWEAPONS))
+    if (Item_ItemsTime_Allow(this.itemdef) || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 	{
 		float t = Item_ItemsTime_UpdateTime(this, 0);
 		Item_ItemsTime_SetTime(this, t);
@@ -570,13 +570,13 @@ void Item_RespawnThink(entity this)
 void Item_ScheduleRespawnIn(entity e, float t)
 {
 	// if the respawn time is longer than 10 seconds, show a waypoint, otherwise, just respawn normally
-	if ((Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS) || MUTATOR_CALLHOOK(Item_ScheduleRespawn, e, t)) && (t - ITEM_RESPAWN_TICKS) > 0)
+	if ((Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS) || MUTATOR_CALLHOOK(Item_ScheduleRespawn, e, t)) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.item_respawncounter = 0;
-		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
+		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 		{
 			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
 			Item_ItemsTime_SetTime(e, t);
@@ -590,7 +590,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.scheduledrespawntime = time + t;
 		e.wait = time + t;
 
-		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
+		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 		{
 			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
 			Item_ItemsTime_SetTime(e, t);
@@ -790,7 +790,7 @@ float Item_GiveTo(entity item, entity player)
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w;
-		w = item.weapons;
+		w = STAT(WEAPONS, item);
 		w &= ~STAT(WEAPONS, player);
 
 		if (w || (item.spawnshieldtime && item.pickup_anyway > 0))
@@ -981,7 +981,7 @@ void Item_Reset(entity this)
 	{
 		WaypointSprite_Kill(this.waypointsprite_attached);
 	}
-	if (this.itemdef.instanceOfPowerup || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
+	if (this.itemdef.instanceOfPowerup || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
 	{
 		Item_ScheduleInitialRespawn(this);
 	}
@@ -1040,7 +1040,7 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 float weapon_pickupevalfunc(entity player, entity item)
 {
 	// See if I have it already
-	if(STAT(WEAPONS, player) & item.weapons)
+	if(STAT(WEAPONS, player) & STAT(WEAPONS, item))
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
@@ -1201,7 +1201,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 
 	if(weaponid)
-		this.weapons = WepSet_FromWeapon(Weapons_from(weaponid));
+		STAT(WEAPONS, this) = WepSet_FromWeapon(Weapons_from(weaponid));
 
 	this.flags = FL_ITEM | itemflags;
 	IL_PUSH(g_items, this);
@@ -1510,7 +1510,7 @@ spawnfunc(target_items)
 					s = W_UndeprecateName(argv(j));
 					if(s == it.netname)
 					{
-						this.weapons |= (it.m_wepset);
+						STAT(WEAPONS, this) |= (it.m_wepset);
 						if(this.spawnflags == 0 || this.spawnflags == 2)
 							it.wr_init(it);
 						break;
@@ -1563,7 +1563,7 @@ spawnfunc(target_items)
 		if(this.health != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.health), "health");
 		if(this.armorvalue != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.armorvalue), "armor");
 		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(BUFFS, this) & (it.m_itemid)), it.m_name));
-		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.weapons & (it.m_wepset)), it.netname));
+		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
 	}
 	this.netname = strzone(this.netname);
 	//print(this.netname, "\n");
