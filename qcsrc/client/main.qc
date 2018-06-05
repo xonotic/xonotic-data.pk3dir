@@ -1145,7 +1145,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			strcpy(race_speedaward_alltimebest_unit, GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_RANKINGS_CNT:
-			RANKINGS_RECEIVED_CNT = ReadByte();
+			RANKINGS_DISPLAY_CNT = ReadByte();
 			break;
 		case RACE_NET_SERVER_RANKINGS:
 			float prevpos, del;
@@ -1156,14 +1156,14 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			// move other rankings out of the way
             int i;
 			if (prevpos) {
-				int m = min(prevpos, RANKINGS_RECEIVED_CNT);
+				int m = min(prevpos, RANKINGS_DISPLAY_CNT);
 				for (i=m-1; i>pos-1; --i) {
 					grecordtime[i] = grecordtime[i-1];
 					strcpy(grecordholder[i], grecordholder[i-1]);
 				}
 			} else if (del) { // a record has been deleted by the admin
-				for (i=pos-1; i<= RANKINGS_RECEIVED_CNT-1; ++i) {
-					if (i == RANKINGS_RECEIVED_CNT-1) { // clear out last record
+				for (i=pos-1; i<= RANKINGS_DISPLAY_CNT-1; ++i) {
+					if (i == RANKINGS_DISPLAY_CNT-1) { // clear out last record
 						grecordtime[i] = 0;
 						strfree(grecordholder[i]);
 					}
@@ -1173,16 +1173,16 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 					}
 				}
 			} else { // player has no ranked record yet
-				for (i=RANKINGS_RECEIVED_CNT-1;i>pos-1;--i) {
+				for (i=RANKINGS_DISPLAY_CNT-1;i>pos-1;--i) {
 					grecordtime[i] = grecordtime[i-1];
 					strcpy(grecordholder[i], grecordholder[i-1]);
 				}
 			}
 
-			if (grecordtime[RANKINGS_RECEIVED_CNT]) {
+			if (grecordtime[RANKINGS_DISPLAY_CNT]) {
 				// kick off the player who fell from the last displayed position
-				grecordtime[RANKINGS_RECEIVED_CNT] = 0;
-				strfree(grecordholder[RANKINGS_RECEIVED_CNT]);
+				grecordtime[RANKINGS_DISPLAY_CNT] = 0;
+				strfree(grecordholder[RANKINGS_DISPLAY_CNT]);
 			}
 
 			// store new ranking
