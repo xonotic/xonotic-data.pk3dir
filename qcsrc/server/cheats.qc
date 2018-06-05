@@ -159,7 +159,7 @@ float CheatImpulse(entity this, int imp)
 			this.personal.ammo_fuel = this.ammo_fuel;
 			this.personal.health = max(1, this.health);
 			this.personal.armorvalue = this.armorvalue;
-			this.personal.weapons = this.weapons;
+			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
 			this.personal.pauserothealth_finished = this.pauserothealth_finished;
@@ -218,7 +218,7 @@ float CheatImpulse(entity this, int imp)
 				this.ammo_fuel = this.personal.ammo_fuel;
 				this.health = this.personal.health;
 				this.armorvalue = this.personal.armorvalue;
-				this.weapons = this.personal.weapons;
+				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
 				this.pauserothealth_finished = time + this.personal.pauserothealth_finished - this.personal.teleport_time;

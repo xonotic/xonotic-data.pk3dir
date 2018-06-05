@@ -66,7 +66,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity we
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		Weapon culprit = DEATH_WEAPONOF(deathtype);
 		if(!culprit) culprit = attacker.(weaponentity).m_weapon;
-		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = attacker.(weaponentity).m_weapon;
+		else if(!(STAT(WEAPONS, attacker) & (culprit.m_wepset))) culprit = attacker.(weaponentity).m_weapon;
 
 		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
@@ -80,26 +80,26 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity we
 			}
 
 			if(warmup_stage)
-				GiveFrags_randomweapons.weapons = WARMUP_START_WEAPONS;
+				STAT(WEAPONS, GiveFrags_randomweapons) = WARMUP_START_WEAPONS;
 			else
-				GiveFrags_randomweapons.weapons = start_weapons;
+				STAT(WEAPONS, GiveFrags_randomweapons) = start_weapons;
 
 			// all others (including the culprit): remove
-			GiveFrags_randomweapons.weapons &= ~attacker.weapons;
-			GiveFrags_randomweapons.weapons &= ~(culprit.m_wepset);
+			STAT(WEAPONS, GiveFrags_randomweapons) &= ~STAT(WEAPONS, attacker);
+			STAT(WEAPONS, GiveFrags_randomweapons) &= ~(culprit.m_wepset);
 
 			// among the remaining ones, choose one by random
-			W_RandomWeapons(GiveFrags_randomweapons, 1);
+			STAT(WEAPONS, GiveFrags_randomweapons) = W_RandomWeapons(GiveFrags_randomweapons, STAT(WEAPONS, GiveFrags_randomweapons), 1);
 
-			if(GiveFrags_randomweapons.weapons)
+			if(STAT(WEAPONS, GiveFrags_randomweapons))
 			{
-				attacker.weapons |= GiveFrags_randomweapons.weapons;
-				attacker.weapons &= ~(culprit.m_wepset);
+				STAT(WEAPONS, attacker) |= STAT(WEAPONS, GiveFrags_randomweapons);
+				STAT(WEAPONS, attacker) &= ~(culprit.m_wepset);
 			}
 		}
 
 		// after a frag, choose another random weapon set
-		if (!(attacker.weapons & WepSet_FromWeapon(attacker.(weaponentity).m_weapon)))
+		if (!(STAT(WEAPONS, attacker) & WepSet_FromWeapon(attacker.(weaponentity).m_weapon)))
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker, weaponentity), weaponentity);
 	}
 
