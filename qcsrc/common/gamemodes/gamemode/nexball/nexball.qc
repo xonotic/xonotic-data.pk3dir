@@ -195,9 +195,9 @@ void GiveBall(entity plyr, entity ball)
 		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
 	}
 
-	plyr.(weaponentity).weapons = plyr.weapons;
+	plyr.(weaponentity).weapons = STAT(WEAPONS, plyr);
 	plyr.m_switchweapon = plyr.(weaponentity).m_weapon;
-	plyr.weapons = WEPSET(NEXBALL);
+	STAT(WEAPONS, plyr) = WEPSET(NEXBALL);
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w, plyr);
 	plyr.(weaponentity).m_switchweapon = WEP_NEXBALL;
@@ -830,7 +830,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 
 				if(player.(weaponentity).weapons)
 				{
-					player.weapons = player.(weaponentity).weapons;
+					STAT(WEAPONS, player) = player.(weaponentity).weapons;
 					Weapon w = WEP_NEXBALL;
 					w.wr_resetplayer(w, player);
 					player.(weaponentity).m_switchweapon = player.m_switchweapon;
@@ -866,9 +866,9 @@ MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 	}
 
 	if (nexball_mode & NBM_BASKETBALL)
-		player.weapons |= WEPSET(NEXBALL);
+		STAT(WEAPONS, player) |= WEPSET(NEXBALL);
 	else
-		player.weapons = '0 0 0';
+		STAT(WEAPONS, player) = '0 0 0';
 
 	return false;
 }

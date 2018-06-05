@@ -1229,7 +1229,7 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 	// Needs weapons?
 	int c = 0;
 	FOREACH(Weapons, it != WEP_Null, {
-		if(this.weapons & (it.m_wepset))
+		if(STAT(WEAPONS, this) & (it.m_wepset))
 		if(++c >= 4)
 			break;
 	});

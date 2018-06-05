@@ -65,7 +65,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			int superweapons = 1;
 			FOREACH(Weapons, it != WEP_Null, {
 				WepSet set = it.m_wepset;
-				if((set & WEPSET_SUPERWEAPONS) && (own.weapons & set)) ++superweapons;
+				if((set & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, own) & set)) ++superweapons;
 			});
 			if(superweapons <= 1)
 			{
@@ -183,8 +183,8 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 		return;
 
 	WepSet set = WepSet_FromWeapon(w);
-	if(!(this.weapons & set)) return;
-	this.weapons &= ~set;
+	if(!(STAT(WEAPONS, this) & set)) return;
+	STAT(WEAPONS, this) &= ~set;
 
 	W_SwitchWeapon_Force(this, w_getbestweapon(this, weaponentity), weaponentity);
 	string a = W_ThrowNewWeapon(this, w.m_id, doreduce, this.origin + delta, velo, weaponentity);
@@ -197,7 +197,7 @@ void SpawnThrownWeapon(entity this, vector org, Weapon wep, .entity weaponentity
 {
 	//entity wep = this.(weaponentity).m_weapon;
 
-	if(this.weapons & WepSet_FromWeapon(wep))
+	if(STAT(WEAPONS, this) & WepSet_FromWeapon(wep))
 		if(W_IsWeaponThrowable(this, wep.m_id))
 			W_ThrowNewWeapon(this, wep.m_id, false, org, randomvec() * 125 + '0 0 200', weaponentity);
 }

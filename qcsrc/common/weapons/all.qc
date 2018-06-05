@@ -196,7 +196,11 @@ string W_FixWeaponOrder_ForceComplete(string order)
 
 void W_RandomWeapons(entity e, int n)
 {
+#ifdef SVQC
+	WepSet remaining = STAT(WEAPONS, e);
+#else
 	WepSet remaining = e.weapons;
+#endif
 	WepSet result = '0 0 0';
 	for (int j = 0; j < n; ++j)
 	{
@@ -209,7 +213,11 @@ void W_RandomWeapons(entity e, int n)
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);
 	}
+#ifdef SVQC
+	STAT(WEAPONS, e) = result;
+#else
 	e.weapons = result;
+#endif
 }
 
 string GetAmmoPicture(int ammotype)

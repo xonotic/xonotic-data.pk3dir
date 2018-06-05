@@ -190,7 +190,8 @@ void FixClientCvars(entity e);
 // WEAPONTODO: remove this
 //WepSet weaponsInMap;
 
-#define weapons _STAT(WEAPONS)
+//#define weapons _STAT(WEAPONS)
+.WepSet weapons; // WEAPONTODO: remove this too, items can safely use the stat, weapon code shouldn't need it!
 
 .float respawn_countdown; // next number to count
 

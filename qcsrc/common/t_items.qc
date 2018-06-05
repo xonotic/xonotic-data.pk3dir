@@ -402,33 +402,6 @@ bool have_pickup_item(entity this)
 	return true;
 }
 
-/*
-float Item_Customize()
-{
-	if(this.spawnshieldtime)
-		return true;
-	if(this.weapons & ~other.weapons)
-	{
-		this.colormod = '0 0 0';
-		this.glowmod = this.colormod;
-		this.alpha = 0.5 + 0.5 * g_ghost_items; // halfway more alpha
-		return true;
-	}
-	else
-	{
-		if(g_ghost_items)
-		{
-			this.colormod = stov(autocvar_g_ghost_items_color);
-			this.glowmod = this.colormod;
-			this.alpha = g_ghost_items;
-			return true;
-		}
-		else
-			return false;
-	}
-}
-*/
-
 void Item_Show (entity e, float mode)
 {
 	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
@@ -728,7 +701,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			FOREACH(Weapons, it != WEP_Null,
 			{
 				// Finding a weapon which player doesn't have.
-				if (!(receiver.weapons & it.m_wepset) && (it.netname == weapon))
+				if (!(STAT(WEAPONS, receiver) & it.m_wepset) && (it.netname == weapon))
 				{
 					RandomSelection_AddEnt(it, 1, 1);
 					break;
@@ -739,7 +712,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 		{
 			return;
 		}
-		receiver.weapons |= RandomSelection_chosen_ent.m_wepset;
+		STAT(WEAPONS, receiver) |= RandomSelection_chosen_ent.m_wepset;
 		if (RandomSelection_chosen_ent.ammo_type == RESOURCE_NONE)
 		{
 			continue;
@@ -801,7 +774,7 @@ float Item_GiveTo(entity item, entity player)
 				if(player.(weaponentity).m_switchweapon == w_getbestweapon(player, weaponentity))
 					_switchweapon |= BIT(slot);
 
-				if(!(player.weapons & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
+				if(!(STAT(WEAPONS, player) & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
 					_switchweapon |= BIT(slot);
 			}
 		}
@@ -818,7 +791,7 @@ float Item_GiveTo(entity item, entity player)
 	{
 		WepSet w;
 		w = item.weapons;
-		w &= ~player.weapons;
+		w &= ~STAT(WEAPONS, player);
 
 		if (w || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
@@ -1067,7 +1040,7 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 float weapon_pickupevalfunc(entity player, entity item)
 {
 	// See if I have it already
-	if(player.weapons & item.weapons)
+	if(STAT(WEAPONS, player) & item.weapons)
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
@@ -1078,7 +1051,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	// reduce weapon value if bot already got a good arsenal
 	float c = 1;
 	int weapons_value = 0;
-	FOREACH(Weapons, it != WEP_Null && (player.weapons & it.m_wepset), {
+	FOREACH(Weapons, it != WEP_Null && (STAT(WEAPONS, player) & it.m_wepset), {
 		weapons_value += it.bot_pickupbasevalue;
 	});
 	c -= bound(0, weapons_value / 20000, 1) * 0.5;
@@ -1112,7 +1085,7 @@ float ammo_pickupevalfunc(entity player, entity item)
 	else
 	{
 		FOREACH(Weapons, it != WEP_Null, {
-			if(!(player.weapons & (it.m_wepset)))
+			if(!(STAT(WEAPONS, player) & (it.m_wepset)))
 				continue;
 
 			switch(it.ammo_type)
@@ -1609,30 +1582,30 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 {
 	WepSet v0, v1;
 	WepSet s = WepSet_FromWeapon(Weapons_from(wpn));
-	v0 = (e.weapons & s);
+	v0 = (STAT(WEAPONS, e) & s);
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				e.weapons |= s;
+				STAT(WEAPONS, e) |= s;
 			else
-				e.weapons &= ~s;
+				STAT(WEAPONS, e) &= ~s;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				e.weapons |= s;
+				STAT(WEAPONS, e) |= s;
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.weapons &= ~s;
+				STAT(WEAPONS, e) &= ~s;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.weapons &= ~s;
+				STAT(WEAPONS, e) &= ~s;
 			break;
 	}
-	v1 = (e.weapons & s);
+	v1 = (STAT(WEAPONS, e) & s);
 	return (v0 != v1);
 }
 
@@ -1850,7 +1823,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	FOREACH(Weapons, it != WEP_Null, {
 		POSTGIVE_WEAPON(e, it, SND_WEAPONPICKUP, SND_Null);
 		if(!(save_weapons & (it.m_wepset)))
-			if(e.weapons & (it.m_wepset))
+			if(STAT(WEAPONS, e) & (it.m_wepset))
 				it.wr_init(it);
 	});
 	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
@@ -1866,7 +1839,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
 	if(e.superweapons_finished <= 0)
-		if(e.weapons & WEPSET_SUPERWEAPONS)
+		if(STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS)
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.strength_finished <= 0)
@@ -1886,7 +1859,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
-		if(!(e.weapons & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
+		if(!(STAT(WEAPONS, e) & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
 			_switchweapon |= BIT(slot);
 	}
 
