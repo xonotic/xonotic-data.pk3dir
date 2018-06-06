@@ -195,7 +195,7 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
 {
-	if (autocvar_g_random_items)
+	if (MUTATOR_IS_ENABLED(random_items))
 	{
 		// Do not replace weapons when random items are enabled.
 		return;

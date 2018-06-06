@@ -24,8 +24,6 @@
 
 // Loot
 
-bool autocvar_g_random_loot; ///< Whether to enable random loot.
-
 float autocvar_g_random_loot_min; ///< Minimum amount of loot items.
 float autocvar_g_random_loot_max; ///< Maximum amount of loot items.
 float autocvar_g_random_loot_time; ///< Amount of time the loot will stay.
@@ -391,9 +389,6 @@ void RandomItems_SpawnLootItem(vector position)
 }
 
 //============================= Hooks ========================================
-
-REGISTER_MUTATOR(random_items, (autocvar_g_random_items ||
-	autocvar_g_random_loot));
 
 MUTATOR_HOOKFUNCTION(random_items, BuildMutatorsString)
 {
