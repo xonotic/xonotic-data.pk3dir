@@ -248,12 +248,14 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 						if (caller.ready)            // toggle
 						{
 							caller.ready = false;
-							bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
-							bprint(playername(caller, false), "^2 is ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!

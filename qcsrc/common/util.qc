@@ -336,19 +336,18 @@ STATIC_INIT(compressShortVector)
 
 	if(cvar("developer"))
 	{
-		LOG_INFO("Verifying vector compression table...");
+		LOG_TRACE("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				LOG_INFOF(
+				LOG_FATALF(
 				    "BROKEN vector compression: %s -> %s -> %s",
 				    ftos(i),
 				    vtos(decompressShortVector(i)),
 				    ftos(compressShortVector(decompressShortVector(i)))
                 );
-				error("b0rk");
 			}
-		LOG_INFO("Done.");
+		LOG_TRACE("Done.");
 	}
 }
 
@@ -1126,6 +1125,8 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 {
 	vector v;
 	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
+		armorblock = 0;
+	if (deathtype & HITTYPE_ARMORPIERCE)
 		armorblock = 0;
 	v.y = bound(0, damage * armorblock, a); // save
 	v.x = bound(0, damage - v.y, damage); // take

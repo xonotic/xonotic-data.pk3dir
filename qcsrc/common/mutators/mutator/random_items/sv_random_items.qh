@@ -6,6 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 bool autocvar_g_random_items; ///< Whether to enable random items.
+bool autocvar_g_random_loot; ///< Whether to enable random loot.
 
 enum
 {
@@ -41,3 +42,6 @@ string RandomItems_GetRandomInstagibItemClassName(string prefix);
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
 /// \return Random classname of the overkill item.
 string RandomItems_GetRandomOverkillItemClassName(string prefix);
+
+REGISTER_MUTATOR(random_items, (autocvar_g_random_items ||
+	autocvar_g_random_loot));

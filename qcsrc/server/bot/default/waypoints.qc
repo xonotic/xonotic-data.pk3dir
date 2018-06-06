@@ -190,6 +190,16 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			return it;
 		});
 	}
+	// spawn only one destination waypoint for teleports teleporting player to the exact same spot
+	// otherwise links loaded from file would be applied only to the first destination
+	// waypoint since link format doesn't specify waypoint entities but just positions
+	if((f & WAYPOINTFLAG_GENERATED) && !(f & WAYPOINTFLAG_NORELINK) && m1 == m2)
+	{
+		IL_EACH(g_waypoints, boxesoverlap(m1, m2, it.absmin, it.absmax),
+		{
+			return it;
+		});
+	}
 
 	entity w = new(waypoint);
 	IL_PUSH(g_waypoints, w);
@@ -446,7 +456,7 @@ float waypoint_getlinearcost(float dist)
 }
 float waypoint_getlinearcost_underwater(float dist)
 {
-	// NOTE: this value is hardcoded on the engine too, see SV_WaterMove
+	// NOTE: underwater speed factor is hardcoded in the engine too, see SV_WaterMove
 	return dist / (autocvar_sv_maxspeed * 0.7);
 }
 
@@ -1345,6 +1355,8 @@ void botframe_showwaypointlinks()
 	{
 		int display_type = 0;
 		entity head = navigation_findnearestwaypoint(it, false);
+		it.nearestwaypoint = head; // mainly useful for debug
+		it.nearestwaypointtimeout = time + 2; // while I'm at it...
 		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
 			display_type = 1; // default
 		else if(head && (head.wphardwired))
