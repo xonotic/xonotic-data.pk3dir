@@ -362,7 +362,7 @@ void PutObserverInServer(entity this)
 	this.revival_time = 0;
 
 	this.items = 0;
-	this.weapons = '0 0 0';
+	STAT(WEAPONS, this) = '0 0 0';
 	this.drawonlytoclient = this;
 
 	this.viewloc = NULL;
@@ -564,7 +564,7 @@ void PutPlayerInServer(entity this)
 		this.ammo_fuel = warmup_start_ammo_fuel;
 		this.health = warmup_start_health;
 		this.armorvalue = warmup_start_armorvalue;
-		this.weapons = WARMUP_START_WEAPONS;
+		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
 	} else {
 		this.ammo_shells = start_ammo_shells;
 		this.ammo_nails = start_ammo_nails;
@@ -574,7 +574,7 @@ void PutPlayerInServer(entity this)
 		this.ammo_fuel = start_ammo_fuel;
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
-		this.weapons = start_weapons;
+		STAT(WEAPONS, this) = start_weapons;
 		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
 		{
 			GiveRandomWeapons(this, random_start_weapons_count,
@@ -585,7 +585,7 @@ void PutPlayerInServer(entity this)
 
 	PS(this).dual_weapons = '0 0 0';
 
-	this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
+	this.superweapons_finished = (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
 
 	this.items = start_items;
 
@@ -1550,7 +1550,7 @@ void player_powerups(entity this)
 		}
 		if (this.items & IT_SUPERWEAPON)
 		{
-			if (!(this.weapons & WEPSET_SUPERWEAPONS))
+			if (!(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 			{
 				this.superweapons_finished = 0;
 				this.items = this.items - (this.items & IT_SUPERWEAPON);
@@ -1567,13 +1567,13 @@ void player_powerups(entity this)
 				if (time > this.superweapons_finished)
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
-					this.weapons &= ~WEPSET_SUPERWEAPONS;
+					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
 					//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_BROKEN, this.netname);
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_BROKEN);
 				}
 			}
 		}
-		else if(this.weapons & WEPSET_SUPERWEAPONS)
+		else if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
 		{
 			if (time < this.superweapons_finished || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
@@ -1585,7 +1585,7 @@ void player_powerups(entity this)
 			else
 			{
 				this.superweapons_finished = 0;
-				this.weapons &= ~WEPSET_SUPERWEAPONS;
+				STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
 			}
 		}
 		else
@@ -1787,7 +1787,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.invincible_finished = spectatee.invincible_finished;
 	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
-	this.weapons = spectatee.weapons;
+	STAT(WEAPONS, this) = STAT(WEAPONS, spectatee);
 	this.punchangle = spectatee.punchangle;
 	this.view_ofs = spectatee.view_ofs;
 	this.velocity = spectatee.velocity;
