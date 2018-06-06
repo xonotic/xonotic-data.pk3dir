@@ -74,7 +74,7 @@ roflsound "New toys, new toys!" sound.
 
 bool nt_IsNewToy(int w);
 
-REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !autocvar_g_instagib && !cvar("g_overkill"))
+REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok))
 {
 	MUTATOR_ONADD
 	{

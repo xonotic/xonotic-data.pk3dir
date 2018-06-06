@@ -779,7 +779,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			}
 		}
 
-		if(!autocvar_g_instagib)
+		if(!MUTATOR_IS_ENABLED(mutator_instagib))
 		{
 			// apply strength multiplier
 			if (attacker.items & ITEM_Strength.m_itemid)

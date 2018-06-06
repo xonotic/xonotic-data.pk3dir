@@ -49,6 +49,7 @@
 #include "../common/items/_mod.qh"
 
 #include "../common/mutators/mutator/waypoints/all.qh"
+#include "../common/mutators/mutator/instagib/sv_instagib.qh"
 
 #include "../common/triggers/subs.qh"
 #include "../common/triggers/triggers.qh"
@@ -1503,7 +1504,7 @@ void player_powerups(entity this)
 	Fire_ApplyDamage(this);
 	Fire_ApplyEffect(this);
 
-	if (!autocvar_g_instagib)
+	if (!MUTATOR_IS_ENABLED(mutator_instagib))
 	{
 		if (this.items & ITEM_Strength.m_itemid)
 		{
