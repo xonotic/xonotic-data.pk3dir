@@ -359,27 +359,27 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 			PlayerTemplate_GetFloatValue(template, "start_ammo_fuel"));
 	}
 	// Give weapons.
-	player.weapons = WEPSET(Null);
+	STAT(WEAPONS, player) = WEPSET(Null);
 	if (PlayerTemplate_GetFloatValue(template, "default_start_weapons"))
 	{
 		FOREACH(Weapons, it != WEP_Null,
 		{
 			if (it.weaponstart)
 			{
-				player.weapons |= it.m_wepset;
+				STAT(WEAPONS, player) |= it.m_wepset;
 			}
 		});
 	}
-	int numweapons = tokenize_console(PlayerTemplate_GetStringValue(template,
+	int num_weapons = tokenize_console(PlayerTemplate_GetStringValue(template,
 		"start_weapons"));
-	for (int i = 0; i < numweapons; ++i)
+	for (int i = 0; i < num_weapons; ++i)
 	{
 		string weapon = argv(i);
 		FOREACH(Weapons, it != WEP_Null,
 		{
 			if (it.netname == weapon)
 			{
-				player.weapons |= it.m_wepset;
+				STAT(WEAPONS, player) |= it.m_wepset;
 				break;
 			}
 		});
@@ -405,17 +405,17 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 		return;
 	}
 	// Give random weapons.
-	numweapons = tokenize_console(PlayerTemplate_GetStringValue(template,
+	num_weapons = tokenize_console(PlayerTemplate_GetStringValue(template,
 		"random_start_weapons"));
 	// Give all weapons during warmup stage.
-	for (int i = 0; i < numweapons; ++i)
+	for (int i = 0; i < num_weapons; ++i)
 	{
 		string weapon = argv(i);
 		FOREACH(Weapons, it != WEP_Null,
 		{
 			if (it.netname == weapon)
 			{
-				player.weapons |= it.m_wepset;
+				STAT(WEAPONS, player) |= it.m_wepset;
 				break;
 			}
 		});
@@ -626,15 +626,30 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_vaporizer");
 		}
-		case "weapon_hmg":
+		case "weapon_okshotgun":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
-				"pickup_weapon_hmg");
+				"pickup_weapon_okshotgun");
 		}
-		case "weapon_rpc":
+		case "weapon_okmachinegun":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
-				"pickup_weapon_rpc");
+				"pickup_weapon_okmachinegun");
+		}
+		case "weapon_oknex":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_oknex");
+		}
+		case "weapon_okhmg":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_okhmg");
+		}
+		case "weapon_okrpc":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_okrpc");
 		}
 		case "item_strength":
 		{
@@ -721,5 +736,5 @@ void PlayerTemplateHook_PlayerDies(entity player, string template)
 	{
 		return;
 	}
-	player.weapons = WEPSET(Null);
+	STAT(WEAPONS, player) = WEPSET(Null);
 }
