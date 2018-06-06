@@ -24,8 +24,6 @@
 
 // Loot
 
-bool autocvar_g_random_loot; ///< Whether to enable random loot.
-
 float autocvar_g_random_loot_min; ///< Minimum amount of loot items.
 float autocvar_g_random_loot_max; ///< Maximum amount of loot items.
 float autocvar_g_random_loot_time; ///< Amount of time the loot will stay.
@@ -55,11 +53,11 @@ string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 
 string RandomItems_GetRandomItemClassName(string prefix)
 {
-	if (autocvar_g_instagib)
+	if (MUTATOR_IS_ENABLED(mutator_instagib))
 	{
 		return RandomItems_GetRandomInstagibItemClassName(prefix);
 	}
-	if (expr_evaluate(autocvar_g_overkill))
+	if (MUTATOR_IS_ENABLED(ok))
 	{
 		return RandomItems_GetRandomOverkillItemClassName(prefix);
 	}
@@ -328,7 +326,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	}
 	random_items_is_spawning = true;
 	entity new_item;
-	if (!expr_evaluate(autocvar_g_overkill))
+	if (!MUTATOR_IS_ENABLED(ok))
 	{
 		new_item = Item_Create(strzone(new_classname), item.origin,
 			Item_ShouldKeepPosition(item));
@@ -374,7 +372,7 @@ void RandomItems_SpawnLootItem(vector position)
 	spread.z = autocvar_g_random_loot_spread / 2;
 	spread += randomvec() * autocvar_g_random_loot_spread;
 	random_items_is_spawning = true;
-	if (!expr_evaluate(autocvar_g_overkill))
+	if (!MUTATOR_IS_ENABLED(ok))
 	{
 		Item_CreateLoot(class_name, position, spread,
 			autocvar_g_random_loot_time);
@@ -391,9 +389,6 @@ void RandomItems_SpawnLootItem(vector position)
 }
 
 //============================= Hooks ========================================
-
-REGISTER_MUTATOR(random_items, (autocvar_g_random_items ||
-	autocvar_g_random_loot));
 
 MUTATOR_HOOKFUNCTION(random_items, BuildMutatorsString)
 {

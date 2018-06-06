@@ -1,61 +1,10 @@
 #include "sv_overkill.qh"
 
-#include "okshotgun.qh"
-#include "okhmg.qh"
-#include "okrpc.qh"
-
-string autocvar_g_overkill;
-
 bool autocvar_g_overkill_powerups_replace;
 
 bool autocvar_g_overkill_itemwaypoints = true;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
-
-REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !autocvar_g_instagib && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
-{
-	MUTATOR_ONADD
-	{
-		precache_all_playermodels("models/ok_player/*.dpm");
-
-		if (autocvar_g_overkill_filter_healthmega)
-		{
-			ITEM_HealthMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-		}
-		if (autocvar_g_overkill_filter_armormedium)
-		{
-			ITEM_ArmorMedium.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-		}
-		if (autocvar_g_overkill_filter_armorbig)
-		{
-			ITEM_ArmorBig.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-		}
-		if (autocvar_g_overkill_filter_armormega)
-		{
-			ITEM_ArmorMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-		}
-
-		WEP_OVERKILL_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-		WEP_OVERKILL_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-
-		//WEP_SHOTGUN.mdl = "ok_shotgun";
-		//WEP_MACHINEGUN.mdl = "ok_mg";
-		//WEP_VORTEX.mdl = "ok_sniper";
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		ITEM_HealthMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_ArmorMedium.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-
-		WEP_OVERKILL_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		WEP_OVERKILL_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-	}
-}
-
-void W_Blaster_Attack(entity, .entity, float, float, float, float, float, float, float, float, float, float);
 
 MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 {
@@ -236,7 +185,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_okhmg");
+		Item_Initialize(wep, "weapon_okhmg"); // doesn't actually use spawnfunc
 		return true;
 	}
 	else if (item.classname == "item_shield")
@@ -250,7 +199,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_okrpc");
+		Item_Initialize(wep, "weapon_okrpc"); // doesn't actually use spawnfunc
 		return true;
 	}
 	return true;

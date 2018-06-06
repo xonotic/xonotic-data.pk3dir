@@ -19,7 +19,7 @@ test_compilation_units:
 test_sv_game:
   stage: test
   script:
-    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
     - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
     - cd ..
 

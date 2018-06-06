@@ -1,7 +1,7 @@
 #include "sv_survival.qh"
 
-#include <common/mutators/mutator/overkill/hmg.qh>
-#include <common/mutators/mutator/overkill/rpc.qh>
+#include <common/mutators/mutator/overkill/okhmg.qh>
+#include <common/mutators/mutator/overkill/okrpc.qh>
 
 //============================ Constants ======================================
 
@@ -303,7 +303,7 @@ entity Surv_SavePlayerState(entity player)
 	state.ammo_nails = player.ammo_nails;
 	state.ammo_rockets = player.ammo_rockets;
 	state.ammo_cells = player.ammo_cells;
-	state.weapons = player.weapons;
+	STAT(WEAPONS, state) = STAT(WEAPONS, player);
 	state.items = player.items;
 	state.superweapons_finished = player.superweapons_finished;
 	return state;
@@ -323,7 +323,7 @@ void Surv_RestorePlayerState(entity player, entity st)
 	player.ammo_nails = st.ammo_nails;
 	player.ammo_rockets = st.ammo_rockets;
 	player.ammo_cells = st.ammo_cells;
-	player.weapons = st.weapons;
+	STAT(WEAPONS, player) = STAT(WEAPONS, st);
 	player.items = st.items;
 	player.superweapons_finished = st.superweapons_finished;
 }
@@ -2036,7 +2036,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 			{
 				case "item_strength":
 				{
-					W_GiveWeapon(player, WEP_HMG.m_id);
+					W_GiveWeapon(player, WEP_OVERKILL_HMG.m_id);
 					player.superweapons_finished = max(
 						player.superweapons_finished, time) +
 						autocvar_g_balance_superweapons_time;
@@ -2047,7 +2047,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				}
 				case "item_shield":
 				{
-					W_GiveWeapon(player, WEP_RPC.m_id);
+					W_GiveWeapon(player, WEP_OVERKILL_RPC.m_id);
 					player.superweapons_finished = max(
 						player.superweapons_finished, time) +
 						autocvar_g_balance_superweapons_time;

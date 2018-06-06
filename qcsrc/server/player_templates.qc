@@ -5,17 +5,17 @@
 /// \copyright GNU GPLv3 or any later version.
 
 #include <common/items/item.qh>
+#include <common/weapons/all.qh>
+#include <common/deathtypes/all.qh>
 #include "autocvars.qh"
 #include "resources.qh"
 #include "mutators/events.qh"
-#include <common/mutators/mutator/overkill/hmg.qh>
-#include <common/mutators/mutator/overkill/rpc.qh>
 
-const string playertemplate_cvar_prefix = "g_player_template_";
+const string player_template_cvar_prefix = "g_player_template_";
 
 string PlayerTemplate_GetFullCvarName(string template, string variable)
 {
-	return strcat(playertemplate_cvar_prefix, template, "_", variable);
+	return strcat(player_template_cvar_prefix, template, "_", variable);
 }
 
 string PlayerTemplate_GetDefaultCvarName(string variable)
@@ -206,16 +206,16 @@ float PlayerTemplate_GetFloatValue(string template, string variable)
 	{
 		return PlayerTemplate_GetDefaultFloatValue(variable);
 	}
-	string fullname = PlayerTemplate_GetFullCvarName(template, variable);
-	if (!(cvar_type(fullname) & CVAR_TYPEFLAG_EXISTS))
+	string full_name = PlayerTemplate_GetFullCvarName(template, variable);
+	if (!(cvar_type(full_name) & CVAR_TYPEFLAG_EXISTS))
 	{
 		return PlayerTemplate_GetDefaultFloatValue(variable);
 	}
-	if (cvar_string(fullname) == "default")
+	if (cvar_string(full_name) == "default")
 	{
 		return PlayerTemplate_GetDefaultFloatValue(variable);
 	}
-	return cvar(fullname);
+	return cvar(full_name);
 }
 
 string PlayerTemplate_GetStringValue(string template, string variable)
@@ -224,16 +224,16 @@ string PlayerTemplate_GetStringValue(string template, string variable)
 	{
 		return PlayerTemplate_GetDefaultStringValue(variable);
 	}
-	string fullname = PlayerTemplate_GetFullCvarName(template, variable);
-	if (!(cvar_type(fullname) & CVAR_TYPEFLAG_EXISTS))
+	string full_name = PlayerTemplate_GetFullCvarName(template, variable);
+	if (!(cvar_type(full_name) & CVAR_TYPEFLAG_EXISTS))
 	{
 		return PlayerTemplate_GetDefaultStringValue(variable);
 	}
-	if (cvar_string(fullname) == "default")
+	if (cvar_string(full_name) == "default")
 	{
 		return PlayerTemplate_GetDefaultStringValue(variable);
 	}
-	return cvar_string(fullname);
+	return cvar_string(full_name);
 }
 
 float PlayerTemplate_GivePlayerItem(entity player, string template,
@@ -244,13 +244,13 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 	{
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
-	int numfields = tokenize_console(PlayerTemplate_GetStringValue(template,
+	int num_fields = tokenize_console(PlayerTemplate_GetStringValue(template,
 		variable));
-	if (numfields == 0)
+	if (num_fields == 0)
 	{
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
-	for (int i = 1; i < numfields; ++i)
+	for (int i = 1; i < num_fields; ++i)
 	{
 		switch (i)
 		{
@@ -359,27 +359,27 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 			PlayerTemplate_GetFloatValue(template, "start_ammo_fuel"));
 	}
 	// Give weapons.
-	player.weapons = WEPSET(Null);
+	STAT(WEAPONS, player) = WEPSET(Null);
 	if (PlayerTemplate_GetFloatValue(template, "default_start_weapons"))
 	{
 		FOREACH(Weapons, it != WEP_Null,
 		{
 			if (it.weaponstart)
 			{
-				player.weapons |= it.m_wepset;
+				STAT(WEAPONS, player) |= it.m_wepset;
 			}
 		});
 	}
-	int numweapons = tokenize_console(PlayerTemplate_GetStringValue(template,
+	int num_weapons = tokenize_console(PlayerTemplate_GetStringValue(template,
 		"start_weapons"));
-	for (int i = 0; i < numweapons; ++i)
+	for (int i = 0; i < num_weapons; ++i)
 	{
 		string weapon = argv(i);
 		FOREACH(Weapons, it != WEP_Null,
 		{
 			if (it.netname == weapon)
 			{
-				player.weapons |= it.m_wepset;
+				STAT(WEAPONS, player) |= it.m_wepset;
 				break;
 			}
 		});
@@ -405,17 +405,17 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 		return;
 	}
 	// Give random weapons.
-	numweapons = tokenize_console(PlayerTemplate_GetStringValue(template,
+	num_weapons = tokenize_console(PlayerTemplate_GetStringValue(template,
 		"random_start_weapons"));
 	// Give all weapons during warmup stage.
-	for (int i = 0; i < numweapons; ++i)
+	for (int i = 0; i < num_weapons; ++i)
 	{
 		string weapon = argv(i);
 		FOREACH(Weapons, it != WEP_Null,
 		{
 			if (it.netname == weapon)
 			{
-				player.weapons |= it.m_wepset;
+				STAT(WEAPONS, player) |= it.m_wepset;
 				break;
 			}
 		});
@@ -626,15 +626,30 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_vaporizer");
 		}
-		case "weapon_hmg":
+		case "weapon_okshotgun":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
-				"pickup_weapon_hmg");
+				"pickup_weapon_okshotgun");
 		}
-		case "weapon_rpc":
+		case "weapon_okmachinegun":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
-				"pickup_weapon_rpc");
+				"pickup_weapon_okmachinegun");
+		}
+		case "weapon_oknex":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_oknex");
+		}
+		case "weapon_okhmg":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_okhmg");
+		}
+		case "weapon_okrpc":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_okrpc");
 		}
 		case "item_strength":
 		{
@@ -693,21 +708,21 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 }
 
 float PlayerTemplateHook_Damage_Calculate(entity attacker,
-	string attackertemplate, entity victim, string victimtemplate,
-	float deathtype, float damage)
+	string attacker_template, entity victim, string victim_template,
+	float death_type, float damage)
 {
 	if (autocvar_g_instagib == 1)
 	{
 		return damage;
 	}
-	if ((attacker == victim) && (DEATH_ISWEAPON(deathtype, WEP_BLASTER)) &&
-		(PlayerTemplate_GetFloatValue(victimtemplate, "blaster_self_damage") ==
+	if ((attacker == victim) && (DEATH_ISWEAPON(death_type, WEP_BLASTER)) &&
+		(PlayerTemplate_GetFloatValue(victim_template, "blaster_self_damage") ==
 		0))
 	{
 		return 0;
 	}
-	damage *= PlayerTemplate_GetFloatValue(attackertemplate, "attack_scale");
-	damage /= PlayerTemplate_GetFloatValue(victimtemplate, "defense_scale");
+	damage *= PlayerTemplate_GetFloatValue(attacker_template, "attack_scale");
+	damage /= PlayerTemplate_GetFloatValue(victim_template, "defense_scale");
 	return damage;
 }
 
@@ -721,5 +736,5 @@ void PlayerTemplateHook_PlayerDies(entity player, string template)
 	{
 		return;
 	}
-	player.weapons = WEPSET(Null);
+	STAT(WEAPONS, player) = WEPSET(Null);
 }

@@ -308,6 +308,24 @@ bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vecto
 	tracebox(trace_endpos, tracetest_ent.mins, tracetest_ent.maxs, trace_endpos - eZ * 1500, true, tracetest_ent);
 	return true;
 }
+
+bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector org)
+{
+	setorigin(tracetest_ent, org);
+	tracetoss(tracetest_ent, tracetest_ent);
+
+	if(trace_startsolid)
+		return false;
+	if (trace_ent == item)
+		return true;
+
+	tracebox(trace_endpos, tracetest_ent.mins, tracetest_ent.maxs, trace_endpos - eZ * 1500, true, tracetest_ent);
+
+	if (trace_ent == item)
+		return true;
+
+	return false;
+}
 #endif
 
 /// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
@@ -336,26 +354,28 @@ bool trigger_push_test(entity this, entity item)
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height, e);
 
-			if(item)
-			{
-				setorigin(e, org);
-				tracetoss(e, e);
-				bool r = (trace_ent == item);
-				delete(e);
-				return r;
-			}
-
 			vel = e.velocity;
 			vector best_target = '0 0 0';
 			vector best_org = '0 0 0';
 			vector best_vel = '0 0 0';
 			bool valid_best_target = false;
-			if (trigger_push_testorigin(e, t, this, org))
+			if (item)
 			{
-				best_target = trace_endpos;
-				best_org = org;
-				best_vel = e.velocity;
-				valid_best_target = true;
+				if (!trigger_push_testorigin_for_item(e, item, org))
+				{
+					delete(e);
+					return false;
+				}
+			}
+			else
+			{
+				if (trigger_push_testorigin(e, t, this, org))
+				{
+					best_target = trace_endpos;
+					best_org = org;
+					best_vel = e.velocity;
+					valid_best_target = true;
+				}
 			}
 
 			vector new_org;
@@ -368,29 +388,41 @@ bool trigger_push_test(entity this, entity item)
 				vector flatdir = normalize(dist - eZ * dist.z);
 				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmax.y - this.absmin.y));
 				new_org = org + ofs;
+
+				LABEL(new_test)
 				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
-				vel = e.velocity;
-				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
-					e.velocity = autocvar_sv_maxspeed * flatdir;
-				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+				if (item)
 				{
-					best_target = trace_endpos;
-					best_org = new_org;
-					best_vel = vel;
-					valid_best_target = true;
+					if (!trigger_push_testorigin_for_item(e, item, new_org))
+					{
+						delete(e);
+						return false;
+					}
 				}
-				new_org = org - ofs;
-				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
-				vel = e.velocity;
-				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
-					e.velocity = autocvar_sv_maxspeed * flatdir;
-				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+				else
 				{
-					best_target = trace_endpos;
-					best_org = new_org;
-					best_vel = vel;
-					valid_best_target = true;
+					vel = e.velocity;
+					if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
+						e.velocity = autocvar_sv_maxspeed * flatdir;
+					if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+					{
+						best_target = trace_endpos;
+						best_org = new_org;
+						best_vel = vel;
+						valid_best_target = true;
+					}
 				}
+				if (ofs && new_org != org - ofs)
+				{
+					new_org = org - ofs;
+					goto new_test;
+				}
+			}
+
+			if (item)
+			{
+				delete(e);
+				return true;
 			}
 
 			if (valid_best_target)
@@ -440,7 +472,7 @@ bool trigger_push_test(entity this, entity item)
 		setorigin(e, org);
 		e.velocity = this.movedir;
 		tracetoss(e, e);
-		if(item)
+		if (item)
 		{
 			bool r = (trace_ent == item);
 			delete(e);

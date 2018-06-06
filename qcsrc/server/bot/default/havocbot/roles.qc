@@ -51,7 +51,7 @@ bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player
 {
 	if (item.health && player.health <= this.health) {return true;}
 	if (item.armorvalue && player.armorvalue <= this.armorvalue) {return true;}
-	if (item.weapons && !(player.weapons & item.weapons)) {return true;}
+	if (STAT(WEAPONS, item) && !(STAT(WEAPONS, player) & STAT(WEAPONS, item))) {return true;}
 	if (item.ammo_shells && player.ammo_shells <= this.ammo_shells) {return true;}
 	if (item.ammo_nails && player.ammo_nails <= this.ammo_nails) {return true;}
 	if (item.ammo_rockets && player.ammo_rockets <= this.ammo_rockets) {return true;}
