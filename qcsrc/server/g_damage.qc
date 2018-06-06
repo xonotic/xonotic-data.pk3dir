@@ -13,6 +13,7 @@
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include "../common/mutators/mutator/instagib/sv_instagib.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -779,7 +780,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			}
 		}
 
-		if(!autocvar_g_instagib)
+		if(!MUTATOR_IS_ENABLED(mutator_instagib))
 		{
 			// apply strength multiplier
 			if (attacker.items & ITEM_Strength.m_itemid)
