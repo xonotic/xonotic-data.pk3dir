@@ -583,15 +583,16 @@ void Draw_WaypointSprite(entity this)
     {
         // scale it to be just in view
         vector d;
-        float f1, f2;
 
         d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
         ang = atan2(-d.x, -d.y);
         if (o.z < 0)
             ang += M_PI;
 
-        f1 = d.x / vid_conwidth;
-        f2 = d.y / vid_conheight;
+		float f1 = d.x / vid_conwidth;
+		float f2 = d.y / vid_conheight; 
+		if (f1 == 0) { f1 = 0.000001; }
+		if (f2 == 0) { f2 = 0.000001; }
 
         if (max(f1, -f1) > max(f2, -f2)) {
             if (d.z * f1 > 0) {
