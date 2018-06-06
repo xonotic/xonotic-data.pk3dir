@@ -241,7 +241,7 @@ MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
 MUTATOR_HOOKABLE(FilterItemDefinition, EV_FilterItemDefinition);
 
 /**
- * checks if the current item may be spawned (.items and .weapons may be read and written to, as well as the ammo_ fields)
+ * checks if the current item may be spawned (.items may be read and written to, as well as the ammo_ fields)
  * return error to request removal
  */
 #define EV_FilterItem(i, o) \
@@ -411,7 +411,8 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor, EV_PlayerDamage_SplitHealthArmor
     /** mirrordamage    */ i(float,  MUTATOR_ARGV_5_float) \
     /** mirrordamage 	*/ o(float,  MUTATOR_ARGV_5_float) \
     /** force           */ i(vector, MUTATOR_ARGV_6_vector) \
-    /** force 			*/ o(vector, MUTATOR_ARGV_6_vector) \
+    /** force           */ o(vector, MUTATOR_ARGV_6_vector) \
+    /** weapon entity 	*/ i(entity, MUTATOR_ARGV_7_entity) \
     /**/
 MUTATOR_HOOKABLE(Damage_Calculate, EV_Damage_Calculate);
 
