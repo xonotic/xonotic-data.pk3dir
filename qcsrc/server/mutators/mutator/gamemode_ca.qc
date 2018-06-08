@@ -268,9 +268,10 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	if (!allowed_to_spawn)
 	{
 		frag_target.respawn_flags = RESPAWN_SILENT;
-		// prevent unwanted sudden rejoin as spectator and move of spectator camera
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
 		frag_target.respawn_time = time + 2;
 	}
+	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	if(IS_BOT_CLIENT(frag_target))

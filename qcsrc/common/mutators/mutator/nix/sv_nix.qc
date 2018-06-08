@@ -36,7 +36,7 @@ float nix_nextweapon;
 
 bool NIX_CanChooseWeapon(int wpn);
 
-REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !autocvar_g_instagib && !cvar("g_overkill"))
+REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok))
 {
 	MUTATOR_ONADD
 	{
@@ -63,7 +63,7 @@ REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !autocvar_g_instagi
 			SetResourceAmount(it, RESOURCE_CELLS, start_ammo_cells);
 			SetResourceAmount(it, RESOURCE_PLASMA, start_ammo_plasma);
 			SetResourceAmount(it, RESOURCE_FUEL, start_ammo_fuel);
-			it.weapons = start_weapons;
+			STAT(WEAPONS, it) = start_weapons;
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
@@ -208,10 +208,10 @@ void NIX_GiveCurrentWeapon(entity this)
 		this.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
 
-	this.weapons = '0 0 0';
+	STAT(WEAPONS, this) = '0 0 0';
 	if(g_nix_with_blaster)
-		this.weapons |= WEPSET(BLASTER);
-	this.weapons |= e.m_wepset;
+		STAT(WEAPONS, this) |= WEPSET(BLASTER);
+	STAT(WEAPONS, this) |= e.m_wepset;
 
     Weapon w = Weapons_from(nix_weapon);
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)

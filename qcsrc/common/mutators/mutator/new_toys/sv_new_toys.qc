@@ -74,7 +74,7 @@ roflsound "New toys, new toys!" sound.
 
 bool nt_IsNewToy(int w);
 
-REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !autocvar_g_instagib && !cvar("g_overkill"))
+REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok))
 {
 	MUTATOR_ONADD
 	{
@@ -195,7 +195,7 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
 {
-	if (autocvar_g_random_items)
+	if (MUTATOR_IS_ENABLED(random_items))
 	{
 		// Do not replace weapons when random items are enabled.
 		return;
