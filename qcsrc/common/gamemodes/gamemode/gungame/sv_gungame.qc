@@ -14,7 +14,7 @@ const string GUNGAME_WEAPONS = "g_gg_weapons";
 /// \brief Number of kills needed to advance to the next weapon.
 int autocvar_g_gg_kills_per_weapon;
 
-int gungame_maxlevel; ///< Player who reaches this level wins.
+int gungame_max_level; ///< Player who reaches this level wins.
 string gungame_weapons; ///< Holds weapons corresponding to levels.
 
 entity gungame_leading_player; ///< Holds the leading player.
@@ -50,13 +50,13 @@ void GunGame_Reset()
 		strunzone(gungame_weapons);
 	}
 	gungame_weapons = strzone(cvar_string(GUNGAME_WEAPONS));
-	gungame_maxlevel = tokenize_console(gungame_weapons) *
+	gungame_max_level = tokenize_console(gungame_weapons) *
 		autocvar_g_gg_kills_per_weapon;
-	if (gungame_maxlevel == 0)
+	if (gungame_max_level == 0)
 	{
 		error("GunGame: Invalid weapon configuration.");
 	}
-	GameRules_limit_score(gungame_maxlevel);
+	GameRules_limit_score(gungame_max_level);
 	gungame_leading_player = NULL;
 	gungame_leading_level = 0;
 	gungame_leading_weapon = GunGame_GetWeapon(0);
@@ -65,7 +65,7 @@ void GunGame_Reset()
 
 entity GunGame_GetWeapon(int level)
 {
-	if (level >= gungame_maxlevel)
+	if (level >= gungame_max_level)
 	{
 		return NULL;
 	}
@@ -139,12 +139,12 @@ void GunGame_UpdateStats()
 void GunGame_GivePlayerWeapon(entity player)
 {
 	int level = GunGame_GetPlayerLevel(player);
-	if (level >= gungame_maxlevel)
+	if (level >= gungame_max_level)
 	{
 		return;
 	}
 	entity weapon = GunGame_GetWeapon(level);
-	player.weapons |= weapon.m_wepset;
+	STAT(WEAPONS, player) |= weapon.m_wepset;
 	centerprint(player, strcat("^3Level ", ftos(level + 1), ": ^2",
 		weapon.m_name));
 }
@@ -199,7 +199,7 @@ MUTATOR_HOOKFUNCTION(gg, reset_map_global)
 MUTATOR_HOOKFUNCTION(gg, PlayerSpawn, CBC_ORDER_LAST)
 {
 	entity player = M_ARGV(0, entity);
-	player.weapons = WEPSET(Null);
+	STAT(WEAPONS, player) = WEPSET(Null);
 	GunGame_GivePlayerWeapon(player);
 	player.items |= IT_UNLIMITED_AMMO;
 }
@@ -216,11 +216,11 @@ MUTATOR_HOOKFUNCTION(gg, PlayerDies)
 	GunGame_UpdateLeadingPlayer();
 	entity attacker = M_ARGV(1, entity);
 	if (!IS_PLAYER(attacker) || IS_DEAD(attacker) || (GunGame_GetPlayerLevel(
-		attacker) >= gungame_maxlevel))
+		attacker) >= gungame_max_level))
 	{
 		return;
 	}
-	attacker.weapons = WEPSET(Null);
+	STAT(WEAPONS, attacker) = WEPSET(Null);
 	GunGame_GivePlayerWeapon(attacker);
 }
 
