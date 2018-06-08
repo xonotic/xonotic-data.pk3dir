@@ -1884,15 +1884,20 @@ void havocbot_role_ctf_retriever(entity this)
 
 	if (navigation_goalrating_timeout(this))
 	{
-		float rt_radius;
-		rt_radius = 10000;
+		const float RT_RADIUS = 10000;
 
 		navigation_goalrating_start(this);
 
-		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
-		havocbot_goalrating_ctf_droppedflags(this, 40000, this.origin, rt_radius);
-		havocbot_goalrating_ctf_enemybase(this, 30000);
-		havocbot_goalrating_items(this, 500, this.origin, rt_radius);
+		// role: retriever
+		havocbot_goalrating_ctf_ourstolenflag(this, 10000);
+		havocbot_goalrating_ctf_droppedflags(this, 12000, this.origin, RT_RADIUS);
+		havocbot_goalrating_ctf_enemybase(this, 8000);
+		entity ef = havocbot_ctf_find_enemy_flag(this);
+		vector enemy_base_org = ef.dropped_origin;
+		// start collecting items very close to the bot but only inside of enemy base radius
+		if (vdist(this.origin - enemy_base_org, <, havocbot_middlepoint_radius))
+			havocbot_goalrating_items(this, 27000, this.origin, min(500, havocbot_middlepoint_radius * 0.5));
+		havocbot_goalrating_items(this, 18000, this.origin, havocbot_middlepoint_radius);
 
 		navigation_goalrating_end(this);
 
