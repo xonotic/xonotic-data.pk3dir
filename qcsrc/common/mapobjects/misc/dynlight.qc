@@ -1,16 +1,15 @@
-#include "g_lights.qh"
+#include "dynlight.qh"
 
+#ifdef SVQC
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
-
-void train_next(entity this);
 
 const float LOOP = 1;
 
 .float speed;
 
-const float DNOSHADOW = 2;
-const float DFOLLOW = 4;
+//const int DNOSHADOW = 2;
+const int DFOLLOW = 4;
 .float light_lev;
 .float lefty;
 .vector color;
@@ -69,7 +68,7 @@ void dynlight_find_path(entity this)
 	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
 	setorigin(this, targ.origin);
-	setthink(this, train_next);
+	setthink(this, train_next); // TODO: reliant on the train's pathing functions
 	this.nextthink = time + 0.1;
 }
 void dynlight_find_target(entity this)
@@ -133,3 +132,4 @@ spawnfunc(dynlight)
 		return;
 	}
 }
+#endif
