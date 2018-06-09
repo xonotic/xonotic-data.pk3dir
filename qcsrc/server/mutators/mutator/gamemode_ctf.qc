@@ -1515,7 +1515,12 @@ void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 	if (head)
 	{
 		if (head.ctf_status == FLAG_CARRY)
+		{
+			// adjust rating of our flag carrier depending on his health
 			head = head.tag_entity;
+			float f = bound(0, (head.health + head.armorvalue) / 100, 2) - 1;
+			ratingscale += ratingscale * f * 0.1;
+		}
 		navigation_routerating(this, head, ratingscale, 10000);
 	}
 }
@@ -1737,8 +1742,7 @@ void havocbot_role_ctf_escort(entity this)
 
 	// If the flag carrier reached the base switch to defense
 	mf = havocbot_ctf_find_flag(this);
-	if(mf.ctf_status!=FLAG_BASE)
-	if(vdist(ef.origin - mf.dropped_origin, <, 300))
+	if (mf.ctf_status != FLAG_BASE && vdist(ef.origin - mf.dropped_origin, <, 900))
 	{
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_DEFENSE);
 		return;
@@ -1763,9 +1767,10 @@ void havocbot_role_ctf_escort(entity this)
 	{
 		navigation_goalrating_start(this);
 
-		havocbot_goalrating_ctf_enemyflag(this, 30000);
-		havocbot_goalrating_ctf_ourstolenflag(this, 40000);
-		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+		// role: escort
+		havocbot_goalrating_ctf_enemyflag(this, 10000);
+		havocbot_goalrating_ctf_ourstolenflag(this, 6000);
+		havocbot_goalrating_items(this, 21000, this.origin, 10000);
 
 		navigation_goalrating_end(this);
 
