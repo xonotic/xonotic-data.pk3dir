@@ -2,6 +2,8 @@
 
 #include "../gamemode.qh"
 
+const int ASSAULT_VALUE_INACTIVE = 1000;
+
 const int ST_ASSAULT_OBJECTIVES = 1;
 
 REGISTER_MUTATOR(as, false)
