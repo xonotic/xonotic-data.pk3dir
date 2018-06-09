@@ -1513,7 +1513,11 @@ void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 		head = head.ctf_worldflagnext;
 	}
 	if (head)
+	{
+		if (head.ctf_status == FLAG_CARRY)
+			head = head.tag_entity;
 		navigation_routerating(this, head, ratingscale, 10000);
+	}
 }
 
 void havocbot_goalrating_ctf_enemybase(entity this, float ratingscale)
