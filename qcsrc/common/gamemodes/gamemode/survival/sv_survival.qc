@@ -1615,7 +1615,7 @@ MUTATOR_HOOKFUNCTION(surv, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 		if (surv_num_defender_humans < autocvar_g_surv_team_size)
 		{
 			M_ARGV(0, float) = surv_defender_team_bit;
-			return;
+			return true;
 		}
 		M_ARGV(0, float) = 0;
 		return true;
