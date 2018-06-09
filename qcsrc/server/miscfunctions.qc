@@ -592,12 +592,6 @@ void readplayerstartcvars()
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
 
-	if(g_weaponarena)
-		g_weaponarena_random = cvar("g_weaponarena_random");
-	else
-		g_weaponarena_random = 0;
-	g_weaponarena_random_with_blaster = cvar("g_weaponarena_random_with_blaster");
-
 	if (g_weaponarena)
 	{
 		g_weapon_stay = 0; // incompatible

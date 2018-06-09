@@ -105,7 +105,7 @@ string getwelcomemessage(entity this)
 	if(g_weaponarena)
 	{
 		if(g_weaponarena_random)
-			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena");
+			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena"); // TODO: somehow get this into the mutator
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
