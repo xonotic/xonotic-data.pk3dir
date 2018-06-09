@@ -69,7 +69,6 @@
 #include <server/mapvoting.qh>
 #include <server/ipban.qh>
 #include <server/antilag.qh>
-#include <server/playerdemo.qh>
 #include <server/item_key.qh>
 #include <server/pathlib/pathlib.qh>
 #include <common/vehicles/all.qh>

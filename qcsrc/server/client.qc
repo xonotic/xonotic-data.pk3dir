@@ -10,7 +10,6 @@
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
-#include "playerdemo.qh"
 #include "spawnpoints.qh"
 #include "resources.qh"
 #include "g_damage.qh"
@@ -2770,8 +2769,6 @@ void PlayerPostThink (entity this)
 	    vector v = healtharmor_maxdamage(this.health, this.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id);
 		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, '1 0 0' * v);
     }
-
-	playerdemo_write(this);
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
