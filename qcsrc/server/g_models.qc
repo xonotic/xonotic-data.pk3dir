@@ -4,8 +4,8 @@
 #include <server/miscfunctions.qh>
 #include "g_subs.qh"
 #include <common/net_linked.qh>
-#include "../common/triggers/subs.qh"
-#include "../common/triggers/triggers.qh"
+#include "../common/mapobjects/subs.qh"
+#include "../common/mapobjects/triggers.qh"
 
 entityclass(BGMScript);
 classfield(BGMScript) .string bgmscript;

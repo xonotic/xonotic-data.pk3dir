@@ -33,9 +33,9 @@
 
 #include <common/effects/qc/globalsound.qh>
 
-#include "../common/triggers/func/conveyor.qh"
-#include "../common/triggers/teleporters.qh"
-#include "../common/triggers/target/spawnpoint.qh"
+#include "../common/mapobjects/func/conveyor.qh"
+#include "../common/mapobjects/teleporters.qh"
+#include "../common/mapobjects/target/spawnpoint.qh"
 
 #include "../common/vehicles/all.qh"
 
@@ -51,9 +51,9 @@
 #include "../common/mutators/mutator/waypoints/all.qh"
 #include "../common/mutators/mutator/instagib/sv_instagib.qh"
 
-#include "../common/triggers/subs.qh"
-#include "../common/triggers/triggers.qh"
-#include "../common/triggers/trigger/secret.qh"
+#include "../common/mapobjects/subs.qh"
+#include "../common/mapobjects/triggers.qh"
+#include "../common/mapobjects/trigger/secret.qh"
 
 #include "../common/minigames/sv_minigames.qh"
 

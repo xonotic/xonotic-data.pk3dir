@@ -7,7 +7,7 @@
     #include <lib/warpzone/util_server.qh>
     #include <lib/warpzone/server.qh>
     #include "../constants.qh"
-	#include "../triggers/subs.qh"
+	#include "../mapobjects/subs.qh"
     #include "../util.qh"
     #include <server/weapons/csqcprojectile.qh>
     #include <server/autocvars.qh>

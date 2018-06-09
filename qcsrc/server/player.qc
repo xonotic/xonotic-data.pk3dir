@@ -16,7 +16,7 @@
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
 #include "../common/deathtypes/all.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/playerstats.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 
@@ -25,7 +25,7 @@
 #include "../common/physics/player.qh"
 #include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/triggers/include.qh"
+#include "../common/mapobjects/include.qh"
 #include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"

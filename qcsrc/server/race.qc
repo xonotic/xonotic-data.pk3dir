@@ -14,7 +14,7 @@
 #include <common/gamemodes/rules.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"

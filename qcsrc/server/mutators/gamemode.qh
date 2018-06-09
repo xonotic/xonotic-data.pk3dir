@@ -95,8 +95,8 @@
 #include <common/effects/qc/_mod.qh>
 #include <common/deathtypes/all.qh>
 #include <common/notifications/all.qh>
-#include <common/triggers/teleporters.qh>
-#include <common/triggers/subs.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/subs.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
 

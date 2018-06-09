@@ -1,7 +1,7 @@
 #include "racer.qh"
 
 #ifdef SVQC
-#include <common/triggers/trigger/impulse.qh>
+#include <common/mapobjects/trigger/impulse.qh>
 
 bool autocvar_g_vehicle_racer = true;
 

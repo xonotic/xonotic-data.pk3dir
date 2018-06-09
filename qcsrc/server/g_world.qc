@@ -30,8 +30,8 @@
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
-#include "../common/triggers/trigger/secret.qh"
-#include "../common/triggers/target/music.qh"
+#include "../common/mapobjects/trigger/secret.qh"
+#include "../common/mapobjects/target/music.qh"
 #include "../common/util.qh"
 #include "../common/items/_mod.qh"
 #include <common/weapons/_all.qh>

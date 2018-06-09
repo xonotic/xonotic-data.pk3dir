@@ -18,7 +18,7 @@
 #include "../vehicles/all.qh"
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
-#include "../triggers/triggers.qh"
+#include "../mapobjects/triggers.qh"
 #include <lib/csqcmodel/sv_model.qh>
 #include <server/round_handler.qh>
 #include <server/weapons/_mod.qh>

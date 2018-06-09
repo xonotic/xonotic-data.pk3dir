@@ -6,7 +6,7 @@
 #include "command/common.qh"
 #include "../common/state.qh"
 #include "../lib/warpzone/common.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 
 spawnfunc(info_null)
 {

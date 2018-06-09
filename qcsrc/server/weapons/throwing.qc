@@ -9,7 +9,7 @@
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
 #include <common/notifications/all.qh>
-#include <common/triggers/subs.qh>
+#include <common/mapobjects/subs.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <common/state.qh>
