@@ -23,6 +23,7 @@
 #include <common/weapons/_all.qh>
 
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/triggers.qh>
 
 #include "../common/mapobjects/func/breakable.qh"
 

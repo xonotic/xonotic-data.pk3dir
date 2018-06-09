@@ -152,19 +152,7 @@ bool W_IsWeaponThrowable(entity this, int w)
     if(w == WEP_Null.m_id)
         return false;
 
-	#if 0
-	if(start_weapons & WepSet_FromWeapon(Weapons_from(w)))
-	{
-		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
-		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
-			return false;
-		if((Weapons_from(w)).ammo_type == RESOURCE_NONE)
-			return false;
-	}
-	return true;
-	#else
 	return (Weapons_from(w)).weaponthrowable;
-	#endif
 }
 
 // toss current weapon

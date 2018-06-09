@@ -505,38 +505,6 @@ void cvar_changes_init()
 	cvar_purechanges = strzone(cvar_purechanges);
 }
 
-void detect_maptype()
-{
-#if 0
-	vector o, v;
-	float i;
-
-	for (;;)
-	{
-		o = world.mins;
-		o.x += random() * (world.maxs.x - world.mins.x);
-		o.y += random() * (world.maxs.y - world.mins.y);
-		o.z += random() * (world.maxs.z - world.mins.z);
-
-		tracebox(o, STAT(PL_MIN), STAT(PL_MAX), o - '0 0 32768', MOVE_WORLDONLY, NULL);
-		if(trace_fraction == 1)
-			continue;
-
-		v = trace_endpos;
-
-		for(i = 0; i < 64; i += 4)
-		{
-			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, NULL);
-	if(trace_fraction == 1)
-		continue;
-			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos));
-		}
-
-		break;
-	}
-#endif
-}
-
 entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
@@ -868,8 +836,6 @@ spawnfunc(worldspawn)
 	Nagger_Init();
 
 	next_pingtime = time + 5;
-
-	detect_maptype();
 
 	// set up information replies for clients and server to use
 	maplist_reply = strzone(getmaplist());
