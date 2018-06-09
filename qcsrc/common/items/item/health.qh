@@ -150,7 +150,7 @@ void item_healthmega_init(entity item)
 REGISTER_ITEM(HealthMega, Health) {
     this.m_canonical_spawnfunc = "item_health_mega";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_HealthMega_ITEM;
     this.m_sound                =   SND_HealthMega;
 #endif
