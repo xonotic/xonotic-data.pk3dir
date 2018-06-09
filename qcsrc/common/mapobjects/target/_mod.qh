@@ -1,6 +1,5 @@
 // generated file; do not modify
 #include <common/mapobjects/target/changelevel.qh>
-#include <common/mapobjects/target/include.qh>
 #include <common/mapobjects/target/kill.qh>
 #include <common/mapobjects/target/levelwarp.qh>
 #include <common/mapobjects/target/location.qh>

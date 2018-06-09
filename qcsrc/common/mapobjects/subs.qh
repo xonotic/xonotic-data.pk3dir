@@ -44,6 +44,12 @@ void SUB_VanishOrRemove (entity ent);
 
 .entity move_controller;
 
+const int TSPEED_TIME = -1;
+const int TSPEED_LINEAR = 0;
+const int TSPEED_START = 1;
+const int TSPEED_END = 2;
+// TODO average too?
+
 #ifdef CSQC
 // this stuff is defined in the server side engine VM, so we must define it separately here
 .float takedamage;
@@ -54,4 +60,72 @@ const int DAMAGE_AIM = 2;
 .string		noise, noise1, noise2, noise3;	// contains names of wavs to play
 
 .float		max_health;		// players maximum health is stored here
+#endif
+
+#ifdef SVQC
+spawnfunc(info_null);
+#endif
+
+/*
+=============
+SUB_CalcMove
+
+calculate this.velocity and this.nextthink to reach dest from
+this.origin traveling at speed
+===============
+*/
+void SUB_CalcMoveDone(entity this);
+
+.float platmovetype_turn;
+void SUB_CalcMove_controller_think (entity this);
+
+void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector control, vector dest);
+
+void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest);
+
+void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
+
+void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
+
+void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
+
+#ifdef SVQC
+void ApplyMinMaxScaleAngles(entity e);
+
+void SetBrushEntityModel(entity this);
+
+void SetBrushEntityModelNoLOD(entity this);
+#endif
+
+/*
+=============
+SUB_CalcAngleMove
+
+calculate this.avelocity and this.nextthink to reach destangle from
+this.angles rotating
+
+The calling function should make sure this.think is valid
+===============
+*/
+void SUB_CalcAngleMoveDone (entity this);
+
+// FIXME: I fixed this function only for rotation around the main axes
+void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float tspeed, void(entity this) func);
+
+void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func);
+
+/*
+================
+InitTrigger
+================
+*/
+
+#ifdef SVQC
+void SetMovedir(entity this);
+
+void InitTrigger(entity this);
+
+void InitSolidBSPTrigger(entity this);
+
+bool InitMovingBrushTrigger(entity this);
 #endif

@@ -1,11 +1,12 @@
-#include "g_models.qh"
+#include "models.qh"
 
+#ifdef SVQC
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
-#include "g_subs.qh"
+#include <server/g_subs.qh>
 #include <common/net_linked.qh>
-#include "../common/mapobjects/subs.qh"
-#include "../common/mapobjects/triggers.qh"
+#include "subs.qh"
+#include "triggers.qh"
 
 entityclass(BGMScript);
 classfield(BGMScript) .string bgmscript;
@@ -14,8 +15,8 @@ classfield(BGMScript) .float bgmscriptdecay;
 classfield(BGMScript) .float bgmscriptsustain;
 classfield(BGMScript) .float bgmscriptrelease;
 
-#include "../common/constants.qh"
-#include "../lib/csqcmodel/sv_model.qh"
+#include <common/constants.qh>
+#include "../../lib/csqcmodel/sv_model.qh"
 
 .float modelscale;
 
@@ -192,3 +193,4 @@ spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_NOT) } // DEP
 // solid brush entities
 spawnfunc(func_wall)              { G_MODEL_INIT      (this, SOLID_BSP) } // Q1 name
 spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+#endif

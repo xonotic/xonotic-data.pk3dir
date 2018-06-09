@@ -24,7 +24,7 @@
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
 #include <common/scores.qh>
-#include <common/mapobjects/include.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>

@@ -1,5 +1,5 @@
 // generated file; do not modify
-#include <common/mapobjects/include.qh>
+#include <common/mapobjects/models.qh>
 #include <common/mapobjects/platforms.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/teleporters.qh>

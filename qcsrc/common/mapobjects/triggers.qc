@@ -1,4 +1,8 @@
 #include "triggers.qh"
+#ifdef SVQC
+	#include <server/item_key.qh>
+#endif
+
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);

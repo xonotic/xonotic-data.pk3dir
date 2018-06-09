@@ -1,5 +1,5 @@
 #include "player.qh"
-#include "../mapobjects/include.qh"
+#include "../mapobjects/_mod.qh"
 #include "../viewloc.qh"
 
 #ifdef SVQC

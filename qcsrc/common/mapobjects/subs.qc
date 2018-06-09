@@ -4,6 +4,14 @@ void SUB_NullThink(entity this) { }
 void SUB_CalcMoveDone(entity this);
 void SUB_CalcAngleMoveDone(entity this);
 
+#ifdef SVQC
+spawnfunc(info_null)
+{
+	delete(this);
+	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
+}
+#endif
+
 /*
 ==================
 SUB_Friction
@@ -179,12 +187,6 @@ void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector de
 	controller.destvec = destin; // end point
 	controller.destvec2 = '0 0 0';
 }
-
-float TSPEED_TIME = -1;
-float TSPEED_LINEAR = 0;
-float TSPEED_START = 1;
-float TSPEED_END = 2;
-// TODO average too?
 
 void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {
@@ -367,3 +369,129 @@ void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float
 {
 	SUB_CalcAngleMove (ent, destangle, tspeedtype, tspeed, func);
 }
+
+#ifdef SVQC
+void ApplyMinMaxScaleAngles(entity e)
+{
+	if(e.angles.x != 0 || e.angles.z != 0 || e.avelocity.x != 0 || e.avelocity.z != 0) // "weird" rotation
+	{
+		e.maxs = '1 1 1' * vlen(
+			'1 0 0' * max(-e.mins.x, e.maxs.x) +
+			'0 1 0' * max(-e.mins.y, e.maxs.y) +
+			'0 0 1' * max(-e.mins.z, e.maxs.z)
+		);
+		e.mins = -e.maxs;
+	}
+	else if(e.angles.y != 0 || e.avelocity.y != 0) // yaw only is a bit better
+	{
+		e.maxs_x = vlen(
+			'1 0 0' * max(-e.mins.x, e.maxs.x) +
+			'0 1 0' * max(-e.mins.y, e.maxs.y)
+		);
+		e.maxs_y = e.maxs.x;
+		e.mins_x = -e.maxs.x;
+		e.mins_y = -e.maxs.x;
+	}
+	if(e.scale)
+		setsize(e, e.mins * e.scale, e.maxs * e.scale);
+	else
+		setsize(e, e.mins, e.maxs);
+}
+
+void SetBrushEntityModel(entity this)
+{
+ 	if(this.model != "")
+ 	{
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
+		{
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
+		}
+		else
+			_setmodel(this, this.model); // no precision needed
+		InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
+ 	}
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
+}
+
+void SetBrushEntityModelNoLOD(entity this)
+{
+ 	if(this.model != "")
+ 	{
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
+		{
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
+		}
+		else
+			_setmodel(this, this.model); // no precision needed
+ 	}
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
+}
+
+/*
+================
+InitTrigger
+================
+*/
+
+void SetMovedir(entity this)
+{
+	if(this.movedir != '0 0 0')
+		this.movedir = normalize(this.movedir);
+	else
+	{
+		makevectors(this.angles);
+		this.movedir = v_forward;
+	}
+
+	this.angles = '0 0 0';
+}
+
+void InitTrigger(entity this)
+{
+// trigger angles are used for one-way touches.  An angle of 0 is assumed
+// to mean no restrictions, so use a yaw of 360 instead.
+	SetMovedir(this);
+	this.solid = SOLID_TRIGGER;
+	SetBrushEntityModel(this);
+	set_movetype(this, MOVETYPE_NONE);
+	this.modelindex = 0;
+	this.model = "";
+}
+
+void InitSolidBSPTrigger(entity this)
+{
+// trigger angles are used for one-way touches.  An angle of 0 is assumed
+// to mean no restrictions, so use a yaw of 360 instead.
+	SetMovedir(this);
+	this.solid = SOLID_BSP;
+	SetBrushEntityModel(this);
+	set_movetype(this, MOVETYPE_NONE); // why was this PUSH? -div0
+//	this.modelindex = 0;
+	this.model = "";
+}
+
+bool InitMovingBrushTrigger(entity this)
+{
+// trigger angles are used for one-way touches.  An angle of 0 is assumed
+// to mean no restrictions, so use a yaw of 360 instead.
+	this.solid = SOLID_BSP;
+	SetBrushEntityModel(this);
+	set_movetype(this, MOVETYPE_PUSH);
+	if(this.modelindex == 0)
+	{
+		objerror(this, "InitMovingBrushTrigger: no brushes found!");
+		return false;
+	}
+	return true;
+}
+#endif

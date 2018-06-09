@@ -8,7 +8,6 @@
 #include <common/mapobjects/trigger/heal.qc>
 #include <common/mapobjects/trigger/hurt.qc>
 #include <common/mapobjects/trigger/impulse.qc>
-#include <common/mapobjects/trigger/include.qc>
 #include <common/mapobjects/trigger/jumppads.qc>
 #include <common/mapobjects/trigger/keylock.qc>
 #include <common/mapobjects/trigger/magicear.qc>

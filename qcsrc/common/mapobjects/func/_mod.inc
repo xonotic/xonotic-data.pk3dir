@@ -7,7 +7,6 @@
 #include <common/mapobjects/func/door_rotating.qc>
 #include <common/mapobjects/func/door_secret.qc>
 #include <common/mapobjects/func/fourier.qc>
-#include <common/mapobjects/func/include.qc>
 #include <common/mapobjects/func/ladder.qc>
 #include <common/mapobjects/func/pendulum.qc>
 #include <common/mapobjects/func/plat.qc>

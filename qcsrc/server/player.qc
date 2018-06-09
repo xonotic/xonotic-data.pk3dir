@@ -25,7 +25,7 @@
 #include "../common/physics/player.qh"
 #include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/mapobjects/include.qh"
+#include "../common/mapobjects/_mod.qh"
 #include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"
