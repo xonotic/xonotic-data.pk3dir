@@ -224,6 +224,14 @@ void race_send_speedaward_alltimebest(float msg)
 	WriteString(msg, speedaward_alltimebest_holder);
 }
 
+void race_send_rankings_cnt(float msg)
+{
+	WriteHeader(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_RANKINGS_CNT);
+	int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
+	WriteByte(msg, m);
+}
+
 void race_SendRankings(float pos, float prevpos, float del, float msg)
 {
 	WriteHeader(msg, TE_CSQC_RACE);
