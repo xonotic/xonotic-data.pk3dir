@@ -16,7 +16,7 @@ SOUND(VaporizerCells, Item_Sound("itempickup"));
 
 #ifdef SVQC
 int autocvar_g_instagib_ammo_drop;
-void ammo_vaporizercells_init(entity item)
+void ammo_vaporizercells_init(Pickup this, entity item)
 {
     if(!item.ammo_cells)
         item.ammo_cells = autocvar_g_instagib_ammo_drop;
@@ -75,7 +75,7 @@ SOUND(Invisibility, Item_Sound("powerup"));
 /// \brief Initializes the invisibility powerup.
 /// \param[in,out] item Item to initialize.
 /// \return No return.
-void powerup_invisibility_init(entity item);
+void powerup_invisibility_init(Pickup this, entity item);
 #endif
 
 REGISTER_ITEM(Invisibility, Powerup) {
@@ -110,7 +110,7 @@ SOUND(Speed, Item_Sound("powerup_shield"));
 /// \brief Initializes the speed powerup.
 /// \param[in,out] item Item to initialize.
 /// \return No return.
-void powerup_speed_init(entity item);
+void powerup_speed_init(Pickup this, entity item);
 #endif
 
 REGISTER_ITEM(Speed, Powerup) {

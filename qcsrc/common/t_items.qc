@@ -1178,7 +1178,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
     this.item_pickupsound_ent = pickupsound;
 
     if(def.m_iteminit)
-    	def.m_iteminit(this);
+    	def.m_iteminit(def, this);
 
 	if(!this.respawntime) // both need to be set
 	{
