@@ -5,7 +5,7 @@
 #include <common/mapinfo.qh>
 #include <common/ent_cs.qh>
 #include <common/scores.qh>
-#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
+#include <common/gamemodes/_mod.qh>
 
 // Mod icons (#10)
 

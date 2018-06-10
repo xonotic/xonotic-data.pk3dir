@@ -10,3 +10,6 @@
 #include <common/mutators/mutator/overkill/oknex.qc>
 #include <common/mutators/mutator/overkill/okrpc.qc>
 #include <common/mutators/mutator/overkill/okshotgun.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/overkill/sv_weapons.qc>
+#endif
