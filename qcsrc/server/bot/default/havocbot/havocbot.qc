@@ -18,8 +18,8 @@
 #include <common/items/_mod.qh>
 #include <common/wepent.qh>
 
-#include <common/triggers/teleporters.qh>
-#include <common/triggers/trigger/jumppads.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/jumppads.qh>
 
 #include <lib/warpzone/common.qh>
 
@@ -109,7 +109,7 @@ void havocbot_ai(entity this)
 		this.aistatus |= AI_STATUS_ATTACKING;
 		this.aistatus &= ~AI_STATUS_ROAMING;
 
-		if(this.weapons)
+		if(STAT(WEAPONS, this))
 		{
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
 			{
@@ -204,7 +204,7 @@ void havocbot_ai(entity this)
 			if(this.(weaponentity).clip_load >= 0) // only if we're not reloading a weapon already
 			{
 				FOREACH(Weapons, it != WEP_Null, {
-					if((this.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
+					if((STAT(WEAPONS, this) & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
 					{
 						this.(weaponentity).m_switchweapon = it;
 						break;
@@ -1238,7 +1238,7 @@ LABEL(scan_targets)
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || this.weapons) // || this.weapon == WEP_RIFLE.m_id
+		if(best || STAT(WEAPONS, this)) // || this.weapon == WEP_RIFLE.m_id
 			break;
 		if(scan_transparent)
 			break;

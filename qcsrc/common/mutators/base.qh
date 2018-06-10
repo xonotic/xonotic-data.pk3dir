@@ -171,6 +171,8 @@ void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 .bool m_added;
 
+#define MUTATOR_IS_ENABLED(this) MUTATOR_##this.mutatorcheck()
+
 #ifdef GAMEQC
 /** server mutators activate corresponding client mutators for all clients */
 REGISTER_NET_LINKED(Mutator)

@@ -13,7 +13,7 @@
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
-#include <common/triggers/trigger/jumppads.qh>
+#include <common/mapobjects/trigger/jumppads.qh>
 
 .float speed;
 
@@ -1256,7 +1256,6 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	//print("routerating ", etos(e), " = ", ftos(f), " - ", ftos(rangebias), "\n");
 
 	// Evaluate path using jetpack
-	if(g_jetpack)
 	if(this.items & IT_JETPACK)
 	if(autocvar_bot_ai_navigation_jetpack)
 	if(vdist(this.origin - goal_org, >, autocvar_bot_ai_navigation_jetpack_mindistance))
@@ -1318,7 +1317,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), " this.ammo_fuel ", ftos(this.ammo_fuel));
 
 			// enough fuel ?
-			if(this.ammo_fuel>fuel)
+			if(this.ammo_fuel>fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship

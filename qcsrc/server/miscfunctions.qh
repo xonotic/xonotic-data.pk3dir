@@ -168,8 +168,7 @@ float g_pickup_fuel_max;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
 WepSet g_weaponarena_weapons;
-float g_weaponarena_random;
-float g_weaponarena_random_with_blaster;
+float g_weaponarena_random; // TODO
 string g_weaponarena_list;
 float g_weaponspeedfactor;
 float g_weaponratefactor;

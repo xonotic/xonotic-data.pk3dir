@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-05-22 15:24+0000\n"
+"PO-Revision-Date: 2018-05-29 05:44+0000\n"
 "Last-Translator: Muhammad Nur Hidayat Yasuyoshi <mnh48mail@gmail.com>\n"
 "Language-Team: Malay (http://www.transifex.com/team-xonotic/xonotic/language/"
 "ms/)\n"
@@ -189,44 +189,44 @@ msgstr "^7Tekan ^3ESC ^7untuk menunjukkan pilihan HUD."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Klik dua kali ^7a panel untuk pilihan khusus panel."
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7untuk melumpuhkan percubaan perlanggaran, ^3SHIFT ^7dan"
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3KEKUNCI ANAK PANAH ^7untuk pelarasan halus."
 
 #: qcsrc/client/hud/panel/modicons.qc:566
 msgid "Personal best"
-msgstr ""
+msgstr "Pencapaian terbaik peribadi"
 
 #: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Server best"
-msgstr ""
+msgstr "Pencapaian terbaik pelayan"
 
 #: qcsrc/client/hud/panel/notify.qc:115 qcsrc/client/hud/panel/notify.qc:116
 #: qcsrc/client/hud/panel/score.qc:59
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "Pemain %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:603
 #: qcsrc/client/hud/panel/quickmenu.qc:605
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Submenu%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:610
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "Perintah%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:636
 msgid "Continue..."
-msgstr ""
+msgstr "Teruskan..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
@@ -235,28 +235,28 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / hebat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^hebat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^terbaiklah"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^hai / semoga berjaya"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^hai / semoga berjaya dan bergembiralah"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Sembang pasukan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^quad soon"
@@ -264,19 +264,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^item percuma %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^item percuma, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^mengambil item (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^mengambil item, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^negative"
@@ -492,21 +492,21 @@ msgstr ""
 #: qcsrc/client/hud/panel/racetimer.qc:37
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr " (-%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:42
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 msgid "Start line"
-msgstr ""
+msgstr "Garisan pemula"
 
 #: qcsrc/client/hud/panel/racetimer.qc:63
 #: qcsrc/client/hud/panel/racetimer.qc:67
 msgid "Finish line"
-msgstr ""
+msgstr "Garisan penamat"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -677,18 +677,20 @@ msgstr ""
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
+"Anda boleh mengubah papan markah menggunakan perintah "
+"^2scoreboard_columns_set .\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:296
 msgid "^3|---------------------------------------------------------------|\n"
-msgstr ""
+msgstr "^3|---------------------------------------------------------------|\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:297
 msgid "Usage:\n"
-msgstr ""
+msgstr "Kegunaan:\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:298
 msgid "^2scoreboard_columns_set default\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set default\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:299
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
@@ -879,117 +881,117 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:208
 msgid "N/A"
-msgstr ""
+msgstr "Tiada"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1156
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "Statistik ketepatan (puratanya %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1295
 msgid "Map stats:"
-msgstr ""
+msgstr "Statistik peta:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1325
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Raksasa dibunuh:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1332
 msgid "Secrets found:"
-msgstr ""
+msgstr "Rahsia dijumpai:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Kedudukan masa tangkapan"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Rankings"
-msgstr ""
+msgstr "Kedudukan"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1519
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
-msgstr ""
+msgstr "Papan markah"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Anugerah kelajuan: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1588
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Terlaju sepanjang masa: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1604
 #, c-format
 msgid "Spectators"
-msgstr ""
+msgstr "Penonton"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1619
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
-msgstr ""
+msgstr "bermain ^3%s^7 di ^2%s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1626
 #: qcsrc/client/hud/panel/scoreboard.qc:1631
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr ""
+msgstr " sehingga ^1%1.0f minit^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1635
 #: qcsrc/client/hud/panel/scoreboard.qc:1654
 msgid " or"
-msgstr ""
+msgstr "atau"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1638
 #: qcsrc/client/hud/panel/scoreboard.qc:1645
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr ""
+msgstr " sehingga ^3%s %s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1639
 #: qcsrc/client/hud/panel/scoreboard.qc:1646
 #: qcsrc/client/hud/panel/scoreboard.qc:1658
 #: qcsrc/client/hud/panel/scoreboard.qc:1665
 msgid "SCO^points"
-msgstr ""
+msgstr "SCO^mata"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1640
 #: qcsrc/client/hud/panel/scoreboard.qc:1647
 #: qcsrc/client/hud/panel/scoreboard.qc:1659
 #: qcsrc/client/hud/panel/scoreboard.qc:1666
 msgid "SCO^is beaten"
-msgstr ""
+msgstr "SCO^dikalahkan"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1657
 #: qcsrc/client/hud/panel/scoreboard.qc:1664
 #, c-format
 msgid " until a lead of ^3%s %s^7"
-msgstr ""
+msgstr " sehingga pimpinan ^3%s %s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1688
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr ""
+msgstr "^1Lahir semula dalam ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1698
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Anda dah mati, tunggu ^3%s^7 sebelum lahir semula"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1707
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Anda dah mati, tekan ^2%s^7 untuk lahir semula"
 
 #: qcsrc/client/hud/panel/vote.qc:24
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr ""
+msgstr "^1Anda mesti jawab sebelum memasuki mod susunan hud\n"
 
 #: qcsrc/client/hud/panel/vote.qc:29
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2Nama ^7menggantikan \"^1Pemain tidak bernama^7\" dalam statistik"
 
 #: qcsrc/client/hud/panel/vote.qc:115
 msgid "A vote has been called for:"
@@ -997,11 +999,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:117
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Benarkan pelayan untuk menyimpan dan memaparkan nama anda?"
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Susun HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:125 qcsrc/menu/xonotic/dialog_firstrun.qc:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
@@ -1011,7 +1013,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Ya"
 
 #: qcsrc/client/hud/panel/vote.qc:127 qcsrc/menu/xonotic/dialog_firstrun.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1021,39 +1023,39 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Tidak"
 
 #: qcsrc/client/hud/panel/weapons.qc:530
 msgid "Out of ammo"
-msgstr ""
+msgstr "Kehabisan peluru"
 
 #: qcsrc/client/hud/panel/weapons.qc:534
 msgid "Don't have"
-msgstr ""
+msgstr "Tiada"
 
 #: qcsrc/client/hud/panel/weapons.qc:538
 msgid "Unavailable"
-msgstr ""
+msgstr "Tak wujud"
 
 #: qcsrc/client/main.qc:1014
 msgid " qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: qcsrc/client/main.qc:1016
 msgid " m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/client/main.qc:1018
 msgid " km/h"
-msgstr ""
+msgstr "km/j"
 
 #: qcsrc/client/main.qc:1020
 msgid " mph"
-msgstr ""
+msgstr "b/j"
 
 #: qcsrc/client/main.qc:1022
 msgid " knots"
-msgstr ""
+msgstr "knot"
 
 #: qcsrc/client/main.qc:1264
 #, c-format
@@ -1062,34 +1064,35 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:49
 msgid " (1 vote)"
-msgstr ""
+msgstr "(1 undi)"
 
 #: qcsrc/client/mapvoting.qc:51
 #, c-format
 msgid " (%d votes)"
-msgstr ""
+msgstr " (%d undi)"
 
 #: qcsrc/client/mapvoting.qc:271
 msgid "Don't care"
-msgstr ""
+msgstr "Tak kisah"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Decide the gametype"
-msgstr ""
+msgstr "Tentukan jenis permainan"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Vote for a map"
-msgstr ""
+msgstr "Undi peta"
 
 #: qcsrc/client/mapvoting.qc:382
 #, c-format
 msgid "%d seconds left"
-msgstr ""
+msgstr "Tinggal %d saat"
 
 #: qcsrc/client/mapvoting.qc:497
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
 msgstr ""
+"mv_mapdownload: ^3Anda tidak patut guna perintah ini dengan sendirinya!\n"
 
 #: qcsrc/client/mapvoting.qc:507
 msgid "^1Error:^7 Couldn't find pak index.\n"
@@ -1097,7 +1100,7 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:516
 msgid "Requesting preview...\n"
-msgstr ""
+msgstr "Meminta pratonton...\n"
 
 #: qcsrc/client/miscfunctions.qc:109
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1166,175 +1169,184 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Deathmatch"
-msgstr ""
+msgstr "Kalah Mati"
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Score as many frags as you can"
-msgstr ""
+msgstr "Dominasi kawasan sebanyak mana yang anda boleh"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Last Man Standing"
-msgstr ""
+msgstr "Orang Terakhir Berdiri"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Survive and kill until the enemies have no lives left"
-msgstr ""
+msgstr "Kekal hidup dan bunuh semua musuh sehingga mereka kehabisan nyawa"
 
 #: qcsrc/common/mapinfo.qh:126
 msgid "Race"
-msgstr ""
+msgstr "Lumba"
 
 #: qcsrc/common/mapinfo.qh:126
 msgid "Race against other players to the finish line"
-msgstr ""
+msgstr "Berlumba dengan pemain lain ke garisan penamat"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race CTS"
-msgstr ""
+msgstr "Lumba CTS"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race for fastest time."
-msgstr ""
+msgstr "Lumba untuk masa terpantas."
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Help your team score the most frags against the enemy team"
 msgstr ""
+"Bantu pasukan anda untuk mendominasi kebanyakan kawasan berbanding pasukan "
+"lawan"
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Team Deathmatch"
-msgstr ""
+msgstr "Kalah Mati Berpasukan"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid "Capture the Flag"
-msgstr ""
+msgstr "Curi Bendera"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Cari dan bawa balik bendera musuh ke tapak anda, pertahankan tapak anda "
+"daripada pasukan lain"
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Clan Arena"
-msgstr ""
+msgstr "Arena Suku"
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "Bunuh semua ahli pasukan musuh untuk memenangi pusingan tersebut"
 
 #: qcsrc/common/mapinfo.qh:287
 msgid "Capture and defend all the control points to win"
-msgstr ""
+msgstr "Ambil alih dan pertahankan semua titik kawalan untuk menang"
 
 #: qcsrc/common/mapinfo.qh:287
 msgid "Domination"
-msgstr ""
+msgstr "Dominasi"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Gather all the keys to win the round"
-msgstr ""
+msgstr "Kumpul semua kunci untuk memenangi pusingan"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Key Hunt"
-msgstr ""
+msgstr "Pencarian Kunci"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid "Assault"
-msgstr ""
+msgstr "Serangan"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
+"Musnahkan halangan untuk mencari dan memusnahkan teras kuasa musuh sebelum "
+"masa tamat"
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Capture control points to reach and destroy the enemy generator"
 msgstr ""
+"Ambil alih titik kawalan untuk sampai ke dan musnahkan penjana kuasa musuh"
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Onslaught"
-msgstr ""
+msgstr "Serangan Hebat"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Nexball"
-msgstr ""
+msgstr "Bola Nex"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
-msgstr ""
+msgstr "Tembak dan tendang bola ke dalam gol musuh, biar kosong gol anda"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid "Freeze Tag"
-msgstr ""
+msgstr "Aci Beku"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Bunuh musuh untuk bekukan mereka, berdiri dekat dengan rakan pasukan beku "
+"untuk mencairkan mereka; bekukan semua musuh untuk menang"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
-msgstr ""
+msgstr "Tangkap bola untuk mendapat mata pembunuhan"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Keepaway"
-msgstr ""
+msgstr "Bola Elak"
 
 #: qcsrc/common/mapinfo.qh:461
 msgid "Invasion"
-msgstr ""
+msgstr "Serangan"
 
 #: qcsrc/common/mapinfo.qh:461
 msgid "Survive against waves of monsters"
-msgstr ""
+msgstr "Cuba untuk hidup dengan gelombang kelahiran raksasa"
 
 #: qcsrc/common/minigames/cl_minigames.qc:383
 msgid "It's your turn"
-msgstr ""
+msgstr "Giliran anda"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:331
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
-msgstr ""
+msgstr "Berhenti Main"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:336
 msgid "Invite"
-msgstr ""
+msgstr "Ajak Rakan"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:378
 msgid "Current Game"
-msgstr ""
+msgstr "Permainan Semasa"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:403
 msgid "Exit Menu"
-msgstr ""
+msgstr "Keluar Menu"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:415
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Create"
-msgstr ""
+msgstr "Cipta"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:418
 msgid "Join"
-msgstr ""
+msgstr "Sertai"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:489
 msgid "Minigames"
-msgstr ""
+msgstr "Permainan Mini"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1168
 msgid "Better luck next time!"
-msgstr ""
+msgstr "Cuba lagi akan datang!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1172
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Macam tiub! Tekan \"Tahap Seterusnya\" untuk teruskan!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1174
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Jahatnya! Tekan \"Tahap Seterusnya\" untuk teruskan!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1177
 msgid "Press the space bar to change your currently selected tile"
@@ -1346,36 +1358,36 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1404
 msgid "Next Level"
-msgstr ""
+msgstr "Tahap Seterusnya"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1405
 msgid "Restart"
-msgstr ""
+msgstr "Mulakan Semula"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1406
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1407
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
-msgstr ""
+msgstr "Simpan"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
 #: qcsrc/common/minigames/minigame/ttt.qc:319
 msgid "Draw"
-msgstr ""
+msgstr "Lukis"
 
 #: qcsrc/common/minigames/minigame/c4.qc:378
 #: qcsrc/common/minigames/minigame/nmm.qc:601
 msgid "You lost the game!"
-msgstr ""
+msgstr "Anda kalah!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:379
 #: qcsrc/common/minigames/minigame/nmm.qc:602
 msgid "You win!"
-msgstr ""
+msgstr "Anda menang!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
 #: qcsrc/common/minigames/minigame/nmm.qc:606
@@ -1389,7 +1401,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:458
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Click on the game board to place your piece"
-msgstr ""
+msgstr "Klik pada papan permainan untuk meletakkan kepingan anda"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:610
 msgid ""
@@ -9155,3 +9167,6 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr ""
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^Sembang"

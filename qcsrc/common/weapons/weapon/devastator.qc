@@ -235,11 +235,19 @@ void W_Devastator_Think(entity this)
 			else
 				f = 1;
 
+			vector md = this.realowner.(weaponentity).movedir;
+			vector vecs = ((md.x > 0) ? md : '0 0 0');
+
+			vector dv = v_right * -vecs.y + v_up * vecs.z;
+
+			if(!W_DualWielding(this.realowner))
+				dv = '0 0 0'; // don't override!
+
 			velspeed = vlen(this.velocity);
 
 			makevectors(this.realowner.v_angle);
 			desireddir = WarpZone_RefSys_TransformVelocity(this.realowner, this, v_forward);
-			desiredorigin = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs);
+			desiredorigin = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs + dv);
 			olddir = normalize(this.velocity);
 
 			// now it gets tricky... we want to move like some curve to approximate the target direction

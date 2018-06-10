@@ -123,6 +123,8 @@ string W_UndeprecateName(string s)
 		case "minstanex": return "vaporizer";
 		case "grenadelauncher": return "mortar";
 		case "uzi": return "machinegun";
+		case "hmg": return "okhmg";
+		case "rpc": return "okrpc";
 		default: return s;
 	}
 }
@@ -192,9 +194,8 @@ string W_FixWeaponOrder_ForceComplete(string order)
 	return W_FixWeaponOrder(order, 1);
 }
 
-void W_RandomWeapons(entity e, int n)
+WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 {
-	WepSet remaining = e.weapons;
 	WepSet result = '0 0 0';
 	for (int j = 0; j < n; ++j)
 	{
@@ -207,7 +208,7 @@ void W_RandomWeapons(entity e, int n)
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);
 	}
-	e.weapons = result;
+	return result;
 }
 
 string GetAmmoPicture(int ammotype)

@@ -4,6 +4,7 @@
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
 #include <server/resources.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/weapons/_all.qh>
 
 spawnfunc(target_items);
@@ -107,7 +108,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 		SetResourceAmount(actor, RESOURCE_PLASMA, start_ammo_plasma);
 		SetResourceAmount(actor, RESOURCE_FUEL, start_ammo_fuel);
 
-		actor.weapons = start_weapons;
+		STAT(WEAPONS, actor) = start_weapons;
 		if (this.spawnflags & 32)
 		{
 			// TODO

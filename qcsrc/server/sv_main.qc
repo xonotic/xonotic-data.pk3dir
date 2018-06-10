@@ -383,3 +383,15 @@ void WarpZone_PostInitialize_Callback()
 	}
 	delete(tracetest_ent);
 }
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main ()
+{
+
+}

@@ -1,5 +1,7 @@
 #include "nades.qh"
 
+#include "../overkill/okmachinegun.qh"
+
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
 float autocvar_g_nades_spread = 0.04;
@@ -156,7 +158,6 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/gamemodes/_mod.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
-#include <server/g_subs.qh>
 
 REGISTER_MUTATOR(nades, autocvar_g_nades);
 
@@ -881,12 +882,12 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		force *= 0.5; // too much
 		damage = 0;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_NEX))
 	{
 		force *= 6;
 		damage = this.max_health * 0.55;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_MACHINEGUN))
 		damage = this.max_health * 0.1;
 	else if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	{
@@ -1251,7 +1252,7 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
     entity player = M_ARGV(0, entity);
 
-	if (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
+	if (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
 		nades_CheckThrow(player);
 		return true;
 	}
@@ -1263,7 +1264,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 	if (!IS_PLAYER(player)) { return; }
 
-	if (player.nade && (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
+	if (player.nade && (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
 
 	entity held_nade = player.nade;
 	if (held_nade)

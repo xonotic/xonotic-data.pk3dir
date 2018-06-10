@@ -1,4 +1,5 @@
 #include "ent_cs.qh"
+#include <common/gamemodes/_mod.qh>
 
 REGISTRY(EntCSProps, BITS(16) - 1)
 #define EntCSProps_from(i) _EntCSProps_from(i, NULL)

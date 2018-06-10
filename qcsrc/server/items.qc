@@ -5,7 +5,6 @@
 /// game items.
 /// \copyright GNU GPLv2 or any later version.
 
-#include "g_subs.qh"
 #include "mutators/events.qh"
 #include <common/weapons/all.qh>
 
