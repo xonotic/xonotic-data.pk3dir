@@ -1,6 +1,5 @@
 #include "sv_monsters.qh"
 
-#include <server/g_subs.qh>
 #include <lib/warpzone/common.qh>
 #include "../constants.qh"
 #include "../teams.qh"

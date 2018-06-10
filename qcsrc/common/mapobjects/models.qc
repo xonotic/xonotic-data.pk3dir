@@ -3,7 +3,6 @@
 #ifdef SVQC
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
-#include <server/g_subs.qh>
 #include <common/net_linked.qh>
 #include "subs.qh"
 #include "triggers.qh"

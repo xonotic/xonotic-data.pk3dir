@@ -8,7 +8,6 @@
 #include "weaponsystem.qh"
 
 #include "../g_damage.qh"
-#include "../g_subs.qh"
 #include "../antilag.qh"
 
 #include <common/constants.qh>
