@@ -17,6 +17,7 @@
 #include "../teamplay.qh"
 
 #include "../mutators/_mod.qh"
+#include <common/gamemodes/_mod.qh>
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>

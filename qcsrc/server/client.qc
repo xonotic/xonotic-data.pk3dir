@@ -50,6 +50,7 @@
 
 #include "../common/mutators/mutator/waypoints/all.qh"
 #include "../common/mutators/mutator/instagib/sv_instagib.qh"
+#include <common/gamemodes/_mod.qh>
 
 #include "../common/mapobjects/subs.qh"
 #include "../common/mapobjects/triggers.qh"
