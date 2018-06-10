@@ -1,48 +1,5 @@
 #pragma once
 
-void SUB_NullThink(entity this);
-
-/*
-==================
-SUB_Friction
-
-Applies some friction to this
-==================
-*/
-.float friction;
-void SUB_Friction (entity this);
-
-/*
-==================
-SUB_VanishOrRemove
-
-Makes client invisible or removes non-client
-==================
-*/
-void SUB_VanishOrRemove (entity ent);
-
-void SUB_SetFade_Think (entity this);
-
-/*
-==================
-SUB_SetFade
-
-Fade 'ent' out when time >= 'when'
-==================
-*/
-void SUB_SetFade (entity ent, float when, float fadetime);
-
-/*
-==================
-main
-
-unused but required by the engine
-==================
-*/
-void main ();
-
-// Misc
-
 /*
 ==================
 traceline_antilag
@@ -73,20 +30,3 @@ Ripped from DPMod
 ==================
 */
 vector findbetterlocation (vector org, float mindist);
-
-
-.string lodtarget1;
-.string lodtarget2;
-.string lodmodel1;
-.string lodmodel2;
-.float lodmodelindex0;
-.float lodmodelindex1;
-.float lodmodelindex2;
-.float loddistance1;
-.float loddistance2;
-
-bool LOD_customize(entity this, entity client);
-
-void LOD_uncustomize(entity this);
-
-void LODmodel_attach(entity this);

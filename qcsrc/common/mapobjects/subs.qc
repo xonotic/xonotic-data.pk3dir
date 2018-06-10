@@ -437,6 +437,97 @@ void SetBrushEntityModelNoLOD(entity this)
 	ApplyMinMaxScaleAngles(this);
 }
 
+bool LOD_customize(entity this, entity client)
+{
+	if(autocvar_loddebug)
+	{
+		int d = autocvar_loddebug;
+		if(d == 1)
+			this.modelindex = this.lodmodelindex0;
+		else if(d == 2 || !this.lodmodelindex2)
+			this.modelindex = this.lodmodelindex1;
+		else // if(d == 3)
+			this.modelindex = this.lodmodelindex2;
+		return true;
+	}
+
+	// TODO csqc network this so it only gets sent once
+	vector near_point = NearestPointOnBox(this, client.origin);
+	if(vdist(near_point - client.origin, <, this.loddistance1))
+		this.modelindex = this.lodmodelindex0;
+	else if(!this.lodmodelindex2 || vdist(near_point - client.origin, <, this.loddistance2))
+		this.modelindex = this.lodmodelindex1;
+	else
+		this.modelindex = this.lodmodelindex2;
+
+	return true;
+}
+
+void LOD_uncustomize(entity this)
+{
+	this.modelindex = this.lodmodelindex0;
+}
+
+void LODmodel_attach(entity this)
+{
+	entity e;
+
+	if(!this.loddistance1)
+		this.loddistance1 = 1000;
+	if(!this.loddistance2)
+		this.loddistance2 = 2000;
+	this.lodmodelindex0 = this.modelindex;
+
+	if(this.lodtarget1 != "")
+	{
+		e = find(NULL, targetname, this.lodtarget1);
+		if(e)
+		{
+			this.lodmodel1 = e.model;
+			delete(e);
+		}
+	}
+	if(this.lodtarget2 != "")
+	{
+		e = find(NULL, targetname, this.lodtarget2);
+		if(e)
+		{
+			this.lodmodel2 = e.model;
+			delete(e);
+		}
+	}
+
+	if(autocvar_loddebug < 0)
+	{
+		this.lodmodel1 = this.lodmodel2 = ""; // don't even initialize
+	}
+
+	if(this.lodmodel1 != "")
+	{
+		vector mi, ma;
+		mi = this.mins;
+		ma = this.maxs;
+
+		precache_model(this.lodmodel1);
+		_setmodel(this, this.lodmodel1);
+		this.lodmodelindex1 = this.modelindex;
+
+		if(this.lodmodel2 != "")
+		{
+			precache_model(this.lodmodel2);
+			_setmodel(this, this.lodmodel2);
+			this.lodmodelindex2 = this.modelindex;
+		}
+
+		this.modelindex = this.lodmodelindex0;
+		setsize(this, mi, ma);
+	}
+
+	if(this.lodmodelindex1)
+		if (!getSendEntity(this))
+			SetCustomizer(this, LOD_customize, LOD_uncustomize);
+}
+
 /*
 ================
 InitTrigger
