@@ -15,6 +15,7 @@
 #include <common/net_linked.qh>
 #include <common/state.qh>
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
