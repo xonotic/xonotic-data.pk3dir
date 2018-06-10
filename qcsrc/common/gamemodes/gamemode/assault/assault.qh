@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 #include <common/mutators/base.qh>
+#include <common/scores.qh>
 
 const int ASSAULT_VALUE_INACTIVE = 1000;
 

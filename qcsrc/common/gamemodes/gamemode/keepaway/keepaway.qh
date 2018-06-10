@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 #include <common/mutators/base.qh>
+#include <common/scores.qh>
 void ka_Initialize();
 
 REGISTER_MUTATOR(ka, false)
