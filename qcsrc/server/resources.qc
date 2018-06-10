@@ -70,8 +70,15 @@ float GetResourceLimit(entity e, int resource_type)
 
 float GetResourceAmount(entity e, int resource_type)
 {
-	.float resource_field = GetResourceField(resource_type);
-	return e.(resource_field);
+	// TODO: turn this into a flag on the registry for items that need to be stored on the entity
+	if(resource_type == RESOURCE_HEALTH)
+		return e.health;
+	else if(resource_type == RESOURCE_ARMOR)
+		return e.armorvalue;
+
+	entity store = ((e.inventory) ? e.inventory : e); // fall back for entities lacking inventories (TODO: just return? support for entities that store items without an inventory is sketchy and incompatible with players)
+	GameItem resource_item = GetResourceItem(resource_type);
+	return store.inv_items[resource_item.m_id];
 }
 
 void SetResourceAmount(entity e, int resource_type, float amount)
@@ -90,10 +97,24 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 		amount_wasted = amount - max_amount;
 		amount = max_amount;
 	}
-	.float resource_field = GetResourceField(resource_type);
-	if (e.(resource_field) != amount)
+	if (GetResourceAmount(e, resource_type) != amount)
 	{
-		e.(resource_field) = amount;
+		if(resource_type == RESOURCE_HEALTH)
+		{
+			e.health = amount;
+		}
+		else if(resource_type == RESOURCE_ARMOR)
+		{
+			e.armorvalue = amount;
+		}
+		else
+		{
+			entity store = ((e.inventory) ? e.inventory : e);
+			GameItem resource_item = GetResourceItem(resource_type);
+			store.inv_items[resource_item.m_id] = amount;
+			if(e.inventory)
+				Inventory_update(e);
+		}
 		MUTATOR_CALLHOOK(ResourceAmountChanged, e, resource_type, amount);
 	}
 	if (amount_wasted == 0)
@@ -208,4 +229,19 @@ int GetResourceType(.float resource_field)
 	}
 	error("GetResourceField: Invalid resource type.");
 	return health;
+}
+
+GameItem GetResourceItem(int resource_type)
+{
+	switch (resource_type)
+	{
+		case RESOURCE_SHELLS: { return ITEM_Shells; }
+		case RESOURCE_BULLETS: { return ITEM_Bullets; }
+		case RESOURCE_ROCKETS: { return ITEM_Rockets; }
+		case RESOURCE_CELLS: { return ITEM_Cells; }
+		case RESOURCE_PLASMA: { return ITEM_Plasma; }
+		case RESOURCE_FUEL: { return ITEM_JetpackFuel; }
+	}
+	error("GetResourceItem: Invalid resource type.");
+	return NULL;
 }

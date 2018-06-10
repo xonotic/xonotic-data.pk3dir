@@ -216,6 +216,7 @@ string GetAmmoPicture(int ammotype);
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i);
 int GetAmmoStat(int ammotype);
+int GetAmmoItem(int ammotype);
 #endif
 
 string W_Sound(string w_snd);

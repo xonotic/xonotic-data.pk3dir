@@ -58,3 +58,8 @@ int GetResourceType(.float resource_field);
 /// \param[in] resource_type Type of the resource.
 /// \return Entity field for that resource.
 .float GetResourceField(int resource_type);
+
+/// \brief Gets the item for which a resource is stored in the inventory.
+/// \param[in] resource_type Type of the resource.
+/// \return The item data.
+GameItem GetResourceItem(int resource_type);

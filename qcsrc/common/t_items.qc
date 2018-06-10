@@ -1070,12 +1070,12 @@ float ammo_pickupevalfunc(entity player, entity item)
 	if(item.itemdef.instanceOfWeaponPickup)
 	{
 		entity ammo = NULL;
-		if(item.ammo_shells)       { need_shells  = true; ammo = ITEM_Shells;      }
-		else if(item.ammo_nails)   { need_nails   = true; ammo = ITEM_Bullets;     }
-		else if(item.ammo_rockets) { need_rockets = true; ammo = ITEM_Rockets;     }
-		else if(item.ammo_cells)   { need_cells   = true; ammo = ITEM_Cells;       }
-		else if(item.ammo_plasma)  { need_plasma  = true; ammo = ITEM_Plasma;      }
-		else if(item.ammo_fuel)    { need_fuel    = true; ammo = ITEM_JetpackFuel; }
+		if(GetResourceAmount(item, RESOURCE_SHELLS))       { need_shells  = true; ammo = ITEM_Shells;      }
+		else if(GetResourceAmount(item, RESOURCE_BULLETS))   { need_nails   = true; ammo = ITEM_Bullets;     }
+		else if(GetResourceAmount(item, RESOURCE_ROCKETS)) { need_rockets = true; ammo = ITEM_Rockets;     }
+		else if(GetResourceAmount(item, RESOURCE_CELLS))   { need_cells   = true; ammo = ITEM_Cells;       }
+		else if(GetResourceAmount(item, RESOURCE_PLASMA))  { need_plasma  = true; ammo = ITEM_Plasma;      }
+		else if(GetResourceAmount(item, RESOURCE_FUEL))    { need_fuel    = true; ammo = ITEM_JetpackFuel; }
 
 		if(!ammo)
 			return 0;
@@ -1103,23 +1103,23 @@ float ammo_pickupevalfunc(entity player, entity item)
 
 	float noammorating = 0.5;
 
-	if ((need_shells) && (item.ammo_shells) && (GetResourceAmount(player, RESOURCE_SHELLS) < g_pickup_shells_max))
-		c = item.ammo_shells / max(noammorating, GetResourceAmount(player, RESOURCE_SHELLS));
+	if ((need_shells) && (GetResourceAmount(item, RESOURCE_SHELLS)) && (GetResourceAmount(player, RESOURCE_SHELLS) < g_pickup_shells_max))
+		c = GetResourceAmount(item, RESOURCE_SHELLS) / max(noammorating, GetResourceAmount(player, RESOURCE_SHELLS));
 
-	if ((need_nails) && (item.ammo_nails) && (GetResourceAmount(player, RESOURCE_BULLETS) < g_pickup_nails_max))
-		c = item.ammo_nails / max(noammorating, GetResourceAmount(player, RESOURCE_BULLETS));
+	if ((need_nails) && (GetResourceAmount(item, RESOURCE_BULLETS)) && (GetResourceAmount(player, RESOURCE_BULLETS) < g_pickup_nails_max))
+		c = GetResourceAmount(item, RESOURCE_BULLETS) / max(noammorating, GetResourceAmount(player, RESOURCE_BULLETS));
 
-	if ((need_rockets) && (item.ammo_rockets) && (GetResourceAmount(player, RESOURCE_ROCKETS) < g_pickup_rockets_max))
-		c = item.ammo_rockets / max(noammorating, GetResourceAmount(player, RESOURCE_ROCKETS));
+	if ((need_rockets) && (GetResourceAmount(item, RESOURCE_ROCKETS)) && (GetResourceAmount(player, RESOURCE_ROCKETS) < g_pickup_rockets_max))
+		c = GetResourceAmount(item, RESOURCE_ROCKETS) / max(noammorating, GetResourceAmount(player, RESOURCE_ROCKETS));
 
-	if ((need_cells) && (item.ammo_cells) && (GetResourceAmount(player, RESOURCE_CELLS) < g_pickup_cells_max))
-		c = item.ammo_cells / max(noammorating, GetResourceAmount(player, RESOURCE_CELLS));
+	if ((need_cells) && (GetResourceAmount(item, RESOURCE_CELLS)) && (GetResourceAmount(player, RESOURCE_CELLS) < g_pickup_cells_max))
+		c = GetResourceAmount(item, RESOURCE_CELLS) / max(noammorating, GetResourceAmount(player, RESOURCE_CELLS));
 
-	if ((need_plasma) && (item.ammo_plasma) && (GetResourceAmount(player, RESOURCE_PLASMA) < g_pickup_plasma_max))
-		c = item.ammo_plasma / max(noammorating, GetResourceAmount(player, RESOURCE_PLASMA));
+	if ((need_plasma) && (GetResourceAmount(item, RESOURCE_PLASMA)) && (GetResourceAmount(player, RESOURCE_PLASMA) < g_pickup_plasma_max))
+		c = GetResourceAmount(item, RESOURCE_PLASMA) / max(noammorating, GetResourceAmount(player, RESOURCE_PLASMA));
 
-	if ((need_fuel) && (item.ammo_fuel) && (GetResourceAmount(player, RESOURCE_FUEL) < g_pickup_fuel_max))
-		c = item.ammo_fuel / max(noammorating, GetResourceAmount(player, RESOURCE_FUEL));
+	if ((need_fuel) && (GetResourceAmount(item, RESOURCE_FUEL)) && (GetResourceAmount(player, RESOURCE_FUEL) < g_pickup_fuel_max))
+		c = GetResourceAmount(item, RESOURCE_FUEL) / max(noammorating, GetResourceAmount(player, RESOURCE_FUEL));
 
 	rating *= min(c, 2);
 	if(wpn)
@@ -1554,12 +1554,12 @@ spawnfunc(target_items)
 		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
 		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
 		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
-		if(this.ammo_shells != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_shells), "shells");
-		if(this.ammo_nails != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_nails), "nails");
-		if(this.ammo_rockets != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_rockets), "rockets");
-		if(this.ammo_cells != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_cells), "cells");
-		if(this.ammo_plasma != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_plasma), "plasma");
-		if(this.ammo_fuel != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_fuel), "fuel");
+		if(GetResourceAmount(this, RESOURCE_SHELLS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_SHELLS)), "shells");
+		if(GetResourceAmount(this, RESOURCE_BULLETS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_BULLETS)), "nails");
+		if(GetResourceAmount(this, RESOURCE_ROCKETS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_ROCKETS)), "rockets");
+		if(GetResourceAmount(this, RESOURCE_CELLS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_CELLS)), "cells");
+		if(GetResourceAmount(this, RESOURCE_PLASMA) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_PLASMA)), "plasma");
+		if(GetResourceAmount(this, RESOURCE_FUEL) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_FUEL)), "fuel");
 		if(this.health != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.health), "health");
 		if(this.armorvalue != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.armorvalue), "armor");
 		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(BUFFS, this) & (it.m_itemid)), it.m_name));
@@ -1693,12 +1693,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 	PREGIVE(e, strength_finished);
 	PREGIVE(e, invincible_finished);
 	PREGIVE(e, superweapons_finished);
-	PREGIVE(e, ammo_nails);
-	PREGIVE(e, ammo_cells);
-	PREGIVE(e, ammo_plasma);
-	PREGIVE(e, ammo_shells);
-	PREGIVE(e, ammo_rockets);
-	PREGIVE(e, ammo_fuel);
+	PREGIVE_RESOURCE(e, RESOURCE_BULLETS);
+	PREGIVE_RESOURCE(e, RESOURCE_CELLS);
+	PREGIVE_RESOURCE(e, RESOURCE_PLASMA);
+	PREGIVE_RESOURCE(e, RESOURCE_SHELLS);
+	PREGIVE_RESOURCE(e, RESOURCE_ROCKETS);
+	PREGIVE_RESOURCE(e, RESOURCE_FUEL);
 	PREGIVE(e, armorvalue);
 	PREGIVE(e, health);
 
@@ -1744,12 +1744,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 			//case "allbuffs": // all buffs makes a player god, do not want!
 				//FOREACH(Buffs, it != BUFF_Null, got += GiveBuff(e, it.m_itemid, op, val));
 			case "allammo":
-				got += GiveValue(e, ammo_cells, op, val);
-				got += GiveValue(e, ammo_plasma, op, val);
-				got += GiveValue(e, ammo_shells, op, val);
-				got += GiveValue(e, ammo_nails, op, val);
-				got += GiveValue(e, ammo_rockets, op, val);
-				got += GiveValue(e, ammo_fuel, op, val);
+				got += GiveValue(e, inv_items[ITEM_Cells.m_id], op, val);
+				got += GiveValue(e, inv_items[ITEM_Plasma.m_id], op, val);
+				got += GiveValue(e, inv_items[ITEM_Shells.m_id], op, val);
+				got += GiveValue(e, inv_items[ITEM_Bullets.m_id], op, val);
+				got += GiveValue(e, inv_items[ITEM_Rockets.m_id], op, val);
+				got += GiveValue(e, inv_items[ITEM_JetpackFuel.m_id], op, val);
 				break;
 			case "unlimited_ammo":
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
@@ -1776,20 +1776,20 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, superweapons_finished, op, val);
 				break;
 			case "cells":
-				got += GiveValue(e, ammo_cells, op, val);
+				got += GiveValue(e, inv_items[ITEM_Cells.m_id], op, val);
 				break;
 			case "plasma":
-				got += GiveValue(e, ammo_plasma, op, val);
+				got += GiveValue(e, inv_items[ITEM_Plasma.m_id], op, val);
 				break;
 			case "shells":
-				got += GiveValue(e, ammo_shells, op, val);
+				got += GiveValue(e, inv_items[ITEM_Shells.m_id], op, val);
 				break;
 			case "nails":
 			case "bullets":
-				got += GiveValue(e, ammo_nails, op, val);
+				got += GiveValue(e, inv_items[ITEM_Bullets.m_id], op, val);
 				break;
 			case "rockets":
-				got += GiveValue(e, ammo_rockets, op, val);
+				got += GiveValue(e, inv_items[ITEM_Rockets.m_id], op, val);
 				break;
 			case "health":
 				got += GiveValue(e, health, op, val);
@@ -1798,7 +1798,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, armorvalue, op, val);
 				break;
 			case "fuel":
-				got += GiveValue(e, ammo_fuel, op, val);
+				got += GiveValue(e, inv_items[ITEM_JetpackFuel.m_id], op, val);
 				break;
 			default:
 				FOREACH(Buffs, it != BUFF_Null && Buff_UndeprecateName(cmd) == it.m_name,
@@ -1829,12 +1829,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_VALUE(e, invincible_finished, 1, SND_Shield, SND_POWEROFF);
 	//POSTGIVE_VALUE(e, superweapons_finished, 1, SND_Null, SND_Null);
-	POSTGIVE_VALUE(e, ammo_nails, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_VALUE(e, ammo_cells, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_VALUE(e, ammo_plasma, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_VALUE(e, ammo_shells, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_VALUE(e, ammo_rockets, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RESOURCE_BULLETS, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RESOURCE_CELLS, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RESOURCE_PLASMA, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RESOURCE_SHELLS, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RESOURCE_ROCKETS, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE_ROT(e, RESOURCE_FUEL, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_ARMOR25, SND_Null);
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 

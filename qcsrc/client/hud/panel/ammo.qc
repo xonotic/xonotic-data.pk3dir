@@ -4,6 +4,7 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <client/view.qh>
+#include <common/items/inventory.qh>
 #include <common/t_items.qh>
 #include <common/wepent.qh>
 
@@ -36,7 +37,7 @@ void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, boo
 		ammo = 60;
 	}
 	else
-		ammo = getstati(GetAmmoStat(ammoType));
+		ammo = ((g_inventory) ? g_inventory.inv_items[GetAmmoItem(ammoType)] : getstati(GetAmmoStat(ammoType)));
 
 	if(!isCurrent)
 	{

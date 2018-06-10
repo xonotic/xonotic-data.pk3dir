@@ -336,6 +336,13 @@ void SV_OnEntityPreSpawnFunction(entity this)
 
 	set_movetype(this, this.movetype);
 
+	SetResourceAmount(this, RESOURCE_SHELLS, this.ammo_shells);
+	SetResourceAmount(this, RESOURCE_BULLETS, this.ammo_nails);
+	SetResourceAmount(this, RESOURCE_ROCKETS, this.ammo_rockets);
+	SetResourceAmount(this, RESOURCE_CELLS, this.ammo_cells);
+	SetResourceAmount(this, RESOURCE_PLASMA, this.ammo_plasma);
+	SetResourceAmount(this, RESOURCE_FUEL, this.ammo_fuel);
+
 	if (this.monster_attack) {
 		IL_PUSH(g_monster_targets, this);
     }

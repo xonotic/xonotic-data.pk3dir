@@ -1772,12 +1772,6 @@ void SpectateCopy(entity this, entity spectatee)
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
 	this.armorvalue = spectatee.armorvalue;
-	this.ammo_cells = spectatee.ammo_cells; // TODO: these will be a part of inventory, so no need to worry about setting them later!
-	this.ammo_plasma = spectatee.ammo_plasma;
-	this.ammo_shells = spectatee.ammo_shells;
-	this.ammo_nails = spectatee.ammo_nails;
-	this.ammo_rockets = spectatee.ammo_rockets;
-	this.ammo_fuel = spectatee.ammo_fuel;
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	this.health = spectatee.health;
 	CS(this).impulse = 0;
@@ -1858,6 +1852,8 @@ bool SpectateSet(entity this)
 		return false;
 
 	ClientData_Touch(this.enemy);
+	Inventory_clear(this); // we need to reset the fields unfortunately, since the inventory wasn't updated for CSQC
+	Inventory_update(this.enemy); // TODO
 
 	msg_entity = this;
 	WriteByte(MSG_ONE, SVC_SETVIEW);

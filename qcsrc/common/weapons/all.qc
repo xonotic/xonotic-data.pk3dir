@@ -253,6 +253,20 @@ int GetAmmoStat(int ammotype)
 		default: return -1;
 	}
 }
+
+int GetAmmoItem(int ammotype)
+{
+	switch (ammotype)
+	{
+		case RESOURCE_SHELLS: { return ITEM_Shells.m_id; }
+		case RESOURCE_BULLETS: { return ITEM_Bullets.m_id; }
+		case RESOURCE_ROCKETS: { return ITEM_Rockets.m_id; }
+		case RESOURCE_CELLS: { return ITEM_Cells.m_id; }
+		case RESOURCE_PLASMA: { return ITEM_Plasma.m_id; }
+		case RESOURCE_FUEL: { return ITEM_JetpackFuel.m_id; }
+		default: return 0;
+	}
+}
 #endif
 
 string W_Sound(string w_snd)

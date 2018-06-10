@@ -4,6 +4,7 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <client/view.qh>
+#include <common/items/inventory.qh>
 #include <common/wepent.qh>
 
 // Weapons (#0)
@@ -477,7 +478,7 @@ void HUD_Weapons()
 			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RESOURCE_NONE))
 			{
 				float ammo_full;
-				a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
+				a = ((g_inventory) ? g_inventory.inv_items[GetAmmoItem(it.ammo_type)] : getstati(GetAmmoStat(it.ammo_type))); // how much ammo do we have?
 
 				if(a > 0)
 				{

@@ -165,7 +165,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
             {
                 if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
                 {
-                    if( actor.ammo_fuel >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
+                    if( GetResourceAmount(actor, RESOURCE_FUEL) >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
                     {
                         W_DecreaseAmmo(thiswep, actor, (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel, weaponentity);
                         actor.(weaponentity).hook_time_fueldecrease = time;
@@ -173,7 +173,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
                     }
                     else
                     {
-                        actor.ammo_fuel = 0;
+                        SetResourceAmount(actor, RESOURCE_FUEL, 0);
                         actor.(weaponentity).hook_state |= HOOK_REMOVING;
                         if(actor.(weaponentity).m_weapon != WEP_Null) // offhand
                         	W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
@@ -214,14 +214,14 @@ METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor, .entity weaponentit
     if (!thiswep.ammo_factor) return true;
 
     if(actor.(weaponentity).hook)
-    	return actor.ammo_fuel > 0;
+    	return GetResourceAmount(actor, RESOURCE_FUEL) > 0;
 
-    return actor.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
+    return GetResourceAmount(actor, RESOURCE_FUEL) >= WEP_CVAR_PRI(hook, ammo);
 }
 METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor, .entity weaponentity))
 {
     // infinite ammo for now
-    return true; // actor.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
+    return true; // GetResourceAmount(actor, RESOURCE_CELLS) >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
 }
 METHOD(Hook, wr_resetplayer, void(entity thiswep, entity actor))
 {

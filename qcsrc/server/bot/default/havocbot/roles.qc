@@ -53,11 +53,11 @@ bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player
 	if (item.health && player.health <= this.health) {return true;}
 	if (item.armorvalue && player.armorvalue <= this.armorvalue) {return true;}
 	if (STAT(WEAPONS, item) && !(STAT(WEAPONS, player) & STAT(WEAPONS, item))) {return true;}
-	if (item.ammo_shells && GetResourceAmount(player, RESOURCE_SHELLS) <= GetResourceAmount(this, RESOURCE_SHELLS)) {return true;}
-	if (item.ammo_nails && GetResourceAmount(player, RESOURCE_BULLETS) <= GetResourceAmount(this, RESOURCE_BULLETS)) {return true;}
-	if (item.ammo_rockets && GetResourceAmount(player, RESOURCE_ROCKETS) <= GetResourceAmount(this, RESOURCE_ROCKETS)) {return true;}
-	if (item.ammo_cells && GetResourceAmount(player, RESOURCE_CELLS) <= GetResourceAmount(this, RESOURCE_CELLS)) {return true;}
-	if (item.ammo_plasma && GetResourceAmount(player, RESOURCE_PLASMA) <= GetResourceAmount(this, RESOURCE_PLASMA)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_SHELLS) && GetResourceAmount(player, RESOURCE_SHELLS) <= GetResourceAmount(this, RESOURCE_SHELLS)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_BULLETS) && GetResourceAmount(player, RESOURCE_BULLETS) <= GetResourceAmount(this, RESOURCE_BULLETS)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_ROCKETS) && GetResourceAmount(player, RESOURCE_ROCKETS) <= GetResourceAmount(this, RESOURCE_ROCKETS)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_CELLS) && GetResourceAmount(player, RESOURCE_CELLS) <= GetResourceAmount(this, RESOURCE_CELLS)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_PLASMA) && GetResourceAmount(player, RESOURCE_PLASMA) <= GetResourceAmount(this, RESOURCE_PLASMA)) {return true;}
 	if (item.itemdef.instanceOfPowerup) {return true;}
 
 	return false;
