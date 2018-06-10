@@ -557,22 +557,22 @@ void PutPlayerInServer(entity this)
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
 	if (warmup_stage) {
-		this.ammo_shells = warmup_start_ammo_shells;
-		this.ammo_nails = warmup_start_ammo_nails;
-		this.ammo_rockets = warmup_start_ammo_rockets;
-		this.ammo_cells = warmup_start_ammo_cells;
-		this.ammo_plasma = warmup_start_ammo_plasma;
-		this.ammo_fuel = warmup_start_ammo_fuel;
+		SetResourceAmount(this, RESOURCE_SHELLS, warmup_start_ammo_shells);
+		SetResourceAmount(this, RESOURCE_BULLETS, warmup_start_ammo_nails);
+		SetResourceAmount(this, RESOURCE_ROCKETS, warmup_start_ammo_rockets);
+		SetResourceAmount(this, RESOURCE_CELLS, warmup_start_ammo_cells);
+		SetResourceAmount(this, RESOURCE_PLASMA, warmup_start_ammo_plasma);
+		SetResourceAmount(this, RESOURCE_FUEL, warmup_start_ammo_fuel);
 		this.health = warmup_start_health;
 		this.armorvalue = warmup_start_armorvalue;
 		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
 	} else {
-		this.ammo_shells = start_ammo_shells;
-		this.ammo_nails = start_ammo_nails;
-		this.ammo_rockets = start_ammo_rockets;
-		this.ammo_cells = start_ammo_cells;
-		this.ammo_plasma = start_ammo_plasma;
-		this.ammo_fuel = start_ammo_fuel;
+		SetResourceAmount(this, RESOURCE_SHELLS, start_ammo_shells);
+		SetResourceAmount(this, RESOURCE_BULLETS, start_ammo_nails);
+		SetResourceAmount(this, RESOURCE_ROCKETS, start_ammo_rockets);
+		SetResourceAmount(this, RESOURCE_CELLS, start_ammo_cells);
+		SetResourceAmount(this, RESOURCE_PLASMA, start_ammo_plasma);
+		SetResourceAmount(this, RESOURCE_FUEL, start_ammo_fuel);
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
 		STAT(WEAPONS, this) = start_weapons;
@@ -1772,7 +1772,7 @@ void SpectateCopy(entity this, entity spectatee)
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
 	this.armorvalue = spectatee.armorvalue;
-	this.ammo_cells = spectatee.ammo_cells;
+	this.ammo_cells = spectatee.ammo_cells; // TODO: these will be a part of inventory, so no need to worry about setting them later!
 	this.ammo_plasma = spectatee.ammo_plasma;
 	this.ammo_shells = spectatee.ammo_shells;
 	this.ammo_nails = spectatee.ammo_nails;
