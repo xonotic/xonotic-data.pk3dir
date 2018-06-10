@@ -1,6 +1,7 @@
 #include "item_key.qh"
 
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../common/monsters/_mod.qh"
 #include "../common/notifications/all.qh"
 #include "../common/util.qh"
