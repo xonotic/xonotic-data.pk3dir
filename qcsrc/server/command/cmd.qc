@@ -17,6 +17,7 @@
 #include "../teamplay.qh"
 
 #include "../mutators/_mod.qh"
+#include <common/gamemodes/_mod.qh>
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>
@@ -30,7 +31,7 @@
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/triggers/triggers.qh>
+#include <common/mapobjects/triggers.qh>
 
 #include <common/minigames/sv_minigames.qh>
 

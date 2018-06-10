@@ -15,7 +15,7 @@
     #include "constants.qh"
     #include <common/deathtypes/all.qh>
     #include <common/notifications/all.qh>
-	#include "triggers/subs.qh"
+	#include "mapobjects/subs.qh"
     #include "util.qh"
 
     #include <common/monsters/_mod.qh>

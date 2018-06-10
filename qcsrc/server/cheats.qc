@@ -6,7 +6,7 @@
 
 #include "g_damage.qh"
 #include "race.qh"
-#include "../common/triggers/teleporters.qh"
+#include "../common/mapobjects/teleporters.qh"
 
 #include "mutators/_mod.qh"
 
@@ -22,9 +22,10 @@
 
 #include <common/weapons/_all.qh>
 
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/triggers.qh>
 
-#include "../common/triggers/func/breakable.qh"
+#include "../common/mapobjects/func/breakable.qh"
 
 #include "../lib/csqcmodel/sv_model.qh"
 

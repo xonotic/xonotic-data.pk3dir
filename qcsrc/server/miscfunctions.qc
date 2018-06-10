@@ -20,7 +20,7 @@
 #include "../common/notifications/all.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include <common/weapons/_all.qh>
@@ -198,10 +198,10 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string AmmoNameFromWeaponentity(entity wpn)
+string AmmoNameFromWeaponentity(Weapon wep)
 {
 	string ammoitems = "batteries";
-	switch ((wpn.m_weapon).ammo_type)
+	switch (wep.ammo_type)
 	{
 		case RESOURCE_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
 		case RESOURCE_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
@@ -266,7 +266,7 @@ string formatmessage(entity this, string msg)
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
 			case "w": replacement = ((this.(weaponentity).m_weapon == WEP_Null) ? ((this.(weaponentity).m_switchweapon == WEP_Null) ? Weapons_from(this.(weaponentity).cnt) : this.(weaponentity).m_switchweapon) : this.(weaponentity).m_weapon).m_name; break;
-			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity)); break;
+			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity).m_weapon); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;
@@ -591,12 +591,6 @@ void readplayerstartcvars()
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
-
-	if(g_weaponarena)
-		g_weaponarena_random = cvar("g_weaponarena_random");
-	else
-		g_weaponarena_random = 0;
-	g_weaponarena_random_with_blaster = cvar("g_weaponarena_random_with_blaster");
 
 	if (g_weaponarena)
 	{
