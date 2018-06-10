@@ -1,5 +1,9 @@
 #include "sv_overkill.qh"
 
+#include "okshotgun.qh"
+#include "okhmg.qh"
+#include "okrpc.qh"
+
 bool autocvar_g_overkill_powerups_replace;
 
 bool autocvar_g_overkill_itemwaypoints = true;
