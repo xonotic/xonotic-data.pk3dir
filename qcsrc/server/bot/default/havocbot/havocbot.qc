@@ -500,7 +500,7 @@ void havocbot_movetogoal(entity this)
 	// Jetpack navigation
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
-	if(this.ammo_fuel)
+	if(GetResourceAmount(this, RESOURCE_FUEL))
 	{
 		if(autocvar_bot_debug_goalstack)
 		{
