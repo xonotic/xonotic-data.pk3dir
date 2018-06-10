@@ -97,6 +97,7 @@
 #include <common/notifications/all.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/subs.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
 
