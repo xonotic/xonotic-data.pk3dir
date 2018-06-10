@@ -1623,6 +1623,20 @@ void havocbot_ctf_reset_role(entity this)
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_OFFENSE);
 		return;
 	}
+	else if (CS(this).jointime < time + 1)
+	{
+		// if bots spawn all at once set good default roles
+		if (count == 1)
+		{
+			havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_DEFENSE);
+			return;
+		}
+		else if (count == 2)
+		{
+			havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_MIDDLE);
+			return;
+		}
+	}
 
 	// Evaluate best position to take
 	// Count mates on middle position
@@ -1640,6 +1654,10 @@ void havocbot_ctf_reset_role(entity this)
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_OFFENSE);
 	else
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_MIDDLE);
+
+	// if bots spawn all at once assign them a more appropriated role after a while
+	if (CS(this).jointime < time + 1 && count > 2)
+		this.havocbot_role_timeout = time + 10 + random() * 10;
 }
 
 bool havocbot_ctf_is_basewaypoint(entity item)
