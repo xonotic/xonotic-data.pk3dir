@@ -911,6 +911,7 @@ enum {
     /**/             o(float, MUTATOR_ARGV_0_float) \
     /* time limit */ i(float, MUTATOR_ARGV_1_float) \
     /* frag limit */ i(float, MUTATOR_ARGV_2_float) \
+    /**/             o(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(CheckRules_World, EV_CheckRules_World);
 
