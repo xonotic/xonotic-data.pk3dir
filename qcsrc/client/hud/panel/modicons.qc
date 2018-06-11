@@ -705,10 +705,43 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	}
 }
 
+// GunGame
+
+/// \brief Duration of transition between the weapons pictures.
+const float gg_weapon_transition_duration = 0.5;
+
+int gg_current_weapon; ///< Current weapon.
+string gg_current_weapon_picture; ///< Current weapon picture.
+int gg_previous_weapon; ///< Previous weapon.
+string gg_previous_weapon_picture; ///< Previous weapon picture.
+float gg_weapon_change_time; ///< Time when the weapon changed.
+
+string GG_GetWeaponPicture(int weapon)
+{
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		if (it.m_id == weapon)
+		{
+			return it.model2;
+		}
+	});
+	return "";
+}
+
 void HUD_Mod_GG(vector pos, vector mySize)
 {
-	mod_active = 1; // required in each mod function that always shows something
+	// Required in each mod function that always shows something.
+	mod_active = 1;
 	int stat_weapon = STAT(GUNGAME_LEADING_WEAPON);
+	if (stat_weapon != gg_current_weapon)
+	{
+		// New leading weapon.
+		gg_previous_weapon = gg_current_weapon;
+		gg_previous_weapon_picture = gg_current_weapon_picture;
+		gg_current_weapon = stat_weapon;
+		gg_current_weapon_picture = GG_GetWeaponPicture(gg_current_weapon);
+		gg_weapon_change_time = time;
+	}
 	vector pic_pos, pic_size;
 	if (mySize.x > mySize.y)
 	{
@@ -720,21 +753,24 @@ void HUD_Mod_GG(vector pos, vector mySize)
 		pic_pos = pos + eY * 0.25 * mySize.y;
 		pic_size = vec2(mySize.x, 0.5 * mySize.y);
 	}
-	string weapon_pic = string_null;
-	FOREACH(Weapons, it != WEP_Null,
+	float weapon_change_elapsed_time = time - gg_weapon_change_time;
+	// Weapon transition phase. 0 at the start of transition. 1 at the end.
+	float phase = bound(0, weapon_change_elapsed_time /
+		gg_weapon_transition_duration, 1);
+
+	// Draw current weapon picture. Fading in if phase is less than 1.
+	if (gg_current_weapon_picture)
 	{
-		if (it.m_id == stat_weapon)
-		{
-			weapon_pic = it.model2;
-			break;
-		}
-	});
-	if (!weapon_pic)
-	{
-		return;
+		drawpic_aspect_skin(pic_pos, gg_current_weapon_picture, pic_size,
+			'1 1 1', phase, DRAWFLAG_NORMAL);
 	}
-	drawpic_aspect_skin(pic_pos, weapon_pic, pic_size, '1 1 1', 1,
-		DRAWFLAG_NORMAL);
+	// Draw previous weapon picture on top of current one so it gives a nice
+	// fade out effect.
+	if ((phase < 1) && gg_previous_weapon_picture)
+	{
+		drawpic_aspect_skin_expanding(pic_pos, gg_previous_weapon_picture,
+			pic_size, '1 1 1', 1 - phase, DRAWFLAG_NORMAL, phase);
+	}
 }
 
 void HUD_ModIcons_SetFunc()
