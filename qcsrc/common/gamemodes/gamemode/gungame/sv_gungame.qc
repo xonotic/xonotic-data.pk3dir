@@ -7,7 +7,7 @@
 
 //============================ Constants ======================================
 
-const string GUNGAME_WEAPONS = "g_gg_weapons";
+const string GUNGAME_WEAPONS_CVAR = "g_gg_weapons";
 
 //======================= Global variables ====================================
 
@@ -24,7 +24,6 @@ entity gungame_leading_weapon; ///< Holds the leading weapon.
 //====================== Forward declarations =================================
 
 /// \brief Resets the state to initial one.
-/// \return No return.
 void GunGame_Reset();
 
 /// \brief Returns the weapon that corresponds to the given level.
@@ -33,7 +32,6 @@ void GunGame_Reset();
 entity GunGame_GetWeapon(int level);
 
 /// \brief Updates stats of all players.
-/// \return No return.
 void GunGame_UpdateStats();
 
 //========================= Free functions ====================================
@@ -45,16 +43,12 @@ void GunGame_Initialize()
 
 void GunGame_Reset()
 {
-	if (gungame_weapons)
-	{
-		strunzone(gungame_weapons);
-	}
-	gungame_weapons = strzone(cvar_string(GUNGAME_WEAPONS));
+	strcpy(gungame_weapons, cvar_string(GUNGAME_WEAPONS_CVAR));
 	gungame_max_level = tokenize_console(gungame_weapons) *
 		autocvar_g_gg_kills_per_weapon;
 	if (gungame_max_level == 0)
 	{
-		error("GunGame: Invalid weapon configuration.");
+		LOG_FATAL("GunGame: Invalid weapon configuration.");
 	}
 	GameRules_limit_score(gungame_max_level);
 	gungame_leading_player = NULL;
@@ -78,7 +72,7 @@ entity GunGame_GetWeapon(int level)
 			return it;
 		}
 	});
-	error("GunGame_GetWeapon: Invalid level or weapon name");
+	LOG_FATAL("GunGame_GetWeapon: Invalid level or weapon name");
 	return NULL;
 }
 
@@ -91,7 +85,6 @@ int GunGame_GetPlayerLevel(entity player)
 }
 
 /// \brief Updates the information about the leading player.
-/// \return No return.
 void GunGame_UpdateLeadingPlayer()
 {
 	entity previous_leader = gungame_leading_player;
@@ -135,7 +128,6 @@ void GunGame_UpdateStats()
 
 /// \brief Gives the player a weapon that corresponds to their level.
 /// \param[in,out] player Player to give weapon to.
-/// \return No return.
 void GunGame_GivePlayerWeapon(entity player)
 {
 	int level = GunGame_GetPlayerLevel(player);
@@ -167,11 +159,16 @@ MUTATOR_HOOKFUNCTION(gg, SetStartItems)
 }
 
 /// \brief Hook that is called when an item is about to spawn.
-MUTATOR_HOOKFUNCTION(gg, FilterItem)
+MUTATOR_HOOKFUNCTION(gg, FilterItemDefinition)
 {
-	//PrintToChatAll("FilterItem");
+	//PrintToChatAll("FilterItemDefinition");
 	entity item = M_ARGV(0, entity);
-	if (item.itemdef.instanceOfWeaponPickup)
+	if (item.instanceOfAmmo)
+	{
+		// Block ammo from spawning.
+		return true;
+	}
+	if (item.instanceOfWeaponPickup)
 	{
 		// Block weapons from spawning.
 		return true;
