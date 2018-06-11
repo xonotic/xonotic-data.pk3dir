@@ -22,7 +22,7 @@ SOUND(HealthSmall, Item_Sound("minihealth"));
 PROPERTY(float, g_pickup_healthsmall_anyway);
 PROPERTY(int, g_pickup_healthsmall);
 PROPERTY(int, g_pickup_healthsmall_max);
-void item_healthsmall_init(entity item)
+void item_healthsmall_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthsmall_max;
@@ -60,7 +60,7 @@ SOUND(HealthMedium, Item_Sound("mediumhealth"));
 PROPERTY(float, g_pickup_healthmedium_anyway);
 PROPERTY(int, g_pickup_healthmedium);
 PROPERTY(int, g_pickup_healthmedium_max);
-void item_healthmedium_init(entity item)
+void item_healthmedium_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthmedium_max;
@@ -98,7 +98,7 @@ SOUND(HealthBig, Item_Sound("mediumhealth"));
 PROPERTY(float, g_pickup_healthbig_anyway);
 PROPERTY(int, g_pickup_healthbig);
 PROPERTY(int, g_pickup_healthbig_max);
-void item_healthbig_init(entity item)
+void item_healthbig_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthbig_max;
@@ -138,7 +138,7 @@ SOUND(HealthMega, Item_Sound("megahealth"));
 PROPERTY(float, g_pickup_healthmega_anyway);
 PROPERTY(int, g_pickup_healthmega);
 PROPERTY(int, g_pickup_healthmega_max);
-void item_healthmega_init(entity item)
+void item_healthmega_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthmega_max;
@@ -150,7 +150,7 @@ void item_healthmega_init(entity item)
 REGISTER_ITEM(HealthMega, Health) {
     this.m_canonical_spawnfunc = "item_health_mega";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_HealthMega_ITEM;
     this.m_sound                =   SND_HealthMega;
 #endif

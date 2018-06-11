@@ -3,12 +3,13 @@
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
+#include <server/resources.qh>
 
 #include "g_damage.qh"
 #include "race.qh"
-#include "../common/triggers/teleporters.qh"
+#include "../common/mapobjects/teleporters.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 #include "weapons/tracing.qh"
 
@@ -22,9 +23,10 @@
 
 #include <common/weapons/_all.qh>
 
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/triggers.qh>
 
-#include "../common/triggers/func/breakable.qh"
+#include "../common/mapobjects/func/breakable.qh"
 
 #include "../lib/csqcmodel/sv_model.qh"
 
@@ -151,12 +153,12 @@ float CheatImpulse(entity this, int imp)
 			this.personal.origin = this.origin;
 			this.personal.v_angle = this.v_angle;
 			this.personal.velocity = this.velocity;
-			this.personal.ammo_rockets = this.ammo_rockets;
-			this.personal.ammo_nails = this.ammo_nails;
-			this.personal.ammo_cells = this.ammo_cells;
-			this.personal.ammo_plasma = this.ammo_plasma;
-			this.personal.ammo_shells = this.ammo_shells;
-			this.personal.ammo_fuel = this.ammo_fuel;
+			SetResourceAmount(this.personal, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS));
+			SetResourceAmount(this.personal, RESOURCE_BULLETS, GetResourceAmount(this, RESOURCE_BULLETS));
+			SetResourceAmount(this.personal, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS));
+			SetResourceAmount(this.personal, RESOURCE_PLASMA, GetResourceAmount(this, RESOURCE_PLASMA));
+			SetResourceAmount(this.personal, RESOURCE_SHELLS, GetResourceAmount(this, RESOURCE_SHELLS));
+			SetResourceAmount(this.personal, RESOURCE_FUEL, GetResourceAmount(this, RESOURCE_FUEL));
 			this.personal.health = max(1, this.health);
 			this.personal.armorvalue = this.armorvalue;
 			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
@@ -210,12 +212,12 @@ float CheatImpulse(entity this, int imp)
 					MUTATOR_CALLHOOK(AbortSpeedrun, this);
 				}
 
-				this.ammo_rockets = this.personal.ammo_rockets;
-				this.ammo_nails = this.personal.ammo_nails;
-				this.ammo_cells = this.personal.ammo_cells;
-				this.ammo_plasma = this.personal.ammo_plasma;
-				this.ammo_shells = this.personal.ammo_shells;
-				this.ammo_fuel = this.personal.ammo_fuel;
+				SetResourceAmount(this, RESOURCE_ROCKETS, GetResourceAmount(this.personal, RESOURCE_ROCKETS));
+				SetResourceAmount(this, RESOURCE_BULLETS, GetResourceAmount(this.personal, RESOURCE_BULLETS));
+				SetResourceAmount(this, RESOURCE_CELLS, GetResourceAmount(this.personal, RESOURCE_CELLS));
+				SetResourceAmount(this, RESOURCE_PLASMA, GetResourceAmount(this.personal, RESOURCE_PLASMA));
+				SetResourceAmount(this, RESOURCE_SHELLS, GetResourceAmount(this.personal, RESOURCE_SHELLS));
+				SetResourceAmount(this, RESOURCE_FUEL, GetResourceAmount(this.personal, RESOURCE_FUEL));
 				this.health = this.personal.health;
 				this.armorvalue = this.personal.armorvalue;
 				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);

@@ -5,9 +5,9 @@
 /// game items.
 /// \copyright GNU GPLv2 or any later version.
 
-#include "g_subs.qh"
-#include "mutators/events.qh"
+#include <server/mutators/_mod.qh>
 #include <common/weapons/all.qh>
+#include <common/mapobjects/subs.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
 /// \brief Holds whether strength, shield or superweapon timers expire while

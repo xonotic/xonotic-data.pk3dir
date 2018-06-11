@@ -9,7 +9,6 @@
 #include <client/shownames.qh>
 #include <client/teamradar.qh>
 #include <client/view.qh>
-#include <client/wall.qh>
 
 #include <client/commands/_mod.qh>
 #include <client/hud/_mod.qh>

@@ -123,6 +123,8 @@ MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
     /** target     */ i(entity, MUTATOR_ARGV_1_entity) \
     /** frag score */ i(float, MUTATOR_ARGV_2_float) \
     /**            */ o(float, MUTATOR_ARGV_2_float) \
+    /** deathtype  */ i(float, MUTATOR_ARGV_3_float) \
+    /** wep entity */ i(entity, MUTATOR_ARGV_4_entity) \
     /**/
 MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 

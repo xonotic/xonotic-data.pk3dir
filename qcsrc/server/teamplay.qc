@@ -9,10 +9,10 @@
 
 #include "command/vote.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 #include "../common/deathtypes/all.qh"
-#include "../common/gamemodes/_mod.qh"
+#include <common/gamemodes/_mod.qh>
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
@@ -105,7 +105,7 @@ string getwelcomemessage(entity this)
 	if(g_weaponarena)
 	{
 		if(g_weaponarena_random)
-			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena");
+			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena"); // TODO: somehow get this into the mutator
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}

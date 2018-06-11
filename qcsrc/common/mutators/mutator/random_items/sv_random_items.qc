@@ -53,13 +53,9 @@ string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 
 string RandomItems_GetRandomItemClassName(string prefix)
 {
-	if (MUTATOR_IS_ENABLED(mutator_instagib))
+	if (MUTATOR_CALLHOOK(RandomItems_GetRandomItemClassName, prefix))
 	{
-		return RandomItems_GetRandomInstagibItemClassName(prefix);
-	}
-	if (MUTATOR_IS_ENABLED(ok))
-	{
-		return RandomItems_GetRandomOverkillItemClassName(prefix);
+		return M_ARGV(1, string);
 	}
 	return RandomItems_GetRandomVanillaItemClassName(prefix,
 		RANDOM_ITEM_TYPE_ALL);
@@ -194,61 +190,6 @@ string RandomItems_GetRandomVanillaItemClassName(string prefix, int types)
 		types &= ~item_type;
 	}
 	return "";
-}
-
-string RandomItems_GetRandomInstagibItemClassName(string prefix)
-{
-	RandomSelection_Init();
-	FOREACH(Items, it.spawnflags & ITEM_FLAG_INSTAGIB &&
-		Item_IsDefinitionAllowed(it),
-	{
-		string cvar_name = sprintf("g_%s_%s_probability", prefix,
-			it.m_canonical_spawnfunc);
-		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-		{
-			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-			continue;
-		}
-		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
-	});
-	return RandomSelection_chosen_string;
-}
-
-string RandomItems_GetRandomOverkillItemClassName(string prefix)
-{
-	RandomSelection_Init();
-	FOREACH(Items, (it.spawnflags & ITEM_FLAG_OVERKILL) &&
-		!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED) &&
-		Item_IsDefinitionAllowed(it),
-	{
-		string cvar_name = sprintf("g_%s_overkill_%s_probability", prefix,
-			it.m_canonical_spawnfunc);
-		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-		{
-			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-			continue;
-		}
-		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
-	});
-	string cvar_name = sprintf("g_%s_overkill_weapon_okhmg_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-	}
-	else
-	{
-		RandomSelection_AddString("weapon_okhmg", cvar(cvar_name), 1);
-	}
-	cvar_name = sprintf("g_%s_overkill_weapon_okrpc_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-	}
-	else
-	{
-		RandomSelection_AddString("weapon_okrpc", cvar(cvar_name), 1);
-	}
-	return RandomSelection_chosen_string;
 }
 
 //========================= Free functions ====================================
