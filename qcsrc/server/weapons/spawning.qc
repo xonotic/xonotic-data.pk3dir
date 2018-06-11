@@ -2,7 +2,7 @@
 
 #include "weaponsystem.qh"
 #include "../resources.qh"
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include <common/t_items.qh>
 #include <server/items.qh>
 #include <common/weapons/_all.qh>
@@ -86,6 +86,13 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			startitem_failed = true;
 			return;
 		}
+	}
+
+	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
+	{
+		delete(this);
+		startitem_failed = true;
+		return;
 	}
 
 	if (!this.respawntime)

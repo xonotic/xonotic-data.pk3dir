@@ -3,7 +3,7 @@
 #include "../autocvars.qh"
 #include "../defs.qh"
 #include "../main.qh"
-#include "../mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/effects/effect.qh>

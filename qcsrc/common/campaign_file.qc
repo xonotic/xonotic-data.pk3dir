@@ -88,16 +88,15 @@ void CampaignFile_Unload()
 {
 	if(campaign_title)
 	{
-		strunzone(campaign_title);
+		strfree(campaign_title);
 		for(int i = 0; i < campaign_entries; ++i)
 		{
-			strunzone(campaign_gametype[i]);
-			strunzone(campaign_mapname[i]);
-			strunzone(campaign_mutators[i]);
-			strunzone(campaign_shortdesc[i]);
-			strunzone(campaign_longdesc[i]);
+			strfree(campaign_gametype[i]);
+			strfree(campaign_mapname[i]);
+			strfree(campaign_mutators[i]);
+			strfree(campaign_shortdesc[i]);
+			strfree(campaign_longdesc[i]);
 		}
 		campaign_entries = 0;
-		campaign_title = string_null;
 	}
 }

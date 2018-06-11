@@ -5,7 +5,6 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
-#include "g_subs.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
@@ -15,8 +14,9 @@
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/deathtypes/all.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/playerstats.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 
@@ -25,7 +25,7 @@
 #include "../common/physics/player.qh"
 #include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/triggers/include.qh"
+#include "../common/mapobjects/_mod.qh"
 #include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"
@@ -173,9 +173,6 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	// damage resistance (ignore most of the damage from a bullet or similar)
-	damage = max(damage - 5, 1);
-
 	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
@@ -223,7 +220,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 
 void calculate_player_respawn_time(entity this)
 {
-	if(g_ca)
+	if(MUTATOR_CALLHOOK(CalculateRespawnTime, this))
 		return;
 
 	float gametype_setting_tmp;
@@ -629,11 +626,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD1, true);
 		else
 			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD2, true);
-		if (this.maxs.z > 5)
-		{
-			this.maxs_z = 5;
-			setsize(this, this.mins, this.maxs);
-		}
+
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
@@ -652,7 +645,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(autocvar_sv_gentle > 0 || autocvar_ekg || this.classname == "body") {
 			// remove corpse
 			// clones don't run any animation code any more, so we must gib them when they die :(
-			PlayerCorpseDamage(this, inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, weaponentity, hitloc, force);
+			this.event_damage(this, inflictor, attacker, autocvar_sv_gibhealth + 1, deathtype, weaponentity, hitloc, force);
 		}
 
 		// reset fields the weapons may use just in case
@@ -976,7 +969,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (privatesay && source && !IS_PLAYER(source))
 	{
 		if (!game_stopped)
-		if ((privatesay && !IS_PLAYER(privatesay)) || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+		if ((privatesay && IS_PLAYER(privatesay)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
 			ret = -1; // just hide the message completely
 	}
 

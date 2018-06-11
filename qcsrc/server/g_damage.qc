@@ -3,7 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
@@ -13,6 +13,7 @@
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include "../common/mutators/mutator/instagib/sv_instagib.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -23,6 +24,7 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
+#include <common/gamemodes/rules.qh>
 #include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
@@ -60,51 +62,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity we
 
 	GameRules_scoring_add(targ, DEATHS, 1);
 
-	if(targ != attacker) // not for suicides
-	if(g_weaponarena_random)
-	{
-		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
-		Weapon culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit) culprit = attacker.(weaponentity).m_weapon;
-		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = attacker.(weaponentity).m_weapon;
-
-		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
-		{
-			// no exchange
-		}
-		else
-		{
-			if(!GiveFrags_randomweapons)
-			{
-				GiveFrags_randomweapons = new(GiveFrags_randomweapons);
-			}
-
-			if(warmup_stage)
-				GiveFrags_randomweapons.weapons = WARMUP_START_WEAPONS;
-			else
-				GiveFrags_randomweapons.weapons = start_weapons;
-
-			// all others (including the culprit): remove
-			GiveFrags_randomweapons.weapons &= ~attacker.weapons;
-			GiveFrags_randomweapons.weapons &= ~(culprit.m_wepset);
-
-			// among the remaining ones, choose one by random
-			W_RandomWeapons(GiveFrags_randomweapons, 1);
-
-			if(GiveFrags_randomweapons.weapons)
-			{
-				attacker.weapons |= GiveFrags_randomweapons.weapons;
-				attacker.weapons &= ~(culprit.m_wepset);
-			}
-		}
-
-		// after a frag, choose another random weapon set
-		if (!(attacker.weapons & WepSet_FromWeapon(attacker.(weaponentity).m_weapon)))
-			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker, weaponentity), weaponentity);
-	}
-
 	// FIXME fix the mess this is (we have REAL points now!)
-	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f, deathtype, attacker.(weaponentity)))
 		f = M_ARGV(2, float);
 
 	attacker.totalfrags += f;
@@ -518,7 +477,7 @@ void Ice_Think(entity this)
 	this.nextthink = time;
 }
 
-void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
+void Freeze (entity targ, float revivespeed, float frozen_type, float show_waypoint)
 {
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
@@ -531,10 +490,11 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	STAT(FROZEN, targ) = frozen_type;
 	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == 3) ? 1 : 0);
 	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
-	targ.revive_speed = freeze_time;
+	targ.revive_speed = revivespeed;
 	if(targ.bot_attack)
 		IL_REMOVE(g_bot_targets, targ);
 	targ.bot_attack = false;
+	targ.freeze_time = time;
 
 	entity ice = new(ice);
 	ice.owner = targ;
@@ -712,7 +672,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		MUTATOR_CALLHOOK(Damage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
+		MUTATOR_CALLHOOK(Damage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force, attacker.(weaponentity));
 		damage = M_ARGV(4, float);
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);
@@ -778,7 +738,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			}
 		}
 
-		if(!g_instagib)
+		if(!MUTATOR_IS_ENABLED(mutator_instagib))
 		{
 			// apply strength multiplier
 			if (attacker.items & ITEM_Strength.m_itemid)
@@ -906,7 +866,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	}
 }
 
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, 
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
 								float inflictorselfdamage, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 	// Returns total damage applies to creatures
 {

@@ -6,7 +6,7 @@
 #elif defined(SVQC)
 	#include <common/constants.qh>
 	#include <common/net_linked.qh>
-	#include <common/triggers/subs.qh>
+	#include <common/mapobjects/subs.qh>
 	#include <common/util.qh>
 	#include <server/constants.qh>
 	#include <server/defs.qh>
@@ -177,11 +177,7 @@ void WarpZone_Touch(entity this, entity toucher)
 		return;
 
 	// FIXME needs a better check to know what is safe to teleport and what not
-	if((toucher.move_movetype == MOVETYPE_NONE && toucher.move_movetype == MOVETYPE_NONE) || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity
-#ifdef CSQC
-	|| tag_networkentity
-#endif
-	)
+	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
 		return;
 
 	if(WarpZoneLib_ExactTrigger_Touch(this, toucher))

@@ -129,8 +129,7 @@ void DemoList_Refresh_Click(entity btn, entity me)
 
 void DemoList_Filter_Change(entity box, entity me)
 {
-	if(me.filterString)
-		strunzone(me.filterString);
+	strfree(me.filterString);
 
 	if(box.text != "")
 	{

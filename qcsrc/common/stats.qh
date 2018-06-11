@@ -120,6 +120,13 @@ REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
+REGISTER_STAT(VEIL_ORB, float)
+REGISTER_STAT(VEIL_ORB_ALPHA, float)
+
+#ifdef SVQC
+float autocvar_sv_showfps = 5;
+#endif
+REGISTER_STAT(SHOWFPS, float, autocvar_sv_showfps)
 
 #ifdef SVQC
 bool autocvar_g_ctf_leaderboard;
@@ -298,6 +305,13 @@ REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 #include "physics/movetypes/movetypes.qh"
 float warmup_limit;
 #endif
+
+#ifdef SVQC
+bool autocvar_g_shootfromcenter;
+bool autocvar_g_shootfromeye;
+#endif
+REGISTER_STAT(SHOOTFROMEYE, bool, autocvar_g_shootfromeye)
+REGISTER_STAT(SHOOTFROMCENTER, bool, autocvar_g_shootfromcenter)
 
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_PENALTY, float)

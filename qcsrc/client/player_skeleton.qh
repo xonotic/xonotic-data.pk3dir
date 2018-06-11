@@ -7,8 +7,8 @@ void skeleton_from_frames(entity e, float is_dead);
 void skeleton_loadinfo(entity e);
 
 entityclass(Skeleton);
-class(Skeleton) .float bone_upperbody;
-class(Skeleton) .int bone_weapon;
-class(Skeleton) .float bone_aim[MAX_AIM_BONES];
-class(Skeleton) .float bone_aimweight[MAX_AIM_BONES];
-class(Skeleton) .float fixbone;
+classfield(Skeleton) .float bone_upperbody;
+classfield(Skeleton) .int bone_weapon;
+classfield(Skeleton) .float bone_aim[MAX_AIM_BONES];
+classfield(Skeleton) .float bone_aimweight[MAX_AIM_BONES];
+classfield(Skeleton) .float fixbone;

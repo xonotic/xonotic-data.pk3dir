@@ -1,16 +1,18 @@
 #include "spawnpoints.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "g_world.qh"
 #include "race.qh"
+#include "defs.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
-#include "../common/triggers/subs.qh"
-#include "../common/triggers/target/spawnpoint.qh"
+#include "../common/mapobjects/subs.qh"
+#include "../common/mapobjects/target/spawnpoint.qh"
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
+#include <server/utils.qh>
 
 bool SpawnPoint_Send(entity this, entity to, int sf)
 {
@@ -213,11 +215,6 @@ spawnfunc(info_player_team4)
 //   _y: weight
 vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 {
-	float shortest, thisdist;
-	float prio;
-
-	prio = 0;
-
 	// filter out spots for the wrong team
 	if(teamcheck >= 0)
 		if(spot.team != teamcheck)
@@ -238,9 +235,10 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 			return '-1 0 0';
 	}
 
-	shortest = vlen(world.maxs - world.mins);
+	float prio = 0;
+	float shortest = vlen(world.maxs - world.mins);
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		thisdist = vlen(it.origin - spot.origin);
+		float thisdist = vlen(it.origin - spot.origin);
 		if (thisdist < shortest)
 			shortest = thisdist;
 	});

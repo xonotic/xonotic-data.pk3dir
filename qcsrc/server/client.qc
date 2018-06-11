@@ -33,9 +33,9 @@
 
 #include <common/effects/qc/globalsound.qh>
 
-#include "../common/triggers/func/conveyor.qh"
-#include "../common/triggers/teleporters.qh"
-#include "../common/triggers/target/spawnpoint.qh"
+#include "../common/mapobjects/func/conveyor.qh"
+#include "../common/mapobjects/teleporters.qh"
+#include "../common/mapobjects/target/spawnpoint.qh"
 
 #include "../common/vehicles/all.qh"
 
@@ -49,10 +49,12 @@
 #include "../common/items/_mod.qh"
 
 #include "../common/mutators/mutator/waypoints/all.qh"
+#include "../common/mutators/mutator/instagib/sv_instagib.qh"
+#include <common/gamemodes/_mod.qh>
 
-#include "../common/triggers/subs.qh"
-#include "../common/triggers/triggers.qh"
-#include "../common/triggers/trigger/secret.qh"
+#include "../common/mapobjects/subs.qh"
+#include "../common/mapobjects/triggers.qh"
+#include "../common/mapobjects/trigger/secret.qh"
 
 #include "../common/minigames/sv_minigames.qh"
 
@@ -61,6 +63,8 @@
 #include "../common/monsters/sv_monsters.qh"
 
 #include "../lib/warpzone/server.qh"
+
+#include <common/mutators/mutator/overkill/oknex.qh>
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
@@ -152,10 +156,15 @@ void ClientData_Detach(entity this)
 
 void ClientData_Touch(entity e)
 {
-	CS(e).clientdata.SendFlags = 1;
+	entity cd = CS(e).clientdata;
+	if (cd) { cd.SendFlags = 1; }
 
 	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, { CS(it).clientdata.SendFlags = 1; });
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
+	{
+		entity cd = CS(it).clientdata;
+		if (cd) { cd.SendFlags = 1; }
+	});
 }
 
 void SetSpectatee(entity this, entity spectatee);
@@ -308,6 +317,9 @@ void PutObserverInServer(entity this)
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
+	if(this.monster_attack)
+		IL_REMOVE(g_monster_targets, this);
+	this.monster_attack = false;
     STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
@@ -340,6 +352,7 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
+	this.dphitcontentsmask = 0;
 	this.pushltime = 0;
 	this.istypefrag = 0;
 	setthink(this, func_null);
@@ -350,7 +363,7 @@ void PutObserverInServer(entity this)
 	this.revival_time = 0;
 
 	this.items = 0;
-	this.weapons = '0 0 0';
+	STAT(WEAPONS, this) = '0 0 0';
 	this.drawonlytoclient = this;
 
 	this.viewloc = NULL;
@@ -544,25 +557,25 @@ void PutPlayerInServer(entity this)
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
 	if (warmup_stage) {
-		this.ammo_shells = warmup_start_ammo_shells;
-		this.ammo_nails = warmup_start_ammo_nails;
-		this.ammo_rockets = warmup_start_ammo_rockets;
-		this.ammo_cells = warmup_start_ammo_cells;
-		this.ammo_plasma = warmup_start_ammo_plasma;
-		this.ammo_fuel = warmup_start_ammo_fuel;
+		SetResourceAmount(this, RESOURCE_SHELLS, warmup_start_ammo_shells);
+		SetResourceAmount(this, RESOURCE_BULLETS, warmup_start_ammo_nails);
+		SetResourceAmount(this, RESOURCE_ROCKETS, warmup_start_ammo_rockets);
+		SetResourceAmount(this, RESOURCE_CELLS, warmup_start_ammo_cells);
+		SetResourceAmount(this, RESOURCE_PLASMA, warmup_start_ammo_plasma);
+		SetResourceAmount(this, RESOURCE_FUEL, warmup_start_ammo_fuel);
 		this.health = warmup_start_health;
 		this.armorvalue = warmup_start_armorvalue;
-		this.weapons = WARMUP_START_WEAPONS;
+		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
 	} else {
-		this.ammo_shells = start_ammo_shells;
-		this.ammo_nails = start_ammo_nails;
-		this.ammo_rockets = start_ammo_rockets;
-		this.ammo_cells = start_ammo_cells;
-		this.ammo_plasma = start_ammo_plasma;
-		this.ammo_fuel = start_ammo_fuel;
+		SetResourceAmount(this, RESOURCE_SHELLS, start_ammo_shells);
+		SetResourceAmount(this, RESOURCE_BULLETS, start_ammo_nails);
+		SetResourceAmount(this, RESOURCE_ROCKETS, start_ammo_rockets);
+		SetResourceAmount(this, RESOURCE_CELLS, start_ammo_cells);
+		SetResourceAmount(this, RESOURCE_PLASMA, start_ammo_plasma);
+		SetResourceAmount(this, RESOURCE_FUEL, start_ammo_fuel);
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
-		this.weapons = start_weapons;
+		STAT(WEAPONS, this) = start_weapons;
 		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
 		{
 			GiveRandomWeapons(this, random_start_weapons_count,
@@ -573,7 +586,7 @@ void PutPlayerInServer(entity this)
 
 	PS(this).dual_weapons = '0 0 0';
 
-	this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
+	this.superweapons_finished = (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
 
 	this.items = start_items;
 
@@ -1094,6 +1107,8 @@ void FixClientCvars(entity e)
 	stuffcmd(e, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
 	stuffcmd(e, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
 
+	stuffcmd(e, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
+
 	MUTATOR_CALLHOOK(FixClientCvars, e);
 }
 
@@ -1346,7 +1361,8 @@ void ClientDisconnect(entity this)
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
-	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
+	strfree(CS(this).weaponorder_byimpulse);
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1366,8 +1382,7 @@ void ClientDisconnect(entity this)
 
 	bot_relinkplayerlist();
 
-	if (this.clientstatus) strunzone(this.clientstatus);
-	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
+	strfree(this.clientstatus);
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
@@ -1490,7 +1505,7 @@ void player_powerups(entity this)
 	Fire_ApplyDamage(this);
 	Fire_ApplyEffect(this);
 
-	if (!g_instagib)
+	if (!MUTATOR_IS_ENABLED(mutator_instagib))
 	{
 		if (this.items & ITEM_Strength.m_itemid)
 		{
@@ -1536,7 +1551,7 @@ void player_powerups(entity this)
 		}
 		if (this.items & IT_SUPERWEAPON)
 		{
-			if (!(this.weapons & WEPSET_SUPERWEAPONS))
+			if (!(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 			{
 				this.superweapons_finished = 0;
 				this.items = this.items - (this.items & IT_SUPERWEAPON);
@@ -1553,13 +1568,13 @@ void player_powerups(entity this)
 				if (time > this.superweapons_finished)
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
-					this.weapons &= ~WEPSET_SUPERWEAPONS;
+					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
 					//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_BROKEN, this.netname);
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_BROKEN);
 				}
 			}
 		}
-		else if(this.weapons & WEPSET_SUPERWEAPONS)
+		else if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
 		{
 			if (time < this.superweapons_finished || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
@@ -1571,7 +1586,7 @@ void player_powerups(entity this)
 			else
 			{
 				this.superweapons_finished = 0;
-				this.weapons &= ~WEPSET_SUPERWEAPONS;
+				STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
 			}
 		}
 		else
@@ -1757,7 +1772,7 @@ void SpectateCopy(entity this, entity spectatee)
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
 	this.armorvalue = spectatee.armorvalue;
-	this.ammo_cells = spectatee.ammo_cells;
+	this.ammo_cells = spectatee.ammo_cells; // TODO: these will be a part of inventory, so no need to worry about setting them later!
 	this.ammo_plasma = spectatee.ammo_plasma;
 	this.ammo_shells = spectatee.ammo_shells;
 	this.ammo_nails = spectatee.ammo_nails;
@@ -1773,7 +1788,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.invincible_finished = spectatee.invincible_finished;
 	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
-	this.weapons = spectatee.weapons;
+	STAT(WEAPONS, this) = STAT(WEAPONS, spectatee);
 	this.punchangle = spectatee.punchangle;
 	this.view_ofs = spectatee.view_ofs;
 	this.velocity = spectatee.velocity;
@@ -2138,12 +2153,13 @@ bool joinAllowed(entity this)
 	if (CS(this).version_mismatch) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
-	if (ShowTeamSelection(this)) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
+	if (ShowTeamSelection(this)) return false;
 	return true;
 }
 
 .int items_added;
+.string shootfromfixedorigin;
 bool PlayerThink(entity this)
 {
 	if (game_stopped || intermission_running) {
@@ -2239,44 +2255,12 @@ bool PlayerThink(entity this)
 		return false;
 	}
 
-	bool have_hook = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).hook.state)
-		{
-			have_hook = true;
-			break;
-		}
-	}
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-	if (have_hook) {
-		do_crouch = false;
-	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		do_crouch = false;
-	} else if (this.vehicle) {
-		do_crouch = false;
-	} else if (STAT(FROZEN, this)) {
-		do_crouch = false;
-    }
-
-	if (do_crouch) {
-		if (!this.crouch) {
-			this.crouch = true;
-			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
-			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
-			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
-		}
-	} else if (this.crouch) {
-        tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
-        if (!trace_startsolid) {
-            this.crouch = false;
-            this.view_ofs = STAT(PL_VIEW_OFS, this);
-            setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
-        }
-	}
-
 	FixPlayermodel(this);
+
+	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
+		this.shootfromfixedorigin = autocvar_g_shootfromfixedorigin;
+		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
+	}
 
 	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 	//if(frametime)
@@ -2320,6 +2304,7 @@ bool PlayerThink(entity this)
 	return true;
 }
 
+.bool would_spectate;
 void ObserverThink(entity this)
 {
 	if ( CS(this).impulse )
@@ -2332,7 +2317,7 @@ void ObserverThink(entity this)
 		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch || this.would_spectate) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
@@ -2392,12 +2377,19 @@ void SpectatorThink(entity this)
 			}
 			CS(this).impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(this)) {
+			this.would_spectate = false;
 			this.flags &= ~FL_JUMPRELEASED;
 			TRANSMUTE(Observer, this);
 			PutClientInServer(this);
 		} else {
 			if(!SpectateUpdate(this))
-				PutObserverInServer(this);
+			{
+				if(!SpectateNext(this))
+				{
+					PutObserverInServer(this);
+					this.would_spectate = true;
+				}
+			}
 		}
 	} else {
 		if (!(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this))) {
@@ -2506,8 +2498,7 @@ void PlayerPreThink (entity this)
 		}
 		if (!assume_unchanged && autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
-		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
-		CS(this).netname_previous = strzone(this.netname);
+		strcpy(CS(this).netname_previous, this.netname);
 	}
 
 	// version nagging
@@ -2758,6 +2749,13 @@ void PlayerPostThink (entity this)
 	}
 
 	if (IS_PLAYER(this)) {
+		if(this.death_time == time && IS_DEAD(this))
+		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
+			this.maxs.z = 5;
+			setsize(this, this.mins, this.maxs);
+		}
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
@@ -2786,11 +2784,14 @@ void PM_UpdateButtons(entity this, entity store)
 		store.impulse = this.impulse;
 	this.impulse = 0;
 
-	store.button0 = this.button0;
-	store.button2 = this.button2;
-	store.button3 = this.button3;
+	bool typing = this.buttonchat;
+
+	store.button0 = (typing) ? 0 : this.button0;
+	//button1?!
+	store.button2 = (typing) ? 0 : this.button2;
+	store.button3 = (typing) ? 0 : this.button3;
 	store.button4 = this.button4;
-	store.button5 = this.button5;
+	store.button5 = (typing) ? 0 : this.button5;
 	store.button6 = this.button6;
 	store.button7 = this.button7;
 	store.button8 = this.button8;
@@ -2816,5 +2817,12 @@ void PM_UpdateButtons(entity this, entity store)
 	store.ping_movementloss = this.ping_movementloss;
 
 	store.v_angle = this.v_angle;
-	store.movement = this.movement;
+	store.movement = (typing) ? '0 0 0' : this.movement;
+}
+
+NET_HANDLE(fpsreport, bool)
+{
+	int fps = ReadShort();
+	PlayerScore_Set(sender, SP_FPS, fps);
+	return true;
 }

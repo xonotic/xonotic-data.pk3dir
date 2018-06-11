@@ -3,9 +3,9 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
-#include "../resources.qh"
+#include <server/resources.qh>
 #include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
@@ -559,7 +559,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	// server framerate is very low and the weapon fire rate very high
 	for (int c = 0; c < W_TICSPERFRAME; ++c)
 	{
-		if (w != WEP_Null && !(actor.weapons & WepSet_FromWeapon(w)))
+		if (w != WEP_Null && !(STAT(WEAPONS, actor) & WepSet_FromWeapon(w)))
 		{
 			if (this.m_weapon == this.m_switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w = WEP_Null;
@@ -576,7 +576,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				key_pressed = false;
 
 			Weapon off = actor.offhand;
-			if (off && !(actor.weapons & WEPSET(HOOK)))
+			if (off && (!(STAT(WEAPONS, actor) & WEPSET(HOOK)) || off != OFFHAND_HOOK))
 			{
 				if (off.offhand_think) off.offhand_think(off, actor, key_pressed);
 			}
@@ -660,8 +660,10 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponentity)
 {
-	if (MUTATOR_CALLHOOK(W_DecreaseAmmo, actor, actor.(weaponentity))) return;
+	if (MUTATOR_CALLHOOK(W_DecreaseAmmo, actor, actor.(weaponentity), ammo_use)) return;
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO) && !wep.reloading_ammo) return;
+
+	ammo_use = M_ARGV(2, float);
 
 	entity w_ent = actor.(weaponentity);
 
@@ -741,8 +743,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	this.reload_ammo_min = sent_ammo_min;
 	this.reload_ammo_amount = e.reloading_ammo;
 	this.reload_time = e.reloading_time;
-	if (actor.reload_sound) strunzone(actor.reload_sound);
-	actor.reload_sound = strzone(Sound_fixpath(sent_sound));
+	strcpy(actor.reload_sound, Sound_fixpath(sent_sound));
 
 	// don't reload weapons that don't have the RELOADABLE flag
 	if (!(e.spawnflags & WEP_FLAG_RELOADABLE))

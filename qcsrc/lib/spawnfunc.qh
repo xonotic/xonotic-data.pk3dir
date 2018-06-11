@@ -19,13 +19,13 @@ noref bool require_spawnfunc_prefix;
 	}
 
 	#define _spawnfunc_checktypes(fld) \
-		if (fieldname == #fld) \
-			if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted", fieldname);
+		if (s == #fld) \
+			if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted", s);
 #else
 	#define _spawnfunc_checktypes(fld)
 #endif
 	#define _spawnfunc_check(fld) \
-		if (fieldname == #fld) continue;
+		if (s == #fld) continue;
 
 	noref int __spawnfunc_expecting;
 	noref entity __spawnfunc_expect;
@@ -86,7 +86,7 @@ noref bool require_spawnfunc_prefix;
 	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
 	#define spawnfunc_2(id, whitelist) \
 		void __spawnfunc_##id(entity this); \
-		[[accumulate]] void spawnfunc_##id(entity this) \
+		ACCUMULATE void spawnfunc_##id(entity this) \
 		{ \
 		    if (!__spawnfunc_first) { \
                 __spawnfunc_first = true; \
@@ -111,13 +111,13 @@ noref bool require_spawnfunc_prefix;
 			if (!this.spawnfunc_checked) { \
 				for (int i = 0, n = numentityfields(); i < n; ++i) { \
 					string value = getentityfieldstring(i, this); \
-					string fieldname = entityfieldname(i); \
+					string s = entityfieldname(i); \
 					whitelist(_spawnfunc_checktypes) \
 					if (value == "") continue; \
-					if (fieldname == "") continue; \
+					if (s == "") continue; \
 					FIELDS_COMMON(_spawnfunc_check) \
 					whitelist(_spawnfunc_check) \
-					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), #id, fieldname, value); \
+					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), #id, s, value); \
 				} \
 				this.spawnfunc_checked = true; \
 				if (this) { \
@@ -163,6 +163,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, bgmscriptsustain) \
 		FIELD_SCALAR(fld, bgmscript) \
 		FIELD_SCALAR(fld, button0) \
+		FIELD_SCALAR(fld, chmap) \
 		FIELD_SCALAR(fld, cnt) \
 		FIELD_SCALAR(fld, colormap) \
 		FIELD_SCALAR(fld, count) \
@@ -182,10 +183,12 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, dmg_force) \
 		FIELD_SCALAR(fld, dmg_radius) \
 		FIELD_SCALAR(fld, effects) \
+		FIELD_SCALAR(fld, falloff) \
 		FIELD_SCALAR(fld, flags) \
 		FIELD_SCALAR(fld, fog) \
 		FIELD_SCALAR(fld, frags) \
 		FIELD_SCALAR(fld, frame) \
+		FIELD_SCALAR(fld, gametype) \
 		FIELD_SCALAR(fld, gametypefilter) \
 		FIELD_SCALAR(fld, geomtype) \
 		FIELD_SCALAR(fld, gravity) \
@@ -216,6 +219,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, noalign) \
 		FIELD_SCALAR(fld, noise1) \
 		FIELD_SCALAR(fld, noise2) \
+		FIELD_SCALAR(fld, noise3) \
 		FIELD_SCALAR(fld, noise) \
 		FIELD_SCALAR(fld, phase) \
 		FIELD_SCALAR(fld, platmovetype) \
@@ -243,6 +247,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, target_random) \
 		FIELD_SCALAR(fld, target_range) \
 		FIELD_SCALAR(fld, team) \
+		FIELD_SCALAR(fld, trigger_reverse) \
 		FIELD_SCALAR(fld, turret_scale_health) \
 		FIELD_SCALAR(fld, turret_scale_range) \
 		FIELD_SCALAR(fld, turret_scale_respawn) \
@@ -256,12 +261,12 @@ noref bool require_spawnfunc_prefix;
 		FIELD_VEC(fld, absmin) \
 		FIELD_VEC(fld, angles) \
 		FIELD_VEC(fld, avelocity) \
+		FIELD_VEC(fld, beam_color)\
 		FIELD_VEC(fld, debrisavelocityjitter) \
 		FIELD_VEC(fld, debrisvelocity) \
 		FIELD_VEC(fld, debrisvelocityjitter) \
 		FIELD_VEC(fld, color) \
 		FIELD_VEC(fld, mangle) \
-		FIELD_VEC(fld, maxs) \
 		FIELD_VEC(fld, maxs) \
 		FIELD_VEC(fld, mins) \
 		FIELD_VEC(fld, modelscale_vec) \
