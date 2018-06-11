@@ -7,6 +7,7 @@
 
 #include "autocvars.qh"
 #include "miscfunctions.qh"
+#include <common/items/inventory.qh>
 
 float GetResourceLimit(entity e, int resource_type)
 {

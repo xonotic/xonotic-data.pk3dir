@@ -2,6 +2,10 @@
 
 #include "all.qh"
 
+#ifdef SVQC
+    #include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#endif
+
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
     ATTRIBARRAY(Inventory, inv_items, int, Items_MAX);
