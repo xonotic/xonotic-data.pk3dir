@@ -18,8 +18,8 @@
 #include <common/items/_mod.qh>
 #include <common/wepent.qh>
 
-#include <common/triggers/teleporters.qh>
-#include <common/triggers/trigger/jumppads.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/jumppads.qh>
 
 #include <lib/warpzone/common.qh>
 

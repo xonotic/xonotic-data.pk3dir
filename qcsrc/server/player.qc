@@ -5,7 +5,6 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
-#include "g_subs.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
@@ -15,8 +14,9 @@
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/deathtypes/all.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/playerstats.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 
@@ -25,7 +25,7 @@
 #include "../common/physics/player.qh"
 #include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/triggers/include.qh"
+#include "../common/mapobjects/_mod.qh"
 #include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"
@@ -677,60 +677,6 @@ bool MoveToTeam(entity client, int team_colour, int type)
 	lockteams = lockteams_backup;  // restore the team lock
 	LogTeamchange(client.playerid, client.team, type);
 	return true;
-}
-
-/** print(), but only print if the server is not local */
-void dedicated_print(string input)
-{
-	if (server_is_dedicated) print(input);
-}
-
-void PrintToChat(entity player, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	sprint(player, text);
-}
-
-void DebugPrintToChat(entity player, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChat(player, text);
-	}
-}
-
-void PrintToChatAll(string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	bprint(text);
-}
-
-void DebugPrintToChatAll(string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatAll(text);
-	}
-}
-
-void PrintToChatTeam(int teamnum, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		if (it.team == teamnum)
-		{
-			sprint(it, text);
-		}
-	});
-}
-
-void DebugPrintToChatTeam(int teamnum, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatTeam(teamnum, text);
-	}
 }
 
 /**

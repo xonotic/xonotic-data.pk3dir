@@ -3,7 +3,7 @@
 #include "../menu.qh"
 #include "../item.qh"
 
-#include "../mutators/events.qh"
+#include <menu/mutators/_mod.qh>
 
 #include <common/command/_mod.qh>
 
