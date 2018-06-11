@@ -64,7 +64,7 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), NULL, NULL, WEP_CVAR(minelayer, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), NULL, NULL, WEP_CVAR(minelayer, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
@@ -96,7 +96,8 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	if(this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FOLLOW)
 		this.velocity = this.mine_orientation; // particle fx and decals need .velocity
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, NULL);
+	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius),
+						NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, this.weaponentity_fld, NULL);
 
 	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
@@ -246,7 +247,7 @@ void W_MineLayer_Touch(entity this, entity toucher)
 	}
 }
 
-void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -282,7 +283,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage), WEP_MINE_LAYER.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(actor);
@@ -307,6 +308,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	set_movetype(mine, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(mine);
 	mine.projectiledeathtype = WEP_MINE_LAYER.m_id;
+	mine.weaponentity_fld = weaponentity;
 	setsize(mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
 
 	setorigin(mine, w_shotorg - v_forward * 4); // move it back so it hits the wall at the right point
@@ -446,9 +448,6 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if(weaponslot(weaponentity) == 0)
-		actor.minelayer_mines = actor.(weaponentity).minelayer_mines;
-
     if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
     {
         // not if we're holding the minelayer without enough ammo, but can detonate existing mines
@@ -492,7 +491,6 @@ METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weap
 }
 METHOD(MineLayer, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.minelayer_mines = 0;
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];

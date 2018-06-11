@@ -39,17 +39,17 @@ float XonoticPicker_mouseDrag(entity me, vector coords)
 	return me.mouseMove(me, coords);
 }
 
-float XonoticPicker_mousePress(entity me, vector coords)
+METHOD(XonoticPicker, mousePress, bool(XonoticPicker this, vector pos))
 {
-	me.mouseMove(me, coords);
+	this.mouseMove(this, pos);
 
-	if(me.focusedCell.x >= 0)
+	if(this.focusedCell.x >= 0)
 	{
-		me.pressed = 1;
-		me.pressedCell = me.focusedCell;
+		this.pressed = 1;
+		this.pressedCell = this.focusedCell;
 	}
 
-	return 1;
+	return true;
 }
 
 float XonoticPicker_mouseRelease(entity me, vector coords)

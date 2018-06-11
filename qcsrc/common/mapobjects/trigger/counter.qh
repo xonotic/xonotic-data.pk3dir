@@ -1,0 +1,4 @@
+#pragma once
+
+
+const int COUNTER_FIRE_AT_COUNT = BIT(2);

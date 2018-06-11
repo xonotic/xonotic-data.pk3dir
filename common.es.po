@@ -8,14 +8,16 @@
 # Ari_tent <xonotic@outlook.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
-# Starfire24680 <starfire24680@gmail.com>, 2017
+# starfire24680 <starfire24680@gmail.com>, 2017
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
 # Simon <inactive+0000simon@transifex.com>, 2014-2015
-# Starfire24680 <starfire24680@gmail.com>, 2017
+# starfire24680 <starfire24680@gmail.com>, 2018
+# starfire24680 <starfire24680@gmail.com>, 2017-2018
+# starfire24680 <starfire24680@gmail.com>, 2017
 # Vitama Piru Leta <vitamanrules@gmail.com>, 2017
 # Ari_tent <xonotic@outlook.com>, 2014
 # Yllelder, 2016
@@ -25,8 +27,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-05-11 21:48+0000\n"
+"Last-Translator: starfire24680 <starfire24680@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -47,7 +49,7 @@ msgstr "^1No se pudo escribir a %s\n"
 
 #: qcsrc/client/hud/panel/chat.qc:82
 msgid "^3Player^7: This is the chat area."
-msgstr "^3Jugador^7: Este es el area de chat."
+msgstr "^3Jugador^7: Este es el area del chat."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:69
 #, c-format
@@ -96,7 +98,7 @@ msgstr "^1Usa ^3%s^1 o ^3%s^1 para cambiar la velocidad"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^1Pulsa ^3%s^1 para observar y ^3%s^1 para cambiar el modo de cámara."
+msgstr "^1Pulsa ^3%s^1 para observar o ^3%s^1 para cambiar el modo de cámara."
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:192
@@ -111,7 +113,7 @@ msgstr "disparo secundario"
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Presiona ^3%s^1 para información del modo de juego"
+msgstr "^1Presiona ^3%s^1 para mostrar información del modo de juego"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #: qcsrc/menu/xonotic/keybinder.qc:94
@@ -247,7 +249,7 @@ msgstr "Continuar..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Chat"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -356,7 +358,7 @@ msgstr "QMCMD^asesinado el portador de bandera (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^asesinado el portador de la bandera, icono"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
@@ -369,11 +371,11 @@ msgstr "QMCMD^bandera tirada, icono"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "QMCMD^tirar arma, icono"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^arma tirada %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
@@ -522,7 +524,7 @@ msgstr "Linea de salida"
 #: qcsrc/client/hud/panel/racetimer.qc:63
 #: qcsrc/client/hud/panel/racetimer.qc:67
 msgid "Finish line"
-msgstr "Línea eta"
+msgstr "Línea de meta"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -1117,7 +1119,7 @@ msgstr "No importa"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Decide the gametype"
-msgstr "Elegir el modo de juego"
+msgstr "Elige el modo de juego"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Vote for a map"
@@ -1131,7 +1133,7 @@ msgstr "%d segundos restantes"
 #: qcsrc/client/mapvoting.qc:497
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
-msgstr "mv_mapdownload: ^3¡No deberias usar este comando en tí!\n"
+msgstr "mv_mapdownload: ^3¡No deberias usar este comando por tu cuenta!\n"
 
 #: qcsrc/client/mapvoting.qc:507
 msgid "^1Error:^7 Couldn't find pak index.\n"
@@ -1250,7 +1252,7 @@ msgstr "Combate a muerte por equipos"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid "Capture the Flag"
-msgstr "Consigue la bandera"
+msgstr "Captura la bandera"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid ""
@@ -1678,7 +1680,7 @@ msgstr "Color:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:47
 msgid "Draw damage numbers for friendly fire"
-msgstr "Dibujar números de daño para fuego amigo"
+msgstr "Dibujar números de daño para el fuego amigo"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:56
 msgid "Extra life"
@@ -1813,7 +1815,7 @@ msgstr "Base rosa"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr "Devuele la vandera aquí"
+msgstr "Devuelva la bandera aquí"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -1911,8 +1913,8 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG capturó la bandera ^TC^TT^BG en ^F1%s^BG segundos, rompiendo ^BG"
-"%s^BG's el record anterior de ^F2%s^BG segundos"
+"^BG%s^BG capturó la bandera ^TC^TT^BG en ^F1%s^BG segundos, batiendo el "
+"record anterior de ^BG%s^BG de ^F2%s^BG segundos"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
@@ -1931,7 +1933,7 @@ msgid ""
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
 "^BG%s^BG capturó la bandera ^TC^TT^BG en ^F2%s^BG segundos, fallando al "
-"romper ^BG%s^BG's el record anterior de ^F1%s^BG segundos"
+"batir el record anterior de ^BG%s^BG de ^F1%s^BG segundos"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
@@ -2084,12 +2086,12 @@ msgstr "^BG%s%s^K1 fue cocinado por ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 fue empujado a un monstruo por ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 fue empujado hacia un monstruo por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1 fue explotado por ^BG%s^K1 Granda%s%s"
+msgstr "^BG%s%s^K1 fue explotado por la granada de ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
@@ -2868,7 +2870,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:443
 #, c-format
 msgid "^BG%s^K1 picked up a Superweapon"
-msgstr "^BG%s^K1 ha recogido una superarma"
+msgstr "^BG%s^K1 ha recogido una Superarma"
 
 #: qcsrc/common/notifications/all.inc:445
 msgid "^BGYou cannot change to a larger team"
@@ -2907,7 +2909,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:452
 #, c-format
 msgid "^F3SVQC Build information: ^F4%s"
-msgstr "^F3SVQC Información de compilación ^F4%s"
+msgstr "^F3SVQC Información de compilación: ^F4%s"
 
 #: qcsrc/common/notifications/all.inc:454
 #, c-format
@@ -2959,8 +2961,8 @@ msgstr "^BG%s%s^K1 se comió el misil de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 se acercó demasiado al misil de ^BG%s^K1%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -3105,7 +3107,7 @@ msgstr "^BG%s%s^K1 se acercó demasiado a la granada del Mortar de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"
-msgstr "^BG%s%s^K1 se comió la granada del mortar de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 se comió la granada del Mortero de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
@@ -3214,7 +3216,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"
-msgstr "^BG%s^K1 lastimó sus propios oidos con el @!#%%'n Tuba%s%s"
+msgstr "^BG%s^K1 lastimó sus propios oidos con la @!#%%'n Tuba%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
@@ -4119,7 +4121,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:788
 msgid "^F2Intruder detected, disabling shields!"
-msgstr ""
+msgstr "^F2Intruso detectado, desactivando escudos!"
 
 #: qcsrc/common/notifications/all.qh:188
 msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
@@ -4532,11 +4534,11 @@ msgstr "Presiona %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:950
 msgid "No right gunner!"
-msgstr "Sin ametralladora derecha!"
+msgstr "¡Sin artillero derecho!"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No left gunner!"
-msgstr "Sin ametralladora izquierda!"
+msgstr "¡Sin artillero izquierdo!"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:19
 msgid "Bumblebee"
@@ -5040,7 +5042,7 @@ msgstr "Húngaro"
 
 #: qcsrc/menu/xonotic/credits.qc:231
 msgid "Irish"
-msgstr ""
+msgstr "Irlandés"
 
 #: qcsrc/menu/xonotic/credits.qc:234
 msgid "Italian"
@@ -5072,7 +5074,7 @@ msgstr "Ruso"
 
 #: qcsrc/menu/xonotic/credits.qc:279
 msgid "Scottish Gaelic"
-msgstr ""
+msgstr "Gaélico escocés"
 
 #: qcsrc/menu/xonotic/credits.qc:282
 msgid "Serbian"
@@ -7389,7 +7391,7 @@ msgstr "Ajustado"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:163
 msgid "Decals"
-msgstr "Símbolos"
+msgstr "Calcomanía"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
 msgid "Enable decals (bullet holes and blood) (default: enabled)"
@@ -9465,3 +9467,9 @@ msgstr "Color del equipo:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Activar panel"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^Chat"
+
+#~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+#~ msgstr "^BG%s%s^K1 se acercó demasiado al misil de ^BG%s^K1%s%s"

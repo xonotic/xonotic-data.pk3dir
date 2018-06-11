@@ -16,7 +16,8 @@
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>
@@ -30,7 +31,7 @@
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/triggers/triggers.qh>
+#include <common/mapobjects/triggers.qh>
 
 #include <common/minigames/sv_minigames.qh>
 
@@ -239,21 +240,23 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 		{
 			if (IS_CLIENT(caller))
 			{
-				if (warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
+				if (warmup_stage || sv_ready_restart || g_race_qualifying == 2)
 				{
-					if (!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
+					if (!readyrestart_happened || sv_ready_restart_repeatable)
 					{
 						if (time < game_starttime) // game is already restarting
 							return;
 						if (caller.ready)            // toggle
 						{
 							caller.ready = false;
-							bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
-							bprint(playername(caller, false), "^2 is ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -614,8 +617,10 @@ void ClientCommand_voice(entity caller, float request, float argc, string comman
 					sprint(caller, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 					return;
 				}
-				if (argc >= 3) VoiceMessage(caller, e, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
-				else VoiceMessage(caller, e, "");
+				string msg = "";
+				if (argc >= 3)
+					msg = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
+				VoiceMessage(caller, e, msg);
 
 				return;
 			}

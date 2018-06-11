@@ -50,7 +50,7 @@ STATIC_INIT(RegisterTempEntities_renumber) { FOREACH(TempEntities, true, it.m_id
 
 #ifdef CSQC
 	#define REGISTER_NET_LINKED(id) \
-		[[accumulate]] NET_HANDLE(id, bool isnew) \
+		ACCUMULATE NET_HANDLE(id, bool isnew) \
 		{ \
 			this = __self; \
 			this.sourceLoc = __FILE__ ":" STR(__LINE__); \
@@ -107,7 +107,6 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 #ifdef SVQC
 	const int MSG_ENTITY = 5;
 
-	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
 
 	IntrusiveList g_uncustomizables;
@@ -202,8 +201,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	{
 		if (g_buf == "") return;
 		localcmd("\ncmd c2s \"", strreplace("$", "$$", g_buf), "\"\n");
-		strunzone(g_buf);
-		g_buf = string_null;
+		strfree(g_buf);
 	}
 #endif
 
@@ -301,8 +299,12 @@ MACRO_END
 		string s = string_null;
 		yenc_single(b, s);
 		string tmp = strcat(g_buf, s);
-		if (g_buf) strunzone(g_buf);
-		g_buf = strzone(tmp);
+		strcpy(g_buf, tmp);
+	}
+	void WriteShort(int to, int b)
+	{
+		WriteByte(to, (b >> 8) & 0xFF);
+		WriteByte(to, b & 0xFF);
 	}
 #elif defined(SVQC)
 	int ReadByte()
@@ -310,6 +312,10 @@ MACRO_END
 		int ret = -1;
 		ydec_single(g_buf, ret);
 		return ret;
+	}
+	int ReadShort()
+	{
+		return (ReadByte() << 8) | (ReadByte());
 	}
 	void WriteByte(int to, int b);
 #endif

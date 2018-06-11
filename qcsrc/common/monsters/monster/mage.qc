@@ -12,7 +12,7 @@ METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weapon
     if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_MAGE.m_id);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Mage_Attack_Spike(actor, w_shotdir);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -101,7 +101,15 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 	switch(this.skin)
 	{
 		case 0: return (targ.health < autocvar_g_balance_health_regenstable);
-		case 1: return ((targ.ammo_cells && targ.ammo_cells < g_pickup_cells_max) || (targ.ammo_plasma && targ.ammo_plasma < g_pickup_plasma_max) || (targ.ammo_rockets && targ.ammo_rockets < g_pickup_rockets_max) || (targ.ammo_nails && targ.ammo_nails < g_pickup_nails_max) || (targ.ammo_shells && targ.ammo_shells < g_pickup_shells_max));
+		case 1:
+		{
+			return ((GetResourceAmount(targ, RESOURCE_CELLS) && GetResourceAmount(targ, RESOURCE_CELLS) < g_pickup_cells_max)
+				||  (GetResourceAmount(targ, RESOURCE_PLASMA) && GetResourceAmount(targ, RESOURCE_PLASMA) < g_pickup_plasma_max)
+				||  (GetResourceAmount(targ, RESOURCE_ROCKETS) && GetResourceAmount(targ, RESOURCE_ROCKETS) < g_pickup_rockets_max)
+				||  (GetResourceAmount(targ, RESOURCE_BULLETS) && GetResourceAmount(targ, RESOURCE_BULLETS) < g_pickup_nails_max)
+				||  (GetResourceAmount(targ, RESOURCE_SHELLS) && GetResourceAmount(targ, RESOURCE_SHELLS) < g_pickup_shells_max)
+					);
+		}
 		case 2: return (targ.armorvalue < autocvar_g_balance_armor_regenstable);
 		case 3: return (targ.health > 0);
 	}
@@ -118,7 +126,8 @@ void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 	this.realowner.mage_spike = NULL;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius),
+						NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, DMG_NOWEP, directhitentity);
 
 	delete(this);
 }
@@ -229,13 +238,16 @@ void M_Mage_Defend_Heal(entity this)
 					fx = EFFECT_HEALING;
 					break;
 				case 1:
-					if(it.ammo_cells) it.ammo_cells = bound(it.ammo_cells, it.ammo_cells + 1, g_pickup_cells_max);
-					if(it.ammo_plasma) it.ammo_plasma = bound(it.ammo_plasma, it.ammo_plasma + 1, g_pickup_plasma_max);
-					if(it.ammo_rockets) it.ammo_rockets = bound(it.ammo_rockets, it.ammo_rockets + 1, g_pickup_rockets_max);
-					if(it.ammo_shells) it.ammo_shells = bound(it.ammo_shells, it.ammo_shells + 2, g_pickup_shells_max);
-					if(it.ammo_nails) it.ammo_nails = bound(it.ammo_nails, it.ammo_nails + 5, g_pickup_nails_max);
+				{
+					float tmpfld;
+					tmpfld = GetResourceAmount(it, RESOURCE_CELLS); if(tmpfld) SetResourceAmount(it, RESOURCE_CELLS, bound(tmpfld, tmpfld + 1, g_pickup_cells_max));
+					tmpfld = GetResourceAmount(it, RESOURCE_PLASMA); if(tmpfld) SetResourceAmount(it, RESOURCE_PLASMA, bound(tmpfld, tmpfld + 1, g_pickup_plasma_max));
+					tmpfld = GetResourceAmount(it, RESOURCE_ROCKETS); if(tmpfld) SetResourceAmount(it, RESOURCE_ROCKETS, bound(tmpfld, tmpfld + 1, g_pickup_rockets_max));
+					tmpfld = GetResourceAmount(it, RESOURCE_SHELLS); if(tmpfld) SetResourceAmount(it, RESOURCE_SHELLS, bound(tmpfld, tmpfld + 2, g_pickup_shells_max));
+					tmpfld = GetResourceAmount(it, RESOURCE_BULLETS); if(tmpfld) SetResourceAmount(it, RESOURCE_BULLETS, bound(tmpfld, tmpfld + 5, g_pickup_nails_max));
 					fx = EFFECT_AMMO_REGEN;
 					break;
+				}
 				case 2:
 					if(it.armorvalue < autocvar_g_balance_armor_regenstable)
 					{
@@ -271,7 +283,8 @@ void M_Mage_Defend_Heal(entity this)
 void M_Mage_Attack_Push(entity this)
 {
 	sound(this, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
-	RadiusDamage (this, this, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), NULL, NULL, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, this.enemy);
+	RadiusDamage (this, this, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius),
+						NULL, NULL, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, DMG_NOWEP, this.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, this.origin, '0 0 0', 1);
 
 	setanim(this, this.anim_shoot, true, true, true);

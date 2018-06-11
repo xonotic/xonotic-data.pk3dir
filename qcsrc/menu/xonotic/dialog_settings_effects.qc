@@ -64,7 +64,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.gotoRC(me, 1.25, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Geometry detail:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("r_subdivisions_tolerance",
-			_("Change the smoothness of the curves on the map (default: normal)")));
+			_("Change the smoothness of the curves on the map")));
 			e.addValue(e, ZCTX(_("DET^Lowest")), "16");
 			e.addValue(e, ZCTX(_("DET^Low")), "8");
 			e.addValue(e, ZCTX(_("DET^Normal")), "4");
@@ -129,31 +129,31 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		{
 			me.TDempty(me, 0.2);
 			me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(3, 0, "r_showsurfaces", _("Show surfaces"),
-				_("Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly. (default: disabled)")));
+				_("Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly.")));
 		}
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(1, "mod_q3bsp_nolightmaps", _("Use lightmaps"),
-			_("Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)")));
+			_("Use high resolution lightmaps, which will look pretty but use up some extra video memory")));
 			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_deluxemapping", _("Deluxe mapping"),
-			_("Use per-pixel lighting effects (default: enabled)")));
+			_("Use per-pixel lighting effects")));
 			setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_gloss", _("Gloss"),
-			_("Enable the use of glossmaps on textures supporting it (default: enabled)")));
+			_("Enable the use of glossmaps on textures supporting it")));
 			setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping", _("Offset mapping"),
-			_("Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface (default: disabled)")));
+			_("Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface")));
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping"),
-			_("Higher quality offset mapping, which also has a huge impact on performance (default: disabled)")));
+			_("Higher quality offset mapping, which also has a huge impact on performance")));
 			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_water", _("Reflections:"),
-			_("Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces (default: disabled)")));
+			_("Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces")));
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("r_water_resolutionmultiplier",
-			_("Resolution of reflections/refractions (default: good)")));
+			_("Resolution of reflections/refractions")));
 			e.addValue(e, _("Blurred"), "0.25");
 			e.addValue(e, ZCTX(_("REFL^Good")), "0.5");
 			e.addValue(e, _("Sharp"), "1");
@@ -161,7 +161,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "cl_decals", _("Decals"),
-			_("Enable decals (bullet holes and blood) (default: enabled)")));
+			_("Enable decals (bullet holes and blood)")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
 			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
@@ -169,14 +169,14 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
 			setDependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(200, 500, 20, "r_drawdecals_drawdistance",
-			_("Decals further away than this will not be drawn (default: 300)")));
+			_("Decals further away than this will not be drawn")));
 			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Time:")));
 			setDependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 20, 1, "cl_decals_fadetime",
-			_("Time in seconds before decals fade away (default: 2)")));
+			_("Time in seconds before decals fade away")));
 			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -189,42 +189,42 @@ void XonoticEffectsSettingsTab_fill(entity me)
 
 	me.gotoRC(me, 1.25, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton_T(1, "r_coronas", "0", _("No dynamic lighting"),
-			_("Enable corona flares around certain lights (default: enabled)")));
+			_("Enable corona flares around certain lights")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton_T(1, "gl_flashblend", string_null, _("Fake corona lighting"),
-			_("Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)")));
+			_("Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights")));
 		makeMulti(e, "r_coronas");
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton_T(1, "r_shadow_realtime_dlight", string_null, _("Realtime dynamic lighting"),
-			_("Enable rendering of dynamic lights such as explosions and rocket lights (default: enabled)")));
+			_("Enable rendering of dynamic lights such as explosions and rocket lights")));
 		makeMulti(e, "r_coronas");
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_dlight_shadows", _("Shadows"),
-			_("Enable rendering of shadows from dynamic lights (default: disabled)")));
+			_("Enable rendering of shadows from dynamic lights")));
 			setDependent(e, "r_shadow_realtime_dlight", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_world", _("Realtime world lighting"),
-			_("Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance. (default: disabled)")));
+			_("Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance.")));
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_world_shadows", _("Shadows"),
-			_("Enable rendering of shadows from realtime world lights (default: disabled)")));
+			_("Enable rendering of shadows from realtime world lights")));
 			setDependent(e, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "r_shadow_usenormalmap", _("Use normal maps"),
-			_("Enable use of directional shading on textures (default: enabled)")));
+			_("Enable use of directional shading on textures")));
 			setDependentOR(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_shadow_shadowmapping", _("Soft shadows")));
 			setDependentWeird(e, someShadowCvarIsEnabled);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "r_coronas_occlusionquery", _("Fade corona according to visibility"),
-			_("Fade coronas according to visibility (default: enabled)")));
+			_("Fade coronas according to visibility")));
 			setDependent(e, "r_coronas", 1, 1);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_bloom", _("Bloom"),
-			_("Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)")));
+			_("Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance.")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx_T(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects"),
-			_("Enables special postprocessing effects for when damaged or under water or using a powerup (default: disabled)")));
+			_("Enables special postprocessing effects for when damaged or under water or using a powerup")));
 			makeMulti(e, "hud_powerup");
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
@@ -246,14 +246,14 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Quality:")));
 			setDependent(e, "cl_particles", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 3.0, 0.25, "cl_particles_quality",
-			_("Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1.0)")));
+			_("Multiplier for amount of particles. Less means less particles, which in turn gives for better performance")));
 			setDependent(e, "cl_particles", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
 			setDependent(e, "cl_particles", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(200, 3000, 200, "r_drawparticles_drawdistance",
-			_("Particles further away than this will not be drawn (default: 1000)")));
+			_("Particles further away than this will not be drawn")));
 			setDependent(e, "cl_particles", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);

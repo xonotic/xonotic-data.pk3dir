@@ -2,13 +2,14 @@
 
 #include "anticheat.qh"
 #include "g_hook.qh"
+#include "g_damage.qh"
 #include "g_world.qh"
 
 #include "bot/api.qh"
 
 #include "command/common.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
@@ -18,6 +19,7 @@
 #include "../common/util.qh"
 
 #include "../common/vehicles/all.qh"
+#include <common/monsters/sv_monsters.qh>
 #include <common/weapons/_all.qh>
 
 #include "../lib/csqcmodel/sv_model.qh"
@@ -37,9 +39,9 @@ void CreatureFrame_hotliquids(entity this)
 		if (this.flags & FL_PROJECTILE)
 		{
 			if (this.watertype == CONTENT_LAVA)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			else if (this.watertype == CONTENT_SLIME)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 		else
 		{
@@ -50,7 +52,7 @@ void CreatureFrame_hotliquids(entity this)
 					this.watersound_finished = time + 0.5;
 					sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
 				if(autocvar_g_balance_contents_playerdamage_lava_burn)
 					Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
 			}
@@ -61,7 +63,7 @@ void CreatureFrame_hotliquids(entity this)
 					this.watersound_finished = time + 0.5;
 					sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			}
 		}
 	}
@@ -116,11 +118,11 @@ void CreatureFrame_FallDamage(entity this)
 			else
 				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 			if (dm > 0)
-				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 
 		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	}
 }
 
@@ -360,7 +362,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 	return;
 LABEL(cleanup)
-    builtin_remove(this);
+    delete(this);
 }
 
 void WarpZone_PostInitialize_Callback()
@@ -382,4 +384,16 @@ void WarpZone_PostInitialize_Callback()
 		waypoint_spawnforteleporter_wz(e, src, dst, 0, -v_up, tracetest_ent);
 	}
 	delete(tracetest_ent);
+}
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main ()
+{
+
 }

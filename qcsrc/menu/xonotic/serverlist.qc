@@ -37,8 +37,7 @@ void RegisterSLCategories()
 				} } \
 				if(catnum) \
 				{ \
-					strunzone(categories[i].override_string); \
-					categories[i].override_string = string_null; \
+					strfree(categories[i].override_string); \
 					categories[i].override_field = catnum; \
 					continue; \
 				} \
@@ -51,8 +50,7 @@ void RegisterSLCategories()
 					); \
 				} \
 			} \
-			strunzone(categories[i].override_string); \
-			categories[i].override_string = string_null; \
+			strfree(categories[i].override_string); \
 			categories[i].override_field = 0; \
 		}
 	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
@@ -308,9 +306,7 @@ void XonoticServerList_setSelected(entity me, int i)
 	if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
 		return; // sorry, it would be wrong
 
-	if(me.selectedServer)
-		strunzone(me.selectedServer);
-	me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+	strcpy(me.selectedServer, gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 
 	me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
 	me.ipAddressBox.cursorPos = strlen(me.selectedServer);
@@ -549,9 +545,10 @@ void XonoticServerList_draw(entity me)
 	}
 	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
 
-	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
-	me.infoButton.disabled = ((me.nItems == 0) || !owned);
-	me.favoriteButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
+	me.connectButton.disabled = (me.lockedSelectedItem || (me.nItems == 0 && me.ipAddressBox.text == ""));
+	me.disconnectButton.disabled = (!(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)));
+	me.infoButton.disabled = (me.lockedSelectedItem || me.nItems == 0 || !owned);
+	me.favoriteButton.disabled = (me.lockedSelectedItem || (me.nItems == 0 && me.ipAddressBox.text == ""));
 
 	if(me.lockedSelectedItem)
 	{
@@ -559,9 +556,7 @@ void XonoticServerList_draw(entity me)
 		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem) != me.selectedServer)
 			{
-				if(me.selectedServer)
-					strunzone(me.selectedServer);
-				me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+				strcpy(me.selectedServer, gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 			}
 			found = true;
 		}
@@ -586,9 +581,7 @@ void XonoticServerList_draw(entity me)
 			// selected server disappeared, select the last server (scrolling to it)
 			if(me.selectedItem >= me.nItems)
 				SUPER(XonoticServerList).setSelected(me, me.nItems - 1);
-			if(me.selectedServer)
-				strunzone(me.selectedServer);
-			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+			strcpy(me.selectedServer, gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 		}
 	}
 
@@ -666,12 +659,9 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 }
 void ServerList_Filter_Change(entity box, entity me)
 {
-	if(me.filterString)
-		strunzone(me.filterString);
+	strfree(me.filterString);
 	if(box.text != "")
 		me.filterString = strzone(box.text);
-	else
-		me.filterString = string_null;
 	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
@@ -717,9 +707,7 @@ void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 	me.sortButton4.forcePressed = 0;
 	me.sortButton5.forcePressed = (fld == SLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
-	if(me.selectedServer)
-		strunzone(me.selectedServer);
-	me.selectedServer = string_null;
+	strfree(me.selectedServer);
 	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 }
 void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
@@ -775,11 +763,10 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 }
 void ServerList_Connect_Click(entity btn, entity me)
 {
-	localcmd(sprintf("connect %s\n",
-		((me.ipAddressBox.text != "") ?
-			me.ipAddressBox.text : me.selectedServer
-		)
-	));
+	if (me.lockedSelectedItem)
+		return;
+	string sv = (me.ipAddressBox.text != "") ? me.ipAddressBox.text : me.selectedServer;
+	localcmd(sprintf("connect %s\n", sv));
 }
 void ServerList_Favorite_Click(entity btn, entity this)
 {
@@ -857,7 +844,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		}
 	}
 
-	if(isSelected)
+	if(isSelected && !me.lockedSelectedItem)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	else if(isFocused)
 	{

@@ -3,6 +3,7 @@
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
+#include <server/resources.qh>
 #include "havocbot.qh"
 
 #include "../cvars.qh"
@@ -51,12 +52,12 @@ bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player
 {
 	if (item.health && player.health <= this.health) {return true;}
 	if (item.armorvalue && player.armorvalue <= this.armorvalue) {return true;}
-	if (item.weapons && !(player.weapons & item.weapons)) {return true;}
-	if (item.ammo_shells && player.ammo_shells <= this.ammo_shells) {return true;}
-	if (item.ammo_nails && player.ammo_nails <= this.ammo_nails) {return true;}
-	if (item.ammo_rockets && player.ammo_rockets <= this.ammo_rockets) {return true;}
-	if (item.ammo_cells && player.ammo_cells <= this.ammo_cells) {return true;}
-	if (item.ammo_plasma && player.ammo_plasma <= this.ammo_plasma) {return true;}
+	if (STAT(WEAPONS, item) && !(STAT(WEAPONS, player) & STAT(WEAPONS, item))) {return true;}
+	if (item.ammo_shells && GetResourceAmount(player, RESOURCE_SHELLS) <= GetResourceAmount(this, RESOURCE_SHELLS)) {return true;}
+	if (item.ammo_nails && GetResourceAmount(player, RESOURCE_BULLETS) <= GetResourceAmount(this, RESOURCE_BULLETS)) {return true;}
+	if (item.ammo_rockets && GetResourceAmount(player, RESOURCE_ROCKETS) <= GetResourceAmount(this, RESOURCE_ROCKETS)) {return true;}
+	if (item.ammo_cells && GetResourceAmount(player, RESOURCE_CELLS) <= GetResourceAmount(this, RESOURCE_CELLS)) {return true;}
+	if (item.ammo_plasma && GetResourceAmount(player, RESOURCE_PLASMA) <= GetResourceAmount(this, RESOURCE_PLASMA)) {return true;}
 	if (item.itemdef.instanceOfPowerup) {return true;}
 
 	return false;

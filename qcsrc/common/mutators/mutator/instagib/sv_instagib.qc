@@ -1,5 +1,9 @@
 #include "sv_instagib.qh"
 
+#include <server/client.qh>
+#include <common/items/_mod.qh>
+#include "../random_items/sv_random_items.qh"
+
 bool autocvar_g_instagib_damagedbycontents = true;
 bool autocvar_g_instagib_blaster_keepdamage = false;
 bool autocvar_g_instagib_blaster_keepforce = false;
@@ -13,24 +17,14 @@ bool autocvar_g_instagib_ammo_convert_bullets;
 int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
-#include <server/client.qh>
-
-#include <common/items/_mod.qh>
-
-REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
+IntrusiveList g_instagib_items;
+STATIC_INIT()
 {
-	MUTATOR_ONADD
-	{
-		ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_Invisibility.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_Speed.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-	}
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_Invisibility.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_Speed.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-	}
+	g_instagib_items = IL_NEW();
+	IL_PUSH(g_instagib_items, ITEM_VaporizerCells);
+	IL_PUSH(g_instagib_items, ITEM_ExtraLife);
+	IL_PUSH(g_instagib_items, ITEM_Invisibility);
+	IL_PUSH(g_instagib_items, ITEM_Speed);
 }
 
 void instagib_invisibility(entity this)
@@ -48,6 +42,26 @@ void instagib_speed(entity this)
 {
 	this.invincible_finished = autocvar_g_instagib_speed_time;
 	StartItem(this, ITEM_Speed);
+}
+
+/// \brief Returns a random classname of the instagib item.
+/// \param[in] prefix Prefix of the cvars that hold probabilities.
+/// \return Random classname of the instagib item.
+string RandomItems_GetRandomInstagibItemClassName(string prefix)
+{
+	RandomSelection_Init();
+	IL_EACH(g_instagib_items, Item_IsDefinitionAllowed(it),
+	{
+		string cvar_name = sprintf("g_%s_%s_probability", prefix,
+			it.m_canonical_spawnfunc);
+		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+		{
+			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			continue;
+		}
+		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
+	});
+	return RandomSelection_chosen_string;
 }
 
 .float instagib_nextthink;
@@ -84,59 +98,59 @@ void instagib_ammocheck(entity this)
 		this.instagib_needammo = true;
 		if (hp <= 5)
 		{
-			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
 		}
 		else if (hp <= 10)
 		{
-			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_1);
 		}
 		else if (hp <= 20)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_2);
 		}
 		else if (hp <= 30)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_3);
 		}
 		else if (hp <= 40)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_4);
 		}
 		else if (hp <= 50)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_5);
 		}
 		else if (hp <= 60)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_6);
 		}
 		else if (hp <= 70)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_7);
 		}
 		else if (hp <= 80)
 		{
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_8);
 		}
 		else if (hp <= 90)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_9);
 		}
 		else
 		{
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, MULTI_INSTAGIB_FINDAMMO);
-			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 	}
 	this.instagib_nextthink = time + 1;
@@ -145,6 +159,13 @@ void instagib_ammocheck(entity this)
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), { instagib_stop_countdown(it); });
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, RandomItems_GetRandomItemClassName)
+{
+	M_ARGV(1, string) = RandomItems_GetRandomInstagibItemClassName(
+		M_ARGV(0, string));
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
@@ -253,14 +274,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 }
 
-.float stat_sv_maxspeed;
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.items & ITEM_Speed.m_itemid)
-		player.stat_sv_maxspeed = player.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_instagib_speed_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
