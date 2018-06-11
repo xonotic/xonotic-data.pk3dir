@@ -9,7 +9,7 @@
 #include <common/effects/all.inc>
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"

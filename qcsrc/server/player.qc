@@ -14,6 +14,7 @@
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapobjects/subs.qh"
 #include "../common/playerstats.qh"

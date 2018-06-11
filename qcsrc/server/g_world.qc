@@ -13,7 +13,7 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mapvoting.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "race.qh"
 #include "scores.qh"
 #include "teamplay.qh"
@@ -21,6 +21,7 @@
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/deathtypes/all.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/_mod.qh"
 #include "../common/monsters/sv_monsters.qh"
@@ -91,7 +92,6 @@ const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
-string GetGametype();
 void ShuffleMaplist();
 
 void SetDefaultAlpha()

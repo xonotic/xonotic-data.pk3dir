@@ -3,7 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"

@@ -9,7 +9,7 @@
 #include "race.qh"
 #include "../common/mapobjects/teleporters.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 #include "weapons/tracing.qh"
 
