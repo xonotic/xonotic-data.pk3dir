@@ -15,7 +15,7 @@
     #include "constants.qh"
     #include <common/deathtypes/all.qh>
     #include <common/notifications/all.qh>
-	#include "triggers/subs.qh"
+	#include "mapobjects/subs.qh"
     #include "util.qh"
 
     #include <common/monsters/_mod.qh>
@@ -1107,23 +1107,23 @@ float ammo_pickupevalfunc(entity player, entity item)
 
 	float noammorating = 0.5;
 
-	if ((need_shells) && (item.ammo_shells) && (player.ammo_shells < g_pickup_shells_max))
-		c = item.ammo_shells / max(noammorating, player.ammo_shells);
+	if ((need_shells) && (item.ammo_shells) && (GetResourceAmount(player, RESOURCE_SHELLS) < g_pickup_shells_max))
+		c = item.ammo_shells / max(noammorating, GetResourceAmount(player, RESOURCE_SHELLS));
 
-	if ((need_nails) && (item.ammo_nails) && (player.ammo_nails < g_pickup_nails_max))
-		c = item.ammo_nails / max(noammorating, player.ammo_nails);
+	if ((need_nails) && (item.ammo_nails) && (GetResourceAmount(player, RESOURCE_BULLETS) < g_pickup_nails_max))
+		c = item.ammo_nails / max(noammorating, GetResourceAmount(player, RESOURCE_BULLETS));
 
-	if ((need_rockets) && (item.ammo_rockets) && (player.ammo_rockets < g_pickup_rockets_max))
-		c = item.ammo_rockets / max(noammorating, player.ammo_rockets);
+	if ((need_rockets) && (item.ammo_rockets) && (GetResourceAmount(player, RESOURCE_ROCKETS) < g_pickup_rockets_max))
+		c = item.ammo_rockets / max(noammorating, GetResourceAmount(player, RESOURCE_ROCKETS));
 
-	if ((need_cells) && (item.ammo_cells) && (player.ammo_cells < g_pickup_cells_max))
-		c = item.ammo_cells / max(noammorating, player.ammo_cells);
+	if ((need_cells) && (item.ammo_cells) && (GetResourceAmount(player, RESOURCE_CELLS) < g_pickup_cells_max))
+		c = item.ammo_cells / max(noammorating, GetResourceAmount(player, RESOURCE_CELLS));
 
-	if ((need_plasma) && (item.ammo_plasma) && (player.ammo_plasma < g_pickup_plasma_max))
-		c = item.ammo_plasma / max(noammorating, player.ammo_plasma);
+	if ((need_plasma) && (item.ammo_plasma) && (GetResourceAmount(player, RESOURCE_PLASMA) < g_pickup_plasma_max))
+		c = item.ammo_plasma / max(noammorating, GetResourceAmount(player, RESOURCE_PLASMA));
 
-	if ((need_fuel) && (item.ammo_fuel) && (player.ammo_fuel < g_pickup_fuel_max))
-		c = item.ammo_fuel / max(noammorating, player.ammo_fuel);
+	if ((need_fuel) && (item.ammo_fuel) && (GetResourceAmount(player, RESOURCE_FUEL) < g_pickup_fuel_max))
+		c = item.ammo_fuel / max(noammorating, GetResourceAmount(player, RESOURCE_FUEL));
 
 	rating *= min(c, 2);
 	if(wpn)
@@ -1182,7 +1182,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
     this.item_pickupsound_ent = pickupsound;
 
     if(def.m_iteminit)
-    	def.m_iteminit(this);
+    	def.m_iteminit(def, this);
 
 	if(!this.respawntime) // both need to be set
 	{

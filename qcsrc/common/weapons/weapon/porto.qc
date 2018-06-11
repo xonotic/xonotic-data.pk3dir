@@ -1,7 +1,7 @@
 #include "porto.qh"
 
 #ifdef SVQC
-#include <common/triggers/trigger/jumppads.qh>
+#include <common/mapobjects/trigger/jumppads.qh>
 
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {

@@ -13,7 +13,7 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mapvoting.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "race.qh"
 #include "scores.qh"
 #include "teamplay.qh"
@@ -21,6 +21,7 @@
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/deathtypes/all.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/_mod.qh"
 #include "../common/monsters/sv_monsters.qh"
@@ -30,8 +31,8 @@
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
-#include "../common/triggers/trigger/secret.qh"
-#include "../common/triggers/target/music.qh"
+#include "../common/mapobjects/trigger/secret.qh"
+#include "../common/mapobjects/target/music.qh"
 #include "../common/util.qh"
 #include "../common/items/_mod.qh"
 #include <common/weapons/_all.qh>
@@ -91,7 +92,6 @@ const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
-string GetGametype();
 void ShuffleMaplist();
 
 void SetDefaultAlpha()
@@ -507,38 +507,6 @@ void cvar_changes_init()
 	cvar_purechanges = strzone(cvar_purechanges);
 }
 
-void detect_maptype()
-{
-#if 0
-	vector o, v;
-	float i;
-
-	for (;;)
-	{
-		o = world.mins;
-		o.x += random() * (world.maxs.x - world.mins.x);
-		o.y += random() * (world.maxs.y - world.mins.y);
-		o.z += random() * (world.maxs.z - world.mins.z);
-
-		tracebox(o, STAT(PL_MIN), STAT(PL_MAX), o - '0 0 32768', MOVE_WORLDONLY, NULL);
-		if(trace_fraction == 1)
-			continue;
-
-		v = trace_endpos;
-
-		for(i = 0; i < 64; i += 4)
-		{
-			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, NULL);
-	if(trace_fraction == 1)
-		continue;
-			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos));
-		}
-
-		break;
-	}
-#endif
-}
-
 entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
@@ -921,8 +889,6 @@ spawnfunc(worldspawn)
 	Nagger_Init();
 
 	next_pingtime = time + 5;
-
-	detect_maptype();
 
 	// set up information replies for clients and server to use
 	maplist_reply = strzone(getmaplist());

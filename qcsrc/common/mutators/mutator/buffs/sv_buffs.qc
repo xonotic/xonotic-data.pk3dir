@@ -1,6 +1,6 @@
 #include "sv_buffs.qh"
 
-#include <common/triggers/target/music.qh>
+#include <common/mapobjects/target/music.qh>
 #include <common/gamemodes/_mod.qh>
 
 void buffs_DelayedInit(entity this);

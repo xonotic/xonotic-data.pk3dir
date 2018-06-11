@@ -1,10 +1,72 @@
 #include "sv_overkill.qh"
 
+#include "okshotgun.qh"
+#include "okhmg.qh"
+#include "okrpc.qh"
+
 bool autocvar_g_overkill_powerups_replace;
 
 bool autocvar_g_overkill_itemwaypoints = true;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
+
+IntrusiveList g_overkill_items;
+STATIC_INIT()
+{
+	g_overkill_items = IL_NEW();
+	IL_PUSH(g_overkill_items, ITEM_HealthMega);
+	IL_PUSH(g_overkill_items, ITEM_ArmorSmall);
+	IL_PUSH(g_overkill_items, ITEM_ArmorMedium);
+	IL_PUSH(g_overkill_items, ITEM_ArmorBig);
+	IL_PUSH(g_overkill_items, ITEM_ArmorMega);
+}
+
+/// \brief Returns a random classname of the overkill item.
+/// \param[in] prefix Prefix of the cvars that hold probabilities.
+/// \return Random classname of the overkill item.
+string RandomItems_GetRandomOverkillItemClassName(string prefix)
+{
+	RandomSelection_Init();
+	IL_EACH(g_overkill_items, !(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED) &&
+		Item_IsDefinitionAllowed(it),
+	{
+		string cvar_name = sprintf("g_%s_%s_probability", prefix,
+			it.m_canonical_spawnfunc);
+		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+		{
+			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			continue;
+		}
+		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
+	});
+	string cvar_name = sprintf("g_%s_weapon_okhmg_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddString("weapon_okhmg", cvar(cvar_name), 1);
+	}
+	cvar_name = sprintf("g_%s_weapon_okrpc_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddString("weapon_okrpc", cvar(cvar_name), 1);
+	}
+	return RandomSelection_chosen_string;
+}
+
+
+MUTATOR_HOOKFUNCTION(ok, RandomItems_GetRandomItemClassName)
+{
+	M_ARGV(1, string) = RandomItems_GetRandomOverkillItemClassName(
+		M_ARGV(0, string));
+	return true;
+}
 
 MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 {

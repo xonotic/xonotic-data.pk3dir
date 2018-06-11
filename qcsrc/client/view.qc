@@ -9,7 +9,7 @@
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/animdecide.qh>
 #include <common/deathtypes/all.qh>
@@ -22,7 +22,7 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
-#include <common/triggers/target/music.qh>
+#include <common/mapobjects/target/music.qh>
 #include <common/teams.qh>
 #include <common/wepent.qh>
 
@@ -32,7 +32,7 @@
 #include <common/weapons/_all.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
 #include <common/viewloc.qh>
-#include <common/triggers/trigger/viewloc.qh>
+#include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 

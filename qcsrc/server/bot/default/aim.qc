@@ -11,7 +11,7 @@
 
 #include "../../weapons/weaponsystem.qh"
 
-#include "../../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
