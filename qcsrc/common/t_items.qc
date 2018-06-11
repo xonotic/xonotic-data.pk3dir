@@ -1661,6 +1661,30 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 	else if(v0 > v1)
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
+bool GiveResourceValue(entity e, int resource_type, int op, int val)
+{
+	int v0 = GetResourceAmount(e, resource_type);
+	switch (op)
+	{
+		case OP_SET:
+			SetResourceAmount(e, resource_type, val);
+			break;
+		case OP_MIN:
+			SetResourceAmount(e, resource_type, max(v0, val)); // min 100 cells = at least 100 cells
+			break;
+		case OP_MAX:
+			SetResourceAmount(e, resource_type, min(v0, val));
+			break;
+		case OP_PLUS:
+			SetResourceAmount(e, resource_type, v0 + val);
+			break;
+		case OP_MINUS:
+			SetResourceAmount(e, resource_type, v0 - val);
+			break;
+	}
+	int v1 = GetResourceAmount(e, resource_type);
+	return v0 != v1;
+}
 float GiveItems(entity e, float beginarg, float endarg)
 {
 	float got, i, val, op;
@@ -1744,12 +1768,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 			//case "allbuffs": // all buffs makes a player god, do not want!
 				//FOREACH(Buffs, it != BUFF_Null, got += GiveBuff(e, it.m_itemid, op, val));
 			case "allammo":
-				got += GiveValue(e, inv_items[ITEM_Cells.m_id], op, val);
-				got += GiveValue(e, inv_items[ITEM_Plasma.m_id], op, val);
-				got += GiveValue(e, inv_items[ITEM_Shells.m_id], op, val);
-				got += GiveValue(e, inv_items[ITEM_Bullets.m_id], op, val);
-				got += GiveValue(e, inv_items[ITEM_Rockets.m_id], op, val);
-				got += GiveValue(e, inv_items[ITEM_JetpackFuel.m_id], op, val);
+				got += GiveResourceValue(e, RESOURCE_CELLS, op, val);
+				got += GiveResourceValue(e, RESOURCE_PLASMA, op, val);
+				got += GiveResourceValue(e, RESOURCE_SHELLS, op, val);
+				got += GiveResourceValue(e, RESOURCE_BULLETS, op, val);
+				got += GiveResourceValue(e, RESOURCE_ROCKETS, op, val);
+				got += GiveResourceValue(e, RESOURCE_FUEL, op, val);
 				break;
 			case "unlimited_ammo":
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
@@ -1776,20 +1800,20 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, superweapons_finished, op, val);
 				break;
 			case "cells":
-				got += GiveValue(e, inv_items[ITEM_Cells.m_id], op, val);
+				got += GiveResourceValue(e, RESOURCE_CELLS, op, val);
 				break;
 			case "plasma":
-				got += GiveValue(e, inv_items[ITEM_Plasma.m_id], op, val);
+				got += GiveResourceValue(e, RESOURCE_PLASMA, op, val);
 				break;
 			case "shells":
-				got += GiveValue(e, inv_items[ITEM_Shells.m_id], op, val);
+				got += GiveResourceValue(e, RESOURCE_SHELLS, op, val);
 				break;
 			case "nails":
 			case "bullets":
-				got += GiveValue(e, inv_items[ITEM_Bullets.m_id], op, val);
+				got += GiveResourceValue(e, RESOURCE_BULLETS, op, val);
 				break;
 			case "rockets":
-				got += GiveValue(e, inv_items[ITEM_Rockets.m_id], op, val);
+				got += GiveResourceValue(e, RESOURCE_ROCKETS, op, val);
 				break;
 			case "health":
 				got += GiveValue(e, health, op, val);
@@ -1798,7 +1822,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, armorvalue, op, val);
 				break;
 			case "fuel":
-				got += GiveValue(e, inv_items[ITEM_JetpackFuel.m_id], op, val);
+				got += GiveResourceValue(e, RESOURCE_FUEL, op, val);
 				break;
 			default:
 				FOREACH(Buffs, it != BUFF_Null && Buff_UndeprecateName(cmd) == it.m_name,
