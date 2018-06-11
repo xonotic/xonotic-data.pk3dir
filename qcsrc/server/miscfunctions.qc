@@ -67,6 +67,10 @@ void WarpZone_crosshair_trace(entity pl)
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
 
 void GameLogEcho(string s)
 {
