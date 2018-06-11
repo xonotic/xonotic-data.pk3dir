@@ -1,6 +1,5 @@
 #include "sv_monsters.qh"
 
-#include <server/g_subs.qh>
 #include <lib/warpzone/common.qh>
 #include "../constants.qh"
 #include "../teams.qh"
@@ -18,7 +17,7 @@
 #include "../vehicles/all.qh"
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
-#include "../triggers/triggers.qh"
+#include "../mapobjects/triggers.qh"
 #include <lib/csqcmodel/sv_model.qh>
 #include <server/round_handler.qh>
 #include <server/weapons/_mod.qh>

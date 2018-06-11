@@ -75,7 +75,7 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 		Send_Effect(it, eff_loc, eff_vel, eff_cnt);
 		return;
 	});
-	// revert to engine handling
+	// revert to engine handling TODO: send the effect name and draw it on the client side? not as light on networking, but resolves the use of server side effects
 	__pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }
 #endif

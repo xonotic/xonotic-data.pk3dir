@@ -20,7 +20,8 @@
 
 #include "../bot/api.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>

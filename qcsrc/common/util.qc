@@ -2,7 +2,7 @@
 
 #if defined(CSQC)
     #include "constants.qh"
-	#include "../client/mutators/events.qh"
+	#include <client/mutators/_mod.qh>
     #include "mapinfo.qh"
     #include "notifications/all.qh"
 	#include "scores.qh"
@@ -10,14 +10,136 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
-	#include "../server/mutators/events.qh"
+	#include <server/mutators/_mod.qh>
     #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
 	#include "scores.qh"
     #include "mapinfo.qh"
 #endif
 
+#ifdef SVQC
+float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity) // returns the number of traces done, for benchmarking
+{
+	vector pos, dir, t;
+	float nudge;
+	entity stopentity;
+
+	//nudge = 2 * cvar("collision_impactnudge"); // why not?
+	nudge = 0.5;
+
+	dir = normalize(v2 - v1);
+
+	pos = v1 + dir * nudge;
+
+	float c;
+	c = 0;
+
+	for (;;)
+	{
+		if(pos * dir >= v2 * dir)
+		{
+			// went too far
+			trace_fraction = 1;
+			trace_endpos = v2;
+			return c;
+		}
+
+		tracebox(pos, mi, ma, v2, nomonsters, forent);
+		++c;
+
+		if(c == 50)
+		{
+			LOG_TRACE("When tracing from ", vtos(v1), " to ", vtos(v2));
+			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos));
+			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos));
+			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)));
+		}
+
+		stopentity = trace_ent;
+
+		if(trace_startsolid)
+		{
+			// we started inside solid.
+			// then trace from endpos to pos
+			t = trace_endpos;
+			tracebox(t, mi, ma, pos, nomonsters, forent);
+			++c;
+			if(trace_startsolid)
+			{
+				// t is still inside solid? bad
+				// force advance, then, and retry
+				pos = t + dir * nudge;
+
+				// but if we hit an entity, stop RIGHT before it
+				if(stopatentity && stopentity && stopentity != ignorestopatentity)
+				{
+					trace_ent = stopentity;
+					trace_endpos = t;
+					trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+					return c;
+				}
+			}
+			else
+			{
+				// we actually LEFT solid!
+				trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+				return c;
+			}
+		}
+		else
+		{
+			// pos is outside solid?!? but why?!? never mind, just return it.
+			trace_endpos = pos;
+			trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+			return c;
+		}
+	}
+}
+
+void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity)
+{
+	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent, stopatentity, ignorestopatentity);
+}
+#endif
+
 #ifdef GAMEQC
+/*
+==================
+findbetterlocation
+
+Returns a point at least 12 units away from walls
+(useful for explosion animations, although the blast is performed where it really happened)
+Ripped from DPMod
+==================
+*/
+vector findbetterlocation (vector org, float mindist)
+{
+	vector vec = mindist * '1 0 0';
+	int c = 0;
+	while (c < 6)
+	{
+		traceline (org, org + vec, true, NULL);
+		vec = vec * -1;
+		if (trace_fraction < 1)
+		{
+			vector loc = trace_endpos;
+			traceline (loc, loc + vec, true, NULL);
+			if (trace_fraction >= 1)
+				org = loc + vec;
+		}
+		if (c & 1)
+		{
+			float h = vec.y;
+			vec.y = vec.x;
+			vec.x = vec.z;
+			vec.z = h;
+		}
+		c = c + 1;
+	}
+
+	return org;
+}
+
 /*
 * Get "real" origin, in worldspace, even if ent is attached to something else.
 */
@@ -1125,6 +1247,8 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 {
 	vector v;
 	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
+		armorblock = 0;
+	if (deathtype & HITTYPE_ARMORPIERCE)
 		armorblock = 0;
 	v.y = bound(0, damage * armorblock, a); // save
 	v.x = bound(0, damage - v.y, damage); // take
