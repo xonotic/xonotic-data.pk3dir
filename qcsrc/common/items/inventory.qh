@@ -21,9 +21,11 @@ const int Inventory_groups_minor = 8; // ceil(Items_MAX / Inventory_groups_major
 #define G_MINOR(id) ((id) % Inventory_groups_minor)
 
 #ifdef CSQC
+Inventory g_inventory;
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
+    g_inventory = this;
     const int majorBits = ReadShort();
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {

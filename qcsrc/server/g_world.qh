@@ -19,6 +19,8 @@ void IntermissionThink(entity this);
 void GotoNextMap(float reinit);
 void ReadyRestart();
 
+string GetGametype();
+
 void DumpStats(float final);
 float Map_IsRecent(string m);
 string GetNextMap();

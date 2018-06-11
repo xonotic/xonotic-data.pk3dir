@@ -14,7 +14,7 @@
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
 
-#include "../mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/mapinfo.qh>
 

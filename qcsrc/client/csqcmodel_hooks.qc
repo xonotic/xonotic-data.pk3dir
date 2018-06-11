@@ -2,7 +2,7 @@
 #include "autocvars.qh"
 #include "csqcmodel_hooks.qh"
 #include "miscfunctions.qh"
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>

@@ -1,6 +1,10 @@
 #pragma once
 
 #ifdef SVQC
+	#include <server/autocvars.qh>
+#endif
+
+#ifdef SVQC
 float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity); // returns the number of traces done, for benchmarking
 
 void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity);

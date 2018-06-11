@@ -9,12 +9,11 @@
 #include <common/effects/all.inc>
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
 #include <common/t_items.qh>
-#include "wall.qh"
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>

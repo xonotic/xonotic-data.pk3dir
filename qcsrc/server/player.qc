@@ -14,6 +14,7 @@
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapobjects/subs.qh"
 #include "../common/playerstats.qh"
@@ -660,60 +661,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			});
 		}
 		MUTATOR_CALLHOOK(PlayerDied, this);
-	}
-}
-
-/** print(), but only print if the server is not local */
-void dedicated_print(string input)
-{
-	if (server_is_dedicated) print(input);
-}
-
-void PrintToChat(entity player, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	sprint(player, text);
-}
-
-void DebugPrintToChat(entity player, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChat(player, text);
-	}
-}
-
-void PrintToChatAll(string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	bprint(text);
-}
-
-void DebugPrintToChatAll(string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatAll(text);
-	}
-}
-
-void PrintToChatTeam(int teamnum, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		if (it.team == teamnum)
-		{
-			sprint(it, text);
-		}
-	});
-}
-
-void DebugPrintToChatTeam(int teamnum, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatTeam(teamnum, text);
 	}
 }
 
