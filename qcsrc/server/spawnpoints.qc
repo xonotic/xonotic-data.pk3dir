@@ -1,6 +1,6 @@
 #include "spawnpoints.qh"
 
-#include "mutators/events.qh"
+#include <server/mutators/_mod.qh>
 #include "g_world.qh"
 #include "race.qh"
 #include "defs.qh"

@@ -9,7 +9,7 @@
 
 #include "command/common.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"

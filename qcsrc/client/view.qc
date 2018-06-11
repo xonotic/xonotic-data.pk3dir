@@ -9,7 +9,7 @@
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/animdecide.qh>
 #include <common/deathtypes/all.qh>

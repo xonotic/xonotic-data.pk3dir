@@ -5,7 +5,7 @@
 #include "constants.qh"
 #include "g_hook.qh"
 #include "ipban.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "../common/t_items.qh"
 #include "resources.qh"
 #include "items.qh"

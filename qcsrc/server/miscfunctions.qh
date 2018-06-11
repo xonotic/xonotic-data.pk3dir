@@ -5,7 +5,7 @@
 
 #include <common/t_items.qh>
 
-#include "mutators/events.qh"
+#include <server/mutators/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>

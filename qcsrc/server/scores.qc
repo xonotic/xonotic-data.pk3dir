@@ -4,8 +4,7 @@
 #include "defs.qh"
 #include <server/g_world.qh>
 #include <server/miscfunctions.qh>
-//#include "mutators/_mod.qh"
-#include "mutators/events.qh"
+#include <server/mutators/_mod.qh>
 #include <common/net_linked.qh>
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
