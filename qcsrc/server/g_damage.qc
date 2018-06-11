@@ -3,7 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
@@ -24,6 +24,7 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
+#include <common/gamemodes/rules.qh>
 #include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"

@@ -1,8 +1,9 @@
 #include "spawnpoints.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "g_world.qh"
 #include "race.qh"
+#include "defs.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
@@ -11,6 +12,7 @@
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
+#include <server/utils.qh>
 
 bool SpawnPoint_Send(entity this, entity to, int sf)
 {

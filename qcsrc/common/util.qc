@@ -2,7 +2,7 @@
 
 #if defined(CSQC)
     #include "constants.qh"
-	#include "../client/mutators/events.qh"
+	#include <client/mutators/_mod.qh>
     #include "mapinfo.qh"
     #include "notifications/all.qh"
 	#include "scores.qh"
@@ -10,7 +10,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
-	#include "../server/mutators/events.qh"
+	#include <server/mutators/_mod.qh>
     #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
 	#include "scores.qh"

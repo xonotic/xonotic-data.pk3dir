@@ -16,7 +16,7 @@
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include <common/gamemodes/_mod.qh>
 
 #ifdef SVQC

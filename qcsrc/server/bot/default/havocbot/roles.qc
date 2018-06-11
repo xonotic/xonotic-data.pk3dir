@@ -3,6 +3,7 @@
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
+#include <server/resources.qh>
 #include "havocbot.qh"
 
 #include "../cvars.qh"
