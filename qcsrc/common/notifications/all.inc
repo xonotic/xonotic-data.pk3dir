@@ -374,6 +374,8 @@
 
     MSG_INFO_NOTIF(GODMODE_OFF,                             N_CONSOLE,  0, 1, "f1", "",         "",     _("^BGGodmode saved you %s units of damage, cheater!"), "")
 
+    MSG_INFO_NOTIF(GUNGAME_NEW_LEVEL,                       N_CONSOLE,  0, 2, "f1 item_wepname2", "", "", _("^BGYou are on level %s: ^F1%s"), "")
+
     MSG_INFO_NOTIF(ITEM_BUFF,                               N_CONSOLE,  1, 1, "s1 item_buffname", "",       "",     _("^BG%s^BG got the %s^BG buff!"), "")
     MSG_INFO_NOTIF(ITEM_BUFF_LOST,                          N_CONSOLE,  1, 1, "s1 item_buffname", "",       "",     _("^BG%s^BG lost the %s^BG buff!"), "")
     MSG_INFO_NOTIF(ITEM_BUFF_DROP,                          N_CONSOLE,  0, 1, "item_buffname", "",          "",     _("^BGYou dropped the %s^BG buff!"), "")
@@ -691,6 +693,8 @@
 
     MSG_CENTER_NOTIF(FREEZETAG_SELF,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1You froze yourself"), "")
     MSG_CENTER_NOTIF(FREEZETAG_SPAWN_LATE,              N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Round already started, you spawn as frozen"), "")
+
+    MSG_CENTER_NOTIF(GUNGAME_NEW_LEVEL,                 N_ENABLE,    0, 2, "f1 item_wepname2", CPID_Null,             "0 0",  _("^F2Level %s: ^F1%s"), "")
 
     MSG_CENTER_NOTIF(INVASION_SUPERMONSTER,             N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K1A %s has arrived!"), "")
 

@@ -716,6 +716,9 @@ int gg_previous_weapon; ///< Previous weapon.
 string gg_previous_weapon_picture; ///< Previous weapon picture.
 float gg_weapon_change_time; ///< Time when the weapon changed.
 
+/// \brief Returns the picture of the weapon.
+/// \param[in] weapon Index of the weapon.
+/// \return Picture of the weapon.
 string GG_GetWeaponPicture(int weapon)
 {
 	FOREACH(Weapons, it != WEP_Null,

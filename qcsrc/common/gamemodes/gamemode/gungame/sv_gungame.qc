@@ -137,8 +137,10 @@ void GunGame_GivePlayerWeapon(entity player)
 	}
 	entity weapon = GunGame_GetWeapon(level);
 	STAT(WEAPONS, player) |= weapon.m_wepset;
-	centerprint(player, strcat("^3Level ", ftos(level + 1), ": ^2",
-		weapon.m_name));
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_GUNGAME_NEW_LEVEL,
+		level + 1, weapon.m_id);
+	Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_GUNGAME_NEW_LEVEL,
+		level + 1, weapon.m_id);
 }
 
 //============================= Hooks ========================================
