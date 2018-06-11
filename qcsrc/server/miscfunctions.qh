@@ -69,6 +69,9 @@ void follow_sameorigin(entity e, entity to);
 
 string formatmessage(entity this, string msg);
 
+/** print(), but only print if the server is not local */
+void dedicated_print(string input);
+
 void GameLogEcho(string s);
 
 void GameLogInit();

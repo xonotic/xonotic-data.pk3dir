@@ -1478,11 +1478,6 @@ void respawn(entity this)
 	PutClientInServer(this);
 }
 
-void dedicated_print(string input)
-{
-	if (server_is_dedicated) print(input);
-}
-
 void PrintToChat(entity client, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
