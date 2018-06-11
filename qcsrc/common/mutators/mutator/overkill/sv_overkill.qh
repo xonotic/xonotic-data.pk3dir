@@ -1,10 +1,5 @@
 #pragma once
 
-#include "okshotgun.qh"
-#include "okmachinegun.qh"
-#include "okhmg.qh"
-#include "okrpc.qh"
-
 string autocvar_g_overkill;
 bool autocvar_g_overkill_filter_healthmega;
 bool autocvar_g_overkill_filter_armormedium;
@@ -35,13 +30,6 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(m
 		{
 			ITEM_ArmorMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 		}
-
-		WEP_OVERKILL_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-		WEP_OVERKILL_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-
-		WEP_OVERKILL_SHOTGUN.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-		WEP_OVERKILL_MACHINEGUN.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-		WEP_OVERKILL_NEX.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONREMOVE
@@ -50,12 +38,5 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !MUTATOR_IS_ENABLED(m
 		ITEM_ArmorMedium.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
 		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-
-		WEP_OVERKILL_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		WEP_OVERKILL_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-
-		WEP_OVERKILL_SHOTGUN.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		WEP_OVERKILL_MACHINEGUN.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		WEP_OVERKILL_NEX.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 }

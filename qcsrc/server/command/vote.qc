@@ -14,7 +14,8 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>

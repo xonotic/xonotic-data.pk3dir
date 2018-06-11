@@ -155,7 +155,6 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_FIREBALL.m_id;
 	proj.weaponentity_fld = weaponentity;
-	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	set_movetype(proj, MOVETYPE_FLY);

@@ -84,12 +84,10 @@ bool Player_SetTeamIndex(entity player, int index);
 
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
-/// \param[in] destination_team_index Index of the team to set.
-/// \param[in] source_team_index Previous index of the team of the player.
-/// \param[in] no_print Whether to print this event to players' console.
+/// \param[in] team_index Index of the team to set.
+/// \param[in] type ???
 /// \return True if team switch was successful, false otherwise.
-bool SetPlayerTeam(entity player, int destination_team_index,
-	int source_team_index, bool no_print);
+bool SetPlayerTeam(entity player, int team_index, int type);
 
 /// \brief Moves player to the specified team.
 /// \param[in,out] client Client to move.

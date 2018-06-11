@@ -14,7 +14,8 @@
 #include <common/gamemodes/rules.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
@@ -222,6 +223,14 @@ void race_send_speedaward_alltimebest(float msg)
 	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
 	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
 	WriteString(msg, speedaward_alltimebest_holder);
+}
+
+void race_send_rankings_cnt(float msg)
+{
+	WriteHeader(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_RANKINGS_CNT);
+	int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
+	WriteByte(msg, m);
 }
 
 void race_SendRankings(float pos, float prevpos, float del, float msg)
