@@ -863,6 +863,8 @@ void Reset_ArcBeam()
 	}
 }
 
+.float beam_tag_index;
+.int beam_prevusevieworigin;
 void Draw_ArcBeam(entity this)
 {
 	float dt = time - this.move_time;
@@ -911,10 +913,16 @@ void Draw_ArcBeam(entity this)
 		else
 			{ start_pos = this.origin; }
 
-		int v_shot_idx;  // used later
-		(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
-		if(v_shot_idx && this.beam_usevieworigin == 2)
-			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
+		if(this.beam_prevusevieworigin != this.beam_usevieworigin)
+		{
+			this.beam_prevusevieworigin = this.beam_usevieworigin;
+			int v_shot_idx;  // used later
+			(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
+			this.beam_tag_index = v_shot_idx;
+		}
+
+		if(this.beam_tag_index && this.beam_usevieworigin == 2)
+			start_pos = gettaginfo(wepent, this.beam_tag_index) - '0 0 2';
 
 		// trace forward with an estimation
 		WarpZone_TraceLine(
@@ -933,7 +941,7 @@ void Draw_ArcBeam(entity this)
 
 		// move shot origin to the actual gun muzzle origin
 		vector origin_offset = '0 0 0';
-		if(!v_shot_idx || this.beam_usevieworigin != 2)
+		if(!this.beam_tag_index || this.beam_usevieworigin != 2)
 		{
 			this.beam_shotorigin = wepent.movedir;
 			origin_offset =
