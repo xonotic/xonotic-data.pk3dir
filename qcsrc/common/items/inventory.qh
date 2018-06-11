@@ -122,6 +122,8 @@ bool Inventory_Send(Inventory this, Client to, int sf)
 void Inventory_clear(entity e)
 {
     // like this one timey?
+    // this is necessary because the csqc linked entity isn't persistent for observers/spectators, causing desyncing
+    // TODO: inventory for observers?
     FOREACH(Items, true,
     {
         e.inv_items[it.m_id] = 0;
