@@ -1,0 +1,45 @@
+#pragma once
+
+/// \file
+/// \brief Header file that describes the random items mutator.
+/// \author Lyberta
+/// \copyright GNU GPLv2 or any later version.
+
+bool autocvar_g_random_items; ///< Whether to enable random items.
+bool autocvar_g_random_loot; ///< Whether to enable random loot.
+
+enum
+{
+	RANDOM_ITEM_TYPE_HEALTH = BIT(0),
+	RANDOM_ITEM_TYPE_ARMOR = BIT(1),
+	RANDOM_ITEM_TYPE_RESOURCE = BIT(2),
+	RANDOM_ITEM_TYPE_WEAPON = BIT(3),
+	RANDOM_ITEM_TYPE_POWERUP = BIT(4),
+	RANDOM_ITEM_TYPE_ALL = BITS(5)
+};
+
+/// \brief Returns a random classname of the item.
+/// \param[in] prefix Prefix of the cvars that hold probabilities.
+/// \return Random classname of the item.
+/// \note This function will automatically detect gamemode and use cvars from
+/// that gamemode.
+string RandomItems_GetRandomItemClassName(string prefix);
+
+/// \brief Returns a random classname of the vanilla item.
+/// \param[in] prefix Prefix of the cvars that hold probabilities.
+/// \param[in] types Bitmask of the types. See RANDOM_ITEM_TYPE constants.
+/// \return Random classname of the vanilla item.
+/// \note This includes mutator items that don't change gameplay a lot such as
+/// jetpack and new toys.
+string RandomItems_GetRandomVanillaItemClassName(string prefix, int types);
+
+/// \brief Called when random item classname is requested.
+#define EV_RandomItems_GetRandomItemClassName(i, o) \
+	/** prefix */    i(string, MUTATOR_ARGV_0_string) \
+	/** classname */ o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(RandomItems_GetRandomItemClassName,
+	EV_RandomItems_GetRandomItemClassName);
+
+REGISTER_MUTATOR(random_items, (autocvar_g_random_items ||
+	autocvar_g_random_loot));

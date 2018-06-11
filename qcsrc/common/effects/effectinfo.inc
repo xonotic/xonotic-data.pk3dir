@@ -8529,6 +8529,22 @@ SUB(arc_lightning) {
 	MY(velocityjitter) = '250.0 250.0 250.0';
 	MY(velocitymultiplier) = 20;
 }
+// impact smoke
+SUB(arc_lightning) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 350;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 400;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 100;
+}
 
 DEF(arc_beam);
 // sparks on beam

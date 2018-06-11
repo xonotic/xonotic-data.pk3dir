@@ -2,13 +2,14 @@
 
 #include "anticheat.qh"
 #include "g_hook.qh"
+#include "g_damage.qh"
 #include "g_world.qh"
 
 #include "bot/api.qh"
 
 #include "command/common.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
@@ -18,6 +19,7 @@
 #include "../common/util.qh"
 
 #include "../common/vehicles/all.qh"
+#include <common/monsters/sv_monsters.qh>
 #include <common/weapons/_all.qh>
 
 #include "../lib/csqcmodel/sv_model.qh"
@@ -37,9 +39,9 @@ void CreatureFrame_hotliquids(entity this)
 		if (this.flags & FL_PROJECTILE)
 		{
 			if (this.watertype == CONTENT_LAVA)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			else if (this.watertype == CONTENT_SLIME)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 		else
 		{
@@ -50,7 +52,7 @@ void CreatureFrame_hotliquids(entity this)
 					this.watersound_finished = time + 0.5;
 					sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
 				if(autocvar_g_balance_contents_playerdamage_lava_burn)
 					Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
 			}
@@ -61,7 +63,7 @@ void CreatureFrame_hotliquids(entity this)
 					this.watersound_finished = time + 0.5;
 					sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			}
 		}
 	}
@@ -88,7 +90,6 @@ void CreatureFrame_Liquids(entity this)
 			this.dmgtime = 0;
 		}
 		this.air_finished = time + 12;
-		this.dmg = 2;
 	}
 }
 
@@ -117,16 +118,19 @@ void CreatureFrame_FallDamage(entity this)
 			else
 				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 			if (dm > 0)
-				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 
 		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	}
 }
 
 void CreatureFrame_All()
 {
+	if(game_stopped || time < game_starttime)
+		return;
+
 	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
@@ -216,8 +220,6 @@ void StartFrame()
 
 	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
-
-	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	bool game_delay = (time < game_starttime);
@@ -320,8 +322,6 @@ bool expr_evaluate(string s)
 
 void SV_OnEntityPreSpawnFunction(entity this)
 {
-	__spawnfunc_expecting = true;
-	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
@@ -362,13 +362,15 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 	return;
 LABEL(cleanup)
-    builtin_remove(this);
-    __spawnfunc_expecting = false;
+    delete(this);
 }
 
 void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
+	entity tracetest_ent = spawn();
+	setsize(tracetest_ent, PL_MIN_CONST, PL_MAX_CONST);
+	tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	//for(entity e = warpzone_first; e; e = e.warpzone_next)
 	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
 	{
@@ -379,6 +381,19 @@ void WarpZone_PostInitialize_Callback()
 		dst = (e.enemy.absmin + e.enemy.absmax) * 0.5;
 		makevectors(e.enemy.warpzone_angles);
 		dst = dst + ((e.enemy.warpzone_origin - dst) * v_forward) * v_forward - 16 * v_right;
-		waypoint_spawnforteleporter_v(e, src, dst, 0);
+		waypoint_spawnforteleporter_wz(e, src, dst, 0, -v_up, tracetest_ent);
 	}
+	delete(tracetest_ent);
+}
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main ()
+{
+
 }

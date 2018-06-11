@@ -1,9 +1,6 @@
 #include "rifle.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(this, WEP_RIFLE); }
-spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
-spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 
 void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
 {
@@ -11,7 +8,7 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 
 	W_DecreaseAmmo(thiswep, actor, pAmmo, weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
+	W_SetupShot(actor, weaponentity, true, 2, pSound, CH_WEAPON_A, pDamage * pShots, deathtype);
 
 	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
@@ -150,19 +147,23 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 }
 METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(rifle, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(rifle, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(rifle, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(rifle, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+        .entity weaponentity = weaponentities[slot];
+        actor.(weaponentity).rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
+    }
 }
 METHOD(Rifle, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -225,6 +226,10 @@ METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
         // no weapon specific image for this weapon
         return false;
     }
+}
+METHOD(Rifle, wr_zoomdir, bool(entity thiswep))
+{
+    return button_attack2 && !WEP_CVAR(rifle, secondary);
 }
 
 #endif

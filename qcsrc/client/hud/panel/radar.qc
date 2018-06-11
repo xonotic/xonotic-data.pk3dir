@@ -214,9 +214,7 @@ void HUD_Radar()
 			panel_bg = "gfx/hud/default/border_default"; // fallback
 		if(!radar_panel_modified && panel_bg != panel.current_panel_bg)
 			radar_panel_modified = true;
-		if(panel.current_panel_bg)
-			strunzone(panel.current_panel_bg);
-		panel.current_panel_bg = strzone(panel_bg);
+		strcpy(panel.current_panel_bg, panel_bg);
 
 		switch(hud_panel_radar_maximized_zoommode)
 		{

@@ -1,0 +1,22 @@
+#pragma once
+
+
+const int LASER_FINITE = BIT(1);
+const int LASER_NOTRACE = BIT(2);
+const int LASER_INVERT_TEAM = BIT(3);
+
+const int SF_LASER_UPDATE_ORIGIN = BIT(0);
+const int SF_LASER_UPDATE_TARGET = BIT(1);
+const int SF_LASER_UPDATE_ACTIVE = BIT(2);
+const int SF_LASER_UPDATE_EFFECT = BIT(3);
+
+const int SF_LASER_NOTRACE = BIT(4);
+const int SF_LASER_SCALE = BIT(5);
+const int SF_LASER_ALPHA = BIT(6);
+const int SF_LASER_FINITE = BIT(7);
+
+.vector beam_color;
+
+const float LASER_BEAM_MAXLENGTH = 32768; // maximum length of a beam trace
+// TODO: find a better way to do this
+const float LASER_BEAM_MAXWORLDSIZE = 1048576; // to make sure the endpoint of the beam is not visible inside

@@ -1,0 +1,6 @@
+#pragma once
+
+
+const int FUNC_ROTATING_XAXIS = BIT(2);
+const int FUNC_ROTATING_YAXIS = BIT(3);
+const int FUNC_ROTATING_STARTOFF = BIT(4);

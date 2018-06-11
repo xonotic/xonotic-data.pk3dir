@@ -22,7 +22,7 @@ SOUND(HealthSmall, Item_Sound("minihealth"));
 PROPERTY(float, g_pickup_healthsmall_anyway);
 PROPERTY(int, g_pickup_healthsmall);
 PROPERTY(int, g_pickup_healthsmall_max);
-void item_healthsmall_init(entity item)
+void item_healthsmall_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthsmall_max;
@@ -32,7 +32,9 @@ void item_healthsmall_init(entity item)
 #endif
 
 REGISTER_ITEM(HealthSmall, Health) {
+    this.m_canonical_spawnfunc = "item_health_small";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_HealthSmall_ITEM;
     this.m_sound                =   SND_HealthSmall;
 #endif
@@ -48,6 +50,8 @@ REGISTER_ITEM(HealthSmall, Health) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_health_small, ITEM_HealthSmall)
+
 #ifdef GAMEQC
 MODEL(HealthMedium_ITEM, Item_Model("g_h25.md3"));
 SOUND(HealthMedium, Item_Sound("mediumhealth"));
@@ -56,7 +60,7 @@ SOUND(HealthMedium, Item_Sound("mediumhealth"));
 PROPERTY(float, g_pickup_healthmedium_anyway);
 PROPERTY(int, g_pickup_healthmedium);
 PROPERTY(int, g_pickup_healthmedium_max);
-void item_healthmedium_init(entity item)
+void item_healthmedium_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthmedium_max;
@@ -66,7 +70,9 @@ void item_healthmedium_init(entity item)
 #endif
 
 REGISTER_ITEM(HealthMedium, Health) {
+    this.m_canonical_spawnfunc = "item_health_medium";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_HealthMedium_ITEM;
     this.m_sound                =   SND_HealthMedium;
 #endif
@@ -82,6 +88,8 @@ REGISTER_ITEM(HealthMedium, Health) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_health_medium, ITEM_HealthMedium)
+
 #ifdef GAMEQC
 MODEL(HealthBig_ITEM, Item_Model("g_h50.md3"));
 SOUND(HealthBig, Item_Sound("mediumhealth"));
@@ -90,7 +98,7 @@ SOUND(HealthBig, Item_Sound("mediumhealth"));
 PROPERTY(float, g_pickup_healthbig_anyway);
 PROPERTY(int, g_pickup_healthbig);
 PROPERTY(int, g_pickup_healthbig_max);
-void item_healthbig_init(entity item)
+void item_healthbig_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthbig_max;
@@ -100,7 +108,9 @@ void item_healthbig_init(entity item)
 #endif
 
 REGISTER_ITEM(HealthBig, Health) {
+    this.m_canonical_spawnfunc = "item_health_big";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_HealthBig_ITEM;
     this.m_sound                =   SND_HealthBig;
 #endif
@@ -118,6 +128,8 @@ REGISTER_ITEM(HealthBig, Health) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_health_big, ITEM_HealthBig)
+
 #ifdef GAMEQC
 MODEL(HealthMega_ITEM, Item_Model("g_h100.md3"));
 SOUND(HealthMega, Item_Sound("megahealth"));
@@ -126,7 +138,7 @@ SOUND(HealthMega, Item_Sound("megahealth"));
 PROPERTY(float, g_pickup_healthmega_anyway);
 PROPERTY(int, g_pickup_healthmega);
 PROPERTY(int, g_pickup_healthmega_max);
-void item_healthmega_init(entity item)
+void item_healthmega_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthmega_max;
@@ -136,7 +148,9 @@ void item_healthmega_init(entity item)
 #endif
 
 REGISTER_ITEM(HealthMega, Health) {
+    this.m_canonical_spawnfunc = "item_health_mega";
 #ifdef GAMEQC
+    this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_HealthMega_ITEM;
     this.m_sound                =   SND_HealthMega;
 #endif
@@ -155,3 +169,5 @@ REGISTER_ITEM(HealthMega, Health) {
     this.m_iteminit             =   item_healthmega_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_health_mega, ITEM_HealthMega)

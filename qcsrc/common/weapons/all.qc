@@ -123,6 +123,8 @@ string W_UndeprecateName(string s)
 		case "minstanex": return "vaporizer";
 		case "grenadelauncher": return "mortar";
 		case "uzi": return "machinegun";
+		case "hmg": return "okhmg";
+		case "rpc": return "okrpc";
 		default: return s;
 	}
 }
@@ -192,9 +194,8 @@ string W_FixWeaponOrder_ForceComplete(string order)
 	return W_FixWeaponOrder(order, 1);
 }
 
-void W_RandomWeapons(entity e, int n)
+WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 {
-	WepSet remaining = e.weapons;
 	WepSet result = '0 0 0';
 	for (int j = 0; j < n; ++j)
 	{
@@ -207,51 +208,51 @@ void W_RandomWeapons(entity e, int n)
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);
 	}
-	e.weapons = result;
+	return result;
 }
 
-string GetAmmoPicture(.int ammotype)
+string GetAmmoPicture(int ammotype)
 {
 	switch (ammotype)
 	{
-		case ammo_shells:  return ITEM_Shells.m_icon;
-		case ammo_nails:   return ITEM_Bullets.m_icon;
-		case ammo_rockets: return ITEM_Rockets.m_icon;
-		case ammo_cells:   return ITEM_Cells.m_icon;
-		case ammo_plasma:  return ITEM_Plasma.m_icon;
-		case ammo_fuel:    return ITEM_JetpackFuel.m_icon;
+		case RESOURCE_SHELLS:  return ITEM_Shells.m_icon;
+		case RESOURCE_BULLETS: return ITEM_Bullets.m_icon;
+		case RESOURCE_ROCKETS: return ITEM_Rockets.m_icon;
+		case RESOURCE_CELLS:   return ITEM_Cells.m_icon;
+		case RESOURCE_PLASMA:  return ITEM_Plasma.m_icon;
+		case RESOURCE_FUEL:    return ITEM_JetpackFuel.m_icon;
 		default: return "";  // wtf, no ammo type?
 	}
 }
 
 #ifdef CSQC
-	.int GetAmmoFieldFromNum(int i)
+int GetAmmoTypeFromNum(int i)
+{
+	switch (i)
 	{
-		switch (i)
-		{
-			case 0: return ammo_shells;
-			case 1: return ammo_nails;
-			case 2: return ammo_rockets;
-			case 3: return ammo_cells;
-			case 4: return ammo_plasma;
-			case 5: return ammo_fuel;
-			default: return ammo_none;
-		}
+		case 0: return RESOURCE_SHELLS;
+		case 1: return RESOURCE_BULLETS;
+		case 2: return RESOURCE_ROCKETS;
+		case 3: return RESOURCE_CELLS;
+		case 4: return RESOURCE_PLASMA;
+		case 5: return RESOURCE_FUEL;
+		default: return RESOURCE_NONE;
 	}
+}
 
-	int GetAmmoStat(.int ammotype)
+int GetAmmoStat(int ammotype)
+{
+	switch (ammotype)
 	{
-		switch (ammotype)
-		{
-			case ammo_shells: return STAT_SHELLS;
-			case ammo_nails: return STAT_NAILS;
-			case ammo_rockets: return STAT_ROCKETS;
-			case ammo_cells: return STAT_CELLS;
-			case ammo_plasma: return STAT_PLASMA.m_id;
-			case ammo_fuel: return STAT_FUEL.m_id;
-			default: return -1;
-		}
+		case RESOURCE_SHELLS: return STAT_SHELLS;
+		case RESOURCE_BULLETS: return STAT_NAILS;
+		case RESOURCE_ROCKETS: return STAT_ROCKETS;
+		case RESOURCE_CELLS: return STAT_CELLS;
+		case RESOURCE_PLASMA: return STAT_PLASMA.m_id;
+		case RESOURCE_FUEL: return STAT_FUEL.m_id;
+		default: return -1;
 	}
+}
 #endif
 
 string W_Sound(string w_snd)
@@ -293,24 +294,21 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
 {
-#ifdef SVQC
 	string s;
-#endif
 	if (visual)
 	{
 		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
 	}
-#ifdef SVQC
-	else if (autocvar_g_shootfromeye)
+	else if (STAT(SHOOTFROMEYE))
 	{
 		vecs.y = vecs.z = 0;
 	}
-	else if (autocvar_g_shootfromcenter)
+	else if (STAT(SHOOTFROMCENTER))
 	{
 		vecs.y = 0;
 		vecs.z -= 2;
 	}
-	else if ((s = autocvar_g_shootfromfixedorigin) != "")
+	else if ((s = G_SHOOTFROMFIXEDORIGIN) != "")
 	{
 		vector v = stov(s);
 		if (y_is_right) v.y = -v.y;
@@ -318,7 +316,6 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
 		vecs.y = v.y;
 		vecs.z = v.z;
 	}
-#endif
 	else  // just do the same as top
 	{
 		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
@@ -531,7 +528,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	// make them match perfectly
 #ifdef SVQC
     // null during init
-    if (this.owner) this.owner.stat_shotorg = compressed_shotorg;
+    if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
 	this.movedir = decompressShotOrigin(compressed_shotorg);
 #else
 	this.movedir = decompressShotOrigin(compressed_shotorg);
@@ -554,10 +551,7 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	vector a;
-	a.x = ReadCoord();
-    a.y = ReadCoord();
-    a.z = ReadCoord();
+	vector a = ReadVector();
     int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
@@ -590,9 +584,7 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	int channel = MSG_ONE;
 	msg_entity = actor;
 	WriteHeader(channel, wframe);
-	WriteCoord(channel, a.x);
-	WriteCoord(channel, a.y);
-	WriteCoord(channel, a.z);
+	WriteVector(channel, a);
 	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);

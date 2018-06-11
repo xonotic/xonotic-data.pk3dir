@@ -73,7 +73,6 @@ CLASS(Client, Object)
 
     ATTRIB(Client, parm_idlesince, int, this.parm_idlesince);
     ATTRIB(Client, muted, bool, this.muted);
-    ATTRIB(Client, killindicator_teamchange, int, this.killindicator_teamchange);
     ATTRIB(Client, idlekick_lasttimeleft, float, this.idlekick_lasttimeleft);
     ATTRIB(Client, pm_frametime, float, this.pm_frametime);
     ATTRIB(Client, pressedkeys, int, this.pressedkeys);
@@ -86,6 +85,7 @@ CLASS(Client, Object)
     ATTRIB(Client, motd_actived_time, float, this.motd_actived_time);
     ATTRIB(Client, jointime, float, this.jointime);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
+    ATTRIB(Client, startplaytime, float, this.startplaytime);
     ATTRIB(Client, version_nagtime, float, this.version_nagtime);
     ATTRIB(Client, netname_previous, string, this.netname_previous);
     ATTRIB(Client, allowed_timeouts, int, this.allowed_timeouts);
@@ -113,6 +113,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cmd_floodcount, int, this.cmd_floodcount);
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
     ATTRIB(Client, wasplayer, bool, this.wasplayer);
+    ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);
 
     // networked cvars
 
@@ -230,5 +231,5 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 bool Spectate(entity this, entity pl);
 
-#define SPECTATE_COPY() [[accumulate]] void SpectateCopy(entity this, entity spectatee)
+#define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }

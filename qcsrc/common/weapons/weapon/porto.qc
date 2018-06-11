@@ -1,9 +1,7 @@
 #include "porto.qh"
 
 #ifdef SVQC
-#include <common/triggers/trigger/jumppads.qh>
-
-spawnfunc(weapon_porto) { weapon_defaultspawnfunc(this, WEP_PORTO); }
+#include <common/mapobjects/trigger/jumppads.qh>
 
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
@@ -39,7 +37,7 @@ void W_Porto_Fail(entity this, float failhard)
 
 	this.realowner.porto_current = NULL;
 
-	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(this.realowner.weapons & WEPSET(PORTO)))
+	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(STAT(WEAPONS, this.realowner) & WEPSET(PORTO)))
 	{
 		setsize(this, '-16 -16 0', '16 16 32');
 		setorigin(this, this.origin + trace_plane_normal);
@@ -47,7 +45,7 @@ void W_Porto_Fail(entity this, float failhard)
 		{
 			this.flags = FL_ITEM;
 			IL_PUSH(g_items, this);
-			this.velocity = trigger_push_calculatevelocity(this.origin, this.realowner, 128);
+			this.velocity = trigger_push_calculatevelocity(this.origin, this.realowner, 128, this);
 			tracetoss(this, this);
 			if(vdist(trace_endpos - this.realowner.origin, <, 128))
 			{
@@ -204,7 +202,7 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 {
 	entity gren;
 
-	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
+	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: does the deathtype even need to be set here? porto can't hurt people
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;

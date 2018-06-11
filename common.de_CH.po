@@ -24,8 +24,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-09-23 19:12+0000\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -92,7 +92,7 @@ msgstr "vorherige Waffe"
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Benutze ^3%s^1 oder ^3%s^1 zum ändern der Geschwindigkeit"
+msgstr "^1Benutze ^3%s^1 oder ^3%s^1 zum Ändern der Geschwindigkeit"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
@@ -131,7 +131,7 @@ msgstr "^1Du hast keine Leben mehr übrig"
 #: qcsrc/client/hud/panel/infomessages.qc:131
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Drücke ^3%s^1 zum mitspielen"
+msgstr "^1Drücke ^3%s^1 zum Mitspielen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
@@ -185,7 +185,7 @@ msgstr "Die Teams sind unausgeglichen!"
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr " Drücke ^3%s%s zum anpassen"
+msgstr " Drücke ^3%s%s zum Anpassen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #: qcsrc/menu/xonotic/keybinder.qc:102
@@ -248,7 +248,7 @@ msgstr "Fortfahren…"
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Chat"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -357,7 +357,7 @@ msgstr "Flaggenträger getötet (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "Flaggenträger getötet, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
@@ -370,11 +370,11 @@ msgstr "Flagge fallen gelassen, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "Waffe wegwerfen, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "Waffe fallen gelassen %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
@@ -2963,8 +2963,8 @@ msgstr "^BG%s%s^K1 hat ^BG%s^K1s Rakete gefressen%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 kam ^BG%s^K1s Rakete zu nahe%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -4124,7 +4124,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:788
 msgid "^F2Intruder detected, disabling shields!"
-msgstr ""
+msgstr "^F2Eindringling entdeckt, deaktiviere Schilde!"
 
 #: qcsrc/common/notifications/all.qh:188
 msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
@@ -5044,7 +5044,7 @@ msgstr "Ungarisch"
 
 #: qcsrc/menu/xonotic/credits.qc:231
 msgid "Irish"
-msgstr ""
+msgstr "Irisch"
 
 #: qcsrc/menu/xonotic/credits.qc:234
 msgid "Italian"
@@ -5076,7 +5076,7 @@ msgstr "Russisch"
 
 #: qcsrc/menu/xonotic/credits.qc:279
 msgid "Scottish Gaelic"
-msgstr ""
+msgstr "Schottisch-Gälisch"
 
 #: qcsrc/menu/xonotic/credits.qc:282
 msgid "Serbian"
@@ -5294,7 +5294,7 @@ msgstr "Engine-Info-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:15
 msgid "Combine health and armor"
-msgstr "Kombiniere Gesundheit und Rüstung"
+msgstr "Gesundheit und Rüstung kombinieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
@@ -5332,7 +5332,7 @@ msgstr "Gesundheit und Rüstung tauschen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
-msgstr "Gesundheit/Rüstungs-Panel"
+msgstr "Gesundheits-/Rüstungs-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:14
 msgid "Info messages:"
@@ -7792,7 +7792,7 @@ msgstr "Nur in Fadenkreuznähe"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:152
 msgid "Display health and armor"
-msgstr "Geunsdheit und Rüstung anzeigen"
+msgstr "Gesundheit und Rüstung anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:157
 msgid "Damage overlay:"
@@ -9502,3 +9502,9 @@ msgstr "Teamfarbe:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Panel aktivieren"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "Chat"
+
+#~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+#~ msgstr "^BG%s%s^K1 kam ^BG%s^K1s Rakete zu nahe%s%s"

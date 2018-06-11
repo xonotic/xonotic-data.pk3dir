@@ -50,10 +50,10 @@ void XonoticColorpickerString_saveCvars(entity me)
 		cvar_set(me.cvarName, sprintf("%v", hslimage_color(me.prevcoords, me.imagemargin)));
 }
 
-float XonoticColorpickerString_mousePress(entity me, vector coords)
+METHOD(XonoticColorpickerString, mousePress, bool(XonoticColorpickerString this, vector pos))
 {
-	me.mouseDrag(me, coords);
-	return 1;
+	this.mouseDrag(this, pos);
+	return true;
 }
 
 float XonoticColorpickerString_mouseDrag(entity me, vector coords)

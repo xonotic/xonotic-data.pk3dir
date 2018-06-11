@@ -24,6 +24,7 @@ void LoadMenuSkinValues();
 vector hud_fontsize;
 
 float RANKINGS_RECEIVED_CNT;
+float RANKINGS_DISPLAY_CNT;
 string grecordholder[RANKINGS_CNT];
 float grecordtime[RANKINGS_CNT];
 

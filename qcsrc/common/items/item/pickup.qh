@@ -17,15 +17,7 @@ PROPERTY(float, g_pickup_respawntimejitter_long)
 PROPERTY(float, g_pickup_respawntimejitter_powerup)
 #endif
 
-#include <common/items/inventory.qh>
 #include <common/items/item.qh>
-#include <common/t_items.qh>
-
-#ifdef GAMEQC
-#include <common/models/all.qh>
-#include <common/sounds/all.qh>
-#include <common/sounds/all.inc>
-#endif
 
 CLASS(Pickup, GameItem)
 #ifdef GAMEQC
@@ -50,19 +42,9 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_respawntime, float());
     ATTRIB(Pickup, m_respawntimejitter, float());
     ATTRIB(Pickup, m_pickupanyway, float());
-    ATTRIB(Pickup, m_iteminit, void(entity item));
+    ATTRIB(Pickup, m_iteminit, void(Pickup this, entity item));
     float Item_GiveTo(entity item, entity player);
-    METHOD(Pickup, giveTo, bool(Pickup this, entity item, entity player))
-    {
-        TC(Pickup, this);
-        bool b = Item_GiveTo(item, player);
-        if (b) {
-            LOG_DEBUGF("entity %i picked up %s", player, this.m_name);
-            player.inventory.inv_items[this.m_id]++;
-            Inventory_update(player);
-        }
-        return b;
-    }
+    METHOD(Pickup, giveTo, bool(Pickup this, entity item, entity player));
     bool ITEM_HANDLE(Pickup, Pickup this, entity item, entity player);
 #endif
 ENDCLASS(Pickup)

@@ -1,0 +1,21 @@
+#pragma once
+
+// tZorks trigger impulse / gravity
+.float radius;
+.int falloff;
+.float strength;
+.float lastpushtime;
+
+const int FALLOFF_NO = 0;
+const int FALLOFF_LINEAR = 1;
+const int FALLOFF_LINEAR_INV = 2;
+
+const int IMPULSE_DIRECTIONAL_SPEEDTARGET = BIT(6);
+
+const float IMPULSE_DEFAULT_RADIAL_STRENGTH = 2000;
+const float IMPULSE_DEFAULT_DIRECTIONAL_STRENGTH = 950;
+const float IMPULSE_DEFAULT_ACCEL_STRENGTH = 0.9;
+
+const float IMPULSE_MAX_PUSHDELTATIME = 0.15;
+
+const float IMPULSE_DIRECTIONAL_MAX_ACCEL_FACTOR = 8;

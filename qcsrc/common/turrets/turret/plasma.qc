@@ -6,7 +6,7 @@ spawnfunc(turret_plasma) { if (!turret_initialize(this, TUR_PLASMA)) delete(this
 
 METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 {
-    if(g_instagib)
+    if(MUTATOR_IS_ENABLED(mutator_instagib))
     {
         .entity weaponentity = weaponentities[0]; // TODO: unhardcode
         FireRailgunBullet (it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance, 10000000000,

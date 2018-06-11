@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(Vaporizer, Weapon)
-/* ammotype  */ ATTRIB(Vaporizer, ammo_field, .int, ammo_cells);
+/* spawnfunc */ ATTRIB(Vaporizer, m_canonical_spawnfunc, string, "weapon_vaporizer");
+/* ammotype  */ ATTRIB(Vaporizer, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(Vaporizer, impulse, int, 7);
 /* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
@@ -21,7 +22,8 @@ CLASS(Vaporizer, Weapon)
 	BEGIN(class) \
 		P(class, prefix, ammo, float, PRI) \
     	P(class, prefix, animtime, float, PRI) \
-    	P(class, prefix, damage, float, PRI) \
+        P(class, prefix, damage, float, PRI) \
+    	P(class, prefix, force, float, PRI) \
     	P(class, prefix, refire, float, PRI) \
     	P(class, prefix, ammo, float, SEC) \
     	P(class, prefix, animtime, float, SEC) \
@@ -50,6 +52,8 @@ CLASS(Vaporizer, Weapon)
 ENDCLASS(Vaporizer)
 REGISTER_WEAPON(VAPORIZER, vaporizer, NEW(Vaporizer));
 
+SPAWNFUNC_WEAPON(weapon_vaporizer, WEP_VAPORIZER)
+SPAWNFUNC_WEAPON(weapon_minstanex, WEP_VAPORIZER)
 
 #ifdef SVQC
 .float vaporizer_lasthit;

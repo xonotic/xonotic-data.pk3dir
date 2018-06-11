@@ -246,12 +246,8 @@ void XonoticKeyBinder_destroy(entity me)
 
 	for(int i = 0; i < MAX_KEYBINDS; ++i)
 	{
-		if(Xonotic_KeyBinds_Functions[i])
-			strunzone(Xonotic_KeyBinds_Functions[i]);
-		Xonotic_KeyBinds_Functions[i] = string_null;
-		if(Xonotic_KeyBinds_Descriptions[i])
-			strunzone(Xonotic_KeyBinds_Descriptions[i]);
-		Xonotic_KeyBinds_Descriptions[i] = string_null;
+		strfree(Xonotic_KeyBinds_Functions[i]);
+		strfree(Xonotic_KeyBinds_Descriptions[i]);
 	}
 	Xonotic_KeyBinds_Count = 0;
 }

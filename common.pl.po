@@ -12,15 +12,16 @@
 # John Smith <myrangd@gmail.com>, 2016
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Piotr Kozica <koza91@gmail.com>, 2016
-# Robert Wolniak <robert.wolniak@gmail.com>, 2015
+# Rafał Szymański <okavasly@gmail.com>, 2017
+# Robert Wolniak <robert.wolniak@gmail.com>, 2015,2018
 # Sertomas, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-04-19 09:01+0000\n"
+"Last-Translator: Robert Wolniak <robert.wolniak@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -243,7 +244,7 @@ msgstr "Kontynuuj..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Czat"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -365,19 +366,19 @@ msgstr "upuściłem flagę, ikona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "QMCMD^upuść broń, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^upuszczono broń %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
-msgstr ""
+msgstr "QMCMD^upuść flagę/klucz, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^upuszczono flagę/klucz %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^Send private message to"
@@ -679,11 +680,11 @@ msgstr "samobójstwa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^takes"
-msgstr ""
+msgstr "SCO^przejęcia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^ticks"
-msgstr ""
+msgstr "SCO^ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:295
 msgid ""
@@ -776,6 +777,8 @@ msgid ""
 "^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
 "ball (Keepaway) was picked up\n"
 msgstr ""
+"^3pickups^7 Jak wiele razy flaga (CTF) lub klucz (KeyHunt) lub piłka "
+"(Keepaway) zostały podniesione\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "^3captime^7                  Time of fastest cap (CTF)\n"
@@ -825,11 +828,11 @@ msgstr "^3laps^7 Ilość ukończonych okrążeń (wyścig/cts)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:329
 msgid "^3time^7                     Total time raced (race/cts)\n"
-msgstr ""
+msgstr "^3time^7 Całkowity czas wyścigów (race/cts)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:330
 msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
-msgstr ""
+msgstr "^3fastest^7 Czas najszybszego okrążenia (race/cts)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid "^3ticks^7                    Number of ticks (DOM)\n"
@@ -837,7 +840,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:332
 msgid "^3takes^7                    Number of domination points taken (DOM)\n"
-msgstr ""
+msgstr "^3takes^7 Liczba zdobytych punktów dominacji (DOM)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:333
 msgid "^3bckills^7                  Number of ball carrier kills\n"
@@ -1155,7 +1158,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
-msgstr ""
+msgstr "Złodziej Kuli"
 
 #: qcsrc/common/items/item/armor.qh:111
 msgid "Big armor"
@@ -1307,6 +1310,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Zabijaj przeciwników by ich zamrozić i stój obok członków swojej drużyny by "
+"ich wskrzesić; aby wygrać, zamroź wszystkich wrogów"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -1465,6 +1470,8 @@ msgid ""
 "You lost the game!\n"
 "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr ""
+"Przegrana meczu!\n"
+"Wybierz w menu opcję \"^1Następny Mecz^7\" po rewanż!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:325
@@ -1472,16 +1479,18 @@ msgid ""
 "You win!\n"
 "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
+"Wygrana!\n"
+"Wybierz w menu opcję \"^1Następny Mecz^7\" by rozpocząć nową grę!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr ""
+msgstr "Wybierz w menu opcję \"^1Następny Mecz^7\" by rozpocząć nową grę!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:451
 #: qcsrc/common/minigames/minigame/ttt.qc:332
 msgid "Wait for your opponent to confirm the rematch"
-msgstr ""
+msgstr "Poczekaj aż twój przeciwnik potwierdzi rewanż."
 
 #: qcsrc/common/minigames/minigame/pp.qc:582
 #: qcsrc/common/minigames/minigame/ttt.qc:665
@@ -2898,7 +2907,7 @@ msgstr "^BG%s%s^K1 zjadł rakietę ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
@@ -9257,3 +9266,6 @@ msgstr "Kolor drużyny:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Włącz panel"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "Czat"
