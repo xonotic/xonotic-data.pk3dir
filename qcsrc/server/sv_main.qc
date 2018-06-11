@@ -2,13 +2,14 @@
 
 #include "anticheat.qh"
 #include "g_hook.qh"
+#include "g_damage.qh"
 #include "g_world.qh"
 
 #include "bot/api.qh"
 
 #include "command/common.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
@@ -18,6 +19,7 @@
 #include "../common/util.qh"
 
 #include "../common/vehicles/all.qh"
+#include <common/monsters/sv_monsters.qh>
 #include <common/weapons/_all.qh>
 
 #include "../lib/csqcmodel/sv_model.qh"
@@ -360,7 +362,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 	return;
 LABEL(cleanup)
-    builtin_remove(this);
+    delete(this);
 }
 
 void WarpZone_PostInitialize_Callback()
@@ -382,4 +384,16 @@ void WarpZone_PostInitialize_Callback()
 		waypoint_spawnforteleporter_wz(e, src, dst, 0, -v_up, tracetest_ent);
 	}
 	delete(tracetest_ent);
+}
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main ()
+{
+
 }

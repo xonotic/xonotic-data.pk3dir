@@ -64,7 +64,7 @@
 #ifndef QCC_SUPPORT_POW
     #define pow(a, b) pow(a, b)
 #else
-    #define pow(a, b) (a ** b)
+    #define pow(a, b) ((a) ** (b))
 #endif
 
 #include "self.qh"
@@ -133,6 +133,7 @@
 #include "oo.qh"
 #include "p2mathlib.qc"
 #include "progname.qh"
+#include "promise.qc"
 #include "random.qc"
 #include "registry.qh"
 #include "registry_net.qh"

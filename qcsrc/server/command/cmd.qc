@@ -16,7 +16,8 @@
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>
@@ -30,7 +31,7 @@
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/triggers/triggers.qh>
+#include <common/mapobjects/triggers.qh>
 
 #include <common/minigames/sv_minigames.qh>
 
@@ -248,12 +249,14 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 						if (caller.ready)            // toggle
 						{
 							caller.ready = false;
-							bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
-							bprint(playername(caller, false), "^2 is ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!

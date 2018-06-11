@@ -1,11 +1,11 @@
 #include "player.qh"
-#include "../triggers/include.qh"
+#include "../mapobjects/_mod.qh"
 #include "../viewloc.qh"
 
 #ifdef SVQC
 
 #include <server/miscfunctions.qh>
-#include "../triggers/trigger/viewloc.qh"
+#include "../mapobjects/trigger/viewloc.qh"
 
 // client side physics
 bool Physics_Valid(string thecvar)
@@ -77,6 +77,8 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
 	STAT(MOVEVARS_JUMPVELOCITY_CROUCH, this) = Physics_ClientOption(this, "jumpvelocity_crouch", autocvar_sv_jumpvelocity_crouch);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
+
+	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
 #endif
 

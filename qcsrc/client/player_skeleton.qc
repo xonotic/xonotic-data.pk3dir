@@ -2,7 +2,7 @@
 
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 #include "../lib/csqcmodel/cl_player.qh"
 #include "../lib/warpzone/anglestransform.qh"
 

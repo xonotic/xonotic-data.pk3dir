@@ -190,8 +190,6 @@ void FixClientCvars(entity e);
 // WEAPONTODO: remove this
 //WepSet weaponsInMap;
 
-#define weapons _STAT(WEAPONS)
-
 .float respawn_countdown; // next number to count
 
 float bot_waypoints_for_items;
@@ -279,9 +277,6 @@ void W_Porto_Remove (entity p);
 // Nexball
 float g_nexball_meter_period;
 
-void SUB_DontUseTargets(entity this, entity actor, entity trigger);
-void SUB_UseTargets(entity this, entity actor, entity trigger);
-
 .void(entity this) reset; // if set, an entity is reset using this
 .void(entity this) reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
 
@@ -323,6 +318,9 @@ float client_cefc_accumulatortime;
 .float vortex_charge;
 .float vortex_charge_rottime;
 .float vortex_chargepool_ammo;
+.float oknex_charge;
+.float oknex_charge_rottime;
+.float oknex_chargepool_ammo;
 .int hagar_load;
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
