@@ -14,7 +14,7 @@ const string GUNGAME_WEAPONS_CVAR = "g_gg_weapons";
 /// \brief Number of kills needed to advance to the next weapon.
 int autocvar_g_gg_kills_per_weapon;
 
-int gungame_max_level; ///< Player who reaches this level wins.
+int gungame_win_level; ///< Player who reaches this level wins.
 string gungame_weapons; ///< Holds weapons corresponding to levels.
 
 entity gungame_leading_player; ///< Holds the leading player.
@@ -44,13 +44,13 @@ void GunGame_Initialize()
 void GunGame_Reset()
 {
 	strcpy(gungame_weapons, cvar_string(GUNGAME_WEAPONS_CVAR));
-	gungame_max_level = tokenize_console(gungame_weapons) *
+	gungame_win_level = tokenize_console(gungame_weapons) *
 		autocvar_g_gg_kills_per_weapon;
-	if (gungame_max_level == 0)
+	if (gungame_win_level == 0)
 	{
 		LOG_FATAL("GunGame: Invalid weapon configuration.");
 	}
-	GameRules_limit_score(gungame_max_level);
+	GameRules_limit_score(gungame_win_level);
 	gungame_leading_player = NULL;
 	gungame_leading_level = 0;
 	gungame_leading_weapon = GunGame_GetWeapon(0);
@@ -59,7 +59,7 @@ void GunGame_Reset()
 
 entity GunGame_GetWeapon(int level)
 {
-	if (level >= gungame_max_level)
+	if (level >= gungame_win_level)
 	{
 		return NULL;
 	}
@@ -131,16 +131,33 @@ void GunGame_UpdateStats()
 void GunGame_GivePlayerWeapon(entity player)
 {
 	int level = GunGame_GetPlayerLevel(player);
-	if (level >= gungame_max_level)
+	if (level >= gungame_win_level)
 	{
 		return;
 	}
 	entity weapon = GunGame_GetWeapon(level);
 	STAT(WEAPONS, player) |= weapon.m_wepset;
-	Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_GUNGAME_NEW_LEVEL,
-		level + 1, weapon.m_id);
-	Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_GUNGAME_NEW_LEVEL,
-		level + 1, weapon.m_id);
+	int levels_left = gungame_win_level - level;
+	if (levels_left > 3)
+	{
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER,
+			CENTER_GUNGAME_NEW_LEVEL, level + 1, weapon.m_id);
+		Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_GUNGAME_NEW_LEVEL,
+			level + 1, weapon.m_id);
+		return;
+	}
+	if (levels_left > 1)
+	{
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER,
+			CENTER_GUNGAME_LEVELS_LEFT, levels_left, weapon.m_id);
+		Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_GUNGAME_LEVELS_LEFT,
+			levels_left, weapon.m_id);
+		return;
+	}
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_GUNGAME_LAST_LEVEL,
+		weapon.m_id);
+	Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_GUNGAME_LAST_LEVEL,
+		weapon.m_id);
 }
 
 //============================= Hooks ========================================
@@ -215,7 +232,7 @@ MUTATOR_HOOKFUNCTION(gg, PlayerDies)
 	GunGame_UpdateLeadingPlayer();
 	entity attacker = M_ARGV(1, entity);
 	if (!IS_PLAYER(attacker) || IS_DEAD(attacker) || (GunGame_GetPlayerLevel(
-		attacker) >= gungame_max_level))
+		attacker) >= gungame_win_level))
 	{
 		return;
 	}
