@@ -16,6 +16,7 @@ int autocvar_g_gg_kills_per_weapon;
 int gungame_win_level; ///< Player who reaches this level wins.
 string gungame_weapons; ///< Holds weapons corresponding to levels.
 
+int gungame_status; ///< Holds global status of the game.
 entity gungame_leading_player; ///< Holds the leading player.
 int gungame_leading_level; ///< Holds the leading level.
 entity gungame_leading_weapon; ///< Holds the leading weapon.
@@ -49,6 +50,7 @@ void GunGame_Reset()
 	{
 		LOG_FATAL("GunGame: Invalid weapon configuration.");
 	}
+	gungame_status = WINNING_NO;
 	GameRules_limit_score(gungame_win_level);
 	gungame_leading_player = NULL;
 	gungame_leading_level = 0;
@@ -188,6 +190,15 @@ MUTATOR_HOOKFUNCTION(gg, FilterItemDefinition)
 	}
 }
 
+/// \brief Hook that is called every frame to check if the game is won and/or
+/// over.
+MUTATOR_HOOKFUNCTION(gg, CheckRules_World)
+{
+	M_ARGV(0, float) = gungame_status;
+	//M_ARGV(2, float) = gungame_win_level;
+	return true;
+}
+
 /// \brief Hook that is called when player connects to the server.
 MUTATOR_HOOKFUNCTION(gg, ClientConnect)
 {
@@ -225,9 +236,13 @@ MUTATOR_HOOKFUNCTION(gg, PlayerDies)
 {
 	GunGame_UpdateLeadingPlayer();
 	entity attacker = M_ARGV(1, entity);
-	if (!IS_PLAYER(attacker) || IS_DEAD(attacker) || (GunGame_GetPlayerLevel(
-		attacker) >= gungame_win_level))
+	if (!IS_PLAYER(attacker) || IS_DEAD(attacker))
 	{
+		return;
+	}
+	if (GunGame_GetPlayerLevel(attacker) >= gungame_win_level)
+	{
+		gungame_status = WINNING_YES;
 		return;
 	}
 	STAT(WEAPONS, attacker) = WEPSET(Null);
