@@ -7,6 +7,7 @@
 
 #include "mutators/events.qh"
 #include <common/weapons/all.qh>
+#include <common/mapobjects/subs.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
 /// \brief Holds whether strength, shield or superweapon timers expire while
