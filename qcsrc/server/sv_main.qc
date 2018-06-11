@@ -2,6 +2,7 @@
 
 #include "anticheat.qh"
 #include "g_hook.qh"
+#include "g_damage.qh"
 #include "g_world.qh"
 
 #include "bot/api.qh"
@@ -18,6 +19,7 @@
 #include "../common/util.qh"
 
 #include "../common/vehicles/all.qh"
+#include <common/monsters/sv_monsters.qh>
 #include <common/weapons/_all.qh>
 
 #include "../lib/csqcmodel/sv_model.qh"

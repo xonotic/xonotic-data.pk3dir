@@ -92,7 +92,6 @@ const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
-string GetGametype();
 void ShuffleMaplist();
 
 void SetDefaultAlpha()

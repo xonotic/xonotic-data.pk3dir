@@ -1,6 +1,7 @@
 #pragma once
 
 #include <server/defs.qh>
+#include <server/g_world.qh>
 
 #include <common/t_items.qh>
 
@@ -215,7 +216,6 @@ void readplayerstartcvars();
 float sv_autotaunt;
 float sv_taunt;
 
-string GetGametype(); // g_world.qc
 void readlevelcvars()
 {
 	if(cvar("sv_allow_fullbright"))
