@@ -233,7 +233,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 	player.PlayerPhysplug = func_null;
 	player.view_ofs       = STAT(PL_VIEW_OFS, player);
 	player.event_damage   = PlayerDamage;
-	player.hud            = HUD_NORMAL;
+	STAT(HUD, player)     = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -298,7 +298,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	set_movetype(player, MOVETYPE_NOCLIP);
 	player.event_damage 	= func_null;
 	player.view_ofs 		= '0 0 0';
-	player.hud 				= gunner.hud;
+	STAT(HUD, player) 		= STAT(HUD, gunner);
 	player.teleportable 	= false;
 	player.PlayerPhysplug 	= gunner.PlayerPhysplug;
 	player.vehicle_ammo1 	= vehic.vehicle_ammo1;
@@ -332,7 +332,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 		WriteAngle(MSG_ONE, 	0); // roll
 	}
 
-	CSQCVehicleSetup(player, player.hud);
+	CSQCVehicleSetup(player, STAT(HUD, player));
 
 	MUTATOR_CALLHOOK(VehicleEnter, player, gunner);
 
@@ -538,7 +538,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 		{
 			if(autocvar_g_vehicle_bumblebee_raygun)
 			{
-				Damage(trace_ent, vehic, this, autocvar_g_vehicle_bumblebee_raygun_dps * PHYS_INPUT_FRAMETIME, DEATH_GENERIC.m_id, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * PHYS_INPUT_FRAMETIME);
+				Damage(trace_ent, vehic, this, autocvar_g_vehicle_bumblebee_raygun_dps * PHYS_INPUT_FRAMETIME, DEATH_GENERIC.m_id, DMG_NOWEP, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * PHYS_INPUT_FRAMETIME);
 				vehic.vehicle_energy -= autocvar_g_vehicle_bumblebee_raygun_aps * PHYS_INPUT_FRAMETIME;
 			}
 			else
@@ -676,7 +676,7 @@ void bumblebee_blowup(entity this)
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
 				 autocvar_g_vehicle_bumblebee_blowup_radius, this, NULL,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
-				 DEATH_VH_BUMB_DEATH.m_id, NULL);
+				 DEATH_VH_BUMB_DEATH.m_id, DMG_NOWEP, NULL);
 
 	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_BIG, (this.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);

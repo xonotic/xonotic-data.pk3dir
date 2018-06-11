@@ -17,7 +17,7 @@ MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_fuel_jetpack);
-void powerup_jetpack_init(entity item)
+void powerup_jetpack_init(Pickup this, entity item)
 {
     if(!item.ammo_fuel)
         item.ammo_fuel = g_pickup_fuel_jetpack;
@@ -55,7 +55,7 @@ MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_fuel);
-void ammo_fuel_init(entity item)
+void ammo_fuel_init(Pickup this, entity item)
 {
     if(!item.ammo_fuel)
         item.ammo_fuel = g_pickup_fuel;

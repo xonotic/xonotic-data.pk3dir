@@ -44,8 +44,6 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, m_canonical_spawnfunc, string);
     /** control what happens when this weapon is spawned */
     METHOD(Weapon, m_spawnfunc_hookreplace, Weapon(Weapon this, entity e)) { return this; }
-    /** A: WEPSET_id : WEPSET_... */
-    ATTRIB(Weapon, weapons, WepSet, '0 0 0');
     /** M: ammotype  : main ammo type */
     ATTRIB(Weapon, ammo_type, int, RESOURCE_NONE);
     /** M: impulse   : weapon impulse */
@@ -108,6 +106,8 @@ CLASS(Weapon, Object)
         // no weapon specific image for this weapon
         return false;
     }
+    /** (CLIENT) check whether the weapon should zoom (special handling) */
+    METHOD(Weapon, wr_zoomdir, bool(Weapon this)) {return false;}
     /** (CLIENT) weapon specific view model */
     METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
     /** (CLIENT) weapon specific glow */
@@ -183,21 +183,20 @@ int max_shot_distance = 32768; // determined by world mins/maxs when map loads
 #endif
 
 // weapon flags
-const int WEP_TYPE_OTHER          =  0x00; // not for damaging people
-const int WEP_TYPE_SPLASH         =  0x01; // splash damage
-const int WEP_TYPE_HITSCAN        =  0x02; // hitscan
-const int WEP_TYPEMASK            =  0x0F;
-const int WEP_FLAG_CANCLIMB       =  0x10; // can be used for movement
-const int WEP_FLAG_NORMAL         =  0x20; // in "most weapons" set
-const int WEP_FLAG_HIDDEN         =  0x40; // hides from menu
-const int WEP_FLAG_RELOADABLE     =  0x80; // can has reload
-const int WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
-const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
-const int WEP_TYPE_MELEE_PRI      = 0x400; // primary attack is melee swing (for animation)
-const int WEP_TYPE_MELEE_SEC      = 0x800; // secondary attack is melee swing (for animation)
-const int WEP_FLAG_DUALWIELD      = 0x1000; // weapon can be dual wielded
-const int WEP_FLAG_NODUAL         = 0x2000; // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
-const int WEP_FLAG_PENETRATEWALLS = 0x4000; // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
+const int WEP_TYPE_OTHER          =  BIT(0); // not for damaging people
+const int WEP_TYPE_SPLASH         =  BIT(1); // splash damage
+const int WEP_TYPE_HITSCAN        =  BIT(2); // hitscan
+const int WEP_FLAG_CANCLIMB       =  BIT(3); // can be used for movement
+const int WEP_FLAG_NORMAL         =  BIT(4); // in "most weapons" set
+const int WEP_FLAG_HIDDEN         =  BIT(5); // hides from menu
+const int WEP_FLAG_RELOADABLE     =  BIT(6); // can has reload
+const int WEP_FLAG_SUPERWEAPON    =  BIT(7); // powerup timer
+const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (mutators are allowed to clear this flag)
+const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
+const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
+const int WEP_FLAG_DUALWIELD      =  BIT(11); // weapon can be dual wielded
+const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
+const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
 
 // variables:
 string weaponorder_byid;
@@ -210,7 +209,7 @@ string W_NumberWeaponOrder(string order);
 string W_FixWeaponOrder_BuildImpulseList(string o);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);
-void W_RandomWeapons(entity e, int n);
+WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
 
 string GetAmmoPicture(int ammotype);
 

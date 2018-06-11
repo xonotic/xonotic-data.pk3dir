@@ -6,8 +6,8 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
-#include "../common/triggers/teleporters.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/teleporters.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/util.qh"
 #include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
@@ -429,7 +429,7 @@ void Portal_Remove(entity portal, float killed)
 	}
 }
 
-void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(deathtype == DEATH_TELEFRAG.m_id)
 		return;

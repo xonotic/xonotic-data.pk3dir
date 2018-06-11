@@ -3,7 +3,6 @@
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include "../antilag.qh"
-#include "../g_subs.qh"
 #include <common/weapons/_all.qh>
 #include <common/state.qh>
 #include <common/wepent.qh>
@@ -54,7 +53,7 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 	return ret;
 }
 
-void W_HitPlotAnalysis(entity player, .entity weaponentity, vector screenforward, vector screenright, vector screenup)
+void W_HitPlotAnalysis(entity player, entity wep, vector screenforward, vector screenright, vector screenup)
 {
 	if(CS(player).hitplotfh >= 0)
 	{
@@ -72,7 +71,7 @@ void W_HitPlotAnalysis(entity player, .entity weaponentity, vector screenforward
 			antilag_takeback(trace_ent, store, time - lag);
 			vector hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
 			antilag_restore(trace_ent, store);
-			fputs(CS(player).hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(player.(weaponentity).m_switchweapon.m_id), "\n"));
+			fputs(CS(player).hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(wep.m_id), "\n"));
 			//print(strcat(ftos(hitplot_x), " ", ftos(hitplot_y), " ", ftos(hitplot_z), "\n"));
 		}
 	}

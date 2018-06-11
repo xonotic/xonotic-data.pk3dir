@@ -24,10 +24,24 @@
 	#define bool float
 #endif
 
+#ifndef QCC_SUPPORT_ACCUMULATE
+	#warning "QCC does not support accumulate, may not compile correctly"
+	#define ACCUMULATE
+#else
+	#define ACCUMULATE [[accumulate]]
+#endif
+
 #ifndef QCC_SUPPORT_ERASEABLE
 	#define ERASEABLE
 #else
 	#define ERASEABLE [[eraseable]]
+#endif
+
+#ifndef QCC_SUPPORT_ALIAS
+    #warning "QCC does not support alias, may not compile correctly"
+    #define ALIAS(var)
+#else
+    #define ALIAS(var) [[alias(var)]]
 #endif
 
 #include <dpdefs/pre.qh>
@@ -46,6 +60,12 @@
 #endif
 
 #include <dpdefs/post.qh>
+
+#ifndef QCC_SUPPORT_POW
+    #define pow(a, b) pow(a, b)
+#else
+    #define pow(a, b) ((a) ** (b))
+#endif
 
 #include "self.qh"
 
@@ -113,6 +133,7 @@
 #include "oo.qh"
 #include "p2mathlib.qc"
 #include "progname.qh"
+#include "promise.qc"
 #include "random.qc"
 #include "registry.qh"
 #include "registry_net.qh"

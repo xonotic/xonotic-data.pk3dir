@@ -312,32 +312,55 @@ float draw_CondensedFontFactor(string theText, float ICanHasKallerz, vector Size
 	return 1.0;
 }
 
-float draw_clipSet;
+IntrusiveList draw_clip;
+STATIC_INIT(draw_clip) { draw_clip = IL_NEW(); }
+CLASS(ClipFrame, Object)
+	ATTRIB(ClipFrame, clip_shift, vector, '0 0 0');
+	ATTRIB(ClipFrame, clip_scale, vector, '0 0 0');
+ENDCLASS(ClipFrame)
+
+void _draw_SetClip(vector o, vector s)
+{
+	ClipFrame prev = IL_PEEK(draw_clip);
+	if (prev) {
+		o.x = bound(prev.clip_shift.x, o.x, prev.clip_shift.x + prev.clip_scale.x);
+		o.y = bound(prev.clip_shift.y, o.y, prev.clip_shift.y + prev.clip_scale.y);
+		s.x = bound(0, s.x, prev.clip_scale.x - (o.x - prev.clip_shift.x));
+		s.y = bound(0, s.y, prev.clip_scale.y - (o.y - prev.clip_shift.y));
+	}
+	ClipFrame e = NEW(ClipFrame);
+	e.clip_shift = o;
+	e.clip_scale = s;
+	IL_PUSH(draw_clip, e);
+	drawsetcliparea(o.x, o.y, s.x, s.y);
+}
+
 void draw_SetClip()
 {
-	if(draw_clipSet)
-		error("Already clipping, no stack implemented here, sorry");
-	drawsetcliparea(draw_shift.x, draw_shift.y, draw_scale.x, draw_scale.y);
-	draw_clipSet = 1;
+	_draw_SetClip(draw_shift, draw_scale);
 }
 
 void draw_SetClipRect(vector theOrigin, vector theScale)
 {
-	vector o, s;
-	if(draw_clipSet)
-		error("Already clipping, no stack implemented here, sorry");
-	o = boxToGlobal(theOrigin, draw_shift, draw_scale);
-	s = boxToGlobalSize(theScale, draw_scale);
-	drawsetcliparea(o.x, o.y, s.x, s.y);
-	draw_clipSet = 1;
+	_draw_SetClip(
+		boxToGlobal(theOrigin, draw_shift, draw_scale),
+		boxToGlobalSize(theScale, draw_scale)
+	);
 }
 
 void draw_ClearClip()
 {
-	if(!draw_clipSet)
-		error("Not clipping, can't clear it then");
+	if (IL_EMPTY(draw_clip)) {
+		LOG_FATAL("Not clipping, can't clear it then");
+	}
+	entity currentSettings = IL_PEEK(draw_clip);
+	IL_REMOVE(draw_clip, currentSettings);
+	delete(currentSettings);
 	drawresetcliparea();
-	draw_clipSet = 0;
+	ClipFrame e = IL_PEEK(draw_clip);
+	if (e) {
+		drawsetcliparea(e.clip_shift.x, e.clip_shift.y, e.clip_scale.x, e.clip_scale.y);
+	}
 }
 
 string draw_TextShortenToWidth(string theText, float maxWidth, float ICanHasKallerz, vector SizeThxBye)

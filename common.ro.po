@@ -238,7 +238,7 @@ msgstr "Continuă..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Conversație"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -9326,6 +9326,9 @@ msgstr "Culoare echipă:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Activare panou"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^Conversație"
 
 #~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
 #~ msgstr "^BG%s%s^K1 s-a apropiat prea mult de racheta%s%s lui ^BG%s^K1"

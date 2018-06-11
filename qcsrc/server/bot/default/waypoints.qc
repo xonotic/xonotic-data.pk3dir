@@ -190,6 +190,16 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			return it;
 		});
 	}
+	// spawn only one destination waypoint for teleports teleporting player to the exact same spot
+	// otherwise links loaded from file would be applied only to the first destination
+	// waypoint since link format doesn't specify waypoint entities but just positions
+	if((f & WAYPOINTFLAG_GENERATED) && !(f & WAYPOINTFLAG_NORELINK) && m1 == m2)
+	{
+		IL_EACH(g_waypoints, boxesoverlap(m1, m2, it.absmin, it.absmax),
+		{
+			return it;
+		});
+	}
 
 	entity w = new(waypoint);
 	IL_PUSH(g_waypoints, w);
@@ -446,7 +456,7 @@ float waypoint_getlinearcost(float dist)
 }
 float waypoint_getlinearcost_underwater(float dist)
 {
-	// NOTE: this value is hardcoded on the engine too, see SV_WaterMove
+	// NOTE: underwater speed factor is hardcoded in the engine too, see SV_WaterMove
 	return dist / (autocvar_sv_maxspeed * 0.7);
 }
 
@@ -1028,10 +1038,33 @@ void waypoint_saveall()
 		return;
 	}
 
-	// add 3 comments to not break compatibility with older Xonotic versions
+	float sym = autocvar_g_waypointeditor_symmetrical;
+	string sym_str = ftos(sym);
+	if (sym == -1 || (sym == 1 && autocvar_g_waypointeditor_symmetrical_order >= 2))
+	{
+		if (sym == 1)
+		{
+			sym_str = cons(sym_str, "-");
+			sym_str = cons(sym_str, "-");
+		}
+		else
+		{
+			sym_str = cons(sym_str, ftos(autocvar_g_waypointeditor_symmetrical_origin.x));
+			sym_str = cons(sym_str, ftos(autocvar_g_waypointeditor_symmetrical_origin.y));
+		}
+		if (autocvar_g_waypointeditor_symmetrical_order >= 2)
+			sym_str = cons(sym_str, ftos(autocvar_g_waypointeditor_symmetrical_order));
+	}
+	else if (autocvar_g_waypointeditor_symmetrical == -2)
+	{
+		sym_str = cons(sym_str, ftos(autocvar_g_waypointeditor_symmetrical_axis.x));
+		sym_str = cons(sym_str, ftos(autocvar_g_waypointeditor_symmetrical_axis.y));
+	}
+
+	// a group of 3 comments doesn't break compatibility with older Xonotic versions
 	// (they are read as a waypoint with origin '0 0 0' and flag 0 though)
 	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
-	fputs(file, strcat("//", "\n"));
+	fputs(file, strcat("//", "WAYPOINT_SYMMETRY ", sym_str, "\n"));
 	fputs(file, strcat("//", "\n"));
 
 	int c = 0;
@@ -1085,6 +1118,8 @@ float waypoint_loadall()
 
 	bool parse_comments = true;
 	float ver = 0;
+	float sym = 0;
+	float sym_param1 = 0, sym_param2 = 0, sym_param3 = 0;
 
 	while ((s = fgets(file)))
 	{
@@ -1094,6 +1129,14 @@ float waypoint_loadall()
 			{
 				if(substring(s, 2, 17) == "WAYPOINT_VERSION ")
 					ver = stof(substring(s, 19, -1));
+				else if(substring(s, 2, 18) == "WAYPOINT_SYMMETRY ")
+				{
+					int tokens = tokenizebyseparator(substring(s, 20, -1), " ");
+					if (tokens) { sym = stof(argv(0)); }
+					if (tokens > 1) { sym_param1 = stof(argv(1)); }
+					if (tokens > 2) { sym_param2 = stof(argv(2)); }
+					if (tokens > 3) { sym_param3 = stof(argv(3)); }
+				}
 				continue;
 			}
 			else
@@ -1123,6 +1166,35 @@ float waypoint_loadall()
 	}
 	fclose(file);
 	LOG_TRACE("loaded ", ftos(cwp), " waypoints and ", ftos(cwb), " wayboxes from maps/", mapname, ".waypoints");
+
+	if (autocvar_g_waypointeditor && autocvar_g_waypointeditor_symmetrical_allowload)
+	{
+		cvar_set("g_waypointeditor_symmetrical", ftos(sym));
+		if (sym == 1 && sym_param3 < 2)
+			cvar_set("g_waypointeditor_symmetrical_order", "0"); // make sure this is reset if not loaded
+		if (sym == -1 || (sym == 1 && sym_param3 >= 2))
+		{
+			string params;
+			if (sym == 1)
+				params = cons("-", "-");
+			else
+			{
+				params = cons(ftos(sym_param1), ftos(sym_param2));
+				cvar_set("g_waypointeditor_symmetrical_origin", params);
+			}
+			cvar_set("g_waypointeditor_symmetrical_order", ftos(sym_param3));
+			LOG_INFO("Waypoint editor: loaded symmetry ", ftos(sym), " with origin ", params, " and order ", ftos(sym_param3));
+		}
+		else if (sym == -2)
+		{
+			string params = strcat(ftos(sym_param1), " ", ftos(sym_param2));
+			cvar_set("g_waypointeditor_symmetrical_axis", params);
+			LOG_INFO("Waypoint editor: loaded symmetry ", ftos(sym), " with axis ", params);
+		}
+		else
+			LOG_INFO("Waypoint editor: loaded symmetry ", ftos(sym));
+		LOG_INFO(strcat("g_waypointeditor_symmetrical", " has been set to ", cvar_string("g_waypointeditor_symmetrical")));
+	}
 
 	return cwp + cwb;
 }
@@ -1283,6 +1355,8 @@ void botframe_showwaypointlinks()
 	{
 		int display_type = 0;
 		entity head = navigation_findnearestwaypoint(it, false);
+		it.nearestwaypoint = head; // mainly useful for debug
+		it.nearestwaypointtimeout = time + 2; // while I'm at it...
 		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
 			display_type = 1; // default
 		else if(head && (head.wphardwired))

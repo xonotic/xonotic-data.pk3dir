@@ -22,6 +22,7 @@ const int RACE_NET_SERVER_RANKINGS = 11;
 const int RACE_NET_SERVER_STATUS = 12;
 const int RACE_NET_CHECKPOINT_HIT_SELF_QUALIFYING = 13; // byte checkpoint, short time, short recordtime
 const int RACE_NET_CHECKPOINT_NEXT_SELF_QUALIFYING = 14; // byte nextcheckpoint, short recordtime
+const int RACE_NET_RANKINGS_CNT = 15;
 
 REGISTER_NET_LINKED(_ENT_CLIENT_INIT)
 #ifdef CSQC
@@ -55,3 +56,5 @@ REGISTER_NET_LINKED(ENT_CLIENT_SPAWNEVENT)
 REGISTER_NET_LINKED(ENT_CLIENT_WALL)
 
 #include <lib/csqcmodel/net.qh>
+
+REGISTER_NET_C2S(fpsreport)

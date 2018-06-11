@@ -1,3 +1,0 @@
-#pragma once
-
-const int BUTTON_DONTACCUMULATEDMG = 128;

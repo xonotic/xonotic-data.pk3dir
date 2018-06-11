@@ -23,14 +23,10 @@ bool modeleffect_SendEntity(entity this, entity to, int sf)
 	WriteShort(MSG_ENTITY, this.modelindex);
 	WriteByte(MSG_ENTITY, this.skin);
 	WriteByte(MSG_ENTITY, this.frame);
-	WriteCoord(MSG_ENTITY, this.origin.x);
-	WriteCoord(MSG_ENTITY, this.origin.y);
-	WriteCoord(MSG_ENTITY, this.origin.z);
+	WriteVector(MSG_ENTITY, this.origin);
 	if(f & 1)
 	{
-		WriteCoord(MSG_ENTITY, this.velocity.x);
-		WriteCoord(MSG_ENTITY, this.velocity.y);
-		WriteCoord(MSG_ENTITY, this.velocity.z);
+		WriteVector(MSG_ENTITY, this.velocity);
 	}
 	if(f & 2)
 	{
@@ -84,10 +80,10 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 #ifdef CSQC
 
 entityclass(ModelEffect);
-class(ModelEffect) .float frame1time;
-class(ModelEffect) .float lifetime, fadetime;
-class(ModelEffect) .float teleport_time;
-class(ModelEffect) .float scale1, scale2;
+classfield(ModelEffect) .float frame1time;
+classfield(ModelEffect) .float lifetime, fadetime;
+classfield(ModelEffect) .float teleport_time;
+classfield(ModelEffect) .float scale1, scale2;
 
 .float cnt;
 .float scale;
@@ -124,15 +120,11 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	e.skin = ReadByte();
 	e.frame = ReadByte();
 	e.frame1time = time;
-	e.origin_x = ReadCoord();
-	e.origin_y = ReadCoord();
-	e.origin_z = ReadCoord();
+	e.origin = ReadVector();
 	setorigin(e, e.origin);
 	if(f & 1)
 	{
-		e.velocity_x = ReadCoord();
-		e.velocity_y = ReadCoord();
-		e.velocity_z = ReadCoord();
+		e.velocity = ReadVector();
 	}
 	if(f & 2)
 	{

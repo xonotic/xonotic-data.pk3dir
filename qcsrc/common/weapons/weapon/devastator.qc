@@ -38,6 +38,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 		NULL,
 		WEP_CVAR(devastator, force),
 		this.projectiledeathtype,
+		this.weaponentity_fld,
 		directhitentity
 	);
 
@@ -112,6 +113,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 						head,
 						(WEP_CVAR(devastator, remote_jump_force) ? WEP_CVAR(devastator, remote_jump_force) : 0),
 						this.projectiledeathtype | HITTYPE_BOUNCE,
+						this.weaponentity_fld,
 						NULL
 					);
 					break;
@@ -131,6 +133,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 		NULL,
 		WEP_CVAR(devastator, remote_force),
 		this.projectiledeathtype | HITTYPE_BOUNCE,
+		this.weaponentity_fld,
 		NULL
 	);
 
@@ -232,11 +235,19 @@ void W_Devastator_Think(entity this)
 			else
 				f = 1;
 
+			vector md = this.realowner.(weaponentity).movedir;
+			vector vecs = ((md.x > 0) ? md : '0 0 0');
+
+			vector dv = v_right * -vecs.y + v_up * vecs.z;
+
+			if(!W_DualWielding(this.realowner))
+				dv = '0 0 0'; // don't override!
+
 			velspeed = vlen(this.velocity);
 
 			makevectors(this.realowner.v_angle);
 			desireddir = WarpZone_RefSys_TransformVelocity(this.realowner, this, v_forward);
-			desiredorigin = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs);
+			desiredorigin = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs + dv);
 			olddir = normalize(this.velocity);
 
 			// now it gets tricky... we want to move like some curve to approximate the target direction
@@ -276,7 +287,7 @@ void W_Devastator_Touch(entity this, entity toucher)
 	W_Devastator_Explode(this, toucher);
 }
 
-void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -295,7 +306,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), WEP_DEVASTATOR.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
