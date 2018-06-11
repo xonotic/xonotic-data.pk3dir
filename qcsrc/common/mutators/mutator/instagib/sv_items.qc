@@ -7,7 +7,7 @@ float autocvar_g_instagib_invisibility_time;
 /// \brief Time of speed powerup in seconds.
 float autocvar_g_instagib_speed_time;
 
-void powerup_invisibility_init(entity item)
+void powerup_invisibility_init(Pickup this, entity item)
 {
 	if(!item.strength_finished)
 	{
@@ -16,7 +16,7 @@ void powerup_invisibility_init(entity item)
 }
 
 
-void powerup_speed_init(entity item)
+void powerup_speed_init(Pickup this, entity item)
 {
 	if(!item.invincible_finished)
 	{

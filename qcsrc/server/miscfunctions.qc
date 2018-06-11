@@ -5,10 +5,11 @@
 #include "constants.qh"
 #include "g_hook.qh"
 #include "ipban.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "../common/t_items.qh"
 #include "resources.qh"
 #include "items.qh"
+#include "player.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -66,6 +67,10 @@ void WarpZone_crosshair_trace(entity pl)
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
 
 void GameLogEcho(string s)
 {

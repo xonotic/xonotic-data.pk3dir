@@ -38,7 +38,7 @@ MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_nails);
-void ammo_bullets_init(entity item)
+void ammo_bullets_init(Pickup this, entity item)
 {
     if(!item.ammo_nails)
         item.ammo_nails = g_pickup_nails;
@@ -72,7 +72,7 @@ MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_cells);
-void ammo_cells_init(entity item)
+void ammo_cells_init(Pickup this, entity item)
 {
     if(!item.ammo_cells)
         item.ammo_cells = g_pickup_cells;
@@ -102,7 +102,7 @@ MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_plasma);
-void ammo_plasma_init(entity item)
+void ammo_plasma_init(Pickup this, entity item)
 {
     if(!item.ammo_plasma)
         item.ammo_plasma = g_pickup_plasma;
@@ -132,7 +132,7 @@ MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_rockets);
-void ammo_rockets_init(entity item)
+void ammo_rockets_init(Pickup this, entity item)
 {
     if(!item.ammo_rockets)
         item.ammo_rockets = g_pickup_rockets;
@@ -162,7 +162,7 @@ MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_shells);
-void ammo_shells_init(entity item)
+void ammo_shells_init(Pickup this, entity item)
 {
     if(!item.ammo_shells)
         item.ammo_shells = g_pickup_shells;
