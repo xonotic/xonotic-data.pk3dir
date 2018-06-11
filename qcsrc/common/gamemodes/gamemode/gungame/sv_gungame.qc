@@ -1,6 +1,5 @@
 /// \file
 /// \brief Source file that contains implementation of the GunGame gamemode.
-/// \author Lyberta
 /// \copyright GNU GPLv2 or any later version.
 
 #include "sv_gungame.qh"
@@ -114,8 +113,6 @@ void GunGame_UpdateLeadingPlayer()
 	gungame_leading_level = GunGame_GetPlayerLevel(gungame_leading_player);
 	gungame_leading_weapon = GunGame_GetWeapon(gungame_leading_level);
 	GunGame_UpdateStats();
-	//PrintToChatAll(strcat(gungame_leading_player.netname,
-	//	" is leading with level ", ftos(gungame_leading_level)));
 }
 
 void GunGame_UpdateStats()
@@ -165,14 +162,12 @@ void GunGame_GivePlayerWeapon(entity player)
 /// \brief Hook that is called to determine if there is a weapon arena.
 MUTATOR_HOOKFUNCTION(gg, SetWeaponArena)
 {
-	//PrintToChatAll("SetWeaponArena");
 	M_ARGV(0, string) = "off";
 }
 
 /// \brief Hook that is called to determine start items of all players.
 MUTATOR_HOOKFUNCTION(gg, SetStartItems)
 {
-	//PrintToChatAll("SetStartItems");
 	start_weapons = WEPSET(Null);
 	warmup_start_weapons = WEPSET(Null);
 }
@@ -180,7 +175,6 @@ MUTATOR_HOOKFUNCTION(gg, SetStartItems)
 /// \brief Hook that is called when an item is about to spawn.
 MUTATOR_HOOKFUNCTION(gg, FilterItemDefinition)
 {
-	//PrintToChatAll("FilterItemDefinition");
 	entity item = M_ARGV(0, entity);
 	if (item.instanceOfAmmo)
 	{
@@ -243,6 +237,6 @@ MUTATOR_HOOKFUNCTION(gg, PlayerDies)
 /// \brief Hook that determines whether remaining frags are announced.
 MUTATOR_HOOKFUNCTION(gg, Scores_CountFragsRemaining)
 {
-	// announce remaining frags
+	// Announce remaining frags.
 	return true;
 }
