@@ -17,6 +17,7 @@
 #include <common/anim.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/net_notice.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
 #include <common/gamemodes/_mod.qh>
@@ -31,6 +32,7 @@
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
 #include <common/viewloc.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
@@ -400,7 +402,6 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
-void Porto_Draw(entity this);
 STATIC_INIT(Porto)
 {
 	entity e = new_pure(porto);
@@ -768,8 +769,6 @@ float TrueAimCheck(entity wepent)
 	return SHOTTYPE_HITWORLD;
 }
 
-void PostInit();
-void CSQC_Demo_Camera();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
@@ -1561,12 +1560,9 @@ float oldr_novis;
 float oldr_useportalculling;
 float oldr_useinfinitefarclip;
 
-void cl_notice_run();
-
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
-void WaypointSprite_Load();
 void CSQC_UpdateView(entity this, float w, float h)
 {
     TC(int, w); TC(int, h);

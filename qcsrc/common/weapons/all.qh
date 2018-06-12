@@ -367,4 +367,8 @@ ENUMCLASS_END(WFRAME)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
+
+#ifdef SVQC
+void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
+#endif
 #endif

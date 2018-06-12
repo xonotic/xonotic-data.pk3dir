@@ -23,3 +23,7 @@ void HUD_Configure_Frame();
 void HUD_Configure_PostDraw();
 
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary);
+
+void HUD_Panel_EnableMenu();
+
+void HUD_Panel_FirstInDrawQ(float id);

@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 #include <common/mapobjects/trigger/jumppads.qh>
+#include <server/weapons/throwing.qh>
 
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
@@ -20,7 +21,6 @@ void W_Porto_Success(entity this)
 	delete(this);
 }
 
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity);
 void W_Porto_Fail(entity this, float failhard)
 {
 	if(this.realowner == NULL)

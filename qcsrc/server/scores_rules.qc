@@ -9,8 +9,6 @@
 
 int ScoreRules_teams;
 
-void CheckAllowedTeams (entity for_whom);
-
 int NumTeams(int teams)
 {
 	return boolean(teams & BIT(0)) + boolean(teams & BIT(1)) + boolean(teams & BIT(2)) + boolean(teams & BIT(3));
