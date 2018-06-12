@@ -791,7 +791,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		bool do_run = (this.enemy || this.monster_moveto);
 		movelib_move_simple(this, v_forward, ((do_run) ? runspeed : walkspeed), 0.4);
 
-		if(time > this.pain_finished && time > this.anim_finished) // TODO: use anim_finished instead!?
+		if(time > this.pain_finished && time > this.anim_finished)
 		if(!this.state)
 		if(vdist(this.velocity, >, 10))
 			setanim(this, ((do_run) ? this.anim_run : this.anim_walk), true, false, false);
