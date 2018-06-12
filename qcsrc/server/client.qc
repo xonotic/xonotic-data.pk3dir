@@ -1228,16 +1228,7 @@ void ClientConnect(entity this)
 	JoinBestTeam(this, false); // if the team number is valid, keep it
 	this.playerid = playerid_save;
 
-	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
-		TRANSMUTE(Observer, this);
-	} else {
-		if (!teamplay || autocvar_g_balance_teams) {
-			TRANSMUTE(Player, this);
-			campaign_bots_may_start = true;
-		} else {
-			TRANSMUTE(Observer, this); // do it anyway
-		}
-	}
+	TRANSMUTE(Observer, this);
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
@@ -2196,9 +2187,11 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
+const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
+	if (time < CS(this).jointime + MIN_SPEC_TIME) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
@@ -2637,6 +2630,8 @@ void PlayerPreThink (entity this)
 		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
+		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)
+			error("Client can't be spawned as player on connection!");
 		if(!PlayerThink(this))
 			return;
 	}
@@ -2644,6 +2639,20 @@ void PlayerPreThink (entity this)
 		if(intermission_running)
 			IntermissionThink(this);
 		return;
+	}
+	else if (IS_REAL_CLIENT(this) && !CS(this).autojoin_checked && time >= CS(this).jointime + MIN_SPEC_TIME)
+	{
+		CS(this).autojoin_checked = true;
+		// don't do this in ClientConnect
+		// many things can go wrong if a client is spawned as player on connection
+		if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
+			|| (!(autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0)
+				&& (!teamplay || autocvar_g_balance_teams)))
+		{
+			campaign_bots_may_start = true;
+			Join(this);
+			return;
+		}
 	}
 	else if (IS_OBSERVER(this)) {
 		ObserverThink(this);
