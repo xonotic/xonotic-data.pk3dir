@@ -2,6 +2,7 @@
 
 void Cmd_Scoreboard_SetFields(int);
 void Cmd_Scoreboard_Help();
+void ConsoleCommand_macro_init();
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void LocalCommand_macro_write_aliases(int fh);
