@@ -360,6 +360,7 @@ void cvar_changes_init()
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
+		BADPREFIX("g_hats_");
 		BADPREFIX("g_maplist_");
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
