@@ -681,42 +681,6 @@ vector Monster_Move_Target(entity this, entity targ)
 	}
 }
 
-void Monster_CalculateVelocity(entity this, vector to, vector from, float turnrate, float movespeed)
-{
-	//float current_distance = vlen((('1 0 0' * to.x) + ('0 1 0' * to.y)) - (('1 0 0' * from.x) + ('0 1 0' * from.y))); // for the sake of this check, exclude Z axis
-	//float initial_height = 0; //min(50, (targ_distance * tanh(20)));
-	//float current_height = (initial_height * min(1, (this.pass_distance) ? (current_distance / this.pass_distance) : current_distance));
-	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
-
-	vector targpos = to;
-#if 0
-	if(current_height) // make sure we can actually do this arcing path
-	{
-		targpos = (to + ('0 0 1' * current_height));
-		WarpZone_TraceLine(this.origin, targpos, MOVE_NOMONSTERS, this);
-		if(trace_fraction < 1)
-		{
-			//print("normal arc line failed, trying to find new pos...");
-			WarpZone_TraceLine(to, targpos, MOVE_NOMONSTERS, this);
-			targpos = (trace_endpos + '0 0 -10');
-			WarpZone_TraceLine(this.origin, targpos, MOVE_NOMONSTERS, this);
-			if(trace_fraction < 1) { targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
-			/*else { print(" ^3SUCCESS^7, using new arc line.\n"); } */
-		}
-	}
-	else { targpos = to; }
-#endif
-
-	//this.angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
-
-	vector desired_direction = normalize(targpos - from);
-	if(turnrate) { this.velocity = (normalize(normalize(this.velocity) + (desired_direction * 50)) * movespeed); }
-	else { this.velocity = (desired_direction * movespeed); }
-
-	//this.steerto = steerlib_attract2(targpos, 0.5, 500, 0.95);
-	//this.angles = vectoangles(this.velocity);
-}
-
 .entity draggedby;
 .entity target2;
 
@@ -819,11 +783,13 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(!(this.spawnflags & MONSTERFLAG_FLY_VERTICAL) && !(this.flags & FL_SWIM))
 		this.moveto_z = this.origin_z;
 
-	if(vdist(this.origin - this.moveto, >, 100))
+	fixedmakevectors(this.angles);
+	float vz = this.velocity_z;
+
+	if(!turret_closetotarget(this, this.moveto))
 	{
 		bool do_run = (this.enemy || this.monster_moveto);
-		if(IS_ONGROUND(this) || ((this.flags & FL_FLY) || (this.flags & FL_SWIM)))
-			Monster_CalculateVelocity(this, this.moveto, this.origin, true, ((do_run) ? runspeed : walkspeed));
+		movelib_move_simple(this, v_forward, ((do_run) ? runspeed : walkspeed), 0.4);
 
 		if(time > this.pain_finished && time > this.anim_finished) // TODO: use anim_finished instead!?
 		if(!this.state)
@@ -846,6 +812,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		if(vdist(this.velocity, <=, 30))
 			setanim(this, this.anim_idle, true, false, false);
 	}
+
+	if(!((this.flags & FL_FLY) || (this.flags & FL_SWIM)))
+		this.velocity_z = vz;
 
 	this.steerto = steerlib_attract2(this, ((this.monster_face) ? this.monster_face : this.moveto), 0.5, 500, 0.95);
 
