@@ -16,6 +16,7 @@
 #include "../common/command/_mod.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
+#include <common/weapons/weapon/crylink.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications/all.qh"
@@ -67,6 +68,10 @@ void WarpZone_crosshair_trace(entity pl)
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
 
 void GameLogEcho(string s)
 {
@@ -1081,7 +1086,6 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 #define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
 
-void W_Crylink_Dequeue(entity e);
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
 	if(SUB_OwnerCheck(this, toucher))

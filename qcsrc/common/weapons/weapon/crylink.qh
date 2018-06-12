@@ -71,4 +71,6 @@ SPAWNFUNC_WEAPON(weapon_crylink, WEP_CRYLINK)
 
 .entity queuenext;
 .entity queueprev;
+
+void W_Crylink_Dequeue(entity e);
 #endif

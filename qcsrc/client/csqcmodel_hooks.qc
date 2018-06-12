@@ -18,8 +18,6 @@
 .float death_time;
 .int modelflags;
 
-void CSQCModel_Hook_PreDraw(entity this, bool isplayer);
-
 .bool isplayermodel;
 
 // FEATURE: LOD

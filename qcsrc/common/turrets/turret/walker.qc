@@ -281,7 +281,8 @@ void walker_move_path(entity this)
 {
 #ifdef WALKER_FANCYPATHING
     // Are we close enougth to a path node to switch to the next?
-    if(vdist(this.origin - this.pathcurrent.origin, <, 64))
+    if(turret_closetotarget(this, this.pathcurrent.origin))
+    {
         if (this.pathcurrent.path_next == NULL)
         {
             // Path endpoint reached
@@ -304,13 +305,14 @@ void walker_move_path(entity this)
         }
         else
             this.pathcurrent = this.pathcurrent.path_next;
+    }
 
     this.moveto = this.pathcurrent.origin;
     this.steerto = steerlib_attract2(this, this.moveto,0.5,500,0.95);
     walker_move_to(this, this.moveto, 0);
 
 #else
-    if(vdist(this.origin - this.pathcurrent.origin, <, 64))
+    if(turret_closetotarget(this, this.pathcurrent.origin))
         this.pathcurrent = this.pathcurrent.enemy;
 
     if(!this.pathcurrent)

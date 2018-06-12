@@ -1239,6 +1239,12 @@ void turret_initparams(entity tur)
 	#undef TRY
 }
 
+bool turret_closetotarget(entity this, vector targ)
+{
+	vector path_extra_size = '64 64 64';
+	return boxesoverlap(targ - path_extra_size, targ + path_extra_size, this.absmin - path_extra_size, this.absmax + path_extra_size);
+}
+
 void turret_findtarget(entity this)
 {
 	entity e = find(NULL, classname, "turret_manager");
