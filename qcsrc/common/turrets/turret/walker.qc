@@ -354,7 +354,7 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 {
     fixedmakevectors(it.angles);
 
-    if (it.spawnflags & TSF_NO_PATHBREAK && it.pathcurrent)
+    if ((it.spawnflags & TSF_NO_PATHBREAK) && it.pathcurrent)
         walker_move_path(it);
     else if (it.enemy == NULL)
     {
