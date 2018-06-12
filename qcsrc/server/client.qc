@@ -17,6 +17,7 @@
 #include "handicap.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
+#include "command/vote.qh"
 #include "cheats.qh"
 #include "g_world.qh"
 #include "race.qh"
@@ -46,6 +47,8 @@
 #include "../common/net_linked.qh"
 #include "../common/physics/player.qh"
 
+#include <common/vehicles/sv_vehicles.qh>
+
 #include "../common/items/_mod.qh"
 
 #include "../common/mutators/mutator/waypoints/all.qh"
@@ -74,8 +77,6 @@ STATIC_METHOD(Client, Add, void(Client this, int _team))
     this.team = _team;
     PutClientInServer(this);
 }
-
-void PutObserverInServer(entity this);
 
 STATIC_METHOD(Client, Remove, void(Client this))
 {
@@ -167,9 +168,6 @@ void ClientData_Touch(entity e)
 	});
 }
 
-void SetSpectatee(entity this, entity spectatee);
-void SetSpectatee_status(entity this, int spectatee_num);
-
 
 /*
 =============
@@ -223,7 +221,6 @@ void setplayermodel(entity e, string modelname)
 		UpdatePlayerSounds(e);
 }
 
-void FixPlayermodel(entity player);
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this)
 {
@@ -791,8 +788,6 @@ void PutClientInServer(entity this)
 	}
 }
 
-void ClientInit_misc(entity this);
-
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
 bool ClientInit_SendEntity(entity this, entity to, int sf)
@@ -1332,7 +1327,6 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
-void ReadyCount();
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -2449,7 +2443,6 @@ void SpectatorThink(entity this)
 	this.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
-void vehicles_enter (entity pl, entity veh);
 void PlayerUseKey(entity this)
 {
 	if (!IS_PLAYER(this))

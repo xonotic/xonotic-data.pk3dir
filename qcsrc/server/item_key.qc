@@ -87,7 +87,7 @@ void item_key_touch(entity this, entity toucher)
 	this.message = "";
 	SUB_UseTargets(this, toucher, toucher); // TODO: should we be using toucher for the trigger here?
 	this.message = oldmsg;
-};
+}
 
 /**
  * Spawn a key with given model, key code and color.
@@ -124,7 +124,7 @@ void spawn_item_key(entity this)
 	}
 
 	settouch(this, item_key_touch);
-};
+}
 
 
 /*QUAKED item_key (0 .5 .8) (-16 -16 -24) (16 16 32) FLOATING
@@ -265,7 +265,7 @@ spawnfunc(item_key1)
 	this.classname = "item_key";
 	this.itemkeys = ITEM_KEY_BIT(1);
 	spawnfunc_item_key(this);
-};
+}
 
 /*QUAKED item_key2 (0 .5 .8) (-16 -16 -24) (16 16 32) FLOATING
 GOLD key.
@@ -284,4 +284,4 @@ spawnfunc(item_key2)
 	this.classname = "item_key";
 	this.itemkeys = ITEM_KEY_BIT(0);
 	spawnfunc_item_key(this);
-};
+}

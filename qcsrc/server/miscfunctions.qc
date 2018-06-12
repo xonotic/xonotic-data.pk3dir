@@ -16,6 +16,7 @@
 #include "../common/command/_mod.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
+#include <common/weapons/weapon/crylink.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications/all.qh"
@@ -1085,7 +1086,6 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 #define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
 
-void W_Crylink_Dequeue(entity e);
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
 	if(SUB_OwnerCheck(this, toucher))

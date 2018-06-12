@@ -32,13 +32,6 @@
 
 #include <common/monsters/sv_monsters.qh>
 
-
-void PutObserverInServer(entity this);
-
-// =====================================================
-//  Server side game commands code, reworked by Samual
-// =====================================================
-
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think(entity this)
 {

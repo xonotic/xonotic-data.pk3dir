@@ -124,6 +124,8 @@ void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_
 
 void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime);
 
+spawnfunc(target_items);
+
 #define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = STAT(WEAPONS, e)
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
 #define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(STAT(WEAPONS, e) & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)

@@ -332,8 +332,6 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bo
 	return false;
 }
 
-void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
-
 /**
  * @param t defer thinking until time + t
  * @param func next think function
