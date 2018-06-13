@@ -1507,12 +1507,12 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 }
 
 // shorten path by removing intermediate goals
-void navigation_shortenpath(entity this)
+bool navigation_shortenpath(entity this)
 {
 	if (!this.goalstack01 || wasfreed(this.goalstack01))
-		return;
+		return false;
 	if (this.bot_tracewalk_time > time)
-		return;
+		return false;
 	this.bot_tracewalk_time = max(time, this.bot_tracewalk_time) + 0.25;
 
 	bool cut_allowed = false;
@@ -1551,8 +1551,9 @@ void navigation_shortenpath(entity this)
 					navigation_poproute(this);
 				}
 				while (this.goalcurrent != next);
+				return true;
 			}
-			return;
+			return false;
 		}
 	}
 
@@ -1573,8 +1574,10 @@ void navigation_shortenpath(entity this)
 		{
 			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
 			navigation_poproute(this);
+			return true;
 		}
 	}
+	return false;
 }
 
 // removes any currently touching waypoints from the goal stack

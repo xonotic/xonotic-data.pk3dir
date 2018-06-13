@@ -772,7 +772,12 @@ void havocbot_movetogoal(entity this)
 	if (this.goalcurrent == this.goalentity && this.goalentity_lock_timeout > time)
 		locked_goal = true;
 
-	navigation_shortenpath(this);
+	if (navigation_shortenpath(this))
+	{
+		if (vdist(this.origin - this.goalcurrent_prev.origin, <, 50)
+			&& navigation_goalrating_timeout_can_be_anticipated(this))
+			navigation_goalrating_timeout_force(this);
+	}
 
 	bool goalcurrent_can_be_removed = false;
 	if (IS_MOVABLE(this.goalcurrent))
