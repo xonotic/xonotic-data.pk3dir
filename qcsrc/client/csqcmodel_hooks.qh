@@ -24,3 +24,5 @@ const int MF_TRACER3 =  BIT(7);  // purple trail
 .int csqcmodel_traileffect;
 
 void CSQCModel_Effects_Apply(entity this);
+
+void CSQCModel_Hook_PreDraw(entity this, bool isplayer);

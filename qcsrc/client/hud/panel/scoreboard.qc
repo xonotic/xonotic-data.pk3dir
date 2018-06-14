@@ -2,6 +2,7 @@
 
 #include <client/autocvars.qh>
 #include <client/defs.qh>
+#include <client/main.qh>
 #include <client/miscfunctions.qh>
 #include "quickmenu.qh"
 #include <common/ent_cs.qh>
@@ -69,10 +70,6 @@ bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 bool autocvar_hud_panel_scoreboard_spectators_aligned = false;
 float autocvar_hud_panel_scoreboard_minwidth = 0.4;
-
-
-void drawstringright(vector, string, vector, vector, float, float);
-void drawstringcenter(vector, string, vector, vector, float, float);
 
 // wrapper to put all possible scores titles through gettext
 string TranslateScoresLabel(string l)
@@ -150,7 +147,6 @@ void Scoreboard_InitScores()
 	Cmd_Scoreboard_SetFields(0);
 }
 
-float SetTeam(entity pl, float Team);
 //float lastpnum;
 void Scoreboard_UpdatePlayerTeams()
 {

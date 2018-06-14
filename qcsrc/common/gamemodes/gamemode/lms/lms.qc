@@ -233,7 +233,10 @@ MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 
 MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
+
+	if (!IS_PLAYER(player))
+		return true;
 
 	lms_RemovePlayer(player);
 	return true;  // prevent team reset
@@ -243,14 +246,18 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	TRANSMUTE(Player, player);
-	campaign_bots_may_start = true;
-
 	if(GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
 		GameRules_scoring_add(player, LMS_RANK, 666); // mark as forced spectator for the hud code
 		player.frags = FRAGS_SPECTATOR;
 	}
+}
+
+MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
+{
+	if(autocvar_g_campaign)
+		return false;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
@@ -382,7 +389,7 @@ MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	if(warmup_stage || player.lms_spectate_warning)
 	{

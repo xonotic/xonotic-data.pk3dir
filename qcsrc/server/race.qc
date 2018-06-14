@@ -14,6 +14,7 @@
 #include <common/gamemodes/rules.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>
+#include <common/weapons/weapon/porto.qh>
 #include "../common/mapobjects/subs.qh"
 #include <common/mapobjects/triggers.qh>
 #include "../lib/warpzone/util_server.qh"
@@ -29,8 +30,6 @@ void race_InitSpectator()
 		if(msg_entity.enemy.race_laptime)
 			race_SendNextCheckpoint(msg_entity.enemy, 1);
 }
-
-void W_Porto_Fail(entity this, float failhard);
 
 float race_readTime(string map, float pos)
 {
@@ -104,8 +103,6 @@ string race_readName(string map, float pos)
 
 
 const float MAX_CHECKPOINTS = 255;
-
-spawnfunc(target_checkpoint);
 
 .float race_penalty;
 .float race_penalty_accumulator;

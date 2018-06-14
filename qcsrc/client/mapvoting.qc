@@ -321,7 +321,6 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	return mv_mouse_selection;
 }
 
-vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect);
 void MapVote_Draw()
 {
 	string map;
