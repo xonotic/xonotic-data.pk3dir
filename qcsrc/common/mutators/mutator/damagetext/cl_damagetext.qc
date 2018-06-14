@@ -22,9 +22,9 @@ AUTOCVAR_SAVE(cl_damagetext_size_max_damage,        float,  140,        "How muc
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
 AUTOCVAR_SAVE(cl_damagetext_velocity_screen,        vector, '0 0 0',    "Damage text move direction (screen coordinates)");
-AUTOCVAR_SAVE(cl_damagetext_velocity_world,         vector, '0 0 20',   "Damage text move direction (world coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_velocity_world,         vector, '0 0 20',   "Damage text move direction (world coordinates relative to player's view)");
 AUTOCVAR_SAVE(cl_damagetext_offset_screen,          vector, '0 -40 0',  "Damage text offset (screen coordinates)");
-AUTOCVAR_SAVE(cl_damagetext_offset_world,           vector, '0 0 0',    "Damage text offset (world coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_offset_world,           vector, '0 0 0',    "Damage text offset (world coordinates relative to player's view)");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage text spawned within this range is accumulated");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_alpha_rel,   float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           int,    1,          "0: never show for friendly fire, 1: when more than 0 damage, 2: always");
