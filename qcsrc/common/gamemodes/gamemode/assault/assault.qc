@@ -523,12 +523,10 @@ void havocbot_role_ast_setrole(entity this, float role)
 	{
 		case HAVOCBOT_AST_ROLE_DEFENSE:
 			this.havocbot_role = havocbot_role_ast_defense;
-			this.havocbot_role_flags = HAVOCBOT_AST_ROLE_DEFENSE;
 			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_AST_ROLE_OFFENSE:
 			this.havocbot_role = havocbot_role_ast_offense;
-			this.havocbot_role_flags = HAVOCBOT_AST_ROLE_OFFENSE;
 			this.havocbot_role_timeout = 0;
 			break;
 	}

@@ -1260,29 +1260,24 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 
 void havocbot_role_ons_setrole(entity this, int role)
 {
-	LOG_DEBUG(this.netname," switched to ");
 	switch(role)
 	{
 		case HAVOCBOT_ONS_ROLE_DEFENSE:
-			LOG_DEBUG("defense");
+			LOG_DEBUG(this.netname, " switched to defense");
 			this.havocbot_role = havocbot_role_ons_defense;
-			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_DEFENSE;
 			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_ASSISTANT:
-			LOG_DEBUG("assistant");
+			LOG_DEBUG(this.netname, " switched to assistant");
 			this.havocbot_role = havocbot_role_ons_assistant;
-			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_ASSISTANT;
 			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_OFFENSE:
-			LOG_DEBUG("offense");
+			LOG_DEBUG(this.netname, " switched to offense");
 			this.havocbot_role = havocbot_role_ons_offense;
-			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_OFFENSE;
 			this.havocbot_role_timeout = 0;
 			break;
 	}
-	LOG_DEBUG("");
 }
 
 void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale)
@@ -1309,7 +1304,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 		// (easier and cleaner than keeping counters per cp and teams)
 		FOREACH_CLIENT(it != this && IS_PLAYER(it), {
 			if(SAME_TEAM(it, this))
-			if(it.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
+			if(it.havocbot_role == havocbot_role_ons_offense)
 			if(it.havocbot_ons_target == cp2)
 				++c;
 		});

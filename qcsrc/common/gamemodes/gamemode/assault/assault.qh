@@ -32,7 +32,6 @@ const int HAVOCBOT_AST_ROLE_NONE = 0;
 const int HAVOCBOT_AST_ROLE_DEFENSE = 2;
 const int HAVOCBOT_AST_ROLE_OFFENSE = 4;
 
-.int havocbot_role_flags;
 .float havocbot_attack_time;
 
 void(entity this) havocbot_role_ast_defense;
