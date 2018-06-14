@@ -1307,7 +1307,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
-		FOREACH_CLIENT(IS_PLAYER(it), {
+		FOREACH_CLIENT(it != this && IS_PLAYER(it), {
 			if(SAME_TEAM(it, this))
 			if(it.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
 			if(it.havocbot_ons_target == cp2)
