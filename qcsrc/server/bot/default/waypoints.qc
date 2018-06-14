@@ -141,8 +141,8 @@ vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
 	}
 	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
 	{
-		float m = havocbot_symmetryaxis_equation.x;
-		float q = havocbot_symmetryaxis_equation.y;
+		float m = havocbot_symmetry_axis_m;
+		float q = havocbot_symmetry_axis_q;
 		if (autocvar_g_waypointeditor_symmetrical == -2)
 		{
 			m = autocvar_g_waypointeditor_symmetrical_axis.x;
@@ -246,7 +246,7 @@ void waypoint_spawn_fromeditor(entity pl)
 {
 	entity e;
 	vector org = pl.origin;
-	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	int ctf_flags = havocbot_symmetry_origin_order;
 	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
 	int order = ctf_flags;
@@ -309,7 +309,7 @@ void waypoint_remove_fromeditor(entity pl)
 {
 	entity e = navigation_findnearestwaypoint(pl, false);
 
-	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	int ctf_flags = havocbot_symmetry_origin_order;
 	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
 	int order = ctf_flags;
