@@ -1320,7 +1320,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 	}
 
 	// We'll consider only the best case
-	bestvalue = 99999999999;
+	bestvalue = FLOAT_MAX;
 	cp = NULL;
 	for(cp1 = ons_worldcplist; cp1; cp1 = cp1.ons_worldcpnext)
 	{
@@ -1346,23 +1346,21 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 		// Rate waypoints near it
 		found = false;
 		best = NULL;
-		bestvalue = 99999999999;
-		for(radius=0; radius<1000 && !found; radius+=500)
+		bestvalue = FLOAT_MAX;
+		for (radius = 0; radius < 1000 && !found; radius += 500)
 		{
-			for(wp=findradius(cp.origin,radius); wp; wp=wp.chain)
+			IL_EACH(g_waypoints, vdist(cp.origin - it.origin, <, radius),
 			{
-				if(!(wp.wpflags & WAYPOINTFLAG_GENERATED))
-				if(wp.classname=="waypoint")
-				if(checkpvs(wp.origin,cp))
+				if (!(it.wpflags & WAYPOINTFLAG_GENERATED) && checkpvs(it.origin, cp))
 				{
 					found = true;
-					if(wp.cnt<bestvalue)
+					if (it.cnt < bestvalue)
 					{
-						best = wp;
-						bestvalue = wp.cnt;
+						best = it;
+						bestvalue = it.cnt;
 					}
 				}
-			}
+			});
 		}
 
 		if(best)
@@ -1389,14 +1387,11 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 
 		// Look for auto generated waypoint
 		if (!bot_waypoints_for_items)
-		for (wp = findradius(cp.origin,100); wp; wp = wp.chain)
+		IL_EACH(g_waypoints, vdist(cp.origin - it.origin, <, 100),
 		{
-			if(wp.classname=="waypoint")
-			{
-				navigation_routerating(this, wp, ratingscale, 10000);
-				found = true;
-			}
-		}
+			navigation_routerating(this, it, ratingscale, 10000);
+			found = true;
+		});
 
 		// Nothing found, rate the controlpoint itself
 		if (!found)
@@ -1408,7 +1403,7 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 {
 	entity g, wp, bestwp;
 	bool found;
-	int best;
+	int bestvalue;
 
 	for(g = ons_worldgeneratorlist; g; g = g.ons_worldgeneratornext)
 	{
@@ -1419,21 +1414,20 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 		// Rate waypoints near it
 		found = false;
 		bestwp = NULL;
-		best = 99999999999;
+		bestvalue = FLOAT_MAX;
 
-		for(wp=findradius(g.origin,400); wp; wp=wp.chain)
+		IL_EACH(g_waypoints, vdist(g.origin - it.origin, <, 400),
 		{
-			if(wp.classname=="waypoint")
-			if(checkpvs(wp.origin,g))
+			if (checkpvs(it.origin, g))
 			{
 				found = true;
-				if(wp.cnt<best)
+				if (it.cnt < bestvalue)
 				{
-					bestwp = wp;
-					best = wp.cnt;
+					bestwp = it;
+					bestvalue = it.cnt;
 				}
 			}
-		}
+		});
 
 		if(bestwp)
 		{
