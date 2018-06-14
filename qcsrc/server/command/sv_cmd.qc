@@ -20,7 +20,8 @@
 
 #include "../bot/api.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
@@ -30,13 +31,6 @@
 #include <common/util.qh>
 
 #include <common/monsters/sv_monsters.qh>
-
-
-void PutObserverInServer(entity this);
-
-// =====================================================
-//  Server side game commands code, reworked by Samual
-// =====================================================
 
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think(entity this)
@@ -1577,10 +1571,13 @@ void GameCommand_trace(float request, float argc)
 					if (argc == 4 || argc == 5)
 					{
 						e = nextent(NULL);
+						int dphitcontentsmask_save = e.dphitcontentsmask;
+						e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 						if (tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), stof(argv(4)), MOVE_NORMAL))
 							LOG_INFO("can walk");
 						else
 							LOG_INFO("cannot walk");
+						e.dphitcontentsmask = dphitcontentsmask_save;
 						return;
 					}
 				}

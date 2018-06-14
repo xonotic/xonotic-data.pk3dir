@@ -30,9 +30,7 @@ void dumpnode(entity n)
 }
 
 #if DEBUGPATHING
-void pathlib_showpath(entity start);
-void pathlib_showpath2(entity path);
-void pathlib_showsquare(vector where,float goodsquare,float _lifetime);
+#include "debug.qh"
 #endif
 
 

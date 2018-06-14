@@ -3,9 +3,9 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
-#include "../resources.qh"
+#include <server/resources.qh>
 #include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
@@ -332,8 +332,6 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bo
 	return false;
 }
 
-void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
-
 /**
  * @param t defer thinking until time + t
  * @param func next think function
@@ -559,7 +557,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	// server framerate is very low and the weapon fire rate very high
 	for (int c = 0; c < W_TICSPERFRAME; ++c)
 	{
-		if (w != WEP_Null && !(actor.weapons & WepSet_FromWeapon(w)))
+		if (w != WEP_Null && !(STAT(WEAPONS, actor) & WepSet_FromWeapon(w)))
 		{
 			if (this.m_weapon == this.m_switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w = WEP_Null;
@@ -576,7 +574,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				key_pressed = false;
 
 			Weapon off = actor.offhand;
-			if (off && (!(actor.weapons & WEPSET(HOOK)) || off != OFFHAND_HOOK))
+			if (off && (!(STAT(WEAPONS, actor) & WEPSET(HOOK)) || off != OFFHAND_HOOK))
 			{
 				if (off.offhand_think) off.offhand_think(off, actor, key_pressed);
 			}

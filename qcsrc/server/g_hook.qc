@@ -110,7 +110,6 @@ void GrapplingHookReset(entity this)
 	RemoveHook(this);
 }
 
-void GrapplingHookThink(entity this);
 void GrapplingHook_Stop(entity this)
 {
 	Send_Effect(EFFECT_HOOK_IMPACT, this.origin, '0 0 0', 1);

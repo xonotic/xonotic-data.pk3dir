@@ -29,11 +29,8 @@ vector steerlib_push(entity this, vector point)
 **/
 vector steerlib_arrive(entity this, vector point, float maximal_distance)
 {
-    float distance;
-    vector direction;
-
-    distance = bound(0.001,vlen(this.origin - point),maximal_distance);
-    direction = normalize(point - this.origin);
+    float distance = bound(0.001,vlen(this.origin - point),maximal_distance);
+    vector direction = normalize(point - this.origin);
     return  direction * (distance / maximal_distance);
 }
 
@@ -42,25 +39,18 @@ vector steerlib_arrive(entity this, vector point, float maximal_distance)
 **/
 vector steerlib_attract(entity this, vector point, float maximal_distance)
 {
-    float distance;
-    vector direction;
-
-    distance = bound(0.001,vlen(this.origin - point),maximal_distance);
-    direction = normalize(point - this.origin);
+    float distance = bound(0.001,vlen(this.origin - point),maximal_distance);
+    vector direction = normalize(point - this.origin);
 
     return  direction * (1-(distance / maximal_distance));
 }
 
 vector steerlib_attract2(entity this, vector point, float min_influense,float max_distance,float max_influense)
 {
-    float distance;
-    vector direction;
-    float influense;
+    float distance  = bound(0.00001,vlen(this.origin - point),max_distance);
+    vector direction = normalize(point - this.origin);
 
-    distance  = bound(0.00001,vlen(this.origin - point),max_distance);
-    direction = normalize(point - this.origin);
-
-    influense = 1 - (distance / max_distance);
+    float influense = 1 - (distance / max_distance);
     influense = min_influense + (influense * (max_influense - min_influense));
 
     return  direction * influense;
@@ -447,176 +437,3 @@ vector steerlib_beamsteer(entity this, vector dir, float length, float step, flo
     return normalize(vr + vl);
 
 }
-
-
-//////////////////////////////////////////////
-//     Testting                             //
-// Everything below this point is a mess :D //
-//////////////////////////////////////////////
-//#define TLIBS_TETSLIBS
-#ifdef TLIBS_TETSLIBS
-void flocker_die(entity this)
-{
-	Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
-
-    this.owner.cnt += 1;
-    this.owner = NULL;
-
-    this.nextthink = time;
-    setthink(this, SUB_Remove);
-}
-
-
-void flocker_think(entity this)
-{
-    vector dodgemove,swarmmove;
-    vector reprellmove,wandermove,newmove;
-
-    this.angles_x = this.angles.x * -1;
-    makevectors(this.angles);
-    this.angles_x = this.angles.x * -1;
-
-    dodgemove   = steerlib_traceavoid(this, 0.35,1000);
-    swarmmove   = steerlib_flock(this, 500,75,700,500);
-    reprellmove = steerlib_repell(this, this.owner.enemy.origin+this.enemy.velocity,2000) * 700;
-
-    if(dodgemove == '0 0 0')
-    {
-        this.pos1 = steerlib_wander(this, 0.5,0.1,this.pos1);
-        wandermove  = this.pos1 * 50;
-    }
-    else
-        this.pos1 = normalize(this.velocity);
-
-    dodgemove = dodgemove * vlen(this.velocity) * 5;
-
-    newmove = swarmmove + reprellmove + wandermove + dodgemove;
-    this.velocity = movelib_inertmove_byspeed(this, newmove,300,0.2,0.9);
-    //this.velocity  = movelib_inertmove(this, dodgemove,0.65);
-
-    this.velocity = movelib_dragvec(this, 0.01,0.6);
-
-    this.angles = vectoangles(this.velocity);
-
-    if(this.health <= 0)
-        flocker_die(this);
-    else
-        this.nextthink = time + 0.1;
-}
-
-MODEL(FLOCKER, "models/turrets/rocket.md3");
-
-void spawn_flocker(entity this)
-{
-    entity flocker = new(flocker);
-
-    setorigin(flocker, this.origin + '0 0 32');
-    setmodel (flocker, MDL_FLOCKER);
-    setsize (flocker, '-3 -3 -3', '3 3 3');
-
-    flocker.flock_id   = this.flock_id;
-    flocker.owner      = this;
-    setthink(flocker, flocker_think);
-    flocker.nextthink  = time + random() * 5;
-    PROJECTILE_MAKETRIGGER(flocker);
-    set_movetype(flocker, MOVETYPE_BOUNCEMISSILE);
-    flocker.effects    = EF_LOWPRECISION;
-    flocker.velocity   = randomvec() * 300;
-    flocker.angles     = vectoangles(flocker.velocity);
-    flocker.health     = 10;
-    flocker.pos1      = normalize(flocker.velocity + randomvec() * 0.1);
-
-    IL_PUSH(g_flockers, flocker);
-
-    this.cnt = this.cnt -1;
-
-}
-
-void flockerspawn_think(entity this)
-{
-    if(this.cnt > 0)
-        spawn_flocker(this);
-
-    this.nextthink = time + this.delay;
-
-}
-
-void flocker_hunter_think(entity this)
-{
-    vector dodgemove,attractmove,newmove;
-    entity ee;
-
-    this.angles_x = this.angles.x * -1;
-    makevectors(this.angles);
-    this.angles_x = this.angles.x * -1;
-
-    if(this.enemy)
-    if(vdist(this.enemy.origin - this.origin, <, 64))
-    {
-        ee = this.enemy;
-        ee.health = -1;
-        this.enemy = NULL;
-
-    }
-
-    if(!this.enemy)
-    {
-        IL_EACH(g_flockers, it.flock_id == this.flock_id,
-        {
-            if(it == this.owner || it == ee)
-                continue;
-
-            if(!this.enemy || vlen2(this.origin - it.origin) > vlen2(this.origin - this.enemy.origin))
-                this.enemy = it;
-        });
-    }
-
-    if(this.enemy)
-        attractmove = steerlib_attract(this, this.enemy.origin+this.enemy.velocity * 0.1,5000) * 1250;
-    else
-        attractmove = normalize(this.velocity) * 200;
-
-    dodgemove = steerlib_traceavoid(this, 0.35,1500) * vlen(this.velocity);
-
-    newmove = dodgemove + attractmove;
-    this.velocity = movelib_inertmove_byspeed(this, newmove,1250,0.3,0.7);
-    this.velocity = movelib_dragvec(this, 0.01,0.5);
-
-    this.angles = vectoangles(this.velocity);
-    this.nextthink = time + 0.1;
-}
-
-
-float globflockcnt;
-spawnfunc(flockerspawn)
-{
-    ++globflockcnt;
-
-    if(!this.cnt)      this.cnt = 20;
-    if(!this.delay)    this.delay = 0.25;
-    if(!this.flock_id) this.flock_id = globflockcnt;
-
-    setthink(this, flockerspawn_think);
-    this.nextthink = time + 0.25;
-
-    this.enemy = new(FLock Hunter);
-
-    setmodel(this.enemy, MDL_FLOCKER);
-    setorigin(this.enemy, this.origin + '0 0 768' + (randomvec() * 128));
-
-    this.enemy.scale     = 3;
-    this.enemy.effects   = EF_LOWPRECISION;
-    set_movetype(this.enemy, MOVETYPE_BOUNCEMISSILE);
-    PROJECTILE_MAKETRIGGER(this.enemy);
-    setthink(this.enemy, flocker_hunter_think);
-    this.enemy.nextthink = time + 10;
-    this.enemy.flock_id  = this.flock_id;
-    this.enemy.owner     = this;
-
-    IL_PUSH(g_flockers, this);
-    IL_PUSH(g_flockers, this.enemy);
-}
-#endif
-
-
-

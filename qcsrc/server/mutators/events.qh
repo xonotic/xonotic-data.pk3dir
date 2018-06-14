@@ -27,6 +27,12 @@ MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
     /**/
 MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
 
+/** returns true if client should be put as player on connection */
+#define EV_AutoJoinOnConnection(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(AutoJoinOnConnection, EV_AutoJoinOnConnection);
+
 /** called when player spawns to determine whether to give them random start weapons. Return true to forbid giving them. */
 #define EV_ForbidRandomStartWeapons(i, o) \
 	/** player */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -123,6 +129,8 @@ MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
     /** target     */ i(entity, MUTATOR_ARGV_1_entity) \
     /** frag score */ i(float, MUTATOR_ARGV_2_float) \
     /**            */ o(float, MUTATOR_ARGV_2_float) \
+    /** deathtype  */ i(float, MUTATOR_ARGV_3_float) \
+    /** wep entity */ i(entity, MUTATOR_ARGV_4_entity) \
     /**/
 MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 
@@ -241,7 +249,7 @@ MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
 MUTATOR_HOOKABLE(FilterItemDefinition, EV_FilterItemDefinition);
 
 /**
- * checks if the current item may be spawned (.items and .weapons may be read and written to, as well as the ammo_ fields)
+ * checks if the current item may be spawned (.items may be read and written to, as well as the ammo_ fields)
  * return error to request removal
  */
 #define EV_FilterItem(i, o) \

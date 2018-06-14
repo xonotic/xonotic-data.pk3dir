@@ -190,8 +190,6 @@ void FixClientCvars(entity e);
 // WEAPONTODO: remove this
 //WepSet weaponsInMap;
 
-#define weapons _STAT(WEAPONS)
-
 .float respawn_countdown; // next number to count
 
 float bot_waypoints_for_items;
@@ -278,9 +276,6 @@ void W_Porto_Remove (entity p);
 
 // Nexball
 float g_nexball_meter_period;
-
-void SUB_DontUseTargets(entity this, entity actor, entity trigger);
-void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 .void(entity this) reset; // if set, an entity is reset using this
 .void(entity this) reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)

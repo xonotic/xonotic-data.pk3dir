@@ -175,8 +175,6 @@ vector hud_shift;
 vector hud_shift_current = '0 0 0';
 vector hud_scale_center;
 
-float stringwidth_colors(string s, vector theSize);
-float stringwidth_nocolors(string s, vector theSize);
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
 
 .int panel_showflags;

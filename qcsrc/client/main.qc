@@ -8,13 +8,14 @@
 #include <common/effects/all.qh>
 #include <common/effects/all.inc>
 #include "hud/_mod.qh"
+#include "commands/cl_cmd.qh"
 #include "mapvoting.qh"
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
+#include "view.qh"
 #include <common/t_items.qh>
-#include "wall.qh"
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
@@ -24,7 +25,7 @@
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
 #include <common/scores.qh>
-#include <common/triggers/include.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -91,7 +92,6 @@ void LoadMenuSkinValues()
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void ConsoleCommand_macro_init();
 void CSQC_Init()
 {
 	prvm_language = strzone(cvar_string("prvm_language"));
@@ -343,7 +343,6 @@ void Playerchecker_Think(entity this)
 	this.nextthink = time + 0.2;
 }
 
-void TrueAim_Init();
 void PostInit()
 {
 	entity playerchecker = new_pure(playerchecker);
@@ -388,8 +387,6 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-
-void Ent_Remove(entity this);
 
 void Ent_RemovePlayerScore(entity this)
 {
@@ -947,7 +944,6 @@ void Fog_Force()
 		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
 }
 
-void Gamemode_Init();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
@@ -1144,6 +1140,9 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			strcpy(race_speedaward_alltimebest_holder, ReadString());
 			strcpy(race_speedaward_alltimebest_unit, GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
+		case RACE_NET_RANKINGS_CNT:
+			RANKINGS_DISPLAY_CNT = ReadByte();
+			break;
 		case RACE_NET_SERVER_RANKINGS:
 			float prevpos, del;
             int pos = ReadShort();
@@ -1153,13 +1152,14 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			// move other rankings out of the way
             int i;
 			if (prevpos) {
-				for (i=prevpos-1;i>pos-1;--i) {
+				int m = min(prevpos, RANKINGS_DISPLAY_CNT);
+				for (i=m-1; i>pos-1; --i) {
 					grecordtime[i] = grecordtime[i-1];
 					strcpy(grecordholder[i], grecordholder[i-1]);
 				}
 			} else if (del) { // a record has been deleted by the admin
-				for (i=pos-1; i<= RANKINGS_CNT-1; ++i) {
-					if (i == RANKINGS_CNT-1) { // clear out last record
+				for (i=pos-1; i<= RANKINGS_DISPLAY_CNT-1; ++i) {
+					if (i == RANKINGS_DISPLAY_CNT-1) { // clear out last record
 						grecordtime[i] = 0;
 						strfree(grecordholder[i]);
 					}
@@ -1169,10 +1169,16 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 					}
 				}
 			} else { // player has no ranked record yet
-				for (i=RANKINGS_CNT-1;i>pos-1;--i) {
+				for (i=RANKINGS_DISPLAY_CNT-1;i>pos-1;--i) {
 					grecordtime[i] = grecordtime[i-1];
 					strcpy(grecordholder[i], grecordholder[i-1]);
 				}
+			}
+
+			if (grecordtime[RANKINGS_DISPLAY_CNT]) {
+				// kick off the player who fell from the last displayed position
+				grecordtime[RANKINGS_DISPLAY_CNT] = 0;
+				strfree(grecordholder[RANKINGS_DISPLAY_CNT]);
 			}
 
 			// store new ranking

@@ -2,6 +2,7 @@
 
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
+#include <client/view.qh>
 #include "panel/scoreboard.qh"
 #include "hud_config.qh"
 #include "../mapvoting.qh"
@@ -13,10 +14,12 @@
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/vehicles/all.qh>
+#include <common/vehicles/vehicle/bumblebee.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
 #include <lib/csqcmodel/cl_player.qh>
-#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
+#include <lib/csqcmodel/cl_model.qh>
+#include <common/gamemodes/_mod.qh>
 
 
 /*
@@ -395,8 +398,6 @@ Main HUD system
 ==================
 */
 
-void CSQC_BUMBLE_GUN_HUD();
-
 void HUD_Vehicle()
 {
 	if(autocvar__hud_configure) return;
@@ -485,8 +486,6 @@ bool Hud_Shake_Update()
 	return true;
 }
 
-entity CSQCModel_server2csqc(int i);
-void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {
 	vector ofs = '0 0 0';

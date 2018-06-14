@@ -5,4 +5,10 @@
 float turret_tag_fire_update(entity this);
 void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax, float bforce, float f_dmg, float f_velfactor, float deathtype);
 
+#ifdef TURRET_DEBUG
+void mark_error(vector where,float lifetime);
+void mark_info(vector where,float lifetime);
+entity mark_misc(vector where,float lifetime);
+#endif
+
 #endif

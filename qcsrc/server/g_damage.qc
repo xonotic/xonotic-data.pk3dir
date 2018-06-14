@@ -3,7 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
@@ -13,6 +13,8 @@
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include "../common/mutators/mutator/instagib/sv_instagib.qh"
+#include "../common/mutators/mutator/buffs/buffs.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -23,6 +25,7 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
+#include <common/gamemodes/rules.qh>
 #include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
@@ -60,51 +63,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity we
 
 	GameRules_scoring_add(targ, DEATHS, 1);
 
-	if(targ != attacker) // not for suicides
-	if(g_weaponarena_random)
-	{
-		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
-		Weapon culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit) culprit = attacker.(weaponentity).m_weapon;
-		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = attacker.(weaponentity).m_weapon;
-
-		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
-		{
-			// no exchange
-		}
-		else
-		{
-			if(!GiveFrags_randomweapons)
-			{
-				GiveFrags_randomweapons = new(GiveFrags_randomweapons);
-			}
-
-			if(warmup_stage)
-				GiveFrags_randomweapons.weapons = WARMUP_START_WEAPONS;
-			else
-				GiveFrags_randomweapons.weapons = start_weapons;
-
-			// all others (including the culprit): remove
-			GiveFrags_randomweapons.weapons &= ~attacker.weapons;
-			GiveFrags_randomweapons.weapons &= ~(culprit.m_wepset);
-
-			// among the remaining ones, choose one by random
-			W_RandomWeapons(GiveFrags_randomweapons, 1);
-
-			if(GiveFrags_randomweapons.weapons)
-			{
-				attacker.weapons |= GiveFrags_randomweapons.weapons;
-				attacker.weapons &= ~(culprit.m_wepset);
-			}
-		}
-
-		// after a frag, choose another random weapon set
-		if (!(attacker.weapons & WepSet_FromWeapon(attacker.(weaponentity).m_weapon)))
-			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker, weaponentity), weaponentity);
-	}
-
 	// FIXME fix the mess this is (we have REAL points now!)
-	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f, deathtype, attacker.(weaponentity)))
 		f = M_ARGV(2, float);
 
 	attacker.totalfrags += f;
@@ -262,7 +222,6 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 	return MUTATOR_CALLHOOK(FragCenterMessage, attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target);
 }
 
-entity buff_FirstFromFlags(int _buffs);
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity)
 {
 	// Sanity check
@@ -779,7 +738,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			}
 		}
 
-		if(!autocvar_g_instagib)
+		if(!MUTATOR_IS_ENABLED(mutator_instagib))
 		{
 			// apply strength multiplier
 			if (attacker.items & ITEM_Strength.m_itemid)

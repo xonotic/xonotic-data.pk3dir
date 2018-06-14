@@ -6,8 +6,8 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
-#include "../common/triggers/teleporters.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/teleporters.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/util.qh"
 #include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
@@ -323,7 +323,6 @@ void Portal_Touch(entity this, entity toucher)
 				toucher.effects += EF_BLUE - EF_RED;
 }
 
-void Portal_Think(entity this);
 void Portal_MakeBrokenPortal(entity portal)
 {
 	portal.skin = 2;

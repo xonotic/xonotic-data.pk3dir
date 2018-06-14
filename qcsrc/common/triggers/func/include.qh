@@ -1,5 +1,0 @@
-#pragma once
-
-#include "door.qh"
-#include "ladder.qh"
-#include "train.qh"

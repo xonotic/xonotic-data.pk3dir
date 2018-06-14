@@ -22,7 +22,7 @@ SOUND(ArmorSmall, Item_Sound("armor1"));
 PROPERTY(float, g_pickup_armorsmall_anyway);
 PROPERTY(int, g_pickup_armorsmall);
 PROPERTY(int, g_pickup_armorsmall_max);
-void item_armorsmall_init(entity item)
+void item_armorsmall_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorsmall_max;
@@ -34,7 +34,7 @@ void item_armorsmall_init(entity item)
 REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_canonical_spawnfunc = "item_armor_small";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_ArmorSmall_ITEM;
     this.m_sound                =   SND_ArmorSmall;
 #endif
@@ -60,7 +60,7 @@ SOUND(ArmorMedium, Item_Sound("armor10"));
 PROPERTY(float, g_pickup_armormedium_anyway);
 PROPERTY(int, g_pickup_armormedium);
 PROPERTY(int, g_pickup_armormedium_max);
-void item_armormedium_init(entity item)
+void item_armormedium_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormedium_max;
@@ -72,7 +72,7 @@ void item_armormedium_init(entity item)
 REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_canonical_spawnfunc = "item_armor_medium";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_ArmorMedium_ITEM;
     this.m_sound                =   SND_ArmorMedium;
 #endif
@@ -98,7 +98,7 @@ SOUND(ArmorBig, Item_Sound("armor17_5"));
 PROPERTY(float, g_pickup_armorbig_anyway);
 PROPERTY(int, g_pickup_armorbig);
 PROPERTY(int, g_pickup_armorbig_max);
-void item_armorbig_init(entity item)
+void item_armorbig_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorbig_max;
@@ -110,7 +110,7 @@ void item_armorbig_init(entity item)
 REGISTER_ITEM(ArmorBig, Armor) {
     this.m_canonical_spawnfunc = "item_armor_big";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_ArmorBig_ITEM;
     this.m_sound                =   SND_ArmorBig;
 #endif
@@ -138,7 +138,7 @@ SOUND(ArmorMega, Item_Sound("armor25"));
 PROPERTY(float, g_pickup_armormega_anyway);
 PROPERTY(int, g_pickup_armormega);
 PROPERTY(int, g_pickup_armormega_max);
-void item_armormega_init(entity item)
+void item_armormega_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormega_max;
@@ -150,7 +150,7 @@ void item_armormega_init(entity item)
 REGISTER_ITEM(ArmorMega, Armor) {
     this.m_canonical_spawnfunc = "item_armor_mega";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_OVERKILL;
+    this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_ArmorMega_ITEM;
     this.m_sound                =   SND_ArmorMega;
 #endif

@@ -17,7 +17,7 @@ const int ewheel_anim_bck_fast = 4;
 void ewheel_move_path(entity this)
 {
     // Are we close enough to a path node to switch to the next?
-    if(vdist(this.origin - this.pathcurrent.origin, <, 64))
+    if(turret_closetotarget(this, this.pathcurrent.origin))
     {
 #ifdef EWHEEL_FANCYPATH
         if (this.pathcurrent.path_next == NULL)
@@ -49,7 +49,6 @@ void ewheel_move_path(entity this)
 
     if (this.pathcurrent)
     {
-
         this.moveto = this.pathcurrent.origin;
         this.steerto = steerlib_attract2(this, this.moveto, 0.5, 500, 0.95);
 

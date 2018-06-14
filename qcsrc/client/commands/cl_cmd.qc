@@ -10,11 +10,15 @@
 #include "../autocvars.qh"
 #include "../defs.qh"
 #include <client/hud/_mod.qh>
+#include <client/hud/panel/quickmenu.qh>
+#include <client/hud/panel/radar.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
 
-#include "../mutators/events.qh"
+#include <client/mutators/_mod.qh>
+
+#include <common/minigames/cl_minigames_hud.qh>
 
 #include <common/mapinfo.qh>
 
@@ -248,16 +252,6 @@ void LocalCommand_handlevote(int request, int argc)
 		}
 	}
 }
-
-bool QuickMenu_IsOpened();
-void QuickMenu_Close();
-bool QuickMenu_Open(string mode, string submenu, string file);
-
-bool HUD_MinigameMenu_IsOpened();
-void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger);
-void HUD_MinigameMenu_Open();
-
-void HUD_Radar_Show_Maximized(bool doshow, bool clickable);
 
 void LocalCommand_hud(int request, int argc)
 {
