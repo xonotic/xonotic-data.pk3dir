@@ -567,6 +567,9 @@ void waypoint_think(entity this)
 
 	bot_calculate_stepheightvec();
 
+	int dphitcontentsmask_save = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
@@ -619,7 +622,7 @@ void waypoint_think(entity this)
 				relink_walkculled += 0.5;
 			else
 			{
-				if (tracewalk(it, ev, PL_MIN_CONST, PL_MAX_CONST, sv2, sv2_height, MOVE_NOMONSTERS))
+				if (tracewalk(this, ev, PL_MIN_CONST, PL_MAX_CONST, sv2, sv2_height, MOVE_NOMONSTERS))
 					waypoint_addlink(it, this);
 				else
 					relink_walkculled += 0.5;
@@ -628,6 +631,7 @@ void waypoint_think(entity this)
 	});
 	navigation_testtracewalk = 0;
 	this.wplinked = true;
+	this.dphitcontentsmask = dphitcontentsmask_save;
 }
 
 void waypoint_clearlinks(entity wp)
