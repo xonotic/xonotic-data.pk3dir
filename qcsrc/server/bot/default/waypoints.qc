@@ -249,12 +249,9 @@ void waypoint_spawn_fromeditor(entity pl)
 	int ctf_flags = havocbot_symmetry_origin_order;
 	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
-	int order = ctf_flags;
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
-	{
-		order = autocvar_g_waypointeditor_symmetrical_order;
-		ctf_flags = order;
-	}
+		ctf_flags = autocvar_g_waypointeditor_symmetrical_order;
+	int wp_num = ctf_flags;
 
 	if(!PHYS_INPUT_BUTTON_CROUCH(pl))
 	{
@@ -285,8 +282,8 @@ void waypoint_spawn_fromeditor(entity pl)
 		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
 		if (vdist(org - pl.origin, >, 32))
 		{
-			if(order > 2)
-				order--;
+			if(wp_num > 2)
+				wp_num--;
 			else
 				sym = false;
 			goto add_wp;
@@ -312,12 +309,9 @@ void waypoint_remove_fromeditor(entity pl)
 	int ctf_flags = havocbot_symmetry_origin_order;
 	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
-	int order = ctf_flags;
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
-	{
-		order = autocvar_g_waypointeditor_symmetrical_order;
-		ctf_flags = order;
-	}
+		ctf_flags = autocvar_g_waypointeditor_symmetrical_order;
+	int wp_num = ctf_flags;
 
 	LABEL(remove_wp);
 	if (!e) return;
@@ -348,8 +342,8 @@ void waypoint_remove_fromeditor(entity pl)
 	if (sym && wp_sym)
 	{
 		e = wp_sym;
-		if(order > 2)
-			order--;
+		if(wp_num > 2)
+			wp_num--;
 		else
 			sym = false;
 		goto remove_wp;
