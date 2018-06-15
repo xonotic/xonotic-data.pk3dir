@@ -28,11 +28,11 @@ REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), "waypoint_flag", '0.8 0.8 0'
 REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), "waypoint_flag", '0.8 0.8 0', 1);
 REGISTER_WAYPOINT(FlagReturn, _("Return flag here"), "", '0 0.8 0.8', 1);
 
-REGISTER_WAYPOINT(DomNeut, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
-REGISTER_WAYPOINT(DomRed, _("Control point"), "dom_icon_red-highlighted", '0 1 1', 1);
-REGISTER_WAYPOINT(DomBlue, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
-REGISTER_WAYPOINT(DomYellow, _("Control point"), "dom_icon_yellow-highlighted", '0 1 1', 1);
-REGISTER_WAYPOINT(DomPink, _("Control point"), "dom_icon_pink-highlighted", '0 1 1', 1);
+REGISTER_WAYPOINT(DomNeut, _("Control point"), "waypoint_dom_team2", '0 1 1', 1);
+REGISTER_WAYPOINT(DomRed, _("Control point"), "waypoint_dom_team1", '0 1 1', 1);
+REGISTER_WAYPOINT(DomBlue, _("Control point"), "waypoint_dom_team2", '0 1 1', 1);
+REGISTER_WAYPOINT(DomYellow, _("Control point"), "waypoint_dom_team3", '0 1 1', 1);
+REGISTER_WAYPOINT(DomPink, _("Control point"), "waypoint_dom_team4", '0 1 1', 1);
 
 REGISTER_WAYPOINT(KeyDropped, _("Dropped key"), "kh_dropped", '0 1 1', 1);
 REGISTER_WAYPOINT(KeyCarrierFriend, _("Key carrier"), "", '0 1 0', 1);
