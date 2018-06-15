@@ -34,13 +34,13 @@ REGISTER_WAYPOINT(DomBlue, _("Control point"), "waypoint_dom_team2", '0 1 1', 1)
 REGISTER_WAYPOINT(DomYellow, _("Control point"), "waypoint_dom_team3", '0 1 1', 1);
 REGISTER_WAYPOINT(DomPink, _("Control point"), "waypoint_dom_team4", '0 1 1', 1);
 
-REGISTER_WAYPOINT(KeyDropped, _("Dropped key"), "kh_dropped", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyDropped, _("Dropped key"), "waypoint_key_dropped", '0 1 1', 1);
 REGISTER_WAYPOINT(KeyCarrierFriend, _("Key carrier"), "", '0 1 0', 1);
 REGISTER_WAYPOINT(KeyCarrierFinish, _("Run here"), "", '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierRed, _("Key carrier"), "kh_red_carrying", '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierBlue, _("Key carrier"), "kh_blue_carrying", '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierYellow, _("Key carrier"), "kh_yellow_carrying", '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierPink, _("Key carrier"), "kh_pink_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierRed, _("Key carrier"), "waypoint_key_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierBlue, _("Key carrier"), "waypoint_key_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierYellow, _("Key carrier"), "waypoint_key_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierPink, _("Key carrier"), "waypoint_key_carrying", '0 1 1', 1);
 
 REGISTER_WAYPOINT(KaBall, _("Ball"), "notify_ballpickedup", '0 1 1', 1);
 REGISTER_WAYPOINT(KaBallCarrier, _("Ball carrier"), "keepawayball_carrying", '1 0 0', 1);
