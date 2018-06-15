@@ -14,6 +14,7 @@ CLASS(Shotgun, Weapon)
 /* crosshair */ ATTRIB(Shotgun, w_crosshair, string, "gfx/crosshairshotgun");
 /* crosshair */ ATTRIB(Shotgun, w_crosshair_size, float, 0.65);
 /* wepimg    */ ATTRIB(Shotgun, model2, string, "weaponshotgun");
+/* wp_icon   */ ATTRIB(Shotgun, m_waypoint_icon, string, "waypoint_weapon_shotgun");
 /* refname   */ ATTRIB(Shotgun, netname, string, "shotgun");
 /* wepname   */ ATTRIB(Shotgun, m_name, string, _("Shotgun"));
 

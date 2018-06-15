@@ -14,6 +14,7 @@ CLASS(Hagar, Weapon)
 /* crosshair */ ATTRIB(Hagar, w_crosshair, string, "gfx/crosshairhagar");
 /* crosshair */ ATTRIB(Hagar, w_crosshair_size, float, 0.8);
 /* wepimg    */ ATTRIB(Hagar, model2, string, "weaponhagar");
+/* wp_icon   */ ATTRIB(Hagar, m_waypoint_icon, string, "waypoint_weapon_hagar");
 /* refname   */ ATTRIB(Hagar, netname, string, "hagar");
 /* wepname   */ ATTRIB(Hagar, m_name, string, _("Hagar"));
 

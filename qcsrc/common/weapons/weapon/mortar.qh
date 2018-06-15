@@ -14,6 +14,7 @@ CLASS(Mortar, Weapon)
 /* crosshair */ ATTRIB(Mortar, w_crosshair, string, "gfx/crosshairgrenadelauncher");
 /* crosshair */ ATTRIB(Mortar, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Mortar, model2, string, "weapongrenadelauncher");
+/* wp_icon   */ ATTRIB(Mortar, m_waypoint_icon, string, "waypoint_weapon_mortar");
 /* refname   */ ATTRIB(Mortar, netname, string, "mortar");
 /* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
 

@@ -14,6 +14,7 @@ CLASS(MineLayer, Weapon)
 /* crosshair */ ATTRIB(MineLayer, w_crosshair, string, "gfx/crosshairminelayer");
 /* crosshair */ ATTRIB(MineLayer, w_crosshair_size, float, 0.9);
 /* wepimg    */ ATTRIB(MineLayer, model2, string, "weaponminelayer");
+/* wp_icon   */ ATTRIB(MineLayer, m_waypoint_icon, string, "waypoint_weapon_minelayer");
 /* refname   */ ATTRIB(MineLayer, netname, string, "minelayer");
 /* wepname   */ ATTRIB(MineLayer, m_name, string, _("Mine Layer"));
 

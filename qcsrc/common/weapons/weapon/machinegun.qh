@@ -14,6 +14,7 @@ CLASS(MachineGun, Weapon)
 /* crosshair */ ATTRIB(MachineGun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(MachineGun, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponuzi");
+/* wp_icon   */ ATTRIB(MachineGun, m_waypoint_icon, string, "waypoint_weapon_machinegun");
 /* refname   */ ATTRIB(MachineGun, netname, string, "machinegun");
 /* wepname   */ ATTRIB(MachineGun, m_name, string, _("MachineGun"));
 
