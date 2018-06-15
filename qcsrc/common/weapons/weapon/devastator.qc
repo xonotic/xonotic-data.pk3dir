@@ -302,7 +302,7 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode_think);
 }
 
-void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
+void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
@@ -342,6 +342,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
+	missile.detonate_later = (fire & 2); // allow instant detonation
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
@@ -358,6 +359,11 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+
+	if (time >= missile.nextthink)
+	{
+		getthink(missile)(missile);
+	}
 }
 
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
@@ -449,7 +455,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
             if(actor.(weaponentity).rl_release || WEP_CVAR(devastator, guidestop))
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(devastator, refire)))
             {
-                W_Devastator_Attack(thiswep, actor, weaponentity);
+                W_Devastator_Attack(thiswep, actor, weaponentity, fire);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
                 actor.(weaponentity).rl_release = 0;
             }
