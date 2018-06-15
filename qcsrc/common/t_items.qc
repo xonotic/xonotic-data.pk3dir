@@ -824,7 +824,8 @@ float Item_GiveTo(entity item, entity player)
 	{
 		pickedup = true;
 		player.items |= its;
-		Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_ITEM_WEAPON_GOT, item.netname);
+		// TODO: we probably want to show a message in the console, but not this one!
+		//Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_ITEM_WEAPON_GOT, item.netname);
 	}
 
 	if (item.strength_finished)
