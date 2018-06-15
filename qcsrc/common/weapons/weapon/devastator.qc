@@ -334,7 +334,12 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	missile.projectiledeathtype = WEP_DEVASTATOR.m_id;
 	setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
-	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+    bool rocketFlying = boolean(fire & 2);
+    if (rocketFlying) {
+	    setorigin(missile, w_shotorg);
+    } else {
+	    setorigin(missile, w_shotorg - (v_forward * 3)); // move it back so it hits the wall at the right point
+	}
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR(devastator, speedstart), 0);
 	missile.angles = vectoangles(missile.velocity);
 
@@ -342,7 +347,6 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
-	missile.detonate_later = (fire & 2); // allow instant detonation
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
@@ -360,9 +364,8 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
-	if (time >= missile.nextthink)
-	{
-		getthink(missile)(missile);
+	if (rocketFlying) {
+        W_Devastator_RemoteExplode(missile, weaponentity);
 	}
 }
 
