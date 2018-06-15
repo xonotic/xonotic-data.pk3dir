@@ -87,7 +87,7 @@ string XonoticMutatorsDialog_toString(entity me)
 	if(cvar("g_bloodloss") > 0)
 		s = cons_mid(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
-		s = cons_mid(s, ", ", _("Jet pack"));
+		s = cons_mid(s, ", ", _("Jetpack"));
 	if(cvar("g_buffs") > 0)
 		s = cons_mid(s, ", ", _("Buffs"));
 	if(cvar("g_overkill"))
@@ -209,7 +209,7 @@ void XonoticMutatorsDialog_fill(entity me)
 			_("Players spawn with the grappling hook")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_jetpack", _("Jet pack"),
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_jetpack", _("Jetpack"),
 			_("Players spawn with the jetpack")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
