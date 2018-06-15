@@ -205,6 +205,16 @@ void func_breakable_restore(entity this, entity actor, entity trigger)
 
 void func_breakable_restore_self(entity this)
 {
+	// TODO: use a clipgroup for all func_breakables so they don't collide with eachother
+	float oldhit = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_BODY; // we really only care about when players are standing inside, obey the mapper in other cases!
+	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NORMAL, this);
+	this.dphitcontentsmask = oldhit;
+	if(trace_startsolid || trace_fraction < 1)
+	{
+		this.nextthink = time + 5; // retry every 5 seconds until the area becomes clear
+		return;
+	}
 	func_breakable_restore(this, NULL, NULL);
 }
 
