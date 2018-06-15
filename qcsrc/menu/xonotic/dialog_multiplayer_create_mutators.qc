@@ -252,14 +252,12 @@ void XonoticMutatorsDialog_fill(entity me)
 		w = Weapons_from(i);
 		if(w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
-		if((j & 1) == 0)
-			me.TDempty(me, 0.2);
-		else
+		if ((j % 3) == 0)
 		{
 			me.TR(me);
 			me.TDempty(me, 0.4);
 		}
-		me.TD(me, 1, 1.7, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.m_name)));
+		me.TD(me, 1, 1.2, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.m_name)));
 			setDependentWeird(e, checkCompatibility_weaponarena_weapon);
 		++j;
 	}
