@@ -92,8 +92,6 @@ const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
-void ShuffleMaplist();
-
 void SetDefaultAlpha()
 {
 	if (!MUTATOR_CALLHOOK(SetDefaultAlpha))
@@ -362,6 +360,7 @@ void cvar_changes_init()
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
+		BADPREFIX("g_hats_");
 		BADPREFIX("g_maplist_");
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
@@ -631,10 +630,6 @@ void InitGameplayMode()
 
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
-void Nagger_Init();
-void ClientInit_Spawn();
-void WeaponStats_Init();
-void WeaponStats_Shutdown();
 spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
@@ -1108,7 +1103,7 @@ void Map_Goto(float reinit)
 // return codes of map selectors:
 //   -1 = temporary failure (that is, try some method that is guaranteed to succeed)
 //   -2 = permanent failure
-float() MaplistMethod_Iterate = // usual method
+float MaplistMethod_Iterate() // usual method
 {
 	float pass, i;
 
@@ -1127,7 +1122,7 @@ float() MaplistMethod_Iterate = // usual method
 	return -1;
 }
 
-float() MaplistMethod_Repeat = // fallback method
+float MaplistMethod_Repeat() // fallback method
 {
 	LOG_TRACE("Trying MaplistMethod_Repeat");
 
@@ -1136,7 +1131,7 @@ float() MaplistMethod_Repeat = // fallback method
 	return -2;
 }
 
-float() MaplistMethod_Random = // random map selection
+float MaplistMethod_Random() // random map selection
 {
 	float i, imax;
 
@@ -1154,7 +1149,7 @@ float() MaplistMethod_Random = // random map selection
 	return -1;
 }
 
-float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
+float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 // the exponent sets a bias on the map selection:
 // the higher the exponent, the less likely "shortly repeated" same maps are
 {
@@ -2170,7 +2165,6 @@ float RedirectionThink()
 	return true;
 }
 
-void TargetMusic_RestoreGame();
 void RestoreGame()
 {
 	// Loaded from a save game

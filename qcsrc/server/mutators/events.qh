@@ -27,6 +27,12 @@ MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
     /**/
 MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
 
+/** returns true if client should be put as player on connection */
+#define EV_AutoJoinOnConnection(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(AutoJoinOnConnection, EV_AutoJoinOnConnection);
+
 /** called when player spawns to determine whether to give them random start weapons. Return true to forbid giving them. */
 #define EV_ForbidRandomStartWeapons(i, o) \
 	/** player */ i(entity, MUTATOR_ARGV_0_entity) \

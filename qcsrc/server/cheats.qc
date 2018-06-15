@@ -6,6 +6,7 @@
 #include <server/resources.qh>
 
 #include "g_damage.qh"
+#include "player.qh"
 #include "race.qh"
 #include "../common/mapobjects/teleporters.qh"
 
@@ -32,8 +33,6 @@
 
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/util_server.qh"
-
-void CopyBody(entity this, float keepvelocity);
 
 #ifdef NOCHEATS
 
@@ -292,7 +291,6 @@ float CheatImpulse(entity this, int imp)
 	END_CHEAT_FUNCTION();
 }
 
-void DragBox_Think(entity this);
 float drag_lastcnt;
 float CheatCommand(entity this, int argc)
 {
@@ -712,18 +710,6 @@ float CheatCommand(entity this, int argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity this, float force_allow_pick, float ischeat);
-void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
-void Drag_Finish(entity dragger);
-float Drag_IsDraggable(entity draggee);
-float Drag_MayChangeAngles(entity draggee);
-void Drag_MoveForward(entity dragger);
-void Drag_SetSpeed(entity dragger, float s);
-void Drag_MoveBackward(entity dragger);
-void Drag_Update(entity dragger);
-float Drag_CanDrag(entity dragger);
-float Drag_IsDragging(entity dragger);
-void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
 float CheatFrame(entity this)

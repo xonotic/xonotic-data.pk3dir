@@ -107,6 +107,7 @@ bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
 float vehicle_altitude(entity this, float amax);
+void vehicles_enter(entity pl, entity veh);
 
 IntrusiveList g_vehicle_returners;
 STATIC_INIT(g_vehicle_returners) { g_vehicle_returners = IL_NEW(); }

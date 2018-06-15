@@ -57,8 +57,6 @@ void QuickMenu_Page_ClearEntry(int i)
 	QuickMenu_Page_Command_Type[i] = 0;
 }
 
-float QuickMenu_Page_Load(string target_submenu, float new_page);
-void QuickMenu_Default(string submenu);
 bool QuickMenu_Open(string mode, string submenu, string file)
 {
 	int fh = -1;
@@ -225,7 +223,6 @@ bool QuickMenu_IsOpened()
 	return (QuickMenu_Page_Entries > 0);
 }
 
-void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me);
 bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, bool without_me)
 {
     TC(int, teamplayers); TC(bool, without_me);

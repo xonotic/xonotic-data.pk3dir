@@ -4,10 +4,9 @@
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
 #include <server/resources.qh>
+#include <common/t_items.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/weapons/_all.qh>
-
-spawnfunc(target_items);
 
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons

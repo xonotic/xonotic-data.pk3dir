@@ -323,7 +323,6 @@ void Portal_Touch(entity this, entity toucher)
 				toucher.effects += EF_BLUE - EF_RED;
 }
 
-void Portal_Think(entity this);
 void Portal_MakeBrokenPortal(entity portal)
 {
 	portal.skin = 2;

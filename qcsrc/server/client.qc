@@ -17,6 +17,7 @@
 #include "handicap.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
+#include "command/vote.qh"
 #include "cheats.qh"
 #include "g_world.qh"
 #include "race.qh"
@@ -46,6 +47,8 @@
 #include "../common/net_linked.qh"
 #include "../common/physics/player.qh"
 
+#include <common/vehicles/sv_vehicles.qh>
+
 #include "../common/items/_mod.qh"
 
 #include "../common/mutators/mutator/waypoints/all.qh"
@@ -74,8 +77,6 @@ STATIC_METHOD(Client, Add, void(Client this, int _team))
     this.team = _team;
     PutClientInServer(this);
 }
-
-void PutObserverInServer(entity this);
 
 STATIC_METHOD(Client, Remove, void(Client this))
 {
@@ -167,9 +168,6 @@ void ClientData_Touch(entity e)
 	});
 }
 
-void SetSpectatee(entity this, entity spectatee);
-void SetSpectatee_status(entity this, int spectatee_num);
-
 
 /*
 =============
@@ -223,7 +221,6 @@ void setplayermodel(entity e, string modelname)
 		UpdatePlayerSounds(e);
 }
 
-void FixPlayermodel(entity player);
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this)
 {
@@ -789,8 +786,6 @@ void PutClientInServer(entity this)
 	}
 }
 
-void ClientInit_misc(entity this);
-
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
 bool ClientInit_SendEntity(entity this, entity to, int sf)
@@ -1296,16 +1291,7 @@ void ClientConnect(entity this)
 	TeamBalance_JoinBestTeam(this, false); // if the team number is valid, keep it
 	this.playerid = playerid_save;
 
-	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
-		TRANSMUTE(Observer, this);
-	} else {
-		if (!teamplay || autocvar_g_balance_teams) {
-			TRANSMUTE(Player, this);
-			campaign_bots_may_start = true;
-		} else {
-			TRANSMUTE(Observer, this); // do it anyway
-		}
-	}
+	TRANSMUTE(Observer, this);
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
@@ -1406,7 +1392,6 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
-void ReadyCount();
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -2263,9 +2248,11 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
+const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
+	if (time < CS(this).jointime + MIN_SPEC_TIME) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
@@ -2523,7 +2510,6 @@ void SpectatorThink(entity this)
 	this.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
-void vehicles_enter (entity pl, entity veh);
 void PlayerUseKey(entity this)
 {
 	if (!IS_PLAYER(this))
@@ -2704,6 +2690,8 @@ void PlayerPreThink (entity this)
 		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
+		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)
+			error("Client can't be spawned as player on connection!");
 		if(!PlayerThink(this))
 			return;
 	}
@@ -2711,6 +2699,20 @@ void PlayerPreThink (entity this)
 		if(intermission_running)
 			IntermissionThink(this);
 		return;
+	}
+	else if (IS_REAL_CLIENT(this) && !CS(this).autojoin_checked && time >= CS(this).jointime + MIN_SPEC_TIME)
+	{
+		CS(this).autojoin_checked = true;
+		// don't do this in ClientConnect
+		// many things can go wrong if a client is spawned as player on connection
+		if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
+			|| (!(autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0)
+				&& (!teamplay || autocvar_g_balance_teams)))
+		{
+			campaign_bots_may_start = true;
+			Join(this);
+			return;
+		}
 	}
 	else if (IS_OBSERVER(this)) {
 		ObserverThink(this);

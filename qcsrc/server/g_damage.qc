@@ -14,6 +14,7 @@
 #include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/mutators/mutator/instagib/sv_instagib.qh"
+#include "../common/mutators/mutator/buffs/buffs.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -221,7 +222,6 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 	return MUTATOR_CALLHOOK(FragCenterMessage, attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target);
 }
 
-entity buff_FirstFromFlags(int _buffs);
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity)
 {
 	// Sanity check
