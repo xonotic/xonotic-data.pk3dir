@@ -1342,7 +1342,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 		found = false;
 		best = NULL;
 		bestvalue = FLOAT_MAX;
-		for (radius = 0; radius < 1000 && !found; radius += 500)
+		for (radius = 500; radius <= 1000 && !found; radius += 500)
 		{
 			IL_EACH(g_waypoints, vdist(cp.origin - it.origin, <, radius),
 			{
