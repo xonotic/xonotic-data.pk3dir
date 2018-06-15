@@ -959,7 +959,8 @@ void ons_GeneratorThink(entity this)
 		if (SAME_TEAM(it, this))
 		{
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
-			soundto(MSG_ONE, it, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE); // FIXME: unique sound?
+			msg_entity = it;
+			soundto(MSG_ONE, this, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE); // FIXME: unique sound?
 		}
 		else
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_ONS_NOTSHIELDED));
