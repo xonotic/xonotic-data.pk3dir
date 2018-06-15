@@ -1378,19 +1378,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 	{
 		// Should be touched
 		LOG_DEBUG(this.netname, " found a touchable controlpoint at ", vtos(cp.origin));
-		found = false;
-
-		// Look for auto generated waypoint
-		if (!bot_waypoints_for_items)
-		IL_EACH(g_waypoints, vdist(cp.origin - it.origin, <, 100),
-		{
-			navigation_routerating(this, it, ratingscale, 10000);
-			found = true;
-		});
-
-		// Nothing found, rate the controlpoint itself
-		if (!found)
-			navigation_routerating(this, cp, ratingscale, 10000);
+		navigation_routerating(this, cp, ratingscale, 10000);
 	}
 }
 
