@@ -19,13 +19,13 @@ REGISTER_WAYPOINT(AssaultDestroy, _("Destroy"), "", '1 0.5 0', 1);
 REGISTER_WAYPOINT(AssaultPush, _("Push"), "", '1 0.5 0', 1);
 
 REGISTER_WAYPOINT(FlagCarrier, _("Flag carrier"), "", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagCarrierEnemy, _("Enemy carrier"), "flag_neutral_carrying", '1 1 1', 1);
-REGISTER_WAYPOINT(FlagDropped, _("Dropped flag"), "flag_neutral_lost", '1 1 1', 1);
-REGISTER_WAYPOINT(FlagBaseNeutral, _("White base"), "flag_neutral_taken", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseRed, _("Red base"), "flag_red_taken", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseBlue, _("Blue base"), "flag_blue_taken", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), "flag_yellow_taken", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), "flag_pink_taken", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagCarrierEnemy, _("Enemy carrier"), "waypoint_flag_carrying", '1 1 1', 1);
+REGISTER_WAYPOINT(FlagDropped, _("Dropped flag"), "waypoint_flag_lost", '1 1 1', 1);
+REGISTER_WAYPOINT(FlagBaseNeutral, _("White base"), "waypoint_flag", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseRed, _("Red base"), "waypoint_flag", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseBlue, _("Blue base"), "waypoint_flag", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), "waypoint_flag", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), "waypoint_flag", '0.8 0.8 0', 1);
 REGISTER_WAYPOINT(FlagReturn, _("Return flag here"), "", '0 0.8 0.8', 1);
 
 REGISTER_WAYPOINT(DomNeut, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
