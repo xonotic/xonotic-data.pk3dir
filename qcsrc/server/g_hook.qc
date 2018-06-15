@@ -327,7 +327,7 @@ void GrapplingHookTouch(entity this, entity toucher)
 	GrapplingHook_Stop(this);
 
 	if(toucher)
-		if(toucher.move_movetype != MOVETYPE_NONE)
+		//if(toucher.move_movetype != MOVETYPE_NONE)
 		{
 			SetMovetypeFollow(this, toucher);
 			WarpZone_RefSys_BeginAddingIncrementally(this, this.aiment);

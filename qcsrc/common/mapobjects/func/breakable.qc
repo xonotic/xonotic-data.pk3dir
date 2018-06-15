@@ -141,6 +141,11 @@ void func_breakable_behave_destroyed(entity this)
 	func_breakable_colormod(this);
 	if (this.noise1)
 		stopsound (this, CH_TRIGGER_SINGLE);
+
+	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
+	{
+		RemoveHook(it);
+	});
 }
 
 void func_breakable_think(entity this)
