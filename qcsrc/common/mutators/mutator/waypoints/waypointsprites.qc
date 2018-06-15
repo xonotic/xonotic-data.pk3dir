@@ -426,10 +426,17 @@ vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, 
 
     o.x += 0.5 * (w - sw);
 
-    if (is_text)
-        drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
-    else
-        drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+	if (is_text)
+	{
+		drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+	}
+	else
+	{
+		drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+		// https://docs.gimp.org/en/gimp-tool-desaturate.html
+		float gray = rgb.x * 0.21 + rgb.y * 0.72 + rgb.z * 0.07;
+		drawpic(o, str, sz, '1 1 1', gray * a, DRAWFLAG_ADDITIVE);
+	}
 
     o.x += 0.5 * sw;
     o.y += 0.5 * h;
