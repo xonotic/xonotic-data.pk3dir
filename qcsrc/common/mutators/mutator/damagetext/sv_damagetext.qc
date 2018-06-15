@@ -4,7 +4,7 @@ AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: visible to spectators, >=
 
 REGISTER_MUTATOR(damagetext, true);
 
-#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 || autocvar_g_instagib)
+#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 || MUTATOR_IS_ENABLED(mutator_instagib))
 #define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1)
 #define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2)
 #define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3)

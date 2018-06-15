@@ -10,13 +10,15 @@
 
 #include "../campaign.qh"
 #include "../cheats.qh"
+#include "../client.qh"
 #include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>
@@ -30,7 +32,7 @@
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/triggers/triggers.qh>
+#include <common/mapobjects/triggers.qh>
 
 #include <common/minigames/sv_minigames.qh>
 
@@ -39,8 +41,6 @@
 #include <common/monsters/sv_monsters.qh>
 
 #include <lib/warpzone/common.qh>
-
-void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual
@@ -165,8 +165,6 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
-bool joinAllowed(entity this);
-void Join(entity this);
 void ClientCommand_join(entity caller, float request)
 {
 	switch (request)
@@ -248,12 +246,14 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 						if (caller.ready)            // toggle
 						{
 							caller.ready = false;
-							bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
-							bprint(playername(caller, false), "^2 is ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -614,8 +614,10 @@ void ClientCommand_voice(entity caller, float request, float argc, string comman
 					sprint(caller, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 					return;
 				}
-				if (argc >= 3) VoiceMessage(caller, e, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
-				else VoiceMessage(caller, e, "");
+				string msg = "";
+				if (argc >= 3)
+					msg = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
+				VoiceMessage(caller, e, msg);
 
 				return;
 			}

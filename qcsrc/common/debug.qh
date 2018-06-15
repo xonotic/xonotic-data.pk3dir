@@ -411,7 +411,7 @@ CLASS(DebugText3d, Object)
 	}
 
 	DESTRUCTOR(DebugText3d) {
-		strunzone(this.message);
+		strfree(this.message);
 	}
 
 	void DebugText3d_draw2d(DebugText3d this) {
@@ -459,13 +459,13 @@ NET_HANDLE(debug_text_3d, bool is_new) {
 #define debug_text_3d_5(pos, msg, align, dur, vel) debug_text_3d_fn(pos, msg, align, dur, vel)
 
 ERASEABLE
-void debug_text_3d_fn(vector pos, string msg, float align, float duration, vector velocity) {
+void debug_text_3d_fn(vector pos, string msg, float align, float duration, vector vel) {
 	WriteHeader(MSG_BROADCAST, debug_text_3d);
 	WriteVector(MSG_BROADCAST, pos);
 	WriteString(MSG_BROADCAST, msg);
 	WriteFloat(MSG_BROADCAST, align);
 	WriteFloat(MSG_BROADCAST, duration);
-	WriteVector(MSG_BROADCAST, velocity);
+	WriteVector(MSG_BROADCAST, vel);
 }
 
 #endif // SVQC

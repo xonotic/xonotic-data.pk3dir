@@ -106,9 +106,9 @@ NET_HANDLE(waypointsprites, bool isnew) {
 
 void Ent_RemoveWaypointSprite(entity this)
 {
-    if (this.netname) strunzone(this.netname);
-    if (this.netname2) strunzone(this.netname2);
-    if (this.netname3) strunzone(this.netname3);
+    strfree(this.netname);
+    strfree(this.netname2);
+    strfree(this.netname3);
 }
 
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
@@ -169,23 +169,17 @@ void Ent_WaypointSprite(entity this, bool isnew)
 
     if (sendflags & 2)
     {
-        if (this.netname)
-            strunzone(this.netname);
-        this.netname = strzone(ReadString());
+        strcpy(this.netname, ReadString());
     }
 
     if (sendflags & 4)
     {
-        if (this.netname2)
-            strunzone(this.netname2);
-        this.netname2 = strzone(ReadString());
+        strcpy(this.netname2, ReadString());
     }
 
     if (sendflags & 8)
     {
-        if (this.netname3)
-            strunzone(this.netname3);
-        this.netname3 = strzone(ReadString());
+        strcpy(this.netname3, ReadString());
     }
 
     if (sendflags & 16)
@@ -589,15 +583,16 @@ void Draw_WaypointSprite(entity this)
     {
         // scale it to be just in view
         vector d;
-        float f1, f2;
 
         d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
         ang = atan2(-d.x, -d.y);
         if (o.z < 0)
             ang += M_PI;
 
-        f1 = d.x / vid_conwidth;
-        f2 = d.y / vid_conheight;
+		float f1 = d.x / vid_conwidth;
+		float f2 = d.y / vid_conheight; 
+		if (f1 == 0) { f1 = 0.000001; }
+		if (f2 == 0) { f2 = 0.000001; }
 
         if (max(f1, -f1) > max(f2, -f2)) {
             if (d.z * f1 > 0) {

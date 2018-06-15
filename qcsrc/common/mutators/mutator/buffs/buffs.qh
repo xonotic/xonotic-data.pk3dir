@@ -64,6 +64,7 @@ STATIC_INIT(REGISTER_BUFFS) {
 #endif
 
 string Buff_UndeprecateName(string buffname);
+entity buff_FirstFromFlags(int _buffs);
 
 REGISTER_BUFF(Null);
 BUFF_SPAWNFUNCS(random, BUFF_Null)

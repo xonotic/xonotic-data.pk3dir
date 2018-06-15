@@ -54,3 +54,4 @@ void reset_map(float dorespawn);
 void ReadyCount();
 void ReadyRestart_force();
 void VoteCount(float first_count);
+void Nagger_Init();

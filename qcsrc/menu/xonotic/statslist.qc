@@ -100,7 +100,7 @@ void XonoticStatsList_getStats(entity me)
 			case "overall/last_seen_dt":
 			{
 				order = 1;
-				outstr = _("Last seen:");
+				outstr = _("Last match:");
 				data = XonoticStatsList_convertDate(car(data));
 				break;
 			}

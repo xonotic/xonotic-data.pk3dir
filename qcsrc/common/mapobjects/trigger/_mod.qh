@@ -1,0 +1,24 @@
+// generated file; do not modify
+#include <common/mapobjects/trigger/counter.qh>
+#include <common/mapobjects/trigger/delay.qh>
+#include <common/mapobjects/trigger/disablerelay.qh>
+#include <common/mapobjects/trigger/flipflop.qh>
+#include <common/mapobjects/trigger/gamestart.qh>
+#include <common/mapobjects/trigger/gravity.qh>
+#include <common/mapobjects/trigger/heal.qh>
+#include <common/mapobjects/trigger/hurt.qh>
+#include <common/mapobjects/trigger/impulse.qh>
+#include <common/mapobjects/trigger/jumppads.qh>
+#include <common/mapobjects/trigger/keylock.qh>
+#include <common/mapobjects/trigger/magicear.qh>
+#include <common/mapobjects/trigger/monoflop.qh>
+#include <common/mapobjects/trigger/multi.qh>
+#include <common/mapobjects/trigger/multivibrator.qh>
+#include <common/mapobjects/trigger/relay.qh>
+#include <common/mapobjects/trigger/relay_activators.qh>
+#include <common/mapobjects/trigger/relay_if.qh>
+#include <common/mapobjects/trigger/relay_teamcheck.qh>
+#include <common/mapobjects/trigger/secret.qh>
+#include <common/mapobjects/trigger/swamp.qh>
+#include <common/mapobjects/trigger/teleport.qh>
+#include <common/mapobjects/trigger/viewloc.qh>

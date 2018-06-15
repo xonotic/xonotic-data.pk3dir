@@ -1,0 +1,14 @@
+#pragma once
+
+
+const int DOOR_ROTATING_BIDIR = BIT(1);
+const int DOOR_ROTATING_BIDIR_IN_DOWN = BIT(3);
+
+const int DOOR_ROTATING_XAXIS = BIT(6);
+const int DOOR_ROTATING_YAXIS = BIT(7);
+
+
+#ifdef GAMEQC
+void door_rotating_go_down(entity this);
+void door_rotating_go_up(entity this, entity oth);
+#endif

@@ -9,7 +9,7 @@
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/animdecide.qh>
 #include <common/deathtypes/all.qh>
@@ -17,12 +17,13 @@
 #include <common/anim.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/net_notice.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
-#include <common/triggers/target/music.qh>
+#include <common/mapobjects/target/music.qh>
 #include <common/teams.qh>
 #include <common/wepent.qh>
 
@@ -30,8 +31,10 @@
 
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
+#include <common/mutators/mutator/overkill/oknex.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
 #include <common/viewloc.qh>
-#include <common/triggers/trigger/viewloc.qh>
+#include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 
@@ -370,7 +373,35 @@ STATIC_INIT(viewmodel) {
     	viewmodels[slot] = new(viewmodel);
 }
 
-void Porto_Draw(entity this);
+float showfps_prevfps;
+float showfps_prevfps_time;
+int showfps_framecounter;
+
+void fpscounter_update()
+{
+	if(!STAT(SHOWFPS))
+		return;
+
+	float currentTime = gettime(GETTIME_REALTIME);
+	showfps_framecounter += 1;
+	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
+	{
+		showfps_prevfps = showfps_framecounter/(currentTime - showfps_prevfps_time);
+		showfps_framecounter = 0;
+		showfps_prevfps_time = currentTime;
+
+		int channel = MSG_C2S;
+		WriteHeader(channel, fpsreport);
+		WriteShort(channel, bound(0, rint(showfps_prevfps), 65535)); // prevent insane fps values
+	}
+}
+
+STATIC_INIT(fpscounter_init)
+{
+	float currentTime = gettime(GETTIME_REALTIME);
+	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
+}
+
 STATIC_INIT(Porto)
 {
 	entity e = new_pure(porto);
@@ -669,6 +700,7 @@ float TrueAimCheck(entity wepent)
 		case WEP_MORTAR: // toss curve
 			return SHOTTYPE_HITWORLD;
 		case WEP_VORTEX:
+		case WEP_OVERKILL_NEX:
 		case WEP_VAPORIZER:
 			mv = MOVE_NORMAL;
 			break;
@@ -737,8 +769,6 @@ float TrueAimCheck(entity wepent)
 	return SHOTTYPE_HITWORLD;
 }
 
-void PostInit();
-void CSQC_Demo_Camera();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
@@ -1199,6 +1229,8 @@ void HUD_Crosshair(entity this)
 				float arc_heat = wepent.arc_heat_percent;
 				float vcharge = wepent.vortex_charge;
 				float vchargepool = wepent.vortex_chargepool_ammo;
+				float oknex_charge_ = wepent.oknex_charge;
+				float oknex_chargepool_ = wepent.oknex_chargepool_ammo;
 
 				if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 					vortex_charge_movingavg = vcharge;
@@ -1220,6 +1252,26 @@ void HUD_Crosshair(entity this)
 
 					// draw the outer ring to show the current charge of the weapon
 					ring_value = vcharge;
+					ring_alpha = autocvar_crosshair_ring_vortex_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring_nexgun.tga";
+				}
+				else if (autocvar_crosshair_ring && (wepent.activeweapon == WEP_OVERKILL_NEX) && oknex_charge_ && autocvar_crosshair_ring_vortex)
+				{
+					if (oknex_chargepool_ || use_vortex_chargepool) {
+						use_vortex_chargepool = 1;
+						ring_inner_value = oknex_chargepool_;
+					} else {
+						vortex_charge_movingavg = (1 - autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate) * vortex_charge_movingavg + autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate * oknex_charge_;
+						ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (oknex_charge_ - vortex_charge_movingavg), 1);
+					}
+
+					ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
+					ring_inner_rgb = eX * autocvar_crosshair_ring_vortex_inner_color_red + eY * autocvar_crosshair_ring_vortex_inner_color_green + eZ * autocvar_crosshair_ring_vortex_inner_color_blue;
+					ring_inner_image = "gfx/crosshair_ring_inner.tga";
+
+					// draw the outer ring to show the current charge of the weapon
+					ring_value = oknex_charge_;
 					ring_alpha = autocvar_crosshair_ring_vortex_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
@@ -1346,12 +1398,8 @@ void HUD_Crosshair(entity this)
 		wcross_scale_goal_prev = 0;
 		wcross_alpha_goal_prev = 0;
 		wcross_changedonetime = 0;
-		if(wcross_name_goal_prev)
-			strunzone(wcross_name_goal_prev);
-		wcross_name_goal_prev = string_null;
-		if(wcross_name_goal_prev_prev)
-			strunzone(wcross_name_goal_prev_prev);
-		wcross_name_goal_prev_prev = string_null;
+		strfree(wcross_name_goal_prev);
+		strfree(wcross_name_goal_prev_prev);
 		wcross_name_changestarttime = 0;
 		wcross_name_changedonetime = 0;
 		wcross_name_alpha_goal_prev = 0;
@@ -1512,12 +1560,9 @@ float oldr_novis;
 float oldr_useportalculling;
 float oldr_useinfinitefarclip;
 
-void cl_notice_run();
-
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
-void WaypointSprite_Load();
 void CSQC_UpdateView(entity this, float w, float h)
 {
     TC(int, w); TC(int, h);
@@ -1866,6 +1911,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	TargetMusic_Advance();
 	Fog_Force();
+	fpscounter_update();
 
 	if(drawtime == 0)
 		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps

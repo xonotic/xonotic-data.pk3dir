@@ -6,7 +6,7 @@ CLASS(XonoticHUDRaceTimerDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDRaceTimerDialog, title, string, _("Race Timer Panel"));
 	ATTRIB(XonoticHUDRaceTimerDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDRaceTimerDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDRaceTimerDialog, rows, float, 15);
+	ATTRIB(XonoticHUDRaceTimerDialog, rows, float, 15.5);
 	ATTRIB(XonoticHUDRaceTimerDialog, columns, float, 4);
 	ATTRIB(XonoticHUDRaceTimerDialog, name, string, "HUDracetimer");
 	ATTRIB(XonoticHUDRaceTimerDialog, requiresConnection, float, true);

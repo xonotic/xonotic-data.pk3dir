@@ -43,7 +43,7 @@ void sys_phys_update(entity this, float dt)
 	float maxspeed_mod = (!this.in_swamp) ? 1 : this.swamp_slowdown;  // cvar("g_balance_swamp_moverate");
 
 // conveyors: first fix velocity
-	if (this.conveyor.state) { this.velocity -= this.conveyor.movedir; }
+	if (this.conveyor.active) { this.velocity -= this.conveyor.movedir; }
 	MUTATOR_CALLHOOK(PlayerPhysics, this, dt);
 
 	if (!IS_PLAYER(this)) {
@@ -156,7 +156,7 @@ void sys_phys_update(entity this, float dt)
 	LABEL(end)
 	if (IS_ONGROUND(this)) { this.lastground = time; }
 // conveyors: then break velocity again
-	if (this.conveyor.state) { this.velocity += this.conveyor.movedir; }
+	if (this.conveyor.active) { this.velocity += this.conveyor.movedir; }
 	this.lastflags = this.flags;
 
 	this.lastclassname = this.classname;

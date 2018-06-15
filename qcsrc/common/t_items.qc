@@ -15,7 +15,7 @@
     #include "constants.qh"
     #include <common/deathtypes/all.qh>
     #include <common/notifications/all.qh>
-	#include "triggers/subs.qh"
+	#include "mapobjects/subs.qh"
     #include "util.qh"
 
     #include <common/monsters/_mod.qh>
@@ -50,13 +50,8 @@ void Item_SetAlpha(entity this)
 	}
 	else
 	{
-		if (autocvar_cl_ghost_items_color)
-		{
-			this.alpha = autocvar_cl_ghost_items;
-			this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
-		}
-		else
-			this.alpha = -1;
+		this.alpha = autocvar_cl_ghost_items;
+		this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
 	}
 
 	if((!veh_hud) && (this.ItemStatus & ITS_STAYWEP))
@@ -148,8 +143,17 @@ void Item_PreDraw(entity this)
 
 void ItemRemove(entity this)
 {
-	if(this.mdl)
-		strunzone(this.mdl);
+	strfree(this.mdl);
+}
+
+HashMap ENT_CLIENT_ITEM_simple;
+STATIC_INIT(ENT_CLIENT_ITEM_simple)
+{
+	HM_NEW(ENT_CLIENT_ITEM_simple);
+}
+SHUTDOWN(ENT_CLIENT_ITEM_simple)
+{
+	HM_DELETE(ENT_CLIENT_ITEM_simple);
 }
 
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
@@ -211,10 +215,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         if(!warpzone_warpzones_exist && this.fade_start && !autocvar_cl_items_nofade)
         	setpredraw(this, Item_PreDraw);
 
-        if(this.mdl)
-            strunzone(this.mdl);
+		strfree(this.mdl);
 
-        this.mdl = "";
         string _fn = ReadString();
         this.item_simple = false; // reset it!
 
@@ -223,27 +225,37 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             this.item_simple = true;
 
-            if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm"));
-            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl")))
-                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
-            else
-            {
-                this.item_simple = false;
-                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it");
-            }
+			#define extensions(x) \
+				x(md3) \
+				x(dpm) \
+				x(iqm) \
+				x(mdl) \
+				/**/
+			#define tryext(ext) { \
+				string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); \
+				string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); \
+				if (cached == "") { \
+					HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); \
+				} \
+				if (cached != "0") { \
+					strcpy(this.mdl, s); \
+					break; \
+				} \
+			}
+			do {
+				extensions(tryext);
+				this.item_simple = false;
+                LOG_TRACEF("Simple item requested for %s but no model exists for it", _fn);
+			} while (0);
+			#undef tryext
+			#undef extensions
         }
 
         if(!this.item_simple)
-            this.mdl = strzone(_fn);
-
+            strcpy(this.mdl, _fn);
 
         if(this.mdl == "")
-            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!");
+            LOG_WARNF("this.mdl is unset for item %s", this.classname);
 
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
@@ -384,38 +396,11 @@ bool have_pickup_item(entity this)
 		if(autocvar_g_pickup_items == 0)
 			return false;
 		if(g_weaponarena)
-			if(this.weapons || this.itemdef.instanceOfAmmo) // no item or ammo pickups in weaponarena
+			if(STAT(WEAPONS, this) || this.itemdef.instanceOfAmmo) // no item or ammo pickups in weaponarena
 				return false;
 	}
 	return true;
 }
-
-/*
-float Item_Customize()
-{
-	if(this.spawnshieldtime)
-		return true;
-	if(this.weapons & ~other.weapons)
-	{
-		this.colormod = '0 0 0';
-		this.glowmod = this.colormod;
-		this.alpha = 0.5 + 0.5 * g_ghost_items; // halfway more alpha
-		return true;
-	}
-	else
-	{
-		if(g_ghost_items)
-		{
-			this.colormod = stov(autocvar_g_ghost_items_color);
-			this.glowmod = this.colormod;
-			this.alpha = g_ghost_items;
-			return true;
-		}
-		else
-			return false;
-	}
-}
-*/
 
 void Item_Show (entity e, float mode)
 {
@@ -440,7 +425,7 @@ void Item_Show (entity e, float mode)
 	}
 	else
 	{
-		bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.weapons & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
+		bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.m_wepset & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
 			|| e.team // weapon stay isn't supported for teamed weapons
 			;
 		if(def.instanceOfWeaponPickup && !nostay && g_weapon_stay)
@@ -500,7 +485,7 @@ void Item_Respawn (entity this)
 	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin(this, this.origin);
 
-    if (Item_ItemsTime_Allow(this.itemdef) || (this.weapons & WEPSET_SUPERWEAPONS))
+    if (Item_ItemsTime_Allow(this.itemdef) || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 	{
 		float t = Item_ItemsTime_UpdateTime(this, 0);
 		Item_ItemsTime_SetTime(this, t);
@@ -585,13 +570,13 @@ void Item_RespawnThink(entity this)
 void Item_ScheduleRespawnIn(entity e, float t)
 {
 	// if the respawn time is longer than 10 seconds, show a waypoint, otherwise, just respawn normally
-	if ((Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS) || MUTATOR_CALLHOOK(Item_ScheduleRespawn, e, t)) && (t - ITEM_RESPAWN_TICKS) > 0)
+	if ((Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS) || MUTATOR_CALLHOOK(Item_ScheduleRespawn, e, t)) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.item_respawncounter = 0;
-		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
+		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 		{
 			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
 			Item_ItemsTime_SetTime(e, t);
@@ -605,7 +590,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.scheduledrespawntime = time + t;
 		e.wait = time + t;
 
-		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
+		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 		{
 			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
 			Item_ItemsTime_SetTime(e, t);
@@ -663,8 +648,6 @@ void Item_ScheduleRespawn(entity e)
 AUTOCVAR(g_pickup_respawntime_initial_random, int, 1,
 	"For items that don't start spawned: 0: spawn after their normal respawntime; 1: spawn after `random * respawntime` with the *same* random; 2: same as 1 but each item has separate random");
 
-float shared_random;
-STATIC_INIT(shared_random) { shared_random = random(); }
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
@@ -675,18 +658,26 @@ void Item_ScheduleInitialRespawn(entity e)
 		// range: respawntime .. respawntime + respawntimejitter
 		spawn_in = e.respawntime + random() * e.respawntimejitter;
 	}
-	else if (autocvar_g_pickup_respawntime_initial_random == 1)
+	else
 	{
+		float rnd;
+		if (autocvar_g_pickup_respawntime_initial_random == 1)
+		{
+			static float shared_random = 0;
+			// NOTE this code works only if items are scheduled at the same time (normal case)
+			// NOTE2 random() can't return exactly 1 so this check always work as intended
+			if (!shared_random || floor(time) > shared_random)
+				shared_random = floor(time) + random();
+			rnd = shared_random - floor(time);
+		}
+		else
+			rnd = random();
+
 		// range:
 		// if respawntime >= ITEM_RESPAWN_TICKS: ITEM_RESPAWN_TICKS .. respawntime + respawntimejitter
 		// else: 0 .. ITEM_RESPAWN_TICKS
 		// this is to prevent powerups spawning unexpectedly without waypoints
-		spawn_in = ITEM_RESPAWN_TICKS + shared_random * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
-	}
-	else
-	{
-		// range: same as 1
-		spawn_in = ITEM_RESPAWN_TICKS + random() * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
+		spawn_in = ITEM_RESPAWN_TICKS + rnd * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
 	}
 
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : spawn_in));
@@ -710,7 +701,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			FOREACH(Weapons, it != WEP_Null,
 			{
 				// Finding a weapon which player doesn't have.
-				if (!(receiver.weapons & it.m_wepset) && (it.netname == weapon))
+				if (!(STAT(WEAPONS, receiver) & it.m_wepset) && (it.netname == weapon))
 				{
 					RandomSelection_AddEnt(it, 1, 1);
 					break;
@@ -721,7 +712,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 		{
 			return;
 		}
-		receiver.weapons |= RandomSelection_chosen_ent.m_wepset;
+		STAT(WEAPONS, receiver) |= RandomSelection_chosen_ent.m_wepset;
 		if (RandomSelection_chosen_ent.ammo_type == RESOURCE_NONE)
 		{
 			continue;
@@ -783,7 +774,7 @@ float Item_GiveTo(entity item, entity player)
 				if(player.(weaponentity).m_switchweapon == w_getbestweapon(player, weaponentity))
 					_switchweapon |= BIT(slot);
 
-				if(!(player.weapons & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
+				if(!(STAT(WEAPONS, player) & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
 					_switchweapon |= BIT(slot);
 			}
 		}
@@ -799,8 +790,8 @@ float Item_GiveTo(entity item, entity player)
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w;
-		w = item.weapons;
-		w &= ~player.weapons;
+		w = STAT(WEAPONS, item);
+		w &= ~STAT(WEAPONS, player);
 
 		if (w || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
@@ -990,7 +981,7 @@ void Item_Reset(entity this)
 	{
 		WaypointSprite_Kill(this.waypointsprite_attached);
 	}
-	if (this.itemdef.instanceOfPowerup || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
+	if (this.itemdef.instanceOfPowerup || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
 	{
 		Item_ScheduleInitialRespawn(this);
 	}
@@ -1049,7 +1040,7 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 float weapon_pickupevalfunc(entity player, entity item)
 {
 	// See if I have it already
-	if(player.weapons & item.weapons)
+	if(STAT(WEAPONS, player) & STAT(WEAPONS, item))
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
@@ -1060,7 +1051,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	// reduce weapon value if bot already got a good arsenal
 	float c = 1;
 	int weapons_value = 0;
-	FOREACH(Weapons, it != WEP_Null && (player.weapons & it.m_wepset), {
+	FOREACH(Weapons, it != WEP_Null && (STAT(WEAPONS, player) & it.m_wepset), {
 		weapons_value += it.bot_pickupbasevalue;
 	});
 	c -= bound(0, weapons_value / 20000, 1) * 0.5;
@@ -1094,7 +1085,7 @@ float ammo_pickupevalfunc(entity player, entity item)
 	else
 	{
 		FOREACH(Weapons, it != WEP_Null, {
-			if(!(player.weapons & (it.m_wepset)))
+			if(!(STAT(WEAPONS, player) & (it.m_wepset)))
 				continue;
 
 			switch(it.ammo_type)
@@ -1112,23 +1103,23 @@ float ammo_pickupevalfunc(entity player, entity item)
 
 	float noammorating = 0.5;
 
-	if ((need_shells) && (item.ammo_shells) && (player.ammo_shells < g_pickup_shells_max))
-		c = item.ammo_shells / max(noammorating, player.ammo_shells);
+	if ((need_shells) && (item.ammo_shells) && (GetResourceAmount(player, RESOURCE_SHELLS) < g_pickup_shells_max))
+		c = item.ammo_shells / max(noammorating, GetResourceAmount(player, RESOURCE_SHELLS));
 
-	if ((need_nails) && (item.ammo_nails) && (player.ammo_nails < g_pickup_nails_max))
-		c = item.ammo_nails / max(noammorating, player.ammo_nails);
+	if ((need_nails) && (item.ammo_nails) && (GetResourceAmount(player, RESOURCE_BULLETS) < g_pickup_nails_max))
+		c = item.ammo_nails / max(noammorating, GetResourceAmount(player, RESOURCE_BULLETS));
 
-	if ((need_rockets) && (item.ammo_rockets) && (player.ammo_rockets < g_pickup_rockets_max))
-		c = item.ammo_rockets / max(noammorating, player.ammo_rockets);
+	if ((need_rockets) && (item.ammo_rockets) && (GetResourceAmount(player, RESOURCE_ROCKETS) < g_pickup_rockets_max))
+		c = item.ammo_rockets / max(noammorating, GetResourceAmount(player, RESOURCE_ROCKETS));
 
-	if ((need_cells) && (item.ammo_cells) && (player.ammo_cells < g_pickup_cells_max))
-		c = item.ammo_cells / max(noammorating, player.ammo_cells);
+	if ((need_cells) && (item.ammo_cells) && (GetResourceAmount(player, RESOURCE_CELLS) < g_pickup_cells_max))
+		c = item.ammo_cells / max(noammorating, GetResourceAmount(player, RESOURCE_CELLS));
 
-	if ((need_plasma) && (item.ammo_plasma) && (player.ammo_plasma < g_pickup_plasma_max))
-		c = item.ammo_plasma / max(noammorating, player.ammo_plasma);
+	if ((need_plasma) && (item.ammo_plasma) && (GetResourceAmount(player, RESOURCE_PLASMA) < g_pickup_plasma_max))
+		c = item.ammo_plasma / max(noammorating, GetResourceAmount(player, RESOURCE_PLASMA));
 
-	if ((need_fuel) && (item.ammo_fuel) && (player.ammo_fuel < g_pickup_fuel_max))
-		c = item.ammo_fuel / max(noammorating, player.ammo_fuel);
+	if ((need_fuel) && (item.ammo_fuel) && (GetResourceAmount(player, RESOURCE_FUEL) < g_pickup_fuel_max))
+		c = item.ammo_fuel / max(noammorating, GetResourceAmount(player, RESOURCE_FUEL));
 
 	rating *= min(c, 2);
 	if(wpn)
@@ -1187,7 +1178,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
     this.item_pickupsound_ent = pickupsound;
 
     if(def.m_iteminit)
-    	def.m_iteminit(this);
+    	def.m_iteminit(def, this);
 
 	if(!this.respawntime) // both need to be set
 	{
@@ -1210,7 +1201,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 
 	if(weaponid)
-		this.weapons = WepSet_FromWeapon(Weapons_from(weaponid));
+		STAT(WEAPONS, this) = WepSet_FromWeapon(Weapons_from(weaponid));
 
 	this.flags = FL_ITEM | itemflags;
 	IL_PUSH(g_items, this);
@@ -1519,7 +1510,7 @@ spawnfunc(target_items)
 					s = W_UndeprecateName(argv(j));
 					if(s == it.netname)
 					{
-						this.weapons |= (it.m_wepset);
+						STAT(WEAPONS, this) |= (it.m_wepset);
 						if(this.spawnflags == 0 || this.spawnflags == 2)
 							it.wr_init(it);
 						break;
@@ -1572,7 +1563,7 @@ spawnfunc(target_items)
 		if(this.health != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.health), "health");
 		if(this.armorvalue != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.armorvalue), "armor");
 		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(BUFFS, this) & (it.m_itemid)), it.m_name));
-		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.weapons & (it.m_wepset)), it.netname));
+		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
 	}
 	this.netname = strzone(this.netname);
 	//print(this.netname, "\n");
@@ -1591,30 +1582,30 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 {
 	WepSet v0, v1;
 	WepSet s = WepSet_FromWeapon(Weapons_from(wpn));
-	v0 = (e.weapons & s);
+	v0 = (STAT(WEAPONS, e) & s);
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				e.weapons |= s;
+				STAT(WEAPONS, e) |= s;
 			else
-				e.weapons &= ~s;
+				STAT(WEAPONS, e) &= ~s;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				e.weapons |= s;
+				STAT(WEAPONS, e) |= s;
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.weapons &= ~s;
+				STAT(WEAPONS, e) &= ~s;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.weapons &= ~s;
+				STAT(WEAPONS, e) &= ~s;
 			break;
 	}
-	v1 = (e.weapons & s);
+	v1 = (STAT(WEAPONS, e) & s);
 	return (v0 != v1);
 }
 
@@ -1832,7 +1823,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	FOREACH(Weapons, it != WEP_Null, {
 		POSTGIVE_WEAPON(e, it, SND_WEAPONPICKUP, SND_Null);
 		if(!(save_weapons & (it.m_wepset)))
-			if(e.weapons & (it.m_wepset))
+			if(STAT(WEAPONS, e) & (it.m_wepset))
 				it.wr_init(it);
 	});
 	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
@@ -1848,7 +1839,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
 	if(e.superweapons_finished <= 0)
-		if(e.weapons & WEPSET_SUPERWEAPONS)
+		if(STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS)
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.strength_finished <= 0)
@@ -1868,7 +1859,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
-		if(!(e.weapons & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
+		if(!(STAT(WEAPONS, e) & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
 			_switchweapon |= BIT(slot);
 	}
 

@@ -1,6 +1,5 @@
 #include "sv_monsters.qh"
 
-#include <server/g_subs.qh>
 #include <lib/warpzone/common.qh>
 #include "../constants.qh"
 #include "../teams.qh"
@@ -18,7 +17,7 @@
 #include "../vehicles/all.qh"
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
-#include "../triggers/triggers.qh"
+#include "../mapobjects/triggers.qh"
 #include <lib/csqcmodel/sv_model.qh>
 #include <server/round_handler.qh>
 #include <server/weapons/_mod.qh>
@@ -82,6 +81,7 @@ bool Monster_ValidTarget(entity this, entity targ)
 	|| (IS_VEHICLE(targ) && !((Monsters_from(this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| (time < game_starttime) // monsters do nothing before match has started
 	|| (targ.takedamage == DAMAGE_NO)
+	|| (game_stopped)
 	|| (targ.items & IT_INVISIBILITY)
 	|| (IS_SPEC(targ) || IS_OBSERVER(targ)) // don't attack spectators
 	|| (!IS_VEHICLE(targ) && (IS_DEAD(targ) || IS_DEAD(this) || targ.health <= 0 || this.health <= 0))
@@ -275,7 +275,7 @@ void Monster_Sounds_Precache(entity this)
 
 void Monster_Sounds_Clear(entity this)
 {
-#define _MSOUND(m) if(this.monstersound_##m) { strunzone(this.monstersound_##m); this.monstersound_##m = string_null; }
+#define _MSOUND(m) strfree(this.monstersound_##m);
 	ALLMONSTERSOUNDS
 #undef _MSOUND
 }
@@ -310,9 +310,7 @@ bool Monster_Sounds_Load(entity this, string f, int first)
 		field = Monster_Sound_SampleField(argv(0));
 		if(GetMonsterSoundSampleField_notFound)
 			continue;
-		if (this.(field))
-			strunzone(this.(field));
-		this.(field) = strzone(strcat(argv(1), " ", argv(2)));
+		strcpy(this.(field), strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
 	return true;

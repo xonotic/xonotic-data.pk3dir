@@ -1,6 +1,6 @@
 #include "announcer.qh"
 
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/notifications/all.qh>
 #include <common/stats.qh>

@@ -5,6 +5,8 @@ float race_teams;
 // scores
 const float ST_RACE_LAPS = 1;
 
+int autocvar_g_cts_send_rankings_cnt = 15;
+
 bool g_race_qualifying;
 
 float speedaward_lastsent;
@@ -61,8 +63,12 @@ void race_send_speedaward(float msg);
 
 void race_send_speedaward_alltimebest(float msg);
 
+void race_send_rankings_cnt(float msg);
+
 void race_SendRankings(float pos, float prevpos, float del, float msg);
 
 void race_RetractPlayer(entity this);
 
 void race_InitSpectator();
+
+spawnfunc(target_checkpoint);
