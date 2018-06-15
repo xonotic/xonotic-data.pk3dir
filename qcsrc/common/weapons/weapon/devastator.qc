@@ -342,7 +342,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
-	missile.detonate_later = (fire & 2); // allow instant detonation
+	missile.rl_detonate_later = (fire & 2); // allow instant detonation
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
