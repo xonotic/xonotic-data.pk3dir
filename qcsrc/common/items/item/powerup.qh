@@ -43,7 +43,8 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_name             =   "Strength Powerup";
     this.m_icon             =   "strength";
     this.m_color            =   '0 0 1';
-    this.m_waypoint         =   _("Strength");
+	this.m_waypoint_text    =   _("Strength");
+	this.m_waypoint_icon    =   "waypoint_strength";
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_STRENGTH;
 #ifdef SVQC
@@ -79,7 +80,8 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_name             =   "Shield";
     this.m_icon             =   "shield";
     this.m_color            =   '1 0 1';
-    this.m_waypoint         =   _("Shield");
+	this.m_waypoint_text    =   _("Shield");
+	this.m_waypoint_icon    =   "waypoint_shield";
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_INVINCIBLE;
 #ifdef SVQC

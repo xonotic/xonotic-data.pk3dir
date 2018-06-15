@@ -243,7 +243,7 @@ string spritelookuptext(entity this, string s)
 		return "Spam"; // no need to translate this debug string
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_name;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint;
+	if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint_text;
     if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -262,7 +262,7 @@ string spritelookupicon(entity this, string s)
 {
     // TODO: needs icons! //if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_icon;
+	if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint_icon;
     if (s == WP_Vehicle.netname) return Vehicles_from(this.wp_extra).m_icon;
     //if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_icon;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
