@@ -469,7 +469,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, bound(0, GetResourceAmount(this, RESOURCE_HEALTH) + (_friendly_count - _enemy_count), this.max_health));
+		GiveResourceWithLimit(this, RESOURCE_HEALTH, (_friendly_count - _enemy_count), this.max_health);
 		this.SendFlags |= CPSF_STATUS;
 		if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		{
@@ -524,7 +524,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 	if(!a)
 		return;
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) + this.count);
+	GiveResource(this, RESOURCE_HEALTH, this.count);
 
 	this.SendFlags |= CPSF_STATUS;
 

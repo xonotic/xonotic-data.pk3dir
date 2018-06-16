@@ -131,7 +131,7 @@ void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, flo
 		return; // g_projectiles_damage says to halt
 
 	if(this.realowner == attacker)
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - (damage * 0.25));
+		TakeResource(this, RESOURCE_HEALTH, (damage * 0.25));
 	else
 		TakeResource(this, RESOURCE_HEALTH, damage);
 

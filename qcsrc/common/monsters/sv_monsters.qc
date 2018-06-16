@@ -1009,7 +1009,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 	if(take)
 	{
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - take);
+		TakeResource(this, RESOURCE_HEALTH, take);
 		Monster_Sound(this, monstersound_pain, 1.2, true, CH_PAIN);
 	}
 

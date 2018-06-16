@@ -558,17 +558,17 @@ bool bumblebee_pilot_frame(entity this, float dt)
 						else if(IS_CLIENT(trace_ent))
 						{
 							if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
-								SetResourceAmountExplicit(trace_ent, RESOURCE_HEALTH, min(GetResourceAmount(trace_ent, RESOURCE_HEALTH) + autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax));
+								GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax);
 
 							if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
-								SetResourceAmountExplicit(trace_ent, RESOURCE_ARMOR, min(GetResourceAmount(trace_ent, RESOURCE_ARMOR) + autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax));
+								GiveResourceWithLimit(trace_ent, RESOURCE_ARMOR, autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax);
 
-							SetResourceAmountExplicit(trace_ent, RESOURCE_HEALTH, min(GetResourceAmount(trace_ent, RESOURCE_HEALTH) + autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax));
+							GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax);
 						}
 						else if(IS_TURRET(trace_ent))
 						{
 							if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health && autocvar_g_vehicle_bumblebee_healgun_hps)
-								SetResourceAmountExplicit(trace_ent, RESOURCE_HEALTH, min(GetResourceAmount(trace_ent, RESOURCE_HEALTH) + autocvar_g_vehicle_bumblebee_healgun_hps * dt, trace_ent.max_health));
+								GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, autocvar_g_vehicle_bumblebee_healgun_hps * dt, trace_ent.max_health);
 							//else ..hmmm what? ammo?
 
 							trace_ent.SendFlags |= TNSF_STATUS;
