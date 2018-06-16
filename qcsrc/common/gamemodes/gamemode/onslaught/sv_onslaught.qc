@@ -400,7 +400,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		ons_notification_time[this.team] = time;
 	}
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if(this.owner.iscaptured)
 		WaypointSprite_UpdateHealth(this.owner.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	else
@@ -482,9 +482,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 	{
 		if(GetResourceAmount(this, RESOURCE_HEALTH) < this.max_health)
 		{
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) + this.count);
-			if (GetResourceAmount(this, RESOURCE_HEALTH) >= this.max_health)
-				SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+			GiveResourceWithLimit(this, RESOURCE_HEALTH, this.count, this.max_health);
 			WaypointSprite_UpdateHealth(this.owner.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 		}
 	}
@@ -889,7 +887,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 			play2team(this.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	// choose an animation frame based on health
 	this.frame = 10 * bound(0, (1 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health), 1);

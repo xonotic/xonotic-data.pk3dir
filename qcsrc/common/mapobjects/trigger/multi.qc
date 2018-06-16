@@ -120,7 +120,7 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 	if(this.team)
 		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != attacker.team))
 			return;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		this.enemy = attacker;

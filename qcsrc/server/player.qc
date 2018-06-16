@@ -192,8 +192,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	SetResourceAmountExplicit(this, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR) - save);
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - take);
+	TakeResource(this, RESOURCE_ARMOR, save);
+	TakeResource(this, RESOURCE_HEALTH, take);
 	// pause regeneration for 5 seconds
 	this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
@@ -411,8 +411,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
-			SetResourceAmountExplicit(this, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR) - save);
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - take);
+			TakeResource(this, RESOURCE_ARMOR, save);
+			TakeResource(this, RESOURCE_HEALTH, take);
 			// pause regeneration for 5 seconds
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);

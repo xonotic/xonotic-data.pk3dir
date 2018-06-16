@@ -66,7 +66,7 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 		if(GetResourceAmount(this.enemy, RESOURCE_HEALTH) - this.dmg > 0.5)
 		{
 			GameRules_scoring_add_team(actor, SCORE, this.dmg);
-			SetResourceAmountExplicit(this.enemy, RESOURCE_HEALTH, GetResourceAmount(this.enemy, RESOURCE_HEALTH) - this.dmg);
+			TakeResource(this.enemy, RESOURCE_HEALTH, this.dmg);
 		}
 		else
 		{

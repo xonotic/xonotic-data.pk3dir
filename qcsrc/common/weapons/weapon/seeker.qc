@@ -133,7 +133,7 @@ void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, flo
 	if(this.realowner == attacker)
 		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - (damage * 0.25));
 	else
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+		TakeResource(this, RESOURCE_HEALTH, damage);
 
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_Seeker_Missile_Explode_think);
@@ -417,7 +417,7 @@ void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float d
 {
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_Seeker_Tag_Explode(this);
 }

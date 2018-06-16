@@ -265,7 +265,7 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
 	if (this.itemkeys)
 	{

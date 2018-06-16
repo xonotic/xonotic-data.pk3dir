@@ -230,7 +230,7 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 			return;
 	}
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
 	// thorw head slightly off aim when hit?
 	if (this.damage_flags & TFL_DMG_HEADSHAKE)
@@ -451,7 +451,7 @@ void turret_projectile_touch(entity this, entity toucher)
 void turret_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
 	this.velocity  += vforce;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	//this.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, this.owner, turret_projectile_explode);

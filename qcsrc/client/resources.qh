@@ -28,6 +28,22 @@ bool SetResourceAmountExplicit(entity e, int resource_type, float amount);
 /// \return No return.
 void SetResourceAmount(entity e, int resource_type, float amount);
 
+/// \brief Takes an entity some resource.
+/// \param[in,out] receiver Entity to take resource from.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] amount Amount of resource to take.
+/// \return No return.
+void TakeResource(entity receiver, int resource_type, float amount);
+
+/// \brief Takes an entity some resource but not less than a limit.
+/// \param[in,out] receiver Entity to take resource from.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] amount Amount of resource to take.
+/// \param[in] limit Limit of resources to take.
+/// \return No return.
+void TakeResourceWithLimit(entity receiver, int resource_type, float amount,
+	float limit);
+
 // ===================== Legacy and/or internal API ===========================
 
 /// \brief Converts an entity field to resource type.

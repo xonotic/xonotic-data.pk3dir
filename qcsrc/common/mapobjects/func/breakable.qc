@@ -272,7 +272,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		if(attacker.team == this.team)
 			return;
 	this.pain_finished = time;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if(this.sprite)
 	{
 		WaypointSprite_Ping(this.sprite);

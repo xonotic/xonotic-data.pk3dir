@@ -26,6 +26,31 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 	SetResourceAmountExplicit(e, resource_type, amount);
 }
 
+void TakeResource(entity receiver, int resource_type, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	SetResourceAmount(receiver, resource_type,
+		GetResourceAmount(receiver, resource_type) - amount);
+}
+
+void TakeResourceWithLimit(entity receiver, int resource_type, float amount,
+	float limit)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	float current_amount = GetResourceAmount(receiver, resource_type);
+	if (current_amount - amount < limit)
+	{
+		amount = limit + current_amount;
+	}
+	TakeResource(receiver, resource_type, amount);
+}
+
 int GetResourceType(.float resource_field)
 {
 	switch (resource_field)

@@ -295,7 +295,7 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)

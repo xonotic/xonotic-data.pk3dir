@@ -86,7 +86,7 @@ void walker_rocket_touch(entity this, entity toucher)
 
 void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
-    SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+    TakeResource(this, RESOURCE_HEALTH, damage);
     this.velocity = this.velocity + vforce;
 
     if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)

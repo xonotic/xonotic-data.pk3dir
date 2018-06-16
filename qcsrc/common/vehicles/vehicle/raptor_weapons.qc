@@ -191,7 +191,7 @@ void raptor_flare_touch(entity this, entity toucher)
 
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-    SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+    TakeResource(this, RESOURCE_HEALTH, damage);
     if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
         delete(this);
 }

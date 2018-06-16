@@ -205,7 +205,7 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 	if(inflictor.owner == this.owner)
 		return;
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.velocity += force;
 	if(GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 	{

@@ -883,7 +883,7 @@ void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage
 	if(autocvar_g_ctf_flag_return_damage)
 	{
 		// reduce health and check if it should be returned
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+		TakeResource(this, RESOURCE_HEALTH, damage);
 		ctf_CheckFlagReturn(this, RETURN_DAMAGE);
 		return;
 	}
@@ -953,13 +953,13 @@ void ctf_FlagThink(entity this)
 			}
 			if(this.ctf_flagdamaged_byworld)
 			{
-				SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - ((this.max_flag_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE));
+				TakeResource(this, RESOURCE_HEALTH, ((this.max_flag_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE));
 				ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
 				return;
 			}
 			else if(autocvar_g_ctf_flag_return_time)
 			{
-				SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - ((this.max_flag_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE));
+				TakeResource(this, RESOURCE_HEALTH, ((this.max_flag_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE));
 				ctf_CheckFlagReturn(this, RETURN_TIMEOUT);
 				return;
 			}

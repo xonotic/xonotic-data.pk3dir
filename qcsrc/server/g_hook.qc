@@ -344,7 +344,7 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
 	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{

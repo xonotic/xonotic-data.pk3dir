@@ -125,7 +125,7 @@ void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float dam
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		this.cnt = 1;

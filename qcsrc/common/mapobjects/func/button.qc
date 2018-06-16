@@ -104,7 +104,7 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	}
 	else
 	{
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+		TakeResource(this, RESOURCE_HEALTH, damage);
 		if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		{
 			this.enemy = attacker;

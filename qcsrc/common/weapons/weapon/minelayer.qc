@@ -257,7 +257,7 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_from_enemy ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)

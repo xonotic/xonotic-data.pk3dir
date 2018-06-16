@@ -186,6 +186,56 @@ void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 	GiveResource(receiver, resource_type, amount);
 }
 
+void TakeResource(entity receiver, int resource_type, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	bool forbid = MUTATOR_CALLHOOK(TakeResource, receiver, resource_type,
+		amount);
+	if (forbid)
+	{
+		return;
+	}
+	resource_type = M_ARGV(1, int);
+	amount = M_ARGV(2, float);
+	if (amount == 0)
+	{
+		return;
+	}
+	SetResourceAmount(receiver, resource_type,
+		GetResourceAmount(receiver, resource_type) - amount);
+}
+
+void TakeResourceWithLimit(entity receiver, int resource_type, float amount,
+	float limit)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	bool forbid = MUTATOR_CALLHOOK(TakeResourceWithLimit, receiver,
+		resource_type, amount, limit);
+	if (forbid)
+	{
+		return;
+	}
+	resource_type = M_ARGV(1, int);
+	amount = M_ARGV(2, float);
+	limit = M_ARGV(3, float);
+	if (amount == 0)
+	{
+		return;
+	}
+	float current_amount = GetResourceAmount(receiver, resource_type);
+	if (current_amount - amount < limit)
+	{
+		amount = limit + current_amount;
+	}
+	TakeResource(receiver, resource_type, amount);
+}
+
 int GetResourceType(.float resource_field)
 {
 	switch (resource_field)

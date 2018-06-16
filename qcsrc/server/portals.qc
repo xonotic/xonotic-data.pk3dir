@@ -435,7 +435,7 @@ void Portal_Damage(entity this, entity inflictor, entity attacker, float damage,
 	if(attacker != this.aiment)
 		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(this.aiment))
 			return;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if(GetResourceAmount(this, RESOURCE_HEALTH) < 0)
 		Portal_Remove(this, 1);
 }

@@ -486,7 +486,7 @@ void Monster_Miniboss_Check(entity this)
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
 	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
 	{
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) + autocvar_g_monsters_miniboss_healthboost);
+		GiveResource(this, RESOURCE_HEALTH, autocvar_g_monsters_miniboss_healthboost);
 		this.effects |= EF_RED;
 		if(!this.weapon)
 			this.weapon = WEP_VORTEX.m_id;
@@ -906,7 +906,7 @@ void Monster_Reset(entity this)
 
 void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
