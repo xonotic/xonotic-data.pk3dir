@@ -16,6 +16,7 @@
 #include <server/mutators/_mod.qh>
 #include "race.qh"
 #include "scores.qh"
+#include "scores_rules.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
 #include "../common/constants.qh"
