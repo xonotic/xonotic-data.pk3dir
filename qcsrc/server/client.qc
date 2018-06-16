@@ -1082,6 +1082,8 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 void ClientKill (entity this)
 {
+	// TODO: once .health is removed, will need to check it here for the "already dead" message!
+
 	if(game_stopped) return;
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
