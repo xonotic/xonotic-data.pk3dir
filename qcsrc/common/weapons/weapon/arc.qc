@@ -104,16 +104,16 @@ void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1))
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
@@ -140,7 +140,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR(arc, bolt_damage);
 
 	missile.takedamage = DAMAGE_YES;
-	missile.health = WEP_CVAR(arc, bolt_health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(arc, bolt_health));
 	missile.damageforcescale = WEP_CVAR(arc, bolt_damageforcescale);
 	missile.event_damage = W_Arc_Bolt_Damage;
 	missile.damagedbycontents = true;
@@ -455,15 +455,12 @@ void W_Arc_Beam_Think(entity this)
 				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
 				if(roothealth)
 				{
-					if(trace_ent.health <= trace_ent.max_health)
+					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
 					{
-						trace_ent.health = min(
-							trace_ent.health + (roothealth * coefficient),
-							trace_ent.max_health
-						);
-						WaypointSprite_UpdateHealth(trace_ent.sprite, trace_ent.health);
-						trace_ent.frame = 10 * bound(0, (1 - trace_ent.health / trace_ent.max_health), 1);
-						trace_ent.lasthealth = trace_ent.health;
+						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
+						WaypointSprite_UpdateHealth(trace_ent.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
+						trace_ent.frame = 10 * bound(0, (1 - GetResourceAmount(trace_ent, RESOURCE_HEALTH) / trace_ent.max_health), 1);
+						trace_ent.lasthealth = GetResourceAmount(trace_ent, RESOURCE_HEALTH);
 						trace_ent.SendFlags |= GSF_STATUS;
 					}
 					new_beam_type = ARC_BT_HEAL;
@@ -474,16 +471,13 @@ void W_Arc_Beam_Think(entity this)
 				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
 				if(roothealth)
 				{
-					if(trace_ent.health <= trace_ent.max_health)
+					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
 					{
-						trace_ent.health = min(
-							trace_ent.health + (roothealth * coefficient),
-							trace_ent.max_health
-						);
+						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
 						if(trace_ent.owner.iscaptured)
-							WaypointSprite_UpdateHealth(trace_ent.owner.sprite, trace_ent.health);
+							WaypointSprite_UpdateHealth(trace_ent.owner.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
 						else
-							WaypointSprite_UpdateBuildFinished(trace_ent.owner.sprite, time + (trace_ent.max_health - trace_ent.health) / (trace_ent.count / ONS_CP_THINKRATE));
+							WaypointSprite_UpdateBuildFinished(trace_ent.owner.sprite, time + (trace_ent.max_health - GetResourceAmount(trace_ent, RESOURCE_HEALTH)) / (trace_ent.count / ONS_CP_THINKRATE));
 					}
 					new_beam_type = ARC_BT_HEAL;
 				}
@@ -494,15 +488,12 @@ void W_Arc_Beam_Think(entity this)
 
 				if(roothealth)
 				{
-					if(trace_ent.health <= trace_ent.max_health)
+					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
 					{
-						trace_ent.health = min(
-							trace_ent.health + (roothealth * coefficient),
-							trace_ent.max_health
-						);
+						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
 						if(trace_ent.sprite)
 						{
-							WaypointSprite_UpdateHealth(trace_ent.sprite, trace_ent.health);
+							WaypointSprite_UpdateHealth(trace_ent.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
 						}
 						func_breakable_colormod(trace_ent);
 					}
@@ -525,19 +516,13 @@ void W_Arc_Beam_Think(entity this)
 				}
 				maxhp = ((IS_MONSTER(trace_ent)) ? trace_ent.max_health : WEP_CVAR(arc, beam_healing_hmax));
 
-				if(trace_ent.health <= maxhp && roothealth)
+				if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= maxhp && roothealth)
 				{
-					trace_ent.health = min(
-						trace_ent.health + (roothealth * coefficient),
-						maxhp
-					);
+					GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), maxhp);
 				}
-				if(trace_ent.armorvalue <= WEP_CVAR(arc, beam_healing_amax) && rootarmor && !IS_MONSTER(trace_ent))
+				if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= WEP_CVAR(arc, beam_healing_amax) && rootarmor && !IS_MONSTER(trace_ent))
 				{
-					trace_ent.armorvalue = min(
-						trace_ent.armorvalue + (rootarmor * coefficient),
-						WEP_CVAR(arc, beam_healing_amax)
-					);
+					GiveResourceWithLimit(trace_ent, RESOURCE_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
 				}
 
 				// stop rot, set visual effect

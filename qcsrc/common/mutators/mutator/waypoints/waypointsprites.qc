@@ -34,7 +34,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     {
         if (this.max_health)
         {
-            WriteByte(MSG_ENTITY, (this.health / this.max_health) * 191.0);
+            WriteByte(MSG_ENTITY, (GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health) * 191.0);
         }
         else
         {
@@ -831,9 +831,9 @@ void WaypointSprite_UpdateSprites(entity e, entity _m1, entity _m2, entity _m3)
 void WaypointSprite_UpdateHealth(entity e, float f)
 {
     f = bound(0, f, e.max_health);
-    if (f != e.health || e.pain_finished)
+    if (f != GetResourceAmount(e, RESOURCE_HEALTH) || e.pain_finished)
     {
-        e.health = f;
+        SetResourceAmountExplicit(e, RESOURCE_HEALTH, f);
         e.pain_finished = 0;
         e.SendFlags |= 0x80;
     }
@@ -1160,10 +1160,10 @@ entity WaypointSprite_AttachCarrier(
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
     entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', NULL, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
-    if (carrier.health)
+    if (GetResourceAmount(carrier, RESOURCE_HEALTH))
     {
         WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
-        WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(carrier.health, carrier.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
+        WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(GetResourceAmount(carrier, RESOURCE_HEALTH), GetResourceAmount(carrier, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
     }
     return e;
 }

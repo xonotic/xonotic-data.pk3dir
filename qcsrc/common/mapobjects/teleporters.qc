@@ -44,12 +44,12 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 {
 	TDEATHLOOP(player.origin)
 	{
-		if (IS_PLAYER(player) && player.health >= 1)
+		if (IS_PLAYER(player) && GetResourceAmount(player, RESOURCE_HEALTH) >= 1)
 		{
 			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 			{
 				if(IS_PLAYER(head))
-					if(head.health >= 1)
+					if(GetResourceAmount(head, RESOURCE_HEALTH) >= 1)
 						++tdeath_hit;
 				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, DMG_NOWEP, head.origin, '0 0 0');
 			}

@@ -94,7 +94,7 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 	}
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
-	float max_amount = GetResourceLimit(e, resource_type);
+	float max_amount = GetResourceLimit(e, resource_type); // TODO: should allow overriding these limits if cheats are enabled!
 	float amount_wasted = 0;
 	if (amount > max_amount)
 	{

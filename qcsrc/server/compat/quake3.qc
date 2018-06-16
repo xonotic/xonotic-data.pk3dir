@@ -165,9 +165,9 @@ void target_give_init(entity this)
 			this.netname = cons(this.netname, "mortar");
 		}
 		else if (it.classname == "item_armor_mega")
-			this.armorvalue = 100;
+			SetResourceAmountExplicit(this, RESOURCE_ARMOR, 100);
 		else if (it.classname == "item_health_mega")
-			this.health = 200;
+			SetResourceAmountExplicit(this, RESOURCE_HEALTH, 200);
 		//remove(it); // removing ents in init functions causes havoc, workaround:
         setthink(it, SUB_Remove);
         it.nextthink = time;

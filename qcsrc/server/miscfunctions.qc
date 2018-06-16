@@ -266,8 +266,8 @@ string formatmessage(entity this, string msg)
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(this.armorvalue)); break;
-			case "h": replacement = ftos(floor(this.health)); break;
+			case "a": replacement = ftos(floor(GetResourceAmount(this, RESOURCE_ARMOR))); break;
+			case "h": replacement = ftos(floor(GetResourceAmount(this, RESOURCE_HEALTH))); break;
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;

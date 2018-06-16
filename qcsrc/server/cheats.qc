@@ -158,8 +158,8 @@ float CheatImpulse(entity this, int imp)
 			SetResourceAmount(this.personal, RESOURCE_PLASMA, GetResourceAmount(this, RESOURCE_PLASMA));
 			SetResourceAmount(this.personal, RESOURCE_SHELLS, GetResourceAmount(this, RESOURCE_SHELLS));
 			SetResourceAmount(this.personal, RESOURCE_FUEL, GetResourceAmount(this, RESOURCE_FUEL));
-			this.personal.health = max(1, this.health);
-			this.personal.armorvalue = this.armorvalue;
+			SetResourceAmount(this.personal, RESOURCE_HEALTH, max(1, GetResourceAmount(this, RESOURCE_HEALTH)));
+			SetResourceAmount(this.personal, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR));
 			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
@@ -217,8 +217,8 @@ float CheatImpulse(entity this, int imp)
 				SetResourceAmount(this, RESOURCE_PLASMA, GetResourceAmount(this.personal, RESOURCE_PLASMA));
 				SetResourceAmount(this, RESOURCE_SHELLS, GetResourceAmount(this.personal, RESOURCE_SHELLS));
 				SetResourceAmount(this, RESOURCE_FUEL, GetResourceAmount(this.personal, RESOURCE_FUEL));
-				this.health = this.personal.health;
-				this.armorvalue = this.personal.armorvalue;
+				SetResourceAmount(this, RESOURCE_HEALTH, GetResourceAmount(this.personal, RESOURCE_HEALTH));
+				SetResourceAmount(this, RESOURCE_ARMOR, GetResourceAmount(this.personal, RESOURCE_ARMOR));
 				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
@@ -355,7 +355,7 @@ float CheatCommand(entity this, int argc)
 					entity e = spawn();
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
-					e.health = 1000;
+					SetResourceAmountExplicit(e, RESOURCE_HEALTH, 1000);
 					setorigin(e, trace_endpos);
 					e.effects = EF_NOMODELFLAGS;
 					if(f == 1)

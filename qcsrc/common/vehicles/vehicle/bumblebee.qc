@@ -557,18 +557,18 @@ bool bumblebee_pilot_frame(entity this, float dt)
 						}
 						else if(IS_CLIENT(trace_ent))
 						{
-							if(trace_ent.health <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax);
+							if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
+								SetResourceAmountExplicit(trace_ent, RESOURCE_HEALTH, min(GetResourceAmount(trace_ent, RESOURCE_HEALTH) + autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax));
 
-							if(trace_ent.armorvalue <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
-								trace_ent.armorvalue = min(trace_ent.armorvalue + autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax);
+							if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
+								SetResourceAmountExplicit(trace_ent, RESOURCE_ARMOR, min(GetResourceAmount(trace_ent, RESOURCE_ARMOR) + autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax));
 
-							trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax);
+							SetResourceAmountExplicit(trace_ent, RESOURCE_HEALTH, min(GetResourceAmount(trace_ent, RESOURCE_HEALTH) + autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax));
 						}
 						else if(IS_TURRET(trace_ent))
 						{
-							if(trace_ent.health  <= trace_ent.max_health && autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * dt, trace_ent.max_health);
+							if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health && autocvar_g_vehicle_bumblebee_healgun_hps)
+								SetResourceAmountExplicit(trace_ent, RESOURCE_HEALTH, min(GetResourceAmount(trace_ent, RESOURCE_HEALTH) + autocvar_g_vehicle_bumblebee_healgun_hps * dt, trace_ent.max_health));
 							//else ..hmmm what? ammo?
 
 							trace_ent.SendFlags |= TNSF_STATUS;
@@ -803,7 +803,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 
     Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation(instance.origin, 16), '0 0 0', 1);
 
-    instance.health			= 0;
+    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, 0);
     instance.event_damage	= func_null;
     instance.solid			= SOLID_NOT;
     instance.takedamage		= DAMAGE_NO;

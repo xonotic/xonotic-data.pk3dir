@@ -205,9 +205,9 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 	if(inflictor.owner == this.owner)
 		return;
 
-	this.health -= damage;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
 	this.velocity += force;
-	if(this.health < 1)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 	{
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
@@ -282,7 +282,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	{
 		proj.takedamage	   = DAMAGE_AIM;
 		proj.event_damage	 = vehicles_projectile_damage;
-		proj.health		   = _health;
+		SetResourceAmountExplicit(proj, RESOURCE_HEALTH, _health);
 	}
 	else
 		proj.flags |= FL_NOTARGET;
