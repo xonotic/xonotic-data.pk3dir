@@ -257,7 +257,7 @@ void M_Mage_Defend_Heal(entity this)
 					break;
 				case 3:
 					float hp = ((it == this) ? autocvar_g_monster_mage_heal_self : autocvar_g_monster_mage_heal_allies);
-					SetResourceAmount(it, RESOURCE_HEALTH, GetResourceAmount(it, RESOURCE_HEALTH) - hp); // TODO: use regular damage functions? needs a way to bypass friendly fire checks
+					TakeResource(it, RESOURCE_HEALTH, hp); // TODO: use regular damage functions? needs a way to bypass friendly fire checks
 					fx = EFFECT_RAGE;
 					break;
 			}
