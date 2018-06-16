@@ -7,9 +7,6 @@
 
 #include <common/resources.qh>
 
-/// \brief Unconditional maximum amount of resources the entity can have.
-const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
-
 // ============================ Public API ====================================
 
 /// \brief Returns the maximum amount of the given resource.
