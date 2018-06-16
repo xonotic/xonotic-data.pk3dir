@@ -185,7 +185,11 @@ bool Player_SetTeamIndex(entity player, int index)
 		// Mutator has blocked team change.
 		return false;
 	}
-	if (new_team != -1)
+	if (new_team == -1)
+	{
+		player.team = -1;
+	}
+	else
 	{
 		SetPlayerColors(player, new_team - 1);
 	}
