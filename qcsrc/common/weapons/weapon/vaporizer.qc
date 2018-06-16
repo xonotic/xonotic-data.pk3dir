@@ -295,7 +295,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     } else if(WEP_CVAR(vaporizer, reload_ammo) && actor.(weaponentity).clip_load < vaporizer_ammo) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     }
-    if((fire & 1) && (actor.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(actor))
+    if((fire & 1) && (GetResourceAmount(actor, RESOURCE_CELLS) || !autocvar_g_rm) && !forbidWeaponUse(actor))
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vaporizer, refire)))
         {
@@ -303,7 +303,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
         }
     }
-    if((fire & 2) || ((fire & 1) && !actor.ammo_cells && autocvar_g_rm))
+    if((fire & 2) || ((fire & 1) && !GetResourceAmount(actor, RESOURCE_CELLS) && autocvar_g_rm))
     {
         if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
         {
