@@ -40,18 +40,10 @@ void swampslug_think(entity this);
 void swampslug_think(entity this)
 {
 	//Slowly kill the slug
-#ifdef SVQC
 	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - 1);
-#elif defined(CSQC)
-	this.health -= 1;
-#endif
 
 	//Slug dead? then remove curses.
-#ifdef SVQC
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
-#elif defined(CSQC)
-	if(this.health <= 0)
-#endif
 	{
 		this.owner.in_swamp = 0;
 		delete(this);
@@ -84,11 +76,7 @@ void swamp_touch(entity this, entity toucher)
 		// If not attach one.
 		//centerprint(toucher,"Entering swamp!\n");
 		toucher.swampslug = spawn();
-	#ifdef SVQC
 		SetResourceAmountExplicit(toucher.swampslug, RESOURCE_HEALTH, 2);
-	#elif defined(CSQC)
-		toucher.swampslug.health = 2;
-	#endif
 		setthink(toucher.swampslug, swampslug_think);
 		toucher.swampslug.nextthink = time;
 		toucher.swampslug.owner = toucher;
@@ -102,11 +90,7 @@ void swamp_touch(entity this, entity toucher)
 	//toucher.in_swamp = 1;
 
 	//Revitalize players swampslug
-#ifdef SVQC
 	SetResourceAmountExplicit(toucher.swampslug, RESOURCE_HEALTH, 2);
-#elif defined(CSQC)
-	toucher.swampslug.health = 2;
-#endif
 }
 
 REGISTER_NET_LINKED(ENT_CLIENT_SWAMP)

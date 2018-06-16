@@ -1,0 +1,44 @@
+#pragma once
+
+/// \file
+/// \brief Header file that describes the resource system.
+/// \copyright GNU GPLv2 or any later version.
+
+#include <common/resources.qh>
+
+/// \brief Unconditional maximum amount of resources the entity can have.
+const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
+
+// ============================ Public API ====================================
+
+/// \brief Returns the current amount of resource the given entity has.
+/// \param[in] e Entity to check.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \return Current amount of resource the given entity has.
+float GetResourceAmount(entity e, int resource_type);
+
+/// \brief Sets the resource amount of an entity without calling any hooks.
+/// \param[in,out] e Entity to adjust.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] amount Amount of resource to set.
+/// \return Boolean for whether the ammo amount was changed
+bool SetResourceAmountExplicit(entity e, int resource_type, float amount);
+
+/// \brief Sets the current amount of resource the given entity will have.
+/// \param[in,out] e Entity to adjust.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] amount Amount of resource to set.
+/// \return No return.
+void SetResourceAmount(entity e, int resource_type, float amount);
+
+// ===================== Legacy and/or internal API ===========================
+
+/// \brief Converts an entity field to resource type.
+/// \param[in] resource_field Entity field to convert.
+/// \return Resource type (a RESOURCE_* constant).
+int GetResourceType(.float resource_field);
+
+/// \brief Converts resource type (a RESOURCE_* constant) to entity field.
+/// \param[in] resource_type Type of the resource.
+/// \return Entity field for that resource.
+.float GetResourceField(int resource_type);

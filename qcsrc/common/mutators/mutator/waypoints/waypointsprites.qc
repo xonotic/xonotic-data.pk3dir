@@ -134,7 +134,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
         int t = ReadByte();
         if (t < 192)
         {
-            this.health = t / 191.0;
+            SetResourceAmountExplicit(this, RESOURCE_HEALTH, t / 191.0);
             this.build_finished = 0;
         }
         else
@@ -142,7 +142,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
             t = (t - 192) * 256 + ReadByte();
             this.build_started = servertime;
             if (this.build_finished)
-                this.build_starthealth = bound(0, this.health, 1);
+                this.build_starthealth = bound(0, GetResourceAmount(this, RESOURCE_HEALTH), 1);
             else
                 this.build_starthealth = 0;
             this.build_finished = servertime + t / 32;
@@ -150,7 +150,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
     }
     else
     {
-        this.health = -1;
+        SetResourceAmountExplicit(this, RESOURCE_HEALTH, -1);
         this.build_finished = 0;
     }
 
@@ -654,14 +654,14 @@ void Draw_WaypointSprite(entity this)
         if (time < this.build_finished + 0.25)
         {
             if (time < this.build_started)
-                this.health = this.build_starthealth;
+                SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.build_starthealth);
             else if (time < this.build_finished)
-                this.health = (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth;
+                SetResourceAmountExplicit(this, RESOURCE_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
             else
-                this.health = 1;
+                SetResourceAmountExplicit(this, RESOURCE_HEALTH, 1);
         }
         else
-            this.health = -1;
+            SetResourceAmountExplicit(this, RESOURCE_HEALTH, -1);
     }
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
@@ -709,7 +709,7 @@ void Draw_WaypointSprite(entity this)
     }
 
     draw_beginBoldFont();
-    if (this.health >= 0)
+    if (GetResourceAmount(this, RESOURCE_HEALTH) >= 0)
     {
         float align = 0, marg;
         if (this.build_finished)
@@ -726,7 +726,7 @@ void Draw_WaypointSprite(entity this)
         drawhealthbar(
                 o,
                 0,
-                this.health,
+                GetResourceAmount(this, RESOURCE_HEALTH),
                 '0 0 0',
                 '0 0 0',
                 SPRITE_HEALTHBAR_WIDTH * t,

@@ -58,11 +58,7 @@ void door_rotating_go_down(entity this)
 	if (this.max_health)
 	{
 		this.takedamage = DAMAGE_YES;
-	#ifdef SVQC
 		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
-	#elif defined(CSQC)
-		this.health = this.max_health;
-	#endif
 	}
 
 	this.state = STATE_DOWN;

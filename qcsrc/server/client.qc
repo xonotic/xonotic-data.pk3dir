@@ -1756,13 +1756,13 @@ void player_regen(entity this)
 	// Ugly hack to make sure the health and armor don't go beyond hard limit.
 	// TODO: Remove this hack when all code uses GivePlayerHealth and
 	// GivePlayerArmor.
-	if (this.health > RESOURCE_AMOUNT_HARD_LIMIT)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) > RESOURCE_AMOUNT_HARD_LIMIT)
 	{
-		this.health = RESOURCE_AMOUNT_HARD_LIMIT;
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, RESOURCE_AMOUNT_HARD_LIMIT);
 	}
-	if (this.armorvalue > RESOURCE_AMOUNT_HARD_LIMIT)
+	if (GetResourceAmount(this, RESOURCE_ARMOR) > RESOURCE_AMOUNT_HARD_LIMIT)
 	{
-		this.armorvalue = RESOURCE_AMOUNT_HARD_LIMIT;
+		SetResourceAmountExplicit(this, RESOURCE_ARMOR, RESOURCE_AMOUNT_HARD_LIMIT);
 	}
 	// End hack.
 }

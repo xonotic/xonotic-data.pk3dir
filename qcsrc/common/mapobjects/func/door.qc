@@ -113,11 +113,7 @@ void door_go_down(entity this)
 	if (this.max_health)
 	{
 		this.takedamage = DAMAGE_YES;
-	#ifdef SVQC
 		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
-	#elif defined(CSQC)
-		this.health = this.max_health;
-	#endif
 	}
 
 	this.state = STATE_DOWN;
@@ -269,11 +265,7 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-#ifdef SVQC
 	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) - damage);
-#elif defined(CSQC)
-	this.health -= damage;
-#endif
 
 	if (this.itemkeys)
 	{
@@ -281,21 +273,12 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 		return;
 	}
 
-#ifdef SVQC
 	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		SetResourceAmountExplicit(this.owner, RESOURCE_HEALTH, this.owner.max_health);
 		this.owner.takedamage = DAMAGE_NO;	// will be reset upon return
 		door_use(this.owner, NULL, NULL);
 	}
-#elif defined(CSQC)
-	if(this.health <= 0)
-	{
-		this.owner.health = this.owner.max_health;
-		this.owner.takedamage = DAMAGE_NO;
-		door_use(this.owner, NULL, NULL);
-	}
-#endif
 }
 
 .float door_finished;
@@ -374,11 +357,10 @@ Spawned if a door lacks a real activator
 
 void door_trigger_touch(entity this, entity toucher)
 {
-#ifdef SVQC
 	if (GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
+#ifdef SVQC
 		if (!((toucher.iscreature || (toucher.flags & FL_PROJECTILE)) && !IS_DEAD(toucher)))
 #elif defined(CSQC)
-	if (toucher.health < 1)
 		if(!((IS_CLIENT(toucher) || toucher.classname == "csqcprojectile") && !IS_DEAD(toucher)))
 #endif
 			return;
@@ -459,11 +441,7 @@ void LinkDoors(entity this)
 	{
 		this.owner = this.enemy = this;
 
-#ifdef SVQC
 		if (GetResourceAmount(this, RESOURCE_HEALTH))
-#elif defined(CSQC)
-		if(this.health)
-#endif
 			return;
 		IFTARGETED
 			return;
@@ -496,13 +474,8 @@ void LinkDoors(entity this)
 	cmaxs = this.absmax;
 	for(t = this; ; t = t.enemy)
 	{
-	#ifdef SVQC
 		if(GetResourceAmount(t, RESOURCE_HEALTH) && !GetResourceAmount(this, RESOURCE_HEALTH))
 			SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(t, RESOURCE_HEALTH));
-	#elif defined(CSQC)
-		if(t.health && !this.health)
-			this.health = t.health;
-	#endif
 		if((t.targetname != "") && (this.targetname == ""))
 			this.targetname = t.targetname;
 		if((t.message != "") && (this.message == ""))
@@ -526,11 +499,7 @@ void LinkDoors(entity this)
 	// distribute health, targetname, message
 	for(t = this; t; t = t.enemy)
 	{
-	#ifdef SVQC
 		SetResourceAmountExplicit(t, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
-	#elif defined(CSQC)
-		t.health = this.health;
-	#endif
 		t.targetname = this.targetname;
 		t.message = this.message;
 		if(t.enemy == this)
@@ -540,11 +509,7 @@ void LinkDoors(entity this)
 	// shootable, or triggered doors just needed the owner/enemy links,
 	// they don't spawn a field
 
-#ifdef SVQC
 	if (GetResourceAmount(this, RESOURCE_HEALTH))
-#elif defined(CSQC)
-	if(this.health)
-#endif
 		return;
 	IFTARGETED
 		return;

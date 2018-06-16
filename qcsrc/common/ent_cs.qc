@@ -83,7 +83,7 @@ ENTCS_PROP_RESOURCE(HEALTH, false, RESOURCE_HEALTH, ENTCS_SET_NORMAL,
 
 ENTCS_PROP_RESOURCE(ARMOR, false, RESOURCE_ARMOR, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_ARMOR) / 10, 255));  /* FIXME: use a better scale? */ },
-	{ ent.armorvalue = ReadByte() * 10; })
+	{ SetResourceAmountExplicit(ent, RESOURCE_ARMOR, ReadByte() * 10); })
 
 ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,
 	{ WriteString(chan, ent.netname); },
