@@ -309,6 +309,7 @@ void Domination_count_controlpoints()
 	{
 		++total_control_points;
 		entity team_ = Entity_GetTeam(it.goalentity);
+		//TODO: team_ seems to be NULL
 		int num_control_points = Team_GetNumberOfControlPoints(team_);
 		++num_control_points;
 		Team_SetNumberOfControlPoints(team_, num_control_points);
