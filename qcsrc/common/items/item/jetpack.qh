@@ -35,10 +35,10 @@ REGISTER_ITEM(Jetpack, Powerup) {
     this.m_itemid               =   IT_JETPACK;
 #endif
     this.netname                =   "jetpack";
-    this.m_name                 =   "Jet pack";
+    this.m_name                 =   "Jetpack";
     this.m_icon                 =   "jetpack";
     this.m_color                =   '0.5 0.5 0.5';
-    this.m_waypoint             =   _("Jet Pack");
+    this.m_waypoint             =   _("Jetpack");
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_botvalue             =   3000;

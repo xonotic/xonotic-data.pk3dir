@@ -34,7 +34,7 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+jump"                                 , _("jump / swim"));
 	KEYBIND_DEF("+crouch"                               , _("crouch / sink"));
 	KEYBIND_DEF("+hook"                                 , _("off-hand hook"));
-	KEYBIND_DEF("+jetpack"                              , _("jet pack"));
+	KEYBIND_DEF("+jetpack"                              , _("jetpack"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("Attacking"));
 	KEYBIND_DEF("+fire"                                 , _("primary fire"));
