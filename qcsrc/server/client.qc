@@ -1723,10 +1723,10 @@ void player_regen(entity this)
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
 
-		SetResourceAmountExplicit(this, RESOURCE_ARMOR, CalcRotRegen(GetResourceAmount(this, RESOURCE_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
+		SetResourceAmount(this, RESOURCE_ARMOR, CalcRotRegen(GetResourceAmount(this, RESOURCE_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
 									regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
 									rot_mod * frametime * (time > this.pauserotarmor_finished), limita));
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, CalcRotRegen(GetResourceAmount(this, RESOURCE_HEALTH), regen_health_stable, regen_health, regen_health_linear,
+		SetResourceAmount(this, RESOURCE_HEALTH, CalcRotRegen(GetResourceAmount(this, RESOURCE_HEALTH), regen_health_stable, regen_health, regen_health_linear,
 									regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear,
 									rot_mod * frametime * (time > this.pauserothealth_finished), limith));
 	}
@@ -1753,18 +1753,6 @@ void player_regen(entity this)
 										frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
 										maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf));
 	}
-	// Ugly hack to make sure the health and armor don't go beyond hard limit.
-	// TODO: Remove this hack when all code uses GivePlayerHealth and
-	// GivePlayerArmor.
-	if (GetResourceAmount(this, RESOURCE_HEALTH) > RESOURCE_AMOUNT_HARD_LIMIT)
-	{
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, RESOURCE_AMOUNT_HARD_LIMIT);
-	}
-	if (GetResourceAmount(this, RESOURCE_ARMOR) > RESOURCE_AMOUNT_HARD_LIMIT)
-	{
-		SetResourceAmountExplicit(this, RESOURCE_ARMOR, RESOURCE_AMOUNT_HARD_LIMIT);
-	}
-	// End hack.
 }
 
 bool zoomstate_set;
