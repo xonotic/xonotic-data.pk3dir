@@ -39,4 +39,6 @@ bool MoveToTeam(entity client, float team_colour, float type);
 
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
+bool PlayerHeal(entity targ, entity inflictor, float amount, float limit);
+
 int Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
