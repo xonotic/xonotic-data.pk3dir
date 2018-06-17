@@ -630,7 +630,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
-		this.event_damage = func_null;
+		this.event_heal = func_null;
 		// call the corpse damage function just in case it wants to gib
 		this.event_damage(this, inflictor, attacker, excess, deathtype, weaponentity, hitloc, force);
 
