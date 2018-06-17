@@ -64,7 +64,7 @@ void ammo_fuel_init(Pickup this, entity item)
 REGISTER_ITEM(JetpackFuel, Ammo) {
     this.m_canonical_spawnfunc = "item_fuel";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_JetpackFuel_ITEM;
 #endif
     this.netname    =   "fuel";
