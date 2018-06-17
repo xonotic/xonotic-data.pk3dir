@@ -11,7 +11,7 @@
 float GetResourceLimit(entity e, int resource_type)
 {
 	if(!IS_PLAYER(e))
-		return -1; // no limits on non-players
+		return RESOURCE_LIMIT_NONE; // no limits on non-players
 
 	float limit;
 	switch (resource_type)
@@ -99,7 +99,7 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 	amount = M_ARGV(2, float);
 	float max_amount = GetResourceLimit(e, resource_type); // TODO: should allow overriding these limits if cheats are enabled!
 	float amount_wasted = 0;
-	if (amount > max_amount && max_amount >= 0)
+	if (amount > max_amount && max_amount != RESOURCE_LIMIT_NONE)
 	{
 		amount_wasted = amount - max_amount;
 		amount = max_amount;
