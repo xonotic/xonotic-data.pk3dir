@@ -10,6 +10,9 @@
 
 float GetResourceLimit(entity e, int resource_type)
 {
+	if(!IS_PLAYER(e))
+		return 0; // no limits on non-players
+
 	float limit;
 	switch (resource_type)
 	{
@@ -96,7 +99,7 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 	amount = M_ARGV(2, float);
 	float max_amount = GetResourceLimit(e, resource_type); // TODO: should allow overriding these limits if cheats are enabled!
 	float amount_wasted = 0;
-	if (amount > max_amount)
+	if (amount > max_amount && max_amount)
 	{
 		amount_wasted = amount - max_amount;
 		amount = max_amount;
@@ -115,7 +118,7 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 
 void GiveResource(entity receiver, int resource_type, float amount)
 {
-	if (amount == 0)
+	if (amount <= 0)
 	{
 		return;
 	}
@@ -161,7 +164,7 @@ void GiveResource(entity receiver, int resource_type, float amount)
 void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 	float limit)
 {
-	if (amount == 0)
+	if (amount <= 0)
 	{
 		return;
 	}
@@ -174,7 +177,7 @@ void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
 	limit = M_ARGV(3, float);
-	if (amount == 0)
+	if (amount <= 0)
 	{
 		return;
 	}
@@ -188,7 +191,7 @@ void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 
 void TakeResource(entity receiver, int resource_type, float amount)
 {
-	if (amount == 0)
+	if (amount <= 0)
 	{
 		return;
 	}
@@ -200,7 +203,7 @@ void TakeResource(entity receiver, int resource_type, float amount)
 	}
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
-	if (amount == 0)
+	if (amount <= 0)
 	{
 		return;
 	}
@@ -211,7 +214,7 @@ void TakeResource(entity receiver, int resource_type, float amount)
 void TakeResourceWithLimit(entity receiver, int resource_type, float amount,
 	float limit)
 {
-	if (amount == 0)
+	if (amount <= 0)
 	{
 		return;
 	}
@@ -224,7 +227,7 @@ void TakeResourceWithLimit(entity receiver, int resource_type, float amount,
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
 	limit = M_ARGV(3, float);
-	if (amount == 0)
+	if (amount <= 0)
 	{
 		return;
 	}
