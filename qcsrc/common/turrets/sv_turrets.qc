@@ -182,6 +182,7 @@ void turret_die(entity this)
 	this.tur_head.solid	 = this.solid;
 
 	this.event_damage		  = func_null;
+	this.event_heal = func_null;
 	this.takedamage			 = DAMAGE_NO;
 
 	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
@@ -248,12 +249,25 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	{
 		this.event_damage		  = func_null;
 		this.tur_head.event_damage = func_null;
+		this.event_heal = func_null;
+		this.tur_head.event_heal = func_null;
 		this.takedamage			 = DAMAGE_NO;
 		this.nextthink = time;
 		setthink(this, turret_die);
 	}
 
 	this.SendFlags  |= TNSF_STATUS;
+}
+
+bool turret_heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit >= 0) ? limit : targ.max_health);
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	targ.SendFlags |= TNSF_STATUS;
+	return true;
 }
 
 void turret_think(entity this);
@@ -268,6 +282,7 @@ void turret_respawn(entity this)
 	this.solid					= SOLID_BBOX;
 	this.takedamage 			= DAMAGE_AIM;
 	this.event_damage			= turret_damage;
+	this.event_heal 			= turret_heal;
 	this.avelocity				= '0 0 0';
 	this.tur_head.avelocity		= this.avelocity;
 	this.tur_head.angles		= this.idle_aim;
@@ -1360,6 +1375,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.idle_aim 				= '0 0 0';
 	this.turret_firecheckfunc	= turret_firecheck;
 	this.event_damage			= turret_damage;
+	this.event_heal 			= turret_heal;
 	this.use					= turret_use;
 	this.bot_attack				= true;
 	this.nextthink				= time + 1;

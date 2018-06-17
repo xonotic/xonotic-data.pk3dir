@@ -234,9 +234,11 @@ void M_Mage_Defend_Heal(entity this)
 			switch(this.skin)
 			{
 				case 0:
-					GiveResourceWithLimit(it, RESOURCE_HEALTH, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_health_regenstable);
+				{
+					Heal(it, this, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_health_regenstable);
 					fx = EFFECT_HEALING;
 					break;
+				}
 				case 1:
 				{
 					if(GetResourceAmount(this, RESOURCE_CELLS)) GiveResourceWithLimit(it, RESOURCE_CELLS, 1, g_pickup_cells_max);
@@ -267,7 +269,7 @@ void M_Mage_Defend_Heal(entity this)
 		else
 		{
 			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-			GiveResourceWithLimit(it, RESOURCE_HEALTH, autocvar_g_monster_mage_heal_allies, it.max_health);
+			Heal(it, this, autocvar_g_monster_mage_heal_allies, -1);
 			if(!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
 				WaypointSprite_UpdateHealth(it.sprite, GetResourceAmount(it, RESOURCE_HEALTH));
 		}

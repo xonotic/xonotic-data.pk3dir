@@ -544,36 +544,27 @@ bool bumblebee_pilot_frame(entity this, float dt)
 			else
 			{
 				if(!IS_DEAD(trace_ent))
+				{
 					if((teamplay && trace_ent.team == this.team) || !teamplay)
 					{
+						if(autocvar_g_vehicle_bumblebee_healgun_hps)
+						{
+							float hplimit = ((IS_PLAYER(trace_ent)) ? autocvar_g_vehicle_bumblebee_healgun_hmax : -1);
+							Heal(trace_ent, this, autocvar_g_vehicle_bumblebee_healgun_hps * dt, hplimit);
+						}
 
 						if(IS_VEHICLE(trace_ent))
 						{
 							if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.max_health)
 								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * dt, trace_ent.tur_head.max_health);
-
-							if(autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.vehicle_health = min(trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * dt, trace_ent.max_health);
 						}
 						else if(IS_CLIENT(trace_ent))
 						{
-							if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
-								GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax);
-
 							if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
 								GiveResourceWithLimit(trace_ent, RESOURCE_ARMOR, autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax);
-
-							GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax);
-						}
-						else if(IS_TURRET(trace_ent))
-						{
-							if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health && autocvar_g_vehicle_bumblebee_healgun_hps)
-								GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, autocvar_g_vehicle_bumblebee_healgun_hps * dt, trace_ent.max_health);
-							//else ..hmmm what? ammo?
-
-							trace_ent.SendFlags |= TNSF_STATUS;
 						}
 					}
+				}
 			}
 		}
 
