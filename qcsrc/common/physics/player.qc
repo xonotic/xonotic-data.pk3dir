@@ -792,7 +792,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 
 #ifdef SVQC
 		if (!(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-			this.ammo_fuel -= PHYS_JETPACK_FUEL(this) * dt * fvel * f;
+			TakeResource(this, RESOURCE_FUEL, PHYS_JETPACK_FUEL(this) * dt * fvel * f);
 
 		ITEMS_STAT(this) |= IT_USING_JETPACK;
 

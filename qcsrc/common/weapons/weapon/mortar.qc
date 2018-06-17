@@ -54,15 +54,15 @@ void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)
 
 void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
@@ -176,7 +176,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Mortar_Grenade_Touch1);
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = WEP_CVAR_PRI(mortar, health);
+	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, WEP_CVAR_PRI(mortar, health));
 	gren.damageforcescale = WEP_CVAR_PRI(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;
@@ -227,7 +227,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Mortar_Grenade_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = WEP_CVAR_SEC(mortar, health);
+	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, WEP_CVAR_SEC(mortar, health));
 	gren.damageforcescale = WEP_CVAR_SEC(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;

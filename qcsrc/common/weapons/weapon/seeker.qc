@@ -124,18 +124,18 @@ void W_Seeker_Missile_Think(entity this)
 
 void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
 	if(this.realowner == attacker)
-		this.health = this.health - (damage * 0.25);
+		TakeResource(this, RESOURCE_HEALTH, (damage * 0.25));
 	else
-		this.health = this.health - damage;
+		TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_Seeker_Missile_Explode_think);
 }
 
@@ -190,7 +190,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.scale           = 2;
 	missile.takedamage      = DAMAGE_YES;
 	missile.weaponentity_fld = weaponentity;
-	missile.health          = WEP_CVAR(seeker, missile_health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(seeker, missile_health));
 	missile.damageforcescale = WEP_CVAR(seeker, missile_damageforcescale);
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -415,10 +415,10 @@ void W_Seeker_Tag_Explode(entity this)
 
 void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
-	this.health = this.health - damage;
-	if(this.health <= 0)
+	TakeResource(this, RESOURCE_HEALTH, damage);
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_Seeker_Tag_Explode(this);
 }
 
@@ -506,7 +506,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 
 	missile.takedamage       = DAMAGE_YES;
 	missile.event_damage     = W_Seeker_Tag_Damage;
-	missile.health           = WEP_CVAR(seeker, tag_health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(seeker, tag_health));
 	missile.damageforcescale = WEP_CVAR(seeker, tag_damageforcescale);
 
 	setorigin(missile, w_shotorg);

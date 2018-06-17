@@ -352,7 +352,7 @@ void HUD_Radar()
 
 	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
-		if ( it.health >= 0 )
+		if ( GetResourceAmount(it, RESOURCE_HEALTH) >= 0 )
 		if ( it.team == myteam + 1 || gametype == MAPINFO_TYPE_RACE || !teamplay )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));

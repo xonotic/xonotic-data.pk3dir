@@ -48,15 +48,15 @@ void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
 
 void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
@@ -88,7 +88,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Hook_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = WEP_CVAR_SEC(hook, health);
+	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, WEP_CVAR_SEC(hook, health));
 	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = true;
@@ -165,7 +165,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
             {
                 if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
                 {
-                    if( actor.ammo_fuel >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
+                    if( GetResourceAmount(actor, RESOURCE_FUEL) >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
                     {
                         W_DecreaseAmmo(thiswep, actor, (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel, weaponentity);
                         actor.(weaponentity).hook_time_fueldecrease = time;
@@ -173,7 +173,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
                     }
                     else
                     {
-                        actor.ammo_fuel = 0;
+                        SetResourceAmount(actor, RESOURCE_FUEL, 0);
                         actor.(weaponentity).hook_state |= HOOK_REMOVING;
                         if(actor.(weaponentity).m_weapon != WEP_Null) // offhand
                         	W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
@@ -214,9 +214,9 @@ METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor, .entity weaponentit
     if (!thiswep.ammo_factor) return true;
 
     if(actor.(weaponentity).hook)
-    	return actor.ammo_fuel > 0;
+    	return GetResourceAmount(actor, RESOURCE_FUEL) > 0;
 
-    return actor.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
+    return GetResourceAmount(actor, RESOURCE_FUEL) >= WEP_CVAR_PRI(hook, ammo);
 }
 METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor, .entity weaponentity))
 {

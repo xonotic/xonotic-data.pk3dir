@@ -18,10 +18,10 @@ void trigger_heal_touch(entity this, entity toucher)
 				toucher.triggerhealtime = time + this.delay;
 
 			bool playthesound = (this.spawnflags & HEAL_SOUND_ALWAYS);
-			if (toucher.health < this.max_health)
+			if (GetResourceAmount(toucher, RESOURCE_HEALTH) < this.max_health)
 			{
 				playthesound = true;
-				toucher.health = min(toucher.health + this.health, this.max_health);
+				GiveResourceWithLimit(toucher, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH), this.max_health);
 				toucher.pauserothealth_finished = max(toucher.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 			}
 
@@ -41,8 +41,8 @@ void trigger_heal_init(entity this)
 	this.active = ACTIVE_ACTIVE;
 	if(!this.delay)
 		this.delay = 1;
-	if(!this.health)
-		this.health = 10;
+	if(!GetResourceAmount(this, RESOURCE_HEALTH))
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 10);
 	if(!this.max_health)
 		this.max_health = 200; // max health topoff for field
 	if(this.noise == "")

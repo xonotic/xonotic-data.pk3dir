@@ -636,7 +636,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
+								vector v  = healtharmor_applydamage(GetResourceAmount(attacker, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
 								attacker.dmg_take += v.x;
 								attacker.dmg_save += v.y;
 								attacker.dmg_inflictor = inflictor;
@@ -646,7 +646,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+								vector v = healtharmor_applydamage(GetResourceAmount(targ, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 								targ.dmg_take += v.x;
 								targ.dmg_save += v.y;
 								targ.dmg_inflictor = inflictor;

@@ -228,17 +228,17 @@ void ewheel_draw(entity this)
     setorigin(this, this.origin + this.velocity * dt);
     this.tur_head.angles += dt * this.tur_head.avelocity;
 
-    if (this.health < 127)
+    if(GetResourceAmount(this, RESOURCE_HEALTH) < 127)
     if(random() < 0.05)
         te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-        METHOD(EWheel, tr_setup, void(EWheel this, entity it))
-        {
-            it.gravity		= 1;
-            set_movetype(it, MOVETYPE_BOUNCE);
-            it.move_time		= time;
-            it.draw			= ewheel_draw;
-        }
+METHOD(EWheel, tr_setup, void(EWheel this, entity it))
+{
+    it.gravity		= 1;
+    set_movetype(it, MOVETYPE_BOUNCE);
+    it.move_time		= time;
+    it.draw			= ewheel_draw;
+}
 
 #endif // CSQC

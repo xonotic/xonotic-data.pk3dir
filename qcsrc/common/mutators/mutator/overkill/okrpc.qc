@@ -28,15 +28,15 @@ void W_OverkillRocketPropelledChainsaw_Touch (entity this, entity toucher)
 
 void W_OverkillRocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if (this.health <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if (this.health <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_OverkillRocketPropelledChainsaw_Explode_think);
 }
 
@@ -78,7 +78,7 @@ void W_OverkillRocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .en
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR_PRI(okrpc, damageforcescale);
-	missile.health = WEP_CVAR_PRI(okrpc, health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_PRI(okrpc, health));
 	missile.event_damage = W_OverkillRocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);

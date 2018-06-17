@@ -1,6 +1,8 @@
 #include "arc.qh"
 
 #ifdef SVQC
+#include <common/gamemodes/gamemode/onslaught/sv_onslaught.qh>
+#include <common/gamemodes/gamemode/onslaught/sv_generator.qh>
 
 bool W_Arc_Beam_Send(entity this, entity to, int sf)
 {
@@ -102,16 +104,16 @@ void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1))
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
@@ -138,7 +140,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR(arc, bolt_damage);
 
 	missile.takedamage = DAMAGE_YES;
-	missile.health = WEP_CVAR(arc, bolt_health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(arc, bolt_health));
 	missile.damageforcescale = WEP_CVAR(arc, bolt_damageforcescale);
 	missile.event_damage = W_Arc_Bolt_Damage;
 	missile.damagedbycontents = true;
@@ -416,7 +418,8 @@ void W_Arc_Beam_Think(entity this)
 			IS_MONSTER(trace_ent)
 		);
 
-		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
+		// TODO: takedamage flag for things that can be healed?
+		if(trace_ent && (trace_ent.takedamage || trace_ent.classname == "onslaught_generator" || trace_ent.classname == "onslaught_controlpoint_icon") && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
 		{
 			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
 			// NO. trace_endpos should be just fine. If not,
@@ -430,9 +433,77 @@ void W_Arc_Beam_Think(entity this)
 				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
 			);
 
-			if(is_player && SAME_TEAM(own, trace_ent))
+			// TODO: api or event for things that can be healed
+			if(IS_VEHICLE(trace_ent) && SAME_TEAM(own, trace_ent))
+			{
+				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
+				// not handling shield, since it's not exactly a defensive stat
+
+				if(trace_ent.vehicle_health <= trace_ent.max_health && roothealth)
+				{
+					trace_ent.vehicle_health = min(
+							trace_ent.vehicle_health + (roothealth * coefficient),
+							trace_ent.max_health
+						);
+					if(trace_ent.owner)
+						trace_ent.owner.vehicle_health = (trace_ent.vehicle_health / trace_ent.max_health) * 100;
+					new_beam_type = ARC_BT_HEAL;
+				}
+			}
+			else if(trace_ent.classname == "onslaught_generator" && SAME_TEAM(own, trace_ent))
+			{
+				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
+				if(roothealth)
+				{
+					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
+					{
+						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
+						WaypointSprite_UpdateHealth(trace_ent.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
+						trace_ent.frame = 10 * bound(0, (1 - GetResourceAmount(trace_ent, RESOURCE_HEALTH) / trace_ent.max_health), 1);
+						trace_ent.lasthealth = GetResourceAmount(trace_ent, RESOURCE_HEALTH);
+						trace_ent.SendFlags |= GSF_STATUS;
+					}
+					new_beam_type = ARC_BT_HEAL;
+				}
+			}
+			else if(trace_ent.classname == "onslaught_controlpoint_icon" && SAME_TEAM(own, trace_ent))
+			{
+				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
+				if(roothealth)
+				{
+					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
+					{
+						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
+						if(trace_ent.owner.iscaptured)
+							WaypointSprite_UpdateHealth(trace_ent.owner.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
+						else
+							WaypointSprite_UpdateBuildFinished(trace_ent.owner.sprite, time + (trace_ent.max_health - GetResourceAmount(trace_ent, RESOURCE_HEALTH)) / (trace_ent.count / ONS_CP_THINKRATE));
+					}
+					new_beam_type = ARC_BT_HEAL;
+				}
+			}
+			else if(trace_ent.classname == "func_assault_destructible" && SAME_TEAM(own, trace_ent))
+			{
+				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
+
+				if(roothealth)
+				{
+					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
+					{
+						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
+						if(trace_ent.sprite)
+						{
+							WaypointSprite_UpdateHealth(trace_ent.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
+						}
+						func_breakable_colormod(trace_ent);
+					}
+					new_beam_type = ARC_BT_HEAL;
+				}
+			}
+			else if(is_player && SAME_TEAM(own, trace_ent))
 			{
 				float roothealth, rootarmor;
+				float maxhp;
 				if(burst)
 				{
 					roothealth = WEP_CVAR(arc, burst_healing_hps);
@@ -443,20 +514,15 @@ void W_Arc_Beam_Think(entity this)
 					roothealth = WEP_CVAR(arc, beam_healing_hps);
 					rootarmor = WEP_CVAR(arc, beam_healing_aps);
 				}
+				maxhp = ((IS_MONSTER(trace_ent)) ? trace_ent.max_health : WEP_CVAR(arc, beam_healing_hmax));
 
-				if(trace_ent.health <= WEP_CVAR(arc, beam_healing_hmax) && roothealth)
+				if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= maxhp && roothealth)
 				{
-					trace_ent.health = min(
-						trace_ent.health + (roothealth * coefficient),
-						WEP_CVAR(arc, beam_healing_hmax)
-					);
+					GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), maxhp);
 				}
-				if(trace_ent.armorvalue <= WEP_CVAR(arc, beam_healing_amax) && rootarmor)
+				if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= WEP_CVAR(arc, beam_healing_amax) && rootarmor && !IS_MONSTER(trace_ent))
 				{
-					trace_ent.armorvalue = min(
-						trace_ent.armorvalue + (rootarmor * coefficient),
-						WEP_CVAR(arc, beam_healing_amax)
-					);
+					GiveResourceWithLimit(trace_ent, RESOURCE_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
 				}
 
 				// stop rot, set visual effect

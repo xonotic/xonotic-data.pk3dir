@@ -400,11 +400,11 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		ons_notification_time[this.team] = time;
 	}
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if(this.owner.iscaptured)
-		WaypointSprite_UpdateHealth(this.owner.sprite, this.health);
+		WaypointSprite_UpdateHealth(this.owner.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	else
-		WaypointSprite_UpdateBuildFinished(this.owner.sprite, time + (this.max_health - this.health) / (this.count / ONS_CP_THINKRATE));
+		WaypointSprite_UpdateBuildFinished(this.owner.sprite, time + (this.max_health - GetResourceAmount(this, RESOURCE_HEALTH)) / (this.count / ONS_CP_THINKRATE));
 	this.pain_finished = time + 1;
 	// particles on every hit
 	pointparticles(EFFECT_SPARKS, hitloc, force*-1, 1);
@@ -414,7 +414,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	else
 		sound(this, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE+0.3, ATTEN_NORM);
 
-	if (this.health < 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) < 0)
 	{
 		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
@@ -469,9 +469,9 @@ void ons_ControlPoint_Icon_Think(entity this)
 		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 
-		this.health = bound(0, this.health + (_friendly_count - _enemy_count), this.max_health);
+		GiveResourceWithLimit(this, RESOURCE_HEALTH, (_friendly_count - _enemy_count), this.max_health);
 		this.SendFlags |= CPSF_STATUS;
-		if(this.health <= 0)
+		if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		{
 			ons_ControlPoint_Icon_Damage(this, this, this, 1, 0, DMG_NOWEP, this.origin, '0 0 0');
 			return;
@@ -480,12 +480,10 @@ void ons_ControlPoint_Icon_Think(entity this)
 
 	if (time > this.pain_finished + 5)
 	{
-		if(this.health < this.max_health)
+		if(GetResourceAmount(this, RESOURCE_HEALTH) < this.max_health)
 		{
-			this.health = this.health + this.count;
-			if (this.health >= this.max_health)
-				this.health = this.max_health;
-			WaypointSprite_UpdateHealth(this.owner.sprite, this.health);
+			GiveResourceWithLimit(this, RESOURCE_HEALTH, this.count, this.max_health);
+			WaypointSprite_UpdateHealth(this.owner.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 		}
 	}
 
@@ -504,7 +502,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 	}
 
 	// damaged fx
-	if(random() < 0.6 - this.health / this.max_health)
+	if(random() < 0.6 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health)
 	{
 		Send_Effect(EFFECT_ELECTRIC_SPARKS, this.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
@@ -526,13 +524,13 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 	if(!a)
 		return;
 
-	this.health = this.health + this.count;
+	GiveResource(this, RESOURCE_HEALTH, this.count);
 
 	this.SendFlags |= CPSF_STATUS;
 
-	if (this.health >= this.max_health)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) >= this.max_health)
 	{
-		this.health = this.max_health;
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 		this.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
 		setthink(this, ons_ControlPoint_Icon_Think);
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
@@ -542,7 +540,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		Send_Effect(EFFECT_CAP(this.owner.team), this.owner.origin, '0 0 0', 1);
 
 		WaypointSprite_UpdateMaxHealth(this.owner.sprite, this.max_health);
-		WaypointSprite_UpdateHealth(this.owner.sprite, this.health);
+		WaypointSprite_UpdateHealth(this.owner.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 
 		if(IS_PLAYER(this.owner.ons_toucher))
 		{
@@ -565,7 +563,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 	if(this.owner.model != MDL_ONS_CP_PAD2.model_str())
 		setmodel_fixsize(this.owner, MDL_ONS_CP_PAD2);
 
-	if(random() < 0.9 - this.health / this.max_health)
+	if(random() < 0.9 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health)
 		Send_Effect(EFFECT_RAGE, this.origin + 10 * randomvec(), '0 0 -1', 1);
 }
 
@@ -580,7 +578,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
-	e.health = autocvar_g_onslaught_cp_buildhealth;
+	SetResourceAmountExplicit(e, RESOURCE_HEALTH, autocvar_g_onslaught_cp_buildhealth);
 	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
@@ -588,7 +586,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	e.event_damage = ons_ControlPoint_Icon_Damage;
 	e.team = player.team;
 	e.colormap = 1024 + (e.team - 1) * 17;
-	e.count = (e.max_health - e.health) * ONS_CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
+	e.count = (e.max_health - GetResourceAmount(e, RESOURCE_HEALTH)) * ONS_CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
 
 	sound(e, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILD, VOL_BASE, ATTEN_NORM);
 
@@ -598,7 +596,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 
 	Send_Effect(EFFECT_FLAG_TOUCH(player.team), e.origin, '0 0 0', 1);
 
-	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / ONS_CP_THINKRATE));
+	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - GetResourceAmount(e, RESOURCE_HEALTH)) / (e.count / ONS_CP_THINKRATE));
 	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
 	cp.sprite.SendFlags |= 16;
 
@@ -640,7 +638,7 @@ void ons_ControlPoint_UpdateSprite(entity e)
 			else
 			{
 				WaypointSprite_UpdateMaxHealth(e.sprite, e.goalentity.max_health);
-				WaypointSprite_UpdateHealth(e.sprite, e.goalentity.health);
+				WaypointSprite_UpdateHealth(e.sprite, GetResourceAmount(e.goalentity, RESOURCE_HEALTH));
 			}
 		}
 		if(e.lastshielded)
@@ -889,14 +887,14 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 			play2team(this.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
-	this.health = this.health - damage;
-	WaypointSprite_UpdateHealth(this.sprite, this.health);
+	TakeResource(this, RESOURCE_HEALTH, damage);
+	WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	// choose an animation frame based on health
-	this.frame = 10 * bound(0, (1 - this.health / this.max_health), 1);
+	this.frame = 10 * bound(0, (1 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health), 1);
 	// see if the generator is still functional, or dying
-	if (this.health > 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) > 0)
 	{
-		this.lasthealth = this.health;
+		this.lasthealth = GetResourceAmount(this, RESOURCE_HEALTH);
 	}
 	else
 	{
@@ -970,7 +968,8 @@ void ons_GeneratorThink(entity this)
 void ons_GeneratorReset(entity this)
 {
 	this.team = this.team_saved;
-	this.lasthealth = this.max_health = this.health = autocvar_g_onslaught_gen_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_onslaught_gen_health);
+	this.lasthealth = this.max_health = autocvar_g_onslaught_gen_health;
 	this.takedamage = DAMAGE_AIM;
 	this.bot_attack = true;
 	if(!IL_CONTAINS(g_bot_targets, this))
@@ -988,7 +987,7 @@ void ons_GeneratorReset(entity this)
 	this.SendFlags |= GSF_STATUS;
 
 	WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
-	WaypointSprite_UpdateHealth(this.sprite, this.health);
+	WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	WaypointSprite_UpdateRule(this.sprite,this.team,SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
@@ -1035,7 +1034,8 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.team_saved = teamnumber;
 	IL_PUSH(g_saved_team, gen);
 	set_movetype(gen, MOVETYPE_NONE);
-	gen.lasthealth = gen.max_health = gen.health = autocvar_g_onslaught_gen_health;
+	gen.lasthealth = gen.max_health = autocvar_g_onslaught_gen_health;
+	SetResourceAmountExplicit(gen, RESOURCE_HEALTH, autocvar_g_onslaught_gen_health);
 	gen.takedamage = DAMAGE_AIM;
 	gen.bot_attack = true;
 	IL_PUSH(g_bot_targets, gen);
@@ -1061,7 +1061,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	WaypointSprite_SpawnFixed(WP_Null, gen.origin + CPGEN_WAYPOINT_OFFSET, gen, sprite, RADARICON_NONE);
 	WaypointSprite_UpdateRule(gen.sprite, gen.team, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(gen.sprite, gen.max_health);
-	WaypointSprite_UpdateHealth(gen.sprite, gen.health);
+	WaypointSprite_UpdateHealth(gen.sprite, GetResourceAmount(gen, RESOURCE_HEALTH));
 
 	InitializeEntity(gen, ons_DelayedGeneratorSetup, INITPRIO_SETLOCATION);
 }
@@ -1231,7 +1231,7 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 	bool needarmor = false, needweapons = false;
 
 	// Needs armor/health?
-	if(this.health<100)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) < 100)
 		needarmor = true;
 
 	// Needs weapons?
@@ -1256,7 +1256,7 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 	{
 		// gather health and armor only
 		if (it.solid)
-		if ( ((it.health || it.armorvalue) && needarmor) || (STAT(WEAPONS, it) && needweapons ) )
+		if ( ((GetResourceAmount(it, RESOURCE_HEALTH) || GetResourceAmount(it, RESOURCE_ARMOR)) && needarmor) || (STAT(WEAPONS, it) && needweapons ) )
 		if (vdist(it.origin - org, <, sradius))
 		{
 			int t = it.bot_pickupevalfunc(this, it);
@@ -1977,7 +1977,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 			{
 				entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
 
-				if ( !source_point && player.health > 0 )
+				if ( !source_point && GetResourceAmount(player, RESOURCE_HEALTH) > 0 )
 				{
 					sprint(player, "\nYou need to be next to a control point\n");
 					return true;
@@ -1992,7 +1992,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 					return true;
 				}
 
-				if ( player.health <= 0 )
+				if ( GetResourceAmount(player, RESOURCE_HEALTH) <= 0 )
 				{
 					player.ons_spawn_by = closest_target;
 					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
@@ -2058,14 +2058,14 @@ MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
 		{
 			entity wp_owner = wp.owner;
 			entity e = WaypointSprite_getviewentity(to);
-			if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health) { wp_flag |= 2; }
+			if(SAME_TEAM(e, wp_owner) && GetResourceAmount(wp_owner.goalentity, RESOURCE_HEALTH) >= wp_owner.goalentity.max_health) { wp_flag |= 2; }
 			if(!ons_ControlPoint_Attackable(wp_owner, e.team)) { wp_flag |= 2; }
 		}
 		if(wp.owner.classname == "onslaught_generator")
 		{
 			entity wp_owner = wp.owner;
-			if(wp_owner.isshielded && wp_owner.health >= wp_owner.max_health) { wp_flag |= 2; }
-			if(wp_owner.health <= 0) { wp_flag |= 2; }
+			if(wp_owner.isshielded && GetResourceAmount(wp_owner, RESOURCE_HEALTH) >= wp_owner.max_health) { wp_flag |= 2; }
+			if(GetResourceAmount(wp_owner, RESOURCE_HEALTH) <= 0) { wp_flag |= 2; }
 		}
 	}
 

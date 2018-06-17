@@ -158,7 +158,7 @@ entity freezetag_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		if(it.health >= 1)
+		if(GetResourceAmount(it, RESOURCE_HEALTH) >= 1)
 		if(!STAT(FROZEN, it))
 		if(SAME_TEAM(it, this))
 		if(!last_pl)
@@ -250,7 +250,7 @@ void havocbot_goalrating_freeplayers(entity this, float ratingscale, vector org,
 		{
 			// If teamate is not frozen still seek them out as fight better
 			// in a group.
-			t = 0.2 * 150 / (this.health + this.armorvalue);
+			t = 0.2 * 150 / (GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR));
 			navigation_routerating(this, it, t * ratingscale, 2000);
 		}
 	});
@@ -326,7 +326,7 @@ void havocbot_role_ft_freeing(entity this)
 
 void ft_RemovePlayer(entity this)
 {
-	this.health = 0; // neccessary to update correctly alive stats
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // neccessary to update correctly alive stats
 	if(!STAT(FROZEN, this))
 		freezetag_LastPlayerForTeam_Notify(this);
 	freezetag_Unfreeze(this);
@@ -377,7 +377,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		}
 		else
 			freezetag_Unfreeze(frag_target); // remove ice
-		frag_target.health = 0; // Unfreeze resets health
+		SetResourceAmountExplicit(frag_target, RESOURCE_HEALTH, 0); // Unfreeze resets health
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
 	}
@@ -486,7 +486,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		player.health = max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health));
+		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
@@ -520,7 +520,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		player.health = max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health));
+		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 	}
 	else if(!n && !STAT(FROZEN, player))
 	{
@@ -583,7 +583,8 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 		return; // target was already frozen, so this is just pushing them off the cliff
 
 	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : CS(frag_target).ping));
-	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target, frag_attacker.health, frag_attacker.armorvalue, (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
+	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target, 
+										GetResourceAmount(frag_attacker, RESOURCE_HEALTH), GetResourceAmount(frag_attacker, RESOURCE_ARMOR), (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
 
 	return true;
 }
