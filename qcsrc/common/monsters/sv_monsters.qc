@@ -1061,7 +1061,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 bool Monster_Heal(entity targ, entity inflictor, float amount, float limit)
 {
-	float true_limit = ((limit) ? limit : targ.max_health);
+	float true_limit = ((limit >= 0) ? limit : targ.max_health);
 	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
 		return false;
 
