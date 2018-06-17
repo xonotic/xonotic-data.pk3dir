@@ -449,7 +449,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 
 bool ons_ControlPoint_Icon_Heal(entity targ, entity inflictor, float amount, float limit)
 {
-	float true_limit = ((limit >= 0) ? limit : targ.max_health);
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
 	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
 		return false;
 
@@ -963,7 +963,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 
 bool ons_GeneratorHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	float true_limit = ((limit >= 0) ? limit : targ.max_health);
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
 	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
 		return false;
 

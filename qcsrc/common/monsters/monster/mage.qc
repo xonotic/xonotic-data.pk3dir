@@ -269,7 +269,7 @@ void M_Mage_Defend_Heal(entity this)
 		else
 		{
 			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-			Heal(it, this, autocvar_g_monster_mage_heal_allies, -1);
+			Heal(it, this, autocvar_g_monster_mage_heal_allies, RESOURCE_LIMIT_NONE);
 			if(!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
 				WaypointSprite_UpdateHealth(it.sprite, GetResourceAmount(it, RESOURCE_HEALTH));
 		}

@@ -549,7 +549,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 					{
 						if(autocvar_g_vehicle_bumblebee_healgun_hps)
 						{
-							float hplimit = ((IS_PLAYER(trace_ent)) ? autocvar_g_vehicle_bumblebee_healgun_hmax : -1);
+							float hplimit = ((IS_PLAYER(trace_ent)) ? autocvar_g_vehicle_bumblebee_healgun_hmax : RESOURCE_LIMIT_NONE);
 							Heal(trace_ent, this, autocvar_g_vehicle_bumblebee_healgun_hps * dt, hplimit);
 						}
 

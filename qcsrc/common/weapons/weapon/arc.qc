@@ -424,7 +424,7 @@ void W_Arc_Beam_Think(entity this)
 			{
 				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
 				float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
-				float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : -1);
+				float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RESOURCE_LIMIT_NONE);
 				Heal(trace_ent, own, (roothealth * coefficient), hplimit);
 				if(IS_PLAYER(trace_ent) && rootarmor)
 				{
