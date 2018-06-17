@@ -593,9 +593,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
-		SetResourceAmount(targ, RESOURCE_ARMOR, 0);
+		SetResourceAmountExplicit(targ, RESOURCE_ARMOR, 0);
 		targ.spawnshieldtime = 0;
-		SetResourceAmount(targ, RESOURCE_HEALTH, 0.9); // this is < 1
+		SetResourceAmountExplicit(targ, RESOURCE_HEALTH, 0.9); // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
