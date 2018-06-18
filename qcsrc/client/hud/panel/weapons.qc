@@ -108,7 +108,7 @@ void HUD_Weapons()
 	}
 
 	if(!autocvar_hud_panel_weapons_complainbubble || autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
-		complain_weapon = 0;
+		complain_weapon = NULL;
 
 	entity wepent = viewmodels[0]; // TODO: unhardcode
 
@@ -169,13 +169,13 @@ void HUD_Weapons()
 		if (autocvar_hud_panel_weapons_onlyowned >= 2) // only current
 		{
 			for (i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-				if (weaponorder[i] == panel_switchweapon || weaponorder[i].m_id == complain_weapon)
+				if (weaponorder[i] == panel_switchweapon || weaponorder[i] == complain_weapon)
 					++weapon_count;
 		}
 		else
 		{
 			for (i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-				if ((weapons_stat & WepSet_FromWeapon(weaponorder[i])) || weaponorder[i].m_id == complain_weapon)
+				if ((weapons_stat & WepSet_FromWeapon(weaponorder[i])) || weaponorder[i] == complain_weapon)
 					++weapon_count;
 		}
 
@@ -407,12 +407,12 @@ void HUD_Weapons()
 		{
 			if (autocvar_hud_panel_weapons_onlyowned >= 2) // only current
 			{
-				if (!(it == panel_switchweapon || it.m_id == complain_weapon))
+				if (!(it == panel_switchweapon || it == complain_weapon))
 					continue;
 			}
 			else
 			{
-				if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
+				if (!((weapons_stat & WepSet_FromWeapon(it)) || (it == complain_weapon)))
 					continue;
 			}
 		}
@@ -534,7 +534,7 @@ void HUD_Weapons()
 		}
 
 		// draw the complain message
-		if(it.m_id == complain_weapon)
+		if(it == complain_weapon)
 		{
 			if(fadetime)
 				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));
