@@ -751,6 +751,8 @@ void PutPlayerInServer(entity this)
 		this.(weaponentity).weaponname = "";
 		this.(weaponentity).m_switchingweapon = WEP_Null;
 		this.(weaponentity).cnt = -1;
+
+		W_WeaponFrame(this, weaponentity);
 	}
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
