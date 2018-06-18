@@ -191,11 +191,9 @@ void W_Arc_Beam_Think(entity this)
 	if(
 		!IS_PLAYER(own)
 		||
-		(!thiswep.wr_checkammo1(thiswep, own, weaponentity) && !(own.items & IT_UNLIMITED_WEAPON_AMMO))
-		||
 		IS_DEAD(own)
 		||
-		forbidWeaponUse(own)
+		!weapon_prepareattack_check(thiswep, own, weaponentity, this.beam_bursting, -1)
 		||
 		own.(weaponentity).m_switchweapon != WEP_ARC
 		||
