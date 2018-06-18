@@ -110,6 +110,13 @@ void HUD_Weapons()
 	if(!autocvar_hud_panel_weapons_complainbubble || autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
 		complain_weapon = 0;
 
+	entity wepent = viewmodels[0]; // TODO: unhardcode
+
+	if (wepent.switchweapon == WEP_Null)
+		panel_switchweapon = NULL;
+	else if (!panel_switchweapon)
+		panel_switchweapon = wepent.switchweapon;
+
 	if(autocvar__hud_configure)
 	{
 		if(!weapons_stat)
@@ -159,10 +166,18 @@ void HUD_Weapons()
 
 		// do we own this weapon?
 		weapon_count = 0;
-		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if((weapons_stat & WepSet_FromWeapon(weaponorder[i])) || (weaponorder[i].m_id == complain_weapon))
-				++weapon_count;
-
+		if (autocvar_hud_panel_weapons_onlyowned >= 2) // only current
+		{
+			for (i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+				if (weaponorder[i] == panel_switchweapon || weaponorder[i].m_id == complain_weapon)
+					++weapon_count;
+		}
+		else
+		{
+			for (i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+				if ((weapons_stat & WepSet_FromWeapon(weaponorder[i])) || weaponorder[i].m_id == complain_weapon)
+					++weapon_count;
+		}
 
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
@@ -373,13 +388,6 @@ void HUD_Weapons()
 		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
-	entity wepent = viewmodels[0]; // TODO: unhardcode
-
-	if(wepent.switchweapon == WEP_Null)
-		panel_switchweapon = NULL;
-	else if(!panel_switchweapon)
-		panel_switchweapon = wepent.switchweapon;
-
 	// draw background behind currently selected weapon
 	// do it earlier to make sure bg is drawn behind every weapon icons while it's moving
 	if(panel_switchweapon)
@@ -395,10 +403,18 @@ void HUD_Weapons()
 		if(!it || weapon_id < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
-		if(autocvar_hud_panel_weapons_onlyowned)
+		if (autocvar_hud_panel_weapons_onlyowned)
 		{
-			if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
-				continue;
+			if (autocvar_hud_panel_weapons_onlyowned >= 2) // only current
+			{
+				if (!(it == panel_switchweapon || it.m_id == complain_weapon))
+					continue;
+			}
+			else
+			{
+				if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
+					continue;
+			}
 		}
 		else
 		{
