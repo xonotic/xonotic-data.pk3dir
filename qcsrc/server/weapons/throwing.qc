@@ -101,7 +101,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 		if(doreduce && g_weapon_stay == 2)
 		{
-		#if 0
 			// if our weapon is loaded, give its load back to the player
 			int i = own.(weaponentity).m_weapon.m_id;
 			if(own.(weaponentity).(weapon_load[i]) > 0)
@@ -109,12 +108,10 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 				GiveResource(own, ammotype, own.(weaponentity).(weapon_load[i]));
 				own.(weaponentity).(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
-		#endif
 			SetResourceAmount(wep, ammotype, 0);
 		}
 		else if(doreduce)
 		{
-		#if 0
 			// if our weapon is loaded, give its load back to the player
 			int i = own.(weaponentity).m_weapon.m_id;
 			if(own.(weaponentity).(weapon_load[i]) > 0)
@@ -122,7 +119,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 				GiveResource(own, ammotype, own.(weaponentity).(weapon_load[i]));
 				own.(weaponentity).(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
-		#endif
+
 			float ownderammo = GetResourceAmount(own, ammotype);
 			thisammo = min(ownderammo, GetResourceAmount(wep, ammotype));
 			SetResourceAmount(wep, ammotype, thisammo);
