@@ -167,8 +167,6 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 		QuickMenu_Page_Load("", 0);
 
 	hud_panel_quickmenu = 1;
-	if(autocvar_hud_cursormode)
-		setcursormode(1);
 	hudShiftState = 0;
 
 	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
@@ -196,10 +194,6 @@ void QuickMenu_Close()
 	mouseClicked = 0;
 	prevMouseClicked = 0;
 	QuickMenu_Buffer_Close();
-
-	if(autocvar_hud_cursormode)
-	if(!mv_active)
-		setcursormode(0);
 }
 
 // It assumes submenu open tag is already detected
@@ -487,9 +481,6 @@ void QuickMenu_Mouse()
 		return;
 	}
 
-	if (!autocvar_hud_cursormode)
-		update_mousepos();
-
 	panel = HUD_PANEL(QUICKMENU);
 	HUD_Panel_LoadCvars();
 
@@ -525,10 +516,6 @@ void QuickMenu_Mouse()
 				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
 		}
 	}
-
-	draw_cursor_normal(mousepos, '1 1 1', 0.8);
-
-	prevMouseClicked = mouseClicked;
 }
 
 void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector fontsize)

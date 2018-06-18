@@ -1111,14 +1111,10 @@ void HUD_Panel_EnableMenu()
 	hud_configure_menu_open = 2;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
-float mouse_over_panel;
 void HUD_Panel_Mouse()
 {
 	if(autocvar__menu_alpha == 1)
 		return;
-
-	if (!autocvar_hud_cursormode)
-		update_mousepos();
 
 	if(mouseClicked)
 	{
@@ -1209,19 +1205,6 @@ void HUD_Panel_Mouse()
 		if (mouse_over_panel && !tab_panel)
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .1, DRAWFLAG_NORMAL);
 	}
-	// draw cursor after performing move/resize to have the panel pos/size updated before mouse_over_panel
-	float cursor_alpha = 1 - autocvar__menu_alpha;
-
-	if(!mouse_over_panel)
-		draw_cursor_normal(mousepos, '1 1 1', cursor_alpha);
-	else if(mouse_over_panel == 1)
-		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
-	else if(mouse_over_panel == 2)
-		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize", '1 1 1', cursor_alpha);
-	else
-		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize2", '1 1 1', cursor_alpha);
-
-	prevMouseClicked = mouseClicked;
 }
 void HUD_Configure_DrawGrid()
 {
@@ -1258,8 +1241,6 @@ void HUD_Configure_Frame()
 
 		if(!hud_configure_prev)
 		{
-			if(autocvar_hud_cursormode)
-				setcursormode(1);
 			hudShiftState = 0;
 			for(i = hud_panels_COUNT - 1; i >= 0; --i)
 				hud_panels_from(panel_order[i]).update_time = time;
@@ -1279,8 +1260,6 @@ void HUD_Configure_Frame()
 	{
 		if(hud_configure_menu_open)
 			hud_configure_menu_open = 0;
-		if(autocvar_hud_cursormode)
-			setcursormode(0);
 		hud_dynamic_shake_factor = -1;
 	}
 }

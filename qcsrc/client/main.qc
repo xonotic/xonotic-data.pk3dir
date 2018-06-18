@@ -364,19 +364,18 @@ void PostInit()
 float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
     TC(int, bInputType);
-	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+    bool override = false;
+	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= MapVote_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
+	override |= HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary);
+
+	if(override)
 		return true;
 
 	return false;

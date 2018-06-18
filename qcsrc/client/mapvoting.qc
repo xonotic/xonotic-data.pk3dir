@@ -321,6 +321,7 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	return mv_mouse_selection;
 }
 
+vector prev_mousepos;
 void MapVote_Draw()
 {
 	string map;
@@ -340,8 +341,7 @@ void MapVote_Draw()
 	if (!autocvar_hud_cursormode)
 	{
 		vector mpos = mousepos;
-		update_mousepos();
-		if (mpos.x != mousepos.x || mpos.y != mousepos.y)
+		if (mpos.x != prev_mousepos.x || mpos.y != prev_mousepos.y)
 			mv_selection_keyboard = 0;
 	}
 
@@ -485,8 +485,6 @@ void MapVote_Draw()
 		pos.x = (xmax+xmin)*0.5;
 		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}
-
-	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
 }
 
 void Cmd_MapVote_MapDownload(int argc)
@@ -649,8 +647,7 @@ void GameTypeVote_ReadOption(int i)
 void MapVote_Init()
 {
 	mv_active = 1;
-	if(autocvar_hud_cursormode) setcursormode(1);
-	else mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+	if(!autocvar_hud_cursormode) mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 	mv_selection = -1;
 	mv_selection_keyboard = 0;
 

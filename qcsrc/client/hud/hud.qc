@@ -561,6 +561,49 @@ void Hud_Dynamic_Frame()
 	HUD_Scale_Disable();
 }
 
+bool cursor_activestate;
+
+bool HUD_WouldShowCursor()
+{
+	if(autocvar__hud_configure)
+		return true;
+	if(hud_panel_radar_mouse)
+		return true;
+	if(mv_active)
+		return true;
+	//entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1)); // TODO: doesn't use regular cursor handling
+	//if(local_player.viewloc && (local_player.viewloc.spawnflags & VIEWLOC_FREEAIM))
+		//return true;
+	if(HUD_Radar_Clickable())
+		return true;
+	if(HUD_MinigameMenu_IsOpened() || active_minigame)
+		return true;
+	if(QuickMenu_IsOpened())
+		return true;
+	return false;
+}
+void HUD_Cursor()
+{
+	if(HUD_WouldShowCursor())
+	{
+		if(!cursor_activestate)
+		{
+			cursor_activestate = true;
+			if(autocvar_hud_cursormode)
+				setcursormode(1);
+		}
+	}
+	else
+	{
+		if(cursor_activestate)
+		{
+			cursor_activestate = false;
+			if(autocvar_hud_cursormode)
+				setcursormode(0);
+		}
+	}
+}
+
 void HUD_Main()
 {
 	int i;
@@ -679,6 +722,8 @@ void HUD_Main()
 	if(hud_panel_quickmenu)
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
+
+	HUD_Cursor();
 
 	if (intermission == 2)
 		HUD_Reset();
