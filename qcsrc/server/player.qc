@@ -74,6 +74,7 @@ void CopyBody(entity this, float keepvelocity)
 	clone.effects = this.effects;
 	clone.glowmod = this.glowmod;
 	clone.event_damage = this.event_damage;
+	clone.event_heal = this.event_heal;
 	clone.anim_state = this.anim_state;
 	clone.anim_time = this.anim_time;
 	clone.anim_lower_action = this.anim_lower_action;
@@ -629,6 +630,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
+		this.event_heal = func_null;
 		// call the corpse damage function just in case it wants to gib
 		this.event_damage(this, inflictor, attacker, excess, deathtype, weaponentity, hitloc, force);
 
@@ -662,6 +664,15 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		}
 		MUTATOR_CALLHOOK(PlayerDied, this);
 	}
+}
+
+bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
+{
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, limit);
+	return true;
 }
 
 bool MoveToTeam(entity client, int team_colour, int type)

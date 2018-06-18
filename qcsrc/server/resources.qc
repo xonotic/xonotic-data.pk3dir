@@ -182,7 +182,7 @@ void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 		return;
 	}
 	float current_amount = GetResourceAmount(receiver, resource_type);
-	if (current_amount + amount > limit)
+	if (current_amount + amount > limit && limit != RESOURCE_LIMIT_NONE)
 	{
 		amount = limit - current_amount;
 	}

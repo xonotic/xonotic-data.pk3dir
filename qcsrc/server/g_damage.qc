@@ -1061,6 +1061,20 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
 }
 
+bool Heal(entity targ, entity inflictor, float amount, float limit)
+{
+	if(game_stopped || (IS_CLIENT(targ) && CS(targ).killcount == FRAGS_SPECTATOR) || STAT(FROZEN, targ) || IS_DEAD(targ))
+		return false;
+
+	bool healed = false;
+	if(targ.event_heal)
+		healed = targ.event_heal(targ, inflictor, amount, limit);
+	// TODO: additional handling? what if the healing kills them? should this abort if healing would do so etc
+	// TODO: healing fx!
+	// TODO: armor healing?
+	return healed;
+}
+
 float Fire_IsBurning(entity e)
 {
 	return (time < e.fire_endtime);

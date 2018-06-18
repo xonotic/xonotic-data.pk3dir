@@ -331,6 +331,21 @@ spawnfunc(target_objective_decrease)
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
+bool destructible_heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	if(targ.sprite)
+	{
+		WaypointSprite_UpdateHealth(targ.sprite, GetResourceAmount(targ, RESOURCE_HEALTH));
+	}
+	func_breakable_colormod(targ);
+	return true;
+}
+
 spawnfunc(func_breakable);
 spawnfunc(func_assault_destructible)
 {
@@ -338,6 +353,7 @@ spawnfunc(func_assault_destructible)
 
 	this.spawnflags = 3;
 	this.classname = "func_assault_destructible";
+	this.event_heal = destructible_heal;
 	IL_PUSH(g_assault_destructibles, this);
 
 	if(assault_attacker_team == NUM_TEAM_1)

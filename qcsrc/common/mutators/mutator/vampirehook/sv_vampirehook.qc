@@ -27,10 +27,8 @@ MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
 		thehook.last_dmg = time + autocvar_g_vampirehook_damagerate;
 		thehook.owner.damage_dealt += autocvar_g_vampirehook_damage;
 		Damage(dmgent, thehook, thehook.owner, autocvar_g_vampirehook_damage, WEP_HOOK.m_id, DMG_NOWEP, thehook.origin, '0 0 0');
-		if(SAME_TEAM(thehook.owner, thehook.aiment))
-			GiveResourceWithLimit(thehook.aiment, RESOURCE_HEALTH, autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
-		else
-			GiveResourceWithLimit(thehook.owner, RESOURCE_HEALTH, autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
+		entity targ = ((SAME_TEAM(thehook.owner, thehook.aiment)) ? thehook.aiment : thehook.owner);
+		Heal(targ, thehook.owner, autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
 
 		if(dmgent == thehook.owner)
 			TakeResource(dmgent, RESOURCE_HEALTH, autocvar_g_vampirehook_damage); // FIXME: friendly fire?!

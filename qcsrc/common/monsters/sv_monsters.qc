@@ -527,6 +527,7 @@ void Monster_Dead_Fade(entity this)
 			this.pos2 = this.angles;
 		}
 		this.event_damage = func_null;
+		this.event_heal = func_null;
 		this.takedamage = DAMAGE_NO;
 		setorigin(this, this.pos1);
 		this.angles = this.pos2;
@@ -956,6 +957,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		_setmodel(this, this.mdl_dead);
 
 	this.event_damage	= ((gibbed) ? func_null : Monster_Dead_Damage);
+	this.event_heal 	= func_null;
 	this.solid			= SOLID_CORPSE;
 	this.takedamage		= DAMAGE_AIM;
 	this.deadflag		= DEAD_DEAD;
@@ -1055,6 +1057,18 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 			this.nextthink = time + 0.1;
 		}
 	}
+}
+
+bool Monster_Heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	if(targ.sprite)
+		WaypointSprite_UpdateHealth(targ.sprite, GetResourceAmount(targ, RESOURCE_HEALTH));
+	return true;
 }
 
 // don't check for enemies, just keep walking in a straight line
@@ -1353,6 +1367,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.damagedbycontents	= true;
 	this.monsterid			= mon_id;
 	this.event_damage		= Monster_Damage;
+	this.event_heal			= Monster_Heal;
 	settouch(this, Monster_Touch);
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;

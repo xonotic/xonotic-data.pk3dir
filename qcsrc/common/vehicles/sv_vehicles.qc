@@ -727,6 +727,20 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	}
 }
 
+bool vehicles_heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	//if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+	if(targ.vehicle_health <= 0 || targ.vehicle_health >= true_limit)
+		return false;
+
+	targ.vehicle_health = min(targ.vehicle_health + amount, true_limit);
+	//GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	//if(targ.owner)
+		//targ.owner.vehicle_health = (targ.vehicle_health / targ.max_health) * 100;
+	return true;
+}
+
 bool vehicles_crushable(entity e)
 {
 	if(IS_PLAYER(e) && time >= e.vehicle_enter_delay)
@@ -1005,6 +1019,7 @@ void vehicles_enter(entity pl, entity veh)
 	setsize(pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
 	veh.event_damage	= vehicles_damage;
+	veh.event_heal 		= vehicles_heal;
 	veh.nextthink		= 0;
 	pl.items &= ~IT_USING_JETPACK;
 	pl.angles			= veh.angles;
@@ -1118,6 +1133,7 @@ void vehicles_spawn(entity this)
 	this.owner				= NULL;
 	settouch(this, vehicles_touch);
 	this.event_damage		= vehicles_damage;
+	this.event_heal 		= vehicles_heal;
 	this.reset 				= vehicles_reset;
 	this.iscreature			= true;
 	this.teleportable		= false; // no teleporting for vehicles, too buggy
@@ -1230,6 +1246,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.vehicleid				= info.vehicleid;
 	this.PlayerPhysplug			= info.PlayerPhysplug;
 	this.event_damage			= func_null;
+	this.event_heal 			= func_null;
 	settouch(this, vehicles_touch);
 	setthink(this, vehicles_spawn);
 	this.nextthink				= time;
