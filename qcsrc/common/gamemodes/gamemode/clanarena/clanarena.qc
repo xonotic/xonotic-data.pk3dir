@@ -253,8 +253,7 @@ entity ca_LastPlayerForTeam(entity this)
 
 void ca_LastPlayerForTeam_Notify(entity this)
 {
-	if (round_handler_IsActive())
-	if (round_handler_IsRoundStarted())
+	if (!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
 	{
 		entity pl = ca_LastPlayerForTeam(this);
 		if (pl)
@@ -275,9 +274,11 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
+	{
 		eliminatedPlayers.SendFlags |= 1;
-	if(IS_BOT_CLIENT(frag_target))
-		bot_clear(frag_target);
+		if (IS_BOT_CLIENT(frag_target))
+			bot_clear(frag_target);
+	}
 	return true;
 }
 
