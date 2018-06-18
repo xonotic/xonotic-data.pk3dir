@@ -96,7 +96,7 @@ float CA_CheckWinner()
 
 void CA_RoundStart()
 {
-    allowed_to_spawn = boolean(warmup_stage);
+	allowed_to_spawn = boolean(warmup_stage);
 }
 
 bool CA_CheckTeams()
@@ -164,7 +164,7 @@ entity CA_SpectateNext(entity player, entity start)
 
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	player.caplayer = 1;
 	if (!warmup_stage)
@@ -220,7 +220,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 
 MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	TRANSMUTE(Observer, player);
 	return true;
@@ -284,7 +284,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	if (player.caplayer == 1)
 		ca_LastPlayerForTeam_Notify(player);
@@ -293,7 +293,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	if (!IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
@@ -353,7 +353,7 @@ MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
 
 MUTATOR_HOOKFUNCTION(ca, FilterItem)
 {
-    entity item = M_ARGV(0, entity);
+	entity item = M_ARGV(0, entity);
 
 	if (autocvar_g_powerups <= 0)
 	if (item.flags & FL_POWERUP)
@@ -397,8 +397,8 @@ MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
 
 MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 {
-    entity client = M_ARGV(0, entity);
-    entity targ = M_ARGV(1, entity);
+	entity client = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
 
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	if (DIFF_TEAM(targ, client))
@@ -407,7 +407,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 
 MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
-    entity client = M_ARGV(0, entity);
+	entity client = M_ARGV(0, entity);
 
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
@@ -419,9 +419,9 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 
 MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 {
-    entity client = M_ARGV(0, entity);
-    entity targ = M_ARGV(1, entity);
-    entity first = M_ARGV(2, entity);
+	entity client = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+	entity first = M_ARGV(2, entity);
 
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
@@ -454,7 +454,7 @@ MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	if (player.caplayer)
 	{
