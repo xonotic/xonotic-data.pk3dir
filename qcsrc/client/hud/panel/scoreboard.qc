@@ -294,8 +294,10 @@ void Cmd_Scoreboard_Help()
 {
 	LOG_INFO(_("You can modify the scoreboard using the ^2scoreboard_columns_set command."));
 	LOG_INFO(_("Usage:"));
-	LOG_INFO("^2scoreboard_columns_set default");
-	LOG_INFO(_("^2scoreboard_columns_set ^7field1 field2 ..."));
+	LOG_INFO("^2scoreboard_columns_set ^3default");
+	LOG_INFO(_("^2scoreboard_columns_set ^3field1 field2 ..."));
+	LOG_INFO(_("^2scoreboard_columns_set ^7without arguments reads the arguments from the cvar scoreboard_columns"));
+	LOG_INFO(_("  ^5Note: ^7scoreboard_columns_set without arguments is executed on every map start"));
 	LOG_INFO(_("You can use a ^3|^7 to start the right-aligned fields."));
 	LOG_INFO(_("The following field names are recognized (case insensitive):"));
 	LOG_INFO("");
