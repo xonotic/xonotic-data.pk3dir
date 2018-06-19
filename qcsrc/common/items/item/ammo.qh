@@ -22,6 +22,10 @@
 #endif
 #endif
 
+#ifdef GAMEQC
+.int spawnflags;
+#endif
+
 #ifdef SVQC
 PROPERTY(float, g_pickup_ammo_anyway);
 #endif
