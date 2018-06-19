@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pickup.qh"
+#include <common/items/all.qh>
 #ifdef SVQC
     #include <common/t_items.qh>
     #include <server/resources.qh>
