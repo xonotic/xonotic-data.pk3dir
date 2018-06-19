@@ -246,6 +246,7 @@ vector resurface_limited(vector org, float lim, vector m1)
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
 // if end_height is > 0 destination is any point in the vertical segment [end, end + end_height * eZ]
+// INFO: the command sv_cmd trace walk is useful to test this function in game
 bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode)
 {
 	if(autocvar_bot_debug_tracewalk)
@@ -1314,10 +1315,10 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
-			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), " this.ammo_fuel ", ftos(this.ammo_fuel));
+			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResourceAmount(this, RESOURCE_FUEL)));
 
 			// enough fuel ?
-			if(this.ammo_fuel>fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
+			if(GetResourceAmount(this, RESOURCE_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship
@@ -1838,7 +1839,7 @@ void navigation_unstuck(entity this)
 		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
 		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
 		set_tracewalk_dest(bot_waypoint_queue_goal, this.origin, false);
-		if (tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
+		if (tracewalk(this, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
 			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)

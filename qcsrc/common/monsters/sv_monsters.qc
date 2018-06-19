@@ -97,7 +97,7 @@ bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
 	|| (game_stopped)
 	|| (targ.items & IT_INVISIBILITY)
 	|| (IS_SPEC(targ) || IS_OBSERVER(targ)) // don't attack spectators
-	|| (!IS_VEHICLE(targ) && (IS_DEAD(targ) || IS_DEAD(this) || targ.health <= 0 || this.health <= 0))
+	|| (!IS_VEHICLE(targ) && (IS_DEAD(targ) || IS_DEAD(this) || GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(this, RESOURCE_HEALTH) <= 0))
 	|| (this.monster_follow == targ || targ.monster_follow == this)
 	|| (!IS_VEHICLE(targ) && (targ.flags & FL_NOTARGET))
 	|| (!autocvar_g_monsters_typefrag && PHYS_INPUT_BUTTON_CHAT(targ))
@@ -400,7 +400,7 @@ bool Monster_Attack_Leap_Check(entity this, vector vel)
 		return false; // already attacking
 	if(!IS_ONGROUND(this))
 		return false; // not on the ground
-	if(this.health <= 0 || IS_DEAD(this))
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0 || IS_DEAD(this))
 		return false; // called when dead?
 	if(time < this.attack_finished_single[0])
 		return false; // still attacking
@@ -510,7 +510,7 @@ void Monster_Miniboss_Check(entity this)
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
 	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
 	{
-		this.health += autocvar_g_monsters_miniboss_healthboost;
+		GiveResource(this, RESOURCE_HEALTH, autocvar_g_monsters_miniboss_healthboost);
 		this.effects |= EF_RED;
 		if(!this.weapon)
 			this.weapon = WEP_VORTEX.m_id;
@@ -551,10 +551,11 @@ void Monster_Dead_Fade(entity this)
 			this.pos2 = this.angles;
 		}
 		this.event_damage = func_null;
+		this.event_heal = func_null;
 		this.takedamage = DAMAGE_NO;
 		setorigin(this, this.pos1);
 		this.angles = this.pos2;
-		this.health = this.max_health;
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 		setmodel(this, MDL_Null);
 	}
 	else
@@ -583,7 +584,7 @@ vector Monster_Move_Target(entity this, entity targ)
 
 		// cases where the enemy may have changed their state (don't need to check everything here)
 		if((!this.enemy)
-			|| (IS_DEAD(this.enemy) || this.enemy.health < 1)
+			|| (IS_DEAD(this.enemy) || GetResourceAmount(this.enemy, RESOURCE_HEALTH) < 1)
 			|| (STAT(FROZEN, this.enemy))
 			|| (this.enemy.flags & FL_NOTARGET)
 			|| (this.enemy.alpha < 0.5 && this.enemy.alpha != 0)
@@ -892,7 +893,7 @@ void Monster_Reset(entity this)
 
 	Unfreeze(this); // remove any icy remains
 
-	this.health = this.max_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 	this.velocity = '0 0 0';
 	this.enemy = NULL;
 	this.goalentity = NULL;
@@ -902,11 +903,11 @@ void Monster_Reset(entity this)
 
 void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	this.health -= damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	if(this.health <= -50) // 100 health until gone?
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= -50) // 100 health until gone?
 	{
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
@@ -928,7 +929,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	if(STAT(FROZEN, this))
 	{
 		Unfreeze(this); // remove any icy remains
-		this.health = 0; // reset by Unfreeze
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // reset by Unfreeze (TODO)
 	}
 
 	monster_dropitem(this, attacker);
@@ -952,6 +953,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		_setmodel(this, this.mdl_dead);
 
 	this.event_damage	= ((gibbed) ? func_null : Monster_Dead_Damage);
+	this.event_heal 	= func_null;
 	this.solid			= SOLID_CORPSE;
 	this.takedamage		= DAMAGE_AIM;
 	this.deadflag		= DEAD_DEAD;
@@ -997,7 +999,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	if(deathtype == DEATH_FALL.m_id && this.draggedby != NULL)
 		return;
 
-	vector v = healtharmor_applydamage(100, this.armorvalue / 100, deathtype, damage);
+	vector v = healtharmor_applydamage(100, GetResourceAmount(this, RESOURCE_ARMOR) / 100, deathtype, damage);
 	float take = v.x;
 	//float save = v.y;
 
@@ -1006,12 +1008,12 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 	if(take)
 	{
-		this.health -= take;
+		TakeResource(this, RESOURCE_HEALTH, take);
 		Monster_Sound(this, monstersound_pain, 1.2, true, CH_PAIN);
 	}
 
 	if(this.sprite)
-		WaypointSprite_UpdateHealth(this.sprite, this.health);
+		WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 
 	this.dmg_time = time;
 
@@ -1029,7 +1031,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 			Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 	}
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		if(deathtype == DEATH_KILL.m_id)
 			this.candrop = false; // killed by mobkill command
@@ -1038,13 +1040,13 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 		SUB_UseTargets(this, attacker, this.enemy);
 		this.target2 = this.oldtarget2; // reset to original target on death, incase we respawn
 
-		Monster_Dead(this, attacker, (this.health <= -100 || deathtype == DEATH_KILL.m_id));
+		Monster_Dead(this, attacker, (GetResourceAmount(this, RESOURCE_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id));
 
 		WaypointSprite_Kill(this.sprite);
 
 		MUTATOR_CALLHOOK(MonsterDies, this, attacker, deathtype);
 
-		if(this.health <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
+		if(GetResourceAmount(this, RESOURCE_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
 		{
 			Violence_GibSplash(this, 1, 0.5, attacker);
 
@@ -1052,6 +1054,18 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 			this.nextthink = time + 0.1;
 		}
 	}
+}
+
+bool Monster_Heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	if(targ.sprite)
+		WaypointSprite_UpdateHealth(targ.sprite, GetResourceAmount(targ, RESOURCE_HEALTH));
+	return true;
 }
 
 // don't check for enemies, just keep walking in a straight line
@@ -1147,11 +1161,11 @@ void Monster_Frozen_Think(entity this)
 	if(STAT(FROZEN, this) == 2)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
-		this.health = max(1, STAT(REVIVE_PROGRESS, this) * this.max_health);
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
 		this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
-			WaypointSprite_UpdateHealth(this.sprite, this.health);
+			WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 
 		if(STAT(REVIVE_PROGRESS, this) >= 1)
 			Unfreeze(this);
@@ -1159,15 +1173,15 @@ void Monster_Frozen_Think(entity this)
 	else if(STAT(FROZEN, this) == 3)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - this.ticrate * this.revive_speed, 1);
-		this.health = max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this) );
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
-			WaypointSprite_UpdateHealth(this.sprite, this.health);
+			WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 
-		if(this.health < 1)
+		if(GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 		{
 			Unfreeze(this);
-			this.health = 0;
+			SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
 			if(this.event_damage)
 				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
@@ -1207,7 +1221,7 @@ void Monster_Think(entity this)
 
 	if(this.monster_lifetime && time >= this.monster_lifetime)
 	{
-		Damage(this, this, this, this.health + this.max_health, DEATH_KILL.m_id, DMG_NOWEP, this.origin, this.origin);
+		Damage(this, this, this, GetResourceAmount(this, RESOURCE_HEALTH) + this.max_health, DEATH_KILL.m_id, DMG_NOWEP, this.origin, this.origin);
 		return;
 	}
 
@@ -1239,8 +1253,8 @@ bool Monster_Spawn_Setup(entity this)
 	mon.mr_setup(mon, this);
 
 	// ensure some basic needs are met
-	if(!this.health) { this.health = 100; }
-	if(!this.armorvalue) { this.armorvalue = bound(0.2, 0.5 * MONSTER_SKILLMOD(this), 0.9); }
+	if(!GetResourceAmount(this, RESOURCE_HEALTH)) { SetResourceAmountExplicit(this, RESOURCE_HEALTH, 100); }
+	if(!GetResourceAmount(this, RESOURCE_ARMOR)) { SetResourceAmountExplicit(this, RESOURCE_ARMOR, bound(0.2, 0.5 * MONSTER_SKILLMOD(this), 0.9)); }
 	if(!this.target_range) { this.target_range = autocvar_g_monsters_target_range; }
 	if(!this.respawntime) { this.respawntime = autocvar_g_monsters_respawn_delay; }
 	if(!this.monster_moveflags) { this.monster_moveflags = MONSTER_MOVE_WANDER; }
@@ -1250,13 +1264,13 @@ bool Monster_Spawn_Setup(entity this)
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		Monster_Miniboss_Check(this);
-		this.health *= MONSTER_SKILLMOD(this);
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) * MONSTER_SKILLMOD(this));
 
 		if(!this.skin)
 			this.skin = rint(random() * 4);
 	}
 
-	this.max_health = this.health;
+	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
 	this.pain_finished = this.nextthink;
 	this.last_enemycheck = this.spawn_time + random(); // slight delay
 
@@ -1286,7 +1300,7 @@ bool Monster_Spawn_Setup(entity this)
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE))
 		{
 			WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
-			WaypointSprite_UpdateHealth(this.sprite, this.health);
+			WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 		}
 	}
 
@@ -1351,6 +1365,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.damagedbycontents	= true;
 	this.monsterid			= mon_id;
 	this.event_damage		= Monster_Damage;
+	this.event_heal			= Monster_Heal;
 	settouch(this, Monster_Touch);
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;

@@ -2,18 +2,11 @@
 
 /// \file
 /// \brief Header file that describes the resource system.
-/// \author Lyberta
 /// \copyright GNU GPLv2 or any later version.
 
 #include <common/resources.qh>
 
 // ============================ Public API ====================================
-
-/// \brief Returns the maximum amount of the given resource.
-/// \param[in] e Entity to check.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
-/// \return Maximum amount of the given resource.
-float GetResourceLimit(entity e, int resource_type);
 
 /// \brief Returns the current amount of resource the given entity has.
 /// \param[in] e Entity to check.
@@ -34,22 +27,6 @@ bool SetResourceAmountExplicit(entity e, int resource_type, float amount);
 /// \param[in] amount Amount of resource to set.
 /// \return No return.
 void SetResourceAmount(entity e, int resource_type, float amount);
-
-/// \brief Gives an entity some resource.
-/// \param[in,out] receiver Entity to give resource to.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
-/// \param[in] amount Amount of resource to give.
-/// \return No return.
-void GiveResource(entity receiver, int resource_type, float amount);
-
-/// \brief Gives an entity some resource but not more than a limit.
-/// \param[in,out] receiver Entity to give resource to.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
-/// \param[in] amount Amount of resource to give.
-/// \param[in] limit Limit of resources to give.
-/// \return No return.
-void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
-	float limit);
 
 /// \brief Takes an entity some resource.
 /// \param[in,out] receiver Entity to take resource from.
@@ -78,3 +55,7 @@ int GetResourceType(.float resource_field);
 /// \param[in] resource_type Type of the resource.
 /// \return Entity field for that resource.
 .float GetResourceField(int resource_type);
+
+/// \brief Legacy fields for the resources. To be removed.
+.float health;
+.float armorvalue;

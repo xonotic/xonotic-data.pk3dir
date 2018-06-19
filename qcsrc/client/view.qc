@@ -2057,7 +2057,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	IL_EACH(g_drawables, it.draw, it.draw(it));
 
-	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
+	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS); // TODO: .health is used in cl_deathfade (a feature we have turned off currently)
 	renderscene();
 
 	// now switch to 2D drawing mode by calling a 2D drawing function

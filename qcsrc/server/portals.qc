@@ -199,8 +199,8 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	// reset fade counter
 	teleporter.portal_wants_to_vanish = 0;
 	teleporter.fade_time = time + autocvar_g_balance_portal_lifetime;
-	teleporter.health = autocvar_g_balance_portal_health;
-	teleporter.enemy.health = autocvar_g_balance_portal_health;
+	SetResourceAmountExplicit(teleporter, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
+	SetResourceAmountExplicit(teleporter.enemy, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
 
 	return 1;
 }
@@ -435,8 +435,8 @@ void Portal_Damage(entity this, entity inflictor, entity attacker, float damage,
 	if(attacker != this.aiment)
 		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(this.aiment))
 			return;
-	this.health -= damage;
-	if(this.health < 0)
+	TakeResource(this, RESOURCE_HEALTH, damage);
+	if(GetResourceAmount(this, RESOURCE_HEALTH) < 0)
 		Portal_Remove(this, 1);
 }
 
@@ -639,7 +639,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.takedamage = DAMAGE_AIM;
 	portal.event_damage = Portal_Damage;
 	portal.fade_time = time + autocvar_g_balance_portal_lifetime;
-	portal.health = autocvar_g_balance_portal_health;
+	SetResourceAmountExplicit(portal, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
 	setmodel(portal, MDL_PORTAL);
 	portal.savemodelindex = portal.modelindex;
 	setcefc(portal, Portal_Customize);

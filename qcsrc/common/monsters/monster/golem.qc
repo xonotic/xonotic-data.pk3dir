@@ -88,15 +88,15 @@ void M_Golem_Attack_Lightning_Explode_use(entity this, entity actor, entity trig
 
 void M_Golem_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if (this.health <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if (this.health <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
@@ -141,7 +141,7 @@ void M_Golem_Attack_Lightning(entity this)
 	settouch(gren, M_Golem_Attack_Lightning_Touch);
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = 50;
+	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, 50);
 	gren.damageforcescale = 0;
 	gren.event_damage = M_Golem_Attack_Lightning_Damage;
 	gren.damagedbycontents = true;
@@ -272,7 +272,7 @@ METHOD(Golem, mr_anim, bool(Golem this, entity actor))
 METHOD(Golem, mr_setup, bool(Golem this, entity actor))
 {
     TC(Golem, this);
-    if(!actor.health) actor.health = (autocvar_g_monster_golem_health);
+    if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_golem_health);
     if(!actor.attack_range) actor.attack_range = 150;
     if(!actor.speed) { actor.speed = (autocvar_g_monster_golem_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_golem_speed_run); }

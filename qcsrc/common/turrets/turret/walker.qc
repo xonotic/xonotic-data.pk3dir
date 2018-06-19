@@ -86,10 +86,10 @@ void walker_rocket_touch(entity this, entity toucher)
 
 void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
-    this.health = this.health - damage;
+    TakeResource(this, RESOURCE_HEALTH, damage);
     this.velocity = this.velocity + vforce;
 
-    if (this.health <= 0)
+    if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
         W_PrepareExplosionByDamage(this, this.owner, walker_rocket_explode);
 }
 
@@ -218,7 +218,7 @@ void walker_fire_rocket(entity this, vector org)
     rocket.bot_dodgerating	= 50;
     rocket.takedamage		 = DAMAGE_YES;
     rocket.damageforcescale   = 2;
-    rocket.health			 = 25;
+    SetResourceAmountExplicit(rocket, RESOURCE_HEALTH, 25);
     rocket.tur_shotorg		= randomvec() * 512;
     rocket.cnt				= time + 1;
     rocket.enemy			  = this.enemy;
@@ -354,7 +354,7 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 {
     fixedmakevectors(it.angles);
 
-    if (it.spawnflags & TSF_NO_PATHBREAK && it.pathcurrent)
+    if ((it.spawnflags & TSF_NO_PATHBREAK) && it.pathcurrent)
         walker_move_path(it);
     else if (it.enemy == NULL)
     {
@@ -629,17 +629,17 @@ void walker_draw(entity this)
     setorigin(this, this.origin + this.velocity * dt);
     this.tur_head.angles += dt * this.tur_head.avelocity;
 
-    if (this.health < 127)
+    if(GetResourceAmount(this, RESOURCE_HEALTH) < 127)
     if(random() < 0.15)
         te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-        METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
-        {
-            it.gravity		= 1;
-            set_movetype(it, MOVETYPE_BOUNCE);
-            it.move_time		= time;
-            it.draw			= walker_draw;
-        }
+METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
+{
+    it.gravity		= 1;
+    set_movetype(it, MOVETYPE_BOUNCE);
+    it.move_time		= time;
+    it.draw			= walker_draw;
+}
 
 #endif // CSQC
