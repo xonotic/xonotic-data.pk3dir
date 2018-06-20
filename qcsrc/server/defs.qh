@@ -36,6 +36,8 @@ float server_is_dedicated;
 
 .void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 
+.bool(entity targ, entity inflictor, float amount, float limit) event_heal;
+
 //.string	wad;
 //.string	map;
 

@@ -10,7 +10,6 @@
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
-#include "playerdemo.qh"
 #include "spawnpoints.qh"
 #include "resources.qh"
 #include "g_damage.qh"
@@ -229,7 +228,7 @@ void PutObserverInServer(entity this)
 
 	if (IS_PLAYER(this))
 	{
-		if(this.health >= 1)
+		if(GetResourceAmount(this, RESOURCE_HEALTH) >= 1)
 		{
 			// despawn effect
 			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
@@ -324,15 +323,14 @@ void PutObserverInServer(entity this)
 	if(this.damagedbycontents)
 		IL_REMOVE(g_damagedbycontents, this);
 	this.damagedbycontents = false;
-	this.health = FRAGS_SPECTATOR;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, FRAGS_SPECTATOR);
 	SetSpectatee_status(this, etof(this));
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_FLY_WORLDONLY); // user preference is controlled by playerprethink
 	this.flags = FL_CLIENT | FL_NOTARGET;
-	this.armorvalue = 666;
 	this.effects = 0;
-	this.armorvalue = autocvar_g_balance_armor_start;
+	SetResourceAmountExplicit(this, RESOURCE_ARMOR, autocvar_g_balance_armor_start); // was 666?!
 	this.pauserotarmor_finished = 0;
 	this.pauserothealth_finished = 0;
 	this.pauseregen_finished = 0;
@@ -381,6 +379,7 @@ void PutObserverInServer(entity this)
 	this.oldvelocity = this.velocity;
 	this.fire_endtime = -1;
 	this.event_damage = func_null;
+	this.event_heal = func_null;
 
 	for(int slot = 0; slot < MAX_AXH; ++slot)
 	{
@@ -560,8 +559,8 @@ void PutPlayerInServer(entity this)
 		SetResourceAmount(this, RESOURCE_CELLS, warmup_start_ammo_cells);
 		SetResourceAmount(this, RESOURCE_PLASMA, warmup_start_ammo_plasma);
 		SetResourceAmount(this, RESOURCE_FUEL, warmup_start_ammo_fuel);
-		this.health = warmup_start_health;
-		this.armorvalue = warmup_start_armorvalue;
+		SetResourceAmount(this, RESOURCE_HEALTH, warmup_start_health);
+		SetResourceAmount(this, RESOURCE_ARMOR, warmup_start_armorvalue);
 		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
 	} else {
 		SetResourceAmount(this, RESOURCE_SHELLS, start_ammo_shells);
@@ -570,8 +569,8 @@ void PutPlayerInServer(entity this)
 		SetResourceAmount(this, RESOURCE_CELLS, start_ammo_cells);
 		SetResourceAmount(this, RESOURCE_PLASMA, start_ammo_plasma);
 		SetResourceAmount(this, RESOURCE_FUEL, start_ammo_fuel);
-		this.health = start_health;
-		this.armorvalue = start_armorvalue;
+		SetResourceAmount(this, RESOURCE_HEALTH, start_health);
+		SetResourceAmount(this, RESOURCE_ARMOR, start_armorvalue);
 		STAT(WEAPONS, this) = start_weapons;
 		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
 		{
@@ -675,6 +674,7 @@ void PutPlayerInServer(entity this)
 	STAT(HUD, this) = HUD_NORMAL;
 
 	this.event_damage = PlayerDamage;
+	this.event_heal = PlayerHeal;
 
 	if(!this.bot_attack)
 		IL_PUSH(g_bot_targets, this);
@@ -750,6 +750,8 @@ void PutPlayerInServer(entity this)
 		this.(weaponentity).weaponname = "";
 		this.(weaponentity).m_switchingweapon = WEP_Null;
 		this.(weaponentity).cnt = -1;
+
+		W_WeaponFrame(this, weaponentity);
 	}
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
@@ -968,7 +970,7 @@ void KillIndicator_Think(entity this)
 		ClientKill_Now(this.owner);
 		return;
 	}
-    else if(this.health == 1) // health == 1 means that it's silent
+    else if(this.count == 1) // count == 1 means that it's silent
     {
         this.nextthink = time + 1;
         this.cnt -= 1;
@@ -1083,6 +1085,8 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 void ClientKill (entity this)
 {
+	// TODO: once .health is removed, will need to check it here for the "already dead" message!
+
 	if(game_stopped) return;
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
@@ -1724,13 +1728,17 @@ void player_regen(entity this)
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
 
-		this.armorvalue = CalcRotRegen(this.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > this.pauserotarmor_finished), limita);
-		this.health = CalcRotRegen(this.health, regen_health_stable, regen_health, regen_health_linear, regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear, rot_mod * frametime * (time > this.pauserothealth_finished), limith);
+		SetResourceAmount(this, RESOURCE_ARMOR, CalcRotRegen(GetResourceAmount(this, RESOURCE_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
+									regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
+									rot_mod * frametime * (time > this.pauserotarmor_finished), limita));
+		SetResourceAmount(this, RESOURCE_HEALTH, CalcRotRegen(GetResourceAmount(this, RESOURCE_HEALTH), regen_health_stable, regen_health, regen_health_linear,
+									regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear,
+									rot_mod * frametime * (time > this.pauserothealth_finished), limith));
 	}
 
 	// if player rotted to death...  die!
 	// check this outside above checks, as player may still be able to rot to death
-	if(this.health < 1)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 	{
 		if(this.vehicle)
 			vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -1746,20 +1754,10 @@ void player_regen(entity this)
 		minf = autocvar_g_balance_fuel_regenstable;
 		limitf = GetResourceLimit(this, RESOURCE_FUEL);
 
-		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
+		SetResourceAmount(this, RESOURCE_FUEL, CalcRotRegen(GetResourceAmount(this, RESOURCE_FUEL), minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, 
+										frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
+										maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf));
 	}
-	// Ugly hack to make sure the health and armor don't go beyond hard limit.
-	// TODO: Remove this hack when all code uses GivePlayerHealth and
-	// GivePlayerArmor.
-	if (this.health > RESOURCE_AMOUNT_HARD_LIMIT)
-	{
-		this.health = RESOURCE_AMOUNT_HARD_LIMIT;
-	}
-	if (this.armorvalue > RESOURCE_AMOUNT_HARD_LIMIT)
-	{
-		this.armorvalue = RESOURCE_AMOUNT_HARD_LIMIT;
-	}
-	// End hack.
 }
 
 bool zoomstate_set;
@@ -1804,15 +1802,15 @@ void SpectateCopy(entity this, entity spectatee)
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
-	this.armorvalue = spectatee.armorvalue;
-	this.ammo_cells = spectatee.ammo_cells; // TODO: these will be a part of inventory, so no need to worry about setting them later!
-	this.ammo_plasma = spectatee.ammo_plasma;
-	this.ammo_shells = spectatee.ammo_shells;
-	this.ammo_nails = spectatee.ammo_nails;
-	this.ammo_rockets = spectatee.ammo_rockets;
-	this.ammo_fuel = spectatee.ammo_fuel;
+	SetResourceAmountExplicit(this, RESOURCE_ARMOR, GetResourceAmount(spectatee, RESOURCE_ARMOR));
+	SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(spectatee, RESOURCE_CELLS));
+	SetResourceAmountExplicit(this, RESOURCE_PLASMA, GetResourceAmount(spectatee, RESOURCE_PLASMA));
+	SetResourceAmountExplicit(this, RESOURCE_SHELLS, GetResourceAmount(spectatee, RESOURCE_SHELLS));
+	SetResourceAmountExplicit(this, RESOURCE_BULLETS, GetResourceAmount(spectatee, RESOURCE_BULLETS));
+	SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(spectatee, RESOURCE_ROCKETS));
+	SetResourceAmountExplicit(this, RESOURCE_FUEL, GetResourceAmount(spectatee, RESOURCE_FUEL));
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
-	this.health = spectatee.health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(spectatee, RESOURCE_HEALTH));
 	CS(this).impulse = 0;
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
@@ -2309,7 +2307,7 @@ bool PlayerThink(entity this)
 		}
 
 		this.items_added = 0;
-		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || this.ammo_fuel >= 0.01))
+		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || GetResourceAmount(this, RESOURCE_FUEL) >= 0.01))
             this.items_added |= IT_FUEL;
 
 		this.items |= this.items_added;
@@ -2565,7 +2563,7 @@ void PlayerPreThink (entity this)
 		if (STAT(FROZEN, this) == 2)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
-			this.health = max(1, STAT(REVIVE_PROGRESS, this) * start_health);
+			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 			if (STAT(REVIVE_PROGRESS, this) >= 1)
@@ -2574,9 +2572,9 @@ void PlayerPreThink (entity this)
 		else if (STAT(FROZEN, this) == 3)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
-			this.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this) );
+			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
-			if (this.health < 1)
+			if (GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 			{
 				if (this.vehicle)
 					vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -2818,11 +2816,9 @@ void PlayerPostThink (entity this)
 	}
 
 	if (this.waypointsprite_attachedforcarrier) {
-	    vector v = healtharmor_maxdamage(this.health, this.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id);
+	    vector v = healtharmor_maxdamage(GetResourceAmount(this, RESOURCE_HEALTH), GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id);
 		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, '1 0 0' * v);
     }
-
-	playerdemo_write(this);
 
 	CSQCMODEL_AUTOUPDATE(this);
 }

@@ -19,7 +19,7 @@ STATIC_INIT(g_assault)
 void assault_objective_use(entity this, entity actor, entity trigger)
 {
 	// activate objective
-	this.health = 100;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 100);
 	//print("^2Activated objective ", this.targetname, "=", etos(this), "\n");
 	//print("Activator is ", actor.classname, "\n");
 
@@ -31,7 +31,7 @@ void assault_objective_use(entity this, entity actor, entity trigger)
 
 vector target_objective_spawn_evalfunc(entity this, entity player, entity spot, vector current)
 {
-	if(this.health < 0 || this.health >= ASSAULT_VALUE_INACTIVE)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) < 0 || GetResourceAmount(this, RESOURCE_HEALTH) >= ASSAULT_VALUE_INACTIVE)
 		return '-1 0 0';
 	return current;
 }
@@ -40,7 +40,7 @@ vector target_objective_spawn_evalfunc(entity this, entity player, entity spot, 
 // and when a new round starts
 void assault_objective_reset(entity this)
 {
-	this.health = ASSAULT_VALUE_INACTIVE;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, ASSAULT_VALUE_INACTIVE);
 }
 
 // decrease the health of targeted objectives
@@ -61,18 +61,18 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 	else
 		return; // already activated! cannot activate again!
 
-	if(this.enemy.health < ASSAULT_VALUE_INACTIVE)
+	if(GetResourceAmount(this.enemy, RESOURCE_HEALTH) < ASSAULT_VALUE_INACTIVE)
 	{
-		if(this.enemy.health - this.dmg > 0.5)
+		if(GetResourceAmount(this.enemy, RESOURCE_HEALTH) - this.dmg > 0.5)
 		{
 			GameRules_scoring_add_team(actor, SCORE, this.dmg);
-			this.enemy.health = this.enemy.health - this.dmg;
+			TakeResource(this.enemy, RESOURCE_HEALTH, this.dmg);
 		}
 		else
 		{
-			GameRules_scoring_add_team(actor, SCORE, this.enemy.health);
+			GameRules_scoring_add_team(actor, SCORE, GetResourceAmount(this.enemy, RESOURCE_HEALTH));
 			GameRules_scoring_add_team(actor, ASSAULT_OBJECTIVES, 1);
-			this.enemy.health = -1;
+			SetResourceAmountExplicit(this.enemy, RESOURCE_HEALTH, -1);
 
 			if(this.enemy.message)
 				FOREACH_CLIENT(IS_PLAYER(it), { centerprint(it, this.enemy.message); });
@@ -99,7 +99,7 @@ void assault_setenemytoobjective(entity this)
 
 bool assault_decreaser_sprite_visible(entity this, entity player, entity view)
 {
-	if(this.assault_decreaser.enemy.health >= ASSAULT_VALUE_INACTIVE)
+	if(GetResourceAmount(this.assault_decreaser.enemy, RESOURCE_HEALTH) >= ASSAULT_VALUE_INACTIVE)
 		return false;
 
 	return true;
@@ -127,7 +127,7 @@ void target_objective_decrease_activate(entity this)
 		{
 			WaypointSprite_UpdateSprites(spr, WP_AssaultDefend, WP_AssaultDestroy, WP_AssaultDestroy);
 			WaypointSprite_UpdateMaxHealth(spr, it.max_health);
-			WaypointSprite_UpdateHealth(spr, it.health);
+			WaypointSprite_UpdateHealth(spr, GetResourceAmount(it, RESOURCE_HEALTH));
 			it.sprite = spr;
 		}
 		else
@@ -176,7 +176,7 @@ void assault_roundstart_use_this(entity this)
 
 void assault_wall_think(entity this)
 {
-	if(this.enemy.health < 0)
+	if(GetResourceAmount(this.enemy, RESOURCE_HEALTH) < 0)
 	{
 		this.model = "";
 		this.solid = SOLID_NOT;
@@ -323,7 +323,7 @@ spawnfunc(target_objective_decrease)
 		this.dmg = 101;
 
 	this.use = assault_objective_decrease_use;
-	this.health = ASSAULT_VALUE_INACTIVE;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, ASSAULT_VALUE_INACTIVE);
 	this.max_health = ASSAULT_VALUE_INACTIVE;
 	this.enemy = NULL;
 
@@ -331,6 +331,21 @@ spawnfunc(target_objective_decrease)
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
+bool destructible_heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	if(targ.sprite)
+	{
+		WaypointSprite_UpdateHealth(targ.sprite, GetResourceAmount(targ, RESOURCE_HEALTH));
+	}
+	func_breakable_colormod(targ);
+	return true;
+}
+
 spawnfunc(func_breakable);
 spawnfunc(func_assault_destructible)
 {
@@ -338,6 +353,7 @@ spawnfunc(func_assault_destructible)
 
 	this.spawnflags = 3;
 	this.classname = "func_assault_destructible";
+	this.event_heal = destructible_heal;
 	IL_PUSH(g_assault_destructibles, this);
 
 	if(assault_attacker_team == NUM_TEAM_1)
@@ -395,7 +411,7 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		entity destr = it;
 		IL_EACH(g_assault_objectivedecreasers, it.targetname == destr.target,
 		{
-			if(it.enemy.health > 0 && it.enemy.health < ASSAULT_VALUE_INACTIVE)
+			if(GetResourceAmount(it.enemy, RESOURCE_HEALTH) > 0 && GetResourceAmount(it.enemy, RESOURCE_HEALTH) < ASSAULT_VALUE_INACTIVE)
 			{
 				found = true;
 				break;

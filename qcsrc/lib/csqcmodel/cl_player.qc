@@ -291,7 +291,7 @@ void CSQCPlayer_SetCamera()
 		// note: these two only work in WIP2, but are harmless in WIP1
 		if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
 		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
-		V_CalcRefdef(view, refdefflags);
+		V_CalcRefdef(view, refdefflags); // TODO? uses .health stat in the engine when this isn't called here, may be broken!
 	}
 	else
 	{

@@ -26,15 +26,15 @@ void item_armorsmall_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorsmall_max;
-    if(!item.armorvalue)
-        item.armorvalue = g_pickup_armorsmall;
+    if(!GetResourceAmount(item, RESOURCE_ARMOR))
+        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armorsmall);
 }
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_canonical_spawnfunc = "item_armor_small";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_ArmorSmall_ITEM;
     this.m_sound                =   SND_ArmorSmall;
 #endif
@@ -64,15 +64,15 @@ void item_armormedium_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormedium_max;
-    if(!item.armorvalue)
-        item.armorvalue = g_pickup_armormedium;
+    if(!GetResourceAmount(item, RESOURCE_ARMOR))
+        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armormedium);
 }
 #endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_canonical_spawnfunc = "item_armor_medium";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_ArmorMedium_ITEM;
     this.m_sound                =   SND_ArmorMedium;
 #endif
@@ -102,15 +102,15 @@ void item_armorbig_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorbig_max;
-    if(!item.armorvalue)
-        item.armorvalue = g_pickup_armorbig;
+    if(!GetResourceAmount(item, RESOURCE_ARMOR))
+        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armorbig);
 }
 #endif
 
 REGISTER_ITEM(ArmorBig, Armor) {
     this.m_canonical_spawnfunc = "item_armor_big";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_ArmorBig_ITEM;
     this.m_sound                =   SND_ArmorBig;
 #endif
@@ -142,15 +142,15 @@ void item_armormega_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormega_max;
-    if(!item.armorvalue)
-        item.armorvalue = g_pickup_armormega;
+    if(!GetResourceAmount(item, RESOURCE_ARMOR))
+        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armormega);
 }
 #endif
 
 REGISTER_ITEM(ArmorMega, Armor) {
     this.m_canonical_spawnfunc = "item_armor_mega";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_ArmorMega_ITEM;
     this.m_sound                =   SND_ArmorMega;
 #endif

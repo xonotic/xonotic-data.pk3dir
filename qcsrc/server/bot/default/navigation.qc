@@ -1234,12 +1234,13 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		{
 			entity theEnemy = e;
 			entity best_wp = NULL;
-			float best_dist = 10000;
-			IL_EACH(g_waypoints, vdist(it.origin - theEnemy.origin, <, 500)
+			float best_dist = FLOAT_MAX;
+			IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_TELEPORT)
+				&& vdist(it.origin - theEnemy.origin, <, 500)
 				&& vdist(it.origin - this.origin, >, 100)
-				&& !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+				&& vdist(it.origin - this.origin, <, 10000),
 			{
-				float dist = vlen(it.origin - theEnemy.origin);
+				float dist = vlen2(it.origin - theEnemy.origin);
 				if (dist < best_dist)
 				{
 					best_wp = it;
@@ -1315,10 +1316,10 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
-			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), " this.ammo_fuel ", ftos(this.ammo_fuel));
+			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResourceAmount(this, RESOURCE_FUEL)));
 
 			// enough fuel ?
-			if(this.ammo_fuel>fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
+			if(GetResourceAmount(this, RESOURCE_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship

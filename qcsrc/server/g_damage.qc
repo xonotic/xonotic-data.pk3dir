@@ -593,9 +593,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
-		SetResourceAmount(targ, RESOURCE_ARMOR, 0);
+		SetResourceAmountExplicit(targ, RESOURCE_ARMOR, 0);
 		targ.spawnshieldtime = 0;
-		SetResourceAmount(targ, RESOURCE_HEALTH, 0.9); // this is < 1
+		SetResourceAmountExplicit(targ, RESOURCE_HEALTH, 0.9); // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
@@ -636,7 +636,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
+								vector v  = healtharmor_applydamage(GetResourceAmount(attacker, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
 								attacker.dmg_take += v.x;
 								attacker.dmg_save += v.y;
 								attacker.dmg_inflictor = inflictor;
@@ -646,7 +646,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+								vector v = healtharmor_applydamage(GetResourceAmount(targ, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 								targ.dmg_take += v.x;
 								targ.dmg_save += v.y;
 								targ.dmg_inflictor = inflictor;
@@ -1059,6 +1059,20 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
 	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
+}
+
+bool Heal(entity targ, entity inflictor, float amount, float limit)
+{
+	if(game_stopped || (IS_CLIENT(targ) && CS(targ).killcount == FRAGS_SPECTATOR) || STAT(FROZEN, targ) || IS_DEAD(targ))
+		return false;
+
+	bool healed = false;
+	if(targ.event_heal)
+		healed = targ.event_heal(targ, inflictor, amount, limit);
+	// TODO: additional handling? what if the healing kills them? should this abort if healing would do so etc
+	// TODO: healing fx!
+	// TODO: armor healing?
+	return healed;
 }
 
 float Fire_IsBurning(entity e)

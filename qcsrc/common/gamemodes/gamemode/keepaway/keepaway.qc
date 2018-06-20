@@ -222,7 +222,7 @@ void havocbot_goalrating_ball(entity this, float ratingscale, vector org)
 	// If ball is carried by player then hunt them down.
 	if (ball_owner)
 	{
-		t = (this.health + this.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
+		t = (GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR)) / (GetResourceAmount(ball_owner, RESOURCE_HEALTH) + GetResourceAmount(ball_owner, RESOURCE_ARMOR));
 		navigation_routerating(this, ball_owner, t * ratingscale, 2000);
 	}
 	else // Ball has been dropped so collect.

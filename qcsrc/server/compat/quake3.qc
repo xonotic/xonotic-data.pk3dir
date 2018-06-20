@@ -141,33 +141,33 @@ void target_give_init(entity this)
 	IL_EACH(g_items, it.targetname == this.target,
 	{
 		if (it.classname == "weapon_devastator") {
-			this.ammo_rockets += it.count * WEP_CVAR(devastator, ammo);
+			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(devastator, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "devastator");
 		}
 		else if (it.classname == "weapon_vortex") {
-			this.ammo_cells += it.count * WEP_CVAR_PRI(vortex, ammo); // WEAPONTODO
+			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(vortex, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "vortex");
 		}
 		else if (it.classname == "weapon_electro") {
-			this.ammo_cells += it.count * WEP_CVAR_PRI(electro, ammo); // WEAPONTODO
+			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(electro, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "electro");
 		}
 		else if (it.classname == "weapon_hagar") {
-			this.ammo_rockets += it.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
+			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(hagar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "hagar");
 		}
 		else if (it.classname == "weapon_crylink") {
-			this.ammo_cells += it.count * WEP_CVAR_PRI(crylink, ammo);
+			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(crylink, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "crylink");
 		}
 		else if (it.classname == "weapon_mortar") {
-			this.ammo_rockets += it.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
+			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "mortar");
 		}
 		else if (it.classname == "item_armor_mega")
-			this.armorvalue = 100;
+			SetResourceAmountExplicit(this, RESOURCE_ARMOR, 100);
 		else if (it.classname == "item_health_mega")
-			this.health = 200;
+			SetResourceAmountExplicit(this, RESOURCE_HEALTH, 200);
 		//remove(it); // removing ents in init functions causes havoc, workaround:
         setthink(it, SUB_Remove);
         it.nextthink = time;
