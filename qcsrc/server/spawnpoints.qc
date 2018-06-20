@@ -327,14 +327,21 @@ SelectSpawnPoint
 Finds a point to respawn
 =============
 */
+bool testspawn_checked;
+entity testspawn_point;
 entity SelectSpawnPoint(entity this, bool anypoint)
 {
 	float teamcheck;
-	entity spot, firstspot;
+	entity spot = NULL;
 
-	spot = find(NULL, classname, "testplayerstart");
-	if (spot)
-		return spot;
+	if(!testspawn_checked)
+	{
+		testspawn_point = find(NULL, classname, "testplayerstart");
+		testspawn_checked = true;
+	}
+
+	if(testspawn_point)
+		return testspawn_point;
 
 	if(this.spawnpoint_targ)
 		return this.spawnpoint_targ;
@@ -365,7 +372,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 
 
 	// get the entire list of spots
-	firstspot = findchain(classname, "info_player_deathmatch");
+	entity firstspot = findchain(classname, "info_player_deathmatch");
 	// filter out the bad ones
 	// (note this returns the original list if none survived)
 	if(anypoint)
