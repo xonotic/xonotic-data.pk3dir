@@ -372,7 +372,16 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 
 
 	// get the entire list of spots
-	entity firstspot = findchain(classname, "info_player_deathmatch");
+	//entity firstspot = findchain(classname, "info_player_deathmatch");
+	entity firstspot = IL_FIRST(g_spawnpoints);
+	entity prev = NULL;
+	IL_EACH(g_spawnpoints, true,
+	{
+		if(prev)
+			prev.chain = it;
+		it.chain = NULL;
+		prev = it;
+	});
 	// filter out the bad ones
 	// (note this returns the original list if none survived)
 	if(anypoint)
