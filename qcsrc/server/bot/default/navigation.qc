@@ -49,12 +49,15 @@ bool navigation_goalrating_timeout(entity this)
 #define MAX_CHASE_DISTANCE 700
 bool navigation_goalrating_timeout_can_be_anticipated(entity this)
 {
-	if(time > this.bot_strategytime - (IS_MOVABLE(this.goalentity) ? 3 : 2))
+	vector gco = (this.goalentity.absmin + this.goalentity.absmax) * 0.5;
+	if (vdist(gco - this.origin, >, autocvar_sv_maxspeed * 1.5)
+		&& time > this.bot_strategytime - (IS_MOVABLE(this.goalentity) ? 3 : 2))
+	{
 		return true;
+	}
 
 	if (this.goalentity.bot_pickup && time > this.bot_strategytime - 5)
 	{
-		vector gco = (this.goalentity.absmin + this.goalentity.absmax) * 0.5;
 		if(!havocbot_goalrating_item_pickable_check_players(this, this.origin, this.goalentity, gco))
 		{
 			this.ignoregoal = this.goalentity;
