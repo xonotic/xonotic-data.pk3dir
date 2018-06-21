@@ -583,14 +583,14 @@ vector Monster_Move_Target(entity this, entity targ)
 		WarpZone_TraceLine(this.origin, targ_origin, MOVE_NOMONSTERS, this);
 
 		// cases where the enemy may have changed their state (don't need to check everything here)
-		if((!this.enemy)
-			|| (IS_DEAD(this.enemy) || GetResourceAmount(this.enemy, RESOURCE_HEALTH) < 1)
+		if(    (IS_DEAD(this.enemy) || GetResourceAmount(this.enemy, RESOURCE_HEALTH) < 1)
 			|| (STAT(FROZEN, this.enemy))
 			|| (this.enemy.flags & FL_NOTARGET)
 			|| (this.enemy.alpha < 0.5 && this.enemy.alpha != 0)
 			|| (this.enemy.takedamage == DAMAGE_NO)
 			|| (vdist(this.origin - targ_origin, >, this.target_range))
-			|| ((trace_fraction < 1) && (trace_ent != this.enemy)))
+			|| ((trace_fraction < 1) && (trace_ent != this.enemy))
+			)
 		{
 			this.enemy = NULL;
 			//this.pass_distance = 0;
@@ -787,7 +787,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	fixedmakevectors(this.angles);
 	float vz = this.velocity_z;
 
-	if(!turret_closetotarget(this, this.moveto))
+	if(!turret_closetotarget(this, this.moveto, 16))
 	{
 		bool do_run = (this.enemy || this.monster_moveto);
 		movelib_move_simple(this, v_forward, ((do_run) ? runspeed : walkspeed), 0.4);
@@ -1196,21 +1196,21 @@ void Monster_Frozen_Think(entity this)
 
 void Monster_Enemy_Check(entity this)
 {
-	if(!this.enemy)
-	{
-		this.enemy = Monster_FindTarget(this);
-		if(this.enemy)
-		{
-			WarpZone_RefSys_Copy(this.enemy, this);
-			WarpZone_RefSys_AddInverse(this.enemy, this); // wz1^-1 ... wzn^-1 receiver
-			// update move target immediately?
-			this.moveto = WarpZone_RefSys_TransformOrigin(this.enemy, this, (0.5 * (this.enemy.absmin + this.enemy.absmax)));
-			this.monster_moveto = '0 0 0';
-			this.monster_face = '0 0 0';
+	if(this.enemy)
+		return;
 
-			//this.pass_distance = vlen((('1 0 0' * this.enemy.origin_x) + ('0 1 0' * this.enemy.origin_y)) - (('1 0 0' *  this.origin_x) + ('0 1 0' *  this.origin_y)));
-			Monster_Sound(this, monstersound_sight, 0, false, CH_VOICE);
-		}
+	this.enemy = Monster_FindTarget(this);
+	if(this.enemy)
+	{
+		WarpZone_RefSys_Copy(this.enemy, this);
+		WarpZone_RefSys_AddInverse(this.enemy, this); // wz1^-1 ... wzn^-1 receiver
+		// update move target immediately?
+		this.moveto = WarpZone_RefSys_TransformOrigin(this.enemy, this, (0.5 * (this.enemy.absmin + this.enemy.absmax)));
+		this.monster_moveto = '0 0 0';
+		this.monster_face = '0 0 0';
+
+		//this.pass_distance = vlen((('1 0 0' * this.enemy.origin_x) + ('0 1 0' * this.enemy.origin_y)) - (('1 0 0' *  this.origin_x) + ('0 1 0' *  this.origin_y)));
+		Monster_Sound(this, monstersound_sight, 0, false, CH_VOICE);
 	}
 }
 
