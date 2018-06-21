@@ -891,9 +891,9 @@ void havocbot_movetogoal(entity this)
 
 		this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 		makevectors(this.v_angle.y * '0 1 0');
-		if (this.waterlevel)
+		if (this.waterlevel > WATERLEVEL_WETFEET)
 		{
-			if(this.waterlevel>WATERLEVEL_SWIMMING)
+			if (this.waterlevel > WATERLEVEL_SWIMMING)
 			{
 				if(!this.goalcurrent)
 					this.aistatus |= AI_STATUS_OUT_WATER;
@@ -904,7 +904,7 @@ void havocbot_movetogoal(entity this)
 			{
 				dir = flatdir;
 				if(this.velocity.z >= 0 && !(this.watertype == CONTENT_WATER && destorg.z < this.origin.z) &&
-					( !(this.waterlevel == WATERLEVEL_WETFEET && this.watertype == CONTENT_WATER) || this.aistatus & AI_STATUS_OUT_WATER))
+					(this.aistatus & AI_STATUS_OUT_WATER))
 					PHYS_INPUT_BUTTON_JUMP(this) = true;
 				else
 					PHYS_INPUT_BUTTON_JUMP(this) = false;
@@ -1597,6 +1597,7 @@ void havocbot_setupbot(entity this)
 	this.cmd_moveto = havocbot_moveto;
 	this.cmd_resetgoal = havocbot_resetgoal;
 
+	// NOTE: bot is not player yet
 	havocbot_chooserole(this);
 }
 
