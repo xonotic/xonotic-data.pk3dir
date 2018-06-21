@@ -1217,8 +1217,11 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if (IS_PLAYER(e))
 	{
 		bool rate_wps = false;
-		if((e.flags & FL_INWATER) || (e.flags & FL_PARTIALGROUND))
+		if (e.watertype < CONTENT_WATER || (e.waterlevel > WATERLEVEL_WETFEET && !STAT(FROZEN, e))
+			|| (e.flags & FL_PARTIALGROUND))
+		{
 			rate_wps = true;
+		}
 
 		if(!IS_ONGROUND(e))
 		{
