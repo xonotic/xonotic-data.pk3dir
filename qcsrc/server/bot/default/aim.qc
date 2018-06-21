@@ -154,11 +154,6 @@ bool bot_shouldattack(entity this, entity targ)
 
 void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
 {
-	if(this.flags & FL_INWATER)
-	{
-		this.bot_aimtarg = NULL;
-		return;
-	}
 	this.bot_aimtarg = e1;
 	this.bot_aimlatency = CS(this).ping; // FIXME?  Shouldn't this be in the lag item?
 	//this.bot_aimorigin = v1;
