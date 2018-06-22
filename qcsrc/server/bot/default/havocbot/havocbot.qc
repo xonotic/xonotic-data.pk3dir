@@ -780,10 +780,10 @@ void havocbot_movetogoal(entity this)
 	}
 
 	bool goalcurrent_can_be_removed = false;
-	if (IS_MOVABLE(this.goalcurrent))
+	if (IS_PLAYER(this.goalcurrent) || IS_MONSTER(this.goalcurrent))
 	{
-		// if is movable  =>  not frozen
-		if (IS_DEAD(this.goalcurrent) || (this.goalentity_shouldbefrozen && this.goalentity == this.goalcurrent))
+		bool freeze_state_changed = (boolean(STAT(FROZEN, this.goalentity)) != this.goalentity_shouldbefrozen);
+		if (IS_DEAD(this.goalcurrent) || (this.goalentity == this.goalcurrent && freeze_state_changed))
 		{
 			goalcurrent_can_be_removed = true;
 			// don't remove if not visible
@@ -793,7 +793,7 @@ void havocbot_movetogoal(entity this)
 				return;
 			}
 		}
-		else if (this.bot_tracewalk_time < time)
+		else if (!(STAT(FROZEN, this.goalentity)) && this.bot_tracewalk_time < time)
 		{
 			set_tracewalk_dest(this.goalcurrent, this.origin, true);
 			if (!(trace_ent == this || tracewalk(this, this.origin, this.mins, this.maxs,
@@ -805,6 +805,7 @@ void havocbot_movetogoal(entity this)
 			this.bot_tracewalk_time = max(time, this.bot_tracewalk_time) + 0.25;
 		}
 	}
+
 	if(!locked_goal)
 	{
 		// optimize path finding by anticipating goalrating when bot is near a waypoint;
