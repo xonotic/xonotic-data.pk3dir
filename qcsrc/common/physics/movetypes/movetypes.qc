@@ -351,36 +351,49 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
     });
 }
 
+bool autocvar__movetype_debug = false;
 void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 {
-	vector mi, ma;
-	if(this.solid == SOLID_BSP)
+	if(autocvar__movetype_debug)
 	{
-		// TODO set the absolute bbox
-		mi = this.mins;
-		ma = this.maxs;
+		vector mi, ma;
+		if(this.solid == SOLID_BSP)
+		{
+			// TODO set the absolute bbox
+			mi = this.mins;
+			ma = this.maxs;
+		}
+		else
+		{
+			mi = this.mins;
+			ma = this.maxs;
+		}
+		mi += this.origin;
+		ma += this.origin;
+
+		if(this.flags & FL_ITEM)
+		{
+			mi -= '15 15 1';
+			ma += '15 15 1';
+		}
+		else
+		{
+			mi -= '1 1 1';
+			ma += '1 1 1';
+		}
+
+		this.absmin = mi;
+		this.absmax = ma;
 	}
 	else
 	{
-		mi = this.mins;
-		ma = this.maxs;
+		setorigin(this, this.origin); // calls SV_LinkEdict
+	#ifdef CSQC
+		// NOTE: CSQC's version of setorigin doesn't expand
+		this.absmin -= '1 1 1';
+		this.absmax += '1 1 1';
+	#endif
 	}
-	mi += this.origin;
-	ma += this.origin;
-
-	if(this.flags & FL_ITEM)
-	{
-		mi -= '15 15 1';
-		ma += '15 15 1';
-	}
-	else
-	{
-		mi -= '1 1 1';
-		ma += '1 1 1';
-	}
-
-	this.absmin = mi;
-	this.absmax = ma;
 
 	if(touch_triggers)
 		_Movetype_LinkEdict_TouchAreaGrid(this);
