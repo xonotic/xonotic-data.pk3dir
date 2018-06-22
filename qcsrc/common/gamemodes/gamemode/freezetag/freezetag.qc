@@ -539,6 +539,10 @@ MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 			bot.havocbot_role = havocbot_role_ft_offense;
 	}
 
+	// if bots spawn all at once assign them a more appropriated role after a while
+	if (CS(bot).jointime < time + 1)
+		bot.havocbot_role_timeout = time + 10 + random() * 10;
+
 	return true;
 }
 
