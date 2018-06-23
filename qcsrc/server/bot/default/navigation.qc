@@ -1878,6 +1878,17 @@ void navigation_unstuck(entity this)
 				bot_waypoint_queue_bestgoal = bot_waypoint_queue_goal;
 			}
 		}
+
+		// move to a random waypoint while bot is searching for a walkable path;
+		// this is usually sufficient to unstuck bots from bad spots or when other
+		// bots of the same team block all their ways
+		if (!bot_waypoint_queue_bestgoal && (!this.goalentity || random() < 0.1))
+		{
+			navigation_clearroute(this);
+			navigation_routetogoal(this, bot_waypoint_queue_goal, this.origin);
+			navigation_goalrating_timeout_expire(this, 1 + random() * 2);
+		}
+
 		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
 
 		if (!bot_waypoint_queue_goal)
@@ -1885,6 +1896,7 @@ void navigation_unstuck(entity this)
 			if (bot_waypoint_queue_bestgoal)
 			{
 				LOG_DEBUG(this.netname, " stuck, reachable waypoint found, heading to it");
+				navigation_clearroute(this);
 				navigation_routetogoal(this, bot_waypoint_queue_bestgoal, this.origin);
 				navigation_goalrating_timeout_set(this);
 				this.aistatus &= ~AI_STATUS_STUCK;
