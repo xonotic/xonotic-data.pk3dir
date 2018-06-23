@@ -126,8 +126,18 @@ void set_tracewalk_dest(entity ent, vector org, bool fix_player_dest)
 		// z coord is set to ent's min height
 		tracewalk_dest.x = bound(wm1.x, org.x, wm2.x);
 		tracewalk_dest.y = bound(wm1.y, org.y, wm2.y);
-		tracewalk_dest.z = wm1.z;
-		tracewalk_dest_height = wm2.z - wm1.z; // destination height
+		if ((IS_PLAYER(ent) || IS_MONSTER(ent))
+			&& org.x == tracewalk_dest.x && org.y == tracewalk_dest.y && org.z > tracewalk_dest.z)
+		{
+			tracewalk_dest.z = wm2.z - PL_MIN_CONST.z;
+			tracewalk_dest_height = 0;
+			fix_player_dest = false;
+		}
+		else
+		{
+			tracewalk_dest.z = wm1.z;
+			tracewalk_dest_height = wm2.z - wm1.z;
+		}
 	}
 	else
 	{
