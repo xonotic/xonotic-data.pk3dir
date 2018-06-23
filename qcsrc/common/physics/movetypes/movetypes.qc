@@ -532,6 +532,8 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 		case MOVETYPE_FLY:
 		case MOVETYPE_FLY_WORLDONLY:
 			_Movetype_Physics_Toss(this, movedt);
+			if(wasfreed(this))
+				return;
 			_Movetype_LinkEdict(this, true);
 			break;
 		case MOVETYPE_PHYSICS:
