@@ -220,9 +220,10 @@ float freezetag_isEliminated(entity e)
 void(entity this) havocbot_role_ft_freeing;
 void(entity this) havocbot_role_ft_offense;
 
-void havocbot_goalrating_freeplayers(entity this, float ratingscale, vector org, float sradius)
+void havocbot_goalrating_ft_freeplayers(entity this, float ratingscale, vector org, float sradius)
 {
-	float t;
+	entity best_pl = NULL;
+	float best_dist2 = FLOAT_MAX;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), {
 		if (STAT(FROZEN, it) == 1)
 		{
@@ -230,14 +231,24 @@ void havocbot_goalrating_freeplayers(entity this, float ratingscale, vector org,
 				continue;
 			navigation_routerating(this, it, ratingscale, 2000);
 		}
-		else if(vdist(it.origin - org, >, 400)) // avoid gathering all teammates in one place
+		else if (best_dist2
+			&& GetResourceAmount(it, RESOURCE_HEALTH) < GetResourceAmount(this, RESOURCE_HEALTH) + 30
+			&& vlen2(it.origin - org) < best_dist2)
 		{
 			// If teamate is not frozen still seek them out as fight better
 			// in a group.
-			t = 0.2 * 150 / (GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR));
-			navigation_routerating(this, it, t * ratingscale, 2000);
+			best_dist2 = vlen2(it.origin - org);
+			if (best_dist2 < 700 ** 2)
+			{
+				best_pl = NULL;
+				best_dist2 = 0; // already close to a teammate
+			}
+			else
+				best_pl = it;
 		}
 	});
+	if (best_pl)
+		navigation_routerating(this, best_pl, ratingscale / 2, 2000);
 }
 
 void havocbot_role_ft_offense(entity this)
@@ -264,9 +275,9 @@ void havocbot_role_ft_offense(entity this)
 	if (navigation_goalrating_timeout(this))
 	{
 		navigation_goalrating_start(this);
-		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+		havocbot_goalrating_items(this, 12000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
-		havocbot_goalrating_freeplayers(this, 9000, this.origin, 10000);
+		havocbot_goalrating_ft_freeplayers(this, 9000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 
@@ -293,9 +304,9 @@ void havocbot_role_ft_freeing(entity this)
 	if (navigation_goalrating_timeout(this))
 	{
 		navigation_goalrating_start(this);
-		havocbot_goalrating_items(this, 8000, this.origin, 10000);
+		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 5000, this.origin, 10000);
-		havocbot_goalrating_freeplayers(this, 20000, this.origin, 10000);
+		havocbot_goalrating_ft_freeplayers(this, 20000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 
