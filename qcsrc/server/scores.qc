@@ -402,7 +402,7 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	});
 
 	if (result.x == 0 && strict)
-		result.x = etof(t1.owner) - etof(t2.owner);
+		result.x = t1.owner.playerid - t2.owner.playerid;
 
 	return result.x;
 }

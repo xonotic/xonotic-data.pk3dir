@@ -116,7 +116,7 @@ string getwelcomemessage(entity this)
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
-		modifications = strcat(modifications, ", Jet pack");
+		modifications = strcat(modifications, ", Jetpack");
 	if(autocvar_g_powerups == 0)
 		modifications = strcat(modifications, ", No powerups");
 	if(autocvar_g_powerups > 0)

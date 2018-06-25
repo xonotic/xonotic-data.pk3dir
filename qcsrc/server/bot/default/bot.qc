@@ -74,12 +74,6 @@ void bot_think(entity this)
 
 	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
 
-	//if (this.bot_painintensity > 0)
-	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
-
-	//this.bot_painintensity = this.bot_painintensity + this.bot_oldhealth - this.health;
-	//this.bot_painintensity = bound(0, this.bot_painintensity, 100);
-
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
 		CS(this).movement = '0 0 0';

@@ -435,7 +435,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	entity this = actor.(weaponentity);
 	if (frametime) this.weapon_frametime = frametime;
 
-	if (!this || actor.health < 1) return;  // Dead player can't use weapons and injure impulse commands
+	if (!this || GetResourceAmount(actor, RESOURCE_HEALTH) < 1) return;  // Dead player can't use weapons and injure impulse commands
 
 	int button_atck = PHYS_INPUT_BUTTON_ATCK(actor);
 	int button_atck2 = PHYS_INPUT_BUTTON_ATCK2(actor);

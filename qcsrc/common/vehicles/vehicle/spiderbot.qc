@@ -540,7 +540,7 @@ METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 {
-    instance.health				= 0;
+	SetResourceAmountExplicit(instance, RESOURCE_HEALTH, 0);
     instance.event_damage		= func_null;
     instance.takedamage			= DAMAGE_NO;
     settouch(instance, func_null);

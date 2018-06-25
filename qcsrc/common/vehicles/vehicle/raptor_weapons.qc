@@ -74,7 +74,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             _flare.solid = SOLID_CORPSE;
             _flare.takedamage = DAMAGE_YES;
             _flare.event_damage = raptor_flare_damage;
-            _flare.health = 20;
+            SetResourceAmountExplicit(_flare, RESOURCE_HEALTH, 20);
             _flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
             settouch(_flare, raptor_flare_touch);
         }
@@ -191,8 +191,8 @@ void raptor_flare_touch(entity this, entity toucher)
 
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-    this.health -= damage;
-    if(this.health <= 0)
+    TakeResource(this, RESOURCE_HEALTH, damage);
+    if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
         delete(this);
 }
 

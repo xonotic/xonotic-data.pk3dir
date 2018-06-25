@@ -114,7 +114,6 @@ const int MAX_SPECTATORS = 7;
 int spectatorlist[MAX_SPECTATORS];
 
 int framecount;
-.float health;
 
 float GetSpeedUnitFactor(int speed_unit);
 string GetSpeedUnit(int speed_unit);
