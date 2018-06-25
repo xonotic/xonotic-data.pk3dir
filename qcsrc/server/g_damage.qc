@@ -524,7 +524,7 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	});
 
 	// add waypoint
-	if(Freeze(targ, revivespeed, frozen_type) || show_waypoint)
+	if(MUTATOR_CALLHOOK(Freeze, targ, revivespeed, frozen_type) || show_waypoint)
 		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
