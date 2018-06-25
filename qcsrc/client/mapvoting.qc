@@ -340,9 +340,11 @@ void MapVote_Draw()
 
 	if (!autocvar_hud_cursormode)
 	{
-		vector mpos = mousepos;
-		if (mpos.x != prev_mousepos.x || mpos.y != prev_mousepos.y)
+		if (mousepos.x != prev_mousepos.x || mousepos.y != prev_mousepos.y)
+		{
 			mv_selection_keyboard = 0;
+			prev_mousepos = mousepos;
+		}
 	}
 
 	center = (vid_conwidth - 1)/2;
