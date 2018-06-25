@@ -182,6 +182,7 @@ void freezetag_Add_Score(entity targ, entity attacker)
 	// else nothing - got frozen by the game type rules themselves
 }
 
+// to be called when the player is frozen by freezetag (on death, spectator join etc), gives the score
 void freezetag_Freeze(entity targ, entity attacker)
 {
 	if(STAT(FROZEN, targ))
@@ -195,14 +196,6 @@ void freezetag_Freeze(entity targ, entity attacker)
 	freezetag_count_alive_players();
 
 	freezetag_Add_Score(targ, attacker);
-}
-
-void freezetag_Unfreeze(entity this)
-{
-	this.freezetag_frozen_time = 0;
-	this.freezetag_frozen_timeout = 0;
-
-	Unfreeze(this);
 }
 
 float freezetag_isEliminated(entity e)
@@ -313,7 +306,7 @@ void ft_RemovePlayer(entity this)
 	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // neccessary to update correctly alive stats
 	if(!STAT(FROZEN, this))
 		freezetag_LastPlayerForTeam_Notify(this);
-	freezetag_Unfreeze(this);
+	Unfreeze(this);
 	freezetag_count_alive_players();
 }
 
@@ -342,7 +335,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(round_handler_CountdownRunning())
 	{
 		if(STAT(FROZEN, frag_target))
-			freezetag_Unfreeze(frag_target);
+			Unfreeze(frag_target);
 		freezetag_count_alive_players();
 		return true; // let the player die so that he can respawn whenever he wants
 	}
@@ -360,7 +353,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			freezetag_LastPlayerForTeam_Notify(frag_target);
 		}
 		else
-			freezetag_Unfreeze(frag_target); // remove ice
+			Unfreeze(frag_target); // remove ice
 		SetResourceAmountExplicit(frag_target, RESOURCE_HEALTH, 0); // Unfreeze resets health
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
@@ -429,6 +422,15 @@ MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ft, Unfreeze)
+{
+	entity targ = M_ARGV(0, entity);
+	targ.freezetag_frozen_time = 0;
+	targ.freezetag_frozen_timeout = 0;
+
+	freezetag_count_alive_players();
+}
+
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 {
 	if(game_stopped)
@@ -474,7 +476,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
-			freezetag_Unfreeze(player);
+			Unfreeze(player);
 			freezetag_count_alive_players();
 
 			if(n == -1)
