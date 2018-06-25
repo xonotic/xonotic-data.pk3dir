@@ -1215,7 +1215,8 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 
 NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
-	complain_weapon = ReadByte();
+	int weapon_id = ReadByte();
+	complain_weapon = Weapons_from(weapon_id);
 	complain_weapon_type = ReadByte();
 	return = true;
 
@@ -1224,9 +1225,9 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 
 	switch(complain_weapon_type)
 	{
-		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, complain_weapon); break;
-		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, complain_weapon); break;
-		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, complain_weapon); break;
+		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, weapon_id); break;
+		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, weapon_id); break;
+		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, weapon_id); break;
 	}
 }
 

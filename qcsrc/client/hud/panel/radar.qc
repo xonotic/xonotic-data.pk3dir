@@ -6,6 +6,7 @@
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <client/mapvoting.qh>
+#include <client/resources.qh>
 #include <client/teamradar.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 

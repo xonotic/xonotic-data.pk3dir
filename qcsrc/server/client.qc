@@ -10,7 +10,6 @@
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
-#include "playerdemo.qh"
 #include "spawnpoints.qh"
 #include "resources.qh"
 #include "g_damage.qh"
@@ -751,11 +750,15 @@ void PutPlayerInServer(entity this)
 		this.(weaponentity).weaponname = "";
 		this.(weaponentity).m_switchingweapon = WEP_Null;
 		this.(weaponentity).cnt = -1;
-
-		W_WeaponFrame(this, weaponentity);
 	}
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_WeaponFrame(this, weaponentity);
+	}
 
 	if (!warmup_stage && !this.alivetime)
 		this.alivetime = time;
@@ -2820,8 +2823,6 @@ void PlayerPostThink (entity this)
 	    vector v = healtharmor_maxdamage(GetResourceAmount(this, RESOURCE_HEALTH), GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id);
 		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, '1 0 0' * v);
     }
-
-	playerdemo_write(this);
 
 	CSQCMODEL_AUTOUPDATE(this);
 }

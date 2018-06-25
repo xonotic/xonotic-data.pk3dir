@@ -2,6 +2,7 @@
 
 #include "autocvars.qh"
 #include "miscfunctions.qh"
+#include "resources.qh"
 #include "hud/_mod.qh"
 
 #include <common/ent_cs.qh>

@@ -16,7 +16,6 @@
 #include <server/matrix.qh>
 #include <server/miscfunctions.qh>
 #include <server/player.qh>
-#include <server/playerdemo.qh>
 #include <server/portals.qh>
 #include <server/race.qh>
 #include <server/resources.qh>

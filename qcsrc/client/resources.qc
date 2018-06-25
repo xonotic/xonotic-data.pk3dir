@@ -1,4 +1,5 @@
 #include "resources.qh"
+#include <common/items/item/ammo.qh>
 
 /// \file
 /// \brief Source file that contains implementation of the resource system.

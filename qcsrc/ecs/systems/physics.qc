@@ -6,6 +6,8 @@
 void sys_phys_simulate(entity this, float dt);
 void sys_phys_simulate_simple(entity this, float dt);
 
+void sys_phys_postupdate(entity this);
+
 void sys_phys_update(entity this, float dt)
 {
 	if (!IS_CLIENT(this)) {
@@ -63,7 +65,8 @@ void sys_phys_update(entity this, float dt)
 			// if(pointcontents(midpoint + '0 0 2') == CONTENT_WATER)
 			// { this.velocity_z = 70; }
 		}
-		goto end;
+		sys_phys_postupdate(this);
+		return;
 	}
 
 	PM_check_slick(this);
@@ -153,7 +156,11 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_air = false;
 	}
 
-	LABEL(end)
+	sys_phys_postupdate(this);
+}
+
+void sys_phys_postupdate(entity this)
+{
 	if (IS_ONGROUND(this)) { this.lastground = time; }
 // conveyors: then break velocity again
 	if (this.conveyor.active) { this.velocity += this.conveyor.movedir; }

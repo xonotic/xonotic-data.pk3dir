@@ -58,7 +58,7 @@ void turret_hk_missile_think(entity this)
     //if (this.cnt < time)
     //	turret_hk_missile_explode();
 
-    if (IS_DEAD(this.enemy))
+    if (IS_DEAD(this.enemy) || IS_SPEC(this.enemy) || IS_OBSERVER(this.enemy))
         this.enemy = NULL;
 
     // Pick the closest valid target.

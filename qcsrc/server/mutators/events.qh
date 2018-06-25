@@ -1174,3 +1174,21 @@ enum {
     MUT_VOTEPARSE_INVALID, // return -1 (vote parsed but counted as invalid, no action or vote)
     MUT_VOTEPARSE_UNACCEPTABLE // return 0 (vote parameter counted as unacceptable, warns caller)
 };
+
+/**
+ * Called when freezing an entity (monster or player), return true to force showing a waypoint
+ */
+#define EV_Freeze(i, o) \
+    /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** revive speed */     i(float, MUTATOR_ARGV_1_float) \
+    /** frozen type */      i(int, MUTATOR_ARGV_2_int) \
+    /**/
+MUTATOR_HOOKABLE(Freeze, EV_Freeze);
+
+/**
+ * Called when an entity (monster or player) is defrosted
+ */
+#define EV_Unfreeze(i, o) \
+    /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);

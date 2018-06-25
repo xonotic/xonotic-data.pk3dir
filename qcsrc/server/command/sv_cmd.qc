@@ -15,7 +15,6 @@
 #include "../player.qh"
 #include "../g_world.qh"
 #include "../ipban.qh"
-#include "../playerdemo.qh"
 #include "../teamplay.qh"
 
 #include "../bot/api.qh"
@@ -1166,86 +1165,6 @@ void GameCommand_nospectators(float request)
 	}
 }
 
-void GameCommand_playerdemo(float request, float argc)
-{
-	switch (request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if (argv(2) && argv(3))
-			{
-				entity client;
-				float i, n, accepted;
-
-				switch (argv(1))
-				{
-					case "read":
-					{
-						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, false, true);
-
-						if (accepted <= 0)
-						{
-							LOG_INFO("playerdemo: read: ", GetClientErrorString(accepted, argv(2)), ".");
-							return;
-						}
-
-						playerdemo_open_read(client, argv(next_token));
-						return;
-					}
-
-					case "write":
-					{
-						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, false, false);
-
-						if (accepted <= 0)
-						{
-							LOG_INFO("playerdemo: write: ", GetClientErrorString(accepted, argv(2)), ".");
-							return;
-						}
-
-						playerdemo_open_write(client, argv(next_token));
-						return;
-					}
-
-					case "auto_read_and_write":
-					{
-						n = GetFilteredNumber(argv(3));
-						cvar_set("bot_number", ftos(n));
-
-						localcmd("wait; wait; wait\n");
-						for (i = 0; i < n; ++i)
-							localcmd("sv_cmd playerdemo read ", ftos(i + 2), " ", argv(2), ftos(i + 1), "\n");
-						localcmd("sv_cmd playerdemo write 1 ", ftos(n + 1), "\n");
-						return;
-					}
-
-					case "auto_read":
-					{
-						n = GetFilteredNumber(argv(3));
-						cvar_set("bot_number", ftos(n));
-
-						localcmd("wait; wait; wait\n");
-						for (i = 0; i < n; ++i)
-							localcmd("sv_cmd playerdemo read ", ftos(i + 2), " ", argv(2), ftos(i + 1), "\n");
-						return;
-					}
-				}
-			}
-		}
-
-		default:
-			LOG_INFO("Incorrect parameters for ^2playerdemo^7");
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFO("Usage:^3 sv_cmd playerdemo command (entitynumber filename | entitynumber botnumber)");
-			LOG_INFO("  Full list of commands here: \"read, write, auto_read_and_write, auto_read.\"");
-			return;
-		}
-	}
-}
-
 void GameCommand_printstats(float request)
 {
 	switch (request)
@@ -1729,7 +1648,6 @@ SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter te
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
 SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
-SERVER_COMMAND(playerdemo, "Control the ability to save demos of players") { GameCommand_playerdemo(request, arguments); }
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }

@@ -87,8 +87,8 @@ const float BORDER_MULTIPLIER = 4;
 float scoreboard_bottom;
 int weapon_accuracy[Weapons_MAX];
 
-int complain_weapon;
-float complain_weapon_type;
+entity complain_weapon;
+int complain_weapon_type;
 float complain_weapon_time;
 
 PlayerScoreField ps_primary, ps_secondary;
