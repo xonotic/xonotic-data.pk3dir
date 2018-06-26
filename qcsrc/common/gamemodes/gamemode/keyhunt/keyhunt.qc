@@ -299,7 +299,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
 	key.modelindex = kh_key_dropped;
-	navigation_dynamicgoal_set(key);
+	navigation_dynamicgoal_set(key, key.owner);
 	key.kh_previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
 }

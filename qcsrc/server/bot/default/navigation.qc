@@ -78,9 +78,11 @@ void navigation_dynamicgoal_init(entity this, bool initially_static)
 		this.nearestwaypointtimeout = time;
 }
 
-void navigation_dynamicgoal_set(entity this)
+void navigation_dynamicgoal_set(entity this, entity dropper)
 {
 	this.nearestwaypointtimeout = time;
+	if (dropper && dropper.nearestwaypointtimeout && dropper.nearestwaypointtimeout < time + 2)
+		this.nearestwaypoint = dropper.nearestwaypoint;
 	if (this.nearestwaypoint)
 		this.nearestwaypointtimeout += 2;
 }
@@ -1215,11 +1217,7 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 // updates the best goal according to a weighted calculation of travel cost and item value of a new proposed item
 void navigation_routerating(entity this, entity e, float f, float rangebias)
 {
-	if (!e)
-		return;
-
-	if(e.blacklisted)
-		return;
+	if (!e || e.blacklisted) { return; }
 
 	rangebias = waypoint_getlinearcost(rangebias);
 	f = waypoint_getlinearcost(f);

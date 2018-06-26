@@ -64,7 +64,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	settouch(this, ka_TouchEvent);
 	setthink(this, ka_RespawnBall);
 	this.nextthink = time + autocvar_g_keepawayball_respawntime;
-	navigation_dynamicgoal_set(this);
+	navigation_dynamicgoal_set(this, NULL);
 
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
@@ -164,10 +164,11 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	entity e = ball.owner; ball.owner = NULL;
+	entity e = ball.owner;
+	ball.owner = NULL;
 	e.ballcarried = NULL;
 	GameRules_scoring_vip(e, false);
-	navigation_dynamicgoal_set(ball);
+	navigation_dynamicgoal_set(ball, e);
 
 	// reset the player effects
 	plyr.glow_trail = false;

@@ -449,7 +449,6 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
-	navigation_dynamicgoal_set(flag);
 
 	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
 
@@ -488,6 +487,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & ITEM_Strength.m_itemid) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
 			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, flag_velocity, false);
 			ctf_Handle_Drop(flag, player, droptype);
+			navigation_dynamicgoal_set(flag, player);
 			break;
 		}
 
@@ -502,6 +502,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 		{
 			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, (('0 0 1' * autocvar_g_ctf_drop_velocity_up) + ((('0 1 0' * crandom()) + ('1 0 0' * crandom())) * autocvar_g_ctf_drop_velocity_side)), false);
 			ctf_Handle_Drop(flag, player, droptype);
+			navigation_dynamicgoal_set(flag, player);
 			break;
 		}
 	}

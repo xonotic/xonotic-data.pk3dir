@@ -83,7 +83,7 @@ float bot_waypoint_queue_bestgoalrating;
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
-void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_set(entity this, entity dropper);
 void navigation_dynamicgoal_unset(entity this);
 
 .int nav_submerged_state;
