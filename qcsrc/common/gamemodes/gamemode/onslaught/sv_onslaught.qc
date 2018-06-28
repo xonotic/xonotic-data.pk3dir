@@ -1251,46 +1251,6 @@ void Onslaught_RoundStart()
 
 // NOTE: LEGACY CODE, needs to be re-written!
 
-void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector org, float sradius)
-{
-	bool needarmor = false, needweapons = false;
-
-	// Needs armor/health?
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 100)
-		needarmor = true;
-
-	// Needs weapons?
-	int c = 0;
-	FOREACH(Weapons, it != WEP_Null, {
-		if(STAT(WEAPONS, this) & (it.m_wepset))
-		if(++c >= 4)
-			break;
-	});
-
-	if(c<4)
-		needweapons = true;
-
-	if(!needweapons && !needarmor)
-		return;
-
-	LOG_DEBUG(this.netname, " needs weapons ", ftos(needweapons));
-	LOG_DEBUG(this.netname, " needs armor ", ftos(needarmor));
-
-	// See what is around
-	IL_EACH(g_items, it.bot_pickup,
-	{
-		// gather health and armor only
-		if (it.solid)
-		if ( ((GetResourceAmount(it, RESOURCE_HEALTH) || GetResourceAmount(it, RESOURCE_ARMOR)) && needarmor) || (STAT(WEAPONS, it) && needweapons ) )
-		if (vdist(it.origin - org, <, sradius))
-		{
-			int t = it.bot_pickupevalfunc(this, it);
-			if (t > 0)
-				navigation_routerating(this, it, t * ratingscale, 500);
-		}
-	});
-}
-
 void havocbot_role_ons_setrole(entity this, int role)
 {
 	switch(role)
@@ -1411,7 +1371,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 	{
 		// Should be touched
 		LOG_DEBUG(this.netname, " found a touchable controlpoint at ", vtos(cp.origin));
-		navigation_routerating(this, cp, ratingscale, 10000);
+		navigation_routerating(this, cp, ratingscale * 2, 10000);
 	}
 }
 
@@ -1495,10 +1455,10 @@ void havocbot_role_ons_offense(entity this)
 	if (navigation_goalrating_timeout(this))
 	{
 		navigation_goalrating_start(this);
-		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 650);
-		if(!havocbot_goalrating_ons_generator_attack(this, 20000))
-			havocbot_goalrating_ons_controlpoints_attack(this, 20000);
-		havocbot_goalrating_ons_offenseitems(this, 10000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 650);
+		if(!havocbot_goalrating_ons_generator_attack(this, 10000))
+			havocbot_goalrating_ons_controlpoints_attack(this, 10000);
+		havocbot_goalrating_items(this, 25000, this.origin, 10000);
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);
