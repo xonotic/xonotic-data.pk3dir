@@ -426,9 +426,9 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		// Find and rate waypoints around it
 		found = false;
 		entity best = NULL;
-		float bestvalue = 99999999999;
+		float bestvalue = FLOAT_MAX;
 		entity des = it;
-		for(float radius = 0; radius < 1500 && !found; radius += 500)
+		for (float radius = 500; radius <= 1500 && !found; radius += 500)
 		{
 			FOREACH_ENTITY_RADIUS(p, radius, it.classname == "waypoint" && !(it.wpflags & WAYPOINTFLAG_GENERATED),
 			{
