@@ -17,10 +17,10 @@ void freezetag_count_alive_players()
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		switch(it.team)
 		{
-			case NUM_TEAM_1: ++total_players; if(GetResourceAmount(it, RESOURCE_HEALTH) >= 1 && STAT(FROZEN, it) != 1) ++redalive; break;
-			case NUM_TEAM_2: ++total_players; if(GetResourceAmount(it, RESOURCE_HEALTH) >= 1 && STAT(FROZEN, it) != 1) ++bluealive; break;
-			case NUM_TEAM_3: ++total_players; if(GetResourceAmount(it, RESOURCE_HEALTH) >= 1 && STAT(FROZEN, it) != 1) ++yellowalive; break;
-			case NUM_TEAM_4: ++total_players; if(GetResourceAmount(it, RESOURCE_HEALTH) >= 1 && STAT(FROZEN, it) != 1) ++pinkalive; break;
+			case NUM_TEAM_1: ++total_players; if(STAT(FROZEN, it) != 1 && GetResourceAmount(it, RESOURCE_HEALTH) >= 1) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(STAT(FROZEN, it) != 1 && GetResourceAmount(it, RESOURCE_HEALTH) >= 1) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(STAT(FROZEN, it) != 1 && GetResourceAmount(it, RESOURCE_HEALTH) >= 1) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(STAT(FROZEN, it) != 1 && GetResourceAmount(it, RESOURCE_HEALTH) >= 1) ++pinkalive; break;
 		}
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
@@ -141,14 +141,14 @@ float freezetag_CheckWinner()
 entity freezetag_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		if(GetResourceAmount(it, RESOURCE_HEALTH) >= 1)
-		if(!STAT(FROZEN, it))
-		if(SAME_TEAM(it, this))
-		if(!last_pl)
-			last_pl = it;
-		else
-			return NULL;
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), {
+		if (!STAT(FROZEN, it) && GetResourceAmount(it, RESOURCE_HEALTH) >= 1)
+		{
+			if (!last_pl)
+				last_pl = it;
+			else
+				return NULL;
+		}
 	});
 	return last_pl;
 }
@@ -568,8 +568,8 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 		return; // target was already frozen, so this is just pushing them off the cliff
 
 	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : CS(frag_target).ping));
-	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target, 
-										GetResourceAmount(frag_attacker, RESOURCE_HEALTH), GetResourceAmount(frag_attacker, RESOURCE_ARMOR), (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
+	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target,
+		GetResourceAmount(frag_attacker, RESOURCE_HEALTH), GetResourceAmount(frag_attacker, RESOURCE_ARMOR), (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
 
 	return true;
 }
@@ -582,7 +582,7 @@ void freezetag_Initialize()
 
 	freezetag_teams = BITS(bound(2, freezetag_teams, 4));
 	GameRules_scoring(freezetag_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
-	    field(SP_FREEZETAG_REVIVALS, "revivals", 0);
+		field(SP_FREEZETAG_REVIVALS, "revivals", 0);
 	});
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);

@@ -449,15 +449,17 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 
 bool ons_ControlPoint_Icon_Heal(entity targ, entity inflictor, float amount, float limit)
 {
+	float hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
 	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
-	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+	if (hlth <= 0 || hlth >= true_limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
 	if(targ.owner.iscaptured)
-		WaypointSprite_UpdateHealth(targ.owner.sprite, GetResourceAmount(targ, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(targ.owner.sprite, hlth);
 	else
-		WaypointSprite_UpdateBuildFinished(targ.owner.sprite, time + (targ.max_health - GetResourceAmount(targ, RESOURCE_HEALTH)) / (targ.count / ONS_CP_THINKRATE));
+		WaypointSprite_UpdateBuildFinished(targ.owner.sprite, time + (targ.max_health - hlth) / (targ.count / ONS_CP_THINKRATE));
 	targ.SendFlags |= CPSF_STATUS;
 	return true;
 }
@@ -904,13 +906,14 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		}
 	}
 	TakeResource(this, RESOURCE_HEALTH, damage);
-	WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
+	float hlth = GetResourceAmount(this, RESOURCE_HEALTH);
+	WaypointSprite_UpdateHealth(this.sprite, hlth);
 	// choose an animation frame based on health
-	this.frame = 10 * bound(0, (1 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health), 1);
+	this.frame = 10 * bound(0, (1 - hlth / this.max_health), 1);
 	// see if the generator is still functional, or dying
-	if (GetResourceAmount(this, RESOURCE_HEALTH) > 0)
+	if (hlth > 0)
 	{
-		this.lasthealth = GetResourceAmount(this, RESOURCE_HEALTH);
+		this.lasthealth = hlth;
 	}
 	else
 	{
@@ -964,13 +967,15 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 bool ons_GeneratorHeal(entity targ, entity inflictor, float amount, float limit)
 {
 	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
-	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+	float hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	if (hlth <= 0 || hlth >= true_limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
-	WaypointSprite_UpdateHealth(targ.sprite, GetResourceAmount(targ, RESOURCE_HEALTH));
-	targ.frame = 10 * bound(0, (1 - GetResourceAmount(targ, RESOURCE_HEALTH) / targ.max_health), 1);
-	targ.lasthealth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	WaypointSprite_UpdateHealth(targ.sprite, hlth);
+	targ.frame = 10 * bound(0, (1 - hlth / targ.max_health), 1);
+	targ.lasthealth = hlth;
 	targ.SendFlags |= GSF_STATUS;
 	return true;
 }
