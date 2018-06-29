@@ -253,6 +253,7 @@ void HUD_Configure_Exit_Force()
 		hud_configure_menu_open = 0;
 		localcmd("togglemenu\n");
 	}
+	mouse_over_panel = 0;
 	cvar_set("_hud_configure", "0");
 }
 
@@ -760,7 +761,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1)
 			return true;
 		if (!hud_configure_menu_open)
-			cvar_set("_hud_configure", "0");
+			HUD_Configure_Exit_Force();
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
 	{
