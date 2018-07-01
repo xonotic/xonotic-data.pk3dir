@@ -12,7 +12,7 @@
 // Step 2: const self
 #if 1
     #define self (RVALUE, self)
-    [[alias("self")]] entity __self;
+    ALIAS("self") entity __self;
     #define setself(s) (__self = s)
     #define WITHSELF(value, block) WITH(entity, __self, value, (RVALUE, block))
 #endif

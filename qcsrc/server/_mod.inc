@@ -6,9 +6,6 @@
 #include <server/client.qc>
 #include <server/g_damage.qc>
 #include <server/g_hook.qc>
-#include <server/g_lights.qc>
-#include <server/g_models.qc>
-#include <server/g_subs.qc>
 #include <server/g_world.qc>
 #include <server/handicap.qc>
 #include <server/impulse.qc>
@@ -19,7 +16,6 @@
 #include <server/matrix.qc>
 #include <server/miscfunctions.qc>
 #include <server/player.qc>
-#include <server/playerdemo.qc>
 #include <server/portals.qc>
 #include <server/race.qc>
 #include <server/resources.qc>

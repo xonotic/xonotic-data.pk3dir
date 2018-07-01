@@ -22,7 +22,8 @@ CLASS(Vaporizer, Weapon)
 	BEGIN(class) \
 		P(class, prefix, ammo, float, PRI) \
     	P(class, prefix, animtime, float, PRI) \
-    	P(class, prefix, damage, float, PRI) \
+        P(class, prefix, damage, float, PRI) \
+    	P(class, prefix, force, float, PRI) \
     	P(class, prefix, refire, float, PRI) \
     	P(class, prefix, ammo, float, SEC) \
     	P(class, prefix, animtime, float, SEC) \

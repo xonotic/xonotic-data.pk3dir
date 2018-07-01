@@ -4,6 +4,7 @@ void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
 	Physics_UpdateStats(this);
+	PM_ClientMovement_UpdateStatus(this);
 }
 
 bool sys_phys_override(entity this, float dt)
@@ -33,7 +34,6 @@ void sys_phys_monitor(entity this, float dt)
 void sys_phys_ai(entity this)
 {
 	if (!IS_BOT_CLIENT(this)) { return; }
-	if (playerdemo_read(this)) { return; }
 	bot_think(this);
 }
 

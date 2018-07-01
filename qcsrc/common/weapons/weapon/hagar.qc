@@ -32,7 +32,7 @@ void W_Hagar_Explode2_use(entity this, entity actor, entity trigger)
 
 void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	float is_linkexplode = ( ((inflictor.owner != NULL) ? (inflictor.owner == this.owner) : true)
@@ -47,10 +47,10 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, is_linkexplode))
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
@@ -91,7 +91,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR_PRI(hagar, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	missile.health = WEP_CVAR_PRI(hagar, health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_PRI(hagar, health));
 	missile.damageforcescale = WEP_CVAR_PRI(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
@@ -137,7 +137,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	missile.health = WEP_CVAR_SEC(hagar, health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_SEC(hagar, health));
 	missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
@@ -183,14 +183,14 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 
 	weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(hagar, refire));
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage), WEP_HAGAR.m_id | HITTYPE_SECONDARY);
+	shots = actor.(weaponentity).hagar_load;
+	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage) * shots, WEP_HAGAR.m_id | HITTYPE_SECONDARY);
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
 
-	shots = actor.(weaponentity).hagar_load;
 	missile = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -200,7 +200,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 		missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
 		missile.takedamage = DAMAGE_YES;
-		missile.health = WEP_CVAR_SEC(hagar, health);
+		SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_SEC(hagar, health));
 		missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 		missile.event_damage = W_Hagar_Damage;
 		missile.damagedbycontents = true;
@@ -255,9 +255,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	// loadable hagar secondary attack, must always run each frame
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
-		return;
-	if(time < game_starttime)
+	if(time < game_starttime || time < actor.race_penalty || timeout_status == TIMEOUT_ACTIVE)
 		return;
 
 	bool loaded = actor.(weaponentity).hagar_load >= WEP_CVAR_SEC(hagar, load_max);
@@ -363,7 +361,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 
 void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(!(fire & 1) || actor.(weaponentity).hagar_load || actor.(weaponentity).hagar_loadblock || actor.(weaponentity).m_switchweapon != WEP_HAGAR)
+	if(!(fire & 1) || actor.(weaponentity).hagar_load || actor.(weaponentity).hagar_loadblock || actor.(weaponentity).m_switchweapon != WEP_HAGAR || !weapon_prepareattack_check(thiswep, actor, weaponentity, false, -1))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;

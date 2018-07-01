@@ -31,8 +31,6 @@
 
 #define MAX_IPBAN_URIS (URI_GET_IPBAN_END - URI_GET_IPBAN + 1)
 
-float Ban_Insert(string ip, float bantime, string reason, float dosync);
-
 void OnlineBanList_SendBan(string ip, float bantime, string reason)
 {
 	string uri;
@@ -211,12 +209,8 @@ void OnlineBanList_Think(entity this)
 	if(argc == 0)
 		goto killme;
 
-	if(OnlineBanList_Servers)
-		strunzone(OnlineBanList_Servers);
-	OnlineBanList_Servers = argv(0);
-	for(i = 1; i < argc; ++i)
-		OnlineBanList_Servers = strcat(OnlineBanList_Servers, ";", argv(i));
-	OnlineBanList_Servers = strzone(OnlineBanList_Servers);
+	string s = argv(0); for(i = 1; i < argc; ++i) s = strcat(s, ";", argv(i));
+	strcpy(OnlineBanList_Servers, s);
 
 	uri = strcat(     "action=list&hostname=", uri_escape(autocvar_hostname));
 	uri = strcat(uri, "&servers=", uri_escape(OnlineBanList_Servers));

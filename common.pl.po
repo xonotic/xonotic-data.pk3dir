@@ -13,15 +13,15 @@
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Piotr Kozica <koza91@gmail.com>, 2016
 # Rafał Szymański <okavasly@gmail.com>, 2017
-# Robert Wolniak <robert.wolniak@gmail.com>, 2015
+# Robert Wolniak <robert.wolniak@gmail.com>, 2015,2018
 # Sertomas, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-09-20 00:10+0000\n"
-"Last-Translator: Rafał Szymański <okavasly@gmail.com>\n"
+"PO-Revision-Date: 2018-04-19 09:01+0000\n"
+"Last-Translator: Robert Wolniak <robert.wolniak@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -1158,7 +1158,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
-msgstr ""
+msgstr "Złodziej Kuli"
 
 #: qcsrc/common/items/item/armor.qh:111
 msgid "Big armor"
@@ -1310,6 +1310,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Zabijaj przeciwników by ich zamrozić i stój obok członków swojej drużyny by "
+"ich wskrzesić; aby wygrać, zamroź wszystkich wrogów"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -1468,6 +1470,8 @@ msgid ""
 "You lost the game!\n"
 "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr ""
+"Przegrana meczu!\n"
+"Wybierz w menu opcję \"^1Następny Mecz^7\" po rewanż!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:325
@@ -1475,16 +1479,18 @@ msgid ""
 "You win!\n"
 "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
+"Wygrana!\n"
+"Wybierz w menu opcję \"^1Następny Mecz^7\" by rozpocząć nową grę!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr ""
+msgstr "Wybierz w menu opcję \"^1Następny Mecz^7\" by rozpocząć nową grę!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:451
 #: qcsrc/common/minigames/minigame/ttt.qc:332
 msgid "Wait for your opponent to confirm the rematch"
-msgstr ""
+msgstr "Poczekaj aż twój przeciwnik potwierdzi rewanż."
 
 #: qcsrc/common/minigames/minigame/pp.qc:582
 #: qcsrc/common/minigames/minigame/ttt.qc:665

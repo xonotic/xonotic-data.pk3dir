@@ -9,8 +9,6 @@
 
 int ScoreRules_teams;
 
-void CheckAllowedTeams (entity for_whom);
-
 int NumTeams(int teams)
 {
 	return boolean(teams & BIT(0)) + boolean(teams & BIT(1)) + boolean(teams & BIT(2)) + boolean(teams & BIT(3));
@@ -55,6 +53,9 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "dmg", 0);
 	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "dmgtaken", SFL_LOWER_IS_BETTER);
 	ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", 0);
+
+	if(STAT(SHOWFPS))
+		ScoreInfo_SetLabel_PlayerScore(SP_FPS, "fps", 0);
 }
 void ScoreRules_basics_end()
 {

@@ -86,8 +86,8 @@ const float BORDER_MULTIPLIER = 4;
 float scoreboard_bottom;
 int weapon_accuracy[Weapons_MAX];
 
-int complain_weapon;
-float complain_weapon_type;
+entity complain_weapon;
+int complain_weapon_type;
 float complain_weapon_time;
 
 PlayerScoreField ps_primary, ps_secondary;
@@ -120,18 +120,18 @@ vector panel_size_copied;
 
 entity panel;
 entityclass(HUDPanel);
-class(HUDPanel) .string panel_name;
-class(HUDPanel) .int panel_id;
-class(HUDPanel) .vector current_panel_pos;
-class(HUDPanel) .vector current_panel_size;
-class(HUDPanel) .string current_panel_bg;
-class(HUDPanel) .float current_panel_bg_alpha;
-class(HUDPanel) .float current_panel_bg_border;
-class(HUDPanel) .vector current_panel_bg_color;
-class(HUDPanel) .float current_panel_bg_color_team;
-class(HUDPanel) .float current_panel_bg_padding;
-class(HUDPanel) .float current_panel_fg_alpha;
-class(HUDPanel) .float update_time;
+classfield(HUDPanel) .string panel_name;
+classfield(HUDPanel) .int panel_id;
+classfield(HUDPanel) .vector current_panel_pos;
+classfield(HUDPanel) .vector current_panel_size;
+classfield(HUDPanel) .string current_panel_bg;
+classfield(HUDPanel) .float current_panel_bg_alpha;
+classfield(HUDPanel) .float current_panel_bg_border;
+classfield(HUDPanel) .vector current_panel_bg_color;
+classfield(HUDPanel) .float current_panel_bg_color_team;
+classfield(HUDPanel) .float current_panel_bg_padding;
+classfield(HUDPanel) .float current_panel_fg_alpha;
+classfield(HUDPanel) .float update_time;
 float panel_enabled;
 vector panel_pos;
 vector panel_size;
@@ -148,7 +148,7 @@ string panel_bg_border_str;
 float panel_bg_padding;
 string panel_bg_padding_str;
 
-class(HUDPanel) .void() panel_draw;
+classfield(HUDPanel) .void() panel_draw;
 
 // chat panel can be reduced / moved while the mapvote is active
 // let know the mapvote panel about chat pos and size
@@ -175,8 +175,6 @@ vector hud_shift;
 vector hud_shift_current = '0 0 0';
 vector hud_scale_center;
 
-float stringwidth_colors(string s, vector theSize);
-float stringwidth_nocolors(string s, vector theSize);
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
 
 .int panel_showflags;
@@ -264,9 +262,7 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO         
 			}                                                                                                       \
 		}                                                                                                           \
 	}                                                                                                               \
-	if (panel.current_panel_bg)                                                                                     \
-		strunzone(panel.current_panel_bg);                                                                          \
-	panel.current_panel_bg = strzone(panel_bg);                                                                     \
+	strcpy(panel.current_panel_bg, panel_bg);                                                                       \
 } MACRO_END
 
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.

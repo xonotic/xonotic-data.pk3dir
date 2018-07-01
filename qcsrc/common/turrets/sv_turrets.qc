@@ -182,9 +182,10 @@ void turret_die(entity this)
 	this.tur_head.solid	 = this.solid;
 
 	this.event_damage		  = func_null;
+	this.event_heal = func_null;
 	this.takedamage			 = DAMAGE_NO;
 
-	this.health			 = 0;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
 
 // Go boom
 	//RadiusDamage (this,this, min(this.ammo,50),min(this.ammo,50) * 0.25,250,NULL,min(this.ammo,50)*5,DEATH_TURRET,NULL);
@@ -230,7 +231,7 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 			return;
 	}
 
-	this.health -= damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
 	// thorw head slightly off aim when hit?
 	if (this.damage_flags & TFL_DMG_HEADSHAKE)
@@ -244,16 +245,29 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	if (this.turret_flags & TUR_FLAG_MOVE)
 		this.velocity = this.velocity + vforce;
 
-	if (this.health <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		this.event_damage		  = func_null;
 		this.tur_head.event_damage = func_null;
+		this.event_heal = func_null;
+		this.tur_head.event_heal = func_null;
 		this.takedamage			 = DAMAGE_NO;
 		this.nextthink = time;
 		setthink(this, turret_die);
 	}
 
 	this.SendFlags  |= TNSF_STATUS;
+}
+
+bool turret_heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	targ.SendFlags |= TNSF_STATUS;
+	return true;
 }
 
 void turret_think(entity this);
@@ -268,10 +282,11 @@ void turret_respawn(entity this)
 	this.solid					= SOLID_BBOX;
 	this.takedamage 			= DAMAGE_AIM;
 	this.event_damage			= turret_damage;
+	this.event_heal 			= turret_heal;
 	this.avelocity				= '0 0 0';
 	this.tur_head.avelocity		= this.avelocity;
 	this.tur_head.angles		= this.idle_aim;
-	this.health					= this.max_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 	this.enemy					= NULL;
 	this.volly_counter			= this.shot_volly;
 	this.ammo					= this.ammo_max;
@@ -350,10 +365,10 @@ bool turret_send(entity this, entity to, float sf)
 	{
 		WriteByte(MSG_ENTITY, this.team);
 
-		if(this.health <= 0)
+		if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 			WriteByte(MSG_ENTITY, 0);
 		else
-			WriteByte(MSG_ENTITY, ceil((this.health / this.max_health) * 255));
+			WriteByte(MSG_ENTITY, ceil((GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health) * 255));
 	}
 
 	return true;
@@ -384,7 +399,7 @@ void load_unit_settings(entity ent, bool is_reload)
 		ent.tur_head.angles = '0 0 0';
 	}
 
-	ent.health	 = cvar(strcat(sbase,"_health")) * ent.turret_scale_health;
+	SetResourceAmountExplicit(ent, RESOURCE_HEALTH, cvar(strcat(sbase,"_health")) * ent.turret_scale_health);
 	ent.respawntime = cvar(strcat(sbase,"_respawntime")) * ent.turret_scale_respawn;
 
 	ent.shot_dmg		 = cvar(strcat(sbase,"_shot_dmg")) * ent.turret_scale_damage;
@@ -451,9 +466,9 @@ void turret_projectile_touch(entity this, entity toucher)
 void turret_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
 	this.velocity  += vforce;
-	this.health	-= damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	//this.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, this.owner, turret_projectile_explode);
 }
 
@@ -483,7 +498,7 @@ entity turret_projectile(entity actor, Sound _snd, float _size, float _health, f
 	PROJECTILE_MAKETRIGGER(proj);
 	if(_health)
 	{
-		proj.health		 = _health;
+		SetResourceAmountExplicit(proj, RESOURCE_HEALTH, _health);
 		proj.takedamage	 = DAMAGE_YES;
 		proj.event_damage  = turret_projectile_damage;
 	}
@@ -720,7 +735,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 		if (e_target.vehicle_health <= 0)
 			return -6;
 	}
-	else if (e_target.health <= 0)
+	else if (GetResourceAmount(e_target, RESOURCE_HEALTH) <= 0)
 		return -6;
 	else if(STAT(FROZEN, e_target) > 0)
 		return -6;
@@ -1239,6 +1254,12 @@ void turret_initparams(entity tur)
 	#undef TRY
 }
 
+bool turret_closetotarget(entity this, vector targ)
+{
+	vector path_extra_size = '64 64 64';
+	return boxesoverlap(targ - path_extra_size, targ + path_extra_size, this.absmin - path_extra_size, this.absmax + path_extra_size);
+}
+
 void turret_findtarget(entity this)
 {
 	entity e = find(NULL, classname, "turret_manager");
@@ -1286,7 +1307,7 @@ bool turret_initialize(entity this, Turret tur)
 
 	if(!this.team || !teamplay)		{ this.team = FLOAT_MAX; }
 	if(!this.ticrate)				{ this.ticrate = ((this.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
-	if(!this.health)				{ this.health = 1000; }
+	if(!GetResourceAmount(this, RESOURCE_HEALTH)) { SetResourceAmountExplicit(this, RESOURCE_HEALTH, 1000); }
 	if(!this.shot_refire)			{ this.shot_refire = 1; }
 	if(!this.tur_shotorg)			{ this.tur_shotorg = '50 0 50'; }
 	if(!this.turret_flags)			{ this.turret_flags = TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER; }
@@ -1343,7 +1364,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.effects				= EF_NODRAW;
 	this.netname				= tur.turret_name;
 	this.ticrate				= bound(sys_frametime, this.ticrate, 60);
-	this.max_health				= this.health;
+	this.max_health				= GetResourceAmount(this, RESOURCE_HEALTH);
 	this.target_validate_flags	= this.target_select_flags;
 	this.ammo					= this.ammo_max;
 	this.ammo_recharge		   *= this.ticrate;
@@ -1354,6 +1375,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.idle_aim 				= '0 0 0';
 	this.turret_firecheckfunc	= turret_firecheck;
 	this.event_damage			= turret_damage;
+	this.event_heal 			= turret_heal;
 	this.use					= turret_use;
 	this.bot_attack				= true;
 	this.nextthink				= time + 1;

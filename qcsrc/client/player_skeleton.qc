@@ -2,19 +2,19 @@
 
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 #include "../lib/csqcmodel/cl_player.qh"
 #include "../lib/warpzone/anglestransform.qh"
 
 .float v_angle_save_x;
 
-class(Skeleton) .float skeleton_info_modelindex;
-class(Skeleton) .float skeleton_info_skin;
+classfield(Skeleton) .float skeleton_info_modelindex;
+classfield(Skeleton) .float skeleton_info_skin;
 const int BONETYPE_LOWER = 0;
 const int BONETYPE_UPPER = 1;
 const int MAX_BONES = 128;
-class(Skeleton) .float skeleton_bonetype[MAX_BONES];
-class(Skeleton) .float skeleton_numbones;
+classfield(Skeleton) .float skeleton_bonetype[MAX_BONES];
+classfield(Skeleton) .float skeleton_numbones;
 
 void skeleton_loadinfo(entity e)
 {

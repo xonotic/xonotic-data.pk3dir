@@ -33,12 +33,6 @@
 		this.delta = e - s;
 	}
 
-	METHOD(Animation, setValueStartDelta, void(entity this, float s, float d))
-	{
-		this.startValue = s;
-		this.delta = d;
-	}
-
 	METHOD(Animation, setObjectSetter, void(entity this, entity o, void(entity, float) s))
 	{
 		this.object = o;

@@ -7,7 +7,7 @@
 
 // Globals
 
-float g_footsteps, g_grappling_hook, g_instagib;
+float g_footsteps, g_grappling_hook;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
@@ -35,6 +35,8 @@ float server_is_dedicated;
 // Fields
 
 .void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
+
+.bool(entity targ, entity inflictor, float amount, float limit) event_heal;
 
 //.string	wad;
 //.string	map;
@@ -182,8 +184,6 @@ float default_weapon_alpha;
 
 string gamemode_name;
 
-float startitem_failed;
-
 string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
@@ -191,8 +191,6 @@ void FixClientCvars(entity e);
 
 // WEAPONTODO: remove this
 //WepSet weaponsInMap;
-
-#define weapons _STAT(WEAPONS)
 
 .float respawn_countdown; // next number to count
 
@@ -281,9 +279,6 @@ void W_Porto_Remove (entity p);
 // Nexball
 float g_nexball_meter_period;
 
-void SUB_DontUseTargets(entity this, entity actor, entity trigger);
-void SUB_UseTargets(entity this, entity actor, entity trigger);
-
 .void(entity this) reset; // if set, an entity is reset using this
 .void(entity this) reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
 
@@ -325,6 +320,9 @@ float client_cefc_accumulatortime;
 .float vortex_charge;
 .float vortex_charge_rottime;
 .float vortex_chargepool_ammo;
+.float oknex_charge;
+.float oknex_charge_rottime;
+.float oknex_chargepool_ammo;
 .int hagar_load;
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
@@ -366,6 +364,7 @@ const float ACTIVE_TOGGLE 	= 3;
 
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.float freeze_time;
 .entity iceblock;
 .entity frozen_by; // for ice fields
 
@@ -407,67 +406,43 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 .WepSet dual_weapons;
 
 IntrusiveList g_monsters;
-STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
-
 IntrusiveList g_waypoints;
-STATIC_INIT(g_waypoints) { g_waypoints = IL_NEW(); }
-
 IntrusiveList g_vehicles;
-STATIC_INIT(g_vehicles) { g_vehicles = IL_NEW(); }
-
 IntrusiveList g_turrets;
-STATIC_INIT(g_turrets) { g_turrets = IL_NEW(); }
-
 IntrusiveList g_mines;
-STATIC_INIT(g_mines) { g_mines = IL_NEW(); }
-
 IntrusiveList g_projectiles;
-STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }
-
 IntrusiveList g_items;
-STATIC_INIT(g_items) { g_items = IL_NEW(); }
-
 IntrusiveList g_initforplayer;
-STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
-
 IntrusiveList g_clones;
-STATIC_INIT(g_clones) { g_clones = IL_NEW(); }
-
-IntrusiveList g_assault_destructibles;
-STATIC_INIT(g_assault_destructibles) { g_assault_destructibles = IL_NEW(); }
-
-IntrusiveList g_assault_objectivedecreasers;
-STATIC_INIT(g_assault_objectivedecreasers) { g_assault_objectivedecreasers = IL_NEW(); }
-
-IntrusiveList g_assault_objectives;
-STATIC_INIT(g_assault_objectives) { g_assault_objectives = IL_NEW(); }
-
 IntrusiveList g_spawnpoints;
-STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }
-
 IntrusiveList g_bot_targets;
-STATIC_INIT(g_bot_targets) { g_bot_targets = IL_NEW(); }
-
 IntrusiveList g_bot_dodge;
-STATIC_INIT(g_bot_dodge) { g_bot_dodge = IL_NEW(); }
-
 IntrusiveList g_damagedbycontents;
-STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
-
 IntrusiveList g_railgunhit;
-STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
-
 IntrusiveList g_ladders;
-STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }
-
 IntrusiveList g_locations;
-STATIC_INIT(g_locations) { g_locations = IL_NEW(); }
-
 IntrusiveList g_saved_team;
-STATIC_INIT(g_saved_team) { g_saved_team = IL_NEW(); }
-
 IntrusiveList g_monster_targets;
-STATIC_INIT(g_monster_targets) { g_monster_targets = IL_NEW(); }
-
 IntrusiveList g_pathlib_nodes;
-STATIC_INIT(g_pathlib_nodes) { g_pathlib_nodes = IL_NEW(); }
+STATIC_INIT(defs)
+{
+	g_monsters = IL_NEW();
+	g_waypoints = IL_NEW();
+	g_vehicles = IL_NEW();
+	g_turrets = IL_NEW();
+	g_mines = IL_NEW();
+	g_projectiles = IL_NEW();
+	g_items = IL_NEW();
+	g_initforplayer = IL_NEW();
+	g_clones = IL_NEW();
+	g_spawnpoints = IL_NEW();
+	g_bot_targets = IL_NEW();
+	g_bot_dodge = IL_NEW();
+	g_damagedbycontents = IL_NEW();
+	g_railgunhit = IL_NEW();
+	g_ladders = IL_NEW();
+	g_locations = IL_NEW();
+	g_saved_team = IL_NEW();
+	g_monster_targets = IL_NEW();
+	g_pathlib_nodes = IL_NEW();
+}

@@ -19,7 +19,7 @@ test_compilation_units:
 test_sv_game:
   stage: test
   script:
-    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
     - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
     - cd ..
 
@@ -29,7 +29,7 @@ test_sv_game:
     - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
     - make
-    - EXPECT=d1a65371174a5210320fa85b3f059d0f
+    - EXPECT=b8f4fa5002af1f9f2d5ac3d1809ed188
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
@@ -44,7 +44,7 @@ test_sv_game:
 test_sv_unit:
   stage: test
   script:
-    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - git clone --depth=1 --branch=div0-stable https://gitlab.com/xonotic/darkplaces.git darkplaces
     - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
     - cd ..
 

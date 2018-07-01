@@ -3,22 +3,23 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Nicky Rowe <nickyrowe@gmail.com>, 2016
+# Nicky Rowe <nicky@kernowlingo.com>, 2016,2018
+# Nicky Rowe <nicky@kernowlingo.com>, 2016
+# Nicky Rowe <nicky@kernowlingo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-09-22 11:16+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-04-28 07:53+0000\n"
+"Last-Translator: Nicky Rowe <nicky@kernowlingo.com>\n"
 "Language-Team: Cornish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/kw/)\n"
 "Language: kw\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n == 3) ? 2 : "
-"3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 ? 0 : n == 2 ? 1 : 2);\n"
 
 #: qcsrc/client/hud/hud_config.qc:239
 #, c-format
@@ -56,7 +57,7 @@ msgstr "^1Gweskewgh ^3%s^1 rag mires"
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr ""
+msgstr "tenn kensa"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
@@ -66,12 +67,12 @@ msgstr "^1Gweskewgh ^3%s^1 po ^3%s^1 rag an gwarier nessa po kyns"
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "arv nessa"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "arv gens"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -81,17 +82,17 @@ msgstr "^1Usyewgh ^3%s^1 po ^3%s^1 rag chanjya an tooth"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Gweskewgh ^3%s^1 aspia, ^3%s^1 dhe janjya modh an kamera"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:192
 msgid "drop weapon"
-msgstr ""
+msgstr "droppya an arv"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr ""
+msgstr "tenn nessa"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
@@ -101,7 +102,7 @@ msgstr "^1Gweskewgh ^3%s^1 rag kedhlow an modh gwari"
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "server info"
-msgstr ""
+msgstr "kedhlow an servyer"
 
 #: qcsrc/client/hud/panel/infomessages.qc:124
 msgid "^1Match has already begun"
@@ -120,7 +121,7 @@ msgstr "^1Gweskewgh ^3%s^1 dhe junya"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "lamma"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -141,7 +142,7 @@ msgstr "%sGweskewgh ^3%s%s rag diwedha an tommheans"
 #: qcsrc/client/hud/panel/infomessages.qc:175
 #: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "ready"
-msgstr ""
+msgstr "parys"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #, c-format
@@ -173,15 +174,15 @@ msgstr " Gweskewgh ^3%s%s rag kompeshe"
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "team menu"
-msgstr ""
+msgstr "rol an para"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Owth aspia an gwarier ma:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Orth dha aspia:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^7Press ^3ESC ^7to show HUD options."
@@ -340,7 +341,7 @@ msgstr "QMCMD^doger an baner ledhys (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^a ladhas doger an baner, arwodhik"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
@@ -353,11 +354,11 @@ msgstr "QMCMD^baner droppyes, arwodhik"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "QMCMD^droppya an arv, arwodhik"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^a dhroppyas an arv %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
@@ -555,7 +556,7 @@ msgstr "SCO^distruys"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:84
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^damach"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:85
 msgid "SCO^dmgtaken"
@@ -655,7 +656,7 @@ msgstr "SCO^teudhys"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "SCO^rondys gwaynyes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^score"
@@ -702,7 +703,7 @@ msgstr "Aswonys yw an henwyn skrifva a sew (nyns yw an kas aswonys):\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:301
 msgid "You can use a ^3|^7 to start the right-aligned fields.\n"
-msgstr ""
+msgstr "Ty a yll usya ^3|^7 rag dalleth an parkow alinys a-dhyghow.\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:304
 msgid "^3name^7 or ^3nick^7             Name of a player\n"
@@ -718,7 +719,7 @@ msgstr "^3pl^7                       Fardelligow kellys\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:307
 msgid "^3elo^7                      Player ELO\n"
-msgstr ""
+msgstr "^3elo^7                      ELO an gwarier\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:308
 msgid "^3kills^7                    Number of kills\n"
@@ -851,7 +852,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:335
 msgid "^3score^7                    Total score\n"
-msgstr ""
+msgstr "^3score^7                    Skor dien\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:338
 msgid ""
@@ -928,7 +929,7 @@ msgstr "Kevrinyow diskudhys:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Renkyow an termyn sesya"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Rankings"
@@ -942,12 +943,12 @@ msgstr "Bord an skoryow"
 #: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Powas tooth: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1588
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "An kreffa oll-dermyn: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1604
 #, c-format
@@ -1039,7 +1040,7 @@ msgstr "^1Restra an HUD"
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Ya"
 
 #: qcsrc/client/hud/panel/vote.qc:127 qcsrc/menu/xonotic/dialog_firstrun.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1049,7 +1050,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Na"
 
 #: qcsrc/client/hud/panel/weapons.qc:530
 msgid "Out of ammo"
@@ -1139,7 +1140,7 @@ msgstr "Euryer granaden"
 
 #: qcsrc/client/view.qc:1385
 msgid "Capture progress"
-msgstr ""
+msgstr "Spedyans ow sesya"
 
 #: qcsrc/client/view.qc:1390
 msgid "Revival progress"
@@ -1160,7 +1161,7 @@ msgstr "Lader pelyow"
 
 #: qcsrc/common/items/item/armor.qh:111
 msgid "Big armor"
-msgstr ""
+msgstr "Arvwisk bras"
 
 #: qcsrc/common/items/item/armor.qh:147
 msgid "Mega armor"
@@ -1168,7 +1169,7 @@ msgstr "Arvwisk mega"
 
 #: qcsrc/common/items/item/health.qh:111
 msgid "Big health"
-msgstr ""
+msgstr "Yeghes bras"
 
 #: qcsrc/common/items/item/health.qh:147
 msgid "Mega health"
@@ -1308,6 +1309,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Ladh eskerens rag aga rewi, sav ryb dha bara rag aga dasserghi; rew pub "
+"eskar rag gwaynya"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -1514,135 +1517,135 @@ msgstr "Lemmewgh darn a-ugh darn aral rag y sesya"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:666
 msgid "Single Player"
-msgstr ""
+msgstr "Unn gwarier"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
 msgid "Mage"
-msgstr ""
+msgstr "Huder"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
-msgstr ""
+msgstr "Spik an huder"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Shambler"
-msgstr ""
+msgstr "Shambler"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
 msgid "Spider"
-msgstr ""
+msgstr "Kevnisen"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
-msgstr ""
+msgstr "Omsettyans kevnisen"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
-msgstr ""
+msgstr "Dragon"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
-msgstr ""
+msgstr "Omsettyans dragon"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
-msgstr ""
+msgstr "Zombi"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:15
 msgid "Ammo"
-msgstr ""
+msgstr "Daffar ladhva"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:24
 msgid "Resistance"
-msgstr ""
+msgstr "Defens"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:33
 #: qcsrc/common/mutators/mutator/instagib/items.qh:94
 msgid "Speed"
-msgstr ""
+msgstr "Tooth"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:43
 msgid "Medic"
-msgstr ""
+msgstr "Medhek"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:54
 msgid "Bash"
-msgstr ""
+msgstr "Kronkya"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:62
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:177
 msgid "Vampire"
-msgstr ""
+msgstr "Vampir"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:70
 msgid "Disability"
-msgstr ""
+msgstr "Anles"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:78
 msgid "Vengeance"
-msgstr ""
+msgstr "Venjyans"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:86
 msgid "Jump"
-msgstr ""
+msgstr "Lamma"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:95
 msgid "Invisible"
-msgstr ""
+msgstr "Anweladow"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:104
 msgid "Inferno"
-msgstr ""
+msgstr "Inferno"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:112
 msgid "Swapper"
-msgstr ""
+msgstr "Keschanj"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:120
 msgid "Magnet"
-msgstr ""
+msgstr "Tennven"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:128
 msgid "Luck"
-msgstr ""
+msgstr "Chons"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:136
 msgid "Flight"
-msgstr ""
+msgstr "Neyj"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:7
 msgid "Buff"
-msgstr ""
+msgstr "Bonus"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
-msgstr ""
+msgstr "Tekst damach"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:18
 msgid "Draw damage numbers"
-msgstr ""
+msgstr "Delinya niverow damach"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
-msgstr ""
+msgstr "Myns font an lyha:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
-msgstr ""
+msgstr "Myns font an ughella:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 msgid "Accumulate range:"
-msgstr ""
+msgstr "Kuntel towlhys:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:35
 msgid "Lifetime:"
-msgstr ""
+msgstr "Termyn bewnans:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:40
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:50
@@ -1656,11 +1659,11 @@ msgstr "Liw:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:47
 msgid "Draw damage numbers for friendly fire"
-msgstr ""
+msgstr "Delinya niverow damach rag tenn kowethek"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:56
 msgid "Extra life"
-msgstr ""
+msgstr "Bewnans keworransel"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:75
 msgid "Invisibility"
@@ -1668,51 +1671,51 @@ msgstr "Anweladowder"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
-msgstr ""
+msgstr "Grenad napalm"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:26
 msgid "Ice grenade"
-msgstr ""
+msgstr "Grenad rew"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:34
 msgid "Translocate grenade"
-msgstr ""
+msgstr "Grenad treustesedha"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:42
 msgid "Spawn grenade"
-msgstr ""
+msgstr "Grenad dinythi"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:50
 msgid "Heal grenade"
-msgstr ""
+msgstr "Grenad sawya"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:58
 msgid "Monster grenade"
-msgstr ""
+msgstr "Grenad euthvil"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:66
 msgid "Entrap grenade"
-msgstr ""
+msgstr "Grenad maglenna"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:32
 msgid "Grenade"
-msgstr ""
+msgstr "Grenad"
 
 #: qcsrc/common/mutators/mutator/overkill/hmg.qh:17
 msgid "Heavy Machine Gun"
-msgstr ""
+msgstr "Gonn Jynn Poos"
 
 #: qcsrc/common/mutators/mutator/overkill/rpc.qh:17
 msgid "Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Hesken gadon rocket"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr ""
+msgstr "Fordhva"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr ""
+msgstr "Gweres vy!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
@@ -1720,7 +1723,7 @@ msgstr "Omma"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
-msgstr ""
+msgstr "PERYL"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:8
 msgid "Frozen!"
@@ -1728,11 +1731,11 @@ msgstr "Rewys!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Item"
-msgstr ""
+msgstr "Tra"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:12
 msgid "Checkpoint"
-msgstr ""
+msgstr "Checkva"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:252
@@ -1747,51 +1750,51 @@ msgstr "Dallethva"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 msgid "Defend"
-msgstr ""
+msgstr "Difres"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
 msgid "Destroy"
-msgstr ""
+msgstr "Distrui"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:19
 msgid "Push"
-msgstr ""
+msgstr "Herdhya"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Flag carrier"
-msgstr ""
+msgstr "Doger an baner"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Enemy carrier"
-msgstr ""
+msgstr "Doger an anvi"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:23
 msgid "Dropped flag"
-msgstr ""
+msgstr "Baner droppyes"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "White base"
-msgstr ""
+msgstr "Selva wynn"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Red base"
-msgstr ""
+msgstr "Selva rudh"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Blue base"
-msgstr ""
+msgstr "Selva las"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "Yellow base"
-msgstr ""
+msgstr "Selva velyn"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Pink base"
-msgstr ""
+msgstr "Selva wynnrudh"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr ""
+msgstr "Daskor an baner arta"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -1802,11 +1805,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:52
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Control point"
-msgstr ""
+msgstr "Kontrolva"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 msgid "Dropped key"
-msgstr ""
+msgstr "Alhwedh droppyes"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
@@ -1814,11 +1817,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
 msgid "Key carrier"
-msgstr ""
+msgstr "Deger an alhwedh"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
-msgstr ""
+msgstr "Poon bys yn omma"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
@@ -1827,54 +1830,55 @@ msgstr "Pel"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
-msgstr ""
+msgstr "Deger an bel"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
-msgstr ""
+msgstr "Gol"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Generator"
-msgstr ""
+msgstr "Dinythor"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Weapon"
-msgstr ""
+msgstr "Arv"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 msgid "Monster"
-msgstr ""
+msgstr "Euthvil"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Vehicle"
-msgstr ""
+msgstr "Karr"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
-msgstr ""
+msgstr "Kammdremener!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Tagged"
-msgstr ""
+msgstr "Taggys"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:651
 #: qcsrc/common/turrets/cl_turrets.qc:120
 msgid "Spam"
-msgstr ""
+msgstr "Spam"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:655
 #, c-format
 msgid "%s needing help!"
-msgstr ""
+msgstr "%s ow kovyn gweres!"
 
 #: qcsrc/common/net_notice.qc:87
 msgid "^1Server notices:"
-msgstr ""
+msgstr "^1Notyansow an servyer:"
 
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
+"^F4NOTEN: ^BGNyns yw klap an viroryon danvenys dhe warioryon dres an fytt"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format

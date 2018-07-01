@@ -1,5 +1,9 @@
 #include "sv_instagib.qh"
 
+#include <server/client.qh>
+#include <common/items/_mod.qh>
+#include "../random_items/sv_random_items.qh"
+
 bool autocvar_g_instagib_damagedbycontents = true;
 bool autocvar_g_instagib_blaster_keepdamage = false;
 bool autocvar_g_instagib_blaster_keepforce = false;
@@ -13,24 +17,14 @@ bool autocvar_g_instagib_ammo_convert_bullets;
 int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
-#include <server/client.qh>
-
-#include <common/items/_mod.qh>
-
-REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
+IntrusiveList g_instagib_items;
+STATIC_INIT()
 {
-	MUTATOR_ONADD
-	{
-		ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_Invisibility.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_Speed.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-	}
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_Invisibility.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-		ITEM_Speed.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-	}
+	g_instagib_items = IL_NEW();
+	IL_PUSH(g_instagib_items, ITEM_VaporizerCells);
+	IL_PUSH(g_instagib_items, ITEM_ExtraLife);
+	IL_PUSH(g_instagib_items, ITEM_Invisibility);
+	IL_PUSH(g_instagib_items, ITEM_Speed);
 }
 
 void instagib_invisibility(entity this)
@@ -48,6 +42,26 @@ void instagib_speed(entity this)
 {
 	this.invincible_finished = autocvar_g_instagib_speed_time;
 	StartItem(this, ITEM_Speed);
+}
+
+/// \brief Returns a random classname of the instagib item.
+/// \param[in] prefix Prefix of the cvars that hold probabilities.
+/// \return Random classname of the instagib item.
+string RandomItems_GetRandomInstagibItemClassName(string prefix)
+{
+	RandomSelection_Init();
+	IL_EACH(g_instagib_items, Item_IsDefinitionAllowed(it),
+	{
+		string cvar_name = sprintf("g_%s_%s_probability", prefix,
+			it.m_canonical_spawnfunc);
+		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+		{
+			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			continue;
+		}
+		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
+	});
+	return RandomSelection_chosen_string;
 }
 
 .float instagib_nextthink;
@@ -145,6 +159,13 @@ void instagib_ammocheck(entity this)
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), { instagib_stop_countdown(it); });
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, RandomItems_GetRandomItemClassName)
+{
+	M_ARGV(1, string) = RandomItems_GetRandomInstagibItemClassName(
+		M_ARGV(0, string));
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)

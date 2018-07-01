@@ -2,6 +2,7 @@
 
 #include "autocvars.qh"
 #include "miscfunctions.qh"
+#include "resources.qh"
 #include "hud/_mod.qh"
 
 #include <common/ent_cs.qh>
@@ -157,10 +158,10 @@ void Draw_ShowNames(entity this)
 					this.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', a,
 					DRAWFLAG_NORMAL);
 			}
-			if (this.armorvalue > 0)
+			if (GetResourceAmount(this, RESOURCE_ARMOR) > 0)
 			{
 				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize.x, sz, "nametag_statusbar",
-					this.armorvalue / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
+					GetResourceAmount(this, RESOURCE_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
 					DRAWFLAG_NORMAL);
 			}
 		}
@@ -193,13 +194,13 @@ void Draw_ShowNames_All()
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;
-			it.armorvalue = entcs.armorvalue;
+			SetResourceAmountExplicit(it, RESOURCE_ARMOR, GetResourceAmount(entcs, RESOURCE_ARMOR));
 			it.sameteam = true;
 		}
 		else
 		{
 			it.healthvalue = 0;
-			it.armorvalue = 0;
+			SetResourceAmountExplicit(it, RESOURCE_ARMOR, 0);
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);

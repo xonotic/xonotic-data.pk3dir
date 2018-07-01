@@ -5,22 +5,24 @@
 #include "constants.qh"
 #include "g_hook.qh"
 #include "ipban.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "../common/t_items.qh"
 #include "resources.qh"
 #include "items.qh"
+#include "player.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
 #include "../common/command/_mod.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
+#include <common/weapons/weapon/crylink.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications/all.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include <common/weapons/_all.qh>
@@ -66,6 +68,10 @@ void WarpZone_crosshair_trace(entity pl)
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
 
 void GameLogEcho(string s)
 {
@@ -198,10 +204,10 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string AmmoNameFromWeaponentity(entity wpn)
+string AmmoNameFromWeaponentity(Weapon wep)
 {
 	string ammoitems = "batteries";
-	switch ((wpn.m_weapon).ammo_type)
+	switch (wep.ammo_type)
 	{
 		case RESOURCE_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
 		case RESOURCE_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
@@ -260,13 +266,13 @@ string formatmessage(entity this, string msg)
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(this.armorvalue)); break;
-			case "h": replacement = ftos(floor(this.health)); break;
+			case "a": replacement = ftos(floor(GetResourceAmount(this, RESOURCE_ARMOR))); break;
+			case "h": replacement = ftos(floor(GetResourceAmount(this, RESOURCE_HEALTH))); break;
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
 			case "w": replacement = ((this.(weaponentity).m_weapon == WEP_Null) ? ((this.(weaponentity).m_switchweapon == WEP_Null) ? Weapons_from(this.(weaponentity).cnt) : this.(weaponentity).m_switchweapon) : this.(weaponentity).m_weapon).m_name; break;
-			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity)); break;
+			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity).m_weapon); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;
@@ -298,17 +304,13 @@ void GetCvars_handleString(entity this, entity store, string thisname, float f, 
 {
 	if (f < 0)
 	{
-		if (store.(field))
-			strunzone(store.(field));
-		store.(field) = string_null;
+		strfree(store.(field));
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (store.(field))
-				strunzone(store.(field));
-			store.(field) = strzone(argv(f + 1));
+			strcpy(store.(field), argv(f + 1));
 		}
 	}
 	else
@@ -323,8 +325,7 @@ void GetCvars_handleString_Fixup(entity this, entity store, string thisname, flo
 			string s = func(this, strcat1(store.(field)));
 			if (s != store.(field))
 			{
-				strunzone(store.(field));
-				store.(field) = strzone(s);
+				strcpy(store.(field), s);
 			}
 		}
 }
@@ -366,14 +367,8 @@ void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float 
 }
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
 {
-	string o;
-	o = W_FixWeaponOrder_ForceComplete(wo);
-	if(this.weaponorder_byimpulse)
-	{
-		strunzone(this.weaponorder_byimpulse);
-		this.weaponorder_byimpulse = string_null;
-	}
-	this.weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
+	string o = W_FixWeaponOrder_ForceComplete(wo);
+	strcpy(CS(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
 
@@ -602,12 +597,6 @@ void readplayerstartcvars()
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
-
-	if(g_weaponarena)
-		g_weaponarena_random = cvar("g_weaponarena_random");
-	else
-		g_weaponarena_random = 0;
-	g_weaponarena_random_with_blaster = cvar("g_weaponarena_random_with_blaster");
 
 	if (g_weaponarena)
 	{
@@ -1071,7 +1060,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	if(trace_dphitcontents == 0)
 	{
 		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
-		checkclient(this);
+		checkclient(this); // TODO: .health is checked in the engine with this, possibly replace with a QC function?
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return true;
@@ -1097,7 +1086,6 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 #define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
 
-void W_Crylink_Dequeue(entity e);
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
 	if(SUB_OwnerCheck(this, toucher))

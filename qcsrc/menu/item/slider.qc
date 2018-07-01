@@ -172,53 +172,53 @@
 
 		return 1;
 	}
-	float Slider_mousePress(entity me, vector pos)
+	METHOD(Slider, mousePress, bool(Slider this, vector pos))
 	{
 		float controlCenter;
-		if (me.disabled) return 0;
-		if (pos.x < 0) return 0;
-		if (pos.y < 0) return 0;
-		if (pos.x >= 1 - me.textSpace) return 0;
-		if (pos.y >= 1) return 0;
-		controlCenter = (me.value - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth) + 0.5 * me.controlWidth;
-		if (fabs(pos.x - controlCenter) <= 0.5 * me.controlWidth)
+		if (this.disabled) return false;
+		if (pos.x < 0) return false;
+		if (pos.y < 0) return false;
+		if (pos.x >= 1 - this.textSpace) return false;
+		if (pos.y >= 1) return false;
+		controlCenter = (this.value - this.valueMin) / (this.valueMax - this.valueMin) * (1 - this.textSpace - this.controlWidth) + 0.5 * this.controlWidth;
+		if (fabs(pos.x - controlCenter) <= 0.5 * this.controlWidth)
 		{
-			me.pressed = 1;
-			me.pressOffset = pos.x - controlCenter;
-			me.previousValue = me.value;
-			// me.mouseDrag(me, pos);
+			this.pressed = 1;
+			this.pressOffset = pos.x - controlCenter;
+			this.previousValue = this.value;
+			// this.mouseDrag(this, pos);
 		}
 		else
 		{
 			float clickValue, pageValue, inRange;
-			clickValue = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
-			inRange = (almost_in_bounds(me.valueMin, me.value, me.valueMax));
+			clickValue = median(0, (pos.x - this.pressOffset - 0.5 * this.controlWidth) / (1 - this.textSpace - this.controlWidth), 1) * (this.valueMax - this.valueMin) + this.valueMin;
+			inRange = (almost_in_bounds(this.valueMin, this.value, this.valueMax));
 			if (pos.x < controlCenter)
 			{
-				pageValue = me.value - me.valuePageStep;
-				if (me.valueStep) clickValue = floor(clickValue / me.valueStep) * me.valueStep;
+				pageValue = this.value - this.valuePageStep;
+				if (this.valueStep) clickValue = floor(clickValue / this.valueStep) * this.valueStep;
 				pageValue = max(pageValue, clickValue);
 			}
 			else
 			{
-				pageValue = me.value + me.valuePageStep;
-				if (me.valueStep) clickValue = ceil(clickValue / me.valueStep) * me.valueStep;
+				pageValue = this.value + this.valuePageStep;
+				if (this.valueStep) clickValue = ceil(clickValue / this.valueStep) * this.valueStep;
 				pageValue = min(pageValue, clickValue);
 			}
-			if (inRange) me.setValue(me, median(me.valueMin, pageValue, me.valueMax));
-			else me.setValue(me, me.valueMax);
-			if(me.applyButton)
-				me.applyButton.disabled = false;
+			if (inRange) this.setValue(this, median(this.valueMin, pageValue, this.valueMax));
+			else this.setValue(this, this.valueMax);
+			if(this.applyButton)
+				this.applyButton.disabled = false;
 			if (pageValue == clickValue)
 			{
-				controlCenter = (me.value - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth) + 0.5 * me.controlWidth;
-				me.pressed = 1;
-				me.pressOffset = pos.x - controlCenter;
-				me.previousValue = me.value;
-				// me.mouseDrag(me, pos);
+				controlCenter = (this.value - this.valueMin) / (this.valueMax - this.valueMin) * (1 - this.textSpace - this.controlWidth) + 0.5 * this.controlWidth;
+				this.pressed = 1;
+				this.pressOffset = pos.x - controlCenter;
+				this.previousValue = this.value;
+				// this.mouseDrag(this, pos);
 			}
 		}
-		return 1;
+		return true;
 	}
 	float Slider_mouseRelease(entity me, vector pos)
 	{

@@ -1,8 +1,19 @@
 #pragma once
 
 #ifdef CSQC
+#include <client/resources.qh>
+#endif
+
+
+// This includes some functions useful for debugging.
+// Some more bot-specific ones are in server/pathlib/debug.qc.
+// Look for other useful commands under prvm_* in console (apropos / search).
+
+
+#ifdef CSQC
 .entity tag_entity;
 #endif
+
 
 #ifdef GAMEQC
 .bool debug;
@@ -44,6 +55,7 @@ REGISTER_NET_TEMP(net_debug)
 		return true;
 	}
 #endif
+
 
 #if ENABLE_DEBUGDRAW
 #ifdef GAMEQC
@@ -151,6 +163,7 @@ bool autocvar_debugdraw;
 	}
 #endif
 
+
 #ifdef SVQC
 	COMMON_COMMAND(debugdraw_sv, "Dump all server entities")
 	{
@@ -183,6 +196,7 @@ bool autocvar_debugdraw;
 #endif
 #endif
 
+
 GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 {
 	switch (request)
@@ -205,6 +219,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 	}
 }
 
+
 GENERIC_COMMAND(version, "Print the current version")
 {
 	switch (request)
@@ -222,6 +237,7 @@ GENERIC_COMMAND(version, "Print the current version")
 		}
 	}
 }
+
 
 #ifdef CSQC
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
@@ -256,6 +272,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 		}
 	}
 }
+
 
 #if ENABLE_DEBUGTRACE
 REGISTER_STAT(TRACE_ENT, int)
@@ -315,6 +332,7 @@ STATIC_INIT(TRACE_ENT)
 #endif
 #endif
 
+
 GENERIC_COMMAND(find, "Search through entities for matching classname")
 {
 	switch (request)
@@ -345,6 +363,7 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 	}
 }
 
+
 GENERIC_COMMAND(findat, "Search through entities for matching origin")
 {
 	switch (request)
@@ -365,3 +384,92 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin")
 		}
 	}
 }
+
+
+// debug_test() allows drawing text from server on the client anywhere in world coordinates.
+
+#ifdef GAMEQC
+REGISTER_NET_TEMP(debug_text_3d);
+#endif
+
+#ifdef CSQC
+
+CLASS(DebugText3d, Object)
+	// reusing existing fields
+	ATTRIB(DebugText3d, origin, vector);
+	ATTRIB(DebugText3d, message, string); // the text (i wanted to use the .text field but then this whole macro-based-inheritance thing shat itself)
+	ATTRIB(DebugText3d, health, float); // text alignment (recycled field)
+	ATTRIB(DebugText3d, hit_time, float); // when it was created
+	ATTRIB(DebugText3d, fade_rate, float); // how fast is should disappear
+	ATTRIB(DebugText3d, velocity, vector);
+
+	CONSTRUCTOR(DebugText3d, vector pos, string msg, float align, float fade_rate_, vector vel) {
+		CONSTRUCT(DebugText3d);
+		this.origin = pos;
+		this.message = strzone(msg);
+		SetResourceAmount(this, RESOURCE_HEALTH, align);
+		this.hit_time = time;
+		this.fade_rate = fade_rate_;
+		this.velocity = vel;
+		IL_PUSH(g_drawables_2d, this);
+	}
+
+	DESTRUCTOR(DebugText3d) {
+		strfree(this.message);
+	}
+
+	void DebugText3d_draw2d(DebugText3d this) {
+		float since_created = time - this.hit_time;
+		float alpha_ = 1 - since_created * this.fade_rate;
+
+		if (alpha_ < 0) {
+			delete(this);
+			return;
+		}
+
+		int size = 8;
+		vector screen_pos = project_3d_to_2d(this.origin) + since_created * this.velocity;
+		float align = GetResourceAmount(this, RESOURCE_HEALTH);
+		if (align > 0)
+			screen_pos.x -= stringwidth(this.message, true, size * '1 1 0') * min(1, align);
+		if (screen_pos.z < 0) return; // behind camera
+		screen_pos.z = 0;
+
+		vector rgb = '1 1 0';
+		drawcolorcodedstring2_builtin(screen_pos, this.message, size * '1 1 0', rgb, alpha_, DRAWFLAG_NORMAL);
+	}
+	ATTRIB(DebugText3d, draw2d, void(DebugText3d), DebugText3d_draw2d);
+ENDCLASS(DebugText3d)
+
+NET_HANDLE(debug_text_3d, bool is_new) {
+	vector pos = ReadVector();
+	string msg = ReadString();
+	float align = ReadFloat();
+	float duration = ReadFloat();
+	vector vel = ReadVector();
+	make_impure(NEW(DebugText3d, pos, msg, align, 1 / duration, vel));
+	return true;
+}
+
+#endif // CSQC
+
+#ifdef SVQC
+
+// can't use autocvars because they give unused warning unless the macros are expanded
+#define debug_text_3d(...) EVAL(OVERLOAD(debug_text_3d, __VA_ARGS__))
+#define debug_text_3d_2(pos, msg) debug_text_3d_3(pos, msg, cvar("debug_text_3d_default_align"))
+#define debug_text_3d_3(pos, msg, align) debug_text_3d_4(pos, msg, align, cvar("debug_text_3d_default_duration"))
+#define debug_text_3d_4(pos, msg, align, dur) debug_text_3d_5(pos, msg, align, dur, stov(cvar_string("debug_text_3d_default_velocity")))
+#define debug_text_3d_5(pos, msg, align, dur, vel) debug_text_3d_fn(pos, msg, align, dur, vel)
+
+ERASEABLE
+void debug_text_3d_fn(vector pos, string msg, float align, float duration, vector vel) {
+	WriteHeader(MSG_BROADCAST, debug_text_3d);
+	WriteVector(MSG_BROADCAST, pos);
+	WriteString(MSG_BROADCAST, msg);
+	WriteFloat(MSG_BROADCAST, align);
+	WriteFloat(MSG_BROADCAST, duration);
+	WriteVector(MSG_BROADCAST, vel);
+}
+
+#endif // SVQC

@@ -1,11 +1,18 @@
 #include "scores.qh"
 
 #include "command/common.qh"
-#include "mutators/_mod.qh"
+#include "defs.qh"
+#include <server/g_world.qh>
+#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
 #include <common/net_linked.qh>
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
+#include <common/mapinfo.qh>
+#include <common/mutators/base.qh>
 #include <common/scores.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
 
 .entity scorekeeper;
 entity teamscorekeepers[16];
@@ -353,6 +360,28 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	return s.(scores(scorefield));
 }
 
+float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score)
+{
+	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
+	entity s = CS(player).scorekeeper;
+	if(!s)
+	{
+		if(game_stopped)
+			return 0;
+		LOG_WARN("Setting score of unknown player!");
+		return 0;
+	}
+
+	float oldscore = s.(scores(scorefield));
+	if(oldscore == score)
+		return oldscore;
+
+	if(scores_label(scorefield) != "")
+		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+	s.(scores(scorefield)) = score;
+	return s.(scores(scorefield));
+}
+
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score)
 {
 	float r;
@@ -373,7 +402,7 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	});
 
 	if (result.x == 0 && strict)
-		result.x = etof(t1.owner) - etof(t2.owner);
+		result.x = t1.owner.playerid - t2.owner.playerid;
 
 	return result.x;
 }
@@ -513,9 +542,7 @@ void WinningConditionHelper(entity this)
 		}
 	}
 
-	if(worldstatus)
-		strunzone(worldstatus);
-	worldstatus = strzone(s);
+	strcpy(worldstatus, s);
 
 	FOREACH_CLIENT(true, {
 		string s = "";
@@ -534,9 +561,7 @@ void WinningConditionHelper(entity this)
 				s = "-666";
 		}
 
-		if(it.clientstatus)
-			strunzone(it.clientstatus);
-		it.clientstatus = strzone(s);
+		strcpy(it.clientstatus, s);
 	});
 }
 

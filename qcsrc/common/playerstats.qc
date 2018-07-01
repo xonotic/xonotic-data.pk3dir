@@ -154,8 +154,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 		}
 	}
 
-	strunzone(p.playerstats_id);
-	p.playerstats_id = string_null;
+	strfree(p.playerstats_id);
 }
 
 void PlayerStats_GameReport(float finished)

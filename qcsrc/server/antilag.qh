@@ -13,3 +13,19 @@ void antilag_restore_all(entity ignore);
 
 #define ANTILAG_LATENCY(e) min(0.4, CS(e).ping * 0.001)
 // add one ticrate?
+
+/*
+==================
+traceline_antilag
+
+A version of traceline that must be used by SOLID_SLIDEBOX things that want to hit SOLID_CORPSE things with a trace attack
+Additionally it moves players back into the past before the trace and restores them afterward.
+==================
+*/
+void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz);
+void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag);
+void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag);

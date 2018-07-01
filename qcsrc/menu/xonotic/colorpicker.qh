@@ -3,7 +3,7 @@
 #include "../item/image.qh"
 CLASS(XonoticColorpicker, Image)
 	METHOD(XonoticColorpicker, configureXonoticColorpicker, void(entity, entity));
-	METHOD(XonoticColorpicker, mousePress, float(entity, vector));
+	METHOD(XonoticColorpicker, mousePress, bool(XonoticColorpicker this, vector pos));
 	METHOD(XonoticColorpicker, mouseRelease, float(entity, vector));
 	METHOD(XonoticColorpicker, mouseDrag, float(entity, vector));
 	ATTRIB(XonoticColorpicker, controlledTextbox, entity);

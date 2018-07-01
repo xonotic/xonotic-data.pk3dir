@@ -212,11 +212,11 @@ void sandbox_ObjectRemove(entity e)
 	// if the object being removed has been selected for attachment by a player, unset it
 	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.object_attach == e, { it.object_attach = NULL; });
 
-	if(e.material)	{	strunzone(e.material);	e.material = string_null;	}
-	if(e.crypto_idfp)	{	strunzone(e.crypto_idfp);	e.crypto_idfp = string_null;	}
-	if(e.netname)	{	strunzone(e.netname);	e.netname = string_null;	}
-	if(e.message)	{	strunzone(e.message);	e.message = string_null;	}
-	if(e.message2)	{	strunzone(e.message2);	e.message2 = string_null;	}
+	strfree(e.material);
+	strfree(e.crypto_idfp);
+	strfree(e.netname);
+	strfree(e.message);
+	strfree(e.message2);
 	delete(e);
 	e = NULL;
 
@@ -357,14 +357,14 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 		e.old_movetype = stof(argv(argv_num));	++argv_num;
 		set_movetype(e, e.old_movetype);
 		e.damageforcescale = stof(argv(argv_num));	++argv_num;
-		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
+		strfree(e.material);	if(argv(argv_num) != "")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
 		if(database)
 		{
 			// properties stored only for the database
-			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
-			if(e.netname)	strunzone(e.netname);	e.netname = strzone(argv(argv_num));	++argv_num;
-			if(e.message)	strunzone(e.message);	e.message = strzone(argv(argv_num));	++argv_num;
-			if(e.message2)	strunzone(e.message2);	e.message2 = strzone(argv(argv_num));	++argv_num;
+			strfree(e.crypto_idfp);	if(argv(argv_num) != "")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
+			strcpy(e.netname, argv(argv_num));	++argv_num;
+			strcpy(e.message, argv(argv_num));	++argv_num;
+			strcpy(e.message2, argv(argv_num));	++argv_num;
 		}
 
 		// attach last
@@ -702,7 +702,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							e.damageforcescale = stof(argv(3));
 							break;
 						case "material":
-							if(e.material)	strunzone(e.material);
+							strfree(e.material);
 							if(argv(3))
 							{
 								for (j = 1; j <= 5; j++) // precache material sounds, 5 in total
@@ -718,8 +718,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					}
 
 					// update last editing time
-					if(e.message2)	strunzone(e.message2);
-					e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S"));
+					strcpy(e.message2, strftime(true, "%d-%m-%Y %H:%M:%S"));
 
 					if(autocvar_g_sandbox_info > 1)
 						LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin));
@@ -745,8 +744,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					// also update the player's nickname if he changed it (but has the same player UID)
 					if(e.netname != player.netname)
 					{
-						if(e.netname)	strunzone(e.netname);
-						e.netname = strzone(player.netname);
+						strcpy(e.netname, player.netname);
 						print_to(player, "^2SANDBOX - INFO: ^7Object owner name updated");
 					}
 
@@ -756,8 +754,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 						return true;
 					}
 
-					if(e.crypto_idfp)	strunzone(e.crypto_idfp);
-					e.crypto_idfp = strzone(player.crypto_idfp);
+					strcpy(e.crypto_idfp, player.crypto_idfp);
 
 					print_to(player, "^2SANDBOX - INFO: ^7Object claimed successfully");
 				}

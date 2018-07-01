@@ -2,14 +2,16 @@
 
 #include "anticheat.qh"
 #include "g_hook.qh"
+#include "g_damage.qh"
 #include "g_world.qh"
 
 #include "bot/api.qh"
 
 #include "command/common.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "weapons/csqcprojectile.qh"
+#include <server/compat/quake3.qh>
 
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
@@ -18,6 +20,7 @@
 #include "../common/util.qh"
 
 #include "../common/vehicles/all.qh"
+#include <common/monsters/sv_monsters.qh>
 #include <common/weapons/_all.qh>
 
 #include "../lib/csqcmodel/sv_model.qh"
@@ -165,7 +168,6 @@ Called before each frame by the server
 bool game_delay_last;
 
 bool autocvar_sv_autopause = false;
-float RedirectionThink();
 void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
@@ -246,7 +248,6 @@ void StartFrame()
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
-bool DoesQ3ARemoveThisEntity(entity this);
 
 /**
  * Evaluate an expression of the form: [+ | -]? [var[op]val | [op]var | val | var] ...
@@ -360,7 +361,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 	return;
 LABEL(cleanup)
-    builtin_remove(this);
+    delete(this);
 }
 
 void WarpZone_PostInitialize_Callback()
@@ -382,4 +383,16 @@ void WarpZone_PostInitialize_Callback()
 		waypoint_spawnforteleporter_wz(e, src, dst, 0, -v_up, tracetest_ent);
 	}
 	delete(tracetest_ent);
+}
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main ()
+{
+
 }

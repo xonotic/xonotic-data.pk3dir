@@ -6,6 +6,7 @@
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <client/mapvoting.qh>
+#include <client/resources.qh>
 #include <client/teamradar.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 
@@ -214,9 +215,7 @@ void HUD_Radar()
 			panel_bg = "gfx/hud/default/border_default"; // fallback
 		if(!radar_panel_modified && panel_bg != panel.current_panel_bg)
 			radar_panel_modified = true;
-		if(panel.current_panel_bg)
-			strunzone(panel.current_panel_bg);
-		panel.current_panel_bg = strzone(panel_bg);
+		strcpy(panel.current_panel_bg, panel_bg);
 
 		switch(hud_panel_radar_maximized_zoommode)
 		{
@@ -354,7 +353,7 @@ void HUD_Radar()
 
 	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
-		if ( it.health >= 0 )
+		if ( GetResourceAmount(it, RESOURCE_HEALTH) >= 0 )
 		if ( it.team == myteam + 1 || gametype == MAPINFO_TYPE_RACE || !teamplay )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));

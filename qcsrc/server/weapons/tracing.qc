@@ -8,7 +8,6 @@
 #include "weaponsystem.qh"
 
 #include "../g_damage.qh"
-#include "../g_subs.qh"
 #include "../antilag.qh"
 
 #include <common/constants.qh>
@@ -30,8 +29,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid = ent.dphitcontentsmask;
 	Weapon wep = DEATH_WEAPONOF(deathtype);
-    if (wep == WEP_Null)
-    	wep = ent.(weaponentity).m_weapon; // TODO: don't fall back, if the attack isn't a weapon we don't want it to affect the user's held weapon!
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
 	if (IS_PLAYER(ent) && (wep.spawnflags & WEP_FLAG_PENETRATEWALLS))
@@ -83,7 +80,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
-	w_shotdir = normalize(w_shotend - w_shotorg);
+	if(W_DualWielding(ent))
+		w_shotdir = s_forward;
+	else
+		w_shotdir = normalize(w_shotend - w_shotorg);
 
 	//vector prevdir = w_shotdir;
 	//vector prevorg = w_shotorg;
@@ -418,10 +418,10 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			yoda = 0;
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
-			float g = accuracy_isgooddamage(this, hit);
+			bool gooddamage = accuracy_isgooddamage(this, hit);
 			Damage(hit, this, this, damage * solid_penetration_left, dtype, weaponentity, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons
-			if(g)
+			if(gooddamage)
 			{
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);

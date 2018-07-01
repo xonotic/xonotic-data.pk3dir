@@ -188,19 +188,15 @@ void HUDSkinList_Refresh_Click(entity btn, entity me)
 
 void HUDSkinList_SavedName_Change(entity box, entity me)
 {
-	if(me.savedName)
-		strunzone(me.savedName);
+	strfree(me.savedName);
 
 	if(box.text != "")
 		me.savedName = strzone(box.text);
-	else
-		me.savedName = string_null;
 }
 
 void HUDSkinList_Filter_Change(entity box, entity me)
 {
-	if(me.filterString)
-		strunzone(me.filterString);
+	strfree(me.filterString);
 
 	if(box.text != "")
 	{
@@ -209,8 +205,6 @@ void HUDSkinList_Filter_Change(entity box, entity me)
 		else
 			me.filterString = strzone(strcat("*", box.text, "*"));
 	}
-	else
-		me.filterString = string_null;
 
 	me.getHUDSkins(me);
 }

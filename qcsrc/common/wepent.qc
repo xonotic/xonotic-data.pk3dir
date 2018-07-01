@@ -26,6 +26,10 @@ MACRO_END
 	{ WriteByte(chan, this.vortex_charge * 255); }, \
 	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 255; }) \
     \
+    PROP(false, oknex_charge, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.oknex_charge * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).oknex_charge = ReadByte() / 16; }) \
+    \
     PROP(false, m_gunalign, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_gunalign); }, \
 	{ (viewmodels[this.m_wepent_slot]).m_gunalign = ReadByte(); }) \
@@ -51,14 +55,18 @@ MACRO_END
 	{ (viewmodels[this.m_wepent_slot]).minelayer_mines = ReadByte(); }) \
     \
     PROP(false, arc_heat_percent, WEPENT_SET_NORMAL, \
-	{ WriteByte(chan, this.arc_heat_percent * 16); }, \
-	{ (viewmodels[this.m_wepent_slot]).arc_heat_percent = ReadByte() / 16; }) \
+	{ WriteByte(chan, this.arc_heat_percent * 255); }, \
+	{ (viewmodels[this.m_wepent_slot]).arc_heat_percent = ReadByte() / 255; }) \
     \
     PROP(false, vortex_chargepool_ammo, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.vortex_chargepool_ammo * 16); }, \
 	{ (viewmodels[this.m_wepent_slot]).vortex_chargepool_ammo = ReadByte() / 16; }) \
     \
-    PROP(false, clip_load, WEPENT_SET_NORMAL, \
+	PROP(false, oknex_chargepool_ammo, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.oknex_chargepool_ammo * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).oknex_chargepool_ammo = ReadByte() / 16; }) \
+    \
+	PROP(false, clip_load, WEPENT_SET_NORMAL, \
 	{ WriteShort(chan, this.clip_load); }, \
 	{ (viewmodels[this.m_wepent_slot]).clip_load = ReadShort(); }) \
     \

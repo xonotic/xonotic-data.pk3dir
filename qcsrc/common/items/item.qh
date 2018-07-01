@@ -7,6 +7,10 @@
 #include <common/stats.qh>
 #endif
 
+#ifdef SVQC
+#include <server/items.qh>
+#endif
+
 const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
 
@@ -48,7 +52,16 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 .float  invincible_finished = _STAT(INVINCIBLE_FINISHED);
 
 #define SPAWNFUNC_ITEM(name, item) \
-    spawnfunc(name) { StartItem(this, item); }
+    spawnfunc(name) \
+	{ \
+		if (!Item_IsDefinitionAllowed(item)) \
+		{ \
+			startitem_failed = true; \
+			delete(this); \
+			return; \
+		} \
+		StartItem(this, item); \
+	}
 
 #else
 
@@ -59,9 +72,8 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 enum
 {
 	ITEM_FLAG_NORMAL = BIT(0), ///< Item is usable during normal gameplay.
-	ITEM_FLAG_INSTAGIB = BIT(1), ///< Item is usable in instagib.
-	ITEM_FLAG_OVERKILL = BIT(2), ///< Item is usable in overkill.
-	ITEM_FLAG_MUTATORBLOCKED = BIT(3)
+	ITEM_FLAG_MUTATORBLOCKED = BIT(1),
+    ITEM_FLAG_RESOURCE = BIT(2) ///< Item is is a resource, not a held item.
 };
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)

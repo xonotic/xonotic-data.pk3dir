@@ -391,7 +391,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 						break;
 					});
 
-					if (!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
+					if (!found && arg_lower != "random" && arg_lower != "anyrandom") { print_to(caller, "Invalid monster"); return; }
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
@@ -405,7 +405,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
-					Damage(mon, NULL, NULL, mon.health + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
+					Damage(mon, NULL, NULL, GetResourceAmount(mon, RESOURCE_HEALTH) + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
 					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
 					return;
 				}

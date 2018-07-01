@@ -16,11 +16,15 @@ void IntermissionThink(entity this);
 void GotoNextMap(float reinit);
 void ReadyRestart();
 
+string GetGametype();
+
 void DumpStats(float final);
 float Map_IsRecent(string m);
 string GetNextMap();
 void ShuffleMaplist();
 void Map_Goto_SetStr(string nextmapname);
 void Map_Goto(float reinit);
+void Map_MarkAsRecent(string m);
 float DoNextMapOverride(float reinit);
 void CheckRules_World();
+float RedirectionThink();

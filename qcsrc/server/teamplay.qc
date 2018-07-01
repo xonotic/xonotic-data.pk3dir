@@ -9,10 +9,10 @@
 
 #include "command/vote.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 #include "../common/deathtypes/all.qh"
-#include "../common/gamemodes/_mod.qh"
+#include <common/gamemodes/_mod.qh>
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
@@ -105,7 +105,7 @@ string getwelcomemessage(entity this)
 	if(g_weaponarena)
 	{
 		if(g_weaponarena_random)
-			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena");
+			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena"); // TODO: somehow get this into the mutator
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
@@ -116,7 +116,7 @@ string getwelcomemessage(entity this)
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
-		modifications = strcat(modifications, ", Jet pack");
+		modifications = strcat(modifications, ", Jetpack");
 	if(autocvar_g_powerups == 0)
 		modifications = strcat(modifications, ", No powerups");
 	if(autocvar_g_powerups > 0)
@@ -131,12 +131,8 @@ string getwelcomemessage(entity this)
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
-		if(cache_lastmutatormsg)
-			strunzone(cache_lastmutatormsg);
-		if(cache_mutatormsg)
-			strunzone(cache_mutatormsg);
-		cache_lastmutatormsg = strzone(autocvar_g_mutatormsg);
-		cache_mutatormsg = strzone(cache_lastmutatormsg);
+		strcpy(cache_lastmutatormsg, autocvar_g_mutatormsg);
+		strcpy(cache_mutatormsg, cache_lastmutatormsg);
 	}
 
 	if (cache_mutatormsg != "") {

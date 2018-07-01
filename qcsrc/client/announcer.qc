@@ -1,6 +1,6 @@
 #include "announcer.qh"
 
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
@@ -129,6 +129,9 @@ void Announcer_Gamestart()
 
 void Announcer_Time()
 {
+	if(intermission)
+		return;
+
 	float timeleft;
 	if(warmup_stage)
 	{
