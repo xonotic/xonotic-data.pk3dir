@@ -363,9 +363,11 @@ void PostInit()
 // In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
 float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
-    bool override = false;
+	TC(int, bInputType);
+	bool override = false;
 	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
+		return true;
 
 	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
 

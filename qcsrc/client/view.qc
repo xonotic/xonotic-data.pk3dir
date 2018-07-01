@@ -1583,12 +1583,15 @@ void HUD_Mouse(entity player)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
-	if(HUD_MinigameMenu_IsOpened() || active_minigame)
-		HUD_Minigame_Mouse();
-	if(QuickMenu_IsOpened())
-		QuickMenu_Mouse();
-	if(HUD_Radar_Clickable())
-		HUD_Radar_Mouse();
+	else
+	{
+		if (HUD_MinigameMenu_IsOpened() || active_minigame)
+			HUD_Minigame_Mouse();
+		if (QuickMenu_IsOpened())
+			QuickMenu_Mouse();
+		if (HUD_Radar_Clickable())
+			HUD_Radar_Mouse();
+	}
 
 	prevMouseClicked = mouseClicked;
 
