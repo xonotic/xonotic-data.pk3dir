@@ -11,7 +11,7 @@
 
 #include "../../weapons/weaponsystem.qh"
 
-#include "../../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
@@ -139,10 +139,12 @@ bool bot_shouldattack(entity this, entity targ)
 		return false;
 	if (IS_DEAD(targ))
 		return false;
-	if (PHYS_INPUT_BUTTON_CHAT(targ))
+	if (PHYS_INPUT_BUTTON_CHAT(targ) && !autocvar_bot_typefrag)
 		return false;
 	if(targ.flags & FL_NOTARGET)
 		return false;
+	if(targ.alpha <= 0.1 && targ.alpha != 0)
+		return false; // invisible via alpha
 
 	if(MUTATOR_CALLHOOK(BotShouldAttack, this, targ))
 		return false;

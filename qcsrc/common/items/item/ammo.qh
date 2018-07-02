@@ -1,10 +1,13 @@
 #pragma once
 
 #include "pickup.qh"
+#include <common/items/all.qh>
 #ifdef SVQC
     #include <common/t_items.qh>
+    #include <server/resources.qh>
 #endif
 
+#if 1
 .int ammo_none;
 .int ammo_shells;
 .int ammo_nails;
@@ -16,6 +19,11 @@
 #else
 .int ammo_plasma;
 .int ammo_fuel;
+#endif
+#endif
+
+#ifdef GAMEQC
+.int spawnflags;
 #endif
 
 #ifdef SVQC
@@ -38,10 +46,10 @@ MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_nails);
-void ammo_bullets_init(entity item)
+void ammo_bullets_init(Pickup this, entity item)
 {
-    if(!item.ammo_nails)
-        item.ammo_nails = g_pickup_nails;
+    if(!GetResourceAmount(item, RESOURCE_BULLETS))
+        SetResourceAmountExplicit(item, RESOURCE_BULLETS, g_pickup_nails);
 }
 #endif
 
@@ -51,7 +59,7 @@ ENDCLASS(Bullets)
 REGISTER_ITEM(Bullets, Bullets) {
     this.m_canonical_spawnfunc = "item_bullets";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Bullets_ITEM;
 #endif
     this.netname    =   "bullets";
@@ -72,16 +80,16 @@ MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_cells);
-void ammo_cells_init(entity item)
+void ammo_cells_init(Pickup this, entity item)
 {
-    if(!item.ammo_cells)
-        item.ammo_cells = g_pickup_cells;
+    if(!GetResourceAmount(item, RESOURCE_CELLS))
+        SetResourceAmountExplicit(item, RESOURCE_CELLS, g_pickup_cells);
 }
 #endif
 REGISTER_ITEM(Cells, Ammo) {
     this.m_canonical_spawnfunc = "item_cells";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Cells_ITEM;
 #endif
     this.netname    =   "cells";
@@ -102,16 +110,16 @@ MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_plasma);
-void ammo_plasma_init(entity item)
+void ammo_plasma_init(Pickup this, entity item)
 {
-    if(!item.ammo_plasma)
-        item.ammo_plasma = g_pickup_plasma;
+    if(!GetResourceAmount(item, RESOURCE_PLASMA))
+        SetResourceAmountExplicit(item, RESOURCE_PLASMA, g_pickup_plasma);
 }
 #endif
 REGISTER_ITEM(Plasma, Ammo) {
     this.m_canonical_spawnfunc = "item_plasma";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Plasma_ITEM;
 #endif
     this.netname    =   "plasma";
@@ -132,16 +140,16 @@ MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_rockets);
-void ammo_rockets_init(entity item)
+void ammo_rockets_init(Pickup this, entity item)
 {
-    if(!item.ammo_rockets)
-        item.ammo_rockets = g_pickup_rockets;
+    if(!GetResourceAmount(item, RESOURCE_ROCKETS))
+        SetResourceAmountExplicit(item, RESOURCE_ROCKETS, g_pickup_rockets);
 }
 #endif
 REGISTER_ITEM(Rockets, Ammo) {
     this.m_canonical_spawnfunc = "item_rockets";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Rockets_ITEM;
 #endif
     this.netname    =   "rockets";
@@ -162,10 +170,10 @@ MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_shells);
-void ammo_shells_init(entity item)
+void ammo_shells_init(Pickup this, entity item)
 {
-    if(!item.ammo_shells)
-        item.ammo_shells = g_pickup_shells;
+    if(!GetResourceAmount(item, RESOURCE_SHELLS))
+        SetResourceAmountExplicit(item, RESOURCE_SHELLS, g_pickup_shells);
 }
 #endif
 
@@ -175,7 +183,7 @@ ENDCLASS(Shells)
 REGISTER_ITEM(Shells, Shells) {
     this.m_canonical_spawnfunc = "item_shells";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Shells_ITEM;
 #endif
     this.netname    =   "shells";

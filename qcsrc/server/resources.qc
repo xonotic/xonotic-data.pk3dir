@@ -10,6 +10,9 @@
 
 float GetResourceLimit(entity e, int resource_type)
 {
+	if(!IS_PLAYER(e))
+		return RESOURCE_LIMIT_NONE; // no limits on non-players
+
 	float limit;
 	switch (resource_type)
 	{
@@ -74,6 +77,17 @@ float GetResourceAmount(entity e, int resource_type)
 	return e.(resource_field);
 }
 
+bool SetResourceAmountExplicit(entity e, int resource_type, float amount)
+{
+	.float resource_field = GetResourceField(resource_type);
+	if (e.(resource_field) != amount)
+	{
+		e.(resource_field) = amount;
+		return true;
+	}
+	return false;
+}
+
 void SetResourceAmount(entity e, int resource_type, float amount)
 {
 	bool forbid = MUTATOR_CALLHOOK(SetResourceAmount, e, resource_type, amount);
@@ -83,22 +97,28 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 	}
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
-	.float resource_field = GetResourceField(resource_type);
-	if (e.(resource_field) == amount)
+	float max_amount = GetResourceLimit(e, resource_type); // TODO: should allow overriding these limits if cheats are enabled!
+	float amount_wasted = 0;
+	if (amount > max_amount && max_amount != RESOURCE_LIMIT_NONE)
+	{
+		amount_wasted = amount - max_amount;
+		amount = max_amount;
+	}
+	bool changed = SetResourceAmountExplicit(e, resource_type, amount);
+	if (changed)
+	{
+		MUTATOR_CALLHOOK(ResourceAmountChanged, e, resource_type, amount);
+	}
+	if (amount_wasted == 0)
 	{
 		return;
 	}
-	float max_amount = GetResourceLimit(e, resource_type);
-	if (amount > max_amount)
-	{
-		amount = max_amount;
-	}
-	e.(resource_field) = amount;
+	MUTATOR_CALLHOOK(ResourceWasted, e, resource_type, amount_wasted);
 }
 
 void GiveResource(entity receiver, int resource_type, float amount)
 {
-	if (amount == 0)
+	if (amount <= 0)
 	{
 		return;
 	}
@@ -144,16 +164,104 @@ void GiveResource(entity receiver, int resource_type, float amount)
 void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
 	float limit)
 {
-	if (amount == 0)
+	if (amount <= 0)
+	{
+		return;
+	}
+	bool forbid = MUTATOR_CALLHOOK(GiveResourceWithLimit, receiver,
+		resource_type, amount, limit);
+	if (forbid)
+	{
+		return;
+	}
+	resource_type = M_ARGV(1, int);
+	amount = M_ARGV(2, float);
+	limit = M_ARGV(3, float);
+	if (amount <= 0)
 	{
 		return;
 	}
 	float current_amount = GetResourceAmount(receiver, resource_type);
-	if (current_amount + amount > limit)
+	if (current_amount + amount > limit && limit != RESOURCE_LIMIT_NONE)
 	{
 		amount = limit - current_amount;
 	}
 	GiveResource(receiver, resource_type, amount);
+}
+
+void TakeResource(entity receiver, int resource_type, float amount)
+{
+	if (amount <= 0)
+	{
+		return;
+	}
+	bool forbid = MUTATOR_CALLHOOK(TakeResource, receiver, resource_type,
+		amount);
+	if (forbid)
+	{
+		return;
+	}
+	resource_type = M_ARGV(1, int);
+	amount = M_ARGV(2, float);
+	if (amount <= 0)
+	{
+		return;
+	}
+	SetResourceAmount(receiver, resource_type,
+		GetResourceAmount(receiver, resource_type) - amount);
+}
+
+void TakeResourceWithLimit(entity receiver, int resource_type, float amount,
+	float limit)
+{
+	if (amount <= 0)
+	{
+		return;
+	}
+	bool forbid = MUTATOR_CALLHOOK(TakeResourceWithLimit, receiver,
+		resource_type, amount, limit);
+	if (forbid)
+	{
+		return;
+	}
+	resource_type = M_ARGV(1, int);
+	amount = M_ARGV(2, float);
+	limit = M_ARGV(3, float);
+	if (amount <= 0)
+	{
+		return;
+	}
+	float current_amount = GetResourceAmount(receiver, resource_type);
+	if (current_amount - amount < -limit)
+	{
+		amount = -limit + current_amount;
+	}
+	TakeResource(receiver, resource_type, amount);
+}
+
+void GiveOrTakeResource(entity receiver, int resource_type, float amount)
+{
+	if(amount < 0)
+	{
+		TakeResource(receiver, resource_type, amount * -1);
+	}
+	else
+	{
+		GiveResource(receiver, resource_type, amount);
+	}
+}
+
+void GiveOrTakeResourceWithLimit(entity receiver, int resource_type, float amount,
+	float limit)
+{
+	if(amount < 0)
+	{
+		TakeResourceWithLimit(receiver, resource_type, amount * -1, limit);
+	}
+	else
+	{
+		GiveResourceWithLimit(receiver, resource_type, amount, limit);
+	}
 }
 
 int GetResourceType(.float resource_field)

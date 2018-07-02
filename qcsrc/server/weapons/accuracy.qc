@@ -1,6 +1,6 @@
 #include "accuracy.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/teams.qh>
@@ -67,14 +67,15 @@ void accuracy_add(entity this, int w, int fired, int hit)
 	entity a = CS(this).accuracy;
 	if (!a) return;
 	if (!hit && !fired) return;
+	if (w == WEP_Null.m_id) return;
 	w -= WEP_FIRST;
 	int b = accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w]);
 	if (hit)    a.accuracy_hit  [w] += hit;
 	if (fired)  a.accuracy_fired[w] += fired;
 
-    if (hit && a.hit_time != time) { // only run this once per frame
+    if (hit && STAT(HIT_TIME, a) != time) { // only run this once per frame
         a.accuracy_cnt_hit[w] += 1;
-        a.hit_time = time;
+        STAT(HIT_TIME, a) = time;
     }
 
     if (fired && a.fired_time != time) { // only run this once per frame
@@ -93,8 +94,12 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 	int mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
 
 	if (warmup_stage) return false;
-	if (IS_DEAD(targ)) return false;
-	if (STAT(FROZEN, targ)) return false;
+	if (game_stopped) return false;
+
+	// damage to dead/frozen players is good only if it happens in the frame they get killed / frozen
+	// so that stats for weapons that shoot multiple projectiles per shot are properly counted
+	if (IS_DEAD(targ) && time > targ.death_time) return false;
+	if (STAT(FROZEN, targ) && time > targ.freeze_time) return false;
 	if (SAME_TEAM(attacker, targ)) return false;
 
 	if (mutator_check == MUT_ACCADD_INVALID) return true;

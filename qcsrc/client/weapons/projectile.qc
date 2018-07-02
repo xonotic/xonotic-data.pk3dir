@@ -3,13 +3,15 @@
 #include "../autocvars.qh"
 #include "../defs.qh"
 #include "../main.qh"
-#include "../mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/effects/effect.qh>
 #include <common/effects/all.qh>
 #include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
+
+#include <common/mutators/mutator/nades/nades.qh>
 
 #include <lib/csqcmodel/interpolate.qh>
 
@@ -49,8 +51,6 @@ void Projectile_DrawTrail(entity this, vector to)
 		boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
-
-bool Projectile_isnade(int proj); // TODO: remove
 
 void Projectile_Draw(entity this)
 {
@@ -236,15 +236,11 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 	if (f & 1)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 		if (this.count & 0x80)
 		{
-			this.velocity_x = ReadCoord();
-			this.velocity_y = ReadCoord();
-			this.velocity_z = ReadCoord();
+			this.velocity = ReadVector();
 			if (f & 0x10)
 				this.gravity = ReadCoord();
 			else

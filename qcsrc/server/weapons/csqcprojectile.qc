@@ -42,15 +42,11 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 
 	if(sf & 1)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 
 		if(sf & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, this.velocity.x);
-			WriteCoord(MSG_ENTITY, this.velocity.y);
-			WriteCoord(MSG_ENTITY, this.velocity.z);
+			WriteVector(MSG_ENTITY, this.velocity);
 			if(sf & 0x10)
 				WriteCoord(MSG_ENTITY, this.gravity);
 		}

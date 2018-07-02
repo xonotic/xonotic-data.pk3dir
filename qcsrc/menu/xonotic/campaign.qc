@@ -14,8 +14,7 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 	for(i = 0; i < campaign_entries; ++i)
 	{
 		l = l0;
-		if(campaign_longdesc_wrapped[i])
-			strunzone(campaign_longdesc_wrapped[i]);
+		strfree(campaign_longdesc_wrapped[i]);
 		n = tokenizebyseparator(campaign_longdesc[i], "\n");
 		r = "";
 		for(j = 0; j < n; ++j)
@@ -70,12 +69,8 @@ void XonoticCampaignList_destroy(entity me)
 void XonoticCampaignList_loadCvars(entity me)
 {
 	// read campaign cvars
-	if(campaign_name)
-		strunzone(campaign_name);
-	if(me.cvarName)
-		strunzone(me.cvarName);
-	campaign_name = strzone(cvar_string("g_campaign_name"));
-	me.cvarName = strzone(strcat("g_campaign", campaign_name, "_index"));
+	strcpy(campaign_name, cvar_string("g_campaign_name"));
+	strcpy(me.cvarName, strcat("g_campaign", campaign_name, "_index"));
 	registercvar(me.cvarName, "", 0); // saved by server QC anyway
 	CampaignFile_Unload();
 	CampaignFile_Load(0, CAMPAIGN_MAX_ENTRIES);

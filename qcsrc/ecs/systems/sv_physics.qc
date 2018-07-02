@@ -4,6 +4,7 @@ void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
 	Physics_UpdateStats(this);
+	PM_ClientMovement_UpdateStatus(this);
 }
 
 bool sys_phys_override(entity this, float dt)
@@ -33,7 +34,6 @@ void sys_phys_monitor(entity this, float dt)
 void sys_phys_ai(entity this)
 {
 	if (!IS_BOT_CLIENT(this)) { return; }
-	if (playerdemo_read(this)) { return; }
 	bot_think(this);
 }
 
@@ -54,7 +54,7 @@ void sys_phys_pregame_hold(entity this)
 void sys_phys_spectator_control(entity this)
 {
 	float maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
-	if (!this.spectatorspeed) { this.spectatorspeed = maxspeed_mod; }
+	if (!STAT(SPECTATORSPEED, this)) { STAT(SPECTATORSPEED, this) = maxspeed_mod; }
 	if ((CS(this).impulse >= 1 && CS(this).impulse <= 19)
 	    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
 	    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
@@ -65,17 +65,17 @@ void sys_phys_spectator_control(entity this)
 			    || CS(this).impulse == 18
 			    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
 			   ) {
-				this.spectatorspeed = bound(autocvar_sv_spectator_speed_multiplier_min, this.spectatorspeed + 0.5, autocvar_sv_spectator_speed_multiplier_max);
+				STAT(SPECTATORSPEED, this) = bound(autocvar_sv_spectator_speed_multiplier_min, STAT(SPECTATORSPEED, this) + 0.5, autocvar_sv_spectator_speed_multiplier_max);
 			} else if (CS(this).impulse == 11) {
-				this.spectatorspeed = maxspeed_mod;
+				STAT(SPECTATORSPEED, this) = maxspeed_mod;
 			} else if (CS(this).impulse == 12
 			    || CS(this).impulse == 16
 			    || CS(this).impulse == 19
 			    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
 			          ) {
-				this.spectatorspeed = bound(autocvar_sv_spectator_speed_multiplier_min, this.spectatorspeed - 0.5, autocvar_sv_spectator_speed_multiplier_max);
+				STAT(SPECTATORSPEED, this) = bound(autocvar_sv_spectator_speed_multiplier_min, STAT(SPECTATORSPEED, this) - 0.5, autocvar_sv_spectator_speed_multiplier_max);
 			} else if (CS(this).impulse >= 1 && CS(this).impulse <= 9) {
-				this.spectatorspeed = 1 + 0.5 * (CS(this).impulse - 1);
+				STAT(SPECTATORSPEED, this) = 1 + 0.5 * (CS(this).impulse - 1);
 			}
 		}  // otherwise just clear
 		CS(this).impulse = 0;

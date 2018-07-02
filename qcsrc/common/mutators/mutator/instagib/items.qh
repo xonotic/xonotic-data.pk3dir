@@ -16,16 +16,16 @@ SOUND(VaporizerCells, Item_Sound("itempickup"));
 
 #ifdef SVQC
 int autocvar_g_instagib_ammo_drop;
-void ammo_vaporizercells_init(entity item)
+void ammo_vaporizercells_init(Pickup this, entity item)
 {
-    if(!item.ammo_cells)
-        item.ammo_cells = autocvar_g_instagib_ammo_drop;
+    if(!GetResourceAmount(item, RESOURCE_CELLS))
+        SetResourceAmountExplicit(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 }
 #endif
 REGISTER_ITEM(VaporizerCells, Ammo) {
     this.m_canonical_spawnfunc = "item_vaporizer_cells";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_INSTAGIB | ITEM_FLAG_MUTATORBLOCKED;
+    this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
     this.m_model                =   MDL_VaporizerCells_ITEM;
     this.m_sound                =   SND_VaporizerCells;
 #endif
@@ -52,8 +52,7 @@ SOUND(ExtraLife, Item_Sound("megahealth"));
 REGISTER_ITEM(ExtraLife, Powerup) {
     this.m_canonical_spawnfunc = "item_extralife";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_INSTAGIB;
-    this.m_model                =   MDL_ExtraLife_ITEM;
+	this.m_model                =   MDL_ExtraLife_ITEM;
     this.m_sound                =   SND_ExtraLife;
 #endif
     this.netname                =   "extralife";
@@ -76,13 +75,13 @@ SOUND(Invisibility, Item_Sound("powerup"));
 /// \brief Initializes the invisibility powerup.
 /// \param[in,out] item Item to initialize.
 /// \return No return.
-void powerup_invisibility_init(entity item);
+void powerup_invisibility_init(Pickup this, entity item);
 #endif
 
 REGISTER_ITEM(Invisibility, Powerup) {
     this.m_canonical_spawnfunc = "item_invisibility";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_INSTAGIB | ITEM_FLAG_MUTATORBLOCKED;
+	this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
     this.m_model            =   MDL_Invisibility_ITEM;
     this.m_sound            =   SND_Invisibility;
     this.m_glow             =   true;
@@ -111,13 +110,13 @@ SOUND(Speed, Item_Sound("powerup_shield"));
 /// \brief Initializes the speed powerup.
 /// \param[in,out] item Item to initialize.
 /// \return No return.
-void powerup_speed_init(entity item);
+void powerup_speed_init(Pickup this, entity item);
 #endif
 
 REGISTER_ITEM(Speed, Powerup) {
     this.m_canonical_spawnfunc = "item_speed";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_INSTAGIB | ITEM_FLAG_MUTATORBLOCKED;
+	this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
     this.m_model            =   MDL_Speed_ITEM;
     this.m_sound            =   SND_Speed;
     this.m_glow             =   true;

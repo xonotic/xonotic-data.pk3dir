@@ -223,9 +223,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	}
 	if (sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 	return true;
 }
@@ -268,17 +266,15 @@ void W_Tuba_NoteThink(entity this)
 void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 {
 	vector o;
-	float n;
-
-	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
-
-	n = W_Tuba_GetNote(actor, hittype);
+	float n = W_Tuba_GetNote(actor, hittype);
 
 	hittype = 0;
 	if(actor.(weaponentity).tuba_instrument & 1)
 		hittype |= HITTYPE_SECONDARY;
 	if(actor.(weaponentity).tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
+
+	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage), hittype | WEP_TUBA.m_id);
 
 	if(actor.(weaponentity).tuba_note)
 	{
@@ -305,7 +301,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
 	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, NULL);
+	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
 
 	o = gettaginfo(actor.exteriorweaponentity, 0);
 	if(time > actor.(weaponentity).tuba_smoketime)
@@ -378,7 +374,12 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 				actor.(weaponentity).weaponname = "tuba";
 				break;
 		}
-		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0);
+		int hittype = 0;
+		if(actor.(weaponentity).tuba_instrument & 1)
+			hittype |= HITTYPE_SECONDARY;
+		if(actor.(weaponentity).tuba_instrument & 2)
+			hittype |= HITTYPE_BOUNCE;
+		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0, hittype | WEP_TUBA.m_id);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
@@ -550,9 +551,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 	}
 
 	if (f & 2) {
-		this.enemy.origin_x = ReadCoord();
-		this.enemy.origin_y = ReadCoord();
-		this.enemy.origin_z = ReadCoord();
+		this.enemy.origin = ReadVector();
 		setorigin(this.enemy, this.enemy.origin);
 		if (this.enemy.enemy) {
 			setorigin(this.enemy.enemy, this.enemy.origin);

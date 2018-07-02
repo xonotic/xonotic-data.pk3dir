@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
+"PO-Revision-Date: 2017-09-20 00:10+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/bg/)\n"
@@ -2912,8 +2912,8 @@ msgstr "^BG%s%s^K1 изяде ракета%s%s на ^BG%s^K1"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 бе твърде близо до ракета%s%s на ^BG%s^K1 "
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -9278,3 +9278,6 @@ msgstr "Цвят на отбора:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Включване на панела"
+
+#~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+#~ msgstr "^BG%s%s^K1 бе твърде близо до ракета%s%s на ^BG%s^K1 "

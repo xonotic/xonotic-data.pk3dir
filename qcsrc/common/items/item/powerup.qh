@@ -24,7 +24,7 @@ SOUND(Strength, Item_Sound("powerup"));
 
 #ifdef SVQC
 float autocvar_g_balance_powerup_strength_time;
-void powerup_strength_init(entity item)
+void powerup_strength_init(Pickup this, entity item)
 {
     if(!item.strength_finished)
         item.strength_finished = autocvar_g_balance_powerup_strength_time;
@@ -60,7 +60,7 @@ SOUND(Shield, Item_Sound("powerup_shield"));
 
 #ifdef SVQC
 float autocvar_g_balance_powerup_invincible_time;
-void powerup_shield_init(entity item)
+void powerup_shield_init(Pickup this, entity item)
 {
     if(!item.invincible_finished)
         item.invincible_finished = autocvar_g_balance_powerup_invincible_time;

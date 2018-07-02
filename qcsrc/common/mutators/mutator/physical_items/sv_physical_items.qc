@@ -79,7 +79,7 @@ void physical_item_touch(entity this, entity toucher)
 	}
 }
 
-void physical_item_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void physical_item_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(!this.cnt) // not for dropped items
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))

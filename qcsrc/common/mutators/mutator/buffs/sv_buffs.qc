@@ -1,9 +1,8 @@
 #include "sv_buffs.qh"
 
-#include <common/triggers/target/music.qh>
+#include <common/mapobjects/target/music.qh>
 #include <common/gamemodes/_mod.qh>
 
-.float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit(entity this);
 
 AUTOCVAR(g_buffs, int, -1, "Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them");
@@ -83,9 +82,9 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 	if(!this.owner.buff_active && !this.owner.buff_activetime)
 		return false;
 
-	if (view.buffs)
+	if (STAT(BUFFS, view))
 	{
-		return CS(view).cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
+		return CS(view).cvar_cl_buffs_autoreplace == false || STAT(BUFFS, view) != STAT(BUFFS, this.owner);
 	}
 
 	return WaypointSprite_visible_for_player(this, player, view);
@@ -93,7 +92,7 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 void buff_Waypoint_Spawn(entity e)
 {
-	entity buff = buff_FirstFromFlags(e.buffs);
+	entity buff = buff_FirstFromFlags(STAT(BUFFS, e));
 	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, NULL, e.team, e, buff_waypoint, true, RADARICON_Buff);
 	wp.wp_extra = buff.m_id;
 	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_Buff, e.glowmod);
@@ -177,15 +176,15 @@ void buff_Touch(entity this, entity toucher)
 		return;
 	}
 
-	if (toucher.buffs)
+	if (STAT(BUFFS, toucher))
 	{
-		if (CS(toucher).cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
+		if (CS(toucher).cvar_cl_buffs_autoreplace && STAT(BUFFS, toucher) != STAT(BUFFS, this))
 		{
-			int buffid = buff_FirstFromFlags(toucher.buffs).m_id;
-			//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_DROP, toucher.buffs);
+			int buffid = buff_FirstFromFlags(STAT(BUFFS, toucher)).m_id;
+			//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_DROP, STAT(BUFFS, toucher));
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
 
-			toucher.buffs = 0;
+			STAT(BUFFS, toucher) = 0;
 			//sound(toucher, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		}
 		else { return; } // do nothing
@@ -194,13 +193,13 @@ void buff_Touch(entity this, entity toucher)
 	this.owner = toucher;
 	this.buff_active = false;
 	this.lifetime = 0;
-	int buffid = buff_FirstFromFlags(this.buffs).m_id;
+	int buffid = buff_FirstFromFlags(STAT(BUFFS, this)).m_id;
 	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_GOT, buffid);
 	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_INFO, INFO_ITEM_BUFF, toucher.netname, buffid);
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
-	toucher.buffs |= (this.buffs);
+	STAT(BUFFS, toucher) |= (STAT(BUFFS, this));
 }
 
 float buff_Available(entity buff)
@@ -226,14 +225,14 @@ void buff_NewType(entity ent)
 	});
 	entity newbuff = RandomSelection_chosen_ent;
 	newbuff.buff_seencount += 1; // lower chances of seeing this buff again soon
-	ent.buffs = newbuff.m_itemid;
+	STAT(BUFFS, ent) = newbuff.m_itemid;
 }
 
 void buff_Think(entity this)
 {
-	if(this.buffs != this.oldbuffs)
+	if(STAT(BUFFS, this) != this.oldbuffs)
 	{
-		entity buff = buff_FirstFromFlags(this.buffs);
+		entity buff = buff_FirstFromFlags(STAT(BUFFS, this));
 		this.color = buff.m_color;
 		this.glowmod = buff_GlowColor(buff);
 		this.skin = buff.m_skin;
@@ -250,7 +249,7 @@ void buff_Think(entity this)
 				WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + this.buff_activetime - frametime);
 		}
 
-		this.oldbuffs = this.buffs;
+		this.oldbuffs = STAT(BUFFS, this);
 	}
 
 	if(!game_stopped)
@@ -262,7 +261,7 @@ void buff_Think(entity this)
 	}
 
 	if(!this.buff_active && !this.buff_activetime)
-	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || this.owner.vehicle || !(this.owner.buffs & this.buffs) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
+	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || this.owner.vehicle || !(STAT(BUFFS, this.owner) & STAT(BUFFS, this)) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
@@ -346,9 +345,9 @@ void buff_Init(entity this)
 
 	if(!teamplay && this.team) { this.team = 0; }
 
-	entity buff = buff_FirstFromFlags(this.buffs);
+	entity buff = buff_FirstFromFlags(STAT(BUFFS, this));
 
-	if(!this.buffs || !buff_Available(buff))
+	if(!STAT(BUFFS, this) || !buff_Available(buff))
 		buff_NewType(this);
 
 	this.classname = "item_buff";
@@ -396,7 +395,7 @@ void buff_Init_Compat(entity ent, entity replacement)
 	else if (ent.spawnflags & 4)
 		ent.team = NUM_TEAM_2;
 
-	ent.buffs = replacement.m_itemid;
+	STAT(BUFFS, ent) = replacement.m_itemid;
 
 	buff_Init(ent);
 }
@@ -405,7 +404,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = (old.noalign || (old.spawnflags & 1));
+	ent.noalign = Item_ShouldKeepPosition(old);
 
 	buff_Init(ent);
 }
@@ -413,7 +412,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 void buff_Vengeance_DelayedDamage(entity this)
 {
 	if(this.enemy)
-		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, this.enemy.origin, '0 0 0');
+		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, DMG_NOWEP, this.enemy.origin, '0 0 0');
 
 	delete(this);
 	return;
@@ -454,28 +453,28 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
 
-	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
+	if(STAT(BUFFS, frag_target) & BUFF_RESISTANCE.m_itemid)
 	{
 		float reduced = frag_damage * autocvar_g_buffs_resistance_blockpercent;
 		frag_damage = bound(0, frag_damage - reduced, frag_damage);
 	}
 
-	if(frag_target.buffs & BUFF_SPEED.m_itemid)
+	if(STAT(BUFFS, frag_target) & BUFF_SPEED.m_itemid)
 	if(frag_target != frag_attacker)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
-	if(frag_target.buffs & BUFF_MEDIC.m_itemid)
+	if(STAT(BUFFS, frag_target) & BUFF_MEDIC.m_itemid)
 	if((GetResourceAmount(frag_target, RESOURCE_HEALTH) - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
 		frag_damage = max(5, GetResourceAmount(frag_target, RESOURCE_HEALTH) - autocvar_g_buffs_medic_survive_health);
 
-	if(frag_target.buffs & BUFF_JUMP.m_itemid)
+	if(STAT(BUFFS, frag_target) & BUFF_JUMP.m_itemid)
 	if(frag_deathtype == DEATH_FALL.m_id)
 		frag_damage = 0;
 
-	if(frag_target.buffs & BUFF_VENGEANCE.m_itemid)
+	if(STAT(BUFFS, frag_target) & BUFF_VENGEANCE.m_itemid)
 	if(frag_attacker)
 	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
@@ -489,22 +488,22 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		dmgent.nextthink = time + 0.1;
 	}
 
-	if(frag_target.buffs & BUFF_BASH.m_itemid)
+	if(STAT(BUFFS, frag_target) & BUFF_BASH.m_itemid)
 	if(frag_attacker != frag_target)
 		frag_force = '0 0 0';
 
-	if(frag_attacker.buffs & BUFF_BASH.m_itemid)
+	if(STAT(BUFFS, frag_attacker) & BUFF_BASH.m_itemid)
 	if(frag_force)
 	if(frag_attacker == frag_target)
 		frag_force *= autocvar_g_buffs_bash_force_self;
 	else
 		frag_force *= autocvar_g_buffs_bash_force;
 
-	if(frag_attacker.buffs & BUFF_DISABILITY.m_itemid)
+	if(STAT(BUFFS, frag_attacker) & BUFF_DISABILITY.m_itemid)
 	if(frag_target != frag_attacker)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
-	if(frag_target.buffs & BUFF_INFERNO.m_itemid)
+	if(STAT(BUFFS, frag_target) & BUFF_INFERNO.m_itemid)
 	{
 		if(frag_deathtype == DEATH_FIRE.m_id)
 			frag_damage = 0;
@@ -512,13 +511,13 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 			frag_damage *= 0.5; // TODO: cvarize?
 	}
 
-	if(frag_attacker.buffs & BUFF_LUCK.m_itemid)
+	if(STAT(BUFFS, frag_attacker) & BUFF_LUCK.m_itemid)
 	if(frag_attacker != frag_target)
 	if(autocvar_g_buffs_luck_damagemultiplier > 0)
 	if(random() <= autocvar_g_buffs_luck_chance)
 		frag_damage *= autocvar_g_buffs_luck_damagemultiplier;
 
-	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
+	if(STAT(BUFFS, frag_attacker) & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
 		float btime = buff_Inferno_CalculateTime(
 			frag_damage,
@@ -532,7 +531,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	}
 
 	// this... is ridiculous (TODO: fix!)
-	if(frag_attacker.buffs & BUFF_VAMPIRE.m_itemid)
+	if(STAT(BUFFS, frag_attacker) & BUFF_VAMPIRE.m_itemid)
 	if(!frag_target.vehicle)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(!IS_DEAD(frag_target))
@@ -545,7 +544,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		float amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
 			GetResourceAmount(frag_target, RESOURCE_HEALTH));
 		GiveResourceWithLimit(frag_attacker, RESOURCE_HEALTH, amount, g_pickup_healthsmall_max);
-		if (frag_target.armorvalue)
+		if (GetResourceAmount(frag_target, RESOURCE_ARMOR))
 		{
 			amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
 				GetResourceAmount(frag_target, RESOURCE_ARMOR));
@@ -561,8 +560,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.buffs = 0;
-	player.buff_time = 0;
+	STAT(BUFFS, player) = 0;
+	STAT(BUFF_TIME, player) = 0;
 	PS(player).buff_shield = time + 0.5; // prevent picking up buffs immediately
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
@@ -574,7 +573,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics_UpdateStats)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(player.buffs & BUFF_SPEED.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_SPEED.m_itemid)
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_buffs_speed_speed;
 
 	if(time < player.buff_disability_time)
@@ -586,7 +585,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(player.buffs & BUFF_JUMP.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_JUMP.m_itemid)
 		STAT(MOVEVARS_JUMPVELOCITY, player) = autocvar_g_buffs_jump_height;
 }
 
@@ -605,11 +604,11 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
-	if(frag_target.buffs)
+	if(STAT(BUFFS, frag_target))
 	{
-		int buffid = buff_FirstFromFlags(frag_target.buffs).m_id;
+		int buffid = buff_FirstFromFlags(STAT(BUFFS, frag_target)).m_id;
 		Send_Notification(NOTIF_ALL_EXCEPT, frag_target, MSG_INFO, INFO_ITEM_BUFF_LOST, frag_target.netname, buffid);
-		frag_target.buffs = 0;
+		STAT(BUFFS, frag_target) = 0;
 
 		if(frag_target.buff_model)
 		{
@@ -625,15 +624,15 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 
 	entity player = M_ARGV(0, entity);
 
-	if(player.buffs)
+	if(STAT(BUFFS, player))
 	{
-		int buffid = buff_FirstFromFlags(player.buffs).m_id;
+		int buffid = buff_FirstFromFlags(STAT(BUFFS, player)).m_id;
 		Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid);
 		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
-		player.buffs = 0;
+		STAT(BUFFS, player) = 0;
 		PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
-		//player.buff_time = 0; // already notified
+		//STAT(BUFF_TIME, player) = 0; // already notified
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
@@ -644,7 +643,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	if(MUTATOR_RETURNVALUE || game_stopped) return;
 	entity player = M_ARGV(0, entity);
 
-	if(player.buffs & BUFF_SWAPPER.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_SWAPPER.m_itemid)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = NULL;
@@ -702,7 +701,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 			sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
 
 			// TODO: add a counter to handle how many times one can teleport, and a delay to prevent spam
-			player.buffs = 0;
+			STAT(BUFFS, player) = 0;
 			return true;
 		}
 	}
@@ -734,36 +733,40 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
-	if((wp.owner.flags & FL_CLIENT) && (wp.owner.buffs & BUFF_INVISIBLE.m_itemid) && (e == player))
+	if((wp.owner.flags & FL_CLIENT) && (STAT(BUFFS, wp.owner) & BUFF_INVISIBLE.m_itemid) && (e == player))
 	if(DIFF_TEAM(wp.owner, e))
 		return true;
 }
 
-MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
+MUTATOR_HOOKFUNCTION(buffs, FilterItem)
 {
 	if(autocvar_g_buffs < 0)
-		return; // no auto replacing of entities in this mode
+		return false; // no auto replacing of entities in this mode
 
-	entity ent = M_ARGV(0, entity);
+	entity item = M_ARGV(0, entity);
 
 	if(autocvar_g_buffs_replace_powerups)
-	switch(ent.classname)
 	{
-		case "item_strength":
-		case "item_shield":
+		switch(item.classname)
 		{
-			entity e = spawn();
-			buff_SpawnReplacement(e, ent);
-			return true;
+			case "item_strength":
+			case "item_shield":
+			{
+				entity e = spawn();
+				buff_SpawnReplacement(e, item);
+				return true;
+			}
 		}
 	}
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
 {
 	entity player = M_ARGV(1, entity);
 
-	if(player.buffs & BUFF_SPEED.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_SPEED.m_itemid)
 		M_ARGV(0, float) *= autocvar_g_buffs_speed_rate;
 
 	if(time < player.buff_disability_time)
@@ -774,7 +777,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 {
 	entity player = M_ARGV(1, entity);
 
-	if(player.buffs & BUFF_SPEED.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_SPEED.m_itemid)
 		M_ARGV(0, float) *= autocvar_g_buffs_speed_weaponspeed;
 
 	if(time < player.buff_disability_time)
@@ -789,7 +792,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(game_stopped || IS_DEAD(player) || frametime || !IS_PLAYER(player)) return;
 
-	if(player.buffs & BUFF_FLIGHT.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_FLIGHT.m_itemid)
 	{
 		if(!PHYS_INPUT_BUTTON_CROUCH(player))
 			player.buff_flight_crouchheld = false;
@@ -812,10 +815,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	// 2: notify carrier as well
 	int buff_lost = 0;
 
-	if(player.buff_time && player.buffs)
-	if(time >= player.buff_time)
+	if(STAT(BUFF_TIME, player) && STAT(BUFFS, player))
+	if(time >= STAT(BUFF_TIME, player))
 	{
-		player.buff_time = 0;
+		STAT(BUFF_TIME, player) = 0;
 		buff_lost = 2;
 	}
 
@@ -823,9 +826,9 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(buff_lost)
 	{
-		if(player.buffs)
+		if(STAT(BUFFS, player))
 		{
-			int buffid = buff_FirstFromFlags(player.buffs).m_id;
+			int buffid = buff_FirstFromFlags(STAT(BUFFS, player)).m_id;
 			if(buff_lost == 2)
 			{
 				Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
@@ -833,17 +836,17 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			}
 			else
 				Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
-			player.buffs = 0;
+			STAT(BUFFS, player) = 0;
 			PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
 		}
 	}
 
-	if(player.buffs & BUFF_MAGNET.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_MAGNET.m_itemid)
 	{
 		vector pickup_size;
 		IL_EACH(g_items, it.itemdef,
 		{
-			if(it.buffs)
+			if(STAT(BUFFS, it))
 				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;
 			else
 				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
@@ -856,7 +859,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		});
 	}
 
-	if(player.buffs & BUFF_AMMO.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -866,31 +869,31 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 	}
 
-	if((player.buffs & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
+	if((STAT(BUFFS, player) & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
 		player.alpha = ((autocvar_g_buffs_invisible_alpha) ? autocvar_g_buffs_invisible_alpha : -1); // powerups reset alpha, so we must enforce this (TODO)
 
-	if(player.buffs & BUFF_MEDIC.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_MEDIC.m_itemid)
 	if(time >= player.buff_medic_healtime)
 	{
 		buff_Medic_Heal(player);
 		player.buff_medic_healtime = time + autocvar_g_buffs_medic_heal_delay;
 	}
 
-#define BUFF_ONADD(b) if ( (player.buffs & (b).m_itemid) && !(player.oldbuffs & (b).m_itemid))
-#define BUFF_ONREM(b) if (!(player.buffs & (b).m_itemid) &&  (player.oldbuffs & (b).m_itemid))
+#define BUFF_ONADD(b) if ( (STAT(BUFFS, player) & (b).m_itemid) && !(player.oldbuffs & (b).m_itemid))
+#define BUFF_ONREM(b) if (!(STAT(BUFFS, player) & (b).m_itemid) &&  (player.oldbuffs & (b).m_itemid))
 
-	if(player.buffs != player.oldbuffs)
+	if(STAT(BUFFS, player) != player.oldbuffs)
 	{
-		entity buff = buff_FirstFromFlags(player.buffs);
+		entity buff = buff_FirstFromFlags(STAT(BUFFS, player));
 		float bufftime = buff != BUFF_Null ? buff.m_time(buff) : 0;
-		player.buff_time = (bufftime) ? time + bufftime : 0;
+		STAT(BUFF_TIME, player) = (bufftime) ? time + bufftime : 0;
 
 		BUFF_ONADD(BUFF_AMMO)
 		{
 			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_WEAPON_AMMO);
 			player.items |= IT_UNLIMITED_WEAPON_AMMO;
 
-			if(player.buffs & BUFF_AMMO.m_itemid)
+			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{
 				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 				{
@@ -910,7 +913,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			else
 				player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
 
-			if(player.buffs & BUFF_AMMO.m_itemid)
+			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{
 				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 				{
@@ -923,7 +926,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONADD(BUFF_INVISIBLE)
 		{
-			if(time < player.strength_finished && g_instagib)
+			if(time < player.strength_finished && MUTATOR_IS_ENABLED(mutator_instagib))
 				player.buff_invisible_prev_alpha = default_player_alpha; // we don't want to save the powerup's alpha, as player may lose the powerup while holding the buff
 			else
 				player.buff_invisible_prev_alpha = player.alpha;
@@ -932,7 +935,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONREM(BUFF_INVISIBLE)
 		{
-			if(time < player.strength_finished && g_instagib)
+			if(time < player.strength_finished && MUTATOR_IS_ENABLED(mutator_instagib))
 				player.alpha = autocvar_g_instagib_invis_alpha;
 			else
 				player.alpha = player.buff_invisible_prev_alpha;
@@ -948,8 +951,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		BUFF_ONREM(BUFF_FLIGHT)
 			player.gravity = ((player.trigger_gravity_check) ? player.trigger_gravity_check.enemy.gravity : player.buff_flight_oldgravity);
 
-		player.oldbuffs = player.buffs;
-		if(player.buffs)
+		player.oldbuffs = STAT(BUFFS, player);
+		if(STAT(BUFFS, player))
 		{
 			if(!player.buff_model)
 				buffs_BuffModel_Spawn(player);
@@ -988,22 +991,22 @@ MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
 	entity spectatee = M_ARGV(0, entity);
 	entity client = M_ARGV(1, entity);
 
-	client.buffs = spectatee.buffs;
-	client.buff_time = spectatee.buff_time;
+	STAT(BUFFS, client) = STAT(BUFFS, spectatee);
+	STAT(BUFF_TIME, client) = STAT(BUFF_TIME, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.buffs & BUFF_MEDIC.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_MEDIC.m_itemid)
 	{
 		M_ARGV(2, float) = autocvar_g_buffs_medic_rot; // rot_mod
 		M_ARGV(4, float) = M_ARGV(1, float) = autocvar_g_buffs_medic_max; // limit_mod = max_mod
 		M_ARGV(2, float) = autocvar_g_buffs_medic_regen; // regen_mod
 	}
 
-	if(player.buffs & BUFF_SPEED.m_itemid)
+	if(STAT(BUFFS, player) & BUFF_SPEED.m_itemid)
 		M_ARGV(2, float) = autocvar_g_buffs_speed_regen; // regen_mod
 }
 

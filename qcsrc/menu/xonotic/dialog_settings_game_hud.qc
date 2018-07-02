@@ -88,6 +88,10 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.25, 1, "g_waypointsprite_crosshairfadealpha", _("Fade when near the crosshair")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "g_waypointsprite_text", _("Display names instead of icons")));
+			setDependent(e, "cl_hidewaypoints", 0, 0);
 
 	#if 0
 	me.TR(me);

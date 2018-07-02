@@ -57,9 +57,6 @@ bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
-#define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
-	// range: 10 .. respawntime + respawntimejitter
-
 .float max_armorvalue;
 .float pickup_anyway;
 
@@ -127,10 +124,15 @@ void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_
 
 void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime);
 
-#define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = e.weapons
+spawnfunc(target_items);
+
+#define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = STAT(WEAPONS, e)
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
-#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(e.weapons & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
+#define PREGIVE_RESOURCE(e,f) float save_##f = GetResourceAmount((e), (f))
+#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(STAT(WEAPONS, e) & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
 #define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
+#define POSTGIVE_RESOURCE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, GetResourceAmount((e), (f)), t, snd_incr, snd_decr)
+#define POSTGIVE_RESOURCE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e),save_##f,GetResourceAmount((e),(f)),rotfield,rottime,regenfield,regentime);GiveSound((e),save_##f,GetResourceAmount((e),(f)),t,snd_incr,snd_decr)
 #define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 

@@ -1,10 +1,11 @@
 #pragma once
 
 #include <server/defs.qh>
+#include <server/g_world.qh>
 
 #include <common/t_items.qh>
 
-#include "mutators/events.qh"
+#include <server/mutators/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
@@ -29,7 +30,6 @@ float cvar_normal(string n)
 #define cvar_set_normal builtin_cvar_set
 
 .vector dropped_origin;
-.float nottargeted;
 
 entity eliminatedPlayers;
 void EliminatedPlayers_Init(float(entity) isEliminated_func);
@@ -68,6 +68,9 @@ void detach_sameorigin(entity e);
 void follow_sameorigin(entity e, entity to);
 
 string formatmessage(entity this, string msg);
+
+/** print(), but only print if the server is not local */
+void dedicated_print(string input);
 
 void GameLogEcho(string s);
 
@@ -169,8 +172,7 @@ float g_pickup_fuel_max;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
 WepSet g_weaponarena_weapons;
-float g_weaponarena_random;
-float g_weaponarena_random_with_blaster;
+float g_weaponarena_random; // TODO
 string g_weaponarena_list;
 float g_weaponspeedfactor;
 float g_weaponratefactor;
@@ -217,13 +219,10 @@ void readplayerstartcvars();
 float sv_autotaunt;
 float sv_taunt;
 
-string GetGametype(); // g_world.qc
 void readlevelcvars()
 {
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
-
-	g_instagib = cvar("g_instagib");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
@@ -235,6 +234,9 @@ void readlevelcvars()
 	sv_maxidle_slots_countbots = cvar("sv_maxidle_slots_countbots");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
+	sv_ready_restart = cvar("sv_ready_restart");
+	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
+	sv_ready_restart_repeatable = cvar("sv_ready_restart_repeatable");
 
 	warmup_stage = cvar("g_warmup");
 	warmup_limit = cvar("g_warmup_limit");

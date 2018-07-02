@@ -327,7 +327,7 @@ REGISTRY(EffectInfos, BITS(9))
 #define EffectInfos_from(i) _EffectInfos_from(i, NULL)
 REGISTER_REGISTRY(EffectInfos)
 #define EFFECTINFO(name) \
-    [[accumulate]] void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { } \
+    ACCUMULATE void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { } \
     REGISTER(EffectInfos, EFFECTINFO, name, m_id, NEW(EffectInfoGroup)) { \
         effectinfo_##name(this, NULL); \
     }
@@ -335,8 +335,8 @@ REGISTER_REGISTRY(EffectInfos)
 #define MY(f) this.effectinfo_##f
 #define DEF(name) EFFECTINFO(name)
 #define SUB(name) \
-    [[accumulate]] void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { parent = EFFECTINFO_##name; parent.children[parent.children_count++] = this = NEW(EffectInfo, #name); } \
-    [[accumulate]] void effectinfo_##name(EffectInfoGroup parent, EffectInfo this)
+    ACCUMULATE void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { parent = EFFECTINFO_##name; parent.children[parent.children_count++] = this = NEW(EffectInfo, #name); } \
+    ACCUMULATE void effectinfo_##name(EffectInfoGroup parent, EffectInfo this)
 #include "effectinfo.inc"
 #undef MY
 #undef DEF

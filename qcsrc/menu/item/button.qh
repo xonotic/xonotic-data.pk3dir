@@ -9,7 +9,7 @@ CLASS(Button, Label)
 	METHOD(Button, showNotify, void(entity));
 	METHOD(Button, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(Button, keyDown, float(entity, float, float, float));
-	METHOD(Button, mousePress, float(entity, vector));
+	METHOD(Button, mousePress, bool(Button this, vector pos));
 	METHOD(Button, mouseDrag, float(entity, vector));
 	METHOD(Button, mouseRelease, float(entity, vector));
 	METHOD(Button, playClickSound, void(entity));

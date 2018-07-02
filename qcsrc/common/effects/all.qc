@@ -11,18 +11,11 @@ NET_HANDLE(net_effect, bool isNew)
 	vector vel = '0 0 0';
 	int eff_cnt = 1;
 	bool eff_trail = eff.eent_eff_trail;
-	vector v;
-	v_x = ReadCoord();
-	v_y = ReadCoord();
-	v_z = ReadCoord();
+	vector v = ReadVector();
 
 	bool use_vel = ReadByte();
 	if(use_vel)
-	{
-		vel_x = ReadCoord();
-		vel_y = ReadCoord();
-		vel_z = ReadCoord();
-	}
+		vel = ReadVector();
 
 	if(!eff_trail)
 		eff_cnt = ReadByte();
@@ -44,17 +37,13 @@ bool Net_Write_Effect(entity this, entity client, int sf)
 	(Effects_COUNT >= 255)
 	? WriteShort(channel, this.m_id)
 	: WriteByte(channel, this.m_id);
-	WriteCoord(channel, this.eent_net_location_x);
-	WriteCoord(channel, this.eent_net_location_y);
-	WriteCoord(channel, this.eent_net_location_z);
+	WriteVector(channel, this.eent_net_location);
 
 	// attempt to save a tiny bit more bandwidth by not sending velocity if it isn't set
 	if(this.eent_net_velocity)
 	{
 		WriteByte(channel, true);
-		WriteCoord(channel, this.eent_net_velocity_x);
-		WriteCoord(channel, this.eent_net_velocity_y);
-		WriteCoord(channel, this.eent_net_velocity_z);
+		WriteVector(channel, this.eent_net_velocity);
 	}
 	else { WriteByte(channel, false); }
 
@@ -86,7 +75,7 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 		Send_Effect(it, eff_loc, eff_vel, eff_cnt);
 		return;
 	});
-	// revert to engine handling
+	// revert to engine handling TODO: send the effect name and draw it on the client side? not as light on networking, but resolves the use of server side effects
 	__pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }
 #endif

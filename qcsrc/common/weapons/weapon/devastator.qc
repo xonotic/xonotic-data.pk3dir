@@ -38,6 +38,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 		NULL,
 		WEP_CVAR(devastator, force),
 		this.projectiledeathtype,
+		this.weaponentity_fld,
 		directhitentity
 	);
 
@@ -112,6 +113,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 						head,
 						(WEP_CVAR(devastator, remote_jump_force) ? WEP_CVAR(devastator, remote_jump_force) : 0),
 						this.projectiledeathtype | HITTYPE_BOUNCE,
+						this.weaponentity_fld,
 						NULL
 					);
 					break;
@@ -131,6 +133,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 		NULL,
 		WEP_CVAR(devastator, remote_force),
 		this.projectiledeathtype | HITTYPE_BOUNCE,
+		this.weaponentity_fld,
 		NULL
 	);
 
@@ -232,11 +235,19 @@ void W_Devastator_Think(entity this)
 			else
 				f = 1;
 
+			vector md = this.realowner.(weaponentity).movedir;
+			vector vecs = ((md.x > 0) ? md : '0 0 0');
+
+			vector dv = v_right * -vecs.y + v_up * vecs.z;
+
+			if(!W_DualWielding(this.realowner))
+				dv = '0 0 0'; // don't override!
+
 			velspeed = vlen(this.velocity);
 
 			makevectors(this.realowner.v_angle);
 			desireddir = WarpZone_RefSys_TransformVelocity(this.realowner, this, v_forward);
-			desiredorigin = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs);
+			desiredorigin = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs + dv);
 			olddir = normalize(this.velocity);
 
 			// now it gets tricky... we want to move like some curve to approximate the target direction
@@ -276,26 +287,26 @@ void W_Devastator_Touch(entity this, entity toucher)
 	W_Devastator_Explode(this, toucher);
 }
 
-void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode_think);
 }
 
-void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
+void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), WEP_DEVASTATOR.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
@@ -313,7 +324,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR(devastator, damageforcescale);
-	missile.health = WEP_CVAR(devastator, health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(devastator, health));
 	missile.event_damage = W_Devastator_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -331,6 +342,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
+	missile.rl_detonate_later = (fire & 2); // allow instant detonation
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
@@ -347,6 +359,11 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+
+	if (time >= missile.nextthink)
+	{
+		getthink(missile)(missile);
+	}
 }
 
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
@@ -420,7 +437,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
         // but don't fire a new shot at the same time!
         if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-        if((skill > 6.5) && (selfdamage > actor.health))
+        if((skill > 6.5) && (selfdamage > GetResourceAmount(actor, RESOURCE_HEALTH)))
             PHYS_INPUT_BUTTON_ATCK2(actor) = false;
         //if(PHYS_INPUT_BUTTON_ATCK2(actor) == true)
         //	dprint(ftos(desirabledamage),"\n");
@@ -438,7 +455,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
             if(actor.(weaponentity).rl_release || WEP_CVAR(devastator, guidestop))
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(devastator, refire)))
             {
-                W_Devastator_Attack(thiswep, actor, weaponentity);
+                W_Devastator_Attack(thiswep, actor, weaponentity, fire);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
                 actor.(weaponentity).rl_release = 0;
             }

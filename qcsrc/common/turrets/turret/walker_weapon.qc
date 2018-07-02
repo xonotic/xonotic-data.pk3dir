@@ -9,7 +9,7 @@ METHOD(WalkerTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WalkerTurretAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WalkerTurretAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_WALK_GUN.m_id);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;

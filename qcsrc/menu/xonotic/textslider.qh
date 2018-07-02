@@ -9,7 +9,7 @@ CLASS(XonoticTextSlider, TextSlider)
 	ATTRIB(XonoticTextSlider, fontSize, float, SKINFONTSIZE_NORMAL);
 	ATTRIB(XonoticTextSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT);
 	ATTRIB(XonoticTextSlider, image, string, SKINGFX_SLIDER);
-	ATTRIB(XonoticTextSlider, tolerance, vector, SKINTOLERANCE_SLIDER);
+	ATTRIB(XonoticTextSlider, tolerance, vector, '0.2 2 0');
 	ATTRIB(XonoticTextSlider, align, float, 0.5);
 	ATTRIB(XonoticTextSlider, color, vector, SKINCOLOR_SLIDER_N);
 	ATTRIB(XonoticTextSlider, colorC, vector, SKINCOLOR_SLIDER_C);

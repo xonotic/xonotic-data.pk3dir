@@ -660,12 +660,10 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
-void HUD_Panel_EnableMenu();
 entity tab_panels[hud_panels_MAX];
 entity tab_panel;
 vector tab_panel_pos;
 float tab_backward;
-void HUD_Panel_FirstInDrawQ(float id);
 void reset_tab_panels()
 {
 	for (int i = 0; i < hud_panels_COUNT; ++i)
@@ -1029,9 +1027,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 		s = strcat(s, ftos(panel_order[i]), " ");
 	}
 	cvar_set("_hud_panelorder", s);
-	if(hud_panelorder_prev)
-		strunzone(hud_panelorder_prev);
-	hud_panelorder_prev = strzone(autocvar__hud_panelorder); // prevent HUD_Main from doing useless update, we already updated here
+	strcpy(hud_panelorder_prev, autocvar__hud_panelorder); // prevent HUD_Main from doing useless update, we already updated here
 }
 
 void HUD_Panel_Highlight(float allow_move)

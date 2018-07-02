@@ -13,7 +13,7 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mapvoting.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "race.qh"
 #include "scores.qh"
 #include "teamplay.qh"
@@ -21,6 +21,7 @@
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/deathtypes/all.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/_mod.qh"
 #include "../common/monsters/sv_monsters.qh"
@@ -30,8 +31,8 @@
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
-#include "../common/triggers/trigger/secret.qh"
-#include "../common/triggers/target/music.qh"
+#include "../common/mapobjects/trigger/secret.qh"
+#include "../common/mapobjects/target/music.qh"
 #include "../common/util.qh"
 #include "../common/items/_mod.qh"
 #include <common/weapons/_all.qh>
@@ -91,9 +92,6 @@ const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
-string GetGametype();
-void ShuffleMaplist();
-
 void SetDefaultAlpha()
 {
 	if (!MUTATOR_CALLHOOK(SetDefaultAlpha))
@@ -145,12 +143,8 @@ void cvar_changes_init()
 	string k, v, d;
 	float n, i, adding, pureadding;
 
-	if(cvar_changes)
-		strunzone(cvar_changes);
-	cvar_changes = string_null;
-	if(cvar_purechanges)
-		strunzone(cvar_purechanges);
-	cvar_purechanges = string_null;
+	strfree(cvar_changes);
+	strfree(cvar_purechanges);
 	cvar_purechanges_count = 0;
 
 	h = buf_create();
@@ -253,6 +247,7 @@ void cvar_changes_init()
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
 		BADCVAR("sv_muteban_list");
+		BADCVAR("sv_voteban_list");
 		BADCVAR("sv_allow_customplayermodels_idlist");
 		BADCVAR("sv_allow_customplayermodels_speciallist");
 
@@ -361,10 +356,12 @@ void cvar_changes_init()
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
 		BADCVAR("sv_weapons_modeloverride");
+		BADCVAR("w_prop_interval");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
+		BADPREFIX("g_hats_");
 		BADPREFIX("g_maplist_");
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
@@ -508,38 +505,6 @@ void cvar_changes_init()
 	cvar_purechanges = strzone(cvar_purechanges);
 }
 
-void detect_maptype()
-{
-#if 0
-	vector o, v;
-	float i;
-
-	for (;;)
-	{
-		o = world.mins;
-		o.x += random() * (world.maxs.x - world.mins.x);
-		o.y += random() * (world.maxs.y - world.mins.y);
-		o.z += random() * (world.maxs.z - world.mins.z);
-
-		tracebox(o, STAT(PL_MIN), STAT(PL_MAX), o - '0 0 32768', MOVE_WORLDONLY, NULL);
-		if(trace_fraction == 1)
-			continue;
-
-		v = trace_endpos;
-
-		for(i = 0; i < 64; i += 4)
-		{
-			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, NULL);
-	if(trace_fraction == 1)
-		continue;
-			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos));
-		}
-
-		break;
-	}
-#endif
-}
-
 entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
@@ -613,12 +578,7 @@ STATIC_INIT_EARLY(maxclients)
 	}
 }
 
-void Map_MarkAsRecent(string m);
 float world_already_spawned;
-void Nagger_Init();
-void ClientInit_Spawn();
-void WeaponStats_Init();
-void WeaponStats_Shutdown();
 spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
@@ -872,8 +832,6 @@ spawnfunc(worldspawn)
 
 	next_pingtime = time + 5;
 
-	detect_maptype();
-
 	// set up information replies for clients and server to use
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
@@ -990,45 +948,43 @@ float GetMaplistPosition()
 	return idx;
 }
 
-float MapHasRightSize(string map)
+bool MapHasRightSize(string map)
 {
-	float fh;
 	if(currentbots || autocvar_bot_number || player_count < autocvar_minplayers)
 	if(autocvar_g_maplist_check_waypoints)
 	{
-		LOG_TRACE("checkwp "); LOG_TRACE(map);
+		string checkwp_msg = strcat("checkwp ", map);
 		if(!fexists(strcat("maps/", map, ".waypoints")))
 		{
-			LOG_TRACE(": no waypoints");
+			LOG_TRACE(checkwp_msg, ": no waypoints");
 			return false;
 		}
-		LOG_TRACE(": has waypoints");
+		LOG_TRACE(checkwp_msg, ": has waypoints");
 	}
 
 	// open map size restriction file
-	LOG_TRACE("opensize "); LOG_TRACE(map);
-	fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
+	string opensize_msg = strcat("opensize ", map);
+	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
 	if(fh >= 0)
 	{
-		float mapmin, mapmax;
-		LOG_TRACE(": ok, ");
-		mapmin = stof(fgets(fh));
-		mapmax = stof(fgets(fh));
+		opensize_msg = strcat(opensize_msg, ": ok, ");
+		int mapmin = stoi(fgets(fh));
+		int mapmax = stoi(fgets(fh));
 		fclose(fh);
 		if(player_count < mapmin)
 		{
-			LOG_TRACE("not enough");
+			LOG_TRACE(opensize_msg, "not enough");
 			return false;
 		}
-		if(player_count > mapmax)
+		if(mapmax && player_count > mapmax)
 		{
-			LOG_TRACE("too many");
+			LOG_TRACE(opensize_msg, "too many");
 			return false;
 		}
-		LOG_TRACE("right size");
+		LOG_TRACE(opensize_msg, "right size");
 		return true;
 	}
-	LOG_TRACE(": not found");
+	LOG_TRACE(opensize_msg, ": not found");
 	return true;
 }
 
@@ -1096,7 +1052,7 @@ void Map_Goto(float reinit)
 // return codes of map selectors:
 //   -1 = temporary failure (that is, try some method that is guaranteed to succeed)
 //   -2 = permanent failure
-float() MaplistMethod_Iterate = // usual method
+float MaplistMethod_Iterate() // usual method
 {
 	float pass, i;
 
@@ -1115,7 +1071,7 @@ float() MaplistMethod_Iterate = // usual method
 	return -1;
 }
 
-float() MaplistMethod_Repeat = // fallback method
+float MaplistMethod_Repeat() // fallback method
 {
 	LOG_TRACE("Trying MaplistMethod_Repeat");
 
@@ -1124,7 +1080,7 @@ float() MaplistMethod_Repeat = // fallback method
 	return -2;
 }
 
-float() MaplistMethod_Random = // random map selection
+float MaplistMethod_Random() // random map selection
 {
 	float i, imax;
 
@@ -1142,7 +1098,7 @@ float() MaplistMethod_Random = // random map selection
 	return -1;
 }
 
-float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
+float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 // the exponent sets a bias on the map selection:
 // the higher the exponent, the less likely "shortly repeated" same maps are
 {
@@ -1201,9 +1157,7 @@ void Maplist_Init()
 		error("empty maplist, cannot select a new map");
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	if(Map_Current_Name)
-		strunzone(Map_Current_Name);
-	Map_Current_Name = strzone(argv(Map_Current)); // will be automatically freed on exit thanks to DP
+	strcpy(Map_Current_Name, argv(Map_Current)); // will be automatically freed on exit thanks to DP
 	// this may or may not be correct, but who cares, in the worst case a map
 	// isn't chosen in the first pass that should have been
 }
@@ -1513,7 +1467,7 @@ void FixIntermissionClient(entity e)
 	if(!e.autoscreenshot) // initial call
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
-		e.health = -2342;
+		SetResourceAmountExplicit(e, RESOURCE_HEALTH, -2342);
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -2069,12 +2023,12 @@ void EndFrame()
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		entity e = IS_SPEC(it) ? it.enemy : it;
 		if (e.typehitsound) {
-			it.typehit_time = time;
+			STAT(TYPEHIT_TIME, it) = time;
 		} else if (e.killsound) {
-			it.kill_time = time;
+			STAT(KILL_TIME, it) = time;
 		} else if (e.damage_dealt) {
-			it.hit_time = time;
-			it.damage_dealt_total += ceil(e.damage_dealt);
+			STAT(HIT_TIME, it) = time;
+			STAT(DAMAGE_DEALT_TOTAL, it) += ceil(e.damage_dealt);
 		}
 	});
 	// add 1 frametime because after this, engine SV_Physics
@@ -2149,7 +2103,6 @@ float RedirectionThink()
 	return true;
 }
 
-void TargetMusic_RestoreGame();
 void RestoreGame()
 {
 	// Loaded from a save game

@@ -14,7 +14,8 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
@@ -128,18 +129,14 @@ void VoteReset()
 
 	if (vote_called)
 	{
-		strunzone(vote_called_command);
-		strunzone(vote_called_display);
-		strunzone(vote_caller_name);
+		strfree(vote_called_command);
+		strfree(vote_called_display);
+		strfree(vote_caller_name);
 	}
 
 	vote_called = VOTE_NULL;
 	vote_caller = NULL;
-	vote_caller_name = string_null;
 	vote_endtime = 0;
-
-	vote_called_command = string_null;
-	vote_called_display = string_null;
 
 	vote_parsed_command = string_null;
 	vote_parsed_display = string_null;
@@ -452,7 +449,7 @@ void ReadyRestart_force()
 	}
 
 	// initiate the restart-countdown-announcer entity
-	if (autocvar_sv_ready_restart_after_countdown)
+	if (sv_ready_restart_after_countdown)
 	{
 		entity restart_timer = new_pure(restart_timer);
 		setthink(restart_timer, ReadyRestart_think);
@@ -464,8 +461,8 @@ void ReadyRestart_force()
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
-    // reset map immediately if this cvar is not set
-    if (!autocvar_sv_ready_restart_after_countdown) reset_map(true);
+
+	if (!sv_ready_restart_after_countdown) reset_map(true);
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
@@ -476,7 +473,7 @@ void ReadyRestart()
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
-	if (!autocvar_sv_ready_restart_after_countdown) Score_ClearAll();
+	if (!sv_ready_restart_after_countdown) Score_ClearAll();
 	ReadyRestart_force();
 }
 
@@ -660,6 +657,14 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 	if (!VoteCommand_checkargs(startpos, argc)) return 0;
 
+	switch (MUTATOR_CALLHOOK(VoteCommand_Parse, caller, first_command, vote_command, startpos, argc))
+	{
+		case MUT_VOTEPARSE_CONTINUE: { break; }
+		case MUT_VOTEPARSE_SUCCESS: { return 1; }
+		case MUT_VOTEPARSE_INVALID: { return -1; }
+		case MUT_VOTEPARSE_UNACCEPTABLE: { return 0; }
+	}
+
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
 		case "kick":
@@ -693,6 +698,16 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
 			vote_parsed_command = strcat("gotomap ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+
+			break;
+		}
+
+		case "nextmap": // TODO: replicate the old behaviour of being able to vote for maps from different modes on multimode servers (possibly support it in gotomap too), maybe fallback instead of aborting if map name is invalid?
+		{
+			vote_command = ValidateMap(argv(startpos + 1), caller);
+			if (!vote_command)  return -1;
+			vote_parsed_command = strcat("nextmap ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
 			break;
@@ -1128,6 +1143,12 @@ void VoteCommand_macro_help(entity caller, float argc)
 
 		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
 #undef VOTE_COMMAND
+
+		string cvarname = strcat("sv_vote_command_help_", argv(2));
+		if(cvar_type(cvarname) & CVAR_TYPEFLAG_EXISTS)
+			wordwrap_sprint(caller, cvar_string(cvarname), 1000);
+		else
+			print_to(caller, "No documentation exists for this vote");
 	}
 }
 

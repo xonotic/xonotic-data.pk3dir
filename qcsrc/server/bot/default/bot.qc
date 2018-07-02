@@ -21,7 +21,7 @@
 #include "../../race.qh"
 #include <common/t_items.qh>
 
-#include "../../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 #include "../../weapons/accuracy.qh"
 
@@ -73,12 +73,6 @@ void bot_think(entity this)
 		this.flags |= FL_GODMODE;
 
 	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
-
-	//if (this.bot_painintensity > 0)
-	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
-
-	//this.bot_painintensity = this.bot_painintensity + this.bot_oldhealth - this.health;
-	//this.bot_painintensity = bound(0, this.bot_painintensity, 100);
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
@@ -255,16 +249,23 @@ void bot_setnameandstuff(entity this)
 		name = bot_name;
 
 	// number bots with identical names
-	int j = 0;
-	FOREACH_CLIENT(IS_BOT_CLIENT(it), {
-		if(it.cleanname == name)
-			++j;
-	});
-	if (j)
-		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
-	else
+	if (name == "")
+	{
+		name = ftos(etof(this));
 		this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
-
+	}
+	else
+	{
+		int j = 0;
+		FOREACH_CLIENT(IS_BOT_CLIENT(it), {
+			if(it.cleanname == name)
+				++j;
+		});
+		if (j)
+			this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
+		else
+			this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
+	}
 	this.cleanname = strzone(name);
 
 	// pick the model and skin
@@ -396,18 +397,10 @@ void bot_clientdisconnect(entity this)
 	if (!IS_BOT_CLIENT(this))
 		return;
 	bot_clearqueue(this);
-	if(this.cleanname)
-		strunzone(this.cleanname);
-	if(this.netname_freeme)
-		strunzone(this.netname_freeme);
-	if(this.playermodel_freeme)
-		strunzone(this.playermodel_freeme);
-	if(this.playerskin_freeme)
-		strunzone(this.playerskin_freeme);
-	this.cleanname = string_null;
-	this.netname_freeme = string_null;
-	this.playermodel_freeme = string_null;
-	this.playerskin_freeme = string_null;
+	strfree(this.cleanname);
+	strfree(this.netname_freeme);
+	strfree(this.playermodel_freeme);
+	strfree(this.playerskin_freeme);
 	if(this.bot_cmd_current)
 		delete(this.bot_cmd_current);
 	if(bot_waypoint_queue_owner == this)

@@ -3,7 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
@@ -13,6 +13,8 @@
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include "../common/mutators/mutator/instagib/sv_instagib.qh"
+#include "../common/mutators/mutator/buffs/buffs.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -23,6 +25,7 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
+#include <common/gamemodes/rules.qh>
 #include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
@@ -32,7 +35,7 @@ void UpdateFrags(entity player, int f)
 	GameRules_scoring_add_team(player, SCORE, f);
 }
 
-void GiveFrags (entity attacker, entity targ, float f, int deathtype)
+void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity weaponentity)
 {
 	// TODO route through PlayerScores instead
 	if(game_stopped) return;
@@ -60,53 +63,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 	GameRules_scoring_add(targ, DEATHS, 1);
 
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-
-	if(targ != attacker) // not for suicides
-	if(g_weaponarena_random)
-	{
-		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
-		Weapon culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit) culprit = attacker.(weaponentity).m_weapon;
-		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = attacker.(weaponentity).m_weapon;
-
-		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
-		{
-			// no exchange
-		}
-		else
-		{
-			if(!GiveFrags_randomweapons)
-			{
-				GiveFrags_randomweapons = new(GiveFrags_randomweapons);
-			}
-
-			if(warmup_stage)
-				GiveFrags_randomweapons.weapons = WARMUP_START_WEAPONS;
-			else
-				GiveFrags_randomweapons.weapons = start_weapons;
-
-			// all others (including the culprit): remove
-			GiveFrags_randomweapons.weapons &= ~attacker.weapons;
-			GiveFrags_randomweapons.weapons &= ~(culprit.m_wepset);
-
-			// among the remaining ones, choose one by random
-			W_RandomWeapons(GiveFrags_randomweapons, 1);
-
-			if(GiveFrags_randomweapons.weapons)
-			{
-				attacker.weapons |= GiveFrags_randomweapons.weapons;
-				attacker.weapons &= ~(culprit.m_wepset);
-			}
-		}
-
-		// after a frag, choose another random weapon set
-		if (!(attacker.weapons & WepSet_FromWeapon(attacker.(weaponentity).m_weapon)))
-			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker, weaponentity), weaponentity);
-	}
-
 	// FIXME fix the mess this is (we have REAL points now!)
-	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f, deathtype, attacker.(weaponentity)))
 		f = M_ARGV(2, float);
 
 	attacker.totalfrags += f;
@@ -264,9 +222,7 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 	return MUTATOR_CALLHOOK(FragCenterMessage, attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target);
 }
 
-.int buffs = _STAT(BUFFS); // TODO: remove
-entity buff_FirstFromFlags(int _buffs);
-void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
+void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity)
 {
 	// Sanity check
 	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
@@ -328,7 +284,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		}
 		LogDeath("suicide", deathtype, targ, targ);
 		if(deathtype != DEATH_AUTOTEAMCHANGE.m_id) // special case: don't negate frags if auto switched
-			GiveFrags(attacker, targ, -1, deathtype);
+			GiveFrags(attacker, targ, -1, deathtype, weaponentity);
 	}
 
 	// ======
@@ -339,7 +295,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		if(SAME_TEAM(attacker, targ))
 		{
 			LogDeath("tk", deathtype, attacker, targ);
-			GiveFrags(attacker, targ, -1, deathtype);
+			GiveFrags(attacker, targ, -1, deathtype, weaponentity);
 
 			CS(attacker).killcount = 0;
 
@@ -353,7 +309,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		else
 		{
 			LogDeath("frag", deathtype, attacker, targ);
-			GiveFrags(attacker, targ, 1, deathtype);
+			GiveFrags(attacker, targ, 1, deathtype, weaponentity);
 
 			CS(attacker).taunt_soundtime = time + 1;
 			CS(attacker).killcount = CS(attacker).killcount + 1;
@@ -445,7 +401,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			int f3 = 0;
 			if(deathtype == DEATH_BUFF.m_id)
-				f3 = buff_FirstFromFlags(attacker.buffs).m_id;
+				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
@@ -494,7 +450,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		}
 
 		LogDeath("accident", deathtype, targ, targ);
-		GiveFrags(targ, targ, -1, deathtype);
+		GiveFrags(targ, targ, -1, deathtype, weaponentity);
 
 		if(GameRules_scoring_add(targ, SCORE, 0) == -5)
 		{
@@ -521,9 +477,9 @@ void Ice_Think(entity this)
 	this.nextthink = time;
 }
 
-void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
+void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 {
-	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
+	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // TODO: only specified entities can be freezed
 		return;
 
 	if(STAT(FROZEN, targ))
@@ -532,12 +488,13 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
 	STAT(FROZEN, targ) = frozen_type;
-	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
+	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == 3) ? 1 : 0);
 	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
-	targ.revive_speed = freeze_time;
+	targ.revive_speed = revivespeed;
 	if(targ.bot_attack)
 		IL_REMOVE(g_bot_targets, targ);
 	targ.bot_attack = false;
+	targ.freeze_time = time;
 
 	entity ice = new(ice);
 	ice.owner = targ;
@@ -567,11 +524,11 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	});
 
 	// add waypoint
-	if(show_waypoint)
+	if(MUTATOR_CALLHOOK(Freeze, targ, revivespeed, frozen_type) || show_waypoint)
 		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
-void Unfreeze (entity targ)
+void Unfreeze(entity targ)
 {
 	if(!STAT(FROZEN, targ))
 		return;
@@ -583,7 +540,7 @@ void Unfreeze (entity targ)
 	}
 
 	STAT(FROZEN, targ) = 0;
-	targ.revive_progress = 0;
+	STAT(REVIVE_PROGRESS, targ) = 0;
 	targ.revival_time = time;
 	if(!targ.bot_attack)
 		IL_PUSH(g_bot_targets, targ);
@@ -605,9 +562,11 @@ void Unfreeze (entity targ)
 	if(targ.iceblock)
 		delete(targ.iceblock);
 	targ.iceblock = NULL;
+
+	MUTATOR_CALLHOOK(Unfreeze, targ);
 }
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	float complainteamdamage = 0;
 	float mirrordamage = 0;
@@ -636,9 +595,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
-		SetResourceAmount(targ, RESOURCE_ARMOR, 0);
+		SetResourceAmountExplicit(targ, RESOURCE_ARMOR, 0);
 		targ.spawnshieldtime = 0;
-		SetResourceAmount(targ, RESOURCE_HEALTH, 0.9); // this is < 1
+		SetResourceAmountExplicit(targ, RESOURCE_HEALTH, 0.9); // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
@@ -679,7 +638,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
+								vector v  = healtharmor_applydamage(GetResourceAmount(attacker, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
 								attacker.dmg_take += v.x;
 								attacker.dmg_save += v.y;
 								attacker.dmg_inflictor = inflictor;
@@ -689,7 +648,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+								vector v = healtharmor_applydamage(GetResourceAmount(targ, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 								targ.dmg_take += v.x;
 								targ.dmg_save += v.y;
 								targ.dmg_inflictor = inflictor;
@@ -715,7 +674,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		MUTATOR_CALLHOOK(Damage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
+		MUTATOR_CALLHOOK(Damage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force, attacker.(weaponentity));
 		damage = M_ARGV(4, float);
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);
@@ -724,9 +683,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		{
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		    {
-		    	.entity weaponentity = weaponentities[slot];
-		    	if(targ.(weaponentity).hook && targ.(weaponentity).hook.aiment == attacker)
-		    		RemoveHook(targ.(weaponentity).hook);
+		    	.entity went = weaponentities[slot];
+		    	if(targ.(went).hook && targ.(went).hook.aiment == attacker)
+		    		RemoveHook(targ.(went).hook);
 		    }
 		}
 
@@ -781,7 +740,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			}
 		}
 
-		if(!g_instagib)
+		if(!MUTATOR_IS_ENABLED(mutator_instagib))
 		{
 			// apply strength multiplier
 			if (attacker.items & ITEM_Strength.m_itemid)
@@ -800,7 +759,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 			// apply invincibility multiplier
 			if (targ.items & ITEM_Shield.m_itemid)
+			{
 				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
+				if (targ != attacker)
+				{
+					force = force * autocvar_g_balance_powerup_invincible_takeforce;
+				}
+			}
 		}
 
 		if (targ == attacker)
@@ -890,7 +855,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	// apply damage
 	if (damage != 0 || (targ.damageforcescale && force))
 	if (targ.event_damage)
-		targ.event_damage (targ, inflictor, attacker, damage, deathtype, hitloc, force);
+		targ.event_damage (targ, inflictor, attacker, damage, deathtype, weaponentity, hitloc, force);
 
 	// apply mirror damage if any
 	if(!autocvar_g_mirrordamage_onlyweapons || DEATH_WEAPONOF(deathtype) != WEP_Null)
@@ -899,11 +864,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		attacker = attacker_save;
 
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
-		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE.m_id, attacker.origin, force);
+		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE.m_id, weaponentity, attacker.origin, force);
 	}
 }
 
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, int deathtype, entity directhitentity)
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
+								float inflictorselfdamage, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
@@ -1074,9 +1040,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						}
 
 						if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
-							Damage (targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
+							Damage (targ, inflictor, attacker, finaldmg, deathtype, weaponentity, nearest, force);
 						else
-							Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
+							Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, weaponentity, nearest, force);
 					}
 				}
 			}
@@ -1092,9 +1058,23 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	return total_damage_to_creatures;
 }
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, entity directhitentity)
+float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, directhitentity);
+	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
+}
+
+bool Heal(entity targ, entity inflictor, float amount, float limit)
+{
+	if(game_stopped || (IS_CLIENT(targ) && CS(targ).killcount == FRAGS_SPECTATOR) || STAT(FROZEN, targ) || IS_DEAD(targ))
+		return false;
+
+	bool healed = false;
+	if(targ.event_heal)
+		healed = targ.event_heal(targ, inflictor, amount, limit);
+	// TODO: additional handling? what if the healing kills them? should this abort if healing would do so etc
+	// TODO: healing fx!
+	// TODO: armor healing?
+	return healed;
 }
 
 float Fire_IsBurning(entity e)
@@ -1247,7 +1227,7 @@ void Fire_ApplyDamage(entity e)
 
 	hi = e.fire_owner.damage_dealt;
 	ty = e.fire_owner.typehitsound;
-	Damage(e, e, e.fire_owner, d, e.fire_deathtype, e.origin, '0 0 0');
+	Damage(e, e, e.fire_owner, d, e.fire_deathtype, DMG_NOWEP, e.origin, '0 0 0');
 	if(e.fire_hitsound && e.fire_owner)
 	{
 		e.fire_owner.damage_dealt = hi;

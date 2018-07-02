@@ -70,9 +70,7 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 
 	if(sf & 2)
 	{
-		axh.origin_x = ReadCoord();
-		axh.origin_y = ReadCoord();
-		axh.origin_z = ReadCoord();
+		axh.origin = ReadVector();
 	}
 
 	if(sf & 4)

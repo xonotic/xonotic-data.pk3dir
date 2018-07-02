@@ -2,6 +2,7 @@
 
 #include <client/autocvars.qh>
 #include <client/defs.qh>
+#include <client/main.qh>
 #include <client/miscfunctions.qh>
 #include "quickmenu.qh"
 #include <common/ent_cs.qh>
@@ -69,10 +70,6 @@ bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 bool autocvar_hud_panel_scoreboard_spectators_aligned = false;
 float autocvar_hud_panel_scoreboard_minwidth = 0.4;
-
-
-void drawstringright(vector, string, vector, vector, float, float);
-void drawstringcenter(vector, string, vector, vector, float, float);
 
 // wrapper to put all possible scores titles through gettext
 string TranslateScoresLabel(string l)
@@ -150,7 +147,6 @@ void Scoreboard_InitScores()
 	Cmd_Scoreboard_SetFields(0);
 }
 
-float SetTeam(entity pl, float Team);
 //float lastpnum;
 void Scoreboard_UpdatePlayerTeams()
 {
@@ -297,61 +293,68 @@ void Scoreboard_UpdateTeamPos(entity Team)
 void Cmd_Scoreboard_Help()
 {
 	LOG_INFO(_("You can modify the scoreboard using the ^2scoreboard_columns_set command."));
-	LOG_INFO(_("^3|---------------------------------------------------------------|"));
 	LOG_INFO(_("Usage:"));
-	LOG_INFO(_("^2scoreboard_columns_set default"));
-	LOG_INFO(_("^2scoreboard_columns_set ^7field1 field2 ..."));
-	LOG_INFO(_("The following field names are recognized (case insensitive):"));
+	LOG_INFO("^2scoreboard_columns_set ^3default");
+	LOG_INFO(_("^2scoreboard_columns_set ^3field1 field2 ..."));
+	LOG_INFO(_("^2scoreboard_columns_set ^7without arguments reads the arguments from the cvar scoreboard_columns"));
+	LOG_INFO(_("  ^5Note: ^7scoreboard_columns_set without arguments is executed on every map start"));
+	LOG_INFO(_("^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands it into the cvar scoreboard_columns so you can edit it"));
 	LOG_INFO(_("You can use a ^3|^7 to start the right-aligned fields."));
+	LOG_INFO(_("The following field names are recognized (case insensitive):"));
 	LOG_INFO("");
 
-	LOG_INFO(_("^3name^7 or ^3nick^7             Name of a player"));
-	LOG_INFO(_("^3ping^7                     Ping time"));
-	LOG_INFO(_("^3pl^7                       Packet loss"));
-	LOG_INFO(_("^3elo^7                      Player ELO"));
-	LOG_INFO(_("^3kills^7                    Number of kills"));
-	LOG_INFO(_("^3deaths^7                   Number of deaths"));
-	LOG_INFO(_("^3suicides^7                 Number of suicides"));
-	LOG_INFO(_("^3frags^7                    kills - suicides"));
-	LOG_INFO(_("^3teamkills^7                Number of teamkills"));
-	LOG_INFO(_("^3kd^7                       The kill-death ratio"));
-	LOG_INFO(_("^3dmg^7                      The total damage done"));
-	LOG_INFO(_("^3dmgtaken^7                 The total damage taken"));
-	LOG_INFO(_("^3sum^7                      frags - deaths"));
-	LOG_INFO(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured"));
-	LOG_INFO(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"));
-	LOG_INFO(_("^3captime^7                  Time of fastest cap (CTF)"));
-	LOG_INFO(_("^3fckills^7                  Number of flag carrier kills"));
-	LOG_INFO(_("^3returns^7                  Number of flag returns"));
-	LOG_INFO(_("^3drops^7                    Number of flag drops"));
-	LOG_INFO(_("^3lives^7                    Number of lives (LMS)"));
-	LOG_INFO(_("^3rank^7                     Player rank"));
-	LOG_INFO(_("^3pushes^7                   Number of players pushed into void"));
-	LOG_INFO(_("^3destroyed^7                Number of keys destroyed by pushing them into void"));
-	LOG_INFO(_("^3kckills^7                  Number of keys carrier kills"));
-	LOG_INFO(_("^3losses^7                   Number of times a key was lost"));
-	LOG_INFO(_("^3laps^7                     Number of laps finished (race/cts)"));
-	LOG_INFO(_("^3time^7                     Total time raced (race/cts)"));
-	LOG_INFO(_("^3fastest^7                  Time of fastest lap (race/cts)"));
-	LOG_INFO(_("^3ticks^7                    Number of ticks (DOM)"));
-	LOG_INFO(_("^3takes^7                    Number of domination points taken (DOM)"));
-	LOG_INFO(_("^3bckills^7                  Number of ball carrier kills"));
-	LOG_INFO(_("^3bctime^7                   Total amount of time holding the ball in Keepaway"));
-	LOG_INFO(_("^3score^7                    Total score"));
+	LOG_INFO(strcat("^3name^7                     ", _("Name of a player")));
+	LOG_INFO(strcat("^3nick^7                     ", _("Name of a player")));
+	LOG_INFO(strcat("^3ping^7                     ", _("Ping time")));
+	LOG_INFO(strcat("^3pl^7                       ", _("Packet loss")));
+	LOG_INFO(strcat("^3elo^7                      ", _("Player ELO")));
+	LOG_INFO(strcat("^3fps^7                      ", _("Player FPS")));
+	LOG_INFO(strcat("^3kills^7                    ", _("Number of kills")));
+	LOG_INFO(strcat("^3deaths^7                   ", _("Number of deaths")));
+	LOG_INFO(strcat("^3suicides^7                 ", _("Number of suicides")));
+	LOG_INFO(strcat("^3frags^7                    ", _("kills - suicides")));
+	LOG_INFO(strcat("^3teamkills^7                ", _("Number of teamkills")));
+	LOG_INFO(strcat("^3kd^7                       ", _("The kill-death ratio")));
+	LOG_INFO(strcat("^3dmg^7                      ", _("The total damage done")));
+	LOG_INFO(strcat("^3dmgtaken^7                 ", _("The total damage taken")));
+	LOG_INFO(strcat("^3sum^7                      ", _("kills - deaths")));
+	LOG_INFO(strcat("^3caps^7                     ", _("How often a flag (CTF) or a key (KeyHunt) was captured")));
+	LOG_INFO(strcat("^3pickups^7                  ", _("How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up")));
+	LOG_INFO(strcat("^3captime^7                  ", _("Time of fastest cap (CTF)")));
+	LOG_INFO(strcat("^3fckills^7                  ", _("Number of flag carrier kills")));
+	LOG_INFO(strcat("^3returns^7                  ", _("Number of flag returns")));
+	LOG_INFO(strcat("^3drops^7                    ", _("Number of flag drops")));
+	LOG_INFO(strcat("^3lives^7                    ", _("Number of lives (LMS)")));
+	LOG_INFO(strcat("^3rank^7                     ", _("Player rank")));
+	LOG_INFO(strcat("^3pushes^7                   ", _("Number of players pushed into void")));
+	LOG_INFO(strcat("^3destroyed^7                ", _("Number of keys destroyed by pushing them into void")));
+	LOG_INFO(strcat("^3kckills^7                  ", _("Number of keys carrier kills")));
+	LOG_INFO(strcat("^3losses^7                   ", _("Number of times a key was lost")));
+	LOG_INFO(strcat("^3laps^7                     ", _("Number of laps finished (race/cts)")));
+	LOG_INFO(strcat("^3time^7                     ", _("Total time raced (race/cts)")));
+	LOG_INFO(strcat("^3fastest^7                  ", _("Time of fastest lap (race/cts)")));
+	LOG_INFO(strcat("^3ticks^7                    ", _("Number of ticks (DOM)")));
+	LOG_INFO(strcat("^3takes^7                    ", _("Number of domination points taken (DOM)")));
+	LOG_INFO(strcat("^3bckills^7                  ", _("Number of ball carrier kills")));
+	LOG_INFO(strcat("^3bctime^7                   ", _("Total amount of time holding the ball in Keepaway")));
+	LOG_INFO(strcat("^3score^7                    ", _("Total score")));
 	LOG_INFO("");
 
 	LOG_INFO(_("Before a field you can put a + or - sign, then a comma separated list\n"
 	        "of game types, then a slash, to make the field show up only in these\n"
 	        "or in all but these game types. You can also specify 'all' as a\n"
-	        "field to show all fields available for the current game mode.\n\n"));
+	        "field to show all fields available for the current game mode."));
+	LOG_INFO("");
 
 	LOG_INFO(_("The special game type names 'teams' and 'noteams' can be used to\n"
-	        "include/exclude ALL teams/noteams game modes.\n\n"));
+	        "include/exclude ALL teams/noteams game modes."));
+	LOG_INFO("");
 
 	LOG_INFO(_("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"));
-	LOG_INFO(_("will display name, ping and pl aligned to the left, and the fields"
-	        "right of the vertical bar aligned to the right.\n"));
-	LOG_INFO(_("'field3' will only be shown in CTF, and 'field4' will be shown in all\nother gamemodes except DM.\n"));
+	LOG_INFO(_("will display name, ping and pl aligned to the left, and the fields\n"
+	        "right of the vertical bar aligned to the right."));
+	LOG_INFO(_("'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
+			"other gamemodes except DM."));
 }
 
 // NOTE: adding a gametype with ? to not warn for an optional field
@@ -359,7 +362,7 @@ void Cmd_Scoreboard_Help()
 // otherwise the previous exclusive rule warns anyway
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
-"ping pl name |" \
+"ping pl fps name |" \
 " -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
 " -teams,lms/deaths +ft,tdm/deaths" \
 " +tdm/sum" \
@@ -401,12 +404,15 @@ void Cmd_Scoreboard_SetFields(int argc)
 
 	if(argc == 3)
 	{
-		if(argv(2) == "default")
+		if(argv(2) == "default" || argv(2) == "expand_default")
+		{
+			if(argv(2) == "expand_default")
+				cvar_set("scoreboard_columns", SCOREBOARD_DEFAULT_COLUMNS);
 			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
+		}
 		else if(argv(2) == "all")
 		{
-			string s;
-			s = "ping pl name |";
+			string s = "ping pl name |"; // scores without a label
 			FOREACH(Scores, true, {
 				if(it != ps_primary)
 				if(it != ps_secondary)
@@ -427,10 +433,8 @@ void Cmd_Scoreboard_SetFields(int argc)
 
 	for(i = 1; i < argc - 1; ++i)
 	{
-		float nocomplain;
 		str = argv(i+1);
-
-		nocomplain = false;
+		bool nocomplain = false;
 		if(substring(str, 0, 1) == "?")
 		{
 			nocomplain = true;
@@ -447,8 +451,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 				continue;
 		}
 
-		strunzone(sbt_field_title[sbt_num_fields]);
-		sbt_field_title[sbt_num_fields] = strzone(TranslateScoresLabel(str));
+		strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(str));
 		sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 		str = strtolower(str);
 
@@ -464,6 +467,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 			case "elo": sbt_field[sbt_num_fields] = SP_ELO; break;
 			case "dmg": case "damage": sbt_field[sbt_num_fields] = SP_DMG; break;
 			case "dmgtaken": case "damagetaken": sbt_field[sbt_num_fields] = SP_DMGTAKEN; break;
+			case "fps": sbt_field[sbt_num_fields] = SP_FPS; break;
 			default:
 			{
 				FOREACH(Scores, true, {
@@ -538,8 +542,7 @@ LABEL(found)
 		}
 		else if(!have_separator)
 		{
-			strunzone(sbt_field_title[sbt_num_fields]);
-			sbt_field_title[sbt_num_fields] = strzone("|");
+			strcpy(sbt_field_title[sbt_num_fields], "|");
 			sbt_field_size[sbt_num_fields] = stringwidth("|", false, hud_fontsize);
 			sbt_field[sbt_num_fields] = SP_SEPARATOR;
 			++sbt_num_fields;
@@ -547,8 +550,7 @@ LABEL(found)
 		}
 		if(!have_secondary)
 		{
-			strunzone(sbt_field_title[sbt_num_fields]);
-			sbt_field_title[sbt_num_fields] = strzone(TranslateScoresLabel(scores_label(ps_secondary)));
+			strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(scores_label(ps_secondary)));
 			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 			sbt_field[sbt_num_fields] = ps_secondary;
 			++sbt_num_fields;
@@ -556,8 +558,7 @@ LABEL(found)
 		}
 		if(!have_primary)
 		{
-			strunzone(sbt_field_title[sbt_num_fields]);
-			sbt_field_title[sbt_num_fields] = strzone(TranslateScoresLabel(scores_label(ps_primary)));
+			strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(scores_label(ps_primary)));
 			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 			sbt_field[sbt_num_fields] = ps_primary;
 			++sbt_num_fields;
@@ -677,6 +678,19 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 				case -2: return _("N/A");
 				default: return ftos(elo);
 			}
+		}
+
+		case SP_FPS:
+		{
+			float fps = pl.(scores(SP_FPS));
+			if(fps == 0)
+			{
+				sbt_field_rgb = '1 1 1';
+				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
+			}
+			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200);
+			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, fps, 60) / 60);
+			return ftos(fps);
 		}
 
 		case SP_DMG: case SP_DMGTAKEN:
@@ -1140,6 +1154,11 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
+		if(it.spawnflags & WEP_TYPE_OTHER)
+		{
+			++nHidden;
+			continue;
+		}
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 		{
 			if (((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)))
@@ -1219,6 +1238,8 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
+			continue;
+		if (it.spawnflags & WEP_TYPE_OTHER)
 			continue;
 
 		float weapon_alpha;
@@ -1467,9 +1488,7 @@ void Scoreboard_Draw()
 			{
 				hud_fontsize = HUD_GetFontsize("hud_fontsize");
 				Scoreboard_initFieldSizes();
-				if(hud_fontsize_str)
-					strunzone(hud_fontsize_str);
-				hud_fontsize_str = strzone(autocvar_hud_fontsize);
+				strcpy(hud_fontsize_str, autocvar_hud_fontsize);
 			}
 		}
 		else {

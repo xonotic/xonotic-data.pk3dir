@@ -99,6 +99,7 @@ void W_Shockwave_Melee_Think(entity this)
 				this.realowner,
 				swing_damage,
 				(WEP_SHOCKWAVE.m_id | HITTYPE_SECONDARY),
+				this.weaponentity_fld,
 				(this.realowner.origin + this.realowner.view_ofs),
 				(v_forward * WEP_CVAR(shockwave, melee_force))
 			);
@@ -155,7 +156,8 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shockwave_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
+	meleetemp.weaponentity_fld = weaponentity;
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range), WEP_SHOCKWAVE.m_id | HITTYPE_SECONDARY);
 }
 
 // SHOCKWAVE ATTACK MODE
@@ -255,12 +257,8 @@ float W_Shockwave_Attack_CheckHit(
 void W_Shockwave_Send(entity actor)
 {
 	WriteHeader(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
-	WriteCoord(MSG_BROADCAST, w_shotorg.x);
-	WriteCoord(MSG_BROADCAST, w_shotorg.y);
-	WriteCoord(MSG_BROADCAST, w_shotorg.z);
-	WriteCoord(MSG_BROADCAST, w_shotdir.x);
-	WriteCoord(MSG_BROADCAST, w_shotdir.y);
-	WriteCoord(MSG_BROADCAST, w_shotdir.z);
+	WriteVector(MSG_BROADCAST, w_shotorg);
+	WriteVector(MSG_BROADCAST, w_shotdir);
 	WriteShort(MSG_BROADCAST, WEP_CVAR(shockwave, blast_distance));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_max), 255));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_min), 255));
@@ -278,7 +276,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 	float i, queue = 0;
 
 	// set up the shot direction
-	W_SetupShot(actor, weaponentity, true, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
+	W_SetupShot(actor, weaponentity, true, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage), WEP_SHOCKWAVE.m_id);
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(shockwave, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, actor);
 	vector attack_hitpos = trace_endpos;
@@ -384,6 +382,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 					actor,
 					final_damage,
 					WEP_SHOCKWAVE.m_id,
+					weaponentity,
 					head.origin,
 					final_force
 				);
@@ -568,6 +567,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 			actor,
 			final_damage,
 			WEP_SHOCKWAVE.m_id,
+			weaponentity,
 			head.origin,
 			final_force
 		);
@@ -762,8 +762,8 @@ void Net_ReadShockwaveParticle()
 	shockwave.draw = Draw_Shockwave;
 	IL_PUSH(g_drawables, shockwave);
 
-	shockwave.sw_shotorg_x = ReadCoord(); shockwave.sw_shotorg_y = ReadCoord(); shockwave.sw_shotorg_z = ReadCoord();
-	shockwave.sw_shotdir_x = ReadCoord(); shockwave.sw_shotdir_y = ReadCoord(); shockwave.sw_shotdir_z = ReadCoord();
+	shockwave.sw_shotorg = ReadVector();
+	shockwave.sw_shotdir = ReadVector();
 
 	shockwave.sw_distance = ReadShort();
 	shockwave.sw_spread_max = ReadByte();

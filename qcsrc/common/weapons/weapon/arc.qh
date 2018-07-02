@@ -112,7 +112,7 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 .float beam_heat; // (beam) amount of heat produced
 .float arc_overheat; // (dropped arc/player) time during which it's too hot
 .float arc_cooldown; // (dropped arc/player) cooling speed
-.float arc_heat_percent = _STAT(ARC_HEAT);
+.float arc_heat_percent;
 .float arc_smoke_sound;
 #endif
 #ifdef CSQC

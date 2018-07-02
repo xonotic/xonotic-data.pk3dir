@@ -121,7 +121,7 @@ void pp_move(entity minigame, entity player, string pos )
 
 			if(existing)
 			{
-				if(existing.netname) { strunzone(existing.netname); }
+				strfree(existing.netname);
 				delete(existing);
 			}
 
@@ -215,7 +215,7 @@ int pp_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			return false;
@@ -471,8 +471,7 @@ void pp_make_move(entity minigame)
 
 void pp_set_curr_pos(string s)
 {
-	if ( pp_curr_pos )
-		strunzone(pp_curr_pos);
+	strfree(pp_curr_pos);
 	if ( s )
 		s = strzone(s);
 	pp_curr_pos = s;

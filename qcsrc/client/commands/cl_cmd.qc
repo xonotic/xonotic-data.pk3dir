@@ -10,11 +10,15 @@
 #include "../autocvars.qh"
 #include "../defs.qh"
 #include <client/hud/_mod.qh>
+#include <client/hud/panel/quickmenu.qh>
+#include <client/hud/panel/radar.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
 
-#include "../mutators/events.qh"
+#include <client/mutators/_mod.qh>
+
+#include <common/minigames/cl_minigames_hud.qh>
 
 #include <common/mapinfo.qh>
 
@@ -249,16 +253,6 @@ void LocalCommand_handlevote(int request, int argc)
 	}
 }
 
-bool QuickMenu_IsOpened();
-void QuickMenu_Close();
-bool QuickMenu_Open(string mode, string submenu, string file);
-
-bool HUD_MinigameMenu_IsOpened();
-void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger);
-void HUD_MinigameMenu_Open();
-
-void HUD_Radar_Show_Maximized(bool doshow, bool clickable);
-
 void LocalCommand_hud(int request, int argc)
 {
     TC(int, request); TC(int, argc);
@@ -331,7 +325,8 @@ void LocalCommand_hud(int request, int argc)
 
 				case "clickradar":
 				{
-					HUD_Radar_Show_Maximized(!hud_panel_radar_mouse, 1);
+					if(!isdemo())
+						HUD_Radar_Show_Maximized(!hud_panel_radar_mouse, 1);
 					return;
 				}
 			}
@@ -418,7 +413,7 @@ void LocalCommand_sendcvar(int request, int argc)
 			if (argv(1))
 			{
 				// W_FixWeaponOrder will trash argv, so save what we need.
-				string thiscvar = strzone(argv(1));
+				string thiscvar = string_null; strcpy(thiscvar, argv(1));
 				string s = cvar_string(thiscvar);
 
 				if (thiscvar == "cl_weaponpriority")
@@ -427,7 +422,7 @@ void LocalCommand_sendcvar(int request, int argc)
 					s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
 
 				localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
-				strunzone(thiscvar);
+				strfree(thiscvar);
 				return;
 			}
 		}

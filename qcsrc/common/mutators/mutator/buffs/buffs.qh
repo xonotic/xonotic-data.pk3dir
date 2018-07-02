@@ -4,7 +4,7 @@
 #include <common/util.qh>
 
 #ifdef GAMEQC
-REGISTER_WAYPOINT(Buff, _("Buff"), '1 0.5 0', 1);
+REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
 #endif
 
@@ -43,11 +43,10 @@ STATIC_INIT(REGISTER_BUFFS) {
 }
 
 #ifdef SVQC
-	// .int buffs = _STAT(BUFFS);
 	void buff_Init(entity ent);
 	void buff_Init_Compat(entity ent, entity replacement);
 	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
-		this.buffs = b.m_itemid; \
+		STAT(BUFFS, this) = b.m_itemid; \
 		this.team = t; \
 		buff_Init(this); \
 	}
@@ -65,6 +64,7 @@ STATIC_INIT(REGISTER_BUFFS) {
 #endif
 
 string Buff_UndeprecateName(string buffname);
+entity buff_FirstFromFlags(int _buffs);
 
 REGISTER_BUFF(Null);
 BUFF_SPAWNFUNCS(random, BUFF_Null)

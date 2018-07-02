@@ -5,7 +5,6 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
-#include "g_subs.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
@@ -15,8 +14,9 @@
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/deathtypes/all.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/playerstats.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 
@@ -25,7 +25,7 @@
 #include "../common/physics/player.qh"
 #include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/triggers/include.qh"
+#include "../common/mapobjects/_mod.qh"
 #include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"
@@ -74,6 +74,7 @@ void CopyBody(entity this, float keepvelocity)
 	clone.effects = this.effects;
 	clone.glowmod = this.glowmod;
 	clone.event_damage = this.event_damage;
+	clone.event_heal = this.event_heal;
 	clone.anim_state = this.anim_state;
 	clone.anim_time = this.anim_time;
 	clone.anim_lower_action = this.anim_lower_action;
@@ -89,8 +90,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.dphitcontentsmask = this.dphitcontentsmask;
 	clone.death_time = this.death_time;
 	clone.pain_finished = this.pain_finished;
-	clone.health = this.health;
-	clone.armorvalue = this.armorvalue;
+	SetResourceAmountExplicit(clone, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
+	SetResourceAmountExplicit(clone, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR));
 	clone.armortype = this.armortype;
 	clone.model = this.model;
 	clone.modelindex = this.modelindex;
@@ -167,16 +168,13 @@ void player_anim(entity this)
 	animdecide_setimplicitstate(this, IS_ONGROUND(this));
 }
 
-void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	float take, save;
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	// damage resistance (ignore most of the damage from a bullet or similar)
-	damage = max(damage - 5, 1);
-
-	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -195,8 +193,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	this.armorvalue = this.armorvalue - save;
-	this.health = this.health - take;
+	TakeResource(this, RESOURCE_ARMOR, save);
+	TakeResource(this, RESOURCE_HEALTH, take);
 	// pause regeneration for 5 seconds
 	this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
@@ -204,7 +202,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
-	if (this.health <= -autocvar_sv_gibhealth && this.alpha >= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
 	{
 		// don't use any animations as a gib
 		this.frame = 0;
@@ -223,7 +221,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 
 void calculate_player_respawn_time(entity this)
 {
-	if(g_ca)
+	if(MUTATOR_CALLHOOK(CalculateRespawnTime, this))
 		return;
 
 	float gametype_setting_tmp;
@@ -307,14 +305,14 @@ void calculate_player_respawn_time(entity this)
 		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
 }
 
-void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	float take, save, dh, da;
 	vector v;
 	float excess;
 
-	dh = max(this.health, 0);
-	da = max(this.armorvalue, 0);
+	dh = max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
+	da = max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
@@ -362,7 +360,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -391,8 +389,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
-	take = bound(0, M_ARGV(4, float), this.health);
-	save = bound(0, M_ARGV(5, float), this.armorvalue);
+	take = bound(0, M_ARGV(4, float), GetResourceAmount(this, RESOURCE_HEALTH));
+	save = bound(0, M_ARGV(5, float), GetResourceAmount(this, RESOURCE_ARMOR));
 	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
@@ -414,8 +412,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
-			this.armorvalue = this.armorvalue - save;
-			this.health = this.health - take;
+			TakeResource(this, RESOURCE_ARMOR, save);
+			TakeResource(this, RESOURCE_HEALTH, take);
 			// pause regeneration for 5 seconds
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
@@ -435,19 +433,19 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 								animdecide_setaction(this, ANIMACTION_PAIN2, true);
 						}
 					}
-
+					float myhp = GetResourceAmount(this, RESOURCE_HEALTH);
+					if(myhp > 1)
+					if(myhp < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
 					if(sound_allowed(MSG_BROADCAST, attacker))
-					if(this.health < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
-					if(this.health > 1)
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
 						if(deathtype == DEATH_FALL.m_id)
 							PlayerSound(this, playersound_fall, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
-						else if(this.health > 75)
+						else if(myhp > 75)
 							PlayerSound(this, playersound_pain100, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
-						else if(this.health > 50)
+						else if(myhp > 50)
 							PlayerSound(this, playersound_pain75, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
-						else if(this.health > 25)
+						else if(myhp > 25)
 							PlayerSound(this, playersound_pain50, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 						else
 							PlayerSound(this, playersound_pain25, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
@@ -457,12 +455,22 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 			// throw off bot aim temporarily
 			float shake;
-			if(IS_BOT_CLIENT(this) && this.health >= 1)
+			if(IS_BOT_CLIENT(this) && GetResourceAmount(this, RESOURCE_HEALTH) >= 1)
 			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				this.v_angle_x = this.v_angle.x + (random() * 2 - 1) * shake;
 				this.v_angle_y = this.v_angle.y + (random() * 2 - 1) * shake;
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
+			}
+
+			if (this != attacker) {
+				float realdmg = damage - excess;
+				if (IS_PLAYER(attacker)) {
+					GameRules_scoring_add(attacker, DMG, realdmg);
+				}
+				if (IS_PLAYER(this)) {
+					GameRules_scoring_add(this, DMGTAKEN, realdmg);
+				}
 			}
 		}
 		else
@@ -472,22 +480,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
-	if (this != attacker) {
-		float realdmg = damage - excess;
-		if (IS_PLAYER(attacker)) {
-			GameRules_scoring_add(attacker, DMG, realdmg);
-		}
-		if (IS_PLAYER(this)) {
-			GameRules_scoring_add(this, DMGTAKEN, realdmg);
-		}
-	}
-
 	bool abot = (IS_BOT_CLIENT(attacker));
 	bool vbot = (IS_BOT_CLIENT(this));
 
 	bool valid_damage_for_weaponstats = false;
 	Weapon awep = WEP_Null;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
@@ -501,8 +498,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(this.health, 0);
-	da = da - max(this.armorvalue, 0);
+	dh = dh - max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
+	da = da - max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
@@ -510,7 +507,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
-	if (this.health < 1)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = false;
@@ -551,7 +548,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// print an obituary message
 		if(this.classname != "body")
-			Obituary (attacker, inflictor, this, deathtype);
+			Obituary (attacker, inflictor, this, deathtype, weaponentity);
 
         // increment frag counter for used weapon type
         Weapon w = DEATH_WEAPONOF(deathtype);
@@ -567,9 +564,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity went = weaponentities[slot];
-			if(!this.(weaponentity))
+			if(!this.(went))
 				continue; // TODO: clones have no weapon, but we don't want to have to check this all the time
-			Weapon wep = this.(weaponentity).m_weapon;
+			Weapon wep = this.(went).m_weapon;
 			wep.wr_playerdeath(wep, this, went);
 		}
 
@@ -584,7 +581,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die
-		if(this.health >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
+		if(GetResourceAmount(this, RESOURCE_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
 
 		if (!this.respawn_time) // can be set in the mutator hook PlayerDies
@@ -593,7 +590,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// when we get here, player actually dies
 
 		Unfreeze(this); // remove any icy remains
-		this.health = 0; // Unfreeze resets health, so we need to set it back
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // Unfreeze resets health, so we need to set it back
 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);
@@ -630,15 +627,12 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD1, true);
 		else
 			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD2, true);
-		if (this.maxs.z > 5)
-		{
-			this.maxs_z = 5;
-			setsize(this, this.mins, this.maxs);
-		}
+
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
+		this.event_heal = func_null;
 		// call the corpse damage function just in case it wants to gib
-		this.event_damage(this, inflictor, attacker, excess, deathtype, hitloc, force);
+		this.event_damage(this, inflictor, attacker, excess, deathtype, weaponentity, hitloc, force);
 
 		// set up to fade out later
 		SUB_SetFade (this, time + 6 + random (), 1);
@@ -653,7 +647,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(autocvar_sv_gentle > 0 || autocvar_ekg || this.classname == "body") {
 			// remove corpse
 			// clones don't run any animation code any more, so we must gib them when they die :(
-			PlayerCorpseDamage(this, inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
+			this.event_damage(this, inflictor, attacker, autocvar_sv_gibhealth + 1, deathtype, weaponentity, hitloc, force);
 		}
 
 		// reset fields the weapons may use just in case
@@ -672,6 +666,15 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 }
 
+bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
+{
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, limit);
+	return true;
+}
+
 bool MoveToTeam(entity client, int team_colour, int type)
 {
 	int lockteams_backup = lockteams;  // backup any team lock
@@ -681,64 +684,10 @@ bool MoveToTeam(entity client, int team_colour, int type)
 	{
 		return false;
 	}
-	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, DMG_NOWEP, client.origin, '0 0 0');  // kill the player
 	lockteams = lockteams_backup;  // restore the team lock
 	LogTeamchange(client.playerid, client.team, type);
 	return true;
-}
-
-/** print(), but only print if the server is not local */
-void dedicated_print(string input)
-{
-	if (server_is_dedicated) print(input);
-}
-
-void PrintToChat(entity player, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	sprint(player, text);
-}
-
-void DebugPrintToChat(entity player, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChat(player, text);
-	}
-}
-
-void PrintToChatAll(string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	bprint(text);
-}
-
-void DebugPrintToChatAll(string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatAll(text);
-	}
-}
-
-void PrintToChatTeam(int teamnum, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		if (it.team == teamnum)
-		{
-			sprint(it, text);
-		}
-	});
-}
-
-void DebugPrintToChatTeam(int teamnum, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatTeam(teamnum, text);
-	}
 }
 
 /**
@@ -977,7 +926,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (privatesay && source && !IS_PLAYER(source))
 	{
 		if (!game_stopped)
-		if ((privatesay && !IS_PLAYER(privatesay)) || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+		if ((privatesay && IS_PLAYER(privatesay)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
 			ret = -1; // just hide the message completely
 	}
 

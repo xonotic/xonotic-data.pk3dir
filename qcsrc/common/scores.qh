@@ -39,6 +39,8 @@ REGISTER_SP(FRAGS);
 
 REGISTER_SP(ELO);
 
+REGISTER_SP(FPS);
+
 // TODO: move to common mutators
 
 REGISTER_SP(RACE_TIME);

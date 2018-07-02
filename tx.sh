@@ -63,13 +63,15 @@ if $sync_po; then
 				cp "$tcurfile" "$gnewfile"
 			else
 				if ! diff -u "$goldfile" "$gnewfile" | patch "$tcurfile"; then
-					while :; do
-						vim -o "$tcurfile.rej" "$tcurfile"
-						echo "OK?"
-						read -r OK || exit 1
-						[ x"$OK" != x"y" ] || break
-					done
-					rm -f "$tcurfile.rej"
+					if [ -z "$BATCH" ]; then
+						while :; do
+							vim -o "$tcurfile.rej" "$tcurfile"
+							echo "OK?"
+							read -r OK || exit 1
+							[ x"$OK" != x"y" ] || break
+						done
+						rm -f "$tcurfile.rej"
+					fi
 				fi
 				msgmerge -N -F -U "$tcurfile" common.pot
 				cp "$tcurfile" "$gnewfile"

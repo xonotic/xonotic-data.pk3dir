@@ -48,9 +48,7 @@ void HUD_Chat()
 			panel_bg = strcat(hud_skin_path, "/border_default");
 			if(precache_pic(panel_bg) == "")
 				panel_bg = "gfx/hud/default/border_default";
-			if(panel.current_panel_bg)
-				strunzone(panel.current_panel_bg);
-			panel.current_panel_bg = strzone(panel_bg);
+			strcpy(panel.current_panel_bg, panel_bg);
 			chat_panel_modified = true;
 		}
 		panel_bg_alpha = max(0.75, panel_bg_alpha);

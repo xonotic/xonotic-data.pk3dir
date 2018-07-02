@@ -29,6 +29,10 @@ ifndef ZIP
     endif
 endif
 
+# Set to empty string to temporarily enable warnings when debugging
+QCCFLAGS_WERROR ?= \
+	-Werror
+
 # We eventually need to get rid of these
 QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
@@ -48,7 +52,8 @@ QCCFLAGS ?= \
 	-std=gmqcc \
 	-Ooverlap-locals \
 	-O3 \
-	-Werror -Wall \
+	$(QCCFLAGS_WERROR) \
+	-Wall \
 	$(QCCFLAGS_WTFS) \
 	-flno -futf8 -fno-bail-on-werror \
 	-frelaxed-switch -freturn-assignments \

@@ -10,7 +10,7 @@ CLASS(Item, Object)
 	METHOD(Item, keyDown, float(Item, float, float, float));
 	METHOD(Item, keyUp, float(Item, float, float, float));
 	METHOD(Item, mouseMove, float(Item, vector));
-	METHOD(Item, mousePress, float(Item, vector));
+	METHOD(Item, mousePress, bool(Item this, vector pos));
 	METHOD(Item, mouseDrag, float(Item, vector));
 	METHOD(Item, mouseRelease, float(Item, vector));
 	METHOD(Item, focusEnter, void(Item));

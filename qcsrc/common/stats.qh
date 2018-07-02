@@ -73,7 +73,6 @@ REGISTER_STAT(GAMESTARTTIME, float, game_starttime)
 REGISTER_STAT(STRENGTH_FINISHED, float)
 REGISTER_STAT(INVINCIBLE_FINISHED, float)
 /** arc heat in [0,1] */
-REGISTER_STAT(ARC_HEAT, float)
 REGISTER_STAT(PRESSED_KEYS, int)
 /** this stat could later contain some other bits of info, like, more server-side particle config */
 REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool, autocvar_g_allow_oldvortexbeam)
@@ -82,18 +81,12 @@ REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
 REGISTER_STAT(SHOTORG, int)
 REGISTER_STAT(LEADLIMIT, float, autocvar_leadlimit)
-REGISTER_STAT(WEAPON_CLIPLOAD, int)
-REGISTER_STAT(WEAPON_CLIPSIZE, int)
 
-REGISTER_STAT(VORTEX_CHARGE, float)
 REGISTER_STAT(LAST_PICKUP, float)
 REGISTER_STAT(HUD, int)
-REGISTER_STAT(VORTEX_CHARGEPOOL, float)
 REGISTER_STAT(HIT_TIME, float)
 REGISTER_STAT(DAMAGE_DEALT_TOTAL, int)
 REGISTER_STAT(TYPEHIT_TIME, float)
-REGISTER_STAT(LAYED_MINES, int)
-REGISTER_STAT(HAGAR_LOAD, int)
 REGISTER_STAT(SUPERWEAPONS_FINISHED, float)
 REGISTER_STAT(VEHICLESTAT_HEALTH, int)
 REGISTER_STAT(VEHICLESTAT_SHIELD, int)
@@ -127,6 +120,13 @@ REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
+REGISTER_STAT(VEIL_ORB, float)
+REGISTER_STAT(VEIL_ORB_ALPHA, float)
+
+#ifdef SVQC
+float autocvar_sv_showfps = 5;
+#endif
+REGISTER_STAT(SHOWFPS, float, autocvar_sv_showfps)
 
 #ifdef SVQC
 bool autocvar_g_ctf_leaderboard;
@@ -305,6 +305,13 @@ REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 #include "physics/movetypes/movetypes.qh"
 float warmup_limit;
 #endif
+
+#ifdef SVQC
+bool autocvar_g_shootfromcenter;
+bool autocvar_g_shootfromeye;
+#endif
+REGISTER_STAT(SHOOTFROMEYE, bool, autocvar_g_shootfromeye)
+REGISTER_STAT(SHOOTFROMCENTER, bool, autocvar_g_shootfromcenter)
 
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_PENALTY, float)
