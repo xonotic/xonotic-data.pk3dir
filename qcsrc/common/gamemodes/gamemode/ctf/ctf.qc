@@ -1626,7 +1626,7 @@ void havocbot_ctf_reset_role(entity this)
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_OFFENSE);
 		return;
 	}
-	else if (CS(this).jointime < time + 1)
+	else if (time < CS(this).jointime + 1)
 	{
 		// if bots spawn all at once set good default roles
 		if (count == 1)
@@ -1659,7 +1659,7 @@ void havocbot_ctf_reset_role(entity this)
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_MIDDLE);
 
 	// if bots spawn all at once assign them a more appropriated role after a while
-	if (CS(this).jointime < time + 1 && count > 2)
+	if (time < CS(this).jointime + 1 && count > 2)
 		this.havocbot_role_timeout = time + 10 + random() * 10;
 }
 
