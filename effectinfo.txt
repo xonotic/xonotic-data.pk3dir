@@ -2751,14 +2751,24 @@ effect flac_explode
 	velocityjitter 256 256 256
 	velocityoffset 0 0 80
 effect tr_bullet
-	type spark
-	alpha 256 256 2560
-	color 0xff8960 0xff8533
-	size 4 4
-	stretchfactor 0.200000
-	tex 70 70
-	trailspacing 750
-	velocitymultiplier 3
+	type beam
+	alpha 500 600 10000
+	color 0xf03000 0xff6010
+	countabsolute 1
+	sizeincrease -3
+	size 0.6 0.8
+	tex 200 200
+effect tr_bullet
+	type smoke
+	airfriction -4
+	alpha 256 256 350
+	color 0x202020 0x404040
+	notunderwater
+	sizeincrease 0.400000
+	size 1 2
+	tex 0 8
+	trailspacing 16
+	velocityjitter 4 4 4
 effect smoking_smallemitter
 	type alphastatic
 	airfriction -1
