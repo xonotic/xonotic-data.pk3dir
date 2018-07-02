@@ -754,6 +754,8 @@ void PutPlayerInServer(entity this)
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
 
+	if (CS(this).impulse) ImpulseCommands(this);
+
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
