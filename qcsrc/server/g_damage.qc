@@ -477,9 +477,9 @@ void Ice_Think(entity this)
 	this.nextthink = time;
 }
 
-void Freeze (entity targ, float revivespeed, float frozen_type, float show_waypoint)
+void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 {
-	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
+	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // TODO: only specified entities can be freezed
 		return;
 
 	if(STAT(FROZEN, targ))
@@ -524,11 +524,11 @@ void Freeze (entity targ, float revivespeed, float frozen_type, float show_waypo
 	});
 
 	// add waypoint
-	if(show_waypoint)
+	if(MUTATOR_CALLHOOK(Freeze, targ, revivespeed, frozen_type) || show_waypoint)
 		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
-void Unfreeze (entity targ)
+void Unfreeze(entity targ)
 {
 	if(!STAT(FROZEN, targ))
 		return;
@@ -562,6 +562,8 @@ void Unfreeze (entity targ)
 	if(targ.iceblock)
 		delete(targ.iceblock);
 	targ.iceblock = NULL;
+
+	MUTATOR_CALLHOOK(Unfreeze, targ);
 }
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)

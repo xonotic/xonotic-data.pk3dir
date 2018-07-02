@@ -83,7 +83,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 void Ice_Think(entity this);
 
-void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint);
+void Freeze(entity targ, float freeze_time, int frozen_type, bool show_waypoint);
 
 void Unfreeze (entity targ);
 

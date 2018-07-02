@@ -811,7 +811,6 @@ void vehicles_exit(entity vehic, bool eject)
 
 	vehicles_exit_running = true;
 
-	// TODO: this was in an IS_CLIENT check, make sure it isn't actually needed!
 	if(vehic.vehicle_flags & VHF_PLAYERSLOT)
 	{
 		vehic.vehicle_exit(vehic, eject);

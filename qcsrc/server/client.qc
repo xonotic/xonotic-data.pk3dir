@@ -750,11 +750,17 @@ void PutPlayerInServer(entity this)
 		this.(weaponentity).weaponname = "";
 		this.(weaponentity).m_switchingweapon = WEP_Null;
 		this.(weaponentity).cnt = -1;
-
-		W_WeaponFrame(this, weaponentity);
 	}
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
+
+	if (CS(this).impulse) ImpulseCommands(this);
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_WeaponFrame(this, weaponentity);
+	}
 
 	if (!warmup_stage && !this.alivetime)
 		this.alivetime = time;

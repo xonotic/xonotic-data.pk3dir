@@ -498,13 +498,13 @@ void havocbot_movetogoal(entity this)
 		{
 			// Calculate brake distance in xy
 			float d = vlen(vec2(this.origin - (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5));
-			float v = vlen(vec2(this.velocity));
-			float db = ((v ** 2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
+			float vel2 = vlen2(vec2(this.velocity));
+			float db = (vel2 / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
 			//LOG_INFOF("distance %d, velocity %d, brake at %d ", ceil(d), ceil(v), ceil(db));
 			if(d < db || d < 500)
 			{
 				// Brake
-				if(v > maxspeed * 0.3)
+				if (vel2 > (maxspeed * 0.3) ** 2)
 				{
 					CS(this).movement_x = dir * v_forward * -maxspeed;
 					return;
@@ -721,9 +721,10 @@ void havocbot_movetogoal(entity this)
 		else
 			PHYS_INPUT_BUTTON_JUMP(this) = false;
 		makevectors(this.v_angle.y * '0 1 0');
-		CS(this).movement_x = dir * v_forward * maxspeed;
-		CS(this).movement_y = dir * v_right * maxspeed;
-		CS(this).movement_z = dir * v_up * maxspeed;
+		vector v = dir * maxspeed;
+		CS(this).movement.x = v * v_forward;
+		CS(this).movement.y = v * v_right;
+		CS(this).movement.z = v * v_up;
 	}
 
 	// if there is nowhere to go, exit

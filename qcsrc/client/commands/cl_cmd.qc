@@ -325,7 +325,8 @@ void LocalCommand_hud(int request, int argc)
 
 				case "clickradar":
 				{
-					HUD_Radar_Show_Maximized(!hud_panel_radar_mouse, 1);
+					if(!isdemo())
+						HUD_Radar_Show_Maximized(!hud_panel_radar_mouse, 1);
 					return;
 				}
 			}
