@@ -2,13 +2,13 @@
 
 #ifdef SVQC
 
-void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary, float ammocount, float damage, float bullets, float spread, float solidpenetration, float force)
+void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary, float ammocount, float damage, float bullets, float spread, float solidpenetration, float force, entity bullet_trail_effect)
 {
 	W_DecreaseAmmo(thiswep, actor, ammocount, weaponentity);
 
 	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, WEP_SHOTGUN.m_id);
 	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, WEP_SHOTGUN.m_id, EFFECT_RIFLE_WEAK);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, WEP_SHOTGUN.m_id, bullet_trail_effect);
 
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, ammocount);
@@ -159,7 +159,8 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 		WEP_CVAR_PRI(shotgun, bullets),
 		WEP_CVAR_PRI(shotgun, spread),
 		WEP_CVAR_PRI(shotgun, solidpenetration),
-		WEP_CVAR_PRI(shotgun, force)); // actually is secondary, but we trick the last shot into playing full reload sound
+		WEP_CVAR_PRI(shotgun, force),
+		EFFECT_BULLET); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
@@ -178,7 +179,8 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		WEP_CVAR_PRI(shotgun, bullets),
 		WEP_CVAR_PRI(shotgun, spread),
 		WEP_CVAR_PRI(shotgun, solidpenetration),
-		WEP_CVAR_PRI(shotgun, force));
+		WEP_CVAR_PRI(shotgun, force),
+		EFFECT_BULLET);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
@@ -215,7 +217,8 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 						WEP_CVAR_PRI(shotgun, bullets),
 						WEP_CVAR_PRI(shotgun, spread),
 						WEP_CVAR_PRI(shotgun, solidpenetration),
-						WEP_CVAR_PRI(shotgun, force));
+						WEP_CVAR_PRI(shotgun, force),
+						EFFECT_BULLET);
                     actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
                 }
@@ -233,7 +236,8 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 						WEP_CVAR_PRI(shotgun, bullets),
 						WEP_CVAR_PRI(shotgun, spread),
 						WEP_CVAR_PRI(shotgun, solidpenetration),
-						WEP_CVAR_PRI(shotgun, force));
+						WEP_CVAR_PRI(shotgun, force),
+						EFFECT_BULLET);
                     actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
                 }
