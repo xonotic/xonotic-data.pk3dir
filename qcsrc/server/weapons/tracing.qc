@@ -345,17 +345,6 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
-
-	if (autocvar_eff == 1) {
-		tracer_effects = EFFECT_RIFLE;
-	} else if (autocvar_eff == 2) {
-		tracer_effects = EFFECT_RIFLE_WEAK;
-	} else if (autocvar_eff == 3) {
-		tracer_effects = EFFECT_BULLET;
-	} else if (autocvar_eff == 4) {
-		tracer_effects = EFFECT_BULLET_WEAK;
-	}
-
 	fireBullet_trace_callback_eff = tracer_effects;
 
 	float solid_penetration_left = 1;
