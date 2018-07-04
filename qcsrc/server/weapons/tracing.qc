@@ -336,7 +336,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effects)
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
 {
 	vector  end;
 
@@ -344,7 +344,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
-	fireBullet_trace_callback_eff = tracer_effects;
+	fireBullet_trace_callback_eff = tracer_effect;
 
 	float solid_penetration_left = 1;
 	float total_damage = 0;
