@@ -1,5 +1,6 @@
 // docs: https://www.quakewiki.net/darkplaces-wiki/effectinfo-scripting-reference/
 // use `cl_particles_reloadeffects` to reload effects without restarting engine
+// use `chase_active 1` and `cl_lockview 1` to see effects from different perspectives
 // `dumpeffectinfo` currently doesn't work so edit effectinfo.txt manually, just try to keep the files in sync
 // `tex` are indices into particles/particlefont.tga, the first is inclusive, second exclusive
 
@@ -4441,6 +4442,24 @@ SUB(tr_bullet) {
 	MY(trailspacing) = 16;
 	MY(type) = "smoke";
 	MY(velocityjitter) = '4 4 4';
+}
+SUB(tr_bullet) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 0.5;
+	MY(size_max) = 0.6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
 }
 
 // smoke emitter for small pipes
@@ -8905,4 +8924,52 @@ SUB(arc_bolt_explode) {
 	MY(type) = "spark";
 	MY(velocityjitter) = '224.0 224.0 224.0';
 	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+// weak bullet trail (somewhat like a tracer)
+DEF(tr_bullet_weak);
+SUB(tr_bullet_weak) {
+	MY(alpha) = '75 100 3000';
+	MY(color_min) = "0xf03000";
+	MY(color_max) = "0xff6010";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -3;
+	MY(size_min) = 0.6;
+	MY(size_max) = 0.8;
+	my(tex_min) = 200;
+	my(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(tr_bullet_weak) {
+	MY(airfriction) = -4;
+	MY(alpha) = '256 256 350';
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 0.4;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 0;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 16;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '4 4 4';
+}
+SUB(tr_bullet_weak) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 0.5;
+	MY(size_max) = 0.6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 32;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
 }

@@ -2769,6 +2769,18 @@ effect tr_bullet
 	tex 0 8
 	trailspacing 16
 	velocityjitter 4 4 4
+effect tr_bullet
+	type bubble
+	alpha 256 256 128
+	bounce 1.500000
+	color 0x404040 0x808080
+	gravity -0.125000
+	liquidfriction 4
+	size 0.5 0.6
+	tex 62 62
+	trailspacing 16
+	underwater
+	velocityjitter 16 16 16
 effect smoking_smallemitter
 	type alphastatic
 	airfriction -1
@@ -8272,14 +8284,14 @@ effect arc_bolt_explode
 	tex 40 40
 	velocityjitter 224 224 224
 	velocityoffset 0 0 80
-//effect tr_bullet_weak
-//	type beam
-//	alpha 150 200 1000
-//	color 0xf03000 0xff6010
-//	countabsolute 1
-//	sizeincrease -3
-//	size 0.6 0.8
-//	tex 200 200
+effect tr_bullet_weak
+	type beam
+	alpha 75 100 3000
+	color 0xf03000 0xff6010
+	countabsolute 1
+	sizeincrease -3
+	size 0.6 0.8
+	tex 200 200
 effect tr_bullet_weak
 	type smoke
 	airfriction -4
@@ -8291,3 +8303,15 @@ effect tr_bullet_weak
 	tex 0 8
 	trailspacing 16
 	velocityjitter 4 4 4
+effect tr_bullet_weak
+	type bubble
+	alpha 256 256 128
+	bounce 1.500000
+	color 0x404040 0x808080
+	gravity -0.125000
+	liquidfriction 4
+	size 0.5 0.6
+	tex 62 62
+	trailspacing 32
+	underwater
+	velocityjitter 16 16 16
