@@ -2,7 +2,10 @@
 // use `cl_particles_reloadeffects` to reload effects without restarting engine
 // use `chase_active 1` and `cl_lockview 1` to see effects from different perspectives
 // `dumpeffectinfo` currently doesn't work so edit effectinfo.txt manually, just try to keep the files in sync
-// `tex` are indices into particles/particlefont.tga, the first is inclusive, second exclusive
+
+// `tex` are indices into particles/particlefont.tga (see particles/particlefont-template.tga for numbers)
+// the first index is inclusive, second exclusive (so `tex 0 8` will use images 0 though 7)
+// unless they're equal (`tex 69 69` is the same as `tex 69 70`)
 
 // item respawn effect
 DEF(TE_WIZSPIKE);
