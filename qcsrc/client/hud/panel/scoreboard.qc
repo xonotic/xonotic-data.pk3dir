@@ -175,7 +175,7 @@ void Scoreboard_UpdatePlayerTeams()
 
 int Scoreboard_CompareScore(int vl, int vr, int f)
 {
-    TC(int, vl); TC(int, vr); TC(int, f);
+	TC(int, vl); TC(int, vr); TC(int, f);
 	if(f & SFL_ZERO_IS_WORST)
 	{
 		if(vl == 0 && vr != 0)
@@ -381,7 +381,7 @@ void Cmd_Scoreboard_Help()
 
 void Cmd_Scoreboard_SetFields(int argc)
 {
-    TC(int, argc);
+	TC(int, argc);
 	int i, slash;
 	string str, pattern;
 	bool have_name = false, have_primary = false, have_secondary = false, have_separator = false;
@@ -716,7 +716,7 @@ float sbt_fixcolumnwidth_marginlen;
 
 string Scoreboard_FixColumnWidth(int i, string str)
 {
-    TC(int, i);
+	TC(int, i);
 	float f;
 	vector sz;
 
@@ -840,7 +840,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 
 void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, int pl_number)
 {
-    TC(bool, is_self); TC(int, pl_number);
+	TC(bool, is_self); TC(int, pl_number);
 	string str;
 	bool is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
 

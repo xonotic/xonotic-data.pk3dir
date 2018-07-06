@@ -1523,7 +1523,7 @@ void DebugPrintToChatTeam(int team_num, string text)
 
 void play_countdown(entity this, float finished, Sound samp)
 {
-    TC(Sound, samp);
+	TC(Sound, samp);
 	if(IS_REAL_CLIENT(this))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
@@ -1803,7 +1803,7 @@ spectate mode routines
 
 void SpectateCopy(entity this, entity spectatee)
 {
-    TC(Client, this); TC(Client, spectatee);
+	TC(Client, this); TC(Client, spectatee);
 
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);

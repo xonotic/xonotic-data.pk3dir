@@ -1568,7 +1568,7 @@ int lasthud;
 float vh_notice_time;
 void CSQC_UpdateView(entity this, float w, float h)
 {
-    TC(int, w); TC(int, h);
+	TC(int, w); TC(int, h);
 	entity e;
 	float fov;
 	float f;

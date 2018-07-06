@@ -43,7 +43,7 @@ int n_ssdirs;
 
 string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, vector fontsize)
 {
-    TC(int, id);
+	TC(int, id);
 	string pre, post;
 	pre = sprintf("%d. ", id+1);
 	if(mv_detail)
@@ -64,7 +64,7 @@ string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, v
 
 vector MapVote_RGB(int id)
 {
-    TC(int, id);
+	TC(int, id);
 	if(!(mv_flags[id] & GTV_AVAILABLE))
 		return '1 1 1';
 	if(id == mv_ownvote)
@@ -77,7 +77,7 @@ vector MapVote_RGB(int id)
 
 void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float _count, int id)
 {
-    TC(int, id);
+	TC(int, id);
 	// Find the correct alpha
 	float alpha;
 	if(!(mv_flags_start[id] & GTV_AVAILABLE))
@@ -189,7 +189,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float _count, int id)
 {
-    TC(int, id);
+	TC(int, id);
 	vector img_size = '0 0 0';
 	string label;
 	float text_size;
@@ -264,7 +264,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 void MapVote_DrawAbstain(vector pos, float isize, float tsize, float _count, int id)
 {
-    TC(int, id);
+	TC(int, id);
 	vector rgb;
 	float text_size;
 	string label;
@@ -281,7 +281,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float _count, int
 
 vector MapVote_GridVec(vector gridspec, int i, int m)
 {
-    TC(int, i); TC(int, m);
+	TC(int, i); TC(int, m);
 	int r = i % m;
 	return
 		'1 0 0' * (gridspec.x * r)
@@ -491,7 +491,7 @@ void MapVote_Draw()
 
 void Cmd_MapVote_MapDownload(int argc)
 {
-    TC(int, argc);
+	TC(int, argc);
 	entity pak;
 
 	if(argc != 2 || !mv_pk3list)
@@ -522,7 +522,7 @@ void Cmd_MapVote_MapDownload(int argc)
 
 void MapVote_CheckPK3(string pic, string pk3, int id)
 {
-    TC(int, id);
+	TC(int, id);
 	entity pak;
 	pak = spawn();
 	pak.netname = pk3;
@@ -544,7 +544,7 @@ void MapVote_CheckPK3(string pic, string pk3, int id)
 
 void MapVote_CheckPic(string pic, string pk3, int id)
 {
-    TC(int, id);
+	TC(int, id);
 	// never try to retrieve a pic for the "don't care" 'map'
 	if(mv_abstain && id == mv_num_maps - 1)
 		return;
@@ -587,7 +587,7 @@ void MapVote_ReadMask()
 
 void MapVote_ReadOption(int i)
 {
-    TC(int, i);
+	TC(int, i);
 	string map = strzone(ReadString());
 	string pk3 = strzone(ReadString());
 	int j = bound(0, ReadByte(), n_ssdirs - 1);
@@ -604,7 +604,7 @@ void MapVote_ReadOption(int i)
 
 void GameTypeVote_ReadOption(int i)
 {
-    TC(int, i);
+	TC(int, i);
 	string gt = strzone(ReadString());
 
 	mv_maps[i] = gt;
@@ -711,13 +711,13 @@ void MapVote_Init()
 
 void MapVote_SendChoice(int index)
 {
-    TC(int, index);
+	TC(int, index);
 	localcmd(strcat("\nimpulse ", ftos(index+1), "\n"));
 }
 
 int MapVote_MoveLeft(int pos)
 {
-    TC(int, pos);
+	TC(int, pos);
 	int imp;
 	if ( pos < 0 )
 		imp = mv_num_maps - 1;
@@ -729,7 +729,7 @@ int MapVote_MoveLeft(int pos)
 }
 int MapVote_MoveRight(int pos)
 {
-    TC(int, pos);
+	TC(int, pos);
 	int imp;
 	if ( pos < 0 )
 		imp = 0;
@@ -741,7 +741,7 @@ int MapVote_MoveRight(int pos)
 }
 int MapVote_MoveUp(int pos)
 {
-    TC(int, pos);
+	TC(int, pos);
 	int imp;
 	if ( pos < 0 )
 		imp = mv_num_maps - 1;
@@ -761,7 +761,7 @@ int MapVote_MoveUp(int pos)
 }
 int MapVote_MoveDown(int pos)
 {
-    TC(int, pos);
+	TC(int, pos);
 	int imp;
 	if ( pos < 0 )
 		imp = 0;
@@ -778,7 +778,7 @@ int MapVote_MoveDown(int pos)
 
 float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
+	TC(int, bInputType);
 	float imp;
 
 	if (!mv_active)
