@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-07-05 20:12+0000\n"
+"PO-Revision-Date: 2018-07-07 11:33+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -1521,7 +1521,7 @@ msgstr "Nächstes Spiel"
 #: qcsrc/common/minigames/minigame/ps.qc:478
 #, c-format
 msgid "Pieces left: %s"
-msgstr "Verbleibend: %s"
+msgstr "Figuren: %s"
 
 #: qcsrc/common/minigames/minigame/ps.qc:488
 msgid "No more valid moves"
@@ -2759,7 +2759,7 @@ msgstr "^BG%s^K1 hat Unsichtbarkeit aufgesammelt"
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
 msgid "^BG%s^K1 picked up Shield"
-msgstr "^BG%s^K1 hat das Schild aufgenommen"
+msgstr "^BG%s^K1 hat den Schild aufgenommen"
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
@@ -4020,7 +4020,7 @@ msgstr "^F2Ein Schild umgibt dich"
 
 #: qcsrc/common/notifications/all.inc:754
 msgid "^F2Shield has worn off"
-msgstr "^F2Das Schild ist wieder verschwunden"
+msgstr "^F2Der Schild ist wieder verschwunden"
 
 #: qcsrc/common/notifications/all.inc:756
 msgid "^F2You are on speed"
@@ -5422,11 +5422,11 @@ msgstr "Panel anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Panel enabled even observing"
-msgstr "Panel auch beim Zuschauen anzeigen"
+msgstr "Auch beim Zuschauen zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Panel enabled only in Race/CTS"
-msgstr "Panel nur in Rennen und CTS-Rennen anzeigen"
+msgstr "Nur in Rennen und CTS-Rennen zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
@@ -7822,7 +7822,7 @@ msgstr "Um den HUD-Editor zu starten, muss ein Spiel gestartet werden."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr "Willst du ein lokales Spiel starten, um das HUD zu editieren?"
+msgstr "Willst du ein lokales Spiel starten, um das HUD zu bearbeiten?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
