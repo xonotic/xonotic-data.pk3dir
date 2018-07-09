@@ -1701,8 +1701,16 @@ int navigation_poptouchedgoals(entity this)
 			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
 			gc_max = this.goalcurrent.origin + '1 1 1' * 12;
 		}
-		if(!boxesoverlap(this.absmin, this.absmax, gc_min, gc_max))
-			break;
+		if (time < this.ladder_time)
+		{
+			if (!boxesoverlap(this.absmin, this.absmax - eZ * STAT(PL_MAX, this).z, gc_min, gc_max))
+				break;
+		}
+		else
+		{
+			if (!boxesoverlap(this.absmin, this.absmax, gc_min, gc_max))
+				break;
+		}
 
 		// Detect personal waypoints
 		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)

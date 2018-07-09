@@ -1151,8 +1151,13 @@ void havocbot_movetogoal(entity this)
 		}
 		if (ladder_zdir)
 		{
-			dir.z = ladder_zdir * 1.3;
-			dir = normalize(dir);
+			if (vdist(flatdir, <, 15))
+				dir = ladder_zdir * '0 0 1';
+			else
+			{
+				dir.z = ladder_zdir * 1.3;
+				dir = normalize(dir);
+			}
 		}
 	}
 

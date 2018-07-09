@@ -242,6 +242,7 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 		+ this.bot_4th_order_aimfilter * autocvar_bot_ai_aimskill_order_mix_4th
 		+ this.bot_5th_order_aimfilter * autocvar_bot_ai_aimskill_order_mix_5th
 	);
+	desiredang.x = bound(-90, desiredang.x, 90);
 
 	// calculate turn angles
 	diffang = desiredang - this.bot_mouseaim;
