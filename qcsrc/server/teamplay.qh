@@ -71,7 +71,8 @@ int Entity_GetTeamIndex(entity this);
 
 /// \brief Returns the team entity of the given entity.
 /// \param[in] this Entity to check.
-/// \return Team entity of the given entity.
+/// \return Team entity of the given entity or NULL if the entity doesn't belong
+/// to any team.
 entity Entity_GetTeam(entity this);
 
 void SetPlayerColors(entity player, float _color);

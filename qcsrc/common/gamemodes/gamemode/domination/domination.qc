@@ -308,8 +308,11 @@ void Domination_count_controlpoints()
 	IL_EACH(g_dompoints, true,
 	{
 		++total_control_points;
+		if (!Entity_HasValidTeam(it.goalentity))
+		{
+			continue;
+		}
 		entity team_ = Entity_GetTeam(it.goalentity);
-		//TODO: team_ seems to be NULL
 		int num_control_points = Team_GetNumberOfControlPoints(team_);
 		++num_control_points;
 		Team_SetNumberOfControlPoints(team_, num_control_points);
