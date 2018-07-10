@@ -55,3 +55,7 @@ int GetResourceType(.float resource_field);
 /// \param[in] resource_type Type of the resource.
 /// \return Entity field for that resource.
 .float GetResourceField(int resource_type);
+
+/// \brief Legacy fields for the resources. To be removed.
+.float health;
+.float armorvalue;

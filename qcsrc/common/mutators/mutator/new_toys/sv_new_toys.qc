@@ -108,7 +108,7 @@ REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENA
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
-bool autocvar_g_new_toys_use_pickupsound = true;
+bool autocvar_g_new_toys_use_pickupsound = false;
 const float NT_AUTOREPLACE_NEVER = 0;
 const float NT_AUTOREPLACE_ALWAYS = 1;
 const float NT_AUTOREPLACE_RANDOM = 2;

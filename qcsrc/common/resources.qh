@@ -7,6 +7,7 @@
 
 /// \brief Unconditional maximum amount of resources the entity can have.
 const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
+const int RESOURCE_LIMIT_NONE = -1;
 
 /// \brief Describes the available resource types.
 enum

@@ -191,11 +191,9 @@ void W_Arc_Beam_Think(entity this)
 	if(
 		!IS_PLAYER(own)
 		||
-		(!thiswep.wr_checkammo1(thiswep, own, weaponentity) && !(own.items & IT_UNLIMITED_WEAPON_AMMO))
-		||
 		IS_DEAD(own)
 		||
-		forbidWeaponUse(own)
+		!weapon_prepareattack_check(thiswep, own, weaponentity, this.beam_bursting, -1)
 		||
 		own.(weaponentity).m_switchweapon != WEP_ARC
 		||
@@ -410,7 +408,7 @@ void W_Arc_Beam_Think(entity this)
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
-		float is_player = (
+		bool is_player = (
 			IS_PLAYER(trace_ent)
 			||
 			trace_ent.classname == "body"
@@ -418,129 +416,42 @@ void W_Arc_Beam_Think(entity this)
 			IS_MONSTER(trace_ent)
 		);
 
-		// TODO: takedamage flag for things that can be healed?
-		if(trace_ent && (trace_ent.takedamage || trace_ent.classname == "onslaught_generator" || trace_ent.classname == "onslaught_controlpoint_icon") && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
+		if(trace_ent)
 		{
-			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
-			// NO. trace_endpos should be just fine. If not,
-			// that's an engine bug that needs proper debugging.
-			vector hitorigin = trace_endpos;
-
-			float falloff = ExponentialFalloff(
-				WEP_CVAR(arc, beam_falloff_mindist),
-				WEP_CVAR(arc, beam_falloff_maxdist),
-				WEP_CVAR(arc, beam_falloff_halflifedist),
-				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
-			);
-
-			// TODO: api or event for things that can be healed
-			if(IS_VEHICLE(trace_ent) && SAME_TEAM(own, trace_ent))
+			if(SAME_TEAM(own, trace_ent))
 			{
 				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
-				// not handling shield, since it's not exactly a defensive stat
-
-				if(trace_ent.vehicle_health <= trace_ent.max_health && roothealth)
+				float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
+				float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RESOURCE_LIMIT_NONE);
+				Heal(trace_ent, own, (roothealth * coefficient), hplimit);
+				if(IS_PLAYER(trace_ent) && rootarmor)
 				{
-					trace_ent.vehicle_health = min(
-							trace_ent.vehicle_health + (roothealth * coefficient),
-							trace_ent.max_health
+					if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= WEP_CVAR(arc, beam_healing_amax))
+					{
+						GiveResourceWithLimit(trace_ent, RESOURCE_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
+						trace_ent.pauserotarmor_finished = max(
+							trace_ent.pauserotarmor_finished,
+							time + autocvar_g_balance_pause_armor_rot
 						);
-					if(trace_ent.owner)
-						trace_ent.owner.vehicle_health = (trace_ent.vehicle_health / trace_ent.max_health) * 100;
-					new_beam_type = ARC_BT_HEAL;
-				}
-			}
-			else if(trace_ent.classname == "onslaught_generator" && SAME_TEAM(own, trace_ent))
-			{
-				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
-				if(roothealth)
-				{
-					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
-					{
-						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
-						WaypointSprite_UpdateHealth(trace_ent.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
-						trace_ent.frame = 10 * bound(0, (1 - GetResourceAmount(trace_ent, RESOURCE_HEALTH) / trace_ent.max_health), 1);
-						trace_ent.lasthealth = GetResourceAmount(trace_ent, RESOURCE_HEALTH);
-						trace_ent.SendFlags |= GSF_STATUS;
 					}
-					new_beam_type = ARC_BT_HEAL;
 				}
-			}
-			else if(trace_ent.classname == "onslaught_controlpoint_icon" && SAME_TEAM(own, trace_ent))
-			{
-				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
-				if(roothealth)
-				{
-					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
-					{
-						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
-						if(trace_ent.owner.iscaptured)
-							WaypointSprite_UpdateHealth(trace_ent.owner.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
-						else
-							WaypointSprite_UpdateBuildFinished(trace_ent.owner.sprite, time + (trace_ent.max_health - GetResourceAmount(trace_ent, RESOURCE_HEALTH)) / (trace_ent.count / ONS_CP_THINKRATE));
-					}
-					new_beam_type = ARC_BT_HEAL;
-				}
-			}
-			else if(trace_ent.classname == "func_assault_destructible" && SAME_TEAM(own, trace_ent))
-			{
-				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
-
-				if(roothealth)
-				{
-					if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
-					{
-						GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), trace_ent.max_health);
-						if(trace_ent.sprite)
-						{
-							WaypointSprite_UpdateHealth(trace_ent.sprite, GetResourceAmount(trace_ent, RESOURCE_HEALTH));
-						}
-						func_breakable_colormod(trace_ent);
-					}
-					new_beam_type = ARC_BT_HEAL;
-				}
-			}
-			else if(is_player && SAME_TEAM(own, trace_ent))
-			{
-				float roothealth, rootarmor;
-				float maxhp;
-				if(burst)
-				{
-					roothealth = WEP_CVAR(arc, burst_healing_hps);
-					rootarmor = WEP_CVAR(arc, burst_healing_aps);
-				}
-				else
-				{
-					roothealth = WEP_CVAR(arc, beam_healing_hps);
-					rootarmor = WEP_CVAR(arc, beam_healing_aps);
-				}
-				maxhp = ((IS_MONSTER(trace_ent)) ? trace_ent.max_health : WEP_CVAR(arc, beam_healing_hmax));
-
-				if(GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= maxhp && roothealth)
-				{
-					GiveResourceWithLimit(trace_ent, RESOURCE_HEALTH, (roothealth * coefficient), maxhp);
-				}
-				if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= WEP_CVAR(arc, beam_healing_amax) && rootarmor && !IS_MONSTER(trace_ent))
-				{
-					GiveResourceWithLimit(trace_ent, RESOURCE_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
-				}
-
-				// stop rot, set visual effect
 				if(roothealth || rootarmor)
-				{
-					trace_ent.pauserothealth_finished = max(
-						trace_ent.pauserothealth_finished,
-						time + autocvar_g_balance_pause_health_rot
-					);
-					trace_ent.pauserotarmor_finished = max(
-						trace_ent.pauserotarmor_finished,
-						time + autocvar_g_balance_pause_armor_rot
-					);
 					new_beam_type = ARC_BT_HEAL;
-				}
 			}
-			else
+			else if(trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
 			{
+				// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+				// NO. trace_endpos should be just fine. If not,
+				// that's an engine bug that needs proper debugging.
+				vector hitorigin = trace_endpos;
+
+				float falloff = ExponentialFalloff(
+					WEP_CVAR(arc, beam_falloff_mindist),
+					WEP_CVAR(arc, beam_falloff_maxdist),
+					WEP_CVAR(arc, beam_falloff_halflifedist),
+					vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
+				);
+
 				float rootdamage;
 				if(is_player)
 				{
@@ -722,7 +633,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     }
     else if(fire & 2)
     {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(arc, bolt_refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(arc, bolt_refire)))
         {
             W_Arc_Attack_Bolt(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);

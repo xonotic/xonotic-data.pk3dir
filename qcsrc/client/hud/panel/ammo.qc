@@ -22,7 +22,7 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 
 void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, bool isInfinite)
 {
-    TC(bool, isCurrent); TC(bool, isInfinite);
+	TC(bool, isCurrent); TC(bool, isInfinite);
 	if(ammoType == RESOURCE_NONE)
 		return;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pickup.qh"
+#include <common/items/all.qh>
 #ifdef SVQC
     #include <common/t_items.qh>
     #include <server/resources.qh>
@@ -19,6 +20,10 @@
 .int ammo_plasma;
 .int ammo_fuel;
 #endif
+#endif
+
+#ifdef GAMEQC
+.int spawnflags;
 #endif
 
 #ifdef SVQC
@@ -54,7 +59,7 @@ ENDCLASS(Bullets)
 REGISTER_ITEM(Bullets, Bullets) {
     this.m_canonical_spawnfunc = "item_bullets";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Bullets_ITEM;
 #endif
     this.netname    =   "bullets";
@@ -84,7 +89,7 @@ void ammo_cells_init(Pickup this, entity item)
 REGISTER_ITEM(Cells, Ammo) {
     this.m_canonical_spawnfunc = "item_cells";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Cells_ITEM;
 #endif
     this.netname    =   "cells";
@@ -114,7 +119,7 @@ void ammo_plasma_init(Pickup this, entity item)
 REGISTER_ITEM(Plasma, Ammo) {
     this.m_canonical_spawnfunc = "item_plasma";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Plasma_ITEM;
 #endif
     this.netname    =   "plasma";
@@ -144,7 +149,7 @@ void ammo_rockets_init(Pickup this, entity item)
 REGISTER_ITEM(Rockets, Ammo) {
     this.m_canonical_spawnfunc = "item_rockets";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Rockets_ITEM;
 #endif
     this.netname    =   "rockets";
@@ -178,7 +183,7 @@ ENDCLASS(Shells)
 REGISTER_ITEM(Shells, Shells) {
     this.m_canonical_spawnfunc = "item_shells";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_Shells_ITEM;
 #endif
     this.netname    =   "shells";

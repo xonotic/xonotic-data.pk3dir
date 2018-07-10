@@ -74,6 +74,7 @@ void CopyBody(entity this, float keepvelocity)
 	clone.effects = this.effects;
 	clone.glowmod = this.glowmod;
 	clone.event_damage = this.event_damage;
+	clone.event_heal = this.event_heal;
 	clone.anim_state = this.anim_state;
 	clone.anim_time = this.anim_time;
 	clone.anim_lower_action = this.anim_lower_action;
@@ -461,6 +462,16 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				this.v_angle_y = this.v_angle.y + (random() * 2 - 1) * shake;
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
+
+			if (this != attacker) {
+				float realdmg = damage - excess;
+				if (IS_PLAYER(attacker)) {
+					GameRules_scoring_add(attacker, DMG, realdmg);
+				}
+				if (IS_PLAYER(this)) {
+					GameRules_scoring_add(this, DMGTAKEN, realdmg);
+				}
+			}
 		}
 		else
 			this.max_armorvalue += (save + take);
@@ -468,16 +479,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	this.dmg_save = this.dmg_save + save;//max(save - 10, 0);
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
-
-	if (this != attacker) {
-		float realdmg = damage - excess;
-		if (IS_PLAYER(attacker)) {
-			GameRules_scoring_add(attacker, DMG, realdmg);
-		}
-		if (IS_PLAYER(this)) {
-			GameRules_scoring_add(this, DMGTAKEN, realdmg);
-		}
-	}
 
 	bool abot = (IS_BOT_CLIENT(attacker));
 	bool vbot = (IS_BOT_CLIENT(this));
@@ -629,6 +630,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
+		this.event_heal = func_null;
 		// call the corpse damage function just in case it wants to gib
 		this.event_damage(this, inflictor, attacker, excess, deathtype, weaponentity, hitloc, force);
 
@@ -662,6 +664,15 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		}
 		MUTATOR_CALLHOOK(PlayerDied, this);
 	}
+}
+
+bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
+{
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, limit);
+	return true;
 }
 
 /**

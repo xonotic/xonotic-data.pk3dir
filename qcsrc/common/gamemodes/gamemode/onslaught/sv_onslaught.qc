@@ -447,6 +447,23 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	this.SendFlags |= CPSF_STATUS;
 }
 
+bool ons_ControlPoint_Icon_Heal(entity targ, entity inflictor, float amount, float limit)
+{
+	float hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	if (hlth <= 0 || hlth >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	if(targ.owner.iscaptured)
+		WaypointSprite_UpdateHealth(targ.owner.sprite, hlth);
+	else
+		WaypointSprite_UpdateBuildFinished(targ.owner.sprite, time + (targ.max_health - hlth) / (targ.count / ONS_CP_THINKRATE));
+	targ.SendFlags |= CPSF_STATUS;
+	return true;
+}
+
 void ons_ControlPoint_Icon_Think(entity this)
 {
 	this.nextthink = time + ONS_CP_THINKRATE;
@@ -584,6 +601,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	e.bot_attack = true;
 	IL_PUSH(g_bot_targets, e);
 	e.event_damage = ons_ControlPoint_Icon_Damage;
+	e.event_heal = ons_ControlPoint_Icon_Heal;
 	e.team = player.team;
 	e.colormap = 1024 + (e.team - 1) * 17;
 	e.count = (e.max_health - GetResourceAmount(e, RESOURCE_HEALTH)) * ONS_CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
@@ -888,13 +906,14 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		}
 	}
 	TakeResource(this, RESOURCE_HEALTH, damage);
-	WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
+	float hlth = GetResourceAmount(this, RESOURCE_HEALTH);
+	WaypointSprite_UpdateHealth(this.sprite, hlth);
 	// choose an animation frame based on health
-	this.frame = 10 * bound(0, (1 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health), 1);
+	this.frame = 10 * bound(0, (1 - hlth / this.max_health), 1);
 	// see if the generator is still functional, or dying
-	if (GetResourceAmount(this, RESOURCE_HEALTH) > 0)
+	if (hlth > 0)
 	{
-		this.lasthealth = GetResourceAmount(this, RESOURCE_HEALTH);
+		this.lasthealth = hlth;
 	}
 	else
 	{
@@ -910,6 +929,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		this.isshielded = false;
 		this.takedamage = DAMAGE_NO; // can't be hurt anymore
 		this.event_damage = func_null; // won't do anything if hurt
+		this.event_heal = func_null;
 		this.count = 0;	// reset counter
 		setthink(this, func_null);
 		this.nextthink = 0;
@@ -942,6 +962,22 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 	}
 
 	this.SendFlags |= GSF_STATUS;
+}
+
+bool ons_GeneratorHeal(entity targ, entity inflictor, float amount, float limit)
+{
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	float hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	if (hlth <= 0 || hlth >= true_limit)
+		return false;
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	WaypointSprite_UpdateHealth(targ.sprite, hlth);
+	targ.frame = 10 * bound(0, (1 - hlth / targ.max_health), 1);
+	targ.lasthealth = hlth;
+	targ.SendFlags |= GSF_STATUS;
+	return true;
 }
 
 void ons_GeneratorThink(entity this)
@@ -978,6 +1014,7 @@ void ons_GeneratorReset(entity this)
 	this.islinked = true;
 	this.isshielded = true;
 	this.event_damage = ons_GeneratorDamage;
+	this.event_heal = ons_GeneratorHeal;
 	setthink(this, ons_GeneratorThink);
 	this.nextthink = time + GEN_THINKRATE;
 
@@ -1040,6 +1077,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.bot_attack = true;
 	IL_PUSH(g_bot_targets, gen);
 	gen.event_damage = ons_GeneratorDamage;
+	gen.event_heal = ons_GeneratorHeal;
 	gen.reset = ons_GeneratorReset;
 	setthink(gen, ons_GeneratorThink);
 	gen.nextthink = time + GEN_THINKRATE;

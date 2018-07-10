@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef CSQC
+#include <client/resources.qh>
+#endif
+
 
 // This includes some functions useful for debugging.
 // Some more bot-specific ones are in server/pathlib/debug.qc.

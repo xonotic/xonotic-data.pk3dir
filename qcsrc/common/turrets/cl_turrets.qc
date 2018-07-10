@@ -425,8 +425,10 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		float myhp = GetResourceAmount(this, RESOURCE_HEALTH);
 		if(_tmp == 0 && myhp != 0)
 			turret_die(this);
-		else if(myhp && myhp != _tmp)
+		else if(myhp && myhp > _tmp)
 			this.helpme = servertime + 10;
+		else if(myhp && myhp < _tmp)
+			this.helpme = 0; // we're being healed, don't spam help me waypoints
 
 		SetResourceAmountExplicit(this, RESOURCE_HEALTH, _tmp);
 	}

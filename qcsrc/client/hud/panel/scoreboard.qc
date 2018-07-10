@@ -175,7 +175,7 @@ void Scoreboard_UpdatePlayerTeams()
 
 int Scoreboard_CompareScore(int vl, int vr, int f)
 {
-    TC(int, vl); TC(int, vr); TC(int, f);
+	TC(int, vl); TC(int, vr); TC(int, f);
 	if(f & SFL_ZERO_IS_WORST)
 	{
 		if(vl == 0 && vr != 0)
@@ -294,8 +294,11 @@ void Cmd_Scoreboard_Help()
 {
 	LOG_INFO(_("You can modify the scoreboard using the ^2scoreboard_columns_set command."));
 	LOG_INFO(_("Usage:"));
-	LOG_INFO("^2scoreboard_columns_set default");
-	LOG_INFO(_("^2scoreboard_columns_set ^7field1 field2 ..."));
+	LOG_INFO("^2scoreboard_columns_set ^3default");
+	LOG_INFO(_("^2scoreboard_columns_set ^3field1 field2 ..."));
+	LOG_INFO(_("^2scoreboard_columns_set ^7without arguments reads the arguments from the cvar scoreboard_columns"));
+	LOG_INFO(_("  ^5Note: ^7scoreboard_columns_set without arguments is executed on every map start"));
+	LOG_INFO(_("^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands it into the cvar scoreboard_columns so you can edit it"));
 	LOG_INFO(_("You can use a ^3|^7 to start the right-aligned fields."));
 	LOG_INFO(_("The following field names are recognized (case insensitive):"));
 	LOG_INFO("");
@@ -378,7 +381,7 @@ void Cmd_Scoreboard_Help()
 
 void Cmd_Scoreboard_SetFields(int argc)
 {
-    TC(int, argc);
+	TC(int, argc);
 	int i, slash;
 	string str, pattern;
 	bool have_name = false, have_primary = false, have_secondary = false, have_separator = false;
@@ -401,8 +404,12 @@ void Cmd_Scoreboard_SetFields(int argc)
 
 	if(argc == 3)
 	{
-		if(argv(2) == "default")
+		if(argv(2) == "default" || argv(2) == "expand_default")
+		{
+			if(argv(2) == "expand_default")
+				cvar_set("scoreboard_columns", SCOREBOARD_DEFAULT_COLUMNS);
 			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
+		}
 		else if(argv(2) == "all")
 		{
 			string s = "ping pl name |"; // scores without a label
@@ -709,7 +716,7 @@ float sbt_fixcolumnwidth_marginlen;
 
 string Scoreboard_FixColumnWidth(int i, string str)
 {
-    TC(int, i);
+	TC(int, i);
 	float f;
 	vector sz;
 
@@ -833,7 +840,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 
 void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, int pl_number)
 {
-    TC(bool, is_self); TC(int, pl_number);
+	TC(bool, is_self); TC(int, pl_number);
 	string str;
 	bool is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
 

@@ -16,7 +16,6 @@
 #include <server/matrix.qc>
 #include <server/miscfunctions.qc>
 #include <server/player.qc>
-#include <server/playerdemo.qc>
 #include <server/portals.qc>
 #include <server/race.qc>
 #include <server/resources.qc>

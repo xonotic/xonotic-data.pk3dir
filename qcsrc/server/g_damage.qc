@@ -35,7 +35,7 @@ void UpdateFrags(entity player, int f)
 	GameRules_scoring_add_team(player, SCORE, f);
 }
 
-void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity weaponentity)
+void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity weaponentity)
 {
 	// TODO route through PlayerScores instead
 	if(game_stopped) return;
@@ -477,9 +477,9 @@ void Ice_Think(entity this)
 	this.nextthink = time;
 }
 
-void Freeze (entity targ, float revivespeed, float frozen_type, float show_waypoint)
+void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 {
-	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
+	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // TODO: only specified entities can be freezed
 		return;
 
 	if(STAT(FROZEN, targ))
@@ -524,11 +524,11 @@ void Freeze (entity targ, float revivespeed, float frozen_type, float show_waypo
 	});
 
 	// add waypoint
-	if(show_waypoint)
+	if(MUTATOR_CALLHOOK(Freeze, targ, revivespeed, frozen_type) || show_waypoint)
 		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
-void Unfreeze (entity targ)
+void Unfreeze(entity targ)
 {
 	if(!STAT(FROZEN, targ))
 		return;
@@ -562,9 +562,11 @@ void Unfreeze (entity targ)
 	if(targ.iceblock)
 		delete(targ.iceblock);
 	targ.iceblock = NULL;
+
+	MUTATOR_CALLHOOK(Unfreeze, targ);
 }
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
+void Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	float complainteamdamage = 0;
 	float mirrordamage = 0;
@@ -593,9 +595,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
-		SetResourceAmount(targ, RESOURCE_ARMOR, 0);
+		SetResourceAmountExplicit(targ, RESOURCE_ARMOR, 0);
 		targ.spawnshieldtime = 0;
-		SetResourceAmount(targ, RESOURCE_HEALTH, 0.9); // this is < 1
+		SetResourceAmountExplicit(targ, RESOURCE_HEALTH, 0.9); // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
@@ -1038,9 +1040,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						}
 
 						if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
-							Damage (targ, inflictor, attacker, finaldmg, deathtype, weaponentity, nearest, force);
+							Damage(targ, inflictor, attacker, finaldmg, deathtype, weaponentity, nearest, force);
 						else
-							Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, weaponentity, nearest, force);
+							Damage(targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, weaponentity, nearest, force);
 					}
 				}
 			}
@@ -1056,9 +1058,23 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	return total_damage_to_creatures;
 }
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
+float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
+}
+
+bool Heal(entity targ, entity inflictor, float amount, float limit)
+{
+	if(game_stopped || (IS_CLIENT(targ) && CS(targ).killcount == FRAGS_SPECTATOR) || STAT(FROZEN, targ) || IS_DEAD(targ))
+		return false;
+
+	bool healed = false;
+	if(targ.event_heal)
+		healed = targ.event_heal(targ, inflictor, amount, limit);
+	// TODO: additional handling? what if the healing kills them? should this abort if healing would do so etc
+	// TODO: healing fx!
+	// TODO: armor healing?
+	return healed;
 }
 
 float Fire_IsBurning(entity e)

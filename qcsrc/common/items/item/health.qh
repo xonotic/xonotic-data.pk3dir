@@ -34,7 +34,7 @@ void item_healthsmall_init(Pickup this, entity item)
 REGISTER_ITEM(HealthSmall, Health) {
     this.m_canonical_spawnfunc = "item_health_small";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthSmall_ITEM;
     this.m_sound                =   SND_HealthSmall;
 #endif
@@ -72,7 +72,7 @@ void item_healthmedium_init(Pickup this, entity item)
 REGISTER_ITEM(HealthMedium, Health) {
     this.m_canonical_spawnfunc = "item_health_medium";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthMedium_ITEM;
     this.m_sound                =   SND_HealthMedium;
 #endif
@@ -110,7 +110,7 @@ void item_healthbig_init(Pickup this, entity item)
 REGISTER_ITEM(HealthBig, Health) {
     this.m_canonical_spawnfunc = "item_health_big";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthBig_ITEM;
     this.m_sound                =   SND_HealthBig;
 #endif
@@ -150,7 +150,7 @@ void item_healthmega_init(Pickup this, entity item)
 REGISTER_ITEM(HealthMega, Health) {
     this.m_canonical_spawnfunc = "item_health_mega";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthMega_ITEM;
     this.m_sound                =   SND_HealthMega;
 #endif
