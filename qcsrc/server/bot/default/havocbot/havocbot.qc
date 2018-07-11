@@ -861,13 +861,18 @@ void havocbot_movetogoal(entity this)
 		// if bot used the jumppad, push towards jumppad origin until jumppad waypoint gets removed
 		destorg = this.goalcurrent.origin;
 	}
-	else if (this.goalcurrent.wpisbox && boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin + eZ * this.mins.z, this.origin + eZ * this.maxs.z))
+	else if (this.goalcurrent.wpisbox)
 	{
 		// if bot is inside the teleport waypoint, head to teleport origin until teleport gets used
-		bunnyhop_forbidden = true;
-		destorg = this.goalcurrent.origin;
-		if(destorg.z > this.origin.z)
-			PHYS_INPUT_BUTTON_JUMP(this) = true;
+		// do it even if bot is on a ledge above a teleport/jumppad so it doesn't get stuck
+		if (boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin + eZ * this.mins.z, this.origin + eZ * this.maxs.z)
+			|| (this.absmin.z > destorg.z && destorg.x == this.origin.x && destorg.y == this.origin.y))
+		{
+			bunnyhop_forbidden = true;
+			destorg = this.goalcurrent.origin;
+			if(destorg.z > this.origin.z)
+				PHYS_INPUT_BUTTON_JUMP(this) = true;
+		}
 	}
 
 	diff = destorg - this.origin;
