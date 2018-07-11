@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-07-09 17:10+0000\n"
+"PO-Revision-Date: 2018-07-10 10:55+0000\n"
 "Last-Translator: nad le <nadavlevi726@gmail.com>\n"
 "Language-Team: Hebrew (http://www.transifex.com/team-xonotic/xonotic/"
 "language/he/)\n"
@@ -141,7 +141,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:175
 #: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "ready"
-msgstr ""
+msgstr "מוכן"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #, c-format
@@ -501,12 +501,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 msgid "Start line"
-msgstr ""
+msgstr "קו התחלה"
 
 #: qcsrc/client/hud/panel/racetimer.qc:63
 #: qcsrc/client/hud/panel/racetimer.qc:67
 msgid "Finish line"
-msgstr ""
+msgstr "קו סיום"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -1415,7 +1415,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/pong.qc:651
 msgid "Start Match"
-msgstr ""
+msgstr "התחל משחק"
 
 #: qcsrc/common/minigames/minigame/pong.qc:652
 msgid "Add AI player"
@@ -1452,7 +1452,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:582
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Next Match"
-msgstr ""
+msgstr "משחק הבא"
 
 #: qcsrc/common/minigames/minigame/ps.qc:478
 #, c-format
@@ -1465,7 +1465,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ps.qc:491
 msgid "Well done, you win!"
-msgstr ""
+msgstr "כל הכבוד, ניצחת!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:494
 msgid "Jump a piece over another to capture it"
@@ -1478,7 +1478,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
 msgid "Mage"
-msgstr ""
+msgstr "קוסם"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
@@ -1492,7 +1492,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
 msgid "Spider"
-msgstr ""
+msgstr "עכביש"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
@@ -1611,7 +1611,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
 #: qcsrc/menu/xonotic/util.qc:775
 msgid "Color:"
-msgstr ""
+msgstr "צבע:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:47
 msgid "Draw damage numbers for friendly fire"
@@ -1782,7 +1782,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Ball"
-msgstr ""
+msgstr "כדור"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
@@ -1799,19 +1799,19 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Weapon"
-msgstr ""
+msgstr "נשק"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 msgid "Monster"
-msgstr ""
+msgstr "מפלצת"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Vehicle"
-msgstr ""
+msgstr "רכב"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
-msgstr ""
+msgstr "פולש!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Tagged"
@@ -4333,7 +4333,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "פלזמה"
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
@@ -4463,7 +4463,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:17
 msgid "Shotgun"
-msgstr ""
+msgstr "שוטגן"
 
 #: qcsrc/common/weapons/weapon/tuba.qc:17
 #, no-c-format
@@ -4713,7 +4713,7 @@ msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:79
 msgid "Available options:\n"
-msgstr ""
+msgstr "אפשרויות זמינות:\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:128
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
@@ -4746,7 +4746,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:48
 msgid "Website"
-msgstr ""
+msgstr "אתר"
 
 #: qcsrc/menu/xonotic/credits.qc:53
 msgid "Stats"
@@ -4926,7 +4926,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
-msgstr ""
+msgstr "פרטי"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:95
 msgid "engine setting"
@@ -4947,7 +4947,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
-msgstr ""
+msgstr "קרדיטים"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
@@ -4963,7 +4963,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
-msgstr ""
+msgstr "שם:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:60
@@ -4984,11 +4984,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 msgid "Save settings"
-msgstr ""
+msgstr "שמור הגדרות"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qh:6
 msgid "Welcome"
-msgstr ""
+msgstr "ברוך הבא"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:16
 msgid "Ammunition display:"
@@ -5022,7 +5022,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Left"
-msgstr ""
+msgstr "שמאל"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
@@ -5033,7 +5033,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:20
 msgid "Right"
-msgstr ""
+msgstr "ימין"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
@@ -5060,7 +5060,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:19
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Center"
-msgstr ""
+msgstr "מרכז"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 msgid "Font scale:"
@@ -5076,7 +5076,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:18
 msgid "Chat size:"
-msgstr ""
+msgstr "גודל צ'אט:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:22
 msgid "Chat lifetime:"
@@ -5266,15 +5266,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
-msgstr ""
+msgstr "מהירות:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
 msgid "Include vertical speed"
-msgstr ""
+msgstr "כלול מהירות אנכית"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Speed unit:"
-msgstr ""
+msgstr "יחידת מידה למהירות:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
@@ -5298,7 +5298,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:57
 msgid "Show"
-msgstr ""
+msgstr "הצג"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:60
 msgid "Top speed"
@@ -5420,7 +5420,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:15
 msgid "Score:"
-msgstr ""
+msgstr "ניקוד:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:18
 msgid "Rankings:"
@@ -5471,7 +5471,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Never"
-msgstr ""
+msgstr "לעולם לא"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
 #, c-format
@@ -5516,7 +5516,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Number"
-msgstr ""
+msgstr "מספר"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Bind"
@@ -5557,14 +5557,14 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:35
 msgid "Filter:"
-msgstr ""
+msgstr "מסנן:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:44
 msgid "Refresh"
-msgstr ""
+msgstr "רענן"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:30
@@ -5582,7 +5582,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
 #: qcsrc/menu/xonotic/util.qc:767
 msgid "Background:"
-msgstr ""
+msgstr "רקע:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
@@ -5663,7 +5663,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
-msgstr ""
+msgstr "מפלצת:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
@@ -5673,7 +5673,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:23
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid "Remove"
-msgstr ""
+msgstr "הסר"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:25
 msgid "Move target:"
@@ -5697,7 +5697,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:31
 msgid "Colors:"
-msgstr ""
+msgstr "צבעים:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:33
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:39
@@ -5710,7 +5710,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
 msgid "Servers"
-msgstr ""
+msgstr "שרתים"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Find servers to play on"
@@ -5744,12 +5744,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:785 qcsrc/menu/xonotic/util.qc:794
 #: qcsrc/menu/xonotic/util.qc:802 qcsrc/menu/xonotic/util.qc:814
 msgid "Default"
-msgstr ""
+msgstr "ברירת מחדל"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Unlimited"
-msgstr ""
+msgstr "לא מוגבל"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:65
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:66
@@ -5790,7 +5790,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:70
 msgid "Lives:"
-msgstr ""
+msgstr "חיים:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:71
 msgid "Laps:"
@@ -5806,11 +5806,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:97
 msgid "Gametype"
-msgstr ""
+msgstr "סוג משחק"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:102
 msgid "Time limit:"
-msgstr ""
+msgstr "הגבלת זמן:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:104
 msgid "Timelimit in minutes that when hit, will end the match"
@@ -5828,7 +5828,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "1 minute"
-msgstr ""
+msgstr "דקה אחת"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:124
 msgid "TIMLIM^Infinite"
@@ -5836,19 +5836,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
 msgid "Teams:"
-msgstr ""
+msgstr "צוותים:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "2 teams"
-msgstr ""
+msgstr "2 צוותים"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "3 teams"
-msgstr ""
+msgstr "3 צוותים"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "4 teams"
-msgstr ""
+msgstr "4 צוותים"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "Player slots:"
@@ -5882,15 +5882,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:153
 msgid "Beginner"
-msgstr ""
+msgstr "מתחיל"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:154
 msgid "You will win"
-msgstr ""
+msgstr "אתה תנצח"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:155
 msgid "You can win"
-msgstr ""
+msgstr "אתה יכול לנצח"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:156
 msgid "You might win"
@@ -5898,27 +5898,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:157
 msgid "Advanced"
-msgstr ""
+msgstr "מתקדם"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:158
 msgid "Expert"
-msgstr ""
+msgstr "מומחה"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Pro"
-msgstr ""
+msgstr "מקצוען"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:160
 msgid "Assassin"
-msgstr ""
+msgstr "מתנקש"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 msgid "Unhuman"
-msgstr ""
+msgstr "לא אנושי"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:162
 msgid "Godlike"
-msgstr ""
+msgstr "דמוי אל"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
 msgid "Mutators..."
@@ -5956,7 +5956,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:217
 msgid "Add all"
-msgstr ""
+msgstr "הוסף הכל"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:218
 msgid "Add every available map to your selection"
@@ -5964,7 +5964,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:221
 msgid "Remove all"
-msgstr ""
+msgstr "הסר הכל"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:222
 msgid "Remove all the maps from your selection"
@@ -5976,20 +5976,20 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:58
 msgid "Title:"
-msgstr ""
+msgstr "כותרת:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Author:"
-msgstr ""
+msgstr "מחבר:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:70
 msgid "Game types:"
-msgstr ""
+msgstr "סוגי משחק:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:296
 msgid "Close"
-msgstr ""
+msgstr "סגור"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:96
 msgid "MAP^Play"
@@ -6045,7 +6045,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:282
 msgid "No start weapons"
-msgstr ""
+msgstr "ללא נשקי התחלה"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:195
@@ -6074,7 +6074,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:229
 msgid "Weapons stay"
-msgstr ""
+msgstr "נשקים נשארים"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
@@ -6130,7 +6130,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:178
 msgid "Damage done to your enemy gets added to your own health"
-msgstr ""
+msgstr "נזק שנעשה לאויב שלך מתווסף לחיים שלך"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:183
 msgid ""
@@ -6183,11 +6183,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:255
 msgid "Most weapons"
-msgstr ""
+msgstr "רוב הנשקים"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:260
 msgid "All weapons"
-msgstr ""
+msgstr "כל הנשקים"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:264
 msgid "Special arenas:"
@@ -6260,7 +6260,7 @@ msgstr "כתובת:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:78
 msgid "Info..."
-msgstr ""
+msgstr "מידע..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:79
 msgid "Show more information about the currently highlighted server"
@@ -6295,7 +6295,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:177
 msgid "Not supported (can't connect)"
-msgstr ""
+msgstr "לא נתמך(לא יכול להתחבר)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:179
 msgid "Not supported (won't encrypt)"
@@ -6352,7 +6352,7 @@ msgstr "הגדרות:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:258
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:290
 msgid "Players:"
-msgstr ""
+msgstr "שחקנים:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:263
 msgid "Bots:"
@@ -6376,7 +6376,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Information"
-msgstr ""
+msgstr "מידע על השרת"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
 msgid "Demos"
@@ -6413,12 +6413,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
 msgid "Do you really wish to disconnect now?"
-msgstr ""
+msgstr "אתה באמת רוצה להתנתק עכשיו?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
 msgid "Disconnect"
-msgstr ""
+msgstr "התנתק"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
@@ -6446,7 +6446,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:55
 msgid "Random order"
-msgstr ""
+msgstr "סדר אקראי"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
 msgid "MUSICPL^Stop"
@@ -6486,7 +6486,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:139
 msgid "Reset"
-msgstr ""
+msgstr "אפס"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:144
 msgid "Previous"
@@ -6498,7 +6498,7 @@ msgstr "הבא"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:152
 msgid "Slide show"
-msgstr ""
+msgstr "מצגת שקופיות"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:34
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:21
@@ -6539,7 +6539,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:145
 msgid "Country"
-msgstr ""
+msgstr "מדינה"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:159
 msgid "Gender:"
@@ -6548,7 +6548,7 @@ msgstr "מין:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:161
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:174
 msgid "Undisclosed"
-msgstr ""
+msgstr "לא ידוע"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:162
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
@@ -6566,11 +6566,11 @@ msgstr "מין"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
-msgstr ""
+msgstr "אתה בטוח שברצונך לצאת?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 msgid "Back to work..."
-msgstr ""
+msgstr "בחזרה לעבודה..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:17
 msgid "I got some more fragging to do!"
@@ -6578,7 +6578,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
-msgstr ""
+msgstr "צא מהמשחק"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -6586,15 +6586,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:21
 msgid "Remove *"
-msgstr ""
+msgstr "הסר *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:23
 msgid "Copy *"
-msgstr ""
+msgstr "העתק *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:24
 msgid "Paste"
-msgstr ""
+msgstr "הדבק"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:26
 msgid "Bone:"
@@ -6694,7 +6694,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "Show help"
-msgstr ""
+msgstr "הצג עזרה"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:82
 msgid "* is the object you are facing"
@@ -6710,23 +6710,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:19
 msgid "Effects"
-msgstr ""
+msgstr "אפקטים"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:20
 msgid "Audio"
-msgstr ""
+msgstr "שמע"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:22
 msgid "Game"
-msgstr ""
+msgstr "משחק"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:23
 msgid "Input"
-msgstr ""
+msgstr "קלט"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:24
 msgid "User"
-msgstr ""
+msgstr "משתמש"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:25
 #: qcsrc/menu/xonotic/keybinder.qc:105
@@ -6735,11 +6735,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:6
 msgid "Settings"
-msgstr ""
+msgstr "הגדרות"
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:7
 msgid "Change the game settings"
-msgstr ""
+msgstr "שנה את הגדרות המשחק"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:29
 msgid "Master:"
@@ -6747,7 +6747,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:35
 msgid "Music:"
-msgstr ""
+msgstr "מוזיקה:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:43
 msgid "VOL^Ambient:"
@@ -6755,7 +6755,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:50
 msgid "Info:"
-msgstr ""
+msgstr "מידע:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:57
 msgid "Items:"
@@ -6767,7 +6767,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:71
 msgid "Player:"
-msgstr ""
+msgstr "שחקן:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:78
 msgid "Shots:"
@@ -6775,11 +6775,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:85
 msgid "Voice:"
-msgstr ""
+msgstr "קול:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:93
 msgid "Weapons:"
-msgstr ""
+msgstr "נשקים:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:99
 msgid "New style sound attenuation"
@@ -6843,7 +6843,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:123
 msgid "Stereo"
-msgstr ""
+msgstr "סטראו"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:124
 msgid "2.1"
@@ -6901,7 +6901,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "Menu sounds"
-msgstr ""
+msgstr "צלילי תפריט"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:150
 msgid "Play sounds when clicking menu items"
@@ -6925,7 +6925,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:160
 msgid "5 minutes"
-msgstr ""
+msgstr "5 דקות"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:161
 msgid "WRN^Both"
@@ -6941,17 +6941,17 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:168
 msgid "Sometimes"
-msgstr ""
+msgstr "לפעמים"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:169
 msgid "Often"
-msgstr ""
+msgstr "לעתים קרובות"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:170
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:141
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Always"
-msgstr ""
+msgstr "תמיד"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:176
 msgid "Debug info about sounds"
@@ -7181,7 +7181,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:169
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:253
 msgid "Distance:"
-msgstr ""
+msgstr "מרחק"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:172
 msgid "Decals further away than this will not be drawn (default: 300)"
@@ -7189,7 +7189,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:176
 msgid "Time:"
-msgstr ""
+msgstr "זמן:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:179
 msgid "Time in seconds before decals fade away (default: 2)"
@@ -7265,7 +7265,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Use normal maps"
-msgstr ""
+msgstr "השתמש במפות רגילות"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Enable use of directional shading on textures (default: enabled)"
@@ -7360,7 +7360,7 @@ msgstr "גודל:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
-msgstr ""
+msgstr "לפי חיים"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:76
 msgid "Use rings to indicate weapon status"
@@ -7456,7 +7456,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:74
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
 msgid "Fontsize:"
-msgstr ""
+msgstr "גודל גופן:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:80
 msgid "Edge offset:"
@@ -7468,7 +7468,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:94
 msgid "Damage"
-msgstr ""
+msgstr "נזק"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:96
 msgid "Overlay:"
@@ -7488,11 +7488,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:114
 msgid "Show names above players"
-msgstr ""
+msgstr "הצג שמות מעל שחקנים"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Max distance:"
-msgstr ""
+msgstr "מרחק מקסימלי:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Decolorize:"
@@ -7612,7 +7612,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:133
 msgid "Other"
-msgstr ""
+msgstr "אחר"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 msgid "Display console messages in the top left corner"
@@ -7697,7 +7697,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
 #: qcsrc/menu/xonotic/serverlist.qc:767
 msgid "Players"
-msgstr ""
+msgstr "שחקנים"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
@@ -7769,7 +7769,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:51
 msgid "3rd person perspective"
-msgstr ""
+msgstr "נקודת מבט מגוף שלישי"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:55
 msgid "Back distance"
@@ -7926,19 +7926,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:41
 msgid "Edit..."
-msgstr ""
+msgstr "ערוך..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:47
 msgid "Clear"
-msgstr ""
+msgstr "נקה"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:52
 msgid "Reset all"
-msgstr ""
+msgstr "אפס הכל"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:57
 msgid "Mouse"
-msgstr ""
+msgstr "עכבר"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:59
 msgid "Sensitivity:"
@@ -8014,7 +8014,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:114
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "Use joystick input"
-msgstr ""
+msgstr "התשתמש בקלט מג'ויסטיק"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:31
 msgid "Command when pressed:"
@@ -8026,7 +8026,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
-msgstr ""
+msgstr "בטל"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
@@ -8049,7 +8049,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:27
 msgid "Network"
-msgstr ""
+msgstr "רשת"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:29
 msgid "Client UDP port:"
@@ -8149,7 +8149,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:102
 msgid "Target:"
-msgstr ""
+msgstr "מטרה:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:104
 msgid "TRGT^Disabled"
@@ -8169,7 +8169,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:129
 msgid "Show frames per second"
-msgstr ""
+msgstr "הצג פריימים לשנייה"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:130
 msgid "Show your rendered frames per second"
@@ -8207,7 +8207,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:147
 msgid "Enable developer mode"
-msgstr ""
+msgstr "אפשר מצב מפתח"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:151
 msgid "Advanced settings..."
@@ -8236,23 +8236,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:49
 msgid "Type:"
-msgstr ""
+msgstr "סוג:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Value:"
-msgstr ""
+msgstr "ערך:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:70
 msgid "Description:"
-msgstr ""
+msgstr "תיאור:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qh:7
 msgid "Advanced settings"
-msgstr ""
+msgstr "אפשרויות מתקדמות"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr ""
+msgstr "האם אתה בטוח שברצונך לאפס את כל ההגדרות?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
@@ -8264,11 +8264,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:64
 msgid "Text Language"
-msgstr ""
+msgstr "שפת טקסט"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:69
 msgid "Set language"
-msgstr ""
+msgstr "קבע שפה"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:74
 msgid "Disable gore effects and harsh language"
@@ -8290,11 +8290,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
-msgstr ""
+msgstr "התנתק עכשיו"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
 msgid "Switch language"
-msgstr ""
+msgstr "החלף שפה"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
@@ -8362,7 +8362,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "Full screen"
-msgstr ""
+msgstr "מסך מלא"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:61
 msgid "Vertical Synchronization"
@@ -8612,7 +8612,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
-msgstr ""
+msgstr "מנצח"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
@@ -8624,27 +8624,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
-msgstr ""
+msgstr "אדום"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:38
 msgid "blue"
-msgstr ""
+msgstr "כחול"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:39
 msgid "yellow"
-msgstr ""
+msgstr "צהוב"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:40
 msgid "pink"
-msgstr ""
+msgstr "ורוד"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:43
 msgid "spectate"
-msgstr ""
+msgstr "צפה"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
-msgstr ""
+msgstr "בחירת צוות"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
@@ -8668,7 +8668,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:30
 msgid "forward"
-msgstr ""
+msgstr "קדימה"
 
 #: qcsrc/menu/xonotic/keybinder.qc:31
 msgid "backpedal"
@@ -8740,7 +8740,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:80
 msgid "screen shot"
-msgstr ""
+msgstr "צילום מסך"
 
 #: qcsrc/menu/xonotic/keybinder.qc:81
 msgid "maximize radar"
@@ -8772,11 +8772,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "vote YES"
-msgstr ""
+msgstr "הצבע כן"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "vote NO"
-msgstr ""
+msgstr "הצבע לא"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Client"
@@ -8788,11 +8788,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "disconnect"
-msgstr ""
+msgstr "התנתק"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "quit"
-msgstr ""
+msgstr "צא"
 
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "auto-join team"
@@ -8866,7 +8866,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:765
 msgid "Map"
-msgstr ""
+msgstr "מפה"
 
 #: qcsrc/menu/xonotic/serverlist.qc:766
 msgid "Type"
@@ -9009,7 +9009,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:115
 msgid "Screen resolution"
-msgstr ""
+msgstr "רזולוציית מסך"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "PART^Slow"
