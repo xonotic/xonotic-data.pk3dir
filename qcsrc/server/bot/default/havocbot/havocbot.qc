@@ -18,6 +18,7 @@
 #include <common/items/_mod.qh>
 #include <common/wepent.qh>
 
+#include <common/mapobjects/func/ladder.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 

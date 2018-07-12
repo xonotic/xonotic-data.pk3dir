@@ -13,6 +13,7 @@
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/mapobjects/func/ladder.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 
 .float speed;
