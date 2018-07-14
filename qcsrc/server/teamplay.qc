@@ -264,6 +264,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		team_ent.m_num_players = TEAM_NOT_ALLOWED;
 		team_ent.m_num_bots = 0;
 	}
+	setthink(balance, TeamBalance_Destroy);
 	
 	int teams_mask = 0;	
 	string teament_name = string_null;
