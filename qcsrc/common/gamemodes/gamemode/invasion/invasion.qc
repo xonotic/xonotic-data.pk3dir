@@ -562,7 +562,6 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 
 void invasion_ScoreRules(int inv_teams)
 {
-	//if(inv_teams) { CheckAllowedTeams(NULL); } // Another bug?
 	GameRules_score_enabled(false);
 	GameRules_scoring(inv_teams, 0, 0, {
 	    if (inv_teams) {

@@ -2694,7 +2694,6 @@ spawnfunc(team_CTL_bluelolly)  { spawnfunc_item_flag_team2(this);    }
 // scoreboard setup
 void ctf_ScoreRules(int teams)
 {
-	//CheckAllowedTeams(NULL); // Bug? Need to get allowed teams?
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
         field_team(ST_CTF_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
         field(SP_CTF_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
