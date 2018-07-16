@@ -428,12 +428,12 @@ bool forbidWeaponUse(entity player)
 
 void W_WeaponFrame(Player actor, .entity weaponentity)
 {
-    TC(Player, actor);
-    TC(PlayerState, PS(actor));
+	TC(Player, actor);
+	TC(PlayerState, PS(actor));
 	entity this = actor.(weaponentity);
 	if (frametime) this.weapon_frametime = frametime;
 
-	if (!this || actor.health < 1) return;  // Dead player can't use weapons and injure impulse commands
+	if (!this || GetResourceAmount(actor, RESOURCE_HEALTH) < 1) return;  // Dead player can't use weapons and injure impulse commands
 
 	int button_atck = PHYS_INPUT_BUTTON_ATCK(actor);
 	int button_atck2 = PHYS_INPUT_BUTTON_ATCK2(actor);
@@ -595,8 +595,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 
 		if (!block_weapon)
 		{
-            Weapon e = this.m_weapon;
-            TC(Weapon, e);
+			Weapon e = this.m_weapon;
+			TC(Weapon, e);
 			if (w != WEP_Null)
 			{
 				e.wr_think(e, actor, weaponentity, button_atck | (button_atck2 << 1));
@@ -731,7 +731,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sent_sound)
 {
-    TC(Sound, sent_sound);
+	TC(Sound, sent_sound);
 	// set global values to work with
 	entity this = actor.(weaponentity);
 	Weapon e = this.m_weapon;

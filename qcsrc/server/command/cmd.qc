@@ -394,13 +394,16 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 			if ((selection != -1) && autocvar_g_balance_teams &&
 				autocvar_g_balance_teams_prevent_imbalance)
 			{
-				CheckAllowedTeams(caller);
-				GetTeamCounts(caller);
-				if ((BIT(Team_TeamToNumber(selection) - 1) & FindBestTeams(caller, false)) == 0)
+				entity balance = TeamBalance_CheckAllowedTeams(caller);
+				TeamBalance_GetTeamCounts(balance, caller);
+				if ((Team_IndexToBit(Team_TeamToIndex(selection)) &
+					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					TeamBalance_Destroy(balance);
 					return;
 				}
+				TeamBalance_Destroy(balance);
 			}
 			ClientKill_TeamChange(caller, selection);
 			if (!IS_PLAYER(caller))

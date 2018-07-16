@@ -15,7 +15,6 @@
 #include "../player.qh"
 #include "../g_world.qh"
 #include "../ipban.qh"
-#include "../playerdemo.qh"
 #include "../teamplay.qh"
 
 #include "../bot/api.qh"
@@ -1058,6 +1057,7 @@ void GameCommand_moveplayer(float request, float argc)
 
 								// find the team to move the player to
 								team_id = Team_ColorToTeam(destination);
+								entity balance;
 								if (team_id == client.team)  // already on the destination team
 								{
 									// keep the forcing undone
@@ -1066,30 +1066,72 @@ void GameCommand_moveplayer(float request, float argc)
 								}
 								else if (team_id == 0)  // auto team
 								{
-									CheckAllowedTeams(client);
-									team_id = Team_NumberToTeam(FindSmallestTeam(client, false));
+									balance = TeamBalance_CheckAllowedTeams(client);
+									team_id = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
 								}
 								else
 								{
-									CheckAllowedTeams(client);
+									balance = TeamBalance_CheckAllowedTeams(client);
 								}
 								client.team_forced = save;
 
 								// Check to see if the destination team is even available
 								switch (team_id)
 								{
-									case NUM_TEAM_1: if (c1 == -1) { LOG_INFO("Sorry, can't move player to red team if it doesn't exist."); return; } break;
-									case NUM_TEAM_2: if (c2 == -1) { LOG_INFO("Sorry, can't move player to blue team if it doesn't exist."); return; } break;
-									case NUM_TEAM_3: if (c3 == -1) { LOG_INFO("Sorry, can't move player to yellow team if it doesn't exist."); return; } break;
-									case NUM_TEAM_4: if (c4 == -1) { LOG_INFO("Sorry, can't move player to pink team if it doesn't exist."); return; } break;
-
-									default: LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
+									case NUM_TEAM_1:
+									{
+										if (!TeamBalance_IsTeamAllowed(balance, 1))
+										{
+											LOG_INFO("Sorry, can't move player to red team if it doesn't exist.");
+											TeamBalance_Destroy(balance);
+											return;
+										}
+										TeamBalance_Destroy(balance);
+										break;
+									}
+									case NUM_TEAM_2:
+									{
+										if (!TeamBalance_IsTeamAllowed(balance, 2))
+										{
+											LOG_INFO("Sorry, can't move player to blue team if it doesn't exist.");
+											TeamBalance_Destroy(balance);
+											return;
+										}
+										TeamBalance_Destroy(balance);
+										break;
+									}
+									case NUM_TEAM_3:
+									{
+										if (!TeamBalance_IsTeamAllowed(balance, 3))
+										{
+											LOG_INFO("Sorry, can't move player to yellow team if it doesn't exist.");
+											TeamBalance_Destroy(balance);
+											return;
+										}
+										TeamBalance_Destroy(balance);
+										break;
+									}
+									case NUM_TEAM_4:
+									{
+										if (!TeamBalance_IsTeamAllowed(balance, 4))
+										{
+											LOG_INFO("Sorry, can't move player to pink team if it doesn't exist.");
+											TeamBalance_Destroy(balance);
+											return;
+										}
+										TeamBalance_Destroy(balance);
+										break;
+									}
+									default:
+									{
+										LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
 										return;
+									}
 								}
 
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
-								if (MoveToTeam(client, team_id, 6))
+								if (MoveToTeam(client, Team_TeamToIndex(team_id), 6))
 								{
 									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
 									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
@@ -1161,86 +1203,6 @@ void GameCommand_nospectators(float request)
 		{
 			LOG_INFO("Usage:^3 sv_cmd nospectators");
 			LOG_INFO("  No arguments required.");
-			return;
-		}
-	}
-}
-
-void GameCommand_playerdemo(float request, float argc)
-{
-	switch (request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if (argv(2) && argv(3))
-			{
-				entity client;
-				float i, n, accepted;
-
-				switch (argv(1))
-				{
-					case "read":
-					{
-						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, false, true);
-
-						if (accepted <= 0)
-						{
-							LOG_INFO("playerdemo: read: ", GetClientErrorString(accepted, argv(2)), ".");
-							return;
-						}
-
-						playerdemo_open_read(client, argv(next_token));
-						return;
-					}
-
-					case "write":
-					{
-						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, false, false);
-
-						if (accepted <= 0)
-						{
-							LOG_INFO("playerdemo: write: ", GetClientErrorString(accepted, argv(2)), ".");
-							return;
-						}
-
-						playerdemo_open_write(client, argv(next_token));
-						return;
-					}
-
-					case "auto_read_and_write":
-					{
-						n = GetFilteredNumber(argv(3));
-						cvar_set("bot_number", ftos(n));
-
-						localcmd("wait; wait; wait\n");
-						for (i = 0; i < n; ++i)
-							localcmd("sv_cmd playerdemo read ", ftos(i + 2), " ", argv(2), ftos(i + 1), "\n");
-						localcmd("sv_cmd playerdemo write 1 ", ftos(n + 1), "\n");
-						return;
-					}
-
-					case "auto_read":
-					{
-						n = GetFilteredNumber(argv(3));
-						cvar_set("bot_number", ftos(n));
-
-						localcmd("wait; wait; wait\n");
-						for (i = 0; i < n; ++i)
-							localcmd("sv_cmd playerdemo read ", ftos(i + 2), " ", argv(2), ftos(i + 1), "\n");
-						return;
-					}
-				}
-			}
-		}
-
-		default:
-			LOG_INFO("Incorrect parameters for ^2playerdemo^7");
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFO("Usage:^3 sv_cmd playerdemo command (entitynumber filename | entitynumber botnumber)");
-			LOG_INFO("  Full list of commands here: \"read, write, auto_read_and_write, auto_read.\"");
 			return;
 		}
 	}
@@ -1360,16 +1322,23 @@ void GameCommand_shuffleteams(float request)
 			});
 
 			int number_of_teams = 0;
-			CheckAllowedTeams(NULL);
-			if (c1 >= 0) number_of_teams = max(1, number_of_teams);
-			if (c2 >= 0) number_of_teams = max(2, number_of_teams);
-			if (c3 >= 0) number_of_teams = max(3, number_of_teams);
-			if (c4 >= 0) number_of_teams = max(4, number_of_teams);
+			entity balance = TeamBalance_CheckAllowedTeams(NULL);
+			for (int i = 1; i <= NUM_TEAMS; ++i)
+			{
+				if (TeamBalance_IsTeamAllowed(balance, i))
+				{
+					number_of_teams = max(i, number_of_teams);
+				}
+			}
+			TeamBalance_Destroy(balance);
 
 			int team_index = 0;
 			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
-				int target_team_number = Team_NumberToTeam(team_index + 1);
-				if (it.team != target_team_number) MoveToTeam(it, target_team_number, 6);
+				int target_team_index = team_index + 1;
+				if (Entity_GetTeamIndex(it) != target_team_index)
+				{
+					MoveToTeam(it, target_team_index, 6);
+				}
 				team_index = (team_index + 1) % number_of_teams;
 			});
 
@@ -1729,7 +1698,6 @@ SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter te
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
 SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
-SERVER_COMMAND(playerdemo, "Control the ability to save demos of players") { GameCommand_playerdemo(request, arguments); }
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }

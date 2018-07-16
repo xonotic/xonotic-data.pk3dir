@@ -308,7 +308,7 @@ void football_touch(entity this, entity toucher)
 	}
 	if (!IS_PLAYER(toucher))
 		return;
-	if(toucher.health < 1)
+	if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
 		return;
 	if(!this.cnt)
 		this.nextthink = time + autocvar_g_nexball_delay_idle;
@@ -348,7 +348,7 @@ void basketball_touch(entity this, entity toucher)
 	}
 	if(!this.cnt && IS_PLAYER(toucher) && !STAT(FROZEN, toucher) && !IS_DEAD(toucher) && (toucher != this.nb_dropper || time > this.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
-		if(toucher.health <= 0)
+		if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
 			return;
 		LogNB("caught", toucher);
 		GiveBall(toucher, this);
@@ -635,7 +635,7 @@ void SpawnGoal(entity this)
 
 	EXACTTRIGGER_INIT;
 
-	if(this.team != GOAL_OUT && Team_TeamToNumber(this.team) != -1)
+	if(this.team != GOAL_OUT && Team_IsValidTeam(this.team))
 	{
 		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (this.absmin + this.absmax) * 0.5, this, sprite, RADARICON_NONE);
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0.5 0');
@@ -920,7 +920,7 @@ MUTATOR_HOOKFUNCTION(nb, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(nb, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(nb, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(1, string) = "nexball_team";
 	return true;

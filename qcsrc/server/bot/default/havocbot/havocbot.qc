@@ -500,7 +500,7 @@ void havocbot_movetogoal(entity this)
 	// Jetpack navigation
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
-	if(this.ammo_fuel)
+	if(GetResourceAmount(this, RESOURCE_FUEL))
 	{
 		if(autocvar_bot_debug_goalstack)
 		{
@@ -525,13 +525,13 @@ void havocbot_movetogoal(entity this)
 		{
 			// Calculate brake distance in xy
 			float d = vlen(vec2(this.origin - (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5));
-			float v = vlen(vec2(this.velocity));
-			float db = ((v ** 2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
+			float vel2 = vlen2(vec2(this.velocity));
+			float db = (vel2 / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
 			//LOG_INFOF("distance %d, velocity %d, brake at %d ", ceil(d), ceil(v), ceil(db));
 			if(d < db || d < 500)
 			{
 				// Brake
-				if(v > maxspeed * 0.3)
+				if (vel2 > (maxspeed * 0.3) ** 2)
 				{
 					CS(this).movement_x = dir * v_forward * -maxspeed;
 					return;
@@ -695,7 +695,7 @@ void havocbot_movetogoal(entity this)
 
 			return;
 		}
-		else if(this.health + this.armorvalue > ROCKETJUMP_DAMAGE())
+		else if(GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
 			if(this.velocity.z < 0)
 			{
@@ -748,9 +748,10 @@ void havocbot_movetogoal(entity this)
 		else
 			PHYS_INPUT_BUTTON_JUMP(this) = false;
 		makevectors(this.v_angle.y * '0 1 0');
-		CS(this).movement_x = dir * v_forward * maxspeed;
-		CS(this).movement_y = dir * v_right * maxspeed;
-		CS(this).movement_z = dir * v_up * maxspeed;
+		vector v = dir * maxspeed;
+		CS(this).movement.x = v * v_forward;
+		CS(this).movement.y = v * v_right;
+		CS(this).movement.z = v * v_up;
 	}
 
 	// if there is nowhere to go, exit
@@ -1167,7 +1168,7 @@ void havocbot_chooseenemy(entity this)
 			traceline(this.origin+this.view_ofs, ( this.enemy.absmin + this.enemy.absmax ) * 0.5,false,NULL);
 			if (trace_ent == this.enemy || trace_fraction == 1)
 			if (vdist(((this.enemy.absmin + this.enemy.absmax) * 0.5) - this.origin, <, 1000))
-			if (this.health > 30)
+			if (GetResourceAmount(this, RESOURCE_HEALTH) > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
 				this.havocbot_chooseenemy_finished = time + 0.5;
