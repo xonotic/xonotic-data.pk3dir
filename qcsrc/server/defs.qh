@@ -27,8 +27,6 @@ float bots_would_leave;
 void UpdateFrags(entity player, int f);
 .float totalfrags;
 
-float team1_score, team2_score, team3_score, team4_score;
-
 // flag set on worldspawn so that the code knows if it is dedicated or not
 float server_is_dedicated;
 
@@ -230,8 +228,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 // WEAPONTODO
 #define DMG_NOWEP (weaponentities[0])
-
-float lockteams;
 
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;

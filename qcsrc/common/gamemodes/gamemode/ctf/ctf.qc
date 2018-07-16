@@ -2466,11 +2466,9 @@ MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ctf, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(ctf, TeamBalance_CheckAllowedTeams)
 {
-	//M_ARGV(0, float) = ctf_teams;
 	M_ARGV(1, string) = "ctf_team";
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, SpectateCopy)
@@ -2696,7 +2694,6 @@ spawnfunc(team_CTL_bluelolly)  { spawnfunc_item_flag_team2(this);    }
 // scoreboard setup
 void ctf_ScoreRules(int teams)
 {
-	CheckAllowedTeams(NULL);
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
         field_team(ST_CTF_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
         field(SP_CTF_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
