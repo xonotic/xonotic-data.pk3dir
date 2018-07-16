@@ -54,8 +54,8 @@ REGISTER_WAYPOINT(OnsCPAttack, _("Control point"), "", '1 0.5 0', 2);
 REGISTER_WAYPOINT(OnsGen, _("Generator"), "", '1 0.5 0', 1);
 REGISTER_WAYPOINT(OnsGenShielded, _("Generator"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(SurvivalKill, _("Kill"), "weaponseeker", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(SurvivalDefend, _("Defend"), "item_large_armor", '0 1 0', 1);
+REGISTER_WAYPOINT(SurvivalKill, _("Kill"), "as_destroy", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(SurvivalDefend, _("Defend"), "as_defend", '0 1 0', 1);
 
 REGISTER_WAYPOINT(Weapon, _("Weapon"), "", '0 0 0', 1);
 
