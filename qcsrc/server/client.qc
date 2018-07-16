@@ -287,10 +287,8 @@ void PutObserverInServer(entity this)
 	if (mutator_returnvalue) {
 	    // mutator prevents resetting teams+score
 	} else {
-		int oldteam = this.team;
-		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
-		MUTATOR_CALLHOOK(Player_ChangedTeam, this, oldteam, this.team);
-        this.frags = FRAGS_SPECTATOR;
+		Player_SetTeamIndex(this, -1);
+		this.frags = FRAGS_SPECTATOR;
         PlayerScore_Clear(this);  // clear scores when needed
     }
 
@@ -302,7 +300,7 @@ void PutObserverInServer(entity this)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 		if(!CS(this).just_joined)
-			LogTeamchange(this.playerid, -1, 4);
+			LogTeamchange(this.playerid, -1, TEAM_CHANGE_SPECTATOR);
 		else
 			CS(this).just_joined = false;
 	}
@@ -521,7 +519,7 @@ void PutPlayerInServer(entity this)
 	accuracy_resend(this);
 
 	if (this.team < 0)
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this, true);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -915,7 +913,7 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if(this.killindicator_teamchange == -1)
 	{
-		JoinBestTeam( this, true );
+		TeamBalance_JoinBestTeam(this, true);
 	}
 	else if(this.killindicator_teamchange == -2)
 	{
@@ -1175,6 +1173,76 @@ void ClientPreConnect(entity this)
 }
 #endif
 
+string GetClientVersionMessage(entity this)
+{
+	if (CS(this).version_mismatch) {
+		if(CS(this).version < autocvar_gameversion) {
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
+		} else {
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8");
+		}
+	} else {
+		return strcat("Welcome to Xonotic ", autocvar_g_xonoticversion);
+	}
+}
+
+string getwelcomemessage(entity this)
+{
+	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
+	string modifications = M_ARGV(0, string);
+
+	if(g_weaponarena)
+	{
+		if(g_weaponarena_random)
+			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena");
+		else
+			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
+	}
+	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
+		modifications = strcat(modifications, ", No start weapons");
+	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
+		modifications = strcat(modifications, ", Low gravity");
+	if(g_weapon_stay && !g_cts)
+		modifications = strcat(modifications, ", Weapons stay");
+	if(g_jetpack)
+		modifications = strcat(modifications, ", Jet pack");
+	if(autocvar_g_powerups == 0)
+		modifications = strcat(modifications, ", No powerups");
+	if(autocvar_g_powerups > 0)
+		modifications = strcat(modifications, ", Powerups");
+	modifications = substring(modifications, 2, strlen(modifications) - 2);
+
+	string versionmessage = GetClientVersionMessage(this);
+	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
+
+	if(modifications != "")
+		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
+
+	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
+	{
+		strcpy(cache_lastmutatormsg, autocvar_g_mutatormsg);
+		strcpy(cache_mutatormsg, cache_lastmutatormsg);
+	}
+
+	if (cache_mutatormsg != "") {
+		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
+	}
+
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = M_ARGV(0, string);
+
+	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
+
+	string motd = autocvar_sv_motd;
+	if (motd != "") {
+		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
+	}
+	return s;
+}
+
 /**
 =============
 ClientConnect
@@ -1230,7 +1298,7 @@ void ClientConnect(entity this)
 
 	int playerid_save = this.playerid;
 	this.playerid = 0; // silent
-	JoinBestTeam(this, false); // if the team number is valid, keep it
+	TeamBalance_JoinBestTeam(this, false); // if the team number is valid, keep it
 	this.playerid = playerid_save;
 
 	TRANSMUTE(Observer, this);
@@ -1246,7 +1314,7 @@ void ClientConnect(entity this)
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
 
-	LogTeamchange(this.playerid, this.team, 1);
+	LogTeamchange(this.playerid, this.team, TEAM_CHANGE_CONNECT);
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
@@ -1266,12 +1334,9 @@ void ClientConnect(entity this)
 	// notify about available teams
 	if (teamplay)
 	{
-		CheckAllowedTeams(this);
-		int t = 0;
-		if (c1 >= 0) t |= BIT(0);
-		if (c2 >= 0) t |= BIT(1);
-		if (c3 >= 0) t |= BIT(2);
-		if (c4 >= 0) t |= BIT(3);
+		entity balance = TeamBalance_CheckAllowedTeams(this);
+		int t = TeamBalance_GetAllowedTeams(balance);
+		TeamBalance_Destroy(balance);
 		stuffcmd(this, sprintf("set _teams_available %d\n", t));
 	}
 	else
@@ -2056,7 +2121,7 @@ void Join(entity this)
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this, true);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
@@ -2067,7 +2132,9 @@ void Join(entity this)
 
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+	{
+		//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;

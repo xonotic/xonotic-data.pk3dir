@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-07-07 11:33+0000\n"
+"PO-Revision-Date: 2018-07-13 16:04+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -222,7 +222,7 @@ msgstr "Persönliche Bestzeit"
 
 #: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Server best"
-msgstr "Server Bestzeit"
+msgstr "Server-Bestzeit"
 
 #: qcsrc/client/hud/panel/notify.qc:115 qcsrc/client/hud/panel/notify.qc:116
 #: qcsrc/client/hud/panel/score.qc:59
@@ -1070,11 +1070,11 @@ msgstr "Keine Munition mehr"
 
 #: qcsrc/client/hud/panel/weapons.qc:534
 msgid "Don't have"
-msgstr "Nicht vorhanden"
+msgstr "Hast du nicht"
 
 #: qcsrc/client/hud/panel/weapons.qc:538
 msgid "Unavailable"
-msgstr "Nicht verfügbar"
+msgstr "Fehlend"
 
 #: qcsrc/client/main.qc:1014
 msgid " qu/s"
@@ -2734,12 +2734,12 @@ msgstr "^BGTeam ^TC^TT^BG hielt den Ball zu lange fest"
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^BG captured %s^BG control point"
-msgstr "^BG%s^BG hat den Kontrollpunkt von %s^BG erobert"
+msgstr "^BG%s^BG hat einen Kontrollpunkt erobert: %s^BG"
 
 #: qcsrc/common/notifications/all.inc:413
 #, c-format
 msgid "^TC^TT^BG team %s^BG control point has been destroyed by %s"
-msgstr "^TC^TT^BGDer Kontrollpunkt vom Team %s^BG wurde von %s zerstört"
+msgstr "^TC^TT^BGEin Kontrollpunkt vom Team %s^BG wurde von %s zerstört"
 
 #: qcsrc/common/notifications/all.inc:414
 msgid "^TC^TT^BG generator has been destroyed"
@@ -3914,12 +3914,12 @@ msgstr "^F2Aktive Waffe: ^F1%s"
 #: qcsrc/common/notifications/all.inc:733
 #, c-format
 msgid "^BGYou captured %s^BG control point"
-msgstr "^BGDu hast den Kontrollpunkt von %s^BG erobert"
+msgstr "^BGDu hast einen Kontrollpunkt erobert: %s^BG"
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr "Team ^TC^TT^BG hat %ss^BG Kontrollpunkt erobert"
+msgstr "Team ^TC^TT^BG hat einen Kontrollpunkt erobert: %s^BG"
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^BGThis control point currently cannot be captured"
