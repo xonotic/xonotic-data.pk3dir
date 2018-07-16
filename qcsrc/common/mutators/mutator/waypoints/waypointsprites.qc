@@ -243,7 +243,7 @@ string spritelookuptext(entity this, string s)
 		return "Spam"; // no need to translate this debug string
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_name;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint;
+	if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint_text;
     if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -261,8 +261,9 @@ string spritelookuptext(entity this, string s)
 string spritelookupicon(entity this, string s)
 {
     // TODO: needs icons! //if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_icon;
+    //if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
+	if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_waypoint_icon;
+	if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint_icon;
     if (s == WP_Vehicle.netname) return Vehicles_from(this.wp_extra).m_icon;
     //if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_icon;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
@@ -426,10 +427,17 @@ vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, 
 
     o.x += 0.5 * (w - sw);
 
-    if (is_text)
-        drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
-    else
-        drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+	if (is_text)
+	{
+		drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+	}
+	else
+	{
+		drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+		// https://docs.gimp.org/en/gimp-tool-desaturate.html
+		//float gray = rgb.x * 0.21 + rgb.y * 0.72 + rgb.z * 0.07;
+		//drawpic(o, str, sz, '1 1 1', gray * a, DRAWFLAG_ADDITIVE);
+	}
 
     o.x += 0.5 * sw;
     o.y += 0.5 * h;

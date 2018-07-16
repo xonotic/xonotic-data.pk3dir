@@ -14,6 +14,7 @@ CLASS(Electro, Weapon)
 /* crosshair */ ATTRIB(Electro, w_crosshair, string, "gfx/crosshairelectro");
 /* crosshair */ ATTRIB(Electro, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(Electro, model2, string, "weaponelectro");
+/* wp_icon   */ ATTRIB(Electro, m_waypoint_icon, string, "waypoint_weapon_electro");
 /* refname   */ ATTRIB(Electro, netname, string, "electro");
 /* wepname   */ ATTRIB(Electro, m_name, string, _("Electro"));
 

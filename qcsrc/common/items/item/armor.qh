@@ -41,6 +41,7 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     this.netname                =   "armor_small";
     this.m_name                 =   "5 Armor";
     this.m_icon                 =   "armor";
+	this.m_waypoint_icon        =   "waypoint_armor";
 #ifdef SVQC
     this.m_itemid               =   IT_ARMOR_SHARD;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
@@ -79,6 +80,7 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     this.netname                =   "armor_medium";
     this.m_name                 =   "25 Armor";
     this.m_icon                 =   "armor";
+	this.m_waypoint_icon        =   "waypoint_armor";
 #ifdef SVQC
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
@@ -118,7 +120,8 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
     this.m_color                =   '0 1 0';
-    this.m_waypoint             =   _("Big armor");
+	this.m_waypoint_text        =   _("Big armor");
+	this.m_waypoint_icon        =   "waypoint_armor";
 #ifdef SVQC
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
@@ -158,7 +161,8 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_name                 =   "100 Armor";
     this.m_icon                 =   "item_large_armor";
     this.m_color                =   '0 1 0';
-    this.m_waypoint             =   _("Mega armor");
+	this.m_waypoint_text        =   _("Mega armor");
+	this.m_waypoint_icon        =   "waypoint_armor_mega";
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_maxs                 =   '16 16 70';

@@ -19,31 +19,31 @@ REGISTER_WAYPOINT(AssaultDestroy, _("Destroy"), "", '1 0.5 0', 1);
 REGISTER_WAYPOINT(AssaultPush, _("Push"), "", '1 0.5 0', 1);
 
 REGISTER_WAYPOINT(FlagCarrier, _("Flag carrier"), "", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagCarrierEnemy, _("Enemy carrier"), "flag_neutral_carrying", '1 1 1', 1);
-REGISTER_WAYPOINT(FlagDropped, _("Dropped flag"), "flag_neutral_lost", '1 1 1', 1);
-REGISTER_WAYPOINT(FlagBaseNeutral, _("White base"), "flag_neutral_taken", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseRed, _("Red base"), "flag_red_taken", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseBlue, _("Blue base"), "flag_blue_taken", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), "flag_yellow_taken", '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), "flag_pink_taken", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagCarrierEnemy, _("Enemy carrier"), "waypoint_flag_carrying", '1 1 1', 1);
+REGISTER_WAYPOINT(FlagDropped, _("Dropped flag"), "waypoint_flag_lost", '1 1 1', 1);
+REGISTER_WAYPOINT(FlagBaseNeutral, _("White base"), "waypoint_flag", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseRed, _("Red base"), "waypoint_flag", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseBlue, _("Blue base"), "waypoint_flag", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), "waypoint_flag", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), "waypoint_flag", '0.8 0.8 0', 1);
 REGISTER_WAYPOINT(FlagReturn, _("Return flag here"), "", '0 0.8 0.8', 1);
 
-REGISTER_WAYPOINT(DomNeut, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
-REGISTER_WAYPOINT(DomRed, _("Control point"), "dom_icon_red-highlighted", '0 1 1', 1);
-REGISTER_WAYPOINT(DomBlue, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
-REGISTER_WAYPOINT(DomYellow, _("Control point"), "dom_icon_yellow-highlighted", '0 1 1', 1);
-REGISTER_WAYPOINT(DomPink, _("Control point"), "dom_icon_pink-highlighted", '0 1 1', 1);
+REGISTER_WAYPOINT(DomNeut, _("Control point"), "waypoint_dom_team2", '0 1 1', 1);
+REGISTER_WAYPOINT(DomRed, _("Control point"), "waypoint_dom_team1", '0 1 1', 1);
+REGISTER_WAYPOINT(DomBlue, _("Control point"), "waypoint_dom_team2", '0 1 1', 1);
+REGISTER_WAYPOINT(DomYellow, _("Control point"), "waypoint_dom_team3", '0 1 1', 1);
+REGISTER_WAYPOINT(DomPink, _("Control point"), "waypoint_dom_team4", '0 1 1', 1);
 
-REGISTER_WAYPOINT(KeyDropped, _("Dropped key"), "kh_dropped", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyDropped, _("Dropped key"), "waypoint_key_dropped", '0 1 1', 1);
 REGISTER_WAYPOINT(KeyCarrierFriend, _("Key carrier"), "", '0 1 0', 1);
 REGISTER_WAYPOINT(KeyCarrierFinish, _("Run here"), "", '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierRed, _("Key carrier"), "kh_red_carrying", '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierBlue, _("Key carrier"), "kh_blue_carrying", '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierYellow, _("Key carrier"), "kh_yellow_carrying", '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierPink, _("Key carrier"), "kh_pink_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierRed, _("Key carrier"), "waypoint_key_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierBlue, _("Key carrier"), "waypoint_key_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierYellow, _("Key carrier"), "waypoint_key_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierPink, _("Key carrier"), "waypoint_key_carrying", '0 1 1', 1);
 
-REGISTER_WAYPOINT(KaBall, _("Ball"), "notify_ballpickedup", '0 1 1', 1);
-REGISTER_WAYPOINT(KaBallCarrier, _("Ball carrier"), "keepawayball_carrying", '1 0 0', 1);
+REGISTER_WAYPOINT(KaBall, _("Ball"), "waypoint_ka_ball", '0 1 1', 1);
+REGISTER_WAYPOINT(KaBallCarrier, _("Ball carrier"), "waypoint_ka_ball_carrying", '1 0 0', 1);
 
 REGISTER_WAYPOINT(NbBall, _("Ball"), "", '0.91 0.85 0.62', 1);
 REGISTER_WAYPOINT(NbGoal, _("Goal"), "", '1 0.5 0', 1);

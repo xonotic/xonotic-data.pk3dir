@@ -66,6 +66,8 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, w_reticle, string, string_null);
     /** M: wepimg    : "weaponfoobar" side view image file of weapon. WEAPONTODO: Move out of skin files, move to common files */
     ATTRIB(Weapon, model2, string, "");
+	/** M: waypoint icon name : "waypoint_weapon_foobar" Name of the weapon waypoint icon */
+	ATTRIB(Weapon, m_waypoint_icon, string, "");
     /** M: refname   : reference name name */
     ATTRIB(Weapon, netname, string, "");
     /** M: wepname   : human readable name */

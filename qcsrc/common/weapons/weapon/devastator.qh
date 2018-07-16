@@ -14,6 +14,7 @@ CLASS(Devastator, Weapon)
 /* crosshair */ ATTRIB(Devastator, w_crosshair, string, "gfx/crosshairrocketlauncher");
 /* crosshair */ ATTRIB(Devastator, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Devastator, model2, string, "weaponrocketlauncher");
+/* wp_icon   */ ATTRIB(Devastator, m_waypoint_icon, string, "waypoint_weapon_devastator");
 /* refname   */ ATTRIB(Devastator, netname, string, "devastator");
 /* wepname   */ ATTRIB(Devastator, m_name, string, _("Devastator"));
 

@@ -15,6 +15,7 @@ CLASS(Vortex, Weapon)
 /* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);
 /* reticle   */ ATTRIB(Vortex, w_reticle, string, "gfx/reticle_nex");
 /* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
+/* wp_icon   */ ATTRIB(Vortex, m_waypoint_icon, string, "waypoint_weapon_vortex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
 /* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
 

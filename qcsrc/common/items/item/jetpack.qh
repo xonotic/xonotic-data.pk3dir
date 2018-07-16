@@ -38,7 +38,8 @@ REGISTER_ITEM(Jetpack, Powerup) {
     this.m_name                 =   "Jetpack";
     this.m_icon                 =   "jetpack";
     this.m_color                =   '0.5 0.5 0.5';
-    this.m_waypoint             =   _("Jetpack");
+    this.m_waypoint_text        =   _("Jetpack");
+    this.m_waypoint_icon        =   "waypoint_jetpack";
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_botvalue             =   3000;
@@ -96,7 +97,8 @@ REGISTER_ITEM(JetpackRegen, JetpackRegen) {
     this.m_name                 =   "Fuel regenerator";
     this.m_icon                 =   "fuelregen";
     this.m_color                =   '1 0.5 0';
-    this.m_waypoint             =   _("Fuel regen");
+    this.m_waypoint_text        =   _("Fuel regen");
+    this.m_waypoint_icon        =   "waypoint_fuel_regen";
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_botvalue             =   3000;
