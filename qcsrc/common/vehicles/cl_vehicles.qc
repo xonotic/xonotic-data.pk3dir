@@ -21,7 +21,7 @@ float alarm2time;
 
 void vehicle_alarm(entity e, int ch, Sound s0und)
 {
-    TC(Sound, s0und);
+	TC(Sound, s0und);
 	if(!autocvar_cl_vehicles_alarm)
 		return;
 

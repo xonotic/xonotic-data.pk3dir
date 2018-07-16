@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef CSQC
+#include <client/resources.qh>
+#endif
+
 
 // This includes some functions useful for debugging.
 // Some more bot-specific ones are in server/pathlib/debug.qc.
@@ -403,7 +407,7 @@ CLASS(DebugText3d, Object)
 		CONSTRUCT(DebugText3d);
 		this.origin = pos;
 		this.message = strzone(msg);
-		this.health = align;
+		SetResourceAmount(this, RESOURCE_HEALTH, align);
 		this.hit_time = time;
 		this.fade_rate = fade_rate_;
 		this.velocity = vel;
@@ -425,7 +429,7 @@ CLASS(DebugText3d, Object)
 
 		int size = 8;
 		vector screen_pos = project_3d_to_2d(this.origin) + since_created * this.velocity;
-		float align = this.health;
+		float align = GetResourceAmount(this, RESOURCE_HEALTH);
 		if (align > 0)
 			screen_pos.x -= stringwidth(this.message, true, size * '1 1 0') * min(1, align);
 		if (screen_pos.z < 0) return; // behind camera

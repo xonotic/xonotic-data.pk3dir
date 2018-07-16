@@ -705,7 +705,7 @@
     MSG_CENTER_NOTIF(ITEM_BUFF_DROP,                    N_ENABLE,    0, 1, "item_buffname",                      CPID_ITEM, "item_centime 0", _("^BGYou dropped the %s^BG buff!"), "")
     MSG_CENTER_NOTIF(ITEM_BUFF_GOT,                     N_ENABLE,    0, 1, "item_buffname",                      CPID_ITEM, "item_centime 0", _("^BGYou got the %s^BG buff!"), "")
     MSG_CENTER_NOTIF(ITEM_FUELREGEN_GOT,                N_ENABLE,    0, 0, "",                                   CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Fuel regenerator"), "")
-    MSG_CENTER_NOTIF(ITEM_JETPACK_GOT,                  N_ENABLE,    0, 0, "",                                   CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Jet pack"), "")
+    MSG_CENTER_NOTIF(ITEM_JETPACK_GOT,                  N_ENABLE,    0, 0, "",                                   CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Jetpack"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_DONTHAVE,              N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    1, 1, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "")

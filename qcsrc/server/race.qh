@@ -70,3 +70,5 @@ void race_SendRankings(float pos, float prevpos, float del, float msg);
 void race_RetractPlayer(entity this);
 
 void race_InitSpectator();
+
+spawnfunc(target_checkpoint);

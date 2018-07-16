@@ -34,7 +34,6 @@ void sys_phys_monitor(entity this, float dt)
 void sys_phys_ai(entity this)
 {
 	if (!IS_BOT_CLIENT(this)) { return; }
-	if (playerdemo_read(this)) { return; }
 	bot_think(this);
 }
 

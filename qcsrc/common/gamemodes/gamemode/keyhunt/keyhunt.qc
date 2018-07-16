@@ -1264,9 +1264,10 @@ MUTATOR_HOOKFUNCTION(kh, MatchEnd)
 	kh_finalize();
 }
 
-MUTATOR_HOOKFUNCTION(kh, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(kh, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = kh_teams;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(kh, SpectateCopy)

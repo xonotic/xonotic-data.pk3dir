@@ -29,11 +29,8 @@ vector steerlib_push(entity this, vector point)
 **/
 vector steerlib_arrive(entity this, vector point, float maximal_distance)
 {
-    float distance;
-    vector direction;
-
-    distance = bound(0.001,vlen(this.origin - point),maximal_distance);
-    direction = normalize(point - this.origin);
+    float distance = bound(0.001,vlen(this.origin - point),maximal_distance);
+    vector direction = normalize(point - this.origin);
     return  direction * (distance / maximal_distance);
 }
 
@@ -42,25 +39,18 @@ vector steerlib_arrive(entity this, vector point, float maximal_distance)
 **/
 vector steerlib_attract(entity this, vector point, float maximal_distance)
 {
-    float distance;
-    vector direction;
-
-    distance = bound(0.001,vlen(this.origin - point),maximal_distance);
-    direction = normalize(point - this.origin);
+    float distance = bound(0.001,vlen(this.origin - point),maximal_distance);
+    vector direction = normalize(point - this.origin);
 
     return  direction * (1-(distance / maximal_distance));
 }
 
 vector steerlib_attract2(entity this, vector point, float min_influense,float max_distance,float max_influense)
 {
-    float distance;
-    vector direction;
-    float influense;
+    float distance  = bound(0.00001,vlen(this.origin - point),max_distance);
+    vector direction = normalize(point - this.origin);
 
-    distance  = bound(0.00001,vlen(this.origin - point),max_distance);
-    direction = normalize(point - this.origin);
-
-    influense = 1 - (distance / max_distance);
+    float influense = 1 - (distance / max_distance);
     influense = min_influense + (influense * (max_influense - min_influense));
 
     return  direction * influense;
