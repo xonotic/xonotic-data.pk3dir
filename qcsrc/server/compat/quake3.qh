@@ -1,1 +1,3 @@
 #pragma once
+
+bool DoesQ3ARemoveThisEntity(entity this);

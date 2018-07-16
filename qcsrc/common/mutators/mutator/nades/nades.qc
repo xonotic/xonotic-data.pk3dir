@@ -978,7 +978,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	settouch(_nade, nade_touch);
 	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
 	SetResourceAmount(_nade, RESOURCE_HEALTH, autocvar_g_nades_nade_health);
-	_nade.max_health = _nade.health;
+	_nade.max_health = GetResourceAmount(_nade, RESOURCE_HEALTH);
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
 	setcefc(_nade, func_null);

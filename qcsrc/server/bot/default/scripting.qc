@@ -620,10 +620,11 @@ float bot_cmd_eval(entity this, string expr)
 		return cvar(substring(expr, 5, strlen(expr)));
 
 	// Search for fields
+	// TODO: expand with support for more fields (key carrier, ball carrier, armor etc)
 	switch(expr)
 	{
 		case "health":
-			return this.health;
+			return GetResourceAmount(this, RESOURCE_HEALTH);
 		case "speed":
 			return vlen(this.velocity);
 		case "flagcarrier":

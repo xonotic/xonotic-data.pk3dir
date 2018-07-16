@@ -11,4 +11,6 @@ void sv_notice_join(entity _to);
 
 #ifdef CSQC
 void cl_notice_read();
+
+void cl_notice_run();
 #endif

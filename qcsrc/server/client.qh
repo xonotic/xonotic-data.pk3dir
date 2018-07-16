@@ -114,6 +114,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
     ATTRIB(Client, wasplayer, bool, this.wasplayer);
     ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);
+    ATTRIB(Client, autojoin_checked, bool, this.wasplayer);
 
     // networked cvars
 
@@ -261,6 +262,22 @@ void play_countdown(entity this, float finished, Sound samp);
 float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
 
 bool Spectate(entity this, entity pl);
+
+void ClientInit_Spawn();
+
+void PutObserverInServer(entity this);
+
+void SetSpectatee(entity this, entity spectatee);
+void SetSpectatee_status(entity this, int spectatee_num);
+
+void FixPlayermodel(entity player);
+
+void ClientInit_misc(entity this);
+
+void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
+
+bool joinAllowed(entity this);
+void Join(entity this);
 
 #define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
