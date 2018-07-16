@@ -101,11 +101,11 @@ if [ x"$mode" = x"txt" ]; then
 				if [ "$p" -lt 50 ]; then
 					continue
 				fi
-				item="$l $l \"$l\" 0%"
+				item="$l \"$l\" \"$l\" 0%"
 			fi
 			printf "%s\n" "$item" | sed -e "s/[0-9][0-9]*%/$p%/"
 		done
-	} | tr '"' '\t' | sort -k3 | tr '\t' '"'
+	} | LC_ALL=C sort -t '"' -k4,4
 fi
 
 if [ x"$mode" = x"po" ]; then

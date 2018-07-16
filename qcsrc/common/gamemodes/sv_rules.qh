@@ -2,7 +2,6 @@
 
 // TODO: find a better location for these?
 float total_players;
-float redalive, bluealive, yellowalive, pinkalive;
 
 // todo: accept the number of teams as a parameter
 void GameRules_teams(bool value);

@@ -74,7 +74,7 @@ void CTS_ClientKill(entity e) // silent version of ClientKill, used when player 
     setthink(e.killindicator, KillIndicator_Think);
     e.killindicator.nextthink = time + (e.lip) * 0.05;
     e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
-    e.killindicator.health = 1; // this is used to indicate that it should be silent
+    e.killindicator.count = 1; // this is used to indicate that it should be silent
     e.lip = 0;
 }
 
@@ -386,7 +386,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 
 	M_ARGV(1, float) = 0; // kill delay
 
-	if(player.killindicator && player.killindicator.health == 1) // player.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
+	if(player.killindicator && player.killindicator.count == 1) // player.killindicator.count == 1 means that the kill indicator was spawned by CTS_ClientKill
 	{
 		delete(player.killindicator);
 		player.killindicator = NULL;

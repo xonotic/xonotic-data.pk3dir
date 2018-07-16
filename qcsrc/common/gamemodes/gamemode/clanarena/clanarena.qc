@@ -7,53 +7,64 @@ bool autocvar_g_ca_spectate_enemies;
 
 void CA_count_alive_players()
 {
-	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), {
-		switch(it.team)
+	total_players = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
+	}
+	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
+	{
+		++total_players;
+		if (IS_DEAD(it))
 		{
-			case NUM_TEAM_1: ++total_players; if(!IS_DEAD(it)) ++redalive; break;
-			case NUM_TEAM_2: ++total_players; if(!IS_DEAD(it)) ++bluealive; break;
-			case NUM_TEAM_3: ++total_players; if(!IS_DEAD(it)) ++yellowalive; break;
-			case NUM_TEAM_4: ++total_players; if(!IS_DEAD(it)) ++pinkalive; break;
+			continue;
 		}
+		entity team_ = Entity_GetTeam(it);
+		int num_alive = Team_GetNumberOfAlivePlayers(team_);
+		++num_alive;
+		Team_SetNumberOfAlivePlayers(team_, num_alive);
 	});
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		STAT(REDALIVE, it) = redalive;
-		STAT(BLUEALIVE, it) = bluealive;
-		STAT(YELLOWALIVE, it) = yellowalive;
-		STAT(PINKALIVE, it) = pinkalive;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(
+			1));
+		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(4));
 	});
 }
 
-float CA_GetWinnerTeam()
+int CA_GetWinnerTeam()
 {
-	float winner_team = 0;
-	if(redalive >= 1)
+	int winner_team = 0;
+	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
+	{
 		winner_team = NUM_TEAM_1;
-	if(bluealive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
 	}
-	if(yellowalive >= 1)
+	for (int i = 2; i <= NUM_TEAMS; ++i)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
+		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
+		{
+			if (winner_team != 0)
+			{
+				return 0;
+			}
+			winner_team = Team_IndexToTeam(i);
+		}
 	}
-	if(pinkalive >= 1)
+	if (winner_team)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
 		return winner_team;
+	}
 	return -1; // no player left
 }
 
 void nades_Clear(entity player);
 
-#define CA_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
-#define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == NumTeams(ca_teams))
+#define CA_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
 float CA_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -69,8 +80,10 @@ float CA_CheckWinner()
 	}
 
 	CA_count_alive_players();
-	if(CA_ALIVE_TEAMS() > 1)
+	if (Team_GetNumberOfAliveTeams() > 1)
+	{
 		return 0;
+	}
 
 	int winner_team = CA_GetWinnerTeam();
 	if(winner_team > 0)
@@ -96,7 +109,7 @@ float CA_CheckWinner()
 
 void CA_RoundStart()
 {
-    allowed_to_spawn = boolean(warmup_stage);
+	allowed_to_spawn = boolean(warmup_stage);
 }
 
 bool CA_CheckTeams()
@@ -119,14 +132,14 @@ bool CA_CheckTeams()
 		return false;
 	}
 	int missing_teams_mask = 0;
-	if(ca_teams & BIT(0))
-		missing_teams_mask += (!redalive) * 1;
-	if(ca_teams & BIT(1))
-		missing_teams_mask += (!bluealive) * 2;
-	if(ca_teams & BIT(2))
-		missing_teams_mask += (!yellowalive) * 4;
-	if(ca_teams & BIT(3))
-		missing_teams_mask += (!pinkalive) * 8;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if ((ca_teams & Team_IndexToBit(i)) &&
+			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
+		{
+			missing_teams_mask |= Team_IndexToBit(i);
+		}
+	}
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
@@ -164,7 +177,7 @@ entity CA_SpectateNext(entity player, entity start)
 
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	player.caplayer = 1;
 	if (!warmup_stage)
@@ -220,7 +233,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 
 MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	TRANSMUTE(Observer, player);
 	return true;
@@ -232,9 +245,10 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(ca, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = ca_teams;
+	return true;
 }
 
 entity ca_LastPlayerForTeam(entity this)
@@ -253,8 +267,7 @@ entity ca_LastPlayerForTeam(entity this)
 
 void ca_LastPlayerForTeam_Notify(entity this)
 {
-	if (round_handler_IsActive())
-	if (round_handler_IsRoundStarted())
+	if (!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
 	{
 		entity pl = ca_LastPlayerForTeam(this);
 		if (pl)
@@ -275,15 +288,17 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
+	{
 		eliminatedPlayers.SendFlags |= 1;
-	if(IS_BOT_CLIENT(frag_target))
-		bot_clear(frag_target);
+		if (IS_BOT_CLIENT(frag_target))
+			bot_clear(frag_target);
+	}
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	if (player.caplayer == 1)
 		ca_LastPlayerForTeam_Notify(player);
@@ -292,7 +307,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	if (!IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
@@ -352,7 +367,7 @@ MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
 
 MUTATOR_HOOKFUNCTION(ca, FilterItem)
 {
-    entity item = M_ARGV(0, entity);
+	entity item = M_ARGV(0, entity);
 
 	if (autocvar_g_powerups <= 0)
 	if (item.flags & FL_POWERUP)
@@ -396,8 +411,8 @@ MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
 
 MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 {
-    entity client = M_ARGV(0, entity);
-    entity targ = M_ARGV(1, entity);
+	entity client = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
 
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	if (DIFF_TEAM(targ, client))
@@ -406,7 +421,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 
 MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
-    entity client = M_ARGV(0, entity);
+	entity client = M_ARGV(0, entity);
 
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
@@ -418,9 +433,9 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 
 MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 {
-    entity client = M_ARGV(0, entity);
-    entity targ = M_ARGV(1, entity);
-    entity first = M_ARGV(2, entity);
+	entity client = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+	entity first = M_ARGV(2, entity);
 
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
@@ -453,7 +468,7 @@ MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	if (player.caplayer)
 	{

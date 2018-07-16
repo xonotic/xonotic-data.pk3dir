@@ -10,6 +10,7 @@
 
 #include "../g_damage.qh"
 #include "../g_world.qh"
+#include "../teamplay.qh"
 #include "../race.qh"
 #include "../round_handler.qh"
 #include "../scores.qh"
