@@ -185,7 +185,11 @@ bool Player_SetTeamIndex(entity player, int index)
 		// Mutator has blocked team change.
 		return false;
 	}
-	if (new_team != -1)
+	if (new_team == -1)
+	{
+		player.team = -1;
+	}
+	else
 	{
 		SetPlayerColors(player, new_team - 1);
 	}
@@ -260,6 +264,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		team_ent.m_num_players = TEAM_NOT_ALLOWED;
 		team_ent.m_num_bots = 0;
 	}
+	setthink(balance, TeamBalance_Destroy);
 	
 	int teams_mask = 0;	
 	string teament_name = string_null;

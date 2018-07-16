@@ -33,7 +33,6 @@ int img_select(int group_id)
 	return img_cur_msg[group_id];
 }
 
-float stringwidth_colors(string s, vector theSize);
 vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
 {
 	getWrappedLine_remaining = s;

@@ -16,6 +16,7 @@
 #include "../common/command/_mod.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
+#include <common/weapons/weapon/crylink.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications/all.qh"
@@ -265,8 +266,8 @@ string formatmessage(entity this, string msg)
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(this.armorvalue)); break;
-			case "h": replacement = ftos(floor(this.health)); break;
+			case "a": replacement = ftos(floor(GetResourceAmount(this, RESOURCE_ARMOR))); break;
+			case "h": replacement = ftos(floor(GetResourceAmount(this, RESOURCE_HEALTH))); break;
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
@@ -1059,7 +1060,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	if(trace_dphitcontents == 0)
 	{
 		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
-		checkclient(this);
+		checkclient(this); // TODO: .health is checked in the engine with this, possibly replace with a QC function?
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return true;
@@ -1085,7 +1086,6 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 #define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
 
-void W_Crylink_Dequeue(entity e);
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
 	if(SUB_OwnerCheck(this, toucher))

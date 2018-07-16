@@ -6,6 +6,7 @@
 #include <client/view.qh>
 #include <common/t_items.qh>
 #include <common/wepent.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 
 // Ammo (#1)
 
@@ -19,11 +20,9 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
-
 void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, bool isInfinite)
 {
-    TC(bool, isCurrent); TC(bool, isInfinite);
+	TC(bool, isCurrent); TC(bool, isInfinite);
 	if(ammoType == RESOURCE_NONE)
 		return;
 

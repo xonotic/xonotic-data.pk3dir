@@ -188,9 +188,9 @@ void dompointthink(entity this)
 
 void dompointtouch(entity this, entity toucher)
 {
-	if (!IS_PLAYER(toucher))
+	if(!IS_PLAYER(toucher))
 		return;
-	if (toucher.health < 1)
+	if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
@@ -308,6 +308,10 @@ void Domination_count_controlpoints()
 	IL_EACH(g_dompoints, true,
 	{
 		++total_control_points;
+		if (!Entity_HasValidTeam(it.goalentity))
+		{
+			continue;
+		}
 		entity team_ = Entity_GetTeam(it.goalentity);
 		int num_control_points = Team_GetNumberOfControlPoints(team_);
 		++num_control_points;
@@ -585,10 +589,10 @@ void ScoreRules_dom(int teams)
 }
 
 // code from here on is just to support maps that don't have control point and team entities
-void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, Sound capsound, string capnarration, string capmessage)
+void dom_spawnteam(string teamname, float teamcolor, string pointmodel, float pointskin, Sound capsound, string capnarration, string capmessage)
 {
-    TC(Sound, capsound);
-    entity e = new_pure(dom_team);
+	TC(Sound, capsound);
+	entity e = new_pure(dom_team);
 	e.netname = strzone(teamname);
 	e.cnt = teamcolor;
 	e.model = pointmodel;
@@ -622,7 +626,7 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(int teams)
 {
-    TC(int, teams);
+	TC(int, teams);
 	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_1), NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND_DOM_CLAIM, "", "Red team has captured a control point");
 	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_2), NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND_DOM_CLAIM, "", "Blue team has captured a control point");
 	if(teams >= 3)

@@ -2,12 +2,20 @@
 
 #ifdef SVQC
 
+.float m_chainsaw_damage; // accumulated damage of the missile as it passes trough enemies
+
 void W_OverkillRocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(okrpc, damage), WEP_CVAR_PRI(okrpc, edgedamage), WEP_CVAR_PRI(okrpc, radius), NULL, NULL, WEP_CVAR_PRI(okrpc, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
+	float explosion_damage = RadiusDamage(this, this.realowner, WEP_CVAR_PRI(okrpc, damage), WEP_CVAR_PRI(okrpc, edgedamage), WEP_CVAR_PRI(okrpc, radius), NULL, NULL, WEP_CVAR_PRI(okrpc, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
+	if (explosion_damage > 0 && this.m_chainsaw_damage > 0)
+	{
+		// if chainsaw hit something, it removed fired damage (so that direct hit is 100%)
+		// now that we also damaged something by explosion we'd go over 100% so let's add the fired damage back
+		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, WEP_CVAR(okrpc, damage), 0);
+	}
 
 	delete(this);
 }
@@ -28,15 +36,15 @@ void W_OverkillRocketPropelledChainsaw_Touch (entity this, entity toucher)
 
 void W_OverkillRocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if (this.health <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if (this.health <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_OverkillRocketPropelledChainsaw_Explode_think);
 }
 
@@ -53,8 +61,22 @@ void W_OverkillRocketPropelledChainsaw_Think(entity this)
 	vector mydir = normalize(this.velocity);
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
-	if(IS_PLAYER(trace_ent))
+	if (IS_PLAYER(trace_ent))
+	{
+		if (accuracy_isgooddamage(this.realowner, trace_ent))
+		{
+			if (this.m_chainsaw_damage == 0) // first hit
+			{
+				// The fired damage of the explosion is already counted in the statistics (when launching the chainsaw).
+				// We remove it here so that a direct hit that passes through and doesn't damage anything by the explosion later is still 100%.
+				float fired_damage = WEP_CVAR_PRI(okrpc, damage2) - WEP_CVAR_PRI(okrpc, damage);
+				float hit_damage = WEP_CVAR_PRI(okrpc, damage2);
+				accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, fired_damage, hit_damage);
+			}
+			this.m_chainsaw_damage += WEP_CVAR_PRI(okrpc, damage2);
+		}
 		Damage(trace_ent, this, this.realowner, WEP_CVAR_PRI(okrpc, damage2), this.projectiledeathtype, this.weaponentity_fld, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR_PRI(okrpc, force));
+	}
 
 	this.velocity = mydir * (myspeed + (WEP_CVAR_PRI(okrpc, speedaccel) * sys_frametime));
 
@@ -78,7 +100,7 @@ void W_OverkillRocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .en
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR_PRI(okrpc, damageforcescale);
-	missile.health = WEP_CVAR_PRI(okrpc, health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_PRI(okrpc, health));
 	missile.event_damage = W_OverkillRocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -106,6 +128,7 @@ void W_OverkillRocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .en
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
+	missile.m_chainsaw_damage = 0;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }

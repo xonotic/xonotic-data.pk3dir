@@ -27,6 +27,12 @@ MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
     /**/
 MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
 
+/** returns true if client should be put as player on connection */
+#define EV_AutoJoinOnConnection(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(AutoJoinOnConnection, EV_AutoJoinOnConnection);
+
 /** called when player spawns to determine whether to give them random start weapons. Return true to forbid giving them. */
 #define EV_ForbidRandomStartWeapons(i, o) \
 	/** player */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -750,6 +756,30 @@ RESOURCE_* constants for resource types. Return true to forbid giving. */
 	/**/
 MUTATOR_HOOKABLE(GiveResourceWithLimit, EV_GiveResourceWithLimit);
 
+/** Called when some resource is being taken from an entity. See RESOURCE_* constants
+for resource types. Return true to forbid giving. */
+#define EV_TakeResource(i, o) \
+    /** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
+    /** resource type */ i(int, MUTATOR_ARGV_1_int) \
+    /**/                 o(int, MUTATOR_ARGV_1_int) \
+    /** amount */        i(float, MUTATOR_ARGV_2_float) \
+    /**/                 o(float, MUTATOR_ARGV_2_float) \
+    /**/
+MUTATOR_HOOKABLE(TakeResource, EV_TakeResource);
+
+/** Called when some resource is being taken from an entity, with a limit. See
+RESOURCE_* constants for resource types. Return true to forbid giving. */
+#define EV_TakeResourceWithLimit(i, o) \
+    /** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
+    /** resource type */ i(int, MUTATOR_ARGV_1_int) \
+    /**/                 o(int, MUTATOR_ARGV_1_int) \
+    /** amount */        i(float, MUTATOR_ARGV_2_float) \
+    /**/                 o(float, MUTATOR_ARGV_2_float) \
+    /** limit */         i(float, MUTATOR_ARGV_3_float) \
+    /**/                 o(float, MUTATOR_ARGV_3_float) \
+    /**/
+MUTATOR_HOOKABLE(TakeResourceWithLimit, EV_TakeResourceWithLimit);
+
 /** called at when a player connect */
 #define EV_ClientConnect(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -1155,3 +1185,21 @@ enum {
     MUT_VOTEPARSE_INVALID, // return -1 (vote parsed but counted as invalid, no action or vote)
     MUT_VOTEPARSE_UNACCEPTABLE // return 0 (vote parameter counted as unacceptable, warns caller)
 };
+
+/**
+ * Called when freezing an entity (monster or player), return true to force showing a waypoint
+ */
+#define EV_Freeze(i, o) \
+    /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** revive speed */     i(float, MUTATOR_ARGV_1_float) \
+    /** frozen type */      i(int, MUTATOR_ARGV_2_int) \
+    /**/
+MUTATOR_HOOKABLE(Freeze, EV_Freeze);
+
+/**
+ * Called when an entity (monster or player) is defrosted
+ */
+#define EV_Unfreeze(i, o) \
+    /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);
