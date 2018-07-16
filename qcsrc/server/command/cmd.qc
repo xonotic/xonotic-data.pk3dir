@@ -10,6 +10,7 @@
 
 #include "../campaign.qh"
 #include "../cheats.qh"
+#include "../client.qh"
 #include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
@@ -40,8 +41,6 @@
 #include <common/monsters/sv_monsters.qh>
 
 #include <lib/warpzone/common.qh>
-
-void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual
@@ -166,8 +165,6 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
-bool joinAllowed(entity this);
-void Join(entity this);
 void ClientCommand_join(entity caller, float request)
 {
 	switch (request)

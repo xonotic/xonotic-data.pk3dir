@@ -27,5 +27,7 @@ string GetNextMap();
 void ShuffleMaplist();
 void Map_Goto_SetStr(string nextmapname);
 void Map_Goto(float reinit);
+void Map_MarkAsRecent(string m);
 float DoNextMapOverride(float reinit);
 void CheckRules_World();
+float RedirectionThink();

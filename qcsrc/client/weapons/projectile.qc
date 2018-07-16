@@ -11,6 +11,8 @@
 #include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
 
+#include <common/mutators/mutator/nades/nades.qh>
+
 #include <lib/csqcmodel/interpolate.qh>
 
 #include <lib/warpzone/anglestransform.qh>
@@ -49,8 +51,6 @@ void Projectile_DrawTrail(entity this, vector to)
 		boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
-
-bool Projectile_isnade(int proj); // TODO: remove
 
 void Projectile_Draw(entity this)
 {
@@ -171,7 +171,7 @@ void Projectile_Draw(entity this)
 
 void loopsound(entity e, int ch, Sound samp, float vol, float attn)
 {
-    TC(int, ch);
+	TC(int, ch);
 	if (e.silent)
 		return;
 

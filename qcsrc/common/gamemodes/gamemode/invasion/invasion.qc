@@ -290,7 +290,7 @@ bool Invasion_CheckWinner()
 
 	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;
 
-	IL_EACH(g_monsters, it.health > 0,
+	IL_EACH(g_monsters, GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((get_monsterinfo(it.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
 			++supermonster_count;
@@ -562,7 +562,6 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 
 void invasion_ScoreRules(int inv_teams)
 {
-	//if(inv_teams) { CheckAllowedTeams(NULL); } // Another bug?
 	GameRules_score_enabled(false);
 	GameRules_scoring(inv_teams, 0, 0, {
 	    if (inv_teams) {

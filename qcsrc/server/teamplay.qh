@@ -71,7 +71,8 @@ int Entity_GetTeamIndex(entity this);
 
 /// \brief Returns the team entity of the given entity.
 /// \param[in] this Entity to check.
-/// \return Team entity of the given entity.
+/// \return Team entity of the given entity or NULL if the entity doesn't belong
+/// to any team.
 entity Entity_GetTeam(entity this);
 
 void SetPlayerColors(entity player, float _color);
@@ -117,7 +118,8 @@ void LogTeamchange(float player_id, float team_number, int type);
 /// configuration and mutator settings.
 /// \param[in] for_whom Player to check for. Pass NULL for global rules.
 /// \return Team balance entity that holds information about teams. This entity
-/// must be manually destroyed by calling TeamBalance_Destroy.
+/// will be automatically destroyed on the next frame but you are encouraged to
+/// manually destroy it by calling TeamBalance_Destroy for performance reasons.
 entity TeamBalance_CheckAllowedTeams(entity for_whom);
 
 /// \brief Destroy the team balance entity.
