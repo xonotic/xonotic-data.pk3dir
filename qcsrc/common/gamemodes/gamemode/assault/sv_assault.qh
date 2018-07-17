@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef SVQC
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
 
@@ -45,4 +44,3 @@ void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrat
 
 // predefined spawnfuncs
 void target_objective_decrease_activate(entity this);
-#endif

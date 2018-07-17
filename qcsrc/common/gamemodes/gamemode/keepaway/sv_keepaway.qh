@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef SVQC
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
 void ka_Initialize();
@@ -28,4 +27,3 @@ void(entity this) havocbot_role_ka_carrier;
 void(entity this) havocbot_role_ka_collector;
 
 void ka_DropEvent(entity plyr);
-#endif

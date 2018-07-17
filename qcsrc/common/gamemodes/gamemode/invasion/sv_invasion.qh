@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef SVQC
 #include <common/mutators/base.qh>
 #define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
 int autocvar_g_invasion_teams;
@@ -45,4 +44,3 @@ const float ST_INV_KILLS = 1;
 const int INV_TYPE_ROUND = 0; // round-based waves of enemies
 const int INV_TYPE_HUNT = 1; // clear the map of placed enemies
 const int INV_TYPE_STAGE = 2; // reach the end of the level
-#endif

@@ -1,7 +1,5 @@
-#include "clanarena.qh"
+#include "sv_clanarena.qh"
 
-// TODO: split into sv_clanarena
-#ifdef SVQC
 float autocvar_g_ca_damage2score_multiplier;
 bool autocvar_g_ca_spectate_enemies;
 
@@ -503,4 +501,3 @@ MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 	// most weapons arena
 	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
 }
-#endif

@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef SVQC
 #include <common/mutators/base.qh>
 #include <server/round_handler.qh>
 #include <server/miscfunctions.qh>
@@ -53,4 +52,3 @@ REGISTER_MUTATOR(ca, false)
 
 // should be removed in the future, as other code should not have to care
 .float caplayer; // 0.5 if scheduled to join the next round
-#endif

@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef SVQC
 #include <common/mutators/base.qh>
 #include <server/race.qh>
 
@@ -23,4 +22,3 @@ REGISTER_MUTATOR(cts, false)
 
 // scores
 const float ST_CTS_LAPS = 1;
-#endif

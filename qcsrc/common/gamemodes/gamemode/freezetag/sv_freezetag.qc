@@ -1,7 +1,4 @@
-#include "freezetag.qh"
-
-// TODO: sv_freezetag
-#ifdef SVQC
+#include "sv_freezetag.qh"
 
 #include <server/resources.qh>
 
@@ -607,4 +604,3 @@ void freezetag_Initialize()
 
 	EliminatedPlayers_Init(freezetag_isEliminated);
 }
-#endif

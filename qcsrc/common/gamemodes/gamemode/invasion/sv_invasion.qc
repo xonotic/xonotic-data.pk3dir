@@ -1,7 +1,5 @@
-#include "invasion.qh"
+#include "sv_invasion.qh"
 
-// TODO: sv_invasion
-#ifdef SVQC
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_spawner.qh>
 #include <common/monsters/sv_monsters.qh>
@@ -603,4 +601,3 @@ void invasion_Initialize()
 {
 	InitializeEntity(NULL, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
-#endif

@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef SVQC
 #include <common/mutators/base.qh>
 int autocvar_g_freezetag_point_limit;
 int autocvar_g_freezetag_point_leadlimit;
@@ -34,4 +33,3 @@ float autocvar_g_freezetag_revive_extra_size;
 float autocvar_g_freezetag_revive_speed;
 bool autocvar_g_freezetag_revive_nade;
 float autocvar_g_freezetag_revive_nade_health;
-#endif

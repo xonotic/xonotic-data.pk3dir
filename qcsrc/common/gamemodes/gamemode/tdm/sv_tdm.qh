@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef SVQC
 #include <common/mutators/base.qh>
 int autocvar_g_tdm_point_limit;
 int autocvar_g_tdm_point_leadlimit;
@@ -21,4 +20,3 @@ REGISTER_MUTATOR(tdm, false)
 	}
 	return 0;
 }
-#endif

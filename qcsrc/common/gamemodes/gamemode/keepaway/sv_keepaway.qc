@@ -1,7 +1,5 @@
-#include "keepaway.qh"
+#include "sv_keepaway.qh"
 
-// TODO: keepaway
-#ifdef SVQC
 #include <common/effects/all.qh>
 
 .entity ballcarried;
@@ -472,4 +470,3 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 {
 	ka_SpawnBall();
 }
-#endif
