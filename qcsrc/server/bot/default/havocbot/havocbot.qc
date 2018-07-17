@@ -669,7 +669,8 @@ void havocbot_movetogoal(entity this)
 
 			return;
 		}
-		else if(GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR) > ROCKETJUMP_DAMAGE())
+		else if(!this.jumppadcount && !this.goalcurrent.wphardwired
+			&& GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
 			if(this.velocity.z < 0)
 			{
