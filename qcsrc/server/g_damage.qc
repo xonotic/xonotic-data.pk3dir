@@ -35,7 +35,7 @@ void UpdateFrags(entity player, int f)
 	GameRules_scoring_add_team(player, SCORE, f);
 }
 
-void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity weaponentity)
+void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity weaponentity)
 {
 	// TODO route through PlayerScores instead
 	if(game_stopped) return;
@@ -566,7 +566,7 @@ void Unfreeze(entity targ)
 	MUTATOR_CALLHOOK(Unfreeze, targ);
 }
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
+void Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	float complainteamdamage = 0;
 	float mirrordamage = 0;
@@ -1040,9 +1040,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						}
 
 						if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
-							Damage (targ, inflictor, attacker, finaldmg, deathtype, weaponentity, nearest, force);
+							Damage(targ, inflictor, attacker, finaldmg, deathtype, weaponentity, nearest, force);
 						else
-							Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, weaponentity, nearest, force);
+							Damage(targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, weaponentity, nearest, force);
 					}
 				}
 			}
@@ -1058,9 +1058,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	return total_damage_to_creatures;
 }
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
+float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
 }
 
 bool Heal(entity targ, entity inflictor, float amount, float limit)
