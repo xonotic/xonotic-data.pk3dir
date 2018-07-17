@@ -916,7 +916,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector pm2 = ent.origin + ent.maxs;
 
 	// do two scans, because box test is cheaper
-	IL_EACH(g_waypoints, it != ent && it != except,
+	IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & WAYPOINTFLAG_TELEPORT),
 	{
 		if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
 		{
