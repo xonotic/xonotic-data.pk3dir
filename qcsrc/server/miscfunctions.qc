@@ -224,25 +224,13 @@ string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
 	float n;
-	vector cursor;
-	entity cursor_ent;
+	vector cursor = '0 0 0';
+	entity cursor_ent = NULL;
 	string escape;
 	string replacement;
 	p = 0;
 	n = 7;
-
-	IL_EACH(g_items, true,
-	{
-		it.old_solid = it.solid;
-		it.solid = SOLID_BSP;
-	});
-	WarpZone_crosshair_trace(this);
-	IL_EACH(g_items, true,
-	{
-		it.solid = it.old_solid;
-	});
-	cursor = trace_endpos;
-	cursor_ent = trace_ent;
+	bool traced = false;
 
 	MUTATOR_CALLHOOK(PreFormatMessage, this, msg);
 	msg = M_ARGV(1, string);
@@ -265,6 +253,23 @@ string formatmessage(entity this, string msg)
 
 		if (p < 0)
 			break;
+		
+		if(!traced)
+		{
+			IL_EACH(g_items, true,
+			{
+				it.old_solid = it.solid;
+				it.solid = SOLID_BSP;
+			});
+			WarpZone_crosshair_trace(this);
+			IL_EACH(g_items, true,
+			{
+				it.solid = it.old_solid;
+			});
+			cursor = trace_endpos;
+			cursor_ent = trace_ent;
+			traced = true;
+		}
 
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
