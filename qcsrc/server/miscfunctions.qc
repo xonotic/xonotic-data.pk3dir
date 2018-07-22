@@ -219,6 +219,7 @@ string AmmoNameFromWeaponentity(Weapon wep)
 	return ammoitems;
 }
 
+.float old_solid;
 string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
@@ -230,7 +231,16 @@ string formatmessage(entity this, string msg)
 	p = 0;
 	n = 7;
 
+	IL_EACH(g_items, true,
+	{
+		it.old_solid = it.solid;
+		it.solid = SOLID_BSP;
+	});
 	WarpZone_crosshair_trace(this);
+	IL_EACH(g_items, true,
+	{
+		it.solid = it.old_solid;
+	});
 	cursor = trace_endpos;
 	cursor_ent = trace_ent;
 
