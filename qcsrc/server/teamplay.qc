@@ -633,7 +633,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 
 void TeamBalance_JoinBestTeam(entity this)
 {
-	PrintToChatAll(sprintf("JoinBestTeam: %s, %f", this.netname));
+	//PrintToChatAll(sprintf("JoinBestTeam: %s", this.netname));
 	// don't join a team if we're not playing a team game
 	if (!teamplay)
 	{
