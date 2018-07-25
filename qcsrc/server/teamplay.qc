@@ -631,9 +631,9 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 	return team_bits;
 }
 
-void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
+void TeamBalance_JoinBestTeam(entity this)
 {
-	//PrintToChatAll(sprintf("JoinBestTeam: %s, %f", this.netname, force_best_team));
+	PrintToChatAll(sprintf("JoinBestTeam: %s, %f", this.netname));
 	// don't join a team if we're not playing a team game
 	if (!teamplay)
 	{
@@ -643,29 +643,6 @@ void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
 	// find out what teams are available
 	entity balance = TeamBalance_CheckAllowedTeams(this);
 
-	// if we don't care what team they end up on, put them on whatever team they entered as.
-	// if they're not on a valid team, then let other code put them on the smallest team
-	if (!force_best_team)
-	{
-		int selected_team_index = -1;
-		for (int i = 1; i <= NUM_TEAMS; ++i)
-		{
-			if (TeamBalance_IsTeamAllowedInternal(balance, i) &&
-				(Team_TeamToIndex(this.team) == i))
-			{
-				selected_team_index = i;
-				break;
-			}
-		}
-		
-		if (Team_IsValidIndex(selected_team_index))
-		{
-			SetPlayerTeam(this, selected_team_index, TEAM_CHANGE_AUTO_RELAXED);
-			TeamBalance_Destroy(balance);
-			return;
-		}
-	}
-	// otherwise end up on the smallest team (handled below)
 	if (this.bot_forced_team)
 	{
 		TeamBalance_Destroy(balance);
