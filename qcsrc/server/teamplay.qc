@@ -273,7 +273,27 @@ int Player_GetForcedTeamIndex(entity player)
 
 void Player_SetForcedTeamIndex(entity player, int team_index)
 {
-	player.team_forced = team_index;
+	switch (team_index)
+	{
+		case TEAM_FORCE_SPECTATOR:
+		case TEAM_FORCE_DEFAULT:
+		{
+			player.team_forced = team_index;
+			break;
+		}
+		default:
+		{
+			if (!Team_IsValidIndex(team_index))
+			{
+				LOG_FATAL("Player_SetForcedTeamIndex: Invalid team index.");
+			}
+			else
+			{
+				player.team_forced = team_index;
+				break;
+			}
+		}
+	}
 }
 
 void Player_DetermineForcedTeam(entity player)

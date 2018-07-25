@@ -112,16 +112,28 @@ void LogTeamchange(float player_id, float team_number, int type);
 
 enum
 {
-	TEAM_FORCE_SPECTATOR = -1,
-	TEAM_FORCE_DEFAULT = 0
+	TEAM_FORCE_SPECTATOR = -1, ///< Force the player to spectator team.
+	TEAM_FORCE_DEFAULT = 0 ///< Don't force any team.
 };
 
+/// \brief Returns whether player has real forced team. Spectator team is
+/// ignored.
+/// \param[in] player Player to check.
+/// \return True if player has real forced team, false otherwise.
 bool Player_HasRealForcedTeam(entity player);
 
+/// \brief Returns the index of the forced team of the given player.
+/// \param[in] player Player to check.
+/// \return Index of the forced team.
 int Player_GetForcedTeamIndex(entity player);
 
+/// \brief Sets the index of the forced team of the given player.
+/// \param[in,out] player Player to adjust.
+/// \param[in] team_index Index of the team to set.
 void Player_SetForcedTeamIndex(entity player, int team_index);
 
+/// \brief Determines the forced team of the player using current global config.
+/// \param[in,out] player Player to adjust.
 void Player_DetermineForcedTeam(entity player);
 
 // ========================= Team balance API =================================
