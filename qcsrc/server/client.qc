@@ -1263,38 +1263,7 @@ void ClientConnect(entity this)
 	TRANSMUTE(Client, this);
 	CS(this).version_nagtime = time + 10 + random() * 10;
 
-	// identify the right forced team
-	if (autocvar_g_campaign)
-	{
-		if (IS_REAL_CLIENT(this)) // only players, not bots
-		{
-			switch (autocvar_g_campaign_forceteam)
-			{
-				case 1: this.team_forced = NUM_TEAM_1; break;
-				case 2: this.team_forced = NUM_TEAM_2; break;
-				case 3: this.team_forced = NUM_TEAM_3; break;
-				case 4: this.team_forced = NUM_TEAM_4; break;
-				default: this.team_forced = 0;
-			}
-		}
-	}
-	else if (PlayerInList(this, autocvar_g_forced_team_red))    this.team_forced = NUM_TEAM_1;
-	else if (PlayerInList(this, autocvar_g_forced_team_blue))   this.team_forced = NUM_TEAM_2;
-	else if (PlayerInList(this, autocvar_g_forced_team_yellow)) this.team_forced = NUM_TEAM_3;
-	else if (PlayerInList(this, autocvar_g_forced_team_pink))   this.team_forced = NUM_TEAM_4;
-	else switch (autocvar_g_forced_team_otherwise)
-	{
-		default: this.team_forced = 0; break;
-		case "red": this.team_forced = NUM_TEAM_1; break;
-		case "blue": this.team_forced = NUM_TEAM_2; break;
-		case "yellow": this.team_forced = NUM_TEAM_3; break;
-		case "pink": this.team_forced = NUM_TEAM_4; break;
-		case "spectate":
-		case "spectator":
-			this.team_forced = -1;
-			break;
-	}
-	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
+	Player_DetermineForcedTeam(this);
 
 	int playerid_save = this.playerid;
 	this.playerid = 0; // silent
@@ -2107,7 +2076,7 @@ void ShowRespawnCountdown(entity this)
 .bool team_selected;
 bool ShowTeamSelection(entity this)
 {
-	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
+	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
 		return false;
 	stuffcmd(this, "menu_showteamselect\n");
 	return true;
@@ -2155,7 +2124,7 @@ int nJoinAllowed(entity this, entity ignore)
 			return 0;
 	}
 
-	if(this && this.team_forced < 0)
+	if(this && (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 		return 0; // forced spectators can never join
 
 	// TODO simplify this
@@ -2707,7 +2676,7 @@ void PlayerPreThink (entity this)
 		// don't do this in ClientConnect
 		// many things can go wrong if a client is spawned as player on connection
 		if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
-			|| (!(autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0)
+			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
 			campaign_bots_may_start = true;

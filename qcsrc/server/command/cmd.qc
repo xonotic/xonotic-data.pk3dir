@@ -118,7 +118,7 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 					{
 						// JoinBestTeam(caller, false, true);
 					}
-					else if (teamplay && !autocvar_sv_spectate && !(caller.team_forced > 0))
+					else if (teamplay && !autocvar_sv_spectate && !(Player_GetForcedTeamIndex(caller) > 0))
 					{
 						TRANSMUTE(Observer, caller);  // really?
 						stuffcmd(caller, "menu_showteamselect\n");
@@ -338,7 +338,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 				sprint(caller, "^7selectteam can only be used in teamgames\n");
 				return;
 			}
-			if (caller.team_forced > 0)
+			if (Player_GetForcedTeamIndex(caller) > 0)
 			{
 				sprint(caller, "^7selectteam can not be used as your team is forced\n");
 				return;

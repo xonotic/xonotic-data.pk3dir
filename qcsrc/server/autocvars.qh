@@ -124,11 +124,7 @@ int autocvar_g_chat_nospectators;
 bool autocvar_g_chat_teamcolors;
 bool autocvar_g_chat_tellprivacy;
 bool autocvar_g_forced_respawn;
-string autocvar_g_forced_team_blue;
-string autocvar_g_forced_team_otherwise;
-string autocvar_g_forced_team_pink;
-string autocvar_g_forced_team_red;
-string autocvar_g_forced_team_yellow;
+string autocvar_g_forced_team_otherwise; // TODO: Move to teamplay.qc
 #define autocvar_g_friendlyfire cvar("g_friendlyfire")
 #define autocvar_g_friendlyfire_virtual cvar("g_friendlyfire_virtual")
 #define autocvar_g_friendlyfire_virtual_force cvar("g_friendlyfire_virtual_force")

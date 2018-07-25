@@ -28,6 +28,8 @@ enum
 /// \brief Indicates that the player is not allowed to join a team.
 const int TEAM_NOT_ALLOWED = -1;
 
+.float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
 .int m_team_balance_state; ///< Holds the state of the team balance entity.
 .entity m_team_balance_team[NUM_TEAMS]; ///< ???
 
@@ -36,6 +38,11 @@ const int TEAM_NOT_ALLOWED = -1;
 .int m_num_bots; ///< Number of bots in a team.
 .int m_num_players_alive; ///< Number of alive players in a team.
 .int m_num_control_points; ///< Number of control points owned by a team.
+
+string autocvar_g_forced_team_red;
+string autocvar_g_forced_team_blue;
+string autocvar_g_forced_team_yellow;
+string autocvar_g_forced_team_pink;
 
 entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
@@ -254,6 +261,96 @@ void LogTeamchange(float player_id, float team_number, int type)
 	GameLogEcho(strcat(":team:", ftos(player_id), ":", ftos(team_number), ":", ftos(type)));
 }
 
+bool Player_HasRealForcedTeam(entity player)
+{
+	return player.team_forced > TEAM_FORCE_DEFAULT;
+}
+
+int Player_GetForcedTeamIndex(entity player)
+{
+	return player.team_forced;
+}
+
+void Player_SetForcedTeamIndex(entity player, int team_index)
+{
+	player.team_forced = team_index;
+}
+
+void Player_DetermineForcedTeam(entity player)
+{
+	if (autocvar_g_campaign)
+	{
+		if (IS_REAL_CLIENT(player)) // only players, not bots
+		{
+			if (Team_IsValidIndex(autocvar_g_campaign_forceteam))
+			{
+				player.team_forced = autocvar_g_campaign_forceteam;
+			}
+			else
+			{
+				player.team_forced = TEAM_FORCE_DEFAULT;
+			}
+		}
+	}
+	else if (PlayerInList(player, autocvar_g_forced_team_red))
+	{
+		player.team_forced = 1;
+	}
+	else if (PlayerInList(player, autocvar_g_forced_team_blue))
+	{
+		player.team_forced = 2;
+	}
+	else if (PlayerInList(player, autocvar_g_forced_team_yellow))
+	{
+		player.team_forced = 3;
+	}
+	else if (PlayerInList(player, autocvar_g_forced_team_pink))
+	{
+		player.team_forced = 4;
+	}
+	else
+	{
+		switch (autocvar_g_forced_team_otherwise)
+		{
+			case "red":
+			{
+				player.team_forced = 1;
+				break;
+			}
+			case "blue":
+			{
+				player.team_forced = 2;
+				break;
+			}
+			case "yellow":
+			{
+				player.team_forced = 3;
+				break;
+			}
+			case "pink":
+			{
+				player.team_forced = 4;
+				break;
+			}
+			case "spectate":
+			case "spectator":
+			{
+				player.team_forced = TEAM_FORCE_SPECTATOR;
+				break;
+			}
+			default:
+			{
+				player.team_forced = TEAM_FORCE_DEFAULT;
+				break;
+			}
+		}
+	}
+	if (!teamplay && Player_HasRealForcedTeam(player))
+	{
+		player.team_forced = TEAM_FORCE_DEFAULT;
+	}
+}
+
 entity TeamBalance_CheckAllowedTeams(entity for_whom)
 {
 	entity balance = spawn();
@@ -383,7 +480,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	// if player has a forced team, ONLY allow that one
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
-		if (for_whom.team_forced == Team_IndexToTeam(i) &&
+		if (for_whom.team_forced == i &&
 			TeamBalance_IsTeamAllowedInternal(balance, i))
 		{
 			TeamBalance_BanTeamsExcept(balance, i);
@@ -487,9 +584,9 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			{
 				team_num = it.team;
 			}
-			else if (it.team_forced > 0)
+			else if (Player_HasRealForcedTeam(it))
 			{
-				team_num = it.team_forced; // reserve the spot
+				team_num = Team_IndexToTeam(it.team_forced); // reserve the spot
 			}
 			else
 			{

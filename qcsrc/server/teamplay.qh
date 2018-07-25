@@ -110,6 +110,20 @@ enum
 
 void LogTeamchange(float player_id, float team_number, int type);
 
+enum
+{
+	TEAM_FORCE_SPECTATOR = -1,
+	TEAM_FORCE_DEFAULT = 0
+};
+
+bool Player_HasRealForcedTeam(entity player);
+
+int Player_GetForcedTeamIndex(entity player);
+
+void Player_SetForcedTeamIndex(entity player, int team_index);
+
+void Player_DetermineForcedTeam(entity player);
+
 // ========================= Team balance API =================================
 
 /// \brief Checks whether the player can join teams according to global
