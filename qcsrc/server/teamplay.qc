@@ -958,5 +958,9 @@ void SV_ChangeTeam(entity this, float _color)
 	{
 		return;
 	}
+	if (source_team_index == -1)
+	{
+		return;
+	}
 	TeamBalance_AutoBalanceBots(destination_team_index, source_team_index);
 }
