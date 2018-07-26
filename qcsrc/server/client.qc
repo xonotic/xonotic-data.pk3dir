@@ -1296,10 +1296,6 @@ void ClientConnect(entity this)
 	}
 	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-	int playerid_save = this.playerid;
-	this.playerid = 0; // silent
-	this.playerid = playerid_save;
-
 	TRANSMUTE(Observer, this);
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
