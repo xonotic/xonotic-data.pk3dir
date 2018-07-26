@@ -219,7 +219,7 @@ string AmmoNameFromWeaponentity(Weapon wep)
 	return ammoitems;
 }
 
-.float old_solid;
+.int solid_prev;
 string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
@@ -253,18 +253,19 @@ string formatmessage(entity this, string msg)
 
 		if (p < 0)
 			break;
-		
+
 		if(!traced)
 		{
 			IL_EACH(g_items, true,
 			{
-				it.old_solid = it.solid;
+				it.solid_prev = it.solid;
 				it.solid = SOLID_BSP;
 			});
 			WarpZone_crosshair_trace(this);
 			IL_EACH(g_items, true,
 			{
-				it.solid = it.old_solid;
+				it.solid = it.solid_prev;
+				it.solid_prev = 0;
 			});
 			cursor = trace_endpos;
 			cursor_ent = trace_ent;
