@@ -228,7 +228,7 @@ void Shutdown()
 }
 
 .float has_team;
-float SetTeam(entity o, int Team)
+bool SetTeam(entity o, int Team)
 {
 	TC(int, Team);
 	devassert_once(Team);

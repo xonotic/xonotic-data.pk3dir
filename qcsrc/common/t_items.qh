@@ -107,7 +107,7 @@ float weapon_pickupevalfunc(entity player, entity item);
 float ammo_pickupevalfunc(entity player, entity item);
 float healtharmor_pickupevalfunc(entity player, entity item);
 
-.float is_item;
+.bool is_item;
 .entity itemdef;
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 

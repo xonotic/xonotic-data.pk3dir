@@ -5,7 +5,7 @@
 float		scoreboard_showscores;
 float		scoreboard_showaccuracy;
 .string		message;
-.int		renderflags;
+.float		renderflags;
 // float		coop;
 // float		deathmatch;
 

@@ -45,7 +45,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 
 #else
 
-.float maycheat;
+.bool maycheat;
 float gamestart_sv_cheats;
 
 
