@@ -57,7 +57,7 @@ void Curl_URI_Get_Callback(int id, float status, string data)
 //  Command Sub-Functions
 // =======================
 
-void GenericCommand_addtolist(float request, float argc)
+void GenericCommand_addtolist(int request, int argc)
 {
 	switch(request)
 	{
@@ -97,7 +97,7 @@ void GenericCommand_addtolist(float request, float argc)
 	}
 }
 
-void GenericCommand_qc_curl(float request, float argc)
+void GenericCommand_qc_curl(int request, int argc)
 {
 	switch(request)
 	{
@@ -229,7 +229,7 @@ GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd
 	}
 }
 
-void GenericCommand_maplist(float request, float argc)
+void GenericCommand_maplist(int request, int argc)
 {
 	switch(request)
 	{
@@ -312,7 +312,7 @@ void GenericCommand_maplist(float request, float argc)
 	}
 }
 
-void GenericCommand_nextframe(float request, float arguments, string command)
+void GenericCommand_nextframe(int request, float arguments, string command)
 {
 	switch(request)
 	{
@@ -332,7 +332,7 @@ void GenericCommand_nextframe(float request, float arguments, string command)
 	}
 }
 
-void GenericCommand_removefromlist(float request, float argc)
+void GenericCommand_removefromlist(int request, int argc)
 {
 	switch(request)
 	{
@@ -367,7 +367,7 @@ void GenericCommand_removefromlist(float request, float argc)
 	}
 }
 
-void GenericCommand_restartnotifs(float request)
+void GenericCommand_restartnotifs(int request)
 {
 	switch(request)
 	{
@@ -415,7 +415,7 @@ void GenericCommand_restartnotifs(float request)
 	}
 }
 
-void GenericCommand_settemp(float request, float argc)
+void GenericCommand_settemp(int request, int argc)
 {
 	switch(request)
 	{
@@ -446,7 +446,7 @@ void GenericCommand_settemp(float request, float argc)
 	}
 }
 
-void GenericCommand_settemp_restore(float request, float argc)
+void GenericCommand_settemp_restore(int request, int argc)
 {
 	switch(request)
 	{
@@ -473,7 +473,7 @@ void GenericCommand_settemp_restore(float request, float argc)
 	}
 }
 
-void GenericCommand_runtest(float request, float argc)
+void GenericCommand_runtest(int request, int argc)
 {
 	switch(request)
 	{
@@ -539,7 +539,7 @@ void GenericCommand_macro_help()
 	FOREACH(GENERIC_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s", it.m_name, it.m_description));
 }
 
-float GenericCommand_macro_command(float argc, string command)
+float GenericCommand_macro_command(int argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(GENERIC_COMMANDS, it.m_name == c, {
@@ -549,7 +549,7 @@ float GenericCommand_macro_command(float argc, string command)
 	return false;
 }
 
-float GenericCommand_macro_usage(float argc)
+float GenericCommand_macro_usage(int argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(GENERIC_COMMANDS, it.m_name == c, {
@@ -572,7 +572,7 @@ void GenericCommand_macro_write_aliases(float fh)
 
 float GenericCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 	float n, j, f, i;
 	string s, s2, c;
 	vector rgb;
