@@ -16,7 +16,6 @@ float		dmg_take;
 // Darkplaces Render Modifications
 #if 0
 .float alpha;
-.float renderflags;
 .vector colormod;
 .float scale;
 #endif
