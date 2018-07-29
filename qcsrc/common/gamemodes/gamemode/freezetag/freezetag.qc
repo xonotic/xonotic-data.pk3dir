@@ -49,7 +49,7 @@ void freezetag_count_alive_players()
 
 #define FREEZETAG_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
 
-float freezetag_CheckTeams()
+bool freezetag_CheckTeams()
 {
 	static float prev_missing_teams_mask;
 	if(FREEZETAG_ALIVE_TEAMS_OK())
@@ -57,14 +57,14 @@ float freezetag_CheckTeams()
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
-		return 1;
+		return true;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
-		return 0;
+		return false;
 	}
 	int missing_teams_mask = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
@@ -80,7 +80,7 @@ float freezetag_CheckTeams()
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
-	return 0;
+	return false;
 }
 
 int freezetag_getWinnerTeam()
@@ -111,7 +111,7 @@ int freezetag_getWinnerTeam()
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
-float freezetag_CheckWinner()
+bool freezetag_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
@@ -123,12 +123,12 @@ float freezetag_CheckWinner()
 		});
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
-		return 1;
+		return true;
 	}
 
 	if (Team_GetNumberOfAliveTeams() > 1)
 	{
-		return 0;
+		return false;
 	}
 
 	int winner_team = freezetag_getWinnerTeam();
@@ -151,7 +151,7 @@ float freezetag_CheckWinner()
 
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
-	return 1;
+	return true;
 }
 
 entity freezetag_LastPlayerForTeam(entity this)
@@ -214,7 +214,7 @@ void freezetag_Freeze(entity targ, entity attacker)
 	freezetag_Add_Score(targ, attacker);
 }
 
-float freezetag_isEliminated(entity e)
+bool freezetag_isEliminated(entity e)
 {
 	if(IS_PLAYER(e) && (STAT(FROZEN, e) == 1 || IS_DEAD(e)))
 		return true;
