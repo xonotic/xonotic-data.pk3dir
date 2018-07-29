@@ -1101,7 +1101,7 @@ entity WaypointSprite_SpawnFixed(
 
 entity WaypointSprite_DeployFixed(
     entity spr,
-    float limited_range,
+    bool limited_range,
     entity player,
     vector ofs,
     entity icon // initial icon
@@ -1133,7 +1133,7 @@ entity WaypointSprite_DeployPersonal(
 entity WaypointSprite_Attach(
     entity spr,
     entity player,
-    float limited_range,
+    bool limited_range,
     entity icon // initial icon
 )
 {
