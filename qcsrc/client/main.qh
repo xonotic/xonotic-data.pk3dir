@@ -38,10 +38,10 @@ float grecordtime[RANKINGS_CNT];
 
 entity playerslots[255]; // 255 is engine limit on maxclients
 entity teamslots[17];    // 17 teams (including "spectator team")
-.float gotscores;
+.bool gotscores;
 .entity owner;
-.float ready;
-.float eliminated;
+.bool ready;
+.bool eliminated;
 
 .void(entity) draw;
 IntrusiveList g_drawables;
