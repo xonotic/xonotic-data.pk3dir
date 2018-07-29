@@ -224,10 +224,7 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 	entity player, bool use_score);
 
 /// \brief Switches a bot from one team to another if teams are not balanced.
-/// \param[in] source_team_index Index of the team to switch from.
-/// \param[in] destination_team_index Index of the team to switch to.
-void TeamBalance_AutoBalanceBots(int source_team_index,
-	int destination_team_index);
+void TeamBalance_AutoBalanceBots();
 
 // ============================ Internal API ==================================
 

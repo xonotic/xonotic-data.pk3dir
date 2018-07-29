@@ -600,12 +600,14 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 				continue;
 			}
 			int team_num;
-			if (IS_PLAYER(it) || it.caplayer)
+			// TODO: Reconsider when the player is truly on the team.
+			if (IS_CLIENT(it) || (it.caplayer))
 			{
 				team_num = it.team;
 			}
 			else if (Player_HasRealForcedTeam(it))
 			{
+				// Do we really need this? Probably not.
 				team_num = Team_IndexToTeam(it.team_forced); // reserve the spot
 			}
 			else
@@ -759,7 +761,6 @@ void TeamBalance_JoinBestTeam(entity this)
 	{
 		return;
 	}
-	int old_team_index = Team_TeamToIndex(this.team);
 	entity balance = TeamBalance_CheckAllowedTeams(this);
 	if (Player_HasRealForcedTeam(this))
 	{
@@ -775,9 +776,9 @@ void TeamBalance_JoinBestTeam(entity this)
 		{
 			return;
 		}
-		if ((old_team_index != -1) && !IS_BOT_CLIENT(this))
+		if (!IS_BOT_CLIENT(this))
 		{
-			TeamBalance_AutoBalanceBots(forced_team_index, old_team_index);
+			TeamBalance_AutoBalanceBots();
 		}
 		return;
 	}
@@ -788,9 +789,9 @@ void TeamBalance_JoinBestTeam(entity this)
 	{
 		return;
 	}
-	if ((old_team_index != -1) && !IS_BOT_CLIENT(this))
+	if (!IS_BOT_CLIENT(this))
 	{
-		TeamBalance_AutoBalanceBots(best_team_index, old_team_index);
+		TeamBalance_AutoBalanceBots();
 	}
 }
 
@@ -825,42 +826,72 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 	return TeamBalance_CompareTeamsInternal(team_a, team_b, player, use_score);
 }
 
-void TeamBalance_AutoBalanceBots(int source_team_index,
-	int destination_team_index)
+void TeamBalance_AutoBalanceBots()
 {
-	if (!Team_IsValidIndex(source_team_index))
-	{
-		LOG_WARNF("TeamBalance_AutoBalanceBots: "
-			"Source team index is invalid: %f", source_team_index);
-		return;
-	}
-	if (!Team_IsValidIndex(destination_team_index))
-	{
-		LOG_WARNF("TeamBalance_AutoBalanceBots: "
-			"Destination team index is invalid: %f", destination_team_index);
-		return;
-	}
 	if (!autocvar_g_balance_teams ||
 		!autocvar_g_balance_teams_prevent_imbalance)
 	{
 		return;
 	}
+	//PrintToChatAll("TeamBalance_AutoBalanceBots");
 	entity balance = TeamBalance_CheckAllowedTeams(NULL);
 	TeamBalance_GetTeamCounts(balance, NULL);
+	int smallest_team_index = 0;
+	int smallest_team_player_count = 0;
+	int largest_team_index = 0;
+	int largest_team_player_count = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		entity team_ = TeamBalance_GetTeamFromIndex(balance, i);
+		if (!TeamBalanceTeam_IsAllowed(team_))
+		{
+			continue;
+		}
+		int player_count = TeamBalanceTeam_GetNumberOfPlayers(team_);
+		if (smallest_team_index == 0)
+		{
+			smallest_team_index = i;
+			smallest_team_player_count = player_count;
+		}
+		else if (player_count < smallest_team_player_count)
+		{
+			smallest_team_index = i;
+			smallest_team_player_count = player_count;
+		}
+		if (largest_team_index == 0)
+		{
+			largest_team_index = i;
+			largest_team_player_count = player_count;
+		}
+		else if (player_count > largest_team_player_count)
+		{
+			largest_team_index = i;
+			largest_team_player_count = player_count;
+		}
+	}
+	//PrintToChatAll(sprintf("Smallest team: %f", smallest_team_index));
+	//PrintToChatAll(sprintf("Largest team: %f", largest_team_index));
+	//PrintToChatAll(sprintf("Smallest team players: %f", smallest_team_player_count));
+	//PrintToChatAll(sprintf("Largest team players: %f", largest_team_player_count));
+	if (smallest_team_index == largest_team_index)
+	{
+		return;
+	}
+	if (largest_team_player_count - smallest_team_player_count < 2)
+	{
+		return;
+	}
 	entity source_team = TeamBalance_GetTeamFromIndex(balance,
-		source_team_index);
-	entity destination_team = TeamBalance_GetTeamFromIndex(balance,
-		destination_team_index);
-	if ((source_team.m_num_bots == 0) || (source_team.m_num_players <=
-		destination_team.m_num_players))
+		largest_team_index);
+	if (source_team.m_num_bots == 0)
 	{
 		TeamBalance_Destroy(balance);
 		return;
 	}
 	TeamBalance_Destroy(balance);
 	entity lowest_bot = NULL;
-	if (MUTATOR_CALLHOOK(TeamBalance_GetPlayerForTeamSwitch, source_team_index,
-		destination_team_index, true))
+	if (MUTATOR_CALLHOOK(TeamBalance_GetPlayerForTeamSwitch, largest_team_index,
+		smallest_team_index, true))
 	{
 		lowest_bot = M_ARGV(3, entity);
 	}
@@ -868,27 +899,34 @@ void TeamBalance_AutoBalanceBots(int source_team_index,
 	{
 		float lowest_score = FLOAT_MAX;
 		FOREACH_CLIENT(IS_BOT_CLIENT(it) && (Entity_GetTeamIndex(it) ==
-			source_team_index),
+			largest_team_index),
 		{
 			float temp_score = PlayerScore_Get(it, SP_SCORE);
 			if (temp_score >= lowest_score)
 			{
 				continue;
 			}
+			//PrintToChatAll(sprintf("Found %s with lowest score, checking allowed teams", it.netname));
 			balance = TeamBalance_CheckAllowedTeams(it);
-			if (TeamBalance_IsTeamAllowed(balance, destination_team_index))
+			if (TeamBalance_IsTeamAllowed(balance, smallest_team_index))
 			{
+				//PrintToChatAll("Allowed");
 				lowest_bot = it;
 				lowest_score = temp_score;
+			}
+			else
+			{
+				//PrintToChatAll("Not allowed");
 			}
 			TeamBalance_Destroy(balance);
 		});
 	}
 	if (lowest_bot == NULL)
 	{
+		//PrintToChatAll("No bot found");
 		return;
 	}
-	if (!Player_SetTeamIndex(lowest_bot, destination_team_index))
+	if (!Player_SetTeamIndex(lowest_bot, smallest_team_index))
 	{
 		return;
 	}
@@ -995,6 +1033,7 @@ void SV_ChangeTeam(entity this, float _color)
 
 	if(!IS_CLIENT(this))
 	{
+		//PrintToChatAll("Not a client yet");
 		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
 		return;
@@ -1045,6 +1084,7 @@ void SV_ChangeTeam(entity this, float _color)
 	{
 		SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL);
 		TeamBalance_Destroy(balance);
+		TeamBalance_AutoBalanceBots(); // Hack
 		return;
 	}
 
@@ -1075,9 +1115,5 @@ void SV_ChangeTeam(entity this, float _color)
 	{
 		return;
 	}
-	if (source_team_index == -1)
-	{
-		return;
-	}
-	TeamBalance_AutoBalanceBots(destination_team_index, source_team_index);
+	TeamBalance_AutoBalanceBots();
 }
