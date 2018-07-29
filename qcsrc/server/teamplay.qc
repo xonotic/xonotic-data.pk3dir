@@ -869,6 +869,7 @@ void TeamBalance_AutoBalanceBots()
 			largest_team_player_count = player_count;
 		}
 	}
+	TeamBalance_Destroy(balance);
 	//PrintToChatAll(sprintf("Smallest team: %f", smallest_team_index));
 	//PrintToChatAll(sprintf("Largest team: %f", largest_team_index));
 	//PrintToChatAll(sprintf("Smallest team players: %f", smallest_team_player_count));
@@ -881,46 +882,8 @@ void TeamBalance_AutoBalanceBots()
 	{
 		return;
 	}
-	entity source_team = TeamBalance_GetTeamFromIndex(balance,
-		largest_team_index);
-	if (source_team.m_num_bots == 0)
-	{
-		TeamBalance_Destroy(balance);
-		return;
-	}
-	TeamBalance_Destroy(balance);
-	entity lowest_bot = NULL;
-	if (MUTATOR_CALLHOOK(TeamBalance_GetPlayerForTeamSwitch, largest_team_index,
-		smallest_team_index, true))
-	{
-		lowest_bot = M_ARGV(3, entity);
-	}
-	else
-	{
-		float lowest_score = FLOAT_MAX;
-		FOREACH_CLIENT(IS_BOT_CLIENT(it) && (Entity_GetTeamIndex(it) ==
-			largest_team_index),
-		{
-			float temp_score = PlayerScore_Get(it, SP_SCORE);
-			if (temp_score >= lowest_score)
-			{
-				continue;
-			}
-			//PrintToChatAll(sprintf("Found %s with lowest score, checking allowed teams", it.netname));
-			balance = TeamBalance_CheckAllowedTeams(it);
-			if (TeamBalance_IsTeamAllowed(balance, smallest_team_index))
-			{
-				//PrintToChatAll("Allowed");
-				lowest_bot = it;
-				lowest_score = temp_score;
-			}
-			else
-			{
-				//PrintToChatAll("Not allowed");
-			}
-			TeamBalance_Destroy(balance);
-		});
-	}
+	entity lowest_bot = TeamBalance_GetPlayerForTeamSwitch(largest_team_index,
+		smallest_team_index, true);
 	if (lowest_bot == NULL)
 	{
 		//PrintToChatAll("No bot found");
@@ -931,6 +894,45 @@ void TeamBalance_AutoBalanceBots()
 		return;
 	}
 	KillPlayerForTeamChange(lowest_bot);
+}
+
+entity TeamBalance_GetPlayerForTeamSwitch(int source_team_index,
+	int destination_team_index, bool is_bot)
+{
+	if (MUTATOR_CALLHOOK(TeamBalance_GetPlayerForTeamSwitch, source_team_index,
+		destination_team_index, is_bot))
+	{
+		return M_ARGV(3, entity);
+	}
+	entity lowest_player = NULL;
+	float lowest_score = FLOAT_MAX;
+	FOREACH_CLIENT(Entity_GetTeamIndex(it) == source_team_index,
+	{
+		if (IS_BOT_CLIENT(it) != is_bot)
+		{
+			continue;
+		}
+		float temp_score = PlayerScore_Get(it, SP_SCORE);
+		if (temp_score >= lowest_score)
+		{
+			continue;
+		}
+		//PrintToChatAll(sprintf(
+		//	"Found %s with lowest score, checking allowed teams", it.netname));
+		entity balance = TeamBalance_CheckAllowedTeams(it);
+		if (TeamBalance_IsTeamAllowed(balance, source_team_index))
+		{
+			//PrintToChatAll("Allowed");
+			lowest_player = it;
+			lowest_score = temp_score;
+		}
+		else
+		{
+			//PrintToChatAll("Not allowed");
+		}
+		TeamBalance_Destroy(balance);
+	});
+	return lowest_player;
 }
 
 bool TeamBalance_IsTeamAllowedInternal(entity balance, int index)

@@ -226,6 +226,16 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 /// \brief Switches a bot from one team to another if teams are not balanced.
 void TeamBalance_AutoBalanceBots();
 
+/// \brief Returns the player who is the most suitable for switching between
+/// the given teams.
+/// \param[in] source_team_index Index of the team to search in.
+/// \param[in] destination_team_index Index of the team to switch to.
+/// \param[in] is_bot True to search for bot, false for human.
+/// \return Player who is the most suitable for switching between the given
+/// teams or NULL if not found.
+entity TeamBalance_GetPlayerForTeamSwitch(int source_team_index,
+	int destination_team_index, bool is_bot);
+
 // ============================ Internal API ==================================
 
 /// \brief Returns whether the team change to the specified team is allowed.
