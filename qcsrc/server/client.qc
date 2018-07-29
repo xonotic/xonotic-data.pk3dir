@@ -519,7 +519,7 @@ void PutPlayerInServer(entity this)
 	accuracy_resend(this);
 
 	if (this.team < 0)
-		TeamBalance_JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -913,7 +913,7 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if(this.killindicator_teamchange == -1)
 	{
-		TeamBalance_JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 	}
 	else if(this.killindicator_teamchange == -2)
 	{
@@ -1296,11 +1296,6 @@ void ClientConnect(entity this)
 	}
 	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-	int playerid_save = this.playerid;
-	this.playerid = 0; // silent
-	TeamBalance_JoinBestTeam(this, false); // if the team number is valid, keep it
-	this.playerid = playerid_save;
-
 	TRANSMUTE(Observer, this);
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
@@ -1313,8 +1308,6 @@ void ClientConnect(entity this)
 
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
-
-	LogTeamchange(this.playerid, this.team, TEAM_CHANGE_CONNECT);
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
@@ -2121,7 +2114,7 @@ void Join(entity this)
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		TeamBalance_JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
