@@ -56,8 +56,8 @@ const string STATIC_NAME_TEAM_3 = "Yellow";
 const string STATIC_NAME_TEAM_4 = "Pink";
 
 #ifdef CSQC
-float teamplay;
-float myteam;
+bool teamplay;
+int myteam;
 #endif
 
 string Team_ColorCode(int teamid)
