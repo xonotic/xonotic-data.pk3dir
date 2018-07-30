@@ -859,7 +859,7 @@ void TeamBalance_AutoBalanceBots()
 	}
 	//PrintToChatAll(sprintf("Smallest team: %f", smallest_team_index));
 	//PrintToChatAll(sprintf("Smallest team players: %f", smallest_team_player_count));
-	entity lowest_bot = NULL;
+	entity switchable_bot = NULL;
 	int teams = BITS(NUM_TEAMS);
 	while (teams != 0)
 	{
@@ -881,25 +881,21 @@ void TeamBalance_AutoBalanceBots()
 		}
 		//PrintToChatAll(sprintf("Largest team: %f", largest_team_index));
 		//PrintToChatAll(sprintf("Largest team players: %f", largest_team_player_count));
-		lowest_bot = TeamBalance_GetPlayerForTeamSwitch(largest_team_index,
+		switchable_bot = TeamBalance_GetPlayerForTeamSwitch(largest_team_index,
 			smallest_team_index, true);
-		if (lowest_bot != NULL)
+		if (switchable_bot != NULL)
 		{
 			break;
 		}
 		teams &= ~Team_IndexToBit(largest_team_index);
 	}
 	TeamBalance_Destroy(balance);
-	if (lowest_bot == NULL)
+	if (switchable_bot == NULL)
 	{
 		//PrintToChatAll("No bot found after searching through all the teams");
 		return;
 	}
-	if (!Player_SetTeamIndex(lowest_bot, smallest_team_index))
-	{
-		return;
-	}
-	KillPlayerForTeamChange(lowest_bot);
+	SetPlayerTeam(switchable_bot, smallest_team_index, TEAM_CHANGE_AUTO);
 }
 
 int TeamBalance_GetLargestTeamIndex(entity balance, int teams)
