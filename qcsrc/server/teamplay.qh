@@ -226,6 +226,13 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 /// \brief Switches a bot from one team to another if teams are not balanced.
 void TeamBalance_AutoBalanceBots();
 
+/// \brief Returns the index of the team with most players that is contained in
+/// the given bitmask of teams.
+/// \param[in] balance Team balance entity.
+/// \param[in] teams Bitmask of teams to search in.
+/// \return Index of the team with most players.
+int TeamBalance_GetLargestTeamIndex(entity balance, int teams);
+
 /// \brief Returns the player who is the most suitable for switching between
 /// the given teams.
 /// \param[in] source_team_index Index of the team to search in.

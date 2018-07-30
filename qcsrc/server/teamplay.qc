@@ -838,8 +838,6 @@ void TeamBalance_AutoBalanceBots()
 	TeamBalance_GetTeamCounts(balance, NULL);
 	int smallest_team_index = 0;
 	int smallest_team_player_count = 0;
-	int largest_team_index = 0;
-	int largest_team_player_count = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
 		entity team_ = TeamBalance_GetTeamFromIndex(balance, i);
@@ -858,6 +856,68 @@ void TeamBalance_AutoBalanceBots()
 			smallest_team_index = i;
 			smallest_team_player_count = player_count;
 		}
+	}
+	//PrintToChatAll(sprintf("Smallest team: %f", smallest_team_index));
+	//PrintToChatAll(sprintf("Smallest team players: %f", smallest_team_player_count));
+	entity lowest_bot = NULL;
+	int teams = BITS(NUM_TEAMS);
+	while (teams != 0)
+	{
+		int largest_team_index = TeamBalance_GetLargestTeamIndex(balance,
+			teams);
+		if (smallest_team_index == largest_team_index)
+		{
+			TeamBalance_Destroy(balance);
+			return;
+		}
+		entity largest_team = TeamBalance_GetTeamFromIndex(balance,
+			largest_team_index);
+		int largest_team_player_count = TeamBalanceTeam_GetNumberOfPlayers(
+			largest_team);
+		if (largest_team_player_count - smallest_team_player_count < 2)
+		{
+			TeamBalance_Destroy(balance);
+			return;
+		}
+		//PrintToChatAll(sprintf("Largest team: %f", largest_team_index));
+		//PrintToChatAll(sprintf("Largest team players: %f", largest_team_player_count));
+		lowest_bot = TeamBalance_GetPlayerForTeamSwitch(largest_team_index,
+			smallest_team_index, true);
+		if (lowest_bot != NULL)
+		{
+			break;
+		}
+		teams &= ~Team_IndexToBit(largest_team_index);
+	}
+	TeamBalance_Destroy(balance);
+	if (lowest_bot == NULL)
+	{
+		//PrintToChatAll("No bot found after searching through all the teams");
+		return;
+	}
+	if (!Player_SetTeamIndex(lowest_bot, smallest_team_index))
+	{
+		return;
+	}
+	KillPlayerForTeamChange(lowest_bot);
+}
+
+int TeamBalance_GetLargestTeamIndex(entity balance, int teams)
+{
+	int largest_team_index = 0;
+	int largest_team_player_count = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if (!(Team_IndexToBit(i) & teams))
+		{
+			continue;
+		}
+		entity team_ = TeamBalance_GetTeamFromIndex(balance, i);
+		if (!TeamBalanceTeam_IsAllowed(team_))
+		{
+			continue;
+		}
+		int player_count = TeamBalanceTeam_GetNumberOfPlayers(team_);
 		if (largest_team_index == 0)
 		{
 			largest_team_index = i;
@@ -869,31 +929,7 @@ void TeamBalance_AutoBalanceBots()
 			largest_team_player_count = player_count;
 		}
 	}
-	TeamBalance_Destroy(balance);
-	//PrintToChatAll(sprintf("Smallest team: %f", smallest_team_index));
-	//PrintToChatAll(sprintf("Largest team: %f", largest_team_index));
-	//PrintToChatAll(sprintf("Smallest team players: %f", smallest_team_player_count));
-	//PrintToChatAll(sprintf("Largest team players: %f", largest_team_player_count));
-	if (smallest_team_index == largest_team_index)
-	{
-		return;
-	}
-	if (largest_team_player_count - smallest_team_player_count < 2)
-	{
-		return;
-	}
-	entity lowest_bot = TeamBalance_GetPlayerForTeamSwitch(largest_team_index,
-		smallest_team_index, true);
-	if (lowest_bot == NULL)
-	{
-		//PrintToChatAll("No bot found");
-		return;
-	}
-	if (!Player_SetTeamIndex(lowest_bot, smallest_team_index))
-	{
-		return;
-	}
-	KillPlayerForTeamChange(lowest_bot);
+	return largest_team_index;
 }
 
 entity TeamBalance_GetPlayerForTeamSwitch(int source_team_index,
