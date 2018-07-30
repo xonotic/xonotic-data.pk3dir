@@ -234,6 +234,57 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	return true;
 }
 
+void Player_SetTeamIndexChecked(entity player, int team_index)
+{
+	if (!teamplay)
+	{
+		return;
+	}
+	if (!Team_IsValidIndex(team_index))
+	{
+		return;
+	}
+	if ((autocvar_g_campaign) || (autocvar_g_changeteam_banned &&
+		CS(player).wasplayer))
+	{
+		Send_Notification(NOTIF_ONE, player, MSG_INFO,
+			INFO_TEAMCHANGE_NOTALLOWED);
+		return;
+	}
+	entity balance = TeamBalance_CheckAllowedTeams(player);
+	if (team_index == 1 && !TeamBalance_IsTeamAllowedInternal(balance, 1))
+	{
+		team_index = 4;
+	}
+	if (team_index == 4 && !TeamBalance_IsTeamAllowedInternal(balance, 4))
+	{
+		team_index = 3;
+	}
+	if (team_index == 3 && !TeamBalance_IsTeamAllowedInternal(balance, 3))
+	{
+		team_index = 2;
+	}
+	if (team_index == 2 && !TeamBalance_IsTeamAllowedInternal(balance, 2))
+	{
+		team_index = 1;
+	}
+	// autocvar_g_balance_teams_prevent_imbalance only makes sense if autocvar_g_balance_teams is on, as it makes the team selection dialog pointless
+	if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+	{
+		TeamBalance_GetTeamCounts(balance, player);
+		if ((Team_IndexToBit(team_index) & TeamBalance_FindBestTeams(balance,
+			player, false)) == 0)
+		{
+			Send_Notification(NOTIF_ONE, player, MSG_INFO,
+				INFO_TEAMCHANGE_LARGERTEAM);
+			TeamBalance_Destroy(balance);
+			return;
+		}
+	}
+	TeamBalance_Destroy(balance);
+	SetPlayerTeam(player, team_index, TEAM_CHANGE_MANUAL);
+}
+
 bool MoveToTeam(entity client, int team_index, int type)
 {
 	//PrintToChatAll(sprintf("MoveToTeam: %s, %f", client.netname, team_index));
@@ -1060,89 +1111,24 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
 	return TEAMS_COMPARE_EQUAL;
 }
 
-// Called when the player connects or when they change their color with "color"
-// command.
-void SV_ChangeTeam(entity this, float _color)
+void SV_ChangeTeam(entity player, int new_color)
 {
-	//PrintToChatAll(sprintf("SV_ChangeTeam: %s, %f", this.netname, _color));
-
-	// in normal deathmatch we can just apply the color and we're done
-	if(!teamplay)
-		SetPlayerColors(this, _color);
-
-	if(!IS_CLIENT(this))
+	if (!teamplay)
 	{
-		//PrintToChatAll("Not a client yet");
+		SetPlayerColors(player, new_color);
+	}
+	// TODO: Should we really bother with this?
+	if(!IS_CLIENT(player))
+	{
 		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING,
+			player.netname);
 		return;
 	}
-
-	if(!teamplay)
-		return;
-
-	int source_color, destination_color;
-	int source_team_index, destination_team_index;
-
-	source_color = this.clientcolors & 0x0F;
-	destination_color = _color & 0x0F;
-
-	source_team_index = Team_TeamToIndex(source_color + 1);
-	destination_team_index = Team_TeamToIndex(destination_color + 1);
-
-	if (destination_team_index == -1)
+	if (!teamplay)
 	{
 		return;
 	}
-
-	entity balance = TeamBalance_CheckAllowedTeams(this);
-
-	if (destination_team_index == 1 && !TeamBalance_IsTeamAllowedInternal(
-		balance, 1))
-	{
-		destination_team_index = 4;
-	}
-	if (destination_team_index == 4 && !TeamBalance_IsTeamAllowedInternal(
-		balance, 4))
-	{
-		destination_team_index = 3;
-	}
-	if (destination_team_index == 3 && !TeamBalance_IsTeamAllowedInternal(
-		balance, 3))
-	{
-		destination_team_index = 2;
-	}
-	if (destination_team_index == 2 && !TeamBalance_IsTeamAllowedInternal(
-		balance, 2))
-	{
-		destination_team_index = 1;
-	}
-
-	// not changing teams
-	if (source_color == destination_color)
-	{
-		SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL);
-		TeamBalance_Destroy(balance);
-		return;
-	}
-
-	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(this).wasplayer)) {
-		Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
-		return; // changing teams is not allowed
-	}
-
-	// autocvar_g_balance_teams_prevent_imbalance only makes sense if autocvar_g_balance_teams is on, as it makes the team selection dialog pointless
-	if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
-	{
-		TeamBalance_GetTeamCounts(balance, this);
-		if ((Team_IndexToBit(destination_team_index) &
-			TeamBalance_FindBestTeams(balance, this, false)) == 0)
-		{
-			Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-			TeamBalance_Destroy(balance);
-			return;
-		}
-	}
-	TeamBalance_Destroy(balance);
-	SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL);
+	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) +
+		1));
 }

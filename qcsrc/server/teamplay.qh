@@ -97,6 +97,11 @@ enum
 /// \return True if team switch was successful, false otherwise.
 bool SetPlayerTeam(entity player, int team_index, int type);
 
+/// \brief Sets the team of the player with all sanity checks.
+/// \param[in,out] player Player to adjust.
+/// \param[in] team_index Index of the team to set.
+void Player_SetTeamIndexChecked(entity player, int team_index);
+
 /// \brief Moves player to the specified team.
 /// \param[in,out] client Client to move.
 /// \param[in] team_index Index of the team.
@@ -305,3 +310,9 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent);
 /// function.
 int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
 	entity player, bool use_score);
+
+/// \brief Called when the player connects or when they change their color with
+/// the "color" command.
+/// \param[in,out] player Player that requested a new color.
+/// \param[in] new_color Requested color.
+void SV_ChangeTeam(entity player, int new_color);

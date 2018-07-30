@@ -923,7 +923,10 @@ void ClientKill_Now_TeamChange(entity this)
 		PutObserverInServer(this);
 	}
 	else
-		SV_ChangeTeam(this, this.killindicator_teamchange - 1);
+	{
+		Player_SetTeamIndexChecked(this, Team_TeamToIndex(
+			this.killindicator_teamchange));
+	}
 	this.killindicator_teamchange = 0;
 }
 
@@ -2095,7 +2098,6 @@ void Join(entity this)
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 	{
-		//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
