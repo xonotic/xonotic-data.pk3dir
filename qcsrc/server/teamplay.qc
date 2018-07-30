@@ -214,8 +214,16 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	LogTeamchange(player.playerid, player.team, type);
 	if (team_index != old_team_index)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team,
-			INFO_JOIN_PLAY_TEAM), player.netname);
+		if (team_index != -1)
+		{
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(
+				player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+		}
+		else
+		{
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE,
+				player.netname);
+		}
 		KillPlayerForTeamChange(player);
 	}
 	return true;

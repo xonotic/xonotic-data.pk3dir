@@ -284,25 +284,16 @@ void PutObserverInServer(entity this)
 
 	WaypointSprite_PlayerDead(this);
 
-	if (mutator_returnvalue) {
-	    // mutator prevents resetting teams+score
-	} else {
-		Player_SetTeamIndex(this, -1);
-		this.frags = FRAGS_SPECTATOR;
-        PlayerScore_Clear(this);  // clear scores when needed
-    }
-
 	if (CS(this).killcount != FRAGS_SPECTATOR)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
 		if(!game_stopped)
 		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
-		if(!CS(this).just_joined)
-			LogTeamchange(this.playerid, -1, TEAM_CHANGE_SPECTATOR);
-		else
+		if(CS(this).just_joined)
+		{
 			CS(this).just_joined = false;
+		}
 	}
 
 	accuracy_resend(this);
@@ -387,6 +378,17 @@ void PutObserverInServer(entity this)
 		if(axh.owner == this && axh != NULL && !wasfreed(axh))
 			delete(axh);
 	}
+	
+	if (mutator_returnvalue)
+	{
+		// mutator prevents resetting teams+score
+	}
+	else
+	{
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
+		this.frags = FRAGS_SPECTATOR;
+		PlayerScore_Clear(this);  // clear scores when needed
+    }
 }
 
 int player_getspecies(entity this)
