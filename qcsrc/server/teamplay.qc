@@ -211,9 +211,10 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	{
 		return false;
 	}
-	LogTeamchange(player.playerid, player.team, type);
+	LogTeamChange(player.playerid, player.team, type);
 	if (team_index != old_team_index)
 	{
+		PlayerScore_Clear(player);
 		if (team_index != -1)
 		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(
@@ -225,6 +226,10 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 				player.netname);
 		}
 		KillPlayerForTeamChange(player);
+		if (!IS_BOT_CLIENT(player))
+		{
+			TeamBalance_AutoBalanceBots();
+		}
 	}
 	return true;
 }
@@ -234,7 +239,6 @@ bool MoveToTeam(entity client, int team_index, int type)
 	//PrintToChatAll(sprintf("MoveToTeam: %s, %f", client.netname, team_index));
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
-	PlayerScore_Clear(client);
 	if (!SetPlayerTeam(client, team_index, type))
 	{
 		lockteams = lockteams_backup;  // restore the team lock
@@ -242,31 +246,6 @@ bool MoveToTeam(entity client, int team_index, int type)
 	}
 	lockteams = lockteams_backup;  // restore the team lock
 	return true;
-}
-
-void KillPlayerForTeamChange(entity player)
-{
-	if (IS_DEAD(player))
-	{
-		return;
-	}
-	if (MUTATOR_CALLHOOK(Player_ChangeTeamKill, player) == true)
-	{
-		return;
-	}
-	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, DMG_NOWEP,
-		player.origin, '0 0 0');
-}
-
-void LogTeamchange(float player_id, float team_number, int type)
-{
-	if(!autocvar_sv_eventlog)
-		return;
-
-	if(player_id < 1)
-		return;
-
-	GameLogEcho(strcat(":team:", ftos(player_id), ":", ftos(team_number), ":", ftos(type)));
 }
 
 bool Player_HasRealForcedTeam(entity player)
@@ -376,6 +355,42 @@ void Player_DetermineForcedTeam(entity player)
 	if (!teamplay && Player_HasRealForcedTeam(player))
 	{
 		player.team_forced = TEAM_FORCE_DEFAULT;
+	}
+}
+
+void TeamBalance_JoinBestTeam(entity player)
+{
+	//PrintToChatAll(sprintf("TeamBalance_JoinBestTeam: %s", player.netname));
+	if (!teamplay)
+	{
+		return;
+	}
+	if (player.bot_forced_team)
+	{
+		return;
+	}
+	entity balance = TeamBalance_CheckAllowedTeams(player);
+	if (Player_HasRealForcedTeam(player))
+	{
+		int forced_team_index = player.team_forced;
+		bool is_team_allowed = TeamBalance_IsTeamAllowedInternal(balance,
+			forced_team_index);
+		TeamBalance_Destroy(balance);
+		if (!is_team_allowed)
+		{
+			return;
+		}
+		if (!SetPlayerTeam(player, forced_team_index, TEAM_CHANGE_AUTO))
+		{
+			return;
+		}
+		return;
+	}
+	int best_team_index = TeamBalance_FindBestTeam(balance, player, true);
+	TeamBalance_Destroy(balance);
+	if (!SetPlayerTeam(player, best_team_index, TEAM_CHANGE_AUTO))
+	{
+		return;
 	}
 }
 
@@ -758,51 +773,6 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 	return team_bits;
 }
 
-void TeamBalance_JoinBestTeam(entity this)
-{
-	//PrintToChatAll(sprintf("JoinBestTeam: %s", this.netname));
-	if (!teamplay)
-	{
-		return;
-	}
-	if (this.bot_forced_team)
-	{
-		return;
-	}
-	entity balance = TeamBalance_CheckAllowedTeams(this);
-	if (Player_HasRealForcedTeam(this))
-	{
-		int forced_team_index = this.team_forced;
-		bool is_team_allowed = TeamBalance_IsTeamAllowedInternal(balance,
-			forced_team_index);
-		TeamBalance_Destroy(balance);
-		if (!is_team_allowed)
-		{
-			return;
-		}
-		if (!SetPlayerTeam(this, forced_team_index, TEAM_CHANGE_AUTO))
-		{
-			return;
-		}
-		if (!IS_BOT_CLIENT(this))
-		{
-			TeamBalance_AutoBalanceBots();
-		}
-		return;
-	}
-	int best_team_index = TeamBalance_FindBestTeam(balance, this, true);
-	TeamBalance_Destroy(balance);
-	PlayerScore_Clear(this);
-	if (!SetPlayerTeam(this, best_team_index, TEAM_CHANGE_AUTO))
-	{
-		return;
-	}
-	if (!IS_BOT_CLIENT(this))
-	{
-		TeamBalance_AutoBalanceBots();
-	}
-}
-
 int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 	entity player, bool use_score)
 {
@@ -975,6 +945,33 @@ entity TeamBalance_GetPlayerForTeamSwitch(int source_team_index,
 	return lowest_player;
 }
 
+void LogTeamChange(float player_id, float team_number, int type)
+{
+	if (!autocvar_sv_eventlog)
+	{
+		return;
+	}
+	if (player_id < 1)
+	{
+		return;
+	}
+	GameLogEcho(sprintf(":team:%f:%f:%f", player_id, team_number, type));
+}
+
+void KillPlayerForTeamChange(entity player)
+{
+	if (IS_DEAD(player))
+	{
+		return;
+	}
+	if (MUTATOR_CALLHOOK(Player_ChangeTeamKill, player) == true)
+	{
+		return;
+	}
+	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, DMG_NOWEP,
+		player.origin, '0 0 0');
+}
+
 bool TeamBalance_IsTeamAllowedInternal(entity balance, int index)
 {
 	return balance.m_team_balance_team[index - 1].m_num_players !=
@@ -1126,7 +1123,6 @@ void SV_ChangeTeam(entity this, float _color)
 	{
 		SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL);
 		TeamBalance_Destroy(balance);
-		TeamBalance_AutoBalanceBots(); // Hack
 		return;
 	}
 
@@ -1148,14 +1144,5 @@ void SV_ChangeTeam(entity this, float _color)
 		}
 	}
 	TeamBalance_Destroy(balance);
-	if (IS_PLAYER(this) && source_team_index != destination_team_index)
-	{
-		// reduce frags during a team change
-		PlayerScore_Clear(this);
-	}
-	if (!SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL))
-	{
-		return;
-	}
-	TeamBalance_AutoBalanceBots();
+	SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL);
 }

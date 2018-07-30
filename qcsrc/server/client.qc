@@ -387,7 +387,6 @@ void PutObserverInServer(entity this)
 	{
 		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 		this.frags = FRAGS_SPECTATOR;
-		PlayerScore_Clear(this);  // clear scores when needed
     }
 }
 

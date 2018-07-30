@@ -83,10 +83,17 @@ void SetPlayerColors(entity player, float _color);
 /// \return True if team switch was successful, false otherwise.
 bool Player_SetTeamIndex(entity player, int index);
 
+enum
+{
+	TEAM_CHANGE_AUTO = 2, ///< The team was selected by autobalance.
+	TEAM_CHANGE_MANUAL = 3, ///< Player has manually selected their team.
+	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
+};
+
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
 /// \param[in] team_index Index of the team to set.
-/// \param[in] type ???
+/// \param[in] type Type of the team change. See TEAM_CHANGE constants.
 /// \return True if team switch was successful, false otherwise.
 bool SetPlayerTeam(entity player, int team_index, int type);
 
@@ -96,19 +103,6 @@ bool SetPlayerTeam(entity player, int team_index, int type);
 /// \param[in] type ???
 /// \return True on success, false otherwise.
 bool MoveToTeam(entity client, int team_index, int type);
-
-/// \brief Kills player as a result of team change.
-/// \param[in,out] player Player to kill.
-void KillPlayerForTeamChange(entity player);
-
-enum
-{
-	TEAM_CHANGE_AUTO = 2,
-	TEAM_CHANGE_MANUAL = 3,
-	TEAM_CHANGE_SPECTATOR = 4
-};
-
-void LogTeamchange(float player_id, float team_number, int type);
 
 enum
 {
@@ -137,6 +131,11 @@ void Player_SetForcedTeamIndex(entity player, int team_index);
 void Player_DetermineForcedTeam(entity player);
 
 // ========================= Team balance API =================================
+
+/// \brief Assigns the given player to a team that will make the game most
+/// balanced.
+/// \param[in,out] player Player to assign.
+void TeamBalance_JoinBestTeam(entity player);
 
 /// \brief Checks whether the player can join teams according to global
 /// configuration and mutator settings.
@@ -200,8 +199,6 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
 /// function.
 int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score);
 
-void TeamBalance_JoinBestTeam(entity this);
-
 /// \brief Describes the result of comparing teams.
 enum
 {
@@ -244,6 +241,12 @@ entity TeamBalance_GetPlayerForTeamSwitch(int source_team_index,
 	int destination_team_index, bool is_bot);
 
 // ============================ Internal API ==================================
+
+void LogTeamChange(float player_id, float team_number, int type);
+
+/// \brief Kills player as a result of team change.
+/// \param[in,out] player Player to kill.
+void KillPlayerForTeamChange(entity player);
 
 /// \brief Returns whether the team change to the specified team is allowed.
 /// \param[in] balance Team balance entity.
