@@ -718,6 +718,7 @@ bool waypoint_load_links()
 
 	bool parse_comments = true;
 	float ver = 0;
+	string links_time = string_null;
 
 	while ((s = fgets(file)))
 	{
@@ -727,13 +728,18 @@ bool waypoint_load_links()
 			{
 				if(substring(s, 2, 17) == "WAYPOINT_VERSION ")
 					ver = stof(substring(s, 19, -1));
+				else if(substring(s, 2, 14) == "WAYPOINT_TIME ")
+					links_time = substring(s, 16, -1);
 				continue;
 			}
 			else
 			{
-				if(ver < WAYPOINT_VERSION)
+				if(ver < WAYPOINT_VERSION || links_time != waypoint_time)
 				{
-					LOG_TRACE("waypoint links for this map are outdated.");
+					if (links_time != waypoint_time)
+						LOG_TRACE("waypoint links for this map are not made for these waypoints.");
+					else
+						LOG_TRACE("waypoint links for this map are outdated.");
 					if (g_assault)
 					{
 						LOG_TRACE("Assault waypoint links need to be manually updated in the editor");
@@ -996,6 +1002,8 @@ void waypoint_save_links()
 	}
 
 	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
+	if (waypoint_time != "")
+		fputs(file, strcat("//", "WAYPOINT_TIME ", waypoint_time, "\n"));
 
 	int c = 0;
 	IL_EACH(g_waypoints, true,
@@ -1063,7 +1071,12 @@ void waypoint_saveall()
 	// (they are read as a waypoint with origin '0 0 0' and flag 0 though)
 	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
 	fputs(file, strcat("//", "WAYPOINT_SYMMETRY ", sym_str, "\n"));
-	fputs(file, strcat("//", "\n"));
+
+	strcpy(waypoint_time, strftime(true, "%Y-%m-%d %H:%M:%S"));
+	fputs(file, strcat("//", "WAYPOINT_TIME ", waypoint_time, "\n"));
+	//fputs(file, strcat("//", "\n"));
+	//fputs(file, strcat("//", "\n"));
+	//fputs(file, strcat("//", "\n"));
 
 	int c = 0;
 	IL_EACH(g_waypoints, true,
@@ -1135,6 +1148,8 @@ float waypoint_loadall()
 					if (tokens > 2) { sym_param2 = stof(argv(2)); }
 					if (tokens > 3) { sym_param3 = stof(argv(3)); }
 				}
+				else if(substring(s, 2, 14) == "WAYPOINT_TIME ")
+					strcpy(waypoint_time, substring(s, 16, -1));
 				continue;
 			}
 			else
