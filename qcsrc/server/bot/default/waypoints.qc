@@ -293,7 +293,6 @@ void waypoint_spawn_fromeditor(entity pl)
 
 void waypoint_remove(entity wp)
 {
-	// tell all waypoints linked to wp that they need to relink
 	IL_EACH(g_waypoints, it != wp,
 	{
 		if (waypoint_islinked(it, wp))
