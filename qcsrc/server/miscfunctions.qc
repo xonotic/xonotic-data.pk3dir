@@ -40,7 +40,7 @@ void crosshair_trace(entity pl)
 {
 	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
-.bool ctrace_solidchanged;
+
 void crosshair_trace_plusvisibletriggers(entity pl)
 {
 	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
@@ -48,21 +48,17 @@ void crosshair_trace_plusvisibletriggers(entity pl)
 		if(it.model != "")
 		{
 			it.solid = SOLID_BSP;
-			it.ctrace_solidchanged = true;
 			IL_PUSH(g_ctrace_changed, it);
 		}
 	});
 
 	crosshair_trace(pl);
 
-	IL_EACH(g_ctrace_changed, it.ctrace_solidchanged,
-	{
-		it.solid = SOLID_TRIGGER;
-		it.ctrace_solidchanged = false;
-	});
+	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
 
 	IL_CLEAR(g_ctrace_changed);
 }
+
 void WarpZone_crosshair_trace(entity pl)
 {
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
