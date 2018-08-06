@@ -62,6 +62,8 @@ void attach_sameorigin(entity e, entity to, string tag);
 void crosshair_trace(entity pl);
 
 void crosshair_trace_plusvisibletriggers(entity pl);
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl);
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz);
 
 void detach_sameorigin(entity e);
 

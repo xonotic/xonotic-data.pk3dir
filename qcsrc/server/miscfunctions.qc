@@ -43,6 +43,16 @@ void crosshair_trace(entity pl)
 
 void crosshair_trace_plusvisibletriggers(entity pl)
 {
+	crosshair_trace_plusvisibletriggers__is_wz(pl, false);
+}
+
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, true);
+}
+
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz)
+{
 	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
 	{
 		if(it.model != "")
@@ -52,7 +62,10 @@ void crosshair_trace_plusvisibletriggers(entity pl)
 		}
 	});
 
-	crosshair_trace(pl);
+	if (is_wz)
+		WarpZone_crosshair_trace(pl);
+	else
+		crosshair_trace(pl);
 
 	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
 
@@ -215,7 +228,6 @@ string AmmoNameFromWeaponentity(Weapon wep)
 	return ammoitems;
 }
 
-.int solid_prev;
 string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
@@ -252,17 +264,7 @@ string formatmessage(entity this, string msg)
 
 		if(!traced)
 		{
-			IL_EACH(g_items, true,
-			{
-				it.solid_prev = it.solid;
-				it.solid = SOLID_BSP;
-			});
-			WarpZone_crosshair_trace(this);
-			IL_EACH(g_items, true,
-			{
-				it.solid = it.solid_prev;
-				it.solid_prev = 0;
-			});
+			WarpZone_crosshair_trace_plusvisibletriggers(this);
 			cursor = trace_endpos;
 			cursor_ent = trace_ent;
 			traced = true;
