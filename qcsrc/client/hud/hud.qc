@@ -561,8 +561,6 @@ void Hud_Dynamic_Frame()
 	HUD_Scale_Disable();
 }
 
-bool cursor_activestate;
-
 bool HUD_WouldShowCursor()
 {
 	if(autocvar__hud_configure)
@@ -581,27 +579,6 @@ bool HUD_WouldShowCursor()
 	if(QuickMenu_IsOpened())
 		return true;
 	return false;
-}
-void HUD_Cursor()
-{
-	if(HUD_WouldShowCursor())
-	{
-		if(!cursor_activestate)
-		{
-			cursor_activestate = true;
-			if(autocvar_hud_cursormode)
-				setcursormode(1);
-		}
-	}
-	else
-	{
-		if(cursor_activestate)
-		{
-			cursor_activestate = false;
-			if(autocvar_hud_cursormode)
-				setcursormode(0);
-		}
-	}
 }
 
 void HUD_Main()
@@ -723,7 +700,10 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 
-	HUD_Cursor();
+	bool cursor_active_prev = cursor_active;
+	cursor_active = HUD_WouldShowCursor();
+	if (cursor_active_prev != cursor_active && autocvar_hud_cursormode)
+		setcursormode(cursor_active);
 
 	if (intermission == 2)
 		HUD_Reset();

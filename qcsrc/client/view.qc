@@ -1555,7 +1555,7 @@ void ViewLocation_Mouse()
 	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
 }
 
-void HUD_Draw_Mouse()
+void HUD_Cursor_Show()
 {
 	float cursor_alpha = 1 - autocvar__menu_alpha;
 	if(cursor_type == CURSOR_NORMAL)
@@ -1573,7 +1573,7 @@ void HUD_Mouse(entity player)
 	if(autocvar__menu_alpha == 1)
 		return;
 
-	if(!HUD_WouldShowCursor())
+	if(!cursor_active)
 	{
 		if(player.viewloc && (player.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			ViewLocation_Mouse(); // NOTE: doesn't use cursormode
@@ -1597,7 +1597,7 @@ void HUD_Mouse(entity player)
 
 	prevMouseClicked = mouseClicked;
 
-	HUD_Draw_Mouse();
+	HUD_Cursor_Show();
 }
 
 bool ov_enabled;
