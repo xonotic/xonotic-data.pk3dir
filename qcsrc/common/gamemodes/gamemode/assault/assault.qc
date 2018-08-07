@@ -31,7 +31,8 @@ void assault_objective_use(entity this, entity actor, entity trigger)
 
 vector target_objective_spawn_evalfunc(entity this, entity player, entity spot, vector current)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 0 || GetResourceAmount(this, RESOURCE_HEALTH) >= ASSAULT_VALUE_INACTIVE)
+	float hlth = GetResourceAmount(this, RESOURCE_HEALTH);
+	if (hlth < 0 || hlth >= ASSAULT_VALUE_INACTIVE)
 		return '-1 0 0';
 	return current;
 }
@@ -61,16 +62,17 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 	else
 		return; // already activated! cannot activate again!
 
-	if(GetResourceAmount(this.enemy, RESOURCE_HEALTH) < ASSAULT_VALUE_INACTIVE)
+	float hlth = GetResourceAmount(this.enemy, RESOURCE_HEALTH);
+	if (hlth < ASSAULT_VALUE_INACTIVE)
 	{
-		if(GetResourceAmount(this.enemy, RESOURCE_HEALTH) - this.dmg > 0.5)
+		if (hlth - this.dmg > 0.5)
 		{
 			GameRules_scoring_add_team(actor, SCORE, this.dmg);
 			TakeResource(this.enemy, RESOURCE_HEALTH, this.dmg);
 		}
 		else
 		{
-			GameRules_scoring_add_team(actor, SCORE, GetResourceAmount(this.enemy, RESOURCE_HEALTH));
+			GameRules_scoring_add_team(actor, SCORE, hlth);
 			GameRules_scoring_add_team(actor, ASSAULT_OBJECTIVES, 1);
 			SetResourceAmountExplicit(this.enemy, RESOURCE_HEALTH, -1);
 
@@ -334,7 +336,8 @@ spawnfunc(target_objective_decrease)
 bool destructible_heal(entity targ, entity inflictor, float amount, float limit)
 {
 	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
-	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+	float hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	if (hlth <= 0 || hlth >= true_limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
@@ -411,7 +414,8 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		entity destr = it;
 		IL_EACH(g_assault_objectivedecreasers, it.targetname == destr.target,
 		{
-			if(GetResourceAmount(it.enemy, RESOURCE_HEALTH) > 0 && GetResourceAmount(it.enemy, RESOURCE_HEALTH) < ASSAULT_VALUE_INACTIVE)
+			float hlth = GetResourceAmount(it.enemy, RESOURCE_HEALTH);
+			if (hlth > 0 && hlth < ASSAULT_VALUE_INACTIVE)
 			{
 				found = true;
 				break;
@@ -602,10 +606,10 @@ MUTATOR_HOOKFUNCTION(as, PlayHitsound)
 	return (frag_victim.classname == "func_assault_destructible");
 }
 
-MUTATOR_HOOKFUNCTION(as, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(as, TeamBalance_CheckAllowedTeams)
 {
 	// assault always has 2 teams
-	c1 = c2 = 0;
+	M_ARGV(0, float) = BIT(0) | BIT(1);
 	return true;
 }
 

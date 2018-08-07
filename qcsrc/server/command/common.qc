@@ -632,8 +632,8 @@ void CommonCommand_time(float request, entity caller)
 			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME))));
 			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES))));
 			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME))));
-			print_to(caller, strcat("localtime = ", strftime(true, "%a %b %e %H:%M:%S %Z %Y")));
-			print_to(caller, strcat("gmtime = ", strftime(false, "%a %b %e %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("localtime = ", strftime(true, "%a %b %d %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("gmtime = ", strftime(false, "%a %b %d %H:%M:%S %Z %Y")));
 			return;
 		}
 

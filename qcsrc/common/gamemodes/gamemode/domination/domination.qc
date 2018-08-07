@@ -297,47 +297,55 @@ void dom_controlpoint_setup(entity this)
 	WaypointSprite_SpawnFixed(WP_DomNeut, this.origin + '0 0 32', this, sprite, RADARICON_DOMPOINT);
 }
 
-float total_controlpoints;
+int total_control_points;
 void Domination_count_controlpoints()
 {
-	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
+	total_control_points = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfControlPoints(Team_GetTeamFromIndex(i), 0);
+	}
 	IL_EACH(g_dompoints, true,
 	{
-		++total_controlpoints;
-		redowned += (it.goalentity.team == NUM_TEAM_1);
-		blueowned += (it.goalentity.team == NUM_TEAM_2);
-		yellowowned += (it.goalentity.team == NUM_TEAM_3);
-		pinkowned += (it.goalentity.team == NUM_TEAM_4);
+		++total_control_points;
+		if (!Entity_HasValidTeam(it.goalentity))
+		{
+			continue;
+		}
+		entity team_ = Entity_GetTeam(it.goalentity);
+		int num_control_points = Team_GetNumberOfControlPoints(team_);
+		++num_control_points;
+		Team_SetNumberOfControlPoints(team_, num_control_points);
 	});
 }
 
-float Domination_GetWinnerTeam()
+int Domination_GetWinnerTeam()
 {
-	float winner_team = 0;
-	if(redowned == total_controlpoints)
+	int winner_team = 0;
+	if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(1)) ==
+		total_control_points)
+	{
 		winner_team = NUM_TEAM_1;
-	if(blueowned == total_controlpoints)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
 	}
-	if(yellowowned == total_controlpoints)
+	for (int i = 2; i <= NUM_TEAMS; ++i)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
+		if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(i)) ==
+			total_control_points)
+		{
+			if (winner_team != 0)
+			{
+				return 0;
+			}
+			winner_team = Team_IndexToTeam(i);
+		}
 	}
-	if(pinkowned == total_controlpoints)
+	if (winner_team)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
 		return winner_team;
+	}
 	return -1; // no control points left?
 }
 
-#define DOM_OWNED_CONTROLPOINTS() ((redowned > 0) + (blueowned > 0) + (yellowowned > 0) + (pinkowned > 0))
-#define DOM_OWNED_CONTROLPOINTS_OK() (DOM_OWNED_CONTROLPOINTS() < total_controlpoints)
 float Domination_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -417,7 +425,7 @@ void havocbot_role_dom(entity this)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(dom, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(dom, TeamBalance_CheckAllowedTeams)
 {
 	// fallback?
 	M_ARGV(0, float) = domination_teams;
@@ -428,12 +436,9 @@ MUTATOR_HOOKFUNCTION(dom, CheckAllowedTeams)
 	{
 		if(head.netname != "")
 		{
-			switch(head.team)
+			if (Team_IsValidTeam(head.team))
 			{
-				case NUM_TEAM_1: c1 = 0; break;
-				case NUM_TEAM_2: c2 = 0; break;
-				case NUM_TEAM_3: c3 = 0; break;
-				case NUM_TEAM_4: c4 = 0; break;
+				M_ARGV(0, float) |= Team_TeamToBit(head.team);
 			}
 		}
 
@@ -584,10 +589,10 @@ void ScoreRules_dom(int teams)
 }
 
 // code from here on is just to support maps that don't have control point and team entities
-void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, Sound capsound, string capnarration, string capmessage)
+void dom_spawnteam(string teamname, float teamcolor, string pointmodel, float pointskin, Sound capsound, string capnarration, string capmessage)
 {
-    TC(Sound, capsound);
-    entity e = new_pure(dom_team);
+	TC(Sound, capsound);
+	entity e = new_pure(dom_team);
 	e.netname = strzone(teamname);
 	e.cnt = teamcolor;
 	e.model = pointmodel;
@@ -621,7 +626,7 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(int teams)
 {
-    TC(int, teams);
+	TC(int, teams);
 	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_1), NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND_DOM_CLAIM, "", "Red team has captured a control point");
 	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_2), NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND_DOM_CLAIM, "", "Blue team has captured a control point");
 	if(teams >= 3)
@@ -644,14 +649,9 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 		dom_spawnteams(domination_teams);
 	}
 
-	CheckAllowedTeams(NULL);
-	//domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
-
-	int teams = 0;
-	if(c1 >= 0) teams |= BIT(0);
-	if(c2 >= 0) teams |= BIT(1);
-	if(c3 >= 0) teams |= BIT(2);
-	if(c4 >= 0) teams |= BIT(3);
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	int teams = TeamBalance_GetAllowedTeams(balance);
+	TeamBalance_Destroy(balance);
 	domination_teams = teams;
 
 	domination_roundbased = autocvar_g_domination_roundbased;

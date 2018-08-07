@@ -251,7 +251,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
 {
-    TC(Sound, _mzlsound);
+	TC(Sound, _mzlsound);
 	entity proj;
 
 	proj = spawn();
@@ -811,7 +811,6 @@ void vehicles_exit(entity vehic, bool eject)
 
 	vehicles_exit_running = true;
 
-	// TODO: this was in an IS_CLIENT check, make sure it isn't actually needed!
 	if(vehic.vehicle_flags & VHF_PLAYERSLOT)
 	{
 		vehic.vehicle_exit(vehic, eject);

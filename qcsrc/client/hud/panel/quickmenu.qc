@@ -43,7 +43,7 @@ float QuickMenu_TimeOut;
 // if s1 is not empty s will be displayed as command otherwise as submenu
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
-    TC(int, i);
+	TC(int, i);
 	//LOG_INFOF("^xc80 entry %d: %s, %s\n", i, s, s1);
 	strcpy(QuickMenu_Page_Description[i], s);
 	strcpy(QuickMenu_Page_Command[i], s1);
@@ -51,7 +51,7 @@ void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 
 void QuickMenu_Page_ClearEntry(int i)
 {
-    TC(int, i);
+	TC(int, i);
 	strfree(QuickMenu_Page_Description[i]);
 	strfree(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command_Type[i] = 0;
@@ -219,7 +219,7 @@ bool QuickMenu_IsOpened()
 
 bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, bool without_me)
 {
-    TC(int, teamplayers); TC(bool, without_me);
+	TC(int, teamplayers); TC(bool, without_me);
 	int i;
 	for(i = 0; i < QUICKMENU_MAXLINES; ++i)
 		QuickMenu_Page_ClearEntry(i);
@@ -244,7 +244,7 @@ bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, bool wi
 int QuickMenu_Buffer_Index_Prev;
 bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 {
-    TC(bool, new_page);
+	TC(bool, new_page);
 	string s = string_null, cmd = string_null, z_submenu;
 
 	if (new_page == 0)
@@ -355,7 +355,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 
 bool QuickMenu_ActionForNumber(int num)
 {
-    TC(int, num);
+	TC(int, num);
 	if (!QuickMenu_IsLastPage)
 	{
 		if (num < 0 || num >= QUICKMENU_MAXLINES)
@@ -383,7 +383,7 @@ bool QuickMenu_ActionForNumber(int num)
 
 void QuickMenu_Page_ActiveEntry(int entry_num)
 {
-    TC(int, entry_num);
+	TC(int, entry_num);
 	QuickMenu_Page_ActivatedEntry = entry_num;
 	QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 	if(QuickMenu_Page_Command[QuickMenu_Page_ActivatedEntry])
@@ -401,7 +401,7 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 
 bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
+	TC(int, bInputType);
 	// we only care for keyboard events
 	if(bInputType == 2)
 		return false;
@@ -735,7 +735,7 @@ void HUD_QuickMenu()
 
 void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me)
 {
-    TC(int, teamplayers); TC(bool, without_me);
+	TC(int, teamplayers); TC(bool, without_me);
 	entity pl;
 	if(teamplayers && !team_count)
 		return;
