@@ -1555,17 +1555,16 @@ void ViewLocation_Mouse()
 	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
 }
 
-float mouse_over_panel;
 void HUD_Draw_Mouse()
 {
 	float cursor_alpha = 1 - autocvar__menu_alpha;
-	if(!mouse_over_panel)
+	if(cursor_type == CURSOR_NORMAL)
 		draw_cursor_normal(mousepos, '1 1 1', cursor_alpha);
-	else if(mouse_over_panel == 1)
+	else if(cursor_type == CURSOR_MOVE)
 		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
-	else if(mouse_over_panel == 2)
+	else if(cursor_type == CURSOR_RESIZE)
 		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize", '1 1 1', cursor_alpha);
-	else
+	else if(cursor_type == CURSOR_RESIZE2)
 		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize2", '1 1 1', cursor_alpha);
 }
 

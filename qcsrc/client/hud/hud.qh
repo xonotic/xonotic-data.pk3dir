@@ -8,6 +8,7 @@ void Hud_Dynamic_Frame();
 bool HUD_Radar_Clickable();
 void HUD_Radar_Mouse();
 bool HUD_WouldShowCursor();
+bool QuickMenu_IsOpened();
 
 REGISTRY(hud_panels, BITS(6))
 #define hud_panels_from(i) _hud_panels_from(i, NULL)
