@@ -96,7 +96,7 @@ REGISTRY_CHECK(Gametypes)
 CLASS(Deathmatch, Gametype)
     INIT(Deathmatch)
     {
-        this.gametype_init(this, _("Deathmatch"),"dm","g_dm",false,"","timelimit=20 pointlimit=30 leadlimit=0",_("Score as many frags as you can"));
+        this.gametype_init(this, _("Deathmatch"),"dm","g_dm",false,"","timelimit=15 pointlimit=30 leadlimit=0",_("Score as many frags as you can"));
     }
     METHOD(Deathmatch, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
@@ -181,7 +181,7 @@ REGISTER_GAMETYPE(CTS, NEW(RaceCTS));
 CLASS(TeamDeathmatch, Gametype)
     INIT(TeamDeathmatch)
     {
-        this.gametype_init(this, _("Team Deathmatch"),"tdm","g_tdm",true,"","timelimit=20 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
+        this.gametype_init(this, _("Team Deathmatch"),"tdm","g_tdm",true,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
     }
     METHOD(TeamDeathmatch, m_parse_mapinfo, bool(string k, string v))
     {

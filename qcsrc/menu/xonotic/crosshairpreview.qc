@@ -25,9 +25,7 @@ void XonoticCrosshairPreview_draw(entity me)
 	float a;
 	rgb = stov(cvar_string("crosshair_color"));
 	a = cvar("crosshair_alpha");
-	if(me.src)
-		strunzone(me.src);
-	me.src = strzone(strcat("/gfx/crosshair", cvar_string("crosshair")));
+	strcpy(me.src, strcat("/gfx/crosshair", cvar_string("crosshair")));
 
 	sz = draw_PictureSize(me.src);
 	sz = globalToBoxSize(sz, me.size);

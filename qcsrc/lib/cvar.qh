@@ -87,7 +87,7 @@ const noref vector default_vector = '0 0 0';
 //  e.g.: AUTOCVAR(mycvar, float, 2.5, "cvar description")
 
 #define __AUTOCVAR(file, archive, var, type, desc, default) \
-	[[accumulate]] void RegisterCvars(void(string, string, string, bool, string) f) \
+	ACCUMULATE void RegisterCvars(void(string, string, string, bool, string) f) \
 	{ \
 		f( #var, repr_cvar_##type(default), desc, archive, file); \
 	} \

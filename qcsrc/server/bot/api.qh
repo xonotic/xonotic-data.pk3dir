@@ -79,7 +79,9 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 
 vector havocbot_middlepoint;
 float havocbot_middlepoint_radius;
-vector havocbot_symmetryaxis_equation;
+float havocbot_symmetry_axis_m;
+float havocbot_symmetry_axis_q;
+float havocbot_symmetry_origin_order;
 
 .float goalentity_lock_timeout;
 .float ignoregoaltime;

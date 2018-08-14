@@ -6,7 +6,6 @@ CLASS(Animation, Object)
 	METHOD(Animation, setTimeStartEnd, void(Animation this, float, float));
 	METHOD(Animation, setTimeStartDuration, void(Animation this, float, float));
 	METHOD(Animation, setValueStartEnd, void(Animation this, float, float));
-	METHOD(Animation, setValueStartDelta, void(Animation this, float, float));
 	METHOD(Animation, setObjectSetter, void(Animation this, entity, void(entity, float)));
 	METHOD(Animation, tick, void(Animation this, float));
 	METHOD(Animation, calcValue, float(Animation this, float, float, float, float));

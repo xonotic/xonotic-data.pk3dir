@@ -5,6 +5,7 @@
 #include <common/constants.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
+#include <common/sounds/sound.qh>
 
 #ifdef CSQC
 #include <client/autocvars.qh>
@@ -676,7 +677,8 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 
 REGISTRY(Notifications, BITS(11))
 REGISTER_REGISTRY(Notifications)
-REGISTRY_SORT(Notifications); STATIC_INIT(Notifications) { FOREACH(Notifications, true, it.m_id = i); }
+REGISTRY_SORT(Notifications);
+STATIC_INIT(Notifications) { FOREACH(Notifications, true, it.m_id = i); }
 REGISTRY_CHECK(Notifications)
 
 const int NOTIF_CHOICE_MAX = 50;

@@ -3,24 +3,26 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# a b <taibr.martin@gmail.com>, 2017
+# Martin Taibr <taibr.martin@gmail.com>, 2017
+# Martin Taibr <taibr.martin@gmail.com>, 2017
 # NONE <nechtom@gmail.com>, 2015
-# Tomáš Volavka <czheron@gmail.com>, 2015
+# Tomáš Volavka <czheron@gmail.com>, 2015,2018
 # Tomáš Volavka <czheron@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-09-19 23:01+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-05-13 08:23+0000\n"
+"Last-Translator: Tomáš Volavka <czheron@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #: qcsrc/client/hud/hud_config.qc:239
 #, c-format
@@ -30,7 +32,7 @@ msgstr "^2Úspěšně exportováno do %s! (Pozn.: Uloženo v data/data/)\n"
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^1Couldn't write to %s\n"
-msgstr ""
+msgstr "^1Nelze zapisovat do %s\n"
 
 #: qcsrc/client/hud/panel/chat.qc:82
 msgid "^3Player^7: This is the chat area."
@@ -58,7 +60,7 @@ msgstr "^1Stiskni ^3%s^1 pro sledování"
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr ""
+msgstr "primární střelba"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
@@ -68,12 +70,12 @@ msgstr "^1Stiskni ^3%s^1 nebo ^3%s^1 pro dalšího nebo předchozího hráče"
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "další zbraň"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "předchozí zbraň"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -83,17 +85,17 @@ msgstr "^1Použij ^3%s^1 nebo ^3%s^1 pro změnu rychlosti"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Stskni ^3%s^1 pro sledování, ^3%s^1 pro změnu kamery"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:192
 msgid "drop weapon"
-msgstr ""
+msgstr "odhodit zbraň"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr ""
+msgstr "sekundární střelba"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
@@ -122,7 +124,7 @@ msgstr "^1Stiskni ^3%s^1 pro připojení"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "skok"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format

@@ -169,7 +169,7 @@ void GenericCommand_qc_curl(float request, float argc)
 	}
 }
 
-GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to *_cmd_dump.txt")
+GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd_dump.txt")
 {
 	switch(request)
 	{
@@ -184,23 +184,28 @@ GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to *_cmd_dump.tx
 				#ifdef SVQC
 					CMD_Write("dump of server console commands:\n");
 					GameCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 
-					CMD_Write("\ndump of networked client only commands:\n");
+					CMD_Write("dump of networked client only commands:\n");
 					ClientCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 
-					CMD_Write("\ndump of common commands:\n");
+					CMD_Write("dump of common commands:\n");
 					CommonCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 
-					CMD_Write("\ndump of ban commands:\n");
+					CMD_Write("dump of ban commands:\n");
 					BanCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 				#endif
 
 				#ifdef CSQC
 					CMD_Write("dump of client commands:\n");
 					LocalCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 				#endif
 
-				CMD_Write("\ndump of generic commands:\n");
+				CMD_Write("dump of generic commands:\n");
 				GenericCommand_macro_write_aliases(fh);
 
 				LOG_INFO("Completed dump of aliases in ^2data/data/", GetProgramCommandPrefix(), "_dump.txt^7.");

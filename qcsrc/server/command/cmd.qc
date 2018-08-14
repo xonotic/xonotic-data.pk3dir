@@ -10,13 +10,15 @@
 
 #include "../campaign.qh"
 #include "../cheats.qh"
+#include "../client.qh"
 #include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>
@@ -30,7 +32,7 @@
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/triggers/triggers.qh>
+#include <common/mapobjects/triggers.qh>
 
 #include <common/minigames/sv_minigames.qh>
 
@@ -39,8 +41,6 @@
 #include <common/monsters/sv_monsters.qh>
 
 #include <lib/warpzone/common.qh>
-
-void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual
@@ -165,8 +165,6 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
-bool joinAllowed(entity this);
-void Join(entity this);
 void ClientCommand_join(entity caller, float request)
 {
 	switch (request)
@@ -248,12 +246,14 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 						if (caller.ready)            // toggle
 						{
 							caller.ready = false;
-							bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
-							bprint(playername(caller, false), "^2 is ready\n");
+							if(IS_PLAYER(caller) || caller.caplayer == 1)
+								bprint(playername(caller, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -394,13 +394,16 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 			if ((selection != -1) && autocvar_g_balance_teams &&
 				autocvar_g_balance_teams_prevent_imbalance)
 			{
-				CheckAllowedTeams(caller);
-				GetTeamCounts(caller);
-				if ((BIT(Team_TeamToNumber(selection) - 1) & FindBestTeams(caller, false)) == 0)
+				entity balance = TeamBalance_CheckAllowedTeams(caller);
+				TeamBalance_GetTeamCounts(balance, caller);
+				if ((Team_IndexToBit(Team_TeamToIndex(selection)) &
+					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					TeamBalance_Destroy(balance);
 					return;
 				}
+				TeamBalance_Destroy(balance);
 			}
 			ClientKill_TeamChange(caller, selection);
 			if (!IS_PLAYER(caller))
@@ -614,8 +617,10 @@ void ClientCommand_voice(entity caller, float request, float argc, string comman
 					sprint(caller, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 					return;
 				}
-				if (argc >= 3) VoiceMessage(caller, e, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
-				else VoiceMessage(caller, e, "");
+				string msg = "";
+				if (argc >= 3)
+					msg = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
+				VoiceMessage(caller, e, msg);
 
 				return;
 			}
@@ -665,8 +670,9 @@ void ClientCommand_(entity caller, float request)
 #define CLIENT_COMMANDS(ent, request, arguments, command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
+	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
+	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(ent, request, arguments, command), "Print a message to chat to all players") \
@@ -678,7 +684,6 @@ void ClientCommand_(entity caller, float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
-	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
 	/* nothing */
 
 void ClientCommand_macro_help(entity caller)

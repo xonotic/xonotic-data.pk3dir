@@ -98,6 +98,7 @@
 #include <menu/xonotic/rootdialog.qh>
 #include <menu/xonotic/screenshotimage.qh>
 #include <menu/xonotic/screenshotlist.qh>
+#include <menu/xonotic/scrollpanel.qh>
 #include <menu/xonotic/serverlist.qh>
 #include <menu/xonotic/skinlist.qh>
 #include <menu/xonotic/slider.qh>

@@ -21,9 +21,18 @@ void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
 void draw_cursor_normal(vector pos, vector col, float a);
 void LoadMenuSkinValues();
 
+void PostInit();
+
+void Ent_Remove(entity this);
+
+void Gamemode_Init();
+
+float SetTeam(entity pl, float Team);
+
 vector hud_fontsize;
 
 float RANKINGS_RECEIVED_CNT;
+float RANKINGS_DISPLAY_CNT;
 string grecordholder[RANKINGS_CNT];
 float grecordtime[RANKINGS_CNT];
 
@@ -105,7 +114,6 @@ const int MAX_SPECTATORS = 7;
 int spectatorlist[MAX_SPECTATORS];
 
 int framecount;
-.float health;
 
 float GetSpeedUnitFactor(int speed_unit);
 string GetSpeedUnit(int speed_unit);

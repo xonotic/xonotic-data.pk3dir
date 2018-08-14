@@ -2,15 +2,16 @@
 
 #ifdef SVQC
 
-void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary)
+void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary, float ammocount, float damage, float bullets, float spread, float solidpenetration, float force)
 {
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo), weaponentity);
+	W_DecreaseAmmo(thiswep, actor, ammocount, weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets), WEP_SHOTGUN.m_id);
-	for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, WEP_SHOTGUN.m_id);
+	for(int sc = 0;sc < bullets;sc = sc + 1)
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, WEP_SHOTGUN.m_id, 0);
 
-	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
+
+	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, ammocount);
 
 	// casing code
 	if(autocvar_g_casings >= 1)
@@ -68,7 +69,7 @@ void W_Shotgun_Melee_Think(entity this)
 			+ (v_up * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_side)));
 
-		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
+		WarpZone_traceline_antilag(this.realowner, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -77,7 +78,7 @@ void W_Shotgun_Melee_Think(entity this)
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
-			&& (trace_ent.takedamage == DAMAGE_AIM)
+			&& (trace_ent.takedamage != DAMAGE_NO)
 			&& (trace_ent != this.swing_alreadyhit)
 			&& (is_player || WEP_CVAR_SEC(shotgun, melee_nonplayerdamage)))
 		{
@@ -152,7 +153,13 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 	}
 
 	sound(actor, CH_WEAPON_SINGLE, SND_Null, VOL_BASE, ATTN_NORM); // kill previous sound
-	W_Shotgun_Attack(WEP_SHOTGUN, actor, weaponentity, true); // actually is secondary, but we trick the last shot into playing full reload sound
+	W_Shotgun_Attack(WEP_SHOTGUN, actor, weaponentity, true,
+		WEP_CVAR_PRI(shotgun, ammo),
+		WEP_CVAR_PRI(shotgun, damage),
+		WEP_CVAR_PRI(shotgun, bullets),
+		WEP_CVAR_PRI(shotgun, spread),
+		WEP_CVAR_PRI(shotgun, solidpenetration),
+		WEP_CVAR_PRI(shotgun, force)); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
@@ -165,7 +172,13 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		return;
 	}
 
-	W_Shotgun_Attack(WEP_SHOTGUN, actor, weaponentity, false);
+	W_Shotgun_Attack(WEP_SHOTGUN, actor, weaponentity, false,
+		WEP_CVAR_PRI(shotgun, ammo),
+		WEP_CVAR_PRI(shotgun, damage),
+		WEP_CVAR_PRI(shotgun, bullets),
+		WEP_CVAR_PRI(shotgun, spread),
+		WEP_CVAR_PRI(shotgun, solidpenetration),
+		WEP_CVAR_PRI(shotgun, force));
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
@@ -178,6 +191,7 @@ METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
     else
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 }
+
 METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     if(WEP_CVAR(shotgun, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
@@ -195,7 +209,13 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
                 {
-                    W_Shotgun_Attack(thiswep, actor, weaponentity, true);
+                    W_Shotgun_Attack(thiswep, actor, weaponentity, true,
+						WEP_CVAR_PRI(shotgun, ammo),
+						WEP_CVAR_PRI(shotgun, damage),
+						WEP_CVAR_PRI(shotgun, bullets),
+						WEP_CVAR_PRI(shotgun, spread),
+						WEP_CVAR_PRI(shotgun, solidpenetration),
+						WEP_CVAR_PRI(shotgun, force));
                     actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
                 }
@@ -207,7 +227,13 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
                 {
-                    W_Shotgun_Attack(thiswep, actor, weaponentity, false);
+                    W_Shotgun_Attack(thiswep, actor, weaponentity, false,
+						WEP_CVAR_PRI(shotgun, ammo),
+						WEP_CVAR_PRI(shotgun, damage),
+						WEP_CVAR_PRI(shotgun, bullets),
+						WEP_CVAR_PRI(shotgun, spread),
+						WEP_CVAR_PRI(shotgun, solidpenetration),
+						WEP_CVAR_PRI(shotgun, force));
                     actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
                 }

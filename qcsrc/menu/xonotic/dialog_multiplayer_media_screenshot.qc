@@ -19,9 +19,7 @@ void XonoticScreenshotBrowserTab_loadPreviewScreenshot(entity me, string scrImag
 {
 	if (me.currentScrPath == scrImage)
 		return;
-	if (me.currentScrPath)
-		strunzone(me.currentScrPath);
-	me.currentScrPath = strzone(scrImage);
+	strcpy(me.currentScrPath, scrImage);
 	me.screenshotImage.load(me.screenshotImage, me.currentScrPath);
 }
 void XonoticScreenshotBrowserTab_fill(entity me)

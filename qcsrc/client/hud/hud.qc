@@ -2,6 +2,7 @@
 
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
+#include <client/view.qh>
 #include "panel/scoreboard.qh"
 #include "hud_config.qh"
 #include "../mapvoting.qh"
@@ -13,10 +14,12 @@
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/vehicles/all.qh>
+#include <common/vehicles/vehicle/bumblebee.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
 #include <lib/csqcmodel/cl_player.qh>
-#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
+#include <lib/csqcmodel/cl_model.qh>
+#include <common/gamemodes/_mod.qh>
 
 
 /*
@@ -72,14 +75,14 @@ vector HUD_Get_Num_Color (float hp, float maxvalue)
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect)
 {
-    TC(int, item_count);
+	TC(int, item_count);
 	float aspect = size_y / size_x;
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
 }
 
 vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect)
 {
-    TC(int, item_count);
+	TC(int, item_count);
 	float columns, rows;
 	float ratio, best_ratio = 0;
 	float best_columns = 1, best_rows = 1;
@@ -177,7 +180,7 @@ void HUD_Panel_LoadCvars()
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
 {
-    TC(bool, vertical); TC(int, drawflag);
+	TC(bool, vertical); TC(int, drawflag);
 	if(!length_ratio || !theAlpha)
 		return;
 	if(length_ratio > 1)
@@ -284,7 +287,7 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag)
 {
-    TC(int, drawflag);
+	TC(int, drawflag);
 	if(!theAlpha)
 		return;
 
@@ -305,7 +308,7 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 
 void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
 {
-    TC(bool, vertical); TC(int, icon_right_align);
+	TC(bool, vertical); TC(int, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
 
@@ -385,7 +388,7 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string ic
 
 void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
 {
-    TC(bool, vertical); TC(int, icon_right_align);
+	TC(bool, vertical); TC(int, icon_right_align);
 	DrawNumIcon_expanding(myPos, mySize, theTime, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
@@ -394,8 +397,6 @@ void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool v
 Main HUD system
 ==================
 */
-
-void CSQC_BUMBLE_GUN_HUD();
 
 void HUD_Vehicle()
 {
@@ -485,8 +486,6 @@ bool Hud_Shake_Update()
 	return true;
 }
 
-entity CSQCModel_server2csqc(int i);
-void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {
 	vector ofs = '0 0 0';
@@ -579,12 +578,8 @@ void HUD_Main()
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
 	{
-		if (hud_skin_path)
-			strunzone(hud_skin_path);
-		hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
-		if (hud_skin_prev)
-			strunzone(hud_skin_prev);
-		hud_skin_prev = strzone(autocvar_hud_skin);
+		strcpy(hud_skin_path, strcat("gfx/hud/", autocvar_hud_skin));
+		strcpy(hud_skin_prev, autocvar_hud_skin);
 	}
 
 	// draw the dock
@@ -659,9 +654,7 @@ void HUD_Main()
 			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder");
 
 		cvar_set("_hud_panelorder", s);
-		if(hud_panelorder_prev)
-			strunzone(hud_panelorder_prev);
-		hud_panelorder_prev = strzone(s);
+		strcpy(hud_panelorder_prev, s);
 
 		//now properly set panel_order
 		tokenize_console(s);

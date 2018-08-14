@@ -2,7 +2,7 @@
 #include "autocvars.qh"
 #include "csqcmodel_hooks.qh"
 #include "miscfunctions.qh"
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>
@@ -17,8 +17,6 @@
 
 .float death_time;
 .int modelflags;
-
-void CSQCModel_Hook_PreDraw(entity this, bool isplayer);
 
 .bool isplayermodel;
 
@@ -364,7 +362,7 @@ void CSQCPlayer_AnimDecide_PostUpdate(entity this, bool isnew)
 }
 int CSQCPlayer_FallbackFrame(entity this, int f)
 {
-    TC(int, f);
+	TC(int, f);
 	if(frameduration(this.modelindex, f) > 0)
 		return f; // goooooood
 	if(frameduration(this.modelindex, 1) <= 0)

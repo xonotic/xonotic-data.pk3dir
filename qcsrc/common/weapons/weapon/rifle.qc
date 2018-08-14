@@ -159,7 +159,11 @@ METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponen
 }
 METHOD(Rifle, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+        .entity weaponentity = weaponentities[slot];
+        actor.(weaponentity).rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
+    }
 }
 METHOD(Rifle, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {

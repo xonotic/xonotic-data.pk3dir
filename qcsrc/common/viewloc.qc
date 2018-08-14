@@ -199,4 +199,10 @@ void viewloc_SetViewLocation()
 	}
 }
 
+STATIC_INIT_LATE(viewloc_cursor)
+{
+	// fix the mouse position on init so it isn't in the corner
+	viewloc_mousepos = '0.5 0 0' * autocvar_vid_conwidth + '0 0.5 0' * autocvar_vid_conheight;
+}
+
 #endif

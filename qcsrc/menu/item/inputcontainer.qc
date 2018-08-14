@@ -89,11 +89,10 @@
 		if (e && !e.focusable) e = NULL;
 		entity prev = this.mouseFocusedChild;
 		this.mouseFocusedChild = e;
-		if (!e) return false;  // keep focus when hovering over non-focusable elements
 		if (e != prev)
 		{
 			this.setFocus(this, e);
-			if (e.instanceOfInputContainer)
+			if (e && e.instanceOfInputContainer)
 			{
 				e.focusedChild = NULL;
 				e._changeFocusXY(e, globalToBox(pos, e.Container_origin, e.Container_size));
@@ -117,13 +116,13 @@
 		if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1) return 1;
 		return 0;
 	}
-	float InputContainer_mousePress(entity me, vector pos)
+	METHOD(InputContainer, mousePress, bool(InputContainer this, vector pos))
 	{
-		me.mouseFocusedChild = NULL;  // force focusing
-		if (me._changeFocusXY(me, pos))
-			if (SUPER(InputContainer).mousePress(me, pos)) return 1;
-		if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1) return 1;
-		return 0;
+		this.mouseFocusedChild = NULL;  // force focusing
+		if (this._changeFocusXY(this, pos))
+			if (SUPER(InputContainer).mousePress(this, pos)) return true;
+		if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1) return true;
+		return false;
 	}
 	float InputContainer_mouseRelease(entity me, vector pos)
 	{

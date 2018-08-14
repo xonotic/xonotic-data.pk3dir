@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# GunChleoc, 2017
+# GunChleoc, 2017-2018
 # GunChleoc, 2017
 # GunChleoc, 2017
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-12-08 17:43+0000\n"
+"PO-Revision-Date: 2018-02-28 14:07+0000\n"
 "Last-Translator: GunChleoc\n"
 "Language-Team: Gaelic, Scottish (http://www.transifex.com/team-xonotic/"
 "xonotic/language/gd/)\n"
@@ -1318,7 +1318,7 @@ msgstr "An geama làithreach"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:403
 msgid "Exit Menu"
-msgstr ""
+msgstr "Fàg an clàr-taice"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:415
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16

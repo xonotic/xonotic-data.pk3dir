@@ -52,8 +52,7 @@ void cvar_set_campaignwrapper(string theCvar, string theValue)
 {
 	if(cvar_string_campaignwrapper(theCvar) == theValue)
 		return;
-	string s;
-	s = cvar_campaignwrapper_list;
+	string s = cvar_campaignwrapper_list;
 	cvar_campaignwrapper_list = strzone(strcat("; ", theCvar, " ", theValue, s));
 	strunzone(s);
 	//print(cvar_campaignwrapper_list, "\n");

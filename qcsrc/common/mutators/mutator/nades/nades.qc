@@ -1,5 +1,7 @@
 #include "nades.qh"
 
+#include "../overkill/okmachinegun.qh"
+
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
 float autocvar_g_nades_spread = 0.04;
@@ -36,6 +38,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
 REGISTER_MUTATOR(cl_nades, true);
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
+	// TODO: make a common orb state!
 	if (STAT(HEALING_ORB) > time)
 	{
 		M_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
@@ -46,6 +49,12 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 	{
 		M_ARGV(0, vector) = NADE_TYPE_ENTRAP.m_color;
 		M_ARGV(1, float) = STAT(ENTRAP_ORB_ALPHA);
+		return true;
+	}
+	if (STAT(VEIL_ORB) > time)
+	{
+		M_ARGV(0, vector) = NADE_TYPE_VEIL.m_color;
+		M_ARGV(1, float) = STAT(VEIL_ORB_ALPHA);
 		return true;
 	}
 	return false;
@@ -96,6 +105,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 	settouch(proj, func_null);
 	proj.scale = 1.5;
 	proj.avelocity = randomvec() * 720;
+	proj.alphamod = nade_type.m_alpha;
 
 	if (nade_type == NADE_TYPE_TRANSLOCATE || nade_type == NADE_TYPE_SPAWN)
 		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
@@ -148,7 +158,6 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/gamemodes/_mod.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
-#include <server/g_subs.qh>
 
 REGISTER_MUTATOR(nades, autocvar_g_nades);
 
@@ -370,11 +379,11 @@ void nade_napalm_boom(entity this)
 	CSQCProjectile(fountain, true, PROJECTILE_NAPALM_FOUNTAIN, true);
 }
 
-void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
+void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 {
 	frost_target.frozen_by = freezefield.realowner;
 	Send_Effect(EFFECT_ELECTRO_IMPACT, frost_target.origin, '0 0 0', 1);
-	Freeze(frost_target, 1/freeze_time, 3, false);
+	Freeze(frost_target, 1 / freezetime, 3, false);
 
 	Drop_Special_Items(frost_target);
 }
@@ -665,6 +674,35 @@ void nade_monster_boom(entity this)
 	e.monster_skill = MONSTER_SKILL_INSANE;
 }
 
+void nade_veil_touch(entity this, entity toucher)
+{
+	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	{
+		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
+
+		float tint_alpha = 0.75;
+		if(SAME_TEAM(toucher, this.realowner))
+		{
+			tint_alpha = 0.45;
+			if(!STAT(VEIL_ORB, show_tint))
+			{
+				toucher.nade_veil_prevalpha = toucher.alpha;
+				toucher.alpha = -1;
+			}
+		}
+		STAT(VEIL_ORB, show_tint) = time + 0.1;
+		STAT(VEIL_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
+	}
+}
+
+void nade_veil_boom(entity this)
+{
+	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_veil_time, autocvar_g_nades_veil_radius);
+
+	settouch(orb, nade_veil_touch);
+	orb.colormod = NADE_TYPE_VEIL.m_color;
+}
+
 void nade_boom(entity this)
 {
 	entity expef = NULL;
@@ -705,6 +743,11 @@ void nade_boom(entity this)
 			expef = EFFECT_SPAWN_YELLOW;
 			break;
 
+		case NADE_TYPE_VEIL:
+			nade_blast = false;
+			expef = EFFECT_SPAWN_NEUTRAL;
+			break;
+
 		default:
 		case NADE_TYPE_NORMAL:
 			expef = EFFECT_NADE_EXPLODE(this.realowner.team);
@@ -736,6 +779,7 @@ void nade_boom(entity this)
 		case NADE_TYPE_HEAL: nade_heal_boom(this); break;
 		case NADE_TYPE_MONSTER: nade_monster_boom(this); break;
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
+		case NADE_TYPE_VEIL: nade_veil_boom(this); break;
 	}
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
@@ -838,12 +882,12 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		force *= 0.5; // too much
 		damage = 0;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_NEX))
 	{
 		force *= 6;
 		damage = this.max_health * 0.55;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_MACHINEGUN))
 		damage = this.max_health * 0.1;
 	else if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	{
@@ -934,7 +978,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	settouch(_nade, nade_touch);
 	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
 	SetResourceAmount(_nade, RESOURCE_HEALTH, autocvar_g_nades_nade_health);
-	_nade.max_health = _nade.health;
+	_nade.max_health = GetResourceAmount(_nade, RESOURCE_HEALTH);
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
 	setcefc(_nade, func_null);
@@ -1056,6 +1100,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	n.projectiledeathtype = DEATH_NADE.m_id;
 	n.weaponentity_fld = weaponentity;
 	n.nade_lifetime = ntime;
+	n.alpha = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_alpha;
 
 	setmodel(fn, MDL_NADE_VIEW);
 	setattachment(fn, player.(weaponentity), "");
@@ -1066,6 +1111,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	setthink(fn, SUB_Remove);
 	fn.nextthink = n.wait;
 	fn.weaponentity_fld = weaponentity;
+	fn.alpha = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_alpha;
 
 	player.nade = n;
 	player.fake_nade = fn;
@@ -1206,7 +1252,7 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
     entity player = M_ARGV(0, entity);
 
-	if (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
+	if (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
 		nades_CheckThrow(player);
 		return true;
 	}
@@ -1218,7 +1264,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 	if (!IS_PLAYER(player)) { return; }
 
-	if (player.nade && (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
+	if (player.nade && (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
 
 	entity held_nade = player.nade;
 	if (held_nade)
@@ -1270,6 +1316,15 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		else
 		{
 			STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
+		}
+
+		if(STAT(VEIL_ORB, player) && STAT(VEIL_ORB, player) <= time)
+		{
+			STAT(VEIL_ORB, player) = 0;
+			if(player.vehicle)
+				player.vehicle.alpha = player.vehicle.nade_veil_prevalpha;
+			else
+				player.alpha = player.nade_veil_prevalpha;
 		}
 	}
 
@@ -1330,6 +1385,12 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 	{
 		M_ARGV(1, float) *= autocvar_g_nades_entrap_speed; // run speed
 		M_ARGV(2, float) *= autocvar_g_nades_entrap_speed; // walk speed
+	}
+
+	if (STAT(VEIL_ORB, mon) && STAT(VEIL_ORB, mon) <= time)
+	{
+		mon.alpha = mon.nade_veil_prevalpha;
+		STAT(VEIL_ORB, mon) = 0;
 	}
 }
 
@@ -1404,10 +1465,7 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);
 
-	if(STAT(FROZEN, frag_target))
-	if(autocvar_g_freezetag_revive_nade)
-	if(frag_attacker == frag_target)
-	if(frag_deathtype == DEATH_NADE.m_id)
+	if(autocvar_g_freezetag_revive_nade && STAT(FROZEN, frag_target) && frag_attacker == frag_target && frag_deathtype == DEATH_NADE.m_id)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
 		Unfreeze(frag_target);
@@ -1469,6 +1527,8 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(HEALING_ORB_ALPHA, client) = STAT(HEALING_ORB_ALPHA, spectatee);
 	STAT(ENTRAP_ORB, client) = STAT(ENTRAP_ORB, spectatee);
 	STAT(ENTRAP_ORB_ALPHA, client) = STAT(ENTRAP_ORB_ALPHA, spectatee);
+	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
+	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
 }
 
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");

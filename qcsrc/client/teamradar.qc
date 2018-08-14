@@ -149,7 +149,7 @@ void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb,
 
 void draw_teamradar_link(vector start, vector end, int colors)
 {
-    TC(int, colors);
+	TC(int, colors);
 	vector c0, c1, norm;
 
 	start = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(start));

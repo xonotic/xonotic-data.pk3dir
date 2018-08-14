@@ -308,9 +308,7 @@ float bot_decodecommand(string cmdstring)
 				bot_cmd.bot_cmd_parm_float = stof(parm);
 				break;
 			case BOT_CMD_PARAMETER_STRING:
-				if(bot_cmd.bot_cmd_parm_string)
-					strunzone(bot_cmd.bot_cmd_parm_string);
-				bot_cmd.bot_cmd_parm_string = strzone(parm);
+				strcpy(bot_cmd.bot_cmd_parm_string, parm);
 				break;
 			case BOT_CMD_PARAMETER_VECTOR:
 				if(substring(parm, 0, 1) != "\'")
@@ -622,10 +620,11 @@ float bot_cmd_eval(entity this, string expr)
 		return cvar(substring(expr, 5, strlen(expr)));
 
 	// Search for fields
+	// TODO: expand with support for more fields (key carrier, ball carrier, armor etc)
 	switch(expr)
 	{
 		case "health":
-			return this.health;
+			return GetResourceAmount(this, RESOURCE_HEALTH);
 		case "speed":
 			return vlen(this.velocity);
 		case "flagcarrier":
@@ -1170,8 +1169,7 @@ void bot_resetqueues()
 		it.bot_barrier = 0;
 		for(int i = 0; i < it.bot_places_count; ++i)
 		{
-			strunzone(it.(bot_placenames[i]));
-			it.(bot_placenames[i]) = string_null;
+			strfree(it.(bot_placenames[i]));
 		}
 		it.bot_places_count = 0;
 	});

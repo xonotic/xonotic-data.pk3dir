@@ -1,6 +1,6 @@
 #include "sv_nix.qh"
 
-string autocvar_g_nix;
+//string autocvar_g_nix;
 int autocvar_g_balance_nix_ammo_cells;
 int autocvar_g_balance_nix_ammo_plasma;
 int autocvar_g_balance_nix_ammo_fuel;
@@ -36,7 +36,7 @@ float nix_nextweapon;
 
 bool NIX_CanChooseWeapon(int wpn);
 
-REGISTER_MUTATOR(nix, expr_evaluate(autocvar_g_nix) && !cvar("g_instagib") && !cvar("g_overkill"))
+REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok))
 {
 	MUTATOR_ONADD
 	{
@@ -63,7 +63,7 @@ REGISTER_MUTATOR(nix, expr_evaluate(autocvar_g_nix) && !cvar("g_instagib") && !c
 			SetResourceAmount(it, RESOURCE_CELLS, start_ammo_cells);
 			SetResourceAmount(it, RESOURCE_PLASMA, start_ammo_plasma);
 			SetResourceAmount(it, RESOURCE_FUEL, start_ammo_fuel);
-			it.weapons = start_weapons;
+			STAT(WEAPONS, it) = start_weapons;
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
@@ -130,7 +130,7 @@ void NIX_GiveCurrentWeapon(entity this)
 	}
 
 	// get weapon info
-	entity e = Weapons_from(nix_weapon);
+	entity wpn = Weapons_from(nix_weapon);
 
 	if(nix_nextchange != this.nix_lastchange_id) // this shall only be called once per round!
 	{
@@ -142,7 +142,7 @@ void NIX_GiveCurrentWeapon(entity this)
 		SetResourceAmount(this, RESOURCE_FUEL, 0);
 		if(this.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
-			switch (e.ammo_type)
+			switch (wpn.ammo_type)
 			{
 				case RESOURCE_SHELLS:  SetResourceAmount(this, RESOURCE_SHELLS, autocvar_g_pickup_shells_max);  break;
 				case RESOURCE_BULLETS: SetResourceAmount(this, RESOURCE_BULLETS, autocvar_g_pickup_nails_max);   break;
@@ -154,7 +154,7 @@ void NIX_GiveCurrentWeapon(entity this)
 		}
 		else
 		{
-			switch (e.ammo_type)
+			switch (wpn.ammo_type)
 			{
 				case RESOURCE_SHELLS:  SetResourceAmount(this, RESOURCE_SHELLS, autocvar_g_balance_nix_ammo_shells);  break;
 				case RESOURCE_BULLETS: SetResourceAmount(this, RESOURCE_BULLETS, autocvar_g_balance_nix_ammo_nails);   break;
@@ -171,15 +171,15 @@ void NIX_GiveCurrentWeapon(entity this)
 		else
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
-		e.wr_resetplayer(e, this);
+		wpn.wr_resetplayer(wpn, this);
 
 		// all weapons must be fully loaded when we spawn
-		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
+		if (wpn.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 		{
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
-				this.(weaponentity).(weapon_load[nix_weapon]) = e.reloading_ammo;
+				this.(weaponentity).(weapon_load[nix_weapon]) = wpn.reloading_ammo;
 			}
 		}
 
@@ -195,7 +195,7 @@ void NIX_GiveCurrentWeapon(entity this)
 
 	if(!(this.items & IT_UNLIMITED_WEAPON_AMMO) && time > this.nix_nextincr)
 	{
-		switch (e.ammo_type)
+		switch (wpn.ammo_type)
 		{
 			case RESOURCE_SHELLS:  GiveResource(this, RESOURCE_SHELLS, autocvar_g_balance_nix_ammoincr_shells);  break;
 			case RESOURCE_BULLETS: GiveResource(this, RESOURCE_BULLETS, autocvar_g_balance_nix_ammoincr_nails);   break;
@@ -208,23 +208,22 @@ void NIX_GiveCurrentWeapon(entity this)
 		this.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
 
-	this.weapons = '0 0 0';
+	STAT(WEAPONS, this) = '0 0 0';
 	if(g_nix_with_blaster)
-		this.weapons |= WEPSET(BLASTER);
-	this.weapons |= e.m_wepset;
+		STAT(WEAPONS, this) |= WEPSET(BLASTER);
+	STAT(WEAPONS, this) |= wpn.m_wepset;
 
-    Weapon w = Weapons_from(nix_weapon);
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
-    		continue;
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (this.(weaponentity).m_weapon == WEP_Null && slot != 0)
+			continue;
 
-		if(this.(weaponentity).m_switchweapon != w)
-		if(!client_hasweapon(this, this.(weaponentity).m_switchweapon, weaponentity, true, false))
+		if (this.(weaponentity).m_switchweapon != wpn)
+		if (!client_hasweapon(this, this.(weaponentity).m_switchweapon, weaponentity, true, false))
 		{
-			if(client_hasweapon(this, w, weaponentity, true, false))
-				W_SwitchWeapon(this, w, weaponentity);
+			if (client_hasweapon(this, wpn, weaponentity, true, false))
+				W_SwitchWeapon(this, wpn, weaponentity);
 		}
 	}
 }
@@ -244,15 +243,15 @@ MUTATOR_HOOKFUNCTION(nix, BuildMutatorsPrettyString)
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", NIX");
 }
 
-MUTATOR_HOOKFUNCTION(nix, FilterItem)
+MUTATOR_HOOKFUNCTION(nix, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	if(item.itemdef.instanceOfHealth || item.itemdef.instanceOfArmor)
+	if (definition.instanceOfHealth || definition.instanceOfArmor)
 	{
 		return !autocvar_g_nix_with_healtharmor;
 	}
-	else if(item.itemdef.instanceOfPowerup)
+	else if (definition.instanceOfPowerup)
 	{
 		return !autocvar_g_nix_with_powerups;
 	}

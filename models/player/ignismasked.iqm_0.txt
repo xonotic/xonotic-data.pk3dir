@@ -11,3 +11,4 @@ bone_aim2 0.2 upperarm_L
 bone_aim3 0.35 bip01 r hand
 bone_weapon bip01 r hand
 fixbone 1
+hidden 1
