@@ -6,6 +6,7 @@
 #include <server/resources.qh>
 
 #include "g_damage.qh"
+#include "clientkill.qh"
 #include "player.qh"
 #include "race.qh"
 #include "../common/mapobjects/teleporters.qh"
