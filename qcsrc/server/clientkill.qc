@@ -99,6 +99,13 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 
 	this.killindicator_teamchange = targetteam;
 
+	// this.killindicator.count == 1 means that the kill indicator was spawned by ClientKill_Silent
+	if(killtime <= 0 && this.killindicator && this.killindicator.count == 1)
+	{
+		ClientKill_Now(this); // allow instant kill in this case
+		return;
+	}
+
 	if (!this.killindicator)
 	{
 		if (!IS_DEAD(this))
@@ -169,6 +176,17 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, notif, this.killindicator.cnt);
 	}
 
+}
+
+void ClientKill_Silent(entity this, float _delay)
+{
+	this.killindicator = spawn();
+	this.killindicator.owner = this;
+	setthink(this.killindicator, KillIndicator_Think);
+	this.killindicator.nextthink = time + (this.lip) * 0.05;
+	this.killindicator.cnt = ceil(_delay);
+	this.killindicator.count = 1; // this is used to indicate that it should be silent
+	this.lip = 0;
 }
 
 // Called when a client types 'kill' in the console
