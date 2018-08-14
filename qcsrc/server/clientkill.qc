@@ -55,14 +55,7 @@ void ClientKill_Now(entity this)
 }
 void KillIndicator_Think(entity this)
 {
-	if (game_stopped)
-	{
-		this.owner.killindicator = NULL;
-		delete(this);
-		return;
-	}
-
-	if (this.owner.alpha < 0 && !this.owner.vehicle)
+	if (game_stopped || (this.owner.alpha < 0 && !this.owner.vehicle))
 	{
 		this.owner.killindicator = NULL;
 		delete(this);
@@ -74,12 +67,9 @@ void KillIndicator_Think(entity this)
 		ClientKill_Now(this.owner);
 		return;
 	}
-	else if (this.count == 1) // count == 1 means that it's silent
-	{
-		this.nextthink = time + 1;
-		this.cnt -= 1;
-	}
-	else
+
+	// count == 1 means that it's silent
+	if (this.count != 1)
 	{
 		if (this.cnt <= 10)
 			setmodel(this, MDL_NUM(this.cnt));
@@ -88,9 +78,9 @@ void KillIndicator_Think(entity this)
 			if (this.cnt <= 10)
 				Send_Notification(NOTIF_ONE, this.owner, MSG_ANNCE, Announcer_PickNumber(CNT_KILL, this.cnt));
 		}
-		this.nextthink = time + 1;
-		this.cnt -= 1;
 	}
+	this.nextthink = time + 1;
+	this.cnt -= 1;
 }
 
 .float lip;
@@ -154,34 +144,29 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 	}
 	if (this.killindicator)
 	{
+		Notification notif;
 		if (targetteam == 0) // just die
 		{
 			this.killindicator.colormod = '0 0 0';
-			if(IS_REAL_CLIENT(this))
-			if(this.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_SUICIDE, this.killindicator.cnt);
+			notif = CENTER_TEAMCHANGE_SUICIDE;
 		}
 		else if (targetteam == -1) // auto
 		{
 			this.killindicator.colormod = '0 1 0';
-			if(IS_REAL_CLIENT(this))
-			if(this.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_AUTO, this.killindicator.cnt);
+			notif = CENTER_TEAMCHANGE_AUTO;
 		}
 		else if (targetteam == -2) // spectate
 		{
 			this.killindicator.colormod = '0.5 0.5 0.5';
-			if(IS_REAL_CLIENT(this))
-			if(this.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_SPECTATE, this.killindicator.cnt);
+			notif = CENTER_TEAMCHANGE_SPECTATE;
 		}
 		else
 		{
 			this.killindicator.colormod = Team_ColorRGB(targetteam);
-			if(IS_REAL_CLIENT(this))
-			if(this.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(targetteam, CENTER_TEAMCHANGE), this.killindicator.cnt);
+			notif = APP_TEAM_NUM(targetteam, CENTER_TEAMCHANGE);
 		}
+		if (IS_REAL_CLIENT(this) && this.killindicator.cnt > 0)
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, notif, this.killindicator.cnt);
 	}
 
 }
