@@ -2,6 +2,7 @@
 
 // TODO: sv_freezetag
 #ifdef SVQC
+
 #include <server/resources.qh>
 
 float autocvar_g_freezetag_frozen_maxtime;
@@ -13,27 +14,40 @@ float autocvar_g_freezetag_warmup;
 
 void freezetag_count_alive_players()
 {
-	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), {
-		switch(it.team)
+	total_players = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
+	}
+	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
+	{
+		++total_players;
+		if ((GetResourceAmount(it, RESOURCE_HEALTH) < 1) ||
+			(STAT(FROZEN, it) == 1))
 		{
-			case NUM_TEAM_1: ++total_players; if(STAT(FROZEN, it) != 1 && GetResourceAmount(it, RESOURCE_HEALTH) >= 1) ++redalive; break;
-			case NUM_TEAM_2: ++total_players; if(STAT(FROZEN, it) != 1 && GetResourceAmount(it, RESOURCE_HEALTH) >= 1) ++bluealive; break;
-			case NUM_TEAM_3: ++total_players; if(STAT(FROZEN, it) != 1 && GetResourceAmount(it, RESOURCE_HEALTH) >= 1) ++yellowalive; break;
-			case NUM_TEAM_4: ++total_players; if(STAT(FROZEN, it) != 1 && GetResourceAmount(it, RESOURCE_HEALTH) >= 1) ++pinkalive; break;
+			continue;
 		}
+		entity team_ = Entity_GetTeam(it);
+		int num_alive = Team_GetNumberOfAlivePlayers(team_);
+		++num_alive;
+		Team_SetNumberOfAlivePlayers(team_, num_alive);
 	});
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		STAT(REDALIVE, it) = redalive;
-		STAT(BLUEALIVE, it) = bluealive;
-		STAT(YELLOWALIVE, it) = yellowalive;
-		STAT(PINKALIVE, it) = pinkalive;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(
+			1));
+		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(2));
+		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(3));
+		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
+			Team_GetTeamFromIndex(4));
 	});
 
 	eliminatedPlayers.SendFlags |= 1;
 }
-#define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
-#define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == NumTeams(freezetag_teams))
+
+#define FREEZETAG_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
 
 float freezetag_CheckTeams()
 {
@@ -53,14 +67,14 @@ float freezetag_CheckTeams()
 		return 0;
 	}
 	int missing_teams_mask = 0;
-	if(freezetag_teams & BIT(0))
-		missing_teams_mask += (!redalive) * 1;
-	if(freezetag_teams & BIT(1))
-		missing_teams_mask += (!bluealive) * 2;
-	if(freezetag_teams & BIT(2))
-		missing_teams_mask += (!yellowalive) * 4;
-	if(freezetag_teams & BIT(3))
-		missing_teams_mask += (!pinkalive) * 8;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if ((freezetag_teams & Team_IndexToBit(i)) &&
+			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
+		{
+			missing_teams_mask |= Team_IndexToBit(i);
+		}
+	}
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
@@ -69,28 +83,28 @@ float freezetag_CheckTeams()
 	return 0;
 }
 
-float freezetag_getWinnerTeam()
+int freezetag_getWinnerTeam()
 {
-	float winner_team = 0;
-	if(redalive >= 1)
+	int winner_team = 0;
+	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
+	{
 		winner_team = NUM_TEAM_1;
-	if(bluealive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
 	}
-	if(yellowalive >= 1)
+	for (int i = 2; i <= NUM_TEAMS; ++i)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
+		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
+		{
+			if (winner_team != 0)
+			{
+				return 0;
+			}
+			winner_team = Team_IndexToTeam(i);
+		}
 	}
-	if(pinkalive >= 1)
+	if (winner_team)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
 		return winner_team;
+	}
 	return -1; // no player left
 }
 
@@ -112,8 +126,10 @@ float freezetag_CheckWinner()
 		return 1;
 	}
 
-	if(FREEZETAG_ALIVE_TEAMS() > 1)
+	if (Team_GetNumberOfAliveTeams() > 1)
+	{
 		return 0;
+	}
 
 	int winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
@@ -544,9 +560,10 @@ MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ft, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(ft, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = freezetag_teams;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)

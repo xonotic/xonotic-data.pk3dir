@@ -394,13 +394,16 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 			if ((selection != -1) && autocvar_g_balance_teams &&
 				autocvar_g_balance_teams_prevent_imbalance)
 			{
-				CheckAllowedTeams(caller);
-				GetTeamCounts(caller);
-				if ((BIT(Team_TeamToNumber(selection) - 1) & FindBestTeams(caller, false)) == 0)
+				entity balance = TeamBalance_CheckAllowedTeams(caller);
+				TeamBalance_GetTeamCounts(balance, caller);
+				if ((Team_IndexToBit(Team_TeamToIndex(selection)) &
+					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					TeamBalance_Destroy(balance);
 					return;
 				}
+				TeamBalance_Destroy(balance);
 			}
 			ClientKill_TeamChange(caller, selection);
 			if (!IS_PLAYER(caller))
@@ -667,8 +670,9 @@ void ClientCommand_(entity caller, float request)
 #define CLIENT_COMMANDS(ent, request, arguments, command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
+	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
+	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(ent, request, arguments, command), "Print a message to chat to all players") \
@@ -680,7 +684,6 @@ void ClientCommand_(entity caller, float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
-	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
 	/* nothing */
 
 void ClientCommand_macro_help(entity caller)

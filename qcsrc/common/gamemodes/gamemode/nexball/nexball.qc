@@ -635,7 +635,7 @@ void SpawnGoal(entity this)
 
 	EXACTTRIGGER_INIT;
 
-	if(this.team != GOAL_OUT && Team_TeamToNumber(this.team) != -1)
+	if(this.team != GOAL_OUT && Team_IsValidTeam(this.team))
 	{
 		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (this.absmin + this.absmax) * 0.5, this, sprite, RADARICON_NONE);
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0.5 0');
@@ -920,7 +920,7 @@ MUTATOR_HOOKFUNCTION(nb, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(nb, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(nb, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(1, string) = "nexball_team";
 	return true;

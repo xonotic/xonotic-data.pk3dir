@@ -251,7 +251,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
 {
-    TC(Sound, _mzlsound);
+	TC(Sound, _mzlsound);
 	entity proj;
 
 	proj = spawn();

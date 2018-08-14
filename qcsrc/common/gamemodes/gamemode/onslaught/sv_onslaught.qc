@@ -1113,46 +1113,52 @@ int total_generators;
 void Onslaught_count_generators()
 {
 	entity e;
-	total_generators = redowned = blueowned = yellowowned = pinkowned = 0;
+	total_generators = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfControlPoints(Team_GetTeamFromIndex(i), 0);
+	}
 	for(e = ons_worldgeneratorlist; e; e = e.ons_worldgeneratornext)
 	{
 		++total_generators;
-		redowned += (e.team == NUM_TEAM_1 && GetResourceAmount(e, RESOURCE_HEALTH) > 0);
-		blueowned += (e.team == NUM_TEAM_2 && GetResourceAmount(e, RESOURCE_HEALTH) > 0);
-		yellowowned += (e.team == NUM_TEAM_3 && GetResourceAmount(e, RESOURCE_HEALTH) > 0);
-		pinkowned += (e.team == NUM_TEAM_4 && GetResourceAmount(e, RESOURCE_HEALTH) > 0);
+		if (GetResourceAmount(e, RESOURCE_HEALTH) < 1)
+		{
+			continue;
+		}
+		entity team_ = Entity_GetTeam(e);
+		int num_control_points = Team_GetNumberOfControlPoints(team_);
+		++num_control_points;
+		Team_SetNumberOfControlPoints(team_, num_control_points);
 	}
 }
 
 int Onslaught_GetWinnerTeam()
 {
 	int winner_team = 0;
-	if(redowned > 0)
+	if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(1)) >= 1)
+	{
 		winner_team = NUM_TEAM_1;
-	if(blueowned > 0)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
 	}
-	if(yellowowned > 0)
+	for (int i = 2; i <= NUM_TEAMS; ++i)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
+		if (Team_GetNumberOfControlPoints(Team_GetTeamFromIndex(i)) >= 1)
+		{
+			if (winner_team != 0)
+			{
+				return 0;
+			}
+			winner_team = Team_IndexToTeam(i);
+		}
 	}
-	if(pinkowned > 0)
+	if (winner_team)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
 		return winner_team;
+	}
 	return -1; // no generators left?
 }
 
 void nades_Clear(entity e);
 
-#define ONS_OWNED_GENERATORS() ((redowned > 0) + (blueowned > 0) + (yellowowned > 0) + (pinkowned > 0))
-#define ONS_OWNED_GENERATORS_OK() (ONS_OWNED_GENERATORS() > 1)
 bool Onslaught_CheckWinner()
 {
 	if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
@@ -1198,8 +1204,10 @@ bool Onslaught_CheckWinner()
 
 	Onslaught_count_generators();
 
-	if(ONS_OWNED_GENERATORS_OK())
+	if (Team_GetNumberOfTeamsWithControlPoints() > 1)
+	{
 		return 0;
+	}
 
 	int winner_team = Onslaught_GetWinnerTeam();
 
@@ -1960,17 +1968,14 @@ MUTATOR_HOOKFUNCTION(ons, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ons, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(ons, TeamBalance_CheckAllowedTeams)
 {
 	// onslaught is special
 	for(entity tmp_entity = ons_worldgeneratorlist; tmp_entity; tmp_entity = tmp_entity.ons_worldgeneratornext)
 	{
-		switch(tmp_entity.team)
+		if (Team_IsValidTeam(tmp_entity.team))
 		{
-			case NUM_TEAM_1: c1 = 0; break;
-			case NUM_TEAM_2: c2 = 0; break;
-			case NUM_TEAM_3: c3 = 0; break;
-			case NUM_TEAM_4: c4 = 0; break;
+			M_ARGV(0, float) |= Team_TeamToBit(tmp_entity.team);
 		}
 	}
 
@@ -2200,12 +2205,9 @@ spawnfunc(onslaught_generator)
 // scoreboard setup
 void ons_ScoreRules()
 {
-	CheckAllowedTeams(NULL);
-	int teams = 0;
-	if(c1 >= 0) teams |= BIT(0);
-	if(c2 >= 0) teams |= BIT(1);
-	if(c3 >= 0) teams |= BIT(2);
-	if(c4 >= 0) teams |= BIT(3);
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	int teams = TeamBalance_GetAllowedTeams(balance);
+	TeamBalance_Destroy(balance);
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
 	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
 	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);

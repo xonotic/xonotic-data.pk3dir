@@ -474,7 +474,7 @@ void turret_projectile_damage(entity this, entity inflictor, entity attacker, fl
 
 entity turret_projectile(entity actor, Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)
 {
-    TC(Sound, _snd);
+	TC(Sound, _snd);
 	entity proj;
 
 	sound (actor, CH_WEAPON_A, _snd, VOL_BASE, ATTEN_NORM);
