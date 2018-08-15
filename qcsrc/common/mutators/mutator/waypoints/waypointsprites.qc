@@ -556,7 +556,7 @@ void Draw_WaypointSprite(entity this)
     {
         if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
-        else if (this.lifetime > 0) // fading out waypoints don't blink
+        else if (!this.lifetime) // fading out waypoints don't blink
             a *= spritelookupblinkvalue(this, spriteimage);
     }
 
