@@ -552,7 +552,9 @@ void Draw_WaypointSprite(entity this)
         LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
     }
 
-    if (time - floor(time) > 0.5)
+    float health_val = GetResourceAmount(this, RESOURCE_HEALTH);
+    float blink_time = (health_val >= 0) ? (health_val * 10) : time;
+    if (blink_time - floor(blink_time) > 0.5)
     {
         if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
@@ -590,7 +592,7 @@ void Draw_WaypointSprite(entity this)
             ang += M_PI;
 
 		float f1 = d.x / vid_conwidth;
-		float f2 = d.y / vid_conheight; 
+		float f2 = d.y / vid_conheight;
 		if (f1 == 0) { f1 = 0.000001; }
 		if (f2 == 0) { f2 = 0.000001; }
 
