@@ -1243,7 +1243,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber)));
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
-	flag.target = "###item###"; // wut?
+	flag.target = "###item###"; // for finding the nearest item using findnearest
 	flag.flags = FL_ITEM | FL_NOTARGET;
 	IL_PUSH(g_items, flag);
 	flag.solid = SOLID_TRIGGER;
