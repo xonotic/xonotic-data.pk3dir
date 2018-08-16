@@ -81,7 +81,8 @@ bool vote_waiting_for_me;
 float current_zoomfraction;
 
 int cs_project_is_b0rked;
-int vid_width, vid_height, vid_pixelheight;
+int vid_width, vid_height;
+float vid_pixelheight;
 
 float camera_active;		// Demo camera is active if set to true
 float chase_active_backup;
