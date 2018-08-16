@@ -89,8 +89,9 @@ void ka_TimeScoring(entity this)
 
 void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
 {
-	if(game_stopped) return;
-	if(!this) return;
+	if (!this || game_stopped || time < game_starttime)
+		return;
+
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The ball fell off the map, respawn it since players can't get to it
 		ka_RespawnBall(this);
