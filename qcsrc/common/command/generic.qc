@@ -501,7 +501,7 @@ void GenericCommand_runtest(int request, int argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void GenericCommand_(float request)
+void GenericCommand_(int request)
 {
 	switch(request)
 	{
