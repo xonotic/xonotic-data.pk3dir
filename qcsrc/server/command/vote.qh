@@ -41,7 +41,7 @@ string vote_parsed_display; // visual string which is fixed after being parsed
 // allow functions to be used in other code like g_world.qc and teamplay.qc
 void VoteThink();
 void VoteReset();
-void VoteCommand(float request, entity caller, float argc, string vote_command);
+void VoteCommand(int request, entity caller, int argc, string vote_command);
 
 // warmup and nagger stuff
 const float RESTART_COUNTDOWN = 10;

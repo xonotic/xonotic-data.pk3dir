@@ -8,7 +8,7 @@ IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
 
 .float pushltime;
-.float istypefrag;
+.bool istypefrag;
 .float height;
 
 const int NUM_JUMPPADSUSED = 3;
