@@ -402,7 +402,7 @@ bool have_pickup_item(entity this)
 	return true;
 }
 
-void Item_Show (entity e, float mode)
+void Item_Show (entity e, int mode)
 {
 	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
 	e.ItemStatus &= ~ITS_STAYWEP;

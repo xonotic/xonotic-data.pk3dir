@@ -889,7 +889,7 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void(entity this) func, float order)
+void InitializeEntity(entity e, void(entity this) func, int order)
 {
     entity prev, cur;
 
