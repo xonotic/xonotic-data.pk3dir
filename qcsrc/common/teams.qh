@@ -56,11 +56,11 @@ const string STATIC_NAME_TEAM_3 = "Yellow";
 const string STATIC_NAME_TEAM_4 = "Pink";
 
 #ifdef CSQC
-float teamplay;
-float myteam;
+bool teamplay;
+int myteam;
 #endif
 
-string Team_ColorCode(float teamid)
+string Team_ColorCode(int teamid)
 {
 	switch(teamid)
 	{
@@ -73,7 +73,7 @@ string Team_ColorCode(float teamid)
 	return "^7";
 }
 
-vector Team_ColorRGB(float teamid)
+vector Team_ColorRGB(int teamid)
 {
 	switch(teamid)
 	{
@@ -86,7 +86,7 @@ vector Team_ColorRGB(float teamid)
     return '0 0 0';
 }
 
-string Team_ColorName(float teamid)
+string Team_ColorName(int teamid)
 {
 	switch(teamid)
 	{
@@ -100,7 +100,7 @@ string Team_ColorName(float teamid)
 }
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
-string Static_Team_ColorName(float teamid)
+string Static_Team_ColorName(int teamid)
 {
 	switch(teamid)
 	{

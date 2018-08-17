@@ -3,7 +3,7 @@
 #include <common/constants.qh>
 void MapVote_Draw();
 
-void Cmd_MapVote_MapDownload(float argc);
+void Cmd_MapVote_MapDownload(int argc);
 
 float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary);
 

@@ -552,11 +552,13 @@ void Draw_WaypointSprite(entity this)
         LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
     }
 
-    if (time - floor(time) > 0.5)
+    float health_val = GetResourceAmount(this, RESOURCE_HEALTH);
+    float blink_time = (health_val >= 0) ? (health_val * 10) : time;
+    if (blink_time - floor(blink_time) > 0.5)
     {
         if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
-        else if (this.lifetime > 0) // fading out waypoints don't blink
+        else if (!this.lifetime) // fading out waypoints don't blink
             a *= spritelookupblinkvalue(this, spriteimage);
     }
 
@@ -590,7 +592,7 @@ void Draw_WaypointSprite(entity this)
             ang += M_PI;
 
 		float f1 = d.x / vid_conwidth;
-		float f2 = d.y / vid_conheight; 
+		float f2 = d.y / vid_conheight;
 		if (f1 == 0) { f1 = 0.000001; }
 		if (f2 == 0) { f2 = 0.000001; }
 
@@ -1101,7 +1103,7 @@ entity WaypointSprite_SpawnFixed(
 
 entity WaypointSprite_DeployFixed(
     entity spr,
-    float limited_range,
+    bool limited_range,
     entity player,
     vector ofs,
     entity icon // initial icon
@@ -1133,7 +1135,7 @@ entity WaypointSprite_DeployPersonal(
 entity WaypointSprite_Attach(
     entity spr,
     entity player,
-    float limited_range,
+    bool limited_range,
     entity icon // initial icon
 )
 {
