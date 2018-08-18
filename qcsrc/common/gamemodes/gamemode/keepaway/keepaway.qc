@@ -165,9 +165,9 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	entity e = ball.owner; ball.owner = NULL;
-	e.ballcarried = NULL;
-	GameRules_scoring_vip(e, false);
+	ball.owner = NULL;
+	plyr.ballcarried = NULL;
+	GameRules_scoring_vip(plyr, false);
 	navigation_dynamicgoal_set(ball);
 
 	// reset the player effects
@@ -206,6 +206,37 @@ void ka_Reset(entity this)
 		ka_RespawnBall(this);
 }
 
+.bool pushable;
+
+MODEL(KA_BALL, "models/orbs/orbblue.md3");
+
+void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
+{
+	entity e = new(keepawayball);
+	setmodel(e, MDL_KA_BALL);
+	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
+	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
+	e.takedamage = DAMAGE_YES;
+	e.solid = SOLID_TRIGGER;
+	set_movetype(e, MOVETYPE_BOUNCE);
+	e.glow_color = autocvar_g_keepawayball_trail_color;
+	e.glow_trail = true;
+	e.flags = FL_ITEM;
+	IL_PUSH(g_items, e);
+	e.pushable = true;
+	e.reset = ka_Reset;
+	settouch(e, ka_TouchEvent);
+	e.owner = NULL;
+	ka_ball = e;
+	navigation_dynamicgoal_init(ka_ball, false);
+
+	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
+}
+
+void ka_Initialize() // run at the start of a match, initiates game mode
+{
+	ka_SpawnBall();
+}
 
 // ================
 // Bot player logic
@@ -438,39 +469,4 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 		ka_DropEvent(frag_target);
 }
 
-.bool pushable;
-
-// ==============
-// Initialization
-// ==============
-
-MODEL(KA_BALL, "models/orbs/orbblue.md3");
-
-void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
-{
-	entity e = new(keepawayball);
-	setmodel(e, MDL_KA_BALL);
-	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
-	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
-	e.takedamage = DAMAGE_YES;
-	e.solid = SOLID_TRIGGER;
-	set_movetype(e, MOVETYPE_BOUNCE);
-	e.glow_color = autocvar_g_keepawayball_trail_color;
-	e.glow_trail = true;
-	e.flags = FL_ITEM;
-	IL_PUSH(g_items, e);
-	e.pushable = true;
-	e.reset = ka_Reset;
-	settouch(e, ka_TouchEvent);
-	e.owner = NULL;
-	ka_ball = e;
-	navigation_dynamicgoal_init(ka_ball, false);
-
-	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
-}
-
-void ka_Initialize() // run at the start of a match, initiates game mode
-{
-	ka_SpawnBall();
-}
 #endif
