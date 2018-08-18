@@ -89,7 +89,7 @@ void ka_TimeScoring(entity this)
 
 void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
 {
-	if (!this || game_stopped || time < game_starttime)
+	if (!this || game_stopped)
 		return;
 
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -147,6 +147,17 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	WaypointSprite_Kill(this.waypointsprite_attachedforcarrier);
 }
 
+void ka_PlayerReset(entity plyr)
+{
+	plyr.ballcarried = NULL;
+	GameRules_scoring_vip(plyr, false);
+	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
+
+	// reset the player effects
+	plyr.glow_trail = false;
+	plyr.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
+}
+
 void ka_DropEvent(entity plyr) // runs any time that a player is supposed to lose the ball
 {
 	entity ball;
@@ -166,13 +177,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner = NULL;
-	plyr.ballcarried = NULL;
-	GameRules_scoring_vip(plyr, false);
 	navigation_dynamicgoal_set(ball);
-
-	// reset the player effects
-	plyr.glow_trail = false;
-	plyr.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
 
 	// messages and sounds
 	ka_EventLog("dropped", plyr);
@@ -180,37 +185,30 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
-	// scoring
-	// GameRules_scoring_add(plyr, KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
-
 	// waypoints
 	WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
-	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
-}
 
-/** used to clear the ballcarrier whenever the match switches from warmup to normal */
-void ka_Reset(entity this)
-{
-	if((this.owner) && (IS_PLAYER(this.owner)))
-		ka_DropEvent(this.owner);
-
-	if(time < game_starttime)
-	{
-		setthink(this, ka_RespawnBall);
-		settouch(this, func_null);
-		this.nextthink = game_starttime;
-	}
-	else
-		ka_RespawnBall(this);
+	ka_PlayerReset(plyr);
 }
 
 .bool pushable;
 
 MODEL(KA_BALL, "models/orbs/orbblue.md3");
 
-void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
+void ka_RemoveBall()
+{
+	entity plyr = ka_ball.owner;
+	if (plyr) // it was attached
+		ka_PlayerReset(plyr);
+	else
+		WaypointSprite_DetachCarrier(ka_ball);
+	delete(ka_ball);
+	ka_ball = NULL;
+}
+
+void ka_SpawnBall()
 {
 	entity e = new(keepawayball);
 	setmodel(e, MDL_KA_BALL);
@@ -224,7 +222,6 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.flags = FL_ITEM;
 	IL_PUSH(g_items, e);
 	e.pushable = true;
-	e.reset = ka_Reset;
 	settouch(e, ka_TouchEvent);
 	e.owner = NULL;
 	ka_ball = e;
@@ -233,10 +230,29 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
 }
 
+void ka_Handler_CheckBall(entity this)
+{
+	if(time < game_starttime)
+	{
+		if (ka_ball)
+			ka_RemoveBall();
+	}
+	else
+	{
+		if (!ka_ball)
+			ka_SpawnBall();
+	}
+
+	this.nextthink = time;
+}
+
 void ka_Initialize() // run at the start of a match, initiates game mode
 {
-	ka_SpawnBall();
+	ka_Handler = new(ka_Handler);
+	setthink(ka_Handler, ka_Handler_CheckBall);
+	ka_Handler.nextthink = time;
 }
+
 
 // ================
 // Bot player logic
