@@ -64,7 +64,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	settouch(this, ka_TouchEvent);
 	setthink(this, ka_RespawnBall);
 	this.nextthink = time + autocvar_g_keepawayball_respawntime;
-	navigation_dynamicgoal_set(this);
+	navigation_dynamicgoal_set(this, NULL);
 
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
@@ -177,7 +177,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner = NULL;
-	navigation_dynamicgoal_set(ball);
+	navigation_dynamicgoal_set(ball, plyr);
 
 	// messages and sounds
 	ka_EventLog("dropped", plyr);
@@ -260,20 +260,15 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 
 void havocbot_goalrating_ball(entity this, float ratingscale, vector org)
 {
-	float t;
 	entity ball_owner;
 	ball_owner = ka_ball.owner;
 
 	if (ball_owner == this)
 		return;
 
-	// If ball is carried by player then hunt them down.
 	if (ball_owner)
-	{
-		t = (GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR)) / (GetResourceAmount(ball_owner, RESOURCE_HEALTH) + GetResourceAmount(ball_owner, RESOURCE_ARMOR));
-		navigation_routerating(this, ball_owner, t * ratingscale, 2000);
-	}
-	else // Ball has been dropped so collect.
+		navigation_routerating(this, ball_owner, ratingscale, 2000);
+	else
 		navigation_routerating(this, ka_ball, ratingscale, 2000);
 }
 
@@ -286,7 +281,7 @@ void havocbot_role_ka_carrier(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 
@@ -309,8 +304,8 @@ void havocbot_role_ka_collector(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 1000, this.origin, 10000);
-		havocbot_goalrating_ball(this, 20000, this.origin);
+		havocbot_goalrating_enemyplayers(this, 500, this.origin, 10000);
+		havocbot_goalrating_ball(this, 8000, this.origin);
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);

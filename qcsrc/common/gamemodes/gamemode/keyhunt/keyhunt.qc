@@ -299,7 +299,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
 	key.modelindex = kh_key_dropped;
-	navigation_dynamicgoal_set(key);
+	navigation_dynamicgoal_set(key, key.owner);
 	key.kh_previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
 }
@@ -1077,9 +1077,9 @@ void havocbot_role_kh_carrier(entity this)
 		navigation_goalrating_start(this);
 
 		if(kh_Key_AllOwnedByWhichTeam() == this.team)
-			havocbot_goalrating_kh(this, 10, 0.1, 0.1); // bring home
+			havocbot_goalrating_kh(this, 10, 0.1, 0.05); // bring home
 		else
-			havocbot_goalrating_kh(this, 4, 4, 1); // play defensively
+			havocbot_goalrating_kh(this, 4, 4, 0.5); // play defensively
 
 		navigation_goalrating_end(this);
 
@@ -1117,11 +1117,11 @@ void havocbot_role_kh_defense(entity this)
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
 		if(key_owner_team == this.team)
-			havocbot_goalrating_kh(this, 10, 0.1, 0.1); // defend key carriers
+			havocbot_goalrating_kh(this, 10, 0.1, 0.05); // defend key carriers
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(this, 4, 1, 0.1); // play defensively
+			havocbot_goalrating_kh(this, 4, 1, 0.05); // play defensively
 		else
-			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
+			havocbot_goalrating_kh(this, 0.1, 0.1, 5); // ATTACK ANYWAY
 
 		navigation_goalrating_end(this);
 
@@ -1160,11 +1160,11 @@ void havocbot_role_kh_offense(entity this)
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
 		if(key_owner_team == this.team)
-			havocbot_goalrating_kh(this, 10, 0.1, 0.1); // defend anyway
+			havocbot_goalrating_kh(this, 10, 0.1, 0.05); // defend anyway
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(this, 0.1, 1, 4); // play offensively
+			havocbot_goalrating_kh(this, 0.1, 1, 2); // play offensively
 		else
-			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK! EMERGENCY!
+			havocbot_goalrating_kh(this, 0.1, 0.1, 5); // ATTACK! EMERGENCY!
 
 		navigation_goalrating_end(this);
 
@@ -1209,11 +1209,11 @@ void havocbot_role_kh_freelancer(entity this)
 
 		int key_owner_team = kh_Key_AllOwnedByWhichTeam();
 		if(key_owner_team == this.team)
-			havocbot_goalrating_kh(this, 10, 0.1, 0.1); // defend anyway
+			havocbot_goalrating_kh(this, 10, 0.1, 0.05); // defend anyway
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(this, 1, 10, 4); // prefer dropped keys
+			havocbot_goalrating_kh(this, 1, 10, 2); // prefer dropped keys
 		else
-			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
+			havocbot_goalrating_kh(this, 0.1, 0.1, 5); // ATTACK ANYWAY
 
 		navigation_goalrating_end(this);
 

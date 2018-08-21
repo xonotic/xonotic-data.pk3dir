@@ -401,9 +401,9 @@ void havocbot_goalrating_controlpoints(entity this, float ratingscale, vector or
 		if(it.cnt > -1) // this is just being fought
 			navigation_routerating(this, it, ratingscale, 5000);
 		else if(it.goalentity.cnt == 0) // unclaimed
-			navigation_routerating(this, it, ratingscale * 0.5, 5000);
+			navigation_routerating(this, it, ratingscale, 5000);
 		else if(it.goalentity.team != this.team) // other team's point
-			navigation_routerating(this, it, ratingscale * 0.2, 5000);
+			navigation_routerating(this, it, ratingscale, 5000);
 	});
 }
 
@@ -416,8 +416,8 @@ void havocbot_role_dom(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_controlpoints(this, 10000, this.origin, 15000);
-		havocbot_goalrating_items(this, 8000, this.origin, 8000);
-		//havocbot_goalrating_enemyplayers(this, 3000, this.origin, 2000);
+		havocbot_goalrating_items(this, 20000, this.origin, 8000);
+		//havocbot_goalrating_enemyplayers(this, 1500, this.origin, 2000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 
