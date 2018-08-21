@@ -40,29 +40,38 @@ void crosshair_trace(entity pl)
 {
 	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
-.bool ctrace_solidchanged;
+
 void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, false);
+}
+
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, true);
+}
+
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz)
 {
 	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
 	{
 		if(it.model != "")
 		{
 			it.solid = SOLID_BSP;
-			it.ctrace_solidchanged = true;
 			IL_PUSH(g_ctrace_changed, it);
 		}
 	});
 
-	crosshair_trace(pl);
+	if (is_wz)
+		WarpZone_crosshair_trace(pl);
+	else
+		crosshair_trace(pl);
 
-	IL_EACH(g_ctrace_changed, it.ctrace_solidchanged,
-	{
-		it.solid = SOLID_TRIGGER;
-		it.ctrace_solidchanged = false;
-	});
+	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
 
 	IL_CLEAR(g_ctrace_changed);
 }
+
 void WarpZone_crosshair_trace(entity pl)
 {
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
@@ -223,16 +232,13 @@ string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
 	float n;
-	vector cursor;
-	entity cursor_ent;
+	vector cursor = '0 0 0';
+	entity cursor_ent = NULL;
 	string escape;
 	string replacement;
 	p = 0;
 	n = 7;
-
-	WarpZone_crosshair_trace(this);
-	cursor = trace_endpos;
-	cursor_ent = trace_ent;
+	bool traced = false;
 
 	MUTATOR_CALLHOOK(PreFormatMessage, this, msg);
 	msg = M_ARGV(1, string);
@@ -255,6 +261,14 @@ string formatmessage(entity this, string msg)
 
 		if (p < 0)
 			break;
+
+		if(!traced)
+		{
+			WarpZone_crosshair_trace_plusvisibletriggers(this);
+			cursor = trace_endpos;
+			cursor_ent = trace_ent;
+			traced = true;
+		}
 
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
@@ -875,7 +889,7 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void(entity this) func, float order)
+void InitializeEntity(entity e, void(entity this) func, int order)
 {
     entity prev, cur;
 

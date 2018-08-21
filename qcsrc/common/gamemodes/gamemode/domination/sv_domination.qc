@@ -344,7 +344,7 @@ int Domination_GetWinnerTeam()
 	return -1; // no control points left?
 }
 
-float Domination_CheckWinner()
+bool Domination_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
@@ -353,7 +353,7 @@ float Domination_CheckWinner()
 
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
-		return 1;
+		return true;
 	}
 
 	Domination_count_controlpoints();
@@ -361,7 +361,7 @@ float Domination_CheckWinner()
 	float winner_team = Domination_GetWinnerTeam();
 
 	if(winner_team == -1)
-		return 0;
+		return false;
 
 	if(winner_team > 0)
 	{
@@ -378,12 +378,12 @@ float Domination_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 
-	return 1;
+	return true;
 }
 
-float Domination_CheckPlayers()
+bool Domination_CheckPlayers()
 {
-	return 1;
+	return true;
 }
 
 void Domination_RoundStart()

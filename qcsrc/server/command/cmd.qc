@@ -72,7 +72,7 @@ bool SV_ParseClientCommand_floodcheck(entity this)
 //  Command Sub-Functions
 // =======================
 
-void ClientCommand_autoswitch(entity caller, float request, float argc)
+void ClientCommand_autoswitch(entity caller, int request, int argc)
 {
 	switch (request)
 	{
@@ -97,7 +97,7 @@ void ClientCommand_autoswitch(entity caller, float request, float argc)
 	}
 }
 
-void ClientCommand_clientversion(entity caller, float request, float argc)  // internal command, used only by code
+void ClientCommand_clientversion(entity caller, int request, int argc)  // internal command, used only by code
 {
 	switch (request)
 	{
@@ -140,7 +140,7 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 	}
 }
 
-void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // internal command, used only by code
+void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // internal command, used only by code
 {
 	switch (request)
 	{
@@ -165,7 +165,7 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
-void ClientCommand_join(entity caller, float request)
+void ClientCommand_join(entity caller, int request)
 {
 	switch (request)
 	{
@@ -189,7 +189,7 @@ void ClientCommand_join(entity caller, float request)
 	}
 }
 
-void ClientCommand_physics(entity caller, float request, float argc)
+void ClientCommand_physics(entity caller, int request, int argc)
 {
 	switch (request)
 	{
@@ -229,7 +229,7 @@ void ClientCommand_physics(entity caller, float request, float argc)
 	}
 }
 
-void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for toggling readyness
+void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for toggling readyness
 {
 	switch (request)
 	{
@@ -278,7 +278,7 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 	}
 }
 
-void ClientCommand_say(entity caller, float request, float argc, string command)
+void ClientCommand_say(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -298,7 +298,7 @@ void ClientCommand_say(entity caller, float request, float argc, string command)
 	}
 }
 
-void ClientCommand_say_team(entity caller, float request, float argc, string command)
+void ClientCommand_say_team(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -319,7 +319,7 @@ void ClientCommand_say_team(entity caller, float request, float argc, string com
 }
 
 .bool team_selected;
-void ClientCommand_selectteam(entity caller, float request, float argc)
+void ClientCommand_selectteam(entity caller, int request, int argc)
 {
 	switch (request)
 	{
@@ -424,7 +424,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 	}
 }
 
-void ClientCommand_selfstuff(entity caller, float request, string command)
+void ClientCommand_selfstuff(entity caller, int request, string command)
 {
 	switch (request)
 	{
@@ -448,7 +448,7 @@ void ClientCommand_selfstuff(entity caller, float request, string command)
 	}
 }
 
-void ClientCommand_sentcvar(entity caller, float request, float argc, string command)
+void ClientCommand_sentcvar(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -482,7 +482,7 @@ void ClientCommand_sentcvar(entity caller, float request, float argc, string com
 	}
 }
 
-void ClientCommand_spectate(entity caller, float request)
+void ClientCommand_spectate(entity caller, int request)
 {
 	switch (request)
 	{
@@ -522,7 +522,7 @@ void ClientCommand_spectate(entity caller, float request)
 	}
 }
 
-void ClientCommand_suggestmap(entity caller, float request, float argc)
+void ClientCommand_suggestmap(entity caller, int request, int argc)
 {
 	switch (request)
 	{
@@ -546,7 +546,7 @@ void ClientCommand_suggestmap(entity caller, float request, float argc)
 	}
 }
 
-void ClientCommand_tell(entity caller, float request, float argc, string command)
+void ClientCommand_tell(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -603,7 +603,7 @@ void ClientCommand_tell(entity caller, float request, float argc, string command
 	}
 }
 
-void ClientCommand_voice(entity caller, float request, float argc, string command)
+void ClientCommand_voice(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -640,7 +640,7 @@ void ClientCommand_voice(entity caller, float request, float argc, string comman
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void ClientCommand_(entity caller, float request)
+void ClientCommand_(entity caller, int request)
 {
     switch(request)
     {
@@ -670,8 +670,9 @@ void ClientCommand_(entity caller, float request)
 #define CLIENT_COMMANDS(ent, request, arguments, command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
+	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
+	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(ent, request, arguments, command), "Print a message to chat to all players") \
@@ -683,7 +684,6 @@ void ClientCommand_(entity caller, float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
-	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
 	/* nothing */
 
 void ClientCommand_macro_help(entity caller)
@@ -695,7 +695,7 @@ void ClientCommand_macro_help(entity caller)
 #undef CLIENT_COMMAND
 }
 
-float ClientCommand_macro_command(float argc, entity caller, string command)
+float ClientCommand_macro_command(int argc, entity caller, string command)
 {
 	#define CLIENT_COMMAND(name, function, description) \
 		{ if (name == strtolower(argv(0))) { function; return true; } }
@@ -706,7 +706,7 @@ float ClientCommand_macro_command(float argc, entity caller, string command)
 	return false;
 }
 
-float ClientCommand_macro_usage(float argc, entity caller)
+float ClientCommand_macro_usage(int argc, entity caller)
 {
 	#define CLIENT_COMMAND(name, function, description) \
 		{ if (name == strtolower(argv(1))) { function; return true; } }
@@ -744,7 +744,7 @@ void SV_ParseClientCommand(entity this, string command)
 	// if we're banned, don't even parse the command
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4

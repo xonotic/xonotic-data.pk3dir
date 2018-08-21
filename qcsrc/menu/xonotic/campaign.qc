@@ -168,8 +168,10 @@ void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticCampaignList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin1 = 0.5 * me.realFontSize.y;
 	me.realUpperMargin2 = me.realUpperMargin1 + 2 * me.realFontSize.y;
 
