@@ -402,7 +402,7 @@ bool have_pickup_item(entity this)
 	return true;
 }
 
-void Item_Show (entity e, float mode)
+void Item_Show (entity e, int mode)
 {
 	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
 	e.ItemStatus &= ~ITS_STAYWEP;
@@ -1317,7 +1317,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
 			|| (itemid & (IT_KEY1 | IT_KEY2))
-		) this.target = "###item###"; // for finding the nearest item using find()
+		) this.target = "###item###"; // for finding the nearest item using findnearest
 
 		Item_ItemsTime_SetTime(this, 0);
 	}

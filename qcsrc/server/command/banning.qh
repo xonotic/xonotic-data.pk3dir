@@ -12,4 +12,4 @@
 void BanCommand_macro_write_aliases(float fh);
 
 void BanCommand_macro_help();
-float BanCommand_macro_usage(float argc);
+float BanCommand_macro_usage(int argc);
