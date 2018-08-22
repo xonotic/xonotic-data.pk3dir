@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-05-22 14:42+0000\n"
+"PO-Revision-Date: 2018-07-22 18:03+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:239
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
-msgstr "^2Exportado com sucesso para %s! (Nota: Foi salvo em data/data/)\n"
+msgstr "^2Exportado com sucesso para %s! (Nota: foi salvo em data/data/)\n"
 
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
@@ -155,12 +155,11 @@ msgstr "%sAperte ^3%s%s assim que estiver pronto"
 #: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
-"^2Esperando que os outros jogadores estejam prontos para acabar o "
-"aquecimento..."
+"^2Aguardando outros jogadores ficarem prontos para terminar o aquecimento..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:169
 msgid "^2Waiting for others to ready up..."
-msgstr "^2Esperando que os outros jogadores estejam prontos..."
+msgstr "^2Aguardando outros jogadores ficarem prontos..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 #, c-format
@@ -183,7 +182,7 @@ msgstr "menu de equipe"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating this player:"
-msgstr "^1Também estão assistindo a este jogador:"
+msgstr "^1Assistindo a este jogador:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating you:"
@@ -191,7 +190,7 @@ msgstr "^1Assistindo você:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Aperte ^3ESC ^7para exibir as opções de HUD."
+msgstr "^7Aperte ^3ESC ^7para exibir as opções de interface."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -201,7 +200,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr "^3CTRL ^7para desligar teste de colisão, ^3SHIFT ^7e"
+msgstr "Use ^3CTRL ^7para desligar o teste de colisão, e ^3SHIFT ^7e"
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -365,7 +364,7 @@ msgstr "Largar arma, ícone"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr "Arma solta %w^7 (l:%l^7)"
+msgstr "Arma largada %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
@@ -377,7 +376,7 @@ msgstr "Bandeira/Chave largada %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^Send private message to"
-msgstr "Mandar mensagem privada para"
+msgstr "Enviar mensagem privada para"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 #: qcsrc/client/hud/panel/quickmenu.qc:860
@@ -387,7 +386,7 @@ msgstr "Configurações"
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^View/HUD settings"
-msgstr "Configurações de Exibição/HUD"
+msgstr "Configurações de exibição/interface"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^3rd person view"
@@ -454,7 +453,7 @@ msgstr "Aumentar velocidade"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Decrease speed"
-msgstr "Diminuir velocidade"
+msgstr "Reduzir velocidade"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Wall collision off"
@@ -685,7 +684,7 @@ msgstr "ticks"
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
-"Você pode modificar o placar usando o comando ^2scoreboard_columns_set.\n"
+"É possível modificar o placar usando o comando ^2scoreboard_columns_set.\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:296
 msgid "^3|---------------------------------------------------------------|\n"
@@ -701,13 +700,13 @@ msgstr "^2scoreboard_columns_set padrão\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:299
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
-msgstr "^2scoreboard_columns_set ^7campo1 campo2...\n"
+msgstr "^2scoreboard_columns_set ^7field1 field2...\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:300
 msgid "The following field names are recognized (case insensitive):\n"
 msgstr ""
-"Os seguintes nomes de campos são reconhecidos (maiúsculas/minúsculas não são "
-"distintas):\n"
+"Os seguintes nomes de campo são reconhecidos (maiúsculas e minúsculas não "
+"diferem):\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:301
 msgid "You can use a ^3|^7 to start the right-aligned fields.\n"
@@ -731,7 +730,7 @@ msgstr "^3elo^7 ELO do jogador\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:308
 msgid "^3kills^7                    Number of kills\n"
-msgstr "^3vítimas^7 Número de aniquilações\n"
+msgstr "^3vítimas^7 Número de vítimas\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:309
 msgid "^3deaths^7                   Number of deaths\n"
@@ -783,8 +782,7 @@ msgstr "^3tempodecaptura^7 Tempo da captura mais rápida (CTF)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "^3fckills^7                  Number of flag carrier kills\n"
-msgstr ""
-"^3pbndvítimas^7 Número de portadores de bandeiras mortos pelo jogador\n"
+msgstr "^3pbndvítimas^7 Número de portadores de bandeiras aniquilados\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:320
 msgid "^3returns^7                  Number of flag returns\n"
@@ -792,7 +790,7 @@ msgstr "^3retornos^7 Número de bandeiras retomadas\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:321
 msgid "^3drops^7                    Number of flag drops\n"
-msgstr "^3quedas^7 Número de bandeiras que foram soltas\n"
+msgstr "^3quedas^7 Número de bandeiras largadas\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:322
 msgid "^3lives^7                    Number of lives (LMS)\n"
@@ -804,18 +802,18 @@ msgstr "^3posição^7 Classificação do jogador\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:324
 msgid "^3pushes^7                   Number of players pushed into void\n"
-msgstr "^3empurrões^7 Número de jogadores empurrados para fora do mapa\n"
+msgstr "^3empurrões^7 Número de jogadores empurrados para o vazio\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:325
 msgid ""
 "^3destroyed^7                Number of keys destroyed by pushing them into "
 "void\n"
 msgstr ""
-"^3destruídas^7 Número de chaves destruídas ao empurrá-las para fora do mapa\n"
+"^3destruídas^7 Número de chaves destruídas ao empurrá-las para o vazio\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:326
 msgid "^3kckills^7                  Number of keys carrier kills\n"
-msgstr "^3pcvítimas^7 Número de portadores de chaves mortos pelo jogador\n"
+msgstr "^3pcvítimas^7 Número de portadores de chaves aniquilados\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:327
 msgid "^3losses^7                   Number of times a key was lost\n"
@@ -827,7 +825,7 @@ msgstr "^3voltas^7 Número de voltas concluídas (corrida/cts)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:329
 msgid "^3time^7                     Total time raced (race/cts)\n"
-msgstr "^3tempo^7 Tempo total de corrida (corrida/cts)\n"
+msgstr "^3tempo^7 Tempo total em corridas (corrida/cts)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:330
 msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
@@ -843,7 +841,7 @@ msgstr "^3tomados^7 Número de pontos de dominação tomados (DOM)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:333
 msgid "^3bckills^7                  Number of ball carrier kills\n"
-msgstr "^3pblvítimas^7 Número de portadores de bolas mortos pelo jogador\n"
+msgstr "^3pblvítimas^7 Número de portadores de bolas aniquilados\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:334
 msgid ""
@@ -1017,7 +1015,8 @@ msgstr "Você morreu. Aperte ^2%s^7 para ressurgir"
 #: qcsrc/client/hud/panel/vote.qc:24
 msgid "^1You must answer before entering hud configure mode\n"
 msgstr ""
-"^1Você tem que responder antes de entrar no modo de configuração do HUD\n"
+"^1Você tem que responder antes de entrar no modo de configuração da "
+"interface\n"
 
 #: qcsrc/client/hud/panel/vote.qc:29
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1033,7 +1032,7 @@ msgstr "Permitir que servidores armazenem e mostrem o seu nome?"
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "^1Configure the HUD"
-msgstr "^1Configurar o HUD"
+msgstr "^1Configurar a interface"
 
 #: qcsrc/client/hud/panel/vote.qc:125 qcsrc/menu/xonotic/dialog_firstrun.qc:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
@@ -5716,7 +5715,7 @@ msgstr "Painel das Armas"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:19
 msgid "HUD skins"
-msgstr "Visuais de HUD"
+msgstr "Visuais de interface"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:196
@@ -5783,7 +5782,7 @@ msgstr "Preenchimento:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:93
 msgid "HUD Dock:"
-msgstr "Camada do HUD:"
+msgstr "Camada da interface:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
 msgid "DOCK^Disabled"
@@ -5827,7 +5826,7 @@ msgstr "Sair da configuração"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:6
 msgid "Panel HUD Setup"
-msgstr "Painel de Configuração do HUD"
+msgstr "Painel de configuração da interface"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
@@ -7754,32 +7753,33 @@ msgstr "Sobreposição do dano:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:160
 msgid "Dynamic HUD"
-msgstr "HUD dinâmico"
+msgstr "Interface dinâmica"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:161
 msgid "HUD moves around following player's movement"
-msgstr "O HUD se move de acordo com o movimento do jogador"
+msgstr "A interface se move de acordo com o movimento do jogador"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
 msgid "Shake the HUD when hurt"
-msgstr "Vibrar o HUD ao ser atingido"
+msgstr "Vibrar a interface ao receber dano"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
-msgstr "Entrar no editor do HUD"
+msgstr "Entrar no editor de interface"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
-msgstr "HUD"
+msgstr "Interface"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
-msgstr "Para o editor do HUD aparecer, é necessário estar jogando em um mapa."
+msgstr ""
+"Para abrir o editor de interface, é necessário estar jogando em um mapa."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr "Quer iniciar um jogo local para personalizar o HUD?"
+msgstr "Quer iniciar um jogo local para personalizar a interface?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
@@ -7888,7 +7888,7 @@ msgstr "Sons da contagem de ressurgimento"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:101
 msgid "Killstreak sounds"
-msgstr "Sons de sequências de mortes"
+msgstr "Sons de sequência de mortes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:104
 msgid "Achievement sounds"

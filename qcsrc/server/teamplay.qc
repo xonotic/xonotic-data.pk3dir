@@ -631,48 +631,40 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 	return team_bits;
 }
 
-void TeamBalance_JoinBestTeam(entity this, bool force_best_team)
+void TeamBalance_JoinBestTeam(entity this)
 {
-	//PrintToChatAll(sprintf("JoinBestTeam: %s, %f", this.netname, force_best_team));
-	// don't join a team if we're not playing a team game
+	//PrintToChatAll(sprintf("JoinBestTeam: %s", this.netname));
 	if (!teamplay)
 	{
 		return;
 	}
-
-	// find out what teams are available
-	entity balance = TeamBalance_CheckAllowedTeams(this);
-
-	// if we don't care what team they end up on, put them on whatever team they entered as.
-	// if they're not on a valid team, then let other code put them on the smallest team
-	if (!force_best_team)
-	{
-		int selected_team_index = -1;
-		for (int i = 1; i <= NUM_TEAMS; ++i)
-		{
-			if (TeamBalance_IsTeamAllowedInternal(balance, i) &&
-				(Team_TeamToIndex(this.team) == i))
-			{
-				selected_team_index = i;
-				break;
-			}
-		}
-		
-		if (Team_IsValidIndex(selected_team_index))
-		{
-			SetPlayerTeam(this, selected_team_index, TEAM_CHANGE_AUTO_RELAXED);
-			TeamBalance_Destroy(balance);
-			return;
-		}
-	}
-	// otherwise end up on the smallest team (handled below)
 	if (this.bot_forced_team)
 	{
+		return;
+	}
+	int old_team_index = Team_TeamToIndex(this.team);
+	entity balance = TeamBalance_CheckAllowedTeams(this);
+	if (this.team_forced > 0)
+	{
+		int forced_team_index = Team_TeamToIndex(this.team_forced);
+		bool is_team_allowed = TeamBalance_IsTeamAllowedInternal(balance,
+			forced_team_index);
 		TeamBalance_Destroy(balance);
+		if (!is_team_allowed)
+		{
+			return;
+		}
+		if (!SetPlayerTeam(this, forced_team_index, TEAM_CHANGE_AUTO))
+		{
+			return;
+		}
+		if ((old_team_index != -1) && !IS_BOT_CLIENT(this))
+		{
+			TeamBalance_AutoBalanceBots(forced_team_index, old_team_index);
+		}
 		return;
 	}
 	int best_team_index = TeamBalance_FindBestTeam(balance, this, true);
-	int old_team_index = Team_TeamToIndex(this.team);
 	TeamBalance_Destroy(balance);
 	PlayerScore_Clear(this);
 	if (!SetPlayerTeam(this, best_team_index, TEAM_CHANGE_AUTO))
@@ -963,6 +955,10 @@ void SV_ChangeTeam(entity this, float _color)
 		PlayerScore_Clear(this);
 	}
 	if (!SetPlayerTeam(this, destination_team_index, TEAM_CHANGE_MANUAL))
+	{
+		return;
+	}
+	if (source_team_index == -1)
 	{
 		return;
 	}

@@ -54,7 +54,7 @@ const string PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD = "achievement-firstblood";
 const string PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM = "achievement-firstvictim";
 
 // delay map switch until this is set
-float PlayerStats_GameReport_DelayMapVote;
+bool PlayerStats_GameReport_DelayMapVote;
 
 // call at initialization
 void PlayerStats_GameReport_Init();

@@ -1,4 +1,9 @@
-1 8 20 0 // fire
-9 5 20 0 // fire2
-15 200 20 1 // idle
-215 40 20 0 // reload
+/*
+Generated framegroups file for h_electro
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 36 30 0 // h_electro fire
+37 36 30 0 // h_electro fire
+73 101 3 1 // h_electro idle
+174 101 3 1 // h_electro idle
