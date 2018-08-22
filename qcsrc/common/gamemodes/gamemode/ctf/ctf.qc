@@ -449,7 +449,6 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
-	navigation_dynamicgoal_set(flag);
 
 	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
 
@@ -488,6 +487,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & ITEM_Strength.m_itemid) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
 			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, flag_velocity, false);
 			ctf_Handle_Drop(flag, player, droptype);
+			navigation_dynamicgoal_set(flag, player);
 			break;
 		}
 
@@ -502,6 +502,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 		{
 			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, (('0 0 1' * autocvar_g_ctf_drop_velocity_up) + ((('0 1 0' * crandom()) + ('1 0 0' * crandom())) * autocvar_g_ctf_drop_velocity_side)), false);
 			ctf_Handle_Drop(flag, player, droptype);
+			navigation_dynamicgoal_set(flag, player);
 			break;
 		}
 	}
@@ -1243,7 +1244,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber)));
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
-	flag.target = "###item###"; // wut?
+	flag.target = "###item###"; // for finding the nearest item using findnearest
 	flag.flags = FL_ITEM | FL_NOTARGET;
 	IL_PUSH(g_items, flag);
 	flag.solid = SOLID_TRIGGER;
@@ -1515,17 +1516,28 @@ void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 		head = head.ctf_worldflagnext;
 	}
 	if (head)
+	{
+		if (head.ctf_status == FLAG_CARRY)
+		{
+			// adjust rating of our flag carrier depending on his health
+			head = head.tag_entity;
+			float f = bound(0, (head.health + head.armorvalue) / 100, 2) - 1;
+			ratingscale += ratingscale * f * 0.1;
+		}
 		navigation_routerating(this, head, ratingscale, 10000);
+	}
 }
 
 void havocbot_goalrating_ctf_enemybase(entity this, float ratingscale)
 {
+	// disabled because we always spawn waypoints for flags with waypoint_spawnforitem_force
+	/*
 	if (!bot_waypoints_for_items)
 	{
 		havocbot_goalrating_ctf_enemyflag(this, ratingscale);
 		return;
 	}
-
+	*/
 	entity head;
 
 	head = havocbot_ctf_find_enemy_flag(this);
@@ -1572,28 +1584,10 @@ void havocbot_goalrating_ctf_droppedflags(entity this, float ratingscale, vector
 	}
 }
 
-void havocbot_goalrating_ctf_carrieritems(entity this, float ratingscale, vector org, float sradius)
-{
-	IL_EACH(g_items, it.bot_pickup,
-	{
-		// gather health and armor only
-		if (it.solid)
-		if (GetResourceAmount(it, RESOURCE_HEALTH) || GetResourceAmount(it, RESOURCE_ARMOR))
-		if (vdist(it.origin - org, <, sradius))
-		{
-			// get the value of the item
-			float t = it.bot_pickupevalfunc(this, it) * 0.0001;
-			if (t > 0)
-				navigation_routerating(this, it, t * ratingscale, 500);
-		}
-	});
-}
-
 void havocbot_ctf_reset_role(entity this)
 {
 	float cdefense, cmiddle, coffense;
 	entity mf, ef;
-	float c;
 
 	if(IS_DEAD(this))
 		return;
@@ -1622,14 +1616,29 @@ void havocbot_ctf_reset_role(entity this)
 		return;
 	}
 
-	// if there is only me on the team switch to offense
-	c = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this), { ++c; });
+	// if there is no one else on the team switch to offense
+	int count = 0;
+	// don't check if this bot is a player since it isn't true when the bot is added to the server
+	FOREACH_CLIENT(it != this && IS_PLAYER(it) && SAME_TEAM(it, this), { ++count; });
 
-	if(c==1)
+	if (count == 0)
 	{
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_OFFENSE);
 		return;
+	}
+	else if (time < CS(this).jointime + 1)
+	{
+		// if bots spawn all at once set good default roles
+		if (count == 1)
+		{
+			havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_DEFENSE);
+			return;
+		}
+		else if (count == 2)
+		{
+			havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_MIDDLE);
+			return;
+		}
 	}
 
 	// Evaluate best position to take
@@ -1648,6 +1657,25 @@ void havocbot_ctf_reset_role(entity this)
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_OFFENSE);
 	else
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_MIDDLE);
+
+	// if bots spawn all at once assign them a more appropriated role after a while
+	if (time < CS(this).jointime + 1 && count > 2)
+		this.havocbot_role_timeout = time + 10 + random() * 10;
+}
+
+bool havocbot_ctf_is_basewaypoint(entity item)
+{
+	if (item.classname != "waypoint")
+		return false;
+
+	entity head = ctf_worldflaglist;
+	while (head)
+	{
+		if (item == head.bot_basewaypoint)
+			return true;
+		head = head.ctf_worldflagnext;
+	}
+	return false;
 }
 
 void havocbot_role_ctf_carrier(entity this)
@@ -1668,30 +1696,30 @@ void havocbot_role_ctf_carrier(entity this)
 	{
 		navigation_goalrating_start(this);
 
+		// role: carrier
+		entity mf = havocbot_ctf_find_flag(this);
+		vector base_org = mf.dropped_origin;
+		float base_rating = (mf.ctf_status == FLAG_BASE) ? 10000 : (vdist(this.origin - base_org, >, 100) ? 2000 : 1000);
 		if(ctf_oneflag)
-			havocbot_goalrating_ctf_enemybase(this, 50000);
+			havocbot_goalrating_ctf_enemybase(this, base_rating);
 		else
-			havocbot_goalrating_ctf_ourbase(this, 50000);
+			havocbot_goalrating_ctf_ourbase(this, base_rating);
 
-		if(GetResourceAmount(this, RESOURCE_HEALTH) < 100)
-			havocbot_goalrating_ctf_carrieritems(this, 1000, this.origin, 1000);
+		// start collecting items very close to the bot but only inside of own base radius
+		if (vdist(this.origin - base_org, <, havocbot_middlepoint_radius))
+			havocbot_goalrating_items(this, 15000, this.origin, min(500, havocbot_middlepoint_radius * 0.5));
+
+		havocbot_goalrating_items(this, 10000, base_org, havocbot_middlepoint_radius * 0.5);
 
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);
 
-		entity head = ctf_worldflaglist;
-		while (head)
-		{
-			if (this.goalentity == head.bot_basewaypoint)
-			{
-				this.goalentity_lock_timeout = time + 5;
-				break;
-			}
-			head = head.ctf_worldflagnext;
-		}
+		entity goal = this.goalentity;
+		if (havocbot_ctf_is_basewaypoint(goal) && vdist(goal.origin - this.origin, <, 100))
+			this.goalentity_lock_timeout = time + ((this.bot_aimtarg) ? 2 : 3);
 
-		if (this.goalentity)
+		if (goal)
 			this.havocbot_cantfindflag = time + 10;
 		else if (time > this.havocbot_cantfindflag)
 		{
@@ -1727,11 +1755,15 @@ void havocbot_role_ctf_escort(entity this)
 		this.havocbot_role_timeout = 0;
 		return;
 	}
+	if (ef.ctf_status == FLAG_DROPPED)
+	{
+		navigation_goalrating_timeout_expire(this, 1);
+		return;
+	}
 
 	// If the flag carrier reached the base switch to defense
 	mf = havocbot_ctf_find_flag(this);
-	if(mf.ctf_status!=FLAG_BASE)
-	if(vdist(ef.origin - mf.dropped_origin, <, 300))
+	if (mf.ctf_status != FLAG_BASE && vdist(ef.origin - mf.dropped_origin, <, 900))
 	{
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_DEFENSE);
 		return;
@@ -1756,9 +1788,10 @@ void havocbot_role_ctf_escort(entity this)
 	{
 		navigation_goalrating_start(this);
 
-		havocbot_goalrating_ctf_enemyflag(this, 30000);
-		havocbot_goalrating_ctf_ourstolenflag(this, 40000);
-		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+		// role: escort
+		havocbot_goalrating_ctf_enemyflag(this, 10000);
+		havocbot_goalrating_ctf_ourstolenflag(this, 6000);
+		havocbot_goalrating_items(this, 21000, this.origin, 10000);
 
 		navigation_goalrating_end(this);
 
@@ -1818,13 +1851,6 @@ void havocbot_role_ctf_offense(entity this)
 		}
 	}
 
-	// About to fail, switch to middlefield
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 50)
-	{
-		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_MIDDLE);
-		return;
-	}
-
 	// Set the role timeout if necessary
 	if (!this.havocbot_role_timeout)
 		this.havocbot_role_timeout = time + 120;
@@ -1839,10 +1865,10 @@ void havocbot_role_ctf_offense(entity this)
 	{
 		navigation_goalrating_start(this);
 
-		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
-		havocbot_goalrating_ctf_enemybase(this, 20000);
-		havocbot_goalrating_items(this, 5000, this.origin, 1000);
-		havocbot_goalrating_items(this, 1000, this.origin, 10000);
+		// role: offense
+		havocbot_goalrating_ctf_ourstolenflag(this, 10000);
+		havocbot_goalrating_ctf_enemybase(this, 10000);
+		havocbot_goalrating_items(this, 22000, this.origin, 10000);
 
 		navigation_goalrating_end(this);
 
@@ -1888,15 +1914,20 @@ void havocbot_role_ctf_retriever(entity this)
 
 	if (navigation_goalrating_timeout(this))
 	{
-		float rt_radius;
-		rt_radius = 10000;
+		const float RT_RADIUS = 10000;
 
 		navigation_goalrating_start(this);
 
-		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
-		havocbot_goalrating_ctf_droppedflags(this, 40000, this.origin, rt_radius);
-		havocbot_goalrating_ctf_enemybase(this, 30000);
-		havocbot_goalrating_items(this, 500, this.origin, rt_radius);
+		// role: retriever
+		havocbot_goalrating_ctf_ourstolenflag(this, 10000);
+		havocbot_goalrating_ctf_droppedflags(this, 12000, this.origin, RT_RADIUS);
+		havocbot_goalrating_ctf_enemybase(this, 8000);
+		entity ef = havocbot_ctf_find_enemy_flag(this);
+		vector enemy_base_org = ef.dropped_origin;
+		// start collecting items very close to the bot but only inside of enemy base radius
+		if (vdist(this.origin - enemy_base_org, <, havocbot_middlepoint_radius))
+			havocbot_goalrating_items(this, 27000, this.origin, min(500, havocbot_middlepoint_radius * 0.5));
+		havocbot_goalrating_items(this, 18000, this.origin, havocbot_middlepoint_radius);
 
 		navigation_goalrating_end(this);
 
@@ -1945,14 +1976,19 @@ void havocbot_role_ctf_middle(entity this)
 
 		navigation_goalrating_start(this);
 
-		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
-		havocbot_goalrating_ctf_droppedflags(this, 30000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 10000, org, havocbot_middlepoint_radius * 0.5);
-		havocbot_goalrating_items(this, 5000, org, havocbot_middlepoint_radius * 0.5);
-		havocbot_goalrating_items(this, 2500, this.origin, 10000);
-		havocbot_goalrating_ctf_enemybase(this, 2500);
+		// role: middle
+		havocbot_goalrating_ctf_ourstolenflag(this, 8000);
+		havocbot_goalrating_ctf_droppedflags(this, 9000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 25000, org, havocbot_middlepoint_radius * 0.5);
+		havocbot_goalrating_items(this, 25000, org, havocbot_middlepoint_radius * 0.5);
+		havocbot_goalrating_items(this, 18000, this.origin, 10000);
+		havocbot_goalrating_ctf_enemybase(this, 3000);
 
 		navigation_goalrating_end(this);
+
+		entity goal = this.goalentity;
+		if (havocbot_ctf_is_basewaypoint(goal) && vdist(goal.origin - this.origin, <, 100))
+			this.goalentity_lock_timeout = time + 2;
 
 		navigation_goalrating_timeout_set(this);
 	}
@@ -2008,17 +2044,18 @@ void havocbot_role_ctf_defense(entity this)
 			}
 		});
 
+		// role: defense
 		if(closestplayer)
 		if(DIFF_TEAM(closestplayer, this))
 		if(vdist(org - this.origin, >, 1000))
 		if(checkpvs(this.origin,closestplayer)||random()<0.5)
-			havocbot_goalrating_ctf_ourbase(this, 30000);
+			havocbot_goalrating_ctf_ourbase(this, 10000);
 
-		havocbot_goalrating_ctf_ourstolenflag(this, 20000);
-		havocbot_goalrating_ctf_droppedflags(this, 20000, org, havocbot_middlepoint_radius);
-		havocbot_goalrating_enemyplayers(this, 15000, org, havocbot_middlepoint_radius);
-		havocbot_goalrating_items(this, 10000, org, havocbot_middlepoint_radius);
-		havocbot_goalrating_items(this, 5000, this.origin, 10000);
+		havocbot_goalrating_ctf_ourstolenflag(this, 5000);
+		havocbot_goalrating_ctf_droppedflags(this, 6000, org, havocbot_middlepoint_radius);
+		havocbot_goalrating_enemyplayers(this, 25000, org, havocbot_middlepoint_radius);
+		havocbot_goalrating_items(this, 25000, org, havocbot_middlepoint_radius);
+		havocbot_goalrating_items(this, 18000, this.origin, 10000);
 
 		navigation_goalrating_end(this);
 

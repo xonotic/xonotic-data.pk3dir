@@ -52,8 +52,6 @@ float CampaignFile_Load(int offset, float n)
 		a = ""; \
 	else \
 		++i
-// What you're seeing here is what people will do when your compiler supports
-// C-style macros but no line continuations.
 
 				i = -1; // starts at -1 so I don't need postincrement; that is, i points to BEFORE the current arg!
 				CAMPAIGN_GETARG; campaign_gametype[campaign_entries] = strzone(a);

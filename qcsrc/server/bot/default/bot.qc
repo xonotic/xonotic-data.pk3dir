@@ -123,6 +123,9 @@ void bot_think(entity this)
 	// if dead, just wait until we can respawn
 	if (IS_DEAD(this))
 	{
+		if (bot_waypoint_queue_owner == this)
+			bot_waypoint_queue_owner = NULL;
+		this.aistatus = 0;
 		CS(this).movement = '0 0 0';
 		if (this.deadflag == DEAD_DEAD)
 		{
@@ -238,7 +241,7 @@ void bot_setnameandstuff(entity this)
 
 	this.bot_config_loaded = true;
 
-	// this is really only a default, JoinBestTeam is called later
+	// this is really only a default, TeamBalance_JoinBestTeam is called later
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
 	this.bot_preferredcolors = this.clientcolors;
 
@@ -431,7 +434,7 @@ void bot_clientconnect(entity this)
 	else if(this.bot_forced_team==4)
 		this.team = NUM_TEAM_4;
 	else
-		TeamBalance_JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 
 	havocbot_setupbot(this);
 }

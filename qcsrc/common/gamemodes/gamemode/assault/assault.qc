@@ -430,9 +430,9 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		// Find and rate waypoints around it
 		found = false;
 		entity best = NULL;
-		float bestvalue = 99999999999;
+		float bestvalue = FLOAT_MAX;
 		entity des = it;
-		for(float radius = 0; radius < 1500 && !found; radius += 500)
+		for (float radius = 500; radius <= 1500 && !found; radius += 500)
 		{
 			FOREACH_ENTITY_RADIUS(p, radius, it.classname == "waypoint" && !(it.wpflags & WAYPOINTFLAG_GENERATED),
 			{
@@ -493,10 +493,11 @@ void havocbot_role_ast_offense(entity this)
 
 	if (navigation_goalrating_timeout(this))
 	{
+		// role: offense
 		navigation_goalrating_start(this);
-		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 650);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 650);
 		havocbot_goalrating_ast_targets(this, 20000);
-		havocbot_goalrating_items(this, 15000, this.origin, 10000);
+		havocbot_goalrating_items(this, 30000, this.origin, 10000);
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);
@@ -527,10 +528,11 @@ void havocbot_role_ast_defense(entity this)
 
 	if (navigation_goalrating_timeout(this))
 	{
+		// role: defense
 		navigation_goalrating_start(this);
-		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 3000);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 3000);
 		havocbot_goalrating_ast_targets(this, 20000);
-		havocbot_goalrating_items(this, 15000, this.origin, 10000);
+		havocbot_goalrating_items(this, 30000, this.origin, 10000);
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);
@@ -543,12 +545,10 @@ void havocbot_role_ast_setrole(entity this, float role)
 	{
 		case HAVOCBOT_AST_ROLE_DEFENSE:
 			this.havocbot_role = havocbot_role_ast_defense;
-			this.havocbot_role_flags = HAVOCBOT_AST_ROLE_DEFENSE;
 			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_AST_ROLE_OFFENSE:
 			this.havocbot_role = havocbot_role_ast_offense;
-			this.havocbot_role_flags = HAVOCBOT_AST_ROLE_OFFENSE;
 			this.havocbot_role_timeout = 0;
 			break;
 	}

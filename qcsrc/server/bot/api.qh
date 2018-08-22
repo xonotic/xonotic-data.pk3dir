@@ -90,7 +90,7 @@ float havocbot_symmetry_origin_order;
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
-void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_set(entity this, entity dropper);
 void navigation_dynamicgoal_unset(entity this);
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
 void navigation_goalrating_end(entity this);
