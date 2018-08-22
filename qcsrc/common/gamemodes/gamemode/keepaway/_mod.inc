@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/gamemodes/gamemode/keepaway/keepaway.qc>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/keepaway/sv_keepaway.qc>
+#endif

@@ -103,11 +103,9 @@ void KillPlayerForTeamChange(entity player);
 
 enum
 {
-	TEAM_CHANGE_CONNECT = 1,
 	TEAM_CHANGE_AUTO = 2,
 	TEAM_CHANGE_MANUAL = 3,
-	TEAM_CHANGE_SPECTATOR = 4,
-	TEAM_CHANGE_AUTO_RELAXED = 99
+	TEAM_CHANGE_SPECTATOR = 4
 };
 
 void LogTeamchange(float player_id, float team_number, int type);
@@ -176,7 +174,7 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
 /// function.
 int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score);
 
-void TeamBalance_JoinBestTeam(entity this, bool force_best_team);
+void TeamBalance_JoinBestTeam(entity this);
 
 /// \brief Describes the result of comparing teams.
 enum

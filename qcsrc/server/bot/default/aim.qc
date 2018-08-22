@@ -154,11 +154,6 @@ bool bot_shouldattack(entity this, entity targ)
 
 void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
 {
-	if(this.flags & FL_INWATER)
-	{
-		this.bot_aimtarg = NULL;
-		return;
-	}
 	this.bot_aimtarg = e1;
 	this.bot_aimlatency = CS(this).ping; // FIXME?  Shouldn't this be in the lag item?
 	//this.bot_aimorigin = v1;
@@ -179,6 +174,8 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 {
 	float dist, delta_t, blend;
 	vector desiredang, diffang;
+
+	this.bot_aimdir_executed = true;
 
 	//dprint("aim ", this.netname, ": old:", vtos(this.v_angle));
 	// make sure v_angle is sane first
@@ -245,6 +242,7 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 		+ this.bot_4th_order_aimfilter * autocvar_bot_ai_aimskill_order_mix_4th
 		+ this.bot_5th_order_aimfilter * autocvar_bot_ai_aimskill_order_mix_5th
 	);
+	desiredang.x = bound(-90, desiredang.x, 90);
 
 	// calculate turn angles
 	diffang = desiredang - this.bot_mouseaim;

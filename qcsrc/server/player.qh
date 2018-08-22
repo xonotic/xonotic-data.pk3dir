@@ -2,7 +2,7 @@
 
 .entity pusher;
 .float pushltime;
-.float istypefrag;
+.bool istypefrag;
 
 .float CopyBody_nextthink;
 .void(entity this) CopyBody_think;

@@ -62,7 +62,7 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float item_respawncounter;
 
-void Item_Show (entity e, float mode);
+void Item_Show (entity e, int mode);
 
 void Item_Respawn (entity this);
 
@@ -107,7 +107,7 @@ float weapon_pickupevalfunc(entity player, entity item);
 float ammo_pickupevalfunc(entity player, entity item);
 float healtharmor_pickupevalfunc(entity player, entity item);
 
-.float is_item;
+.bool is_item;
 .entity itemdef;
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 

@@ -197,7 +197,7 @@ LABEL(skip)
 
 void OnlineBanList_Think(entity this)
 {
-	float argc;
+	int argc;
 	string uri;
 	float i, n;
 

@@ -30,6 +30,7 @@ entity navigation_bestgoal;
 .float goalcurrent_distance_time;
 
 .float goalentity_lock_timeout;
+.bool goalentity_shouldbefrozen;
 
 .entity nearestwaypoint;
 .float nearestwaypointtimeout;
@@ -82,7 +83,7 @@ float bot_waypoint_queue_bestgoalrating;
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
-void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_set(entity this, entity dropper);
 void navigation_dynamicgoal_unset(entity this);
 
 .int nav_submerged_state;
@@ -114,7 +115,7 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
 void navigation_routerating(entity this, entity e, float f, float rangebias);
-void navigation_shortenpath(entity this);
+bool navigation_shortenpath(entity this);
 int navigation_poptouchedgoals(entity this);
 void navigation_goalrating_start(entity this);
 void navigation_goalrating_end(entity this);
