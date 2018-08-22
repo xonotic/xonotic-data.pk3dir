@@ -49,7 +49,7 @@ float damage_gooddamage;
 .float teamkill_soundtime;
 .entity teamkill_soundsource;
 .entity pusher;
-.float istypefrag;
+.bool istypefrag;
 .float taunt_soundtime;
 
 float IsFlying(entity a);
