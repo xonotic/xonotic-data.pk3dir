@@ -1,6 +1,5 @@
-#include "lms.qh"
+#include "sv_lms.qh"
 
-#ifdef SVQC
 #include <common/mutators/mutator/instagib/items.qh>
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
@@ -435,4 +434,3 @@ void lms_Initialize()
 {
 	lms_lowest_lives = 9999;
 }
-#endif

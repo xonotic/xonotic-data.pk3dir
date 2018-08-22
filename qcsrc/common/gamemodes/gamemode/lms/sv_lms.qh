@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef SVQC
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
 .float lms_spectate_warning;
@@ -28,4 +27,3 @@ REGISTER_MUTATOR(lms, false)
 // lives related defs
 float lms_lowest_lives;
 float LMS_NewPlayerLives();
-#endif

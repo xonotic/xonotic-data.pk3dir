@@ -1,7 +1,5 @@
-#include "keepaway.qh"
+#include "sv_keepaway.qh"
 
-// TODO: keepaway
-#ifdef SVQC
 #include <common/effects/all.qh>
 
 .entity ballcarried;
@@ -479,5 +477,3 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 	if(frag_target.ballcarried)
 		ka_DropEvent(frag_target);
 }
-
-#endif

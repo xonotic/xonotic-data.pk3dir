@@ -1,17 +1,14 @@
-#include "race.qh"
+#include "sv_cts.qh"
 
-// TODO: sv_race
-#ifdef SVQC
 #include <server/race.qh>
+#include <server/items.qh>
 
-#define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
-float autocvar_g_race_qualifying_timelimit;
-float autocvar_g_race_qualifying_timelimit_override;
-int autocvar_g_race_teams;
+float autocvar_g_cts_finish_kill_delay;
+bool autocvar_g_cts_selfdamage;
 
 // legacy bot roles
 .float race_checkpoint;
-void havocbot_role_race(entity this)
+void havocbot_role_cts(entity this)
 {
 	if(IS_DEAD(this))
 		return;
@@ -30,7 +27,7 @@ void havocbot_role_race(entity this)
 			{
 				// redirect bot to next goal if it touched the waypoint of an untouchable checkpoint
 				// e.g. checkpoint in front of Stormkeep's warpzone
-				// the same workaround is applied in CTS game mode
+				// the same workaround is applied in Race game mode
 				if (raw_touch_check && vdist(this.origin - it.nearestwaypoint.origin, <, 30))
 				{
 					cp = race_NextCheckpoint(cp);
@@ -47,84 +44,39 @@ void havocbot_role_race(entity this)
 	}
 }
 
-void race_ScoreRules()
+void cts_ScoreRules()
 {
     GameRules_score_enabled(false);
-	GameRules_scoring(race_teams, 0, 0, {
-        if (race_teams) {
-            field_team(ST_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
-        } else if (g_race_qualifying) {
+    GameRules_scoring(0, 0, 0, {
+        if (g_race_qualifying) {
             field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
         } else {
             field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
             field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
             field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
         }
-	});
+    });
 }
 
-void race_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
+void cts_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":race:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
+		GameLogEcho(strcat(":cts:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-float WinningCondition_Race(float fraglimit)
+void KillIndicator_Think(entity this);
+void CTS_ClientKill(entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
 {
-	float wc;
-	float n, c;
-
-	n = 0;
-	c = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), {
-		++n;
-		if(CS(it).race_completed)
-			++c;
-	});
-	if(n && (n == c))
-		return WINNING_YES;
-	wc = WinningCondition_Scores(fraglimit, 0);
-
-	// ALWAYS initiate overtime, unless EVERYONE has finished the race!
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	// do NOT support equality when the laps are all raced!
-		return WINNING_STARTSUDDENDEATHOVERTIME;
-	else
-		return WINNING_NEVER;
+    e.killindicator = spawn();
+    e.killindicator.owner = e;
+    setthink(e.killindicator, KillIndicator_Think);
+    e.killindicator.nextthink = time + (e.lip) * 0.05;
+    e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
+    e.killindicator.count = 1; // this is used to indicate that it should be silent
+    e.lip = 0;
 }
 
-float WinningCondition_QualifyingThenRace(float limit)
-{
-	float wc;
-	wc = WinningCondition_Scores(limit, 0);
-
-	// NEVER initiate overtime
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	{
-		return WINNING_YES;
-	}
-
-	return wc;
-}
-
-MUTATOR_HOOKFUNCTION(rc, ClientKill)
-{
-	if(g_race_qualifying)
-		M_ARGV(1, float) = 0; // killtime
-}
-
-MUTATOR_HOOKFUNCTION(rc, AbortSpeedrun)
-{
-	entity player = M_ARGV(0, entity);
-
-	if(autocvar_g_allow_checkpoints)
-		race_PreparePlayer(player); // nice try
-}
-
-MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
 	float dt = M_ARGV(1, float);
@@ -135,7 +87,6 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 	player.race_movetime_count += f;
 	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
 
-#ifdef SVQC
 	if(IS_PLAYER(player))
 	{
 		if (player.race_penalty)
@@ -148,7 +99,6 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 			player.disableclientprediction = 2;
 		}
 	}
-#endif
 
 	// force kbd movement for fairness
 	float wishspeed;
@@ -197,7 +147,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(rc, reset_map_global)
+MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 {
 	float s;
 
@@ -213,7 +163,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 			if(!s)
 				it.race_place = 0;
 		}
-		race_EventLog(ftos(it.race_place), it);
+		cts_EventLog(ftos(it.race_place), it);
 	});
 
 	if(g_race_qualifying == 2)
@@ -223,21 +173,21 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 		cvar_set("fraglimit", ftos(race_fraglimit));
 		cvar_set("leadlimit", ftos(race_leadlimit));
 		cvar_set("timelimit", ftos(race_timelimit));
-		race_ScoreRules();
+		cts_ScoreRules();
 	}
 }
 
-MUTATOR_HOOKFUNCTION(rc, ClientConnect)
+MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
 
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 
-	string rr = RACE_RECORD;
-
 	if(IS_REAL_CLIENT(player))
 	{
+		string rr = CTS_RECORD;
+
 		msg_entity = player;
 		race_send_recordtime(MSG_ONE);
 		race_send_speedaward(MSG_ONE);
@@ -256,11 +206,18 @@ MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
+MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(g_race_qualifying)
+	if(autocvar_g_allow_checkpoints)
+		race_PreparePlayer(player); // nice try
+}
+
+MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
+{
+	entity player = M_ARGV(0, entity);
+
 	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
 		player.frags = FRAGS_LMS_LOSER;
 	else
@@ -270,7 +227,7 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 	player.race_checkpoint = -1;
 }
 
-MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(cts, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
@@ -286,7 +243,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
 	player.race_place = 0;
 }
 
-MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
+MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -302,7 +259,7 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(rc, PlayerDies)
+MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
@@ -310,15 +267,15 @@ MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 	race_AbandonRaceCheck(frag_target);
 }
 
-MUTATOR_HOOKFUNCTION(rc, HavocBot_ChooseRole)
+MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)
 {
 	entity bot = M_ARGV(0, entity);
 
-	bot.havocbot_role = havocbot_role_race;
+	bot.havocbot_role = havocbot_role_cts;
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
+MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -344,7 +301,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 		}
 		if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
 		{
-			string rr = RACE_RECORD;
+			string rr = CTS_RECORD;
 			race_send_speedaward(MSG_ALL);
 			speedaward_lastsent = speedaward_speed;
 			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
@@ -360,26 +317,43 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
+MUTATOR_HOOKFUNCTION(cts, ForbidThrowCurrentWeapon)
 {
-	if(g_race_qualifying)
-		return true; // in qualifying, you don't lose score by observing
-}
-
-MUTATOR_HOOKFUNCTION(rc, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
-{
-	M_ARGV(0, float) = race_teams;
+	// no weapon dropping in CTS
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
+MUTATOR_HOOKFUNCTION(cts, FilterItem)
 {
-	// announce remaining frags if not in qualifying mode
-	if(!g_race_qualifying)
+	entity item = M_ARGV(0, entity);
+
+	if (Item_IsLoot(item))
+	{
 		return true;
+	}
 }
 
-MUTATOR_HOOKFUNCTION(rc, GetRecords)
+MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+
+	if(frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id)
+	if(!autocvar_g_cts_selfdamage)
+	{
+		frag_damage = 0;
+		M_ARGV(4, float) = frag_damage;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(cts, ForbidPlayerScore_Clear)
+{
+	return true; // in CTS, you don't lose score by observing
+}
+
+MUTATOR_HOOKFUNCTION(cts, GetRecords)
 {
 	int record_page = M_ARGV(0, int);
 	string ret_string = M_ARGV(1, string);
@@ -401,93 +375,56 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 	M_ARGV(1, string) = ret_string;
 }
 
-MUTATOR_HOOKFUNCTION(rc, HideTeamNagger)
+void ClientKill_Now(entity this);
+MUTATOR_HOOKFUNCTION(cts, ClientKill)
 {
-	return true; // doesn't work so well
+    entity player = M_ARGV(0, entity);
+
+	M_ARGV(1, float) = 0; // kill delay
+
+	if(player.killindicator && player.killindicator.count == 1) // player.killindicator.count == 1 means that the kill indicator was spawned by CTS_ClientKill
+	{
+		delete(player.killindicator);
+		player.killindicator = NULL;
+
+		ClientKill_Now(player); // allow instant kill in this case
+		return;
+	}
 }
 
-MUTATOR_HOOKFUNCTION(rc, FixClientCvars)
+MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(autocvar_g_cts_finish_kill_delay)
+		CTS_ClientKill(player);
+}
+
+MUTATOR_HOOKFUNCTION(cts, HideTeamNagger)
+{
+	return true; // doesn't work so well (but isn't cts a teamless mode?)
+}
+
+MUTATOR_HOOKFUNCTION(cts, FixClientCvars)
 {
 	entity player = M_ARGV(0, entity);
 
 	stuffcmd(player, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 }
 
-MUTATOR_HOOKFUNCTION(rc, CheckRules_World)
+MUTATOR_HOOKFUNCTION(cts, WantWeapon)
 {
-	float checkrules_timelimit = M_ARGV(1, float);
-	float checkrules_fraglimit = M_ARGV(2, float);
-
-	if(checkrules_timelimit >= 0)
-	{
-		if(!g_race_qualifying)
-		{
-			M_ARGV(0, float) = WinningCondition_Race(checkrules_fraglimit);
-			return true;
-		}
-		else if(g_race_qualifying == 2)
-		{
-			M_ARGV(0, float) = WinningCondition_QualifyingThenRace(checkrules_fraglimit);
-			return true;
-		}
-	}
+	M_ARGV(1, float) = (M_ARGV(0, entity) == WEP_SHOTGUN); // want weapon = weapon info
+	M_ARGV(3, bool) = true; // want mutator blocked
+	return true;
 }
 
-MUTATOR_HOOKFUNCTION(rc, ReadLevelCvars)
+MUTATOR_HOOKFUNCTION(cts, ForbidDropCurrentWeapon)
 {
-	if(g_race_qualifying == 2)
-		warmup_stage = 0;
+	return true;
 }
 
-void race_Initialize()
+void cts_Initialize()
 {
-	race_ScoreRules();
-	if(g_race_qualifying == 2)
-		warmup_stage = 0;
+	cts_ScoreRules();
 }
-
-void rc_SetLimits()
-{
-	int fraglimit_override, leadlimit_override;
-	float timelimit_override, qualifying_override;
-
-	if(autocvar_g_race_teams)
-	{
-		GameRules_teams(true);
-		race_teams = BITS(bound(2, autocvar_g_race_teams, 4));
-	}
-	else
-		race_teams = 0;
-
-	qualifying_override = autocvar_g_race_qualifying_timelimit_override;
-	fraglimit_override = autocvar_g_race_laps_limit;
-	leadlimit_override = 0; // currently not supported by race
-	timelimit_override = autocvar_timelimit_override;
-
-	float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
-
-	if(autocvar_g_campaign)
-	{
-		g_race_qualifying = 1;
-		independent_players = 1;
-	}
-	else if(want_qualifying)
-	{
-		g_race_qualifying = 2;
-		independent_players = 1;
-		race_fraglimit = (fraglimit_override >= 0) ? fraglimit_override : autocvar_fraglimit;
-		race_leadlimit = (leadlimit_override >= 0) ? leadlimit_override : autocvar_leadlimit;
-		race_timelimit = (timelimit_override >= 0) ? timelimit_override : autocvar_timelimit;
-		qualifying_override = (qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit;
-		fraglimit_override = 0;
-		leadlimit_override = 0;
-		timelimit_override = qualifying_override;
-	}
-	else
-		g_race_qualifying = 0;
-    GameRules_limit_score(fraglimit_override);
-    GameRules_limit_lead(leadlimit_override);
-    GameRules_limit_time(timelimit_override);
-    GameRules_limit_time_qualifying(qualifying_override);
-}
-#endif

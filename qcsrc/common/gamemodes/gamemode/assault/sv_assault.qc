@@ -1,7 +1,5 @@
-#include "assault.qh"
+#include "sv_assault.qh"
 
-// TODO: split into sv_assault
-#ifdef SVQC
 .entity sprite;
 #define AS_ROUND_DELAY 5
 
@@ -645,4 +643,3 @@ MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 	// readyrestart not supported (yet)
 	return true;
 }
-#endif

@@ -1,8 +1,6 @@
-#include "tdm.qh"
+#include "sv_tdm.qh"
 
-// TODO: sv_tdm
 // TODO? rename to teamdeathmatch
-#ifdef SVQC
 int autocvar_g_tdm_teams;
 int autocvar_g_tdm_teams_override;
 
@@ -63,4 +61,3 @@ MUTATOR_HOOKFUNCTION(tdm, Scores_CountFragsRemaining)
 	// announce remaining frags
 	return true;
 }
-#endif

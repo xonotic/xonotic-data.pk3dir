@@ -1,7 +1,5 @@
-#include "domination.qh"
+#include "sv_domination.qh"
 
-// TODO: sv_domination
-#ifdef SVQC
 #include <server/teamplay.qh>
 
 bool g_domination;
@@ -670,4 +668,3 @@ void dom_Initialize()
 	g_domination = true;
 	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
-#endif

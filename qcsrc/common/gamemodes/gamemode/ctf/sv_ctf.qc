@@ -1,7 +1,5 @@
-#include "ctf.qh"
+#include "sv_ctf.qh"
 
-// TODO: split into sv_ctf
-#ifdef SVQC
 #include <common/effects/all.qh>
 #include <common/vehicles/all.qh>
 #include <server/teamplay.qh>
@@ -2810,4 +2808,3 @@ void ctf_Initialize()
 
 	InitializeEntity(NULL, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }
-#endif
