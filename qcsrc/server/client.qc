@@ -519,7 +519,7 @@ void PutPlayerInServer(entity this)
 	accuracy_resend(this);
 
 	if (this.team < 0)
-		TeamBalance_JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -913,7 +913,7 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if(this.killindicator_teamchange == -1)
 	{
-		TeamBalance_JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 	}
 	else if(this.killindicator_teamchange == -2)
 	{
@@ -1263,6 +1263,10 @@ void ClientConnect(entity this)
 	TRANSMUTE(Client, this);
 	CS(this).version_nagtime = time + 10 + random() * 10;
 
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
+
+	bot_clientconnect(this);
+
 	// identify the right forced team
 	if (autocvar_g_campaign)
 	{
@@ -1296,11 +1300,6 @@ void ClientConnect(entity this)
 	}
 	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-	int playerid_save = this.playerid;
-	this.playerid = 0; // silent
-	TeamBalance_JoinBestTeam(this, false); // if the team number is valid, keep it
-	this.playerid = playerid_save;
-
 	TRANSMUTE(Observer, this);
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
@@ -1314,14 +1313,7 @@ void ClientConnect(entity this)
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
 
-	LogTeamchange(this.playerid, this.team, TEAM_CHANGE_CONNECT);
-
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
-
-	if(teamplay && IS_PLAYER(this))
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_CONNECT_TEAM), this.netname);
-	else
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -2121,7 +2113,7 @@ void Join(entity this)
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		TeamBalance_JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;

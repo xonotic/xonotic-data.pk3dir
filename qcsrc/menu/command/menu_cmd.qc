@@ -49,6 +49,7 @@ void GameCommand(string theCommand)
 		LOG_INFO(_("  sync - reloads all cvars on the current menu page"));
 		LOG_INFO(_("  directmenu ITEM - select a menu item as main item"));
 		LOG_INFO(_("  dumptree - dump the state of the menu as a tree to the console"));
+		LOG_INFO("\n");
 
 		LOG_INFO("Generic commands shared by all programs:");
 		GenericCommand_macro_help();
