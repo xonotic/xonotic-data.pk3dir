@@ -609,7 +609,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 {
-    instance.health				= 0;
+	SetResourceAmountExplicit(instance, RESOURCE_HEALTH, 0);
     instance.event_damage		= func_null;
     instance.solid				= SOLID_CORPSE;
     instance.takedamage			= DAMAGE_NO;

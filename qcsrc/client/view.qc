@@ -17,6 +17,7 @@
 #include <common/anim.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/net_notice.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
 #include <common/gamemodes/_mod.qh>
@@ -31,6 +32,7 @@
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
 #include <common/viewloc.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
@@ -400,7 +402,6 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
-void Porto_Draw(entity this);
 STATIC_INIT(Porto)
 {
 	entity e = new_pure(porto);
@@ -490,9 +491,8 @@ vector GetCurrentFov(float fov)
 	if(zoomfactor < 1 || zoomfactor > 30)
 		zoomfactor = 2.5;
 	zoomspeed = autocvar_cl_zoomspeed;
-	if(zoomspeed >= 0)
-	if(zoomspeed < 0.5 || zoomspeed > 16)
-			zoomspeed = 3.5;
+	if (zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
+		zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
 
@@ -525,7 +525,11 @@ vector GetCurrentFov(float fov)
 
 	if(zoomdir) { zoomin_effect = 0; }
 
-	if(camera_active)
+	if (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2)
+	{
+		current_viewzoom = 1;
+	}
+	else if (camera_active)
 	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
 	}
@@ -569,10 +573,10 @@ vector GetCurrentFov(float fov)
 
 	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
 	{
-		if(intermission) { curspeed = 0; }
+		if (intermission || (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2))
+			curspeed = 0;
 		else
 		{
-
 			makevectors(view_angles);
 			v = pmove_vel;
 			if(csqcplayer)
@@ -768,8 +772,6 @@ float TrueAimCheck(entity wepent)
 	return SHOTTYPE_HITWORLD;
 }
 
-void PostInit();
-void CSQC_Demo_Camera();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
@@ -1561,15 +1563,12 @@ float oldr_novis;
 float oldr_useportalculling;
 float oldr_useinfinitefarclip;
 
-void cl_notice_run();
-
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
-void WaypointSprite_Load();
 void CSQC_UpdateView(entity this, float w, float h)
 {
-    TC(int, w); TC(int, h);
+	TC(int, w); TC(int, h);
 	entity e;
 	float fov;
 	float f;
@@ -2061,7 +2060,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	IL_EACH(g_drawables, it.draw, it.draw(it));
 
-	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
+	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS); // TODO: .health is used in cl_deathfade (a feature we have turned off currently)
 	renderscene();
 
 	// now switch to 2D drawing mode by calling a 2D drawing function

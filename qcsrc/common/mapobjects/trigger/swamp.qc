@@ -18,6 +18,7 @@
 
 .float swamp_interval;	//Hurt players in swamp with this interval
 .float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
+.float swamp_lifetime;  // holds the points remaining until slug dies (not quite health!) 
 .entity swampslug;
 
 #ifdef SVQC
@@ -40,10 +41,10 @@ void swampslug_think(entity this);
 void swampslug_think(entity this)
 {
 	//Slowly kill the slug
-	this.health = this.health - 1;
+	this.swamp_lifetime -= 1;
 
 	//Slug dead? then remove curses.
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		this.owner.in_swamp = 0;
 		delete(this);
@@ -76,7 +77,7 @@ void swamp_touch(entity this, entity toucher)
 		// If not attach one.
 		//centerprint(toucher,"Entering swamp!\n");
 		toucher.swampslug = spawn();
-		toucher.swampslug.health = 2;
+		toucher.swampslug.swamp_lifetime = 2;
 		setthink(toucher.swampslug, swampslug_think);
 		toucher.swampslug.nextthink = time;
 		toucher.swampslug.owner = toucher;
@@ -90,7 +91,7 @@ void swamp_touch(entity this, entity toucher)
 	//toucher.in_swamp = 1;
 
 	//Revitalize players swampslug
-	toucher.swampslug.health = 2;
+	toucher.swampslug.swamp_lifetime = 2;
 }
 
 REGISTER_NET_LINKED(ENT_CLIENT_SWAMP)

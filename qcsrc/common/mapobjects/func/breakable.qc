@@ -83,7 +83,7 @@ void func_breakable_colormod(entity this)
 	float h;
 	if (!(this.spawnflags & BREAKABLE_INDICATE_DAMAGE))
 		return;
-	h = this.health / this.max_health;
+	h = GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health;
 	if(h < 0.25)
 		this.colormod = '1 0 0';
 	else if(h <= 0.75)
@@ -129,7 +129,7 @@ void func_breakable_look_restore(entity this)
 
 void func_breakable_behave_destroyed(entity this)
 {
-	this.health = this.max_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 	this.takedamage = DAMAGE_NO;
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
@@ -141,6 +141,11 @@ void func_breakable_behave_destroyed(entity this)
 	func_breakable_colormod(this);
 	if (this.noise1)
 		stopsound (this, CH_TRIGGER_SINGLE);
+
+	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
+	{
+		RemoveHook(it);
+	});
 }
 
 void func_breakable_think(entity this)
@@ -152,11 +157,11 @@ void func_breakable_think(entity this)
 void func_breakable_destroy(entity this, entity actor, entity trigger);
 void func_breakable_behave_restore(entity this)
 {
-	this.health = this.max_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 	if(this.sprite)
 	{
 		WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
-		WaypointSprite_UpdateHealth(this.sprite, this.health);
+		WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	}
 	if(!(this.spawnflags & BREAKABLE_NODAMAGE))
 	{
@@ -200,6 +205,16 @@ void func_breakable_restore(entity this, entity actor, entity trigger)
 
 void func_breakable_restore_self(entity this)
 {
+	// TODO: use a clipgroup for all func_breakables so they don't collide with eachother
+	float oldhit = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_BODY; // we really only care about when players are standing inside, obey the mapper in other cases!
+	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NORMAL, this);
+	this.dphitcontentsmask = oldhit;
+	if(trace_startsolid || trace_fraction < 1)
+	{
+		this.nextthink = time + 5; // retry every 5 seconds until the area becomes clear
+		return;
+	}
 	func_breakable_restore(this, NULL, NULL);
 }
 
@@ -257,15 +272,15 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		if(attacker.team == this.team)
 			return;
 	this.pain_finished = time;
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if(this.sprite)
 	{
 		WaypointSprite_Ping(this.sprite);
-		WaypointSprite_UpdateHealth(this.sprite, this.health);
+		WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	}
 	func_breakable_colormod(this);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		debrisforce = force;
 
@@ -300,9 +315,9 @@ void func_breakable_reset(entity this)
 spawnfunc(func_breakable)
 {
 	float n, i;
-	if(!this.health)
-		this.health = 100;
-	this.max_health = this.health;
+	if(!GetResourceAmount(this, RESOURCE_HEALTH))
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 100);
+	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
 
 	// yes, I know, MOVETYPE_NONE is not available here, not that one would want it here anyway
 	if(!this.debrismovetype) this.debrismovetype = MOVETYPE_BOUNCE;

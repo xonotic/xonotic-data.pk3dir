@@ -55,7 +55,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_GameReport_AddTeam(float t)
+void PlayerStats_GameReport_AddTeam(int t)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
@@ -157,7 +157,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	strfree(p.playerstats_id);
 }
 
-void PlayerStats_GameReport(float finished)
+void PlayerStats_GameReport(bool finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 

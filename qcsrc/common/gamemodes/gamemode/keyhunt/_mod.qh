@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/gamemodes/gamemode/keyhunt/keyhunt.qh>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/keyhunt/sv_keyhunt.qh>
+#endif

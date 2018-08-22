@@ -31,8 +31,6 @@
 
 #define MAX_IPBAN_URIS (URI_GET_IPBAN_END - URI_GET_IPBAN + 1)
 
-float Ban_Insert(string ip, float bantime, string reason, float dosync);
-
 void OnlineBanList_SendBan(string ip, float bantime, string reason)
 {
 	string uri;
@@ -199,7 +197,7 @@ LABEL(skip)
 
 void OnlineBanList_Think(entity this)
 {
-	float argc;
+	int argc;
 	string uri;
 	float i, n;
 

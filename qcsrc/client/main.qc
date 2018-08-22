@@ -8,11 +8,13 @@
 #include <common/effects/all.qh>
 #include <common/effects/all.inc>
 #include "hud/_mod.qh"
+#include "commands/cl_cmd.qh"
 #include "mapvoting.qh"
 #include <client/mutators/_mod.qh>
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
+#include "view.qh"
 #include <common/t_items.qh>
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
@@ -90,7 +92,6 @@ void LoadMenuSkinValues()
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void ConsoleCommand_macro_init();
 void CSQC_Init()
 {
 	prvm_language = strzone(cvar_string("prvm_language"));
@@ -227,9 +228,9 @@ void Shutdown()
 }
 
 .float has_team;
-float SetTeam(entity o, int Team)
+bool SetTeam(entity o, int Team)
 {
-    TC(int, Team);
+	TC(int, Team);
 	devassert_once(Team);
 	entity tm;
 	if(teamplay)
@@ -342,7 +343,6 @@ void Playerchecker_Think(entity this)
 	this.nextthink = time + 0.2;
 }
 
-void TrueAim_Init();
 void PostInit()
 {
 	entity playerchecker = new_pure(playerchecker);
@@ -387,8 +387,6 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-
-void Ent_Remove(entity this);
 
 void Ent_RemovePlayerScore(entity this)
 {
@@ -579,14 +577,14 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	{
 		for(j = 0; j < maxclients; ++j)
 			if(playerslots[j])
-				playerslots[j].ready = 1;
+				playerslots[j].ready = true;
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
 			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])
-						playerslots[j].ready = 0;
+						playerslots[j].ready = false;
 		}
 	}
 
@@ -607,7 +605,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 	if (sf & 1) {
 		for (int j = 0; j < maxclients; ++j) {
 			if (playerslots[j]) {
-				playerslots[j].eliminated = 1;
+				playerslots[j].eliminated = true;
 			}
 		}
 		for (int i = 1; i <= maxclients; i += 8) {
@@ -617,7 +615,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 				if (f & BIT(b)) continue;
 				int j = i - 1 + b;
 				if (playerslots[j]) {
-					playerslots[j].eliminated = 0;
+					playerslots[j].eliminated = false;
 				}
 			}
 		}
@@ -946,7 +944,6 @@ void Fog_Force()
 		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
 }
 
-void Gamemode_Init();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
@@ -1219,7 +1216,8 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 
 NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
-	complain_weapon = ReadByte();
+	int weapon_id = ReadByte();
+	complain_weapon = Weapons_from(weapon_id);
 	complain_weapon_type = ReadByte();
 	return = true;
 
@@ -1228,9 +1226,9 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 
 	switch(complain_weapon_type)
 	{
-		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, complain_weapon); break;
-		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, complain_weapon); break;
-		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, complain_weapon); break;
+		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, weapon_id); break;
+		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, weapon_id); break;
+		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, weapon_id); break;
 	}
 }
 

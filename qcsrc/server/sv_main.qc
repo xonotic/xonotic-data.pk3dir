@@ -11,6 +11,7 @@
 
 #include <server/mutators/_mod.qh>
 #include "weapons/csqcprojectile.qh"
+#include <server/compat/quake3.qh>
 
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
@@ -167,7 +168,6 @@ Called before each frame by the server
 bool game_delay_last;
 
 bool autocvar_sv_autopause = false;
-float RedirectionThink();
 void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
@@ -248,7 +248,6 @@ void StartFrame()
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
-bool DoesQ3ARemoveThisEntity(entity this);
 
 /**
  * Evaluate an expression of the form: [+ | -]? [var[op]val | [op]var | val | var] ...

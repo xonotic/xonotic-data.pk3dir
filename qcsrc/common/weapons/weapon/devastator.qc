@@ -289,20 +289,20 @@ void W_Devastator_Touch(entity this, entity toucher)
 
 void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode_think);
 }
 
-void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
+void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
@@ -324,7 +324,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR(devastator, damageforcescale);
-	missile.health = WEP_CVAR(devastator, health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(devastator, health));
 	missile.event_damage = W_Devastator_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -342,6 +342,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
+	missile.rl_detonate_later = (fire & 2); // allow instant detonation
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
@@ -358,6 +359,11 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+
+	if (time >= missile.nextthink)
+	{
+		getthink(missile)(missile);
+	}
 }
 
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
@@ -431,7 +437,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
         // but don't fire a new shot at the same time!
         if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-        if((skill > 6.5) && (selfdamage > actor.health))
+        if((skill > 6.5) && (selfdamage > GetResourceAmount(actor, RESOURCE_HEALTH)))
             PHYS_INPUT_BUTTON_ATCK2(actor) = false;
         //if(PHYS_INPUT_BUTTON_ATCK2(actor) == true)
         //	dprint(ftos(desirabledamage),"\n");
@@ -449,7 +455,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
             if(actor.(weaponentity).rl_release || WEP_CVAR(devastator, guidestop))
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(devastator, refire)))
             {
-                W_Devastator_Attack(thiswep, actor, weaponentity);
+                W_Devastator_Attack(thiswep, actor, weaponentity, fire);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
                 actor.(weaponentity).rl_release = 0;
             }
