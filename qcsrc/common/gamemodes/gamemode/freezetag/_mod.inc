@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/gamemodes/gamemode/freezetag/freezetag.qc>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/freezetag/sv_freezetag.qc>
+#endif
