@@ -312,8 +312,9 @@ string sandbox_ObjectPort_Save(entity e, bool database)
 entity sandbox_ObjectPort_Load(entity this, string s, float database)
 {
 	// load object properties, and spawn a new object with them
-	float n, i;
+	int n, i;
 	entity e = NULL, parent = NULL;
+	string arg = string_null;
 
 	// separate objects between the ; symbols
 	n = tokenizebyseparator(s, "; ");
@@ -323,9 +324,10 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 	// now separate and apply the properties of each object
 	for(i = 0; i < n; ++i)
 	{
-		float argv_num;
+		#define SANDBOX_GETARG arg = argv(++argv_num);
+		int argv_num = -1; // starts at -1 so I don't need postincrement
+
 		string tagname = string_null;
-		argv_num = 0;
 		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(this, database);
 
@@ -333,38 +335,40 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 		if(i)
 		{
 			// properties stored only for child objects
-			if(argv(argv_num) != "")	tagname = argv(argv_num);	else tagname = string_null;	++argv_num;
+			SANDBOX_GETARG; tagname = (arg != "") ? arg : string_null;
 		}
 		else
 		{
 			// properties stored only for parent objects
 			if(database)
 			{
-				setorigin(e, stov(argv(argv_num)));	++argv_num;
-				e.angles = stov(argv(argv_num));	++argv_num;
+				SANDBOX_GETARG; setorigin(e, stov(arg));
+				SANDBOX_GETARG; e.angles = stov(arg);
 			}
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		_setmodel(e, argv(argv_num));	++argv_num;
-		e.skin = stof(argv(argv_num));	++argv_num;
-		e.alpha = stof(argv(argv_num));	++argv_num;
-		e.colormod = stov(argv(argv_num));	++argv_num;
-		e.glowmod = stov(argv(argv_num));	++argv_num;
-		e.frame = stof(argv(argv_num));	++argv_num;
-		sandbox_ObjectEdit_Scale(e, stof(argv(argv_num)));	++argv_num;
-		e.solid = e.old_solid = stof(argv(argv_num));	++argv_num;
-		e.old_movetype = stof(argv(argv_num));	++argv_num;
+		SANDBOX_GETARG; _setmodel(e, arg);
+		SANDBOX_GETARG; e.skin = stof(arg);
+		SANDBOX_GETARG; e.alpha = stof(arg);
+		SANDBOX_GETARG; e.colormod = stov(arg);
+		SANDBOX_GETARG; e.glowmod = stov(arg);
+		SANDBOX_GETARG; e.frame = stof(arg);
+		SANDBOX_GETARG; sandbox_ObjectEdit_Scale(e, stof(arg));
+		SANDBOX_GETARG; e.solid = e.old_solid = stof(arg);
+		SANDBOX_GETARG; e.old_movetype = stof(arg);
 		set_movetype(e, e.old_movetype);
-		e.damageforcescale = stof(argv(argv_num));	++argv_num;
-		strfree(e.material);	if(argv(argv_num) != "")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
+		SANDBOX_GETARG; e.damageforcescale = stof(arg);
+		strfree(e.material);
+		SANDBOX_GETARG; e.material = (arg != "") ? strzone(arg) : string_null;
 		if(database)
 		{
 			// properties stored only for the database
-			strfree(e.crypto_idfp);	if(argv(argv_num) != "")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
-			strcpy(e.netname, argv(argv_num));	++argv_num;
-			strcpy(e.message, argv(argv_num));	++argv_num;
-			strcpy(e.message2, argv(argv_num));	++argv_num;
+			strfree(e.crypto_idfp);
+			SANDBOX_GETARG; e.crypto_idfp = (arg != "") ? strzone(arg) : string_null;
+			SANDBOX_GETARG; strcpy(e.netname, arg);
+			SANDBOX_GETARG; strcpy(e.message, arg);
+			SANDBOX_GETARG; strcpy(e.message2, arg);
 		}
 
 		// attach last

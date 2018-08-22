@@ -53,10 +53,9 @@ void tdm_DelayedInit(entity this)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(tdm, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(tdm, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "tdm_team";
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(tdm, Scores_CountFragsRemaining)

@@ -76,7 +76,7 @@ float VerifyClientNumber(float tmp_number)
 	else return true;
 }
 
-entity GetIndexedEntity(float argc, float start_index)
+entity GetIndexedEntity(int argc, float start_index)
 {
 	entity selection;
 	float tmp_number, index;
@@ -280,7 +280,7 @@ void timeout_handler_think(entity this)
 //  Common commands used in both sv_cmd.qc and cmd.qc
 // ===================================================
 
-void CommonCommand_cvar_changes(float request, entity caller)
+void CommonCommand_cvar_changes(int request, entity caller)
 {
 	switch (request)
 	{
@@ -301,7 +301,7 @@ void CommonCommand_cvar_changes(float request, entity caller)
 	}
 }
 
-void CommonCommand_cvar_purechanges(float request, entity caller)
+void CommonCommand_cvar_purechanges(int request, entity caller)
 {
 	switch (request)
 	{
@@ -469,7 +469,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 	}
 }
 
-void CommonCommand_info(float request, entity caller, float argc)
+void CommonCommand_info(int request, entity caller, int argc)
 {
 	switch (request)
 	{
@@ -493,7 +493,7 @@ void CommonCommand_info(float request, entity caller, float argc)
 	}
 }
 
-void CommonCommand_ladder(float request, entity caller)
+void CommonCommand_ladder(int request, entity caller)
 {
 	switch (request)
 	{
@@ -513,7 +513,7 @@ void CommonCommand_ladder(float request, entity caller)
 	}
 }
 
-void CommonCommand_lsmaps(float request, entity caller)
+void CommonCommand_lsmaps(int request, entity caller)
 {
 	switch (request)
 	{
@@ -533,7 +533,7 @@ void CommonCommand_lsmaps(float request, entity caller)
 	}
 }
 
-void CommonCommand_printmaplist(float request, entity caller)
+void CommonCommand_printmaplist(int request, entity caller)
 {
 	switch (request)
 	{
@@ -553,7 +553,7 @@ void CommonCommand_printmaplist(float request, entity caller)
 	}
 }
 
-void CommonCommand_rankings(float request, entity caller)
+void CommonCommand_rankings(int request, entity caller)
 {
 	switch (request)
 	{
@@ -573,7 +573,7 @@ void CommonCommand_rankings(float request, entity caller)
 	}
 }
 
-void CommonCommand_records(float request, entity caller)
+void CommonCommand_records(int request, entity caller)
 {
 	switch (request)
 	{
@@ -601,7 +601,7 @@ void CommonCommand_records(float request, entity caller)
 	}
 }
 
-void CommonCommand_teamstatus(float request, entity caller)
+void CommonCommand_teamstatus(int request, entity caller)
 {
 	switch (request)
 	{
@@ -621,7 +621,7 @@ void CommonCommand_teamstatus(float request, entity caller)
 	}
 }
 
-void CommonCommand_time(float request, entity caller)
+void CommonCommand_time(int request, entity caller)
 {
 	switch (request)
 	{
@@ -632,8 +632,8 @@ void CommonCommand_time(float request, entity caller)
 			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME))));
 			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES))));
 			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME))));
-			print_to(caller, strcat("localtime = ", strftime(true, "%a %b %e %H:%M:%S %Z %Y")));
-			print_to(caller, strcat("gmtime = ", strftime(false, "%a %b %e %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("localtime = ", strftime(true, "%a %b %d %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("gmtime = ", strftime(false, "%a %b %d %H:%M:%S %Z %Y")));
 			return;
 		}
 
@@ -647,7 +647,7 @@ void CommonCommand_time(float request, entity caller)
 	}
 }
 
-void CommonCommand_timein(float request, entity caller)
+void CommonCommand_timein(int request, entity caller)
 {
 	switch (request)
 	{
@@ -702,7 +702,7 @@ void CommonCommand_timein(float request, entity caller)
 	}
 }
 
-void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMAND IS TERRIBLE.
+void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND IS TERRIBLE.
 {
 	switch (request)
 	{
@@ -771,7 +771,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 	}
 }
 
-void CommonCommand_who(float request, entity caller, float argc)
+void CommonCommand_who(int request, entity caller, int argc)
 {
 	switch (request)
 	{
@@ -836,7 +836,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void CommonCommand_(float request, entity caller)
+void CommonCommand_(int request, entity caller)
 {
     switch(request)
     {

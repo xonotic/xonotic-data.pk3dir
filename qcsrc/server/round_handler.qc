@@ -86,7 +86,7 @@ void round_handler_FirstThink(entity this)
 	this.nextthink = max(time, game_starttime);
 }
 
-void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func)
+void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, void() roundStart_func)
 {
 	if (round_handler)
 	{

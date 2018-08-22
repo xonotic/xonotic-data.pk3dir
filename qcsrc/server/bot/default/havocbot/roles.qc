@@ -73,7 +73,7 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 	float enemy_distance = FLOAT_MAX;
 	float dist;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !(IS_DEAD(it) || STAT(FROZEN, it)),
 	{
 		if (it.team == this.team)
 		{
@@ -113,7 +113,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 {
 	float rating;
 	vector o;
-	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
+	ratingscale = ratingscale * 0.0001;
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
@@ -121,8 +121,6 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		// NOTE: this code assumes each bot rates items in a different frame
 		if(it.bot_ratingscale_time == time && ratingscale < it.bot_ratingscale)
 			continue;
-		it.bot_ratingscale_time = time;
-		it.bot_ratingscale = ratingscale;
 
 		if(!it.solid)
 		{
@@ -175,6 +173,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		if(!havocbot_goalrating_item_pickable_check_players(this, org, it, o))
 			continue;
 
+		it.bot_ratingscale_time = time;
+		it.bot_ratingscale = ratingscale;
 		rating = it.bot_pickupevalfunc(this, it);
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
@@ -191,7 +191,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 	if(this.waterlevel>WATERLEVEL_WETFEET)
 		return;
 
-	ratingscale = ratingscale * 0.00005; // enemies are rated around 20000 already
+	ratingscale = ratingscale * 0.0001;
 
 	float t;
 	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), {
@@ -235,7 +235,7 @@ void havocbot_role_generic(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 

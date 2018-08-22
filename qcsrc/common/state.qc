@@ -52,8 +52,6 @@ void ClientState_attach(entity this)
 	entcs_attach(this);
 	anticheat_init(this);
 	W_HitPlotOpen(this);
-
-	bot_clientconnect(this);
 }
 
 void bot_clientdisconnect(entity this);

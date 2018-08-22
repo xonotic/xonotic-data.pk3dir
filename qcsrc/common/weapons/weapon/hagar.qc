@@ -255,7 +255,9 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	// loadable hagar secondary attack, must always run each frame
-	if(!weapon_prepareattack_check(thiswep, actor, weaponentity, true, -1))
+	if(time < game_starttime || time < actor.race_penalty || timeout_status == TIMEOUT_ACTIVE)
+		return;
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return;
 
 	bool loaded = actor.(weaponentity).hagar_load >= WEP_CVAR_SEC(hagar, load_max);
