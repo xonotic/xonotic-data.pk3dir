@@ -716,6 +716,8 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 		case "restart":
 		{
+			// add a delay so that vote result can be seen and announcer can be heard
+			// if the vote is accepted
 			vote_parsed_command = strcat("defer 1 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
 
