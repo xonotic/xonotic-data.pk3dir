@@ -159,11 +159,6 @@ void VoteAccept()
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ^1", vote_called_display, "^2 was accepted\n");
 
 	if ((vote_called == VOTE_MASTER) && vote_caller) vote_caller.vote_master = 1;
-	else if (vote_called_command == "restart")
-	{
-		// add a delay so that vote result can be seen and announcer can be heard
-		localcmd(strcat("defer 1 ", vote_called_command, "\n"));
-	}
 	else localcmd(strcat(vote_called_command, "\n"));
 
 	if (vote_caller)   vote_caller.vote_waittime = 0;  // people like your votes, you don't need to wait to vote again
@@ -715,6 +710,14 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			if (!vote_command)  return -1;
 			vote_parsed_command = strcat("nextmap ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+
+			break;
+		}
+
+		case "restart":
+		{
+			vote_parsed_command = strcat("defer 1 ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_command));
 
 			break;
 		}
