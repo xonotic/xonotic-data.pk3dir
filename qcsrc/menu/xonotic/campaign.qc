@@ -57,7 +57,7 @@ void XonoticCampaignList_configureXonoticCampaignList(entity me)
 	me.configureXonoticListBox(me);
 	me.campaignGlob = search_begin("maps/campaign*.txt", true, true);
 	me.loadCvars(me);
-	me.campaignGo(me, 0); // takes care of enabling/disabling buttons too
+	me.campaignGo(me, 0); // it makes work buttons too
 }
 
 void XonoticCampaignList_destroy(entity me)
@@ -96,11 +96,8 @@ void XonoticCampaignList_saveCvars(entity me)
 
 void XonoticCampaignList_campaignGo(entity me, float step)
 {
-	float canNext, canPrev;
 	string s;
 	float i, j, n;
-
-	canNext = canPrev = 0;
 
 	if(me.campaignGlob >= 0)
 	{
@@ -136,15 +133,10 @@ void XonoticCampaignList_campaignGo(entity me, float step)
 			s = substring(s, 13, strlen(s) - 17);
 			cvar_set("g_campaign_name", s);
 			me.loadCvars(me);
-			canNext = (j != n - 1);
-			canPrev = (j != 0);
+			me.hasNextCampaign = (j != n - 1);
+			me.hasPrevCampaign = (j != 0);
 		}
 	}
-
-	if(me.buttonNext)
-		me.buttonNext.disabled = !canNext;
-	if(me.buttonPrev)
-		me.buttonPrev.disabled = !canPrev;
 }
 
 void MultiCampaign_Next(entity btn, entity me)
@@ -158,6 +150,11 @@ void MultiCampaign_Prev(entity btn, entity me)
 
 void XonoticCampaignList_draw(entity me)
 {
+	if(me.buttonNext)
+		me.buttonNext.disabled = !me.hasNextCampaign;
+	if(me.buttonPrev)
+		me.buttonPrev.disabled = !me.hasPrevCampaign;
+
 	if(cvar(me.cvarName) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
 		me.loadCvars(me);
 	SUPER(XonoticCampaignList).draw(me);
