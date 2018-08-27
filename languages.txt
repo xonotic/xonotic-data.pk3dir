@@ -7,7 +7,7 @@ es    "Spanish" "Español" 99%
 fr    "French" "Français" 99%
 ga    "Irish" "Irish" 35%
 it    "Italian" "Italiano" 99%
-hu    "Hungarian" "Magyar" 55%
+hu    "Hungarian" "Magyar" 57%
 nl    "Dutch" "Nederlands" 70%
 pl    "Polish" "Polski" 81%
 pt    "Portuguese" "Português" 98%
