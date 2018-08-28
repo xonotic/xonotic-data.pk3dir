@@ -8,6 +8,8 @@
 #include "common.qh"
 #include "vote.qh"
 
+#include "../bot/api.qh"
+
 #include "../campaign.qh"
 #include "../cheats.qh"
 #include "../client.qh"
@@ -160,6 +162,61 @@ void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // inter
 		{
 			sprint(caller, "\nUsage:^3 cmd mv_getpicture mapid\n");
 			sprint(caller, "  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_wpeditor(entity caller, int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (!autocvar_g_waypointeditor)
+			{
+				sprint(caller, "ERROR: this command works only if the waypoint editor is on\n");
+				return;
+			}
+
+			if (argv(1) != "")
+			{
+				if (argv(1) == "spawn")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_spawn_fromeditor(caller);
+				}
+				else if (argv(1) == "remove")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_remove_fromeditor(caller);
+				}
+				else if (argv(1) == "unreachable")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_unreachable(caller);
+				}
+				else if (argv(1) == "saveall")
+					waypoint_saveall();
+				else if (argv(1) == "relinkall")
+					waypoint_schedulerelinkall();
+
+				return;
+			}
+		}
+
+		default:
+			sprint(caller, "Incorrect parameters for ^2wpeditor^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
+			sprint(caller, "  Where 'action' can be: spawn, remove, unreachable, saveall, relinkall\n");
 			return;
 		}
 	}
@@ -697,6 +754,7 @@ void ClientCommand_(entity caller, int request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
+	CLIENT_COMMAND("wpeditor", ClientCommand_wpeditor(ent, request, arguments), "Waypoint editor commands") \
 	/* nothing */
 
 void ClientCommand_macro_help(entity caller)
@@ -771,6 +829,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "begin": break;                               // handled by engine in host_cmd.c
 		case "download": break;                            // handled by engine in cl_parse.c
 		case "mv_getpicture": break;                       // handled by server in this file
+		case "wpeditor": break;                            // handled by server in this file
 		case "pause": break;                               // handled by engine in host_cmd.c
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file

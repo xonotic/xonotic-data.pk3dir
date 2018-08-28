@@ -1,8 +1,6 @@
 #include "impulse.qh"
 #include "round_handler.qh"
 
-#include "bot/api.qh"
-
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "cheats.qh"
@@ -570,34 +568,4 @@ IMPULSE(waypoint_clear)
 			ClientKill(this);
 	}
 	sprint(this, "all waypoints cleared\n");
-}
-
-IMPULSE(navwaypoint_spawn)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_spawn_fromeditor(this);
-}
-
-IMPULSE(navwaypoint_remove)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_remove_fromeditor(this);
-}
-
-IMPULSE(navwaypoint_relink)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_schedulerelinkall();
-}
-
-IMPULSE(navwaypoint_save)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_saveall();
-}
-
-IMPULSE(navwaypoint_unreachable)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_unreachable(this);
 }
