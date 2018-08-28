@@ -128,7 +128,7 @@ void waypoint_unreachable(entity pl)
 	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
 }
 
-vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
+vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 {
 	vector new_org = org;
 	if (fabs(autocvar_g_waypointeditor_symmetrical) == 1)
@@ -281,7 +281,7 @@ void waypoint_spawn_fromeditor(entity pl)
 	bprint(strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 	if(sym)
 	{
-		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		org = waypoint_getSymmetricalPoint(e.origin, ctf_flags);
 		if (vdist(org - pl.origin, >, 32))
 		{
 			if(wp_num > 2)
@@ -329,7 +329,7 @@ void waypoint_remove_fromeditor(entity pl)
 	entity wp_sym = NULL;
 	if (sym)
 	{
-		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		vector org = waypoint_getSymmetricalPoint(e.origin, ctf_flags);
 		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
 			if(vdist(org - it.origin, <, 3))
 			{
