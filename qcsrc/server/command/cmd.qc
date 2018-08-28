@@ -304,7 +304,20 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argc >= 2)   Say(caller, true, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			if (argc >= 2)
+			{
+				string _classname = string_null;
+				if (!IS_PLAYER(caller) && caller.caplayer)
+				{
+					// CA: make work team chat for killed players
+					_classname = caller.classname;
+					caller.classname = STR_PLAYER;
+				}
+
+				Say(caller, true, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+				if (_classname)
+					caller.classname = _classname;
+			}
 			return;  // never fall through to usage
 		}
 
