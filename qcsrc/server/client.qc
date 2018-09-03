@@ -290,11 +290,6 @@ void PutObserverInServer(entity this)
 		if(!game_stopped)
 		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
-
-		if(CS(this).just_joined)
-		{
-			CS(this).just_joined = false;
-		}
 	}
 
 	accuracy_resend(this);

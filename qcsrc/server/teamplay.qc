@@ -222,8 +222,15 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 		}
 		else
 		{
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE,
-				player.netname);
+			if (!CS(this).just_joined)
+			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE,
+					player.netname);
+			}
+			else
+			{
+				CS(this).just_joined = false;
+			}
 		}
 		KillPlayerForTeamChange(player);
 		if (!IS_BOT_CLIENT(player))
