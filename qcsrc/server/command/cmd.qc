@@ -11,6 +11,7 @@
 #include "../campaign.qh"
 #include "../cheats.qh"
 #include "../client.qh"
+#include "../clientkill.qh"
 #include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"

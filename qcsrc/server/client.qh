@@ -274,8 +274,6 @@ void FixPlayermodel(entity player);
 
 void ClientInit_misc(entity this);
 
-void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
-
 bool joinAllowed(entity this);
 void Join(entity this);
 

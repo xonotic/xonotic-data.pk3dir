@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
+#include "clientkill.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
 #include "miscfunctions.qh"
