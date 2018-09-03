@@ -312,7 +312,7 @@ void GenericCommand_maplist(int request, int argc)
 	}
 }
 
-void GenericCommand_nextframe(int request, float arguments, string command)
+void GenericCommand_nextframe(int request, string command)
 {
 	switch(request)
 	{
@@ -446,7 +446,7 @@ void GenericCommand_settemp(int request, int argc)
 	}
 }
 
-void GenericCommand_settemp_restore(int request, int argc)
+void GenericCommand_settemp_restore(int request)
 {
 	switch(request)
 	{
@@ -525,13 +525,13 @@ void GenericCommand_(int request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 GENERIC_COMMAND(addtolist, "Add a string to a cvar") { GenericCommand_addtolist(request, arguments); }
 GENERIC_COMMAND(maplist, "Automatic control of maplist") { GenericCommand_maplist(request, arguments); }
-GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM") { GenericCommand_nextframe(request, arguments, command); }
+GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM") { GenericCommand_nextframe(request, command); }
 GENERIC_COMMAND(qc_curl, "Queries a URL") { GenericCommand_qc_curl(request, arguments); }
 GENERIC_COMMAND(removefromlist, "Remove a string from a cvar") { GenericCommand_removefromlist(request, arguments); }
 GENERIC_COMMAND(restartnotifs, "Re-initialize all notifications") { GenericCommand_restartnotifs(request); }
 GENERIC_COMMAND(rpn, "RPN calculator") { GenericCommand_rpn(request, arguments, command); }
 GENERIC_COMMAND(settemp, "Temporarily set a value to a cvar which is restored later") { GenericCommand_settemp(request, arguments); }
-GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command") { GenericCommand_settemp_restore(request, arguments); }
+GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command") { GenericCommand_settemp_restore(request); }
 GENERIC_COMMAND(runtest, "Run unit tests") { GenericCommand_runtest(request, arguments); }
 
 void GenericCommand_macro_help()

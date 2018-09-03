@@ -219,9 +219,6 @@ bool some_spawn_has_been_used;
 int have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
 int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it has no spawns; team 0 is the "no-team"
 
-// set when showing a kill countdown
-.entity killindicator;
-
 .bool canteamdamage;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
@@ -364,8 +361,6 @@ const int ACTIVE_TOGGLE 	= 3;
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
-
-.int killindicator_teamchange;
 
 void PlayerUseKey(entity this);
 

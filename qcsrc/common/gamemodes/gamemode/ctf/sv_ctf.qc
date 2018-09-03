@@ -186,7 +186,7 @@ void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnra
 		{
 			//print("normal arc line failed, trying to find new pos...");
 			WarpZone_TraceLine(to, targpos, MOVE_NOMONSTERS, flag);
-			targpos = (trace_endpos + FLAG_PASS_ARC_OFFSET);
+			targpos = (trace_endpos + eZ * FLAG_PASS_ARC_OFFSET_Z);
 			WarpZone_TraceLine(flag.origin, targpos, MOVE_NOMONSTERS, flag);
 			if(trace_fraction < 1) { targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
 			/*else { print(" ^3SUCCESS^7, using new arc line.\n"); } */
@@ -934,7 +934,7 @@ void ctf_FlagThink(entity this)
 				{
 					this.velocity = this.velocity * 0.5;
 
-					if(pointcontents(midpoint + FLAG_FLOAT_OFFSET) == CONTENT_WATER)
+					if (pointcontents(midpoint + eZ * FLAG_FLOAT_OFFSET_Z) == CONTENT_WATER)
 						{ this.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater; }
 					else
 						{ set_movetype(this, MOVETYPE_FLY); }

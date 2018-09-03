@@ -251,6 +251,8 @@ void waypoint_spawn_fromeditor(entity pl)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
 		ctf_flags = autocvar_g_waypointeditor_symmetrical_order;
+	if (sym && ctf_flags < 2)
+		ctf_flags = 2;
 	int wp_num = ctf_flags;
 
 	if(!PHYS_INPUT_BUTTON_CROUCH(pl))
@@ -310,6 +312,8 @@ void waypoint_remove_fromeditor(entity pl)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
 		ctf_flags = autocvar_g_waypointeditor_symmetrical_order;
+	if (sym && ctf_flags < 2)
+		ctf_flags = 2;
 	int wp_num = ctf_flags;
 
 	LABEL(remove_wp);
