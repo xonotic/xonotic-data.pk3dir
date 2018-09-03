@@ -222,14 +222,14 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 		}
 		else
 		{
-			if (!CS(this).just_joined)
+			if (!CS(player).just_joined)
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE,
 					player.netname);
 			}
 			else
 			{
-				CS(this).just_joined = false;
+				CS(player).just_joined = false;
 			}
 		}
 		KillPlayerForTeamChange(player);
