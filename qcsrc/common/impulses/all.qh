@@ -186,20 +186,6 @@ LEGACY_IMPULSE(g_waypointsprite_clear_personal, 47, "waypoint_clear_personal")
 REGISTER_IMPULSE(waypoint_clear, 48)
 LEGACY_IMPULSE(g_waypointsprite_clear, 48, "waypoint_clear")
 
-REGISTER_IMPULSE(navwaypoint_spawn, 103)
-LEGACY_IMPULSE(g_waypointeditor_spawn, 103, "navwaypoint_spawn")
-
-REGISTER_IMPULSE(navwaypoint_remove, 104)
-LEGACY_IMPULSE(g_waypointeditor_remove, 104, "navwaypoint_remove")
-
-REGISTER_IMPULSE(navwaypoint_relink, 105)
-LEGACY_IMPULSE(g_waypointeditor_relinkall, 105, "navwaypoint_relink")
-
-REGISTER_IMPULSE(navwaypoint_save, 106)
-LEGACY_IMPULSE(g_waypointeditor_saveall, 106, "navwaypoint_save")
-
-REGISTER_IMPULSE(navwaypoint_unreachable, 107)
-LEGACY_IMPULSE(g_waypointeditor_unreachable, 107, "navwaypoint_unreachable")
 
 #define CHIMPULSE(id, n) _CHIMPULSE(CHIMPULSE_##id, n)
 #define _CHIMPULSE(id, n) \
