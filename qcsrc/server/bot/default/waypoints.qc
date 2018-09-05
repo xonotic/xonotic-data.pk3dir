@@ -1016,6 +1016,7 @@ void waypoint_save_links()
 			entity link = waypoint_get_link(it, j);
 			if(link)
 			{
+				// NOTE: vtos rounds vector components to 1 decimal place
 				string s = strcat(vtos(it.origin), "*", vtos(link.origin), "\n");
 				fputs(file, s);
 				++c;
@@ -1088,6 +1089,7 @@ void waypoint_saveall()
 			continue;
 
 		string s;
+		// NOTE: vtos rounds vector components to 1 decimal place
 		s = strcat(vtos(it.origin + it.mins), "\n");
 		s = strcat(s, vtos(it.origin + it.maxs));
 		s = strcat(s, "\n");
