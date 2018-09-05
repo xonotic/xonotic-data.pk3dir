@@ -626,8 +626,6 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 
 string notif_arg_item_wepammo(float f1, float f2)
 {
-	if(f2 <= 0)
-		return "";
 	string ammoitems = "";
 	Weapon wep = Weapons_from(f1);
 	switch (wep.ammo_type)
