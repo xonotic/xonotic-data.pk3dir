@@ -5,7 +5,7 @@ MUTATOR_HOOKFUNCTION(cl_buffs, HUD_Powerups_add)
 {
     int allBuffs = STAT(BUFFS);
     FOREACH(Buffs, it.m_itemid & allBuffs, {
-		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, STAT(BUFF_TIME) - time, 99), 60);
+		addPowerupItem(it.m_name, strcat("buff_", it.netname), it.m_color, bound(0, STAT(BUFF_TIME) - time, 99), 60);
 	});
 }
 MUTATOR_HOOKFUNCTION(cl_buffs, WP_Format)
@@ -16,8 +16,8 @@ MUTATOR_HOOKFUNCTION(cl_buffs, WP_Format)
     {
         Buff b = Buffs_from(this.wp_extra);
         M_ARGV(2, vector) = b.m_color;
-        M_ARGV(3, string) = b.m_prettyName;
-        M_ARGV(4, string) = strcat("buff_", b.m_name);
+        M_ARGV(3, string) = b.m_name;
+        M_ARGV(4, string) = strcat("buff_", b.netname);
         return true;
     }
 }
