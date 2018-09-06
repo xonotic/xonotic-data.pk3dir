@@ -207,7 +207,10 @@ void invasion_SpawnChosenMonster(Monster mon)
 		setsize(e, mon.m_mins, mon.m_maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+		{
 			monster = spawnmonster(e, tospawn, mon.monsterid, NULL, NULL, e.origin, false, false, 2);
+			monster.angles_x = monster.angles_z = 0;
+		}
 		else
 		{
 			delete(e);
