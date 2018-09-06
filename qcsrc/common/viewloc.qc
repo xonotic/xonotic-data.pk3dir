@@ -48,7 +48,7 @@ void viewloc_PlayerPhysics(entity this)
 			if(PHYS_CS(this).movement_x > 0) // right
 				this.angles_y = forward.y;
 		}
-
+	#if 0
 		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
 		if(!(this.viewloc.spawnflags & VIEWLOC_FREEMOVE))
 		{
@@ -65,6 +65,7 @@ void viewloc_PlayerPhysics(entity this)
 			//else { input_buttons &= ~16; this.flags &= ~FL_DUCKED; }
 #endif
 		}
+	#endif
 	}
 }
 

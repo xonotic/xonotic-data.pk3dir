@@ -119,6 +119,8 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		}
 	}
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	if(this.viewloc && !(this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && PHYS_CS(this).movement.x < 0)
+		do_crouch = true;
 	if (have_hook) {
 		do_crouch = false;
 	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
