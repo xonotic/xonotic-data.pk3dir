@@ -370,7 +370,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	spree_end: placed at the end of murder messages to show ending of sprees
 	spree_lost: placed at the end of suicide messages to show losing of sprees
 	item_wepname: return full name of a weapon from weaponid
-	item_wepammo: ammo display for weapon from f1
+	item_wepammo: ammo display for weapon from f1 and f2
 	item_centime: amount of time to display weapon message in centerprint
 	item_buffname: return full name of a buff from buffid
 	death_team: show the full name of the team a player is switching from
