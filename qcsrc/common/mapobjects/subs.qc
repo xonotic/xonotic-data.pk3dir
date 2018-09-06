@@ -553,7 +553,7 @@ void InitTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
-	SetBrushEntityModel(this);
+	SetBrushEntityModelNoLOD(this);
 	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
@@ -565,7 +565,7 @@ void InitSolidBSPTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir(this);
 	this.solid = SOLID_BSP;
-	SetBrushEntityModel(this);
+	SetBrushEntityModelNoLOD(this);
 	set_movetype(this, MOVETYPE_NONE); // why was this PUSH? -div0
 //	this.modelindex = 0;
 	this.model = "";

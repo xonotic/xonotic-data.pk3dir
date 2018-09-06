@@ -6,6 +6,7 @@
 #include <server/resources.qh>
 
 #include "g_damage.qh"
+#include "clientkill.qh"
 #include "player.qh"
 #include "race.qh"
 #include "../common/mapobjects/teleporters.qh"
@@ -45,7 +46,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 
 #else
 
-.float maycheat;
+.bool maycheat;
 float gamestart_sv_cheats;
 
 
@@ -59,7 +60,7 @@ void CheatShutdown()
 {
 }
 
-float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
+float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets passed as argument for possible future ACL checking
 {
 	// dead people cannot cheat
 	if(IS_DEAD(this))

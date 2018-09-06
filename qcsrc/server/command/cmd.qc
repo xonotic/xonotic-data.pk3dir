@@ -8,9 +8,12 @@
 #include "common.qh"
 #include "vote.qh"
 
+#include "../bot/api.qh"
+
 #include "../campaign.qh"
 #include "../cheats.qh"
 #include "../client.qh"
+#include "../clientkill.qh"
 #include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
@@ -72,7 +75,7 @@ bool SV_ParseClientCommand_floodcheck(entity this)
 //  Command Sub-Functions
 // =======================
 
-void ClientCommand_autoswitch(entity caller, float request, float argc)
+void ClientCommand_autoswitch(entity caller, int request, int argc)
 {
 	switch (request)
 	{
@@ -97,7 +100,7 @@ void ClientCommand_autoswitch(entity caller, float request, float argc)
 	}
 }
 
-void ClientCommand_clientversion(entity caller, float request, float argc)  // internal command, used only by code
+void ClientCommand_clientversion(entity caller, int request, int argc)  // internal command, used only by code
 {
 	switch (request)
 	{
@@ -140,7 +143,7 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 	}
 }
 
-void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // internal command, used only by code
+void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // internal command, used only by code
 {
 	switch (request)
 	{
@@ -165,7 +168,62 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
-void ClientCommand_join(entity caller, float request)
+void ClientCommand_wpeditor(entity caller, int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (!autocvar_g_waypointeditor)
+			{
+				sprint(caller, "ERROR: this command works only if the waypoint editor is on\n");
+				return;
+			}
+
+			if (argv(1) != "")
+			{
+				if (argv(1) == "spawn")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_spawn_fromeditor(caller);
+				}
+				else if (argv(1) == "remove")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_remove_fromeditor(caller);
+				}
+				else if (argv(1) == "unreachable")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_unreachable(caller);
+				}
+				else if (argv(1) == "saveall")
+					waypoint_saveall();
+				else if (argv(1) == "relinkall")
+					waypoint_schedulerelinkall();
+
+				return;
+			}
+		}
+
+		default:
+			sprint(caller, "Incorrect parameters for ^2wpeditor^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
+			sprint(caller, "  Where 'action' can be: spawn, remove, unreachable, saveall, relinkall\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_join(entity caller, int request)
 {
 	switch (request)
 	{
@@ -189,7 +247,7 @@ void ClientCommand_join(entity caller, float request)
 	}
 }
 
-void ClientCommand_physics(entity caller, float request, float argc)
+void ClientCommand_physics(entity caller, int request, int argc)
 {
 	switch (request)
 	{
@@ -229,7 +287,7 @@ void ClientCommand_physics(entity caller, float request, float argc)
 	}
 }
 
-void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for toggling readyness
+void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for toggling readyness
 {
 	switch (request)
 	{
@@ -278,7 +336,7 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 	}
 }
 
-void ClientCommand_say(entity caller, float request, float argc, string command)
+void ClientCommand_say(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -298,13 +356,26 @@ void ClientCommand_say(entity caller, float request, float argc, string command)
 	}
 }
 
-void ClientCommand_say_team(entity caller, float request, float argc, string command)
+void ClientCommand_say_team(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argc >= 2)   Say(caller, true, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			if (argc >= 2)
+			{
+				string _classname = string_null;
+				if (!IS_PLAYER(caller) && caller.caplayer)
+				{
+					// CA: make work team chat for killed players
+					_classname = caller.classname;
+					caller.classname = STR_PLAYER;
+				}
+
+				Say(caller, true, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+				if (_classname)
+					caller.classname = _classname;
+			}
 			return;  // never fall through to usage
 		}
 
@@ -319,7 +390,7 @@ void ClientCommand_say_team(entity caller, float request, float argc, string com
 }
 
 .bool team_selected;
-void ClientCommand_selectteam(entity caller, float request, float argc)
+void ClientCommand_selectteam(entity caller, int request, int argc)
 {
 	switch (request)
 	{
@@ -394,13 +465,16 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 			if ((selection != -1) && autocvar_g_balance_teams &&
 				autocvar_g_balance_teams_prevent_imbalance)
 			{
-				CheckAllowedTeams(caller);
-				GetTeamCounts(caller);
-				if ((BIT(Team_TeamToNumber(selection) - 1) & FindBestTeams(caller, false)) == 0)
+				entity balance = TeamBalance_CheckAllowedTeams(caller);
+				TeamBalance_GetTeamCounts(balance, caller);
+				if ((Team_IndexToBit(Team_TeamToIndex(selection)) &
+					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					TeamBalance_Destroy(balance);
 					return;
 				}
+				TeamBalance_Destroy(balance);
 			}
 			ClientKill_TeamChange(caller, selection);
 			if (!IS_PLAYER(caller))
@@ -421,7 +495,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 	}
 }
 
-void ClientCommand_selfstuff(entity caller, float request, string command)
+void ClientCommand_selfstuff(entity caller, int request, string command)
 {
 	switch (request)
 	{
@@ -445,7 +519,7 @@ void ClientCommand_selfstuff(entity caller, float request, string command)
 	}
 }
 
-void ClientCommand_sentcvar(entity caller, float request, float argc, string command)
+void ClientCommand_sentcvar(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -479,7 +553,7 @@ void ClientCommand_sentcvar(entity caller, float request, float argc, string com
 	}
 }
 
-void ClientCommand_spectate(entity caller, float request)
+void ClientCommand_spectate(entity caller, int request)
 {
 	switch (request)
 	{
@@ -519,7 +593,7 @@ void ClientCommand_spectate(entity caller, float request)
 	}
 }
 
-void ClientCommand_suggestmap(entity caller, float request, float argc)
+void ClientCommand_suggestmap(entity caller, int request, int argc)
 {
 	switch (request)
 	{
@@ -543,7 +617,7 @@ void ClientCommand_suggestmap(entity caller, float request, float argc)
 	}
 }
 
-void ClientCommand_tell(entity caller, float request, float argc, string command)
+void ClientCommand_tell(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -600,7 +674,7 @@ void ClientCommand_tell(entity caller, float request, float argc, string command
 	}
 }
 
-void ClientCommand_voice(entity caller, float request, float argc, string command)
+void ClientCommand_voice(entity caller, int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -637,7 +711,7 @@ void ClientCommand_voice(entity caller, float request, float argc, string comman
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void ClientCommand_(entity caller, float request)
+void ClientCommand_(entity caller, int request)
 {
     switch(request)
     {
@@ -667,8 +741,9 @@ void ClientCommand_(entity caller, float request)
 #define CLIENT_COMMANDS(ent, request, arguments, command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
+	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
+	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(ent, request, arguments, command), "Print a message to chat to all players") \
@@ -680,7 +755,7 @@ void ClientCommand_(entity caller, float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
-	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
+	CLIENT_COMMAND("wpeditor", ClientCommand_wpeditor(ent, request, arguments), "Waypoint editor commands") \
 	/* nothing */
 
 void ClientCommand_macro_help(entity caller)
@@ -692,7 +767,7 @@ void ClientCommand_macro_help(entity caller)
 #undef CLIENT_COMMAND
 }
 
-float ClientCommand_macro_command(float argc, entity caller, string command)
+float ClientCommand_macro_command(int argc, entity caller, string command)
 {
 	#define CLIENT_COMMAND(name, function, description) \
 		{ if (name == strtolower(argv(0))) { function; return true; } }
@@ -703,7 +778,7 @@ float ClientCommand_macro_command(float argc, entity caller, string command)
 	return false;
 }
 
-float ClientCommand_macro_usage(float argc, entity caller)
+float ClientCommand_macro_usage(int argc, entity caller)
 {
 	#define CLIENT_COMMAND(name, function, description) \
 		{ if (name == strtolower(argv(1))) { function; return true; } }
@@ -741,7 +816,7 @@ void SV_ParseClientCommand(entity this, string command)
 	// if we're banned, don't even parse the command
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
@@ -755,6 +830,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "begin": break;                               // handled by engine in host_cmd.c
 		case "download": break;                            // handled by engine in cl_parse.c
 		case "mv_getpicture": break;                       // handled by server in this file
+		case "wpeditor": break;                            // handled by server in this file
 		case "pause": break;                               // handled by engine in host_cmd.c
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file

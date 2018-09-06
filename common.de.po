@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Wuzzy <almikes@aol.com>, 2016-2017
+# Wuzzy <almikes@aol.com>, 2016-2018
 # Brot Brot <noah.schluessel@gmail.com>, 2015
 # cvcxc <hans.andersen72@yahoo.com>, 2013
 # divVerent <divVerent@xonotic.org>, 2011,2013
@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-09-23 19:12+0000\n"
+"PO-Revision-Date: 2018-07-13 16:04+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -48,7 +48,7 @@ msgstr "^1Konnte nicht nach %s schreiben\n"
 
 #: qcsrc/client/hud/panel/chat.qc:82
 msgid "^3Player^7: This is the chat area."
-msgstr "^3Player^7: Dies ist der Chat-Bereich."
+msgstr "^3Spieler^7: Dies ist der Chat-Bereich."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:69
 #, c-format
@@ -210,7 +210,7 @@ msgstr "^3Doppelklicke ^7ein Panel für Panel-spezifische Optionen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr "^3STRG^7, um Kollisionstests zu deaktivieren, ^3SHIFT ^7und"
+msgstr "^3CTRL^7, um Kollisionstests zu deaktivieren, ^3SHIFT ^7und"
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -222,7 +222,7 @@ msgstr "Persönliche Bestzeit"
 
 #: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Server best"
-msgstr "Server Bestzeit"
+msgstr "Server-Bestzeit"
 
 #: qcsrc/client/hud/panel/notify.qc:115 qcsrc/client/hud/panel/notify.qc:116
 #: qcsrc/client/hud/panel/score.qc:59
@@ -285,7 +285,7 @@ msgstr "freier Gegenstand %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item, icon"
-msgstr "freier Gegenstand, icon"
+msgstr "freier Gegenstand, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item (l:%l^7)"
@@ -293,7 +293,7 @@ msgstr "Gegenstand genommen (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item, icon"
-msgstr "Gegenstand genommen, icon"
+msgstr "Gegenstand genommen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^negative"
@@ -309,7 +309,7 @@ msgstr "brauche Hilfe (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^need help, icon"
-msgstr "brauche Hilfe, icon"
+msgstr "brauche Hilfe, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^enemy seen (l:%y^7)"
@@ -317,7 +317,7 @@ msgstr "Gegner gesehen (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^enemy seen, icon"
-msgstr "Gegner gesehen, icon"
+msgstr "Gegner gesehen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^flag seen (l:%y^7)"
@@ -325,7 +325,7 @@ msgstr "Flagge gesehen (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^flag seen, icon"
-msgstr "Flagge gesehen, icon"
+msgstr "Flagge gesehen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -333,7 +333,7 @@ msgstr "verteidigen (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^defending, icon"
-msgstr "verteidigen, icon"
+msgstr "verteidigen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -341,7 +341,7 @@ msgstr "wandernd (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^roaming, icon"
-msgstr "wandernd, icon"
+msgstr "wandernd, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -349,7 +349,7 @@ msgstr "angreifen (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^attacking, icon"
-msgstr "angreifen, Iion"
+msgstr "angreifen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
@@ -357,7 +357,7 @@ msgstr "Flaggenträger getötet (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr "Flaggenträger getötet, icon"
+msgstr "Flaggenträger getötet, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
@@ -366,11 +366,11 @@ msgstr "Flagge fallen gelassen (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^dropped flag, icon"
-msgstr "Flagge fallen gelassen, icon"
+msgstr "Flagge fallen gelassen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^drop weapon, icon"
-msgstr "Waffe wegwerfen, icon"
+msgstr "Waffe wegwerfen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
@@ -378,7 +378,7 @@ msgstr "Waffe fallen gelassen %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
-msgstr "Flagge/Schlüssel fallen gelassen, icon"
+msgstr "Flagge/Schlüssel fallen gelassen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
@@ -694,7 +694,7 @@ msgstr "ticks"
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
-"Du kannst die Tabelle mit dem ^2scoreboard_columns_set-Befehl ändern.\n"
+"Du kannst die Punktetafel mit dem ^2scoreboard_columns_set-Befehl ändern.\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:296
 msgid "^3|---------------------------------------------------------------|\n"
@@ -792,7 +792,7 @@ msgstr "^3capzeit^7                  Zeit des schnellsten Captures (CTF)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "^3fckills^7                  Number of flag carrier kills\n"
-msgstr "^3fckills^7                  Anzahl der getöteten Flaggen-Träger\n"
+msgstr "^3fckills^7                  Anzahl der getöteten Flaggenträger\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:320
 msgid "^3returns^7                  Number of flag returns\n"
@@ -950,7 +950,7 @@ msgstr "Platzierungen"
 #: qcsrc/client/hud/panel/scoreboard.qc:1519
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
-msgstr "Tabelle"
+msgstr "Punktetafel"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
@@ -1022,7 +1022,7 @@ msgstr "Du bist tot, warte ^3%s^7 bis zum Respawn"
 #: qcsrc/client/hud/panel/scoreboard.qc:1707
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr "Du bist tot, drücke ^2%s^7 um neu zu spawnen"
+msgstr "Du bist tot, drücke ^2%s^7, um neu zu spawnen"
 
 #: qcsrc/client/hud/panel/vote.qc:24
 msgid "^1You must answer before entering hud configure mode\n"
@@ -1070,11 +1070,11 @@ msgstr "Keine Munition mehr"
 
 #: qcsrc/client/hud/panel/weapons.qc:534
 msgid "Don't have"
-msgstr "Nicht vorhanden"
+msgstr "Hast du nicht"
 
 #: qcsrc/client/hud/panel/weapons.qc:538
 msgid "Unavailable"
-msgstr "Nicht verfügbar"
+msgstr "Fehlend"
 
 #: qcsrc/client/main.qc:1014
 msgid " qu/s"
@@ -1384,11 +1384,11 @@ msgstr "Vielleicht klappt es beim nächsten Mal!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1172
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr "Großartig! Drücke „Nächter Level“ zum Fortfahren!"
+msgstr "Großartig! Drücke „Nächstes Level“ zum Fortfahren!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1174
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr "Wahnsinn! Klicke \"Nächstes Level\" um weiter zu spielen!"
+msgstr "Wahnsinn! Drücke „Nächstes Level“ zum Fortfahren!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1177
 msgid "Press the space bar to change your currently selected tile"
@@ -1419,7 +1419,7 @@ msgstr "Speichern"
 #: qcsrc/common/minigames/minigame/pp.qc:438
 #: qcsrc/common/minigames/minigame/ttt.qc:319
 msgid "Draw"
-msgstr "Zeichnen"
+msgstr "Unentschieden"
 
 #: qcsrc/common/minigames/minigame/c4.qc:378
 #: qcsrc/common/minigames/minigame/nmm.qc:601
@@ -1521,7 +1521,7 @@ msgstr "Nächstes Spiel"
 #: qcsrc/common/minigames/minigame/ps.qc:478
 #, c-format
 msgid "Pieces left: %s"
-msgstr "Verbleibende Spielfiguren: %s"
+msgstr "Figuren: %s"
 
 #: qcsrc/common/minigames/minigame/ps.qc:488
 msgid "No more valid moves"
@@ -2626,7 +2626,7 @@ msgstr "^BGDu hast ^F1%s^BG%s fallengelassen"
 #: qcsrc/common/notifications/all.inc:698
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr "^BG^F1%s^K1 erhalten"
+msgstr "^F1%s^BG erhalten"
 
 #: qcsrc/common/notifications/all.inc:385
 #: qcsrc/common/notifications/all.inc:699
@@ -2734,12 +2734,12 @@ msgstr "^BGTeam ^TC^TT^BG hielt den Ball zu lange fest"
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^BG captured %s^BG control point"
-msgstr "^BG%s^BG hat den Kontrollpunkt von %s^BG erobert"
+msgstr "^BG%s^BG hat einen Kontrollpunkt erobert: %s^BG"
 
 #: qcsrc/common/notifications/all.inc:413
 #, c-format
 msgid "^TC^TT^BG team %s^BG control point has been destroyed by %s"
-msgstr "^TC^TT^BGDer Kontrollpunkt vom Team %s^BG wurde von %s zerstört"
+msgstr "^TC^TT^BGEin Kontrollpunkt vom Team %s^BG wurde von %s zerstört"
 
 #: qcsrc/common/notifications/all.inc:414
 msgid "^TC^TT^BG generator has been destroyed"
@@ -2759,7 +2759,7 @@ msgstr "^BG%s^K1 hat Unsichtbarkeit aufgesammelt"
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
 msgid "^BG%s^K1 picked up Shield"
-msgstr "^BG%s^K1 hat das Schild aufgenommen"
+msgstr "^BG%s^K1 hat den Schild aufgenommen"
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
@@ -3596,7 +3596,7 @@ msgstr "^K1Deine Medizin-Granate ist ein wenig defekt"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You are respawning for running out of ammo..."
-msgstr "^K1Du wirst wiederbelebt weil du keine Munition mehr hast …"
+msgstr "^K1Du wirst wiederbelebt, weil du keine Munition mehr hast …"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You were killed for running out of ammo..."
@@ -3913,12 +3913,12 @@ msgstr "^F2Aktive Waffe: ^F1%s"
 #: qcsrc/common/notifications/all.inc:733
 #, c-format
 msgid "^BGYou captured %s^BG control point"
-msgstr "^BGDu hast den Kontrollpunkt von %s^BG erobert"
+msgstr "^BGDu hast einen Kontrollpunkt erobert: %s^BG"
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr "Team ^TC^TT^BG hat %ss^BG Kontrollpunkt erobert"
+msgstr "Team ^TC^TT^BG hat einen Kontrollpunkt erobert: %s^BG"
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^BGThis control point currently cannot be captured"
@@ -4019,7 +4019,7 @@ msgstr "^F2Ein Schild umgibt dich"
 
 #: qcsrc/common/notifications/all.inc:754
 msgid "^F2Shield has worn off"
-msgstr "^F2Das Schild ist wieder verschwunden"
+msgstr "^F2Der Schild ist wieder verschwunden"
 
 #: qcsrc/common/notifications/all.inc:756
 msgid "^F2You are on speed"
@@ -5257,7 +5257,7 @@ msgstr "Schriftgröße:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
-msgstr "Nachrichten-Panel"
+msgstr "Zentralanzeigen-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:15
 msgid "Chat entries:"
@@ -5355,7 +5355,7 @@ msgstr "Beim Zuschauen zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "PNL^Enabled even playing in warmup"
-msgstr "Auch in der Aufwärmphase zeigen"
+msgstr "Auch in Aufwärmphase zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
@@ -5363,7 +5363,7 @@ msgstr "Reduziert"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 msgid "Text/icon ratio:"
-msgstr "Text/Icon-Verhältnis:"
+msgstr "Text-/Icon-Verhältnis:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
@@ -5407,7 +5407,7 @@ msgstr "Eintrags-Ausblendung:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
-msgstr "Anzeige-Panel"
+msgstr "Nachrichten-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
@@ -5421,11 +5421,11 @@ msgstr "Panel anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Panel enabled even observing"
-msgstr "Panel auch beim Zuschauen anzeigen"
+msgstr "Auch beim Zuschauen zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Panel enabled only in Race/CTS"
-msgstr "Panel nur in Rennen und CTS-Rennen anzeigen"
+msgstr "Nur in Rennen und CTS-Rennen zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
@@ -5536,7 +5536,7 @@ msgstr "Rundenzeit-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Panel enabled in teamgames"
-msgstr "Panel in Team-Spieltypen aktivieren"
+msgstr "Panel in Teamspielen aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
@@ -6317,13 +6317,11 @@ msgstr "Spielmechanik-Mutatoren:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Enable dodging"
-msgstr ""
-"Ausweichmodus: Es ist möglich rasch zur Seite zu springen (spezielle "
-"Bewegung)"
+msgstr "Ausweichmanöver aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:167
 msgid "All players are almost invisible"
-msgstr "Tarnmodus: Alle Spieler sind fast unsichtbar"
+msgstr "Alle Spieler sind fast unsichtbar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:174
 msgid "Only possible to inflict damage on your enemy while he's airborne"
@@ -6333,15 +6331,15 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:178
 msgid "Damage done to your enemy gets added to your own health"
 msgstr ""
-"Vampirmodus: Der Schaden, dem du anderen Spielern zufügst, wird deiner "
-"eigenen Lebensenergie hinzugefügt"
+"Der Schaden, dem du anderen Spielern zufügst, wird deiner eigenen "
+"Lebensenergie hinzugefügt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:183
 msgid ""
 "Amount of health below which your player gets stunned because of blood loss"
 msgstr ""
-"Blutverlust: Aktiviere diesen Modus und stelle den Wert der Lebensenergie, "
-"bei der Spieler auf Grund von Blutverlust betäubt wirken, ein"
+"Aktiviere diesen Modus und stelle den Wert der Lebensenergie, bei der "
+"Spieler auf Grund von Blutverlust betäubt wirken, ein"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
 msgid "Make things fall to the ground slower, lower value means lower gravity"
@@ -6390,10 +6388,9 @@ msgid ""
 "Selecting a weapon arena will give all players that weapon at spawn as well "
 "as unlimited ammo, and disable all other weapon pickups."
 msgstr ""
-"Waffen-Arenen: Die Auswahl einer Waffen-Arena führt dazu, dass jeder Spieler "
-"mit der gewählten Waffe startet. Diese hat unendlich viel Munition, andere "
-"Waffen sind nicht vorhanden – Spezielle Waffen-Arenen: Spieler starten mit "
-"allen Waffen und unendlich viel Munition"
+"Die Auswahl einer Waffen-Arena führt dazu, dass jeder Spieler mit der "
+"gewählten Waffe startet. Diese hat unendlich viel Munition, andere Waffen "
+"sind nicht vorhanden."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:255
 msgid "Most weapons"
@@ -6617,7 +6614,7 @@ msgstr "Musikplayer"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
 msgid "Auto record demos"
-msgstr "Wiederholungen automatisch aufzeichnen"
+msgstr "Wiederholungen autom. aufzeichnen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
 msgid "Timedemo"
@@ -6708,7 +6705,7 @@ msgstr "Alle entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:43
 msgid "Auto screenshot scoreboard"
-msgstr "Screenshot der Tabelle automatisch anfertigen"
+msgstr "Auto-Screenshot der Punktetafel"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:63
 msgid "Open in the viewer"
@@ -7419,7 +7416,7 @@ msgstr "Scharf"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:163
 msgid "Decals"
-msgstr "Einschusslöcher"
+msgstr "Dekore"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
 msgid "Enable decals (bullet holes and blood) (default: enabled)"
@@ -7717,7 +7714,7 @@ msgstr "Dezimalstellen im Respawn-Countdown anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid "Show accuracy underneath scoreboard"
-msgstr "Trefferquote unter Tabelle anzeigen"
+msgstr "Trefferquote unter Punktetafel anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:61
 msgid "Waypoints"
@@ -7824,7 +7821,7 @@ msgstr "Um den HUD-Editor zu starten, muss ein Spiel gestartet werden."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr "Willst du ein lokales Spiel starten, um das HUD zu editieren?"
+msgstr "Willst du ein lokales Spiel starten, um das HUD zu bearbeiten?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
@@ -7840,7 +7837,7 @@ msgstr "Amokläufe nur anzeigen, wenn sie Achievements sind"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
 msgid "Show spree information in centerprints"
-msgstr "Amoklauf-Informationen in Centerprints anzeigen"
+msgstr "Amoklauf-Infos in Zentralanzeige zeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:38
 msgid "Show spree information in death messages"
@@ -7872,7 +7869,7 @@ msgstr "In separater Zeile anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
 msgid "Add extra frag information to centerprint when available"
-msgstr "Zusätzliche Frag-Informationen in Centerprint anzeigen, wenn verfügbar"
+msgstr "Zusätzliche Frag-Infos in Zentralanzeige zeigen, wenn verfügbar"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
@@ -7914,7 +7911,7 @@ msgstr "Powerup-Nachrichten"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Weapon centerprint notifications"
-msgstr "Waffen-Centerprint-Nachrichten"
+msgstr "Waffen-Zentralanzeigen-Nachrichten"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:92
 msgid "Weapon info message notifications"
@@ -7995,7 +7992,7 @@ msgstr "Nur in Nicht-Teamspielen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Body fading:"
-msgstr "Ausblenden von Leichen:"
+msgstr "Leichenausblendung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "Gibs:"
@@ -8290,7 +8287,7 @@ msgstr "Auto-Springen"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:99
 msgid "Jetpack on jump:"
-msgstr "Jetpack aktiveren durch Springen:"
+msgstr "Jetpack bei Sprung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:101
 msgid "JPJUMP^Disabled"
@@ -8395,7 +8392,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Server queries/s:"
-msgstr "Server Anfragen/Sekunde:"
+msgstr "Serveranfragen/s:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:52
 msgid "Downloads:"
@@ -8589,11 +8586,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
 msgstr ""
-"Während du verbunden bist, werden Sprachänderungen nur auf das Menü angewandt"
+"Während du verbunden bist, werden Sprachänderungen nur auf das Menü "
+"angewandt;"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
-msgstr "Volle Sprachänderungen finden erst nach dem Neustart des Spiels statt"
+msgstr "volle Sprachänderungen finden erst nach dem Neustart des Spiels statt."
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
@@ -8940,7 +8938,7 @@ msgstr "Einzelspieler"
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
 msgstr ""
-"Spiele die Einzelspieler-Kampagne oder habe Instant-Action Spiele gegen Bots"
+"Spiele die Einzelspieler-Kampagne oder spiele ein Schnellspiel gegen Bots"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -9492,7 +9490,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:780
 msgid "Use default"
-msgstr "Standard verwenden"
+msgstr "Standard"
 
 #: qcsrc/menu/xonotic/util.qc:800
 msgid "Team Color:"

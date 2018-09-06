@@ -388,7 +388,6 @@
 
     MSG_INFO_NOTIF(CONNECTING,                              N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^BG is connecting..."), "")
     MSG_INFO_NOTIF(JOIN_CONNECT,                            N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 connected"), "")
-    MULTITEAM_INFO(JOIN_CONNECT_TEAM, 4,                    N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 connected and joined the ^TC^TT team"), "", NAME)
     MSG_INFO_NOTIF(JOIN_PLAY,                               N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing"), "")
     MULTITEAM_INFO(JOIN_PLAY_TEAM, 4,                       N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing on the ^TC^TT team"), "", NAME)
 

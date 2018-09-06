@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
+#include "clientkill.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
 #include "miscfunctions.qh"
@@ -462,6 +463,16 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				this.v_angle_y = this.v_angle.y + (random() * 2 - 1) * shake;
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
+
+			if (this != attacker) {
+				float realdmg = damage - excess;
+				if (IS_PLAYER(attacker)) {
+					GameRules_scoring_add(attacker, DMG, realdmg);
+				}
+				if (IS_PLAYER(this)) {
+					GameRules_scoring_add(this, DMGTAKEN, realdmg);
+				}
+			}
 		}
 		else
 			this.max_armorvalue += (save + take);
@@ -469,16 +480,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	this.dmg_save = this.dmg_save + save;//max(save - 10, 0);
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
-
-	if (this != attacker) {
-		float realdmg = damage - excess;
-		if (IS_PLAYER(attacker)) {
-			GameRules_scoring_add(attacker, DMG, realdmg);
-		}
-		if (IS_PLAYER(this)) {
-			GameRules_scoring_add(this, DMGTAKEN, realdmg);
-		}
-	}
 
 	bool abot = (IS_BOT_CLIENT(attacker));
 	bool vbot = (IS_BOT_CLIENT(this));
@@ -672,21 +673,6 @@ bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, limit);
-	return true;
-}
-
-bool MoveToTeam(entity client, int team_colour, int type)
-{
-	int lockteams_backup = lockteams;  // backup any team lock
-	lockteams = 0;  // disable locked teams
-	TeamchangeFrags(client);  // move the players frags
-	if (!SetPlayerTeamSimple(client, team_colour))
-	{
-		return false;
-	}
-	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, DMG_NOWEP, client.origin, '0 0 0');  // kill the player
-	lockteams = lockteams_backup;  // restore the team lock
-	LogTeamchange(client.playerid, client.team, type);
 	return true;
 }
 
