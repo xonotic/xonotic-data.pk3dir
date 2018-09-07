@@ -6,7 +6,7 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <common/sounds/sound.qh>
-#include <common/weapons/weapon.qh>
+#include <common/weapons/all.qh>
 
 #ifdef CSQC
 #include <client/autocvars.qh>
