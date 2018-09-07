@@ -155,7 +155,7 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_sound                =   SND_ArmorMega;
 #endif
     this.netname                =   "armor_mega";
-    this.m_name                 =   _("mega armor");
+    this.m_name                 =   _("Mega armor");
     this.m_icon                 =   "item_large_armor";
     this.m_color                =   '0 1 0';
     this.m_waypoint             =   _("Mega armor");

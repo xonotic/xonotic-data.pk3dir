@@ -155,7 +155,7 @@ REGISTER_ITEM(HealthMega, Health) {
     this.m_sound                =   SND_HealthMega;
 #endif
     this.netname                =   "health_mega";
-    this.m_name                 =   _("mega health");
+    this.m_name                 =   _("Mega health");
     this.m_icon                 =   "item_mega_health";
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Mega health");
