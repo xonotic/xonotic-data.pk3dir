@@ -23,6 +23,8 @@
 
 #include "../common/minigames/sv_minigames.qh"
 
+#include <common/gamemodes/_mod.qh>
+
 #include "../common/physics/player.qh"
 #include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
