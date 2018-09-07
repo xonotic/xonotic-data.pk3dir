@@ -380,7 +380,7 @@
     MSG_INFO_NOTIF(ITEM_BUFF_GOT,                           N_CONSOLE,  0, 1, "item_buffname", "",          "",     _("^BGYou got the %s^BG buff!"), "")
 
     MSG_INFO_NOTIF(ITEM_WEAPON_DONTHAVE,                    N_DISABLE,  0, 1, "item_wepname", "",                           "",     _("^BGYou do not have the ^F1%s"), "")
-    MSG_INFO_NOTIF(ITEM_WEAPON_DROP,                        N_DISABLE,  1, 1, "item_wepname item_wepammo", "",              "",     _("^BGYou dropped the ^F1%s^BG%s"), "")
+    MSG_INFO_NOTIF(ITEM_WEAPON_DROP,                        N_DISABLE,  0, 2, "item_wepname item_wepammo", "",              "",     _("^BGYou dropped the ^F1%s^BG%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_GOT,                         N_DISABLE,  0, 1, "item_wepname", "",                           "",     _("^BGYou got the ^F1%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_NOAMMO,                      N_DISABLE,  0, 1, "item_wepname", "",                           "",     _("^BGYou don't have enough ammo for the ^F1%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_PRIMORSEC,                   N_DISABLE,  0, 3, "item_wepname f2primsec f3primsec", "",       "",     _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
@@ -698,7 +698,7 @@
     MSG_CENTER_NOTIF(ITEM_FUELREGEN_GOT,                N_ENABLE,    0, 0, "",                                   CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Fuel regenerator"), "")
     MSG_CENTER_NOTIF(ITEM_JETPACK_GOT,                  N_ENABLE,    0, 0, "",                                   CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Jetpack"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_DONTHAVE,              N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "")
-    MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    1, 1, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
+    MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    0, 2, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_NOAMMO,                N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
