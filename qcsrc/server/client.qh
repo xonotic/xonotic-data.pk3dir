@@ -226,6 +226,8 @@ METHOD(Client, m_unwind, bool(Client this))
     return false;
 }
 
+bool PlayerInList(entity player, string list);
+
 /// \brief Print the string to the client's chat.
 /// \param[in] client Client to print to.
 /// \param[in] text Text to print.

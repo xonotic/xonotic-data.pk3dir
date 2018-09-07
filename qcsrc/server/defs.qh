@@ -351,8 +351,6 @@ const int ACTIVE_TOGGLE 	= 3;
 
 //float serverflags;
 
-.int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
-
 .bool player_blocked;
 
 .float revival_time; // time at which player was last revived

@@ -285,25 +285,11 @@ void PutObserverInServer(entity this)
 
 	WaypointSprite_PlayerDead(this);
 
-	if (mutator_returnvalue) {
-	    // mutator prevents resetting teams+score
-	} else {
-		Player_SetTeamIndex(this, -1);
-		this.frags = FRAGS_SPECTATOR;
-        PlayerScore_Clear(this);  // clear scores when needed
-    }
-
 	if (CS(this).killcount != FRAGS_SPECTATOR)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
 		if(!game_stopped)
 		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
-
-		if(!CS(this).just_joined)
-			LogTeamchange(this.playerid, -1, TEAM_CHANGE_SPECTATOR);
-		else
-			CS(this).just_joined = false;
 	}
 
 	accuracy_resend(this);
@@ -388,6 +374,16 @@ void PutObserverInServer(entity this)
 		if(axh.owner == this && axh != NULL && !wasfreed(axh))
 			delete(axh);
 	}
+	
+	if (mutator_returnvalue)
+	{
+		// mutator prevents resetting teams+score
+	}
+	else
+	{
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
+		this.frags = FRAGS_SPECTATOR;
+    }
 }
 
 int player_getspecies(entity this)
@@ -1070,38 +1066,7 @@ void ClientConnect(entity this)
 
 	bot_clientconnect(this);
 
-	// identify the right forced team
-	if (autocvar_g_campaign)
-	{
-		if (IS_REAL_CLIENT(this)) // only players, not bots
-		{
-			switch (autocvar_g_campaign_forceteam)
-			{
-				case 1: this.team_forced = NUM_TEAM_1; break;
-				case 2: this.team_forced = NUM_TEAM_2; break;
-				case 3: this.team_forced = NUM_TEAM_3; break;
-				case 4: this.team_forced = NUM_TEAM_4; break;
-				default: this.team_forced = 0;
-			}
-		}
-	}
-	else if (PlayerInList(this, autocvar_g_forced_team_red))    this.team_forced = NUM_TEAM_1;
-	else if (PlayerInList(this, autocvar_g_forced_team_blue))   this.team_forced = NUM_TEAM_2;
-	else if (PlayerInList(this, autocvar_g_forced_team_yellow)) this.team_forced = NUM_TEAM_3;
-	else if (PlayerInList(this, autocvar_g_forced_team_pink))   this.team_forced = NUM_TEAM_4;
-	else switch (autocvar_g_forced_team_otherwise)
-	{
-		default: this.team_forced = 0; break;
-		case "red": this.team_forced = NUM_TEAM_1; break;
-		case "blue": this.team_forced = NUM_TEAM_2; break;
-		case "yellow": this.team_forced = NUM_TEAM_3; break;
-		case "pink": this.team_forced = NUM_TEAM_4; break;
-		case "spectate":
-		case "spectator":
-			this.team_forced = -1;
-			break;
-	}
-	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
+	Player_DetermineForcedTeam(this);
 
 	TRANSMUTE(Observer, this);
 
@@ -1905,7 +1870,7 @@ void ShowRespawnCountdown(entity this)
 .bool team_selected;
 bool ShowTeamSelection(entity this)
 {
-	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
+	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
 		return false;
 	stuffcmd(this, "menu_showteamselect\n");
 	return true;
@@ -1928,7 +1893,6 @@ void Join(entity this)
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 	{
-		//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
@@ -1953,7 +1917,7 @@ int nJoinAllowed(entity this, entity ignore)
 			return 0;
 	}
 
-	if(this && this.team_forced < 0)
+	if(this && (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 		return 0; // forced spectators can never join
 
 	// TODO simplify this
@@ -2505,7 +2469,7 @@ void PlayerPreThink (entity this)
 		// don't do this in ClientConnect
 		// many things can go wrong if a client is spawned as player on connection
 		if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
-			|| (!(autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0)
+			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
 			campaign_bots_may_start = true;
