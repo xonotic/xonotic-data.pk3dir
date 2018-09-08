@@ -332,7 +332,10 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
-	this.dphitcontentsmask = 0;
+	//this.dphitcontentsmask = 0;
+	this.dphitcontentsmask = DPCONTENTS_SOLID;
+	if (autocvar_g_playerclip_collisions)
+		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 	this.pushltime = 0;
 	this.istypefrag = 0;
 	setthink(this, func_null);
