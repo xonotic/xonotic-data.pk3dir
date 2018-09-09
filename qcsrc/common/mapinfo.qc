@@ -1064,6 +1064,11 @@ int MapInfo_Get_ByName(string pFilename, float pAllowGenerate, Gametype pGametyp
 {
 	int r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
 
+	// force all DM maps to work in duel?!
+	// TODO: we should really check the size of maps, some DM maps do not work for duel!
+	if(!(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DUEL.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+		_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_DUEL);
+
 	if(cvar("g_tdm_on_dm_maps"))
 	{
 		// if this is set, all DM maps support TDM too

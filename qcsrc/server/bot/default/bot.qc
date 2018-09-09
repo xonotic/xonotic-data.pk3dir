@@ -593,6 +593,7 @@ float bot_fixcount()
 		});
 	}
 
+	//int player_limit = GetPlayerLimit(); // TODO: use this instead of maxclients!
 	int bots;
 	// add/remove bots if needed to make sure there are at least
 	// minplayers+bot_number, or remove all bots if no one is playing

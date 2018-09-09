@@ -480,6 +480,18 @@ CLASS(Invasion, Gametype)
 ENDCLASS(Invasion)
 REGISTER_GAMETYPE(INVASION, NEW(Invasion));
 
+CLASS(Duel, Gametype)
+    INIT(Duel)
+    {
+        this.gametype_init(this, _("Duel"),"duel","g_duel",false,"","timelimit=10 pointlimit=0 leadlimit=0",_("Fight in a one versus one arena battle to decide the winner"));
+    }
+    METHOD(Duel, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return (diameter < 4096);
+    }
+ENDCLASS(Duel)
+REGISTER_GAMETYPE(DUEL, NEW(Duel));
+
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;
 const int MAPINFO_FEATURE_TURRETS       = 4;
