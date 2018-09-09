@@ -427,6 +427,10 @@ void Porto_Draw(entity this)
 
 		vector pos = view_origin;
 		vector dir = view_forward;
+		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
+		pos += v_right * -wepent.movedir.y
+			+  v_up * wepent.movedir.z;
+
 		if (wepent.angles_held_status)
 		{
 			makevectors(wepent.angles_held);
