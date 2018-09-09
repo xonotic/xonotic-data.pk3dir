@@ -688,6 +688,7 @@ void turret_track(entity this)
  + TFL_TARGETSELECT_LOS
  + TFL_TARGETSELECT_PLAYERS
  + TFL_TARGETSELECT_MISSILES
+ + TFL_TARGETSELECT_VEHICLES
  - TFL_TARGETSELECT_TRIGGERTARGET
  + TFL_TARGETSELECT_ANGLELIMITS
  + TFL_TARGETSELECT_RANGELIMITS
@@ -734,6 +735,9 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	{
 		if (e_target.vehicle_health <= 0)
 			return -6;
+
+		if ((validate_flags & TFL_TARGETSELECT_VEHICLES) && !e_target.owner)
+			return -7;
 	}
 	else if (GetResourceAmount(e_target, RESOURCE_HEALTH) <= 0)
 		return -6;
