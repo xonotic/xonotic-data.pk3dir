@@ -1352,6 +1352,9 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	else
 		setmodel(this, mon.m_model);
 
+	if(!this.monster_name || this.monster_name == "")
+		this.monster_name = mon.monster_name;
+
 	this.flags				= FL_MONSTER;
 	this.classname			= "monster";
 	this.takedamage			= DAMAGE_AIM;
@@ -1379,7 +1382,6 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.reset				= Monster_Reset;
 	this.netname			= mon.netname;
 	this.monster_attackfunc	= mon.monster_attackfunc;
-	this.monster_name		= mon.monster_name;
 	this.candrop			= true;
 	this.oldtarget2			= this.target2;
 	//this.pass_distance		= 0;
