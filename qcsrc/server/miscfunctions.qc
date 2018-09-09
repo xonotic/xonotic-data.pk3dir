@@ -632,6 +632,9 @@ void readplayerstartcvars()
 		});
 	}
 
+	if(cvar("g_balance_superweapons_time") < 0)
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
+
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
