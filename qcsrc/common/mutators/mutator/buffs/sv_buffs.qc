@@ -210,7 +210,7 @@ float buff_Available(entity buff)
 		return false;
 	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
-	return cvar(strcat("g_buffs_", buff.m_name));
+	return cvar(strcat("g_buffs_", buff.netname));
 }
 
 .int buff_seencount;

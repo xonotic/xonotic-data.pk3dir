@@ -716,7 +716,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	if(!checkpvs(e_target.origin, e_turret))
 		return -1;
 
-	if(e_target.alpha <= 0.3)
+	if(e_target.alpha != 0 && e_target.alpha <= 0.3)
 		return -1;
 
 	if(MUTATOR_CALLHOOK(TurretValidateTarget, e_turret, e_target, validate_flags))

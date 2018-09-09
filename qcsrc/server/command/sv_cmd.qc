@@ -1052,8 +1052,8 @@ void GameCommand_moveplayer(int request, int argc)
 							{
 								// set up
 								float team_id;
-								float save = client.team_forced;
-								client.team_forced = 0;
+								int save = Player_GetForcedTeamIndex(client);
+								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 
 								// find the team to move the player to
 								team_id = Team_ColorToTeam(destination);
@@ -1073,7 +1073,7 @@ void GameCommand_moveplayer(int request, int argc)
 								{
 									balance = TeamBalance_CheckAllowedTeams(client);
 								}
-								client.team_forced = save;
+								Player_SetForcedTeamIndex(client, save);
 
 								// Check to see if the destination team is even available
 								switch (team_id)
@@ -1130,7 +1130,7 @@ void GameCommand_moveplayer(int request, int argc)
 								}
 
 								// If so, lets continue and finally move the player
-								client.team_forced = 0;
+								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 								if (MoveToTeam(client, Team_TeamToIndex(team_id), 6))
 								{
 									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
@@ -1312,7 +1312,7 @@ void GameCommand_shuffleteams(int request)
 			}
 
 			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
-				if (it.team_forced) {
+				if (Player_HasRealForcedTeam(it)) {
 					// we could theoretically assign forced players to their teams
 					// and shuffle the rest to fill the empty spots but in practise
 					// either all players or none are gonna have forced teams

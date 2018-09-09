@@ -22,7 +22,10 @@ void ClientKill_Now_TeamChange(entity this)
 		PutObserverInServer(this);
 	}
 	else
-		SV_ChangeTeam(this, this.killindicator_teamchange - 1);
+	{
+		Player_SetTeamIndexChecked(this, Team_TeamToIndex(
+			this.killindicator_teamchange));
+	}
 	this.killindicator_teamchange = 0;
 }
 
