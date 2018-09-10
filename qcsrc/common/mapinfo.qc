@@ -757,6 +757,7 @@ float MapInfo_isRedundant(string fn, string t)
 	// we allow the visible title to have punctuation the file name does
 	// not, but not vice versa
 	t = strreplace("-", "", t);
+	fn = strreplace("-", "", fn);
 
 	if(!strcasecmp(fn, t))
 		return true;
