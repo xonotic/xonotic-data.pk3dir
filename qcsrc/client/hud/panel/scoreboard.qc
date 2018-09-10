@@ -1470,6 +1470,30 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 }
 
 bool have_weapon_stats;
+bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
+{
+	if (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_NEXBALL)
+		return false;
+	if (!autocvar_hud_panel_scoreboard_accuracy || warmup_stage || ypos > 0.91 * vid_conheight)
+		return false;
+
+	if (!have_weapon_stats)
+	{
+		FOREACH(Weapons, it != WEP_Null, {
+			int weapon_stats = weapon_accuracy[i - WEP_FIRST];
+			if (weapon_stats >= 0)
+			{
+				have_weapon_stats = true;
+				break;
+			}
+		});
+		if (!have_weapon_stats)
+			return false;
+	}
+
+	return true;
+}
+
 void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
@@ -1601,22 +1625,7 @@ void Scoreboard_Draw()
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
 
-	bool show_accuracy = (gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_NEXBALL);
-
-	if (!have_weapon_stats)
-	{
-		FOREACH(Weapons, it != WEP_Null, {
-			int weapon_stats = weapon_accuracy[i - WEP_FIRST];
-			if (weapon_stats >= 0)
-			{
-				have_weapon_stats = true;
-				break;
-			}
-		});
-	}
-
-	if (have_weapon_stats)
-	if (show_accuracy && autocvar_hud_panel_scoreboard_accuracy && !warmup_stage && pos.y > 0.91 * vid_conheight)
+	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 
 	if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (autocvar_hud_panel_scoreboard_ctf_leaderboard && gametype == MAPINFO_TYPE_CTF && STAT(CTF_SHOWLEADERBOARD))) {
