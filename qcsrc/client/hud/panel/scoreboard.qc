@@ -1602,7 +1602,7 @@ void Scoreboard_Draw()
 
 	bool show_accuracy = (gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_NEXBALL);
 
-	if (show_accuracy && autocvar_hud_panel_scoreboard_accuracy && !warmup_stage)
+	if (show_accuracy && autocvar_hud_panel_scoreboard_accuracy && !warmup_stage && pos.y > 0.91 * vid_conheight)
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 
 	if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (autocvar_hud_panel_scoreboard_ctf_leaderboard && gametype == MAPINFO_TYPE_CTF && STAT(CTF_SHOWLEADERBOARD))) {
