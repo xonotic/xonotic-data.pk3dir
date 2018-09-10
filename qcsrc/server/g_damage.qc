@@ -1236,11 +1236,11 @@ void Fire_ApplyDamage(entity e)
 	}
 	e.fire_hitsound = true;
 
-	if(!IS_INDEPENDENT_PLAYER(e))
-	if(!STAT(FROZEN, e))
-		FOREACH_CLIENT(IS_PLAYER(it) && it != e, {
-			if(!IS_DEAD(it))
-			if(!IS_INDEPENDENT_PLAYER(it))
+	if(!IS_INDEPENDENT_PLAYER(e) && !STAT(FROZEN, e))
+	{
+		IL_EACH(g_damagedbycontents, it.damagedbycontents && it != e,
+		{
+			if(!IS_DEAD(it) && it.takedamage && !IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
 			{
 				t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
@@ -1248,6 +1248,8 @@ void Fire_ApplyDamage(entity e)
 				Fire_AddDamage(it, o, d, t, DEATH_FIRE.m_id);
 			}
 		});
+	}
+			
 }
 
 void Fire_ApplyEffect(entity e)
