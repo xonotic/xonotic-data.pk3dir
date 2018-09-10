@@ -1025,6 +1025,12 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			field_pos.x += fieldpadding + (max(fieldsize, min_fieldsize) - fieldsize) * 0.5;
 			drawstring(field_pos, field, hud_fontsize, sbt_field_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		}
+		if(pl.eliminated)
+		{
+			h_size.x = column_width + hud_fontsize.x * 0.25;
+			h_size.y = hud_fontsize.y;
+			drawfill(pos - hud_fontsize.x * 0.25 * eX, h_size, '0 0 0', 0.5 * panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
 		pos.x += column_width;
 		pos.x += hud_fontsize.x;
 	}
