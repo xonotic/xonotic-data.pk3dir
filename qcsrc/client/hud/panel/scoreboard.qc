@@ -1469,6 +1469,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	return end_pos;
 }
 
+bool have_weapon_stats;
 void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
@@ -1602,6 +1603,19 @@ void Scoreboard_Draw()
 
 	bool show_accuracy = (gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_NEXBALL);
 
+	if (!have_weapon_stats)
+	{
+		FOREACH(Weapons, it != WEP_Null, {
+			int weapon_stats = weapon_accuracy[i - WEP_FIRST];
+			if (weapon_stats >= 0)
+			{
+				have_weapon_stats = true;
+				break;
+			}
+		});
+	}
+
+	if (have_weapon_stats)
 	if (show_accuracy && autocvar_hud_panel_scoreboard_accuracy && !warmup_stage && pos.y > 0.91 * vid_conheight)
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 
