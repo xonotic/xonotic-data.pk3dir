@@ -61,6 +61,9 @@ float autocvar_hud_panel_scoreboard_namesize = 15;
 bool autocvar_hud_panel_scoreboard_accuracy = true;
 bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
 bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
+float autocvar_hud_panel_scoreboard_accuracy_showdelay = 2;
+float autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos = 0.75;
+
 bool autocvar_hud_panel_scoreboard_ctf_leaderboard = true;
 
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
@@ -1475,6 +1478,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	return end_pos;
 }
 
+float scoreboard_time;
 bool have_weapon_stats;
 bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 {
@@ -1482,6 +1486,12 @@ bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 		return false;
 	if (!autocvar_hud_panel_scoreboard_accuracy || warmup_stage || ypos > 0.91 * vid_conheight)
 		return false;
+
+	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_accuracy_showdelay
+		&& ypos > autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos * vid_conheight)
+	{
+		return false;
+	}
 
 	if (!have_weapon_stats)
 	{
@@ -1508,6 +1518,8 @@ void Scoreboard_Draw()
 
 		// frametime checks allow to toggle the scoreboard even when the game is paused
 		if(scoreboard_active) {
+			if (scoreboard_fade_alpha < 1)
+				scoreboard_time = time;
 			if(hud_configure_menu_open == 1)
 				scoreboard_fade_alpha = 1;
 			float scoreboard_fadeinspeed = autocvar_hud_panel_scoreboard_fadeinspeed;
