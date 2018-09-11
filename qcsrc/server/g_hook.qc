@@ -328,7 +328,6 @@ void GrapplingHookTouch(entity this, entity toucher)
 
 	if(toucher)
 		//if(toucher.move_movetype != MOVETYPE_NONE)
-		if(!(toucher.flags & FL_PROJECTILE) || toucher.classname == "nade")
 		{
 			SetMovetypeFollow(this, toucher);
 			WarpZone_RefSys_BeginAddingIncrementally(this, this.aiment);

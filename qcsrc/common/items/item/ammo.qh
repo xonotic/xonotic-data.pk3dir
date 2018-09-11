@@ -63,7 +63,7 @@ REGISTER_ITEM(Bullets, Bullets) {
     this.m_model    =   MDL_Bullets_ITEM;
 #endif
     this.netname    =   "bullets";
-    this.m_name     =   "bullets";
+    this.m_name     =   _("bullets");
     this.m_icon     =   "ammo_bullets";
 #ifdef SVQC
     this.m_botvalue =   1500;
@@ -93,7 +93,7 @@ REGISTER_ITEM(Cells, Ammo) {
     this.m_model    =   MDL_Cells_ITEM;
 #endif
     this.netname    =   "cells";
-    this.m_name     =   "cells";
+    this.m_name     =   _("cells");
     this.m_icon     =   "ammo_cells";
 #ifdef SVQC
     this.m_botvalue =   1500;
@@ -123,7 +123,7 @@ REGISTER_ITEM(Plasma, Ammo) {
     this.m_model    =   MDL_Plasma_ITEM;
 #endif
     this.netname    =   "plasma";
-    this.m_name     =   "plasma";
+    this.m_name     =   _("plasma");
     this.m_icon     =   "ammo_plasma";
 #ifdef SVQC
     this.m_botvalue =   1500;
@@ -153,7 +153,7 @@ REGISTER_ITEM(Rockets, Ammo) {
     this.m_model    =   MDL_Rockets_ITEM;
 #endif
     this.netname    =   "rockets";
-    this.m_name     =   "rockets";
+    this.m_name     =   _("rockets");
     this.m_icon     =   "ammo_rockets";
 #ifdef SVQC
     this.m_botvalue =   1500;
@@ -187,7 +187,7 @@ REGISTER_ITEM(Shells, Shells) {
     this.m_model    =   MDL_Shells_ITEM;
 #endif
     this.netname    =   "shells";
-    this.m_name     =   "shells";
+    this.m_name     =   _("shells");
     this.m_icon     =   "ammo_shells";
 #ifdef SVQC
     this.m_botvalue =   1000;

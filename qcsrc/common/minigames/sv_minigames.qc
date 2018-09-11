@@ -9,7 +9,7 @@ void player_clear_minigame(entity player)
 		set_movetype(player, MOVETYPE_WALK);
 	else
 		set_movetype(player, MOVETYPE_FLY_WORLDONLY);
-	player.team_forced = 0;
+	Player_SetForcedTeamIndex(player, TEAM_FORCE_DEFAULT);
 }
 
 void minigame_rmplayer(entity minigame_session, entity player)
@@ -150,7 +150,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 			PutObserverInServer(player);
 		}
 		if ( autocvar_sv_minigames_observer == 2 )
-			player.team_forced = -1;
+			Player_SetForcedTeamIndex(player, TEAM_FORCE_SPECTATOR);
 
 		minigame_resend(minigame_session);
 	}

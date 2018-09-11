@@ -226,6 +226,8 @@ METHOD(Client, m_unwind, bool(Client this))
     return false;
 }
 
+bool PlayerInList(entity player, string list);
+
 /// \brief Print the string to the client's chat.
 /// \param[in] client Client to print to.
 /// \param[in] text Text to print.
@@ -273,8 +275,6 @@ void SetSpectatee_status(entity this, int spectatee_num);
 void FixPlayermodel(entity player);
 
 void ClientInit_misc(entity this);
-
-void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
 
 bool joinAllowed(entity this);
 void Join(entity this);

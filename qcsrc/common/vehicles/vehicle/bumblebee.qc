@@ -160,7 +160,7 @@ bool bumblebee_gunner_frame(entity this, float dt)
 				gun.attack_finished_single[0] = time + autocvar_g_vehicle_bumblebee_cannon_refire;
 			}
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, bumblebee);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, bumblebee, RESOURCE_HEALTH);
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, bumblebee);
@@ -389,7 +389,7 @@ void bumblebee_regen(entity this, float dt)
 		vehicles_regen(this, this.dmg_time, vehicle_shield, autocvar_g_vehicle_bumblebee_shield, autocvar_g_vehicle_bumblebee_shield_regen_pause, autocvar_g_vehicle_bumblebee_shield_regen, dt, true);
 
 	if(this.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(this, this.dmg_time, vehicle_health, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_health_regen_pause, autocvar_g_vehicle_bumblebee_health_regen, dt, false);
+		vehicles_regen_resource(this, this.dmg_time, vehicle_health, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_health_regen_pause, autocvar_g_vehicle_bumblebee_health_regen, dt, false, RESOURCE_HEALTH);
 
 	if(this.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(this, this.wait, vehicle_energy, autocvar_g_vehicle_bumblebee_energy, autocvar_g_vehicle_bumblebee_energy_regen_pause, autocvar_g_vehicle_bumblebee_energy_regen, dt, false);
@@ -555,7 +555,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 
 						if(IS_VEHICLE(trace_ent))
 						{
-							if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.max_health)
+							if(autocvar_g_vehicle_bumblebee_healgun_sps && GetResourceAmount(trace_ent, RESOURCE_HEALTH) <= trace_ent.max_health)
 								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * dt, trace_ent.tur_head.max_health);
 						}
 						else if(IS_CLIENT(trace_ent))
@@ -584,7 +584,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 	}
 	*/
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, bumblebee);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, bumblebee, RESOURCE_HEALTH);
 	VEHICLE_UPDATE_PLAYER(this, vehic, energy, bumblebee);
 
 	this.vehicle_ammo1 = (vehic.gun1.vehicle_energy / autocvar_g_vehicle_bumblebee_cannon_ammo) * 100;
@@ -879,7 +879,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
     if(!autocvar_g_vehicle_bumblebee_swim)
     	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 
-    instance.vehicle_health = autocvar_g_vehicle_bumblebee_health;
+    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_bumblebee_health);
     instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
     instance.solid = SOLID_BBOX;
     set_movetype(instance, MOVETYPE_TOSS);
@@ -906,8 +906,8 @@ METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 
     instance.vehicle_exit = bumblebee_exit;
     instance.respawntime = autocvar_g_vehicle_bumblebee_respawntime;
-    instance.vehicle_health = autocvar_g_vehicle_bumblebee_health;
-    instance.max_health = instance.vehicle_health;
+    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_bumblebee_health);
+    instance.max_health = GetResourceAmount(instance, RESOURCE_HEALTH);
     instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
 }
 

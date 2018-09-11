@@ -1,4 +1,4 @@
-name Gak Masked
+name Gak
 species alien
 sex Male
 weight 87

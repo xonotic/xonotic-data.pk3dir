@@ -4,6 +4,7 @@
 #include <server/campaign.qc>
 #include <server/cheats.qc>
 #include <server/client.qc>
+#include <server/clientkill.qc>
 #include <server/g_damage.qc>
 #include <server/g_hook.qc>
 #include <server/g_world.qc>
