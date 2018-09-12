@@ -1504,7 +1504,8 @@ bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 		return false;
 
 	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_accuracy_showdelay
-		&& ypos > autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos * vid_conheight)
+		&& ypos > autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos * vid_conheight
+		&& !intermission)
 	{
 		return false;
 	}
