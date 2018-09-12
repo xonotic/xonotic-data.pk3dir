@@ -99,7 +99,7 @@ float autocvar_g_ban_sync_timeout;
 string autocvar_g_ban_sync_trusted_servers;
 bool autocvar_g_ban_sync_trusted_servers_verify;
 string autocvar_g_ban_sync_uri;
-bool autocvar_g_ban_telluser;
+bool autocvar_g_ban_telluser = true;
 string autocvar_g_banned_list;
 bool autocvar_g_banned_list_idmode;
 bool autocvar_g_botclip_collisions;
