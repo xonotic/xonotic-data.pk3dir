@@ -1155,6 +1155,15 @@ bool Scoreboard_WouldDraw()
 float average_accuracy;
 vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 {
+	if (frametime)
+	{
+		if (scoreboard_fade_alpha == 1)
+			scoreboard_acc_fade_alpha = min(1, scoreboard_acc_fade_alpha + frametime * 10);
+		else
+			scoreboard_acc_fade_alpha = 1; // sync fading with the scoreboard
+	}
+	vector initial_pos = pos;
+
 	WepSet weapons_stat = WepSet_GetFromStat();
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	int disownedcnt = 0;
@@ -1188,7 +1197,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	float weapon_height = 29;
 	float height = hud_fontsize.y + weapon_height;
 
-	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -1196,7 +1205,11 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	panel_pos = pos;
 	panel_size.y = height * rows;
 	panel_size.y += panel_bg_padding * 2;
+
+	float panel_bg_alpha_save = panel_bg_alpha;
+	panel_bg_alpha *= scoreboard_acc_fade_alpha;
 	HUD_Panel_DrawBg();
+	panel_bg_alpha = panel_bg_alpha_save;
 
 	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
@@ -1214,18 +1227,18 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	float weapon_width = tmp.x / columnns / rows;
 
 	if (sbt_bg_alpha)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 
 	if(sbt_highlight)
 	{
 		// column highlighting
 		for (int i = 0; i < columnns; ++i)
 			if ((i % 2) == 0)
-				drawfill(pos + eX * weapon_width * rows * i, vec2(weapon_width * rows, height * rows), '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos + eX * weapon_width * rows * i, vec2(weapon_width * rows, height * rows), '0 0 0', sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 
 		// row highlighting
 		for (int i = 0; i < rows; ++i)
-			drawfill(pos + eY * (weapon_height + height * i), vec2(tmp.x, hud_fontsize.y), rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + eY * (weapon_height + height * i), vec2(tmp.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 	}
 
 	average_accuracy = 0;
@@ -1258,7 +1271,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * sbt_fg_alpha;
 
 		// weapon icon
-		drawpic_aspect_skin(tmpos, it.model2, vec2(weapon_width, weapon_height), '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(tmpos, it.model2, vec2(weapon_width, weapon_height), '1 1 1', weapon_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if (weapon_stats >= 0) {
 			weapons_with_stats += 1;
@@ -1273,7 +1286,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 			if(!autocvar_hud_panel_scoreboard_accuracy_nocolors)
 				rgb = Accuracy_GetColor(weapon_stats);
 
-			drawstring(tmpos + vec2(padding, weapon_height), s, hud_fontsize, rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(tmpos + vec2(padding, weapon_height), s, hud_fontsize, rgb, sbt_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 		}
 		tmpos.x += weapon_width * rows;
 		pos.x += weapon_width * rows;
@@ -1289,7 +1302,10 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
-	return end_pos;
+
+	if (scoreboard_acc_fade_alpha == 1)
+		return end_pos;
+	return initial_pos + (end_pos - initial_pos) * scoreboard_acc_fade_alpha;
 }
 
 vector MapStats_DrawKeyValue(vector pos, string key, string value) {
@@ -1543,7 +1559,10 @@ void Scoreboard_Draw()
 		}
 
 		if (!scoreboard_fade_alpha)
+		{
+			scoreboard_acc_fade_alpha = 0;
 			return;
+		}
 	}
 	else
 		scoreboard_fade_alpha = 0;
