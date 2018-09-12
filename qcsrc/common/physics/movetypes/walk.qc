@@ -144,7 +144,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	}
 
 	// move down
-	vector downmove = '0 0 1' * (-PHYS_STEPHEIGHT(this) + start_velocity.z * dt);
+	vector downmove = '0 0 0';
+	downmove.z = -PHYS_STEPHEIGHT(this) + start_velocity.z * dt;
 	_Movetype_PushEntity(this, downmove, true);
 	if(wasfreed(this))
 		return;
