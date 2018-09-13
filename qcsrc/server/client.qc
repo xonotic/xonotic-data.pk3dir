@@ -721,10 +721,10 @@ void PutPlayerInServer(entity this)
 	});
 
 	{
-		string s = spot.target;
-		spot.target = string_null;
+		//string s = spot.target;
+		//spot.target = string_null;
 		SUB_UseTargets(spot, this, NULL);
-		spot.target = s;
+		//spot.target = s;
 	}
 
 	Unfreeze(this);
