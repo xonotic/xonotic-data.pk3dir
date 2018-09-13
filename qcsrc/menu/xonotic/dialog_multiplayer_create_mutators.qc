@@ -37,7 +37,7 @@ string WeaponArenaString()
 	s = "";
 	for(int j = 0; j < n; ++j)
 	{
-		entity wep = Weapons_fromstr(argv(j));
+		Weapon wep = Weapons_fromstr(argv(j));
 		if(wep != WEP_Null)
 		{
 			s = cons_mid(s, " & ", wep.m_name);

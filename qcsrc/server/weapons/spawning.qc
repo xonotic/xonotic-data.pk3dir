@@ -56,7 +56,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				entity wep = Weapons_fromstr(s);
+				Weapon wep = Weapons_fromstr(s);
 				if(wep != WEP_Null)
 				{
 					entity replacement = spawn();

@@ -600,7 +600,7 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			entity wep = Weapons_fromstr(s);
+			Weapon wep = Weapons_fromstr(s);
 			if(wep != WEP_Null)
 			{
 				g_weaponarena_weapons |= (wep.m_wepset);
