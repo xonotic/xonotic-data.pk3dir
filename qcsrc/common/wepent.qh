@@ -35,6 +35,8 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 	.Weapon switchingweapon;
 	.Weapon switchweapon;
 
+	.float m_alpha;
+
 	// only for Porto
 	.bool angles_held_status;
 	.vector angles_held;
