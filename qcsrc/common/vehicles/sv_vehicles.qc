@@ -385,7 +385,7 @@ bool vehicle_addplayerslot(	entity _owner,
 
 vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname,
 						 float _pichlimit_min, float _pichlimit_max,
-						 float _rotlimit_min, float _rotlimit_max, float _aimspeed)
+						 float _rotlimit_min, float _rotlimit_max, float _aimspeed, float dt)
 {
 	vector vtmp, vtag;
 	float ftmp;
@@ -393,7 +393,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	vtmp = vectoangles(normalize(_target - vtag));
 	vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
 	vtmp = AnglesTransform_Normalize(vtmp, true);
-	ftmp = _aimspeed * frametime;
+	ftmp = _aimspeed * dt;
 	vtmp_y = bound(-ftmp, vtmp_y, ftmp);
 	vtmp_x = bound(-ftmp, vtmp_x, ftmp);
 	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);
