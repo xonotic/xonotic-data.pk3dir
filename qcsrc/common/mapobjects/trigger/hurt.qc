@@ -25,7 +25,7 @@ void trigger_hurt_touch(entity this, entity toucher)
 		if (toucher.triggerhurttime < time)
 		{
 			EXACTTRIGGER_TOUCH(this, toucher);
-			toucher.triggerhurttime = time + ((autocvar_sv_vq3compat && !(this.spawnflags & HURT_SLOW)) ? 0.2 : 1);
+			toucher.triggerhurttime = time + ((autocvar_sv_vq3compat && !(this.spawnflags & HURT_SLOW)) ? 0.1 : 1);
 
 			entity own;
 			own = this.enemy;
