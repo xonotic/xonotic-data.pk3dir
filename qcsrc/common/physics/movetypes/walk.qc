@@ -53,7 +53,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	// if the move did not hit the ground at any point, we're not on ground
 	if (!(clip & 1))
 		UNSET_ONGROUND(this);
-	else if(PHYS_WALLCLIP(this) && !this.groundentity && start_velocity.z < -200) // don't do landing time if we were just going down a slope
+	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
 		this.pm_time = 0.25;
 
 	_Movetype_CheckVelocity(this);
