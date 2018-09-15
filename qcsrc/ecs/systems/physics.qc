@@ -532,6 +532,7 @@ void sys_phys_update(entity this, float dt)
 	float jumpvel = this.com_phys_jumpvel;
 	float bounce = this.com_phys_bounce;
 	float friction = this.com_phys_friction;
+	float airfriction = this.com_phys_friction * 0.5;
 	float gravity = this.com_phys_gravity.z;
 	bool noclip = this.com_phys_noclip;
 	if (noclip)
@@ -566,6 +567,15 @@ void sys_phys_update(entity this, float dt)
 				slide *= 1 - friction * dt;
 				vel = slide + push;
 			}
+		}
+		else
+		{
+			float oldz = vel.z;
+			vector slide = vel;
+			vector push = vel - slide;
+			slide *= 1 - airfriction * dt;
+			vel = slide + push;
+			vel.z = oldz;
 		}
 		vector step = vel * dt;
 		bool pass = false;
