@@ -94,6 +94,7 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 	int mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
 
 	if (warmup_stage) return false;
+	if (game_stopped) return false;
 
 	// damage to dead/frozen players is good only if it happens in the frame they get killed / frozen
 	// so that stats for weapons that shoot multiple projectiles per shot are properly counted

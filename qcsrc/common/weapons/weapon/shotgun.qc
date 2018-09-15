@@ -69,7 +69,7 @@ void W_Shotgun_Melee_Think(entity this)
 			+ (v_up * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_side)));
 
-		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
+		WarpZone_traceline_antilag(this.realowner, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -78,7 +78,7 @@ void W_Shotgun_Melee_Think(entity this)
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
-			&& (trace_ent.takedamage == DAMAGE_AIM)
+			&& (trace_ent.takedamage != DAMAGE_NO)
 			&& (trace_ent != this.swing_alreadyhit)
 			&& (is_player || WEP_CVAR_SEC(shotgun, melee_nonplayerdamage)))
 		{

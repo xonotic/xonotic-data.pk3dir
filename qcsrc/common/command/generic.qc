@@ -57,7 +57,7 @@ void Curl_URI_Get_Callback(int id, float status, string data)
 //  Command Sub-Functions
 // =======================
 
-void GenericCommand_addtolist(float request, float argc)
+void GenericCommand_addtolist(int request, int argc)
 {
 	switch(request)
 	{
@@ -97,7 +97,7 @@ void GenericCommand_addtolist(float request, float argc)
 	}
 }
 
-void GenericCommand_qc_curl(float request, float argc)
+void GenericCommand_qc_curl(int request, int argc)
 {
 	switch(request)
 	{
@@ -169,7 +169,7 @@ void GenericCommand_qc_curl(float request, float argc)
 	}
 }
 
-GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to *_cmd_dump.txt")
+GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd_dump.txt")
 {
 	switch(request)
 	{
@@ -184,23 +184,28 @@ GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to *_cmd_dump.tx
 				#ifdef SVQC
 					CMD_Write("dump of server console commands:\n");
 					GameCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 
-					CMD_Write("\ndump of networked client only commands:\n");
+					CMD_Write("dump of networked client only commands:\n");
 					ClientCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 
-					CMD_Write("\ndump of common commands:\n");
+					CMD_Write("dump of common commands:\n");
 					CommonCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 
-					CMD_Write("\ndump of ban commands:\n");
+					CMD_Write("dump of ban commands:\n");
 					BanCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 				#endif
 
 				#ifdef CSQC
 					CMD_Write("dump of client commands:\n");
 					LocalCommand_macro_write_aliases(fh);
+					CMD_Write("\n");
 				#endif
 
-				CMD_Write("\ndump of generic commands:\n");
+				CMD_Write("dump of generic commands:\n");
 				GenericCommand_macro_write_aliases(fh);
 
 				LOG_INFO("Completed dump of aliases in ^2data/data/", GetProgramCommandPrefix(), "_dump.txt^7.");
@@ -224,7 +229,7 @@ GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to *_cmd_dump.tx
 	}
 }
 
-void GenericCommand_maplist(float request, float argc)
+void GenericCommand_maplist(int request, int argc)
 {
 	switch(request)
 	{
@@ -307,7 +312,7 @@ void GenericCommand_maplist(float request, float argc)
 	}
 }
 
-void GenericCommand_nextframe(float request, float arguments, string command)
+void GenericCommand_nextframe(int request, string command)
 {
 	switch(request)
 	{
@@ -327,7 +332,7 @@ void GenericCommand_nextframe(float request, float arguments, string command)
 	}
 }
 
-void GenericCommand_removefromlist(float request, float argc)
+void GenericCommand_removefromlist(int request, int argc)
 {
 	switch(request)
 	{
@@ -362,7 +367,7 @@ void GenericCommand_removefromlist(float request, float argc)
 	}
 }
 
-void GenericCommand_restartnotifs(float request)
+void GenericCommand_restartnotifs(int request)
 {
 	switch(request)
 	{
@@ -410,7 +415,7 @@ void GenericCommand_restartnotifs(float request)
 	}
 }
 
-void GenericCommand_settemp(float request, float argc)
+void GenericCommand_settemp(int request, int argc)
 {
 	switch(request)
 	{
@@ -441,7 +446,7 @@ void GenericCommand_settemp(float request, float argc)
 	}
 }
 
-void GenericCommand_settemp_restore(float request, float argc)
+void GenericCommand_settemp_restore(int request)
 {
 	switch(request)
 	{
@@ -468,7 +473,7 @@ void GenericCommand_settemp_restore(float request, float argc)
 	}
 }
 
-void GenericCommand_runtest(float request, float argc)
+void GenericCommand_runtest(int request, int argc)
 {
 	switch(request)
 	{
@@ -496,7 +501,7 @@ void GenericCommand_runtest(float request, float argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void GenericCommand_(float request)
+void GenericCommand_(int request)
 {
 	switch(request)
 	{
@@ -520,13 +525,13 @@ void GenericCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 GENERIC_COMMAND(addtolist, "Add a string to a cvar") { GenericCommand_addtolist(request, arguments); }
 GENERIC_COMMAND(maplist, "Automatic control of maplist") { GenericCommand_maplist(request, arguments); }
-GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM") { GenericCommand_nextframe(request, arguments, command); }
+GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM") { GenericCommand_nextframe(request, command); }
 GENERIC_COMMAND(qc_curl, "Queries a URL") { GenericCommand_qc_curl(request, arguments); }
 GENERIC_COMMAND(removefromlist, "Remove a string from a cvar") { GenericCommand_removefromlist(request, arguments); }
 GENERIC_COMMAND(restartnotifs, "Re-initialize all notifications") { GenericCommand_restartnotifs(request); }
 GENERIC_COMMAND(rpn, "RPN calculator") { GenericCommand_rpn(request, arguments, command); }
 GENERIC_COMMAND(settemp, "Temporarily set a value to a cvar which is restored later") { GenericCommand_settemp(request, arguments); }
-GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command") { GenericCommand_settemp_restore(request, arguments); }
+GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command") { GenericCommand_settemp_restore(request); }
 GENERIC_COMMAND(runtest, "Run unit tests") { GenericCommand_runtest(request, arguments); }
 
 void GenericCommand_macro_help()
@@ -534,7 +539,7 @@ void GenericCommand_macro_help()
 	FOREACH(GENERIC_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s", it.m_name, it.m_description));
 }
 
-float GenericCommand_macro_command(float argc, string command)
+float GenericCommand_macro_command(int argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(GENERIC_COMMANDS, it.m_name == c, {
@@ -544,7 +549,7 @@ float GenericCommand_macro_command(float argc, string command)
 	return false;
 }
 
-float GenericCommand_macro_usage(float argc)
+float GenericCommand_macro_usage(int argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(GENERIC_COMMANDS, it.m_name == c, {
@@ -567,7 +572,7 @@ void GenericCommand_macro_write_aliases(float fh)
 
 float GenericCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 	float n, j, f, i;
 	string s, s2, c;
 	vector rgb;

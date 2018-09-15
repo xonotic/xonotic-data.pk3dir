@@ -1,7 +1,4 @@
 #include "triggers.qh"
-#ifdef SVQC
-	#include <server/item_key.qh>
-#endif
 
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
@@ -79,7 +76,7 @@ void generic_netlinked_reset(entity this)
 // Compatibility with old maps
 void generic_netlinked_legacy_use(entity this, entity actor, entity trigger)
 {
-	LOG_WARNF("Entity %s was (de)activated by a trigger, please update map to use relays", this.targetname);
+	//LOG_WARNF("Entity %s was (de)activated by a trigger, please update map to use relays", this.targetname);
 	this.setactive(this, ACTIVE_TOGGLE);
 }
 

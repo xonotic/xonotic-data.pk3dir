@@ -121,7 +121,7 @@ void RemoveTeam(entity Team)
 
 entity GetTeam(int Team, bool add)
 {
-    TC(int, Team); TC(bool, add);
+	TC(int, Team); TC(bool, add);
 	int num = (Team == NUM_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
@@ -553,7 +553,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 /** engine callback */
 void URI_Get_Callback(int id, int status, string data)
 {
-    TC(int, id); TC(int, status);
+	TC(int, id); TC(int, status);
 	if(url_URI_Get_Callback(id, status, data))
 	{
 		// handled

@@ -6,6 +6,8 @@
 #include <server/resources.qh>
 
 #include "g_damage.qh"
+#include "clientkill.qh"
+#include "player.qh"
 #include "race.qh"
 #include "../common/mapobjects/teleporters.qh"
 
@@ -33,8 +35,6 @@
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/util_server.qh"
 
-void CopyBody(entity this, float keepvelocity);
-
 #ifdef NOCHEATS
 
 float CheatImpulse(entity this, int imp) { return 0; }
@@ -46,7 +46,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 
 #else
 
-.float maycheat;
+.bool maycheat;
 float gamestart_sv_cheats;
 
 
@@ -60,7 +60,7 @@ void CheatShutdown()
 {
 }
 
-float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
+float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets passed as argument for possible future ACL checking
 {
 	// dead people cannot cheat
 	if(IS_DEAD(this))
@@ -159,8 +159,8 @@ float CheatImpulse(entity this, int imp)
 			SetResourceAmount(this.personal, RESOURCE_PLASMA, GetResourceAmount(this, RESOURCE_PLASMA));
 			SetResourceAmount(this.personal, RESOURCE_SHELLS, GetResourceAmount(this, RESOURCE_SHELLS));
 			SetResourceAmount(this.personal, RESOURCE_FUEL, GetResourceAmount(this, RESOURCE_FUEL));
-			this.personal.health = max(1, this.health);
-			this.personal.armorvalue = this.armorvalue;
+			SetResourceAmount(this.personal, RESOURCE_HEALTH, max(1, GetResourceAmount(this, RESOURCE_HEALTH)));
+			SetResourceAmount(this.personal, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR));
 			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
@@ -218,8 +218,8 @@ float CheatImpulse(entity this, int imp)
 				SetResourceAmount(this, RESOURCE_PLASMA, GetResourceAmount(this.personal, RESOURCE_PLASMA));
 				SetResourceAmount(this, RESOURCE_SHELLS, GetResourceAmount(this.personal, RESOURCE_SHELLS));
 				SetResourceAmount(this, RESOURCE_FUEL, GetResourceAmount(this.personal, RESOURCE_FUEL));
-				this.health = this.personal.health;
-				this.armorvalue = this.personal.armorvalue;
+				SetResourceAmount(this, RESOURCE_HEALTH, GetResourceAmount(this.personal, RESOURCE_HEALTH));
+				SetResourceAmount(this, RESOURCE_ARMOR, GetResourceAmount(this.personal, RESOURCE_ARMOR));
 				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
@@ -292,7 +292,6 @@ float CheatImpulse(entity this, int imp)
 	END_CHEAT_FUNCTION();
 }
 
-void DragBox_Think(entity this);
 float drag_lastcnt;
 float CheatCommand(entity this, int argc)
 {
@@ -357,7 +356,7 @@ float CheatCommand(entity this, int argc)
 					entity e = spawn();
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
-					e.health = 1000;
+					SetResourceAmountExplicit(e, RESOURCE_HEALTH, 1000);
 					setorigin(e, trace_endpos);
 					e.effects = EF_NOMODELFLAGS;
 					if(f == 1)
@@ -712,18 +711,6 @@ float CheatCommand(entity this, int argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity this, float force_allow_pick, float ischeat);
-void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
-void Drag_Finish(entity dragger);
-float Drag_IsDraggable(entity draggee);
-float Drag_MayChangeAngles(entity draggee);
-void Drag_MoveForward(entity dragger);
-void Drag_SetSpeed(entity dragger, float s);
-void Drag_MoveBackward(entity dragger);
-void Drag_Update(entity dragger);
-float Drag_CanDrag(entity dragger);
-float Drag_IsDragging(entity dragger);
-void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
 float CheatFrame(entity this)

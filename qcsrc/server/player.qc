@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
+#include "clientkill.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
 #include "miscfunctions.qh"
@@ -21,6 +22,8 @@
 #include "../lib/csqcmodel/sv_model.qh"
 
 #include "../common/minigames/sv_minigames.qh"
+
+#include <common/gamemodes/_mod.qh>
 
 #include "../common/physics/player.qh"
 #include "../common/effects/qc/_mod.qh"
@@ -74,6 +77,7 @@ void CopyBody(entity this, float keepvelocity)
 	clone.effects = this.effects;
 	clone.glowmod = this.glowmod;
 	clone.event_damage = this.event_damage;
+	clone.event_heal = this.event_heal;
 	clone.anim_state = this.anim_state;
 	clone.anim_time = this.anim_time;
 	clone.anim_lower_action = this.anim_lower_action;
@@ -89,8 +93,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.dphitcontentsmask = this.dphitcontentsmask;
 	clone.death_time = this.death_time;
 	clone.pain_finished = this.pain_finished;
-	clone.health = this.health;
-	clone.armorvalue = this.armorvalue;
+	SetResourceAmountExplicit(clone, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
+	SetResourceAmountExplicit(clone, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR));
 	clone.armortype = this.armortype;
 	clone.model = this.model;
 	clone.modelindex = this.modelindex;
@@ -173,7 +177,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -192,8 +196,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	this.armorvalue = this.armorvalue - save;
-	this.health = this.health - take;
+	TakeResource(this, RESOURCE_ARMOR, save);
+	TakeResource(this, RESOURCE_HEALTH, take);
 	// pause regeneration for 5 seconds
 	this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
@@ -201,7 +205,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
-	if (this.health <= -autocvar_sv_gibhealth && this.alpha >= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
 	{
 		// don't use any animations as a gib
 		this.frame = 0;
@@ -310,8 +314,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	vector v;
 	float excess;
 
-	dh = max(this.health, 0);
-	da = max(this.armorvalue, 0);
+	dh = max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
+	da = max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
@@ -359,7 +363,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -388,8 +392,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
-	take = bound(0, M_ARGV(4, float), this.health);
-	save = bound(0, M_ARGV(5, float), this.armorvalue);
+	take = bound(0, M_ARGV(4, float), GetResourceAmount(this, RESOURCE_HEALTH));
+	save = bound(0, M_ARGV(5, float), GetResourceAmount(this, RESOURCE_ARMOR));
 	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
@@ -411,8 +415,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
-			this.armorvalue = this.armorvalue - save;
-			this.health = this.health - take;
+			TakeResource(this, RESOURCE_ARMOR, save);
+			TakeResource(this, RESOURCE_HEALTH, take);
 			// pause regeneration for 5 seconds
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
@@ -432,19 +436,19 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 								animdecide_setaction(this, ANIMACTION_PAIN2, true);
 						}
 					}
-
+					float myhp = GetResourceAmount(this, RESOURCE_HEALTH);
+					if(myhp > 1)
+					if(myhp < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
 					if(sound_allowed(MSG_BROADCAST, attacker))
-					if(this.health < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
-					if(this.health > 1)
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
 						if(deathtype == DEATH_FALL.m_id)
 							PlayerSound(this, playersound_fall, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
-						else if(this.health > 75)
+						else if(myhp > 75)
 							PlayerSound(this, playersound_pain100, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
-						else if(this.health > 50)
+						else if(myhp > 50)
 							PlayerSound(this, playersound_pain75, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
-						else if(this.health > 25)
+						else if(myhp > 25)
 							PlayerSound(this, playersound_pain50, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 						else
 							PlayerSound(this, playersound_pain25, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
@@ -454,12 +458,22 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 			// throw off bot aim temporarily
 			float shake;
-			if(IS_BOT_CLIENT(this) && this.health >= 1)
+			if(IS_BOT_CLIENT(this) && GetResourceAmount(this, RESOURCE_HEALTH) >= 1)
 			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				this.v_angle_x = this.v_angle.x + (random() * 2 - 1) * shake;
 				this.v_angle_y = this.v_angle.y + (random() * 2 - 1) * shake;
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
+			}
+
+			if (this != attacker) {
+				float realdmg = damage - excess;
+				if (IS_PLAYER(attacker)) {
+					GameRules_scoring_add(attacker, DMG, realdmg);
+				}
+				if (IS_PLAYER(this)) {
+					GameRules_scoring_add(this, DMGTAKEN, realdmg);
+				}
 			}
 		}
 		else
@@ -468,16 +482,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	this.dmg_save = this.dmg_save + save;//max(save - 10, 0);
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
-
-	if (this != attacker) {
-		float realdmg = damage - excess;
-		if (IS_PLAYER(attacker)) {
-			GameRules_scoring_add(attacker, DMG, realdmg);
-		}
-		if (IS_PLAYER(this)) {
-			GameRules_scoring_add(this, DMGTAKEN, realdmg);
-		}
-	}
 
 	bool abot = (IS_BOT_CLIENT(attacker));
 	bool vbot = (IS_BOT_CLIENT(this));
@@ -497,8 +501,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(this.health, 0);
-	da = da - max(this.armorvalue, 0);
+	dh = dh - max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
+	da = da - max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
@@ -506,7 +510,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
-	if (this.health < 1)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = false;
@@ -549,8 +553,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(this.classname != "body")
 			Obituary (attacker, inflictor, this, deathtype, weaponentity);
 
-        // increment frag counter for used weapon type
-        Weapon w = DEATH_WEAPONOF(deathtype);
+		// increment frag counter for used weapon type
+		Weapon w = DEATH_WEAPONOF(deathtype);
 		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
 			CS(attacker).accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
@@ -580,7 +584,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die
-		if(this.health >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
+		if(GetResourceAmount(this, RESOURCE_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
 
 		if (!this.respawn_time) // can be set in the mutator hook PlayerDies
@@ -589,7 +593,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// when we get here, player actually dies
 
 		Unfreeze(this); // remove any icy remains
-		this.health = 0; // Unfreeze resets health, so we need to set it back
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // Unfreeze resets health, so we need to set it back
 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);
@@ -629,6 +633,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
+		this.event_heal = func_null;
 		// call the corpse damage function just in case it wants to gib
 		this.event_damage(this, inflictor, attacker, excess, deathtype, weaponentity, hitloc, force);
 
@@ -664,73 +669,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 }
 
-bool MoveToTeam(entity client, int team_colour, int type)
+bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	int lockteams_backup = lockteams;  // backup any team lock
-	lockteams = 0;  // disable locked teams
-	TeamchangeFrags(client);  // move the players frags
-	if (!SetPlayerTeamSimple(client, team_colour))
-	{
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= limit)
 		return false;
-	}
-	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, DMG_NOWEP, client.origin, '0 0 0');  // kill the player
-	lockteams = lockteams_backup;  // restore the team lock
-	LogTeamchange(client.playerid, client.team, type);
+
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, limit);
 	return true;
-}
-
-/** print(), but only print if the server is not local */
-void dedicated_print(string input)
-{
-	if (server_is_dedicated) print(input);
-}
-
-void PrintToChat(entity player, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	sprint(player, text);
-}
-
-void DebugPrintToChat(entity player, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChat(player, text);
-	}
-}
-
-void PrintToChatAll(string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	bprint(text);
-}
-
-void DebugPrintToChatAll(string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatAll(text);
-	}
-}
-
-void PrintToChatTeam(int teamnum, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		if (it.team == teamnum)
-		{
-			sprint(it, text);
-		}
-	});
-}
-
-void DebugPrintToChatTeam(int teamnum, string text)
-{
-	if (autocvar_developer)
-	{
-		PrintToChatTeam(teamnum, text);
-	}
 }
 
 /**
@@ -743,13 +688,13 @@ void DebugPrintToChatTeam(int teamnum, string text)
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
 	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
-        msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
+		msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
-    if(source)
+	if (source)
 		msgin = formatmessage(source, msgin);
 
-    string colorstr;
-	if (!IS_PLAYER(source))
+	string colorstr;
+	if (!(IS_PLAYER(source) || source.caplayer))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
@@ -762,10 +707,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if(game_stopped)
 		teamsay = false;
 
-    if (!source) {
+	if (!source) {
 		colorstr = "";
 		teamsay = false;
-    }
+	}
 
 	if(msgin != "")
 		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
@@ -781,18 +726,17 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 	*/
 
-    string namestr = "";
-    if (source)
-        namestr = playername(source, autocvar_g_chat_teamcolors);
+	string namestr = "";
+	if (source)
+		namestr = playername(source, autocvar_g_chat_teamcolors);
 
-    string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
+	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
-    string msgstr, cmsgstr;
-    string privatemsgprefix = string_null;
-    int privatemsgprefixlen = 0;
-	if (msgin == "") {
-        msgstr = cmsgstr = "";
-	} else {
+	string msgstr = "", cmsgstr = "";
+	string privatemsgprefix = string_null;
+	int privatemsgprefixlen = 0;
+	if (msgin != "")
+	{
 		if(privatesay)
 		{
 			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
@@ -824,10 +768,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				msgstr = strcat("\{1}^4* ", "^7", msgin);
 			}
 			else {
-                msgstr = "\{1}";
-                msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
-                msgstr = strcat(msgstr, msgin);
-            }
+				msgstr = "\{1}";
+				msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
+				msgstr = strcat(msgstr, msgin);
+			}
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
@@ -910,7 +854,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			source.(flood_field) = flood = 0;
 	}
 
-    string sourcemsgstr, sourcecmsgstr;
+	string sourcemsgstr, sourcecmsgstr;
 	if(flood == 2) // cannot happen for empty msgstr
 	{
 		if(autocvar_g_chat_flood_notify_flooder)
@@ -931,7 +875,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcecmsgstr = cmsgstr;
 	}
 
-	if (!privatesay && source && !IS_PLAYER(source))
+	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer))
 	{
 		if (!game_stopped)
 		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
@@ -945,7 +889,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if(privatesay)
 		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
 
-    int ret;
+	int ret;
 	if(source && CS(source).muted)
 	{
 		// always fake the message
@@ -966,10 +910,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = 1;
 	}
 
-	if (privatesay && source && !IS_PLAYER(source))
+	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer))
 	{
 		if (!game_stopped)
-		if ((privatesay && IS_PLAYER(privatesay)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
+		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
 			ret = -1; // just hide the message completely
 	}
 
@@ -999,7 +943,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -1007,7 +953,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+			FOREACH_CLIENT((IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
@@ -1017,17 +963,21 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
+			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
 		}
 		else
 		{
-            if (source) {
-                sprint(source, sourcemsgstr);
-                dedicated_print(msgstr); // send to server console too
-                MX_Say(strcat(playername(source, true), "^7: ", msgin));
-            }
-            FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
-        }
+			if (source) {
+				sprint(source, sourcemsgstr);
+				dedicated_print(msgstr); // send to server console too
+				MX_Say(strcat(playername(source, true), "^7: ", msgin));
+			}
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
+		}
 	}
 
 	return ret;

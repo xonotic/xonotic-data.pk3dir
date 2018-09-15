@@ -53,7 +53,7 @@ void trigger_hurt_touch(entity this, entity toucher)
 /*QUAKED spawnfunc_trigger_hurt (.5 .5 .5) ?
 Any object touching this will be hurt
 set dmg to damage amount
-default dmg = 1000
+default dmg = 10000
 */
 .entity trigger_hurt_next;
 entity trigger_hurt_last;
@@ -66,7 +66,7 @@ spawnfunc(trigger_hurt)
 	this.use = trigger_hurt_use;
 	this.enemy = world; // I hate you all
 	if (!this.dmg)
-		this.dmg = 1000;
+		this.dmg = 10000;
 	if (this.message == "")
 		this.message = "was in the wrong place";
 	if (this.message2 == "")

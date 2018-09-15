@@ -128,7 +128,7 @@ void waypoint_unreachable(entity pl)
 	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
 }
 
-vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
+vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 {
 	vector new_org = org;
 	if (fabs(autocvar_g_waypointeditor_symmetrical) == 1)
@@ -141,8 +141,8 @@ vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
 	}
 	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
 	{
-		float m = havocbot_symmetryaxis_equation.x;
-		float q = havocbot_symmetryaxis_equation.y;
+		float m = havocbot_symmetry_axis_m;
+		float q = havocbot_symmetry_axis_q;
 		if (autocvar_g_waypointeditor_symmetrical == -2)
 		{
 			m = autocvar_g_waypointeditor_symmetrical_axis.x;
@@ -246,15 +246,14 @@ void waypoint_spawn_fromeditor(entity pl)
 {
 	entity e;
 	vector org = pl.origin;
-	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	int ctf_flags = havocbot_symmetry_origin_order;
 	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
-	int order = ctf_flags;
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
-	{
-		order = autocvar_g_waypointeditor_symmetrical_order;
-		ctf_flags = order;
-	}
+		ctf_flags = autocvar_g_waypointeditor_symmetrical_order;
+	if (sym && ctf_flags < 2)
+		ctf_flags = 2;
+	int wp_num = ctf_flags;
 
 	if(!PHYS_INPUT_BUTTON_CROUCH(pl))
 	{
@@ -263,7 +262,7 @@ void waypoint_spawn_fromeditor(entity pl)
 		{
 			vector item_org = (it.absmin + it.absmax) * 0.5;
 			item_org.z = it.absmin.z - PL_MIN_CONST.z;
-			if(vlen(item_org - org) < 30)
+			if (vlen(item_org - org) < 20)
 			{
 				org = item_org;
 				break;
@@ -282,11 +281,11 @@ void waypoint_spawn_fromeditor(entity pl)
 	bprint(strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 	if(sym)
 	{
-		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		org = waypoint_getSymmetricalPoint(e.origin, ctf_flags);
 		if (vdist(org - pl.origin, >, 32))
 		{
-			if(order > 2)
-				order--;
+			if(wp_num > 2)
+				wp_num--;
 			else
 				sym = false;
 			goto add_wp;
@@ -296,7 +295,6 @@ void waypoint_spawn_fromeditor(entity pl)
 
 void waypoint_remove(entity wp)
 {
-	// tell all waypoints linked to wp that they need to relink
 	IL_EACH(g_waypoints, it != wp,
 	{
 		if (waypoint_islinked(it, wp))
@@ -309,15 +307,14 @@ void waypoint_remove_fromeditor(entity pl)
 {
 	entity e = navigation_findnearestwaypoint(pl, false);
 
-	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	int ctf_flags = havocbot_symmetry_origin_order;
 	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
-	int order = ctf_flags;
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
-	{
-		order = autocvar_g_waypointeditor_symmetrical_order;
-		ctf_flags = order;
-	}
+		ctf_flags = autocvar_g_waypointeditor_symmetrical_order;
+	if (sym && ctf_flags < 2)
+		ctf_flags = 2;
+	int wp_num = ctf_flags;
 
 	LABEL(remove_wp);
 	if (!e) return;
@@ -332,7 +329,7 @@ void waypoint_remove_fromeditor(entity pl)
 	entity wp_sym = NULL;
 	if (sym)
 	{
-		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		vector org = waypoint_getSymmetricalPoint(e.origin, ctf_flags);
 		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
 			if(vdist(org - it.origin, <, 3))
 			{
@@ -348,8 +345,8 @@ void waypoint_remove_fromeditor(entity pl)
 	if (sym && wp_sym)
 	{
 		e = wp_sym;
-		if(order > 2)
-			order--;
+		if(wp_num > 2)
+			wp_num--;
 		else
 			sym = false;
 		goto remove_wp;
@@ -567,6 +564,9 @@ void waypoint_think(entity this)
 
 	bot_calculate_stepheightvec();
 
+	int dphitcontentsmask_save = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
@@ -619,7 +619,7 @@ void waypoint_think(entity this)
 				relink_walkculled += 0.5;
 			else
 			{
-				if (tracewalk(it, ev, PL_MIN_CONST, PL_MAX_CONST, sv2, sv2_height, MOVE_NOMONSTERS))
+				if (tracewalk(this, ev, PL_MIN_CONST, PL_MAX_CONST, sv2, sv2_height, MOVE_NOMONSTERS))
 					waypoint_addlink(it, this);
 				else
 					relink_walkculled += 0.5;
@@ -628,6 +628,7 @@ void waypoint_think(entity this)
 	});
 	navigation_testtracewalk = 0;
 	this.wplinked = true;
+	this.dphitcontentsmask = dphitcontentsmask_save;
 }
 
 void waypoint_clearlinks(entity wp)
@@ -720,6 +721,7 @@ bool waypoint_load_links()
 
 	bool parse_comments = true;
 	float ver = 0;
+	string links_time = string_null;
 
 	while ((s = fgets(file)))
 	{
@@ -729,13 +731,18 @@ bool waypoint_load_links()
 			{
 				if(substring(s, 2, 17) == "WAYPOINT_VERSION ")
 					ver = stof(substring(s, 19, -1));
+				else if(substring(s, 2, 14) == "WAYPOINT_TIME ")
+					links_time = substring(s, 16, -1);
 				continue;
 			}
 			else
 			{
-				if(ver < WAYPOINT_VERSION)
+				if(ver < WAYPOINT_VERSION || links_time != waypoint_time)
 				{
-					LOG_TRACE("waypoint links for this map are outdated.");
+					if (links_time != waypoint_time)
+						LOG_TRACE("waypoint links for this map are not made for these waypoints.");
+					else
+						LOG_TRACE("waypoint links for this map are outdated.");
 					if (g_assault)
 					{
 						LOG_TRACE("Assault waypoint links need to be manually updated in the editor");
@@ -998,6 +1005,8 @@ void waypoint_save_links()
 	}
 
 	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
+	if (waypoint_time != "")
+		fputs(file, strcat("//", "WAYPOINT_TIME ", waypoint_time, "\n"));
 
 	int c = 0;
 	IL_EACH(g_waypoints, true,
@@ -1007,6 +1016,7 @@ void waypoint_save_links()
 			entity link = waypoint_get_link(it, j);
 			if(link)
 			{
+				// NOTE: vtos rounds vector components to 1 decimal place
 				string s = strcat(vtos(it.origin), "*", vtos(link.origin), "\n");
 				fputs(file, s);
 				++c;
@@ -1065,7 +1075,12 @@ void waypoint_saveall()
 	// (they are read as a waypoint with origin '0 0 0' and flag 0 though)
 	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
 	fputs(file, strcat("//", "WAYPOINT_SYMMETRY ", sym_str, "\n"));
-	fputs(file, strcat("//", "\n"));
+
+	strcpy(waypoint_time, strftime(true, "%Y-%m-%d %H:%M:%S"));
+	fputs(file, strcat("//", "WAYPOINT_TIME ", waypoint_time, "\n"));
+	//fputs(file, strcat("//", "\n"));
+	//fputs(file, strcat("//", "\n"));
+	//fputs(file, strcat("//", "\n"));
 
 	int c = 0;
 	IL_EACH(g_waypoints, true,
@@ -1074,6 +1089,7 @@ void waypoint_saveall()
 			continue;
 
 		string s;
+		// NOTE: vtos rounds vector components to 1 decimal place
 		s = strcat(vtos(it.origin + it.mins), "\n");
 		s = strcat(s, vtos(it.origin + it.maxs));
 		s = strcat(s, "\n");
@@ -1137,6 +1153,8 @@ float waypoint_loadall()
 					if (tokens > 2) { sym_param2 = stof(argv(2)); }
 					if (tokens > 3) { sym_param3 = stof(argv(3)); }
 				}
+				else if(substring(s, 2, 14) == "WAYPOINT_TIME ")
+					strcpy(waypoint_time, substring(s, 16, -1));
 				continue;
 			}
 			else

@@ -240,7 +240,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 
 void W_SwitchWeapon_Force(Player this, Weapon wep, .entity weaponentity)
 {
-    TC(Weapon, wep);
+	TC(Weapon, wep);
 	this.(weaponentity).cnt = this.(weaponentity).m_switchweapon.m_id;
 	this.(weaponentity).m_switchweapon = wep;
 	this.(weaponentity).selectweapon = wep.m_id;
