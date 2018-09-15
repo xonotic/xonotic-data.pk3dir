@@ -334,7 +334,8 @@ bool trigger_push_test(entity this, entity item)
 {
 	// first calculate a typical start point for the jump
 	vector org = (this.absmin + this.absmax) * 0.5;
-	org.z = this.absmax.z - PL_MIN_CONST.z - 7;
+	if(!STAT(VQ3COMPAT))
+		org.z = this.absmax.z - PL_MIN_CONST.z - 7;
 
 	if (this.target)
 	{
