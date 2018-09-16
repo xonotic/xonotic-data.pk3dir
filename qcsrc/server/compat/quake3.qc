@@ -184,12 +184,35 @@ spawnfunc(target_give)
 	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
 }
 
+void score_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	actor.fragsfilter_cnt += this.count;
+}
+spawnfunc(target_score)
+{
+	if(!g_cts) { delete(this); return; }
 
+	if(!this.count)
+		this.count = 1;
+	this.use = score_use;
+}
+
+void fragsfilter_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	if(actor.fragsfilter_cnt == this.frags)
+		SUB_UseTargets(this, actor, trigger);
+}
 spawnfunc(target_fragsFilter)
 {
-	this.spawnflags |= COUNTER_PER_PLAYER;
-	this.count = this.frags;
-	spawnfunc_trigger_counter(this);
+	if(!g_cts) { delete(this); return; }
+
+	if(!this.frags)
+		this.frags = 1;
+	this.use = fragsfilter_use;
 }
 
 //spawnfunc(item_flight)       /* handled by buffs mutator */

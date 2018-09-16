@@ -32,6 +32,8 @@
 #include "../common/wepent.qh"
 #include <common/state.qh>
 
+#include "compat/quake3.qh"
+
 #include <common/effects/qc/globalsound.qh>
 
 #include "../common/mapobjects/func/conveyor.qh"
@@ -707,6 +709,7 @@ void PutPlayerInServer(entity this)
 	this.speedrunning = false;
 
 	this.counter_cnt = 0;
+	this.fragsfilter_cnt = 0;
 
 	target_voicescript_clear(this);
 
