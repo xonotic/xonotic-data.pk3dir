@@ -696,7 +696,7 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
 		HUD_Panel_Draw(HUD_PANEL(CHAT));
-	if(hud_panel_quickmenu)
+	if (QuickMenu_IsOpened())
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 

@@ -166,7 +166,6 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	else
 		QuickMenu_Page_Load("", 0);
 
-	hud_panel_quickmenu = 1;
 	hudShiftState = 0;
 
 	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
@@ -190,7 +189,6 @@ void QuickMenu_Close()
 	for (i = 0; i < QUICKMENU_MAXLINES; ++i)
 		QuickMenu_Page_ClearEntry(i);
 	QuickMenu_Page_Entries = 0;
-	hud_panel_quickmenu = 0;
 	mouseClicked = 0;
 	prevMouseClicked = 0;
 	QuickMenu_Buffer_Close();
@@ -563,8 +561,7 @@ void HUD_QuickMenu()
 
 		if(!hud_draw_maximized) return;
 		if(mv_active) return;
-		//if(!autocvar_hud_panel_quickmenu) return;
-		if(!hud_panel_quickmenu) return;
+		if (!QuickMenu_IsOpened()) return;
 
 		if(QuickMenu_TimeOut)
 		if(time > QuickMenu_TimeOut)

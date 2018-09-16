@@ -75,8 +75,6 @@ int vote_prev; // previous state of vote_active to check for a change
 float vote_alpha;
 float vote_change; // "time" when vote_active changed
 
-float hud_panel_quickmenu;
-
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
 vector panel_click_resizeorigin; // coordinates for opposite point when resizing
