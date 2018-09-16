@@ -37,6 +37,7 @@
 #include "../common/mapobjects/func/conveyor.qh"
 #include "../common/mapobjects/teleporters.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
+#include <common/mapobjects/trigger/counter.qh>
 
 #include "../common/vehicles/all.qh"
 
@@ -704,6 +705,8 @@ void PutPlayerInServer(entity this)
 	this.exteriorweaponentity.alpha = default_weapon_alpha;
 
 	this.speedrunning = false;
+
+	this.counter_cnt = 0;
 
 	target_voicescript_clear(this);
 
