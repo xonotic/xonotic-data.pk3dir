@@ -185,11 +185,11 @@ spawnfunc(target_give)
 }
 
 
-spawnfunc(target_fragsFilter)
-{
-	this.count = this.frags;
-	spawnfunc_trigger_counter(this);
-}
+//spawnfunc(target_fragsFilter)
+//{
+//	this.count = this.frags;
+//	spawnfunc_trigger_counter(this);
+//}
 
 //spawnfunc(item_flight)       /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
