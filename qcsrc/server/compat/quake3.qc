@@ -6,6 +6,7 @@
 #include <server/resources.qh>
 #include <common/t_items.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mapobjects/trigger/counter.qh>
 #include <common/weapons/_all.qh>
 
 //***********************
@@ -181,6 +182,13 @@ void target_give_init(entity this)
 spawnfunc(target_give)
 {
 	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
+}
+
+
+spawnfunc(target_fragsFilter)
+{
+	this.count = this.frags;
+	spawnfunc_trigger_counter(this);
 }
 
 //spawnfunc(item_flight)       /* handled by buffs mutator */

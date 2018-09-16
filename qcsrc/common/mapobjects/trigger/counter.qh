@@ -1,4 +1,7 @@
 #pragma once
 
+#ifdef SVQC
+spawnfunc(trigger_counter);
+#endif
 
 const int COUNTER_FIRE_AT_COUNT = BIT(2);
