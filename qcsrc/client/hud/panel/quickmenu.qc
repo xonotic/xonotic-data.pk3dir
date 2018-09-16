@@ -4,6 +4,7 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <common/ent_cs.qh>
+#include <common/minigames/cl_minigames.qh>
 #include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
 
@@ -57,8 +58,21 @@ void QuickMenu_Page_ClearEntry(int i)
 	QuickMenu_Page_Command_Type[i] = 0;
 }
 
+bool HUD_QuickMenu_Forbidden()
+{
+	return (mv_active
+		|| (hud_configure_prev && hud_configure_prev != -1)
+		|| HUD_MinigameMenu_IsOpened()
+		|| (QuickMenu_TimeOut && time > QuickMenu_TimeOut));
+}
+
+// returns true if succeded, false otherwise
 bool QuickMenu_Open(string mode, string submenu, string file)
 {
+	QuickMenu_TimeOut = 0;
+	if (HUD_QuickMenu_Forbidden())
+		return false;
+
 	int fh = -1;
 	string s;
 
@@ -556,15 +570,10 @@ void HUD_QuickMenu()
 {
 	if(!autocvar__hud_configure)
 	{
-		if (hud_configure_prev && hud_configure_prev != -1)
-			QuickMenu_Close();
+		if (!hud_draw_maximized || !QuickMenu_IsOpened())
+			return;
 
-		if(!hud_draw_maximized) return;
-		if(mv_active) return;
-		if (!QuickMenu_IsOpened()) return;
-
-		if(QuickMenu_TimeOut)
-		if(time > QuickMenu_TimeOut)
+		if (HUD_QuickMenu_Forbidden())
 		{
 			QuickMenu_Close();
 			return;
