@@ -32,6 +32,11 @@ entity spawn_pure() = #600;
 #define spawn_pure() _spawn()
 #endif
 
+#ifdef SVQC
+// TODO
+.bool move_qcphysics;
+#endif
+
 entity __spawn(string _classname, string _sourceLoc, bool pure)
 {
 	entity this = pure ? spawn_pure() : _spawn();
@@ -46,6 +51,11 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
         setorigin(this, (world.mins + world.maxs) * 0.5);
         #endif
 	}
+	#ifdef SVQC
+	else {
+		this.move_qcphysics = true;
+	}
+	#endif
 	return this;
 }
 

@@ -335,6 +335,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 		goto cleanup;
 	}
 
+	this.move_qcphysics = true;
 	set_movetype(this, this.movetype);
 
 	if (this.monster_attack) {
