@@ -203,7 +203,7 @@ void fragsfilter_use(entity this, entity actor, entity trigger)
 {
 	if(!IS_PLAYER(actor))
 		return;
-	if(actor.fragsfilter_cnt == this.frags)
+	if(actor.fragsfilter_cnt >= this.frags)
 		SUB_UseTargets(this, actor, trigger);
 }
 spawnfunc(target_fragsFilter)
