@@ -695,7 +695,6 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 }
 
 .entity draggedby;
-.entity target2;
 
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
