@@ -232,6 +232,9 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blocked & 8))
 		this.velocity = primal_velocity;
 
+	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blocked & 8))
+		this.velocity = primal_velocity;
+
 	if(applygravity)
 	{
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))

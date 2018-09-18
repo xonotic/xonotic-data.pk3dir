@@ -1,7 +1,7 @@
 #pragma once
 
 // TODO: find a better location for these?
-float total_players;
+int total_players;
 
 // todo: accept the number of teams as a parameter
 void GameRules_teams(bool value);

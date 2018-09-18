@@ -2,7 +2,7 @@
 
 .entity pusher;
 .float pushltime;
-.float istypefrag;
+.bool istypefrag;
 
 .float CopyBody_nextthink;
 .void(entity this) CopyBody_think;
@@ -27,8 +27,6 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	: gametype_setting_tmp)
 
 void calculate_player_respawn_time(entity this);
-
-void ClientKill_Now_TeamChange(entity this);
 
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 

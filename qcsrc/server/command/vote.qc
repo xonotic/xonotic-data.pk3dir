@@ -515,7 +515,7 @@ float Votecommand_check_assignment(entity caller, float assignment)
 	return false;
 }
 
-string VoteCommand_extractcommand(string input, float startpos, float argc)
+string VoteCommand_extractcommand(string input, float startpos, int argc)
 {
 	string output;
 
@@ -572,7 +572,7 @@ string ValidateMap(string validated_map, entity caller)
 	return validated_map;
 }
 
-float VoteCommand_checkargs(float startpos, float argc)
+float VoteCommand_checkargs(float startpos, int argc)
 {
 	float p, q, check, minargs;
 	string cvarname = strcat("sv_vote_command_restriction_", argv(startpos));
@@ -646,7 +646,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 	return true;
 }
 
-int VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
+int VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, int argc)
 {
 	string first_command = argv(startpos);
 	int missing_chars = argv_start_index(startpos);
@@ -714,6 +714,16 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
+		case "restart":
+		{
+			// add a delay so that vote result can be seen and announcer can be heard
+			// if the vote is accepted
+			vote_parsed_command = strcat("defer 1 ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_command));
+
+			break;
+		}
+
 		default:
 		{
 			vote_parsed_command = vote_command;
@@ -731,7 +741,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 //  Command Sub-Functions
 // =======================
 
-void VoteCommand_abstain(float request, entity caller)  // CLIENT ONLY
+void VoteCommand_abstain(int request, entity caller)  // CLIENT ONLY
 {
 	switch (request)
 	{
@@ -763,7 +773,7 @@ void VoteCommand_abstain(float request, entity caller)  // CLIENT ONLY
 	}
 }
 
-void VoteCommand_call(float request, entity caller, float argc, string vote_command)  // BOTH
+void VoteCommand_call(int request, entity caller, int argc, string vote_command)  // BOTH
 {
 	switch (request)
 	{
@@ -850,7 +860,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	}
 }
 
-void VoteCommand_master(float request, entity caller, float argc, string vote_command)  // CLIENT ONLY
+void VoteCommand_master(int request, entity caller, int argc, string vote_command)  // CLIENT ONLY
 {
 	switch (request)
 	{
@@ -965,7 +975,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 	}
 }
 
-void VoteCommand_no(float request, entity caller)  // CLIENT ONLY
+void VoteCommand_no(int request, entity caller)  // CLIENT ONLY
 {
 	switch (request)
 	{
@@ -1003,7 +1013,7 @@ void VoteCommand_no(float request, entity caller)  // CLIENT ONLY
 	}
 }
 
-void VoteCommand_status(float request, entity caller)  // BOTH
+void VoteCommand_status(int request, entity caller)  // BOTH
 {
 	switch (request)
 	{
@@ -1025,7 +1035,7 @@ void VoteCommand_status(float request, entity caller)  // BOTH
 	}
 }
 
-void VoteCommand_stop(float request, entity caller)  // BOTH
+void VoteCommand_stop(int request, entity caller)  // BOTH
 {
 	switch (request)
 	{
@@ -1047,7 +1057,7 @@ void VoteCommand_stop(float request, entity caller)  // BOTH
 	}
 }
 
-void VoteCommand_yes(float request, entity caller)  // CLIENT ONLY
+void VoteCommand_yes(int request, entity caller)  // CLIENT ONLY
 {
 	switch (request)
 	{
@@ -1082,7 +1092,7 @@ void VoteCommand_yes(float request, entity caller)  // CLIENT ONLY
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void VoteCommand_(float request)
+void VoteCommand_(int request)
 {
     switch(request)
     {
@@ -1120,7 +1130,7 @@ void VoteCommand_(float request)
 	VOTE_COMMAND("yes", VoteCommand_yes(request, caller), "Select yes in current vote", VC_ASGNMNT_CLIENTONLY) \
 	/* nothing */
 
-void VoteCommand_macro_help(entity caller, float argc)
+void VoteCommand_macro_help(entity caller, int argc)
 {
 	string command_origin = GetCommandPrefix(caller);
 
@@ -1153,7 +1163,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 	}
 }
 
-float VoteCommand_macro_command(entity caller, float argc, string vote_command)
+float VoteCommand_macro_command(entity caller, int argc, string vote_command)
 {
 	#define VOTE_COMMAND(name, function, description, assignment) \
 		{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(1))) { function; return true; } } }
@@ -1169,7 +1179,7 @@ float VoteCommand_macro_command(entity caller, float argc, string vote_command)
 //  Main function handling vote commands
 // ======================================
 
-void VoteCommand(float request, entity caller, float argc, string vote_command)
+void VoteCommand(int request, entity caller, int argc, string vote_command)
 {
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4

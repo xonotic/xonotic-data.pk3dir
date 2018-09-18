@@ -228,7 +228,7 @@ void Shutdown()
 }
 
 .float has_team;
-float SetTeam(entity o, int Team)
+bool SetTeam(entity o, int Team)
 {
 	TC(int, Team);
 	devassert_once(Team);
@@ -578,14 +578,14 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	{
 		for(j = 0; j < maxclients; ++j)
 			if(playerslots[j])
-				playerslots[j].ready = 1;
+				playerslots[j].ready = true;
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
 			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])
-						playerslots[j].ready = 0;
+						playerslots[j].ready = false;
 		}
 	}
 
@@ -606,7 +606,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 	if (sf & 1) {
 		for (int j = 0; j < maxclients; ++j) {
 			if (playerslots[j]) {
-				playerslots[j].eliminated = 1;
+				playerslots[j].eliminated = true;
 			}
 		}
 		for (int i = 1; i <= maxclients; i += 8) {
@@ -616,7 +616,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 				if (f & BIT(b)) continue;
 				int j = i - 1 + b;
 				if (playerslots[j]) {
-					playerslots[j].eliminated = 0;
+					playerslots[j].eliminated = false;
 				}
 			}
 		}

@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
+#include "clientkill.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
 #include "miscfunctions.qh"
@@ -21,6 +22,8 @@
 #include "../lib/csqcmodel/sv_model.qh"
 
 #include "../common/minigames/sv_minigames.qh"
+
+#include <common/gamemodes/_mod.qh>
 
 #include "../common/physics/player.qh"
 #include "../common/effects/qc/_mod.qh"
@@ -550,8 +553,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(this.classname != "body")
 			Obituary (attacker, inflictor, this, deathtype, weaponentity);
 
-        // increment frag counter for used weapon type
-        Weapon w = DEATH_WEAPONOF(deathtype);
+		// increment frag counter for used weapon type
+		Weapon w = DEATH_WEAPONOF(deathtype);
 		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
 			CS(attacker).accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
@@ -685,13 +688,13 @@ bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
 	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
-        msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
+		msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
-    if(source)
+	if (source)
 		msgin = formatmessage(source, msgin);
 
-    string colorstr;
-	if (!IS_PLAYER(source))
+	string colorstr;
+	if (!(IS_PLAYER(source) || source.caplayer))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
@@ -704,10 +707,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if(game_stopped)
 		teamsay = false;
 
-    if (!source) {
+	if (!source) {
 		colorstr = "";
 		teamsay = false;
-    }
+	}
 
 	if(msgin != "")
 		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
@@ -723,18 +726,17 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 	*/
 
-    string namestr = "";
-    if (source)
-        namestr = playername(source, autocvar_g_chat_teamcolors);
+	string namestr = "";
+	if (source)
+		namestr = playername(source, autocvar_g_chat_teamcolors);
 
-    string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
+	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
-    string msgstr, cmsgstr;
-    string privatemsgprefix = string_null;
-    int privatemsgprefixlen = 0;
-	if (msgin == "") {
-        msgstr = cmsgstr = "";
-	} else {
+	string msgstr = "", cmsgstr = "";
+	string privatemsgprefix = string_null;
+	int privatemsgprefixlen = 0;
+	if (msgin != "")
+	{
 		if(privatesay)
 		{
 			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
@@ -766,10 +768,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				msgstr = strcat("\{1}^4* ", "^7", msgin);
 			}
 			else {
-                msgstr = "\{1}";
-                msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
-                msgstr = strcat(msgstr, msgin);
-            }
+				msgstr = "\{1}";
+				msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
+				msgstr = strcat(msgstr, msgin);
+			}
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
@@ -852,7 +854,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			source.(flood_field) = flood = 0;
 	}
 
-    string sourcemsgstr, sourcecmsgstr;
+	string sourcemsgstr, sourcecmsgstr;
 	if(flood == 2) // cannot happen for empty msgstr
 	{
 		if(autocvar_g_chat_flood_notify_flooder)
@@ -873,7 +875,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcecmsgstr = cmsgstr;
 	}
 
-	if (!privatesay && source && !IS_PLAYER(source))
+	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer))
 	{
 		if (!game_stopped)
 		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
@@ -887,7 +889,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if(privatesay)
 		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
 
-    int ret;
+	int ret;
 	if(source && CS(source).muted)
 	{
 		// always fake the message
@@ -908,10 +910,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = 1;
 	}
 
-	if (privatesay && source && !IS_PLAYER(source))
+	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer))
 	{
 		if (!game_stopped)
-		if ((privatesay && IS_PLAYER(privatesay)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
+		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
 			ret = -1; // just hide the message completely
 	}
 
@@ -941,7 +943,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -949,7 +953,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+			FOREACH_CLIENT((IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
@@ -959,17 +963,21 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
+			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
 		}
 		else
 		{
-            if (source) {
-                sprint(source, sourcemsgstr);
-                dedicated_print(msgstr); // send to server console too
-                MX_Say(strcat(playername(source, true), "^7: ", msgin));
-            }
-            FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
-        }
+			if (source) {
+				sprint(source, sourcemsgstr);
+				dedicated_print(msgstr); // send to server console too
+				MX_Say(strcat(playername(source, true), "^7: ", msgin));
+			}
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
+		}
 	}
 
 	return ret;

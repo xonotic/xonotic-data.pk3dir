@@ -9,7 +9,7 @@ vector mi_scale;
 // Minimap
 string minimapname;
 
-float postinit;
+bool postinit;
 entity gametype;
 
 float FONT_USER = 8;
@@ -27,7 +27,7 @@ void Ent_Remove(entity this);
 
 void Gamemode_Init();
 
-float SetTeam(entity pl, float Team);
+bool SetTeam(entity pl, int Team);
 
 vector hud_fontsize;
 
@@ -38,10 +38,10 @@ float grecordtime[RANKINGS_CNT];
 
 entity playerslots[255]; // 255 is engine limit on maxclients
 entity teamslots[17];    // 17 teams (including "spectator team")
-.float gotscores;
+.bool gotscores;
 .entity owner;
-.float ready;
-.float eliminated;
+.bool ready;
+.bool eliminated;
 
 .void(entity) draw;
 IntrusiveList g_drawables;
@@ -64,7 +64,7 @@ bool button_attack2;
 
 float current_viewzoom;
 float zoomin_effect;
-float warmup_stage;
+bool warmup_stage;
 
 void Fog_Force();
 
@@ -73,15 +73,16 @@ string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
 
 string vote_called_vote;
-float ready_waiting;
-float ready_waiting_for_me;
-float vote_waiting;
-float vote_waiting_for_me;
+bool ready_waiting;
+bool ready_waiting_for_me;
+bool vote_waiting;
+bool vote_waiting_for_me;
 
 float current_zoomfraction;
 
-float cs_project_is_b0rked;
-float vid_width, vid_height, vid_pixelheight;
+int cs_project_is_b0rked;
+int vid_width, vid_height;
+float vid_pixelheight;
 
 float camera_active;		// Demo camera is active if set to true
 float chase_active_backup;

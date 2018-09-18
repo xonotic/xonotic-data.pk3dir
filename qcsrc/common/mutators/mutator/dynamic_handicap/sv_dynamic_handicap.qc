@@ -32,13 +32,13 @@ float DynamicHandicap_ClampHandicap(float handicap);
 void DynamicHandicap_UpdateHandicap()
 {
 	float total_score = 0;
-	float total_players = 0;
+	float totalplayers = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		total_score += PlayerScore_Get(it, SP_SCORE);
-		++total_players;
+		++totalplayers;
 	});
-	float mean_score = total_score / total_players;
+	float mean_score = total_score / totalplayers;
 	FOREACH_CLIENT(true,
 	{
 		float score = PlayerScore_Get(it, SP_SCORE);

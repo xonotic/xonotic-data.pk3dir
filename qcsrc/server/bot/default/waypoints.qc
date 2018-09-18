@@ -128,7 +128,7 @@ void waypoint_unreachable(entity pl)
 	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
 }
 
-vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
+vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 {
 	vector new_org = org;
 	if (fabs(autocvar_g_waypointeditor_symmetrical) == 1)
@@ -251,6 +251,8 @@ void waypoint_spawn_fromeditor(entity pl)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
 		ctf_flags = autocvar_g_waypointeditor_symmetrical_order;
+	if (sym && ctf_flags < 2)
+		ctf_flags = 2;
 	int wp_num = ctf_flags;
 
 	if(!PHYS_INPUT_BUTTON_CROUCH(pl))
@@ -279,7 +281,7 @@ void waypoint_spawn_fromeditor(entity pl)
 	bprint(strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 	if(sym)
 	{
-		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		org = waypoint_getSymmetricalPoint(e.origin, ctf_flags);
 		if (vdist(org - pl.origin, >, 32))
 		{
 			if(wp_num > 2)
@@ -310,6 +312,8 @@ void waypoint_remove_fromeditor(entity pl)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
 		ctf_flags = autocvar_g_waypointeditor_symmetrical_order;
+	if (sym && ctf_flags < 2)
+		ctf_flags = 2;
 	int wp_num = ctf_flags;
 
 	LABEL(remove_wp);
@@ -325,7 +329,7 @@ void waypoint_remove_fromeditor(entity pl)
 	entity wp_sym = NULL;
 	if (sym)
 	{
-		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		vector org = waypoint_getSymmetricalPoint(e.origin, ctf_flags);
 		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
 			if(vdist(org - it.origin, <, 3))
 			{
@@ -1012,6 +1016,7 @@ void waypoint_save_links()
 			entity link = waypoint_get_link(it, j);
 			if(link)
 			{
+				// NOTE: vtos rounds vector components to 1 decimal place
 				string s = strcat(vtos(it.origin), "*", vtos(link.origin), "\n");
 				fputs(file, s);
 				++c;
@@ -1084,6 +1089,7 @@ void waypoint_saveall()
 			continue;
 
 		string s;
+		// NOTE: vtos rounds vector components to 1 decimal place
 		s = strcat(vtos(it.origin + it.mins), "\n");
 		s = strcat(s, vtos(it.origin + it.maxs));
 		s = strcat(s, "\n");

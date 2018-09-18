@@ -688,6 +688,7 @@ void turret_track(entity this)
  + TFL_TARGETSELECT_LOS
  + TFL_TARGETSELECT_PLAYERS
  + TFL_TARGETSELECT_MISSILES
+ + TFL_TARGETSELECT_VEHICLES
  - TFL_TARGETSELECT_TRIGGERTARGET
  + TFL_TARGETSELECT_ANGLELIMITS
  + TFL_TARGETSELECT_RANGELIMITS
@@ -716,7 +717,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	if(!checkpvs(e_target.origin, e_turret))
 		return -1;
 
-	if(e_target.alpha <= 0.3)
+	if(e_target.alpha != 0 && e_target.alpha <= 0.3)
 		return -1;
 
 	if(MUTATOR_CALLHOOK(TurretValidateTarget, e_turret, e_target, validate_flags))
@@ -730,15 +731,17 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 		return -5;
 
 	// Cant touch this
-	if(IS_VEHICLE(e_target))
-	{
-		if (e_target.vehicle_health <= 0)
-			return -6;
-	}
-	else if (GetResourceAmount(e_target, RESOURCE_HEALTH) <= 0)
+	if (GetResourceAmount(e_target, RESOURCE_HEALTH) <= 0)
 		return -6;
 	else if(STAT(FROZEN, e_target) > 0)
 		return -6;
+
+	// vehicle
+	if(IS_VEHICLE(e_target))
+	{
+		if ((validate_flags & TFL_TARGETSELECT_VEHICLES) && !e_target.owner)
+			return -7;
+	}
 
 	// player
 	if (IS_CLIENT(e_target))

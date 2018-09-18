@@ -62,6 +62,8 @@ void attach_sameorigin(entity e, entity to, string tag);
 void crosshair_trace(entity pl);
 
 void crosshair_trace_plusvisibletriggers(entity pl);
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl);
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz);
 
 void detach_sameorigin(entity e);
 
@@ -93,6 +95,8 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
 
 string NearestLocation(vector p);
+
+string AmmoNameFromWeaponentity(Weapon wep);
 
 void play2(entity e, string filename);
 
@@ -324,17 +328,17 @@ void readlevelcvars()
 
 //#NO AUTOCVARS END
 
-const float INITPRIO_FIRST 				= 0;
-const float INITPRIO_GAMETYPE 			= 0;
-const float INITPRIO_GAMETYPE_FALLBACK 	= 1;
-const float INITPRIO_FINDTARGET 		= 10;
-const float INITPRIO_DROPTOFLOOR 		= 20;
-const float INITPRIO_SETLOCATION 		= 90;
-const float INITPRIO_LINKDOORS 			= 91;
-const float INITPRIO_LAST 				= 99;
+const int INITPRIO_FIRST 		= 0;
+const int INITPRIO_GAMETYPE 		= 0;
+const int INITPRIO_GAMETYPE_FALLBACK 	= 1;
+const int INITPRIO_FINDTARGET 		= 10;
+const int INITPRIO_DROPTOFLOOR 		= 20;
+const int INITPRIO_SETLOCATION 		= 90;
+const int INITPRIO_LINKDOORS 		= 91;
+const int INITPRIO_LAST 		= 99;
 
 .void(entity this) initialize_entity;
-.float initialize_entity_order;
+.int initialize_entity_order;
 .entity initialize_entity_next;
 entity initialize_entity_first;
 
@@ -342,8 +346,8 @@ entity initialize_entity_first;
 
 
 
-float sound_allowed(float dest, entity e);
-void InitializeEntity(entity e, void(entity this) func, float order);
+bool sound_allowed(int dest, entity e);
+void InitializeEntity(entity e, void(entity this) func, int order);
 
 IntrusiveList g_ctrace_changed;
 STATIC_INIT(g_ctrace_changed) { g_ctrace_changed = IL_NEW(); }

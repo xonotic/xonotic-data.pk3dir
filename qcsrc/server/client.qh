@@ -17,7 +17,7 @@ CLASS(Client, Object)
     /** Client IP */
     ATTRIB(Client, netaddress, string, this.netaddress);
     ATTRIB(Client, playermodel, string, this.playermodel);
-    ATTRIB(Client, playerskin, int, this.playerskin);
+    ATTRIB(Client, playerskin, string, this.playerskin);
 
     /** fingerprint of CA key the player used to authenticate */
     ATTRIB(Client, crypto_keyfp, string, this.crypto_keyfp);
@@ -226,6 +226,8 @@ METHOD(Client, m_unwind, bool(Client this))
     return false;
 }
 
+bool PlayerInList(entity player, string list);
+
 /// \brief Print the string to the client's chat.
 /// \param[in] client Client to print to.
 /// \param[in] text Text to print.
@@ -273,8 +275,6 @@ void SetSpectatee_status(entity this, int spectatee_num);
 void FixPlayermodel(entity player);
 
 void ClientInit_misc(entity this);
-
-void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
 
 bool joinAllowed(entity this);
 void Join(entity this);

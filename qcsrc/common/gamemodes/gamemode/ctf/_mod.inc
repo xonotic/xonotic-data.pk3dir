@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/gamemodes/gamemode/ctf/ctf.qc>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/ctf/sv_ctf.qc>
+#endif

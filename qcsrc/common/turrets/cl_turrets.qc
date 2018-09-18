@@ -176,7 +176,10 @@ void turret_draw2d(entity this)
 	}
 
 	o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
-	o = drawsprite_TextOrIcon(true, o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+	if(autocvar_g_waypointsprite_turrets_text)
+	{
+		o = drawsprite_TextOrIcon(true, o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+	}
 	drawhealthbar(
 			o,
 			0,

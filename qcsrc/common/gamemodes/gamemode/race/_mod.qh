@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/gamemodes/gamemode/race/race.qh>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/race/sv_race.qh>
+#endif

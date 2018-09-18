@@ -1264,71 +1264,26 @@ void Onslaught_RoundStart()
 
 // NOTE: LEGACY CODE, needs to be re-written!
 
-void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector org, float sradius)
-{
-	bool needarmor = false, needweapons = false;
-
-	// Needs armor/health?
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 100)
-		needarmor = true;
-
-	// Needs weapons?
-	int c = 0;
-	FOREACH(Weapons, it != WEP_Null, {
-		if(STAT(WEAPONS, this) & (it.m_wepset))
-		if(++c >= 4)
-			break;
-	});
-
-	if(c<4)
-		needweapons = true;
-
-	if(!needweapons && !needarmor)
-		return;
-
-	LOG_DEBUG(this.netname, " needs weapons ", ftos(needweapons));
-	LOG_DEBUG(this.netname, " needs armor ", ftos(needarmor));
-
-	// See what is around
-	IL_EACH(g_items, it.bot_pickup,
-	{
-		// gather health and armor only
-		if (it.solid)
-		if ( ((GetResourceAmount(it, RESOURCE_HEALTH) || GetResourceAmount(it, RESOURCE_ARMOR)) && needarmor) || (STAT(WEAPONS, it) && needweapons ) )
-		if (vdist(it.origin - org, <, sradius))
-		{
-			int t = it.bot_pickupevalfunc(this, it);
-			if (t > 0)
-				navigation_routerating(this, it, t * ratingscale, 500);
-		}
-	});
-}
-
 void havocbot_role_ons_setrole(entity this, int role)
 {
-	LOG_DEBUG(this.netname," switched to ");
 	switch(role)
 	{
 		case HAVOCBOT_ONS_ROLE_DEFENSE:
-			LOG_DEBUG("defense");
+			LOG_DEBUG(this.netname, " switched to defense");
 			this.havocbot_role = havocbot_role_ons_defense;
-			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_DEFENSE;
 			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_ASSISTANT:
-			LOG_DEBUG("assistant");
+			LOG_DEBUG(this.netname, " switched to assistant");
 			this.havocbot_role = havocbot_role_ons_assistant;
-			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_ASSISTANT;
 			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_OFFENSE:
-			LOG_DEBUG("offense");
+			LOG_DEBUG(this.netname, " switched to offense");
 			this.havocbot_role = havocbot_role_ons_offense;
-			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_OFFENSE;
 			this.havocbot_role_timeout = 0;
 			break;
 	}
-	LOG_DEBUG("");
 }
 
 void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale)
@@ -1353,9 +1308,9 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
-		FOREACH_CLIENT(IS_PLAYER(it), {
+		FOREACH_CLIENT(it != this && IS_PLAYER(it), {
 			if(SAME_TEAM(it, this))
-			if(it.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
+			if(it.havocbot_role == havocbot_role_ons_offense)
 			if(it.havocbot_ons_target == cp2)
 				++c;
 		});
@@ -1366,7 +1321,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 	}
 
 	// We'll consider only the best case
-	bestvalue = 99999999999;
+	bestvalue = FLOAT_MAX;
 	cp = NULL;
 	for(cp1 = ons_worldcplist; cp1; cp1 = cp1.ons_worldcpnext)
 	{
@@ -1392,23 +1347,21 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 		// Rate waypoints near it
 		found = false;
 		best = NULL;
-		bestvalue = 99999999999;
-		for(radius=0; radius<1000 && !found; radius+=500)
+		bestvalue = FLOAT_MAX;
+		for (radius = 500; radius <= 1000 && !found; radius += 500)
 		{
-			for(wp=findradius(cp.origin,radius); wp; wp=wp.chain)
+			IL_EACH(g_waypoints, vdist(cp.origin - it.origin, <, radius),
 			{
-				if(!(wp.wpflags & WAYPOINTFLAG_GENERATED))
-				if(wp.classname=="waypoint")
-				if(checkpvs(wp.origin,cp))
+				if (!(it.wpflags & WAYPOINTFLAG_GENERATED) && checkpvs(it.origin, cp))
 				{
 					found = true;
-					if(wp.cnt<bestvalue)
+					if (it.cnt < bestvalue)
 					{
-						best = wp;
-						bestvalue = wp.cnt;
+						best = it;
+						bestvalue = it.cnt;
 					}
 				}
-			}
+			});
 		}
 
 		if(best)
@@ -1431,22 +1384,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 	{
 		// Should be touched
 		LOG_DEBUG(this.netname, " found a touchable controlpoint at ", vtos(cp.origin));
-		found = false;
-
-		// Look for auto generated waypoint
-		if (!bot_waypoints_for_items)
-		for (wp = findradius(cp.origin,100); wp; wp = wp.chain)
-		{
-			if(wp.classname=="waypoint")
-			{
-				navigation_routerating(this, wp, ratingscale, 10000);
-				found = true;
-			}
-		}
-
-		// Nothing found, rate the controlpoint itself
-		if (!found)
-			navigation_routerating(this, cp, ratingscale, 10000);
+		navigation_routerating(this, cp, ratingscale * 2, 10000);
 	}
 }
 
@@ -1454,7 +1392,7 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 {
 	entity g, wp, bestwp;
 	bool found;
-	int best;
+	int bestvalue;
 
 	for(g = ons_worldgeneratorlist; g; g = g.ons_worldgeneratornext)
 	{
@@ -1465,21 +1403,20 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 		// Rate waypoints near it
 		found = false;
 		bestwp = NULL;
-		best = 99999999999;
+		bestvalue = FLOAT_MAX;
 
-		for(wp=findradius(g.origin,400); wp; wp=wp.chain)
+		IL_EACH(g_waypoints, vdist(g.origin - it.origin, <, 400),
 		{
-			if(wp.classname=="waypoint")
-			if(checkpvs(wp.origin,g))
+			if (checkpvs(it.origin, g))
 			{
 				found = true;
-				if(wp.cnt<best)
+				if (it.cnt < bestvalue)
 				{
-					bestwp = wp;
-					best = wp.cnt;
+					bestwp = it;
+					bestvalue = it.cnt;
 				}
 			}
-		}
+		});
 
 		if(bestwp)
 		{
@@ -1532,9 +1469,9 @@ void havocbot_role_ons_offense(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 650);
-		if(!havocbot_goalrating_ons_generator_attack(this, 20000))
-			havocbot_goalrating_ons_controlpoints_attack(this, 20000);
-		havocbot_goalrating_ons_offenseitems(this, 10000, this.origin, 10000);
+		if(!havocbot_goalrating_ons_generator_attack(this, 10000))
+			havocbot_goalrating_ons_controlpoints_attack(this, 10000);
+		havocbot_goalrating_items(this, 25000, this.origin, 10000);
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);

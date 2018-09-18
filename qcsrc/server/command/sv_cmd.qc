@@ -88,7 +88,7 @@ void changematchtime(float delta, float mi, float ma)
 //  Command Sub-Functions
 // =======================
 
-void GameCommand_adminmsg(float request, float argc)
+void GameCommand_adminmsg(int request, int argc)
 {
 	switch (request)
 	{
@@ -160,7 +160,7 @@ void GameCommand_adminmsg(float request, float argc)
 	}
 }
 
-void GameCommand_allready(float request)
+void GameCommand_allready(int request)
 {
 	switch (request)
 	{
@@ -180,7 +180,7 @@ void GameCommand_allready(float request)
 	}
 }
 
-void GameCommand_allspec(float request, float argc)
+void GameCommand_allspec(int request, int argc)
 {
 	switch (request)
 	{
@@ -209,7 +209,7 @@ void GameCommand_allspec(float request, float argc)
 	}
 }
 
-void GameCommand_anticheat(float request, float argc)
+void GameCommand_anticheat(int request, int argc)
 {
 	switch (request)
 	{
@@ -240,7 +240,7 @@ void GameCommand_anticheat(float request, float argc)
 	}
 }
 
-void GameCommand_bbox(float request)
+void GameCommand_bbox(int request)
 {
 	switch (request)
 	{
@@ -313,7 +313,7 @@ void GameCommand_bbox(float request)
 	}
 }
 
-void GameCommand_bot_cmd(float request, float argc, string command)
+void GameCommand_bot_cmd(int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -445,7 +445,7 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 	}
 }
 
-void GameCommand_cointoss(float request, float argc)
+void GameCommand_cointoss(int request, int argc)
 {
 	switch (request)
 	{
@@ -469,7 +469,7 @@ void GameCommand_cointoss(float request, float argc)
 	}
 }
 
-void GameCommand_database(float request, float argc)
+void GameCommand_database(int request, int argc)
 {
 	switch (request)
 	{
@@ -512,7 +512,7 @@ void GameCommand_database(float request, float argc)
 	}
 }
 
-void GameCommand_defer_clear(float request, float argc)
+void GameCommand_defer_clear(int request, int argc)
 {
 	switch (request)
 	{
@@ -549,14 +549,14 @@ void GameCommand_defer_clear(float request, float argc)
 	}
 }
 
-void GameCommand_defer_clear_all(float request)
+void GameCommand_defer_clear_all(int request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			int n = 0;
-			float argc;
+			int argc;
 
 			FOREACH_CLIENT(true, {
 				argc = tokenize_console(strcat("defer_clear ", ftos(etof(it))));
@@ -578,7 +578,7 @@ void GameCommand_defer_clear_all(float request)
 	}
 }
 
-void GameCommand_delrec(float request, float argc)  // perhaps merge later with records and printstats and such?
+void GameCommand_delrec(int request, int argc)  // perhaps merge later with records and printstats and such?
 {
 	switch (request)
 	{
@@ -605,7 +605,7 @@ void GameCommand_delrec(float request, float argc)  // perhaps merge later with 
 	}
 }
 
-void GameCommand_effectindexdump(float request)
+void GameCommand_effectindexdump(int request)
 {
 	switch (request)
 	{
@@ -719,7 +719,7 @@ void GameCommand_effectindexdump(float request)
 	}
 }
 
-void GameCommand_extendmatchtime(float request)
+void GameCommand_extendmatchtime(int request)
 {
 	switch (request)
 	{
@@ -740,7 +740,7 @@ void GameCommand_extendmatchtime(float request)
 	}
 }
 
-void GameCommand_gametype(float request, float argc)
+void GameCommand_gametype(int request, int argc)
 {
 	switch (request)
 	{
@@ -790,7 +790,7 @@ void GameCommand_gametype(float request, float argc)
 	}
 }
 
-void GameCommand_gettaginfo(float request, float argc)
+void GameCommand_gettaginfo(int request, int argc)
 {
 	switch (request)
 	{
@@ -855,7 +855,7 @@ void GameCommand_gettaginfo(float request, float argc)
 	}
 }
 
-void GameCommand_animbench(float request, float argc)
+void GameCommand_animbench(int request, int argc)
 {
 	switch (request)
 	{
@@ -914,7 +914,7 @@ void GameCommand_animbench(float request, float argc)
 	}
 }
 
-void GameCommand_gotomap(float request, float argc)
+void GameCommand_gotomap(int request, int argc)
 {
 	switch (request)
 	{
@@ -939,7 +939,7 @@ void GameCommand_gotomap(float request, float argc)
 	}
 }
 
-void GameCommand_lockteams(float request)
+void GameCommand_lockteams(int request)
 {
 	switch (request)
 	{
@@ -968,7 +968,7 @@ void GameCommand_lockteams(float request)
 	}
 }
 
-void GameCommand_make_mapinfo(float request)
+void GameCommand_make_mapinfo(int request)
 {
 	switch (request)
 	{
@@ -994,7 +994,7 @@ void GameCommand_make_mapinfo(float request)
 	}
 }
 
-void GameCommand_moveplayer(float request, float argc)
+void GameCommand_moveplayer(int request, int argc)
 {
 	switch (request)
 	{
@@ -1052,8 +1052,8 @@ void GameCommand_moveplayer(float request, float argc)
 							{
 								// set up
 								float team_id;
-								float save = client.team_forced;
-								client.team_forced = 0;
+								int save = Player_GetForcedTeamIndex(client);
+								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 
 								// find the team to move the player to
 								team_id = Team_ColorToTeam(destination);
@@ -1073,7 +1073,7 @@ void GameCommand_moveplayer(float request, float argc)
 								{
 									balance = TeamBalance_CheckAllowedTeams(client);
 								}
-								client.team_forced = save;
+								Player_SetForcedTeamIndex(client, save);
 
 								// Check to see if the destination team is even available
 								switch (team_id)
@@ -1130,7 +1130,7 @@ void GameCommand_moveplayer(float request, float argc)
 								}
 
 								// If so, lets continue and finally move the player
-								client.team_forced = 0;
+								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 								if (MoveToTeam(client, Team_TeamToIndex(team_id), 6))
 								{
 									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
@@ -1179,7 +1179,7 @@ void GameCommand_moveplayer(float request, float argc)
 	}
 }
 
-void GameCommand_nospectators(float request)
+void GameCommand_nospectators(int request)
 {
 	switch (request)
 	{
@@ -1208,7 +1208,7 @@ void GameCommand_nospectators(float request)
 	}
 }
 
-void GameCommand_printstats(float request)
+void GameCommand_printstats(int request)
 {
 	switch (request)
 	{
@@ -1229,7 +1229,7 @@ void GameCommand_printstats(float request)
 	}
 }
 
-void GameCommand_radarmap(float request, float argc)
+void GameCommand_radarmap(int request, int argc)
 {
 	switch (request)
 	{
@@ -1251,7 +1251,7 @@ void GameCommand_radarmap(float request, float argc)
 	}
 }
 
-void GameCommand_reducematchtime(float request)
+void GameCommand_reducematchtime(int request)
 {
 	switch (request)
 	{
@@ -1272,7 +1272,7 @@ void GameCommand_reducematchtime(float request)
 	}
 }
 
-void GameCommand_setbots(float request, float argc)
+void GameCommand_setbots(int request, int argc)
 {
 	switch (request)
 	{
@@ -1299,7 +1299,7 @@ void GameCommand_setbots(float request, float argc)
 	}
 }
 
-void GameCommand_shuffleteams(float request)
+void GameCommand_shuffleteams(int request)
 {
 	switch (request)
 	{
@@ -1312,7 +1312,7 @@ void GameCommand_shuffleteams(float request)
 			}
 
 			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
-				if (it.team_forced) {
+				if (Player_HasRealForcedTeam(it)) {
 					// we could theoretically assign forced players to their teams
 					// and shuffle the rest to fill the empty spots but in practise
 					// either all players or none are gonna have forced teams
@@ -1357,7 +1357,7 @@ void GameCommand_shuffleteams(float request)
 	}
 }
 
-void GameCommand_stuffto(float request, float argc)
+void GameCommand_stuffto(int request, int argc)
 {
 	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
 	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
@@ -1406,7 +1406,7 @@ void GameCommand_stuffto(float request, float argc)
 #endif
 }
 
-void GameCommand_trace(float request, float argc)
+void GameCommand_trace(int request, int argc)
 {
 	switch (request)
 	{
@@ -1582,7 +1582,7 @@ void GameCommand_trace(float request, float argc)
 	}
 }
 
-void GameCommand_unlockteams(float request)
+void GameCommand_unlockteams(int request)
 {
 	switch (request)
 	{
@@ -1611,7 +1611,7 @@ void GameCommand_unlockteams(float request)
 	}
 }
 
-void GameCommand_warp(float request, float argc)
+void GameCommand_warp(int request, int argc)
 {
 	switch (request)
 	{
@@ -1650,7 +1650,7 @@ void GameCommand_warp(float request, float argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void GameCommand_(float request)
+void GameCommand_(int request)
 {
     switch(request)
     {
@@ -1713,7 +1713,7 @@ void GameCommand_macro_help()
 	FOREACH(SERVER_COMMANDS, true, { LOG_INFOF("  ^2%s^7: %s", it.m_name, it.m_description); });
 }
 
-float GameCommand_macro_command(float argc, string command)
+float GameCommand_macro_command(int argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, {
@@ -1723,7 +1723,7 @@ float GameCommand_macro_command(float argc, string command)
 	return false;
 }
 
-float GameCommand_macro_usage(float argc)
+float GameCommand_macro_usage(int argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, {
@@ -1746,7 +1746,7 @@ void GameCommand_macro_write_aliases(float fh)
 
 void GameCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4

@@ -88,9 +88,6 @@ float autocvar_g_balance_powerup_strength_selfforce;
 //float autocvar_g_balance_powerup_strength_time;
 float autocvar_g_balance_superweapons_time;
 float autocvar_g_balance_selfdamagepercent;
-bool autocvar_g_balance_teams;
-bool autocvar_g_balance_teams_prevent_imbalance;
-//float autocvar_g_balance_teams_scorefactor;
 float autocvar_g_ballistics_density_corpse;
 float autocvar_g_ballistics_density_player;
 float autocvar_g_ballistics_mindistance;
@@ -102,6 +99,7 @@ float autocvar_g_ban_sync_timeout;
 string autocvar_g_ban_sync_trusted_servers;
 bool autocvar_g_ban_sync_trusted_servers_verify;
 string autocvar_g_ban_sync_uri;
+bool autocvar_g_ban_telluser = true;
 string autocvar_g_banned_list;
 bool autocvar_g_banned_list_idmode;
 bool autocvar_g_botclip_collisions;
@@ -109,7 +107,6 @@ bool autocvar_g_campaign;
 #define autocvar_g_campaign_forceteam cvar("g_campaign_forceteam")
 int autocvar_g_campaign_skill;
 int autocvar_g_casings;
-bool autocvar_g_changeteam_banned;
 float autocvar_g_chat_flood_burst;
 float autocvar_g_chat_flood_burst_team;
 float autocvar_g_chat_flood_burst_tell;
@@ -124,11 +121,7 @@ int autocvar_g_chat_nospectators;
 bool autocvar_g_chat_teamcolors;
 bool autocvar_g_chat_tellprivacy;
 bool autocvar_g_forced_respawn;
-string autocvar_g_forced_team_blue;
-string autocvar_g_forced_team_otherwise;
-string autocvar_g_forced_team_pink;
-string autocvar_g_forced_team_red;
-string autocvar_g_forced_team_yellow;
+string autocvar_g_forced_team_otherwise; // TODO: Move to teamplay.qc
 #define autocvar_g_friendlyfire cvar("g_friendlyfire")
 #define autocvar_g_friendlyfire_virtual cvar("g_friendlyfire_virtual")
 #define autocvar_g_friendlyfire_virtual_force cvar("g_friendlyfire_virtual_force")
@@ -366,8 +359,6 @@ bool autocvar_sv_vote_gamestart;
 string autocvar_sv_weaponstats_file;
 float autocvar_sv_gibhealth;
 float autocvar_sys_ticrate;
-bool autocvar_teamplay_lockonrestart;
-int autocvar_teamplay_mode;
 #define autocvar_timelimit cvar("timelimit")
 #define autocvar_timelimit_override cvar("timelimit_override")
 float autocvar_timelimit_increment;

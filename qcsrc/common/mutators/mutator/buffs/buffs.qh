@@ -20,13 +20,13 @@ REGISTRY_CHECK(Buffs)
 CLASS(Buff, Pickup)
 	/** bit index */
 	ATTRIB(Buff, m_itemid, int, 0);
-	ATTRIB(Buff, m_name, string, "buff");
+	ATTRIB(Buff, netname, string, "buff");
 	ATTRIB(Buff, m_color, vector, '1 1 1');
-	ATTRIB(Buff, m_prettyName, string, "Buff");
+	ATTRIB(Buff, m_name, string, "Buff");
 	ATTRIB(Buff, m_skin, int, 0);
 	ATTRIB(Buff, m_sprite, string, "");
 	METHOD(Buff, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.m_prettyName, sprintf("/gfx/hud/%s/buff_%s", cvar_string("menu_skin"), this.m_name));
+		returns(this.m_name, sprintf("/gfx/hud/%s/buff_%s", cvar_string("menu_skin"), this.netname));
 	}
 #ifdef SVQC
 	METHOD(Buff, m_time, float(Buff this))
@@ -36,9 +36,8 @@ ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {
     FOREACH(Buffs, true, {
-        it.netname = it.m_name; \
         it.m_itemid = BIT(it.m_id - 1); \
-        it.m_sprite = strzone(strcat("buff-", it.m_name)); \
+        it.m_sprite = strzone(strcat("buff-", it.netname)); \
     });
 }
 
