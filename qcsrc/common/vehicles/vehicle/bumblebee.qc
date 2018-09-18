@@ -938,7 +938,7 @@ METHOD(Bumblebee, vr_hud, void(Bumblebee thisveh))
     float hudAlpha = autocvar_hud_panel_fg_alpha;
     float blinkValue = 0.55 + sin(time * 7) * 0.45;
     vector tmpPos  = '0 0 0';
-    vector tmpSize = '1 1 1' * hud_fontsize;
+    vector tmpSize = hud_fontsize;
     tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (520/768);
 
     if(!AuxiliaryXhair[1].draw2d)
