@@ -126,6 +126,8 @@ const int MOVETYPE_ANGLENOCLIP      = 1;
 const int MOVETYPE_ANGLECLIP        = 2;
 #endif
 
+const int MOVETYPE_QCPLAYER = 150; // QC-driven player physics, no think functions!
+
 const int FL_ONSLICK = BIT(20);
 
 const int MOVETYPE_FAKEPUSH         = 13;
