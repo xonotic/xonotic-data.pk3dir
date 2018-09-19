@@ -827,6 +827,9 @@ bool WantEventchase(entity this)
 			}
 			else return true;
 		}
+		if (spectatee_status > 0 && autocvar_cl_eventchase_spectated_change
+			&& time <= spectatee_status_changed_time + 0.5)
+			return true;
 	}
 	return false;
 }
