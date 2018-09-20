@@ -45,7 +45,7 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 	}
 	if (fire & 1) // Primary attack
 	{
-		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okshotgun, animtime)))
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okshotgun, refire)))
 		{
 			return;
 		}
