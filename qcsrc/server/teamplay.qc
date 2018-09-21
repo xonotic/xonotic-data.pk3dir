@@ -585,8 +585,8 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 			TeamBalance_IsTeamAllowedInternal(balance, i))
 		{
 			TeamBalance_BanTeamsExcept(balance, i);
+			break;
 		}
-		break;
 	}
 	balance.m_team_balance_state = TEAM_BALANCE_TEAMS_CHECKED;
 	return balance;
