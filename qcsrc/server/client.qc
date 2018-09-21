@@ -32,11 +32,14 @@
 #include "../common/wepent.qh"
 #include <common/state.qh>
 
+#include "compat/quake3.qh"
+
 #include <common/effects/qc/globalsound.qh>
 
 #include "../common/mapobjects/func/conveyor.qh"
 #include "../common/mapobjects/teleporters.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
+#include <common/mapobjects/trigger/counter.qh>
 
 #include "../common/vehicles/all.qh"
 
@@ -705,6 +708,9 @@ void PutPlayerInServer(entity this)
 
 	this.speedrunning = false;
 
+	this.counter_cnt = 0;
+	this.fragsfilter_cnt = 0;
+
 	target_voicescript_clear(this);
 
 	// reset fields the weapons may use
@@ -721,10 +727,10 @@ void PutPlayerInServer(entity this)
 	});
 
 	{
-		string s = spot.target;
-		spot.target = string_null;
+		//string s = spot.target;
+		//spot.target = string_null;
 		SUB_UseTargets(spot, this, NULL);
-		spot.target = s;
+		//spot.target = s;
 	}
 
 	Unfreeze(this);

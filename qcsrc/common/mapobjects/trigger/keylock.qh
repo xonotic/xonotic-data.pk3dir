@@ -1,10 +1,1 @@
 #pragma once
-
-#ifdef CSQC
-bool item_keys_usekey(entity l, entity p)
-{
-	int valid = (l.itemkeys & p.itemkeys); // TODO: itemkeys isn't networked or anything!
-	l.itemkeys &= ~valid; // only some of the needed keys were given
-	return valid != 0;
-}
-#endif

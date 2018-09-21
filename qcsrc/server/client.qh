@@ -17,7 +17,7 @@ CLASS(Client, Object)
     /** Client IP */
     ATTRIB(Client, netaddress, string, this.netaddress);
     ATTRIB(Client, playermodel, string, this.playermodel);
-    ATTRIB(Client, playerskin, int, this.playerskin);
+    ATTRIB(Client, playerskin, string, this.playerskin);
 
     /** fingerprint of CA key the player used to authenticate */
     ATTRIB(Client, crypto_keyfp, string, this.crypto_keyfp);

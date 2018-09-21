@@ -1519,7 +1519,7 @@ void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 		{
 			// adjust rating of our flag carrier depending on his health
 			head = head.tag_entity;
-			float f = bound(0, (head.health + head.armorvalue) / 100, 2) - 1;
+			float f = bound(0, (GetResourceAmount(head, RESOURCE_HEALTH) + GetResourceAmount(head, RESOURCE_ARMOR)) / 100, 2) - 1;
 			ratingscale += ratingscale * f * 0.1;
 		}
 		navigation_routerating(this, head, ratingscale, 10000);

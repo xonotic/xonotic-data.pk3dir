@@ -585,8 +585,8 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 			TeamBalance_IsTeamAllowedInternal(balance, i))
 		{
 			TeamBalance_BanTeamsExcept(balance, i);
+			break;
 		}
-		break;
 	}
 	balance.m_team_balance_state = TEAM_BALANCE_TEAMS_CHECKED;
 	return balance;
@@ -881,16 +881,16 @@ void TeamBalance_AutoBalanceBots()
 		{
 			continue;
 		}
-		int player_count = TeamBalanceTeam_GetNumberOfPlayers(team_);
+		int playercount = TeamBalanceTeam_GetNumberOfPlayers(team_);
 		if (smallest_team_index == 0)
 		{
 			smallest_team_index = i;
-			smallest_team_player_count = player_count;
+			smallest_team_player_count = playercount;
 		}
-		else if (player_count < smallest_team_player_count)
+		else if (playercount < smallest_team_player_count)
 		{
 			smallest_team_index = i;
-			smallest_team_player_count = player_count;
+			smallest_team_player_count = playercount;
 		}
 	}
 	//PrintToChatAll(sprintf("Smallest team: %f", smallest_team_index));
@@ -949,16 +949,16 @@ int TeamBalance_GetLargestTeamIndex(entity balance, int teams)
 		{
 			continue;
 		}
-		int player_count = TeamBalanceTeam_GetNumberOfPlayers(team_);
+		int playercount = TeamBalanceTeam_GetNumberOfPlayers(team_);
 		if (largest_team_index == 0)
 		{
 			largest_team_index = i;
-			largest_team_player_count = player_count;
+			largest_team_player_count = playercount;
 		}
-		else if (player_count > largest_team_player_count)
+		else if (playercount > largest_team_player_count)
 		{
 			largest_team_index = i;
-			largest_team_player_count = player_count;
+			largest_team_player_count = playercount;
 		}
 	}
 	return largest_team_index;

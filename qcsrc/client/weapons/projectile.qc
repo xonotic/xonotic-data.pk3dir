@@ -265,19 +265,19 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			this.fade_rate = 0;
 		}
 
-		int myteam = ReadByte();
-		this.team = myteam - 1;
+		int proj_team = ReadByte();
+		this.team = proj_team - 1;
 
 		if(teamplay)
 		{
-			if(myteam)
+			if(proj_team)
 				this.colormap = (this.team) * 0x11; // note: team - 1 on server (client uses different numbers)
 			else
 				this.colormap = 0x00;
 			this.colormap |= BIT(10); // RENDER_COLORMAPPED
 		}
 		else
-			this.colormap = myteam;
+			this.colormap = proj_team;
 		// TODO: projectiles use glowmaps for their color, not teams
 		#if 0
 		if(this.colormap > 0)
