@@ -1560,6 +1560,51 @@ void ViewLocation_Mouse()
 	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
 }
 
+void HUD_Cursor_Show()
+{
+	float cursor_alpha = 1 - autocvar__menu_alpha;
+	if(cursor_type == CURSOR_NORMAL)
+		draw_cursor_normal(mousepos, '1 1 1', cursor_alpha);
+	else if(cursor_type == CURSOR_MOVE)
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
+	else if(cursor_type == CURSOR_RESIZE)
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize", '1 1 1', cursor_alpha);
+	else if(cursor_type == CURSOR_RESIZE2)
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize2", '1 1 1', cursor_alpha);
+}
+
+void HUD_Mouse(entity player)
+{
+	if(autocvar__menu_alpha == 1)
+		return;
+
+	if(!cursor_active)
+	{
+		if(player.viewloc && (player.viewloc.spawnflags & VIEWLOC_FREEAIM))
+			ViewLocation_Mouse(); // NOTE: doesn't use cursormode
+		return;
+	}
+
+	if(!autocvar_hud_cursormode)
+		update_mousepos();
+
+	if(autocvar__hud_configure)
+		HUD_Panel_Mouse();
+	else
+	{
+		if (HUD_MinigameMenu_IsOpened() || active_minigame)
+			HUD_Minigame_Mouse();
+		if (QuickMenu_IsOpened())
+			QuickMenu_Mouse();
+		if (HUD_Radar_Clickable())
+			HUD_Radar_Mouse();
+	}
+
+	prevMouseClicked = mouseClicked;
+
+	HUD_Cursor_Show();
+}
+
 bool ov_enabled;
 float oldr_nearclip;
 float oldr_farclip_base;
@@ -2449,16 +2494,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
-	if(autocvar__hud_configure)
-		HUD_Panel_Mouse();
-	else if (HUD_MinigameMenu_IsOpened() || active_minigame)
-		HUD_Minigame_Mouse();
-	else if(QuickMenu_IsOpened())
-		QuickMenu_Mouse();
-	else if(local_player.viewloc && (local_player.viewloc.spawnflags & VIEWLOC_FREEAIM))
-		ViewLocation_Mouse(); // NOTE: doesn't use cursormode
-	else
-		HUD_Radar_Mouse();
+	HUD_Mouse(local_player);
 
 	cl_notice_run();
 	unpause_update();
