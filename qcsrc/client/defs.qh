@@ -77,6 +77,7 @@ float nb_pb_period;
 // 0 - playing
 // >0 - id of spectated player
 float spectatee_status;
+float spectatee_status_changed_time;
 
 // short mapname
 string shortmapname;
