@@ -327,10 +327,11 @@ void havocbot_role_ft_freeing(entity this)
 
 void ft_RemovePlayer(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // neccessary to update correctly alive stats
 	if(!STAT(FROZEN, this))
 		freezetag_LastPlayerForTeam_Notify(this);
 	Unfreeze(this);
+
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // neccessary to correctly count alive players
 	freezetag_count_alive_players();
 }
 
