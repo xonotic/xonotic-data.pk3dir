@@ -170,6 +170,13 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	{
 		// this has been disabled so that you can't jump when you are stepping
 		// up while already jumping (also known as the Quake2 double jump bug)
+		// LordHavoc: disabled this check so you can walk on monsters/players
+		//if (PRVM_serveredictfloat(ent, solid) == SOLID_BSP)
+		if(GAMEPLAYFIX_STEPDOWN(this) == 2)
+		{
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+		}
 	}
 	else
 	{
