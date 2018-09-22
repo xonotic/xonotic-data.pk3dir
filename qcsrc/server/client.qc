@@ -1143,6 +1143,8 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
+	this.move_qcphysics = true;
+
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
 
@@ -2562,7 +2564,7 @@ void DrownPlayer(entity this)
 
 void Player_Physics(entity this)
 {
-	set_movetype(this, this.move_movetype);
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCPLAYER : this.move_movetype;
 
 	if(!this.move_qcphysics)
 		return;
