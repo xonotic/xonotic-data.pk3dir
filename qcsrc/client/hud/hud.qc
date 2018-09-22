@@ -574,7 +574,7 @@ bool HUD_WouldShowCursor()
 		//return true;
 	if(HUD_Radar_Clickable())
 		return true;
-	if(HUD_MinigameMenu_IsOpened() || active_minigame)
+	if(HUD_MinigameMenu_IsOpened())
 		return true;
 	if(QuickMenu_IsOpened())
 		return true;

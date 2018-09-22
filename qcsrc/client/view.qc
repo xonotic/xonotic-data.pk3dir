@@ -633,6 +633,8 @@ vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, ve
 // this function must match W_SetupShot!
 float zoomscript_caught;
 
+bool minigame_wasactive;
+
 vector wcross_origin;
 float wcross_scale_prev, wcross_alpha_prev;
 vector wcross_color_prev;
@@ -1592,7 +1594,7 @@ void HUD_Mouse(entity player)
 		HUD_Panel_Mouse();
 	else
 	{
-		if (HUD_MinigameMenu_IsOpened() || active_minigame)
+		if (HUD_MinigameMenu_IsOpened())
 			HUD_Minigame_Mouse();
 		if (QuickMenu_IsOpened())
 			QuickMenu_Mouse();
@@ -2008,6 +2010,20 @@ void CSQC_UpdateView(entity this, float w, float h)
 			localcmd("-button9\n");
 			zoomscript_caught = 0;
 		}
+	}
+
+	if(active_minigame && HUD_MinigameMenu_IsOpened())
+	{
+		if(!minigame_wasactive)
+		{
+			localcmd("+button14\n");
+			minigame_wasactive = true;
+		}
+	}
+	else if(minigame_wasactive)
+	{
+		localcmd("-button14\n");
+		minigame_wasactive = false;
 	}
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
