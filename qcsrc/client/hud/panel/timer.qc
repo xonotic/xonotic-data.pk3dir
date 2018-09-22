@@ -61,7 +61,9 @@ void HUD_Timer()
 	else
 		timer_color = '1 0 0'; //red
 
-	if (intermission_time) {
+	if (warmup_stage && warmup_timeleft >= 60) {
+		timer = _("WARMUP");
+	} else if (intermission_time) {
 		timer = seconds_tostring(max(0, floor(intermission_time - STAT(GAMESTARTTIME))));
 	} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
 		if (time < STAT(GAMESTARTTIME))
