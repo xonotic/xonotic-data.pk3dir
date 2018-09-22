@@ -592,8 +592,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// when we get here, player actually dies
 
-		Unfreeze(this); // remove any icy remains
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // Unfreeze resets health, so we need to set it back
+		Unfreeze(this, false); // remove any icy remains
 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);

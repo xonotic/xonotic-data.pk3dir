@@ -274,7 +274,7 @@ void PutObserverInServer(entity this)
 
     RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
-	Unfreeze(this);
+	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
 
 	if (this.alivetime)
@@ -733,7 +733,7 @@ void PutPlayerInServer(entity this)
 		//spot.target = s;
 	}
 
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 
@@ -1196,7 +1196,7 @@ void ClientDisconnect(entity this)
 
 	Portal_ClearAll(this);
 
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	RemoveGrapplingHooks(this);
 
@@ -2404,16 +2404,16 @@ void PlayerPreThink (entity this)
 
 	if(IS_PLAYER(this))
 	{
-		if (STAT(FROZEN, this) == 2)
+		if (STAT(FROZEN, this) == 2) // reviving in progress
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
 			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 			if (STAT(REVIVE_PROGRESS, this) >= 1)
-				Unfreeze(this);
+				Unfreeze(this, false);
 		}
-		else if (STAT(FROZEN, this) == 3)
+		else if (STAT(FROZEN, this) == 3) // ice nade progress until explosion
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
 			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
@@ -2426,7 +2426,7 @@ void PlayerPreThink (entity this)
 					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			}
 			else if (STAT(REVIVE_PROGRESS, this) <= 0)
-				Unfreeze(this);
+				Unfreeze(this, false);
 		}
 	}
 

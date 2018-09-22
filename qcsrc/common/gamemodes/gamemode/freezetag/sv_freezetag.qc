@@ -329,7 +329,7 @@ void ft_RemovePlayer(entity this)
 {
 	if(!STAT(FROZEN, this))
 		freezetag_LastPlayerForTeam_Notify(this);
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // neccessary to correctly count alive players
 	freezetag_count_alive_players();
@@ -360,7 +360,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(round_handler_CountdownRunning())
 	{
 		if(STAT(FROZEN, frag_target))
-			Unfreeze(frag_target);
+			Unfreeze(frag_target, true);
 		freezetag_count_alive_players();
 		return true; // let the player die so that he can respawn whenever he wants
 	}
@@ -378,8 +378,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			freezetag_LastPlayerForTeam_Notify(frag_target);
 		}
 		else
-			Unfreeze(frag_target); // remove ice
-		SetResourceAmountExplicit(frag_target, RESOURCE_HEALTH, 0); // Unfreeze resets health
+			Unfreeze(frag_target, false); // remove ice
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
 	}
@@ -452,8 +451,6 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 	entity targ = M_ARGV(0, entity);
 	targ.freezetag_frozen_time = 0;
 	targ.freezetag_frozen_timeout = 0;
-
-	freezetag_count_alive_players();
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
@@ -501,7 +498,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
-			Unfreeze(player);
+			Unfreeze(player, false);
 			freezetag_count_alive_players();
 
 			if(n == -1)

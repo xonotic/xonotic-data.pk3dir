@@ -1355,7 +1355,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
-			Unfreeze(player);
+			Unfreeze(player, false);
 
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
@@ -1468,7 +1468,7 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 	if(autocvar_g_freezetag_revive_nade && STAT(FROZEN, frag_target) && frag_attacker == frag_target && frag_deathtype == DEATH_NADE.m_id)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
-		Unfreeze(frag_target);
+		Unfreeze(frag_target, false);
 		SetResourceAmount(frag_target, RESOURCE_HEALTH, autocvar_g_freezetag_revive_nade_health);
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		M_ARGV(4, float) = 0;
