@@ -19,8 +19,7 @@ void freezetag_count_alive_players()
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
-		if ((GetResourceAmount(it, RESOURCE_HEALTH) < 1) ||
-			(STAT(FROZEN, it) == 1))
+		if (GetResourceAmount(it, RESOURCE_HEALTH) < 1 || STAT(FROZEN, it) == FROZEN_NORMAL)
 		{
 			continue;
 		}
@@ -155,7 +154,7 @@ entity freezetag_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), {
-		if (!STAT(FROZEN, it) && GetResourceAmount(it, RESOURCE_HEALTH) >= 1)
+		if (STAT(FROZEN, it) != FROZEN_NORMAL && GetResourceAmount(it, RESOURCE_HEALTH) >= 1)
 		{
 			if (!last_pl)
 				last_pl = it;
@@ -213,7 +212,7 @@ void freezetag_Freeze(entity targ, entity attacker)
 
 bool freezetag_isEliminated(entity e)
 {
-	if(IS_PLAYER(e) && (STAT(FROZEN, e) == 1 || IS_DEAD(e)))
+	if(IS_PLAYER(e) && (STAT(FROZEN, e) == FROZEN_NORMAL || IS_DEAD(e)))
 		return true;
 	return false;
 }
@@ -231,7 +230,7 @@ void havocbot_goalrating_ft_freeplayers(entity this, float ratingscale, vector o
 	entity best_pl = NULL;
 	float best_dist2 = FLOAT_MAX;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), {
-		if (STAT(FROZEN, it) == 1)
+		if (STAT(FROZEN, it) == FROZEN_NORMAL)
 		{
 			if(vdist(it.origin - org, >, sradius))
 				continue;
@@ -267,10 +266,12 @@ void havocbot_role_ft_offense(entity this)
 
 	// Count how many players on team are unfrozen.
 	int unfrozen = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this) && !STAT(FROZEN, it), { unfrozen++; });
+	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this) && STAT(FROZEN, it) != FROZEN_NORMAL, {
+		unfrozen++;
+	});
 
 	// If only one left on team or if role has timed out then start trying to free players.
-	if ((unfrozen == 0 && !STAT(FROZEN, this)) || time > this.havocbot_role_timeout)
+	if ((!unfrozen && STAT(FROZEN, this) != FROZEN_NORMAL) || time > this.havocbot_role_timeout)
 	{
 		LOG_TRACE("changing role to freeing");
 		this.havocbot_role = havocbot_role_ft_freeing;
@@ -327,7 +328,7 @@ void havocbot_role_ft_freeing(entity this)
 
 void ft_RemovePlayer(entity this)
 {
-	if(!STAT(FROZEN, this))
+	if (STAT(FROZEN, this) != FROZEN_NORMAL)
 		freezetag_LastPlayerForTeam_Notify(this);
 	Unfreeze(this, false);
 
@@ -359,7 +360,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
 	{
-		if(STAT(FROZEN, frag_target))
+		if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
 			Unfreeze(frag_target, true);
 		freezetag_count_alive_players();
 		return true; // let the player die so that he can respawn whenever he wants
@@ -371,7 +372,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		|| frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
 		// let the player die, he will be automatically frozen when he respawns
-		if(STAT(FROZEN, frag_target) != 1)
+		if (STAT(FROZEN, frag_target) != FROZEN_NORMAL)
 		{
 			freezetag_Add_Score(frag_target, frag_attacker);
 			freezetag_count_alive_players();
@@ -383,7 +384,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		return true;
 	}
 
-	if(STAT(FROZEN, frag_target))
+	if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
 		return true;
 
 	freezetag_Freeze(frag_target, frag_attacker);
@@ -465,7 +466,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	int n;
 	entity o = NULL;
 	entity player = M_ARGV(0, entity);
-	//if(STAT(FROZEN, player))
+	//if (STAT(FROZEN, player) == FROZEN_NORMAL)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
 
@@ -476,22 +477,19 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
-			if(STAT(FROZEN, it) == 0)
-			if(!IS_DEAD(it))
-			if(SAME_TEAM(it, player))
+			if (!STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player))
 			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 			{
 				if(!o)
 					o = it;
-				if(STAT(FROZEN, player) == 1)
+				if (STAT(FROZEN, player) == FROZEN_NORMAL)
 					it.reviving = true;
 				++n;
 			}
 		});
-
 	}
 
-	if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
+	if (n && STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
@@ -525,12 +523,12 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			it.reviving = false;
 		});
 	}
-	else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
+	else if (!n && STAT(FROZEN, player) == FROZEN_NORMAL) // only if no teammate is nearby will we reset
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
 		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 	}
-	else if(!n && !STAT(FROZEN, player))
+	else if (!n && !STAT(FROZEN, player))
 	{
 		STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
 	}
@@ -591,7 +589,7 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 	int kill_count_to_attacker = M_ARGV(3, int);
 	int kill_count_to_target = M_ARGV(4, int);
 
-	if(STAT(FROZEN, frag_target))
+	if(STAT(FROZEN, frag_target) == FROZEN_NORMAL)
 		return; // target was already frozen, so this is just pushing them off the cliff
 
 	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : CS(frag_target).ping));

@@ -489,8 +489,8 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
 	STAT(FROZEN, targ) = frozen_type;
-	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == 3) ? 1 : 0);
-	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
+	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == FROZEN_TEMP_DYING) ? 1 : 0);
+	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == FROZEN_TEMP_DYING) ? targ_maxhealth : 1));
 	targ.revive_speed = revivespeed;
 	if(targ.bot_attack)
 		IL_REMOVE(g_bot_targets, targ);
@@ -534,7 +534,7 @@ void Unfreeze(entity targ, bool reset_health)
 	if(!STAT(FROZEN, targ))
 		return;
 
-	if (reset_health && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
+	if (reset_health && STAT(FROZEN, targ) != FROZEN_TEMP_DYING)
 		SetResourceAmount(targ, RESOURCE_HEALTH, ((IS_PLAYER(targ)) ? start_health : targ.max_health));
 
 	targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
@@ -1248,7 +1248,6 @@ void Fire_ApplyDamage(entity e)
 			}
 		});
 	}
-			
 }
 
 void Fire_ApplyEffect(entity e)

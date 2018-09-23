@@ -1021,7 +1021,7 @@ void nades_GiveBonus(entity player, float score)
 	if (autocvar_g_nades_bonus)
 	if (IS_REAL_CLIENT(player))
 	if (IS_PLAYER(player) && STAT(NADE_BONUS, player) < autocvar_g_nades_bonus_max)
-	if (STAT(FROZEN, player) == 0)
+	if (!STAT(FROZEN, player))
 	if (!IS_DEAD(player))
 	{
 		if ( STAT(NADE_BONUS_SCORE, player) < 1 )
@@ -1332,12 +1332,12 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	entity o = NULL;
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
-	else if(STAT(FROZEN, player) == 3)
+	else if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
-			if(!IS_DEAD(it) && STAT(FROZEN, it) == 0 && SAME_TEAM(it, player))
+			if (!IS_DEAD(it) && !STAT(FROZEN, it) && SAME_TEAM(it, player))
 			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 			{
 				if(!o)
@@ -1348,7 +1348,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		});
 	}
 
-	if(n > 0 && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
+	if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 		SetResourceAmount(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
