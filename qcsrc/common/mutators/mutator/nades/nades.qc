@@ -1258,6 +1258,15 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 	}
 }
 
+#ifdef IS_REVIVING
+	#undef IS_REVIVING
+#endif
+
+// returns true if player is reviving it
+#define IS_REVIVING(player, it, revive_extra_size) \
+	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
+	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
+
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
@@ -1330,21 +1339,16 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 	int n = 0;
 	entity o = NULL;
+	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 	else if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
 	{
-		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
-			if (!IS_DEAD(it) && !STAT(FROZEN, it) && SAME_TEAM(it, player))
-			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
-			{
-				if(!o)
-					o = it;
-				it.reviving = true;
-				++n;
-			}
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+			if(!o)
+				o = it;
+			++n;
 		});
 	}
 
@@ -1361,9 +1365,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-			it.reviving = false;
 		});
 	}
 }

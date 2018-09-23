@@ -454,6 +454,15 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 	targ.freezetag_frozen_timeout = 0;
 }
 
+#ifdef IS_REVIVING
+	#undef IS_REVIVING
+#endif
+
+// returns true if player is reviving it
+#define IS_REVIVING(player, it, revive_extra_size) \
+	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
+	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
+
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 {
 	if(game_stopped)
@@ -465,6 +474,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 	int n;
 	entity o = NULL;
+	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 	entity player = M_ARGV(0, entity);
 	//if (STAT(FROZEN, player) == FROZEN_NORMAL)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
@@ -474,18 +484,11 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		n = -1;
 	else
 	{
-		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
-			if (!STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player))
-			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
-			{
-				if(!o)
-					o = it;
-				if (STAT(FROZEN, player) == FROZEN_NORMAL)
-					it.reviving = true;
-				++n;
-			}
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+			if(!o)
+				o = it;
+			++n;
 		});
 	}
 
@@ -507,10 +510,10 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
 				GameRules_scoring_add(it, FREEZETAG_REVIVALS, +1);
 				GameRules_scoring_add(it, SCORE, +1);
-				nades_GiveBonus(it,autocvar_g_nades_bonus_score_low);
+				nades_GiveBonus(it, autocvar_g_nades_bonus_score_low);
 			});
 
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
@@ -518,9 +521,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-			it.reviving = false;
 		});
 	}
 	else if (!n && STAT(FROZEN, player) == FROZEN_NORMAL) // only if no teammate is nearby will we reset
