@@ -957,7 +957,7 @@ spawnfunc(worldspawn)
 	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
-	string filename = strcat(mapname, "_scrshot_ent.txt"); // doesn't support custom paths
+	string filename = strcat("data/", mapname, "_scrshot_ent.txt"); // doesn't support custom paths
 	if(fexists(filename))
 		loadfromfile(filename);
 	__spawnfunc_spawn_all();
