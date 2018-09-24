@@ -14,6 +14,8 @@ float CheatFrame(entity this);
 
 const float CHRAME_DRAG = 8;
 
+bool drag_undraggable(entity draggee, entity dragger);
+
 .bool(entity this, entity dragger) draggable;
 void Drag_MoveDrag(entity from, entity to); // call this from CopyBody
 void DragBox_Think(entity this);

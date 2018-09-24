@@ -915,29 +915,22 @@ void Drag_Finish(entity dragger)
 	}
 }
 
+bool drag_undraggable(entity draggee, entity dragger)
+{
+	// stuff probably shouldn't need this, we should figure out why they do!
+	// exceptions of course are observers and weapon entities, where things mess up
+	return false;
+}
+
 float Drag_IsDraggable(entity draggee, entity dragger)
 {
 	// TODO add more checks for bad stuff here
 	if(draggee == NULL)
 		return false;
-	if(draggee.classname == "func_bobbing")
-		return false;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
-		return false;
-	if(draggee.classname == "plat")
-		return false;
-	if(draggee.classname == "func_button")
-		return false;
+		return false; // probably due to BSP collision
 //	if(draggee.model == "")
 //		return false;
-	if(IS_SPEC(draggee))
-		return false;
-	if(IS_OBSERVER(draggee))
-		return false;
-	if(draggee.classname == "exteriorweaponentity")
-		return false;
-	if(draggee.classname == "weaponentity")
-		return false;
 
 	return ((draggee.draggable) ? draggee.draggable(draggee, dragger) : true);
 }

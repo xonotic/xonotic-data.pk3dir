@@ -347,6 +347,7 @@ void PutObserverInServer(entity this)
 	this.crouch = false;
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
+	this.draggable = drag_undraggable;
 
 	this.items = 0;
 	STAT(WEAPONS, this) = '0 0 0';
@@ -676,6 +677,8 @@ void PutPlayerInServer(entity this)
 
 	this.event_damage = PlayerDamage;
 	this.event_heal = PlayerHeal;
+
+	this.draggable = func_null;
 
 	if(!this.bot_attack)
 		IL_PUSH(g_bot_targets, this);
