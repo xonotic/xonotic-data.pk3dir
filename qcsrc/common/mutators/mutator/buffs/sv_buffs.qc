@@ -423,7 +423,7 @@ void buff_Medic_Heal(entity this)
 {
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
 	{
-		if (!SAME_TEAM(it, this))
+		if (DIFF_TEAM(it, this))
 		{
 			continue;
 		}

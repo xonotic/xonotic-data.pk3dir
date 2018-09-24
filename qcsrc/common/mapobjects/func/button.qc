@@ -158,6 +158,7 @@ spawnfunc(func_button)
         precache_sound(this.noise);
 
 	this.active = ACTIVE_ACTIVE;
+	this.draggable = drag_undraggable;
 
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);

@@ -103,6 +103,7 @@ spawnfunc(func_plat)
 	this.angles = '0 0 0';
 
 	this.classname = "plat";
+	this.draggable = drag_undraggable;
 	if (!InitMovingBrushTrigger(this))
 		return;
 	this.effects |= EF_LOWPRECISION;

@@ -6,9 +6,9 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 {
 	W_DecreaseAmmo(thiswep, actor, ammocount, weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, WEP_SHOTGUN.m_id);
+	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, thiswep.m_id);
 	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, WEP_SHOTGUN.m_id, 0);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, thiswep.m_id, 0);
 
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, ammocount);
