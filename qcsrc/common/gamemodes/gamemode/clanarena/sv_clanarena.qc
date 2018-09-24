@@ -385,7 +385,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
-	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && !SAME_TEAM(frag_target, frag_attacker))
+	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_target, frag_attacker))
 		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
 }
 
