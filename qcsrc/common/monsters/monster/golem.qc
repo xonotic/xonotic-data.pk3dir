@@ -165,6 +165,7 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
+			setanim(actor, ((random() >= 0.5) ? actor.anim_melee2 : actor.anim_melee3), false, true, true);
 			int swing_cnt = bound(1, floor(random() * 4), 3);
 			Monster_Delay(actor, swing_cnt, 0.5, M_Golem_Attack_Swing);
 			actor.anim_finished = actor.attack_finished_single[0] = time + (0.5 * swing_cnt); // set this for the delay
