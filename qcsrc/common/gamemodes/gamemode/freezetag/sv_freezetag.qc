@@ -492,7 +492,17 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		});
 	}
 
-	if (n && STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
+	if (!n) // no teammate nearby
+	{
+		if (STAT(FROZEN, player) == FROZEN_NORMAL)
+		{
+			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+			SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
+		}
+		else if (!STAT(FROZEN, player))
+			STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
+	}
+	else if (STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
@@ -524,15 +534,6 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 		});
-	}
-	else if (!n && STAT(FROZEN, player) == FROZEN_NORMAL) // only if no teammate is nearby will we reset
-	{
-		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
-	}
-	else if (!n && !STAT(FROZEN, player))
-	{
-		STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
 	}
 
 	return true;
