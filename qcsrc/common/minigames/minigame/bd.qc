@@ -1370,7 +1370,7 @@ int bd_client_event(entity minigame, string event, ...)
 				{
 					sent.message = bd_turn_to_string(sent.minigame_flags);
 					//if ( sent.minigame_flags & minigame_self.team )
-						minigame_prompt();
+						//minigame_prompt();
 				}
 			}
 			else if(sent.classname == "minigame_board_piece")

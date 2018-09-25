@@ -385,7 +385,7 @@ bool vehicle_addplayerslot(	entity _owner,
 
 vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname,
 						 float _pichlimit_min, float _pichlimit_max,
-						 float _rotlimit_min, float _rotlimit_max, float _aimspeed)
+						 float _rotlimit_min, float _rotlimit_max, float _aimspeed, float dt)
 {
 	vector vtmp, vtag;
 	float ftmp;
@@ -393,7 +393,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	vtmp = vectoangles(normalize(_target - vtag));
 	vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
 	vtmp = AnglesTransform_Normalize(vtmp, true);
-	ftmp = _aimspeed * frametime;
+	ftmp = _aimspeed * dt;
 	vtmp_y = bound(-ftmp, vtmp_y, ftmp);
 	vtmp_x = bound(-ftmp, vtmp_x, ftmp);
 	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);
@@ -587,12 +587,29 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 	if(timer + rpause < time)
 	{
 		if(_healthscale)
-			regen = regen * (this.vehicle_health / this.max_health);
+			regen = regen * (GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health);
 
 		this.(regen_field) = min(this.(regen_field) + regen * delta_time, field_max);
 
 		if(this.owner)
 			this.owner.(regen_field) = (this.(regen_field) / field_max) * 100;
+	}
+}
+
+void vehicles_regen_resource(entity this, float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale, int resource)
+{
+	float resource_amount = GetResourceAmount(this, resource);
+
+	if(resource_amount < field_max)
+	if(timer + rpause < time)
+	{
+		if(_healthscale)
+			regen = regen * (resource_amount / this.max_health);
+
+		SetResourceAmount(this, resource, min(resource_amount + regen * delta_time, field_max));
+
+		if(this.owner)
+			this.owner.(regen_field) = (GetResourceAmount(this, resource) / field_max) * 100;
 	}
 }
 
@@ -613,7 +630,7 @@ void shieldhit_think(entity this)
 
 void vehicles_painframe(entity this)
 {
-	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((this.vehicle_health / this.max_health) * 100));
+	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health) * 100));
 
 	if(myhealth <= 50)
 	if(this.pain_frame < time)
@@ -684,7 +701,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 
 		if(this.vehicle_shield < 0)
 		{
-			this.vehicle_health -= fabs(this.vehicle_shield);
+			TakeResource(this, RESOURCE_HEALTH, fabs(this.vehicle_shield));
 			this.vehicle_shieldent.colormod = '2 0 0';
 			this.vehicle_shield = 0;
 			this.vehicle_shieldent.alpha = 0.75;
@@ -699,7 +716,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	}
 	else
 	{
-		this.vehicle_health -= damage;
+		TakeResource(this, RESOURCE_HEALTH, damage);
 
 		if(sound_allowed(MSG_BROADCAST, attacker))
 			spamsound (this, CH_PAIN, SND_ONS_HIT2, VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
@@ -710,7 +727,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	else
 		this.velocity += force;
 
-	if(this.vehicle_health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		if(this.owner)
 			if(this.vehicle_flags & VHF_DEATHEJECT)
@@ -730,14 +747,12 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 bool vehicles_heal(entity targ, entity inflictor, float amount, float limit)
 {
 	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
-	//if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
-	if(targ.vehicle_health <= 0 || targ.vehicle_health >= true_limit)
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
 		return false;
 
-	targ.vehicle_health = min(targ.vehicle_health + amount, true_limit);
-	//GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
-	//if(targ.owner)
-		//targ.owner.vehicle_health = (targ.vehicle_health / targ.max_health) * 100;
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	if(targ.owner)
+		targ.owner.vehicle_health = (GetResourceAmount(targ, RESOURCE_HEALTH) / targ.max_health) * 100;
 	return true;
 }
 

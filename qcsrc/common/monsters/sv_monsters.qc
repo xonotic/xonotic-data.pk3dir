@@ -683,7 +683,6 @@ vector Monster_Move_Target(entity this, entity targ)
 }
 
 .entity draggedby;
-.entity target2;
 
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {

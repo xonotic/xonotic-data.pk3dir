@@ -32,11 +32,14 @@
 #include "../common/wepent.qh"
 #include <common/state.qh>
 
+#include "compat/quake3.qh"
+
 #include <common/effects/qc/globalsound.qh>
 
 #include "../common/mapobjects/func/conveyor.qh"
 #include "../common/mapobjects/teleporters.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
+#include <common/mapobjects/trigger/counter.qh>
 
 #include "../common/vehicles/all.qh"
 
@@ -344,6 +347,7 @@ void PutObserverInServer(entity this)
 	this.crouch = false;
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
+	this.draggable = drag_undraggable;
 
 	this.items = 0;
 	STAT(WEAPONS, this) = '0 0 0';
@@ -674,6 +678,8 @@ void PutPlayerInServer(entity this)
 	this.event_damage = PlayerDamage;
 	this.event_heal = PlayerHeal;
 
+	this.draggable = func_null;
+
 	if(!this.bot_attack)
 		IL_PUSH(g_bot_targets, this);
 	this.bot_attack = true;
@@ -705,6 +711,9 @@ void PutPlayerInServer(entity this)
 
 	this.speedrunning = false;
 
+	this.counter_cnt = 0;
+	this.fragsfilter_cnt = 0;
+
 	target_voicescript_clear(this);
 
 	// reset fields the weapons may use
@@ -721,10 +730,10 @@ void PutPlayerInServer(entity this)
 	});
 
 	{
-		string s = spot.target;
-		spot.target = string_null;
+		//string s = spot.target;
+		//spot.target = string_null;
 		SUB_UseTargets(spot, this, NULL);
-		spot.target = s;
+		//spot.target = s;
 	}
 
 	Unfreeze(this);
@@ -1137,6 +1146,8 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
+	this.move_qcphysics = true;
+
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
 
@@ -1230,7 +1241,7 @@ void ChatBubbleThink(entity this)
 
 	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) )
 	{
-		if ( CS(this.owner).active_minigame )
+		if ( CS(this.owner).active_minigame && PHYS_INPUT_BUTTON_MINIGAME(this.owner) )
 			this.mdl = "models/sprites/minigame_busy.iqm";
 		else if (PHYS_INPUT_BUTTON_CHAT(this.owner))
 			this.mdl = "models/misc/chatbubble.spr";
@@ -1450,9 +1461,12 @@ void player_powerups(entity this)
 			if (time < this.superweapons_finished || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				this.items = this.items | IT_SUPERWEAPON;
-				if(!g_cts)
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
+				if(!(this.items & IT_UNLIMITED_SUPERWEAPONS))
+				{
+					if(!g_cts)
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
+				}
 			}
 			else
 			{
@@ -2553,7 +2567,7 @@ void DrownPlayer(entity this)
 
 void Player_Physics(entity this)
 {
-	set_movetype(this, this.move_movetype);
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCPLAYER : this.move_movetype;
 
 	if(!this.move_qcphysics)
 		return;
@@ -2665,7 +2679,7 @@ void PM_UpdateButtons(entity this, entity store)
 		store.impulse = this.impulse;
 	this.impulse = 0;
 
-	bool typing = this.buttonchat;
+	bool typing = this.buttonchat || this.button14;
 
 	store.button0 = (typing) ? 0 : this.button0;
 	//button1?!

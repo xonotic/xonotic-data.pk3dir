@@ -1,3 +1,5 @@
 #pragma once
 
 bool DoesQ3ARemoveThisEntity(entity this);
+
+.int fragsfilter_cnt;

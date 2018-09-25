@@ -48,6 +48,7 @@
 #define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
 
 float autocvar_cl_viewmodel_scale;
+float autocvar_cl_viewmodel_alpha;
 
 bool autocvar_cl_bobmodel;
 float autocvar_cl_bobmodel_speed;
@@ -297,12 +298,9 @@ void viewmodel_draw(entity this)
 	if(!this.activeweapon || !autocvar_r_drawviewmodel)
 		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
-	float a = this.alpha;
-	static bool wasinvehicle;
+	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
-	else if (wasinvehicle) a = 1;
-	wasinvehicle = invehicle;
 	Weapon wep = this.activeweapon;
 	int c = entcs_GetClientColors(current_player);
 	vector g = weaponentity_glowmod(wep, NULL, c, this);
@@ -427,6 +425,10 @@ void Porto_Draw(entity this)
 
 		vector pos = view_origin;
 		vector dir = view_forward;
+		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
+		pos += v_right * -wepent.movedir.y
+			+  v_up * wepent.movedir.z;
+
 		if (wepent.angles_held_status)
 		{
 			makevectors(wepent.angles_held);
@@ -631,6 +633,8 @@ vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, ve
 // this function must match W_SetupShot!
 float zoomscript_caught;
 
+bool minigame_wasactive;
+
 vector wcross_origin;
 float wcross_scale_prev, wcross_alpha_prev;
 vector wcross_color_prev;
@@ -825,6 +829,9 @@ bool WantEventchase(entity this)
 			}
 			else return true;
 		}
+		if (spectatee_status > 0 && autocvar_cl_eventchase_spectated_change
+			&& time <= spectatee_status_changed_time + 0.5)
+			return true;
 	}
 	return false;
 }
@@ -1555,6 +1562,51 @@ void ViewLocation_Mouse()
 	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
 }
 
+void HUD_Cursor_Show()
+{
+	float cursor_alpha = 1 - autocvar__menu_alpha;
+	if(cursor_type == CURSOR_NORMAL)
+		draw_cursor_normal(mousepos, '1 1 1', cursor_alpha);
+	else if(cursor_type == CURSOR_MOVE)
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
+	else if(cursor_type == CURSOR_RESIZE)
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize", '1 1 1', cursor_alpha);
+	else if(cursor_type == CURSOR_RESIZE2)
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize2", '1 1 1', cursor_alpha);
+}
+
+void HUD_Mouse(entity player)
+{
+	if(autocvar__menu_alpha == 1)
+		return;
+
+	if(!cursor_active)
+	{
+		if(player.viewloc && (player.viewloc.spawnflags & VIEWLOC_FREEAIM))
+			ViewLocation_Mouse(); // NOTE: doesn't use cursormode
+		return;
+	}
+
+	if(!autocvar_hud_cursormode)
+		update_mousepos();
+
+	if(autocvar__hud_configure)
+		HUD_Panel_Mouse();
+	else
+	{
+		if (HUD_MinigameMenu_IsOpened())
+			HUD_Minigame_Mouse();
+		if (QuickMenu_IsOpened())
+			QuickMenu_Mouse();
+		if (HUD_Radar_Clickable())
+			HUD_Radar_Mouse();
+	}
+
+	prevMouseClicked = mouseClicked;
+
+	HUD_Cursor_Show();
+}
+
 bool ov_enabled;
 float oldr_nearclip;
 float oldr_farclip_base;
@@ -1958,6 +2010,20 @@ void CSQC_UpdateView(entity this, float w, float h)
 			localcmd("-button9\n");
 			zoomscript_caught = 0;
 		}
+	}
+
+	if(active_minigame && HUD_MinigameMenu_IsOpened())
+	{
+		if(!minigame_wasactive)
+		{
+			localcmd("+button14\n");
+			minigame_wasactive = true;
+		}
+	}
+	else if(minigame_wasactive)
+	{
+		localcmd("-button14\n");
+		minigame_wasactive = false;
 	}
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
@@ -2444,16 +2510,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
-	if(autocvar__hud_configure)
-		HUD_Panel_Mouse();
-	else if (HUD_MinigameMenu_IsOpened() || active_minigame)
-		HUD_Minigame_Mouse();
-	else if(QuickMenu_IsOpened())
-		QuickMenu_Mouse();
-	else if(local_player.viewloc && (local_player.viewloc.spawnflags & VIEWLOC_FREEAIM))
-		ViewLocation_Mouse(); // NOTE: doesn't use cursormode
-	else
-		HUD_Radar_Mouse();
+	HUD_Mouse(local_player);
 
 	cl_notice_run();
 	unpause_update();

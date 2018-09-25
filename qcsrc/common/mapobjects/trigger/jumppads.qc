@@ -133,9 +133,20 @@ bool jumppad_push(entity this, entity targ)
 	if (!isPushable(targ))
 		return false;
 
+	vector org = targ.origin;
+#ifdef SVQC
+	if(autocvar_sv_vq3compat)
+#elif defined(CSQC)
+	if(STAT(VQ3COMPAT))
+#endif
+	{
+		org.z += targ.mins_z;
+		org.z += 1; // off by 1!
+	}
+
 	if(this.enemy)
 	{
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height, targ);
+		targ.velocity = trigger_push_calculatevelocity(org, this.enemy, this.height, targ);
 	}
 	else if(this.target && this.target != "")
 	{
@@ -148,7 +159,7 @@ bool jumppad_push(entity this, entity targ)
 			else
 				RandomSelection_AddEnt(e, 1, 1);
 		}
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height, targ);
+		targ.velocity = trigger_push_calculatevelocity(org, RandomSelection_chosen_ent, this.height, targ);
 	}
 	else
 	{

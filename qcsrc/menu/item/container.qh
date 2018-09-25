@@ -2,7 +2,7 @@
 
 #include <menu/item.qh>
 
-CLASS(Container, Item)
+CLASS(Container, MenuItem)
 	METHOD(Container, draw, void(entity));
 	METHOD(Container, keyUp, float(entity, float, float, float));
 	METHOD(Container, keyDown, float(entity, float, float, float));

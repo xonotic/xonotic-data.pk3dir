@@ -468,7 +468,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 			if (this != attacker) {
 				float realdmg = damage - excess;
-				if (IS_PLAYER(attacker)) {
+				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
 				}
 				if (IS_PLAYER(this)) {

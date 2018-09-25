@@ -162,9 +162,9 @@ CLASS(WeaponPickup, Pickup)
     METHOD(WeaponPickup, giveTo, bool(entity this, entity item, entity player))
     {
         bool b = Item_GiveTo(item, player);
-        if (b) {
-            LOG_TRACEF("entity %i picked up %s", player, this.m_name);
-        }
+        //if (b) {
+            //LOG_TRACEF("entity %i picked up %s", player, this.m_name);
+        //}
         return b;
     }
 #endif

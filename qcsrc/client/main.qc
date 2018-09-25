@@ -363,20 +363,21 @@ void PostInit()
 // In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
 float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
-	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+	TC(int, bInputType);
+	bool override = false;
+	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
 		return true;
 
-	if (QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= MapVote_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
+	override |= HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary);
+
+	if(override)
 		return true;
 
 	return false;
@@ -528,6 +529,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		race_laptime = 0;
 		race_checkpointtime = 0;
 		hud_dynamic_shake_factor = -1;
+		spectatee_status_changed_time = time;
 	}
 	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 	{
