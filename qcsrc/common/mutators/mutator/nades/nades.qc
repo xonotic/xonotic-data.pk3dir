@@ -383,7 +383,7 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 {
 	frost_target.frozen_by = freezefield.realowner;
 	Send_Effect(EFFECT_ELECTRO_IMPACT, frost_target.origin, '0 0 0', 1);
-	Freeze(frost_target, 1 / freezetime, 3, false);
+	Freeze(frost_target, 1 / freezetime, FROZEN_TEMP_DYING, false);
 
 	Drop_Special_Items(frost_target);
 }

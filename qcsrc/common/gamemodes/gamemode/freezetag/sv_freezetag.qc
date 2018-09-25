@@ -203,7 +203,7 @@ void freezetag_Freeze(entity targ, entity attacker)
 	if(autocvar_g_freezetag_frozen_maxtime > 0)
 		targ.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
-	Freeze(targ, 0, 1, true);
+	Freeze(targ, 0, FROZEN_NORMAL, true);
 
 	freezetag_count_alive_players();
 
