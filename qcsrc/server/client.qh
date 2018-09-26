@@ -145,6 +145,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_accuracy_data_receive, bool, this.cvar_cl_accuracy_data_receive);
     ATTRIBARRAY(Client, cvar_cl_weaponpriorities, string, 10);
     ATTRIB(Client, cvar_cl_weaponpriority, string, this.cvar_cl_weaponpriority);
+    ATTRIB(Client, cvar_cl_cts_noautoswitch, bool, this.cvar_cl_cts_noautoswitch);
 
     METHOD(Client, m_unwind, bool(Client this));
 

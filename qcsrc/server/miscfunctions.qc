@@ -416,6 +416,8 @@ REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
 
 REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 
+REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
+
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
