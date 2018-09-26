@@ -228,9 +228,9 @@ void Shutdown()
 }
 
 .float has_team;
-float SetTeam(entity o, int Team)
+bool SetTeam(entity o, int Team)
 {
-    TC(int, Team);
+	TC(int, Team);
 	devassert_once(Team);
 	entity tm;
 	if(teamplay)
@@ -363,20 +363,21 @@ void PostInit()
 // In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
 float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
-	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+	TC(int, bInputType);
+	bool override = false;
+	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
 		return true;
 
-	if (QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	override |= MapVote_InputEvent(bInputType, nPrimary, nSecondary);
 
-	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
+	override |= HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary);
+
+	if(override)
 		return true;
 
 	return false;
@@ -528,6 +529,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		race_laptime = 0;
 		race_checkpointtime = 0;
 		hud_dynamic_shake_factor = -1;
+		spectatee_status_changed_time = time;
 	}
 	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 	{
@@ -577,14 +579,14 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	{
 		for(j = 0; j < maxclients; ++j)
 			if(playerslots[j])
-				playerslots[j].ready = 1;
+				playerslots[j].ready = true;
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
 			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])
-						playerslots[j].ready = 0;
+						playerslots[j].ready = false;
 		}
 	}
 
@@ -605,7 +607,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 	if (sf & 1) {
 		for (int j = 0; j < maxclients; ++j) {
 			if (playerslots[j]) {
-				playerslots[j].eliminated = 1;
+				playerslots[j].eliminated = true;
 			}
 		}
 		for (int i = 1; i <= maxclients; i += 8) {
@@ -615,7 +617,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 				if (f & BIT(b)) continue;
 				int j = i - 1 + b;
 				if (playerslots[j]) {
-					playerslots[j].eliminated = 0;
+					playerslots[j].eliminated = false;
 				}
 			}
 		}

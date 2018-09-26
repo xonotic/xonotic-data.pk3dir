@@ -138,7 +138,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != SND_Null) {
-		sound (ent, chan, snd, (W_DualWielding(ent) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
+		sound(ent, chan, snd, (W_DualWielding(ent) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 

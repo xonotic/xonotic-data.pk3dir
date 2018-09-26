@@ -5,15 +5,17 @@
 # Translators:
 # Ákos RUSZKAI, 2012
 # divVerent <divVerent@xonotic.org>, 2011
+# MmAaXx500 <viktor.balogh2000@gmail.com>, 2018
 # Peter Ferenczy <fpeterhu@gmail.com>, 2017
 # divVerent <divVerent@xonotic.org>, 2011
+# MmAaXx500 <viktor.balogh2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-09-19 19:55+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-08-26 13:48+0000\n"
+"Last-Translator: MmAaXx500 <viktor.balogh2000@gmail.com>\n"
 "Language-Team: Hungarian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/hu/)\n"
 "Language: hu\n"
@@ -380,12 +382,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Settings"
-msgstr ""
+msgstr "QMCMD^Beállítások"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^View/HUD settings"
-msgstr ""
+msgstr "QMCMD^Nézet/HUD beállítások"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^3rd person view"
@@ -397,49 +399,49 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:827
 msgid "QMCMD^Names above players"
-msgstr ""
+msgstr "QMCMD^Nevek a játékosok fölött"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:828
 msgid "QMCMD^Crosshair per weapon"
-msgstr ""
+msgstr "QMCMD^Célkereszt fegyverenként"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^FPS"
-msgstr ""
+msgstr "QMCMD^FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Net graph"
-msgstr ""
+msgstr "QMCMD^Hálózati grafikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Sound settings"
-msgstr ""
+msgstr "Hang beállítások"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Hit sound"
-msgstr ""
+msgstr "QMCMD^Találat hang"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^Chat sound"
-msgstr ""
+msgstr "QMCMD^Chat hang"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Spectator camera"
-msgstr ""
+msgstr "QMCMD^Szemlélő kamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^1st person"
-msgstr ""
+msgstr "QMCMD^Első személy"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^3rd person around player"
-msgstr ""
+msgstr "QMCMD^Harmadik személy a játékos körül"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^3rd person behind"
-msgstr ""
+msgstr "QMCMD^Harmadik személy mögött"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:849
 #: qcsrc/client/hud/panel/quickmenu.qc:854
@@ -448,11 +450,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Increase speed"
-msgstr ""
+msgstr "QMCMD^Sebesség növelése"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Decrease speed"
-msgstr ""
+msgstr "QMCMD^Sebesség csökkentése"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Wall collision off"
@@ -464,36 +466,36 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "QMCMD^Teljes képernyő"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^Translate chat messages"
-msgstr ""
+msgstr "QMCMD^Chat üzenetek lefordítása"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 msgid "QMCMD^Call a vote"
-msgstr ""
+msgstr "QMCMD^Szavazás indítása"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^Restart the map"
-msgstr ""
+msgstr "QMCMD^Játék újraindítása"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^End match"
-msgstr ""
+msgstr "QMCMD^Játék vége"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^Reduce match time"
-msgstr ""
+msgstr "QMCMD^Játékidő csökkentése"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Extend match time"
-msgstr ""
+msgstr "QMCMD^Játékidő csökkentése"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Shuffle teams"
-msgstr ""
+msgstr "QMCMD^Csapatok összekeverése"
 
 #: qcsrc/client/hud/panel/racetimer.qc:37
 #, c-format
@@ -561,7 +563,7 @@ msgstr "megsemmisítve"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:84
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^sérülés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:85
 msgid "SCO^dmgtaken"
@@ -621,7 +623,7 @@ msgstr "Név"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^sum"
-msgstr ""
+msgstr "SCO^össz"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^nick"
@@ -931,7 +933,7 @@ msgstr "Feldezett titkok:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Célbaérési idő rangsor"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Rankings"
@@ -1002,7 +1004,7 @@ msgstr " amíg valaki ^3%s %s^7 -ig nem vezeti a mezőnyt."
 #: qcsrc/client/hud/panel/scoreboard.qc:1688
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr ""
+msgstr "^1Respawning: ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1698
 #, c-format

@@ -75,14 +75,14 @@ vector HUD_Get_Num_Color (float hp, float maxvalue)
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect)
 {
-    TC(int, item_count);
+	TC(int, item_count);
 	float aspect = size_y / size_x;
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
 }
 
 vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect)
 {
-    TC(int, item_count);
+	TC(int, item_count);
 	float columns, rows;
 	float ratio, best_ratio = 0;
 	float best_columns = 1, best_rows = 1;
@@ -180,7 +180,7 @@ void HUD_Panel_LoadCvars()
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
 {
-    TC(bool, vertical); TC(int, drawflag);
+	TC(bool, vertical); TC(int, drawflag);
 	if(!length_ratio || !theAlpha)
 		return;
 	if(length_ratio > 1)
@@ -287,7 +287,7 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag)
 {
-    TC(int, drawflag);
+	TC(int, drawflag);
 	if(!theAlpha)
 		return;
 
@@ -308,7 +308,7 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 
 void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
 {
-    TC(bool, vertical); TC(int, icon_right_align);
+	TC(bool, vertical); TC(int, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
 
@@ -388,7 +388,7 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string ic
 
 void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
 {
-    TC(bool, vertical); TC(int, icon_right_align);
+	TC(bool, vertical); TC(int, icon_right_align);
 	DrawNumIcon_expanding(myPos, mySize, theTime, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
@@ -561,6 +561,26 @@ void Hud_Dynamic_Frame()
 	HUD_Scale_Disable();
 }
 
+bool HUD_WouldShowCursor()
+{
+	if(autocvar__hud_configure)
+		return true;
+	if(hud_panel_radar_mouse)
+		return true;
+	if(mv_active)
+		return true;
+	//entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1)); // TODO: doesn't use regular cursor handling
+	//if(local_player.viewloc && (local_player.viewloc.spawnflags & VIEWLOC_FREEAIM))
+		//return true;
+	if(HUD_Radar_Clickable())
+		return true;
+	if(HUD_MinigameMenu_IsOpened())
+		return true;
+	if(QuickMenu_IsOpened())
+		return true;
+	return false;
+}
+
 void HUD_Main()
 {
 	int i;
@@ -676,9 +696,14 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
 		HUD_Panel_Draw(HUD_PANEL(CHAT));
-	if(hud_panel_quickmenu)
+	if (QuickMenu_IsOpened())
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
+
+	bool cursor_active_prev = cursor_active;
+	cursor_active = HUD_WouldShowCursor();
+	if (cursor_active_prev != cursor_active && autocvar_hud_cursormode)
+		setcursormode(cursor_active);
 
 	if (intermission == 2)
 		HUD_Reset();

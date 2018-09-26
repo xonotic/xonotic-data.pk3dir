@@ -10,19 +10,23 @@
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	return autocvar_g_physics_clientselect && thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
+	return thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity this, string option, float defaultval)
 {
+	if(!autocvar_g_physics_clientselect)
+		return defaultval;
+
 	if(IS_REAL_CLIENT(this) && Physics_Valid(CS(this).cvar_cl_physics))
 	{
 		string s = strcat("g_physics_", CS(this).cvar_cl_physics, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
-	if(autocvar_g_physics_clientselect && autocvar_g_physics_clientselect_default && autocvar_g_physics_clientselect_default != "")
+	if(autocvar_g_physics_clientselect_default && autocvar_g_physics_clientselect_default != "" && autocvar_g_physics_clientselect_default != "default")
 	{
+		// NOTE: not using Physics_Valid here, so the default can be forced to something normally unavailable
 		string s = strcat("g_physics_", autocvar_g_physics_clientselect_default, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
@@ -119,6 +123,8 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		}
 	}
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	if(this.viewloc && !(this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && PHYS_CS(this).movement.x < 0)
+		do_crouch = true;
 	if (have_hook) {
 		do_crouch = false;
 	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
@@ -809,7 +815,8 @@ bool IsFlying(entity this)
 		return false;
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		return false;
-	traceline(this.origin, this.origin - '0 0 48', MOVE_NORMAL, this);
+	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 24', MOVE_NORMAL, this);
+	//traceline(this.origin, this.origin - '0 0 48', MOVE_NORMAL, this);
 	if(trace_fraction < 1)
 		return false;
 	return true;

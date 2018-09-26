@@ -20,7 +20,7 @@ MACRO_END
     \
     PROP(false, m_alpha, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, rint(bound(-1, 254 * this.m_alpha, 254) - -1)); }, \
-	{ (viewmodels[this.m_wepent_slot]).alpha = (ReadByte() + -1) / 254; }) \
+	{ (viewmodels[this.m_wepent_slot]).m_alpha = (ReadByte() + -1) / 254; }) \
     \
     PROP(false, vortex_charge, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.vortex_charge * 255); }, \

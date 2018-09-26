@@ -43,7 +43,7 @@ void DrawDebugModel(entity this)
 
 void LocalCommand_blurtest(int request)
 {
-    TC(int, request);
+	TC(int, request);
 	// Simple command to work with postprocessing temporarily... possibly completely pointless, the glsl shader is used for a real feature now...
 	// Anyway, to enable it, just compile the client with -DBLURTEST and then you can use the command.
 
@@ -79,7 +79,7 @@ void LocalCommand_blurtest(int request)
 
 void LocalCommand_boxparticles(int request, int argc)
 {
-    TC(int, request); TC(int, argc);
+	TC(int, request); TC(int, argc);
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -135,7 +135,7 @@ void LocalCommand_boxparticles(int request, int argc)
 
 void LocalCommand_create_scrshot_ent(int request)
 {
-    TC(int, request);
+	TC(int, request);
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -175,7 +175,7 @@ void LocalCommand_create_scrshot_ent(int request)
 
 void LocalCommand_debugmodel(int request, int argc)
 {
-    TC(int, request); TC(int, argc);
+	TC(int, request); TC(int, argc);
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -205,7 +205,7 @@ void LocalCommand_debugmodel(int request, int argc)
 
 void LocalCommand_handlevote(int request, int argc)
 {
-    TC(int, request); TC(int, argc);
+	TC(int, request); TC(int, argc);
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -255,7 +255,7 @@ void LocalCommand_handlevote(int request, int argc)
 
 void LocalCommand_hud(int request, int argc)
 {
-    TC(int, request); TC(int, argc);
+	TC(int, request); TC(int, argc);
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -351,7 +351,7 @@ void LocalCommand_hud(int request, int argc)
 
 void LocalCommand_localprint(int request, int argc)
 {
-    TC(int, request); TC(int, argc);
+	TC(int, request); TC(int, argc);
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -378,7 +378,7 @@ void LocalCommand_localprint(int request, int argc)
 
 void LocalCommand_mv_download(int request, int argc)
 {
-    TC(int, request); TC(int, argc);
+	TC(int, request); TC(int, argc);
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -405,7 +405,7 @@ void LocalCommand_mv_download(int request, int argc)
 
 void LocalCommand_sendcvar(int request, int argc)
 {
-    TC(int, request); TC(int, argc);
+	TC(int, request); TC(int, argc);
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:

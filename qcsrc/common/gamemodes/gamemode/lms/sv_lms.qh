@@ -1,0 +1,29 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <common/scores.qh>
+.float lms_spectate_warning;
+#define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
+void lms_Initialize();
+
+REGISTER_MUTATOR(lms, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+        GameRules_limit_score(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override));
+        GameRules_limit_lead(0);
+        GameRules_score_enabled(false);
+        GameRules_scoring(0, 0, 0, {
+            field(SP_LMS_LIVES, "lives", SFL_SORT_PRIO_SECONDARY);
+            field(SP_LMS_RANK, "rank", SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
+        });
+
+		lms_Initialize();
+	}
+	return 0;
+}
+
+// lives related defs
+float lms_lowest_lives;
+float LMS_NewPlayerLives();

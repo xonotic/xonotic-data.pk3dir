@@ -362,7 +362,7 @@ void CSQCPlayer_AnimDecide_PostUpdate(entity this, bool isnew)
 }
 int CSQCPlayer_FallbackFrame(entity this, int f)
 {
-    TC(int, f);
+	TC(int, f);
 	if(frameduration(this.modelindex, f) > 0)
 		return f; // goooooood
 	if(frameduration(this.modelindex, 1) <= 0)

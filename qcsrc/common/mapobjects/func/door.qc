@@ -277,7 +277,7 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 	{
 		SetResourceAmountExplicit(this.owner, RESOURCE_HEALTH, this.owner.max_health);
 		this.owner.takedamage = DAMAGE_NO;	// will be reset upon return
-		door_use(this.owner, NULL, NULL);
+		door_use(this.owner, attacker, NULL);
 	}
 }
 

@@ -259,6 +259,6 @@ entity EFFECT_ROCKETMINSTA_LASER(int teamid)
         case NUM_TEAM_4:    e = EFFECT_ROCKETMINSTA_LASER_PINK; break;
         default:            e = EFFECT_ROCKETMINSTA_LASER_NEUTRAL; break;
     }
-    if (particleeffectnum(e) < 0 || Team_TeamToNumber(teamid) == -1) { e = EFFECT_TR_NEXUIZPLASMA; }
+    if (particleeffectnum(e) < 0 || !Team_IsValidTeam(teamid)) { e = EFFECT_TR_NEXUIZPLASMA; }
     return e;
 }

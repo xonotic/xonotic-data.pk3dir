@@ -107,7 +107,7 @@ bool Inventory_Send(Inventory this, Client to, int sf)
     TC(Inventory, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     entity e = this.owner;
-    if (IS_SPEC(e)) e = e.enemy;
+    if (IS_SPEC(e)) e = PS(e.enemy); // TODO: how can this *ever* be the case?
     TC(Player, e);
     Inventory data = e.inventory;
     Inventory_Write(data);
@@ -118,7 +118,7 @@ void Inventory_new(entity e)
 {
     Inventory inv = NEW(Inventory), bak = NEW(Inventory);
     inv.inventory = bak;
-    inv.drawonlytoclient = e;
+    inv.drawonlytoclient = IS_CLIENT(e) ? e : e.m_client;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);
 }
 void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }

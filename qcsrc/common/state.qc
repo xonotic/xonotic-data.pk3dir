@@ -7,7 +7,7 @@ void PlayerState_attach(entity this)
 {
 	this._ps = NEW(PlayerState, this);
 
-	Inventory_new(this);
+	Inventory_new(PS(this));
 }
 
 void PlayerState_detach(entity this)
@@ -18,11 +18,10 @@ void PlayerState_detach(entity this)
 
 	if (ps.m_client != this) return;  // don't own state, spectator
 	ps.ps_push(ps, this);
+    Inventory_delete(ps);
 
 	FOREACH_CLIENT(PS(it) == ps, { PS(it) = NULL; });
 	delete(ps);
-
-    Inventory_delete(this);
 }
 
 void GetCvars(entity this, entity store, int);
@@ -52,8 +51,6 @@ void ClientState_attach(entity this)
 	entcs_attach(this);
 	anticheat_init(this);
 	W_HitPlotOpen(this);
-
-	bot_clientconnect(this);
 }
 
 void bot_clientdisconnect(entity this);

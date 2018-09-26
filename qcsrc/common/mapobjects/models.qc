@@ -199,42 +199,42 @@ spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // bru
 
 void Ent_Wall_PreDraw(entity this)
 {
+	float alph = this.alpha;
 	if (this.inactive)
 	{
-		this.alpha = 0;
+		alph = 0;
 	}
 	else
 	{
 		vector org = getpropertyvec(VF_ORIGIN);
 		if(!checkpvs(org, this))
-			this.alpha = 0;
+			alph = 0;
 		else if(this.fade_start || this.fade_end) {
 			vector offset = '0 0 0';
 			offset_z = this.fade_vertical_offset;
-			float player_dist = vlen(org - this.origin - 0.5 * (this.mins + this.maxs) + offset);
+			vector player_dist_math = org - this.origin - 0.5 * (this.mins + this.maxs) + offset;
 			if (this.fade_end == this.fade_start)
 			{
-				if (player_dist >= this.fade_start)
-					this.alpha = 0;
+				if (vdist(player_dist_math, >=, this.fade_start))
+					alph = 0;
 				else
-					this.alpha = 1;
+					alph = 1;
 			}
 			else
 			{
-				this.alpha = (this.alpha_min + this.alpha_max * bound(0,
+				float player_dist = vlen(player_dist_math);
+				alph = (this.alpha_min + this.alpha_max * bound(0,
 							   (this.fade_end - player_dist)
 							   / (this.fade_end - this.fade_start), 1)) / 100.0;
 			}
 		}
 		else
 		{
-			this.alpha = 1;
+			alph = 1;
 		}
 	}
-	if(this.alpha <= 0)
-		this.drawmask = 0;
-	else
-		this.drawmask = MASK_NORMAL;
+	this.alpha = alph;
+	this.drawmask = (alph <= 0) ? 0 : MASK_NORMAL;
 }
 
 void Ent_Wall_Draw(entity this)

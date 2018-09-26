@@ -19,7 +19,7 @@ bool HUD_Radar_Clickable()
 
 void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 {
-    TC(bool, doshow);
+	TC(bool, doshow);
 	hud_panel_radar_maximized = doshow;
 	hud_panel_radar_temp_hidden = 0;
 
@@ -27,8 +27,6 @@ void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 	{
 		if (clickable)
 		{
-			if(autocvar_hud_cursormode)
-				setcursormode(1);
 			hud_panel_radar_mouse = 1;
 
 			// we must unset the player's buttons, as they aren't released elsewhere
@@ -43,9 +41,6 @@ void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 	{
 		hud_panel_radar_mouse = 0;
 		mouseClicked = 0;
-		if(autocvar_hud_cursormode)
-		if(!mv_active)
-			setcursormode(0);
 	}
 }
 void HUD_Radar_Hide_Maximized()
@@ -56,7 +51,7 @@ void HUD_Radar_Hide_Maximized()
 
 float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
+	TC(int, bInputType);
 	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse ||
 		autocvar__hud_configure || mv_active)
 		return false;
@@ -141,9 +136,6 @@ void HUD_Radar_Mouse()
 		return;
 	}
 
-	if (!autocvar_hud_cursormode)
-		update_mousepos();
-
 	panel = HUD_PANEL(RADAR);
 	HUD_Panel_LoadCvars();
 
@@ -169,9 +161,6 @@ void HUD_Radar_Mouse()
 		HUD_Radar_Hide_Maximized();
 		return;
 	}
-
-
-	draw_cursor_normal(mousepos, '1 1 1', 0.8);
 }
 
 void HUD_Radar()

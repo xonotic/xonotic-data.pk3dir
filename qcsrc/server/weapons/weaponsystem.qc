@@ -178,6 +178,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	setthink(view, CL_Weaponentity_Think);
 	view.nextthink = time;
 	view.viewmodelforclient = actor;
+	view.draggable = drag_undraggable;
 	setcefc(view, CL_Weaponentity_CustomizeEntityForClient);
 
 	wepent_link(view);
@@ -187,6 +188,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 		entity exterior = actor.exteriorweaponentity = new(exteriorweaponentity);
 		exterior.solid = SOLID_NOT;
 		exterior.owner = actor;
+		exterior.draggable = drag_undraggable;
 		exterior.weaponentity_fld = weaponentity;
 		setorigin(exterior, '0 0 0');
 		setthink(exterior, CL_ExteriorWeaponentity_Think);
@@ -428,8 +430,8 @@ bool forbidWeaponUse(entity player)
 
 void W_WeaponFrame(Player actor, .entity weaponentity)
 {
-    TC(Player, actor);
-    TC(PlayerState, PS(actor));
+	TC(Player, actor);
+	TC(PlayerState, PS(actor));
 	entity this = actor.(weaponentity);
 	if (frametime) this.weapon_frametime = frametime;
 
@@ -595,8 +597,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 
 		if (!block_weapon)
 		{
-            Weapon e = this.m_weapon;
-            TC(Weapon, e);
+			Weapon e = this.m_weapon;
+			TC(Weapon, e);
 			if (w != WEP_Null)
 			{
 				e.wr_think(e, actor, weaponentity, button_atck | (button_atck2 << 1));
@@ -731,7 +733,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sent_sound)
 {
-    TC(Sound, sent_sound);
+	TC(Sound, sent_sound);
 	// set global values to work with
 	entity this = actor.(weaponentity);
 	Weapon e = this.m_weapon;

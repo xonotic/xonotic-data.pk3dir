@@ -294,7 +294,7 @@ bool spiderbot_frame(entity this, float dt)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, dt, false);
+		vehicles_regen_resource(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, dt, false, RESOURCE_HEALTH);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	//this.vehicle_ammo2 = vehic.tur_head.frame;
@@ -309,7 +309,7 @@ bool spiderbot_frame(entity this, float dt)
 	this.oldorigin = this.origin; // negate fall damage
 	this.velocity = vehic.velocity;
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, spiderbot);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, spiderbot, RESOURCE_HEALTH);
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, spiderbot);
@@ -524,7 +524,7 @@ METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
     STAT(VEHICLESTAT_W2MODE, instance) = SBRM_GUIDE;
     set_movetype(instance, MOVETYPE_WALK);
     CSQCVehicleSetup(instance.owner, 0);
-    instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
+    instance.owner.vehicle_health = (GetResourceAmount(instance, RESOURCE_HEALTH) / autocvar_g_vehicle_spiderbot_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
 
     if(instance.owner.flagcarried)
@@ -582,7 +582,7 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
     setorigin(instance, instance.pos1 + '0 0 128');
     instance.angles = instance.pos2;
     instance.damageforcescale = 0.03;
-    instance.vehicle_health = autocvar_g_vehicle_spiderbot_health;
+    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_spiderbot_health);
     instance.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 
     instance.PlayerPhysplug = spiderbot_frame;
@@ -599,9 +599,9 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
         instance.vehicle_flags |= VHF_HEALTHREGEN;
 
     instance.respawntime = autocvar_g_vehicle_spiderbot_respawntime;
-    instance.vehicle_health = autocvar_g_vehicle_spiderbot_health;
+    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_spiderbot_health);
     instance.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
-    instance.max_health = instance.vehicle_health;
+    instance.max_health = GetResourceAmount(instance, RESOURCE_HEALTH);
     instance.pushable = true; // spiderbot can use jumppads
 }
 

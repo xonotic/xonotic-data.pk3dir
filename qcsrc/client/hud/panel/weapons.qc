@@ -11,7 +11,7 @@
 entity weaponorder[Weapons_MAX];
 void weaponorder_swap(int i, int j, entity pass)
 {
-    TC(int, i); TC(int, j);
+	TC(int, i); TC(int, j);
 	entity h = weaponorder[i];
 	weaponorder[i] = weaponorder[j];
 	weaponorder[j] = h;
@@ -20,7 +20,7 @@ void weaponorder_swap(int i, int j, entity pass)
 string weaponorder_cmp_str;
 int weaponorder_cmp(int i, int j, entity pass)
 {
-    TC(int, i); TC(int, j);
+	TC(int, i); TC(int, j);
 	int ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].m_id), 0);
 	int aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].m_id), 0);
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
