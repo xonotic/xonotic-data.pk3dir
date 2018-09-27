@@ -1338,16 +1338,19 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	}
 
 	int n = 0;
-	entity o = NULL;
-	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+
+	IntrusiveList reviving_players = NULL;
+
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 	else if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
 	{
+		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
-			if(!o)
-				o = it;
+			if (!reviving_players)
+				reviving_players = IL_NEW();
+			IL_PUSH(reviving_players, it);
 			++n;
 		});
 	}
@@ -1361,14 +1364,17 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		{
 			Unfreeze(player, false);
 
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
-			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			entity first = IL_FIRST(reviving_players);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
+			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+		IL_EACH(reviving_players, true, {
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 		});
 	}
+	if (reviving_players)
+		IL_DELETE(reviving_players);
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)

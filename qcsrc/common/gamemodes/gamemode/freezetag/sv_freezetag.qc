@@ -473,21 +473,23 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		return true;
 
 	int n;
-	entity o = NULL;
-	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 	entity player = M_ARGV(0, entity);
 	//if (STAT(FROZEN, player) == FROZEN_NORMAL)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
+
+	IntrusiveList reviving_players = NULL;
 
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 	else
 	{
 		n = 0;
+		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
-			if(!o)
-				o = it;
+			if (!reviving_players)
+				reviving_players = IL_NEW();
+			IL_PUSH(reviving_players, it);
 			++n;
 		});
 	}
@@ -520,22 +522,25 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+			IL_EACH(reviving_players, true, {
 				GameRules_scoring_add(it, FREEZETAG_REVIVALS, +1);
 				GameRules_scoring_add(it, SCORE, +1);
 				nades_GiveBonus(it, autocvar_g_nades_bonus_score_low);
 			});
 
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
-			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
+			entity first = IL_FIRST(reviving_players);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
+			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, first.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+		IL_EACH(reviving_players, true, {
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 		});
 	}
 
+	if (reviving_players)
+		IL_DELETE(reviving_players);
 	return true;
 }
 
