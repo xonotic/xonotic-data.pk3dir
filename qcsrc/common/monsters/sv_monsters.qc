@@ -894,7 +894,7 @@ void Monster_Reset(entity this)
 	setorigin(this, this.pos1);
 	this.angles = this.pos2;
 
-	Unfreeze(this); // remove any icy remains
+	Unfreeze(this, false); // remove any icy remains
 
 	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 	this.velocity = '0 0 0';
@@ -930,10 +930,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	this.monster_lifetime = time + 5;
 
 	if(STAT(FROZEN, this))
-	{
-		Unfreeze(this); // remove any icy remains
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // reset by Unfreeze (TODO)
-	}
+		Unfreeze(this, false); // remove any icy remains
 
 	monster_dropitem(this, attacker);
 
@@ -1160,7 +1157,7 @@ void Monster_Anim(entity this)
 
 void Monster_Frozen_Think(entity this)
 {
-	if(STAT(FROZEN, this) == 2)
+	if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
 		SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
@@ -1170,9 +1167,9 @@ void Monster_Frozen_Think(entity this)
 			WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 
 		if(STAT(REVIVE_PROGRESS, this) >= 1)
-			Unfreeze(this);
+			Unfreeze(this, false);
 	}
-	else if(STAT(FROZEN, this) == 3)
+	else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - this.ticrate * this.revive_speed, 1);
 		SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
@@ -1182,14 +1179,12 @@ void Monster_Frozen_Think(entity this)
 
 		if(GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 		{
-			Unfreeze(this);
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
+			Unfreeze(this, false);
 			if(this.event_damage)
 				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
-
 		else if ( STAT(REVIVE_PROGRESS, this) <= 0 )
-			Unfreeze(this);
+			Unfreeze(this, false);
 	}
 	// otherwise, no revival!
 
