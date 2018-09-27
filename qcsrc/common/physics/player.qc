@@ -52,10 +52,10 @@ void Physics_UpdateStats(entity this)
 	bool vq3compat = autocvar_sv_vq3compat && autocvar_sv_vq3compat_changehitbox; // NOTE: these hitboxes are off by 1 due to engine differences
 	STAT(PL_MIN, this) = (vq3compat) ? '-15 -15 -24' : autocvar_sv_player_mins;
 	STAT(PL_MAX, this) = (vq3compat) ? '15 15 32' : autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this) = autocvar_sv_player_viewoffset;
+	STAT(PL_VIEW_OFS, this) = (vq3compat) ? '0 0 26' : autocvar_sv_player_viewoffset;
 	STAT(PL_CROUCH_MIN, this) = (vq3compat) ? '-15 -15 -24' : autocvar_sv_player_crouch_mins;
 	STAT(PL_CROUCH_MAX, this) = (vq3compat) ? '15 15 16' : autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_player_crouch_viewoffset;
+	STAT(PL_CROUCH_VIEW_OFS, this) = (vq3compat) ? '0 0 12' : autocvar_sv_player_crouch_viewoffset;
 
 	// old stats
 	// fix some new settings
