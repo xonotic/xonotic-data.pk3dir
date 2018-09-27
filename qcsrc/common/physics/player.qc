@@ -49,7 +49,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
 	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
 
-	bool vq3compat = STAT(VQ3COMPAT) && autocvar_sv_vq3compat_changehitbox; // NOTE: these hitboxes are off by 1 due to engine differences
+	bool vq3compat = autocvar_sv_vq3compat && autocvar_sv_vq3compat_changehitbox; // NOTE: these hitboxes are off by 1 due to engine differences
 	STAT(PL_MIN, this) = (vq3compat) ? '-15 -15 -24' : autocvar_sv_player_mins;
 	STAT(PL_MAX, this) = (vq3compat) ? '15 15 32' : autocvar_sv_player_maxs;
 	STAT(PL_VIEW_OFS, this) = autocvar_sv_player_viewoffset;
