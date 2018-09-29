@@ -676,20 +676,14 @@ void nade_monster_boom(entity this)
 
 void nade_veil_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
+	if ( IS_PLAYER(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
 		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 
 		float tint_alpha = 0.75;
-		if(SAME_TEAM(toucher, this.realowner))
-		{
+		if(SAME_TEAM(show_tint, this.realowner))
 			tint_alpha = 0.45;
-			if(!STAT(VEIL_ORB, show_tint))
-			{
-				toucher.nade_veil_prevalpha = toucher.alpha;
-				toucher.alpha = -1;
-			}
-		}
+
 		STAT(VEIL_ORB, show_tint) = time + 0.1;
 		STAT(VEIL_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -1267,6 +1261,17 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
 	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
+MUTATOR_HOOKFUNCTION(nades, SetPlayerAlpha)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(STAT(VEIL_ORB, player) > time)
+	{
+		M_ARGV(1, float) = -1; // player_alpha
+		M_ARGV(2, float) = -1; // weapon_alpha
+	}
+}
+
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
@@ -1330,10 +1335,6 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		if(STAT(VEIL_ORB, player) && STAT(VEIL_ORB, player) <= time)
 		{
 			STAT(VEIL_ORB, player) = 0;
-			if(player.vehicle)
-				player.vehicle.alpha = player.vehicle.nade_veil_prevalpha;
-			else
-				player.alpha = player.nade_veil_prevalpha;
 		}
 	}
 
@@ -1394,12 +1395,6 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 	{
 		M_ARGV(1, float) *= autocvar_g_nades_entrap_speed; // run speed
 		M_ARGV(2, float) *= autocvar_g_nades_entrap_speed; // walk speed
-	}
-
-	if (STAT(VEIL_ORB, mon) && STAT(VEIL_ORB, mon) <= time)
-	{
-		mon.alpha = mon.nade_veil_prevalpha;
-		STAT(VEIL_ORB, mon) = 0;
 	}
 }
 

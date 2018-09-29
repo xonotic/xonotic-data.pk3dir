@@ -1369,8 +1369,24 @@ void play_countdown(entity this, float finished, Sound samp)
 				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
+void SetPlayerAlpha(entity this)
+{
+	if(IS_DEAD(this) || this.vehicle)
+		return;
+
+	float player_alpha = default_player_alpha;
+	float weapon_alpha = default_weapon_alpha;
+	MUTATOR_CALLHOOK(SetPlayerAlpha, this, player_alpha, weapon_alpha);
+	player_alpha = M_ARGV(1, float);
+	weapon_alpha = M_ARGV(2, float);
+	this.alpha = player_alpha;
+	this.exteriorweaponentity.alpha = weapon_alpha;
+}
+
 void player_powerups(entity this)
 {
+	SetPlayerAlpha(this);
+
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = this.items;
 

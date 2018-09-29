@@ -224,6 +224,17 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerRegen)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetPlayerAlpha)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(time < player.strength_finished)
+	{
+		M_ARGV(1, float) = autocvar_g_instagib_invis_alpha; // player_alpha
+		M_ARGV(2, float) = autocvar_g_instagib_invis_alpha; // weapon_alpha
+	}
+}
+
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 {
 	entity player = M_ARGV(0, entity);
@@ -236,8 +247,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 		play_countdown(player, player.strength_finished, SND_POWEROFF);
 		if (time > player.strength_finished)
 		{
-			player.alpha = default_player_alpha;
-			player.exteriorweaponentity.alpha = default_weapon_alpha;
 			player.items &= ~ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
@@ -246,8 +255,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	{
 		if (time < player.strength_finished)
 		{
-			player.alpha = autocvar_g_instagib_invis_alpha;
-			player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
 			player.items |= ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_INVISIBILITY, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);

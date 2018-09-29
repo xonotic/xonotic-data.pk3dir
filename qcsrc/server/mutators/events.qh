@@ -1203,3 +1203,13 @@ MUTATOR_HOOKABLE(Freeze, EV_Freeze);
     /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);
+
+/** Called when setting the player's alpha, useful for powerups */
+#define EV_SetPlayerAlpha(i, o) \
+    /** player */       i(entity, MUTATOR_ARGV_0_entity) \
+    /** player alpha */ i(float, MUTATOR_ARGV_1_float) \
+    /**/                o(float, MUTATOR_ARGV_1_float) \
+    /** weapon alpha */ i(float, MUTATOR_ARGV_2_float) \
+    /**/                o(float, MUTATOR_ARGV_2_float) \
+    /**/
+MUTATOR_HOOKABLE(SetPlayerAlpha, EV_SetPlayerAlpha);

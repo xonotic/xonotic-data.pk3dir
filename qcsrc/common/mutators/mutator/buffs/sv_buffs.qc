@@ -784,6 +784,18 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
 
+MUTATOR_HOOKFUNCTION(buffs, SetPlayerAlpha)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(STAT(BUFFS, player) & BUFF_INVISIBLE.m_itemid)
+	{
+		float alph = ((autocvar_g_buffs_invisible_alpha) ? autocvar_g_buffs_invisible_alpha : -1);
+		M_ARGV(1, float) = alph; // player_alpha
+		M_ARGV(2, float) = alph; // weapon_alpha
+	}
+}
+
 .bool buff_flight_crouchheld;
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
@@ -869,9 +881,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 	}
 
-	if((STAT(BUFFS, player) & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
-		player.alpha = ((autocvar_g_buffs_invisible_alpha) ? autocvar_g_buffs_invisible_alpha : -1); // powerups reset alpha, so we must enforce this (TODO)
-
 	if(STAT(BUFFS, player) & BUFF_MEDIC.m_itemid)
 	if(time >= player.buff_medic_healtime)
 	{
@@ -922,23 +931,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 						player.(weaponentity).clip_load = player.(weaponentity).buff_ammo_prev_clipload;
 				}
 			}
-		}
-
-		BUFF_ONADD(BUFF_INVISIBLE)
-		{
-			if(time < player.strength_finished && MUTATOR_IS_ENABLED(mutator_instagib))
-				player.buff_invisible_prev_alpha = default_player_alpha; // we don't want to save the powerup's alpha, as player may lose the powerup while holding the buff
-			else
-				player.buff_invisible_prev_alpha = player.alpha;
-			player.alpha = autocvar_g_buffs_invisible_alpha;
-		}
-
-		BUFF_ONREM(BUFF_INVISIBLE)
-		{
-			if(time < player.strength_finished && MUTATOR_IS_ENABLED(mutator_instagib))
-				player.alpha = autocvar_g_instagib_invis_alpha;
-			else
-				player.alpha = player.buff_invisible_prev_alpha;
 		}
 
 		BUFF_ONADD(BUFF_FLIGHT)
