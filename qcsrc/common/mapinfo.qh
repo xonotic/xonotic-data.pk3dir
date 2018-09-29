@@ -57,6 +57,10 @@ CLASS(Gametype, Object)
     {
         return false;
     }
+    METHOD(Gametype, m_isForcedSupported, bool(Gametype this))
+    {
+        return false;
+    }
 
     METHOD(Gametype, describe, string(Gametype this))
     {
@@ -200,6 +204,16 @@ CLASS(TeamDeathmatch, Gametype)
     {
         if(spawnpoints >= 8 && diameter > 4096)
             return true;
+        return false;
+    }
+    METHOD(TeamDeathmatch, m_isForcedSupported, bool(Gametype this))
+    {
+        if(cvar("g_tdm_on_dm_maps"))
+        {
+            // if this is set, all DM maps support TDM too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
         return false;
     }
     METHOD(TeamDeathmatch, m_setTeams, void(string sa))
@@ -487,10 +501,19 @@ CLASS(Duel, Gametype)
     }
     METHOD(Duel, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
-        return (diameter < 8192);
+        return (diameter < 16384);
+    }
+    METHOD(Duel, m_isForcedSupported, bool(Gametype this))
+    {
+        // force all DM maps to work in duel?!
+        // TODO: we should really check the size of maps, some DM maps do not work for duel!
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+            return true;
+        return false;
     }
 ENDCLASS(Duel)
 REGISTER_GAMETYPE(DUEL, NEW(Duel));
+#define g_duel IS_GAMETYPE(DUEL)
 
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;

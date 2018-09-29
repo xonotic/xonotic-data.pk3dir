@@ -198,11 +198,11 @@ void W_Porto_Touch(entity this, entity toucher)
 	}
 }
 
-void W_Porto_Attack(entity actor, .entity weaponentity, float type)
+void W_Porto_Attack(Weapon thiswep, entity actor, .entity weaponentity, float type)
 {
 	entity gren;
 
-	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: does the deathtype even need to be set here? porto can't hurt people
+	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0, thiswep.m_id); // TODO: does the deathtype even need to be set here? porto can't hurt people
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;
@@ -270,7 +270,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(actor, weaponentity, 0);
+            W_Porto_Attack(thiswep, actor, weaponentity, 0);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
 
@@ -279,7 +279,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
         {
-            W_Porto_Attack(actor, weaponentity, 1);
+            W_Porto_Attack(thiswep, actor, weaponentity, 1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
         }
     }
@@ -306,7 +306,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(actor, weaponentity, -1);
+            W_Porto_Attack(thiswep, actor, weaponentity, -1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
     }

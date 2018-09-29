@@ -7,6 +7,8 @@ void Hud_Dynamic_Frame();
 
 bool HUD_Radar_Clickable();
 void HUD_Radar_Mouse();
+bool HUD_WouldShowCursor();
+bool QuickMenu_IsOpened();
 
 REGISTRY(hud_panels, BITS(6))
 #define hud_panels_from(i) _hud_panels_from(i, NULL)
@@ -72,8 +74,6 @@ int vote_active; // is there an active vote?
 int vote_prev; // previous state of vote_active to check for a change
 float vote_alpha;
 float vote_change; // "time" when vote_active changed
-
-float hud_panel_quickmenu;
 
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
@@ -228,7 +228,7 @@ REGISTER_HUD_PANEL(MINIGAMEHELP,    HUD_MinigameHelp,   PANEL_CONFIG_NO         
 REGISTER_HUD_PANEL(MINIGAMEMENU,    HUD_MinigameMenu,   PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // MINIGAMEMENU
 REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       PANEL_CONFIG_NO                          ,                                             PANEL_SHOW_MAPVOTE                     ) // MAPVOTE
 REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // ITEMSTIME
-REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME                                                                ) // QUICKMENU
+REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // QUICKMENU
 REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
 // always add new panels to the end of list
 

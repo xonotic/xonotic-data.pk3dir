@@ -274,7 +274,7 @@ void PutObserverInServer(entity this)
 
     RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
-	Unfreeze(this);
+	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
 
 	if (this.alivetime)
@@ -347,6 +347,7 @@ void PutObserverInServer(entity this)
 	this.crouch = false;
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
+	this.draggable = drag_undraggable;
 
 	this.items = 0;
 	STAT(WEAPONS, this) = '0 0 0';
@@ -677,6 +678,8 @@ void PutPlayerInServer(entity this)
 	this.event_damage = PlayerDamage;
 	this.event_heal = PlayerHeal;
 
+	this.draggable = func_null;
+
 	if(!this.bot_attack)
 		IL_PUSH(g_bot_targets, this);
 	this.bot_attack = true;
@@ -733,7 +736,7 @@ void PutPlayerInServer(entity this)
 		//spot.target = s;
 	}
 
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 
@@ -1143,6 +1146,8 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
+	this.move_qcphysics = true;
+
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
 
@@ -1196,7 +1201,7 @@ void ClientDisconnect(entity this)
 
 	Portal_ClearAll(this);
 
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	RemoveGrapplingHooks(this);
 
@@ -1236,7 +1241,7 @@ void ChatBubbleThink(entity this)
 
 	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) )
 	{
-		if ( CS(this.owner).active_minigame )
+		if ( CS(this.owner).active_minigame && PHYS_INPUT_BUTTON_MINIGAME(this.owner) )
 			this.mdl = "models/sprites/minigame_busy.iqm";
 		else if (PHYS_INPUT_BUTTON_CHAT(this.owner))
 			this.mdl = "models/misc/chatbubble.spr";
@@ -2414,16 +2419,16 @@ void PlayerPreThink (entity this)
 
 	if(IS_PLAYER(this))
 	{
-		if (STAT(FROZEN, this) == 2)
+		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
 			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 			if (STAT(REVIVE_PROGRESS, this) >= 1)
-				Unfreeze(this);
+				Unfreeze(this, false);
 		}
-		else if (STAT(FROZEN, this) == 3)
+		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
 			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
@@ -2436,7 +2441,7 @@ void PlayerPreThink (entity this)
 					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			}
 			else if (STAT(REVIVE_PROGRESS, this) <= 0)
-				Unfreeze(this);
+				Unfreeze(this, false);
 		}
 	}
 
@@ -2572,7 +2577,7 @@ void DrownPlayer(entity this)
 
 void Player_Physics(entity this)
 {
-	set_movetype(this, this.move_movetype);
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCPLAYER : this.move_movetype;
 
 	if(!this.move_qcphysics)
 		return;
@@ -2684,7 +2689,7 @@ void PM_UpdateButtons(entity this, entity store)
 		store.impulse = this.impulse;
 	this.impulse = 0;
 
-	bool typing = this.buttonchat;
+	bool typing = this.buttonchat || this.button14;
 
 	store.button0 = (typing) ? 0 : this.button0;
 	//button1?!
