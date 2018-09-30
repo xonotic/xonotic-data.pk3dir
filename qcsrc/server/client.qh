@@ -277,6 +277,8 @@ void FixPlayermodel(entity player);
 
 void ClientInit_misc(entity this);
 
+int GetPlayerLimit();
+
 bool joinAllowed(entity this);
 void Join(entity this);
 

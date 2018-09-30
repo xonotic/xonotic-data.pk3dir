@@ -5,6 +5,7 @@
 #include "../command/common.qh"
 #include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
+#include <server/cheats.qh>
 #include <server/resources.qh>
 #include <common/t_items.qh>
 #include <common/animdecide.qh>

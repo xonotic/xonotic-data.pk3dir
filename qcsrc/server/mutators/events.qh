@@ -1204,6 +1204,15 @@ MUTATOR_HOOKABLE(Freeze, EV_Freeze);
     /**/
 MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);
 
+/**
+ * Called when a player is trying to join, argument is the number of players allowed to join the match
+ */
+#define EV_GetPlayerLimit(i, o) \
+    /** g_maxplayers */             i(int, MUTATOR_ARGV_0_int) \
+    /**/                            o(int, MUTATOR_ARGV_0_int) \
+    /**/
+MUTATOR_HOOKABLE(GetPlayerLimit, EV_GetPlayerLimit);
+
 /** Called when setting the player's alpha, useful for powerups */
 #define EV_SetPlayerAlpha(i, o) \
     /** player */       i(entity, MUTATOR_ARGV_0_entity) \

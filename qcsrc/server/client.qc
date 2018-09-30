@@ -1146,7 +1146,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = true;
+	this.move_qcphysics = false;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
@@ -1932,6 +1932,14 @@ void Join(entity this)
 	this.team_selected = false;
 }
 
+int GetPlayerLimit()
+{
+	int player_limit = autocvar_g_maxplayers;
+	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
+	player_limit = M_ARGV(0, int);
+	return player_limit;
+}
+
 /**
  * Determines whether the player is allowed to join. This depends on cvar
  * g_maxplayers, if it isn't used this function always return true, otherwise
@@ -1964,11 +1972,13 @@ int nJoinAllowed(entity this, entity ignore)
 			++currentlyPlaying;
 	});
 
+	int player_limit = GetPlayerLimit();
+
 	float free_slots = 0;
-	if (!autocvar_g_maxplayers)
+	if (!player_limit)
 		free_slots = maxclients - totalClients;
-	else if(currentlyPlaying < autocvar_g_maxplayers)
-		free_slots = min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
+	else if(currentlyPlaying < player_limit)
+		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
 	static float join_prevent_msg_time = 0;
 	if(this && ignore && !free_slots && time > join_prevent_msg_time)
