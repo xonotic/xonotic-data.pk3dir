@@ -542,7 +542,7 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 void Arc_Smoke(entity actor, .entity weaponentity)
 {
 	makevectors(actor.v_angle);
-	W_SetupShot_Range(actor,weaponentity,true,0,SND_Null,0,0,0,WEP_ARC.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
+	W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,WEP_ARC.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
 
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )
