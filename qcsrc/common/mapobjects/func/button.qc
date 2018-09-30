@@ -5,6 +5,43 @@
 void button_wait(entity this);
 void button_return(entity this);
 
+// in case button is deactivated by a relay_deactivate while it pressed down
+// set both fields to -1 in button_return!!
+.float wait_remaining;
+.float activation_time;
+
+void button_setactive(entity this, int astate)
+{
+	int oldstate = this.active;
+	if (astate == ACTIVE_TOGGLE)
+	{
+		if (this.active == ACTIVE_ACTIVE)
+			this.active = ACTIVE_NOT;
+		else
+			this.active = ACTIVE_ACTIVE;
+	}
+	else
+		this.active = astate;
+
+	if (this.active == ACTIVE_ACTIVE && oldstate == ACTIVE_NOT)
+	{
+		// button was deactivated while it was pressed
+		if (this.wait_remaining >= 0)
+		{
+			this.nextthink =  this.wait_remaining + this.ltime;
+			setthink(this, button_return);
+		}
+	}
+	else if (this.active == ACTIVE_NOT && oldstate == ACTIVE_ACTIVE)
+	{
+		// check if button is in pressed state
+		if (this.activation_time >= 0)
+		{
+			this.wait_remaining = this.wait - (time - this.activation_time);
+		}
+	}
+}
+
 void button_wait(entity this)
 {
 	this.state = STATE_TOP;
@@ -24,11 +61,17 @@ void button_done(entity this)
 
 void button_return(entity this)
 {
+	if (this.active != ACTIVE_ACTIVE)
+	{
+		return;
+	}
 	this.state = STATE_DOWN;
 	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, button_done);
 	this.frame = 0;			// use normal textures
 	if (GetResourceAmount(this, RESOURCE_HEALTH))
 		this.takedamage = DAMAGE_YES;	// can be shot again
+	this.wait_remaining = -1;
+	this.activation_time = -1;
 }
 
 
@@ -46,6 +89,8 @@ void button_fire(entity this)
 	if (this.state == STATE_UP || this.state == STATE_TOP)
 		return;
 
+	this.activation_time = time;
+
 	if (this.noise != "")
 		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
@@ -60,6 +105,9 @@ void button_reset(entity this)
 	this.frame = 0;			// use normal textures
 	this.state = STATE_BOTTOM;
 	this.velocity = '0 0 0';
+	this.wait_remaining = -1;
+	this.activation_time = -1;
+	this.active = ACTIVE_ACTIVE;
 	setthink(this, func_null);
 	this.nextthink = 0;
 	if (GetResourceAmount(this, RESOURCE_HEALTH))
@@ -77,6 +125,8 @@ void button_use(entity this, entity actor, entity trigger)
 
 void button_touch(entity this, entity toucher)
 {
+	if (this.active != ACTIVE_ACTIVE)
+		return;
 	if (!toucher)
 		return;
 	if (!toucher.iscreature)
@@ -91,6 +141,8 @@ void button_touch(entity this, entity toucher)
 
 void button_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
+	if (this.active != ACTIVE_ACTIVE)
+		return;
 	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
@@ -157,8 +209,9 @@ spawnfunc(func_button)
     if(this.noise != "")
         precache_sound(this.noise);
 
-	this.active = ACTIVE_ACTIVE;
 	this.draggable = drag_undraggable;
+
+	this.setactive = button_setactive;
 
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
