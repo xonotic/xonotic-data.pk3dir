@@ -19,7 +19,7 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 	}
 
 	for(i = 0; i < pShots; ++i)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EFFECT_RIFLE : EFFECT_RIFLE_WEAK));
 
 	if(autocvar_g_casings >= 2)
     {
