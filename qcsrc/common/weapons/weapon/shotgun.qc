@@ -152,7 +152,7 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 	}
 
 	sound(actor, CH_WEAPON_SINGLE, SND_Null, VOL_BASE, ATTN_NORM); // kill previous sound
-	W_Shotgun_Attack(WEP_SHOTGUN, actor, weaponentity, true,
+	W_Shotgun_Attack(thiswep, actor, weaponentity, true,
 		WEP_CVAR_PRI(shotgun, ammo),
 		WEP_CVAR_PRI(shotgun, damage),
 		WEP_CVAR_PRI(shotgun, bullets),
@@ -172,7 +172,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		return;
 	}
 
-	W_Shotgun_Attack(WEP_SHOTGUN, actor, weaponentity, false,
+	W_Shotgun_Attack(thiswep, actor, weaponentity, false,
 		WEP_CVAR_PRI(shotgun, ammo),
 		WEP_CVAR_PRI(shotgun, damage),
 		WEP_CVAR_PRI(shotgun, bullets),
@@ -255,7 +255,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(shotgun, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
     return ammo_amount;
 }
 METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -269,7 +269,7 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
         case 2: // secondary triple shot
         {
             float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(shotgun, ammo);
-            ammo_amount += actor.(weaponentity).(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
             return ammo_amount;
         }
         default: return false; // secondary unavailable

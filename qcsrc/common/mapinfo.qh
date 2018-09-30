@@ -57,6 +57,10 @@ CLASS(Gametype, Object)
     {
         return false;
     }
+    METHOD(Gametype, m_isForcedSupported, bool(Gametype this))
+    {
+        return false;
+    }
 
     METHOD(Gametype, describe, string(Gametype this))
     {
@@ -200,6 +204,16 @@ CLASS(TeamDeathmatch, Gametype)
     {
         if(spawnpoints >= 8 && diameter > 4096)
             return true;
+        return false;
+    }
+    METHOD(TeamDeathmatch, m_isForcedSupported, bool(Gametype this))
+    {
+        if(cvar("g_tdm_on_dm_maps"))
+        {
+            // if this is set, all DM maps support TDM too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
         return false;
     }
     METHOD(TeamDeathmatch, m_setTeams, void(string sa))

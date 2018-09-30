@@ -236,8 +236,8 @@ void W_Arc_Beam_Think(entity this)
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(own, weaponentity);
-			own.(weaponentity).arc_BUTTON_ATCK_prev = false; // hax
 		}
+		own.(weaponentity).arc_BUTTON_ATCK_prev = false; // allow switching weapons
 		delete(this);
 		return;
 	}
@@ -322,7 +322,10 @@ void W_Arc_Beam_Think(entity this)
 				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
 				min(WEP_CVAR(arc, beam_maxangle) / angle, 1)
 			);
-			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+				this.beam_dir = w_shotdir;
+			else
+				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 		}
 		else
 		{
@@ -332,7 +335,10 @@ void W_Arc_Beam_Think(entity this)
 				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
 				1
 			);
-			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+				this.beam_dir = w_shotdir;
+			else
+				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 		}
 
 		// network information: beam direction

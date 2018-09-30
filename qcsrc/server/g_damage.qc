@@ -489,8 +489,8 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
 	STAT(FROZEN, targ) = frozen_type;
-	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == 3) ? 1 : 0);
-	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
+	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == FROZEN_TEMP_DYING) ? 1 : 0);
+	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == FROZEN_TEMP_DYING) ? targ_maxhealth : 1));
 	targ.revive_speed = revivespeed;
 	if(targ.bot_attack)
 		IL_REMOVE(g_bot_targets, targ);
@@ -529,16 +529,15 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
-void Unfreeze(entity targ)
+void Unfreeze(entity targ, bool reset_health)
 {
 	if(!STAT(FROZEN, targ))
 		return;
 
-	if(STAT(FROZEN, targ) && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
-	{
+	if (reset_health && STAT(FROZEN, targ) != FROZEN_TEMP_DYING)
 		SetResourceAmount(targ, RESOURCE_HEALTH, ((IS_PLAYER(targ)) ? start_health : targ.max_health));
-		targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
-	}
+
+	targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 
 	STAT(FROZEN, targ) = 0;
 	STAT(REVIVE_PROGRESS, targ) = 0;
@@ -697,7 +696,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			if(deathtype == DEATH_FALL.m_id)
 			if(damage >= autocvar_g_frozen_revive_falldamage)
 			{
-				Unfreeze(targ);
+				Unfreeze(targ, false);
 				SetResourceAmount(targ, RESOURCE_HEALTH, autocvar_g_frozen_revive_falldamage_health);
 				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
@@ -1249,7 +1248,6 @@ void Fire_ApplyDamage(entity e)
 			}
 		});
 	}
-			
 }
 
 void Fire_ApplyEffect(entity e)

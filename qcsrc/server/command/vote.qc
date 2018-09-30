@@ -365,7 +365,7 @@ void reset_map(bool dorespawn)
 		if (it.reset2) it.reset2(it);
 	});
 
-	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), { Unfreeze(it); });
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), { Unfreeze(it, false); });
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
