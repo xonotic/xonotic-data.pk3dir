@@ -105,6 +105,9 @@ void button_reset(entity this)
 	this.frame = 0;			// use normal textures
 	this.state = STATE_BOTTOM;
 	this.velocity = '0 0 0';
+	this.wait_remaining = -1;
+	this.activation_time = -1;
+	this.active = ACTIVE_ACTIVE;
 	setthink(this, func_null);
 	this.nextthink = 0;
 	if (GetResourceAmount(this, RESOURCE_HEALTH))
@@ -203,13 +206,9 @@ spawnfunc(func_button)
 	if (!this.lip)
 		this.lip = 4;
 
-	this.wait_remaining = -1;
-	this.activation_time = -1;
-
     if(this.noise != "")
         precache_sound(this.noise);
 
-	this.active = ACTIVE_ACTIVE;
 	this.draggable = drag_undraggable;
 
 	this.setactive = button_setactive;
