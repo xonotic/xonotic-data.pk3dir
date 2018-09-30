@@ -236,8 +236,8 @@ void W_Arc_Beam_Think(entity this)
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(own, weaponentity);
-			own.(weaponentity).arc_BUTTON_ATCK_prev = false; // hax
 		}
+		own.(weaponentity).arc_BUTTON_ATCK_prev = false; // allow switching weapons
 		delete(this);
 		return;
 	}
