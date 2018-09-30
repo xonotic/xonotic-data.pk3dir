@@ -265,14 +265,14 @@ void W_Arc_Beam_Think(entity this)
 
 	W_SetupShot_Range(
 		own,
-		weaponentity, // TODO
+		weaponentity,
 		true,
 		0,
 		SND_Null,
 		0,
 		WEP_CVAR(arc, beam_damage) * coefficient,
 		WEP_CVAR(arc, beam_range),
-		WEP_ARC.m_id
+		thiswep.m_id
 	);
 
 	// After teleport, "lock" the beam until the teleport is confirmed.
