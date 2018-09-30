@@ -607,8 +607,9 @@ float bot_fixcount()
 		// add bots to reach minplayers if needed
 		bots = max(minbots, minplayers - activerealplayers);
 		// cap bots to the max players allowed by the server
-		if(autocvar_g_maxplayers)
-			bots = min(bots, autocvar_g_maxplayers - activerealplayers);
+		int player_limit = GetPlayerLimit();
+		if(player_limit)
+			bots = min(bots, player_limit - activerealplayers);
 		bots = min(bots, maxclients - realplayers);
 
 		if(bots > minbots)
