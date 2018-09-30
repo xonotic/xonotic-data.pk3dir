@@ -831,7 +831,7 @@ int WantEventchase(entity this)
 		}
 		if (spectatee_status > 0 && autocvar_cl_eventchase_spectated_change)
 		{
-			if (time <= spectatee_status_changed_time + 0.5)
+			if (time <= spectatee_status_changed_time + min(3, autocvar_cl_eventchase_spectated_change_time))
 				return 1;
 			else if (eventchase_running)
 				return -1; // disable chase_active while eventchase is still enabled so to avoid a glicth
