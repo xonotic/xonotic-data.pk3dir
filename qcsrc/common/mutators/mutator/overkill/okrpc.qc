@@ -84,13 +84,13 @@ void W_OverkillRocketPropelledChainsaw_Think(entity this)
 	this.nextthink = time;
 }
 
-void W_OverkillRocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity weaponentity)
+void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(okrpc, ammo), weaponentity);
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okrpc, damage), WEP_OVERKILL_RPC.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okrpc, damage), thiswep.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -106,7 +106,7 @@ void W_OverkillRocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .en
 	IL_PUSH(g_damagedbycontents, missile);
 	set_movetype(missile, MOVETYPE_FLY);
 
-	missile.projectiledeathtype = WEP_OVERKILL_RPC.m_id;
+	missile.projectiledeathtype = thiswep.m_id;
 	missile.weaponentity_fld = weaponentity;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
@@ -189,14 +189,14 @@ METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity ac
 METHOD(OverkillRocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okrpc, ammo);
-	ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_RPC.m_id]) >= WEP_CVAR_PRI(okrpc, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(okrpc, ammo);
 	return ammo_amount;
 }
 
 METHOD(OverkillRocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okrpc, ammo);
-	ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_RPC.m_id]) >= WEP_CVAR_SEC(okrpc, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(okrpc, ammo);
 	return ammo_amount;
 }
 

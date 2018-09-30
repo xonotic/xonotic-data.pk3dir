@@ -33,9 +33,9 @@ float autocvar_g_vehicle_bumblebee_cannon_ammo = 100;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen = 100;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen_pause = 1;
 
-float autocvar_g_vehicle_bumblebee_cannon_lock = 0;
+float autocvar_g_vehicle_bumblebee_cannon_lock = 1;
 
-float autocvar_g_vehicle_bumblebee_cannon_turnspeed = 160;
+float autocvar_g_vehicle_bumblebee_cannon_turnspeed = 260;
 float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down = 60;
 float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up = 60;
 float autocvar_g_vehicle_bumblebee_cannon_turnlimit_in = 20;
@@ -105,20 +105,28 @@ bool bumblebee_gunner_frame(entity this, float dt)
 
 	if(autocvar_g_vehicle_bumblebee_cannon_lock)
 	{
-		if(gun.lock_time < time)
+		if(gun.lock_time < time || IS_DEAD(gun.enemy) || STAT(FROZEN, gun.enemy))
 			gun.enemy = NULL;
 
 		if(trace_ent)
-			if(trace_ent.move_movetype)
-				if(trace_ent.takedamage)
-					if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
-					{
-						if(DIFF_TEAM(trace_ent, this))
-						{
-							gun.enemy = trace_ent;
-							gun.lock_time = time + 5;
-						}
-					}
+		if(trace_ent.move_movetype)
+		if(trace_ent.takedamage)
+		if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
+		{
+			if(teamplay)
+			{
+				if(DIFF_TEAM(trace_ent, this))
+				{
+					gun.enemy = trace_ent;
+					gun.lock_time = time + 2.5;
+				}
+			}
+			else
+			{
+				gun.enemy = trace_ent;
+				gun.lock_time = time + 0.5;
+			}
+		}
 	}
 
 	if(gun.enemy)
@@ -141,13 +149,13 @@ bool bumblebee_gunner_frame(entity this, float dt)
 		UpdateAuxiliaryXhair(this, ad, '1 0 1', 1);
 		vehicle_aimturret(vehic, trace_endpos, gun, "fire",
 						  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
-						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
+						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed, dt);
 
 	}
 	else
 		vehicle_aimturret(vehic, _ct, gun, "fire",
 						  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
-						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
+						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed, dt);
 
 	if(!forbidWeaponUse(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
@@ -521,7 +529,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 
 	vang = vehicle_aimturret(vehic, trace_endpos, vehic.gun3, "fire",
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
-					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
+					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed, dt);
 
 	if(!forbidWeaponUse(this))
 	if((PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * PHYS_INPUT_FRAMETIME || autocvar_g_vehicle_bumblebee_raygun == 0))
@@ -930,7 +938,7 @@ METHOD(Bumblebee, vr_hud, void(Bumblebee thisveh))
     float hudAlpha = autocvar_hud_panel_fg_alpha;
     float blinkValue = 0.55 + sin(time * 7) * 0.45;
     vector tmpPos  = '0 0 0';
-    vector tmpSize = '1 1 1' * hud_fontsize;
+    vector tmpSize = hud_fontsize;
     tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (520/768);
 
     if(!AuxiliaryXhair[1].draw2d)

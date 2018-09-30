@@ -37,10 +37,11 @@ string WeaponArenaString()
 	s = "";
 	for(int j = 0; j < n; ++j)
 	{
-		FOREACH(Weapons, it != WEP_Null, {
-			if(argv(j) == it.netname)
-				s = cons_mid(s, " & ", it.m_name);
-		});
+		Weapon wep = Weapons_fromstr(argv(j));
+		if(wep != WEP_Null)
+		{
+			s = cons_mid(s, " & ", wep.m_name);
+		}
 	}
 	s = sprintf(_("%s Arena"), s);
 

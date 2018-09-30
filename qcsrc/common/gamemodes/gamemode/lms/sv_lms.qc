@@ -36,16 +36,16 @@ void ClearWinners();
 int WinningCondition_LMS()
 {
 	entity first_player = NULL;
-	int total_players = 0;
+	int totalplayers = 0;
 	FOREACH_CLIENT(IS_PLAYER(it), {
-		if (!total_players)
+		if (!totalplayers)
 			first_player = it;
-		++total_players;
+		++totalplayers;
 	});
 
-	if (total_players)
+	if (totalplayers)
 	{
-		if (total_players > 1)
+		if (totalplayers > 1)
 		{
 			// two or more active players - continue with the game
 
