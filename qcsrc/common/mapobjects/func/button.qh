@@ -1,0 +1,4 @@
+#pragma once
+
+
+const int BUTTON_DONTACCUMULATEDMG = BIT(7);

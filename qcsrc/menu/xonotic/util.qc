@@ -1,4 +1,5 @@
 #include "util.qh"
+#include "dialog.qh"
 
 #include "../item.qh"
 
@@ -266,8 +267,7 @@ void setZonedTooltip(entity e, string theTooltip, string theCvar)
 		theTooltip = string_null;
 	}
 
-	if(e.tooltip)
-		strunzone(e.tooltip);
+	strfree(e.tooltip);
 	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
 }
 
@@ -458,21 +458,18 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 void updateCheck()
 {
-	if(cvar("menu_updatecheck"))
+	if(!_Nex_ExtResponseSystem_Queried)
 	{
-		if(!_Nex_ExtResponseSystem_Queried)
-		{
-			_Nex_ExtResponseSystem_Queried = 1;
-			float startcnt;
-			string uri;
+		_Nex_ExtResponseSystem_Queried = 1;
+		float startcnt;
+		string uri;
 
-			cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
+		cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
 
-			// for privacy, munge the start count a little
-			startcnt = floor((floor(startcnt / 10) + random()) * 10);
-			uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-			uri_get(uri, URI_GET_UPDATENOTIFICATION);
-		}
+		// for privacy, munge the start count a little
+		startcnt = floor((floor(startcnt / 10) + random()) * 10);
+		uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
+		uri_get(uri, URI_GET_UPDATENOTIFICATION);
 	}
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
@@ -565,7 +562,7 @@ void preMenuDraw()
 
 	updateCheck();
 
-	if(_Nex_ExtResponseSystem_UpdateTo != "")
+	if(_Nex_ExtResponseSystem_UpdateTo != "" && !(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
 	{
 		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale.x) * eX + (1/draw_scale.y) * eY) * 12;
@@ -611,8 +608,7 @@ void preMenuDraw()
 	}
 	else
 	{
-		strunzone(campaign_name_previous);
-		campaign_name_previous = strzone(campaign_name);
+		strcpy(campaign_name_previous, campaign_name);
 		campaign_won_previous = cvar(strcat("g_campaign", campaign_name, "_won"));
 	}
 }
@@ -693,6 +689,7 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
 	/**/
 
@@ -749,6 +746,7 @@ string GameType_GetIcon(int cnt)
 .void(entity) TR;
 .void(entity, float, float, entity) TD;
 .void(entity, float) TDempty;
+.void(entity, float, float) gotoRC;
 entity makeXonoticTextLabel(float theAlign, string theText);
 entity makeXonoticTextSlider(string);
 .void(entity, string, string) addValue;
@@ -758,12 +756,21 @@ entity makeXonoticCheckBoxString(string, string, string, string);
 entity makeXonoticCheckBox(float, string, string);
 .bool sendCvars;
 
-void dialog_hudpanel_common_notoggle(entity me, string panelname)
+void dialog_hudpanel_main_checkbox(entity me, string panelname)
+{
+	entity e;
+
+	me.TR(me);
+		me.TDempty(me, 1.5);
+		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable")));
+}
+
+void dialog_hudpanel_main_settings(entity me, string panelname)
 {
 	float i;
 	entity e;
 
-	me.TR(me);
+	me.gotoRC(me, me.currentRow + 1.5, 0);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg"))));
 				e.addValue(e, _("Default"), "");

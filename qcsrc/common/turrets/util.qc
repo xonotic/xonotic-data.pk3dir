@@ -85,7 +85,7 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 		// apply the damage
 		if (ent.takedamage)
 		{
-			Damage (ent, this, this, f_dmg, deathtype, hitloc, force);
+			Damage (ent, this, this, f_dmg, deathtype, DMG_NOWEP, hitloc, force);
 			ent.velocity = ent.velocity * f_velfactor;
 			//ent.alpha = 0.25 + random() * 0.75;
 		}

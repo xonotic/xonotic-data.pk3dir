@@ -3,6 +3,12 @@
  * Globals and Fields
  */
 
+// increase by 0.01 when changes require only waypoint relinking
+// increase by 1 when changes require to manually edit waypoints
+// max 2 decimal places, always specified
+const float WAYPOINT_VERSION = 1.01;
+string waypoint_time;
+
 // fields you can query using prvm_global server to get some statistics about waypoint linking culling
 float relink_total, relink_walkculled, relink_pvsculled, relink_lengthculled;
 
@@ -10,10 +16,11 @@ float botframe_waypointeditorlightningtime;
 float botframe_loadedforcedlinks;
 float botframe_cachedwaypointlinks;
 
+// waypoint wp links to waypoint wp.wpXX (OUTGOING link)
+// links are sorted by their cost (wpXXmincost)
 .entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
 .entity wp16, wp17, wp18, wp19, wp20, wp21, wp22, wp23, wp24, wp25, wp26, wp27, wp28, wp29, wp30, wp31;
 
-// itemscore = (howmuchmoreIwant / howmuchIcanwant) / itemdistance
 .float wp00mincost, wp01mincost, wp02mincost, wp03mincost, wp04mincost, wp05mincost, wp06mincost, wp07mincost;
 .float wp08mincost, wp09mincost, wp10mincost, wp11mincost, wp12mincost, wp13mincost, wp14mincost, wp15mincost;
 .float wp16mincost, wp17mincost, wp18mincost, wp19mincost, wp20mincost, wp21mincost, wp22mincost, wp23mincost;
@@ -29,30 +36,43 @@ float botframe_cachedwaypointlinks;
  */
 
 spawnfunc(waypoint);
+void waypoint_removelink(entity from, entity to);
+bool waypoint_islinked(entity from, entity to);
+void waypoint_addlink_customcost(entity from, entity to, float c);
 void waypoint_addlink(entity from, entity to);
 void waypoint_think(entity this);
 void waypoint_clearlinks(entity wp);
 void waypoint_schedulerelink(entity wp);
 
-void waypoint_remove(entity e);
-void waypoint_removeall();
+float waypoint_getlinkcost(entity from, entity to);
+float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_ent);
+float waypoint_getlinearcost(float dist);
+void waypoint_updatecost_foralllinks();
+
+void waypoint_remove_fromeditor(entity pl);
+void waypoint_remove(entity wp);
 void waypoint_schedulerelinkall();
-void waypoint_load_links_hardwired();
 void waypoint_save_links();
 void waypoint_saveall();
 
 void waypoint_spawnforitem_force(entity e, vector org);
 void waypoint_spawnforitem(entity e);
-void waypoint_spawnforteleporter(entity e, vector destination, float timetaken);
-void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken);
+void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent);
+void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir, entity tracetest_ent);
 void botframe_showwaypointlinks();
 
 float waypoint_loadall();
-float waypoint_load_links();
+bool waypoint_load_links();
+#define waypoint_load_links_hardwired() waypoint_load_or_remove_links_hardwired(false)
+#define waypoint_remove_links_hardwired() waypoint_load_or_remove_links_hardwired(true)
+void waypoint_load_or_remove_links_hardwired(bool removal_mode);
 
+void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);
 entity waypoint_spawnpersonal(entity this, vector position);
 
-vector waypoint_fixorigin(vector position);
+void waypoint_unreachable(entity pl);
+
+vector waypoint_fixorigin_down_dir(vector position, entity tracetest_ent, vector down_dir);
 
 void botframe_autowaypoints();

@@ -6,8 +6,8 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
-#include "../common/triggers/teleporters.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/teleporters.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/util.qh"
 #include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
@@ -198,9 +198,9 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 
 	// reset fade counter
 	teleporter.portal_wants_to_vanish = 0;
-	teleporter.fade_time = time + autocvar_g_balance_portal_lifetime;
-	teleporter.health = autocvar_g_balance_portal_health;
-	teleporter.enemy.health = autocvar_g_balance_portal_health;
+	teleporter.fade_time = ((autocvar_g_balance_portal_lifetime >= 0) ? time + autocvar_g_balance_portal_lifetime : 0);
+	SetResourceAmountExplicit(teleporter, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
+	SetResourceAmountExplicit(teleporter.enemy, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
 
 	return 1;
 }
@@ -323,7 +323,6 @@ void Portal_Touch(entity this, entity toucher)
 				toucher.effects += EF_BLUE - EF_RED;
 }
 
-void Portal_Think(entity this);
 void Portal_MakeBrokenPortal(entity portal)
 {
 	portal.skin = 2;
@@ -384,7 +383,7 @@ void Portal_Connect(entity teleporter, entity destination)
 	destination.enemy = teleporter;
 	Portal_MakeInPortal(teleporter);
 	Portal_MakeOutPortal(destination);
-	teleporter.fade_time = time + autocvar_g_balance_portal_lifetime;
+	teleporter.fade_time = ((autocvar_g_balance_portal_lifetime >= 0) ? time + autocvar_g_balance_portal_lifetime : 0);
 	destination.fade_time = teleporter.fade_time;
 	teleporter.portal_wants_to_vanish = 0;
 	destination.portal_wants_to_vanish = 0;
@@ -429,15 +428,15 @@ void Portal_Remove(entity portal, float killed)
 	}
 }
 
-void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(deathtype == DEATH_TELEFRAG.m_id)
 		return;
 	if(attacker != this.aiment)
 		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(this.aiment))
 			return;
-	this.health -= damage;
-	if(this.health < 0)
+	TakeResource(this, RESOURCE_HEALTH, damage);
+	if(GetResourceAmount(this, RESOURCE_HEALTH) < 0)
 		Portal_Remove(this, 1);
 }
 
@@ -495,7 +494,7 @@ void Portal_Think(entity this)
 
 	this.nextthink = time;
 
-	if(time > this.fade_time)
+	if(this.fade_time && time > this.fade_time)
 		Portal_Remove(this, 0);
 }
 
@@ -639,8 +638,8 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.portal_activatetime = time + 0.1;
 	portal.takedamage = DAMAGE_AIM;
 	portal.event_damage = Portal_Damage;
-	portal.fade_time = time + autocvar_g_balance_portal_lifetime;
-	portal.health = autocvar_g_balance_portal_health;
+	portal.fade_time = ((autocvar_g_balance_portal_lifetime >= 0) ? time + autocvar_g_balance_portal_lifetime : 0);
+	SetResourceAmountExplicit(portal, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
 	setmodel(portal, MDL_PORTAL);
 	portal.savemodelindex = portal.modelindex;
 	setcefc(portal, Portal_Customize);

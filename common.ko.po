@@ -3,15 +3,18 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Kuff Lee <coughingmouse@gmail.com>, 2016
-# Kuff Lee <coughingmouse@gmail.com>, 2016-2017
+# Jisoo Lim <liminj0719@gmail.com>, 2017
+# Kyf Lee <coughingmouse@gmail.com>, 2016
+# Kyf Lee <coughingmouse@gmail.com>, 2016-2017
+# Kyf Lee <coughingmouse@gmail.com>, 2016-2017
+# Kyf Lee <coughingmouse@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-12-05 10:37+0000\n"
+"Last-Translator: Jisoo Lim <liminj0719@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ko/)\n"
 "Language: ko\n"
@@ -231,7 +234,7 @@ msgstr "계속..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "채팅"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -260,31 +263,31 @@ msgstr "QMCMD^팀 채팅"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^quad soon"
-msgstr ""
+msgstr "쿼드는 머지않아"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^가져갈 수 있는 아이템 %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^가져갈 수 있는 아이템, 아이콘"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^아이템 가져감 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^아이템 가져감, 아이콘"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^negative"
-msgstr ""
+msgstr "QMCMD^아님"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^positive"
-msgstr ""
+msgstr "QMCMD^맞음"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -340,36 +343,36 @@ msgstr "QMCMD^죽인 깃발 운반자 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^죽인 깃발 운반자, 아이콘"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr ""
+msgstr "QMCMD^깃발 떨어뜨림 (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^dropped flag, icon"
-msgstr ""
+msgstr "QMCMD^깃발 떨어뜨림, 아이콘"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "QMCMD^무기 떨구기, 아이콘"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^무기 떨어뜨림 %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
-msgstr ""
+msgstr "QMCMD^깃발/열쇠 떨어뜨리기, 아이콘"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^깃발/열쇠 떨어뜨림 %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^Send private message to"
-msgstr ""
+msgstr "QMCMD^비밀 메세지 받는 사람:"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 #: qcsrc/client/hud/panel/quickmenu.qc:860
@@ -403,7 +406,7 @@ msgstr "QMCMD^FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Net graph"
-msgstr ""
+msgstr "넷차트"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 #: qcsrc/client/hud/panel/quickmenu.qc:836
@@ -555,7 +558,7 @@ msgstr "SCO^파괴"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:84
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^데미지"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:85
 msgid "SCO^dmgtaken"
@@ -583,15 +586,15 @@ msgstr "SCO^열쇠 운반자 킬"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^kdratio"
-msgstr ""
+msgstr "SCO^킬뎃비율"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "SCO^k/d"
-msgstr ""
+msgstr "SCO^킬/뎃"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^kdr"
-msgstr ""
+msgstr "SCO^킬뎃비"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^kills"
@@ -607,7 +610,7 @@ msgstr "SCO^목숨"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^losses"
-msgstr ""
+msgstr "SCO^패배"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:98
 msgid "SCO^name"
@@ -615,7 +618,7 @@ msgstr "SCO^이름"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^sum"
-msgstr ""
+msgstr "SCO^합"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^nick"
@@ -627,7 +630,7 @@ msgstr "SCO^목표"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "SCO^pickups"
-msgstr ""
+msgstr "SCO^픽업"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:103
 msgid "SCO^ping"
@@ -635,11 +638,11 @@ msgstr "SCO^핑"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:104
 msgid "SCO^pl"
-msgstr ""
+msgstr "SCO^패킷 손실"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "SCO^pushes"
-msgstr ""
+msgstr "SCO^밀어냄"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "SCO^rank"
@@ -655,7 +658,7 @@ msgstr "SCO^부활"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "SCO^회 이김"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^score"
@@ -667,7 +670,7 @@ msgstr "SCO^자살"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^takes"
-msgstr ""
+msgstr "SCO^가져감"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^ticks"
@@ -2625,7 +2628,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^BG%s^F3 forfeited"
-msgstr ""
+msgstr "^BG%s^F3는 몰수당하다"
 
 #: qcsrc/common/notifications/all.inc:406
 #, c-format
@@ -2697,7 +2700,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
 msgid "^BG%s^F3 is now spectating"
-msgstr ""
+msgstr "^BG%s^F3는 지켜보다"
 
 #: qcsrc/common/notifications/all.inc:427
 #, c-format
@@ -2858,7 +2861,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
@@ -3984,11 +3987,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:410
 msgid "point"
-msgstr ""
+msgstr "포인트"
 
 #: qcsrc/common/notifications/all.qh:410
 msgid "points"
-msgstr ""
+msgstr "포인트"
 
 #: qcsrc/common/notifications/all.qh:419
 msgid "drop flag"
@@ -4015,7 +4018,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:444
 msgid "TRIPLE FRAG! "
-msgstr ""
+msgstr "트리플 킬!"
 
 #: qcsrc/common/notifications/all.qh:445
 #, c-format
@@ -4029,7 +4032,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:445
 msgid "RAGE! "
-msgstr ""
+msgstr "레이지!"
 
 #: qcsrc/common/notifications/all.qh:446
 #, c-format
@@ -4043,7 +4046,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:446
 msgid "MASSACRE! "
-msgstr ""
+msgstr "대학살!"
 
 #: qcsrc/common/notifications/all.qh:447
 #, c-format
@@ -4276,141 +4279,141 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret.qh:11
 msgid "Turret"
-msgstr ""
+msgstr "터렛"
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
-msgstr ""
+msgstr "eWheel 터렛"
 
 #: qcsrc/common/turrets/turret/ewheel_weapon.qh:7
 msgid "eWheel"
-msgstr ""
+msgstr "eWheel"
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
-msgstr ""
+msgstr "FLAC 캐논"
 
 #: qcsrc/common/turrets/turret/flac_weapon.qh:7
 msgid "FLAC"
-msgstr ""
+msgstr "FLAC"
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
-msgstr ""
+msgstr "퓨전 리액터"
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
-msgstr ""
+msgstr "헬리온 유도탄 터렛"
 
 #: qcsrc/common/turrets/turret/hellion_weapon.qh:7
 msgid "Hellion"
-msgstr ""
+msgstr "헬리온"
 
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
-msgstr ""
+msgstr "헌터킬러 터렛"
 
 #: qcsrc/common/turrets/turret/hk_weapon.qh:7
 msgid "Hunter-Killer"
-msgstr ""
+msgstr "헌터킬러"
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr ""
+msgstr "기관총 터렛"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
-msgstr ""
+msgstr "기관총"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
-msgstr ""
+msgstr "MLRS 터렛"
 
 #: qcsrc/common/turrets/turret/mlrs_weapon.qh:7
 msgid "MLRS"
-msgstr ""
+msgstr "MLRS"
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
-msgstr ""
+msgstr "페이저 캐논"
 
 #: qcsrc/common/turrets/turret/phaser_weapon.qh:7
 msgid "Phaser"
-msgstr ""
+msgstr "페이저"
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
-msgstr ""
+msgstr "플라즈마 캐논"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:7
 msgid "Dual plasma"
-msgstr ""
+msgstr "두 플라즈마"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:19
 msgid "Dual Plasma Cannon"
-msgstr ""
+msgstr "두 플라즈마 캐논"
 
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "플라즈마"
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
 msgid "Tesla Coil"
-msgstr ""
+msgstr "테슬라 코일"
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
-msgstr ""
+msgstr "걷기 터렛"
 
 #: qcsrc/common/turrets/turret/walker_weapon.qh:7
 msgid "Walker"
-msgstr ""
+msgstr "걷기"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:192
 #, c-format
 msgid "Press %s"
-msgstr ""
+msgstr "%s는 누릅니다"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:950
 msgid "No right gunner!"
-msgstr ""
+msgstr "옳은 사수없어요!"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No left gunner!"
-msgstr ""
+msgstr "왼쪽 사수없어요!"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:19
 msgid "Bumblebee"
-msgstr ""
+msgstr "범블비"
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:19
 msgid "Racer"
-msgstr ""
+msgstr "레이써"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
-msgstr ""
+msgstr "레이써 캐논"
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:19
 msgid "Raptor"
-msgstr ""
+msgstr "라프토"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:9
 msgid "Raptor cannon"
-msgstr ""
+msgstr "라프토 캐논"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:17
 msgid "Raptor bomb"
-msgstr ""
+msgstr "라프토 폭탄"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:25
 msgid "Raptor flare"
-msgstr ""
+msgstr "라프토 신호탄"
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:19
 msgid "Spiderbot"
-msgstr ""
+msgstr "거미봇"
 
 #: qcsrc/common/weapons/all.qh:78
 msgid "Weapons dump command only works with sv_cmd.\n"
@@ -4821,139 +4824,139 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:151
 msgid "Asturian"
-msgstr ""
+msgstr "오스트리아어"
 
 #: qcsrc/menu/xonotic/credits.qc:156
 msgid "Belarusian"
-msgstr ""
+msgstr "벨로루시어"
 
 #: qcsrc/menu/xonotic/credits.qc:159
 msgid "Bulgarian"
-msgstr ""
+msgstr "불가리아어"
 
 #: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
-msgstr ""
+msgstr "중국어(중국)"
 
 #: qcsrc/menu/xonotic/credits.qc:172
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "중국어(대만)"
 
 #: qcsrc/menu/xonotic/credits.qc:177
 msgid "Cornish"
-msgstr ""
+msgstr "콘월어"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Czech"
-msgstr ""
+msgstr "체코어"
 
 #: qcsrc/menu/xonotic/credits.qc:185
 msgid "Dutch"
-msgstr ""
+msgstr "네덜란드어"
 
 #: qcsrc/menu/xonotic/credits.qc:192
 msgid "English (Australia)"
-msgstr ""
+msgstr "영어(호주)"
 
 #: qcsrc/menu/xonotic/credits.qc:197
 msgid "Finnish"
-msgstr ""
+msgstr "핀란드어"
 
 #: qcsrc/menu/xonotic/credits.qc:202
 msgid "French"
-msgstr ""
+msgstr "프랑스어"
 
 #: qcsrc/menu/xonotic/credits.qc:210
 msgid "German"
-msgstr ""
+msgstr "독일어"
 
 #: qcsrc/menu/xonotic/credits.qc:221
 msgid "Greek"
-msgstr ""
+msgstr "그리스어"
 
 #: qcsrc/menu/xonotic/credits.qc:227
 msgid "Hungarian"
-msgstr ""
+msgstr "헝가리어"
 
 #: qcsrc/menu/xonotic/credits.qc:231
 msgid "Irish"
-msgstr ""
+msgstr "아일렌드어"
 
 #: qcsrc/menu/xonotic/credits.qc:234
 msgid "Italian"
-msgstr ""
+msgstr "이탈리아어"
 
 #: qcsrc/menu/xonotic/credits.qc:240
 msgid "Kazakh"
-msgstr ""
+msgstr "카자흐어"
 
 #: qcsrc/menu/xonotic/credits.qc:243
 msgid "Korean"
-msgstr ""
+msgstr "한국어"
 
 #: qcsrc/menu/xonotic/credits.qc:247
 msgid "Polish"
-msgstr ""
+msgstr "폴란드어"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "Portuguese"
-msgstr ""
+msgstr "포르투갈어"
 
 #: qcsrc/menu/xonotic/credits.qc:261
 msgid "Romanian"
-msgstr ""
+msgstr "로마니아어"
 
 #: qcsrc/menu/xonotic/credits.qc:268
 msgid "Russian"
-msgstr ""
+msgstr "러시아어"
 
 #: qcsrc/menu/xonotic/credits.qc:279
 msgid "Scottish Gaelic"
-msgstr ""
+msgstr "스코트식 게일어"
 
 #: qcsrc/menu/xonotic/credits.qc:282
 msgid "Serbian"
-msgstr ""
+msgstr "세르비아어"
 
 #: qcsrc/menu/xonotic/credits.qc:288
 msgid "Spanish"
-msgstr ""
+msgstr "스페인어"
 
 #: qcsrc/menu/xonotic/credits.qc:299
 msgid "Swedish"
-msgstr ""
+msgstr "스웨덴어"
 
 #: qcsrc/menu/xonotic/credits.qc:303
 msgid "Ukrainian"
-msgstr ""
+msgstr "우크라이나어"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Past Contributors"
-msgstr ""
+msgstr "기존 기여자"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
-msgstr ""
+msgstr "config.cfg에 강제로 저장되도록 함"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
-msgstr ""
+msgstr "저장되지 않을 것임"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:84
 msgid "will be saved to config.cfg"
-msgstr ""
+msgstr "config.cfg에 저장될 것임"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
-msgstr ""
+msgstr "비밀"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:95
 msgid "engine setting"
-msgstr ""
+msgstr "엔진 설정"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:97
 msgid "read only"
-msgstr ""
+msgstr "읽기 전용"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:38
@@ -4962,11 +4965,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
-msgstr ""
+msgstr "크레딧"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
@@ -4984,12 +4987,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
-msgstr ""
+msgstr "이름:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:60
 msgid "Name under which you will appear in the game"
-msgstr ""
+msgstr "게임 내 이름"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
@@ -5003,23 +5006,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Undecided"
-msgstr ""
+msgstr "미정"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 msgid "Save settings"
-msgstr ""
+msgstr "저장 설정"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qh:6
 msgid "Welcome"
-msgstr ""
+msgstr "환영합니다"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:16
 msgid "Ammunition display:"
-msgstr ""
+msgstr "탄약 표시:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:19
 msgid "Show only current ammo type"
-msgstr ""
+msgstr "현재 탄약 종류만 보이기"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:22
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:44
@@ -5034,7 +5037,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "Align icon:"
-msgstr ""
+msgstr "아이콘 정렬하기:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:30
@@ -5045,7 +5048,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Left"
-msgstr ""
+msgstr "왼쪽으로"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
@@ -5056,7 +5059,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:20
 msgid "Right"
-msgstr ""
+msgstr "오른쪽으로"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
@@ -5064,15 +5067,15 @@ msgstr "탄환 제어반"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:17
 msgid "Message duration:"
-msgstr ""
+msgstr "메세지 표시 시간"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:21
 msgid "Fade time:"
-msgstr ""
+msgstr "사라지는 시간:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
 msgid "Flip messages order"
-msgstr ""
+msgstr "메시지 순서 뒤바꾸기"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:15
@@ -5083,11 +5086,11 @@ msgstr "텍스트 배열:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:19
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Center"
-msgstr ""
+msgstr "중앙으로"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 msgid "Font scale:"
-msgstr ""
+msgstr "글자 크기:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
@@ -5095,19 +5098,19 @@ msgstr "중심점 제어반"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:15
 msgid "Chat entries:"
-msgstr ""
+msgstr "체팅 입력:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:18
 msgid "Chat size:"
-msgstr ""
+msgstr "체팅 사이즈:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:22
 msgid "Chat lifetime:"
-msgstr ""
+msgstr "체팅창 시간:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:26
 msgid "Chat beep sound"
-msgstr ""
+msgstr "체팅 알림 소리"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
@@ -5115,11 +5118,11 @@ msgstr "채팅 제어반"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:14
 msgid "Engine info:"
-msgstr ""
+msgstr "엔진 정보:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "Use an averaging algorithm for fps"
-msgstr ""
+msgstr "fps에 평균 알고리즘 사용하기"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -5127,37 +5130,37 @@ msgstr "엔진 정보 제어반"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:15
 msgid "Combine health and armor"
-msgstr ""
+msgstr "체력과 보호구 합치기"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:15
 msgid "Enable status bar"
-msgstr ""
+msgstr "상태 창 켜기"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Status bar alignment:"
-msgstr ""
+msgstr "상태 창 정렬:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:25
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:35
 msgid "Inward"
-msgstr ""
+msgstr "안쪽으로"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:36
 msgid "Outward"
-msgstr ""
+msgstr "바깥쪽으로"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:30
 msgid "Icon alignment:"
-msgstr ""
+msgstr "아이콘 정렬:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:40
 msgid "Flip health and armor positions"
@@ -5169,7 +5172,7 @@ msgstr "체력/보호구 제어반"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:14
 msgid "Info messages:"
-msgstr ""
+msgstr "정보 메세지:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:17
 msgid "Flip align"
@@ -6352,7 +6355,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:217
 msgid "Hostname:"
-msgstr ""
+msgstr "호스트이름:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:231
 msgid "Gametype:"
@@ -6360,19 +6363,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:236
 msgid "Map:"
-msgstr ""
+msgstr "맵:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:241
 msgid "Mod:"
-msgstr ""
+msgstr "모드:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:246
 msgid "Version:"
-msgstr ""
+msgstr "버전:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:251
 msgid "Settings:"
-msgstr ""
+msgstr "설정:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:258
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:290
@@ -6381,7 +6384,7 @@ msgstr "플레이어:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:263
 msgid "Bots:"
-msgstr ""
+msgstr "봇:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:268
 msgid "Free slots:"
@@ -6393,11 +6396,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:279
 msgid "ID:"
-msgstr ""
+msgstr "아이디:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:284
 msgid "Key:"
-msgstr ""
+msgstr "키:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Information"
@@ -6405,7 +6408,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
 msgid "Demos"
-msgstr ""
+msgstr "데모들"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:26
 msgid "Screenshots"
@@ -6429,7 +6432,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
 msgid "DEMO^Play"
-msgstr ""
+msgstr "데모^플레이"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
@@ -6467,7 +6470,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:54
 msgid "Playlist:"
-msgstr ""
+msgstr "플레이리스트"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:55
 msgid "Random order"
@@ -6511,7 +6514,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:139
 msgid "Reset"
-msgstr ""
+msgstr "리셋"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:144
 msgid "Previous"
@@ -6536,7 +6539,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:48
 msgid "Name"
-msgstr ""
+msgstr "이름"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:77
 msgid "Model"
@@ -6564,7 +6567,7 @@ msgstr "플레이어 통계에서 당신의 별칭을 이용하는 걸 허용하
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:145
 msgid "Country"
-msgstr ""
+msgstr "국가"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:159
 msgid "Gender:"
@@ -6578,24 +6581,24 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:162
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
 msgid "Female"
-msgstr ""
+msgstr "음성"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:163
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:173
 msgid "Male"
-msgstr ""
+msgstr "남성"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:166
 msgid "Gender"
-msgstr ""
+msgstr "성별"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
-msgstr ""
+msgstr "게임에서 나가시겠습니까?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 msgid "Back to work..."
-msgstr ""
+msgstr "직장으로 복귀하다..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:17
 msgid "I got some more fragging to do!"
@@ -6603,23 +6606,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
-msgstr ""
+msgstr "게임이 종료됩니다"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
-msgstr ""
+msgstr "모델:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:21
 msgid "Remove *"
-msgstr ""
+msgstr "삭제 *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:23
 msgid "Copy *"
-msgstr ""
+msgstr "복사 *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:24
 msgid "Paste"
-msgstr ""
+msgstr "붙여넣기"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:26
 msgid "Bone:"
@@ -6735,32 +6738,32 @@ msgstr "비디오"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:19
 msgid "Effects"
-msgstr ""
+msgstr "그래픽"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:20
 msgid "Audio"
-msgstr ""
+msgstr "소리"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:22
 msgid "Game"
-msgstr ""
+msgstr "게임"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:23
 msgid "Input"
-msgstr ""
+msgstr "입력"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:24
 msgid "User"
-msgstr ""
+msgstr "유저"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:25
 #: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "Misc"
-msgstr ""
+msgstr "다른"
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:6
 msgid "Settings"
-msgstr ""
+msgstr "설정"
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:7
 msgid "Change the game settings"
@@ -6768,7 +6771,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:29
 msgid "Master:"
-msgstr ""
+msgstr "마스터:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:35
 msgid "Music:"
@@ -6800,11 +6803,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:85
 msgid "Voice:"
-msgstr ""
+msgstr "음성:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:93
 msgid "Weapons:"
-msgstr ""
+msgstr "무기들:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:99
 msgid "New style sound attenuation"
@@ -6824,39 +6827,39 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "8 kHz"
-msgstr ""
+msgstr "8 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:109
 msgid "11.025 kHz"
-msgstr ""
+msgstr "11.025 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "16 kHz"
-msgstr ""
+msgstr "16 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:111
 msgid "22.05 kHz"
-msgstr ""
+msgstr "22.05 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:112
 msgid "24 kHz"
-msgstr ""
+msgstr "24 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:113
 msgid "32 kHz"
-msgstr ""
+msgstr "32 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:114
 msgid "44.1 kHz"
-msgstr ""
+msgstr "44.1 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:115
 msgid "48 kHz"
-msgstr ""
+msgstr "48 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:119
 msgid "Channels:"
-msgstr ""
+msgstr "채널:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:121
 msgid "Number of channels for the sound output"
@@ -6864,35 +6867,35 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:122
 msgid "Mono"
-msgstr ""
+msgstr "모노"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:123
 msgid "Stereo"
-msgstr ""
+msgstr "스테레오"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:124
 msgid "2.1"
-msgstr ""
+msgstr "2.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:125
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:126
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:127
 msgid "5.1"
-msgstr ""
+msgstr "5.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:128
 msgid "6.1"
-msgstr ""
+msgstr "6.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:129
 msgid "7.1"
-msgstr ""
+msgstr "7.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:134
 msgid "Swap stereo output channels"
@@ -7214,7 +7217,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:176
 msgid "Time:"
-msgstr ""
+msgstr "시간:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:179
 msgid "Time in seconds before decals fade away (default: 2)"
@@ -7267,7 +7270,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
 msgid "Shadows"
-msgstr ""
+msgstr "샤도우"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Enable rendering of shadows from dynamic lights (default: disabled)"
@@ -7561,7 +7564,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
-msgstr ""
+msgstr "HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
@@ -7683,7 +7686,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qh:7
 msgid "Messages"
-msgstr ""
+msgstr "메시지"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 msgid "Items"
@@ -7724,7 +7727,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
 #: qcsrc/menu/xonotic/serverlist.qc:767
 msgid "Players"
-msgstr ""
+msgstr "플레이어"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
@@ -8053,7 +8056,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
-msgstr ""
+msgstr "취소"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
@@ -8062,25 +8065,25 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:11
 #, c-format
 msgid "%d fps"
-msgstr ""
+msgstr "%d fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
 msgid "%d KB/s"
-msgstr ""
+msgstr "%d KB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d MB/s"
-msgstr ""
+msgstr "%d MB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:27
 msgid "Network"
-msgstr ""
+msgstr "네트워크"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:29
 msgid "Client UDP port:"
-msgstr ""
+msgstr "클라이언트 UDP 포트:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Force client to use chosen port unless it is set to 0"
@@ -8096,7 +8099,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "56k"
-msgstr ""
+msgstr "56k"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:38
 msgid "ISDN"
@@ -8128,7 +8131,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:52
 msgid "Downloads:"
-msgstr ""
+msgstr "다운로드:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:54
 msgid "Maximum number of concurrent HTTP/FTP downloads"
@@ -8164,7 +8167,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
 msgid "Framerate"
-msgstr ""
+msgstr "프레임레이트"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
 msgid "Maximum:"
@@ -8204,7 +8207,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:135
 msgid "Menu tooltips:"
-msgstr ""
+msgstr "메뉴 팁:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:137
 msgid ""
@@ -8295,7 +8298,7 @@ msgstr "텍스트 언어"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:69
 msgid "Set language"
-msgstr ""
+msgstr "확인"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:74
 msgid "Disable gore effects and harsh language"
@@ -8381,11 +8384,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:54
 msgid "16bit"
-msgstr ""
+msgstr "16빗"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:55
 msgid "32bit"
-msgstr ""
+msgstr "32빗"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "Full screen"
@@ -8685,7 +8688,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:86
 msgid "teamplay"
-msgstr ""
+msgstr "팀플레이"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "free for all"
@@ -8821,7 +8824,7 @@ msgstr "연결 종료하기"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "quit"
-msgstr ""
+msgstr "종료"
 
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "auto-join team"
@@ -8833,7 +8836,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "quick menu"
-msgstr ""
+msgstr "빠른메뉴"
 
 #: qcsrc/menu/xonotic/keybinder.qc:107
 msgid "sandbox menu"
@@ -8887,15 +8890,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:763
 msgid "Ping"
-msgstr ""
+msgstr "핑"
 
 #: qcsrc/menu/xonotic/serverlist.qc:764
 msgid "Hostname"
-msgstr ""
+msgstr "호스트이름"
 
 #: qcsrc/menu/xonotic/serverlist.qc:765
 msgid "Map"
-msgstr ""
+msgstr "맵"
 
 #: qcsrc/menu/xonotic/serverlist.qc:766
 msgid "Type"
@@ -9054,51 +9057,51 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
-msgstr ""
+msgstr "1월"
 
 #: qcsrc/menu/xonotic/statslist.qc:30
 msgid "February"
-msgstr ""
+msgstr "2월"
 
 #: qcsrc/menu/xonotic/statslist.qc:31
 msgid "March"
-msgstr ""
+msgstr "3월"
 
 #: qcsrc/menu/xonotic/statslist.qc:32
 msgid "April"
-msgstr ""
+msgstr "4월"
 
 #: qcsrc/menu/xonotic/statslist.qc:33
 msgid "May"
-msgstr ""
+msgstr "5월"
 
 #: qcsrc/menu/xonotic/statslist.qc:34
 msgid "June"
-msgstr ""
+msgstr "6월"
 
 #: qcsrc/menu/xonotic/statslist.qc:35
 msgid "July"
-msgstr ""
+msgstr "7월"
 
 #: qcsrc/menu/xonotic/statslist.qc:36
 msgid "August"
-msgstr ""
+msgstr "8월"
 
 #: qcsrc/menu/xonotic/statslist.qc:37
 msgid "September"
-msgstr ""
+msgstr "9월"
 
 #: qcsrc/menu/xonotic/statslist.qc:38
 msgid "October"
-msgstr ""
+msgstr "10월"
 
 #: qcsrc/menu/xonotic/statslist.qc:39
 msgid "November"
-msgstr ""
+msgstr "11월"
 
 #: qcsrc/menu/xonotic/statslist.qc:40
 msgid "December"
-msgstr ""
+msgstr "12월"
 
 #: qcsrc/menu/xonotic/statslist.qc:96
 msgid "Joined:"
@@ -9110,7 +9113,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time_Played:"
-msgstr ""
+msgstr "플레이_시간:"
 
 #: qcsrc/menu/xonotic/statslist.qc:117
 msgid "Favorite_Map:"
@@ -9184,3 +9187,6 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "제어반 활성화"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^채팅"

@@ -21,7 +21,7 @@ float alarm2time;
 
 void vehicle_alarm(entity e, int ch, Sound s0und)
 {
-    TC(Sound, s0und);
+	TC(Sound, s0und);
 	if(!autocvar_cl_vehicles_alarm)
 		return;
 
@@ -70,9 +70,7 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 
 	if(sf & 2)
 	{
-		axh.origin_x = ReadCoord();
-		axh.origin_y = ReadCoord();
-		axh.origin_z = ReadCoord();
+		axh.origin = ReadVector();
 	}
 
 	if(sf & 4)

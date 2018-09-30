@@ -54,7 +54,7 @@ const string PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD = "achievement-firstblood";
 const string PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM = "achievement-firstvictim";
 
 // delay map switch until this is set
-float PlayerStats_GameReport_DelayMapVote;
+bool PlayerStats_GameReport_DelayMapVote;
 
 // call at initialization
 void PlayerStats_GameReport_Init();
@@ -69,8 +69,8 @@ void PlayerStats_GameReport_AddTeam(float t);
 void PlayerStats_GameReport_AddEvent(string event_id);
 
 // call on each event to track, or at player disconnect OR match end for "global stuff"
-#define PS_GR_P_ADDVAL(ent,eventid,val) PlayerStats_GameReport_Event(ent.playerstats_id, eventid, val)
-#define PS_GR_T_ADDVAL(team,eventid,val) PlayerStats_GameReport_Event(sprintf("team#%d", team), eventid, val)
+#define PlayerStats_GameReport_Event_Player(ent, eventid, val) PlayerStats_GameReport_Event(ent.playerstats_id, eventid, val)
+#define PlayerStats_GameReport_Event_Team(team, eventid, val) PlayerStats_GameReport_Event(sprintf("team#%d", team), eventid, val)
 float PlayerStats_GameReport_Event(string prefix, string event_id, float value);
 
 void PlayerStats_GameReport_Accuracy(entity p);

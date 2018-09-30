@@ -2,7 +2,7 @@
 #include "autocvars.qh"
 #include "csqcmodel_hooks.qh"
 #include "miscfunctions.qh"
-#include "mutators/events.qh"
+#include <client/mutators/_mod.qh>
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>
@@ -17,8 +17,6 @@
 
 .float death_time;
 .int modelflags;
-
-void CSQCModel_Hook_PreDraw(entity this, bool isplayer);
 
 .bool isplayermodel;
 
@@ -364,7 +362,7 @@ void CSQCPlayer_AnimDecide_PostUpdate(entity this, bool isnew)
 }
 int CSQCPlayer_FallbackFrame(entity this, int f)
 {
-    TC(int, f);
+	TC(int, f);
 	if(frameduration(this.modelindex, f) > 0)
 		return f; // goooooood
 	if(frameduration(this.modelindex, 1) <= 0)
@@ -602,7 +600,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null")
+	if(!this.modelindex || this.model == "null" || this.alpha < 0)
 	{
 		this.drawmask = 0;
 		return;
@@ -610,7 +608,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 	else
 		this.drawmask = MASK_NORMAL;
 
-	if(this.isplayermodel) // this checks if it's a player MODEL!
+	if(this.isplayermodel && this.drawmask) // this checks if it's a player MODEL!
 	{
 		CSQCPlayer_ModelAppearance_Apply(this, this.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply(this);

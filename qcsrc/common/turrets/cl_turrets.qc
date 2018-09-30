@@ -37,7 +37,7 @@ void turret_draw(entity this)
 
 	this.tur_head.angles += dt * this.tur_head.avelocity;
 
-	if (this.health < 127)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) < 127)
 	{
 		dt = random();
 
@@ -45,11 +45,11 @@ void turret_draw(entity this)
 			te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 	}
 
-	if(this.health < 85)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) < 85)
 	if(dt < 0.01)
 		pointparticles(EFFECT_SMOKE_LARGE, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
-	if(this.health < 32)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) < 32)
 	if(dt < 0.015)
 		pointparticles(EFFECT_SMOKE_SMALL, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
@@ -115,11 +115,7 @@ void turret_draw2d(entity this)
 		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
 	}
 
-	txt = this.netname;
-	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-		txt = _("Spam");
-	else
-		txt = spritelookuptext(this, spriteimage);
+	txt = spritelookuptext(this, spriteimage);
 
 	if(time - floor(time) > 0.5 && t == this.team)
 	{
@@ -180,11 +176,14 @@ void turret_draw2d(entity this)
 	}
 
 	o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
-	o = drawspritetext(o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+	if(autocvar_g_waypointsprite_turrets_text)
+	{
+		o = drawsprite_TextOrIcon(true, o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+	}
 	drawhealthbar(
 			o,
 			0,
-			this.health / 255,
+			GetResourceAmount(this, RESOURCE_HEALTH) / 255,
 			'0 0 0',
 			'0 0 0',
 			0.5 * SPRITE_HEALTHBAR_WIDTH * t,
@@ -225,7 +224,7 @@ void turret_construct(entity this, bool isnew)
 	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.tur_head.angles			= this.angles;
-	this.health						= 255;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 255);
 	this.solid						= SOLID_BBOX;
 	this.tur_head.solid				= SOLID_NOT;
 	set_movetype(this, MOVETYPE_NOCLIP);
@@ -365,9 +364,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 	{
 		this.m_id = ReadByte();
 
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
 		this.angles_x = ReadAngle();
@@ -401,14 +398,10 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 	if(sf & TNSF_MOVE)
 	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.velocity_x = ReadShort();
-		this.velocity_y = ReadShort();
-		this.velocity_z = ReadShort();
+		this.velocity = ReadVector();
 
 		this.angles_y = ReadShort();
 
@@ -432,13 +425,15 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		}
 
 		_tmp = ReadByte();
-		if(_tmp == 0 && this.health != 0)
+		float myhp = GetResourceAmount(this, RESOURCE_HEALTH);
+		if(_tmp == 0 && myhp != 0)
 			turret_die(this);
-		else if(this.health && this.health != _tmp)
+		else if(myhp && myhp > _tmp)
 			this.helpme = servertime + 10;
+		else if(myhp && myhp < _tmp)
+			this.helpme = 0; // we're being healed, don't spam help me waypoints
 
-		this.health = _tmp;
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, _tmp);
 	}
-	//this.enemy.health = this.health / 255;
 	return true;
 }

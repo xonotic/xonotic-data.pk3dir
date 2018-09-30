@@ -1,14 +1,13 @@
 #include "hagar.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_hagar) { weapon_defaultspawnfunc(this, WEP_HAGAR); }
 
 // NO bounce protection, as bounces are limited!
 
 void W_Hagar_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -21,7 +20,7 @@ void W_Hagar_Explode_use(entity this, entity actor, entity trigger)
 void W_Hagar_Explode2(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -31,9 +30,9 @@ void W_Hagar_Explode2_use(entity this, entity actor, entity trigger)
 	W_Hagar_Explode2(this, trigger);
 }
 
-void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	float is_linkexplode = ( ((inflictor.owner != NULL) ? (inflictor.owner == this.owner) : true)
@@ -48,10 +47,10 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, is_linkexplode))
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
@@ -82,7 +81,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hagar, ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage), thiswep.m_id);
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -92,7 +91,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR_PRI(hagar, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	missile.health = WEP_CVAR_PRI(hagar, health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_PRI(hagar, health));
 	missile.damageforcescale = WEP_CVAR_PRI(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
@@ -103,7 +102,8 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink = time + WEP_CVAR_PRI(hagar, lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_HAGAR.m_id;
+	missile.projectiledeathtype = thiswep.m_id;
+	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -127,7 +127,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage), thiswep.m_id | HITTYPE_SECONDARY);
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -137,7 +137,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	missile.health = WEP_CVAR_SEC(hagar, health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_SEC(hagar, health));
 	missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
@@ -149,7 +149,8 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
+	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -168,7 +169,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 }
 
 .float hagar_loadstep, hagar_loadblock, hagar_loadbeep, hagar_warning;
-void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
+void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	// time to release the rockets we've loaded
 
@@ -182,14 +183,14 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 
 	weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(hagar, refire));
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	shots = actor.(weaponentity).hagar_load;
+	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage) * shots, thiswep.m_id | HITTYPE_SECONDARY);
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
 
-	shots = actor.(weaponentity).hagar_load;
 	missile = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -199,7 +200,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 		missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
 		missile.takedamage = DAMAGE_YES;
-		missile.health = WEP_CVAR_SEC(hagar, health);
+		SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_SEC(hagar, health));
 		missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 		missile.event_damage = W_Hagar_Damage;
 		missile.damagedbycontents = true;
@@ -210,7 +211,8 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 		setthink(missile, adaptor_think2use_hittype_splash);
 		missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 		PROJECTILE_MAKETRIGGER(missile);
-		missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
+		missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
+		missile.weaponentity_fld = weaponentity;
 		setorigin(missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		set_movetype(missile, MOVETYPE_FLY);
@@ -248,17 +250,14 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hagar, load_animtime), w_ready);
 	actor.(weaponentity).hagar_loadstep = time + WEP_CVAR_SEC(hagar, refire) * W_WeaponRateFactor(actor);
 	actor.(weaponentity).hagar_load = 0;
-
-	if(weaponslot(weaponentity) == 0)
-		actor.hagar_load = 0;
 }
 
 void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	// loadable hagar secondary attack, must always run each frame
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(time < game_starttime || time < actor.race_penalty || timeout_status == TIMEOUT_ACTIVE)
 		return;
-	if(time < game_starttime)
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return;
 
 	bool loaded = actor.(weaponentity).hagar_load >= WEP_CVAR_SEC(hagar, load_max);
@@ -268,9 +267,9 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 	if(actor.items & IT_UNLIMITED_WEAPON_AMMO)
 		enough_ammo = true;
 	else if(autocvar_g_balance_hagar_reload_ammo)
-		enough_ammo = actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
+		enough_ammo = actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
-		enough_ammo = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hagar, ammo);
+		enough_ammo = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
 
 	bool stopped = loaded || !enough_ammo;
 
@@ -284,8 +283,6 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 				actor.(weaponentity).state = WS_READY;
 				W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo) * actor.(weaponentity).hagar_load * -1, weaponentity); // give back ammo
 				actor.(weaponentity).hagar_load = 0;
-				if(weaponslot(weaponentity) == 0)
-					actor.hagar_load = 0;
 				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
@@ -345,7 +342,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 		if(!PHYS_INPUT_BUTTON_ATCK2(actor) || (stopped && actor.(weaponentity).hagar_loadstep < time && WEP_CVAR_SEC(hagar, load_hold) >= 0))
 		{
 			actor.(weaponentity).state = WS_READY;
-			W_Hagar_Attack2_Load_Release(actor, weaponentity);
+			W_Hagar_Attack2_Load_Release(thiswep, actor, weaponentity);
 		}
 	}
 	else
@@ -366,7 +363,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 
 void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(!(fire & 1) || actor.(weaponentity).hagar_load || actor.(weaponentity).hagar_loadblock || actor.(weaponentity).m_switchweapon != WEP_HAGAR)
+	if(!(fire & 1) || actor.(weaponentity).hagar_load || actor.(weaponentity).hagar_loadblock || actor.(weaponentity).m_switchweapon != thiswep || !weapon_prepareattack_check(thiswep, actor, weaponentity, false, -1))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
@@ -405,8 +402,6 @@ METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 {
     float loadable_secondary;
     loadable_secondary = (WEP_CVAR_SEC(hagar, load) && WEP_CVAR(hagar, secondary));
-    if(weaponslot(weaponentity) == 0)
-    	actor.hagar_load = actor.(weaponentity).hagar_load;
 
     if(loadable_secondary)
         W_Hagar_Attack2_Load(thiswep, actor, weaponentity); // must always run each frame
@@ -433,12 +428,11 @@ METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor, .entity weaponent
     if(actor.(weaponentity).hagar_load)
     {
     	actor.(weaponentity).state = WS_READY;
-    	W_Hagar_Attack2_Load_Release(actor, weaponentity);
+    	W_Hagar_Attack2_Load_Release(thiswep, actor, weaponentity);
     }
 }
 METHOD(Hagar, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	actor.hagar_load = 0;
     actor.(weaponentity).hagar_loadblock = false;
     if(actor.(weaponentity).hagar_load)
     {
@@ -448,19 +442,18 @@ METHOD(Hagar, wr_setup, void(entity thiswep, entity actor, .entity weaponentity)
 }
 METHOD(Hagar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(hagar, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hagar, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
     return ammo_amount;
 }
 METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hagar, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
     return ammo_amount;
 }
 METHOD(Hagar, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.hagar_load = 0;
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
@@ -471,7 +464,7 @@ METHOD(Hagar, wr_playerdeath, void(entity thiswep, entity actor, .entity weapone
 {
     // if we have any rockets loaded when we die, release them
     if(actor.(weaponentity).hagar_load && WEP_CVAR_SEC(hagar, load_releasedeath))
-    	W_Hagar_Attack2_Load_Release(actor, weaponentity);
+    	W_Hagar_Attack2_Load_Release(thiswep, actor, weaponentity);
 }
 METHOD(Hagar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {

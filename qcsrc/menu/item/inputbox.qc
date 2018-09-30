@@ -22,7 +22,7 @@
 
 	void InputBox_setText(entity me, string txt)
 	{
-		if (me.text) strunzone(me.text);
+		strfree(me.text);
 		SUPER(InputBox).setText(me, strzone(txt));
 	}
 
@@ -71,17 +71,17 @@
 		return 1;
 	}
 
-	float InputBox_mousePress(entity me, vector pos)
+	METHOD(InputBox, mousePress, bool(InputBox this, vector pos))
 	{
-		if (me.enableClearButton)
-			if (over_ClearButton(me, pos))
+		if (this.enableClearButton)
+			if (over_ClearButton(this, pos))
 			{
-				me.cb_pressed = 1;
-				return 1;
+				this.cb_pressed = 1;
+				return true;
 			}
-		me.dragScrollTimer = time;
-		me.pressed = 1;
-		return InputBox_mouseDrag(me, pos);
+		this.dragScrollTimer = time;
+		this.pressed = 1;
+		return InputBox_mouseDrag(this, pos);
 	}
 
 	float InputBox_mouseRelease(entity me, vector pos)
@@ -356,7 +356,7 @@
 			}
 
 		// skipping SUPER(InputBox).draw(me);
-		Item_draw(me);
+		MenuItem_draw(me);
 	}
 
 	void InputBox_showNotify(entity me)

@@ -25,6 +25,14 @@ void PlayerScore_Detach(entity player);
 float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score);
 
 /**
+ * Sets the player's score to the score parameter.
+ * NEVER call this if PlayerScore_Attach has not been called yet!
+ * Means: FIXME make players unable to join the game when not called ClientConnect yet.
+ * Returns the new (or old if unchanged) score.
+ */
+float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score);
+
+/**
  * \brief Returns the player's score.
  * \param[in] player Player to inspect.
  * \param[in] scorefield Field of the score.
@@ -52,7 +60,7 @@ float TeamScore_Add(entity player, float scorefield, float score);
  * NEVER call this if team has not been set yet!
  * Returns the new score.
  */
-float TeamScore_AddToTeam(float t, float scorefield, float score);
+float TeamScore_AddToTeam(int t, float scorefield, float score);
 
 /**
  * Returns a value indicating the team score (and higher is better).

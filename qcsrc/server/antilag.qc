@@ -5,6 +5,7 @@
     #include <server/defs.qh>
     #include <common/state.qh>
     #include <common/vehicles/all.qh>
+	#include <lib/warpzone/common.qh>
     #include "antilag.qh"
 #endif
 
@@ -118,4 +119,106 @@ void antilag_clear(entity e, entity store)
 		store.antilag_origins[i] = e.origin;
 	}
 	store.antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
+}
+
+// TODO: use a single intrusive list across all antilagged entities
+void antilag_takeback_all(entity ignore, float lag)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && it != ignore, antilag_takeback(it, CS(it), time - lag));
+	IL_EACH(g_monsters, it != ignore,
+	{
+		antilag_takeback(it, it, time - lag);
+	});
+	IL_EACH(g_projectiles, it != ignore && it.classname == "nade",
+	{
+		antilag_takeback(it, it, time - lag);
+	});
+}
+
+void antilag_restore_all(entity ignore)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && it != ignore, antilag_restore(it, CS(it)));
+	IL_EACH(g_monsters, it != ignore,
+	{
+		antilag_restore(it, it);
+	});
+	IL_EACH(g_projectiles, it != ignore && it.classname == "nade",
+	{
+		antilag_restore(it, it);
+	});
+}
+
+/*
+==================
+traceline_antilag
+
+A version of traceline that must be used by SOLID_SLIDEBOX things that want to hit SOLID_CORPSE things with a trace attack
+Additionally it moves players back into the past before the trace and restores them afterward.
+==================
+*/
+void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz)
+{
+	// check whether antilagged traces are enabled
+	if (lag < 0.001)
+		lag = 0;
+	if (!IS_REAL_CLIENT(forent))
+		lag = 0; // only antilag for clients
+
+	// change shooter to SOLID_BBOX so the shot can hit corpses
+	int oldsolid = source.dphitcontentsmask;
+	if(source)
+		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
+	if (lag)
+		antilag_takeback_all(forent, lag);
+
+	// do the trace
+	if(wz)
+		WarpZone_TraceBox (v1, mi, ma, v2, nomonst, forent);
+	else
+		tracebox (v1, mi, ma, v2, nomonst, forent);
+
+	// restore players to current positions
+	if (lag)
+		antilag_restore_all(forent);
+
+	// restore shooter solid type
+	if(source)
+		source.dphitcontentsmask = oldsolid;
+}
+void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
+{
+	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, false);
+}
+void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
+{
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
+		lag = 0;
+	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
+}
+void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
+{
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
+		lag = 0;
+	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, false);
+}
+void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
+{
+	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, true);
+}
+void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
+{
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
+		lag = 0;
+	WarpZone_traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
+}
+void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
+{
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
+		lag = 0;
+	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, true);
 }

@@ -6,7 +6,7 @@
 #elif defined(SVQC)
 	#include <common/constants.qh>
 	#include <common/net_linked.qh>
-	#include <common/triggers/subs.qh>
+	#include <common/mapobjects/subs.qh>
 	#include <common/util.qh>
 	#include <server/constants.qh>
 	#include <server/defs.qh>
@@ -37,6 +37,10 @@
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
+#ifdef SVQC
+	player.lastteleport_origin = player.origin;
+	player.lastteleporttime = time;
+#endif
 	setorigin(player, to); // NOTE: this also aborts the move, when this is called by touch
 #ifdef SVQC
 	player.oldorigin = to; // for DP's unsticking
@@ -57,9 +61,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 bool WarpZone_Teleported_Send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
-	WriteCoord(MSG_ENTITY, this.angles.x);
-	WriteCoord(MSG_ENTITY, this.angles.y);
-	WriteCoord(MSG_ENTITY, this.angles.z);
+	WriteVector(MSG_ENTITY, this.angles);
 	return true;
 }
 #endif
@@ -175,11 +177,7 @@ void WarpZone_Touch(entity this, entity toucher)
 		return;
 
 	// FIXME needs a better check to know what is safe to teleport and what not
-	if((toucher.move_movetype == MOVETYPE_NONE && toucher.move_movetype == MOVETYPE_NONE) || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity
-#ifdef CSQC
-	|| tag_networkentity
-#endif
-	)
+	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
 		return;
 
 	if(WarpZoneLib_ExactTrigger_Touch(this, toucher))

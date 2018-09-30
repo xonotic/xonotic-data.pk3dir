@@ -54,6 +54,7 @@ bool autocvar_bot_usemodelnames;
 bool autocvar_bot_debug_tracewalk;
 bool autocvar_bot_debug_goalstack;
 bool autocvar_bot_wander_enable;
+bool autocvar_bot_typefrag;
 bool autocvar_g_debug_bot_commands;
 int autocvar_g_waypointeditor_auto;
 float autocvar_skill_auto;

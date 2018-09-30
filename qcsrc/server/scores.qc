@@ -1,11 +1,18 @@
 #include "scores.qh"
 
 #include "command/common.qh"
-#include "mutators/_mod.qh"
+#include "defs.qh"
+#include <server/g_world.qh>
+#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
 #include <common/net_linked.qh>
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
+#include <common/mapinfo.qh>
+#include <common/mutators/base.qh>
 #include <common/scores.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
 
 .entity scorekeeper;
 entity teamscorekeepers[16];
@@ -96,7 +103,7 @@ void TeamScore_Spawn(float t, string name)
 	PlayerStats_GameReport_AddTeam(t);
 }
 
-float TeamScore_AddToTeam(float t, float scorefield, float score)
+float TeamScore_AddToTeam(int t, float scorefield, float score)
 {
 	entity s;
 
@@ -347,8 +354,32 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	if(scores_label(scorefield) != "")
 		s.SendFlags |= (2 ** (scorefield.m_id % 16));
 	if(!warmup_stage)
-		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
-	return (s.(scores(scorefield)) += score);
+		PlayerStats_GameReport_Event_Player(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
+	s.(scores(scorefield)) += score;
+	MUTATOR_CALLHOOK(AddedPlayerScore, scorefield, score, player);
+	return s.(scores(scorefield));
+}
+
+float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score)
+{
+	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
+	entity s = CS(player).scorekeeper;
+	if(!s)
+	{
+		if(game_stopped)
+			return 0;
+		LOG_WARN("Setting score of unknown player!");
+		return 0;
+	}
+
+	float oldscore = s.(scores(scorefield));
+	if(oldscore == score)
+		return oldscore;
+
+	if(scores_label(scorefield) != "")
+		s.SendFlags |= (2 ** (scorefield.m_id % 16));
+	s.(scores(scorefield)) = score;
+	return s.(scores(scorefield));
 }
 
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score)
@@ -371,7 +402,7 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	});
 
 	if (result.x == 0 && strict)
-		result.x = etof(t1.owner) - etof(t2.owner);
+		result.x = t1.owner.playerid - t2.owner.playerid;
 
 	return result.x;
 }
@@ -511,9 +542,7 @@ void WinningConditionHelper(entity this)
 		}
 	}
 
-	if(worldstatus)
-		strunzone(worldstatus);
-	worldstatus = strzone(s);
+	strcpy(worldstatus, s);
 
 	FOREACH_CLIENT(true, {
 		string s = "";
@@ -532,9 +561,7 @@ void WinningConditionHelper(entity this)
 				s = "-666";
 		}
 
-		if(it.clientstatus)
-			strunzone(it.clientstatus);
-		it.clientstatus = strzone(s);
+		strcpy(it.clientstatus, s);
 	});
 }
 
@@ -906,10 +933,10 @@ void PlayerScore_PlayerStats(entity p)
 {
 	entity s = CS(p).scorekeeper;
 	FOREACH(Scores, true, {
-		if(s.(scores(it)) != 0)
-			if(scores_label(it) != "")
-				PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label(it)), s.(scores(it)));
-    });
+		if(s.(scores(it)) != 0 && scores_label(it) != "")
+			PlayerStats_GameReport_Event_Player(s.owner,
+				strcat(PLAYERSTATS_SCOREBOARD, scores_label(it)), s.(scores(it)));
+	});
 }
 
 void PlayerScore_TeamStats()
@@ -922,9 +949,9 @@ void PlayerScore_TeamStats()
 		if(!sk)
 			continue;
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(sk.(teamscores(i)) != 0)
-				if(teamscores_label(i) != "")
-					// the +1 is important here!
-					PS_GR_T_ADDVAL(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label(i)), sk.(teamscores(i)));
+			if(sk.(teamscores(i)) != 0 && teamscores_label(i) != "")
+				// the +1 is important here!
+				PlayerStats_GameReport_Event_Team(t+1,
+					strcat(PLAYERSTATS_SCOREBOARD, teamscores_label(i)), sk.(teamscores(i)));
 	}
 }

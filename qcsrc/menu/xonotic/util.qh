@@ -36,13 +36,8 @@ string GameType_GetIcon(int cnt);
 int GameType_GetCount();
 int GameType_GetTotalCount();
 
-void dialog_hudpanel_common_notoggle(entity me, string panelname);
-#define DIALOG_HUDPANEL_COMMON_NOTOGGLE() \
-	dialog_hudpanel_common_notoggle(me, panelname)
-#define DIALOG_HUDPANEL_COMMON() \
-	me.TR(me); \
-		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
-	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
+void dialog_hudpanel_main_checkbox(entity me, string panelname);
+void dialog_hudpanel_main_settings(entity me, string panelname);
 
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha);
 

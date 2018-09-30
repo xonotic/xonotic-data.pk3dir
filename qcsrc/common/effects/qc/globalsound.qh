@@ -119,6 +119,8 @@ void PrecachePlayerSounds(string f);
 //#endif
 entity GetVoiceMessage(string type);
 
+string GlobalSound_sample(string pair, float r);
+
 #ifdef SVQC
 
 	void _GlobalSound(entity this, entity gs, entity ps, string sample, float chan, float vol, float voicetype, bool fake);

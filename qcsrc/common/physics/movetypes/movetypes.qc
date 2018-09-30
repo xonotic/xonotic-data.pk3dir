@@ -232,6 +232,9 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blocked & 8))
 		this.velocity = primal_velocity;
 
+	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blocked & 8))
+		this.velocity = primal_velocity;
+
 	if(applygravity)
 	{
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
@@ -351,36 +354,49 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
     });
 }
 
+bool autocvar__movetype_debug = false;
 void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 {
-	vector mi, ma;
-	if(this.solid == SOLID_BSP)
+	if(autocvar__movetype_debug)
 	{
-		// TODO set the absolute bbox
-		mi = this.mins;
-		ma = this.maxs;
+		vector mi, ma;
+		if(this.solid == SOLID_BSP)
+		{
+			// TODO set the absolute bbox
+			mi = this.mins;
+			ma = this.maxs;
+		}
+		else
+		{
+			mi = this.mins;
+			ma = this.maxs;
+		}
+		mi += this.origin;
+		ma += this.origin;
+
+		if(this.flags & FL_ITEM)
+		{
+			mi -= '15 15 1';
+			ma += '15 15 1';
+		}
+		else
+		{
+			mi -= '1 1 1';
+			ma += '1 1 1';
+		}
+
+		this.absmin = mi;
+		this.absmax = ma;
 	}
 	else
 	{
-		mi = this.mins;
-		ma = this.maxs;
+		setorigin(this, this.origin); // calls SV_LinkEdict
+	#ifdef CSQC
+		// NOTE: CSQC's version of setorigin doesn't expand
+		this.absmin -= '1 1 1';
+		this.absmax += '1 1 1';
+	#endif
 	}
-	mi += this.origin;
-	ma += this.origin;
-
-	if(this.flags & FL_ITEM)
-	{
-		mi -= '15 15 1';
-		ma += '15 15 1';
-	}
-	else
-	{
-		mi -= '1 1 1';
-		ma += '1 1 1';
-	}
-
-	this.absmin = mi;
-	this.absmax = ma;
 
 	if(touch_triggers)
 		_Movetype_LinkEdict_TouchAreaGrid(this);
@@ -390,11 +406,11 @@ entity _Movetype_TestEntityPosition_ent;
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
     entity this = _Movetype_TestEntityPosition_ent;
-//	vector org = this.origin + ofs;
+	vector org = this.origin + ofs;
 
 	int cont = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(this.origin, this.mins, this.maxs, this.origin, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
+	tracebox(org, this.mins, this.maxs, org, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
 	this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
@@ -405,11 +421,11 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 	return false;
 }
 
-bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
+int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
     _Movetype_TestEntityPosition_ent = this;
 	if (!_Movetype_TestEntityPosition(' 0  0  0')) {
-	    return true;
+	    return UNSTICK_FINE;
 	}
 	#define X(v) if (_Movetype_TestEntityPosition(v))
 	X('-1  0  0') X(' 1  0  0')
@@ -428,13 +444,32 @@ bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         {
             LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
                 etof(this), this.classname, vtos(this.origin));
-            return false;
+            return UNSTICK_STUCK;
         }
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
 	_Movetype_LinkEdict(this, true);
-	return true;
+	return UNSTICK_FIXED;
+}
+
+void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
+{
+	int unstick = _Movetype_UnstickEntity(this); // sets test position entity
+	switch(unstick)
+	{
+		case UNSTICK_FINE:
+			this.oldorigin = this.origin;
+			break;
+		case UNSTICK_FIXED:
+			break; // already sorted
+		case UNSTICK_STUCK:
+			vector offset = this.oldorigin - this.origin;
+			if(!_Movetype_TestEntityPosition(offset))
+				_Movetype_LinkEdict(this, false);
+			// couldn't unstick, should we warn about this?
+			break;
+	}
 }
 
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // SV_ClipVelocity
@@ -519,6 +554,8 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 		case MOVETYPE_FLY:
 		case MOVETYPE_FLY_WORLDONLY:
 			_Movetype_Physics_Toss(this, movedt);
+			if(wasfreed(this))
+				return;
 			_Movetype_LinkEdict(this, true);
 			break;
 		case MOVETYPE_PHYSICS:
@@ -544,7 +581,6 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			_Movetype_CheckWater(this);
 			this.origin = this.origin + movedt * this.velocity;
 			this.angles = this.angles + movedt * this.avelocity;
-			_Movetype_LinkEdict(this, false);
 			break;
 		case MOVETYPE_STEP:
 			_Movetype_Physics_Step(this, movedt);
@@ -563,6 +599,12 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 		case MOVETYPE_PHYSICS:
 			break;
 	}
+
+	//_Movetype_CheckVelocity(this);
+
+	_Movetype_LinkEdict(this, true);
+
+	//_Movetype_CheckVelocity(this);
 }
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient)  // to be run every move frame

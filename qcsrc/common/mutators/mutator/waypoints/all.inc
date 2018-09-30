@@ -1,64 +1,64 @@
 /** If you register a new waypoint, make sure to add it to this list */
 
-REGISTER_WAYPOINT(Waypoint, _("Waypoint"), '0 1 1', 1);
-REGISTER_WAYPOINT(Helpme, _("Help me!"), '1 0.5 0', 1);
-REGISTER_WAYPOINT(Here, _("Here"), '0 1 0', 1);
-REGISTER_WAYPOINT(Danger, _("DANGER"), '1 0.5 0', 1);
+REGISTER_WAYPOINT(Waypoint, _("Waypoint"), "", '0 1 1', 1);
+REGISTER_WAYPOINT(Helpme, _("Help me!"), "", '1 0.5 0', 1);
+REGISTER_WAYPOINT(Here, _("Here"), "", '0 1 0', 1);
+REGISTER_WAYPOINT(Danger, _("DANGER"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(Frozen, _("Frozen!"), '0.25 0.90 1', 1);
+REGISTER_WAYPOINT(Frozen, _("Frozen!"), "", '0.25 0.90 1', 1);
 
-REGISTER_WAYPOINT(Item, _("Item"), '1 0 1', 1);
+REGISTER_WAYPOINT(Item, _("Item"), "", '1 0 1', 1);
 
-REGISTER_WAYPOINT(RaceCheckpoint, _("Checkpoint"), '1 0.5 0', 1);
-REGISTER_WAYPOINT(RaceFinish, _("Finish"), '1 0.5 0', 1);
-REGISTER_WAYPOINT(RaceStart, _("Start"), '1 0.5 0', 1);
-REGISTER_WAYPOINT(RaceStartFinish, _("Start"), '1 0.5 0', 1);
+REGISTER_WAYPOINT(RaceCheckpoint, _("Checkpoint"), "", '1 0.5 0', 1);
+REGISTER_WAYPOINT(RaceFinish, _("Finish"), "", '1 0.5 0', 1);
+REGISTER_WAYPOINT(RaceStart, _("Start"), "", '1 0.5 0', 1);
+REGISTER_WAYPOINT(RaceStartFinish, _("Start"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(AssaultDefend, _("Defend"), '1 0.5 0', 1);
-REGISTER_WAYPOINT(AssaultDestroy, _("Destroy"), '1 0.5 0', 1);
-REGISTER_WAYPOINT(AssaultPush, _("Push"), '1 0.5 0', 1);
+REGISTER_WAYPOINT(AssaultDefend, _("Defend"), "as_defend", '1 0.5 0', 1);
+REGISTER_WAYPOINT(AssaultDestroy, _("Destroy"), "as_destroy", '1 0.5 0', 1);
+REGISTER_WAYPOINT(AssaultPush, _("Push"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(FlagCarrier, _("Flag carrier"), '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagCarrierEnemy, _("Enemy carrier"), '1 1 1', 1);
-REGISTER_WAYPOINT(FlagDropped, _("Dropped flag"), '1 1 1', 1);
-REGISTER_WAYPOINT(FlagBaseNeutral, _("White base"), '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseRed, _("Red base"), '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseBlue, _("Blue base"), '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), '0.8 0.8 0', 1);
-REGISTER_WAYPOINT(FlagReturn, _("Return flag here"), '0 0.8 0.8', 1);
+REGISTER_WAYPOINT(FlagCarrier, _("Flag carrier"), "", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagCarrierEnemy, _("Enemy carrier"), "flag_neutral_carrying", '1 1 1', 1);
+REGISTER_WAYPOINT(FlagDropped, _("Dropped flag"), "flag_neutral_lost", '1 1 1', 1);
+REGISTER_WAYPOINT(FlagBaseNeutral, _("White base"), "flag_neutral_taken", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseRed, _("Red base"), "flag_red_taken", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseBlue, _("Blue base"), "flag_blue_taken", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), "flag_yellow_taken", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), "flag_pink_taken", '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagReturn, _("Return flag here"), "", '0 0.8 0.8', 1);
 
-REGISTER_WAYPOINT(DomNeut, _("Control point"), '0 1 1', 1);
-REGISTER_WAYPOINT(DomRed, _("Control point"), '0 1 1', 1);
-REGISTER_WAYPOINT(DomBlue, _("Control point"), '0 1 1', 1);
-REGISTER_WAYPOINT(DomYellow, _("Control point"), '0 1 1', 1);
-REGISTER_WAYPOINT(DomPink, _("Control point"), '0 1 1', 1);
+REGISTER_WAYPOINT(DomNeut, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
+REGISTER_WAYPOINT(DomRed, _("Control point"), "dom_icon_red-highlighted", '0 1 1', 1);
+REGISTER_WAYPOINT(DomBlue, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
+REGISTER_WAYPOINT(DomYellow, _("Control point"), "dom_icon_yellow-highlighted", '0 1 1', 1);
+REGISTER_WAYPOINT(DomPink, _("Control point"), "dom_icon_pink-highlighted", '0 1 1', 1);
 
-REGISTER_WAYPOINT(KeyDropped, _("Dropped key"), '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierFriend, _("Key carrier"), '0 1 0', 1);
-REGISTER_WAYPOINT(KeyCarrierFinish, _("Run here"), '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierRed, _("Key carrier"), '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierBlue, _("Key carrier"), '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierYellow, _("Key carrier"), '0 1 1', 1);
-REGISTER_WAYPOINT(KeyCarrierPink, _("Key carrier"), '0 1 1', 1);
+REGISTER_WAYPOINT(KeyDropped, _("Dropped key"), "kh_dropped", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierFriend, _("Key carrier"), "", '0 1 0', 1);
+REGISTER_WAYPOINT(KeyCarrierFinish, _("Run here"), "", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierRed, _("Key carrier"), "kh_red_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierBlue, _("Key carrier"), "kh_blue_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierYellow, _("Key carrier"), "kh_yellow_carrying", '0 1 1', 1);
+REGISTER_WAYPOINT(KeyCarrierPink, _("Key carrier"), "kh_pink_carrying", '0 1 1', 1);
 
-REGISTER_WAYPOINT(KaBall, _("Ball"), '0 1 1', 1);
-REGISTER_WAYPOINT(KaBallCarrier, _("Ball carrier"), '1 0 0', 1);
+REGISTER_WAYPOINT(KaBall, _("Ball"), "notify_ballpickedup", '0 1 1', 1);
+REGISTER_WAYPOINT(KaBallCarrier, _("Ball carrier"), "keepawayball_carrying", '1 0 0', 1);
 
-REGISTER_WAYPOINT(NbBall, _("Ball"), '0.91 0.85 0.62', 1);
-REGISTER_WAYPOINT(NbGoal, _("Goal"), '1 0.5 0', 1);
+REGISTER_WAYPOINT(NbBall, _("Ball"), "", '0.91 0.85 0.62', 1);
+REGISTER_WAYPOINT(NbGoal, _("Goal"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(OnsCP, _("Control point"), '1 0.5 0', 1);
-REGISTER_WAYPOINT(OnsCPDefend, _("Control point"), '1 0.5 0', 0.5);
-REGISTER_WAYPOINT(OnsCPAttack, _("Control point"), '1 0.5 0', 2);
-REGISTER_WAYPOINT(OnsGen, _("Generator"), '1 0.5 0', 1);
-REGISTER_WAYPOINT(OnsGenShielded, _("Generator"), '1 0.5 0', 1);
+REGISTER_WAYPOINT(OnsCP, _("Control point"), "", '1 0.5 0', 1);
+REGISTER_WAYPOINT(OnsCPDefend, _("Control point"), "", '1 0.5 0', 0.5);
+REGISTER_WAYPOINT(OnsCPAttack, _("Control point"), "", '1 0.5 0', 2);
+REGISTER_WAYPOINT(OnsGen, _("Generator"), "", '1 0.5 0', 1);
+REGISTER_WAYPOINT(OnsGenShielded, _("Generator"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(Weapon, _("Weapon"), '0 0 0', 1);
+REGISTER_WAYPOINT(Weapon, _("Weapon"), "", '0 0 0', 1);
 
-REGISTER_WAYPOINT(Monster, _("Monster"), '1 0 0', 1);
+REGISTER_WAYPOINT(Monster, _("Monster"), "", '1 0 0', 1);
 
-REGISTER_WAYPOINT(Vehicle, _("Vehicle"), '1 1 1', 1);
-REGISTER_WAYPOINT(VehicleIntruder, _("Intruder!"), '1 1 1', 1);
+REGISTER_WAYPOINT(Vehicle, _("Vehicle"), "", '1 1 1', 1);
+REGISTER_WAYPOINT(VehicleIntruder, _("Intruder!"), "", '1 1 1', 1);
 
-REGISTER_WAYPOINT(Seeker, _("Tagged"), '0.5 1 0', 2);
+REGISTER_WAYPOINT(Seeker, _("Tagged"), "", '0.5 1 0', 2);

@@ -57,6 +57,10 @@ CLASS(Gametype, Object)
     {
         return false;
     }
+    METHOD(Gametype, m_isForcedSupported, bool(Gametype this))
+    {
+        return false;
+    }
 
     METHOD(Gametype, describe, string(Gametype this))
     {
@@ -96,7 +100,7 @@ REGISTRY_CHECK(Gametypes)
 CLASS(Deathmatch, Gametype)
     INIT(Deathmatch)
     {
-        this.gametype_init(this, _("Deathmatch"),"dm","g_dm",false,"","timelimit=20 pointlimit=30 leadlimit=0",_("Score as many frags as you can"));
+        this.gametype_init(this, _("Deathmatch"),"dm","g_dm",false,"","timelimit=15 pointlimit=30 leadlimit=0",_("Score as many frags as you can"));
     }
     METHOD(Deathmatch, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
@@ -181,7 +185,7 @@ REGISTER_GAMETYPE(CTS, NEW(RaceCTS));
 CLASS(TeamDeathmatch, Gametype)
     INIT(TeamDeathmatch)
     {
-        this.gametype_init(this, _("Team Deathmatch"),"tdm","g_tdm",true,"","timelimit=20 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
+        this.gametype_init(this, _("Team Deathmatch"),"tdm","g_tdm",true,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
     }
     METHOD(TeamDeathmatch, m_parse_mapinfo, bool(string k, string v))
     {
@@ -200,6 +204,16 @@ CLASS(TeamDeathmatch, Gametype)
     {
         if(spawnpoints >= 8 && diameter > 4096)
             return true;
+        return false;
+    }
+    METHOD(TeamDeathmatch, m_isForcedSupported, bool(Gametype this))
+    {
+        if(cvar("g_tdm_on_dm_maps"))
+        {
+            // if this is set, all DM maps support TDM too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
         return false;
     }
     METHOD(TeamDeathmatch, m_setTeams, void(string sa))
@@ -479,6 +493,27 @@ CLASS(Invasion, Gametype)
     }
 ENDCLASS(Invasion)
 REGISTER_GAMETYPE(INVASION, NEW(Invasion));
+
+CLASS(Duel, Gametype)
+    INIT(Duel)
+    {
+        this.gametype_init(this, _("Duel"),"duel","g_duel",false,"","timelimit=10 pointlimit=0 leadlimit=0",_("Fight in a one versus one arena battle to decide the winner"));
+    }
+    METHOD(Duel, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return (diameter < 16384);
+    }
+    METHOD(Duel, m_isForcedSupported, bool(Gametype this))
+    {
+        // force all DM maps to work in duel?!
+        // TODO: we should really check the size of maps, some DM maps do not work for duel!
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+            return true;
+        return false;
+    }
+ENDCLASS(Duel)
+REGISTER_GAMETYPE(DUEL, NEW(Duel));
+#define g_duel IS_GAMETYPE(DUEL)
 
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "all.qh"
-#include "item/pickup.qh"
 
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
@@ -22,9 +21,11 @@ const int Inventory_groups_minor = 8; // ceil(Items_MAX / Inventory_groups_major
 #define G_MINOR(id) ((id) % Inventory_groups_minor)
 
 #ifdef CSQC
+Inventory g_inventory;
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
+    g_inventory = this;
     const int majorBits = ReadShort();
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
@@ -81,7 +82,7 @@ void Inventory_Write(Inventory data)
             if (!(minorBits & BIT(j))) { \
                 continue; \
             } \
-            const GameItem it = Items_from(Inventory_groups_minor * maj + j); \
+            const entity it = Items_from(Inventory_groups_minor * maj + j); \
             WriteByte(MSG_ENTITY, data.inv_items[it.m_id]); \
         } \
     } \
@@ -106,7 +107,7 @@ bool Inventory_Send(Inventory this, Client to, int sf)
     TC(Inventory, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     entity e = this.owner;
-    if (IS_SPEC(e)) e = e.enemy;
+    if (IS_SPEC(e)) e = PS(e.enemy); // TODO: how can this *ever* be the case?
     TC(Player, e);
     Inventory data = e.inventory;
     Inventory_Write(data);
@@ -117,7 +118,7 @@ void Inventory_new(entity e)
 {
     Inventory inv = NEW(Inventory), bak = NEW(Inventory);
     inv.inventory = bak;
-    inv.drawonlytoclient = e;
+    inv.drawonlytoclient = IS_CLIENT(e) ? e : e.m_client;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);
 }
 void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }

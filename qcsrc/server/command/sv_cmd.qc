@@ -15,12 +15,12 @@
 #include "../player.qh"
 #include "../g_world.qh"
 #include "../ipban.qh"
-#include "../playerdemo.qh"
 #include "../teamplay.qh"
 
 #include "../bot/api.qh"
 
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
+#include <common/gamemodes/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
@@ -30,13 +30,6 @@
 #include <common/util.qh>
 
 #include <common/monsters/sv_monsters.qh>
-
-
-void PutObserverInServer(entity this);
-
-// =====================================================
-//  Server side game commands code, reworked by Samual
-// =====================================================
 
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think(entity this)
@@ -95,7 +88,7 @@ void changematchtime(float delta, float mi, float ma)
 //  Command Sub-Functions
 // =======================
 
-void GameCommand_adminmsg(float request, float argc)
+void GameCommand_adminmsg(int request, int argc)
 {
 	switch (request)
 	{
@@ -167,7 +160,7 @@ void GameCommand_adminmsg(float request, float argc)
 	}
 }
 
-void GameCommand_allready(float request)
+void GameCommand_allready(int request)
 {
 	switch (request)
 	{
@@ -187,7 +180,7 @@ void GameCommand_allready(float request)
 	}
 }
 
-void GameCommand_allspec(float request, float argc)
+void GameCommand_allspec(int request, int argc)
 {
 	switch (request)
 	{
@@ -216,7 +209,7 @@ void GameCommand_allspec(float request, float argc)
 	}
 }
 
-void GameCommand_anticheat(float request, float argc)
+void GameCommand_anticheat(int request, int argc)
 {
 	switch (request)
 	{
@@ -247,7 +240,7 @@ void GameCommand_anticheat(float request, float argc)
 	}
 }
 
-void GameCommand_bbox(float request)
+void GameCommand_bbox(int request)
 {
 	switch (request)
 	{
@@ -320,7 +313,7 @@ void GameCommand_bbox(float request)
 	}
 }
 
-void GameCommand_bot_cmd(float request, float argc, string command)
+void GameCommand_bot_cmd(int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -452,7 +445,7 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 	}
 }
 
-void GameCommand_cointoss(float request, float argc)
+void GameCommand_cointoss(int request, int argc)
 {
 	switch (request)
 	{
@@ -476,7 +469,7 @@ void GameCommand_cointoss(float request, float argc)
 	}
 }
 
-void GameCommand_database(float request, float argc)
+void GameCommand_database(int request, int argc)
 {
 	switch (request)
 	{
@@ -519,7 +512,7 @@ void GameCommand_database(float request, float argc)
 	}
 }
 
-void GameCommand_defer_clear(float request, float argc)
+void GameCommand_defer_clear(int request, int argc)
 {
 	switch (request)
 	{
@@ -556,14 +549,14 @@ void GameCommand_defer_clear(float request, float argc)
 	}
 }
 
-void GameCommand_defer_clear_all(float request)
+void GameCommand_defer_clear_all(int request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			int n = 0;
-			float argc;
+			int argc;
 
 			FOREACH_CLIENT(true, {
 				argc = tokenize_console(strcat("defer_clear ", ftos(etof(it))));
@@ -585,7 +578,7 @@ void GameCommand_defer_clear_all(float request)
 	}
 }
 
-void GameCommand_delrec(float request, float argc)  // perhaps merge later with records and printstats and such?
+void GameCommand_delrec(int request, int argc)  // perhaps merge later with records and printstats and such?
 {
 	switch (request)
 	{
@@ -612,7 +605,7 @@ void GameCommand_delrec(float request, float argc)  // perhaps merge later with 
 	}
 }
 
-void GameCommand_effectindexdump(float request)
+void GameCommand_effectindexdump(int request)
 {
 	switch (request)
 	{
@@ -726,7 +719,7 @@ void GameCommand_effectindexdump(float request)
 	}
 }
 
-void GameCommand_extendmatchtime(float request)
+void GameCommand_extendmatchtime(int request)
 {
 	switch (request)
 	{
@@ -747,7 +740,7 @@ void GameCommand_extendmatchtime(float request)
 	}
 }
 
-void GameCommand_gametype(float request, float argc)
+void GameCommand_gametype(int request, int argc)
 {
 	switch (request)
 	{
@@ -797,7 +790,7 @@ void GameCommand_gametype(float request, float argc)
 	}
 }
 
-void GameCommand_gettaginfo(float request, float argc)
+void GameCommand_gettaginfo(int request, int argc)
 {
 	switch (request)
 	{
@@ -862,7 +855,7 @@ void GameCommand_gettaginfo(float request, float argc)
 	}
 }
 
-void GameCommand_animbench(float request, float argc)
+void GameCommand_animbench(int request, int argc)
 {
 	switch (request)
 	{
@@ -921,7 +914,7 @@ void GameCommand_animbench(float request, float argc)
 	}
 }
 
-void GameCommand_gotomap(float request, float argc)
+void GameCommand_gotomap(int request, int argc)
 {
 	switch (request)
 	{
@@ -946,7 +939,7 @@ void GameCommand_gotomap(float request, float argc)
 	}
 }
 
-void GameCommand_lockteams(float request)
+void GameCommand_lockteams(int request)
 {
 	switch (request)
 	{
@@ -975,7 +968,7 @@ void GameCommand_lockteams(float request)
 	}
 }
 
-void GameCommand_make_mapinfo(float request)
+void GameCommand_make_mapinfo(int request)
 {
 	switch (request)
 	{
@@ -1001,7 +994,7 @@ void GameCommand_make_mapinfo(float request)
 	}
 }
 
-void GameCommand_moveplayer(float request, float argc)
+void GameCommand_moveplayer(int request, int argc)
 {
 	switch (request)
 	{
@@ -1059,11 +1052,12 @@ void GameCommand_moveplayer(float request, float argc)
 							{
 								// set up
 								float team_id;
-								float save = client.team_forced;
-								client.team_forced = 0;
+								int save = Player_GetForcedTeamIndex(client);
+								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 
 								// find the team to move the player to
 								team_id = Team_ColorToTeam(destination);
+								entity balance;
 								if (team_id == client.team)  // already on the destination team
 								{
 									// keep the forcing undone
@@ -1072,30 +1066,72 @@ void GameCommand_moveplayer(float request, float argc)
 								}
 								else if (team_id == 0)  // auto team
 								{
-									CheckAllowedTeams(client);
-									team_id = Team_NumberToTeam(FindSmallestTeam(client, false));
+									balance = TeamBalance_CheckAllowedTeams(client);
+									team_id = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
 								}
 								else
 								{
-									CheckAllowedTeams(client);
+									balance = TeamBalance_CheckAllowedTeams(client);
 								}
-								client.team_forced = save;
+								Player_SetForcedTeamIndex(client, save);
 
 								// Check to see if the destination team is even available
 								switch (team_id)
 								{
-									case NUM_TEAM_1: if (c1 == -1) { LOG_INFO("Sorry, can't move player to red team if it doesn't exist."); return; } break;
-									case NUM_TEAM_2: if (c2 == -1) { LOG_INFO("Sorry, can't move player to blue team if it doesn't exist."); return; } break;
-									case NUM_TEAM_3: if (c3 == -1) { LOG_INFO("Sorry, can't move player to yellow team if it doesn't exist."); return; } break;
-									case NUM_TEAM_4: if (c4 == -1) { LOG_INFO("Sorry, can't move player to pink team if it doesn't exist."); return; } break;
-
-									default: LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
+									case NUM_TEAM_1:
+									{
+										if (!TeamBalance_IsTeamAllowed(balance, 1))
+										{
+											LOG_INFO("Sorry, can't move player to red team if it doesn't exist.");
+											TeamBalance_Destroy(balance);
+											return;
+										}
+										TeamBalance_Destroy(balance);
+										break;
+									}
+									case NUM_TEAM_2:
+									{
+										if (!TeamBalance_IsTeamAllowed(balance, 2))
+										{
+											LOG_INFO("Sorry, can't move player to blue team if it doesn't exist.");
+											TeamBalance_Destroy(balance);
+											return;
+										}
+										TeamBalance_Destroy(balance);
+										break;
+									}
+									case NUM_TEAM_3:
+									{
+										if (!TeamBalance_IsTeamAllowed(balance, 3))
+										{
+											LOG_INFO("Sorry, can't move player to yellow team if it doesn't exist.");
+											TeamBalance_Destroy(balance);
+											return;
+										}
+										TeamBalance_Destroy(balance);
+										break;
+									}
+									case NUM_TEAM_4:
+									{
+										if (!TeamBalance_IsTeamAllowed(balance, 4))
+										{
+											LOG_INFO("Sorry, can't move player to pink team if it doesn't exist.");
+											TeamBalance_Destroy(balance);
+											return;
+										}
+										TeamBalance_Destroy(balance);
+										break;
+									}
+									default:
+									{
+										LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
 										return;
+									}
 								}
 
 								// If so, lets continue and finally move the player
-								client.team_forced = 0;
-								if (MoveToTeam(client, team_id, 6))
+								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
+								if (MoveToTeam(client, Team_TeamToIndex(team_id), 6))
 								{
 									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
 									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
@@ -1143,7 +1179,7 @@ void GameCommand_moveplayer(float request, float argc)
 	}
 }
 
-void GameCommand_nospectators(float request)
+void GameCommand_nospectators(int request)
 {
 	switch (request)
 	{
@@ -1172,87 +1208,7 @@ void GameCommand_nospectators(float request)
 	}
 }
 
-void GameCommand_playerdemo(float request, float argc)
-{
-	switch (request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if (argv(2) && argv(3))
-			{
-				entity client;
-				float i, n, accepted;
-
-				switch (argv(1))
-				{
-					case "read":
-					{
-						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, false, true);
-
-						if (accepted <= 0)
-						{
-							LOG_INFO("playerdemo: read: ", GetClientErrorString(accepted, argv(2)), ".");
-							return;
-						}
-
-						playerdemo_open_read(client, argv(next_token));
-						return;
-					}
-
-					case "write":
-					{
-						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, false, false);
-
-						if (accepted <= 0)
-						{
-							LOG_INFO("playerdemo: write: ", GetClientErrorString(accepted, argv(2)), ".");
-							return;
-						}
-
-						playerdemo_open_write(client, argv(next_token));
-						return;
-					}
-
-					case "auto_read_and_write":
-					{
-						n = GetFilteredNumber(argv(3));
-						cvar_set("bot_number", ftos(n));
-
-						localcmd("wait; wait; wait\n");
-						for (i = 0; i < n; ++i)
-							localcmd("sv_cmd playerdemo read ", ftos(i + 2), " ", argv(2), ftos(i + 1), "\n");
-						localcmd("sv_cmd playerdemo write 1 ", ftos(n + 1), "\n");
-						return;
-					}
-
-					case "auto_read":
-					{
-						n = GetFilteredNumber(argv(3));
-						cvar_set("bot_number", ftos(n));
-
-						localcmd("wait; wait; wait\n");
-						for (i = 0; i < n; ++i)
-							localcmd("sv_cmd playerdemo read ", ftos(i + 2), " ", argv(2), ftos(i + 1), "\n");
-						return;
-					}
-				}
-			}
-		}
-
-		default:
-			LOG_INFO("Incorrect parameters for ^2playerdemo^7");
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFO("Usage:^3 sv_cmd playerdemo command (entitynumber filename | entitynumber botnumber)");
-			LOG_INFO("  Full list of commands here: \"read, write, auto_read_and_write, auto_read.\"");
-			return;
-		}
-	}
-}
-
-void GameCommand_printstats(float request)
+void GameCommand_printstats(int request)
 {
 	switch (request)
 	{
@@ -1273,7 +1229,7 @@ void GameCommand_printstats(float request)
 	}
 }
 
-void GameCommand_radarmap(float request, float argc)
+void GameCommand_radarmap(int request, int argc)
 {
 	switch (request)
 	{
@@ -1295,7 +1251,7 @@ void GameCommand_radarmap(float request, float argc)
 	}
 }
 
-void GameCommand_reducematchtime(float request)
+void GameCommand_reducematchtime(int request)
 {
 	switch (request)
 	{
@@ -1316,7 +1272,7 @@ void GameCommand_reducematchtime(float request)
 	}
 }
 
-void GameCommand_setbots(float request, float argc)
+void GameCommand_setbots(int request, int argc)
 {
 	switch (request)
 	{
@@ -1343,7 +1299,7 @@ void GameCommand_setbots(float request, float argc)
 	}
 }
 
-void GameCommand_shuffleteams(float request)
+void GameCommand_shuffleteams(int request)
 {
 	switch (request)
 	{
@@ -1356,7 +1312,7 @@ void GameCommand_shuffleteams(float request)
 			}
 
 			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
-				if (it.team_forced) {
+				if (Player_HasRealForcedTeam(it)) {
 					// we could theoretically assign forced players to their teams
 					// and shuffle the rest to fill the empty spots but in practise
 					// either all players or none are gonna have forced teams
@@ -1366,16 +1322,23 @@ void GameCommand_shuffleteams(float request)
 			});
 
 			int number_of_teams = 0;
-			CheckAllowedTeams(NULL);
-			if (c1 >= 0) number_of_teams = max(1, number_of_teams);
-			if (c2 >= 0) number_of_teams = max(2, number_of_teams);
-			if (c3 >= 0) number_of_teams = max(3, number_of_teams);
-			if (c4 >= 0) number_of_teams = max(4, number_of_teams);
+			entity balance = TeamBalance_CheckAllowedTeams(NULL);
+			for (int i = 1; i <= NUM_TEAMS; ++i)
+			{
+				if (TeamBalance_IsTeamAllowed(balance, i))
+				{
+					number_of_teams = max(i, number_of_teams);
+				}
+			}
+			TeamBalance_Destroy(balance);
 
 			int team_index = 0;
 			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
-				int target_team_number = Team_NumberToTeam(team_index + 1);
-				if (it.team != target_team_number) MoveToTeam(it, target_team_number, 6);
+				int target_team_index = team_index + 1;
+				if (Entity_GetTeamIndex(it) != target_team_index)
+				{
+					MoveToTeam(it, target_team_index, 6);
+				}
 				team_index = (team_index + 1) % number_of_teams;
 			});
 
@@ -1394,7 +1357,7 @@ void GameCommand_shuffleteams(float request)
 	}
 }
 
-void GameCommand_stuffto(float request, float argc)
+void GameCommand_stuffto(int request, int argc)
 {
 	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
 	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
@@ -1443,7 +1406,7 @@ void GameCommand_stuffto(float request, float argc)
 #endif
 }
 
-void GameCommand_trace(float request, float argc)
+void GameCommand_trace(int request, int argc)
 {
 	switch (request)
 	{
@@ -1574,11 +1537,16 @@ void GameCommand_trace(float request, float argc)
 
 				case "walk":
 				{
-					if (argc == 4)
+					if (argc == 4 || argc == 5)
 					{
 						e = nextent(NULL);
-						if (tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), MOVE_NORMAL)) LOG_INFO("can walk");
-						else LOG_INFO("cannot walk");
+						int dphitcontentsmask_save = e.dphitcontentsmask;
+						e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+						if (tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), stof(argv(4)), MOVE_NORMAL))
+							LOG_INFO("can walk");
+						else
+							LOG_INFO("cannot walk");
+						e.dphitcontentsmask = dphitcontentsmask_save;
 						return;
 					}
 				}
@@ -1604,7 +1572,9 @@ void GameCommand_trace(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2trace^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd trace command (startpos endpos)");
+			LOG_INFO("Usage:^3 sv_cmd trace command [startpos endpos] [endpos_height]");
+			LOG_INFO("  Where startpos and endpos are parameters for 'walk' and 'showline' commands,");
+			LOG_INFO("  'endpos_height' is an optional parameter for 'walk' command,");
 			LOG_INFO("  Full list of commands here: \"debug, debug2, walk, showline.\"");
 			LOG_INFO("See also: ^2bbox, gettaginfo^7");
 			return;
@@ -1612,7 +1582,7 @@ void GameCommand_trace(float request, float argc)
 	}
 }
 
-void GameCommand_unlockteams(float request)
+void GameCommand_unlockteams(int request)
 {
 	switch (request)
 	{
@@ -1641,7 +1611,7 @@ void GameCommand_unlockteams(float request)
 	}
 }
 
-void GameCommand_warp(float request, float argc)
+void GameCommand_warp(int request, int argc)
 {
 	switch (request)
 	{
@@ -1680,7 +1650,7 @@ void GameCommand_warp(float request, float argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void GameCommand_(float request)
+void GameCommand_(int request)
 {
     switch(request)
     {
@@ -1728,7 +1698,6 @@ SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter te
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
 SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
-SERVER_COMMAND(playerdemo, "Control the ability to save demos of players") { GameCommand_playerdemo(request, arguments); }
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
@@ -1744,7 +1713,7 @@ void GameCommand_macro_help()
 	FOREACH(SERVER_COMMANDS, true, { LOG_INFOF("  ^2%s^7: %s", it.m_name, it.m_description); });
 }
 
-float GameCommand_macro_command(float argc, string command)
+float GameCommand_macro_command(int argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, {
@@ -1754,7 +1723,7 @@ float GameCommand_macro_command(float argc, string command)
 	return false;
 }
 
-float GameCommand_macro_usage(float argc)
+float GameCommand_macro_usage(int argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, {
@@ -1777,7 +1746,7 @@ void GameCommand_macro_write_aliases(float fh)
 
 void GameCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4

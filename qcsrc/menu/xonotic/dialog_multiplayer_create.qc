@@ -27,16 +27,8 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 	// clear old values
 	for(i = 0; i < e.nValues; ++i);
 	{
-		if(e.(valueStrings[i]))
-		{
-			strunzone(e.(valueStrings[i]));
-			e.(valueStrings[i]) = string_null;
-		}
-		if(e.(valueIdentifiers[i]))
-		{
-			strunzone(e.(valueIdentifiers[i]));
-			e.(valueIdentifiers[i]) = string_null;
-		}
+		strfree(e.(valueStrings[i]));
+		strfree(e.(valueIdentifiers[i]));
 	}
 	e.clearValues(e);
 

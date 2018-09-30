@@ -48,10 +48,10 @@ void generator_draw(entity this)
 	if(time < this.move_time)
 		return;
 
-	if(this.health > 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) > 0)
 	{
 		// damaged fx (less probable the more damaged is the generator)
-		if(random() < 0.9 - this.health / this.max_health)
+		if(random() < 0.9 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health)
 		if(random() < 0.01)
 		{
 			pointparticles(EFFECT_ELECTRO_BALLEXPLODE, this.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
@@ -192,12 +192,10 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 
 	if(sf & GSF_SETUP)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.health = ReadByte();
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, ReadByte());
 		this.max_health = ReadByte();
 		this.count = ReadByte();
 		this.team = ReadByte();
@@ -221,9 +219,9 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 
 		_tmp = ReadByte();
 
-		if(_tmp != this.health)
+		if(_tmp != GetResourceAmount(this, RESOURCE_HEALTH))
 			generator_damage(this, _tmp);
 
-		this.health = _tmp;
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, _tmp);
 	}
 }

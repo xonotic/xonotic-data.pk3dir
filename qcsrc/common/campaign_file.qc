@@ -52,8 +52,6 @@ float CampaignFile_Load(int offset, float n)
 		a = ""; \
 	else \
 		++i
-// What you're seeing here is what people will do when your compiler supports
-// C-style macros but no line continuations.
 
 				i = -1; // starts at -1 so I don't need postincrement; that is, i points to BEFORE the current arg!
 				CAMPAIGN_GETARG; campaign_gametype[campaign_entries] = strzone(a);
@@ -88,16 +86,15 @@ void CampaignFile_Unload()
 {
 	if(campaign_title)
 	{
-		strunzone(campaign_title);
+		strfree(campaign_title);
 		for(int i = 0; i < campaign_entries; ++i)
 		{
-			strunzone(campaign_gametype[i]);
-			strunzone(campaign_mapname[i]);
-			strunzone(campaign_mutators[i]);
-			strunzone(campaign_shortdesc[i]);
-			strunzone(campaign_longdesc[i]);
+			strfree(campaign_gametype[i]);
+			strfree(campaign_mapname[i]);
+			strfree(campaign_mutators[i]);
+			strfree(campaign_shortdesc[i]);
+			strfree(campaign_longdesc[i]);
 		}
 		campaign_entries = 0;
-		campaign_title = string_null;
 	}
 }

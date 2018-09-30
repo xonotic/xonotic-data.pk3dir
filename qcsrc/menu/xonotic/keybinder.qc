@@ -34,7 +34,7 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+jump"                                 , _("jump / swim"));
 	KEYBIND_DEF("+crouch"                               , _("crouch / sink"));
 	KEYBIND_DEF("+hook"                                 , _("off-hand hook"));
-	KEYBIND_DEF("+jetpack"                              , _("jet pack"));
+	KEYBIND_DEF("+jetpack"                              , _("jetpack"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("Attacking"));
 	KEYBIND_DEF("+fire"                                 , _("primary fire"));
@@ -246,12 +246,8 @@ void XonoticKeyBinder_destroy(entity me)
 
 	for(int i = 0; i < MAX_KEYBINDS; ++i)
 	{
-		if(Xonotic_KeyBinds_Functions[i])
-			strunzone(Xonotic_KeyBinds_Functions[i]);
-		Xonotic_KeyBinds_Functions[i] = string_null;
-		if(Xonotic_KeyBinds_Descriptions[i])
-			strunzone(Xonotic_KeyBinds_Descriptions[i]);
-		Xonotic_KeyBinds_Descriptions[i] = string_null;
+		strfree(Xonotic_KeyBinds_Functions[i]);
+		strfree(Xonotic_KeyBinds_Descriptions[i]);
 	}
 	Xonotic_KeyBinds_Count = 0;
 }

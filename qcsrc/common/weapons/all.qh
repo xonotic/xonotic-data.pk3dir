@@ -304,7 +304,6 @@ STATIC_INIT(register_weapons_done)
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
         if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
-        it.weapons = set;
         if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)
@@ -359,6 +358,17 @@ ENUMCLASS_END(WFRAME)
 
 .WFRAME wframe;
 
+#ifdef SVQC
+    #define G_SHOOTFROMFIXEDORIGIN autocvar_g_shootfromfixedorigin
+#elif defined(CSQC)
+    string autocvar_cl_shootfromfixedorigin;
+    #define G_SHOOTFROMFIXEDORIGIN autocvar_cl_shootfromfixedorigin
+#endif
+
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
+
+#ifdef SVQC
+void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
+#endif
 #endif

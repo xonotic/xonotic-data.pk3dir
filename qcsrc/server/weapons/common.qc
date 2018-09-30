@@ -10,13 +10,27 @@
 #include <common/state.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <common/wepent.qh>
 #include <common/items/_mod.qh>
+
+bool W_DualWielding(entity player)
+{
+	int held_weapons = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(player.(weaponentity) && player.(weaponentity).m_switchweapon != WEP_Null)
+			++held_weapons;
+	}
+
+	return held_weapons > 1;
+}
 
 void W_GiveWeapon(entity e, int wep)
 {
 	if (!wep) return;
 
-	e.weapons |= WepSet_FromWeapon(Weapons_from(wep));
+	STAT(WEAPONS, e) |= WepSet_FromWeapon(Weapons_from(wep));
 
 	if (IS_PLAYER(e)) {
 	    Send_Notification(NOTIF_ONE, e, MSG_MULTI, ITEM_WEAPON_GOT, wep);

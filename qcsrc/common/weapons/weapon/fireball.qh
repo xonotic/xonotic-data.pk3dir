@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(Fireball, Weapon)
-/* ammotype  */ //ATTRIB(Fireball, ammo_field, .int, ammo_none);
+/* spawnfunc */ ATTRIB(Fireball, m_canonical_spawnfunc, string, "weapon_fireball");
+/* ammotype  */ //ATTRIB(Fireball, ammo_type, int, RESOURCE_NONE);
 /* impulse   */ ATTRIB(Fireball, impulse, int, 9);
 /* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, 5000);
@@ -52,6 +53,8 @@ CLASS(Fireball, Weapon)
 
 ENDCLASS(Fireball)
 REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
+
+SPAWNFUNC_WEAPON(weapon_fireball, WEP_FIREBALL)
 
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is

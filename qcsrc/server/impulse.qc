@@ -1,11 +1,10 @@
 #include "impulse.qh"
 #include "round_handler.qh"
 
-#include "bot/api.qh"
-
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "cheats.qh"
+#include "clientkill.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
@@ -343,8 +342,9 @@ IMPULSE(weapon_reload)
 		Weapon w = this.(weaponentity).m_weapon;
 		w.wr_reload(w, actor, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
-			break;
+		// allow reloading all active slots?
+		//if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			//break;
 	}
 }
 
@@ -569,220 +569,4 @@ IMPULSE(waypoint_clear)
 			ClientKill(this);
 	}
 	sprint(this, "all waypoints cleared\n");
-}
-
-vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
-{
-	vector new_org = org;
-	if (fabs(autocvar_g_waypointeditor_symmetrical) == 1)
-	{
-		vector map_center = havocbot_middlepoint;
-		if (autocvar_g_waypointeditor_symmetrical == -1)
-			map_center = autocvar_g_waypointeditor_symmetrical_origin;
-
-		new_org = Rotate(org - map_center, 360 * DEG2RAD / ctf_flags) + map_center;
-	}
-	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
-	{
-		float m = havocbot_symmetryaxis_equation.x;
-		float q = havocbot_symmetryaxis_equation.y;
-		if (autocvar_g_waypointeditor_symmetrical == -2)
-		{
-			m = autocvar_g_waypointeditor_symmetrical_axis.x;
-			q = autocvar_g_waypointeditor_symmetrical_axis.y;
-		}
-
-		new_org.x = (1 / (1 + m*m)) * ((1 - m*m) * org.x + 2 * m * org.y - 2 * m * q);
-		new_org.y = (1 / (1 + m*m)) * (2 * m * org.x + (m*m - 1) * org.y + 2 * q);
-	}
-	new_org.z = org.z;
-	return new_org;
-}
-
-IMPULSE(navwaypoint_spawn)
-{
-	if (!autocvar_g_waypointeditor) return;
-	entity e;
-	vector org = this.origin;
-	int ctf_flags = havocbot_symmetryaxis_equation.z;
-	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
-	           || (autocvar_g_waypointeditor_symmetrical < 0));
-	int order = ctf_flags;
-	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
-	{
-		order = autocvar_g_waypointeditor_symmetrical_order;
-		ctf_flags = order;
-	}
-
-	LABEL(add_wp);
-	e = waypoint_spawn(org, org, 0);
-	waypoint_schedulerelink(e);
-	bprint(strcat("Waypoint spawned at ", vtos(org), "\n"));
-	if(sym)
-	{
-		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
-		if (vdist(org - this.origin, >, 32))
-		{
-			if(order > 2)
-				order--;
-			else
-				sym = false;
-			goto add_wp;
-		}
-	}
-}
-
-IMPULSE(navwaypoint_remove)
-{
-	if (!autocvar_g_waypointeditor) return;
-	entity e = navigation_findnearestwaypoint(this, false);
-	int ctf_flags = havocbot_symmetryaxis_equation.z;
-	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
-	           || (autocvar_g_waypointeditor_symmetrical < 0));
-	int order = ctf_flags;
-	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
-	{
-		order = autocvar_g_waypointeditor_symmetrical_order;
-		ctf_flags = order;
-	}
-
-	LABEL(remove_wp);
-	if (!e) return;
-	if (e.wpflags & WAYPOINTFLAG_GENERATED) return;
-
-	if (e.wphardwired)
-	{
-		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired");
-		return;
-	}
-
-	entity wp_sym = NULL;
-	if (sym)
-	{
-		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
-		IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_GENERATED), {
-			if(vdist(org - it.origin, <, 3))
-			{
-				wp_sym = it;
-				break;
-			}
-		});
-	}
-	bprint(strcat("Waypoint removed at ", vtos(e.origin), "\n"));
-	waypoint_remove(e);
-	if (sym && wp_sym)
-	{
-		e = wp_sym;
-		if(order > 2)
-			order--;
-		else
-			sym = false;
-		goto remove_wp;
-	}
-}
-
-IMPULSE(navwaypoint_relink)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_schedulerelinkall();
-}
-
-IMPULSE(navwaypoint_save)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_saveall();
-}
-
-IMPULSE(navwaypoint_unreachable)
-{
-	if (!autocvar_g_waypointeditor) return;
-	IL_EACH(g_waypoints, true,
-	{
-		it.colormod = '0.5 0.5 0.5';
-		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
-	});
-	entity e2 = navigation_findnearestwaypoint(this, false);
-	navigation_markroutes(this, e2);
-
-	int j, m;
-
-	j = 0;
-	m = 0;
-	IL_EACH(g_waypoints, it.wpcost >= 10000000,
-	{
-		LOG_INFO("unreachable: ", etos(it), " ", vtos(it.origin));
-		it.colormod_z = 8;
-		it.effects |= EF_NODEPTHTEST | EF_BLUE;
-		++j;
-		++m;
-	});
-	if (j) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)", j);
-	navigation_markroutes_inverted(e2);
-
-	j = 0;
-	IL_EACH(g_waypoints, it.wpcost >= 10000000,
-	{
-		LOG_INFO("cannot reach me: ", etos(it), " ", vtos(it.origin));
-		it.colormod_x = 8;
-		if (!(it.effects & EF_NODEPTHTEST))  // not already reported before
-			++m;
-		it.effects |= EF_NODEPTHTEST | EF_RED;
-		++j;
-	});
-	if (j) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)", j);
-	if (m) LOG_INFOF("%d waypoints have been marked total", m);
-
-	j = 0;
-	IL_EACH(g_spawnpoints, true,
-	{
-		vector org = it.origin;
-		tracebox(it.origin, PL_MIN_CONST, PL_MAX_CONST, it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
-		setorigin(it, trace_endpos);
-		if (navigation_findnearestwaypoint(it, false))
-		{
-			setorigin(it, org);
-			it.effects &= ~EF_NODEPTHTEST;
-			it.model = "";
-		}
-		else
-		{
-			setorigin(it, org);
-			LOG_INFO("spawn without waypoint: ", etos(it), " ", vtos(it.origin));
-			it.effects |= EF_NODEPTHTEST;
-			_setmodel(it, this.model);
-			it.frame = this.frame;
-			it.skin = this.skin;
-			it.colormod = '8 0.5 8';
-			setsize(it, '0 0 0', '0 0 0');
-			++j;
-		}
-	});
-	if (j) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)", j);
-
-	j = 0;
-	IL_EACH(g_items, true,
-	{
-		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
-		it.colormod = '0.5 0.5 0.5';
-	});
-	IL_EACH(g_items, true,
-	{
-		if (navigation_findnearestwaypoint(it, false)) continue;
-		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin));
-		it.effects |= EF_NODEPTHTEST | EF_RED;
-		it.colormod_x = 8;
-		++j;
-	});
-	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)", j);
-
-	j = 0;
-	IL_EACH(g_items, true,
-	{
-		if (navigation_findnearestwaypoint(it, true)) continue;
-		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin));
-		it.effects |= EF_NODEPTHTEST | EF_BLUE;
-		it.colormod_z = 8;
-		++j;
-	});
-	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)", j);
 }

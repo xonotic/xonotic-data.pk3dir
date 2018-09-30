@@ -55,7 +55,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_GameReport_AddTeam(float t)
+void PlayerStats_GameReport_AddTeam(int t)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
@@ -93,7 +93,6 @@ void PlayerStats_GameReport_AddEvent(string event_id)
 	}
 }
 
-// referred to by PS_GR_P_ADDVAL and PS_GR_T_ADDVAL
 float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 {
 	if((prefix == "") || PS_GR_OUT_DB < 0) { return 0; }
@@ -108,7 +107,8 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 void PlayerStats_GameReport_Accuracy(entity p)
 {
 	#define ACCMAC(suffix, field) \
-		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
+		PlayerStats_GameReport_Event_Player(p, \
+			sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
 	FOREACH(Weapons, it != WEP_Null, {
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
@@ -126,7 +126,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	// add global info!
 	if(p.alivetime)
 	{
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
 		p.alivetime = 0;
 	}
 
@@ -139,7 +139,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 		db_put(PS_GR_OUT_DB, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
 	if(stof(db_get(PS_GR_OUT_DB, sprintf("%s:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_JOINS, 1);
+		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_GameReport_Accuracy(p);
 	anticheat_report_to_playerstats(p);
@@ -149,15 +149,15 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 		if(CS(p).latency_cnt)
 		{
 			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
-			if(latency) { PS_GR_P_ADDVAL(p, PLAYERSTATS_AVGLATENCY, latency); }
+			if(latency)
+				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
 	}
 
-	strunzone(p.playerstats_id);
-	p.playerstats_id = string_null;
+	strfree(p.playerstats_id);
 }
 
-void PlayerStats_GameReport(float finished)
+void PlayerStats_GameReport(bool finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
@@ -167,16 +167,16 @@ void PlayerStats_GameReport(float finished)
 
 	FOREACH_CLIENT(true, {
 		// add personal score rank
-		PS_GR_P_ADDVAL(it, PLAYERSTATS_RANK, it.score_dummyfield);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_RANK, it.score_dummyfield);
 
 		// scoreboard data
 		if(it.scoreboard_pos)
 		{
 			// scoreboard is valid!
-			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
+			PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
 
 			// add scoreboard position
-			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_POS, it.scoreboard_pos);
+			PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_SCOREBOARD_POS, it.scoreboard_pos);
 
 			// add scoreboard data
 			PlayerScore_PlayerStats(it);
@@ -184,8 +184,8 @@ void PlayerStats_GameReport(float finished)
 			// if the match ended normally, add winning info
 			if(finished)
 			{
-				PS_GR_P_ADDVAL(it, PLAYERSTATS_WINS, it.winning);
-				PS_GR_P_ADDVAL(it, PLAYERSTATS_MATCHES, 1);
+				PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_WINS, it.winning);
+				PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_MATCHES, 1);
 			}
 		}
 
@@ -258,6 +258,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 }
 
 // this... is a hack, a temporary one until we get a proper duel gametype
+// TODO: remove duel hack after servers have migrated to the proper duel gametype!
 string PlayerStats_GetGametype()
 {
 	if(IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2)

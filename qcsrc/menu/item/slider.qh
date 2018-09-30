@@ -10,7 +10,7 @@ CLASS(Slider, Label)
 	METHOD(Slider, draw, void(entity));
 	METHOD(Slider, keyDown, float(entity, float, float, float));
 	METHOD(Slider, keyUp, float(entity, float, float, float));
-	METHOD(Slider, mousePress, float(entity, vector));
+	METHOD(Slider, mousePress, bool(Slider this, vector pos));
 	METHOD(Slider, mouseDrag, float(entity, vector));
 	METHOD(Slider, mouseRelease, float(entity, vector));
 	METHOD(Slider, valueToText, string(entity, float));
@@ -39,7 +39,7 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, pressed, float, 0);
 	ATTRIB(Slider, pressOffset, float, 0);
 	ATTRIB(Slider, previousValue, float, 0);
-	ATTRIB(Slider, tolerance, vector, '0 0 0');
+	ATTRIB(Slider, tolerance, vector, '0 0 0'); // drag tolerance
 	ATTRIB(Slider, disabled, float, 0);
 	ATTRIB(Slider, color, vector, '1 1 1');
 	ATTRIB(Slider, color2, vector, '1 1 1');

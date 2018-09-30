@@ -11,8 +11,6 @@ REGISTRY_CHECK(Deathtypes)
 .entity death_msgmurder;
 .string death_msgextra;
 
-int dt_identity(int i) { return i; }
-
 #define REGISTER_DEATHTYPE(id, msg_death, msg_death_by, extra) \
     REGISTER(Deathtypes, DEATH, id, m_id, new_pure(deathtype)) { \
         this.m_id += DT_FIRST; \
@@ -27,10 +25,10 @@ const int HITTYPE_SECONDARY = BITS(1) << 8;
 /** automatically set by RadiusDamage */
 const int HITTYPE_SPLASH = BITS(1) << 9;
 const int HITTYPE_BOUNCE = BITS(1) << 10;
+const int HITTYPE_ARMORPIERCE = BITS(1) << 11;
 // unused yet
-const int HITTYPE_RESERVED = BITS(1) << 11;
-const int HITTYPE_RESERVED2 = BITS(1) << 12;
-const int DEATH_HITTYPEMASK = HITTYPE_SECONDARY | HITTYPE_SPLASH | HITTYPE_BOUNCE | HITTYPE_RESERVED | HITTYPE_RESERVED2;
+const int HITTYPE_RESERVED = BITS(1) << 12;
+const int DEATH_HITTYPEMASK = HITTYPE_SECONDARY | HITTYPE_SPLASH | HITTYPE_BOUNCE | HITTYPE_ARMORPIERCE | HITTYPE_RESERVED;
 // normal deaths begin
 const int DT_FIRST = BIT(13);
 

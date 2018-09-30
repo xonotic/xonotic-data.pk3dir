@@ -8,7 +8,6 @@
 #include "weaponsystem.qh"
 
 #include "../g_damage.qh"
-#include "../g_subs.qh"
 #include "../antilag.qh"
 
 #include <common/constants.qh>
@@ -16,6 +15,7 @@
 #include <common/util.qh>
 
 #include <common/weapons/_all.qh>
+#include <common/wepent.qh>
 #include <common/state.qh>
 
 #include <lib/warpzone/common.qh>
@@ -23,14 +23,15 @@
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range, int deathtype)
 {
 	TC(Sound, snd);
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid = ent.dphitcontentsmask;
+	Weapon wep = DEATH_WEAPONOF(deathtype);
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
-	if (IS_PLAYER(ent) && (ent.(weaponentity).m_weapon.spawnflags & WEP_FLAG_PENETRATEWALLS))
+	if (IS_PLAYER(ent) && (wep.spawnflags & WEP_FLAG_PENETRATEWALLS))
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -56,10 +57,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
-		accuracy_add(ent, ent.(weaponentity).m_weapon.m_id, maxdamage, 0);
+		accuracy_add(ent, wep.m_id, maxdamage, 0);
 
 	if(IS_PLAYER(ent))
-		W_HitPlotAnalysis(ent, weaponentity, v_forward, v_right, v_up);
+		W_HitPlotAnalysis(ent, wep, v_forward, v_right, v_up);
 
 	vector md = ent.(weaponentity).movedir;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
@@ -79,7 +80,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
-	w_shotdir = normalize(w_shotend - w_shotorg);
+	if(W_DualWielding(ent))
+		w_shotdir = s_forward;
+	else
+		w_shotdir = normalize(w_shotend - w_shotorg);
 
 	//vector prevdir = w_shotdir;
 	//vector prevorg = w_shotorg;
@@ -134,7 +138,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != SND_Null) {
-		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+		sound(ent, chan, snd, (W_DualWielding(ent) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 
@@ -302,7 +306,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 		// apply the damage
 		if (it.takedamage)
-			Damage (it, this, this, bdamage * foff, deathtype, hitloc, it.railgunforce * ffs);
+			Damage (it, this, this, bdamage * foff, deathtype, weaponentity, hitloc, it.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin(explosion, hitloc);
@@ -332,7 +336,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
 {
 	vector  end;
 
@@ -340,15 +344,10 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
+	fireBullet_trace_callback_eff = tracer_effect;
+
 	float solid_penetration_left = 1;
 	float total_damage = 0;
-
-	if(tracereffects & EF_RED)
-		fireBullet_trace_callback_eff = EFFECT_RIFLE;
-	else if(tracereffects & EF_BLUE)
-		fireBullet_trace_callback_eff = EFFECT_RIFLE_WEAK;
-	else
-		fireBullet_trace_callback_eff = EFFECT_BULLET;
 
 	float lag = ((IS_REAL_CLIENT(this)) ? ANTILAG_LATENCY(this) : 0);
 	if(lag < 0.001)
@@ -357,13 +356,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_takeback(it, CS(it), time - lag));
-		IL_EACH(g_monsters, it != this,
-		{
-			antilag_takeback(it, it, time - lag);
-		});
-	}
+		antilag_takeback_all(this, lag);
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
 	int oldsolid = this.dphitcontentsmask;
@@ -420,10 +413,10 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			yoda = 0;
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
-			float g = accuracy_isgooddamage(this, hit);
-			Damage(hit, this, this, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
+			bool gooddamage = accuracy_isgooddamage(this, hit);
+			Damage(hit, this, this, damage * solid_penetration_left, dtype, weaponentity, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons
-			if(g)
+			if(gooddamage)
 			{
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
@@ -480,13 +473,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	}
 
 	if(lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_restore(it, CS(it)));
-		IL_EACH(g_monsters, it != this,
-		{
-			antilag_restore(it, it);
-		});
-	}
+		antilag_restore_all(this);
 
 	// restore shooter solid type
 	if(this)

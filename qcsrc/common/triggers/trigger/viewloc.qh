@@ -1,9 +1,0 @@
-#pragma once
-
-.entity viewloc;
-
-#ifdef CSQC
-.entity goalentity;
-.entity enemy;
-.vector movedir;
-#endif

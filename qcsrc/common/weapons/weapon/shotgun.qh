@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(Shotgun, Weapon)
-/* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells);
+/* spawnfunc */ ATTRIB(Shotgun, m_canonical_spawnfunc, string, "weapon_shotgun");
+/* ammotype  */ ATTRIB(Shotgun, ammo_type, int, RESOURCE_SHELLS);
 /* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
 /* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, 6000);
@@ -52,3 +53,5 @@ CLASS(Shotgun, Weapon)
 
 ENDCLASS(Shotgun)
 REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
+
+SPAWNFUNC_WEAPON(weapon_shotgun, WEP_SHOTGUN)

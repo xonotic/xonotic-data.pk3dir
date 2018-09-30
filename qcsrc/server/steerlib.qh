@@ -5,6 +5,3 @@
 vector steerlib_arrive(entity this, vector point, float maximal_distance);
 vector steerlib_attract2(entity this, vector point, float min_influense, float max_distance, float max_influense);
 //vector steerlib_pull(entity this, vector point);
-
-IntrusiveList g_flockers;
-STATIC_INIT(g_flockers) { g_flockers = IL_NEW(); }

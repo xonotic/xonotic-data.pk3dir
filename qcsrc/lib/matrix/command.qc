@@ -5,12 +5,10 @@
 GENERIC_COMMAND(mx, "Send a matrix command") {
     switch (argv(1)) {
         case "user":
-            if (matrix_user) strunzone(matrix_user);
-            matrix_user = strzone(substring(command, argv_start_index(2), -1));
+            strcpy(matrix_user, substring(command, argv_start_index(2), -1));
             break;
         case "token":
-            if (matrix_access_token) strunzone(matrix_access_token);
-            matrix_access_token = strzone(substring(command, argv_start_index(2), -1));
+            strcpy(matrix_access_token, substring(command, argv_start_index(2), -1));
             break;
         case "messages":
             MX_Messages(string_null);

@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO: WEP_TYPE_OTHER?
+
 CLASS(FlacAttack, PortoLaunch)
 /* flags     */ ATTRIB(FlacAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(FlacAttack, impulse, int, 5);

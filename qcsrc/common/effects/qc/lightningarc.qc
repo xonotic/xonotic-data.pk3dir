@@ -8,12 +8,8 @@ REGISTER_NET_TEMP(TE_CSQC_ARC)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_ARC);
 
-		WriteCoord(MSG_BROADCAST, from.x);
-		WriteCoord(MSG_BROADCAST, from.y);
-		WriteCoord(MSG_BROADCAST, from.z);
-		WriteCoord(MSG_BROADCAST, to.x);
-		WriteCoord(MSG_BROADCAST, to.y);
-		WriteCoord(MSG_BROADCAST, to.z);
+		WriteVector(MSG_BROADCAST, from);
+		WriteVector(MSG_BROADCAST, to);
 	}
 
 #elif defined(CSQC)
@@ -89,14 +85,8 @@ void b_make(vector s,vector e, string t,float l,float z)
 
 	NET_HANDLE(TE_CSQC_ARC, bool isNew)
 	{
-		vector from;
-		from.x = ReadCoord();
-		from.y = ReadCoord();
-		from.z = ReadCoord();
-		vector to;
-		to.x = ReadCoord();
-		to.y = ReadCoord();
-		to.z = ReadCoord();
+		vector from = ReadVector();
+		vector to = ReadVector();
 		return = true;
 
 		if (autocvar_cl_effects_lightningarc_simple)

@@ -13,8 +13,6 @@ MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
 }
 #endif
 #ifdef SVQC
-.float metertime = _STAT(NB_METERSTART);
-
 .entity ballcarried;
 
 int autocvar_g_nexball_goalleadlimit;
@@ -154,9 +152,9 @@ void GiveBall(entity plyr, entity ball)
 		ownr.effects &= ~autocvar_g_nexball_basketball_effects_default;
 		ownr.ballcarried = NULL;
 		GameRules_scoring_vip(ownr, false);
-		if(ownr.metertime)
+		if(STAT(NB_METERSTART, ownr))
 		{
-			ownr.metertime = 0;
+			STAT(NB_METERSTART, ownr) = 0;
 			ownr.(weaponentity).state = WS_READY;
 		}
 		WaypointSprite_Kill(ownr.waypointsprite_attachedforcarrier);
@@ -197,9 +195,9 @@ void GiveBall(entity plyr, entity ball)
 		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
 	}
 
-	plyr.(weaponentity).weapons = plyr.weapons;
+	STAT(WEAPONS, plyr.(weaponentity)) = STAT(WEAPONS, plyr);
 	plyr.m_switchweapon = plyr.(weaponentity).m_weapon;
-	plyr.weapons = WEPSET(NEXBALL);
+	STAT(WEAPONS, plyr) = WEPSET(NEXBALL);
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w, plyr);
 	plyr.(weaponentity).m_switchweapon = WEP_NEXBALL;
@@ -223,9 +221,9 @@ void DropBall(entity ball, vector org, vector vel)
 	setthink(ball, ResetBall);
 	ball.nextthink = min(time + autocvar_g_nexball_delay_idle, ball.teamtime);
 
-	if(ball.owner.metertime)
+	if(STAT(NB_METERSTART, ball.owner))
 	{
-		ball.owner.metertime = 0;
+		STAT(NB_METERSTART, ball.owner) = 0;
 		.entity weaponentity = ball.weaponentity_fld;
 		ball.owner.(weaponentity).state = WS_READY;
 	}
@@ -310,7 +308,7 @@ void football_touch(entity this, entity toucher)
 	}
 	if (!IS_PLAYER(toucher))
 		return;
-	if(toucher.health < 1)
+	if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
 		return;
 	if(!this.cnt)
 		this.nextthink = time + autocvar_g_nexball_delay_idle;
@@ -350,7 +348,7 @@ void basketball_touch(entity this, entity toucher)
 	}
 	if(!this.cnt && IS_PLAYER(toucher) && !STAT(FROZEN, toucher) && !IS_DEAD(toucher) && (toucher != this.nb_dropper || time > this.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
-		if(toucher.health <= 0)
+		if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
 			return;
 		LogNB("caught", toucher);
 		GiveBall(toucher, this);
@@ -637,7 +635,7 @@ void SpawnGoal(entity this)
 
 	EXACTTRIGGER_INIT;
 
-	if(this.team != GOAL_OUT && Team_TeamToNumber(this.team) != -1)
+	if(this.team != GOAL_OUT && Team_IsValidTeam(this.team))
 	{
 		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (this.absmin + this.absmax) * 0.5, this, sprite, RADARICON_NONE);
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0.5 0');
@@ -830,15 +828,15 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 			{
 				.entity weaponentity = weaponentities[slot];
 
-				if(player.(weaponentity).weapons)
+				if(STAT(WEAPONS, player.(weaponentity)))
 				{
-					player.weapons = player.(weaponentity).weapons;
+					STAT(WEAPONS, player) = STAT(WEAPONS, player.(weaponentity));
 					Weapon w = WEP_NEXBALL;
 					w.wr_resetplayer(w, player);
 					player.(weaponentity).m_switchweapon = player.m_switchweapon;
 					W_SwitchWeapon(player, player.(weaponentity).m_switchweapon, weaponentity);
 
-					player.(weaponentity).weapons = '0 0 0';
+					STAT(WEAPONS, player.(weaponentity)) = '0 0 0';
 				}
 			}
 		}
@@ -853,40 +851,35 @@ MUTATOR_HOOKFUNCTION(nb, SpectateCopy)
 	entity spectatee = M_ARGV(0, entity);
 	entity client = M_ARGV(1, entity);
 
-	client.metertime = spectatee.metertime;
+	STAT(NB_METERSTART, client) = STAT(NB_METERSTART, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.metertime = 0;
+	STAT(NB_METERSTART, player) = 0;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		player.(weaponentity).weapons = '0 0 0';
+		STAT(WEAPONS, player.(weaponentity)) = '0 0 0';
 	}
 
 	if (nexball_mode & NBM_BASKETBALL)
-		player.weapons |= WEPSET(NEXBALL);
+		STAT(WEAPONS, player) |= WEPSET(NEXBALL);
 	else
-		player.weapons = '0 0 0';
+		STAT(WEAPONS, player) = '0 0 0';
 
 	return false;
 }
 
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
-
-MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(nb, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.ballcarried)
-	{
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_nexball_basketball_carrier_highspeed;
-		player.stat_sv_maxspeed *= autocvar_g_nexball_basketball_carrier_highspeed;
-	}
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nexball_basketball_carrier_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
@@ -909,7 +902,7 @@ MUTATOR_HOOKFUNCTION(nb, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.classname == "droppedweapon")
+	if(Item_IsLoot(item))
 	if(item.weapon == WEP_NEXBALL.m_id)
 		return true;
 
@@ -927,7 +920,7 @@ MUTATOR_HOOKFUNCTION(nb, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(nb, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(nb, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(1, string) = "nexball_team";
 	return true;

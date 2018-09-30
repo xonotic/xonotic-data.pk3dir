@@ -1,6 +1,6 @@
 #include "mainwindow.qh"
 
-#include "../mutators/events.qh"
+#include <menu/mutators/_mod.qh>
 
 #include "nexposee.qh"
 #include "inputbox.qh"

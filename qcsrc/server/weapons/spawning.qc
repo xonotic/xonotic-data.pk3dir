@@ -1,9 +1,13 @@
 #include "spawning.qh"
 
 #include "weaponsystem.qh"
-#include "../mutators/_mod.qh"
+#include "../resources.qh"
+#include <server/mutators/_mod.qh>
 #include <common/t_items.qh>
+#include <server/items.qh>
 #include <common/weapons/_all.qh>
+
+.bool m_isreplaced; ///< Holds whether the weapon has been replaced.
 
 string W_Apply_Weaponreplace(string in)
 {
@@ -25,7 +29,9 @@ string W_Apply_Weaponreplace(string in)
 void weapon_defaultspawnfunc(entity this, Weapon e)
 {
 	Weapon wpn = e;
-	if (this.classname != "droppedweapon" && this.classname != "replacedweapon")
+	e = wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
+	this.classname = wpn.m_canonical_spawnfunc;
+	if (!Item_IsLoot(this) && !this.m_isreplaced)
 	{
 		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
@@ -50,29 +56,20 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				FOREACH(Weapons, it != WEP_Null, {
-					if(it.netname == s)
-					{
-						entity replacement = spawn();
-						copyentity(this, replacement);
-						replacement.classname = "replacedweapon";
-						weapon_defaultspawnfunc(replacement, it);
-						break;
-					}
-				});
+				Weapon wep = Weapons_fromstr(s);
+				if(wep != WEP_Null)
+				{
+					entity replacement = spawn();
+					copyentity(this, replacement);
+					replacement.m_isreplaced = true;
+					weapon_defaultspawnfunc(replacement, wep);
+				}
 			}
 		}
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
-			wpn = WEP_Null;
-			FOREACH(Weapons, it != WEP_Null, {
-				if(it.netname == s)
-				{
-					wpn = it;
-					break;
-				}
-			});
+			wpn = Weapons_fromstr(s);
 		}
 		if (wpn == WEP_Null)
 		{
@@ -80,6 +77,13 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			startitem_failed = true;
 			return;
 		}
+	}
+
+	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
+	{
+		delete(this);
+		startitem_failed = true;
+		return;
 	}
 
 	if (!this.respawntime)
@@ -101,16 +105,16 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	if (!this.(wpn.ammo_field))
+	if ((wpn.ammo_type != RESOURCE_NONE) && !GetResourceAmount(this, wpn.ammo_type))
 	{
-		switch (wpn.ammo_field)
+		switch (wpn.ammo_type)
 		{
-			case ammo_shells:  this.ammo_shells  = cvar("g_pickup_shells_weapon");  break;
-			case ammo_nails:   this.ammo_nails   = cvar("g_pickup_nails_weapon");   break;
-			case ammo_rockets: this.ammo_rockets = cvar("g_pickup_rockets_weapon"); break;
-			case ammo_cells:   this.ammo_cells   = cvar("g_pickup_cells_weapon");   break;
-			case ammo_plasma:  this.ammo_plasma  = cvar("g_pickup_plasma_weapon");  break;
-			case ammo_fuel:    this.ammo_fuel    = cvar("g_pickup_fuel_weapon");    break;
+			case RESOURCE_SHELLS:  SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_shells_weapon"));  break;
+			case RESOURCE_BULLETS: SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_nails_weapon"));   break;
+			case RESOURCE_ROCKETS: SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_rockets_weapon")); break;
+			case RESOURCE_CELLS:   SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_cells_weapon"));   break;
+			case RESOURCE_PLASMA:  SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_plasma_weapon"));  break;
+			case RESOURCE_FUEL:    SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_fuel_weapon"));    break;
 		}
 	}
 

@@ -124,7 +124,7 @@ void Item_ItemsTime_SetTime(entity e, float t)
     {
 		if (!item.instanceOfWeaponPickup)
 			it_times[item.m_id] = t;
-		else if (e.weapons & WEPSET_SUPERWEAPONS)
+		else if (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS)
 			it_times[Items_MAX] = t;
     }
 }
@@ -139,7 +139,7 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
     bool isavailable = (t == 0);
     IL_EACH(g_items, it != e,
     {
-        if(!(it.itemdef == e.itemdef || ((e.weapons & WEPSET_SUPERWEAPONS) && (it.weapons & WEPSET_SUPERWEAPONS))))
+        if(!(it.itemdef == e.itemdef || ((STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, it) & WEPSET_SUPERWEAPONS))))
             continue;
         if (it.scheduledrespawntime <= time)
             isavailable = true;

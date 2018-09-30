@@ -2,8 +2,6 @@
 
 #ifdef SVQC
 
-spawnfunc(weapon_hook) { weapon_defaultspawnfunc(this, WEP_HOOK); }
-
 void W_Hook_ExplodeThink(entity this)
 {
 	float dt, dmg_remaining_next, f;
@@ -14,7 +12,7 @@ void W_Hook_ExplodeThink(entity this)
 	f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
 
-	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
+	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, NULL, this.dmg_force * f, this.projectiledeathtype, this.weaponentity_fld, NULL);
 	this.projectiledeathtype |= HITTYPE_BOUNCE;
 	//RadiusDamage(this, NULL, this.dmg * f, this.dmg_edge * f, this.dmg_radius, NULL, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
 
@@ -48,17 +46,17 @@ void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
 	W_Hook_Explode2(this);
 }
 
-void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
@@ -71,7 +69,7 @@ void W_Hook_Touch2(entity this, entity toucher)
 void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage), WEP_HOOK.m_id | HITTYPE_SECONDARY);
 
 	entity gren = new(hookbomb);
 	gren.owner = gren.realowner = actor;
@@ -80,6 +78,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	set_movetype(gren, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
+	gren.weaponentity_fld = weaponentity;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
@@ -89,7 +88,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Hook_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = WEP_CVAR_SEC(hook, health);
+	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, WEP_CVAR_SEC(hook, health));
 	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = true;
@@ -166,7 +165,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
             {
                 if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
                 {
-                    if( actor.ammo_fuel >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
+                    if( GetResourceAmount(actor, RESOURCE_FUEL) >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
                     {
                         W_DecreaseAmmo(thiswep, actor, (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel, weaponentity);
                         actor.(weaponentity).hook_time_fueldecrease = time;
@@ -174,7 +173,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
                     }
                     else
                     {
-                        actor.ammo_fuel = 0;
+                        SetResourceAmount(actor, RESOURCE_FUEL, 0);
                         actor.(weaponentity).hook_state |= HOOK_REMOVING;
                         if(actor.(weaponentity).m_weapon != WEP_Null) // offhand
                         	W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
@@ -215,9 +214,9 @@ METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor, .entity weaponentit
     if (!thiswep.ammo_factor) return true;
 
     if(actor.(weaponentity).hook)
-    	return actor.ammo_fuel > 0;
+    	return GetResourceAmount(actor, RESOURCE_FUEL) > 0;
 
-    return actor.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
+    return GetResourceAmount(actor, RESOURCE_FUEL) >= WEP_CVAR_PRI(hook, ammo);
 }
 METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor, .entity weaponentity))
 {
@@ -262,11 +261,11 @@ float autocvar_cl_grapplehook_alpha = 1;
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg);
 
 entityclass(Hook);
-class(Hook) .entity HookType; // ENT_CLIENT_*
-class(Hook) .vector origin;
-class(Hook) .vector velocity;
-class(Hook) .float HookSilent;
-class(Hook) .float HookRange;
+classfield(Hook) .entity HookType; // ENT_CLIENT_*
+classfield(Hook) .vector origin;
+classfield(Hook) .vector velocity;
+classfield(Hook) .float HookSilent;
+classfield(Hook) .float HookRange;
 
 string Draw_GrapplingHook_trace_callback_tex;
 float Draw_GrapplingHook_trace_callback_rnd;
@@ -282,7 +281,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
-class(Hook) .float teleport_time;
+classfield(Hook) .float teleport_time;
 void Draw_GrapplingHook(entity this)
 {
 	vector a, b, atrans;
@@ -320,8 +319,8 @@ void Draw_GrapplingHook(entity this)
 		{
 			default:
 			case NET_ENT_CLIENT_HOOK:
-				if(autocvar_chase_active > 0)
-					a = csqcplayer.origin;
+				if(autocvar_chase_active)
+					a = csqcplayer.origin + csqcplayer.view_ofs;
 				else
 					a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				b = this.origin;
@@ -467,16 +466,12 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 	}
 	if(sf & 2)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
 	if(sf & 4)
 	{
-		this.velocity_x = ReadCoord();
-		this.velocity_y = ReadCoord();
-		this.velocity_z = ReadCoord();
+		this.velocity = ReadVector();
 	}
 
 	InterpolateOrigin_Note(this);

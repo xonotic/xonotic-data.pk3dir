@@ -252,4 +252,3 @@ COLOR_SLIDER_F                  '1 1 1'
 COLOR_SLIDER_D                  '1 1 1'
 COLOR_SLIDER_S                  '1 1 1'
 WIDTH_SLIDERTEXT                0.333333333333
-TOLERANCE_SLIDER                '0.2 2 0'

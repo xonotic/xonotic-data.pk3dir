@@ -11,13 +11,13 @@ METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, .ent
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(machinegun, sustained_refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MachineGunTurretAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MachineGunTurretAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_MACHINEGUN.m_id);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
         }
-        fireBullet (actor, weaponentity, actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_MACHINEGUN.m_id, 0);
+        fireBullet(actor, weaponentity, actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_MACHINEGUN.m_id, EFFECT_BULLET);
         W_MachineGun_MuzzleFlash(actor, weaponentity);
         setattachment(actor.(weaponentity).muzzle_flash, actor.tur_head, "tag_fire");
     }
