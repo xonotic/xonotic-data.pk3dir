@@ -64,7 +64,7 @@ void W_Electro_ExplodeCombo(entity this)
 		NULL,
 		NULL,
 		WEP_CVAR(electro, combo_force),
-		this.projectiledeathtype | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
+		WEP_ELECTRO.m_id | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
 		this.weaponentity_fld,
 		NULL
 	);
@@ -393,14 +393,6 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
 	proj.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
-
-#if 0
-	entity p2;
-	p2 = spawn();
-	copyentity(proj, p2);
-	setmodel(p2, MDL_PROJECTILE_ELECTRO);
-	setsize(p2, proj.mins, proj.maxs);
-#endif
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, false); // no culling, it has sound
 
