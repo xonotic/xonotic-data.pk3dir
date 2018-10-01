@@ -26,6 +26,4 @@ MUTATOR_HOOKFUNCTION(duel, FilterItemDefinition)
 	{
 		return !autocvar_g_duel_with_powerups;
 	}
-
-	return false;
 }
