@@ -106,7 +106,7 @@ void W_Shockwave_Melee_Think(entity this)
 
 			// handle accuracy
 			if(accuracy_isgooddamage(this.realowner, target_victim))
-				{ accuracy_add(this.realowner, WEP_SHOCKWAVE.m_id, 0, swing_damage); }
+				{ accuracy_add(this.realowner, WEP_SHOCKWAVE, 0, swing_damage); }
 
 			#ifdef DEBUG_SHOCKWAVE
 			LOG_INFOF(
@@ -573,7 +573,7 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		);
 
 		if(accuracy_isgooddamage(actor, head))
-			accuracy_add(actor, thiswep.m_id, 0, final_damage);
+			accuracy_add(actor, thiswep, 0, final_damage);
 
 		#ifdef DEBUG_SHOCKWAVE
 		LOG_INFOF(

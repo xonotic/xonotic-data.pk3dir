@@ -95,7 +95,7 @@ void W_Shotgun_Melee_Think(entity this)
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR_SEC(shotgun, force));
 
-			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_SHOTGUN.m_id, 0, swing_damage); }
+			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_SHOTGUN, 0, swing_damage); }
 
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');

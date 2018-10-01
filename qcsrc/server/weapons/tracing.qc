@@ -57,7 +57,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
-		accuracy_add(ent, wep.m_id, maxdamage, 0);
+		accuracy_add(ent, wep, maxdamage, 0);
 
 	if(IS_PLAYER(ent))
 		W_HitPlotAnalysis(ent, wep, v_forward, v_right, v_up);
@@ -266,7 +266,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	//explosion = spawn();
 
 	// Find all non-hit players the beam passed close by
-	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
+	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id) // WEAPONTODO
 	{
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
 			if(!it.railgunhit)
@@ -321,7 +321,8 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	IL_CLEAR(g_railgunhit);
 
 	// calculate hits and fired shots for hitscan
-	accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, min(bdamage, totaldmg));
+	if(this.(weaponentity))
+		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg));
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -421,7 +422,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
 				total_damage += damage * solid_penetration_left;
-				accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, added_damage);
+				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage);
 			}
 		}
 
