@@ -2,7 +2,8 @@
 
 MUTATOR_HOOKFUNCTION(duel, ReadLevelCvars)
 {
-	warmup_stage = 1;
+	if(autocvar_g_duel_warmup)
+		warmup_stage = 1; // otherwise allow it if it's enabled
 	//sv_ready_restart_after_countdown = 0;
 }
 
