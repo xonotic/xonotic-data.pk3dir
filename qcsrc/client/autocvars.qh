@@ -412,6 +412,7 @@ float autocvar_cl_hitsound_max_pitch = 1.5;
 float autocvar_cl_hitsound_nom_damage = 25;
 float autocvar_cl_hitsound_antispam_time;
 int autocvar_cl_eventchase_spectated_change = 1;
+float autocvar_cl_eventchase_spectated_change_time = 1;
 int autocvar_cl_eventchase_death = 1;
 float autocvar_cl_eventchase_distance = 140;
 bool autocvar_cl_eventchase_frozen = false;
