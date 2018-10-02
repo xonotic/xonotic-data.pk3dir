@@ -835,14 +835,15 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 				}
 
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++tmp_playercount; });
-				if (tmp_playercount > 1)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_CALL);
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");
 				if (autocvar_sv_eventlog)
 					GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display));
 				Nagger_VoteChanged();
 				VoteCount(true);  // needed if you are the only one
+
+				if (tmp_playercount > 1 && vote_called != VOTE_NULL)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_CALL);
 			}
 
 			return;
