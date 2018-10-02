@@ -298,7 +298,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (player.caplayer == 1)
+	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	return true;
 }
@@ -307,7 +307,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (!IS_DEAD(player))
+	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
