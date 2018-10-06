@@ -3572,7 +3572,7 @@ msgstr "^K1Vous devez faire plus attention !"
 
 #: qcsrc/common/notifications/all.inc:638
 msgid "^K1You couldn't stand the heat!"
-msgstr "^K1Vous n'avez pas pu supporter la chaleur !"
+msgstr "^K1Vous n'avez pas pu supporté la chaleur !"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You need to watch out for monsters!"
