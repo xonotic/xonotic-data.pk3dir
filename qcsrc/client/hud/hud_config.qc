@@ -5,6 +5,7 @@
 #include <client/autocvars.qh>
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
+#include <client/view.qh>
 
 #define HUD_Write(s) fputs(fh, s)
 #define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
@@ -253,6 +254,7 @@ void HUD_Configure_Exit_Force()
 		hud_configure_menu_open = 0;
 		localcmd("togglemenu\n");
 	}
+	cursor_type = CURSOR_NORMAL;
 	cvar_set("_hud_configure", "0");
 }
 
@@ -760,7 +762,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1)
 			return true;
 		if (!hud_configure_menu_open)
-			cvar_set("_hud_configure", "0");
+			HUD_Configure_Exit_Force();
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
 	{
@@ -951,7 +953,7 @@ LABEL(find_tab_panel)
 	return true;
 }
 
-float HUD_Panel_Check_Mouse_Pos(float allow_move)
+int HUD_Panel_Check_Mouse_Pos(bool allow_move)
 {
 	int i, j = 0;
 	while(j < hud_panels_COUNT)
@@ -968,30 +970,30 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		// move
 		if(allow_move && mousepos.x > panel_pos.x && mousepos.y > panel_pos.y && mousepos.x < panel_pos.x + panel_size.x && mousepos.y < panel_pos.y + panel_size.y)
 		{
-			return 1;
+			return CURSOR_MOVE;
 		}
 		// resize from topleft border
 		else if(mousepos.x >= panel_pos.x - border && mousepos.y >= panel_pos.y - border && mousepos.x <= panel_pos.x + 0.5 * panel_size.x && mousepos.y <= panel_pos.y + 0.5 * panel_size.y)
 		{
-			return 2;
+			return CURSOR_RESIZE;
 		}
 		// resize from topright border
 		else if(mousepos.x >= panel_pos.x + 0.5 * panel_size.x && mousepos.y >= panel_pos.y - border && mousepos.x <= panel_pos.x + panel_size.x + border && mousepos.y <= panel_pos.y + 0.5 * panel_size.y)
 		{
-			return 3;
+			return CURSOR_RESIZE2;
 		}
 		// resize from bottomleft border
 		else if(mousepos.x >= panel_pos.x - border && mousepos.y >= panel_pos.y + 0.5 * panel_size.y && mousepos.x <= panel_pos.x + 0.5 * panel_size.x && mousepos.y <= panel_pos.y + panel_size.y + border)
 		{
-			return 3;
+			return CURSOR_RESIZE2;
 		}
 		// resize from bottomright border
 		else if(mousepos.x >= panel_pos.x + 0.5 * panel_size.x && mousepos.y >= panel_pos.y + 0.5 * panel_size.y && mousepos.x <= panel_pos.x + panel_size.x + border && mousepos.y <= panel_pos.y + panel_size.y + border)
 		{
-			return 2;
+			return CURSOR_RESIZE;
 		}
 	}
-	return 0;
+	return CURSOR_NORMAL;
 }
 
 // move a panel to the beginning of the panel order array (which means it gets drawn last, on top of everything else)
@@ -1111,14 +1113,10 @@ void HUD_Panel_EnableMenu()
 	hud_configure_menu_open = 2;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
-float mouse_over_panel;
 void HUD_Panel_Mouse()
 {
 	if(autocvar__menu_alpha == 1)
 		return;
-
-	if (!autocvar_hud_cursormode)
-		update_mousepos();
 
 	if(mouseClicked)
 	{
@@ -1150,7 +1148,7 @@ void HUD_Panel_Mouse()
 					prevMouseClickedTime = time;
 					prevMouseClickedPos = mousepos;
 				}
-				mouse_over_panel = HUD_Panel_Check_Mouse_Pos(mouseClicked & S_MOUSE1);
+				cursor_type = HUD_Panel_Check_Mouse_Pos(mouseClicked & S_MOUSE1);
 			}
 		}
 		else
@@ -1203,25 +1201,12 @@ void HUD_Panel_Mouse()
 		if(prevMouseClicked)
 			highlightedAction = 0;
 		if(hud_configure_menu_open == 2)
-			mouse_over_panel = 0;
+			cursor_type = CURSOR_NORMAL;
 		else
-			mouse_over_panel = HUD_Panel_Check_Mouse_Pos(true);
-		if (mouse_over_panel && !tab_panel)
+			cursor_type = HUD_Panel_Check_Mouse_Pos(true);
+		if (cursor_type != CURSOR_NORMAL && !tab_panel) // mouse over a panel?
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .1, DRAWFLAG_NORMAL);
 	}
-	// draw cursor after performing move/resize to have the panel pos/size updated before mouse_over_panel
-	float cursor_alpha = 1 - autocvar__menu_alpha;
-
-	if(!mouse_over_panel)
-		draw_cursor_normal(mousepos, '1 1 1', cursor_alpha);
-	else if(mouse_over_panel == 1)
-		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
-	else if(mouse_over_panel == 2)
-		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize", '1 1 1', cursor_alpha);
-	else
-		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize2", '1 1 1', cursor_alpha);
-
-	prevMouseClicked = mouseClicked;
 }
 void HUD_Configure_DrawGrid()
 {
@@ -1258,8 +1243,6 @@ void HUD_Configure_Frame()
 
 		if(!hud_configure_prev)
 		{
-			if(autocvar_hud_cursormode)
-				setcursormode(1);
 			hudShiftState = 0;
 			for(i = hud_panels_COUNT - 1; i >= 0; --i)
 				hud_panels_from(panel_order[i]).update_time = time;
@@ -1279,8 +1262,6 @@ void HUD_Configure_Frame()
 	{
 		if(hud_configure_menu_open)
 			hud_configure_menu_open = 0;
-		if(autocvar_hud_cursormode)
-			setcursormode(0);
 		hud_dynamic_shake_factor = -1;
 	}
 }

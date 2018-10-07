@@ -33,11 +33,9 @@ void thrown_wep_think(entity this)
 		SUB_VanishOrRemove(this);
 }
 
-// returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
+// returns amount of ammo used, or -1 for failure, or 0 for no ammo count
+float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
 {
-	float thisammo;
-	string s;
 	Weapon info = Weapons_from(wpn);
 	int ammotype = info.ammo_type;
 
@@ -84,7 +82,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 	weapon_defaultspawnfunc(wep, info);
 	if(startitem_failed)
-		return string_null;
+		return -1;
 	setthink(wep, thrown_wep_think);
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
@@ -93,12 +91,10 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	//wa = W_AmmoItemCode(wpn);
 	if(ammotype == RESOURCE_NONE)
 	{
-		return "";
+		return 0;
 	}
 	else
 	{
-		s = "";
-
 		if(doreduce && g_weapon_stay == 2)
 		{
 			// if our weapon is loaded, give its load back to the player
@@ -121,23 +117,13 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			}
 
 			float ownderammo = GetResourceAmount(own, ammotype);
-			thisammo = min(ownderammo, GetResourceAmount(wep, ammotype));
+			float thisammo = min(ownderammo, GetResourceAmount(wep, ammotype));
 			SetResourceAmount(wep, ammotype, thisammo);
 			SetResourceAmount(own, ammotype, ownderammo - thisammo);
 
-			switch (ammotype)
-			{
-				case RESOURCE_SHELLS:  s = sprintf("%s and %d shells", s, thisammo);  break;
-				case RESOURCE_BULLETS: s = sprintf("%s and %d nails", s, thisammo);   break;
-				case RESOURCE_ROCKETS: s = sprintf("%s and %d rockets", s, thisammo); break;
-				case RESOURCE_CELLS:   s = sprintf("%s and %d cells", s, thisammo);   break;
-				case RESOURCE_PLASMA:  s = sprintf("%s and %d plasma", s, thisammo);  break;
-				case RESOURCE_FUEL:    s = sprintf("%s and %d fuel", s, thisammo);    break;
-			}
-
-			s = substring(s, 5, -1);
+			return thisammo;
 		}
-		return s;
+		return 0;
 	}
 }
 
@@ -175,10 +161,10 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	STAT(WEAPONS, this) &= ~set;
 
 	W_SwitchWeapon_Force(this, w_getbestweapon(this, weaponentity), weaponentity);
-	string a = W_ThrowNewWeapon(this, w.m_id, doreduce, this.origin + delta, velo, weaponentity);
+	float a = W_ThrowNewWeapon(this, w.m_id, doreduce, this.origin + delta, velo, weaponentity);
 
-	if(!a) return;
-	Send_Notification(NOTIF_ONE, this, MSG_MULTI, ITEM_WEAPON_DROP, a, w.m_id);
+	if(a < 0) return;
+	Send_Notification(NOTIF_ONE, this, MSG_MULTI, ITEM_WEAPON_DROP, w.m_id, a);
 }
 
 void SpawnThrownWeapon(entity this, vector org, Weapon wep, .entity weaponentity)

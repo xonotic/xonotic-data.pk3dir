@@ -6,6 +6,7 @@
 #include <common/gamemodes/gamemode/cts/_mod.qh>
 #include <common/gamemodes/gamemode/deathmatch/_mod.qh>
 #include <common/gamemodes/gamemode/domination/_mod.qh>
+#include <common/gamemodes/gamemode/duel/_mod.qh>
 #include <common/gamemodes/gamemode/freezetag/_mod.qh>
 #include <common/gamemodes/gamemode/invasion/_mod.qh>
 #include <common/gamemodes/gamemode/keepaway/_mod.qh>

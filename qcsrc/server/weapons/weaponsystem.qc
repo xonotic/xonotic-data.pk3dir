@@ -5,6 +5,7 @@
 #include "../command/common.qh"
 #include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
+#include <server/cheats.qh>
 #include <server/resources.qh>
 #include <common/t_items.qh>
 #include <common/animdecide.qh>
@@ -178,6 +179,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	setthink(view, CL_Weaponentity_Think);
 	view.nextthink = time;
 	view.viewmodelforclient = actor;
+	view.draggable = drag_undraggable;
 	setcefc(view, CL_Weaponentity_CustomizeEntityForClient);
 
 	wepent_link(view);
@@ -187,6 +189,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 		entity exterior = actor.exteriorweaponentity = new(exteriorweaponentity);
 		exterior.solid = SOLID_NOT;
 		exterior.owner = actor;
+		exterior.draggable = drag_undraggable;
 		exterior.weaponentity_fld = weaponentity;
 		setorigin(exterior, '0 0 0');
 		setthink(exterior, CL_ExteriorWeaponentity_Think);

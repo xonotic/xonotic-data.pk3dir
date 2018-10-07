@@ -600,7 +600,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null")
+	if(!this.modelindex || this.model == "null" || this.alpha < 0)
 	{
 		this.drawmask = 0;
 		return;
@@ -608,7 +608,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 	else
 		this.drawmask = MASK_NORMAL;
 
-	if(this.isplayermodel) // this checks if it's a player MODEL!
+	if(this.isplayermodel && this.drawmask) // this checks if it's a player MODEL!
 	{
 		CSQCPlayer_ModelAppearance_Apply(this, this.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply(this);

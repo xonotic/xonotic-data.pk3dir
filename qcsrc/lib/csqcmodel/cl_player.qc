@@ -210,11 +210,11 @@ bool CSQCPlayer_IsLocalPlayer(entity this)
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
 {
-	const vector v0 = ((intermission && !autocvar_cl_movement_intermissionrunning) ? '0 0 0' : pmove_vel); // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
-	const float vh = PHYS_VIEWHEIGHT(NULL);
-	const vector pl_viewofs = PHYS_PL_VIEWOFS(NULL);
-	const vector pl_viewofs_crouch = PHYS_PL_CROUCH_VIEWOFS(NULL);
-	const entity e = csqcplayer;
+	vector v0 = ((intermission && !autocvar_cl_movement_intermissionrunning) ? '0 0 0' : pmove_vel); // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+	float vh = PHYS_VIEWHEIGHT(NULL);
+	vector pl_viewofs = PHYS_PL_VIEWOFS(NULL);
+	vector pl_viewofs_crouch = PHYS_PL_CROUCH_VIEWOFS(NULL);
+	entity e = csqcplayer;
 	if (e)
 	{
 		if (servercommandframe == 0 || clientcommandframe == 0)
@@ -239,13 +239,13 @@ void CSQCPlayer_SetCamera()
 		}
 		else
 		{
-			const int flg = e.iflags; e.iflags &= ~(IFLAG_ORIGIN | IFLAG_ANGLES);
+			int flg = e.iflags; e.iflags &= ~(IFLAG_ORIGIN | IFLAG_ANGLES);
 			InterpolateOrigin_Do(e);
 			e.iflags = flg;
 
 			if (csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
 			{
-				const vector o = e.origin;
+				vector o = e.origin;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 				CSQCPlayer_PredictTo(e, servercommandframe + 1, false);
 				CSQCPlayer_SetPredictionError(e.origin - o, e.velocity - v0, pmove_onground - IS_ONGROUND(e));

@@ -3,8 +3,9 @@
 
 bool scoreboard_active;
 float scoreboard_fade_alpha;
+float scoreboard_acc_fade_alpha;
 
-void Cmd_Scoreboard_SetFields(float argc);
+void Cmd_Scoreboard_SetFields(int argc);
 void Scoreboard_Draw();
 void Scoreboard_InitScores();
 void Scoreboard_UpdatePlayerTeams();

@@ -61,5 +61,3 @@ void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrat
  */
 
 .entity draggedby;
-.float ladder_time;
-.entity ladder_entity;
