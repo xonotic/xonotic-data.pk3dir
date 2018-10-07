@@ -67,13 +67,13 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), NULL, NULL, WEP_CVAR(minelayer, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	.entity weaponentity = this.weaponentity_fld;
-	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
+	Weapon thiswep = WEP_MINE_LAYER;
+	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		entity own = this.realowner;
-		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w, own, weaponentity))
+		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity))
 		{
-			own.cnt = WEP_MINE_LAYER.m_id;
+			own.cnt = thiswep.m_id;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
 			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
@@ -100,13 +100,13 @@ void W_MineLayer_DoRemoteExplode(entity this)
 						NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, this.weaponentity_fld, NULL);
 
 	.entity weaponentity = this.weaponentity_fld;
-	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
+	Weapon thiswep = WEP_MINE_LAYER;
+	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		entity own = this.realowner;
-		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w, own, weaponentity))
+		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity))
 		{
-			own.cnt = WEP_MINE_LAYER.m_id;
+			own.cnt = thiswep.m_id;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
 			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
@@ -283,7 +283,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage), WEP_MINE_LAYER.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage), thiswep.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(actor);
@@ -307,7 +307,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	set_movetype(mine, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(mine);
-	mine.projectiledeathtype = WEP_MINE_LAYER.m_id;
+	mine.projectiledeathtype = thiswep.m_id;
 	mine.weaponentity_fld = weaponentity;
 	setsize(mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
 
@@ -477,7 +477,7 @@ METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weap
     //if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
     //{
         float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(minelayer, ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(minelayer, ammo);
         return ammo_amount;
     //}
     //return true;

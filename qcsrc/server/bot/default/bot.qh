@@ -16,7 +16,7 @@ const int AI_STATUS_JETPACK_FLYING             = BIT(9);
 const int AI_STATUS_JETPACK_LANDING            = BIT(10);
 const int AI_STATUS_STUCK                      = BIT(11); // Cannot reach any goal
 
-.float isbot; // true if this client is actually a bot
+.bool isbot; // true if this client is actually a bot
 .int aistatus;
 
 // Skill system

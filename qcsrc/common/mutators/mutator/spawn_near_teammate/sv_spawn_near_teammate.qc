@@ -90,7 +90,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_max && tested >= autocvar_g_spawn_near_teammate_ignore_spawnpoint_max) break;
 
 			if (PHYS_INPUT_BUTTON_CHAT(it)) continue;
-			if (!SAME_TEAM(player, it)) continue;
+			if (DIFF_TEAM(player, it)) continue;
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && GetResourceAmount(it, RESOURCE_HEALTH) < autocvar_g_balance_health_regenstable) continue;
 			if (IS_DEAD(it)) continue;
 			if (time < it.msnt_timer) continue;

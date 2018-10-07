@@ -236,8 +236,8 @@ void W_Arc_Beam_Think(entity this)
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(own, weaponentity);
-			own.(weaponentity).arc_BUTTON_ATCK_prev = false; // hax
 		}
+		own.(weaponentity).arc_BUTTON_ATCK_prev = false; // allow switching weapons
 		delete(this);
 		return;
 	}
@@ -265,14 +265,14 @@ void W_Arc_Beam_Think(entity this)
 
 	W_SetupShot_Range(
 		own,
-		weaponentity, // TODO
+		weaponentity,
 		true,
 		0,
 		SND_Null,
 		0,
 		WEP_CVAR(arc, beam_damage) * coefficient,
 		WEP_CVAR(arc, beam_range),
-		WEP_ARC.m_id
+		thiswep.m_id
 	);
 
 	// After teleport, "lock" the beam until the teleport is confirmed.
@@ -322,7 +322,10 @@ void W_Arc_Beam_Think(entity this)
 				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
 				min(WEP_CVAR(arc, beam_maxangle) / angle, 1)
 			);
-			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+				this.beam_dir = w_shotdir;
+			else
+				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 		}
 		else
 		{
@@ -332,7 +335,10 @@ void W_Arc_Beam_Think(entity this)
 				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
 				1
 			);
-			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+				this.beam_dir = w_shotdir;
+			else
+				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 		}
 
 		// network information: beam direction
@@ -467,7 +473,7 @@ void W_Arc_Beam_Think(entity this)
 				{
 					accuracy_add(
 						own,
-						WEP_ARC.m_id,
+						WEP_ARC,
 						0,
 						rootdamage * coefficient * falloff
 					);
@@ -536,7 +542,7 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 void Arc_Smoke(entity actor, .entity weaponentity)
 {
 	makevectors(actor.v_angle);
-	W_SetupShot_Range(actor,weaponentity,true,0,SND_Null,0,0,0,WEP_ARC.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
+	W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,WEP_ARC.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
 
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )

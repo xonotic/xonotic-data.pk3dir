@@ -197,7 +197,7 @@ LABEL(skip)
 
 void OnlineBanList_Think(entity this)
 {
-	float argc;
+	int argc;
 	string uri;
 	float i, n;
 
@@ -446,6 +446,8 @@ bool Ban_MaybeEnforceBan(entity client)
 	if (Ban_IsClientBanned(client, -1))
 	{
 		string s = sprintf("^1NOTE:^7 banned client %s just tried to enter\n", client.netaddress);
+		if(autocvar_g_ban_telluser)
+			sprint(client, "You are banned from this server.\n");
 		dropclient(client);
 		bprint(s);
 		return true;

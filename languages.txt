@@ -7,7 +7,7 @@ es    "Spanish" "Español" 99%
 fr    "French" "Français" 99%
 ga    "Irish" "Irish" 35%
 it    "Italian" "Italiano" 99%
-hu    "Hungarian" "Magyar" 55%
+hu    "Hungarian" "Magyar" 57%
 nl    "Dutch" "Nederlands" 70%
 pl    "Polish" "Polski" 81%
 pt    "Portuguese" "Português" 98%
@@ -20,6 +20,6 @@ bg    "Bulgarian" "Български" 68%
 ru    "Russian" "Русский" 99%
 sr    "Serbian" "Српски" 71%
 uk    "Ukrainian" "Українська" 57%
-zh_CN "Chinese (China)" "中文" 62%
+zh_CN "Chinese (China)" "中文" 63%
 zh_TW "Chinese (Taiwan)" "國語" 68%
 ko    "Korean" "한국의" 33%

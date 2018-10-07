@@ -380,7 +380,7 @@
     MSG_INFO_NOTIF(ITEM_BUFF_GOT,                           N_CONSOLE,  0, 1, "item_buffname", "",          "",     _("^BGYou got the %s^BG buff!"), "")
 
     MSG_INFO_NOTIF(ITEM_WEAPON_DONTHAVE,                    N_DISABLE,  0, 1, "item_wepname", "",                           "",     _("^BGYou do not have the ^F1%s"), "")
-    MSG_INFO_NOTIF(ITEM_WEAPON_DROP,                        N_DISABLE,  1, 1, "item_wepname item_wepammo", "",              "",     _("^BGYou dropped the ^F1%s^BG%s"), "")
+    MSG_INFO_NOTIF(ITEM_WEAPON_DROP,                        N_DISABLE,  0, 2, "item_wepname item_wepammo", "",              "",     _("^BGYou dropped the ^F1%s^BG%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_GOT,                         N_DISABLE,  0, 1, "item_wepname", "",                           "",     _("^BGYou got the ^F1%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_NOAMMO,                      N_DISABLE,  0, 1, "item_wepname", "",                           "",     _("^BGYou don't have enough ammo for the ^F1%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_PRIMORSEC,                   N_DISABLE,  0, 3, "item_wepname f2primsec f3primsec", "",       "",     _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
@@ -422,7 +422,7 @@
     MSG_INFO_NOTIF(QUIT_KICK_IDLING,                        N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for idling"), "")
     MSG_INFO_NOTIF(QUIT_KICK_SPECTATING,                    N_CONSOLE,  0, 0, "", "",           "",             _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "")
     MSG_INFO_NOTIF(QUIT_KICK_TEAMKILL,                      N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for excessive teamkilling"), "")
-    MSG_INFO_NOTIF(QUIT_SPECTATE,                           N_CONSOLE,  1, 0, "s1", "",         "",             _("^BG%s^F3 is now spectating"), "")
+    MSG_INFO_NOTIF(QUIT_SPECTATE,                           N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 is now spectating"), "")
 
     MSG_INFO_NOTIF(RACE_ABANDONED,                          N_CONSOLE,  1, 0, "s1", "",                                                                     "",                         _("^BG%s^BG has abandoned the race"), "")
     MSG_INFO_NOTIF(RACE_FAIL_RANKED,                        N_CONSOLE,  1, 3, "s1 race_col f1ord race_col f3race_time race_diff", "s1 f3race_time",         "race_newfail",             _("^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"), "")
@@ -445,7 +445,7 @@
     MSG_INFO_NOTIF(TEAMCHANGE_LARGERTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou cannot change to a larger team"), "")
     MSG_INFO_NOTIF(TEAMCHANGE_NOTALLOWED,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou are not allowed to change teams"), "")
 
-    MSG_INFO_NOTIF(VERSION_BETA,                            N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s"), "")
+    MSG_INFO_NOTIF(VERSION_BETA,                            N_CONSOLE,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s"), "")
     MSG_INFO_NOTIF(VERSION_OLD,                             N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"), "")
     MSG_INFO_NOTIF(VERSION_OUTDATED,                        N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!"), "")
 
@@ -698,7 +698,7 @@
     MSG_CENTER_NOTIF(ITEM_FUELREGEN_GOT,                N_ENABLE,    0, 0, "",                                   CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Fuel regenerator"), "")
     MSG_CENTER_NOTIF(ITEM_JETPACK_GOT,                  N_ENABLE,    0, 0, "",                                   CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Jetpack"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_DONTHAVE,              N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "")
-    MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    1, 1, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
+    MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    0, 2, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_NOAMMO,                N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
@@ -1005,9 +1005,9 @@
 #define A_ALWAYS 2
 
 // MSG_CHOICE_NOTIFICATIONS
-    MULTITEAM_CHOICE(CTF_CAPTURE_BROKEN, 4,     N__NORMAL, A_ALWAYS,  MSG_INFO,   INFO_CTF_CAPTURE,                   INFO_CTF_CAPTURE_BROKEN)
-    MULTITEAM_CHOICE(CTF_CAPTURE_TIME, 4,       N__NORMAL, A_ALWAYS,  MSG_INFO,   INFO_CTF_CAPTURE,                   INFO_CTF_CAPTURE_TIME)
-    MULTITEAM_CHOICE(CTF_CAPTURE_UNBROKEN, 4,   N__NORMAL, A_ALWAYS,  MSG_INFO,   INFO_CTF_CAPTURE,                   INFO_CTF_CAPTURE_UNBROKEN)
+    MULTITEAM_CHOICE(CTF_CAPTURE_BROKEN, 4,     N_VERBOSE, A_ALWAYS,  MSG_INFO,   INFO_CTF_CAPTURE,                   INFO_CTF_CAPTURE_BROKEN)
+    MULTITEAM_CHOICE(CTF_CAPTURE_TIME, 4,       N_VERBOSE, A_ALWAYS,  MSG_INFO,   INFO_CTF_CAPTURE,                   INFO_CTF_CAPTURE_TIME)
+    MULTITEAM_CHOICE(CTF_CAPTURE_UNBROKEN, 4,   N_VERBOSE, A_ALWAYS,  MSG_INFO,   INFO_CTF_CAPTURE,                   INFO_CTF_CAPTURE_UNBROKEN)
     MULTITEAM_CHOICE(CTF_PICKUP_TEAM, 4,        N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_TEAM,             CENTER_CTF_PICKUP_TEAM_VERBOSE)
     MSG_CHOICE_NOTIF(CTF_PICKUP_TEAM_NEUTRAL,   N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_TEAM_NEUTRAL,     CENTER_CTF_PICKUP_TEAM_VERBOSE_NEUTRAL)
     MSG_CHOICE_NOTIF(CTF_PICKUP_ENEMY,          N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_ENEMY,            CENTER_CTF_PICKUP_ENEMY_VERBOSE)

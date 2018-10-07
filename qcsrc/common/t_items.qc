@@ -402,7 +402,7 @@ bool have_pickup_item(entity this)
 	return true;
 }
 
-void Item_Show (entity e, float mode)
+void Item_Show (entity e, int mode)
 {
 	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
 	e.ItemStatus &= ~ITS_STAYWEP;
@@ -856,7 +856,7 @@ float Item_GiveTo(entity item, entity player)
 		return 0;
 
 	// crude hack to enforce switching weapons
-	if(g_cts && item.itemdef.instanceOfWeaponPickup)
+	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS(player).cvar_cl_cts_noautoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1317,7 +1317,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
 			|| (itemid & (IT_KEY1 | IT_KEY2))
-		) this.target = "###item###"; // for finding the nearest item using find()
+		) this.target = "###item###"; // for finding the nearest item using findnearest
 
 		Item_ItemsTime_SetTime(this, 0);
 	}

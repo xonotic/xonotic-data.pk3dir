@@ -53,7 +53,7 @@ float rpn_popf() { return stof(rpn_pop()); }
 void rpn_pushf(float f) { return rpn_push(sprintf("%.9g", f)); }
 void rpn_setf(float f) { return rpn_set(sprintf("%.9g", f)); }
 
-void GenericCommand_rpn(float request, float argc, string command)
+void GenericCommand_rpn(int request, int argc, string command)
 {
 	switch(request)
 	{

@@ -80,7 +80,6 @@ const int HAVOCBOT_ONS_ROLE_OFFENSE 	= 8;
 
 .entity havocbot_ons_target;
 
-.int havocbot_role_flags;
 .float havocbot_attack_time;
 
 void havocbot_role_ons_defense(entity this);

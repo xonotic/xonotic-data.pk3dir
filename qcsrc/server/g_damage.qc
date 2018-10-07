@@ -4,6 +4,7 @@
 #include "bot/api.qh"
 #include "g_hook.qh"
 #include <server/mutators/_mod.qh>
+#include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
@@ -488,8 +489,8 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
 	STAT(FROZEN, targ) = frozen_type;
-	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == 3) ? 1 : 0);
-	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
+	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == FROZEN_TEMP_DYING) ? 1 : 0);
+	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == FROZEN_TEMP_DYING) ? targ_maxhealth : 1));
 	targ.revive_speed = revivespeed;
 	if(targ.bot_attack)
 		IL_REMOVE(g_bot_targets, targ);
@@ -528,16 +529,15 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
-void Unfreeze(entity targ)
+void Unfreeze(entity targ, bool reset_health)
 {
 	if(!STAT(FROZEN, targ))
 		return;
 
-	if(STAT(FROZEN, targ) && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
-	{
+	if (reset_health && STAT(FROZEN, targ) != FROZEN_TEMP_DYING)
 		SetResourceAmount(targ, RESOURCE_HEALTH, ((IS_PLAYER(targ)) ? start_health : targ.max_health));
-		targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
-	}
+
+	targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 
 	STAT(FROZEN, targ) = 0;
 	STAT(REVIVE_PROGRESS, targ) = 0;
@@ -702,7 +702,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			if(deathtype == DEATH_FALL.m_id)
 			if(damage >= autocvar_g_frozen_revive_falldamage)
 			{
-				Unfreeze(targ);
+				Unfreeze(targ, false);
 				SetResourceAmount(targ, RESOURCE_HEALTH, autocvar_g_frozen_revive_falldamage_health);
 				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
@@ -1086,7 +1086,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	RadiusDamage_running = 0;
 
 	if(!DEATH_ISSPECIAL(deathtype))
-		accuracy_add(attacker, DEATH_WEAPONOF(deathtype).m_id, 0, min(coredamage, stat_damagedone));
+		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(coredamage, stat_damagedone));
 
 	return total_damage_to_creatures;
 }
@@ -1215,7 +1215,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 				}
 			}
 			if(accuracy_isgooddamage(o, e))
-				accuracy_add(o, DEATH_WEAPONOF(dt).m_id, 0, max(0, totaldamage - mindamage));
+				accuracy_add(o, DEATH_WEAPONOF(dt), 0, max(0, totaldamage - mindamage));
 			return max(0, totaldamage - mindamage); // can never be negative, but to make sure
 		}
 		else
@@ -1229,7 +1229,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		e.fire_owner = o;
 		e.fire_hitsound = false;
 		if(accuracy_isgooddamage(o, e))
-			accuracy_add(o, DEATH_WEAPONOF(dt).m_id, 0, d);
+			accuracy_add(o, DEATH_WEAPONOF(dt), 0, d);
 		return d;
 	}
 }
@@ -1268,11 +1268,11 @@ void Fire_ApplyDamage(entity e)
 	}
 	e.fire_hitsound = true;
 
-	if(!IS_INDEPENDENT_PLAYER(e))
-	if(!STAT(FROZEN, e))
-		FOREACH_CLIENT(IS_PLAYER(it) && it != e, {
-			if(!IS_DEAD(it))
-			if(!IS_INDEPENDENT_PLAYER(it))
+	if(!IS_INDEPENDENT_PLAYER(e) && !STAT(FROZEN, e))
+	{
+		IL_EACH(g_damagedbycontents, it.damagedbycontents && it != e,
+		{
+			if(!IS_DEAD(it) && it.takedamage && !IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
 			{
 				t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
@@ -1280,6 +1280,7 @@ void Fire_ApplyDamage(entity e)
 				Fire_AddDamage(it, o, d, t, DEATH_FIRE.m_id);
 			}
 		});
+	}
 }
 
 void Fire_ApplyEffect(entity e)

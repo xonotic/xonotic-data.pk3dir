@@ -52,6 +52,7 @@ int autocvar_g_waypointsprite_spam;
 float autocvar_g_waypointsprite_timealphaexponent;
 bool autocvar_g_waypointsprite_turrets = true;
 float autocvar_g_waypointsprite_turrets_maxdist = 5000;
+bool autocvar_g_waypointsprite_turrets_text = false;
 bool autocvar_g_waypointsprite_uppercase;
 bool autocvar_g_waypointsprite_text;
 float autocvar_g_waypointsprite_iconsize = 32;
@@ -203,7 +204,7 @@ entity WaypointSprite_SpawnFixed(
 .entity waypointsprite_deployed_fixed;
 entity WaypointSprite_DeployFixed(
     entity spr,
-    float limited_range,
+    bool limited_range,
     entity player,
     vector ofs,
     entity icon // initial icon
@@ -222,7 +223,7 @@ entity WaypointSprite_DeployPersonal(
 entity WaypointSprite_Attach(
     entity spr,
     entity player,
-    float limited_range,
+    bool limited_range,
     entity icon // initial icon
 );
 

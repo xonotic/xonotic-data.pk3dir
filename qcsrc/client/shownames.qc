@@ -38,8 +38,18 @@ const float SHOWNAMES_FADESPEED = 4;
 const float SHOWNAMES_FADEDELAY = 0.4;
 void Draw_ShowNames(entity this)
 {
-	if (this.sv_entnum == (current_player + 1))  // self or spectatee
-		if (!(autocvar_hud_shownames_self && autocvar_chase_active)) return;
+	if (this.sv_entnum == current_player + 1) // self or spectatee
+	{
+		if (!autocvar_chase_active)
+			return;
+
+		if (!autocvar_hud_shownames_self
+			&& !(spectatee_status > 0 && time <= spectatee_status_changed_time + 1))
+		{
+			return;
+		}
+	}
+
 	if (!this.sameteam && !autocvar_hud_shownames_enemies) return;
 	bool hit;
 	if (!autocvar_hud_shownames_crosshairdistance && this.sameteam)
