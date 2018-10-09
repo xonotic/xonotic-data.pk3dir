@@ -10,17 +10,6 @@ void DelayThink(entity this)
 	delete(this);
 }
 
-void FixSize(entity e)
-{
-	e.mins_x = rint(e.mins_x);
-	e.mins_y = rint(e.mins_y);
-	e.mins_z = rint(e.mins_z);
-
-	e.maxs_x = rint(e.maxs_x);
-	e.maxs_y = rint(e.maxs_y);
-	e.maxs_z = rint(e.maxs_z);
-}
-
 #ifdef SVQC
 void generic_setactive(entity this, int act)
 {
