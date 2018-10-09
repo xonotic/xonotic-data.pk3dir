@@ -41,6 +41,11 @@ void g_clientmodel_setcolormaptoactivator(entity this, entity actor, entity trig
 
 void g_clientmodel_use(entity this, entity actor, entity trigger)
 {
+	// Flag to set func_clientwall state
+	// 1 == deactivate, 2 == activate, 0 == do nothing
+	if(this.classname == "func_clientwall" || this.classname == "func_clientillusionary")
+		this.antiwall_flag = trigger.antiwall_flag;
+
 	if (this.antiwall_flag == 1)
 	{
 		this.inactive = 1;

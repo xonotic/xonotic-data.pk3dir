@@ -302,9 +302,6 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		}
 		if (s != "")
 		{
-			// Flag to set func_clientwall state
-			// 1 == deactivate, 2 == activate, 0 == do nothing
-			int aw_flag = this.antiwall_flag;
 			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
 				if(t.use && (t.sub_target_used != time || !preventReuse))
@@ -315,9 +312,6 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 					}
 					else
 					{
-						if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
-							t.antiwall_flag = aw_flag;
-
 						t.use(t, actor, this);
 						if(preventReuse)
 							t.sub_target_used = time;
