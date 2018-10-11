@@ -8,4 +8,3 @@ REGISTER_MUTATOR(duel, false)
 }
 
 bool autocvar_g_duel_with_powerups;
-bool autocvar_g_duel_warmup = true;

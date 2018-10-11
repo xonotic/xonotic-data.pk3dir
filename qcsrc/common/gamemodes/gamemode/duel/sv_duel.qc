@@ -1,12 +1,5 @@
 #include "sv_duel.qh"
 
-MUTATOR_HOOKFUNCTION(duel, ReadLevelCvars)
-{
-	if(autocvar_g_duel_warmup)
-		warmup_stage = 1; // otherwise allow it if it's enabled
-	//sv_ready_restart_after_countdown = 0;
-}
-
 MUTATOR_HOOKFUNCTION(duel, GetPlayerLimit)
 {
 	M_ARGV(0, int) = 2; // duel is always 1v1!
