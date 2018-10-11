@@ -284,3 +284,5 @@ void Join(entity this);
 
 #define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
+
+int Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
