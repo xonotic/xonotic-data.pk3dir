@@ -304,7 +304,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		{
 			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
-				if(t.use && (t.sub_target_used != time || !preventReuse))
+				if(t != this && t.use && (t.sub_target_used != time || !preventReuse))
 				{
 					if(this.target_random)
 					{
