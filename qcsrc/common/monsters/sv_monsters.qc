@@ -172,15 +172,15 @@ void monster_setupcolors(entity this)
 	else
 	{
 		if(this.monster_skill <= MONSTER_SKILL_EASY)
-			this.colormap = 1029;
+			this.colormap = 1126;
 		else if(this.monster_skill <= MONSTER_SKILL_MEDIUM)
-			this.colormap = 1027;
+			this.colormap = 1075;
 		else if(this.monster_skill <= MONSTER_SKILL_HARD)
-			this.colormap = 1038;
+			this.colormap = 1228;
 		else if(this.monster_skill <= MONSTER_SKILL_INSANE)
-			this.colormap = 1028;
+			this.colormap = 1092;
 		else if(this.monster_skill <= MONSTER_SKILL_NIGHTMARE)
-			this.colormap = 1032;
+			this.colormap = 1160;
 		else
 			this.colormap = 1024;
 	}
