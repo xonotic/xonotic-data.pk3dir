@@ -179,6 +179,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	setthink(view, CL_Weaponentity_Think);
 	view.nextthink = time;
 	view.viewmodelforclient = actor;
+	view.nodrawtoclient = actor;
 	view.draggable = drag_undraggable;
 	setcefc(view, CL_Weaponentity_CustomizeEntityForClient);
 
