@@ -175,8 +175,9 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 		{
 			float randomness = random();
 
-			if(time >= actor.golem_lastattack) // golem doesn't attack much
-			if(IS_ONGROUND(actor))
+			if(time < actor.golem_lastattack || !IS_ONGROUND(actor))
+				return false;
+
 			if(randomness <= 0.5 && vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_golem_attack_smash_range))
 			{
 				setanim(actor, actor.anim_melee1, false, true, true);
@@ -192,7 +193,7 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 			}
 			else if(randomness <= 0.1 && vdist(actor.enemy.origin - actor.origin, >=, autocvar_g_monster_golem_attack_smash_range * 1.5)) // small chance, don't want this spammed
 			{
-				setanim(actor, actor.anim_shoot, true, true, false);
+				setanim(actor, actor.anim_melee2, true, true, false);
 				actor.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general
 				actor.attack_finished_single[0] = time + 1.1;
 				actor.anim_finished = 1.1;
@@ -253,7 +254,7 @@ METHOD(Golem, mr_anim, bool(Golem this, entity actor))
     //actor.anim_pain3 = animfixfps(actor, '9 1 2', none); // 0.5 seconds
     //actor.anim_pain4 = animfixfps(actor, '10 1 2', none); // 0.5 seconds
     //actor.anim_pain5 = animfixfps(actor, '11 1 2', none); // 0.5 seconds
-    //actor.anim_sight = animfixfps(actor, '12 1 5', none); // analyze models and set framerate
+    actor.anim_spawn = animfixfps(actor, '12 1 5', none); // analyze models and set framerate
     actor.anim_die1 = animfixfps(actor, '13 1 0.5', none); // 2 seconds
     //actor.anim_dead = animfixfps(actor, '14 1 0.5', none); // 2 seconds
     actor.anim_die2 = animfixfps(actor, '15 1 0.5', none); // 2 seconds
@@ -283,7 +284,7 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
     actor.monster_loot = ITEM_HealthMega;
     actor.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
 
-    setanim(actor, actor.anim_shoot, false, true, true);
+    setanim(actor, actor.anim_spawn, false, true, true);
     actor.spawn_time = actor.animstate_endtime;
     actor.spawnshieldtime = actor.spawn_time;
     actor.monster_attackfunc = M_Golem_Attack;
