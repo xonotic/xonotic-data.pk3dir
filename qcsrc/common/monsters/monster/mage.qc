@@ -298,15 +298,16 @@ void M_Mage_Attack_Push(entity this)
 void M_Mage_Attack_Teleport(entity this, entity targ)
 {
 	if(!targ) return;
+	if(!IS_ONGROUND(targ)) return;
 	if(vdist(targ.origin - this.origin, >, 1500)) return;
 
 	makevectors(targ.angles);
-	tracebox(targ.origin + ((v_forward * -1) * 200), this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
+	tracebox(CENTER_OR_VIEWOFS(targ), this.mins, this.maxs, CENTER_OR_VIEWOFS(targ) + ((v_forward * -1) * 200), MOVE_NOMONSTERS, this);
 
 	if(trace_fraction < 1)
 		return;
 
-	vector newpos = targ.origin + ((v_forward * -1) * 200);
+	vector newpos = trace_endpos;
 
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, newpos, '0 0 0', 1);
@@ -363,7 +364,8 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 				if(random() <= 0.4)
 				{
 					OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
-					off.offhand_think(off, actor, true);
+					actor.OffhandMageTeleport_key_pressed = 0;
+					off.offhand_think(off, actor, 1);
 					return true;
 				}
 				else
