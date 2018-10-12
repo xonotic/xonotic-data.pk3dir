@@ -274,7 +274,7 @@ void PutObserverInServer(entity this)
 
     RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
-	Unfreeze(this);
+	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
 
 	if (this.alivetime)
@@ -736,7 +736,7 @@ void PutPlayerInServer(entity this)
 		//spot.target = s;
 	}
 
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 
@@ -1146,7 +1146,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = true;
+	this.move_qcphysics = false;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
@@ -1201,7 +1201,7 @@ void ClientDisconnect(entity this)
 
 	Portal_ClearAll(this);
 
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	RemoveGrapplingHooks(this);
 
@@ -1916,6 +1916,14 @@ void Join(entity this)
 	this.team_selected = false;
 }
 
+int GetPlayerLimit()
+{
+	int player_limit = autocvar_g_maxplayers;
+	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
+	player_limit = M_ARGV(0, int);
+	return player_limit;
+}
+
 /**
  * Determines whether the player is allowed to join. This depends on cvar
  * g_maxplayers, if it isn't used this function always return true, otherwise
@@ -1948,11 +1956,13 @@ int nJoinAllowed(entity this, entity ignore)
 			++currentlyPlaying;
 	});
 
+	int player_limit = GetPlayerLimit();
+
 	float free_slots = 0;
-	if (!autocvar_g_maxplayers)
+	if (!player_limit)
 		free_slots = maxclients - totalClients;
-	else if(currentlyPlaying < autocvar_g_maxplayers)
-		free_slots = min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
+	else if(currentlyPlaying < player_limit)
+		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
 	static float join_prevent_msg_time = 0;
 	if(this && ignore && !free_slots && time > join_prevent_msg_time)
@@ -2409,16 +2419,16 @@ void PlayerPreThink (entity this)
 
 	if(IS_PLAYER(this))
 	{
-		if (STAT(FROZEN, this) == 2)
+		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
 			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 			if (STAT(REVIVE_PROGRESS, this) >= 1)
-				Unfreeze(this);
+				Unfreeze(this, false);
 		}
-		else if (STAT(FROZEN, this) == 3)
+		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
 			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
@@ -2431,7 +2441,7 @@ void PlayerPreThink (entity this)
 					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			}
 			else if (STAT(REVIVE_PROGRESS, this) <= 0)
-				Unfreeze(this);
+				Unfreeze(this, false);
 		}
 	}
 
@@ -2670,6 +2680,311 @@ void PlayerPostThink (entity this)
     }
 
 	CSQCMODEL_AUTOUPDATE(this);
+}
+
+/**
+ * message "": do not say, just test flood control
+ * return value:
+ *   1 = accept
+ *   0 = reject
+ *  -1 = fake accept
+ */
+int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
+{
+	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
+		msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
+
+	if (source)
+		msgin = formatmessage(source, msgin);
+
+	string colorstr;
+	if (!(IS_PLAYER(source) || source.caplayer))
+		colorstr = "^0"; // black for spectators
+	else if(teamplay)
+		colorstr = Team_ColorCode(source.team);
+	else
+	{
+		colorstr = "";
+		teamsay = false;
+	}
+
+	if(game_stopped)
+		teamsay = false;
+
+	if (!source) {
+		colorstr = "";
+		teamsay = false;
+	}
+
+	if(msgin != "")
+		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
+
+	/*
+	 * using bprint solves this... me stupid
+	// how can we prevent the message from appearing in a listen server?
+	// for now, just give "say" back and only handle say_team
+	if(!teamsay)
+	{
+		clientcommand(source, strcat("say ", msgin));
+		return;
+	}
+	*/
+
+	string namestr = "";
+	if (source)
+		namestr = playername(source, autocvar_g_chat_teamcolors);
+
+	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
+
+	string msgstr = "", cmsgstr = "";
+	string privatemsgprefix = string_null;
+	int privatemsgprefixlen = 0;
+	if (msgin != "")
+	{
+		if(privatesay)
+		{
+			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
+			privatemsgprefixlen = strlen(msgstr);
+			msgstr = strcat(msgstr, msgin);
+			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
+			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay, autocvar_g_chat_teamcolors), ": ^7");
+		}
+		else if(teamsay)
+		{
+			if(strstrofs(msgin, "/me", 0) >= 0)
+			{
+				//msgin = strreplace("/me", "", msgin);
+				//msgin = substring(msgin, 3, strlen(msgin));
+				msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
+				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
+			}
+			else
+				msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
+		}
+		else
+		{
+			if(strstrofs(msgin, "/me", 0) >= 0)
+			{
+				//msgin = strreplace("/me", "", msgin);
+				//msgin = substring(msgin, 3, strlen(msgin));
+				msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
+				msgstr = strcat("\{1}^4* ", "^7", msgin);
+			}
+			else {
+				msgstr = "\{1}";
+				msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
+				msgstr = strcat(msgstr, msgin);
+			}
+			cmsgstr = "";
+		}
+		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
+	}
+
+	string fullmsgstr = msgstr;
+	string fullcmsgstr = cmsgstr;
+
+	// FLOOD CONTROL
+	int flood = 0;
+	var .float flood_field = floodcontrol_chat;
+	if(floodcontrol && source)
+	{
+		float flood_spl;
+		float flood_burst;
+		float flood_lmax;
+		float lines;
+		if(privatesay)
+		{
+			flood_spl = autocvar_g_chat_flood_spl_tell;
+			flood_burst = autocvar_g_chat_flood_burst_tell;
+			flood_lmax = autocvar_g_chat_flood_lmax_tell;
+			flood_field = floodcontrol_chattell;
+		}
+		else if(teamsay)
+		{
+			flood_spl = autocvar_g_chat_flood_spl_team;
+			flood_burst = autocvar_g_chat_flood_burst_team;
+			flood_lmax = autocvar_g_chat_flood_lmax_team;
+			flood_field = floodcontrol_chatteam;
+		}
+		else
+		{
+			flood_spl = autocvar_g_chat_flood_spl;
+			flood_burst = autocvar_g_chat_flood_burst;
+			flood_lmax = autocvar_g_chat_flood_lmax;
+			flood_field = floodcontrol_chat;
+		}
+		flood_burst = max(0, flood_burst - 1);
+		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
+
+		// do flood control for the default line size
+		if(msgstr != "")
+		{
+			getWrappedLine_remaining = msgstr;
+			msgstr = "";
+			lines = 0;
+			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
+			{
+				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
+				++lines;
+			}
+			msgstr = substring(msgstr, 1, strlen(msgstr) - 1);
+
+			if(getWrappedLine_remaining != "")
+			{
+				msgstr = strcat(msgstr, "\n");
+				flood = 2;
+			}
+
+			if (time >= source.(flood_field))
+			{
+				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
+			}
+			else
+			{
+				flood = 1;
+				msgstr = fullmsgstr;
+			}
+		}
+		else
+		{
+			if (time >= source.(flood_field))
+				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
+			else
+				flood = 1;
+		}
+
+		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
+			source.(flood_field) = flood = 0;
+	}
+
+	string sourcemsgstr, sourcecmsgstr;
+	if(flood == 2) // cannot happen for empty msgstr
+	{
+		if(autocvar_g_chat_flood_notify_flooder)
+		{
+			sourcemsgstr = strcat(msgstr, "\n^3FLOOD CONTROL: ^7message too long, trimmed\n");
+			sourcecmsgstr = "";
+		}
+		else
+		{
+			sourcemsgstr = fullmsgstr;
+			sourcecmsgstr = fullcmsgstr;
+		}
+		cmsgstr = "";
+	}
+	else
+	{
+		sourcemsgstr = msgstr;
+		sourcecmsgstr = cmsgstr;
+	}
+
+	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer))
+	{
+		if (!game_stopped)
+		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			teamsay = -1; // spectators
+	}
+
+	if(flood)
+		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.");
+
+	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
+	if(privatesay)
+		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
+
+	int ret;
+	if(source && CS(source).muted)
+	{
+		// always fake the message
+		ret = -1;
+	}
+	else if(flood == 1)
+	{
+		if (autocvar_g_chat_flood_notify_flooder)
+		{
+			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			ret = 0;
+		}
+		else
+			ret = -1;
+	}
+	else
+	{
+		ret = 1;
+	}
+
+	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer))
+	{
+		if (!game_stopped)
+		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
+			ret = -1; // just hide the message completely
+	}
+
+	MUTATOR_CALLHOOK(ChatMessage, source, ret);
+	ret = M_ARGV(1, int);
+
+	if(sourcemsgstr != "" && ret != 0)
+	{
+		if(ret < 0) // faked message, because the player is muted
+		{
+			sprint(source, sourcemsgstr);
+			if(sourcecmsgstr != "" && !privatesay)
+				centerprint(source, sourcecmsgstr);
+		}
+		else if(privatesay) // private message, between 2 people only
+		{
+			sprint(source, sourcemsgstr);
+			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
+			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
+			{
+				sprint(privatesay, msgstr);
+				if(cmsgstr != "")
+					centerprint(privatesay, cmsgstr);
+			}
+		}
+		else if ( teamsay && CS(source).active_minigame )
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
+		}
+		else if(teamsay > 0) // team message, only sent to team mates
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			if(sourcecmsgstr != "")
+				centerprint(source, sourcecmsgstr);
+			FOREACH_CLIENT((IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+				if(cmsgstr != "")
+					centerprint(it, cmsgstr);
+			});
+		}
+		else if(teamsay < 0) // spectator message, only sent to spectators
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
+		}
+		else
+		{
+			if (source) {
+				sprint(source, sourcemsgstr);
+				dedicated_print(msgstr); // send to server console too
+				MX_Say(strcat(playername(source, true), "^7: ", msgin));
+			}
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
+		}
+	}
+
+	return ret;
 }
 
 // hack to copy the button fields from the client entity to the Client State

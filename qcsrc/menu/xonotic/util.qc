@@ -689,6 +689,7 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	/* GAMETYPE(MAPINFO_TYPE_DUEL) */ \
 	/**/
 
 // hidden gametypes come last so indexing always works correctly

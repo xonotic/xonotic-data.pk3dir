@@ -856,7 +856,7 @@ float Item_GiveTo(entity item, entity player)
 		return 0;
 
 	// crude hack to enforce switching weapons
-	if(g_cts && item.itemdef.instanceOfWeaponPickup)
+	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS(player).cvar_cl_cts_noautoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

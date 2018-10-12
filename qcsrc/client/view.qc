@@ -803,37 +803,41 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-bool WantEventchase(entity this)
+int WantEventchase(entity this)
 {
 	if(autocvar_cl_orthoview)
-		return false;
+		return 0;
 	if(STAT(GAME_STOPPED) || intermission)
-		return true;
+		return 1;
 	if(this.viewloc)
-		return true;
+		return 1;
 	if(spectatee_status >= 0)
 	{
 		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
-			return true;
+			return 1;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
-			return true;
+			return 1;
 		if(autocvar_cl_eventchase_frozen && STAT(FROZEN))
-			return true;
+			return 1;
 		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
 			if(autocvar_cl_eventchase_death == 2)
 			{
 				// don't stop eventchase once it's started (even if velocity changes afterwards)
 				if(this.velocity == '0 0 0' || eventchase_running)
-					return true;
+					return 1;
 			}
-			else return true;
+			else return 1;
 		}
-		if (spectatee_status > 0 && autocvar_cl_eventchase_spectated_change
-			&& time <= spectatee_status_changed_time + 0.5)
-			return true;
+		if (spectatee_status > 0 && autocvar_cl_eventchase_spectated_change)
+		{
+			if (time <= spectatee_status_changed_time + min(3, autocvar_cl_eventchase_spectated_change_time))
+				return 1;
+			else if (eventchase_running)
+				return -1; // disable chase_active while eventchase is still enabled so to avoid a glicth
+		}
 	}
-	return false;
+	return 0;
 }
 
 void HUD_Crosshair_Vehicle(entity this)
@@ -1743,7 +1747,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 			}
 		}
 
-		if(WantEventchase(this))
+		int eventchase = WantEventchase(this);
+		if (eventchase)
 		{
 			vector current_view_origin_override = '0 0 0';
 			vector view_offset_override = '0 0 0';
@@ -1821,7 +1826,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 			if(!local_player.viewloc)
 				setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
-		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
+
+		if (eventchase <= 0 && autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
 			eventchase_running = false;
 			cvar_set("chase_active", "0");

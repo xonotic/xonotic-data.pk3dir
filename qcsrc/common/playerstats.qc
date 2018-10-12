@@ -258,6 +258,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 }
 
 // this... is a hack, a temporary one until we get a proper duel gametype
+// TODO: remove duel hack after servers have migrated to the proper duel gametype!
 string PlayerStats_GetGametype()
 {
 	if(IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2)

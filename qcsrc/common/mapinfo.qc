@@ -1067,13 +1067,7 @@ int MapInfo_Get_ByName(string pFilename, float pAllowGenerate, Gametype pGametyp
 {
 	int r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
 
-	if(cvar("g_tdm_on_dm_maps"))
-	{
-		// if this is set, all DM maps support TDM too
-		if (!(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags))
-			if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags)
-				_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_TEAM_DEATHMATCH);
-	}
+	FOREACH(Gametypes, it.m_isForcedSupported(it), _MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, it));
 
 	if(pGametypeToSet)
 	{

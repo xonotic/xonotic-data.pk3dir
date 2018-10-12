@@ -145,6 +145,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_accuracy_data_receive, bool, this.cvar_cl_accuracy_data_receive);
     ATTRIBARRAY(Client, cvar_cl_weaponpriorities, string, 10);
     ATTRIB(Client, cvar_cl_weaponpriority, string, this.cvar_cl_weaponpriority);
+    ATTRIB(Client, cvar_cl_cts_noautoswitch, bool, this.cvar_cl_cts_noautoswitch);
 
     METHOD(Client, m_unwind, bool(Client this));
 
@@ -276,8 +277,12 @@ void FixPlayermodel(entity player);
 
 void ClientInit_misc(entity this);
 
+int GetPlayerLimit();
+
 bool joinAllowed(entity this);
 void Join(entity this);
 
 #define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
+
+int Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
