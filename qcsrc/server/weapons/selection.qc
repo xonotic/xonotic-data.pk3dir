@@ -282,6 +282,25 @@ void W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 	}
 }
 
+void W_SwitchWeapon_TryOthers(entity this, Weapon w, .entity weaponentity)
+{
+	if(this.(weaponentity).m_switchweapon != w)
+	{
+		if(client_hasweapon(this, w, weaponentity, true, true)) // NOTE: still complains
+			W_SwitchWeapon_Force(this, w, weaponentity);
+		else
+		{
+			this.(weaponentity).selectweapon = w.m_id; // update selectweapon anyway
+			W_NextWeaponOnImpulse(this, w.impulse, weaponentity);
+		}
+	}
+	else if(!forbidWeaponUse(this))
+	{
+		entity actor = this;
+		w.wr_reload(w, actor, weaponentity);
+	}
+}
+
 void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity)
 {
 	float w;
