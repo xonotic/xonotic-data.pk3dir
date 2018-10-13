@@ -279,7 +279,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	delete(this);
 
 	if(to)
-		SetMovetypeFollow(this, to);
+		SetMovetypeFollow(newproj, to);
 }
 
 void W_Electro_Orb_Touch(entity this, entity toucher)
