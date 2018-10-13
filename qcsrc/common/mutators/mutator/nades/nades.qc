@@ -975,6 +975,10 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	if(set_owner)
 		_nade.realowner = e;
 
+	.entity weaponentity = _nade.weaponentity_fld;
+	if(e.(weaponentity))
+		e.(weaponentity).nodrawtoclient = e; // restore it!
+
 	settouch(_nade, nade_touch);
 	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
 	SetResourceAmount(_nade, RESOURCE_HEALTH, autocvar_g_nades_nade_health);
@@ -1104,6 +1108,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 
 	setmodel(fn, MDL_NADE_VIEW);
 	setattachment(fn, player.(weaponentity), "");
+	if(player.(weaponentity))
+		player.(weaponentity).nodrawtoclient = NULL; // temporarily allow server side view model
 	fn.realowner = fn.owner = player;
 	fn.colormod = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_color;
 	fn.colormap = player.colormap;
