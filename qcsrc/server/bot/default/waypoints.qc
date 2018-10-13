@@ -390,7 +390,7 @@ void waypoint_removelink(entity from, entity to)
 	if (!found && from.wp28 == to) found = true; if (found) {from.wp28 = from.wp29; from.wp28mincost = from.wp29mincost;}
 	if (!found && from.wp29 == to) found = true; if (found) {from.wp29 = from.wp30; from.wp29mincost = from.wp30mincost;}
 	if (!found && from.wp30 == to) found = true; if (found) {from.wp30 = from.wp31; from.wp30mincost = from.wp31mincost;}
-	if (found) {from.wp31 = NULL; from.wp31mincost = 10000000;}
+	if (!found && from.wp31 == to) found = true; if (found) {from.wp31 = NULL; from.wp31mincost = 10000000;}
 }
 
 bool waypoint_islinked(entity from, entity to)
