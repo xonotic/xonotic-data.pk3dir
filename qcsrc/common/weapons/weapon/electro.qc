@@ -285,8 +285,8 @@ void W_Electro_Orb_Stick(entity this, entity to)
 void W_Electro_Orb_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	if(toucher.takedamage == DAMAGE_AIM)
-		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(this, toucher); } }
+	if(toucher.takedamage == DAMAGE_AIM && WEP_CVAR_SEC(electro, touchexplode))
+		{ W_Electro_Explode(this, toucher); }
 	else if(toucher.owner != this.owner && toucher.classname != this.classname) // don't stick to player's other projectiles!
 	{
 		//UpdateCSQCProjectile(this);
