@@ -37,6 +37,7 @@ float botframe_cachedwaypointlinks;
 
 spawnfunc(waypoint);
 void waypoint_removelink(entity from, entity to);
+int waypoint_getlinknum(entity from, entity to);
 bool waypoint_islinked(entity from, entity to);
 void waypoint_addlink_customcost(entity from, entity to, float c);
 void waypoint_addlink(entity from, entity to);
