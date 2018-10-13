@@ -358,6 +358,8 @@ void waypoint_removelink(entity from, entity to)
 	if (from == to || (from.wpflags & WAYPOINTFLAG_NORELINK))
 		return;
 
+	entity fromwp31_prev = from.wp31;
+
 	bool found = false;
 	if (!found && from.wp00 == to) found = true; if (found) {from.wp00 = from.wp01; from.wp00mincost = from.wp01mincost;}
 	if (!found && from.wp01 == to) found = true; if (found) {from.wp01 = from.wp02; from.wp01mincost = from.wp02mincost;}
@@ -391,6 +393,9 @@ void waypoint_removelink(entity from, entity to)
 	if (!found && from.wp29 == to) found = true; if (found) {from.wp29 = from.wp30; from.wp29mincost = from.wp30mincost;}
 	if (!found && from.wp30 == to) found = true; if (found) {from.wp30 = from.wp31; from.wp30mincost = from.wp31mincost;}
 	if (!found && from.wp31 == to) found = true; if (found) {from.wp31 = NULL; from.wp31mincost = 10000000;}
+
+	if (fromwp31_prev && !from.wp31)
+		waypoint_schedulerelink(from);
 }
 
 bool waypoint_islinked(entity from, entity to)
