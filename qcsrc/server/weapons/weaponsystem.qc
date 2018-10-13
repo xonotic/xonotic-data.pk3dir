@@ -321,6 +321,22 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
 		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor(actor);
+
+		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor))
+		{
+			for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot)
+			{
+				if(slot == wepslot)
+					continue;
+				.entity wepent = weaponentities[wepslot];
+				if(actor.(wepent) && actor.(wepent).m_weapon != WEP_Null)
+				{
+					if (ATTACK_FINISHED(actor, wepslot) < time - actor.(wepent).weapon_frametime * 1.5)
+						ATTACK_FINISHED(actor, wepslot) = time;
+					ATTACK_FINISHED(actor, wepslot) = ATTACK_FINISHED(actor, wepslot) + (attacktime * W_WeaponRateFactor(actor)) * 0.5;
+				}
+			}
+		}
 	}
 	this.bulletcounter += 1;
 	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, slot)), "\n");
