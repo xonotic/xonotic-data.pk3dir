@@ -262,7 +262,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	// scan how many mines we placed, and return if we reached our limit
 	if(WEP_CVAR(minelayer, limit))
 	{
-		int minecount = W_MineLayer_Count(actor);
+		int minecount = W_MineLayer_Count(actor, weaponentity);
 		if(minecount >= WEP_CVAR(minelayer, limit))
 		{
 			// the refire delay keeps this message from being spammed
