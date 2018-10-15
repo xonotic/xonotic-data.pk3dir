@@ -42,6 +42,9 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, m_modicons_reset, void());
 #endif
 
+    /** DO NOT USE, this is compatibility for legacy maps! */
+    ATTRIB(Gametype, m_legacydefaults, string, "");
+
     ATTRIB(Gametype, m_mutators, string);
     METHOD(Gametype, m_parse_mapinfo, bool(string k, string v))
     {
@@ -114,6 +117,7 @@ CLASS(Deathmatch, Gametype)
     {
         return true;
     }
+    ATTRIB(Deathmatch, m_legacydefaults, string, "30 20 0");
 ENDCLASS(Deathmatch)
 REGISTER_GAMETYPE(DEATHMATCH, NEW(Deathmatch));
 
@@ -131,6 +135,7 @@ CLASS(LastManStanding, Gametype)
         TC(Gametype, this);
         returns(menu, _("Lives:"),           3,   50,  1, "g_lms_lives_override",      string_null,                    string_null);
     }
+    ATTRIB(LastManStanding, m_legacydefaults, string, "9 20 0");
 ENDCLASS(LastManStanding)
 REGISTER_GAMETYPE(LMS, NEW(LastManStanding));
 
@@ -172,6 +177,7 @@ CLASS(Race, Gametype)
 #ifdef CSQC
     ATTRIB(Race, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
 #endif
+    ATTRIB(Race, m_legacydefaults, string, "20 5 7 15 0");
 ENDCLASS(Race)
 REGISTER_GAMETYPE(RACE, NEW(Race));
 #define g_race IS_GAMETYPE(RACE)
@@ -201,6 +207,7 @@ CLASS(RaceCTS, Gametype)
 #ifdef CSQC
     ATTRIB(RaceCTS, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
 #endif
+    ATTRIB(RaceCTS, m_legacydefaults, string, "20 0 0");
 ENDCLASS(RaceCTS)
 REGISTER_GAMETYPE(CTS, NEW(RaceCTS));
 #define g_cts IS_GAMETYPE(CTS)
@@ -248,6 +255,7 @@ CLASS(TeamDeathmatch, Gametype)
         TC(Gametype, this);
         returns(menu, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit",         "g_tdm_teams_override",         _("The amount of points needed before the match will end"));
     }
+    ATTRIB(TeamDeathmatch, m_legacydefaults, string, "50 20 2 0");
 ENDCLASS(TeamDeathmatch)
 REGISTER_GAMETYPE(TEAM_DEATHMATCH, NEW(TeamDeathmatch));
 #define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
@@ -283,6 +291,7 @@ CLASS(CaptureTheFlag, Gametype)
     ATTRIB(CaptureTheFlag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CTF);
     ATTRIB(CaptureTheFlag, m_modicons_reset, void(), HUD_Mod_CTF_Reset);
 #endif
+    ATTRIB(CaptureTheFlag, m_legacydefaults, string, "300 20 10 0");
 ENDCLASS(CaptureTheFlag)
 REGISTER_GAMETYPE(CTF, NEW(CaptureTheFlag));
 #define g_ctf IS_GAMETYPE(CTF)
@@ -326,6 +335,7 @@ CLASS(ClanArena, Gametype)
 #ifdef CSQC
     ATTRIB(ClanArena, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
 #endif
+    ATTRIB(ClanArena, m_legacydefaults, string, "10 20 0");
 ENDCLASS(ClanArena)
 REGISTER_GAMETYPE(CA, NEW(ClanArena));
 #define g_ca IS_GAMETYPE(CA)
@@ -364,6 +374,7 @@ CLASS(Domination, Gametype)
 #ifdef CSQC
     ATTRIB(Domination, m_modicons, void(vector pos, vector mySize), HUD_Mod_Dom);
 #endif
+    ATTRIB(Domination, m_legacydefaults, string, "200 20 0");
 ENDCLASS(Domination)
 REGISTER_GAMETYPE(DOMINATION, NEW(Domination));
 
@@ -406,6 +417,7 @@ CLASS(KeyHunt, Gametype)
 #ifdef CSQC
     ATTRIB(KeyHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_KH);
 #endif
+    ATTRIB(KeyHunt, m_legacydefaults, string, "1000 20 3 0");
 ENDCLASS(KeyHunt)
 REGISTER_GAMETYPE(KEYHUNT, NEW(KeyHunt));
 
@@ -428,6 +440,7 @@ CLASS(Assault, Gametype)
         TC(Gametype, this);
         returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
     }
+    ATTRIB(Assault, m_legacydefaults, string, "20 0");
 ENDCLASS(Assault)
 REGISTER_GAMETYPE(ASSAULT, NEW(Assault));
 #define g_assault IS_GAMETYPE(ASSAULT)
@@ -447,6 +460,7 @@ CLASS(Onslaught, Gametype)
         TC(Gametype, this);
         returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
     }
+    ATTRIB(Onslaught, m_legacydefaults, string, "20 0");
 ENDCLASS(Onslaught)
 REGISTER_GAMETYPE(ONSLAUGHT, NEW(Onslaught));
 
@@ -475,6 +489,7 @@ CLASS(NexBall, Gametype)
 #ifdef CSQC
     ATTRIB(NexBall, m_modicons, void(vector pos, vector mySize), HUD_Mod_NexBall);
 #endif
+    ATTRIB(NexBall, m_legacydefaults, string, "5 20 0");
 ENDCLASS(NexBall)
 REGISTER_GAMETYPE(NEXBALL, NEW(NexBall));
 #define g_nexball IS_GAMETYPE(NEXBALL)
@@ -515,6 +530,7 @@ CLASS(FreezeTag, Gametype)
 #ifdef CSQC
     ATTRIB(FreezeTag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
 #endif
+    ATTRIB(FreezeTag, m_legacydefaults, string, "10 20 0");
 ENDCLASS(FreezeTag)
 REGISTER_GAMETYPE(FREEZETAG, NEW(FreezeTag));
 #define g_freezetag IS_GAMETYPE(FREEZETAG)

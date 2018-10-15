@@ -424,27 +424,7 @@ void _MapInfo_Map_Reset()
 
 string _MapInfo_GetDefault(Gametype t)
 {
-	switch(t)
-	{
-		case MAPINFO_TYPE_DEATHMATCH:      return "30 20 0";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "50 20 2 0";
-		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
-		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
-		case MAPINFO_TYPE_LMS:             return "9 20 0";
-		case MAPINFO_TYPE_CA:              return "10 20 0";
-		case MAPINFO_TYPE_KEYHUNT:         return "1000 20 3 0";
-		case MAPINFO_TYPE_ASSAULT:         return "20 0";
-		case MAPINFO_TYPE_RACE:            return "20 5 7 15 0";
-		case MAPINFO_TYPE_ONSLAUGHT:       return "20 0";
-		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
-		case MAPINFO_TYPE_CTS:             return "20 0 0";
-		case MAPINFO_TYPE_FREEZETAG:       return "10 20 0";
-		// NOTE: DO NOT ADD ANY MORE GAME TYPES HERE
-		// THIS IS JUST LEGACY SUPPORT FOR NEXUIZ MAPS
-		// ONLY ADD NEW STUFF TO _MapInfo_GetDefaultEx
-		// THIS FUNCTION WILL EVENTUALLY BE REMOVED
-		default:                           return "";
-	}
+	return t.m_legacydefaults;
 }
 
 void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisType, int load_default)

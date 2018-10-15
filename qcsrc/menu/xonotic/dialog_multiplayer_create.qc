@@ -53,7 +53,7 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 void GameType_ConfigureSliders_for_CurrentGametype(entity me)
 {
 	Gametype gt = MapInfo_CurrentGametype();
-	gt.m_configuremenu(t, me, GameType_ConfigureSliders);
+	gt.m_configuremenu(gt, me, GameType_ConfigureSliders);
 }
 
 entity makeXonoticServerCreateTab()
