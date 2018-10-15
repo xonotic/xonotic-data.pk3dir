@@ -457,7 +457,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	if(load_default)
 		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, false);
 
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(!pWantedType.frags) // these modes don't use fraglimit
 	{
 		cvar_set("fraglimit", "0");
 	}
@@ -485,6 +485,8 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{
+		cvar_set("fraglimit", "0"); // special case!
+
 		sa = car(s); if(sa == "") sa = cvar_string("timelimit");
 		cvar_set("g_race_qualifying_timelimit", sa);
 		s = cdr(s);
@@ -502,7 +504,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 		s = cdr(s);
 	}
 
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(!pWantedType.frags) // these modes don't use fraglimit
 	{
 		cvar_set("leadlimit", "0");
 	}
