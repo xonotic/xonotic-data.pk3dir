@@ -697,7 +697,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 		{
 			backtrace(sprintf(
 				"W_DecreaseAmmo(%.2f): '%s' subtracted too much %s from '%s', resulting with '%.2f' left... "
-				"Please notify Samual immediately with a copy of this backtrace!\n",
+				"Please notify the developers immediately with a copy of this backtrace!\n",
 				ammo_use,
 				wep.netname,
 				GetAmmoPicture(wep.ammo_type),
