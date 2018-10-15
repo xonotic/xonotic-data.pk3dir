@@ -319,7 +319,8 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 			ATTACK_FINISHED(actor, slot) = time;
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
-		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor(actor);
+		float arate = W_WeaponRateFactor(actor);
+		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * arate;
 
 		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor))
 		{
@@ -330,9 +331,11 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 				.entity wepent = weaponentities[wepslot];
 				if(actor.(wepent) && actor.(wepent).m_weapon != WEP_Null)
 				{
+					if(ATTACK_FINISHED(actor, wepslot) > time + actor.(wepent).weapon_frametime * 0.5)
+						continue; // still cooling down!
 					if (ATTACK_FINISHED(actor, wepslot) < time - actor.(wepent).weapon_frametime * 1.5)
 						ATTACK_FINISHED(actor, wepslot) = time;
-					ATTACK_FINISHED(actor, wepslot) = ATTACK_FINISHED(actor, wepslot) + (attacktime * W_WeaponRateFactor(actor)) * 0.5;
+					ATTACK_FINISHED(actor, wepslot) = ATTACK_FINISHED(actor, wepslot) + (attacktime * arate) * 0.5;
 				}
 			}
 		}
