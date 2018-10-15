@@ -335,7 +335,7 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 						continue; // still cooling down!
 					if (ATTACK_FINISHED(actor, wepslot) < time - actor.(wepent).weapon_frametime * 1.5)
 						ATTACK_FINISHED(actor, wepslot) = time;
-					ATTACK_FINISHED(actor, wepslot) = ATTACK_FINISHED(actor, wepslot) + (attacktime * arate) * 0.5;
+					ATTACK_FINISHED(actor, wepslot) = ATTACK_FINISHED(actor, wepslot) + (attacktime * arate) / MAX_WEAPONSLOTS;
 				}
 			}
 		}
