@@ -50,8 +50,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = thiswep.m_id;
-			int slot = weaponslot(weaponentity);
-			ATTACK_FINISHED(this.realowner, slot) = time;
+			ATTACK_FINISHED(this.realowner, weaponentity) = time;
 			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
 		}
 	}
@@ -144,8 +143,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = thiswep.m_id;
-			int slot = weaponslot(weaponentity);
-			ATTACK_FINISHED(this.realowner, slot) = time;
+			ATTACK_FINISHED(this.realowner, weaponentity) = time;
 			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
 		}
 	}
@@ -488,7 +486,7 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 {
     #if 0
     // don't switch while guiding a missile
-    if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_DEVASTATOR)
+    if(ATTACK_FINISHED(actor, weaponentity) <= time || PS(actor).m_weapon != WEP_DEVASTATOR)
     {
         ammo_amount = false;
         if(WEP_CVAR(devastator, reload_ammo))
