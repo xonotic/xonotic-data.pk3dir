@@ -149,7 +149,7 @@ X(9, next)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
 		{ \
 			.entity weaponentity = weaponentities[slot]; \
-			W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i), weaponentity); \
+			W_SwitchWeapon_TryOthers(this, Weapons_from(WEP_FIRST + i), weaponentity); \
 			if(slot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
