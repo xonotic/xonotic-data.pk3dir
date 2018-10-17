@@ -9,7 +9,7 @@ classfield(Wall) .float loddistance1, loddistance2;
 classfield(Wall) .vector saved;
 
 // Needed for interactive clientwalls
-.float inactive; // Clientwall disappears when inactive
+.bool inactive; // Clientwall disappears when inactive
 .float alpha_max, alpha_min;
 // If fade_start > fade_end, fadeout will be inverted
 // fade_vertical_offset is a vertival offset for player position

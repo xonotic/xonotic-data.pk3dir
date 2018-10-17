@@ -4,7 +4,7 @@ CLASS(OverkillNex, Weapon)
 /* spawnfunc */ ATTRIB(OverkillNex, m_canonical_spawnfunc, string, "weapon_oknex");
 /* ammotype  */ ATTRIB(OverkillNex, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(OverkillNex, impulse, int, 7);
-/* flags     */ ATTRIB(OverkillNex, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(OverkillNex, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(OverkillNex, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(OverkillNex, wpcolor, vector, '0.5 1 1');
 /* modelname */ ATTRIB(OverkillNex, mdl, string, "ok_sniper");

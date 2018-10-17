@@ -1,7 +1,7 @@
 #include "sv_weapon.qh"
 
-void W_Nexball_Attack(entity actor, .entity weaponentity, float t);
-void W_Nexball_Attack2(entity actor, .entity weaponentity);
+void W_Nexball_Attack(Weapon thiswep, entity actor, .entity weaponentity, float t);
+void W_Nexball_Attack2(Weapon thiswep, entity actor, .entity weaponentity);
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity pushed_entity);
 
 METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
@@ -18,19 +18,19 @@ METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity we
             }
             else
             {
-                W_Nexball_Attack(actor, weaponentity, -1);
+                W_Nexball_Attack(thiswep, actor, weaponentity, -1);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
             }
     if(fire & 2)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
         {
-            W_Nexball_Attack2(actor, weaponentity);
+            W_Nexball_Attack2(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
         }
 
     if(!(fire & 1) && STAT(NB_METERSTART, actor) && actor.ballcarried)
     {
-        W_Nexball_Attack(actor, weaponentity, time - STAT(NB_METERSTART, actor));
+        W_Nexball_Attack(thiswep, actor, weaponentity, time - STAT(NB_METERSTART, actor));
         // DropBall or stealing will set metertime back to 0
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
     }
@@ -105,7 +105,7 @@ void W_Nexball_Touch(entity this, entity toucher)
 	delete(this);
 }
 
-void W_Nexball_Attack(entity actor, .entity weaponentity, float t)
+void W_Nexball_Attack(Weapon thiswep, entity actor, .entity weaponentity, float t)
 {
 	entity ball;
 	float mul, mi, ma;
@@ -141,7 +141,7 @@ void W_Nexball_Attack(entity actor, .entity weaponentity, float t)
 	//TODO: use the speed_up cvar too ??
 }
 
-void W_Nexball_Attack2(entity actor, .entity weaponentity)
+void W_Nexball_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	if(actor.ballcarried.enemy)
 	{

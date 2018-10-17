@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/gamemodes/gamemode/domination/domination.qc>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/domination/sv_domination.qc>
+#endif

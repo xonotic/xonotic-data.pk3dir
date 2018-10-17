@@ -1,5 +1,9 @@
 #include "ent_cs.qh"
 #include <common/gamemodes/_mod.qh>
+#include <common/resources.qh>
+#ifdef SVQC
+#include <server/resources.qh>
+#endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)
 #define EntCSProps_from(i) _EntCSProps_from(i, NULL)
@@ -34,6 +38,26 @@ STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i
 	}
 #endif
 
+#ifdef SVQC
+#define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, svsend, clreceive) \
+	bool id##_check(entity ent, entity player) { return (GetResourceAmount(ent, checkprop) != GetResourceAmount(player, checkprop)); } \
+	void id##_set(entity ent, entity player) { SetResourceAmountExplicit(ent, checkprop, GetResourceAmount(player, checkprop)); } \
+	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+		this.m_public = ispublic; \
+		this.m_check = id##_check; \
+		this.m_set = id##_set; \
+		this.m_send = id##_send; \
+	}
+#elif defined(CSQC)
+#define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, svsend, clreceive) \
+	void id##_receive(entity ent) { LAMBDA(clreceive); } \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+		this.m_public = ispublic; \
+		this.m_receive = id##_receive; \
+	}
+#endif
+
 #define ENTCS_SET_NORMAL(var, x) MACRO_BEGIN \
 	var = x; \
 MACRO_END
@@ -53,13 +77,13 @@ ENTCS_PROP(ANGLES, false, angles_y, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.angles.y / 360 * 256); },
 	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; ent.angles = v; })
 
-ENTCS_PROP(HEALTH, false, health, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, bound(0, ent.health / 10, 255));  /* FIXME: use a better scale? */ },
+ENTCS_PROP_RESOURCE(HEALTH, false, RESOURCE_HEALTH, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_HEALTH) / 10, 255));  /* FIXME: use a better scale? */ },
 	{ ent.healthvalue = ReadByte() * 10; })
 
-ENTCS_PROP(ARMOR, false, armorvalue, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, bound(0, ent.armorvalue / 10, 255));  /* FIXME: use a better scale? */ },
-	{ ent.armorvalue = ReadByte() * 10; })
+ENTCS_PROP_RESOURCE(ARMOR, false, RESOURCE_ARMOR, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_ARMOR) / 10, 255));  /* FIXME: use a better scale? */ },
+	{ SetResourceAmountExplicit(ent, RESOURCE_ARMOR, ReadByte() * 10); })
 
 ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,
 	{ WriteString(chan, ent.netname); },

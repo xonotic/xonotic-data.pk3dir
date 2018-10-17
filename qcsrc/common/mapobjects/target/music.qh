@@ -25,4 +25,6 @@ void Ent_TriggerMusic_Remove(entity this);
 
 #elif defined(SVQC)
 void target_music_kill();
+
+void TargetMusic_RestoreGame();
 #endif

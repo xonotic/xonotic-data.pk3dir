@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../item.qh"
-CLASS(Image, Item)
+CLASS(Image, MenuItem)
 	METHOD(Image, configureImage, void(entity, string));
 	METHOD(Image, draw, void(entity));
 	METHOD(Image, toString, string(entity));

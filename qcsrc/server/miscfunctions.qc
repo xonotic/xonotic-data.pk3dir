@@ -16,6 +16,7 @@
 #include "../common/command/_mod.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
+#include <common/weapons/weapon/crylink.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications/all.qh"
@@ -39,34 +40,47 @@ void crosshair_trace(entity pl)
 {
 	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
-.bool ctrace_solidchanged;
+
 void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, false);
+}
+
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, true);
+}
+
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz)
 {
 	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
 	{
 		if(it.model != "")
 		{
 			it.solid = SOLID_BSP;
-			it.ctrace_solidchanged = true;
 			IL_PUSH(g_ctrace_changed, it);
 		}
 	});
 
-	crosshair_trace(pl);
+	if (is_wz)
+		WarpZone_crosshair_trace(pl);
+	else
+		crosshair_trace(pl);
 
-	IL_EACH(g_ctrace_changed, it.ctrace_solidchanged,
-	{
-		it.solid = SOLID_TRIGGER;
-		it.ctrace_solidchanged = false;
-	});
+	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
 
 	IL_CLEAR(g_ctrace_changed);
 }
+
 void WarpZone_crosshair_trace(entity pl)
 {
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
 
 void GameLogEcho(string s)
 {
@@ -218,16 +232,13 @@ string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
 	float n;
-	vector cursor;
-	entity cursor_ent;
+	vector cursor = '0 0 0';
+	entity cursor_ent = NULL;
 	string escape;
 	string replacement;
 	p = 0;
 	n = 7;
-
-	WarpZone_crosshair_trace(this);
-	cursor = trace_endpos;
-	cursor_ent = trace_ent;
+	bool traced = false;
 
 	MUTATOR_CALLHOOK(PreFormatMessage, this, msg);
 	msg = M_ARGV(1, string);
@@ -251,6 +262,14 @@ string formatmessage(entity this, string msg)
 		if (p < 0)
 			break;
 
+		if(!traced)
+		{
+			WarpZone_crosshair_trace_plusvisibletriggers(this);
+			cursor = trace_endpos;
+			cursor_ent = trace_ent;
+			traced = true;
+		}
+
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
@@ -261,8 +280,8 @@ string formatmessage(entity this, string msg)
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(this.armorvalue)); break;
-			case "h": replacement = ftos(floor(this.health)); break;
+			case "a": replacement = ftos(floor(GetResourceAmount(this, RESOURCE_ARMOR))); break;
+			case "h": replacement = ftos(floor(GetResourceAmount(this, RESOURCE_HEALTH))); break;
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
@@ -396,6 +415,8 @@ REPLICATE(cvar_cl_voice_directional_taunt_attenuation, float, "cl_voice_directio
 REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
 
 REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
+
+REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
 
 /**
  * @param f -1: cleanup, 0: request, 1: receive
@@ -581,14 +602,12 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			FOREACH(Weapons, it != WEP_Null, {
-				if(it.netname == s)
-				{
-					g_weaponarena_weapons |= (it.m_wepset);
-					g_weaponarena_list = strcat(g_weaponarena_list, it.m_name, " & ");
-					break;
-				}
-			});
+			Weapon wep = Weapons_fromstr(s);
+			if(wep != WEP_Null)
+			{
+				g_weaponarena_weapons |= (wep.m_wepset);
+				g_weaponarena_list = strcat(g_weaponarena_list, wep.m_name, " & ");
+			}
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
@@ -612,6 +631,9 @@ void readplayerstartcvars()
 				start_weapons_defaultmask |= s;
 		});
 	}
+
+	if(cvar("g_balance_superweapons_time") < 0)
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
@@ -870,7 +892,7 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void(entity this) func, float order)
+void InitializeEntity(entity e, void(entity this) func, int order)
 {
     entity prev, cur;
 
@@ -1055,7 +1077,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	if(trace_dphitcontents == 0)
 	{
 		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
-		checkclient(this);
+		checkclient(this); // TODO: .health is checked in the engine with this, possibly replace with a QC function?
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return true;
@@ -1081,7 +1103,6 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 #define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
 
-void W_Crylink_Dequeue(entity e);
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
 	if(SUB_OwnerCheck(this, toucher))

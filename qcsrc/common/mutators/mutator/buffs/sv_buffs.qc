@@ -210,7 +210,7 @@ float buff_Available(entity buff)
 		return false;
 	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
-	return cvar(strcat("g_buffs_", buff.m_name));
+	return cvar(strcat("g_buffs_", buff.netname));
 }
 
 .int buff_seencount;
@@ -423,7 +423,7 @@ void buff_Medic_Heal(entity this)
 {
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
 	{
-		if (!SAME_TEAM(it, this))
+		if (DIFF_TEAM(it, this))
 		{
 			continue;
 		}
@@ -544,7 +544,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		float amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
 			GetResourceAmount(frag_target, RESOURCE_HEALTH));
 		GiveResourceWithLimit(frag_attacker, RESOURCE_HEALTH, amount, g_pickup_healthsmall_max);
-		if (frag_target.armorvalue)
+		if (GetResourceAmount(frag_target, RESOURCE_ARMOR))
 		{
 			amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
 				GetResourceAmount(frag_target, RESOURCE_ARMOR));

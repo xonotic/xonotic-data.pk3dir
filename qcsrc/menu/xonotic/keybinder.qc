@@ -34,7 +34,7 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+jump"                                 , _("jump / swim"));
 	KEYBIND_DEF("+crouch"                               , _("crouch / sink"));
 	KEYBIND_DEF("+hook"                                 , _("off-hand hook"));
-	KEYBIND_DEF("+jetpack"                              , _("jet pack"));
+	KEYBIND_DEF("+jetpack"                              , _("jetpack"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("Attacking"));
 	KEYBIND_DEF("+fire"                                 , _("primary fire"));
@@ -103,6 +103,7 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("Misc"));
+	KEYBIND_DEF("kill"                                  , _("respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
 	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
 	KEYBIND_DEF("+button8"                              , _("drag object"));

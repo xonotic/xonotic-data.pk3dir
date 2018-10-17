@@ -4,6 +4,7 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <common/ent_cs.qh>
+#include <common/minigames/cl_minigames.qh>
 #include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
 
@@ -43,7 +44,7 @@ float QuickMenu_TimeOut;
 // if s1 is not empty s will be displayed as command otherwise as submenu
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
-    TC(int, i);
+	TC(int, i);
 	//LOG_INFOF("^xc80 entry %d: %s, %s\n", i, s, s1);
 	strcpy(QuickMenu_Page_Description[i], s);
 	strcpy(QuickMenu_Page_Command[i], s1);
@@ -51,16 +52,27 @@ void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 
 void QuickMenu_Page_ClearEntry(int i)
 {
-    TC(int, i);
+	TC(int, i);
 	strfree(QuickMenu_Page_Description[i]);
 	strfree(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command_Type[i] = 0;
 }
 
-float QuickMenu_Page_Load(string target_submenu, float new_page);
-void QuickMenu_Default(string submenu);
+bool HUD_QuickMenu_Forbidden()
+{
+	return (mv_active
+		|| (hud_configure_prev && hud_configure_prev != -1)
+		|| HUD_MinigameMenu_IsOpened()
+		|| (QuickMenu_TimeOut && time > QuickMenu_TimeOut));
+}
+
+// returns true if succeded, false otherwise
 bool QuickMenu_Open(string mode, string submenu, string file)
 {
+	QuickMenu_TimeOut = 0;
+	if (HUD_QuickMenu_Forbidden())
+		return false;
+
 	int fh = -1;
 	string s;
 
@@ -107,7 +119,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 		while((s = fgets(fh)) && QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES)
 		{
 			// first skip invalid entries, so we don't check them anymore
-			float argc;
+			int argc;
 			argc = tokenize_console(s);
 			if(argc == 0 || argv(0) == "")
 				continue;
@@ -168,9 +180,6 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	else
 		QuickMenu_Page_Load("", 0);
 
-	hud_panel_quickmenu = 1;
-	if(autocvar_hud_cursormode)
-		setcursormode(1);
 	hudShiftState = 0;
 
 	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
@@ -194,14 +203,9 @@ void QuickMenu_Close()
 	for (i = 0; i < QUICKMENU_MAXLINES; ++i)
 		QuickMenu_Page_ClearEntry(i);
 	QuickMenu_Page_Entries = 0;
-	hud_panel_quickmenu = 0;
 	mouseClicked = 0;
 	prevMouseClicked = 0;
 	QuickMenu_Buffer_Close();
-
-	if(autocvar_hud_cursormode)
-	if(!mv_active)
-		setcursormode(0);
 }
 
 // It assumes submenu open tag is already detected
@@ -225,10 +229,9 @@ bool QuickMenu_IsOpened()
 	return (QuickMenu_Page_Entries > 0);
 }
 
-void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me);
 bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, bool without_me)
 {
-    TC(int, teamplayers); TC(bool, without_me);
+	TC(int, teamplayers); TC(bool, without_me);
 	int i;
 	for(i = 0; i < QUICKMENU_MAXLINES; ++i)
 		QuickMenu_Page_ClearEntry(i);
@@ -253,7 +256,7 @@ bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, bool wi
 int QuickMenu_Buffer_Index_Prev;
 bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 {
-    TC(bool, new_page);
+	TC(bool, new_page);
 	string s = string_null, cmd = string_null, z_submenu;
 
 	if (new_page == 0)
@@ -364,7 +367,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 
 bool QuickMenu_ActionForNumber(int num)
 {
-    TC(int, num);
+	TC(int, num);
 	if (!QuickMenu_IsLastPage)
 	{
 		if (num < 0 || num >= QUICKMENU_MAXLINES)
@@ -392,7 +395,7 @@ bool QuickMenu_ActionForNumber(int num)
 
 void QuickMenu_Page_ActiveEntry(int entry_num)
 {
-    TC(int, entry_num);
+	TC(int, entry_num);
 	QuickMenu_Page_ActivatedEntry = entry_num;
 	QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 	if(QuickMenu_Page_Command[QuickMenu_Page_ActivatedEntry])
@@ -410,7 +413,7 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 
 bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-    TC(int, bInputType);
+	TC(int, bInputType);
 	// we only care for keyboard events
 	if(bInputType == 2)
 		return false;
@@ -490,9 +493,6 @@ void QuickMenu_Mouse()
 		return;
 	}
 
-	if (!autocvar_hud_cursormode)
-		update_mousepos();
-
 	panel = HUD_PANEL(QUICKMENU);
 	HUD_Panel_LoadCvars();
 
@@ -528,10 +528,6 @@ void QuickMenu_Mouse()
 				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
 		}
 	}
-
-	draw_cursor_normal(mousepos, '1 1 1', 0.8);
-
-	prevMouseClicked = mouseClicked;
 }
 
 void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector fontsize)
@@ -574,16 +570,10 @@ void HUD_QuickMenu()
 {
 	if(!autocvar__hud_configure)
 	{
-		if (hud_configure_prev && hud_configure_prev != -1)
-			QuickMenu_Close();
+		if (!hud_draw_maximized || !QuickMenu_IsOpened())
+			return;
 
-		if(!hud_draw_maximized) return;
-		if(mv_active) return;
-		//if(!autocvar_hud_panel_quickmenu) return;
-		if(!hud_panel_quickmenu) return;
-
-		if(QuickMenu_TimeOut)
-		if(time > QuickMenu_TimeOut)
+		if (HUD_QuickMenu_Forbidden())
 		{
 			QuickMenu_Close();
 			return;
@@ -751,7 +741,7 @@ void HUD_QuickMenu()
 
 void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me)
 {
-    TC(int, teamplayers); TC(bool, without_me);
+	TC(int, teamplayers); TC(bool, without_me);
 	entity pl;
 	if(teamplayers && !team_count)
 		return;

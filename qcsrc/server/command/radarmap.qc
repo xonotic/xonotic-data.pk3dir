@@ -366,7 +366,7 @@ void RadarMap_Think(entity this)
 	}
 }
 
-bool RadarMap_Make(float argc)
+bool RadarMap_Make(int argc)
 {
 	float i;
 

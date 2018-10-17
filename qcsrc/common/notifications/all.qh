@@ -6,6 +6,7 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <common/sounds/sound.qh>
+#include <common/weapons/all.qh>
 
 #ifdef CSQC
 #include <client/autocvars.qh>
@@ -370,7 +371,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	spree_end: placed at the end of murder messages to show ending of sprees
 	spree_lost: placed at the end of suicide messages to show losing of sprees
 	item_wepname: return full name of a weapon from weaponid
-	item_wepammo: ammo display for weapon from string
+	item_wepammo: ammo display for weapon from f1 and f2
 	item_centime: amount of time to display weapon message in centerprint
 	item_buffname: return full name of a buff from buffid
 	death_team: show the full name of the team a player is switching from
@@ -433,7 +434,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV,     "item_wepname",  Weapons_from(f1).m_name) \
 	ARG_CASE(ARG_CS_SV,     "item_buffname", BUFF_NAME(f1)) \
 	ARG_CASE(ARG_CS_SV,     "f3buffname",    BUFF_NAME(f3)) \
-	ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
+	ARG_CASE(ARG_CS_SV,     "item_wepammo",  (f2 > 0 ? notif_arg_item_wepammo(f1, f2) : "")) \
 	ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
 	ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1)) \
@@ -622,6 +623,23 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 		}
 	}
 	return "";
+}
+
+string notif_arg_item_wepammo(float f1, float f2)
+{
+	string ammoitems = "";
+	Weapon wep = Weapons_from(f1);
+	switch (wep.ammo_type)
+	{
+		case RESOURCE_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
+		case RESOURCE_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
+		case RESOURCE_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
+		case RESOURCE_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
+		case RESOURCE_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
+		case RESOURCE_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
+		default: return ""; // doesn't use ammo
+	}
+	return sprintf(_(" with %d %s"), f2, ammoitems);
 }
 
 

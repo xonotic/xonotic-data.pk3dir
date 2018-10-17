@@ -129,6 +129,9 @@ void Announcer_Gamestart()
 
 void Announcer_Time()
 {
+	if(intermission)
+		return;
+
 	float timeleft;
 	if(warmup_stage)
 	{

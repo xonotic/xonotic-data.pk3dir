@@ -26,6 +26,8 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP)
 #define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION)
 
+#define PHYS_WALLCLIP(s)					STAT(MOVEVARS_WALLCLIP)
+
 #ifdef CSQC
 .float bouncestop;
 .float bouncefactor;
@@ -55,6 +57,8 @@ const int WATERLEVEL_SUBMERGED = 3;
 
 void set_movetype(entity this, int mt);
 
+.float pm_time;
+
 .float move_movetype;
 .float move_time;
 //.vector move_origin;
@@ -76,10 +80,16 @@ void set_movetype(entity this, int mt);
 .float move_suspendedinair;
 .float move_didgravity;
 
+// unsticking
+const int UNSTICK_FINE = 0;
+const int UNSTICK_FIXED = 1;
+const int UNSTICK_STUCK = 2;
+
 void _Movetype_WallFriction(entity this, vector stepnormal);
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight);
 void _Movetype_CheckVelocity(entity this);
 void _Movetype_CheckWaterTransition(entity ent);
+void _Movetype_CheckStuck(entity this);
 float _Movetype_CheckWater(entity ent);
 void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
@@ -94,7 +104,7 @@ void Movetype_Physics_NoMatchServer(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
 void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 
-float _Movetype_UnstickEntity(entity this);
+int _Movetype_UnstickEntity(entity this);
 
 const int MAX_CLIP_PLANES = 5;
 
@@ -121,6 +131,8 @@ const int FL_ONGROUND				= 512;
 const int MOVETYPE_ANGLENOCLIP      = 1;
 const int MOVETYPE_ANGLECLIP        = 2;
 #endif
+
+const int MOVETYPE_QCPLAYER = 150; // QC-driven player physics, no think functions!
 
 const int FL_ONSLICK = BIT(20);
 

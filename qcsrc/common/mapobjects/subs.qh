@@ -24,6 +24,7 @@ SUB_SetFade
 Fade 'ent' out when time >= 'when'
 ==================
 */
+.float fade_rate;
 void SUB_SetFade(entity ent, float when, float fading_time);
 
 .vector		finaldest, finalangle; 		//plat.qc stuff

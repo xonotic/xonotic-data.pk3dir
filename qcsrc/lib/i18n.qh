@@ -45,14 +45,14 @@ ERASEABLE
 string CTX(string s)
 {
 #if CTX_CACHE
-		string c = HM_gets(CTX_cache, s);
-		if (c != "") return c;
+	string c = HM_gets(CTX_cache, s);
+	if (c != "") return c;
 #endif
 	int p = strstrofs(s, "^", 0);
 	string ret = (p < 0) ? s : substring(s, p + 1, -1);
 #if CTX_CACHE
-        LOG_DEBUGF("CTX(\"%s\")", s);
-		HM_sets(CTX_cache, s, ret);
+	LOG_DEBUGF("CTX(\"%s\")", s);
+	HM_sets(CTX_cache, s, ret);
 #endif
 	return ret;
 }
