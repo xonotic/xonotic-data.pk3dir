@@ -378,9 +378,13 @@ void WarpZone_PostInitialize_Callback()
 		makevectors(e.warpzone_angles);
 		src = src + ((e.warpzone_origin - src) * v_forward) * v_forward + 16 * v_right;
 		dst = (e.enemy.absmin + e.enemy.absmax) * 0.5;
+		vector down_dir_src = -v_up;
+
 		makevectors(e.enemy.warpzone_angles);
 		dst = dst + ((e.enemy.warpzone_origin - dst) * v_forward) * v_forward - 16 * v_right;
-		waypoint_spawnforteleporter_wz(e, src, dst, 0, -v_up, tracetest_ent);
+		vector down_dir_dest = -v_up;
+
+		waypoint_spawnforteleporter_wz(e, src, dst, 0, down_dir_src, down_dir_dest, tracetest_ent);
 	}
 	delete(tracetest_ent);
 }

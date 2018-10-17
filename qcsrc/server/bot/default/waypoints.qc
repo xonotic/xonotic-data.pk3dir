@@ -1297,19 +1297,22 @@ void waypoint_spawnforteleporter_boxes(entity e, int teleport_flag, vector org1,
 	e.nearestwaypointtimeout = -1;
 }
 
-void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir, entity tracetest_ent)
+void waypoint_spawnforteleporter_wz(entity e, vector src, vector destination, float timetaken, vector down_dir_src, vector down_dir_dest, entity tracetest_ent)
 {
 	// warpzones with oblique warp plane rely on down_dir to snap waypoints
 	// to the ground without leaving the warp plane
 	// warpzones with horizontal warp plane (down_dir.x == -1) generate
 	// destination waypoint snapped to the ground (leaving warpzone), source
 	// waypoint in the center of the warp plane
-	if(down_dir.x != -1)
-		org = waypoint_fixorigin_down_dir(org, tracetest_ent, down_dir);
-	if(down_dir.x == -1)
-		down_dir = '0 0 -1';
-	destination = waypoint_fixorigin_down_dir(destination, tracetest_ent, down_dir);
-	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, org, org, destination, destination, timetaken);
+
+	// snap to the ground only if source warpzone isn't horizontal
+	if(down_dir_src.x != -1)
+		src = waypoint_fixorigin_down_dir(src, tracetest_ent, down_dir_src);
+	if(down_dir_dest.x == -1) // horizontal
+		down_dir_dest = '0 0 -1'; // change to vertical
+	destination = waypoint_fixorigin_down_dir(destination, tracetest_ent, down_dir_dest);
+
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, src, src, destination, destination, timetaken);
 }
 
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)

@@ -59,7 +59,7 @@ void waypoint_saveall();
 void waypoint_spawnforitem_force(entity e, vector org);
 void waypoint_spawnforitem(entity e);
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent);
-void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir, entity tracetest_ent);
+void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir_src, vector down_dir_dest, entity tracetest_ent);
 void botframe_showwaypointlinks();
 
 float waypoint_loadall();
