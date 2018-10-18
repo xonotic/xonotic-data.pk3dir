@@ -1539,7 +1539,7 @@ void HUD_Draw(entity this)
 	if(autocvar_r_letterbox == 0)
 		if(autocvar_viewsize < 120)
 		{
-			if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
+			if(!(ISGAMETYPE(RACE) || ISGAMETYPE(CTS)))
 				Accuracy_LoadLevels();
 
 			HUD_Main();
@@ -2467,7 +2467,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else if(cvar("r_glsl_postprocess") == 2)
 		cvar_set("r_glsl_postprocess", "0");
 
-	/*if(gametype == MAPINFO_TYPE_CTF)
+	/*if(ISGAMETYPE(CTF))
 	  {
 	  ctf_view();
 	  } else */
