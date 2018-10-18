@@ -1297,22 +1297,38 @@ void waypoint_spawnforteleporter_boxes(entity e, int teleport_flag, vector org1,
 	e.nearestwaypointtimeout = -1;
 }
 
-void waypoint_spawnforteleporter_wz(entity e, vector src, vector destination, float timetaken, vector down_dir_src, vector down_dir_dest, entity tracetest_ent)
+void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent)
 {
-	// warpzones with oblique warp plane rely on down_dir to snap waypoints
-	// to the ground without leaving the warp plane
-	// warpzones with horizontal warp plane (down_dir.x == -1) generate
-	// destination waypoint snapped to the ground (leaving warpzone), source
-	// waypoint in the center of the warp plane
+	float src_angle = e.warpzone_angles.x;
+	while (src_angle < -180) src_angle += 360;
+	while (src_angle > 180) src_angle -= 360;
 
-	// snap to the ground only if source warpzone isn't horizontal
-	if(down_dir_src.x != -1)
+	float dest_angle = e.enemy.warpzone_angles.x;
+	while (dest_angle < -180) dest_angle += 360;
+	while (dest_angle > 180) dest_angle -= 360;
+
+	// no waypoints for warpzones pointing upwards, they can't be used by the bots
+	if (src_angle == -90 || dest_angle == -90)
+		return;
+
+	makevectors(e.warpzone_angles);
+	vector src = (e.absmin + e.absmax) * 0.5;
+	src += ((e.warpzone_origin - src) * v_forward) * v_forward + 16 * v_right;
+	vector down_dir_src = -v_up;
+
+	makevectors(e.enemy.warpzone_angles);
+	vector dest = (e.enemy.absmin + e.enemy.absmax) * 0.5;
+	dest += ((e.enemy.warpzone_origin - dest) * v_forward) * v_forward - 16 * v_right;
+	vector down_dir_dest = -v_up;
+
+	// don't snap to the ground waypoints for source warpzones pointing downwards
+	if (src_angle != 90)
+	{
 		src = waypoint_fixorigin_down_dir(src, tracetest_ent, down_dir_src);
-	if(down_dir_dest.x == -1) // horizontal
-		down_dir_dest = '0 0 -1'; // change to vertical
-	destination = waypoint_fixorigin_down_dir(destination, tracetest_ent, down_dir_dest);
+		dest = waypoint_fixorigin_down_dir(dest, tracetest_ent, down_dir_dest);
+	}
 
-	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, src, src, destination, destination, timetaken);
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, src, src, dest, dest, 0);
 }
 
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)
