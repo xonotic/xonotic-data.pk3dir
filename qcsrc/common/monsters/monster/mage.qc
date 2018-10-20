@@ -45,16 +45,22 @@ float autocvar_g_monster_mage_attack_spike_radius;
 float autocvar_g_monster_mage_attack_spike_delay;
 float autocvar_g_monster_mage_attack_spike_accel;
 float autocvar_g_monster_mage_attack_spike_decel;
+float autocvar_g_monster_mage_attack_spike_chance = 0.45;
 float autocvar_g_monster_mage_attack_spike_turnrate;
 float autocvar_g_monster_mage_attack_spike_speed_max;
 float autocvar_g_monster_mage_attack_spike_smart;
 float autocvar_g_monster_mage_attack_spike_smart_trace_min;
 float autocvar_g_monster_mage_attack_spike_smart_trace_max;
 float autocvar_g_monster_mage_attack_spike_smart_mindist;
+float autocvar_g_monster_mage_attack_push_chance = 0.7;
 float autocvar_g_monster_mage_attack_push_damage;
 float autocvar_g_monster_mage_attack_push_radius;
 float autocvar_g_monster_mage_attack_push_delay;
 float autocvar_g_monster_mage_attack_push_force;
+float autocvar_g_monster_mage_attack_teleport_chance = 0.2;
+float autocvar_g_monster_mage_attack_teleport_delay = 2;
+float autocvar_g_monster_mage_attack_teleport_random = 0.4;
+float autocvar_g_monster_mage_attack_teleport_random_range = 1200;
 float autocvar_g_monster_mage_heal_self;
 float autocvar_g_monster_mage_heal_allies;
 float autocvar_g_monster_mage_heal_minhealth;
@@ -223,7 +229,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 
 void M_Mage_Defend_Heal(entity this)
 {
-	float washealed = false;
+	bool washealed = false;
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_mage_heal_range, M_Mage_Defend_Heal_Check(this, it),
 	{
@@ -277,7 +283,7 @@ void M_Mage_Defend_Heal(entity this)
 
 	if(washealed)
 	{
-		setanim(this, this.anim_shoot, true, true, true);
+		setanim(this, this.anim_melee, true, true, true);
 		this.attack_finished_single[0] = time + (autocvar_g_monster_mage_heal_delay);
 		this.state = MONSTER_ATTACK_MELEE;
 		this.anim_finished = time + 1.5;
@@ -291,15 +297,36 @@ void M_Mage_Attack_Push(entity this)
 						NULL, NULL, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, DMG_NOWEP, this.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, this.origin, '0 0 0', 1);
 
-	setanim(this, this.anim_shoot, true, true, true);
+	setanim(this, this.anim_duckjump, true, true, true);
 	this.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_push_delay);
+	this.anim_finished = time + 1;
+	this.state = MONSTER_ATTACK_MELEE; // prevent moving while firing spike
 }
 
 void M_Mage_Attack_Teleport(entity this, entity targ)
 {
 	if(!targ) return;
-	if(!IS_ONGROUND(targ)) return;
 	if(vdist(targ.origin - this.origin, >, 1500)) return;
+
+	if(autocvar_g_monster_mage_attack_teleport_random && random() <= autocvar_g_monster_mage_attack_teleport_random)
+	{
+		vector oldpos = this.origin;
+		vector extrasize = '1 1 1' * autocvar_g_monster_mage_attack_teleport_random_range;
+		if(MoveToRandomLocationWithinBounds(this, this.absmin - extrasize, this.absmax + extrasize,
+											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 
+											Q3SURFACEFLAG_SKY, 10, 1024, 256, true))
+		{
+			vector a = vectoangles(targ.origin - this.origin);
+			this.angles = '0 1 0' * a.y;
+			this.fixangle = true;
+			Send_Effect(EFFECT_SPAWN_NEUTRAL, oldpos, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+			this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_teleport_delay;
+			return;
+		}
+	}
+
+	if(!IS_ONGROUND(targ)) return;
 
 	makevectors(targ.angles);
 	tracebox(CENTER_OR_VIEWOFS(targ), this.mins, this.maxs, CENTER_OR_VIEWOFS(targ) + ((v_forward * -1) * 200), MOVE_NOMONSTERS, this);
@@ -321,7 +348,7 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 	this.fixangle = true;
 	this.velocity *= 0.5;
 
-	this.attack_finished_single[0] = time + 0.2;
+	this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_teleport_delay;
 }
 
 void M_Mage_Defend_Shield_Remove(entity this)
@@ -337,7 +364,7 @@ void M_Mage_Defend_Shield(entity this)
 	SetResourceAmountExplicit(this, RESOURCE_ARMOR, autocvar_g_monster_mage_shield_blockpercent);
 	this.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
 	setanim(this, this.anim_shoot, true, true, true);
-	this.attack_finished_single[0] = time + 1;
+	this.attack_finished_single[0] = time + 1; // give just a short cooldown on attacking
 	this.anim_finished = time + 1;
 }
 
@@ -347,7 +374,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			if(random() <= 0.7)
+			if(random() <= autocvar_g_monster_mage_attack_push_chance)
 			{
 				Weapon wep = WEP_MAGE_SPIKE;
 
@@ -359,30 +386,25 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(!actor.mage_spike)
+			if(random() <= autocvar_g_monster_mage_attack_teleport_chance)
 			{
-				if(random() <= 0.4)
-				{
-					OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
-					actor.OffhandMageTeleport_key_pressed = 0;
-					off.offhand_think(off, actor, 1);
-					return true;
-				}
-				else
-				{
-					setanim(actor, actor.anim_shoot, true, true, true);
-					actor.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_spike_delay);
-					actor.anim_finished = time + 1;
-					Weapon wep = WEP_MAGE_SPIKE;
-					wep.wr_think(wep, actor, weaponentity, 1);
-					return true;
-				}
+				OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
+				actor.OffhandMageTeleport_key_pressed = 0;
+				off.offhand_think(off, actor, 1);
+				return true;
+			}
+			else if(!actor.mage_spike && random() <= autocvar_g_monster_mage_attack_spike_chance)
+			{
+				setanim(actor, actor.anim_shoot, true, true, true);
+				actor.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_spike_delay);
+				actor.anim_finished = time + 1;
+				actor.state = MONSTER_ATTACK_MELEE; // prevent moving while firing spike
+				Weapon wep = WEP_MAGE_SPIKE;
+				wep.wr_think(wep, actor, weaponentity, 1);
+				return true;
 			}
 
-			if(actor.mage_spike)
-				return true;
-			else
-				return false;
+			return false;
 		}
 	}
 
@@ -448,7 +470,7 @@ METHOD(Mage, mr_pain, float(Mage this, entity actor, float damage_take, entity a
 METHOD(Mage, mr_death, bool(Mage this, entity actor))
 {
     TC(Mage, this);
-    setanim(actor, actor.anim_die1, false, true, true);
+    setanim(actor, ((random() > 0.5) ? actor.anim_die2 : actor.anim_die1), false, true, true);
     return true;
 }
 
@@ -462,6 +484,8 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
     actor.anim_walk = animfixfps(actor, '1 1 1', none);
     actor.anim_run = animfixfps(actor, '1 1 1', none);
     actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+    actor.anim_duckjump = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_melee = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
     //actor.anim_fire1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
     //actor.anim_fire2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
     //actor.anim_fire3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate

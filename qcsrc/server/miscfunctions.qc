@@ -1179,7 +1179,7 @@ string uid2name(string myuid) {
 	return s;
 }
 
-float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos)
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
@@ -1239,14 +1239,22 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
 
 	// rule 4: we must "see" some spawnpoint or item
     entity sp = NULL;
-    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+    if(frompos)
     {
-    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
-    	{
-    		sp = it;
-    		break;
-    	}
-    });
+    	if((traceline(mstart, e.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+    		sp = e;
+    }
+    if(!sp)
+    {
+	    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+	    {
+	    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+	    	{
+	    		sp = it;
+	    		break;
+	    	}
+	    });
+	}
 	if(!sp)
 	{
 		int items_checked = 0;
@@ -1304,9 +1312,9 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
         return false;
 }
 
-float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+bool MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance)
 {
-	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance);
+	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance, false);
 }
 
 void write_recordmarker(entity pl, float tstart, float dt)
