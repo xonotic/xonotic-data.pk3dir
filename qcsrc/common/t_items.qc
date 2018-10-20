@@ -1401,7 +1401,7 @@ int group_count = 1;
 
 void setItemGroup(entity this)
 {
-	if(!IS_SMALL(this.itemdef))
+	if(!IS_SMALL(this.itemdef) || Item_IsLoot(this))
 		return;
 
 	FOREACH_ENTITY_RADIUS(this.origin, 120, (it != this) && IS_SMALL(it.itemdef),
