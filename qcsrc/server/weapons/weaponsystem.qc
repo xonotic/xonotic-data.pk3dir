@@ -50,7 +50,7 @@ bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 {
 	this.viewmodelforclient = this.owner;
 	if (IS_SPEC(client) && client.enemy == this.owner) this.viewmodelforclient = client;
-	return true;
+	return false;
 }
 
 vector CL_Weapon_GetShotOrg(int wpn)

@@ -1103,7 +1103,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	n.alpha = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_alpha;
 
 	setmodel(fn, MDL_NADE_VIEW);
-	setattachment(fn, player.(weaponentity), "");
+	//setattachment(fn, player.(weaponentity), "");
+	fn.viewmodelforclient = player;
 	fn.realowner = fn.owner = player;
 	fn.colormod = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_color;
 	fn.colormap = player.colormap;
