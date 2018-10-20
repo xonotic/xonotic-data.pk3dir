@@ -266,6 +266,7 @@ void W_SwitchToOtherWeapon(entity this, .entity weaponentity)
 	W_SwitchWeapon_Force(this, ww, weaponentity);
 }
 
+AUTOCVAR_SAVE(cl_weapon_switch_reload, bool, true, "When trying to switch to the currently held weapon, reload it");
 bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 {
 	if(this.(weaponentity).m_switchweapon != w)
@@ -281,7 +282,7 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 			return false;
 		}
 	}
-	else if(!forbidWeaponUse(this))
+	else if(!forbidWeaponUse(this) && autocvar_cl_weapon_switch_reload)
 	{
 		entity actor = this;
 		w.wr_reload(w, actor, weaponentity);
@@ -290,9 +291,10 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 	return true; // player already has the weapon out or needs to reload
 }
 
+AUTOCVAR_SAVE(cl_weapon_switch_fallback_to_impulse, bool, true, "When trying to switch to a weapon that is not available, switch to an alternative from the same impulse");
 void W_SwitchWeapon_TryOthers(entity this, Weapon w, .entity weaponentity)
 {
-	if(!W_SwitchWeapon(this, w, weaponentity))
+	if(!W_SwitchWeapon(this, w, weaponentity) && autocvar_cl_weapon_switch_fallback_to_impulse)
 		W_NextWeaponOnImpulse(this, w.impulse, weaponentity);
 }
 
