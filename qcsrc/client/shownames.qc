@@ -128,7 +128,7 @@ void Draw_ShowNames(entity this)
 		// FIXME: alpha is negative when dead, breaking death fade
 		if (!this.csqcmodel_isdead) a *= f;
 	}
-	if (a < ALPHA_MIN_VISIBLE && gametype != MAPINFO_TYPE_CTS) return;
+	if (a < ALPHA_MIN_VISIBLE && ISGAMETYPE(CTS)) return;
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
 	float dist = vlen(this.origin - view_origin);
 	if (autocvar_hud_shownames_maxdistance)

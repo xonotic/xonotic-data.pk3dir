@@ -520,5 +520,6 @@ float autocvar_sv_airstopaccelerate;
 float autocvar_sv_track_canjump;
 bool autocvar_sv_showspectators;
 bool autocvar_g_weaponswitch_debug;
+bool autocvar_g_weaponswitch_debug_alternate;
 bool autocvar_g_allow_checkpoints;
 bool autocvar_sv_vq3compat_changehitbox = false;

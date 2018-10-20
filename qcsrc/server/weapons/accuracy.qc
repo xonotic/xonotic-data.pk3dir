@@ -106,12 +106,12 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 	if (mutator_check == MUT_ACCADD_INVALID) return true;
 
 	if (mutator_check != MUT_ACCADD_VALID) return false;
-	if (!IS_CLIENT(targ)) return false;
+	if (!IS_CLIENT(targ) || !IS_CLIENT(attacker)) return false;
 
 	return true;
 }
 
 bool accuracy_canbegooddamage(entity attacker)
 {
-	return !warmup_stage;
+	return !warmup_stage && IS_CLIENT(attacker);
 }
