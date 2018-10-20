@@ -314,7 +314,7 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 		vector extrasize = '1 1 1' * autocvar_g_monster_mage_attack_teleport_random_range;
 		if(MoveToRandomLocationWithinBounds(this, this.absmin - extrasize, this.absmax + extrasize,
 											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 
-											Q3SURFACEFLAG_SKY, 10, 1024, 256, true))
+											Q3SURFACEFLAG_SKY, 10, 64, 256, true))
 		{
 			vector a = vectoangles(targ.origin - this.origin);
 			this.angles = '0 1 0' * a.y;
