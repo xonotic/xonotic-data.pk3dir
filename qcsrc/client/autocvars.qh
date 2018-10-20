@@ -351,6 +351,7 @@ float autocvar_hud_panel_weapons_selection_radius = 0;
 float autocvar_hud_panel_weapons_selection_speed = 10;
 float autocvar_hud_panel_weapons_timeout;
 int autocvar_hud_panel_weapons_timeout_effect;
+bool autocvar_hud_panel_weapons_orderbyimpulse = true;
 float autocvar_hud_panel_weapons_timeout_fadebgmin;
 float autocvar_hud_panel_weapons_timeout_fadefgmin;
 float autocvar_hud_panel_weapons_timeout_speed_in = 0.25;

@@ -114,6 +114,7 @@ float bgmtime;
 
 string weaponorder_byimpulse;
 string weaponorder_bypriority;
+bool weapons_orderbyimpulse; // update priority list when toggling this
 
 float vortex_charge_movingavg;
 
