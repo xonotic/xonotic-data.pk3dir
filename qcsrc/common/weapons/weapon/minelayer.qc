@@ -74,8 +74,7 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity))
 		{
 			own.cnt = thiswep.m_id;
-			int slot = weaponslot(weaponentity);
-			ATTACK_FINISHED(own, slot) = time;
+			ATTACK_FINISHED(own, weaponentity) = time;
 			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
 		}
 	}
@@ -106,8 +105,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity))
 		{
 			own.cnt = thiswep.m_id;
-			int slot = weaponslot(weaponentity);
-			ATTACK_FINISHED(own, slot) = time;
+			ATTACK_FINISHED(own, weaponentity) = time;
 			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
 		}
 	}
@@ -464,9 +462,8 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    //int slot = 0; // TODO: unhardcode
     // actually do // don't switch while placing a mine
-    //if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
+    //if(ATTACK_FINISHED(actor, weaponentity) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
     //{
         float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(minelayer, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(minelayer, ammo);

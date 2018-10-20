@@ -11,6 +11,8 @@ string minimapname;
 
 bool postinit;
 entity gametype;
+// temporary hack
+#define ISGAMETYPE(NAME) (gametype == MAPINFO_TYPE_##NAME)
 
 float FONT_USER = 8;
 
