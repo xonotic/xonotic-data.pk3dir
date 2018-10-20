@@ -1146,7 +1146,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = false;
+	this.move_qcphysics = true;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
