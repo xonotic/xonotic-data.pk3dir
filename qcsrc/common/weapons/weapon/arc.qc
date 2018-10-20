@@ -236,8 +236,8 @@ void W_Arc_Beam_Think(entity this)
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(own, weaponentity);
-			own.(weaponentity).arc_BUTTON_ATCK_prev = false; // hax
 		}
+		own.(weaponentity).arc_BUTTON_ATCK_prev = false; // allow switching weapons
 		delete(this);
 		return;
 	}
@@ -265,14 +265,14 @@ void W_Arc_Beam_Think(entity this)
 
 	W_SetupShot_Range(
 		own,
-		weaponentity, // TODO
+		weaponentity,
 		true,
 		0,
 		SND_Null,
 		0,
 		WEP_CVAR(arc, beam_damage) * coefficient,
 		WEP_CVAR(arc, beam_range),
-		WEP_ARC.m_id
+		thiswep.m_id
 	);
 
 	// After teleport, "lock" the beam until the teleport is confirmed.
@@ -322,7 +322,10 @@ void W_Arc_Beam_Think(entity this)
 				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
 				min(WEP_CVAR(arc, beam_maxangle) / angle, 1)
 			);
-			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+				this.beam_dir = w_shotdir;
+			else
+				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 		}
 		else
 		{
@@ -332,7 +335,10 @@ void W_Arc_Beam_Think(entity this)
 				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
 				1
 			);
-			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+				this.beam_dir = w_shotdir;
+			else
+				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 		}
 
 		// network information: beam direction
@@ -467,7 +473,7 @@ void W_Arc_Beam_Think(entity this)
 				{
 					accuracy_add(
 						own,
-						WEP_ARC.m_id,
+						WEP_ARC,
 						0,
 						rootdamage * coefficient * falloff
 					);
@@ -533,17 +539,33 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 
 	getthink(beam)(beam);
 }
-void Arc_Smoke(entity actor, .entity weaponentity)
+void W_Arc_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
+	if(!actor.(weaponentity).arc_beam || wasfreed(actor.(weaponentity).arc_beam))
+	{
+		w_ready(thiswep, actor, weaponentity, fire);
+		return;
+	}
+
+	// attack handled by the beam itself, this is just a loop to keep the attack happening!
+
+	// NOTE: arc doesn't use a refire
+	//ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(arc, refire) * W_WeaponRateFactor(actor);
+	actor.(weaponentity).wframe = WFRAME_FIRE1;
+	weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(arc, beam_animtime), W_Arc_Attack);
+}
+void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
+{
+	// TODO: spamming this without checking any refires is asking for trouble!
 	makevectors(actor.v_angle);
-	W_SetupShot_Range(actor,weaponentity,true,0,SND_Null,0,0,0,WEP_ARC.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
+	W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,thiswep.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
 
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )
 	{
 		if ( random() < actor.(weaponentity).arc_heat_percent )
 			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
-		if ( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) )
+		if ( (fire & 1) || (fire & 2) )
 		{
 			Send_Effect(EFFECT_ARC_OVERHEAT_FIRE, smoke_origin, w_shotdir, 1 );
 			if ( !actor.arc_smoke_sound )
@@ -562,7 +584,7 @@ void Arc_Smoke(entity actor, .entity weaponentity)
 	}
 
 	if (  actor.arc_smoke_sound && ( actor.arc_overheat <= time ||
-		!( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) ) ) || actor.(weaponentity).m_switchweapon != WEP_ARC )
+		!( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) ) ) || actor.(weaponentity).m_switchweapon != thiswep )
 	{
 		actor.arc_smoke_sound = 0;
 		sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
@@ -597,14 +619,14 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     Arc_Player_SetHeat(actor, weaponentity);
-    Arc_Smoke(actor, weaponentity);
+    Arc_Smoke(thiswep, actor, weaponentity, fire);
 
     bool beam_fire2 = ((fire & 2) && !WEP_CVAR(arc, bolt));
 
     if (time >= actor.arc_overheat)
     if ((fire & 1) || beam_fire2 || actor.(weaponentity).arc_beam.beam_bursting)
     {
-
+    	#if 0
         if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
         {
             #if 0
@@ -614,6 +636,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
             #endif
                 weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(arc, beam_animtime), w_ready);
         }
+        #endif
 
         if((!actor.(weaponentity).arc_beam) || wasfreed(actor.(weaponentity).arc_beam))
         {
@@ -623,7 +646,8 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 
                 if(!actor.(weaponentity).arc_BUTTON_ATCK_prev)
                 {
-                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+                	actor.(weaponentity).wframe = WFRAME_FIRE1;
+                    weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(arc, beam_animtime), W_Arc_Attack);
                     actor.(weaponentity).arc_BUTTON_ATCK_prev = true;
                 }
             }
@@ -642,10 +666,9 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 
     if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
     {
-    	int slot = weaponslot(weaponentity);
         sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-        ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor(actor);
+        ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor(actor);
     }
     actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 

@@ -292,7 +292,7 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		it.debug_trace_button = btn;
 		if (!btn || skip) continue;
 		FOREACH_ENTITY(true, {
-		    it.solid_prev = it.solid;
+			it.solid_prev = it.solid;
 			it.solid = SOLID_BBOX;
 		});
 		vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
@@ -300,8 +300,8 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		vector pos = it.origin + it.view_ofs;
 		traceline(pos, pos + forward * max_shot_distance, MOVE_NORMAL, it);
 		FOREACH_ENTITY(true, {
-		    it.solid = it.solid_prev;
-            it.solid_prev = 0;
+			it.solid = it.solid_prev;
+			it.solid_prev = 0;
 		});
 		entity e = trace_ent;
 		int i = etof(e);

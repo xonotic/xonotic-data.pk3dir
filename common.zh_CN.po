@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-06-02 05:39+0000\n"
+"PO-Revision-Date: 2018-09-02 02:29+0000\n"
 "Last-Translator: Losier Blackheath <losier.cc@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
@@ -198,7 +198,7 @@ msgstr "^3双击 ^7面板以获取面板特定选项。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7以禁用碰撞检测， ^3SHIFT ^7以及"
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -277,7 +277,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^捡起物品 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item, icon"
@@ -455,11 +455,11 @@ msgstr "QMCMD^减少速度"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Wall collision off"
-msgstr ""
+msgstr "QMCMD^关闭墙壁碰撞"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Wall collision on"
-msgstr ""
+msgstr "QMCMD^开启墙壁碰撞"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Fullscreen"
@@ -753,7 +753,7 @@ msgstr "^3dmgtaken^7                 遭受的总破坏值\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid "^3sum^7                      frags - deaths\n"
-msgstr ""
+msgstr "^3sum^7                      击杀数 - 死亡数\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid ""
@@ -767,6 +767,8 @@ msgid ""
 "^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
 "ball (Keepaway) was picked up\n"
 msgstr ""
+"^3pickups^7                  旗帜 (CTF) 或钥匙 (KeyHunt) 或球 (Keepaway) 被捡"
+"起来\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "^3captime^7                  Time of fastest cap (CTF)\n"
@@ -920,7 +922,7 @@ msgstr "计分板"
 #: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "速度奖励: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1588
 #, c-format
@@ -3167,7 +3169,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:559
 msgid "^BGYou captured the flag!"
-msgstr ""
+msgstr "^BG你捡到了旗帜！"
 
 #: qcsrc/common/notifications/all.inc:560
 #, c-format
@@ -3212,7 +3214,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:568
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr ""
+msgstr "^BG你把旗帜交给了 %s"
 
 #: qcsrc/common/notifications/all.inc:569
 msgid "^BGYou got the ^TC^TT^BG flag!"

@@ -232,6 +232,9 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blocked & 8))
 		this.velocity = primal_velocity;
 
+	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blocked & 8))
+		this.velocity = primal_velocity;
+
 	if(applygravity)
 	{
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
@@ -403,11 +406,11 @@ entity _Movetype_TestEntityPosition_ent;
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
     entity this = _Movetype_TestEntityPosition_ent;
-//	vector org = this.origin + ofs;
+	vector org = this.origin + ofs;
 
 	int cont = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(this.origin, this.mins, this.maxs, this.origin, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
+	tracebox(org, this.mins, this.maxs, org, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
 	this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
@@ -418,11 +421,11 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 	return false;
 }
 
-bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
+int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
     _Movetype_TestEntityPosition_ent = this;
 	if (!_Movetype_TestEntityPosition(' 0  0  0')) {
-	    return true;
+	    return UNSTICK_FINE;
 	}
 	#define X(v) if (_Movetype_TestEntityPosition(v))
 	X('-1  0  0') X(' 1  0  0')
@@ -441,13 +444,32 @@ bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         {
             LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
                 etof(this), this.classname, vtos(this.origin));
-            return false;
+            return UNSTICK_STUCK;
         }
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
 	_Movetype_LinkEdict(this, true);
-	return true;
+	return UNSTICK_FIXED;
+}
+
+void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
+{
+	int unstick = _Movetype_UnstickEntity(this); // sets test position entity
+	switch(unstick)
+	{
+		case UNSTICK_FINE:
+			this.oldorigin = this.origin;
+			break;
+		case UNSTICK_FIXED:
+			break; // already sorted
+		case UNSTICK_STUCK:
+			vector offset = this.oldorigin - this.origin;
+			if(!_Movetype_TestEntityPosition(offset))
+				_Movetype_LinkEdict(this, false);
+			// couldn't unstick, should we warn about this?
+			break;
+	}
 }
 
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // SV_ClipVelocity

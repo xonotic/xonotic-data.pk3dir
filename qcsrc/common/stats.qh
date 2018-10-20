@@ -302,6 +302,11 @@ bool autocvar_sv_slick_applygravity;
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
 #ifdef SVQC
+bool autocvar_sv_vq3compat;
+#endif
+REGISTER_STAT(VQ3COMPAT, bool, autocvar_sv_vq3compat)
+
+#ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
 float warmup_limit;
 #endif
@@ -360,6 +365,10 @@ REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
 REGISTER_STAT(MOVEVARS_SPECIALCOMMAND, bool)
+#ifdef SVQC
+int autocvar_sv_wallclip;
+#endif
+REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
 
 
 #ifdef CSQC

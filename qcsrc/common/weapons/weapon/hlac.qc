@@ -30,7 +30,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
     if(actor.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
-	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage), WEP_HLAC.m_id);
+	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage), thiswep.m_id);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
@@ -61,7 +61,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
-	missile.projectiledeathtype = WEP_HLAC.m_id;
+	missile.projectiledeathtype = thiswep.m_id;
 	missile.weaponentity_fld = weaponentity;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
@@ -69,7 +69,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-void W_HLAC_Attack2(entity actor, .entity weaponentity)
+void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
     float spread;
@@ -80,7 +80,7 @@ void W_HLAC_Attack2(entity actor, .entity weaponentity)
     if(actor.crouch)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
-	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage), WEP_HLAC.m_id | HITTYPE_SECONDARY);
+	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage), thiswep.m_id | HITTYPE_SECONDARY);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = new(hlacbolt);
@@ -107,7 +107,7 @@ void W_HLAC_Attack2(entity actor, .entity weaponentity)
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
-	missile.projectiledeathtype = WEP_HLAC.m_id | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	missile.weaponentity_fld = weaponentity;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
@@ -134,9 +134,8 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 			return;
 		}
 
-		int slot = weaponslot(weaponentity);
-		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor(actor);
-		W_HLAC_Attack(WEP_HLAC, actor, weaponentity);
+		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor(actor);
+		W_HLAC_Attack(thiswep, actor, weaponentity);
 		actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
@@ -153,7 +152,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep, entity actor, .entity weaponentity)
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo), weaponentity);
 
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
-        W_HLAC_Attack2(actor, weaponentity);
+        W_HLAC_Attack2(thiswep, actor, weaponentity);
 
 	if(!autocvar_g_norecoil)
 	{
@@ -192,13 +191,13 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 METHOD(HLAC, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hlac, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
     return ammo_amount;
 }
 METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hlac, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
     return ammo_amount;
 }
 METHOD(HLAC, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))

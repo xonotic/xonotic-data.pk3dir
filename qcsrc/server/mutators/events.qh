@@ -137,40 +137,51 @@ MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 /** called when the match ends */
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 
-/** allows adjusting allowed teams */
-#define EV_CheckAllowedTeams(i, o) \
+/** Allows adjusting allowed teams. Return true to use the bitmask value and set
+ * non-empty string to use team entity name. Both behaviors can be active at the
+ * same time and will stack allowed teams.
+ */
+#define EV_TeamBalance_CheckAllowedTeams(i, o) \
     /** mask of teams      */ i(float, MUTATOR_ARGV_0_float) \
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
     /** player checked     */ i(entity, MUTATOR_ARGV_2_entity) \
     /**/
-MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
+MUTATOR_HOOKABLE(TeamBalance_CheckAllowedTeams,
+	EV_TeamBalance_CheckAllowedTeams);
 
 /** return true to manually override team counts */
-MUTATOR_HOOKABLE(GetTeamCounts, EV_NO_ARGS);
+MUTATOR_HOOKABLE(TeamBalance_GetTeamCounts, EV_NO_ARGS);
 
-/** allow overriding of team counts */
-#define EV_GetTeamCount(i, o) \
-    /** team to count                   */ i(float, MUTATOR_ARGV_0_float) \
+/** allows overriding of team counts */
+#define EV_TeamBalance_GetTeamCount(i, o) \
+    /** team index to count             */ i(float, MUTATOR_ARGV_0_float) \
     /** player to ignore                */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** number of players in a team     */ i(float, MUTATOR_ARGV_2_float) \
-    /**/                                   o(float, MUTATOR_ARGV_2_float) \
-    /** number of bots in a team        */ i(float, MUTATOR_ARGV_3_float) \
-    /**/                                   o(float, MUTATOR_ARGV_3_float) \
-    /** lowest scoring human in a team  */ i(entity, MUTATOR_ARGV_4_entity) \
-    /**/                                   o(entity, MUTATOR_ARGV_4_entity) \
-    /** lowest scoring bot in a team    */ i(entity, MUTATOR_ARGV_5_entity) \
-    /**/                                   o(entity, MUTATOR_ARGV_5_entity) \
+    /** number of players in a team     */ o(float, MUTATOR_ARGV_2_float) \
+    /** number of bots in a team        */ o(float, MUTATOR_ARGV_3_float) \
     /**/
-MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
+MUTATOR_HOOKABLE(TeamBalance_GetTeamCount, EV_TeamBalance_GetTeamCount);
 
-/** allows overriding best teams */
-#define EV_FindBestTeams(i, o) \
+/** allows overriding the teams that will make the game most balanced if the
+ *  player joins any of them.
+ */
+#define EV_TeamBalance_FindBestTeams(i, o) \
     /** player checked   */ i(entity, MUTATOR_ARGV_0_entity) \
     /** bitmask of teams */ o(float, MUTATOR_ARGV_1_float) \
     /**/
-MUTATOR_HOOKABLE(FindBestTeams, EV_FindBestTeams);
+MUTATOR_HOOKABLE(TeamBalance_FindBestTeams, EV_TeamBalance_FindBestTeams);
+
+/** Called during autobalance. Return true to override the player that will be
+switched. */
+#define EV_TeamBalance_GetPlayerForTeamSwitch(i, o) \
+    /** source team index      */ i(int, MUTATOR_ARGV_0_int) \
+    /** destination team index */ i(int, MUTATOR_ARGV_1_int) \
+    /** is looking for bot     */ i(bool, MUTATOR_ARGV_2_bool) \
+    /** player to switch       */ o(entity, MUTATOR_ARGV_3_entity) \
+    /**/
+MUTATOR_HOOKABLE(TeamBalance_GetPlayerForTeamSwitch,
+	EV_TeamBalance_GetPlayerForTeamSwitch);
 
 /** copies variables for spectating "spectatee" to "this" */
 #define EV_SpectateCopy(i, o) \
@@ -1041,9 +1052,9 @@ MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
  * Called before player changes their team. Return true to block team change.
  */
 #define EV_Player_ChangeTeam(i, o) \
-    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
-	/** current team */   i(float, MUTATOR_ARGV_1_float) \
-	/** new team */       i(float, MUTATOR_ARGV_2_float) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** current team index */ i(float, MUTATOR_ARGV_1_float) \
+    /** new team index */     i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
 
@@ -1051,9 +1062,9 @@ MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
  * Called after player has changed their team.
  */
 #define EV_Player_ChangedTeam(i, o) \
-    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
-	/** old team */       i(float, MUTATOR_ARGV_1_float) \
-	/** current team */   i(float, MUTATOR_ARGV_2_float) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** old team index */     i(float, MUTATOR_ARGV_1_float) \
+    /** current team index */ i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Player_ChangedTeam, EV_Player_ChangedTeam);
 
@@ -1192,3 +1203,12 @@ MUTATOR_HOOKABLE(Freeze, EV_Freeze);
     /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);
+
+/**
+ * Called when a player is trying to join, argument is the number of players allowed to join the match
+ */
+#define EV_GetPlayerLimit(i, o) \
+    /** g_maxplayers */             i(int, MUTATOR_ARGV_0_int) \
+    /**/                            o(int, MUTATOR_ARGV_0_int) \
+    /**/
+MUTATOR_HOOKABLE(GetPlayerLimit, EV_GetPlayerLimit);

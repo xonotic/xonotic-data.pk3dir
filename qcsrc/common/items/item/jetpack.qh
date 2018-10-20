@@ -35,7 +35,7 @@ REGISTER_ITEM(Jetpack, Powerup) {
     this.m_itemid               =   IT_JETPACK;
 #endif
     this.netname                =   "jetpack";
-    this.m_name                 =   "Jetpack";
+    this.m_name                 =   _("Jetpack");
     this.m_icon                 =   "jetpack";
     this.m_color                =   '0.5 0.5 0.5';
     this.m_waypoint             =   _("Jetpack");
@@ -68,7 +68,7 @@ REGISTER_ITEM(JetpackFuel, Ammo) {
     this.m_model    =   MDL_JetpackFuel_ITEM;
 #endif
     this.netname    =   "fuel";
-    this.m_name     =   "Fuel";
+    this.m_name     =   _("fuel");
     this.m_icon     =   "ammo_fuel";
 #ifdef SVQC
     this.m_botvalue =   2000;
@@ -93,7 +93,7 @@ REGISTER_ITEM(JetpackRegen, JetpackRegen) {
     this.m_model                =   MDL_JetpackRegen_ITEM;
 #endif
     this.netname                =   "fuel_regen";
-    this.m_name                 =   "Fuel regenerator";
+    this.m_name                 =   _("Fuel regenerator");
     this.m_icon                 =   "fuelregen";
     this.m_color                =   '1 0.5 0';
     this.m_waypoint             =   _("Fuel regen");

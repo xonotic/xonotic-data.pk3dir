@@ -2,7 +2,7 @@
 
 .entity pusher;
 .float pushltime;
-.float istypefrag;
+.bool istypefrag;
 
 .float CopyBody_nextthink;
 .void(entity this) CopyBody_think;
@@ -28,17 +28,6 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 
 void calculate_player_respawn_time(entity this);
 
-void ClientKill_Now_TeamChange(entity this);
-
-/// \brief Moves player to the specified team.
-/// \param[in,out] client Client to move.
-/// \param[in] team_colour Color of the team.
-/// \param[in] type ???
-/// \return True on success, false otherwise.
-bool MoveToTeam(entity client, float team_colour, float type);
-
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit);
-
-int Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);

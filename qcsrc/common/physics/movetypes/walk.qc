@@ -8,7 +8,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		return;
 
 	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
-		_Movetype_UnstickEntity(this);
+		_Movetype_CheckStuck(this);
 
 	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.flags & FL_WATERJUMP));
 
@@ -19,6 +19,14 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
+
+	if(PHYS_WALLCLIP(this) && this.pm_time)
+	{
+		if(dt >= this.pm_time || (this.flags & FL_WATERJUMP))
+			this.pm_time = 0;
+		else
+			this.pm_time -= dt;
+	}
 
 	int clip = _Movetype_FlyMove(this, dt, applygravity, stepnormal, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
 
@@ -45,6 +53,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	// if the move did not hit the ground at any point, we're not on ground
 	if (!(clip & 1))
 		UNSET_ONGROUND(this);
+	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
+		this.pm_time = 0.25;
 
 	_Movetype_CheckVelocity(this);
 	_Movetype_LinkEdict(this, true);
@@ -144,7 +154,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	}
 
 	// move down
-	vector downmove = '0 0 1' * (-PHYS_STEPHEIGHT(this) + start_velocity.z * dt);
+	vector downmove = '0 0 0';
+	downmove.z = -PHYS_STEPHEIGHT(this) + start_velocity.z * dt;
 	_Movetype_PushEntity(this, downmove, true);
 	if(wasfreed(this))
 		return;
@@ -159,6 +170,13 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	{
 		// this has been disabled so that you can't jump when you are stepping
 		// up while already jumping (also known as the Quake2 double jump bug)
+		// LordHavoc: disabled this check so you can walk on monsters/players
+		//if (PRVM_serveredictfloat(ent, solid) == SOLID_BSP)
+		if(GAMEPLAYFIX_STEPDOWN(this) == 2)
+		{
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+		}
 	}
 	else
 	{

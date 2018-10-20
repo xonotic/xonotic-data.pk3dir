@@ -4,13 +4,13 @@
 #include <server/campaign.qc>
 #include <server/cheats.qc>
 #include <server/client.qc>
+#include <server/clientkill.qc>
 #include <server/g_damage.qc>
 #include <server/g_hook.qc>
 #include <server/g_world.qc>
 #include <server/handicap.qc>
 #include <server/impulse.qc>
 #include <server/ipban.qc>
-#include <server/item_key.qc>
 #include <server/items.qc>
 #include <server/mapvoting.qc>
 #include <server/matrix.qc>

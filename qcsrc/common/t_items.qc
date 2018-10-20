@@ -402,7 +402,7 @@ bool have_pickup_item(entity this)
 	return true;
 }
 
-void Item_Show (entity e, float mode)
+void Item_Show (entity e, int mode)
 {
 	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
 	e.ItemStatus &= ~ITS_STAYWEP;
@@ -613,14 +613,18 @@ float adjust_respawntime(float normal_respawntime) {
 		return normal_respawntime;
 	}
 
-	CheckAllowedTeams(NULL);
-	GetTeamCounts(NULL);
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	TeamBalance_GetTeamCounts(balance, NULL);
 	int players = 0;
-	if (c1 != -1) players += c1;
-	if (c2 != -1) players += c2;
-	if (c3 != -1) players += c3;
-	if (c4 != -1) players += c4;
-
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if (TeamBalance_IsTeamAllowed(balance, i))
+		{
+			players += TeamBalance_GetNumberOfPlayers(balance, i);
+		}
+	}
+	TeamBalance_Destroy(balance);
+	
 	if (players >= 2) {
 		return normal_respawntime * (r / (players + o) + l);
 	} else {
@@ -852,7 +856,7 @@ float Item_GiveTo(entity item, entity player)
 		return 0;
 
 	// crude hack to enforce switching weapons
-	if(g_cts && item.itemdef.instanceOfWeaponPickup)
+	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS(player).cvar_cl_cts_noautoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1313,7 +1317,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
 			|| (itemid & (IT_KEY1 | IT_KEY2))
-		) this.target = "###item###"; // for finding the nearest item using find()
+		) this.target = "###item###"; // for finding the nearest item using findnearest
 
 		Item_ItemsTime_SetTime(this, 0);
 	}

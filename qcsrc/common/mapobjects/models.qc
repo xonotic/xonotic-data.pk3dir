@@ -41,6 +41,11 @@ void g_clientmodel_setcolormaptoactivator(entity this, entity actor, entity trig
 
 void g_clientmodel_use(entity this, entity actor, entity trigger)
 {
+	// Flag to set func_clientwall state
+	// 1 == deactivate, 2 == activate, 0 == do nothing
+	if(this.classname == "func_clientwall" || this.classname == "func_clientillusionary")
+		this.antiwall_flag = trigger.antiwall_flag;
+
 	if (this.antiwall_flag == 1)
 	{
 		this.inactive = 1;
@@ -148,10 +153,10 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 			WriteVector(MSG_ENTITY, this.movedir);
 			WriteByte(MSG_ENTITY, floor(this.lip * 255));
 		}
-		WriteByte(MSG_ENTITY, this.fade_start);
-		WriteByte(MSG_ENTITY, this.fade_end);
-		WriteByte(MSG_ENTITY, this.alpha_max);
-		WriteByte(MSG_ENTITY, this.alpha_min);
+		WriteShort(MSG_ENTITY, bound(0, this.fade_start, 65535));
+		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 65535));
+		WriteByte(MSG_ENTITY, floor(this.alpha_max * 256));
+		WriteByte(MSG_ENTITY, floor(this.alpha_min * 256));
 		WriteByte(MSG_ENTITY, this.inactive);
 		WriteShort(MSG_ENTITY, this.fade_vertical_offset);
 	}
@@ -199,42 +204,42 @@ spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // bru
 
 void Ent_Wall_PreDraw(entity this)
 {
+	float alph = this.alpha;
 	if (this.inactive)
 	{
-		this.alpha = 0;
+		alph = 0;
 	}
 	else
 	{
 		vector org = getpropertyvec(VF_ORIGIN);
 		if(!checkpvs(org, this))
-			this.alpha = 0;
+			alph = 0;
 		else if(this.fade_start || this.fade_end) {
 			vector offset = '0 0 0';
 			offset_z = this.fade_vertical_offset;
-			float player_dist = vlen(org - this.origin - 0.5 * (this.mins + this.maxs) + offset);
+			vector player_dist_math = org - this.origin - 0.5 * (this.mins + this.maxs) + offset;
 			if (this.fade_end == this.fade_start)
 			{
-				if (player_dist >= this.fade_start)
-					this.alpha = 0;
+				if (vdist(player_dist_math, >=, this.fade_start))
+					alph = 0;
 				else
-					this.alpha = 1;
+					alph = 1;
 			}
 			else
 			{
-				this.alpha = (this.alpha_min + this.alpha_max * bound(0,
+				float player_dist = vlen(player_dist_math);
+				alph = (this.alpha_min + this.alpha_max * bound(0,
 							   (this.fade_end - player_dist)
 							   / (this.fade_end - this.fade_start), 1)) / 100.0;
 			}
 		}
 		else
 		{
-			this.alpha = 1;
+			alph = 1;
 		}
 	}
-	if(this.alpha <= 0)
-		this.drawmask = 0;
-	else
-		this.drawmask = MASK_NORMAL;
+	this.alpha = alph;
+	this.drawmask = (alph <= 0) ? 0 : MASK_NORMAL;
 }
 
 void Ent_Wall_Draw(entity this)
@@ -390,10 +395,10 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 			this.movedir = ReadVector();
 			this.lip = ReadByte() / 255.0;
 		}
-		this.fade_start = ReadByte();
-		this.fade_end = ReadByte();
-		this.alpha_max = ReadByte();
-		this.alpha_min = ReadByte();
+		this.fade_start = ReadShort();
+		this.fade_end = ReadShort();
+		this.alpha_max = ReadByte() / 255.0;
+		this.alpha_min = ReadByte() / 255.0;
 		this.inactive = ReadByte();
 		this.fade_vertical_offset = ReadShort();
 		BGMScript_InitEntity(this);

@@ -198,7 +198,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 
 	// reset fade counter
 	teleporter.portal_wants_to_vanish = 0;
-	teleporter.fade_time = time + autocvar_g_balance_portal_lifetime;
+	teleporter.fade_time = ((autocvar_g_balance_portal_lifetime >= 0) ? time + autocvar_g_balance_portal_lifetime : 0);
 	SetResourceAmountExplicit(teleporter, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
 	SetResourceAmountExplicit(teleporter.enemy, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
 
@@ -383,7 +383,7 @@ void Portal_Connect(entity teleporter, entity destination)
 	destination.enemy = teleporter;
 	Portal_MakeInPortal(teleporter);
 	Portal_MakeOutPortal(destination);
-	teleporter.fade_time = time + autocvar_g_balance_portal_lifetime;
+	teleporter.fade_time = ((autocvar_g_balance_portal_lifetime >= 0) ? time + autocvar_g_balance_portal_lifetime : 0);
 	destination.fade_time = teleporter.fade_time;
 	teleporter.portal_wants_to_vanish = 0;
 	destination.portal_wants_to_vanish = 0;
@@ -494,7 +494,7 @@ void Portal_Think(entity this)
 
 	this.nextthink = time;
 
-	if(time > this.fade_time)
+	if(this.fade_time && time > this.fade_time)
 		Portal_Remove(this, 0);
 }
 
@@ -638,7 +638,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.portal_activatetime = time + 0.1;
 	portal.takedamage = DAMAGE_AIM;
 	portal.event_damage = Portal_Damage;
-	portal.fade_time = time + autocvar_g_balance_portal_lifetime;
+	portal.fade_time = ((autocvar_g_balance_portal_lifetime >= 0) ? time + autocvar_g_balance_portal_lifetime : 0);
 	SetResourceAmountExplicit(portal, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
 	setmodel(portal, MDL_PORTAL);
 	portal.savemodelindex = portal.modelindex;
