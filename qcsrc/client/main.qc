@@ -140,6 +140,9 @@ void CSQC_Init()
 
 	registercvar("cl_spawn_near_teammate", "1");
 
+	registercvar("cl_weapon_switch_reload", "1");
+	registercvar("cl_weapon_switch_fallback_to_impulse", "1");
+
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
 
