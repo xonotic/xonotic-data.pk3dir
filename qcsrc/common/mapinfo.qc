@@ -724,23 +724,19 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 float MapInfo_isRedundant(string fn, string t)
 {
 	// normalize file name
-	fn = strreplace("_", "-", fn);
+	fn = strreplace("_", "", fn);
+	fn = strreplace("-", "", fn);
 
 	// normalize visible title
-	t = strreplace(": ", "-", t);
-	t = strreplace(":", "-", t);
-	t = strreplace(" ", "-", t);
-	t = strreplace("_", "-", t);
-	t = strreplace("'", "-", t);
-
-	if(!strcasecmp(fn, t))
-		return true;
+	t = strreplace(":", "", t);
+	t = strreplace(" ", "", t);
+	t = strreplace("_", "", t);
+	t = strreplace("-", "", t);
+	t = strreplace("'", "", t);
+	t = strdecolorize(t);
 
 	// we allow the visible title to have punctuation the file name does
 	// not, but not vice versa
-	t = strreplace("-", "", t);
-	fn = strreplace("-", "", fn);
-
 	if(!strcasecmp(fn, t))
 		return true;
 
