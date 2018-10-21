@@ -106,8 +106,6 @@ void conveyor_init(entity this)
 	this.reset = generic_netlinked_reset;
 	this.reset(this);
 
-	FixSize(this);
-
 	Net_LinkEntity(this, 0, false, conveyor_send);
 
 	this.SendFlags |= SF_TRIGGER_INIT;

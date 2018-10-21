@@ -49,9 +49,8 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			this.realowner.cnt = WEP_DEVASTATOR.m_id;
-			int slot = weaponslot(weaponentity);
-			ATTACK_FINISHED(this.realowner, slot) = time;
+			this.realowner.cnt = thiswep.m_id;
+			ATTACK_FINISHED(this.realowner, weaponentity) = time;
 			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
 		}
 	}
@@ -143,9 +142,8 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			this.realowner.cnt = WEP_DEVASTATOR.m_id;
-			int slot = weaponslot(weaponentity);
-			ATTACK_FINISHED(this.realowner, slot) = time;
+			this.realowner.cnt = thiswep.m_id;
+			ATTACK_FINISHED(this.realowner, weaponentity) = time;
 			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
 		}
 	}
@@ -306,7 +304,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), WEP_DEVASTATOR.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), thiswep.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
@@ -331,7 +329,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 
 	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_DEVASTATOR.m_id;
+	missile.projectiledeathtype = thiswep.m_id;
 	setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
@@ -464,7 +462,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
             actor.(weaponentity).rl_release = 1;
 
         if(fire & 2)
-        if(actor.(weaponentity).m_switchweapon == WEP_DEVASTATOR)
+        if(actor.(weaponentity).m_switchweapon == thiswep)
         {
             bool rockfound = false;
             IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
@@ -488,7 +486,7 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 {
     #if 0
     // don't switch while guiding a missile
-    if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_DEVASTATOR)
+    if(ATTACK_FINISHED(actor, weaponentity) <= time || PS(actor).m_weapon != WEP_DEVASTATOR)
     {
         ammo_amount = false;
         if(WEP_CVAR(devastator, reload_ammo))
@@ -516,7 +514,7 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
     }
     #else
     float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(devastator, ammo);
     return ammo_amount;
     #endif
 }

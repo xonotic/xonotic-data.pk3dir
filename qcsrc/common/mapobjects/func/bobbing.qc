@@ -48,6 +48,8 @@ spawnfunc(func_bobbing)
 
 	this.active = ACTIVE_ACTIVE;
 
+	this.draggable = drag_undraggable;
+
 	// damage when blocked
 	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))

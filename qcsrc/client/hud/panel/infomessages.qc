@@ -118,7 +118,7 @@ void HUD_InfoMessages()
 
 			MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize);
 
-			if(!warmup_stage && gametype == MAPINFO_TYPE_LMS)
+			if(!warmup_stage && ISGAMETYPE(LMS))
 			{
 				entity sk;
 				sk = playerslots[player_localnum];

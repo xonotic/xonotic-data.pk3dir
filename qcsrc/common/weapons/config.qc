@@ -25,7 +25,10 @@ float W_Config_Queue_Compare(int root, int child, entity pass)
 void Dump_Weapon_Settings()
 {
 	int totalweapons = 0, totalsettings = 0;
+	int wepcount = 1;
 	FOREACH(Weapons, it != WEP_Null, {
+		if((it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_NORMAL))
+			continue; // never include the attacks
 		// step 1: clear the queue
 		WEP_CONFIG_COUNT = 0;
 		for (int x = 0; x <= MAX_CONFIG_SETTINGS; ++x)
@@ -40,7 +43,7 @@ void Dump_Weapon_Settings()
 		// step 4: write queue
 		WEP_CONFIG_WRITETOFILE(sprintf(
 			"// {{{ #%d: %s%s\n",
-			i,
+			wepcount,
 			it.m_name,
 			((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) ? " (MUTATOR WEAPON)" : "")
 		));
@@ -51,6 +54,7 @@ void Dump_Weapon_Settings()
 		LOG_INFOF("#%d: %s: %d settings...", i, it.m_name, WEP_CONFIG_COUNT);
 		totalweapons += 1;
 		totalsettings += WEP_CONFIG_COUNT;
+		wepcount += 1;
 	});
 
 	// clear queue now that we're finished

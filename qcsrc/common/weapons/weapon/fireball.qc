@@ -42,7 +42,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 			dir = normalize(e.origin + e.view_ofs - this.origin);
 
 			if(accuracy_isgooddamage(this.realowner, e))
-				accuracy_add(this.realowner, WEP_FIREBALL.m_id, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
+				accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
 			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, this.weaponentity_fld, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
 			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);

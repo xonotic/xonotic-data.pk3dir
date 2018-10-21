@@ -277,7 +277,7 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 	{
 		SetResourceAmountExplicit(this.owner, RESOURCE_HEALTH, this.owner.max_health);
 		this.owner.takedamage = DAMAGE_NO;	// will be reset upon return
-		door_use(this.owner, NULL, NULL);
+		door_use(this.owner, attacker, NULL);
 	}
 }
 
@@ -595,8 +595,6 @@ float door_send(entity this, entity to, float sf)
 
 void door_link()
 {
-	// set size now, as everything is loaded
-	//FixSize(this);
 	//Net_LinkEntity(this, false, 0, door_send);
 }
 #endif
@@ -715,9 +713,6 @@ spawnfunc(func_door)
 	setblocked(this, door_blocked);
 	this.use = door_use;
 
-	this.pos1 = this.origin;
-	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
-
 	if(this.spawnflags & DOOR_NONSOLID)
 		this.solid = SOLID_NOT;
 
@@ -727,6 +722,9 @@ spawnfunc(func_door)
 		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
 
 	door_init_shared(this);
+
+	this.pos1 = this.origin;
+	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
 	if (!this.speed)
 	{

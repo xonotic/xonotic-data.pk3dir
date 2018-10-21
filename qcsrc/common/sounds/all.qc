@@ -8,6 +8,7 @@ bool autocvar_bot_sound_monopoly;
 .entity realowner;
 bool sound_allowed(int to, entity e)
 {
+	if(!e) return true; // save on a few checks
 	for ( ; ; )
 	{
 		if (e.classname == "body") e = e.enemy;

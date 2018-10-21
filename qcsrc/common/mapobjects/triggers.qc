@@ -1,7 +1,4 @@
 #include "triggers.qh"
-#ifdef SVQC
-	#include <server/item_key.qh>
-#endif
 
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
@@ -11,17 +8,6 @@ void DelayThink(entity this)
 {
 	SUB_UseTargets (this, this.enemy, NULL);
 	delete(this);
-}
-
-void FixSize(entity e)
-{
-	e.mins_x = rint(e.mins_x);
-	e.mins_y = rint(e.mins_y);
-	e.mins_z = rint(e.mins_z);
-
-	e.maxs_x = rint(e.maxs_x);
-	e.maxs_y = rint(e.maxs_y);
-	e.maxs_z = rint(e.maxs_z);
 }
 
 #ifdef SVQC
@@ -316,12 +302,9 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		}
 		if (s != "")
 		{
-			// Flag to set func_clientwall state
-			// 1 == deactivate, 2 == activate, 0 == do nothing
-			int aw_flag = this.antiwall_flag;
 			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
-				if(t.use && (t.sub_target_used != time || !preventReuse))
+				if(t != this && t.use && (t.sub_target_used != time || !preventReuse))
 				{
 					if(this.target_random)
 					{
@@ -329,9 +312,6 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 					}
 					else
 					{
-						if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
-							t.antiwall_flag = aw_flag;
-
 						t.use(t, actor, this);
 						if(preventReuse)
 							t.sub_target_used = time;

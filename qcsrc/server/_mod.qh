@@ -11,7 +11,6 @@
 #include <server/handicap.qh>
 #include <server/impulse.qh>
 #include <server/ipban.qh>
-#include <server/item_key.qh>
 #include <server/items.qh>
 #include <server/mapvoting.qh>
 #include <server/matrix.qh>

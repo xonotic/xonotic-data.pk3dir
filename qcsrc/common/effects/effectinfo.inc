@@ -1,3 +1,12 @@
+// docs: https://www.quakewiki.net/darkplaces-wiki/effectinfo-scripting-reference/
+// use `cl_particles_reloadeffects` to reload effects without restarting engine
+// use `chase_active 1` and `cl_lockview 1` to see effects from different perspectives
+// `dumpeffectinfo` currently doesn't work so edit effectinfo.txt manually, just try to keep the files in sync
+
+// `tex` are indices into particles/particlefont.tga (see particles/particlefont-template.tga for numbers)
+// the first index is inclusive, second exclusive (so `tex 0 8` will use images 0 though 7)
+// unless they're equal (`tex 69 69` is the same as `tex 69 70`)
+
 // item respawn effect
 DEF(TE_WIZSPIKE);
 // flare particle and light
@@ -4411,19 +4420,49 @@ SUB(flac_explode) {
 // bullet trail (somewhat like a tracer)
 DEF(tr_bullet);
 SUB(tr_bullet) {
+	MY(alpha) = '500 600 10000';
+	MY(color_min) = "0xf03000";
+	MY(color_max) = "0xff6010";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -3;
+	MY(size_min) = 0.6;
+	MY(size_max) = 0.8;
+	my(tex_min) = 200;
+	my(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(tr_bullet) {
+	MY(airfriction) = -4;
+	MY(alpha) = '256 256 350';
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 0.4;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 0;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 16;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '4 4 4';
+}
+SUB(tr_bullet) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
-	MY(alpha_fade) = 2560;
-	MY(color_min) = "0xff8960";
-	MY(color_max) = "0xff8533";
-	MY(size_min) = 4;
-	MY(size_max) = 4;
-	MY(stretchfactor) = 0.200000;
-	MY(tex_min) = 70;
-	MY(tex_max) = 70;
-	MY(trailspacing) = 750;
-	MY(type) = "spark";
-	MY(velocitymultiplier) = 3;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 0.5;
+	MY(size_max) = 0.6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
 }
 
 // smoke emitter for small pipes
@@ -8888,4 +8927,52 @@ SUB(arc_bolt_explode) {
 	MY(type) = "spark";
 	MY(velocityjitter) = '224.0 224.0 224.0';
 	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+// weak bullet trail (somewhat like a tracer)
+DEF(tr_bullet_weak);
+SUB(tr_bullet_weak) {
+	MY(alpha) = '75 100 3000';
+	MY(color_min) = "0xf03000";
+	MY(color_max) = "0xff6010";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -3;
+	MY(size_min) = 0.6;
+	MY(size_max) = 0.8;
+	my(tex_min) = 200;
+	my(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(tr_bullet_weak) {
+	MY(airfriction) = -4;
+	MY(alpha) = '256 256 350';
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 0.4;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 0;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 16;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '4 4 4';
+}
+SUB(tr_bullet_weak) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 0.5;
+	MY(size_max) = 0.6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 32;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
 }

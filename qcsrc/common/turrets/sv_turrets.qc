@@ -731,18 +731,17 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 		return -5;
 
 	// Cant touch this
+	if (GetResourceAmount(e_target, RESOURCE_HEALTH) <= 0)
+		return -6;
+	else if (STAT(FROZEN, e_target))
+		return -6;
+
+	// vehicle
 	if(IS_VEHICLE(e_target))
 	{
-		if (e_target.vehicle_health <= 0)
-			return -6;
-
 		if ((validate_flags & TFL_TARGETSELECT_VEHICLES) && !e_target.owner)
 			return -7;
 	}
-	else if (GetResourceAmount(e_target, RESOURCE_HEALTH) <= 0)
-		return -6;
-	else if(STAT(FROZEN, e_target) > 0)
-		return -6;
 
 	// player
 	if (IS_CLIENT(e_target))

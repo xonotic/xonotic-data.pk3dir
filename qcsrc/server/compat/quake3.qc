@@ -6,6 +6,7 @@
 #include <server/resources.qh>
 #include <common/t_items.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mapobjects/trigger/counter.qh>
 #include <common/weapons/_all.qh>
 
 //***********************
@@ -183,6 +184,37 @@ spawnfunc(target_give)
 	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
 }
 
+void score_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	actor.fragsfilter_cnt += this.count;
+}
+spawnfunc(target_score)
+{
+	if(!g_cts) { delete(this); return; }
+
+	if(!this.count)
+		this.count = 1;
+	this.use = score_use;
+}
+
+void fragsfilter_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	if(actor.fragsfilter_cnt >= this.frags)
+		SUB_UseTargets(this, actor, trigger);
+}
+spawnfunc(target_fragsFilter)
+{
+	if(!g_cts) { delete(this); return; }
+
+	if(!this.frags)
+		this.frags = 1;
+	this.use = fragsfilter_use;
+}
+
 //spawnfunc(item_flight)       /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
@@ -233,6 +265,8 @@ bool DoesQ3ARemoveThisEntity(entity this)
 			gametypename = "team";
 		if(g_ctf)
 			gametypename = "ctf";
+		if(g_duel)
+			gametypename = "tournament";
 		if(maxclients == 1)
 			gametypename = "single";
 		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)

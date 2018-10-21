@@ -356,7 +356,7 @@
 			}
 
 		// skipping SUPER(InputBox).draw(me);
-		Item_draw(me);
+		MenuItem_draw(me);
 	}
 
 	void InputBox_showNotify(entity me)

@@ -1,12 +1,15 @@
-#include "item_key.qh"
+#include "keys.qh"
 
-#include "../common/mapobjects/subs.qh"
-#include <common/mapobjects/triggers.qh>
-#include "../common/monsters/_mod.qh"
-#include "../common/notifications/all.qh"
-#include "../common/util.qh"
-#include "../lib/warpzone/util_server.qh"
+#ifdef CSQC
+bool item_keys_usekey(entity l, entity p)
+{
+	int valid = (l.itemkeys & p.itemkeys); // TODO: itemkeys isn't networked or anything!
+	l.itemkeys &= ~valid; // only some of the needed keys were given
+	return valid != 0;
+}
+#endif
 
+#ifdef SVQC
 /*
 TODO:
 - add an unlock sound (here to trigger_keylock and to func_door)
@@ -18,7 +21,7 @@ TODO:
 
 bool item_keys_usekey(entity l, entity p)
 {
-	int valid = l.itemkeys & PS(p).itemkeys;
+	int valid = l.itemkeys & p.itemkeys;
 
 	if (!valid) {
 		// player has none of the needed keys
@@ -285,3 +288,5 @@ spawnfunc(item_key2)
 	this.itemkeys = ITEM_KEY_BIT(0);
 	spawnfunc_item_key(this);
 }
+
+#endif

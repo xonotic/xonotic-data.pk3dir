@@ -606,8 +606,8 @@ int ps_client_event(entity minigame, string event, ...)
 				if ( sf & MINIG_SF_UPDATE )
 				{
 					sent.message = ps_turn_to_string(sent.minigame_flags);
-					if ( sent.minigame_flags & minigame_self.team )
-						minigame_prompt();
+					//if ( sent.minigame_flags & minigame_self.team )
+						//minigame_prompt();
 				}
 			}
 

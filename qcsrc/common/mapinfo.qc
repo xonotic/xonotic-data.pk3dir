@@ -424,27 +424,7 @@ void _MapInfo_Map_Reset()
 
 string _MapInfo_GetDefault(Gametype t)
 {
-	switch(t)
-	{
-		case MAPINFO_TYPE_DEATHMATCH:      return "30 20 0";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "50 20 2 0";
-		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
-		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
-		case MAPINFO_TYPE_LMS:             return "9 20 0";
-		case MAPINFO_TYPE_CA:              return "10 20 0";
-		case MAPINFO_TYPE_KEYHUNT:         return "1000 20 3 0";
-		case MAPINFO_TYPE_ASSAULT:         return "20 0";
-		case MAPINFO_TYPE_RACE:            return "20 5 7 15 0";
-		case MAPINFO_TYPE_ONSLAUGHT:       return "20 0";
-		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
-		case MAPINFO_TYPE_CTS:             return "20 0 0";
-		case MAPINFO_TYPE_FREEZETAG:       return "10 20 0";
-		// NOTE: DO NOT ADD ANY MORE GAME TYPES HERE
-		// THIS IS JUST LEGACY SUPPORT FOR NEXUIZ MAPS
-		// ONLY ADD NEW STUFF TO _MapInfo_GetDefaultEx
-		// THIS FUNCTION WILL EVENTUALLY BE REMOVED
-		default:                           return "";
-	}
+	return t.m_legacydefaults;
 }
 
 void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisType, int load_default)
@@ -457,7 +437,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	if(load_default)
 		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, false);
 
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(!pWantedType.frags) // these modes don't use fraglimit
 	{
 		cvar_set("fraglimit", "0");
 	}
@@ -485,6 +465,8 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{
+		cvar_set("fraglimit", "0"); // special case!
+
 		sa = car(s); if(sa == "") sa = cvar_string("timelimit");
 		cvar_set("g_race_qualifying_timelimit", sa);
 		s = cdr(s);
@@ -502,7 +484,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 		s = cdr(s);
 	}
 
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(!pWantedType.frags) // these modes don't use fraglimit
 	{
 		cvar_set("leadlimit", "0");
 	}
@@ -855,6 +837,9 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			if(fexists(strcat("scripts/", pFilename, ".arena")))
 				fputs(fh, "settemp_for_type all sv_q3acompat_machineshotgunswap 1\n");
 
+			if(fexists(strcat("scripts/", pFilename, ".defi")))
+				fputs(fh, "settemp_for_type all sv_vq3compat 1\n");
+
 			fputs(fh, "// optional: fog density red green blue alpha mindist maxdist\n");
 			fputs(fh, "// optional: settemp_for_type (all|gametypename) cvarname value\n");
 			fputs(fh, "// optional: clientsettemp_for_type (all|gametypename) cvarname value\n");
@@ -1065,13 +1050,7 @@ int MapInfo_Get_ByName(string pFilename, float pAllowGenerate, Gametype pGametyp
 {
 	int r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
 
-	if(cvar("g_tdm_on_dm_maps"))
-	{
-		// if this is set, all DM maps support TDM too
-		if (!(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags))
-			if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags)
-				_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_TEAM_DEATHMATCH);
-	}
+	FOREACH(Gametypes, it.m_isForcedSupported(it), _MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, it));
 
 	if(pGametypeToSet)
 	{
