@@ -169,6 +169,8 @@ float default_weapon_alpha;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 .float cvar_cl_cts_noautoswitch;
+.bool cvar_cl_weapon_switch_reload;
+.bool cvar_cl_weapon_switch_fallback_to_impulse;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
