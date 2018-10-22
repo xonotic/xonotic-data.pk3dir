@@ -98,7 +98,7 @@ void HUD_RaceTimer ()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
-		if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
+		if(!(ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
 		if(spectatee_status == -1) return;
 	}
 

@@ -1235,11 +1235,12 @@ float waypoint_loadall()
 
 vector waypoint_fixorigin_down_dir(vector position, entity tracetest_ent, vector down_dir)
 {
-	tracebox(position + '0 0 1', PL_MIN_CONST, PL_MAX_CONST, position + down_dir * 3000, MOVE_NOMONSTERS, tracetest_ent);
+	vector endpos = position + down_dir * 3000;
+	tracebox(position + '0 0 1', PL_MIN_CONST, PL_MAX_CONST, endpos, MOVE_NOMONSTERS, tracetest_ent);
 	if(trace_startsolid)
-		tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z / 2), PL_MIN_CONST, PL_MAX_CONST, position + down_dir * 3000, MOVE_NOMONSTERS, tracetest_ent);
+		tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z / 2), PL_MIN_CONST, PL_MAX_CONST, endpos, MOVE_NOMONSTERS, tracetest_ent);
 	if(trace_startsolid)
-		tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z), PL_MIN_CONST, PL_MAX_CONST, position + down_dir * 3000, MOVE_NOMONSTERS, tracetest_ent);
+		tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z), PL_MIN_CONST, PL_MAX_CONST, endpos, MOVE_NOMONSTERS, tracetest_ent);
 	if(trace_fraction < 1)
 		position = trace_endpos;
 	return position;
