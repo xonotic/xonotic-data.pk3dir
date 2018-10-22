@@ -95,11 +95,11 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 
 void lag_update(entity this)
 {
-	if (this.lag1_time) if (time > this.lag1_time) {this.lag_func(this, this.lag1_time, this.lag1_float1, this.lag1_float2, this.lag1_entity1, this.lag1_vec1, this.lag1_vec2, this.lag1_vec3, this.lag1_vec4);this.lag1_time = 0;}
-	if (this.lag2_time) if (time > this.lag2_time) {this.lag_func(this, this.lag2_time, this.lag2_float1, this.lag2_float2, this.lag2_entity1, this.lag2_vec1, this.lag2_vec2, this.lag2_vec3, this.lag2_vec4);this.lag2_time = 0;}
-	if (this.lag3_time) if (time > this.lag3_time) {this.lag_func(this, this.lag3_time, this.lag3_float1, this.lag3_float2, this.lag3_entity1, this.lag3_vec1, this.lag3_vec2, this.lag3_vec3, this.lag3_vec4);this.lag3_time = 0;}
-	if (this.lag4_time) if (time > this.lag4_time) {this.lag_func(this, this.lag4_time, this.lag4_float1, this.lag4_float2, this.lag4_entity1, this.lag4_vec1, this.lag4_vec2, this.lag4_vec3, this.lag4_vec4);this.lag4_time = 0;}
-	if (this.lag5_time) if (time > this.lag5_time) {this.lag_func(this, this.lag5_time, this.lag5_float1, this.lag5_float2, this.lag5_entity1, this.lag5_vec1, this.lag5_vec2, this.lag5_vec3, this.lag5_vec4);this.lag5_time = 0;}
+	if (this.lag1_time && time > this.lag1_time) { this.lag_func(this, this.lag1_time, this.lag1_float1, this.lag1_float2, this.lag1_entity1, this.lag1_vec1, this.lag1_vec2, this.lag1_vec3, this.lag1_vec4); this.lag1_time = 0; }
+	if (this.lag2_time && time > this.lag2_time) { this.lag_func(this, this.lag2_time, this.lag2_float1, this.lag2_float2, this.lag2_entity1, this.lag2_vec1, this.lag2_vec2, this.lag2_vec3, this.lag2_vec4); this.lag2_time = 0; }
+	if (this.lag3_time && time > this.lag3_time) { this.lag_func(this, this.lag3_time, this.lag3_float1, this.lag3_float2, this.lag3_entity1, this.lag3_vec1, this.lag3_vec2, this.lag3_vec3, this.lag3_vec4); this.lag3_time = 0; }
+	if (this.lag4_time && time > this.lag4_time) { this.lag_func(this, this.lag4_time, this.lag4_float1, this.lag4_float2, this.lag4_entity1, this.lag4_vec1, this.lag4_vec2, this.lag4_vec3, this.lag4_vec4); this.lag4_time = 0; }
+	if (this.lag5_time && time > this.lag5_time) { this.lag_func(this, this.lag5_time, this.lag5_float1, this.lag5_float2, this.lag5_entity1, this.lag5_vec1, this.lag5_vec2, this.lag5_vec3, this.lag5_vec4); this.lag5_time = 0; }
 }
 
 float lag_additem(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)

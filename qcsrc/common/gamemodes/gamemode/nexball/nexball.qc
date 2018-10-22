@@ -7,7 +7,7 @@ REGISTER_MUTATOR(cl_nb, true);
 
 MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
 {
-	if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
+	if(autocvar_cl_eventchase_nexball && ISGAMETYPE(NEXBALL) && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
 		return true;
 	return false;
 }
