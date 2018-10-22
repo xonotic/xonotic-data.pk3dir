@@ -200,7 +200,7 @@ void freezetag_Freeze(entity targ, entity attacker)
 	if(STAT(FROZEN, targ))
 		return;
 
-	if(autocvar_g_freezetag_frozen_maxtime > 0)
+	if (autocvar_g_freezetag_revive_auto && autocvar_g_freezetag_frozen_maxtime > 0)
 		targ.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
 	Freeze(targ, 0, FROZEN_NORMAL, true);
@@ -494,10 +494,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		});
 	}
 
-	// TODO patch nade code
-	// TODO add autocvar_g_freezetag_revive_auto
 	float base_progress = 0;
-	if  (STAT(FROZEN, player) == FROZEN_NORMAL
+	if  (STAT(FROZEN, player) == FROZEN_NORMAL && autocvar_g_freezetag_revive_auto
 		&& autocvar_g_freezetag_frozen_maxtime > 0 && autocvar_g_freezetag_revive_auto_progress)
 	{
 		base_progress = bound(0, (1 - (player.freezetag_frozen_timeout - time) / autocvar_g_freezetag_frozen_maxtime), 1);
