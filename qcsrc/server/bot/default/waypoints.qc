@@ -1321,14 +1321,18 @@ void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent)
 	dest += ((e.enemy.warpzone_origin - dest) * v_forward) * v_forward - 16 * v_right;
 	vector down_dir_dest = -v_up;
 
+	int extra_flag = 0;
 	// don't snap to the ground waypoints for source warpzones pointing downwards
 	if (src_angle != 90)
 	{
 		src = waypoint_fixorigin_down_dir(src, tracetest_ent, down_dir_src);
 		dest = waypoint_fixorigin_down_dir(dest, tracetest_ent, down_dir_dest);
+		// oblique warpzones need a jump otherwise bots gets stuck
+		if (src_angle != 0)
+			extra_flag = WAYPOINTFLAG_JUMP;
 	}
 
-	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, src, src, dest, dest, 0);
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT | extra_flag, src, src, dest, dest, 0);
 }
 
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)

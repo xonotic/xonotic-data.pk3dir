@@ -13,6 +13,7 @@ const int WAYPOINTFLAG_PROTECTED = BIT(18);  // Useless WP detection never kills
 const int WAYPOINTFLAG_USEFUL = BIT(17);  // Useless WP detection temporary flag.
 const int WAYPOINTFLAG_DEAD_END = BIT(16);  // Useless WP detection temporary flag.
 const int WAYPOINTFLAG_LADDER = BIT(15);
+const int WAYPOINTFLAG_JUMP = BIT(14);
 
 entity kh_worldkeylist;
 .entity kh_worldkeynext;

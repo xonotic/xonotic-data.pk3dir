@@ -779,7 +779,9 @@ void havocbot_movetogoal(entity this)
 	{
 		if (vdist(this.origin - this.goalcurrent_prev.origin, <, 50)
 			&& navigation_goalrating_timeout_can_be_anticipated(this))
+		{
 			navigation_goalrating_timeout_force(this);
+		}
 	}
 
 	bool goalcurrent_can_be_removed = false;
@@ -961,8 +963,16 @@ void havocbot_movetogoal(entity this)
 			{
 				if (vlen2(flat_diff) < vlen2(offset))
 				{
-					actual_destorg.x = destorg.x;
-					actual_destorg.y = destorg.y;
+					if (this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP && this.goalstack01)
+					{
+						// oblique warpzones need a jump otherwise bots gets stuck
+						PHYS_INPUT_BUTTON_JUMP(this) = true;
+					}
+					else
+					{
+						actual_destorg.x = destorg.x;
+						actual_destorg.y = destorg.y;
+					}
 				}
 			}
 			else if (vdist(flat_diff, <, 32) && diff.z < -16) // destination is under the bot
