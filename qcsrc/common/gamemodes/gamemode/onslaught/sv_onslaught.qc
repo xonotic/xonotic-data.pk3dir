@@ -27,7 +27,6 @@ float autocvar_g_onslaught_teleport_radius;
 float autocvar_g_onslaught_spawn_choose;
 float autocvar_g_onslaught_click_radius;
 
-void FixSize(entity e);
 entity cam;
 
 // =======================
@@ -113,12 +112,6 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 // ==========
 // Junk Pile
 // ==========
-
-void setmodel_fixsize(entity e, Model m)
-{
-	setmodel(e, m);
-	FixSize(e);
-}
 
 void onslaught_updatelinks()
 {
@@ -438,7 +431,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 
 		this.owner.waslinked = this.owner.islinked;
 		if(this.owner.model != "models/onslaught/controlpoint_pad.md3")
-			setmodel_fixsize(this.owner, MDL_ONS_CP_PAD1);
+			setmodel(this.owner, MDL_ONS_CP_PAD1);
 		//setsize(this, '-32 -32 0', '32 32 8');
 
 		delete(this);
@@ -578,7 +571,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		this.SendFlags |= CPSF_SETUP;
 	}
 	if(this.owner.model != MDL_ONS_CP_PAD2.model_str())
-		setmodel_fixsize(this.owner, MDL_ONS_CP_PAD2);
+		setmodel(this.owner, MDL_ONS_CP_PAD2);
 
 	if(random() < 0.9 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health)
 		Send_Effect(EFFECT_RAGE, this.origin + 10 * randomvec(), '0 0 -1', 1);
@@ -737,7 +730,7 @@ void ons_ControlPoint_Reset(entity this)
 	setthink(this, ons_ControlPoint_Think);
 	this.ons_toucher = NULL;
 	this.nextthink = time + ONS_CP_THINKRATE;
-	setmodel_fixsize(this, MDL_ONS_CP_PAD1);
+	setmodel(this, MDL_ONS_CP_PAD1);
 
 	WaypointSprite_UpdateMaxHealth(this.sprite, 0);
 	WaypointSprite_UpdateRule(this.sprite,this.team,SPRITERULE_TEAMPLAY);
@@ -781,7 +774,7 @@ void ons_ControlPoint_Setup(entity cp)
 	if(cp.message == "") { cp.message = "a"; }
 
 	// appearence
-	setmodel_fixsize(cp, MDL_ONS_CP_PAD1);
+	setmodel(cp, MDL_ONS_CP_PAD1);
 
 	// control point placement
 	if((cp.spawnflags & 1) || cp.noalign) // don't drop to floor, just stay at fixed location

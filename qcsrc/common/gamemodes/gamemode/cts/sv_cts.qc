@@ -5,6 +5,7 @@
 
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;
+bool autocvar_g_cts_removeprojectiles;
 
 // legacy bot roles
 .float race_checkpoint;
@@ -253,6 +254,14 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
+
+	if(autocvar_g_cts_removeprojectiles)
+	{
+		IL_EACH(g_projectiles, it.owner == frag_target && (it.flags & FL_PROJECTILE),
+		{
+			delete(it);
+		});
+	}
 }
 
 MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)

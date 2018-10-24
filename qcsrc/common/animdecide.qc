@@ -210,9 +210,8 @@ vector animdecide_getloweranim(entity e)
 				return vec3(e.anim_duckwalkbackright.x, t, ANIMPRIO_CROUCH);
 			case ANIMIMPLICITSTATE_BACKWARDS | ANIMIMPLICITSTATE_LEFT:
 				return vec3(e.anim_duckwalkbackleft.x, t, ANIMPRIO_CROUCH);
-			default:
-				return vec3(e.anim_duckidle.x, t, ANIMPRIO_CROUCH);
 		}
+		return vec3(e.anim_duckidle.x, t, ANIMPRIO_CROUCH);
 	}
 	else
 	{
@@ -236,12 +235,11 @@ vector animdecide_getloweranim(entity e)
 				return vec3(e.anim_backright.x, t, ANIMPRIO_ACTIVE);
 			case ANIMIMPLICITSTATE_BACKWARDS | ANIMIMPLICITSTATE_LEFT:
 				return vec3(e.anim_backleft.x, t, ANIMPRIO_ACTIVE);
-			default:
-				return vec3(e.anim_idle.x, t, ANIMPRIO_IDLE);
 		}
+		return vec3(e.anim_idle.x, t, ANIMPRIO_IDLE);
 	}
 	// can't get here
-	return vec3(e.anim_idle.x, t, ANIMPRIO_IDLE);
+	//return vec3(e.anim_idle.x, t, ANIMPRIO_IDLE);
 }
 
 void animdecide_setimplicitstate(entity e, float onground)

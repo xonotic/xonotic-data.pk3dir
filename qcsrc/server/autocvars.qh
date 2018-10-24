@@ -314,7 +314,6 @@ float autocvar_sv_maxairspeed;
 float autocvar_sv_maxspeed;
 string autocvar_sv_motd;
 bool autocvar_sv_precacheplayermodels;
-//float autocvar_sv_precacheweapons; // WEAPONTODO?
 bool autocvar_sv_q3acompat_machineshotgunswap;
 bool autocvar_sv_servermodelsonly;
 int autocvar_sv_spectate;
@@ -519,4 +518,6 @@ float autocvar_sv_airstopaccelerate;
 float autocvar_sv_track_canjump;
 bool autocvar_sv_showspectators;
 bool autocvar_g_weaponswitch_debug;
+bool autocvar_g_weaponswitch_debug_alternate;
 bool autocvar_g_allow_checkpoints;
+bool autocvar_sv_vq3compat_changehitbox = false;

@@ -247,6 +247,36 @@ void ClientCommand_join(entity caller, int request)
 	}
 }
 
+void ClientCommand_kill(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(IS_SPEC(caller) || IS_OBSERVER(caller))
+				return; // no point warning about this, command does nothing
+
+			if(GetResourceAmount(caller, RESOURCE_HEALTH) <= 0)
+			{
+				sprint(caller, "Can't die - you are already dead!\n");
+				return;
+			}
+
+			ClientKill(caller);
+
+			return;  // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd kill\n");
+			sprint(caller, "  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_physics(entity caller, int request, int argc)
 {
 	switch (request)
@@ -730,6 +760,7 @@ void ClientCommand_(entity caller, int request)
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
+	CLIENT_COMMAND("kill", ClientCommand_kill(ent, request), "Become a member of the dead") \
 	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \

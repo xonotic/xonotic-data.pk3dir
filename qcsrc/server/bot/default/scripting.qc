@@ -1084,12 +1084,12 @@ float bot_cmd_debug_assert_canfire(entity this)
 			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state");
 		}
 	}
-	else if(ATTACK_FINISHED(this, slot) > time)
+	else if(ATTACK_FINISHED(this, weaponentity) > time)
 	{
 		if(f)
 		{
 			this.colormod = '8 0 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, weaponentity) - time), " seconds left)");
 		}
 	}
 	else if(this.(weaponentity).tuba_note)
@@ -1105,7 +1105,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(!f)
 		{
 			this.colormod = '8 8 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, weaponentity) - time), " seconds left");
 		}
 	}
 

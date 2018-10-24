@@ -52,23 +52,8 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 
 void GameType_ConfigureSliders_for_CurrentGametype(entity me)
 {
-	switch(MapInfo_CurrentGametype())
-	{
-		case MAPINFO_TYPE_CA:              GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of frags needed before the match will end")); break;
-		case MAPINFO_TYPE_FREEZETAG:       GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_freezetag_teams_override",   _("The amount of frags needed before the match will end")); break;
-		case MAPINFO_TYPE_CTF:             GameType_ConfigureSliders(me, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The amount of captures needed before the match will end")); break;
-		case MAPINFO_TYPE_DOMINATION:      GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, "g_domination_point_limit",  "g_domination_teams_override",  _("The amount of points needed before the match will end")); break;
-		case MAPINFO_TYPE_KEYHUNT:         GameType_ConfigureSliders(me, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The amount of points needed before the match will end")); break;
-		case MAPINFO_TYPE_LMS:             GameType_ConfigureSliders(me, _("Lives:"),           3,   50,  1, "g_lms_lives_override",      string_null,                    string_null); break;
-		case MAPINFO_TYPE_RACE:            GameType_ConfigureSliders(me, _("Laps:"),            1,   25,  1, "g_race_laps_limit",         string_null,                    string_null); break;
-		case MAPINFO_TYPE_NEXBALL:         GameType_ConfigureSliders(me, _("Goals:"),           1,   50,  1, "g_nexball_goallimit",       string_null,                    _("The amount of goals needed before the match will end")); break;
-		case MAPINFO_TYPE_ASSAULT:         GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
-		case MAPINFO_TYPE_ONSLAUGHT:       GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
-		case MAPINFO_TYPE_CTS:             GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
-		case MAPINFO_TYPE_INVASION:        GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: GameType_ConfigureSliders(me, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit",         "g_tdm_teams_override",         _("The amount of points needed before the match will end")); break;
-		default:                           GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The amount of frags needed before the match will end")); break;
-	}
+	Gametype gt = MapInfo_CurrentGametype();
+	gt.m_configuremenu(gt, me, GameType_ConfigureSliders);
 }
 
 entity makeXonoticServerCreateTab()

@@ -839,7 +839,7 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 						}
 						// Find e and pick
 						if(e && pick)
-							if(Drag_IsDraggable(e))
+							if(Drag_IsDraggable(e, this))
 							{
 								if(ischeat)
 									IS_CHEAT(this, 0, 0, CHRAME_DRAG);
@@ -915,31 +915,24 @@ void Drag_Finish(entity dragger)
 	}
 }
 
-float Drag_IsDraggable(entity draggee)
+bool drag_undraggable(entity draggee, entity dragger)
+{
+	// stuff probably shouldn't need this, we should figure out why they do!
+	// exceptions of course are observers and weapon entities, where things mess up
+	return false;
+}
+
+float Drag_IsDraggable(entity draggee, entity dragger)
 {
 	// TODO add more checks for bad stuff here
 	if(draggee == NULL)
 		return false;
-	if(draggee.classname == "func_bobbing")
-		return false;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
-		return false;
-	if(draggee.classname == "plat")
-		return false;
-	if(draggee.classname == "func_button")
-		return false;
+		return false; // probably due to BSP collision
 //	if(draggee.model == "")
 //		return false;
-	if(IS_SPEC(draggee))
-		return false;
-	if(IS_OBSERVER(draggee))
-		return false;
-	if(draggee.classname == "exteriorweaponentity")
-		return false;
-	if(draggee.classname == "weaponentity")
-		return false;
 
-	return true;
+	return ((draggee.draggable) ? draggee.draggable(draggee, dragger) : true);
 }
 
 float Drag_MayChangeAngles(entity draggee)
@@ -1017,7 +1010,7 @@ float Drag_IsDragging(entity dragger)
 		dragger.dragentity = NULL;
 		return false;
 	}
-	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity))
+	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity, dragger))
 	{
 		Drag_Finish(dragger);
 		return false;

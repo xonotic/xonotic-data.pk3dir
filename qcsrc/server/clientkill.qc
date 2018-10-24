@@ -195,8 +195,6 @@ void ClientKill_Silent(entity this, float _delay)
 // Called when a client types 'kill' in the console
 void ClientKill(entity this)
 {
-	// TODO: once .health is removed, will need to check it here for the "already dead" message!
-
 	if (game_stopped || this.player_blocked || STAT(FROZEN, this))
 		return;
 
