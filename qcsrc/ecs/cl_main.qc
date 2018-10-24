@@ -16,8 +16,8 @@
 		it.com_phys_stepheight = 31;
 		it.com_phys_jumpvel = 260;
 		it.com_phys_friction = 6;
-		//it.com_phys_gravity = '0 0 800';
-		it.com_phys_noclip = true;
+		it.com_phys_gravity = '0 0 800';
+		it.com_phys_noclip = false;
 
 		it.com_phys_pos = '0 0 200';
 	}
