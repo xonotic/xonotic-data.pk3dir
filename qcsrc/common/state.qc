@@ -1,6 +1,6 @@
 #include "state.qh"
 
-void Inventory_new(entity this);
+void Inventory_new(PlayerState this);
 void Inventory_delete(entity this);
 
 void PlayerState_attach(entity this)
