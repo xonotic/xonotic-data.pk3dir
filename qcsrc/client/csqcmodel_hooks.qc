@@ -413,7 +413,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
 		if(this.tag_entity.classname == "csqcmodel")
 		{
-			CSQCModel_Hook_PreDraw(this.tag_entity, (this.tag_entity.isplayermodel & ISPLAYER_ENT));
+			CSQCModel_Hook_PreDraw(this.tag_entity, (this.tag_entity.isplayermodel & ISPLAYER_CLIENT));
 		}
 
 		if(this.tag_entity.modelindex != this.tag_entity_lastmodelindex)

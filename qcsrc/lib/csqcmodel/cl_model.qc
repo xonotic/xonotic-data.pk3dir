@@ -179,7 +179,7 @@ void CSQCModel_InterpolateAnimation_Do(entity this)
 void CSQCModel_Draw(entity this)
 {
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = (this.entnum >= 1 && this.entnum <= maxclients);
+	bool isplayer = (this.isplayermodel & ISPLAYER_CLIENT);
 	noref bool islocalplayer = (this.entnum == player_localnum + 1);
 	noref bool isnolocalplayer = (isplayer && (this.entnum != player_localnum + 1));
 
@@ -226,7 +226,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	int psf = ReadByte();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = (psf & ISPLAYER_ENT) || (this.entnum >= 1 && this.entnum <= maxclients);
+	bool isplayer = (psf & ISPLAYER_CLIENT) || (this.entnum >= 1 && this.entnum <= maxclients);
 	if (isnew && isplayer)
 	{
 		CSQCModel_players[this.entnum - 1] = this;
@@ -235,8 +235,9 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	bool islocalplayer = (this.entnum == player_localnum + 1);
 	noref bool isnolocalplayer = (isplayer && !islocalplayer);
 
-	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_ENT, isplayer);
+	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_CLIENT, isplayer);
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_LOCAL, islocalplayer);
+	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_PLAYER, (psf & ISPLAYER_PLAYER));
 
 	this.classname = "csqcmodel";
 	this.iflags |= IFLAG_ORIGIN; // interpolate origin too
