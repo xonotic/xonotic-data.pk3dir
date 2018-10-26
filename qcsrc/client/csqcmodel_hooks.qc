@@ -18,8 +18,6 @@
 .float death_time;
 .int modelflags;
 
-.bool isplayermodel;
-
 // FEATURE: LOD
 .int lodmodelindex0;
 .int lodmodelindex1;
@@ -415,7 +413,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
 		if(this.tag_entity.classname == "csqcmodel")
 		{
-			CSQCModel_Hook_PreDraw(this.tag_entity, (this.tag_entity.entnum >= 1 && this.tag_entity.entnum <= maxclients));
+			CSQCModel_Hook_PreDraw(this.tag_entity, (this.tag_entity.isplayermodel & ISPLAYER_ENT));
 		}
 
 		if(this.tag_entity.modelindex != this.tag_entity_lastmodelindex)
@@ -610,7 +608,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 
 	if(this.isplayermodel && this.drawmask) // this checks if it's a player MODEL!
 	{
-		CSQCPlayer_ModelAppearance_Apply(this, this.entnum == player_localnum + 1);
+		CSQCPlayer_ModelAppearance_Apply(this, (this.isplayermodel & ISPLAYER_LOCAL));
 		CSQCPlayer_LOD_Apply(this);
 
 		if(!isplayer)
@@ -710,7 +708,9 @@ void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool isloc
 void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
-	this.isplayermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || (substring(this.model, 0, 16) == "models/monsters/" && (this.entnum >= 1 && this.entnum <= maxclients)));
+	bool is_playermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
+							(substring(this.model, 0, 16) == "models/monsters/" && (this.isplayermodel & BIT(1))));
+	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
 
 	// save values set by server
 	if(this.isplayermodel)

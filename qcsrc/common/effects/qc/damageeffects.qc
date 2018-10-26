@@ -53,7 +53,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 
 .float cnt;
 .int state;
-.bool isplayermodel;
 
 void DamageEffect_Think(entity this)
 {
@@ -79,7 +78,7 @@ void DamageEffect_Think(entity this)
 		return;
 	}
 	this.state = this.owner.csqcmodel_isdead;
-	if(this.owner.isplayermodel && (this.owner.entnum == player_localentnum) && !autocvar_chase_active)
+	if(this.owner.isplayermodel && (this.owner.isplayermodel & ISPLAYER_LOCAL) && !autocvar_chase_active)
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
