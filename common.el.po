@@ -7,6 +7,7 @@
 # Vindex <kon14.inside@gmail.com>, 2014
 # Konstantinos Mihalenas <ldinos99@gmail.com>, 2014
 # MasterWord, 2016
+# Mensious Mensious <ektoras@tutanota.com>, 2018
 # Vindex <kon14.inside@gmail.com>, 2014
 # Γιάννης Ανθυμίδης, 2011-2012
 msgid ""
@@ -14,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-09-19 19:54+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-10-27 17:32+0000\n"
+"Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
 "Language: el\n"
@@ -70,12 +71,12 @@ msgstr "^1Πατήστε ^3%s^1 ή ^3%s^1 για επόμενο ή προηγο�
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "επόμενο όπλο"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "προηγούμενο όπλο"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -124,7 +125,7 @@ msgstr "^1Πατήστε ^3%s^1 για σύνδεση"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "άλμα"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
