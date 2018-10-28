@@ -881,7 +881,8 @@ void havocbot_movetogoal(entity this)
 
 	diff = destorg - this.origin;
 
-	if (this.goalcurrent == this.goalentity && time < this.goalentity_lock_timeout && vdist(diff, <, 10))
+	if (time < this.bot_stop_moving_timeout
+		|| (this.goalcurrent == this.goalentity && time < this.goalentity_lock_timeout && vdist(diff, <, 10)))
 	{
 		// stop if the locked goal has been reached
 		destorg = this.origin;
@@ -1065,6 +1066,12 @@ void havocbot_movetogoal(entity this)
 			// Check for water/slime/lava and dangerous edges
 			// (only when the bot is on the ground or jumping intentionally)
 
+			if (skill + this.bot_moveskill <= 3 && time > this.bot_stop_moving_timeout
+				&& current_speed > maxspeed * 0.9 && fabs(deviation.y) > 70)
+			{
+				this.bot_stop_moving_timeout = time + 0.4 + random() * 0.2;
+			}
+
 			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : v_forward * 32);
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			vector dst_down = dst_ahead - '0 0 3000';
@@ -1189,7 +1196,12 @@ void havocbot_movetogoal(entity this)
 	}
 
 	if (!this.bot_aimdir_executed)
-		bot_aimdir(this, dir, -1);
+	{
+		if (time < this.bot_stop_moving_timeout)
+			bot_aimdir(this, normalize(this.goalcurrent.origin - this.origin), -1);
+		else
+			bot_aimdir(this, dir, -1);
+	}
 
 	if (!ladder_zdir)
 	{
