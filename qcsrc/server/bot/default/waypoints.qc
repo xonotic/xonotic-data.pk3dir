@@ -363,16 +363,16 @@ void waypoint_removelink(entity from, entity to)
 	switch (waypoint_getlinknum(from, to))
 	{
 		// fallthrough all the way
-		case 00: from.wp00 = from.wp01; from.wp00mincost = from.wp01mincost;
-		case 01: from.wp01 = from.wp02; from.wp01mincost = from.wp02mincost;
-		case 02: from.wp02 = from.wp03; from.wp02mincost = from.wp03mincost;
-		case 03: from.wp03 = from.wp04; from.wp03mincost = from.wp04mincost;
-		case 04: from.wp04 = from.wp05; from.wp04mincost = from.wp05mincost;
-		case 05: from.wp05 = from.wp06; from.wp05mincost = from.wp06mincost;
-		case 06: from.wp06 = from.wp07; from.wp06mincost = from.wp07mincost;
-		case 07: from.wp07 = from.wp08; from.wp07mincost = from.wp08mincost;
-		case 08: from.wp08 = from.wp09; from.wp08mincost = from.wp09mincost;
-		case 09: from.wp09 = from.wp10; from.wp09mincost = from.wp10mincost;
+		case  0: from.wp00 = from.wp01; from.wp00mincost = from.wp01mincost;
+		case  1: from.wp01 = from.wp02; from.wp01mincost = from.wp02mincost;
+		case  2: from.wp02 = from.wp03; from.wp02mincost = from.wp03mincost;
+		case  3: from.wp03 = from.wp04; from.wp03mincost = from.wp04mincost;
+		case  4: from.wp04 = from.wp05; from.wp04mincost = from.wp05mincost;
+		case  5: from.wp05 = from.wp06; from.wp05mincost = from.wp06mincost;
+		case  6: from.wp06 = from.wp07; from.wp06mincost = from.wp07mincost;
+		case  7: from.wp07 = from.wp08; from.wp07mincost = from.wp08mincost;
+		case  8: from.wp08 = from.wp09; from.wp08mincost = from.wp09mincost;
+		case  9: from.wp09 = from.wp10; from.wp09mincost = from.wp10mincost;
 		case 10: from.wp10 = from.wp11; from.wp10mincost = from.wp11mincost;
 		case 11: from.wp11 = from.wp12; from.wp11mincost = from.wp12mincost;
 		case 12: from.wp12 = from.wp13; from.wp12mincost = from.wp13mincost;
@@ -403,9 +403,9 @@ void waypoint_removelink(entity from, entity to)
 
 int waypoint_getlinknum(entity from, entity to)
 {
-	if (from.wp00 == to) return 00; if (from.wp01 == to) return 01; if (from.wp02 == to) return 02; if (from.wp03 == to) return 03;
-	if (from.wp04 == to) return 04; if (from.wp05 == to) return 05; if (from.wp06 == to) return 06; if (from.wp07 == to) return 07;
-	if (from.wp08 == to) return 08; if (from.wp09 == to) return 09; if (from.wp10 == to) return 10; if (from.wp11 == to) return 11;
+	if (from.wp00 == to) return  0; if (from.wp01 == to) return  1; if (from.wp02 == to) return  2; if (from.wp03 == to) return  3;
+	if (from.wp04 == to) return  4; if (from.wp05 == to) return  5; if (from.wp06 == to) return  6; if (from.wp07 == to) return  7;
+	if (from.wp08 == to) return  8; if (from.wp09 == to) return  9; if (from.wp10 == to) return 10; if (from.wp11 == to) return 11;
 	if (from.wp12 == to) return 12; if (from.wp13 == to) return 13; if (from.wp14 == to) return 14; if (from.wp15 == to) return 15;
 	if (from.wp16 == to) return 16; if (from.wp17 == to) return 17; if (from.wp18 == to) return 18; if (from.wp19 == to) return 19;
 	if (from.wp20 == to) return 20; if (from.wp21 == to) return 21; if (from.wp22 == to) return 22; if (from.wp23 == to) return 23;
