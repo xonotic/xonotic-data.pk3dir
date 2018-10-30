@@ -541,7 +541,7 @@ void CSQCModel_Effects_Apply(entity this)
 	if(this.csqcmodel_modelflags & MF_ROTATE)
 	{
 		this.renderflags |= RF_USEAXIS;
-		makevectors(this.angles + '0 100 0' * fmod(time, 3.6));
+		MAKEVECTORS(makevectors, this.angles + '0 100 0' * fmod(time, 3.6), v_forward, v_right, v_up);
 	}
 	if(this.csqcmodel_modelflags & MF_TRACER)
 		tref = EFFECT_TR_WIZSPIKE.m_id;
