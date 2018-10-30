@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-10-27 17:32+0000\n"
+"PO-Revision-Date: 2018-10-29 12:20+0000\n"
 "Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
@@ -893,7 +893,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1295
 msgid "Map stats:"
-msgstr ""
+msgstr "Στατιστικά χάρτη:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1325
 msgid "Monsters killed:"
