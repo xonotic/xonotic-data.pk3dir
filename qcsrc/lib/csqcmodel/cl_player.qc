@@ -207,6 +207,93 @@ bool CSQCPlayer_IsLocalPlayer(entity this)
 	return (this == csqcplayer);
 }
 
+float stairsmoothz;
+float autocvar_cl_stairsmoothspeed;
+float autocvar_cl_smoothviewheight;
+float smooth_prevtime;
+float viewheightavg;
+float autocvar_cl_bobfall;
+float autocvar_cl_bobfallcycle;
+float autocvar_cl_bobfallminspeed;
+float bobfall_swing;
+float bobfall_speed;
+vector CSQCPlayer_ApplySmoothing(entity this, vector v)
+{
+	if(this.csqcmodel_teleported || !IS_ONGROUND(this) || autocvar_cl_stairsmoothspeed <= 0)
+		stairsmoothz = v.z;
+	else
+	{
+		if(v.z > stairsmoothz)
+			v.z = stairsmoothz = bound(v.z - PHYS_STEPHEIGHT(this), stairsmoothz + frametime * autocvar_cl_stairsmoothspeed, v.z);
+		else if(v.z < stairsmoothz)
+			v.z = stairsmoothz = bound(v.z, stairsmoothz - frametime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
+	}
+
+	float viewheight = bound(0, (time - smooth_prevtime) / max(0.0001, autocvar_cl_smoothviewheight), 1);
+	viewheightavg = viewheightavg * (1 - viewheight) + this.view_ofs.z * viewheight;
+	v.z += viewheightavg;
+
+	if(autocvar_cl_bobfall && autocvar_cl_bobfallcycle)
+	{
+		if(!IS_ONGROUND(this))
+		{
+			bobfall_speed = bound(-400, this.velocity.z, 0) * bound(0, autocvar_cl_bobfall, 0.1);
+			if(this.velocity.z < -autocvar_cl_bobfallminspeed)
+				bobfall_swing = 1;
+			else
+				bobfall_swing = 0; // really?
+		}
+		else
+		{
+			bobfall_swing = max(0, bobfall_swing - autocvar_cl_bobfallcycle * frametime);
+			float bobfall = sin(M_PI * bobfall_swing) * bobfall_speed;
+			v.z += bobfall;
+		}
+	}
+
+	smooth_prevtime = time;
+
+	return v;
+}
+
+bool autocvar_v_deathtilt;
+float autocvar_v_deathtiltangle;
+void CSQCPlayer_ApplyDeathTilt(entity this)
+{
+	if(!autocvar_v_deathtilt)
+		return;
+	view_angles.y = autocvar_v_deathtiltangle;
+}
+
+float autocvar_v_idlescale;
+float autocvar_v_ipitch_cycle;
+float autocvar_v_iyaw_cycle;
+float autocvar_v_iroll_cycle;
+float autocvar_v_ipitch_level;
+float autocvar_v_iyaw_level;
+float autocvar_v_iroll_level;
+void CSQCPlayer_ApplyIdleScaling(entity this)
+{
+	view_angles.x += autocvar_v_idlescale * sin(time * autocvar_v_ipitch_cycle) * autocvar_v_ipitch_level;
+	view_angles.y += autocvar_v_idlescale * sin(time * autocvar_v_iyaw_cycle) * autocvar_v_iyaw_level;
+	view_angles.z += autocvar_v_idlescale * sin(time * autocvar_v_iroll_cycle) * autocvar_v_iroll_level;
+	setproperty(VF_CL_VIEWANGLES, view_angles); // update view angles as well so we can aim
+}
+
+float autocvar_chase_back;
+float autocvar_chase_up;
+vector CSQCPlayer_ApplyChase(entity this, vector v)
+{
+	// TODO: chase_overhead
+	v += this.view_ofs;
+	makevectors(view_angles);
+	tracebox(v, '-4 -4 -4', '4 4 4', v - v_forward * autocvar_chase_back, MOVE_NORMAL, this);
+	v = trace_endpos;
+	tracebox(v, '-4 -4 -4', '4 4 4', v + v_up * autocvar_chase_up, MOVE_NORMAL, this);
+	v = trace_endpos;
+	return v;
+}
+
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
 {
@@ -285,13 +372,26 @@ void CSQCPlayer_SetCamera()
 			InterpolateOrigin_Do(view);
 			view.view_ofs = '0 0 1' * vh;
 		}
-		int refdefflags = 0;
-		if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
-		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
+		//int refdefflags = 0;
+		//if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
+		//if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
 		// note: these two only work in WIP2, but are harmless in WIP1
-		if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
-		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
-		V_CalcRefdef(view, refdefflags); // TODO? uses .health stat in the engine when this isn't called here, may be broken!
+		//if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
+		//if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
+		vector vieworg = view.origin;
+		if(autocvar_chase_active)
+			vieworg = CSQCPlayer_ApplyChase(view, vieworg);
+		else
+		{
+			vieworg = CSQCPlayer_ApplySmoothing(view, vieworg);
+			if(IS_DEAD(view))
+				CSQCPlayer_ApplyDeathTilt(view);
+		}
+		if(autocvar_v_idlescale)
+			CSQCPlayer_ApplyIdleScaling(view);
+		setproperty(VF_ORIGIN, vieworg);
+		setproperty(VF_ANGLES, view_angles);
+		//V_CalcRefdef(view, refdefflags); // TODO? uses .health stat in the engine when this isn't called here, may be broken!
 	}
 	else
 	{
