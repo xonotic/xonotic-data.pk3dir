@@ -716,21 +716,6 @@ int gg_previous_weapon; ///< Previous weapon.
 string gg_previous_weapon_picture; ///< Previous weapon picture.
 float gg_weapon_change_time; ///< Time when the weapon changed.
 
-/// \brief Returns the picture of the weapon.
-/// \param[in] weapon Index of the weapon.
-/// \return Picture of the weapon.
-string GG_GetWeaponPicture(int weapon)
-{
-	FOREACH(Weapons, it != WEP_Null,
-	{
-		if (it.m_id == weapon)
-		{
-			return it.model2;
-		}
-	});
-	return "";
-}
-
 void HUD_Mod_GG(vector pos, vector mySize)
 {
 	// Required in each mod function that always shows something.
@@ -742,7 +727,7 @@ void HUD_Mod_GG(vector pos, vector mySize)
 		gg_previous_weapon = gg_current_weapon;
 		gg_previous_weapon_picture = gg_current_weapon_picture;
 		gg_current_weapon = stat_weapon;
-		gg_current_weapon_picture = GG_GetWeaponPicture(gg_current_weapon);
+		gg_current_weapon_picture = Weapons_from(gg_current_weapon).model2;
 		gg_weapon_change_time = time;
 	}
 	vector pic_pos, pic_size;

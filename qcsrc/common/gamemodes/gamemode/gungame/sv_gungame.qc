@@ -65,16 +65,13 @@ entity GunGame_GetWeapon(int level)
 		return NULL;
 	}
 	tokenize_console(gungame_weapons);
-	string weapon = argv(floor(level / autocvar_g_gg_kills_per_weapon));
-	FOREACH(Weapons, it != WEP_Null,
+	string weapon_name = argv(floor(level / autocvar_g_gg_kills_per_weapon));
+	Weapon weapon = Weapons_fromstr(weapon_name);
+	if (weapon == WEP_Null)
 	{
-		if (it.netname == weapon)
-		{
-			return it;
-		}
-	});
-	LOG_FATAL("GunGame_GetWeapon: Invalid level or weapon name");
-	return NULL;
+		LOG_FATAL("GunGame_GetWeapon: Invalid level or weapon name");
+	}
+	return weapon;
 }
 
 /// \brief Returns the player level.
