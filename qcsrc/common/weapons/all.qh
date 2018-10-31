@@ -130,7 +130,7 @@ REGISTER_WEAPON(Null, NEW(Weapon));
 Weapon Weapons_fromstr(string s)
 {
     FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
-    return NULL;
+    return WEP_Null;
 }
 
 

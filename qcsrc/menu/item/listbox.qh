@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../item.qh"
-CLASS(ListBox, Item)
+CLASS(ListBox, MenuItem)
 	METHOD(ListBox, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(ListBox, configureListBox, void(entity, float, float));
 	METHOD(ListBox, draw, void(entity));

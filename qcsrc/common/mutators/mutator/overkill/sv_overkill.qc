@@ -102,7 +102,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
+	entity targ = ((IS_PLAYER(frag_attacker)) ? frag_attacker : frag_target);
 
 	ok_DropItem(frag_target, targ);
 

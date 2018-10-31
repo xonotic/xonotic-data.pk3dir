@@ -96,6 +96,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
 string NearestLocation(vector p);
 
+string AmmoNameFromWeaponentity(Weapon wep);
+
 void play2(entity e, string filename);
 
 string playername(entity p, bool team_colorize);

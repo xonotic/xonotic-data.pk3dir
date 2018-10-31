@@ -8,9 +8,12 @@
 #include "common.qh"
 #include "vote.qh"
 
+#include "../bot/api.qh"
+
 #include "../campaign.qh"
 #include "../cheats.qh"
 #include "../client.qh"
+#include "../clientkill.qh"
 #include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
@@ -118,7 +121,7 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 					{
 						// JoinBestTeam(caller, false, true);
 					}
-					else if (teamplay && !autocvar_sv_spectate && !(caller.team_forced > 0))
+					else if (teamplay && !autocvar_sv_spectate && !(Player_GetForcedTeamIndex(caller) > 0))
 					{
 						TRANSMUTE(Observer, caller);  // really?
 						stuffcmd(caller, "menu_showteamselect\n");
@@ -165,6 +168,61 @@ void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // inter
 	}
 }
 
+void ClientCommand_wpeditor(entity caller, int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (!autocvar_g_waypointeditor)
+			{
+				sprint(caller, "ERROR: this command works only if the waypoint editor is on\n");
+				return;
+			}
+
+			if (argv(1) != "")
+			{
+				if (argv(1) == "spawn")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_spawn_fromeditor(caller);
+				}
+				else if (argv(1) == "remove")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_remove_fromeditor(caller);
+				}
+				else if (argv(1) == "unreachable")
+				{
+					if (!IS_PLAYER(caller))
+						sprint(caller, "ERROR: this command works only if you are player\n");
+					else
+						waypoint_unreachable(caller);
+				}
+				else if (argv(1) == "saveall")
+					waypoint_saveall();
+				else if (argv(1) == "relinkall")
+					waypoint_schedulerelinkall();
+
+				return;
+			}
+		}
+
+		default:
+			sprint(caller, "Incorrect parameters for ^2wpeditor^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
+			sprint(caller, "  Where 'action' can be: spawn, remove, unreachable, saveall, relinkall\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_join(entity caller, int request)
 {
 	switch (request)
@@ -183,6 +241,36 @@ void ClientCommand_join(entity caller, int request)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd join\n");
+			sprint(caller, "  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_kill(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(IS_SPEC(caller) || IS_OBSERVER(caller))
+				return; // no point warning about this, command does nothing
+
+			if(GetResourceAmount(caller, RESOURCE_HEALTH) <= 0)
+			{
+				sprint(caller, "Can't die - you are already dead!\n");
+				return;
+			}
+
+			ClientKill(caller);
+
+			return;  // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd kill\n");
 			sprint(caller, "  No arguments required.\n");
 			return;
 		}
@@ -304,7 +392,8 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argc >= 2)   Say(caller, true, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			if (argc >= 2)
+				Say(caller, true, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 			return;  // never fall through to usage
 		}
 
@@ -338,7 +427,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				sprint(caller, "^7selectteam can only be used in teamgames\n");
 				return;
 			}
-			if (caller.team_forced > 0)
+			if (Player_GetForcedTeamIndex(caller) > 0)
 			{
 				sprint(caller, "^7selectteam can not be used as your team is forced\n");
 				return;
@@ -671,6 +760,7 @@ void ClientCommand_(entity caller, int request)
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
+	CLIENT_COMMAND("kill", ClientCommand_kill(ent, request), "Become a member of the dead") \
 	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
@@ -684,6 +774,7 @@ void ClientCommand_(entity caller, int request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
+	CLIENT_COMMAND("wpeditor", ClientCommand_wpeditor(ent, request, arguments), "Waypoint editor commands") \
 	/* nothing */
 
 void ClientCommand_macro_help(entity caller)
@@ -758,6 +849,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "begin": break;                               // handled by engine in host_cmd.c
 		case "download": break;                            // handled by engine in cl_parse.c
 		case "mv_getpicture": break;                       // handled by server in this file
+		case "wpeditor": break;                            // handled by server in this file
 		case "pause": break;                               // handled by engine in host_cmd.c
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file

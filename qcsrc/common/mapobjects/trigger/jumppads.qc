@@ -133,9 +133,20 @@ bool jumppad_push(entity this, entity targ)
 	if (!isPushable(targ))
 		return false;
 
+	vector org = targ.origin;
+#ifdef SVQC
+	if(autocvar_sv_vq3compat)
+#elif defined(CSQC)
+	if(STAT(VQ3COMPAT))
+#endif
+	{
+		org.z += targ.mins_z;
+		org.z += 1; // off by 1!
+	}
+
 	if(this.enemy)
 	{
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height, targ);
+		targ.velocity = trigger_push_calculatevelocity(org, this.enemy, this.height, targ);
 	}
 	else if(this.target && this.target != "")
 	{
@@ -148,7 +159,7 @@ bool jumppad_push(entity this, entity targ)
 			else
 				RandomSelection_AddEnt(e, 1, 1);
 		}
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height, targ);
+		targ.velocity = trigger_push_calculatevelocity(org, RandomSelection_chosen_ent, this.height, targ);
 	}
 	else
 	{
@@ -349,6 +360,10 @@ bool trigger_push_test(entity this, entity item)
 			if(t.move_movetype != MOVETYPE_NONE)
 				continue;
 
+			// bots can't tell teamed jumppads from normal ones
+			if (this.team)
+				continue;
+
 			entity e = spawn();
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
@@ -455,32 +470,41 @@ bool trigger_push_test(entity this, entity item)
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			this.enemy = find(NULL, targetname, this.target);
+			if (!this.team)
+				this.enemy = find(NULL, targetname, this.target);
+			else // bots can't tell teamed jumppads from normal ones
+				this.enemy = NULL;
 		}
 		else
 		{
 			// have to use random selection every single time
 			this.enemy = NULL;
 		}
+
 	}
 #ifdef SVQC
 	else
 	{
-		entity e = spawn();
-		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
-		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-		setorigin(e, org);
-		e.velocity = this.movedir;
-		tracetoss(e, e);
-		if (item)
+		if (!this.team)
 		{
-			bool r = (trace_ent == item);
+			entity e = spawn();
+			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+			setorigin(e, org);
+			e.velocity = this.movedir;
+			tracetoss(e, e);
+			if (item)
+			{
+				bool r = (trace_ent == item);
+				delete(e);
+				return r;
+			}
+			if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
+				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
 			delete(e);
-			return r;
 		}
-		if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
-			waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
-		delete(e);
+		else if (item)
+			return false;
 	}
 
 	defer(this, 0.1, trigger_push_updatelink);

@@ -1,13 +1,13 @@
 #include "state.qh"
 
-void Inventory_new(entity this);
+void Inventory_new(PlayerState this);
 void Inventory_delete(entity this);
 
 void PlayerState_attach(entity this)
 {
 	this._ps = NEW(PlayerState, this);
 
-	Inventory_new(this);
+	Inventory_new(PS(this));
 }
 
 void PlayerState_detach(entity this)
@@ -18,11 +18,10 @@ void PlayerState_detach(entity this)
 
 	if (ps.m_client != this) return;  // don't own state, spectator
 	ps.ps_push(ps, this);
+    Inventory_delete(ps);
 
 	FOREACH_CLIENT(PS(it) == ps, { PS(it) = NULL; });
 	delete(ps);
-
-    Inventory_delete(this);
 }
 
 void GetCvars(entity this, entity store, int);
@@ -69,12 +68,11 @@ void ClientState_detach(entity this)
     PlayerScore_Detach(this); // what ^they^ said
     W_HitPlotClose(this);
     ClientData_Detach(this);
+    entcs_detach(this);
 	delete(CS(this));
 	this._cs = NULL;
-
 
     bot_clientdisconnect(this);
 
     anticheat_report_to_eventlog(this);
-    entcs_detach(this);
 }

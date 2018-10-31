@@ -27,8 +27,6 @@ const float ICE_MAX_ALPHA = 1;
 const float ICE_MIN_ALPHA = 0.1;
 float freezetag_teams;
 
-.float reviving; // temp var
-
 float autocvar_g_freezetag_revive_extra_size;
 float autocvar_g_freezetag_revive_speed;
 bool autocvar_g_freezetag_revive_nade;

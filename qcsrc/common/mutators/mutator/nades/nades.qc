@@ -383,7 +383,7 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 {
 	frost_target.frozen_by = freezefield.realowner;
 	Send_Effect(EFFECT_ELECTRO_IMPACT, frost_target.origin, '0 0 0', 1);
-	Freeze(frost_target, 1 / freezetime, 3, false);
+	Freeze(frost_target, 1 / freezetime, FROZEN_TEMP_DYING, false);
 
 	Drop_Special_Items(frost_target);
 }
@@ -1021,7 +1021,7 @@ void nades_GiveBonus(entity player, float score)
 	if (autocvar_g_nades_bonus)
 	if (IS_REAL_CLIENT(player))
 	if (IS_PLAYER(player) && STAT(NADE_BONUS, player) < autocvar_g_nades_bonus_max)
-	if (STAT(FROZEN, player) == 0)
+	if (!STAT(FROZEN, player))
 	if (!IS_DEAD(player))
 	{
 		if ( STAT(NADE_BONUS_SCORE, player) < 1 )
@@ -1103,7 +1103,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	n.alpha = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_alpha;
 
 	setmodel(fn, MDL_NADE_VIEW);
-	setattachment(fn, player.(weaponentity), "");
+	//setattachment(fn, player.(weaponentity), "");
+	fn.viewmodelforclient = player;
 	fn.realowner = fn.owner = player;
 	fn.colormod = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_color;
 	fn.colormap = player.colormap;
@@ -1258,6 +1259,15 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 	}
 }
 
+#ifdef IS_REVIVING
+	#undef IS_REVIVING
+#endif
+
+// returns true if player is reviving it
+#define IS_REVIVING(player, it, revive_extra_size) \
+	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
+	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
+
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
@@ -1329,43 +1339,43 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	}
 
 	int n = 0;
-	entity o = NULL;
+
+	IntrusiveList reviving_players = NULL;
+
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
-	else if(STAT(FROZEN, player) == 3)
+	else if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
-			if(!IS_DEAD(it) && STAT(FROZEN, it) == 0 && SAME_TEAM(it, player))
-			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
-			{
-				if(!o)
-					o = it;
-				it.reviving = true;
-				++n;
-			}
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+			if (!reviving_players)
+				reviving_players = IL_NEW();
+			IL_PUSH(reviving_players, it);
+			++n;
 		});
 	}
 
-	if(n > 0 && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
+	if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 		SetResourceAmount(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
-			Unfreeze(player);
+			Unfreeze(player, false);
 
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
-			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			entity first = IL_FIRST(reviving_players);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
+			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
+		IL_EACH(reviving_players, true, {
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-			it.reviving = false;
 		});
 	}
+	if (reviving_players)
+		IL_DELETE(reviving_players);
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)
@@ -1468,7 +1478,7 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 	if(autocvar_g_freezetag_revive_nade && STAT(FROZEN, frag_target) && frag_attacker == frag_target && frag_deathtype == DEATH_NADE.m_id)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
-		Unfreeze(frag_target);
+		Unfreeze(frag_target, false);
 		SetResourceAmount(frag_target, RESOURCE_HEALTH, autocvar_g_freezetag_revive_nade_health);
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		M_ARGV(4, float) = 0;

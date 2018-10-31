@@ -248,7 +248,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
-	if(spot.target != "")
+	if(spot.target && spot.target != "")
 	{
 		int found = 0;
 		for(entity targ = findchain(targetname, spot.target); targ; targ = targ.chain)

@@ -109,6 +109,7 @@ bool IsFlying(entity a);
 #define PHYS_INPUT_BUTTON_ZOOMSCRIPT(s)     PHYS_INPUT_BUTTON_BUTTON9(s)
 #define PHYS_INPUT_BUTTON_JETPACK(s)        PHYS_INPUT_BUTTON_BUTTON10(s)
 #define PHYS_INPUT_BUTTON_DODGE(s)			PHYS_INPUT_BUTTON_BUTTON11(s)
+#define PHYS_INPUT_BUTTON_MINIGAME(s)		PHYS_INPUT_BUTTON_BUTTON14(s)
 
 #ifdef CSQC
 STATIC_INIT(PHYS_INPUT_BUTTON)
@@ -189,8 +190,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	.entity hook;
 
 // TODO
-	#define IS_CLIENT(s)                        ((s).isplayermodel || (s) == csqcplayer)
-	#define IS_PLAYER(s)                        ((s).isplayermodel)
+	#define IS_CLIENT(s)                        (((s).isplayermodel & ISPLAYER_CLIENT) || (s) == csqcplayer)
+	#define IS_PLAYER(s)                        ((s).isplayermodel & ISPLAYER_PLAYER)
 	#define IS_NOT_A_CLIENT(s)                  (!(s).isplayermodel && (s) != csqcplayer)
 	#define isPushable(s)                       ((s).isplayermodel || (s).pushable || ((s).flags & FL_PROJECTILE))
 

@@ -1298,6 +1298,7 @@ float matchacl(string acl, string str)
 		if(s == t)
 		{
 			r = d;
+			break; // if we found a killing case, apply it! other settings may be allowed in the future, but this one is caught
 		}
 	}
 	return r;

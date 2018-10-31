@@ -103,7 +103,7 @@ void HUD_Powerups()
 		addPowerupItem("Strength", "strength", autocvar_hud_progressbar_strength_color, strengthTime, 30);
 	if(shieldTime)
 		addPowerupItem("Shield", "shield", autocvar_hud_progressbar_shield_color, shieldTime, 30);
-	if(superTime)
+	if(superTime && !(allItems & IT_UNLIMITED_SUPERWEAPONS))
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
 	MUTATOR_CALLHOOK(HUD_Powerups_add);

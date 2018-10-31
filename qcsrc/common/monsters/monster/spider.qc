@@ -168,9 +168,9 @@ void M_Spider_Attack_Web(entity this)
 
 bool M_Spider_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
+	Weapon wep = WEP_SPIDER_ATTACK;
 	switch(attack_type)
 	{
-		Weapon wep = WEP_SPIDER_ATTACK;
 		case MONSTER_ATTACK_MELEE:
 		{
 			wep.wr_think(wep, actor, weaponentity, 2);

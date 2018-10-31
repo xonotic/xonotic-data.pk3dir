@@ -54,9 +54,9 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	mod_active = 1; // required in each mod function that always shows something
 
 	int layout;
-	if(gametype == MAPINFO_TYPE_CA)
+	if(ISGAMETYPE(CA))
 		layout = autocvar_hud_panel_modicons_ca_layout;
-	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
+	else //if(ISGAMETYPE(FREEZETAG))
 		layout = autocvar_hud_panel_modicons_freezetag_layout;
 	int rows, columns;
 	float aspect_ratio;
@@ -528,7 +528,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 	// clientside personal record
 	string rr;
-	if(gametype == MAPINFO_TYPE_CTS)
+	if(ISGAMETYPE(CTS))
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;

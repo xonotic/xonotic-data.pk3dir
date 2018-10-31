@@ -36,11 +36,15 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 vector planes[MAX_CLIP_PLANES];
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
 {
+	if(dt <= 0)
+		return 0;
+
 	int blocked = 0;
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
-	vector primal_velocity, original_velocity, restore_velocity;
+	vector primal_velocity, original_velocity;
+	vector restore_velocity = this.velocity;
 
 	for(i = 0; i < MAX_CLIP_PLANES; ++i)
 		planes[i] = '0 0 0';
@@ -59,7 +63,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		}
 	}
 
-	original_velocity = primal_velocity = restore_velocity = this.velocity;
+	original_velocity = primal_velocity = this.velocity;
 
 	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
 	{
@@ -67,8 +71,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			break;
 
 		push = this.velocity * time_left;
-		_Movetype_PushEntity(this, push, true);
-		if(trace_startsolid)
+		if(!_Movetype_PushEntity(this, push, true, false))
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -113,22 +116,19 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			vector org = this.origin;
 			vector steppush = '0 0 1' * stepheight;
 
-			_Movetype_PushEntity(this, steppush, true);
-			if(trace_startsolid)
+			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
 				blocked |= 8;
 				break;
 			}
-			_Movetype_PushEntity(this, push, true);
-			if(trace_startsolid)
+			if(!_Movetype_PushEntity(this, push, true, false))
 			{
 				blocked |= 8;
 				break;
 			}
 			float trace2_fraction = trace_fraction;
-			steppush = '0 0 1' * (org.z - this.origin_z);
-			_Movetype_PushEntity(this, steppush, true);
-			if(trace_startsolid)
+			steppush = vec3(0, 0, org.z - this.origin_z);
+			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
 				blocked |= 8;
 				break;
@@ -230,6 +230,9 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 
 	// LordHavoc: this came from QW and allows you to get out of water more easily
 	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blocked & 8))
+		this.velocity = primal_velocity;
+
+	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blocked & 8))
 		this.velocity = primal_velocity;
 
 	if(applygravity)
@@ -403,11 +406,11 @@ entity _Movetype_TestEntityPosition_ent;
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
     entity this = _Movetype_TestEntityPosition_ent;
-//	vector org = this.origin + ofs;
+	vector org = this.origin + ofs;
 
 	int cont = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(this.origin, this.mins, this.maxs, this.origin, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
+	tracebox(org, this.mins, this.maxs, org, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
 	this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
@@ -418,11 +421,11 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 	return false;
 }
 
-bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
+int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
     _Movetype_TestEntityPosition_ent = this;
 	if (!_Movetype_TestEntityPosition(' 0  0  0')) {
-	    return true;
+	    return UNSTICK_FINE;
 	}
 	#define X(v) if (_Movetype_TestEntityPosition(v))
 	X('-1  0  0') X(' 1  0  0')
@@ -434,20 +437,39 @@ bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         #define X(i) \
             if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
             if (_Movetype_TestEntityPosition('0 0 1' * i))
-        X(01) X(02) X(03) X(04) X(05) X(06) X(07) X(08)
-        X(09) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
+        X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8)
+        X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
         X(17)
         #undef X
         {
             LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
                 etof(this), this.classname, vtos(this.origin));
-            return false;
+            return UNSTICK_STUCK;
         }
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
 	_Movetype_LinkEdict(this, true);
-	return true;
+	return UNSTICK_FIXED;
+}
+
+void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
+{
+	int unstick = _Movetype_UnstickEntity(this); // sets test position entity
+	switch(unstick)
+	{
+		case UNSTICK_FINE:
+			this.oldorigin = this.origin;
+			break;
+		case UNSTICK_FIXED:
+			break; // already sorted
+		case UNSTICK_STUCK:
+			vector offset = this.oldorigin - this.origin;
+			if(!_Movetype_TestEntityPosition(offset))
+				_Movetype_LinkEdict(this, false);
+			// couldn't unstick, should we warn about this?
+			break;
+	}
 }
 
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // SV_ClipVelocity
@@ -479,20 +501,32 @@ void _Movetype_PushEntityTrace(entity this, vector push)
 	tracebox(this.origin, this.mins, this.maxs, end, type, this);
 }
 
-float _Movetype_PushEntity(entity this, vector push, bool failonstartsolid)  // SV_PushEntity
+bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool dolink)  // SV_PushEntity
 {
 	_Movetype_PushEntityTrace(this, push);
 
 	if(trace_startsolid && failonstartsolid)
-		return trace_fraction;
+	{
+		int oldtype = this.move_nomonsters;
+		this.move_nomonsters = MOVE_NOMONSTERS;
+		_Movetype_PushEntityTrace(this, push);
+		this.move_nomonsters = oldtype;
+		if(trace_startsolid)
+			return true;
+	}
 
 	this.origin = trace_endpos;
+
+	vector last_origin = this.origin;
+
+	if(dolink)
+		_Movetype_LinkEdict(this, true);
 
 	if(trace_fraction < 1)
 		if(this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
 			_Movetype_Impact(this, trace_ent);
 
-	return trace_fraction;
+	return (this.origin == last_origin); // false if teleported by touch
 }
 
 

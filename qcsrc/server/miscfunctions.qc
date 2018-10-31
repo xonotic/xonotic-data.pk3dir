@@ -416,6 +416,12 @@ REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
 
 REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 
+REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
+
+REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
+
+REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
+
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
@@ -600,14 +606,12 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			FOREACH(Weapons, it != WEP_Null, {
-				if(it.netname == s)
-				{
-					g_weaponarena_weapons |= (it.m_wepset);
-					g_weaponarena_list = strcat(g_weaponarena_list, it.m_name, " & ");
-					break;
-				}
-			});
+			Weapon wep = Weapons_fromstr(s);
+			if(wep != WEP_Null)
+			{
+				g_weaponarena_weapons |= (wep.m_wepset);
+				g_weaponarena_list = strcat(g_weaponarena_list, wep.m_name, " & ");
+			}
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
@@ -631,6 +635,9 @@ void readplayerstartcvars()
 				start_weapons_defaultmask |= s;
 		});
 	}
+
+	if(cvar("g_balance_superweapons_time") < 0)
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
