@@ -42,7 +42,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Input packets/s:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(20, 100, 5, "cl_netfps",
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(30, 180, 5, "cl_netfps",
 			_("How many input packets to send to the server each second")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Server queries/s:")));

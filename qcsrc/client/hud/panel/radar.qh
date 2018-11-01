@@ -1,2 +1,4 @@
 #pragma once
 #include "../panel.qh"
+
+void HUD_Radar_Show_Maximized(bool doshow, bool clickable);

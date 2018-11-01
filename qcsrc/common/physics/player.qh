@@ -15,7 +15,7 @@
 .float swamp_slowdown;
 .float lastflags;
 .float lastground;
-.float wasFlying;
+.bool wasFlying;
 
 .int buttons_old;
 .vector movement_old;
@@ -101,15 +101,6 @@ bool IsFlying(entity a);
 #define PHYS_INPUT_BUTTON_ZOOM(s)           PHYS_INPUT_BUTTON_BUTTON4(s)
 #define PHYS_INPUT_BUTTON_CROUCH(s)         PHYS_INPUT_BUTTON_BUTTON5(s)
 #define PHYS_INPUT_BUTTON_HOOK(s)           PHYS_INPUT_BUTTON_BUTTON6(s)
-
-#ifdef CSQC
-STATIC_INIT(PHYS_INPUT_BUTTON_HOOK)
-{
-	localcmd("alias +hook +button6\n");
-	localcmd("alias -hook -button6\n");
-}
-#endif
-
 #define PHYS_INPUT_BUTTON_INFO(s)           PHYS_INPUT_BUTTON_BUTTON7(s)
 #define PHYS_INPUT_BUTTON_DRAG(s)           PHYS_INPUT_BUTTON_BUTTON8(s)
 #define PHYS_INPUT_BUTTON_USE(s)            PHYS_INPUT_BUTTON_BUTTON_USE(s)
@@ -118,18 +109,19 @@ STATIC_INIT(PHYS_INPUT_BUTTON_HOOK)
 #define PHYS_INPUT_BUTTON_ZOOMSCRIPT(s)     PHYS_INPUT_BUTTON_BUTTON9(s)
 #define PHYS_INPUT_BUTTON_JETPACK(s)        PHYS_INPUT_BUTTON_BUTTON10(s)
 #define PHYS_INPUT_BUTTON_DODGE(s)			PHYS_INPUT_BUTTON_BUTTON11(s)
+#define PHYS_INPUT_BUTTON_MINIGAME(s)		PHYS_INPUT_BUTTON_BUTTON14(s)
 
 #ifdef CSQC
-STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
+STATIC_INIT(PHYS_INPUT_BUTTON)
 {
-	localcmd("alias +jetpack +button10\n");
-    localcmd("alias -jetpack -button10\n");
-}
+	localcmd("alias +hook +button6\n");
+	localcmd("alias -hook -button6\n");
 
-STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
-{
-    localcmd("alias +dodge +button11\n");
-    localcmd("alias -dodge -button11\n");
+	localcmd("alias +jetpack +button10\n");
+	localcmd("alias -jetpack -button10\n");
+
+	localcmd("alias +dodge +button11\n");
+	localcmd("alias -dodge -button11\n");
 }
 #endif
 
@@ -198,8 +190,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	.entity hook;
 
 // TODO
-	#define IS_CLIENT(s)                        ((s).isplayermodel || (s) == csqcplayer)
-	#define IS_PLAYER(s)                        ((s).isplayermodel)
+	#define IS_CLIENT(s)                        (((s).isplayermodel & ISPLAYER_CLIENT) || (s) == csqcplayer)
+	#define IS_PLAYER(s)                        ((s).isplayermodel & ISPLAYER_PLAYER)
 	#define IS_NOT_A_CLIENT(s)                  (!(s).isplayermodel && (s) != csqcplayer)
 	#define isPushable(s)                       ((s).isplayermodel || (s).pushable || ((s).flags & FL_PROJECTILE))
 
@@ -239,6 +231,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define IS_DUCKED(s)                        (boolean((s).flags & FL_DUCKED))
 	#define SET_DUCKED(s)                       ((s).flags |= FL_DUCKED)
 	#define UNSET_DUCKED(s)                     ((s).flags &= ~FL_DUCKED)
+
+	#define PHYS_INVEHICLE(s) 					(boolean(hud != HUD_NORMAL))
 
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_cl_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_cl_jumpspeedcap_max
@@ -291,6 +285,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define IS_DUCKED(s)                        ((s).crouch)
 	#define SET_DUCKED(s)                       ((s).crouch = true)
 	#define UNSET_DUCKED(s)                     ((s).crouch = false)
+
+	#define PHYS_INVEHICLE(s) 					(boolean((s).vehicle != NULL))
 
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max

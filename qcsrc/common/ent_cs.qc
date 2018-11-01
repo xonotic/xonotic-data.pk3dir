@@ -1,4 +1,9 @@
 #include "ent_cs.qh"
+#include <common/gamemodes/_mod.qh>
+#include <common/resources.qh>
+#ifdef SVQC
+#include <server/resources.qh>
+#endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)
 #define EntCSProps_from(i) _EntCSProps_from(i, NULL)
@@ -33,14 +38,33 @@ STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i
 	}
 #endif
 
+#ifdef SVQC
+#define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, svsend, clreceive) \
+	bool id##_check(entity ent, entity player) { return (GetResourceAmount(ent, checkprop) != GetResourceAmount(player, checkprop)); } \
+	void id##_set(entity ent, entity player) { SetResourceAmountExplicit(ent, checkprop, GetResourceAmount(player, checkprop)); } \
+	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+		this.m_public = ispublic; \
+		this.m_check = id##_check; \
+		this.m_set = id##_set; \
+		this.m_send = id##_send; \
+	}
+#elif defined(CSQC)
+#define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, svsend, clreceive) \
+	void id##_receive(entity ent) { LAMBDA(clreceive); } \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+		this.m_public = ispublic; \
+		this.m_receive = id##_receive; \
+	}
+#endif
+
 #define ENTCS_SET_NORMAL(var, x) MACRO_BEGIN \
 	var = x; \
 MACRO_END
 
 /** the engine player name strings are mutable! */
 #define ENTCS_SET_MUTABLE_STRING(var, x) MACRO_BEGIN \
-	if (var) strunzone(var); \
-	var = strzone(x); \
+	strcpy(var, x); \
 MACRO_END
 
 ENTCS_PROP(ENTNUM, false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
@@ -53,21 +77,21 @@ ENTCS_PROP(ANGLES, false, angles_y, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.angles.y / 360 * 256); },
 	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; ent.angles = v; })
 
-ENTCS_PROP(HEALTH, false, health, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, bound(0, ent.health / 10, 255));  /* FIXME: use a better scale? */ },
+ENTCS_PROP_RESOURCE(HEALTH, false, RESOURCE_HEALTH, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_HEALTH) / 10, 255));  /* FIXME: use a better scale? */ },
 	{ ent.healthvalue = ReadByte() * 10; })
 
-ENTCS_PROP(ARMOR, false, armorvalue, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, bound(0, ent.armorvalue / 10, 255));  /* FIXME: use a better scale? */ },
-	{ ent.armorvalue = ReadByte() * 10; })
+ENTCS_PROP_RESOURCE(ARMOR, false, RESOURCE_ARMOR, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_ARMOR) / 10, 255));  /* FIXME: use a better scale? */ },
+	{ SetResourceAmountExplicit(ent, RESOURCE_ARMOR, ReadByte() * 10); })
 
 ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,
 	{ WriteString(chan, ent.netname); },
-	{ if (ent.netname) strunzone(ent.netname); ent.netname = strzone(ReadString()); })
+	{ strcpy(ent.netname, ReadString()); })
 
 ENTCS_PROP(MODEL, true, model, ENTCS_SET_NORMAL,
 	{ WriteString(chan, ent.model); },
-	{ if (ent.model) strunzone(ent.model); ent.model = strzone(ReadString()); })
+	{ strcpy(ent.model, ReadString()); })
 
 ENTCS_PROP(SKIN, true, skin, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.skin); },
@@ -140,23 +164,23 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 
 	void entcs_attach(entity player)
 	{
-		entity e = player.entcs = new(entcs_sender);
+		entity e = CS(player).entcs = new(entcs_sender);
 		e.owner = player;
 		setthink(e, entcs_think);
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
 		if (!IS_REAL_CLIENT(player)) return;
 		FOREACH_CLIENT(true, {
-			assert(it.entcs);
-			_entcs_send(it.entcs, msg_entity = player, BITS(23), MSG_ONE);
+			assert(CS(it).entcs);
+			_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
 		});
 	}
 
 	void entcs_detach(entity player)
 	{
-		if (!player.entcs) return;
-		delete(player.entcs);
-		player.entcs = NULL;
+		if (!CS(player).entcs) return;
+		delete(CS(player).entcs);
+		CS(player).entcs = NULL;
 	}
 
 #endif
@@ -168,10 +192,8 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		int n = this.sv_entnum;
 		entity e = entcs_receiver(n);
 		entcs_receiver(n, NULL);
-		if (e.netname) strunzone(e.netname);
-		e.netname = string_null;
-		if (e.model) strunzone(e.model);
-		e.model = string_null;
+		strfree(e.netname);
+		strfree(e.model);
 		if (e != this) delete(e);
 	}
 
@@ -188,8 +210,7 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		// `cl_forceplayermodels 1` sounds will be wrong until the player has been in the PVS, but so be it
 		if (this.model != e.model)
 		{
-			if (this.model) strunzone(this.model);
-			this.model = strzone(e.model);
+			strcpy(this.model, e.model);
 		}
 	}
 

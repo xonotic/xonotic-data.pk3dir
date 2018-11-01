@@ -33,7 +33,6 @@ int img_select(int group_id)
 	return img_cur_msg[group_id];
 }
 
-float stringwidth_colors(string s, vector theSize);
 vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
 {
 	getWrappedLine_remaining = s;
@@ -119,7 +118,7 @@ void HUD_InfoMessages()
 
 			MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize);
 
-			if(!warmup_stage && gametype == MAPINFO_TYPE_LMS)
+			if(!warmup_stage && ISGAMETYPE(LMS))
 			{
 				entity sk;
 				sk = playerslots[player_localnum];

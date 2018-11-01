@@ -13,14 +13,16 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mapvoting.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "race.qh"
 #include "scores.qh"
+#include "scores_rules.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/deathtypes/all.qh"
+#include "../common/gamemodes/sv_rules.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/_mod.qh"
 #include "../common/monsters/sv_monsters.qh"
@@ -30,8 +32,8 @@
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
-#include "../common/triggers/trigger/secret.qh"
-#include "../common/triggers/target/music.qh"
+#include "../common/mapobjects/trigger/secret.qh"
+#include "../common/mapobjects/target/music.qh"
 #include "../common/util.qh"
 #include "../common/items/_mod.qh"
 #include <common/weapons/_all.qh>
@@ -91,9 +93,6 @@ const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
-string GetGametype();
-void ShuffleMaplist();
-
 void SetDefaultAlpha()
 {
 	if (!MUTATOR_CALLHOOK(SetDefaultAlpha))
@@ -145,12 +144,8 @@ void cvar_changes_init()
 	string k, v, d;
 	float n, i, adding, pureadding;
 
-	if(cvar_changes)
-		strunzone(cvar_changes);
-	cvar_changes = string_null;
-	if(cvar_purechanges)
-		strunzone(cvar_purechanges);
-	cvar_purechanges = string_null;
+	strfree(cvar_changes);
+	strfree(cvar_purechanges);
 	cvar_purechanges_count = 0;
 
 	h = buf_create();
@@ -253,6 +248,7 @@ void cvar_changes_init()
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
 		BADCVAR("sv_muteban_list");
+		BADCVAR("sv_voteban_list");
 		BADCVAR("sv_allow_customplayermodels_idlist");
 		BADCVAR("sv_allow_customplayermodels_speciallist");
 
@@ -269,6 +265,7 @@ void cvar_changes_init()
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
+		BADCVAR("g_duel");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
@@ -361,10 +358,12 @@ void cvar_changes_init()
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
 		BADCVAR("sv_weapons_modeloverride");
+		BADCVAR("w_prop_interval");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
+		BADPREFIX("g_hats_");
 		BADPREFIX("g_maplist_");
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
@@ -508,38 +507,6 @@ void cvar_changes_init()
 	cvar_purechanges = strzone(cvar_purechanges);
 }
 
-void detect_maptype()
-{
-#if 0
-	vector o, v;
-	float i;
-
-	for (;;)
-	{
-		o = world.mins;
-		o.x += random() * (world.maxs.x - world.mins.x);
-		o.y += random() * (world.maxs.y - world.mins.y);
-		o.z += random() * (world.maxs.z - world.mins.z);
-
-		tracebox(o, STAT(PL_MIN), STAT(PL_MAX), o - '0 0 32768', MOVE_WORLDONLY, NULL);
-		if(trace_fraction == 1)
-			continue;
-
-		v = trace_endpos;
-
-		for(i = 0; i < 64; i += 4)
-		{
-			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, NULL);
-	if(trace_fraction == 1)
-		continue;
-			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos));
-		}
-
-		break;
-	}
-#endif
-}
-
 entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
@@ -613,12 +580,59 @@ STATIC_INIT_EARLY(maxclients)
 	}
 }
 
+void default_delayedinit(entity this)
+{
+	if(!scores_initialized)
+		ScoreRules_generic();
+}
+
+void InitGameplayMode()
+{
+	VoteReset();
+
+	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
+	get_mi_min_max(1);
+	// assign reflectively to avoid "assignment to world" warning
+	int done = 0; for (int i = 0, n = numentityfields(); i < n; ++i) {
+	    string k = entityfieldname(i); vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
+	    if (v) {
+            putentityfieldstring(i, world, sprintf("%v", v));
+            if (++done == 2) break;
+        }
+	}
+	// currently, NetRadiant's limit is 131072 qu for each side
+	// distance from one corner of a 131072qu cube to the opposite corner is approx. 227023 qu
+	// set the distance according to map size but don't go over the limit to avoid issues with float precision
+	// in case somebody makes extremely large maps
+	max_shot_distance = min(230000, vlen(world.maxs - world.mins));
+
+	MapInfo_LoadMapSettings(mapname);
+	GameRules_teams(false);
+
+	if (!cvar_value_issafe(world.fog))
+	{
+		LOG_INFO("The current map contains a potentially harmful fog setting, ignored");
+		world.fog = string_null;
+	}
+	if(MapInfo_Map_fog != "")
+		if(MapInfo_Map_fog == "none")
+			world.fog = string_null;
+		else
+			world.fog = strzone(MapInfo_Map_fog);
+	clientstuff = strzone(MapInfo_Map_clientstuff);
+
+	MapInfo_ClearTemps();
+
+	gamemode_name = MapInfo_Type_ToText(MapInfo_LoadedGametype);
+
+	cache_mutatormsg = strzone("");
+	cache_lastmutatormsg = strzone("");
+
+	InitializeEntity(NULL, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
+}
+
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
-void Nagger_Init();
-void ClientInit_Spawn();
-void WeaponStats_Init();
-void WeaponStats_Shutdown();
 spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
@@ -872,8 +886,6 @@ spawnfunc(worldspawn)
 
 	next_pingtime = time + 5;
 
-	detect_maptype();
-
 	// set up information replies for clients and server to use
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
@@ -1094,7 +1106,7 @@ void Map_Goto(float reinit)
 // return codes of map selectors:
 //   -1 = temporary failure (that is, try some method that is guaranteed to succeed)
 //   -2 = permanent failure
-float() MaplistMethod_Iterate = // usual method
+float MaplistMethod_Iterate() // usual method
 {
 	float pass, i;
 
@@ -1113,7 +1125,7 @@ float() MaplistMethod_Iterate = // usual method
 	return -1;
 }
 
-float() MaplistMethod_Repeat = // fallback method
+float MaplistMethod_Repeat() // fallback method
 {
 	LOG_TRACE("Trying MaplistMethod_Repeat");
 
@@ -1122,7 +1134,7 @@ float() MaplistMethod_Repeat = // fallback method
 	return -2;
 }
 
-float() MaplistMethod_Random = // random map selection
+float MaplistMethod_Random() // random map selection
 {
 	float i, imax;
 
@@ -1140,7 +1152,7 @@ float() MaplistMethod_Random = // random map selection
 	return -1;
 }
 
-float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
+float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 // the exponent sets a bias on the map selection:
 // the higher the exponent, the less likely "shortly repeated" same maps are
 {
@@ -1199,9 +1211,7 @@ void Maplist_Init()
 		error("empty maplist, cannot select a new map");
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	if(Map_Current_Name)
-		strunzone(Map_Current_Name);
-	Map_Current_Name = strzone(argv(Map_Current)); // will be automatically freed on exit thanks to DP
+	strcpy(Map_Current_Name, argv(Map_Current)); // will be automatically freed on exit thanks to DP
 	// this may or may not be correct, but who cares, in the worst case a map
 	// isn't chosen in the first pass that should have been
 }
@@ -1511,7 +1521,7 @@ void FixIntermissionClient(entity e)
 	if(!e.autoscreenshot) // initial call
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
-		e.health = -2342;
+		SetResourceAmountExplicit(e, RESOURCE_HEALTH, -2342);
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1602,7 +1612,9 @@ float InitiateSuddenDeath()
 	// - for this timelimit_overtime needs to be >0 of course
 	// - also check the winning condition calculated in the previous frame and only add normal overtime
 	//   again, if at the point at which timelimit would be extended again, still no winner was found
-	if (!autocvar_g_campaign && (checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < autocvar_timelimit_overtimes || autocvar_timelimit_overtimes < 0) && autocvar_timelimit_overtime && !(g_race && !g_race_qualifying))
+	if (!autocvar_g_campaign && checkrules_overtimesadded >= 0
+		&& (checkrules_overtimesadded < autocvar_timelimit_overtimes || autocvar_timelimit_overtimes < 0)
+		&& autocvar_timelimit_overtime && !(g_race && !g_race_qualifying))
 	{
 		return 1; // need to call InitiateOvertime later
 	}
@@ -1625,11 +1637,7 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 {
 	++checkrules_overtimesadded;
 	//add one more overtime by simply extending the timelimit
-	float tl;
-	tl = autocvar_timelimit;
-	tl += autocvar_timelimit_overtime;
-	cvar_set("timelimit", ftos(tl));
-
+	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
 }
 
@@ -1690,10 +1698,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(teamplay)
 	{
-		team1_score = TeamScore_GetCompareValue(NUM_TEAM_1);
-		team2_score = TeamScore_GetCompareValue(NUM_TEAM_2);
-		team3_score = TeamScore_GetCompareValue(NUM_TEAM_3);
-		team4_score = TeamScore_GetCompareValue(NUM_TEAM_4);
+		for (int i = 1; i < 5; ++i)
+		{
+			Team_SetTeamScore(Team_GetTeamFromIndex(i),
+				TeamScore_GetCompareValue(Team_IndexToTeam(i)));
+		}
 	}
 
 	ClearWinners();
@@ -1763,30 +1772,32 @@ float WinningCondition_RanOutOfSpawns()
 	if(!some_spawn_has_been_used)
 		return WINNING_NO;
 
-	team1_score = team2_score = team3_score = team4_score = 0;
+	for (int i = 1; i < 5; ++i)
+	{
+		Team_SetTeamScore(Team_GetTeamFromIndex(i), 0);
+	}
 
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-		switch(it.team)
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+	{
+		if (Team_IsValidTeam(it.team))
 		{
-			case NUM_TEAM_1: team1_score = 1; break;
-			case NUM_TEAM_2: team2_score = 1; break;
-			case NUM_TEAM_3: team3_score = 1; break;
-			case NUM_TEAM_4: team4_score = 1; break;
+			Team_SetTeamScore(Team_GetTeam(it.team), 1);
 		}
 	});
 
 	IL_EACH(g_spawnpoints, true,
 	{
-		switch(it.team)
+		if (Team_IsValidTeam(it.team))
 		{
-			case NUM_TEAM_1: team1_score = 1; break;
-			case NUM_TEAM_2: team2_score = 1; break;
-			case NUM_TEAM_3: team3_score = 1; break;
-			case NUM_TEAM_4: team4_score = 1; break;
+			Team_SetTeamScore(Team_GetTeam(it.team), 1);
 		}
 	});
 
 	ClearWinners();
+	float team1_score = Team_GetTeamScore(Team_GetTeamFromIndex(1));
+	float team2_score = Team_GetTeamScore(Team_GetTeamFromIndex(2));
+	float team3_score = Team_GetTeamScore(Team_GetTeamFromIndex(3));
+	float team4_score = Team_GetTeamScore(Team_GetTeamFromIndex(4));
 	if(team1_score + team2_score + team3_score + team4_score == 0)
 	{
 		checkrules_equality = true;
@@ -1796,20 +1807,28 @@ float WinningCondition_RanOutOfSpawns()
 	{
 		float t, i;
 		if(team1_score)
-			t = NUM_TEAM_1;
+			t = 1;
 		else if(team2_score)
-			t = NUM_TEAM_2;
+			t = 2;
 		else if(team3_score)
-			t = NUM_TEAM_3;
+			t = 3;
 		else // if(team4_score)
-			t = NUM_TEAM_4;
-		CheckAllowedTeams(NULL);
+			t = 4;
+		entity balance = TeamBalance_CheckAllowedTeams(NULL);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			if(t != NUM_TEAM_1) if(c1 >= 0) TeamScore_AddToTeam(NUM_TEAM_1, i, -1000);
-			if(t != NUM_TEAM_2) if(c2 >= 0) TeamScore_AddToTeam(NUM_TEAM_2, i, -1000);
-			if(t != NUM_TEAM_3) if(c3 >= 0) TeamScore_AddToTeam(NUM_TEAM_3, i, -1000);
-			if(t != NUM_TEAM_4) if(c4 >= 0) TeamScore_AddToTeam(NUM_TEAM_4, i, -1000);
+			for (int j = 1; j <= NUM_TEAMS; ++j)
+			{
+				if (t == j)
+				{
+					continue;
+				}
+				if (!TeamBalance_IsTeamAllowed(balance, j))
+				{
+					continue;
+				}
+				TeamScore_AddToTeam(Team_IndexToTeam(j), i, -1000);
+			}
 		}
 
 		AddWinners(team, t);
@@ -2147,7 +2166,6 @@ float RedirectionThink()
 	return true;
 }
 
-void TargetMusic_RestoreGame();
 void RestoreGame()
 {
 	// Loaded from a save game

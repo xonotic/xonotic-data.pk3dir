@@ -121,7 +121,7 @@ void RemoveTeam(entity Team)
 
 entity GetTeam(int Team, bool add)
 {
-    TC(int, Team); TC(bool, add);
+	TC(int, Team); TC(bool, add);
 	int num = (Team == NUM_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
@@ -553,7 +553,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 /** engine callback */
 void URI_Get_Callback(int id, int status, string data)
 {
-    TC(int, id); TC(int, status);
+	TC(int, id); TC(int, status);
 	if(url_URI_Get_Callback(id, status, data))
 	{
 		// handled
@@ -577,9 +577,7 @@ void Accuracy_LoadLevels()
 {
 	if(autocvar_accuracy_color_levels != acc_color_levels)
 	{
-		if(acc_color_levels)
-			strunzone(acc_color_levels);
-		acc_color_levels = strzone(autocvar_accuracy_color_levels);
+		strcpy(acc_color_levels, autocvar_accuracy_color_levels);
 		acc_levels = tokenize_console(acc_color_levels);
 		if(acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;

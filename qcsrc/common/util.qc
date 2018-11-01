@@ -2,7 +2,7 @@
 
 #if defined(CSQC)
     #include "constants.qh"
-	#include "../client/mutators/events.qh"
+	#include <client/mutators/_mod.qh>
     #include "mapinfo.qh"
     #include "notifications/all.qh"
 	#include "scores.qh"
@@ -10,14 +10,136 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
-	#include "../server/mutators/events.qh"
+	#include <server/mutators/_mod.qh>
     #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
 	#include "scores.qh"
     #include "mapinfo.qh"
 #endif
 
+#ifdef SVQC
+float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity) // returns the number of traces done, for benchmarking
+{
+	vector pos, dir, t;
+	float nudge;
+	entity stopentity;
+
+	//nudge = 2 * cvar("collision_impactnudge"); // why not?
+	nudge = 0.5;
+
+	dir = normalize(v2 - v1);
+
+	pos = v1 + dir * nudge;
+
+	float c;
+	c = 0;
+
+	for (;;)
+	{
+		if(pos * dir >= v2 * dir)
+		{
+			// went too far
+			trace_fraction = 1;
+			trace_endpos = v2;
+			return c;
+		}
+
+		tracebox(pos, mi, ma, v2, nomonsters, forent);
+		++c;
+
+		if(c == 50)
+		{
+			LOG_TRACE("When tracing from ", vtos(v1), " to ", vtos(v2));
+			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos));
+			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos));
+			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)));
+		}
+
+		stopentity = trace_ent;
+
+		if(trace_startsolid)
+		{
+			// we started inside solid.
+			// then trace from endpos to pos
+			t = trace_endpos;
+			tracebox(t, mi, ma, pos, nomonsters, forent);
+			++c;
+			if(trace_startsolid)
+			{
+				// t is still inside solid? bad
+				// force advance, then, and retry
+				pos = t + dir * nudge;
+
+				// but if we hit an entity, stop RIGHT before it
+				if(stopatentity && stopentity && stopentity != ignorestopatentity)
+				{
+					trace_ent = stopentity;
+					trace_endpos = t;
+					trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+					return c;
+				}
+			}
+			else
+			{
+				// we actually LEFT solid!
+				trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+				return c;
+			}
+		}
+		else
+		{
+			// pos is outside solid?!? but why?!? never mind, just return it.
+			trace_endpos = pos;
+			trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+			return c;
+		}
+	}
+}
+
+void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity)
+{
+	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent, stopatentity, ignorestopatentity);
+}
+#endif
+
 #ifdef GAMEQC
+/*
+==================
+findbetterlocation
+
+Returns a point at least 12 units away from walls
+(useful for explosion animations, although the blast is performed where it really happened)
+Ripped from DPMod
+==================
+*/
+vector findbetterlocation (vector org, float mindist)
+{
+	vector vec = mindist * '1 0 0';
+	int c = 0;
+	while (c < 6)
+	{
+		traceline (org, org + vec, true, NULL);
+		vec = vec * -1;
+		if (trace_fraction < 1)
+		{
+			vector loc = trace_endpos;
+			traceline (loc, loc + vec, true, NULL);
+			if (trace_fraction >= 1)
+				org = loc + vec;
+		}
+		if (c & 1)
+		{
+			float h = vec.y;
+			vec.y = vec.x;
+			vec.x = vec.z;
+			vec.z = h;
+		}
+		c = c + 1;
+	}
+
+	return org;
+}
+
 /*
 * Get "real" origin, in worldspace, even if ent is attached to something else.
 */
@@ -336,19 +458,18 @@ STATIC_INIT(compressShortVector)
 
 	if(cvar("developer"))
 	{
-		LOG_INFO("Verifying vector compression table...");
+		LOG_TRACE("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				LOG_INFOF(
+				LOG_FATALF(
 				    "BROKEN vector compression: %s -> %s -> %s",
 				    ftos(i),
 				    vtos(decompressShortVector(i)),
 				    ftos(compressShortVector(decompressShortVector(i)))
                 );
-				error("b0rk");
 			}
-		LOG_INFO("Done.");
+		LOG_TRACE("Done.");
 	}
 }
 
@@ -453,14 +574,12 @@ void get_mi_min_max(float mode)
 {
 	vector mi, ma;
 
-	if(mi_shortname)
-		strunzone(mi_shortname);
-	mi_shortname = mapname;
-	if(!strcasecmp(substring(mi_shortname, 0, 5), "maps/"))
-		mi_shortname = substring(mi_shortname, 5, strlen(mi_shortname) - 5);
-	if(!strcasecmp(substring(mi_shortname, strlen(mi_shortname) - 4, 4), ".bsp"))
-		mi_shortname = substring(mi_shortname, 0, strlen(mi_shortname) - 4);
-	mi_shortname = strzone(mi_shortname);
+	string s = mapname;
+	if(!strcasecmp(substring(s, 0, 5), "maps/"))
+		s = substring(s, 5, strlen(s) - 5);
+	if(!strcasecmp(substring(s, strlen(s) - 4, 4), ".bsp"))
+		s = substring(s, 0, strlen(s) - 4);
+	strcpy(mi_shortname, s);
 
 #ifdef CSQC
 	mi = world.mins;
@@ -1129,6 +1248,8 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 	vector v;
 	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
 		armorblock = 0;
+	if (deathtype & HITTYPE_ARMORPIERCE)
+		armorblock = 0;
 	v.y = bound(0, damage * armorblock, a); // save
 	v.x = bound(0, damage - v.y, damage); // take
 	v.z = 0;
@@ -1177,6 +1298,7 @@ float matchacl(string acl, string str)
 		if(s == t)
 		{
 			r = d;
+			break; // if we found a killing case, apply it! other settings may be allowed in the future, but this one is caught
 		}
 	}
 	return r;
@@ -1397,8 +1519,7 @@ void execute_next_frame()
 	if(to_execute_next_frame)
 	{
 		localcmd("\n", to_execute_next_frame, "\n");
-		strunzone(to_execute_next_frame);
-		to_execute_next_frame = string_null;
+		strfree(to_execute_next_frame);
 	}
 }
 void queue_to_execute_next_frame(string s)
@@ -1406,9 +1527,8 @@ void queue_to_execute_next_frame(string s)
 	if(to_execute_next_frame)
 	{
 		s = strcat(s, "\n", to_execute_next_frame);
-		strunzone(to_execute_next_frame);
 	}
-	to_execute_next_frame = strzone(s);
+	strcpy(to_execute_next_frame, s);
 }
 
 .float FindConnectedComponent_processing;

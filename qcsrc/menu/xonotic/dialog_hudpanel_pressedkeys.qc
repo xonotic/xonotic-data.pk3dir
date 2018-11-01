@@ -11,12 +11,12 @@ void XonoticHUDPressedKeysDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_pressedkeys"));
-			e.addValue(e, _("Panel disabled"), "0");
-			e.addValue(e, _("Panel enabled when spectating"), "1");
-			e.addValue(e, _("Panel always enabled"), "2");
+			e.addValue(e, ("Disable"), "0");
+			e.addValue(e, ("Enable when spectating"), "1");
+			e.addValue(e, ("Always enable"), "2");
 			e.configureXonoticTextSliderValues(e);
 
-	DIALOG_HUDPANEL_COMMON_NOTOGGLE();
+	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
 		me.TDempty(me, 0.2);

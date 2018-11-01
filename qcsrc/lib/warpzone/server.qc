@@ -6,7 +6,7 @@
 #elif defined(SVQC)
 	#include <common/constants.qh>
 	#include <common/net_linked.qh>
-	#include <common/triggers/subs.qh>
+	#include <common/mapobjects/subs.qh>
 	#include <common/util.qh>
 	#include <server/constants.qh>
 	#include <server/defs.qh>

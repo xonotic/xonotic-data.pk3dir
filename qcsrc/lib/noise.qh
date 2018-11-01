@@ -2,11 +2,11 @@
 
 // noises "usually" start in the range -1..1
 entityclass(Noise);
-class(Noise).float noise_baccum;
-class(Noise).float noise_paccum;
-class(Noise).float noise_paccum2;
-class(Noise).float noise_paccum3;
-class(Noise).float noise_bstate;
+classfield(Noise).float noise_baccum;
+classfield(Noise).float noise_paccum;
+classfield(Noise).float noise_paccum2;
+classfield(Noise).float noise_paccum3;
+classfield(Noise).float noise_bstate;
 
 ERASEABLE
 float Noise_Brown(entity e, float dt)

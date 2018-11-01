@@ -55,7 +55,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_GameReport_AddTeam(float t)
+void PlayerStats_GameReport_AddTeam(int t)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
@@ -154,11 +154,10 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 		}
 	}
 
-	strunzone(p.playerstats_id);
-	p.playerstats_id = string_null;
+	strfree(p.playerstats_id);
 }
 
-void PlayerStats_GameReport(float finished)
+void PlayerStats_GameReport(bool finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
 
@@ -259,6 +258,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 }
 
 // this... is a hack, a temporary one until we get a proper duel gametype
+// TODO: remove duel hack after servers have migrated to the proper duel gametype!
 string PlayerStats_GetGametype()
 {
 	if(IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2)

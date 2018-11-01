@@ -11,7 +11,7 @@
 
 #include "../../weapons/weaponsystem.qh"
 
-#include "../../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
@@ -95,11 +95,11 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 
 void lag_update(entity this)
 {
-	if (this.lag1_time) if (time > this.lag1_time) {this.lag_func(this, this.lag1_time, this.lag1_float1, this.lag1_float2, this.lag1_entity1, this.lag1_vec1, this.lag1_vec2, this.lag1_vec3, this.lag1_vec4);this.lag1_time = 0;}
-	if (this.lag2_time) if (time > this.lag2_time) {this.lag_func(this, this.lag2_time, this.lag2_float1, this.lag2_float2, this.lag2_entity1, this.lag2_vec1, this.lag2_vec2, this.lag2_vec3, this.lag2_vec4);this.lag2_time = 0;}
-	if (this.lag3_time) if (time > this.lag3_time) {this.lag_func(this, this.lag3_time, this.lag3_float1, this.lag3_float2, this.lag3_entity1, this.lag3_vec1, this.lag3_vec2, this.lag3_vec3, this.lag3_vec4);this.lag3_time = 0;}
-	if (this.lag4_time) if (time > this.lag4_time) {this.lag_func(this, this.lag4_time, this.lag4_float1, this.lag4_float2, this.lag4_entity1, this.lag4_vec1, this.lag4_vec2, this.lag4_vec3, this.lag4_vec4);this.lag4_time = 0;}
-	if (this.lag5_time) if (time > this.lag5_time) {this.lag_func(this, this.lag5_time, this.lag5_float1, this.lag5_float2, this.lag5_entity1, this.lag5_vec1, this.lag5_vec2, this.lag5_vec3, this.lag5_vec4);this.lag5_time = 0;}
+	if (this.lag1_time && time > this.lag1_time) { this.lag_func(this, this.lag1_time, this.lag1_float1, this.lag1_float2, this.lag1_entity1, this.lag1_vec1, this.lag1_vec2, this.lag1_vec3, this.lag1_vec4); this.lag1_time = 0; }
+	if (this.lag2_time && time > this.lag2_time) { this.lag_func(this, this.lag2_time, this.lag2_float1, this.lag2_float2, this.lag2_entity1, this.lag2_vec1, this.lag2_vec2, this.lag2_vec3, this.lag2_vec4); this.lag2_time = 0; }
+	if (this.lag3_time && time > this.lag3_time) { this.lag_func(this, this.lag3_time, this.lag3_float1, this.lag3_float2, this.lag3_entity1, this.lag3_vec1, this.lag3_vec2, this.lag3_vec3, this.lag3_vec4); this.lag3_time = 0; }
+	if (this.lag4_time && time > this.lag4_time) { this.lag_func(this, this.lag4_time, this.lag4_float1, this.lag4_float2, this.lag4_entity1, this.lag4_vec1, this.lag4_vec2, this.lag4_vec3, this.lag4_vec4); this.lag4_time = 0; }
+	if (this.lag5_time && time > this.lag5_time) { this.lag_func(this, this.lag5_time, this.lag5_float1, this.lag5_float2, this.lag5_entity1, this.lag5_vec1, this.lag5_vec2, this.lag5_vec3, this.lag5_vec4); this.lag5_time = 0; }
 }
 
 float lag_additem(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
@@ -139,10 +139,12 @@ bool bot_shouldattack(entity this, entity targ)
 		return false;
 	if (IS_DEAD(targ))
 		return false;
-	if (PHYS_INPUT_BUTTON_CHAT(targ))
+	if (PHYS_INPUT_BUTTON_CHAT(targ) && !autocvar_bot_typefrag)
 		return false;
 	if(targ.flags & FL_NOTARGET)
 		return false;
+	if(targ.alpha <= 0.1 && targ.alpha != 0)
+		return false; // invisible via alpha
 
 	if(MUTATOR_CALLHOOK(BotShouldAttack, this, targ))
 		return false;
@@ -152,11 +154,6 @@ bool bot_shouldattack(entity this, entity targ)
 
 void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
 {
-	if(this.flags & FL_INWATER)
-	{
-		this.bot_aimtarg = NULL;
-		return;
-	}
 	this.bot_aimtarg = e1;
 	this.bot_aimlatency = CS(this).ping; // FIXME?  Shouldn't this be in the lag item?
 	//this.bot_aimorigin = v1;
@@ -177,6 +174,8 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 {
 	float dist, delta_t, blend;
 	vector desiredang, diffang;
+
+	this.bot_aimdir_executed = true;
 
 	//dprint("aim ", this.netname, ": old:", vtos(this.v_angle));
 	// make sure v_angle is sane first
@@ -243,6 +242,7 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 		+ this.bot_4th_order_aimfilter * autocvar_bot_ai_aimskill_order_mix_4th
 		+ this.bot_5th_order_aimfilter * autocvar_bot_ai_aimskill_order_mix_5th
 	);
+	desiredang.x = bound(-90, desiredang.x, 90);
 
 	// calculate turn angles
 	diffang = desiredang - this.bot_mouseaim;

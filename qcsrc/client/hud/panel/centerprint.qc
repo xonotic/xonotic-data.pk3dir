@@ -20,7 +20,7 @@ bool centerprint_showing;
 
 void centerprint_generic(int new_id, string strMessage, float duration, int countdown_num)
 {
-    TC(int, new_id); TC(int, countdown_num);
+	TC(int, new_id); TC(int, countdown_num);
 	//printf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num);
 	int i, j;
 
@@ -75,9 +75,7 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 			cpm_index = CENTERPRINT_MAX_MSGS - 1;
 		j = cpm_index;
 	}
-	if(centerprint_messages[j])
-		strunzone(centerprint_messages[j]);
-	centerprint_messages[j] = strzone(strMessage);
+	strcpy(centerprint_messages[j], strMessage);
 	centerprint_msgID[j] = new_id;
 	if (duration < 0)
 	{
@@ -96,7 +94,7 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 
 void centerprint_kill(int id)
 {
-    TC(int, id);
+	TC(int, id);
 	centerprint_generic(id, "", 0, 0);
 }
 
@@ -112,9 +110,7 @@ void reset_centerprint_messages()
 		centerprint_expire_time[i] = 0;
 		centerprint_time[i] = 1;
 		centerprint_msgID[i] = 0;
-		if(centerprint_messages[i])
-			strunzone(centerprint_messages[i]);
-		centerprint_messages[i] = string_null;
+		strfree(centerprint_messages[i]);
 	}
 }
 float hud_configure_cp_generation_time;

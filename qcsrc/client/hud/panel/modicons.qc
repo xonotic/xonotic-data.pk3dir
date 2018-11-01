@@ -5,7 +5,7 @@
 #include <common/mapinfo.qh>
 #include <common/ent_cs.qh>
 #include <common/scores.qh>
-#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
+#include <common/gamemodes/_mod.qh>
 
 // Mod icons (#10)
 
@@ -13,7 +13,7 @@ bool mod_active; // is there any active mod icon?
 
 void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
-    TC(int, layout); TC(int, i);
+	TC(int, layout); TC(int, i);
 	int stat = -1;
 	string pic = "";
 	vector color = '0 0 0';
@@ -54,9 +54,9 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	mod_active = 1; // required in each mod function that always shows something
 
 	int layout;
-	if(gametype == MAPINFO_TYPE_CA)
+	if(ISGAMETYPE(CA))
 		layout = autocvar_hud_panel_modicons_ca_layout;
-	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
+	else //if(ISGAMETYPE(FREEZETAG))
 		layout = autocvar_hud_panel_modicons_freezetag_layout;
 	int rows, columns;
 	float aspect_ratio;
@@ -528,7 +528,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 	// clientside personal record
 	string rr;
-	if(gametype == MAPINFO_TYPE_CTS)
+	if(ISGAMETYPE(CTS))
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
@@ -583,9 +583,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
 		race_status_time = time + 5;
 		race_status_prev = race_status;
-		if (race_status_name_prev)
-			strunzone(race_status_name_prev);
-		race_status_name_prev = strzone(race_status_name);
+		strcpy(race_status_name_prev, race_status_name);
 	}
 
 	// race "awards"
@@ -621,18 +619,14 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	if (race_status_time - time <= 0) {
 		race_status_prev = -1;
 		race_status = -1;
-		if(race_status_name)
-			strunzone(race_status_name);
-		race_status_name = string_null;
-		if(race_status_name_prev)
-			strunzone(race_status_name_prev);
-		race_status_name_prev = string_null;
+		strfree(race_status_name);
+		strfree(race_status_name_prev);
 	}
 }
 
 void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
-    TC(int, layout); TC(int, i);
+	TC(int, layout); TC(int, i);
 	float stat = -1;
 	string pic = "";
 	vector color = '0 0 0';

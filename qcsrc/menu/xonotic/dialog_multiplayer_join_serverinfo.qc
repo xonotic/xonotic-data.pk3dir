@@ -16,61 +16,21 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	// ====================================
 	//  First clear and unzone the strings
 	// ====================================
-	if(me.currentServerName)
-		strunzone(me.currentServerName);
-	me.currentServerName = string_null;
-
-	if(me.currentServerCName)
-		strunzone(me.currentServerCName);
-	me.currentServerCName = string_null;
-
-	if(me.currentServerType)
-		strunzone(me.currentServerType);
-	me.currentServerType = string_null;
-
-	if(me.currentServerMap)
-		strunzone(me.currentServerMap);
-	me.currentServerMap = string_null;
-
-	if(me.currentServerPlayers)
-		strunzone(me.currentServerPlayers);
-	me.currentServerPlayers = string_null;
-
-	if(me.currentServerNumPlayers)
-		strunzone(me.currentServerNumPlayers);
-	me.currentServerNumPlayers = string_null;
-
-	if(me.currentServerNumBots)
-		strunzone(me.currentServerNumBots);
-	me.currentServerNumBots = string_null;
-
-	if(me.currentServerNumFreeSlots)
-		strunzone(me.currentServerNumFreeSlots);
-	me.currentServerNumFreeSlots = string_null;
-
-	if(me.currentServerMod)
-		strunzone(me.currentServerMod);
-	me.currentServerMod = string_null;
-
-	if(me.currentServerVersion)
-		strunzone(me.currentServerVersion);
-	me.currentServerVersion = string_null;
-
+	strfree(me.currentServerName);
+	strfree(me.currentServerCName);
+	strfree(me.currentServerType);
+	strfree(me.currentServerMap);
+	strfree(me.currentServerPlayers);
+	strfree(me.currentServerNumPlayers);
+	strfree(me.currentServerNumBots);
+	strfree(me.currentServerNumFreeSlots);
+	strfree(me.currentServerMod);
+	strfree(me.currentServerVersion);
 	// not zoned!
-	//if(me.currentServerEncrypt)
-	//	strunzone(me.currentServerEncrypt);
-	//me.currentServerEncrypt = string_null;
-	if(me.currentServerPure)
-		strunzone(me.currentServerPure);
-	me.currentServerPure = string_null;
-
-	if(me.currentServerKey)
-		strunzone(me.currentServerKey);
-	me.currentServerKey = string_null;
-
-	if(me.currentServerID)
-		strunzone(me.currentServerID);
-	me.currentServerID = string_null;
+	//	strfree(me.currentServerEncrypt);
+	strfree(me.currentServerPure);
+	strfree(me.currentServerKey);
+	strfree(me.currentServerID);
 
 	// ==========================
 	//  Now, fill in the strings

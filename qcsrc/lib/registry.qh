@@ -22,9 +22,9 @@
  */
 #define REGISTRY(id, max) \
 	void Register##id(); \
-	[[accumulate]] void REGISTRY_DEPENDS_(id) {} \
-	[[accumulate]] REGISTRY_BEGIN(id) {} \
-	[[accumulate]] REGISTRY_END(id) {} \
+	ACCUMULATE void REGISTRY_DEPENDS_(id) {} \
+	REGISTRY_BEGIN(id) {} \
+	REGISTRY_END(id) {} \
 	void _Register##id() {} \
 	int id##_state = 0; \
 	void Register##id() { if (id##_state) return; id##_state = 1; REGISTRY_DEPENDS_(id); REGISTRY_BEGIN_(id); _Register##id(); id##_state = 2; REGISTRY_END_(id); } \
@@ -40,11 +40,11 @@
 #define REGISTRY_DEPENDS_(id) Register##id##_Depends()
 
 /** Called before initializing a registry. */
-#define REGISTRY_BEGIN(id) [[accumulate]] void REGISTRY_BEGIN_(id) { noref void() f = Register##id; } void REGISTRY_BEGIN_(id)
+#define REGISTRY_BEGIN(id) ACCUMULATE void REGISTRY_BEGIN_(id) { noref void() f = Register##id; } void REGISTRY_BEGIN_(id)
 #define REGISTRY_BEGIN_(id) Register##id##_First()
 
 /** Called after initializing a registry. */
-#define REGISTRY_END(id) [[accumulate]] void REGISTRY_END_(id) { noref void() f = Register##id; } void REGISTRY_END_(id)
+#define REGISTRY_END(id) ACCUMULATE void REGISTRY_END_(id) { noref void() f = Register##id; } void REGISTRY_END_(id)
 #define REGISTRY_END_(id) Register##id##_Done()
 
 REGISTRY(Registries, BITS(8))
@@ -104,7 +104,7 @@ REGISTRY(Registries, BITS(8))
 	REGISTRY_PUSH(registry, fld, e); \
 } MACRO_END
 
-#define REGISTER_INIT(id) [[accumulate]] void Register_##id##_init(entity this)
+#define REGISTER_INIT(id) ACCUMULATE void Register_##id##_init(entity this)
 
 /** internal next pointer */
 #define REGISTRY_NEXT enemy
@@ -147,9 +147,9 @@ REGISTRY(Registries, BITS(8))
 #define REGISTRY_HASH(id) Registry_hash_##id
 
 ERASEABLE
-[[accumulate]] void Registry_check(string r, string server) { }
+ACCUMULATE void Registry_check(string r, string server) { }
 ERASEABLE
-[[accumulate]] void Registry_send_all() { }
+ACCUMULATE void Registry_send_all() { }
 
 #ifdef SVQC
 void Registry_send(string id, string hash);

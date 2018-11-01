@@ -2,6 +2,7 @@
 
 #include "autocvars.qh"
 #include "miscfunctions.qh"
+#include "resources.qh"
 #include "hud/_mod.qh"
 
 #include <common/ent_cs.qh>
@@ -37,8 +38,18 @@ const float SHOWNAMES_FADESPEED = 4;
 const float SHOWNAMES_FADEDELAY = 0.4;
 void Draw_ShowNames(entity this)
 {
-	if (this.sv_entnum == (current_player + 1))  // self or spectatee
-		if (!(autocvar_hud_shownames_self && autocvar_chase_active)) return;
+	if (this.sv_entnum == current_player + 1) // self or spectatee
+	{
+		if (!autocvar_chase_active)
+			return;
+
+		if (!autocvar_hud_shownames_self
+			&& !(spectatee_status > 0 && time <= spectatee_status_changed_time + 1))
+		{
+			return;
+		}
+	}
+
 	if (!this.sameteam && !autocvar_hud_shownames_enemies) return;
 	bool hit;
 	if (!autocvar_hud_shownames_crosshairdistance && this.sameteam)
@@ -117,7 +128,7 @@ void Draw_ShowNames(entity this)
 		// FIXME: alpha is negative when dead, breaking death fade
 		if (!this.csqcmodel_isdead) a *= f;
 	}
-	if (a < ALPHA_MIN_VISIBLE && gametype != MAPINFO_TYPE_CTS) return;
+	if (a < ALPHA_MIN_VISIBLE && ISGAMETYPE(CTS)) return;
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
 	float dist = vlen(this.origin - view_origin);
 	if (autocvar_hud_shownames_maxdistance)
@@ -157,10 +168,10 @@ void Draw_ShowNames(entity this)
 					this.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', a,
 					DRAWFLAG_NORMAL);
 			}
-			if (this.armorvalue > 0)
+			if (GetResourceAmount(this, RESOURCE_ARMOR) > 0)
 			{
 				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize.x, sz, "nametag_statusbar",
-					this.armorvalue / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
+					GetResourceAmount(this, RESOURCE_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
 					DRAWFLAG_NORMAL);
 			}
 		}
@@ -193,13 +204,13 @@ void Draw_ShowNames_All()
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;
-			it.armorvalue = entcs.armorvalue;
+			SetResourceAmountExplicit(it, RESOURCE_ARMOR, GetResourceAmount(entcs, RESOURCE_ARMOR));
 			it.sameteam = true;
 		}
 		else
 		{
 			it.healthvalue = 0;
-			it.armorvalue = 0;
+			SetResourceAmountExplicit(it, RESOURCE_ARMOR, 0);
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);

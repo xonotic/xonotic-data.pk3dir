@@ -13,6 +13,7 @@ const int WAYPOINTFLAG_PROTECTED = BIT(18);  // Useless WP detection never kills
 const int WAYPOINTFLAG_USEFUL = BIT(17);  // Useless WP detection temporary flag.
 const int WAYPOINTFLAG_DEAD_END = BIT(16);  // Useless WP detection temporary flag.
 const int WAYPOINTFLAG_LADDER = BIT(15);
+const int WAYPOINTFLAG_JUMP = BIT(14);
 
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
@@ -79,7 +80,9 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 
 vector havocbot_middlepoint;
 float havocbot_middlepoint_radius;
-vector havocbot_symmetryaxis_equation;
+float havocbot_symmetry_axis_m;
+float havocbot_symmetry_axis_q;
+float havocbot_symmetry_origin_order;
 
 .float goalentity_lock_timeout;
 .float ignoregoaltime;
@@ -88,7 +91,7 @@ vector havocbot_symmetryaxis_equation;
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
-void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_set(entity this, entity dropper);
 void navigation_dynamicgoal_unset(entity this);
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
 void navigation_goalrating_end(entity this);
@@ -116,7 +119,7 @@ void waypoint_schedulerelink(entity wp);
 void waypoint_spawnforitem(entity e);
 void waypoint_spawnforitem_force(entity e, vector org);
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent);
-void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir, entity tracetest_ent);
+void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent);
 void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);
 void waypoint_unreachable(entity pl);

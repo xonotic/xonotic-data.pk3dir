@@ -17,7 +17,7 @@ CLASS(Client, Object)
     /** Client IP */
     ATTRIB(Client, netaddress, string, this.netaddress);
     ATTRIB(Client, playermodel, string, this.playermodel);
-    ATTRIB(Client, playerskin, int, this.playerskin);
+    ATTRIB(Client, playerskin, string, this.playerskin);
 
     /** fingerprint of CA key the player used to authenticate */
     ATTRIB(Client, crypto_keyfp, string, this.crypto_keyfp);
@@ -114,6 +114,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
     ATTRIB(Client, wasplayer, bool, this.wasplayer);
     ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);
+    ATTRIB(Client, autojoin_checked, bool, this.wasplayer);
 
     // networked cvars
 
@@ -144,6 +145,9 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_accuracy_data_receive, bool, this.cvar_cl_accuracy_data_receive);
     ATTRIBARRAY(Client, cvar_cl_weaponpriorities, string, 10);
     ATTRIB(Client, cvar_cl_weaponpriority, string, this.cvar_cl_weaponpriority);
+    ATTRIB(Client, cvar_cl_cts_noautoswitch, bool, this.cvar_cl_cts_noautoswitch);
+    ATTRIB(Client, cvar_cl_weapon_switch_reload, bool, this.cvar_cl_weapon_switch_reload);
+    ATTRIB(Client, cvar_cl_weapon_switch_fallback_to_impulse, bool, this.cvar_cl_weapon_switch_fallback_to_impulse);
 
     METHOD(Client, m_unwind, bool(Client this));
 
@@ -225,11 +229,62 @@ METHOD(Client, m_unwind, bool(Client this))
     return false;
 }
 
+bool PlayerInList(entity player, string list);
+
+/// \brief Print the string to the client's chat.
+/// \param[in] client Client to print to.
+/// \param[in] text Text to print.
+void PrintToChat(entity client, string text);
+
+/// \brief Print the string to the client's chat if the server cvar "developer"
+/// is not 0.
+/// \param[in] client Client to print to.
+/// \param[in] text Text to print.
+void DebugPrintToChat(entity client, string text);
+
+/// \brief Prints the string to all clients' chat.
+/// \param[in] text Text to print.
+void PrintToChatAll(string text);
+
+/// \brief Prints the string to all clients' chat if the server cvar "developer"
+/// is not 0.
+/// \param[in] text Text to print.
+void DebugPrintToChatAll(string text);
+
+/// \brief Print the string to chat of all clients of the specified team.
+/// \param[in] team_num Team to print to. See NUM_TEAM constants.
+/// \param[in] text Text to print.
+void PrintToChatTeam(int team_num, string text);
+
+/// \brief Print the string to chat of all clients of the specified team if the
+/// server cvar "developer" is not 0.
+/// \param[in] team_num Team to print to. See NUM_TEAM constants.
+/// \param[in] text Text to print.
+void DebugPrintToChatTeam(int team_num, string text);
+
 void play_countdown(entity this, float finished, Sound samp);
 
 float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
 
 bool Spectate(entity this, entity pl);
 
-#define SPECTATE_COPY() [[accumulate]] void SpectateCopy(entity this, entity spectatee)
+void ClientInit_Spawn();
+
+void PutObserverInServer(entity this);
+
+void SetSpectatee(entity this, entity spectatee);
+void SetSpectatee_status(entity this, int spectatee_num);
+
+void FixPlayermodel(entity player);
+
+void ClientInit_misc(entity this);
+
+int GetPlayerLimit();
+
+bool joinAllowed(entity this);
+void Join(entity this);
+
+#define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
+
+int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);

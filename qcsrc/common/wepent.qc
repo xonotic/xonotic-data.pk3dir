@@ -20,11 +20,15 @@ MACRO_END
     \
     PROP(false, m_alpha, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, rint(bound(-1, 254 * this.m_alpha, 254) - -1)); }, \
-	{ (viewmodels[this.m_wepent_slot]).alpha = (ReadByte() + -1) / 254; }) \
+	{ (viewmodels[this.m_wepent_slot]).m_alpha = (ReadByte() + -1) / 254; }) \
     \
     PROP(false, vortex_charge, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.vortex_charge * 255); }, \
 	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 255; }) \
+    \
+    PROP(false, oknex_charge, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.oknex_charge * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).oknex_charge = ReadByte() / 16; }) \
     \
     PROP(false, m_gunalign, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_gunalign); }, \
@@ -58,7 +62,11 @@ MACRO_END
 	{ WriteByte(chan, this.vortex_chargepool_ammo * 16); }, \
 	{ (viewmodels[this.m_wepent_slot]).vortex_chargepool_ammo = ReadByte() / 16; }) \
     \
-    PROP(false, clip_load, WEPENT_SET_NORMAL, \
+	PROP(false, oknex_chargepool_ammo, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.oknex_chargepool_ammo * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).oknex_chargepool_ammo = ReadByte() / 16; }) \
+    \
+	PROP(false, clip_load, WEPENT_SET_NORMAL, \
 	{ WriteShort(chan, this.clip_load); }, \
 	{ (viewmodels[this.m_wepent_slot]).clip_load = ReadShort(); }) \
     \

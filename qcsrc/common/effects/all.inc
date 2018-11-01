@@ -229,6 +229,7 @@ EFFECT(0, SMOKING,                  "smoking")
 EFFECT(0, SMOKE_RING,               "smoke_ring")
 EFFECT(0, JUMPPAD,                  "jumppad_activate")
 EFFECT(1, BULLET,                   "tr_bullet")
+EFFECT(1, BULLET_WEAK,              "tr_bullet_weak")
 EFFECT(0, EF_FLAME,                 "EF_FLAME")
 EFFECT(0, EF_STARDUST,              "EF_STARDUST")
 EFFECT(0, TE_EXPLOSION,             "TE_EXPLOSION")
@@ -258,6 +259,6 @@ entity EFFECT_ROCKETMINSTA_LASER(int teamid)
         case NUM_TEAM_4:    e = EFFECT_ROCKETMINSTA_LASER_PINK; break;
         default:            e = EFFECT_ROCKETMINSTA_LASER_NEUTRAL; break;
     }
-    if (particleeffectnum(e) < 0 || Team_TeamToNumber(teamid) == -1) { e = EFFECT_TR_NEXUIZPLASMA; }
+    if (particleeffectnum(e) < 0 || !Team_IsValidTeam(teamid)) { e = EFFECT_TR_NEXUIZPLASMA; }
     return e;
 }

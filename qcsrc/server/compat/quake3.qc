@@ -4,9 +4,10 @@
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
 #include <server/resources.qh>
+#include <common/t_items.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/mapobjects/trigger/counter.qh>
 #include <common/weapons/_all.qh>
-
-spawnfunc(target_items);
 
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
@@ -107,7 +108,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 		SetResourceAmount(actor, RESOURCE_PLASMA, start_ammo_plasma);
 		SetResourceAmount(actor, RESOURCE_FUEL, start_ammo_fuel);
 
-		actor.weapons = start_weapons;
+		STAT(WEAPONS, actor) = start_weapons;
 		if (this.spawnflags & 32)
 		{
 			// TODO
@@ -141,33 +142,33 @@ void target_give_init(entity this)
 	IL_EACH(g_items, it.targetname == this.target,
 	{
 		if (it.classname == "weapon_devastator") {
-			this.ammo_rockets += it.count * WEP_CVAR(devastator, ammo);
+			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(devastator, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "devastator");
 		}
 		else if (it.classname == "weapon_vortex") {
-			this.ammo_cells += it.count * WEP_CVAR_PRI(vortex, ammo); // WEAPONTODO
+			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(vortex, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "vortex");
 		}
 		else if (it.classname == "weapon_electro") {
-			this.ammo_cells += it.count * WEP_CVAR_PRI(electro, ammo); // WEAPONTODO
+			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(electro, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "electro");
 		}
 		else if (it.classname == "weapon_hagar") {
-			this.ammo_rockets += it.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
+			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(hagar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "hagar");
 		}
 		else if (it.classname == "weapon_crylink") {
-			this.ammo_cells += it.count * WEP_CVAR_PRI(crylink, ammo);
+			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(crylink, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "crylink");
 		}
 		else if (it.classname == "weapon_mortar") {
-			this.ammo_rockets += it.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
+			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "mortar");
 		}
 		else if (it.classname == "item_armor_mega")
-			this.armorvalue = 100;
+			SetResourceAmountExplicit(this, RESOURCE_ARMOR, 100);
 		else if (it.classname == "item_health_mega")
-			this.health = 200;
+			SetResourceAmountExplicit(this, RESOURCE_HEALTH, 200);
 		//remove(it); // removing ents in init functions causes havoc, workaround:
         setthink(it, SUB_Remove);
         it.nextthink = time;
@@ -181,6 +182,37 @@ void target_give_init(entity this)
 spawnfunc(target_give)
 {
 	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
+}
+
+void score_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	actor.fragsfilter_cnt += this.count;
+}
+spawnfunc(target_score)
+{
+	if(!g_cts) { delete(this); return; }
+
+	if(!this.count)
+		this.count = 1;
+	this.use = score_use;
+}
+
+void fragsfilter_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	if(actor.fragsfilter_cnt >= this.frags)
+		SUB_UseTargets(this, actor, trigger);
+}
+spawnfunc(target_fragsFilter)
+{
+	if(!g_cts) { delete(this); return; }
+
+	if(!this.frags)
+		this.frags = 1;
+	this.use = fragsfilter_use;
 }
 
 //spawnfunc(item_flight)       /* handled by buffs mutator */
@@ -233,6 +265,8 @@ bool DoesQ3ARemoveThisEntity(entity this)
 			gametypename = "team";
 		if(g_ctf)
 			gametypename = "ctf";
+		if(g_duel)
+			gametypename = "tournament";
 		if(maxclients == 1)
 			gametypename = "single";
 		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)

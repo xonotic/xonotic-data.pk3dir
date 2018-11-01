@@ -7,7 +7,7 @@
 
 // Globals
 
-float g_footsteps, g_grappling_hook, g_instagib;
+float g_footsteps, g_grappling_hook;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
@@ -25,9 +25,7 @@ float currentbots;
 float bots_would_leave;
 
 void UpdateFrags(entity player, int f);
-.float totalfrags;
-
-float team1_score, team2_score, team3_score, team4_score;
+.int totalfrags;
 
 // flag set on worldspawn so that the code knows if it is dedicated or not
 float server_is_dedicated;
@@ -36,12 +34,14 @@ float server_is_dedicated;
 
 .void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 
+.bool(entity targ, entity inflictor, float amount, float limit) event_heal;
+
 //.string	wad;
 //.string	map;
 
 //.float	worldtype;
 // Needed for dynamic clientwalls
-.float inactive; // Clientwall disappears when inactive
+.bool inactive; // Clientwall disappears when inactive
 .float alpha_max, alpha_min;
 .float fade_start, fade_end, fade_vertical_offset;
 .float default_solid; // Variable to store default .solid for clientwalls
@@ -168,6 +168,9 @@ float default_weapon_alpha;
 .float cvar_cl_jetpack_jump;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
+.float cvar_cl_cts_noautoswitch;
+.bool cvar_cl_weapon_switch_reload;
+.bool cvar_cl_weapon_switch_fallback_to_impulse;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
@@ -182,8 +185,6 @@ float default_weapon_alpha;
 
 string gamemode_name;
 
-float startitem_failed;
-
 string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
@@ -191,8 +192,6 @@ void FixClientCvars(entity e);
 
 // WEAPONTODO: remove this
 //WepSet weaponsInMap;
-
-#define weapons _STAT(WEAPONS)
 
 .float respawn_countdown; // next number to count
 
@@ -205,10 +204,7 @@ float bot_waypoints_for_items;
 #else
 #define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
 #endif
-#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, ent.(weaponentity).m_weapon.m_id, slot)
-
-// assault game mode: Which team is attacking in this round?
-float assault_attacker_team;
+#define ATTACK_FINISHED(ent, w) ATTACK_FINISHED_FOR(ent, ent.(w).m_weapon.m_id, weaponslot(w))
 
 // speedrun: when 1, player auto teleports back when capture timeout happens
 .float speedrunning;
@@ -217,14 +213,11 @@ float assault_attacker_team;
 float ServerProgsDB;
 float TemporaryDB;
 
-.float team_saved;
+.int team_saved;
 
 bool some_spawn_has_been_used;
 int have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
 int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it has no spawns; team 0 is the "no-team"
-
-// set when showing a kill countdown
-.entity killindicator;
 
 .bool canteamdamage;
 
@@ -232,8 +225,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 // WEAPONTODO
 #define DMG_NOWEP (weaponentities[0])
-
-float lockteams;
 
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
@@ -281,9 +272,6 @@ void W_Porto_Remove (entity p);
 // Nexball
 float g_nexball_meter_period;
 
-void SUB_DontUseTargets(entity this, entity actor, entity trigger);
-void SUB_UseTargets(entity this, entity actor, entity trigger);
-
 .void(entity this) reset; // if set, an entity is reset using this
 .void(entity this) reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
 
@@ -317,14 +305,17 @@ float client_cefc_accumulatortime;
 
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
-.float clip_load;
-.float old_clip_load;
-.float clip_size;
+.int clip_load;
+.int old_clip_load;
+.int clip_size;
 
 .int minelayer_mines;
 .float vortex_charge;
 .float vortex_charge_rottime;
 .float vortex_chargepool_ammo;
+.float oknex_charge;
+.float oknex_charge_rottime;
+.float oknex_chargepool_ammo;
 .int hagar_load;
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
@@ -333,9 +324,9 @@ float client_cefc_accumulatortime;
 // when doing this, hagar can go through clones
 // #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
 
-.float spectatee_status;
-.float zoomstate;
-.float restriction;
+.int spectatee_status;
+.bool zoomstate;
+.int restriction;
 
 .entity clientdata;
 .entity personal;
@@ -345,24 +336,27 @@ string deathmessage;
 .bool just_joined;
 
 .float cvar_cl_weaponimpulsemode;
-.float selectweapon; // last selected weapon of the player
+.int selectweapon; // last selected weapon of the player
 
 .float ballistics_density; // wall piercing factor, larger = bullet can pass through more
 
-const float ACTIVE_NOT 		= 0;
-const float ACTIVE_ACTIVE 	= 1;
-const float ACTIVE_IDLE 	= 2;
-const float ACTIVE_BUSY 	= 2;
-const float ACTIVE_TOGGLE 	= 3;
-.float active;
+//const int FROZEN_NOT				= 0;
+const int FROZEN_NORMAL				= 1;
+const int FROZEN_TEMP_REVIVING		= 2;
+const int FROZEN_TEMP_DYING			= 3;
+
+const int ACTIVE_NOT 		= 0;
+const int ACTIVE_ACTIVE 	= 1;
+const int ACTIVE_IDLE	 	= 2;
+const int ACTIVE_BUSY	 	= 2;
+const int ACTIVE_TOGGLE 	= 3;
+.int active;
 .void (entity this, int act_state) setactive;
 .entity realowner;
 
 //float serverflags;
 
-.float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
-
-.float player_blocked;
+.bool player_blocked;
 
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
@@ -373,8 +367,6 @@ const float ACTIVE_TOGGLE 	= 3;
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
-.int killindicator_teamchange;
-
 void PlayerUseKey(entity this);
 
 USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector current));
@@ -382,7 +374,7 @@ USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector c
 
 string modname;
 
-.float missile_flags;
+.int missile_flags;
 const int MIF_SPLASH = BIT(1);
 const int MIF_ARC = BIT(2);
 const int MIF_PROXY = BIT(3);
@@ -408,67 +400,43 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 .WepSet dual_weapons;
 
 IntrusiveList g_monsters;
-STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
-
 IntrusiveList g_waypoints;
-STATIC_INIT(g_waypoints) { g_waypoints = IL_NEW(); }
-
 IntrusiveList g_vehicles;
-STATIC_INIT(g_vehicles) { g_vehicles = IL_NEW(); }
-
 IntrusiveList g_turrets;
-STATIC_INIT(g_turrets) { g_turrets = IL_NEW(); }
-
 IntrusiveList g_mines;
-STATIC_INIT(g_mines) { g_mines = IL_NEW(); }
-
 IntrusiveList g_projectiles;
-STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }
-
 IntrusiveList g_items;
-STATIC_INIT(g_items) { g_items = IL_NEW(); }
-
 IntrusiveList g_initforplayer;
-STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
-
 IntrusiveList g_clones;
-STATIC_INIT(g_clones) { g_clones = IL_NEW(); }
-
-IntrusiveList g_assault_destructibles;
-STATIC_INIT(g_assault_destructibles) { g_assault_destructibles = IL_NEW(); }
-
-IntrusiveList g_assault_objectivedecreasers;
-STATIC_INIT(g_assault_objectivedecreasers) { g_assault_objectivedecreasers = IL_NEW(); }
-
-IntrusiveList g_assault_objectives;
-STATIC_INIT(g_assault_objectives) { g_assault_objectives = IL_NEW(); }
-
 IntrusiveList g_spawnpoints;
-STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }
-
 IntrusiveList g_bot_targets;
-STATIC_INIT(g_bot_targets) { g_bot_targets = IL_NEW(); }
-
 IntrusiveList g_bot_dodge;
-STATIC_INIT(g_bot_dodge) { g_bot_dodge = IL_NEW(); }
-
 IntrusiveList g_damagedbycontents;
-STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
-
 IntrusiveList g_railgunhit;
-STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
-
 IntrusiveList g_ladders;
-STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }
-
 IntrusiveList g_locations;
-STATIC_INIT(g_locations) { g_locations = IL_NEW(); }
-
 IntrusiveList g_saved_team;
-STATIC_INIT(g_saved_team) { g_saved_team = IL_NEW(); }
-
 IntrusiveList g_monster_targets;
-STATIC_INIT(g_monster_targets) { g_monster_targets = IL_NEW(); }
-
 IntrusiveList g_pathlib_nodes;
-STATIC_INIT(g_pathlib_nodes) { g_pathlib_nodes = IL_NEW(); }
+STATIC_INIT(defs)
+{
+	g_monsters = IL_NEW();
+	g_waypoints = IL_NEW();
+	g_vehicles = IL_NEW();
+	g_turrets = IL_NEW();
+	g_mines = IL_NEW();
+	g_projectiles = IL_NEW();
+	g_items = IL_NEW();
+	g_initforplayer = IL_NEW();
+	g_clones = IL_NEW();
+	g_spawnpoints = IL_NEW();
+	g_bot_targets = IL_NEW();
+	g_bot_dodge = IL_NEW();
+	g_damagedbycontents = IL_NEW();
+	g_railgunhit = IL_NEW();
+	g_ladders = IL_NEW();
+	g_locations = IL_NEW();
+	g_saved_team = IL_NEW();
+	g_monster_targets = IL_NEW();
+	g_pathlib_nodes = IL_NEW();
+}

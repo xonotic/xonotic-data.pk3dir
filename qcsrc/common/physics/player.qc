@@ -1,28 +1,32 @@
 #include "player.qh"
-#include "../triggers/include.qh"
+#include "../mapobjects/_mod.qh"
 #include "../viewloc.qh"
 
 #ifdef SVQC
 
 #include <server/miscfunctions.qh>
-#include "../triggers/trigger/viewloc.qh"
+#include "../mapobjects/trigger/viewloc.qh"
 
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	return autocvar_g_physics_clientselect && thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
+	return thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity this, string option, float defaultval)
 {
+	if(!autocvar_g_physics_clientselect)
+		return defaultval;
+
 	if(IS_REAL_CLIENT(this) && Physics_Valid(CS(this).cvar_cl_physics))
 	{
 		string s = strcat("g_physics_", CS(this).cvar_cl_physics, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
-	if(autocvar_g_physics_clientselect && autocvar_g_physics_clientselect_default && autocvar_g_physics_clientselect_default != "")
+	if(autocvar_g_physics_clientselect_default && autocvar_g_physics_clientselect_default != "" && autocvar_g_physics_clientselect_default != "default")
 	{
+		// NOTE: not using Physics_Valid here, so the default can be forced to something normally unavailable
 		string s = strcat("g_physics_", autocvar_g_physics_clientselect_default, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
@@ -45,12 +49,13 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
 	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
 
-	STAT(PL_MIN, this) = autocvar_sv_player_mins;
-	STAT(PL_MAX, this) = autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this) = autocvar_sv_player_viewoffset;
-	STAT(PL_CROUCH_MIN, this) = autocvar_sv_player_crouch_mins;
-	STAT(PL_CROUCH_MAX, this) = autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_player_crouch_viewoffset;
+	bool vq3compat = autocvar_sv_vq3compat && autocvar_sv_vq3compat_changehitbox; // NOTE: these hitboxes are off by 1 due to engine differences
+	STAT(PL_MIN, this) = (vq3compat) ? '-15 -15 -24' : autocvar_sv_player_mins;
+	STAT(PL_MAX, this) = (vq3compat) ? '15 15 32' : autocvar_sv_player_maxs;
+	STAT(PL_VIEW_OFS, this) = (vq3compat) ? '0 0 26' : autocvar_sv_player_viewoffset;
+	STAT(PL_CROUCH_MIN, this) = (vq3compat) ? '-15 -15 -24' : autocvar_sv_player_crouch_mins;
+	STAT(PL_CROUCH_MAX, this) = (vq3compat) ? '15 15 16' : autocvar_sv_player_crouch_maxs;
+	STAT(PL_CROUCH_VIEW_OFS, this) = (vq3compat) ? '0 0 12' : autocvar_sv_player_crouch_viewoffset;
 
 	// old stats
 	// fix some new settings
@@ -77,6 +82,8 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
 	STAT(MOVEVARS_JUMPVELOCITY_CROUCH, this) = Physics_ClientOption(this, "jumpvelocity_crouch", autocvar_sv_jumpvelocity_crouch);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
+
+	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
 #endif
 
@@ -98,42 +105,53 @@ float GeomLerp(float a, float _lerp, float b)
 
 void PM_ClientMovement_UpdateStatus(entity this)
 {
-#ifdef CSQC
 	if(!IS_PLAYER(this))
 		return;
 
-	// set crouched
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		entity wep = viewmodels[slot];
-		if(wep.hook && !wasfreed(wep.hook))
+	#if defined(CSQC)
+		entity wepent = viewmodels[slot];
+	#elif defined(SVQC)
+		.entity weaponentity = weaponentities[slot];
+		entity wepent = this.(weaponentity);
+	#endif
+		if(wepent.hook && !wasfreed(wepent.hook))
 		{
-			do_crouch = false;
-			break; // don't bother checking the others
+			have_hook = true;
+			break;
 		}
 	}
-	if(this.waterlevel >= WATERLEVEL_SWIMMING)
+	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	if(this.viewloc && !(this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && PHYS_CS(this).movement.x < 0)
+		do_crouch = true;
+	if (have_hook) {
 		do_crouch = false;
-	if(hud != HUD_NORMAL)
+	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
+		//do_crouch = false;
+	} else if (PHYS_INVEHICLE(this)) {
 		do_crouch = false;
-	if(STAT(FROZEN, this))
+	} else if (STAT(FROZEN, this)) {
 		do_crouch = false;
+    }
 
-	if (do_crouch)
-	{
-		// wants to crouch, this always works
-		if (!IS_DUCKED(this)) SET_DUCKED(this);
-	}
-	else
-	{
-		// wants to stand, if currently crouching we need to check for a low ceiling first
-		if (IS_DUCKED(this))
-		{
-			tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
-			if (!trace_startsolid) UNSET_DUCKED(this);
+	if (do_crouch) {
+		if (!IS_DUCKED(this)) {
+			SET_DUCKED(this);
+			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
+			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
+			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 		}
+	} else if (IS_DUCKED(this)) {
+        tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
+        if (!trace_startsolid) {
+            UNSET_DUCKED(this);
+            this.view_ofs = STAT(PL_VIEW_OFS, this);
+            setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
+        }
 	}
+#ifdef CSQC
 
 	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_WATERJUMP_TIME(this) <= 0)
 		PHYS_WATERJUMP_TIME(this) = 0;
@@ -781,7 +799,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 
 #ifdef SVQC
 		if (!(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-			this.ammo_fuel -= PHYS_JETPACK_FUEL(this) * dt * fvel * f;
+			TakeResource(this, RESOURCE_FUEL, PHYS_JETPACK_FUEL(this) * dt * fvel * f);
 
 		ITEMS_STAT(this) |= IT_USING_JETPACK;
 
@@ -798,7 +816,8 @@ bool IsFlying(entity this)
 		return false;
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		return false;
-	traceline(this.origin, this.origin - '0 0 48', MOVE_NORMAL, this);
+	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 24', MOVE_NORMAL, this);
+	//traceline(this.origin, this.origin - '0 0 48', MOVE_NORMAL, this);
 	if(trace_fraction < 1)
 		return false;
 	return true;

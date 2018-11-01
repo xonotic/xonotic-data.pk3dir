@@ -2,7 +2,7 @@
 
 #include "weaponsystem.qh"
 #include "../resources.qh"
-#include "../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include <common/t_items.qh>
 #include <server/items.qh>
 #include <common/weapons/_all.qh>
@@ -56,29 +56,20 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				FOREACH(Weapons, it != WEP_Null, {
-					if(it.netname == s)
-					{
-						entity replacement = spawn();
-						copyentity(this, replacement);
-						replacement.m_isreplaced = true;
-						weapon_defaultspawnfunc(replacement, it);
-						break;
-					}
-				});
+				Weapon wep = Weapons_fromstr(s);
+				if(wep != WEP_Null)
+				{
+					entity replacement = spawn();
+					copyentity(this, replacement);
+					replacement.m_isreplaced = true;
+					weapon_defaultspawnfunc(replacement, wep);
+				}
 			}
 		}
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
-			wpn = WEP_Null;
-			FOREACH(Weapons, it != WEP_Null, {
-				if(it.netname == s)
-				{
-					wpn = it;
-					break;
-				}
-			});
+			wpn = Weapons_fromstr(s);
 		}
 		if (wpn == WEP_Null)
 		{
@@ -86,6 +77,13 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			startitem_failed = true;
 			return;
 		}
+	}
+
+	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
+	{
+		delete(this);
+		startitem_failed = true;
+		return;
 	}
 
 	if (!this.respawntime)

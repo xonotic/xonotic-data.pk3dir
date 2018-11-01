@@ -1,6 +1,8 @@
 #include "arc.qh"
 
 #ifdef SVQC
+#include <common/gamemodes/gamemode/onslaught/sv_onslaught.qh>
+#include <common/gamemodes/gamemode/onslaught/sv_generator.qh>
 
 bool W_Arc_Beam_Send(entity this, entity to, int sf)
 {
@@ -102,16 +104,16 @@ void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1))
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
@@ -138,7 +140,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR(arc, bolt_damage);
 
 	missile.takedamage = DAMAGE_YES;
-	missile.health = WEP_CVAR(arc, bolt_health);
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(arc, bolt_health));
 	missile.damageforcescale = WEP_CVAR(arc, bolt_damageforcescale);
 	missile.event_damage = W_Arc_Bolt_Damage;
 	missile.damagedbycontents = true;
@@ -189,11 +191,9 @@ void W_Arc_Beam_Think(entity this)
 	if(
 		!IS_PLAYER(own)
 		||
-		(!thiswep.wr_checkammo1(thiswep, own, weaponentity) && !(own.items & IT_UNLIMITED_WEAPON_AMMO))
-		||
 		IS_DEAD(own)
 		||
-		forbidWeaponUse(own)
+		!weapon_prepareattack_check(thiswep, own, weaponentity, this.beam_bursting, -1)
 		||
 		own.(weaponentity).m_switchweapon != WEP_ARC
 		||
@@ -236,8 +236,8 @@ void W_Arc_Beam_Think(entity this)
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(own, weaponentity);
-			own.(weaponentity).arc_BUTTON_ATCK_prev = false; // hax
 		}
+		own.(weaponentity).arc_BUTTON_ATCK_prev = false; // allow switching weapons
 		delete(this);
 		return;
 	}
@@ -265,14 +265,14 @@ void W_Arc_Beam_Think(entity this)
 
 	W_SetupShot_Range(
 		own,
-		weaponentity, // TODO
+		weaponentity,
 		true,
 		0,
 		SND_Null,
 		0,
 		WEP_CVAR(arc, beam_damage) * coefficient,
 		WEP_CVAR(arc, beam_range),
-		WEP_ARC.m_id
+		thiswep.m_id
 	);
 
 	// After teleport, "lock" the beam until the teleport is confirmed.
@@ -322,7 +322,10 @@ void W_Arc_Beam_Think(entity this)
 				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
 				min(WEP_CVAR(arc, beam_maxangle) / angle, 1)
 			);
-			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+				this.beam_dir = w_shotdir;
+			else
+				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 		}
 		else
 		{
@@ -332,7 +335,10 @@ void W_Arc_Beam_Think(entity this)
 				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
 				1
 			);
-			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+				this.beam_dir = w_shotdir;
+			else
+				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 		}
 
 		// network information: beam direction
@@ -408,7 +414,7 @@ void W_Arc_Beam_Think(entity this)
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
-		float is_player = (
+		bool is_player = (
 			IS_PLAYER(trace_ent)
 			||
 			trace_ent.classname == "body"
@@ -416,65 +422,42 @@ void W_Arc_Beam_Think(entity this)
 			IS_MONSTER(trace_ent)
 		);
 
-		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
+		if(trace_ent)
 		{
-			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
-			// NO. trace_endpos should be just fine. If not,
-			// that's an engine bug that needs proper debugging.
-			vector hitorigin = trace_endpos;
-
-			float falloff = ExponentialFalloff(
-				WEP_CVAR(arc, beam_falloff_mindist),
-				WEP_CVAR(arc, beam_falloff_maxdist),
-				WEP_CVAR(arc, beam_falloff_halflifedist),
-				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
-			);
-
-			if(is_player && SAME_TEAM(own, trace_ent))
+			if(SAME_TEAM(own, trace_ent))
 			{
-				float roothealth, rootarmor;
-				if(burst)
+				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
+				float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
+				float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RESOURCE_LIMIT_NONE);
+				Heal(trace_ent, own, (roothealth * coefficient), hplimit);
+				if(IS_PLAYER(trace_ent) && rootarmor)
 				{
-					roothealth = WEP_CVAR(arc, burst_healing_hps);
-					rootarmor = WEP_CVAR(arc, burst_healing_aps);
+					if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= WEP_CVAR(arc, beam_healing_amax))
+					{
+						GiveResourceWithLimit(trace_ent, RESOURCE_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
+						trace_ent.pauserotarmor_finished = max(
+							trace_ent.pauserotarmor_finished,
+							time + autocvar_g_balance_pause_armor_rot
+						);
+					}
 				}
-				else
-				{
-					roothealth = WEP_CVAR(arc, beam_healing_hps);
-					rootarmor = WEP_CVAR(arc, beam_healing_aps);
-				}
-
-				if(trace_ent.health <= WEP_CVAR(arc, beam_healing_hmax) && roothealth)
-				{
-					trace_ent.health = min(
-						trace_ent.health + (roothealth * coefficient),
-						WEP_CVAR(arc, beam_healing_hmax)
-					);
-				}
-				if(trace_ent.armorvalue <= WEP_CVAR(arc, beam_healing_amax) && rootarmor)
-				{
-					trace_ent.armorvalue = min(
-						trace_ent.armorvalue + (rootarmor * coefficient),
-						WEP_CVAR(arc, beam_healing_amax)
-					);
-				}
-
-				// stop rot, set visual effect
 				if(roothealth || rootarmor)
-				{
-					trace_ent.pauserothealth_finished = max(
-						trace_ent.pauserothealth_finished,
-						time + autocvar_g_balance_pause_health_rot
-					);
-					trace_ent.pauserotarmor_finished = max(
-						trace_ent.pauserotarmor_finished,
-						time + autocvar_g_balance_pause_armor_rot
-					);
 					new_beam_type = ARC_BT_HEAL;
-				}
 			}
-			else
+			else if(trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
 			{
+				// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+				// NO. trace_endpos should be just fine. If not,
+				// that's an engine bug that needs proper debugging.
+				vector hitorigin = trace_endpos;
+
+				float falloff = ExponentialFalloff(
+					WEP_CVAR(arc, beam_falloff_mindist),
+					WEP_CVAR(arc, beam_falloff_maxdist),
+					WEP_CVAR(arc, beam_falloff_halflifedist),
+					vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
+				);
+
 				float rootdamage;
 				if(is_player)
 				{
@@ -490,7 +473,7 @@ void W_Arc_Beam_Think(entity this)
 				{
 					accuracy_add(
 						own,
-						WEP_ARC.m_id,
+						WEP_ARC,
 						0,
 						rootdamage * coefficient * falloff
 					);
@@ -556,17 +539,33 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 
 	getthink(beam)(beam);
 }
-void Arc_Smoke(entity actor, .entity weaponentity)
+void W_Arc_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
+	if(!actor.(weaponentity).arc_beam || wasfreed(actor.(weaponentity).arc_beam))
+	{
+		w_ready(thiswep, actor, weaponentity, fire);
+		return;
+	}
+
+	// attack handled by the beam itself, this is just a loop to keep the attack happening!
+
+	// NOTE: arc doesn't use a refire
+	//ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(arc, refire) * W_WeaponRateFactor(actor);
+	actor.(weaponentity).wframe = WFRAME_FIRE1;
+	weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(arc, beam_animtime), W_Arc_Attack);
+}
+void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
+{
+	// TODO: spamming this without checking any refires is asking for trouble!
 	makevectors(actor.v_angle);
-	W_SetupShot_Range(actor,weaponentity,true,0,SND_Null,0,0,0,WEP_ARC.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
+	W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,thiswep.m_id); // TODO: probably doesn't need deathtype, since this is just a prefire effect
 
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )
 	{
 		if ( random() < actor.(weaponentity).arc_heat_percent )
 			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
-		if ( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) )
+		if ( (fire & 1) || (fire & 2) )
 		{
 			Send_Effect(EFFECT_ARC_OVERHEAT_FIRE, smoke_origin, w_shotdir, 1 );
 			if ( !actor.arc_smoke_sound )
@@ -585,7 +584,7 @@ void Arc_Smoke(entity actor, .entity weaponentity)
 	}
 
 	if (  actor.arc_smoke_sound && ( actor.arc_overheat <= time ||
-		!( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) ) ) || actor.(weaponentity).m_switchweapon != WEP_ARC )
+		!( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) ) ) || actor.(weaponentity).m_switchweapon != thiswep )
 	{
 		actor.arc_smoke_sound = 0;
 		sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
@@ -620,14 +619,14 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     Arc_Player_SetHeat(actor, weaponentity);
-    Arc_Smoke(actor, weaponentity);
+    Arc_Smoke(thiswep, actor, weaponentity, fire);
 
     bool beam_fire2 = ((fire & 2) && !WEP_CVAR(arc, bolt));
 
     if (time >= actor.arc_overheat)
     if ((fire & 1) || beam_fire2 || actor.(weaponentity).arc_beam.beam_bursting)
     {
-
+    	#if 0
         if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
         {
             #if 0
@@ -637,6 +636,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
             #endif
                 weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(arc, beam_animtime), w_ready);
         }
+        #endif
 
         if((!actor.(weaponentity).arc_beam) || wasfreed(actor.(weaponentity).arc_beam))
         {
@@ -646,7 +646,8 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 
                 if(!actor.(weaponentity).arc_BUTTON_ATCK_prev)
                 {
-                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+                	actor.(weaponentity).wframe = WFRAME_FIRE1;
+                    weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(arc, beam_animtime), W_Arc_Attack);
                     actor.(weaponentity).arc_BUTTON_ATCK_prev = true;
                 }
             }
@@ -656,7 +657,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     }
     else if(fire & 2)
     {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(arc, bolt_refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(arc, bolt_refire)))
         {
             W_Arc_Attack_Bolt(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);
@@ -665,10 +666,9 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 
     if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
     {
-    	int slot = weaponslot(weaponentity);
         sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-        ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor(actor);
+        ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor(actor);
     }
     actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 
@@ -752,6 +752,9 @@ METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponent
 #endif
 #ifdef CSQC
 bool autocvar_cl_arcbeam_teamcolor = true;
+bool autocvar_cl_arcbeam_simple = true;
+
+.int beam_slot;
 
 METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 {
@@ -802,32 +805,37 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
 	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
-	R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
-	R_PolygonVertex(
-		top,
-		'0 0.5 0' + ('0 0.5 0' * (thickness / beam.beam_thickness)),
-		beam.beam_color,
-		beam.beam_alpha
-	);
-	R_PolygonVertex(
-		last_top,
-		'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
-		beam.beam_color,
-		beam.beam_alpha
-	);
-	R_PolygonVertex(
-		last_bottom,
-		'0 0.5 0' * (1 - (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
-		beam.beam_color,
-		beam.beam_alpha
-	);
-	R_PolygonVertex(
-		bottom,
-		'0 0.5 0' * (1 - (thickness / beam.beam_thickness)),
-		beam.beam_color,
-		beam.beam_alpha
-	);
-	R_EndPolygon();
+	if(autocvar_cl_arcbeam_simple)
+		Draw_CylindricLine(start, end, thickness, beam.beam_image, 0.25, -time * 3, beam.beam_color, beam.beam_alpha, DRAWFLAG_NORMAL, transformed_view_org);
+	else
+	{
+		R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
+		R_PolygonVertex(
+			top,
+			'0 0.5 0' + ('0 0.5 0' * (thickness / beam.beam_thickness)),
+			beam.beam_color,
+			beam.beam_alpha
+		);
+		R_PolygonVertex(
+			last_top,
+			'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
+			beam.beam_color,
+			beam.beam_alpha
+		);
+		R_PolygonVertex(
+			last_bottom,
+			'0 0.5 0' * (1 - (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
+			beam.beam_color,
+			beam.beam_alpha
+		);
+		R_PolygonVertex(
+			bottom,
+			'0 0.5 0' * (1 - (thickness / beam.beam_thickness)),
+			beam.beam_color,
+			beam.beam_alpha
+		);
+		R_EndPolygon();
+	}
 
 	// draw trailing particles
 	// NOTES:
@@ -884,16 +892,29 @@ void Draw_ArcBeam(entity this)
 		// into a weapon system for client code.
 
 		// find where we are aiming
-		makevectors(warpzone_save_view_angles);
+		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
 		vector forward = v_forward;
 		vector right = v_right;
 		vector up = v_up;
+		entity wepent = viewmodels[this.beam_slot];
+
+		if(autocvar_chase_active)
+			this.beam_usevieworigin = 1;
+		else
+			this.beam_usevieworigin = 2;
 
 		// decide upon start position
 		if(this.beam_usevieworigin == 2)
 			{ start_pos = warpzone_save_view_origin; }
+		else if(csqcplayer)
+			{ start_pos = csqcplayer.origin + csqcplayer.view_ofs; }
 		else
 			{ start_pos = this.origin; }
+
+		int v_shot_idx;  // used later
+		(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
+		if(v_shot_idx && this.beam_usevieworigin == 2)
+			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
 
 		// trace forward with an estimation
 		WarpZone_TraceLine(
@@ -911,9 +932,16 @@ void Draw_ArcBeam(entity this)
 			end_pos = start_pos + (forward * g_trueaim_minrange);
 
 		// move shot origin to the actual gun muzzle origin
-		vector origin_offset =
-			  right * -this.beam_shotorigin.y
-			+ up * this.beam_shotorigin.z;
+		vector origin_offset = '0 0 0';
+		if(!v_shot_idx || this.beam_usevieworigin != 2)
+		{
+			this.beam_shotorigin = wepent.movedir;
+			origin_offset =
+			 	 right * -this.beam_shotorigin.y
+				+ up * this.beam_shotorigin.z;
+		}
+		else
+			this.beam_shotorigin = '0 0 0';
 
 		start_pos = start_pos + origin_offset;
 
@@ -1119,7 +1147,7 @@ void Draw_ArcBeam(entity this)
 			)
 		);
 	}
-	if(this.beam_muzzleeffect)
+	if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 	{
 		pointparticles(
 			this.beam_muzzleeffect,
@@ -1160,11 +1188,13 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 	int slot = ReadByte();
 	entity flash;
 
+	this.beam_slot = slot;
+
 	if(isnew)
 	{
 		int gunalign = W_GunAlign(viewmodels[slot], STAT(GUNALIGN)) - 1;
 
-		this.beam_shotorigin = arc_shotorigin[gunalign];
+		this.beam_shotorigin = arc_shotorigin[gunalign]; // get a starting point
 
 		// set other main attributes of the beam
 		this.draw = Draw_ArcBeam;
@@ -1271,18 +1301,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1297,18 +1327,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; // (EFFECT_GRENADE_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null; // (EFFECT_GRENADE_MUZZLEFLASH);
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1323,18 +1353,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1349,18 +1379,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 0;
 				this.beam_hitlight[3] = 0;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 50;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 0;
 				this.beam_muzzlelight[3] = 0;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1375,18 +1405,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1401,18 +1431,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1427,18 +1457,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1453,18 +1483,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}
@@ -1481,18 +1511,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 				this.beam_hitlight[1] = 1;
 				this.beam_hitlight[2] = 1;
 				this.beam_hitlight[3] = 1;
-				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzleeffect = EFFECT_Null;
 				this.beam_muzzlelight[0] = 0;
 				this.beam_muzzlelight[1] = 1;
 				this.beam_muzzlelight[2] = 1;
 				this.beam_muzzlelight[3] = 1;
 				this.beam_image = "particles/lgbeam";
-				if(this.beam_muzzleeffect)
+				if(this.beam_muzzleeffect && autocvar_r_drawviewmodel)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = this.beam_alpha;
 					flash.colormod = this.beam_color;
-					flash.scale = 0.5;
+					flash.scale = 0.35;
 				}
 				break;
 			}

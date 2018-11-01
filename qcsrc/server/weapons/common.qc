@@ -30,7 +30,7 @@ void W_GiveWeapon(entity e, int wep)
 {
 	if (!wep) return;
 
-	e.weapons |= WepSet_FromWeapon(Weapons_from(wep));
+	STAT(WEAPONS, e) |= WepSet_FromWeapon(Weapons_from(wep));
 
 	if (IS_PLAYER(e)) {
 	    Send_Notification(NOTIF_ONE, e, MSG_MULTI, ITEM_WEAPON_GOT, wep);

@@ -135,7 +135,7 @@ void RegisterCallbacks() {};
         params(_MUTATOR_HANDLE_NOP,     _MUTATOR_HANDLE_POPOUT) \
         return ret; \
     } \
-    [[accumulate]] void RegisterHooks() { HOOK_##id = NEW(CallbackChain, #id); }
+    ACCUMULATE void RegisterHooks() { HOOK_##id = NEW(CallbackChain, #id); }
 
 #define MUTATOR_CALLHOOK(id, ...) _MUTATOR_CALLHOOK(id, __VA_ARGS__)
 #ifdef __STDC__
@@ -170,6 +170,8 @@ bool Mutator_Add(Mutator mut);
 void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 .bool m_added;
+
+#define MUTATOR_IS_ENABLED(this) MUTATOR_##this.mutatorcheck()
 
 #ifdef GAMEQC
 /** server mutators activate corresponding client mutators for all clients */
@@ -265,7 +267,7 @@ void Mutator_Remove(Mutator mut)
     bool MUTATOR_##id##_check() { return dependence; } \
     REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
-    [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
+    ACCUMULATE bool MUTATORFUNCTION_##id(int mode)
 
 STATIC_INIT(Mutators) {
     RegisterHooks();
@@ -301,7 +303,7 @@ STATIC_INIT_LATE(Mutators) {
 #define _MUTATOR_CALLBACK(name, func) \
     Callback CALLBACK_##name; \
     bool func(); \
-    [[accumulate]] void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
+    ACCUMULATE void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
 
 #define MUTATOR_HOOKFUNCTION(...) \
     EVAL_MUTATOR_HOOKFUNCTION(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
@@ -312,9 +314,9 @@ STATIC_INIT_LATE(Mutators) {
 
 #define MUTATOR_HOOKFUNCTION_3(mut, cb, order) \
     _MUTATOR_CALLBACK(mut##_##cb, mut##_##cb) \
-    [[accumulate]] bool MUTATORFUNCTION_##mut##_hooks(int mode) { MUTATOR_HOOK(cb, mut##_##cb, order); } \
+    ACCUMULATE bool MUTATORFUNCTION_##mut##_hooks(int mode) { MUTATOR_HOOK(cb, mut##_##cb, order); } \
     bool mut##_##cb() { return = false; } \
-    [[accumulate]] bool mut##_##cb()
+    ACCUMULATE bool mut##_##cb()
 
 #define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN {                     \
     MUTATOR_ONADD {                                                     \

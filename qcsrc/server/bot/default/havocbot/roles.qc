@@ -3,6 +3,7 @@
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
+#include <server/resources.qh>
 #include "havocbot.qh"
 
 #include "../cvars.qh"
@@ -49,14 +50,14 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 
 bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player, entity item)
 {
-	if (item.health && player.health <= this.health) {return true;}
-	if (item.armorvalue && player.armorvalue <= this.armorvalue) {return true;}
-	if (item.weapons && !(player.weapons & item.weapons)) {return true;}
-	if (item.ammo_shells && player.ammo_shells <= this.ammo_shells) {return true;}
-	if (item.ammo_nails && player.ammo_nails <= this.ammo_nails) {return true;}
-	if (item.ammo_rockets && player.ammo_rockets <= this.ammo_rockets) {return true;}
-	if (item.ammo_cells && player.ammo_cells <= this.ammo_cells) {return true;}
-	if (item.ammo_plasma && player.ammo_plasma <= this.ammo_plasma) {return true;}
+	if (GetResourceAmount(item, RESOURCE_HEALTH) && GetResourceAmount(player, RESOURCE_HEALTH) <= GetResourceAmount(this, RESOURCE_HEALTH)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_ARMOR) && GetResourceAmount(player, RESOURCE_ARMOR) <= GetResourceAmount(this, RESOURCE_ARMOR)) {return true;}
+	if (STAT(WEAPONS, item) && !(STAT(WEAPONS, player) & STAT(WEAPONS, item))) {return true;}
+	if (GetResourceAmount(item, RESOURCE_SHELLS) && GetResourceAmount(player, RESOURCE_SHELLS) <= GetResourceAmount(this, RESOURCE_SHELLS)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_BULLETS) && GetResourceAmount(player, RESOURCE_BULLETS) <= GetResourceAmount(this, RESOURCE_BULLETS)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_ROCKETS) && GetResourceAmount(player, RESOURCE_ROCKETS) <= GetResourceAmount(this, RESOURCE_ROCKETS)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_CELLS) && GetResourceAmount(player, RESOURCE_CELLS) <= GetResourceAmount(this, RESOURCE_CELLS)) {return true;}
+	if (GetResourceAmount(item, RESOURCE_PLASMA) && GetResourceAmount(player, RESOURCE_PLASMA) <= GetResourceAmount(this, RESOURCE_PLASMA)) {return true;}
 	if (item.itemdef.instanceOfPowerup) {return true;}
 
 	return false;
@@ -72,7 +73,7 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 	float enemy_distance = FLOAT_MAX;
 	float dist;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !(IS_DEAD(it) || STAT(FROZEN, it)),
 	{
 		if (it.team == this.team)
 		{
@@ -112,7 +113,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 {
 	float rating;
 	vector o;
-	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
+	ratingscale = ratingscale * 0.0001;
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
@@ -120,8 +121,6 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		// NOTE: this code assumes each bot rates items in a different frame
 		if(it.bot_ratingscale_time == time && ratingscale < it.bot_ratingscale)
 			continue;
-		it.bot_ratingscale_time = time;
-		it.bot_ratingscale = ratingscale;
 
 		if(!it.solid)
 		{
@@ -174,6 +173,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		if(!havocbot_goalrating_item_pickable_check_players(this, org, it, o))
 			continue;
 
+		it.bot_ratingscale_time = time;
+		it.bot_ratingscale = ratingscale;
 		rating = it.bot_pickupevalfunc(this, it);
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
@@ -190,7 +191,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 	if(this.waterlevel>WATERLEVEL_WETFEET)
 		return;
 
-	ratingscale = ratingscale * 0.00005; // enemies are rated around 20000 already
+	ratingscale = ratingscale * 0.0001;
 
 	float t;
 	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), {
@@ -207,7 +208,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 			continue;
 		*/
 
-		t = ((this.health + this.armorvalue) - (it.health + it.armorvalue)) / 150;
+		t = ((GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR)) - (GetResourceAmount(it, RESOURCE_HEALTH) + GetResourceAmount(it, RESOURCE_ARMOR))) / 150;
 		t = bound(0, 1 + t, 3);
 		if (skill > 3)
 		{
@@ -234,7 +235,7 @@ void havocbot_role_generic(entity this)
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 

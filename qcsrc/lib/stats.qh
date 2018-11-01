@@ -53,7 +53,7 @@ int g_magic_stats_hole = 0;
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
 			} \
 		} \
-		[[accumulate]] void stats_get() \
+		ACCUMULATE void stats_get() \
 		{ \
 			T it = getstat_##T(STAT_##id.m_id); \
 			/* if (it != CAT(_STAT(id), _prev)) \
@@ -111,7 +111,7 @@ int g_magic_stats_hole = 0;
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
 			} \
 		} \
-		[[accumulate]] void stats_add() \
+		ACCUMULATE void stats_add() \
 		{ \
 			.T fld = _STAT(id); \
 			addstat_##T(STAT_##id.m_id, fld); \
@@ -120,7 +120,7 @@ int g_magic_stats_hole = 0;
     /** TODO: do we want the global copy to update? */
     #define REGISTER_STAT_3(id, T, expr) \
     	REGISTER_STAT_2(id, T); \
-    	[[accumulate]] void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
+    	ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
     	STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)

@@ -139,11 +139,10 @@ bool ps_move_piece(entity minigame, entity piece, string pos, int leti, int numb
 	if(!middle)
 		return false;
 
-	if(middle.netname) { strunzone(middle.netname); }
+	strfree(middle.netname);
 	delete(middle);
 
-	if(piece.netname) { strunzone(piece.netname); }
-	piece.netname = strzone(pos);
+	strcpy(piece.netname, pos);
 
 	minigame_server_sendflags(piece,MINIG_SF_ALL);
 
@@ -232,7 +231,7 @@ int ps_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			return false;
@@ -514,8 +513,7 @@ void ps_make_move(entity minigame)
 
 void ps_set_curr_pos(string s)
 {
-	if ( ps_curr_pos )
-		strunzone(ps_curr_pos);
+	strfree(ps_curr_pos);
 	if ( s )
 		s = strzone(s);
 	ps_curr_pos = s;
@@ -608,8 +606,8 @@ int ps_client_event(entity minigame, string event, ...)
 				if ( sf & MINIG_SF_UPDATE )
 				{
 					sent.message = ps_turn_to_string(sent.minigame_flags);
-					if ( sent.minigame_flags & minigame_self.team )
-						minigame_prompt();
+					//if ( sent.minigame_flags & minigame_self.team )
+						//minigame_prompt();
 				}
 			}
 

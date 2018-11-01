@@ -47,7 +47,7 @@ void addPowerupItem(string name, string icon, vector color, float currentTime, f
 
 int getPowerupItemAlign(int align, int column, int row, int columns, int rows, bool isVertical)
 {
-    TC(int, align); TC(int, column); TC(int, row); TC(int, columns); TC(int, rows); TC(bool, isVertical);
+	TC(int, align); TC(int, column); TC(int, row); TC(int, columns); TC(int, rows); TC(bool, isVertical);
 	if(align < 2)
 		return align;
 
@@ -103,7 +103,7 @@ void HUD_Powerups()
 		addPowerupItem("Strength", "strength", autocvar_hud_progressbar_strength_color, strengthTime, 30);
 	if(shieldTime)
 		addPowerupItem("Shield", "shield", autocvar_hud_progressbar_shield_color, shieldTime, 30);
-	if(superTime)
+	if(superTime && !(allItems & IT_UNLIMITED_SUPERWEAPONS))
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
 	MUTATOR_CALLHOOK(HUD_Powerups_add);

@@ -21,7 +21,7 @@
 #include "../../race.qh"
 #include <common/t_items.qh>
 
-#include "../../mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 #include "../../weapons/accuracy.qh"
 
@@ -74,12 +74,6 @@ void bot_think(entity this)
 
 	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
 
-	//if (this.bot_painintensity > 0)
-	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
-
-	//this.bot_painintensity = this.bot_painintensity + this.bot_oldhealth - this.health;
-	//this.bot_painintensity = bound(0, this.bot_painintensity, 100);
-
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
 		CS(this).movement = '0 0 0';
@@ -129,6 +123,9 @@ void bot_think(entity this)
 	// if dead, just wait until we can respawn
 	if (IS_DEAD(this))
 	{
+		if (bot_waypoint_queue_owner == this)
+			bot_waypoint_queue_owner = NULL;
+		this.aistatus = 0;
 		CS(this).movement = '0 0 0';
 		if (this.deadflag == DEAD_DEAD)
 		{
@@ -244,7 +241,7 @@ void bot_setnameandstuff(entity this)
 
 	this.bot_config_loaded = true;
 
-	// this is really only a default, JoinBestTeam is called later
+	// this is really only a default, TeamBalance_JoinBestTeam is called later
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
 	this.bot_preferredcolors = this.clientcolors;
 
@@ -255,16 +252,23 @@ void bot_setnameandstuff(entity this)
 		name = bot_name;
 
 	// number bots with identical names
-	int j = 0;
-	FOREACH_CLIENT(IS_BOT_CLIENT(it), {
-		if(it.cleanname == name)
-			++j;
-	});
-	if (j)
-		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
-	else
+	if (name == "")
+	{
+		name = ftos(etof(this));
 		this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
-
+	}
+	else
+	{
+		int j = 0;
+		FOREACH_CLIENT(IS_BOT_CLIENT(it), {
+			if(it.cleanname == name)
+				++j;
+		});
+		if (j)
+			this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
+		else
+			this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
+	}
 	this.cleanname = strzone(name);
 
 	// pick the model and skin
@@ -396,18 +400,10 @@ void bot_clientdisconnect(entity this)
 	if (!IS_BOT_CLIENT(this))
 		return;
 	bot_clearqueue(this);
-	if(this.cleanname)
-		strunzone(this.cleanname);
-	if(this.netname_freeme)
-		strunzone(this.netname_freeme);
-	if(this.playermodel_freeme)
-		strunzone(this.playermodel_freeme);
-	if(this.playerskin_freeme)
-		strunzone(this.playerskin_freeme);
-	this.cleanname = string_null;
-	this.netname_freeme = string_null;
-	this.playermodel_freeme = string_null;
-	this.playerskin_freeme = string_null;
+	strfree(this.cleanname);
+	strfree(this.netname_freeme);
+	strfree(this.playermodel_freeme);
+	strfree(this.playerskin_freeme);
 	if(this.bot_cmd_current)
 		delete(this.bot_cmd_current);
 	if(bot_waypoint_queue_owner == this)
@@ -438,15 +434,15 @@ void bot_clientconnect(entity this)
 	else if(this.bot_forced_team==4)
 		this.team = NUM_TEAM_4;
 	else
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 
 	havocbot_setupbot(this);
 }
 
 void bot_removefromlargestteam()
 {
-	CheckAllowedTeams(NULL);
-	GetTeamCounts(NULL);
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	TeamBalance_GetTeamCounts(balance, NULL);
 
 	entity best = NULL;
 	float besttime = 0;
@@ -465,12 +461,10 @@ void bot_removefromlargestteam()
 
 		int thiscount = 0;
 
-		switch(it.team)
+		if (Team_IsValidTeam(it.team))
 		{
-			case NUM_TEAM_1: thiscount = c1; break;
-			case NUM_TEAM_2: thiscount = c2; break;
-			case NUM_TEAM_3: thiscount = c3; break;
-			case NUM_TEAM_4: thiscount = c4; break;
+			thiscount = TeamBalance_GetNumberOfPlayers(balance,
+				Team_TeamToIndex(it.team));
 		}
 
 		if(thiscount > bestcount)
@@ -485,6 +479,7 @@ void bot_removefromlargestteam()
 			best = it;
 		}
 	});
+	TeamBalance_Destroy(balance);
 	if(!bcount)
 		return; // no bots to remove
 	currentbots = currentbots - 1;
@@ -599,8 +594,6 @@ float bot_fixcount()
 	}
 
 	int bots;
-	// add/remove bots if needed to make sure there are at least
-	// minplayers+bot_number, or remove all bots if no one is playing
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
@@ -608,15 +601,17 @@ float bot_fixcount()
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
-		float realminplayers, minplayers;
-		realminplayers = autocvar_minplayers;
-		minplayers = max(0, floor(realminplayers));
+		int minplayers = max(0, floor(autocvar_minplayers));
+		int minbots = max(0, floor(autocvar_bot_number));
 
-		float realminbots, minbots;
-		realminbots = autocvar_bot_number;
-		minbots = max(0, floor(realminbots));
+		// add bots to reach minplayers if needed
+		bots = max(minbots, minplayers - activerealplayers);
+		// cap bots to the max players allowed by the server
+		int player_limit = GetPlayerLimit();
+		if(player_limit)
+			bots = min(bots, player_limit - activerealplayers);
+		bots = min(bots, maxclients - realplayers);
 
-		bots = min(max(minbots, minplayers - activerealplayers), maxclients - realplayers);
 		if(bots > minbots)
 			bots_would_leave = true;
 	}

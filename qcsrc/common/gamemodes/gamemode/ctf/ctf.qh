@@ -1,0 +1,20 @@
+#pragma once
+
+const int CTF_RED_FLAG_TAKEN			= 1;
+const int CTF_RED_FLAG_LOST				= 2;
+const int CTF_RED_FLAG_CARRYING			= 3;
+const int CTF_BLUE_FLAG_TAKEN			= 4;
+const int CTF_BLUE_FLAG_LOST			= 8;
+const int CTF_BLUE_FLAG_CARRYING		= 12;
+const int CTF_YELLOW_FLAG_TAKEN			= 16;
+const int CTF_YELLOW_FLAG_LOST			= 32;
+const int CTF_YELLOW_FLAG_CARRYING		= 48;
+const int CTF_PINK_FLAG_TAKEN			= 64;
+const int CTF_PINK_FLAG_LOST			= 128;
+const int CTF_PINK_FLAG_CARRYING		= 192;
+const int CTF_NEUTRAL_FLAG_TAKEN		= 256;
+const int CTF_NEUTRAL_FLAG_LOST			= 512;
+const int CTF_NEUTRAL_FLAG_CARRYING		= 768;
+const int CTF_FLAG_NEUTRAL				= 2048;
+const int CTF_SHIELDED					= 4096;
+const int CTF_STALEMATE					= 8192;
