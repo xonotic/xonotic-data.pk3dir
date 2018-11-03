@@ -69,6 +69,7 @@ CLASS(DamageText, Object)
             delete(this);
             return;
         }
+
         vector screen_pos;
         if (this.m_screen_coords) {
             screen_pos = this.origin + since_hit * autocvar_cl_damagetext_2d_velocity;
@@ -78,6 +79,8 @@ CLASS(DamageText, Object)
             vector world_pos = this.origin + world_offset.x * v_forward + world_offset.y * v_right + world_offset.z * v_up;
             screen_pos = project_3d_to_2d(world_pos) + since_hit * autocvar_cl_damagetext_velocity_screen + autocvar_cl_damagetext_offset_screen;
         }
+        screen_pos.y += size / 2;
+
         if (screen_pos.z >= 0) {
             screen_pos.z = 0;
             vector rgb;
@@ -93,6 +96,7 @@ CLASS(DamageText, Object)
 
             vector drawfontscale_save = drawfontscale;
             drawfontscale = (size / autocvar_cl_damagetext_size_max) * '1 1 0';
+            screen_pos.y -= drawfontscale.x * size / 2;
             drawcolorcodedstring2_builtin(screen_pos, this.text, autocvar_cl_damagetext_size_max * '1 1 0', rgb, alpha_, DRAWFLAG_NORMAL);
             drawfontscale = drawfontscale_save;
         }
