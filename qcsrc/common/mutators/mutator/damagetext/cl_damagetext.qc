@@ -237,15 +237,14 @@ NET_HANDLE(damagetext, bool isNew)
 
     if (can_use_3d && !prefer_2d) {
         // world coords
-        if (autocvar_cl_damagetext_accumulate_range) {
-            for (entity e = findradius(entcs.origin, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
-                if (e.instanceOfDamageText
-                    && !e.m_screen_coords // we're using origin for both world coords and screen coords so avoid mismatches
-                    && e.m_group == server_entity_index
-                    && current_alpha(e) > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
-                    DamageText_update(e, entcs.origin, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
-                    return;
-                }
+        // using 1 as minimum because of shotgun (same as menu)
+        for (entity e = findradius(entcs.origin, max(autocvar_cl_damagetext_accumulate_range, 1)); e; e = e.chain) {
+            if (e.instanceOfDamageText
+                && !e.m_screen_coords // we're using origin for both world coords and screen coords so avoid mismatches
+                && e.m_group == server_entity_index
+                && current_alpha(e) > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
+                DamageText_update(e, entcs.origin, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
+                return;
             }
         }
         make_impure(NEW(DamageText, server_entity_index, entcs.origin, false, health, armor, potential_damage, deathtype, friendlyfire));
