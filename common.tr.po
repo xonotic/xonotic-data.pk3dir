@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-10-27 11:04+0000\n"
-"Last-Translator: Çağlar Turalı <caglarturali@gmail.com>\n"
+"PO-Revision-Date: 2018-11-03 19:42+0000\n"
+"Last-Translator: Demiray Muhterem <mdemiray@msn.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
@@ -1792,16 +1792,16 @@ msgstr "Anahtar taşıyıcı"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
-msgstr ""
+msgstr "Burada koş"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Ball"
-msgstr ""
+msgstr "Küre"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
-msgstr ""
+msgstr "Küre taşıyıcı"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
@@ -1810,50 +1810,50 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Generator"
-msgstr ""
+msgstr "Dinamo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Weapon"
-msgstr ""
+msgstr "Silah"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 msgid "Monster"
-msgstr ""
+msgstr "Canavar"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Vehicle"
-msgstr ""
+msgstr "Araç"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
-msgstr ""
+msgstr "Davetsiz misafir!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Tagged"
-msgstr ""
+msgstr "Etiketli"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:651
 #: qcsrc/common/turrets/cl_turrets.qc:120
 msgid "Spam"
-msgstr ""
+msgstr "İstenmeyen"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:655
 #, c-format
 msgid "%s needing help!"
-msgstr ""
+msgstr "%s yardıma ihtiyacım var!"
 
 #: qcsrc/common/net_notice.qc:87
 msgid "^1Server notices:"
-msgstr ""
+msgstr "^1Sunucu bildirimleri:"
 
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
-msgstr ""
+msgstr "^F4NOT: ^BGMaç sırasında oyunculara sohbet gönderilmez"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT^BG bayrağı ele geçirildi"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -4737,219 +4737,219 @@ msgstr ""
 #: qcsrc/menu/item/listbox.qc:415
 #, c-format
 msgid "Item %d"
-msgstr ""
+msgstr "Nesne %d"
 
 #: qcsrc/menu/item/textslider.qc:11 qcsrc/menu/item/textslider.qc:12
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:37
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:115
 msgid "Custom"
-msgstr ""
+msgstr "Mevcut"
 
 #: qcsrc/menu/xonotic/campaign.qc:241
 #, c-format
 msgid "Level %d: %s"
-msgstr ""
+msgstr "Seviye %d: %s"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
-msgstr ""
+msgstr "Çekirdek Takım"
 
 #: qcsrc/menu/xonotic/credits.qc:16
 msgid "Extended Team"
-msgstr ""
+msgstr "İlave Takım"
 
 #: qcsrc/menu/xonotic/credits.qc:48
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 #: qcsrc/menu/xonotic/credits.qc:53
 msgid "Stats"
-msgstr ""
+msgstr "İstatistikler"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Art"
-msgstr ""
+msgstr "Sanat"
 
 #: qcsrc/menu/xonotic/credits.qc:65
 msgid "Animation"
-msgstr ""
+msgstr "Canlandırma"
 
 #: qcsrc/menu/xonotic/credits.qc:69
 msgid "Level Design"
-msgstr ""
+msgstr "Seviye Tasarımı"
 
 #: qcsrc/menu/xonotic/credits.qc:92
 msgid "Music / Sound FX"
-msgstr ""
+msgstr "Müzik / Ses FX"
 
 #: qcsrc/menu/xonotic/credits.qc:108
 msgid "Game Code"
-msgstr ""
+msgstr "Oyun Kodu"
 
 #: qcsrc/menu/xonotic/credits.qc:116
 msgid "Marketing / PR"
-msgstr ""
+msgstr "Mağaza / PR"
 
 #: qcsrc/menu/xonotic/credits.qc:122
 msgid "Legal"
-msgstr ""
+msgstr "Yasal"
 
 #: qcsrc/menu/xonotic/credits.qc:127
 msgid "Game Engine"
-msgstr ""
+msgstr "Oyun Motoru"
 
 #: qcsrc/menu/xonotic/credits.qc:131
 msgid "Engine Additions"
-msgstr ""
+msgstr "Motor Eklemeleri"
 
 #: qcsrc/menu/xonotic/credits.qc:136
 msgid "Compiler"
-msgstr ""
+msgstr "Derleyici"
 
 #: qcsrc/menu/xonotic/credits.qc:142
 msgid "Other Active Contributors"
-msgstr ""
+msgstr "Diğer Aktif Geliştiriciler"
 
 #: qcsrc/menu/xonotic/credits.qc:149
 msgid "Translators"
-msgstr ""
+msgstr "Çevirmenler"
 
 #: qcsrc/menu/xonotic/credits.qc:151
 msgid "Asturian"
-msgstr ""
+msgstr "Asturyaca"
 
 #: qcsrc/menu/xonotic/credits.qc:156
 msgid "Belarusian"
-msgstr ""
+msgstr "Beyaz Rusça"
 
 #: qcsrc/menu/xonotic/credits.qc:159
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulgarca"
 
 #: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
-msgstr ""
+msgstr "Çince (Çin)"
 
 #: qcsrc/menu/xonotic/credits.qc:172
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "Çince (Tayvan)"
 
 #: qcsrc/menu/xonotic/credits.qc:177
 msgid "Cornish"
-msgstr ""
+msgstr "Keltçe"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Czech"
-msgstr ""
+msgstr "Çekce"
 
 #: qcsrc/menu/xonotic/credits.qc:185
 msgid "Dutch"
-msgstr ""
+msgstr "Flemenkçe"
 
 #: qcsrc/menu/xonotic/credits.qc:192
 msgid "English (Australia)"
-msgstr ""
+msgstr "İngilizce (Avustralya)"
 
 #: qcsrc/menu/xonotic/credits.qc:197
 msgid "Finnish"
-msgstr ""
+msgstr "Fince"
 
 #: qcsrc/menu/xonotic/credits.qc:202
 msgid "French"
-msgstr ""
+msgstr "Fransızca"
 
 #: qcsrc/menu/xonotic/credits.qc:210
 msgid "German"
-msgstr ""
+msgstr "Almanca"
 
 #: qcsrc/menu/xonotic/credits.qc:221
 msgid "Greek"
-msgstr ""
+msgstr "Yunanca"
 
 #: qcsrc/menu/xonotic/credits.qc:227
 msgid "Hungarian"
-msgstr ""
+msgstr "Macarca"
 
 #: qcsrc/menu/xonotic/credits.qc:231
 msgid "Irish"
-msgstr ""
+msgstr "İrlandaca"
 
 #: qcsrc/menu/xonotic/credits.qc:234
 msgid "Italian"
-msgstr ""
+msgstr "İtalyanca"
 
 #: qcsrc/menu/xonotic/credits.qc:240
 msgid "Kazakh"
-msgstr ""
+msgstr "Kazakça"
 
 #: qcsrc/menu/xonotic/credits.qc:243
 msgid "Korean"
-msgstr ""
+msgstr "Korece"
 
 #: qcsrc/menu/xonotic/credits.qc:247
 msgid "Polish"
-msgstr ""
+msgstr "Polonyaca"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "Portuguese"
-msgstr ""
+msgstr "Portekizce"
 
 #: qcsrc/menu/xonotic/credits.qc:261
 msgid "Romanian"
-msgstr ""
+msgstr "Romanca"
 
 #: qcsrc/menu/xonotic/credits.qc:268
 msgid "Russian"
-msgstr ""
+msgstr "Rusça"
 
 #: qcsrc/menu/xonotic/credits.qc:279
 msgid "Scottish Gaelic"
-msgstr ""
+msgstr "İskoçca"
 
 #: qcsrc/menu/xonotic/credits.qc:282
 msgid "Serbian"
-msgstr ""
+msgstr "Sırpça"
 
 #: qcsrc/menu/xonotic/credits.qc:288
 msgid "Spanish"
-msgstr ""
+msgstr "İspanyolca"
 
 #: qcsrc/menu/xonotic/credits.qc:299
 msgid "Swedish"
-msgstr ""
+msgstr "İsveççe"
 
 #: qcsrc/menu/xonotic/credits.qc:303
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ukraynaca"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Past Contributors"
-msgstr ""
+msgstr "Geçmişte Katkıda Bulunanlar"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
-msgstr ""
+msgstr "config.cfg dosyasına kaydedilmek zorunda"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
-msgstr ""
+msgstr "kaydedilmeyecek"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:84
 msgid "will be saved to config.cfg"
-msgstr ""
+msgstr "config.cfg dosyasına kaydedilecek"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
-msgstr ""
+msgstr "özel"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:95
 msgid "engine setting"
-msgstr ""
+msgstr "motor ayarı"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:97
 msgid "read only"
-msgstr ""
+msgstr "salt okunur"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:38
@@ -4958,7 +4958,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr ""
+msgstr "TAMAM"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
@@ -4974,28 +4974,32 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
+"Xonotic'e hoş geldiniz, lütfen dil tercihinizi seçin ve başlamak için oyuncu "
+"adınızı girin. Bu seçenekleri daha sonra menüden değiştirebilirsiniz."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
-msgstr ""
+msgstr "İsim:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:60
 msgid "Name under which you will appear in the game"
-msgstr ""
+msgstr "Oyunda görüneceğiniz isim"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
-msgstr ""
+msgstr "Yazı dili:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:78
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
+"Oyuncu istatistikleri takma adınızı stats.xonotic.org adresinde kullanmasına "
+"izin verilsin mi?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Undecided"
-msgstr ""
+msgstr "Kararsız"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 msgid "Save settings"
@@ -5003,30 +5007,30 @@ msgstr "Ayarları kaydet"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qh:6
 msgid "Welcome"
-msgstr ""
+msgstr "Hoşgeldiniz"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:16
 msgid "Ammunition display:"
-msgstr ""
+msgstr "Mühimmat ekranı:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:19
 msgid "Show only current ammo type"
-msgstr ""
+msgstr "Sadece geçerli mühimmat türünü göster"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:22
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:44
 msgid "Noncurrent alpha:"
-msgstr ""
+msgstr "Mevcut olmayan alfa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:26
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:48
 msgid "Noncurrent scale:"
-msgstr ""
+msgstr "Akım dışı ölçek:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "Align icon:"
-msgstr ""
+msgstr "Hizalama simgesi:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:30
@@ -5037,7 +5041,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Left"
-msgstr ""
+msgstr "Sol"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
@@ -5048,325 +5052,325 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:20
 msgid "Right"
-msgstr ""
+msgstr "Sağ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
-msgstr ""
+msgstr "Mühimmat Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:17
 msgid "Message duration:"
-msgstr ""
+msgstr "Mesaj süresi:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:21
 msgid "Fade time:"
-msgstr ""
+msgstr "Solma süresi:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
 msgid "Flip messages order"
-msgstr ""
+msgstr "Mesajları sırala"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:15
 msgid "Text alignment:"
-msgstr ""
+msgstr "Metin hizalama:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:19
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Center"
-msgstr ""
+msgstr "Ortala"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 msgid "Font scale:"
-msgstr ""
+msgstr "Yazı tipi ölçeği:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
-msgstr ""
+msgstr "Ortabaskı paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:15
 msgid "Chat entries:"
-msgstr ""
+msgstr "Sohbet girişleri:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:18
 msgid "Chat size:"
-msgstr ""
+msgstr "Sohbet boyutu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:22
 msgid "Chat lifetime:"
-msgstr ""
+msgstr "Sohbet süresi:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:26
 msgid "Chat beep sound"
-msgstr ""
+msgstr "Sohbet bip sesi"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
-msgstr ""
+msgstr "Sohbet Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:14
 msgid "Engine info:"
-msgstr ""
+msgstr "Motor bilgisi:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "Use an averaging algorithm for fps"
-msgstr ""
+msgstr "Fps için ortalama algoritma kullan"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
-msgstr ""
+msgstr "Motor Bilgisi Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:15
 msgid "Combine health and armor"
-msgstr ""
+msgstr "Sağlık ve zırhı birleştirin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:15
 msgid "Enable status bar"
-msgstr ""
+msgstr "Durum çubuğunu etkinleştir"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Status bar alignment:"
-msgstr ""
+msgstr "Durum çubuğu hizalaması:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:25
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:35
 msgid "Inward"
-msgstr ""
+msgstr "içe doğru"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:36
 msgid "Outward"
-msgstr ""
+msgstr "Dışa doğru"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:30
 msgid "Icon alignment:"
-msgstr ""
+msgstr "Simge hizalama:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:40
 msgid "Flip health and armor positions"
-msgstr ""
+msgstr "Ayak sağlığı ve zırh pozisyonları"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
-msgstr ""
+msgstr "Sağlık/Zırh Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:14
 msgid "Info messages:"
-msgstr ""
+msgstr "Bilgi mesajları:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:17
 msgid "Flip align"
-msgstr ""
+msgstr "Çevir hizala"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qh:6
 msgid "Info Messages Panel"
-msgstr ""
+msgstr "Bilgi Mesajları Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:16
 msgid "PNL^Disabled"
-msgstr ""
+msgstr "PNL^Devredışı"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 msgid "PNL^Enabled spectating"
-msgstr ""
+msgstr "PNL^Etkinleştiriliyor"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "PNL^Enabled even playing in warmup"
-msgstr ""
+msgstr "PNL^Isınmada bile oynatma etkin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
-msgstr ""
+msgstr "İndirimli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "Metin/simge oranı:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
-msgstr ""
+msgstr "Ortaya çıkan öğeleri gizle"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide big armor and health"
-msgstr ""
+msgstr "Büyük zırhı ve sağlığı gizle"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Dynamic size"
-msgstr ""
+msgstr "Dinamik boyut"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
-msgstr ""
+msgstr "Öğeler Zaman Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
-msgstr ""
+msgstr "Mod Simgeleri Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:15
 msgid "Notifications:"
-msgstr ""
+msgstr "Bildirimler:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:18
 msgid "Also print notifications to the console"
-msgstr ""
+msgstr "Ayrıca konsola bildirimleri yazdır"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:21
 msgid "Flip notify order"
-msgstr ""
+msgstr "Siparişi bilgilendir"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:24
 msgid "Entry lifetime:"
-msgstr ""
+msgstr "Giriş ömrü:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:28
 msgid "Entry fadetime:"
-msgstr ""
+msgstr "Giriş solma süresi:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
-msgstr ""
+msgstr "Bildirim Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
 msgid "Panel disabled"
-msgstr ""
+msgstr "Panel devre dışı"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 msgid "Panel enabled"
-msgstr ""
+msgstr "Panel etkin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Panel enabled even observing"
-msgstr ""
+msgstr "Panel gözlemleme etkin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Panel enabled only in Race/CTS"
-msgstr ""
+msgstr "Panel yalnızca Race/CTS'de etkinleştirildi"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
-msgstr ""
+msgstr "Durum çubuğu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
 msgid "Left align"
-msgstr ""
+msgstr "Sol hizalama"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:74
 msgid "Right align"
-msgstr ""
+msgstr "Sağ hizalama"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 msgid "Inward align"
-msgstr ""
+msgstr "İçe hizala"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "Outward align"
-msgstr ""
+msgstr "Dışa hizala"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
-msgstr ""
+msgstr "Çevirme hızı/hızlanma pozisyonları"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
-msgstr ""
+msgstr "Hız:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
 msgid "Include vertical speed"
-msgstr ""
+msgstr "Dikey hızı dahil et"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Speed unit:"
-msgstr ""
+msgstr "Hız ünitesi:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
-msgstr ""
+msgstr "bağ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:57
 msgid "Show"
-msgstr ""
+msgstr "Göster"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:60
 msgid "Top speed"
-msgstr ""
+msgstr "En yüksek hız"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
 msgid "Acceleration:"
-msgstr ""
+msgstr "Hızlanma:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:67
 msgid "Include vertical acceleration"
-msgstr ""
+msgstr "Dikey hızlandırmayı dahil et"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
-msgstr ""
+msgstr "Fizik Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
-msgstr ""
+msgstr "Güç Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Panel enabled when spectating"
-msgstr ""
+msgstr "Panel isteğe bağlı olarak etkinleştirildi"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Panel always enabled"
-msgstr ""
+msgstr "Panel her zaman etkin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
-msgstr ""
+msgstr "Zorlama yönü:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
-msgstr ""
+msgstr "Basılı Tuşlar Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
-msgstr ""
+msgstr "Hızlı Menü Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
-msgstr ""
+msgstr "Yarış Zamanlayıcı Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Panel enabled in teamgames"
-msgstr ""
+msgstr "Takım oyunlarında panel etkin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
-msgstr ""
+msgstr "Radar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:68
@@ -5379,191 +5383,191 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 #: qcsrc/menu/xonotic/util.qc:792
 msgid "Alpha:"
-msgstr ""
+msgstr "Alfa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
 msgid "Rotation:"
-msgstr ""
+msgstr "Döndürme:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
 msgid "Forward"
-msgstr ""
+msgstr "İleri"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:33
 msgid "West"
-msgstr ""
+msgstr "Batı"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:34
 msgid "South"
-msgstr ""
+msgstr "Güney"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
 msgid "East"
-msgstr ""
+msgstr "Doğu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:36
 msgid "North"
-msgstr ""
+msgstr "Kuzey"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
 msgid "Scale:"
-msgstr ""
+msgstr "Ölçek:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:44
 msgid "Zoom mode:"
-msgstr ""
+msgstr "Yakınlaştırma modu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr ""
+msgstr "Yakınlaştırılmış"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr ""
+msgstr "Uzaklaştırıldı"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr ""
+msgstr "Her zaman yakınlaştırılmış"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr ""
+msgstr "Hiçbir zaman yakınlaştırma"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
-msgstr ""
+msgstr "Radar Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:15
 msgid "Score:"
-msgstr ""
+msgstr "Puan:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:18
 msgid "Rankings:"
-msgstr ""
+msgstr "Sıralama:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:19
 msgid "Off"
-msgstr ""
+msgstr "Kapat"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:20
 msgid "And me"
-msgstr ""
+msgstr "ve ben"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:21
 msgid "Pure"
-msgstr ""
+msgstr "Sade"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
-msgstr ""
+msgstr "Sonuç Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:14
 msgid "Timer:"
-msgstr ""
+msgstr "Zamanlayıcı:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Show elapsed time"
-msgstr ""
+msgstr "Geçen zamanı göster"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
-msgstr ""
+msgstr "Zamanlayıcı Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:15
 msgid "Alpha after voting:"
-msgstr ""
+msgstr "Oylamadan sonra Alfa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
-msgstr ""
+msgstr "Oylama Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:20
 msgid "Fade out after:"
-msgstr ""
+msgstr "Sonra solma:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:167
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Never"
-msgstr ""
+msgstr "Asla"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
 #, c-format
 msgid "%ds"
-msgstr ""
+msgstr "%ds"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:28
 msgid "Fade effect:"
-msgstr ""
+msgstr "Solma efekti:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:31
 msgid "EF^None"
-msgstr ""
+msgstr "EF^Yok"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:32
 msgid "Alpha"
-msgstr ""
+msgstr "Alfa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Slide"
-msgstr ""
+msgstr "Kaydır"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "EF^Both"
-msgstr ""
+msgstr "EF^Her ikisi de"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:38
 msgid "Weapon icons:"
-msgstr ""
+msgstr "Silah simgeleri:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:41
 msgid "Show only owned weapons"
-msgstr ""
+msgstr "Sadece sahip olunan silahları göster"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:52
 msgid "Show weapon ID as:"
-msgstr ""
+msgstr "Silah kimliğini şunun gibi göster:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:53
 msgid "SHOWAS^None"
-msgstr ""
+msgstr "SHOWAS^Yok"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Number"
-msgstr ""
+msgstr "Numara"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Bind"
-msgstr ""
+msgstr "Bindir"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:58
 msgid "Weapon ID scale:"
-msgstr ""
+msgstr "Silah kimliği ölçeği:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:64
 msgid "Show Accuracy"
-msgstr ""
+msgstr "Doğruluk Göster"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:65
 msgid "Show Ammo"
-msgstr ""
+msgstr "Cephaneyi Göster"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:68
 msgid "Ammo bar alpha:"
-msgstr ""
+msgstr "Cephane çubuğu alfa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:74
 msgid "Ammo bar color:"
-msgstr ""
+msgstr "Cephane çubuğu rengi:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qh:6
 msgid "Weapons Panel"
-msgstr ""
+msgstr "Cephane Paneli"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:19
 msgid "HUD skins"
-msgstr ""
+msgstr "HUD biçimleri"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:196
@@ -5572,32 +5576,32 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:35
 msgid "Filter:"
-msgstr ""
+msgstr "Filtre:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:44
 msgid "Refresh"
-msgstr ""
+msgstr "Yenile"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:30
 msgid "Set skin"
-msgstr ""
+msgstr "Biçim ayarla"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:37
 msgid "Save current skin"
-msgstr ""
+msgstr "Mevcut biçimi kaydet"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "Panel background defaults:"
-msgstr ""
+msgstr "Panel arka plan varsayılanları:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
 #: qcsrc/menu/xonotic/util.qc:767
 msgid "Background:"
-msgstr ""
+msgstr "Arkaplan:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
@@ -5606,39 +5610,39 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:770 qcsrc/menu/xonotic/util.qc:786
 #: qcsrc/menu/xonotic/util.qc:803
 msgid "Disable"
-msgstr ""
+msgstr "Devredışı"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
 #: qcsrc/menu/xonotic/util.qc:783
 msgid "Border size:"
-msgstr ""
+msgstr "Kenarlık boyutu:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:114
 msgid "Team color:"
-msgstr ""
+msgstr "Takım rengi:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
 #: qcsrc/menu/xonotic/util.qc:809
 msgid "Test team color in configure mode"
-msgstr ""
+msgstr "Yapılandırma modunda ekip rengini test et"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
 #: qcsrc/menu/xonotic/util.qc:812
 msgid "Padding:"
-msgstr ""
+msgstr "Dolgu malzemesi:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:93
 msgid "HUD Dock:"
-msgstr ""
+msgstr "HUD Rıhtım:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
 msgid "DOCK^Disabled"
-msgstr ""
+msgstr "DOCK^Devredışı"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:96
 msgid "DOCK^Small"
-msgstr ""
+msgstr "DOCK^Küçük"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:97
 msgid "DOCK^Medium"
@@ -5646,7 +5650,7 @@ msgstr "DOCK^Vasat"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:98
 msgid "DOCK^Large"
-msgstr ""
+msgstr "DOCK^Geniş"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:121
 msgid "Grid settings:"
@@ -5654,53 +5658,53 @@ msgstr "Izgara ayarları:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 msgid "Snap panels to grid"
-msgstr ""
+msgstr "Panelleri ızgaraya yapıştır"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
 msgid "Grid size:"
-msgstr ""
+msgstr "Izgara boyutu:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:129
 msgid "X:"
-msgstr ""
+msgstr "X:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:136
 msgid "Y:"
-msgstr ""
+msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 msgid "Exit setup"
-msgstr ""
+msgstr "Kurulumdan çık"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:6
 msgid "Panel HUD Setup"
-msgstr ""
+msgstr "Panel HUD Kurulum"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
-msgstr ""
+msgstr "Canavar:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
 msgid "Spawn"
-msgstr ""
+msgstr "Yumurta"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:23
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid "Remove"
-msgstr ""
+msgstr "Kaldır"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:25
 msgid "Move target:"
-msgstr ""
+msgstr "Hedefi taşı:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:26
 msgid "Follow"
-msgstr ""
+msgstr "Takip et"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:27
 msgid "Wander"
-msgstr ""
+msgstr "Dolaş"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:28
 msgid "Spawnpoint"
