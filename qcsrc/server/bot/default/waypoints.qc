@@ -1428,10 +1428,14 @@ void botframe_showwaypointlinks()
 	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot,
 	{
 		int display_type = 0;
-		entity head = navigation_findnearestwaypoint(it, false);
+		if (PHYS_INPUT_BUTTON_USE(it))
+			it.wp_locked = it.wp_aimed;
+		entity head = it.wp_locked;
+		if (!head)
+			head = navigation_findnearestwaypoint(it, false);
 		it.nearestwaypoint = head; // mainly useful for debug
 		it.nearestwaypointtimeout = time + 2; // while I'm at it...
-		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
+		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE || it.wp_locked)
 			display_type = 1; // default
 		else if(head && (head.wphardwired))
 			display_type = 2; // only hardwired
