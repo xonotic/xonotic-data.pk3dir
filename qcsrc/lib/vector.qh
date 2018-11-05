@@ -94,10 +94,16 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 #define ROLL(v) ((v).z)
 
 #define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN { \
+	vector old_forward = v_forward; \
+	vector old_right = v_right; \
+	vector old_up = v_up; \
 	f(angles); \
 	forward = v_forward; \
 	right = v_right; \
 	up = v_up; \
+	v_forward = old_forward; \
+	v_right = old_right; \
+	v_up = old_up; \
 } MACRO_END
 
 //pseudo prototypes:
