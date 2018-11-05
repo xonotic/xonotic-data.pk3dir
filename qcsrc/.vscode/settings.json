@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.qc": "c",
+        "*.qh": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
