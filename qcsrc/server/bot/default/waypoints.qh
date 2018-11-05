@@ -28,6 +28,7 @@ float botframe_cachedwaypointlinks;
 
 .float wpfire, wpcost, wpconsidered, wpisbox, wplinked, wphardwired;
 .int wpflags;
+.entity wp_aimed;
 
 .vector wpnearestpoint;
 

@@ -1401,6 +1401,25 @@ void waypoint_showlinks_from(entity wp, int display_type)
 	waypoint_showlink(wp.wp15, wp, display_type); waypoint_showlink(wp.wp31, wp, display_type);
 }
 
+void crosshair_trace_waypoints(entity pl)
+{
+	IL_EACH(g_waypoints, true, {
+		it.solid = SOLID_BSP;
+		if (!it.wpisbox)
+			setsize(it, '-16 -16 -16', '16 16 16');
+	});
+
+	crosshair_trace(pl);
+
+	IL_EACH(g_waypoints, true, {
+		it.solid = SOLID_TRIGGER;
+		if (!it.wpisbox)
+			setsize(it, '0 0 0', '0 0 0');
+	});
+	if (trace_ent.classname != "waypoint")
+		trace_ent = NULL;
+}
+
 void botframe_showwaypointlinks()
 {
 	if (time < botframe_waypointeditorlightningtime)
@@ -1431,6 +1450,29 @@ void botframe_showwaypointlinks()
 					waypoint_showlinks_from(head, display_type);
 			}
 		}
+		string str;
+		entity wp = NULL;
+		if (vdist(vec2(it.velocity), <, autocvar_sv_maxspeed * 1.1))
+		{
+			crosshair_trace_waypoints(it);
+			if (trace_ent)
+			{
+				wp = trace_ent;
+				if (wp != it.wp_aimed)
+				{
+					str = sprintf("\necho ^2WP info^7: entity: %d, flags: %d, origin: '%s'\n", etof(wp), wp.wpflags, vtos(wp.origin));
+					if (wp.wpisbox)
+						str = strcat(str, sprintf("echo \" absmin: '%s', absmax: '%s'\"\n", vtos(wp.absmin), vtos(wp.absmax)));
+					stuffcmd(it, str);
+					str = sprintf("entity: %d\nflags: %d\norigin: \'%s\'", etof(wp), wp.wpflags, vtos(wp.origin));
+					if (wp.wpisbox)
+						str = strcat(str, sprintf(" \nabsmin: '%s'\nabsmax: '%s'", vtos(wp.absmin), vtos(wp.absmax)));
+					debug_text_3d(wp.origin, str, 0, 7, '0 0 0');
+				}
+			}
+		}
+		if (it.wp_aimed != wp)
+			it.wp_aimed = wp;
 	});
 }
 
