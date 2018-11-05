@@ -444,8 +444,7 @@ CLASS(DebugText3d, Object)
 			if (align > 0)
 				msg_pos.x -= stringwidth(msg, true, size * '1 1 0') * min(1, align);
 
-			vector rgb = '1 1 0';
-			drawcolorcodedstring2_builtin(msg_pos, msg, size * '1 1 0', rgb, alpha_, DRAWFLAG_NORMAL);
+			drawcolorcodedstring_builtin(msg_pos, msg, size * '1 1 0', alpha_, DRAWFLAG_NORMAL);
 		}
 	}
 	ATTRIB(DebugText3d, draw2d, void(DebugText3d), DebugText3d_draw2d);
