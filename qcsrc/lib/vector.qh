@@ -135,9 +135,9 @@ STATIC_INIT(globals) {
 
 // Same as `MAKEVECTORS` but also creates the locals for convenience.
 #define MAKEVECTORS_NEW(angles, forward, right, up) \
-	vector forward; \
-	vector right; \
-	vector up; \
+	vector forward = '0 0 0'; \
+	vector right = '0 0 0'; \
+	vector up = '0 0 0'; \
 	MAKEVECTORS(angles, forward, right, up);
 
 // TODO when raw makevectors and similar functions are not used anywhere else anymore,
