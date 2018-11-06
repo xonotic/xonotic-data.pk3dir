@@ -188,6 +188,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
 						waypoint_spawn_fromeditor(caller);
+					return;
 				}
 				else if (argv(1) == "remove")
 				{
@@ -195,6 +196,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
 						waypoint_remove_fromeditor(caller);
+					return;
 				}
 				else if (argv(1) == "unreachable")
 				{
@@ -202,13 +204,34 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
 						waypoint_unreachable(caller);
+					return;
 				}
 				else if (argv(1) == "saveall")
+				{
 					waypoint_saveall();
+					return;
+				}
 				else if (argv(1) == "relinkall")
+				{
 					waypoint_schedulerelinkall();
-
-				return;
+					return;
+				}
+				else if (argv(1) == "symaxis")
+				{
+					if (argv(2) == "set" || argv(2) == "get")
+					{
+						waypoint_getSymmetricalAxis_cmd(caller, (argv(2) == "set"), 3);
+						return;
+					}
+				}
+				else if (argv(1) == "symorigin")
+				{
+					if (argv(2) == "set" || argv(2) == "get")
+					{
+						waypoint_getSymmetricalOrigin_cmd(caller, (argv(2) == "set"), 3);
+						return;
+					}
+				}
 			}
 		}
 
@@ -217,7 +240,13 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
-			sprint(caller, "  Where 'action' can be: spawn, remove, unreachable, saveall, relinkall\n");
+			sprint(caller, "  Where 'action' can be: spawn, remove, unreachable, saveall, relinkall,\n");
+			sprint(caller, "   symorigin get|set\n");
+			sprint(caller, "   symorigin get|set p1 p2 ... pX\n");
+			sprint(caller, "   symaxis get|set p1 p2\n");
+			sprint(caller, "    where p1 p2 ... pX are positions \"x y z\" (z can be omitted)\n");
+			sprint(caller, " symorigin and symaxis commands are useful to determine origin/axis of symmetry"
+							" on maps without ctf flags or where flags aren't perfectly symmetrical\n");
 			return;
 		}
 	}

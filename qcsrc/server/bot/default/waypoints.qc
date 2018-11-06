@@ -128,6 +128,108 @@ void waypoint_unreachable(entity pl)
 	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
 }
 
+void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx)
+{
+	vector v1 = stov(argv(arg_idx++));
+	vector v2 = stov(argv(arg_idx++));
+	vector mid = (v1 + v2) / 2;
+
+	float diffy = (v2.y - v1.y);
+	float diffx = (v2.x - v1.x);
+	if (v1.y == v2.y)
+		diffy = 0.000001;
+	if (v1.x == v2.x)
+		diffx = 0.000001;
+	float m = - diffx / diffy;
+	float q = - m * mid.x + mid.y;
+	if (fabs(m) <= 0.000001) m = 0;
+	if (fabs(q) <= 0.000001) q = 0;
+
+	string axis_str =  strcat(ftos(m), " ", ftos(q));
+	if (save)
+		cvar_set("g_waypointeditor_symmetrical_axis", axis_str);
+	axis_str = strcat("\"", axis_str, "\"");
+	sprint(caller, strcat("Axis of symmetry based on input points: ", axis_str, "\n"));
+	if (save)
+		sprint(caller, sprintf(" ^3saved to %s\n", "g_waypointeditor_symmetrical_axis"));
+	if (save)
+	{
+		cvar_set("g_waypointeditor_symmetrical", "-2");
+		sprint(caller, strcat("g_waypointeditor_symmetrical", " has been set to ",
+			cvar_string("g_waypointeditor_symmetrical"), "\n"));
+	}
+}
+
+void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
+{
+	vector org = '0 0 0';
+	int ctf_flags = 0;
+	for (int i = 0; i < 6; i++)
+	{
+		if (argv(arg_idx + i) != "")
+			ctf_flags++;
+	}
+	if (ctf_flags < 2)
+	{
+		ctf_flags = 0;
+		org = vec2(havocbot_middlepoint);
+		if (argv(arg_idx) != "")
+			sprint(caller, "WARNING: Ignoring single input point\n");
+		if (havocbot_middlepoint_radius == 0)
+		{
+			sprint(caller, "Origin of symmetry can't be automatically determined\n");
+			return;
+		}
+	}
+	else
+	{
+		vector v1, v2, v3, v4, v5, v6;
+		for (int i = 1; i <= ctf_flags; i++)
+		{
+			if (i == 1) { v1 = stov(argv(arg_idx++)); org = v1 / ctf_flags; }
+			else if (i == 2) { v2 = stov(argv(arg_idx++)); org += v2 / ctf_flags; }
+			else if (i == 3) { v3 = stov(argv(arg_idx++)); org += v3 / ctf_flags; }
+			else if (i == 4) { v4 = stov(argv(arg_idx++)); org += v4 / ctf_flags; }
+			else if (i == 5) { v5 = stov(argv(arg_idx++)); org += v5 / ctf_flags; }
+			else if (i == 6) { v6 = stov(argv(arg_idx++)); org += v6 / ctf_flags; }
+		}
+	}
+
+	if (fabs(org.x) <= 0.000001) org.x = 0;
+	if (fabs(org.y) <= 0.000001) org.y = 0;
+	string org_str = strcat(ftos(org.x), " ", ftos(org.y));
+	if (save)
+	{
+		cvar_set("g_waypointeditor_symmetrical_origin", org_str);
+		cvar_set("g_waypointeditor_symmetrical_order", ftos(ctf_flags));
+	}
+	org_str = strcat("\"", org_str, "\"");
+
+	if (ctf_flags < 2)
+		sprint(caller, strcat("Origin of symmetry based on flag positions: ", org_str, "\n"));
+	else
+		sprint(caller, strcat("Origin of symmetry based on input points: ", org_str, "\n"));
+	if (save)
+		sprint(caller, sprintf(" ^3saved to %s\n", "g_waypointeditor_symmetrical_origin"));
+
+	if (ctf_flags < 2)
+		sprint(caller, "Order of symmetry: 0 (autodetected)\n");
+	else
+		sprint(caller, strcat("Order of symmetry: ", ftos(ctf_flags), "\n"));
+	if (save)
+		sprint(caller, sprintf(" ^3saved to %s\n", "g_waypointeditor_symmetrical_order"));
+
+	if (save)
+	{
+		if (ctf_flags < 2)
+			cvar_set("g_waypointeditor_symmetrical", "0");
+		else
+			cvar_set("g_waypointeditor_symmetrical", "-1");
+		sprint(caller, strcat("g_waypointeditor_symmetrical", " has been set to ",
+			cvar_string("g_waypointeditor_symmetrical"), "\n"));
+	}
+}
+
 vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 {
 	vector new_org = org;
