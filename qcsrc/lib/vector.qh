@@ -1,5 +1,23 @@
 #pragma once
 
+#include "lib/float.qh"
+#include "lib/misc.qh"
+#include "lib/static.qh"
+
+//pseudo prototypes:
+// vector vec2(vector v); // returns a vector with just the x and y components of the given vector
+// vector vec2(float x, float y); // returns a vector with the given x and y components
+
+noref vector _vec2;
+#define vec2(...) EVAL(OVERLOAD(vec2, __VA_ARGS__))
+#define vec2_1(v) (_vec2 = (v), _vec2.z = 0, _vec2)
+#define vec2_2(x, y) (_vec2_x = (x), _vec2_y = (y), _vec2)
+
+noref vector _vec3;
+#define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
+
+#define VEC_NAN vec3(FLOAT_NAN, FLOAT_NAN, FLOAT_NAN);
+
 noref vector _vlen2;
 #define vlen2(v) (_vlen2 = (v), dotproduct(_vlen2, _vlen2))
 
@@ -93,30 +111,26 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 #define YAW(v) ((v).y)
 #define ROLL(v) ((v).z)
 
+#ifdef GAMEQC
+STATIC_INIT(globals) {
+	// set to NaN to more easily detect uninitialized use
+	v_forward = VEC_NAN;
+	v_right = VEC_NAN;
+	v_up = VEC_NAN;
+}
+#endif
+
+// TODO when raw makevectors in not used anywhere else, assert that the global vectors are NaN before calling makevectors here
+// to make sure nobody is accidentally using them
 #define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN { \
-	vector old_forward = v_forward; \
-	vector old_right = v_right; \
-	vector old_up = v_up; \
 	f(angles); \
 	forward = v_forward; \
 	right = v_right; \
 	up = v_up; \
-	v_forward = old_forward; \
-	v_right = old_right; \
-	v_up = old_up; \
+	v_forward = VEC_NAN; \
+	v_right = VEC_NAN; \
+	v_up = VEC_NAN; \
 } MACRO_END
-
-//pseudo prototypes:
-// vector vec2(vector v); // returns a vector with just the x and y components of the given vector
-// vector vec2(float x, float y); // returns a vector with the given x and y components
-
-noref vector _vec2;
-#define vec2(...) EVAL(OVERLOAD(vec2, __VA_ARGS__))
-#define vec2_1(v) (_vec2 = (v), _vec2.z = 0, _vec2)
-#define vec2_2(x, y) (_vec2_x = (x), _vec2_y = (y), _vec2)
-
-noref vector _vec3;
-#define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
 
 ERASEABLE
 vector Rotate(vector v, float a)
