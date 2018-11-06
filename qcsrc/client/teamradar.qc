@@ -93,8 +93,7 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
 
-	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-	MAKEVECTORS(makevectors, pangles - '0 1 0' * teamradar_angle, forward, right, up);
+	MAKEVECTORS_NEW(pangles - '0 1 0' * teamradar_angle, forward, right, up);
 	if(v_flipped)
 	{
 		forward.x = -forward.x;

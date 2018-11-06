@@ -141,8 +141,7 @@ void calc_followmodel_ofs(entity view)
 		vel = view.velocity;
 	else
 	{
-		vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		MAKEVECTORS_NEW(view_angles, forward, right, up);
 		vel.x = view.velocity * forward;
 		vel.y = view.velocity * right * -1;
 		vel.z = view.velocity * up;
@@ -167,8 +166,7 @@ void calc_followmodel_ofs(entity view)
 	if (autocvar_cl_followmodel_velocity_absolute)
 	{
 		vector fixed_gunorg;
-		vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		MAKEVECTORS_NEW(view_angles, forward, right, up);
 		fixed_gunorg.x = gunorg * forward;
 		fixed_gunorg.y = gunorg * right * -1;
 		fixed_gunorg.z = gunorg * up;
@@ -1946,7 +1944,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
-	MAKEVECTORS(makevectors, view_angles, view_forward, view_right, view_up);
+	MAKEVECTORS(view_angles, view_forward, view_right, view_up);
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)

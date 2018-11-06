@@ -120,10 +120,11 @@ STATIC_INIT(globals) {
 }
 #endif
 
-// TODO when raw makevectors in not used anywhere else, assert that the global vectors are NaN before calling makevectors here
-// to make sure nobody is accidentally using them
-#define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN { \
-	f(angles); \
+/// Same as the `makevectors` builtin but uses the provided locals instead of the `v_*` globals.
+/// Always use this instead of raw `makevectors` to make the data flow clear.
+/// It's 2018, they even teach that globals are bad at my uni... though for some reason they never explained why. Sigh.
+#define MAKEVECTORS(angles, forward, right, up) MACRO_BEGIN { \
+	makevectors(angles); \
 	forward = v_forward; \
 	right = v_right; \
 	up = v_up; \
@@ -131,6 +132,22 @@ STATIC_INIT(globals) {
 	v_right = VEC_NAN; \
 	v_up = VEC_NAN; \
 } MACRO_END
+
+// Same as `MAKEVECTORS` but also creates the locals for convenience.
+#define MAKEVECTORS_NEW(angles, forward, right, up) \
+	vector forward; \
+	vector right; \
+	vector up; \
+	MAKEVECTORS(angles, forward, right, up);
+
+// TODO when raw makevectors and similar functions are not used anywhere else anymore,
+// assert that the global vectors are NaN before calling makevectors in MAKEVECTORS
+// to make sure nobody (even builtins) is accidentally using them - NaN is the most liekly value to expose values clearly
+// also uncomment these:
+//#define makevectors DO_NOT_USE_GLOBALS
+//#define v_forward DO_NOT_USE_GLOBALS
+//#define v_right DO_NOT_USE_GLOBALS
+//#define v_up DO_NOT_USE_GLOBALS
 
 ERASEABLE
 vector Rotate(vector v, float a)
