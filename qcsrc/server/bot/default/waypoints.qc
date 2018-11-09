@@ -1530,6 +1530,10 @@ void botframe_showwaypointlinks()
 	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot,
 	{
 		int display_type = 0;
+		if (wasfreed(it.wp_aimed))
+			it.wp_aimed = NULL;
+		if (wasfreed(it.wp_locked))
+			it.wp_locked = NULL;
 		if (PHYS_INPUT_BUTTON_USE(it))
 			it.wp_locked = it.wp_aimed;
 		entity head = it.wp_locked;
