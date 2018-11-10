@@ -1,5 +1,8 @@
 #pragma once
 
+#include "lib/macro.qh"
+#include "lib/log.qh"
+
 #define GETTIME_REALTIME 1
 #ifdef MENUQC
 float(int tmr) _gettime = #67;
