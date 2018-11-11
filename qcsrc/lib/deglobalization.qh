@@ -6,8 +6,6 @@
 // Functions for which all usages are replaced with these macros can be hidden inside our `*defs.qh` files
 // to prevent anyone from using them accidentally.
 
-// FIXME MAKE_VECTORS because current naming sucks
-
 #ifdef GAMEQC
 STATIC_INIT(globals) {
 	// set to NaN to more easily detect uninitialized use
@@ -22,7 +20,7 @@ STATIC_INIT(globals) {
 
 /// Same as the `makevectors` builtin but uses the provided locals instead of the `v_*` globals.
 /// Always use this instead of raw `makevectors` to make the data flow clear.
-#define MAKEVECTORS(angles, forward, right, up) MACRO_BEGIN { \
+#define MAKE_VECTORS(angles, forward, right, up) MACRO_BEGIN { \
 	makevectors(angles); \
 	forward = v_forward; \
 	right = v_right; \
@@ -32,12 +30,12 @@ STATIC_INIT(globals) {
 	v_up = VEC_NAN; \
 } MACRO_END
 
-/// Same as `MAKEVECTORS` but also creates the locals for convenience.
-#define MAKEVECTORS_NEW(angles, forward, right, up) \
+/// Same as `MAKE_VECTORS` but also creates the locals for convenience.
+#define MAKE_VECTORS_NEW(angles, forward, right, up) \
 	vector forward = '0 0 0'; \
 	vector right = '0 0 0'; \
 	vector up = '0 0 0'; \
-	MAKEVECTORS(angles, forward, right, up);
+	MAKE_VECTORS(angles, forward, right, up);
 
 #define VECTOR_VECTORS(forward_in, forward, right, up) MACRO_BEGIN { \
 	_vectorvectors_hidden(forward_in); \
