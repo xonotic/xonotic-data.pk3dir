@@ -6,6 +6,17 @@
 // Functions for which all usages are replaced with these macros can be hidden inside our `*defs.qh` files
 // to prevent anyone from using them accidentally.
 
+// TODO stuff in the engine that uses the v_forward/v_right/v_up globals and is not wrapped:
+//  - RF_USEAXIS, addentities, predraw,
+//    CL_GetEntityMatrix (in engine but is called from other functions so transitively any of them can use the globals - e.g. V_CalcRefdef, maybe others)
+//  - e.camera_transform / CL_VM_TransformView (in engine)
+//  - adddynamiclight
+//  - makestatic
+//  - gettaginfo
+//  - getentity
+//  - skel_get_bonerel, skel_get_boneabs, skel_set_bone, skel_mul_bone, skel_mul_bones
+//  - aim
+
 #ifdef GAMEQC
 STATIC_INIT(globals) {
 	// set to NaN to more easily detect uninitialized use
