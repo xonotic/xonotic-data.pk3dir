@@ -22,11 +22,11 @@
 #include "lib/static.qh"
 #include "lib/vector.qh"
 
-void(vector) _vectorvectors;
+//void(vector) _vectorvectors;
 
 #ifdef GAMEQC
 STATIC_INIT(globals) {
-	_vectorvectors = vectorvectors;
+	//_vectorvectors = vectorvectors;
 
 	// set to NaN to more easily detect uninitialized use
 	v_forward = VEC_NAN;
@@ -55,7 +55,7 @@ STATIC_INIT(globals) {
 	MAKEVECTORS(angles, forward, right, up);
 
 #define VECTOR_VECTORS(forward_in, forward, right, up) MACRO_BEGIN { \
-	_vectorvectors(forward_in); \
+	vectorvectors_broken(forward_in); \
 	forward = v_forward; \
 	right = v_right; \
 	up = v_up; \
