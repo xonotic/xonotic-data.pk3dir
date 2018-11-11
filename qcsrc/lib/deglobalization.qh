@@ -1,0 +1,56 @@
+#include "lib/misc.qh"
+#include "lib/static.qh"
+#include "lib/vector.qh"
+
+// These macros wrap functions which use globals so mutation only occurs inside them and is not visible from outside.
+// Functions for which all usages are replaced with these macros can be hidden inside our `*defs.qh` files
+// to prevent anyone from using them accidentally.
+
+// FIXME MAKE_VECTORS because current naming sucks
+
+#ifdef GAMEQC
+STATIC_INIT(globals) {
+	// set to NaN to more easily detect uninitialized use
+    // TODO when all functions are wrapped and the raw functions are not used anymore,
+    // assert that the global vectors are NaN before calling the raw functions
+    // to make sure nobody (even builtins) is accidentally using them - NaN is the most likely value to expose remaining usages
+	v_forward = VEC_NAN;
+	v_right = VEC_NAN;
+	v_up = VEC_NAN;
+}
+#endif
+
+/// Same as the `makevectors` builtin but uses the provided locals instead of the `v_*` globals.
+/// Always use this instead of raw `makevectors` to make the data flow clear.
+#define MAKEVECTORS(angles, forward, right, up) MACRO_BEGIN { \
+	makevectors(angles); \
+	forward = v_forward; \
+	right = v_right; \
+	up = v_up; \
+	v_forward = VEC_NAN; \
+	v_right = VEC_NAN; \
+	v_up = VEC_NAN; \
+} MACRO_END
+
+/// Same as `MAKEVECTORS` but also creates the locals for convenience.
+#define MAKEVECTORS_NEW(angles, forward, right, up) \
+	vector forward = '0 0 0'; \
+	vector right = '0 0 0'; \
+	vector up = '0 0 0'; \
+	MAKEVECTORS(angles, forward, right, up);
+
+#define VECTOR_VECTORS(forward_in, forward, right, up) MACRO_BEGIN { \
+	_vectorvectors_hidden(forward_in); \
+	forward = v_forward; \
+	right = v_right; \
+	up = v_up; \
+	v_forward = VEC_NAN; \
+	v_right = VEC_NAN; \
+	v_up = VEC_NAN; \
+} MACRO_END
+
+#define VECTOR_VECTORS_NEW(forward_in, forward, right, up) \
+	vector forward = '0 0 0'; \
+	vector right = '0 0 0'; \
+	vector up = '0 0 0'; \
+	VECTOR_VECTORS(forward_in, forward, right, up);

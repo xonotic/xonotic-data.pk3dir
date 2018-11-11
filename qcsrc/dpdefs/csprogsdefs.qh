@@ -44,5 +44,5 @@
 .void(entity this, entity actor, entity trigger) use;
 #define touch move_touch
 
-void(vector dir) vectorvectors_broken = #432;
-#define vectorvectors DO_NOT_USE_GLOBALS
+void(vector dir) _vectorvectors_hidden = #432;
+#define vectorvectors DO_NOT_USE_GLOBALS_PREFER_VECTOR_VECTORS_MACRO_INSTEAD

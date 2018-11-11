@@ -112,6 +112,7 @@
 #include "counting.qh"
 #include "cvar.qh"
 #include "defer.qh"
+#include "deglobalization.qh"
 #include "draw.qh"
 #include "enumclass.qh"
 #include "file.qh"
