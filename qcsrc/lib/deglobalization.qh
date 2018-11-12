@@ -26,6 +26,7 @@ STATIC_INIT(globals) {
 	v_forward = VEC_NAN;
 	v_right = VEC_NAN;
 	v_up = VEC_NAN;
+	// FIXME check this is actually NaN
 }
 #endif
 
