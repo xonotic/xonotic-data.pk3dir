@@ -110,6 +110,11 @@ noref vector _vec3;
 #define VEC_NAN vec3(FLOAT_NAN, FLOAT_NAN, FLOAT_NAN);
 
 ERASEABLE
+bool is_all_nans(vector v) {
+	return isnan(v.x) && isnan(v.y) && isnan(v.z);
+}
+
+ERASEABLE
 vector Rotate(vector v, float a)
 {
 	float a_sin = sin(a), a_cos = cos(a);

@@ -20,13 +20,20 @@
 #ifdef GAMEQC
 STATIC_INIT(globals) {
 	// set to NaN to more easily detect uninitialized use
-    // TODO when all functions are wrapped and the raw functions are not used anymore,
-    // assert that the global vectors are NaN before calling the raw functions
-    // to make sure nobody (even builtins) is accidentally using them - NaN is the most likely value to expose remaining usages
+	// TODO when all functions are wrapped and the raw functions are not used anymore,
+	// assert that the global vectors are NaN before calling the raw functions
+	// to make sure nobody (even builtins) is accidentally using them - NaN is the most likely value to expose remaining usages
+
+	// TODO make sure `isnan` actually works - potential compiler bug:
+	//LOG_INFOF("%f\n", 0.0/0.0 == 0.0/0.0);
+	//LOG_INFOF("%f\n", 0.0/0.0 != 0.0/0.0);
+	//float x = 0.0/0.0;
+	//LOG_INFOF("%f\n", x == x);
+	//LOG_INFOF("%f\n", x != x);
+
 	v_forward = VEC_NAN;
 	v_right = VEC_NAN;
 	v_up = VEC_NAN;
-	// FIXME check this is actually NaN
 }
 #endif
 
