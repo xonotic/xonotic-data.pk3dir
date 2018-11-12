@@ -106,15 +106,12 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			vector forward = '0 0 0';
 			vector right = '0 0 0';
 			vector up = '0 0 0';
-			// TODO ^ test this
 			if (vdist(horiz_vel, >, autocvar_sv_maxspeed + 50))
 			{
-				//fixedmakevectors(vectoangles(horiz_vel));
 				FIXED_MAKE_VECTORS(vectoangles(horiz_vel), forward, right, up);
 			}
 			else
 			{
-				//fixedmakevectors(it.angles); // .angles is the angle of the model - usually/always 0 pitch
 				FIXED_MAKE_VECTORS(it.angles, forward, right, up);
 			}
 
