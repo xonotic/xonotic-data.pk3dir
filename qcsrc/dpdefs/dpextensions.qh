@@ -77,3 +77,6 @@ void(float skel, float bonenum, vector org) _skel_set_bone_hidden = #271;
 #define skel_mul_bone DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
 
 #define skel_mul_bones DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
+
+vector(entity ent, float tagindex) _gettaginfo_hidden = #452;
+//#define gettaginfo DO_NOT_USE_GLOBALS_PREFER_GET_TAG_INFO_MACRO_INSTEAD

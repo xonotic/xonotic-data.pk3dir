@@ -13,8 +13,14 @@
 //  - e.camera_transform / CL_VM_TransformView (in engine)
 //  - adddynamiclight
 //  - makestatic
-//  - gettaginfo
-//  - getentity
+
+#define NEW_VECS(...) EVAL(OVERLOAD(NEW_VECS, __VA_ARGS__))
+#define NEW_VECS_3(forward, right, up) vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
+#define NEW_VECS_4(forward, right, up, origin) NEW_VECS_3(forward, right, up); vector origin = '0 0 0';
+
+#define CLEAR_V_GLOBALS() v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN;
+#define GET_V_GLOBALS(forward, right, up) forward = v_forward; right = v_right; up = v_up;
+#define SET_V_GLOBALS(forward, right, up) v_forward = forward; v_right = right; v_up = up;
 
 #ifdef GAMEQC
 STATIC_INIT(globals) {
@@ -31,9 +37,7 @@ STATIC_INIT(globals) {
 	//LOG_INFOF("%f\n", x == x);
 	//LOG_INFOF("%f\n", x != x);
 
-	v_forward = VEC_NAN;
-	v_right = VEC_NAN;
-	v_up = VEC_NAN;
+	CLEAR_V_GLOBALS();
 }
 #endif
 
@@ -41,54 +45,49 @@ STATIC_INIT(globals) {
 /// Always use this instead of raw `makevectors` to make the data flow clear.
 #define MAKE_VECTORS(angles, forward, right, up) MACRO_BEGIN { \
 	_makevectors_hidden(angles); \
-	forward = v_forward; \
-	right = v_right; \
-	up = v_up; \
-	v_forward = VEC_NAN; \
-	v_right = VEC_NAN; \
-	v_up = VEC_NAN; \
+	GET_V_GLOBALS(forward, right, up); \
+	CLEAR_V_GLOBALS(); \
 } MACRO_END
 
 /// Same as `MAKE_VECTORS` but also creates the locals for convenience.
 #define MAKE_VECTORS_NEW(angles, forward, right, up) \
-	vector forward = '0 0 0'; \
-	vector right = '0 0 0'; \
-	vector up = '0 0 0'; \
+	NEW_VECS(forward, right, up); \
 	MAKE_VECTORS(angles, forward, right, up);
-
-#define VECTOR_VECTORS(forward_in, forward, right, up) MACRO_BEGIN { \
-	_vectorvectors_hidden(forward_in); \
-	forward = v_forward; \
-	right = v_right; \
-	up = v_up; \
-	v_forward = VEC_NAN; \
-	v_right = VEC_NAN; \
-	v_up = VEC_NAN; \
-} MACRO_END
-
-#define VECTOR_VECTORS_NEW(forward_in, forward, right, up) \
-	vector forward = '0 0 0'; \
-	vector right = '0 0 0'; \
-	vector up = '0 0 0'; \
-	VECTOR_VECTORS(forward_in, forward, right, up);
 
 /// Returns all 4 vectors by assigning to them (instead of returning a value) for consistency (and sanity)
 #define SKEL_GET_BONE_ABS(skel, bonenum, forward, right, up, origin) MACRO_BEGIN { \
 	origin = _skel_get_boneabs_hidden(skel, bonenum) \
-	forward = v_forward; \
-	right = v_right; \
-	up = v_up; \
-	v_forward = VEC_NAN; \
-	v_right = VEC_NAN; \
-	v_up = VEC_NAN; \
+	GET_V_GLOBALS(forward, right, up); \
+	CLEAR_V_GLOBALS(); \
 } MACRO_END
 
+#define SKEL_GET_BONE_ABS_NEW(skel, bonenum, forward, right, up, origin) \
+	NEW_VECS(forward, right, up, origin); \
+	SKEL_GET_BONE_ABS(skel, bonenum, forward, right, up, origin)
+
 #define SKEL_SET_BONE(skel, bonenum, org, forward, right, up) MACRO_BEGIN { \
-	v_forward = forward; \
-	v_right = right; \
-	v_up = up; \
+	SET_V_GLOBALS(forward, right, up); \
 	_skel_set_bone_hidden(skel, bonenum, org); \
-	v_forward = VEC_NAN; \
-	v_right = VEC_NAN; \
-	v_up = VEC_NAN; \
+	CLEAR_V_GLOBALS(); \
 } MACRO_END
+
+#define VECTOR_VECTORS(forward_in, forward, right, up) MACRO_BEGIN { \
+	_vectorvectors_hidden(forward_in); \
+	GET_V_GLOBALS(forward, right, up); \
+	CLEAR_V_GLOBALS(); \
+} MACRO_END
+
+#define VECTOR_VECTORS_NEW(forward_in, forward, right, up) \
+	NEW_VECS(forward, right, up); \
+	VECTOR_VECTORS(forward_in, forward, right, up);
+
+/// Note that this only avoids the v_* globals, not the gettaginfo_* ones
+#define GET_TAG_INFO(ent, tagindex, forward, right, up, origin) MACRO_BEGIN {  \
+	origin = _gettaginfo_hidden(ent, tagindex); \
+	GET_V_GLOBALS(forward, right, up); \
+	CLEAR_V_GLOBALS(); \
+} MACRO_END
+
+#define GET_TAG_INFO_NEW(ent, tagindex, forward, right, up, origin) \
+	NEW_VECS(forward, right, up, origin); \
+	GET_TAG_INFO(ent, tagindex, forward, right, up, origin);
