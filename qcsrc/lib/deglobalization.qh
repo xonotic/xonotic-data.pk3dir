@@ -6,22 +6,22 @@
 // Functions for which all usages are replaced with these macros can be hidden inside our `*defs.qh` files
 // to prevent anyone from using them accidentally.
 
-// TODO stuff in the engine that uses the v_forward/v_right/v_up globals and is not wrapped:
+// TODO stuff in the engine that uses the v_forward/v_right/v_up globals and is not wrapped yet:
 //  - RF_USEAXIS, addentities, predraw,
-//    CL_GetEntityMatrix (in engine but is called from other functions so transitively any of them can use the globals - e.g. V_CalcRefdef, maybe others)
+//    - CL_GetEntityMatrix (in engine but is called from other functions so transitively any of them can use the globals - e.g. V_CalcRefdef, maybe others)
+//    - however RF_USEAXIS is only used if MF_ROTATE is used which is only set in one place
 //  - e.camera_transform / CL_VM_TransformView (in engine)
 //  - adddynamiclight
 //  - makestatic
 //  - gettaginfo
 //  - getentity
-//  - skel_get_bonerel, skel_get_boneabs, skel_set_bone, skel_mul_bone, skel_mul_bones
-//  - aim
 
 #ifdef GAMEQC
 STATIC_INIT(globals) {
 	// set to NaN to more easily detect uninitialized use
 	// TODO when all functions are wrapped and the raw functions are not used anymore,
-	// assert that the global vectors are NaN before calling the raw functions
+	// uncomment the defines in *progs.qh files that hide the raw functions
+	// and assert that the global vectors are NaN before calling the raw functions here
 	// to make sure nobody (even builtins) is accidentally using them - NaN is the most likely value to expose remaining usages
 
 	// TODO make sure `isnan` actually works - potential compiler bug:
@@ -40,7 +40,7 @@ STATIC_INIT(globals) {
 /// Same as the `makevectors` builtin but uses the provided locals instead of the `v_*` globals.
 /// Always use this instead of raw `makevectors` to make the data flow clear.
 #define MAKE_VECTORS(angles, forward, right, up) MACRO_BEGIN { \
-	makevectors(angles); \
+	_makevectors_hidden(angles); \
 	forward = v_forward; \
 	right = v_right; \
 	up = v_up; \
@@ -71,3 +71,24 @@ STATIC_INIT(globals) {
 	vector right = '0 0 0'; \
 	vector up = '0 0 0'; \
 	VECTOR_VECTORS(forward_in, forward, right, up);
+
+/// Returns all 4 vectors by assigning to them (instead of returning a value) for consistency (and sanity)
+#define SKEL_GET_BONE_ABS(skel, bonenum, forward, right, up, origin) MACRO_BEGIN { \
+	origin = _skel_get_boneabs_hidden(skel, bonenum) \
+	forward = v_forward; \
+	right = v_right; \
+	up = v_up; \
+	v_forward = VEC_NAN; \
+	v_right = VEC_NAN; \
+	v_up = VEC_NAN; \
+} MACRO_END
+
+#define SKEL_SET_BONE(skel, bonenum, org, forward, right, up) MACRO_BEGIN { \
+	v_forward = forward; \
+	v_right = right; \
+	v_up = up; \
+	_skel_set_bone_hidden(skel, bonenum, org); \
+	v_forward = VEC_NAN; \
+	v_right = VEC_NAN; \
+	v_up = VEC_NAN; \
+} MACRO_END
