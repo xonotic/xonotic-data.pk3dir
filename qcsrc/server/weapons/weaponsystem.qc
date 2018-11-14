@@ -492,10 +492,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		return;
 	}
 
-	makevectors(actor.v_angle);
-	vector fo = v_forward;  // save them in case the weapon think functions change it
-	vector ri = v_right;
-	vector up = v_up;
+	MAKE_VECTORS_NEW(actor.v_angle, fo, ri, up);
 
 	// Change weapon
 	if (this.m_weapon != this.m_switchweapon)
