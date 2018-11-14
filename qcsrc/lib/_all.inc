@@ -116,6 +116,7 @@
 #include "draw.qh"
 #include "enumclass.qh"
 #include "file.qh"
+#include "float.qh"
 #include "functional.qh"
 #include "i18n.qh"
 #include "intrusivelist.qh"

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "lib/float.qh"
-
 noref vector _vlen2;
 #define vlen2(v) (_vlen2 = (v), dotproduct(_vlen2, _vlen2))
 
