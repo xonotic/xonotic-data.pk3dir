@@ -18,6 +18,7 @@
 #define NEW_VECS_3(forward, right, up) vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
 #define NEW_VECS_4(forward, right, up, origin) NEW_VECS_3(forward, right, up); vector origin = '0 0 0';
 
+// convenience for deglobalized code - don't use these just to hide that globals are still used
 #define CLEAR_V_GLOBALS() v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN;
 #define GET_V_GLOBALS(forward, right, up) forward = v_forward; right = v_right; up = v_up;
 #define SET_V_GLOBALS(forward, right, up) v_forward = forward; v_right = right; v_up = up;
