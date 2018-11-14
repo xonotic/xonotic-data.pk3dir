@@ -38,6 +38,11 @@ STATIC_INIT(globals) {
 	//LOG_INFOF("%f\n", x == x);
 	//LOG_INFOF("%f\n", x != x);
 
+	//float y = __builtin_nan();
+	//LOG_INFOF("%f\n", y);
+	//LOG_INFOF("%f\n", y == y);
+	//LOG_INFOF("%f\n", __builtin_isnan(y));
+
 	CLEAR_V_GLOBALS();
 }
 #endif
