@@ -373,10 +373,6 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		restartanim = fr != WFRAME_IDLE;
 	}
 
-	vector of = v_forward;
-	vector or = v_right;
-	vector ou = v_up;
-
 	vector a = '0 0 0';
     this.wframe = fr;
     if (fr == WFRAME_IDLE) a = this.anim_idle;
@@ -385,10 +381,6 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
     else  // if (fr == WFRAME_RELOAD)
         a = this.anim_reload;
     a.z *= g_weaponratefactor;
-
-	v_forward = of;
-	v_right = or;
-	v_up = ou;
 
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
