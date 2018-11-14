@@ -12,8 +12,6 @@
 //    - however RF_USEAXIS is only used if MF_ROTATE is used which is only set in one place
 //  - e.camera_transform / CL_VM_TransformView (in engine
 //    - this is the only used function that both sets and gets the globals (aim does too but isn't used in our code)
-//  - adddynamiclight
-//  - makestatic
 
 #define NEW_VECS(...) EVAL(OVERLOAD(NEW_VECS, __VA_ARGS__))
 #define NEW_VECS_3(forward, right, up) vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
@@ -69,6 +67,12 @@ STATIC_INIT(globals) {
 #define SKEL_SET_BONE(skel, bonenum, org, forward, right, up) MACRO_BEGIN { \
 	SET_V_GLOBALS(forward, right, up); \
 	_skel_set_bone_hidden(skel, bonenum, org); \
+	CLEAR_V_GLOBALS(); \
+} MACRO_END
+
+#define ADD_DYNAMIC_LIGHT(org, radius, lightcolours, forward, right, up) MACRO_BEGIN { \
+	SET_V_GLOBALS(forward, right, up); \
+	_adddynamiclight_hidden(org, radius, lightcolours); \
 	CLEAR_V_GLOBALS(); \
 } MACRO_END
 
