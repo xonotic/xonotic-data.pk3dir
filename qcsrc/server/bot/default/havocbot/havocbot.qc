@@ -1175,13 +1175,11 @@ void havocbot_movetogoal(entity this)
 		}
 		if (ladder_zdir)
 		{
-			if (vdist(flatdir, <, 15))
-				dir = ladder_zdir * '0 0 1';
+			if (vdist(vec2(diff), <, 40))
+				dir.z = ladder_zdir * 4;
 			else
-			{
-				dir.z = ladder_zdir * 1.3;
-				dir = normalize(dir);
-			}
+				dir.z = ladder_zdir * 2;
+			dir = normalize(dir);
 		}
 	}
 
@@ -1195,6 +1193,7 @@ void havocbot_movetogoal(entity this)
 		dir = normalize(dir);
 	}
 
+	// already executed when bot targets an enemy
 	if (!this.bot_aimdir_executed)
 	{
 		if (time < this.bot_stop_moving_timeout)
