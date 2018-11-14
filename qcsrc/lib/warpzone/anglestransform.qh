@@ -21,17 +21,11 @@
     }
     #define FIXED_MAKE_VECTORS(angles, forward, right, up) MACRO_BEGIN { \
         fixedmakevectors(angles); \
-        forward = v_forward; \
-        right = v_right; \
-        up = v_up; \
-        v_forward = VEC_NAN; \
-        v_right = VEC_NAN; \
-        v_up = VEC_NAN; \
+        GET_V_GLOBALS(forward, right, up); \
+        CLEAR_V_GLOBALS(); \
     } MACRO_END
     #define FIXED_MAKE_VECTORS_NEW(angles, forward, right, up) \
-        vector forward = '0 0 0'; \
-        vector right = '0 0 0'; \
-        vector up = '0 0 0'; \
+        VECS_NEW(forward, right, up); \
         FIXED_MAKE_VECTORS(angles, forward, right, up);
     #define fixedvectoangles2 vectoangles2
     #define fixedvectoangles vectoangles
