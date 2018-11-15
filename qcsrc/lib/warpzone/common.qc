@@ -203,7 +203,6 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	float nomonsters_adjusted;
 	float frac, sol, i;
 	float contentshack;
-	vector o0, e0;
 	entity wz;
 
 	WarpZone_trace_forent = forent;
@@ -228,9 +227,6 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			return;
 		}
 	}
-
-	o0 = org;
-	e0 = end;
 
 	switch(nomonsters)
 	{
