@@ -50,14 +50,11 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	vector vf, vr, vu;
-	vf = v_forward;
-	vr = v_right;
-	vu = v_up;
+	NEW_VECS(forward, right, up);
+	forward = v_forward;
+	right = v_right;
+	up = v_up;
 	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
-	v_forward = vf;
-	v_right = vr;
-	v_up = vu;
 
 	// un-adjust trueaim if shotend is too close
 	if(vdist(w_shotend - (ent.origin + ent.view_ofs), <, autocvar_g_trueaim_minrange))
@@ -68,12 +65,12 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		accuracy_add(ent, wep, maxdamage, 0);
 
 	if(IS_PLAYER(ent))
-		W_HitPlotAnalysis(ent, wep, v_forward, v_right, v_up);
+		W_HitPlotAnalysis(ent, wep, forward, right, up);
 
 	vector md = ent.(weaponentity).movedir;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
 
-	vector dv = v_forward * vecs.x + v_right * -vecs.y + v_up * vecs.z;
+	vector dv = forward * vecs.x + right * -vecs.y + up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs;
 
 	// now move the shotorg forward as much as requested if possible
