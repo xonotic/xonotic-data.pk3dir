@@ -58,7 +58,7 @@ void InterpolateOrigin_Note(entity this)
 
 	if (this.iflags & IFLAG_ANGLES)
 	{
-		fixedmakevectors(this.angles);
+		FIXED_MAKE_VECTORS_NEW(this.angles, forward, right, up);
 		if (f0 & IFLAG_VALID)
 		{
 			this.iforward1 = this.iforward2;
@@ -66,16 +66,16 @@ void InterpolateOrigin_Note(entity this)
 		}
 		else
 		{
-			this.iforward1 = v_forward;
-			this.iup1 = v_up;
+			this.iforward1 = forward;
+			this.iup1 = up;
 		}
-		this.iforward2 = v_forward;
-		this.iup2 = v_up;
+		this.iforward2 = forward;
+		this.iup2 = up;
 	}
 
 	if (this.iflags & IFLAG_V_ANGLE)
 	{
-		fixedmakevectors(this.v_angle);
+		FIXED_MAKE_VECTORS_NEW(this.v_angle, forward, right, up);
 		if (f0 & IFLAG_VALID)
 		{
 			this.ivforward1 = this.ivforward2;
@@ -83,11 +83,11 @@ void InterpolateOrigin_Note(entity this)
 		}
 		else
 		{
-			this.ivforward1 = v_forward;
-			this.ivup1 = v_up;
+			this.ivforward1 = forward;
+			this.ivup1 = up;
 		}
-		this.ivforward2 = v_forward;
-		this.ivup2 = v_up;
+		this.ivforward2 = forward;
+		this.ivup2 = up;
 	}
 	else if (this.iflags & IFLAG_V_ANGLE_X)
 	{
