@@ -334,7 +334,7 @@ void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent)
 void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
 	float g, dt, i;
-	vector v0, o0;
+	vector vf, vr, vu, v0, o0;
 	entity wz;
 
 	o0 = e.origin;
@@ -358,6 +358,10 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		e.velocity = v0;
 		return;
 	}
+
+	vf = v_forward;
+	vr = v_right;
+	vu = v_up;
 
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
@@ -428,6 +432,9 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	WarpZone_MakeAllOther();
 LABEL(fail)
 	WarpZone_tracetoss_velocity = e.velocity;
+	v_forward = vf;
+	v_right = vr;
+	v_up = vu;
 	// restore old entity data (caller just uses trace_endpos, WarpZone_tracetoss_velocity and the transform)
 	e.velocity = v0;
 	e.origin = o0;
