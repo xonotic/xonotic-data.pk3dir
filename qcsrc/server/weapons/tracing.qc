@@ -55,6 +55,9 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	right = v_right;
 	up = v_up;
 	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
+	v_forward = forward;
+	v_right = right;
+	v_up = up;
 
 	// un-adjust trueaim if shotend is too close
 	if(vdist(w_shotend - (ent.origin + ent.view_ofs), <, autocvar_g_trueaim_minrange))
