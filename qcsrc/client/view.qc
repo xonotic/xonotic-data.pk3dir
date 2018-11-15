@@ -423,14 +423,14 @@ void Porto_Draw(entity this)
 
 		vector pos = view_origin;
 		vector dir = view_forward;
-		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
-		pos += v_right * -wepent.movedir.y
-			+  v_up * wepent.movedir.z;
+		MAKE_VECTORS_NEW(autocvar_chase_active ? warpzone_save_view_angles : view_angles, forward, right, up);
+		pos += right * -wepent.movedir.y
+			+  up * wepent.movedir.z;
 
 		if (wepent.angles_held_status)
 		{
-			makevectors(wepent.angles_held);
-			dir = v_forward;
+			MAKE_VECTORS(wepent.angles_held, forward, right, up);
+			dir = forward;
 		}
 
 		wepent.polyline[0] = pos;
@@ -457,8 +457,8 @@ void Porto_Draw(entity this)
 			{
 				vector ang = vectoangles2(trace_plane_normal, dir);
 				ang.x = -ang.x;
-				makevectors(ang);
-				if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+				MAKE_VECTORS(ang, forward, right, up);
+				if (!CheckWireframeBox(this, pos - 48 * right - 48 * up + 16 * forward, 96 * right, 96 * up, 96 * forward))
 				{
 					n = max(2, idx);
 					break;
