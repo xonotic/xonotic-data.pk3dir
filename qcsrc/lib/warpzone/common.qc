@@ -205,7 +205,6 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	float contentshack;
 	vector o0, e0;
 	entity wz;
-	vector vf, vr, vu;
 
 	WarpZone_trace_forent = forent;
 	WarpZone_trace_firstzone = NULL;
@@ -230,9 +229,6 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		}
 	}
 
-	vf = v_forward;
-	vr = v_right;
-	vu = v_up;
 	o0 = org;
 	e0 = end;
 
@@ -327,9 +323,6 @@ LABEL(fail)
 	if(contentshack)
 		BITCLR_ASSIGN(WarpZone_trace_forent.dphitcontentsmask, DPCONTENTS_SOLID);
 	trace_startsolid = sol;
-	v_forward = vf;
-	v_right = vr;
-	v_up = vu;
 }
 
 void WarpZone_TraceBox(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent)
