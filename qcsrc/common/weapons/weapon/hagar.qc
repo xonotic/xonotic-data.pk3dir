@@ -379,16 +379,9 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 
 	W_Hagar_Attack(thiswep, actor, weaponentity);
 
-	int slot = weaponslot(weaponentity);
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hagar, refire) * W_WeaponRateFactor(actor);
-	int theframe = WFRAME_FIRE1;
-	entity this = actor.(weaponentity);
-	if(this)
-	{
-		if(this.wframe == WFRAME_FIRE1)
-			theframe = WFRAME_DONTCHANGE;
-	}
-	weapon_thinkf(actor, weaponentity, theframe, WEP_CVAR_PRI(hagar, refire), W_Hagar_Attack_Auto);
+	ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(hagar, refire) * W_WeaponRateFactor(actor);
+	actor.(weaponentity).wframe = WFRAME_FIRE1;
+	weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR_PRI(hagar, refire), W_Hagar_Attack_Auto);
 }
 
 METHOD(Hagar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))

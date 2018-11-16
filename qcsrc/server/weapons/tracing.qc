@@ -31,7 +31,16 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
 	if (IS_PLAYER(ent) && (wep.spawnflags & WEP_FLAG_PENETRATEWALLS))
+	{
+		// This is the reason rifle, MG, OKMG and other fireBullet weapons don't hit the crosshair when shooting at walls.
+		// This is intentional, otherwise if you stand too close to a (glass) wall and attempt to shoot an enemy through it,
+		// trueaim will cause the shot to hit the wall exactly but then miss the enemy (unless shooting from eye/center).
+		// TODO for fireBullet, find how far the shot will penetrate and aim at that
+		//      for fireRailgunbullet, find the farthest target and aim at that
+		//      this will avoid issues when another player is passing in front of you when you shoot
+		//      (currently such a shot will hit him but then miss the original target)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	}
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	if(antilag)

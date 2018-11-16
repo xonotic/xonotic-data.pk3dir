@@ -43,7 +43,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	.int m_forceupdate;
 
 /** Force an origin update, for player sounds */
-	#define entcs_force_origin(e) ((e).entcs.m_forceupdate = BIT(2))
+	#define entcs_force_origin(e) (CS(e).entcs.m_forceupdate = BIT(2))
 
 #endif
 

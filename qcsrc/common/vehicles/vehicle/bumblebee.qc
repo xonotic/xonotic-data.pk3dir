@@ -15,7 +15,7 @@ float autocvar_g_vehicle_bumblebee_turnspeed = 120;
 float autocvar_g_vehicle_bumblebee_pitchspeed = 60;
 float autocvar_g_vehicle_bumblebee_pitchlimit = 60;
 float autocvar_g_vehicle_bumblebee_friction = 0.5;
-bool autocvar_g_vehicle_bumblebee_swim = false;
+bool autocvar_g_vehicle_bumblebee_swim = true;
 
 float autocvar_g_vehicle_bumblebee_energy = 500;
 float autocvar_g_vehicle_bumblebee_energy_regen = 50;

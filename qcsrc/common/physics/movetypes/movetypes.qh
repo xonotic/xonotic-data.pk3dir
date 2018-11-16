@@ -95,7 +95,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
 void _Movetype_PushEntityTrace(entity this, vector push);
-float _Movetype_PushEntity(entity this, vector push, float failonstartsolid);
+bool _Movetype_PushEntity(entity this, vector push, float failonstartsolid, bool dolink);
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient);
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy);

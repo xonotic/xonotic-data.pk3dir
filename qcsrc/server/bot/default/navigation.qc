@@ -1608,6 +1608,16 @@ int navigation_poptouchedgoals(entity this)
 
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
+		if (!this.goalcurrent.wpisbox // warpzone
+			&& vlen2(this.origin - this.goalstack01.origin) < vlen2(this.origin - this.goalcurrent.origin))
+		{
+			navigation_poproute(this);
+			++removed_goals;
+			navigation_poproute(this);
+			++removed_goals;
+			return removed_goals;
+		}
+
 		// make sure jumppad is really hit, don't rely on distance based checks
 		// as they may report a touch even if it didn't really happen
 		if(this.lastteleporttime > 0 && TELEPORT_USED(this, this.goalcurrent))

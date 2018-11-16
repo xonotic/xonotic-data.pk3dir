@@ -779,7 +779,9 @@ void havocbot_movetogoal(entity this)
 	{
 		if (vdist(this.origin - this.goalcurrent_prev.origin, <, 50)
 			&& navigation_goalrating_timeout_can_be_anticipated(this))
+		{
 			navigation_goalrating_timeout_force(this);
+		}
 	}
 
 	bool goalcurrent_can_be_removed = false;
@@ -961,8 +963,16 @@ void havocbot_movetogoal(entity this)
 			{
 				if (vlen2(flat_diff) < vlen2(offset))
 				{
-					actual_destorg.x = destorg.x;
-					actual_destorg.y = destorg.y;
+					if (this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP && this.goalstack01)
+					{
+						// oblique warpzones need a jump otherwise bots gets stuck
+						PHYS_INPUT_BUTTON_JUMP(this) = true;
+					}
+					else
+					{
+						actual_destorg.x = destorg.x;
+						actual_destorg.y = destorg.y;
+					}
 				}
 			}
 			else if (vdist(flat_diff, <, 32) && diff.z < -16) // destination is under the bot
@@ -1187,6 +1197,7 @@ void havocbot_movetogoal(entity this)
 		dir = normalize(dir + dodge);
 	}
 
+	makevectors(this.v_angle);
 	//dir = this.bot_dodgevector;
 	//if (this.bot_dodgevector_jumpbutton)
 	//	PHYS_INPUT_BUTTON_JUMP(this) = true;
@@ -1402,7 +1413,7 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	// Should it do a weapon combo?
 	float af, ct, combo_time, combo;
 
-	af = ATTACK_FINISHED(this, 0);
+	af = ATTACK_FINISHED(this, weaponentity);
 	ct = autocvar_bot_ai_weapon_combo_threshold;
 
 	// Bots with no skill will be 4 times more slower than "godlike" bots when doing weapon combos

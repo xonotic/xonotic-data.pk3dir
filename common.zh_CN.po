@@ -9,7 +9,8 @@
 # kalawore <kalawore@outlook.com>, 2015
 # Losier Blackheath <losier.cc@gmail.com>, 2018
 # sapphireliu <balancedliu@gmail.com>, 2014
-# 茂森 杜 <dumaosen_main01@outlook.com>, 2018
+# 杜茂森 <dumaosen_main01@outlook.com>, 2018
+# 杜茂森 <dumaosen_main01@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"

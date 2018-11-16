@@ -427,16 +427,25 @@ CLASS(DebugText3d, Object)
 			return;
 		}
 
-		int size = 8;
+		int size = 11;
 		vector screen_pos = project_3d_to_2d(this.origin) + since_created * this.velocity;
-		float align = GetResourceAmount(this, RESOURCE_HEALTH);
-		if (align > 0)
-			screen_pos.x -= stringwidth(this.message, true, size * '1 1 0') * min(1, align);
 		if (screen_pos.z < 0) return; // behind camera
-		screen_pos.z = 0;
 
-		vector rgb = '1 1 0';
-		drawcolorcodedstring2_builtin(screen_pos, this.message, size * '1 1 0', rgb, alpha_, DRAWFLAG_NORMAL);
+		screen_pos.z = 0;
+		float align = GetResourceAmount(this, RESOURCE_HEALTH);
+		string msg;
+		vector msg_pos;
+
+		int n = tokenizebyseparator(this.message, "\n");
+		for(int k = 0; k < n; ++k)
+		{
+			msg = argv(k);
+			msg_pos = screen_pos + k * 1.25 * size * eY;
+			if (align > 0)
+				msg_pos.x -= stringwidth(msg, true, size * '1 1 0') * min(1, align);
+
+			drawcolorcodedstring_builtin(msg_pos, msg, size * '1 1 0', alpha_, DRAWFLAG_NORMAL);
+		}
 	}
 	ATTRIB(DebugText3d, draw2d, void(DebugText3d), DebugText3d_draw2d);
 ENDCLASS(DebugText3d)

@@ -6,7 +6,10 @@
 # MasterWord, 2016
 # Vindex <kon14.inside@gmail.com>, 2014
 # Konstantinos Mihalenas <ldinos99@gmail.com>, 2014
+# Marinus Savoritias, 2018
+# Marinus Savoritias, 2018
 # MasterWord, 2016
+# Mensious Mensious <ektoras@tutanota.com>, 2018
 # Vindex <kon14.inside@gmail.com>, 2014
 # Γιάννης Ανθυμίδης, 2011-2012
 msgid ""
@@ -14,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-09-19 19:54+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-11-10 10:16+0000\n"
+"Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
 "Language: el\n"
@@ -70,12 +73,12 @@ msgstr "^1Πατήστε ^3%s^1 ή ^3%s^1 για επόμενο ή προηγο�
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "επόμενο όπλο"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "προηγούμενο όπλο"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -124,7 +127,7 @@ msgstr "^1Πατήστε ^3%s^1 για σύνδεση"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "άλμα"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -230,7 +233,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:636
 msgid "Continue..."
-msgstr ""
+msgstr "Συνέχεια..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
@@ -284,11 +287,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^negative"
-msgstr ""
+msgstr "QMCMD^αρνητικό"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^positive"
-msgstr ""
+msgstr "QMCMD^θετικό"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -403,7 +406,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^FPS"
-msgstr ""
+msgstr "QMCMD^FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Net graph"
@@ -591,11 +594,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "SCO^k/d"
-msgstr ""
+msgstr "SCO^k/d"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^kdr"
-msgstr ""
+msgstr "SCO^kdr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^kills"
@@ -659,11 +662,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "SCO^γύροι νικήθηκαν"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^score"
-msgstr ""
+msgstr "SCO^score"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^suicides"
@@ -883,7 +886,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:208
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1156
 #, c-format
@@ -892,7 +895,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1295
 msgid "Map stats:"
-msgstr ""
+msgstr "Στατιστικά χάρτη:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1325
 msgid "Monsters killed:"
@@ -913,7 +916,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1519
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
-msgstr ""
+msgstr "Scoreboard"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
@@ -944,13 +947,13 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1635
 #: qcsrc/client/hud/panel/scoreboard.qc:1654
 msgid " or"
-msgstr ""
+msgstr "ή"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1638
 #: qcsrc/client/hud/panel/scoreboard.qc:1645
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr ""
+msgstr " μέχρι ^3%s %s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1639
 #: qcsrc/client/hud/panel/scoreboard.qc:1646
@@ -1043,7 +1046,7 @@ msgstr "Μη διαθέσιμο"
 
 #: qcsrc/client/main.qc:1014
 msgid " qu/s"
-msgstr ""
+msgstr " qu/s"
 
 #: qcsrc/client/main.qc:1016
 msgid " m/s"
@@ -1151,7 +1154,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/jetpack.qh:35
 msgid "Jet Pack"
-msgstr ""
+msgstr "Jet Pack"
 
 #: qcsrc/common/items/item/jetpack.qh:82
 msgid "Fuel regen"
@@ -1159,11 +1162,11 @@ msgstr ""
 
 #: qcsrc/common/items/item/powerup.qh:44
 msgid "Strength"
-msgstr ""
+msgstr "Δύναμη"
 
 #: qcsrc/common/items/item/powerup.qh:76
 msgid "Shield"
-msgstr ""
+msgstr "Ασπίδα"
 
 #: qcsrc/common/mapinfo.qc:639
 #, no-c-format
@@ -1172,7 +1175,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Deathmatch"
-msgstr ""
+msgstr "Deathmatch"
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Score as many frags as you can"
@@ -1180,7 +1183,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Last Man Standing"
-msgstr ""
+msgstr "Last Man Standing"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Survive and kill until the enemies have no lives left"
@@ -1196,11 +1199,11 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race CTS"
-msgstr ""
+msgstr "Race CTS"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race for fastest time."
-msgstr ""
+msgstr "Αγώνας για τον γρηγορότερο χρόνο."
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Help your team score the most frags against the enemy team"
@@ -1208,7 +1211,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Team Deathmatch"
-msgstr ""
+msgstr "Team Deathmatch"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid "Capture the Flag"
@@ -1260,7 +1263,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Onslaught"
-msgstr ""
+msgstr "Onslaught"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Nexball"
@@ -1298,7 +1301,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/cl_minigames.qc:383
 msgid "It's your turn"
-msgstr ""
+msgstr "Είναι η σειρά σου"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:331
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
@@ -1307,7 +1310,7 @@ msgstr "Έξοδος"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:336
 msgid "Invite"
-msgstr ""
+msgstr "Πρόσκληση"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:378
 msgid "Current Game"
@@ -1328,11 +1331,11 @@ msgstr "Σύνδεση"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:489
 msgid "Minigames"
-msgstr ""
+msgstr "Minigames"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1168
 msgid "Better luck next time!"
-msgstr ""
+msgstr "Καλή τύχη την επόμενη φορά!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1172
 msgid "Tubular! Press \"Next Level\" to continue!"
@@ -1352,11 +1355,11 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1404
 msgid "Next Level"
-msgstr ""
+msgstr "Επόμενο Επίπεδο"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1405
 msgid "Restart"
-msgstr ""
+msgstr "Επανακίνηση"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1406
 msgid "Editor"
@@ -1376,12 +1379,12 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/c4.qc:378
 #: qcsrc/common/minigames/minigame/nmm.qc:601
 msgid "You lost the game!"
-msgstr ""
+msgstr "Έχασες το παιχνίδι!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:379
 #: qcsrc/common/minigames/minigame/nmm.qc:602
 msgid "You win!"
-msgstr ""
+msgstr "Νίκησες!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
 #: qcsrc/common/minigames/minigame/nmm.qc:606
@@ -1413,7 +1416,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pong.qc:570
 #: qcsrc/common/minigames/minigame/ttt.qc:299
 msgid "AI"
-msgstr ""
+msgstr "AI"
 
 #: qcsrc/common/minigames/minigame/pong.qc:587
 msgid "Press ^1Start Match^7 to start the match with the current players"
@@ -1421,15 +1424,15 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/pong.qc:651
 msgid "Start Match"
-msgstr ""
+msgstr "Έναρξη Match"
 
 #: qcsrc/common/minigames/minigame/pong.qc:652
 msgid "Add AI player"
-msgstr ""
+msgstr "Προσθήκη παίκτη AI"
 
 #: qcsrc/common/minigames/minigame/pong.qc:653
 msgid "Remove AI player"
-msgstr ""
+msgstr "Αφαίρεση παίκτη AI"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
@@ -1458,7 +1461,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:582
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Next Match"
-msgstr ""
+msgstr "Επόμενο Match"
 
 #: qcsrc/common/minigames/minigame/ps.qc:478
 #, c-format
@@ -1507,11 +1510,11 @@ msgstr ""
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
-msgstr ""
+msgstr "Wyvern"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
-msgstr ""
+msgstr "Επίθεση Wyvern"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
@@ -1529,7 +1532,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/buffs/all.inc:33
 #: qcsrc/common/mutators/mutator/instagib/items.qh:94
 msgid "Speed"
-msgstr ""
+msgstr "Ταχύτητα"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:43
 msgid "Medic"
@@ -1555,7 +1558,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:86
 msgid "Jump"
-msgstr ""
+msgstr "Άλμα"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:95
 msgid "Invisible"
@@ -1575,11 +1578,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:128
 msgid "Luck"
-msgstr ""
+msgstr "Τύχη"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:136
 msgid "Flight"
-msgstr ""
+msgstr "Πτύση"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:7
 msgid "Buff"
@@ -1595,11 +1598,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
-msgstr ""
+msgstr "Ελάχιστο μέγεθος γραμματοσειράς:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
-msgstr ""
+msgstr "Μέγιστο μέγεθος γραμματοσειράς:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 msgid "Accumulate range:"
@@ -1661,7 +1664,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:32
 msgid "Grenade"
-msgstr ""
+msgstr "Χειροβομβίδα"
 
 #: qcsrc/common/mutators/mutator/overkill/hmg.qh:17
 msgid "Heavy Machine Gun"
@@ -1677,15 +1680,15 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr ""
+msgstr "Βοήθεια!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
-msgstr ""
+msgstr "Εδώ"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
-msgstr ""
+msgstr "ΚΙΝΔΥΝΟΣ"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:8
 msgid "Frozen!"
@@ -1693,22 +1696,22 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Item"
-msgstr ""
+msgstr "Αντικείμενο"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:12
 msgid "Checkpoint"
-msgstr ""
+msgstr "Checkpoint"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:252
 msgid "Finish"
-msgstr ""
+msgstr "Τερματισμός"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:14
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:252
 msgid "Start"
-msgstr ""
+msgstr "Εκκίνηση"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 msgid "Defend"
@@ -1736,27 +1739,27 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "White base"
-msgstr ""
+msgstr "Άσπρη Βάση"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Red base"
-msgstr ""
+msgstr "Κόκκινη Βάση"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Blue base"
-msgstr ""
+msgstr "Μπλέ Βάση"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "Yellow base"
-msgstr ""
+msgstr "Κίτρινη Βάση"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Pink base"
-msgstr ""
+msgstr "Ρόζ Βάση"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr ""
+msgstr "Επέστρεψε την σημαία εδώ"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -1783,12 +1786,12 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
-msgstr ""
+msgstr "Τρέξε εδώ"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Ball"
-msgstr ""
+msgstr "Μπάλα"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
@@ -1796,7 +1799,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
-msgstr ""
+msgstr "Goal"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
@@ -1805,15 +1808,15 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Weapon"
-msgstr ""
+msgstr "Όπλο"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 msgid "Monster"
-msgstr ""
+msgstr "Τέρας"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Vehicle"
-msgstr ""
+msgstr "Όχημα"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
@@ -1826,12 +1829,12 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:651
 #: qcsrc/common/turrets/cl_turrets.qc:120
 msgid "Spam"
-msgstr ""
+msgstr "Spam"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:655
 #, c-format
 msgid "%s needing help!"
-msgstr ""
+msgstr "%s χρειάζεται βοήθεια!"
 
 #: qcsrc/common/net_notice.qc:87
 msgid "^1Server notices:"
@@ -1844,7 +1847,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG έπιασε την ^TC^TT^BG σημαία"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -1852,11 +1855,13 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
+"^BG%s^BG έπιασε την ^TC^TT^BG σημαία σε ^F1%s^BG δευτερόλεπτα, ξεπερνώντας "
+"^BG%s^BG's προηγούμενο ρεκόρ των ^F2%s^BG δευτερολέπτων"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr ""
+msgstr "^BG%s^BG έπιασε την σημαία"
 
 #: qcsrc/common/notifications/all.inc:244
 #, c-format
@@ -1933,17 +1938,17 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:259
 #, c-format
 msgid "^BG%s^BG lost the flag"
-msgstr ""
+msgstr "^BG%s^BG έχασε την σημαία"
 
 #: qcsrc/common/notifications/all.inc:260
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG πήρε την ^TC^TT^BG σημαία"
 
 #: qcsrc/common/notifications/all.inc:261
 #, c-format
 msgid "^BG%s^BG got the flag"
-msgstr ""
+msgstr "^BG%s^BG πήρε την σημαία"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:263
@@ -2475,23 +2480,23 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:684
 msgid "^TC^TT^BG team wins the round"
-msgstr ""
+msgstr "^TC^TT^BG ομάδα κέρδισε τον γύρο"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^BG%s^BG wins the round"
-msgstr ""
+msgstr "^BG%s^BG κέρδισε τον γύρο"
 
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:548
 msgid "^BGRound tied"
-msgstr ""
+msgstr "^BGRound ισοπαλία"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGRound over, there's no winner"
-msgstr ""
+msgstr "^BGRound τέλος, δεν υπάρχει νικητής"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
@@ -2536,7 +2541,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:698
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr ""
+msgstr "^BGΠήρες το ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:385
 #: qcsrc/common/notifications/all.inc:699
@@ -2559,12 +2564,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:389
 #, c-format
 msgid "^BG%s^BG is connecting..."
-msgstr ""
+msgstr "^BG%s^BG συνδέεται...."
 
 #: qcsrc/common/notifications/all.inc:390
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr ""
+msgstr "^BG%s^F3 συνδέθηκε"
 
 #: qcsrc/common/notifications/all.inc:391
 #, c-format
@@ -2682,7 +2687,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr ""
+msgstr "^BG%s^F3 αποσυνδέθηκε"
 
 #: qcsrc/common/notifications/all.inc:423
 #, c-format
@@ -2718,7 +2723,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr ""
+msgstr "^BG%s^BG τερμάτισε τον αγώνα"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -2774,11 +2779,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:445
 msgid "^BGYou cannot change to a larger team"
-msgstr ""
+msgstr "^BGΔεν μπορείς να αλλάξεις σε μία μεγαλύτερη ομάδα"
 
 #: qcsrc/common/notifications/all.inc:446
 msgid "^BGYou are not allowed to change teams"
-msgstr ""
+msgstr "^BGΔεν επιτρέπεται να αλλάξεις ομάδες"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
@@ -3281,7 +3286,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:583
 msgid "^BGEnemies can now see you on radar!"
-msgstr ""
+msgstr "^BGΟι εχθροί μπορούν να σε δούν στο radar!"
 
 #: qcsrc/common/notifications/all.inc:584
 msgid "^BGYou returned the ^TC^TT^BG flag!"
@@ -3337,7 +3342,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr ""
+msgstr "^K1 %s Πάγωσες από τον ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:617
 #, c-format
@@ -3634,7 +3639,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:683
 msgid "^TC^TT^BG team loses the round"
-msgstr ""
+msgstr "^TC^TT^BG ομάδα χάνει τον γύρο"
 
 #: qcsrc/common/notifications/all.inc:687
 msgid "^K1You froze yourself"
@@ -3789,7 +3794,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:739
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
-msgstr ""
+msgstr "^BGΠάτα ^F2%s^BG για να τηλεμεταφερθείς"
 
 #: qcsrc/common/notifications/all.inc:740
 #, c-format
@@ -3973,11 +3978,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:410
 msgid "point"
-msgstr ""
+msgstr "πόντος"
 
 #: qcsrc/common/notifications/all.qh:410
 msgid "points"
-msgstr ""
+msgstr "πόντοι"
 
 #: qcsrc/common/notifications/all.qh:419
 msgid "drop flag"
@@ -4182,23 +4187,23 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:29
 msgid "TEAM^Red"
-msgstr ""
+msgstr "TEAM^Κόκκινη"
 
 #: qcsrc/common/teams.qh:30
 msgid "TEAM^Blue"
-msgstr ""
+msgstr "TEAM^Μπλέ"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Yellow"
-msgstr ""
+msgstr "TEAM^Κίτρινη"
 
 #: qcsrc/common/teams.qh:32
 msgid "TEAM^Pink"
-msgstr ""
+msgstr "TEAM^Ρόζ"
 
 #: qcsrc/common/teams.qh:33
 msgid "Team"
-msgstr ""
+msgstr "Ομάδα"
 
 #: qcsrc/common/teams.qh:34
 msgid "Neutral"
@@ -4206,51 +4211,51 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:37
 msgid "KEY^Red"
-msgstr ""
+msgstr "KEY^Κόκκινο"
 
 #: qcsrc/common/teams.qh:38
 msgid "KEY^Blue"
-msgstr ""
+msgstr "KEY^Μπλέ"
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Yellow"
-msgstr ""
+msgstr "KEY^Κίτρινο"
 
 #: qcsrc/common/teams.qh:40
 msgid "KEY^Pink"
-msgstr ""
+msgstr "KEY^Ρόζ"
 
 #: qcsrc/common/teams.qh:41
 msgid "FLAG^Red"
-msgstr ""
+msgstr "FLAG^Κόκκινο"
 
 #: qcsrc/common/teams.qh:42
 msgid "FLAG^Blue"
-msgstr ""
+msgstr "FLAG^Μπλέ"
 
 #: qcsrc/common/teams.qh:43
 msgid "FLAG^Yellow"
-msgstr ""
+msgstr "FLAG^Κίτρινο"
 
 #: qcsrc/common/teams.qh:44
 msgid "FLAG^Pink"
-msgstr ""
+msgstr "FLAG^Ρόζ"
 
 #: qcsrc/common/teams.qh:45
 msgid "GENERATOR^Red"
-msgstr ""
+msgstr "GENERATOR^Κόκκινο"
 
 #: qcsrc/common/teams.qh:46
 msgid "GENERATOR^Blue"
-msgstr ""
+msgstr "GENERATOR^Μπλέ"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Yellow"
-msgstr ""
+msgstr "GENERATOR^Κίτρινο"
 
 #: qcsrc/common/teams.qh:48
 msgid "GENERATOR^Pink"
-msgstr ""
+msgstr "GENERATOR^Ρόζ"
 
 #: qcsrc/common/turrets/all.qh:51
 msgid "Turrets dump command only works with sv_cmd.\n"
@@ -4271,15 +4276,15 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/ewheel_weapon.qh:7
 msgid "eWheel"
-msgstr ""
+msgstr "eWheel"
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
-msgstr ""
+msgstr "FLAC Cannon"
 
 #: qcsrc/common/turrets/turret/flac_weapon.qh:7
 msgid "FLAC"
-msgstr ""
+msgstr "FLAC"
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
@@ -4307,48 +4312,48 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
-msgstr ""
+msgstr "Machinegun"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
-msgstr ""
+msgstr "MLRS Turret"
 
 #: qcsrc/common/turrets/turret/mlrs_weapon.qh:7
 msgid "MLRS"
-msgstr ""
+msgstr "MRLS"
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
-msgstr ""
+msgstr "Phaser Cannon"
 
 #: qcsrc/common/turrets/turret/phaser_weapon.qh:7
 msgid "Phaser"
-msgstr ""
+msgstr "Phaser"
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
-msgstr ""
+msgstr "Plasma Cannon"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:7
 msgid "Dual plasma"
-msgstr ""
+msgstr "Dual Plasma"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:19
 msgid "Dual Plasma Cannon"
-msgstr ""
+msgstr "Dual Plasma Cannon"
 
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "Plasma"
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
 msgid "Tesla Coil"
-msgstr ""
+msgstr "Tesla Coil"
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
-msgstr ""
+msgstr "Walker Turret"
 
 #: qcsrc/common/turrets/turret/walker_weapon.qh:7
 msgid "Walker"
@@ -4357,7 +4362,7 @@ msgstr ""
 #: qcsrc/common/vehicles/cl_vehicles.qc:192
 #, c-format
 msgid "Press %s"
-msgstr ""
+msgstr "Πατήστε %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:950
 msgid "No right gunner!"
@@ -4373,11 +4378,11 @@ msgstr ""
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:19
 msgid "Racer"
-msgstr ""
+msgstr "Αγωνιζόμενος"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
-msgstr ""
+msgstr "Racer Canon"
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:19
 msgid "Raptor"
@@ -4385,15 +4390,15 @@ msgstr ""
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:9
 msgid "Raptor cannon"
-msgstr ""
+msgstr "Raptor cannon"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:17
 msgid "Raptor bomb"
-msgstr ""
+msgstr "Raptor bomb"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:25
 msgid "Raptor flare"
-msgstr ""
+msgstr "Raptor flare"
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:19
 msgid "Spiderbot"
@@ -4405,23 +4410,23 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/arc.qc:17
 msgid "Arc"
-msgstr ""
+msgstr "Arc"
 
 #: qcsrc/common/weapons/weapon/blaster.qc:17
 msgid "Blaster"
-msgstr ""
+msgstr "Blaster"
 
 #: qcsrc/common/weapons/weapon/crylink.qc:17
 msgid "Crylink"
-msgstr ""
+msgstr "Crylink"
 
 #: qcsrc/common/weapons/weapon/devastator.qc:17
 msgid "Devastator"
-msgstr ""
+msgstr "Devastator"
 
 #: qcsrc/common/weapons/weapon/electro.qc:17
 msgid "Electro"
-msgstr ""
+msgstr "Electro"
 
 #: qcsrc/common/weapons/weapon/fireball.qc:17
 msgid "Fireball"
@@ -4429,7 +4434,7 @@ msgstr "Φλογοβολίδα"
 
 #: qcsrc/common/weapons/weapon/hagar.qc:17
 msgid "Hagar"
-msgstr ""
+msgstr "Hagar"
 
 #: qcsrc/common/weapons/weapon/hlac.qc:17
 msgid "Heavy Laser Assault Cannon"
@@ -4465,7 +4470,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/shockwave.qc:17
 msgid "Shockwave"
-msgstr ""
+msgstr "Shockwave"
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:17
 msgid "Shotgun"
@@ -4478,191 +4483,191 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:18
 msgid "Vaporizer"
-msgstr ""
+msgstr "Vaporizer"
 
 #: qcsrc/common/weapons/weapon/vortex.qc:18
 msgid "Vortex"
-msgstr ""
+msgstr "Vortex"
 
 #: qcsrc/lib/counting.qh:9
 #, c-format
 msgid "CI_DEC^%s years"
-msgstr ""
+msgstr "CI_DEC^%s χρόνια"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr ""
+msgstr "CI_ZER^%d χρόνια"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr ""
+msgstr "CI_FIR^%d χρόνος"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr ""
+msgstr "CI_SEC^%d χρόνια"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "CI_THI^%d years"
-msgstr ""
+msgstr "CI_THI^%d χρόνια"
 
 #: qcsrc/lib/counting.qh:16
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr ""
+msgstr "CI_MUL^%d χρόνια"
 
 #: qcsrc/lib/counting.qh:18
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr ""
+msgstr "CI_DEC^%s εβδομάδες"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr ""
+msgstr "CI_ZER^%d εβδομάδες"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr ""
+msgstr "CI_FIR^%d εβδομάδα"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr ""
+msgstr "CI_SEC^%d εβδομάδες"
 
 #: qcsrc/lib/counting.qh:24
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr ""
+msgstr "CI_THI^%d εβδομάδες"
 
 #: qcsrc/lib/counting.qh:25
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr ""
+msgstr "CI_MUL^%d εβδομάδες"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr ""
+msgstr "CI_DEC^%s μέρες"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr ""
+msgstr "CI_ZER^%d μέρες"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr ""
+msgstr "CI_FIR^%d μέρα"
 
 #: qcsrc/lib/counting.qh:32
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr ""
+msgstr "CI_SEC^%d μέρες"
 
 #: qcsrc/lib/counting.qh:33
 #, c-format
 msgid "CI_THI^%d days"
-msgstr ""
+msgstr "CI_THI^%d μέρες"
 
 #: qcsrc/lib/counting.qh:34
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr ""
+msgstr "CI_MUL^%d μέρες"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr ""
+msgstr "CI_DEC^%s ώρες"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr ""
+msgstr "CI_ZER^%d ώρες"
 
 #: qcsrc/lib/counting.qh:40
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr ""
+msgstr "CI_FIR^%d ώρα"
 
 #: qcsrc/lib/counting.qh:41
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr ""
+msgstr "CI_SEC^%d ώρες"
 
 #: qcsrc/lib/counting.qh:42
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr ""
+msgstr "CI_THI^%d ώρες"
 
 #: qcsrc/lib/counting.qh:43
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr ""
+msgstr "CI_MUL^%d ώρες"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr ""
+msgstr "CI_DEC^%s λεπτά"
 
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr ""
+msgstr "CI_ZER^%d λεπτά"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr ""
+msgstr "CI_FIR^%d λεπτό"
 
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr ""
+msgstr "CI_SEC^%d λεπτά"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr ""
+msgstr "CI_THI^%d λεπτά"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr ""
+msgstr "CI_MUL^%d λεπτά"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr ""
+msgstr "CI_DEC^%s δευτερόλεπτα"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr ""
+msgstr "CI_ZER^%d δευτερόλεπτα"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr ""
+msgstr "CI_FIR^%d δευτερόλεπτο"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr ""
+msgstr "CI_SEC^%d δευτερόλεπτα"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr ""
+msgstr "CI_THI^%d δευτερόλεπτα"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "CI_MUL^%d seconds"
-msgstr ""
+msgstr "CI_MUL^%d δευτερόλεπτα"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
@@ -4698,12 +4703,12 @@ msgstr ""
 #: qcsrc/lib/string.qh:48
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
-msgstr ""
+msgstr "%d μέρες, %02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:49
 #, c-format
 msgid "%02d:%02d:%02d"
-msgstr ""
+msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
@@ -4824,11 +4829,11 @@ msgstr "Κινεζικά (Κίνα)"
 
 #: qcsrc/menu/xonotic/credits.qc:172
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "Chinese (Taiwan)"
 
 #: qcsrc/menu/xonotic/credits.qc:177
 msgid "Cornish"
-msgstr ""
+msgstr "Cornish"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Czech"
@@ -4872,11 +4877,11 @@ msgstr "Ιταλικά"
 
 #: qcsrc/menu/xonotic/credits.qc:240
 msgid "Kazakh"
-msgstr ""
+msgstr "Kazakh"
 
 #: qcsrc/menu/xonotic/credits.qc:243
 msgid "Korean"
-msgstr ""
+msgstr "Korean"
 
 #: qcsrc/menu/xonotic/credits.qc:247
 msgid "Polish"
@@ -5580,7 +5585,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:30
 msgid "Set skin"
-msgstr ""
+msgstr "Ρύθμισε το σχεδιό σου"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:37
 msgid "Save current skin"
@@ -5674,7 +5679,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
-msgstr ""
+msgstr "Τέρας:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
@@ -5692,7 +5697,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:26
 msgid "Follow"
-msgstr ""
+msgstr "Ακολούθησε"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:27
 msgid "Wander"
@@ -5870,6 +5875,7 @@ msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Ο μέγιστος αριθμός παικτών που μπορεί να συνδεθεί στον server σας ταυτόχρονα"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
 msgid "Number of bots:"
@@ -5971,7 +5977,7 @@ msgstr "Προσθήκη όλων"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:218
 msgid "Add every available map to your selection"
-msgstr ""
+msgstr "Προσθήκη όλων των διαθέσιμων χαρτών στις επιλογές σας"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:221
 msgid "Remove all"
@@ -6021,7 +6027,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:49
 #, c-format
 msgid "%s Arena"
-msgstr ""
+msgstr "%s Αρένα"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:61
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
@@ -6108,11 +6114,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "No powerups"
-msgstr ""
+msgstr "Όχι powerups"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:101
 msgid "Powerups"
-msgstr ""
+msgstr "Powerups"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:103
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:163
@@ -6129,7 +6135,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Enable dodging"
-msgstr ""
+msgstr "Ενεργοποίηση Αποφυγής"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:167
 msgid "All players are almost invisible"
@@ -6241,7 +6247,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:42
 msgid "Show empty servers"
-msgstr ""
+msgstr "Εμφάνιση άδειων server"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:46
 msgid "SRVS^Full"
@@ -6886,7 +6892,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:135
 msgid "Swap left/right channels"
-msgstr ""
+msgstr "Αλλαγή αριστερών/δεξιών καναλιών"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:138
 msgid "Headphone friendly mode"
@@ -7528,7 +7534,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:160
 msgid "Dynamic HUD"
-msgstr ""
+msgstr "Dynamic HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:161
 msgid "HUD moves around following player's movement"
@@ -8048,17 +8054,17 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:11
 #, c-format
 msgid "%d fps"
-msgstr ""
+msgstr "%d fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
 msgid "%d KB/s"
-msgstr ""
+msgstr "%d KB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d MB/s"
-msgstr ""
+msgstr "%d MB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:27
 msgid "Network"
@@ -8122,7 +8128,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:56
 msgid "Download speed:"
-msgstr ""
+msgstr "Ταχύτητα λήψης:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Local latency:"
@@ -8723,11 +8729,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:44
 msgid "WEAPON^previous"
-msgstr ""
+msgstr "ΟΠΛΟ^προηγούμενο"
 
 #: qcsrc/menu/xonotic/keybinder.qc:45
 msgid "WEAPON^next"
-msgstr ""
+msgstr "ΟΠΛΟ^επόμενο"
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "WEAPON^previously used"
@@ -8811,7 +8817,7 @@ msgstr "αποσύνδεση"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "quit"
-msgstr ""
+msgstr "έξοδος"
 
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "auto-join team"
@@ -8896,7 +8902,7 @@ msgstr "Τύπος"
 #: qcsrc/menu/xonotic/serverlist.qc:1060
 #, c-format
 msgid "AES level %d"
-msgstr ""
+msgstr "Επίπεδο AES %d"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1060
 msgid "ENC^none"
@@ -8959,7 +8965,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^InstaGib"
-msgstr ""
+msgstr "SLCAT^InstaGib"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Defrag Mode"
