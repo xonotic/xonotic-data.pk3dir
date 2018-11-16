@@ -534,9 +534,10 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, first.netname);
 		}
 
-		IL_EACH(reviving_players, true, {
-			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-		});
+		if (reviving_players)
+			IL_EACH(reviving_players, true, {
+				STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
+			});
 	}
 
 	if (reviving_players)

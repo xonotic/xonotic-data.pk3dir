@@ -1197,6 +1197,7 @@ void havocbot_movetogoal(entity this)
 		dir = normalize(dir + dodge);
 	}
 
+	makevectors(this.v_angle);
 	//dir = this.bot_dodgevector;
 	//if (this.bot_dodgevector_jumpbutton)
 	//	PHYS_INPUT_BUTTON_JUMP(this) = true;
