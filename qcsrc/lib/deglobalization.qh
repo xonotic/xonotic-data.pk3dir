@@ -31,18 +31,6 @@ STATIC_INIT(globals) {
 	// and assert that the global vectors are NaN before calling the raw functions here
 	// to make sure nobody (even builtins) is accidentally using them - NaN is the most likely value to expose remaining usages
 
-	// TODO make sure `isnan` actually works - potential compiler bug:
-	//LOG_INFOF("%f\n", 0.0/0.0 == 0.0/0.0);
-	//LOG_INFOF("%f\n", 0.0/0.0 != 0.0/0.0);
-	//float x = 0.0/0.0;
-	//LOG_INFOF("%f\n", x == x);
-	//LOG_INFOF("%f\n", x != x);
-
-	//float y = __builtin_nan();
-	//LOG_INFOF("%f\n", y);
-	//LOG_INFOF("%f\n", y == y);
-	//LOG_INFOF("%f\n", __builtin_isnan(y));
-
 	CLEAR_V_GLOBALS();
 }
 #endif
