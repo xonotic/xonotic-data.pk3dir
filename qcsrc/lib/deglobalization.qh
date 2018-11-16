@@ -37,6 +37,7 @@ STATIC_INIT(globals) {
 
 /// Same as the `makevectors` builtin but uses the provided locals instead of the `v_*` globals.
 /// Always use this instead of raw `makevectors` to make the data flow clear.
+/// Note that you might prefer `FIXED_MAKE_VECTORS` for new code.
 #define MAKE_VECTORS(angles, forward, right, up) MACRO_BEGIN { \
 	_makevectors_hidden(angles); \
 	GET_V_GLOBALS(forward, right, up); \
