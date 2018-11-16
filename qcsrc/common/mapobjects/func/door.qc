@@ -595,8 +595,6 @@ float door_send(entity this, entity to, float sf)
 
 void door_link()
 {
-	// set size now, as everything is loaded
-	//FixSize(this);
 	//Net_LinkEntity(this, false, 0, door_send);
 }
 #endif

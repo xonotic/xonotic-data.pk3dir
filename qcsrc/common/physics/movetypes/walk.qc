@@ -100,10 +100,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 		// move up
 		vector upmove = '0 0 1' * PHYS_STEPHEIGHT(this);
-		_Movetype_PushEntity(this, upmove, true);
-		if(wasfreed(this))
-			return;
-		if(trace_startsolid)
+		if(!_Movetype_PushEntity(this, upmove, true, true))
 		{
 			// we got teleported when upstepping... must abort the move
 			return;
@@ -156,11 +153,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	// move down
 	vector downmove = '0 0 0';
 	downmove.z = -PHYS_STEPHEIGHT(this) + start_velocity.z * dt;
-	_Movetype_PushEntity(this, downmove, true);
-	if(wasfreed(this))
-		return;
-
-	if(trace_startsolid)
+	if(!_Movetype_PushEntity(this, downmove, true, true))
 	{
 		// we got teleported when downstepping... must abort the move
 		return;

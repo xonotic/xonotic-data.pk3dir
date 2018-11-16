@@ -1539,7 +1539,7 @@ void HUD_Draw(entity this)
 	if(autocvar_r_letterbox == 0)
 		if(autocvar_viewsize < 120)
 		{
-			if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
+			if(!(ISGAMETYPE(RACE) || ISGAMETYPE(CTS)))
 				Accuracy_LoadLevels();
 
 			HUD_Main();
@@ -1946,10 +1946,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
-	makevectors(view_angles);
-	view_forward = v_forward;
-	view_right = v_right;
-	view_up = v_up;
+	MAKEVECTORS(makevectors, view_angles, view_forward, view_right, view_up);
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)
@@ -2467,7 +2464,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else if(cvar("r_glsl_postprocess") == 2)
 		cvar_set("r_glsl_postprocess", "0");
 
-	/*if(gametype == MAPINFO_TYPE_CTF)
+	/*if(ISGAMETYPE(CTF))
 	  {
 	  ctf_view();
 	  } else */

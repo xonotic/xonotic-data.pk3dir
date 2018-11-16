@@ -164,23 +164,23 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 
 	void entcs_attach(entity player)
 	{
-		entity e = player.entcs = new(entcs_sender);
+		entity e = CS(player).entcs = new(entcs_sender);
 		e.owner = player;
 		setthink(e, entcs_think);
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
 		if (!IS_REAL_CLIENT(player)) return;
 		FOREACH_CLIENT(true, {
-			assert(it.entcs);
-			_entcs_send(it.entcs, msg_entity = player, BITS(23), MSG_ONE);
+			assert(CS(it).entcs);
+			_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
 		});
 	}
 
 	void entcs_detach(entity player)
 	{
-		if (!player.entcs) return;
-		delete(player.entcs);
-		player.entcs = NULL;
+		if (!CS(player).entcs) return;
+		delete(CS(player).entcs);
+		CS(player).entcs = NULL;
 	}
 
 #endif

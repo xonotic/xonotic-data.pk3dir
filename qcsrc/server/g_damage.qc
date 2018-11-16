@@ -695,12 +695,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		    }
 		}
 
-		if(STAT(FROZEN, targ))
-		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
+		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id && STAT(FROZEN, targ))
 		{
-			if(autocvar_g_frozen_revive_falldamage > 0)
-			if(deathtype == DEATH_FALL.m_id)
-			if(damage >= autocvar_g_frozen_revive_falldamage)
+			if(autocvar_g_frozen_revive_falldamage > 0 && deathtype == DEATH_FALL.m_id && damage >= autocvar_g_frozen_revive_falldamage)
 			{
 				Unfreeze(targ, false);
 				SetResourceAmount(targ, RESOURCE_HEALTH, autocvar_g_frozen_revive_falldamage_health);
@@ -713,7 +710,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			force *= autocvar_g_frozen_force;
 		}
 
-		if(STAT(FROZEN, targ) && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_frozen_damage_trigger)
+		if(IS_PLAYER(targ) && STAT(FROZEN, targ) && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_frozen_damage_trigger)
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 

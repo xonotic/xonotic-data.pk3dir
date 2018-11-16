@@ -424,27 +424,7 @@ void _MapInfo_Map_Reset()
 
 string _MapInfo_GetDefault(Gametype t)
 {
-	switch(t)
-	{
-		case MAPINFO_TYPE_DEATHMATCH:      return "30 20 0";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "50 20 2 0";
-		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
-		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
-		case MAPINFO_TYPE_LMS:             return "9 20 0";
-		case MAPINFO_TYPE_CA:              return "10 20 0";
-		case MAPINFO_TYPE_KEYHUNT:         return "1000 20 3 0";
-		case MAPINFO_TYPE_ASSAULT:         return "20 0";
-		case MAPINFO_TYPE_RACE:            return "20 5 7 15 0";
-		case MAPINFO_TYPE_ONSLAUGHT:       return "20 0";
-		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
-		case MAPINFO_TYPE_CTS:             return "20 0 0";
-		case MAPINFO_TYPE_FREEZETAG:       return "10 20 0";
-		// NOTE: DO NOT ADD ANY MORE GAME TYPES HERE
-		// THIS IS JUST LEGACY SUPPORT FOR NEXUIZ MAPS
-		// ONLY ADD NEW STUFF TO _MapInfo_GetDefaultEx
-		// THIS FUNCTION WILL EVENTUALLY BE REMOVED
-		default:                           return "";
-	}
+	return t.m_legacydefaults;
 }
 
 void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisType, int load_default)
@@ -457,7 +437,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	if(load_default)
 		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, false);
 
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(!pWantedType.frags) // these modes don't use fraglimit
 	{
 		cvar_set("fraglimit", "0");
 	}
@@ -485,6 +465,8 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{
+		cvar_set("fraglimit", "0"); // special case!
+
 		sa = car(s); if(sa == "") sa = cvar_string("timelimit");
 		cvar_set("g_race_qualifying_timelimit", sa);
 		s = cdr(s);
@@ -502,7 +484,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 		s = cdr(s);
 	}
 
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(!pWantedType.frags) // these modes don't use fraglimit
 	{
 		cvar_set("leadlimit", "0");
 	}
@@ -742,22 +724,19 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 float MapInfo_isRedundant(string fn, string t)
 {
 	// normalize file name
-	fn = strreplace("_", "-", fn);
+	fn = strreplace("_", "", fn);
+	fn = strreplace("-", "", fn);
 
 	// normalize visible title
-	t = strreplace(": ", "-", t);
-	t = strreplace(":", "-", t);
-	t = strreplace(" ", "-", t);
-	t = strreplace("_", "-", t);
-	t = strreplace("'", "-", t);
-
-	if(!strcasecmp(fn, t))
-		return true;
+	t = strreplace(":", "", t);
+	t = strreplace(" ", "", t);
+	t = strreplace("_", "", t);
+	t = strreplace("-", "", t);
+	t = strreplace("'", "", t);
+	t = strdecolorize(t);
 
 	// we allow the visible title to have punctuation the file name does
 	// not, but not vice versa
-	t = strreplace("-", "", t);
-
 	if(!strcasecmp(fn, t))
 		return true;
 

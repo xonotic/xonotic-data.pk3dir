@@ -418,6 +418,10 @@ REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 
 REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
 
+REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
+
+REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
+
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
