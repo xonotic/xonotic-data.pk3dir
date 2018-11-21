@@ -309,10 +309,15 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
 	// decide whether to fire this time
-	if (v * shotdir >= cos(maxfiredeviation * DEG2RAD))
-	if(vdist(trace_endpos-shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10)) || random()*random()>bound(0,(skill+this.bot_aggresskill)*0.05,1))
-		this.bot_firetimer = time + bound(0.1, 0.5-(skill+this.bot_aggresskill)*0.05, 0.5);
-	//traceline(shotorg,shotorg+shotdir*1000,false,NULL);
+	if (maxfiredeviation != 0 && v * shotdir > cos(maxfiredeviation * DEG2RAD))
+	{
+		traceline(shotorg, shotorg + shotdir * 1000, false, NULL);
+		if (vdist(trace_endpos - shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10))
+			|| random() * random() > bound(0, (skill + this.bot_aggresskill) * 0.05, 1))
+		{
+			this.bot_firetimer = time + bound(0.1, 0.5 - (skill + this.bot_aggresskill) * 0.05, 0.5);
+		}
+	}
 	//dprint(ftos(maxfiredeviation),"\n");
 	//dprint(" diff:", vtos(diffang), "\n");
 
@@ -388,6 +393,12 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 			this.dphitcontentsmask = hf;
 			return false;
 		}
+	}
+
+	if (time > this.bot_firetimer)
+	{
+		this.dphitcontentsmask = hf;
+		return false;
 	}
 
 	//if (r > maxshottime * shotspeed)

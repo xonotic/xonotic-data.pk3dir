@@ -137,7 +137,7 @@ void havocbot_ai(entity this)
 		else
 		{
 			if(IS_PLAYER(this.bot_aimtarg))
-				bot_aimdir(this, this.bot_aimtarg.origin + this.bot_aimtarg.view_ofs - this.origin - this.view_ofs , -1);
+				bot_aimdir(this, this.bot_aimtarg.origin + this.bot_aimtarg.view_ofs - this.origin - this.view_ofs, 0);
 		}
 	}
 	else if (this.goalcurrent)
@@ -153,7 +153,7 @@ void havocbot_ai(entity this)
 		vector dir = get_closer_dest(this.goalcurrent, this.origin);
 		dir -= this.origin + this.view_ofs;
 		dir.z = 0;
-		bot_aimdir(this, dir, -1);
+		bot_aimdir(this, dir, 0);
 	}
 
 	// if the bot is not attacking, consider reloading weapons
@@ -1203,9 +1203,9 @@ void havocbot_movetogoal(entity this)
 	if (!this.bot_aimdir_executed)
 	{
 		if (time < this.bot_stop_moving_timeout)
-			bot_aimdir(this, normalize(this.goalcurrent.origin - this.origin), -1);
+			bot_aimdir(this, normalize(this.goalcurrent.origin - this.origin), 0);
 		else
-			bot_aimdir(this, dir, -1);
+			bot_aimdir(this, dir, 0);
 	}
 
 	if (!ladder_zdir)
@@ -1578,7 +1578,7 @@ float havocbot_moveto(entity this, vector pos)
 			vector dir = get_closer_dest(this.goalcurrent, this.origin);
 			dir -= this.origin + this.view_ofs;
 			dir.z = 0;
-			bot_aimdir(this, dir, -1);
+			bot_aimdir(this, dir, 0);
 		}
 
 		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_REACHED)
