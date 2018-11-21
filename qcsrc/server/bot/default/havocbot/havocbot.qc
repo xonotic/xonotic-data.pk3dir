@@ -929,12 +929,18 @@ void havocbot_movetogoal(entity this)
 			}
 			else
 			{
-				dir = flatdir;
 				if(this.velocity.z >= 0 && !(this.watertype == CONTENT_WATER && destorg.z < this.origin.z) &&
 					(this.aistatus & AI_STATUS_OUT_WATER))
+				{
 					PHYS_INPUT_BUTTON_JUMP(this) = true;
+					dir = flatdir;
+				}
 				else
+				{
 					PHYS_INPUT_BUTTON_JUMP(this) = false;
+					if (destorg.z > this.origin.z)
+						dir = flatdir;
+				}
 			}
 		}
 		else
