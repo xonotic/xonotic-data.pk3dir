@@ -351,20 +351,12 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 {
 	float r, hf, distanceratio;
 	vector v;
-	/*
-	eprint(this);
-	dprint("bot_aim(", ftos(shotspeed));
-	dprint(", ", ftos(shotspeedupward));
-	dprint(", ", ftos(maxshottime));
-	dprint(", ", ftos(applygravity));
-	dprint(");\n");
-	*/
-
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	shotspeed *= W_WeaponSpeedFactor(this);
-	shotspeedupward *= W_WeaponSpeedFactor(this);
+	float speed_factor = W_WeaponSpeedFactor(this);
+	shotspeed *= speed_factor;
+	shotspeedupward *= speed_factor;
 	if (!shotspeed)
 	{
 		LOG_TRACE("bot_aim: WARNING: weapon ", this.(weaponentity).m_weapon.m_name, " shotspeed is zero!");
