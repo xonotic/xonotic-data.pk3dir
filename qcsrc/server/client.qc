@@ -622,7 +622,10 @@ void PutPlayerInServer(entity this)
 	this.angles = spot.angles;
 	this.angles_z = 0; // never spawn tilted even if the spot says to
 	if (IS_BOT_CLIENT(this))
+	{
 		this.v_angle = this.angles;
+		bot_aim_reset(this);
+	}
 	this.fixangle = true; // turn this way immediately
 	this.oldvelocity = this.velocity = '0 0 0';
 	this.avelocity = '0 0 0';

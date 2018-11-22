@@ -170,6 +170,23 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 		this.bot_canfire = 1;
 }
 
+void bot_aim_reset(entity this)
+{
+	this.bot_aimdir_executed = true;
+	makevectors(this.v_angle);
+	this.bot_badaimtime = 0;
+	this.bot_aimthinktime = time;
+	this.bot_prevaimtime = time;
+	this.bot_mouseaim = v_forward;
+	this.bot_olddesiredang = v_forward;
+	this.bot_1st_order_aimfilter = '0 0 0';
+	this.bot_2nd_order_aimfilter = '0 0 0';
+	this.bot_3th_order_aimfilter = '0 0 0';
+	this.bot_4th_order_aimfilter = '0 0 0';
+	this.bot_5th_order_aimfilter = '0 0 0';
+	this.bot_firetimer = 0;
+}
+
 void bot_aimdir(entity this, vector v, float maxfiredeviation)
 {
 	float dist, delta_t, blend;
