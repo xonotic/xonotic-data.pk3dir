@@ -794,8 +794,26 @@ void havocbot_movetogoal(entity this)
 			// don't remove if not visible
 			if (checkpvs(this.origin + this.view_ofs, this.goalcurrent))
 			{
-				navigation_goalrating_timeout_force(this);
-				return;
+				if (IS_DEAD(this.goalcurrent))
+				{
+					IL_EACH(g_items, it.enemy == this.goalcurrent && Item_IsLoot(it),
+					{
+						if (vdist(it.origin - this.goalcurrent.death_origin, <, 50))
+						{
+							navigation_clearroute(this);
+							navigation_pushroute(this, it);
+							// loot can't be immediately rated since it isn't on ground yet
+							// it will be rated after a second when on ground, meanwhile head to it
+							navigation_goalrating_timeout_expire(this, 1);
+							return;
+						}
+					});
+				}
+				if (!Item_IsLoot(this.goalcurrent))
+				{
+					navigation_goalrating_timeout_force(this);
+					return;
+				}
 			}
 		}
 		else if (!(STAT(FROZEN, this.goalentity)) && this.bot_tracewalk_time < time)
