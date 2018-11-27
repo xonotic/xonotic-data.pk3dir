@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-11-08 17:13+0000\n"
+"PO-Revision-Date: 2018-11-26 14:15+0000\n"
 "Last-Translator: Demiray Muhterem <mdemiray@msn.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
@@ -881,7 +881,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:208
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1156
 #, c-format
@@ -3307,31 +3307,31 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr ""
+msgstr "^K3%sParçalandın ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:591
 #: qcsrc/common/notifications/all.inc:600
 #: qcsrc/common/notifications/all.inc:609
 #, c-format
 msgid "^K3%sYou scored against ^BG%s"
-msgstr ""
+msgstr "^K3%sPuan yaptın ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:592
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sŞunun tarafından parçalandın ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:593
 #: qcsrc/common/notifications/all.inc:602
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr ""
+msgstr "^K1%sŞundan puan kaybettin ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:599
 #, c-format
 msgid "^K3%sYou burned ^BG%s"
-msgstr ""
+msgstr "^K3%sYandın ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:601
 #, c-format
