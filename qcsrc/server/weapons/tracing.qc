@@ -74,6 +74,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	vector md = ent.(weaponentity).movedir;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
 
+	// TODO this is broken - see 637056bea7bf7f5c9c0fc6113e94731a2767476 for an attempted fix
+	// which fixes issue #1957 but causes #2129
 	vector dv = v_right * -vecs.y + v_up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
