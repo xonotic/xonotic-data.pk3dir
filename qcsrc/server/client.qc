@@ -1054,6 +1054,8 @@ string getwelcomemessage(entity this)
 	return s;
 }
 
+bool autocvar_sv_qcphysics = false; // TODO this is for testing - remove when qcphysics work
+
 /**
 =============
 ClientConnect
@@ -1146,7 +1148,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = true;
+	this.move_qcphysics = autocvar_sv_qcphysics;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
