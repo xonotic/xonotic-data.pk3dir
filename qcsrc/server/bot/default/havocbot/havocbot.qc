@@ -31,6 +31,8 @@ void havocbot_ai(entity this)
 	if(this.draggedby)
 		return;
 
+	this.bot_aimdir_executed = false;
+
 	if(bot_execute_commands(this))
 		return;
 
@@ -105,8 +107,6 @@ void havocbot_ai(entity this)
 	}
 	havocbot_aim(this);
 	lag_update(this);
-
-	this.bot_aimdir_executed = false;
 
 	if (this.bot_aimtarg)
 	{
