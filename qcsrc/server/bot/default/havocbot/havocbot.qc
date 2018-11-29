@@ -1603,7 +1603,7 @@ float havocbot_moveto(entity this, vector pos)
 		{
 			// Step 5: Waypoint reached
 			LOG_TRACE(this.netname, "'s personal waypoint reached");
-			delete(this.havocbot_personal_waypoint);
+			waypoint_remove(this.havocbot_personal_waypoint);
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			return CMD_STATUS_FINISHED;
 		}
