@@ -15,8 +15,8 @@
 //    - this is the only used function that both sets and gets the globals (aim does too but isn't used in our code)
 
 #define NEW_VECS(...) EVAL(OVERLOAD(NEW_VECS, __VA_ARGS__))
-#define NEW_VECS_3(forward, right, up) vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
-#define NEW_VECS_4(forward, right, up, origin) NEW_VECS_3(forward, right, up); vector origin = '0 0 0';
+#define NEW_VECS_3(forward, right, up) vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0'
+#define NEW_VECS_4(forward, right, up, origin) NEW_VECS_3(forward, right, up); vector origin = '0 0 0'
 
 // convenience for deglobalized code - don't use these just to hide that globals are still used
 #define CLEAR_V_GLOBALS() v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN;
