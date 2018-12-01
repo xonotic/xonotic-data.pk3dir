@@ -1357,20 +1357,21 @@ void HUD_Crosshair(entity this)
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
 			MACRO_BEGIN { \
+				vector scaled_sz = sz * wcross_size; \
 				if(wcross_blur > 0) \
 				{ \
 					for(i = -2; i <= 2; ++i) \
 					for(j = -2; j <= 2; ++j) \
-					M(i,j,sz,wcross_name,wcross_alpha*0.04); \
+					M(i,j,sz,scaled_sz,wcross_name,wcross_alpha*0.04); \
 				} \
 				else \
 				{ \
-					M(0,0,sz,wcross_name,wcross_alpha); \
+					M(0,0,sz,scaled_sz,wcross_name,wcross_alpha); \
 				} \
 			} MACRO_END
 
-#define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
-			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size.x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size.y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+#define CROSSHAIR_DRAW_SINGLE(i,j,sz,scaled_sz,wcross_name,wcross_alpha) \
+			drawpic(wcross_origin - ('0.5 0 0' * (scaled_sz.x + i * wcross_blur) + '0 0.5 0' * (scaled_sz.y + j * wcross_blur)), wcross_name, scaled_sz, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
 			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)

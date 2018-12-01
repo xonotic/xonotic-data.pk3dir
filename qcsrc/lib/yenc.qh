@@ -34,9 +34,7 @@
 		if (conv <= 0) { \
 			ret = -1; \
 		} else { \
-			bool esc = false; \
 			if (conv == '=') { \
-				esc = true; \
 				conv = STRING_ITERATOR_GET(stringiter); \
 				conv -= 64; \
 			} \
