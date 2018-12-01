@@ -103,7 +103,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			vector horiz_vel = vec2(it.velocity);
 			// when walking slowly sideways, we assume the player wants a clear shot ahead - spawn behind him according to where he's looking
 			// when running fast, spawn behind him according to his direction of movement to prevent colliding with the newly spawned player
-			NEW_VECS(forward, right, up);
+			vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
 			if (vdist(horiz_vel, >, autocvar_sv_maxspeed + 50))
 			{
 				FIXED_MAKE_VECTORS(vectoangles(horiz_vel), forward, right, up);

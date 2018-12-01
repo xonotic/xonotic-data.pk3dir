@@ -221,7 +221,7 @@ void PM_dodging(entity this)
 		return;
 	}
 
-	NEW_VECS(forward, right, up);
+	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 	if(PHYS_DODGING_AIR)
 		MAKE_VECTORS(this.v_angle, forward, right, up);
 	else

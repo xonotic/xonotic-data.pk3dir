@@ -51,7 +51,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	NEW_VECS(forward, right, up);
+	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 	forward = v_forward;
 	right = v_right;
 	up = v_up;

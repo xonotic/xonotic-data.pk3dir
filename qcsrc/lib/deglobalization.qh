@@ -11,17 +11,13 @@
 //  - RF_USEAXIS, addentities, predraw,
 //    - CL_GetEntityMatrix (in engine but is called from other functions so transitively any of them can use the globals - e.g. V_CalcRefdef, maybe others)
 //    - however RF_USEAXIS is only used if MF_ROTATE is used which is only set in one place
-//  - e.camera_transform / CL_VM_TransformView (in engine
+//  - e.camera_transform / CL_VM_TransformView (in engine)
 //    - this is the only used function that both sets and gets the globals (aim does too but isn't used in our code)
 
-#define NEW_VECS(...) EVAL(OVERLOAD(NEW_VECS, __VA_ARGS__))
-#define NEW_VECS_3(forward, right, up) vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0'
-#define NEW_VECS_4(forward, right, up, origin) NEW_VECS_3(forward, right, up); vector origin = '0 0 0'
-
-// convenience for deglobalized code - don't use these just to hide that globals are still used
-#define CLEAR_V_GLOBALS() v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN;
-#define GET_V_GLOBALS(forward, right, up) forward = v_forward; right = v_right; up = v_up;
-#define SET_V_GLOBALS(forward, right, up) v_forward = forward; v_right = right; v_up = up;
+// convenience for deglobalization code - don't use these just to hide that globals are still used
+#define CLEAR_V_GLOBALS() v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN
+#define GET_V_GLOBALS(forward, right, up) forward = v_forward; right = v_right; up = v_up
+#define SET_V_GLOBALS(forward, right, up) v_forward = forward; v_right = right; v_up = up
 
 #ifdef GAMEQC
 STATIC_INIT(globals) {
@@ -46,7 +42,7 @@ STATIC_INIT(globals) {
 
 /// Same as `MAKE_VECTORS` but also creates the locals for convenience.
 #define MAKE_VECTORS_NEW(angles, forward, right, up) \
-	NEW_VECS(forward, right, up); \
+	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0'; \
 	MAKE_VECTORS(angles, forward, right, up);
 
 /// Returns all 4 vectors by assigning to them (instead of returning a value) for consistency (and sanity)
@@ -57,7 +53,7 @@ STATIC_INIT(globals) {
 } MACRO_END
 
 #define SKEL_GET_BONE_ABS_NEW(skel, bonenum, forward, right, up, origin) \
-	NEW_VECS(forward, right, up, origin); \
+	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0', origin = '0 0 0'; \
 	SKEL_GET_BONE_ABS(skel, bonenum, forward, right, up, origin)
 
 #define SKEL_SET_BONE(skel, bonenum, org, forward, right, up) MACRO_BEGIN { \
@@ -79,7 +75,7 @@ STATIC_INIT(globals) {
 } MACRO_END
 
 #define VECTOR_VECTORS_NEW(forward_in, forward, right, up) \
-	NEW_VECS(forward, right, up); \
+	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0'; \
 	VECTOR_VECTORS(forward_in, forward, right, up);
 
 /// Note that this only avoids the v_* globals, not the gettaginfo_* ones
@@ -90,5 +86,5 @@ STATIC_INIT(globals) {
 } MACRO_END
 
 #define GET_TAG_INFO_NEW(ent, tagindex, forward, right, up, origin) \
-	NEW_VECS(forward, right, up, origin); \
+	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0', origin = '0 0 0'; \
 	GET_TAG_INFO(ent, tagindex, forward, right, up, origin);
