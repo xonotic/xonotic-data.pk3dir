@@ -95,8 +95,7 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 }
 
 #define BEGIN_CHEAT_FUNCTION() \
-	float cheating, attempting; \
-	cheating = 0; attempting = 0
+	float cheating = 0, attempting = 0
 #define DID_CHEAT() \
 	++cheating
 #define ADD_CHEATS(e,n) \
