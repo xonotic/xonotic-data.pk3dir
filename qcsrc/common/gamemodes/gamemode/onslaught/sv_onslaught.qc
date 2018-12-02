@@ -1625,6 +1625,11 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 				player.angles = '0 1 0' * ( theta * RAD2DEG + 180 );
 				makevectors(player.angles);
 				player.fixangle = true;
+				if (IS_BOT_CLIENT(player))
+				{
+					player.v_angle = player.angles;
+					bot_aim_reset(player);
+				}
 				player.teleport_antispam = time + autocvar_g_onslaught_teleport_wait;
 
 				if ( tele_effects )

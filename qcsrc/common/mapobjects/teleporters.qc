@@ -113,6 +113,11 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	setorigin(player, to);
 	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
+	if (IS_BOT_CLIENT(player))
+	{
+		player.v_angle = player.angles;
+		bot_aim_reset(player);
+	}
 	player.fixangle = true;
 	player.velocity = to_velocity;
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
