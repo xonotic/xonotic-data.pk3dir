@@ -1796,6 +1796,7 @@ void navigation_goalrating_start(entity this)
 	navigation_clearroute(this);
 	navigation_bestgoal = NULL;
 	navigation_markroutes(this, wp);
+	this.goalstack31 = wp; // temporarly save the really close waypoint
 }
 
 // ends a goal selection session (updates goal stack to the best goal)
@@ -1804,8 +1805,14 @@ void navigation_goalrating_end(entity this)
 	if(this.aistatus & AI_STATUS_STUCK)
 		return;
 
+	entity wp = this.goalstack31; // save to wp as this.goalstack31 is set by navigation_routetogoal
+	this.goalstack31 = NULL;
+
 	navigation_routetogoal(this, navigation_bestgoal, this.origin);
 	LOG_DEBUG("best goal ", this.goalcurrent.classname);
+
+	if (wp && this.goalcurrent == wp)
+		navigation_poproute(this);
 
 	// If the bot got stuck then try to reach the farthest waypoint
 	if (!this.goalentity)
