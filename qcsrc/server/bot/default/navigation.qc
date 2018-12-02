@@ -1808,15 +1808,17 @@ void navigation_goalrating_end(entity this)
 	LOG_DEBUG("best goal ", this.goalcurrent.classname);
 
 	// If the bot got stuck then try to reach the farthest waypoint
-	if (!this.goalentity && autocvar_bot_wander_enable)
+	if (!this.goalentity)
 	{
-		if (!(this.aistatus & AI_STATUS_STUCK))
+		if (autocvar_bot_wander_enable && !(this.aistatus & AI_STATUS_STUCK))
 		{
 			LOG_DEBUG(this.netname, " cannot walk to any goal");
 			this.aistatus |= AI_STATUS_STUCK;
 		}
+		this.goalentity_shouldbefrozen = false;
 	}
-	this.goalentity_shouldbefrozen = boolean(STAT(FROZEN, this.goalentity));
+	else
+		this.goalentity_shouldbefrozen = boolean(STAT(FROZEN, this.goalentity));
 }
 
 void botframe_updatedangerousobjects(float maxupdate)
