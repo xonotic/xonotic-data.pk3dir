@@ -32,6 +32,9 @@ void havocbot_ai(entity this)
 		return;
 
 	this.bot_aimdir_executed = false;
+	// lock aim if teleported or passing through a warpzone
+	if (this.lastteleporttime && !this.jumppadcount)
+		this.bot_aimdir_executed = true;
 
 	if(bot_execute_commands(this))
 		return;

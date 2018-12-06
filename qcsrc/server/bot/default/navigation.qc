@@ -742,6 +742,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 // completely empty the goal stack, used when deciding where to go
 void navigation_clearroute(entity this)
 {
+	this.lastteleporttime = 0;
 	this.goalcurrent_prev = this.goalcurrent;
 	this.goalcurrent_distance_2d = FLOAT_MAX;
 	this.goalcurrent_distance_z = FLOAT_MAX;
