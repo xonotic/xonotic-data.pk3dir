@@ -577,7 +577,7 @@ void havocbot_movetogoal(entity this)
 					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
 				}
 			}
-			else
+			else //if (this.goalcurrent)
 			{
 				if (this.goalcurrent.bot_pickup)
 				{
@@ -601,9 +601,9 @@ void havocbot_movetogoal(entity this)
 					return;
 			}
 		}
-		else
+		else //if (!(this.aistatus & AI_STATUS_OUT_JUMPPAD))
 		{
-			if(time - this.lastteleporttime > 0.2 && this.velocity.z > 0)
+			if(this.origin.z - this.lastteleport_origin.z > (this.maxs.z - this.mins.z) * 0.5)
 			{
 				vector velxy = this.velocity; velxy_z = 0;
 				if(vdist(velxy, <, autocvar_sv_maxspeed * 0.2))

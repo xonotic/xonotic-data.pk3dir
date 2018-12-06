@@ -1611,11 +1611,12 @@ int navigation_poptouchedgoals(entity this)
 		if (!this.goalcurrent.wpisbox // warpzone
 			&& vlen2(this.origin - this.goalstack01.origin) < vlen2(this.origin - this.goalcurrent.origin))
 		{
+			// immediately remove origin and destination waypoints
 			navigation_poproute(this);
 			++removed_goals;
 			navigation_poproute(this);
 			++removed_goals;
-			return removed_goals;
+			this.lastteleporttime = 0;
 		}
 
 		// make sure jumppad is really hit, don't rely on distance based checks
@@ -1638,12 +1639,17 @@ int navigation_poptouchedgoals(entity this)
 				if (time - this.lastteleporttime < random() * max_delay)
 					return removed_goals;
 			}
+			else if (this.goalcurrent.wpisbox) // teleport
+			{
+				// immediately remove origin and destination waypoints
+				navigation_poproute(this);
+				++removed_goals;
+			}
 			navigation_poproute(this);
 			this.lastteleporttime = 0;
 			++removed_goals;
 		}
-		else
-			return removed_goals;
+		return removed_goals;
 	}
 	else if (this.lastteleporttime > 0)
 	{
@@ -1675,6 +1681,9 @@ int navigation_poptouchedgoals(entity this)
 			++removed_goals;
 			return removed_goals;
 		}
+		// reset of lastteleporttime can be overriden by a jumppad when it's set
+		// in more than one frame: make sure it's reset
+		this.lastteleporttime = 0;
 	}
 
 	// Loose goal touching check when running
