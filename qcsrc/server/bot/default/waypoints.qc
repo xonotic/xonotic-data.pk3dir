@@ -12,6 +12,7 @@
 #include "../../antilag.qh"
 
 #include <common/constants.qh>
+#include <common/debug.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
 
