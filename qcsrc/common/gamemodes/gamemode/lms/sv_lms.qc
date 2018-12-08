@@ -129,6 +129,12 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 	});
 }
 
+MUTATOR_HOOKFUNCTION(lms, ReadLevelCvars)
+{
+	// incompatible
+	sv_ready_restart_after_countdown = 0;
+}
+
 MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
