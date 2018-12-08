@@ -170,6 +170,22 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 		this.bot_canfire = 1;
 }
 
+void bot_aim_reset(entity this)
+{
+	this.bot_aimdir_executed = true;
+	this.bot_badaimtime = 0;
+	this.bot_aimthinktime = time;
+	this.bot_prevaimtime = time;
+	this.bot_mouseaim = this.v_angle;
+	this.bot_olddesiredang = this.v_angle;
+	this.bot_1st_order_aimfilter = '0 0 0';
+	this.bot_2nd_order_aimfilter = '0 0 0';
+	this.bot_3th_order_aimfilter = '0 0 0';
+	this.bot_4th_order_aimfilter = '0 0 0';
+	this.bot_5th_order_aimfilter = '0 0 0';
+	this.bot_firetimer = 0;
+}
+
 void bot_aimdir(entity this, vector v, float maxfiredeviation)
 {
 	float dist, delta_t, blend;
@@ -309,10 +325,15 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
 	// decide whether to fire this time
-	if (v * shotdir >= cos(maxfiredeviation * DEG2RAD))
-	if(vdist(trace_endpos-shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10)) || random()*random()>bound(0,(skill+this.bot_aggresskill)*0.05,1))
-		this.bot_firetimer = time + bound(0.1, 0.5-(skill+this.bot_aggresskill)*0.05, 0.5);
-	//traceline(shotorg,shotorg+shotdir*1000,false,NULL);
+	if (maxfiredeviation != 0 && v * shotdir > cos(maxfiredeviation * DEG2RAD))
+	{
+		traceline(shotorg, shotorg + shotdir * 1000, false, NULL);
+		if (vdist(trace_endpos - shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10))
+			|| random() * random() > bound(0, (skill + this.bot_aggresskill) * 0.05, 1))
+		{
+			this.bot_firetimer = time + bound(0.1, 0.5 - (skill + this.bot_aggresskill) * 0.05, 0.5);
+		}
+	}
 	//dprint(ftos(maxfiredeviation),"\n");
 	//dprint(" diff:", vtos(diffang), "\n");
 
@@ -329,20 +350,12 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 {
 	float r, hf, distanceratio;
 	vector v;
-	/*
-	eprint(this);
-	dprint("bot_aim(", ftos(shotspeed));
-	dprint(", ", ftos(shotspeedupward));
-	dprint(", ", ftos(maxshottime));
-	dprint(", ", ftos(applygravity));
-	dprint(");\n");
-	*/
-
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	shotspeed *= W_WeaponSpeedFactor(this);
-	shotspeedupward *= W_WeaponSpeedFactor(this);
+	float speed_factor = W_WeaponSpeedFactor(this);
+	shotspeed *= speed_factor;
+	shotspeedupward *= speed_factor;
 	if (!shotspeed)
 	{
 		LOG_TRACE("bot_aim: WARNING: weapon ", this.(weaponentity).m_weapon.m_name, " shotspeed is zero!");
@@ -388,6 +401,12 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 			this.dphitcontentsmask = hf;
 			return false;
 		}
+	}
+
+	if (time > this.bot_firetimer)
+	{
+		this.dphitcontentsmask = hf;
+		return false;
 	}
 
 	//if (r > maxshottime * shotspeed)

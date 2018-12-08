@@ -742,6 +742,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 // completely empty the goal stack, used when deciding where to go
 void navigation_clearroute(entity this)
 {
+	this.lastteleporttime = 0;
 	this.goalcurrent_prev = this.goalcurrent;
 	this.goalcurrent_distance_2d = FLOAT_MAX;
 	this.goalcurrent_distance_z = FLOAT_MAX;
@@ -1611,11 +1612,12 @@ int navigation_poptouchedgoals(entity this)
 		if (!this.goalcurrent.wpisbox // warpzone
 			&& vlen2(this.origin - this.goalstack01.origin) < vlen2(this.origin - this.goalcurrent.origin))
 		{
+			// immediately remove origin and destination waypoints
 			navigation_poproute(this);
 			++removed_goals;
 			navigation_poproute(this);
 			++removed_goals;
-			return removed_goals;
+			this.lastteleporttime = 0;
 		}
 
 		// make sure jumppad is really hit, don't rely on distance based checks
@@ -1638,12 +1640,17 @@ int navigation_poptouchedgoals(entity this)
 				if (time - this.lastteleporttime < random() * max_delay)
 					return removed_goals;
 			}
+			else if (this.goalcurrent.wpisbox) // teleport
+			{
+				// immediately remove origin and destination waypoints
+				navigation_poproute(this);
+				++removed_goals;
+			}
 			navigation_poproute(this);
 			this.lastteleporttime = 0;
 			++removed_goals;
 		}
-		else
-			return removed_goals;
+		return removed_goals;
 	}
 	else if (this.lastteleporttime > 0)
 	{
@@ -1675,6 +1682,9 @@ int navigation_poptouchedgoals(entity this)
 			++removed_goals;
 			return removed_goals;
 		}
+		// reset of lastteleporttime can be overriden by a jumppad when it's set
+		// in more than one frame: make sure it's reset
+		this.lastteleporttime = 0;
 	}
 
 	// Loose goal touching check when running
@@ -1796,6 +1806,7 @@ void navigation_goalrating_start(entity this)
 	navigation_clearroute(this);
 	navigation_bestgoal = NULL;
 	navigation_markroutes(this, wp);
+	this.goalstack31 = wp; // temporarly save the really close waypoint
 }
 
 // ends a goal selection session (updates goal stack to the best goal)
@@ -1804,19 +1815,27 @@ void navigation_goalrating_end(entity this)
 	if(this.aistatus & AI_STATUS_STUCK)
 		return;
 
+	entity wp = this.goalstack31; // save to wp as this.goalstack31 is set by navigation_routetogoal
+	this.goalstack31 = NULL;
+
 	navigation_routetogoal(this, navigation_bestgoal, this.origin);
 	LOG_DEBUG("best goal ", this.goalcurrent.classname);
 
+	if (wp && this.goalcurrent == wp)
+		navigation_poproute(this);
+
 	// If the bot got stuck then try to reach the farthest waypoint
-	if (!this.goalentity && autocvar_bot_wander_enable)
+	if (!this.goalentity)
 	{
-		if (!(this.aistatus & AI_STATUS_STUCK))
+		if (autocvar_bot_wander_enable && !(this.aistatus & AI_STATUS_STUCK))
 		{
 			LOG_DEBUG(this.netname, " cannot walk to any goal");
 			this.aistatus |= AI_STATUS_STUCK;
 		}
+		this.goalentity_shouldbefrozen = false;
 	}
-	this.goalentity_shouldbefrozen = boolean(STAT(FROZEN, this.goalentity));
+	else
+		this.goalentity_shouldbefrozen = boolean(STAT(FROZEN, this.goalentity));
 }
 
 void botframe_updatedangerousobjects(float maxupdate)

@@ -680,11 +680,21 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 
 			closest.velocity = my_vel;
 			closest.angles = my_ang;
+			if (IS_BOT_CLIENT(closest))
+			{
+				closest.v_angle = closest.angles;
+				bot_aim_reset(closest);
+			}
 			closest.fixangle = true;
 			closest.oldorigin = my_org;
 			closest.oldvelocity = my_vel;
 			player.velocity = their_vel;
 			player.angles = their_ang;
+			if (IS_BOT_CLIENT(player))
+			{
+				player.v_angle = player.angles;
+				bot_aim_reset(player);
+			}
 			player.fixangle = true;
 			player.oldorigin = their_org;
 			player.oldvelocity = their_vel;
