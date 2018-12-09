@@ -129,6 +129,8 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 	});
 }
 
+// FIXME add support for sv_ready_restart_after_countdown
+// that is find a way to respawn/reset players IN GAME without setting lives to 0
 MUTATOR_HOOKFUNCTION(lms, ReadLevelCvars)
 {
 	// incompatible
@@ -258,6 +260,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 	}
 }
 
+// FIXME LMS doesn't allow clients to spectate due to its particular implementation
 MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
 {
 	if(autocvar_g_campaign)
