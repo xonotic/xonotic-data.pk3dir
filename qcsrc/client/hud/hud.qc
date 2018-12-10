@@ -565,8 +565,6 @@ bool HUD_WouldShowCursor()
 {
 	if(autocvar__hud_configure)
 		return true;
-	if(hud_panel_radar_mouse)
-		return true;
 	if(mv_active)
 		return true;
 	//entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1)); // TODO: doesn't use regular cursor handling
