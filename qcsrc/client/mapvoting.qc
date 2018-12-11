@@ -359,6 +359,11 @@ void MapVote_Draw()
 		ymax -= chat_sizey;
 
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
+	if (gametypevote)
+	{
+		gtv_text_size = hud_fontsize * 1.4;
+		gtv_text_size_small = hud_fontsize * 1.1;
+	}
 
 	pos.y = ymin;
 	pos.z = 0;
@@ -680,9 +685,6 @@ void MapVote_Init()
 		mapvote_chosenmap = strzone(ReadString());
 		if ( gametypevote == 2 )
 			gametypevote = 0;
-
-		gtv_text_size = hud_fontsize*1.4;
-		gtv_text_size_small = hud_fontsize*1.1;
 	}
 
 	MapVote_ReadMask();
