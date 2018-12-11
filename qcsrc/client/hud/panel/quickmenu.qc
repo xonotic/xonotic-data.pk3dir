@@ -779,6 +779,7 @@ void QuickMenu_Default(string target_submenu)
 	string tc_cmd;
 
 	QUICKMENU_SMENU(_("Chat"), "Chat")
+		QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send public message to")), "Send public message to", "commandmode say %s:^7", 0, 1)
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
