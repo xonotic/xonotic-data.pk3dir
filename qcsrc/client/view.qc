@@ -1592,6 +1592,15 @@ void HUD_Mouse(entity player)
 		return;
 	}
 
+	if (cursor_active == -1) // starting to display the cursor
+	{
+		// since HUD_Mouse is called by CSQC_UpdateView before CSQC_InputEvent,
+		// in the first frame mousepos is the mouse position of the last time
+		// the cursor was displayed, thus we ignore it to avoid a glictch
+		cursor_active = 1;
+		return;
+	}
+
 	if(!autocvar_hud_cursormode)
 		update_mousepos();
 

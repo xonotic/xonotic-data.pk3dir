@@ -698,10 +698,15 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 
-	bool cursor_active_prev = cursor_active;
+	int cursor_active_prev = cursor_active;
 	cursor_active = HUD_WouldShowCursor();
 	if (cursor_active_prev != cursor_active && autocvar_hud_cursormode)
+	{
 		setcursormode(cursor_active);
+		// cursor inactive this frame, will be set to 1 the next frame
+		if (cursor_active)
+			cursor_active = -1;
+	}
 
 	if (intermission == 2)
 		HUD_Reset();
