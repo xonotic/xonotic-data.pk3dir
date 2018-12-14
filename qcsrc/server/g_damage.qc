@@ -808,7 +808,9 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 				}
 				else if(IS_PLAYER(attacker))
 				{
-					if(deathtype != DEATH_FIRE.m_id)
+					// if enemy gets frozen in this frame and receives other damage don't
+					// play the typehitsound e.g. when hit by multiple bullets of the shotgun
+					if (deathtype != DEATH_FIRE.m_id && (!STAT(FROZEN, victim) || time > victim.freeze_time))
 					{
 						attacker.typehitsound += 1;
 					}
