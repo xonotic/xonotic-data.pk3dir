@@ -478,7 +478,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
 
-	IntrusiveList reviving_players = NULL;
+	entity reviving_players_last = NULL;
+	entity reviving_players_first = NULL;
 
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
@@ -487,11 +488,15 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		n = 0;
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
-			if (!reviving_players)
-				reviving_players = IL_NEW();
-			IL_PUSH(reviving_players, it);
+			if (reviving_players_last)
+				reviving_players_last.chain = it;
+			reviving_players_last = it;
+			if (!reviving_players_first)
+				reviving_players_first = it;
 			++n;
 		});
+		if (reviving_players_last)
+			reviving_players_last.chain = NULL;
 	}
 
 	if (!n) // no teammate nearby
@@ -522,26 +527,23 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			IL_EACH(reviving_players, true, {
+			for(entity it = reviving_players_first; it; it = it.chain)
+			{
 				GameRules_scoring_add(it, FREEZETAG_REVIVALS, +1);
 				GameRules_scoring_add(it, SCORE, +1);
 				nades_GiveBonus(it, autocvar_g_nades_bonus_score_low);
-			});
+			}
 
-			entity first = IL_FIRST(reviving_players);
+			entity first = reviving_players_first;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
 			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, first.netname);
 		}
 
-		if (reviving_players)
-			IL_EACH(reviving_players, true, {
-				STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-			});
+		for(entity it = reviving_players_first; it; it = it.chain)
+			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 	}
 
-	if (reviving_players)
-		IL_DELETE(reviving_players);
 	return true;
 }
 
