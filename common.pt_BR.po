@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-13 14:42+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-12-15 00:19+0000\n"
+"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -27,12 +27,12 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Exportado com sucesso para %s! (Nota: foi salvo em data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Não foi possível escrever para %s"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -238,11 +238,11 @@ msgstr "Continuar..."
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "Bate-papo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "Enviar mensagem pública para"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
@@ -266,7 +266,7 @@ msgstr "Olá / Boa sorte e divirta-se"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "Enviar em inglês"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
@@ -351,11 +351,11 @@ msgstr "Atacando, ícone"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr "Portador da bandeira aniquilado (l:%y^7)"
+msgstr "Portador de bandeira aniquilado (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr "Portador da bandeira aniquilado, ícone"
+msgstr "Portador de bandeira aniquilado, ícone"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 #, c-format
@@ -610,7 +610,7 @@ msgstr "vítimas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "vítimas de equipe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^laps"
@@ -692,178 +692,190 @@ msgstr "ticks"
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
+"É possível modificar o placar usando o comando ^2scoreboard_columns_set."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:299
 msgid "Usage:"
-msgstr ""
+msgstr "Uso:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:301
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr ""
+msgstr "^2scoreboard_columns_set ^3field1 field2..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:302
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
+"^2scoreboard_columns_set ^7sem argumentos lê os argumentos do cvar "
+"scoreboard_columns"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:303
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
+"  ^5Observação: ^7scoreboard_columns_set sem argumentos é executado sempre "
+"que um mapa é iniciado"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:304
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
+"^2scoreboard_columns_set ^3expand_default ^7carrega o layout padrão e o "
+"expande no cvar scoreboard_columns para ficar editável"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:305
 msgid "You can use a ^3|^7 to start the right-aligned fields."
-msgstr ""
+msgstr "É possível usar um ^3|^7 para iniciar os campos alinhados à direita."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:306
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
+"Os seguintes nomes de campo são reconhecidos (maiúsculas e minúsculas não "
+"diferem):"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:309
 #: qcsrc/client/hud/panel/scoreboard.qc:310
 msgid "Name of a player"
-msgstr ""
+msgstr "Nome de um jogador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid "Ping time"
-msgstr ""
+msgstr "Tempo de ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:312
 msgid "Packet loss"
-msgstr ""
+msgstr "Perda de pacotes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:313
 msgid "Player ELO"
-msgstr ""
+msgstr "ELO do jogador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:314
 msgid "Player FPS"
-msgstr ""
+msgstr "FPS do jogador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid "Number of kills"
-msgstr ""
+msgstr "Número de vítimas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid "Number of deaths"
-msgstr ""
+msgstr "Número de mortes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:317
 msgid "Number of suicides"
-msgstr ""
+msgstr "Número de suicídios"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "kills - suicides"
-msgstr ""
+msgstr "vítimas - suicídios"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Número de vítimas de equipe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:320
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "A taxa de vítimas/mortes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:321
 msgid "The total damage done"
-msgstr ""
+msgstr "O dano total causado"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:322
 msgid "The total damage taken"
-msgstr ""
+msgstr "O dano total recebido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:323
 msgid "kills - deaths"
-msgstr ""
+msgstr "vítimas - mortes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:324
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr ""
+"Quão frequente uma bandeira (CTF) ou uma chave (Caça a Chaves) foi capturada"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:325
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
+"Quão frequente uma bandeira (CTF), uma chave (Caça a Chaves) ou uma bola "
+"(Keepaway) foi coletada"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:326
 msgid "Time of fastest cap (CTF)"
-msgstr ""
+msgstr "Tempo da captura mais rápida (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:327
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Número de vítimas de portador de bandeira"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:328
 msgid "Number of flag returns"
-msgstr ""
+msgstr "Número de retornos da bandeira"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:329
 msgid "Number of flag drops"
-msgstr ""
+msgstr "Quantas vezes a bandeira foi largada"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:330
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "Número de vidas (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid "Player rank"
-msgstr ""
+msgstr "Classificação do jogador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:332
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Número de jogadores empurrados para o vazio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:333
 msgid "Number of keys destroyed by pushing them into void"
-msgstr ""
+msgstr "Número de chaves destruídas ao empurrá-las para o vazio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:334
 msgid "Number of keys carrier kills"
-msgstr ""
+msgstr "Número de vítimas de portador de chave"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:335
 msgid "Number of times a key was lost"
-msgstr ""
+msgstr "Vezes em que uma chave foi perdida"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:336
 msgid "Number of laps finished (race/cts)"
-msgstr ""
+msgstr "Voltas concluídas (corrida/cts)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:337
 msgid "Total time raced (race/cts)"
-msgstr ""
+msgstr "Tempo total em corridas (corrida/cts)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:338
 msgid "Time of fastest lap (race/cts)"
-msgstr ""
+msgstr "Tempo da volta mais rápida (corrida/cts)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:339
 msgid "Number of ticks (DOM)"
-msgstr ""
+msgstr "Número de tiques (DOM)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:340
 msgid "Number of domination points taken (DOM)"
-msgstr ""
+msgstr "Pontos de dominação capturados (DOM)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:341
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Número de vítimas de portador de bola"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:342
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
+msgstr "Tempo total segurando a bola em Keepaway"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:343
 msgid "Total score"
-msgstr ""
+msgstr "Pontuação total"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:346
 msgid ""
@@ -872,28 +884,40 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
+"Antes de um campo, é possível inserir um sinal de + ou -, seguido de uma "
+"lista de modos de jogo separada por vírgulas,\n"
+"e depois uma barra para fazer com que os campos apareçam somente nesses "
+"modos de jogo ou em todos, exceto os especificados.\n"
+"Também é possível especificar a palavra \"all\" como um\n"
+"campo para exibir todos os campos disponíveis para o modo de jogo atual."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:352
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
+"É possível usar os nomes especiais de modos de jogo \"teams\" e \"noteams\"\n"
+"para incluir/excluir TODOS os modos de jogo de equipe/sem equipe."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:356
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
-msgstr ""
+msgstr "Exemplo: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:357
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
+"exibirá o nome, ping e pp alinhados à esquerda e os campos\n"
+"à direita da barra vertical alinhada à direita."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:359
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
+"\"field3\" só aparecerá em CTF e 'field4' aparecerá em todos\n"
+"os outros modos de jogo, exceto MM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:622
 #: qcsrc/client/hud/panel/scoreboard.qc:629
@@ -1011,11 +1035,12 @@ msgstr "Você morreu. Aperte ^2%s^7 para ressurgir"
 
 #: qcsrc/client/hud/panel/timer.qc:67
 msgid "WARMUP"
-msgstr ""
+msgstr "AQUECIMENTO"
 
 #: qcsrc/client/hud/panel/vote.qc:27
 msgid "^1You must answer before entering hud configure mode"
 msgstr ""
+"^1Você tem que responder antes de entrar no modo de configuração da interface"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1118,15 +1143,15 @@ msgstr "Faltam %d segundos"
 
 #: qcsrc/client/mapvoting.qc:504
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
-msgstr ""
+msgstr "mv_mapdownload: ^3Você não pode usar esse comando sozinho!"
 
 #: qcsrc/client/mapvoting.qc:514
 msgid "^1Error:^7 Couldn't find pak index."
-msgstr ""
+msgstr "^1Erro:^7 Não foi possível encontrar o índice do pak."
 
 #: qcsrc/client/mapvoting.qc:523
 msgid "Requesting preview..."
-msgstr ""
+msgstr "Solicitando prévia..."
 
 #: qcsrc/client/miscfunctions.qc:111
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1147,11 +1172,12 @@ msgstr "Progresso de renascimento"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
-msgstr ""
+msgstr "erro ao criar curl handle"
 
 #: qcsrc/common/command/generic.qc:403
 msgid "Notification restart command only works with cl_cmd and sv_cmd."
 msgstr ""
+"Comando de reinício de notificação funciona apenas com cl_cmd e sv_cmd."
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
@@ -1159,31 +1185,31 @@ msgstr "Ladrão de Bolas"
 
 #: qcsrc/common/items/item/ammo.qh:66
 msgid "bullets"
-msgstr ""
+msgstr "balas"
 
 #: qcsrc/common/items/item/ammo.qh:96
 msgid "cells"
-msgstr ""
+msgstr "células"
 
 #: qcsrc/common/items/item/ammo.qh:126
 msgid "plasma"
-msgstr ""
+msgstr "plasma"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "rockets"
-msgstr ""
+msgstr "foguetes"
 
 #: qcsrc/common/items/item/ammo.qh:190
 msgid "shells"
-msgstr ""
+msgstr "cartuchos"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "Armadura pequena"
 
 #: qcsrc/common/items/item/armor.qh:80
 msgid "Medium armor"
-msgstr ""
+msgstr "Armadura média"
 
 #: qcsrc/common/items/item/armor.qh:118 qcsrc/common/items/item/armor.qh:121
 msgid "Big armor"
@@ -1195,11 +1221,11 @@ msgstr "Mega armadura"
 
 #: qcsrc/common/items/item/health.qh:42
 msgid "Small health"
-msgstr ""
+msgstr "Saúde pequena"
 
 #: qcsrc/common/items/item/health.qh:80
 msgid "Medium health"
-msgstr ""
+msgstr "Saúde média"
 
 #: qcsrc/common/items/item/health.qh:118 qcsrc/common/items/item/health.qh:121
 msgid "Big health"
@@ -1213,15 +1239,15 @@ msgstr "Mega saúde"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
 msgid "Jetpack"
-msgstr ""
+msgstr "Mochila a jato"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
-msgstr ""
+msgstr "combustível"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Regenerador de combustível"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
@@ -1421,11 +1447,11 @@ msgstr "Sobreviva contra ondas de monstros"
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Duel"
-msgstr ""
+msgstr "Duelo"
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Fight in a one versus one arena battle to decide the winner"
-msgstr ""
+msgstr "Lute em uma batalha de arena 1v1 para decidir o vencedor"
 
 #: qcsrc/common/minigames/cl_minigames.qc:383
 msgid "It's your turn"
@@ -1769,7 +1795,7 @@ msgstr "Exibir números de dano para fogo amigo"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
-msgstr ""
+msgstr "Munição de Vaporizer"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
@@ -1890,7 +1916,7 @@ msgstr "Empurrar"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Flag carrier"
-msgstr "Portador de bandeiras"
+msgstr "Portador de bandeira"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Enemy carrier"
@@ -2881,7 +2907,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 foi expulso por matar excessivamente a equipe"
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
@@ -3060,7 +3086,7 @@ msgstr "^BG%s%s^K1 comeu o foguete de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 chegou muito perto do foguete de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -3908,7 +3934,7 @@ msgstr "^BGVocê pegou o ^F1Regenerador de combustível"
 
 #: qcsrc/common/notifications/all.inc:699
 msgid "^BGYou got the ^F1Jetpack"
-msgstr ""
+msgstr "^BGVocê pegou a ^F1Mochila a Jato"
 
 #: qcsrc/common/notifications/all.inc:707
 msgid ""
@@ -4242,6 +4268,7 @@ msgstr "^F2Intruso detectado, desativando escudos!"
 #: qcsrc/common/notifications/all.qh:194
 msgid "Notification dump command only works with cl_cmd and sv_cmd."
 msgstr ""
+"O comando de despejo de notificação funciona apenas com cl_cmd e sv_cmd."
 
 #: qcsrc/common/notifications/all.qh:405 qcsrc/common/notifications/all.qh:406
 #, c-format
@@ -4467,7 +4494,7 @@ msgstr ", perdendo sua cadeia de %d pontuações"
 #: qcsrc/common/notifications/all.qh:642
 #, c-format
 msgid " with %d %s"
-msgstr ""
+msgstr " com %d %s"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
@@ -4543,7 +4570,7 @@ msgstr "Rosa"
 
 #: qcsrc/common/turrets/all.qh:51
 msgid "Turrets dump command only works with sv_cmd."
-msgstr ""
+msgstr "O comando de despejo de sentinelas funciona apenas com sv_cmd."
 
 #: qcsrc/common/turrets/cl_turrets.qc:125
 #, c-format

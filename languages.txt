@@ -4,20 +4,20 @@ de_CH "German (Switzerland)" "Deutsch (Schweiz)" 92%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 81%
 es    "Spanish" "Español" 92%
-fr    "French" "Français" 94%
+fr    "French" "Français" 96%
 ga    "Irish" "Irish" 34%
 it    "Italian" "Italiano" 100%
 hu    "Hungarian" "Magyar" 51%
 nl    "Dutch" "Nederlands" 66%
 pl    "Polish" "Polski" 76%
 pt    "Portuguese" "Português" 91%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 92%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 95%
 ro    "Romanian" "Romana" 78%
 fi    "Finnish" "Suomi" 32%
 el    "Greek" "Ελληνική" 42%
 be    "Belarusian" "Беларуская" 58%
 bg    "Bulgarian" "Български" 64%
-ru    "Russian" "Русский" 99%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 66%
 uk    "Ukrainian" "Українська" 53%
 zh_CN "Chinese (China)" "中文" 60%

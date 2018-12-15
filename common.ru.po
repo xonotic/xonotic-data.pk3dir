@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-14 00:27+0000\n"
-"Last-Translator: Nick S <morosophos@teichisma.info>\n"
+"PO-Revision-Date: 2018-12-14 06:48+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -760,7 +760,7 @@ msgstr "ЭЛО игрока"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:314
 msgid "Player FPS"
-msgstr "ФПС игрока"
+msgstr "FPS игрока"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid "Number of kills"
@@ -1840,23 +1840,23 @@ msgstr "Граната"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:20
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "Оверкилл Тяжёлый Пулемёт"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:18
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "Оверкилл Пулемёт"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "Оверкилл Некс"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:20
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Оверкилл Реактивная Бензопила"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "Оверкилл Дробовик"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -3214,24 +3214,25 @@ msgstr "^BG%s^K1 взорвал сам себя с помощью Мортиры
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 застрелен из Оверкилл Тяжёлого Пулемёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 разорван на куски из Оверкилл Тяжёлого Пулемёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 изрешечён Оверкилл Пулемётом ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 был испарён Оверкилл Нексом ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
@@ -3239,29 +3240,31 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
+"^BG%s%s^K1 распилен пополам Оверкилл Реактивной Бензопилой ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s%s^K1 почти уклонился от Оверкилл Реактивной Бензопилы ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 распилен пополам своей же Оверкилл Реактивной Бензопилой%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 взорвал себя своей же Оверкилл Реактивной Бензопилой%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 пристрелен из Оверкилл Дробовика ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -6338,7 +6341,7 @@ msgstr "Усилители"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Overkill"
-msgstr "Overkill"
+msgstr "Оверкилл"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:97
 msgid "No powerups"
@@ -7028,7 +7031,7 @@ msgstr "Фоновые звуки:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:50
 msgid "Info:"
-msgstr "Инфо:"
+msgstr "Информация:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:57
 msgid "Items:"
@@ -9263,7 +9266,7 @@ msgstr "Модифицированные:"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr "SLCAT^Overkill"
+msgstr "SLCAT^Оверкилл"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
