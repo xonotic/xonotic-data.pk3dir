@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-14 06:48+0000\n"
+"PO-Revision-Date: 2018-12-16 06:22+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -730,7 +730,7 @@ msgid ""
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7загружает конфигурацию по-"
-"умолчанию и разворачивает ее в cvar scoreboard_columns, где вы можете ее "
+"умолчанию и выводит её в переменную scoreboard_columns, где вы можете её "
 "отредактировать"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:305
@@ -816,7 +816,7 @@ msgstr "Время быстрейшего захвата (Захват флаг�
 
 #: qcsrc/client/hud/panel/scoreboard.qc:327
 msgid "Number of flag carrier kills"
-msgstr "Число убитых флагоносцец"
+msgstr "Число убитых флагоносцев"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:328
 msgid "Number of flag returns"
@@ -1159,7 +1159,7 @@ msgstr "Запрос эскиза..."
 
 #: qcsrc/client/miscfunctions.qc:111
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr "Попытка удалить команду, отсутствующей в списке команд!"
+msgstr "Попытка удалить команду, отсутствующую в списке команд!"
 
 #: qcsrc/client/view.qc:1526
 msgid "Nade timer"
@@ -1195,7 +1195,7 @@ msgstr "заряды"
 
 #: qcsrc/common/items/item/ammo.qh:126
 msgid "plasma"
-msgstr "плащма"
+msgstr "плазма"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "rockets"
@@ -5707,19 +5707,19 @@ msgstr "Режим увел.:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr "Приближен"
+msgstr "Увеличен"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr "Не приближен"
+msgstr "Не увеличен"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr "Всегда приближен"
+msgstr "Всегда увеличен"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr "Никогда не приближен"
+msgstr "Никогда не увеличен"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -7273,7 +7273,7 @@ msgstr "Детализация геометрии:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Change the smoothness of the curves on the map"
-msgstr "Изменить сглаживание кривых на карте"
+msgstr "Меняет сглаживание кривых на карте"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
 msgid "DET^Lowest"
@@ -7409,8 +7409,7 @@ msgstr "Параллакс-маппинг"
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
-msgstr ""
-"Эффект рельефного текстурирования, который сделает 2D-текстуры трёхмерными"
+msgstr "Эффект рельефного текстурирования, делает 2D-текстуры трёхмерными"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
 msgid "Relief mapping"
@@ -7543,8 +7542,9 @@ msgid ""
 "Enable rendering of full realtime world lighting on maps that support it. "
 "Note that this might have a big impact on performance."
 msgstr ""
-"Включить отрисовку полного освещения реального времени на картах, "
-"поддерживающих это. Примечание: это скажется на производительности."
+"Включить отрисовку полноценного освещения реального времени на "
+"поддерживаемых картах. Примечание: значительно сказывается на "
+"производительности."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Enable rendering of shadows from realtime world lights"
@@ -7579,8 +7579,8 @@ msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
-"Включить эффект свечения, который увеличивает яркость пикселей, "
-"соседствующих с очень яркими. Сильно снижает производительность"
+"Включить эффект свечения, увеличивающий яркость пикселей рядом с очень "
+"яркими. Сильно снижает производительность."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:226
 msgid "Extra postprocessing effects"
@@ -7591,8 +7591,8 @@ msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
 msgstr ""
-"Включить специальные эффекты пост-обработки, когда получен урон, под водой "
-"или используется усилитель"
+"Включить специальные эффекты пост-обработки при получении урона, под водой и "
+"при использовании усилителя"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Motion blur strength - 0.4 recommended"
@@ -7612,7 +7612,7 @@ msgstr "Эффекты точек возрождения"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 msgid "Particles effects at all spawn points and whenever a player spawns"
-msgstr "Эффекты частиц на местах возрождения и в случае возрождения игрока"
+msgstr "Эффекты частиц на точках возрождения и в случае возрождения игрока"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
 msgid "Quality:"
@@ -7623,7 +7623,8 @@ msgstr "Качество:"
 msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
-msgstr "Множитель количества частиц. Чем меньше, тем выше производительность"
+msgstr ""
+"Множитель количества частиц. Чем он меньше, тем выше производительность"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
 msgid "Particles further away than this will not be drawn"
@@ -7932,7 +7933,7 @@ msgstr "Уведомления бонусов"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Weapon centerprint notifications"
-msgstr "Центральные уведомления оружий"
+msgstr "Уведомления оружия в центральной панели"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:92
 msgid "Weapon info message notifications"
@@ -8049,7 +8050,7 @@ msgstr "Вид от 1-ого лица"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:30
 msgid "Slide to third person upon death"
-msgstr "Переходить в режим от третьего лица при смерти"
+msgstr "Переходить в режим третьего лица при смерти"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:34
 msgid "Smooth the view when landing from a jump"
@@ -8097,7 +8098,7 @@ msgstr "Кратность увеличения:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:78
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr "Насколько большой множитель масштабирования при прицеливании"
+msgstr "Множитель масштабирования при нажатии кнопки увеличителя"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:81
 msgid "ZOOM^Zoom speed:"
@@ -8155,7 +8156,7 @@ msgstr "Вид"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:34
 msgid "Weapon Priority List (* = mutator weapon)"
-msgstr "Список приоритета оружия (* = из мутатора)"
+msgstr "Приоритет оружия (* = из мутатора)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:40
 msgid "Up"
@@ -8167,7 +8168,7 @@ msgstr "Вниз"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid "Use priority list for weapon cycling"
-msgstr "Использовать приоритеты для переключения оружия"
+msgstr "Использовать приоритет при переключении оружия"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:51
 msgid ""
@@ -8263,7 +8264,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:66
 msgid "Invert aiming"
-msgstr "Обратить мышь"
+msgstr "Инвертировать мышь по вертикали"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:67
 msgid "Invert mouse movement on the Y-axis"
@@ -8434,7 +8435,7 @@ msgstr "Предсказание движения на стороне клиен
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Movement error compensation"
-msgstr "Компенсация ошибки движения"
+msgstr "Компенсация ошибок движения"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Use encryption (AES) when available"
@@ -8828,7 +8829,7 @@ msgstr "Усиление контраста:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:136
 msgid "By how much to multiply the contrast in dark areas"
-msgstr "Множитель контраста для тёмных областей"
+msgstr "Множитель контраста тёмных областей"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid "Saturation:"
@@ -9052,11 +9053,11 @@ msgstr "бросить оружие / кинуть гранату"
 
 #: qcsrc/menu/xonotic/keybinder.qc:77
 msgid "hold zoom"
-msgstr "увеличение"
+msgstr "держать для увеличения"
 
 #: qcsrc/menu/xonotic/keybinder.qc:78
 msgid "toggle zoom"
-msgstr "переключить увеличение"
+msgstr "переключать увеличение"
 
 #: qcsrc/menu/xonotic/keybinder.qc:79
 msgid "show scores"
@@ -9331,8 +9332,8 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
-"Изменение резкости текстур. Снижение повысит эффективность расхода памяти "
-"текстурами, но сделает их размытыми."
+"Изменение резкости текстур. Снижение повысит эффективность расхода памяти, "
+"но сделает текстуры размытыми."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:115
 msgid "Screen resolution"
