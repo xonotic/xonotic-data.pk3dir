@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-16 06:22+0000\n"
+"PO-Revision-Date: 2018-12-16 13:57+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -547,7 +547,7 @@ msgstr "^2ШТРАФ: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:82
 msgid "SCO^bckills"
-msgstr "SCO^убийств"
+msgstr "SCO^убийства"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:83
 msgid "SCO^bctime"
@@ -1142,7 +1142,7 @@ msgstr "Голосование за карту"
 #: qcsrc/client/mapvoting.qc:391
 #, c-format
 msgid "%d seconds left"
-msgstr "Осталось %d секунд"
+msgstr "Секунд осталось: %d"
 
 #: qcsrc/client/mapvoting.qc:504
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
@@ -2013,11 +2013,11 @@ msgstr "Отмечен"
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:699
 #, c-format
 msgid "%s needing help!"
-msgstr "%s требуется помощь!"
+msgstr "Требуется помощь %s!"
 
 #: qcsrc/common/net_notice.qc:87
 msgid "^1Server notices:"
-msgstr "^1Уведомления от сервера:"
+msgstr "^1Уведомления сервера:"
 
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2034,8 +2034,8 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG захватили ^TC^TT^BG флаг за ^F1%s^BG секунд, сбросив предыдущий "
-"рекорд ^BG%s^BG  - ^F2%s^BG секунды"
+"^BG%s^BG захватили ^TC^TT^BG флаг за ^F1%s^BG секунд, побив предыдущий "
+"рекорд ^BG%s^BG - ^F2%s^BG секунды"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
@@ -2053,8 +2053,8 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
-"^BG%s^BG захватили ^TC^TT^BG флаг за ^F2%s^BG секунд, не сумев побить ^BG"
-"%s^BG's предыдущий рекорд в ^F1%s^BG секунд"
+"^BG%s^BG захватили ^TC^TT^BG флаг за ^F2%s^BG секунд, не сумев побить "
+"предыдущий рекорд ^BG%s^BG - ^F2%s^BG секунды"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
@@ -2074,11 +2074,11 @@ msgstr "^BGФлаг был уничтожен и возвращён на баз�
 
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr "^BG ^TC^TT^BG Флаг был брошен на базе и возвращён"
+msgstr "^BG ^TC^TT^BG Флаг был брошен на базе и возвращён автоматически"
 
 #: qcsrc/common/notifications/all.inc:251
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr "^BGФлаг был брошен на базе и вернулся сам по себе"
+msgstr "^BGФлаг был брошен на базе и возвращён автоматически"
 
 #: qcsrc/common/notifications/all.inc:252
 msgid ""
@@ -2097,7 +2097,7 @@ msgid ""
 "itself"
 msgstr ""
 "^BG^TC^TT^BG У флага кончилось терпение, и после ^F1%.2f^BG секунд ожидания "
-"он вернулся на базу"
+"он вернулся на базу автоматически"
 
 #: qcsrc/common/notifications/all.inc:255
 #, c-format
@@ -2105,7 +2105,7 @@ msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
 msgstr ""
 "^BGУ флага кончилось терпение, и после ^F1%.2f^BG секунд ожидания он "
-"вернулся на базу"
+"вернулся на базу автоматически"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
@@ -2208,7 +2208,7 @@ msgstr "^BG%s%s^K1 испечён с помощью ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 отправлен к монстрам рукой ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 отправлен к монстрам руками ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
@@ -2343,7 +2343,7 @@ msgstr "^BG%s%s^K1 не смог скрыться от Гонщика, упра�
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 отправлен в мир боли рукой ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 отправлен в мир боли руками ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
@@ -2545,7 +2545,7 @@ msgstr "^BG%s^K1 попал под огонь Зенитной Пушки %s%s"
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s"
-msgstr "^BG%s^K1 разорван в клочья турелью Hellion%s%s"
+msgstr "^BG%s^K1 разорван в клочья турелью Хулигана%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
@@ -2742,7 +2742,7 @@ msgstr "^BGВы подобрали ^F1%s"
 #: qcsrc/common/notifications/all.inc:703
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr "^BGУ вас недостаточно патронов для ^F1%s"
+msgstr "^BGНедостаточно патронов, чтобы использовать ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:386
 #: qcsrc/common/notifications/all.inc:704
@@ -2791,7 +2791,7 @@ msgstr "^BG%s^BG Завладел мячом!"
 #: qcsrc/common/notifications/all.inc:397
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr "^BG%s^BG захватил ключ ^TC^TT команды"
+msgstr "^BG%s^BG захватил ключ команды ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:398
 #, c-format
@@ -4173,7 +4173,7 @@ msgstr "^BGВпереди ещё много чего..."
 #: qcsrc/common/notifications/all.inc:772
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
-msgstr "^BGВсего лишь %s^BG осталось..."
+msgstr "^BGОсталось всего лишь %s^BG..."
 
 #: qcsrc/common/notifications/all.inc:774
 msgid "^F2Superweapons have broken down"
@@ -4579,11 +4579,11 @@ msgstr "Термоядерный Реактор"
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
-msgstr "Ракетные турели Хеллиона"
+msgstr "Ракетные турели Хулигана"
 
 #: qcsrc/common/turrets/turret/hellion_weapon.qh:7
 msgid "Hellion"
-msgstr "Хеллион"
+msgstr "Хулиган"
 
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
@@ -4992,7 +4992,7 @@ msgstr ""
 #: qcsrc/lib/string.qh:81
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
-msgstr "%d д., %02d:%02d:%02d"
+msgstr "%d д, %02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:82
 #, c-format
@@ -5763,7 +5763,7 @@ msgstr "Панель таймера"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
-msgstr "Прозр. после голосования:"
+msgstr "Прозрач. после голосования:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -5880,7 +5880,7 @@ msgstr "Применить тему"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:37
 msgid "Save current skin"
-msgstr "Сохранить текущую оболочку"
+msgstr "Сохранить текущую тему"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "Panel background defaults:"
@@ -5921,7 +5921,7 @@ msgstr "Отключено"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:96
 msgid "DOCK^Small"
-msgstr "Небольшая"
+msgstr "Малая"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:97
 msgid "DOCK^Medium"
@@ -6109,7 +6109,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid "Number of bots:"
-msgstr "Кол-во ботов:"
+msgstr "Число ботов:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Amount of bots on your server"
@@ -6173,7 +6173,7 @@ msgstr "Мутаторы..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:156
 msgid "Mutators and weapon arenas"
-msgstr "Мутаторы и арены оружий"
+msgstr "Мутаторы и арены оружия"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:165
 msgid "Maplist"
@@ -7071,7 +7071,7 @@ msgstr "Частота:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:107
 msgid "Sound output frequency"
-msgstr "Частота дискретизации для вывода звука"
+msgstr "Частота дискретизации вывода звука"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "8 kHz"
@@ -7079,7 +7079,7 @@ msgstr "8 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:109
 msgid "11.025 kHz"
-msgstr "11.025 кГц"
+msgstr "11,025 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "16 kHz"
@@ -7087,7 +7087,7 @@ msgstr "16 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:111
 msgid "22.05 kHz"
-msgstr "22.05 кГц"
+msgstr "22,05 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:112
 msgid "24 kHz"
@@ -7099,7 +7099,7 @@ msgstr "32 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:114
 msgid "44.1 kHz"
-msgstr "44.1 кГц"
+msgstr "44,1 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:115
 msgid "48 kHz"
@@ -7477,7 +7477,7 @@ msgstr "Время:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:179
 msgid "Time in seconds before decals fade away"
-msgstr "Время исчезнования следов в секундах"
+msgstr "Время исчезновения следов в секундах"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid "Damage effects:"
@@ -7724,7 +7724,7 @@ msgstr "Скорость затухания"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:51
 msgid "Enable rows / columns highlighting"
-msgstr "Включить подстветку строк и столбцов"
+msgstr "Включить подсветку строк и столбцов"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show decimals in respawn countdown"
@@ -7757,7 +7757,7 @@ msgstr "Размер шрифта:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:80
 msgid "Edge offset:"
-msgstr "Смещение краев:"
+msgstr "Смещение краёв:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:89
 msgid "Fade when near the crosshair"
@@ -8106,8 +8106,7 @@ msgstr "Скорость увеличения:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:83
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr ""
-"Насколько быстро будет увеличение; отключите, чтобы прицеливаться мгновенно"
+msgstr "Скорость увеличения; отключите, чтобы прицеливаться мгновенно"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:92
 msgid "ZOOM^Instant"
@@ -8395,7 +8394,7 @@ msgstr "Широкополосная"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:44
 msgid "Input packets/s:"
-msgstr "Кол-во пакетов/с:"
+msgstr "Число пакетов/с:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 msgid "How many input packets to send to the server each second"

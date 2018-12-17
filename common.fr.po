@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-14 21:00+0000\n"
+"PO-Revision-Date: 2018-12-16 12:23+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -702,7 +702,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:299
 msgid "Usage:"
-msgstr "Usage :"
+msgstr "Utilisation :"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:301
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
@@ -806,15 +806,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:327
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Nombre de porteurs de drapeaux tués"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:328
 msgid "Number of flag returns"
-msgstr ""
+msgstr "Nombre de drapeaux retournés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:329
 msgid "Number of flag drops"
-msgstr ""
+msgstr "Nombre de drapeaux lâchés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:330
 msgid "Number of lives (LMS)"
@@ -822,35 +822,35 @@ msgstr "Nombre de vies (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid "Player rank"
-msgstr ""
+msgstr "Rang du joueur"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:332
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Nombre de joueurs poussés dans le vide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:333
 msgid "Number of keys destroyed by pushing them into void"
-msgstr ""
+msgstr "Nombre de clés détruites en les poussant dans le vide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:334
 msgid "Number of keys carrier kills"
-msgstr ""
+msgstr "Nombre de porteurs de clés tués"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:335
 msgid "Number of times a key was lost"
-msgstr ""
+msgstr "Nombre de fois qu'une clé a été perdue"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:336
 msgid "Number of laps finished (race/cts)"
-msgstr ""
+msgstr "Nombre de tours complétés (course/cts)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:337
 msgid "Total time raced (race/cts)"
-msgstr ""
+msgstr "Temps total en course (course/cts)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:338
 msgid "Time of fastest lap (race/cts)"
-msgstr ""
+msgstr "Temps du tour le plus rapide (course/cts)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:339
 msgid "Number of ticks (DOM)"
@@ -862,7 +862,7 @@ msgstr "Nombre de points de domination capturés (DOM)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:341
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Nombre de porteurs de balle tués"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:342
 msgid "Total amount of time holding the ball in Keepaway"
@@ -1022,7 +1022,7 @@ msgstr "ÉCHAUFFEMENT"
 
 #: qcsrc/client/hud/panel/vote.qc:27
 msgid "^1You must answer before entering hud configure mode"
-msgstr ""
+msgstr "^1Vous devez répondre avant d'entrer dans la configuration de l'ATH"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1127,10 +1127,11 @@ msgstr "%d secondes restantes"
 #: qcsrc/client/mapvoting.qc:504
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
+"mv_mapdownload : ^3Vous n'êtes pas censé utiliser cette commande vous-même !"
 
 #: qcsrc/client/mapvoting.qc:514
 msgid "^1Error:^7 Couldn't find pak index."
-msgstr ""
+msgstr "^1Erreur :^7 Impossible de trouver l'index du pak."
 
 #: qcsrc/client/mapvoting.qc:523
 msgid "Requesting preview..."
@@ -1831,23 +1832,23 @@ msgstr "Grenade"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:20
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "Mitraillette Overkill lourde"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:18
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "Mitraillette Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "Nex Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:20
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Tronçonneuse à roquettes Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "Fusil Overkill"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2050,7 +2051,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr "^BGLe drapeau ^TC^TT^BG a été renvoyé à la base par son propriétaire"
+msgstr "^BGLe drapeau ^TC^TT^BG a été retourné à la base par son propriétaire"
 
 #: qcsrc/common/notifications/all.inc:247
 msgid "^BGThe flag was returned by its owner"
@@ -2058,7 +2059,7 @@ msgstr "^BGLe drapeau a été retourné par son propriétaire"
 
 #: qcsrc/common/notifications/all.inc:248
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr "^BGLe drapeau ^TC^TT^BG a été détruit et est revenu à la base"
+msgstr "^BGLe drapeau ^TC^TT^BG a été détruit et est retourné à la base"
 
 #: qcsrc/common/notifications/all.inc:249
 msgid "^BGThe flag was destroyed and returned to base"
@@ -2067,11 +2068,11 @@ msgstr "^BGLe drapeau a été détruit et est retourné à la base"
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
 msgstr ""
-"^BGLe drapeau ^TC^TT^BG a été lâché dans la base et est revenu tout seul"
+"^BGLe drapeau ^TC^TT^BG a été lâché dans la base et est retourné tout seul"
 
 #: qcsrc/common/notifications/all.inc:251
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr "^BGLe drapeau a été lâché dans la base et est revenu tout seul"
+msgstr "^BGLe drapeau a été lâché dans la base et est retourné tout seul"
 
 #: qcsrc/common/notifications/all.inc:252
 msgid ""
@@ -2079,7 +2080,7 @@ msgid ""
 "base"
 msgstr ""
 "^BGLe drapeau ^TC^TT^BG est tombé dans un endroit inaccessible est est "
-"revenu à la base"
+"retourné à la base"
 
 #: qcsrc/common/notifications/all.inc:253
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
@@ -2094,19 +2095,19 @@ msgid ""
 "itself"
 msgstr ""
 "^BGLe drapeau ^TC^TT^BG s'est impatienté après ^F1%.2f^BG secondes et est "
-"revenu tout seul"
+"retourné tout seul"
 
 #: qcsrc/common/notifications/all.inc:255
 #, c-format
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
 msgstr ""
-"^BGLe drapeau s'est impatienté après ^F1%.2f^BG secondes et est revenu tout "
-"seul"
+"^BGLe drapeau s'est impatienté après ^F1%.2f^BG secondes et est retourné "
+"tout seul"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr "^BGLe drapeau ^TC^TT^BG est revenu à la base"
+msgstr "^BGLe drapeau ^TC^TT^BG est retourné à la base"
 
 #: qcsrc/common/notifications/all.inc:257
 msgid "^BGThe flag has returned to the base"
@@ -3230,23 +3231,28 @@ msgstr "^BG%s^K1 s'est fait sauter avec son propre Mortier%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 a été abattu par la Mitraillette Overkill lourde de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 a été réduit en miettes par la Mitraillette Overkill lourde de ^BG"
+"%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 a été criblé de balles par la Mitraillette Overkill de ^BG%s^K1%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a été vaporisé par le Nex Overkill de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
@@ -3254,29 +3260,35 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
+"^BG%s%s^K1 a été scié en deux par la Tronçonneuse à roquettes Overkill de ^BG"
+"%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s%s^K1 a presque évité la Tronçonneuse à roquettes Overkill de ^BG%s^K1%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 a été scié en deux par sa propre Tronçonneuse à roquettes Overkill%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 s'est fait sauter avec sa propre Tronçonneuse à roquettes%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a été abattu par le Fusil Overkill de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3487,7 +3499,7 @@ msgstr "^BGVous avez le drapeau !"
 #: qcsrc/common/notifications/all.inc:575
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr "^BGVous avez le drapeau de votre équipe %s^BG, rapportez-le !"
+msgstr "^BGVous avez le drapeau de votre équipe %s^BG, retournez-le !"
 
 #: qcsrc/common/notifications/all.inc:576
 #, c-format
@@ -5025,7 +5037,7 @@ msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr ""
+msgstr "Utilisation : menu_cmd commande..., où les commandes possibles sont :"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
 msgid "  sync - reloads all cvars on the current menu page"
@@ -9357,6 +9369,8 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
+"Ajuster la finesse des textures. Une valeur plus basse diminue l'utilisation "
+"des ressources, mais rend les textures floues."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:115
 msgid "Screen resolution"
@@ -9470,7 +9484,7 @@ msgstr "ELO :"
 
 #: qcsrc/menu/xonotic/statslist.qc:214
 msgid "Rank:"
-msgstr "Classement :"
+msgstr "Rang :"
 
 #: qcsrc/menu/xonotic/statslist.qc:221
 msgid "Percentile:"
