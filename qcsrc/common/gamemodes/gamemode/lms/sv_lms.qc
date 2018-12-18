@@ -186,7 +186,7 @@ void lms_RemovePlayer(entity player)
 	{
 		int pl_cnt = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
-		if (player.lms_spectate_warning != 2)
+		if (player.lms_spectate_warning < 2)
 		{
 			if(IS_BOT_CLIENT(player))
 				bot_clear(player);
@@ -224,8 +224,8 @@ void lms_RemovePlayer(entity player)
 			lms_lowest_lives = 0; // end the game now!
 	}
 
-	if(CS(player).killcount != FRAGS_SPECTATOR)
-		if(GameRules_scoring_add(player, LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
+	if (CS(player).killcount != FRAGS_SPECTATOR && player.lms_spectate_warning < 3)
+		if (GameRules_scoring_add(player, LMS_RANK, 0) > 0 && player.lms_spectate_warning < 2)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_FORFEIT, player.netname);
@@ -234,6 +234,9 @@ void lms_RemovePlayer(entity player)
 MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
+
+	// no further message other than the disconnect message
+	player.lms_spectate_warning = 3;
 
 	lms_RemovePlayer(player);
 }
