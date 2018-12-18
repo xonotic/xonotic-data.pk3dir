@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-16 13:57+0000\n"
+"PO-Revision-Date: 2018-12-17 10:58+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -8592,7 +8592,7 @@ msgstr "Пока вы подключены, изменение языка вст
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
-msgstr "полное применение языка вступит в силу только начала следующей игры"
+msgstr "полное применение языка вступит в силу только с начала следующей игры"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
@@ -8864,7 +8864,7 @@ msgstr "Общая яркость отрисовки"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:155
 msgid "Wait for GPU to finish each frame"
-msgstr "Ждать завершения каждого кадра ГП"
+msgstr "Ждать завершения каждого кадра видеокартой"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:156
 msgid ""

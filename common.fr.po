@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-16 12:23+0000\n"
+"PO-Revision-Date: 2018-12-17 08:29+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -794,15 +794,19 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:324
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr ""
+"Combien de fois un drapeau (CTF) ou une clé (Chasse aux Clés) a été "
+"capturé(e)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:325
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
+"Combien de fois un drapeau (CTF) ou une clé (Chasse aux Clés) ou une balle "
+"(Gardez-la-Balle) a été ramassé(e)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:326
 msgid "Time of fastest cap (CTF)"
-msgstr ""
+msgstr "Temps de la capture la plus rapide (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:327
 msgid "Number of flag carrier kills"
@@ -866,7 +870,7 @@ msgstr "Nombre de porteurs de balle tués"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:342
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
+msgstr "Temps total de possession de balle en mode Gardez-la-Balle"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:343
 msgid "Total score"
@@ -5041,15 +5045,17 @@ msgstr "Utilisation : menu_cmd commande..., où les commandes possibles sont :"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
 msgid "  sync - reloads all cvars on the current menu page"
-msgstr ""
+msgstr "sync - recharge toutes les cvars sur la page de menu actuelle"
 
 #: qcsrc/menu/command/menu_cmd.qc:50
 msgid "  directmenu ITEM - select a menu item as main item"
 msgstr ""
+"directmenu OBJET - sélectionne un objet du menu en tant qu'élément principal"
 
 #: qcsrc/menu/command/menu_cmd.qc:51
 msgid "  dumptree - dump the state of the menu as a tree to the console"
 msgstr ""
+"dumptree - décharge l'état du menu sous la forme d'un arbre dans la console"
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available options:"
@@ -7439,7 +7445,7 @@ msgstr "Brillance des textures"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid "Enable the use of glossmaps on textures supporting it"
-msgstr ""
+msgstr "Activer le reflet des textures"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:145
 msgid "Offset mapping"
@@ -7472,7 +7478,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 msgid "Resolution of reflections/refractions"
-msgstr ""
+msgstr "Résolution des reflets / réfractions"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:157
 msgid "Blurred"
@@ -7492,7 +7498,7 @@ msgstr "Impacts"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
 msgid "Enable decals (bullet holes and blood)"
-msgstr ""
+msgstr "Activer les marques d'impact et de sang"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:165
 msgid "Decals on models"
@@ -7506,6 +7512,8 @@ msgstr "Distance :"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:172
 msgid "Decals further away than this will not be drawn"
 msgstr ""
+"Les marques d'impact situées au-delà de cette distance ne seront pas "
+"affichées"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:176
 msgid "Time:"
@@ -7513,7 +7521,7 @@ msgstr "Durée :"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:179
 msgid "Time in seconds before decals fade away"
-msgstr ""
+msgstr "Durée en secondes avant que les marques d'impact ne disparaissent"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid "Damage effects:"
