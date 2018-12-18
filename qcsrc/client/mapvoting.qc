@@ -322,6 +322,7 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 }
 
 vector prev_mousepos;
+// draws map vote or gametype vote
 void MapVote_Draw()
 {
 	string map;
@@ -464,7 +465,7 @@ void MapVote_Draw()
 	mv_selection = MapVote_Selection(pos, dist, rows, mv_columns);
 
 	if (mv_top2_time)
-		mv_top2_alpha = max(0.2, 1 - (time - mv_top2_time)*(time - mv_top2_time));
+		mv_top2_alpha = max(0.2, 1 - (time - mv_top2_time) ** 2);
 
 	void (vector, float, float, string, string, float, float) DrawItem;
 
