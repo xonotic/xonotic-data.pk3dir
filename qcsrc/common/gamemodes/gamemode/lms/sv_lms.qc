@@ -37,7 +37,7 @@ int WinningCondition_LMS()
 {
 	entity first_player = NULL;
 	int totalplayers = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
 		if (!totalplayers)
 			first_player = it;
 		++totalplayers;
@@ -185,7 +185,9 @@ void lms_RemovePlayer(entity player)
 	if (!player_rank)
 	{
 		int pl_cnt = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+			pl_cnt++;
+		});
 		if (player.lms_spectate_warning < 2)
 		{
 			if(IS_BOT_CLIENT(player))
@@ -220,8 +222,6 @@ void lms_RemovePlayer(entity player)
 			player.frags = FRAGS_LMS_LOSER;
 			TRANSMUTE(Observer, player);
 		}
-		if (pl_cnt == 2 && !warmup_stage) // a player is forfeiting leaving only one player
-			lms_lowest_lives = 0; // end the game now!
 	}
 
 	if (CS(player).killcount != FRAGS_SPECTATOR && player.lms_spectate_warning < 3)
@@ -305,7 +305,9 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		if(tl <= 0)
 		{
 			int pl_cnt = 0;
-			FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
+			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+				pl_cnt++;
+			});
 			if(IS_BOT_CLIENT(frag_target))
 				bot_clear(frag_target);
 			frag_target.frags = FRAGS_LMS_LOSER;
