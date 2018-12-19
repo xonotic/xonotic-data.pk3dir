@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-15 00:19+0000\n"
+"PO-Revision-Date: 2018-12-18 18:59+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -1845,23 +1845,23 @@ msgstr "Granada"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:20
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "Metralhadora Pesada Suprema"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:18
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "Metralhadora Suprema"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "Nex Suprema"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:20
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Lança-motosserras Supremo"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "Escopeta Suprema"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -3236,13 +3236,14 @@ msgstr "^BG%s^K1 se explodiu com o seu próprio Mortar%s%s"
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s^K1%s%s atingiu ^BG%s%s^K1 com sua Metralhadora Pesada Suprema"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
+"A ^BG%sMetralhadora Pesada Suprema de ^K1%s%s deixou ^BG%s%s^K1 em pedacinhos"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
@@ -4717,7 +4718,7 @@ msgstr "Spiderbot"
 
 #: qcsrc/common/weapons/all.qh:77
 msgid "Weapons dump command only works with sv_cmd."
-msgstr ""
+msgstr "O comando de despejo de armas funciona apenas com sv_cmd."
 
 #: qcsrc/common/weapons/weapon/arc.qh:18
 msgid "Arc"
@@ -5025,27 +5026,29 @@ msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr ""
+msgstr "Uso: comando menu_cmd..., onde os possíveis comandos são:"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
 msgid "  sync - reloads all cvars on the current menu page"
-msgstr ""
+msgstr " sync - recarrega todas as cvars no menu atual"
 
 #: qcsrc/menu/command/menu_cmd.qc:50
 msgid "  directmenu ITEM - select a menu item as main item"
-msgstr ""
+msgstr " directmenu ITEM - seleciona um item do menu como principal"
 
 #: qcsrc/menu/command/menu_cmd.qc:51
 msgid "  dumptree - dump the state of the menu as a tree to the console"
-msgstr ""
+msgstr "  dumptree - despeja o estado do menu como uma árvore ao console"
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available options:"
-msgstr ""
+msgstr "Opções disponíveis:"
 
 #: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
+"Comando inválido. Digite menu_cmd help para obter uma lista de comandos "
+"suportados."
 
 #: qcsrc/menu/item/listbox.qc:413
 #, c-format
@@ -5503,11 +5506,11 @@ msgstr "Desabilitar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 msgid "Enable spectating"
-msgstr ""
+msgstr "Ativar observação"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr ""
+msgstr "Ativar jogo equilibrado no aquecimento"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
@@ -5564,15 +5567,15 @@ msgstr "Painel de Notificações"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/util.qc:765
 msgid "Enable"
-msgstr ""
+msgstr "Ativar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Enable even observing"
-msgstr ""
+msgstr "Ativar observação equilibrada"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Enable only in Race/CTS"
-msgstr ""
+msgstr "Ativar somente em Corrida/CTS"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
@@ -5674,11 +5677,11 @@ msgstr "Painel do Cronômetro de Corrida"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Enable in team games"
-msgstr ""
+msgstr "Ativar em modos de equipe"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
-msgstr ""
+msgstr "Ativar sempre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
@@ -6344,7 +6347,7 @@ msgstr "No ar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Melee only"
-msgstr ""
+msgstr "Somente corpo a corpo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:229
@@ -6385,7 +6388,7 @@ msgstr "Toque explosivo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:103
 msgid "Wall jumping"
-msgstr ""
+msgstr "Salto de parede"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "MUT^None"
@@ -6405,7 +6408,7 @@ msgstr "Todos jogadores ficarão quase invisíveis"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:179
 msgid "Only possible to inflict damage on your enemy while they're airborne"
-msgstr ""
+msgstr "Só é possível causar dano aos inimigos enquanto estiverem no ar."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:183
 msgid "Damage done to your enemy gets added to your own health"
@@ -6458,6 +6461,8 @@ msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr ""
+"Os jogadores receberão um conjunto de armas ao surgirem e munição ilimitada. "
+"Não haverá armas disponíveis no mapa."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:243
 msgid "Weapon arenas:"
@@ -6465,7 +6470,7 @@ msgstr "Arenas de armas:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:246
 msgid "Custom weapons"
-msgstr ""
+msgstr "Armas personalizadas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:268
 msgid "Most weapons"
@@ -6570,7 +6575,7 @@ msgstr "Desconectar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Disconnect from the server"
-msgstr ""
+msgstr "Desconectar-se do servidor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:264
@@ -6634,7 +6639,7 @@ msgstr "Necessário (irá encriptar)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr ""
+msgstr "Use a cvar \"crypto_aeslevel\" para alterar suas preferências"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
 msgid "Hostname:"
@@ -6874,7 +6879,7 @@ msgstr "Gênero"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
-msgstr "Tem certeza de que deseja sair?"
+msgstr "Quer mesmo sair?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 msgid "Back to work..."
@@ -7305,7 +7310,7 @@ msgstr "Detalhes da geometria:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Change the smoothness of the curves on the map"
-msgstr ""
+msgstr "Altera a suavização das curvas no mapa."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
 msgid "DET^Lowest"
@@ -7402,6 +7407,8 @@ msgid ""
 "Disable textures completely for very slow hardware. This gives a huge "
 "performance boost, but looks very ugly."
 msgstr ""
+"Desativa completamente as texturas para sistemas muito lentos. Isso garante "
+"uma alto ganho de desempenho, mas deixa o jogo muito feio."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:135
 msgid "Use lightmaps"
@@ -7412,6 +7419,8 @@ msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory"
 msgstr ""
+"Usa lightmaps de alta resolução. O jogo ficará bonito, mas isso exigirá mais "
+"memória de vídeo."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:138
 msgid "Deluxe mapping"
@@ -7419,7 +7428,7 @@ msgstr "Mapeamento deluxe"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
 msgid "Use per-pixel lighting effects"
-msgstr ""
+msgstr "Usa efeitos de iluminação por pixel."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Gloss"
@@ -7427,7 +7436,7 @@ msgstr "Lustro"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid "Enable the use of glossmaps on textures supporting it"
-msgstr ""
+msgstr "Ativa glossmaps em texturas que suportam esse recurso."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:145
 msgid "Offset mapping"
@@ -7438,6 +7447,8 @@ msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
+"Efeito de mapeamento por paralaxe que faz as texturas com bumpmaps parecerem "
+"que estão \"saindo\" da superfície plana em 2D."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
 msgid "Relief mapping"
@@ -7447,6 +7458,8 @@ msgstr "Mapeamento de relevo"
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
+"Mapeamento por paralaxe de maior qualidade, o que também impacta bastante o "
+"desempenho."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "Reflections:"
@@ -7457,10 +7470,12 @@ msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
+"Qualidade dos reflexos e refrações. Impacta bastante o desempenho em mapas "
+"com superfícies refletoras."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 msgid "Resolution of reflections/refractions"
-msgstr ""
+msgstr "Resolução dos reflexos e refrações."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:157
 msgid "Blurred"
@@ -7480,7 +7495,7 @@ msgstr "Decalques"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
 msgid "Enable decals (bullet holes and blood)"
-msgstr ""
+msgstr "Ativa decalques (buracos de bala e sangue)."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:165
 msgid "Decals on models"
@@ -7493,7 +7508,7 @@ msgstr "Distância:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:172
 msgid "Decals further away than this will not be drawn"
-msgstr ""
+msgstr "Os decalques mais distantes que isso não serão desenhados."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:176
 msgid "Time:"
@@ -7501,7 +7516,7 @@ msgstr "Tempo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:179
 msgid "Time in seconds before decals fade away"
-msgstr ""
+msgstr "Tempo em segundos antes dos decalques desaparecerem."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid "Damage effects:"
@@ -7525,7 +7540,7 @@ msgstr "Desabilitar iluminação dinâmica"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Enable corona flares around certain lights"
-msgstr ""
+msgstr "Ativa luzes de corona em volta de certas luzes."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:194
 msgid "Fake corona lighting"
@@ -7536,6 +7551,8 @@ msgid ""
 "Enable faster but uglier dynamic lights by rendering bright coronas instead "
 "of real dynamic lights"
 msgstr ""
+"Ativa luzes dinâmicas mais rápidas, porém mais feias ao renderizar coronas "
+"brilhantes em vez de luzes dinâmicas reais."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:198
 msgid "Realtime dynamic lighting"
@@ -7544,6 +7561,7 @@ msgstr "Iluminação dinâmica em tempo real"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Enable rendering of dynamic lights such as explosions and rocket lights"
 msgstr ""
+"Ativa a renderização de luzes dinâmicas como explosões e luzes de foguetes."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
@@ -7552,7 +7570,7 @@ msgstr "Sombras"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Enable rendering of shadows from dynamic lights"
-msgstr ""
+msgstr "Ativa a renderização de sombras de luzes dinâmicas."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Realtime world lighting"
@@ -7563,10 +7581,12 @@ msgid ""
 "Enable rendering of full realtime world lighting on maps that support it. "
 "Note that this might have a big impact on performance."
 msgstr ""
+"Ativa a renderização de iluminação de mundo em tempo real em mapas que a "
+"suportam. Saiba que isso pode impactar bastante o desempenho."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Enable rendering of shadows from realtime world lights"
-msgstr ""
+msgstr "Ativa a renderização de sombras de luzes de mundo em tempo real."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Use normal maps"
@@ -7574,7 +7594,7 @@ msgstr "Usar normal maps"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Enable use of directional shading on textures"
-msgstr ""
+msgstr "Ativa o uso de sombreadores direcionais em texturas."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid "Soft shadows"
@@ -7586,7 +7606,7 @@ msgstr "Enfraquecer corona de acordo com a visibilidade"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
 msgid "Fade coronas according to visibility"
-msgstr ""
+msgstr "Desvanece as coronas de acordo com a visibilidade."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
 msgid "Bloom"
@@ -7597,6 +7617,8 @@ msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
+"Ativa o efeito bloom, que ilumina os pixeis próximos a pixeis muito "
+"brilhantes. Impacta bastante o desempenho."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:226
 msgid "Extra postprocessing effects"
@@ -7607,6 +7629,8 @@ msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
 msgstr ""
+"Ativa efeitos especiais de pós-processamento ao receber dano, estar debaixo "
+"d'água ou usar potencializadores."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Motion blur strength - 0.4 recommended"
@@ -7640,10 +7664,12 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Multiplicador para a quantidade de partículas. Menos significa menos "
+"partículas, o que resulta em um melhor desempenho."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
 msgid "Particles further away than this will not be drawn"
-msgstr ""
+msgstr "As partículas mais distantes que isso não serão desenhadas."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:31
 msgid "No crosshair"
@@ -7781,7 +7807,7 @@ msgstr "Desvanecer ao se aproximar do retículo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:93
 msgid "Display names instead of icons"
-msgstr ""
+msgstr "Exibe nomes em vez de ícones."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:98
 msgid "Damage"
@@ -8110,7 +8136,7 @@ msgstr "Campo de visão:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
 msgid "Field of vision in degrees"
-msgstr ""
+msgstr "Campo de visão em graus."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:76
 msgid "ZOOM^Zoom factor:"
@@ -8585,8 +8611,7 @@ msgstr "Configurações avançadas"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr ""
-"Tem certeza de que deseja redefinir todas as configurações para o padrão?"
+msgstr "Quer mesmo redefinir todas as configurações para o padrão?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
@@ -8612,7 +8637,7 @@ msgstr "Desabilitar sangue e linguagem inapropriada"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:75
 msgid "Replace blood and gibs with content that does not have any gore effects"
-msgstr ""
+msgstr "Substitui o sangue com conteúdo que não contém nenhum efeito violento."
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
@@ -8710,6 +8735,8 @@ msgid ""
 "Enable vertical synchronization to prevent tearing, will cap your fps to the "
 "screen refresh rate"
 msgstr ""
+"Ativa a sincronização vertical para evitar cortes na tela. Isso limitará seu "
+"fps à taxa de atualização do monitor."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "Flip view horizontally"
@@ -8717,7 +8744,7 @@ msgstr "Girar a visão horizontalmente"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:68
 msgid "Poor man's left handed mode"
-msgstr ""
+msgstr "Modo canhoto do pobre coitado."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "Anisotropy:"
@@ -8725,7 +8752,7 @@ msgstr "Filtro anisotrópico:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:73
 msgid "Anisotropic filtering quality"
-msgstr ""
+msgstr "Qualidade do filtro anisotrópico."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:74
 msgid "ANISO^Disabled"
@@ -8758,6 +8785,8 @@ msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
+"Ativa o antisserrilhado, que suaviza as bordas da geometria em 3D. Saiba que "
+"isso pode diminuir bastante o desempenho."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "AA^Disabled"
@@ -8776,6 +8805,8 @@ msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
+"Elimina o excesso de renderização ao renderizar uma versão de profundidade "
+"única da cena antes que a renderização normal comece."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^Disabled"
@@ -8808,6 +8839,8 @@ msgid ""
 "Make use of Vertex Buffer Objects to store static geometry in video memory "
 "for faster rendering"
 msgstr ""
+"Faz uso de Vertex Buffer Objects (VBOs) para armazenar geometria estática na "
+"memória de vídeo para uma renderização mais rápida."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:113
 msgid "Vertices"
@@ -8823,7 +8856,7 @@ msgstr "Brilho:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:121
 msgid "Brightness of black"
-msgstr ""
+msgstr "Brilho do preto."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:123
 msgid "Contrast:"
@@ -8831,7 +8864,7 @@ msgstr "Contraste:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:125
 msgid "Brightness of white"
-msgstr ""
+msgstr "Brilho do branco."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:127
 msgid "Gamma:"
@@ -8842,6 +8875,8 @@ msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
 msgstr ""
+"Valor de correção de gama inverso. É um efeito de brilho que não afeta o "
+"branco ou preto."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:133
 msgid "Contrast boost:"
@@ -8849,7 +8884,7 @@ msgstr "Impulso do contraste:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:136
 msgid "By how much to multiply the contrast in dark areas"
-msgstr ""
+msgstr "Por quanto deve ser multiplicado o contraste em áreas escuras."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid "Saturation:"
@@ -8860,6 +8895,8 @@ msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
+"Ajuste da saturação (0 = tons de cinza, 1 = normal, 2 = muito saturado). "
+"Requer controle de cor GLSL."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
 msgid "LIT^Ambient:"
@@ -8870,6 +8907,8 @@ msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
 msgstr ""
+"Iluminação de ambiente. Caso o valor seja muito alto, poderá fazer com que "
+"as luzes dos mapas fiquem planas e sem graça."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Intensity:"
@@ -8877,7 +8916,7 @@ msgstr "Intensidade:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:152
 msgid "Global rendering brightness"
-msgstr ""
+msgstr "Brilho da renderização global."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:155
 msgid "Wait for GPU to finish each frame"
@@ -8888,6 +8927,9 @@ msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines"
 msgstr ""
+"Faz com que o processador espere a placa de vídeo terminar cada quadro. Pode "
+"ajudar em casos de atraso em dispositivos de entrada ou de vídeo em algumas "
+"máquinas."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
@@ -8902,6 +8944,8 @@ msgid ""
 "Enable use of GLSL to apply gamma correction, note that it might decrease "
 "performance by a lot"
 msgstr ""
+"Ativa o uso de GLSL para aplicar correção de gama. Saiba que isso pode "
+"diminuir bastante o desempenho."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:168
 msgid "Psycho coloring (easter egg)"
@@ -9037,7 +9081,7 @@ msgstr "gancho imediato"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "jetpack"
-msgstr ""
+msgstr "mochila a jato"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "Attacking"
@@ -9145,7 +9189,7 @@ msgstr "largar chave / largar bandeira"
 
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "respawn"
-msgstr ""
+msgstr "ressurgir"
 
 #: qcsrc/menu/xonotic/keybinder.qc:107
 msgid "quick menu"
@@ -9171,6 +9215,8 @@ msgstr "Não aperte este botão novamente!"
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
+"Hã? Impossível jogar isto (m é NULO). Refiltrando para que isso não ocorra "
+"novamente."
 
 #: qcsrc/menu/xonotic/maplist.qc:296
 #, c-format
@@ -9182,6 +9228,8 @@ msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Hã? Impossível jogar isto (modo de jogo inválido). Refiltrando para que isso "
+"não ocorra novamente."
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
@@ -9281,7 +9329,7 @@ msgstr "Servidores Modificados"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr "Overkill"
+msgstr "Exagero"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
@@ -9346,6 +9394,8 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
+"Altera a nitidez das texturas. Usar valores baixos reduzirá eficientemente o "
+"uso de memória para as texturas, mas fará com que pareçam mais desfocadas."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:115
 msgid "Screen resolution"
@@ -9417,49 +9467,49 @@ msgstr "Juntou-se:"
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
-msgstr ""
+msgstr "Última partida:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
-msgstr ""
+msgstr "Tempo de jogo:"
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:230
 msgid "Favorite map:"
-msgstr ""
+msgstr "Mapa favorito:"
 
 #: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
 #: qcsrc/menu/xonotic/statslist.qc:244
 #, c-format
 msgid "Matches:"
-msgstr ""
+msgstr "Partidas:"
 
 #: qcsrc/menu/xonotic/statslist.qc:154
 #, c-format
 msgid "Wins/Losses:"
-msgstr ""
+msgstr "Vitórias/derrotas:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Win percentage:"
-msgstr ""
+msgstr "Porcentagem de vitórias:"
 
 #: qcsrc/menu/xonotic/statslist.qc:166
 #, c-format
 msgid "Kills/Deaths:"
-msgstr ""
+msgstr "Vítimas/mortes:"
 
 #: qcsrc/menu/xonotic/statslist.qc:172
 #, c-format
 msgid "Kill ratio:"
-msgstr ""
+msgstr "Taxa de vítimas:"
 
 #: qcsrc/menu/xonotic/statslist.qc:207
 msgid "ELO:"
-msgstr ""
+msgstr "ELO:"
 
 #: qcsrc/menu/xonotic/statslist.qc:214
 msgid "Rank:"
-msgstr ""
+msgstr "Classificação:"
 
 #: qcsrc/menu/xonotic/statslist.qc:221
 msgid "Percentile:"
