@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-18 18:59+0000\n"
+"PO-Revision-Date: 2018-12-19 09:40+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -9513,7 +9513,7 @@ msgstr "Classificação:"
 
 #: qcsrc/menu/xonotic/statslist.qc:221
 msgid "Percentile:"
-msgstr ""
+msgstr "Percentil:"
 
 #: qcsrc/menu/xonotic/statslist.qc:246
 #, c-format
@@ -9526,6 +9526,8 @@ msgid ""
 "Update can be downloaded at:\n"
 "%s"
 msgstr ""
+"É possível baixar a atualização em:\n"
+"%s"
 
 #: qcsrc/menu/xonotic/util.qc:525
 msgid "Autogenerating mapinfo for newly added maps..."
@@ -9546,6 +9548,8 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
+"^1ERRO: a compressão de texturas é necessária, mas não é suportada.\n"
+"^1Espere problemas visuais."
 
 #: qcsrc/menu/xonotic/util.qc:787
 msgid "Use default"
@@ -9553,4 +9557,4 @@ msgstr "Usar padrão"
 
 #: qcsrc/menu/xonotic/util.qc:807
 msgid "Team Color:"
-msgstr "Cor de Equipe:"
+msgstr "Cor de equipe:"
