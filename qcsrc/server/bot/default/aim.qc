@@ -170,14 +170,15 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 		this.bot_canfire = 1;
 }
 
+// this function should be called after bot_aim so the aim is reset the next frame
 void bot_aim_reset(entity this)
 {
+	this.bot_mouseaim = this.v_angle;
+	this.bot_olddesiredang = this.v_angle;
 	this.bot_aimdir_executed = true;
 	this.bot_badaimtime = 0;
 	this.bot_aimthinktime = time;
 	this.bot_prevaimtime = time;
-	this.bot_mouseaim = this.v_angle;
-	this.bot_olddesiredang = this.v_angle;
 	this.bot_1st_order_aimfilter = '0 0 0';
 	this.bot_2nd_order_aimfilter = '0 0 0';
 	this.bot_3th_order_aimfilter = '0 0 0';
@@ -197,6 +198,10 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	// make sure v_angle is sane first
 	this.v_angle_y = this.v_angle.y - floor(this.v_angle.y / 360) * 360;
 	this.v_angle_z = 0;
+
+	// make work bot_aim_reset even if called before this function
+	if (this.bot_prevaimtime == time)
+		return;
 
 	// invalid aim dir (can happen when bot overlaps target)
 	if(!v) return;
