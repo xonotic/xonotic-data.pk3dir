@@ -307,7 +307,8 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	r = max(fixedrate, blendrate);
 	//this.v_angle = this.v_angle + diffang * bound(frametime, r * frametime * (2+skill*skill*0.05-random()*0.05*(10-skill)), 1);
 	this.v_angle = this.v_angle + diffang * bound(delta_t, r * delta_t * (2 + ((skill + this.bot_mouseskill) ** 3) * 0.005 - random()), 1);
-	this.v_angle = this.v_angle * bound(0,autocvar_bot_ai_aimskill_mouse,1) + desiredang * bound(0,(1-autocvar_bot_ai_aimskill_mouse),1);
+	this.v_angle += diffang * bound(0, (1 - autocvar_bot_ai_aimskill_mouse), 1);
+
 	//this.v_angle = this.v_angle + diffang * bound(0, r * frametime * (skill * 0.5 + 2), 1);
 	//this.v_angle = this.v_angle + diffang * (1/ blendrate);
 	this.v_angle_z = 0;
