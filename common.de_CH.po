@@ -13,6 +13,7 @@
 # Yepoleb <huberg18@gmail.com>, 2013
 # Larson März <larson@protonmail.ch>, 2016
 # Larson März <larson@protonmail.ch>, 2016
+# afba88cf42cbdff57149d4a6d53a94f9, 2018
 # Mirio <opivy@hotmail.de>, 2014-2017
 # divVerent <divVerent@xonotic.org>, 2011
 # Sless <sless@gmx.net>, 2014
@@ -24,8 +25,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-13 14:42+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-12-22 11:34+0000\n"
+"Last-Translator: afba88cf42cbdff57149d4a6d53a94f9\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -70,7 +71,7 @@ msgstr "^1Drücke ^3%s^1, um jemandem zuzuschauen"
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr "Primärschuss"
+msgstr "Primärfeuer"
 
 #: qcsrc/client/hud/panel/infomessages.qc:104
 #, c-format
@@ -250,7 +251,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Sende öffentliche Nachricht an"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
@@ -274,7 +275,7 @@ msgstr "Hallo / Viel Glück und habt Spass"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Sende in Englisch"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
@@ -738,27 +739,27 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:309
 #: qcsrc/client/hud/panel/scoreboard.qc:310
 msgid "Name of a player"
-msgstr ""
+msgstr "Name eines Spielers"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid "Ping time"
-msgstr ""
+msgstr "Latenz"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:312
 msgid "Packet loss"
-msgstr ""
+msgstr "Paketverlust"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:313
 msgid "Player ELO"
-msgstr ""
+msgstr "Spieler ELO"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:314
 msgid "Player FPS"
-msgstr ""
+msgstr "Spieler FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid "Number of kills"
-msgstr ""
+msgstr "Anzahl an Kills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid "Number of deaths"
@@ -1019,7 +1020,7 @@ msgstr "Du bist tot, drücke ^2%s^7, um neu zu spawnen"
 
 #: qcsrc/client/hud/panel/timer.qc:67
 msgid "WARMUP"
-msgstr ""
+msgstr "AUFWÄRMRUNDE"
 
 #: qcsrc/client/hud/panel/vote.qc:27
 msgid "^1You must answer before entering hud configure mode"
