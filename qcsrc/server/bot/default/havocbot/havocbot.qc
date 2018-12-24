@@ -207,7 +207,6 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 		keyboard = CS(this).movement / autocvar_sv_maxspeed;
 
 		float trigger = autocvar_bot_ai_keyboard_threshold;
-		float trigger1 = -trigger;
 
 		// categorize forward movement
 		// at skill < 1.5 only forward
@@ -220,7 +219,7 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 			if (sk < 2.5)
 				keyboard.y = 0;
 		}
-		else if (keyboard.x < trigger1 && sk > 1.5)
+		else if (keyboard.x < -trigger && sk > 1.5)
 		{
 			keyboard.x = -1;
 			if (sk < 4.5)
@@ -237,17 +236,21 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 
 		if (keyboard.y > trigger)
 			keyboard.y = 1;
-		else if (keyboard.y < trigger1)
+		else if (keyboard.y < -trigger)
 			keyboard.y = -1;
 		else
 			keyboard.y = 0;
 
 		if (keyboard.z > trigger)
 			keyboard.z = 1;
-		else if (keyboard.z < trigger1)
+		else if (keyboard.z < -trigger)
 			keyboard.z = -1;
 		else
 			keyboard.z = 0;
+
+		// make sure bots don't get stuck if havocbot_keyboardtime is very high
+		if (keyboard == '0 0 0')
+			this.havocbot_keyboardtime = min(this.havocbot_keyboardtime, time + 0.2);
 
 		this.havocbot_keyboard = keyboard * autocvar_sv_maxspeed;
 		if (this.havocbot_ducktime > time)
