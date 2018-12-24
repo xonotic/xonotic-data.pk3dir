@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-17 08:29+0000\n"
+"PO-Revision-Date: 2018-12-23 11:52+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -706,33 +706,39 @@ msgstr "Utilisation :"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:301
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr ""
+msgstr "^2scoreboard_columns_set ^3field1 field2..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:302
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
+"^2scoreboard_columns_set ^7sans argument lit les arguments de la cvar "
+"scoreboard_columns"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:303
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
+"  ^5Remarque : ^7scoreboard_columns_set sans argument est exécuté pour "
+"chaque nouvelle carte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:304
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
+"^2scoreboard_columns_set ^3expand_default ^7charge la disposition par défaut "
+"et l'étend dans la cvar scoreboard_columns pour que vous puissiez l'éditer"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:305
 msgid "You can use a ^3|^7 to start the right-aligned fields."
-msgstr ""
+msgstr "Vous pouvez utiliser un ^3|^7 pour créer des champs alignés à droite."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:306
 msgid "The following field names are recognized (case insensitive):"
-msgstr ""
+msgstr "Les noms de champ suivants sont reconnus (non sensibles à la casse) :"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:309
 #: qcsrc/client/hud/panel/scoreboard.qc:310
@@ -1159,7 +1165,7 @@ msgstr "Dégel en cours"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
-msgstr ""
+msgstr "erreur à la création du curl handle"
 
 #: qcsrc/common/command/generic.qc:403
 msgid "Notification restart command only works with cl_cmd and sv_cmd."
@@ -6363,7 +6369,7 @@ msgstr "Midair"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Melee only"
-msgstr ""
+msgstr "Mêlée seulement"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:229
@@ -6404,7 +6410,7 @@ msgstr "Explosion au toucher"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:103
 msgid "Wall jumping"
-msgstr ""
+msgstr "Sauts sur les murs"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "MUT^None"
@@ -6476,6 +6482,8 @@ msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr ""
+"Les joueurs se voient attribuer un ensemble d'armes ainsi que des munitions "
+"illimitées, il n'y a aucune arme à ramasser"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:243
 msgid "Weapon arenas:"
@@ -6650,7 +6658,7 @@ msgstr "Requis (chiffrement activé)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr ""
+msgstr "Utiliser la cvar « crypto_aeslevel » pour changer vos préférences"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
 msgid "Hostname:"
@@ -7456,6 +7464,8 @@ msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
+"Activer l'effet de relief sur les textures, cela a un léger impact sur la "
+"performance"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
 msgid "Relief mapping"
@@ -7465,6 +7475,8 @@ msgstr "Textures en relief avancé"
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
+"Augmenter la qualité des effets de relief sur les textures, cela a un gros "
+"impact sur la performance"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "Reflections:"
@@ -7475,6 +7487,8 @@ msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
+"Qualité des reflets et de la réfraction, cela a un gros impact sur la "
+"performance dans les cartes avec des surfaces réfléchissantes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 msgid "Resolution of reflections/refractions"
@@ -7546,6 +7560,8 @@ msgstr "Pas de lumière dynamique"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Enable corona flares around certain lights"
 msgstr ""
+"Activer des effets d'éblouissement peu gourmands autour de certaines sources "
+"de lumière"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:194
 msgid "Fake corona lighting"
@@ -7556,6 +7572,8 @@ msgid ""
 "Enable faster but uglier dynamic lights by rendering bright coronas instead "
 "of real dynamic lights"
 msgstr ""
+"Activer les lumières dynamiques rapides mais laides en affichant des "
+"couronnes de lumières au lieu des vraies lumières dynamiques"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:198
 msgid "Realtime dynamic lighting"
@@ -7564,6 +7582,8 @@ msgstr "Lumières dynamiques en temps réel"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Enable rendering of dynamic lights such as explosions and rocket lights"
 msgstr ""
+"Activer le rendu des lumières dynamiques comme les explosions et les "
+"roquettes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
@@ -7573,6 +7593,7 @@ msgstr "Ombres"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Enable rendering of shadows from dynamic lights"
 msgstr ""
+"Activer le rendu des ombres depuis les lumières dynamiques en temps réel"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Realtime world lighting"
@@ -7583,10 +7604,12 @@ msgid ""
 "Enable rendering of full realtime world lighting on maps that support it. "
 "Note that this might have a big impact on performance."
 msgstr ""
+"Activer le rendu des lumières en temps réel sur les cartes qui le prennent "
+"en charge. Attention, cette option a un gros impact sur la performance."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Enable rendering of shadows from realtime world lights"
-msgstr ""
+msgstr "Activer le rendu des ombres depuis les lumières en temps réel"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Use normal maps"
@@ -8634,7 +8657,7 @@ msgstr "Désactiver les effets gores et le langage grossier"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:75
 msgid "Replace blood and gibs with content that does not have any gore effects"
-msgstr ""
+msgstr "Remplacer les effets gores par des effets moins violents"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
@@ -9176,7 +9199,7 @@ msgstr "lâcher la clé / drapeau"
 
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "respawn"
-msgstr ""
+msgstr "réapparaître"
 
 #: qcsrc/menu/xonotic/keybinder.qc:107
 msgid "quick menu"
