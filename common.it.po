@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-14 00:15+0000\n"
+"PO-Revision-Date: 2018-12-24 16:29+0000\n"
 "Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -730,7 +730,8 @@ msgstr "Puoi usare ^3|^7 per cominciare i campi allineati a destra."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:306
 msgid "The following field names are recognized (case insensitive):"
-msgstr "Sono riconsciuti i seguenti nomi di campo (non case-sensitive):"
+msgstr ""
+"Sono riconsciuti i seguenti nomi di campo (non importa se maiusc./minusc.):"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:309
 #: qcsrc/client/hud/panel/scoreboard.qc:310
