@@ -255,12 +255,12 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 		this.havocbot_keyboard = keyboard * autocvar_sv_maxspeed;
 		if (this.havocbot_ducktime > time)
 			PHYS_INPUT_BUTTON_CROUCH(this) = true;
-	}
 
-	keyboard = this.havocbot_keyboard;
-	float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
-	//dprint("movement ", vtos(CS(this).movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
-	CS(this).movement = CS(this).movement + (keyboard - CS(this).movement) * blend;
+		keyboard = this.havocbot_keyboard;
+		float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
+		//dprint("movement ", vtos(CS(this).movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
+		CS(this).movement = CS(this).movement + (keyboard - CS(this).movement) * blend;
+	}
 }
 
 void havocbot_bunnyhop(entity this, vector dir)
