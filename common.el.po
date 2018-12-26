@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-25 13:05+0000\n"
+"PO-Revision-Date: 2018-12-26 14:09+0000\n"
 "Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
@@ -258,7 +258,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^γεια / καλή τύχη"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck and have fun"
@@ -271,7 +271,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Συζήτηση ομάδας"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
@@ -279,7 +279,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^Ελέυθερο αντικείμενο %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item, icon"
@@ -473,7 +473,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "QMCMD^Πλήρης οθόνη"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 #: qcsrc/client/hud/panel/quickmenu.qc:860
@@ -482,11 +482,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Restart the map"
-msgstr ""
+msgstr "QMCMD^Ανανέωση τον χάρτη"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^End match"
-msgstr ""
+msgstr "QMCMD^Τέλος match"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "QMCMD^Reduce match time"
@@ -930,7 +930,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1407
 msgid "Rankings"
-msgstr ""
+msgstr "Κατατάξεις"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1608
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
@@ -955,7 +955,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1706
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
-msgstr ""
+msgstr "Πέζουνε ^3%s^7 on ^2%s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1713
 #: qcsrc/client/hud/panel/scoreboard.qc:1718
@@ -1171,7 +1171,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "rockets"
-msgstr ""
+msgstr "Πύραυλοι"
 
 #: qcsrc/common/items/item/ammo.qh:190
 msgid "shells"
@@ -1179,15 +1179,15 @@ msgstr ""
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "Μικρή πανοπλία"
 
 #: qcsrc/common/items/item/armor.qh:80
 msgid "Medium armor"
-msgstr ""
+msgstr "Μέτρια πανοπλία"
 
 #: qcsrc/common/items/item/armor.qh:118 qcsrc/common/items/item/armor.qh:121
 msgid "Big armor"
-msgstr ""
+msgstr "Μεγάλη πανοπλία"
 
 #: qcsrc/common/items/item/armor.qh:158 qcsrc/common/items/item/armor.qh:161
 msgid "Mega armor"
@@ -1195,15 +1195,15 @@ msgstr ""
 
 #: qcsrc/common/items/item/health.qh:42
 msgid "Small health"
-msgstr ""
+msgstr "Μικρή ζωή"
 
 #: qcsrc/common/items/item/health.qh:80
 msgid "Medium health"
-msgstr ""
+msgstr "Μετρία ζωή"
 
 #: qcsrc/common/items/item/health.qh:118 qcsrc/common/items/item/health.qh:121
 msgid "Big health"
-msgstr ""
+msgstr "Μεγάλη ζωή"
 
 #: qcsrc/common/items/item/health.qh:158 qcsrc/common/items/item/health.qh:161
 msgid "Mega health"
@@ -1213,7 +1213,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
 msgid "Jetpack"
-msgstr ""
+msgstr "Σακίδιο ώθησης"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
