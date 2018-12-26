@@ -1102,7 +1102,7 @@ void havocbot_movetogoal(entity this)
 				this.bot_stop_moving_timeout = time + 0.4 + random() * 0.2;
 			}
 
-			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : v_forward * 32);
+			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : flatdir * 32);
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			vector dst_down = dst_ahead - '0 0 3000';
 			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
@@ -1115,7 +1115,7 @@ void havocbot_movetogoal(entity this)
 				// Look downwards
 				traceline(dst_ahead , dst_down, true, NULL);
 				//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
-				//te_lightning2(NULL, dst_ahead, dst_down); // Draw "downwards" look
+				//te_lightning2(NULL, dst_ahead, trace_endpos); // Draw "downwards" look
 				if(trace_endpos.z < this.origin.z + this.mins.z)
 				{
 					s = pointcontents(trace_endpos + '0 0 1');
