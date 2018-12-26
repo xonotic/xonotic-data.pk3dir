@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-13 14:42+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2018-12-25 13:05+0000\n"
+"Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
 "Language: el\n"
@@ -238,7 +238,7 @@ msgstr "Συνέχεια..."
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "Συζήτηση"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
@@ -389,7 +389,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Settings"
-msgstr ""
+msgstr "QMCMD^Ρυθμίσεις"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 #: qcsrc/client/hud/panel/quickmenu.qc:821
@@ -566,7 +566,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^καταστροφή"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "SCO^dmgtaken"
@@ -586,7 +586,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^goals"
-msgstr ""
+msgstr "SCO^Γκολς"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^kckills"
@@ -614,19 +614,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^laps"
-msgstr ""
+msgstr "SCO^Γύροι"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "SCO^lives"
-msgstr ""
+msgstr "SCO^Ζωντανοί"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "SCO^losses"
-msgstr ""
+msgstr "SCO^Χαμένοι"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:103
 msgid "SCO^name"
-msgstr ""
+msgstr "SCO^Όνομα"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:104
 msgid "SCO^sum"
@@ -730,7 +730,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:309
 #: qcsrc/client/hud/panel/scoreboard.qc:310
 msgid "Name of a player"
-msgstr ""
+msgstr "Όνομα για ένα παίκτη"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid "Ping time"
@@ -754,7 +754,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid "Number of deaths"
-msgstr ""
+msgstr "Νούμερο για σκοτομούς"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:317
 msgid "Number of suicides"
@@ -815,7 +815,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid "Player rank"
-msgstr ""
+msgstr "Κατάταξη παικτών"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:332
 msgid "Number of players pushed into void"
@@ -979,7 +979,7 @@ msgstr " μέχρι ^3%s %s^7"
 #: qcsrc/client/hud/panel/scoreboard.qc:1745
 #: qcsrc/client/hud/panel/scoreboard.qc:1752
 msgid "SCO^points"
-msgstr ""
+msgstr "SCO^Πόντοι"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1727
 #: qcsrc/client/hud/panel/scoreboard.qc:1734
@@ -1440,7 +1440,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:401
 msgid "Exit Menu"
-msgstr ""
+msgstr "Εξόδος απο το μενού"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:413
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
@@ -1485,7 +1485,7 @@ msgstr "Επανακίνηση"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1398
 msgid "Editor"
-msgstr ""
+msgstr "Δημιουργία"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1399
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
@@ -1733,7 +1733,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:38
 msgid "Lifetime:"
-msgstr ""
+msgstr "Χρόνος ζωής:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:43
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:53
@@ -4132,11 +4132,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:413 qcsrc/common/notifications/all.qh:414
 msgid "primary"
-msgstr ""
+msgstr "Βασικό"
 
 #: qcsrc/common/notifications/all.qh:413 qcsrc/common/notifications/all.qh:414
 msgid "secondary"
-msgstr ""
+msgstr "Δεύτερο"
 
 #: qcsrc/common/notifications/all.qh:416
 msgid "point"
@@ -4292,7 +4292,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:520
 msgid "First score! "
-msgstr ""
+msgstr "Πρώτο σκορ!"
 
 #: qcsrc/common/notifications/all.qh:524
 msgid "First casualty! "
@@ -4931,7 +4931,7 @@ msgstr "Στατιστικά"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Art"
-msgstr ""
+msgstr "Τέχνη"
 
 #: qcsrc/menu/xonotic/credits.qc:65
 msgid "Animation"
@@ -5262,7 +5262,7 @@ msgstr "Μέγεθος ομιλίας:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
 msgid "Chat lifetime:"
-msgstr ""
+msgstr "Χρόνος συζήτησης:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
 msgid "Chat beep sound"
@@ -5352,7 +5352,7 @@ msgstr "Απενεργοποίηση"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 msgid "Enable spectating"
-msgstr ""
+msgstr "Ενεργοποίηση παρακουλούθησης"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
@@ -5413,7 +5413,7 @@ msgstr "Πίνακας Ανακοινώσεων"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/util.qc:765
 msgid "Enable"
-msgstr ""
+msgstr "Ενεργοποίηση"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Enable even observing"
@@ -5744,7 +5744,7 @@ msgstr "Φίλτρο:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:42
 msgid "Refresh"
-msgstr ""
+msgstr "Ανανέωση"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:30
@@ -5864,7 +5864,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:29
 msgid "No moving"
-msgstr ""
+msgstr "Χωρίς κίνηση"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:31
 msgid "Colors:"
@@ -6120,7 +6120,7 @@ msgstr "Πληροφορίες Χάρτη"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "All Weapons Arena"
-msgstr ""
+msgstr "Όλα τα όπλα στην αρένα"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:30
 msgid "Most Weapons Arena"
