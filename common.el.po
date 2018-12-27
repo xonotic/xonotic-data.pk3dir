@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-26 14:09+0000\n"
+"PO-Revision-Date: 2018-12-26 14:33+0000\n"
 "Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
@@ -1217,7 +1217,7 @@ msgstr "Σακίδιο ώθησης"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
-msgstr ""
+msgstr "Καυσίμα"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -1415,7 +1415,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Duel"
-msgstr ""
+msgstr "Διπλό"
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -1496,7 +1496,7 @@ msgstr "Αποθήκευση"
 #: qcsrc/common/minigames/minigame/pp.qc:438
 #: qcsrc/common/minigames/minigame/ttt.qc:319
 msgid "Draw"
-msgstr ""
+msgstr "Ζωγραφίζω"
 
 #: qcsrc/common/minigames/minigame/c4.qc:378
 #: qcsrc/common/minigames/minigame/nmm.qc:606
@@ -1574,6 +1574,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
+"Επίλεξε \"^1Next Match^7\" στο μενού για να ξεκινήσεις ένα κανούργιο match!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:451
 #: qcsrc/common/minigames/minigame/ttt.qc:332
@@ -1627,7 +1628,7 @@ msgstr "Αράχνη"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
-msgstr ""
+msgstr "Επίθεση αράχνη"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -1837,7 +1838,7 @@ msgstr "ΚΙΝΔΥΝΟΣ"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:8
 msgid "Frozen!"
-msgstr ""
+msgstr "Παγωμένος!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Item"
@@ -1860,11 +1861,11 @@ msgstr "Εκκίνηση"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 msgid "Defend"
-msgstr ""
+msgstr "Άμυνα"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
 msgid "Destroy"
-msgstr ""
+msgstr "Καταστροφή"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:19
 msgid "Push"
@@ -3276,11 +3277,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:543
 msgid "^BGYou are attacking!"
-msgstr ""
+msgstr "^BGYou Επιτήθονται!"
 
 #: qcsrc/common/notifications/all.inc:544
 msgid "^BGYou are defending!"
-msgstr ""
+msgstr "^BGYou Αμύνονται!"
 
 #: qcsrc/common/notifications/all.inc:545
 #, c-format
@@ -3331,7 +3332,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:563
 msgid "^BGYou captured the flag!"
-msgstr ""
+msgstr "^BGYou Επίασες την σημαία!"
 
 #: qcsrc/common/notifications/all.inc:564
 #, c-format
@@ -6041,7 +6042,7 @@ msgstr "Θεικό"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:155
 msgid "Mutators..."
-msgstr ""
+msgstr "Επιπλέον Ρυθμίσεις..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:156
 msgid "Mutators and weapon arenas"
@@ -6506,7 +6507,7 @@ msgstr "Κρυπτογράφηση:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:240
 msgid "ID:"
-msgstr ""
+msgstr "ID:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:245
 msgid "Key:"
@@ -7441,7 +7442,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:239
 msgid "Particles"
-msgstr ""
+msgstr "Πειροτεχνήματα"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
 msgid "Spawnpoint effects"
@@ -7745,7 +7746,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:133
 msgid "Other"
-msgstr ""
+msgstr "Άλλο"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 msgid "Display console messages in the top left corner"
@@ -8139,7 +8140,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "Air only"
-msgstr ""
+msgstr "Μόνο Εναέρια"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "JPJUMP^All"
@@ -8799,11 +8800,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "free for all"
-msgstr ""
+msgstr "free for all"
 
 #: qcsrc/menu/xonotic/keybinder.qc:29
 msgid "Moving"
-msgstr ""
+msgstr "Κινείται"
 
 #: qcsrc/menu/xonotic/keybinder.qc:30
 msgid "forward"
@@ -8835,7 +8836,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "jetpack"
-msgstr ""
+msgstr " Σακίδιο ώθησης"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "Attacking"
@@ -8903,7 +8904,7 @@ msgstr "δημόσια συζήτηση"
 
 #: qcsrc/menu/xonotic/keybinder.qc:87 qcsrc/menu/xonotic/keybinder.qc:100
 msgid "team chat"
-msgstr ""
+msgstr "συζήτηση ομάδας"
 
 #: qcsrc/menu/xonotic/keybinder.qc:88
 msgid "show chat history"
@@ -9033,7 +9034,7 @@ msgstr "κρυπτογράφηση:"
 #: qcsrc/menu/xonotic/serverlist.qc:1051
 #, c-format
 msgid "mod: %s"
-msgstr ""
+msgstr "mod: %s"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1053
 #, c-format
@@ -9043,7 +9044,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/serverlist.qc:1053
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "επίσημες ρυθμίσεις"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "stats disabled"
@@ -9091,11 +9092,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
-msgstr ""
+msgstr "<TITLE>"
 
 #: qcsrc/menu/xonotic/skinlist.qc:71
 msgid "<AUTHOR>"
-msgstr ""
+msgstr "<AUTHOR>"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"
@@ -9116,24 +9117,24 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PART^Low"
-msgstr ""
+msgstr "PART^Χαμηλό"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PART^Medium"
-msgstr ""
+msgstr "PART^Μέτριο"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "PART^Normal"
-msgstr ""
+msgstr "PART^Κανονική"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PART^High"
-msgstr ""
+msgstr "PART^Υψηλή"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PART^Ultra"
-msgstr ""
+msgstr "PART^Μέγιστη"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PART^Ultimate"
@@ -9151,11 +9152,11 @@ msgstr "Ανάλυση οθόνης"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "PART^Slow"
-msgstr ""
+msgstr "PART^Αργή"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "PART^Fast"
-msgstr ""
+msgstr "PART^Γρήγορη"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "PART^Instant"
@@ -9215,7 +9216,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
-msgstr ""
+msgstr "Τελευταίο match:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
@@ -9223,18 +9224,18 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:230
 msgid "Favorite map:"
-msgstr ""
+msgstr "Αγαπημένος χάρτης:"
 
 #: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
 #: qcsrc/menu/xonotic/statslist.qc:244
 #, c-format
 msgid "Matches:"
-msgstr ""
+msgstr "Matches:"
 
 #: qcsrc/menu/xonotic/statslist.qc:154
 #, c-format
 msgid "Wins/Losses:"
-msgstr ""
+msgstr "Νίκες/ήττες:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
@@ -9257,7 +9258,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:214
 msgid "Rank:"
-msgstr ""
+msgstr "Κατάταξη:"
 
 #: qcsrc/menu/xonotic/statslist.qc:221
 msgid "Percentile:"

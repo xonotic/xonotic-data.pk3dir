@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-23 11:52+0000\n"
+"PO-Revision-Date: 2018-12-26 17:20+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -611,11 +611,11 @@ msgstr "tmr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:98
 msgid "SCO^kills"
-msgstr "tués"
+msgstr "meurtres"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "meurtres équipe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^laps"
@@ -706,7 +706,7 @@ msgstr "Utilisation :"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:301
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr "^2scoreboard_columns_set ^3field1 field2..."
+msgstr "^2scoreboard_columns_set ^3champ1 champ2..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:302
 msgid ""
@@ -763,7 +763,7 @@ msgstr "IPS du joueur"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid "Number of kills"
-msgstr "Nombre de tués"
+msgstr "Nombre de meurtres"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid "Number of deaths"
@@ -775,15 +775,15 @@ msgstr "Nombre de suicides"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "kills - suicides"
-msgstr ""
+msgstr "meurtres - suicides"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Nombre de meurtres équipe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:320
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "Le ratio meurtre-mort"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:321
 msgid "The total damage done"
@@ -795,7 +795,7 @@ msgstr "Les dommages totaux subis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:323
 msgid "kills - deaths"
-msgstr ""
+msgstr "meurtres - morts"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:324
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
@@ -889,28 +889,42 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
+"Avant un champ vous pouvez insérer un signe + ou -, puis une liste des modes "
+"de jeux\n"
+"séparés par des virgules, puis un slash pour faire apparaître le champ dans "
+"ces modes uniquement\n"
+"ou dans tous les modes sauf ceux-ci. Vous pouvez aussi spécifier « all » "
+"comme champ\n"
+"pour afficher tous les champs disponibles pour le mode de jeu actuel."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:352
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
+"Les types de jeu spéciaux « teams » et « noteams » peuvent être utilisés "
+"pour\n"
+"inclure ou exclure TOUS les modes de jeu en équipe ou non."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:356
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
-msgstr ""
+msgstr "Exemple : scoreboard_columns_set name ping pl | +ctf/champ3 -dm/champ4"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:357
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
+"affiche le nom, le ping et le pl alignés à gauche, et les champs\n"
+"à droite de la barre verticale alignés à droite."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:359
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
+"« champ3 » sera affiché uniquement en CTF, et « champ4 » sera affiché\n"
+"dans tous les autres modes de jeu sauf DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:622
 #: qcsrc/client/hud/panel/scoreboard.qc:629
@@ -1834,7 +1848,7 @@ msgstr "Grenade piégée"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:74
 msgid "Veil grenade"
-msgstr ""
+msgstr "Grenade de voile"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:34
 msgid "Grenade"
@@ -2911,7 +2925,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 a été expulsé pour des meurtres équipe excessifs"
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
@@ -3091,7 +3105,7 @@ msgstr "^BG%s%s^K1 a goûté à la roquette de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 s'est approché trop près de la roquette de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
