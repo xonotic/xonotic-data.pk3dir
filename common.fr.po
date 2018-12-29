@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-26 17:20+0000\n"
+"PO-Revision-Date: 2018-12-28 19:40+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -5604,7 +5604,7 @@ msgstr "Notifications"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/util.qc:765
 msgid "Enable"
-msgstr ""
+msgstr "Afficher"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Enable even observing"
@@ -7459,7 +7459,7 @@ msgstr "Deluxe mapping"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
 msgid "Use per-pixel lighting effects"
-msgstr ""
+msgstr "Utiliser les effets de lumière par pixel"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Gloss"
@@ -7631,7 +7631,7 @@ msgstr "Utiliser les cartes normales"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Enable use of directional shading on textures"
-msgstr ""
+msgstr "Utiliser des effets d'ombrage de lumière sur les textures"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid "Soft shadows"
@@ -7643,7 +7643,7 @@ msgstr "Utiliser l'occultation du rendu"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
 msgid "Fade coronas according to visibility"
-msgstr ""
+msgstr "Utiliser l'occultation du rendu"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
 msgid "Bloom"
@@ -7654,6 +7654,8 @@ msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
+"Activer l'effet « bloom », qui éclaire les pixels voisins de pixels très "
+"brillants. Cela a un gros impact sur la performance."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:226
 msgid "Extra postprocessing effects"
@@ -7699,6 +7701,8 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Multiplicateur pour la quantité de particules. Plus la valeur est basse, "
+"moins il y a de particules et meilleures sont les performances"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
 msgid "Particles further away than this will not be drawn"
@@ -8822,6 +8826,8 @@ msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
+"Activer l'anticrénelage, réduit l'effet d'escalier sur les modèles 3D. "
+"Attention, cela peut fortement réduire les performances"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "AA^Disabled"
@@ -8840,6 +8846,8 @@ msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
+"Éviter des problèmes de profondeur de rendu en faisant un rendu de "
+"profondeur de la carte et des joueurs avant le rendu standard"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^Disabled"
@@ -8872,6 +8880,8 @@ msgid ""
 "Make use of Vertex Buffer Objects to store static geometry in video memory "
 "for faster rendering"
 msgstr ""
+"Utiliser les VBOs pour stocker les modèles 3D statiques dans la mémoire "
+"vidéo pour un rendu plus rapide"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:113
 msgid "Vertices"
@@ -8906,6 +8916,8 @@ msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
 msgstr ""
+"Valeur de correction gamma inverse, un effet de luminosité qui n'affecte ni "
+"le blanc ni le noir"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:133
 msgid "Contrast boost:"
@@ -9239,6 +9251,8 @@ msgstr "N'appuyez plus sur ce bouton !"
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
+"Hein ? Impossible de lancer cette partie (m est NULL). Re-filtrer pour que "
+"cela n'arrive plus."
 
 #: qcsrc/menu/xonotic/maplist.qc:296
 #, c-format
@@ -9250,6 +9264,8 @@ msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Hein ? Impossible de lancer cette partie (type de jeu non valide). Re-"
+"filtrer pour que cela n'arrive plus."
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
