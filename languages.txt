@@ -4,7 +4,7 @@ de_CH "German (Switzerland)" "Deutsch (Schweiz)" 92%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 81%
 es    "Spanish" "Español" 92%
-fr    "French" "Français" 100%
+fr    "French" "Français" 99%
 ga    "Irish" "Irish" 34%
 it    "Italian" "Italiano" 100%
 hu    "Hungarian" "Magyar" 51%

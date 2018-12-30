@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-28 19:40+0000\n"
+"PO-Revision-Date: 2018-12-29 16:31+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -7478,8 +7478,8 @@ msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
-"Activer l'effet de relief sur les textures, cela a un léger impact sur la "
-"performance"
+"Activer l'effet de relief sur les textures, cela a un léger impact sur les "
+"performances"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
 msgid "Relief mapping"
@@ -7490,7 +7490,7 @@ msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
 "Augmenter la qualité des effets de relief sur les textures, cela a un gros "
-"impact sur la performance"
+"impact sur les performances"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "Reflections:"
@@ -7501,8 +7501,8 @@ msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
-"Qualité des reflets et de la réfraction, cela a un gros impact sur la "
-"performance dans les cartes avec des surfaces réfléchissantes"
+"Qualité des reflets et de la réfraction, cela a un gros impact sur les "
+"performances dans les cartes avec des surfaces réfléchissantes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 msgid "Resolution of reflections/refractions"
@@ -7619,7 +7619,7 @@ msgid ""
 "Note that this might have a big impact on performance."
 msgstr ""
 "Activer le rendu des lumières en temps réel sur les cartes qui le prennent "
-"en charge. Attention, cette option a un gros impact sur la performance."
+"en charge. Attention, cette option a un gros impact sur les performances."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Enable rendering of shadows from realtime world lights"
@@ -7655,7 +7655,7 @@ msgid ""
 "pixels. Has a big impact on performance."
 msgstr ""
 "Activer l'effet « bloom », qui éclaire les pixels voisins de pixels très "
-"brillants. Cela a un gros impact sur la performance."
+"brillants. Cela a un gros impact sur les performances."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:226
 msgid "Extra postprocessing effects"
@@ -9499,7 +9499,7 @@ msgstr "Décembre"
 
 #: qcsrc/menu/xonotic/statslist.qc:96
 msgid "Joined:"
-msgstr "A_rejoint_le_:"
+msgstr "A rejoint le :"
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
@@ -9527,17 +9527,17 @@ msgstr "Victoires/Défaites :"
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Win percentage:"
-msgstr "Pourcentage de victoires :"
+msgstr "% victoires :"
 
 #: qcsrc/menu/xonotic/statslist.qc:166
 #, c-format
 msgid "Kills/Deaths:"
-msgstr "Tués/Morts :"
+msgstr "Meurtres/Morts :"
 
 #: qcsrc/menu/xonotic/statslist.qc:172
 #, c-format
 msgid "Kill ratio:"
-msgstr "Ratio tués :"
+msgstr "Taux de mortalité :"
 
 #: qcsrc/menu/xonotic/statslist.qc:207
 msgid "ELO:"
