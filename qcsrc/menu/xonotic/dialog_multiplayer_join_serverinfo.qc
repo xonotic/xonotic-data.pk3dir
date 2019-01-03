@@ -169,6 +169,10 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	if (!s) { s = _("N/A"); }
 	me.currentServerKey = strzone(s);
 	me.keyLabel.setText(me.keyLabel, me.currentServerKey);
+
+	me.currentServerStatsStatus = ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) ? ((sflags & SERVERFLAG_PLAYERSTATS_CUSTOM) ? _("custom stats server") : _("stats enabled")) : _("stats disabled"));
+	me.currentServerStatsStatus = strzone(me.currentServerStatsStatus);
+	me.statsLabel.setText(me.statsLabel, me.currentServerStatsStatus);
 }
 
 void XonoticServerInfoDialog_fill(entity me)
@@ -246,6 +250,11 @@ void XonoticServerInfoDialog_fill(entity me)
 		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.idLabel = e;
+	me.TR(me);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Stats:")));
+		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
+			e.allowCut = 1;
+			me.statsLabel = e;
 
 	me.gotoRC(me, 2, 2.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Players:")));

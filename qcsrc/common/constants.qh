@@ -16,9 +16,9 @@ const int KEY_ATCK2 = BIT(7);
 ///////////////////////////
 // cvar constants
 
-const int CVAR_SAVE = 1;
-const int CVAR_NOTIFY = 2;
-const int CVAR_READONLY = 4;
+const int CVAR_SAVE = BIT(0);
+const int CVAR_NOTIFY = BIT(1);
+const int CVAR_READONLY = BIT(2);
 
 ///////////////////////////
 // csqc communication stuff
@@ -43,9 +43,10 @@ const int FRAGS_SPECTATOR = -666;
 const int FRAGS_PLAYER_OUT_OF_GAME = -616;
 
 // server flags
-const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
-const int SERVERFLAG_TEAMPLAY = 2;
-const int SERVERFLAG_PLAYERSTATS = 4;
+const int SERVERFLAG_ALLOW_FULLBRIGHT = BIT(0);
+const int SERVERFLAG_TEAMPLAY = BIT(1);
+const int SERVERFLAG_PLAYERSTATS = BIT(2);
+const int SERVERFLAG_PLAYERSTATS_CUSTOM = BIT(3);
 
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';

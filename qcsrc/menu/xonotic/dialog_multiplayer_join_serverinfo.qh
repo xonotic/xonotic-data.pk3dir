@@ -24,6 +24,7 @@ CLASS(XonoticServerInfoDialog, XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, currentServerID, string);
 	ATTRIB(XonoticServerInfoDialog, currentServerEncrypt, string);
 	ATTRIB(XonoticServerInfoDialog, currentServerPure, string);
+	ATTRIB(XonoticServerInfoDialog, currentServerStatsStatus, string);
 
 	ATTRIB(XonoticServerInfoDialog, nameLabel, entity);
 	ATTRIB(XonoticServerInfoDialog, cnameLabel, entity);
@@ -40,6 +41,7 @@ CLASS(XonoticServerInfoDialog, XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, encryptLabel, entity);
 	ATTRIB(XonoticServerInfoDialog, canConnectLabel, entity);
 	ATTRIB(XonoticServerInfoDialog, pureLabel, entity);
+	ATTRIB(XonoticServerInfoDialog, statsLabel, entity);
 ENDCLASS(XonoticServerInfoDialog)
 
 void Join_Click(entity btn, entity me);

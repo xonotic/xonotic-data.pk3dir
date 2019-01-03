@@ -224,6 +224,10 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_DelayMapVote = true;
 
 		serverflags |= SERVERFLAG_PLAYERSTATS;
+		if(autocvar_g_playerstats_gamereport_uri != "http://stats.xonotic.org/stats/submit")
+		{
+			serverflags |= SERVERFLAG_PLAYERSTATS_CUSTOM;
+		}
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);
