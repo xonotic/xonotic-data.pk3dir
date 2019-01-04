@@ -2929,6 +2929,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	MUTATOR_CALLHOOK(ChatMessage, source, ret);
 	ret = M_ARGV(1, int);
 
+	string event_log_msg = "";
+
 	if(sourcemsgstr != "" && ret != 0)
 	{
 		if(ret < 0) // faked message, because the player is muted
@@ -2955,6 +2957,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat_minigame:%d:%s:%s", source.playerid, CS(source).active_minigame.netname, msgin);
+
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -2967,6 +2971,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
 			});
+			event_log_msg = sprintf(":chat_team:%d:%d:%s", source.playerid, source.team, strreplace("\n", " ", msgin));
 		}
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
@@ -2975,6 +2980,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
 		else
 		{
@@ -2986,7 +2992,12 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
+	}
+
+	if (autocvar_sv_eventlog && (event_log_msg != "")) {
+		GameLogEcho(event_log_msg);
 	}
 
 	return ret;

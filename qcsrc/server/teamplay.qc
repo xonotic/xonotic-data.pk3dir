@@ -1013,7 +1013,7 @@ void LogTeamChange(float player_id, float team_number, int type)
 	{
 		return;
 	}
-	GameLogEcho(sprintf(":team:%f:%f:%f", player_id, team_number, type));
+	GameLogEcho(sprintf(":team:%d:%d:%d", player_id, team_number, type));
 }
 
 void KillPlayerForTeamChange(entity player)
