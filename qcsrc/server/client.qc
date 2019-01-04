@@ -2957,8 +2957,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
-			// IDK if the following works:
-			// event_log_msg = sprintf(":chat_team_minigame:%d:%d:%s", source, CS(source).active_minigame, msgin);
+			event_log_msg = sprintf(":chat_minigame:%d:%d:%s", source.playerid, etof(CS(source).active_minigame), msgin);
 
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
