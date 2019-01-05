@@ -11,7 +11,7 @@
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # Lord Canistra <lordcanistra@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
-# Nick S <morosophos@teichisma.info>, 2018
+# Nick S <morosophos@teichisma.info>, 2018-2019
 # Simple88, 2016
 # Simple88, 2016
 msgid ""
@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-25 08:28+0000\n"
-"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
+"PO-Revision-Date: 2019-01-04 23:45+0000\n"
+"Last-Translator: Nick S <morosophos@teichisma.info>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -527,11 +527,11 @@ msgstr "Линия финиша"
 #: qcsrc/client/hud/panel/racetimer.qc:82
 #, c-format
 msgid "Intermediate %d"
-msgstr "Среднее %d"
+msgstr "Промежуточное %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:151
 msgid "^1Intermediate 1 (+15.42)"
-msgstr "^1Среднее 1 (+15.42)"
+msgstr "^1Промежуточное 1 (+15.42)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154
 #: qcsrc/client/hud/panel/racetimer.qc:200
