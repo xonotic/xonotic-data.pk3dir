@@ -526,7 +526,11 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         thiswep.wr_reload(thiswep, actor, weaponentity);
     }
 
-    if(fire & 1)
+    // attack swapping is useful for emulating BFG behavior in XDF
+    int primary_fire = autocvar_g_balance_crylink_swap_attacks ? fire & 2 : fire & 1;
+    int secondary_fire = autocvar_g_balance_crylink_swap_attacks ? fire & 1 : fire & 2;
+
+    if(primary_fire)
     {
         if(actor.(weaponentity).crylink_waitrelease != 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(crylink, refire)))
@@ -536,7 +540,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         }
     }
 
-    if((fire & 2) && autocvar_g_balance_crylink_secondary)
+    if((secondary_fire) && autocvar_g_balance_crylink_secondary)
     {
         if(actor.(weaponentity).crylink_waitrelease != 2)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(crylink, refire)))
@@ -546,7 +550,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         }
     }
 
-    if((actor.(weaponentity).crylink_waitrelease == 1 && !(fire & 1)) || (actor.(weaponentity).crylink_waitrelease == 2 && !(fire & 2)))
+    if((actor.(weaponentity).crylink_waitrelease == 1 && !(primary_fire)) || (actor.(weaponentity).crylink_waitrelease == 2 && !(secondary_fire)))
     {
         if(!actor.(weaponentity).crylink_lastgroup || time > actor.(weaponentity).crylink_lastgroup.teleport_time)
         {

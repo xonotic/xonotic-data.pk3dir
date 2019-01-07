@@ -47,6 +47,7 @@ CLASS(Crylink, Weapon)
         P(class, prefix, speed, float, BOTH) \
         P(class, prefix, spreadtype, float, SEC) \
         P(class, prefix, spread, float, BOTH) \
+        P(class, prefix, swap_attacks, float, NONE) \
         P(class, prefix, switchdelay_drop, float, NONE) \
         P(class, prefix, switchdelay_raise, float, NONE) \
         P(class, prefix, weaponreplace, string, NONE) \
