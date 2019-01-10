@@ -9,7 +9,7 @@
 # Marinus Savoritias, 2018
 # Marinus Savoritias, 2018
 # MasterWord, 2016
-# Mensious Mensious <ektoras@tutanota.com>, 2018
+# Mensious Mensious <ektoras@tutanota.com>, 2018-2019
 # Vindex <kon14.inside@gmail.com>, 2014
 # Γιάννης Ανθυμίδης, 2011-2012
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-31 16:02+0000\n"
+"PO-Revision-Date: 2019-01-09 17:42+0000\n"
 "Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
@@ -35,7 +35,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Δεν μπορεις να γραψείς στο %s"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -188,7 +188,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Εσύ παρακουλουθής:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^7Press ^3ESC ^7to show HUD options."
@@ -262,11 +262,11 @@ msgstr "QMCMD^γεια / καλή τύχη"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^γεια / καλή τύχη και καλά να περάσουμε"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Στέιλε στα αγγλικά"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
@@ -6304,7 +6304,7 @@ msgstr "Αρένες για όπλα:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:246
 msgid "Custom weapons"
-msgstr ""
+msgstr "Σχεδίασε τα όπλα"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:268
 msgid "Most weapons"
@@ -6409,7 +6409,7 @@ msgstr "Σύνδεση!"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
 #: qcsrc/menu/xonotic/serverlist.qc:1051
 msgid "MOD^Default"
-msgstr ""
+msgstr "MOD^Πρόεπιλεγμενο"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
 #, c-format
@@ -6560,7 +6560,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
 msgid "MUSICPL^Add"
-msgstr ""
+msgstr "MUSICPL^Πρόσθεσε"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:40
 msgid "MUSICPL^Add all"
