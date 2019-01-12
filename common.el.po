@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2019-01-09 17:42+0000\n"
+"PO-Revision-Date: 2019-01-11 19:29+0000\n"
 "Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
@@ -184,7 +184,7 @@ msgstr "μενού ομάδας"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Παρακολουθής αυτόν τον παίκτη:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating you:"
@@ -254,7 +254,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:784
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^Ωραίο παιχνίδι"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck"
