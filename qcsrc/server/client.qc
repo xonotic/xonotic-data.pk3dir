@@ -2713,7 +2713,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		teamsay = false;
 	}
 
-	if(game_stopped)
+	if (intermission_running).
 		teamsay = false;
 
 	if (!source) {
