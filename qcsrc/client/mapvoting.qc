@@ -781,8 +781,8 @@ int MapVote_MoveDown(int pos)
 float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	TC(int, bInputType);
-	float imp;
 
+	static int first_digit = 0;
 	if (!mv_active)
 		return false;
 
@@ -794,29 +794,28 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		return true;
 	}
 
+	if (bInputType == 0)
+	{
+		if (nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if (nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if (nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+	}
+	else if (bInputType == 1)
+	{
+		if (nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if (nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if (nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+
+		if (nPrimary == K_CTRL)
+			first_digit = 0;
+	}
+
 	if (bInputType != 0)
 		return false;
 
-	if ('0' <= nPrimary && nPrimary <= '9')
-	{
-		imp = nPrimary - '0';
-		if (imp == 0) imp = 10;
-		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
-		return true;
-	}
+	int imp = 0;
 	switch(nPrimary)
 	{
-		case K_KP_1: localcmd("\nimpulse 1\n"); return true;
-		case K_KP_2: localcmd("\nimpulse 2\n"); return true;
-		case K_KP_3: localcmd("\nimpulse 3\n"); return true;
-		case K_KP_4: localcmd("\nimpulse 4\n"); return true;
-		case K_KP_5: localcmd("\nimpulse 5\n"); return true;
-		case K_KP_6: localcmd("\nimpulse 6\n"); return true;
-		case K_KP_7: localcmd("\nimpulse 7\n"); return true;
-		case K_KP_8: localcmd("\nimpulse 8\n"); return true;
-		case K_KP_9: localcmd("\nimpulse 9\n"); return true;
-		case K_KP_0: localcmd("\nimpulse 10\n"); return true;
-
 		case K_RIGHTARROW:
 			mv_selection_keyboard = 1;
 			mv_selection = MapVote_MoveRight(mv_selection);
@@ -839,6 +838,27 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			if ( mv_selection_keyboard )
 				MapVote_SendChoice(mv_selection);
 			return true;
+		case '1': case K_KP_1: imp = 1; break;
+		case '2': case K_KP_2: imp = 2; break;
+		case '3': case K_KP_3: imp = 3; break;
+		case '4': case K_KP_4: imp = 4; break;
+		case '5': case K_KP_5: imp = 5; break;
+		case '6': case K_KP_6: imp = 6; break;
+		case '7': case K_KP_7: imp = 7; break;
+		case '8': case K_KP_8: imp = 8; break;
+		case '9': case K_KP_9: imp = 9; break;
+		case '0': case K_KP_0: imp = 10; break;
+	}
+
+	if (imp && hudShiftState & S_CTRL)
+	{
+		if (!first_digit)
+		{
+			first_digit = imp % 10;
+			return true;
+		}
+		else
+			imp = first_digit * 10 + (imp % 10);
 	}
 
 	if (nPrimary == K_MOUSE1)
@@ -846,11 +866,14 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		mv_selection_keyboard = 0;
 		mv_selection = mv_mouse_selection;
 		if (mv_selection >= 0)
-		{
 			imp = min(mv_selection + 1, mv_num_maps);
+	}
+
+	if (imp)
+	{
+		if (imp <= mv_num_maps)
 			localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
-			return true;
-		}
+		return true;
 	}
 
 	return false;
