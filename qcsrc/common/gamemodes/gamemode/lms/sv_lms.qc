@@ -427,9 +427,24 @@ MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms, WantWeapon)
+// Not CBC_ORDER_LAST since this needs to be overriden by several other mutators otherwise they get vanilla weapons.
+// Also can't use WantWeapon or SetStartItems because they're called too early and weaponsInMapAll is not initialized yet.
+// TODO ^ check other mutators and fix them
+MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 {
-	M_ARGV(2, bool) = true; // all weapons
+	entity player = M_ARGV(0, entity);
+
+	LOG_INFOF("has: %v", STAT(WEAPONS, player));
+	LOG_INFOF("in map: %v | %v\n", weaponsInMap, weaponsInMapAll);
+	LOG_INFOF("start: %v | %v\n", start_weapons, start_weapons_default);
+
+	FOREACH(Weapons, it != WEP_Null, {
+		bool normal = it.spawnflags & WEP_FLAG_NORMAL;
+		bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
+		if (normal && !blocked) {
+			STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
+		}
+	});
 }
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
