@@ -2746,6 +2746,24 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	int privatemsgprefixlen = 0;
 	if (msgin != "")
 	{
+		bool found_me = false;
+		if(strstrofs(msgin, "/me", 0) >= 0)
+		{
+			string newmsgin = "";
+			string newnamestr = ((teamsay) ? strcat(colorstr, "(", colorprefix, namestr, colorstr, ")", "^7") : strcat(colorprefix, namestr, "^7"));
+			FOREACH_WORD(msgin, true,
+			{
+				if(strdecolorize(it) == "/me")
+				{
+					found_me = true;
+					newmsgin = cons(newmsgin, newnamestr);
+				}
+				else
+					newmsgin = cons(newmsgin, it);
+			});
+			msgin = newmsgin;
+		}
+
 		if(privatesay)
 		{
 			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
@@ -2756,11 +2774,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 		else if(teamsay)
 		{
-			if(strstrofs(msgin, "/me", 0) >= 0)
+			if(found_me)
 			{
 				//msgin = strreplace("/me", "", msgin);
 				//msgin = substring(msgin, 3, strlen(msgin));
-				msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
+				//msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
 				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
 			}
 			else
@@ -2769,12 +2787,12 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 		else
 		{
-			if(strstrofs(msgin, "/me", 0) >= 0)
+			if(found_me)
 			{
 				//msgin = strreplace("/me", "", msgin);
 				//msgin = substring(msgin, 3, strlen(msgin));
-				msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
-				msgstr = strcat("\{1}^4* ", "^7", msgin);
+				//msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
+				msgstr = strcat("\{1}^4* ^7", msgin);
 			}
 			else {
 				msgstr = "\{1}";
