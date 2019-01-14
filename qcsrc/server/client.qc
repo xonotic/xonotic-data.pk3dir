@@ -2750,7 +2750,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		if(strstrofs(msgin, "/me", 0) >= 0)
 		{
 			string newmsgin = "";
-			string newnamestr = ((teamsay) ? strcat(colorstr, "(", colorprefix, namestr, colorstr, ")", colorprefix) : strcat(colorprefix, namestr, colorprefix));
+			string newnamestr = ((teamsay) ? strcat(colorstr, "(", colorprefix, namestr, colorstr, ")", "^7") : strcat(colorprefix, namestr, "^7"));
 			FOREACH_WORD(msgin, true,
 			{
 				if(strdecolorize(it) == "/me")
