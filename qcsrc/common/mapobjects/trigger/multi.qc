@@ -24,7 +24,7 @@ void multi_trigger(entity this)
 		return;		// allready been triggered
 	}
 
-	if(this.spawnflags & ONLY_PLAYERS && !IS_PLAYER(this.enemy))
+	if((this.spawnflags & ONLY_PLAYERS) && !IS_PLAYER(this.enemy))
 	{
 		return; // only players
 	}

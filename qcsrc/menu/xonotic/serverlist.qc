@@ -27,14 +27,17 @@ void RegisterSLCategories()
 		for(i = 0; i < category_ent_count; ++i) \
 		{ \
 			s = categories[i].override_string; \
-			if((s != "") && (s != categories[i].cat_name)) \
+			if(s != "" && s != categories[i].cat_name) \
 			{ \
 				catnum = 0; \
 				for(x = 0; x < category_ent_count; ++x) \
-				{ if(categories[x].cat_name == s) { \
-					catnum = (x+1); \
-					break; \
-				} } \
+				{ \
+					if(categories[x].cat_name == s) \
+					{ \
+						catnum = x + 1; \
+						break; \
+					} \
+				} \
 				if(catnum) \
 				{ \
 					strfree(categories[i].override_string); \

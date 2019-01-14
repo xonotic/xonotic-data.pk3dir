@@ -21,14 +21,16 @@ AUTOCVAR_SAVE(cl_damagetext_size_max,               float,  16,         "Damage 
 AUTOCVAR_SAVE(cl_damagetext_size_max_damage,        float,  140,        "How much damage is considered large");
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
-AUTOCVAR_SAVE(cl_damagetext_velocity,               vector, '0 0 20',   "Damage text move direction (world coordinates)");
-AUTOCVAR_SAVE(cl_damagetext_offset,                 vector, '0 -40 0',  "Damage text offset (screen coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_velocity_screen,        vector, '0 0 0',    "Damage text move direction (screen coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_velocity_world,         vector, '0 0 20',   "Damage text move direction (world coordinates relative to player's view)");
+AUTOCVAR_SAVE(cl_damagetext_offset_screen,          vector, '0 -45 0',  "Damage text offset (screen coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_offset_world,           vector, '0 0 0',    "Damage text offset (world coordinates relative to player's view)");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage text spawned within this range is accumulated");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_alpha_rel,   float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
-AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show damage text for friendlyfire too");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           int,    1,          "0: never show for friendly fire, 1: when more than 0 damage, 2: always");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
 
-AUTOCVAR_SAVE(cl_damagetext_2d,                     bool,   true,       "Show damagetext in 2D coordinated if the enemy's location is not known");
+AUTOCVAR_SAVE(cl_damagetext_2d,                     bool,   true,       "Show damagetext in 2D coordinates if the enemy's location is not known");
 AUTOCVAR_SAVE(cl_damagetext_2d_pos,                 vector, '0.47 0.53 0',     "2D damage text initial position (X and Y between 0 and 1)");
 AUTOCVAR_SAVE(cl_damagetext_2d_alpha_start,         float,  1,          "2D damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_2d_alpha_lifetime,      float,  1.3,        "2D damage text lifetime (alpha fading) in seconds");
@@ -36,7 +38,7 @@ AUTOCVAR_SAVE(cl_damagetext_2d_size_lifetime,       float,  3,          "2D dama
 AUTOCVAR_SAVE(cl_damagetext_2d_velocity,            vector, '-25 0 0',  "2D damage text move direction (screen coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_2d_overlap_offset,      vector, '0 -15 0',  "Offset 2D damage text by this much to prevent overlapping (screen coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_2d_close_range,         float,  125,        "Always use 2D damagetext for hits closer that this");
-AUTOCVAR_SAVE(cl_damagetext_2d_out_of_view,         bool,   true,       "Always use 2D damagetext for hits that occured off-screen");
+AUTOCVAR_SAVE(cl_damagetext_2d_out_of_view,         bool,   true,       "Always use 2D damagetext for hits that occurred off-screen");
 
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color);
@@ -60,18 +62,25 @@ CLASS(DamageText, Object)
 
     void DamageText_draw2d(DamageText this) {
         float since_hit = time - this.hit_time;
+        // can't use `dt = hit_time - prev_update_time` because shrinking wouldn't be linear
         float size = this.m_size - since_hit * this.m_shrink_rate * this.m_size;
         float alpha_ = this.alpha - since_hit * this.fade_rate;
         if (alpha_ <= 0 || size <= 0) {
             delete(this);
             return;
         }
+
         vector screen_pos;
         if (this.m_screen_coords) {
             screen_pos = this.origin + since_hit * autocvar_cl_damagetext_2d_velocity;
         } else {
-            screen_pos = project_3d_to_2d(this.origin + since_hit * autocvar_cl_damagetext_velocity) + autocvar_cl_damagetext_offset;
+            makevectors(view_angles);
+            vector world_offset = since_hit * autocvar_cl_damagetext_velocity_world + autocvar_cl_damagetext_offset_world;
+            vector world_pos = this.origin + world_offset.x * v_forward + world_offset.y * v_right + world_offset.z * v_up;
+            screen_pos = project_3d_to_2d(world_pos) + since_hit * autocvar_cl_damagetext_velocity_screen + autocvar_cl_damagetext_offset_screen;
         }
+        screen_pos.y += size / 2;
+
         if (screen_pos.z >= 0) {
             screen_pos.z = 0;
             vector rgb;
@@ -87,6 +96,7 @@ CLASS(DamageText, Object)
 
             vector drawfontscale_save = drawfontscale;
             drawfontscale = (size / autocvar_cl_damagetext_size_max) * '1 1 0';
+            screen_pos.y -= drawfontscale.x * size / 2;
             drawcolorcodedstring2_builtin(screen_pos, this.text, autocvar_cl_damagetext_size_max * '1 1 0', rgb, alpha_, DRAWFLAG_NORMAL);
             drawfontscale = drawfontscale_save;
         }
@@ -188,6 +198,11 @@ CLASS(DamageText, Object)
     }
 ENDCLASS(DamageText)
 
+float current_alpha(entity damage_text) {
+    // alpha doesn't change - actual alpha is always calculated from the initial value
+    return damage_text.alpha - (time - damage_text.hit_time) * damage_text.fade_rate;
+}
+
 NET_HANDLE(damagetext, bool isNew)
 {
     int server_entity_index = ReadByte();
@@ -206,8 +221,11 @@ NET_HANDLE(damagetext, bool isNew)
     else potential_damage = ReadShort();
 
     return = true;
-    if (!autocvar_cl_damagetext) return;
-    if (friendlyfire && !autocvar_cl_damagetext_friendlyfire) return;
+    if (autocvar_cl_damagetext == 0) return;
+    if (friendlyfire) {
+        if (autocvar_cl_damagetext_friendlyfire == 0) return;
+        if (autocvar_cl_damagetext_friendlyfire == 1 && health == 0 && armor == 0) return;
+    }
 
     int client_entity_index = server_entity_index - 1;
     entity entcs = entcs_receiver(client_entity_index);
@@ -219,15 +237,14 @@ NET_HANDLE(damagetext, bool isNew)
 
     if (can_use_3d && !prefer_2d) {
         // world coords
-        if (autocvar_cl_damagetext_accumulate_range) {
-            for (entity e = findradius(entcs.origin, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
-                if (e.instanceOfDamageText
-                    && !e.m_screen_coords // we're using origin for both world coords and screen coords so avoid mismatches
-                    && e.m_group == server_entity_index
-                    && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
-                    DamageText_update(e, entcs.origin, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
-                    return;
-                }
+        // using 1 as minimum because of shotgun (same as menu)
+        for (entity e = findradius(entcs.origin, max(autocvar_cl_damagetext_accumulate_range, 1)); e; e = e.chain) {
+            if (e.instanceOfDamageText
+                && !e.m_screen_coords // we're using origin for both world coords and screen coords so avoid mismatches
+                && e.m_group == server_entity_index
+                && current_alpha(e) > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
+                DamageText_update(e, entcs.origin, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
+                return;
             }
         }
         make_impure(NEW(DamageText, server_entity_index, entcs.origin, false, health, armor, potential_damage, deathtype, friendlyfire));

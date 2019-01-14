@@ -41,6 +41,8 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
+
 // TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
 void bot_setclientfields(entity this)
 {
@@ -578,7 +580,7 @@ void bot_calculate_stepheightvec()
 	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
 }
 
-float bot_fixcount()
+bool bot_fixcount()
 {
 	int activerealplayers = 0;
 	int realplayers = 0;

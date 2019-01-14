@@ -10,6 +10,7 @@
 	#include <common/util.qh>
 	#include <server/constants.qh>
 	#include <server/defs.qh>
+	#include <server/utils.qh>
 #endif
 
 #ifdef WARPZONELIB_KEEPDEBUG
@@ -42,11 +43,17 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	player.lastteleporttime = time;
 #endif
 	setorigin(player, to); // NOTE: this also aborts the move, when this is called by touch
+	player.angles = to_angles;
 #ifdef SVQC
 	player.oldorigin = to; // for DP's unsticking
 	player.fixangle = true;
+	if (IS_BOT_CLIENT(player))
+	{
+		// FIXME find a way to smooth view's angles change for bots too
+		player.v_angle = player.angles;
+		bot_aim_reset(player);
+	}
 #endif
-	player.angles = to_angles;
 	player.velocity = to_velocity;
 
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);

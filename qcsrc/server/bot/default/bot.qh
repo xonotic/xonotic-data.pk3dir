@@ -88,7 +88,7 @@ int _content_type;
  */
 
 entity bot_spawn();
-float bot_fixcount();
+bool bot_fixcount();
 
 void bot_think(entity this);
 void bot_setnameandstuff(entity this);

@@ -37,7 +37,7 @@ int WinningCondition_LMS()
 {
 	entity first_player = NULL;
 	int totalplayers = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
 		if (!totalplayers)
 			first_player = it;
 		++totalplayers;
@@ -129,6 +129,14 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 	});
 }
 
+// FIXME add support for sv_ready_restart_after_countdown
+// that is find a way to respawn/reset players IN GAME without setting lives to 0
+MUTATOR_HOOKFUNCTION(lms, ReadLevelCvars)
+{
+	// incompatible
+	sv_ready_restart_after_countdown = 0;
+}
+
 MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
@@ -177,8 +185,10 @@ void lms_RemovePlayer(entity player)
 	if (!player_rank)
 	{
 		int pl_cnt = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
-		if (player.lms_spectate_warning != 2)
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+			pl_cnt++;
+		});
+		if (player.lms_spectate_warning < 2)
 		{
 			if(IS_BOT_CLIENT(player))
 				bot_clear(player);
@@ -212,12 +222,10 @@ void lms_RemovePlayer(entity player)
 			player.frags = FRAGS_LMS_LOSER;
 			TRANSMUTE(Observer, player);
 		}
-		if (pl_cnt == 2 && !warmup_stage) // a player is forfeiting leaving only one player
-			lms_lowest_lives = 0; // end the game now!
 	}
 
-	if(CS(player).killcount != FRAGS_SPECTATOR)
-		if(GameRules_scoring_add(player, LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
+	if (CS(player).killcount != FRAGS_SPECTATOR && player.lms_spectate_warning < 3)
+		if (GameRules_scoring_add(player, LMS_RANK, 0) > 0 && player.lms_spectate_warning < 2)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_FORFEIT, player.netname);
@@ -226,6 +234,9 @@ void lms_RemovePlayer(entity player)
 MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
+
+	// no further message other than the disconnect message
+	player.lms_spectate_warning = 3;
 
 	lms_RemovePlayer(player);
 }
@@ -252,6 +263,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 	}
 }
 
+// FIXME LMS doesn't allow clients to spectate due to its particular implementation
 MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
 {
 	if(autocvar_g_campaign)
@@ -293,7 +305,9 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		if(tl <= 0)
 		{
 			int pl_cnt = 0;
-			FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
+			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+				pl_cnt++;
+			});
 			if(IS_BOT_CLIENT(frag_target))
 				bot_clear(frag_target);
 			frag_target.frags = FRAGS_LMS_LOSER;

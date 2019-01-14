@@ -622,7 +622,10 @@ void PutPlayerInServer(entity this)
 	this.angles = spot.angles;
 	this.angles_z = 0; // never spawn tilted even if the spot says to
 	if (IS_BOT_CLIENT(this))
+	{
 		this.v_angle = this.angles;
+		bot_aim_reset(this);
+	}
 	this.fixangle = true; // turn this way immediately
 	this.oldvelocity = this.velocity = '0 0 0';
 	this.avelocity = '0 0 0';
@@ -1054,6 +1057,8 @@ string getwelcomemessage(entity this)
 	return s;
 }
 
+bool autocvar_sv_qcphysics = false; // TODO this is for testing - remove when qcphysics work
+
 /**
 =============
 ClientConnect
@@ -1146,7 +1151,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = true;
+	this.move_qcphysics = autocvar_sv_qcphysics;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
@@ -2708,7 +2713,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		teamsay = false;
 	}
 
-	if(game_stopped)
+	if (intermission_running)
 		teamsay = false;
 
 	if (!source) {
@@ -2942,6 +2947,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	MUTATOR_CALLHOOK(ChatMessage, source, ret);
 	ret = M_ARGV(1, int);
 
+	string event_log_msg = "";
+
 	if(sourcemsgstr != "" && ret != 0)
 	{
 		if(ret < 0) // faked message, because the player is muted
@@ -2968,6 +2975,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat_minigame:%d:%s:%s", source.playerid, CS(source).active_minigame.netname, msgin);
+
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -2980,6 +2989,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
 			});
+			event_log_msg = sprintf(":chat_team:%d:%d:%s", source.playerid, source.team, strreplace("\n", " ", msgin));
 		}
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
@@ -2988,6 +2998,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
 		else
 		{
@@ -2999,7 +3010,12 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
+	}
+
+	if (autocvar_sv_eventlog && (event_log_msg != "")) {
+		GameLogEcho(event_log_msg);
 	}
 
 	return ret;

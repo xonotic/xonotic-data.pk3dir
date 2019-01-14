@@ -93,6 +93,7 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 float bot_shouldattack(entity this, entity targ);
 void bot_aimdir(entity this, vector v, float maxfiredeviation);
 bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity);
+void bot_aim_reset(entity this);
 float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore);
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay);

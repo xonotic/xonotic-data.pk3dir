@@ -84,8 +84,11 @@ void race_writeTime(string map, float t, string myuid)
 		// player has no ranked record yet
 		for (i = RANKINGS_CNT; i > newpos; --i)
 		{
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
+			float other_time = race_readTime(map, i - 1);
+			if (other_time) {
+				db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(other_time));
+				db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
+			}
 		}
 	}
 

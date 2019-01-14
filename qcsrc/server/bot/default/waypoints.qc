@@ -12,6 +12,7 @@
 #include "../../antilag.qh"
 
 #include <common/constants.qh>
+#include <common/debug.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
 
@@ -128,6 +129,108 @@ void waypoint_unreachable(entity pl)
 	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
 }
 
+void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx)
+{
+	vector v1 = stov(argv(arg_idx++));
+	vector v2 = stov(argv(arg_idx++));
+	vector mid = (v1 + v2) / 2;
+
+	float diffy = (v2.y - v1.y);
+	float diffx = (v2.x - v1.x);
+	if (v1.y == v2.y)
+		diffy = 0.000001;
+	if (v1.x == v2.x)
+		diffx = 0.000001;
+	float m = - diffx / diffy;
+	float q = - m * mid.x + mid.y;
+	if (fabs(m) <= 0.000001) m = 0;
+	if (fabs(q) <= 0.000001) q = 0;
+
+	string axis_str =  strcat(ftos(m), " ", ftos(q));
+	if (save)
+		cvar_set("g_waypointeditor_symmetrical_axis", axis_str);
+	axis_str = strcat("\"", axis_str, "\"");
+	sprint(caller, strcat("Axis of symmetry based on input points: ", axis_str, "\n"));
+	if (save)
+		sprint(caller, sprintf(" ^3saved to %s\n", "g_waypointeditor_symmetrical_axis"));
+	if (save)
+	{
+		cvar_set("g_waypointeditor_symmetrical", "-2");
+		sprint(caller, strcat("g_waypointeditor_symmetrical", " has been set to ",
+			cvar_string("g_waypointeditor_symmetrical"), "\n"));
+	}
+}
+
+void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
+{
+	vector org = '0 0 0';
+	int ctf_flags = 0;
+	for (int i = 0; i < 6; i++)
+	{
+		if (argv(arg_idx + i) != "")
+			ctf_flags++;
+	}
+	if (ctf_flags < 2)
+	{
+		ctf_flags = 0;
+		org = vec2(havocbot_middlepoint);
+		if (argv(arg_idx) != "")
+			sprint(caller, "WARNING: Ignoring single input point\n");
+		if (havocbot_middlepoint_radius == 0)
+		{
+			sprint(caller, "Origin of symmetry can't be automatically determined\n");
+			return;
+		}
+	}
+	else
+	{
+		vector v1, v2, v3, v4, v5, v6;
+		for (int i = 1; i <= ctf_flags; i++)
+		{
+			if (i == 1) { v1 = stov(argv(arg_idx++)); org = v1 / ctf_flags; }
+			else if (i == 2) { v2 = stov(argv(arg_idx++)); org += v2 / ctf_flags; }
+			else if (i == 3) { v3 = stov(argv(arg_idx++)); org += v3 / ctf_flags; }
+			else if (i == 4) { v4 = stov(argv(arg_idx++)); org += v4 / ctf_flags; }
+			else if (i == 5) { v5 = stov(argv(arg_idx++)); org += v5 / ctf_flags; }
+			else if (i == 6) { v6 = stov(argv(arg_idx++)); org += v6 / ctf_flags; }
+		}
+	}
+
+	if (fabs(org.x) <= 0.000001) org.x = 0;
+	if (fabs(org.y) <= 0.000001) org.y = 0;
+	string org_str = strcat(ftos(org.x), " ", ftos(org.y));
+	if (save)
+	{
+		cvar_set("g_waypointeditor_symmetrical_origin", org_str);
+		cvar_set("g_waypointeditor_symmetrical_order", ftos(ctf_flags));
+	}
+	org_str = strcat("\"", org_str, "\"");
+
+	if (ctf_flags < 2)
+		sprint(caller, strcat("Origin of symmetry based on flag positions: ", org_str, "\n"));
+	else
+		sprint(caller, strcat("Origin of symmetry based on input points: ", org_str, "\n"));
+	if (save)
+		sprint(caller, sprintf(" ^3saved to %s\n", "g_waypointeditor_symmetrical_origin"));
+
+	if (ctf_flags < 2)
+		sprint(caller, "Order of symmetry: 0 (autodetected)\n");
+	else
+		sprint(caller, strcat("Order of symmetry: ", ftos(ctf_flags), "\n"));
+	if (save)
+		sprint(caller, sprintf(" ^3saved to %s\n", "g_waypointeditor_symmetrical_order"));
+
+	if (save)
+	{
+		if (ctf_flags < 2)
+			cvar_set("g_waypointeditor_symmetrical", "0");
+		else
+			cvar_set("g_waypointeditor_symmetrical", "-1");
+		sprint(caller, strcat("g_waypointeditor_symmetrical", " has been set to ",
+			cvar_string("g_waypointeditor_symmetrical"), "\n"));
+	}
+}
+
 vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 {
 	vector new_org = org;
@@ -193,7 +296,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	// spawn only one destination waypoint for teleports teleporting player to the exact same spot
 	// otherwise links loaded from file would be applied only to the first destination
 	// waypoint since link format doesn't specify waypoint entities but just positions
-	if((f & WAYPOINTFLAG_GENERATED) && !(f & WAYPOINTFLAG_NORELINK) && m1 == m2)
+	if((f & WAYPOINTFLAG_GENERATED) && !(f & (WAYPOINTFLAG_NORELINK | WAYPOINTFLAG_PERSONAL)) && m1 == m2)
 	{
 		IL_EACH(g_waypoints, boxesoverlap(m1, m2, it.absmin, it.absmax),
 		{
@@ -358,52 +461,65 @@ void waypoint_removelink(entity from, entity to)
 	if (from == to || (from.wpflags & WAYPOINTFLAG_NORELINK))
 		return;
 
-	bool found = false;
-	if (!found && from.wp00 == to) found = true; if (found) {from.wp00 = from.wp01; from.wp00mincost = from.wp01mincost;}
-	if (!found && from.wp01 == to) found = true; if (found) {from.wp01 = from.wp02; from.wp01mincost = from.wp02mincost;}
-	if (!found && from.wp02 == to) found = true; if (found) {from.wp02 = from.wp03; from.wp02mincost = from.wp03mincost;}
-	if (!found && from.wp03 == to) found = true; if (found) {from.wp03 = from.wp04; from.wp03mincost = from.wp04mincost;}
-	if (!found && from.wp04 == to) found = true; if (found) {from.wp04 = from.wp05; from.wp04mincost = from.wp05mincost;}
-	if (!found && from.wp05 == to) found = true; if (found) {from.wp05 = from.wp06; from.wp05mincost = from.wp06mincost;}
-	if (!found && from.wp06 == to) found = true; if (found) {from.wp06 = from.wp07; from.wp06mincost = from.wp07mincost;}
-	if (!found && from.wp07 == to) found = true; if (found) {from.wp07 = from.wp08; from.wp07mincost = from.wp08mincost;}
-	if (!found && from.wp08 == to) found = true; if (found) {from.wp08 = from.wp09; from.wp08mincost = from.wp09mincost;}
-	if (!found && from.wp09 == to) found = true; if (found) {from.wp09 = from.wp10; from.wp09mincost = from.wp10mincost;}
-	if (!found && from.wp10 == to) found = true; if (found) {from.wp10 = from.wp11; from.wp10mincost = from.wp11mincost;}
-	if (!found && from.wp11 == to) found = true; if (found) {from.wp11 = from.wp12; from.wp11mincost = from.wp12mincost;}
-	if (!found && from.wp12 == to) found = true; if (found) {from.wp12 = from.wp13; from.wp12mincost = from.wp13mincost;}
-	if (!found && from.wp13 == to) found = true; if (found) {from.wp13 = from.wp14; from.wp13mincost = from.wp14mincost;}
-	if (!found && from.wp14 == to) found = true; if (found) {from.wp14 = from.wp15; from.wp14mincost = from.wp15mincost;}
-	if (!found && from.wp15 == to) found = true; if (found) {from.wp15 = from.wp16; from.wp15mincost = from.wp16mincost;}
-	if (!found && from.wp16 == to) found = true; if (found) {from.wp16 = from.wp17; from.wp16mincost = from.wp17mincost;}
-	if (!found && from.wp17 == to) found = true; if (found) {from.wp17 = from.wp18; from.wp17mincost = from.wp18mincost;}
-	if (!found && from.wp18 == to) found = true; if (found) {from.wp18 = from.wp19; from.wp18mincost = from.wp19mincost;}
-	if (!found && from.wp19 == to) found = true; if (found) {from.wp19 = from.wp20; from.wp19mincost = from.wp20mincost;}
-	if (!found && from.wp20 == to) found = true; if (found) {from.wp20 = from.wp21; from.wp20mincost = from.wp21mincost;}
-	if (!found && from.wp21 == to) found = true; if (found) {from.wp21 = from.wp22; from.wp21mincost = from.wp22mincost;}
-	if (!found && from.wp22 == to) found = true; if (found) {from.wp22 = from.wp23; from.wp22mincost = from.wp23mincost;}
-	if (!found && from.wp23 == to) found = true; if (found) {from.wp23 = from.wp24; from.wp23mincost = from.wp24mincost;}
-	if (!found && from.wp24 == to) found = true; if (found) {from.wp24 = from.wp25; from.wp24mincost = from.wp25mincost;}
-	if (!found && from.wp25 == to) found = true; if (found) {from.wp25 = from.wp26; from.wp25mincost = from.wp26mincost;}
-	if (!found && from.wp26 == to) found = true; if (found) {from.wp26 = from.wp27; from.wp26mincost = from.wp27mincost;}
-	if (!found && from.wp27 == to) found = true; if (found) {from.wp27 = from.wp28; from.wp27mincost = from.wp28mincost;}
-	if (!found && from.wp28 == to) found = true; if (found) {from.wp28 = from.wp29; from.wp28mincost = from.wp29mincost;}
-	if (!found && from.wp29 == to) found = true; if (found) {from.wp29 = from.wp30; from.wp29mincost = from.wp30mincost;}
-	if (!found && from.wp30 == to) found = true; if (found) {from.wp30 = from.wp31; from.wp30mincost = from.wp31mincost;}
-	if (found) {from.wp31 = NULL; from.wp31mincost = 10000000;}
+	entity fromwp31_prev = from.wp31;
+
+	switch (waypoint_getlinknum(from, to))
+	{
+		// fallthrough all the way
+		case  0: from.wp00 = from.wp01; from.wp00mincost = from.wp01mincost;
+		case  1: from.wp01 = from.wp02; from.wp01mincost = from.wp02mincost;
+		case  2: from.wp02 = from.wp03; from.wp02mincost = from.wp03mincost;
+		case  3: from.wp03 = from.wp04; from.wp03mincost = from.wp04mincost;
+		case  4: from.wp04 = from.wp05; from.wp04mincost = from.wp05mincost;
+		case  5: from.wp05 = from.wp06; from.wp05mincost = from.wp06mincost;
+		case  6: from.wp06 = from.wp07; from.wp06mincost = from.wp07mincost;
+		case  7: from.wp07 = from.wp08; from.wp07mincost = from.wp08mincost;
+		case  8: from.wp08 = from.wp09; from.wp08mincost = from.wp09mincost;
+		case  9: from.wp09 = from.wp10; from.wp09mincost = from.wp10mincost;
+		case 10: from.wp10 = from.wp11; from.wp10mincost = from.wp11mincost;
+		case 11: from.wp11 = from.wp12; from.wp11mincost = from.wp12mincost;
+		case 12: from.wp12 = from.wp13; from.wp12mincost = from.wp13mincost;
+		case 13: from.wp13 = from.wp14; from.wp13mincost = from.wp14mincost;
+		case 14: from.wp14 = from.wp15; from.wp14mincost = from.wp15mincost;
+		case 15: from.wp15 = from.wp16; from.wp15mincost = from.wp16mincost;
+		case 16: from.wp16 = from.wp17; from.wp16mincost = from.wp17mincost;
+		case 17: from.wp17 = from.wp18; from.wp17mincost = from.wp18mincost;
+		case 18: from.wp18 = from.wp19; from.wp18mincost = from.wp19mincost;
+		case 19: from.wp19 = from.wp20; from.wp19mincost = from.wp20mincost;
+		case 20: from.wp20 = from.wp21; from.wp20mincost = from.wp21mincost;
+		case 21: from.wp21 = from.wp22; from.wp21mincost = from.wp22mincost;
+		case 22: from.wp22 = from.wp23; from.wp22mincost = from.wp23mincost;
+		case 23: from.wp23 = from.wp24; from.wp23mincost = from.wp24mincost;
+		case 24: from.wp24 = from.wp25; from.wp24mincost = from.wp25mincost;
+		case 25: from.wp25 = from.wp26; from.wp25mincost = from.wp26mincost;
+		case 26: from.wp26 = from.wp27; from.wp26mincost = from.wp27mincost;
+		case 27: from.wp27 = from.wp28; from.wp27mincost = from.wp28mincost;
+		case 28: from.wp28 = from.wp29; from.wp28mincost = from.wp29mincost;
+		case 29: from.wp29 = from.wp30; from.wp29mincost = from.wp30mincost;
+		case 30: from.wp30 = from.wp31; from.wp30mincost = from.wp31mincost;
+		case 31: from.wp31 = NULL; from.wp31mincost = 10000000;
+	}
+
+	if (fromwp31_prev && !from.wp31)
+		waypoint_schedulerelink(from);
+}
+
+int waypoint_getlinknum(entity from, entity to)
+{
+	if (from.wp00 == to) return  0; if (from.wp01 == to) return  1; if (from.wp02 == to) return  2; if (from.wp03 == to) return  3;
+	if (from.wp04 == to) return  4; if (from.wp05 == to) return  5; if (from.wp06 == to) return  6; if (from.wp07 == to) return  7;
+	if (from.wp08 == to) return  8; if (from.wp09 == to) return  9; if (from.wp10 == to) return 10; if (from.wp11 == to) return 11;
+	if (from.wp12 == to) return 12; if (from.wp13 == to) return 13; if (from.wp14 == to) return 14; if (from.wp15 == to) return 15;
+	if (from.wp16 == to) return 16; if (from.wp17 == to) return 17; if (from.wp18 == to) return 18; if (from.wp19 == to) return 19;
+	if (from.wp20 == to) return 20; if (from.wp21 == to) return 21; if (from.wp22 == to) return 22; if (from.wp23 == to) return 23;
+	if (from.wp24 == to) return 24; if (from.wp25 == to) return 25; if (from.wp26 == to) return 26; if (from.wp27 == to) return 27;
+	if (from.wp28 == to) return 28; if (from.wp29 == to) return 29; if (from.wp30 == to) return 30; if (from.wp31 == to) return 31;
+	return -1;
 }
 
 bool waypoint_islinked(entity from, entity to)
 {
-	if (from.wp00 == to) return true;if (from.wp01 == to) return true;if (from.wp02 == to) return true;if (from.wp03 == to) return true;
-	if (from.wp04 == to) return true;if (from.wp05 == to) return true;if (from.wp06 == to) return true;if (from.wp07 == to) return true;
-	if (from.wp08 == to) return true;if (from.wp09 == to) return true;if (from.wp10 == to) return true;if (from.wp11 == to) return true;
-	if (from.wp12 == to) return true;if (from.wp13 == to) return true;if (from.wp14 == to) return true;if (from.wp15 == to) return true;
-	if (from.wp16 == to) return true;if (from.wp17 == to) return true;if (from.wp18 == to) return true;if (from.wp19 == to) return true;
-	if (from.wp20 == to) return true;if (from.wp21 == to) return true;if (from.wp22 == to) return true;if (from.wp23 == to) return true;
-	if (from.wp24 == to) return true;if (from.wp25 == to) return true;if (from.wp26 == to) return true;if (from.wp27 == to) return true;
-	if (from.wp28 == to) return true;if (from.wp29 == to) return true;if (from.wp30 == to) return true;if (from.wp31 == to) return true;
-	return false;
+	return (waypoint_getlinknum(from, to) >= 0);
 }
 
 void waypoint_updatecost_foralllinks()
@@ -902,7 +1018,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 			if(!found)
 			{
 				if(!removal_mode)
-					LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped");
+					LOG_INFO("NOTICE: Can not find origin waypoint for the hardwired link ", s, ". Path skipped");
 				continue;
 			}
 		}
@@ -924,7 +1040,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 		if(!found)
 		{
 			if(!removal_mode)
-				LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped");
+				LOG_INFO("NOTICE: Can not find destination waypoint for the hardwired link ", s, ". Path skipped");
 			continue;
 		}
 
@@ -1285,19 +1401,42 @@ void waypoint_spawnforteleporter_boxes(entity e, int teleport_flag, vector org1,
 	e.nearestwaypointtimeout = -1;
 }
 
-void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir, entity tracetest_ent)
+void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent)
 {
-	// warpzones with oblique warp plane rely on down_dir to snap waypoints
-	// to the ground without leaving the warp plane
-	// warpzones with horizontal warp plane (down_dir.x == -1) generate
-	// destination waypoint snapped to the ground (leaving warpzone), source
-	// waypoint in the center of the warp plane
-	if(down_dir.x != -1)
-		org = waypoint_fixorigin_down_dir(org, tracetest_ent, down_dir);
-	if(down_dir.x == -1)
-		down_dir = '0 0 -1';
-	destination = waypoint_fixorigin_down_dir(destination, tracetest_ent, down_dir);
-	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, org, org, destination, destination, timetaken);
+	float src_angle = e.warpzone_angles.x;
+	while (src_angle < -180) src_angle += 360;
+	while (src_angle > 180) src_angle -= 360;
+
+	float dest_angle = e.enemy.warpzone_angles.x;
+	while (dest_angle < -180) dest_angle += 360;
+	while (dest_angle > 180) dest_angle -= 360;
+
+	// no waypoints for warpzones pointing upwards, they can't be used by the bots
+	if (src_angle == -90 || dest_angle == -90)
+		return;
+
+	makevectors(e.warpzone_angles);
+	vector src = (e.absmin + e.absmax) * 0.5;
+	src += ((e.warpzone_origin - src) * v_forward) * v_forward + 16 * v_right;
+	vector down_dir_src = -v_up;
+
+	makevectors(e.enemy.warpzone_angles);
+	vector dest = (e.enemy.absmin + e.enemy.absmax) * 0.5;
+	dest += ((e.enemy.warpzone_origin - dest) * v_forward) * v_forward - 16 * v_right;
+	vector down_dir_dest = -v_up;
+
+	int extra_flag = 0;
+	// don't snap to the ground waypoints for source warpzones pointing downwards
+	if (src_angle != 90)
+	{
+		src = waypoint_fixorigin_down_dir(src, tracetest_ent, down_dir_src);
+		dest = waypoint_fixorigin_down_dir(dest, tracetest_ent, down_dir_dest);
+		// oblique warpzones need a jump otherwise bots gets stuck
+		if (src_angle != 0)
+			extra_flag = WAYPOINTFLAG_JUMP;
+	}
+
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT | extra_flag, src, src, dest, dest, 0);
 }
 
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)
@@ -1365,6 +1504,25 @@ void waypoint_showlinks_from(entity wp, int display_type)
 	waypoint_showlink(wp.wp15, wp, display_type); waypoint_showlink(wp.wp31, wp, display_type);
 }
 
+void crosshair_trace_waypoints(entity pl)
+{
+	IL_EACH(g_waypoints, true, {
+		it.solid = SOLID_BSP;
+		if (!it.wpisbox)
+			setsize(it, '-16 -16 -16', '16 16 16');
+	});
+
+	crosshair_trace(pl);
+
+	IL_EACH(g_waypoints, true, {
+		it.solid = SOLID_TRIGGER;
+		if (!it.wpisbox)
+			setsize(it, '0 0 0', '0 0 0');
+	});
+	if (trace_ent.classname != "waypoint")
+		trace_ent = NULL;
+}
+
 void botframe_showwaypointlinks()
 {
 	if (time < botframe_waypointeditorlightningtime)
@@ -1373,10 +1531,18 @@ void botframe_showwaypointlinks()
 	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot,
 	{
 		int display_type = 0;
-		entity head = navigation_findnearestwaypoint(it, false);
+		if (wasfreed(it.wp_aimed))
+			it.wp_aimed = NULL;
+		if (wasfreed(it.wp_locked))
+			it.wp_locked = NULL;
+		if (PHYS_INPUT_BUTTON_USE(it))
+			it.wp_locked = it.wp_aimed;
+		entity head = it.wp_locked;
+		if (!head)
+			head = navigation_findnearestwaypoint(it, false);
 		it.nearestwaypoint = head; // mainly useful for debug
 		it.nearestwaypointtimeout = time + 2; // while I'm at it...
-		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
+		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE || it.wp_locked)
 			display_type = 1; // default
 		else if(head && (head.wphardwired))
 			display_type = 2; // only hardwired
@@ -1395,6 +1561,29 @@ void botframe_showwaypointlinks()
 					waypoint_showlinks_from(head, display_type);
 			}
 		}
+		string str;
+		entity wp = NULL;
+		if (vdist(vec2(it.velocity), <, autocvar_sv_maxspeed * 1.1))
+		{
+			crosshair_trace_waypoints(it);
+			if (trace_ent)
+			{
+				wp = trace_ent;
+				if (wp != it.wp_aimed)
+				{
+					str = sprintf("\necho ^2WP info^7: entity: %d, flags: %d, origin: '%s'\n", etof(wp), wp.wpflags, vtos(wp.origin));
+					if (wp.wpisbox)
+						str = strcat(str, sprintf("echo \" absmin: '%s', absmax: '%s'\"\n", vtos(wp.absmin), vtos(wp.absmax)));
+					stuffcmd(it, str);
+					str = sprintf("entity: %d\nflags: %d\norigin: \'%s\'", etof(wp), wp.wpflags, vtos(wp.origin));
+					if (wp.wpisbox)
+						str = strcat(str, sprintf(" \nabsmin: '%s'\nabsmax: '%s'", vtos(wp.absmin), vtos(wp.absmax)));
+					debug_text_3d(wp.origin, str, 0, 7, '0 0 0');
+				}
+			}
+		}
+		if (it.wp_aimed != wp)
+			it.wp_aimed = wp;
 	});
 }
 
