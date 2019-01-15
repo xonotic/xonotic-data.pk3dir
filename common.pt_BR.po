@@ -4,7 +4,7 @@
 #
 # Translators:
 # Ivan Paulos Tomé <greylica@gmail.com>, 2016
-# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2018
+# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2018-2019
 # Mirio <opivy@hotmail.de>, 2017
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-19 09:40+0000\n"
+"PO-Revision-Date: 2019-01-15 02:59+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -1837,7 +1837,7 @@ msgstr "Granada de armadilha"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:74
 msgid "Veil grenade"
-msgstr ""
+msgstr "Granada de véu"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:34
 msgid "Grenade"
@@ -3250,11 +3250,13 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 ficou cheio de buracos por causa da Metralhadora Suprema de ^BG"
+"%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 foi vaporizado pela Vortex Suprema de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
@@ -3262,29 +3264,31 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
+"^BG%s%s^K1 foi serrado ao meio pelo Lança-motosserras Supremo de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 quase desviou do Lança-motosserras Supremo de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 foi serrado ao meio pelo seu próprio Lança-motosserras Supremo%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se explodiu com seu próprio Lança-motosserras Supremo%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 foi baleado pela Escopeta Suprema de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3334,12 +3338,12 @@ msgstr "^BG%s%s^K1 deu uns tapas em ^BG%s^K1 com uma grande Shockwave%s%s"
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr "^BG%s%s^K1 foi baleado pela Shotgun de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi baleado pela Escopeta de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"
-msgstr "^BG%s%s^K1 deu uns tapas em ^BG%s^K1 com uma grande Shotgun%s%s"
+msgstr "^BG%s%s^K1 deu uns tapas em ^BG%s^K1 com uma grande Escopeta%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -4786,7 +4790,7 @@ msgstr "Shockwave"
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:18
 msgid "Shotgun"
-msgstr "Shotgun"
+msgstr "Escopeta"
 
 #: qcsrc/common/weapons/weapon/tuba.qh:18
 #, no-c-format
@@ -8561,7 +8565,7 @@ msgstr "Exibir data e hora atual"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:144
 msgid "Show current date and time of day, useful on screenshots"
-msgstr "Exibe a data e hora atual do dia, útil para capturas de tela"
+msgstr "Exibe a data e hora atual, útil para capturas de tela"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:147
 msgid "Enable developer mode"
