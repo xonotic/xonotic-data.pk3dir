@@ -1459,6 +1459,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	vector text_ofs = vec2(0.5 * hud_fontsize.x, (1.25 - 1) / 2 * hud_fontsize.y); // center text vertically
 	string str = "";
 	int column = 0, j = 0;
+	string zoned_name_self = strzone(strdecolorize(entcs_GetName(player_localnum)));
 	for(i = 0; i < RANKINGS_RECEIVED_CNT; ++i)
 	{
 		float t;
@@ -1466,7 +1467,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 		if (t == 0)
 			continue;
 
-		if(strdecolorize(grecordholder[i]) == strdecolorize(entcs_GetName(player_localnum)))
+		if(strdecolorize(grecordholder[i]) == zoned_name_self)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!((j + column) & 1) && sbt_highlight)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
@@ -1489,6 +1490,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 			pos.y = panel_pos.y;
 		}
 	}
+	strfree(zoned_name_self);
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 	return end_pos;
