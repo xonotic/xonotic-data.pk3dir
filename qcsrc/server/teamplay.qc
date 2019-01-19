@@ -227,16 +227,17 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE,
 					player.netname);
 			}
-			else
-			{
-				CS(player).just_joined = false;
-			}
 		}
 		KillPlayerForTeamChange(player);
 		if (!IS_BOT_CLIENT(player))
 		{
 			TeamBalance_AutoBalanceBots();
 		}
+	}
+	else if (team_index == -1)
+	{
+		if (!CS(player).just_joined)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
 	}
 	return true;
 }

@@ -381,7 +381,7 @@ void PutObserverInServer(entity this)
 		if(axh.owner == this && axh != NULL && !wasfreed(axh))
 			delete(axh);
 	}
-	
+
 	if (mutator_returnvalue)
 	{
 		// mutator prevents resetting teams+score
@@ -390,7 +390,9 @@ void PutObserverInServer(entity this)
 	{
 		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 		this.frags = FRAGS_SPECTATOR;
-    }
+	}
+	if (CS(this).just_joined)
+		CS(this).just_joined = false;
 }
 
 int player_getspecies(entity this)
