@@ -824,7 +824,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 {
 	TC(bool, is_self); TC(int, pl_number);
 	string str;
-	bool is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
+	bool is_spec = entcs_IsSpectating(pl.sv_entnum);
 
 	vector h_pos = item_pos;
 	vector h_size = vec2(panel_size.x, hud_fontsize.y * 1.25);
