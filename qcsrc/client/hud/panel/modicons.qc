@@ -41,8 +41,8 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 
 	if(layout)
 	{
-		drawpic_aspect_skin(myPos, pic, vec2(0.7 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(myPos + eX * 0.7 * mySize.x, ftos(stat), vec2(0.3 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(myPos, pic, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(myPos + eX * 0.5 * mySize.x, ftos(stat), vec2(0.5 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else
 		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
