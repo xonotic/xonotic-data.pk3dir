@@ -58,7 +58,7 @@ void HUD_PressedKeys()
 	if(autocvar_hud_panel_pressedkeys_attack)
 	{
 		drawpic_aspect_skin(pos + eX * keysize.x * 0.5, ((pressedkeys & KEY_ATCK) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(pos + eX * keysize.x * 1.5, ((pressedkeys & KEY_ATCK2) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos + eX * keysize.x * 1.5, ((pressedkeys & KEY_ATCK2) ? "key_atck2_inv.tga" : "key_atck2.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += keysize.y;
 	}
 
