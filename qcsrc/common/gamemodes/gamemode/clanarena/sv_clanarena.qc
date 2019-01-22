@@ -421,7 +421,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
 	entity client = M_ARGV(0, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer
+		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		entity targ = M_ARGV(1, entity);
 		M_ARGV(1, entity) = CA_SpectateNext(client, targ);
@@ -435,7 +436,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity targ = M_ARGV(1, entity);
 	entity first = M_ARGV(2, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer
+		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		do { targ = targ.chain; }
 		while(targ && DIFF_TEAM(targ, client));
