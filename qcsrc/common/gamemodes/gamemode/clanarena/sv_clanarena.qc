@@ -448,6 +448,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 				return MUT_SPECPREV_RETURN;
 		}
 	}
+	else
+		return MUT_SPECPREV_CONTINUE;
 
 	M_ARGV(1, entity) = targ;
 
