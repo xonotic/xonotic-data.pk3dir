@@ -78,7 +78,7 @@ void DamageEffect_Think(entity this)
 		return;
 	}
 	this.state = this.owner.csqcmodel_isdead;
-	if(this.owner.isplayermodel && (this.owner.isplayermodel & ISPLAYER_LOCAL) && !autocvar_chase_active)
+	if((this.owner.isplayermodel & ISPLAYER_LOCAL) && !autocvar_chase_active)
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
@@ -153,7 +153,7 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
 	{
-		if(this.isplayermodel)
+		if((this.isplayermodel & ISPLAYER_MODEL))
 		{
 			specstr = species_prefix(specnum);
 			specstr = substring(specstr, 0, strlen(specstr) - 1);
@@ -250,7 +250,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if(it.isplayermodel)
+		if((it.isplayermodel & ISPLAYER_MODEL))
 			hitplayer = true; // this impact damaged a player
 	});
 
