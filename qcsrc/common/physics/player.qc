@@ -132,7 +132,7 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		//do_crouch = false;
 	} else if (PHYS_INVEHICLE(this)) {
 		do_crouch = false;
-	} else if (STAT(FROZEN, this)) {
+	} else if (STAT(FROZEN, this) || IS_DEAD(this)) {
 		do_crouch = false;
     }
 
