@@ -40,7 +40,9 @@ STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i
 
 #ifdef SVQC
 #define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, svsend, clreceive) \
-	bool id##_check(entity ent, entity player) { return (GetResourceAmount(ent, checkprop) != GetResourceAmount(player, checkprop)); } \
+	bool id##_check(entity ent, entity player) { \
+		return (floor(GetResourceAmount(ent, checkprop) / 10) != floor(GetResourceAmount(player, checkprop) / 10)); \
+	} \
 	void id##_set(entity ent, entity player) { SetResourceAmountExplicit(ent, checkprop, GetResourceAmount(player, checkprop)); } \
 	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
