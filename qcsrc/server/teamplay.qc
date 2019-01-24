@@ -181,7 +181,7 @@ bool Player_SetTeamIndex(entity player, int index)
 		{
 			// This is important when players join the game and one of their
 			// color matches the team color while other doesn't. For example
-			// [BOT]Lion.
+			// [BOT]Lion: color 0 4.
 			SetPlayerColors(player, new_team - 1);
 		}
 		return true;
@@ -236,7 +236,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	}
 	else if (team_index == -1)
 	{
-		if (!CS(player).just_joined)
+		if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
 	}
 	return true;
