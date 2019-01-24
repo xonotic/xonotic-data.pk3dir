@@ -272,6 +272,13 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 }
 
+MUTATOR_HOOKFUNCTION(ok, SetWeaponArena)
+{
+	// turn weapon arena off
+	M_ARGV(0, string) = "off";
+}
+
+// This overrides LMS and similar
 MUTATOR_HOOKFUNCTION(ok, PlayerSpawn, CBC_ORDER_LAST)
 {
 	entity player = M_ARGV(0, entity);
@@ -280,12 +287,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn, CBC_ORDER_LAST)
 
 	if(WEP_OVERKILL_RPC.weaponstart > 0) { STAT(WEAPONS, player) |= WEPSET(OVERKILL_RPC); }
 	if(WEP_OVERKILL_HMG.weaponstart > 0) { STAT(WEAPONS, player) |= WEPSET(OVERKILL_HMG); }
-}
-
-MUTATOR_HOOKFUNCTION(ok, SetWeaponArena)
-{
-	// turn weapon arena off
-	M_ARGV(0, string) = "off";
 }
 
 MUTATOR_HOOKFUNCTION(ok, BuildMutatorsString)

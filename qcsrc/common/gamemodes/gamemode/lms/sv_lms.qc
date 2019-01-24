@@ -427,24 +427,29 @@ MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
+{
+	if (autocvar_g_lms_weapons_all) {
+		// most weapons arena
+		if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
+	}
+}
+
+// We need to set weapons *after* weaponsInMapAll is initialized so we can't use WantWeapon/SetStartItems/SetWeaponArena.
 // Not CBC_ORDER_LAST since this needs to be overriden by several other mutators otherwise they get vanilla weapons.
-// Also can't use WantWeapon or SetStartItems because they're called too early and weaponsInMapAll is not initialized yet.
-// TODO ^ check other mutators and fix them
 MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 {
-	entity player = M_ARGV(0, entity);
+	if (!autocvar_g_lms_weapons_all) {
+		entity player = M_ARGV(0, entity);
 
-	LOG_INFOF("has: %v", STAT(WEAPONS, player));
-	LOG_INFOF("in map: %v | %v\n", weaponsInMap, weaponsInMapAll);
-	LOG_INFOF("start: %v | %v\n", start_weapons, start_weapons_default);
-
-	FOREACH(Weapons, it != WEP_Null, {
-		bool normal = it.spawnflags & WEP_FLAG_NORMAL;
-		bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
-		if (normal && !blocked) {
-			STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
-		}
-	});
+		FOREACH(Weapons, it != WEP_Null, {
+			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
+			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
+			if (normal && !blocked) {
+				STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
+			}
+		});
+	}
 }
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)

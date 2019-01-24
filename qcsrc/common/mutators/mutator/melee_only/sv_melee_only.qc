@@ -8,13 +8,20 @@ REGISTER_MUTATOR(melee_only, expr_evaluate(autocvar_g_melee_only) && !MUTATOR_IS
 MUTATOR_HOOKFUNCTION(melee_only, SetStartItems, CBC_ORDER_LAST)
 {
 	start_ammo_shells = warmup_start_ammo_shells = 0;
-	start_weapons = warmup_start_weapons = WEPSET(SHOTGUN);
 }
 
 MUTATOR_HOOKFUNCTION(melee_only, SetWeaponArena)
 {
 	// turn weapon arena off
 	M_ARGV(0, string) = "off";
+}
+
+// CBC_ORDER_LAST - must override LMS and similar
+MUTATOR_HOOKFUNCTION(melee_only, PlayerSpawn, CBC_ORDER_LAST)
+{
+	entity player = M_ARGV(0, entity);
+
+	STAT(WEAPONS, player) = WEPSET(SHOTGUN);
 }
 
 MUTATOR_HOOKFUNCTION(melee_only, ForbidRandomStartWeapons)

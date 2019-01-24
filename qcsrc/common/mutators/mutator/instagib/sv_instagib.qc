@@ -204,6 +204,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidRandomStartWeapons)
 	return true;
 }
 
+// Overrides LMS and similar
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn, CBC_ORDER_LAST)
 {
 	entity player = M_ARGV(0, entity);

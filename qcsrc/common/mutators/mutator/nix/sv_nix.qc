@@ -282,7 +282,7 @@ MUTATOR_HOOKFUNCTION(nix, ForbidRandomStartWeapons)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(nix, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(nix, PlayerSpawn, CBC_ORDER_LAST)
 {
 	entity player = M_ARGV(0, entity);
 

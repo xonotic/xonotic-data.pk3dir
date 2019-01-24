@@ -408,6 +408,18 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	// same mechanism as LMS to set start weapons
+	if (!autocvar_g_freezetag_weapons_all)
+	{
+		FOREACH(Weapons, it != WEP_Null, {
+			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
+			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
+			if (normal && !blocked) {
+				STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
+			}
+		});
+	}
+
 	if(player.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return true; // do nothing, round is starting right now
 
@@ -588,8 +600,10 @@ MUTATOR_HOOKFUNCTION(ft, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
 {
 	// most weapons arena
-	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+	if(autocvar_g_freezetag_weapons_all && (M_ARGV(0, string) == "0" || M_ARGV(0, string) == ""))
+	{
 		M_ARGV(0, string) = "most";
+	}
 }
 
 MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)

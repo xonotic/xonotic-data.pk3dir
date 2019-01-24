@@ -172,7 +172,15 @@ entity CA_SpectateNext(entity player, entity start)
 	return start;
 }
 
+MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
+{
+	if (autocvar_g_ca_weapons_all && (M_ARGV(0, string) == "0" || M_ARGV(0, string) == ""))
+	{
+		M_ARGV(0, string) = "most";
+	}
+}
 
+// Using the same mechanism as LMS to set start weapons
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -180,6 +188,17 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	player.caplayer = 1;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
+
+	if (!autocvar_g_ca_weapons_all)
+	{
+		FOREACH(Weapons, it != WEP_Null, {
+			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
+			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
+			if (normal && !blocked) {
+				STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
+			}
+		});
+	}
 }
 
 MUTATOR_HOOKFUNCTION(ca, ForbidSpawn)
@@ -479,11 +498,6 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(ca, WantWeapon)
-{
-	M_ARGV(2, bool) = true; // all weapons
-}
-
 MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
 {
 	return true; // doesn't work well with the whole spectator as player thing
@@ -494,10 +508,4 @@ MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 	entity player = M_ARGV(0, entity);
 
 	return player.caplayer == 1;
-}
-
-MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
-{
-	// most weapons arena
-	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
 }
