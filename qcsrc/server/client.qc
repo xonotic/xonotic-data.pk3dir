@@ -1032,6 +1032,7 @@ string getwelcomemessage(entity this)
 
 	string versionmessage = GetClientVersionMessage(this);
 	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
+	s = strcat(s, "^8\nCurrent map: ^2", GetMapname(), "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
