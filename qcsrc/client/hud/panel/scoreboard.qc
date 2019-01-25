@@ -559,6 +559,7 @@ string sbt_field_icon2;
 vector sbt_field_icon0_rgb;
 vector sbt_field_icon1_rgb;
 vector sbt_field_icon2_rgb;
+string sbt_icon_self;
 string Scoreboard_GetName(entity pl)
 {
 	if(ready_waiting && pl.ready)
@@ -837,9 +838,15 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	float fg_alpha = (is_self ? sbt_fg_alpha_self : sbt_fg_alpha);
 
 	vector pos = item_pos;
+    // put an mark on self column
+    sbt_icon_self = "gfx/scoreboard/player_self";
+    if (is_self)
+        drawpic(pos+eX*(panel_size.x+.5*hud_fontsize.x), sbt_icon_self, vec2(hud_fontsize.x, hud_fontsize.y), rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+
 	pos.x += hud_fontsize.x * 0.5;
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
 	vector tmp = '0 0 0';
+
 	int i;
 	PlayerScoreField field;
 	for(i = 0; i < sbt_num_fields; ++i)
@@ -1591,7 +1598,8 @@ void Scoreboard_Draw()
 	draw_endBoldFont();
 
 	float tl, fl, ll;
-	str = sprintf("^7Until ");
+	//str = sprintf("^7Limits: ");
+	str = sprintf("");
 	tl = STAT(TIMELIMIT);
 	fl = STAT(FRAGLIMIT);
 	ll = STAT(LEADLIMIT);
@@ -1607,7 +1615,7 @@ void Scoreboard_Draw()
 		if(fl > 0)
 		{
 			if(tl > 0)
-				str = strcat(str, _(" or "));
+				str = strcat(str, _(" / "));
 			if(teamplay)
 			{
 				str = strcat(str, sprintf(_("^x0EF%s %s^7"), ScoreString(teamscores_flags(ts_primary), fl),
@@ -1626,10 +1634,10 @@ void Scoreboard_Draw()
 		if(ll > 0)
 		{
 			if(tl > 0 || fl > 0)
-				str = strcat(str, _(" or "));
+				str = strcat(str, _(" / "));
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_("a lead of ^2+%s %s^7"), ScoreString(teamscores_flags(ts_primary), ll),
+				str = strcat(str, sprintf(_("^2+%s %s^7"), ScoreString(teamscores_flags(ts_primary), ll),
 					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
 					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(teamscores_label(ts_primary))));
@@ -1647,15 +1655,10 @@ void Scoreboard_Draw()
 	pos.y += sb_gameinfo_heading_fontsize.y * 1.2;
     sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
 	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	str = sprintf(_("^7Map: ^2%s^7"), shortmapname);
+	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
-    // Scoreboard heading
-	sb_heading_fontsize = hud_fontsize * 2;
 	pos.y += sb_gameinfo_detail_fontsize.y * 1.2;
-	draw_beginBoldFont();
-	drawstring(pos + eX * panel_bg_padding, _("Scoreboard"), sb_heading_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	draw_endBoldFont();
-
-	pos.y += sb_heading_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
 
@@ -1668,9 +1671,9 @@ void Scoreboard_Draw()
 	if(teamplay)
 	{
 		vector panel_bg_color_save = panel_bg_color;
-		vector team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
+		vector team_score_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
 		if(panel.current_panel_bg != "0")
-			team_score_baseoffset.x -= panel_bg_border;
+			team_score_baseoffset.x += panel_bg_border;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
@@ -1681,13 +1684,13 @@ void Scoreboard_Draw()
 			draw_beginBoldFont();
 			vector rgb = Team_ColorRGB(tm.team);
 			str = ftos(tm.(teamscores(ts_primary)));
-			str_pos = pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
+			str_pos = pos + eX * (panel_size.x + hud_fontsize.x) + team_score_baseoffset;
 			drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
 			{
 				str = ftos(tm.(teamscores(ts_secondary)));
-				str_pos = pos + team_score_baseoffset - vec2(stringwidth(str, false, hud_fontsize), hud_fontsize.y * 1.5);
+				str_pos = pos + eX * (panel_size.x + hud_fontsize.x) + team_score_baseoffset;
 				drawstring(str_pos, str, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			draw_endBoldFont();
@@ -1749,10 +1752,9 @@ void Scoreboard_Draw()
 	}
 
 	// Map info
-	str = sprintf(_("^7Map: ^2%s^7"), shortmapname);
-
-	pos.y += 1.2 * hud_fontsize.y;
-	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	//str = sprintf(_("^7Map: ^2%s^7"), shortmapname);
+	//pos.y += 1.2 * hud_fontsize.y;
+	//drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print information about respawn status
 	float respawn_time = STAT(RESPAWN_TIME);
