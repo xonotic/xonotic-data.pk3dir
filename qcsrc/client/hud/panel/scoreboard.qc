@@ -1054,7 +1054,7 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg();
 
-	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + 0.5* hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
 		end_pos.y += panel_bg_border * 2;
 
@@ -1589,14 +1589,15 @@ void Scoreboard_Draw()
 	string str;
 	vector str_pos;
 
-	vector sb_heading_fontsize, sb_gameinfo_heading_fontsize, sb_gameinfo_detail_fontsize;
-	// Game Info
+	vector sb_gameinfo_heading_fontsize, sb_gameinfo_detail_fontsize;
+	// Game Type
 	str = sprintf(_("^3%s^7"), MapInfo_Type_ToText(gametype));
 	draw_beginBoldFont();
 	sb_gameinfo_heading_fontsize = hud_fontsize * 2.5;
 	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_heading_fontsize)), str, sb_gameinfo_heading_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
 
+    // Game info
 	float tl, fl, ll;
 	//str = sprintf("^7Limits: ");
 	str = sprintf("");
@@ -1615,7 +1616,7 @@ void Scoreboard_Draw()
 		if(fl > 0)
 		{
 			if(tl > 0)
-				str = strcat(str, _(" / "));
+				str = strcat(str, _(" / ")); // delimiter
 			if(teamplay)
 			{
 				str = strcat(str, sprintf(_("^x0EF%s %s^7"), ScoreString(teamscores_flags(ts_primary), fl),
@@ -1634,7 +1635,7 @@ void Scoreboard_Draw()
 		if(ll > 0)
 		{
 			if(tl > 0 || fl > 0)
-				str = strcat(str, _(" / "));
+				str = strcat(str, _(" / ")); // delimiter
 			if(teamplay)
 			{
 				str = strcat(str, sprintf(_("^2+%s %s^7"), ScoreString(teamscores_flags(ts_primary), ll),
@@ -1652,13 +1653,16 @@ void Scoreboard_Draw()
 		}
 	}
 
-	pos.y += sb_gameinfo_heading_fontsize.y * 1.2;
+	pos.y += sb_gameinfo_heading_fontsize.y;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
-	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	//drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // center
+	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
+    // map name
 	str = sprintf(_("^7Map: ^2%s^7"), shortmapname);
-	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	//drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
+	drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 
-	pos.y += sb_gameinfo_detail_fontsize.y * 1.2;
+	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
 
