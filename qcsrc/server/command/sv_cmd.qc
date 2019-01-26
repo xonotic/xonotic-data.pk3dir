@@ -330,6 +330,7 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 			{
 				cvar_settemp("bot_vs_human", "0");
 				cvar_settemp("minplayers", "0");
+				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", "0");
 				bot_fixcount();
 				cvar_settemp("bot_number", argv(2));
@@ -362,6 +363,7 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 						{
 							cvar_settemp("bot_vs_human", "0");
 							cvar_settemp("minplayers", "0");
+							cvar_settemp("minplayers_per_team", "0");
 							cvar_settemp("bot_number", "0");
 							bot_fixcount();
 							cvar_settemp("bot_number", argv(3));
@@ -1281,6 +1283,7 @@ void GameCommand_setbots(int request, int argc)
 			if (argc >= 2)
 			{
 				cvar_settemp("minplayers", "0");
+				cvar_settemp("minplayers_per_team", "0");
 				cvar_settemp("bot_number", argv(1));
 				bot_fixcount();
 				return;
