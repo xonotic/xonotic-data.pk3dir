@@ -1599,8 +1599,7 @@ void Scoreboard_Draw()
 
     // Game info
 	float tl, fl, ll;
-	//str = sprintf("^7Limits: ");
-	str = sprintf("");
+	str = sprintf(""); // optionally "^7Limits: "
 	tl = STAT(TIMELIMIT);
 	fl = STAT(FRAGLIMIT);
 	ll = STAT(LEADLIMIT);
@@ -1655,11 +1654,9 @@ void Scoreboard_Draw()
 
 	pos.y += sb_gameinfo_heading_fontsize.y;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
-	//drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // center
 	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
     // map name
 	str = sprintf(_("^7Map: ^2%s^7"), shortmapname);
-	//drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
 	drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 
 	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
