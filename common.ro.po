@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-13 14:42+0000\n"
+"POT-Creation-Date: 2019-01-27 07:23+0100\n"
+"PO-Revision-Date: 2019-01-27 06:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Romanian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ro/)\n"
@@ -206,11 +206,11 @@ msgstr "^3CTRL ^7pentru a dezactiva testarea de coliziune, ^3SHIFT ^7și"
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3SĂGEȚI ^7pentru ajustări fine."
 
-#: qcsrc/client/hud/panel/modicons.qc:571
+#: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Personal best"
 msgstr "Record personal"
 
-#: qcsrc/client/hud/panel/modicons.qc:581
+#: qcsrc/client/hud/panel/modicons.qc:586
 msgid "Server best"
 msgstr "Record server"
 
@@ -540,332 +540,374 @@ msgstr "^1PENALIZARE: %.1f (%s)"
 msgid "^2PENALTY: %.1f (%s)"
 msgstr "^2PENALIZARE: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:82
+#: qcsrc/client/hud/panel/scoreboard.qc:86
+msgid "Number of ball carrier kills"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "SCO^bckills"
 msgstr "SCO^bcucideri"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:83
+#: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "SCO^bctime"
 msgstr "SCO^bctimp"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:84
+#: qcsrc/client/hud/panel/scoreboard.qc:87
+msgid "Total amount of time holding the ball in Keepaway"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:88
+msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "SCO^caps"
 msgstr "SCO^capturi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:85
+#: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "SCO^captime"
 msgstr "SCO^timpcapturi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:86
+#: qcsrc/client/hud/panel/scoreboard.qc:89
+msgid "Time of fastest capture (CTF)"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:90
+msgid "Number of deaths"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "SCO^deaths"
 msgstr "SCO^morți"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:87
+#: qcsrc/client/hud/panel/scoreboard.qc:91
+msgid "Number of keys destroyed by pushing them into void"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^destroyed"
 msgstr "SCO^distrus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:88
+#: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "SCO^damage"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:89
+#: qcsrc/client/hud/panel/scoreboard.qc:92
+msgid "The total damage done"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^dmgtaken"
 msgstr "SCO^dauneprimite"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:90
+#: qcsrc/client/hud/panel/scoreboard.qc:93
+msgid "The total damage taken"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:94
+msgid "Number of flag drops"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^drops"
 msgstr "SCO^căzături"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:91
+#: qcsrc/client/hud/panel/scoreboard.qc:95
+msgid "Player ELO"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:95
+msgid "SCO^elo"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:96
+msgid "SCO^fastest"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:96
+msgid "Time of fastest lap (Race/CTS)"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:97
+msgid "Number of faults committed"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^faults"
 msgstr "SCO^defecte"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:92
+#: qcsrc/client/hud/panel/scoreboard.qc:98
+msgid "Number of flag carrier kills"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:98
 msgid "SCO^fckills"
 msgstr "SCO^fcucideri"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:93
-msgid "SCO^goals"
-msgstr "SCO^goluri"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:94
-msgid "SCO^kckills"
-msgstr "SCO^kcucideri"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:95
-msgid "SCO^kdratio"
-msgstr "SCO^kdrație"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:96
-msgid "SCO^k/d"
-msgstr "SCO^u/m"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:97
-msgid "SCO^kdr"
-msgstr "SCO^rum"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:98
-msgid "SCO^kills"
-msgstr "SCO^ucideri"
+#: qcsrc/client/hud/panel/scoreboard.qc:99
+msgid "FPS"
+msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
-msgid "SCO^teamkills"
+msgid "SCO^fps"
 msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
+msgid "Number of kills minus suicides"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:100
+msgid "SCO^frags"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:101
+msgid "Number of goals scored"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:101
+msgid "SCO^goals"
+msgstr "SCO^goluri"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:102
+msgid "Number of keys carrier kills"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:102
+msgid "SCO^kckills"
+msgstr "SCO^kcucideri"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:103
+msgid "SCO^k/d"
+msgstr "SCO^u/m"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:103
+#: qcsrc/client/hud/panel/scoreboard.qc:104
+#: qcsrc/client/hud/panel/scoreboard.qc:105
+msgid "The kill-death ratio"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:104
+msgid "SCO^kdr"
+msgstr "SCO^rum"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:105
+msgid "SCO^kdratio"
+msgstr "SCO^kdrație"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:106
+msgid "Number of kills"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:106
+msgid "SCO^kills"
+msgstr "SCO^ucideri"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:107
+msgid "Number of laps finished (Race/CTS)"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^laps"
 msgstr "SCO^ture"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:101
+#: qcsrc/client/hud/panel/scoreboard.qc:108
+msgid "Number of lives (LMS)"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^lives"
 msgstr "SCO^vieți"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:102
+#: qcsrc/client/hud/panel/scoreboard.qc:109
+msgid "Number of times a key was lost"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^losses"
 msgstr "SCO^pierderi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:103
+#: qcsrc/client/hud/panel/scoreboard.qc:110
+#: qcsrc/client/hud/panel/scoreboard.qc:111
+msgid "Player name"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^name"
 msgstr "SCO^nume"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:104
-msgid "SCO^sum"
-msgstr "SCO^sumă"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:105
+#: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^nick"
 msgstr "SCO^poreclă"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:106
+#: qcsrc/client/hud/panel/scoreboard.qc:112
+msgid "Number of objectives destroyed"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^objectives"
 msgstr "SCO^obiective"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:107
+#: qcsrc/client/hud/panel/scoreboard.qc:113
+msgid ""
+"How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^pickups"
 msgstr "SCO^ridicări"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:108
+#: qcsrc/client/hud/panel/scoreboard.qc:114
+msgid "Ping time"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "SCO^ping"
 msgstr "SCO^latență"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:109
-msgid "SCO^pl"
-msgstr "SCO^pl"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:110
-msgid "SCO^pushes"
-msgstr "SCO^împingeri"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:111
-msgid "SCO^rank"
-msgstr "SCO^rang"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:112
-msgid "SCO^returns"
-msgstr "SCO^returnări"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:113
-msgid "SCO^revivals"
-msgstr "SCO^reînvieri"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:114
-msgid "SCO^rounds won"
+#: qcsrc/client/hud/panel/scoreboard.qc:115
+msgid "Packet loss"
 msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
+msgid "SCO^pl"
+msgstr "SCO^pl"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:116
+msgid "Number of players pushed into void"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:116
+msgid "SCO^pushes"
+msgstr "SCO^împingeri"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:117
+msgid "Player rank"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:117
+msgid "SCO^rank"
+msgstr "SCO^rang"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:118
+msgid "Number of flag returns"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:118
+msgid "SCO^returns"
+msgstr "SCO^returnări"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:119
+msgid "Number of revivals"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:119
+msgid "SCO^revivals"
+msgstr "SCO^reînvieri"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:120
+msgid "Number of rounds won"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:120
+msgid "SCO^rounds won"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^score"
 msgstr "SCO^scor"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:116
+#: qcsrc/client/hud/panel/scoreboard.qc:121
+msgid "Total score"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:122
+msgid "Number of suicides"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^suicides"
 msgstr "SCO^sinucideri"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:117
+#: qcsrc/client/hud/panel/scoreboard.qc:123
+msgid "Number of kills minus deaths"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:123
+msgid "SCO^sum"
+msgstr "SCO^sumă"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:124
+msgid "Number of domination points taken (Domination)"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^takes"
 msgstr "SCO^luări"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:118
+#: qcsrc/client/hud/panel/scoreboard.qc:125
+msgid "Number of teamkills"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:125
+msgid "SCO^teamkills"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:126
+msgid "Number of ticks (Domination)"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^ticks"
 msgstr "SCO^tic-uri"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:298
+#: qcsrc/client/hud/panel/scoreboard.qc:127
+msgid "SCO^time"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:127
+msgid "Total time raced (Race/CTS)"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:299
+#: qcsrc/client/hud/panel/scoreboard.qc:312
 msgid "Usage:"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:301
+#: qcsrc/client/hud/panel/scoreboard.qc:314
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:302
+#: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:303
+#: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:304
+#: qcsrc/client/hud/panel/scoreboard.qc:317
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:305
+#: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:306
+#: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:309
-#: qcsrc/client/hud/panel/scoreboard.qc:310
-msgid "Name of a player"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:311
-msgid "Ping time"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:312
-msgid "Packet loss"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:313
-msgid "Player ELO"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:314
-msgid "Player FPS"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:315
-msgid "Number of kills"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:316
-msgid "Number of deaths"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:317
-msgid "Number of suicides"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:318
-msgid "kills - suicides"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:319
-msgid "Number of teamkills"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:320
-msgid "The kill-death ratio"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:321
-msgid "The total damage done"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:322
-msgid "The total damage taken"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:323
-msgid "kills - deaths"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:324
-msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
-msgstr ""
-
 #: qcsrc/client/hud/panel/scoreboard.qc:325
-msgid ""
-"How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:326
-msgid "Time of fastest cap (CTF)"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:327
-msgid "Number of flag carrier kills"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:328
-msgid "Number of flag returns"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:329
-msgid "Number of flag drops"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:330
-msgid "Number of lives (LMS)"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:331
-msgid "Player rank"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:332
-msgid "Number of players pushed into void"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:333
-msgid "Number of keys destroyed by pushing them into void"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:334
-msgid "Number of keys carrier kills"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:335
-msgid "Number of times a key was lost"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:336
-msgid "Number of laps finished (race/cts)"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:337
-msgid "Total time raced (race/cts)"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:338
-msgid "Time of fastest lap (race/cts)"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:339
-msgid "Number of ticks (DOM)"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:340
-msgid "Number of domination points taken (DOM)"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:341
-msgid "Number of ball carrier kills"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:342
-msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:343
-msgid "Total score"
-msgstr ""
-
-#: qcsrc/client/hud/panel/scoreboard.qc:346
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -873,32 +915,32 @@ msgid ""
 "field to show all fields available for the current game mode."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:352
+#: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:356
+#: qcsrc/client/hud/panel/scoreboard.qc:335
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:357
+#: qcsrc/client/hud/panel/scoreboard.qc:336
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:359
+#: qcsrc/client/hud/panel/scoreboard.qc:338
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:622
-#: qcsrc/client/hud/panel/scoreboard.qc:629
-#: qcsrc/client/hud/panel/scoreboard.qc:681
-#: qcsrc/client/hud/panel/scoreboard.qc:692
+#: qcsrc/client/hud/panel/scoreboard.qc:601
+#: qcsrc/client/hud/panel/scoreboard.qc:608
+#: qcsrc/client/hud/panel/scoreboard.qc:660
+#: qcsrc/client/hud/panel/scoreboard.qc:671
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:46
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:47
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
@@ -907,104 +949,104 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1200
+#: qcsrc/client/hud/panel/scoreboard.qc:1179
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Statistici de acuratețe (medie %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1348
+#: qcsrc/client/hud/panel/scoreboard.qc:1327
 msgid "Map stats:"
 msgstr "Statistici hartă:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1378
+#: qcsrc/client/hud/panel/scoreboard.qc:1357
 msgid "Monsters killed:"
 msgstr "Monștri uciși:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1385
+#: qcsrc/client/hud/panel/scoreboard.qc:1364
 msgid "Secrets found:"
 msgstr "Secrete descoperite:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1407
+#: qcsrc/client/hud/panel/scoreboard.qc:1386
 msgid "Capture time rankings"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1407
+#: qcsrc/client/hud/panel/scoreboard.qc:1386
 msgid "Rankings"
 msgstr "Clasament"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1608
+#: qcsrc/client/hud/panel/scoreboard.qc:1589
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
 msgstr "Tabelă de scor"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1671
+#: qcsrc/client/hud/panel/scoreboard.qc:1652
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1675
+#: qcsrc/client/hud/panel/scoreboard.qc:1656
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1691
+#: qcsrc/client/hud/panel/scoreboard.qc:1672
 #, c-format
 msgid "Spectators"
 msgstr "Spectatori"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1706
+#: qcsrc/client/hud/panel/scoreboard.qc:1687
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
 msgstr "se joacă ^3%s^7 pe harta ^2%s^7 "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1713
-#: qcsrc/client/hud/panel/scoreboard.qc:1718
+#: qcsrc/client/hud/panel/scoreboard.qc:1694
+#: qcsrc/client/hud/panel/scoreboard.qc:1699
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
 msgstr "timp de ^1%1.0f minute^7 "
 
+#: qcsrc/client/hud/panel/scoreboard.qc:1703
 #: qcsrc/client/hud/panel/scoreboard.qc:1722
-#: qcsrc/client/hud/panel/scoreboard.qc:1741
 msgid " or"
 msgstr "sau "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1725
-#: qcsrc/client/hud/panel/scoreboard.qc:1732
+#: qcsrc/client/hud/panel/scoreboard.qc:1706
+#: qcsrc/client/hud/panel/scoreboard.qc:1713
 #, c-format
 msgid " until ^3%s %s^7"
 msgstr "până la ^3%s %s^7"
 
+#: qcsrc/client/hud/panel/scoreboard.qc:1707
+#: qcsrc/client/hud/panel/scoreboard.qc:1714
 #: qcsrc/client/hud/panel/scoreboard.qc:1726
 #: qcsrc/client/hud/panel/scoreboard.qc:1733
-#: qcsrc/client/hud/panel/scoreboard.qc:1745
-#: qcsrc/client/hud/panel/scoreboard.qc:1752
 msgid "SCO^points"
 msgstr "SCO^puncte"
 
+#: qcsrc/client/hud/panel/scoreboard.qc:1708
+#: qcsrc/client/hud/panel/scoreboard.qc:1715
 #: qcsrc/client/hud/panel/scoreboard.qc:1727
 #: qcsrc/client/hud/panel/scoreboard.qc:1734
-#: qcsrc/client/hud/panel/scoreboard.qc:1746
-#: qcsrc/client/hud/panel/scoreboard.qc:1753
 msgid "SCO^is beaten"
 msgstr "SCO^este bătut"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1744
-#: qcsrc/client/hud/panel/scoreboard.qc:1751
+#: qcsrc/client/hud/panel/scoreboard.qc:1725
+#: qcsrc/client/hud/panel/scoreboard.qc:1732
 #, c-format
 msgid " until a lead of ^3%s %s^7"
 msgstr "până la un avans de ^3%s %s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1775
+#: qcsrc/client/hud/panel/scoreboard.qc:1756
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Respawn în ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1785
+#: qcsrc/client/hud/panel/scoreboard.qc:1766
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Ești mort, așteaptă ^3%s^7 până la respawn"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1794
+#: qcsrc/client/hud/panel/scoreboard.qc:1775
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Ești mort, apasă ^2%s^7 pentru a te respawna"
@@ -1103,28 +1145,28 @@ msgstr "(%d voturi)"
 msgid "Don't care"
 msgstr "Nu-mi pasă"
 
-#: qcsrc/client/mapvoting.qc:374
+#: qcsrc/client/mapvoting.qc:375
 msgid "Decide the gametype"
 msgstr "Alege tipul de joc"
 
-#: qcsrc/client/mapvoting.qc:374
+#: qcsrc/client/mapvoting.qc:375
 msgid "Vote for a map"
 msgstr "Votează o hartă"
 
-#: qcsrc/client/mapvoting.qc:391
+#: qcsrc/client/mapvoting.qc:392
 #, c-format
 msgid "%d seconds left"
 msgstr "%d secunde rămase"
 
-#: qcsrc/client/mapvoting.qc:504
+#: qcsrc/client/mapvoting.qc:505
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:514
+#: qcsrc/client/mapvoting.qc:515
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:523
+#: qcsrc/client/mapvoting.qc:524
 msgid "Requesting preview..."
 msgstr ""
 
@@ -1234,7 +1276,7 @@ msgstr "Forță"
 msgid "Shield"
 msgstr "Scut"
 
-#: qcsrc/common/mapinfo.qc:621
+#: qcsrc/common/mapinfo.qc:626
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "Aruncă @!#%'n Tuba"
@@ -5459,6 +5501,7 @@ msgstr "Fereastra Informatii"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
@@ -5470,6 +5513,7 @@ msgid "Disable"
 msgstr "Dezactivat"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
 msgstr ""
 
@@ -5624,6 +5668,11 @@ msgstr "Panou Fizici"
 msgid "Powerups Panel"
 msgstr "Panou Powerup"
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
+msgid "Always enable"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
 msgstr "Aspect forțat:"
@@ -5642,10 +5691,6 @@ msgstr "Panou de Timp pentru Curse"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Enable in team games"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
-msgid "Always enable"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
