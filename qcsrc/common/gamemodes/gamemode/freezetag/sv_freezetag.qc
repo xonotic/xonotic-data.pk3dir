@@ -43,12 +43,10 @@ void freezetag_count_alive_players()
 	eliminatedPlayers.SendFlags |= 1;
 }
 
-#define FREEZETAG_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
-
 bool freezetag_CheckTeams()
 {
 	static float prev_missing_teams_mask;
-	if(FREEZETAG_ALIVE_TEAMS_OK())
+	if (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);

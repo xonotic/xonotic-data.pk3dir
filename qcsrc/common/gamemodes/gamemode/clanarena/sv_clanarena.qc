@@ -62,7 +62,6 @@ int CA_GetWinnerTeam()
 
 void nades_Clear(entity player);
 
-#define CA_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
 float CA_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -115,7 +114,7 @@ bool CA_CheckTeams()
 	static int prev_missing_teams_mask;
 	allowed_to_spawn = true;
 	CA_count_alive_players();
-	if(CA_ALIVE_TEAMS_OK())
+	if (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
