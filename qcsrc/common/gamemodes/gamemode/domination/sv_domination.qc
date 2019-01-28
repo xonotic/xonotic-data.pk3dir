@@ -69,10 +69,12 @@ void dompoint_captured(entity this)
 		this.enemy = NULL;
 
 	if (head.noise != "")
+	{
 		if(this.enemy)
 			_sound(this.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
 		else
 			_sound(this, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
+	}
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
@@ -466,10 +468,7 @@ MUTATOR_HOOKFUNCTION(dom, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	if(domination_roundbased)
-	if(!round_handler_IsRoundStarted())
-		player.player_blocked = 1;
-	else
-		player.player_blocked = 0;
+		player.player_blocked = !round_handler_IsRoundStarted();
 }
 
 MUTATOR_HOOKFUNCTION(dom, ClientConnect)

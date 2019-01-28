@@ -615,10 +615,12 @@ void InitGameplayMode()
 		world.fog = string_null;
 	}
 	if(MapInfo_Map_fog != "")
+	{
 		if(MapInfo_Map_fog == "none")
 			world.fog = string_null;
 		else
 			world.fog = strzone(MapInfo_Map_fog);
+	}
 	clientstuff = strzone(MapInfo_Map_clientstuff);
 
 	MapInfo_ClearTemps();
@@ -1644,22 +1646,29 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 float GetWinningCode(float fraglimitreached, float equality)
 {
 	if(autocvar_g_campaign == 1)
+	{
 		if(fraglimitreached)
 			return WINNING_YES;
 		else
 			return WINNING_NO;
-
+	}
 	else
+	{
 		if(equality)
+		{
 			if(fraglimitreached)
 				return WINNING_STARTSUDDENDEATHOVERTIME;
 			else
 				return WINNING_NEVER;
+		}
 		else
+		{
 			if(fraglimitreached)
 				return WINNING_YES;
 			else
 				return WINNING_NO;
+		}
+	}
 }
 
 // set the .winning flag for exactly those players with a given field value
@@ -1729,19 +1738,20 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			leaderfrags = WinningConditionHelper_topscore;
 
 			if (limit)
-			if (leaderfrags == limit - 1)
-				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-			else if (leaderfrags == limit - 2)
-				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-			else if (leaderfrags == limit - 3)
-				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+			{
+				if (leaderfrags == limit - 1)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
+				else if (leaderfrags == limit - 2)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
+				else if (leaderfrags == limit - 3)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+			}
 		}
 	}
 
 	limitreached = false;
-	if(limit)
-		if(WinningConditionHelper_topscore >= limit)
-			limitreached = true;
+	if (limit && WinningConditionHelper_topscore >= limit)
+		limitreached = true;
 	if(leadlimit)
 	{
 		float leadlimitreached;

@@ -225,10 +225,12 @@ void lms_RemovePlayer(entity player)
 	}
 
 	if (CS(player).killcount != FRAGS_SPECTATOR && player.lms_spectate_warning < 3)
+	{
 		if (GameRules_scoring_add(player, LMS_RANK, 0) > 0 && player.lms_spectate_warning < 2)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_FORFEIT, player.netname);
+	}
 }
 
 MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)

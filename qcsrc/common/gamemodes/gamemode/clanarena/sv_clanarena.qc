@@ -252,12 +252,13 @@ entity ca_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		if (!IS_DEAD(it))
-		if (SAME_TEAM(this, it))
-		if (!last_pl)
-			last_pl = it;
-		else
-			return NULL;
+		if (!IS_DEAD(it) && SAME_TEAM(this, it))
+		{
+			if (!last_pl)
+				last_pl = it;
+			else
+				return NULL;
+		}
 	});
 	return last_pl;
 }

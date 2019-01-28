@@ -961,10 +961,11 @@ bool turret_firecheck(entity this)
 	{
 		// To close?
 		if (this.tur_dist_aimpos < this.target_range_min)
+		{
 			if(turret_validate_target(this, this.tur_impactent, this.target_validate_flags) > 0)
 				return true; // Target of opertunity?
-			else
-				return false;
+			return false;
+		}
 	}
 
 	// Try to avoid FF?

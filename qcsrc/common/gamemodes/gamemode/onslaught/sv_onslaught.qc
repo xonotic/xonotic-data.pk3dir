@@ -679,10 +679,11 @@ void ons_ControlPoint_Touch(entity this, entity toucher)
 	int attackable;
 
 	if(IS_VEHICLE(toucher) && toucher.owner)
-	if(autocvar_g_onslaught_allow_vehicle_touch)
+	{
+		if (!autocvar_g_onslaught_allow_vehicle_touch)
+			return;
 		toucher = toucher.owner;
-	else
-		return;
+	}
 
 	if(!IS_PLAYER(toucher)) { return; }
 	if(STAT(FROZEN, toucher)) { return; }
@@ -1716,10 +1717,12 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 		for(tmp_entity = ons_worldcplist; tmp_entity; tmp_entity = tmp_entity.ons_worldcpnext)
 		{
 			if(SAME_TEAM(tmp_entity, player))
-			if(random_target)
-				RandomSelection_AddEnt(tmp_entity, 1, 1);
-			else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
-				closest_target = tmp_entity;
+			{
+				if(random_target)
+					RandomSelection_AddEnt(tmp_entity, 1, 1);
+				else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
+					closest_target = tmp_entity;
+			}
 		}
 
 		if(random_target) { closest_target = RandomSelection_chosen_ent; }

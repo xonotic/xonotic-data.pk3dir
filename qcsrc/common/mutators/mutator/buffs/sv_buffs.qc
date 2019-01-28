@@ -494,10 +494,12 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(STAT(BUFFS, frag_attacker) & BUFF_BASH.m_itemid)
 	if(frag_force)
-	if(frag_attacker == frag_target)
-		frag_force *= autocvar_g_buffs_bash_force_self;
-	else
-		frag_force *= autocvar_g_buffs_bash_force;
+	{
+		if(frag_attacker == frag_target)
+			frag_force *= autocvar_g_buffs_bash_force_self;
+		else
+			frag_force *= autocvar_g_buffs_bash_force;
+	}
 
 	if(STAT(BUFFS, frag_attacker) & BUFF_DISABILITY.m_itemid)
 	if(frag_target != frag_attacker)

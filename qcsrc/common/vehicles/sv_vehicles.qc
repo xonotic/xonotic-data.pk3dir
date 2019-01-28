@@ -643,10 +643,12 @@ void vehicles_painframe(entity this)
 			this.velocity += randomvec() * 30;
 
 		if(this.vehicle_flags & VHF_DMGROLL)
+		{
 			if(this.vehicle_flags & VHF_DMGHEADROLL)
 				this.tur_head.angles += randomvec();
 			else
 				this.angles += randomvec();
+		}
 	}
 }
 
@@ -730,11 +732,12 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		if(this.owner)
+		{
 			if(this.vehicle_flags & VHF_DEATHEJECT)
 				vehicles_exit(this, VHEF_EJECT);
 			else
 				vehicles_exit(this, VHEF_RELEASE);
-
+		}
 
 		antilag_clear(this, this);
 

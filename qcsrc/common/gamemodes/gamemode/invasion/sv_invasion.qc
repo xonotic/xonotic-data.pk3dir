@@ -334,14 +334,20 @@ bool Invasion_CheckWinner()
 	{
 		if(red_alive > 0) { winner_team = NUM_TEAM_1; }
 		if(blue_alive > 0)
-		if(winner_team) { winner_team = 0; }
-		else { winner_team = NUM_TEAM_2; }
+		{
+			if(winner_team) { winner_team = 0; }
+			else { winner_team = NUM_TEAM_2; }
+		}
 		if(yellow_alive > 0)
-		if(winner_team) { winner_team = 0; }
-		else { winner_team = NUM_TEAM_3; }
+		{
+			if(winner_team) { winner_team = 0; }
+			else { winner_team = NUM_TEAM_3; }
+		}
 		if(pink_alive > 0)
-		if(winner_team) { winner_team = 0; }
-		else { winner_team = NUM_TEAM_4; }
+		{
+			if(winner_team) { winner_team = 0; }
+			else { winner_team = NUM_TEAM_4; }
+		}
 	}
 	else
 	{
@@ -429,13 +435,15 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 		if(teamplay) { inv_monsters_perteam[frag_target.team] -= 1; }
 
 		if(IS_PLAYER(frag_attacker))
-		if(SAME_TEAM(frag_attacker, frag_target)) // in non-teamplay modes, same team = same player, so this works
-			GameRules_scoring_add(frag_attacker, KILLS, -1);
-		else
 		{
-			GameRules_scoring_add(frag_attacker, KILLS, +1);
-			if(teamplay)
-				TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
+			if(SAME_TEAM(frag_attacker, frag_target)) // in non-teamplay modes, same team = same player, so this works
+				GameRules_scoring_add(frag_attacker, KILLS, -1);
+			else
+			{
+				GameRules_scoring_add(frag_attacker, KILLS, +1);
+				if(teamplay)
+					TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
+			}
 		}
 	}
 }

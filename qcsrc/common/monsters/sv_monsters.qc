@@ -803,10 +803,12 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 
 		if(time > this.pain_finished && time > this.anim_finished) // TODO: use anim_finished instead!?
 		if(!this.state)
-		if(vdist(this.velocity, >, 10))
-			setanim(this, ((do_run) ? this.anim_run : this.anim_walk), true, false, false);
-		else
-			setanim(this, this.anim_idle, true, false, false);
+		{
+			if(vdist(this.velocity, >, 10))
+				setanim(this, ((do_run) ? this.anim_run : this.anim_walk), true, false, false);
+			else
+				setanim(this, this.anim_idle, true, false, false);
+		}
 	}
 	else
 	{
@@ -1112,10 +1114,12 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	movelib_move_simple_gravity(this, v_forward, mspeed, 1);
 
 	if(time > this.pain_finished && time > this.attack_finished_single[0])
-	if(vdist(this.velocity, >, 10))
-		setanim(this, this.anim_walk, true, false, false);
-	else
-		setanim(this, this.anim_idle, true, false, false);
+	{
+		if(vdist(this.velocity, >, 10))
+			setanim(this, this.anim_walk, true, false, false);
+		else
+			setanim(this, this.anim_idle, true, false, false);
+	}
 }
 
 void Monster_Anim(entity this)
