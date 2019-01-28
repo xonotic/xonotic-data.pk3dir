@@ -2715,9 +2715,6 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		teamsay = false;
 	}
 
-	if (intermission_running)
-		teamsay = false;
-
 	if (!source) {
 		colorstr = "";
 		teamsay = false;
