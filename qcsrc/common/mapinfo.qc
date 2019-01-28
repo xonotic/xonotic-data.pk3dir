@@ -11,7 +11,7 @@
 
 bool autocvar_g_mapinfo_ignore_warnings;
 #ifdef MENUQC
-#define WARN_COND !autocvar_g_mapinfo_ignore_warnings
+#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings)
 #else
 #define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
 #endif
@@ -665,8 +665,10 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 		{
 			fh = fopen(s, FILE_READ);
 			if(fh < 0)
+			{
 				if(WARN_COND)
 					LOG_WARN("Map ", pFilename, " references not existing config file ", s);
+			}
 			else
 			{
 				for (;;)
@@ -951,19 +953,25 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			t = car(s); s = cdr(s); d = stof(t);
 			t = car(s); s = cdr(s); e = stof(t);
 			if(s == "")
+			{
 				if(WARN_COND)
 					LOG_WARN("Map ", pFilename, " contains an incorrect size line (not enough params), syntax: size mins_x mins_y mins_z maxs_x maxs_y maxs_z");
+			}
 			else
 			{
 				t = car(s); s = cdr(s); f = stof(t);
 				if(s != "")
+				{
 					if(WARN_COND)
 						LOG_WARN("Map ", pFilename, " contains an incorrect size line (too many params), syntax: size mins_x mins_y mins_z maxs_x maxs_y maxs_z");
+				}
 				else
 				{
 					if(a >= d || b >= e || c >= f)
+					{
 						if(WARN_COND)
 							LOG_WARN("Map ", pFilename, " contains an incorrect size line, mins have to be < maxs");
+					}
 					else
 					{
 						MapInfo_Map_mins.x = a;
@@ -1013,8 +1021,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(t == "fog")
 		{
 			if (!cvar_value_issafe(s))
+			{
 				if(WARN_COND)
 					LOG_WARN("Map ", pFilename, " contains a potentially harmful fog setting, ignored");
+			}
 			else
 				MapInfo_Map_fog = s;
 		}
@@ -1030,8 +1040,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			if(pGametypeToSet)
 			{
 				if (!cvar_value_issafe(t))
+				{
 					if(WARN_COND)
 						LOG_WARN("Map ", pFilename, " contains a potentially harmful cdtrack, ignored");
+				}
 				else
 					MapInfo_Map_clientstuff = strcat(
 						MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
