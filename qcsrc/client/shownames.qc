@@ -162,6 +162,8 @@ void Draw_ShowNames(entity this)
 		{
 			vector pos = namepos + eY * autocvar_hud_shownames_fontsize * resize;
 			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
+			if (autocvar_hud_shownames_statusbar_highlight)
+				drawfill(pos + eX * 0.25 * mySize.x, sz, '0.7 0.7 0.7', a / 2, DRAWFLAG_NORMAL);
 			if (this.healthvalue > 0)
 			{
 				HUD_Panel_DrawProgressBar(pos, sz, "nametag_statusbar",
