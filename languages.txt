@@ -11,13 +11,13 @@ hu    "Hungarian" "Magyar" 51%
 nl    "Dutch" "Nederlands" 66%
 pl    "Polish" "Polski" 76%
 pt    "Portuguese" "Português" 90%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 78%
 fi    "Finnish" "Suomi" 31%
 el    "Greek" "Ελληνική" 48%
 be    "Belarusian" "Беларуская" 58%
 bg    "Bulgarian" "Български" 63%
-ru    "Russian" "Русский" 99%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 66%
 uk    "Ukrainian" "Українська" 53%
 zh_CN "Chinese (China)" "中文" 59%

@@ -12,14 +12,14 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2018
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-01-27 11:05+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -577,7 +577,7 @@ msgstr "temps capture"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "Temps de la capture la plus rapide (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "Number of deaths"
@@ -625,19 +625,19 @@ msgstr "ELO du joueur"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "SCO^elo"
-msgstr ""
+msgstr "elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "SCO^fastest"
-msgstr ""
+msgstr "plus rapide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "Temps du tour le plus rapide (Course / CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "Number of faults committed"
-msgstr ""
+msgstr "Nombre de fautes commises"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^faults"
@@ -653,23 +653,23 @@ msgstr "drap. tués"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "FPS"
-msgstr ""
+msgstr "IPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^fps"
-msgstr ""
+msgstr "ips"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Nombre de meurtres moins les suicides"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^frags"
-msgstr ""
+msgstr "frags"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Nombre de buts marqués"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "SCO^goals"
@@ -711,7 +711,7 @@ msgstr "meurtres"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Nombre de tours complétés (Course / CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^laps"
@@ -736,7 +736,7 @@ msgstr "pertes"
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "Player name"
-msgstr ""
+msgstr "Nom du joueur"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^name"
@@ -748,7 +748,7 @@ msgstr "pseudo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "Number of objectives destroyed"
-msgstr ""
+msgstr "Nombres d'objectifs détruits"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^objectives"
@@ -807,7 +807,7 @@ msgstr "retournés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "Number of revivals"
-msgstr ""
+msgstr "Nombre de dégels"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "SCO^revivals"
@@ -815,7 +815,7 @@ msgstr "dégels"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Nombre de manches gagnées"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^rounds won"
@@ -839,7 +839,7 @@ msgstr "suicides"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Nombre de meurtres moins les morts"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^sum"
@@ -847,7 +847,7 @@ msgstr "somme"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "Nombre de points de domination capturés (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^takes"
@@ -863,7 +863,7 @@ msgstr "meurtres équipe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Nombre de marques (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^ticks"
@@ -871,11 +871,11 @@ msgstr "marques"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^time"
-msgstr ""
+msgstr "temps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "Temps total couru (Course / CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid ""
@@ -1479,7 +1479,7 @@ msgid ""
 "freeze all enemies to win"
 msgstr ""
 "Tuez les ennemis pour les geler, tenez-vous à côté des équipiers gelés pour "
-"les ranimer ; gelez tous les ennemis pour gagner"
+"les dégeler ; gelez tous les ennemis pour gagner"
 
 #: qcsrc/common/mapinfo.qh:544
 msgid "Hold the ball to get points for kills"
@@ -2722,22 +2722,22 @@ msgstr "^BG%s^K1 a été gelé par ^BG%s"
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr "^BG%s^K3 a été ranimé par ^BG%s"
+msgstr "^BG%s^K3 a été dégelé par ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:365
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr "^BG%s^K3 a été ranimé après être tombé"
+msgstr "^BG%s^K3 a été dégelé après être tombé"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr "^BG%s^K3 a été ranimé par l'explosion de sa Grenade"
+msgstr "^BG%s^K3 a été dégelé par l'explosion de sa Grenade"
 
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s second(s)"
-msgstr "^BG%s^K3 a été automatiquement ranimé après %s seconde(s)"
+msgstr "^BG%s^K3 a été automatiquement dégelé après %s seconde(s)"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
@@ -3967,21 +3967,21 @@ msgstr "^F2Vous avez ramassé quelques vies supplémentaires"
 #: qcsrc/common/notifications/all.inc:680
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr "^K3Vous avez ranimé ^BG%s"
+msgstr "^K3Vous avez dégelé ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^K3You revived yourself"
-msgstr "^K3Vous vous êtes ranimé tout seul"
+msgstr "^K3Vous vous êtes dégelé tout seul"
 
 #: qcsrc/common/notifications/all.inc:682
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "^K3Vous avez été ranimé par ^BG%s"
+msgstr "^K3Vous avez été dégelé par ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:683
 #, c-format
 msgid "^K3You were automatically revived after %s second(s)"
-msgstr "^K3Vous avez été automatiquement ranimé après %s seconde(s)"
+msgstr "^K3Vous avez été automatiquement dégelé après %s seconde(s)"
 
 #: qcsrc/common/notifications/all.inc:685
 msgid "^BGThe generator is under attack!"

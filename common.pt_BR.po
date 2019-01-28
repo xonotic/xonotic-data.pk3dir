@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-01-27 16:23+0000\n"
+"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -571,7 +571,7 @@ msgstr "tempo de captura"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "Tempo da captura mais rápida (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "Number of deaths"
@@ -619,19 +619,19 @@ msgstr "ELO do jogador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "SCO^elo"
-msgstr ""
+msgstr "elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "SCO^fastest"
-msgstr ""
+msgstr "mais rápido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "Tempo da volta mais rápida (Corrida/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "Number of faults committed"
-msgstr ""
+msgstr "Faltas cometidas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^faults"
@@ -647,23 +647,23 @@ msgstr "pbndvítimas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^fps"
-msgstr ""
+msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Vítimas menos suicídios"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^frags"
-msgstr ""
+msgstr "execuções"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Gols"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "SCO^goals"
@@ -705,7 +705,7 @@ msgstr "vítimas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Voltas concluídas (Corrida/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^laps"
@@ -730,7 +730,7 @@ msgstr "derrotas"
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "Player name"
-msgstr ""
+msgstr "Nome do jogador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^name"
@@ -742,7 +742,7 @@ msgstr "apelido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "Number of objectives destroyed"
-msgstr ""
+msgstr "Objetivos destruídos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^objectives"
@@ -801,7 +801,7 @@ msgstr "retornos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "Number of revivals"
-msgstr ""
+msgstr "Ressurreições"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "SCO^revivals"
@@ -809,7 +809,7 @@ msgstr "ressurreições"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Rodadas vencidas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^rounds won"
@@ -833,7 +833,7 @@ msgstr "suicídios"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Vítimas menos mortes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^sum"
@@ -841,7 +841,7 @@ msgstr "soma"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "Pontos de dominação capturados (Dominação)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^takes"
@@ -857,7 +857,7 @@ msgstr "vítimas de equipe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Número de tiques (Dominação)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^ticks"
@@ -865,11 +865,11 @@ msgstr "ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^time"
-msgstr ""
+msgstr "tempo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "Tempo total em corridas (Corrida/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid ""
@@ -1210,7 +1210,7 @@ msgstr "Progresso de captura"
 
 #: qcsrc/client/view.qc:1536
 msgid "Revival progress"
-msgstr "Progresso de renascimento"
+msgstr "Progresso de ressurreição"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"

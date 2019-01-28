@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-01-27 22:20+0000\n"
+"Last-Translator: Nick S <morosophos@teichisma.info>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -576,7 +576,7 @@ msgstr "SCO^время захвата"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "Время быстрейшего захвата (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "Number of deaths"
@@ -624,19 +624,19 @@ msgstr "ЭЛО игрока"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "SCO^elo"
-msgstr ""
+msgstr "SCO^эло"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "SCO^fastest"
-msgstr ""
+msgstr "SCO^быстрейший"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "Время лучшего круга (Гонка/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "Number of faults committed"
-msgstr ""
+msgstr "Количество совершенных ошибок"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^faults"
@@ -652,23 +652,23 @@ msgstr "SCO^фнубийства"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^fps"
-msgstr ""
+msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Количество убийств за вычетом самоубийств"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^frags"
-msgstr ""
+msgstr "SCO^фраги"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Количество забитых голов"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "SCO^goals"
@@ -710,7 +710,7 @@ msgstr "SCO^убийства"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Количество завершенных кругов (Гонка/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^laps"
@@ -735,7 +735,7 @@ msgstr "SCO^поражений"
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "Player name"
-msgstr ""
+msgstr "Имя игрока"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^name"
@@ -747,7 +747,7 @@ msgstr "SCO^ник"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "Number of objectives destroyed"
-msgstr ""
+msgstr "Количество уничтоженных целей"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^objectives"
@@ -806,7 +806,7 @@ msgstr "SCO^возвраты"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "Number of revivals"
-msgstr ""
+msgstr "Количество возрождений"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "SCO^revivals"
@@ -814,7 +814,7 @@ msgstr "SCO^возрождения"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Количество выигранных раундов"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^rounds won"
@@ -838,7 +838,7 @@ msgstr "SCO^суициды"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Количество убийств за вычетом смертей"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^sum"
@@ -846,7 +846,7 @@ msgstr "SCO^сум"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "Количество захваченных точек доминации (Доминация)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^takes"
@@ -862,7 +862,7 @@ msgstr "SCO^союзубийства"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Количество тиков (Доминация)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^ticks"
@@ -870,11 +870,11 @@ msgstr "SCO^тиков"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^time"
-msgstr ""
+msgstr "SCO^время"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "Общее время гонки (Гонка/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid ""
@@ -2068,7 +2068,7 @@ msgstr "^F4ПРИМЕЧАНИЕ: ^BGИгроки не видят чат зрит
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr "^BG%s^BG захватили ^TC^TT^BG флаг"
+msgstr "^BG%s^BG захватил ^TC^TT^BG флаг"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -2076,18 +2076,18 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG захватили ^TC^TT^BG флаг за ^F1%s^BG секунд, побив предыдущий "
-"рекорд ^BG%s^BG - ^F2%s^BG секунды"
+"^BG%s^BG захватил ^TC^TT^BG флаг за ^F1%s^BG секунд, побив предыдущий рекорд "
+"^BG%s^BG - ^F2%s^BG секунды"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr "^BG%s^BG захватили флаг"
+msgstr "^BG%s^BG захватил флаг"
 
 #: qcsrc/common/notifications/all.inc:244
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr "^BG%s^BG захватили ^TC^TT^BG флаг за ^F1%s^BG секунд"
+msgstr "^BG%s^BG захватил ^TC^TT^BG флаг за ^F1%s^BG секунд"
 
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
@@ -2095,7 +2095,7 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
-"^BG%s^BG захватили ^TC^TT^BG флаг за ^F2%s^BG секунд, не сумев побить "
+"^BG%s^BG захватил ^TC^TT^BG флаг за ^F2%s^BG секунд, не сумев побить "
 "предыдущий рекорд ^BG%s^BG - ^F2%s^BG секунды"
 
 #: qcsrc/common/notifications/all.inc:246
