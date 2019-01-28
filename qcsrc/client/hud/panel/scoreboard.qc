@@ -1697,10 +1697,11 @@ void Scoreboard_Draw()
 			str_pos = pos + team_size_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
 			drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
+            // secondary score, e.g. keyhunt
 			if(ts_primary != ts_secondary)
 			{
 				str = ftos(tm.(teamscores(ts_secondary)));
-				str_pos = pos + eX * (panel_size.x + hud_fontsize.x) + team_score_baseoffset;
+				str_pos = pos + team_score_baseoffset + vec2(panel_size.x + hud_fontsize.x, hud_fontsize.y * 1.5);
 				drawstring(str_pos, str, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			draw_endBoldFont();
