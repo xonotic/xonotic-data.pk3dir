@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-01-28 18:12+0000\n"
+"Last-Translator: Mensious Mensious <ektoras@tutanota.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
 "Language: el\n"
@@ -307,7 +307,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help, icon"
-msgstr ""
+msgstr "QMCMD^χρειάζομαι βοήθεια, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen (l:%y^7)"
@@ -364,7 +364,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^dropped flag, icon"
-msgstr ""
+msgstr "QMCMD^πεζμένει σημαία, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^drop weapon, icon"
@@ -372,7 +372,7 @@ msgstr "QMCMD^πεζμένο όπλο, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^πεζμένο όπλο %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^drop flag/key, icon"
@@ -380,7 +380,7 @@ msgstr "QMCMD^πεζμένει σημαία/κλειδί, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^πεζμένει σημαία/κλειδί %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^Send private message to"
@@ -622,7 +622,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "SCO^fastest"
-msgstr ""
+msgstr "SCO^Γρηγορότερο"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "Time of fastest lap (Race/CTS)"
@@ -862,7 +862,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^time"
-msgstr ""
+msgstr "SCO^Χρόνος"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Total time raced (Race/CTS)"
@@ -7777,7 +7777,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
-msgstr ""
+msgstr "Ρυθμίσεις κατηγορίας παιχνιδιού"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Display capture times in Capture The Flag"
