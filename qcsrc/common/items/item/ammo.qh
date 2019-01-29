@@ -14,8 +14,8 @@
 .int ammo_rockets;
 .int ammo_cells;
 #ifdef SVQC
-.int ammo_plasma = _STAT(PLASMA);
-.int ammo_fuel = _STAT(FUEL);
+const .int ammo_plasma = _STAT(PLASMA);
+const .int ammo_fuel = _STAT(FUEL);
 #else
 .int ammo_plasma;
 .int ammo_fuel;

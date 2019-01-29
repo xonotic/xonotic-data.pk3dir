@@ -45,14 +45,14 @@ float autocvar_g_vehicles_weapon_damagerate = 2;
 .entity gunner1;
 .entity gunner2;
 
-.float vehicle_health = _STAT(VEHICLESTAT_HEALTH);  /// If ent is player this is 0..100 indicating precentage of health left on vehicle. Vehicle's value is the health resource
-.float vehicle_energy = _STAT(VEHICLESTAT_ENERGY);  /// If ent is player this is 0..100 indicating precentage of energy left on vehicle. If ent is vehicle, this is the real energy value.
-.float vehicle_shield = _STAT(VEHICLESTAT_SHIELD);  /// If ent is player this is 0..100 indicating precentage of shield left on vehicle. If ent is vehicle, this is the real shield value.
+const .float vehicle_health = _STAT(VEHICLESTAT_HEALTH);  /// If ent is player this is 0..100 indicating precentage of health left on vehicle. Vehicle's value is the health resource
+const .float vehicle_energy = _STAT(VEHICLESTAT_ENERGY);  /// If ent is player this is 0..100 indicating precentage of energy left on vehicle. If ent is vehicle, this is the real energy value.
+const .float vehicle_shield = _STAT(VEHICLESTAT_SHIELD);  /// If ent is player this is 0..100 indicating precentage of shield left on vehicle. If ent is vehicle, this is the real shield value.
 
-.float vehicle_ammo1 = _STAT(VEHICLESTAT_AMMO1);   /// If ent is player this is 0..100 indicating percentage of primary ammo left UNLESS value is already stored in vehicle_energy. If ent is vehicle, this is the real ammo1 value.
-.float vehicle_reload1 = _STAT(VEHICLESTAT_RELOAD1); /// If ent is player this is 0..100 indicating percentage of primary reload status. If ent is vehicle, this is the real reload1 value.
-.float vehicle_ammo2 = _STAT(VEHICLESTAT_AMMO2);   /// If ent is player this is 0..100 indicating percentage of secondary ammo left. If ent is vehicle, this is the real ammo2 value.
-.float vehicle_reload2 = _STAT(VEHICLESTAT_RELOAD2); /// If ent is player this is 0..100 indicating percentage of secondary reload status. If ent is vehicle, this is the real reload2 value.
+const .float vehicle_ammo1 = _STAT(VEHICLESTAT_AMMO1);   /// If ent is player this is 0..100 indicating percentage of primary ammo left UNLESS value is already stored in vehicle_energy. If ent is vehicle, this is the real ammo1 value.
+const .float vehicle_reload1 = _STAT(VEHICLESTAT_RELOAD1); /// If ent is player this is 0..100 indicating percentage of primary reload status. If ent is vehicle, this is the real reload1 value.
+const .float vehicle_ammo2 = _STAT(VEHICLESTAT_AMMO2);   /// If ent is player this is 0..100 indicating percentage of secondary ammo left. If ent is vehicle, this is the real ammo2 value.
+const .float vehicle_reload2 = _STAT(VEHICLESTAT_RELOAD2); /// If ent is player this is 0..100 indicating percentage of secondary reload status. If ent is vehicle, this is the real reload2 value.
 
 .float sound_nexttime;
 const float VOL_VEHICLEENGINE = 1;
