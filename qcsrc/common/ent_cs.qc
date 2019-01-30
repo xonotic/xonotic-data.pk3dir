@@ -160,6 +160,7 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		WriteShort(chan, sf);
 		FOREACH(EntCSProps, sf & BIT(it.m_id),
 		{
+			it.m_set(this, player);
 			it.m_send(chan, this);
 		});
 		return true;
@@ -176,10 +177,9 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		entity o = this.owner;
 		FOREACH(EntCSProps, it.m_check(this, o),
 		{
-			it.m_set(this, o);
 			this.SendFlags |= BIT(it.m_id);
 		});
-	    setorigin(this, this.origin);  // relink
+		setorigin(this, this.origin); // relink
 	}
 
 	void entcs_attach(entity player)
@@ -189,11 +189,6 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		setthink(e, entcs_think);
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
-		if (!IS_REAL_CLIENT(player)) return;
-		FOREACH_CLIENT(true, {
-			assert(CS(it).entcs);
-			_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
-		});
 	}
 
 	void entcs_detach(entity player)
