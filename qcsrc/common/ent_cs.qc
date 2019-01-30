@@ -88,7 +88,7 @@ ENTCS_PROP(ORIGIN, false, origin, ENTCS_SET_NORMAL,
 	{ WriteVector(chan, ent.origin); },
 	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
 
-#define DEC_FACTOR (360 / 256)
+#define DEC_FACTOR (360 / 32)
 ENTCS_PROP_CODED(ANGLES, false, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
 	{ WriteByte(chan, ent.angles.y / DEC_FACTOR); },
 	{ vector v = '0 0 0'; v.y = ReadByte() * DEC_FACTOR; ent.angles = v; })
