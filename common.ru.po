@@ -6,7 +6,7 @@
 # adem4ik, 2014
 # Alex Talker <alextalker7@gmail.com>, 2014-2015
 # Andrei Stepanov, 2014
-# Andrei Stepanov <adem4ik@gmail.com>, 2014-2018
+# Andrei Stepanov <adem4ik@gmail.com>, 2014-2019
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # Lord Canistra <lordcanistra@gmail.com>, 2011
@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 22:20+0000\n"
-"Last-Translator: Nick S <morosophos@teichisma.info>\n"
+"PO-Revision-Date: 2019-01-29 15:32+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -636,7 +636,7 @@ msgstr "Время лучшего круга (Гонка/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "Number of faults committed"
-msgstr "Количество совершенных ошибок"
+msgstr "Количество совершённых ошибок"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^faults"
@@ -710,7 +710,7 @@ msgstr "SCO^убийства"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "Number of laps finished (Race/CTS)"
-msgstr "Количество завершенных кругов (Гонка/CTS)"
+msgstr "Количество завершённых кругов (Гонка/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^laps"
