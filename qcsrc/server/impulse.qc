@@ -51,18 +51,18 @@
 
 // weapon switching impulses
 
-#define X(slot) \
-	IMPULSE(weapon_group_##slot) \
+#define X(i) \
+	IMPULSE(weapon_group_##i) \
 	{ \
 		if (IS_DEAD(this)) \
 		{ \
-			this.impulse = IMP_weapon_group_##slot.impulse; \
+			this.impulse = IMP_weapon_group_##i.impulse; \
 			return; \
 		} \
-		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
 		{ \
-			.entity weaponentity = weaponentities[wepslot]; \
-			W_NextWeaponOnImpulse(this, slot, weaponentity); \
+			.entity weaponentity = weaponentities[slot]; \
+			W_NextWeaponOnImpulse(this, i, weaponentity); \
 			if(autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
@@ -81,22 +81,22 @@ X(0)
 
 // custom order weapon cycling
 
-#define X(slot, dir) \
-	IMPULSE(weapon_priority_##slot##_##dir) \
+#define X(i, dir) \
+	IMPULSE(weapon_priority_##i##_##dir) \
 	{ \
 		if (this.vehicle) return; \
 		if (IS_DEAD(this)) \
 		{ \
-			this.impulse = IMP_weapon_priority_##slot##_##dir.impulse; \
+			this.impulse = IMP_weapon_priority_##i##_##dir.impulse; \
 			return; \
 		} \
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
-		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
 		{ \
-			.entity weaponentity = weaponentities[wepslot]; \
-			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[slot], dir, weaponentity); \
+			.entity weaponentity = weaponentities[slot]; \
+			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[i], dir, weaponentity); \
 			if(autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
