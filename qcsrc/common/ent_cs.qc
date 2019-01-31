@@ -35,7 +35,7 @@ STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i
 
 #define ENTCS_PROP_CODED(id, ispublic, checkprop, setprop, decfactor, svsend, clreceive) \
 	bool id##_check(entity ent, entity player) { \
-		return (floor(ent.(checkprop)) / decfactor != floor(player.(checkprop)) * decfactor); \
+		return (floor(ent.(checkprop)) / decfactor != floor(player.(checkprop)) / decfactor); \
 	} \
 	_ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive)
 
