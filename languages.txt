@@ -6,7 +6,7 @@ en_AU "English (Australia)" "English (Australia)" 80%
 es    "Spanish" "Español" 91%
 fr    "French" "Français" 99%
 ga    "Irish" "Irish" 34%
-it    "Italian" "Italiano" 99%
+it    "Italian" "Italiano" 100%
 hu    "Hungarian" "Magyar" 51%
 nl    "Dutch" "Nederlands" 66%
 pl    "Polish" "Polski" 76%
