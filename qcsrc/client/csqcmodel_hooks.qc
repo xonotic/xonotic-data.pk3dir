@@ -341,10 +341,10 @@ void CSQCPlayer_FallbackFrame_PostUpdate(entity this, bool isnew)
 	// player "pops in"
 	if(isnew)
 	{
-#define FIX_FRAMETIME(f,ft) MACRO_BEGIN {																			\
-		if(IS_DEAD_FRAME(this.f) && this.ft != 0 && this.death_time != 0)											\
-			this.ft = this.death_time;																				\
-} MACRO_END
+#define FIX_FRAMETIME(f,ft) MACRO_BEGIN \
+		if(IS_DEAD_FRAME(this.f) && this.ft != 0 && this.death_time != 0) \
+			this.ft = this.death_time; \
+MACRO_END
 		FIX_FRAMETIME(frame, frame1time);
 		FIX_FRAMETIME(frame2, frame2time);
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES

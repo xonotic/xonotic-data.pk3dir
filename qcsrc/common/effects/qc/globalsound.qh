@@ -129,7 +129,6 @@ string GlobalSound_sample(string pair, float r);
 	#define PlayerSound(this, def, chan, vol, voicetype) _GlobalSound(this, NULL, def, string_null, chan, vol, voicetype, false)
 	#define VoiceMessage(this, def, msg) \
 		MACRO_BEGIN \
-		{ \
 			entity VM = def; \
 			int voicetype = VM.m_playersoundvt; \
 			bool ownteam = (voicetype == VOICETYPE_TEAMRADIO); \
@@ -139,7 +138,7 @@ string GlobalSound_sample(string pair, float r);
 			else if (flood > 0) fake = false; \
 			else break; \
 			_GlobalSound(this, NULL, VM, string_null, CH_VOICE, VOL_BASEVOICE, voicetype, fake); \
-		} MACRO_END
+		MACRO_END
 
 #endif
 

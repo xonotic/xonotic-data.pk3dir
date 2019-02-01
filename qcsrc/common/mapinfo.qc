@@ -591,14 +591,14 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 
 Gametype MapInfo_Type_FromString(string t)
 {
-#define deprecate(from, to) MACRO_BEGIN { \
+#define deprecate(from, to) MACRO_BEGIN \
 	if (t == #from) { \
 		string replacement = #to; \
 		if(WARN_COND) \
 			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, t, replacement); \
 		t = replacement; \
 	} \
-} MACRO_END
+MACRO_END
 	deprecate(nexball, nb);
 	deprecate(freezetag, ft);
 	deprecate(keepaway, ka);

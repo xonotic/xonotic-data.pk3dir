@@ -3,7 +3,7 @@
 #include "test.qh"
 
 #define yenc_single(c, ret) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		int conv = c; \
 		conv += 42; \
 		if (conv >= 256) conv -= 256; \
@@ -26,10 +26,10 @@
 				break; \
 			} \
 		} \
-	} MACRO_END
+	MACRO_END
 
 #define ydec_single(stringiter, ret) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		int conv = STRING_ITERATOR_GET(stringiter); \
 		if (conv <= 0) { \
 			ret = -1; \
@@ -42,7 +42,7 @@
 			conv -= 42; \
 			ret = conv; \
 		} \
-	} MACRO_END
+	MACRO_END
 
 TEST(yEnc, EncodeDecode)
 {

@@ -26,7 +26,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
-#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN { \
+#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN \
 	int nHidden = 0; \
 	FOREACH(Weapons, it != WEP_Null, { \
 		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
@@ -37,7 +37,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 	rows = table_size.y; \
 	weapon_size.x = panel_size.x / columns; \
 	weapon_size.y = panel_size.y / rows; \
-} MACRO_END
+MACRO_END
 
 void HUD_Weapons()
 {

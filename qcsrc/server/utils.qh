@@ -34,14 +34,14 @@ const string STR_OBSERVER = "observer";
 // NOTE: FOR_EACH_REALPLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { code; });
 
 #define FOREACH_CLIENTSLOT(cond, body) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		for(int _i = 1; _i <= maxclients; ++_i) \
 		{ \
 			const noref int i = _i; \
 			ITER_CONST noref entity it = ftoe(i); \
 			if(cond) { LAMBDA(body) } \
 		} \
-	} MACRO_END
+	MACRO_END
 
 #define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), LAMBDA(body))
 
@@ -50,7 +50,7 @@ const string STR_OBSERVER = "observer";
 entity _FCR_clients[255];
 bool _FCR_entered = false;
 #define FOREACH_CLIENT_RANDOM(cond, body) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		if (_FCR_entered) LOG_FATAL("FOREACH_CLIENT_RANDOM must not be nested"); \
 		_FCR_entered = true; \
 		int _cnt = 0; \
@@ -74,6 +74,6 @@ bool _FCR_entered = false;
 			if (cond) { LAMBDA(body) } \
 		} \
 		_FCR_entered = false; \
-	} MACRO_END
+	MACRO_END
 
 // NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: IL_EACH(g_monsters, true, { code; });

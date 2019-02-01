@@ -608,7 +608,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 				// ======================
 				//  Process Notif String
 				// ======================
-				#define SET_NOTIF_STRING(string,stringname) MACRO_BEGIN { \
+				#define SET_NOTIF_STRING(string,stringname) MACRO_BEGIN \
 					notif.nent_string = strzone(CCR( \
 						Process_Notif_Line( \
 							typeId, \
@@ -619,7 +619,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 							stringname \
 						)) \
 					); \
-				} MACRO_END
+				MACRO_END
 
 				if(GENTLE)
 				{
@@ -777,20 +777,20 @@ void Notification_GetCvars(entity this)
 /** used to output notifications.cfg file */
 void Dump_Notifications(int fh, bool alsoprint)
 {
-	#define NOTIF_WRITE(a) MACRO_BEGIN { \
+	#define NOTIF_WRITE(a) MACRO_BEGIN \
 		fputs(fh, a); \
 		if (alsoprint) LOG_INFO(a); \
-	} MACRO_END
+	MACRO_END
 
-	#define NOTIF_WRITE_ENTITY(e, description) MACRO_BEGIN { \
+	#define NOTIF_WRITE_ENTITY(e, description) MACRO_BEGIN \
 		string notif_msg = sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n", \
 			Get_Notif_CvarName(e), e.nent_default, description \
 		); \
 		NOTIF_WRITE(notif_msg); \
-	} MACRO_END
+	MACRO_END
 
-	#define NOTIF_WRITE_ENTITY_CHOICE(e, descriptiona, descriptionb) MACRO_BEGIN { \
+	#define NOTIF_WRITE_ENTITY_CHOICE(e, descriptiona, descriptionb) MACRO_BEGIN \
 		string notif_msg = sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n" \
 			"seta notification_%s_ALLOWED \"%d\" \"%s\"\n", \
@@ -798,15 +798,15 @@ void Dump_Notifications(int fh, bool alsoprint)
 			Get_Notif_CvarName(e), e.nent_challow_def, descriptionb \
 		); \
 		NOTIF_WRITE(notif_msg); \
-	} MACRO_END
+	MACRO_END
 
-	#define NOTIF_WRITE_HARDCODED(cvar, default, description) MACRO_BEGIN { \
+	#define NOTIF_WRITE_HARDCODED(cvar, default, description) MACRO_BEGIN \
 		string notif_msg = sprintf( \
 			"seta notification_%s \"%s\" \"%s\"\n", \
 			cvar, default, description \
 		); \
 		NOTIF_WRITE(notif_msg); \
-	} MACRO_END
+	MACRO_END
 
 	// Note: This warning only applies to the notifications.cfg file that is output...
 	// You ARE supposed to manually edit this function to add i.e. hard coded
@@ -1603,7 +1603,7 @@ void Send_Notification(
 		//   2. Manually handling each separate call on per-usage basis (See old CTF usage of verbose)
 		entity found_choice;
 
-		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN { \
+		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN \
 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) { \
 				switch (CS(ent).msg_choice_choices[net_name.nent_choice_idx]) \
 				{ \
@@ -1623,7 +1623,7 @@ void Send_Notification(
 				found_choice.nent_floatcount, \
 				s1, s2, s3, s4, \
 				f1, f2, f3, f4); \
-		} MACRO_END
+		MACRO_END
 
 		switch (broadcast)
 		{

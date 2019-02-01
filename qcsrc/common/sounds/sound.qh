@@ -41,11 +41,10 @@ const float VOL_MUFFLED = 0.35;
 #ifdef SVQC
 	#define _sound(e, c, s, v, a) \
 		MACRO_BEGIN \
-		{ \
 			entity __e = e; \
 			if (sound_allowed(MSG_BROADCAST, __e)) \
 				sound7(__e, c, s, v, a, 0, 0); \
-		} MACRO_END
+		MACRO_END
 #else
 	#define _sound(e, c, s, v, a) sound7(e, c, s, v, a, 0, 0)
 #endif
@@ -65,7 +64,6 @@ const float VOL_MUFFLED = 0.35;
  */
 #define sound8(e, o, chan, samp, vol, atten, speed, sf) \
 	MACRO_BEGIN \
-	{ \
 		entity __e; \
 		int __chan = chan; \
 		string __samp = samp; \
@@ -90,7 +88,7 @@ const float VOL_MUFFLED = 0.35;
 			setorigin(__e, old_origin); \
 			setsize(__e, old_mins, old_maxs); \
 		} \
-	} MACRO_END
+	MACRO_END
 
 string _Sound_fixpath(string base)
 {
