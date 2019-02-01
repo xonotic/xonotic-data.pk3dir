@@ -217,7 +217,8 @@ void wordwrap_cb(string s, float l, void(string) callback)
 
 	s = strzone(s);
 	lleft = l;
-	for (i = 0;i < strlen(s);++i)
+	int len = strlen(s);
+	for (i = 0; i < len; ++i)
 	{
 		if (substring(s, i, 2) == "\\n")
 		{
@@ -235,12 +236,12 @@ void wordwrap_cb(string s, float l, void(string) callback)
 			if (lleft > 0)
 			{
 				callback(" ");
-				lleft = lleft - 1;
+				--lleft;
 			}
 		}
 		else
 		{
-			for (j = i+1;j < strlen(s);++j)
+			for (j = i+1; j < len; ++j)
 				//    ^^ this skips over the first character of a word, which
 				//       is ALWAYS part of the word
 				//       this is safe since if i+1 == strlen(s), i will become
@@ -268,7 +269,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 				lleft = l;
 			}
 			callback(substring(s, i, wlen));
-			lleft = lleft - wlen;
+			lleft -= wlen;
 			i = j - 1;
 		}
 	}

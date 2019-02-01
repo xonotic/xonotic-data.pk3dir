@@ -810,7 +810,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
 #define SET_YRANGE(start,end) \
-	draw_scale = boxToGlobalSize(eX * 1 + eY * (end - start), oldscale); \
+	draw_scale = boxToGlobalSize(eX + eY * (end - start), oldscale); \
 	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
 
 	for (j = 0; j < category_draw_count; ++j) {
