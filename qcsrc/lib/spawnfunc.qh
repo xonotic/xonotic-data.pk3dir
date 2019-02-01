@@ -93,11 +93,11 @@ noref bool require_spawnfunc_prefix;
                 static_init_early(); \
 		    } \
 		    bool dospawn = true; \
-		    if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = false; } \
+		    if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = 0; } \
 			else if (__spawnfunc_expecting) { \
 				/* engine call */ \
                 if (!g_spawn_queue) { g_spawn_queue = IL_NEW(); } \
-				__spawnfunc_expecting = false; \
+				__spawnfunc_expecting = 0; \
 				this = __spawnfunc_expect; \
 				__spawnfunc_expect = NULL; \
                 dospawn = false; \

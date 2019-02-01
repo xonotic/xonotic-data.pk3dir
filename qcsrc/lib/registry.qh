@@ -162,12 +162,10 @@ void Registry_send(string id, string hash);
 	STATIC_INIT(Registry_check_##id) \
 	{ \
 		/* Note: SHA256 isn't always available, use MD4 instead */ \
-		string algo = "MD4"; \
-		string join = ":"; \
-		string s = ""; \
+		string s = "", join = ":"; \
 		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
 		s = substring(s, strlen(join), -1); \
-		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
+		string h = REGISTRY_HASH(id) = strzone(digest_hex("MD4", s)); \
 		LOG_DEBUGF(#id ": %s\n[%s]", h, s); \
 	} \
 	void Registry_check(string r, string sv) \

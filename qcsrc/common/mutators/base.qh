@@ -259,15 +259,15 @@ void Mutator_Remove(Mutator mut)
 }
 
 #define REGISTER_MUTATOR(id, dependence) \
-    bool MUTATORFUNCTION_##id##_hooks(int mode) { return = false; } \
-    bool MUTATORFUNCTION_##id(int mode) { \
+    bool MUTATORFUNC_##id##_hooks(int mode) { return = false; } \
+    bool MUTATORFUNC_##id(int mode) { \
         return = false; \
-        bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
+        bool ret = MUTATORFUNC_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNC_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
-    ACCUMULATE bool MUTATORFUNCTION_##id(int mode)
+    ACCUMULATE bool MUTATORFUNC_##id(int mode)
 
 STATIC_INIT(Mutators) {
     RegisterHooks();
@@ -301,9 +301,9 @@ STATIC_INIT_LATE(Mutators) {
 #define MUTATOR_RETURNVALUE             CallbackChain_ReturnValue
 
 #define _MUTATOR_CALLBACK(name, func) \
-    Callback CALLBACK_##name; \
+    Callback CB_##name; \
     bool func(); \
-    ACCUMULATE void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
+    ACCUMULATE void RegisterCallbacks() { CB_##name = NEW(Callback, func); }
 
 #define MUTATOR_HOOKFUNCTION(...) \
     EVAL_MUTATOR_HOOKFUNCTION(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
@@ -314,20 +314,20 @@ STATIC_INIT_LATE(Mutators) {
 
 #define MUTATOR_HOOKFUNCTION_3(mut, cb, order) \
     _MUTATOR_CALLBACK(mut##_##cb, mut##_##cb) \
-    ACCUMULATE bool MUTATORFUNCTION_##mut##_hooks(int mode) { MUTATOR_HOOK(cb, mut##_##cb, order); } \
+    ACCUMULATE bool MUTATORFUNC_##mut##_hooks(int mode) { MUTATOR_HOOK(cb, mut##_##cb, order); } \
     bool mut##_##cb() { return = false; } \
     ACCUMULATE bool mut##_##cb()
 
-#define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN {                     \
-    MUTATOR_ONADD {                                                     \
-        if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
-            LOG_INFO("HOOK FAILED: ", #cb, ":", #func);                 \
-            return true;                                                \
-        }                                                               \
-    }                                                                   \
-    MUTATOR_ONROLLBACK_OR_REMOVE {                                      \
-        CallbackChain_Remove(HOOK_##cb, CALLBACK_##func);               \
-    }                                                                   \
+#define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN { \
+    MUTATOR_ONADD { \
+        if (!CallbackChain_Add(HOOK_##cb, CB_##func, order)) { \
+            LOG_INFO("HOOK FAILED: ", #cb, ":", #func); \
+            return true; \
+        } \
+    } \
+    MUTATOR_ONROLLBACK_OR_REMOVE { \
+        CallbackChain_Remove(HOOK_##cb, CB_##func); \
+    } \
 } MACRO_END
 
 #include "events.qh"
