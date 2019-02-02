@@ -2682,9 +2682,9 @@ void PlayerPostThink (entity this)
 	}
 
 	if (this.waypointsprite_attachedforcarrier) {
-	    vector v = healtharmor_maxdamage(GetResourceAmount(this, RESOURCE_HEALTH), GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id);
-		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, '1 0 0' * v);
-    }
+		float hp = healtharmor_maxdamage(GetResourceAmount(this, RESOURCE_HEALTH), GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x;
+		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, hp);
+	}
 
 	CSQCMODEL_AUTOUPDATE(this);
 }

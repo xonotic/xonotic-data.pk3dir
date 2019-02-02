@@ -144,8 +144,8 @@ bool ctf_Return_Customize(entity this, entity client)
 void ctf_FlagcarrierWaypoints(entity player)
 {
 	WaypointSprite_Spawn(WP_FlagCarrier, 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL, player.team, player, wps_flagcarrier, true, RADARICON_FLAG);
-	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
-	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
+	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, 2 * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
+	WaypointSprite_UpdateHealth(player.wps_flagcarrier, healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, WPCOLOR_FLAGCARRIER(player.team));
 
 	if(player.flagcarried && CTF_SAMETEAM(player, player.flagcarried))
@@ -2168,7 +2168,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 
 	// update the health of the flag carrier waypointsprite
 	if(player.wps_flagcarrier)
-		WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
+		WaypointSprite_UpdateHealth(player.wps_flagcarrier, healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
 }
 
 MUTATOR_HOOKFUNCTION(ctf, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
@@ -2196,8 +2196,8 @@ MUTATOR_HOOKFUNCTION(ctf, Damage_Calculate) // for changing damage and force val
 	}
 	else if(frag_target.flagcarried && !IS_DEAD(frag_target) && CTF_DIFFTEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
-		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(GetResourceAmount(frag_target, RESOURCE_HEALTH), GetResourceAmount(frag_target, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)))
-		if(time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
+		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > healtharmor_maxdamage(GetResourceAmount(frag_target, RESOURCE_HEALTH), GetResourceAmount(frag_target, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x
+			&& time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
 		{
 			frag_target.wps_helpme_time = time;
 			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier);

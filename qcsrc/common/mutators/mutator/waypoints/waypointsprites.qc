@@ -1164,8 +1164,8 @@ entity WaypointSprite_AttachCarrier(
     entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', NULL, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
     if (GetResourceAmount(carrier, RESOURCE_HEALTH))
     {
-        WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
-        WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(GetResourceAmount(carrier, RESOURCE_HEALTH), GetResourceAmount(carrier, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
+        WaypointSprite_UpdateMaxHealth(e, 2 * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
+        WaypointSprite_UpdateHealth(e, healtharmor_maxdamage(GetResourceAmount(carrier, RESOURCE_HEALTH), GetResourceAmount(carrier, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
     }
     return e;
 }
