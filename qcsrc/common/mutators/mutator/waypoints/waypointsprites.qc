@@ -830,7 +830,7 @@ void WaypointSprite_UpdateHealth(entity e, float f)
 {
     f = bound(0, f, e.max_health);
     float step = e.max_health / 40;
-    if ((floor(f / step) != floor(GetResourceAmount(e, RESOURCE_HEALTH)) / step) || e.pain_finished)
+    if ((floor(f / step) != floor(GetResourceAmount(e, RESOURCE_HEALTH) / step)) || e.pain_finished)
     {
         SetResourceAmountExplicit(e, RESOURCE_HEALTH, f);
         e.pain_finished = 0;
