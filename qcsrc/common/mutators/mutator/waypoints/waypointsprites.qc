@@ -82,11 +82,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
         if (WaypointSprite_isteammate(this.owner, WaypointSprite_getviewentity(to)))
         {
-            float dt = (this.waypointsprite_helpmetime - time) / 0.1;
-            if (dt < 0)
-                dt = 0;
-            if (dt > 255)
-                dt = 255;
+            float dt = bound(0, (this.waypointsprite_helpmetime - time) / 0.1, 255);
             WriteByte(MSG_ENTITY, dt);
         }
         else
@@ -833,7 +829,8 @@ void WaypointSprite_UpdateSprites(entity e, entity _m1, entity _m2, entity _m3)
 void WaypointSprite_UpdateHealth(entity e, float f)
 {
     f = bound(0, f, e.max_health);
-    if (f != GetResourceAmount(e, RESOURCE_HEALTH) || e.pain_finished)
+    float step = e.max_health / 40;
+    if ((floor(f / step) != floor(GetResourceAmount(e, RESOURCE_HEALTH)) / step) || e.pain_finished)
     {
         SetResourceAmountExplicit(e, RESOURCE_HEALTH, f);
         e.pain_finished = 0;
