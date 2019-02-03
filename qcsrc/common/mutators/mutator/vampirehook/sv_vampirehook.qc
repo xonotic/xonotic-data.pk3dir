@@ -30,7 +30,7 @@ MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
 		entity targ = ((SAME_TEAM(thehook.owner, thehook.aiment)) ? thehook.aiment : thehook.owner);
 		// TODO: we can't do this due to an issue with globals and the mutator arguments
 		//Heal(targ, thehook.owner, autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
-		SetResourceAmountExplicit(targ, RESOURCE_HEALTH, min(GetResourceAmount(targ, RESOURCE_HEALTH) + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max));
+		SetResourceAmount(targ, RESOURCE_HEALTH, min(GetResourceAmount(targ, RESOURCE_HEALTH) + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max));
 
 		if(dmgent == thehook.owner)
 			TakeResource(dmgent, RESOURCE_HEALTH, autocvar_g_vampirehook_damage); // FIXME: friendly fire?!

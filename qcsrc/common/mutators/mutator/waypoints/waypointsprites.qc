@@ -130,7 +130,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
         int t = ReadByte();
         if (t < 192)
         {
-            SetResourceAmountExplicit(this, RESOURCE_HEALTH, t / 191.0);
+            SetResourceAmount(this, RESOURCE_HEALTH, t / 191.0);
             this.build_finished = 0;
         }
         else
@@ -146,7 +146,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
     }
     else
     {
-        SetResourceAmountExplicit(this, RESOURCE_HEALTH, -1);
+        SetResourceAmount(this, RESOURCE_HEALTH, -1);
         this.build_finished = 0;
     }
 
@@ -652,14 +652,14 @@ void Draw_WaypointSprite(entity this)
         if (time < this.build_finished + 0.25)
         {
             if (time < this.build_started)
-                SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.build_starthealth);
+                SetResourceAmount(this, RESOURCE_HEALTH, this.build_starthealth);
             else if (time < this.build_finished)
-                SetResourceAmountExplicit(this, RESOURCE_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
+                SetResourceAmount(this, RESOURCE_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
             else
-                SetResourceAmountExplicit(this, RESOURCE_HEALTH, 1);
+                SetResourceAmount(this, RESOURCE_HEALTH, 1);
         }
         else
-            SetResourceAmountExplicit(this, RESOURCE_HEALTH, -1);
+            SetResourceAmount(this, RESOURCE_HEALTH, -1);
     }
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
@@ -832,7 +832,7 @@ void WaypointSprite_UpdateHealth(entity e, float f)
     float step = e.max_health / 40;
     if ((floor(f / step) != floor(GetResourceAmount(e, RESOURCE_HEALTH) / step)) || e.pain_finished)
     {
-        SetResourceAmountExplicit(e, RESOURCE_HEALTH, f);
+        SetResourceAmount(e, RESOURCE_HEALTH, f);
         e.pain_finished = 0;
         e.SendFlags |= 0x80;
     }

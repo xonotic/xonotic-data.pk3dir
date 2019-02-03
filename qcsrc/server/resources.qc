@@ -77,17 +77,6 @@ float GetResourceAmount(entity e, int resource_type)
 	return e.(resource_field);
 }
 
-bool SetResourceAmountExplicit(entity e, int resource_type, float amount)
-{
-	.float resource_field = GetResourceField(resource_type);
-	if (e.(resource_field) != amount)
-	{
-		e.(resource_field) = amount;
-		return true;
-	}
-	return false;
-}
-
 void SetResourceAmount(entity e, int resource_type, float amount)
 {
 	bool forbid = MUTATOR_CALLHOOK(SetResourceAmount, e, resource_type, amount);
@@ -104,9 +93,10 @@ void SetResourceAmount(entity e, int resource_type, float amount)
 		amount_wasted = amount - max_amount;
 		amount = max_amount;
 	}
-	bool changed = SetResourceAmountExplicit(e, resource_type, amount);
-	if (changed)
+	.float resource_field = GetResourceField(resource_type);
+	if (e.(resource_field) != amount)
 	{
+		e.(resource_field) = amount;
 		MUTATOR_CALLHOOK(ResourceAmountChanged, e, resource_type, amount);
 	}
 	if (amount_wasted == 0)

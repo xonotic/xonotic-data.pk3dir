@@ -74,7 +74,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             _flare.solid = SOLID_CORPSE;
             _flare.takedamage = DAMAGE_YES;
             _flare.event_damage = raptor_flare_damage;
-            SetResourceAmountExplicit(_flare, RESOURCE_HEALTH, 20);
+            SetResourceAmount(_flare, RESOURCE_HEALTH, 20);
             _flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
             settouch(_flare, raptor_flare_touch);
         }

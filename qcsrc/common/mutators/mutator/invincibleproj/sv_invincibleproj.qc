@@ -10,7 +10,7 @@ MUTATOR_HOOKFUNCTION(invincibleprojectiles, EditProjectile)
 	if(GetResourceAmount(proj, RESOURCE_HEALTH))
 	{
 		// disable health which in effect disables damage calculations
-		SetResourceAmountExplicit(proj, RESOURCE_HEALTH, 0);
+		SetResourceAmount(proj, RESOURCE_HEALTH, 0);
 	}
 }
 

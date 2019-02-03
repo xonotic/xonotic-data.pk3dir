@@ -54,7 +54,7 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
+	SetResourceAmount(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
 
 	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
@@ -88,7 +88,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Hook_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
-	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, WEP_CVAR_SEC(hook, health));
+	SetResourceAmount(gren, RESOURCE_HEALTH, WEP_CVAR_SEC(hook, health));
 	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = true;
