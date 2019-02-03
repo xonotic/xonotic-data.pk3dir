@@ -311,14 +311,14 @@ void PutObserverInServer(entity this)
 	if(this.damagedbycontents)
 		IL_REMOVE(g_damagedbycontents, this);
 	this.damagedbycontents = false;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, FRAGS_SPECTATOR);
+	SetResourceAmount(this, RESOURCE_HEALTH, FRAGS_SPECTATOR);
 	SetSpectatee_status(this, etof(this));
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_FLY_WORLDONLY); // user preference is controlled by playerprethink
 	this.flags = FL_CLIENT | FL_NOTARGET;
 	this.effects = 0;
-	SetResourceAmountExplicit(this, RESOURCE_ARMOR, autocvar_g_balance_armor_start); // was 666?!
+	SetResourceAmount(this, RESOURCE_ARMOR, autocvar_g_balance_armor_start); // was 666?!
 	this.pauserotarmor_finished = 0;
 	this.pauserothealth_finished = 0;
 	this.pauseregen_finished = 0;
@@ -1657,15 +1657,15 @@ void SpectateCopy(entity this, entity spectatee)
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
-	SetResourceAmountExplicit(this, RESOURCE_ARMOR, GetResourceAmount(spectatee, RESOURCE_ARMOR));
-	SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(spectatee, RESOURCE_CELLS));
-	SetResourceAmountExplicit(this, RESOURCE_PLASMA, GetResourceAmount(spectatee, RESOURCE_PLASMA));
-	SetResourceAmountExplicit(this, RESOURCE_SHELLS, GetResourceAmount(spectatee, RESOURCE_SHELLS));
-	SetResourceAmountExplicit(this, RESOURCE_BULLETS, GetResourceAmount(spectatee, RESOURCE_BULLETS));
-	SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(spectatee, RESOURCE_ROCKETS));
-	SetResourceAmountExplicit(this, RESOURCE_FUEL, GetResourceAmount(spectatee, RESOURCE_FUEL));
+	SetResourceAmount(this, RESOURCE_ARMOR, GetResourceAmount(spectatee, RESOURCE_ARMOR));
+	SetResourceAmount(this, RESOURCE_CELLS, GetResourceAmount(spectatee, RESOURCE_CELLS));
+	SetResourceAmount(this, RESOURCE_PLASMA, GetResourceAmount(spectatee, RESOURCE_PLASMA));
+	SetResourceAmount(this, RESOURCE_SHELLS, GetResourceAmount(spectatee, RESOURCE_SHELLS));
+	SetResourceAmount(this, RESOURCE_BULLETS, GetResourceAmount(spectatee, RESOURCE_BULLETS));
+	SetResourceAmount(this, RESOURCE_ROCKETS, GetResourceAmount(spectatee, RESOURCE_ROCKETS));
+	SetResourceAmount(this, RESOURCE_FUEL, GetResourceAmount(spectatee, RESOURCE_FUEL));
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(spectatee, RESOURCE_HEALTH));
+	SetResourceAmount(this, RESOURCE_HEALTH, GetResourceAmount(spectatee, RESOURCE_HEALTH));
 	CS(this).impulse = 0;
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
@@ -2429,7 +2429,7 @@ void PlayerPreThink (entity this)
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
+			SetResourceAmount(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 			if (STAT(REVIVE_PROGRESS, this) >= 1)
@@ -2438,7 +2438,7 @@ void PlayerPreThink (entity this)
 		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
+			SetResourceAmount(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
 			if (GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 			{

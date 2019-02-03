@@ -37,7 +37,7 @@ void trigger_heal_init(entity this)
 	if(!this.delay)
 		this.delay = 1;
 	if(!GetResourceAmount(this, RESOURCE_HEALTH))
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 10); // TODO: use a special field for this, it doesn't have actual health!
+		SetResourceAmount(this, RESOURCE_HEALTH, 10); // TODO: use a special field for this, it doesn't have actual health!
 	if(!this.max_health)
 		this.max_health = 200; // max health topoff for field
 	if(this.noise == "")

@@ -113,7 +113,7 @@ void door_go_down(entity this)
 	if (this.max_health)
 	{
 		this.takedamage = DAMAGE_YES;
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+		SetResourceAmount(this, RESOURCE_HEALTH, this.max_health);
 	}
 
 	this.state = STATE_DOWN;
@@ -275,7 +275,7 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 
 	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
-		SetResourceAmountExplicit(this.owner, RESOURCE_HEALTH, this.owner.max_health);
+		SetResourceAmount(this.owner, RESOURCE_HEALTH, this.owner.max_health);
 		this.owner.takedamage = DAMAGE_NO;	// will be reset upon return
 		door_use(this.owner, attacker, NULL);
 	}
@@ -475,7 +475,7 @@ void LinkDoors(entity this)
 	for(t = this; ; t = t.enemy)
 	{
 		if(GetResourceAmount(t, RESOURCE_HEALTH) && !GetResourceAmount(this, RESOURCE_HEALTH))
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(t, RESOURCE_HEALTH));
+			SetResourceAmount(this, RESOURCE_HEALTH, GetResourceAmount(t, RESOURCE_HEALTH));
 		if((t.targetname != "") && (this.targetname == ""))
 			this.targetname = t.targetname;
 		if((t.message != "") && (this.message == ""))
@@ -499,7 +499,7 @@ void LinkDoors(entity this)
 	// distribute health, targetname, message
 	for(t = this; t; t = t.enemy)
 	{
-		SetResourceAmountExplicit(t, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
+		SetResourceAmount(t, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
 		t.targetname = this.targetname;
 		t.message = this.message;
 		if(t.enemy == this)

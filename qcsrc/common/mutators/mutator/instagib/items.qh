@@ -19,7 +19,7 @@ int autocvar_g_instagib_ammo_drop;
 void ammo_vaporizercells_init(Pickup this, entity item)
 {
     if(!GetResourceAmount(item, RESOURCE_CELLS))
-        SetResourceAmountExplicit(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
+        SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 }
 #endif
 REGISTER_ITEM(VaporizerCells, Ammo) {

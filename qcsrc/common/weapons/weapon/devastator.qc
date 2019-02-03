@@ -322,7 +322,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR(devastator, damageforcescale);
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(devastator, health));
+	SetResourceAmount(missile, RESOURCE_HEALTH, WEP_CVAR(devastator, health));
 	missile.event_damage = W_Devastator_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);

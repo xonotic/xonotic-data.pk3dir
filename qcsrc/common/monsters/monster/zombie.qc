@@ -78,12 +78,12 @@ void M_Zombie_Defend_Block_End(entity this)
 		return;
 
 	setanim(this, this.anim_blockend, false, true, true);
-	SetResourceAmountExplicit(this, RESOURCE_ARMOR, autocvar_g_monsters_armor_blockpercent);
+	SetResourceAmount(this, RESOURCE_ARMOR, autocvar_g_monsters_armor_blockpercent);
 }
 
 bool M_Zombie_Defend_Block(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_ARMOR, 0.9);
+	SetResourceAmount(this, RESOURCE_ARMOR, 0.9);
 	this.state = MONSTER_ATTACK_MELEE; // freeze monster
 	this.attack_finished_single[0] = time + 2.1;
 	this.anim_finished = this.attack_finished_single[0];
@@ -148,7 +148,7 @@ METHOD(Zombie, mr_pain, float(Zombie this, entity actor, float damage_take, enti
 METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
 {
     TC(Zombie, this);
-    SetResourceAmountExplicit(actor, RESOURCE_ARMOR, autocvar_g_monsters_armor_blockpercent);
+    SetResourceAmount(actor, RESOURCE_ARMOR, autocvar_g_monsters_armor_blockpercent);
 
     setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
     return true;
@@ -180,7 +180,7 @@ METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
 METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 {
     TC(Zombie, this);
-    if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_zombie_health);
+    if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmount(actor, RESOURCE_HEALTH, autocvar_g_monster_zombie_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_zombie_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_zombie_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_zombie_speed_stop); }

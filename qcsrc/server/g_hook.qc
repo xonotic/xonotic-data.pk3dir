@@ -397,7 +397,7 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
 
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, autocvar_g_balance_grapplehook_health);
+	SetResourceAmount(missile, RESOURCE_HEALTH, autocvar_g_balance_grapplehook_health);
 	missile.event_damage = GrapplingHook_Damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;

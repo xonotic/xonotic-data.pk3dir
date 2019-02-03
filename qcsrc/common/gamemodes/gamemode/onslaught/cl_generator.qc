@@ -195,7 +195,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, ReadByte());
+		SetResourceAmount(this, RESOURCE_HEALTH, ReadByte());
 		this.max_health = ReadByte();
 		this.count = ReadByte();
 		this.team = ReadByte();
@@ -222,6 +222,6 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 		if(_tmp != GetResourceAmount(this, RESOURCE_HEALTH))
 			generator_damage(this, _tmp);
 
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, _tmp);
+		SetResourceAmount(this, RESOURCE_HEALTH, _tmp);
 	}
 }

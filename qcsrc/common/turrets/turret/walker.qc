@@ -218,7 +218,7 @@ void walker_fire_rocket(entity this, vector org)
     rocket.bot_dodgerating	= 50;
     rocket.takedamage		 = DAMAGE_YES;
     rocket.damageforcescale   = 2;
-    SetResourceAmountExplicit(rocket, RESOURCE_HEALTH, 25);
+    SetResourceAmount(rocket, RESOURCE_HEALTH, 25);
     rocket.tur_shotorg		= randomvec() * 512;
     rocket.cnt				= time + 1;
     rocket.enemy			  = this.enemy;

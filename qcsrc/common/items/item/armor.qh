@@ -27,7 +27,7 @@ void item_armorsmall_init(Pickup this, entity item)
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorsmall_max;
     if(!GetResourceAmount(item, RESOURCE_ARMOR))
-        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armorsmall);
+        SetResourceAmount(item, RESOURCE_ARMOR, g_pickup_armorsmall);
 }
 #endif
 
@@ -65,7 +65,7 @@ void item_armormedium_init(Pickup this, entity item)
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormedium_max;
     if(!GetResourceAmount(item, RESOURCE_ARMOR))
-        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armormedium);
+        SetResourceAmount(item, RESOURCE_ARMOR, g_pickup_armormedium);
 }
 #endif
 
@@ -103,7 +103,7 @@ void item_armorbig_init(Pickup this, entity item)
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorbig_max;
     if(!GetResourceAmount(item, RESOURCE_ARMOR))
-        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armorbig);
+        SetResourceAmount(item, RESOURCE_ARMOR, g_pickup_armorbig);
 }
 #endif
 
@@ -143,7 +143,7 @@ void item_armormega_init(Pickup this, entity item)
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormega_max;
     if(!GetResourceAmount(item, RESOURCE_ARMOR))
-        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armormega);
+        SetResourceAmount(item, RESOURCE_ARMOR, g_pickup_armormega);
 }
 #endif
 

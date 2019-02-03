@@ -129,7 +129,7 @@ void func_breakable_look_restore(entity this)
 
 void func_breakable_behave_destroyed(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceAmount(this, RESOURCE_HEALTH, this.max_health);
 	this.takedamage = DAMAGE_NO;
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
@@ -157,7 +157,7 @@ void func_breakable_think(entity this)
 void func_breakable_destroy(entity this, entity actor, entity trigger);
 void func_breakable_behave_restore(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceAmount(this, RESOURCE_HEALTH, this.max_health);
 	if(this.sprite)
 	{
 		WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
@@ -316,7 +316,7 @@ spawnfunc(func_breakable)
 {
 	float n, i;
 	if(!GetResourceAmount(this, RESOURCE_HEALTH))
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 100);
+		SetResourceAmount(this, RESOURCE_HEALTH, 100);
 	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
 
 	// yes, I know, MOVETYPE_NONE is not available here, not that one would want it here anyway

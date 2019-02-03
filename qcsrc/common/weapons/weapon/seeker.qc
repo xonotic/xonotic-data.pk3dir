@@ -190,7 +190,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.scale           = 2;
 	missile.takedamage      = DAMAGE_YES;
 	missile.weaponentity_fld = weaponentity;
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(seeker, missile_health));
+	SetResourceAmount(missile, RESOURCE_HEALTH, WEP_CVAR(seeker, missile_health));
 	missile.damageforcescale = WEP_CVAR(seeker, missile_damageforcescale);
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -506,7 +506,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 
 	missile.takedamage       = DAMAGE_YES;
 	missile.event_damage     = W_Seeker_Tag_Damage;
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(seeker, tag_health));
+	SetResourceAmount(missile, RESOURCE_HEALTH, WEP_CVAR(seeker, tag_health));
 	missile.damageforcescale = WEP_CVAR(seeker, tag_damageforcescale);
 
 	setorigin(missile, w_shotorg);
