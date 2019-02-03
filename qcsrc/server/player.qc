@@ -93,8 +93,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.dphitcontentsmask = this.dphitcontentsmask;
 	clone.death_time = this.death_time;
 	clone.pain_finished = this.pain_finished;
-	SetResourceAmount(clone, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
-	SetResourceAmount(clone, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR));
+	SetResourceAmount(clone, RES_HEALTH, GetResourceAmount(this, RES_HEALTH));
+	SetResourceAmount(clone, RES_ARMOR, GetResourceAmount(this, RES_ARMOR));
 	clone.armortype = this.armortype;
 	clone.model = this.model;
 	clone.modelindex = this.modelindex;
@@ -177,7 +177,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(GetResourceAmount(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -196,8 +196,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	TakeResource(this, RESOURCE_ARMOR, save);
-	TakeResource(this, RESOURCE_HEALTH, take);
+	TakeResource(this, RES_ARMOR, save);
+	TakeResource(this, RES_HEALTH, take);
 	// pause regeneration for 5 seconds
 	this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
@@ -205,7 +205,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
+	if (GetResourceAmount(this, RES_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
 	{
 		// don't use any animations as a gib
 		this.frame = 0;
@@ -314,8 +314,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	vector v;
 	float excess;
 
-	dh = max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
-	da = max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
+	dh = max(GetResourceAmount(this, RES_HEALTH), 0);
+	da = max(GetResourceAmount(this, RES_ARMOR), 0);
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
@@ -363,7 +363,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(GetResourceAmount(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -392,8 +392,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
-	take = bound(0, M_ARGV(4, float), GetResourceAmount(this, RESOURCE_HEALTH));
-	save = bound(0, M_ARGV(5, float), GetResourceAmount(this, RESOURCE_ARMOR));
+	take = bound(0, M_ARGV(4, float), GetResourceAmount(this, RES_HEALTH));
+	save = bound(0, M_ARGV(5, float), GetResourceAmount(this, RES_ARMOR));
 	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
@@ -415,8 +415,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
-			TakeResource(this, RESOURCE_ARMOR, save);
-			TakeResource(this, RESOURCE_HEALTH, take);
+			TakeResource(this, RES_ARMOR, save);
+			TakeResource(this, RES_HEALTH, take);
 			// pause regeneration for 5 seconds
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
@@ -436,7 +436,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 								animdecide_setaction(this, ANIMACTION_PAIN2, true);
 						}
 					}
-					float myhp = GetResourceAmount(this, RESOURCE_HEALTH);
+					float myhp = GetResourceAmount(this, RES_HEALTH);
 					if(myhp > 1)
 					if(myhp < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
 					if(sound_allowed(MSG_BROADCAST, attacker))
@@ -458,7 +458,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 			// throw off bot aim temporarily
 			float shake;
-			if(IS_BOT_CLIENT(this) && GetResourceAmount(this, RESOURCE_HEALTH) >= 1)
+			if(IS_BOT_CLIENT(this) && GetResourceAmount(this, RES_HEALTH) >= 1)
 			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				this.v_angle_x = this.v_angle.x + (random() * 2 - 1) * shake;
@@ -501,8 +501,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
-	da = da - max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
+	dh = dh - max(GetResourceAmount(this, RES_HEALTH), 0);
+	da = da - max(GetResourceAmount(this, RES_ARMOR), 0);
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
@@ -510,7 +510,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) < 1)
+	if (GetResourceAmount(this, RES_HEALTH) < 1)
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = false;
@@ -584,7 +584,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die
-		if(GetResourceAmount(this, RESOURCE_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
+		if(GetResourceAmount(this, RES_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
 
 		if (!this.respawn_time) // can be set in the mutator hook PlayerDies
@@ -670,9 +670,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= limit)
+	if(GetResourceAmount(targ, RES_HEALTH) <= 0 || GetResourceAmount(targ, RES_HEALTH) >= limit)
 		return false;
 
-	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, limit);
+	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);
 	return true;
 }

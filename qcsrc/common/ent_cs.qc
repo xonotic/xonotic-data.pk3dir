@@ -117,13 +117,13 @@ ENTCS_PROP_CODED(ANGLES, false, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
 
 // FIXME: use a better scale?
 #define DEC_FACTOR 10
-ENTCS_PROP_RESOURCE(HEALTH, false, RESOURCE_HEALTH, ENTCS_SET_NORMAL, DEC_FACTOR,
-	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_HEALTH) / DEC_FACTOR, 255)); },
+ENTCS_PROP_RESOURCE(HEALTH, false, RES_HEALTH, ENTCS_SET_NORMAL, DEC_FACTOR,
+	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RES_HEALTH) / DEC_FACTOR, 255)); },
 	{ ent.healthvalue = ReadByte() * DEC_FACTOR; })
 
-ENTCS_PROP_RESOURCE(ARMOR, false, RESOURCE_ARMOR, ENTCS_SET_NORMAL, DEC_FACTOR,
-	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_ARMOR) / DEC_FACTOR, 255)); },
-	{ SetResourceAmount(ent, RESOURCE_ARMOR, ReadByte() * DEC_FACTOR); })
+ENTCS_PROP_RESOURCE(ARMOR, false, RES_ARMOR, ENTCS_SET_NORMAL, DEC_FACTOR,
+	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RES_ARMOR) / DEC_FACTOR, 255)); },
+	{ SetResourceAmount(ent, RES_ARMOR, ReadByte() * DEC_FACTOR); })
 #undef DEC_FACTOR
 
 ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,

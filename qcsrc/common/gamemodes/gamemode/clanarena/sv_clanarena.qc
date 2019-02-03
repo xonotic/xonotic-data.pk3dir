@@ -380,8 +380,8 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_damage = M_ARGV(7, float);
-	float damage_take = bound(0, M_ARGV(4, float), GetResourceAmount(frag_target, RESOURCE_HEALTH));
-	float damage_save = bound(0, M_ARGV(5, float), GetResourceAmount(frag_target, RESOURCE_ARMOR));
+	float damage_take = bound(0, M_ARGV(4, float), GetResourceAmount(frag_target, RES_HEALTH));
+	float damage_save = bound(0, M_ARGV(5, float), GetResourceAmount(frag_target, RES_ARMOR));
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 

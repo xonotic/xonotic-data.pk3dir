@@ -427,13 +427,13 @@ void buff_Medic_Heal(entity this)
 		{
 			continue;
 		}
-		float hp = GetResourceAmount(it, RESOURCE_HEALTH);
+		float hp = GetResourceAmount(it, RES_HEALTH);
 		if(hp >= autocvar_g_balance_health_regenstable)
 		{
 			continue;
 		}
 		Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-		SetResourceAmount(it, RESOURCE_HEALTH, bound(0, hp + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable));
+		SetResourceAmount(it, RES_HEALTH, bound(0, hp + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable));
 	});
 }
 
@@ -464,11 +464,11 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
 	if(STAT(BUFFS, frag_target) & BUFF_MEDIC.m_itemid)
-	if((GetResourceAmount(frag_target, RESOURCE_HEALTH) - frag_damage) <= 0)
+	if((GetResourceAmount(frag_target, RES_HEALTH) - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
-		frag_damage = max(5, GetResourceAmount(frag_target, RESOURCE_HEALTH) - autocvar_g_buffs_medic_survive_health);
+		frag_damage = max(5, GetResourceAmount(frag_target, RES_HEALTH) - autocvar_g_buffs_medic_survive_health);
 
 	if(STAT(BUFFS, frag_target) & BUFF_JUMP.m_itemid)
 	if(frag_deathtype == DEATH_FALL.m_id)
@@ -544,13 +544,13 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
 		float amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
-			GetResourceAmount(frag_target, RESOURCE_HEALTH));
-		GiveResourceWithLimit(frag_attacker, RESOURCE_HEALTH, amount, g_pickup_healthsmall_max);
-		if (GetResourceAmount(frag_target, RESOURCE_ARMOR))
+			GetResourceAmount(frag_target, RES_HEALTH));
+		GiveResourceWithLimit(frag_attacker, RES_HEALTH, amount, g_pickup_healthsmall_max);
+		if (GetResourceAmount(frag_target, RES_ARMOR))
 		{
 			amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
-				GetResourceAmount(frag_target, RESOURCE_ARMOR));
-			GiveResourceWithLimit(frag_attacker, RESOURCE_ARMOR, amount, g_pickup_armorsmall_max);
+				GetResourceAmount(frag_target, RES_ARMOR));
+			GiveResourceWithLimit(frag_attacker, RES_ARMOR, amount, g_pickup_armorsmall_max);
 		}
 	}
 

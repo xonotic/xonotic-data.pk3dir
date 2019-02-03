@@ -89,7 +89,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 	wep.pickup_anyway = true; // these are ALWAYS pickable
 
 	//wa = W_AmmoItemCode(wpn);
-	if(ammotype == RESOURCE_NONE)
+	if(ammotype == RES_NONE)
 	{
 		return 0;
 	}

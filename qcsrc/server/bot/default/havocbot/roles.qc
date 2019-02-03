@@ -50,14 +50,14 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 
 bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player, entity item)
 {
-	if (GetResourceAmount(item, RESOURCE_HEALTH) && GetResourceAmount(player, RESOURCE_HEALTH) <= GetResourceAmount(this, RESOURCE_HEALTH)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_ARMOR) && GetResourceAmount(player, RESOURCE_ARMOR) <= GetResourceAmount(this, RESOURCE_ARMOR)) {return true;}
+	if (GetResourceAmount(item, RES_HEALTH) && GetResourceAmount(player, RES_HEALTH) <= GetResourceAmount(this, RES_HEALTH)) {return true;}
+	if (GetResourceAmount(item, RES_ARMOR) && GetResourceAmount(player, RES_ARMOR) <= GetResourceAmount(this, RES_ARMOR)) {return true;}
 	if (STAT(WEAPONS, item) && !(STAT(WEAPONS, player) & STAT(WEAPONS, item))) {return true;}
-	if (GetResourceAmount(item, RESOURCE_SHELLS) && GetResourceAmount(player, RESOURCE_SHELLS) <= GetResourceAmount(this, RESOURCE_SHELLS)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_BULLETS) && GetResourceAmount(player, RESOURCE_BULLETS) <= GetResourceAmount(this, RESOURCE_BULLETS)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_ROCKETS) && GetResourceAmount(player, RESOURCE_ROCKETS) <= GetResourceAmount(this, RESOURCE_ROCKETS)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_CELLS) && GetResourceAmount(player, RESOURCE_CELLS) <= GetResourceAmount(this, RESOURCE_CELLS)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_PLASMA) && GetResourceAmount(player, RESOURCE_PLASMA) <= GetResourceAmount(this, RESOURCE_PLASMA)) {return true;}
+	if (GetResourceAmount(item, RES_SHELLS) && GetResourceAmount(player, RES_SHELLS) <= GetResourceAmount(this, RES_SHELLS)) {return true;}
+	if (GetResourceAmount(item, RES_BULLETS) && GetResourceAmount(player, RES_BULLETS) <= GetResourceAmount(this, RES_BULLETS)) {return true;}
+	if (GetResourceAmount(item, RES_ROCKETS) && GetResourceAmount(player, RES_ROCKETS) <= GetResourceAmount(this, RES_ROCKETS)) {return true;}
+	if (GetResourceAmount(item, RES_CELLS) && GetResourceAmount(player, RES_CELLS) <= GetResourceAmount(this, RES_CELLS)) {return true;}
+	if (GetResourceAmount(item, RES_PLASMA) && GetResourceAmount(player, RES_PLASMA) <= GetResourceAmount(this, RES_PLASMA)) {return true;}
 	if (item.itemdef.instanceOfPowerup) {return true;}
 
 	return false;
@@ -208,7 +208,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 			continue;
 		*/
 
-		t = ((GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR)) - (GetResourceAmount(it, RESOURCE_HEALTH) + GetResourceAmount(it, RESOURCE_ARMOR))) / 150;
+		t = ((GetResourceAmount(this, RES_HEALTH) + GetResourceAmount(this, RES_ARMOR)) - (GetResourceAmount(it, RES_HEALTH) + GetResourceAmount(it, RES_ARMOR))) / 150;
 		t = bound(0, 1 + t, 3);
 		if (skill > 3)
 		{
