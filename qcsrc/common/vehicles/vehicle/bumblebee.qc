@@ -563,12 +563,12 @@ bool bumblebee_pilot_frame(entity this, float dt)
 
 						if(IS_VEHICLE(trace_ent))
 						{
-							if(autocvar_g_vehicle_bumblebee_healgun_sps && GetResourceAmount(trace_ent, RES_HEALTH) <= trace_ent.max_health)
+							if(autocvar_g_vehicle_bumblebee_healgun_sps && GetResource(trace_ent, RES_HEALTH) <= trace_ent.max_health)
 								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * dt, trace_ent.tur_head.max_health);
 						}
 						else if(IS_CLIENT(trace_ent))
 						{
-							if(GetResourceAmount(trace_ent, RES_ARMOR) <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
+							if(GetResource(trace_ent, RES_ARMOR) <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
 								GiveResourceWithLimit(trace_ent, RES_ARMOR, autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax);
 						}
 					}
@@ -802,7 +802,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 
     Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation(instance.origin, 16), '0 0 0', 1);
 
-    SetResourceAmount(instance, RES_HEALTH, 0);
+    SetResource(instance, RES_HEALTH, 0);
     instance.event_damage	= func_null;
     instance.solid			= SOLID_NOT;
     instance.takedamage		= DAMAGE_NO;
@@ -887,7 +887,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
     if(!autocvar_g_vehicle_bumblebee_swim)
     	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 
-    SetResourceAmount(instance, RES_HEALTH, autocvar_g_vehicle_bumblebee_health);
+    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_bumblebee_health);
     instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
     instance.solid = SOLID_BBOX;
     set_movetype(instance, MOVETYPE_TOSS);
@@ -914,8 +914,8 @@ METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 
     instance.vehicle_exit = bumblebee_exit;
     instance.respawntime = autocvar_g_vehicle_bumblebee_respawntime;
-    SetResourceAmount(instance, RES_HEALTH, autocvar_g_vehicle_bumblebee_health);
-    instance.max_health = GetResourceAmount(instance, RES_HEALTH);
+    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_bumblebee_health);
+    instance.max_health = GetResource(instance, RES_HEALTH);
     instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
 }
 

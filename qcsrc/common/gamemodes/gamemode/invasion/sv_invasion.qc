@@ -288,7 +288,7 @@ bool Invasion_CheckWinner()
 
 	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;
 
-	IL_EACH(g_monsters, GetResourceAmount(it, RES_HEALTH) > 0,
+	IL_EACH(g_monsters, GetResource(it, RES_HEALTH) > 0,
 	{
 		if((get_monsterinfo(it.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
 			++supermonster_count;

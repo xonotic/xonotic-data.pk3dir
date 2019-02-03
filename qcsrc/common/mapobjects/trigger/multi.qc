@@ -7,7 +7,7 @@ void multi_wait(entity this)
 {
 	if (this.max_health)
 	{
-		SetResourceAmount(this, RES_HEALTH, this.max_health);
+		SetResource(this, RES_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
 	}
@@ -121,7 +121,7 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != attacker.team))
 			return;
 	TakeResource(this, RES_HEALTH, damage);
-	if (GetResourceAmount(this, RES_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		this.enemy = attacker;
 		this.goalentity = inflictor;
@@ -135,7 +135,7 @@ void multi_reset(entity this)
 		settouch(this, multi_touch);
 	if (this.max_health)
 	{
-		SetResourceAmount(this, RES_HEALTH, this.max_health);
+		SetResource(this, RES_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
 	}
@@ -181,12 +181,12 @@ spawnfunc(trigger_multiple)
 	this.team_saved = this.team;
 	IL_PUSH(g_saved_team, this);
 
-	if (GetResourceAmount(this, RES_HEALTH))
+	if (GetResource(this, RES_HEALTH))
 	{
 		if (this.spawnflags & SPAWNFLAG_NOTOUCH)
 			objerror (this, "health and notouch don't make sense\n");
 		this.canteamdamage = true;
-		this.max_health = GetResourceAmount(this, RES_HEALTH);
+		this.max_health = GetResource(this, RES_HEALTH);
 		this.event_damage = multi_eventdamage;
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;

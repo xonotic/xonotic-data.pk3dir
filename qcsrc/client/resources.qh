@@ -12,14 +12,14 @@
 /// \param[in] e Entity to check.
 /// \param[in] res_type Type of the resource (a RES_* constant).
 /// \return Current amount of resource the given entity has.
-float GetResourceAmount(entity e, int res_type);
+float GetResource(entity e, int res_type);
 
 /// \brief Sets the current amount of resource the given entity will have.
 /// \param[in,out] e Entity to adjust.
 /// \param[in] res_type Type of the resource (a RES_* constant).
 /// \param[in] amount Amount of resource to set.
 /// \return No return.
-void SetResourceAmount(entity e, int res_type, float amount);
+void SetResource(entity e, int res_type, float amount);
 
 /// \brief Takes an entity some resource.
 /// \param[in,out] receiver Entity to take resource from.

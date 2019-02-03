@@ -454,7 +454,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	entity this = actor.(weaponentity);
 	if (frametime) this.weapon_frametime = frametime;
 
-	if (!this || GetResourceAmount(actor, RES_HEALTH) < 1) return;  // Dead player can't use weapons and injure impulse commands
+	if (!this || GetResource(actor, RES_HEALTH) < 1) return;  // Dead player can't use weapons and injure impulse commands
 
 	int button_atck = PHYS_INPUT_BUTTON_ATCK(actor);
 	int button_atck2 = PHYS_INPUT_BUTTON_ATCK2(actor);
@@ -694,7 +694,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 	}
 	else if (wep.ammo_type != RES_NONE)
 	{
-		float ammo = GetResourceAmount(actor, wep.ammo_type);
+		float ammo = GetResource(actor, wep.ammo_type);
 		if (ammo < ammo_use)
 		{
 			backtrace(sprintf(
@@ -707,7 +707,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 				ammo
 				             ));
 		}
-		SetResourceAmount(actor, wep.ammo_type, ammo - ammo_use);
+		SetResource(actor, wep.ammo_type, ammo - ammo_use);
 	}
 }
 
@@ -734,10 +734,10 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	else
 	{
 		// make sure we don't add more ammo than we have
-		float ammo = GetResourceAmount(actor, wpn.ammo_type);
+		float ammo = GetResource(actor, wpn.ammo_type);
 		float load = min(w_ent.reload_ammo_amount - w_ent.clip_load, ammo);
 		w_ent.clip_load += load;
-		SetResourceAmount(actor, wpn.ammo_type, ammo - load);
+		SetResource(actor, wpn.ammo_type, ammo - load);
 	}
 	w_ent.(weapon_load[w_ent.m_weapon.m_id]) = w_ent.clip_load;
 
@@ -781,7 +781,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	// no ammo, so nothing to load
 	if (e.ammo_type != RES_NONE)
 	{
-		if (!GetResourceAmount(actor, e.ammo_type) && this.reload_ammo_min)
+		if (!GetResource(actor, e.ammo_type) && this.reload_ammo_min)
 		{
 			if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 			{

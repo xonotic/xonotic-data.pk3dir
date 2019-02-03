@@ -477,7 +477,7 @@ void havocbot_movetogoal(entity this)
 	// Jetpack navigation
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
-	if(GetResourceAmount(this, RES_FUEL))
+	if(GetResource(this, RES_FUEL))
 	{
 		if(autocvar_bot_debug_goalstack)
 		{
@@ -673,7 +673,7 @@ void havocbot_movetogoal(entity this)
 			return;
 		}
 		else if(!this.jumppadcount && !this.goalcurrent.wphardwired
-			&& GetResourceAmount(this, RES_HEALTH) + GetResourceAmount(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
+			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
 			if(this.velocity.z < 0)
 			{
@@ -1303,7 +1303,7 @@ void havocbot_chooseenemy(entity this)
 			traceline(this.origin+this.view_ofs, ( this.enemy.absmin + this.enemy.absmax ) * 0.5,false,NULL);
 			if (trace_ent == this.enemy || trace_fraction == 1)
 			if (vdist(((this.enemy.absmin + this.enemy.absmax) * 0.5) - this.origin, <, 1000))
-			if (GetResourceAmount(this, RES_HEALTH) > 30)
+			if (GetResource(this, RES_HEALTH) > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
 				this.havocbot_chooseenemy_finished = time + 0.5;

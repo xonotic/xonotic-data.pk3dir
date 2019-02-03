@@ -124,7 +124,7 @@ void W_Seeker_Missile_Think(entity this)
 
 void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RES_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
@@ -135,7 +135,7 @@ void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, flo
 	else
 		TakeResource(this, RES_HEALTH, damage);
 
-	if(GetResourceAmount(this, RES_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_Seeker_Missile_Explode_think);
 }
 
@@ -190,7 +190,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.scale           = 2;
 	missile.takedamage      = DAMAGE_YES;
 	missile.weaponentity_fld = weaponentity;
-	SetResourceAmount(missile, RES_HEALTH, WEP_CVAR(seeker, missile_health));
+	SetResource(missile, RES_HEALTH, WEP_CVAR(seeker, missile_health));
 	missile.damageforcescale = WEP_CVAR(seeker, missile_damageforcescale);
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -348,7 +348,7 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	Weapon thiswep = WEP_SEEKER;
 	.entity weaponentity = this.weaponentity_fld;
-	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != thiswep))
+	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != thiswep))
 	{
 		delete(this);
 		return;
@@ -415,10 +415,10 @@ void W_Seeker_Tag_Explode(entity this)
 
 void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RES_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 	TakeResource(this, RES_HEALTH, damage);
-	if(GetResourceAmount(this, RES_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_Seeker_Tag_Explode(this);
 }
 
@@ -506,7 +506,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 
 	missile.takedamage       = DAMAGE_YES;
 	missile.event_damage     = W_Seeker_Tag_Damage;
-	SetResourceAmount(missile, RES_HEALTH, WEP_CVAR(seeker, tag_health));
+	SetResource(missile, RES_HEALTH, WEP_CVAR(seeker, tag_health));
 	missile.damageforcescale = WEP_CVAR(seeker, tag_damageforcescale);
 
 	setorigin(missile, w_shotorg);
@@ -591,12 +591,12 @@ METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapone
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, missile_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, missile_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(seeker, missile_ammo);
     }
     else
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, tag_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     return ammo_amount;
@@ -606,12 +606,12 @@ METHOD(Seeker, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, tag_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     else
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, flac_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, flac_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(seeker, flac_ammo);
     }
     return ammo_amount;

@@ -170,10 +170,10 @@ void Draw_ShowNames(entity this)
 					this.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', a,
 					DRAWFLAG_NORMAL);
 			}
-			if (GetResourceAmount(this, RES_ARMOR) > 0)
+			if (GetResource(this, RES_ARMOR) > 0)
 			{
 				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize.x, sz, "nametag_statusbar",
-					GetResourceAmount(this, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
+					GetResource(this, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
 					DRAWFLAG_NORMAL);
 			}
 		}
@@ -206,13 +206,13 @@ void Draw_ShowNames_All()
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;
-			SetResourceAmount(it, RES_ARMOR, GetResourceAmount(entcs, RES_ARMOR));
+			SetResource(it, RES_ARMOR, GetResource(entcs, RES_ARMOR));
 			it.sameteam = true;
 		}
 		else
 		{
 			it.healthvalue = 0;
-			SetResourceAmount(it, RES_ARMOR, 0);
+			SetResource(it, RES_ARMOR, 0);
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);

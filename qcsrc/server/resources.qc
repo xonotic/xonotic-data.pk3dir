@@ -71,14 +71,14 @@ float GetResourceLimit(entity e, int res_type)
 	return limit;
 }
 
-float GetResourceAmount(entity e, int res_type)
+float GetResource(entity e, int res_type)
 {
 	return e.(GetResourceField(res_type));
 }
 
-void SetResourceAmount(entity e, int res_type, float amount)
+void SetResource(entity e, int res_type, float amount)
 {
-	bool forbid = MUTATOR_CALLHOOK(SetResourceAmount, e, res_type, amount);
+	bool forbid = MUTATOR_CALLHOOK(SetResource, e, res_type, amount);
 	if (forbid)
 	{
 		return;
@@ -122,7 +122,7 @@ void GiveResource(entity receiver, int res_type, float amount)
 	{
 		return;
 	}
-	SetResourceAmount(receiver, res_type, GetResourceAmount(receiver, res_type) + amount);
+	SetResource(receiver, res_type, GetResource(receiver, res_type) + amount);
 	switch (res_type)
 	{
 		case RES_HEALTH:
@@ -166,7 +166,7 @@ void GiveResourceWithLimit(entity receiver, int res_type, float amount, float li
 	{
 		return;
 	}
-	float current_amount = GetResourceAmount(receiver, res_type);
+	float current_amount = GetResource(receiver, res_type);
 	if (current_amount + amount > limit && limit != RES_LIMIT_NONE)
 	{
 		amount = limit - current_amount;
@@ -191,7 +191,7 @@ void TakeResource(entity receiver, int res_type, float amount)
 	{
 		return;
 	}
-	SetResourceAmount(receiver, res_type, GetResourceAmount(receiver, res_type) - amount);
+	SetResource(receiver, res_type, GetResource(receiver, res_type) - amount);
 }
 
 void TakeResourceWithLimit(entity receiver, int res_type, float amount, float limit)
@@ -212,7 +212,7 @@ void TakeResourceWithLimit(entity receiver, int res_type, float amount, float li
 	{
 		return;
 	}
-	float current_amount = GetResourceAmount(receiver, res_type);
+	float current_amount = GetResource(receiver, res_type);
 	if (current_amount - amount < -limit)
 	{
 		amount = -limit + current_amount;

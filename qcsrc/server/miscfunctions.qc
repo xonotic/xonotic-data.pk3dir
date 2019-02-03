@@ -280,8 +280,8 @@ string formatmessage(entity this, string msg)
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(GetResourceAmount(this, RES_ARMOR))); break;
-			case "h": replacement = ftos(floor(GetResourceAmount(this, RES_HEALTH))); break;
+			case "a": replacement = ftos(floor(GetResource(this, RES_ARMOR))); break;
+			case "h": replacement = ftos(floor(GetResource(this, RES_HEALTH))); break;
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
@@ -660,15 +660,15 @@ void readplayerstartcvars()
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 		random_start_weapons_count = cvar("g_random_start_weapons_count");
-		SetResourceAmount(random_start_ammo, RES_SHELLS, cvar(
+		SetResource(random_start_ammo, RES_SHELLS, cvar(
 			"g_random_start_shells"));
-		SetResourceAmount(random_start_ammo, RES_BULLETS, cvar(
+		SetResource(random_start_ammo, RES_BULLETS, cvar(
 			"g_random_start_bullets"));
-		SetResourceAmount(random_start_ammo, RES_ROCKETS,
+		SetResource(random_start_ammo, RES_ROCKETS,
 			cvar("g_random_start_rockets"));
-		SetResourceAmount(random_start_ammo, RES_CELLS, cvar(
+		SetResource(random_start_ammo, RES_CELLS, cvar(
 			"g_random_start_cells"));
-		SetResourceAmount(random_start_ammo, RES_PLASMA, cvar(
+		SetResource(random_start_ammo, RES_PLASMA, cvar(
 			"g_random_start_plasma"));
 	}
 
@@ -738,16 +738,16 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
-	SetResourceAmount(random_start_ammo, RES_SHELLS, max(0,
-		GetResourceAmount(random_start_ammo, RES_SHELLS)));
-	SetResourceAmount(random_start_ammo, RES_BULLETS, max(0,
-		GetResourceAmount(random_start_ammo, RES_BULLETS)));
-	SetResourceAmount(random_start_ammo, RES_ROCKETS, max(0,
-		GetResourceAmount(random_start_ammo, RES_ROCKETS)));
-	SetResourceAmount(random_start_ammo, RES_CELLS, max(0,
-		GetResourceAmount(random_start_ammo, RES_CELLS)));
-	SetResourceAmount(random_start_ammo, RES_PLASMA, max(0,
-		GetResourceAmount(random_start_ammo, RES_PLASMA)));
+	SetResource(random_start_ammo, RES_SHELLS, max(0,
+		GetResource(random_start_ammo, RES_SHELLS)));
+	SetResource(random_start_ammo, RES_BULLETS, max(0,
+		GetResource(random_start_ammo, RES_BULLETS)));
+	SetResource(random_start_ammo, RES_ROCKETS, max(0,
+		GetResource(random_start_ammo, RES_ROCKETS)));
+	SetResource(random_start_ammo, RES_CELLS, max(0,
+		GetResource(random_start_ammo, RES_CELLS)));
+	SetResource(random_start_ammo, RES_PLASMA, max(0,
+		GetResource(random_start_ammo, RES_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);

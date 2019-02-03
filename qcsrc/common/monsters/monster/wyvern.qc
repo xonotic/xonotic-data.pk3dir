@@ -152,7 +152,7 @@ METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
 METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 {
     TC(Wyvern, this);
-    if(!GetResourceAmount(this, RES_HEALTH)) SetResourceAmount(actor, RES_HEALTH, autocvar_g_monster_wyvern_health);
+    if(!GetResource(this, RES_HEALTH)) SetResource(actor, RES_HEALTH, autocvar_g_monster_wyvern_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_wyvern_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_wyvern_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }

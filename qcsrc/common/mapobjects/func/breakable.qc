@@ -83,7 +83,7 @@ void func_breakable_colormod(entity this)
 	float h;
 	if (!(this.spawnflags & BREAKABLE_INDICATE_DAMAGE))
 		return;
-	h = GetResourceAmount(this, RES_HEALTH) / this.max_health;
+	h = GetResource(this, RES_HEALTH) / this.max_health;
 	if(h < 0.25)
 		this.colormod = '1 0 0';
 	else if(h <= 0.75)
@@ -129,7 +129,7 @@ void func_breakable_look_restore(entity this)
 
 void func_breakable_behave_destroyed(entity this)
 {
-	SetResourceAmount(this, RES_HEALTH, this.max_health);
+	SetResource(this, RES_HEALTH, this.max_health);
 	this.takedamage = DAMAGE_NO;
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
@@ -157,11 +157,11 @@ void func_breakable_think(entity this)
 void func_breakable_destroy(entity this, entity actor, entity trigger);
 void func_breakable_behave_restore(entity this)
 {
-	SetResourceAmount(this, RES_HEALTH, this.max_health);
+	SetResource(this, RES_HEALTH, this.max_health);
 	if(this.sprite)
 	{
 		WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
-		WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RES_HEALTH));
+		WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
 	}
 	if(!(this.spawnflags & BREAKABLE_NODAMAGE))
 	{
@@ -276,11 +276,11 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 	if(this.sprite)
 	{
 		WaypointSprite_Ping(this.sprite);
-		WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RES_HEALTH));
+		WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
 	}
 	func_breakable_colormod(this);
 
-	if(GetResourceAmount(this, RES_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		debrisforce = force;
 
@@ -315,9 +315,9 @@ void func_breakable_reset(entity this)
 spawnfunc(func_breakable)
 {
 	float n, i;
-	if(!GetResourceAmount(this, RES_HEALTH))
-		SetResourceAmount(this, RES_HEALTH, 100);
-	this.max_health = GetResourceAmount(this, RES_HEALTH);
+	if(!GetResource(this, RES_HEALTH))
+		SetResource(this, RES_HEALTH, 100);
+	this.max_health = GetResource(this, RES_HEALTH);
 
 	// yes, I know, MOVETYPE_NONE is not available here, not that one would want it here anyway
 	if(!this.debrismovetype) this.debrismovetype = MOVETYPE_BOUNCE;

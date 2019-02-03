@@ -58,7 +58,7 @@ void door_rotating_go_down(entity this)
 	if (this.max_health)
 	{
 		this.takedamage = DAMAGE_YES;
-		SetResourceAmount(this, RES_HEALTH, this.max_health);
+		SetResource(this, RES_HEALTH, this.max_health);
 	}
 
 	this.state = STATE_DOWN;

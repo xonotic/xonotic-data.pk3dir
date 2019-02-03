@@ -234,11 +234,11 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                                 }
                                 else
                                 {
-                                    dt = min(dt, (GetResourceAmount(actor, thiswep.ammo_type) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+                                    dt = min(dt, (GetResource(actor, thiswep.ammo_type) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
                                     dt = max(0, dt);
                                     if(dt > 0)
                                     {
-                                        SetResourceAmount(actor, thiswep.ammo_type, max(WEP_CVAR_SEC(vortex, ammo), GetResourceAmount(actor, thiswep.ammo_type) - WEP_CVAR_SEC(vortex, ammo) * dt));
+                                        SetResource(actor, thiswep.ammo_type, max(WEP_CVAR_SEC(vortex, ammo), GetResource(actor, thiswep.ammo_type) - WEP_CVAR_SEC(vortex, ammo) * dt));
                                     }
                                 }
                             }
@@ -270,7 +270,7 @@ METHOD(Vortex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity
 }
 METHOD(Vortex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(vortex, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(vortex, ammo);
     ammo_amount += (autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
     return ammo_amount;
 }
@@ -279,7 +279,7 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
     if(WEP_CVAR(vortex, secondary))
     {
         // don't allow charging if we don't have enough ammo
-        float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vortex, ammo);
+        float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vortex, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
         return ammo_amount;
     }

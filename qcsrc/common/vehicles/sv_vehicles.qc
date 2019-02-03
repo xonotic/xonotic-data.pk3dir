@@ -207,7 +207,7 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 
 	TakeResource(this, RES_HEALTH, damage);
 	this.velocity += force;
-	if(GetResourceAmount(this, RES_HEALTH) < 1)
+	if(GetResource(this, RES_HEALTH) < 1)
 	{
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
@@ -282,7 +282,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	{
 		proj.takedamage	   = DAMAGE_AIM;
 		proj.event_damage	 = vehicles_projectile_damage;
-		SetResourceAmount(proj, RES_HEALTH, _health);
+		SetResource(proj, RES_HEALTH, _health);
 	}
 	else
 		proj.flags |= FL_NOTARGET;
@@ -587,7 +587,7 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 	if(timer + rpause < time)
 	{
 		if(_healthscale)
-			regen = regen * (GetResourceAmount(this, RES_HEALTH) / this.max_health);
+			regen = regen * (GetResource(this, RES_HEALTH) / this.max_health);
 
 		this.(regen_field) = min(this.(regen_field) + regen * delta_time, field_max);
 
@@ -598,7 +598,7 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 
 void vehicles_regen_resource(entity this, float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale, int resource)
 {
-	float resource_amount = GetResourceAmount(this, resource);
+	float resource_amount = GetResource(this, resource);
 
 	if(resource_amount < field_max)
 	if(timer + rpause < time)
@@ -606,10 +606,10 @@ void vehicles_regen_resource(entity this, float timer, .float regen_field, float
 		if(_healthscale)
 			regen = regen * (resource_amount / this.max_health);
 
-		SetResourceAmount(this, resource, min(resource_amount + regen * delta_time, field_max));
+		SetResource(this, resource, min(resource_amount + regen * delta_time, field_max));
 
 		if(this.owner)
-			this.owner.(regen_field) = (GetResourceAmount(this, resource) / field_max) * 100;
+			this.owner.(regen_field) = (GetResource(this, resource) / field_max) * 100;
 	}
 }
 
@@ -630,7 +630,7 @@ void shieldhit_think(entity this)
 
 void vehicles_painframe(entity this)
 {
-	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((GetResourceAmount(this, RES_HEALTH) / this.max_health) * 100));
+	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((GetResource(this, RES_HEALTH) / this.max_health) * 100));
 
 	if(myhealth <= 50)
 	if(this.pain_frame < time)
@@ -729,7 +729,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	else
 		this.velocity += force;
 
-	if(GetResourceAmount(this, RES_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(this.owner)
 		{
@@ -750,12 +750,12 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 bool vehicles_heal(entity targ, entity inflictor, float amount, float limit)
 {
 	float true_limit = ((limit != RES_LIMIT_NONE) ? limit : targ.max_health);
-	if(GetResourceAmount(targ, RES_HEALTH) <= 0 || GetResourceAmount(targ, RES_HEALTH) >= true_limit)
+	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= true_limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, true_limit);
 	if(targ.owner)
-		targ.owner.vehicle_health = (GetResourceAmount(targ, RES_HEALTH) / targ.max_health) * 100;
+		targ.owner.vehicle_health = (GetResource(targ, RES_HEALTH) / targ.max_health) * 100;
 	return true;
 }
 

@@ -232,7 +232,7 @@ void PutObserverInServer(entity this)
 
 	if (IS_PLAYER(this))
 	{
-		if(GetResourceAmount(this, RES_HEALTH) >= 1)
+		if(GetResource(this, RES_HEALTH) >= 1)
 		{
 			// despawn effect
 			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
@@ -311,14 +311,14 @@ void PutObserverInServer(entity this)
 	if(this.damagedbycontents)
 		IL_REMOVE(g_damagedbycontents, this);
 	this.damagedbycontents = false;
-	SetResourceAmount(this, RES_HEALTH, FRAGS_SPECTATOR);
+	SetResource(this, RES_HEALTH, FRAGS_SPECTATOR);
 	SetSpectatee_status(this, etof(this));
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_FLY_WORLDONLY); // user preference is controlled by playerprethink
 	this.flags = FL_CLIENT | FL_NOTARGET;
 	this.effects = 0;
-	SetResourceAmount(this, RES_ARMOR, autocvar_g_balance_armor_start); // was 666?!
+	SetResource(this, RES_ARMOR, autocvar_g_balance_armor_start); // was 666?!
 	this.pauserotarmor_finished = 0;
 	this.pauserothealth_finished = 0;
 	this.pauseregen_finished = 0;
@@ -557,24 +557,24 @@ void PutPlayerInServer(entity this)
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
 	if (warmup_stage) {
-		SetResourceAmount(this, RES_SHELLS, warmup_start_ammo_shells);
-		SetResourceAmount(this, RES_BULLETS, warmup_start_ammo_nails);
-		SetResourceAmount(this, RES_ROCKETS, warmup_start_ammo_rockets);
-		SetResourceAmount(this, RES_CELLS, warmup_start_ammo_cells);
-		SetResourceAmount(this, RES_PLASMA, warmup_start_ammo_plasma);
-		SetResourceAmount(this, RES_FUEL, warmup_start_ammo_fuel);
-		SetResourceAmount(this, RES_HEALTH, warmup_start_health);
-		SetResourceAmount(this, RES_ARMOR, warmup_start_armorvalue);
+		SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
+		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
+		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
+		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
+		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
+		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
+		SetResource(this, RES_HEALTH, warmup_start_health);
+		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
 		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
 	} else {
-		SetResourceAmount(this, RES_SHELLS, start_ammo_shells);
-		SetResourceAmount(this, RES_BULLETS, start_ammo_nails);
-		SetResourceAmount(this, RES_ROCKETS, start_ammo_rockets);
-		SetResourceAmount(this, RES_CELLS, start_ammo_cells);
-		SetResourceAmount(this, RES_PLASMA, start_ammo_plasma);
-		SetResourceAmount(this, RES_FUEL, start_ammo_fuel);
-		SetResourceAmount(this, RES_HEALTH, start_health);
-		SetResourceAmount(this, RES_ARMOR, start_armorvalue);
+		SetResource(this, RES_SHELLS, start_ammo_shells);
+		SetResource(this, RES_BULLETS, start_ammo_nails);
+		SetResource(this, RES_ROCKETS, start_ammo_rockets);
+		SetResource(this, RES_CELLS, start_ammo_cells);
+		SetResource(this, RES_PLASMA, start_ammo_plasma);
+		SetResource(this, RES_FUEL, start_ammo_fuel);
+		SetResource(this, RES_HEALTH, start_health);
+		SetResource(this, RES_ARMOR, start_armorvalue);
 		STAT(WEAPONS, this) = start_weapons;
 		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
 		{
@@ -1583,17 +1583,17 @@ void player_regen(entity this)
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
 
-		SetResourceAmount(this, RES_ARMOR, CalcRotRegen(GetResourceAmount(this, RES_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
+		SetResource(this, RES_ARMOR, CalcRotRegen(GetResource(this, RES_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
 									regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
 									rot_mod * frametime * (time > this.pauserotarmor_finished), limita));
-		SetResourceAmount(this, RES_HEALTH, CalcRotRegen(GetResourceAmount(this, RES_HEALTH), regen_health_stable, regen_health, regen_health_linear,
+		SetResource(this, RES_HEALTH, CalcRotRegen(GetResource(this, RES_HEALTH), regen_health_stable, regen_health, regen_health_linear,
 									regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear,
 									rot_mod * frametime * (time > this.pauserothealth_finished), limith));
 	}
 
 	// if player rotted to death...  die!
 	// check this outside above checks, as player may still be able to rot to death
-	if(GetResourceAmount(this, RES_HEALTH) < 1)
+	if(GetResource(this, RES_HEALTH) < 1)
 	{
 		if(this.vehicle)
 			vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -1609,7 +1609,7 @@ void player_regen(entity this)
 		minf = autocvar_g_balance_fuel_regenstable;
 		limitf = GetResourceLimit(this, RES_FUEL);
 
-		SetResourceAmount(this, RES_FUEL, CalcRotRegen(GetResourceAmount(this, RES_FUEL), minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, 
+		SetResource(this, RES_FUEL, CalcRotRegen(GetResource(this, RES_FUEL), minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, 
 										frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
 										maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf));
 	}
@@ -1657,15 +1657,15 @@ void SpectateCopy(entity this, entity spectatee)
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
-	SetResourceAmount(this, RES_ARMOR, GetResourceAmount(spectatee, RES_ARMOR));
-	SetResourceAmount(this, RES_CELLS, GetResourceAmount(spectatee, RES_CELLS));
-	SetResourceAmount(this, RES_PLASMA, GetResourceAmount(spectatee, RES_PLASMA));
-	SetResourceAmount(this, RES_SHELLS, GetResourceAmount(spectatee, RES_SHELLS));
-	SetResourceAmount(this, RES_BULLETS, GetResourceAmount(spectatee, RES_BULLETS));
-	SetResourceAmount(this, RES_ROCKETS, GetResourceAmount(spectatee, RES_ROCKETS));
-	SetResourceAmount(this, RES_FUEL, GetResourceAmount(spectatee, RES_FUEL));
+	SetResource(this, RES_ARMOR, GetResource(spectatee, RES_ARMOR));
+	SetResource(this, RES_CELLS, GetResource(spectatee, RES_CELLS));
+	SetResource(this, RES_PLASMA, GetResource(spectatee, RES_PLASMA));
+	SetResource(this, RES_SHELLS, GetResource(spectatee, RES_SHELLS));
+	SetResource(this, RES_BULLETS, GetResource(spectatee, RES_BULLETS));
+	SetResource(this, RES_ROCKETS, GetResource(spectatee, RES_ROCKETS));
+	SetResource(this, RES_FUEL, GetResource(spectatee, RES_FUEL));
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
-	SetResourceAmount(this, RES_HEALTH, GetResourceAmount(spectatee, RES_HEALTH));
+	SetResource(this, RES_HEALTH, GetResource(spectatee, RES_HEALTH));
 	CS(this).impulse = 0;
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
@@ -2173,7 +2173,7 @@ bool PlayerThink(entity this)
 		}
 
 		this.items_added = 0;
-		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || GetResourceAmount(this, RES_FUEL) >= 0.01))
+		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || GetResource(this, RES_FUEL) >= 0.01))
             this.items_added |= IT_FUEL;
 
 		this.items |= this.items_added;
@@ -2429,7 +2429,7 @@ void PlayerPreThink (entity this)
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
-			SetResourceAmount(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
+			SetResource(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 			if (STAT(REVIVE_PROGRESS, this) >= 1)
@@ -2438,9 +2438,9 @@ void PlayerPreThink (entity this)
 		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
-			SetResourceAmount(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
+			SetResource(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
-			if (GetResourceAmount(this, RES_HEALTH) < 1)
+			if (GetResource(this, RES_HEALTH) < 1)
 			{
 				if (this.vehicle)
 					vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -2682,7 +2682,7 @@ void PlayerPostThink (entity this)
 	}
 
 	if (this.waypointsprite_attachedforcarrier) {
-		float hp = healtharmor_maxdamage(GetResourceAmount(this, RES_HEALTH), GetResourceAmount(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x;
+		float hp = healtharmor_maxdamage(GetResource(this, RES_HEALTH), GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x;
 		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, hp);
 	}
 

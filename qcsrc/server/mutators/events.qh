@@ -703,14 +703,14 @@ MUTATOR_HOOKABLE(GetResourceLimit, EV_GetResourceLimit);
 
 /** Called when the amount of resource of an entity changes. See RES_*
 constants for resource types. Return true to forbid the change. */
-#define EV_SetResourceAmount(i, o) \
+#define EV_SetResource(i, o) \
 	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
 	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
 	/**/                  o(int, MUTATOR_ARGV_1_int) \
 	/** amount */         i(float, MUTATOR_ARGV_2_float) \
 	/**/                  o(float, MUTATOR_ARGV_2_float) \
 	/**/
-MUTATOR_HOOKABLE(SetResourceAmount, EV_SetResourceAmount);
+MUTATOR_HOOKABLE(SetResource, EV_SetResource);
 
 /** Called after the amount of resource of an entity has changed. See RES_*
 constants for resource types. Amount wasted is the amount of resource that is

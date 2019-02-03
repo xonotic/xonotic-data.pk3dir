@@ -591,9 +591,9 @@ void MapVote_Tick()
 	int totalvotes = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		// hide scoreboard again
-		if(GetResourceAmount(it, RES_HEALTH) != 2342)
+		if(GetResource(it, RES_HEALTH) != 2342)
 		{
-			SetResourceAmount(it, RES_HEALTH, 2342);
+			SetResource(it, RES_HEALTH, 2342);
 			CS(it).impulse = 0;
 
 			msg_entity = it;

@@ -88,25 +88,25 @@ void target_init_use(entity this, entity actor, entity trigger)
 {
 	if (!(this.spawnflags & 1))
 	{
-		SetResourceAmount(actor, RES_ARMOR, start_armorvalue);
+		SetResource(actor, RES_ARMOR, start_armorvalue);
 		actor.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot;
 	}
 
 	if (!(this.spawnflags & 2))
 	{
-		SetResourceAmount(actor, RES_HEALTH, start_health);
+		SetResource(actor, RES_HEALTH, start_health);
 		actor.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot;
 		actor.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 	}
 
 	if (!(this.spawnflags & 4))
 	{
-		SetResourceAmount(actor, RES_SHELLS, start_ammo_shells);
-		SetResourceAmount(actor, RES_BULLETS, start_ammo_nails);
-		SetResourceAmount(actor, RES_ROCKETS, start_ammo_rockets);
-		SetResourceAmount(actor, RES_CELLS, start_ammo_cells);
-		SetResourceAmount(actor, RES_PLASMA, start_ammo_plasma);
-		SetResourceAmount(actor, RES_FUEL, start_ammo_fuel);
+		SetResource(actor, RES_SHELLS, start_ammo_shells);
+		SetResource(actor, RES_BULLETS, start_ammo_nails);
+		SetResource(actor, RES_ROCKETS, start_ammo_rockets);
+		SetResource(actor, RES_CELLS, start_ammo_cells);
+		SetResource(actor, RES_PLASMA, start_ammo_plasma);
+		SetResource(actor, RES_FUEL, start_ammo_fuel);
 
 		STAT(WEAPONS, actor) = start_weapons;
 		if (this.spawnflags & 32)
@@ -142,33 +142,33 @@ void target_give_init(entity this)
 	IL_EACH(g_items, it.targetname == this.target,
 	{
 		if (it.classname == "weapon_devastator") {
-			SetResourceAmount(this, RES_ROCKETS, GetResourceAmount(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(devastator, ammo)); // WEAPONTODO
+			SetResource(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(devastator, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "devastator");
 		}
 		else if (it.classname == "weapon_vortex") {
-			SetResourceAmount(this, RES_CELLS, GetResourceAmount(this, RES_CELLS) + it.count * WEP_CVAR_PRI(vortex, ammo)); // WEAPONTODO
+			SetResource(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(vortex, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "vortex");
 		}
 		else if (it.classname == "weapon_electro") {
-			SetResourceAmount(this, RES_CELLS, GetResourceAmount(this, RES_CELLS) + it.count * WEP_CVAR_PRI(electro, ammo)); // WEAPONTODO
+			SetResource(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(electro, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "electro");
 		}
 		else if (it.classname == "weapon_hagar") {
-			SetResourceAmount(this, RES_ROCKETS, GetResourceAmount(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(hagar, ammo)); // WEAPONTODO
+			SetResource(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(hagar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "hagar");
 		}
 		else if (it.classname == "weapon_crylink") {
-			SetResourceAmount(this, RES_CELLS, GetResourceAmount(this, RES_CELLS) + it.count * WEP_CVAR_PRI(crylink, ammo)); // WEAPONTODO
+			SetResource(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(crylink, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "crylink");
 		}
 		else if (it.classname == "weapon_mortar") {
-			SetResourceAmount(this, RES_ROCKETS, GetResourceAmount(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
+			SetResource(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "mortar");
 		}
 		else if (it.classname == "item_armor_mega")
-			SetResourceAmount(this, RES_ARMOR, 100);
+			SetResource(this, RES_ARMOR, 100);
 		else if (it.classname == "item_health_mega")
-			SetResourceAmount(this, RES_HEALTH, 200);
+			SetResource(this, RES_HEALTH, 200);
 		//remove(it); // removing ents in init functions causes havoc, workaround:
         setthink(it, SUB_Remove);
         it.nextthink = time;

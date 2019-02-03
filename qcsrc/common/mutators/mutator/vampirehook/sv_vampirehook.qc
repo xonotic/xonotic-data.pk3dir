@@ -21,7 +21,7 @@ MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
 	if(!STAT(FROZEN, thehook.aiment))
 	if(time >= game_starttime)
 	if(DIFF_TEAM(thehook.owner, thehook.aiment) || autocvar_g_vampirehook_teamheal)
-	if(GetResourceAmount(thehook.aiment, RES_HEALTH) > 0)
+	if(GetResource(thehook.aiment, RES_HEALTH) > 0)
 	if(autocvar_g_vampirehook_damage)
 	{
 		thehook.last_dmg = time + autocvar_g_vampirehook_damagerate;
@@ -30,7 +30,7 @@ MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
 		entity targ = ((SAME_TEAM(thehook.owner, thehook.aiment)) ? thehook.aiment : thehook.owner);
 		// TODO: we can't do this due to an issue with globals and the mutator arguments
 		//Heal(targ, thehook.owner, autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
-		SetResourceAmount(targ, RES_HEALTH, min(GetResourceAmount(targ, RES_HEALTH) + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max));
+		SetResource(targ, RES_HEALTH, min(GetResource(targ, RES_HEALTH) + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max));
 
 		if(dmgent == thehook.owner)
 			TakeResource(dmgent, RES_HEALTH, autocvar_g_vampirehook_damage); // FIXME: friendly fire?!

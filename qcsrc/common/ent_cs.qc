@@ -75,9 +75,9 @@ void entcs_force_origin(entity player)
 #ifdef SVQC
 #define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, decfactor, svsend, clreceive) \
 	bool id##_check(entity ent, entity player) { \
-		return (floor(GetResourceAmount(ent, checkprop) / decfactor) != floor(GetResourceAmount(player, checkprop) / decfactor)); \
+		return (floor(GetResource(ent, checkprop) / decfactor) != floor(GetResource(player, checkprop) / decfactor)); \
 	} \
-	void id##_set(entity ent, entity player) { SetResourceAmount(ent, checkprop, GetResourceAmount(player, checkprop)); } \
+	void id##_set(entity ent, entity player) { SetResource(ent, checkprop, GetResource(player, checkprop)); } \
 	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
 		this.m_public = ispublic; \
@@ -118,12 +118,12 @@ ENTCS_PROP_CODED(ANGLES, false, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
 // FIXME: use a better scale?
 #define DEC_FACTOR 10
 ENTCS_PROP_RESOURCE(HEALTH, false, RES_HEALTH, ENTCS_SET_NORMAL, DEC_FACTOR,
-	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RES_HEALTH) / DEC_FACTOR, 255)); },
+	{ WriteByte(chan, bound(0, GetResource(ent, RES_HEALTH) / DEC_FACTOR, 255)); },
 	{ ent.healthvalue = ReadByte() * DEC_FACTOR; })
 
 ENTCS_PROP_RESOURCE(ARMOR, false, RES_ARMOR, ENTCS_SET_NORMAL, DEC_FACTOR,
-	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RES_ARMOR) / DEC_FACTOR, 255)); },
-	{ SetResourceAmount(ent, RES_ARMOR, ReadByte() * DEC_FACTOR); })
+	{ WriteByte(chan, bound(0, GetResource(ent, RES_ARMOR) / DEC_FACTOR, 255)); },
+	{ SetResource(ent, RES_ARMOR, ReadByte() * DEC_FACTOR); })
 #undef DEC_FACTOR
 
 ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,

@@ -190,7 +190,7 @@ void dompointtouch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
 		return;
-	if(GetResourceAmount(toucher, RES_HEALTH) < 1)
+	if(GetResource(toucher, RES_HEALTH) < 1)
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())

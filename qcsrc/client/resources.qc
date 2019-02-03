@@ -5,12 +5,12 @@
 /// \brief Source file that contains implementation of the resource system.
 /// \copyright GNU GPLv2 or any later version.
 
-float GetResourceAmount(entity e, int res_type)
+float GetResource(entity e, int res_type)
 {
 	return e.(GetResourceField(res_type));
 }
 
-void SetResourceAmount(entity e, int res_type, float amount)
+void SetResource(entity e, int res_type, float amount)
 {
 	e.(GetResourceField(res_type)) = amount;
 }
@@ -21,7 +21,7 @@ void TakeResource(entity receiver, int res_type, float amount)
 	{
 		return;
 	}
-	SetResourceAmount(receiver, res_type, GetResourceAmount(receiver, res_type) - amount);
+	SetResource(receiver, res_type, GetResource(receiver, res_type) - amount);
 }
 
 void TakeResourceWithLimit(entity receiver, int res_type, float amount, float limit)
@@ -30,7 +30,7 @@ void TakeResourceWithLimit(entity receiver, int res_type, float amount, float li
 	{
 		return;
 	}
-	float current_amount = GetResourceAmount(receiver, res_type);
+	float current_amount = GetResource(receiver, res_type);
 	if (current_amount - amount < limit)
 	{
 		amount = limit + current_amount;

@@ -34,7 +34,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     {
         if (this.max_health)
         {
-            WriteByte(MSG_ENTITY, (GetResourceAmount(this, RES_HEALTH) / this.max_health) * 191.0);
+            WriteByte(MSG_ENTITY, (GetResource(this, RES_HEALTH) / this.max_health) * 191.0);
         }
         else
         {
@@ -130,7 +130,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
         int t = ReadByte();
         if (t < 192)
         {
-            SetResourceAmount(this, RES_HEALTH, t / 191.0);
+            SetResource(this, RES_HEALTH, t / 191.0);
             this.build_finished = 0;
         }
         else
@@ -138,7 +138,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
             t = (t - 192) * 256 + ReadByte();
             this.build_started = servertime;
             if (this.build_finished)
-                this.build_starthealth = bound(0, GetResourceAmount(this, RES_HEALTH), 1);
+                this.build_starthealth = bound(0, GetResource(this, RES_HEALTH), 1);
             else
                 this.build_starthealth = 0;
             this.build_finished = servertime + t / 32;
@@ -146,7 +146,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
     }
     else
     {
-        SetResourceAmount(this, RES_HEALTH, -1);
+        SetResource(this, RES_HEALTH, -1);
         this.build_finished = 0;
     }
 
@@ -548,7 +548,7 @@ void Draw_WaypointSprite(entity this)
         LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
     }
 
-    float health_val = GetResourceAmount(this, RES_HEALTH);
+    float health_val = GetResource(this, RES_HEALTH);
     float blink_time = (health_val >= 0) ? (health_val * 10) : time;
     if (blink_time - floor(blink_time) > 0.5)
     {
@@ -652,14 +652,14 @@ void Draw_WaypointSprite(entity this)
         if (time < this.build_finished + 0.25)
         {
             if (time < this.build_started)
-                SetResourceAmount(this, RES_HEALTH, this.build_starthealth);
+                SetResource(this, RES_HEALTH, this.build_starthealth);
             else if (time < this.build_finished)
-                SetResourceAmount(this, RES_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
+                SetResource(this, RES_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
             else
-                SetResourceAmount(this, RES_HEALTH, 1);
+                SetResource(this, RES_HEALTH, 1);
         }
         else
-            SetResourceAmount(this, RES_HEALTH, -1);
+            SetResource(this, RES_HEALTH, -1);
     }
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
@@ -707,7 +707,7 @@ void Draw_WaypointSprite(entity this)
     }
 
     draw_beginBoldFont();
-    if (GetResourceAmount(this, RES_HEALTH) >= 0)
+    if (GetResource(this, RES_HEALTH) >= 0)
     {
         float align = 0, marg;
         if (this.build_finished)
@@ -724,7 +724,7 @@ void Draw_WaypointSprite(entity this)
         drawhealthbar(
                 o,
                 0,
-                GetResourceAmount(this, RES_HEALTH),
+                GetResource(this, RES_HEALTH),
                 '0 0 0',
                 '0 0 0',
                 SPRITE_HEALTHBAR_WIDTH * t,
@@ -830,9 +830,9 @@ void WaypointSprite_UpdateHealth(entity e, float f)
 {
     f = bound(0, f, e.max_health);
     float step = e.max_health / 40;
-    if ((floor(f / step) != floor(GetResourceAmount(e, RES_HEALTH) / step)) || e.pain_finished)
+    if ((floor(f / step) != floor(GetResource(e, RES_HEALTH) / step)) || e.pain_finished)
     {
-        SetResourceAmount(e, RES_HEALTH, f);
+        SetResource(e, RES_HEALTH, f);
         e.pain_finished = 0;
         e.SendFlags |= 0x80;
     }
@@ -1159,10 +1159,10 @@ entity WaypointSprite_AttachCarrier(
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
     entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', NULL, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
-    if (GetResourceAmount(carrier, RES_HEALTH))
+    if (GetResource(carrier, RES_HEALTH))
     {
         WaypointSprite_UpdateMaxHealth(e, 2 * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
-        WaypointSprite_UpdateHealth(e, healtharmor_maxdamage(GetResourceAmount(carrier, RES_HEALTH), GetResourceAmount(carrier, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
+        WaypointSprite_UpdateHealth(e, healtharmor_maxdamage(GetResource(carrier, RES_HEALTH), GetResource(carrier, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
     }
     return e;
 }
