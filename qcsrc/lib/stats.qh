@@ -131,7 +131,7 @@ REGISTRY(Stats, 256 - STATS_ENGINE_RESERVE)
 REGISTER_REGISTRY(Stats)
 REGISTRY_SORT(Stats)
 REGISTRY_CHECK(Stats)
-STATIC_INIT(RegisterStats_renumber)
+STATIC_INIT(Stats_renumber)
 {
 	FOREACH(Stats, true, {
 		it.m_id = STATS_ENGINE_RESERVE + i;

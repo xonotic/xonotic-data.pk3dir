@@ -10,12 +10,12 @@ REGISTRY(EntCSProps, BITS(16) - 1)
 REGISTER_REGISTRY(EntCSProps)
 REGISTRY_SORT(EntCSProps)
 REGISTRY_CHECK(EntCSProps)
-STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
+STATIC_INIT(EntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
 
 // these entcs_props ids need to be referenced directly
 int ENTCS_PROP_ENTNUM_id = 0;
 int ENTCS_PROP_ORIGIN_id = 0;
-STATIC_INIT(RegisterEntCSProps_setglobalids)
+STATIC_INIT(EntCSProps_setglobalids)
 {
 	FOREACH(EntCSProps, true, {
 		if (it.registered_id == "ENTCS_PROP_ENTNUM")
