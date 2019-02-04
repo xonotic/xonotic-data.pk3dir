@@ -52,6 +52,14 @@ REGISTRY(Registries, BITS(8))
 /** registered item identifier */
 .string registered_id;
 
+void _regCheck(int i, int _max)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	// (this very long line would be repeated literally thousands times!)
+	if (i >= _max)
+		LOG_FATALF("Registry capacity exceeded (%d)", _max);
+}
+
 /**
  * Register a new entity with a registry.
  * Must be followed by a semicolon or a function body with a `this` parameter.
@@ -79,7 +87,7 @@ REGISTRY(Registries, BITS(8))
 	{ \
 		entity this = id; \
 		if (this == NULL) { \
-			if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
+			_regCheck(registry##_COUNT, registry##_MAX); \
 			this = id = inst; \
 			this.registered_id = #id; \
 			REGISTRY_PUSH(registry, fld, this); \
