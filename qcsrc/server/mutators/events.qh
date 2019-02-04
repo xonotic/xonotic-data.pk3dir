@@ -733,7 +733,8 @@ of resource that is above resource limit so it was not given. */
 MUTATOR_HOOKABLE(ResourceWasted, EV_ResourceWasted);
 
 /** Called when entity is being given some resource. See RES_* constants
-for resource types. Return true to forbid giving. */
+for resource types. Return true to forbid giving.
+NOTE: This hook is also called by GiveResourceWithLimit */
 #define EV_GiveResource(i, o) \
 	/** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
 	/** resource type */ i(int, MUTATOR_ARGV_1_int) \
@@ -757,7 +758,8 @@ RES_* constants for resource types. Return true to forbid giving. */
 MUTATOR_HOOKABLE(GiveResourceWithLimit, EV_GiveResourceWithLimit);
 
 /** Called when some resource is being taken from an entity. See RES_* constants
-for resource types. Return true to forbid giving. */
+for resource types. Return true to forbid giving.
+NOTE: This hook is also called by TakeResourceWithLimit */
 #define EV_TakeResource(i, o) \
     /** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
     /** resource type */ i(int, MUTATOR_ARGV_1_int) \
