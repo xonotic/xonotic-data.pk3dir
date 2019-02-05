@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-29 15:32+0000\n"
+"PO-Revision-Date: 2019-02-05 01:06+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -9451,7 +9451,7 @@ msgstr "Присоединился:"
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
-msgstr "Последний матч"
+msgstr "Последний матч:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
