@@ -220,6 +220,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			_("Fade coronas according to visibility")));
 			setDependent(e, "r_coronas", 1, 1);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_sRGB", _("Use sRGB color space")));
+			makeMulti(e, "mod_q3bsp_sRGBlightmaps");
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_bloom", _("Bloom"),
 			_("Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance.")));
