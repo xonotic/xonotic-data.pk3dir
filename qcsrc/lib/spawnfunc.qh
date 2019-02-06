@@ -221,6 +221,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_VEC(fld, velocity) \
 		/**/
 
+ERASEABLE
 void _checkWhitelisted(entity this, string id)
 {
 	for (int i = 0, n = numentityfields(); i < n; ++i)
