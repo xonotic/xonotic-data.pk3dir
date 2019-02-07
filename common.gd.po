@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# GunChleoc, 2017-2018
+# GunChleoc, 2017-2019
 # GunChleoc, 2017
 # GunChleoc, 2017
 msgid ""
@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-02-06 18:19+0000\n"
+"Last-Translator: GunChleoc\n"
 "Language-Team: Gaelic, Scottish (http://www.transifex.com/team-xonotic/"
 "xonotic/language/gd/)\n"
 "Language: gd\n"
@@ -26,11 +26,12 @@ msgstr ""
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
 msgstr ""
+"^2Chaidh às-phortadh gu %s! (An aire: Chaidh a shàbhaladh ann an data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Cha b’ urrainn dhuinn sgrìobhadh gu %s"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -208,11 +209,11 @@ msgstr "^3ALT ^7+ ^3IUCHRAICHEAN SAIGHDE ^7airson mion-ghleusadh."
 
 #: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Personal best"
-msgstr ""
+msgstr "As fheàrr gu pearsanta"
 
 #: qcsrc/client/hud/panel/modicons.qc:586
 msgid "Server best"
-msgstr ""
+msgstr "As fheàrr air an fhrithealaiche"
 
 #: qcsrc/client/hud/panel/notify.qc:117 qcsrc/client/hud/panel/notify.qc:118
 #: qcsrc/client/hud/panel/score.qc:63
@@ -238,11 +239,11 @@ msgstr "Lean air adhart…"
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "Cabadaich"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Cuir teachdaireachd phoblach gu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
@@ -266,7 +267,7 @@ msgstr "sin sibh / gura math a thèid leibh is gabhaibh tlachd"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Cuir sa Bheurla"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
@@ -522,23 +523,23 @@ msgstr "Loidhne crìochnachaidh"
 #: qcsrc/client/hud/panel/racetimer.qc:82
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
+msgstr "Eadar-mheadhanach %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:151
 msgid "^1Intermediate 1 (+15.42)"
-msgstr ""
+msgstr "^1adar-mheadhanach 1 (+15.42)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154
 #: qcsrc/client/hud/panel/racetimer.qc:200
 #: qcsrc/client/hud/panel/racetimer.qc:250
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^1PEANAS: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:252
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^2PEANAS: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "Number of ball carrier kills"
@@ -646,11 +647,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^fps"
-msgstr ""
+msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "Number of kills minus suicides"
@@ -729,15 +730,15 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "Player name"
-msgstr ""
+msgstr "Ainm a’ chluicheadair"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^name"
-msgstr ""
+msgstr "SCO^ainm"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^nick"
-msgstr ""
+msgstr "SCO^far-ainm"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "Number of objectives destroyed"
@@ -758,15 +759,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "Ping time"
-msgstr ""
+msgstr "Ùine a’ ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "SCO^ping"
-msgstr ""
+msgstr "SCO^ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "Packet loss"
-msgstr ""
+msgstr "Call phacaidean"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "SCO^pl"
@@ -875,7 +876,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:312
 msgid "Usage:"
-msgstr ""
+msgstr "Cleachdadh:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:314
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
@@ -1053,7 +1054,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:67
 msgid "WARMUP"
-msgstr ""
+msgstr "BLÀTHACHADH"
 
 #: qcsrc/client/hud/panel/vote.qc:27
 msgid "^1You must answer before entering hud configure mode"
