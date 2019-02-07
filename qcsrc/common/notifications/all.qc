@@ -777,10 +777,7 @@ void Notification_GetCvars(entity this)
 /** used to output notifications.cfg file */
 void Dump_Notifications(int fh, bool alsoprint)
 {
-	#define NOTIF_WRITE(a) MACRO_BEGIN \
-		fputs(fh, a); \
-		if (alsoprint) LOG_INFO(a); \
-	MACRO_END
+	#define NOTIF_WRITE(str) write_String_To_File(fh, str, alsoprint)
 
 	#define NOTIF_WRITE_ENTITY(e, description) MACRO_BEGIN \
 		string notif_msg = sprintf( \
