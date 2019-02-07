@@ -779,31 +779,25 @@ void Dump_Notifications(int fh, bool alsoprint)
 {
 	#define NOTIF_WRITE(str) write_String_To_File(fh, str, alsoprint)
 
-	#define NOTIF_WRITE_ENTITY(e, description) MACRO_BEGIN \
-		string notif_msg = sprintf( \
+	#define NOTIF_WRITE_ENTITY(e, description) \
+		NOTIF_WRITE(sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n", \
 			Get_Notif_CvarName(e), e.nent_default, description \
-		); \
-		NOTIF_WRITE(notif_msg); \
-	MACRO_END
+		))
 
-	#define NOTIF_WRITE_ENTITY_CHOICE(e, descriptiona, descriptionb) MACRO_BEGIN \
-		string notif_msg = sprintf( \
+	#define NOTIF_WRITE_ENTITY_CHOICE(e, descriptiona, descriptionb) \
+		NOTIF_WRITE(sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n" \
 			"seta notification_%s_ALLOWED \"%d\" \"%s\"\n", \
 			Get_Notif_CvarName(e), e.nent_default, descriptiona, \
 			Get_Notif_CvarName(e), e.nent_challow_def, descriptionb \
-		); \
-		NOTIF_WRITE(notif_msg); \
-	MACRO_END
+		))
 
-	#define NOTIF_WRITE_HARDCODED(cvar, default, description) MACRO_BEGIN \
-		string notif_msg = sprintf( \
+	#define NOTIF_WRITE_HARDCODED(cvar, default, description) \
+		NOTIF_WRITE(sprintf( \
 			"seta notification_%s \"%s\" \"%s\"\n", \
 			cvar, default, description \
-		); \
-		NOTIF_WRITE(notif_msg); \
-	MACRO_END
+		))
 
 	// Note: This warning only applies to the notifications.cfg file that is output...
 	// You ARE supposed to manually edit this function to add i.e. hard coded
