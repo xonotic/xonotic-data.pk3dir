@@ -794,10 +794,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 		))
 
 	#define NOTIF_WRITE_HARDCODED(cvar, default, description) \
-		NOTIF_WRITE(sprintf( \
-			"seta notification_%s \"%s\" \"%s\"\n", \
-			cvar, default, description \
-		))
+		NOTIF_WRITE("seta notification_" cvar " \"" default "\" \"" description "\"\n")
 
 	// Note: This warning only applies to the notifications.cfg file that is output...
 	// You ARE supposed to manually edit this function to add i.e. hard coded
