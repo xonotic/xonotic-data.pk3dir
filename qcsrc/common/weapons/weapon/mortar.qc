@@ -176,7 +176,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Mortar_Grenade_Touch1);
 
 	gren.takedamage = DAMAGE_YES;
-	SetResource(gren, RES_HEALTH, WEP_CVAR_PRI(mortar, health));
+	SetResourceExplicit(gren, RES_HEALTH, WEP_CVAR_PRI(mortar, health));
 	gren.damageforcescale = WEP_CVAR_PRI(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;
@@ -227,7 +227,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Mortar_Grenade_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
-	SetResource(gren, RES_HEALTH, WEP_CVAR_SEC(mortar, health));
+	SetResourceExplicit(gren, RES_HEALTH, WEP_CVAR_SEC(mortar, health));
 	gren.damageforcescale = WEP_CVAR_SEC(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;

@@ -325,14 +325,14 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 void M_Mage_Defend_Shield_Remove(entity this)
 {
 	this.effects &= ~(EF_ADDITIVE | EF_BLUE);
-	SetResource(this, RES_ARMOR, autocvar_g_monsters_armor_blockpercent);
+	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monsters_armor_blockpercent);
 }
 
 void M_Mage_Defend_Shield(entity this)
 {
 	this.effects |= (EF_ADDITIVE | EF_BLUE);
 	this.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
-	SetResource(this, RES_ARMOR, autocvar_g_monster_mage_shield_blockpercent);
+	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monster_mage_shield_blockpercent);
 	this.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
 	setanim(this, this.anim_shoot, true, true, true);
 	this.attack_finished_single[0] = time + 1;
@@ -469,7 +469,7 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 {
     TC(Mage, this);
-    if(!GetResource(this, RES_HEALTH)) SetResource(actor, RES_HEALTH, autocvar_g_monster_mage_health);
+    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_mage_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_mage_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_mage_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }

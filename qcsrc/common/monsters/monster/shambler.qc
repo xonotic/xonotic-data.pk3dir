@@ -136,7 +136,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	settouch(gren, M_Shambler_Attack_Lightning_Touch);
 
 	gren.takedamage = DAMAGE_YES;
-	SetResource(gren, RES_HEALTH, 50);
+	SetResourceExplicit(gren, RES_HEALTH, 50);
 	gren.damageforcescale = 0;
 	gren.event_damage = M_Shambler_Attack_Lightning_Damage;
 	gren.damagedbycontents = true;
@@ -246,7 +246,7 @@ METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
 METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 {
     TC(Shambler, this);
-    if(!GetResource(this, RES_HEALTH)) SetResource(actor, RES_HEALTH, autocvar_g_monster_shambler_health);
+    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_shambler_health);
     if(!actor.attack_range) actor.attack_range = 150;
     if(!actor.speed) { actor.speed = (autocvar_g_monster_shambler_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_shambler_speed_run); }

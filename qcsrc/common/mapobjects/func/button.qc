@@ -83,7 +83,7 @@ void button_blocked(entity this, entity blocker)
 
 void button_fire(entity this)
 {
-	SetResource(this, RES_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	this.takedamage = DAMAGE_NO;    // will be reset upon return
 
 	if (this.state == STATE_UP || this.state == STATE_TOP)
@@ -100,7 +100,7 @@ void button_fire(entity this)
 
 void button_reset(entity this)
 {
-	SetResource(this, RES_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	setorigin(this, this.pos1);
 	this.frame = 0;			// use normal textures
 	this.state = STATE_BOTTOM;

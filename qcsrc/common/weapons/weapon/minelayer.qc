@@ -27,7 +27,7 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	newmine.takedamage = this.takedamage;
 	newmine.damageforcescale = this.damageforcescale;
-	SetResource(newmine, RES_HEALTH, GetResource(this, RES_HEALTH));
+	SetResourceExplicit(newmine, RES_HEALTH, GetResource(this, RES_HEALTH));
 	newmine.event_damage = this.event_damage;
 	newmine.spawnshieldtime = this.spawnshieldtime;
 	newmine.damagedbycontents = true;
@@ -289,7 +289,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	mine.takedamage = DAMAGE_YES;
 	mine.damageforcescale = WEP_CVAR(minelayer, damageforcescale);
-	SetResource(mine, RES_HEALTH, WEP_CVAR(minelayer, health));
+	SetResourceExplicit(mine, RES_HEALTH, WEP_CVAR(minelayer, health));
 	mine.event_damage = W_MineLayer_Damage;
 	mine.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, mine);

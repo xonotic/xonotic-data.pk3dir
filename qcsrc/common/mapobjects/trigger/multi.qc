@@ -7,7 +7,7 @@ void multi_wait(entity this)
 {
 	if (this.max_health)
 	{
-		SetResource(this, RES_HEALTH, this.max_health);
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
 	}
@@ -135,7 +135,7 @@ void multi_reset(entity this)
 		settouch(this, multi_touch);
 	if (this.max_health)
 	{
-		SetResource(this, RES_HEALTH, this.max_health);
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
 	}

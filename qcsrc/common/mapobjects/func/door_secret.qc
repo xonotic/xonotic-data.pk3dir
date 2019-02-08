@@ -13,7 +13,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	float temp;
 	string message_save;
 
-	SetResource(this, RES_HEALTH, 10000);
+	SetResourceExplicit(this, RES_HEALTH, 10000);
 	if(!this.bot_attack)
 		IL_PUSH(g_bot_targets, this);
 	this.bot_attack = true;
@@ -122,7 +122,7 @@ void fd_secret_done(entity this)
 {
 	if (this.spawnflags&DOOR_SECRET_YES_SHOOT)
 	{
-		SetResource(this, RES_HEALTH, 10000);
+		SetResourceExplicit(this, RES_HEALTH, 10000);
 		this.takedamage = DAMAGE_YES;
 		//this.th_pain = fd_secret_use;
 	}
@@ -168,7 +168,7 @@ void secret_reset(entity this)
 {
 	if (this.spawnflags & DOOR_SECRET_YES_SHOOT)
 	{
-		SetResource(this, RES_HEALTH, 10000);
+		SetResourceExplicit(this, RES_HEALTH, 10000);
 		this.takedamage = DAMAGE_YES;
 	}
 	setorigin(this, this.oldorigin);
@@ -253,7 +253,7 @@ spawnfunc(func_door_secret)
 	if (this.spawnflags & DOOR_SECRET_YES_SHOOT)
 	{
 		//this.canteamdamage = true; // TODO
-		SetResource(this, RES_HEALTH, 10000);
+		SetResourceExplicit(this, RES_HEALTH, 10000);
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = fd_secret_damage;
 	}

@@ -49,7 +49,7 @@ PROPERTY(int, g_pickup_nails);
 void ammo_bullets_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_BULLETS))
-        SetResource(item, RES_BULLETS, g_pickup_nails);
+        SetResourceExplicit(item, RES_BULLETS, g_pickup_nails);
 }
 #endif
 
@@ -83,7 +83,7 @@ PROPERTY(int, g_pickup_cells);
 void ammo_cells_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_CELLS))
-        SetResource(item, RES_CELLS, g_pickup_cells);
+        SetResourceExplicit(item, RES_CELLS, g_pickup_cells);
 }
 #endif
 REGISTER_ITEM(Cells, Ammo) {
@@ -113,7 +113,7 @@ PROPERTY(int, g_pickup_plasma);
 void ammo_plasma_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_PLASMA))
-        SetResource(item, RES_PLASMA, g_pickup_plasma);
+        SetResourceExplicit(item, RES_PLASMA, g_pickup_plasma);
 }
 #endif
 REGISTER_ITEM(Plasma, Ammo) {
@@ -143,7 +143,7 @@ PROPERTY(int, g_pickup_rockets);
 void ammo_rockets_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_ROCKETS))
-        SetResource(item, RES_ROCKETS, g_pickup_rockets);
+        SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
 }
 #endif
 REGISTER_ITEM(Rockets, Ammo) {
@@ -173,7 +173,7 @@ PROPERTY(int, g_pickup_shells);
 void ammo_shells_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_SHELLS))
-        SetResource(item, RES_SHELLS, g_pickup_shells);
+        SetResourceExplicit(item, RES_SHELLS, g_pickup_shells);
 }
 #endif
 

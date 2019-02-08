@@ -17,7 +17,7 @@ STATIC_INIT(g_assault)
 void assault_objective_use(entity this, entity actor, entity trigger)
 {
 	// activate objective
-	SetResource(this, RES_HEALTH, 100);
+	SetResourceExplicit(this, RES_HEALTH, 100);
 	//print("^2Activated objective ", this.targetname, "=", etos(this), "\n");
 	//print("Activator is ", actor.classname, "\n");
 
@@ -39,7 +39,7 @@ vector target_objective_spawn_evalfunc(entity this, entity player, entity spot, 
 // and when a new round starts
 void assault_objective_reset(entity this)
 {
-	SetResource(this, RES_HEALTH, ASSAULT_VALUE_INACTIVE);
+	SetResourceExplicit(this, RES_HEALTH, ASSAULT_VALUE_INACTIVE);
 }
 
 // decrease the health of targeted objectives
@@ -72,7 +72,7 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 		{
 			GameRules_scoring_add_team(actor, SCORE, hlth);
 			GameRules_scoring_add_team(actor, ASSAULT_OBJECTIVES, 1);
-			SetResource(this.enemy, RES_HEALTH, -1);
+			SetResourceExplicit(this.enemy, RES_HEALTH, -1);
 
 			if(this.enemy.message)
 				FOREACH_CLIENT(IS_PLAYER(it), { centerprint(it, this.enemy.message); });
@@ -323,7 +323,7 @@ spawnfunc(target_objective_decrease)
 		this.dmg = 101;
 
 	this.use = assault_objective_decrease_use;
-	SetResource(this, RES_HEALTH, ASSAULT_VALUE_INACTIVE);
+	SetResourceExplicit(this, RES_HEALTH, ASSAULT_VALUE_INACTIVE);
 	this.max_health = ASSAULT_VALUE_INACTIVE;
 	this.enemy = NULL;
 

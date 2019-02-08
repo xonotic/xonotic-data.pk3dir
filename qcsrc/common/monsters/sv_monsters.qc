@@ -531,7 +531,7 @@ void Monster_Dead_Fade(entity this)
 		this.takedamage = DAMAGE_NO;
 		setorigin(this, this.pos1);
 		this.angles = this.pos2;
-		SetResource(this, RES_HEALTH, this.max_health);
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		setmodel(this, MDL_Null);
 	}
 	else
@@ -898,7 +898,7 @@ void Monster_Reset(entity this)
 
 	Unfreeze(this, false); // remove any icy remains
 
-	SetResource(this, RES_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	this.velocity = '0 0 0';
 	this.enemy = NULL;
 	this.goalentity = NULL;
@@ -1164,7 +1164,7 @@ void Monster_Frozen_Think(entity this)
 	if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
-		SetResource(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
+		SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
 		this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
@@ -1176,7 +1176,7 @@ void Monster_Frozen_Think(entity this)
 	else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - this.ticrate * this.revive_speed, 1);
-		SetResource(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
+		SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
 			WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
@@ -1254,8 +1254,8 @@ bool Monster_Spawn_Setup(entity this)
 	mon.mr_setup(mon, this);
 
 	// ensure some basic needs are met
-	if(!GetResource(this, RES_HEALTH)) { SetResource(this, RES_HEALTH, 100); }
-	if(!GetResource(this, RES_ARMOR)) { SetResource(this, RES_ARMOR, bound(0.2, 0.5 * MONSTER_SKILLMOD(this), 0.9)); }
+	if(!GetResource(this, RES_HEALTH)) { SetResourceExplicit(this, RES_HEALTH, 100); }
+	if(!GetResource(this, RES_ARMOR)) { SetResourceExplicit(this, RES_ARMOR, bound(0.2, 0.5 * MONSTER_SKILLMOD(this), 0.9)); }
 	if(!this.target_range) { this.target_range = autocvar_g_monsters_target_range; }
 	if(!this.respawntime) { this.respawntime = autocvar_g_monsters_respawn_delay; }
 	if(!this.monster_moveflags) { this.monster_moveflags = MONSTER_MOVE_WANDER; }
@@ -1265,7 +1265,7 @@ bool Monster_Spawn_Setup(entity this)
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		Monster_Miniboss_Check(this);
-		SetResource(this, RES_HEALTH, GetResource(this, RES_HEALTH) * MONSTER_SKILLMOD(this));
+		SetResourceExplicit(this, RES_HEALTH, GetResource(this, RES_HEALTH) * MONSTER_SKILLMOD(this));
 
 		if(!this.skin)
 			this.skin = rint(random() * 4);

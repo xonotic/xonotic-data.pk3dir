@@ -593,7 +593,7 @@ void MapVote_Tick()
 		// hide scoreboard again
 		if(GetResource(it, RES_HEALTH) != 2342)
 		{
-			SetResource(it, RES_HEALTH, 2342);
+			SetResourceExplicit(it, RES_HEALTH, 2342);
 			CS(it).impulse = 0;
 
 			msg_entity = it;

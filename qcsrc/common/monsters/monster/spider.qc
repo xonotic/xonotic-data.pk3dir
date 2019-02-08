@@ -151,7 +151,7 @@ void M_Spider_Attack_Web(entity this)
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_NO;
 	proj.damageforcescale = 0;
-	SetResource(proj, RES_HEALTH, 500);
+	SetResourceExplicit(proj, RES_HEALTH, 500);
 	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
@@ -227,7 +227,7 @@ METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 {
     TC(Spider, this);
-    if(!GetResource(this, RES_HEALTH)) SetResource(actor, RES_HEALTH, autocvar_g_monster_spider_health);
+    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_spider_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_spider_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spider_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }

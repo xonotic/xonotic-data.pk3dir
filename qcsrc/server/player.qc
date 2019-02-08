@@ -93,8 +93,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.dphitcontentsmask = this.dphitcontentsmask;
 	clone.death_time = this.death_time;
 	clone.pain_finished = this.pain_finished;
-	SetResource(clone, RES_HEALTH, GetResource(this, RES_HEALTH));
-	SetResource(clone, RES_ARMOR, GetResource(this, RES_ARMOR));
+	SetResourceExplicit(clone, RES_HEALTH, GetResource(this, RES_HEALTH));
+	SetResourceExplicit(clone, RES_ARMOR, GetResource(this, RES_ARMOR));
 	clone.armortype = this.armortype;
 	clone.model = this.model;
 	clone.modelindex = this.modelindex;

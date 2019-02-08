@@ -91,7 +91,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR_PRI(hagar, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	SetResource(missile, RES_HEALTH, WEP_CVAR_PRI(hagar, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_PRI(hagar, health));
 	missile.damageforcescale = WEP_CVAR_PRI(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
@@ -137,7 +137,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	SetResource(missile, RES_HEALTH, WEP_CVAR_SEC(hagar, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_SEC(hagar, health));
 	missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
@@ -200,7 +200,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 		missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
 		missile.takedamage = DAMAGE_YES;
-		SetResource(missile, RES_HEALTH, WEP_CVAR_SEC(hagar, health));
+		SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_SEC(hagar, health));
 		missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 		missile.event_damage = W_Hagar_Damage;
 		missile.damagedbycontents = true;

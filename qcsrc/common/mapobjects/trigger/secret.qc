@@ -73,7 +73,7 @@ spawnfunc(trigger_secret)
 	this.targetname = "";
 
 	// you can't just shoot a room to find it, can you?
-	SetResource(this, RES_HEALTH, 0);
+	SetResourceExplicit(this, RES_HEALTH, 0);
 
 	// a secret can not be delayed
 	this.delay = 0;

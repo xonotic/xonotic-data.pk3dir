@@ -540,7 +540,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 
 	if (GetResource(this, RES_HEALTH) >= this.max_health)
 	{
-		SetResource(this, RES_HEALTH, this.max_health);
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		this.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
 		setthink(this, ons_ControlPoint_Icon_Think);
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
@@ -588,7 +588,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
-	SetResource(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
+	SetResourceExplicit(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
 	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
@@ -998,7 +998,7 @@ void ons_GeneratorThink(entity this)
 void ons_GeneratorReset(entity this)
 {
 	this.team = this.team_saved;
-	SetResource(this, RES_HEALTH, autocvar_g_onslaught_gen_health);
+	SetResourceExplicit(this, RES_HEALTH, autocvar_g_onslaught_gen_health);
 	this.lasthealth = this.max_health = autocvar_g_onslaught_gen_health;
 	this.takedamage = DAMAGE_AIM;
 	this.bot_attack = true;
@@ -1066,7 +1066,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	IL_PUSH(g_saved_team, gen);
 	set_movetype(gen, MOVETYPE_NONE);
 	gen.lasthealth = gen.max_health = autocvar_g_onslaught_gen_health;
-	SetResource(gen, RES_HEALTH, autocvar_g_onslaught_gen_health);
+	SetResourceExplicit(gen, RES_HEALTH, autocvar_g_onslaught_gen_health);
 	gen.takedamage = DAMAGE_AIM;
 	gen.bot_attack = true;
 	IL_PUSH(g_bot_targets, gen);

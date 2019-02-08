@@ -282,7 +282,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	{
 		proj.takedamage	   = DAMAGE_AIM;
 		proj.event_damage	 = vehicles_projectile_damage;
-		SetResource(proj, RES_HEALTH, _health);
+		SetResourceExplicit(proj, RES_HEALTH, _health);
 	}
 	else
 		proj.flags |= FL_NOTARGET;

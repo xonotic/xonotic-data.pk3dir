@@ -20,7 +20,7 @@ PROPERTY(int, g_pickup_fuel_jetpack);
 void powerup_jetpack_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_FUEL))
-        SetResource(item, RES_FUEL, g_pickup_fuel_jetpack);
+        SetResourceExplicit(item, RES_FUEL, g_pickup_fuel_jetpack);
 }
 #endif
 
@@ -58,7 +58,7 @@ PROPERTY(int, g_pickup_fuel);
 void ammo_fuel_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_FUEL))
-        SetResource(item, RES_FUEL, g_pickup_fuel);
+        SetResourceExplicit(item, RES_FUEL, g_pickup_fuel);
 }
 #endif
 REGISTER_ITEM(JetpackFuel, Ammo) {

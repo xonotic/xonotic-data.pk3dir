@@ -224,7 +224,7 @@ void turret_construct(entity this, bool isnew)
 	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.tur_head.angles			= this.angles;
-	SetResource(this, RES_HEALTH, 255);
+	SetResourceExplicit(this, RES_HEALTH, 255);
 	this.solid						= SOLID_BBOX;
 	this.tur_head.solid				= SOLID_NOT;
 	set_movetype(this, MOVETYPE_NOCLIP);
@@ -433,7 +433,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		else if(myhp && myhp < _tmp)
 			this.helpme = 0; // we're being healed, don't spam help me waypoints
 
-		SetResource(this, RES_HEALTH, _tmp);
+		SetResourceExplicit(this, RES_HEALTH, _tmp);
 	}
 	return true;
 }

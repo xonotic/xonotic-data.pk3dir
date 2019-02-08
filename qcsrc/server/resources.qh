@@ -21,6 +21,13 @@ float GetResourceLimit(entity e, int res_type);
 /// \return Current amount of resource the given entity has.
 float GetResource(entity e, int res_type);
 
+/// \brief Sets the resource amount of an entity without calling any hooks.
+/// \param[in,out] e Entity to adjust.
+/// \param[in] res_type Type of the resource (a RES_* constant).
+/// \param[in] amount Amount of resource to set.
+/// \return Boolean for whether the ammo amount was changed
+bool SetResourceExplicit(entity e, int res_type, float amount);
+
 /// \brief Sets the current amount of resource the given entity will have.
 /// \param[in,out] e Entity to adjust.
 /// \param[in] res_type Type of the resource (a RES_* constant).

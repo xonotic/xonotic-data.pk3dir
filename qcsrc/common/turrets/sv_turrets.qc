@@ -185,7 +185,7 @@ void turret_die(entity this)
 	this.event_heal = func_null;
 	this.takedamage			 = DAMAGE_NO;
 
-	SetResource(this, RES_HEALTH, 0);
+	SetResourceExplicit(this, RES_HEALTH, 0);
 
 // Go boom
 	//RadiusDamage (this,this, min(this.ammo,50),min(this.ammo,50) * 0.25,250,NULL,min(this.ammo,50)*5,DEATH_TURRET,NULL);
@@ -286,7 +286,7 @@ void turret_respawn(entity this)
 	this.avelocity				= '0 0 0';
 	this.tur_head.avelocity		= this.avelocity;
 	this.tur_head.angles		= this.idle_aim;
-	SetResource(this, RES_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	this.enemy					= NULL;
 	this.volly_counter			= this.shot_volly;
 	this.ammo					= this.ammo_max;
@@ -399,7 +399,7 @@ void load_unit_settings(entity ent, bool is_reload)
 		ent.tur_head.angles = '0 0 0';
 	}
 
-	SetResource(ent, RES_HEALTH, cvar(strcat(sbase,"_health")) * ent.turret_scale_health);
+	SetResourceExplicit(ent, RES_HEALTH, cvar(strcat(sbase,"_health")) * ent.turret_scale_health);
 	ent.respawntime = cvar(strcat(sbase,"_respawntime")) * ent.turret_scale_respawn;
 
 	ent.shot_dmg		 = cvar(strcat(sbase,"_shot_dmg")) * ent.turret_scale_damage;
@@ -498,7 +498,7 @@ entity turret_projectile(entity actor, Sound _snd, float _size, float _health, f
 	PROJECTILE_MAKETRIGGER(proj);
 	if(_health)
 	{
-		SetResource(proj, RES_HEALTH, _health);
+		SetResourceExplicit(proj, RES_HEALTH, _health);
 		proj.takedamage	 = DAMAGE_YES;
 		proj.event_damage  = turret_projectile_damage;
 	}
@@ -1311,7 +1311,7 @@ bool turret_initialize(entity this, Turret tur)
 
 	if(!this.team || !teamplay)		{ this.team = FLOAT_MAX; }
 	if(!this.ticrate)				{ this.ticrate = ((this.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
-	if(!GetResource(this, RES_HEALTH)) { SetResource(this, RES_HEALTH, 1000); }
+	if(!GetResource(this, RES_HEALTH)) { SetResourceExplicit(this, RES_HEALTH, 1000); }
 	if(!this.shot_refire)			{ this.shot_refire = 1; }
 	if(!this.tur_shotorg)			{ this.tur_shotorg = '50 0 50'; }
 	if(!this.turret_flags)			{ this.turret_flags = TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER; }

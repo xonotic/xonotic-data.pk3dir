@@ -27,7 +27,7 @@ void item_healthsmall_init(Pickup this, entity item)
     if(!item.max_health)
         item.max_health = g_pickup_healthsmall_max;
     if(!GetResource(item, RES_HEALTH))
-        SetResource(item, RES_HEALTH, g_pickup_healthsmall);
+        SetResourceExplicit(item, RES_HEALTH, g_pickup_healthsmall);
 }
 #endif
 
@@ -65,7 +65,7 @@ void item_healthmedium_init(Pickup this, entity item)
     if(!item.max_health)
         item.max_health = g_pickup_healthmedium_max;
     if(!GetResource(item, RES_HEALTH))
-        SetResource(item, RES_HEALTH, g_pickup_healthmedium);
+        SetResourceExplicit(item, RES_HEALTH, g_pickup_healthmedium);
 }
 #endif
 
@@ -103,7 +103,7 @@ void item_healthbig_init(Pickup this, entity item)
     if(!item.max_health)
         item.max_health = g_pickup_healthbig_max;
     if(!GetResource(item, RES_HEALTH))
-        SetResource(item, RES_HEALTH, g_pickup_healthbig);
+        SetResourceExplicit(item, RES_HEALTH, g_pickup_healthbig);
 }
 #endif
 
@@ -143,7 +143,7 @@ void item_healthmega_init(Pickup this, entity item)
     if(!item.max_health)
         item.max_health = g_pickup_healthmega_max;
     if(!GetResource(item, RES_HEALTH))
-        SetResource(item, RES_HEALTH, g_pickup_healthmega);
+        SetResourceExplicit(item, RES_HEALTH, g_pickup_healthmega);
 }
 #endif
 

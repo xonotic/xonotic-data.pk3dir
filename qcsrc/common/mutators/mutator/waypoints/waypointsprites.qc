@@ -130,7 +130,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
         int t = ReadByte();
         if (t < 192)
         {
-            SetResource(this, RES_HEALTH, t / 191.0);
+            SetResourceExplicit(this, RES_HEALTH, t / 191.0);
             this.build_finished = 0;
         }
         else
@@ -146,7 +146,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
     }
     else
     {
-        SetResource(this, RES_HEALTH, -1);
+        SetResourceExplicit(this, RES_HEALTH, -1);
         this.build_finished = 0;
     }
 
@@ -652,14 +652,14 @@ void Draw_WaypointSprite(entity this)
         if (time < this.build_finished + 0.25)
         {
             if (time < this.build_started)
-                SetResource(this, RES_HEALTH, this.build_starthealth);
+                SetResourceExplicit(this, RES_HEALTH, this.build_starthealth);
             else if (time < this.build_finished)
-                SetResource(this, RES_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
+                SetResourceExplicit(this, RES_HEALTH, (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth);
             else
-                SetResource(this, RES_HEALTH, 1);
+                SetResourceExplicit(this, RES_HEALTH, 1);
         }
         else
-            SetResource(this, RES_HEALTH, -1);
+            SetResourceExplicit(this, RES_HEALTH, -1);
     }
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
@@ -832,7 +832,7 @@ void WaypointSprite_UpdateHealth(entity e, float f)
     float step = e.max_health / 40;
     if ((floor(f / step) != floor(GetResource(e, RES_HEALTH) / step)) || e.pain_finished)
     {
-        SetResource(e, RES_HEALTH, f);
+        SetResourceExplicit(e, RES_HEALTH, f);
         e.pain_finished = 0;
         e.SendFlags |= 0x80;
     }

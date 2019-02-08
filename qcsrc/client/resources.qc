@@ -10,9 +10,20 @@ float GetResource(entity e, int res_type)
 	return e.(GetResourceField(res_type));
 }
 
+bool SetResourceExplicit(entity e, int res_type, float amount)
+{
+	.float res_field = GetResourceField(res_type);
+	if (e.(res_field) != amount)
+	{
+		e.(res_field) = amount;
+		return true;
+	}
+	return false;
+}
+
 void SetResource(entity e, int res_type, float amount)
 {
-	e.(GetResourceField(res_type)) = amount;
+	SetResourceExplicit(e, res_type, amount);
 }
 
 void TakeResource(entity receiver, int res_type, float amount)

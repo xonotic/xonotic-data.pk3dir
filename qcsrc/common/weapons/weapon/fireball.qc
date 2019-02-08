@@ -147,7 +147,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	proj.use = W_Fireball_Explode_use;
 	setthink(proj, W_Fireball_Think);
 	proj.nextthink = time;
-	SetResource(proj, RES_HEALTH, WEP_CVAR_PRI(fireball, health));
+	SetResourceExplicit(proj, RES_HEALTH, WEP_CVAR_PRI(fireball, health));
 	proj.team = actor.team;
 	proj.event_damage = W_Fireball_Damage;
 	proj.takedamage = DAMAGE_YES;

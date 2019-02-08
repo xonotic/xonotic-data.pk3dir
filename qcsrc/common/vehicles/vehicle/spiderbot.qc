@@ -540,7 +540,7 @@ METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 {
-	SetResource(instance, RES_HEALTH, 0);
+	SetResourceExplicit(instance, RES_HEALTH, 0);
     instance.event_damage		= func_null;
     instance.takedamage			= DAMAGE_NO;
     settouch(instance, func_null);
@@ -582,7 +582,7 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
     setorigin(instance, instance.pos1 + '0 0 128');
     instance.angles = instance.pos2;
     instance.damageforcescale = 0.03;
-    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_spiderbot_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_spiderbot_health);
     instance.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 
     instance.PlayerPhysplug = spiderbot_frame;
@@ -599,7 +599,7 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
         instance.vehicle_flags |= VHF_HEALTHREGEN;
 
     instance.respawntime = autocvar_g_vehicle_spiderbot_respawntime;
-    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_spiderbot_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_spiderbot_health);
     instance.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
     instance.max_health = GetResource(instance, RES_HEALTH);
     instance.pushable = true; // spiderbot can use jumppads

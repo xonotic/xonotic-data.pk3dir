@@ -77,7 +77,7 @@ void entcs_force_origin(entity player)
 	bool id##_check(entity ent, entity player) { \
 		return (floor(GetResource(ent, checkprop) / decfactor) != floor(GetResource(player, checkprop) / decfactor)); \
 	} \
-	void id##_set(entity ent, entity player) { SetResource(ent, checkprop, GetResource(player, checkprop)); } \
+	void id##_set(entity ent, entity player) { SetResourceExplicit(ent, checkprop, GetResource(player, checkprop)); } \
 	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
 		this.m_public = ispublic; \
@@ -123,7 +123,7 @@ ENTCS_PROP_RESOURCE(HEALTH, false, RES_HEALTH, ENTCS_SET_NORMAL, DEC_FACTOR,
 
 ENTCS_PROP_RESOURCE(ARMOR, false, RES_ARMOR, ENTCS_SET_NORMAL, DEC_FACTOR,
 	{ WriteByte(chan, bound(0, GetResource(ent, RES_ARMOR) / DEC_FACTOR, 255)); },
-	{ SetResource(ent, RES_ARMOR, ReadByte() * DEC_FACTOR); })
+	{ SetResourceExplicit(ent, RES_ARMOR, ReadByte() * DEC_FACTOR); })
 #undef DEC_FACTOR
 
 ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,

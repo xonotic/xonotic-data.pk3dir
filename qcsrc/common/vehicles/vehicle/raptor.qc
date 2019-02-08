@@ -609,7 +609,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 {
-	SetResource(instance, RES_HEALTH, 0);
+	SetResourceExplicit(instance, RES_HEALTH, 0);
     instance.event_damage		= func_null;
     instance.solid				= SOLID_CORPSE;
     instance.takedamage			= DAMAGE_NO;
@@ -701,7 +701,7 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
     }
 
     instance.frame		  = 0;
-    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     set_movetype(instance, MOVETYPE_TOSS);
     instance.solid		  = SOLID_SLIDEBOX;
@@ -720,7 +720,7 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
     instance.bouncefactor = autocvar_g_vehicle_raptor_bouncefactor;
     instance.bouncestop = autocvar_g_vehicle_raptor_bouncestop;
     instance.damageforcescale = 0.25;
-    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 }
 METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
@@ -739,7 +739,7 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 
     instance.vehicle_exit = raptor_exit;
     instance.respawntime = autocvar_g_vehicle_raptor_respawntime;
-    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     instance.max_health = GetResource(instance, RES_HEALTH);
 

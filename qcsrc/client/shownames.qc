@@ -206,13 +206,13 @@ void Draw_ShowNames_All()
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;
-			SetResource(it, RES_ARMOR, GetResource(entcs, RES_ARMOR));
+			SetResourceExplicit(it, RES_ARMOR, GetResource(entcs, RES_ARMOR));
 			it.sameteam = true;
 		}
 		else
 		{
 			it.healthvalue = 0;
-			SetResource(it, RES_ARMOR, 0);
+			SetResourceExplicit(it, RES_ARMOR, 0);
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);

@@ -544,7 +544,7 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 
     setthink(instance, racer_think);
     instance.nextthink	  = time;
-    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
     instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
     set_movetype(instance, MOVETYPE_TOSS);
@@ -557,7 +557,7 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
     instance.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
     instance.bouncestop = autocvar_g_vehicle_racer_bouncestop;
     instance.damageforcescale = 0.5;
-    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
     instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 #endif
 }
@@ -566,7 +566,7 @@ METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
     setSendEntity(instance, func_null); // stop networking this racer (for now)
-    SetResource(instance, RES_HEALTH, 0);
+    SetResourceExplicit(instance, RES_HEALTH, 0);
     instance.event_damage	= func_null;
     instance.solid			= SOLID_CORPSE;
     instance.takedamage		= DAMAGE_NO;
@@ -625,7 +625,7 @@ METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
         instance.vehicle_flags |= VHF_HEALTHREGEN;
 
     instance.respawntime = autocvar_g_vehicle_racer_respawntime;
-    SetResource(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
     instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
     instance.max_health = GetResource(instance, RES_HEALTH);
 #endif
