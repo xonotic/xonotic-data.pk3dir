@@ -1,5 +1,8 @@
 #pragma once
 
+// remove this ifdef when client or menu will actually make use of this stuff
+#ifdef SVQC
+
 /** If this global exists, only functions with spawnfunc_ name prefix qualify as spawn functions */
 noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
@@ -278,3 +281,5 @@ noref bool __spawnfunc_first;
 		if (__spawnfunc_unreachable_workaround) return; \
 	} \
 	void __spawnfunc_##id(entity this)
+
+#endif
