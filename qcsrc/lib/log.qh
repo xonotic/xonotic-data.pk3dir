@@ -43,12 +43,12 @@ string(string, string...) strcat1n = #115;
 // would be nice if __FUNC__ could be concatenated at compile time
 #if 0
 	// less work, bigger binary
-	#define __SOURCELOC__ (sprintf("^7%s^9" "(" "^9"__FILE__"^7"  ":"  "^9"STR(__LINE__)"^7" ")", __FUNC__))
+	#define __SOURCELOC__ (sprintf("^7%s^9(^9"__FILE__"^7:^9"STR(__LINE__)"^7)", __FUNC__))
 #else
-	#define __SOURCELOC__ (sprintf("^7%s^9" "(" "^9%s^7"  ":"  "^9%s^7" ")", __FUNC__, __FILE__, STR(__LINE__)))
+	#define __SOURCELOC__ (sprintf("^7%s^9(^9%s^7:^9%s^7)", __FUNC__, __FILE__, STR(__LINE__)))
 #endif
 
-#define _LOG_HEADER(level) "^9[::" "^7"PROGNAME"^9" "::" level"^9" "] ", __SOURCELOC__
+#define _LOG_HEADER(level) "^9[::^7"PROGNAME"^9::"level"^9] ", __SOURCELOC__
 #define _LOG(f, level, s) \
 	MACRO_BEGIN \
 		f(strcat1n(_LOG_HEADER(level), "\n^7", s, "\n")); \

@@ -53,7 +53,7 @@ STATIC_INIT(TempEntities_renumber) { FOREACH(TempEntities, true, it.m_id = 80 + 
 		ACCUMULATE NET_HANDLE(id, bool isnew) \
 		{ \
 			this = __self; \
-			this.sourceLoc = __FILE__ ":" STR(__LINE__); \
+			this.sourceLoc = __FILE__":"STR(__LINE__); \
 			if (!this) isnew = true; \
 		} \
 		NET_GUARD(id); \

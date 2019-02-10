@@ -264,7 +264,7 @@ noref bool __spawnfunc_first;
 			assert(this); \
 		} \
 		if (!this.sourceLoc) { \
-			this.sourceLoc = __FILE__ ":" STR(__LINE__); \
+			this.sourceLoc = __FILE__":"STR(__LINE__); \
 		} \
 		if (!this.spawnfunc_checked) { \
 			_checkWhitelisted(this, #id); \
