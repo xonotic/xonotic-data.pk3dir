@@ -374,16 +374,25 @@ void GenericCommand_restartnotifs(int request)
 		case CMD_REQUEST_COMMAND:
 		{
 			#ifdef GAMEQC
-			int NOTIF_ANNCE_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE,   { ++NOTIF_ANNCE_COUNT;  });
-			int NOTIF_INFO_COUNT    = 0; FOREACH(Notifications, it.nent_type == MSG_INFO,    { ++NOTIF_INFO_COUNT;   });
-			int NOTIF_CENTER_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER,  { ++NOTIF_CENTER_COUNT; });
-			int NOTIF_MULTI_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_MULTI,   { ++NOTIF_MULTI_COUNT;  });
-			int NOTIF_CHOICE_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CHOICE,  { ++NOTIF_CHOICE_COUNT; });
+			int NOTIF_ANNCE_COUNT = 0;
+			int NOTIF_INFO_COUNT = 0;
+			int NOTIF_CENTER_COUNT = 0;
+			int NOTIF_MULTI_COUNT = 0;
+			int NOTIF_CHOICE_COUNT = 0;
+			FOREACH(Notifications, true, {
+				switch (it.nent_type)
+				{
+					case MSG_ANNCE: ++NOTIF_ANNCE_COUNT; break;
+					case MSG_INFO: ++NOTIF_INFO_COUNT; break;
+					case MSG_CENTER: ++NOTIF_CENTER_COUNT; break;
+					case MSG_MULTI: ++NOTIF_MULTI_COUNT; break;
+					case MSG_CHOICE: ++NOTIF_CHOICE_COUNT; break;
+				}
+			});
+
 			LOG_INFOF(
-			    (
-                    "Restart_Notifications(): Restarting %d notifications... "
-                    "Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d"
-                ),
+				"Restart_Notifications(): Restarting %d notifications... "
+				"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d",
 				(
 					NOTIF_ANNCE_COUNT +
 					NOTIF_INFO_COUNT +

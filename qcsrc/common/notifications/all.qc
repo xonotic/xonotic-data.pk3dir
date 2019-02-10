@@ -819,7 +819,22 @@ void Dump_Notifications(int fh, bool alsoprint)
 	// This is not necessary, and does not matter if they vary between config versions,
 	// it is just a semi-helpful tool for those who want to manually change their user settings.
 
-	int NOTIF_ANNCE_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE, { ++NOTIF_ANNCE_COUNT; });
+	int NOTIF_ANNCE_COUNT = 0;
+	int NOTIF_INFO_COUNT = 0;
+	int NOTIF_CENTER_COUNT = 0;
+	int NOTIF_MULTI_COUNT = 0;
+	int NOTIF_CHOICE_COUNT = 0;
+	FOREACH(Notifications, true, {
+		switch (it.nent_type)
+		{
+			case MSG_ANNCE: ++NOTIF_ANNCE_COUNT; break;
+			case MSG_INFO: ++NOTIF_INFO_COUNT; break;
+			case MSG_CENTER: ++NOTIF_CENTER_COUNT; break;
+			case MSG_MULTI: ++NOTIF_MULTI_COUNT; break;
+			case MSG_CHOICE: ++NOTIF_CHOICE_COUNT; break;
+		}
+	});
+
 	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications (count = %d):\n", NOTIF_ANNCE_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_ANNCE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
@@ -827,7 +842,6 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	int NOTIF_INFO_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_INFO, { ++NOTIF_INFO_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_INFO && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
@@ -836,7 +850,6 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	int NOTIF_CENTER_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER, { ++NOTIF_CENTER_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_CENTER && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
@@ -844,7 +857,6 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	int NOTIF_MULTI_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_MULTI, { ++NOTIF_MULTI_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications (count = %d):\n", NOTIF_MULTI_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_MULTI && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
@@ -852,7 +864,6 @@ void Dump_Notifications(int fh, bool alsoprint)
 		);
 	});
 
-	int NOTIF_CHOICE_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_CHOICE, { ++NOTIF_CHOICE_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications (count = %d):\n", NOTIF_CHOICE_COUNT));
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY_CHOICE(it,
