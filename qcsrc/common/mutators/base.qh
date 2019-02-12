@@ -318,10 +318,16 @@ MACRO_END
     bool mut##_##cb() { return = false; } \
     ACCUMULATE bool mut##_##cb()
 
+void _mutPrintFail(string cb, string func)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	LOG_INFO("HOOK FAILED: ", cb, ":", func);
+}
+
 #define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN \
     MUTATOR_ONADD { \
         if (!CallbackChain_Add(HOOK_##cb, CB_##func, order)) { \
-            LOG_INFO("HOOK FAILED: ", #cb, ":", #func); \
+            _mutPrintFail(#cb, #func); \
             return true; \
         } \
     } \

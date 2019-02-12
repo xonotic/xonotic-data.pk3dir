@@ -589,25 +589,25 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 	}
 }
 
-Gametype MapInfo_Type_FromString(string t)
+Gametype MapInfo_Type_FromString(string str)
 {
-#define deprecate(from, to) MACRO_BEGIN \
-	if (t == #from) { \
-		string replacement = #to; \
-		if(WARN_COND) \
-			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, t, replacement); \
-		t = replacement; \
-	} \
-MACRO_END
-	deprecate(nexball, nb);
-	deprecate(freezetag, ft);
-	deprecate(keepaway, ka);
-	deprecate(invasion, inv);
-	deprecate(assault, as);
-	deprecate(race, rc);
-	FOREACH(Gametypes, it.mdl == t, return it);
+	string replacement = "";
+	switch (str)
+	{
+		case "nexball":   replacement = "nb"; break;
+		case "freezetag": replacement = "ft"; break;
+		case "keepaway":  replacement = "ka"; break;
+		case "invasion":  replacement = "inv"; break;
+		case "assault":   replacement = "as"; break;
+		case "race":      replacement = "rc"; break;
+	}
+	if (replacement != "" && WARN_COND)
+	{
+		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, str, replacement);
+		str = replacement;
+	}
+	FOREACH(Gametypes, it.mdl == str, return it);
 	return NULL;
-#undef deprecate
 }
 
 string MapInfo_Type_Description(Gametype t)

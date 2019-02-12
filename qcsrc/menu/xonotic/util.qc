@@ -702,7 +702,7 @@ float updateCompression()
 Gametype GameType_GetID(int cnt)
 {
 	int i = 0;
-	#define GAMETYPE(it) { if (i++ == cnt) return it; }
+	#define GAMETYPE(it) if (i++ == cnt) return it;
 	GAMETYPES
 	HIDDEN_GAMETYPES
 	#undef GAMETYPE

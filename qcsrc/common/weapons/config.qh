@@ -14,11 +14,6 @@ int WEP_CONFIG_COUNT;
 	config_queue[WEP_CONFIG_COUNT] = a; \
 	++WEP_CONFIG_COUNT; }
 
-#define WEP_CONFIG_WRITETOFILE(a) MACRO_BEGIN \
-	fputs(wep_config_file, a); \
-	if(wep_config_alsoprint) { LOG_INFO(a); } \
-MACRO_END
-
 
 #define WEP_CONFIG_WRITE_CVARS(wepname, name, T) WEP_CONFIG_WRITE_PROPS_##T(wepname, name)
 

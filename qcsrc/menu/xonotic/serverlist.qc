@@ -6,6 +6,36 @@
 #include "dialog_multiplayer_join_serverinfo.qh"
 #include <common/mapinfo.qh>
 
+void SL_ProcessCategoryOverrides(.string override_field_string, .float override_field)
+{
+	string s;
+	for (int i = 0; i < category_ent_count; ++i)
+	{
+		s = categories[i].override_field_string;
+		if (s != "" && s != categories[i].cat_name)
+		{
+			int catnum = 0;
+			for (int x = 0; x < category_ent_count; ++x)
+			{
+				if(categories[x].cat_name == s)
+				{
+					catnum = x + 1;
+					break;
+				}
+			}
+			if (catnum)
+			{
+				strfree(categories[i].override_field_string);
+				categories[i].override_field = catnum;
+				continue;
+			}
+			LOG_INFOF("RegisterSLCategories(): Improper override '%s' for category '%s'!", s, categories[i].cat_name);
+		}
+		strfree(categories[i].override_field_string);
+		categories[i].override_field = 0;
+	}
+}
+
 void RegisterSLCategories()
 {
 	entity cat;
@@ -20,45 +50,8 @@ void RegisterSLCategories()
 	SLIST_CATEGORIES
 	#undef SLIST_CATEGORY
 
-	int i, x, catnum;
-	string s;
-
-	#define PROCESS_OVERRIDE(override_string,override_field) \
-		for(i = 0; i < category_ent_count; ++i) \
-		{ \
-			s = categories[i].override_string; \
-			if(s != "" && s != categories[i].cat_name) \
-			{ \
-				catnum = 0; \
-				for(x = 0; x < category_ent_count; ++x) \
-				{ \
-					if(categories[x].cat_name == s) \
-					{ \
-						catnum = x + 1; \
-						break; \
-					} \
-				} \
-				if(catnum) \
-				{ \
-					strfree(categories[i].override_string); \
-					categories[i].override_field = catnum; \
-					continue; \
-				} \
-				else \
-				{ \
-					LOG_INFOF( \
-						"RegisterSLCategories(): Improper override '%s' for category '%s'!", \
-						s, \
-						categories[i].cat_name \
-					); \
-				} \
-			} \
-			strfree(categories[i].override_string); \
-			categories[i].override_field = 0; \
-		}
-	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
-	PROCESS_OVERRIDE(cat_dioverride_string, cat_dioverride)
-	#undef PROCESS_OVERRIDE
+	SL_ProcessCategoryOverrides(cat_enoverride_string, cat_enoverride);
+	SL_ProcessCategoryOverrides(cat_dioverride_string, cat_dioverride);
 }
 
 // Supporting Functions

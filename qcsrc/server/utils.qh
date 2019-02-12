@@ -55,18 +55,12 @@ bool _FCR_entered = false;
 		_FCR_entered = true; \
 		int _cnt = 0; \
 		FOREACH_CLIENT(cond, { \
-            int _j = floor(random() * (_cnt + 1)); \
-            if (_j == _cnt) \
-            { \
-                _FCR_clients[_cnt] = it; \
-            } \
-            else \
-            { \
-                _FCR_clients[_cnt] = _FCR_clients[_j]; \
-                _FCR_clients[_j] = it; \
-            } \
-            _cnt++; \
-        }); \
+			int _j = floor(random() * (_cnt + 1)); \
+			if (_j != _cnt) \
+				_FCR_clients[_cnt] = _FCR_clients[_j]; \
+			_FCR_clients[_j] = it; \
+			++_cnt; \
+		}); \
 		for (int _i = 0; _i < _cnt; ++_i) \
 		{ \
 			const noref int i = _i; \

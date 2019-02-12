@@ -321,14 +321,11 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			// these 2 macros are spread over multiple files
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
-				{ \
 					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
-					if (!warmup_stage)\
-					{\
+					if (!warmup_stage) \
 						PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
-					}\
-					break; \
-				}
+					break;
+
 			switch(CS(attacker).killcount)
 			{
 				KILL_SPREE_LIST

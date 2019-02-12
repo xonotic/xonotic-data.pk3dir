@@ -1,5 +1,8 @@
 #pragma once
 
+// remove this ifdef when client or menu will actually make use of this stuff
+#ifdef SVQC
+
 /** If this global exists, only functions with spawnfunc_ name prefix qualify as spawn functions */
 noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
@@ -80,58 +83,6 @@ noref bool require_spawnfunc_prefix;
 #endif
         e.__spawnfunc_constructor(e);
     }
-
-	noref bool __spawnfunc_first;
-
-	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
-	#define spawnfunc_2(id, whitelist) \
-		void __spawnfunc_##id(entity this); \
-		ACCUMULATE void spawnfunc_##id(entity this) \
-		{ \
-		    if (!__spawnfunc_first) { \
-                __spawnfunc_first = true; \
-                static_init_early(); \
-		    } \
-		    bool dospawn = true; \
-		    if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = 0; } \
-			else if (__spawnfunc_expecting) { \
-				/* engine call */ \
-                if (!g_spawn_queue) { g_spawn_queue = IL_NEW(); } \
-				__spawnfunc_expecting = 0; \
-				this = __spawnfunc_expect; \
-				__spawnfunc_expect = NULL; \
-                dospawn = false; \
-			} else { \
-			    /* userland call */ \
-				assert(this); \
-			} \
-			if (!this.sourceLoc) { \
-				this.sourceLoc = __FILE__ ":" STR(__LINE__); \
-			} \
-			if (!this.spawnfunc_checked) { \
-				for (int i = 0, n = numentityfields(); i < n; ++i) { \
-					string value = getentityfieldstring(i, this); \
-					string s = entityfieldname(i); \
-					whitelist(_spawnfunc_checktypes) \
-					if (value == "") continue; \
-					if (s == "") continue; \
-					FIELDS_COMMON(_spawnfunc_check) \
-					whitelist(_spawnfunc_check) \
-					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), #id, s, value); \
-				} \
-				this.spawnfunc_checked = true; \
-				if (this) { \
-                    /* not worldspawn, delay spawn */ \
-                    __spawnfunc_defer(this, __spawnfunc_##id); \
-                } else { \
-                    /* world might not be "worldspawn" */ \
-                    this.__spawnfunc_constructor = __spawnfunc_##id; \
-                } \
-			} \
-			if (dospawn) { __spawnfunc_##id(this); } \
-			if (__spawnfunc_unreachable_workaround) return; \
-		} \
-		void __spawnfunc_##id(entity this)
 
 	#define FIELD_SCALAR(fld, n) \
 		fld(n)
@@ -273,5 +224,62 @@ noref bool require_spawnfunc_prefix;
 		FIELD_VEC(fld, velocity) \
 		/**/
 
-	#define spawnfunc(...) EVAL_spawnfunc(OVERLOAD(spawnfunc, __VA_ARGS__))
-	#define EVAL_spawnfunc(...) __VA_ARGS__
+ERASEABLE
+void _checkWhitelisted(entity this, string id)
+{
+	for (int i = 0, n = numentityfields(); i < n; ++i)
+	{
+		string value = getentityfieldstring(i, this);
+		string s = entityfieldname(i);
+		FIELDS_UNION(_spawnfunc_checktypes)
+		if (value == "") continue;
+		if (s == "") continue;
+		FIELDS_COMMON(_spawnfunc_check)
+		FIELDS_UNION(_spawnfunc_check)
+		LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), id, s, value);
+	}
+}
+
+noref bool __spawnfunc_first;
+
+#define spawnfunc(id) \
+	void __spawnfunc_##id(entity this); \
+	ACCUMULATE void spawnfunc_##id(entity this) \
+	{ \
+		if (!__spawnfunc_first) { \
+			__spawnfunc_first = true; \
+			static_init_early(); \
+		} \
+		bool dospawn = true; \
+		if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = 0; } \
+		else if (__spawnfunc_expecting) { \
+			/* engine call */ \
+			if (!g_spawn_queue) { g_spawn_queue = IL_NEW(); } \
+			__spawnfunc_expecting = 0; \
+			this = __spawnfunc_expect; \
+			__spawnfunc_expect = NULL; \
+			dospawn = false; \
+		} else { \
+			/* userland call */ \
+			assert(this); \
+		} \
+		if (!this.sourceLoc) { \
+			this.sourceLoc = __FILE__":"STR(__LINE__); \
+		} \
+		if (!this.spawnfunc_checked) { \
+			_checkWhitelisted(this, #id); \
+			this.spawnfunc_checked = true; \
+			if (this) { \
+				/* not worldspawn, delay spawn */ \
+				__spawnfunc_defer(this, __spawnfunc_##id); \
+			} else { \
+				/* world might not be "worldspawn" */ \
+				this.__spawnfunc_constructor = __spawnfunc_##id; \
+			} \
+		} \
+		if (dospawn) { __spawnfunc_##id(this); } \
+		if (__spawnfunc_unreachable_workaround) return; \
+	} \
+	void __spawnfunc_##id(entity this)
+
+#endif

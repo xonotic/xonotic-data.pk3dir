@@ -2,7 +2,10 @@
 
 #include "progname.qh"
 
-#define assert(expr, ...) _assert(LOG_SEVERE, expr, __VA_ARGS__)
+void print_assertfailed_severe(string expr);
+void print_assertfailed_fatal(string expr);
+
+#define assert(expr, ...) _assert(print_assertfailed_severe, expr, __VA_ARGS__)
 #define devassert(...) MACRO_BEGIN if (autocvar_developer) assert(__VA_ARGS__); MACRO_END
 
 #define assert_once(expr, ...) \
@@ -16,14 +19,14 @@
 	MACRO_END
 #define devassert_once(...) MACRO_BEGIN if (autocvar_developer) assert_once(__VA_ARGS__); MACRO_END
 
-#define demand(expr, ...) _assert(LOG_FATAL, expr, __VA_ARGS__)
+#define demand(expr, ...) _assert(print_assertfailed_fatal, expr, __VA_ARGS__)
 #define devdemand(...) MACRO_BEGIN if (autocvar_developer) demand(__VA_ARGS__); MACRO_END
 
 #define _assert(f, expr, then) \
 	MACRO_BEGIN \
 		if (!(expr)) \
 		{ \
-			f("assertion failed: `" #expr "`\n"); \
+			f(#expr); \
 			then; \
 		} \
 	MACRO_END
@@ -40,12 +43,12 @@ string(string, string...) strcat1n = #115;
 // would be nice if __FUNC__ could be concatenated at compile time
 #if 0
 	// less work, bigger binary
-	#define __SOURCELOC__ (sprintf("^7%s^9" "(" "^9"__FILE__"^7"  ":"  "^9"STR(__LINE__)"^7" ")", __FUNC__))
+	#define __SOURCELOC__ (sprintf("^7%s^9(^9"__FILE__"^7:^9"STR(__LINE__)"^7)", __FUNC__))
 #else
-	#define __SOURCELOC__ (sprintf("^7%s^9" "(" "^9%s^7"  ":"  "^9%s^7" ")", __FUNC__, __FILE__, STR(__LINE__)))
+	#define __SOURCELOC__ (sprintf("^7%s^9(^9%s^7:^9%s^7)", __FUNC__, __FILE__, STR(__LINE__)))
 #endif
 
-#define _LOG_HEADER(level) "^9[::" "^7"PROGNAME"^9" "::" level"^9" "] ", __SOURCELOC__
+#define _LOG_HEADER(level) "^9[::^7"PROGNAME"^9::"level"^9] ", __SOURCELOC__
 #define _LOG(f, level, s) \
 	MACRO_BEGIN \
 		f(strcat1n(_LOG_HEADER(level), "\n^7", s, "\n")); \
@@ -111,3 +114,15 @@ noref bool autocvar_prvm_backtraceforwarnings;
 		bt_cvar_set("developer", ftos(dev)); \
 		bt_cvar_set("prvm_backtraceforwarnings", ftos(war)); \
 	MACRO_END
+
+void print_assertfailed_severe(string expr)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	LOG_SEVERE("assertion failed: `", expr, "`\n");
+}
+
+void print_assertfailed_fatal(string expr)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	LOG_FATAL("assertion failed: `", expr, "`\n");
+}
