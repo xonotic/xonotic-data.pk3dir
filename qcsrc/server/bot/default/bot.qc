@@ -604,6 +604,8 @@ bool bot_fixcount()
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
 		int minplayers = max(0, floor(autocvar_minplayers));
+		if (teamplay)
+			minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
 		int minbots = max(0, floor(autocvar_bot_number));
 
 		// add bots to reach minplayers if needed

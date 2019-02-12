@@ -431,6 +431,7 @@ void cvar_changes_init()
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
 		BADCVAR("minplayers");
+		BADCVAR("minplayers_per_team");
 		BADCVAR("net_address");
 		BADCVAR("port");
 		BADCVAR("rcon_password");
@@ -1006,8 +1007,11 @@ float GetMaplistPosition()
 
 bool MapHasRightSize(string map)
 {
-	if(currentbots || autocvar_bot_number || player_count < autocvar_minplayers)
-	if(autocvar_g_maplist_check_waypoints)
+	int minplayers = max(0, floor(autocvar_minplayers));
+	if (teamplay)
+		minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+	if (autocvar_g_maplist_check_waypoints
+		&& (currentbots || autocvar_bot_number || player_count < minplayers))
 	{
 		string checkwp_msg = strcat("checkwp ", map);
 		if(!fexists(strcat("maps/", map, ".waypoints")))
