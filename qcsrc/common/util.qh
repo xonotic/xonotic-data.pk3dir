@@ -135,6 +135,8 @@ string getcurrentmod();
 
 float matchacl(string acl, string str); // matches str against ACL acl (with entries +foo*, +foo, +*foo, +*foo*, and same with - for forbidding)
 
+void write_String_To_File(int fh, string str, bool alsoprint);
+
 string get_model_datafilename(string mod, float skn, string fil); // skin -1 will return wildcard, mod string_null will also put wildcard there
 string get_model_parameters_modelname;
 float get_model_parameters_modelskin;

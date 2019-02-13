@@ -624,7 +624,7 @@ float bot_cmd_eval(entity this, string expr)
 	switch(expr)
 	{
 		case "health":
-			return GetResourceAmount(this, RESOURCE_HEALTH);
+			return GetResource(this, RES_HEALTH);
 		case "speed":
 			return vlen(this.velocity);
 		case "flagcarrier":

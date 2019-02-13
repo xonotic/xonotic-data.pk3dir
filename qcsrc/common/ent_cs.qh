@@ -36,14 +36,13 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 	void entcs_think(entity this);
 
-	void entcs_attach(entity e);
+	void entcs_attach(entity player);
 
-	void entcs_detach(entity e);
+	void entcs_detach(entity player);
 
 	.int m_forceupdate;
 
-/** Force an origin update, for player sounds */
-	#define entcs_force_origin(e) (CS(e).entcs.m_forceupdate = BIT(2))
+	void entcs_force_origin(entity player);
 
 #endif
 

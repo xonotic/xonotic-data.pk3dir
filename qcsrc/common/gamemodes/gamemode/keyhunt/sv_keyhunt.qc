@@ -686,10 +686,12 @@ LABEL(not_winning)
 		kh_interferemsg_time = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(it.team == kh_interferemsg_team)
+			{
 				if(it.kh_next)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_MEET);
 				else
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
+			}
 			else
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
 		});

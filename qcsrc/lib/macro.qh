@@ -1,12 +1,13 @@
 #pragma once
 
+// NOTE: spaces removed from these often used macros to reduce size when expanded
 #if 1
     void voidfunc() { }
-    #define MACRO_BEGIN if (1) {
-    #define MACRO_END } else voidfunc()
+    #define MACRO_BEGIN if(1){
+    #define MACRO_END }else voidfunc()
 #else
-    #define MACRO_BEGIN do {
-    #define MACRO_END } while (0)
+    #define MACRO_BEGIN do{
+    #define MACRO_END }while(0)
 #endif
 
 /** Marker for use in (RVALUE, (expr)) */

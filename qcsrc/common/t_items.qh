@@ -82,7 +82,7 @@ void Item_ScheduleInitialRespawn(entity e);
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 	entity ammo_entity);
 
-float Item_GiveAmmoTo(entity item, entity player, int resource_type, float ammomax);
+float Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax);
 
 float Item_GiveTo(entity item, entity player);
 
@@ -128,11 +128,11 @@ spawnfunc(target_items);
 
 #define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = STAT(WEAPONS, e)
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
-#define PREGIVE_RESOURCE(e,f) float save_##f = GetResourceAmount((e), (f))
+#define PREGIVE_RESOURCE(e,f) float save_##f = GetResource((e), (f))
 #define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(STAT(WEAPONS, e) & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
 #define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
-#define POSTGIVE_RESOURCE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, GetResourceAmount((e), (f)), t, snd_incr, snd_decr)
-#define POSTGIVE_RESOURCE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e),save_##f,GetResourceAmount((e),(f)),rotfield,rottime,regenfield,regentime);GiveSound((e),save_##f,GetResourceAmount((e),(f)),t,snd_incr,snd_decr)
+#define POSTGIVE_RESOURCE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, GetResource((e), (f)), t, snd_incr, snd_decr)
+#define POSTGIVE_RES_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e),save_##f,GetResource((e),(f)),rotfield,rottime,regenfield,regentime);GiveSound((e),save_##f,GetResource((e),(f)),t,snd_incr,snd_decr)
 #define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 

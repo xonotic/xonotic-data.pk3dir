@@ -50,7 +50,7 @@ float server_is_dedicated;
 .float	pain_frame;			//"
 .float  crouch;	// Crouching or not?
 
-.float	superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
+const .float superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
 
 .float cnt; // used in too many places
 .float count;

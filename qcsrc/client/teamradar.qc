@@ -93,18 +93,19 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
 
-	makevectors(pangles - '0 1 0' * teamradar_angle);
+	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
+	MAKEVECTORS(makevectors, pangles - '0 1 0' * teamradar_angle, forward, right, up);
 	if(v_flipped)
 	{
-		v_forward.x = -v_forward.x;
-		v_right.x = -v_right.x;
-		v_up.x = -v_up.x;
+		forward.x = -forward.x;
+		right.x = -right.x;
+		up.x = -up.x; // TODO: unused!
 	}
-	v_forward.z = 0;
-	v_forward = normalize(v_forward);
-	v_forward.y *= -1.0;
-	v_right.x = -v_forward.y;
-	v_right.y = v_forward.x;
+	forward.z = 0;
+	forward = normalize(forward);
+	forward.y *= -1.0;
+	right.x = -forward.y;
+	right.y = forward.x;
 
 	if(rgb == '1 1 1')
 		rgb2 = '0 0 0';
@@ -112,17 +113,17 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 		rgb2 = '1 1 1';
 
 	R_BeginPolygon("", 0);
-	R_PolygonVertex(coord+v_forward*3, '0 0 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord+v_right*4-v_forward*2.5, '0 1 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord-v_forward*2, '1 0 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord-v_right*4-v_forward*2.5, '1 1 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord+forward*3, '0 0 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord+right*4-forward*2.5, '0 1 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord-forward*2, '1 0 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord-right*4-forward*2.5, '1 1 0', rgb2, panel_fg_alpha);
 	R_EndPolygon();
 
 	R_BeginPolygon("", 0);
-	R_PolygonVertex(coord+v_forward*2, '0 0 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord+v_right*3-v_forward*2, '0 1 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord-v_forward, '1 0 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord-v_right*3-v_forward*2, '1 1 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord+forward*2, '0 0 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord+right*3-forward*2, '0 1 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord-forward, '1 0 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord-right*3-forward*2, '1 1 0', rgb, panel_fg_alpha);
 	R_EndPolygon();
 }
 

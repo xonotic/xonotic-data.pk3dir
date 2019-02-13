@@ -116,7 +116,7 @@ METHOD(OverkillHeavyMachineGun, wr_think, void(entity thiswep, entity actor, .en
 
 METHOD(OverkillHeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okhmg, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okhmg, ammo);
 	if (autocvar_g_balance_okhmg_reload_ammo)
 	{
 		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_HMG.m_id]) >= WEP_CVAR_PRI(okhmg, ammo);
@@ -126,7 +126,7 @@ METHOD(OverkillHeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor
 
 METHOD(OverkillHeavyMachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okhmg, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okhmg, ammo);
 	if (autocvar_g_balance_okhmg_reload_ammo)
 	{
 		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_HMG.m_id]) >= WEP_CVAR_SEC(okhmg, ammo);

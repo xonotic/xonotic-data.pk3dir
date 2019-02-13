@@ -717,43 +717,43 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			return;
 		}
 		STAT(WEAPONS, receiver) |= RandomSelection_chosen_ent.m_wepset;
-		if (RandomSelection_chosen_ent.ammo_type == RESOURCE_NONE)
+		if (RandomSelection_chosen_ent.ammo_type == RES_NONE)
 		{
 			continue;
 		}
-		if (GetResourceAmount(receiver,
+		if (GetResource(receiver,
 			RandomSelection_chosen_ent.ammo_type) != 0)
 		{
 			continue;
 		}
 		GiveResource(receiver, RandomSelection_chosen_ent.ammo_type,
-			GetResourceAmount(ammo_entity,
+			GetResource(ammo_entity,
 			RandomSelection_chosen_ent.ammo_type));
 	}
 }
 
-float Item_GiveAmmoTo(entity item, entity player, int resource_type, float ammomax)
+float Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
 {
-	float amount = GetResourceAmount(item, resource_type);
+	float amount = GetResource(item, res_type);
 	if (amount == 0)
 	{
 		return false;
 	}
-	float player_amount = GetResourceAmount(player, resource_type);
+	float player_amount = GetResource(player, res_type);
 	if (item.spawnshieldtime)
 	{
 		if ((player_amount >= ammomax) && (item.pickup_anyway <= 0))
 		{
 			return false;
 		}
-		GiveOrTakeResourceWithLimit(player, resource_type, amount, ammomax);
+		GiveOrTakeResourceWithLimit(player, res_type, amount, ammomax);
 		return true;
 	}
 	if (g_weapon_stay != 2)
 	{
 		return false;
 	}
-	GiveOrTakeResourceWithLimit(player, resource_type, amount, min(amount, ammomax));
+	GiveOrTakeResourceWithLimit(player, res_type, amount, min(amount, ammomax));
 	return true;
 }
 
@@ -783,14 +783,14 @@ float Item_GiveTo(entity item, entity player)
 			}
 		}
 	}
-	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_HEALTH, item.max_health);
-	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_ARMOR, item.max_armorvalue);
-	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_SHELLS, g_pickup_shells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_BULLETS, g_pickup_nails_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_ROCKETS, g_pickup_rockets_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_CELLS, g_pickup_cells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_PLASMA, g_pickup_plasma_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_FUEL, g_pickup_fuel_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_HEALTH, item.max_health);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_ARMOR, item.max_armorvalue);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_SHELLS, g_pickup_shells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_BULLETS, g_pickup_nails_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_ROCKETS, g_pickup_rockets_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_CELLS, g_pickup_cells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_PLASMA, g_pickup_plasma_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w;
@@ -1075,12 +1075,12 @@ float ammo_pickupevalfunc(entity player, entity item)
 	if(item.itemdef.instanceOfWeaponPickup)
 	{
 		entity ammo = NULL;
-		if(GetResourceAmount(item, RESOURCE_SHELLS))       { need_shells  = true; ammo = ITEM_Shells;      }
-		else if(GetResourceAmount(item, RESOURCE_BULLETS))   { need_nails   = true; ammo = ITEM_Bullets;     }
-		else if(GetResourceAmount(item, RESOURCE_ROCKETS)) { need_rockets = true; ammo = ITEM_Rockets;     }
-		else if(GetResourceAmount(item, RESOURCE_CELLS))   { need_cells   = true; ammo = ITEM_Cells;       }
-		else if(GetResourceAmount(item, RESOURCE_PLASMA))  { need_plasma  = true; ammo = ITEM_Plasma;      }
-		else if(GetResourceAmount(item, RESOURCE_FUEL))    { need_fuel    = true; ammo = ITEM_JetpackFuel; }
+		if(GetResource(item, RES_SHELLS))       { need_shells  = true; ammo = ITEM_Shells;      }
+		else if(GetResource(item, RES_BULLETS))   { need_nails   = true; ammo = ITEM_Bullets;     }
+		else if(GetResource(item, RES_ROCKETS)) { need_rockets = true; ammo = ITEM_Rockets;     }
+		else if(GetResource(item, RES_CELLS))   { need_cells   = true; ammo = ITEM_Cells;       }
+		else if(GetResource(item, RES_PLASMA))  { need_plasma  = true; ammo = ITEM_Plasma;      }
+		else if(GetResource(item, RES_FUEL))    { need_fuel    = true; ammo = ITEM_JetpackFuel; }
 
 		if(!ammo)
 			return 0;
@@ -1095,12 +1095,12 @@ float ammo_pickupevalfunc(entity player, entity item)
 
 			switch(it.ammo_type)
 			{
-				case RESOURCE_SHELLS:  need_shells  = true; break;
-				case RESOURCE_BULLETS: need_nails   = true; break;
-				case RESOURCE_ROCKETS: need_rockets = true; break;
-				case RESOURCE_CELLS:   need_cells   = true; break;
-				case RESOURCE_PLASMA:  need_plasma  = true; break;
-				case RESOURCE_FUEL:    need_fuel    = true; break;
+				case RES_SHELLS:  need_shells  = true; break;
+				case RES_BULLETS: need_nails   = true; break;
+				case RES_ROCKETS: need_rockets = true; break;
+				case RES_CELLS:   need_cells   = true; break;
+				case RES_PLASMA:  need_plasma  = true; break;
+				case RES_FUEL:    need_fuel    = true; break;
 			}
 		});
 		rating = item.bot_pickupbasevalue;
@@ -1108,23 +1108,23 @@ float ammo_pickupevalfunc(entity player, entity item)
 
 	float noammorating = 0.5;
 
-	if ((need_shells) && GetResourceAmount(item, RESOURCE_SHELLS) && (GetResourceAmount(player, RESOURCE_SHELLS) < g_pickup_shells_max))
-		c = GetResourceAmount(item, RESOURCE_SHELLS) / max(noammorating, GetResourceAmount(player, RESOURCE_SHELLS));
+	if ((need_shells) && GetResource(item, RES_SHELLS) && (GetResource(player, RES_SHELLS) < g_pickup_shells_max))
+		c = GetResource(item, RES_SHELLS) / max(noammorating, GetResource(player, RES_SHELLS));
 
-	if ((need_nails) && GetResourceAmount(item, RESOURCE_BULLETS) && (GetResourceAmount(player, RESOURCE_BULLETS) < g_pickup_nails_max))
-		c = GetResourceAmount(item, RESOURCE_BULLETS) / max(noammorating, GetResourceAmount(player, RESOURCE_BULLETS));
+	if ((need_nails) && GetResource(item, RES_BULLETS) && (GetResource(player, RES_BULLETS) < g_pickup_nails_max))
+		c = GetResource(item, RES_BULLETS) / max(noammorating, GetResource(player, RES_BULLETS));
 
-	if ((need_rockets) && GetResourceAmount(item, RESOURCE_ROCKETS) && (GetResourceAmount(player, RESOURCE_ROCKETS) < g_pickup_rockets_max))
-		c = GetResourceAmount(item, RESOURCE_ROCKETS) / max(noammorating, GetResourceAmount(player, RESOURCE_ROCKETS));
+	if ((need_rockets) && GetResource(item, RES_ROCKETS) && (GetResource(player, RES_ROCKETS) < g_pickup_rockets_max))
+		c = GetResource(item, RES_ROCKETS) / max(noammorating, GetResource(player, RES_ROCKETS));
 
-	if ((need_cells) && GetResourceAmount(item, RESOURCE_CELLS) && (GetResourceAmount(player, RESOURCE_CELLS) < g_pickup_cells_max))
-		c = GetResourceAmount(item, RESOURCE_CELLS) / max(noammorating, GetResourceAmount(player, RESOURCE_CELLS));
+	if ((need_cells) && GetResource(item, RES_CELLS) && (GetResource(player, RES_CELLS) < g_pickup_cells_max))
+		c = GetResource(item, RES_CELLS) / max(noammorating, GetResource(player, RES_CELLS));
 
-	if ((need_plasma) && GetResourceAmount(item, RESOURCE_PLASMA) && (GetResourceAmount(player, RESOURCE_PLASMA) < g_pickup_plasma_max))
-		c = GetResourceAmount(item, RESOURCE_PLASMA) / max(noammorating, GetResourceAmount(player, RESOURCE_PLASMA));
+	if ((need_plasma) && GetResource(item, RES_PLASMA) && (GetResource(player, RES_PLASMA) < g_pickup_plasma_max))
+		c = GetResource(item, RES_PLASMA) / max(noammorating, GetResource(player, RES_PLASMA));
 
-	if ((need_fuel) && GetResourceAmount(item, RESOURCE_FUEL) && (GetResourceAmount(player, RESOURCE_FUEL) < g_pickup_fuel_max))
-		c = GetResourceAmount(item, RESOURCE_FUEL) / max(noammorating, GetResourceAmount(player, RESOURCE_FUEL));
+	if ((need_fuel) && GetResource(item, RES_FUEL) && (GetResource(player, RES_FUEL) < g_pickup_fuel_max))
+		c = GetResource(item, RES_FUEL) / max(noammorating, GetResource(player, RES_FUEL));
 
 	rating *= min(c, 2);
 	if(wpn)
@@ -1137,8 +1137,8 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 	float c = 0;
 	float rating = item.bot_pickupbasevalue;
 
-	float itemarmor = GetResourceAmount(item, RESOURCE_ARMOR);
-	float itemhealth = GetResourceAmount(item, RESOURCE_HEALTH);
+	float itemarmor = GetResource(item, RES_ARMOR);
+	float itemhealth = GetResource(item, RES_HEALTH);
 
 	if(item.item_group)
 	{
@@ -1146,11 +1146,11 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 		itemhealth *= min(4, item.item_group_count);
 	}
 
-	if (itemarmor && (GetResourceAmount(player, RESOURCE_ARMOR) < item.max_armorvalue))
-		c = itemarmor / max(1, GetResourceAmount(player, RESOURCE_ARMOR) * 2/3 + GetResourceAmount(player, RESOURCE_HEALTH) * 1/3);
+	if (itemarmor && (GetResource(player, RES_ARMOR) < item.max_armorvalue))
+		c = itemarmor / max(1, GetResource(player, RES_ARMOR) * 2/3 + GetResource(player, RES_HEALTH) * 1/3);
 
-	if (itemhealth && (GetResourceAmount(player, RESOURCE_HEALTH) < item.max_health))
-		c = itemhealth / max(1, GetResourceAmount(player, RESOURCE_HEALTH));
+	if (itemhealth && (GetResource(player, RES_HEALTH) < item.max_health))
+		c = itemhealth / max(1, GetResource(player, RES_HEALTH));
 
 	rating *= min(2, c);
 	return rating;
@@ -1339,7 +1339,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(def.instanceOfPowerup)
 			this.ItemStatus |= ITS_ANIMATE1;
 
-		if(GetResourceAmount(this, RESOURCE_ARMOR) || GetResourceAmount(this, RESOURCE_HEALTH))
+		if(GetResource(this, RES_ARMOR) || GetResource(this, RES_HEALTH))
 			this.ItemStatus |= ITS_ANIMATE2;
 	}
 
@@ -1559,14 +1559,14 @@ spawnfunc(target_items)
 		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
 		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
 		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
-		if(GetResourceAmount(this, RESOURCE_SHELLS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_SHELLS)), "shells");
-		if(GetResourceAmount(this, RESOURCE_BULLETS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_BULLETS)), "nails");
-		if(GetResourceAmount(this, RESOURCE_ROCKETS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_ROCKETS)), "rockets");
-		if(GetResourceAmount(this, RESOURCE_CELLS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_CELLS)), "cells");
-		if(GetResourceAmount(this, RESOURCE_PLASMA) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_PLASMA)), "plasma");
-		if(GetResourceAmount(this, RESOURCE_FUEL) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_FUEL)), "fuel");
-		if(GetResourceAmount(this, RESOURCE_HEALTH) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_HEALTH)), "health");
-		if(GetResourceAmount(this, RESOURCE_ARMOR) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResourceAmount(this, RESOURCE_ARMOR)), "armor");
+		if(GetResource(this, RES_SHELLS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_SHELLS)), "shells");
+		if(GetResource(this, RES_BULLETS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_BULLETS)), "nails");
+		if(GetResource(this, RES_ROCKETS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_ROCKETS)), "rockets");
+		if(GetResource(this, RES_CELLS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_CELLS)), "cells");
+		if(GetResource(this, RES_PLASMA) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_PLASMA)), "plasma");
+		if(GetResource(this, RES_FUEL) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_FUEL)), "fuel");
+		if(GetResource(this, RES_HEALTH) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_HEALTH)), "health");
+		if(GetResource(this, RES_ARMOR) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_ARMOR)), "armor");
 		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(BUFFS, this) & (it.m_itemid)), it.m_name));
 		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
 	}
@@ -1666,28 +1666,19 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 	else if(v0 > v1)
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
-bool GiveResourceValue(entity e, int resource_type, int op, int val)
+bool GiveResourceValue(entity e, int res_type, int op, int val)
 {
-	int v0 = GetResourceAmount(e, resource_type);
+	int v0 = GetResource(e, res_type);
 	switch (op)
 	{
-		case OP_SET:
-			SetResourceAmount(e, resource_type, val);
-			break;
-		case OP_MIN:
-			SetResourceAmount(e, resource_type, max(v0, val)); // min 100 cells = at least 100 cells
-			break;
-		case OP_MAX:
-			SetResourceAmount(e, resource_type, min(v0, val));
-			break;
-		case OP_PLUS:
-			SetResourceAmount(e, resource_type, v0 + val);
-			break;
-		case OP_MINUS:
-			SetResourceAmount(e, resource_type, v0 - val);
-			break;
+		// min 100 cells = at least 100 cells
+		case OP_SET: SetResource(e, res_type, val); break;
+		case OP_MIN: SetResource(e, res_type, max(v0, val)); break;
+		case OP_MAX: SetResource(e, res_type, min(v0, val)); break;
+		case OP_PLUS: SetResource(e, res_type, v0 + val); break;
+		case OP_MINUS: SetResource(e, res_type, v0 - val); break;
 	}
-	int v1 = GetResourceAmount(e, resource_type);
+	int v1 = GetResource(e, res_type);
 	return v0 != v1;
 }
 
@@ -1723,14 +1714,14 @@ float GiveItems(entity e, float beginarg, float endarg)
 	PREGIVE(e, strength_finished);
 	PREGIVE(e, invincible_finished);
 	PREGIVE(e, superweapons_finished);
-	PREGIVE_RESOURCE(e, RESOURCE_BULLETS);
-	PREGIVE_RESOURCE(e, RESOURCE_CELLS);
-	PREGIVE_RESOURCE(e, RESOURCE_PLASMA);
-	PREGIVE_RESOURCE(e, RESOURCE_SHELLS);
-	PREGIVE_RESOURCE(e, RESOURCE_ROCKETS);
-	PREGIVE_RESOURCE(e, RESOURCE_FUEL);
-	PREGIVE_RESOURCE(e, RESOURCE_ARMOR);
-	PREGIVE_RESOURCE(e, RESOURCE_HEALTH);
+	PREGIVE_RESOURCE(e, RES_BULLETS);
+	PREGIVE_RESOURCE(e, RES_CELLS);
+	PREGIVE_RESOURCE(e, RES_PLASMA);
+	PREGIVE_RESOURCE(e, RES_SHELLS);
+	PREGIVE_RESOURCE(e, RES_ROCKETS);
+	PREGIVE_RESOURCE(e, RES_FUEL);
+	PREGIVE_RESOURCE(e, RES_ARMOR);
+	PREGIVE_RESOURCE(e, RES_HEALTH);
 
 	for(i = beginarg; i < endarg; ++i)
 	{
@@ -1767,19 +1758,19 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
 			case "all":
 				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
-				got += GiveResourceValue(e, RESOURCE_HEALTH, op, val);
-				got += GiveResourceValue(e, RESOURCE_ARMOR, op, val);
+				got += GiveResourceValue(e, RES_HEALTH, op, val);
+				got += GiveResourceValue(e, RES_ARMOR, op, val);
 			case "allweapons":
 				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED), got += GiveWeapon(e, it.m_id, op, val));
 			//case "allbuffs": // all buffs makes a player god, do not want!
 				//FOREACH(Buffs, it != BUFF_Null, got += GiveBuff(e, it.m_itemid, op, val));
 			case "allammo":
-				got += GiveResourceValue(e, RESOURCE_CELLS, op, val);
-				got += GiveResourceValue(e, RESOURCE_PLASMA, op, val);
-				got += GiveResourceValue(e, RESOURCE_SHELLS, op, val);
-				got += GiveResourceValue(e, RESOURCE_BULLETS, op, val);
-				got += GiveResourceValue(e, RESOURCE_ROCKETS, op, val);
-				got += GiveResourceValue(e, RESOURCE_FUEL, op, val);
+				got += GiveResourceValue(e, RES_CELLS, op, val);
+				got += GiveResourceValue(e, RES_PLASMA, op, val);
+				got += GiveResourceValue(e, RES_SHELLS, op, val);
+				got += GiveResourceValue(e, RES_BULLETS, op, val);
+				got += GiveResourceValue(e, RES_ROCKETS, op, val);
+				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			case "unlimited_ammo":
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
@@ -1806,29 +1797,29 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, superweapons_finished, op, val);
 				break;
 			case "cells":
-				got += GiveResourceValue(e, RESOURCE_CELLS, op, val);
+				got += GiveResourceValue(e, RES_CELLS, op, val);
 				break;
 			case "plasma":
-				got += GiveResourceValue(e, RESOURCE_PLASMA, op, val);
+				got += GiveResourceValue(e, RES_PLASMA, op, val);
 				break;
 			case "shells":
-				got += GiveResourceValue(e, RESOURCE_SHELLS, op, val);
+				got += GiveResourceValue(e, RES_SHELLS, op, val);
 				break;
 			case "nails":
 			case "bullets":
-				got += GiveResourceValue(e, RESOURCE_BULLETS, op, val);
+				got += GiveResourceValue(e, RES_BULLETS, op, val);
 				break;
 			case "rockets":
-				got += GiveResourceValue(e, RESOURCE_ROCKETS, op, val);
+				got += GiveResourceValue(e, RES_ROCKETS, op, val);
 				break;
 			case "health":
-				got += GiveResourceValue(e, RESOURCE_HEALTH, op, val);
+				got += GiveResourceValue(e, RES_HEALTH, op, val);
 				break;
 			case "armor":
-				got += GiveResourceValue(e, RESOURCE_ARMOR, op, val);
+				got += GiveResourceValue(e, RES_ARMOR, op, val);
 				break;
 			case "fuel":
-				got += GiveResourceValue(e, RESOURCE_FUEL, op, val);
+				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			default:
 				FOREACH(Buffs, it != BUFF_Null && Buff_UndeprecateName(cmd) == it.m_name,
@@ -1859,14 +1850,14 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_VALUE(e, invincible_finished, 1, SND_Shield, SND_POWEROFF);
 	//POSTGIVE_VALUE(e, superweapons_finished, 1, SND_Null, SND_Null);
-	POSTGIVE_RESOURCE(e, RESOURCE_BULLETS, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_RESOURCE(e, RESOURCE_CELLS, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_RESOURCE(e, RESOURCE_PLASMA, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_RESOURCE(e, RESOURCE_SHELLS, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_RESOURCE(e, RESOURCE_ROCKETS, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_RESOURCE_ROT(e, RESOURCE_FUEL, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_RESOURCE_ROT(e, RESOURCE_ARMOR, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_ARMOR25, SND_Null);
-	POSTGIVE_RESOURCE_ROT(e, RESOURCE_HEALTH, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
+	POSTGIVE_RESOURCE(e, RES_BULLETS, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RES_CELLS, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RES_PLASMA, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RES_SHELLS, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RESOURCE(e, RES_ROCKETS, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RES_ROT(e, RES_FUEL, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_RES_ROT(e, RES_ARMOR, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_ARMOR25, SND_Null);
+	POSTGIVE_RES_ROT(e, RES_HEALTH, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
 	if(e.superweapons_finished <= 0)
 		if(STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS)

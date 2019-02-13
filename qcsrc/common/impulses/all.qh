@@ -27,10 +27,17 @@ REGISTRY_CHECK(IMPULSES)
 
 #define LEGACY_IMPULSE_ID(alias, id) LEGACY_IMPULSE(alias, id, sprintf("impulse %d", IMP_##alias.impulse))
 
+void _impCheck(string s, string alias)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	if (s == alias)
+		LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s);
+}
+
 #define LEGACY_IMPULSE(alias, id, new) \
 	STATIC_INIT(legacy_##alias) { \
 		string s = new; \
-		if (s == #alias) LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s); \
+		_impCheck(s, #alias); \
 		IMPULSE_ALIAS(alias, s); \
 	} \
 	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }

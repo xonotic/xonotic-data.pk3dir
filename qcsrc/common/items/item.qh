@@ -48,8 +48,8 @@ const int IT_UNLIMITED_AMMO            	= IT_UNLIMITED_WEAPON_AMMO | IT_UNLIMITE
 const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
 
 #ifdef SVQC
-.float  strength_finished = _STAT(STRENGTH_FINISHED);
-.float  invincible_finished = _STAT(INVINCIBLE_FINISHED);
+const .float strength_finished = _STAT(STRENGTH_FINISHED);
+const .float invincible_finished = _STAT(INVINCIBLE_FINISHED);
 
 #define spawnfunc_body(item) \
 	if (!Item_IsDefinitionAllowed(item)) \
