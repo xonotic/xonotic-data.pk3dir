@@ -205,8 +205,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 		{
 			int bufhandle = stof(argv(1));
 			int string_index = stof(argv(2));
-			string s = bufstr_get(bufhandle, string_index);
-			LOG_INFOF("%s", s);
+			LOG_INFO(bufstr_get(bufhandle, string_index));
 			return;
 		}
 

@@ -794,8 +794,8 @@ void GameCommand_gettaginfo(int request, int argc)
 				{
 					v = gettaginfo(tmp_entity, i);
 					LOG_INFOF(
-					    "model %s frame %s tag %s index %s parent %s",
-					    tmp_entity.model, ftos(tmp_entity.frame), gettaginfo_name, ftos(i), ftos(gettaginfo_parent)
+						"model %s frame %s tag %s index %s parent %s",
+						tmp_entity.model, ftos(tmp_entity.frame), gettaginfo_name, ftos(i), ftos(gettaginfo_parent)
 					);
 					LOG_INFOF(" vector = %s %s %s", ftos(v.x), ftos(v.y), ftos(v.z));
 					LOG_INFOF(" offset = %s %s %s", ftos(gettaginfo_offset.x), ftos(gettaginfo_offset.y), ftos(gettaginfo_offset.z));
