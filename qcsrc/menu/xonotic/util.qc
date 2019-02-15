@@ -712,10 +712,11 @@ Gametype GameType_GetID(int cnt)
 int GameType_GetCount()
 {
 	int i = 0;
+	int dev = cvar("developer");
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-	#define GAMETYPE(it) if (cvar("developer")) ++i;
+	#define GAMETYPE(it) if (dev) ++i;
 	HIDDEN_GAMETYPES
 	#undef GAMETYPE
 	return i;
