@@ -613,7 +613,7 @@ bool bot_fixcount()
 		// cap bots to the max players allowed by the server
 		int player_limit = GetPlayerLimit();
 		if(player_limit)
-			bots = min(bots, player_limit - activerealplayers);
+			bots = min(bots, max(player_limit - activerealplayers, 0));
 		bots = min(bots, maxclients - realplayers);
 
 		if(bots > minbots)
@@ -636,7 +636,7 @@ bool bot_fixcount()
 				return false;
 			}
 		}
-		while (currentbots > bots)
+		while (currentbots > bots && bots >= 0)
 			bot_removenewest();
 	}
 
