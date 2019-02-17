@@ -31,14 +31,14 @@ void GameRules_limit_fallbacks();
  * @param spprio player score priority (if frags aren't enabled)
  * @param stprio team score priority (if frags aren't enabled)
  */
-#define GameRules_scoring(teams, spprio, stprio, fields) MACRO_BEGIN { \
+#define GameRules_scoring(teams, spprio, stprio, fields) MACRO_BEGIN \
     _GameRules_scoring_begin((teams), (spprio), (stprio)); \
     noref void(entity, string, float) field = _GameRules_scoring_field; \
     /* todo: just have the one `field` function */ \
     noref void(int, string, float) field_team = _GameRules_scoring_field_team; \
     LAMBDA(fields); \
     _GameRules_scoring_end(); \
-} MACRO_END
+MACRO_END
 
 void _GameRules_scoring_begin(int teams, float spprio, float stprio);
 void _GameRules_scoring_field(entity i, string label, int scoreflags);

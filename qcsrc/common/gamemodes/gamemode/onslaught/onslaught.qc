@@ -36,7 +36,7 @@ MUTATOR_HOOKFUNCTION(cl_ons, WantEventchase)
 	entity gen = NULL;
 	if(ons_roundlost)
 	{
-		IL_EACH(g_onsgenerators, GetResourceAmount(it, RESOURCE_HEALTH) <= 0,
+		IL_EACH(g_onsgenerators, GetResource(it, RES_HEALTH) <= 0,
 		{
 			gen = it;
 			break;

@@ -88,7 +88,7 @@ void GameCommand(string theCommand)
 					if (!startsWith(s, filter)) continue;
 					s = substring(s, strlen(filter), strlen(s) - strlen(filter));
 				}
-				LOG_INFOF(" %s", s);
+				LOG_INFO(" ", s);
 			});
 		}
 		else if (argc == 2 && !isdemo())     // don't allow this command in demos

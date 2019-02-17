@@ -14,8 +14,8 @@
 .int ammo_rockets;
 .int ammo_cells;
 #ifdef SVQC
-.int ammo_plasma = _STAT(PLASMA);
-.int ammo_fuel = _STAT(FUEL);
+const .int ammo_plasma = _STAT(PLASMA);
+const .int ammo_fuel = _STAT(FUEL);
 #else
 .int ammo_plasma;
 .int ammo_fuel;
@@ -48,8 +48,8 @@ MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
 PROPERTY(int, g_pickup_nails);
 void ammo_bullets_init(Pickup this, entity item)
 {
-    if(!GetResourceAmount(item, RESOURCE_BULLETS))
-        SetResourceAmountExplicit(item, RESOURCE_BULLETS, g_pickup_nails);
+    if(!GetResource(item, RES_BULLETS))
+        SetResourceExplicit(item, RES_BULLETS, g_pickup_nails);
 }
 #endif
 
@@ -82,8 +82,8 @@ MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
 PROPERTY(int, g_pickup_cells);
 void ammo_cells_init(Pickup this, entity item)
 {
-    if(!GetResourceAmount(item, RESOURCE_CELLS))
-        SetResourceAmountExplicit(item, RESOURCE_CELLS, g_pickup_cells);
+    if(!GetResource(item, RES_CELLS))
+        SetResourceExplicit(item, RES_CELLS, g_pickup_cells);
 }
 #endif
 REGISTER_ITEM(Cells, Ammo) {
@@ -112,8 +112,8 @@ MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
 PROPERTY(int, g_pickup_plasma);
 void ammo_plasma_init(Pickup this, entity item)
 {
-    if(!GetResourceAmount(item, RESOURCE_PLASMA))
-        SetResourceAmountExplicit(item, RESOURCE_PLASMA, g_pickup_plasma);
+    if(!GetResource(item, RES_PLASMA))
+        SetResourceExplicit(item, RES_PLASMA, g_pickup_plasma);
 }
 #endif
 REGISTER_ITEM(Plasma, Ammo) {
@@ -142,8 +142,8 @@ MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
 PROPERTY(int, g_pickup_rockets);
 void ammo_rockets_init(Pickup this, entity item)
 {
-    if(!GetResourceAmount(item, RESOURCE_ROCKETS))
-        SetResourceAmountExplicit(item, RESOURCE_ROCKETS, g_pickup_rockets);
+    if(!GetResource(item, RES_ROCKETS))
+        SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
 }
 #endif
 REGISTER_ITEM(Rockets, Ammo) {
@@ -172,8 +172,8 @@ MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
 PROPERTY(int, g_pickup_shells);
 void ammo_shells_init(Pickup this, entity item)
 {
-    if(!GetResourceAmount(item, RESOURCE_SHELLS))
-        SetResourceAmountExplicit(item, RESOURCE_SHELLS, g_pickup_shells);
+    if(!GetResource(item, RES_SHELLS))
+        SetResourceExplicit(item, RES_SHELLS, g_pickup_shells);
 }
 #endif
 

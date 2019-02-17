@@ -6,7 +6,7 @@
 // increase by 0.01 when changes require only waypoint relinking
 // increase by 1 when changes require to manually edit waypoints
 // max 2 decimal places, always specified
-const float WAYPOINT_VERSION = 1.01;
+const float WAYPOINT_VERSION = 1.02;
 string waypoint_time;
 
 // fields you can query using prvm_global server to get some statistics about waypoint linking culling
@@ -28,6 +28,8 @@ float botframe_cachedwaypointlinks;
 
 .float wpfire, wpcost, wpconsidered, wpisbox, wplinked, wphardwired;
 .int wpflags;
+.entity wp_aimed;
+.entity wp_locked;
 
 .vector wpnearestpoint;
 
@@ -37,6 +39,7 @@ float botframe_cachedwaypointlinks;
 
 spawnfunc(waypoint);
 void waypoint_removelink(entity from, entity to);
+int waypoint_getlinknum(entity from, entity to);
 bool waypoint_islinked(entity from, entity to);
 void waypoint_addlink_customcost(entity from, entity to, float c);
 void waypoint_addlink(entity from, entity to);
@@ -58,7 +61,7 @@ void waypoint_saveall();
 void waypoint_spawnforitem_force(entity e, vector org);
 void waypoint_spawnforitem(entity e);
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent);
-void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir, entity tracetest_ent);
+void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent);
 void botframe_showwaypointlinks();
 
 float waypoint_loadall();

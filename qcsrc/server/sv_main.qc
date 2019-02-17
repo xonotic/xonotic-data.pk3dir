@@ -278,12 +278,11 @@ bool expr_evaluate(string s)
         string k, v;
         s = argv(i);
         #define X(expr) \
-            if (expr) { \
+            if (expr) \
                 continue; \
-            } else { \
-                expr_fail = true; \
-                break; \
-            }
+            expr_fail = true; \
+            break;
+
         #define BINOP(op, len, expr) \
             if ((o = strstrofs(s, op, 0)) >= 0) { \
                 k = substring(s, 0, o); \
@@ -372,16 +371,7 @@ void WarpZone_PostInitialize_Callback()
 	tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	//for(entity e = warpzone_first; e; e = e.warpzone_next)
 	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-	{
-		vector src, dst;
-		src = (e.absmin + e.absmax) * 0.5;
-		makevectors(e.warpzone_angles);
-		src = src + ((e.warpzone_origin - src) * v_forward) * v_forward + 16 * v_right;
-		dst = (e.enemy.absmin + e.enemy.absmax) * 0.5;
-		makevectors(e.enemy.warpzone_angles);
-		dst = dst + ((e.enemy.warpzone_origin - dst) * v_forward) * v_forward - 16 * v_right;
-		waypoint_spawnforteleporter_wz(e, src, dst, 0, -v_up, tracetest_ent);
-	}
+		waypoint_spawnforteleporter_wz(e, tracetest_ent);
 	delete(tracetest_ent);
 }
 

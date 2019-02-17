@@ -308,7 +308,7 @@ void football_touch(entity this, entity toucher)
 	}
 	if (!IS_PLAYER(toucher))
 		return;
-	if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
+	if(GetResource(toucher, RES_HEALTH) < 1)
 		return;
 	if(!this.cnt)
 		this.nextthink = time + autocvar_g_nexball_delay_idle;
@@ -348,7 +348,7 @@ void basketball_touch(entity this, entity toucher)
 	}
 	if(!this.cnt && IS_PLAYER(toucher) && !STAT(FROZEN, toucher) && !IS_DEAD(toucher) && (toucher != this.nb_dropper || time > this.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
-		if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
+		if(GetResource(toucher, RES_HEALTH) < 1)
 			return;
 		LogNB("caught", toucher);
 		GiveBall(toucher, this);

@@ -335,7 +335,8 @@ void drawBackground(string img, float a, string algn, float force1)
 	if (main.mainNexposee.ModalController_state == 0) return;
 	vector v = '0 0 0';
 	int scalemode = SCALEMODE_CROP;
-	for (int i = 0, l = 0; i < strlen(algn); ++i)
+	int len = strlen(algn);
+	for (int i = 0, l = 0; i < len; ++i)
 	{
 		string c = substring(algn, i, 1);
 		switch (c)

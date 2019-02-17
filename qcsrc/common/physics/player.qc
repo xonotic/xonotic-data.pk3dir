@@ -132,7 +132,7 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		//do_crouch = false;
 	} else if (PHYS_INVEHICLE(this)) {
 		do_crouch = false;
-	} else if (STAT(FROZEN, this)) {
+	} else if (STAT(FROZEN, this) || IS_DEAD(this)) {
 		do_crouch = false;
     }
 
@@ -799,7 +799,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 
 #ifdef SVQC
 		if (!(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-			TakeResource(this, RESOURCE_FUEL, PHYS_JETPACK_FUEL(this) * dt * fvel * f);
+			TakeResource(this, RES_FUEL, PHYS_JETPACK_FUEL(this) * dt * fvel * f);
 
 		ITEMS_STAT(this) |= IT_USING_JETPACK;
 

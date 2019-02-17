@@ -441,9 +441,10 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(NULL,netname,s1).descriptor.message) \
 	ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(NULL,netname,s1).descriptor.netname)
 
-#define NOTIF_HIT_MAX(count,funcname) MACRO_BEGIN { \
+#define NOTIF_HIT_MAX(count,funcname) MACRO_BEGIN \
 	if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; } \
-} MACRO_END
+MACRO_END
+
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 
 #define KILL_SPREE_LIST \
@@ -631,12 +632,12 @@ string notif_arg_item_wepammo(float f1, float f2)
 	Weapon wep = Weapons_from(f1);
 	switch (wep.ammo_type)
 	{
-		case RESOURCE_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
-		case RESOURCE_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
-		case RESOURCE_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
-		case RESOURCE_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
-		case RESOURCE_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
-		case RESOURCE_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
+		case RES_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
+		case RES_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
+		case RES_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
+		case RES_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
+		case RES_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
+		case RES_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
 		default: return ""; // doesn't use ammo
 	}
 	return sprintf(_(" with %d %s"), f2, ammoitems);
