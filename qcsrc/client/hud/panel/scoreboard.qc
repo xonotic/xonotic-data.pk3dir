@@ -559,7 +559,7 @@ string sbt_field_icon2;
 vector sbt_field_icon0_rgb;
 vector sbt_field_icon1_rgb;
 vector sbt_field_icon2_rgb;
-string sbt_icon_self;
+string sbt_font_self;
 string Scoreboard_GetName(entity pl)
 {
 	if(ready_waiting && pl.ready)
@@ -838,10 +838,10 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	float fg_alpha = (is_self ? sbt_fg_alpha_self : sbt_fg_alpha);
 
 	vector pos = item_pos;
-	// put an mark on self column
-	sbt_icon_self = "gfx/scoreboard/player_self";
+	// put a "self indicator" beside the self row
+	sbt_font_self = "◀"; // unicode U+25C0 (black left-pointing triangle)
 	if (is_self)
-		drawpic(pos+eX*(panel_size.x+.5*hud_fontsize.x), sbt_icon_self, vec2(hud_fontsize.x, hud_fontsize.y), rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos+eX*(panel_size.x+.5*hud_fontsize.x)+eY, sbt_font_self, vec2(hud_fontsize.x, hud_fontsize.y), rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	pos.x += hud_fontsize.x * 0.5;
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
@@ -1085,7 +1085,6 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	bool is_self = false;
 	bool self_shown = false;
 	int i = 0;
-	string team_size;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(pl.team != tm.team)
