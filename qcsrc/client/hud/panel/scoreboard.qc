@@ -33,6 +33,9 @@ float sbt_fg_alpha_self;
 bool sbt_highlight;
 float sbt_highlight_alpha;
 float sbt_highlight_alpha_self;
+int sbt_team_score_position;
+int sbt_team_size_position;
+int sbt_team_size_total;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
@@ -57,6 +60,8 @@ float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
 float autocvar_hud_panel_scoreboard_namesize = 15;
+float autocvar_hud_panel_scoreboard_team_score_position = 0;
+float autocvar_hud_panel_scoreboard_team_size_position = 0;
 
 bool autocvar_hud_panel_scoreboard_accuracy = true;
 bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
@@ -774,10 +779,13 @@ void Scoreboard_initFieldSizes()
 	}
 }
 
-vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
+vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, int team_size)
 {
 	int i;
 	vector column_dim = eY * panel_size.y;
+	string team_size_info_str;
+	vector pos_holder;
+
 	if(other_players)
 		column_dim.y -= 1.25 * hud_fontsize.y;
 	vector text_offset = eY * (1.25 - 1) / 2 * hud_fontsize.y;
@@ -792,6 +800,26 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		pos.x += column_dim.x;
+
+		// show team size info in the name column header, if set to do so
+		if (sbt_field[i] == SP_NAME && sbt_team_size_position == 1 && team_size >= 0)
+		{
+			// calculate the starting point of the whole string
+			team_size_info_str = sprintf("(%d/%d)", team_size, sbt_team_size_total);
+			pos_holder = pos - '1 0 0' * stringwidth(team_size_info_str, true, hud_fontsize) - eX * hud_fontsize.x;
+			team_size_info_str = "(";
+			drawstring(pos_holder, team_size_info_str, hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			pos_holder += '1 0 0' * stringwidth(team_size_info_str, true, hud_fontsize);
+
+			// emphasize this team size with white
+			team_size_info_str = sprintf("%d", team_size);
+			drawstring(pos_holder, team_size_info_str, hud_fontsize, '1 1 1' * 2, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			pos_holder += '1 0 0' * stringwidth(team_size_info_str, true, hud_fontsize);
+
+			team_size_info_str = sprintf("/%d)", sbt_team_size_total);
+			drawstring(pos_holder, team_size_info_str, hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			pos_holder += '1 0 0' * stringwidth(team_size_info_str, true, hud_fontsize);
+		}
 	}
 	if(sbt_field[i] == SP_SEPARATOR)
 	{
@@ -1025,7 +1053,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	return vec2(item_pos.x, item_pos.y + i * hud_fontsize.y * 1.25);
 }
 
-vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
+vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size, bool is_teamplay)
 {
 	int max_players = 999;
 	if(autocvar_hud_panel_scoreboard_maxheight > 0)
@@ -1079,7 +1107,10 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 
 
 	// print header row and highlight columns
-	pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm.team_size));
+	if (sbt_team_size_position == 1 && is_teamplay)
+		pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm.team_size), tm.team_size);
+	else
+		pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm.team_size), -1);
 
 	// fill the table and draw the rows
 	bool is_self = false;
@@ -1571,6 +1602,8 @@ void Scoreboard_Draw()
 	sbt_highlight_alpha_self = autocvar_hud_panel_scoreboard_table_highlight_alpha_self * panel_fg_alpha;
 	sbt_fg_alpha = autocvar_hud_panel_scoreboard_table_fg_alpha * panel_fg_alpha;
 	sbt_fg_alpha_self = autocvar_hud_panel_scoreboard_table_fg_alpha_self * panel_fg_alpha;
+	sbt_team_score_position = autocvar_hud_panel_scoreboard_team_score_position;
+	sbt_team_size_position = autocvar_hud_panel_scoreboard_team_size_position;
 
 	// don't overlap with con_notify
 	if(!autocvar__hud_configure)
@@ -1597,7 +1630,7 @@ void Scoreboard_Draw()
 	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_type_fontsize)), str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
 
-    // Game Detail
+	// Game Detail
 	float tl, fl, ll;
 	str = sprintf(""); // optionally "^7Limits: "
 	tl = STAT(TIMELIMIT);
@@ -1655,13 +1688,18 @@ void Scoreboard_Draw()
 	pos.y += sb_gameinfo_type_fontsize.y;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
 	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
-    // map name
+	// map name
 	str = sprintf(_("^7Map: ^2%s^7"), shortmapname);
 	drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 
 	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
+
+	// calculate team size total (sum of all team sizes)
+	sbt_team_size_total = 0;
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		sbt_team_size_total += tm.team_size;
 
 	// Draw the scoreboard
 	float scale = autocvar_hud_panel_scoreboard_table_bg_scale;
@@ -1672,12 +1710,31 @@ void Scoreboard_Draw()
 	if(teamplay)
 	{
 		vector panel_bg_color_save = panel_bg_color;
-		vector team_score_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
-		vector team_size_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
-		if(panel.current_panel_bg != "0") {
-			team_score_baseoffset.x += panel_bg_border;
-			team_size_baseoffset.x -= panel_bg_border;
+		vector team_score_baseoffset;
+		vector team_size_baseoffset;
+		if (sbt_team_score_position == 1)
+		{
+			// put team score to the right of scoreboard (and team size to the left)
+			team_score_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
+			team_size_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
+			if(panel.current_panel_bg != "0")
+			{
+				team_score_baseoffset.x += panel_bg_border;
+				team_size_baseoffset.x -= panel_bg_border;
+			}
 		}
+		else
+		{
+			// put team score to the left of scoreboard (and team size to the right)
+			team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
+			team_size_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
+			if(panel.current_panel_bg != "0")
+			{
+				team_score_baseoffset.x -= panel_bg_border;
+				team_size_baseoffset.x += panel_bg_border;
+			}
+		}
+
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
@@ -1685,22 +1742,58 @@ void Scoreboard_Draw()
 			if(!tm.team)
 				continue;
 
-			// team total score on the right
 			draw_beginBoldFont();
 			vector rgb = Team_ColorRGB(tm.team);
 			str = ftos(tm.(teamscores(ts_primary)));
-			str_pos = pos + eX * (panel_size.x + hud_fontsize.x) + team_score_baseoffset;
-			drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
-			// draw team size on the left
-			str = ftos(tm.team_size);
-			str_pos = pos + team_size_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
+			if (sbt_team_score_position == 1)
+			{
+				// team score on the right
+				str_pos = pos + team_score_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.1);
+			}
+			else
+			{
+				// team score on the left
+				str_pos = pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
+			}
 			drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
-            // secondary score, e.g. keyhunt
+			// team size (if set to show on the side)
+			if (sbt_team_size_position == 2)
+			{
+				// calculate the starting position for the whole team size info string
+				str = sprintf("%d/%d", tm.team_size, sbt_team_size_total);
+				if (sbt_team_score_position == 1) // show on the opposite side of the team score
+				{
+					// team size on the left
+					str_pos = pos + team_size_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
+				}
+				else
+				{
+					str_pos = pos + team_size_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.1);
+				}
+				str = sprintf("%d", tm.team_size);
+				drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+				str_pos += eX * stringwidth(str, true, hud_fontsize * 1.5) + eY * hud_fontsize.y * .5;
+				str = sprintf("/%d", sbt_team_size_total);
+				drawstring(str_pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+
+
+			// secondary score, e.g. keyhunt
 			if(ts_primary != ts_secondary)
 			{
 				str = ftos(tm.(teamscores(ts_secondary)));
-				str_pos = pos + team_score_baseoffset + vec2(panel_size.x + hud_fontsize.x, hud_fontsize.y * 1.5);
+				if (sbt_team_score_position == 1)
+				{
+					// right
+					str_pos = pos + team_score_baseoffset + vec2(panel_size.x + hud_fontsize.x, hud_fontsize.y * 1.1);
+				}
+				else
+				{
+					// left
+					str_pos = pos + team_score_baseoffset - vec2(stringwidth(str, false, hud_fontsize), hud_fontsize.y * -1.5);
+				}
+
 				drawstring(str_pos, str, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			draw_endBoldFont();
@@ -1710,7 +1803,7 @@ void Scoreboard_Draw()
 				panel_bg_color = rgb * panel_bg_color_team;
 			else
 				panel_bg_color = rgb;
-			pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
+			pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size, true);
 		}
 		panel_bg_color = panel_bg_color_save;
 	}
@@ -1719,8 +1812,8 @@ void Scoreboard_Draw()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 			if(tm.team != NUM_SPECTATOR)
 				break;
-		// display it anyway
-		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
+		// display it anyway (but don't show team size info)
+		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size, false);
 	}
 
 	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
