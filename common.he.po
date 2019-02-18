@@ -4,13 +4,14 @@
 #
 # Translators:
 # nad le <nadavlevi726@gmail.com>, 2018
+# Tal Leibman <leibman2@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-02-17 18:41+0000\n"
+"Last-Translator: Tal Leibman <leibman2@gmail.com>\n"
 "Language-Team: Hebrew (http://www.transifex.com/team-xonotic/xonotic/"
 "language/he/)\n"
 "Language: he\n"
@@ -9230,11 +9231,11 @@ msgstr "דצמבר"
 
 #: qcsrc/menu/xonotic/statslist.qc:96
 msgid "Joined:"
-msgstr ""
+msgstr "הצטרף:"
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
-msgstr ""
+msgstr "משחק אחרון:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
@@ -9242,7 +9243,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:230
 msgid "Favorite map:"
-msgstr ""
+msgstr "מפה מועדפת:"
 
 #: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
 #: qcsrc/menu/xonotic/statslist.qc:244
@@ -9253,12 +9254,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:154
 #, c-format
 msgid "Wins/Losses:"
-msgstr ""
+msgstr "ניצחונות/הפסדים"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Win percentage:"
-msgstr ""
+msgstr "אחוז ניצחונות:"
 
 #: qcsrc/menu/xonotic/statslist.qc:166
 #, c-format
@@ -9268,7 +9269,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:172
 #, c-format
 msgid "Kill ratio:"
-msgstr ""
+msgstr "יחס הריגות:"
 
 #: qcsrc/menu/xonotic/statslist.qc:207
 msgid "ELO:"
@@ -9276,11 +9277,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:214
 msgid "Rank:"
-msgstr ""
+msgstr "דרגה:"
 
 #: qcsrc/menu/xonotic/statslist.qc:221
 msgid "Percentile:"
-msgstr ""
+msgstr "אחוזון:"
 
 #: qcsrc/menu/xonotic/statslist.qc:246
 #, c-format
@@ -9320,4 +9321,4 @@ msgstr "השתמש בברירת מחדל"
 
 #: qcsrc/menu/xonotic/util.qc:807
 msgid "Team Color:"
-msgstr ""
+msgstr "צבע קבוצה"
