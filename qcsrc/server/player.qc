@@ -310,62 +310,63 @@ void calculate_player_respawn_time(entity this)
 
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	float take, save, dh, da;
 	vector v;
-	float excess;
+	float dh = max(GetResource(this, RES_HEALTH), 0);
+	float da = max(GetResource(this, RES_ARMOR), 0);
+	float take = 0, save = 0;
 
-	dh = max(GetResource(this, RES_HEALTH), 0);
-	da = max(GetResource(this, RES_ARMOR), 0);
-
-	if(!DEATH_ISSPECIAL(deathtype))
+	if (damage)
 	{
-		damage *= Handicap_GetTotalHandicap(this);
-		if (this != attacker && IS_PLAYER(attacker))
+		if(!DEATH_ISSPECIAL(deathtype))
 		{
-			damage /= Handicap_GetTotalHandicap(attacker);
+			damage *= Handicap_GetTotalHandicap(this);
+			if (this != attacker && IS_PLAYER(attacker))
+			{
+				damage /= Handicap_GetTotalHandicap(attacker);
+			}
 		}
-	}
 
-	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
-		damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
+		if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
 
-	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
-	{
-		// tuba causes blood to come out of the ears
-		vector ear1, ear2;
-		vector d;
-		float f;
-		ear1 = this.origin;
-		ear1_z += 0.125 * this.view_ofs.z + 0.875 * this.maxs.z; // 7/8
-		ear2 = ear1;
-		makevectors(this.angles);
-		ear1 += v_right * -10;
-		ear2 += v_right * +10;
-		d = inflictor.origin - this.origin;
-		if (d)
-			f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
+		{
+			// tuba causes blood to come out of the ears
+			vector ear1, ear2;
+			vector d;
+			float f;
+			ear1 = this.origin;
+			ear1_z += 0.125 * this.view_ofs.z + 0.875 * this.maxs.z; // 7/8
+			ear2 = ear1;
+			makevectors(this.angles);
+			ear1 += v_right * -10;
+			ear2 += v_right * +10;
+			d = inflictor.origin - this.origin;
+			if (d)
+				f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+			else
+				f = 0;  // Assum ecenter.
+			force = v_right * vlen(force);
+			Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), this, attacker);
+			Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), this, attacker);
+			if(f > 0)
+			{
+				hitloc = ear1;
+				force = force * -1;
+			}
+			else
+			{
+				hitloc = ear2;
+				// force is already good
+			}
+		}
 		else
-			f = 0;  // Assum ecenter.
-		force = v_right * vlen(force);
-		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), this, attacker);
-		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), this, attacker);
-		if(f > 0)
-		{
-			hitloc = ear1;
-			force = force * -1;
-		}
-		else
-		{
-			hitloc = ear2;
-			// force is already good
-		}
-	}
-	else
-		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
+			Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
-	take = v.x;
-	save = v.y;
+		v = healtharmor_applydamage(GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+		take = v.x;
+		save = v.y;
+	}
 
 	if(attacker == this)
 	{
@@ -394,7 +395,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
 	take = bound(0, M_ARGV(4, float), GetResource(this, RES_HEALTH));
 	save = bound(0, M_ARGV(5, float), GetResource(this, RES_ARMOR));
-	excess = max(0, damage - take - save);
+	float excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
