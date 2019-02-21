@@ -79,12 +79,11 @@ void Item_ScheduleInitialRespawn(entity e);
 /// \param[in] weapon_names Names of weapons to give separated by spaces.
 /// \param[in] ammo Entity containing the ammo amount for each possible weapon.
 /// \return No return.
-void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
-	entity ammo_entity);
+void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names, entity ammo_entity);
 
-float Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax);
+bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax);
 
-float Item_GiveTo(entity item, entity player);
+bool Item_GiveTo(entity item, entity player);
 
 void Item_Touch(entity this, entity toucher);
 
