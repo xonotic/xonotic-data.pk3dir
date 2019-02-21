@@ -467,8 +467,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
 
-			if (this != attacker) {
-				float realdmg = damage - excess;
+			float realdmg = damage - excess;
+			if (this != attacker && realdmg)
+			{
 				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
 				}
@@ -552,7 +553,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// print an obituary message
 		if(this.classname != "body")
-			Obituary (attacker, inflictor, this, deathtype, weaponentity);
+			Obituary(attacker, inflictor, this, deathtype, weaponentity);
 
 		// increment frag counter for used weapon type
 		Weapon w = DEATH_WEAPONOF(deathtype);
