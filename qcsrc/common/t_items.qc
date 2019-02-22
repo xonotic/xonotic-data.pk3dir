@@ -743,23 +743,16 @@ bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
 	if (item.spawnshieldtime)
 	{
 		if ((player_amount >= ammomax) && (item.pickup_anyway <= 0))
-		{
 			return false;
-		}
-		if (amount < 0)
-			TakeResourceWithLimit(player, res_type, -amount, ammomax);
-		else
-			GiveResourceWithLimit(player, res_type, amount, ammomax);
-		return true;
 	}
-	if (g_weapon_stay != 2)
-	{
-		return false;
-	}
-	if (amount < 0)
-		TakeResourceWithLimit(player, res_type, -amount, min(amount, ammomax));
+	else if (g_weapon_stay == 2)
+		ammomax = min(amount, ammomax);
 	else
-		GiveResourceWithLimit(player, res_type, amount, min(amount, ammomax));
+		return false;
+	if (amount < 0)
+		TakeResourceWithLimit(player, res_type, -amount, ammomax);
+	else
+		GiveResourceWithLimit(player, res_type, amount, ammomax);
 	return true;
 }
 
