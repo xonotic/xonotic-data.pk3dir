@@ -746,14 +746,20 @@ bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
 		{
 			return false;
 		}
-		GiveOrTakeResourceWithLimit(player, res_type, amount, ammomax);
+		if (amount < 0)
+			TakeResourceWithLimit(player, res_type, -amount, ammomax);
+		else
+			GiveResourceWithLimit(player, res_type, amount, ammomax);
 		return true;
 	}
 	if (g_weapon_stay != 2)
 	{
 		return false;
 	}
-	GiveOrTakeResourceWithLimit(player, res_type, amount, min(amount, ammomax));
+	if (amount < 0)
+		TakeResourceWithLimit(player, res_type, -amount, min(amount, ammomax));
+	else
+		GiveResourceWithLimit(player, res_type, amount, min(amount, ammomax));
 	return true;
 }
 
