@@ -26,8 +26,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-02-23 14:52+0000\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -40,11 +40,13 @@ msgstr ""
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
 msgstr ""
+"^2Erfolgreich nach %s exportiert! (Anmerkung: Es wird in data/data/ "
+"gespeichert)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Konnte nicht nach %s schreiben"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -107,7 +109,7 @@ msgstr "Waffe wegwerfen"
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr "Sekundärschuss"
+msgstr "Sekundärfeuer"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
@@ -248,7 +250,7 @@ msgstr "Fortfahren…"
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
@@ -552,7 +554,7 @@ msgstr "^2STRAFZEIT: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Anzahl an Ballbesitzer-Kills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "SCO^bckills"
@@ -564,11 +566,12 @@ msgstr "bbzeit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
+msgstr "Gesamtzeit, die der Ball in Keepaway gehalten wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr ""
+"Wie oft eine Flagge (CTF) oder ein Schlüssel (KeyHunt) geschnappt wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "SCO^caps"
@@ -580,11 +583,11 @@ msgstr "capzeit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "Zeit der schnellsten Eroberung (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "Number of deaths"
-msgstr ""
+msgstr "Anzahl Tode"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "SCO^deaths"
@@ -593,6 +596,7 @@ msgstr "tode"
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "Number of keys destroyed by pushing them into void"
 msgstr ""
+"Anzahl der zerstörten Schlüssel, indem sie in die Leere geworfen wurden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^destroyed"
@@ -604,7 +608,7 @@ msgstr "schaden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "The total damage done"
-msgstr ""
+msgstr "Angerichteter Gesamtschaden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^dmgtaken"
@@ -612,11 +616,11 @@ msgstr "scherhal"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "The total damage taken"
-msgstr ""
+msgstr "Erhaltenen Gesamtschaden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "Number of flag drops"
-msgstr ""
+msgstr "Anzahl fallengelassener Flaggen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^drops"
@@ -624,31 +628,31 @@ msgstr "fallen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "Player ELO"
-msgstr "Spieler ELO"
+msgstr "Spieler-ELO"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "SCO^elo"
-msgstr ""
+msgstr "elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "SCO^fastest"
-msgstr ""
+msgstr "schnellste"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "Time of fastest lap (Race/CTS)"
-msgstr ""
+msgstr "Zeit der schnellsten Runde (Rennen/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "Number of faults committed"
-msgstr ""
+msgstr "Anzahl der gemachten Fehler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^faults"
-msgstr "faults"
+msgstr "Fehler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:98
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Anzahl an Flaggenträgerkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:98
 msgid "SCO^fckills"
@@ -656,23 +660,23 @@ msgstr "fckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^fps"
-msgstr ""
+msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Anzahl Kills minus Suizide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^frags"
-msgstr ""
+msgstr "frags"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "Number of goals scored"
-msgstr ""
+msgstr "Anzahl geschossener Tore"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "SCO^goals"
@@ -680,7 +684,7 @@ msgstr "tore"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "Number of keys carrier kills"
-msgstr ""
+msgstr "Anzahl an Schlüsselträgerkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "SCO^kckills"
@@ -694,7 +698,7 @@ msgstr "k/d"
 #: qcsrc/client/hud/panel/scoreboard.qc:104
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "The kill-death ratio"
-msgstr ""
+msgstr "Das Kill-/Tod-Verhältnis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:104
 msgid "SCO^kdr"
@@ -714,7 +718,7 @@ msgstr "kills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Anzahl gedrehter Runden (Rennen/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^laps"
@@ -722,7 +726,7 @@ msgstr "runden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "Anzahl Leben (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^lives"
@@ -730,7 +734,7 @@ msgstr "leben"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "Number of times a key was lost"
-msgstr ""
+msgstr "Wie oft ein Schlüssel verloren wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^losses"
@@ -739,7 +743,7 @@ msgstr "verloren"
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "Player name"
-msgstr ""
+msgstr "Spielername"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^name"
@@ -751,7 +755,7 @@ msgstr "nick"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "Number of objectives destroyed"
-msgstr ""
+msgstr "Anzahl an zerstörten Zielen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^objectives"
@@ -761,6 +765,8 @@ msgstr "ziele"
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
+"Wie oft eine Flagge (CTF) oder ein Schlüssel (KeyHunt) oder ein Ball "
+"(Keepaway) aufgehoben wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^pickups"
@@ -784,7 +790,7 @@ msgstr "pl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Anzahl der Spieler, die in die Leere geschubst wurden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "SCO^pushes"
@@ -792,7 +798,7 @@ msgstr "schubser"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "Player rank"
-msgstr ""
+msgstr "Spielerrang"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "SCO^rank"
@@ -800,7 +806,7 @@ msgstr "rang"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "Number of flag returns"
-msgstr ""
+msgstr "Anzahl zurückgebrachter Flaggen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "SCO^returns"
@@ -808,7 +814,7 @@ msgstr "zurück"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "Number of revivals"
-msgstr ""
+msgstr "Anzahl Wiederbelebungen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "SCO^revivals"
@@ -816,7 +822,7 @@ msgstr "wiederbelebungen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Anzahl gewonnener Runden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^rounds won"
@@ -828,11 +834,11 @@ msgstr "punkte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Total score"
-msgstr ""
+msgstr "Gesamtpunktzahl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Number of suicides"
-msgstr ""
+msgstr "Anzahl Suizide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^suicides"
@@ -840,7 +846,7 @@ msgstr "suizide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Anzahl der Kills minus der Tode"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^sum"
@@ -848,7 +854,7 @@ msgstr "summe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "Anzahl eroberter Dominationspunkte (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^takes"
@@ -856,15 +862,15 @@ msgstr "takes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Anzahl der Teamkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "teamkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Anzahl Ticks (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^ticks"
@@ -872,50 +878,59 @@ msgstr "ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^time"
-msgstr ""
+msgstr "zeit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "Gesamtzeit im Rennen (Rennen/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
+"Du kannst die Punktetafel mit dem ^2scoreboard_columns_set^7-Befehl "
+"modifizieren."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:312
 msgid "Usage:"
-msgstr ""
+msgstr "Benutzung:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:314
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr ""
+msgstr "^2scoreboard_columns_set ^3field1 field2 ..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
+"^2scoreboard_columns_set ^7ohne Argumente liest die Argumente von der cvar "
+"scoreboard_columns"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
+"  ^5Anmerkung: ^7scoreboard_columns_set ohne Argumente wird bei jedem "
+"Kartenstart ausgeführt"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:317
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
+"^2scoreboard_columns_set ^3expand_default ^7lädt das Standard-Layout und "
+"expandiert es in die cvar scoreboard_columns, damit du sie bearbeiten kannst"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "You can use a ^3|^7 to start the right-aligned fields."
-msgstr ""
+msgstr "Du kannst ein ^3|^7 benutzen, um die rechtsbündigen Felder zu starten."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
+"Die folgenden Feldnamen werden akzeptiert (Groß-/Kleinschreibung egal):"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:325
 msgid ""
@@ -924,28 +939,40 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
+"Vor einem Feld kannst du ein Plus- oder Minuszeichen setzen, dann\n"
+"eine kommagetrennte Liste an Spieltypen, dann ein Schrägstrich,\n"
+"um das Feld nur in diesen oder in allen außer diesen Spieltypen\n"
+"anzuzeigen. Du kannst außerdem „all“ als ein Feld angeben, um\n"
+"alle verfügbaren Felder für den aktuellen Spielmodus anzuzeigen."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
+"Die besonderen Spieltypnamen „teams“ und „noteams“ können\n"
+"benutzt werden, um ALLE Spielmodi mit bzw. ohne Teams\n"
+"einzubinden bzw. auszuschließen."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:335
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
-msgstr ""
+msgstr "Beispiel: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:336
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
+"wird name, ping und pl linksbündig anzeigen, und die Felder\n"
+"rechts vom Querstrich werden rechtsbündig sein."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:338
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
+"„field3“ wird nur in CTF angezeigt, und „field4“ wird in allen\n"
+"anderen Spielmodi außer DM angezeigt."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:601
 #: qcsrc/client/hud/panel/scoreboard.qc:608
@@ -1067,7 +1094,7 @@ msgstr "AUFWÄRMRUNDE"
 
 #: qcsrc/client/hud/panel/vote.qc:27
 msgid "^1You must answer before entering hud configure mode"
-msgstr ""
+msgstr "^1Du musst antworten, bevor du den HUD-Konfigurationsmodus betrittst"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1107,11 +1134,11 @@ msgstr "Nein"
 
 #: qcsrc/client/hud/panel/weapons.qc:546
 msgid "Out of ammo"
-msgstr "Keine Munition mehr"
+msgstr "Muni alle"
 
 #: qcsrc/client/hud/panel/weapons.qc:550
 msgid "Don't have"
-msgstr "Hast du nicht"
+msgstr "Nicht dabei"
 
 #: qcsrc/client/hud/panel/weapons.qc:554
 msgid "Unavailable"
@@ -1123,15 +1150,15 @@ msgstr "qu/s"
 
 #: qcsrc/client/main.qc:1029
 msgid " m/s"
-msgstr "m/s"
+msgstr " m/s"
 
 #: qcsrc/client/main.qc:1031
 msgid " km/h"
-msgstr "km/h"
+msgstr " km/h"
 
 #: qcsrc/client/main.qc:1033
 msgid " mph"
-msgstr "mi/h"
+msgstr " mi/h"
 
 #: qcsrc/client/main.qc:1035
 msgid " knots"
@@ -1171,14 +1198,15 @@ msgstr "%d Sekunden übrig"
 #: qcsrc/client/mapvoting.qc:505
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
+"mv_mapdownload: ^3Du solltest diesen Befehl nicht selbstständig benutzen!"
 
 #: qcsrc/client/mapvoting.qc:515
 msgid "^1Error:^7 Couldn't find pak index."
-msgstr ""
+msgstr "^1Fehler:^7pak-Index konnte nicht gefunden werden."
 
 #: qcsrc/client/mapvoting.qc:524
 msgid "Requesting preview..."
-msgstr ""
+msgstr "Vorschau abfragen ..."
 
 #: qcsrc/client/miscfunctions.qc:111
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1198,11 +1226,12 @@ msgstr "Wiederbelebungsfortschritt"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
-msgstr ""
+msgstr "Fehler bei Erzeugung des curl-Handles"
 
 #: qcsrc/common/command/generic.qc:403
 msgid "Notification restart command only works with cl_cmd and sv_cmd."
 msgstr ""
+"Benachrichtigungs-Neustart-Befehl funktioniert nur mit cl_cmd und sv_cmd."
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
@@ -1210,31 +1239,31 @@ msgstr "Ball-Dieb"
 
 #: qcsrc/common/items/item/ammo.qh:66
 msgid "bullets"
-msgstr ""
+msgstr "Kugeln"
 
 #: qcsrc/common/items/item/ammo.qh:96
 msgid "cells"
-msgstr ""
+msgstr "Zellen"
 
 #: qcsrc/common/items/item/ammo.qh:126
 msgid "plasma"
-msgstr ""
+msgstr "Plasma"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "rockets"
-msgstr ""
+msgstr "Raketen"
 
 #: qcsrc/common/items/item/ammo.qh:190
 msgid "shells"
-msgstr ""
+msgstr "Patronen"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "Kleine Rüstung"
 
 #: qcsrc/common/items/item/armor.qh:80
 msgid "Medium armor"
-msgstr ""
+msgstr "Mittlere Rüstung"
 
 #: qcsrc/common/items/item/armor.qh:118 qcsrc/common/items/item/armor.qh:121
 msgid "Big armor"
@@ -1246,11 +1275,11 @@ msgstr "Megarüstung"
 
 #: qcsrc/common/items/item/health.qh:42
 msgid "Small health"
-msgstr ""
+msgstr "Kleine Gesundheit"
 
 #: qcsrc/common/items/item/health.qh:80
 msgid "Medium health"
-msgstr ""
+msgstr "Mittlere Gesundheit"
 
 #: qcsrc/common/items/item/health.qh:118 qcsrc/common/items/item/health.qh:121
 msgid "Big health"
@@ -1264,15 +1293,15 @@ msgstr "Megagesundheit"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
 msgid "Jetpack"
-msgstr ""
+msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
-msgstr ""
+msgstr "Treibstoff"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Treibstoff-Regenerator"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
@@ -1478,11 +1507,11 @@ msgstr "Überlebe gegen Wellen von Monstern"
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Duel"
-msgstr ""
+msgstr "Duell"
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Fight in a one versus one arena battle to decide the winner"
-msgstr ""
+msgstr "Kämpfe in einem 1-gegen-1-Arenakampf, um den Sieger zu bestimmen"
 
 #: qcsrc/common/minigames/cl_minigames.qc:383
 msgid "It's your turn"
@@ -1824,7 +1853,7 @@ msgstr "Schadenszahlen für Eigenbeschuss anzeigen"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
-msgstr ""
+msgstr "Vaporisierermunition"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
@@ -1862,11 +1891,11 @@ msgstr "Monstergranate"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:66
 msgid "Entrap grenade"
-msgstr "Granate einfangen"
+msgstr "Fanggranate"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:74
 msgid "Veil grenade"
-msgstr ""
+msgstr "Schleiergranate"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:34
 msgid "Grenade"
@@ -1874,23 +1903,23 @@ msgstr "Granate"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:20
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "Overkill-Schweres-Maschinengewehr"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:18
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "Overkill-Maschinengewehr"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "Overkill-Nex"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:20
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Overkill-Raketenkettensäge"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "Overkill-Schrotflinte"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2071,7 +2100,7 @@ msgid ""
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert, und damit ^BG"
-"%s^BG's Rekord von ^F2%s^BG Sekunden gebrochen"
+"%s^BGs Rekord von ^F2%s^BG Sekunden gebrochen"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
@@ -2090,7 +2119,7 @@ msgid ""
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
 "^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert, konnte "
-"jedoch nicht ^BG%s^BG's Rekord von ^F2%s^BG Sekunden brechen"
+"jedoch nicht ^BG%s^BGs Rekord von ^F2%s^BG Sekunden brechen"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
@@ -2192,7 +2221,7 @@ msgstr "^F2Münzwurf … Ergebnis: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:267
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr "^BGDu hast keinen Treibstoff für das ^F1Jetpack"
+msgstr "^BGDu hast keinen Treibstoff für den ^F1Jetpack"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -2260,7 +2289,7 @@ msgstr "^BG%s%s^K1 wurde vor Monster befördert von ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1 wurde in die Luft gejagt von ^BG%s^K1's Granate%s%s"
+msgstr "^BG%s%s^K1 wurde in die Luft gejagt von ^BG%s^K1s Granate%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
@@ -2606,7 +2635,7 @@ msgstr "^BG%s^K1 wurde von einem Geschützturm durchlöchert%s%s"
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
 msgstr ""
-"^BG%s^K1 wurde vom MLRS-Geschützturm in qualmende Reste zerschossen%s%s"
+"^BG%s^K1 wurde von einem MLRS-Geschützturm in qualmende Reste zerschossen%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
@@ -2778,7 +2807,7 @@ msgstr "^BGDu hast nicht: ^F1%s"
 #: qcsrc/common/notifications/all.inc:701
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr "^BGDu hast ^F1%s^BG%s fallengelassen"
+msgstr "^BGDu hast ^F1%s^BG%s weggeworfen"
 
 #: qcsrc/common/notifications/all.inc:384
 #: qcsrc/common/notifications/all.inc:702
@@ -2796,7 +2825,7 @@ msgstr "^BGDu hast nicht genug Munition für ^F1%s"
 #: qcsrc/common/notifications/all.inc:704
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "^F1%s %s^BG kann nicht schießen, aber sein ^F1%s^BG kann"
+msgstr "^F1%s^BG kann nicht ^F1%s^BG schießen, aber ^F1%s^BG schon"
 
 #: qcsrc/common/notifications/all.inc:387
 #: qcsrc/common/notifications/all.inc:705
@@ -2945,7 +2974,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 wurde für übertriebene Teamkills hinausgeworfen"
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
@@ -3034,7 +3063,7 @@ msgstr "^BG%s^K1 hat eine Superwaffe aufgesammelt"
 
 #: qcsrc/common/notifications/all.inc:445
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGDu kannst nicht in ein größeres Team wechseln."
+msgstr "^BGDu kannst nicht in ein größeres Team wechseln"
 
 #: qcsrc/common/notifications/all.inc:446
 msgid "^BGYou are not allowed to change teams"
@@ -3092,7 +3121,7 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Arc geschockt%s%s"
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 wurde von ^BG%s^K1's Arc Blitzen zerfetzt%s%s"
+msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Arcblitzen zerfetzt%s%s"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
@@ -3122,7 +3151,7 @@ msgstr "^BG%s%s^K1 hat ^BG%s^K1s Rakete gefressen%s%s"
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 kam zu nah an der Rakete von ^BG%s^K1 heran%s%s"
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -3138,7 +3167,7 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Elektrokugeln zerfetzt%s%s"
 #, c-format
 msgid "^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s"
 msgstr ""
-"^BG%s%s^K1 fühlte die elektrifizierte Luft von ^BG%s^K1's Elektro-Kombi%s%s"
+"^BG%s%s^K1 fühlte die elektrifizierte Luft von ^BG%s^K1s Elektro-Kombi%s%s"
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -3272,23 +3301,28 @@ msgstr "^BG%s^K1 jagte sich mit dem eigenen Granatwerfer in die Luft%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 wurde vom Schweren Maschinengewehr (Overkill) von ^BG%s^K1 "
+"abgeschossen%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 wurde vom ^BG%s^K1s Overkill-Schweres-Maschinengewehr in Stücke "
+"zerrissen%s%s"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 wurde von ^BG%s^K1s Overkill-Maschinengewehr durchlöchert%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Overkill-Nex vaporisiert%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
@@ -3296,29 +3330,36 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
+"^BG%s%s^K1 wurde von ^BG%s^K1s Overkill-Raketenkettensäge in zwei Teile "
+"zersägt%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s%s^K1 ist ^BG%s^K1s Overkill-Raketenkettensäge fast ausgewichen%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 wurde von der eigenen Overkill-Raketenkettensäge in zwei Teile "
+"zersägt%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 sprengte sich mit der eigenen Overkill-Raketenkettensäge selbst in "
+"die Luft%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Overkill-Schrotflinte abgeschossen%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3641,12 +3682,12 @@ msgstr "^K1%sDu wurdest von ^BG%s verbrannt"
 #: qcsrc/common/notifications/all.inc:612
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr "^K3%sDu hast ^BG%s eingefroren"
+msgstr "^K3%sDu hast ^BG%s^K3 eingefroren"
 
 #: qcsrc/common/notifications/all.inc:614
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr "^K1%sDu wurdest von ^BG%s eingefroren"
+msgstr "^K1%sDu wurdest von ^BG%s^K1 eingefroren"
 
 #: qcsrc/common/notifications/all.inc:621
 #, c-format
@@ -3656,7 +3697,7 @@ msgstr "^K1%sDu hast ^BG%s^K1 beim Tippen getötet"
 #: qcsrc/common/notifications/all.inc:622
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr "^K1%sDu hast gegen ^BG%s^K1 gepunktet, während er am Tippen war"
+msgstr "^K1%sDu hast gegen ^BG%s^K1 beim Tippen gepunktet"
 
 #: qcsrc/common/notifications/all.inc:623
 #, c-format
@@ -3675,7 +3716,7 @@ msgstr "^BGDrücke ^F2%s^BG erneut, um die Granate zu werfen!"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr "^F2Du kriegst eine ^K1BONUS-GRANATE^F2!"
+msgstr "^F2Du erhältst eine ^K1BONUS-GRANATE^F2!"
 
 #: qcsrc/common/notifications/all.inc:633
 #, c-format
@@ -3700,7 +3741,7 @@ msgstr "^K1Stirb, Camper!"
 
 #: qcsrc/common/notifications/all.inc:635
 msgid "^K1Reconsider your tactics, camper!"
-msgstr "^1Überdenke dein Verhalten, Camper!"
+msgstr "^K1Überdenke dein Verhalten, Camper!"
 
 #: qcsrc/common/notifications/all.inc:636
 msgid "^K1You unfairly eliminated yourself!"
@@ -3749,7 +3790,7 @@ msgstr "^K1Du wurdest von einem Monster getötet!"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1Tastes like chicken!"
-msgstr "^K1Schmeckt nach McDonald's!"
+msgstr "^K1Schmeckt nach Hühnchen!"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You forgot to put the pin back in!"
@@ -3761,7 +3802,7 @@ msgstr "^K1Bei einer Napalm-Explosion herumzuhängen ist schlecht!"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You felt a little chilly!"
-msgstr "^K1Dir ist ein wenig kalt."
+msgstr "^K1Dir wurde ein wenig kühl!"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You got a little bit too cold!"
@@ -3781,11 +3822,11 @@ msgstr "^K1Du wurdest getötet, weil du keine Munition mehr hast …"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You grew too old without taking your medicine"
-msgstr "^1Du wurdest zu alt, und hast deine Medizin nicht genommen"
+msgstr "^K1Du wurdest zu alt, und hast deine Medizin nicht genommen"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You need to preserve your health"
-msgstr "^1Du solltest deine Gesundheit erhalten"
+msgstr "^K1Du solltest deine Gesundheit erhalten"
 
 #: qcsrc/common/notifications/all.inc:650
 msgid "^K1You became a shooting star!"
@@ -3877,7 +3918,7 @@ msgstr "^K1Du konntest keinen Schutz vor der Rakete eines Rasers finden!"
 
 #: qcsrc/common/notifications/all.inc:667
 msgid "^K1Watch your step!"
-msgstr "^1Achte darauf, wo du hin trittst!"
+msgstr "^K1Achte darauf, wo du hintrittst!"
 
 #: qcsrc/common/notifications/all.inc:669
 #, c-format
@@ -3928,7 +3969,7 @@ msgstr "^F2Du hast einige Extra-Leben aufgehoben"
 #: qcsrc/common/notifications/all.inc:680
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr "^K3Du hast ^BG%s ^K3wiederbelebt"
+msgstr "^K3Du hast ^BG%s^K3 wiederbelebt"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^K3You revived yourself"
@@ -3937,7 +3978,7 @@ msgstr "^K3Du hast dich selbst wiederbelebt"
 #: qcsrc/common/notifications/all.inc:682
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "^K3Du wurdest von ^BG%s ^K3wiederbelebt"
+msgstr "^K3Du wurdest von ^BG%s^K3 wiederbelebt"
 
 #: qcsrc/common/notifications/all.inc:683
 #, c-format
@@ -3967,11 +4008,11 @@ msgstr "^K1A %s ist angekommen!"
 
 #: qcsrc/common/notifications/all.inc:698
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr "^BGDu hast den ^F1Treibstoff-Regenerator"
+msgstr "^F1Treibstoff-Regenerator^BG erhalten"
 
 #: qcsrc/common/notifications/all.inc:699
 msgid "^BGYou got the ^F1Jetpack"
-msgstr ""
+msgstr "^F1Jetpack^BG erhalten"
 
 #: qcsrc/common/notifications/all.inc:707
 msgid ""
@@ -4176,7 +4217,7 @@ msgstr "^K1Eingangs^BG-Portal erstellt"
 
 #: qcsrc/common/notifications/all.inc:751
 msgid "^F3Out^BG-portal created"
-msgstr "^K1Ausgangs^BG-Portal erstellt"
+msgstr "^F3Ausgangs^BG-Portal erstellt"
 
 #: qcsrc/common/notifications/all.inc:752
 msgid "^F1Portal creation failed"
@@ -4304,7 +4345,7 @@ msgstr "^F2Eindringling entdeckt, deaktiviere Schilde!"
 
 #: qcsrc/common/notifications/all.qh:194
 msgid "Notification dump command only works with cl_cmd and sv_cmd."
-msgstr ""
+msgstr "Benachrichtigungs-dump-Befehl funktioniert nur mit cl_cmd und sv_cmd."
 
 #: qcsrc/common/notifications/all.qh:405 qcsrc/common/notifications/all.qh:406
 #, c-format
@@ -4530,7 +4571,7 @@ msgstr ", und verliert seinen Lauf von %d Punkten"
 #: qcsrc/common/notifications/all.qh:642
 #, c-format
 msgid " with %d %s"
-msgstr ""
+msgstr " mit %d %s"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
@@ -4606,7 +4647,7 @@ msgstr "rosa"
 
 #: qcsrc/common/turrets/all.qh:51
 msgid "Turrets dump command only works with sv_cmd."
-msgstr ""
+msgstr "Geschütztürme-dump-Befehl funktioniert nur mit sv_cmd."
 
 #: qcsrc/common/turrets/cl_turrets.qc:125
 #, c-format
@@ -4753,7 +4794,7 @@ msgstr "Spinnenroboter"
 
 #: qcsrc/common/weapons/all.qh:77
 msgid "Weapons dump command only works with sv_cmd."
-msgstr ""
+msgstr "Waffen-dump-Befehl funktioniert nur mit sv_cmd."
 
 #: qcsrc/common/weapons/weapon/arc.qh:18
 msgid "Arc"
@@ -5061,27 +5102,29 @@ msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr ""
+msgstr "Benutzung: menu_cmd command ..., wobei die möglichen Befehle sind ...:"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
 msgid "  sync - reloads all cvars on the current menu page"
-msgstr ""
+msgstr "  sync – lädt alle cvars auf der aktuellen Menüseite neu"
 
 #: qcsrc/menu/command/menu_cmd.qc:50
 msgid "  directmenu ITEM - select a menu item as main item"
-msgstr ""
+msgstr "  directmenu ITEM – wählt einen Menüeintrag als Haupteintrag aus"
 
 #: qcsrc/menu/command/menu_cmd.qc:51
 msgid "  dumptree - dump the state of the menu as a tree to the console"
-msgstr ""
+msgstr "  dumptree – gibt den Zustand des Menüs als Baum auf der Konsole aus"
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available options:"
-msgstr ""
+msgstr "Verfügbare Optionen:"
 
 #: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
+"Ungültiger Befehl. Für eine Liste an unterstützten Befehlen, versuch es mit "
+"menu_cmd help."
 
 #: qcsrc/menu/item/listbox.qc:413
 #, c-format
@@ -5540,11 +5583,11 @@ msgstr "Aus"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
-msgstr ""
+msgstr "Zuschauen aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr ""
+msgstr "Ausgeglichenes Aufwärmspiel aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
@@ -5601,15 +5644,15 @@ msgstr "Nachrichten-Panel"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/util.qc:765
 msgid "Enable"
-msgstr ""
+msgstr "Aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Enable even observing"
-msgstr ""
+msgstr "Ausgeglichenes Zuschauen aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Enable only in Race/CTS"
-msgstr ""
+msgstr "Nur in Rennen/CTS aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
@@ -5696,7 +5739,7 @@ msgstr "Powerup-Panel"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
-msgstr ""
+msgstr "Immer aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
@@ -5716,7 +5759,7 @@ msgstr "Rundenzeit-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Enable in team games"
-msgstr ""
+msgstr "In Teamspielen aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
@@ -6183,11 +6226,11 @@ msgstr "Wähle die maximale Anzahl von Bots auf dem Server"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:125
 msgid "Bot skill:"
-msgstr "Computerspielerstärke:"
+msgstr "Botstärke:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:128
 msgid "Specify how experienced the bots will be"
-msgstr "Stelle die Stärke der Bots ein"
+msgstr "Leg fest, wie gut die Bots spielen werden"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Botlike"
@@ -6383,7 +6426,7 @@ msgstr "In der Luft"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Melee only"
-msgstr ""
+msgstr "Nur Nahkampf"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:229
@@ -6424,7 +6467,7 @@ msgstr "Kontakt-Explosion"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:103
 msgid "Wall jumping"
-msgstr ""
+msgstr "Wandsprünge"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "MUT^None"
@@ -6445,6 +6488,8 @@ msgstr "Alle Spieler sind fast unsichtbar"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:179
 msgid "Only possible to inflict damage on your enemy while they're airborne"
 msgstr ""
+"Schaden an deinen Gegnern kann nur angerichtet werden, wenn sie sich in der "
+"Luft befinden"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:183
 msgid "Damage done to your enemy gets added to your own health"
@@ -6500,6 +6545,8 @@ msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr ""
+"Spieler erhalten einen Satz Waffen beim Spawn sowie unbegrenzte Munition, "
+"ohne aufsammelbare Waffen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:243
 msgid "Weapon arenas:"
@@ -6507,7 +6554,7 @@ msgstr "Waffen-Arenen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:246
 msgid "Custom weapons"
-msgstr ""
+msgstr "Eigene Waffen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:268
 msgid "Most weapons"
@@ -6539,10 +6586,9 @@ msgid ""
 "weapon. After some time, a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
-"Es gibt keine aufzusammelnden Gegenstände in Xonotic – Anstelle der "
-"Möglichkeit Waffen aufzusammeln, spielen alle mit der gleichen Waffe. Nach "
-"einiger Zeit startet ein Countdown, danach wechseln alle Spieler zu einer "
-"neuen gleichen Waffe"
+"Xonotic ohne aufsammelbare Gegenstände – Anstelle der Möglichkeit, Waffen "
+"aufzusammeln, spielen alle mit der gleichen Waffe. Nach einiger Zeit startet "
+"ein Countdown, danach wechseln alle Spieler zu einer neuen gleichen Waffe."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:288
 msgid "with blaster"
@@ -6613,7 +6659,7 @@ msgstr "Trennen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Disconnect from the server"
-msgstr ""
+msgstr "Vom Server trennen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:264
@@ -6676,7 +6722,7 @@ msgstr "Notwendig (aktiv)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr ""
+msgstr "Benutze die cvar `crypto_aeslevel`, um deine Einstellungen zu ändern"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
 msgid "Hostname:"
@@ -7239,7 +7285,7 @@ msgid ""
 "Enable spatialization (blend the right and left channel slightly to decrease "
 "stereo separation a bit for headphones)"
 msgstr ""
-"Aktiviere „räumlicheren“ Klang (Mischung des linken und rechten Kanals um "
+"Aktiviere „räumlicheren“ Klang (Mischung des linken und rechten Kanals, um "
 "die Stereo-Trennung leicht zu verringern, für Kopfhörer)"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -7354,7 +7400,7 @@ msgstr "Geometrie-Detail:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Change the smoothness of the curves on the map"
-msgstr ""
+msgstr "Die Weichheit der Kurven auf der Karte ändern"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
 msgid "DET^Lowest"
@@ -7451,6 +7497,8 @@ msgid ""
 "Disable textures completely for very slow hardware. This gives a huge "
 "performance boost, but looks very ugly."
 msgstr ""
+"Texturen vollständig für sehr langsame Hardware deaktivieren. Das ergibt "
+"einen enormen Performanzschub, sieht aber sehr hässlich aus."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:135
 msgid "Use lightmaps"
@@ -7461,6 +7509,8 @@ msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory"
 msgstr ""
+"Hochauflösende Lightmaps benutzen, welche schön aussehen, aber etwas "
+"zusätzlichen Grafikspeicher benötigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:138
 msgid "Deluxe mapping"
@@ -7468,7 +7518,7 @@ msgstr "Deluxemapping"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
 msgid "Use per-pixel lighting effects"
-msgstr ""
+msgstr "Pixelweise Lichteffekte benutzen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Gloss"
@@ -7477,6 +7527,7 @@ msgstr "Glanz"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid "Enable the use of glossmaps on textures supporting it"
 msgstr ""
+"Die Benutzung von Glossmaps auf Texturen, die das unterstützen, aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:145
 msgid "Offset mapping"
@@ -7487,6 +7538,8 @@ msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
+"Offset-Mapping-Effekt, der Texturen mit Bumpmaps so erscheinen lässt, als ob "
+"sie aus der flachen 2-D-Oberfläche „hervorploppen“"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
 msgid "Relief mapping"
@@ -7496,6 +7549,8 @@ msgstr "Reliefmapping"
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
+"Offset-Mapping in höherer Qualität, was außerdem eine enorme Auswirkung auf "
+"die Performanz hat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "Reflections:"
@@ -7506,10 +7561,12 @@ msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
+"Reflektions- und Lichtbrechungsqualität, hat einen enormen Einfluss auf die "
+"Performanz auf Karten mit spiegelnden Flächen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 msgid "Resolution of reflections/refractions"
-msgstr ""
+msgstr "Auflösung von Reflektionen/Lichtbrechungen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:157
 msgid "Blurred"
@@ -7529,7 +7586,7 @@ msgstr "Dekore"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
 msgid "Enable decals (bullet holes and blood)"
-msgstr ""
+msgstr "Dekore aktivieren (Einschusslöcher und Blut)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:165
 msgid "Decals on models"
@@ -7542,7 +7599,7 @@ msgstr "Distanz:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:172
 msgid "Decals further away than this will not be drawn"
-msgstr ""
+msgstr "Dekore, die weiter weg sind als dieser Wert, werden nicht gezeichnet"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:176
 msgid "Time:"
@@ -7550,7 +7607,7 @@ msgstr "Zeit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:179
 msgid "Time in seconds before decals fade away"
-msgstr ""
+msgstr "Zeit in Sekunden, bevor Dekore verschwinden"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid "Damage effects:"
@@ -7574,7 +7631,7 @@ msgstr "Kein dynamisches Licht"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Enable corona flares around certain lights"
-msgstr ""
+msgstr "Strahlenkränze um bestimmte Lichter aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:194
 msgid "Fake corona lighting"
@@ -7585,6 +7642,8 @@ msgid ""
 "Enable faster but uglier dynamic lights by rendering bright coronas instead "
 "of real dynamic lights"
 msgstr ""
+"Schnellere aber hässlichere dynamische Lichter aktivieren, indem helle "
+"Koronas statt echter dynamischer Lichter gerendert werden"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:198
 msgid "Realtime dynamic lighting"
@@ -7593,6 +7652,8 @@ msgstr "Dynamisches Licht in Echtzeit"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Enable rendering of dynamic lights such as explosions and rocket lights"
 msgstr ""
+"Rendern von dynamischen Lichtern so wie Explosionen und Raketenlichtern "
+"aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
@@ -7601,7 +7662,7 @@ msgstr "Schatten"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Enable rendering of shadows from dynamic lights"
-msgstr ""
+msgstr "Rendern von Schatten von dynamischen Lichtern aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Realtime world lighting"
@@ -7612,10 +7673,13 @@ msgid ""
 "Enable rendering of full realtime world lighting on maps that support it. "
 "Note that this might have a big impact on performance."
 msgstr ""
+"Rendern von Vollechtzeitweltbeleuchtung auf Karten, die das unterstützen, "
+"aktivieren. Beachte, dass dies einen großen Einfluss auf die Performanz "
+"haben könnte."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Enable rendering of shadows from realtime world lights"
-msgstr ""
+msgstr "Schatten von Echtzeitweltlichtern aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Use normal maps"
@@ -7623,7 +7687,7 @@ msgstr "Normalmaps verwenden"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Enable use of directional shading on textures"
-msgstr ""
+msgstr "Benutzung von direktionalem Shading auf Texturen aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid "Soft shadows"
@@ -7635,7 +7699,7 @@ msgstr "Korona nach Sichtbarkeit abdunkeln"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
 msgid "Fade coronas according to visibility"
-msgstr ""
+msgstr "Koronas anhand Sichtbarkeit verblassen lassen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
 msgid "Bloom"
@@ -7646,6 +7710,8 @@ msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
+"Bloom-Effekt aktivieren, welche die Nachbarpixel von sehr hellen Pixeln "
+"erhellt. Hat eine große Auswirkung auf die Performanz."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:226
 msgid "Extra postprocessing effects"
@@ -7656,6 +7722,8 @@ msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
 msgstr ""
+"Besondere Nachbearbeitungs-Effekte aktivieren, die benutzt werden, wenn man "
+"Schaden nimmt, oder unter Wasser ist, oder ein Powerup benutzt"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Motion blur strength - 0.4 recommended"
@@ -7687,10 +7755,13 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Faktor für die Anzahl an Partikeln. Weniger bedeutet weniger Partikel, was "
+"zu einer besseren Perormanz führt"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
 msgid "Particles further away than this will not be drawn"
 msgstr ""
+"Partikel, die weiter weg sind als dieser Wert, werden nicht gezeichneet"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:31
 msgid "No crosshair"
@@ -7829,7 +7900,7 @@ msgstr "Ausblenden in der Nähe vom Fadenkreuz"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:93
 msgid "Display names instead of icons"
-msgstr ""
+msgstr "Namen statt Symbole anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:98
 msgid "Damage"
@@ -8029,7 +8100,7 @@ msgstr "Gegenstände"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:32
 msgid "Use simple 2D images instead of item models"
-msgstr "Gegenstände als einfache 2D-Bilder anzeigen"
+msgstr "Gegenstände als einfache 2-D-Bilder anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:34
 msgid "Unavailable alpha:"
@@ -8154,7 +8225,7 @@ msgstr "Sichtfeld:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
 msgid "Field of vision in degrees"
-msgstr ""
+msgstr "Gesichtsfeld in Grad"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:76
 msgid "ZOOM^Zoom factor:"
@@ -8265,7 +8336,7 @@ msgstr "Beim Waffenwechsel mit dem Schießen aufhören"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw 1st person weapon model"
-msgstr "Waffe in 3D anzeigen"
+msgstr "Waffe in 3-D anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
 msgid "Draw the weapon model"
@@ -8644,15 +8715,15 @@ msgstr "Wirklich alle Einstellungen zurücksetzen?"
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
 msgstr ""
-"Eine Sicherheitskopie der Konfiguration wird im data-Verzeichnis angelegt."
+"Eine Sicherheitskopie der Konfiguration wird im data-Verzeichnis angelegt"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:25
 msgid "Menu Skins"
-msgstr "Menü-Skins:"
+msgstr "Menü-Skins"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:64
 msgid "Text Language"
-msgstr "Sprache:"
+msgstr "Sprache"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:69
 msgid "Set language"
@@ -8665,6 +8736,8 @@ msgstr "Gewalteffekte deaktivieren"
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:75
 msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr ""
+"Blut und Fleischteile durch Dinge ersetzen, die keinerlei brutale Effekte "
+"haben"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
@@ -8763,14 +8836,17 @@ msgid ""
 "Enable vertical synchronization to prevent tearing, will cap your fps to the "
 "screen refresh rate"
 msgstr ""
+"Vertikale Synchronisation aktivieren, um ein „Auseinanderreißen“ des Bildes "
+"zu verhindern, wird die Bildrate des Spiels auf die Bildrate des Bildschirms "
+"begrenzen"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "Flip view horizontally"
-msgstr "3D-Ansicht spiegeln"
+msgstr "Ansicht horizontal spiegeln"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:68
 msgid "Poor man's left handed mode"
-msgstr ""
+msgstr "Linkshändermodus für Arme"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "Anisotropy:"
@@ -8778,7 +8854,7 @@ msgstr "Anisotropie:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:73
 msgid "Anisotropic filtering quality"
-msgstr ""
+msgstr "Anisotrope Filterqualität"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:74
 msgid "ANISO^Disabled"
@@ -8811,6 +8887,8 @@ msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
+"Anti-Aliasing aktivieren, was die Kanten von 3-D-Geometrie weicher "
+"erscheinen lässt. Beachte, dass dies die Performanz stark verringern könnte"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "AA^Disabled"
@@ -8829,6 +8907,8 @@ msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
+"Überzeichnen verhindern, indem ein eine Nur-Tiefen-Version der Szene "
+"gerendert wird, bevor das richtige Rendern beginnt"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^Disabled"
@@ -8861,6 +8941,8 @@ msgid ""
 "Make use of Vertex Buffer Objects to store static geometry in video memory "
 "for faster rendering"
 msgstr ""
+"Vertex Buffer Objects benutzen, um statische Geometrie im Grafikspeicher "
+"abzuspeichern, für ein schnelleres Rendern"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:113
 msgid "Vertices"
@@ -8876,7 +8958,7 @@ msgstr "Helligkeit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:121
 msgid "Brightness of black"
-msgstr ""
+msgstr "Helligkeit von schwarz"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:123
 msgid "Contrast:"
@@ -8884,7 +8966,7 @@ msgstr "Kontrast:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:125
 msgid "Brightness of white"
-msgstr ""
+msgstr "Helligkeit von weiß"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:127
 msgid "Gamma:"
@@ -8895,6 +8977,8 @@ msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
 msgstr ""
+"Inverser Gammakorrekturwert, ein Helligkeitseffekt, der nicht weiß oder "
+"schwarz beeinflusst"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:133
 msgid "Contrast boost:"
@@ -8902,7 +8986,7 @@ msgstr "Kontrasterhöhung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:136
 msgid "By how much to multiply the contrast in dark areas"
-msgstr ""
+msgstr "Mit wieviel der Kontrast in dunklen Bereichen multipliziert wird"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid "Saturation:"
@@ -8913,6 +8997,8 @@ msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
+"Sättigungsanpassung (0 = Grautöne, 1 = normal, 2 = übersättigt), benötigt "
+"„GLSL color control“"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
 msgid "LIT^Ambient:"
@@ -8923,6 +9009,8 @@ msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
 msgstr ""
+"Umgebungslicht, wenn zu hoch eingestellt, tendiert es dazu, das Licht auf "
+"Karten dumpf und flach erscheinen zu lassen"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Intensity:"
@@ -8930,7 +9018,7 @@ msgstr "Lichtstärke:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:152
 msgid "Global rendering brightness"
-msgstr ""
+msgstr "Globale Renderhelligkeit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:155
 msgid "Wait for GPU to finish each frame"
@@ -8941,6 +9029,9 @@ msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines"
 msgstr ""
+"Sorgt dafür, dass die CPU auf die GPU wartet, um jedes Frame "
+"fertigzustellen; kann dabei helfen, ein paar seltsame Eingabe- oder "
+"Grafikverzögerungen auf einigen Maschinen zu beheben"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
@@ -8955,6 +9046,8 @@ msgid ""
 "Enable use of GLSL to apply gamma correction, note that it might decrease "
 "performance by a lot"
 msgstr ""
+"Benutzung von GLSL aktivieren, um Gammakorrektur anzuwenden, beachte, dass "
+"dies die Performanz stark senken könnte"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:168
 msgid "Psycho coloring (easter egg)"
@@ -9043,7 +9136,7 @@ msgstr "Dürfen Spielerstatistiken deinen Spitznamen aufnehmen?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr "Wenn du »Nein« sagst, wirst du als »Anonymer Spieler« erscheinen."
+msgstr "Wenn du „Nein“ sagst, wirst du als „Anonymer Spieler“ erscheinen."
 
 #: qcsrc/menu/xonotic/gametypelist.qc:86
 msgid "teamplay"
@@ -9087,7 +9180,7 @@ msgstr "Enterhaken"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "jetpack"
-msgstr ""
+msgstr "Jetpack"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "Attacking"
@@ -9195,7 +9288,7 @@ msgstr "Schlüssel/Flagge wegwerfen"
 
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "respawn"
-msgstr ""
+msgstr "Respawn"
 
 #: qcsrc/menu/xonotic/keybinder.qc:107
 msgid "quick menu"
@@ -9221,6 +9314,8 @@ msgstr "Bitte nicht nochmal diesen Knopf drücken!"
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
+"Huch? Kann dies nicht spielen (m ist NULL). Neufilterung, damit das nicht "
+"nochmal passiert."
 
 #: qcsrc/menu/xonotic/maplist.qc:296
 #, c-format
@@ -9232,6 +9327,8 @@ msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Huch? Kann dies nicht spielen (ungültiger Spieltyp). Neufilterung, damit das "
+"nicht nochmal passiert."
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
@@ -9396,6 +9493,9 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
+"Die Schärfe der Texturen ändern. Eine Verringerung wird effektiv den "
+"Speicherbedarf von Texturen verringern, daber Texturen werden sehr "
+"verschwommen erscheinen."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:115
 msgid "Screen resolution"
@@ -9467,53 +9567,53 @@ msgstr "Angefangen:"
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
-msgstr ""
+msgstr "Letztes Spiel:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
-msgstr ""
+msgstr "Gespielte Zeit:"
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:230
 msgid "Favorite map:"
-msgstr ""
+msgstr "Lieblingskarte:"
 
 #: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
 #: qcsrc/menu/xonotic/statslist.qc:244
 #, c-format
 msgid "Matches:"
-msgstr ""
+msgstr "Spiele:"
 
 #: qcsrc/menu/xonotic/statslist.qc:154
 #, c-format
 msgid "Wins/Losses:"
-msgstr ""
+msgstr "Siege/Niederlagen:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Win percentage:"
-msgstr ""
+msgstr "Siegprozentsatz:"
 
 #: qcsrc/menu/xonotic/statslist.qc:166
 #, c-format
 msgid "Kills/Deaths:"
-msgstr ""
+msgstr "Kills/Tode:"
 
 #: qcsrc/menu/xonotic/statslist.qc:172
 #, c-format
 msgid "Kill ratio:"
-msgstr ""
+msgstr "Killverhältnis:"
 
 #: qcsrc/menu/xonotic/statslist.qc:207
 msgid "ELO:"
-msgstr ""
+msgstr "ELO:"
 
 #: qcsrc/menu/xonotic/statslist.qc:214
 msgid "Rank:"
-msgstr ""
+msgstr "Rang:"
 
 #: qcsrc/menu/xonotic/statslist.qc:221
 msgid "Percentile:"
-msgstr ""
+msgstr "Perzentil:"
 
 #: qcsrc/menu/xonotic/statslist.qc:246
 #, c-format
@@ -9526,6 +9626,8 @@ msgid ""
 "Update can be downloaded at:\n"
 "%s"
 msgstr ""
+"Update kann heruntergeladen werden auf:\n"
+"%s"
 
 #: qcsrc/menu/xonotic/util.qc:525
 msgid "Autogenerating mapinfo for newly added maps..."
@@ -9546,6 +9648,8 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
+"^1FEHLER: Texturenkompression wird benötigt, aber ist nicht unterstützt.\n"
+"^1Rechne mit visuellen Problemen."
 
 #: qcsrc/menu/xonotic/util.qc:787
 msgid "Use default"

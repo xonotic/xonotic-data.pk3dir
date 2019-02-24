@@ -732,7 +732,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 	}
 }
 
-float Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
+bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
 {
 	float amount = GetResource(item, res_type);
 	if (amount == 0)
@@ -743,26 +743,22 @@ float Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
 	if (item.spawnshieldtime)
 	{
 		if ((player_amount >= ammomax) && (item.pickup_anyway <= 0))
-		{
 			return false;
-		}
-		GiveOrTakeResourceWithLimit(player, res_type, amount, ammomax);
-		return true;
 	}
-	if (g_weapon_stay != 2)
-	{
+	else if (g_weapon_stay == 2)
+		ammomax = min(amount, ammomax);
+	else
 		return false;
-	}
-	GiveOrTakeResourceWithLimit(player, res_type, amount, min(amount, ammomax));
+	if (amount < 0)
+		TakeResourceWithLimit(player, res_type, -amount, ammomax);
+	else
+		GiveResourceWithLimit(player, res_type, amount, ammomax);
 	return true;
 }
 
-float Item_GiveTo(entity item, entity player)
+bool Item_GiveTo(entity item, entity player)
 {
-	float pickedup;
-
 	// if nothing happens to player, just return without taking the item
-	pickedup = false;
 	int _switchweapon = 0;
 	// in case the player has autoswitch enabled do the following:
 	// if the player is using their best weapon before items are given, they
@@ -783,14 +779,15 @@ float Item_GiveTo(entity item, entity player)
 			}
 		}
 	}
-	pickedup |= Item_GiveAmmoTo(item, player, RES_HEALTH, item.max_health);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_ARMOR, item.max_armorvalue);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_SHELLS, g_pickup_shells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_BULLETS, g_pickup_nails_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_ROCKETS, g_pickup_rockets_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_CELLS, g_pickup_cells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_PLASMA, g_pickup_plasma_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
+	bool pickedup = false;
+	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_HEALTH, item.max_health));
+	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_ARMOR, item.max_armorvalue));
+	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_SHELLS, g_pickup_shells_max));
+	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_BULLETS, g_pickup_nails_max));
+	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_ROCKETS, g_pickup_rockets_max));
+	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_CELLS, g_pickup_cells_max));
+	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_PLASMA, g_pickup_plasma_max));
+	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max));
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w;
@@ -853,7 +850,7 @@ float Item_GiveTo(entity item, entity player)
 		pickedup = true;
 
 	if (!pickedup)
-		return 0;
+		return false;
 
 	// crude hack to enforce switching weapons
 	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS(player).cvar_cl_cts_noautoswitch)
@@ -864,7 +861,7 @@ float Item_GiveTo(entity item, entity player)
 			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
 				W_SwitchWeapon_Force(player, Weapons_from(item.weapon), weaponentity);
 		}
-		return 1;
+		return true;
 	}
 
 	if(_switchweapon)
@@ -878,7 +875,7 @@ float Item_GiveTo(entity item, entity player)
 		}
 	}
 
-	return 1;
+	return true;
 }
 
 void Item_Touch(entity this, entity toucher)

@@ -28,7 +28,8 @@ float GetResource(entity e, int res_type);
 /// \return Boolean for whether the ammo amount was changed
 bool SetResourceExplicit(entity e, int res_type, float amount);
 
-/// \brief Sets the current amount of resource the given entity will have.
+/// \brief Sets the current amount of resource the given entity will have
+/// but limited to the max amount allowed for the resource type.
 /// \param[in,out] e Entity to adjust.
 /// \param[in] res_type Type of the resource (a RES_* constant).
 /// \param[in] amount Amount of resource to set.
@@ -64,21 +65,6 @@ void TakeResource(entity receiver, int res_type, float amount);
 /// \param[in] limit Limit of resources to take.
 /// \return No return.
 void TakeResourceWithLimit(entity receiver, int res_type, float amount, float limit);
-
-/// \brief Gives to or takes from an entity resource.
-/// \param[in,out] receiver Entity to give or take resource.
-/// \param[in] res_type Type of the resource (a RES_* constant).
-/// \param[in] amount Amount of resource to give or take.
-/// \return No return.
-void GiveOrTakeResource(entity receiver, int res_type, float amount);
-
-/// \brief Gives to or takes from an entity resource but not more/less than a limit.
-/// \param[in,out] receiver Entity to give or take resource.
-/// \param[in] res_type Type of the resource (a RES_* constant).
-/// \param[in] amount Amount of resource to give or take.
-/// \param[in] limit Limit of resources to give or take.
-/// \return No return.
-void GiveOrTakeResourceWithLimit(entity receiver, int res_type, float amount, float limit);
 
 // ===================== Legacy and/or internal API ===========================
 
