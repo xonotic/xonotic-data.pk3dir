@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-02-23 04:57+0000\n"
+"PO-Revision-Date: 2019-02-23 14:52+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -109,7 +109,7 @@ msgstr "Waffe wegwerfen"
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr "Sekundärschuss"
+msgstr "Sekundärfeuer"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
@@ -1134,11 +1134,11 @@ msgstr "Nein"
 
 #: qcsrc/client/hud/panel/weapons.qc:546
 msgid "Out of ammo"
-msgstr "Keine Munition mehr"
+msgstr "Muni alle"
 
 #: qcsrc/client/hud/panel/weapons.qc:550
 msgid "Don't have"
-msgstr "Hast du nicht"
+msgstr "Nicht dabei"
 
 #: qcsrc/client/hud/panel/weapons.qc:554
 msgid "Unavailable"
@@ -1301,7 +1301,7 @@ msgstr "Treibstoff"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr "Treibstoffregenerator"
+msgstr "Treibstoff-Regenerator"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
@@ -2635,7 +2635,7 @@ msgstr "^BG%s^K1 wurde von einem Geschützturm durchlöchert%s%s"
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
 msgstr ""
-"^BG%s^K1 wurde vom MLRS-Geschützturm in qualmende Reste zerschossen%s%s"
+"^BG%s^K1 wurde von einem MLRS-Geschützturm in qualmende Reste zerschossen%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
@@ -2807,7 +2807,7 @@ msgstr "^BGDu hast nicht: ^F1%s"
 #: qcsrc/common/notifications/all.inc:701
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr "^BGDu hast ^F1%s^BG%s fallengelassen"
+msgstr "^BGDu hast ^F1%s^BG%s weggeworfen"
 
 #: qcsrc/common/notifications/all.inc:384
 #: qcsrc/common/notifications/all.inc:702
@@ -2825,7 +2825,7 @@ msgstr "^BGDu hast nicht genug Munition für ^F1%s"
 #: qcsrc/common/notifications/all.inc:704
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "^F1%s %s^BG kann nicht schiessen, aber sein ^F1%s^BG kann"
+msgstr "^F1%s^BG kann nicht ^F1%s^BG schiessen, aber ^F1%s^BG schon"
 
 #: qcsrc/common/notifications/all.inc:387
 #: qcsrc/common/notifications/all.inc:705
@@ -3683,12 +3683,12 @@ msgstr "^K1%sDu wurdest von ^BG%s verbrannt"
 #: qcsrc/common/notifications/all.inc:612
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr "^K3%sDu hast ^BG%s eingefroren"
+msgstr "^K3%sDu hast ^BG%s^K3 eingefroren"
 
 #: qcsrc/common/notifications/all.inc:614
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr "^K1%sDu wurdest von ^BG%s eingefroren"
+msgstr "^K1%sDu wurdest von ^BG%s^K1 eingefroren"
 
 #: qcsrc/common/notifications/all.inc:621
 #, c-format
@@ -3698,7 +3698,7 @@ msgstr "^K1%sDu hast ^BG%s^K1 beim Tippen getötet"
 #: qcsrc/common/notifications/all.inc:622
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr "^K1%sDu hast gegen ^BG%s^K1 gepunktet, während er am Tippen war"
+msgstr "^K1%sDu hast gegen ^BG%s^K1 beim Tippen gepunktet"
 
 #: qcsrc/common/notifications/all.inc:623
 #, c-format
@@ -3717,7 +3717,7 @@ msgstr "^BGDrücke ^F2%s^BG erneut, um die Granate zu werfen!"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr "^F2Du kriegst eine ^K1BONUS-GRANATE^F2!"
+msgstr "^F2Du erhältst eine ^K1BONUS-GRANATE^F2!"
 
 #: qcsrc/common/notifications/all.inc:633
 #, c-format
@@ -3742,7 +3742,7 @@ msgstr "^K1Stirb, Camper!"
 
 #: qcsrc/common/notifications/all.inc:635
 msgid "^K1Reconsider your tactics, camper!"
-msgstr "^1Überdenke dein Verhalten, Camper!"
+msgstr "^K1Überdenke dein Verhalten, Camper!"
 
 #: qcsrc/common/notifications/all.inc:636
 msgid "^K1You unfairly eliminated yourself!"
@@ -3970,7 +3970,7 @@ msgstr "^F2Du hast einige Extra-Leben aufgehoben"
 #: qcsrc/common/notifications/all.inc:680
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr "^K3Du hast ^BG%s ^K3wiederbelebt"
+msgstr "^K3Du hast ^BG%s^K3 wiederbelebt"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^K3You revived yourself"
@@ -3979,7 +3979,7 @@ msgstr "^K3Du hast dich selbst wiederbelebt"
 #: qcsrc/common/notifications/all.inc:682
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "^K3Du wurdest von ^BG%s ^K3wiederbelebt"
+msgstr "^K3Du wurdest von ^BG%s^K3 wiederbelebt"
 
 #: qcsrc/common/notifications/all.inc:683
 #, c-format
@@ -4009,7 +4009,7 @@ msgstr "^K1A %s ist angekommen!"
 
 #: qcsrc/common/notifications/all.inc:698
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr "^BGDu hast den ^F1Treibstoff-Regenerator"
+msgstr "^F1Treibstoff-Regenerator^BG erhalten"
 
 #: qcsrc/common/notifications/all.inc:699
 msgid "^BGYou got the ^F1Jetpack"
@@ -6227,11 +6227,11 @@ msgstr "Wähle die maximale Anzahl von Bots auf dem Server"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:125
 msgid "Bot skill:"
-msgstr "Computerspielerstärke:"
+msgstr "Botstärke:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:128
 msgid "Specify how experienced the bots will be"
-msgstr "Stelle die Stärke der Bots ein"
+msgstr "Leg fest, wie gut die Bots spielen werden"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Botlike"
@@ -6587,9 +6587,9 @@ msgid ""
 "weapon. After some time, a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
-"Xonotic ohne aufsammelbare Gegenstände – Anstelle der Möglichkeit Waffen "
+"Xonotic ohne aufsammelbare Gegenstände – Anstelle der Möglichkeit, Waffen "
 "aufzusammeln, spielen alle mit der gleichen Waffe. Nach einiger Zeit startet "
-"ein Countdown, danach wechseln alle Spieler zu einer neuen gleichen Waffe"
+"ein Countdown, danach wechseln alle Spieler zu einer neuen gleichen Waffe."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:288
 msgid "with blaster"
@@ -7286,7 +7286,7 @@ msgid ""
 "Enable spatialization (blend the right and left channel slightly to decrease "
 "stereo separation a bit for headphones)"
 msgstr ""
-"Aktiviere „räumlicheren“ Klang (Mischung des linken und rechten Kanals um "
+"Aktiviere „räumlicheren“ Klang (Mischung des linken und rechten Kanals, um "
 "die Stereo-Trennung leicht zu verringern, für Kopfhörer)"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -8101,7 +8101,7 @@ msgstr "Gegenstände"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:32
 msgid "Use simple 2D images instead of item models"
-msgstr "Gegenstände als einfache 2D-Bilder anzeigen"
+msgstr "Gegenstände als einfache 2-D-Bilder anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:34
 msgid "Unavailable alpha:"
@@ -8337,7 +8337,7 @@ msgstr "Beim Waffenwechsel mit dem Schiessen aufhören"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw 1st person weapon model"
-msgstr "Waffe in 3D anzeigen"
+msgstr "Waffe in 3-D anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
 msgid "Draw the weapon model"
@@ -8737,7 +8737,8 @@ msgstr "Gewalteffekte deaktivieren"
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:75
 msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr ""
-"Blut und Innereien durch Dinge ersetzen, die keinerlei brutale Effekte haben"
+"Blut und Fleischteile durch Dinge ersetzen, die keinerlei brutale Effekte "
+"haben"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
@@ -8837,12 +8838,12 @@ msgid ""
 "screen refresh rate"
 msgstr ""
 "Vertikale Synchronisation aktivieren, um ein „Auseinanderreissen“ des Bildes "
-"zu verhindern, wird deine Bildrate auf die Bildschirmwiederholungsrate "
+"zu verhindern, wird die Bildrate des Spiels auf die Bildrate des Bildschirms "
 "begrenzen"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "Flip view horizontally"
-msgstr "3D-Ansicht spiegeln"
+msgstr "Ansicht horizontal spiegeln"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:68
 msgid "Poor man's left handed mode"
