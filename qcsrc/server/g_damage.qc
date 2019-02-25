@@ -613,7 +613,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(SAME_TEAM(attacker, targ))
+			else if(!STAT(FROZEN, targ) && SAME_TEAM(attacker, targ))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
