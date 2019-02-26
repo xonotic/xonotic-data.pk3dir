@@ -495,7 +495,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && this != attacker)
-	if(DIFF_TEAM(this, attacker))
+	if (DIFF_TEAM(this, attacker) && (!STAT(FROZEN, this) || this.freeze_time > time))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
 			awep = attacker.(weaponentity).m_weapon;
@@ -504,8 +504,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(GetResource(this, RES_HEALTH), 0);
-	da = da - max(GetResource(this, RES_ARMOR), 0);
+	dh -= max(GetResource(this, RES_HEALTH), 0); // health difference
+	da -= max(GetResource(this, RES_ARMOR), 0); // armor difference
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
