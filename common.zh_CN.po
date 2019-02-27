@@ -9,15 +9,15 @@
 # kalawore <kalawore@outlook.com>, 2015
 # Losier Blackheath <losier.cc@gmail.com>, 2018
 # sapphireliu <balancedliu@gmail.com>, 2014
-# 杜茂森 <dumaosen_main01@outlook.com>, 2018
+# 杜茂森 <dumaosen_main01@outlook.com>, 2018-2019
 # 杜茂森 <dumaosen_main01@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-01-27 06:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-02-26 07:06+0000\n"
+"Last-Translator: 杜茂森 <dumaosen_main01@outlook.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -237,11 +237,11 @@ msgstr "继续..."
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "聊天"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^发送公共短信给"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
@@ -265,7 +265,7 @@ msgstr "QMCMD^hi / 祝你好运，玩的开心"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^英文发送"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
