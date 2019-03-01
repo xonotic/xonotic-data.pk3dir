@@ -198,6 +198,7 @@ void freezetag_Freeze(entity targ, entity attacker)
 	if(STAT(FROZEN, targ))
 		return;
 
+	targ.freezetag_frozen_time = time;
 	if (autocvar_g_freezetag_revive_auto && autocvar_g_freezetag_frozen_maxtime > 0)
 		targ.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
@@ -452,6 +453,30 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 	targ.freezetag_frozen_timeout = 0;
 }
 
+MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	//float frag_deathtype = M_ARGV(3, float);
+	//float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
+	if (STAT(FROZEN, frag_target) == FROZEN_NORMAL && autocvar_g_freezetag_revive_auto_reducible
+		&& autocvar_g_freezetag_frozen_maxtime > 0 && autocvar_g_freezetag_revive_auto)
+	{
+		float t = 0;
+		if ((autocvar_g_freezetag_revive_auto_reducible > 0 || DIFF_TEAM(frag_attacker, frag_target))
+			&& frag_target.freezetag_frozen_timeout > time)
+		{
+			if (fabs(autocvar_g_freezetag_revive_auto_reducible) == 1)
+				t = vlen(frag_force) * autocvar_g_freezetag_revive_auto_reducible_forcefactor;
+			frag_target.freezetag_frozen_timeout -= t;
+			if (frag_target.freezetag_frozen_timeout < time)
+				frag_target.freezetag_frozen_timeout = time;
+		}
+	}
+}
+
 #ifdef IS_REVIVING
 	#undef IS_REVIVING
 #endif
@@ -521,13 +546,14 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
+			float frozen_time = time - player.freezetag_frozen_time;
 			Unfreeze(player, false);
 			freezetag_count_alive_players();
 
 			if(n == -1)
 			{
-				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freezetag_frozen_maxtime);
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, autocvar_g_freezetag_frozen_maxtime);
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, frozen_time);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, frozen_time);
 				return true;
 			}
 
