@@ -278,12 +278,11 @@ bool expr_evaluate(string s)
         string k, v;
         s = argv(i);
         #define X(expr) \
-            if (expr) { \
+            if (expr) \
                 continue; \
-            } else { \
-                expr_fail = true; \
-                break; \
-            }
+            expr_fail = true; \
+            break;
+
         #define BINOP(op, len, expr) \
             if ((o = strstrofs(s, op, 0)) >= 0) { \
                 k = substring(s, 0, o); \

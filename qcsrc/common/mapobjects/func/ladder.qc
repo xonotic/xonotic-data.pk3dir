@@ -9,7 +9,7 @@ void func_ladder_touch(entity this, entity toucher)
 	if(IS_VEHICLE(toucher))
 		return;
 #elif defined(CSQC)
-	if(!toucher.isplayermodel)
+	if(!IS_PLAYER(toucher)) // don't allow non-player predicted entities!
 		return;
 #endif
 

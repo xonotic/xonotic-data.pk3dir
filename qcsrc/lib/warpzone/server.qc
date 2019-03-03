@@ -29,12 +29,12 @@
 .float warpzone_teleport_finishtime;
 .entity warpzone_teleport_zone;
 
-#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN { \
+#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN \
 	entity e = e_; \
 	e.warpzone_oldorigin = e.origin; \
 	e.warpzone_oldvelocity = e.velocity; \
 	e.warpzone_oldangles = e.angles; \
-	} MACRO_END
+	MACRO_END
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {

@@ -285,7 +285,7 @@ void ClientCommand_kill(entity caller, int request)
 			if(IS_SPEC(caller) || IS_OBSERVER(caller))
 				return; // no point warning about this, command does nothing
 
-			if(GetResourceAmount(caller, RESOURCE_HEALTH) <= 0)
+			if(GetResource(caller, RES_HEALTH) <= 0)
 			{
 				sprint(caller, "Can't die - you are already dead!\n");
 				return;

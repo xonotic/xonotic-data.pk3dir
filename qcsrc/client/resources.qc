@@ -5,82 +5,79 @@
 /// \brief Source file that contains implementation of the resource system.
 /// \copyright GNU GPLv2 or any later version.
 
-float GetResourceAmount(entity e, int resource_type)
+float GetResource(entity e, int res_type)
 {
-	.float resource_field = GetResourceField(resource_type);
-	return e.(resource_field);
+	return e.(GetResourceField(res_type));
 }
 
-bool SetResourceAmountExplicit(entity e, int resource_type, float amount)
+bool SetResourceExplicit(entity e, int res_type, float amount)
 {
-	.float resource_field = GetResourceField(resource_type);
-	if (e.(resource_field) != amount)
+	.float res_field = GetResourceField(res_type);
+	if (e.(res_field) != amount)
 	{
-		e.(resource_field) = amount;
+		e.(res_field) = amount;
 		return true;
 	}
 	return false;
 }
 
-void SetResourceAmount(entity e, int resource_type, float amount)
+void SetResource(entity e, int res_type, float amount)
 {
-	SetResourceAmountExplicit(e, resource_type, amount);
+	SetResourceExplicit(e, res_type, amount);
 }
 
-void TakeResource(entity receiver, int resource_type, float amount)
+void TakeResource(entity receiver, int res_type, float amount)
 {
 	if (amount == 0)
 	{
 		return;
 	}
-	SetResourceAmount(receiver, resource_type,
-		GetResourceAmount(receiver, resource_type) - amount);
+	SetResource(receiver, res_type, GetResource(receiver, res_type) - amount);
 }
 
-void TakeResourceWithLimit(entity receiver, int resource_type, float amount,
-	float limit)
+void TakeResourceWithLimit(entity receiver, int res_type, float amount, float limit)
 {
 	if (amount == 0)
 	{
 		return;
 	}
-	float current_amount = GetResourceAmount(receiver, resource_type);
+	float current_amount = GetResource(receiver, res_type);
 	if (current_amount - amount < limit)
 	{
 		amount = limit + current_amount;
 	}
-	TakeResource(receiver, resource_type, amount);
+	TakeResource(receiver, res_type, amount);
 }
 
-int GetResourceType(.float resource_field)
+int GetResourceType(.float res_field)
 {
-	switch (resource_field)
+	switch (res_field)
 	{
-		case health: { return RESOURCE_HEALTH; }
-		case armorvalue: { return RESOURCE_ARMOR; }
-		case ammo_shells: { return RESOURCE_SHELLS; }
-		case ammo_nails: { return RESOURCE_BULLETS; }
-		case ammo_rockets: { return RESOURCE_ROCKETS; }
-		case ammo_cells: { return RESOURCE_CELLS; }
-		case ammo_plasma: { return RESOURCE_PLASMA; }
-		case ammo_fuel: { return RESOURCE_FUEL; }
+		case health: { return RES_HEALTH; }
+		case armorvalue: { return RES_ARMOR; }
+		case ammo_shells: { return RES_SHELLS; }
+		case ammo_nails: { return RES_BULLETS; }
+		case ammo_rockets: { return RES_ROCKETS; }
+		case ammo_cells: { return RES_CELLS; }
+		case ammo_plasma: { return RES_PLASMA; }
+		case ammo_fuel: { return RES_FUEL; }
 	}
 	error("GetResourceType: Invalid field.");
 	return 0;
 }
 
-.float GetResourceField(int resource_type)
+.float GetResourceField(int res_type)
 {
-	switch (resource_type)
+	switch (res_type)
 	{
-		case RESOURCE_HEALTH: { return health; }
-		case RESOURCE_ARMOR: { return armorvalue; }
-		case RESOURCE_SHELLS: { return ammo_shells; }
-		case RESOURCE_BULLETS: { return ammo_nails; }
-		case RESOURCE_ROCKETS: { return ammo_rockets; }
-		case RESOURCE_CELLS: { return ammo_cells; }
-		case RESOURCE_PLASMA: { return ammo_plasma; }
-		case RESOURCE_FUEL: { return ammo_fuel; }
+		case RES_HEALTH: { return health; }
+		case RES_ARMOR: { return armorvalue; }
+		case RES_SHELLS: { return ammo_shells; }
+		case RES_BULLETS: { return ammo_nails; }
+		case RES_ROCKETS: { return ammo_rockets; }
+		case RES_CELLS: { return ammo_cells; }
+		case RES_PLASMA: { return ammo_plasma; }
+		case RES_FUEL: { return ammo_fuel; }
 	}
 	error("GetResourceField: Invalid resource type.");
 	return health;

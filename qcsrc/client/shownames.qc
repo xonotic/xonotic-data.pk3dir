@@ -162,16 +162,18 @@ void Draw_ShowNames(entity this)
 		{
 			vector pos = namepos + eY * autocvar_hud_shownames_fontsize * resize;
 			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
+			if (autocvar_hud_shownames_statusbar_highlight)
+				drawfill(pos + eX * 0.25 * mySize.x, sz, '0.7 0.7 0.7', a / 2, DRAWFLAG_NORMAL);
 			if (this.healthvalue > 0)
 			{
 				HUD_Panel_DrawProgressBar(pos, sz, "nametag_statusbar",
 					this.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', a,
 					DRAWFLAG_NORMAL);
 			}
-			if (GetResourceAmount(this, RESOURCE_ARMOR) > 0)
+			if (GetResource(this, RES_ARMOR) > 0)
 			{
 				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize.x, sz, "nametag_statusbar",
-					GetResourceAmount(this, RESOURCE_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
+					GetResource(this, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
 					DRAWFLAG_NORMAL);
 			}
 		}
@@ -204,13 +206,13 @@ void Draw_ShowNames_All()
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;
-			SetResourceAmountExplicit(it, RESOURCE_ARMOR, GetResourceAmount(entcs, RESOURCE_ARMOR));
+			SetResourceExplicit(it, RES_ARMOR, GetResource(entcs, RES_ARMOR));
 			it.sameteam = true;
 		}
 		else
 		{
 			it.healthvalue = 0;
-			SetResourceAmountExplicit(it, RESOURCE_ARMOR, 0);
+			SetResourceExplicit(it, RES_ARMOR, 0);
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);

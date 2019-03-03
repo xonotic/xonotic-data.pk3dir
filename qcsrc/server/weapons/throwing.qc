@@ -89,7 +89,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 	wep.pickup_anyway = true; // these are ALWAYS pickable
 
 	//wa = W_AmmoItemCode(wpn);
-	if(ammotype == RESOURCE_NONE)
+	if(ammotype == RES_NONE)
 	{
 		return 0;
 	}
@@ -104,7 +104,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 				GiveResource(own, ammotype, own.(weaponentity).(weapon_load[i]));
 				own.(weaponentity).(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
-			SetResourceAmount(wep, ammotype, 0);
+			SetResource(wep, ammotype, 0);
 		}
 		else if(doreduce)
 		{
@@ -116,10 +116,10 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 				own.(weaponentity).(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
 
-			float ownderammo = GetResourceAmount(own, ammotype);
-			float thisammo = min(ownderammo, GetResourceAmount(wep, ammotype));
-			SetResourceAmount(wep, ammotype, thisammo);
-			SetResourceAmount(own, ammotype, ownderammo - thisammo);
+			float ownderammo = GetResource(own, ammotype);
+			float thisammo = min(ownderammo, GetResource(wep, ammotype));
+			SetResource(wep, ammotype, thisammo);
+			SetResource(own, ammotype, ownderammo - thisammo);
 
 			return thisammo;
 		}

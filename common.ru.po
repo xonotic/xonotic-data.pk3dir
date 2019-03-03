@@ -6,20 +6,20 @@
 # adem4ik, 2014
 # Alex Talker <alextalker7@gmail.com>, 2014-2015
 # Andrei Stepanov, 2014
-# Andrei Stepanov <adem4ik@gmail.com>, 2014-2018
+# Andrei Stepanov <adem4ik@gmail.com>, 2014-2019
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # Lord Canistra <lordcanistra@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
-# Nick S <morosophos@teichisma.info>, 2018
+# Nick S <morosophos@teichisma.info>, 2018-2019
 # Simple88, 2016
 # Simple88, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-13 15:42+0100\n"
-"PO-Revision-Date: 2018-12-17 10:58+0000\n"
+"POT-Creation-Date: 2019-01-27 07:23+0100\n"
+"PO-Revision-Date: 2019-02-05 01:06+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -211,11 +211,11 @@ msgstr "^3CTRL ^7для отключения теста коллизий, ^3SHIF
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3СТРЕЛКИ ^7для точной настройки."
 
-#: qcsrc/client/hud/panel/modicons.qc:571
+#: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Personal best"
 msgstr "Личный рекорд"
 
-#: qcsrc/client/hud/panel/modicons.qc:581
+#: qcsrc/client/hud/panel/modicons.qc:586
 msgid "Server best"
 msgstr "Рекорд сервера"
 
@@ -527,11 +527,11 @@ msgstr "Линия финиша"
 #: qcsrc/client/hud/panel/racetimer.qc:82
 #, c-format
 msgid "Intermediate %d"
-msgstr "Среднее %d"
+msgstr "Промежуточное %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:151
 msgid "^1Intermediate 1 (+15.42)"
-msgstr "^1Среднее 1 (+15.42)"
+msgstr "^1Промежуточное 1 (+15.42)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154
 #: qcsrc/client/hud/panel/racetimer.qc:200
@@ -545,170 +545,353 @@ msgstr "^1ШТРАФ: %.1f (%s)"
 msgid "^2PENALTY: %.1f (%s)"
 msgstr "^2ШТРАФ: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:82
+#: qcsrc/client/hud/panel/scoreboard.qc:86
+msgid "Number of ball carrier kills"
+msgstr "Число убитых переносчиков мяча"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "SCO^bckills"
 msgstr "SCO^убийства"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:83
+#: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "SCO^bctime"
 msgstr "SCO^время"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:84
+#: qcsrc/client/hud/panel/scoreboard.qc:87
+msgid "Total amount of time holding the ball in Keepaway"
+msgstr "Общее время владения мячом в режиме Прятки"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:88
+msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
+msgstr ""
+"Как часто флаг (Захват флага) или ключ (Охота за ключами) были захвачены"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "SCO^caps"
 msgstr "SCO^захватов"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:85
+#: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "SCO^captime"
 msgstr "SCO^время захвата"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:86
+#: qcsrc/client/hud/panel/scoreboard.qc:89
+msgid "Time of fastest capture (CTF)"
+msgstr "Время быстрейшего захвата (CTF)"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:90
+msgid "Number of deaths"
+msgstr "Число смертей"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "SCO^deaths"
 msgstr "SCO^смерти"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:87
+#: qcsrc/client/hud/panel/scoreboard.qc:91
+msgid "Number of keys destroyed by pushing them into void"
+msgstr "Число ключей, разрушенных толчком в пустоту"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^destroyed"
 msgstr "SCO^разрушено"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:88
+#: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "SCO^damage"
 msgstr "SCO^урон"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:89
+#: qcsrc/client/hud/panel/scoreboard.qc:92
+msgid "The total damage done"
+msgstr "Общий нанесённый урон"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^dmgtaken"
 msgstr "SCO^уронпол"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:90
+#: qcsrc/client/hud/panel/scoreboard.qc:93
+msgid "The total damage taken"
+msgstr "Общий принятый урон"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:94
+msgid "Number of flag drops"
+msgstr "Число брошенных флагов"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^drops"
 msgstr "SCO^потери"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:91
+#: qcsrc/client/hud/panel/scoreboard.qc:95
+msgid "Player ELO"
+msgstr "ЭЛО игрока"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:95
+msgid "SCO^elo"
+msgstr "SCO^эло"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:96
+msgid "SCO^fastest"
+msgstr "SCO^быстрейший"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:96
+msgid "Time of fastest lap (Race/CTS)"
+msgstr "Время лучшего круга (Гонка/CTS)"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:97
+msgid "Number of faults committed"
+msgstr "Количество совершённых ошибок"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^faults"
 msgstr "SCO^ошибок"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:92
+#: qcsrc/client/hud/panel/scoreboard.qc:98
+msgid "Number of flag carrier kills"
+msgstr "Число убитых флагоносцев"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:98
 msgid "SCO^fckills"
 msgstr "SCO^фнубийства"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:93
+#: qcsrc/client/hud/panel/scoreboard.qc:99
+msgid "FPS"
+msgstr "FPS"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:99
+msgid "SCO^fps"
+msgstr "SCO^fps"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:100
+msgid "Number of kills minus suicides"
+msgstr "Количество убийств за вычетом самоубийств"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:100
+msgid "SCO^frags"
+msgstr "SCO^фраги"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:101
+msgid "Number of goals scored"
+msgstr "Количество забитых голов"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "SCO^goals"
 msgstr "SCO^голы"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:94
+#: qcsrc/client/hud/panel/scoreboard.qc:102
+msgid "Number of keys carrier kills"
+msgstr "Число убийств носителей ключей"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "SCO^kckills"
 msgstr "SCO^нкубийства"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:95
-msgid "SCO^kdratio"
-msgstr "SCO^уб/см"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:96
+#: qcsrc/client/hud/panel/scoreboard.qc:103
 msgid "SCO^k/d"
 msgstr "SCO^уб/см"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:97
+#: qcsrc/client/hud/panel/scoreboard.qc:103
+#: qcsrc/client/hud/panel/scoreboard.qc:104
+#: qcsrc/client/hud/panel/scoreboard.qc:105
+msgid "The kill-death ratio"
+msgstr "Отношение убийств/смертей"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:104
 msgid "SCO^kdr"
 msgstr "SCO^уб/см"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:98
+#: qcsrc/client/hud/panel/scoreboard.qc:105
+msgid "SCO^kdratio"
+msgstr "SCO^уб/см"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:106
+msgid "Number of kills"
+msgstr "Число убийств"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "SCO^kills"
 msgstr "SCO^убийства"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:99
-msgid "SCO^teamkills"
-msgstr "SCO^союзубийства"
+#: qcsrc/client/hud/panel/scoreboard.qc:107
+msgid "Number of laps finished (Race/CTS)"
+msgstr "Количество завершённых кругов (Гонка/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:100
+#: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^laps"
 msgstr "SCO^круги"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:101
+#: qcsrc/client/hud/panel/scoreboard.qc:108
+msgid "Number of lives (LMS)"
+msgstr "Количество жизней (LMS)"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^lives"
 msgstr "SCO^жизни"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:102
+#: qcsrc/client/hud/panel/scoreboard.qc:109
+msgid "Number of times a key was lost"
+msgstr "Число потерянных ключей"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^losses"
 msgstr "SCO^поражений"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:103
+#: qcsrc/client/hud/panel/scoreboard.qc:110
+#: qcsrc/client/hud/panel/scoreboard.qc:111
+msgid "Player name"
+msgstr "Имя игрока"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^name"
 msgstr "SCO^имя"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:104
-msgid "SCO^sum"
-msgstr "SCO^сум"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:105
+#: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^nick"
 msgstr "SCO^ник"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:106
+#: qcsrc/client/hud/panel/scoreboard.qc:112
+msgid "Number of objectives destroyed"
+msgstr "Количество уничтоженных целей"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^objectives"
 msgstr "SCO^целей"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:107
+#: qcsrc/client/hud/panel/scoreboard.qc:113
+msgid ""
+"How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
+msgstr ""
+"Как часто флаг (Захват флага) или ключ (Охота за ключами) или мяч (Прятки) "
+"были подобраны"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^pickups"
 msgstr "SCO^поднятия"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:108
+#: qcsrc/client/hud/panel/scoreboard.qc:114
+msgid "Ping time"
+msgstr "Время пинга"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "SCO^ping"
 msgstr "SCO^пинг"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:109
+#: qcsrc/client/hud/panel/scoreboard.qc:115
+msgid "Packet loss"
+msgstr "Потеря пакета"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "SCO^pl"
 msgstr "потери"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:110
+#: qcsrc/client/hud/panel/scoreboard.qc:116
+msgid "Number of players pushed into void"
+msgstr "Число отправленных в пустоту игроков"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "SCO^pushes"
 msgstr "SCO^толчков"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:111
+#: qcsrc/client/hud/panel/scoreboard.qc:117
+msgid "Player rank"
+msgstr "Ранг игрока"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "SCO^rank"
 msgstr "SCO^ранг"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:112
+#: qcsrc/client/hud/panel/scoreboard.qc:118
+msgid "Number of flag returns"
+msgstr "Число возвратов флага"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "SCO^returns"
 msgstr "SCO^возвраты"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:113
+#: qcsrc/client/hud/panel/scoreboard.qc:119
+msgid "Number of revivals"
+msgstr "Количество возрождений"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "SCO^revivals"
 msgstr "SCO^возрождения"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:114
+#: qcsrc/client/hud/panel/scoreboard.qc:120
+msgid "Number of rounds won"
+msgstr "Количество выигранных раундов"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^rounds won"
 msgstr "SCO^раундов выиграно"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:115
+#: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^score"
 msgstr "SCO^счёт"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:116
+#: qcsrc/client/hud/panel/scoreboard.qc:121
+msgid "Total score"
+msgstr "Общий счёт"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:122
+msgid "Number of suicides"
+msgstr "Число суицидов"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^suicides"
 msgstr "SCO^суициды"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:117
+#: qcsrc/client/hud/panel/scoreboard.qc:123
+msgid "Number of kills minus deaths"
+msgstr "Количество убийств за вычетом смертей"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:123
+msgid "SCO^sum"
+msgstr "SCO^сум"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:124
+msgid "Number of domination points taken (Domination)"
+msgstr "Количество захваченных точек доминации (Доминация)"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^takes"
 msgstr "SCO^подборов"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:118
+#: qcsrc/client/hud/panel/scoreboard.qc:125
+msgid "Number of teamkills"
+msgstr "Число убийств союзников"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:125
+msgid "SCO^teamkills"
+msgstr "SCO^союзубийства"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:126
+msgid "Number of ticks (Domination)"
+msgstr "Количество тиков (Доминация)"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^ticks"
 msgstr "SCO^тиков"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:298
+#: qcsrc/client/hud/panel/scoreboard.qc:127
+msgid "SCO^time"
+msgstr "SCO^время"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:127
+msgid "Total time raced (Race/CTS)"
+msgstr "Общее время гонки (Гонка/CTS)"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:311
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
 "Вы можете изменить таблицу результатов, используя команду "
 "^2scoreboard_columns_set."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:299
+#: qcsrc/client/hud/panel/scoreboard.qc:312
 msgid "Usage:"
 msgstr "Применение:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:301
+#: qcsrc/client/hud/panel/scoreboard.qc:314
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3поле1 поле2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:302
+#: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -716,7 +899,7 @@ msgstr ""
 "^2scoreboard_columns_set ^7 без аргументов считывает конфигурацию из cvar'а "
 "scoreboard_columns"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:303
+#: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
@@ -724,7 +907,7 @@ msgstr ""
 " ^5Примечание: ^7scoreboard_columns_set без аргументов выполняется перед "
 "началом каждой карты"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:304
+#: qcsrc/client/hud/panel/scoreboard.qc:317
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -733,156 +916,15 @@ msgstr ""
 "умолчанию и выводит её в переменную scoreboard_columns, где вы можете её "
 "отредактировать"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:305
+#: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "Используйте ^3|^7 для начала полей, выровненных справа."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:306
+#: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "The following field names are recognized (case insensitive):"
 msgstr "Распознаны следующие имена полей (без учёта регистра):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:309
-#: qcsrc/client/hud/panel/scoreboard.qc:310
-msgid "Name of a player"
-msgstr "Имя игрока"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:311
-msgid "Ping time"
-msgstr "Время пинга"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:312
-msgid "Packet loss"
-msgstr "Потеря пакета"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:313
-msgid "Player ELO"
-msgstr "ЭЛО игрока"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:314
-msgid "Player FPS"
-msgstr "FPS игрока"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:315
-msgid "Number of kills"
-msgstr "Число убийств"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:316
-msgid "Number of deaths"
-msgstr "Число смертей"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:317
-msgid "Number of suicides"
-msgstr "Число суицидов"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:318
-msgid "kills - suicides"
-msgstr "убийства - суициды"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:319
-msgid "Number of teamkills"
-msgstr "Число убийств союзников"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:320
-msgid "The kill-death ratio"
-msgstr "Отношение убийств/смертей"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:321
-msgid "The total damage done"
-msgstr "Общий нанесённый урон"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:322
-msgid "The total damage taken"
-msgstr "Общий принятый урон"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:323
-msgid "kills - deaths"
-msgstr "убийства - смерти"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:324
-msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
-msgstr ""
-"Как часто флаг (Захват флага) или ключ (Охота за ключами) были захвачены"
-
 #: qcsrc/client/hud/panel/scoreboard.qc:325
-msgid ""
-"How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
-msgstr ""
-"Как часто флаг (Захват флага) или ключ (Охота за ключами) или мяч (Прятки) "
-"были подобраны"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:326
-msgid "Time of fastest cap (CTF)"
-msgstr "Время быстрейшего захвата (Захват флага)"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:327
-msgid "Number of flag carrier kills"
-msgstr "Число убитых флагоносцев"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:328
-msgid "Number of flag returns"
-msgstr "Число возвратов флага"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:329
-msgid "Number of flag drops"
-msgstr "Число брошенных флагов"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:330
-msgid "Number of lives (LMS)"
-msgstr "Количество жизней (LMS)"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:331
-msgid "Player rank"
-msgstr "Ранг игрока"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:332
-msgid "Number of players pushed into void"
-msgstr "Число отправленных в пустоту игроков"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:333
-msgid "Number of keys destroyed by pushing them into void"
-msgstr "Число ключей, разрушенных толчком в пустоту"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:334
-msgid "Number of keys carrier kills"
-msgstr "Число убийств носителей ключей"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:335
-msgid "Number of times a key was lost"
-msgstr "Число потерянных ключей"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:336
-msgid "Number of laps finished (race/cts)"
-msgstr "Число законченных кругов (race/cts)"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:337
-msgid "Total time raced (race/cts)"
-msgstr "Общее время гонок (race/cts)"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:338
-msgid "Time of fastest lap (race/cts)"
-msgstr "Время лучшего круга (race/cts)"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:339
-msgid "Number of ticks (DOM)"
-msgstr "Количество тиков (DOM)"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:340
-msgid "Number of domination points taken (DOM)"
-msgstr "Количество захваченных точек доминации (DOM)"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:341
-msgid "Number of ball carrier kills"
-msgstr "Число убитых переносчиков мяча"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:342
-msgid "Total amount of time holding the ball in Keepaway"
-msgstr "Общее время владения мячом в режиме Прятки"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:343
-msgid "Total score"
-msgstr "Общий счёт"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:346
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -894,7 +936,7 @@ msgstr ""
 "режимов. Вы так же можете указать 'all' как поле для показа всех\n"
 "полей текущего игрового режима."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:352
+#: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
@@ -903,11 +945,11 @@ msgstr ""
 "использованы для включения/отключения ВСЕХ командных\n"
 "или некомандных игровых режимов."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:356
+#: qcsrc/client/hud/panel/scoreboard.qc:335
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "Например: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:357
+#: qcsrc/client/hud/panel/scoreboard.qc:336
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -915,7 +957,7 @@ msgstr ""
 "отобразит имя, пинг и потери пакетов выровненными слева, и поля\n"
 "вертикальной панели справа."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:359
+#: qcsrc/client/hud/panel/scoreboard.qc:338
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -923,10 +965,10 @@ msgstr ""
 "'field3' будет отображаться только в CTF, и 'field4' во всех других режимах "
 "кроме DM."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:622
-#: qcsrc/client/hud/panel/scoreboard.qc:629
-#: qcsrc/client/hud/panel/scoreboard.qc:681
-#: qcsrc/client/hud/panel/scoreboard.qc:692
+#: qcsrc/client/hud/panel/scoreboard.qc:601
+#: qcsrc/client/hud/panel/scoreboard.qc:608
+#: qcsrc/client/hud/panel/scoreboard.qc:660
+#: qcsrc/client/hud/panel/scoreboard.qc:671
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:46
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:47
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
@@ -935,104 +977,104 @@ msgstr ""
 msgid "N/A"
 msgstr "Н/Д"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1200
+#: qcsrc/client/hud/panel/scoreboard.qc:1179
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Точность попаданий (средняя %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1348
+#: qcsrc/client/hud/panel/scoreboard.qc:1327
 msgid "Map stats:"
 msgstr "Статистика карты:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1378
+#: qcsrc/client/hud/panel/scoreboard.qc:1357
 msgid "Monsters killed:"
 msgstr "Монстров убито:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1385
+#: qcsrc/client/hud/panel/scoreboard.qc:1364
 msgid "Secrets found:"
 msgstr "Секретов найдено:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1407
+#: qcsrc/client/hud/panel/scoreboard.qc:1386
 msgid "Capture time rankings"
 msgstr "Рейтинг времени захвата"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1407
+#: qcsrc/client/hud/panel/scoreboard.qc:1386
 msgid "Rankings"
 msgstr "Рейтинг"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1608
+#: qcsrc/client/hud/panel/scoreboard.qc:1589
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
 msgstr "Таблица результатов"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1671
+#: qcsrc/client/hud/panel/scoreboard.qc:1652
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Награда за скорость: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1675
+#: qcsrc/client/hud/panel/scoreboard.qc:1656
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Быстрейший за всё время: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1691
+#: qcsrc/client/hud/panel/scoreboard.qc:1672
 #, c-format
 msgid "Spectators"
 msgstr "Зрители"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1706
+#: qcsrc/client/hud/panel/scoreboard.qc:1687
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
 msgstr "режим ^3%s^7 на карте ^2%s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1713
-#: qcsrc/client/hud/panel/scoreboard.qc:1718
+#: qcsrc/client/hud/panel/scoreboard.qc:1694
+#: qcsrc/client/hud/panel/scoreboard.qc:1699
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
 msgstr " до ^1%1.0f минут^7"
 
+#: qcsrc/client/hud/panel/scoreboard.qc:1703
 #: qcsrc/client/hud/panel/scoreboard.qc:1722
-#: qcsrc/client/hud/panel/scoreboard.qc:1741
 msgid " or"
 msgstr " или"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1725
-#: qcsrc/client/hud/panel/scoreboard.qc:1732
+#: qcsrc/client/hud/panel/scoreboard.qc:1706
+#: qcsrc/client/hud/panel/scoreboard.qc:1713
 #, c-format
 msgid " until ^3%s %s^7"
 msgstr " до ^3%s %s^7"
 
+#: qcsrc/client/hud/panel/scoreboard.qc:1707
+#: qcsrc/client/hud/panel/scoreboard.qc:1714
 #: qcsrc/client/hud/panel/scoreboard.qc:1726
 #: qcsrc/client/hud/panel/scoreboard.qc:1733
-#: qcsrc/client/hud/panel/scoreboard.qc:1745
-#: qcsrc/client/hud/panel/scoreboard.qc:1752
 msgid "SCO^points"
 msgstr "SCO^очков"
 
+#: qcsrc/client/hud/panel/scoreboard.qc:1708
+#: qcsrc/client/hud/panel/scoreboard.qc:1715
 #: qcsrc/client/hud/panel/scoreboard.qc:1727
 #: qcsrc/client/hud/panel/scoreboard.qc:1734
-#: qcsrc/client/hud/panel/scoreboard.qc:1746
-#: qcsrc/client/hud/panel/scoreboard.qc:1753
 msgid "SCO^is beaten"
 msgstr "SCO^побит"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1744
-#: qcsrc/client/hud/panel/scoreboard.qc:1751
+#: qcsrc/client/hud/panel/scoreboard.qc:1725
+#: qcsrc/client/hud/panel/scoreboard.qc:1732
 #, c-format
 msgid " until a lead of ^3%s %s^7"
 msgstr " по достижению лидерства в ^3%s %s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1775
+#: qcsrc/client/hud/panel/scoreboard.qc:1756
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Возрождение через ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1785
+#: qcsrc/client/hud/panel/scoreboard.qc:1766
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Вы мертвы, подождите ^3%s^7 до возрождения"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1794
+#: qcsrc/client/hud/panel/scoreboard.qc:1775
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Вы мертвы, нажмите ^2%s^7 для возрождения"
@@ -1131,29 +1173,29 @@ msgstr " (голосов: %d)"
 msgid "Don't care"
 msgstr "Всё равно"
 
-#: qcsrc/client/mapvoting.qc:374
+#: qcsrc/client/mapvoting.qc:375
 msgid "Decide the gametype"
 msgstr "Выберите тип игры"
 
-#: qcsrc/client/mapvoting.qc:374
+#: qcsrc/client/mapvoting.qc:375
 msgid "Vote for a map"
 msgstr "Голосование за карту"
 
-#: qcsrc/client/mapvoting.qc:391
+#: qcsrc/client/mapvoting.qc:392
 #, c-format
 msgid "%d seconds left"
 msgstr "Секунд осталось: %d"
 
-#: qcsrc/client/mapvoting.qc:504
+#: qcsrc/client/mapvoting.qc:505
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
 "mv_mapdownload: ^3Вы не должны использовать эту команду по своему усмотрению!"
 
-#: qcsrc/client/mapvoting.qc:514
+#: qcsrc/client/mapvoting.qc:515
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr "^1Error:^7 Не удалось найти индекс пака."
 
-#: qcsrc/client/mapvoting.qc:523
+#: qcsrc/client/mapvoting.qc:524
 msgid "Requesting preview..."
 msgstr "Запрос эскиза..."
 
@@ -1263,7 +1305,7 @@ msgstr "Сила"
 msgid "Shield"
 msgstr "Щит"
 
-#: qcsrc/common/mapinfo.qc:621
+#: qcsrc/common/mapinfo.qc:626
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Швыряние Трубой"
@@ -2026,7 +2068,7 @@ msgstr "^F4ПРИМЕЧАНИЕ: ^BGИгроки не видят чат зрит
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr "^BG%s^BG захватили ^TC^TT^BG флаг"
+msgstr "^BG%s^BG захватил ^TC^TT^BG флаг"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -2034,18 +2076,18 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG захватили ^TC^TT^BG флаг за ^F1%s^BG секунд, побив предыдущий "
-"рекорд ^BG%s^BG - ^F2%s^BG секунды"
+"^BG%s^BG захватил ^TC^TT^BG флаг за ^F1%s^BG секунд, побив предыдущий рекорд "
+"^BG%s^BG - ^F2%s^BG секунды"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr "^BG%s^BG захватили флаг"
+msgstr "^BG%s^BG захватил флаг"
 
 #: qcsrc/common/notifications/all.inc:244
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr "^BG%s^BG захватили ^TC^TT^BG флаг за ^F1%s^BG секунд"
+msgstr "^BG%s^BG захватил ^TC^TT^BG флаг за ^F1%s^BG секунд"
 
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
@@ -2053,16 +2095,16 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
-"^BG%s^BG захватили ^TC^TT^BG флаг за ^F2%s^BG секунд, не сумев побить "
+"^BG%s^BG захватил ^TC^TT^BG флаг за ^F2%s^BG секунд, не сумев побить "
 "предыдущий рекорд ^BG%s^BG - ^F2%s^BG секунды"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr "^BG ^TC^TT^BG Флаг возвращён на базу владельцем"
+msgstr "^BG ^TC^TT^BG Флаг был возвращён на базу владельцем"
 
 #: qcsrc/common/notifications/all.inc:247
 msgid "^BGThe flag was returned by its owner"
-msgstr "^BGФлаг возвращён на базу владельцем"
+msgstr "^BGФлаг был возвращён на базу владельцем"
 
 #: qcsrc/common/notifications/all.inc:248
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
@@ -2168,12 +2210,12 @@ msgstr "^F2Вы станете зрителем со следующего рау
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 убит ^BG%s^K1 с усилителем ^BG%s^K1 ^K1%s%s"
+msgstr "^BG%s%s^K1 был убит ^BG%s^K1 с усилителем ^BG%s^K1 ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 растерзан ^BG%s^K1 с усилителем ^BG%s^K1 ^K1%s%s"
+msgstr "^BG%s%s^K1 был растерзан ^BG%s^K1 с усилителем ^BG%s^K1 ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:275
 #, c-format
@@ -2198,17 +2240,17 @@ msgstr "^BG%s%s^K1 немного подпалён из ^BG%s^K1^K1%s%s"
 #: qcsrc/common/notifications/all.inc:278
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 прожарен до хрустящей корочки ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был прожарен до хрустящей корочки ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:279
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 испечён с помощью ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был испечён с помощью ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 отправлен к монстрам руками ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был отправлен к монстрам руками ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
@@ -2223,17 +2265,17 @@ msgstr "^BG%s%s^K1 слишком близко подошёл к взрыву н
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr "^BG%s%s^K1 сожжён заживо Гранатой Напалма ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был сожжён заживо Гранатой Напалма ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 подорван Ледяной Гранатой ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был подорван Ледяной Гранатой ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 заморожен Ледяной Гранатой ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был заморожен Ледяной Гранатой ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
@@ -2243,12 +2285,12 @@ msgstr "^BG%s%s^K1 не был вылечен Лечащей Гранатой ^B
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 отправлен в открытый космос ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был отправлен в открытый космос ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 утоплен в слизи ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был утоплен в слизи ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
@@ -2322,7 +2364,8 @@ msgstr "^BG%s%s^K1 измельчён Пуком-ботом, управляем�
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"
-msgstr "^BG%s%s^K1 разорван на куски Пауком-ботом, управляемым ^BG%s^K1%s%s"
+msgstr ""
+"^BG%s%s^K1 был разорван на куски Пауком-ботом, управляемым ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
@@ -2343,7 +2386,7 @@ msgstr "^BG%s%s^K1 не смог скрыться от Гонщика, упра�
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 отправлен в мир боли руками ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был отправлен в мир боли руками ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
@@ -2413,7 +2456,7 @@ msgstr "^BG%s^K1 сгорел дотла%s%s"
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
 msgid "^BG%s^K1 was exploded by a Mage%s%s"
-msgstr "^BG%s^K1 подорван Магом%s%s"
+msgstr "^BG%s^K1 был подорван Магом%s%s"
 
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
@@ -2423,22 +2466,22 @@ msgstr "^BG%s^K1's вывернут наизнанку Шамблером%s%s"
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
 msgid "^BG%s^K1 was smashed by a Shambler%s%s"
-msgstr "^BG%s^K1 раздавлен Шамблером%s%s"
+msgstr "^BG%s^K1 был раздавлен Шамблером%s%s"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr "^BG%s^K1 стёрт в порошок Шамблером%s%s"
+msgstr "^BG%s^K1 был стёрт в порошок Шамблером%s%s"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1 was bitten by a Spider%s%s"
-msgstr "^BG%s^K1 побит Пауком%s%s"
+msgstr "^BG%s^K1 был побит Пауком%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 was fireballed by a Wyvern%s%s"
-msgstr "^BG%s^K1 поражён огненным шаром Виверна%s%s"
+msgstr "^BG%s^K1 был поражён огненным шаром Виверна%s%s"
 
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
@@ -2448,7 +2491,7 @@ msgstr "^BG%s^K1 присоединился к Зомбиs%s%s"
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr "^BG%s^K1 получил урок кунг-фу от Зомби%s%s"
+msgstr "^BG%s^K1 был получил урок кунг-фу от Зомби%s%s"
 
 #: qcsrc/common/notifications/all.inc:323
 #: qcsrc/common/notifications/all.inc:325
@@ -2465,7 +2508,7 @@ msgstr "^BG%s^K1 захотел посмотреть на взрыв своег�
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
 msgid "^BG%s^K1 was burned to death by their own Napalm Nade%s%s"
-msgstr "^BG%s^K1 сожжён заживо своей же Гранатой Напалма%s%s"
+msgstr "^BG%s^K1 был сожжён заживо своей же Гранатой Напалма%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
@@ -2475,7 +2518,7 @@ msgstr "^BG%s^K1 немного обжёгся%s%s"
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid "^BG%s^K1 was frozen to death by their own Ice Nade%s%s"
-msgstr "^BG%s^K1 заморожен своей же Ледяной Гранатой%s%s"
+msgstr "^BG%s^K1 был заморожен своей же Ледяной Гранатой%s%s"
 
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
@@ -2535,7 +2578,7 @@ msgstr "^BG%s^K1 налетел на турель%s%s"
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
 msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s"
-msgstr "^BG%s^K1 разорван в клочья турелью еМобиля%s%s"
+msgstr "^BG%s^K1 был разорван в клочья турелью еМобиля%s%s"
 
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
@@ -2545,7 +2588,7 @@ msgstr "^BG%s^K1 попал под огонь Зенитной Пушки %s%s"
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s"
-msgstr "^BG%s^K1 разорван в клочья турелью Хулигана%s%s"
+msgstr "^BG%s^K1 был разорван в клочья турелью Хулигана%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
@@ -2555,7 +2598,7 @@ msgstr "^BG%s^K1 не смог спрятаться от турели Hunter%s%s
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr "^BG%s^K1 изрешечён Пулемётной башней%s%s"
+msgstr "^BG%s^K1 был изрешечён Пулемётной башней%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
@@ -2565,7 +2608,7 @@ msgstr "^BG%s^K1 разорван на тлеющие кусочки турел�
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
 msgid "^BG%s^K1 was phased out by a turret%s%s"
-msgstr "^BG%s^K1 ликвидирован турелью%s%s"
+msgstr "^BG%s^K1 был ликвидирован турелью%s%s"
 
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
@@ -2575,7 +2618,7 @@ msgstr "^BG%s^K1 отведал перегретой плазмы из туре�
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
 msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s"
-msgstr "^BG%s^K1 убит электрическим током турели Теслы%s%s"
+msgstr "^BG%s^K1 был убит электрическим током турели Теслы%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
@@ -2585,12 +2628,12 @@ msgstr "^BG%s^K1 обогащён свинцом из турели Ходунa%s
 #: qcsrc/common/notifications/all.inc:347
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s"
-msgstr "^BG%s^K1 пронзён турелью Ходуна%s%s"
+msgstr "^BG%s^K1 был пронзён турелью Ходуна%s%s"
 
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s"
-msgstr "^BG%s^K1 разорван в клочья турелью Ходуна%s%s"
+msgstr "^BG%s^K1 был разорван в клочья турелью Ходуна%s%s"
 
 #: qcsrc/common/notifications/all.inc:349
 #, c-format
@@ -2600,7 +2643,7 @@ msgstr "^BG%s^K1 зацепило взрывной волной от Шмеля 
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
 msgid "^BG%s^K1 was crushed by a vehicle%s%s"
-msgstr "^BG%s^K1 раздавлен весом тяжёлой машины%s%s"
+msgstr "^BG%s^K1 был раздавлен весом тяжёлой машины%s%s"
 
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
@@ -2620,7 +2663,7 @@ msgstr "^BG%s^K1 задело взрывной волной от Паука-бо
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
 msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"
-msgstr "^BG%s^K1 разорван на кусочки ракетой Паука-бота%s%s"
+msgstr "^BG%s^K1 был разорван на кусочки ракетой Паука-бота%s%s"
 
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
@@ -2660,12 +2703,12 @@ msgstr "^BG%s^K3 воскрес после падения"
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr "^BG%s^K3 оживлён взрывом своей гранаты"
+msgstr "^BG%s^K3 был оживлён взрывом своей гранаты"
 
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s second(s)"
-msgstr "^BG%s^K3 автоматически оживлён после %s секунд(ы)"
+msgstr "^BG%s^K3 был автоматически оживлён после %s секунд(ы)"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
@@ -2852,7 +2895,7 @@ msgstr "^TC^TT^BG генератор уничтожен"
 
 #: qcsrc/common/notifications/all.inc:414
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr "^TC^TT^BG генератор воспламенился из-за овертайма1"
+msgstr "^TC^TT^BG генератор воспламенился из-за овертайма!"
 
 #: qcsrc/common/notifications/all.inc:416
 #, c-format
@@ -2882,7 +2925,7 @@ msgstr "^BG%s^F3 отключился"
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
 msgid "^BG%s^F3 was kicked for idling"
-msgstr "^BG%s^F3 выкинут за бездействие"
+msgstr "^BG%s^F3 был выкинут за бездействие"
 
 #: qcsrc/common/notifications/all.inc:423
 msgid ""
@@ -2895,7 +2938,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr "^BG%s^F3 выкинут за чрезмерные убийства союзников"
+msgstr "^BG%s^F3 был выкинут за чрезмерные убийства союзников"
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
@@ -3039,12 +3082,12 @@ msgstr "^BG%s%s^K1 попал под раздачу тока из Дуговой
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 взорван кривыми болтами%s%s ^BG%s^K1's"
+msgstr "^BG%s%s^K1 был взорван кривыми болтами%s%s ^BG%s^K1's"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"
-msgstr "^BG%s%s^K1 застрелен из Бластера ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был застрелен из Бластера ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:459
 #, c-format
@@ -3079,7 +3122,7 @@ msgstr "^BG%s^K1 взорвал себя с помощью Разрушител�
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 разорван зарядом Электро ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был разорван зарядом Электро ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:466
 #, c-format
@@ -3124,12 +3167,12 @@ msgstr "^BG%s^K1 забыл о своей зажигательной мине %s
 #: qcsrc/common/notifications/all.inc:474
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s"
-msgstr "^BG%s%s^K1 утрамбован очередью из Хагара от ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был утрамбован очередью из Хагара от ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:475
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s"
-msgstr "^BG%s%s^K1 обстрелян из Хагара ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был обстрелян из Хагара ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:476
 #, c-format
@@ -3166,12 +3209,12 @@ msgstr "^BGУ %s^K1 завяли уши от игры на @!#%%й Бутылк�
 #: qcsrc/common/notifications/all.inc:482
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 расстрелян из Пулемёта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был расстрелян из Пулемёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:483
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 изрешечён Пулемётом ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был изрешечён Пулемётом ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:484
 #: qcsrc/common/notifications/all.inc:794
@@ -3214,20 +3257,20 @@ msgstr "^BG%s^K1 взорвал сам себя с помощью Мортиры
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr "^BG%s%s^K1 застрелен из Оверкилл Тяжёлого Пулемёта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был застрелен из Оверкилл Тяжёлого Пулемёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 разорван на куски из Оверкилл Тяжёлого Пулемёта ^BG%s^K1%s%s"
+"^BG%s%s^K1 был разорван на куски из Оверкилл Тяжёлого Пулемёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
-msgstr "^BG%s%s^K1 изрешечён Оверкилл Пулемётом ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был изрешечён Оверкилл Пулемётом ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
@@ -3240,7 +3283,7 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
-"^BG%s%s^K1 распилен пополам Оверкилл Реактивной Бензопилой ^BG%s^K1%s%s"
+"^BG%s%s^K1 был распилен пополам Оверкилл Реактивной Бензопилой ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
@@ -3253,7 +3296,8 @@ msgstr ""
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
-msgstr "^BG%s^K1 распилен пополам своей же Оверкилл Реактивной Бензопилой%s%s"
+msgstr ""
+"^BG%s^K1 был распилен пополам своей же Оверкилл Реактивной Бензопилой%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
@@ -3264,12 +3308,12 @@ msgstr "^BG%s^K1 взорвал себя своей же Оверкилл Реа
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr "^BG%s%s^K1 пристрелен из Оверкилл Дробовика ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был пристрелен из Оверкилл Дробовика ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
 msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 расстрелян из Винтовки ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был расстрелян из Винтовки ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
@@ -3291,8 +3335,8 @@ msgstr "^BG%s%s^K1 не смог спрятаться от Винтовки ^BG%
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"
 msgstr ""
-"^BG%s%s^K1 подвергся усиленному обстрелу ракетами из Самонаводчика со "
-"стороны ^BG%s^K1%s%s"
+"^BG%s%s^K1 попал под обстрел ракетами из Самонаводчика со стороны ^BG%s^K1%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:506
 #, c-format
@@ -3307,7 +3351,7 @@ msgstr "^BG%s^K1 доигрался с ракетками из Самонаво�
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"
-msgstr "^BG%s%s^K1 застрелен из Шоковой Волны ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был застрелен из Шоковой Волны ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:509
 #, c-format
@@ -3317,7 +3361,7 @@ msgstr "^BG%s%s^K1 отшлёпан ^BG%s^K1 огромной Шоковой В�
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr "^BG%s%s^K1 пристрелен из Дробовика ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был пристрелен из Дробовика ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
@@ -4450,12 +4494,12 @@ msgstr "%s^K1 получил первое очко! %s^BG"
 #: qcsrc/common/notifications/all.qh:601
 #, c-format
 msgid ", ending their %d frag spree"
-msgstr ", прервав серию из %d убийств подряд"
+msgstr ", прервав свою серию из %d убийств подряд"
 
 #: qcsrc/common/notifications/all.qh:602
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ", прервав серию из %d очков подряд"
+msgstr ", прервав свою серию из %d очков подряд"
 
 #: qcsrc/common/notifications/all.qh:616
 #, c-format
@@ -5013,7 +5057,7 @@ msgstr "  directmenu ITEM — определить элемент меню ка�
 
 #: qcsrc/menu/command/menu_cmd.qc:51
 msgid "  dumptree - dump the state of the menu as a tree to the console"
-msgstr "dumptree - консольный дамп состояния меню в виде дерева"
+msgstr "dumptree — консольный дамп состояния меню в виде дерева"
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available options:"
@@ -5467,6 +5511,7 @@ msgstr "Панель информационных сообщений"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
@@ -5478,6 +5523,7 @@ msgid "Disable"
 msgstr "Отключить"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
 msgstr "Включить наблюдение"
 
@@ -5632,6 +5678,11 @@ msgstr "Панель физики"
 msgid "Powerups Panel"
 msgstr "Панель бонусов"
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
+msgid "Always enable"
+msgstr "Включать всегда"
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
 msgstr "Соотношение:"
@@ -5651,10 +5702,6 @@ msgstr "Гоночная панель таймера"
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Enable in team games"
 msgstr "Включить в командных играх"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
-msgid "Always enable"
-msgstr "Включать всегда"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
@@ -9404,7 +9451,7 @@ msgstr "Присоединился:"
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
-msgstr "Последний матч"
+msgstr "Последний матч:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"

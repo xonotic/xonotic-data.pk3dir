@@ -73,16 +73,16 @@ int g_magic_stats_hole = 0;
 	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_float(id, fld) addstat(id, AS_FLOAT, fld)
-	#define addstat_vector(id, fld) MACRO_BEGIN { \
+	#define addstat_vector(id, fld) MACRO_BEGIN \
 		addstat_float(id + 0, fld##_x); \
 		addstat_float(id + 1, fld##_y); \
 		addstat_float(id + 2, fld##_z); \
-	} MACRO_END
-	#define addstat_vectori(id, fld) MACRO_BEGIN { \
+	MACRO_END
+	#define addstat_vectori(id, fld) MACRO_BEGIN \
 		addstat_int(id + 0, fld##_x); \
 		addstat_int(id + 1, fld##_y); \
 		addstat_int(id + 2, fld##_z); \
-	} MACRO_END
+	MACRO_END
 	const int AS_STRING = 1;
 	const int AS_INT = 2;
 	const int AS_FLOAT = 8;
@@ -131,7 +131,7 @@ REGISTRY(Stats, 256 - STATS_ENGINE_RESERVE)
 REGISTER_REGISTRY(Stats)
 REGISTRY_SORT(Stats)
 REGISTRY_CHECK(Stats)
-STATIC_INIT(RegisterStats_renumber)
+STATIC_INIT(Stats_renumber)
 {
 	FOREACH(Stats, true, {
 		it.m_id = STATS_ENGINE_RESERVE + i;

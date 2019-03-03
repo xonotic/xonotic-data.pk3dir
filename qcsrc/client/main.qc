@@ -801,7 +801,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(entity this, bool isnew)
 {
-	this.sourceLoc = __FILE__ ":" STR(__LINE__);
+	this.sourceLoc = __FILE__":"STR(__LINE__);
 	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes

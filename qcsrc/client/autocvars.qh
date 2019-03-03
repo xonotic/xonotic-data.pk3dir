@@ -381,6 +381,7 @@ float autocvar_hud_shownames_crosshairdistance_antioverlap;
 bool autocvar_hud_shownames_self;
 bool autocvar_hud_shownames_status;
 float autocvar_hud_shownames_statusbar_height;
+float autocvar_hud_shownames_statusbar_highlight = 1;
 float autocvar_hud_shownames_aspect;
 float autocvar_hud_shownames_fontsize;
 int autocvar_hud_shownames_decolorize;
