@@ -335,8 +335,17 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 
 	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
+	if (maxfiredeviation <= 0)
+		return;
+
+	if (!autocvar_bot_ai_aimskill_firetolerance)
+	{
+		this.bot_firetimer = time + 0.2;
+		return;
+	}
+
 	// decide whether to fire this time
-	if (maxfiredeviation != 0 && v * shotdir > cos(maxfiredeviation * DEG2RAD))
+	if (v * shotdir > cos(maxfiredeviation * DEG2RAD))
 	{
 		traceline(shotorg, shotorg + shotdir * 1000, false, NULL);
 		if (vdist(trace_endpos - shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10))
