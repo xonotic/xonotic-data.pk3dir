@@ -32,5 +32,8 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
             this.TD(this, 2, 2, e = makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
                 setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
+        this.TR(this);
+            this.TD(this, 1, 3, e = makeXonoticCheckBox(0, "cl_damagetext_friendlyfire", _("Draw damage numbers for friendly fire")));
+                setDependent(e, "cl_damagetext", 1, 1);
     }
 ENDCLASS(XonoticDamageTextSettings)
