@@ -1819,7 +1819,7 @@ void navigation_goalrating_end(entity this)
 	this.goalstack31 = NULL;
 
 	navigation_routetogoal(this, navigation_bestgoal, this.origin);
-	LOG_DEBUG("best goal ", this.goalcurrent.classname);
+	LOG_DEBUG("best goal ", navigation_bestgoal.classname);
 
 	if (wp && this.goalcurrent == wp)
 		navigation_poproute(this);
