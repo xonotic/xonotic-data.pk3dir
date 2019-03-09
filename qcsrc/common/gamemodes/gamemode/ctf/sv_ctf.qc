@@ -1162,7 +1162,8 @@ void ctf_RespawnFlag(entity flag)
 	setattachment(flag, NULL, "");
 	setorigin(flag, flag.ctf_spawnorigin);
 
-	set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS));
+	//set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS)); // would be desired, except maps that want floating flags have it set to fall!
+	set_movetype(flag, MOVETYPE_NONE); // match the initial setup handling (flag doesn't move when spawned)
 	flag.takedamage = DAMAGE_NO;
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_flag_health);
 	flag.solid = SOLID_TRIGGER;
