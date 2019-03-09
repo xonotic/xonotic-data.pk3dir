@@ -195,8 +195,8 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 	void entcs_think(entity this)
 	{
 		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
-		entity o = this.owner;
-		FOREACH(EntCSProps, it.m_check(this, o),
+		entity player = this.owner;
+		FOREACH(EntCSProps, it.m_check(this, player),
 		{
 			this.SendFlags |= BIT(it.m_id);
 		});
