@@ -108,7 +108,7 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 	int nearestbone = 0;
 	float life;
 	string effectname;
-	entity e;
+	entity e, wep;
 
 	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
@@ -148,9 +148,11 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, thedamage * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
-	effectname = strcat("damage_", DEATH_WEAPONOF(type).netname);
-	if(DEATH_WEAPONOF(type) == WEP_SHOTGUN || DEATH_WEAPONOF(type) == WEP_MACHINEGUN)
+	wep = DEATH_WEAPONOF(type);
+	effectname = strcat("damage_", wep.netname);
+	if((wep.spawnflags & WEP_FLAG_BLEED))
 	{
+		// if this weapon induces bleeding, use the effect name with the proper species prefix (blood type)
 		if((this.isplayermodel & ISPLAYER_MODEL))
 		{
 			string specstr = species_prefix(specnum);

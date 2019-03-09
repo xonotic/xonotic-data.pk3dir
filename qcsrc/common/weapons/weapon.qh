@@ -197,6 +197,7 @@ const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing
 const int WEP_FLAG_DUALWIELD      =  BIT(11); // weapon can be dual wielded
 const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
 const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
+const int WEP_FLAG_BLEED          =  BIT(14); // weapon pierces and causes bleeding (used for damage effects)
 
 // variables:
 string weaponorder_byid;
