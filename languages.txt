@@ -20,6 +20,6 @@ bg    "Bulgarian" "Български" 63%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 66%
 uk    "Ukrainian" "Українська" 53%
-zh_CN "Chinese (China)" "中文" 59%
+zh_CN "Chinese (China)" "中文" 60%
 zh_TW "Chinese (Taiwan)" "國語" 65%
 ko    "Korean" "한국의" 32%

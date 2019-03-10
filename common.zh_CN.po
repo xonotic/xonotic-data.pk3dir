@@ -11,13 +11,14 @@
 # sapphireliu <balancedliu@gmail.com>, 2014
 # 杜茂森 <dumaosen_main01@outlook.com>, 2018-2019
 # 杜茂森 <dumaosen_main01@outlook.com>, 2018
+# 韬 刘 <jiegushijia@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-02-26 07:06+0000\n"
-"Last-Translator: 杜茂森 <dumaosen_main01@outlook.com>\n"
+"PO-Revision-Date: 2019-03-09 14:18+0000\n"
+"Last-Translator: 韬 刘 <jiegushijia@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -393,7 +394,7 @@ msgstr "QMCMD^设定"
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^View/HUD settings"
-msgstr ""
+msgstr "QMCMD^视角/HUD设置"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^3rd person view"
@@ -573,7 +574,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "Number of deaths"
-msgstr ""
+msgstr "死亡次数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "SCO^deaths"
@@ -728,7 +729,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "Player name"
-msgstr ""
+msgstr "玩家名称"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^name"
@@ -817,11 +818,11 @@ msgstr "SCO^分数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Total score"
-msgstr ""
+msgstr "总分数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Number of suicides"
-msgstr ""
+msgstr "自杀次数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^suicides"
@@ -8865,7 +8866,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "jetpack"
-msgstr ""
+msgstr "喷气背包"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "Attacking"
@@ -9247,7 +9248,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
-msgstr ""
+msgstr "游戏时间："
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:230
 msgid "Favorite map:"
@@ -9272,7 +9273,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:166
 #, c-format
 msgid "Kills/Deaths:"
-msgstr ""
+msgstr "击杀/死亡："
 
 #: qcsrc/menu/xonotic/statslist.qc:172
 #, c-format
