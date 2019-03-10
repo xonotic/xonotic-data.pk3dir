@@ -181,7 +181,6 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		WriteShort(chan, sf);
 		FOREACH(EntCSProps, sf & BIT(it.m_id),
 		{
-			it.m_set(this, player);
 			it.m_send(chan, this);
 		});
 		return true;
@@ -196,18 +195,9 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 	{
 		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
 		entity player = this.owner;
-		if (!this.realowner)
-		{
-			this.realowner = player;
-			if (IS_REAL_CLIENT(player))
-				FOREACH_CLIENT(true, {
-					assert(CS(it).entcs);
-					_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
-				});
-			return;
-		}
 		FOREACH(EntCSProps, it.m_check(this, player),
 		{
+			it.m_set(this, player);
 			this.SendFlags |= BIT(it.m_id);
 		});
 		setorigin(this, this.origin); // relink
@@ -218,8 +208,13 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		entity e = CS(player).entcs = new(entcs_sender);
 		e.owner = player;
 		setthink(e, entcs_think);
-		e.nextthink = time + 0.033333333333;
+		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
+		if (!IS_REAL_CLIENT(player)) return;
+		FOREACH_CLIENT(true, {
+			assert(CS(it).entcs);
+			_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
+		});
 	}
 
 	void entcs_detach(entity player)
