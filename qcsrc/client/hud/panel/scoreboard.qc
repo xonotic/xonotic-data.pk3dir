@@ -1748,7 +1748,7 @@ void Scoreboard_Draw()
 			if (sbt_team_score_position == 1)
 			{
 				// team score on the right
-				str_pos = pos + team_score_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.1);
+				str_pos = pos + team_score_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.5);
 			}
 			else
 			{
@@ -1769,7 +1769,7 @@ void Scoreboard_Draw()
 				}
 				else
 				{
-					str_pos = pos + team_size_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.1);
+					str_pos = pos + team_size_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.5);
 				}
 				str = sprintf("%d", tm.team_size);
 				drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -1786,7 +1786,7 @@ void Scoreboard_Draw()
 				if (sbt_team_score_position == 1)
 				{
 					// right
-					str_pos = pos + team_score_baseoffset + vec2(panel_size.x + hud_fontsize.x, hud_fontsize.y * 1.1);
+					str_pos = pos + team_score_baseoffset + vec2(panel_size.x + hud_fontsize.x, hud_fontsize.y * 1.5);
 				}
 				else
 				{
