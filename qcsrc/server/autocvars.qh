@@ -251,6 +251,7 @@ bool autocvar_lastlevel;
 int autocvar_leadlimit_and_fraglimit;
 int autocvar_leadlimit_override;
 int autocvar_minplayers;
+int autocvar_minplayers_per_team;
 string autocvar_nextmap;
 string autocvar_quit_and_redirect;
 float autocvar_quit_and_redirect_timer;

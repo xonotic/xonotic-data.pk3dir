@@ -54,15 +54,15 @@ void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)
 
 void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
@@ -176,7 +176,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Mortar_Grenade_Touch1);
 
 	gren.takedamage = DAMAGE_YES;
-	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, WEP_CVAR_PRI(mortar, health));
+	SetResourceExplicit(gren, RES_HEALTH, WEP_CVAR_PRI(mortar, health));
 	gren.damageforcescale = WEP_CVAR_PRI(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;
@@ -227,7 +227,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(gren, W_Mortar_Grenade_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
-	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, WEP_CVAR_SEC(mortar, health));
+	SetResourceExplicit(gren, RES_HEALTH, WEP_CVAR_SEC(mortar, health));
 	gren.damageforcescale = WEP_CVAR_SEC(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;
@@ -324,13 +324,13 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 }
 METHOD(Mortar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(mortar, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(mortar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
     return ammo_amount;
 }
 METHOD(Mortar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(mortar, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(mortar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
     return ammo_amount;
 }

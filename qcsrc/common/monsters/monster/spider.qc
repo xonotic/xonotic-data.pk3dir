@@ -103,7 +103,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 		RadiusDamage(this, this.realowner, 0, 0, 25, NULL, NULL, 25, this.projectiledeathtype, DMG_NOWEP, NULL);
 
-		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0 && it.monsterid != MON_SPIDER.monsterid,
+		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && it.monsterid != MON_SPIDER.monsterid,
 		{
 			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 		});
@@ -151,7 +151,7 @@ void M_Spider_Attack_Web(entity this)
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_NO;
 	proj.damageforcescale = 0;
-	SetResourceAmountExplicit(proj, RESOURCE_HEALTH, 500);
+	SetResourceExplicit(proj, RES_HEALTH, 500);
 	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
@@ -227,7 +227,7 @@ METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 {
     TC(Spider, this);
-    if(!GetResourceAmount(this, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_spider_health);
+    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_spider_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_spider_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spider_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
