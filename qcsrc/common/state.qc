@@ -1,6 +1,6 @@
 #include "state.qh"
 
-void Inventory_new(entity this);
+void Inventory_new(PlayerState this);
 void Inventory_delete(entity this);
 
 void PlayerState_attach(entity this)
@@ -68,12 +68,11 @@ void ClientState_detach(entity this)
     PlayerScore_Detach(this); // what ^they^ said
     W_HitPlotClose(this);
     ClientData_Detach(this);
+    entcs_detach(this);
 	delete(CS(this));
 	this._cs = NULL;
-
 
     bot_clientdisconnect(this);
 
     anticheat_report_to_eventlog(this);
-    entcs_detach(this);
 }

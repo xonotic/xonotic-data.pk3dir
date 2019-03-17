@@ -93,12 +93,12 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 #define YAW(v) ((v).y)
 #define ROLL(v) ((v).z)
 
-#define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN { \
+#define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN \
 	f(angles); \
 	forward = v_forward; \
 	right = v_right; \
 	up = v_up; \
-} MACRO_END
+MACRO_END
 
 //pseudo prototypes:
 // vector vec2(vector v); // returns a vector with just the x and y components of the given vector

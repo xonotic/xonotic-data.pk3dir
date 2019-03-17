@@ -437,8 +437,8 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         #define X(i) \
             if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
             if (_Movetype_TestEntityPosition('0 0 1' * i))
-        X(01) X(02) X(03) X(04) X(05) X(06) X(07) X(08)
-        X(09) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
+        X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8)
+        X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
         X(17)
         #undef X
         {
@@ -540,7 +540,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
+			LOG_DEBUG("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;
@@ -582,7 +582,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
+			LOG_DEBUG("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;

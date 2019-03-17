@@ -104,16 +104,16 @@ void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1))
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
@@ -140,7 +140,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR(arc, bolt_damage);
 
 	missile.takedamage = DAMAGE_YES;
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(arc, bolt_health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(arc, bolt_health));
 	missile.damageforcescale = WEP_CVAR(arc, bolt_damageforcescale);
 	missile.event_damage = W_Arc_Bolt_Damage;
 	missile.damagedbycontents = true;
@@ -254,8 +254,8 @@ void W_Arc_Beam_Think(entity this)
 
 		if(rootammo)
 		{
-			coefficient = min(coefficient, GetResourceAmount(own, thiswep.ammo_type) / rootammo);
-			SetResourceAmount(own, thiswep.ammo_type, max(0, GetResourceAmount(own, thiswep.ammo_type) - (rootammo * frametime)));
+			coefficient = min(coefficient, GetResource(own, thiswep.ammo_type) / rootammo);
+			SetResource(own, thiswep.ammo_type, max(0, GetResource(own, thiswep.ammo_type) - (rootammo * frametime)));
 		}
 	}
 	float heat_speed = burst ? WEP_CVAR(arc, burst_heat) : WEP_CVAR(arc, beam_heat);
@@ -428,13 +428,13 @@ void W_Arc_Beam_Think(entity this)
 			{
 				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
 				float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
-				float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RESOURCE_LIMIT_NONE);
+				float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RES_LIMIT_NONE);
 				Heal(trace_ent, own, (roothealth * coefficient), hplimit);
 				if(IS_PLAYER(trace_ent) && rootarmor)
 				{
-					if(GetResourceAmount(trace_ent, RESOURCE_ARMOR) <= WEP_CVAR(arc, beam_healing_amax))
+					if(GetResource(trace_ent, RES_ARMOR) <= WEP_CVAR(arc, beam_healing_amax))
 					{
-						GiveResourceWithLimit(trace_ent, RESOURCE_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
+						GiveResourceWithLimit(trace_ent, RES_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
 						trace_ent.pauserotarmor_finished = max(
 							trace_ent.pauserotarmor_finished,
 							time + autocvar_g_balance_pause_armor_rot
@@ -695,19 +695,19 @@ METHOD(Arc, wr_init, void(entity thiswep))
 }
 METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    return ((!WEP_CVAR(arc, beam_ammo)) || (GetResourceAmount(actor, thiswep.ammo_type) > 0));
+    return ((!WEP_CVAR(arc, beam_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
 }
 METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(WEP_CVAR(arc, bolt))
     {
-        float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(arc, bolt_ammo);
+        float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(arc, bolt_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(arc, bolt_ammo);
         return ammo_amount;
     }
     else
         return WEP_CVAR(arc, overheat_max) > 0 &&
-            ((!WEP_CVAR(arc, burst_ammo)) || (GetResourceAmount(actor, thiswep.ammo_type) > 0));
+            ((!WEP_CVAR(arc, burst_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
 }
 METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 {

@@ -41,6 +41,8 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
+
 // TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
 void bot_setclientfields(entity this)
 {
@@ -213,13 +215,13 @@ void bot_setnameandstuff(entity this)
 
 	prio = 6;
 
-	#define READSKILL(f, w, r) MACRO_BEGIN { \
+	#define READSKILL(f, w, r) MACRO_BEGIN \
 		if(argv(prio) != "") \
 			this.f = stof(argv(prio)) * w; \
 		else \
 			this.f = (!autocvar_g_campaign) * (2 * random() - 1) * r * w; \
 		prio++; \
-	} MACRO_END
+	MACRO_END
 	//print(bot_name, ": ping=", argv(9), "\n");
 
 	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboard skill
@@ -578,7 +580,7 @@ void bot_calculate_stepheightvec()
 	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
 }
 
-float bot_fixcount()
+bool bot_fixcount()
 {
 	int activerealplayers = 0;
 	int realplayers = 0;
@@ -602,6 +604,8 @@ float bot_fixcount()
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
 		int minplayers = max(0, floor(autocvar_minplayers));
+		if (teamplay)
+			minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
 		int minbots = max(0, floor(autocvar_bot_number));
 
 		// add bots to reach minplayers if needed
@@ -609,7 +613,7 @@ float bot_fixcount()
 		// cap bots to the max players allowed by the server
 		int player_limit = GetPlayerLimit();
 		if(player_limit)
-			bots = min(bots, player_limit - activerealplayers);
+			bots = min(bots, max(player_limit - activerealplayers, 0));
 		bots = min(bots, maxclients - realplayers);
 
 		if(bots > minbots)
@@ -632,7 +636,7 @@ float bot_fixcount()
 				return false;
 			}
 		}
-		while (currentbots > bots)
+		while (currentbots > bots && bots >= 0)
 			bot_removenewest();
 	}
 

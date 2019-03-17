@@ -140,6 +140,9 @@ void CSQC_Init()
 
 	registercvar("cl_spawn_near_teammate", "1");
 
+	registercvar("cl_weapon_switch_reload", "1");
+	registercvar("cl_weapon_switch_fallback_to_impulse", "1");
+
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
 
@@ -223,7 +226,7 @@ void Shutdown()
 
 	localcmd("\ncl_hook_shutdown\n");
 
-	localcmd("\n-button14\n");
+	localcmd("\n-button12\n");
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
@@ -798,7 +801,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(entity this, bool isnew)
 {
-	this.sourceLoc = __FILE__ ":" STR(__LINE__);
+	this.sourceLoc = __FILE__":"STR(__LINE__);
 	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes

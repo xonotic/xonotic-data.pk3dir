@@ -388,7 +388,7 @@
 
     MSG_INFO_NOTIF(CONNECTING,                              N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^BG is connecting..."), "")
     MSG_INFO_NOTIF(JOIN_CONNECT,                            N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 connected"), "")
-    MSG_INFO_NOTIF(JOIN_PLAY,                               N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing"), "")
+    MSG_INFO_NOTIF(JOIN_PLAY,                               N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing"), "")
     MULTITEAM_INFO(JOIN_PLAY_TEAM, 4,                       N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing on the ^TC^TT team"), "", NAME)
 
     MSG_INFO_NOTIF(KEEPAWAY_DROPPED,                        N_CONSOLE,  1, 0, "s1", "s1",       "notify_balldropped",       _("^BG%s^BG has dropped the ball!"), "")
@@ -401,7 +401,7 @@
     MULTITEAM_INFO(KEYHUNT_DESTROYED, 4,                    N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^BG destroyed the ^TC^TT Key"), "", KEY)
     MULTITEAM_INFO(KEYHUNT_PICKUP, 4,                       N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^BG picked up the ^TC^TT Key"), "", KEY)
 
-    MSG_INFO_NOTIF(LMS_FORFEIT,                             N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^F3 forfeited"), "")
+    MSG_INFO_NOTIF(LMS_FORFEIT,                             N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 forfeited"), "")
     MSG_INFO_NOTIF(LMS_NOLIVES,                             N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^F3 has no more lives left"), "")
 
     MSG_INFO_NOTIF(MONSTERS_DISABLED,                       N_CONSOLE,  0, 0, "", "",           "",     _("^BGMonsters are currently disabled"), "")

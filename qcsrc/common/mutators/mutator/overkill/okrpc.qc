@@ -36,15 +36,15 @@ void W_OverkillRocketPropelledChainsaw_Touch (entity this, entity toucher)
 
 void W_OverkillRocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_OverkillRocketPropelledChainsaw_Explode_think);
 }
 
@@ -100,7 +100,7 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR_PRI(okrpc, damageforcescale);
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_PRI(okrpc, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_PRI(okrpc, health));
 	missile.event_damage = W_OverkillRocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -191,14 +191,14 @@ METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity ac
 
 METHOD(OverkillRocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okrpc, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okrpc, ammo);
 	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(okrpc, ammo);
 	return ammo_amount;
 }
 
 METHOD(OverkillRocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okrpc, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okrpc, ammo);
 	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(okrpc, ammo);
 	return ammo_amount;
 }

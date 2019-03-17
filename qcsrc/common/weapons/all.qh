@@ -144,9 +144,9 @@ X(weaponstart, float)
 X(weaponthrowable, float)
 #ifdef SVQC
 X(reload_ammo, float)
-.float reloading_ammo = reload_ammo;
+const .float reloading_ammo = reload_ammo;
 X(reload_time, float)
-.float reloading_time = reload_time;
+const .float reloading_time = reload_time;
 #endif
 #undef X
 

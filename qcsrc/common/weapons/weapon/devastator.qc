@@ -46,7 +46,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
+		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = thiswep.m_id;
@@ -139,7 +139,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	Weapon thiswep = WEP_DEVASTATOR;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
+		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = thiswep.m_id;
@@ -287,16 +287,16 @@ void W_Devastator_Touch(entity this, entity toucher)
 
 void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode_think);
 }
 
@@ -322,7 +322,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR(devastator, damageforcescale);
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(devastator, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(devastator, health));
 	missile.event_damage = W_Devastator_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -435,7 +435,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
         // but don't fire a new shot at the same time!
         if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-        if((skill > 6.5) && (selfdamage > GetResourceAmount(actor, RESOURCE_HEALTH)))
+        if((skill > 6.5) && (selfdamage > GetResource(actor, RES_HEALTH)))
             PHYS_INPUT_BUTTON_ATCK2(actor) = false;
         //if(PHYS_INPUT_BUTTON_ATCK2(actor) == true)
         //	dprint(ftos(desirabledamage),"\n");
@@ -491,10 +491,10 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
         ammo_amount = false;
         if(WEP_CVAR(devastator, reload_ammo))
         {
-            if(GetResourceAmount(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo) && actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
+            if(GetResource(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo) && actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
                 ammo_amount = true;
         }
-        else if(GetResourceAmount(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
+        else if(GetResource(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
             ammo_amount = true;
         return !ammo_amount;
     }
@@ -502,18 +502,18 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
     #if 0
     if(actor.rl_release == 0)
     {
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE", actor.rl_release, GetResourceAmount(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE", actor.rl_release, GetResource(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo));
         return true;
     }
     else
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s", actor.rl_release, GetResourceAmount(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s", actor.rl_release, GetResource(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
         return ammo_amount;
     }
     #else
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(devastator, ammo);
     return ammo_amount;
     #endif

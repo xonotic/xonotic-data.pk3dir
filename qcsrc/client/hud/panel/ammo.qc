@@ -23,7 +23,7 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, bool isInfinite)
 {
 	TC(bool, isCurrent); TC(bool, isInfinite);
-	if(ammoType == RESOURCE_NONE)
+	if(ammoType == RES_NONE)
 		return;
 
 	// Initialize variables
@@ -31,7 +31,7 @@ void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, boo
 	int ammo;
 	if(autocvar__hud_configure)
 	{
-		isCurrent = (ammoType == RESOURCE_ROCKETS); // Rockets always current
+		isCurrent = (ammoType == RES_ROCKETS); // Rockets always current
 		ammo = 60;
 	}
 	else
@@ -183,7 +183,7 @@ void HUD_Ammo()
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, RESOURCE_ROCKETS, true, false);
+			DrawAmmoItem(pos, ammo_size, RES_ROCKETS, true, false);
 		}
 		else
 		{

@@ -228,7 +228,7 @@ void ewheel_draw(entity this)
     setorigin(this, this.origin + this.velocity * dt);
     this.tur_head.angles += dt * this.tur_head.avelocity;
 
-    if(GetResourceAmount(this, RESOURCE_HEALTH) < 127)
+    if(GetResource(this, RES_HEALTH) < 127)
     if(random() < 0.05)
         te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }

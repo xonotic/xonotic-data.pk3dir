@@ -75,13 +75,13 @@ ACCUMULATE void ONREMOVE(entity this) {}
 #endif
 
 .void(entity this) dtor;
-#define delete(this) MACRO_BEGIN { \
+#define delete(this) MACRO_BEGIN \
     entity _this = (this); \
     void(entity) _dtor = _this.dtor; \
     ONREMOVE(this); \
     if (_dtor) _dtor(_this); else delete_fn(_this); \
     /* this = NULL; */  \
-} MACRO_END
+MACRO_END
 
 entity _clearentity_ent;
 STATIC_INIT(clearentity)

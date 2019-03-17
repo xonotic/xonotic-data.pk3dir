@@ -86,10 +86,10 @@ void walker_rocket_touch(entity this, entity toucher)
 
 void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
-    TakeResource(this, RESOURCE_HEALTH, damage);
+    TakeResource(this, RES_HEALTH, damage);
     this.velocity = this.velocity + vforce;
 
-    if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+    if (GetResource(this, RES_HEALTH) <= 0)
         W_PrepareExplosionByDamage(this, this.owner, walker_rocket_explode);
 }
 
@@ -218,7 +218,7 @@ void walker_fire_rocket(entity this, vector org)
     rocket.bot_dodgerating	= 50;
     rocket.takedamage		 = DAMAGE_YES;
     rocket.damageforcescale   = 2;
-    SetResourceAmountExplicit(rocket, RESOURCE_HEALTH, 25);
+    SetResourceExplicit(rocket, RES_HEALTH, 25);
     rocket.tur_shotorg		= randomvec() * 512;
     rocket.cnt				= time + 1;
     rocket.enemy			  = this.enemy;
@@ -629,7 +629,7 @@ void walker_draw(entity this)
     setorigin(this, this.origin + this.velocity * dt);
     this.tur_head.angles += dt * this.tur_head.avelocity;
 
-    if(GetResourceAmount(this, RESOURCE_HEALTH) < 127)
+    if(GetResource(this, RES_HEALTH) < 127)
     if(random() < 0.15)
         te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }

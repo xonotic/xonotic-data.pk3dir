@@ -252,9 +252,9 @@ METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 {
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, sustained_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, sustained_ammo);
     else
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, first_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, first_ammo);
 
     if(WEP_CVAR(machinegun, reload_ammo))
     {
@@ -269,9 +269,9 @@ METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity wea
 {
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, burst_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, burst_ammo);
     else
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, first_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, first_ammo);
 
     if(WEP_CVAR(machinegun, reload_ammo))
     {

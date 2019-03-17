@@ -62,7 +62,6 @@ int CA_GetWinnerTeam()
 
 void nades_Clear(entity player);
 
-#define CA_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
 float CA_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -115,7 +114,7 @@ bool CA_CheckTeams()
 	static int prev_missing_teams_mask;
 	allowed_to_spawn = true;
 	CA_count_alive_players();
-	if(CA_ALIVE_TEAMS_OK())
+	if (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
@@ -164,7 +163,7 @@ entity CA_SpectateNext(entity player, entity start)
 	{
 		if (SAME_TEAM(player, e)) return e;
 	}
-	// restart from begining
+	// restart from the beginning
 	for (entity e = NULL; (e = find(e, classname, STR_PLAYER)); )
 	{
 		if (SAME_TEAM(player, e)) return e;
@@ -253,12 +252,13 @@ entity ca_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		if (!IS_DEAD(it))
-		if (SAME_TEAM(this, it))
-		if (!last_pl)
-			last_pl = it;
-		else
-			return NULL;
+		if (!IS_DEAD(it) && SAME_TEAM(this, it))
+		{
+			if (!last_pl)
+				last_pl = it;
+			else
+				return NULL;
+		}
 	});
 	return last_pl;
 }
@@ -380,8 +380,8 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_damage = M_ARGV(7, float);
-	float damage_take = bound(0, M_ARGV(4, float), GetResourceAmount(frag_target, RESOURCE_HEALTH));
-	float damage_save = bound(0, M_ARGV(5, float), GetResourceAmount(frag_target, RESOURCE_ARMOR));
+	float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
+	float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
@@ -421,7 +421,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
 	entity client = M_ARGV(0, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer
+		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		entity targ = M_ARGV(1, entity);
 		M_ARGV(1, entity) = CA_SpectateNext(client, targ);
@@ -435,7 +436,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity targ = M_ARGV(1, entity);
 	entity first = M_ARGV(2, entity);
 
-	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer
+		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
 	{
 		do { targ = targ.chain; }
 		while(targ && DIFF_TEAM(targ, client));
@@ -448,6 +450,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 				return MUT_SPECPREV_RETURN;
 		}
 	}
+	else
+		return MUT_SPECPREV_CONTINUE;
 
 	M_ARGV(1, entity) = targ;
 

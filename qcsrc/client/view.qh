@@ -16,7 +16,7 @@ entity viewmodels[MAX_WEAPONSLOTS];
 
 vector viewloc_mousepos;
 
-bool cursor_active;
+int cursor_active;
 int cursor_type;
 const int CURSOR_NORMAL = 0;
 const int CURSOR_MOVE = 1;

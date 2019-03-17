@@ -52,8 +52,7 @@ entity navigation_bestgoal;
 	waypoint_addlink_customcost(to_item, from_wp, waypoint_getlinkcost(from_wp, to_item))
 
 #define TELEPORT_USED(pl, tele_wp) \
-	(time - pl.lastteleporttime < ((tele_wp.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15) \
-	&& boxesoverlap(tele_wp.absmin, tele_wp.absmax, pl.lastteleport_origin + STAT(PL_MIN, pl), pl.lastteleport_origin + STAT(PL_MAX, pl)))
+	boxesoverlap(tele_wp.absmin, tele_wp.absmax, pl.lastteleport_origin + STAT(PL_MIN, pl), pl.lastteleport_origin + STAT(PL_MAX, pl))
 
 vector tracewalk_dest;
 float tracewalk_dest_height;

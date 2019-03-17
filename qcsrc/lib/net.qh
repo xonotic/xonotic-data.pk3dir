@@ -44,7 +44,7 @@ REGISTRY(TempEntities, BITS(8) - 80)
 REGISTER_REGISTRY(TempEntities)
 REGISTRY_SORT(TempEntities)
 REGISTRY_CHECK(TempEntities)
-STATIC_INIT(RegisterTempEntities_renumber) { FOREACH(TempEntities, true, it.m_id = 80 + i); }
+STATIC_INIT(TempEntities_renumber) { FOREACH(TempEntities, true, it.m_id = 80 + i); }
 
 
 
@@ -53,7 +53,7 @@ STATIC_INIT(RegisterTempEntities_renumber) { FOREACH(TempEntities, true, it.m_id
 		ACCUMULATE NET_HANDLE(id, bool isnew) \
 		{ \
 			this = __self; \
-			this.sourceLoc = __FILE__ ":" STR(__LINE__); \
+			this.sourceLoc = __FILE__":"STR(__LINE__); \
 			if (!this) isnew = true; \
 		} \
 		NET_GUARD(id); \
@@ -76,7 +76,7 @@ REGISTRY(LinkedEntities, BITS(8) - 1)
 REGISTER_REGISTRY(LinkedEntities)
 REGISTRY_SORT(LinkedEntities)
 REGISTRY_CHECK(LinkedEntities)
-STATIC_INIT(RegisterLinkedEntities_renumber) { FOREACH(LinkedEntities, true, it.m_id = 1 + i); }
+STATIC_INIT(LinkedEntities_renumber) { FOREACH(LinkedEntities, true, it.m_id = 1 + i); }
 
 
 
@@ -187,13 +187,13 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	const int MSG_C2S = 0;
 
 	#define Net_Accept(classname) \
-		MACRO_BEGIN { \
-			if (!this)    this = new(classname); \
-		} MACRO_END
+		MACRO_BEGIN \
+			if (!this) this = new(classname); \
+		MACRO_END
 	#define Net_Reject() \
-		MACRO_BEGIN { \
-			if (this)     delete(this); \
-		} MACRO_END
+		MACRO_BEGIN \
+			if (this) delete(this); \
+		MACRO_END
 
 	string g_buf;
 
@@ -207,16 +207,14 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 #if defined(CSQC)
 	#define WriteHeader(to, id) \
-		MACRO_BEGIN { \
-			WriteByte(to, NET_##id.m_id); \
-		} MACRO_END
+		WriteByte(to, NET_##id.m_id)
 #elif defined(SVQC)
 	#define WriteHeader(to, id) \
-		MACRO_BEGIN { \
+		MACRO_BEGIN \
 			if (NET_##id##_istemp) WriteByte(to, SVC_TEMPENTITY); \
 			WriteByte(to, NET_##id.m_id); \
 			bool _net_valid = false; serialize_marker(to, _net_valid); \
-		} MACRO_END
+		MACRO_END
 #endif
 
 // serialization: new style
@@ -386,9 +384,9 @@ MACRO_END
 			WriteInt24_t(dst, val.z);
 		}
 
-        #define WriteFloat(to, f) WriteCoord(to, f)
-		#define WriteVector(to, v) MACRO_BEGIN { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } MACRO_END
-        #define WriteVector2D(to, v) MACRO_BEGIN { WriteFloat(to, v.x); WriteFloat(to, v.y); } MACRO_END
+		#define WriteFloat(to, f) WriteCoord(to, f)
+		#define WriteVector(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); MACRO_END
+		#define WriteVector2D(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); MACRO_END
 
 		// this will use the value:
 		//   128
@@ -413,7 +411,7 @@ MACRO_END
 		}
 
 		// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
-		#define WRITESPECTATABLE_MSG_ONE(to, statement) MACRO_BEGIN { \
+		#define WRITESPECTATABLE_MSG_ONE(to, statement) MACRO_BEGIN \
 			entity prev = msg_entity; \
 			entity dst = to; \
 			FOREACH_CLIENT(IS_REAL_CLIENT(it), { \
@@ -424,6 +422,6 @@ MACRO_END
 				} \
 			}); \
 			msg_entity = prev; \
-		} MACRO_END
+		MACRO_END
 	#endif
 #endif

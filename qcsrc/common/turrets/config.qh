@@ -7,9 +7,6 @@ float tur_config_file;
 float tur_config_alsoprint;
 
 float TUR_CONFIG_COUNT;
-#define TUR_CONFIG_WRITETOFILE(a) { \
-	fputs(tur_config_file, a); \
-	if(tur_config_alsoprint) { LOG_INFO(a); } }
 
 
 #endif

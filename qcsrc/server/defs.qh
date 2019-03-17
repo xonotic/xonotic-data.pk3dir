@@ -50,7 +50,7 @@ float server_is_dedicated;
 .float	pain_frame;			//"
 .float  crouch;	// Crouching or not?
 
-.float	superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
+const .float superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
 
 .float cnt; // used in too many places
 .float count;
@@ -169,6 +169,8 @@ float default_weapon_alpha;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 .float cvar_cl_cts_noautoswitch;
+.bool cvar_cl_weapon_switch_reload;
+.bool cvar_cl_weapon_switch_fallback_to_impulse;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
