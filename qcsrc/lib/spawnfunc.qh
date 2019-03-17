@@ -154,6 +154,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, lodmodel1) \
 		FIELD_SCALAR(fld, ltime) \
 		FIELD_SCALAR(fld, map) \
+		FIELD_SCALAR(fld, max_health) \
 		FIELD_SCALAR(fld, mdl) \
 		FIELD_SCALAR(fld, message2) \
 		FIELD_SCALAR(fld, message) \
