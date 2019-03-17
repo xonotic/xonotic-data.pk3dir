@@ -2021,13 +2021,13 @@ void CSQC_UpdateView(entity this, float w, float h)
 	{
 		if(!minigame_wasactive)
 		{
-			localcmd("+button14\n");
+			localcmd("+button12\n");
 			minigame_wasactive = true;
 		}
 	}
 	else if(minigame_wasactive)
 	{
-		localcmd("-button14\n");
+		localcmd("-button12\n");
 		minigame_wasactive = false;
 	}
 

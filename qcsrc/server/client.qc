@@ -3027,7 +3027,7 @@ void PM_UpdateButtons(entity this, entity store)
 		store.impulse = this.impulse;
 	this.impulse = 0;
 
-	bool typing = this.buttonchat || this.button14;
+	bool typing = this.buttonchat || this.button12;
 
 	store.button0 = (typing) ? 0 : this.button0;
 	//button1?!

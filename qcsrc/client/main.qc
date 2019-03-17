@@ -226,7 +226,7 @@ void Shutdown()
 
 	localcmd("\ncl_hook_shutdown\n");
 
-	localcmd("\n-button14\n");
+	localcmd("\n-button12\n");
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
