@@ -232,7 +232,7 @@ void PutObserverInServer(entity this)
 
 	if (IS_PLAYER(this))
 	{
-		if(GetResourceAmount(this, RESOURCE_HEALTH) >= 1)
+		if(GetResource(this, RES_HEALTH) >= 1)
 		{
 			// despawn effect
 			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
@@ -311,14 +311,14 @@ void PutObserverInServer(entity this)
 	if(this.damagedbycontents)
 		IL_REMOVE(g_damagedbycontents, this);
 	this.damagedbycontents = false;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, FRAGS_SPECTATOR);
+	SetResourceExplicit(this, RES_HEALTH, FRAGS_SPECTATOR);
 	SetSpectatee_status(this, etof(this));
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_FLY_WORLDONLY); // user preference is controlled by playerprethink
 	this.flags = FL_CLIENT | FL_NOTARGET;
 	this.effects = 0;
-	SetResourceAmountExplicit(this, RESOURCE_ARMOR, autocvar_g_balance_armor_start); // was 666?!
+	SetResourceExplicit(this, RES_ARMOR, autocvar_g_balance_armor_start); // was 666?!
 	this.pauserotarmor_finished = 0;
 	this.pauserothealth_finished = 0;
 	this.pauseregen_finished = 0;
@@ -381,7 +381,7 @@ void PutObserverInServer(entity this)
 		if(axh.owner == this && axh != NULL && !wasfreed(axh))
 			delete(axh);
 	}
-	
+
 	if (mutator_returnvalue)
 	{
 		// mutator prevents resetting teams+score
@@ -390,7 +390,9 @@ void PutObserverInServer(entity this)
 	{
 		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 		this.frags = FRAGS_SPECTATOR;
-    }
+	}
+	if (CS(this).just_joined)
+		CS(this).just_joined = false;
 }
 
 int player_getspecies(entity this)
@@ -555,24 +557,24 @@ void PutPlayerInServer(entity this)
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
 	if (warmup_stage) {
-		SetResourceAmount(this, RESOURCE_SHELLS, warmup_start_ammo_shells);
-		SetResourceAmount(this, RESOURCE_BULLETS, warmup_start_ammo_nails);
-		SetResourceAmount(this, RESOURCE_ROCKETS, warmup_start_ammo_rockets);
-		SetResourceAmount(this, RESOURCE_CELLS, warmup_start_ammo_cells);
-		SetResourceAmount(this, RESOURCE_PLASMA, warmup_start_ammo_plasma);
-		SetResourceAmount(this, RESOURCE_FUEL, warmup_start_ammo_fuel);
-		SetResourceAmount(this, RESOURCE_HEALTH, warmup_start_health);
-		SetResourceAmount(this, RESOURCE_ARMOR, warmup_start_armorvalue);
+		SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
+		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
+		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
+		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
+		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
+		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
+		SetResource(this, RES_HEALTH, warmup_start_health);
+		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
 		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
 	} else {
-		SetResourceAmount(this, RESOURCE_SHELLS, start_ammo_shells);
-		SetResourceAmount(this, RESOURCE_BULLETS, start_ammo_nails);
-		SetResourceAmount(this, RESOURCE_ROCKETS, start_ammo_rockets);
-		SetResourceAmount(this, RESOURCE_CELLS, start_ammo_cells);
-		SetResourceAmount(this, RESOURCE_PLASMA, start_ammo_plasma);
-		SetResourceAmount(this, RESOURCE_FUEL, start_ammo_fuel);
-		SetResourceAmount(this, RESOURCE_HEALTH, start_health);
-		SetResourceAmount(this, RESOURCE_ARMOR, start_armorvalue);
+		SetResource(this, RES_SHELLS, start_ammo_shells);
+		SetResource(this, RES_BULLETS, start_ammo_nails);
+		SetResource(this, RES_ROCKETS, start_ammo_rockets);
+		SetResource(this, RES_CELLS, start_ammo_cells);
+		SetResource(this, RES_PLASMA, start_ammo_plasma);
+		SetResource(this, RES_FUEL, start_ammo_fuel);
+		SetResource(this, RES_HEALTH, start_health);
+		SetResource(this, RES_ARMOR, start_armorvalue);
 		STAT(WEAPONS, this) = start_weapons;
 		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
 		{
@@ -622,7 +624,10 @@ void PutPlayerInServer(entity this)
 	this.angles = spot.angles;
 	this.angles_z = 0; // never spawn tilted even if the spot says to
 	if (IS_BOT_CLIENT(this))
+	{
 		this.v_angle = this.angles;
+		bot_aim_reset(this);
+	}
 	this.fixangle = true; // turn this way immediately
 	this.oldvelocity = this.velocity = '0 0 0';
 	this.avelocity = '0 0 0';
@@ -1054,6 +1059,8 @@ string getwelcomemessage(entity this)
 	return s;
 }
 
+bool autocvar_sv_qcphysics = false; // TODO this is for testing - remove when qcphysics work
+
 /**
 =============
 ClientConnect
@@ -1146,7 +1153,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	this.move_qcphysics = true;
+	this.move_qcphysics = autocvar_sv_qcphysics;
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
@@ -1568,25 +1575,25 @@ void player_regen(entity this)
 		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
 		mina = autocvar_g_balance_armor_regenstable;
-		limith = GetResourceLimit(this, RESOURCE_HEALTH);
-		limita = GetResourceLimit(this, RESOURCE_ARMOR);
+		limith = GetResourceLimit(this, RES_HEALTH);
+		limita = GetResourceLimit(this, RES_ARMOR);
 
 		regen_health_rotstable = regen_health_rotstable * max_mod;
 		regen_health_stable = regen_health_stable * max_mod;
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
 
-		SetResourceAmount(this, RESOURCE_ARMOR, CalcRotRegen(GetResourceAmount(this, RESOURCE_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
+		SetResource(this, RES_ARMOR, CalcRotRegen(GetResource(this, RES_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
 									regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
 									rot_mod * frametime * (time > this.pauserotarmor_finished), limita));
-		SetResourceAmount(this, RESOURCE_HEALTH, CalcRotRegen(GetResourceAmount(this, RESOURCE_HEALTH), regen_health_stable, regen_health, regen_health_linear,
+		SetResource(this, RES_HEALTH, CalcRotRegen(GetResource(this, RES_HEALTH), regen_health_stable, regen_health, regen_health_linear,
 									regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear,
 									rot_mod * frametime * (time > this.pauserothealth_finished), limith));
 	}
 
 	// if player rotted to death...  die!
 	// check this outside above checks, as player may still be able to rot to death
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 1)
+	if(GetResource(this, RES_HEALTH) < 1)
 	{
 		if(this.vehicle)
 			vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -1600,9 +1607,9 @@ void player_regen(entity this)
 
 		maxf = autocvar_g_balance_fuel_rotstable;
 		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = GetResourceLimit(this, RESOURCE_FUEL);
+		limitf = GetResourceLimit(this, RES_FUEL);
 
-		SetResourceAmount(this, RESOURCE_FUEL, CalcRotRegen(GetResourceAmount(this, RESOURCE_FUEL), minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, 
+		SetResource(this, RES_FUEL, CalcRotRegen(GetResource(this, RES_FUEL), minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, 
 										frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
 										maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf));
 	}
@@ -1650,15 +1657,15 @@ void SpectateCopy(entity this, entity spectatee)
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
-	SetResourceAmountExplicit(this, RESOURCE_ARMOR, GetResourceAmount(spectatee, RESOURCE_ARMOR));
-	SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(spectatee, RESOURCE_CELLS));
-	SetResourceAmountExplicit(this, RESOURCE_PLASMA, GetResourceAmount(spectatee, RESOURCE_PLASMA));
-	SetResourceAmountExplicit(this, RESOURCE_SHELLS, GetResourceAmount(spectatee, RESOURCE_SHELLS));
-	SetResourceAmountExplicit(this, RESOURCE_BULLETS, GetResourceAmount(spectatee, RESOURCE_BULLETS));
-	SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(spectatee, RESOURCE_ROCKETS));
-	SetResourceAmountExplicit(this, RESOURCE_FUEL, GetResourceAmount(spectatee, RESOURCE_FUEL));
+	SetResourceExplicit(this, RES_ARMOR, GetResource(spectatee, RES_ARMOR));
+	SetResourceExplicit(this, RES_CELLS, GetResource(spectatee, RES_CELLS));
+	SetResourceExplicit(this, RES_PLASMA, GetResource(spectatee, RES_PLASMA));
+	SetResourceExplicit(this, RES_SHELLS, GetResource(spectatee, RES_SHELLS));
+	SetResourceExplicit(this, RES_BULLETS, GetResource(spectatee, RES_BULLETS));
+	SetResourceExplicit(this, RES_ROCKETS, GetResource(spectatee, RES_ROCKETS));
+	SetResourceExplicit(this, RES_FUEL, GetResource(spectatee, RES_FUEL));
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(spectatee, RESOURCE_HEALTH));
+	SetResourceExplicit(this, RES_HEALTH, GetResource(spectatee, RES_HEALTH));
 	CS(this).impulse = 0;
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
@@ -2166,7 +2173,7 @@ bool PlayerThink(entity this)
 		}
 
 		this.items_added = 0;
-		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || GetResourceAmount(this, RESOURCE_FUEL) >= 0.01))
+		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || GetResource(this, RES_FUEL) >= 0.01))
             this.items_added |= IT_FUEL;
 
 		this.items |= this.items_added;
@@ -2422,7 +2429,7 @@ void PlayerPreThink (entity this)
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
+			SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 			if (STAT(REVIVE_PROGRESS, this) >= 1)
@@ -2431,9 +2438,9 @@ void PlayerPreThink (entity this)
 		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
+			SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
-			if (GetResourceAmount(this, RESOURCE_HEALTH) < 1)
+			if (GetResource(this, RES_HEALTH) < 1)
 			{
 				if (this.vehicle)
 					vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -2675,9 +2682,9 @@ void PlayerPostThink (entity this)
 	}
 
 	if (this.waypointsprite_attachedforcarrier) {
-	    vector v = healtharmor_maxdamage(GetResourceAmount(this, RESOURCE_HEALTH), GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id);
-		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, '1 0 0' * v);
-    }
+		float hp = healtharmor_maxdamage(GetResource(this, RES_HEALTH), GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x;
+		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, hp);
+	}
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -2707,9 +2714,6 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		colorstr = "";
 		teamsay = false;
 	}
-
-	if(game_stopped)
-		teamsay = false;
 
 	if (!source) {
 		colorstr = "";
@@ -2741,6 +2745,24 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	int privatemsgprefixlen = 0;
 	if (msgin != "")
 	{
+		bool found_me = false;
+		if(strstrofs(msgin, "/me", 0) >= 0)
+		{
+			string newmsgin = "";
+			string newnamestr = ((teamsay) ? strcat(colorstr, "(", colorprefix, namestr, colorstr, ")", "^7") : strcat(colorprefix, namestr, "^7"));
+			FOREACH_WORD(msgin, true,
+			{
+				if(strdecolorize(it) == "/me")
+				{
+					found_me = true;
+					newmsgin = cons(newmsgin, newnamestr);
+				}
+				else
+					newmsgin = cons(newmsgin, it);
+			});
+			msgin = newmsgin;
+		}
+
 		if(privatesay)
 		{
 			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
@@ -2751,11 +2773,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 		else if(teamsay)
 		{
-			if(strstrofs(msgin, "/me", 0) >= 0)
+			if(found_me)
 			{
 				//msgin = strreplace("/me", "", msgin);
 				//msgin = substring(msgin, 3, strlen(msgin));
-				msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
+				//msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
 				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
 			}
 			else
@@ -2764,12 +2786,12 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 		else
 		{
-			if(strstrofs(msgin, "/me", 0) >= 0)
+			if(found_me)
 			{
 				//msgin = strreplace("/me", "", msgin);
 				//msgin = substring(msgin, 3, strlen(msgin));
-				msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
-				msgstr = strcat("\{1}^4* ", "^7", msgin);
+				//msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
+				msgstr = strcat("\{1}^4* ^7", msgin);
 			}
 			else {
 				msgstr = "\{1}";
@@ -2924,6 +2946,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	MUTATOR_CALLHOOK(ChatMessage, source, ret);
 	ret = M_ARGV(1, int);
 
+	string event_log_msg = "";
+
 	if(sourcemsgstr != "" && ret != 0)
 	{
 		if(ret < 0) // faked message, because the player is muted
@@ -2950,6 +2974,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat_minigame:%d:%s:%s", source.playerid, CS(source).active_minigame.netname, msgin);
+
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -2962,6 +2988,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
 			});
+			event_log_msg = sprintf(":chat_team:%d:%d:%s", source.playerid, source.team, strreplace("\n", " ", msgin));
 		}
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
@@ -2970,6 +2997,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
 		else
 		{
@@ -2981,7 +3009,12 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
+	}
+
+	if (autocvar_sv_eventlog && (event_log_msg != "")) {
+		GameLogEcho(event_log_msg);
 	}
 
 	return ret;
@@ -2994,7 +3027,7 @@ void PM_UpdateButtons(entity this, entity store)
 		store.impulse = this.impulse;
 	this.impulse = 0;
 
-	bool typing = this.buttonchat || this.button14;
+	bool typing = this.buttonchat || this.button12;
 
 	store.button0 = (typing) ? 0 : this.button0;
 	//button1?!

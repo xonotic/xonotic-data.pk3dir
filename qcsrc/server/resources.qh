@@ -11,86 +11,69 @@
 
 /// \brief Returns the maximum amount of the given resource.
 /// \param[in] e Entity to check.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] res_type Type of the resource (a RES_* constant).
 /// \return Maximum amount of the given resource.
-float GetResourceLimit(entity e, int resource_type);
+float GetResourceLimit(entity e, int res_type);
 
 /// \brief Returns the current amount of resource the given entity has.
 /// \param[in] e Entity to check.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] res_type Type of the resource (a RES_* constant).
 /// \return Current amount of resource the given entity has.
-float GetResourceAmount(entity e, int resource_type);
+float GetResource(entity e, int res_type);
 
 /// \brief Sets the resource amount of an entity without calling any hooks.
 /// \param[in,out] e Entity to adjust.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] res_type Type of the resource (a RES_* constant).
 /// \param[in] amount Amount of resource to set.
 /// \return Boolean for whether the ammo amount was changed
-bool SetResourceAmountExplicit(entity e, int resource_type, float amount);
+bool SetResourceExplicit(entity e, int res_type, float amount);
 
-/// \brief Sets the current amount of resource the given entity will have.
+/// \brief Sets the current amount of resource the given entity will have
+/// but limited to the max amount allowed for the resource type.
 /// \param[in,out] e Entity to adjust.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] res_type Type of the resource (a RES_* constant).
 /// \param[in] amount Amount of resource to set.
 /// \return No return.
-void SetResourceAmount(entity e, int resource_type, float amount);
+void SetResource(entity e, int res_type, float amount);
 
 /// \brief Gives an entity some resource.
 /// \param[in,out] receiver Entity to give resource to.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] res_type Type of the resource (a RES_* constant).
 /// \param[in] amount Amount of resource to give.
 /// \return No return.
-void GiveResource(entity receiver, int resource_type, float amount);
+void GiveResource(entity receiver, int res_type, float amount);
 
 /// \brief Gives an entity some resource but not more than a limit.
 /// \param[in,out] receiver Entity to give resource to.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] res_type Type of the resource (a RES_* constant).
 /// \param[in] amount Amount of resource to give.
 /// \param[in] limit Limit of resources to give.
 /// \return No return.
-void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
-	float limit);
+void GiveResourceWithLimit(entity receiver, int res_type, float amount, float limit);
 
 /// \brief Takes an entity some resource.
 /// \param[in,out] receiver Entity to take resource from.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] res_type Type of the resource (a RES_* constant).
 /// \param[in] amount Amount of resource to take.
 /// \return No return.
-void TakeResource(entity receiver, int resource_type, float amount);
+void TakeResource(entity receiver, int res_type, float amount);
 
 /// \brief Takes an entity some resource but not less than a limit.
 /// \param[in,out] receiver Entity to take resource from.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] res_type Type of the resource (a RES_* constant).
 /// \param[in] amount Amount of resource to take.
 /// \param[in] limit Limit of resources to take.
 /// \return No return.
-void TakeResourceWithLimit(entity receiver, int resource_type, float amount,
-	float limit);
-
-/// \brief Gives to or takes from an entity resource.
-/// \param[in,out] receiver Entity to give or take resource.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
-/// \param[in] amount Amount of resource to give or take.
-/// \return No return.
-void GiveOrTakeResource(entity receiver, int resource_type, float amount);
-
-/// \brief Gives to or takes from an entity resource but not more/less than a limit.
-/// \param[in,out] receiver Entity to give or take resource.
-/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
-/// \param[in] amount Amount of resource to give or take.
-/// \param[in] limit Limit of resources to give or take.
-/// \return No return.
-void GiveOrTakeResourceWithLimit(entity receiver, int resource_type, float amount,
-	float limit);
+void TakeResourceWithLimit(entity receiver, int res_type, float amount, float limit);
 
 // ===================== Legacy and/or internal API ===========================
 
 /// \brief Converts an entity field to resource type.
-/// \param[in] resource_field Entity field to convert.
-/// \return Resource type (a RESOURCE_* constant).
-int GetResourceType(.float resource_field);
+/// \param[in] res_field Entity field to convert.
+/// \return Resource type (a RES_* constant).
+int GetResourceType(.float res_field);
 
-/// \brief Converts resource type (a RESOURCE_* constant) to entity field.
-/// \param[in] resource_type Type of the resource.
+/// \brief Converts resource type (a RES_* constant) to entity field.
+/// \param[in] res_type Type of the resource.
 /// \return Entity field for that resource.
-.float GetResourceField(int resource_type);
+.float GetResourceField(int res_type);

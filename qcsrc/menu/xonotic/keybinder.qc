@@ -10,21 +10,21 @@ const string KEY_NOT_BOUND_CMD = "// not bound";
 
 const int MAX_KEYS_PER_FUNCTION = 2;
 const int MAX_KEYBINDS = 256;
-string Xonotic_KeyBinds_Functions[MAX_KEYBINDS];
-string Xonotic_KeyBinds_Descriptions[MAX_KEYBINDS];
-int Xonotic_KeyBinds_Count = -1;
+string KeyBinds_Functions[MAX_KEYBINDS];
+string KeyBinds_Descriptions[MAX_KEYBINDS];
+int KeyBinds_Count = -1;
 
-void Xonotic_KeyBinds_Read()
+void KeyBinds_Read()
 {
-	Xonotic_KeyBinds_Count = 0;
+	KeyBinds_Count = 0;
 
-	#define KEYBIND_DEF(func, desc) MACRO_BEGIN { \
-		if((Xonotic_KeyBinds_Count < MAX_KEYBINDS)) { \
-			Xonotic_KeyBinds_Functions[Xonotic_KeyBinds_Count] = strzone(func); \
-			Xonotic_KeyBinds_Descriptions[Xonotic_KeyBinds_Count] = strzone(desc); \
-			++Xonotic_KeyBinds_Count; \
+	#define KEYBIND_DEF(func, desc) MACRO_BEGIN \
+		if((KeyBinds_Count < MAX_KEYBINDS)) { \
+			KeyBinds_Functions[KeyBinds_Count] = strzone(func); \
+			KeyBinds_Descriptions[KeyBinds_Count] = strzone(desc); \
+			++KeyBinds_Count; \
 		} \
-	} MACRO_END
+	MACRO_END
 
 	KEYBIND_DEF(""                                      , _("Moving"));
 	KEYBIND_DEF("+forward"                              , _("forward"));
@@ -59,7 +59,7 @@ void Xonotic_KeyBinds_Read()
 
 	for(int imp = 1; imp <= 9; ++imp)
 	{
-        string w_list = "";
+		string w_list = "";
 		ADD_TO_W_LIST(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON));
 		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_SUPERWEAPON) && !(it.spawnflags & WEP_FLAG_HIDDEN));
 		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN));
@@ -157,10 +157,10 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
 	bool force_initial_selection = false;
-	if(Xonotic_KeyBinds_Count < 0) // me.handle not loaded yet?
+	if(KeyBinds_Count < 0) // me.handle not loaded yet?
 		force_initial_selection = true;
-	Xonotic_KeyBinds_Read();
-	me.nItems = Xonotic_KeyBinds_Count;
+	KeyBinds_Read();
+	me.nItems = KeyBinds_Count;
 	if(force_initial_selection)
 		me.setSelected(me, 0);
 }
@@ -184,9 +184,7 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 }
 void KeyBinder_Bind_Change(entity btn, entity me)
 {
-	string func;
-
-	func = Xonotic_KeyBinds_Functions[me.selectedItem];
+	string func = KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
 
@@ -198,7 +196,6 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 {
 	int n, j, nvalid;
 	float k;
-	string func;
 
 	me.keyGrabButton.forcePressed = 0;
 	me.clearButton.disabled = 0;
@@ -213,7 +210,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 		return;
 	}
 
-	func = Xonotic_KeyBinds_Functions[me.selectedItem];
+	string func = KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
 
@@ -242,28 +239,26 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 }
 void XonoticKeyBinder_destroy(entity me)
 {
-	if(Xonotic_KeyBinds_Count < 0)
+	if(KeyBinds_Count < 0)
 		return;
 
 	for(int i = 0; i < MAX_KEYBINDS; ++i)
 	{
-		strfree(Xonotic_KeyBinds_Functions[i]);
-		strfree(Xonotic_KeyBinds_Descriptions[i]);
+		strfree(KeyBinds_Functions[i]);
+		strfree(KeyBinds_Descriptions[i]);
 	}
-	Xonotic_KeyBinds_Count = 0;
+	KeyBinds_Count = 0;
 }
 void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
-	string func, descr;
-
 	if(!me.userbindEditDialog)
 		return;
 
-	func = Xonotic_KeyBinds_Functions[me.selectedItem];
+	string func = KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
 
-	descr = Xonotic_KeyBinds_Descriptions[me.selectedItem];
+	string descr = KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
 	descr = substring(descr, 1, strlen(descr) - 1);
@@ -275,16 +270,14 @@ void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandP
 }
 void KeyBinder_Bind_Edit(entity btn, entity me)
 {
-	string func, descr;
-
 	if(!me.userbindEditDialog)
 		return;
 
-	func = Xonotic_KeyBinds_Functions[me.selectedItem];
+	string func = KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
 
-	descr = Xonotic_KeyBinds_Descriptions[me.selectedItem];
+	string descr = KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
 	descr = substring(descr, 1, strlen(descr) - 1);
@@ -297,9 +290,8 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 void KeyBinder_Bind_Clear(entity btn, entity me)
 {
 	float n, j, k;
-	string func;
 
-	func = Xonotic_KeyBinds_Functions[me.selectedItem];
+	string func = KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
 
@@ -334,23 +326,23 @@ void XonoticKeyBinder_setSelected(entity me, int i)
 	{
 		if(i > me.previouslySelected)
 		{
-			while((i < me.nItems - 1) && (Xonotic_KeyBinds_Functions[i] == ""))
+			while((i < me.nItems - 1) && (KeyBinds_Functions[i] == ""))
 				++i;
 		}
-		while((i > 0) && (Xonotic_KeyBinds_Functions[i] == ""))
+		while((i > 0) && (KeyBinds_Functions[i] == ""))
 			--i;
-		while((i < me.nItems - 1) && (Xonotic_KeyBinds_Functions[i] == ""))
+		while((i < me.nItems - 1) && (KeyBinds_Functions[i] == ""))
 			++i;
 	}
 	if(me.pressed == 3) // released the mouse - fall back to last valid item
 	{
-		if(Xonotic_KeyBinds_Functions[i] == "")
+		if(KeyBinds_Functions[i] == "")
 			i = me.previouslySelected;
 	}
-	if(Xonotic_KeyBinds_Functions[i] != "")
+	if(KeyBinds_Functions[i] != "")
 		me.previouslySelected = i;
 	if(me.userbindEditButton)
-		me.userbindEditButton.disabled = (substring(Xonotic_KeyBinds_Descriptions[i], 0, 1) != "$");
+		me.userbindEditButton.disabled = (substring(KeyBinds_Descriptions[i], 0, 1) != "$");
 	SUPER(XonoticKeyBinder).setSelected(me, i);
 }
 float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
@@ -381,11 +373,10 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	float k;
 	vector theColor;
 	float theAlpha;
-	string func, descr;
 	float extraMargin;
 
-	descr = Xonotic_KeyBinds_Descriptions[i];
-	func = Xonotic_KeyBinds_Functions[i];
+	string descr = KeyBinds_Descriptions[i];
+	string func = KeyBinds_Functions[i];
 
 	if(func == "")
 	{

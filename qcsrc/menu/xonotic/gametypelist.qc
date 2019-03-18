@@ -31,16 +31,17 @@ void XonoticGametypeList_setSelected(entity me, float i)
 void XonoticGametypeList_loadCvars(entity me)
 {
 	Gametype t = MapInfo_CurrentGametype();
+	int cnt = GameType_GetCount();
 	float i;
-	for(i = 0; i < GameType_GetCount(); ++i)
+	for(i = 0; i < cnt; ++i)
 		if(t == GameType_GetID(i))
 			break;
-	if(i >= GameType_GetCount())
+	if(i >= cnt)
 	{
-		for(i = 0; i < GameType_GetCount(); ++i)
+		for(i = 0; i < cnt; ++i)
 			if(t == MAPINFO_TYPE_DEATHMATCH)
 				break;
-		if(i >= GameType_GetCount())
+		if(i >= cnt)
 			i = 0;
 	}
 	me.setSelected(me, i);

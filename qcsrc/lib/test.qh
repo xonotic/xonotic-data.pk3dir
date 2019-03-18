@@ -15,7 +15,10 @@
 #define SUCCEED() (TEST_ok = true)
 
 /** Add a failure, but continue */
-#define ADD_FAILURE(msg) MACRO_BEGIN { ++TEST_failed; LOG_WARN(msg); } MACRO_END
+#define ADD_FAILURE(msg) MACRO_BEGIN \
+	++TEST_failed; \
+	LOG_WARN(msg); \
+MACRO_END
 
 /** Add a failure and return */
 #define FAIL(msg) _TEST_ASSERT(ADD_FAILURE(msg))
@@ -26,7 +29,7 @@ bool RUN_ALL_TESTS();
 
 // difference between expect/assert: assert returns early
 
-#define EXPECT_EQ(expected_, actual_) MACRO_BEGIN { \
+#define EXPECT_EQ(expected_, actual_) MACRO_BEGIN \
 	int expected = expected_; \
 	int actual = actual_; \
 	if ((expected) != (actual)) { \
@@ -37,7 +40,7 @@ bool RUN_ALL_TESTS();
 			actual, expected \
 		)); \
 	} \
-} MACRO_END
+MACRO_END
 #define ASSERT_EQ(expected, actual) _TEST_ASSERT(EXPECT_EQ(expected, actual))
 
 #define EXPECT_TRUE(condition) EXPECT_EQ(true, condition)
@@ -72,18 +75,18 @@ bool TEST_ok;
 int TEST_failed;
 
 #define _TEST_ASSERT(statement) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		LAMBDA(statement); \
 		++TEST_fatal; return; \
-	} MACRO_END
+	MACRO_END
 
 #define EXPECT_NO_FATAL_FAILURE__(statement, then) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		int TEST_prevfatal = TEST_fatal; \
 		LAMBDA(statement); \
 		if (TEST_fatal != TEST_prevfatal) \
 			LAMBDA(then); \
-	} MACRO_END
+	MACRO_END
 
 #define EXPECT_NO_FATAL_FAILURE_(statement, then) \
 	EXPECT_NO_FATAL_FAILURE__(statement, { \

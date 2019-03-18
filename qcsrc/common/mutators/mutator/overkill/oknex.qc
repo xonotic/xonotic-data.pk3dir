@@ -268,7 +268,7 @@ METHOD(OverkillNex, wr_setup, void(entity thiswep, entity actor, .entity weapone
 
 METHOD(OverkillNex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(oknex, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(oknex, ammo);
 	ammo_amount += (autocvar_g_balance_oknex_reload_ammo && actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(oknex, ammo));
 	return ammo_amount;
 }
@@ -278,7 +278,7 @@ METHOD(OverkillNex, wr_checkammo2, bool(entity thiswep, entity actor, .entity we
 	if (WEP_CVAR(oknex, secondary))
 	{
 		// don't allow charging if we don't have enough ammo
-		float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(oknex, ammo);
+		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(oknex, ammo);
 		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(oknex, ammo);
 		return ammo_amount;
 	}

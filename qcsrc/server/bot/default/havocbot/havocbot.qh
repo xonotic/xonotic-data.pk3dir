@@ -23,6 +23,7 @@
 .float havocbot_stickenemy;
 .float havocbot_role_timeout;
 
+.float bot_stop_moving_timeout;
 .float bot_tracewalk_time;
 .entity ignoregoal;
 .entity bot_lastseengoal;

@@ -2,7 +2,7 @@
 
 void test_weapons_hurt(entity this)
 {
-    EXPECT_NE(100, GetResourceAmount(this, RESOURCE_HEALTH));
+    EXPECT_NE(100, GetResource(this, RES_HEALTH));
     delete(this.enemy);
     delete(this);
 }
