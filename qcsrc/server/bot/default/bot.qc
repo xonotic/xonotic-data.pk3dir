@@ -429,7 +429,7 @@ void bot_clientconnect(entity this)
 
 	if (Team_IsValidIndex(this.bot_forced_team))
 	{
-		this.team = Team_IndexToTeam(this.bot_forced_team);
+		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
 	}
 	else
 	{
