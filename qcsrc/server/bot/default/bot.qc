@@ -427,16 +427,15 @@ void bot_clientconnect(entity this)
 		bot_setclientfields(this);
 	}
 
-	if(this.bot_forced_team==1)
-		this.team = NUM_TEAM_1;
-	else if(this.bot_forced_team==2)
-		this.team = NUM_TEAM_2;
-	else if(this.bot_forced_team==3)
-		this.team = NUM_TEAM_3;
-	else if(this.bot_forced_team==4)
-		this.team = NUM_TEAM_4;
+	if (Team_IsValidIndex(this.bot_forced_team))
+	{
+		this.team = Team_IndexToTeam(this.bot_forced_team);
+	}
 	else
+	{
+		this.bot_forced_team = 0;
 		TeamBalance_JoinBestTeam(this);
+	}
 
 	havocbot_setupbot(this);
 }
