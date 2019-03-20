@@ -146,7 +146,7 @@ void HUD_CenterPrint ()
 			}
 			else
 			{
-				centerprint_generic(0, sprintf("Centerprint message", seconds_tostring(time)), 10, 0);
+				centerprint_generic(0, "Centerprint message", 10, 0);
 				hud_configure_cp_generation_time = time + 10 - random()*3;
 			}
 		}
