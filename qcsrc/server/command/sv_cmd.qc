@@ -1274,50 +1274,55 @@ void GameCommand_setbots(int request, int argc)
 	}
 }
 
+void shuffleteams()
+{
+	if (!teamplay)
+	{
+		LOG_INFO("Can't shuffle teams when currently not playing a team game.");
+		return;
+	}
+
+	FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
+		if (Player_HasRealForcedTeam(it)) {
+			// we could theoretically assign forced players to their teams
+			// and shuffle the rest to fill the empty spots but in practise
+			// either all players or none are gonna have forced teams
+			LOG_INFO("Can't shuffle teams because at least one player has a forced team.");
+			return;
+		}
+	});
+
+	int number_of_teams = 0;
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if (TeamBalance_IsTeamAllowed(balance, i))
+		{
+			number_of_teams = max(i, number_of_teams);
+		}
+	}
+	TeamBalance_Destroy(balance);
+
+	int team_index = 0;
+	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
+		int target_team_index = team_index + 1;
+		if (Entity_GetTeamIndex(it) != target_team_index)
+		{
+			MoveToTeam(it, target_team_index, 6);
+		}
+		team_index = (team_index + 1) % number_of_teams;
+	});
+
+	bprint("Successfully shuffled the players around randomly.\n");
+}
+
 void GameCommand_shuffleteams(int request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!teamplay)
-			{
-				LOG_INFO("Can't shuffle teams when currently not playing a team game.");
-				return;
-			}
-
-			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
-				if (Player_HasRealForcedTeam(it)) {
-					// we could theoretically assign forced players to their teams
-					// and shuffle the rest to fill the empty spots but in practise
-					// either all players or none are gonna have forced teams
-					LOG_INFO("Can't shuffle teams because at least one player has a forced team.");
-					return;
-				}
-			});
-
-			int number_of_teams = 0;
-			entity balance = TeamBalance_CheckAllowedTeams(NULL);
-			for (int i = 1; i <= NUM_TEAMS; ++i)
-			{
-				if (TeamBalance_IsTeamAllowed(balance, i))
-				{
-					number_of_teams = max(i, number_of_teams);
-				}
-			}
-			TeamBalance_Destroy(balance);
-
-			int team_index = 0;
-			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
-				int target_team_index = team_index + 1;
-				if (Entity_GetTeamIndex(it) != target_team_index)
-				{
-					MoveToTeam(it, target_team_index, 6);
-				}
-				team_index = (team_index + 1) % number_of_teams;
-			});
-
-			bprint("Successfully shuffled the players around randomly.\n");
+			shuffleteams();
 			return;
 		}
 
