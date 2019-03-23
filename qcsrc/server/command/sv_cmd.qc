@@ -1322,7 +1322,13 @@ void GameCommand_shuffleteams(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			shuffleteams();
+			if (shuffleteams_on_reset_map)
+			{
+				bprint("Players will be shuffled when this round is over.\n");
+				shuffleteams_on_reset_map = true;
+			}
+			else
+				shuffleteams();
 			return;
 		}
 

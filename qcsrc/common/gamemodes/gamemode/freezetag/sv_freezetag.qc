@@ -608,6 +608,12 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ft, SV_ParseServerCommand)
+{
+	shuffleteams_on_reset_map = !(round_handler_IsActive() && !round_handler_IsRoundStarted());
+	return false;
+}
+
 void freezetag_Initialize()
 {
 	freezetag_teams = autocvar_g_freezetag_teams_override;
