@@ -361,7 +361,9 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
 			Unfreeze(frag_target, true);
 		freezetag_count_alive_players();
-		return true; // let the player die so that he can respawn whenever he wants
+		frag_target.respawn_time = time;
+		frag_target.respawn_flags |= RESPAWN_FORCE;
+		return true;
 	}
 
 	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
