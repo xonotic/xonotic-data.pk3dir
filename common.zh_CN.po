@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-27 07:23+0100\n"
-"PO-Revision-Date: 2019-03-09 14:18+0000\n"
-"Last-Translator: 韬 刘 <jiegushijia@gmail.com>\n"
+"PO-Revision-Date: 2019-03-25 13:41+0000\n"
+"Last-Translator: 杜茂森 <dumaosen_main01@outlook.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -30,12 +30,12 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2已导出至 %s！ （小贴士：它被保存到 data/data/）"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "无法将^1写入到 %s"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
