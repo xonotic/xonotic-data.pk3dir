@@ -41,6 +41,7 @@ const int SPECIES_RESERVED = 15;
 const int FRAGS_PLAYER = 0;
 const int FRAGS_SPECTATOR = -666;
 const int FRAGS_LMS_LOSER = -616;
+const int FRAGS_CA_LOSER = -616;
 const int FRAGS_PLAYER_NONSOLID = -616;
 
 // server flags
