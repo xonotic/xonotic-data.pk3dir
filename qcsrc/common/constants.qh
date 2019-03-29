@@ -40,9 +40,7 @@ const int SPECIES_RESERVED = 15;
 
 const int FRAGS_PLAYER = 0;
 const int FRAGS_SPECTATOR = -666;
-const int FRAGS_LMS_LOSER = -616;
-const int FRAGS_PLAYER_NONSOLID = FRAGS_LMS_LOSER;
-// we can use this frags value for both
+const int FRAGS_PLAYER_OUT_OF_GAME = -616;
 
 // server flags
 const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
