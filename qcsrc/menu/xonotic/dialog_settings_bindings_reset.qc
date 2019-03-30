@@ -9,7 +9,7 @@ void XonoticBindingsResetDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 2, makeXonoticTextLabel(0.5, _("Are you sure you want to reset all keybindings?")));
+		me.TD(me, 1, 2, makeXonoticTextLabel(0.5, _("Are you sure you want to reset all key bindings?")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Yes"), '1 0 0'));
