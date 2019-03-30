@@ -27,6 +27,7 @@
 #include "dialog_hudpanel_quickmenu.qh"
 
 #include "dialog_settings_input_userbind.qh"
+#include "dialog_settings_bindings_reset.qh"
 #include "dialog_settings_misc_cvars.qh"
 #include "dialog_settings_misc_reset.qh"
 #include "dialog_settings_user_languagewarning.qh"
@@ -160,6 +161,10 @@ void MainWindow_configureMainWindow(entity me)
 
 	// dialogs used by settings
 	me.userbindEditDialog = i = NEW(XonoticUserbindEditDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.bindingsResetDialog = i = NEW(XonoticBindingsResetDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 

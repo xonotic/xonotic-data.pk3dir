@@ -50,8 +50,8 @@ void XonoticInputSettingsTab_fill(entity me)
 			kb.clearButton = e;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticButton(_("Reset all"), '0 0 0'));
-			e.onClick = KeyBinder_Bind_Reset_All;
-			e.onClickEntity = kb;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.bindingsResetDialog;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Mouse")));
