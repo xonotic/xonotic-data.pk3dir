@@ -1,7 +1,6 @@
 #include "dialog_settings_bindings_reset.qh"
 
 #include "textlabel.qh"
-#include "commandbutton.qh"
 #include "button.qh"
 #include "keybinder.qh"
 
