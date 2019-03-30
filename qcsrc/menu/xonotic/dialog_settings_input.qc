@@ -1,6 +1,7 @@
 #include "dialog_settings_input.qh"
 
 #include "dialog_settings_input_userbind.qh"
+#include "dialog_settings_bindings_reset.qh"
 #include "skinlist.qh"
 #include "slider_resolution.qh"
 #include "../item/checkbox.qh"
