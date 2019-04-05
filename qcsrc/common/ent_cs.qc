@@ -146,6 +146,10 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 	{ WriteShort(chan, ent.frags); },
 	{ ent.frags = ReadShort(); })
 
+ENTCS_PROP(SOLID, true, solid, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.solid); },
+	{ ent.solid = ReadByte(); })
+
 #ifdef SVQC
 
 	int ENTCS_PUBLICMASK = 0;
