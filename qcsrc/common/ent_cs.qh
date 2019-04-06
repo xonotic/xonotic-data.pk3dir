@@ -7,6 +7,7 @@
 REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 REGISTER_NET_TEMP(CLIENT_ENTCS)
 
+#ifdef CSQC
 /** True when private information such as origin is available */
 .bool m_entcs_private;
 
@@ -18,6 +19,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 /** True when a recent server sent origin has been received */
 .bool has_sv_origin;
+.int sv_solid;
+#endif
 
 #ifdef SVQC
 /*
@@ -78,7 +81,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		int fr = ((e) ? e.frags : stof(getplayerkeyvalue(i, "frags")));
 		if (unconnected || fr == FRAGS_SPECTATOR)
 			return ENTCS_SPEC_PURE;
-		int sol = ((e) ? e.solid : SOLID_NOT);
+		int sol = ((e) ? e.sv_solid : SOLID_NOT);
 		if (fr == FRAGS_PLAYER_OUT_OF_GAME && sol == SOLID_NOT)
 			return ENTCS_SPEC_IN_SCOREBOARD;
 		return 0;

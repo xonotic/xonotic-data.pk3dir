@@ -148,7 +148,7 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 
 ENTCS_PROP(SOLID, true, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.solid); },
-	{ ent.solid = ReadByte(); })
+	{ ent.sv_solid = ReadByte(); })
 
 #ifdef SVQC
 
