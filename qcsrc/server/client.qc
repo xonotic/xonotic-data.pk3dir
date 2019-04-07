@@ -2396,9 +2396,18 @@ void PlayerPreThink (entity this)
 	if (this.netname == "" || this.netname != CS(this).netname_previous)
 	{
 		bool assume_unchanged = (CS(this).netname_previous == "");
+		if (strlennocol(this.netname) > autocvar_name_maxlength)
+		{
+			int new_length = textLengthUpToLength(this.netname, autocvar_name_maxlength, strlennocol);
+			this.netname = strzone(strcat(substring(this.netname, 0, new_length), "^7"));
+			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_name_maxlength));
+			assume_unchanged = false;
+			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+		}
 		if (isInvisibleString(this.netname))
 		{
 			this.netname = strzone(sprintf("Player#%d", this.playerid));
+			sprint(this, "Warning: invisible names are not allowed.\n");
 			assume_unchanged = false;
 			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 		}
