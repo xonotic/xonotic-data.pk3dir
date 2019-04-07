@@ -1321,12 +1321,14 @@ void respawn(entity this)
 	PutClientInServer(this);
 }
 
+ERASEABLE
 void PrintToChat(entity client, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
 	sprint(client, text);
 }
 
+ERASEABLE
 void DebugPrintToChat(entity client, string text)
 {
 	if (autocvar_developer)
@@ -1335,12 +1337,14 @@ void DebugPrintToChat(entity client, string text)
 	}
 }
 
+ERASEABLE
 void PrintToChatAll(string text)
 {
 	text = strcat("\{1}^7", text, "\n");
 	bprint(text);
 }
 
+ERASEABLE
 void DebugPrintToChatAll(string text)
 {
 	if (autocvar_developer)
@@ -1349,6 +1353,7 @@ void DebugPrintToChatAll(string text)
 	}
 }
 
+ERASEABLE
 void PrintToChatTeam(int team_num, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
@@ -1361,6 +1366,7 @@ void PrintToChatTeam(int team_num, string text)
 	});
 }
 
+ERASEABLE
 void DebugPrintToChatTeam(int team_num, string text)
 {
 	if (autocvar_developer)
