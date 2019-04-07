@@ -427,7 +427,7 @@ void bot_clientconnect(entity this)
 		bot_setclientfields(this);
 	}
 
-	if (Team_IsValidIndex(this.bot_forced_team))
+	if (teamplay && Team_IsValidIndex(this.bot_forced_team))
 	{
 		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
 	}
