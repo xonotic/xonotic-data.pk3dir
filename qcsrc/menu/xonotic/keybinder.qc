@@ -313,6 +313,7 @@ void KeyBinder_Bind_Reset_All(entity btn, entity me)
 	localcmd("exec binds-xonotic.cfg\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
+	me.close(me);
 }
 void XonoticKeyBinder_doubleClickListBoxItem(entity me, float i, vector where)
 {
