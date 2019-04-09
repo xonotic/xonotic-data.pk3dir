@@ -18,7 +18,7 @@ CLASS(Turret, Object)
 
     ATTRIB(Turret, spawnflags, int, 0);
     /** turret hitbox size */
-    ATTRIB(Turret, m_mins, vector, '-0 -0 -0');
+    ATTRIB(Turret, m_mins, vector, '0 0 0');
     /** turret hitbox size */
     ATTRIB(Turret, m_maxs, vector, '0 0 0');
 

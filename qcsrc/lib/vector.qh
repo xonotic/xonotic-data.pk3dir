@@ -15,11 +15,7 @@ noref float _vdist_f;
 #define dotproduct(a, b) ((a) * (b))
 #else
 noref vector _dotproduct_a, _dotproduct_b;
-#define dotproduct(a, b) \
-	(_dotproduct_a = (a), _dotproduct_b = (b), \
-	  _dotproduct_a.x * _dotproduct_b.x \
-	+ _dotproduct_a.y * _dotproduct_b.y \
-	+ _dotproduct_a.z * _dotproduct_b.z)
+#define dotproduct(a, b) 	(_dotproduct_a = (a), _dotproduct_b = (b), 	  _dotproduct_a.x * _dotproduct_b.x 	+ _dotproduct_a.y * _dotproduct_b.y 	+ _dotproduct_a.z * _dotproduct_b.z)
 #endif
 
 #if 1
@@ -36,11 +32,7 @@ vector cross(vector a, vector b)
 #endif
 
 noref vector _vmul_a, _vmul_b;
-#define vmul(a, b) \
-    (_vmul_a = (a), _vmul_b = (b), \
-	  '1 0 0' * (_vmul_a.x * _vmul_b.x) \
-	+ '0 1 0' * (_vmul_a.y * _vmul_b.y) \
-	+ '0 0 1' * (_vmul_a.z * _vmul_b.z))
+#define vmul(a, b)     (_vmul_a = (a), _vmul_b = (b), 	  '1 0 0' * (_vmul_a.x * _vmul_b.x) 	+ '0 1 0' * (_vmul_a.y * _vmul_b.y) 	+ '0 0 1' * (_vmul_a.z * _vmul_b.z))
 
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';
@@ -93,12 +85,7 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 #define YAW(v) ((v).y)
 #define ROLL(v) ((v).z)
 
-#define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN \
-	f(angles); \
-	forward = v_forward; \
-	right = v_right; \
-	up = v_up; \
-MACRO_END
+#define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN 	f(angles); 	forward = v_forward; 	right = v_right; 	up = v_up; MACRO_END
 
 //pseudo prototypes:
 // vector vec2(vector v); // returns a vector with just the x and y components of the given vector
@@ -151,8 +138,7 @@ vector vec_epsilon(vector this, float eps)
 	return this;
 }
 
-#define ClipVelocity(in, normal, out, overbounce) \
-	(out = vec_epsilon(vec_reflect(in, normal, (overbounce) - 1), 0.1))
+#define ClipVelocity(in, normal, out, overbounce) 	(out = vec_epsilon(vec_reflect(in, normal, (overbounce) - 1), 0.1))
 
 #ifdef GAMEQC
 	ERASEABLE

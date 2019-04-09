@@ -51,27 +51,11 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 const .float strength_finished = _STAT(STRENGTH_FINISHED);
 const .float invincible_finished = _STAT(INVINCIBLE_FINISHED);
 
-#define spawnfunc_body(item) \
-	if (!Item_IsDefinitionAllowed(item)) \
-	{ \
-		startitem_failed = true; \
-		delete(this); \
-		return; \
-	} \
-	StartItem(this, item)
+#define spawnfunc_body(item) 	if (!Item_IsDefinitionAllowed(item)) 	{ 		startitem_failed = true; 		delete(this); 		return; 	} 	StartItem(this, item)
 
-#define SPAWNFUNC_ITEM(name, item) \
-	spawnfunc(name) \
-	{ \
-		spawnfunc_body(item); \
-	}
+#define SPAWNFUNC_ITEM(name, item) 	spawnfunc(name) 	{ 		spawnfunc_body(item); 	}
 
-#define SPAWNFUNC_ITEM_COND(name, cond, item1, item2) \
-	spawnfunc(name) \
-	{ \
-		entity item = (cond) ? item1 : item2; \
-		spawnfunc_body(item); \
-	}
+#define SPAWNFUNC_ITEM_COND(name, cond, item1, item2) 	spawnfunc(name) 	{ 		entity item = (cond) ? item1 : item2; 		spawnfunc_body(item); 	}
 
 #else
 

@@ -136,14 +136,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
-	#define X(team) MACRO_BEGIN \
-		if (team##flag != team##flag_prevframe) { \
-			team##flag_statuschange_time = time; \
-			team##flag_prevstatus = team##flag_prevframe; \
-			team##flag_prevframe = team##flag; \
-		} \
-		team##flag_statuschange_elapsedtime = time - team##flag_statuschange_time; \
-	MACRO_END
+	#define X(team) MACRO_BEGIN 		if (team##flag != team##flag_prevframe) { 			team##flag_statuschange_time = time; 			team##flag_prevstatus = team##flag_prevframe; 			team##flag_prevframe = team##flag; 		} 		team##flag_statuschange_elapsedtime = time - team##flag_statuschange_time; 	MACRO_END
 	X(red);
 	X(blue);
 	X(yellow);
@@ -160,38 +153,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	// ensure RMS == 1
 	const float BLINK_FREQ = 5; // circle frequency, = 2*pi*frequency in hertz
 
-	#define X(team, cond) \
-	string team##_icon = string_null, team##_icon_prevstatus = string_null; \
-	int team##_alpha, team##_alpha_prevstatus; \
-	team##_alpha = team##_alpha_prevstatus = 1; \
-	MACRO_BEGIN \
-		switch (team##flag) { \
-			case 1: team##_icon = "flag_" #team "_taken"; break; \
-			case 2: team##_icon = "flag_" #team "_lost"; break; \
-			case 3: team##_icon = "flag_" #team "_carrying"; team##_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; \
-			default: \
-				if ((stat_items & CTF_SHIELDED) && (cond)) { \
-					team##_icon = "flag_" #team "_shielded"; \
-				} else { \
-					team##_icon = string_null; \
-				} \
-				break; \
-		} \
-		switch (team##flag_prevstatus) { \
-			case 1: team##_icon_prevstatus = "flag_" #team "_taken"; break; \
-			case 2: team##_icon_prevstatus = "flag_" #team "_lost"; break; \
-			case 3: team##_icon_prevstatus = "flag_" #team "_carrying"; team##_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; \
-			default: \
-				if (team##flag == 3) { \
-					team##_icon_prevstatus = "flag_" #team "_carrying"; /* make it more visible */\
-				} else if((stat_items & CTF_SHIELDED) && (cond)) { \
-					team##_icon_prevstatus = "flag_" #team "_shielded"; \
-				} else { \
-					team##_icon_prevstatus = string_null; \
-				} \
-				break; \
-		} \
-	MACRO_END
+	#define X(team, cond) 	string team##_icon = string_null, team##_icon_prevstatus = string_null; 	int team##_alpha, team##_alpha_prevstatus; 	team##_alpha = team##_alpha_prevstatus = 1; 	MACRO_BEGIN 		switch (team##flag) { 			case 1: team##_icon = "flag_" #team "_taken"; break; 			case 2: team##_icon = "flag_" #team "_lost"; break; 			case 3: team##_icon = "flag_" #team "_carrying"; team##_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; 			default: 				if ((stat_items & CTF_SHIELDED) && (cond)) { 					team##_icon = "flag_" #team "_shielded"; 				} else { 					team##_icon = string_null; 				} 				break; 		} 		switch (team##flag_prevstatus) { 			case 1: team##_icon_prevstatus = "flag_" #team "_taken"; break; 			case 2: team##_icon_prevstatus = "flag_" #team "_lost"; break; 			case 3: team##_icon_prevstatus = "flag_" #team "_carrying"; team##_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; 			default: 				if (team##flag == 3) { 					team##_icon_prevstatus = "flag_" #team "_carrying"; /* make it more visible */				} else if((stat_items & CTF_SHIELDED) && (cond)) { 					team##_icon_prevstatus = "flag_" #team "_shielded"; 				} else { 					team##_icon_prevstatus = string_null; 				} 				break; 		} 	MACRO_END
 	X(red, myteam != NUM_TEAM_1 && (nteams & BIT(0)));
 	X(blue, myteam != NUM_TEAM_2 && (nteams & BIT(1)));
 	X(yellow, myteam != NUM_TEAM_3 && (nteams & BIT(2)));
@@ -262,15 +224,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	neutralflag_pos = pos;
 	flag_size = e1 * fs * size1 + e2 * size2;
 
-	#define X(team) MACRO_BEGIN \
-		f = bound(0, team##flag_statuschange_elapsedtime * 2, 1); \
-		if (team##_icon && ctf_stalemate) \
-			drawpic_aspect_skin(team##flag_pos, "flag_stalemate", flag_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL); \
-		if (team##_icon_prevstatus && f < 1) \
-			drawpic_aspect_skin_expanding(team##flag_pos, team##_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * team##_alpha_prevstatus, DRAWFLAG_NORMAL, f); \
-		if (team##_icon) \
-			drawpic_aspect_skin(team##flag_pos, team##_icon, flag_size, '1 1 1', panel_fg_alpha * team##_alpha * f, DRAWFLAG_NORMAL); \
-	MACRO_END
+	#define X(team) MACRO_BEGIN 		f = bound(0, team##flag_statuschange_elapsedtime * 2, 1); 		if (team##_icon && ctf_stalemate) 			drawpic_aspect_skin(team##flag_pos, "flag_stalemate", flag_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL); 		if (team##_icon_prevstatus && f < 1) 			drawpic_aspect_skin_expanding(team##flag_pos, team##_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * team##_alpha_prevstatus, DRAWFLAG_NORMAL, f); 		if (team##_icon) 			drawpic_aspect_skin(team##flag_pos, team##_icon, flag_size, '1 1 1', panel_fg_alpha * team##_alpha * f, DRAWFLAG_NORMAL); 	MACRO_END
 	X(red);
 	X(blue);
 	X(yellow);

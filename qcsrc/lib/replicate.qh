@@ -16,44 +16,13 @@
 
 	#define REPLICATE_3(fld, type, var) REPLICATE_4(fld, type, var, )
 	#define REPLICATE_4(fld, type, var, func) REPLICATE_##type(fld, var, func)
-	#define REPLICATE_string(fld, var, func) \
-		REPLICATE_7(fld, string, var, , \
-	{ strcpy(field, it); }, \
-	{ strfree(field); }, \
-	{ \
-		/* also initialize to the default value of func when requesting cvars */ \
-		string s = func(field); \
-		if (s != field) \
-		{ \
-		    strcpy(field, s); \
-		} \
-	})
+	#define REPLICATE_string(fld, var, func) 		REPLICATE_7(fld, string, var, , 	{ strcpy(field, it); }, 	{ strfree(field); }, 	{ 		/* also initialize to the default value of func when requesting cvars */ 		string s = func(field); 		if (s != field) 		{ 		    strcpy(field, s); 		} 	})
 	#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func,  { field = stof(it); },          , )
 	#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func,   { field = boolean(stoi(it)); }, , )
 	#define REPLICATE_int(fld, var, func) REPLICATE_7(fld, int, var, func,    { field = stoi(it); },          , )
 
 	#if defined(SVQC)
-		#define REPLICATE_7(fld, type, var, func, create, destroy, after) \
-			void ReplicateVars(entity this, entity store, string thisname, int i) \
-			{ \
-				type field = store.fld; \
-				if (i < 0) { destroy } \
-				else \
-				{ \
-					string it = func(argv(i + 1)); \
-					bool current = thisname == var; \
-					if (i > 0) \
-					{ \
-						if (current) { create } \
-					} \
-					else \
-					{ \
-						stuffcmd(this, "cl_cmd sendcvar " var "\n"); \
-					} \
-					if (current) { after } \
-				} \
-				store.fld = field; \
-			}
+		#define REPLICATE_7(fld, type, var, func, create, destroy, after) 			void ReplicateVars(entity this, entity store, string thisname, int i) 			{ 				type field = store.fld; 				if (i < 0) { destroy } 				else 				{ 					string it = func(argv(i + 1)); 					bool current = thisname == var; 					if (i > 0) 					{ 						if (current) { create } 					} 					else 					{ 						stuffcmd(this, "cl_cmd sendcvar " var "\n"); 					} 					if (current) { after } 				} 				store.fld = field; 			}
 	#elif defined(CSQC)
 		// TODO
 		#define REPLICATE_7(fld, type, var, func, create, destroy, after)

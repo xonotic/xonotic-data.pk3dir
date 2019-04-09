@@ -11,14 +11,14 @@ SUB(onslaught_generator_gib_explode) {
     MY(count) = 17;
     MY(liquidfriction) = 8;
     MY(notunderwater) = true;
-    MY(originjitter) = '8.0 8.0 8.0';
+    MY(originjitter) = '8 8 8';
     MY(sizeincrease) = 45;
     MY(size_min) = 20;
     MY(size_max) = 26;
     MY(tex_min) = 48;
     MY(tex_max) = 55;
     MY(type) = "static";
-    MY(velocityjitter) = '286.0 286.0 286.0';
+    MY(velocityjitter) = '286 286 286';
 }
 // smoke
 SUB(onslaught_generator_gib_explode) {
@@ -37,7 +37,7 @@ SUB(onslaught_generator_gib_explode) {
     MY(size_max) = 10;
     MY(tex_max) = 8;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '244.0 244.0 244.0';
+    MY(velocityjitter) = '244 244 244';
 }
 // underwater bubbles
 SUB(onslaught_generator_gib_explode) {
@@ -50,14 +50,14 @@ SUB(onslaught_generator_gib_explode) {
     MY(count) = 16;
     MY(gravity) = -0.125000;
     MY(liquidfriction) = 0.250000;
-    MY(originjitter) = '16.0 16.0 16.0';
+    MY(originjitter) = '16 16 16';
     MY(size_min) = 3;
     MY(size_max) = 3;
     MY(tex_min) = 62;
     MY(tex_max) = 62;
     MY(type) = "bubble";
     MY(underwater) = true;
-    MY(velocityjitter) = '96.0 96.0 96.0';
+    MY(velocityjitter) = '96 96 96';
 }
 
 DEF(onslaught_generator_gib_flame);
@@ -73,14 +73,14 @@ SUB(onslaught_generator_gib_flame) {
     MY(gravity) = -0.500000;
     MY(liquidfriction) = 8;
     MY(notunderwater) = true;
-    MY(originjitter) = '3.0 3.0 3.0';
+    MY(originjitter) = '3 3 3';
     MY(sizeincrease) = 25;
     MY(size_min) = 5;
     MY(size_max) = 10;
     MY(tex_min) = 48;
     MY(tex_max) = 55;
     MY(type) = "static";
-    MY(velocityjitter) = '86.0 86.0 86.0';
+    MY(velocityjitter) = '86 86 86';
 }
 // smoke
 SUB(onslaught_generator_gib_flame) {
@@ -99,7 +99,7 @@ SUB(onslaught_generator_gib_flame) {
     MY(size_max) = 20;
     MY(tex_max) = 8;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '44.0 44.0 44.0';
+    MY(velocityjitter) = '44 44 44';
 }
 // underwater bubbles
 SUB(onslaught_generator_gib_flame) {
@@ -112,12 +112,12 @@ SUB(onslaught_generator_gib_flame) {
     MY(count) = 16;
     MY(gravity) = -0.125000;
     MY(liquidfriction) = 0.250000;
-    MY(originjitter) = '16.0 16.0 16.0';
+    MY(originjitter) = '16 16 16';
     MY(size_min) = 3;
     MY(size_max) = 3;
     MY(tex_min) = 62;
     MY(tex_max) = 62;
     MY(type) = "bubble";
     MY(underwater) = true;
-    MY(velocityjitter) = '96.0 96.0 96.0';
+    MY(velocityjitter) = '96 96 96';
 }

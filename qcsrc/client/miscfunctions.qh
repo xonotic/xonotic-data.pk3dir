@@ -73,34 +73,26 @@ vector HUD_Shift(vector v);
 
 float stringwidth(string text, float handleColors, vector sz);
 
-#define drawpic(position, pic, size, rgb, alpha, flag) \
-	drawpic_builtin(HUD_Shift(position), pic, HUD_Scale(size), rgb, alpha, flag)
+#define drawpic(position, pic, size, rgb, alpha, flag) 	drawpic_builtin(HUD_Shift(position), pic, HUD_Scale(size), rgb, alpha, flag)
 
-#define drawcharacter(position, character, scale, rgb, alpha, flag) \
-	drawcharacter_builtin(HUD_Shift(position), text, scale, rgb, alpha, flag)
+#define drawcharacter(position, character, scale, rgb, alpha, flag) 	drawcharacter_builtin(HUD_Shift(position), text, scale, rgb, alpha, flag)
 
-#define drawstring(position, text, scale, rgb, alpha, flag) \
-	drawstring_builtin(HUD_Shift(position), text, scale, rgb, alpha, flag)
+#define drawstring(position, text, scale, rgb, alpha, flag) 	drawstring_builtin(HUD_Shift(position), text, scale, rgb, alpha, flag)
 
-#define drawcolorcodedstring(position, text, scale, alpha, flag) \
-	drawcolorcodedstring_builtin(HUD_Shift(position), text, scale, alpha, flag)
+#define drawcolorcodedstring(position, text, scale, alpha, flag) 	drawcolorcodedstring_builtin(HUD_Shift(position), text, scale, alpha, flag)
 
-#define drawcolorcodedstring2(position, text, scale, rgb, alpha, flag) \
-	drawcolorcodedstring2_builtin(HUD_Shift(position), text, scale, rgb, alpha, flag)
+#define drawcolorcodedstring2(position, text, scale, rgb, alpha, flag) 	drawcolorcodedstring2_builtin(HUD_Shift(position), text, scale, rgb, alpha, flag)
 
-#define drawfill(position, size, rgb, alpha, flag) \
-	drawfill_builtin(HUD_Shift(position), HUD_Scale(size), rgb, alpha, flag)
+#define drawfill(position, size, rgb, alpha, flag) 	drawfill_builtin(HUD_Shift(position), HUD_Scale(size), rgb, alpha, flag)
 
-#define drawsetcliparea(xposition, yposition, w, h) \
-	drawsetcliparea_builtin(HUD_ShiftX(xposition), HUD_ShiftY(yposition), HUD_ScaleX(w), HUD_ScaleY(h))
+#define drawsetcliparea(xposition, yposition, w, h) 	drawsetcliparea_builtin(HUD_ShiftX(xposition), HUD_ShiftY(yposition), HUD_ScaleX(w), HUD_ScaleY(h))
 
 // Since drawsubpic usually gets called multiple times from within an
 // utility function, instead of scaling pos and size in every call
 // we scale them once for all in the beginning of that utility function.
 // That's why drawsubpic isn't remapped.
 /*
-#define drawsubpic(position, size, pic, srcPosition, srcSize, rgb, alpha, flag) \
-	drawsubpic_builtin(HUD_Shift(position), HUD_Scale(size), pic, HUD_Shift(srcPosition), HUD_Scale(srcSize), rgb, alpha, flag)
+#define drawsubpic(position, size, pic, srcPosition, srcSize, rgb, alpha, flag) 	drawsubpic_builtin(HUD_Shift(position), HUD_Scale(size), pic, HUD_Shift(srcPosition), HUD_Scale(srcSize), rgb, alpha, flag)
 */
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
@@ -109,68 +101,19 @@ vector _drawpic_imgsize;
 vector _drawpic_sz;
 float _drawpic_oldsz;
 string _drawpic_picpath;
-#define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
-	MACRO_BEGIN \
-		_drawpic_imgsize = draw_getimagesize(pic);\
-		if(_drawpic_imgsize != '0 0 0') {\
-			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;\
-			_drawpic_sz = mySize;\
-			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {\
-				_drawpic_oldsz = _drawpic_sz.x;\
-				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;\
-				if(_drawpic_sz.x)\
-					drawpic(pos + eX * 0.5 * (_drawpic_oldsz - _drawpic_sz.x), pic, _drawpic_sz, color, theAlpha, drawflag);\
-			} else {\
-				_drawpic_oldsz = _drawpic_sz.y;\
-				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;\
-				if(_drawpic_sz.y)\
-					drawpic(pos + eY * 0.5 * (_drawpic_oldsz - _drawpic_sz.y), pic, _drawpic_sz, color, theAlpha, drawflag);\
-			}\
-		}\
-	MACRO_END
+#define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)	MACRO_BEGIN 		_drawpic_imgsize = draw_getimagesize(pic);		if(_drawpic_imgsize != '0 0 0') {			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;			_drawpic_sz = mySize;			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {				_drawpic_oldsz = _drawpic_sz.x;				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;				if(_drawpic_sz.x)					drawpic(pos + eX * 0.5 * (_drawpic_oldsz - _drawpic_sz.x), pic, _drawpic_sz, color, theAlpha, drawflag);			} else {				_drawpic_oldsz = _drawpic_sz.y;				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;				if(_drawpic_sz.y)					drawpic(pos + eY * 0.5 * (_drawpic_oldsz - _drawpic_sz.y), pic, _drawpic_sz, color, theAlpha, drawflag);			}		}	MACRO_END
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
-#define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)\
-	MACRO_BEGIN \
-		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(_drawpic_picpath) == "") {\
-			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
-		}\
-		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
-		_drawpic_picpath = string_null;\
-	MACRO_END
+#define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)	MACRO_BEGIN 		_drawpic_picpath = strcat(hud_skin_path, "/", pic);		if(precache_pic(_drawpic_picpath) == "") {			_drawpic_picpath = strcat("gfx/hud/default/", pic);		}		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);		_drawpic_picpath = string_null;	MACRO_END
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
-#define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)\
-	MACRO_BEGIN \
-		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(_drawpic_picpath) == "") {\
-			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
-		}\
-		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
-		_drawpic_picpath = string_null;\
-	MACRO_END
+#define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)	MACRO_BEGIN 		_drawpic_picpath = strcat(hud_skin_path, "/", pic);		if(precache_pic(_drawpic_picpath) == "") {			_drawpic_picpath = strcat("gfx/hud/default/", pic);		}		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);		_drawpic_picpath = string_null;	MACRO_END
 
 void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
 
 void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
 
-#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN															\
-	float textaspect, oldsz;																						\
-	vector dfs = drawfontscale; \
-	drawfontscale = '1 1 0'; \
-	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;											\
-	drawfontscale = dfs; \
-	if(sz.x/sz.y > textaspect) {																					\
-		oldsz = sz.x;																								\
-		sz.x = sz.y * textaspect;																					\
-		pos.x += (oldsz - sz.x) * 0.5;																				\
-	} else {																										\
-		oldsz = sz.y;																								\
-		sz.y = sz.x / textaspect; 																					\
-		pos.y += (oldsz - sz.y) * 0.5;																				\
-	}																												\
-MACRO_END
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN																float textaspect, oldsz;																							vector dfs = drawfontscale; 	drawfontscale = '1 1 0'; 	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;												drawfontscale = dfs; 	if(sz.x/sz.y > textaspect) {																							oldsz = sz.x;																										sz.x = sz.y * textaspect;																							pos.x += (oldsz - sz.x) * 0.5;																					} else {																												oldsz = sz.y;																										sz.y = sz.x / textaspect; 																							pos.y += (oldsz - sz.y) * 0.5;																					}																												MACRO_END
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag);

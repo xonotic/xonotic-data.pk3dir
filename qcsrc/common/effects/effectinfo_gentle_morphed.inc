@@ -16,7 +16,7 @@ SUB(morphed_damage_hit) {
     MY(tex_min) = 43;
     MY(tex_max) = 43;
     MY(type) = "spark";
-    MY(velocityjitter) = '356.0 356.0 456.0';
+    MY(velocityjitter) = '356 356 456';
 }
 SUB(morphed_damage_hit) {
     MY(airfriction) = 5;
@@ -27,7 +27,7 @@ SUB(morphed_damage_hit) {
     MY(color_max) = "0x9271fb";
     MY(count) = 0.500000;
     MY(liquidfriction) = 10;
-    MY(originjitter) = '10.0 10.0 10.0';
+    MY(originjitter) = '10 10 10';
     MY(sizeincrease) = -24;
     MY(size_min) = 24;
     MY(size_max) = 24;
@@ -57,7 +57,7 @@ SUB(morphed_damage_dissolve) {
     MY(tex_min) = 43;
     MY(tex_max) = 43;
     MY(type) = "smoke";
-    MY(velocityjitter) = '256.0 256.0 512.0';
+    MY(velocityjitter) = '256 256 512';
 }
 SUB(morphed_damage_dissolve) {
     MY(airfriction) = 9;
@@ -77,7 +77,7 @@ SUB(morphed_damage_dissolve) {
     MY(tex_min) = 43;
     MY(tex_max) = 43;
     MY(type) = "smoke";
-    MY(velocityjitter) = '256.0 256.0 512.0';
+    MY(velocityjitter) = '256 256 512';
 }
 SUB(morphed_damage_dissolve) {
     MY(airfriction) = 3;
@@ -88,7 +88,7 @@ SUB(morphed_damage_dissolve) {
     MY(color_max) = "0x9271fb";
     MY(count) = 5;
     MY(liquidfriction) = 6;
-    MY(originjitter) = '22.0 22.0 76.0';
+    MY(originjitter) = '22 22 76';
     MY(sizeincrease) = -16;
     MY(size_min) = 44;
     MY(size_max) = 44;
@@ -117,5 +117,5 @@ SUB(morphed_damage_dissolve) {
     MY(tex_min) = 46;
     MY(tex_max) = 46;
     MY(type) = "smoke";
-    MY(velocityjitter) = '400.0 400.0 0.0';
+    MY(velocityjitter) = '400 400 0';
 }

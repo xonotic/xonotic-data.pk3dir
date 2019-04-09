@@ -151,9 +151,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 {
-#define OPTIONINFO(flag,var,test,text,long,short) \
-    var = strcat(var, ((flag & test) ? "^2[ON]  ^7" : "^1[OFF] ^7")); \
-    var = strcat(var, text," ^7(^3 ", long, "^7 | ^3", short, " ^7)\n")
+#define OPTIONINFO(flag,var,test,text,long,short)     var = strcat(var, ((flag & test) ? "^2[ON]  ^7" : "^1[OFF] ^7"));     var = strcat(var, text," ^7(^3 ", long, "^7 | ^3", short, " ^7)\n")
 
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return;

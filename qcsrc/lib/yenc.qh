@@ -2,47 +2,9 @@
 
 #include "test.qh"
 
-#define yenc_single(c, ret) \
-	MACRO_BEGIN \
-		int conv = c; \
-		conv += 42; \
-		if (conv >= 256) conv -= 256; \
-		switch (conv) \
-		{ \
-			default: \
-			{ \
-				string yenc_it = chr2str(conv); \
-				ret = yenc_it; \
-				break; \
-			} \
-			case 0: \
-			case '\n': \
-			case '\r': \
-			case '=': \
-			{ \
-				conv += 64; \
-				string yenc_it = chr2str('=', conv); \
-				ret = yenc_it; \
-				break; \
-			} \
-		} \
-	MACRO_END
+#define yenc_single(c, ret) 	MACRO_BEGIN 		int conv = c; 		conv += 42; 		if (conv >= 256) conv -= 256; 		switch (conv) 		{ 			default: 			{ 				string yenc_it = chr2str(conv); 				ret = yenc_it; 				break; 			} 			case 0: 			case '\n': 			case '\r': 			case '=': 			{ 				conv += 64; 				string yenc_it = chr2str('=', conv); 				ret = yenc_it; 				break; 			} 		} 	MACRO_END
 
-#define ydec_single(stringiter, ret) \
-	MACRO_BEGIN \
-		int conv = STRING_ITERATOR_GET(stringiter); \
-		if (conv <= 0) { \
-			ret = -1; \
-		} else { \
-			if (conv == '=') { \
-				conv = STRING_ITERATOR_GET(stringiter); \
-				conv -= 64; \
-			} \
-			if (conv < 42) conv += 256; \
-			conv -= 42; \
-			ret = conv; \
-		} \
-	MACRO_END
+#define ydec_single(stringiter, ret) 	MACRO_BEGIN 		int conv = STRING_ITERATOR_GET(stringiter); 		if (conv <= 0) { 			ret = -1; 		} else { 			if (conv == '=') { 				conv = STRING_ITERATOR_GET(stringiter); 				conv -= 64; 			} 			if (conv < 42) conv += 256; 			conv -= 42; 			ret = conv; 		} 	MACRO_END
 
 TEST(yEnc, EncodeDecode)
 {

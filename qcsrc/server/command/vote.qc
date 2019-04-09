@@ -1120,16 +1120,7 @@ void VoteCommand_(int request)
 // ================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define VOTE_COMMANDS(request, caller, arguments, command) \
-	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "Abstain your vote in current vote", VC_ASGNMNT_CLIENTONLY) \
-	VOTE_COMMAND("call", VoteCommand_call(request, caller, arguments, command), "Create a new vote for players to decide on", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("help", VoteCommand_macro_help(caller, arguments), "Shows this information", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments, command), "Full control over all voting and vote commands", VC_ASGNMNT_CLIENTONLY) \
-	VOTE_COMMAND("no", VoteCommand_no(request, caller), "Select no in current vote", VC_ASGNMNT_CLIENTONLY) \
-	VOTE_COMMAND("status", VoteCommand_status(request, caller), "Prints information about current vote", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("stop", VoteCommand_stop(request, caller), "Immediately end a vote", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("yes", VoteCommand_yes(request, caller), "Select yes in current vote", VC_ASGNMNT_CLIENTONLY) \
-	/* nothing */
+#define VOTE_COMMANDS(request, caller, arguments, command) 	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "Abstain your vote in current vote", VC_ASGNMNT_CLIENTONLY) 	VOTE_COMMAND("call", VoteCommand_call(request, caller, arguments, command), "Create a new vote for players to decide on", VC_ASGNMNT_BOTH) 	VOTE_COMMAND("help", VoteCommand_macro_help(caller, arguments), "Shows this information", VC_ASGNMNT_BOTH) 	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments, command), "Full control over all voting and vote commands", VC_ASGNMNT_CLIENTONLY) 	VOTE_COMMAND("no", VoteCommand_no(request, caller), "Select no in current vote", VC_ASGNMNT_CLIENTONLY) 	VOTE_COMMAND("status", VoteCommand_status(request, caller), "Prints information about current vote", VC_ASGNMNT_BOTH) 	VOTE_COMMAND("stop", VoteCommand_stop(request, caller), "Immediately end a vote", VC_ASGNMNT_BOTH) 	VOTE_COMMAND("yes", VoteCommand_yes(request, caller), "Select yes in current vote", VC_ASGNMNT_CLIENTONLY) 	/* nothing */
 
 void VoteCommand_macro_help(entity caller, int argc)
 {
@@ -1138,8 +1129,7 @@ void VoteCommand_macro_help(entity caller, int argc)
 	if (argc == 2 || argv(2) == "help")  // help display listing all commands
 	{
 		print_to(caller, "\nVoting commands:\n");
-		#define VOTE_COMMAND(name, function, description, assignment) \
-			{ if (Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
+		#define VOTE_COMMAND(name, function, description, assignment) 			{ if (Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
 
 		VOTE_COMMANDS(0, caller, 0, "");
 #undef VOTE_COMMAND
@@ -1150,8 +1140,7 @@ void VoteCommand_macro_help(entity caller, int argc)
 	}
 	else  // usage for individual command
 	{
-		#define VOTE_COMMAND(name, function, description, assignment) \
-			{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(2))) { function; return; } } }
+		#define VOTE_COMMAND(name, function, description, assignment) 			{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(2))) { function; return; } } }
 
 		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
 #undef VOTE_COMMAND
@@ -1166,8 +1155,7 @@ void VoteCommand_macro_help(entity caller, int argc)
 
 float VoteCommand_macro_command(entity caller, int argc, string vote_command)
 {
-	#define VOTE_COMMAND(name, function, description, assignment) \
-		{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(1))) { function; return true; } } }
+	#define VOTE_COMMAND(name, function, description, assignment) 		{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(1))) { function; return true; } } }
 
 	VOTE_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, vote_command);
 #undef VOTE_COMMAND

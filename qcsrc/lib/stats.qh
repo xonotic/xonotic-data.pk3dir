@@ -10,21 +10,15 @@ USING(vectori, vector);
 
 const int STATS_ENGINE_RESERVE = 32;
 // must be listed in ascending order
-#define MAGIC_STATS(_, x) \
-	_(x, MOVEVARS_TIMESCALE, 241) \
-	/**/
+#define MAGIC_STATS(_, x) 	_(x, MOVEVARS_TIMESCALE, 241) 	/**/
 
 int g_magic_stats_hole = 0;
 
-#define MAGIC_STATS_FIX_MANUAL(it, var, id) \
-	if (it.registered_id == "STAT_" #var) { --g_magic_stats_hole; it.m_id = id; } else
+#define MAGIC_STATS_FIX_MANUAL(it, var, id) 	if (it.registered_id == "STAT_" #var) { --g_magic_stats_hole; it.m_id = id; } else
 
-#define MAGIC_STATS_FIX_AUTO(it, var, id) \
-	if (it.m_id == id) { ++g_magic_stats_hole; ++it.m_id; }
+#define MAGIC_STATS_FIX_AUTO(it, var, id) 	if (it.m_id == id) { ++g_magic_stats_hole; ++it.m_id; }
 
-#define MAGIC_STATS_FIX(it) \
-	it.m_id += g_magic_stats_hole; \
-	MAGIC_STATS(MAGIC_STATS_FIX_MANUAL, it) { MAGIC_STATS(MAGIC_STATS_FIX_AUTO, it) }
+#define MAGIC_STATS_FIX(it) 	it.m_id += g_magic_stats_hole; 	MAGIC_STATS(MAGIC_STATS_FIX_MANUAL, it) { MAGIC_STATS(MAGIC_STATS_FIX_AUTO, it) }
 
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
@@ -43,22 +37,7 @@ int g_magic_stats_hole = 0;
 	#define getstat_vectori(id) vec3(getstat_int(id + 0), getstat_int(id + 1), getstat_int(id + 2))
 
 	#define _STAT(id) g_stat_##id
-	#define REGISTER_STAT_2(id, T) \
-		T _STAT(id); \
-		/* T CAT(_STAT(id), _prev); */ \
-		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
-		{ \
-			if (#T == "vector" || #T == "vectori") { \
-				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
-				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
-			} \
-		} \
-		ACCUMULATE void stats_get() \
-		{ \
-			T it = getstat_##T(STAT_##id.m_id); \
-			/* if (it != CAT(_STAT(id), _prev)) \
-				CAT(_STAT(id), _prev) = */ _STAT(id) = it; \
-		}
+	#define REGISTER_STAT_2(id, T) 		T _STAT(id); 		/* T CAT(_STAT(id), _prev); */ 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) 		{ 			if (#T == "vector" || #T == "vectori") { 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); 			} 		} 		ACCUMULATE void stats_get() 		{ 			T it = getstat_##T(STAT_##id.m_id); 			/* if (it != CAT(_STAT(id), _prev)) 				CAT(_STAT(id), _prev) = */ _STAT(id) = it; 		}
 	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
 #elif defined(SVQC)
     /** Internal use only */
@@ -73,16 +52,8 @@ int g_magic_stats_hole = 0;
 	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_float(id, fld) addstat(id, AS_FLOAT, fld)
-	#define addstat_vector(id, fld) MACRO_BEGIN \
-		addstat_float(id + 0, fld##_x); \
-		addstat_float(id + 1, fld##_y); \
-		addstat_float(id + 2, fld##_z); \
-	MACRO_END
-	#define addstat_vectori(id, fld) MACRO_BEGIN \
-		addstat_int(id + 0, fld##_x); \
-		addstat_int(id + 1, fld##_y); \
-		addstat_int(id + 2, fld##_z); \
-	MACRO_END
+	#define addstat_vector(id, fld) MACRO_BEGIN 		addstat_float(id + 0, fld##_x); 		addstat_float(id + 1, fld##_y); 		addstat_float(id + 2, fld##_z); 	MACRO_END
+	#define addstat_vectori(id, fld) MACRO_BEGIN 		addstat_int(id + 0, fld##_x); 		addstat_int(id + 1, fld##_y); 		addstat_int(id + 2, fld##_z); 	MACRO_END
 	const int AS_STRING = 1;
 	const int AS_INT = 2;
 	const int AS_FLOAT = 8;
@@ -102,26 +73,10 @@ int g_magic_stats_hole = 0;
 	}
 
 	#define _STAT(id) stat_##id
-	#define REGISTER_STAT_2(id, T) \
-		.T _STAT(id); \
-		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
-		{ \
-			if (#T == "vector" || #T == "vectori") { \
-				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
-				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
-			} \
-		} \
-		ACCUMULATE void stats_add() \
-		{ \
-			.T fld = _STAT(id); \
-			addstat_##T(STAT_##id.m_id, fld); \
-		}
+	#define REGISTER_STAT_2(id, T) 		.T _STAT(id); 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) 		{ 			if (#T == "vector" || #T == "vectori") { 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); 			} 		} 		ACCUMULATE void stats_add() 		{ 			.T fld = _STAT(id); 			addstat_##T(STAT_##id.m_id, fld); 		}
 	void GlobalStats_update(entity this) {}
     /** TODO: do we want the global copy to update? */
-    #define REGISTER_STAT_3(id, T, expr) \
-    	REGISTER_STAT_2(id, T); \
-    	ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
-    	STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
+    #define REGISTER_STAT_3(id, T, expr)     	REGISTER_STAT_2(id, T);     	ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); }     	STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)
     #define REGISTER_STAT_3(id, T, expr)

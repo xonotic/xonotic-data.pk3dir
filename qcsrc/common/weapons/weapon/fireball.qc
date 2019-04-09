@@ -187,19 +187,19 @@ void W_Fireball_Attack1_Frame4(Weapon thiswep, entity actor, .entity weaponentit
 
 void W_Fireball_Attack1_Frame3(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 0, '+1.25 +3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 0, '1.25 3.75 0');
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame4);
 }
 
 void W_Fireball_Attack1_Frame2(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 0, '-1.25 +3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 0, '-1.25 3.75 0');
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame3);
 }
 
 void W_Fireball_Attack1_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 1, '+1.25 -3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 1, '1.25 -3.75 0');
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame2);
 }
 
@@ -261,14 +261,14 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 			f_diff = '-1.25 -3.75 0';
 			break;
 		case 1:
-			f_diff = '+1.25 -3.75 0';
+			f_diff = '1.25 -3.75 0';
 			break;
 		case 2:
-			f_diff = '-1.25 +3.75 0';
+			f_diff = '-1.25 3.75 0';
 			break;
 		case 3:
 		default:
-			f_diff = '+1.25 +3.75 0';
+			f_diff = '1.25 3.75 0';
 			break;
 	}
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage), WEP_FIREBALL.m_id | HITTYPE_SECONDARY);

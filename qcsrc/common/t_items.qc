@@ -225,23 +225,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             this.item_simple = true;
 
-			#define extensions(x) \
-				x(md3) \
-				x(dpm) \
-				x(iqm) \
-				x(mdl) \
-				/**/
-			#define tryext(ext) { \
-				string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); \
-				string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); \
-				if (cached == "") { \
-					HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); \
-				} \
-				if (cached != "0") { \
-					strcpy(this.mdl, s); \
-					break; \
-				} \
-			}
+			#define extensions(x) 				x(md3) 				x(dpm) 				x(iqm) 				x(mdl) 				/**/
+			#define tryext(ext) { 				string s = strcat(_fn2, autocvar_cl_simpleitems_postfix, "." #ext); 				string cached = HM_gets(ENT_CLIENT_ITEM_simple, s); 				if (cached == "") { 					HM_sets(ENT_CLIENT_ITEM_simple, s, cached = fexists(s) ? "1" : "0"); 				} 				if (cached != "0") { 					strcpy(this.mdl, s); 					break; 				} 			}
 			do {
 				extensions(tryext);
 				this.item_simple = false;

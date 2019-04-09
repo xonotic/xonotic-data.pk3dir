@@ -126,8 +126,7 @@ ENDCLASS(Weapon)
 #ifdef SVQC
 
 void weapon_defaultspawnfunc(entity this, Weapon e);
-#define SPAWNFUNC_WEAPON(name, weapon) \
-    spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
+#define SPAWNFUNC_WEAPON(name, weapon)     spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
 
 #else
 

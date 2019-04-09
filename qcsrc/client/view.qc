@@ -72,50 +72,23 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 
 #define avg_factor(avg_time) (1 - exp(-frametime / max(0.001, avg_time)))
 
-#define lowpass(value, frac, ref_store, ret) \
-	ret = ref_store = ref_store * (1 - frac) + (value) * frac;
+#define lowpass(value, frac, ref_store, ret) 	ret = ref_store = ref_store * (1 - frac) + (value) * frac;
 
-#define lowpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
-	float __ignore; lowpass(value, frac, ref_store, __ignore); \
-	ret = ref_store = bound((value) - (limit), ref_store, (value) + (limit)); \
-MACRO_END
+#define lowpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN 	float __ignore; lowpass(value, frac, ref_store, __ignore); 	ret = ref_store = bound((value) - (limit), ref_store, (value) + (limit)); MACRO_END
 
-#define highpass(value, frac, ref_store, ret) MACRO_BEGIN \
-	float __f = 0; lowpass(value, frac, ref_store, __f); \
-	ret = (value) - __f; \
-MACRO_END
+#define highpass(value, frac, ref_store, ret) MACRO_BEGIN 	float __f = 0; lowpass(value, frac, ref_store, __f); 	ret = (value) - __f; MACRO_END
 
-#define highpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
-	float __f = 0; lowpass_limited(value, frac, limit, ref_store, __f); \
-	ret = (value) - __f; \
-MACRO_END
+#define highpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN 	float __f = 0; lowpass_limited(value, frac, limit, ref_store, __f); 	ret = (value) - __f; MACRO_END
 
-#define lowpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
-	lowpass(value.x, frac, ref_store.x, ref_out.x); \
-	lowpass(value.y, frac, ref_store.y, ref_out.y); \
-MACRO_END
+#define lowpass2(value, frac, ref_store, ref_out) MACRO_BEGIN 	lowpass(value.x, frac, ref_store.x, ref_out.x); 	lowpass(value.y, frac, ref_store.y, ref_out.y); MACRO_END
 
-#define highpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
-	highpass(value.x, frac, ref_store.x, ref_out.x); \
-	highpass(value.y, frac, ref_store.y, ref_out.y); \
-MACRO_END
+#define highpass2(value, frac, ref_store, ref_out) MACRO_BEGIN 	highpass(value.x, frac, ref_store.x, ref_out.x); 	highpass(value.y, frac, ref_store.y, ref_out.y); MACRO_END
 
-#define highpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-	highpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	highpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-MACRO_END
+#define highpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN 	highpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); 	highpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); MACRO_END
 
-#define lowpass3(value, frac, ref_store, ref_out) MACRO_BEGIN \
-	lowpass(value.x, frac, ref_store.x, ref_out.x); \
-	lowpass(value.y, frac, ref_store.y, ref_out.y); \
-	lowpass(value.z, frac, ref_store.z, ref_out.z); \
-MACRO_END
+#define lowpass3(value, frac, ref_store, ref_out) MACRO_BEGIN 	lowpass(value.x, frac, ref_store.x, ref_out.x); 	lowpass(value.y, frac, ref_store.y, ref_out.y); 	lowpass(value.z, frac, ref_store.z, ref_out.z); MACRO_END
 
-#define highpass3(value, frac, ref_store, ref_out) MACRO_BEGIN \
-	highpass(value.x, frac, ref_store.x, ref_out.x); \
-	highpass(value.y, frac, ref_store.y, ref_out.y); \
-	highpass(value.z, frac, ref_store.z, ref_out.z); \
-MACRO_END
+#define highpass3(value, frac, ref_store, ref_out) MACRO_BEGIN 	highpass(value.x, frac, ref_store.x, ref_out.x); 	highpass(value.y, frac, ref_store.y, ref_out.y); 	highpass(value.z, frac, ref_store.z, ref_out.z); MACRO_END
 
 void calc_followmodel_ofs(entity view)
 {
@@ -1347,26 +1320,11 @@ void HUD_Crosshair(entity this)
 					DrawCircleClippedPic(wcross_origin, wcross_size.x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
-#define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
-			MACRO_BEGIN \
-				vector scaled_sz = sz * wcross_size; \
-				if(wcross_blur > 0) \
-				{ \
-					for(i = -2; i <= 2; ++i) \
-					for(j = -2; j <= 2; ++j) \
-					M(i,j,sz,scaled_sz,wcross_name,wcross_alpha*0.04); \
-				} \
-				else \
-				{ \
-					M(0,0,sz,scaled_sz,wcross_name,wcross_alpha); \
-				} \
-			MACRO_END
+#define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) 			MACRO_BEGIN 				vector scaled_sz = sz * wcross_size; 				if(wcross_blur > 0) 				{ 					for(i = -2; i <= 2; ++i) 					for(j = -2; j <= 2; ++j) 					M(i,j,sz,scaled_sz,wcross_name,wcross_alpha*0.04); 				} 				else 				{ 					M(0,0,sz,scaled_sz,wcross_name,wcross_alpha); 				} 			MACRO_END
 
-#define CROSSHAIR_DRAW_SINGLE(i,j,sz,scaled_sz,wcross_name,wcross_alpha) \
-			drawpic(wcross_origin - ('0.5 0 0' * (scaled_sz.x + i * wcross_blur) + '0 0.5 0' * (scaled_sz.y + j * wcross_blur)), wcross_name, scaled_sz, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+#define CROSSHAIR_DRAW_SINGLE(i,j,sz,scaled_sz,wcross_name,wcross_alpha) 			drawpic(wcross_origin - ('0.5 0 0' * (scaled_sz.x + i * wcross_blur) + '0 0.5 0' * (scaled_sz.y + j * wcross_blur)), wcross_name, scaled_sz, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
-#define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
-			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
+#define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) 			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
 
 			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
 			{
@@ -1503,7 +1461,7 @@ void HUD_Draw(entity this)
 	}
 	else if(STAT(FROZEN))
 	{
-		vector col = '0.25 0.90 1';
+		vector col = '0.25 0.9 1';
 		if(STAT(REVIVE_PROGRESS))
 			col += vec3(STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS));
 		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
@@ -1513,18 +1471,18 @@ void HUD_Draw(entity this)
 	if(!intermission)
 	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
-		vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
+		vector col = '0.25 0.9 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
 		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(NADE_TIMER), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 	else if(STAT(CAPTURE_PROGRESS))
 	{
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(CAPTURE_PROGRESS), '0.25 0.9 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 	else if(STAT(REVIVE_PROGRESS))
 	{
-		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(REVIVE_PROGRESS), '0.25 0.9 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 	HUD_Scale_Disable();

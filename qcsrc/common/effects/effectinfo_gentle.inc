@@ -18,7 +18,7 @@ SUB(damage_hit) {
     MY(tex_min) = 48;
     MY(tex_max) = 55;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '256.0 256.0 256.0';
+    MY(velocityjitter) = '256 256 256';
 }
 SUB(damage_hit) {
     MY(airfriction) = 5;
@@ -37,7 +37,7 @@ SUB(damage_hit) {
     MY(tex_min) = 48;
     MY(tex_max) = 55;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '256.0 256.0 256.0';
+    MY(velocityjitter) = '256 256 256';
 }
 SUB(damage_hit) {
     MY(airfriction) = 5;
@@ -56,7 +56,7 @@ SUB(damage_hit) {
     MY(tex_min) = 48;
     MY(tex_max) = 55;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '256.0 256.0 256.0';
+    MY(velocityjitter) = '256 256 256';
 }
 
 // effect for removing player model
@@ -79,7 +79,7 @@ SUB(damage_dissolve) {
     MY(tex_min) = 48;
     MY(tex_max) = 55;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '512.0 512.0 512.0';
+    MY(velocityjitter) = '512 512 512';
 }
 SUB(damage_dissolve) {
     MY(airfriction) = 3;
@@ -98,7 +98,7 @@ SUB(damage_dissolve) {
     MY(tex_min) = 48;
     MY(tex_max) = 55;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '512.0 512.0 512.0';
+    MY(velocityjitter) = '512 512 512';
 }
 SUB(damage_dissolve) {
     MY(airfriction) = 3;
@@ -117,5 +117,5 @@ SUB(damage_dissolve) {
     MY(tex_min) = 48;
     MY(tex_max) = 55;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '512.0 512.0 512.0';
+    MY(velocityjitter) = '512 512 512';
 }

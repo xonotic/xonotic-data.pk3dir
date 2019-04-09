@@ -1,19 +1,13 @@
 #pragma once
 
-#define particleeffectnum(e) \
-	_particleeffectnum(e.eent_eff_name)
+#define particleeffectnum(e) 	_particleeffectnum(e.eent_eff_name)
 
 #if defined(SVQC)
-	#define pointparticles(effect, org, vel, howmany) \
-		Send_Effect(effect, org, vel, howmany)
-	#define trailparticles(e, effect, org, vel) \
-		((!e) ? Send_Effect(effect, org, vel, 0) \
-		: __trailparticles(e, particleeffectnum(effect), org, vel))
+	#define pointparticles(effect, org, vel, howmany) 		Send_Effect(effect, org, vel, howmany)
+	#define trailparticles(e, effect, org, vel) 		((!e) ? Send_Effect(effect, org, vel, 0) 		: __trailparticles(e, particleeffectnum(effect), org, vel))
 #elif defined(CSQC)
-	#define pointparticles(effect, org, vel, howmany) \
-		__pointparticles(particleeffectnum(effect), org, vel, howmany)
-	#define trailparticles(e, effect, org, vel) \
-		__trailparticles(e, particleeffectnum(effect), org, vel)
+	#define pointparticles(effect, org, vel, howmany) 		__pointparticles(particleeffectnum(effect), org, vel, howmany)
+	#define trailparticles(e, effect, org, vel) 		__trailparticles(e, particleeffectnum(effect), org, vel)
 #endif
 
 .int m_id;

@@ -34,11 +34,11 @@ SUB(TE_WIZSPIKE) {
 	MY(color_max) = "0x63f2EA";
 	MY(count) = 50;
 	MY(liquidfriction) = 2;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 2;
 	MY(size_max) = 2;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 }
 
 // laser impact
@@ -48,10 +48,10 @@ SUB(TE_KNIGHTSPIKE) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '4.0 0.2 0.2';
+	MY(lightcolor) = '4 0.2 0.2';
 	MY(lightradiusfade) = 1000;
 	MY(lightradius) = 200;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 24;
 	MY(size_max) = 24;
 	MY(tex_min) = 47;
@@ -85,7 +85,7 @@ SUB(TE_KNIGHTSPIKE) {
 	MY(size_min) = 4;
 	MY(size_max) = 4;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 
 // machinegun bullet impact
@@ -95,7 +95,7 @@ SUB(TE_SPIKE) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(size_min) = 5;
 	MY(size_max) = 5;
 	MY(tex_min) = 56;
@@ -115,7 +115,7 @@ SUB(TE_SPIKE) {
 	MY(size_max) = 3;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '8.0 8.0 8.0';
+	MY(velocityjitter) = '8 8 8';
 }
 // dust/smoke staying at the impact
 SUB(TE_SPIKE) {
@@ -143,8 +143,8 @@ SUB(TE_SPIKE) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '64 64 64';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // electro combo explosion
@@ -154,10 +154,10 @@ SUB(TE_SPIKEQUAD) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '2.0 2.5 3.0';
+	MY(lightcolor) = '2 2.5 3';
 	MY(lightradiusfade) = 200;
 	MY(lightradius) = 400;
-	MY(originjitter) = '34.0 34.0 34.0';
+	MY(originjitter) = '34 34 34';
 	MY(size_min) = 64;
 	MY(size_max) = 64;
 	MY(tex_min) = 59;
@@ -192,7 +192,7 @@ SUB(TE_SPIKEQUAD) {
 	MY(size_min) = 32;
 	MY(size_max) = 32;
 	MY(type) = "static";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 
 // quake effect
@@ -202,7 +202,7 @@ SUB(TE_SUPERSPIKE) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 56;
@@ -222,7 +222,7 @@ SUB(TE_SUPERSPIKE) {
 	MY(size_max) = 3;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '8.0 8.0 8.0';
+	MY(velocityjitter) = '8 8 8';
 }
 // dust/smoke staying at the impact
 SUB(TE_SUPERSPIKE) {
@@ -250,8 +250,8 @@ SUB(TE_SUPERSPIKE) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '64 64 64';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // quake effect
@@ -264,7 +264,7 @@ SUB(TE_SUPERSPIKEQUAD) {
 	MY(lightcolor) = '0.2 0.2 1.5';
 	MY(lightradiusfade) = 500;
 	MY(lightradius) = 100;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 56;
@@ -284,7 +284,7 @@ SUB(TE_SUPERSPIKEQUAD) {
 	MY(size_max) = 3;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '8.0 8.0 8.0';
+	MY(velocityjitter) = '8 8 8';
 }
 // dust/smoke staying at the impact
 SUB(TE_SUPERSPIKEQUAD) {
@@ -312,8 +312,8 @@ SUB(TE_SUPERSPIKEQUAD) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '64 64 64';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // shotgun pellet impact
@@ -323,7 +323,7 @@ SUB(TE_GUNSHOT) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 56;
@@ -343,7 +343,7 @@ SUB(TE_GUNSHOT) {
 	MY(size_max) = 3;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '8.0 8.0 8.0';
+	MY(velocityjitter) = '8 8 8';
 }
 // dust/smoke staying at the impact
 SUB(TE_GUNSHOT) {
@@ -371,8 +371,8 @@ SUB(TE_GUNSHOT) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '64 64 64';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // crylink impact effect
@@ -382,7 +382,7 @@ SUB(TE_GUNSHOTQUAD) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '12.0 12.0 12.0';
+	MY(originjitter) = '12 12 12';
 	MY(size_min) = 8;
 	MY(size_max) = 8;
 	MY(tex_min) = 47;
@@ -416,8 +416,8 @@ SUB(TE_GUNSHOTQUAD) {
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(type) = "spark";
-	MY(velocityjitter) = '128.0 128.0 128.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '128 128 128';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // mortar/hagar explosion (smaller than rocket)
@@ -427,10 +427,10 @@ SUB(TE_EXPLOSION) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '4.0 2.0 0.5';
+	MY(lightcolor) = '4 2 0.5';
 	MY(lightradiusfade) = 300;
 	MY(lightradius) = 150;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(size_min) = 48;
 	MY(size_max) = 48;
 	MY(tex_min) = 8;
@@ -463,13 +463,13 @@ SUB(TE_EXPLOSION) {
 	MY(count) = 64;
 	MY(liquidfriction) = 4;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 // underwater bubbles
 SUB(TE_EXPLOSION) {
@@ -482,14 +482,14 @@ SUB(TE_EXPLOSION) {
 	MY(count) = 16;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '96.0 96.0 96.0';
+	MY(velocityjitter) = '96 96 96';
 }
 // bouncing sparks
 SUB(TE_EXPLOSION) {
@@ -507,8 +507,8 @@ SUB(TE_EXPLOSION) {
 	MY(size_min) = 2;
 	MY(size_max) = 2;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '256 256 256';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // quake effect
@@ -518,10 +518,10 @@ SUB(TE_EXPLOSIONQUAD) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '4.0 2.0 8.0';
+	MY(lightcolor) = '4 2 8';
 	MY(lightradiusfade) = 700;
 	MY(lightradius) = 350;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(size_min) = 48;
 	MY(size_max) = 48;
 	MY(tex_min) = 8;
@@ -541,7 +541,7 @@ SUB(TE_EXPLOSIONQUAD) {
 	MY(size_max) = 12;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '48.0 48.0 48.0';
+	MY(velocityjitter) = '48 48 48';
 }
 // underwater bubbles
 SUB(TE_EXPLOSIONQUAD) {
@@ -554,14 +554,14 @@ SUB(TE_EXPLOSIONQUAD) {
 	MY(count) = 16;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '96.0 96.0 96.0';
+	MY(velocityjitter) = '96 96 96';
 }
 // sparks which go through walls
 SUB(TE_EXPLOSIONQUAD) {
@@ -577,8 +577,8 @@ SUB(TE_EXPLOSIONQUAD) {
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '256 256 256';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // quake effect
@@ -588,10 +588,10 @@ SUB(TE_TAREXPLOSION) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '1.6 0.8 2.0';
+	MY(lightcolor) = '1.6 0.8 2';
 	MY(lightradiusfade) = 1200;
 	MY(lightradius) = 600;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(size_min) = 48;
 	MY(size_max) = 48;
 	MY(tex_min) = 8;
@@ -611,7 +611,7 @@ SUB(TE_TAREXPLOSION) {
 	MY(size_max) = 12;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '48.0 48.0 48.0';
+	MY(velocityjitter) = '48 48 48';
 }
 // underwater bubbles
 SUB(TE_TAREXPLOSION) {
@@ -624,14 +624,14 @@ SUB(TE_TAREXPLOSION) {
 	MY(count) = 16;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '96.0 96.0 96.0';
+	MY(velocityjitter) = '96 96 96';
 }
 // sparks which go through walls
 SUB(TE_TAREXPLOSION) {
@@ -647,8 +647,8 @@ SUB(TE_TAREXPLOSION) {
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '256 256 256';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // bloody impact effect indicating damage
@@ -670,7 +670,7 @@ SUB(TE_BLOOD) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 1;
 }
 
@@ -690,9 +690,9 @@ SUB(TE_SPARK) {
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 1;
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // vortex impact
@@ -702,10 +702,10 @@ SUB(TE_PLASMABURN) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '1.0 1.0 1.0';
+	MY(lightcolor) = '1 1 1';
 	MY(lightradiusfade) = 400;
 	MY(lightradius) = 200;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 24;
 	MY(size_max) = 24;
 	MY(tex_min) = 47;
@@ -740,13 +740,13 @@ SUB(TE_PLASMABURN) {
 	MY(size_min) = 1;
 	MY(size_max) = 2;
 	MY(type) = "spark";
-	MY(velocityjitter) = '128.0 128.0 128.0';
+	MY(velocityjitter) = '128 128 128';
 }
 
 // quake effect
 DEF(TE_SMALLFLASH);
 SUB(TE_SMALLFLASH) {
-	MY(lightcolor) = '2.0 2.0 2.0';
+	MY(lightcolor) = '2 2 2';
 	MY(lightradiusfade) = 1000;
 	MY(lightradius) = 200;
 }
@@ -767,7 +767,7 @@ SUB(TE_FLAMEJET) {
 	MY(size_min) = 4;
 	MY(size_max) = 4;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '128.0 128.0 128.0';
+	MY(velocityjitter) = '128 128 128';
 	MY(velocitymultiplier) = 1;
 }
 
@@ -781,13 +781,13 @@ SUB(TE_LAVASPLASH) {
 	MY(color_max) = "0xe3974f";
 	MY(count) = 32;
 	MY(gravity) = 0.050000;
-	MY(originjitter) = '128.0 128.0 32.0';
-	MY(originoffset) = '0.0 0.0 32.0';
+	MY(originjitter) = '128 128 32';
+	MY(originoffset) = '0 0 32';
 	MY(size_min) = 12;
 	MY(size_max) = 12;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '128.0 128.0 0.0';
-	MY(velocityoffset) = '0.0 0.0 256.0';
+	MY(velocityjitter) = '128 128 0';
+	MY(velocityoffset) = '0 0 256';
 }
 
 // player teleport effect
@@ -801,12 +801,12 @@ SUB(TE_TELEPORT) {
 	MY(color_max) = "0xFFFFFF";
 	MY(count) = 56;
 	MY(liquidfriction) = 4;
-	MY(originjitter) = '16.0 16.0 28.0';
-	MY(originoffset) = '0.0 0.0 28.0';
+	MY(originjitter) = '16 16 28';
+	MY(originoffset) = '0 0 28';
 	MY(size_min) = 10;
 	MY(size_max) = 10;
 	MY(type) = "static";
-	MY(velocityjitter) = '0.0 0.0 256.0';
+	MY(velocityjitter) = '0 0 256';
 }
 
 // vortex beam
@@ -835,7 +835,7 @@ SUB(TE_TEI_G3) {
 	MY(size_max) = 1;
 	MY(trailspacing) = 4;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '8.0 8.0 8.0';
+	MY(velocityjitter) = '8 8 8';
 }
 
 // smoke effect
@@ -852,7 +852,7 @@ SUB(TE_TEI_SMOKE) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 1;
 }
 
@@ -863,10 +863,10 @@ SUB(TE_TEI_BIGEXPLOSION) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '4.0 2.0 0.5';
+	MY(lightcolor) = '4 2 0.5';
 	MY(lightradiusfade) = 500;
 	MY(lightradius) = 500;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(size_min) = 72;
 	MY(size_max) = 72;
 	MY(tex_min) = 8;
@@ -899,13 +899,13 @@ SUB(TE_TEI_BIGEXPLOSION) {
 	MY(count) = 128;
 	MY(liquidfriction) = 4;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // underwater bubbles
 SUB(TE_TEI_BIGEXPLOSION) {
@@ -918,14 +918,14 @@ SUB(TE_TEI_BIGEXPLOSION) {
 	MY(count) = 32;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '144.0 144.0 144.0';
+	MY(velocityjitter) = '144 144 144';
 }
 // bouncing sparks
 SUB(TE_TEI_BIGEXPLOSION) {
@@ -943,8 +943,8 @@ SUB(TE_TEI_BIGEXPLOSION) {
 	MY(size_min) = 2;
 	MY(size_max) = 2;
 	MY(type) = "spark";
-	MY(velocityjitter) = '384.0 384.0 384.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '384 384 384';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // electro explosion
@@ -954,10 +954,10 @@ SUB(TE_TEI_PLASMAHIT) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '2.4 4.8 8.0';
+	MY(lightcolor) = '2.4 4.8 8';
 	MY(lightradiusfade) = 600;
 	MY(lightradius) = 200;
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(originjitter) = '20 20 20';
 	MY(size_min) = 32;
 	MY(size_max) = 32;
 	MY(tex_min) = 59;
@@ -990,7 +990,7 @@ SUB(TE_TEI_PLASMAHIT) {
 	MY(size_min) = 2;
 	MY(size_max) = 4;
 	MY(type) = "spark";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 
 // bloody impact effect indicating damage
@@ -1018,7 +1018,7 @@ SUB(blood) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "spark";
-	MY(velocityjitter) = '99.0 99.0 55.0';
+	MY(velocityjitter) = '99 99 55';
 }
 //blood mist
 SUB(blood) {
@@ -1029,7 +1029,7 @@ SUB(blood) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x420000";
 	MY(countabsolute) = 1;
-	MY(originjitter) = '11.0 11.0 11.0';
+	MY(originjitter) = '11 11 11';
 	MY(sizeincrease) = 20;
 	MY(size_min) = 25;
 	MY(size_max) = 30;
@@ -1048,14 +1048,14 @@ SUB(teleport) {
 	MY(color_min) = "0x807aff";
 	MY(color_max) = "0x4463d5";
 	MY(count) = 500;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(stretchfactor) = 0.600000;
 	MY(tex_min) = 64;
 	MY(tex_max) = 64;
 	MY(type) = "spark";
-	MY(velocityjitter) = '1000.0 1000.0 1500.0';
+	MY(velocityjitter) = '1000 1000 1500';
 	MY(velocitymultiplier) = 0.500000;
 }
 SUB(teleport) {
@@ -1100,7 +1100,7 @@ SUB(TR_BLOOD) {
 	MY(tex_max) = 32;
 	MY(trailspacing) = 20;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = -0.100000;
 }
 // splash around gib
@@ -1140,7 +1140,7 @@ SUB(TR_SLIGHTBLOOD) {
 	MY(tex_max) = 32;
 	MY(trailspacing) = 64;
 	MY(type) = "blood";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -1156,11 +1156,11 @@ SUB(EF_STARDUST) {
 	MY(count) = 37.500000;
 	MY(gravity) = -0.100000;
 	MY(liquidfriction) = 0.800000;
-	MY(originjitter) = '16.0 16.0 64.0';
+	MY(originjitter) = '16 16 64';
 	MY(size_min) = 1;
 	MY(size_max) = 2;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 0.0';
+	MY(velocityjitter) = '32 32 0';
 }
 
 // flare particle and light
@@ -1189,12 +1189,12 @@ SUB(item_respawn) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 
 DEF(jumppad_activate);
 SUB(jumppad_activate) {
-	MY(lightcolor) = '2.0 2.0 2.0';
+	MY(lightcolor) = '2 2 2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 }
@@ -1209,7 +1209,7 @@ SUB(laser_muzzleflash) {
 	MY(color_min) = "0xcc0000";
 	MY(color_max) = "0xff0000";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '3.0 0.1 0.1';
+	MY(lightcolor) = '3 0.1 0.1';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(sizeincrease) = -100;
@@ -1229,7 +1229,7 @@ SUB(laser_muzzleflash) {
 	MY(color_min) = "0xb44215";
 	MY(color_max) = "0xff0000";
 	MY(count) = 3;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = 4000;
@@ -1241,7 +1241,7 @@ SUB(laser_muzzleflash) {
 	MY(tex_min) = 43;
 	MY(tex_max) = 43;
 	MY(type) = "spark";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.200000;
 }
 // fire
@@ -1253,7 +1253,7 @@ SUB(laser_muzzleflash) {
 	MY(color_min) = "0xff4200";
 	MY(color_max) = "0xff0000";
 	MY(count) = 6;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = -100;
 	MY(size_min) = 7;
 	MY(size_max) = 9;
@@ -1261,7 +1261,7 @@ SUB(laser_muzzleflash) {
 	MY(tex_min) = 8;
 	MY(tex_max) = 15;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 0.200000;
 }
 
@@ -1271,10 +1271,10 @@ SUB(laser_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 0.4 0.4';
+	MY(lightcolor) = '8 0.4 0.4';
 	MY(lightradiusfade) = 500;
 	MY(lightradius) = 200;
-	MY(originjitter) = '14.0 14.0 14.0';
+	MY(originjitter) = '14 14 14';
 	MY(size_min) = 24;
 	MY(size_max) = 24;
 	MY(tex_min) = 47;
@@ -1308,7 +1308,7 @@ SUB(laser_impact) {
 	MY(size_min) = 4;
 	MY(size_max) = 4;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 SUB(laser_impact) {
 	MY(alpha_min) = 128;
@@ -1317,14 +1317,14 @@ SUB(laser_impact) {
 	MY(color_min) = "0x800000";
 	MY(color_max) = "0xFF8020";
 	MY(count) = 4;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = 6;
 	MY(size_min) = 12;
 	MY(size_max) = 12;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 	MY(velocitymultiplier) = 0.010000;
 }
 
@@ -1336,7 +1336,7 @@ SUB(shotgun_muzzleflash) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 1.500000;
-	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightcolor) = '2 1.5 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -1345,7 +1345,7 @@ SUB(shotgun_muzzleflash) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.050000;
 }
 SUB(shotgun_muzzleflash) {
@@ -1355,14 +1355,14 @@ SUB(shotgun_muzzleflash) {
 	MY(color_min) = "0xffdb96";
 	MY(color_max) = "0xff5400";
 	MY(count) = 16;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 10;
 	MY(size_max) = 20;
 	MY(stretchfactor) = 2.500000;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -1373,7 +1373,7 @@ SUB(shotgun_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(size_min) = 5;
 	MY(size_max) = 8;
 	MY(tex_min) = 56;
@@ -1398,7 +1398,7 @@ SUB(shotgun_impact) {
 	MY(size_max) = 20;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.200000;
 }
 // dust/smoke staying at the impact
@@ -1421,7 +1421,7 @@ SUB(shotgun_impact) {
 	MY(tex_min) = 36;
 	MY(tex_max) = 36;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 11.0';
+	MY(velocityjitter) = '11 11 11';
 	MY(velocitymultiplier) = 0.030000;
 }
 // sparks
@@ -1435,13 +1435,13 @@ SUB(shotgun_impact) {
 	MY(count) = 0.500000;
 	MY(gravity) = 1;
 	MY(notunderwater) = true;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 0.600000;
 	MY(size_max) = 0.600000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityjitter) = '200 200 200';
 	MY(velocitymultiplier) = 0.200000;
 }
 
@@ -1454,7 +1454,7 @@ SUB(uzi_muzzleflash) {
 	MY(color_max) = "0x404040";
 	MY(count) = 1;
 	MY(gravity) = -0.100000;
-	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightcolor) = '2 1.5 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -1462,7 +1462,7 @@ SUB(uzi_muzzleflash) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "static";
-	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocityjitter) = '1 1 1';
 	MY(velocitymultiplier) = 0.030000;
 }
 SUB(uzi_muzzleflash) {
@@ -1472,14 +1472,14 @@ SUB(uzi_muzzleflash) {
 	MY(color_min) = "0xff9c00";
 	MY(color_max) = "0xffd200";
 	MY(count) = 3;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 0.300000;
 	MY(size_max) = 0.400000;
 	MY(stretchfactor) = 0.150000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '555.0 555.0 555.0';
+	MY(velocityjitter) = '555 555 555';
 	MY(velocitymultiplier) = 3;
 }
 
@@ -1489,10 +1489,10 @@ SUB(machinegun_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '6.0 3.6 0.6';
+	MY(lightcolor) = '6 3.6 0.6';
 	MY(lightradiusfade) = 800;
 	MY(lightradius) = 80;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(size_min) = 5;
 	MY(size_max) = 5;
 	MY(tex_min) = 56;
@@ -1517,7 +1517,7 @@ SUB(machinegun_impact) {
 	MY(size_max) = 20;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.100000;
 }
 // dust/smoke staying at the impact
@@ -1540,7 +1540,7 @@ SUB(machinegun_impact) {
 	MY(tex_min) = 36;
 	MY(tex_max) = 36;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 11.0';
+	MY(velocityjitter) = '11 11 11';
 	MY(velocitymultiplier) = 0.030000;
 }
 // debris
@@ -1563,7 +1563,7 @@ SUB(machinegun_impact) {
 	MY(tex_min) = 66;
 	MY(tex_max) = 68;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocityjitter) = '350 350 350';
 	MY(velocitymultiplier) = 0.200000;
 }
 // sparks
@@ -1578,13 +1578,13 @@ SUB(machinegun_impact) {
 	MY(count) = 1;
 	MY(gravity) = 1;
 	MY(notunderwater) = true;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 0.300000;
 	MY(size_max) = 0.300000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocityjitter) = '300 300 300';
 	MY(velocitymultiplier) = 0.200000;
 }
 
@@ -1597,7 +1597,7 @@ SUB(grenadelauncher_muzzleflash) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 1.500000;
-	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightcolor) = '2 1.5 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -1605,7 +1605,7 @@ SUB(grenadelauncher_muzzleflash) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '20.0 20.0 20.0';
+	MY(velocityjitter) = '20 20 20';
 	MY(velocitymultiplier) = 0.030000;
 }
 SUB(grenadelauncher_muzzleflash) {
@@ -1615,14 +1615,14 @@ SUB(grenadelauncher_muzzleflash) {
 	MY(color_min) = "0xffdb96";
 	MY(color_max) = "0xff5400";
 	MY(count) = 16;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 10;
 	MY(size_max) = 20;
 	MY(stretchfactor) = 2.500000;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -1636,14 +1636,14 @@ SUB(TR_GRENADE) {
 	MY(bounce) = 1;
 	MY(color_min) = "0x101010";
 	MY(color_max) = "0x000000";
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 3;
 	MY(size_max) = 2;
 	MY(tex_max) = 8;
 	MY(trailspacing) = 4;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocityjitter) = '1 1 1';
 	MY(velocitymultiplier) = -0.020000;
 }
 // fire
@@ -1662,7 +1662,7 @@ SUB(TR_GRENADE) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = -1;
 }
 // bubbles
@@ -1682,7 +1682,7 @@ SUB(TR_GRENADE) {
 	MY(trailspacing) = 16;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }
 
 // hookbomb trail
@@ -1697,14 +1697,14 @@ SUB(TR_KNIGHTSPIKE) {
 	MY(color_max) = "0x000000";
 	MY(gravity) = -0.110000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = 11;
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_max) = 8;
 	MY(trailspacing) = 6;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocityjitter) = '3 3 3';
 	MY(velocitymultiplier) = -0.020000;
 }
 // marker
@@ -1739,7 +1739,7 @@ SUB(TR_KNIGHTSPIKE) {
 	MY(trailspacing) = 32;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }
 
 DEF(grenade_explode);
@@ -1748,10 +1748,10 @@ SUB(grenade_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightcolor) = '8 4 1';
 	MY(lightradiusfade) = 400;
 	MY(lightradius) = 250;
-	MY(originjitter) = '26.0 26.0 26.0';
+	MY(originjitter) = '26 26 26';
 	MY(size_min) = 48;
 	MY(size_max) = 48;
 	MY(tex_min) = 8;
@@ -1770,14 +1770,14 @@ SUB(grenade_explode) {
 	MY(count) = 40;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 20;
 	MY(size_min) = 16;
 	MY(size_max) = 26;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 // fire effect which make bright dot inside
 SUB(grenade_explode) {
@@ -1791,14 +1791,14 @@ SUB(grenade_explode) {
 	MY(count) = 15;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 40;
 	MY(size_min) = 6;
 	MY(size_max) = 16;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 // smoke
 SUB(grenade_explode) {
@@ -1816,7 +1816,7 @@ SUB(grenade_explode) {
 	MY(size_max) = 40;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 // underwater bubbles
 SUB(grenade_explode) {
@@ -1829,14 +1829,14 @@ SUB(grenade_explode) {
 	MY(count) = 32;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 6;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '196.0 196.0 196.0';
+	MY(velocityjitter) = '196 196 196';
 }
 // underwatershockwave
 SUB(grenade_explode) {
@@ -1866,14 +1866,14 @@ SUB(grenade_explode) {
 	MY(gravity) = 1;
 	MY(liquidfriction) = 0.800000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 1;
 	MY(size_max) = 0.100000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '424.0 424.0 624.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '424 424 624';
+	MY(velocityoffset) = '0 0 80';
 }
 // debris
 SUB(grenade_explode) {
@@ -1896,7 +1896,7 @@ SUB(grenade_explode) {
 	MY(tex_min) = 66;
 	MY(tex_max) = 68;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '324.0 324.0 524.0';
+	MY(velocityjitter) = '324 324 524';
 }
 
 DEF(electro_muzzleflash);
@@ -1907,7 +1907,7 @@ SUB(electro_muzzleflash) {
 	MY(color_min) = "0x283880";
 	MY(color_max) = "0x283880";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightcolor) = '1.5 3 6';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -1917,7 +1917,7 @@ SUB(electro_muzzleflash) {
 	MY(tex_min) = 65;
 	MY(tex_max) = 65;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(electro_muzzleflash) {
@@ -1928,14 +1928,14 @@ SUB(electro_muzzleflash) {
 	MY(color_min) = "0xD9FDFF";
 	MY(color_max) = "0xD9FDFF";
 	MY(count) = 7;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 5;
 	MY(size_max) = 15;
 	MY(stretchfactor) = 1.500000;
 	MY(tex_min) = 8;
 	MY(tex_max) = 15;
 	MY(type) = "spark";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.500000;
 }
 SUB(electro_muzzleflash) {
@@ -1947,14 +1947,14 @@ SUB(electro_muzzleflash) {
 	MY(color_max) = "0xD9FDFF";
 	MY(count) = 5;
 	MY(gravity) = 1.300000;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 7;
 	MY(size_max) = 6;
 	MY(stretchfactor) = 0.100000;
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocityjitter) = '350 350 350';
 	MY(velocitymultiplier) = 2.500000;
 }
 
@@ -1967,7 +1967,7 @@ SUB(TR_NEXUIZPLASMA) {
 	MY(alpha_fade) = 968;
 	MY(color_min) = "0x283880";
 	MY(color_max) = "0x283880";
-	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightcolor) = '1.5 3 6';
 	MY(lightradius) = 90;
 	MY(size_min) = 3;
 	MY(size_max) = 3;
@@ -1987,7 +1987,7 @@ SUB(TR_NEXUIZPLASMA) {
 	MY(color_min) = "0x629dff";
 	MY(color_max) = "0x0018ff";
 	MY(count) = 1.500000;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = -20;
 	MY(size_min) = 2;
 	MY(size_max) = 4;
@@ -1995,8 +1995,8 @@ SUB(TR_NEXUIZPLASMA) {
 	MY(tex_max) = 42;
 	MY(trailspacing) = 12;
 	MY(type) = "snow";
-	MY(velocityjitter) = '50.0 50.0 50.0';
-	MY(velocityoffset) = '0.0 0.0 15.0';
+	MY(velocityjitter) = '50 50 50';
+	MY(velocityoffset) = '0 0 15';
 }
 
 DEF(electro_impact);
@@ -2005,10 +2005,10 @@ SUB(electro_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightcolor) = '3.1 4.4 10';
 	MY(lightradiusfade) = 250;
 	MY(lightradius) = 250;
-	MY(originjitter) = '17.0 17.0 17.0';
+	MY(originjitter) = '17 17 17';
 	MY(size_min) = 32;
 	MY(size_max) = 32;
 	MY(tex_min) = 59;
@@ -2056,7 +2056,7 @@ SUB(electro_impact) {
 	MY(color_max) = "0x0018ff";
 	MY(count) = 30;
 	MY(gravity) = -0.300000;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -9999;
@@ -2067,7 +2067,7 @@ SUB(electro_impact) {
 	MY(tex_min) = 42;
 	MY(tex_max) = 42;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // inner cloud of smoke
 SUB(electro_impact) {
@@ -2078,13 +2078,13 @@ SUB(electro_impact) {
 	MY(color_min) = "0x629dff";
 	MY(color_max) = "0x0018ff";
 	MY(count) = 30;
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(originjitter) = '20 20 20';
 	MY(sizeincrease) = 50;
 	MY(size_min) = 20;
 	MY(size_max) = 24;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '320.0 320.0 320.0';
+	MY(velocityjitter) = '320 320 320';
 }
 
 DEF(electro_ballexplode);
@@ -2093,10 +2093,10 @@ SUB(electro_ballexplode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightcolor) = '3.1 4.4 10';
 	MY(lightradiusfade) = 250;
 	MY(lightradius) = 250;
-	MY(originjitter) = '17.0 17.0 17.0';
+	MY(originjitter) = '17 17 17';
 	MY(size_min) = 32;
 	MY(size_max) = 32;
 	MY(tex_min) = 59;
@@ -2126,14 +2126,14 @@ SUB(electro_ballexplode) {
 	MY(color_min) = "0xFDFFD9";
 	MY(color_max) = "0xFDFFD9";
 	MY(count) = 64;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 2;
 	MY(stretchfactor) = 0.400000;
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // inner cloud of smoke
 SUB(electro_ballexplode) {
@@ -2143,12 +2143,12 @@ SUB(electro_ballexplode) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 8;
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(originjitter) = '20 20 20';
 	MY(size_min) = 24;
 	MY(size_max) = 24;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 }
 
 DEF(electro_combo);
@@ -2157,10 +2157,10 @@ SUB(electro_combo) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '4.0 5.0 6.0';
+	MY(lightcolor) = '4 5 6';
 	MY(lightradiusfade) = 300;
 	MY(lightradius) = 400;
-	MY(originjitter) = '17.0 17.0 17.0';
+	MY(originjitter) = '17 17 17';
 	MY(size_min) = 64;
 	MY(size_max) = 64;
 	MY(tex_min) = 59;
@@ -2197,7 +2197,7 @@ SUB(electro_combo) {
 	MY(size_max) = 32;
 	MY(tex_max) = 7;
 	MY(type) = "static";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 SUB(electro_combo) {
 	MY(alpha_min) = 444;
@@ -2208,14 +2208,14 @@ SUB(electro_combo) {
 	MY(color_max) = "0x0054ff";
 	MY(count) = 32;
 	MY(gravity) = 0.300000;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 2;
 	MY(size_max) = 4;
 	MY(stretchfactor) = 2;
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '312.0 312.0 312.0';
+	MY(velocityjitter) = '312 312 312';
 	MY(velocitymultiplier) = 3;
 }
 // inner cloud of smoke
@@ -2226,12 +2226,12 @@ SUB(electro_combo) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 0.125000;
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(originjitter) = '20 20 20';
 	MY(size_min) = 24;
 	MY(size_max) = 24;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 }
 // shockwave
 SUB(electro_combo) {
@@ -2258,7 +2258,7 @@ SUB(crylink_muzzleflash) {
 	MY(color_min) = "0xdd9cff";
 	MY(color_max) = "0xff0090";
 	MY(count) = 0.500000;
-	MY(lightcolor) = '1.6 0.2 2.0';
+	MY(lightcolor) = '1.6 0.2 2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(size_min) = 15;
@@ -2275,14 +2275,14 @@ SUB(crylink_muzzleflash) {
 	MY(color_min) = "0xA080C0";
 	MY(color_max) = "0xA080C0";
 	MY(count) = 5;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 5;
 	MY(size_max) = 10;
 	MY(stretchfactor) = 1.500000;
 	MY(tex_min) = 35;
 	MY(tex_max) = 36;
 	MY(type) = "spark";
-	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityjitter) = '200 200 200';
 	MY(velocitymultiplier) = 0.300000;
 }
 
@@ -2292,7 +2292,7 @@ SUB(crylink_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '12.0 12.0 12.0';
+	MY(originjitter) = '12 12 12';
 	MY(size_min) = 24;
 	MY(size_max) = 24;
 	MY(tex_min) = 47;
@@ -2327,7 +2327,7 @@ SUB(crylink_impact) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // purple splash
 SUB(crylink_impact) {
@@ -2340,7 +2340,7 @@ SUB(crylink_impact) {
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 }
 // purple splash
 SUB(crylink_impact) {
@@ -2353,7 +2353,7 @@ SUB(crylink_impact) {
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(type) = "static";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 
 DEF(nex_muzzleflash);
@@ -2365,10 +2365,10 @@ SUB(nex_muzzleflash) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x0072ff";
 	MY(count) = 12;
-	MY(lightcolor) = '2.0 2.5 3.0';
+	MY(lightcolor) = '2 2.5 3';
 	MY(lightradiusfade) = 200;
 	MY(lightradius) = 200;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(sizeincrease) = -100;
 	MY(size_min) = 16;
 	MY(size_max) = 16;
@@ -2376,7 +2376,7 @@ SUB(nex_muzzleflash) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '180.0 180.0 180.0';
+	MY(velocityjitter) = '180 180 180';
 	MY(velocitymultiplier) = 1.400000;
 }
 SUB(nex_muzzleflash) {
@@ -2386,13 +2386,13 @@ SUB(nex_muzzleflash) {
 	MY(color_min) = "0xD9FDFF";
 	MY(color_max) = "0xD9FDFF";
 	MY(count) = 50;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '600.0 600.0 600.0';
+	MY(velocityjitter) = '600 600 600';
 	MY(velocitymultiplier) = 1.500000;
 }
 
@@ -2427,7 +2427,7 @@ SUB(nex_beam) {
 	MY(tex_max) = 8;
 	MY(trailspacing) = 12;
 	MY(type) = "static";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 }
 // bright core
 SUB(nex_beam) {
@@ -2464,10 +2464,10 @@ SUB(nex_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '4.0 6.0 8.0';
+	MY(lightcolor) = '4 6 8';
 	MY(lightradiusfade) = 250;
 	MY(lightradius) = 200;
-	MY(originjitter) = '14.0 14.0 14.0';
+	MY(originjitter) = '14 14 14';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(size_min) = 24;
@@ -2554,7 +2554,7 @@ SUB(nex_impact) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '600.0 600.0 600.0';
+	MY(velocityjitter) = '600 600 600';
 	MY(velocitymultiplier) = 0.500000;
 }
 // small sparks that live longer
@@ -2574,7 +2574,7 @@ SUB(nex_impact) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '300.0 300.0 600.0';
+	MY(velocityjitter) = '300 300 600';
 	MY(velocitymultiplier) = 2.500000;
 }
 
@@ -2586,7 +2586,7 @@ SUB(hagar_muzzleflash) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 2;
-	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightcolor) = '2 1.5 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -2594,7 +2594,7 @@ SUB(hagar_muzzleflash) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(hagar_muzzleflash) {
@@ -2604,7 +2604,7 @@ SUB(hagar_muzzleflash) {
 	MY(color_min) = "0xff8400";
 	MY(color_max) = "0xff4200";
 	MY(count) = 15;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -400;
@@ -2615,7 +2615,7 @@ SUB(hagar_muzzleflash) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityjitter) = '200 200 200';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -2627,7 +2627,7 @@ SUB(hagar_bounce) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 2;
-	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightcolor) = '2 1.5 0.2';
 	MY(lightradiusfade) = 300;
 	MY(lightradius) = 60;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -2635,7 +2635,7 @@ SUB(hagar_bounce) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(hagar_bounce) {
@@ -2647,13 +2647,13 @@ SUB(hagar_bounce) {
 	MY(color_max) = "0xFFFDD9";
 	MY(count) = 15;
 	MY(gravity) = 1;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '600.0 600.0 600.0';
+	MY(velocityjitter) = '600 600 600';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -2663,10 +2663,10 @@ SUB(hagar_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightcolor) = '8 4 1';
 	MY(lightradiusfade) = 400;
 	MY(lightradius) = 120;
-	MY(originjitter) = '14.0 14.0 14.0';
+	MY(originjitter) = '14 14 14';
 	MY(size_min) = 28;
 	MY(size_max) = 38;
 	MY(tex_min) = 8;
@@ -2685,14 +2685,14 @@ SUB(hagar_explode) {
 	MY(count) = 3.500000;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 5;
 	MY(size_min) = 16;
 	MY(size_max) = 26;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '156.0 156.0 156.0';
+	MY(velocityjitter) = '156 156 156';
 }
 // fire effect which expands then slows
 SUB(hagar_explode) {
@@ -2706,14 +2706,14 @@ SUB(hagar_explode) {
 	MY(count) = 12;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 15;
 	MY(size_min) = 20;
 	MY(size_max) = 26;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '286.0 286.0 286.0';
+	MY(velocityjitter) = '286 286 286';
 }
 // smoke
 SUB(hagar_explode) {
@@ -2731,7 +2731,7 @@ SUB(hagar_explode) {
 	MY(size_max) = 40;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '244.0 244.0 244.0';
+	MY(velocityjitter) = '244 244 244';
 }
 // underwater bubbles
 SUB(hagar_explode) {
@@ -2744,14 +2744,14 @@ SUB(hagar_explode) {
 	MY(count) = 16;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '96.0 96.0 96.0';
+	MY(velocityjitter) = '96 96 96';
 }
 // bouncing sparks
 SUB(hagar_explode) {
@@ -2766,14 +2766,14 @@ SUB(hagar_explode) {
 	MY(gravity) = 1;
 	MY(liquidfriction) = 0.800000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 1;
 	MY(size_max) = 0.100000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '224.0 224.0 224.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '224 224 224';
+	MY(velocityoffset) = '0 0 80';
 }
 
 DEF(rocketlauncher_muzzleflash);
@@ -2791,7 +2791,7 @@ SUB(rocketlauncher_muzzleflash) {
 	MY(size_max) = 1;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '40.0 40.0 40.0';
+	MY(velocityjitter) = '40 40 40';
 	MY(velocitymultiplier) = -0.130000;
 }
 SUB(rocketlauncher_muzzleflash) {
@@ -2802,7 +2802,7 @@ SUB(rocketlauncher_muzzleflash) {
 	MY(color_min) = "0xFFFDD9";
 	MY(color_max) = "0xFFFDD9";
 	MY(count) = 6;
-	MY(originjitter) = '3.0 3.0 3.0';
+	MY(originjitter) = '3 3 3';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
@@ -2813,7 +2813,7 @@ SUB(rocketlauncher_muzzleflash) {
 	MY(tex_min) = 35;
 	MY(tex_max) = 36;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 0.300000;
 }
 
@@ -2827,10 +2827,10 @@ SUB(TR_ROCKET) {
 	MY(bounce) = 1;
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x666666";
-	MY(lightcolor) = '6.0 3.0 1.0';
+	MY(lightcolor) = '6 3 1';
 	MY(lightradius) = 150;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
@@ -2841,7 +2841,7 @@ SUB(TR_ROCKET) {
 	MY(tex_max) = 8;
 	MY(trailspacing) = 10;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocityjitter) = '3 3 3';
 	MY(velocitymultiplier) = -0.020000;
 }
 // fire
@@ -2859,7 +2859,7 @@ SUB(TR_ROCKET) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = -1.500000;
 }
 // bubbles
@@ -2877,7 +2877,7 @@ SUB(TR_ROCKET) {
 	MY(trailspacing) = 16;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 	MY(velocitymultiplier) = -0.310000;
 }
 // sparks
@@ -2890,7 +2890,7 @@ SUB(TR_ROCKET) {
 	MY(color_min) = "0xFFFDD9";
 	MY(color_max) = "0xFFFDD9";
 	MY(notunderwater) = true;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 0.500000;
 	MY(size_max) = 0.500000;
 	MY(stretchfactor) = 0.300000;
@@ -2898,7 +2898,7 @@ SUB(TR_ROCKET) {
 	MY(tex_max) = 40;
 	MY(trailspacing) = 20;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = -0.310000;
 }
 
@@ -2908,10 +2908,10 @@ SUB(rocket_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightcolor) = '8 4 1';
 	MY(lightradiusfade) = 750;
 	MY(lightradius) = 400;
-	MY(originjitter) = '23.0 23.0 23.0';
+	MY(originjitter) = '23 23 23';
 	MY(size_min) = 72;
 	MY(size_max) = 72;
 	MY(tex_min) = 8;
@@ -2930,14 +2930,14 @@ SUB(rocket_explode) {
 	MY(count) = 32;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 45;
 	MY(size_min) = 33;
 	MY(size_max) = 44;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // fire effect 2
 SUB(rocket_explode) {
@@ -2951,14 +2951,14 @@ SUB(rocket_explode) {
 	MY(count) = 14;
 	MY(liquidfriction) = 19;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 55;
 	MY(size_min) = 33;
 	MY(size_max) = 44;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '912.0 912.0 912.0';
+	MY(velocityjitter) = '912 912 912';
 }
 // smoke
 SUB(rocket_explode) {
@@ -2976,7 +2976,7 @@ SUB(rocket_explode) {
 	MY(size_max) = 40;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '444.0 444.0 444.0';
+	MY(velocityjitter) = '444 444 444';
 }
 // underwater bubbles
 SUB(rocket_explode) {
@@ -2989,14 +2989,14 @@ SUB(rocket_explode) {
 	MY(count) = 32;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '144.0 144.0 144.0';
+	MY(velocityjitter) = '144 144 144';
 }
 // underwatershockwave
 SUB(rocket_explode) {
@@ -3026,14 +3026,14 @@ SUB(rocket_explode) {
 	MY(gravity) = 1;
 	MY(liquidfriction) = 0.800000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 1;
 	MY(size_max) = 0.100000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '424.0 424.0 624.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '424 424 624';
+	MY(velocityoffset) = '0 0 80';
 }
 // debris
 SUB(rocket_explode) {
@@ -3056,19 +3056,19 @@ SUB(rocket_explode) {
 	MY(tex_min) = 66;
 	MY(tex_max) = 68;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '324.0 324.0 524.0';
+	MY(velocityjitter) = '324 324 524';
 }
 
 DEF(grapple_muzzleflash);
 SUB(grapple_muzzleflash) {
-	MY(lightcolor) = '1.0 0.0 0.0';
+	MY(lightcolor) = '1 0 0';
 	MY(lightradiusfade) = 800;
 	MY(lightradius) = 160;
 }
 
 DEF(grapple_impact);
 SUB(grapple_impact) {
-	MY(lightcolor) = '1.0 0.0 0.0';
+	MY(lightcolor) = '1 0 0';
 	MY(lightradiusfade) = 800;
 	MY(lightradius) = 160;
 }
@@ -3102,7 +3102,7 @@ SUB(nex242_misc_laser_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3135,7 +3135,7 @@ SUB(nex242_misc_laser_beam_fast_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3168,7 +3168,7 @@ SUB(nex242_misc_laser_green_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3201,7 +3201,7 @@ SUB(nex242_misc_laser_blue_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3234,7 +3234,7 @@ SUB(nex242_misc_laser_yellow_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3267,7 +3267,7 @@ SUB(nex242_misc_laser_cyan_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3300,7 +3300,7 @@ SUB(nex242_misc_laser_magenta_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3333,7 +3333,7 @@ SUB(nex242_misc_laser_white_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3366,7 +3366,7 @@ SUB(nex242_misc_laser_black_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3399,7 +3399,7 @@ SUB(nex242_misc_laser_orange_beam_end) {
 	MY(size_min) = 0.400000;
 	MY(size_max) = 0.400000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3410,7 +3410,7 @@ SUB(crylink_impactbig) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '12.0 12.0 12.0';
+	MY(originjitter) = '12 12 12';
 	MY(size_min) = 24;
 	MY(size_max) = 24;
 	MY(tex_min) = 47;
@@ -3445,7 +3445,7 @@ SUB(crylink_impactbig) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // purple splash
 SUB(crylink_impactbig) {
@@ -3458,7 +3458,7 @@ SUB(crylink_impactbig) {
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 }
 // purple splash
 SUB(crylink_impactbig) {
@@ -3471,7 +3471,7 @@ SUB(crylink_impactbig) {
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(type) = "static";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 
 #include "effectinfo_gentle.inc"
@@ -3482,7 +3482,7 @@ SUB(laser_deadly) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(size_min) = 5;
 	MY(size_max) = 5;
 	MY(tex_min) = 56;
@@ -3498,14 +3498,14 @@ SUB(laser_deadly) {
 	MY(color_max) = "0xFFFFFF";
 	MY(count) = 0.025000;
 	MY(liquidfriction) = 16;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = 2;
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '15.0 15.0 15.0';
+	MY(velocityjitter) = '15 15 15';
 	MY(velocitymultiplier) = 20;
 }
 // sparks
@@ -3520,13 +3520,13 @@ SUB(laser_deadly) {
 	MY(count) = 0.025000;
 	MY(gravity) = 1;
 	MY(notunderwater) = true;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 0.600000;
 	MY(size_max) = 0.600000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 100;
 }
 
@@ -3540,14 +3540,14 @@ SUB(torch_small) {
 	MY(color_max) = "0xff5a00";
 	MY(count) = 8;
 	MY(gravity) = -0.500000;
-	MY(originjitter) = '5.0 5.0 5.0';
+	MY(originjitter) = '5 5 5';
 	MY(sizeincrease) = -1;
 	MY(size_min) = 1;
 	MY(size_max) = 11;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '1.0 1.0 50.0';
+	MY(velocityjitter) = '1 1 50';
 }
 // smoke
 SUB(torch_small) {
@@ -3558,13 +3558,13 @@ SUB(torch_small) {
 	MY(color_max) = "0x111111";
 	MY(count) = 4;
 	MY(gravity) = -0.300000;
-	MY(originjitter) = '3.0 3.0 3.0';
+	MY(originjitter) = '3 3 3';
 	MY(sizeincrease) = 5;
 	MY(size_min) = 5;
 	MY(size_max) = 10;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 
 DEF(fountain01);
@@ -3576,13 +3576,13 @@ SUB(fountain01) {
 	MY(color_max) = "0xcfd1ff";
 	MY(count) = 16;
 	MY(gravity) = 0.600000;
-	MY(originjitter) = '5.0 5.0 5.0';
+	MY(originjitter) = '5 5 5';
 	MY(sizeincrease) = 20;
 	MY(size_min) = 10;
 	MY(size_max) = 15;
 	MY(tex_max) = 8;
 	MY(type) = "snow";
-	MY(velocityjitter) = '81.0 81.0 150.0';
+	MY(velocityjitter) = '81 81 150';
 	MY(velocitymultiplier) = 2;
 }
 
@@ -3596,14 +3596,14 @@ SUB(hookbomb_explode) {
 	MY(color_min) = "0x807aff";
 	MY(color_max) = "0x4463d5";
 	MY(count) = 25;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(sizeincrease) = -160;
 	MY(size_min) = 150;
 	MY(size_max) = 200;
 	MY(tex_min) = 38;
 	MY(tex_max) = 38;
 	MY(type) = "static";
-	MY(velocityjitter) = '550.0 550.0 550.0';
+	MY(velocityjitter) = '550 550 550';
 }
 // decal in the air
 SUB(hookbomb_explode) {
@@ -3613,7 +3613,7 @@ SUB(hookbomb_explode) {
 	MY(color_min) = "0x807aff";
 	MY(color_max) = "0x4463d5";
 	MY(countabsolute) = 3;
-	MY(originoffset) = '0.0 0.0 6.0';
+	MY(originoffset) = '0 0 6';
 	MY(sizeincrease) = -60;
 	MY(size_min) = 160;
 	MY(size_max) = 200;
@@ -3626,7 +3626,7 @@ SUB(hookbomb_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(size_min) = 80;
 	MY(size_max) = 100;
 	MY(tex_min) = 39;
@@ -3644,14 +3644,14 @@ SUB(hookbomb_explode) {
 	MY(color_max) = "0x4463d5";
 	MY(count) = 30;
 	MY(gravity) = 1;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = -60;
 	MY(size_min) = 20;
 	MY(size_max) = 30;
 	MY(tex_min) = 38;
 	MY(tex_max) = 38;
 	MY(type) = "spark";
-	MY(velocityjitter) = '1900.0 1900.0 1300.0';
+	MY(velocityjitter) = '1900 1900 1300';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -3689,7 +3689,7 @@ SUB(EF_MGTURRETTRAIL) {
 	MY(trailspacing) = 32;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }
 
 DEF(fire_big);
@@ -3703,14 +3703,14 @@ SUB(fire_big) {
 	MY(color_max) = "0xff5a00";
 	MY(count) = 26;
 	MY(gravity) = -0.500000;
-	MY(originjitter) = '33.0 33.0 33.0';
+	MY(originjitter) = '33 33 33';
 	MY(sizeincrease) = -3;
 	MY(size_min) = 11;
 	MY(size_max) = 31;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '22.0 22.0 50.0';
+	MY(velocityjitter) = '22 22 50';
 }
 // smoke
 SUB(fire_big) {
@@ -3722,34 +3722,16 @@ SUB(fire_big) {
 	MY(color_max) = "0x111111";
 	MY(count) = 11;
 	MY(gravity) = -0.300000;
-	MY(originjitter) = '44.0 44.0 44.0';
+	MY(originjitter) = '44 44 44';
 	MY(sizeincrease) = 11;
 	MY(size_min) = 22;
 	MY(size_max) = 33;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 
-#define flare(name, colormin, colormax) \
-	DEF(name##_flare); \
-	SUB(name##_flare) /* smoke */ { \
-		MY(alpha_min) = 200; \
-		MY(alpha_max) = 256; \
-		MY(alpha_fade) = 160; \
-		MY(bounce) = 1; \
-		MY(color_min) = colormin; \
-		MY(color_max) = colormax; \
-		MY(count) = 10.500000; \
-		MY(gravity) = -0.240000; \
-		MY(originjitter) = '2.0 2.0 0.0'; \
-		MY(sizeincrease) = 11; \
-		MY(size_min) = 1; \
-		MY(size_max) = 11; \
-		MY(tex_max) = 8; \
-		MY(type) = "alphastatic"; \
-		MY(velocityjitter) = '15.0 15.0 30.0'; \
-	}
+#define flare(name, colormin, colormax) 	DEF(name##_flare); 	SUB(name##_flare) /* smoke */ { 		MY(alpha_min) = 200; 		MY(alpha_max) = 256; 		MY(alpha_fade) = 160; 		MY(bounce) = 1; 		MY(color_min) = colormin; 		MY(color_max) = colormax; 		MY(count) = 10.500000; 		MY(gravity) = -0.240000; 		MY(originjitter) = '2 2 0'; 		MY(sizeincrease) = 11; 		MY(size_min) = 1; 		MY(size_max) = 11; 		MY(tex_max) = 8; 		MY(type) = "alphastatic"; 		MY(velocityjitter) = '15 15 30'; 	}
 
 flare(red, 	"0xff0000", "0xdc7171")
 flare(blue, "0x0000ff", "0x7194dc")
@@ -3773,7 +3755,7 @@ SUB(smoke_ring) {
 	MY(size_max) = 11;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '190.0 190.0 50.0';
+	MY(velocityjitter) = '190 190 50';
 }
 
 DEF(smoke_large);
@@ -3794,7 +3776,7 @@ SUB(smoke_large) {
 	MY(size_max) = 21;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '390.0 390.0 390.0';
+	MY(velocityjitter) = '390 390 390';
 }
 
 DEF(sparks);
@@ -3807,13 +3789,13 @@ SUB(sparks) {
 	MY(color_max) = "0xFFFDD9";
 	MY(count) = 15;
 	MY(gravity) = 1;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '300.0 300.0 200.0';
+	MY(velocityjitter) = '300 300 200';
 	MY(velocitymultiplier) = 1.500000;
 }
 
@@ -3827,13 +3809,13 @@ SUB(electricity_sparks) {
 	MY(color_max) = "0x4463d5";
 	MY(count) = 35;
 	MY(gravity) = 1;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocityjitter) = '300 300 300';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -3854,7 +3836,7 @@ SUB(steam) {
 	MY(size_max) = 3;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '19.0 19.0 19.0';
+	MY(velocityjitter) = '19 19 19';
 	MY(velocitymultiplier) = 14;
 }
 
@@ -3869,13 +3851,13 @@ SUB(smoking) {
 	MY(color_max) = "0x000000";
 	MY(count) = 10;
 	MY(gravity) = -0.100000;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(sizeincrease) = 5;
 	MY(size_min) = 10;
 	MY(size_max) = 40;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '5.0 5.0 20.0';
+	MY(velocityjitter) = '5 5 20';
 }
 
 // golden dust (create it once per second to cover large area in small yellow particles)
@@ -3888,7 +3870,7 @@ SUB(goldendust) {
 	MY(color_min) = "0xff9600";
 	MY(color_max) = "0xffefb8";
 	MY(count) = 25;
-	MY(originjitter) = '500.0 500.0 500.0';
+	MY(originjitter) = '500 500 500';
 	MY(sizeincrease) = -0.300000;
 	MY(size_min) = 2;
 	MY(size_max) = 3;
@@ -3909,14 +3891,14 @@ SUB(healing_fx) {
 	MY(color_max) = "0xff0000";
 	MY(count) = 25;
 	MY(gravity) = -0.100000;
-	MY(originjitter) = '5.0 5.0 100.0';
+	MY(originjitter) = '5 5 100';
 	MY(sizeincrease) = -0.050000;
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '50.0 50.0 0.0';
+	MY(velocityjitter) = '50 50 0';
 }
 
 DEF(armorrepair_fx);
@@ -3930,14 +3912,14 @@ SUB(armorrepair_fx) {
 	MY(color_max) = "0x00ff00";
 	MY(count) = 25;
 	MY(gravity) = -0.100000;
-	MY(originjitter) = '5.0 5.0 50.0';
+	MY(originjitter) = '5 5 50';
 	MY(sizeincrease) = -0.050000;
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '50.0 50.0 0.0';
+	MY(velocityjitter) = '50 50 0';
 }
 
 DEF(ammoregen_fx);
@@ -3951,14 +3933,14 @@ SUB(ammoregen_fx) {
 	MY(color_max) = "0x0000ff";
 	MY(count) = 25;
 	MY(gravity) = -0.100000;
-	MY(originjitter) = '5.0 5.0 50.0';
+	MY(originjitter) = '5 5 50';
 	MY(sizeincrease) = -0.050000;
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '50.0 50.0 0.0';
+	MY(velocityjitter) = '50 50 0';
 }
 
 // red-yellow flame like fx
@@ -3972,14 +3954,14 @@ SUB(rage) {
 	MY(color_max) = "0xff7800";
 	MY(count) = 2.500000;
 	MY(gravity) = -0.060000;
-	MY(originjitter) = '5.0 5.0 5.0';
+	MY(originjitter) = '5 5 5';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 35;
 	MY(tex_max) = 36;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '25.0 25.0 25.0';
+	MY(velocityjitter) = '25 25 25';
 }
 
 // pieces of glass or ice falling on the floor
@@ -3993,7 +3975,7 @@ SUB(iceorglass) {
 	MY(color_max) = "0xb2d3e6";
 	MY(count) = 15;
 	MY(gravity) = 1.300000;
-	MY(originjitter) = '30.0 30.0 30.0';
+	MY(originjitter) = '30 30 30';
 	MY(size_min) = 3;
 	MY(size_max) = 7;
 	MY(tex_min) = 44;
@@ -4001,7 +3983,7 @@ SUB(iceorglass) {
 	MY(time_min) = 1;
 	MY(time_max) = 3;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 }
 
 // cover small area in poison gas, spawn it once per second
@@ -4016,13 +3998,13 @@ SUB(poisonfield) {
 	MY(color_max) = "0x7db843";
 	MY(count) = 15;
 	MY(gravity) = -0.010000;
-	MY(originjitter) = '333.0 333.0 50.0';
+	MY(originjitter) = '333 333 50';
 	MY(sizeincrease) = 30;
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '5.0 5.0 5.0';
+	MY(velocityjitter) = '5 5 5';
 }
 
 // cover small area in icy mist, spawn it once per second
@@ -4037,13 +4019,13 @@ SUB(icefield) {
 	MY(color_max) = "0x75e7ff";
 	MY(count) = 10;
 	MY(gravity) = -0.010000;
-	MY(originjitter) = '333.0 333.0 0.0';
+	MY(originjitter) = '333 333 0';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '5.0 5.0 30.0';
+	MY(velocityjitter) = '5 5 30';
 }
 SUB(icefield) {
 	MY(alpha_min) = 256;
@@ -4053,7 +4035,7 @@ SUB(icefield) {
 	MY(color_max) = "0x75e7ff";
 	MY(count) = 5;
 	MY(gravity) = -0.001000;
-	MY(originjitter) = '333.0 333.0 0.0';
+	MY(originjitter) = '333 333 0';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 1;
 	MY(size_max) = 1;
@@ -4075,14 +4057,14 @@ SUB(firefield) {
 	MY(color_max) = "0xff5a00";
 	MY(count) = 100;
 	MY(gravity) = -0.060000;
-	MY(originjitter) = '180.0 180.0 0.0';
+	MY(originjitter) = '180 180 0';
 	MY(sizeincrease) = 20;
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '5.0 5.0 30.0';
+	MY(velocityjitter) = '5 5 30';
 }
 // flames that stay on the ground
 SUB(firefield) {
@@ -4092,7 +4074,7 @@ SUB(firefield) {
 	MY(color_min) = "0x8f0d00";
 	MY(color_max) = "0xff5a00";
 	MY(count) = 50;
-	MY(originjitter) = '180.0 180.0 0.0';
+	MY(originjitter) = '180 180 0';
 	MY(sizeincrease) = 40;
 	MY(size_min) = 1;
 	MY(size_max) = 1;
@@ -4109,7 +4091,7 @@ SUB(firefield) {
 	MY(color_max) = "0x111111";
 	MY(count) = 20;
 	MY(gravity) = -0.020000;
-	MY(originjitter) = '180.0 180.0 0.0';
+	MY(originjitter) = '180 180 0';
 	MY(sizeincrease) = 7;
 	MY(size_min) = 1;
 	MY(size_max) = 1;
@@ -4136,7 +4118,7 @@ SUB(flamethrower) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '40.0 40.0 11.0';
+	MY(velocityjitter) = '40 40 11';
 	MY(velocitymultiplier) = 30;
 }
 // slow fire
@@ -4156,7 +4138,7 @@ SUB(flamethrower) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '40.0 40.0 40.0';
+	MY(velocityjitter) = '40 40 40';
 	MY(velocitymultiplier) = 20;
 }
 // very slow and small fire
@@ -4176,7 +4158,7 @@ SUB(flamethrower) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '30.0 30.0 30.0';
+	MY(velocityjitter) = '30 30 30';
 	MY(velocitymultiplier) = 10;
 }
 // decreasing fire
@@ -4196,7 +4178,7 @@ SUB(flamethrower) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocityjitter) = '10 10 10';
 	MY(velocitymultiplier) = 15;
 }
 // smoke
@@ -4208,14 +4190,14 @@ SUB(flamethrower) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x111111";
 	MY(count) = 0.500000;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(sizeincrease) = 7;
 	MY(size_min) = 5;
 	MY(size_max) = 15;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
 	MY(velocitymultiplier) = 20;
-	MY(velocityoffset) = '0.0 0.0 10.0';
+	MY(velocityoffset) = '0 0 10';
 }
 
 // port-o-launch trail
@@ -4227,7 +4209,7 @@ SUB(TR_WIZSPIKE) {
 	MY(alpha_fade) = 968;
 	MY(color_min) = "0x404040";
 	MY(color_max) = "0x404040";
-	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightcolor) = '1.5 3 6';
 	MY(lightradius) = 90;
 	MY(size_min) = 3;
 	MY(size_max) = 3;
@@ -4247,7 +4229,7 @@ SUB(TR_WIZSPIKE) {
 	MY(color_min) = "0x404040";
 	MY(color_max) = "0x404040";
 	MY(count) = 1.500000;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = -20;
 	MY(size_min) = 2;
 	MY(size_max) = 4;
@@ -4255,8 +4237,8 @@ SUB(TR_WIZSPIKE) {
 	MY(tex_max) = 42;
 	MY(trailspacing) = 12;
 	MY(type) = "snow";
-	MY(velocityjitter) = '50.0 50.0 50.0';
-	MY(velocityoffset) = '0.0 0.0 15.0';
+	MY(velocityjitter) = '50 50 50';
+	MY(velocityoffset) = '0 0 15';
 }
 
 // TAG trail
@@ -4268,7 +4250,7 @@ SUB(TR_VORESPIKE) {
 	MY(alpha_fade) = 968;
 	MY(color_min) = "0x804000";
 	MY(color_max) = "0x804000";
-	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightcolor) = '1.5 3 6';
 	MY(lightradius) = 90;
 	MY(size_min) = 3;
 	MY(size_max) = 3;
@@ -4288,7 +4270,7 @@ SUB(TR_VORESPIKE) {
 	MY(color_min) = "0xff8000";
 	MY(color_max) = "0xff8000";
 	MY(count) = 1.500000;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = -20;
 	MY(size_min) = 2;
 	MY(size_max) = 4;
@@ -4296,8 +4278,8 @@ SUB(TR_VORESPIKE) {
 	MY(tex_max) = 42;
 	MY(trailspacing) = 12;
 	MY(type) = "snow";
-	MY(velocityjitter) = '50.0 50.0 50.0';
-	MY(velocityoffset) = '0.0 0.0 15.0';
+	MY(velocityjitter) = '50 50 50';
+	MY(velocityoffset) = '0 0 15';
 }
 
 DEF(flac_explode);
@@ -4305,10 +4287,10 @@ SUB(flac_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightcolor) = '8 4 1';
 	MY(lightradiusfade) = 400;
 	MY(lightradius) = 150;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(size_min) = 18;
 	MY(size_max) = 28;
 	MY(tex_min) = 8;
@@ -4327,14 +4309,14 @@ SUB(flac_explode) {
 	MY(count) = 3;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 5;
 	MY(size_min) = 6;
 	MY(size_max) = 16;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '156.0 156.0 156.0';
+	MY(velocityjitter) = '156 156 156';
 }
 // fire effect which expands then slows
 SUB(flac_explode) {
@@ -4348,14 +4330,14 @@ SUB(flac_explode) {
 	MY(count) = 6;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 15;
 	MY(size_min) = 10;
 	MY(size_max) = 16;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 // smoke
 SUB(flac_explode) {
@@ -4373,7 +4355,7 @@ SUB(flac_explode) {
 	MY(size_max) = 20;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '244.0 244.0 244.0';
+	MY(velocityjitter) = '244 244 244';
 }
 // underwater bubbles
 SUB(flac_explode) {
@@ -4386,14 +4368,14 @@ SUB(flac_explode) {
 	MY(count) = 8;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 1;
 	MY(size_max) = 2;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '96.0 96.0 96.0';
+	MY(velocityjitter) = '96 96 96';
 }
 // bouncing sparks
 SUB(flac_explode) {
@@ -4413,8 +4395,8 @@ SUB(flac_explode) {
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '256 256 256';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // bullet trail (somewhat like a tracer)
@@ -4462,7 +4444,7 @@ SUB(tr_bullet) {
 	MY(trailspacing) = 16;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }
 
 // smoke emitter for small pipes
@@ -4476,13 +4458,13 @@ SUB(smoking_smallemitter) {
 	MY(color_max) = "0x000000";
 	MY(count) = 10;
 	MY(gravity) = -0.100000;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(sizeincrease) = 20;
 	MY(size_min) = 6;
 	MY(size_max) = 15;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '5.0 5.0 20.0';
+	MY(velocityjitter) = '5 5 20';
 }
 
 // crylink trail
@@ -4501,7 +4483,7 @@ SUB(TR_CRYLINKPLASMA) {
 	MY(tex_max) = 32;
 	MY(trailspacing) = 128;
 	MY(type) = "static";
-	MY(velocityjitter) = '8.0 8.0 8.0';
+	MY(velocityjitter) = '8 8 8';
 	MY(velocitymultiplier) = -0.010000;
 }
 // crylink main trail
@@ -4518,7 +4500,7 @@ SUB(TR_CRYLINKPLASMA) {
 	MY(tex_max) = 3;
 	MY(trailspacing) = 16;
 	MY(type) = "static";
-	MY(velocityjitter) = '2.0 2.0 2.0';
+	MY(velocityjitter) = '2 2 2';
 	MY(velocitymultiplier) = 0.010000;
 }
 
@@ -4534,13 +4516,13 @@ SUB(cherryblossom) {
 	MY(count) = 1.500000;
 	MY(gravity) = 0.050000;
 	MY(liquidfriction) = 1;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 1.500000;
 	MY(size_max) = 2;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 0.0';
+	MY(velocityjitter) = '32 32 0';
 }
 
 DEF(alien_blood);
@@ -4567,7 +4549,7 @@ SUB(alien_blood) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "spark";
-	MY(velocityjitter) = '99.0 99.0 55.0';
+	MY(velocityjitter) = '99 99 55';
 }
 // blood mist
 SUB(alien_blood) {
@@ -4578,7 +4560,7 @@ SUB(alien_blood) {
 	MY(color_min) = "0xDC9BCD";
 	MY(color_max) = "0xDC9BCD";
 	MY(countabsolute) = 1;
-	MY(originjitter) = '11.0 11.0 11.0';
+	MY(originjitter) = '11 11 11';
 	MY(sizeincrease) = 20;
 	MY(size_min) = 25;
 	MY(size_max) = 30;
@@ -4604,8 +4586,8 @@ SUB(robot_blood) {
 	MY(tex_min) = 70;
 	MY(tex_max) = 70;
 	MY(type) = "spark";
-	MY(velocityjitter) = '264.0 264.0 264.0';
-	MY(velocityoffset) = '0.0 0.0 100.0';
+	MY(velocityjitter) = '264 264 264';
+	MY(velocityoffset) = '0 0 100';
 }
 // shockwave
 SUB(robot_blood) {
@@ -4614,7 +4596,7 @@ SUB(robot_blood) {
 	MY(color_min) = "0xff8400";
 	MY(color_max) = "0xffbb72";
 	MY(countabsolute) = 1;
-	MY(originjitter) = '11.0 11.0 11.0';
+	MY(originjitter) = '11 11 11';
 	MY(sizeincrease) = 800;
 	MY(size_min) = 2;
 	MY(size_max) = 2;
@@ -4630,7 +4612,7 @@ SUB(robot_blood) {
 	MY(color_min) = "0xff3000";
 	MY(color_max) = "0xff8585";
 	MY(count) = 0.100000;
-	MY(originjitter) = '41.0 41.0 21.0';
+	MY(originjitter) = '41 41 21';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = 4000;
@@ -4668,7 +4650,7 @@ SUB(alien_TR_BLOOD) {
 	MY(tex_max) = 32;
 	MY(trailspacing) = 20;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = -0.100000;
 }
 
@@ -4714,7 +4696,7 @@ SUB(robot_TR_BLOOD) {
 	MY(tex_max) = 32;
 	MY(trailspacing) = 16;
 	MY(type) = "spark";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = -0.300000;
 }
 // fire
@@ -4736,7 +4718,7 @@ SUB(robot_TR_BLOOD) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 16;
 	MY(type) = "spark";
-	MY(velocityjitter) = '44.0 44.0 44.0';
+	MY(velocityjitter) = '44 44 44';
 }
 // arcs
 SUB(robot_TR_BLOOD) {
@@ -4755,7 +4737,7 @@ SUB(robot_TR_BLOOD) {
 	MY(tex_max) = 73;
 	MY(trailspacing) = 128;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '44.0 44.0 44.0';
+	MY(velocityjitter) = '44 44 44';
 }
 
 DEF(alien_TR_SLIGHTBLOOD);
@@ -4778,7 +4760,7 @@ SUB(alien_TR_SLIGHTBLOOD) {
 	MY(tex_max) = 32;
 	MY(trailspacing) = 64;
 	MY(type) = "blood";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -4802,7 +4784,7 @@ SUB(robot_TR_SLIGHTBLOOD) {
 	MY(tex_max) = 32;
 	MY(trailspacing) = 64;
 	MY(type) = "blood";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -4832,7 +4814,7 @@ SUB(item_pickup) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 
 DEF(bloodshower);
@@ -4859,7 +4841,7 @@ SUB(bloodshower) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "spark";
-	MY(velocityjitter) = '764.0 764.0 764.0';
+	MY(velocityjitter) = '764 764 764';
 }
 // center blood
 SUB(bloodshower) {
@@ -4870,7 +4852,7 @@ SUB(bloodshower) {
 	MY(color_min) = "0xA8FFFF";
 	MY(color_max) = "0xA8FFFFF";
 	MY(countabsolute) = 0.100000;
-	MY(originjitter) = '50.0 50.0 50.0';
+	MY(originjitter) = '50 50 50';
 	MY(sizeincrease) = 300;
 	MY(size_min) = 1;
 	MY(size_max) = 28;
@@ -4903,7 +4885,7 @@ SUB(alien_bloodshower) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "spark";
-	MY(velocityjitter) = '764.0 764.0 764.0';
+	MY(velocityjitter) = '764 764 764';
 }
 // center blood
 SUB(bloodshower) {
@@ -4914,7 +4896,7 @@ SUB(bloodshower) {
 	MY(color_min) = "0xA8FFFF";
 	MY(color_max) = "0xA8FFFFF";
 	MY(countabsolute) = 0.100000;
-	MY(originjitter) = '50.0 50.0 50.0';
+	MY(originjitter) = '50 50 50';
 	MY(sizeincrease) = 300;
 	MY(size_min) = 1;
 	MY(size_max) = 28;
@@ -4947,7 +4929,7 @@ SUB(robot_bloodshower) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "spark";
-	MY(velocityjitter) = '764.0 764.0 764.0';
+	MY(velocityjitter) = '764 764 764';
 }
 // arc
 SUB(robot_bloodshower) {
@@ -4957,7 +4939,7 @@ SUB(robot_bloodshower) {
 	MY(color_min) = "0xff3000";
 	MY(color_max) = "0xff8585";
 	MY(count) = 2.500000;
-	MY(originjitter) = '150.0 150.0 150.0';
+	MY(originjitter) = '150 150 150';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = 99;
@@ -4967,7 +4949,7 @@ SUB(robot_bloodshower) {
 	MY(tex_min) = 71;
 	MY(tex_max) = 73;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '44.0 44.0 44.0';
+	MY(velocityjitter) = '44 44 44';
 }
 // shockwave
 SUB(robot_bloodshower) {
@@ -4985,88 +4967,7 @@ SUB(robot_bloodshower) {
 	MY(type) = "smoke";
 }
 
-#define ground_quake(name, colormin, colormax) \
-	DEF(name##_ground_quake); \
-	SUB(name##_ground_quake) /* smoke */ { \
-		MY(airfriction) = 3; \
-		MY(alpha_min) = 100; \
-		MY(alpha_max) = 126; \
-		MY(alpha_fade) = 200; \
-		MY(bounce) = 1.100000; \
-		MY(color_min) = "0x111111"; \
-		MY(color_max) = "0xbbbbbb"; \
-		MY(count) = 90; \
-		MY(gravity) = 0.500000; \
-		MY(notunderwater) = true; \
-		MY(sizeincrease) = 100; \
-		MY(size_min) = 20; \
-		MY(size_max) = 50; \
-		MY(tex_max) = 8; \
-		MY(time_min) = 5; \
-		MY(time_max) = 10; \
-		MY(type) = "smoke"; \
-		MY(velocityjitter) = '190.0 190.0 50.0'; \
-	} \
-	SUB(name##_ground_quake) { \
-		MY(airfriction) = 4; \
-		MY(alpha_min) = 100; \
-		MY(alpha_max) = 126; \
-		MY(alpha_fade) = 200; \
-		MY(bounce) = 1.200000; \
-		MY(color_min) = "0x111111"; \
-		MY(color_max) = "0x979797"; \
-		MY(count) = 40; \
-		MY(gravity) = 0.200000; \
-		MY(notunderwater) = true; \
-		MY(sizeincrease) = 60; \
-		MY(size_min) = 10; \
-		MY(size_max) = 30; \
-		MY(tex_max) = 8; \
-		MY(time_min) = 10; \
-		MY(time_max) = 15; \
-		MY(type) = "smoke"; \
-		MY(velocityjitter) = '190.0 190.0 50.0'; \
-	} \
-	SUB(name##_ground_quake) { \
-		MY(alpha_min) = 200; \
-		MY(alpha_max) = 356; \
-		MY(alpha_fade) = 512; \
-		MY(bounce) = 6; \
-		MY(color_min) = colormin; \
-		MY(color_max) = colormax; \
-		MY(count) = 16; \
-		MY(gravity) = -0.500000; \
-		MY(originjitter) = '33.0 33.0 33.0'; \
-		MY(sizeincrease) = 5; \
-		MY(size_min) = 4; \
-		MY(size_max) = 20; \
-		MY(tex_min) = 48; \
-		MY(tex_max) = 55; \
-		MY(time_min) = 15; \
-		MY(time_max) = 25; \
-		MY(type) = "smoke"; \
-		MY(velocityjitter) = '22.0 22.0 50.0'; \
-	} \
-	SUB(name##_ground_quake) /* smoke */ { \
-		MY(alpha_min) = 200; \
-		MY(alpha_max) = 256; \
-		MY(alpha_fade) = 200; \
-		MY(bounce) = 2; \
-		MY(color_min) = "0x000000"; \
-		MY(color_max) = "0xffffff"; \
-		MY(count) = 11; \
-		MY(gravity) = -0.300000; \
-		MY(originjitter) = '44.0 44.0 44.0'; \
-		MY(sizeincrease) = 11; \
-		MY(size_min) = 22; \
-		MY(size_max) = 33; \
-		MY(tex_max) = 8; \
-		MY(time_min) = 25; \
-		MY(time_max) = 35; \
-		MY(type) = "alphastatic"; \
-		MY(velocityjitter) = '11.0 11.0 50.0'; \
-	} \
-	/**/
+#define ground_quake(name, colormin, colormax) 	DEF(name##_ground_quake); 	SUB(name##_ground_quake) /* smoke */ { 		MY(airfriction) = 3; 		MY(alpha_min) = 100; 		MY(alpha_max) = 126; 		MY(alpha_fade) = 200; 		MY(bounce) = 1.100000; 		MY(color_min) = "0x111111"; 		MY(color_max) = "0xbbbbbb"; 		MY(count) = 90; 		MY(gravity) = 0.500000; 		MY(notunderwater) = true; 		MY(sizeincrease) = 100; 		MY(size_min) = 20; 		MY(size_max) = 50; 		MY(tex_max) = 8; 		MY(time_min) = 5; 		MY(time_max) = 10; 		MY(type) = "smoke"; 		MY(velocityjitter) = '190 190 50'; 	} 	SUB(name##_ground_quake) { 		MY(airfriction) = 4; 		MY(alpha_min) = 100; 		MY(alpha_max) = 126; 		MY(alpha_fade) = 200; 		MY(bounce) = 1.200000; 		MY(color_min) = "0x111111"; 		MY(color_max) = "0x979797"; 		MY(count) = 40; 		MY(gravity) = 0.200000; 		MY(notunderwater) = true; 		MY(sizeincrease) = 60; 		MY(size_min) = 10; 		MY(size_max) = 30; 		MY(tex_max) = 8; 		MY(time_min) = 10; 		MY(time_max) = 15; 		MY(type) = "smoke"; 		MY(velocityjitter) = '190 190 50'; 	} 	SUB(name##_ground_quake) { 		MY(alpha_min) = 200; 		MY(alpha_max) = 356; 		MY(alpha_fade) = 512; 		MY(bounce) = 6; 		MY(color_min) = colormin; 		MY(color_max) = colormax; 		MY(count) = 16; 		MY(gravity) = -0.500000; 		MY(originjitter) = '33 33 33'; 		MY(sizeincrease) = 5; 		MY(size_min) = 4; 		MY(size_max) = 20; 		MY(tex_min) = 48; 		MY(tex_max) = 55; 		MY(time_min) = 15; 		MY(time_max) = 25; 		MY(type) = "smoke"; 		MY(velocityjitter) = '22 22 50'; 	} 	SUB(name##_ground_quake) /* smoke */ { 		MY(alpha_min) = 200; 		MY(alpha_max) = 256; 		MY(alpha_fade) = 200; 		MY(bounce) = 2; 		MY(color_min) = "0x000000"; 		MY(color_max) = "0xffffff"; 		MY(count) = 11; 		MY(gravity) = -0.300000; 		MY(originjitter) = '44 44 44'; 		MY(sizeincrease) = 11; 		MY(size_min) = 22; 		MY(size_max) = 33; 		MY(tex_max) = 8; 		MY(time_min) = 25; 		MY(time_max) = 35; 		MY(type) = "alphastatic"; 		MY(velocityjitter) = '11 11 50'; 	} 	/**/
 
 ground_quake(red, 	"0x9E6A64", "0x91302D")
 ground_quake(blue, 	"0x64679E", "0x2D4C91")
@@ -5075,79 +4976,7 @@ ground_quake(blue, 	"0x64679E", "0x2D4C91")
 #include "effectinfo_gentle_morphed.inc"
 
 // Team / hit vaporizer effects
-#define TE_TEI_G3(name, colormin1, colormax1, colormin2, colormax2) \
-	DEF(TE_TEI_G3##name); \
-	SUB(TE_TEI_G3##name) { \
-		MY(alpha_min) = 128; \
-		MY(alpha_max) = 128; \
-		MY(alpha_fade) = 256; \
-		MY(color_min) = colormin1; \
-		MY(color_max) = colormax1; \
-		MY(countabsolute) = 1; \
-		MY(size_min) = 4; \
-		MY(size_max) = 4; \
-		MY(tex_min) = 200; \
-		MY(tex_max) = 200; \
-		MY(type) = "beam"; \
-	} \
-	SUB(TE_TEI_G3##name) { \
-		MY(airfriction) = -4; \
-		MY(alpha_min) = 256; \
-		MY(alpha_max) = 256; \
-		MY(alpha_fade) = 512; \
-		MY(color_min) = colormin2; \
-		MY(color_max) = colormax2; \
-		MY(sizeincrease) = 3; \
-		MY(size_min) = 0.300000; \
-		MY(size_max) = 0.300000; \
-		MY(tex_min) = 46; \
-		MY(tex_max) = 46; \
-		MY(trailspacing) = 8; \
-		MY(type) = "smoke"; \
-		MY(velocityjitter) = '3.0 3.0 3.0'; \
-	} \
-	DEF(TE_TEI_G3##name##_HIT); \
-	SUB(TE_TEI_G3##name##_HIT) { \
-		MY(alpha_min) = 128; \
-		MY(alpha_max) = 128; \
-		MY(alpha_fade) = 256; \
-		MY(color_min) = colormin1; \
-		MY(color_max) = colormax1; \
-		MY(countabsolute) = 1; \
-		MY(size_min) = 8; \
-		MY(size_max) = 8; \
-		MY(tex_min) = 200; \
-		MY(tex_max) = 200; \
-		MY(type) = "beam"; \
-	} \
-	SUB(TE_TEI_G3##name##_HIT) /* rings */ { \
-		MY(airfriction) = -4; \
-		MY(alpha_min) = 256; \
-		MY(alpha_max) = 256; \
-		MY(alpha_fade) = 512; \
-		MY(color_min) = "0xFFFFFF"; \
-		MY(color_max) = colormax1; \
-		MY(sizeincrease) = -2; \
-		MY(size_min) = 2; \
-		MY(size_max) = 2; \
-		MY(trailspacing) = 20; \
-		MY(type) = "smoke"; \
-		MY(velocityjitter) = '2.0 2.0 2.0'; \
-	} \
-	SUB(TE_TEI_G3##name##_HIT) { \
-		MY(airfriction) = -4; \
-		MY(alpha_min) = 256; \
-		MY(alpha_max) = 256; \
-		MY(alpha_fade) = 512; \
-		MY(color_min) = colormin1; \
-		MY(color_max) = colormax1; \
-		MY(sizeincrease) = -6; \
-		MY(size_min) = 10; \
-		MY(size_max) = 10; \
-		MY(trailspacing) = 40; \
-		MY(type) = "smoke"; \
-	} \
-	/**/
+#define TE_TEI_G3(name, colormin1, colormax1, colormin2, colormax2) 	DEF(TE_TEI_G3##name); 	SUB(TE_TEI_G3##name) { 		MY(alpha_min) = 128; 		MY(alpha_max) = 128; 		MY(alpha_fade) = 256; 		MY(color_min) = colormin1; 		MY(color_max) = colormax1; 		MY(countabsolute) = 1; 		MY(size_min) = 4; 		MY(size_max) = 4; 		MY(tex_min) = 200; 		MY(tex_max) = 200; 		MY(type) = "beam"; 	} 	SUB(TE_TEI_G3##name) { 		MY(airfriction) = -4; 		MY(alpha_min) = 256; 		MY(alpha_max) = 256; 		MY(alpha_fade) = 512; 		MY(color_min) = colormin2; 		MY(color_max) = colormax2; 		MY(sizeincrease) = 3; 		MY(size_min) = 0.300000; 		MY(size_max) = 0.300000; 		MY(tex_min) = 46; 		MY(tex_max) = 46; 		MY(trailspacing) = 8; 		MY(type) = "smoke"; 		MY(velocityjitter) = '3 3 3'; 	} 	DEF(TE_TEI_G3##name##_HIT); 	SUB(TE_TEI_G3##name##_HIT) { 		MY(alpha_min) = 128; 		MY(alpha_max) = 128; 		MY(alpha_fade) = 256; 		MY(color_min) = colormin1; 		MY(color_max) = colormax1; 		MY(countabsolute) = 1; 		MY(size_min) = 8; 		MY(size_max) = 8; 		MY(tex_min) = 200; 		MY(tex_max) = 200; 		MY(type) = "beam"; 	} 	SUB(TE_TEI_G3##name##_HIT) /* rings */ { 		MY(airfriction) = -4; 		MY(alpha_min) = 256; 		MY(alpha_max) = 256; 		MY(alpha_fade) = 512; 		MY(color_min) = "0xFFFFFF"; 		MY(color_max) = colormax1; 		MY(sizeincrease) = -2; 		MY(size_min) = 2; 		MY(size_max) = 2; 		MY(trailspacing) = 20; 		MY(type) = "smoke"; 		MY(velocityjitter) = '2 2 2'; 	} 	SUB(TE_TEI_G3##name##_HIT) { 		MY(airfriction) = -4; 		MY(alpha_min) = 256; 		MY(alpha_max) = 256; 		MY(alpha_fade) = 512; 		MY(color_min) = colormin1; 		MY(color_max) = colormax1; 		MY(sizeincrease) = -6; 		MY(size_min) = 10; 		MY(size_max) = 10; 		MY(trailspacing) = 40; 		MY(type) = "smoke"; 	} 	/**/
 TE_TEI_G3(RED, "0xFF0000", "0xFF0011", "0x200000", "0x400000")
 TE_TEI_G3(BLUE, "0x0000FF", "0x1100FF", "0x000020", "0x000040")
 TE_TEI_G3(YELLOW, "0xffff00", "0xffff11", "0x202000", "0x404000")
@@ -5176,7 +5005,7 @@ SUB(firemine) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 2;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '10.0 10.0 2.0';
+	MY(velocityjitter) = '10 10 2';
 }
 // slowfire
 SUB(firemine) {
@@ -5196,7 +5025,7 @@ SUB(firemine) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 2;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocityjitter) = '10 10 10';
 }
 // very slow and small fire
 SUB(firemine) {
@@ -5216,7 +5045,7 @@ SUB(firemine) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '8.0 8.0 8.0';
+	MY(velocityjitter) = '8 8 8';
 }
 // decreasing fire
 SUB(firemine) {
@@ -5236,7 +5065,7 @@ SUB(firemine) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocityjitter) = '3 3 3';
 }
 // smoke
 SUB(firemine) {
@@ -5247,14 +5076,14 @@ SUB(firemine) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x111111";
 	MY(count) = 0.500000;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = 1;
 	MY(size_min) = 1;
 	MY(size_max) = 4;
 	MY(tex_max) = 8;
 	MY(trailspacing) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityoffset) = '0.0 0.0 3.0';
+	MY(velocityoffset) = '0 0 3';
 }
 // fastfire
 SUB(firemine) {
@@ -5299,7 +5128,7 @@ SUB(fireball) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 2;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '40.0 40.0 11.0';
+	MY(velocityjitter) = '40 40 11';
 }
 // slow fire
 SUB(fireball) {
@@ -5319,7 +5148,7 @@ SUB(fireball) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 2;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '40.0 40.0 40.0';
+	MY(velocityjitter) = '40 40 40';
 }
 // very slow and small fire
 SUB(fireball) {
@@ -5339,7 +5168,7 @@ SUB(fireball) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '30.0 30.0 30.0';
+	MY(velocityjitter) = '30 30 30';
 }
 // decreasing fire
 SUB(fireball) {
@@ -5359,7 +5188,7 @@ SUB(fireball) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocityjitter) = '10 10 10';
 }
 // smoke
 SUB(fireball) {
@@ -5370,14 +5199,14 @@ SUB(fireball) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x111111";
 	MY(count) = 0.500000;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(sizeincrease) = 7;
 	MY(size_min) = 5;
 	MY(size_max) = 15;
 	MY(tex_max) = 8;
 	MY(trailspacing) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityoffset) = '0.0 0.0 10.0';
+	MY(velocityoffset) = '0 0 10';
 }
 // fast fire
 SUB(fireball) {
@@ -5416,7 +5245,7 @@ SUB(fireball_laser) {
 	MY(size_max) = 1;
 	MY(stretchfactor) = 0.700000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocityjitter) = '1 1 1';
 	MY(velocitymultiplier) = 10;
 }
 
@@ -5427,10 +5256,10 @@ SUB(fireball_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '4.0 2.0 0.5';
+	MY(lightcolor) = '4 2 0.5';
 	MY(lightradiusfade) = 500;
 	MY(lightradius) = 500;
-	MY(originjitter) = '56.0 56.0 56.0';
+	MY(originjitter) = '56 56 56';
 	MY(size_min) = 72;
 	MY(size_max) = 72;
 	MY(tex_min) = 8;
@@ -5463,13 +5292,13 @@ SUB(fireball_explode) {
 	MY(count) = 128;
 	MY(liquidfriction) = 4;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // underwater bubbles
 SUB(fireball_explode) {
@@ -5482,14 +5311,14 @@ SUB(fireball_explode) {
 	MY(count) = 32;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '144.0 144.0 144.0';
+	MY(velocityjitter) = '144 144 144';
 }
 // bouncing sparks
 SUB(fireball_explode) {
@@ -5507,8 +5336,8 @@ SUB(fireball_explode) {
 	MY(size_min) = 2;
 	MY(size_max) = 2;
 	MY(type) = "spark";
-	MY(velocityjitter) = '384.0 384.0 384.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '384 384 384';
+	MY(velocityoffset) = '0 0 80';
 }
 
 DEF(fireball_muzzleflash);
@@ -5519,7 +5348,7 @@ SUB(fireball_muzzleflash) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 2;
-	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightcolor) = '2 1.5 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -5527,7 +5356,7 @@ SUB(fireball_muzzleflash) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(fireball_muzzleflash) {
@@ -5537,13 +5366,13 @@ SUB(fireball_muzzleflash) {
 	MY(color_min) = "0xFFFDD9";
 	MY(color_max) = "0xFFFDD9";
 	MY(count) = 15;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocityjitter) = '300 300 300';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -5555,7 +5384,7 @@ SUB(fireball_preattack_muzzleflash) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 2;
-	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightcolor) = '2 1.5 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -5563,7 +5392,7 @@ SUB(fireball_preattack_muzzleflash) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(fireball_preattack_muzzleflash) {
@@ -5573,13 +5402,13 @@ SUB(fireball_preattack_muzzleflash) {
 	MY(color_min) = "0xFFFDD9";
 	MY(color_max) = "0xFFFDD9";
 	MY(count) = 15;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocityjitter) = '300 300 300';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -5591,7 +5420,7 @@ SUB(fireball_bfgdamage) {
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(count) = 2;
-	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightcolor) = '2 1.5 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -5599,7 +5428,7 @@ SUB(fireball_bfgdamage) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(fireball_bfgdamage) {
@@ -5609,13 +5438,13 @@ SUB(fireball_bfgdamage) {
 	MY(color_min) = "0xFFFDD9";
 	MY(color_max) = "0xFFFDD9";
 	MY(count) = 15;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocityjitter) = '300 300 300';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -5630,15 +5459,15 @@ SUB(EF_FLAME) {
 	MY(color_max) = "0xff5a00";
 	MY(count) = 100;
 	MY(gravity) = -0.500000;
-	MY(originjitter) = '12.0 12.0 34.0';
-	MY(originoffset) = '0.0 0.0 10.0';
+	MY(originjitter) = '12 12 34';
+	MY(originoffset) = '0 0 10';
 	MY(sizeincrease) = -1;
 	MY(size_min) = 5;
 	MY(size_max) = 21;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '22.0 22.0 50.0';
+	MY(velocityjitter) = '22 22 50';
 }
 // smoke
 SUB(EF_FLAME) {
@@ -5650,14 +5479,14 @@ SUB(EF_FLAME) {
 	MY(color_max) = "0x111111";
 	MY(count) = 50;
 	MY(gravity) = -0.300000;
-	MY(originjitter) = '12.0 12.0 34.0';
-	MY(originoffset) = '0.0 0.0 10.0';
+	MY(originjitter) = '12 12 34';
+	MY(originoffset) = '0 0 10';
 	MY(sizeincrease) = 6;
 	MY(size_min) = 11;
 	MY(size_max) = 15;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 SUB(EF_FLAME) {
 	MY(count) = 0.500000;
@@ -5695,7 +5524,7 @@ SUB(tr_rifle) {
 	MY(tex_max) = 8;
 	MY(trailspacing) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '4.0 4.0 4.0';
+	MY(velocityjitter) = '4 4 4';
 }
 SUB(tr_rifle) {
 	MY(alpha_min) = 256;
@@ -5713,7 +5542,7 @@ SUB(tr_rifle) {
 	MY(trailspacing) = 32;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }
 
 // rocket guiding start
@@ -5729,14 +5558,14 @@ SUB(rocket_guide) {
 	MY(count) = 2;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(size_min) = 1.500000;
 	MY(size_max) = 1.500000;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '48.0 48.0 48.0';
+	MY(velocityjitter) = '48 48 48';
 	MY(velocitymultiplier) = -0.100000;
 }
 // bouncing sparks
@@ -5758,9 +5587,9 @@ SUB(rocket_guide) {
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '156.0 156.0 156.0';
+	MY(velocityjitter) = '156 156 156';
 	MY(velocitymultiplier) = -0.300000;
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityoffset) = '0 0 80';
 }
 SUB(rocket_guide) {
 	MY(alpha_min) = 100;
@@ -5787,7 +5616,7 @@ SUB(laser_gauntlet) {
 	MY(color_min) = "0xb44215";
 	MY(color_max) = "0x880000";
 	MY(count) = 3;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = 4000;
@@ -5799,7 +5628,7 @@ SUB(laser_gauntlet) {
 	MY(tex_min) = 43;
 	MY(tex_max) = 43;
 	MY(type) = "spark";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.200000;
 }
 SUB(laser_gauntlet) {
@@ -5810,7 +5639,7 @@ SUB(laser_gauntlet) {
 	MY(color_min) = "0xff4200";
 	MY(color_max) = "0xff0000";
 	MY(count) = 6;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = -100;
 	MY(size_min) = 7;
 	MY(size_max) = 9;
@@ -5818,7 +5647,7 @@ SUB(laser_gauntlet) {
 	MY(tex_min) = 8;
 	MY(tex_max) = 15;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 0.200000;
 }
 
@@ -5832,7 +5661,7 @@ SUB(laser_gauntletmuzzleflash) {
 	MY(color_min) = "0x220000";
 	MY(color_max) = "0x880000";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '3.0 0.1 0.1';
+	MY(lightcolor) = '3 0.1 0.1';
 	MY(lightradiusfade) = 500;
 	MY(lightradius) = 150;
 	MY(sizeincrease) = -100;
@@ -5852,7 +5681,7 @@ SUB(laser_gauntletmuzzleflash) {
 	MY(color_min) = "0xb44215";
 	MY(color_max) = "0x880000";
 	MY(count) = 3;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = 4000;
@@ -5864,7 +5693,7 @@ SUB(laser_gauntletmuzzleflash) {
 	MY(tex_min) = 43;
 	MY(tex_max) = 43;
 	MY(type) = "spark";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.200000;
 }
 // fire
@@ -5876,7 +5705,7 @@ SUB(laser_gauntletmuzzleflash) {
 	MY(color_min) = "0xff4200";
 	MY(color_max) = "0xff0000";
 	MY(count) = 6;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = -100;
 	MY(size_min) = 7;
 	MY(size_max) = 9;
@@ -5884,7 +5713,7 @@ SUB(laser_gauntletmuzzleflash) {
 	MY(tex_min) = 8;
 	MY(tex_max) = 15;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 0.200000;
 }
 
@@ -5906,7 +5735,7 @@ SUB(torchflame) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '40.0 40.0 11.0';
+	MY(velocityjitter) = '40 40 11';
 	MY(velocitymultiplier) = 30;
 }
 // slow fire
@@ -5925,7 +5754,7 @@ SUB(torchflame) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '40.0 40.0 40.0';
+	MY(velocityjitter) = '40 40 40';
 	MY(velocitymultiplier) = 20;
 }
 // very slow and small fire
@@ -5944,7 +5773,7 @@ SUB(torchflame) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '30.0 30.0 30.0';
+	MY(velocityjitter) = '30 30 30';
 	MY(velocitymultiplier) = 10;
 }
 // decreasing fire
@@ -5963,7 +5792,7 @@ SUB(torchflame) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocityjitter) = '10 10 10';
 	MY(velocitymultiplier) = 15;
 }
 // smoke
@@ -5975,14 +5804,14 @@ SUB(torchflame) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x111111";
 	MY(count) = 0.500000;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(sizeincrease) = 7;
 	MY(size_min) = 5;
 	MY(size_max) = 15;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
 	MY(velocitymultiplier) = 20;
-	MY(velocityoffset) = '0.0 0.0 10.0';
+	MY(velocityoffset) = '0 0 10';
 }
 
 #include "effectinfo_gentle_happy.inc"
@@ -5992,10 +5821,10 @@ SUB(electro_lightning) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightcolor) = '3.1 4.4 10';
 	MY(lightradiusfade) = 500;
 	MY(lightradius) = 50;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(tex_min) = 59;
@@ -6016,7 +5845,7 @@ SUB(electro_lightning) {
 	MY(tex_min) = 65;
 	MY(tex_max) = 65;
 	MY(type) = "spark";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 2000;
 }
 SUB(electro_lightning) {
@@ -6027,14 +5856,14 @@ SUB(electro_lightning) {
 	MY(color_min) = "0xDDFDFF";
 	MY(color_max) = "0xFDFDFF";
 	MY(count) = 30;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 2;
 	MY(size_max) = 5;
 	MY(stretchfactor) = 1.500000;
 	MY(tex_min) = 8;
 	MY(tex_max) = 15;
 	MY(type) = "spark";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.500000;
 }
 SUB(electro_lightning) {
@@ -6046,14 +5875,14 @@ SUB(electro_lightning) {
 	MY(color_max) = "0xF9FDFF";
 	MY(count) = 50;
 	MY(gravity) = 1.300000;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 2;
 	MY(size_max) = 3;
 	MY(stretchfactor) = 0.100000;
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocityjitter) = '350 350 350';
 	MY(velocitymultiplier) = 2.500000;
 }
 
@@ -6072,7 +5901,7 @@ SUB(gauntlet_lightning) {
 	MY(tex_min) = 65;
 	MY(tex_max) = 65;
 	MY(type) = "spark";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 2000;
 }
 SUB(gauntlet_lightning) {
@@ -6083,14 +5912,14 @@ SUB(gauntlet_lightning) {
 	MY(color_min) = "0xDD0000";
 	MY(color_max) = "0xFD0000";
 	MY(count) = 30;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 2;
 	MY(size_max) = 5;
 	MY(stretchfactor) = 1.500000;
 	MY(tex_min) = 8;
 	MY(tex_max) = 15;
 	MY(type) = "spark";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.500000;
 }
 SUB(gauntlet_lightning) {
@@ -6102,14 +5931,14 @@ SUB(gauntlet_lightning) {
 	MY(color_max) = "0xF90000";
 	MY(count) = 50;
 	MY(gravity) = 1.300000;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 2;
 	MY(size_max) = 3;
 	MY(stretchfactor) = 0.100000;
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocityjitter) = '350 350 350';
 	MY(velocitymultiplier) = 2.500000;
 }
 
@@ -6119,7 +5948,7 @@ SUB(crylink_joinexplode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(originjitter) = '12.0 12.0 12.0';
+	MY(originjitter) = '12 12 12';
 	MY(size_min) = 24;
 	MY(size_max) = 24;
 	MY(tex_min) = 47;
@@ -6154,7 +5983,7 @@ SUB(crylink_joinexplode) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // purple splash
 SUB(crylink_joinexplode) {
@@ -6167,7 +5996,7 @@ SUB(crylink_joinexplode) {
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 }
 // purple splash
 SUB(crylink_joinexplode) {
@@ -6180,7 +6009,7 @@ SUB(crylink_joinexplode) {
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(type) = "static";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 
 // sparks for keepaway ball touch
@@ -6194,13 +6023,13 @@ SUB(kaball_sparks) {
 	MY(color_max) = "0x0054ff";
 	MY(count) = 35;
 	MY(gravity) = 1;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocityjitter) = '300 300 300';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -6233,7 +6062,7 @@ SUB(tr_rifle_weak) {
 	MY(tex_max) = 8;
 	MY(trailspacing) = 48;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '4.0 4.0 4.0';
+	MY(velocityjitter) = '4 4 4';
 }
 SUB(tr_rifle_weak) {
 	MY(alpha_min) = 256;
@@ -6251,7 +6080,7 @@ SUB(tr_rifle_weak) {
 	MY(trailspacing) = 192;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }
 
 // red smoke emiter
@@ -6294,7 +6123,7 @@ SUB(pipe_smoke) {
 	MY(size_max) = 10;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '0.0 0.0 5.0';
+	MY(velocityjitter) = '0 0 5';
 	MY(velocitymultiplier) = 15;
 }
 
@@ -6307,10 +6136,10 @@ SUB(TR_SEEKER) {
 	MY(bounce) = 1;
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x666666";
-	MY(lightcolor) = '6.0 3.0 1.0';
+	MY(lightcolor) = '6 3 1';
 	MY(lightradius) = 100;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
@@ -6321,7 +6150,7 @@ SUB(TR_SEEKER) {
 	MY(tex_max) = 8;
 	MY(trailspacing) = 10;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocityjitter) = '3 3 3';
 	MY(velocitymultiplier) = -0.020000;
 }
 // fire
@@ -6339,7 +6168,7 @@ SUB(TR_SEEKER) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = -1.500000;
 }
 // bubbles
@@ -6357,7 +6186,7 @@ SUB(TR_SEEKER) {
 	MY(trailspacing) = 16;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 	MY(velocitymultiplier) = -0.310000;
 }
 // sparks
@@ -6370,7 +6199,7 @@ SUB(TR_SEEKER) {
 	MY(color_min) = "0xFFFDD9";
 	MY(color_max) = "0xFFFDD9";
 	MY(notunderwater) = true;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 0.500000;
 	MY(size_max) = 0.500000;
 	MY(stretchfactor) = 0.300000;
@@ -6378,7 +6207,7 @@ SUB(TR_SEEKER) {
 	MY(tex_max) = 40;
 	MY(trailspacing) = 20;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = -0.310000;
 }
 
@@ -6391,10 +6220,10 @@ SUB(explosion_big) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 4.0 0.0';
+	MY(lightcolor) = '8 4 0';
 	MY(lightradiusfade) = 1750;
 	MY(lightradius) = 600;
-	MY(originjitter) = '23.0 23.0 23.0';
+	MY(originjitter) = '23 23 23';
 	MY(size_min) = 172;
 	MY(size_max) = 172;
 	MY(tex_min) = 8;
@@ -6427,14 +6256,14 @@ SUB(explosion_big) {
 	MY(count) = 64;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '80.0 80.0 80.0';
+	MY(originjitter) = '80 80 80';
 	MY(sizeincrease) = 45;
 	MY(size_min) = 133;
 	MY(size_max) = 144;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '2512.0 2512.0 2512.0';
+	MY(velocityjitter) = '2512 2512 2512';
 }
 // fire rays
 SUB(explosion_big) {
@@ -6447,7 +6276,7 @@ SUB(explosion_big) {
 	MY(count) = 64;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(sizeincrease) = 45;
 	MY(size_min) = 133;
 	MY(size_max) = 144;
@@ -6455,7 +6284,7 @@ SUB(explosion_big) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // smoke
 SUB(explosion_big) {
@@ -6472,7 +6301,7 @@ SUB(explosion_big) {
 	MY(size_max) = 100;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '3444.0 3444.0 3444.0';
+	MY(velocityjitter) = '3444 3444 3444';
 }
 // bouncing sparks
 SUB(explosion_big) {
@@ -6486,15 +6315,15 @@ SUB(explosion_big) {
 	MY(gravity) = 1;
 	MY(liquidfriction) = 0.800000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '160.0 160.0 160.0';
+	MY(originjitter) = '160 160 160';
 	MY(size_min) = 3;
 	MY(size_max) = 4;
 	MY(stretchfactor) = 0.700000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '924.0 924.0 924.0';
-	MY(velocityoffset) = '0.0 0.0 370.0';
+	MY(velocityjitter) = '924 924 924';
+	MY(velocityoffset) = '0 0 370';
 }
 // debris
 SUB(explosion_big) {
@@ -6517,8 +6346,8 @@ SUB(explosion_big) {
 	MY(tex_min) = 66;
 	MY(tex_max) = 68;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '1800.0 1800.0 1800.0';
-	MY(velocityoffset) = '0.0 0.0 970.0';
+	MY(velocityjitter) = '1800 1800 1800';
+	MY(velocityoffset) = '0 0 970';
 }
 // underwater bubbles
 SUB(explosion_big) {
@@ -6531,14 +6360,14 @@ SUB(explosion_big) {
 	MY(count) = 32;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '160.0 160.0 160.0';
+	MY(originjitter) = '160 160 160';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '444.0 444.0 444.0';
+	MY(velocityjitter) = '444 444 444';
 }
 // underwatershockwave
 SUB(explosion_big) {
@@ -6584,7 +6413,7 @@ SUB(explosion_medium) {
 	MY(count) = 32;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '30.0 30.0 30.0';
+	MY(originjitter) = '30 30 30';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -500;
@@ -6595,7 +6424,7 @@ SUB(explosion_medium) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '1512.0 1512.0 1512.0';
+	MY(velocityjitter) = '1512 1512 1512';
 }
 // fire effect 2
 SUB(explosion_medium) {
@@ -6609,7 +6438,7 @@ SUB(explosion_medium) {
 	MY(gravity) = -2;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '30.0 30.0 30.0';
+	MY(originjitter) = '30 30 30';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -150;
@@ -6620,7 +6449,7 @@ SUB(explosion_medium) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '1512.0 1512.0 1512.0';
+	MY(velocityjitter) = '1512 1512 1512';
 }
 // fire rays
 SUB(explosion_medium) {
@@ -6633,7 +6462,7 @@ SUB(explosion_medium) {
 	MY(count) = 14;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(sizeincrease) = 40;
 	MY(size_min) = 43;
 	MY(size_max) = 74;
@@ -6641,7 +6470,7 @@ SUB(explosion_medium) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // smoke
 SUB(explosion_medium) {
@@ -6653,7 +6482,7 @@ SUB(explosion_medium) {
 	MY(color_max) = "0x000000";
 	MY(count) = 5;
 	MY(notunderwater) = true;
-	MY(originjitter) = '100.0 100.0 100.0';
+	MY(originjitter) = '100 100 100';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -20;
@@ -6663,7 +6492,7 @@ SUB(explosion_medium) {
 	MY(size_max) = 300;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityjitter) = '200 200 200';
 }
 // smoke 2
 SUB(explosion_medium) {
@@ -6676,7 +6505,7 @@ SUB(explosion_medium) {
 	MY(count) = 10;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '100.0 100.0 100.0';
+	MY(originjitter) = '100 100 100';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -20;
@@ -6686,8 +6515,8 @@ SUB(explosion_medium) {
 	MY(size_max) = 100;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '500.0 500.0 500.0';
-	MY(velocityoffset) = '0.0 0.0 200.0';
+	MY(velocityjitter) = '500 500 500';
+	MY(velocityoffset) = '0 0 200';
 }
 // smoke rays
 SUB(explosion_medium) {
@@ -6698,14 +6527,14 @@ SUB(explosion_medium) {
 	MY(color_max) = "0x000000";
 	MY(count) = 13;
 	MY(notunderwater) = true;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(sizeincrease) = 100;
 	MY(size_min) = 150;
 	MY(size_max) = 200;
 	MY(stretchfactor) = 50;
 	MY(tex_max) = 8;
 	MY(type) = "spark";
-	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocityjitter) = '250 250 250';
 }
 // bouncing sparks
 SUB(explosion_medium) {
@@ -6719,15 +6548,15 @@ SUB(explosion_medium) {
 	MY(gravity) = 1;
 	MY(liquidfriction) = 0.800000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '100.0 100.0 100.0';
+	MY(originjitter) = '100 100 100';
 	MY(size_min) = 2;
 	MY(size_max) = 3;
 	MY(stretchfactor) = 0.700000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '624.0 624.0 624.0';
-	MY(velocityoffset) = '0.0 0.0 370.0';
+	MY(velocityjitter) = '624 624 624';
+	MY(velocityoffset) = '0 0 370';
 }
 // underwater bubbles
 SUB(explosion_medium) {
@@ -6740,14 +6569,14 @@ SUB(explosion_medium) {
 	MY(count) = 32;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '160.0 160.0 160.0';
+	MY(originjitter) = '160 160 160';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '444.0 444.0 444.0';
+	MY(velocityjitter) = '444 444 444';
 }
 // underwatershockwave
 SUB(explosion_medium) {
@@ -6803,7 +6632,7 @@ SUB(explosion_small) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // fire effect 2
 SUB(explosion_small) {
@@ -6826,7 +6655,7 @@ SUB(explosion_small) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '912.0 912.0 912.0';
+	MY(velocityjitter) = '912 912 912';
 }
 // fire rays
 SUB(explosion_small) {
@@ -6839,7 +6668,7 @@ SUB(explosion_small) {
 	MY(count) = 14;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '40.0 40.0 40.0';
+	MY(originjitter) = '40 40 40';
 	MY(sizeincrease) = 30;
 	MY(size_min) = 13;
 	MY(size_max) = 54;
@@ -6847,7 +6676,7 @@ SUB(explosion_small) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '512.0 512.0 512.0';
+	MY(velocityjitter) = '512 512 512';
 }
 // underwater bubbles
 SUB(explosion_small) {
@@ -6860,14 +6689,14 @@ SUB(explosion_small) {
 	MY(count) = 32;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '160.0 160.0 160.0';
+	MY(originjitter) = '160 160 160';
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '144.0 144.0 144.0';
+	MY(velocityjitter) = '144 144 144';
 }
 // underwatershockwave
 SUB(explosion_small) {
@@ -6896,7 +6725,7 @@ SUB(smoke_big) {
 	MY(count) = 3;
 	MY(gravity) = -0.500000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '55.0 55.0 55.0';
+	MY(originjitter) = '55 55 55';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -20;
@@ -6906,8 +6735,8 @@ SUB(smoke_big) {
 	MY(size_max) = 60;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '140.0 140.0 200.0';
-	MY(velocityoffset) = '0.0 0.0 200.0';
+	MY(velocityjitter) = '140 140 200';
+	MY(velocityoffset) = '0 0 200';
 }
 
 // small smoke ( more precise than big one, for spamming on damaged parts like raptors spinner )
@@ -6931,8 +6760,8 @@ SUB(smoke_small) {
 	MY(size_max) = 100;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '40.0 40.0 400.0';
-	MY(velocityoffset) = '0.0 0.0 200.0';
+	MY(velocityjitter) = '40 40 400';
+	MY(velocityoffset) = '0 0 200';
 }
 
 // metal impact effect
@@ -6945,7 +6774,7 @@ SUB(impact_metal) {
 	MY(color_max) = "0x886666";
 	MY(count) = 1;
 	MY(gravity) = -0.010000;
-	MY(originjitter) = '20.0 20.0 5.0';
+	MY(originjitter) = '20 20 5';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 3;
 	MY(size_max) = 6;
@@ -6969,7 +6798,7 @@ SUB(impact_metal) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '200.0 200.0 300.0';
+	MY(velocityjitter) = '200 200 300';
 	MY(velocitymultiplier) = 2;
 }
 
@@ -6983,7 +6812,7 @@ SUB(impact_stone) {
 	MY(color_max) = "0xcc9966";
 	MY(count) = 1;
 	MY(gravity) = -0.010000;
-	MY(originjitter) = '20.0 20.0 5.0';
+	MY(originjitter) = '20 20 5';
 	MY(sizeincrease) = 15;
 	MY(size_min) = 3;
 	MY(size_max) = 6;
@@ -7011,7 +6840,7 @@ SUB(impact_stone) {
 	MY(tex_min) = 66;
 	MY(tex_max) = 68;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '124.0 124.0 324.0';
+	MY(velocityjitter) = '124 124 324';
 }
 
 // wood impact effect
@@ -7024,7 +6853,7 @@ SUB(impact_wood) {
 	MY(color_max) = "0xcc9966";
 	MY(count) = 1;
 	MY(gravity) = -0.010000;
-	MY(originjitter) = '20.0 20.0 5.0';
+	MY(originjitter) = '20 20 5';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 3;
 	MY(size_max) = 6;
@@ -7047,7 +6876,7 @@ SUB(impact_wood) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '180.0 180.0 260.0';
+	MY(velocityjitter) = '180 180 260';
 	MY(velocitymultiplier) = 2;
 }
 
@@ -7060,7 +6889,7 @@ SUB(impact_flesh) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x420000";
 	MY(count) = 0.500000;
-	MY(originjitter) = '11.0 11.0 11.0';
+	MY(originjitter) = '11 11 11';
 	MY(size_min) = 8;
 	MY(size_max) = 12;
 	MY(tex_max) = 8;
@@ -7086,7 +6915,7 @@ SUB(impact_flesh) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '96.0 96.0 96.0';
+	MY(velocityjitter) = '96 96 96';
 	MY(velocitymultiplier) = 5;
 }
 
@@ -7100,14 +6929,14 @@ SUB(tr_hagar) {
 	MY(bounce) = 1;
 	MY(color_min) = "0x101010";
 	MY(color_max) = "0x000000";
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 3;
 	MY(size_max) = 2;
 	MY(tex_max) = 8;
 	MY(trailspacing) = 4;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocityjitter) = '1 1 1';
 	MY(velocitymultiplier) = -0.020000;
 }
 // fire
@@ -7126,7 +6955,7 @@ SUB(tr_hagar) {
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
 	MY(type) = "static";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = -1;
 }
 // bubbles
@@ -7146,7 +6975,7 @@ SUB(tr_hagar) {
 	MY(trailspacing) = 16;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }
 
 // laser damage effect
@@ -7160,7 +6989,7 @@ SUB(damage_blaster) {
 	MY(color_max) = "0xff4400";
 	MY(count) = 3;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
 	MY(spin_max) = 30;
@@ -7193,7 +7022,7 @@ SUB(damage_shotgun) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7204,7 +7033,7 @@ SUB(damage_shotgun) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x420000";
 	MY(count) = 1;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 8;
 	MY(size_max) = 16;
 	MY(tex_max) = 8;
@@ -7232,7 +7061,7 @@ SUB(alien_damage_shotgun) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7243,7 +7072,7 @@ SUB(alien_damage_shotgun) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x204010";
 	MY(count) = 1;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 8;
 	MY(size_max) = 16;
 	MY(tex_max) = 8;
@@ -7271,7 +7100,7 @@ SUB(robot_damage_shotgun) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityjitter) = '64 64 64';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7282,7 +7111,7 @@ SUB(robot_damage_shotgun) {
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x301860";
 	MY(count) = 1;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 8;
 	MY(size_max) = 16;
 	MY(tex_max) = 8;
@@ -7310,7 +7139,7 @@ SUB(damage_machinegun) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7348,7 +7177,7 @@ SUB(alien_damage_machinegun) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7386,7 +7215,7 @@ SUB(robot_damage_machinegun) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7414,14 +7243,14 @@ SUB(damage_minelayer) {
 	MY(count) = 3;
 	MY(gravity) = -0.500000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = -15;
 	MY(size_min) = 4;
 	MY(size_max) = 8;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '22.0 22.0 50.0';
+	MY(velocityjitter) = '22 22 50';
 }
 // smoke
 SUB(damage_minelayer) {
@@ -7433,13 +7262,13 @@ SUB(damage_minelayer) {
 	MY(count) = 2;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(sizeincrease) = 5;
 	MY(size_min) = 4;
 	MY(size_max) = 8;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 
 // mortar damage effect
@@ -7453,14 +7282,14 @@ SUB(damage_mortar) {
 	MY(count) = 3;
 	MY(gravity) = -0.500000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = -15;
 	MY(size_min) = 4;
 	MY(size_max) = 8;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '22.0 22.0 50.0';
+	MY(velocityjitter) = '22 22 50';
 }
 // smoke
 SUB(damage_mortar) {
@@ -7472,13 +7301,13 @@ SUB(damage_mortar) {
 	MY(count) = 2;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(sizeincrease) = 5;
 	MY(size_min) = 4;
 	MY(size_max) = 8;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 
 // arc damage effect
@@ -7494,7 +7323,7 @@ SUB(damage_arc) {
 	MY(gravity) = -0.000100;
 	MY(liquidfriction) = 0.600000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_min) = 180;
 	MY(startangle_max) = 360;
 	MY(spin_min) = -30;
@@ -7505,7 +7334,7 @@ SUB(damage_arc) {
 	MY(tex_min) = 47;
 	MY(tex_max) = 47;
 	MY(type) = "static";
-	MY(velocityjitter) = '6.0 6.0 12.0';
+	MY(velocityjitter) = '6 6 12';
 }
 // plasma smoke
 SUB(damage_arc) {
@@ -7517,7 +7346,7 @@ SUB(damage_arc) {
 	MY(color_max) = "0x002266";
 	MY(count) = 4;
 	MY(notunderwater) = true;
-	MY(originjitter) = '3.0 3.0 3.0';
+	MY(originjitter) = '3 3 3';
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
 	MY(spin_max) = 30;
@@ -7545,7 +7374,7 @@ SUB(damage_arc) {
 	MY(tex_min) = 66;
 	MY(tex_max) = 68;
 	MY(type) = "spark";
-	MY(velocityjitter) = '24.0 24.0 24.0';
+	MY(velocityjitter) = '24 24 24';
 }
 
 // electro damage effect
@@ -7561,7 +7390,7 @@ SUB(damage_electro) {
 	MY(gravity) = -0.000100;
 	MY(liquidfriction) = 0.800000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '3.0 3.0 3.0';
+	MY(originjitter) = '3 3 3';
 	MY(startangle_min) = 180;
 	MY(startangle_max) = 360;
 	MY(spin_min) = -30;
@@ -7572,7 +7401,7 @@ SUB(damage_electro) {
 	MY(tex_min) = 47;
 	MY(tex_max) = 47;
 	MY(type) = "static";
-	MY(velocityjitter) = '8.0 8.0 16.0';
+	MY(velocityjitter) = '8 8 16';
 }
 // plasma smoke
 SUB(damage_electro) {
@@ -7584,7 +7413,7 @@ SUB(damage_electro) {
 	MY(color_max) = "0x002266";
 	MY(count) = 4;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
 	MY(spin_max) = 30;
@@ -7612,7 +7441,7 @@ SUB(damage_electro) {
 	MY(tex_min) = 66;
 	MY(tex_max) = 68;
 	MY(type) = "spark";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 }
 
 // crylink damage effect
@@ -7628,7 +7457,7 @@ SUB(damage_crylink) {
 	MY(gravity) = -0.000100;
 	MY(liquidfriction) = 0.800000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '3.0 3.0 3.0';
+	MY(originjitter) = '3 3 3';
 	MY(startangle_min) = 180;
 	MY(startangle_max) = 360;
 	MY(spin_min) = -30;
@@ -7639,7 +7468,7 @@ SUB(damage_crylink) {
 	MY(tex_min) = 38;
 	MY(tex_max) = 38;
 	MY(type) = "static";
-	MY(velocityjitter) = '10.0 10.0 20.0';
+	MY(velocityjitter) = '10 10 20';
 }
 // plasma smoke
 SUB(damage_crylink) {
@@ -7652,7 +7481,7 @@ SUB(damage_crylink) {
 	MY(count) = 4;
 	MY(gravity) = 0.001000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
 	MY(spin_max) = 30;
@@ -7677,7 +7506,7 @@ SUB(damage_crylink) {
 	MY(size_min) = 0.500000;
 	MY(size_max) = 0.500000;
 	MY(type) = "spark";
-	MY(velocityjitter) = '12.0 12.0 12.0';
+	MY(velocityjitter) = '12 12 12';
 }
 
 // hlac damage effect
@@ -7691,7 +7520,7 @@ SUB(damage_hlac) {
 	MY(color_max) = "0xff4400";
 	MY(count) = 3;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
 	MY(spin_max) = 30;
@@ -7715,7 +7544,7 @@ SUB(damage_vortex) {
 	MY(count) = 1;
 	MY(gravity) = -0.000100;
 	MY(liquidfriction) = 0.600000;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(startangle_min) = 180;
 	MY(startangle_max) = 360;
 	MY(spin_min) = -30;
@@ -7726,7 +7555,7 @@ SUB(damage_vortex) {
 	MY(tex_min) = 47;
 	MY(tex_max) = 47;
 	MY(type) = "static";
-	MY(velocityjitter) = '8.0 8.0 16.0';
+	MY(velocityjitter) = '8 8 16';
 }
 // plasma smoke
 SUB(damage_vortex) {
@@ -7737,7 +7566,7 @@ SUB(damage_vortex) {
 	MY(color_min) = "0x6688ff";
 	MY(color_max) = "0x226688";
 	MY(count) = 2;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
 	MY(spin_max) = 30;
@@ -7765,7 +7594,7 @@ SUB(damage_vortex) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 300.0';
+	MY(velocityjitter) = '100 100 300';
 	MY(velocitymultiplier) = 3;
 }
 
@@ -7781,7 +7610,7 @@ SUB(damage_vaporizer) {
 	MY(count) = 2;
 	MY(gravity) = -0.000100;
 	MY(liquidfriction) = 0.600000;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(startangle_min) = 180;
 	MY(startangle_max) = 360;
 	MY(spin_min) = -30;
@@ -7792,7 +7621,7 @@ SUB(damage_vaporizer) {
 	MY(tex_min) = 47;
 	MY(tex_max) = 47;
 	MY(type) = "static";
-	MY(velocityjitter) = '8.0 8.0 16.0';
+	MY(velocityjitter) = '8 8 16';
 }
 // plasma smoke
 SUB(damage_vaporizer) {
@@ -7803,7 +7632,7 @@ SUB(damage_vaporizer) {
 	MY(color_min) = "0x6688ff";
 	MY(color_max) = "0x226688";
 	MY(count) = 4;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_max) = 180;
 	MY(spin_min) = -30;
 	MY(spin_max) = 30;
@@ -7831,7 +7660,7 @@ SUB(damage_vaporizer) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 300.0';
+	MY(velocityjitter) = '100 100 300';
 	MY(velocitymultiplier) = 3;
 }
 
@@ -7856,7 +7685,7 @@ SUB(damage_rifle) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7894,7 +7723,7 @@ SUB(damage_rifle_alien) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7932,7 +7761,7 @@ SUB(damage_rifle_robot) {
 	MY(tex_min) = 24;
 	MY(tex_max) = 32;
 	MY(type) = "blood";
-	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocityjitter) = '32 32 32';
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
@@ -7960,14 +7789,14 @@ SUB(damage_seeker) {
 	MY(count) = 3;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = -10;
 	MY(size_min) = 4;
 	MY(size_max) = 8;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '22.0 22.0 50.0';
+	MY(velocityjitter) = '22 22 50';
 }
 // smoke
 SUB(damage_seeker) {
@@ -7979,13 +7808,13 @@ SUB(damage_seeker) {
 	MY(count) = 2;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 2;
 	MY(size_max) = 4;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 
 // hagar damage effect
@@ -7999,14 +7828,14 @@ SUB(damage_hagar) {
 	MY(count) = 3;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = -10;
 	MY(size_min) = 4;
 	MY(size_max) = 8;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '22.0 22.0 50.0';
+	MY(velocityjitter) = '22 22 50';
 }
 // smoke
 SUB(damage_hagar) {
@@ -8018,13 +7847,13 @@ SUB(damage_hagar) {
 	MY(count) = 2;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 2;
 	MY(size_max) = 4;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 
 // fireball damage effect
@@ -8038,14 +7867,14 @@ SUB(damage_fireball) {
 	MY(count) = 4;
 	MY(gravity) = -0.500000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = -10;
 	MY(size_min) = 5;
 	MY(size_max) = 10;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '22.0 22.0 50.0';
+	MY(velocityjitter) = '22 22 50';
 }
 // smoke
 SUB(damage_fireball) {
@@ -8057,13 +7886,13 @@ SUB(damage_fireball) {
 	MY(count) = 4;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 4;
 	MY(size_max) = 8;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 
 // rocketlauncher damage effect
@@ -8077,14 +7906,14 @@ SUB(damage_devastator) {
 	MY(count) = 3;
 	MY(gravity) = -0.700000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(sizeincrease) = -10;
 	MY(size_min) = 5;
 	MY(size_max) = 10;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '22.0 22.0 30.0';
+	MY(velocityjitter) = '22 22 30';
 }
 // smoke
 SUB(damage_devastator) {
@@ -8096,13 +7925,13 @@ SUB(damage_devastator) {
 	MY(count) = 3;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '4.0 4.0 4.0';
+	MY(originjitter) = '4 4 4';
 	MY(sizeincrease) = 10;
 	MY(size_min) = 4;
 	MY(size_max) = 8;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '11.0 11.0 50.0';
+	MY(velocityjitter) = '11 11 50';
 }
 
 // fireflies
@@ -8116,8 +7945,8 @@ SUB(fireflies) {
 	MY(color_min) = "0xff9600";
 	MY(color_max) = "0xffefb8";
 	MY(count) = 1;
-	MY(originjitter) = '32.0 32.0 32.0';
-	MY(originoffset) = '8.0 8.0 8.0';
+	MY(originjitter) = '32 32 32';
+	MY(originoffset) = '8 8 8';
 	MY(sizeincrease) = -0.300000;
 	MY(size_min) = 2;
 	MY(size_max) = 3;
@@ -8126,8 +7955,8 @@ SUB(fireflies) {
 	MY(time_min) = 1;
 	MY(time_max) = 2;
 	MY(type) = "static";
-	MY(velocityjitter) = '64.0 64.0 64.0';
-	MY(velocityoffset) = '2.0 2.0 2.0';
+	MY(velocityjitter) = '64 64 64';
+	MY(velocityoffset) = '2 2 2';
 }
 
 DEF(healray_muzzleflash);
@@ -8138,7 +7967,7 @@ SUB(healray_muzzleflash) {
 	MY(color_min) = "0x283880";
 	MY(color_max) = "0x283880";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightcolor) = '1.5 3 6';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -8148,7 +7977,7 @@ SUB(healray_muzzleflash) {
 	MY(tex_min) = 65;
 	MY(tex_max) = 65;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(healray_muzzleflash) {
@@ -8159,7 +7988,7 @@ SUB(healray_muzzleflash) {
 	MY(color_min) = "0xD9FDFF";
 	MY(color_max) = "0x00f0ff";
 	MY(count) = 22;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = 3;
 	MY(size_min) = 1;
 	MY(size_max) = 15;
@@ -8167,7 +7996,7 @@ SUB(healray_muzzleflash) {
 	MY(tex_min) = 71;
 	MY(tex_max) = 73;
 	MY(type) = "spark";
-	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocityjitter) = '150 150 150';
 	MY(velocitymultiplier) = 0.400000;
 }
 SUB(healray_muzzleflash) {
@@ -8177,14 +8006,14 @@ SUB(healray_muzzleflash) {
 	MY(color_min) = "0xD9FDFF";
 	MY(color_max) = "0x00f0ff";
 	MY(count) = 4;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 1;
 	MY(stretchfactor) = 0.200000;
 	MY(tex_min) = 70;
 	MY(tex_max) = 70;
 	MY(type) = "spark";
-	MY(velocityjitter) = '650.0 650.0 650.0';
+	MY(velocityjitter) = '650 650 650';
 	MY(velocitymultiplier) = 1.100000;
 }
 
@@ -8195,10 +8024,10 @@ SUB(healray_impact) {
 	MY(color_min) = "0xd800ff";
 	MY(color_max) = "0xd800ff";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '0.0 4.4 0.0';
+	MY(lightcolor) = '0 4.4 0';
 	MY(lightradiusfade) = 450;
 	MY(lightradius) = 125;
-	MY(originjitter) = '17.0 17.0 17.0';
+	MY(originjitter) = '17 17 17';
 	MY(size_min) = 32;
 	MY(size_max) = 32;
 	MY(tex_min) = 59;
@@ -8231,13 +8060,13 @@ SUB(healray_impact) {
 	MY(color_max) = "0x84c52f";
 	MY(count) = 30;
 	MY(gravity) = 2;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 2;
 	MY(tex_min) = 70;
 	MY(tex_max) = 70;
 	MY(type) = "spark";
-	MY(velocityjitter) = '1112.0 1112.0 1112.0';
+	MY(velocityjitter) = '1112 1112 1112';
 }
 // inner cloud of smoke
 SUB(healray_impact) {
@@ -8258,7 +8087,7 @@ SUB(healray_impact) {
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '120.0 120.0 420.0';
+	MY(velocityjitter) = '120 120 420';
 }
 
 DEF(bigplasma_muzzleflash);
@@ -8269,7 +8098,7 @@ SUB(bigplasma_muzzleflash) {
 	MY(color_min) = "0x283880";
 	MY(color_max) = "0x283880";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightcolor) = '1.5 3 6';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -8279,7 +8108,7 @@ SUB(bigplasma_muzzleflash) {
 	MY(tex_min) = 65;
 	MY(tex_max) = 65;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(bigplasma_muzzleflash) {
@@ -8304,7 +8133,7 @@ SUB(bigplasma_muzzleflash) {
 	MY(color_min) = "0xD9FDFF";
 	MY(color_max) = "0x00f0ff";
 	MY(count) = 14;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(sizeincrease) = 135;
 	MY(size_min) = 5;
 	MY(size_max) = 10;
@@ -8312,7 +8141,7 @@ SUB(bigplasma_muzzleflash) {
 	MY(tex_min) = 51;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocityjitter) = '350 350 350';
 	MY(velocitymultiplier) = 0.400000;
 }
 SUB(bigplasma_muzzleflash) {
@@ -8322,14 +8151,14 @@ SUB(bigplasma_muzzleflash) {
 	MY(color_min) = "0xD9FDFF";
 	MY(color_max) = "0x00f0ff";
 	MY(count) = 4;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 20;
 	MY(size_max) = 20;
 	MY(stretchfactor) = 0.200000;
 	MY(tex_min) = 70;
 	MY(tex_max) = 70;
 	MY(type) = "spark";
-	MY(velocityjitter) = '650.0 650.0 650.0';
+	MY(velocityjitter) = '650 650 650';
 	MY(velocitymultiplier) = 1.100000;
 }
 
@@ -8338,10 +8167,10 @@ SUB(bigplasma_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightcolor) = '3.1 4.4 10';
 	MY(lightradiusfade) = 450;
 	MY(lightradius) = 125;
-	MY(originjitter) = '17.0 17.0 17.0';
+	MY(originjitter) = '17 17 17';
 	MY(size_min) = 32;
 	MY(size_max) = 32;
 	MY(tex_min) = 59;
@@ -8374,13 +8203,13 @@ SUB(bigplasma_impact) {
 	MY(color_max) = "0x0018ff";
 	MY(count) = 30;
 	MY(gravity) = 2;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(size_min) = 1;
 	MY(size_max) = 2;
 	MY(tex_min) = 70;
 	MY(tex_max) = 70;
 	MY(type) = "spark";
-	MY(velocityjitter) = '1512.0 1512.0 1512.0';
+	MY(velocityjitter) = '1512 1512 1512';
 }
 // inner cloud of smoke
 SUB(bigplasma_impact) {
@@ -8391,7 +8220,7 @@ SUB(bigplasma_impact) {
 	MY(color_min) = "0x629dff";
 	MY(color_max) = "0x0018ff";
 	MY(count) = 15;
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(originjitter) = '20 20 20';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -9;
@@ -8402,7 +8231,7 @@ SUB(bigplasma_impact) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '320.0 320.0 320.0';
+	MY(velocityjitter) = '320 320 320';
 }
 // smoke
 SUB(bigplasma_impact) {
@@ -8415,7 +8244,7 @@ SUB(bigplasma_impact) {
 	MY(color_max) = "0x000000";
 	MY(count) = 16;
 	MY(gravity) = 0.400000;
-	MY(originjitter) = '80.0 80.0 10.0';
+	MY(originjitter) = '80 80 10';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = 2;
@@ -8425,8 +8254,8 @@ SUB(bigplasma_impact) {
 	MY(size_max) = 30;
 	MY(tex_max) = 7;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '100.0 100.0 200.0';
-	MY(velocityoffset) = '0.0 0.0 180.0';
+	MY(velocityjitter) = '100 100 200';
+	MY(velocityoffset) = '0 0 180';
 }
 // smoke in the middle
 SUB(bigplasma_impact) {
@@ -8438,7 +8267,7 @@ SUB(bigplasma_impact) {
 	MY(color_max) = "0x000000";
 	MY(count) = 10;
 	MY(gravity) = -0.200000;
-	MY(originjitter) = '80.0 80.0 80.0';
+	MY(originjitter) = '80 80 80';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = 20;
@@ -8448,30 +8277,13 @@ SUB(bigplasma_impact) {
 	MY(size_max) = 70;
 	MY(tex_max) = 7;
 	MY(type) = "alphastatic";
-	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocityjitter) = '10 10 10';
 }
 
 #include "effectinfo_ctf.inc"
 
 // spawn_point -- team idle spawn point effect
-#define spawn_point(name, color) \
-	DEF(spawn_point_##name); \
-	SUB(spawn_point_##name) { \
-		MY(airfriction) = 0.200000; \
-		MY(alpha_min) = 64; \
-		MY(alpha_max) = 128; \
-		MY(alpha_fade) = 128; \
-		MY(color_min) = color; \
-		MY(color_max) = color; \
-		MY(count) = 37.500000; \
-		MY(gravity) = -0.100000; \
-		MY(liquidfriction) = 0.800000; \
-		MY(originjitter) = '16.0 16.0 64.0'; \
-		MY(size_min) = 1; \
-		MY(size_max) = 2; \
-		MY(type) = "static"; \
-		MY(velocityjitter) = '32.0 32.0 0.0'; \
-	}
+#define spawn_point(name, color) 	DEF(spawn_point_##name); 	SUB(spawn_point_##name) { 		MY(airfriction) = 0.200000; 		MY(alpha_min) = 64; 		MY(alpha_max) = 128; 		MY(alpha_fade) = 128; 		MY(color_min) = color; 		MY(color_max) = color; 		MY(count) = 37.500000; 		MY(gravity) = -0.100000; 		MY(liquidfriction) = 0.800000; 		MY(originjitter) = '16 16 64'; 		MY(size_min) = 1; 		MY(size_max) = 2; 		MY(type) = "static"; 		MY(velocityjitter) = '32 32 0'; 	}
 
 spawn_point(red, 		"0xFF0F0F")
 spawn_point(blue, 		"0x0F0FFF")
@@ -8481,41 +8293,7 @@ spawn_point(neutral, 	"0xFFFFFF")
 #undef spawn_point
 
 // spawn_event -- team spawning effect
-#define spawn_event(name, color) \
-	DEF(spawn_event_##name); \
-	SUB(spawn_event_##name) { \
-		MY(airfriction) = 2; \
-		MY(alpha_max) = 256; \
-		MY(alpha_fade) = 256; \
-		MY(bounce) = 1; \
-		MY(color_min) = color; \
-		MY(color_max) = color; \
-		MY(count) = 100; \
-		MY(originjitter) = '1.0 1.0 1.0'; \
-		MY(size_min) = 1; \
-		MY(size_max) = 1; \
-		MY(stretchfactor) = 0.600000; \
-		MY(tex_min) = 64; \
-		MY(tex_max) = 64; \
-		MY(type) = "spark"; \
-		MY(velocityjitter) = '500.0 500.0 500.0'; \
-		MY(velocitymultiplier) = 0.100000; \
-	} \
-	SUB(spawn_event_##name) { \
-		MY(alpha_min) = 190; \
-		MY(alpha_max) = 190; \
-		MY(alpha_fade) = 180; \
-		MY(color_min) = color; \
-		MY(color_max) = color; \
-		MY(countabsolute) = 1; \
-		MY(sizeincrease) = -80; \
-		MY(size_min) = 100; \
-		MY(size_max) = 100; \
-		MY(tex_min) = 65; \
-		MY(tex_max) = 65; \
-		MY(type) = "smoke"; \
-	} \
-	/**/
+#define spawn_event(name, color) 	DEF(spawn_event_##name); 	SUB(spawn_event_##name) { 		MY(airfriction) = 2; 		MY(alpha_max) = 256; 		MY(alpha_fade) = 256; 		MY(bounce) = 1; 		MY(color_min) = color; 		MY(color_max) = color; 		MY(count) = 100; 		MY(originjitter) = '1 1 1'; 		MY(size_min) = 1; 		MY(size_max) = 1; 		MY(stretchfactor) = 0.600000; 		MY(tex_min) = 64; 		MY(tex_max) = 64; 		MY(type) = "spark"; 		MY(velocityjitter) = '500 500 500'; 		MY(velocitymultiplier) = 0.100000; 	} 	SUB(spawn_event_##name) { 		MY(alpha_min) = 190; 		MY(alpha_max) = 190; 		MY(alpha_fade) = 180; 		MY(color_min) = color; 		MY(color_max) = color; 		MY(countabsolute) = 1; 		MY(sizeincrease) = -80; 		MY(size_min) = 100; 		MY(size_max) = 100; 		MY(tex_min) = 65; 		MY(tex_max) = 65; 		MY(type) = "smoke"; 	} 	/**/
 
 spawn_event(red, 		"0xFF0F0F")
 spawn_event(blue, 		"0x0F0FFF")
@@ -8536,7 +8314,7 @@ SUB(shockwave_attack) {
 	MY(color_min) = "0xb44215";
 	MY(color_max) = "0xff0000";
 	MY(count) = 1;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = 4000;
@@ -8548,7 +8326,7 @@ SUB(shockwave_attack) {
 	MY(tex_min) = 43;
 	MY(tex_max) = 43;
 	MY(type) = "spark";
-	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocityjitter) = '10 10 10';
 	MY(velocitymultiplier) = 10;
 }
 // fire
@@ -8560,7 +8338,7 @@ SUB(shockwave_attack) {
 	MY(color_min) = "0xff4200";
 	MY(color_max) = "0xff0000";
 	MY(count) = 1;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(sizeincrease) = 1.500000;
 	MY(size_min) = 7;
 	MY(size_max) = 9;
@@ -8568,7 +8346,7 @@ SUB(shockwave_attack) {
 	MY(tex_min) = 8;
 	MY(tex_max) = 15;
 	MY(type) = "spark";
-	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocityjitter) = '10 10 10';
 	MY(velocitymultiplier) = 10;
 }
 
@@ -8578,10 +8356,10 @@ SUB(arc_lightning) {
 	MY(alpha_min) = 32;
 	MY(alpha_max) = 32;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightcolor) = '3.1 4.4 10';
 	MY(lightradiusfade) = 200;
 	MY(lightradius) = 50;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(originjitter) = '2 2 2';
 	MY(size_min) = 16;
 	MY(size_max) = 16;
 	MY(tex_min) = 16;
@@ -8597,7 +8375,7 @@ SUB(arc_lightning) {
 	MY(color_min) = "0xDDFDFF";
 	MY(color_max) = "0xFDFDFF";
 	MY(count) = 100;
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(originjitter) = '20 20 20';
 	MY(startangle_max) = 360;
 	MY(spin_min) = -36000;
 	MY(spin_max) = 36000;
@@ -8607,7 +8385,7 @@ SUB(arc_lightning) {
 	MY(tex_min) = 71;
 	MY(tex_max) = 74;
 	MY(type) = "static";
-	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocityjitter) = '250 250 250';
 	MY(velocitymultiplier) = 100;
 }
 // impact sparks (underwater)
@@ -8621,7 +8399,7 @@ SUB(arc_lightning) {
 	MY(count) = 100;
 	MY(liquidfriction) = 5;
 	MY(orientation) = "spark";
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(originjitter) = '20 20 20';
 	MY(startangle_max) = 360;
 	MY(spin_min) = -36000;
 	MY(spin_max) = 36000;
@@ -8632,7 +8410,7 @@ SUB(arc_lightning) {
 	MY(tex_max) = 74;
 	MY(type) = "static";
 	MY(underwater) = true;
-	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocityjitter) = '250 250 250';
 	MY(velocitymultiplier) = 20;
 }
 // impact smoke
@@ -8661,8 +8439,8 @@ SUB(arc_beam) {
 	MY(alpha_fade) = 16384;
 	MY(color_min) = "0xfafad2";
 	MY(color_max) = "0xffffff";
-	MY(originjitter) = '3.0 3.0 3.0';
-	MY(relativeoriginoffset) = '10.0 0.0 0.0';
+	MY(originjitter) = '3 3 3';
+	MY(relativeoriginoffset) = '10 0 0';
 	MY(startangle_max) = 360;
 	MY(spin_min) = 360;
 	MY(spin_max) = 1000;
@@ -8673,7 +8451,7 @@ SUB(arc_beam) {
 	MY(time_max) = 0.050000;
 	MY(trailspacing) = 10;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 200;
 }
 // sparks on beam (underwater)
@@ -8684,8 +8462,8 @@ SUB(arc_beam) {
 	MY(color_min) = "0xfafad2";
 	MY(color_max) = "0xffffff";
 	MY(liquidfriction) = -10;
-	MY(originjitter) = '30.0 30.0 30.0';
-	MY(relativeoriginoffset) = '10.0 0.0 0.0';
+	MY(originjitter) = '30 30 30';
+	MY(relativeoriginoffset) = '10 0 0';
 	MY(startangle_max) = 360;
 	MY(spin_min) = 360;
 	MY(spin_max) = 1000;
@@ -8697,7 +8475,7 @@ SUB(arc_beam) {
 	MY(trailspacing) = 10;
 	MY(type) = "spark";
 	MY(underwater) = true;
-	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocityjitter) = '100 100 100';
 	MY(velocitymultiplier) = 200;
 }
 
@@ -8710,8 +8488,8 @@ SUB(arc_beam_heal) {
 	MY(alpha_fade) = 256;
 	MY(color_min) = "0x20FF20";
 	MY(color_max) = "0x40FF40";
-	MY(relativeoriginoffset) = '5.0 0.0 0.0';
-	MY(relativevelocityoffset) = '100.0 0.0 0.0';
+	MY(relativeoriginoffset) = '5 0 0';
+	MY(relativevelocityoffset) = '100 0 0';
 	MY(sizeincrease) = 20;
 	MY(size_min) = 0.100000;
 	MY(size_max) = 0.100000;
@@ -8719,7 +8497,7 @@ SUB(arc_beam_heal) {
 	MY(tex_max) = 74;
 	MY(trailspacing) = 1500;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocityjitter) = '3 3 3';
 	MY(velocitymultiplier) = 200;
 }
 
@@ -8732,7 +8510,7 @@ SUB(arc_beam_healimpact) {
 	MY(color_min) = "0x00ff00";
 	MY(color_max) = "0x84c52f";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '0.0 4.4 0.0';
+	MY(lightcolor) = '0 4.4 0';
 	MY(lightradiusfade) = 150;
 	MY(lightradius) = 20;
 	MY(sizeincrease) = -1000;
@@ -8762,7 +8540,7 @@ SUB(arc_beam_healimpact) {
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '120.0 120.0 420.0';
+	MY(velocityjitter) = '120 120 420';
 }
 
 DEF(arc_smoke);
@@ -8785,7 +8563,7 @@ SUB(arc_smoke) {
 	MY(size_max) = 10;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '0.0 0.0 16.0';
+	MY(velocityjitter) = '0 0 16';
 }
 // arc heat bubbles  (underwater)
 SUB(arc_smoke) {
@@ -8798,14 +8576,14 @@ SUB(arc_smoke) {
 	MY(count) = 2;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(size_min) = 0.100000;
 	MY(size_max) = 1;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }
 
 DEF(arc_overheat);
@@ -8820,14 +8598,14 @@ SUB(arc_overheat) {
 	MY(count) = 24;
 	MY(gravity) = -0.400000;
 	MY(liquidfriction) = 10;
-	MY(originjitter) = '10.0 10.0 10.0';
+	MY(originjitter) = '10 10 10';
 	MY(sizeincrease) = -24;
 	MY(size_min) = 6;
 	MY(size_max) = 12;
 	MY(tex_min) = 43;
 	MY(tex_max) = 43;
 	MY(type) = "spark";
-	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityjitter) = '256 256 256';
 }
 
 DEF(arc_overheat_fire);
@@ -8841,13 +8619,13 @@ SUB(arc_overheat_fire) {
 	MY(count) = 1;
 	MY(gravity) = 1;
 	MY(liquidfriction) = 5;
-	MY(originjitter) = '6.0 6.0 6.0';
+	MY(originjitter) = '6 6 6';
 	MY(size_min) = 0.400000;
 	MY(size_max) = 1;
 	MY(type) = "spark";
-	MY(velocityjitter) = '92.0 92.0 92.0';
+	MY(velocityjitter) = '92 92 92';
 	MY(velocitymultiplier) = 80;
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityoffset) = '0 0 80';
 }
 
 #include "effectinfo_buffs.inc"
@@ -8862,7 +8640,7 @@ SUB(arc_muzzleflash) {
 	MY(color_min) = "0x00ff00";
 	MY(color_max) = "0x8f4333";
 	MY(count) = 2;
-	MY(lightcolor) = '0.3 2.0 0.2';
+	MY(lightcolor) = '0.3 2 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 200;
 	MY(originjitter) = '1.5 1.5 1.5';
@@ -8870,7 +8648,7 @@ SUB(arc_muzzleflash) {
 	MY(size_max) = 5;
 	MY(tex_max) = 8;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocityjitter) = '6 6 6';
 	MY(velocitymultiplier) = 0.010000;
 }
 SUB(arc_muzzleflash) {
@@ -8880,7 +8658,7 @@ SUB(arc_muzzleflash) {
 	MY(color_min) = "0x00ff00";
 	MY(color_max) = "0x8f4333";
 	MY(count) = 15;
-	MY(originjitter) = '1.0 1.0 1.0';
+	MY(originjitter) = '1 1 1';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
 	MY(spin_min) = -400;
@@ -8891,7 +8669,7 @@ SUB(arc_muzzleflash) {
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityjitter) = '200 200 200';
 	MY(velocitymultiplier) = 0.500000;
 }
 
@@ -8901,10 +8679,10 @@ SUB(arc_bolt_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightcolor) = '8 4 1';
 	MY(lightradiusfade) = 400;
 	MY(lightradius) = 120;
-	MY(originjitter) = '14.0 14.0 14.0';
+	MY(originjitter) = '14 14 14';
 	MY(size_min) = 28;
 	MY(size_max) = 38;
 	MY(tex_min) = 8;
@@ -8923,14 +8701,14 @@ SUB(arc_bolt_explode) {
 	MY(count) = 3.500000;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 5;
 	MY(size_min) = 16;
 	MY(size_max) = 26;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '156.0 156.0 156.0';
+	MY(velocityjitter) = '156 156 156';
 }
 // fire effect which expands then slows
 SUB(arc_bolt_explode) {
@@ -8944,14 +8722,14 @@ SUB(arc_bolt_explode) {
 	MY(count) = 12;
 	MY(liquidfriction) = 8;
 	MY(notunderwater) = true;
-	MY(originjitter) = '8.0 8.0 8.0';
+	MY(originjitter) = '8 8 8';
 	MY(sizeincrease) = 15;
 	MY(size_min) = 20;
 	MY(size_max) = 26;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "static";
-	MY(velocityjitter) = '286.0 286.0 286.0';
+	MY(velocityjitter) = '286 286 286';
 }
 // underwater bubbles
 SUB(arc_bolt_explode) {
@@ -8964,14 +8742,14 @@ SUB(arc_bolt_explode) {
 	MY(count) = 16;
 	MY(gravity) = -0.125000;
 	MY(liquidfriction) = 0.250000;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 3;
 	MY(size_max) = 3;
 	MY(tex_min) = 62;
 	MY(tex_max) = 62;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '96.0 96.0 96.0';
+	MY(velocityjitter) = '96 96 96';
 }
 // bouncing sparks
 SUB(arc_bolt_explode) {
@@ -8986,14 +8764,14 @@ SUB(arc_bolt_explode) {
 	MY(gravity) = 1;
 	MY(liquidfriction) = 0.800000;
 	MY(notunderwater) = true;
-	MY(originjitter) = '16.0 16.0 16.0';
+	MY(originjitter) = '16 16 16';
 	MY(size_min) = 1;
 	MY(size_max) = 0.100000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(type) = "spark";
-	MY(velocityjitter) = '224.0 224.0 224.0';
-	MY(velocityoffset) = '0.0 0.0 80.0';
+	MY(velocityjitter) = '224 224 224';
+	MY(velocityoffset) = '0 0 80';
 }
 
 // weak bullet trail (somewhat like a tracer)
@@ -9041,5 +8819,5 @@ SUB(tr_bullet_weak) {
 	MY(trailspacing) = 32;
 	MY(type) = "bubble";
 	MY(underwater) = true;
-	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocityjitter) = '16 16 16';
 }

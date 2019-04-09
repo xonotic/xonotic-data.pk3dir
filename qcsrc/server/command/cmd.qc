@@ -785,31 +785,11 @@ void ClientCommand_(entity caller, int request)
 // =====================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define CLIENT_COMMANDS(ent, request, arguments, command) \
-	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
-	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
-	CLIENT_COMMAND("kill", ClientCommand_kill(ent, request), "Become a member of the dead") \
-	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
-	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
-	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
-	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
-	CLIENT_COMMAND("say", ClientCommand_say(ent, request, arguments, command), "Print a message to chat to all players") \
-	CLIENT_COMMAND("say_team", ClientCommand_say_team(ent, request, arguments, command), "Print a message to chat to all team mates") \
-	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(ent, request, arguments), "Attempt to choose a team to join into") \
-	CLIENT_COMMAND("selfstuff", ClientCommand_selfstuff(ent, request, command), "Stuffcmd a command to your own client") \
-	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(ent, request, arguments, command), "New system for sending a client cvar to the server") \
-	CLIENT_COMMAND("spectate", ClientCommand_spectate(ent, request), "Become an observer") \
-	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
-	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
-	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
-	CLIENT_COMMAND("wpeditor", ClientCommand_wpeditor(ent, request, arguments), "Waypoint editor commands") \
-	/* nothing */
+#define CLIENT_COMMANDS(ent, request, arguments, command) 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") 	CLIENT_COMMAND("kill", ClientCommand_kill(ent, request), "Become a member of the dead") 	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") 	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") 	CLIENT_COMMAND("say", ClientCommand_say(ent, request, arguments, command), "Print a message to chat to all players") 	CLIENT_COMMAND("say_team", ClientCommand_say_team(ent, request, arguments, command), "Print a message to chat to all team mates") 	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(ent, request, arguments), "Attempt to choose a team to join into") 	CLIENT_COMMAND("selfstuff", ClientCommand_selfstuff(ent, request, command), "Stuffcmd a command to your own client") 	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(ent, request, arguments, command), "New system for sending a client cvar to the server") 	CLIENT_COMMAND("spectate", ClientCommand_spectate(ent, request), "Become an observer") 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") 	CLIENT_COMMAND("wpeditor", ClientCommand_wpeditor(ent, request, arguments), "Waypoint editor commands") 	/* nothing */
 
 void ClientCommand_macro_help(entity caller)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ sprint(caller, "  ^2", name, "^7: ", description, "\n"); }
+	#define CLIENT_COMMAND(name, function, description) 		{ sprint(caller, "  ^2", name, "^7: ", description, "\n"); }
 
 	CLIENT_COMMANDS(NULL, 0, 0, "");
 #undef CLIENT_COMMAND
@@ -817,8 +797,7 @@ void ClientCommand_macro_help(entity caller)
 
 float ClientCommand_macro_command(int argc, entity caller, string command)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(0))) { function; return true; } }
+	#define CLIENT_COMMAND(name, function, description) 		{ if (name == strtolower(argv(0))) { function; return true; } }
 
 	CLIENT_COMMANDS(caller, CMD_REQUEST_COMMAND, argc, command);
 #undef CLIENT_COMMAND
@@ -828,8 +807,7 @@ float ClientCommand_macro_command(int argc, entity caller, string command)
 
 float ClientCommand_macro_usage(int argc, entity caller)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(1))) { function; return true; } }
+	#define CLIENT_COMMAND(name, function, description) 		{ if (name == strtolower(argv(1))) { function; return true; } }
 
 	CLIENT_COMMANDS(caller, CMD_REQUEST_USAGE, argc, "");
 #undef CLIENT_COMMAND
@@ -839,8 +817,7 @@ float ClientCommand_macro_usage(int argc, entity caller)
 
 void ClientCommand_macro_write_aliases(float fh)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ CMD_Write_Alias("qc_cmd_cmd", name, description); }
+	#define CLIENT_COMMAND(name, function, description) 		{ CMD_Write_Alias("qc_cmd_cmd", name, description); }
 
 	CLIENT_COMMANDS(NULL, 0, 0, "");
 #undef CLIENT_COMMAND

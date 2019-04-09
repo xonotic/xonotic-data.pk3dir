@@ -457,9 +457,7 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 #endif
 
 // returns true if player is reviving it
-#define IS_REVIVING(player, it, revive_extra_size) \
-	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
-	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
+#define IS_REVIVING(player, it, revive_extra_size) 	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) 	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 {

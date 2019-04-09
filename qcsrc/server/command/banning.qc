@@ -267,19 +267,11 @@ void BanCommand_(int request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define BAN_COMMANDS(request, arguments, command) \
-	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
-	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
-	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
-	BAN_COMMAND("mute", BanCommand_mute(request, arguments, command), "Disallow a client from talking by muting them") \
-	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \
-	BAN_COMMAND("unmute", BanCommand_unmute(request, arguments), "Unmute a client") \
-	/* nothing */
+#define BAN_COMMANDS(request, arguments, command) 	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") 	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") 	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") 	BAN_COMMAND("mute", BanCommand_mute(request, arguments, command), "Disallow a client from talking by muting them") 	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") 	BAN_COMMAND("unmute", BanCommand_unmute(request, arguments), "Unmute a client") 	/* nothing */
 
 void BanCommand_macro_help()
 {
-	#define BAN_COMMAND(name, function, description) \
-		{ if (strtolower(description) != "") { LOG_INFO("  ^2", name, "^7: ", description); } }
+	#define BAN_COMMAND(name, function, description) 		{ if (strtolower(description) != "") { LOG_INFO("  ^2", name, "^7: ", description); } }
 
 	BAN_COMMANDS(0, 0, "");
 #undef BAN_COMMAND
@@ -287,8 +279,7 @@ void BanCommand_macro_help()
 
 float BanCommand_macro_command(int argc, string command)
 {
-	#define BAN_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(0))) { function; return true; } }
+	#define BAN_COMMAND(name, function, description) 		{ if (name == strtolower(argv(0))) { function; return true; } }
 
 	BAN_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 #undef BAN_COMMAND
@@ -298,8 +289,7 @@ float BanCommand_macro_command(int argc, string command)
 
 float BanCommand_macro_usage(int argc)
 {
-	#define BAN_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(1))) { function; return true; } }
+	#define BAN_COMMAND(name, function, description) 		{ if (name == strtolower(argv(1))) { function; return true; } }
 
 	BAN_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 #undef BAN_COMMAND
@@ -309,8 +299,7 @@ float BanCommand_macro_usage(int argc)
 
 void BanCommand_macro_write_aliases(float fh)
 {
-	#define BAN_COMMAND(name, function, description) \
-		{ if (strtolower(description) != "") { CMD_Write_Alias("qc_cmd_sv", name, description); } }
+	#define BAN_COMMAND(name, function, description) 		{ if (strtolower(description) != "") { CMD_Write_Alias("qc_cmd_sv", name, description); } }
 
 	BAN_COMMANDS(0, 0, "");
 #undef BAN_COMMAND

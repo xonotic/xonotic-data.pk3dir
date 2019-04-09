@@ -93,18 +93,10 @@
 #define N_GNTLOFF 1
 #define N__ALWAYS 2
 
-#define MULTITEAM_ANNCE2(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position)
-#define MULTITEAM_ANNCE3(prefix, default, sound, channel, volume, position) \
-    MULTITEAM_ANNCE2(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position)
-#define MULTITEAM_ANNCE4(prefix, default, sound, channel, volume, position) \
-    MULTITEAM_ANNCE3(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
-#define MULTITEAM_ANNCE(prefix, teams, default, sound, channel, volume, position) \
-    NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, default) \
-    MULTITEAM_ANNCE##teams(prefix, default, sound, channel, volume, position)
+#define MULTITEAM_ANNCE2(prefix, default, sound, channel, volume, position)     MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position)     MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position)
+#define MULTITEAM_ANNCE3(prefix, default, sound, channel, volume, position)     MULTITEAM_ANNCE2(prefix, default, sound, channel, volume, position)     MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position)
+#define MULTITEAM_ANNCE4(prefix, default, sound, channel, volume, position)     MULTITEAM_ANNCE3(prefix, default, sound, channel, volume, position)     MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
+#define MULTITEAM_ANNCE(prefix, teams, default, sound, channel, volume, position)     NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, default)     MULTITEAM_ANNCE##teams(prefix, default, sound, channel, volume, position)
 
 // MSG_ANNCE_NOTIFICATIONS
     MSG_ANNCE_NOTIF(ACHIEVEMENT_AIRSHOT,        N_GNTLOFF, "airshot",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
@@ -222,18 +214,10 @@
 #define N_CONSOLE 1
 #define N_CHATCON 2
 
-#define MULTITEAM_INFO2(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    MSG_INFO_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, type, 1), TCR(gentle, type, 1)) \
-    MSG_INFO_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, type, 2), TCR(gentle, type, 2))
-#define MULTITEAM_INFO3(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    MULTITEAM_INFO2(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    MSG_INFO_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, type, 3), TCR(gentle, type, 3))
-#define MULTITEAM_INFO4(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    MULTITEAM_INFO3(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    MSG_INFO_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
-#define MULTITEAM_INFO(prefix, teams, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    NOTIF_ADD_AUTOCVAR(INFO_##prefix, default) \
-    MULTITEAM_INFO##teams(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)
+#define MULTITEAM_INFO2(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)     MSG_INFO_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, type, 1), TCR(gentle, type, 1))     MSG_INFO_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, type, 2), TCR(gentle, type, 2))
+#define MULTITEAM_INFO3(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)     MULTITEAM_INFO2(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)     MSG_INFO_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, type, 3), TCR(gentle, type, 3))
+#define MULTITEAM_INFO4(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)     MULTITEAM_INFO3(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)     MSG_INFO_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
+#define MULTITEAM_INFO(prefix, teams, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)     NOTIF_ADD_AUTOCVAR(INFO_##prefix, default)     MULTITEAM_INFO##teams(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)
 
 // MSG_INFO_NOTIFICATIONS
     MSG_INFO_NOTIF(CHAT_NOSPECTATORS,                       N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "")
@@ -524,18 +508,10 @@
 #define N_DISABL 0
 #define N_ENABLE 1
 
-#define MULTITEAM_CENTER2(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    MSG_CENTER_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 1), TCR(gentle, type, 1)) \
-    MSG_CENTER_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 2), TCR(gentle, type, 2))
-#define MULTITEAM_CENTER3(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    MULTITEAM_CENTER2(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    MSG_CENTER_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 3), TCR(gentle, type, 3))
-#define MULTITEAM_CENTER4(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    MULTITEAM_CENTER3(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    MSG_CENTER_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 4), TCR(gentle, type, 4))
-#define MULTITEAM_CENTER(prefix, teams, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    NOTIF_ADD_AUTOCVAR(CENTER_##prefix, default) \
-    MULTITEAM_CENTER##teams(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)
+#define MULTITEAM_CENTER2(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)     MSG_CENTER_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 1), TCR(gentle, type, 1))     MSG_CENTER_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 2), TCR(gentle, type, 2))
+#define MULTITEAM_CENTER3(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)     MULTITEAM_CENTER2(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)     MSG_CENTER_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 3), TCR(gentle, type, 3))
+#define MULTITEAM_CENTER4(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)     MULTITEAM_CENTER3(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)     MSG_CENTER_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 4), TCR(gentle, type, 4))
+#define MULTITEAM_CENTER(prefix, teams, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)     NOTIF_ADD_AUTOCVAR(CENTER_##prefix, default)     MULTITEAM_CENTER##teams(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)
 
 // MSG_CENTER_NOTIFICATIONS
     MSG_CENTER_NOTIF(ALONE,                             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F4You are now alone!"), "")
@@ -801,17 +777,10 @@
 #define N_DISABL 0
 #define N_ENABLE 1
 
-#define MULTITEAM_MULTI2(prefix, default, anncepre, infopre, centerpre) \
-    MSG_MULTI_NOTIF(prefix##_RED, default, anncepre##_RED, infopre##_RED, centerpre##_RED) \
-    MSG_MULTI_NOTIF(prefix##_BLUE, default, anncepre##_BLUE, infopre##_BLUE, centerpre##_BLUE)
-#define MULTITEAM_MULTI3(prefix, default, anncepre, infopre, centerpre) \
-    MULTITEAM_MULTI2(prefix, default, anncepre, infopre, centerpre) \
-    MSG_MULTI_NOTIF(prefix##_YELLOW, default, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW)
-#define MULTITEAM_MULTI4(prefix, default, anncepre, infopre, centerpre) \
-    MULTITEAM_MULTI3(prefix, default, anncepre, infopre, centerpre) \
-    MSG_MULTI_NOTIF(prefix##_PINK, default, anncepre##PINK, infopre##PINK, centerpre##PINK)
-#define MULTITEAM_MULTI(prefix, teams, default, anncepre, infopre, centerpre) \
-    MULTITEAM_MULTI##teams(prefix, default, anncepre, infopre, centerpre)
+#define MULTITEAM_MULTI2(prefix, default, anncepre, infopre, centerpre)     MSG_MULTI_NOTIF(prefix##_RED, default, anncepre##_RED, infopre##_RED, centerpre##_RED)     MSG_MULTI_NOTIF(prefix##_BLUE, default, anncepre##_BLUE, infopre##_BLUE, centerpre##_BLUE)
+#define MULTITEAM_MULTI3(prefix, default, anncepre, infopre, centerpre)     MULTITEAM_MULTI2(prefix, default, anncepre, infopre, centerpre)     MSG_MULTI_NOTIF(prefix##_YELLOW, default, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW)
+#define MULTITEAM_MULTI4(prefix, default, anncepre, infopre, centerpre)     MULTITEAM_MULTI3(prefix, default, anncepre, infopre, centerpre)     MSG_MULTI_NOTIF(prefix##_PINK, default, anncepre##PINK, infopre##PINK, centerpre##PINK)
+#define MULTITEAM_MULTI(prefix, teams, default, anncepre, infopre, centerpre)     MULTITEAM_MULTI##teams(prefix, default, anncepre, infopre, centerpre)
 
 // MSG_MULTI_NOTIFICATIONS
     MSG_MULTI_NOTIF(DEATH_MURDER_BUFF,                  N_ENABLE,  NULL,           INFO_DEATH_MURDER_BUFF,                 NULL)
@@ -975,19 +944,10 @@
     MSG_MULTI_NOTIF(WEAPON_VAPORIZER_MURDER,            N_ENABLE,  NULL,           INFO_WEAPON_VAPORIZER_MURDER,           NULL)
     MSG_MULTI_NOTIF(WEAPON_VORTEX_MURDER,               N_ENABLE,  NULL,           INFO_WEAPON_VORTEX_MURDER,              NULL)
 
-#define MULTITEAM_CHOICE2(prefix, default, challow, chtype, optiona, optionb) \
-    MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, challow, chtype, optiona##_RED, optionb##_RED) \
-    MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, challow, chtype, optiona##_BLUE, optionb##_BLUE)
-#define MULTITEAM_CHOICE3(prefix, default, challow, chtype, optiona, optionb) \
-    MULTITEAM_CHOICE2(prefix, default, challow, chtype, optiona, optionb) \
-    MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, challow, chtype, optiona##_YELLOW, optionb##_YELLOW)
-#define MULTITEAM_CHOICE4(prefix, default, challow, chtype, optiona, optionb) \
-    MULTITEAM_CHOICE3(prefix, default, challow, chtype, optiona, optionb) \
-    MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, challow, chtype, optiona##_PINK, optionb##_PINK)
-#define MULTITEAM_CHOICE(prefix, teams, default, challow, chtype, optiona, optionb) \
-    NOTIF_ADD_AUTOCVAR(CHOICE_##prefix, default) \
-    NOTIF_ADD_AUTOCVAR(CHOICE_##prefix##_ALLOWED, challow) \
-    MULTITEAM_CHOICE##teams(prefix, default, challow, chtype, optiona, optionb)
+#define MULTITEAM_CHOICE2(prefix, default, challow, chtype, optiona, optionb)     MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, challow, chtype, optiona##_RED, optionb##_RED)     MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, challow, chtype, optiona##_BLUE, optionb##_BLUE)
+#define MULTITEAM_CHOICE3(prefix, default, challow, chtype, optiona, optionb)     MULTITEAM_CHOICE2(prefix, default, challow, chtype, optiona, optionb)     MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, challow, chtype, optiona##_YELLOW, optionb##_YELLOW)
+#define MULTITEAM_CHOICE4(prefix, default, challow, chtype, optiona, optionb)     MULTITEAM_CHOICE3(prefix, default, challow, chtype, optiona, optionb)     MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, challow, chtype, optiona##_PINK, optionb##_PINK)
+#define MULTITEAM_CHOICE(prefix, teams, default, challow, chtype, optiona, optionb)     NOTIF_ADD_AUTOCVAR(CHOICE_##prefix, default)     NOTIF_ADD_AUTOCVAR(CHOICE_##prefix##_ALLOWED, challow)     MULTITEAM_CHOICE##teams(prefix, default, challow, chtype, optiona, optionb)
 
 #undef N_DISABL
 #undef N_ENABLE

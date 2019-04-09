@@ -9,11 +9,11 @@ SUB(relic_resistance) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_regeneration);
@@ -27,11 +27,11 @@ SUB(relic_regeneration) {
     MY(count) = 1;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_vampire);
@@ -45,11 +45,11 @@ SUB(relic_vampire) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_ammo);
@@ -63,11 +63,11 @@ SUB(relic_ammo) {
     MY(count) = 1;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_damage);
@@ -81,11 +81,11 @@ SUB(relic_damage) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_ssplashdamage);
@@ -99,11 +99,11 @@ SUB(relic_ssplashdamage) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_firingspeed);
@@ -117,11 +117,11 @@ SUB(relic_firingspeed) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_disability);
@@ -135,11 +135,11 @@ SUB(relic_disability) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_disability_curse);
@@ -153,11 +153,11 @@ SUB(relic_disability_curse) {
     MY(count) = 1;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_teamboost);
@@ -171,11 +171,11 @@ SUB(relic_teamboost) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_teamboost_boost);
@@ -189,11 +189,11 @@ SUB(relic_teamboost_boost) {
     MY(count) = 1;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_speed);
@@ -207,11 +207,11 @@ SUB(relic_speed) {
     MY(count) = 1;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_jump);
@@ -225,11 +225,11 @@ SUB(relic_jump) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_flight);
@@ -243,11 +243,11 @@ SUB(relic_flight) {
     MY(count) = 1;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_radioactive);
@@ -261,11 +261,11 @@ SUB(relic_radioactive) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_resurrection);
@@ -279,11 +279,11 @@ SUB(relic_resurrection) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }
 
 DEF(relic_vengeance);
@@ -297,9 +297,9 @@ SUB(relic_vengeance) {
     MY(count) = 20;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
-    MY(originjitter) = '8.0 8.0 32.0';
+    MY(originjitter) = '8 8 32';
     MY(size_min) = 1.500000;
     MY(size_max) = 1.500000;
     MY(type) = "static";
-    MY(velocityjitter) = '64.0 64.0 32.0';
+    MY(velocityjitter) = '64 64 32';
 }

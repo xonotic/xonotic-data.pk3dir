@@ -17,37 +17,7 @@ CLASS(Fireball, Weapon)
 /* refname   */ ATTRIB(Fireball, netname, string, "fireball");
 /* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bfgdamage, float, PRI) \
-		P(class, prefix, bfgforce, float, PRI) \
-		P(class, prefix, bfgradius, float, PRI) \
-		P(class, prefix, damageforcescale, float, BOTH) \
-		P(class, prefix, damagetime, float, SEC) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, edgedamage, float, PRI) \
-		P(class, prefix, force, float, PRI) \
-		P(class, prefix, health, float, PRI) \
-		P(class, prefix, laserburntime, float, BOTH) \
-		P(class, prefix, laserdamage, float, BOTH) \
-		P(class, prefix, laseredgedamage, float, BOTH) \
-		P(class, prefix, laserradius, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, radius, float, PRI) \
-		P(class, prefix, refire2, float, PRI) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, speed_up, float, SEC) \
-		P(class, prefix, speed_z, float, SEC) \
-		P(class, prefix, spread, float, BOTH) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
+#define X(BEGIN, P, END, class, prefix) 	BEGIN(class) 		P(class, prefix, animtime, float, BOTH) 		P(class, prefix, bfgdamage, float, PRI) 		P(class, prefix, bfgforce, float, PRI) 		P(class, prefix, bfgradius, float, PRI) 		P(class, prefix, damageforcescale, float, BOTH) 		P(class, prefix, damagetime, float, SEC) 		P(class, prefix, damage, float, BOTH) 		P(class, prefix, edgedamage, float, PRI) 		P(class, prefix, force, float, PRI) 		P(class, prefix, health, float, PRI) 		P(class, prefix, laserburntime, float, BOTH) 		P(class, prefix, laserdamage, float, BOTH) 		P(class, prefix, laseredgedamage, float, BOTH) 		P(class, prefix, laserradius, float, BOTH) 		P(class, prefix, lifetime, float, BOTH) 		P(class, prefix, radius, float, PRI) 		P(class, prefix, refire2, float, PRI) 		P(class, prefix, refire, float, BOTH) 		P(class, prefix, speed, float, BOTH) 		P(class, prefix, speed_up, float, SEC) 		P(class, prefix, speed_z, float, SEC) 		P(class, prefix, spread, float, BOTH) 		P(class, prefix, switchdelay_drop, float, NONE) 		P(class, prefix, switchdelay_raise, float, NONE) 		P(class, prefix, weaponreplace, string,NONE) 		P(class, prefix, weaponstartoverride, float, NONE) 		P(class, prefix, weaponstart, float, NONE) 		P(class, prefix, weaponthrowable, float, NONE) 	END()
 	W_PROPS(X, Fireball, fireball)
 #undef X
 

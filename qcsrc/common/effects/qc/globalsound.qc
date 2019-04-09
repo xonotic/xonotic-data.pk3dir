@@ -335,13 +335,7 @@
 				}
 				case VOICETYPE_TEAMRADIO:
 				{
-					#define X() \
-						MACRO_BEGIN \
-							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
-							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
-							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
-							else soundto(MSG_ONE, this, chan, sample, vol, atten); \
-						MACRO_END
+					#define X() 						MACRO_BEGIN 							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); 							else soundto(MSG_ONE, this, chan, sample, vol, atten); 						MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
 					else
@@ -364,19 +358,7 @@
 					if (autocvar_sv_gentle) break;
 					float tauntrand = 0;
 					if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
-					#define X() \
-						MACRO_BEGIN \
-							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < CS(msg_entity).cvar_cl_autotaunt) \
-							{ \
-								float atten = (CS(msg_entity).cvar_cl_voice_directional >= 1) \
-								    ? bound(ATTEN_MIN, CS(msg_entity).cvar_cl_voice_directional_taunt_attenuation, \
-									ATTEN_MAX) \
-									: ATTEN_NONE; \
-								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
-								else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
-								else soundto(MSG_ONE, this, chan, sample, vol, atten); \
-							} \
-						MACRO_END
+					#define X() 						MACRO_BEGIN 							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < CS(msg_entity).cvar_cl_autotaunt) 							{ 								float atten = (CS(msg_entity).cvar_cl_voice_directional >= 1) 								    ? bound(ATTEN_MIN, CS(msg_entity).cvar_cl_voice_directional_taunt_attenuation, 									ATTEN_MAX) 									: ATTEN_NONE; 								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); 								else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); 								else soundto(MSG_ONE, this, chan, sample, vol, atten); 							} 						MACRO_END
 					if (fake)
 					{
 						msg_entity = this;

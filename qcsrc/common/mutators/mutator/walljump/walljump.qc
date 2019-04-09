@@ -15,11 +15,7 @@ REGISTER_MUTATOR(walljump, autocvar_g_walljump);
 
 vector PlayerTouchWall(entity this)
 {
-#define TRACE(newvec) \
-	tracebox (start, this.mins, this.maxs, (newvec), true, this); \
-	if (trace_fraction < 1 && vdist(this.origin - trace_endpos, <, dist) && trace_plane_normal_z < max_normal) \
-	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) \
-		return trace_plane_normal;
+#define TRACE(newvec) 	tracebox (start, this.mins, this.maxs, (newvec), true, this); 	if (trace_fraction < 1 && vdist(this.origin - trace_endpos, <, dist) && trace_plane_normal_z < max_normal) 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) 		return trace_plane_normal;
 
 	float dist = 10, max_normal = 0.2, scaler = 100;
 	vector start = this.origin;

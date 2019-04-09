@@ -925,17 +925,7 @@ spawnfunc(worldspawn)
 			s = cons(s, pkg);
 		}
 		// add automatically managed files to the list
-		#define X(match) MACRO_BEGIN \
-			int fd = search_begin(match, true, false); \
-			if (fd >= 0) \
-			{ \
-				for (int i = 0, j = search_getsize(fd); i < j; ++i) \
-				{ \
-					s = cons(s, search_getfilename(fd, i)); \
-				} \
-				search_end(fd); \
-			} \
-		MACRO_END
+		#define X(match) MACRO_BEGIN 			int fd = search_begin(match, true, false); 			if (fd >= 0) 			{ 				for (int i = 0, j = search_getsize(fd); i < j; ++i) 				{ 					s = cons(s, search_getfilename(fd, i)); 				} 				search_end(fd); 			} 		MACRO_END
 		X("*-serverpackage.txt");
 		X("*.serverpackage");
 		#undef X

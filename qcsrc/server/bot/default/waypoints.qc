@@ -1333,8 +1333,7 @@ float waypoint_loadall()
 	return cwp + cwb;
 }
 
-#define waypoint_fixorigin(position, tracetest_ent) \
-	waypoint_fixorigin_down_dir(position, tracetest_ent, '0 0 -1')
+#define waypoint_fixorigin(position, tracetest_ent) 	waypoint_fixorigin_down_dir(position, tracetest_ent, '0 0 -1')
 
 vector waypoint_fixorigin_down_dir(vector position, entity tracetest_ent, vector down_dir)
 {

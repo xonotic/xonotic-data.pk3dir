@@ -96,11 +96,9 @@ vector force_fromtag_origin;
 float vehicles_exit_running;
 
 // macros
-#define VEHICLE_UPDATE_PLAYER(ply,vehi,fld,vhname) \
-	ply.vehicle_##fld = (vehi.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
+#define VEHICLE_UPDATE_PLAYER(ply,vehi,fld,vhname) 	ply.vehicle_##fld = (vehi.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
-#define VEHICLE_UPDATE_PLAYER_RESOURCE(ply,vehi,fld,vhname,res) \
-	ply.vehicle_##fld = (GetResource(vehi, res) / autocvar_g_vehicle_##vhname##_##fld) * 100
+#define VEHICLE_UPDATE_PLAYER_RESOURCE(ply,vehi,fld,vhname,res) 	ply.vehicle_##fld = (GetResource(vehi, res) / autocvar_g_vehicle_##vhname##_##fld) * 100
 
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 

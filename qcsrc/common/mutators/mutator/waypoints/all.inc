@@ -5,7 +5,7 @@ REGISTER_WAYPOINT(Helpme, _("Help me!"), "", '1 0.5 0', 1);
 REGISTER_WAYPOINT(Here, _("Here"), "", '0 1 0', 1);
 REGISTER_WAYPOINT(Danger, _("DANGER"), "", '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(Frozen, _("Frozen!"), "", '0.25 0.90 1', 1);
+REGISTER_WAYPOINT(Frozen, _("Frozen!"), "", '0.25 0.9 1', 1);
 
 REGISTER_WAYPOINT(Item, _("Item"), "", '1 0 1', 1);
 

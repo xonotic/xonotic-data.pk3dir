@@ -608,18 +608,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 				// ======================
 				//  Process Notif String
 				// ======================
-				#define SET_NOTIF_STRING(string,stringname) MACRO_BEGIN \
-					notif.nent_string = strzone(CCR( \
-						Process_Notif_Line( \
-							typeId, \
-							(var_cvar > 1), \
-							string, \
-							typestring, \
-							namestring, \
-							stringname \
-						)) \
-					); \
-				MACRO_END
+				#define SET_NOTIF_STRING(string,stringname) MACRO_BEGIN 					notif.nent_string = strzone(CCR( 						Process_Notif_Line( 							typeId, 							(var_cvar > 1), 							string, 							typestring, 							namestring, 							stringname 						)) 					); 				MACRO_END
 
 				if(GENTLE)
 				{
@@ -779,22 +768,11 @@ void Dump_Notifications(int fh, bool alsoprint)
 {
 	#define NOTIF_WRITE(str) write_String_To_File(fh, str, alsoprint)
 
-	#define NOTIF_WRITE_ENTITY(e, description) \
-		NOTIF_WRITE(sprintf( \
-			"seta notification_%s \"%d\" \"%s\"\n", \
-			Get_Notif_CvarName(e), e.nent_default, description \
-		))
+	#define NOTIF_WRITE_ENTITY(e, description) 		NOTIF_WRITE(sprintf( 			"seta notification_%s \"%d\" \"%s\"\n", 			Get_Notif_CvarName(e), e.nent_default, description 		))
 
-	#define NOTIF_WRITE_ENTITY_CHOICE(e, descriptiona, descriptionb) \
-		NOTIF_WRITE(sprintf( \
-			"seta notification_%s \"%d\" \"%s\"\n" \
-			"seta notification_%s_ALLOWED \"%d\" \"%s\"\n", \
-			Get_Notif_CvarName(e), e.nent_default, descriptiona, \
-			Get_Notif_CvarName(e), e.nent_challow_def, descriptionb \
-		))
+	#define NOTIF_WRITE_ENTITY_CHOICE(e, descriptiona, descriptionb) 		NOTIF_WRITE(sprintf( 			"seta notification_%s \"%d\" \"%s\"\n" 			"seta notification_%s_ALLOWED \"%d\" \"%s\"\n", 			Get_Notif_CvarName(e), e.nent_default, descriptiona, 			Get_Notif_CvarName(e), e.nent_challow_def, descriptionb 		))
 
-	#define NOTIF_WRITE_HARDCODED(cvar, default, description) \
-		NOTIF_WRITE("seta notification_" cvar " \"" default "\" \"" description "\"\n")
+	#define NOTIF_WRITE_HARDCODED(cvar, default, description) 		NOTIF_WRITE("seta notification_" cvar " \"" default "\" \"" description "\"\n")
 
 	// Note: This warning only applies to the notifications.cfg file that is output...
 	// You ARE supposed to manually edit this function to add i.e. hard coded
@@ -1368,9 +1346,7 @@ void Local_Notification_WOVA(
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
-	#define VARITEM(stringc, floatc, args) \
-		if ((stringcount == stringc) && (floatcount == floatc)) \
-		{ Local_Notification(net_type, net_name, args); return; }
+	#define VARITEM(stringc, floatc, args) 		if ((stringcount == stringc) && (floatcount == floatc)) 		{ Local_Notification(net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
 	Local_Notification(net_type, net_name); // some notifications don't have any arguments at all
@@ -1603,27 +1579,7 @@ void Send_Notification(
 		//   2. Manually handling each separate call on per-usage basis (See old CTF usage of verbose)
 		entity found_choice;
 
-		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN \
-			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) { \
-				switch (CS(ent).msg_choice_choices[net_name.nent_choice_idx]) \
-				{ \
-					case 1: found_choice = notif.nent_optiona; break; \
-					case 2: found_choice = notif.nent_optionb; break; \
-					default: action; \
-				} \
-			} else { \
-				found_choice = notif.nent_optiona; \
-			} \
-			Send_Notification_WOVA( \
-				NOTIF_ONE_ONLY, \
-				ent, \
-				found_choice.nent_type, \
-				found_choice, \
-				found_choice.nent_stringcount, \
-				found_choice.nent_floatcount, \
-				s1, s2, s3, s4, \
-				f1, f2, f3, f4); \
-		MACRO_END
+		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) { 				switch (CS(ent).msg_choice_choices[net_name.nent_choice_idx]) 				{ 					case 1: found_choice = notif.nent_optiona; break; 					case 2: found_choice = notif.nent_optionb; break; 					default: action; 				} 			} else { 				found_choice = notif.nent_optiona; 			} 			Send_Notification_WOVA( 				NOTIF_ONE_ONLY, 				ent, 				found_choice.nent_type, 				found_choice, 				found_choice.nent_stringcount, 				found_choice.nent_floatcount, 				s1, s2, s3, s4, 				f1, f2, f3, f4); 		MACRO_END
 
 		switch (broadcast)
 		{
@@ -1697,9 +1653,7 @@ void Send_Notification_WOVA(
 	));
 	#endif
 
-	#define VARITEM(stringc, floatc, args) \
-		if ((stringcount == stringc) && (floatcount == floatc)) \
-		{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
+	#define VARITEM(stringc, floatc, args) 		if ((stringcount == stringc) && (floatcount == floatc)) 		{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
@@ -1729,9 +1683,7 @@ void Send_Notification_WOCOVA(
 	));
 	#endif
 
-	#define VARITEM(stringc, floatc, args) \
-		if ((notif.nent_stringcount == stringc) && (notif.nent_floatcount == floatc)) \
-		{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
+	#define VARITEM(stringc, floatc, args) 		if ((notif.nent_stringcount == stringc) && (notif.nent_floatcount == floatc)) 		{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all

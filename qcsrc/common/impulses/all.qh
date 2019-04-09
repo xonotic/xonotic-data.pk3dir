@@ -18,12 +18,7 @@ REGISTRY_CHECK(IMPULSES)
 #endif
 
 #define REGISTER_IMPULSE(id, n) _REGISTER_IMPULSE(IMP_##id, id, n)
-#define _REGISTER_IMPULSE(id, alias, n) \
-	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) \
-	{ \
-		this.impulse = n; \
-		IMPULSE_ALIAS(alias, "impulse " #n); \
-	}
+#define _REGISTER_IMPULSE(id, alias, n) 	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) 	{ 		this.impulse = n; 		IMPULSE_ALIAS(alias, "impulse " #n); 	}
 
 #define LEGACY_IMPULSE_ID(alias, id) LEGACY_IMPULSE(alias, id, sprintf("impulse %d", IMP_##alias.impulse))
 
@@ -34,17 +29,9 @@ void _impCheck(string s, string alias)
 		LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s);
 }
 
-#define LEGACY_IMPULSE(alias, id, new) \
-	STATIC_INIT(legacy_##alias) { \
-		string s = new; \
-		_impCheck(s, #alias); \
-		IMPULSE_ALIAS(alias, s); \
-	} \
-	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
+#define LEGACY_IMPULSE(alias, id, new) 	STATIC_INIT(legacy_##alias) { 		string s = new; 		_impCheck(s, #alias); 		IMPULSE_ALIAS(alias, s); 	} 	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
 
-#define X(slot, imp) \
-	REGISTER_IMPULSE(weapon_group_##slot, imp) \
-	LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse " #imp)
+#define X(slot, imp) 	REGISTER_IMPULSE(weapon_group_##slot, imp) 	LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse " #imp)
 X(1, 1)
 X(2, 2)
 X(3, 3)
@@ -57,9 +44,7 @@ X(9, 9)
 X(0, 14)
 #undef X
 
-#define X(slot, dir, imp) \
-	REGISTER_IMPULSE(weapon_priority_##slot##_##dir, imp) \
-	LEGACY_IMPULSE(weapon_priority_##slot##_##dir, imp, "impulse " #imp)
+#define X(slot, dir, imp) 	REGISTER_IMPULSE(weapon_priority_##slot##_##dir, imp) 	LEGACY_IMPULSE(weapon_priority_##slot##_##dir, imp, "impulse " #imp)
 X(0, prev, 200)
 X(1, prev, 201)
 X(2, prev, 202)
@@ -96,8 +81,7 @@ X(9, next, 229)
 
 // direct weapons
 
-#define X(i, imp) \
-	REGISTER_IMPULSE(weapon_byid_##i, imp)
+#define X(i, imp) 	REGISTER_IMPULSE(weapon_byid_##i, imp)
 X(0, 230)
 X(1, 231)
 X(2, 232)
@@ -195,11 +179,7 @@ LEGACY_IMPULSE(g_waypointsprite_clear, 48, "waypoint_clear")
 
 
 #define CHIMPULSE(id, n) _CHIMPULSE(CHIMPULSE_##id, n)
-#define _CHIMPULSE(id, n) \
-	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) \
-	{ \
-		this.impulse = n; \
-	}
+#define _CHIMPULSE(id, n) 	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) 	{ 		this.impulse = n; 	}
 
 CHIMPULSE(SPEEDRUN_INIT, 30)
 CHIMPULSE(GIVE_ALL, 99)

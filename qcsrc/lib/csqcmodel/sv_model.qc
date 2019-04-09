@@ -43,11 +43,7 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
-#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
-	if(sf & flag) \
-	{ \
-		w(MSG_ENTITY, this.csqcmodel_##f); \
-	}
+#define CSQCMODEL_PROPERTY(flag,t,r,w,f) 	if(sf & flag) 	{ 		w(MSG_ENTITY, this.csqcmodel_##f); 	}
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
@@ -90,24 +86,8 @@ void CSQCModel_CheckUpdate(entity e)
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
-#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
-	{ \
-		t tmp = e.f; \
-		if(tmp != e.csqcmodel_##f) \
-		{ \
-			e.csqcmodel_##f = tmp; \
-			e.SendFlags |= flag; \
-		} \
-	}
-#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
-	{ \
-		t tmp = rint(bound(mi, s * e.f, ma) - mi); \
-		if(tmp != e.csqcmodel_##f) \
-		{ \
-			e.csqcmodel_##f = tmp; \
-			e.SendFlags |= flag; \
-		} \
-	}
+#define CSQCMODEL_PROPERTY(flag,t,r,w,f) 	{ 		t tmp = e.f; 		if(tmp != e.csqcmodel_##f) 		{ 			e.csqcmodel_##f = tmp; 			e.SendFlags |= flag; 		} 	}
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) 	{ 		t tmp = rint(bound(mi, s * e.f, ma) - mi); 		if(tmp != e.csqcmodel_##f) 		{ 			e.csqcmodel_##f = tmp; 			e.SendFlags |= flag; 		} 	}
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY

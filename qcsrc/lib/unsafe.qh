@@ -1,9 +1,7 @@
 #pragma once
 
 #define reinterpret_cast(T, it) _unsafe_cast_##T(0, it)
-#define X(T) \
-    T _unsafe_cast_##T(int dummy, ...) { return ...(0, T); } \
-    USING(T##_fld, .T); T##_fld _unsafe_cast_##T##_fld(int dummy, ...) { return ...(0, T##_fld); }
+#define X(T)     T _unsafe_cast_##T(int dummy, ...) { return ...(0, T); }     USING(T##_fld, .T); T##_fld _unsafe_cast_##T##_fld(int dummy, ...) { return ...(0, T##_fld); }
 X(bool)
 X(int)
 X(float)

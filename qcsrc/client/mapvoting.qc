@@ -251,7 +251,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	if(pic == "")
 	{
-		drawfill(pos, img_size, '.5 .5 .5', .7 * theAlpha, DRAWFLAG_NORMAL);
+		drawfill(pos, img_size, '0.5 0.5 0.5', .7 * theAlpha, DRAWFLAG_NORMAL);
 	}
 	else
 	{

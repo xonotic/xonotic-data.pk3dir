@@ -106,9 +106,7 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 
 void PlayerStats_GameReport_Accuracy(entity p)
 {
-	#define ACCMAC(suffix, field) \
-		PlayerStats_GameReport_Event_Player(p, \
-			sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
+	#define ACCMAC(suffix, field) 		PlayerStats_GameReport_Event_Player(p, 			sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
 	FOREACH(Weapons, it != WEP_Null, {
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)

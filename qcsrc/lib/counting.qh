@@ -7,59 +7,23 @@
 // ===============================================
 
 #define count_years_decs(time, decs) sprintf(CTX(_("CI_DEC^%s years")), ftos_decimals(time, decs))
-#define count_years(time) \
-	count_fill(time, \
-	_("CI_ZER^%d years"), /* zeroth */ \
-	_("CI_FIR^%d year"),  /* first */ \
-	_("CI_SEC^%d years"), /* year */ \
-	_("CI_THI^%d years"), /* third */ \
-	_("CI_MUL^%d years")) /* multi */
+#define count_years(time) 	count_fill(time, 	_("CI_ZER^%d years"), /* zeroth */ 	_("CI_FIR^%d year"),  /* first */ 	_("CI_SEC^%d years"), /* year */ 	_("CI_THI^%d years"), /* third */ 	_("CI_MUL^%d years")) /* multi */
 
 #define count_weeks_decs(time, decs) sprintf(CTX(_("CI_DEC^%s weeks")), ftos_decimals(time, decs))
-#define count_weeks(time) \
-	count_fill(time, \
-	_("CI_ZER^%d weeks"), /* zeroth */ \
-	_("CI_FIR^%d week"),  /* first */ \
-	_("CI_SEC^%d weeks"), /* week */ \
-	_("CI_THI^%d weeks"), /* third */ \
-	_("CI_MUL^%d weeks")) /* multi */
+#define count_weeks(time) 	count_fill(time, 	_("CI_ZER^%d weeks"), /* zeroth */ 	_("CI_FIR^%d week"),  /* first */ 	_("CI_SEC^%d weeks"), /* week */ 	_("CI_THI^%d weeks"), /* third */ 	_("CI_MUL^%d weeks")) /* multi */
 
 #define count_days_decs(time, decs) sprintf(CTX(_("CI_DEC^%s days")), ftos_decimals(time, decs))
-#define count_days(time) \
-	count_fill(time, \
-	_("CI_ZER^%d days"), /* zeroth */ \
-	_("CI_FIR^%d day"),  /* first */ \
-	_("CI_SEC^%d days"), /* day */ \
-	_("CI_THI^%d days"), /* third */ \
-	_("CI_MUL^%d days")) /* multi */
+#define count_days(time) 	count_fill(time, 	_("CI_ZER^%d days"), /* zeroth */ 	_("CI_FIR^%d day"),  /* first */ 	_("CI_SEC^%d days"), /* day */ 	_("CI_THI^%d days"), /* third */ 	_("CI_MUL^%d days")) /* multi */
 
 #define count_hours_decs(time, decs) sprintf(CTX(_("CI_DEC^%s hours")), ftos_decimals(time, decs))
-#define count_hours(time) \
-	count_fill(time, \
-	_("CI_ZER^%d hours"), /* zeroth */ \
-	_("CI_FIR^%d hour"),  /* first */ \
-	_("CI_SEC^%d hours"), /* hour */ \
-	_("CI_THI^%d hours"), /* third */ \
-	_("CI_MUL^%d hours")) /* multi */
+#define count_hours(time) 	count_fill(time, 	_("CI_ZER^%d hours"), /* zeroth */ 	_("CI_FIR^%d hour"),  /* first */ 	_("CI_SEC^%d hours"), /* hour */ 	_("CI_THI^%d hours"), /* third */ 	_("CI_MUL^%d hours")) /* multi */
 
 
 #define count_minutes_decs(time, decs) sprintf(CTX(_("CI_DEC^%s minutes")), ftos_decimals(time, decs))
-#define count_minutes(time) \
-	count_fill(time, \
-	_("CI_ZER^%d minutes"), /* zeroth */ \
-	_("CI_FIR^%d minute"),  /* first */ \
-	_("CI_SEC^%d minutes"), /* minute */ \
-	_("CI_THI^%d minutes"), /* third */ \
-	_("CI_MUL^%d minutes")) /* multi */
+#define count_minutes(time) 	count_fill(time, 	_("CI_ZER^%d minutes"), /* zeroth */ 	_("CI_FIR^%d minute"),  /* first */ 	_("CI_SEC^%d minutes"), /* minute */ 	_("CI_THI^%d minutes"), /* third */ 	_("CI_MUL^%d minutes")) /* multi */
 
 #define count_seconds_decs(time, decs) sprintf(CTX(_("CI_DEC^%s seconds")), ftos_decimals(time, decs))
-#define count_seconds(time) \
-	count_fill(time, \
-	_("CI_ZER^%d seconds"), /* zeroth */ \
-	_("CI_FIR^%d second"),  /* first */ \
-	_("CI_SEC^%d seconds"), /* second */ \
-	_("CI_THI^%d seconds"), /* third */ \
-	_("CI_MUL^%d seconds")) /* multi */
+#define count_seconds(time) 	count_fill(time, 	_("CI_ZER^%d seconds"), /* zeroth */ 	_("CI_FIR^%d second"),  /* first */ 	_("CI_SEC^%d seconds"), /* second */ 	_("CI_THI^%d seconds"), /* third */ 	_("CI_MUL^%d seconds")) /* multi */
 
 ERASEABLE
 string count_ordinal(int interval)

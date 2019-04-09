@@ -16,12 +16,7 @@ void profile(string s)
 	LOG_TRACEF("[%f] %s", rt - g_starttime, s);
 }
 
-#define _STATIC_INIT(func, where) \
-	ACCUMULATE void _static_##func##profile() { profile(#func); } \
-	ACCUMULATE_FUNCTION(where, _static_##func##profile) \
-	ACCUMULATE void _static_##func(); \
-	ACCUMULATE_FUNCTION(where, _static_##func) \
-	void _static_##func()
+#define _STATIC_INIT(func, where) 	ACCUMULATE void _static_##func##profile() { profile(#func); } 	ACCUMULATE_FUNCTION(where, _static_##func##profile) 	ACCUMULATE void _static_##func(); 	ACCUMULATE_FUNCTION(where, _static_##func) 	void _static_##func()
 
 /** before worldspawn */
 #define STATIC_INIT_EARLY(func) _STATIC_INIT(func##_0,    __static_init_0)

@@ -38,7 +38,7 @@ CLASS(Monster, Object)
     /** model */
     ATTRIB(Monster, m_model, entity);
     /** hitbox size */
-    ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
+    ATTRIB(Monster, m_mins, vector, '0 0 0');
     /** hitbox size */
     ATTRIB(Monster, m_maxs, vector, '0 0 0');
 

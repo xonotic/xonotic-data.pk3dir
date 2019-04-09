@@ -165,27 +165,9 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 }
 
 
-#define G_MODEL_INIT(ent,sol) \
-	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
-	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent); \
-	ent.use = g_model_setcolormaptoactivator; \
-	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); \
-	else if(ent.solid < 0) ent.solid = SOLID_NOT;
+#define G_MODEL_INIT(ent,sol) 	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); 	if(!ent.scale) ent.scale = ent.modelscale; 	SetBrushEntityModel(ent); 	ent.use = g_model_setcolormaptoactivator; 	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); 	if(!ent.solid) ent.solid = (sol); 	else if(ent.solid < 0) ent.solid = SOLID_NOT;
 
-#define G_CLIENTMODEL_INIT(ent,sol) \
-	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
-	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent); \
-	ent.use = g_clientmodel_use; \
-	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); \
-	else if(ent.solid < 0) ent.solid = SOLID_NOT; \
-	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; \
-	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
-	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity); \
-	ent.default_solid = sol;
+#define G_CLIENTMODEL_INIT(ent,sol) 	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); 	if(!ent.scale) ent.scale = ent.modelscale; 	SetBrushEntityModel(ent); 	ent.use = g_clientmodel_use; 	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); 	if(!ent.solid) ent.solid = (sol); 	else if(ent.solid < 0) ent.solid = SOLID_NOT; 	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; 	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; 	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity); 	ent.default_solid = sol;
 
 // non-solid model entities:
 spawnfunc(misc_gamemodel)         { this.angles_x = -this.angles.x; G_MODEL_INIT      (this, SOLID_NOT) } // model entity

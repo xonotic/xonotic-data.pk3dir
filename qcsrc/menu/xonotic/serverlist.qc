@@ -39,14 +39,7 @@ void SL_ProcessCategoryOverrides(.string override_field_string, .float override_
 void RegisterSLCategories()
 {
 	entity cat;
-	#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
-		SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) \
-		CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") \
-		cat = categories[name - 1] = new(slist_category); \
-		cat.cat_name = #name; \
-		cat.cat_enoverride_string = strzone(SLIST_CATEGORY_AUTOCVAR(name)); \
-		cat.cat_dioverride_string = strzone(dioverride); \
-		cat.cat_string = strzone(str);
+	#define SLIST_CATEGORY(name,enoverride,dioverride,str) 		SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) 		CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") 		cat = categories[name - 1] = new(slist_category); 		cat.cat_name = #name; 		cat.cat_enoverride_string = strzone(SLIST_CATEGORY_AUTOCVAR(name)); 		cat.cat_dioverride_string = strzone(dioverride); 		cat.cat_string = strzone(str);
 	SLIST_CATEGORIES
 	#undef SLIST_CATEGORY
 
@@ -802,9 +795,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
-#define SET_YRANGE(start,end) \
-	draw_scale = boxToGlobalSize(eX + eY * (end - start), oldscale); \
-	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
+#define SET_YRANGE(start,end) 	draw_scale = boxToGlobalSize(eX + eY * (end - start), oldscale); 	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
 
 	for (j = 0; j < category_draw_count; ++j) {
 		// Matches exactly the headings with increased height.

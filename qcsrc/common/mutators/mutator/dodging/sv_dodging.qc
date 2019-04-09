@@ -107,10 +107,7 @@ REGISTER_MUTATOR(dodging, true);
 .int pressedkeys;
 #endif
 
-#define X(dir) \
-	tracebox(this.origin, this.mins, this.maxs, this.origin + threshold * dir, true, this); \
-	if (trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) \
-		return true;
+#define X(dir) 	tracebox(this.origin, this.mins, this.maxs, this.origin + threshold * dir, true, this); 	if (trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) 		return true;
 
 // returns true if the player is close to a wall
 bool is_close_to_wall(entity this, float threshold)
@@ -152,19 +149,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool dodge_detected = false;
 	vector mymovement = PHYS_CS(this).movement;
 
-	#define X(COND,BTN,RESULT)																				\
-	if (mymovement_##COND) {																				\
-		/* is this a state change? */																		\
-		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {							\
-			tap_direction_##RESULT;																			\
-			if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap) {	\
-				dodge_detected = true;																		\
-			} else if(PHYS_INPUT_BUTTON_DODGE(this)) {														\
-				dodge_detected = true;																		\
-			}																								\
-			this.last_##BTN##_KEY_time = time;																\
-		}																									\
-	}
+	#define X(COND,BTN,RESULT)																					if (mymovement_##COND) {																						/* is this a state change? */																				if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {										tap_direction_##RESULT;																						if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap) {					dodge_detected = true;																					} else if(PHYS_INPUT_BUTTON_DODGE(this)) {																		dodge_detected = true;																					}																											this.last_##BTN##_KEY_time = time;																		}																										}
 	X(x < 0, BACKWARD,	x--);
 	X(x > 0, FORWARD,	x++);
 	X(y < 0, LEFT,		y--);

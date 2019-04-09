@@ -94,19 +94,11 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 	return 0;
 }
 
-#define BEGIN_CHEAT_FUNCTION() \
-	float cheating = 0, attempting = 0
-#define DID_CHEAT() \
-	++cheating
-#define ADD_CHEATS(e,n) \
-	cheatcount_total += n; \
-	e.cheatcount += n
-#define END_CHEAT_FUNCTION() \
-	ADD_CHEATS(this, cheating); \
-	return attempting
-#define IS_CHEAT(ent,i,argc,fr) \
-	if((++attempting, !CheatsAllowed(ent,i,argc,fr))) \
-		break
+#define BEGIN_CHEAT_FUNCTION() 	float cheating = 0, attempting = 0
+#define DID_CHEAT() 	++cheating
+#define ADD_CHEATS(e,n) 	cheatcount_total += n; 	e.cheatcount += n
+#define END_CHEAT_FUNCTION() 	ADD_CHEATS(this, cheating); 	return attempting
+#define IS_CHEAT(ent,i,argc,fr) 	if((++attempting, !CheatsAllowed(ent,i,argc,fr))) 		break
 
 float num_autoscreenshot;
 void info_autoscreenshot_findtarget(entity this)

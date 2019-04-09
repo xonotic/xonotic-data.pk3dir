@@ -79,12 +79,7 @@
 #if NDEBUG
 	#define TC(T, sym) MACRO_BEGIN MACRO_END
 #else
-	#define TC(T, sym) MACRO_BEGIN \
-		if (!is_##T(sym)) { \
-			LOG_WARNF("Type check failed: " #sym " :: " #T); \
-			isnt_##T(sym); \
-		} \
-	MACRO_END
+	#define TC(T, sym) MACRO_BEGIN 		if (!is_##T(sym)) { 			LOG_WARNF("Type check failed: " #sym " :: " #T); 			isnt_##T(sym); 		} 	MACRO_END
 #endif
 
 #if !(NDEBUG)
@@ -162,14 +157,7 @@ void make_safe_for_remove(entity this);
     #define objerror_safe(e) make_safe_for_remove(e)
 #endif
 
-#define objerror(this, msg) MACRO_BEGIN \
-	LOG_WARN("======OBJECT ERROR======"); \
-	entity _e = (this); \
-	eprint(_e); \
-	objerror_safe(_e); \
-	delete(_e); \
-	LOG_WARNF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); \
-MACRO_END
+#define objerror(this, msg) MACRO_BEGIN 	LOG_WARN("======OBJECT ERROR======"); 	entity _e = (this); 	eprint(_e); 	objerror_safe(_e); 	delete(_e); 	LOG_WARNF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); MACRO_END
 
 #ifdef MENUQC
 	void _m_init();

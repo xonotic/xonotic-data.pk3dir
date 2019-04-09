@@ -18,13 +18,7 @@ void KeyBinds_Read()
 {
 	KeyBinds_Count = 0;
 
-	#define KEYBIND_DEF(func, desc) MACRO_BEGIN \
-		if((KeyBinds_Count < MAX_KEYBINDS)) { \
-			KeyBinds_Functions[KeyBinds_Count] = strzone(func); \
-			KeyBinds_Descriptions[KeyBinds_Count] = strzone(desc); \
-			++KeyBinds_Count; \
-		} \
-	MACRO_END
+	#define KEYBIND_DEF(func, desc) MACRO_BEGIN 		if((KeyBinds_Count < MAX_KEYBINDS)) { 			KeyBinds_Functions[KeyBinds_Count] = strzone(func); 			KeyBinds_Descriptions[KeyBinds_Count] = strzone(desc); 			++KeyBinds_Count; 		} 	MACRO_END
 
 	KEYBIND_DEF(""                                      , _("Moving"));
 	KEYBIND_DEF("+forward"                              , _("forward"));
@@ -50,12 +44,7 @@ void KeyBinds_Read()
 
 	int i;
 
-	#define ADD_TO_W_LIST(pred) \
-		FOREACH(Weapons, it != WEP_Null, { \
-			if (it.impulse != imp) continue; \
-			if (!(pred)) continue; \
-			w_list = strcat(w_list, it.m_name, " / "); \
-		})
+	#define ADD_TO_W_LIST(pred) 		FOREACH(Weapons, it != WEP_Null, { 			if (it.impulse != imp) continue; 			if (!(pred)) continue; 			w_list = strcat(w_list, it.m_name, " / "); 		})
 
 	for(int imp = 1; imp <= 9; ++imp)
 	{

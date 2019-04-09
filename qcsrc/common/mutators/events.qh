@@ -4,14 +4,7 @@
 
 #pragma noref 1
 
-#define MUTATOR_TYPES(_, x) \
-    _(x, bool) \
-    _(x, int) \
-    _(x, entity) \
-    _(x, float) \
-    _(x, vector) \
-    _(x, string) \
-    /**/
+#define MUTATOR_TYPES(_, x)     _(x, bool)     _(x, int)     _(x, entity)     _(x, float)     _(x, vector)     _(x, string)     /**/
 
 // TODO: migrate to arrays some day when no other globals are used
 #define M_ARGV(x, type) MUTATOR_ARGV_##x##_##type
@@ -35,80 +28,42 @@ MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 10)
 #pragma noref 0
 
 /** appends ":mutatorname" to argument for logging */
-#define EV_BuildMutatorsString(i, o) \
-    /** mutator string */ i(string, MUTATOR_ARGV_0_string) \
-    /**/                  o(string, MUTATOR_ARGV_0_string) \
-    /**/
+#define EV_BuildMutatorsString(i, o)     /** mutator string */ i(string, MUTATOR_ARGV_0_string)     /**/                  o(string, MUTATOR_ARGV_0_string)     /**/
 MUTATOR_HOOKABLE(BuildMutatorsString, EV_BuildMutatorsString);
 
 /** appends ", Mutator name" to ret_string for display */
-#define EV_BuildMutatorsPrettyString(i, o) \
-    /** mutator string */ i(string, MUTATOR_ARGV_0_string) \
-    /**/                  o(string, MUTATOR_ARGV_0_string) \
-    /**/
+#define EV_BuildMutatorsPrettyString(i, o)     /** mutator string */ i(string, MUTATOR_ARGV_0_string)     /**/                  o(string, MUTATOR_ARGV_0_string)     /**/
 MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
 
 /** appends mutator string for displaying extra gameplay tips */
-#define EV_BuildGameplayTipsString(i, o) \
-    /** tips string */    i(string, MUTATOR_ARGV_0_string) \
-    /**/                  o(string, MUTATOR_ARGV_0_string) \
-    /**/
+#define EV_BuildGameplayTipsString(i, o)     /** tips string */    i(string, MUTATOR_ARGV_0_string)     /**/                  o(string, MUTATOR_ARGV_0_string)     /**/
 MUTATOR_HOOKABLE(BuildGameplayTipsString, EV_BuildGameplayTipsString);
 
-#define EV_IsFlying(i, o) \
-	/**/ i(entity, MUTATOR_ARGV_0_entity) \
-	/**/
+#define EV_IsFlying(i, o) 	/**/ i(entity, MUTATOR_ARGV_0_entity) 	/**/
 MUTATOR_HOOKABLE(IsFlying, EV_IsFlying);
 
-#define EV_WP_Format(i, o) \
-    /**/ i(entity, MUTATOR_ARGV_0_entity) \
-    /**/ i(string, MUTATOR_ARGV_1_string) \
-    /**/ o(vector, MUTATOR_ARGV_2_vector) \
-    /**/ o(string, MUTATOR_ARGV_3_string) \
-    /**/ o(string, MUTATOR_ARGV_4_string) \
-    /**/
+#define EV_WP_Format(i, o)     /**/ i(entity, MUTATOR_ARGV_0_entity)     /**/ i(string, MUTATOR_ARGV_1_string)     /**/ o(vector, MUTATOR_ARGV_2_vector)     /**/ o(string, MUTATOR_ARGV_3_string)     /**/ o(string, MUTATOR_ARGV_4_string)     /**/
 MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
 
 /**
  * called before any player physics, may adjust variables for movement,
  * is run AFTER bot code and idle checking on the server
  */
-#define EV_PlayerPhysics(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
-    /** ticrate*/ i(float, MUTATOR_ARGV_1_float) \
-    /**/
+#define EV_PlayerPhysics(i, o)     /** player */ i(entity, MUTATOR_ARGV_0_entity)     /** ticrate*/ i(float, MUTATOR_ARGV_1_float)     /**/
 MUTATOR_HOOKABLE(PlayerPhysics, EV_PlayerPhysics);
 
 /** called when a player presses the jump key */
-#define EV_PlayerJump(i, o) \
-    /** player */      i(entity, MUTATOR_ARGV_0_entity) \
-    /** jump height */ i(float, MUTATOR_ARGV_1_float) \
-    /**/               o(float, MUTATOR_ARGV_1_float) \
-    /** multijump */   i(bool, MUTATOR_ARGV_2_bool) \
-    /**/               o(bool, MUTATOR_ARGV_2_bool) \
-    /**/
+#define EV_PlayerJump(i, o)     /** player */      i(entity, MUTATOR_ARGV_0_entity)     /** jump height */ i(float, MUTATOR_ARGV_1_float)     /**/               o(float, MUTATOR_ARGV_1_float)     /** multijump */   i(bool, MUTATOR_ARGV_2_bool)     /**/               o(bool, MUTATOR_ARGV_2_bool)     /**/
 MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 
 /** called during player physics, allows adjusting the movement type used */
-#define EV_PM_Physics(i, o) \
-    /** player */       i(entity, MUTATOR_ARGV_0_entity) \
-    /** maxspeed_mod */ i(float, MUTATOR_ARGV_1_float) \
-    /** tick rate */    i(float, MUTATOR_ARGV_2_float) \
-    /**/
+#define EV_PM_Physics(i, o)     /** player */       i(entity, MUTATOR_ARGV_0_entity)     /** maxspeed_mod */ i(float, MUTATOR_ARGV_1_float)     /** tick rate */    i(float, MUTATOR_ARGV_2_float)     /**/
 MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
 
 /** called when a weapon sound is about to be played, allows custom paths etc. */
-#define EV_WeaponSound(i, o) \
-    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
-    /** output      */ i(string, MUTATOR_ARGV_1_string) \
-    /**/               o(string, MUTATOR_ARGV_1_string) \
-    /**/
+#define EV_WeaponSound(i, o)     /** sound       */ i(string, MUTATOR_ARGV_0_string)     /** output      */ i(string, MUTATOR_ARGV_1_string)     /**/               o(string, MUTATOR_ARGV_1_string)     /**/
 MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
 
 /** called when a weapon model is about to be set, allows custom paths etc. */
-#define EV_WeaponModel(i, o) \
-    /** model */  i(string, MUTATOR_ARGV_0_string) \
-    /** output */ i(string, MUTATOR_ARGV_1_string) \
-    /**/          o(string, MUTATOR_ARGV_1_string) \
-    /**/
+#define EV_WeaponModel(i, o)     /** model */  i(string, MUTATOR_ARGV_0_string)     /** output */ i(string, MUTATOR_ARGV_1_string)     /**/          o(string, MUTATOR_ARGV_1_string)     /**/
 MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);

@@ -121,9 +121,7 @@ STATIC_INIT_LATE(W_PROP_reloader)
 #define EVAL_REGISTER_WEAPON(...) __VA_ARGS__
 #define REGISTER_WEAPON_2(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
 /** TODO: deprecated - remove */
-#define REGISTER_WEAPON_3(id, sname, inst) \
-    REGISTER_WEAPON_2(id, inst); \
-    [[alias("WEP_" #id)]] Weapon _wep_##sname
+#define REGISTER_WEAPON_3(id, sname, inst)     REGISTER_WEAPON_2(id, inst);     [[alias("WEP_" #id)]] Weapon _wep_##sname
 
 REGISTER_WEAPON(Null, NEW(Weapon));
 
@@ -152,25 +150,15 @@ const .float reloading_time = reload_time;
 
 
 
-#define W_PROPS(L, class, prefix) \
-    L(W_PROP_BEGIN, W_PROP, W_PROP_END, class, prefix) \
-    L(W_CONFIG_BEGIN, W_CONFIG, W_CONFIG_END, class, prefix) \
-    L(W_UPDATE_BEGIN, W_UPDATE, W_UPDATE_END, class, prefix) \
-    L(W_NET_BEGIN, W_NET, W_NET_END, class, prefix) \
-    /**/ \
-
+#define W_PROPS(L, class, prefix)     L(W_PROP_BEGIN, W_PROP, W_PROP_END, class, prefix)     L(W_CONFIG_BEGIN, W_CONFIG, W_CONFIG_END, class, prefix)     L(W_UPDATE_BEGIN, W_UPDATE, W_UPDATE_END, class, prefix)     L(W_NET_BEGIN, W_NET, W_NET_END, class, prefix)     /**/ 
 
     #define W_PROP(class, wepname, fld, T, m)       W_PROP_##m(class, fld, T, wepname)
     #define W_PROP_NONE(class, fld, T, wepname)     _W_PROP(class, fld, T, wepname)
     #define W_PROP_PRI(class, fld, T, wepname)      _W_PROP(class, primary_##fld, T, wepname)
     #define W_PROP_SEC(class, fld, T, wepname)      _W_PROP(class, secondary_##fld, T, wepname)
-    #define W_PROP_BOTH(class, fld, T, wepname) \
-            W_PROP_PRI(class, fld, T, wepname) \
-            W_PROP_SEC(class, fld, T, wepname)
+    #define W_PROP_BOTH(class, fld, T, wepname)             W_PROP_PRI(class, fld, T, wepname)             W_PROP_SEC(class, fld, T, wepname)
     #define W_PROP_BEGIN(class)
-        #define _W_PROP(class, fld, T, wepname) \
-            /* static */ T _W_PROP_CVAR(wepname, fld); \
-            ATTRIB(class, wepvar_##fld, T, _W_PROP_CVAR(wepname, fld));
+        #define _W_PROP(class, fld, T, wepname)             /* static */ T _W_PROP_CVAR(wepname, fld);             ATTRIB(class, wepvar_##fld, T, _W_PROP_CVAR(wepname, fld));
         #define _W_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
     #define W_PROP_END()
 
@@ -180,9 +168,7 @@ const .float reloading_time = reload_time;
     #define W_CONFIG_NONE(class, fld, T, wepname)   _W_CONFIG(class, fld, T, wepname)
     #define W_CONFIG_PRI(class, fld, T, wepname)    _W_CONFIG(class, primary_##fld, T, wepname)
     #define W_CONFIG_SEC(class, fld, T, wepname)    _W_CONFIG(class, secondary_##fld, T, wepname)
-    #define W_CONFIG_BOTH(class, fld, T, wepname) \
-            W_CONFIG_PRI(class, fld, T, wepname) \
-            W_CONFIG_SEC(class, fld, T, wepname)
+    #define W_CONFIG_BOTH(class, fld, T, wepname)             W_CONFIG_PRI(class, fld, T, wepname)             W_CONFIG_SEC(class, fld, T, wepname)
     #define W_CONFIG_BEGIN(class) METHOD(class, wr_config, void(class this)) {
         #ifdef SVQC
             #define _W_CONFIG(class, fld, T, wepname) if (#wepname == this.netname) WEP_CONFIG_WRITE_CVARS(wepname, fld, T);
@@ -196,26 +182,11 @@ const .float reloading_time = reload_time;
     #define W_UPDATE_NONE(class, fld, T, wepname)   _W_UPDATE(class, fld, T, wepname)
     #define W_UPDATE_PRI(class, fld, T, wepname)    _W_UPDATE(class, primary_##fld, T, wepname)
     #define W_UPDATE_SEC(class, fld, T, wepname)    _W_UPDATE(class, secondary_##fld, T, wepname)
-    #define W_UPDATE_BOTH(class, fld, T, wepname) \
-            W_UPDATE_PRI(class, fld, T, wepname) \
-            W_UPDATE_SEC(class, fld, T, wepname)
+    #define W_UPDATE_BOTH(class, fld, T, wepname)             W_UPDATE_PRI(class, fld, T, wepname)             W_UPDATE_SEC(class, fld, T, wepname)
     .entity baseline, baseline_target;
-    #define W_UPDATE_BEGIN(class) \
-        METHOD(class, wr_update, void(class this)) \
-        { \
-            noref entity b = this.baseline; \
-            if (!b) \
-            { \
-                b = this.baseline = new_pure(baseline); \
-                b.baseline_target = this; \
-            }
+    #define W_UPDATE_BEGIN(class)         METHOD(class, wr_update, void(class this))         {             noref entity b = this.baseline;             if (!b)             {                 b = this.baseline = new_pure(baseline);                 b.baseline_target = this;             }
         #ifdef SVQC
-            #define _W_UPDATE(class, fld, T, wepname) \
-                { \
-                    T it = _W_PROP_CVAR(wepname, fld); \
-                    b.wepvar_##fld = this.wepvar_##fld; \
-                    this.wepvar_##fld = it; \
-                }
+            #define _W_UPDATE(class, fld, T, wepname)                 {                     T it = _W_PROP_CVAR(wepname, fld);                     b.wepvar_##fld = this.wepvar_##fld;                     this.wepvar_##fld = it;                 }
         #else
             #define _W_UPDATE(class, fld, T, wepname)
         #endif
@@ -226,16 +197,11 @@ const .float reloading_time = reload_time;
     #define W_NET_NONE(class, fld, T, wepname)   _W_NET(class, fld, T, wepname)
     #define W_NET_PRI(class, fld, T, wepname)    _W_NET(class, primary_##fld, T, wepname)
     #define W_NET_SEC(class, fld, T, wepname)    _W_NET(class, secondary_##fld, T, wepname)
-    #define W_NET_BOTH(class, fld, T, wepname) \
-            W_NET_PRI(class, fld, T, wepname) \
-            W_NET_SEC(class, fld, T, wepname)
+    #define W_NET_BOTH(class, fld, T, wepname)             W_NET_PRI(class, fld, T, wepname)             W_NET_SEC(class, fld, T, wepname)
     REGISTER_NET_TEMP(WeaponUpdate)
     #if defined(CSQC)
         #define W_NET_BEGIN(class) METHOD(class, wr_net, void(class this, int i)) { int n = 0;
-            #define _W_NET(class, fld, T, wepname) \
-            { \
-                if (++n == i) this.wepvar_##fld = Read_##T(); \
-            }
+            #define _W_NET(class, fld, T, wepname)             {                 if (++n == i) this.wepvar_##fld = Read_##T();             }
             .void(Weapon this, int i) wr_net;
             NET_HANDLE(WeaponUpdate, bool isnew)
             {
@@ -248,24 +214,9 @@ const .float reloading_time = reload_time;
             }
         #define W_NET_END() }
     #elif defined(SVQC)
-        #define W_NET_BEGIN(class) \
-            METHOD(class, wr_net, void(class this, int chan)) \
-            { \
-                bool commit = false; \
-                int i = 0;
-    #define _W_NET(class, fld, T, wepname) \
-                { \
-                    ++i; \
-                    T it = this.wepvar_##fld; \
-                    if (chan == MSG_ONE || it != this.baseline.wepvar_##fld) \
-                    { \
-                        if (!commit) { commit = true; WriteHeader(chan, WeaponUpdate); WriteByte(chan, this.m_id); } \
-                        WriteByte(chan, i); Write_##T(chan, it); \
-                    } \
-                }
-    #define W_NET_END() \
-                if (commit) WriteByte(chan, 0); \
-            }
+        #define W_NET_BEGIN(class)             METHOD(class, wr_net, void(class this, int chan))             {                 bool commit = false;                 int i = 0;
+    #define _W_NET(class, fld, T, wepname)                 {                     ++i;                     T it = this.wepvar_##fld;                     if (chan == MSG_ONE || it != this.baseline.wepvar_##fld)                     {                         if (!commit) { commit = true; WriteHeader(chan, WeaponUpdate); WriteByte(chan, this.m_id); }                         WriteByte(chan, i); Write_##T(chan, it);                     }                 }
+    #define W_NET_END()                 if (commit) WriteByte(chan, 0);             }
     #else
         #define W_NET_BEGIN(class)
             #define _W_NET(class, fld, T, wepname)

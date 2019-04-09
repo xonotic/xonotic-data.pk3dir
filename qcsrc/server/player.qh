@@ -20,11 +20,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 // If <0, 0 is used.
 // Otherwise, g_str (default value) is used.
 // For consistency, negative values there are mapped to zero too.
-#define GAMETYPE_DEFAULTED_SETTING(str) \
-	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
-	(gametype_setting_tmp < 0) ? 0 \
-	: (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) \
-	: gametype_setting_tmp)
+#define GAMETYPE_DEFAULTED_SETTING(str) 	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), 	(gametype_setting_tmp < 0) ? 0 	: (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) 	: gametype_setting_tmp)
 
 void calculate_player_respawn_time(entity this);
 

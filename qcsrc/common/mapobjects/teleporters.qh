@@ -33,21 +33,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 void trigger_teleport_use(entity this, entity actor, entity trigger);
 
-#define TDEATHLOOP(o) \
-	vector deathmin = (o) + player.mins; \
-	vector deathmax = (o) + player.maxs; \
-	if(telefragmin != telefragmax) \
-	{ \
-		if(deathmin.x > telefragmin.x) deathmin.x = telefragmin.x; \
-		if(deathmin.y > telefragmin.y) deathmin.y = telefragmin.y; \
-		if(deathmin.z > telefragmin.z) deathmin.z = telefragmin.z; \
-		if(deathmax.x < telefragmax.x) deathmax.x = telefragmax.x; \
-		if(deathmax.y < telefragmax.y) deathmax.y = telefragmax.y; \
-		if(deathmax.z < telefragmax.z) deathmax.z = telefragmax.z; \
-	} \
-	float deathradius = max(vlen(deathmin), vlen(deathmax)); \
-	for (entity head = findradius(o, deathradius); head; head = head.chain) \
-		if (head != player && head.takedamage && boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
+#define TDEATHLOOP(o) 	vector deathmin = (o) + player.mins; 	vector deathmax = (o) + player.maxs; 	if(telefragmin != telefragmax) 	{ 		if(deathmin.x > telefragmin.x) deathmin.x = telefragmin.x; 		if(deathmin.y > telefragmin.y) deathmin.y = telefragmin.y; 		if(deathmin.z > telefragmin.z) deathmin.z = telefragmin.z; 		if(deathmax.x < telefragmax.x) deathmax.x = telefragmax.x; 		if(deathmax.y < telefragmax.y) deathmax.y = telefragmax.y; 		if(deathmax.z < telefragmax.z) deathmax.z = telefragmax.z; 	} 	float deathradius = max(vlen(deathmin), vlen(deathmax)); 	for (entity head = findradius(o, deathradius); head; head = head.chain) 		if (head != player && head.takedamage && boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax);
 float tdeath_hit;

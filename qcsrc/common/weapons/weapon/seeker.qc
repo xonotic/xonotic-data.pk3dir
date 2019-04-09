@@ -256,14 +256,14 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 			f_diff = '-1.25 -3.75 0';
 			break;
 		case 1:
-			f_diff = '+1.25 -3.75 0';
+			f_diff = '1.25 -3.75 0';
 			break;
 		case 2:
-			f_diff = '-1.25 +3.75 0';
+			f_diff = '-1.25 3.75 0';
 			break;
 		case 3:
 		default:
-			f_diff = '+1.25 +3.75 0';
+			f_diff = '1.25 3.75 0';
 			break;
 	}
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_FLAC_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, flac_damage), thiswep.m_id | HITTYPE_SECONDARY);
@@ -368,14 +368,14 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 -3.75 0', own.enemy); // TODO
 			break;
 		case 1:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '+1.25 -3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '1.25 -3.75 0', own.enemy); // TODO
 			break;
 		case 2:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 +3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 3.75 0', own.enemy); // TODO
 			break;
 		case 3:
 		default:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '+1.25 +3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '1.25 3.75 0', own.enemy); // TODO
 			break;
 	}
 

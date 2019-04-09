@@ -117,8 +117,8 @@ void draw_ButtonPicture(vector theOrigin, string pic, vector theSize, vector the
 	else
 	{
 		square = eX * theSize.y;
-		drawsubpic(theOrigin,                  height  +     square, pic, '0    0 0', '0.25 1 0', theColor, theAlpha, 0);
-		drawsubpic(theOrigin +         square, theSize - 2 * square, pic, '0.25 0 0', '0.5  1 0', theColor, theAlpha, 0);
+		drawsubpic(theOrigin,                  height  +     square, pic, '0 0 0', '0.25 1 0', theColor, theAlpha, 0);
+		drawsubpic(theOrigin +         square, theSize - 2 * square, pic, '0.25 0 0', '0.5 1 0', theColor, theAlpha, 0);
 		drawsubpic(theOrigin + width - square, height  +     square, pic, '0.75 0 0', '0.25 1 0', theColor, theAlpha, 0);
 	}
 }
@@ -152,8 +152,8 @@ void draw_VertButtonPicture(vector theOrigin, string pic, vector theSize, vector
 	else
 	{
 		square = eY * theSize.x;
-		drawsubpic(theOrigin,                   width   +     square, pic, '0 0    0', '1 0.25 0', theColor, theAlpha, 0);
-		drawsubpic(theOrigin +          square, theSize - 2 * square, pic, '0 0.25 0', '1 0.5  0', theColor, theAlpha, 0);
+		drawsubpic(theOrigin,                   width   +     square, pic, '0 0 0', '1 0.25 0', theColor, theAlpha, 0);
+		drawsubpic(theOrigin +          square, theSize - 2 * square, pic, '0 0.25 0', '1 0.5 0', theColor, theAlpha, 0);
 		drawsubpic(theOrigin + height - square, width   +     square, pic, '0 0.75 0', '1 0.25 0', theColor, theAlpha, 0);
 	}
 }
@@ -185,21 +185,21 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	{
 		if(theBorderSize.y <= 0)
 		{
-			drawsubpic(theOrigin,                            width          + height,          pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin,                            width          + height,          pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
 		}
 		else if(theSize.y <= theBorderSize.y * 2)
 		{
 			// not high enough... draw just top and bottom then
 			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
-			drawsubpic(theOrigin,                             width          + height * 0.5, pic, '0.25 0 0',           '0.5  0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin              + height * 0.5, width          + height * 0.5, pic, '0.25 0 0' + eY - bH, '0.5  0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin,                             width          + height * 0.5, pic, '0.25 0 0',           '0.5 0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin              + height * 0.5, width          + height * 0.5, pic, '0.25 0 0' + eY - bH, '0.5 0 0' + bH, theColor, theAlpha, 0);
 		}
 		else
 		{
 			dY = theBorderSize.y * eY;
-			drawsubpic(theOrigin,                            width                   +     dY, pic, '0.25 0    0', '0.5  0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY,              width          + height - 2 * dY, pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY,              width                   +     dY, pic, '0.25 0.75 0', '0.5  0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin,                            width                   +     dY, pic, '0.25 0 0', '0.5 0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + dY,              width          + height - 2 * dY, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin + height - dY,              width                   +     dY, pic, '0.25 0.75 0', '0.5 0.25 0', theColor, theAlpha, 0);
 		}
 	}
 	else if(theSize.x <= theBorderSize.x * 2)
@@ -208,8 +208,8 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 		bW = eX * (0.25 * theSize.x / (theBorderSize.x * 2));
 		if(theBorderSize.y <= 0)
 		{
-			drawsubpic(theOrigin,                             width * 0.5 + height,          pic, '0 0.25 0',           '0 0.5  0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5,               width * 0.5 + height,          pic, '0 0.25 0' + eX - bW, '0 0.5  0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin,                             width * 0.5 + height,          pic, '0 0.25 0',           '0 0.5 0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width * 0.5,               width * 0.5 + height,          pic, '0 0.25 0' + eX - bW, '0 0.5 0' + bW, theColor, theAlpha, 0);
 		}
 		else if(theSize.y <= theBorderSize.y * 2)
 		{
@@ -223,10 +223,10 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 		else
 		{
 			dY = theBorderSize.y * eY;
-			drawsubpic(theOrigin,                             width * 0.5          +     dY, pic, '0 0    0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5,               width * 0.5          +     dY, pic, '0 0    0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin                        + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0',           '0 0.5  0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5          + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0' + eX - bW, '0 0.5  0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin,                             width * 0.5          +     dY, pic, '0 0 0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width * 0.5,               width * 0.5          +     dY, pic, '0 0 0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin                        + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0',           '0 0.5 0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width * 0.5          + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0' + eX - bW, '0 0.5 0' + bW, theColor, theAlpha, 0);
 			drawsubpic(theOrigin               + height - dY, width * 0.5          +     dY, pic, '0 0.75 0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + width * 0.5 + height - dY, width * 0.5          +     dY, pic, '0 0.75 0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
 		}
@@ -236,34 +236,34 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 		if(theBorderSize.y <= 0)
 		{
 			dX = theBorderSize.x * eX;
-			drawsubpic(theOrigin,                                        dX + height,          pic, '0    0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin                       + dX, width - 2 * dX + height,          pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin               + width - dX,             dX + height,          pic, '0.75 0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin,                                        dX + height,          pic, '0 0.25 0', '0.25 0.5 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin                       + dX, width - 2 * dX + height,          pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin               + width - dX,             dX + height,          pic, '0.75 0.25 0', '0.25 0.5 0', theColor, theAlpha, 0);
 		}
 		else if(theSize.y <= theBorderSize.y * 2)
 		{
 			// not high enough... draw just top and bottom then
 			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
 			dX = theBorderSize.x * eX;
-			drawsubpic(theOrigin,                                         dX + height * 0.5, pic, '0    0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + dX,                        width - 2 * dX + height * 0.5, pic, '0.25 0 0',           '0.5  0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin,                                         dX + height * 0.5, pic, '0 0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + dX,                        width - 2 * dX + height * 0.5, pic, '0.25 0 0',           '0.5 0 0' + bH, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + width - dX,                            dX + height * 0.5, pic, '0.75 0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin              + height * 0.5,             dX + height * 0.5, pic, '0    0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + dX         + height * 0.5, width - 2 * dX + height * 0.5, pic, '0.25 0 0' + eY - bH, '0.5  0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin              + height * 0.5,             dX + height * 0.5, pic, '0 0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + dX         + height * 0.5, width - 2 * dX + height * 0.5, pic, '0.25 0 0' + eY - bH, '0.5 0 0' + bH, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + width - dX + height * 0.5,             dX + height * 0.5, pic, '0.75 0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
 		}
 		else
 		{
 			dX = theBorderSize.x * eX;
 			dY = theBorderSize.y * eY;
-			drawsubpic(theOrigin,                                        dX          +     dY, pic, '0    0    0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin                  + dX,      width - 2 * dX          +     dY, pic, '0.25 0    0', '0.5  0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + width - dX,                  dX          +     dY, pic, '0.75 0    0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY,                          dX + height - 2 * dY, pic, '0    0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY         + dX, width - 2 * dX + height - 2 * dY, pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY + width - dX,             dX + height - 2 * dY, pic, '0.75 0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY,                          dX          +     dY, pic, '0    0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY         + dX, width - 2 * dX          +     dY, pic, '0.25 0.75 0', '0.5  0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin,                                        dX          +     dY, pic, '0 0 0', '0.25 0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin                  + dX,      width - 2 * dX          +     dY, pic, '0.25 0 0', '0.5 0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + width - dX,                  dX          +     dY, pic, '0.75 0 0', '0.25 0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + dY,                          dX + height - 2 * dY, pic, '0 0.25 0', '0.25 0.5 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + dY         + dX, width - 2 * dX + height - 2 * dY, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + dY + width - dX,             dX + height - 2 * dY, pic, '0.75 0.25 0', '0.25 0.5 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin + height - dY,                          dX          +     dY, pic, '0 0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin + height - dY         + dX, width - 2 * dX          +     dY, pic, '0.25 0.75 0', '0.5 0.25 0', theColor, theAlpha, 0);
 			drawsubpic(theOrigin + height - dY + width - dX,             dX          +     dY, pic, '0.75 0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
 		}
 	}

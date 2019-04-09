@@ -23,8 +23,4 @@ CLASS(Model, Object)
     }
 ENDCLASS(Model)
 
-#define setmodel(this, m) MACRO_BEGIN \
-    Model _setmodel_model = (m); \
-    string _setmodel_cached = _setmodel_model.model_str_; \
-    _setmodel((this), _setmodel_cached ? _setmodel_cached : _setmodel_model.model_str()); \
-MACRO_END
+#define setmodel(this, m) MACRO_BEGIN     Model _setmodel_model = (m);     string _setmodel_cached = _setmodel_model.model_str_;     _setmodel((this), _setmodel_cached ? _setmodel_cached : _setmodel_model.model_str()); MACRO_END

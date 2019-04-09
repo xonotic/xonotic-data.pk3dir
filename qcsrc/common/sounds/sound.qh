@@ -39,12 +39,7 @@ const float VOL_MUFFLED = 0.35;
 // Play all sounds via sound7, for access to the extra channels.
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #ifdef SVQC
-	#define _sound(e, c, s, v, a) \
-		MACRO_BEGIN \
-			entity __e = e; \
-			if (sound_allowed(MSG_BROADCAST, __e)) \
-				sound7(__e, c, s, v, a, 0, 0); \
-		MACRO_END
+	#define _sound(e, c, s, v, a) 		MACRO_BEGIN 			entity __e = e; 			if (sound_allowed(MSG_BROADCAST, __e)) 				sound7(__e, c, s, v, a, 0, 0); 		MACRO_END
 #else
 	#define _sound(e, c, s, v, a) sound7(e, c, s, v, a, 0, 0)
 #endif
@@ -62,33 +57,7 @@ const float VOL_MUFFLED = 0.35;
  * @param speed
  * @param sf
  */
-#define sound8(e, o, chan, samp, vol, atten, speed, sf) \
-	MACRO_BEGIN \
-		entity __e; \
-		int __chan = chan; \
-		string __samp = samp; \
-		bool auto = false; \
-		if (__chan > 0) __e = e; \
-		else \
-		{ \
-			auto = true; \
-			__chan = fabs(__chan); \
-			entity tmp = __e = new(csqc_autochannel); \
-			setthink(tmp, SUB_Remove); \
-			tmp.nextthink = time + soundlength(__samp); \
-		} \
-		vector old_origin = __e.origin; \
-		vector old_mins = __e.mins; \
-		vector old_maxs = __e.maxs; \
-		setorigin(__e, o); \
-		setsize(__e, '0 0 0', '0 0 0'); \
-		sound7(__e, __chan, __samp, vol, atten, speed, sf); \
-		if (!auto) \
-		{ \
-			setorigin(__e, old_origin); \
-			setsize(__e, old_mins, old_maxs); \
-		} \
-	MACRO_END
+#define sound8(e, o, chan, samp, vol, atten, speed, sf) 	MACRO_BEGIN 		entity __e; 		int __chan = chan; 		string __samp = samp; 		bool auto = false; 		if (__chan > 0) __e = e; 		else 		{ 			auto = true; 			__chan = fabs(__chan); 			entity tmp = __e = new(csqc_autochannel); 			setthink(tmp, SUB_Remove); 			tmp.nextthink = time + soundlength(__samp); 		} 		vector old_origin = __e.origin; 		vector old_mins = __e.mins; 		vector old_maxs = __e.maxs; 		setorigin(__e, o); 		setsize(__e, '0 0 0', '0 0 0'); 		sound7(__e, __chan, __samp, vol, atten, speed, sf); 		if (!auto) 		{ 			setorigin(__e, old_origin); 			setsize(__e, old_mins, old_maxs); 		} 	MACRO_END
 
 string _Sound_fixpath(string base)
 {
@@ -96,17 +65,8 @@ string _Sound_fixpath(string base)
 #ifdef SVQC
 	return strcat(base, ".wav");  // let the client engine decide
 #else
-#define extensions(x) \
-	x(wav) \
-	x(ogg) \
-	x(flac) \
-	/**/
-#define tryext(ext) { \
-		string s = strcat(base, "." #ext); \
-		if (fexists(strcat("sound/", s))) { \
-			return s; \
-		} \
-	}
+#define extensions(x) 	x(wav) 	x(ogg) 	x(flac) 	/**/
+#define tryext(ext) { 		string s = strcat(base, "." #ext); 		if (fexists(strcat("sound/", s))) { 			return s; 		} 	}
 	extensions(tryext);
 	LOG_WARNF("Missing sound: \"%s\"", strcat("sound/", base));
 #undef tryext
@@ -137,8 +97,4 @@ ENDCLASS(Sound)
 
 entity _Sound_fixpath_this;
 string _Sound_fixpath_cached;
-#define Sound_fixpath(this) ( \
-	_Sound_fixpath_this = (this), \
-	_Sound_fixpath_cached = _Sound_fixpath_this.sound_str_, \
-	_Sound_fixpath_cached ? _Sound_fixpath_cached : _Sound_fixpath(_Sound_fixpath_this.sound_str()) \
-)
+#define Sound_fixpath(this) ( 	_Sound_fixpath_this = (this), 	_Sound_fixpath_cached = _Sound_fixpath_this.sound_str_, 	_Sound_fixpath_cached ? _Sound_fixpath_cached : _Sound_fixpath(_Sound_fixpath_this.sound_str()) )

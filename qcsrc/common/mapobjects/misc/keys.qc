@@ -172,32 +172,32 @@ spawnfunc(item_key)
 	switch(this.itemkeys) {
 	case BIT(0):
 		_netname = "GOLD key";
-		_colormod = '1 .9 0';
+		_colormod = '1 0.9 0';
 		break;
 
 	case BIT(1):
 		_netname = "SILVER key";
-		_colormod = '.9 .9 .9';
+		_colormod = '0.9 0.9 0.9';
 		break;
 
 	case BIT(2):
 		_netname = "BRONZE key";
-		_colormod = '.6 .25 0';
+		_colormod = '0.6 0.25 0';
 		break;
 
 	case BIT(3):
 		_netname = "RED keycard";
-		_colormod = '.9 0 0';
+		_colormod = '0.9 0 0';
 		break;
 
 	case BIT(4):
 		_netname = "BLUE keycard";
-		_colormod = '0 0 .9';
+		_colormod = '0 0 0.9';
 		break;
 
 	case BIT(5):
 		_netname = "GREEN keycard";
-		_colormod = '0 .9 0';
+		_colormod = '0 0.9 0';
 		break;
 
 	default:

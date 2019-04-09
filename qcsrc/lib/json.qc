@@ -22,11 +22,7 @@ bool _json_parse_number();
 
 #define JSON_BEGIN() int __i = STRING_ITERATOR_SAVE(_json)
 #define JSON_FAIL(reason) goto fail
-#define JSON_END() \
-   return true; \
-:fail \
-   STRING_ITERATOR_LOAD(_json, __i); \
-   return false;
+#define JSON_END()    return true; :fail    STRING_ITERATOR_LOAD(_json, __i);    return false;
 // Current namespace
 string _json_ns;
 // Current keys
@@ -301,13 +297,7 @@ void json_dump(int buf)
 
 TEST(json, Parse)
 {
-    string s = "{\n\
-    \"m_string\": \"\\\"string\\\"\",\n\
-    \"m_int\": 123,\n\
-    \"m_bool\": true,\n\
-    \"m_null\": null,\n\
-    \"m_obj\": { },\n\
-    \"m_arr\": [ ]\n}"; // "
+    string s = "{\n    \"m_string\": \"\\\"string\\\"\",\n    \"m_int\": 123,\n    \"m_bool\": true,\n    \"m_null\": null,\n    \"m_obj\": { },\n    \"m_arr\": [ ]\n}"; // "
     print(s, "\n");
     int buf = json_parse(s, _json_parse_object);
     EXPECT_NE(-1, buf);

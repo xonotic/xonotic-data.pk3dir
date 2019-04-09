@@ -1,57 +1,22 @@
 #pragma once
 
 /** Components always interpolate from the previous state */
-#define COMPONENT(com) \
-	void com_##com##_interpolate(entity it, float a); \
-	.bool com_##com
+#define COMPONENT(com) 	void com_##com##_interpolate(entity it, float a); 	.bool com_##com
 
 #define FOREACH_COMPONENT(com, body) FOREACH_ENTITY_FLOAT(com_##com, true, body)
 
 
 #define EVENT(T, args) .bool evt_##T##_listener; .void args evt_##T
 
-#define emit(T, ...) \
-	MACRO_BEGIN \
-	FOREACH_ENTITY_FLOAT_ORDERED(evt_##T##_listener, true, it.evt_##T(__VA_ARGS__)); \
-	MACRO_END
+#define emit(T, ...) 	MACRO_BEGIN 	FOREACH_ENTITY_FLOAT_ORDERED(evt_##T##_listener, true, it.evt_##T(__VA_ARGS__)); 	MACRO_END
 
-#define subscribe(listener, T, fn) \
-	MACRO_BEGIN \
-	listener.evt_##T = (fn); \
-	listener.evt_##T##_listener = true; \
-	MACRO_END
+#define subscribe(listener, T, fn) 	MACRO_BEGIN 	listener.evt_##T = (fn); 	listener.evt_##T##_listener = true; 	MACRO_END
 
 
 /**
  * framelimit 0 is no limit, interpolation does not apply
  * framerate below minfps will result in less than 100% speed
  */
-#define SYSTEM(sys, frameLimit, minfps) \
-	void sys_##sys##_update(entity this, float dt); \
-	noref float autocvar_xon_sys_##sys##_dt = ((frameLimit) ? (1 / (frameLimit)) : 0); \
-	noref float autocvar_xon_sys_##sys##_minfps = (1 / (1 / (minfps)))
+#define SYSTEM(sys, frameLimit, minfps) 	void sys_##sys##_update(entity this, float dt); 	noref float autocvar_xon_sys_##sys##_dt = ((frameLimit) ? (1 / (frameLimit)) : 0); 	noref float autocvar_xon_sys_##sys##_minfps = (1 / (1 / (minfps)))
 
-#define SYSTEM_UPDATE(sys) \
-	MACRO_BEGIN \
-	static float t = 0; \
-	float dt = autocvar_xon_sys_##sys##_dt; \
-	float minfps = autocvar_xon_sys_##sys##_minfps; \
-	static float accumulator = 0; \
-	float a = 0; \
-	if (dt) { \
-		accumulator += min(frametime, 1 / (minfps)); \
-	} else { \
-		accumulator += frametime; \
-		dt = accumulator; \
-		a = 1; \
-	} \
-	while (accumulator >= dt) \
-	{ \
-		time = t; \
-		FOREACH_COMPONENT(sys, sys_##sys##_update(it, dt)); \
-		t += dt; \
-		accumulator -= dt; \
-	} \
-	if (!a) a = accumulator / dt; \
-	FOREACH_COMPONENT(sys, com_##sys##_interpolate(it, a)); \
-	MACRO_END
+#define SYSTEM_UPDATE(sys) 	MACRO_BEGIN 	static float t = 0; 	float dt = autocvar_xon_sys_##sys##_dt; 	float minfps = autocvar_xon_sys_##sys##_minfps; 	static float accumulator = 0; 	float a = 0; 	if (dt) { 		accumulator += min(frametime, 1 / (minfps)); 	} else { 		accumulator += frametime; 		dt = accumulator; 		a = 1; 	} 	while (accumulator >= dt) 	{ 		time = t; 		FOREACH_COMPONENT(sys, sys_##sys##_update(it, dt)); 		t += dt; 		accumulator -= dt; 	} 	if (!a) a = accumulator / dt; 	FOREACH_COMPONENT(sys, com_##sys##_interpolate(it, a)); 	MACRO_END

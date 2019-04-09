@@ -44,12 +44,7 @@ string markdown(string s)
 
 TEST(Markdown, LineWrap)
 {
-	#define X(expect, in) MACRO_BEGIN \
-		string out = markdown(in); \
-		EXPECT_TRUE(expect == out); \
-		LOG_INFO(expect); \
-		LOG_INFO(out); \
-	MACRO_END
+	#define X(expect, in) MACRO_BEGIN 		string out = markdown(in); 		EXPECT_TRUE(expect == out); 		LOG_INFO(expect); 		LOG_INFO(out); 	MACRO_END
 
 	// identity
 	X("lorem ipsum", "lorem ipsum");

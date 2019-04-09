@@ -236,8 +236,8 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 		else
 		{
 			square = eY * theSize.x;
-			drawsubpic(theOrigin,                   width   +     square, pic, '0 0    0', '1 0.25 0', theColor, theAlpha, drawflag);
-			drawsubpic(theOrigin +          square, theSize - 2 * square, pic, '0 0.25 0', '1 0.5  0', theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin,                   width   +     square, pic, '0 0 0', '1 0.25 0', theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin +          square, theSize - 2 * square, pic, '0 0.25 0', '1 0.5 0', theColor, theAlpha, drawflag);
 			drawsubpic(theOrigin + height - square, width   +     square, pic, '0 0.75 0', '1 0.25 0', theColor, theAlpha, drawflag);
 		}
 	} else {
@@ -278,8 +278,8 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 		else
 		{
 			square = eX * theSize.y;
-			drawsubpic(theOrigin,                  height  +     square, pic, '0    0 0', '0.25 1 0', theColor, theAlpha, drawflag);
-			drawsubpic(theOrigin +         square, theSize - 2 * square, pic, '0.25 0 0', '0.5  1 0', theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin,                  height  +     square, pic, '0 0 0', '0.25 1 0', theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin +         square, theSize - 2 * square, pic, '0.25 0 0', '0.5 1 0', theColor, theAlpha, drawflag);
 			drawsubpic(theOrigin + width - square, height  +     square, pic, '0.75 0 0', '0.25 1 0', theColor, theAlpha, drawflag);
 		}
 	}

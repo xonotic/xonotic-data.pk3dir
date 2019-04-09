@@ -26,18 +26,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
-#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN \
-	int nHidden = 0; \
-	FOREACH(Weapons, it != WEP_Null, { \
-		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
-		if ((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) nHidden += 1; \
-	}); \
-	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
-	columns = table_size.x; \
-	rows = table_size.y; \
-	weapon_size.x = panel_size.x / columns; \
-	weapon_size.y = panel_size.y / rows; \
-MACRO_END
+#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN 	int nHidden = 0; 	FOREACH(Weapons, it != WEP_Null, { 		if (weapons_stat & WepSet_FromWeapon(it)) continue; 		if ((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) nHidden += 1; 	}); 	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); 	columns = table_size.x; 	rows = table_size.y; 	weapon_size.x = panel_size.x / columns; 	weapon_size.y = panel_size.y / rows; MACRO_END
 
 void HUD_Weapons()
 {

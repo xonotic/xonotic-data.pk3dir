@@ -6,13 +6,7 @@ REGISTRY(COMMON_COMMANDS, BITS(7))
 REGISTER_REGISTRY(COMMON_COMMANDS)
 REGISTRY_SORT(COMMON_COMMANDS)
 
-#define COMMON_COMMAND(id, description) \
-	CLASS(commoncommand_##id, Command) \
-		ATTRIB(commoncommand_##id, m_name, string, #id); \
-    	ATTRIB(commoncommand_##id, m_description, string, description); \
-	ENDCLASS(commoncommand_##id) \
-    REGISTER(COMMON_COMMANDS, CMD_SV, id, m_id, NEW(commoncommand_##id)); \
-	METHOD(commoncommand_##id, m_invokecmd, void(commoncommand_##id this, int request, entity caller, int arguments, string command))
+#define COMMON_COMMAND(id, description) 	CLASS(commoncommand_##id, Command) 		ATTRIB(commoncommand_##id, m_name, string, #id);     	ATTRIB(commoncommand_##id, m_description, string, description); 	ENDCLASS(commoncommand_##id)     REGISTER(COMMON_COMMANDS, CMD_SV, id, m_id, NEW(commoncommand_##id)); 	METHOD(commoncommand_##id, m_invokecmd, void(commoncommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(COMMON_COMMANDS_aliases) {
 	FOREACH(COMMON_COMMANDS, true, { localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svcmd")); });

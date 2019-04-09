@@ -17,7 +17,7 @@ SUB(happy_damage_dissolve) {
     MY(tex_min) = 69;
     MY(tex_max) = 69;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '312.0 312.0 312.0';
+    MY(velocityjitter) = '312 312 312';
 }
 SUB(happy_damage_dissolve) {
     MY(airfriction) = 3;
@@ -36,7 +36,7 @@ SUB(happy_damage_dissolve) {
     MY(tex_min) = 69;
     MY(tex_max) = 69;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '312.0 312.0 312.0';
+    MY(velocityjitter) = '312 312 312';
 }
 SUB(happy_damage_dissolve) {
     MY(airfriction) = 3;
@@ -55,7 +55,7 @@ SUB(happy_damage_dissolve) {
     MY(tex_min) = 69;
     MY(tex_max) = 69;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '312.0 312.0 312.0';
+    MY(velocityjitter) = '312 312 312';
 }
 
 // happy damage fx for cl_gentle
@@ -77,7 +77,7 @@ SUB(happy_damage_hit) {
     MY(tex_min) = 69;
     MY(tex_max) = 69;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '156.0 156.0 156.0';
+    MY(velocityjitter) = '156 156 156';
 }
 SUB(happy_damage_hit) {
     MY(airfriction) = 5;
@@ -96,7 +96,7 @@ SUB(happy_damage_hit) {
     MY(tex_min) = 69;
     MY(tex_max) = 69;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '156.0 156.0 156.0';
+    MY(velocityjitter) = '156 156 156';
 }
 SUB(happy_damage_hit) {
     MY(airfriction) = 5;
@@ -115,5 +115,5 @@ SUB(happy_damage_hit) {
     MY(tex_min) = 69;
     MY(tex_max) = 69;
     MY(type) = "alphastatic";
-    MY(velocityjitter) = '156.0 156.0 156.0';
+    MY(velocityjitter) = '156 156 156';
 }

@@ -6,51 +6,17 @@
 #define ITER_CONST
 #endif
 
-#define FOREACH_ARRAY(arr, start, end, cond, body) \
-	MACRO_BEGIN \
-		for (int _i = start; _i < end; ++_i) \
-		{ \
-			const noref int i = _i; \
-			ITER_CONST noref entity it = arr[i]; \
-			if (cond) { LAMBDA(body) } \
-		} \
-	MACRO_END
+#define FOREACH_ARRAY(arr, start, end, cond, body) 	MACRO_BEGIN 		for (int _i = start; _i < end; ++_i) 		{ 			const noref int i = _i; 			ITER_CONST noref entity it = arr[i]; 			if (cond) { LAMBDA(body) } 		} 	MACRO_END
 
 #define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
 
-#define FOREACH_LIST(list, next, cond, body) \
-	MACRO_BEGIN \
-		int _i = 0; \
-		for (entity _it = list##_first, _next = NULL; _it; (_it = _next, ++_i)) \
-		{ \
-			const noref int i = _i; \
-			ITER_CONST noref entity it = _it; \
-			_next = _it.next; \
-			if (cond) { LAMBDA(body) } \
-		} \
-	MACRO_END
+#define FOREACH_LIST(list, next, cond, body) 	MACRO_BEGIN 		int _i = 0; 		for (entity _it = list##_first, _next = NULL; _it; (_it = _next, ++_i)) 		{ 			const noref int i = _i; 			ITER_CONST noref entity it = _it; 			_next = _it.next; 			if (cond) { LAMBDA(body) } 		} 	MACRO_END
 
-#define FOREACH_WORD(words, cond, body) \
-	MACRO_BEGIN \
-		string _words = words; \
-		int _i = 0; \
-		for (string _it; (_it = car(_words)); (_words = cdr(_words), ++_i)) \
-		{ \
-			const noref int i = _i; \
-			const noref string it = _it; \
-			if (cond) { LAMBDA(body) } \
-		} \
-	MACRO_END
+#define FOREACH_WORD(words, cond, body) 	MACRO_BEGIN 		string _words = words; 		int _i = 0; 		for (string _it; (_it = car(_words)); (_words = cdr(_words), ++_i)) 		{ 			const noref int i = _i; 			const noref string it = _it; 			if (cond) { LAMBDA(body) } 		} 	MACRO_END
 
-#define STRING_ITERATOR(this, s, i) \
-	string this##_s = s; \
-	int this##_i = i
+#define STRING_ITERATOR(this, s, i) 	string this##_s = s; 	int this##_i = i
 
-#define STRING_ITERATOR_SET(this, s, i) \
-	MACRO_BEGIN \
-		this##_s = s; \
-		this##_i = i; \
-	MACRO_END
+#define STRING_ITERATOR_SET(this, s, i) 	MACRO_BEGIN 		this##_s = s; 		this##_i = i; 	MACRO_END
 
 #define STRING_ITERATOR_GET(this) str2chr(this##_s, this##_i++)
 #define STRING_ITERATOR_PEEK(this) str2chr(this##_s, this##_i)
@@ -59,16 +25,7 @@
 #define STRING_ITERATOR_SAVE(this) this##_i
 #define STRING_ITERATOR_LOAD(this, n) MACRO_BEGIN this##_i = n; MACRO_END
 
-#define FOREACH_CHAR(s, cond, body) \
-	MACRO_BEGIN \
-		STRING_ITERATOR(iter, s, 0); \
-		int _it; \
-		while ((_it = STRING_ITERATOR_GET(iter)) > 0) \
-		{ \
-			const noref int it = _it; \
-			if (cond) { LAMBDA(body) } \
-		} \
-	MACRO_END
+#define FOREACH_CHAR(s, cond, body) 	MACRO_BEGIN 		STRING_ITERATOR(iter, s, 0); 		int _it; 		while ((_it = STRING_ITERATOR_GET(iter)) > 0) 		{ 			const noref int it = _it; 			if (cond) { LAMBDA(body) } 		} 	MACRO_END
 
 #if defined(CSQC)
     entity(entity start, .string fld, string match) _findstring = #18;
@@ -109,42 +66,13 @@
 #endif
 
 #define ORDERED(F) F##_UNORDERED
-#define _FOREACH_ENTITY_FIND_ORDERED(T, fld, match, cond, body) \
-    MACRO_BEGIN \
-        int _i = 0; \
-        for (entity _it = NULL; (_it = _find##T(_it, fld, match)); ++_i) \
-        { \
-            const noref int i = _i; \
-            ITER_CONST noref entity it = _it; \
-            if (cond) LAMBDA(body) \
-        } \
-    MACRO_END
-#define MUTEX_LOCK(this) MACRO_BEGIN \
-	if (this) LOG_SEVEREF("Loop mutex held by %s", this); \
-	this = __FUNC__; \
-MACRO_END
-#define MUTEX_UNLOCK(this) MACRO_BEGIN \
-	this = string_null; \
-MACRO_END
-#define _FOREACH_ENTITY_FIND_UNORDERED(id, T, fld, match, cond, body) \
-	MACRO_BEGIN \
-		MUTEX_LOCK(_FOREACH_ENTITY_FIND_##T##_##id##mutex); \
-		entity _foundchain_first = _findchain##T##_tofield(fld, match, _FOREACH_ENTITY_FIND_##T##_next##id); \
-		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_FIND_##T##_next##id, cond, body); \
-		MUTEX_UNLOCK(_FOREACH_ENTITY_FIND_##T##_##id##mutex); \
-	MACRO_END
+#define _FOREACH_ENTITY_FIND_ORDERED(T, fld, match, cond, body)     MACRO_BEGIN         int _i = 0;         for (entity _it = NULL; (_it = _find##T(_it, fld, match)); ++_i)         {             const noref int i = _i;             ITER_CONST noref entity it = _it;             if (cond) LAMBDA(body)         }     MACRO_END
+#define MUTEX_LOCK(this) MACRO_BEGIN 	if (this) LOG_SEVEREF("Loop mutex held by %s", this); 	this = __FUNC__; MACRO_END
+#define MUTEX_UNLOCK(this) MACRO_BEGIN 	this = string_null; MACRO_END
+#define _FOREACH_ENTITY_FIND_UNORDERED(id, T, fld, match, cond, body) 	MACRO_BEGIN 		MUTEX_LOCK(_FOREACH_ENTITY_FIND_##T##_##id##mutex); 		entity _foundchain_first = _findchain##T##_tofield(fld, match, _FOREACH_ENTITY_FIND_##T##_next##id); 		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_FIND_##T##_next##id, cond, body); 		MUTEX_UNLOCK(_FOREACH_ENTITY_FIND_##T##_##id##mutex); 	MACRO_END
 
 #define FOREACH_ENTITY(cond, body) ORDERED(FOREACH_ENTITY)(cond, body)
-#define FOREACH_ENTITY_ORDERED(cond, body) \
-	MACRO_BEGIN \
-		int _i = 0; \
-		for (entity _it = NULL; (_it = nextent(_it)); ++_i) \
-		{ \
-			const noref int i = _i; \
-			ITER_CONST noref entity it = _it; \
-			if (cond) LAMBDA(body) \
-		} \
-	MACRO_END
+#define FOREACH_ENTITY_ORDERED(cond, body) 	MACRO_BEGIN 		int _i = 0; 		for (entity _it = NULL; (_it = nextent(_it)); ++_i) 		{ 			const noref int i = _i; 			ITER_CONST noref entity it = _it; 			if (cond) LAMBDA(body) 		} 	MACRO_END
 /** marker field, always NULL */
 .entity _FOREACH_ENTITY_fld;
 .entity _FOREACH_ENTITY_FIND_entity_nextall; noref string _FOREACH_ENTITY_FIND_entity_allmutex;
@@ -161,14 +89,7 @@ entity(vector org, float rad, .entity tofield) _findchainradius_tofield = #22;
 .entity _FOREACH_ENTITY_FIND_radius_next; noref string _FOREACH_ENTITY_FIND_radius_mutex;
 #define FOREACH_ENTITY_RADIUS_UNORDERED(org, dist, cond, body) _FOREACH_ENTITY_FIND_UNORDERED(, radius, org, dist, cond, body)
 .entity _FOREACH_ENTITY_FIND_radius_nexttmp; noref string _FOREACH_ENTITY_FIND_radius_tmpmutex;
-#define FOREACH_ENTITY_RADIUS_ORDERED(org, dist, cond, body) \
-MACRO_BEGIN \
-	entity _rev_first = NULL; \
-	_FOREACH_ENTITY_FIND_UNORDERED(tmp, radius, org, dist, cond, (it._FOREACH_ENTITY_FIND_radius_nexttmp = _rev_first, _rev_first = it)); \
-	MUTEX_LOCK(_FOREACH_ENTITY_FIND_radius_tmpmutex); \
-	FOREACH_LIST(_rev, _FOREACH_ENTITY_FIND_radius_nexttmp, true, body); \
-	MUTEX_UNLOCK(_FOREACH_ENTITY_FIND_radius_tmpmutex); \
-MACRO_END
+#define FOREACH_ENTITY_RADIUS_ORDERED(org, dist, cond, body) MACRO_BEGIN 	entity _rev_first = NULL; 	_FOREACH_ENTITY_FIND_UNORDERED(tmp, radius, org, dist, cond, (it._FOREACH_ENTITY_FIND_radius_nexttmp = _rev_first, _rev_first = it)); 	MUTEX_LOCK(_FOREACH_ENTITY_FIND_radius_tmpmutex); 	FOREACH_LIST(_rev, _FOREACH_ENTITY_FIND_radius_nexttmp, true, body); 	MUTEX_UNLOCK(_FOREACH_ENTITY_FIND_radius_tmpmutex); MACRO_END
 #endif
 
 #define FOREACH_ENTITY_FLOAT(fld, match, body) ORDERED(FOREACH_ENTITY_FLOAT)(fld, match, body)

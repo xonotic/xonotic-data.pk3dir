@@ -1264,9 +1264,7 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 #endif
 
 // returns true if player is reviving it
-#define IS_REVIVING(player, it, revive_extra_size) \
-	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
-	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
+#define IS_REVIVING(player, it, revive_extra_size) 	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) 	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
@@ -1452,8 +1450,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
 		else if(autocvar_g_nades_bonus_score_spree && CS(frag_attacker).killcount > 1)
 		{
-			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
-				case counta: { nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_spree); break; }
+			#define SPREE_ITEM(counta,countb,center,normal,gentle) 				case counta: { nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_spree); break; }
 			switch(CS(frag_attacker).killcount)
 			{
 				KILL_SPREE_LIST

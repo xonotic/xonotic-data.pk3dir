@@ -95,15 +95,7 @@ int totalspawned;
 
 // monster sounds
 .float msound_delay; // temporary antilag system
-#define ALLMONSTERSOUNDS \
-		_MSOUND(death) \
-		_MSOUND(sight) \
-		_MSOUND(ranged) \
-		_MSOUND(melee) \
-		_MSOUND(pain) \
-		_MSOUND(spawn) \
-		_MSOUND(idle) \
-		_MSOUND(attack)
+#define ALLMONSTERSOUNDS 		_MSOUND(death) 		_MSOUND(sight) 		_MSOUND(ranged) 		_MSOUND(melee) 		_MSOUND(pain) 		_MSOUND(spawn) 		_MSOUND(idle) 		_MSOUND(attack)
 
 #define _MSOUND(m) .string monstersound_##m;
 ALLMONSTERSOUNDS

@@ -33,11 +33,9 @@ void movelib_move_simple(vector newdir,float velo,float blendrate)
     this.velocity = this.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
 }
 */
-#define movelib_move_simple(e,newdir,velo,blendrate) \
-    e.velocity = e.velocity * (1 - blendrate) + (newdir * blendrate) * velo
+#define movelib_move_simple(e,newdir,velo,blendrate)     e.velocity = e.velocity * (1 - blendrate) + (newdir * blendrate) * velo
 
-#define movelib_move_simple_gravity(e,newdir,velo,blendrate) \
-    if(IS_ONGROUND(e)) movelib_move_simple(e,newdir,velo,blendrate)
+#define movelib_move_simple_gravity(e,newdir,velo,blendrate)     if(IS_ONGROUND(e)) movelib_move_simple(e,newdir,velo,blendrate)
 
 void movelib_brake_simple(entity this, float force);
 

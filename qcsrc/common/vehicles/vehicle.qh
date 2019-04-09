@@ -27,7 +27,7 @@ CLASS(Vehicle, Object)
     /**  */
     ATTRIB(Vehicle, spawnflags, int, 0);
     /** vehicle hitbox size */
-    ATTRIB(Vehicle, m_mins, vector, '-0 -0 -0');
+    ATTRIB(Vehicle, m_mins, vector, '0 0 0');
     /** vehicle hitbox size */
     ATTRIB(Vehicle, m_maxs, vector, '0 0 0');
     /** vehicle 3rd person view offset */

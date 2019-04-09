@@ -11,10 +11,4 @@ CLASS(Lazy, Object)
 ENDCLASS(Lazy)
 
 #define LAZY(id) __lazy_##id
-#define LAZY_NEW(id, compute) \
-	entity LAZY(id)() { \
-		static bool done; \
-		static entity it; \
-		if (!done) { it = compute; done = true; } \
-		return it; \
-	}
+#define LAZY_NEW(id, compute) 	entity LAZY(id)() { 		static bool done; 		static entity it; 		if (!done) { it = compute; done = true; } 		return it; 	}

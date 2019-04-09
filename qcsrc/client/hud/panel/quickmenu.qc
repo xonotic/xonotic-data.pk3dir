@@ -690,57 +690,16 @@ void HUD_QuickMenu()
 }
 
 
-#define QUICKMENU_SMENU(submenu,eng_submenu) { \
-	if(target_submenu == eng_submenu && target_submenu_found) \
-		return; /* target_submenu entries are now loaded, exit */ \
-	if(QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES) \
-		QuickMenu_Buffer_Set(QM_TAG_SUBMENU, submenu); \
-	++QuickMenu_Buffer_Size; \
-	if(target_submenu == eng_submenu && !target_submenu_found) { \
-		QuickMenu_Buffer_Size = 0; /* enable load of next entries */ \
-		target_submenu_found = true; \
-	} \
-}
+#define QUICKMENU_SMENU(submenu,eng_submenu) { 	if(target_submenu == eng_submenu && target_submenu_found) 		return; /* target_submenu entries are now loaded, exit */ 	if(QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES) 		QuickMenu_Buffer_Set(QM_TAG_SUBMENU, submenu); 	++QuickMenu_Buffer_Size; 	if(target_submenu == eng_submenu && !target_submenu_found) { 		QuickMenu_Buffer_Size = 0; /* enable load of next entries */ 		target_submenu_found = true; 	} }
 
-#define QUICKMENU_ENTRY(title,command) { \
-	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
-	{ \
-		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
-		++QuickMenu_Buffer_Size; \
-		QuickMenu_Buffer_Set(QM_TAG_COMMAND, command); \
-	} \
-	++QuickMenu_Buffer_Size; \
-}
+#define QUICKMENU_ENTRY(title,command) { 	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) 	{ 		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); 		++QuickMenu_Buffer_Size; 		QuickMenu_Buffer_Set(QM_TAG_COMMAND, command); 	} 	++QuickMenu_Buffer_Size; }
 
-#define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,teamplayers,without_me) { \
-	if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES) {\
-		QUICKMENU_SMENU(submenu,eng_submenu) \
-		QuickMenu_Buffer_Set(QM_TAG_TITLE, strcat(ftos(teamplayers), ftos(without_me))); \
-		++QuickMenu_Buffer_Size; \
-		QuickMenu_Buffer_Set(QM_TAG_PLCOMMAND, command); \
-		++QuickMenu_Buffer_Size; \
-		QUICKMENU_SMENU(submenu,eng_submenu) \
-	} \
-}
+#define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,teamplayers,without_me) { 	if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES) {		QUICKMENU_SMENU(submenu,eng_submenu) 		QuickMenu_Buffer_Set(QM_TAG_TITLE, strcat(ftos(teamplayers), ftos(without_me))); 		++QuickMenu_Buffer_Size; 		QuickMenu_Buffer_Set(QM_TAG_PLCOMMAND, command); 		++QuickMenu_Buffer_Size; 		QUICKMENU_SMENU(submenu,eng_submenu) 	} }
 
 
 
 // useful to Translate a string inside the Command
-#define QUICKMENU_ENTRY_TC(title,command,text,translated_text) {\
-	if(prvm_language == "en") { \
-		tc_title = title; \
-		tc_cmd = sprintf(command, text); \
-	} \
-	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) { \
-		tc_title = strcat("(en)", title); \
-		tc_cmd = sprintf(command, text); \
-	} \
-	else { \
-		tc_title = strcat("(", prvm_language, ")", title); \
-		tc_cmd = sprintf(command, translated_text); \
-	} \
-	QUICKMENU_ENTRY(tc_title, tc_cmd) \
-}
+#define QUICKMENU_ENTRY_TC(title,command,text,translated_text) {	if(prvm_language == "en") { 		tc_title = title; 		tc_cmd = sprintf(command, text); 	} 	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) { 		tc_title = strcat("(en)", title); 		tc_cmd = sprintf(command, text); 	} 	else { 		tc_title = strcat("(", prvm_language, ")", title); 		tc_cmd = sprintf(command, translated_text); 	} 	QUICKMENU_ENTRY(tc_title, tc_cmd) }
 
 void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me)
 {

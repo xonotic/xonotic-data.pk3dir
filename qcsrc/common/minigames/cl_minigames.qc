@@ -66,8 +66,7 @@ string minigame_texture(string name)
 #define MSLE_CLEAN_Vector(x)
 #define MSLE_CLEAN_Vector2D(x)
 
-#define MSLE(Name,Fields) \
-	void msle_entremove_##Name(entity this) { strunzone(this.netname); Fields }
+#define MSLE(Name,Fields) 	void msle_entremove_##Name(entity this) { strunzone(this.netname); Fields }
 MINIGAME_SIMPLELINKED_ENTITIES
 #undef MSLE
 #undef FIELD
@@ -157,15 +156,7 @@ string() ReadString_Raw = #366;
 string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 #define ReadString ReadString_Zoned
 #define FIELD(Flags, Type,Name) if ( sf & (Flags) ) this.Name = Read##Type();
-#define MSLE(Name,Fields) \
-	else if ( this.classname == #Name ) { \
-		if ( sf & MINIG_SF_CREATE ) { \
-			minigame_read_owner(this); \
-			this.entremove = msle_entremove_##Name; \
-		} \
-		minigame_ent = this.owner; \
-		Fields \
-	}
+#define MSLE(Name,Fields) 	else if ( this.classname == #Name ) { 		if ( sf & MINIG_SF_CREATE ) { 			minigame_read_owner(this); 			this.entremove = msle_entremove_##Name; 		} 		minigame_ent = this.owner; 		Fields 	}
 void minigame_read_owner(entity this)
 {
 	string owner_name = ReadString_Raw();

@@ -252,12 +252,8 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
-#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
-	if(sf & flag) \
-		this.f = r();
-#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
-	if(sf & flag) \
-		this.f = (r() + mi) / s;
+#define CSQCMODEL_PROPERTY(flag,t,r,w,f) 	if(sf & flag) 		this.f = r();
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) 	if(sf & flag) 		this.f = (r() + mi) / s;
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY

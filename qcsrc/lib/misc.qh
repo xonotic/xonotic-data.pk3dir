@@ -37,10 +37,4 @@
 #define LAMBDA(...) { __VA_ARGS__; }
 
 // With block may not contain continue or break
-#define WITH(type, name, value, block) \
-	MACRO_BEGIN \
-		type __with_save = (name); \
-		name = (value); \
-		LAMBDA(block) \
-		name = __with_save; \
-	MACRO_END
+#define WITH(type, name, value, block) 	MACRO_BEGIN 		type __with_save = (name); 		name = (value); 		LAMBDA(block) 		name = __with_save; 	MACRO_END

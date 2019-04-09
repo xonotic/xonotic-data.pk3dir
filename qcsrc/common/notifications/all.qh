@@ -84,31 +84,7 @@ USING(Notification, entity);
 #define APP_TEAM_NUM(num, prefix) ((num == NUM_TEAM_1) ? prefix##_RED : ((num == NUM_TEAM_2) ? prefix##_BLUE : ((num == NUM_TEAM_3) ? prefix##_YELLOW : prefix##_PINK)))
 #define APP_NUM(num, prefix) ((num) ? APP_TEAM_NUM(num, prefix) : prefix##_NEUTRAL)
 
-#define EIGHT_VARS_TO_VARARGS_VARLIST \
-	VARITEM(1, 0, s1) \
-	VARITEM(2, 0, XPD(s1, s2)) \
-	VARITEM(3, 0, XPD(s1, s2, s3)) \
-	VARITEM(4, 0, XPD(s1, s2, s3, s4)) \
-	VARITEM(0, 1, f1) \
-	VARITEM(1, 1, XPD(s1, f1)) \
-	VARITEM(2, 1, XPD(s1, s2, f1)) \
-	VARITEM(3, 1, XPD(s1, s2, s3, f1)) \
-	VARITEM(4, 1, XPD(s1, s2, s3, s4, f1)) \
-	VARITEM(0, 2, XPD(f1, f2)) \
-	VARITEM(1, 2, XPD(s1, f1, f2)) \
-	VARITEM(2, 2, XPD(s1, s2, f1, f2)) \
-	VARITEM(3, 2, XPD(s1, s2, s3, f1, f2)) \
-	VARITEM(4, 2, XPD(s1, s2, s3, s4, f1, f2)) \
-	VARITEM(0, 3, XPD(f1, f2, f3)) \
-	VARITEM(1, 3, XPD(s1, f1, f2, f3)) \
-	VARITEM(2, 3, XPD(s1, s2, f1, f2, f3)) \
-	VARITEM(3, 3, XPD(s1, s2, s3, f1, f2, f3)) \
-	VARITEM(4, 3, XPD(s1, s2, s3, s4, f1, f2, f3)) \
-	VARITEM(0, 4, XPD(f1, f2, f3, f4)) \
-	VARITEM(1, 4, XPD(s1, f1, f2, f3, f4)) \
-	VARITEM(2, 4, XPD(s1, s2, f1, f2, f3, f4)) \
-	VARITEM(3, 4, XPD(s1, s2, s3, f1, f2, f3, f4)) \
-	VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
+#define EIGHT_VARS_TO_VARARGS_VARLIST 	VARITEM(1, 0, s1) 	VARITEM(2, 0, XPD(s1, s2)) 	VARITEM(3, 0, XPD(s1, s2, s3)) 	VARITEM(4, 0, XPD(s1, s2, s3, s4)) 	VARITEM(0, 1, f1) 	VARITEM(1, 1, XPD(s1, f1)) 	VARITEM(2, 1, XPD(s1, s2, f1)) 	VARITEM(3, 1, XPD(s1, s2, s3, f1)) 	VARITEM(4, 1, XPD(s1, s2, s3, s4, f1)) 	VARITEM(0, 2, XPD(f1, f2)) 	VARITEM(1, 2, XPD(s1, f1, f2)) 	VARITEM(2, 2, XPD(s1, s2, f1, f2)) 	VARITEM(3, 2, XPD(s1, s2, s3, f1, f2)) 	VARITEM(4, 2, XPD(s1, s2, s3, s4, f1, f2)) 	VARITEM(0, 3, XPD(f1, f2, f3)) 	VARITEM(1, 3, XPD(s1, f1, f2, f3)) 	VARITEM(2, 3, XPD(s1, s2, f1, f2, f3)) 	VARITEM(3, 3, XPD(s1, s2, s3, f1, f2, f3)) 	VARITEM(4, 3, XPD(s1, s2, s3, s4, f1, f2, f3)) 	VARITEM(0, 4, XPD(f1, f2, f3, f4)) 	VARITEM(1, 4, XPD(s1, f1, f2, f3, f4)) 	VARITEM(2, 4, XPD(s1, s2, f1, f2, f3, f4)) 	VARITEM(3, 4, XPD(s1, s2, s3, f1, f2, f3, f4)) 	VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
 
 void Destroy_All_Notifications();
 void Create_Notification_Entity(entity notif,
@@ -397,64 +373,13 @@ const float ARG_DC = 6; // unique result to durcnt/centerprint
 
 string BUFF_NAME(int i);
 
-#define NOTIF_ARGUMENT_LIST \
-	ARG_CASE(ARG_CS_SV_HA,  "s1",            s1) \
-	ARG_CASE(ARG_CS_SV_HA,  "s2",            s2) \
-	ARG_CASE(ARG_CS_SV_HA,  "s3",            s3) \
-	ARG_CASE(ARG_CS_SV_HA,  "s4",            s4) \
-	ARG_CASE(ARG_CS_SV,     "s2loc",         ((autocvar_notification_show_location && (s2 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
-	ARG_CASE(ARG_CS_SV,     "s3loc",         ((autocvar_notification_show_location && (s3 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
-	ARG_CASE(ARG_CS_SV_DC,  "f1",            ftos(f1)) \
-	ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
-	ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
-	ARG_CASE(ARG_CS_SV,     "f4",            ftos(f4)) \
-	ARG_CASE(ARG_CS_SV,     "f1dtime",       ftos_decimals(TIME_DECODE(f1), 2)) \
-	ARG_CASE(ARG_CS_SV,     "f2dtime",       ftos_decimals(TIME_DECODE(f2), 2)) \
-	ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) \
-	ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) \
-	ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \
-	ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("point") : _("points"))) \
-	ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
-	ARG_CASE(ARG_CS_SV,     "f1time",        process_time(2, f1)) \
-	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   mmssss(f1)) \
-	ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   mmssss(f2)) \
-	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   mmssss(f3)) \
-	ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) \
-	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
-	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
-	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) \
-	ARG_CASE(ARG_CS,        "nade_key",      getcommandkey(_("throw nade"), "dropweapon")) \
-	ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(true, f2)) \
-	ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) \
-	/*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
-	ARG_CASE(ARG_CS,        "spree_cen",     (autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
-	ARG_CASE(ARG_CS_SV,     "spree_inf",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
-	ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
-	ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
-	ARG_CASE(ARG_CS_SV,     "item_wepname",  Weapons_from(f1).m_name) \
-	ARG_CASE(ARG_CS_SV,     "item_buffname", BUFF_NAME(f1)) \
-	ARG_CASE(ARG_CS_SV,     "f3buffname",    BUFF_NAME(f3)) \
-	ARG_CASE(ARG_CS_SV,     "item_wepammo",  (f2 > 0 ? notif_arg_item_wepammo(f1, f2) : "")) \
-	ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
-	ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
-	ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1)) \
-	ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(NULL,netname,s1).descriptor.message) \
-	ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(NULL,netname,s1).descriptor.netname)
+#define NOTIF_ARGUMENT_LIST 	ARG_CASE(ARG_CS_SV_HA,  "s1",            s1) 	ARG_CASE(ARG_CS_SV_HA,  "s2",            s2) 	ARG_CASE(ARG_CS_SV_HA,  "s3",            s3) 	ARG_CASE(ARG_CS_SV_HA,  "s4",            s4) 	ARG_CASE(ARG_CS_SV,     "s2loc",         ((autocvar_notification_show_location && (s2 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) 	ARG_CASE(ARG_CS_SV,     "s3loc",         ((autocvar_notification_show_location && (s3 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) 	ARG_CASE(ARG_CS_SV_DC,  "f1",            ftos(f1)) 	ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) 	ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) 	ARG_CASE(ARG_CS_SV,     "f4",            ftos(f4)) 	ARG_CASE(ARG_CS_SV,     "f1dtime",       ftos_decimals(TIME_DECODE(f1), 2)) 	ARG_CASE(ARG_CS_SV,     "f2dtime",       ftos_decimals(TIME_DECODE(f2), 2)) 	ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) 	ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) 	ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) 	ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("point") : _("points"))) 	ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) 	ARG_CASE(ARG_CS_SV,     "f1time",        process_time(2, f1)) 	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   mmssss(f1)) 	ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   mmssss(f2)) 	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   mmssss(f3)) 	ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) 	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) 	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) 	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) 	ARG_CASE(ARG_CS,        "nade_key",      getcommandkey(_("throw nade"), "dropweapon")) 	ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(true, f2)) 	ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) 	/*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ 	ARG_CASE(ARG_CS,        "spree_cen",     (autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) 	ARG_CASE(ARG_CS_SV,     "spree_inf",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) 	ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) 	ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) 	ARG_CASE(ARG_CS_SV,     "item_wepname",  Weapons_from(f1).m_name) 	ARG_CASE(ARG_CS_SV,     "item_buffname", BUFF_NAME(f1)) 	ARG_CASE(ARG_CS_SV,     "f3buffname",    BUFF_NAME(f3)) 	ARG_CASE(ARG_CS_SV,     "item_wepammo",  (f2 > 0 ? notif_arg_item_wepammo(f1, f2) : "")) 	ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) 	ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) 	ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1)) 	ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(NULL,netname,s1).descriptor.message) 	ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(NULL,netname,s1).descriptor.netname)
 
-#define NOTIF_HIT_MAX(count,funcname) MACRO_BEGIN \
-	if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; } \
-MACRO_END
+#define NOTIF_HIT_MAX(count,funcname) MACRO_BEGIN 	if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; } MACRO_END
 
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 
-#define KILL_SPREE_LIST \
-	SPREE_ITEM(3, 03, _("TRIPLE FRAG! "), _("%s^K1 made a TRIPLE FRAG! %s^BG"), _("%s^K1 made a TRIPLE SCORE! %s^BG")) \
-	SPREE_ITEM(5, 05, _("RAGE! "), _("%s^K1 unlocked RAGE! %s^BG"), _("%s^K1 made FIVE SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(10, 10, _("MASSACRE! "), _("%s^K1 started a MASSACRE! %s^BG"), _("%s^K1 made TEN SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(15, 15, _("MAYHEM! "), _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(20, 20, _("BERSERKER! "), _("%s^K1 is a BERSERKER! %s^BG"), _("%s^K1 made TWENTY SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(25, 25, _("CARNAGE! "), _("%s^K1 inflicts CARNAGE! %s^BG"), _("%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(30, 30, _("ARMAGEDDON! "), _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
+#define KILL_SPREE_LIST 	SPREE_ITEM(3, 03, _("TRIPLE FRAG! "), _("%s^K1 made a TRIPLE FRAG! %s^BG"), _("%s^K1 made a TRIPLE SCORE! %s^BG")) 	SPREE_ITEM(5, 05, _("RAGE! "), _("%s^K1 unlocked RAGE! %s^BG"), _("%s^K1 made FIVE SCORES IN A ROW! %s^BG")) 	SPREE_ITEM(10, 10, _("MASSACRE! "), _("%s^K1 started a MASSACRE! %s^BG"), _("%s^K1 made TEN SCORES IN A ROW! %s^BG")) 	SPREE_ITEM(15, 15, _("MAYHEM! "), _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) 	SPREE_ITEM(20, 20, _("BERSERKER! "), _("%s^K1 is a BERSERKER! %s^BG"), _("%s^K1 made TWENTY SCORES IN A ROW! %s^BG")) 	SPREE_ITEM(25, 25, _("CARNAGE! "), _("%s^K1 inflicts CARNAGE! %s^BG"), _("%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG")) 	SPREE_ITEM(30, 30, _("ARMAGEDDON! "), _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
 
 #ifdef CSQC
 string notif_arg_frag_ping(bool newline, float fping)
@@ -492,8 +417,7 @@ string notif_arg_spree_cen(float spree)
 	{
 		if(spree > 1)
 		{
-			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
-				case counta: { return normal_or_gentle(center, sprintf(_("%d score spree! "), spree)); }
+			#define SPREE_ITEM(counta,countb,center,normal,gentle) 				case counta: { return normal_or_gentle(center, sprintf(_("%d score spree! "), spree)); }
 
 			switch(spree)
 			{
@@ -550,8 +474,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 
 				if(spree > 1)
 				{
-					#define SPREE_ITEM(counta,countb,center,normal,gentle) \
-						case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, spree_newline); }
+					#define SPREE_ITEM(counta,countb,center,normal,gentle) 						case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, spree_newline); }
 
 					switch(spree)
 					{
@@ -737,110 +660,35 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	return it;
 }
 
-#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, default, sound, channel, volume, position) \
-	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, default, sound, channel, volume, position)
+#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, default, sound, channel, volume, position) 	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, default, sound, channel, volume, position)
 
-#define MSG_ANNCE_NOTIF(name, default, sound, channel, volume, position) \
-	NOTIF_ADD_AUTOCVAR(ANNCE_##name, default) \
-	MSG_ANNCE_NOTIF_(0, ANNCE_##name, ANNCE_##name, default, sound, channel, volume, position)
+#define MSG_ANNCE_NOTIF(name, default, sound, channel, volume, position) 	NOTIF_ADD_AUTOCVAR(ANNCE_##name, default) 	MSG_ANNCE_NOTIF_(0, ANNCE_##name, ANNCE_##name, default, sound, channel, volume, position)
 
-#define MSG_ANNCE_NOTIF_(teamnum, name, cvarname, default, sound, channel, volume, position) \
-	REGISTER(Notifications, name, m_id, new_pure(msg_annce_notification)) { \
-		Create_Notification_Entity      (this, default, ACVNN(cvarname), MSG_ANNCE, strtoupper(#name), teamnum); \
-		Create_Notification_Entity_Annce(this, ACVNN(cvarname), strtoupper(#name), \
-			channel,   /* channel  */ \
-			sound,     /* snd      */ \
-			volume,    /* vol      */ \
-			position); /* position */ \
-	}
+#define MSG_ANNCE_NOTIF_(teamnum, name, cvarname, default, sound, channel, volume, position) 	REGISTER(Notifications, name, m_id, new_pure(msg_annce_notification)) { 		Create_Notification_Entity      (this, default, ACVNN(cvarname), MSG_ANNCE, strtoupper(#name), teamnum); 		Create_Notification_Entity_Annce(this, ACVNN(cvarname), strtoupper(#name), 			channel,   /* channel  */ 			sound,     /* snd      */ 			volume,    /* vol      */ 			position); /* position */ 	}
 
-#define MSG_INFO_NOTIF_TEAM(teamnum, name, cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
-	MSG_INFO_NOTIF_(teamnum, INFO_##name, INFO_##cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle)
+#define MSG_INFO_NOTIF_TEAM(teamnum, name, cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle) 	MSG_INFO_NOTIF_(teamnum, INFO_##name, INFO_##cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle)
 
-#define MSG_INFO_NOTIF(name, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
-	NOTIF_ADD_AUTOCVAR(INFO_##name, default) \
-	MSG_INFO_NOTIF_(0, INFO_##name, INFO_##name, default, strnum, flnum, args, hudargs, icon, normal, gentle)
+#define MSG_INFO_NOTIF(name, default, strnum, flnum, args, hudargs, icon, normal, gentle) 	NOTIF_ADD_AUTOCVAR(INFO_##name, default) 	MSG_INFO_NOTIF_(0, INFO_##name, INFO_##name, default, strnum, flnum, args, hudargs, icon, normal, gentle)
 
-#define MSG_INFO_NOTIF_(teamnum, name, cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
-	REGISTER(Notifications, name, m_id, new_pure(msg_info_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(cvarname), MSG_INFO, strtoupper(#name), teamnum); \
-		Create_Notification_Entity_InfoCenter(this, ACVNN(cvarname), strtoupper(#name), strnum, flnum, \
-			args,     /* args    */ \
-			hudargs,  /* hudargs */ \
-			icon,     /* icon    */ \
-			CPID_Null,/* cpid    */ \
-			"",       /* durcnt  */ \
-			normal,   /* normal  */ \
-			gentle);  /* gentle  */ \
-	}
+#define MSG_INFO_NOTIF_(teamnum, name, cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle) 	REGISTER(Notifications, name, m_id, new_pure(msg_info_notification)) { 		Create_Notification_Entity           (this, default, ACVNN(cvarname), MSG_INFO, strtoupper(#name), teamnum); 		Create_Notification_Entity_InfoCenter(this, ACVNN(cvarname), strtoupper(#name), strnum, flnum, 			args,     /* args    */ 			hudargs,  /* hudargs */ 			icon,     /* icon    */ 			CPID_Null,/* cpid    */ 			"",       /* durcnt  */ 			normal,   /* normal  */ 			gentle);  /* gentle  */ 	}
 
 .string nent_iconargs;
-#define MULTIICON_INFO(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
-	MULTIICON_INFO_(INFO_##name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle)
-#define MULTIICON_INFO_(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
-	NOTIF_ADD_AUTOCVAR(name, default) \
-	REGISTER(Notifications, name, m_id, new_pure(msg_info_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(name), MSG_INFO, strtoupper(#name), 0); \
-		Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, \
-			args,     /* args    */ \
-			hudargs,  /* hudargs */ \
-			icon,     /* icon    */ \
-			CPID_Null,/* cpid    */ \
-			"",       /* durcnt  */ \
-			normal,   /* normal  */ \
-			gentle);  /* gentle  */ \
-		this.nent_iconargs = iconargs; \
-	}
+#define MULTIICON_INFO(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) 	MULTIICON_INFO_(INFO_##name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle)
+#define MULTIICON_INFO_(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) 	NOTIF_ADD_AUTOCVAR(name, default) 	REGISTER(Notifications, name, m_id, new_pure(msg_info_notification)) { 		Create_Notification_Entity           (this, default, ACVNN(name), MSG_INFO, strtoupper(#name), 0); 		Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, 			args,     /* args    */ 			hudargs,  /* hudargs */ 			icon,     /* icon    */ 			CPID_Null,/* cpid    */ 			"",       /* durcnt  */ 			normal,   /* normal  */ 			gentle);  /* gentle  */ 		this.nent_iconargs = iconargs; 	}
 
-#define MSG_CENTER_NOTIF_TEAM(teamnum, name, cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	MSG_CENTER_NOTIF_(teamnum, CENTER_##name, CENTER_##cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
+#define MSG_CENTER_NOTIF_TEAM(teamnum, name, cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle) 	MSG_CENTER_NOTIF_(teamnum, CENTER_##name, CENTER_##cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
 
-#define MSG_CENTER_NOTIF(name, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	NOTIF_ADD_AUTOCVAR(CENTER_##name, default) \
-	MSG_CENTER_NOTIF_(0, CENTER_##name, CENTER_##name, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
+#define MSG_CENTER_NOTIF(name, default, strnum, flnum, args, cpid, durcnt, normal, gentle) 	NOTIF_ADD_AUTOCVAR(CENTER_##name, default) 	MSG_CENTER_NOTIF_(0, CENTER_##name, CENTER_##name, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
 
-#define MSG_CENTER_NOTIF_(teamnum, name, cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	REGISTER(Notifications, name, m_id, new_pure(msg_center_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(cvarname), MSG_CENTER, strtoupper(#name), teamnum); \
-		Create_Notification_Entity_InfoCenter(this, ACVNN(cvarname), strtoupper(#name), strnum, flnum, \
-			args,    /* args    */ \
-			"",      /* hudargs */ \
-			"",      /* icon    */ \
-			cpid,    /* cpid    */ \
-			durcnt,  /* durcnt  */ \
-			normal,  /* normal  */ \
-			gentle); /* gentle  */ \
-	}
+#define MSG_CENTER_NOTIF_(teamnum, name, cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle) 	REGISTER(Notifications, name, m_id, new_pure(msg_center_notification)) { 		Create_Notification_Entity           (this, default, ACVNN(cvarname), MSG_CENTER, strtoupper(#name), teamnum); 		Create_Notification_Entity_InfoCenter(this, ACVNN(cvarname), strtoupper(#name), strnum, flnum, 			args,    /* args    */ 			"",      /* hudargs */ 			"",      /* icon    */ 			cpid,    /* cpid    */ 			durcnt,  /* durcnt  */ 			normal,  /* normal  */ 			gentle); /* gentle  */ 	}
 
-#define MSG_MULTI_NOTIF(name, default, anncename, infoname, centername) \
-	NOTIF_ADD_AUTOCVAR(name, default) \
-	REGISTER(Notifications, name, m_id, new_pure(msg_multi_notification)) { \
-		Create_Notification_Entity      (this, default, ACVNN(name), MSG_MULTI, strtoupper(#name), 0); \
-		Create_Notification_Entity_Multi(this, ACVNN(name), strtoupper(#name), \
-			anncename,   /* anncename  */ \
-			infoname,    /* infoname   */ \
-			centername); /* centername */ \
-	}
+#define MSG_MULTI_NOTIF(name, default, anncename, infoname, centername) 	NOTIF_ADD_AUTOCVAR(name, default) 	REGISTER(Notifications, name, m_id, new_pure(msg_multi_notification)) { 		Create_Notification_Entity      (this, default, ACVNN(name), MSG_MULTI, strtoupper(#name), 0); 		Create_Notification_Entity_Multi(this, ACVNN(name), strtoupper(#name), 			anncename,   /* anncename  */ 			infoname,    /* infoname   */ 			centername); /* centername */ 	}
 
-#define MSG_CHOICE_NOTIF_TEAM(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) \
-	MSG_CHOICE_NOTIF_(teamnum, CHOICE_##name, CHOICE_##cvarname, default, challow, chtype, optiona, optionb)
+#define MSG_CHOICE_NOTIF_TEAM(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) 	MSG_CHOICE_NOTIF_(teamnum, CHOICE_##name, CHOICE_##cvarname, default, challow, chtype, optiona, optionb)
 
-#define MSG_CHOICE_NOTIF(name, default, challow, chtype, optiona, optionb) \
-	NOTIF_ADD_AUTOCVAR(CHOICE_##name, default) \
-	NOTIF_ADD_AUTOCVAR(CHOICE_##name##_ALLOWED, challow) \
-	MSG_CHOICE_NOTIF_(0, CHOICE_##name, CHOICE_##name, default, challow, chtype, optiona, optionb)
+#define MSG_CHOICE_NOTIF(name, default, challow, chtype, optiona, optionb) 	NOTIF_ADD_AUTOCVAR(CHOICE_##name, default) 	NOTIF_ADD_AUTOCVAR(CHOICE_##name##_ALLOWED, challow) 	MSG_CHOICE_NOTIF_(0, CHOICE_##name, CHOICE_##name, default, challow, chtype, optiona, optionb)
 
-#define MSG_CHOICE_NOTIF_(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) \
-	REGISTER(Notifications, name, m_id, new_pure(msg_choice_notification)) { \
-		this.nent_choice_idx = nent_choice_count++; \
-		Create_Notification_Entity       (this, default, ACVNN(cvarname), MSG_CHOICE, strtoupper(#name), teamnum); \
-		Create_Notification_Entity_Choice(this, ACVNN(cvarname), strtoupper(#name), \
-			challow,                                 /* challow_def */ \
-			autocvar_notification_##cvarname##_ALLOWED,  /* challow_var */ \
-			chtype,                                  /* chtype      */ \
-			optiona,                                 /* optiona     */ \
-			optionb);                                /* optionb     */ \
-	}
+#define MSG_CHOICE_NOTIF_(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) 	REGISTER(Notifications, name, m_id, new_pure(msg_choice_notification)) { 		this.nent_choice_idx = nent_choice_count++; 		Create_Notification_Entity       (this, default, ACVNN(cvarname), MSG_CHOICE, strtoupper(#name), teamnum); 		Create_Notification_Entity_Choice(this, ACVNN(cvarname), strtoupper(#name), 			challow,                                 /* challow_def */ 			autocvar_notification_##cvarname##_ALLOWED,  /* challow_var */ 			chtype,                                  /* chtype      */ 			optiona,                                 /* optiona     */ 			optionb);                                /* optionb     */ 	}
 
 REGISTRY_BEGIN(Notifications)
 {

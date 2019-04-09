@@ -6,9 +6,7 @@
 //#define CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
 
 // add properties you want networked to CSQC here
-#define CSQCMODEL_EXTRAPROPERTIES \
-	/* CSQCMODEL_PROPERTY(1, float, ReadShort, WriteShort, colormap) */ \
-	/* CSQCMODEL_PROPERTY(2, float, ReadInt24_t, WriteInt24_t, effects) */
+#define CSQCMODEL_EXTRAPROPERTIES 	/* CSQCMODEL_PROPERTY(1, float, ReadShort, WriteShort, colormap) */ 	/* CSQCMODEL_PROPERTY(2, float, ReadInt24_t, WriteInt24_t, effects) */
 
 // add hook function calls here
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP

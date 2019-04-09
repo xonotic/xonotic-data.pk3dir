@@ -52,10 +52,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 
 
 #define FIELD(Flags, Type,Name) if ( sf & (Flags) ) Write##Type(MSG_ENTITY, this.Name);
-#define MSLE(Name,Fields) \
-	else if ( this.classname == #Name ) { \
-		if ( sf & MINIG_SF_CREATE ) WriteString(MSG_ENTITY,this.owner.netname); \
-		Fields }
+#define MSLE(Name,Fields) 	else if ( this.classname == #Name ) { 		if ( sf & MINIG_SF_CREATE ) WriteString(MSG_ENTITY,this.owner.netname); 		Fields }
 
 // Send an entity to a client
 // only use on minigame entities or entities with a minigame owner

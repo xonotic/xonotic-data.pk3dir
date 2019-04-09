@@ -20,7 +20,7 @@ SUB(particlegibs_damage_hit) {
     MY(staintex_max) = 24;
     MY(tex_max) = 8;
     MY(type) = "blood";
-    MY(velocityjitter) = '156.0 156.0 212.0';
+    MY(velocityjitter) = '156 156 212';
 }
 // front blood
 SUB(particlegibs_damage_hit) {
@@ -44,7 +44,7 @@ SUB(particlegibs_damage_hit) {
     MY(tex_min) = 24;
     MY(tex_max) = 32;
     MY(type) = "blood";
-    MY(velocityjitter) = '6.0 6.0 30.0';
+    MY(velocityjitter) = '6 6 30';
     MY(velocitymultiplier) = -1;
 }
 // back blood
@@ -59,7 +59,7 @@ SUB(particlegibs_damage_hit) {
     MY(count) = 0.100000;
     MY(gravity) = 1;
     MY(liquidfriction) = 3;
-    MY(originjitter) = '3.0 3.0 3.0';
+    MY(originjitter) = '3 3 3';
     MY(sizeincrease) = 10;
     MY(size_min) = 5;
     MY(size_max) = 15;
@@ -70,7 +70,7 @@ SUB(particlegibs_damage_hit) {
     MY(tex_min) = 24;
     MY(tex_max) = 32;
     MY(type) = "blood";
-    MY(velocityjitter) = '26.0 26.0 112.0';
+    MY(velocityjitter) = '26 26 112';
     MY(velocitymultiplier) = 2;
 }
 
@@ -87,7 +87,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(count) = 32;
     MY(gravity) = 1;
     MY(liquidfriction) = 6;
-    MY(originjitter) = '10.0 10.0 25.0';
+    MY(originjitter) = '10 10 25';
     MY(size_min) = 15;
     MY(size_max) = 20;
     MY(staincolor_min) = "0x808080";
@@ -96,7 +96,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(staintex_max) = 24;
     MY(tex_max) = 8;
     MY(type) = "blood";
-    MY(velocityjitter) = '256.0 256.0 312.0';
+    MY(velocityjitter) = '256 256 312';
 }
 // core decal
 SUB(particlegibs_damage_dissolve) {
@@ -110,7 +110,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(count) = 12;
     MY(gravity) = 2;
     MY(liquidfriction) = 6;
-    MY(originjitter) = '10.0 10.0 25.0';
+    MY(originjitter) = '10 10 25';
     MY(size_min) = 20;
     MY(size_max) = 40;
     MY(staincolor_min) = "0x808080";
@@ -119,7 +119,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(staintex_max) = 24;
     MY(tex_max) = 8;
     MY(type) = "blood";
-    MY(velocityjitter) = '356.0 356.0 412.0';
+    MY(velocityjitter) = '356 356 412';
 }
 // front blood
 SUB(particlegibs_damage_dissolve) {
@@ -133,7 +133,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(count) = 32;
     MY(gravity) = 0.500000;
     MY(liquidfriction) = 3;
-    MY(originjitter) = '5.0 5.0 10.0';
+    MY(originjitter) = '5 5 10';
     MY(sizeincrease) = -15;
     MY(size_min) = 10;
     MY(size_max) = 20;
@@ -144,7 +144,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(tex_min) = 24;
     MY(tex_max) = 32;
     MY(type) = "blood";
-    MY(velocityjitter) = '56.0 56.0 212.0';
+    MY(velocityjitter) = '56 56 212';
     MY(velocitymultiplier) = -0.300000;
 }
 // back blood
@@ -159,7 +159,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(count) = 32;
     MY(gravity) = 1;
     MY(liquidfriction) = 3;
-    MY(originjitter) = '5.0 5.0 10.0';
+    MY(originjitter) = '5 5 10';
     MY(sizeincrease) = 10;
     MY(size_min) = 5;
     MY(size_max) = 15;
@@ -170,7 +170,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(tex_min) = 24;
     MY(tex_max) = 32;
     MY(type) = "blood";
-    MY(velocityjitter) = '56.0 56.0 212.0';
+    MY(velocityjitter) = '56 56 212';
     MY(velocitymultiplier) = 0.500000;
 }
 // small bits
@@ -184,7 +184,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(count) = 75;
     MY(gravity) = 1;
     MY(liquidfriction) = 3;
-    MY(originjitter) = '10.0 10.0 25.0';
+    MY(originjitter) = '10 10 25';
     MY(sizeincrease) = 10;
     MY(size_min) = 1;
     MY(size_max) = 1;
@@ -195,5 +195,5 @@ SUB(particlegibs_damage_dissolve) {
     MY(tex_min) = 24;
     MY(tex_max) = 32;
     MY(type) = "blood";
-    MY(velocityjitter) = '656.0 656.0 912.0';
+    MY(velocityjitter) = '656 656 912';
 }

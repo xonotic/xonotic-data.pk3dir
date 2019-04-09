@@ -15,31 +15,16 @@
 #pragma once
 
 #define P99_MAX_NUMBER 16
-#define P00_ARG(                            \
-    _01, _02, _03, _04, _05, _06, _07, _08, \
-    _09, _10, _11, _12, _13, _14, _15, _16, \
-    _00, ...) _00
-#define P00_NARG(...) P00_ARG(__VA_ARGS__,  \
-    16, 15, 14, 13, 12, 11, 10,  9,         \
-     8,  7,  6,  5,  4,  3,  2,  1,         \
-     0, )
-#define P99_HAS_COMMA(...) P00_ARG(__VA_ARGS__, \
-    1, 1, 1, 1, 1, 1, 1, 1,                     \
-    1, 1, 1, 1, 1, 1, 1, 0,                     \
-    0)
+#define P00_ARG(                                _01, _02, _03, _04, _05, _06, _07, _08,     _09, _10, _11, _12, _13, _14, _15, _16,     _00, ...) _00
+#define P00_NARG(...) P00_ARG(__VA_ARGS__,      16, 15, 14, 13, 12, 11, 10,  9,              8,  7,  6,  5,  4,  3,  2,  1,              0, )
+#define P99_HAS_COMMA(...) P00_ARG(__VA_ARGS__,     1, 1, 1, 1, 1, 1, 1, 1,                         1, 1, 1, 1, 1, 1, 1, 0,                         0)
 
 #define P99_IF_EMPTY(...) P99_IF_EQ(1, P99_IS_EMPTY(__VA_ARGS__))
     // P99_HAS_COMMA(__VA_ARGS__),                         : test if there is just one argument, that might be empty
     // P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__),            : test if P99_IS__EQ__ together with the argument adds a comma
     // P99_HAS_COMMA(__VA_ARGS__ (/*empty*/)),             : test if the argument together with a parenthesis adds a comma
     // P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__ (/*empty*/)) : test if placing it between P99_IS__EQ__ and the parenthesis adds a comma
-    #define P99_IS_EMPTY(...)                                                               \
-        P00_ISEMPTY(                                                                        \
-            P99_HAS_COMMA(__VA_ARGS__),                                                     \
-            P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__),                                        \
-            P99_HAS_COMMA(__VA_ARGS__ (/*empty*/)),                                         \
-            P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__ (/*empty*/))                             \
-        )
+    #define P99_IS_EMPTY(...)                                                                       P00_ISEMPTY(                                                                                    P99_HAS_COMMA(__VA_ARGS__),                                                                 P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__),                                                    P99_HAS_COMMA(__VA_ARGS__ (/*empty*/)),                                                     P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__ (/*empty*/))                                     )
         #define P00_IS__EQ__(...) ,
         #define P00_ISEMPTY(_1, _2, _3, _4) P99_HAS_COMMA(P99_PASTE5(P00_IS_EMPTY_CASE_, _1, _2, _3, _4))
             #define P00_IS_EMPTY_CASE_0000 P00_IS_EMPTY_CASE_0000
@@ -74,11 +59,7 @@
 
 
 #define P99_CAT2(_1, _2) _1 ## _2
-#define P99_PASTE2(_1, _2) \
-    P99_CAT2(_1, _2)
-#define P99_PASTE3(_1, _2, _3) \
-    P99_PASTE2(P99_PASTE2(_1, _2), _3)
-#define P99_PASTE4(_1, _2, _3, _4) \
-    P99_PASTE2(P99_PASTE3(_1, _2, _3), _4)
-#define P99_PASTE5(_1, _2, _3, _4, _5) \
-    P99_PASTE2(P99_PASTE4(_1, _2, _3, _4), _5)
+#define P99_PASTE2(_1, _2)     P99_CAT2(_1, _2)
+#define P99_PASTE3(_1, _2, _3)     P99_PASTE2(P99_PASTE2(_1, _2), _3)
+#define P99_PASTE4(_1, _2, _3, _4)     P99_PASTE2(P99_PASTE3(_1, _2, _3), _4)
+#define P99_PASTE5(_1, _2, _3, _4, _5)     P99_PASTE2(P99_PASTE4(_1, _2, _3, _4), _5)

@@ -21,13 +21,7 @@
 .entity vehicle;
 
 #define IMPULSE(id) _IMPULSE(IMP_##id)
-#define _IMPULSE(id) \
-	void id##_handle(entity this); \
-	STATIC_INIT_LATE(id) \
-	{ \
-		id.impulse_handle = id##_handle; \
-	} \
-	void id##_handle(entity this)
+#define _IMPULSE(id) 	void id##_handle(entity this); 	STATIC_INIT_LATE(id) 	{ 		id.impulse_handle = id##_handle; 	} 	void id##_handle(entity this)
 
 /**
  * Impulse map:
@@ -51,22 +45,7 @@
 
 // weapon switching impulses
 
-#define X(i) \
-	IMPULSE(weapon_group_##i) \
-	{ \
-		if (IS_DEAD(this)) \
-		{ \
-			this.impulse = IMP_weapon_group_##i.impulse; \
-			return; \
-		} \
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
-		{ \
-			.entity weaponentity = weaponentities[slot]; \
-			W_NextWeaponOnImpulse(this, i, weaponentity); \
-			if(autocvar_g_weaponswitch_debug != 1) \
-				break; \
-		} \
-	}
+#define X(i) 	IMPULSE(weapon_group_##i) 	{ 		if (IS_DEAD(this)) 		{ 			this.impulse = IMP_weapon_group_##i.impulse; 			return; 		} 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) 		{ 			.entity weaponentity = weaponentities[slot]; 			W_NextWeaponOnImpulse(this, i, weaponentity); 			if(autocvar_g_weaponswitch_debug != 1) 				break; 		} 	}
 X(1)
 X(2)
 X(3)
@@ -81,26 +60,7 @@ X(0)
 
 // custom order weapon cycling
 
-#define X(i, dir) \
-	IMPULSE(weapon_priority_##i##_##dir) \
-	{ \
-		if (this.vehicle) return; \
-		if (IS_DEAD(this)) \
-		{ \
-			this.impulse = IMP_weapon_priority_##i##_##dir.impulse; \
-			return; \
-		} \
-		noref int prev = -1; \
-		noref int best =  0; \
-		noref int next = +1; \
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
-		{ \
-			.entity weaponentity = weaponentities[slot]; \
-			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[i], dir, weaponentity); \
-			if(autocvar_g_weaponswitch_debug != 1) \
-				break; \
-		} \
-	}
+#define X(i, dir) 	IMPULSE(weapon_priority_##i##_##dir) 	{ 		if (this.vehicle) return; 		if (IS_DEAD(this)) 		{ 			this.impulse = IMP_weapon_priority_##i##_##dir.impulse; 			return; 		} 		noref int prev = -1; 		noref int best =  0; 		noref int next = +1; 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) 		{ 			.entity weaponentity = weaponentities[slot]; 			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[i], dir, weaponentity); 			if(autocvar_g_weaponswitch_debug != 1) 				break; 		} 	}
 X(0, prev)
 X(1, prev)
 X(2, prev)
@@ -137,23 +97,7 @@ X(9, next)
 
 // direct weapons
 
-#define X(i) \
-	IMPULSE(weapon_byid_##i) \
-	{ \
-		if (this.vehicle) return; \
-		if (IS_DEAD(this)) \
-		{ \
-			this.impulse = IMP_weapon_byid_##i.impulse; \
-			return; \
-		} \
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
-		{ \
-			.entity weaponentity = weaponentities[slot]; \
-			W_SwitchWeapon_TryOthers(this, Weapons_from(WEP_FIRST + i), weaponentity); \
-			if(autocvar_g_weaponswitch_debug != 1) \
-				break; \
-		} \
-	}
+#define X(i) 	IMPULSE(weapon_byid_##i) 	{ 		if (this.vehicle) return; 		if (IS_DEAD(this)) 		{ 			this.impulse = IMP_weapon_byid_##i.impulse; 			return; 		} 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) 		{ 			.entity weaponentity = weaponentities[slot]; 			W_SwitchWeapon_TryOthers(this, Weapons_from(WEP_FIRST + i), weaponentity); 			if(autocvar_g_weaponswitch_debug != 1) 				break; 		} 	}
 X(0)
 X(1)
 X(2)

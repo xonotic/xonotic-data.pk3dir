@@ -424,19 +424,17 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
     _Movetype_TestEntityPosition_ent = this;
-	if (!_Movetype_TestEntityPosition(' 0  0  0')) {
+	if (!_Movetype_TestEntityPosition('0 0 0')) {
 	    return UNSTICK_FINE;
 	}
 	#define X(v) if (_Movetype_TestEntityPosition(v))
-	X('-1  0  0') X(' 1  0  0')
-	X(' 0 -1  0') X(' 0  1  0')
-	X('-1 -1  0') X(' 1 -1  0')
-	X('-1  1  0') X(' 1  1  0')
+	X('-1 0 0') X('1 0 0')
+	X('0 -1 0') X('0 1 0')
+	X('-1 -1 0') X('1 -1 0')
+	X('-1 1 0') X('1 1 0')
 	#undef X
 	{
-        #define X(i) \
-            if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
-            if (_Movetype_TestEntityPosition('0 0 1' * i))
+        #define X(i)             if (_Movetype_TestEntityPosition('0 0 -1' * i))             if (_Movetype_TestEntityPosition('0 0 1' * i))
         X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8)
         X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
         X(17)
@@ -663,9 +661,7 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 .vector tic_saved_angles;
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Physics_Entity
 {
-#define X(s) \
-	if(this.(s) != this.tic_saved_##s) \
-		this.tic_##s = this.(s)
+#define X(s) 	if(this.(s) != this.tic_saved_##s) 		this.tic_##s = this.(s)
 
 	X(origin);
 	X(velocity);
