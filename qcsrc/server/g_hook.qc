@@ -360,7 +360,7 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 
 void FireGrapplingHook(entity actor, .entity weaponentity)
 {
-	if(forbidWeaponUse(actor)) return;
+	if(weaponLocked(actor)) return;
 	if(actor.vehicle) return;
 
 	// TODO: offhand hook shoots from eye

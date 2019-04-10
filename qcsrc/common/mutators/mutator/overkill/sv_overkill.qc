@@ -143,7 +143,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	{
 		return;
 	}
-	if (!PHYS_INPUT_BUTTON_ATCK2(player) || forbidWeaponUse(player) ||
+	if (!PHYS_INPUT_BUTTON_ATCK2(player) || weaponLocked(player) ||
 		!(round_handler_IsActive() && !round_handler_IsRoundStarted()))
 	{
 		return;
