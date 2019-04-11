@@ -11,6 +11,18 @@ REGISTRY(Turrets, BITS(5))
 REGISTER_REGISTRY(Turrets)
 REGISTRY_CHECK(Turrets)
 
+#define TR_PROPS(L, class, prefix) \
+	L(TR_CONFIG_BEGIN, TR_CONFIG, TR_CONFIG_END, class, prefix) \
+	/**/ \
+
+#define TR_CONFIG(class, turname, fld, T)     _TR_CONFIG(class, fld, T, turname)
+#define TR_CONFIG_BEGIN(class) METHOD(class, tr_config, void(class this)) {
+	#ifdef SVQC
+		#define _TR_CONFIG(class, fld, T, turname) if (#turname == this.netname) TUR_CONFIG_WRITE_CVARS(turname, fld, T);
+	#else
+		#define _TR_CONFIG(class, fld, T, turname)
+	#endif
+#define TR_CONFIG_END() }
 
 GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")
 {
