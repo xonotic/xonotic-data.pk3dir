@@ -10,10 +10,7 @@ int wep_config_file;
 bool wep_config_alsoprint;
 
 int WEP_CONFIG_COUNT;
-#define WEP_CONFIG_QUEUE(a) { \
-	config_queue[WEP_CONFIG_COUNT] = a; \
-	++WEP_CONFIG_COUNT; }
-
+#define WEP_CONFIG_QUEUE(a) config_queue[WEP_CONFIG_COUNT++] = a;
 
 #define WEP_CONFIG_WRITE_CVARS(wepname, name, T) WEP_CONFIG_WRITE_PROPS_##T(wepname, name)
 
