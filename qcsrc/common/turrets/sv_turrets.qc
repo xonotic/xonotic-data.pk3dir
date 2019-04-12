@@ -419,6 +419,7 @@ void load_unit_settings(entity ent, bool is_reload)
 	ent.target_select_rangebias = cvar(strcat(sbase,"_target_select_rangebias"));
 	ent.target_select_samebias  = cvar(strcat(sbase,"_target_select_samebias"));
 	ent.target_select_anglebias = cvar(strcat(sbase,"_target_select_anglebias"));
+	ent.target_select_missilebias = cvar(strcat(sbase,"_target_select_missilebias"));
 	ent.target_select_playerbias = cvar(strcat(sbase,"_target_select_playerbias"));
 	//ent.target_select_fov = cvar(cvar_gets(sbase,"_target_select_fov"));
 
