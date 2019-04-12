@@ -16,7 +16,6 @@ REGISTRY_CHECK(Turrets)
 	P(class, prefix, aim_maxpitch, float) \
 	P(class, prefix, aim_maxrot, float) \
 	P(class, prefix, aim_speed, float) \
-	P(class, prefix, ammo, float) \
 	P(class, prefix, ammo_max, float) \
 	P(class, prefix, ammo_recharge, float) \
 	P(class, prefix, health, float) \
