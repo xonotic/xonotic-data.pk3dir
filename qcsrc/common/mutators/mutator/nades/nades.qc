@@ -1161,7 +1161,7 @@ bool CanThrowNade(entity this)
 	if (!autocvar_g_nades)
 		return false; // allow turning them off mid match
 
-	if(forbidWeaponUse(this))
+	if (weaponLocked(this))
 		return false;
 
 	if (!IS_PLAYER(this))

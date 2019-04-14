@@ -924,7 +924,7 @@ void vehicles_touch(entity this, entity toucher)
 	// Vehicle currently in use
 	if(this.owner)
 	{
-		if(!forbidWeaponUse(this.owner))
+		if(!weaponLocked(this.owner))
 		if(toucher != NULL)
 		if((this.origin_z + this.maxs_z) > (toucher.origin_z))
 		if(vehicles_crushable(toucher))

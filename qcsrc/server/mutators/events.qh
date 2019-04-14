@@ -1083,15 +1083,23 @@ MUTATOR_HOOKABLE(Player_ChangeTeamKill, EV_Player_ChangeTeamKill);
 	/** id */       i(float, MUTATOR_ARGV_0_float) \
 	/** status */   i(float, MUTATOR_ARGV_1_float) \
 	/** data */     i(string, MUTATOR_ARGV_2_string) \
-    /**/
+	/**/
 MUTATOR_HOOKABLE(URI_GetCallback, EV_URI_GetCallback);
+
+/**
+ * return true to lock weapon (can't be used nor changed) for a player
+ */
+#define EV_LockWeapon(i, o) \
+	/** player */ i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(LockWeapon, EV_LockWeapon);
 
 /**
  * return true to prevent weapon use for a player
  */
- #define EV_ForbidWeaponUse(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
-    /**/
+#define EV_ForbidWeaponUse(i, o) \
+	/** player */ i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
 MUTATOR_HOOKABLE(ForbidWeaponUse, EV_ForbidWeaponUse);
 
 /** called when creating a clone of the player (usually for corpses that stay after the player has re-spawned) */

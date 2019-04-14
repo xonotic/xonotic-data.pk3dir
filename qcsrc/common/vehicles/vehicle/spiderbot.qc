@@ -246,7 +246,7 @@ bool spiderbot_frame(entity this, float dt)
 	vehic.angles_x = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, vehic.angles_x, autocvar_g_vehicle_spiderbot_tiltlimit);
 	vehic.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, vehic.angles_z, autocvar_g_vehicle_spiderbot_tiltlimit);
 
-	if(!forbidWeaponUse(this))
+	if(!weaponLocked(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
 	{
 		vehic.cnt = time;
