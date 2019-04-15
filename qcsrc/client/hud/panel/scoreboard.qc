@@ -1592,14 +1592,17 @@ void Scoreboard_Draw()
 	string str;
 	vector str_pos;
 
-	vector sb_gameinfo_type_pos, sb_gameinfo_detail_pos;
 	vector sb_gameinfo_type_fontsize, sb_gameinfo_detail_fontsize;
+
+	int show_gameinfo_subpanel_background = 0; // TODO keep/remove it depending on discussion
+	vector sb_gameinfo_type_pos, sb_gameinfo_detail_pos;
 	vector sb_gameinfo_subpanel_size = panel_size; // will be adjusted later
 
 	// Game Info subpanel
 	sb_gameinfo_type_fontsize = hud_fontsize * 2.5;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
-	// pre-calculate the size of the info panel
+
+	// pre-calculate the size of this subpanel
 	sb_gameinfo_type_pos = pos;
 	sb_gameinfo_detail_pos = sb_gameinfo_type_pos + '0 1 0' * sb_gameinfo_type_fontsize.y;
 	sb_gameinfo_subpanel_size.y = sb_gameinfo_detail_pos.y + sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3 - sb_gameinfo_type_pos.y;
@@ -1607,14 +1610,14 @@ void Scoreboard_Draw()
 		sb_gameinfo_subpanel_size.y += panel_bg_border;
 
 	// draw a background for the info panel
-	draw_BorderPicture( \
-		HUD_Shift(panel_pos - '1 1 0' * panel_bg_border), \
-		panel.current_panel_bg, \
-		HUD_Scale(sb_gameinfo_subpanel_size + '1 1 0' * 2 * panel_bg_border), \
-		panel_bg_color, panel_bg_alpha*.3, \
-		HUD_Scale('1 1 0' * BORDER_MULTIPLIER * panel_bg_border) \
-	); \
-
+	if (show_gameinfo_subpanel_background)
+		draw_BorderPicture( \
+			HUD_Shift(panel_pos - '1 1 0' * panel_bg_border), \
+			panel.current_panel_bg, \
+			HUD_Scale(sb_gameinfo_subpanel_size + '1 1 0' * 2 * panel_bg_border), \
+			panel_bg_color, panel_bg_alpha*.3, \
+			HUD_Scale('1 1 0' * BORDER_MULTIPLIER * panel_bg_border) \
+		); \
 
 	// Game Type
 	str = sprintf(_("^7%s"), MapInfo_Type_ToText(gametype));
@@ -1684,7 +1687,9 @@ void Scoreboard_Draw()
 	drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	// end of Game Info subpanel
 	
-	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 1.0;
+	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
+	if (show_gameinfo_subpanel_background)
+		pos.y += hud_fontsize.y * 0.7; // add more space between backgrounds
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
 
