@@ -93,8 +93,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.dphitcontentsmask = this.dphitcontentsmask;
 	clone.death_time = this.death_time;
 	clone.pain_finished = this.pain_finished;
-	SetResourceAmountExplicit(clone, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
-	SetResourceAmountExplicit(clone, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR));
+	SetResourceExplicit(clone, RES_HEALTH, GetResource(this, RES_HEALTH));
+	SetResourceExplicit(clone, RES_ARMOR, GetResource(this, RES_ARMOR));
 	clone.armortype = this.armortype;
 	clone.model = this.model;
 	clone.modelindex = this.modelindex;
@@ -177,7 +177,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -196,8 +196,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	TakeResource(this, RESOURCE_ARMOR, save);
-	TakeResource(this, RESOURCE_HEALTH, take);
+	TakeResource(this, RES_ARMOR, save);
+	TakeResource(this, RES_HEALTH, take);
 	// pause regeneration for 5 seconds
 	this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
@@ -205,7 +205,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
+	if (GetResource(this, RES_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
 	{
 		// don't use any animations as a gib
 		this.frame = 0;
@@ -310,62 +310,63 @@ void calculate_player_respawn_time(entity this)
 
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	float take, save, dh, da;
 	vector v;
-	float excess;
+	float dh = max(GetResource(this, RES_HEALTH), 0);
+	float da = max(GetResource(this, RES_ARMOR), 0);
+	float take = 0, save = 0;
 
-	dh = max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
-	da = max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
-
-	if(!DEATH_ISSPECIAL(deathtype))
+	if (damage)
 	{
-		damage *= Handicap_GetTotalHandicap(this);
-		if (this != attacker && IS_PLAYER(attacker))
+		if(!DEATH_ISSPECIAL(deathtype))
 		{
-			damage /= Handicap_GetTotalHandicap(attacker);
+			damage *= Handicap_GetTotalHandicap(this);
+			if (this != attacker && IS_PLAYER(attacker))
+			{
+				damage /= Handicap_GetTotalHandicap(attacker);
+			}
 		}
-	}
 
-	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
-		damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
+		if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
 
-	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
-	{
-		// tuba causes blood to come out of the ears
-		vector ear1, ear2;
-		vector d;
-		float f;
-		ear1 = this.origin;
-		ear1_z += 0.125 * this.view_ofs.z + 0.875 * this.maxs.z; // 7/8
-		ear2 = ear1;
-		makevectors(this.angles);
-		ear1 += v_right * -10;
-		ear2 += v_right * +10;
-		d = inflictor.origin - this.origin;
-		if (d)
-			f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
+		{
+			// tuba causes blood to come out of the ears
+			vector ear1, ear2;
+			vector d;
+			float f;
+			ear1 = this.origin;
+			ear1_z += 0.125 * this.view_ofs.z + 0.875 * this.maxs.z; // 7/8
+			ear2 = ear1;
+			makevectors(this.angles);
+			ear1 += v_right * -10;
+			ear2 += v_right * +10;
+			d = inflictor.origin - this.origin;
+			if (d)
+				f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+			else
+				f = 0;  // Assum ecenter.
+			force = v_right * vlen(force);
+			Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), this, attacker);
+			Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), this, attacker);
+			if(f > 0)
+			{
+				hitloc = ear1;
+				force = force * -1;
+			}
+			else
+			{
+				hitloc = ear2;
+				// force is already good
+			}
+		}
 		else
-			f = 0;  // Assum ecenter.
-		force = v_right * vlen(force);
-		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), this, attacker);
-		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), this, attacker);
-		if(f > 0)
-		{
-			hitloc = ear1;
-			force = force * -1;
-		}
-		else
-		{
-			hitloc = ear2;
-			// force is already good
-		}
-	}
-	else
-		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
+			Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
-	take = v.x;
-	save = v.y;
+		v = healtharmor_applydamage(GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+		take = v.x;
+		save = v.y;
+	}
 
 	if(attacker == this)
 	{
@@ -392,9 +393,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
-	take = bound(0, M_ARGV(4, float), GetResourceAmount(this, RESOURCE_HEALTH));
-	save = bound(0, M_ARGV(5, float), GetResourceAmount(this, RESOURCE_ARMOR));
-	excess = max(0, damage - take - save);
+	take = bound(0, M_ARGV(4, float), GetResource(this, RES_HEALTH));
+	save = bound(0, M_ARGV(5, float), GetResource(this, RES_ARMOR));
+	float excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
@@ -415,8 +416,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
-			TakeResource(this, RESOURCE_ARMOR, save);
-			TakeResource(this, RESOURCE_HEALTH, take);
+			TakeResource(this, RES_ARMOR, save);
+			TakeResource(this, RES_HEALTH, take);
 			// pause regeneration for 5 seconds
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
@@ -436,7 +437,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 								animdecide_setaction(this, ANIMACTION_PAIN2, true);
 						}
 					}
-					float myhp = GetResourceAmount(this, RESOURCE_HEALTH);
+					float myhp = GetResource(this, RES_HEALTH);
 					if(myhp > 1)
 					if(myhp < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
 					if(sound_allowed(MSG_BROADCAST, attacker))
@@ -458,7 +459,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 			// throw off bot aim temporarily
 			float shake;
-			if(IS_BOT_CLIENT(this) && GetResourceAmount(this, RESOURCE_HEALTH) >= 1)
+			if(IS_BOT_CLIENT(this) && GetResource(this, RES_HEALTH) >= 1)
 			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				this.v_angle_x = this.v_angle.x + (random() * 2 - 1) * shake;
@@ -466,8 +467,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
 
-			if (this != attacker) {
-				float realdmg = damage - excess;
+			float realdmg = damage - excess;
+			if (this != attacker && realdmg)
+			{
 				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
 				}
@@ -501,8 +503,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
-	da = da - max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
+	dh = dh - max(GetResource(this, RES_HEALTH), 0);
+	da = da - max(GetResource(this, RES_ARMOR), 0);
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
@@ -510,7 +512,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) < 1)
+	if (GetResource(this, RES_HEALTH) < 1)
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = false;
@@ -551,7 +553,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// print an obituary message
 		if(this.classname != "body")
-			Obituary (attacker, inflictor, this, deathtype, weaponentity);
+			Obituary(attacker, inflictor, this, deathtype, weaponentity);
 
 		// increment frag counter for used weapon type
 		Weapon w = DEATH_WEAPONOF(deathtype);
@@ -584,7 +586,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die
-		if(GetResourceAmount(this, RESOURCE_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
+		if(GetResource(this, RES_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
 
 		if (!this.respawn_time) // can be set in the mutator hook PlayerDies
@@ -670,9 +672,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= limit)
+	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= limit)
 		return false;
 
-	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, limit);
+	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);
 	return true;
 }

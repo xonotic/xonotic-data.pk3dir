@@ -727,11 +727,13 @@ bool bd_save_level(entity minigame)
 		int target_count = 0, boulder_count = 0;
 		entity piece = NULL;
 		while((piece = findentity(piece,owner,minigame)))
-		if(piece.classname == "minigame_board_piece")
-			if(piece.bd_tiletype == BD_TILE_BOULDER)
-				++boulder_count;
-			else if(piece.bd_tiletype == BD_TILE_TARGET)
-				++target_count;
+			if(piece.classname == "minigame_board_piece")
+			{
+				if(piece.bd_tiletype == BD_TILE_BOULDER)
+					++boulder_count;
+				else if(piece.bd_tiletype == BD_TILE_TARGET)
+					++target_count;
+			}
 
 		if(boulder_count != target_count)
 		{
@@ -1162,10 +1164,12 @@ string bd_turn_to_string(int turnflags)
 		return _("Better luck next time!");
 
 	if ( turnflags & BD_TURN_WIN )
+	{
 		if(random() > 0.5)
 			return _("Tubular! Press \"Next Level\" to continue!");
 		else
 			return _("Wicked! Press \"Next Level\" to continue!");
+	}
 
 	if( turnflags & BD_TURN_EDIT )
 		return _("Press the space bar to change your currently selected tile");

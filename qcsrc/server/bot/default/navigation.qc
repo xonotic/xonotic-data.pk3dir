@@ -1332,10 +1332,10 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
-			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResourceAmount(this, RESOURCE_FUEL)));
+			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResource(this, RES_FUEL)));
 
 			// enough fuel ?
-			if(GetResourceAmount(this, RESOURCE_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
+			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship
@@ -1819,7 +1819,7 @@ void navigation_goalrating_end(entity this)
 	this.goalstack31 = NULL;
 
 	navigation_routetogoal(this, navigation_bestgoal, this.origin);
-	LOG_DEBUG("best goal ", this.goalcurrent.classname);
+	LOG_DEBUG("best goal ", navigation_bestgoal.classname);
 
 	if (wp && this.goalcurrent == wp)
 		navigation_poproute(this);

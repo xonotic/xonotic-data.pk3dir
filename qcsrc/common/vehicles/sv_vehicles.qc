@@ -205,9 +205,9 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 	if(inflictor.owner == this.owner)
 		return;
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 	this.velocity += force;
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 1)
+	if(GetResource(this, RES_HEALTH) < 1)
 	{
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
@@ -282,7 +282,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	{
 		proj.takedamage	   = DAMAGE_AIM;
 		proj.event_damage	 = vehicles_projectile_damage;
-		SetResourceAmountExplicit(proj, RESOURCE_HEALTH, _health);
+		SetResourceExplicit(proj, RES_HEALTH, _health);
 	}
 	else
 		proj.flags |= FL_NOTARGET;
@@ -587,7 +587,7 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 	if(timer + rpause < time)
 	{
 		if(_healthscale)
-			regen = regen * (GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health);
+			regen = regen * (GetResource(this, RES_HEALTH) / this.max_health);
 
 		this.(regen_field) = min(this.(regen_field) + regen * delta_time, field_max);
 
@@ -598,7 +598,7 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 
 void vehicles_regen_resource(entity this, float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale, int resource)
 {
-	float resource_amount = GetResourceAmount(this, resource);
+	float resource_amount = GetResource(this, resource);
 
 	if(resource_amount < field_max)
 	if(timer + rpause < time)
@@ -606,10 +606,10 @@ void vehicles_regen_resource(entity this, float timer, .float regen_field, float
 		if(_healthscale)
 			regen = regen * (resource_amount / this.max_health);
 
-		SetResourceAmount(this, resource, min(resource_amount + regen * delta_time, field_max));
+		SetResource(this, resource, min(resource_amount + regen * delta_time, field_max));
 
 		if(this.owner)
-			this.owner.(regen_field) = (GetResourceAmount(this, resource) / field_max) * 100;
+			this.owner.(regen_field) = (GetResource(this, resource) / field_max) * 100;
 	}
 }
 
@@ -630,7 +630,7 @@ void shieldhit_think(entity this)
 
 void vehicles_painframe(entity this)
 {
-	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health) * 100));
+	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((GetResource(this, RES_HEALTH) / this.max_health) * 100));
 
 	if(myhealth <= 50)
 	if(this.pain_frame < time)
@@ -643,10 +643,12 @@ void vehicles_painframe(entity this)
 			this.velocity += randomvec() * 30;
 
 		if(this.vehicle_flags & VHF_DMGROLL)
+		{
 			if(this.vehicle_flags & VHF_DMGHEADROLL)
 				this.tur_head.angles += randomvec();
 			else
 				this.angles += randomvec();
+		}
 	}
 }
 
@@ -701,7 +703,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 
 		if(this.vehicle_shield < 0)
 		{
-			TakeResource(this, RESOURCE_HEALTH, fabs(this.vehicle_shield));
+			TakeResource(this, RES_HEALTH, fabs(this.vehicle_shield));
 			this.vehicle_shieldent.colormod = '2 0 0';
 			this.vehicle_shield = 0;
 			this.vehicle_shieldent.alpha = 0.75;
@@ -716,7 +718,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	}
 	else
 	{
-		TakeResource(this, RESOURCE_HEALTH, damage);
+		TakeResource(this, RES_HEALTH, damage);
 
 		if(sound_allowed(MSG_BROADCAST, attacker))
 			spamsound (this, CH_PAIN, SND_ONS_HIT2, VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
@@ -727,14 +729,15 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	else
 		this.velocity += force;
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(this.owner)
+		{
 			if(this.vehicle_flags & VHF_DEATHEJECT)
 				vehicles_exit(this, VHEF_EJECT);
 			else
 				vehicles_exit(this, VHEF_RELEASE);
-
+		}
 
 		antilag_clear(this, this);
 
@@ -746,13 +749,13 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 
 bool vehicles_heal(entity targ, entity inflictor, float amount, float limit)
 {
-	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
-	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+	float true_limit = ((limit != RES_LIMIT_NONE) ? limit : targ.max_health);
+	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= true_limit)
 		return false;
 
-	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	GiveResourceWithLimit(targ, RES_HEALTH, amount, true_limit);
 	if(targ.owner)
-		targ.owner.vehicle_health = (GetResourceAmount(targ, RESOURCE_HEALTH) / targ.max_health) * 100;
+		targ.owner.vehicle_health = (GetResource(targ, RES_HEALTH) / targ.max_health) * 100;
 	return true;
 }
 
@@ -921,7 +924,7 @@ void vehicles_touch(entity this, entity toucher)
 	// Vehicle currently in use
 	if(this.owner)
 	{
-		if(!forbidWeaponUse(this.owner))
+		if(!weaponLocked(this.owner))
 		if(toucher != NULL)
 		if((this.origin_z + this.maxs_z) > (toucher.origin_z))
 		if(vehicles_crushable(toucher))

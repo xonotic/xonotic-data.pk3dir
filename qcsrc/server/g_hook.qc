@@ -338,15 +338,15 @@ void GrapplingHookTouch(entity this, entity toucher)
 
 void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(attacker != this.realowner)
 		{
@@ -360,7 +360,7 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 
 void FireGrapplingHook(entity actor, .entity weaponentity)
 {
-	if(forbidWeaponUse(actor)) return;
+	if(weaponLocked(actor)) return;
 	if(actor.vehicle) return;
 
 	// TODO: offhand hook shoots from eye
@@ -397,7 +397,7 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
 
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, autocvar_g_balance_grapplehook_health);
+	SetResourceExplicit(missile, RES_HEALTH, autocvar_g_balance_grapplehook_health);
 	missile.event_damage = GrapplingHook_Damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;

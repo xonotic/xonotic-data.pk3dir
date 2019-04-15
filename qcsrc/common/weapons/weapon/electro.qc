@@ -258,7 +258,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 
 	newproj.takedamage = this.takedamage;
 	newproj.damageforcescale = this.damageforcescale;
-	SetResourceAmountExplicit(newproj, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
+	SetResourceExplicit(newproj, RES_HEALTH, GetResource(this, RES_HEALTH));
 	newproj.event_damage = this.event_damage;
 	newproj.spawnshieldtime = this.spawnshieldtime;
 	newproj.damagedbycontents = true;
@@ -300,7 +300,7 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 
 void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	// note: combos are usually triggered by W_Electro_TriggerCombo, not damage
@@ -309,8 +309,8 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_combo ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	TakeResource(this, RES_HEALTH, damage);
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		this.takedamage = DAMAGE_NO;
 		this.nextthink = time;
@@ -381,7 +381,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = WEP_CVAR_SEC(electro, damageforcescale);
-	SetResourceAmountExplicit(proj, RESOURCE_HEALTH, WEP_CVAR_SEC(electro, health));
+	SetResourceExplicit(proj, RES_HEALTH, WEP_CVAR_SEC(electro, health));
 	proj.event_damage = W_Electro_Orb_Damage;
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
@@ -483,7 +483,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(Electro, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(electro, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(electro, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(electro, ammo);
     return ammo_amount;
 }
@@ -492,12 +492,12 @@ METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
     float ammo_amount;
     if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
     }
     else
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(electro, ammo);
     }
     return ammo_amount;

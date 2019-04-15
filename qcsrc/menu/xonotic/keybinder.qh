@@ -27,6 +27,7 @@ CLASS(XonoticKeyBinder, XonoticListBox)
 	ATTRIB(XonoticKeyBinder, keyGrabButton, entity);
 	ATTRIB(XonoticKeyBinder, clearButton, entity);
 	ATTRIB(XonoticKeyBinder, userbindEditDialog, entity);
+	ATTRIB(XonoticKeyBinder, bindingsResetDialog, entity);
 	METHOD(XonoticKeyBinder, editUserbind, void(entity, string, string, string));
 ENDCLASS(XonoticKeyBinder)
 entity makeXonoticKeyBinder();

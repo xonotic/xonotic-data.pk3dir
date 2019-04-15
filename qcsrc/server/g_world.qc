@@ -431,6 +431,7 @@ void cvar_changes_init()
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
 		BADCVAR("minplayers");
+		BADCVAR("minplayers_per_team");
 		BADCVAR("net_address");
 		BADCVAR("port");
 		BADCVAR("rcon_password");
@@ -615,10 +616,12 @@ void InitGameplayMode()
 		world.fog = string_null;
 	}
 	if(MapInfo_Map_fog != "")
+	{
 		if(MapInfo_Map_fog == "none")
 			world.fog = string_null;
 		else
 			world.fog = strzone(MapInfo_Map_fog);
+	}
 	clientstuff = strzone(MapInfo_Map_clientstuff);
 
 	MapInfo_ClearTemps();
@@ -637,7 +640,7 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
-    bool wantrestart = false;
+	bool wantrestart = false;
 	{
 		if (!server_is_dedicated)
 		{
@@ -692,7 +695,7 @@ spawnfunc(worldspawn)
 		}
 		if (wantrestart)
 		{
-			LOG_INFOF("Restart requested");
+			LOG_INFO("Restart requested");
 			changelevel(mapname);
 			// let initialization continue, shutdown depends on it
 		}
@@ -771,7 +774,7 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 	GrappleHookInit();
 
-    GameRules_limit_fallbacks();
+	GameRules_limit_fallbacks();
 
 	if(warmup_limit == 0)
 		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
@@ -922,7 +925,7 @@ spawnfunc(worldspawn)
 			s = cons(s, pkg);
 		}
 		// add automatically managed files to the list
-		#define X(match) MACRO_BEGIN { \
+		#define X(match) MACRO_BEGIN \
 			int fd = search_begin(match, true, false); \
 			if (fd >= 0) \
 			{ \
@@ -932,7 +935,7 @@ spawnfunc(worldspawn)
 				} \
 				search_end(fd); \
 			} \
-		} MACRO_END
+		MACRO_END
 		X("*-serverpackage.txt");
 		X("*.serverpackage");
 		#undef X
@@ -1004,8 +1007,11 @@ float GetMaplistPosition()
 
 bool MapHasRightSize(string map)
 {
-	if(currentbots || autocvar_bot_number || player_count < autocvar_minplayers)
-	if(autocvar_g_maplist_check_waypoints)
+	int minplayers = max(0, floor(autocvar_minplayers));
+	if (teamplay)
+		minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+	if (autocvar_g_maplist_check_waypoints
+		&& (currentbots || autocvar_bot_number || player_count < minplayers))
 	{
 		string checkwp_msg = strcat("checkwp ", map);
 		if(!fexists(strcat("maps/", map, ".waypoints")))
@@ -1521,7 +1527,7 @@ void FixIntermissionClient(entity e)
 	if(!e.autoscreenshot) // initial call
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
-		SetResourceAmountExplicit(e, RESOURCE_HEALTH, -2342);
+		SetResourceExplicit(e, RES_HEALTH, -2342);
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1644,22 +1650,29 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 float GetWinningCode(float fraglimitreached, float equality)
 {
 	if(autocvar_g_campaign == 1)
+	{
 		if(fraglimitreached)
 			return WINNING_YES;
 		else
 			return WINNING_NO;
-
+	}
 	else
+	{
 		if(equality)
+		{
 			if(fraglimitreached)
 				return WINNING_STARTSUDDENDEATHOVERTIME;
 			else
 				return WINNING_NEVER;
+		}
 		else
+		{
 			if(fraglimitreached)
 				return WINNING_YES;
 			else
 				return WINNING_NO;
+		}
+	}
 }
 
 // set the .winning flag for exactly those players with a given field value
@@ -1729,19 +1742,20 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			leaderfrags = WinningConditionHelper_topscore;
 
 			if (limit)
-			if (leaderfrags == limit - 1)
-				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-			else if (leaderfrags == limit - 2)
-				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-			else if (leaderfrags == limit - 3)
-				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+			{
+				if (leaderfrags == limit - 1)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
+				else if (leaderfrags == limit - 2)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
+				else if (leaderfrags == limit - 3)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+			}
 		}
 	}
 
 	limitreached = false;
-	if(limit)
-		if(WinningConditionHelper_topscore >= limit)
-			limitreached = true;
+	if (limit && WinningConditionHelper_topscore >= limit)
+		limitreached = true;
 	if(leadlimit)
 	{
 		float leadlimitreached;
