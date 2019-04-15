@@ -1784,7 +1784,7 @@ void Scoreboard_Draw()
 				else
 				{
 					// right
-					str_pos = pos + team_score_baseoffset + vec2(panel_size.x + hud_fontsize.x, hud_fontsize.y * 1.5);
+					str_pos = pos + team_score_baseoffset + vec2(panel_size.x + hud_fontsize.x * 1.5, hud_fontsize.y * 1.5);
 				}
 
 				drawstring(str_pos, str, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
