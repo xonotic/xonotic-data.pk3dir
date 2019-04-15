@@ -56,17 +56,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_accuracy", _("Show accuracy underneath scoreboard")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Team score position:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("hud_panel_scoreboard_team_score_position", _("Team score position: Show team score to the left/right of the team scoreboard")));
-			e.addValue(e, _("Left"), "0");
-			e.addValue(e, _("Right"), "1");
-			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Team size position:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Header=show in the name column of the team scoreboard; Side=show on the opposite side (of the team scoreboard) to the team score")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Left=on the left side of the scoreboard and move team scores to the right; Right=on the right of the scoreboard")));
+			e.addValue(e, _("Left"), "1");
 			e.addValue(e, _("Off"), "0");
-			e.addValue(e, _("Header"), "1");
-			e.addValue(e, _("Side"), "2");
+			e.addValue(e, _("Right"), "2");
 			e.configureXonoticTextSliderValues(e);
 
 	//me.TR(me);
