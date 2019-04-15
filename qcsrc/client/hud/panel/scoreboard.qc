@@ -1620,40 +1620,40 @@ void Scoreboard_Draw()
 		); \
 
 	// Game Type
-	str = sprintf(_("^7%s"), MapInfo_Type_ToText(gametype));
+	str = MapInfo_Type_ToText(gametype);
 	draw_beginBoldFont();
 	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_type_fontsize)), str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
 
 	// Game Detail
 	float tl, fl, ll;
-	str = sprintf(""); // optionally "^7Limits: "
+	str = ""; // optionally "^7Limits: "
 	tl = STAT(TIMELIMIT);
 	fl = STAT(FRAGLIMIT);
 	ll = STAT(LEADLIMIT);
 	if(ISGAMETYPE(LMS))
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_("^xE4F%1.0f minutes^7"), tl));
+			str = strcat(str, sprintf(_("^xE4F%1.0f minutes"), tl));
 	}
 	else
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_("^xE4F%1.0f minutes^7"), tl));
+			str = strcat(str, sprintf(_("^xE4F%1.0f minutes"), tl));
 		if(fl > 0)
 		{
 			if(tl > 0)
-				str = strcat(str, _(" / ")); // delimiter
+				str = strcat(str, "^7 / "); // delimiter
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_("^x0EF%s %s^7"), ScoreString(teamscores_flags(ts_primary), fl),
+				str = strcat(str, sprintf(_("^x0EF%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
 					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
 					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(teamscores_label(ts_primary))));
 			}
 			else
 			{
-				str = strcat(str, sprintf(_("^x0EF%s %s^7"), ScoreString(scores_flags(ps_primary), fl),
+				str = strcat(str, sprintf(_("^x0EF%s %s"), ScoreString(scores_flags(ps_primary), fl),
 					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
 					(scores_label(ps_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(scores_label(ps_primary))));
@@ -1662,17 +1662,17 @@ void Scoreboard_Draw()
 		if(ll > 0)
 		{
 			if(tl > 0 || fl > 0)
-				str = strcat(str, _(" / ")); // delimiter
+				str = strcat(str, "^7 / "); // delimiter
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_("^2+%s %s^7"), ScoreString(teamscores_flags(ts_primary), ll),
+				str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(teamscores_flags(ts_primary), ll),
 					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
 					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(teamscores_label(ts_primary))));
 			}
 			else
 			{
-				str = strcat(str, sprintf(_("a lead of ^2+%s %s^7"), ScoreString(scores_flags(ps_primary), ll),
+				str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(scores_flags(ps_primary), ll),
 					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
 					(scores_label(ps_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(scores_label(ps_primary))));
@@ -1683,10 +1683,10 @@ void Scoreboard_Draw()
 	pos.y += sb_gameinfo_type_fontsize.y;
 	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
 	// map name
-	str = sprintf(_("^7Map: ^2%s^7"), shortmapname);
+	str = sprintf(_("^7Map: ^2%s"), shortmapname);
 	drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	// end of Game Info subpanel
-	
+
 	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
 	if (show_gameinfo_subpanel_background)
 		pos.y += hud_fontsize.y * 0.7; // add more space between backgrounds
