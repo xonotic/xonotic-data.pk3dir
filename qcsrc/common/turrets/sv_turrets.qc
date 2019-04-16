@@ -1288,6 +1288,11 @@ void turret_findtarget(entity this)
 	this.idle_aim = this.tur_head.angles + angleofs(this.tur_head, targ);
 }
 
+void turret_reset(entity this)
+{
+	turret_respawn(this);
+}
+
 bool turret_initialize(entity this, Turret tur)
 {
 	if(!autocvar_g_turrets)
@@ -1381,8 +1386,8 @@ bool turret_initialize(entity this, Turret tur)
 	this.event_heal 			= turret_heal;
 	this.use					= turret_use;
 	this.bot_attack				= true;
-	this.nextthink				= time + 1;
-	this.nextthink			   += turret_count * sys_frametime;
+	this.nextthink				= time + 1 + turret_count * sys_frametime;
+	this.reset					= turret_reset;
 
 	this.tur_head = new(turret_head);
 	_setmodel(this.tur_head, tur.head_model);
