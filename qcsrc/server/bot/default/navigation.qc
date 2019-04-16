@@ -1903,7 +1903,7 @@ void navigation_unstuck(entity this)
 	{
 		// evaluate the next goal on the queue
 		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
-		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
+		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with squared distance ", ftos(d));
 		set_tracewalk_dest(bot_waypoint_queue_goal, this.origin, false);
 		if (tracewalk(this, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
 			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
