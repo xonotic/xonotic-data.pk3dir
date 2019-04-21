@@ -14,7 +14,9 @@
 #include <common/gamemodes/rules.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>
-#include "../common/triggers/subs.qh"
+#include <common/weapons/weapon/porto.qh>
+#include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
@@ -28,8 +30,6 @@ void race_InitSpectator()
 		if(msg_entity.enemy.race_laptime)
 			race_SendNextCheckpoint(msg_entity.enemy, 1);
 }
-
-void W_Porto_Fail(entity this, float failhard);
 
 float race_readTime(string map, float pos)
 {
@@ -84,8 +84,11 @@ void race_writeTime(string map, float t, string myuid)
 		// player has no ranked record yet
 		for (i = RANKINGS_CNT; i > newpos; --i)
 		{
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
+			float other_time = race_readTime(map, i - 1);
+			if (other_time) {
+				db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(other_time));
+				db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
+			}
 		}
 	}
 
@@ -103,8 +106,6 @@ string race_readName(string map, float pos)
 
 
 const float MAX_CHECKPOINTS = 255;
-
-spawnfunc(target_checkpoint);
 
 .float race_penalty;
 .float race_penalty_accumulator;
@@ -222,6 +223,14 @@ void race_send_speedaward_alltimebest(float msg)
 	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
 	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
 	WriteString(msg, speedaward_alltimebest_holder);
+}
+
+void race_send_rankings_cnt(float msg)
+{
+	WriteHeader(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_RANKINGS_CNT);
+	int m = min(RANKINGS_CNT, autocvar_g_cts_send_rankings_cnt);
+	WriteByte(msg, m);
 }
 
 void race_SendRankings(float pos, float prevpos, float del, float msg)

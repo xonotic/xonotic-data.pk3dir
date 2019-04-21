@@ -3,13 +3,15 @@
 #include "../autocvars.qh"
 #include "../defs.qh"
 #include "../main.qh"
-#include "../mutators/events.qh"
+#include <client/mutators/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/effects/effect.qh>
 #include <common/effects/all.qh>
 #include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
+
+#include <common/mutators/mutator/nades/nades.qh>
 
 #include <lib/csqcmodel/interpolate.qh>
 
@@ -49,8 +51,6 @@ void Projectile_DrawTrail(entity this, vector to)
 		boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
-
-bool Projectile_isnade(int proj); // TODO: remove
 
 void Projectile_Draw(entity this)
 {
@@ -171,7 +171,7 @@ void Projectile_Draw(entity this)
 
 void loopsound(entity e, int ch, Sound samp, float vol, float attn)
 {
-    TC(int, ch);
+	TC(int, ch);
 	if (e.silent)
 		return;
 
@@ -265,19 +265,19 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			this.fade_rate = 0;
 		}
 
-		int myteam = ReadByte();
-		this.team = myteam - 1;
+		int proj_team = ReadByte();
+		this.team = proj_team - 1;
 
 		if(teamplay)
 		{
-			if(myteam)
+			if(proj_team)
 				this.colormap = (this.team) * 0x11; // note: team - 1 on server (client uses different numbers)
 			else
 				this.colormap = 0x00;
 			this.colormap |= BIT(10); // RENDER_COLORMAPPED
 		}
 		else
-			this.colormap = myteam;
+			this.colormap = proj_team;
 		// TODO: projectiles use glowmaps for their color, not teams
 		#if 0
 		if(this.colormap > 0)

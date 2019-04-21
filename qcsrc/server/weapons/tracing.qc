@@ -8,7 +8,6 @@
 #include "weaponsystem.qh"
 
 #include "../g_damage.qh"
-#include "../g_subs.qh"
 #include "../antilag.qh"
 
 #include <common/constants.qh>
@@ -33,7 +32,16 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
 	if (IS_PLAYER(ent) && (wep.spawnflags & WEP_FLAG_PENETRATEWALLS))
+	{
+		// This is the reason rifle, MG, OKMG and other fireBullet weapons don't hit the crosshair when shooting at walls.
+		// This is intentional, otherwise if you stand too close to a (glass) wall and attempt to shoot an enemy through it,
+		// trueaim will cause the shot to hit the wall exactly but then miss the enemy (unless shooting from eye/center).
+		// TODO for fireBullet, find how far the shot will penetrate and aim at that
+		//      for fireRailgunbullet, find the farthest target and aim at that
+		//      this will avoid issues when another player is passing in front of you when you shoot
+		//      (currently such a shot will hit him but then miss the original target)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	}
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	if(antilag)
@@ -58,7 +66,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
-		accuracy_add(ent, wep.m_id, maxdamage, 0);
+		accuracy_add(ent, wep, maxdamage, 0);
 
 	if(IS_PLAYER(ent))
 		W_HitPlotAnalysis(ent, wep, v_forward, v_right, v_up);
@@ -66,6 +74,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	vector md = ent.(weaponentity).movedir;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
 
+	// TODO this is broken - see 637056bea7bf7f5c9c0fc6113e94731a2767476 for an attempted fix
+	// which fixes issue #1957 but causes #2129
 	vector dv = v_right * -vecs.y + v_up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
@@ -81,7 +91,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
-	w_shotdir = normalize(w_shotend - w_shotorg);
+	if(W_DualWielding(ent))
+		w_shotdir = s_forward;
+	else
+		w_shotdir = normalize(w_shotend - w_shotorg);
 
 	//vector prevdir = w_shotdir;
 	//vector prevorg = w_shotorg;
@@ -136,7 +149,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != SND_Null) {
-		sound (ent, chan, snd, (W_DualWielding(ent) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
+		sound(ent, chan, snd, (W_DualWielding(ent) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 
@@ -264,7 +277,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	//explosion = spawn();
 
 	// Find all non-hit players the beam passed close by
-	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
+	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id) // WEAPONTODO
 	{
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
 			if(!it.railgunhit)
@@ -319,7 +332,8 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	IL_CLEAR(g_railgunhit);
 
 	// calculate hits and fired shots for hitscan
-	accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, min(bdamage, totaldmg));
+	if(this.(weaponentity))
+		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg));
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -334,7 +348,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
 {
 	vector  end;
 
@@ -342,15 +356,10 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
+	fireBullet_trace_callback_eff = tracer_effect;
+
 	float solid_penetration_left = 1;
 	float total_damage = 0;
-
-	if(tracereffects & EF_RED)
-		fireBullet_trace_callback_eff = EFFECT_RIFLE;
-	else if(tracereffects & EF_BLUE)
-		fireBullet_trace_callback_eff = EFFECT_RIFLE_WEAK;
-	else
-		fireBullet_trace_callback_eff = EFFECT_BULLET;
 
 	float lag = ((IS_REAL_CLIENT(this)) ? ANTILAG_LATENCY(this) : 0);
 	if(lag < 0.001)
@@ -424,7 +433,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
 				total_damage += damage * solid_penetration_left;
-				accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, added_damage);
+				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage);
 			}
 		}
 

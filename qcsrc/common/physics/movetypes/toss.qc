@@ -44,14 +44,14 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 	for (int bump = 0; bump < MAX_CLIP_PLANES && movetime > 0; ++bump)
 	{
 		vector move = this.velocity * movetime;
-		_Movetype_PushEntity(this, move, true);
+		_Movetype_PushEntity(this, move, true, false);
 		if (wasfreed(this))
 			return;
 
 		if (trace_startsolid)
 		{
 			_Movetype_UnstickEntity(this);
-			_Movetype_PushEntity(this, move, false);
+			_Movetype_PushEntity(this, move, false, false);
 			if (wasfreed(this))
 				return;
 		}

@@ -6,6 +6,7 @@
 #include <client/view.qh>
 #include <common/t_items.qh>
 #include <common/wepent.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 
 // Ammo (#1)
 
@@ -19,12 +20,10 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
-
 void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, bool isInfinite)
 {
-    TC(bool, isCurrent); TC(bool, isInfinite);
-	if(ammoType == RESOURCE_NONE)
+	TC(bool, isCurrent); TC(bool, isInfinite);
+	if(ammoType == RES_NONE)
 		return;
 
 	// Initialize variables
@@ -32,7 +31,7 @@ void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, boo
 	int ammo;
 	if(autocvar__hud_configure)
 	{
-		isCurrent = (ammoType == RESOURCE_ROCKETS); // Rockets always current
+		isCurrent = (ammoType == RES_ROCKETS); // Rockets always current
 		ammo = 60;
 	}
 	else
@@ -184,7 +183,7 @@ void HUD_Ammo()
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, RESOURCE_ROCKETS, true, false);
+			DrawAmmoItem(pos, ammo_size, RES_ROCKETS, true, false);
 		}
 		else
 		{

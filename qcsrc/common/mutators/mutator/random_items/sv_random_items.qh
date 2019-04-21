@@ -6,6 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 bool autocvar_g_random_items; ///< Whether to enable random items.
+bool autocvar_g_random_loot; ///< Whether to enable random loot.
 
 enum
 {
@@ -32,12 +33,13 @@ string RandomItems_GetRandomItemClassName(string prefix);
 /// jetpack and new toys.
 string RandomItems_GetRandomVanillaItemClassName(string prefix, int types);
 
-/// \brief Returns a random classname of the instagib item.
-/// \param[in] prefix Prefix of the cvars that hold probabilities.
-/// \return Random classname of the instagib item.
-string RandomItems_GetRandomInstagibItemClassName(string prefix);
+/// \brief Called when random item classname is requested.
+#define EV_RandomItems_GetRandomItemClassName(i, o) \
+	/** prefix */    i(string, MUTATOR_ARGV_0_string) \
+	/** classname */ o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(RandomItems_GetRandomItemClassName,
+	EV_RandomItems_GetRandomItemClassName);
 
-/// \brief Returns a random classname of the overkill item.
-/// \param[in] prefix Prefix of the cvars that hold probabilities.
-/// \return Random classname of the overkill item.
-string RandomItems_GetRandomOverkillItemClassName(string prefix);
+REGISTER_MUTATOR(random_items, (autocvar_g_random_items ||
+	autocvar_g_random_loot));

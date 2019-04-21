@@ -3,9 +3,8 @@
 // Additional OPTIONAL Fields and Globals
 //float		intermission;
 float		scoreboard_showscores;
-float		scoreboard_showaccuracy;
 .string		message;
-.int		renderflags;
+.float		renderflags;
 // float		coop;
 // float		deathmatch;
 
@@ -16,7 +15,6 @@ float		dmg_take;
 // Darkplaces Render Modifications
 #if 0
 .float alpha;
-.float renderflags;
 .vector colormod;
 .float scale;
 #endif
@@ -78,6 +76,7 @@ float nb_pb_period;
 // 0 - playing
 // >0 - id of spectated player
 float spectatee_status;
+float spectatee_status_changed_time;
 
 // short mapname
 string shortmapname;

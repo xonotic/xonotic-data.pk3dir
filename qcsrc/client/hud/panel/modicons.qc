@@ -5,7 +5,7 @@
 #include <common/mapinfo.qh>
 #include <common/ent_cs.qh>
 #include <common/scores.qh>
-#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
+#include <common/gamemodes/_mod.qh>
 
 // Mod icons (#10)
 
@@ -13,7 +13,7 @@ bool mod_active; // is there any active mod icon?
 
 void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
-    TC(int, layout); TC(int, i);
+	TC(int, layout); TC(int, i);
 	int stat = -1;
 	string pic = "";
 	vector color = '0 0 0';
@@ -41,8 +41,8 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 
 	if(layout)
 	{
-		drawpic_aspect_skin(myPos, pic, vec2(0.7 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(myPos + eX * 0.7 * mySize.x, ftos(stat), vec2(0.3 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(myPos, pic, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(myPos + eX * 0.5 * mySize.x, ftos(stat), vec2(0.5 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else
 		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -54,9 +54,9 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	mod_active = 1; // required in each mod function that always shows something
 
 	int layout;
-	if(gametype == MAPINFO_TYPE_CA)
+	if(ISGAMETYPE(CA))
 		layout = autocvar_hud_panel_modicons_ca_layout;
-	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
+	else //if(ISGAMETYPE(FREEZETAG))
 		layout = autocvar_hud_panel_modicons_freezetag_layout;
 	int rows, columns;
 	float aspect_ratio;
@@ -136,14 +136,14 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
-	#define X(team) MACRO_BEGIN {													\
-		if (team##flag != team##flag_prevframe) {									\
-    		team##flag_statuschange_time = time;									\
-    		team##flag_prevstatus = team##flag_prevframe;							\
-    		team##flag_prevframe = team##flag;										\
-    	}																			\
-    	team##flag_statuschange_elapsedtime = time - team##flag_statuschange_time; 	\
-    } MACRO_END
+	#define X(team) MACRO_BEGIN \
+		if (team##flag != team##flag_prevframe) { \
+			team##flag_statuschange_time = time; \
+			team##flag_prevstatus = team##flag_prevframe; \
+			team##flag_prevframe = team##flag; \
+		} \
+		team##flag_statuschange_elapsedtime = time - team##flag_statuschange_time; \
+	MACRO_END
 	X(red);
 	X(blue);
 	X(yellow);
@@ -164,7 +164,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	string team##_icon = string_null, team##_icon_prevstatus = string_null; \
 	int team##_alpha, team##_alpha_prevstatus; \
 	team##_alpha = team##_alpha_prevstatus = 1; \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		switch (team##flag) { \
 			case 1: team##_icon = "flag_" #team "_taken"; break; \
 			case 2: team##_icon = "flag_" #team "_lost"; break; \
@@ -191,7 +191,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				} \
 				break; \
 		} \
-	} MACRO_END
+	MACRO_END
 	X(red, myteam != NUM_TEAM_1 && (nteams & BIT(0)));
 	X(blue, myteam != NUM_TEAM_2 && (nteams & BIT(1)));
 	X(yellow, myteam != NUM_TEAM_3 && (nteams & BIT(2)));
@@ -262,7 +262,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	neutralflag_pos = pos;
 	flag_size = e1 * fs * size1 + e2 * size2;
 
-	#define X(team) MACRO_BEGIN { \
+	#define X(team) MACRO_BEGIN \
 		f = bound(0, team##flag_statuschange_elapsedtime * 2, 1); \
 		if (team##_icon && ctf_stalemate) \
 			drawpic_aspect_skin(team##flag_pos, "flag_stalemate", flag_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL); \
@@ -270,7 +270,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			drawpic_aspect_skin_expanding(team##flag_pos, team##_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * team##_alpha_prevstatus, DRAWFLAG_NORMAL, f); \
 		if (team##_icon) \
 			drawpic_aspect_skin(team##flag_pos, team##_icon, flag_size, '1 1 1', panel_fg_alpha * team##_alpha * f, DRAWFLAG_NORMAL); \
-	} MACRO_END
+	MACRO_END
 	X(red);
 	X(blue);
 	X(yellow);
@@ -496,11 +496,16 @@ string race_status_name_prev;
 // Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
 int race_CheckName(string net_name)
 {
-	int i;
-	for (i=RANKINGS_CNT-1;i>=0;--i)
-		if(strdecolorize(grecordholder[i]) == strdecolorize(net_name))
-			return i+1;
-	return 0;
+	int rank = 0;
+	string zoned_name = strzone(strdecolorize(entcs_GetName(player_localnum)));
+	for (int i = RANKINGS_CNT - 1; i >= 0; --i)
+		if (strdecolorize(grecordholder[i]) == zoned_name)
+		{
+			rank = i + 1;
+			break;
+		}
+	strfree(zoned_name);
+	return rank;
 }
 
 void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, vector textSize, float f)
@@ -528,7 +533,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 	// clientside personal record
 	string rr;
-	if(gametype == MAPINFO_TYPE_CTS)
+	if(ISGAMETYPE(CTS))
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
@@ -626,7 +631,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
-    TC(int, layout); TC(int, i);
+	TC(int, layout); TC(int, i);
 	float stat = -1;
 	string pic = "";
 	vector color = '0 0 0';

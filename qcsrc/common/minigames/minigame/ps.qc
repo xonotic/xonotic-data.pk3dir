@@ -39,15 +39,19 @@ bool ps_tile_blacklisted(string tile)
 	int number = minigame_tile_number(tile);
 	int letter = minigame_tile_letter(tile);
 	if(letter < 2)
+	{
 		if(number < 2)
 			return true;
 		else if(number > PS_NUM_CNT - 3)
 			return true;
+	}
 	if(letter > PS_LET_CNT - 3)
+	{
 		if(number < 2)
 			return true;
 		else if(number > PS_NUM_CNT - 3)
 			return true;
+	}
 
 	return false;
 }
@@ -606,8 +610,8 @@ int ps_client_event(entity minigame, string event, ...)
 				if ( sf & MINIG_SF_UPDATE )
 				{
 					sent.message = ps_turn_to_string(sent.minigame_flags);
-					if ( sent.minigame_flags & minigame_self.team )
-						minigame_prompt();
+					//if ( sent.minigame_flags & minigame_self.team )
+						//minigame_prompt();
 				}
 			}
 

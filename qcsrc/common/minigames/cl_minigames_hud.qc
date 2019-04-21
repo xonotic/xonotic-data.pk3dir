@@ -357,9 +357,6 @@ void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger)
 		HUD_MinigameMenu_entries = NULL;
 		HUD_MinigameMenu_last_entry = NULL;
 		HUD_MinigameMenu_activeitem = NULL;
-		if(autocvar_hud_cursormode)
-		if ( !autocvar__hud_configure )
-			setcursormode(0);
 	}
 }
 
@@ -420,8 +417,6 @@ void HUD_MinigameMenu_Open()
 			HUD_MinigameMenu_last_entry );
 		HUD_MinigameMenu_CurrentButton();
 		HUD_MinigameMenu_activeitem = NULL;
-		if(autocvar_hud_cursormode)
-			setcursormode(1);
 	}
 }
 
@@ -683,11 +678,6 @@ void HUD_Minigame_Mouse()
 	if( !HUD_MinigameMenu_IsOpened() || autocvar__hud_configure || mv_active )
 		return;
 
-	if (!autocvar_hud_cursormode)
-		update_mousepos();
-
 	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
 		HUD_MinigameMenu_MouseInput();
-
-	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
 }

@@ -3,12 +3,15 @@
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
+#include <server/resources.qh>
 
 #include "g_damage.qh"
+#include "clientkill.qh"
+#include "player.qh"
 #include "race.qh"
-#include "../common/triggers/teleporters.qh"
+#include "../common/mapobjects/teleporters.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 
 #include "weapons/tracing.qh"
 
@@ -22,16 +25,15 @@
 
 #include <common/weapons/_all.qh>
 
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/triggers.qh>
 
-#include "../common/triggers/func/breakable.qh"
+#include "../common/mapobjects/func/breakable.qh"
 
 #include "../lib/csqcmodel/sv_model.qh"
 
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/util_server.qh"
-
-void CopyBody(entity this, float keepvelocity);
 
 #ifdef NOCHEATS
 
@@ -44,7 +46,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 
 #else
 
-.float maycheat;
+.bool maycheat;
 float gamestart_sv_cheats;
 
 
@@ -58,7 +60,7 @@ void CheatShutdown()
 {
 }
 
-float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
+float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets passed as argument for possible future ACL checking
 {
 	// dead people cannot cheat
 	if(IS_DEAD(this))
@@ -93,8 +95,7 @@ float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat get
 }
 
 #define BEGIN_CHEAT_FUNCTION() \
-	float cheating, attempting; \
-	cheating = 0; attempting = 0
+	float cheating = 0, attempting = 0
 #define DID_CHEAT() \
 	++cheating
 #define ADD_CHEATS(e,n) \
@@ -151,15 +152,15 @@ float CheatImpulse(entity this, int imp)
 			this.personal.origin = this.origin;
 			this.personal.v_angle = this.v_angle;
 			this.personal.velocity = this.velocity;
-			this.personal.ammo_rockets = this.ammo_rockets;
-			this.personal.ammo_nails = this.ammo_nails;
-			this.personal.ammo_cells = this.ammo_cells;
-			this.personal.ammo_plasma = this.ammo_plasma;
-			this.personal.ammo_shells = this.ammo_shells;
-			this.personal.ammo_fuel = this.ammo_fuel;
-			this.personal.health = max(1, this.health);
-			this.personal.armorvalue = this.armorvalue;
-			this.personal.weapons = this.weapons;
+			SetResource(this.personal, RES_ROCKETS, GetResource(this, RES_ROCKETS));
+			SetResource(this.personal, RES_BULLETS, GetResource(this, RES_BULLETS));
+			SetResource(this.personal, RES_CELLS, GetResource(this, RES_CELLS));
+			SetResource(this.personal, RES_PLASMA, GetResource(this, RES_PLASMA));
+			SetResource(this.personal, RES_SHELLS, GetResource(this, RES_SHELLS));
+			SetResource(this.personal, RES_FUEL, GetResource(this, RES_FUEL));
+			SetResource(this.personal, RES_HEALTH, max(1, GetResource(this, RES_HEALTH)));
+			SetResource(this.personal, RES_ARMOR, GetResource(this, RES_ARMOR));
+			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
 			this.personal.pauserothealth_finished = this.pauserothealth_finished;
@@ -210,15 +211,15 @@ float CheatImpulse(entity this, int imp)
 					MUTATOR_CALLHOOK(AbortSpeedrun, this);
 				}
 
-				this.ammo_rockets = this.personal.ammo_rockets;
-				this.ammo_nails = this.personal.ammo_nails;
-				this.ammo_cells = this.personal.ammo_cells;
-				this.ammo_plasma = this.personal.ammo_plasma;
-				this.ammo_shells = this.personal.ammo_shells;
-				this.ammo_fuel = this.personal.ammo_fuel;
-				this.health = this.personal.health;
-				this.armorvalue = this.personal.armorvalue;
-				this.weapons = this.personal.weapons;
+				SetResource(this, RES_ROCKETS, GetResource(this.personal, RES_ROCKETS));
+				SetResource(this, RES_BULLETS, GetResource(this.personal, RES_BULLETS));
+				SetResource(this, RES_CELLS, GetResource(this.personal, RES_CELLS));
+				SetResource(this, RES_PLASMA, GetResource(this.personal, RES_PLASMA));
+				SetResource(this, RES_SHELLS, GetResource(this.personal, RES_SHELLS));
+				SetResource(this, RES_FUEL, GetResource(this.personal, RES_FUEL));
+				SetResource(this, RES_HEALTH, GetResource(this.personal, RES_HEALTH));
+				SetResource(this, RES_ARMOR, GetResource(this.personal, RES_ARMOR));
+				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
 				this.pauserothealth_finished = time + this.personal.pauserothealth_finished - this.personal.teleport_time;
@@ -290,7 +291,6 @@ float CheatImpulse(entity this, int imp)
 	END_CHEAT_FUNCTION();
 }
 
-void DragBox_Think(entity this);
 float drag_lastcnt;
 float CheatCommand(entity this, int argc)
 {
@@ -355,7 +355,7 @@ float CheatCommand(entity this, int argc)
 					entity e = spawn();
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
-					e.health = 1000;
+					SetResourceExplicit(e, RES_HEALTH, 1000);
 					setorigin(e, trace_endpos);
 					e.effects = EF_NOMODELFLAGS;
 					if(f == 1)
@@ -710,18 +710,6 @@ float CheatCommand(entity this, int argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity this, float force_allow_pick, float ischeat);
-void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
-void Drag_Finish(entity dragger);
-float Drag_IsDraggable(entity draggee);
-float Drag_MayChangeAngles(entity draggee);
-void Drag_MoveForward(entity dragger);
-void Drag_SetSpeed(entity dragger, float s);
-void Drag_MoveBackward(entity dragger);
-void Drag_Update(entity dragger);
-float Drag_CanDrag(entity dragger);
-float Drag_IsDragging(entity dragger);
-void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
 float CheatFrame(entity this)
@@ -850,7 +838,7 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 						}
 						// Find e and pick
 						if(e && pick)
-							if(Drag_IsDraggable(e))
+							if(Drag_IsDraggable(e, this))
 							{
 								if(ischeat)
 									IS_CHEAT(this, 0, 0, CHRAME_DRAG);
@@ -926,31 +914,24 @@ void Drag_Finish(entity dragger)
 	}
 }
 
-float Drag_IsDraggable(entity draggee)
+bool drag_undraggable(entity draggee, entity dragger)
+{
+	// stuff probably shouldn't need this, we should figure out why they do!
+	// exceptions of course are observers and weapon entities, where things mess up
+	return false;
+}
+
+float Drag_IsDraggable(entity draggee, entity dragger)
 {
 	// TODO add more checks for bad stuff here
 	if(draggee == NULL)
 		return false;
-	if(draggee.classname == "func_bobbing")
-		return false;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
-		return false;
-	if(draggee.classname == "plat")
-		return false;
-	if(draggee.classname == "func_button")
-		return false;
+		return false; // probably due to BSP collision
 //	if(draggee.model == "")
 //		return false;
-	if(IS_SPEC(draggee))
-		return false;
-	if(IS_OBSERVER(draggee))
-		return false;
-	if(draggee.classname == "exteriorweaponentity")
-		return false;
-	if(draggee.classname == "weaponentity")
-		return false;
 
-	return true;
+	return ((draggee.draggable) ? draggee.draggable(draggee, dragger) : true);
 }
 
 float Drag_MayChangeAngles(entity draggee)
@@ -1028,7 +1009,7 @@ float Drag_IsDragging(entity dragger)
 		dragger.dragentity = NULL;
 		return false;
 	}
-	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity))
+	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity, dragger))
 	{
 		Drag_Finish(dragger);
 		return false;

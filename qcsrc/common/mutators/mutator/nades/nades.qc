@@ -1,5 +1,7 @@
 #include "nades.qh"
 
+#include "../overkill/okmachinegun.qh"
+
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
 float autocvar_g_nades_spread = 0.04;
@@ -156,7 +158,6 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/gamemodes/_mod.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
-#include <server/g_subs.qh>
 
 REGISTER_MUTATOR(nades, autocvar_g_nades);
 
@@ -382,7 +383,7 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 {
 	frost_target.frozen_by = freezefield.realowner;
 	Send_Effect(EFFECT_ELECTRO_IMPACT, frost_target.origin, '0 0 0', 1);
-	Freeze(frost_target, 1 / freezetime, 3, false);
+	Freeze(frost_target, 1 / freezetime, FROZEN_TEMP_DYING, false);
 
 	Drop_Special_Items(frost_target);
 }
@@ -439,7 +440,7 @@ void nade_ice_think(entity this)
 
 	float current_freeze_time = this.ltime - time - 0.1;
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0 && current_freeze_time > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0,
 	{
 		if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(it, this.realowner) || it == this.realowner))
 		if(!it.revival_time || ((time - it.revival_time) >= 1.5))
@@ -631,14 +632,14 @@ void nade_heal_touch(entity this, entity toucher)
 		if ( health_factor > 0 )
 		{
 			maxhealth = (IS_MONSTER(toucher)) ? toucher.max_health : g_pickup_healthmega_max;
-			float hp = GetResourceAmount(toucher, RESOURCE_HEALTH);
+			float hp = GetResource(toucher, RES_HEALTH);
 			if (hp < maxhealth)
 			{
 				if (this.nade_show_particles)
 				{
 					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
 				}
-				GiveResourceWithLimit(toucher, RESOURCE_HEALTH, health_factor, maxhealth);
+				GiveResourceWithLimit(toucher, RES_HEALTH, health_factor, maxhealth);
 			}
 		}
 		else if ( health_factor < 0 )
@@ -813,7 +814,7 @@ void nade_touch(entity this, entity toucher)
 
 	if(autocvar_g_nades_pickup)
 	if(time >= this.spawnshieldtime)
-	if(!toucher.nade && GetResourceAmount(this, RESOURCE_HEALTH) == this.max_health) // no boosted shot pickups, thank you very much
+	if(!toucher.nade && GetResource(this, RES_HEALTH) == this.max_health) // no boosted shot pickups, thank you very much
 	if(CanThrowNade(toucher)) // prevent some obvious things, like dead players
 	if(IS_REAL_CLIENT(toucher)) // above checks for IS_PLAYER, don't need to do it here
 	{
@@ -841,7 +842,7 @@ void nade_touch(entity this, entity toucher)
 
 	//setsize(this, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(this);
-	if(GetResourceAmount(this, RESOURCE_HEALTH) == this.max_health)
+	if(GetResource(this, RES_HEALTH) == this.max_health)
 	{
 		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
 		return;
@@ -881,12 +882,12 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		force *= 0.5; // too much
 		damage = 0;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_NEX))
 	{
 		force *= 6;
 		damage = this.max_health * 0.55;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_MACHINEGUN))
 		damage = this.max_health * 0.1;
 	else if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	{
@@ -905,7 +906,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(damage <= 0 || ((IS_ONGROUND(this)) && IS_PLAYER(attacker)))
 		return;
 
-	float hp = GetResourceAmount(this, RESOURCE_HEALTH);
+	float hp = GetResource(this, RES_HEALTH);
 	if(hp == this.max_health)
 	{
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
@@ -914,7 +915,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	}
 
 	hp -= damage;
-	SetResourceAmount(this, RESOURCE_HEALTH, hp);
+	SetResource(this, RES_HEALTH, hp);
 
 
 	if ( STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
@@ -976,8 +977,8 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	settouch(_nade, nade_touch);
 	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
-	SetResourceAmount(_nade, RESOURCE_HEALTH, autocvar_g_nades_nade_health);
-	_nade.max_health = _nade.health;
+	SetResource(_nade, RES_HEALTH, autocvar_g_nades_nade_health);
+	_nade.max_health = GetResource(_nade, RES_HEALTH);
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
 	setcefc(_nade, func_null);
@@ -1020,7 +1021,7 @@ void nades_GiveBonus(entity player, float score)
 	if (autocvar_g_nades_bonus)
 	if (IS_REAL_CLIENT(player))
 	if (IS_PLAYER(player) && STAT(NADE_BONUS, player) < autocvar_g_nades_bonus_max)
-	if (STAT(FROZEN, player) == 0)
+	if (!STAT(FROZEN, player))
 	if (!IS_DEAD(player))
 	{
 		if ( STAT(NADE_BONUS_SCORE, player) < 1 )
@@ -1102,7 +1103,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	n.alpha = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_alpha;
 
 	setmodel(fn, MDL_NADE_VIEW);
-	setattachment(fn, player.(weaponentity), "");
+	//setattachment(fn, player.(weaponentity), "");
+	fn.viewmodelforclient = player;
 	fn.realowner = fn.owner = player;
 	fn.colormod = Nades_from(STAT(NADE_BONUS_TYPE, n)).m_color;
 	fn.colormap = player.colormap;
@@ -1159,7 +1161,7 @@ bool CanThrowNade(entity this)
 	if (!autocvar_g_nades)
 		return false; // allow turning them off mid match
 
-	if(forbidWeaponUse(this))
+	if (weaponLocked(this))
 		return false;
 
 	if (!IS_PLAYER(this))
@@ -1251,11 +1253,20 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
     entity player = M_ARGV(0, entity);
 
-	if (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
+	if (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
 		nades_CheckThrow(player);
 		return true;
 	}
 }
+
+#ifdef IS_REVIVING
+	#undef IS_REVIVING
+#endif
+
+// returns true if player is reviving it
+#define IS_REVIVING(player, it, revive_extra_size) \
+	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
+	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
@@ -1263,7 +1274,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 	if (!IS_PLAYER(player)) { return; }
 
-	if (player.nade && (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
+	if (player.nade && (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
 
 	entity held_nade = player.nade;
 	if (held_nade)
@@ -1328,43 +1339,43 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	}
 
 	int n = 0;
-	entity o = NULL;
+
+	IntrusiveList reviving_players = NULL;
+
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
-	else if(STAT(FROZEN, player) == 3)
+	else if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
-			if(!IS_DEAD(it) && STAT(FROZEN, it) == 0 && SAME_TEAM(it, player))
-			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
-			{
-				if(!o)
-					o = it;
-				it.reviving = true;
-				++n;
-			}
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+			if (!reviving_players)
+				reviving_players = IL_NEW();
+			IL_PUSH(reviving_players, it);
+			++n;
 		});
 	}
 
-	if(n > 0 && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
+	if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		SetResourceAmount(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
+		SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
-			Unfreeze(player);
+			Unfreeze(player, false);
 
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
-			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			entity first = IL_FIRST(reviving_players);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
+			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
+		IL_EACH(reviving_players, true, {
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-			it.reviving = false;
 		});
 	}
+	if (reviving_players)
+		IL_DELETE(reviving_players);
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)
@@ -1467,8 +1478,8 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 	if(autocvar_g_freezetag_revive_nade && STAT(FROZEN, frag_target) && frag_attacker == frag_target && frag_deathtype == DEATH_NADE.m_id)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
-		Unfreeze(frag_target);
-		SetResourceAmount(frag_target, RESOURCE_HEALTH, autocvar_g_freezetag_revive_nade_health);
+		Unfreeze(frag_target, false);
+		SetResource(frag_target, RES_HEALTH, autocvar_g_freezetag_revive_nade_health);
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		M_ARGV(4, float) = 0;
 		M_ARGV(6, vector) = '0 0 0';

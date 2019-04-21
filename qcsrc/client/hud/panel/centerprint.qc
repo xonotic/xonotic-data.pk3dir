@@ -20,7 +20,7 @@ bool centerprint_showing;
 
 void centerprint_generic(int new_id, string strMessage, float duration, int countdown_num)
 {
-    TC(int, new_id); TC(int, countdown_num);
+	TC(int, new_id); TC(int, countdown_num);
 	//printf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num);
 	int i, j;
 
@@ -94,7 +94,7 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 
 void centerprint_kill(int id)
 {
-    TC(int, id);
+	TC(int, id);
 	centerprint_generic(id, "", 0, 0);
 }
 
@@ -146,7 +146,7 @@ void HUD_CenterPrint ()
 			}
 			else
 			{
-				centerprint_generic(0, sprintf("Centerprint message", seconds_tostring(time)), 10, 0);
+				centerprint_generic(0, "Centerprint message", 10, 0);
 				hud_configure_cp_generation_time = time + 10 - random()*3;
 			}
 		}

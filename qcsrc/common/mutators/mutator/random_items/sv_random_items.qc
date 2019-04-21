@@ -24,8 +24,6 @@
 
 // Loot
 
-bool autocvar_g_random_loot; ///< Whether to enable random loot.
-
 float autocvar_g_random_loot_min; ///< Minimum amount of loot items.
 float autocvar_g_random_loot_max; ///< Maximum amount of loot items.
 float autocvar_g_random_loot_time; ///< Amount of time the loot will stay.
@@ -55,13 +53,9 @@ string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 
 string RandomItems_GetRandomItemClassName(string prefix)
 {
-	if (autocvar_g_instagib)
+	if (MUTATOR_CALLHOOK(RandomItems_GetRandomItemClassName, prefix))
 	{
-		return RandomItems_GetRandomInstagibItemClassName(prefix);
-	}
-	if (expr_evaluate(autocvar_g_overkill))
-	{
-		return RandomItems_GetRandomOverkillItemClassName(prefix);
+		return M_ARGV(1, string);
 	}
 	return RandomItems_GetRandomVanillaItemClassName(prefix,
 		RANDOM_ITEM_TYPE_ALL);
@@ -198,61 +192,6 @@ string RandomItems_GetRandomVanillaItemClassName(string prefix, int types)
 	return "";
 }
 
-string RandomItems_GetRandomInstagibItemClassName(string prefix)
-{
-	RandomSelection_Init();
-	FOREACH(Items, it.spawnflags & ITEM_FLAG_INSTAGIB &&
-		Item_IsDefinitionAllowed(it),
-	{
-		string cvar_name = sprintf("g_%s_%s_probability", prefix,
-			it.m_canonical_spawnfunc);
-		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-		{
-			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-			continue;
-		}
-		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
-	});
-	return RandomSelection_chosen_string;
-}
-
-string RandomItems_GetRandomOverkillItemClassName(string prefix)
-{
-	RandomSelection_Init();
-	FOREACH(Items, (it.spawnflags & ITEM_FLAG_OVERKILL) &&
-		!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED) &&
-		Item_IsDefinitionAllowed(it),
-	{
-		string cvar_name = sprintf("g_%s_overkill_%s_probability", prefix,
-			it.m_canonical_spawnfunc);
-		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-		{
-			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-			continue;
-		}
-		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
-	});
-	string cvar_name = sprintf("g_%s_overkill_weapon_hmg_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-	}
-	else
-	{
-		RandomSelection_AddString("weapon_hmg", cvar(cvar_name), 1);
-	}
-	cvar_name = sprintf("g_%s_overkill_weapon_rpc_probability", prefix);
-	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-	{
-		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
-	}
-	else
-	{
-		RandomSelection_AddString("weapon_rpc", cvar(cvar_name), 1);
-	}
-	return RandomSelection_chosen_string;
-}
-
 //========================= Free functions ====================================
 
 /// \brief Returns list of classnames to replace a map item with.
@@ -328,7 +267,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	}
 	random_items_is_spawning = true;
 	entity new_item;
-	if (!expr_evaluate(autocvar_g_overkill))
+	if (!MUTATOR_IS_ENABLED(ok))
 	{
 		new_item = Item_Create(strzone(new_classname), item.origin,
 			Item_ShouldKeepPosition(item));
@@ -374,7 +313,7 @@ void RandomItems_SpawnLootItem(vector position)
 	spread.z = autocvar_g_random_loot_spread / 2;
 	spread += randomvec() * autocvar_g_random_loot_spread;
 	random_items_is_spawning = true;
-	if (!expr_evaluate(autocvar_g_overkill))
+	if (!MUTATOR_IS_ENABLED(ok))
 	{
 		Item_CreateLoot(class_name, position, spread,
 			autocvar_g_random_loot_time);
@@ -391,9 +330,6 @@ void RandomItems_SpawnLootItem(vector position)
 }
 
 //============================= Hooks ========================================
-
-REGISTER_MUTATOR(random_items, (autocvar_g_random_items ||
-	autocvar_g_random_loot));
 
 MUTATOR_HOOKFUNCTION(random_items, BuildMutatorsString)
 {

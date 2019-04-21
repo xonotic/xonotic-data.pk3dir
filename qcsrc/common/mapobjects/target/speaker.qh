@@ -1,0 +1,7 @@
+#pragma once
+
+
+const int SPEAKER_LOOPED_ON = BIT(0);
+const int SPEAKER_LOOPED_OFF = BIT(1);
+const int SPEAKER_GLOBAL = BIT(2); // legacy, set speaker atten to -1 instead
+const int SPEAKER_ACTIVATOR = BIT(3);

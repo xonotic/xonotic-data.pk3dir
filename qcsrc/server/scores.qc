@@ -1,11 +1,18 @@
 #include "scores.qh"
 
 #include "command/common.qh"
-#include "mutators/_mod.qh"
+#include "defs.qh"
+#include <server/g_world.qh>
+#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
 #include <common/net_linked.qh>
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
+#include <common/mapinfo.qh>
+#include <common/mutators/base.qh>
 #include <common/scores.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
 
 .entity scorekeeper;
 entity teamscorekeepers[16];
@@ -395,7 +402,7 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	});
 
 	if (result.x == 0 && strict)
-		result.x = etof(t1.owner) - etof(t2.owner);
+		result.x = t1.owner.playerid - t2.owner.playerid;
 
 	return result.x;
 }

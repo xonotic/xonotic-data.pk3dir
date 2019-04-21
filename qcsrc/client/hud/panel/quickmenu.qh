@@ -4,3 +4,8 @@
 bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary);
 bool QuickMenu_IsOpened();
 void QuickMenu_Mouse();
+float QuickMenu_Page_Load(string target_submenu, float new_page);
+void QuickMenu_Default(string submenu);
+void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me);
+void QuickMenu_Close();
+bool QuickMenu_Open(string mode, string submenu, string file);

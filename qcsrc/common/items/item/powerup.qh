@@ -10,7 +10,7 @@ CLASS(Powerup, Pickup)
 #ifdef SVQC
     ATTRIB(Powerup, m_mins, vector, '-16 -16 0');
     ATTRIB(Powerup, m_maxs, vector, '16 16 80');
-    ATTRIB(Powerup, m_botvalue, int, 20000);
+    ATTRIB(Powerup, m_botvalue, int, 11000);
     ATTRIB(Powerup, m_itemflags, int, FL_POWERUP);
     ATTRIB(Powerup, m_respawntime, float(), GET(g_pickup_respawntime_powerup));
     ATTRIB(Powerup, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_powerup));
@@ -24,7 +24,7 @@ SOUND(Strength, Item_Sound("powerup"));
 
 #ifdef SVQC
 float autocvar_g_balance_powerup_strength_time;
-void powerup_strength_init(entity item)
+void powerup_strength_init(Pickup this, entity item)
 {
     if(!item.strength_finished)
         item.strength_finished = autocvar_g_balance_powerup_strength_time;
@@ -40,7 +40,7 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
 #endif
     this.netname            =   "strength";
-    this.m_name             =   "Strength Powerup";
+    this.m_name             =   _("Strength");
     this.m_icon             =   "strength";
     this.m_color            =   '0 0 1';
     this.m_waypoint         =   _("Strength");
@@ -60,7 +60,7 @@ SOUND(Shield, Item_Sound("powerup_shield"));
 
 #ifdef SVQC
 float autocvar_g_balance_powerup_invincible_time;
-void powerup_shield_init(entity item)
+void powerup_shield_init(Pickup this, entity item)
 {
     if(!item.invincible_finished)
         item.invincible_finished = autocvar_g_balance_powerup_invincible_time;
@@ -76,7 +76,7 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_respawnsound     =   SND_SHIELD_RESPAWN;
 #endif
     this.netname            =   "invincible";
-    this.m_name             =   "Shield";
+    this.m_name             =   _("Shield");
     this.m_icon             =   "shield";
     this.m_color            =   '1 0 1';
     this.m_waypoint         =   _("Shield");

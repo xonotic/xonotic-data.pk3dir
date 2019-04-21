@@ -52,6 +52,14 @@ REGISTRY(Registries, BITS(8))
 /** registered item identifier */
 .string registered_id;
 
+void _regCheck(int i, int _max)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	// (this very long line would be repeated literally thousands times!)
+	if (i >= _max)
+		LOG_FATALF("Registry capacity exceeded (%d)", _max);
+}
+
 /**
  * Register a new entity with a registry.
  * Must be followed by a semicolon or a function body with a `this` parameter.
@@ -79,7 +87,7 @@ REGISTRY(Registries, BITS(8))
 	{ \
 		entity this = id; \
 		if (this == NULL) { \
-			if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
+			_regCheck(registry##_COUNT, registry##_MAX); \
 			this = id = inst; \
 			this.registered_id = #id; \
 			REGISTRY_PUSH(registry, fld, this); \
@@ -89,20 +97,20 @@ REGISTRY(Registries, BITS(8))
 	ACCUMULATE_FUNCTION(_Register##registry, Register_##id) \
 	REGISTER_INIT(id)
 
-#define REGISTRY_PUSH(registry, fld, it) MACRO_BEGIN { \
+#define REGISTRY_PUSH(registry, fld, it) MACRO_BEGIN \
 	it.fld = registry##_COUNT; \
 	_R_SET(_##registry, registry##_COUNT, it); \
 	++registry##_COUNT; \
 	if (!registry##_first) registry##_first = it; \
 	if (registry##_last)   registry##_last.REGISTRY_NEXT = it; \
 	registry##_last = it; \
-} MACRO_END
+MACRO_END
 
-#define REGISTRY_RESERVE(registry, fld, id, suffix) MACRO_BEGIN { \
+#define REGISTRY_RESERVE(registry, fld, id, suffix) MACRO_BEGIN \
 	entity e = new_pure(registry_reserved); \
 	e.registered_id = #id "/" #suffix; \
 	REGISTRY_PUSH(registry, fld, e); \
-} MACRO_END
+MACRO_END
 
 #define REGISTER_INIT(id) ACCUMULATE void Register_##id##_init(entity this)
 
@@ -162,12 +170,10 @@ void Registry_send(string id, string hash);
 	STATIC_INIT(Registry_check_##id) \
 	{ \
 		/* Note: SHA256 isn't always available, use MD4 instead */ \
-		string algo = "MD4"; \
-		string join = ":"; \
-		string s = ""; \
+		string s = "", join = ":"; \
 		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
 		s = substring(s, strlen(join), -1); \
-		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
+		string h = REGISTRY_HASH(id) = strzone(digest_hex("MD4", s)); \
 		LOG_DEBUGF(#id ": %s\n[%s]", h, s); \
 	} \
 	void Registry_check(string r, string sv) \

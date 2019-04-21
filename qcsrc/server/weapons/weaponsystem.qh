@@ -12,7 +12,8 @@ void CL_SpawnWeaponentity(entity e, .entity weaponentity);
 
 vector CL_Weapon_GetShotOrg(float wpn);
 
-bool forbidWeaponUse(entity player);
+bool weaponUseForbidden(entity player);
+bool weaponLocked(entity player);
 
 void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset);
 

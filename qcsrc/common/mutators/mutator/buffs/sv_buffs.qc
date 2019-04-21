@@ -1,6 +1,6 @@
 #include "sv_buffs.qh"
 
-#include <common/triggers/target/music.qh>
+#include <common/mapobjects/target/music.qh>
 #include <common/gamemodes/_mod.qh>
 
 void buffs_DelayedInit(entity this);
@@ -210,7 +210,7 @@ float buff_Available(entity buff)
 		return false;
 	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
-	return cvar(strcat("g_buffs_", buff.m_name));
+	return cvar(strcat("g_buffs_", buff.netname));
 }
 
 .int buff_seencount;
@@ -423,17 +423,17 @@ void buff_Medic_Heal(entity this)
 {
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
 	{
-		if (!SAME_TEAM(it, this))
+		if (DIFF_TEAM(it, this))
 		{
 			continue;
 		}
-		float hp = GetResourceAmount(it, RESOURCE_HEALTH);
+		float hp = GetResource(it, RES_HEALTH);
 		if(hp >= autocvar_g_balance_health_regenstable)
 		{
 			continue;
 		}
 		Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-		SetResourceAmount(it, RESOURCE_HEALTH, bound(0, hp + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable));
+		SetResource(it, RES_HEALTH, bound(0, hp + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable));
 	});
 }
 
@@ -464,11 +464,11 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
 	if(STAT(BUFFS, frag_target) & BUFF_MEDIC.m_itemid)
-	if((GetResourceAmount(frag_target, RESOURCE_HEALTH) - frag_damage) <= 0)
+	if((GetResource(frag_target, RES_HEALTH) - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
-		frag_damage = max(5, GetResourceAmount(frag_target, RESOURCE_HEALTH) - autocvar_g_buffs_medic_survive_health);
+		frag_damage = max(5, GetResource(frag_target, RES_HEALTH) - autocvar_g_buffs_medic_survive_health);
 
 	if(STAT(BUFFS, frag_target) & BUFF_JUMP.m_itemid)
 	if(frag_deathtype == DEATH_FALL.m_id)
@@ -494,10 +494,12 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(STAT(BUFFS, frag_attacker) & BUFF_BASH.m_itemid)
 	if(frag_force)
-	if(frag_attacker == frag_target)
-		frag_force *= autocvar_g_buffs_bash_force_self;
-	else
-		frag_force *= autocvar_g_buffs_bash_force;
+	{
+		if(frag_attacker == frag_target)
+			frag_force *= autocvar_g_buffs_bash_force_self;
+		else
+			frag_force *= autocvar_g_buffs_bash_force;
+	}
 
 	if(STAT(BUFFS, frag_attacker) & BUFF_DISABILITY.m_itemid)
 	if(frag_target != frag_attacker)
@@ -542,13 +544,13 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
 		float amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
-			GetResourceAmount(frag_target, RESOURCE_HEALTH));
-		GiveResourceWithLimit(frag_attacker, RESOURCE_HEALTH, amount, g_pickup_healthsmall_max);
-		if (frag_target.armorvalue)
+			GetResource(frag_target, RES_HEALTH));
+		GiveResourceWithLimit(frag_attacker, RES_HEALTH, amount, g_pickup_healthsmall_max);
+		if (GetResource(frag_target, RES_ARMOR))
 		{
 			amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
-				GetResourceAmount(frag_target, RESOURCE_ARMOR));
-			GiveResourceWithLimit(frag_attacker, RESOURCE_ARMOR, amount, g_pickup_armorsmall_max);
+				GetResource(frag_target, RES_ARMOR));
+			GiveResourceWithLimit(frag_attacker, RES_ARMOR, amount, g_pickup_armorsmall_max);
 		}
 	}
 
@@ -680,11 +682,21 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 
 			closest.velocity = my_vel;
 			closest.angles = my_ang;
+			if (IS_BOT_CLIENT(closest))
+			{
+				closest.v_angle = closest.angles;
+				bot_aim_reset(closest);
+			}
 			closest.fixangle = true;
 			closest.oldorigin = my_org;
 			closest.oldvelocity = my_vel;
 			player.velocity = their_vel;
 			player.angles = their_ang;
+			if (IS_BOT_CLIENT(player))
+			{
+				player.v_angle = player.angles;
+				bot_aim_reset(player);
+			}
 			player.fixangle = true;
 			player.oldorigin = their_org;
 			player.oldvelocity = their_vel;
@@ -926,7 +938,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONADD(BUFF_INVISIBLE)
 		{
-			if(time < player.strength_finished && g_instagib)
+			if(time < player.strength_finished && MUTATOR_IS_ENABLED(mutator_instagib))
 				player.buff_invisible_prev_alpha = default_player_alpha; // we don't want to save the powerup's alpha, as player may lose the powerup while holding the buff
 			else
 				player.buff_invisible_prev_alpha = player.alpha;
@@ -935,7 +947,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONREM(BUFF_INVISIBLE)
 		{
-			if(time < player.strength_finished && g_instagib)
+			if(time < player.strength_finished && MUTATOR_IS_ENABLED(mutator_instagib))
 				player.alpha = autocvar_g_instagib_invis_alpha;
 			else
 				player.alpha = player.buff_invisible_prev_alpha;

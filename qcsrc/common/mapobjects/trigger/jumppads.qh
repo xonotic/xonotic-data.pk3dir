@@ -1,0 +1,63 @@
+#pragma once
+
+
+const int PUSH_ONCE = BIT(0); // legacy, deactivate with relay instead
+const int PUSH_SILENT = BIT(1); // not used?
+
+IntrusiveList g_jumppads;
+STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
+
+.float pushltime;
+.bool istypefrag;
+.float height;
+
+const int NUM_JUMPPADSUSED = 3;
+.float jumppadcount;
+.entity jumppadsused[NUM_JUMPPADSUSED];
+
+#ifdef SVQC
+void SUB_UseTargets(entity this, entity actor, entity trigger);
+void trigger_push_use(entity this, entity actor, entity trigger);
+bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vector org);
+bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector org);
+#endif
+
+/*
+	trigger_push_calculatevelocity
+
+	Arguments:
+	  org - origin of the object which is to be pushed
+	  tgt - target entity (can be either a point or a model entity; if it is
+	        the latter, its midpoint is used)
+	  ht  - jump height, measured from the higher one of org and tgt's midpoint
+	  pushed_entity - object that is to be pushed
+
+	Returns: velocity for the jump
+ */
+vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity pushed_entity);
+
+void trigger_push_touch(entity this, entity toucher);
+
+.vector dest;
+bool trigger_push_test(entity this, entity item);
+void trigger_push_findtarget(entity this);
+
+/*
+ * ENTITY PARAMETERS:
+ *
+ *   target:  target of jump
+ *   height:  the absolute value is the height of the highest point of the jump
+ *            trajectory above the higher one of the player and the target.
+ *            the sign indicates whether the highest point is INSIDE (positive)
+ *            or OUTSIDE (negative) of the jump trajectory. General rule: use
+ *            positive values for targets mounted on the floor, and use negative
+ *            values to target a point on the ceiling.
+ *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
+ */
+#ifdef SVQC
+spawnfunc(trigger_push);
+
+spawnfunc(target_push);
+spawnfunc(info_notnull);
+spawnfunc(target_position);
+#endif

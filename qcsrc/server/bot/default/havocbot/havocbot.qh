@@ -23,6 +23,7 @@
 .float havocbot_stickenemy;
 .float havocbot_role_timeout;
 
+.float bot_stop_moving_timeout;
 .float bot_tracewalk_time;
 .entity ignoregoal;
 .entity bot_lastseengoal;
@@ -61,5 +62,3 @@ void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrat
  */
 
 .entity draggedby;
-.float ladder_time;
-.entity ladder_entity;

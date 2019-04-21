@@ -130,7 +130,7 @@ REGISTER_WEAPON(Null, NEW(Weapon));
 Weapon Weapons_fromstr(string s)
 {
     FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
-    return NULL;
+    return WEP_Null;
 }
 
 
@@ -144,9 +144,9 @@ X(weaponstart, float)
 X(weaponthrowable, float)
 #ifdef SVQC
 X(reload_ammo, float)
-.float reloading_ammo = reload_ammo;
+const .float reloading_ammo = reload_ammo;
 X(reload_time, float)
-.float reloading_time = reload_time;
+const .float reloading_time = reload_time;
 #endif
 #undef X
 
@@ -304,7 +304,6 @@ STATIC_INIT(register_weapons_done)
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
         if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
-        it.weapons = set;
         if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)
@@ -368,4 +367,8 @@ ENUMCLASS_END(WFRAME)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
+
+#ifdef SVQC
+void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
+#endif
 #endif

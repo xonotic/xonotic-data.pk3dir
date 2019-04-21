@@ -48,19 +48,29 @@ const int IT_UNLIMITED_AMMO            	= IT_UNLIMITED_WEAPON_AMMO | IT_UNLIMITE
 const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
 
 #ifdef SVQC
-.float  strength_finished = _STAT(STRENGTH_FINISHED);
-.float  invincible_finished = _STAT(INVINCIBLE_FINISHED);
+const .float strength_finished = _STAT(STRENGTH_FINISHED);
+const .float invincible_finished = _STAT(INVINCIBLE_FINISHED);
+
+#define spawnfunc_body(item) \
+	if (!Item_IsDefinitionAllowed(item)) \
+	{ \
+		startitem_failed = true; \
+		delete(this); \
+		return; \
+	} \
+	StartItem(this, item)
 
 #define SPAWNFUNC_ITEM(name, item) \
-    spawnfunc(name) \
+	spawnfunc(name) \
 	{ \
-		if (!Item_IsDefinitionAllowed(item)) \
-		{ \
-			startitem_failed = true; \
-			delete(this); \
-			return; \
-		} \
-		StartItem(this, item); \
+		spawnfunc_body(item); \
+	}
+
+#define SPAWNFUNC_ITEM_COND(name, cond, item1, item2) \
+	spawnfunc(name) \
+	{ \
+		entity item = (cond) ? item1 : item2; \
+		spawnfunc_body(item); \
 	}
 
 #else
@@ -72,9 +82,8 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 enum
 {
 	ITEM_FLAG_NORMAL = BIT(0), ///< Item is usable during normal gameplay.
-	ITEM_FLAG_INSTAGIB = BIT(1), ///< Item is usable in instagib.
-	ITEM_FLAG_OVERKILL = BIT(2), ///< Item is usable in overkill.
-	ITEM_FLAG_MUTATORBLOCKED = BIT(3)
+	ITEM_FLAG_MUTATORBLOCKED = BIT(1),
+	ITEM_FLAG_RESOURCE = BIT(2) ///< Item is is a resource, not a held item.
 };
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)

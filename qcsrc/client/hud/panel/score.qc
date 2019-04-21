@@ -140,7 +140,7 @@ void HUD_Score()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
-		if(spectatee_status == -1 && (gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
+		if(spectatee_status == -1 && (ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
 	}
 
 	HUD_Panel_LoadCvars();
