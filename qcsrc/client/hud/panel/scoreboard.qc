@@ -841,7 +841,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 	vector pos = item_pos;
 	// put a "self indicator" beside the self row
-	sbt_font_self = "◀"; // unicode U+25C0 (black left-pointing triangle)
+	sbt_font_self = "\xE2\x97\x80"; // unicode U+25C0 (black left-pointing triangle)
 	if (is_self)
 		drawstring(pos+eX*(panel_size.x+.5*hud_fontsize.x)+eY, sbt_font_self, vec2(hud_fontsize.x, hud_fontsize.y), rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
