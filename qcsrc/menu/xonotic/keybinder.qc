@@ -26,6 +26,9 @@ void KeyBinds_Read()
 		} \
 	MACRO_END
 
+	#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
+	#define KEYBIND_SPECIAL_DEF(key) KEYBIND_DEF(strcat("*", key), "")
+
 	KEYBIND_DEF(""                                      , _("Moving"));
 	KEYBIND_DEF("+forward"                              , _("forward"));
 	KEYBIND_DEF("+back"                                 , _("backpedal"));
@@ -92,7 +95,11 @@ void KeyBinds_Read()
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("Client"));
 	KEYBIND_DEF("+show_info"                            , _("server info"));
+	// display the hardcoded shortcut to open the console as it works for all
+	// non-English keyboard layouts, unlike default keys (` and ~)
 	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
+		// TODO make it translatable together with all key names
+		KEYBIND_SPECIAL_DEF("SHIFT+ESC");
 	KEYBIND_DEF("disconnect"                            , _("disconnect"));
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
 	KEYBIND_DEF(""                                      , "");
@@ -185,7 +192,7 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 void KeyBinder_Bind_Change(entity btn, entity me)
 {
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	me.keyGrabButton.forcePressed = 1;
@@ -211,7 +218,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 	}
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
@@ -255,7 +262,7 @@ void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandP
 		return;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	string descr = KeyBinds_Descriptions[me.selectedItem];
@@ -274,7 +281,7 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 		return;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	string descr = KeyBinds_Descriptions[me.selectedItem];
@@ -292,7 +299,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	float n, j, k;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
@@ -323,6 +330,11 @@ void XonoticKeyBinder_setSelected(entity me, int i)
 {
 	// handling of "unselectable" items
 	i = floor(0.5 + bound(0, i, me.nItems - 1));
+	if (KEYBIND_IS_SPECIAL(KeyBinds_Functions[i]))
+	{
+		SUPER(XonoticKeyBinder).setSelected(me, i - 1);
+		return;
+	}
 	if(me.pressed == 0 || me.pressed == 1) // keyboard or scrolling - skip unselectable items
 	{
 		if(i > me.previouslySelected)
@@ -419,10 +431,16 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 
 	s = draw_TextShortenToWidth(descr, me.columnFunctionSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	if(func != "")
+
+	if (func == "")
+		return;
+
+	s = "";
+	if (KEYBIND_IS_SPECIAL(func))
+		s = substring(func, 1, -1);
+	else
 	{
 		n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
-		s = "";
 		for(j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));
@@ -433,7 +451,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 				s = strcat(s, keynumtostring(k));
 			}
 		}
-		s = draw_TextShortenToWidth(s, me.columnKeysSize, 0, me.realFontSize);
-		draw_CenterText(me.realUpperMargin * eY + (me.columnKeysOrigin + 0.5 * me.columnKeysSize) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	}
+	s = draw_TextShortenToWidth(s, me.columnKeysSize, 0, me.realFontSize);
+	draw_CenterText(me.realUpperMargin * eY + (me.columnKeysOrigin + 0.5 * me.columnKeysSize) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
