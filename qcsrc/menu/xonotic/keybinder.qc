@@ -26,10 +26,13 @@ void KeyBinds_Read()
 		} \
 	MACRO_END
 
+	#define KEYBIND_EMPTY_LINE() KEYBIND_DEF("", "")
+	#define KEYBIND_HEADER(str) KEYBIND_DEF("", str)
+
 	#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
 	#define KEYBIND_SPECIAL_DEF(key) KEYBIND_DEF(strcat("*", key), "")
 
-	KEYBIND_DEF(""                                      , _("Moving"));
+	KEYBIND_HEADER(_("Moving"));
 	KEYBIND_DEF("+forward"                              , _("forward"));
 	KEYBIND_DEF("+back"                                 , _("backpedal"));
 	KEYBIND_DEF("+moveleft"                             , _("strafe left"));
@@ -38,12 +41,14 @@ void KeyBinds_Read()
 	KEYBIND_DEF("+crouch"                               , _("crouch / sink"));
 	KEYBIND_DEF("+hook"                                 , _("off-hand hook"));
 	KEYBIND_DEF("+jetpack"                              , _("jetpack"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Attacking"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Attacking"));
 	KEYBIND_DEF("+fire"                                 , _("primary fire"));
 	KEYBIND_DEF("+fire2"                                , _("secondary fire"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Weapons"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Weapons"));
 	KEYBIND_DEF("weapprev"                              , CTX(_("WEAPON^previous")));
 	KEYBIND_DEF("weapnext"                              , CTX(_("WEAPON^next")));
 	KEYBIND_DEF("weaplast"                              , CTX(_("WEAPON^previously used")));
@@ -75,8 +80,9 @@ void KeyBinds_Read()
 	}
 	#undef ADD_TO_W_LIST
 
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("View"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("View"));
 	KEYBIND_DEF("+zoom"                                 , _("hold zoom"));
 	KEYBIND_DEF("togglezoom"                            , _("toggle zoom"));
 	KEYBIND_DEF("+showscores"                           , _("show scores"));
@@ -84,16 +90,18 @@ void KeyBinds_Read()
 	KEYBIND_DEF("+hud_panel_radar_maximized"            , _("maximize radar"));
 	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
 	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Communicate"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Communicate"));
 	KEYBIND_DEF("messagemode"                           , _("public chat"));
 	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("+con_chat_maximize"                    , _("show chat history"));
 	KEYBIND_DEF("vyes"                                  , _("vote YES"));
 	KEYBIND_DEF("vno"                                   , _("vote NO"));
 	KEYBIND_DEF("ready"                                 , _("ready"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Client"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Client"));
 	KEYBIND_DEF("+show_info"                            , _("server info"));
 	// display the hardcoded shortcut to open the console as it works for all
 	// non-English keyboard layouts, unlike default keys (` and ~)
@@ -102,20 +110,23 @@ void KeyBinds_Read()
 		KEYBIND_SPECIAL_DEF("SHIFT+ESC");
 	KEYBIND_DEF("disconnect"                            , _("disconnect"));
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Teamplay"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Teamplay"));
 	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
 	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
 	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Misc"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Misc"));
 	KEYBIND_DEF("kill"                                  , _("respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
 	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
 	KEYBIND_DEF("+button8"                              , _("drag object"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("User defined"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("User defined"));
 
 	for(i = 1; i <= 32; ++i)
 		KEYBIND_DEF(strcat("+userbind ", itos(i)), strcat("$userbind", itos(i)));
