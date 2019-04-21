@@ -34,7 +34,6 @@ bool sbt_highlight;
 float sbt_highlight_alpha;
 float sbt_highlight_alpha_self;
 int sbt_team_size_position;
-int sbt_team_size_total;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
@@ -1665,11 +1664,6 @@ void Scoreboard_Draw()
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
 
-	// calculate team size total (sum of all team sizes)
-	sbt_team_size_total = 0;
-	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		sbt_team_size_total += tm.team_size;
-
 	// Draw the scoreboard
 	float scale = autocvar_hud_panel_scoreboard_table_bg_scale;
 	if(scale <= 0)
@@ -1704,6 +1698,15 @@ void Scoreboard_Draw()
 			}
 		}
 
+		int team_size_total = 0;
+		if (sbt_team_size_position != 0) // team size not off
+		{
+			// calculate team size total (sum of all team sizes)
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				if(tm.team != NUM_SPECTATOR)
+					team_size_total += tm.team_size;
+		}
+
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
@@ -1730,7 +1733,7 @@ void Scoreboard_Draw()
 			if (sbt_team_size_position != 0) // team size not off
 			{
 				// calculate the starting position for the whole team size info string
-				str = sprintf("%d/%d", tm.team_size, sbt_team_size_total);
+				str = sprintf("%d/%d", tm.team_size, team_size_total);
 				if (sbt_team_size_position == 1)
 				{
 					// team size on the left
@@ -1744,7 +1747,7 @@ void Scoreboard_Draw()
 				str = sprintf("%d", tm.team_size);
 				drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 				str_pos += eX * stringwidth(str, true, hud_fontsize * 1.5) + eY * hud_fontsize.y * .5;
-				str = sprintf("/%d", sbt_team_size_total);
+				str = sprintf("/%d", team_size_total);
 				drawstring(str_pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
