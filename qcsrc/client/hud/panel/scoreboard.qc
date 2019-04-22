@@ -33,7 +33,6 @@ float sbt_fg_alpha_self;
 bool sbt_highlight;
 float sbt_highlight_alpha;
 float sbt_highlight_alpha_self;
-int sbt_team_size_position;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
@@ -561,7 +560,6 @@ string sbt_field_icon2;
 vector sbt_field_icon0_rgb;
 vector sbt_field_icon1_rgb;
 vector sbt_field_icon2_rgb;
-string sbt_font_self;
 string Scoreboard_GetName(entity pl)
 {
 	if(ready_waiting && pl.ready)
@@ -581,6 +579,7 @@ string Scoreboard_GetName(entity pl)
 	}
 	return entcs_GetName(pl.sv_entnum);
 }
+
 string Scoreboard_GetField(entity pl, PlayerScoreField field)
 {
 	float tmp, num, denom;
@@ -597,7 +596,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 	{
 		case SP_PING:
 			if (!pl.gotscores)
-				return "\xE2\x96\xB6\xE2\x96\xB6\xE2\x96\xB6"; // >>> sign using U+25B6
+				return "\xE2\x96\xB6\xE2\x96\xB6\xE2\x96\xB6"; // >>> sign using U+25B6 (Black Right-Pointing Triangle)
 			//str = getplayerkeyvalue(pl.sv_entnum, "ping");
 			f = pl.ping;
 			if(f == 0)
@@ -840,10 +839,9 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	float fg_alpha = (is_self ? sbt_fg_alpha_self : sbt_fg_alpha);
 
 	vector pos = item_pos;
-	// put a "self indicator" beside the self row
-	sbt_font_self = "\xE2\x97\x80"; // unicode U+25C0 (black left-pointing triangle)
+	// put a "self indicator" beside the self row, unicode U+25C0 (black left-pointing triangle)
 	if (is_self)
-		drawstring(pos+eX*(panel_size.x+.5*hud_fontsize.x)+eY, sbt_font_self, vec2(hud_fontsize.x, hud_fontsize.y), rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos+eX*(panel_size.x+.5*hud_fontsize.x)+eY, "\xE2\x97\x80", vec2(hud_fontsize.x, hud_fontsize.y), rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	pos.x += hud_fontsize.x * 0.5;
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
@@ -1573,7 +1571,6 @@ void Scoreboard_Draw()
 	sbt_highlight_alpha_self = autocvar_hud_panel_scoreboard_table_highlight_alpha_self * panel_fg_alpha;
 	sbt_fg_alpha = autocvar_hud_panel_scoreboard_table_fg_alpha * panel_fg_alpha;
 	sbt_fg_alpha_self = autocvar_hud_panel_scoreboard_table_fg_alpha_self * panel_fg_alpha;
-	sbt_team_size_position = autocvar_hud_panel_scoreboard_team_size_position;
 
 	// don't overlap with con_notify
 	if(!autocvar__hud_configure)
@@ -1675,7 +1672,7 @@ void Scoreboard_Draw()
 		vector panel_bg_color_save = panel_bg_color;
 		vector team_score_baseoffset;
 		vector team_size_baseoffset;
-		if (sbt_team_size_position != 1) // team size not on left
+		if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 		{
 			// put team score to the left of scoreboard (and team size to the right)
 			team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
@@ -1699,7 +1696,7 @@ void Scoreboard_Draw()
 		}
 
 		int team_size_total = 0;
-		if (sbt_team_size_position != 0) // team size not off
+		if (autocvar_hud_panel_scoreboard_team_size_position != 0) // team size not off
 		{
 			// calculate team size total (sum of all team sizes)
 			for(tm = teams.sort_next; tm; tm = tm.sort_next)
@@ -1717,7 +1714,7 @@ void Scoreboard_Draw()
 			draw_beginBoldFont();
 			vector rgb = Team_ColorRGB(tm.team);
 			str = ftos(tm.(teamscores(ts_primary)));
-			if (sbt_team_size_position != 1) // team size not on left
+			if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 			{
 				// team score on the left (default)
 				str_pos = pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
@@ -1730,11 +1727,11 @@ void Scoreboard_Draw()
 			drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// team size (if set to show on the side)
-			if (sbt_team_size_position != 0) // team size not off
+			if (autocvar_hud_panel_scoreboard_team_size_position != 0) // team size not off
 			{
 				// calculate the starting position for the whole team size info string
 				str = sprintf("%d/%d", tm.team_size, team_size_total);
-				if (sbt_team_size_position == 1)
+				if (autocvar_hud_panel_scoreboard_team_size_position == 1)
 				{
 					// team size on the left
 					str_pos = pos + team_size_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
@@ -1756,7 +1753,7 @@ void Scoreboard_Draw()
 			if(ts_primary != ts_secondary)
 			{
 				str = ftos(tm.(teamscores(ts_secondary)));
-				if (sbt_team_size_position != 1) // team size not on left
+				if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 				{
 					// left
 					str_pos = pos + team_score_baseoffset - vec2(stringwidth(str, false, hud_fontsize), hud_fontsize.y * -1.5);
@@ -1785,6 +1782,7 @@ void Scoreboard_Draw()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 			if(tm.team != NUM_SPECTATOR)
 				break;
+
 		// display it anyway
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
