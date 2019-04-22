@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-14 07:23+0200\n"
-"PO-Revision-Date: 2019-04-14 08:12+0000\n"
+"PO-Revision-Date: 2019-04-21 12:21+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -9582,7 +9582,7 @@ msgstr "Victoires/Défaites :"
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Win percentage:"
-msgstr "% victoires :"
+msgstr "Pourcentage victoires :"
 
 #: qcsrc/menu/xonotic/statslist.qc:166
 #, c-format

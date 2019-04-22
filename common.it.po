@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-14 07:23+0200\n"
-"PO-Revision-Date: 2019-04-14 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-04-21 12:48+0000\n"
+"Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -7121,7 +7121,7 @@ msgstr "Gioco"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:23
 msgid "Input"
-msgstr "Comandi"
+msgstr "Controlli"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:24
 msgid "User"
@@ -7360,11 +7360,11 @@ msgstr "Info di debug sui suoni"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
-msgstr ""
+msgstr "Sei sicuro di voler reimpostare tutte le associazioni dei tasti?"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qh:6
 msgid "Reset key bindings"
-msgstr ""
+msgstr "Reimposta associazioni dei tasti"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:41
 msgid "Quality preset:"
