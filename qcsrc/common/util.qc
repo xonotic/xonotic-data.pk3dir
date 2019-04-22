@@ -1459,19 +1459,6 @@ string translate_key(string key)
 		case "CTRL":			return _("CTRL");
 		case "SHIFT":			return _("SHIFT");
 
-		case "F1":				return _("F1");
-		case "F2":				return _("F2");
-		case "F3":				return _("F3");
-		case "F4":				return _("F4");
-		case "F5":				return _("F5");
-		case "F6":				return _("F6");
-		case "F7":				return _("F7");
-		case "F8":				return _("F8");
-		case "F9":				return _("F9");
-		case "F10":				return _("F10");
-		case "F11":				return _("F11");
-		case "F12":				return _("F12");
-
 		case "INS":				return _("INS");
 		case "DEL":				return _("DEL");
 		case "PGDN":			return _("PGDN");
@@ -1491,6 +1478,16 @@ string translate_key(string key)
 		case "QUOTE":			return _("QUOTE");
 		case "APOSTROPHE":		return _("APOSTROPHE");
 		case "BACKSLASH":		return _("BACKSLASH");
+	}
+
+	if (substring(key, 0, 1) == "F")
+	{
+		string subkey = substring(key, 1, -1);
+		if (IS_DIGIT(substring(key, 3, 1))) // check only first digit
+		{
+			return sprintf(_("F%d"), stof(subkey));
+		}
+		// continue in case there is another key name starting with F
 	}
 
 	if (substring(key, 0, 3) == "KP_")
