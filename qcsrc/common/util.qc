@@ -1442,6 +1442,12 @@ string translate_key(string key)
 {
 	if (prvm_language == "en") return key;
 
+	if (substring(key, 0, 1) == "<")
+	{
+		if (key == "<KEY NOT FOUND>") return _("<KEY NOT FOUND>");
+		if (key == "<UNKNOWN KEYNUM>") return _("<UNKNOWN KEYNUM>");
+	}
+
 	switch(key)
 	{
 		case "TAB":				return _("TAB");
