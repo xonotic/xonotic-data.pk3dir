@@ -29,7 +29,11 @@ void HUD_MinigameBoard ()
 	entity hud_minigame = NULL;
 
 	if(!autocvar__hud_configure)
+	{
+		if (!active_minigame)
+			return;
 		hud_minigame = active_minigame.descriptor;
+	}
 	else
 		hud_minigame = minigame_get_descriptor("nmm");
 
@@ -55,7 +59,11 @@ void HUD_MinigameStatus ()
 	entity hud_minigame = NULL;
 
 	if(!autocvar__hud_configure)
+	{
+		if (!active_minigame)
+			return;
 		hud_minigame = active_minigame.descriptor;
+	}
 	else
 		hud_minigame = minigame_get_descriptor("nmm");
 
@@ -534,7 +542,11 @@ void HUD_MinigameHelp()
 	string help_message;
 
 	if(!autocvar__hud_configure)
+	{
+		if (!active_minigame)
+			return;
 		help_message = active_minigame.message;
+	}
 	else
 		help_message = "Minigame message";
 
