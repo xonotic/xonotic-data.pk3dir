@@ -1484,6 +1484,13 @@ string translate_key(string key)
 		case "NUMLOCK":			return _("NUMLOCK");
 		case "CAPSLOCK":		return _("CAPSLOCK");
 		case "SCROLLOCK":		return _("SCROLLOCK");
+
+		case "SEMICOLON":		return _("SEMICOLON");
+		case "TILDE":			return _("TILDE");
+		case "BACKQUOTE":		return _("BACKQUOTE");
+		case "QUOTE":			return _("QUOTE");
+		case "APOSTROPHE":		return _("APOSTROPHE");
+		case "BACKSLASH":		return _("BACKSLASH");
 	}
 
 	if (substring(key, 0, 3) == "KP_")
