@@ -1,5 +1,5 @@
 #include "pong.qh"
-REGISTER_MINIGAME(pong, "Pong");
+REGISTER_MINIGAME(pong, _("Pong"));
 
 // minigame flags
 const int PONG_STATUS_WAIT = 0x0010; // waiting for players to join

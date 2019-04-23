@@ -1,5 +1,5 @@
 #include "pp.qh"
-REGISTER_MINIGAME(pp, "Push-Pull");
+REGISTER_MINIGAME(pp, _("Push-Pull"));
 
 const int PP_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int PP_TURN_WIN   = 0x0200; // player has won

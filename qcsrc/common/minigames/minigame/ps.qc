@@ -1,5 +1,5 @@
 #include "ps.qh"
-REGISTER_MINIGAME(ps, "Peg Solitaire");
+REGISTER_MINIGAME(ps, _("Peg Solitaire"));
 
 const float PS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board
 const float PS_TURN_WIN   = 0x0200; // player has won

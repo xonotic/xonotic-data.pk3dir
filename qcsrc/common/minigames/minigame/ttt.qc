@@ -1,5 +1,5 @@
 #include "ttt.qh"
-REGISTER_MINIGAME(ttt, "Tic Tac Toe");
+REGISTER_MINIGAME(ttt, _("Tic Tac Toe"));
 
 const int TTT_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int TTT_TURN_WIN   = 0x0200; // player has won

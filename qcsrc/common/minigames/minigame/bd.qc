@@ -1,5 +1,5 @@
 #include "bd.qh"
-REGISTER_MINIGAME(bd, "Bulldozer");
+REGISTER_MINIGAME(bd, _("Bulldozer"));
 
 REGISTER_NET_LINKED(ENT_CLIENT_BD_CONTROLLER)
 

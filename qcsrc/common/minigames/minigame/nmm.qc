@@ -4,7 +4,7 @@
 #include <client/miscfunctions.qh>
 #endif
 
-REGISTER_MINIGAME(nmm, "Nine Men's Morris");
+REGISTER_MINIGAME(nmm, _("Nine Men's Morris"));
 
 const int NMM_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int NMM_TURN_MOVE  = 0x0200; // player has to move a piece by one tile
