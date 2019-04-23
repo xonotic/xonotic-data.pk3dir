@@ -1089,22 +1089,20 @@ void bd_hud_board(vector pos, vector mySize)
 	if ( (active_minigame.minigame_flags & BD_TURN_LOSS) || (active_minigame.minigame_flags & BD_TURN_WIN) )
 	{
 		vector winfs = hud_fontsize*2;
-		string victory_text = "Game over!";
+		string victory_text = _("Game over!");
 
 		if(active_minigame.minigame_flags & BD_TURN_WIN)
-			victory_text = "Well done! Click 'Next Level' to continue";
+			victory_text = _("Well done! Click 'Next Level' to continue");
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s", victory_text),
-			winfs, 0, DRAWFLAG_NORMAL, 0.5);
+			victory_text, winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'0.3 0.3 1',0.8,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s", victory_text),
-			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
+			victory_text, winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
 

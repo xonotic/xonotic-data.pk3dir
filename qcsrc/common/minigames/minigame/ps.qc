@@ -411,20 +411,20 @@ void ps_hud_board(vector pos, vector mySize)
 		vector winfs = hud_fontsize*2;
 		string remaining_text;
 		if(active_minigame.minigame_flags & PS_TURN_WIN)
-			remaining_text = "All pieces cleared!";
+			remaining_text = _("All pieces cleared!");
 		else
-			remaining_text = strcat("Remaining pieces: ", ftos(remaining));
+			remaining_text = strcat(_("Remaining pieces:"), " ", ftos(remaining));
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("Game over! %s", remaining_text),
+			strcat(_("Game over!"), " ", remaining_text),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("Game over! %s", remaining_text),
+			strcat(_("Game over!"), " ", remaining_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }

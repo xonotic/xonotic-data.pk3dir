@@ -564,7 +564,7 @@ void HUD_MinigameHelp()
 		help_message = active_minigame.message;
 	}
 	else
-		help_message = "Minigame message";
+		help_message = _("Minigame message");
 
 	if ( !help_message )
 		return;
