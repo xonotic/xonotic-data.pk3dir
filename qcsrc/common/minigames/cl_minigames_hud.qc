@@ -26,6 +26,9 @@ bool HUD_mouse_over(entity somepanel)
 // Draws the minigame game board
 void HUD_MinigameBoard ()
 {
+	if (!HUD_MinigameMenu_IsOpened())
+		return;
+
 	entity hud_minigame = NULL;
 
 	if(!autocvar__hud_configure)
@@ -56,6 +59,9 @@ void HUD_MinigameBoard ()
 // Draws the minigame status panel
 void HUD_MinigameStatus ()
 {
+	if (!HUD_MinigameMenu_IsOpened())
+		return;
+
 	entity hud_minigame = NULL;
 
 	if(!autocvar__hud_configure)
@@ -415,7 +421,7 @@ void HUD_MinigameMenu_CurrentButton()
 // Open the minigame menu panel
 void HUD_MinigameMenu_Open()
 {
-	if ( !HUD_MinigameMenu_IsOpened() )
+	if ( !mv_active && !HUD_MinigameMenu_IsOpened() )
 	{
 		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnEntry(
 			_("Create"), '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCreate),
@@ -476,6 +482,13 @@ void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
 // Minigame menu panel UI
 void HUD_MinigameMenu ()
 {
+	if (mv_active)
+	{
+		if (HUD_MinigameMenu_IsOpened())
+			HUD_MinigameMenu_Close(NULL, NULL, NULL);
+		return;
+	}
+
 	if ( !HUD_MinigameMenu_IsOpened() )
 		return;
 
@@ -539,6 +552,9 @@ void HUD_MinigameMenu ()
 
 void HUD_MinigameHelp()
 {
+	if (!HUD_MinigameMenu_IsOpened())
+		return;
+
 	string help_message;
 
 	if(!autocvar__hud_configure)
