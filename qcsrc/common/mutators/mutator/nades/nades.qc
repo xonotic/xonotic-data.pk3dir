@@ -1551,7 +1551,7 @@ MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 
 MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3nades^8 are enabled, press 'g' to use them\n");
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3nades^8 are enabled, press 'g' (dropweapon) to use them\n");
 }
 
 #endif
