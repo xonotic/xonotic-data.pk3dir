@@ -414,7 +414,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			// update needed
 			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
-			if(un_download) { LOG_INFOF(_("Update can be downloaded at:\n%s"), un_download); }
+			if(un_download) { LOG_INFO(_("Update can be downloaded at:"), "\n", un_download); }
 			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
 			DisableServerBackwardsCompatibility();
 		}
