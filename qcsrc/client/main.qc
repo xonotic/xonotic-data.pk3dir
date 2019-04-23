@@ -1261,6 +1261,8 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 				if(!joy_active && substring(key, 0, 3) == "JOY")
 					continue;
 
+				key = translate_key(key);
+
 				if (keys == "")
 					keys = key;
 				else

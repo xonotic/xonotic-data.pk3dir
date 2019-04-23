@@ -106,8 +106,7 @@ void KeyBinds_Read()
 	// display the hardcoded shortcut to open the console as it works for all
 	// non-English keyboard layouts, unlike default keys (` and ~)
 	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
-		// TODO make it translatable together with all key names
-		KEYBIND_SPECIAL_DEF("SHIFT+ESC");
+		KEYBIND_SPECIAL_DEF(strcat(translate_key("SHIFT"), "+", translate_key("ESCAPE")));
 	KEYBIND_DEF("disconnect"                            , _("disconnect"));
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
 	KEYBIND_EMPTY_LINE();
@@ -390,6 +389,7 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 	}
 	return r;
 }
+
 void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
@@ -459,7 +459,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 			{
 				if(s != "")
 					s = strcat(s, ", ");
-				s = strcat(s, keynumtostring(k));
+				s = strcat(s, translate_key(keynumtostring(k)));
 			}
 		}
 	}
