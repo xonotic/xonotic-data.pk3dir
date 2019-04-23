@@ -1399,7 +1399,12 @@ float get_model_parameters(string m, float sk)
 				case "reserved":    get_model_parameters_species = SPECIES_RESERVED;    break;
 			}
 		if(c == "sex")
+		{
+			if (s == "Male")				s = _("Male");
+			else if (s == "Female")			s = _("Female");
+			else if (s == "Undisclosed")	s = _("Undisclosed");
 			get_model_parameters_sex = s;
+		}
 		if(c == "weight")
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
