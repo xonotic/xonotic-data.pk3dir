@@ -1130,8 +1130,11 @@ bool Scoreboard_WouldDraw()
 		return true;
 	else if (intermission == 2)
 		return false;
-	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !ISGAMETYPE(CTS) && !active_minigame)
+	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !ISGAMETYPE(CTS)
+		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
+	{
 		return true;
+	}
 	else if (scoreboard_showscores_force)
 		return true;
 	return false;
