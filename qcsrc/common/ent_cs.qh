@@ -19,8 +19,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 /** True when a recent server sent origin has been received */
 .bool has_sv_origin;
-.int sv_solid;
 #endif
+.int sv_solid;
 
 #ifdef SVQC
 /*
