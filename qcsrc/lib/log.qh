@@ -35,9 +35,9 @@ void print_assertfailed_fatal(string expr);
 
 
 #if defined(MENUQC)
-string(string, ...) strcat1n = #53;
+string(string, string...) strcat1n = #53;
 #else
-string(string, ...) strcat1n = #115;
+string(string, string...) strcat1n = #115;
 #endif
 
 // would be nice if __FUNC__ could be concatenated at compile time

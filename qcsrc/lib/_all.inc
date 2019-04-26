@@ -133,7 +133,7 @@
 #include "oo.qh"
 #include "p2mathlib.qc"
 #include "progname.qh"
-//#include "promise.qc"
+#include "promise.qc"
 #include "random.qc"
 #include "registry.qh"
 #include "registry_net.qh"
