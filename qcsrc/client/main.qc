@@ -1124,7 +1124,10 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 		case RACE_NET_PENALTY_QUALIFYING:
 			race_penaltyeventtime = time;
 			race_penaltytime = ReadShort();
-			strcpy(race_penaltyreason, ReadString());
+			string reason = ReadString();
+			if (reason == "missing a checkpoint")
+				reason = _("missing a checkpoint");
+			strcpy(race_penaltyreason, reason);
 			if (b == RACE_NET_PENALTY_QUALIFYING)
 				race_penaltyaccumulator += race_penaltytime;
 			break;

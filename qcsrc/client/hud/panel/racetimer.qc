@@ -151,7 +151,7 @@ void HUD_RaceTimer ()
 		s = _("^1Intermediate 1 (+15.42)");
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
-		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, "missing a checkpoint");
+		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
