@@ -308,7 +308,7 @@ bool SetTeam(entity o, int Team)
 
 void Playerchecker_Think(entity this)
 {
-    int i;
+	int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)
 	{
@@ -1121,17 +1121,12 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			break;
 
 		case RACE_NET_PENALTY_RACE:
-			race_penaltyeventtime = time;
-			race_penaltytime = ReadShort();
-			//race_penaltyaccumulator += race_penaltytime;
-			strcpy(race_penaltyreason, ReadString());
-			break;
-
 		case RACE_NET_PENALTY_QUALIFYING:
 			race_penaltyeventtime = time;
 			race_penaltytime = ReadShort();
-			race_penaltyaccumulator += race_penaltytime;
 			strcpy(race_penaltyreason, ReadString());
+			if (b == RACE_NET_PENALTY_QUALIFYING)
+				race_penaltyaccumulator += race_penaltytime;
 			break;
 
 		case RACE_NET_SERVER_RECORD:
@@ -1152,12 +1147,12 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			break;
 		case RACE_NET_SERVER_RANKINGS:
 			float prevpos, del;
-            int pos = ReadShort();
+			int pos = ReadShort();
 			prevpos = ReadShort();
 			del = ReadShort();
 
 			// move other rankings out of the way
-            int i;
+			int i;
 			if (prevpos) {
 				int m = min(prevpos, RANKINGS_DISPLAY_CNT);
 				for (i=m-1; i>pos-1; --i) {
