@@ -2397,7 +2397,7 @@ void PlayerPreThink (entity this)
 	if (this.netname == "" || this.netname != CS(this).netname_previous)
 	{
 		bool assume_unchanged = (CS(this).netname_previous == "");
-		if (strlennocol(this.netname) > autocvar_name_maxlength)
+		if (autocvar_name_maxlength > 0 && strlennocol(this.netname) > autocvar_name_maxlength)
 		{
 			int new_length = textLengthUpToLength(this.netname, autocvar_name_maxlength, strlennocol);
 			this.netname = strzone(strcat(substring(this.netname, 0, new_length), "^7"));
