@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-28 05:23+0000\n"
+"PO-Revision-Date: 2019-04-28 10:31+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -44,7 +44,7 @@ msgstr "^1Не удалось записать в %s"
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Сообщение отсчёта начала матча в течение %s, секунд осталось: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:142
 #, c-format
@@ -52,15 +52,17 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Многострочное сообщение в течение %s , которое\n"
+"^1отображается дольше, чем обычное"
 
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Сообщение в течение %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "Общее сообщение"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -556,19 +558,19 @@ msgstr "Промежуточное %d"
 #: qcsrc/client/hud/panel/racetimer.qc:262
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "ШТРАФ: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154 qcsrc/client/main.qc:1129
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "пропущена контрольная точка"
 
 #: qcsrc/client/hud/panel/radar.qc:373
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Кликните для выбора точки назначения телепорта"
 
 #: qcsrc/client/hud/panel/radar.qc:377
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Кликните для выбора точки возрождения"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "Number of ball carrier kills"
@@ -1030,13 +1032,13 @@ msgstr "Рейтинг"
 #: qcsrc/client/hud/panel/scoreboard.qc:1613
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f минуты"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1622
 #: qcsrc/client/hud/panel/scoreboard.qc:1629
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1623
 #: qcsrc/client/hud/panel/scoreboard.qc:1630
@@ -1056,12 +1058,12 @@ msgstr "SCO^побит"
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1659
 #, c-format
 msgid "^7Map: ^2%s"
-msgstr ""
+msgstr "^7Карта: ^2%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1798
 #, c-format
@@ -1548,11 +1550,11 @@ msgstr "Мини-игры"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:567
 msgid "Minigame message"
-msgstr ""
+msgstr "Сообщение мини-игры"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Бульдозер"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1092
 #: qcsrc/common/minigames/minigame/ps.qc:421
@@ -1562,7 +1564,7 @@ msgstr "Игра окончена!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Отличная работа! Нажмите \"Следующий уровень\" для продолжения"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
@@ -1603,7 +1605,7 @@ msgstr "Сохранение"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Четыре в ряд"
 
 #: qcsrc/common/minigames/minigame/c4.qc:311
 #: qcsrc/common/minigames/minigame/c4.qc:317
@@ -1613,7 +1615,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:368
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 одержал победу в игре!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
@@ -1651,7 +1653,7 @@ msgstr "Кликнете по игровой доске для размещен�
 
 #: qcsrc/common/minigames/minigame/nmm.qc:7
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "Девять людей Мориса"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 msgid ""
@@ -1670,7 +1672,7 @@ msgstr "Вы можете взять одну из частей противни
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "Понг"
 
 #: qcsrc/common/minigames/minigame/pong.qc:589
 #: qcsrc/common/minigames/minigame/ttt.qc:299
@@ -1695,12 +1697,12 @@ msgstr "Удалить бота"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "Тяни-толкай"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr ""
+msgstr "Выберите в меню \"^1Следующий матч^7\" для переигровки матча!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1721,15 +1723,15 @@ msgstr "Следующий матч"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "Солитер"
 
 #: qcsrc/common/minigames/minigame/ps.qc:414
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Все части собраны!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Оставшиеся части:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:481
 #, c-format
@@ -1750,7 +1752,7 @@ msgstr "Перепрыгните часть, чтобы захватить её"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "Крестики-нолики"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Single Player"
@@ -4779,144 +4781,144 @@ msgstr "Не указан"
 
 #: qcsrc/common/util.qc:1452
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<KEY NOT FOUND>"
 
 #: qcsrc/common/util.qc:1453
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<UNKNOWN KEYNUM>"
 
 #: qcsrc/common/util.qc:1458
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #: qcsrc/common/util.qc:1459 qcsrc/common/util.qc:1530
 #, c-format
 msgid "ENTER"
-msgstr ""
+msgstr "ENTER"
 
 #: qcsrc/common/util.qc:1460
 msgid "ESCAPE"
-msgstr ""
+msgstr "ESCAPE"
 
 #: qcsrc/common/util.qc:1461
 msgid "SPACE"
-msgstr ""
+msgstr "SPACE"
 
 #: qcsrc/common/util.qc:1463
 msgid "BACKSPACE"
-msgstr ""
+msgstr "BACKSPACE"
 
 #: qcsrc/common/util.qc:1464 qcsrc/common/util.qc:1521
 #, c-format
 msgid "UPARROW"
-msgstr ""
+msgstr "UPARROW"
 
 #: qcsrc/common/util.qc:1465 qcsrc/common/util.qc:1516
 #, c-format
 msgid "DOWNARROW"
-msgstr ""
+msgstr "DOWNARROW"
 
 #: qcsrc/common/util.qc:1466 qcsrc/common/util.qc:1518
 #, c-format
 msgid "LEFTARROW"
-msgstr ""
+msgstr "LEFTARROW"
 
 #: qcsrc/common/util.qc:1467 qcsrc/common/util.qc:1519
 #, c-format
 msgid "RIGHTARROW"
-msgstr ""
+msgstr "RIGHTARROW"
 
 #: qcsrc/common/util.qc:1469
 msgid "ALT"
-msgstr ""
+msgstr "ALT"
 
 #: qcsrc/common/util.qc:1470
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #: qcsrc/common/util.qc:1471
 msgid "SHIFT"
-msgstr ""
+msgstr "SHIFT"
 
 #: qcsrc/common/util.qc:1473 qcsrc/common/util.qc:1514
 #, c-format
 msgid "INS"
-msgstr ""
+msgstr "INS"
 
 #: qcsrc/common/util.qc:1474 qcsrc/common/util.qc:1524
 #, c-format
 msgid "DEL"
-msgstr ""
+msgstr "DEL"
 
 #: qcsrc/common/util.qc:1475 qcsrc/common/util.qc:1517
 #, c-format
 msgid "PGDN"
-msgstr ""
+msgstr "PGDN"
 
 #: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1522
 #, c-format
 msgid "PGUP"
-msgstr ""
+msgstr "PGUP"
 
 #: qcsrc/common/util.qc:1477 qcsrc/common/util.qc:1520
 #, c-format
 msgid "HOME"
-msgstr ""
+msgstr "HOME"
 
 #: qcsrc/common/util.qc:1478 qcsrc/common/util.qc:1515
 #, c-format
 msgid "END"
-msgstr ""
+msgstr "END"
 
 #: qcsrc/common/util.qc:1480
 msgid "PAUSE"
-msgstr ""
+msgstr "PAUSE"
 
 #: qcsrc/common/util.qc:1482
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUMLOCK"
 
 #: qcsrc/common/util.qc:1483
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "CAPSLOCK"
 
 #: qcsrc/common/util.qc:1484
 msgid "SCROLLOCK"
-msgstr ""
+msgstr "SCROLLOCK"
 
 #: qcsrc/common/util.qc:1486
 msgid "SEMICOLON"
-msgstr ""
+msgstr "SEMICOLON"
 
 #: qcsrc/common/util.qc:1487
 msgid "TILDE"
-msgstr ""
+msgstr "TILDE"
 
 #: qcsrc/common/util.qc:1488
 msgid "BACKQUOTE"
-msgstr ""
+msgstr "BACKQUOTE"
 
 #: qcsrc/common/util.qc:1489
 msgid "QUOTE"
-msgstr ""
+msgstr "QUOTE"
 
 #: qcsrc/common/util.qc:1490
 msgid "APOSTROPHE"
-msgstr ""
+msgstr "APOSTROPHE"
 
 #: qcsrc/common/util.qc:1491
 msgid "BACKSLASH"
-msgstr ""
+msgstr "BACKSLASH"
 
 #: qcsrc/common/util.qc:1499
 #, c-format
 msgid "F%d"
-msgstr ""
+msgstr "F%d"
 
 #: qcsrc/common/util.qc:1509
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "KP_%d"
 
 #: qcsrc/common/util.qc:1514 qcsrc/common/util.qc:1515
 #: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
@@ -4929,74 +4931,74 @@ msgstr ""
 #: qcsrc/common/util.qc:1530 qcsrc/common/util.qc:1531
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "KP_%s"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
 msgid "PERIOD"
-msgstr ""
+msgstr "PERIOD"
 
 #: qcsrc/common/util.qc:1525
 #, c-format
 msgid "DIVIDE"
-msgstr ""
+msgstr "DIVIDE"
 
 #: qcsrc/common/util.qc:1526
 #, c-format
 msgid "SLASH"
-msgstr ""
+msgstr "SLASH"
 
 #: qcsrc/common/util.qc:1527
 #, c-format
 msgid "MULTIPLY"
-msgstr ""
+msgstr "MULTIPLY"
 
 #: qcsrc/common/util.qc:1528
 #, c-format
 msgid "MINUS"
-msgstr ""
+msgstr "MINUS"
 
 #: qcsrc/common/util.qc:1529
 #, c-format
 msgid "PLUS"
-msgstr ""
+msgstr "PLUS"
 
 #: qcsrc/common/util.qc:1531
 #, c-format
 msgid "EQUALS"
-msgstr ""
+msgstr "EQUALS"
 
 #: qcsrc/common/util.qc:1536
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "PRINTSCREEN"
 
 #: qcsrc/common/util.qc:1539
 #, c-format
 msgid "MOUSE%d"
-msgstr ""
+msgstr "MOUSE%d"
 
 #: qcsrc/common/util.qc:1541
 msgid "MWHEELUP"
-msgstr ""
+msgstr "MWHEELUP"
 
 #: qcsrc/common/util.qc:1542
 msgid "MWHEELDOWN"
-msgstr ""
+msgstr "MWHEELDOWN"
 
 #: qcsrc/common/util.qc:1545
 #, c-format
 msgid "JOY%d"
-msgstr ""
+msgstr "JOY%d"
 
 #: qcsrc/common/util.qc:1548
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "DPAD_UP"
-msgstr ""
+msgstr "DPAD_UP"
 
 #: qcsrc/common/util.qc:1555 qcsrc/common/util.qc:1556
 #: qcsrc/common/util.qc:1557 qcsrc/common/util.qc:1558
@@ -5010,133 +5012,133 @@ msgstr ""
 #: qcsrc/common/util.qc:1573 qcsrc/common/util.qc:1574
 #, c-format
 msgid "X360_%s"
-msgstr ""
+msgstr "X360_%s"
 
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "DPAD_DOWN"
-msgstr ""
+msgstr "DPAD_DOWN"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "DPAD_LEFT"
-msgstr ""
+msgstr "DPAD_LEFT"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr ""
+msgstr "DPAD_RIGHT"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
 msgid "START"
-msgstr ""
+msgstr "START"
 
 #: qcsrc/common/util.qc:1560
 #, c-format
 msgid "BACK"
-msgstr ""
+msgstr "BACK"
 
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "LEFT_THUMB"
-msgstr ""
+msgstr "LEFT_THUMB"
 
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr ""
+msgstr "RIGHT_THUMB"
 
 #: qcsrc/common/util.qc:1563
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr ""
+msgstr "LEFT_SHOULDER"
 
 #: qcsrc/common/util.qc:1564
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr ""
+msgstr "RIGHT_SHOULDER"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr ""
+msgstr "LEFT_TRIGGER"
 
 #: qcsrc/common/util.qc:1566
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr ""
+msgstr "RIGHT_TRIGGER"
 
 #: qcsrc/common/util.qc:1567
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr ""
+msgstr "LEFT_THUMB_UP"
 
 #: qcsrc/common/util.qc:1568
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr ""
+msgstr "LEFT_THUMB_DOWN"
 
 #: qcsrc/common/util.qc:1569
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr ""
+msgstr "LEFT_THUMB_LEFT"
 
 #: qcsrc/common/util.qc:1570
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr ""
+msgstr "LEFT_THUMB_RIGHT"
 
 #: qcsrc/common/util.qc:1571
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr ""
+msgstr "RIGHT_THUMB_UP"
 
 #: qcsrc/common/util.qc:1572
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr ""
+msgstr "RIGHT_THUMB_DOWN"
 
 #: qcsrc/common/util.qc:1573
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr ""
+msgstr "RIGHT_THUMB_LEFT"
 
 #: qcsrc/common/util.qc:1574
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr ""
+msgstr "RIGHT_THUMB_RIGHT"
 
 #: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
 #: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
 #, c-format
 msgid "JOY_%s"
-msgstr ""
+msgstr "JOY_%s"
 
 #: qcsrc/common/util.qc:1584
 #, c-format
 msgid "UP"
-msgstr ""
+msgstr "UP"
 
 #: qcsrc/common/util.qc:1585
 #, c-format
 msgid "DOWN"
-msgstr ""
+msgstr "DOWN"
 
 #: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT"
-msgstr ""
+msgstr "LEFT"
 
 #: qcsrc/common/util.qc:1587
 #, c-format
 msgid "RIGHT"
-msgstr ""
+msgstr "RIGHT"
 
 #: qcsrc/common/util.qc:1593
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "MIDINOTE%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 #, c-format
@@ -8227,13 +8229,16 @@ msgstr "Показывать точность под таблицей резул
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show team sizes:"
-msgstr ""
+msgstr "Показывать размеры команд:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:56
 msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
+"Позиция размера команды: откл. = не отображать; слева = на левой части табло "
+"счёта, командные очки перемещаются направо; справа = на правой части табло "
+"счёта"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
@@ -9960,7 +9965,7 @@ msgstr "%d (без рейтинга)"
 
 #: qcsrc/menu/xonotic/util.qc:417
 msgid "Update can be downloaded at:"
-msgstr ""
+msgstr "Обновление может быть загружено с:"
 
 #: qcsrc/menu/xonotic/util.qc:525
 msgid "Autogenerating mapinfo for newly added maps..."

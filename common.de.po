@@ -26,8 +26,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-28 05:23+0000\n"
-"Last-Translator: Wuzzy <almikes@aol.com>\n"
+"PO-Revision-Date: 2019-04-28 13:12+0000\n"
+"Last-Translator: Mirio <opivy@hotmail.de>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -51,7 +51,7 @@ msgstr "^1Konnte nicht nach %s schreiben"
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Countdown-Nachricht bei Zeitpunkt %s, Sekunden übrig: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:142
 #, c-format
@@ -59,15 +59,17 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Mehrzeilige Nachricht beim Zeitpunkt %s, welche\n"
+"^1länger bleibt als üblich"
 
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Nachricht beim Zeitpunkt %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "Allgemeine Nachricht"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -515,7 +517,7 @@ msgstr "Abstimmung starten"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Restart the map"
-msgstr "Map neustarten"
+msgstr "Karte neustarten"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^End match"
@@ -563,19 +565,19 @@ msgstr "Zwischenzeit %d"
 #: qcsrc/client/hud/panel/racetimer.qc:262
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "STRAFE: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154 qcsrc/client/main.qc:1129
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "einen Checkpoint verpasst"
 
 #: qcsrc/client/hud/panel/radar.qc:373
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Klicke, um Teleporterziel auszuwählen"
 
 #: qcsrc/client/hud/panel/radar.qc:377
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Klicke, um Startort zu auszuwählen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "Number of ball carrier kills"
@@ -1018,7 +1020,7 @@ msgstr "Genauigkeit (Durchschn.: %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1336
 msgid "Map stats:"
-msgstr "Map-Statistiken:"
+msgstr "Karten-Statistiken:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1366
 msgid "Monsters killed:"
@@ -1039,13 +1041,13 @@ msgstr "Platzierungen"
 #: qcsrc/client/hud/panel/scoreboard.qc:1613
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f Minuten"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1622
 #: qcsrc/client/hud/panel/scoreboard.qc:1629
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1623
 #: qcsrc/client/hud/panel/scoreboard.qc:1630
@@ -1065,12 +1067,12 @@ msgstr "wurde geschlagen"
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1659
 #, c-format
 msgid "^7Map: ^2%s"
-msgstr ""
+msgstr "^7Karte: ^2%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1798
 #, c-format
@@ -1204,7 +1206,7 @@ msgstr "Wähle den Spieltyp"
 
 #: qcsrc/client/mapvoting.qc:375
 msgid "Vote for a map"
-msgstr "Stimme für eine Map ab"
+msgstr "Stimme für eine Karte ab"
 
 #: qcsrc/client/mapvoting.qc:392
 #, c-format
@@ -1565,11 +1567,11 @@ msgstr "Minispiele"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:567
 msgid "Minigame message"
-msgstr ""
+msgstr "Minispielnachricht"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Bulldozer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1092
 #: qcsrc/common/minigames/minigame/ps.qc:421
@@ -1579,7 +1581,7 @@ msgstr "Spiel vorbei!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Gut gemacht! Klicke 'Nächstes Level' um fortzufahren"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
@@ -1620,7 +1622,7 @@ msgstr "Speichern"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Vier gewinnt"
 
 #: qcsrc/common/minigames/minigame/c4.qc:311
 #: qcsrc/common/minigames/minigame/c4.qc:317
@@ -1630,7 +1632,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:368
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 hat das Spiel gewonnen!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
@@ -1668,7 +1670,7 @@ msgstr "Klick auf das Spielfeld, um deine Spielfigur zu setzen"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:7
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "Mühle"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 msgid ""
@@ -1689,7 +1691,7 @@ msgstr "Du kannst eine der Spielfiguren deines Gegners nehmen"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "Pong"
 
 #: qcsrc/common/minigames/minigame/pong.qc:589
 #: qcsrc/common/minigames/minigame/ttt.qc:299
@@ -1716,12 +1718,12 @@ msgstr "KI-Spieler entfernen"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "Drücken-Ziehen"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr ""
+msgstr "Wähle im Menü \"^1Nächstes Spiel^7\" für eine Revanche!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1742,15 +1744,15 @@ msgstr "Nächstes Spiel"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "Solitär"
 
 #: qcsrc/common/minigames/minigame/ps.qc:414
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Alle Teile abgeräumt!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Übrige Teile:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:481
 #, c-format
@@ -1771,7 +1773,7 @@ msgstr "Spring mit einer Spielfigur über einer anderen, um sie zu stehlen"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "Tic-Tac-Toe"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Single Player"
@@ -2900,7 +2902,7 @@ msgstr "^F1%s^BG kann nicht ^F1%s^BG schießen, aber ^F1%s^BG schon"
 #: qcsrc/common/notifications/all.inc:705
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr "^F1%s^BG ist auf dieser Map ^F4nicht verfügbar"
+msgstr "^F1%s^BG ist auf dieser Karte ^F4nicht verfügbar"
 
 #: qcsrc/common/notifications/all.inc:389
 #, c-format
@@ -4836,144 +4838,144 @@ msgstr "Keine Angabe"
 
 #: qcsrc/common/util.qc:1452
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<KEY NOT FOUND>"
 
 #: qcsrc/common/util.qc:1453
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<UNKNOWN KEYNUM>"
 
 #: qcsrc/common/util.qc:1458
 msgid "TAB"
-msgstr ""
+msgstr "TABULATOR"
 
 #: qcsrc/common/util.qc:1459 qcsrc/common/util.qc:1530
 #, c-format
 msgid "ENTER"
-msgstr ""
+msgstr "EINGABE"
 
 #: qcsrc/common/util.qc:1460
 msgid "ESCAPE"
-msgstr ""
+msgstr "ESCAPE"
 
 #: qcsrc/common/util.qc:1461
 msgid "SPACE"
-msgstr ""
+msgstr "LEERTASTE"
 
 #: qcsrc/common/util.qc:1463
 msgid "BACKSPACE"
-msgstr ""
+msgstr "RÜCKTASTE"
 
 #: qcsrc/common/util.qc:1464 qcsrc/common/util.qc:1521
 #, c-format
 msgid "UPARROW"
-msgstr ""
+msgstr "PFEIL-NACHOBEN"
 
 #: qcsrc/common/util.qc:1465 qcsrc/common/util.qc:1516
 #, c-format
 msgid "DOWNARROW"
-msgstr ""
+msgstr "PFEIL-NACHUNTEN"
 
 #: qcsrc/common/util.qc:1466 qcsrc/common/util.qc:1518
 #, c-format
 msgid "LEFTARROW"
-msgstr ""
+msgstr "PFEIL-LINKS"
 
 #: qcsrc/common/util.qc:1467 qcsrc/common/util.qc:1519
 #, c-format
 msgid "RIGHTARROW"
-msgstr ""
+msgstr "PFEIL-RECHTS"
 
 #: qcsrc/common/util.qc:1469
 msgid "ALT"
-msgstr ""
+msgstr "ALT"
 
 #: qcsrc/common/util.qc:1470
 msgid "CTRL"
-msgstr ""
+msgstr "STRG"
 
 #: qcsrc/common/util.qc:1471
 msgid "SHIFT"
-msgstr ""
+msgstr "UMSCHALTTASTE"
 
 #: qcsrc/common/util.qc:1473 qcsrc/common/util.qc:1514
 #, c-format
 msgid "INS"
-msgstr ""
+msgstr "EINFG"
 
 #: qcsrc/common/util.qc:1474 qcsrc/common/util.qc:1524
 #, c-format
 msgid "DEL"
-msgstr ""
+msgstr "ENTF"
 
 #: qcsrc/common/util.qc:1475 qcsrc/common/util.qc:1517
 #, c-format
 msgid "PGDN"
-msgstr ""
+msgstr "BILD-AB"
 
 #: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1522
 #, c-format
 msgid "PGUP"
-msgstr ""
+msgstr "BILD-AUF"
 
 #: qcsrc/common/util.qc:1477 qcsrc/common/util.qc:1520
 #, c-format
 msgid "HOME"
-msgstr ""
+msgstr "POS1"
 
 #: qcsrc/common/util.qc:1478 qcsrc/common/util.qc:1515
 #, c-format
 msgid "END"
-msgstr ""
+msgstr "ENDE"
 
 #: qcsrc/common/util.qc:1480
 msgid "PAUSE"
-msgstr ""
+msgstr "PAUSE"
 
 #: qcsrc/common/util.qc:1482
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUM"
 
 #: qcsrc/common/util.qc:1483
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "FESTSTELLTASTE"
 
 #: qcsrc/common/util.qc:1484
 msgid "SCROLLOCK"
-msgstr ""
+msgstr "ROLLEN"
 
 #: qcsrc/common/util.qc:1486
 msgid "SEMICOLON"
-msgstr ""
+msgstr "SEMIKOLON"
 
 #: qcsrc/common/util.qc:1487
 msgid "TILDE"
-msgstr ""
+msgstr "TILDE"
 
 #: qcsrc/common/util.qc:1488
 msgid "BACKQUOTE"
-msgstr ""
+msgstr "GRAVIS"
 
 #: qcsrc/common/util.qc:1489
 msgid "QUOTE"
-msgstr ""
+msgstr "AKUT"
 
 #: qcsrc/common/util.qc:1490
 msgid "APOSTROPHE"
-msgstr ""
+msgstr "APOSTROPH"
 
 #: qcsrc/common/util.qc:1491
 msgid "BACKSLASH"
-msgstr ""
+msgstr "BACKSLASH"
 
 #: qcsrc/common/util.qc:1499
 #, c-format
 msgid "F%d"
-msgstr ""
+msgstr "F%d"
 
 #: qcsrc/common/util.qc:1509
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "KP_%d"
 
 #: qcsrc/common/util.qc:1514 qcsrc/common/util.qc:1515
 #: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
@@ -4986,74 +4988,74 @@ msgstr ""
 #: qcsrc/common/util.qc:1530 qcsrc/common/util.qc:1531
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "KP_%s"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
 msgid "PERIOD"
-msgstr ""
+msgstr "PUNKT"
 
 #: qcsrc/common/util.qc:1525
 #, c-format
 msgid "DIVIDE"
-msgstr ""
+msgstr "GETEILT"
 
 #: qcsrc/common/util.qc:1526
 #, c-format
 msgid "SLASH"
-msgstr ""
+msgstr "SLASH"
 
 #: qcsrc/common/util.qc:1527
 #, c-format
 msgid "MULTIPLY"
-msgstr ""
+msgstr "MAL"
 
 #: qcsrc/common/util.qc:1528
 #, c-format
 msgid "MINUS"
-msgstr ""
+msgstr "MINUS"
 
 #: qcsrc/common/util.qc:1529
 #, c-format
 msgid "PLUS"
-msgstr ""
+msgstr "PLUS"
 
 #: qcsrc/common/util.qc:1531
 #, c-format
 msgid "EQUALS"
-msgstr ""
+msgstr "GLEICHHEITSZEICHEN"
 
 #: qcsrc/common/util.qc:1536
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "DRUCK"
 
 #: qcsrc/common/util.qc:1539
 #, c-format
 msgid "MOUSE%d"
-msgstr ""
+msgstr "MAUS%d"
 
 #: qcsrc/common/util.qc:1541
 msgid "MWHEELUP"
-msgstr ""
+msgstr "MRADHOCH"
 
 #: qcsrc/common/util.qc:1542
 msgid "MWHEELDOWN"
-msgstr ""
+msgstr "MRADHERAB"
 
 #: qcsrc/common/util.qc:1545
 #, c-format
 msgid "JOY%d"
-msgstr ""
+msgstr "JOY%d"
 
 #: qcsrc/common/util.qc:1548
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "DPAD_UP"
-msgstr ""
+msgstr "STEUERKREUZ_HOCH"
 
 #: qcsrc/common/util.qc:1555 qcsrc/common/util.qc:1556
 #: qcsrc/common/util.qc:1557 qcsrc/common/util.qc:1558
@@ -5067,133 +5069,133 @@ msgstr ""
 #: qcsrc/common/util.qc:1573 qcsrc/common/util.qc:1574
 #, c-format
 msgid "X360_%s"
-msgstr ""
+msgstr "X360_%s"
 
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "DPAD_DOWN"
-msgstr ""
+msgstr "STEUERKREUZ_HERAB"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "DPAD_LEFT"
-msgstr ""
+msgstr "STEUERKREUZ_LINKS"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr ""
+msgstr "STEUERKREUZ_RECHTS"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
 msgid "START"
-msgstr ""
+msgstr "START"
 
 #: qcsrc/common/util.qc:1560
 #, c-format
 msgid "BACK"
-msgstr ""
+msgstr "ZURÜCK"
 
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "LEFT_THUMB"
-msgstr ""
+msgstr "ANALOGSTICK_LINKS"
 
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr ""
+msgstr "ANALOGSTICK_RECHTS"
 
 #: qcsrc/common/util.qc:1563
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr ""
+msgstr "SCHULTERTASTE_LINKS"
 
 #: qcsrc/common/util.qc:1564
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr ""
+msgstr "SCHULTERTASTE_RECHTS"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr ""
+msgstr "TRIGGERTASTE_LINKS"
 
 #: qcsrc/common/util.qc:1566
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr ""
+msgstr "TRIGGERTASTE_RECHTS"
 
 #: qcsrc/common/util.qc:1567
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr ""
+msgstr "ANALOGSTICK_LINKS_HOCH"
 
 #: qcsrc/common/util.qc:1568
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr ""
+msgstr "ANALOGSTICK_LINKS_HERAB"
 
 #: qcsrc/common/util.qc:1569
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr ""
+msgstr "ANALOGSTICK_LINKS_LINKS"
 
 #: qcsrc/common/util.qc:1570
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr ""
+msgstr "ANALOGSTICK_LINKS_RECHTS"
 
 #: qcsrc/common/util.qc:1571
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr ""
+msgstr "ANALOGSTICK_RECHTS_HOCH"
 
 #: qcsrc/common/util.qc:1572
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr ""
+msgstr "ANALOGSTICK_RECHTS_HERAB"
 
 #: qcsrc/common/util.qc:1573
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr ""
+msgstr "ANALOGSTICK_RECHTS_LINKS"
 
 #: qcsrc/common/util.qc:1574
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr ""
+msgstr "ANALOGSTICK_RECHTS_RECHTS"
 
 #: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
 #: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
 #, c-format
 msgid "JOY_%s"
-msgstr ""
+msgstr "JOY_%s"
 
 #: qcsrc/common/util.qc:1584
 #, c-format
 msgid "UP"
-msgstr ""
+msgstr "HOCH"
 
 #: qcsrc/common/util.qc:1585
 #, c-format
 msgid "DOWN"
-msgstr ""
+msgstr "HERAB"
 
 #: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT"
-msgstr ""
+msgstr "LINKS"
 
 #: qcsrc/common/util.qc:1587
 #, c-format
 msgid "RIGHT"
-msgstr ""
+msgstr "RECHTS"
 
 #: qcsrc/common/util.qc:1593
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "MIDINOTE%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 #, c-format
@@ -6522,7 +6524,7 @@ msgstr "Monster:"
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
 msgid "Spawn"
-msgstr "Neu"
+msgstr "Spawn"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:23
 #: qcsrc/menu/xonotic/serverlist.qc:262
@@ -6737,7 +6739,7 @@ msgstr "Wähle Mutatoren und Waffen-Arenen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:165
 msgid "Maplist"
-msgstr "Mapliste"
+msgstr "Kartenliste"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:175
 msgid ""
@@ -6745,7 +6747,7 @@ msgid ""
 "Delete to clear; Enter when done."
 msgstr ""
 "Klücke hier oder drücke Strg+F, um ein Schüsselwort einzugeben, um die Liste "
-"der Maps einzugrenzen. Strg+Entfernen zum Leeren; Enter, wenn fertig."
+"der Karten einzugrenzen. Strg+Entfernen zum Leeren; Enter, wenn fertig."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:184
 msgid "Add shown"
@@ -6753,7 +6755,7 @@ msgstr "Alle sichtbaren hinzufügen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:185
 msgid "Add the maps shown in the list to your selection"
-msgstr "Die in der Liste gezeigten Maps zu deiner Auswahl hinzufügen"
+msgstr "Die in der Liste gezeigten Karten zu deiner Auswahl hinzufügen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Remove shown"
@@ -6761,7 +6763,7 @@ msgstr "Alle sichtbaren entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
 msgid "Remove the maps shown in the list from your selection"
-msgstr "Die in der Liste gezeigten Maps von deiner Auswahl entfernen"
+msgstr "Die in der Liste gezeigten Karten von deiner Auswahl entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:194
 msgid "Add all"
@@ -6769,7 +6771,7 @@ msgstr "Alle hinzufügen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:195
 msgid "Add every available map to your selection"
-msgstr "Jede verfügbare Map deiner Auswahl hinzufügen"
+msgstr "Jede verfügbare Karte deiner Auswahl hinzufügen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:198
 msgid "Remove all"
@@ -6777,7 +6779,7 @@ msgstr "Alle entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:199
 msgid "Remove all the maps from your selection"
-msgstr "Alle Maps aus deiner Auswahl entfernen"
+msgstr "Alle Karten aus deiner Auswahl entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:206
 msgid "Start Multiplayer!"
@@ -6806,7 +6808,7 @@ msgstr "MAP^Spielen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qh:7
 msgid "Map Information"
-msgstr "Map-Information"
+msgstr "Karten-Information"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "All Weapons Arena"
@@ -7185,7 +7187,7 @@ msgstr "Spieltyp:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:197
 msgid "Map:"
-msgstr "Map:"
+msgstr "Karte:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:202
 msgid "Mod:"
@@ -8315,13 +8317,16 @@ msgstr "Trefferquote unter Punktetafel anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show team sizes:"
-msgstr ""
+msgstr "Teamgrößen anzeigen:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:56
 msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
+"Teamgrößen-Position: Aus=nicht angezeigen; Links=auf der linken Seite der "
+"Punktetafel und Teampunkte auf die rechte Seite verschieben; Rechts=auf der "
+"rechten Seite der Punktetafel"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
@@ -8329,7 +8334,7 @@ msgstr "Wegpunkte"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:66
 msgid "Display waypoint markers for objectives on the map"
-msgstr "Wegpunkte für feste Ziele anzeigen"
+msgstr "Wegpunkte für feste Ziele auf der Karte anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:67
 msgid "Show various gametype specific waypoints"
@@ -9513,7 +9518,7 @@ msgstr "Alles total verbiegen (Osterei)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:110
 msgid "Instant action! (random map with bots)"
-msgstr "Sofortstart! (zufällige Map mit Bots)"
+msgstr "Sofortstart! (zufällige Karte mit Bots)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:117
 msgid "???"
@@ -9814,7 +9819,7 @@ msgstr "Servername"
 
 #: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Map"
-msgstr "Map"
+msgstr "Karte"
 
 #: qcsrc/menu/xonotic/serverlist.qc:750
 msgid "Type"
@@ -10076,11 +10081,11 @@ msgstr "%d (kein Rang)"
 
 #: qcsrc/menu/xonotic/util.qc:417
 msgid "Update can be downloaded at:"
-msgstr ""
+msgstr "Update kann heruntergeladen werden auf:"
 
 #: qcsrc/menu/xonotic/util.qc:525
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "Automatische Generierung von mapinfo-Dateien …"
+msgstr "Automatisch mapinfo-Dateien für neu hinzugefügte Karten erzeugen…"
 
 #: qcsrc/menu/xonotic/util.qc:554
 #, c-format

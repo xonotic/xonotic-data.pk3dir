@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-28 05:23+0000\n"
+"PO-Revision-Date: 2019-04-28 23:02+0000\n"
 "Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2Esportato con successo in %s!"
+msgstr "^2Esportato con successo in %s! (Nota: è salvato in data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
@@ -37,7 +37,7 @@ msgstr "^1Impossibile scrivere su %s"
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Messaggio di conto alla rovescia %s, secondi rimasti: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:142
 #, c-format
@@ -45,15 +45,17 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Messaggio multilinea al tempo %s che\n"
+"^1dura di più del normale"
 
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Messaggio al tempo %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "Messaggio generico"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -548,19 +550,19 @@ msgstr "Intermedio %d"
 #: qcsrc/client/hud/panel/racetimer.qc:262
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "PENALITÀ: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154 qcsrc/client/main.qc:1129
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "mancato un checkpoint"
 
 #: qcsrc/client/hud/panel/radar.qc:373
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Clicca per scegliere una destinazione"
 
 #: qcsrc/client/hud/panel/radar.qc:377
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Clicca per scegliere un punto di nascita"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "Number of ball carrier kills"
@@ -1026,13 +1028,13 @@ msgstr "Classifica"
 #: qcsrc/client/hud/panel/scoreboard.qc:1613
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f minuti"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1622
 #: qcsrc/client/hud/panel/scoreboard.qc:1629
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1623
 #: qcsrc/client/hud/panel/scoreboard.qc:1630
@@ -1052,12 +1054,12 @@ msgstr "è battuto"
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1659
 #, c-format
 msgid "^7Map: ^2%s"
-msgstr ""
+msgstr "^7Mappa: ^2%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1798
 #, c-format
@@ -1320,7 +1322,7 @@ msgstr "Scudo"
 #: qcsrc/common/mapinfo.qc:626
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr "@!#%'n Tuba Throwing"
+msgstr "Lancio della @!#%'n Tuba"
 
 #: qcsrc/common/mapinfo.qh:72 qcsrc/common/mapinfo.qh:333
 #: qcsrc/common/mapinfo.qh:528
@@ -1548,11 +1550,11 @@ msgstr "Minigiochi"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:567
 msgid "Minigame message"
-msgstr ""
+msgstr "Messaggio di un minigame"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Bulldozer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1092
 #: qcsrc/common/minigames/minigame/ps.qc:421
@@ -1562,7 +1564,7 @@ msgstr "Gioco finito!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Ben fatto! Clicca 'Prossimo livello' per continuare"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
@@ -1603,7 +1605,7 @@ msgstr "Salva"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Forza quattro"
 
 #: qcsrc/common/minigames/minigame/c4.qc:311
 #: qcsrc/common/minigames/minigame/c4.qc:317
@@ -1613,7 +1615,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:368
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 ha vinto la partita!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
@@ -1651,7 +1653,7 @@ msgstr "Clicca sul tavolo da gioco per mettere il tuo pezzo"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:7
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "Mulino"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 msgid ""
@@ -1669,7 +1671,7 @@ msgstr "Puoi prendere uno dei pezzi del rivale"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "Pong"
 
 #: qcsrc/common/minigames/minigame/pong.qc:589
 #: qcsrc/common/minigames/minigame/ttt.qc:299
@@ -1695,12 +1697,12 @@ msgstr "Rimuovi giocatori AI"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "Spingi-Tira"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr ""
+msgstr "Scegli \"^1Prossima partita^7\" nel menu per una rivincita!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1722,15 +1724,15 @@ msgstr "Prossima Partita"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "Solitario della Bastiglia"
 
 #: qcsrc/common/minigames/minigame/ps.qc:414
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Mangiati tutti i pezzi!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Pezzi rimasti:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:481
 #, c-format
@@ -1751,7 +1753,7 @@ msgstr "Salta un pezzo su un altro per catturarlo"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "Tris"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Single Player"
@@ -4841,144 +4843,144 @@ msgstr "Nascosto"
 
 #: qcsrc/common/util.qc:1452
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<TASTO NON TROVATO>"
 
 #: qcsrc/common/util.qc:1453
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<TASTONUM SCONOSCIUTO>"
 
 #: qcsrc/common/util.qc:1458
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #: qcsrc/common/util.qc:1459 qcsrc/common/util.qc:1530
 #, c-format
 msgid "ENTER"
-msgstr ""
+msgstr "INVIO"
 
 #: qcsrc/common/util.qc:1460
 msgid "ESCAPE"
-msgstr ""
+msgstr "ESC"
 
 #: qcsrc/common/util.qc:1461
 msgid "SPACE"
-msgstr ""
+msgstr "SPAZIO"
 
 #: qcsrc/common/util.qc:1463
 msgid "BACKSPACE"
-msgstr ""
+msgstr "BACKSPACE"
 
 #: qcsrc/common/util.qc:1464 qcsrc/common/util.qc:1521
 #, c-format
 msgid "UPARROW"
-msgstr ""
+msgstr "FRECCIASU"
 
 #: qcsrc/common/util.qc:1465 qcsrc/common/util.qc:1516
 #, c-format
 msgid "DOWNARROW"
-msgstr ""
+msgstr "FRECCIAGIU'"
 
 #: qcsrc/common/util.qc:1466 qcsrc/common/util.qc:1518
 #, c-format
 msgid "LEFTARROW"
-msgstr ""
+msgstr "FRECCIASINISTRA"
 
 #: qcsrc/common/util.qc:1467 qcsrc/common/util.qc:1519
 #, c-format
 msgid "RIGHTARROW"
-msgstr ""
+msgstr "FRECCIADESTRA"
 
 #: qcsrc/common/util.qc:1469
 msgid "ALT"
-msgstr ""
+msgstr "ALT"
 
 #: qcsrc/common/util.qc:1470
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #: qcsrc/common/util.qc:1471
 msgid "SHIFT"
-msgstr ""
+msgstr "MAIUSC"
 
 #: qcsrc/common/util.qc:1473 qcsrc/common/util.qc:1514
 #, c-format
 msgid "INS"
-msgstr ""
+msgstr "INS"
 
 #: qcsrc/common/util.qc:1474 qcsrc/common/util.qc:1524
 #, c-format
 msgid "DEL"
-msgstr ""
+msgstr "DEL"
 
 #: qcsrc/common/util.qc:1475 qcsrc/common/util.qc:1517
 #, c-format
 msgid "PGDN"
-msgstr ""
+msgstr "PAGGIU'"
 
 #: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1522
 #, c-format
 msgid "PGUP"
-msgstr ""
+msgstr "PAGSU"
 
 #: qcsrc/common/util.qc:1477 qcsrc/common/util.qc:1520
 #, c-format
 msgid "HOME"
-msgstr ""
+msgstr "INIZIO"
 
 #: qcsrc/common/util.qc:1478 qcsrc/common/util.qc:1515
 #, c-format
 msgid "END"
-msgstr ""
+msgstr "FINE"
 
 #: qcsrc/common/util.qc:1480
 msgid "PAUSE"
-msgstr ""
+msgstr "PAUSA"
 
 #: qcsrc/common/util.qc:1482
 msgid "NUMLOCK"
-msgstr ""
+msgstr "BLOCKNUM"
 
 #: qcsrc/common/util.qc:1483
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "BLOCMAIUSC"
 
 #: qcsrc/common/util.qc:1484
 msgid "SCROLLOCK"
-msgstr ""
+msgstr "BLOCSCORR"
 
 #: qcsrc/common/util.qc:1486
 msgid "SEMICOLON"
-msgstr ""
+msgstr "PUNTOEVIRGOLA"
 
 #: qcsrc/common/util.qc:1487
 msgid "TILDE"
-msgstr ""
+msgstr "TILDE"
 
 #: qcsrc/common/util.qc:1488
 msgid "BACKQUOTE"
-msgstr ""
+msgstr "APOS.RETROV."
 
 #: qcsrc/common/util.qc:1489
 msgid "QUOTE"
-msgstr ""
+msgstr "VIRGOLETTE"
 
 #: qcsrc/common/util.qc:1490
 msgid "APOSTROPHE"
-msgstr ""
+msgstr "APOSTROFO"
 
 #: qcsrc/common/util.qc:1491
 msgid "BACKSLASH"
-msgstr ""
+msgstr "BARRARETROV."
 
 #: qcsrc/common/util.qc:1499
 #, c-format
 msgid "F%d"
-msgstr ""
+msgstr "F%d"
 
 #: qcsrc/common/util.qc:1509
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "TN_%d"
 
 #: qcsrc/common/util.qc:1514 qcsrc/common/util.qc:1515
 #: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
@@ -4991,74 +4993,74 @@ msgstr ""
 #: qcsrc/common/util.qc:1530 qcsrc/common/util.qc:1531
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "TN_%s"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
 msgid "PERIOD"
-msgstr ""
+msgstr "PUNTO"
 
 #: qcsrc/common/util.qc:1525
 #, c-format
 msgid "DIVIDE"
-msgstr ""
+msgstr "DIVIDI"
 
 #: qcsrc/common/util.qc:1526
 #, c-format
 msgid "SLASH"
-msgstr ""
+msgstr "BARRA"
 
 #: qcsrc/common/util.qc:1527
 #, c-format
 msgid "MULTIPLY"
-msgstr ""
+msgstr "MOLTIPLICA"
 
 #: qcsrc/common/util.qc:1528
 #, c-format
 msgid "MINUS"
-msgstr ""
+msgstr "MENO"
 
 #: qcsrc/common/util.qc:1529
 #, c-format
 msgid "PLUS"
-msgstr ""
+msgstr "PIU'"
 
 #: qcsrc/common/util.qc:1531
 #, c-format
 msgid "EQUALS"
-msgstr ""
+msgstr "UGUALE"
 
 #: qcsrc/common/util.qc:1536
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "STAMP"
 
 #: qcsrc/common/util.qc:1539
 #, c-format
 msgid "MOUSE%d"
-msgstr ""
+msgstr "MOUSE%d"
 
 #: qcsrc/common/util.qc:1541
 msgid "MWHEELUP"
-msgstr ""
+msgstr "ROTELLINASU"
 
 #: qcsrc/common/util.qc:1542
 msgid "MWHEELDOWN"
-msgstr ""
+msgstr "ROTELLINAGIU'"
 
 #: qcsrc/common/util.qc:1545
 #, c-format
 msgid "JOY%d"
-msgstr ""
+msgstr "JOY%d"
 
 #: qcsrc/common/util.qc:1548
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "DPAD_UP"
-msgstr ""
+msgstr "DPAD_SU"
 
 #: qcsrc/common/util.qc:1555 qcsrc/common/util.qc:1556
 #: qcsrc/common/util.qc:1557 qcsrc/common/util.qc:1558
@@ -5072,133 +5074,133 @@ msgstr ""
 #: qcsrc/common/util.qc:1573 qcsrc/common/util.qc:1574
 #, c-format
 msgid "X360_%s"
-msgstr ""
+msgstr "X360_%s"
 
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "DPAD_DOWN"
-msgstr ""
+msgstr "DPAD_GIU'"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "DPAD_LEFT"
-msgstr ""
+msgstr "DPAD_SINISTRA"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr ""
+msgstr "DPAD_DESTRA"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
 msgid "START"
-msgstr ""
+msgstr "AVVIO"
 
 #: qcsrc/common/util.qc:1560
 #, c-format
 msgid "BACK"
-msgstr ""
+msgstr "INDIETRO"
 
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "LEFT_THUMB"
-msgstr ""
+msgstr "POLLICE_SINISTRO"
 
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr ""
+msgstr "POLLICE_DESTRO"
 
 #: qcsrc/common/util.qc:1563
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr ""
+msgstr "SPALLA_SINISTRA"
 
 #: qcsrc/common/util.qc:1564
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr ""
+msgstr "SPALLA_DESTRA"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr ""
+msgstr "GRILLETTO_SINISTRO"
 
 #: qcsrc/common/util.qc:1566
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr ""
+msgstr "GRILLETTO_DESTRO"
 
 #: qcsrc/common/util.qc:1567
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr ""
+msgstr "POLLICE_SINISTRO_SU"
 
 #: qcsrc/common/util.qc:1568
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr ""
+msgstr "POLLICE_SINISTRO_GIU'"
 
 #: qcsrc/common/util.qc:1569
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr ""
+msgstr "POLLICE_SINISTRO_SIN"
 
 #: qcsrc/common/util.qc:1570
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr ""
+msgstr "POLLICE_SINISTRO_DES"
 
 #: qcsrc/common/util.qc:1571
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr ""
+msgstr "POLLICE_DESTRO_SU"
 
 #: qcsrc/common/util.qc:1572
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr ""
+msgstr "POLLICE_DESTRO_GIU'"
 
 #: qcsrc/common/util.qc:1573
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr ""
+msgstr "POLLICE_DESTRO_SIN"
 
 #: qcsrc/common/util.qc:1574
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr ""
+msgstr "POLLICE_DESTRO_DES"
 
 #: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
 #: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
 #, c-format
 msgid "JOY_%s"
-msgstr ""
+msgstr "JOY_%s"
 
 #: qcsrc/common/util.qc:1584
 #, c-format
 msgid "UP"
-msgstr ""
+msgstr "SU"
 
 #: qcsrc/common/util.qc:1585
 #, c-format
 msgid "DOWN"
-msgstr ""
+msgstr "GIU'"
 
 #: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT"
-msgstr ""
+msgstr "SINISTRA"
 
 #: qcsrc/common/util.qc:1587
 #, c-format
 msgid "RIGHT"
-msgstr ""
+msgstr "DESTRA"
 
 #: qcsrc/common/util.qc:1593
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "NOTAMIDI%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 #, c-format
@@ -7960,12 +7962,11 @@ msgstr "Usa gli effetti d'illuminazione pixel per pixel"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Gloss"
-msgstr "Lucentezza"
+msgstr "Lucidezza"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid "Enable the use of glossmaps on textures supporting it"
-msgstr ""
-"Abilita l'uso della lucentezza delle mappe sulle texture che la supportano"
+msgstr "Abilita l'uso di mappe di lucidezza sulle texture che la supportano"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:145
 msgid "Offset mapping"
@@ -7976,12 +7977,12 @@ msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
-"Effetto del mappaggio in offset che fa sembrare che le texture con bumpmaps "
-"\"saltino fuori\" dalle superfici piane in 2D"
+"Effetto del mappaggio in offset che fa sembrare che le texture con mappe di "
+"rilievo \"saltino fuori\" dalle superfici piane in 2D"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
 msgid "Relief mapping"
-msgstr "Mappaggio in rilievo"
+msgstr "Mappaggio di soccorso"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:149
 msgid ""
@@ -8004,7 +8005,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 msgid "Resolution of reflections/refractions"
-msgstr "Risoluzione dei riflessi/rifrazioni"
+msgstr "Risoluzione di riflessi/rifrazioni"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:157
 msgid "Blurred"
@@ -8307,13 +8308,16 @@ msgstr "Mostra accuratezza sotto i punteggi"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show team sizes:"
-msgstr ""
+msgstr "Mostra numero giocatori:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:56
 msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
+"Posizion numero giocatori per squadra: Spento=non mostrare; Sinistra=sulla "
+"sinistra della tabella dei punteggi e muovi punteggi delle squadre sulla "
+"destra; Destra=sulla destra della tabella dei punteggi"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
@@ -8566,7 +8570,7 @@ msgstr "Scuro"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:41
 msgid "GHOITEMS^Tinted"
-msgstr "Dipinto"
+msgstr "Colorato"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
 msgid "GHOITEMS^Normal"
@@ -8647,7 +8651,7 @@ msgstr "Vista ondeggiante quando inattivo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:46
 msgid "View bobbing while walking around"
-msgstr "Movimento visuale su/giù camminando"
+msgstr "Ondeggiamento visuale mentre cammini"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:51
 msgid "3rd person perspective"
@@ -8710,7 +8714,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "Velocity zoom"
-msgstr "Zoom velocità"
+msgstr "Zoom di velocità"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:102
 msgid "Forward movement only"
@@ -8799,7 +8803,7 @@ msgstr "Oscillazione arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:85
 msgid "Gun model bobbing"
-msgstr "Movimento su/giù arma"
+msgstr "Ondeggiamento arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:51
@@ -9122,7 +9126,7 @@ msgstr "Reimposta valori base"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
-msgstr "Filtro delle cvar:"
+msgstr "Filtro cvar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
@@ -9254,11 +9258,11 @@ msgstr "Bit per pixel (BPP) per il rendering, 32 è raccomandato"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:54
 msgid "16bit"
-msgstr "16bit"
+msgstr "16 bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:55
 msgid "32bit"
-msgstr "32bit"
+msgstr "32 bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "Full screen"
@@ -9492,11 +9496,11 @@ msgstr "Colorazione psico (easter egg)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:171
 msgid "Trippy vertices (easter egg)"
-msgstr "Vertici da viaggio (easter egg)"
+msgstr "Vertici allucinogeni (easter egg)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:110
 msgid "Instant action! (random map with bots)"
-msgstr "Inizia ora! (mappa casuale con bot)"
+msgstr "Azione immediata! (mappa casuale con bot)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:117
 msgid "???"
@@ -9520,7 +9524,7 @@ msgstr "Difficile"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:135
 msgid "Start Singleplayer!"
-msgstr "Inizia modalità Giocatore Singolo!"
+msgstr "Inizia modalità giocatore singolo!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9529,8 +9533,7 @@ msgstr "Giocatore singolo"
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
 msgstr ""
-"Gioca la campagna in giocatore singolo o una partita istantanea contro dei "
-"bot"
+"Gioca la campagna in giocatore singolo o azione immediata contro dei bot"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -10059,7 +10062,7 @@ msgstr "%d (non piazzato)"
 
 #: qcsrc/menu/xonotic/util.qc:417
 msgid "Update can be downloaded at:"
-msgstr ""
+msgstr "L'aggiornamento può essere scaricato da:"
 
 #: qcsrc/menu/xonotic/util.qc:525
 msgid "Autogenerating mapinfo for newly added maps..."
