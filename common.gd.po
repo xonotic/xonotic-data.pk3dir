@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-28 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-04-29 08:23+0000\n"
+"Last-Translator: GunChleoc\n"
 "Language-Team: Gaelic, Scottish (http://www.transifex.com/team-xonotic/"
 "xonotic/language/gd/)\n"
 "Language: gd\n"
@@ -325,7 +325,7 @@ msgstr "dearbh"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "feumach air cobhair,  (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "feumach air cobhair, (i:%l^7) (s:%h^7 d:%a^7 a:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help, icon"
@@ -1118,11 +1118,11 @@ msgstr "Dh'fhalbh an connadh ort"
 
 #: qcsrc/client/hud/panel/weapons.qc:550
 msgid "Don't have"
-msgstr ""
+msgstr "Chan eil seo agad: "
 
 #: qcsrc/client/hud/panel/weapons.qc:554
 msgid "Unavailable"
-msgstr ""
+msgstr "Chan eil seo ri fhaighinn: "
 
 #: qcsrc/client/main.qc:1027
 msgid " qu/s"

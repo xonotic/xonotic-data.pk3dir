@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-28 23:02+0000\n"
+"PO-Revision-Date: 2019-04-29 19:12+0000\n"
 "Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -5041,11 +5041,11 @@ msgstr "MOUSE%d"
 
 #: qcsrc/common/util.qc:1541
 msgid "MWHEELUP"
-msgstr "ROTELLINASU"
+msgstr "ROTELLASU"
 
 #: qcsrc/common/util.qc:1542
 msgid "MWHEELDOWN"
-msgstr "ROTELLINAGIU'"
+msgstr "ROTELLAGIU'"
 
 #: qcsrc/common/util.qc:1545
 #, c-format

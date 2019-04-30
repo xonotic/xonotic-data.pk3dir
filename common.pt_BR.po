@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-29 02:58+0000\n"
+"PO-Revision-Date: 2019-04-29 19:46+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -5005,11 +5005,11 @@ msgstr "MOUSE%d"
 
 #: qcsrc/common/util.qc:1541
 msgid "MWHEELUP"
-msgstr "RODA DO MOUSE PARA CIMA"
+msgstr "RODAPARACIMA"
 
 #: qcsrc/common/util.qc:1542
 msgid "MWHEELDOWN"
-msgstr "RODA DO MOUSE PARA BAIXO"
+msgstr "RODAPARABAIXO"
 
 #: qcsrc/common/util.qc:1545
 #, c-format
@@ -5088,12 +5088,12 @@ msgstr ""
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr "GATILHO ESQUERDO"
+msgstr "GATILHO_ESQUERDO"
 
 #: qcsrc/common/util.qc:1566
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr "GATILHO DIREITO"
+msgstr "GATILHO_DIREITO"
 
 #: qcsrc/common/util.qc:1567
 #, c-format
