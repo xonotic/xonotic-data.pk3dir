@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-29 19:12+0000\n"
+"PO-Revision-Date: 2019-04-30 20:17+0000\n"
 "Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -5060,7 +5060,7 @@ msgstr "AUX%d"
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "DPAD_UP"
-msgstr "DPAD_SU"
+msgstr "CROCE_SU"
 
 #: qcsrc/common/util.qc:1555 qcsrc/common/util.qc:1556
 #: qcsrc/common/util.qc:1557 qcsrc/common/util.qc:1558
@@ -5079,17 +5079,17 @@ msgstr "X360_%s"
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "DPAD_DOWN"
-msgstr "DPAD_GIU'"
+msgstr "CROCE_GIU'"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "DPAD_LEFT"
-msgstr "DPAD_SINISTRA"
+msgstr "CROCE_SINISTRA"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr "DPAD_DESTRA"
+msgstr "CROCE_DESTRA"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
