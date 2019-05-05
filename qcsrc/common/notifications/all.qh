@@ -310,7 +310,6 @@ float autocvar_notification_lifetime_mapload = 10;
 #endif
 
 #ifdef SVQC
-.float FRAG_VERBOSE;
 void Notification_GetCvars(entity this);
 float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
 #else
