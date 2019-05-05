@@ -597,7 +597,10 @@ void havocbot_movetogoal(entity this)
 				}
 				vector gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
 				if (this.origin.z > gco.z && vdist(vec2(this.velocity), <, autocvar_sv_maxspeed))
-					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
+				{
+					if (this.velocity.z < 0)
+						this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
+				}
 				else if(havocbot_checkgoaldistance(this, gco))
 				{
 					navigation_clearroute(this);
@@ -609,7 +612,7 @@ void havocbot_movetogoal(entity this)
 		}
 		else //if (!(this.aistatus & AI_STATUS_OUT_JUMPPAD))
 		{
-			if(this.origin.z - this.lastteleport_origin.z > (this.maxs.z - this.mins.z) * 0.5)
+			if(this.velocity.z > 0 && this.origin.z - this.lastteleport_origin.z > (this.maxs.z - this.mins.z) * 0.5)
 			{
 				vector velxy = this.velocity; velxy_z = 0;
 				if(vdist(velxy, <, autocvar_sv_maxspeed * 0.2))
