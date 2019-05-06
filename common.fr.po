@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-29 18:37+0000\n"
+"PO-Revision-Date: 2019-05-05 12:09+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -4838,11 +4838,11 @@ msgstr "Non divulgué"
 
 #: qcsrc/common/util.qc:1452
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<KEY NOT FOUND>"
 
 #: qcsrc/common/util.qc:1453
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<UNKNOWN KEYNUM>"
 
 #: qcsrc/common/util.qc:1458
 msgid "TAB"
