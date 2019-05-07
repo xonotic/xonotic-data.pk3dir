@@ -5,6 +5,9 @@
 
 void target_changelevel_use(entity this, entity actor, entity trigger)
 {
+	if(game_stopped)
+		return;
+
 	if(this.spawnflags & CHANGELEVEL_MULTIPLAYER)
 	{
 		// simply don't react if a non-player triggers it
@@ -28,9 +31,13 @@ void target_changelevel_use(entity this, entity actor, entity trigger)
 		MapInfo_SwitchGameType(MapInfo_Type_FromString(this.gametype));
 
 	if (this.chmap == "")
-		localcmd("endmatch\n");
+	{
+		if(IS_REAL_CLIENT(actor) && autocvar_g_campaign) // only count it as a win if the player touched (TODO: bots ending stage/vehicles?)
+			campaign_forcewin = true; // this counts as beating the map in a campaign stage!
+		NextLevel();
+	}
 	else
-		localcmd(strcat("changelevel ", this.chmap, "\n"));
+		changelevel(this.chmap);
 }
 
 /*target_changelevel
