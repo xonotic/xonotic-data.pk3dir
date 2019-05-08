@@ -28,21 +28,15 @@ MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(time > player.touchexplode_time)
-	if(!game_stopped)
-	if(!STAT(FROZEN, player))
-	if(IS_PLAYER(player))
-	if(!IS_DEAD(player))
-	if(!IS_INDEPENDENT_PLAYER(player))
+	if(time > player.touchexplode_time && !game_stopped && !IS_DEAD(player) && IS_PLAYER(player) && !STAT(FROZEN, player) && !IS_INDEPENDENT_PLAYER(player))
+	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
-			if(time > it.touchexplode_time)
-			if(!STAT(FROZEN, it))
-			if(!IS_DEAD(it))
-			if (!IS_INDEPENDENT_PLAYER(it))
+			if(time > it.touchexplode_time && !STAT(FROZEN, it) && !IS_DEAD(it) && !IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(player.absmin, player.absmax, it.absmin, it.absmax))
 			{
 				PlayerTouchExplode(player, it);
 				player.touchexplode_time = it.touchexplode_time = time + 0.2;
 			}
 		});
+	}
 }
