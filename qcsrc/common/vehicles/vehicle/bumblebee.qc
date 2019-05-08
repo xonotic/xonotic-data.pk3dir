@@ -157,7 +157,7 @@ bool bumblebee_gunner_frame(entity this, float dt)
 						  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
 						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed, dt);
 
-	if(!weaponLocked(this))
+	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
 		if(time > gun.attack_finished_single[0])
 			if(gun.vehicle_energy >= autocvar_g_vehicle_bumblebee_cannon_cost)
@@ -531,7 +531,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed, dt);
 
-	if(!weaponLocked(this))
+	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if((PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * PHYS_INPUT_FRAMETIME || autocvar_g_vehicle_bumblebee_raygun == 0))
 	{
 		vehic.gun3.enemy.realowner = this;
