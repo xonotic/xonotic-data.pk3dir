@@ -567,6 +567,9 @@ void race_ClearTime(entity e)
 
 void checkpoint_passed(entity this, entity player)
 {
+	if(IS_VEHICLE(player) && player.owner)
+		player = player.owner;
+
 	if(player.personal && autocvar_g_allow_checkpoints)
 		return; // practice mode!
 
@@ -716,8 +719,6 @@ void checkpoint_passed(entity this, entity player)
 void checkpoint_touch(entity this, entity toucher)
 {
 	EXACTTRIGGER_TOUCH(this, toucher);
-	if(IS_VEHICLE(toucher) && toucher.owner)
-		toucher = toucher.owner;
 	checkpoint_passed(this, toucher);
 }
 
@@ -726,8 +727,6 @@ void checkpoint_use(entity this, entity actor, entity trigger)
 	if(trigger.classname == "info_player_deathmatch") // a spawn, a spawn
 		return;
 
-	if(IS_VEHICLE(actor) && actor.owner)
-		actor = actor.owner;
 	checkpoint_passed(this, actor);
 }
 
