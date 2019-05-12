@@ -345,10 +345,15 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	return w;
 }
 
-void waypoint_spawn_fromeditor(entity pl)
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 {
 	entity e;
 	vector org = pl.origin;
+	if (at_crosshair)
+	{
+		crosshair_trace(pl);
+		org = trace_endpos - eZ * STAT(PL_MIN, pl).z;
+	}
 	int ctf_flags = havocbot_symmetry_origin_order;
 	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
 	           || (autocvar_g_waypointeditor_symmetrical < 0));
@@ -358,7 +363,7 @@ void waypoint_spawn_fromeditor(entity pl)
 		ctf_flags = 2;
 	int wp_num = ctf_flags;
 
-	if(!PHYS_INPUT_BUTTON_CROUCH(pl))
+	if(!PHYS_INPUT_BUTTON_CROUCH(pl) && !at_crosshair)
 	{
 		// snap waypoint to item's origin if close enough
 		IL_EACH(g_items, true,
