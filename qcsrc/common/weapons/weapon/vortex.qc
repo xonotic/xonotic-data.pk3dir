@@ -29,6 +29,9 @@ METHOD(Vortex, wr_glow, vector(Vortex this, entity actor, entity wepent))
 		g.y += f * autocvar_g_weapon_charge_colormod_green_full;
 		g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
 	}
+	// transition color can't be '0 0 0' as it defaults to player model glow color
+	if (g == '0 0 0')
+		g = '0 0 0.000001';
 	return g;
 }
 #endif
