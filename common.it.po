@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-05-19 22:12+0000\n"
+"Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -7393,7 +7393,7 @@ msgstr "Nazione"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:153
 msgid "Select language..."
-msgstr ""
+msgstr "Scegli lingua"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:169
 msgid "Gender:"
