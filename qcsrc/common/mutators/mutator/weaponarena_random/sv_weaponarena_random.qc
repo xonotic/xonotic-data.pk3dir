@@ -9,7 +9,7 @@ MUTATOR_HOOKFUNCTION(weaponarena_random, SetStartItems)
 		g_weaponarena_random = cvar("g_weaponarena_random");
 	else
 		g_weaponarena_random = 0;
-	
+
 	g_weaponarena_random_with_blaster = cvar("g_weaponarena_random_with_blaster");
 }
 

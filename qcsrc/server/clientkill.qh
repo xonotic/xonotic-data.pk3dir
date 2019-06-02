@@ -1,3 +1,4 @@
+#pragma once
 
 // set when showing a kill countdown
 .entity killindicator;

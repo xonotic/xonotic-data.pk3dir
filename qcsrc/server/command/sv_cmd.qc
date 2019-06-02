@@ -608,7 +608,7 @@ void GameCommand_delrec(int request, int argc)  // perhaps merge later with reco
 }
 
 void print_Effect_Index(int d, string effect_name)
-{ 
+{
 	// this is inside a function to avoid expanding it on compilation everytime
 	LOG_INFO("effect ", effect_name, " is ", ftos(_particleeffectnum(effect_name)), "\n");
 	db_put(d, effect_name, "1");

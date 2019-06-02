@@ -624,7 +624,7 @@ float adjust_respawntime(float normal_respawntime) {
 		}
 	}
 	TeamBalance_Destroy(balance);
-	
+
 	if (players >= 2) {
 		return normal_respawntime * (r / (players + o) + l);
 	} else {

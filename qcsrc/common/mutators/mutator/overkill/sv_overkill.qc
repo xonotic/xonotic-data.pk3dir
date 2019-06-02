@@ -11,7 +11,7 @@ bool autocvar_g_overkill_itemwaypoints = true;
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
 IntrusiveList g_overkill_items;
-STATIC_INIT()
+STATIC_INIT(g_overkill_items)
 {
 	g_overkill_items = IL_NEW();
 	IL_PUSH(g_overkill_items, ITEM_HealthMega);

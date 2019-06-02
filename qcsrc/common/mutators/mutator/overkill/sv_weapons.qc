@@ -1,3 +1,4 @@
+#include "sv_weapons.qh"
 string autocvar_g_overkill_weapons;
 
 REGISTER_MUTATOR(ok_weapons, expr_evaluate(autocvar_g_overkill_weapons) || MUTATOR_IS_ENABLED(ok))
