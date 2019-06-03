@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-20 09:04+0000\n"
+"PO-Revision-Date: 2019-06-02 10:26+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -962,7 +962,7 @@ msgstr ""
 "de jeux\n"
 "séparés par des virgules, puis un slash pour faire apparaître le champ dans "
 "ces modes uniquement\n"
-"ou dans tous les modes sauf ceux-ci. Vous pouvez aussi spécifier « all » "
+"ou dans tous les modes sauf ceux-ci. Vous pouvez aussi spécifier « all » "
 "comme champ\n"
 "pour afficher tous les champs disponibles pour le mode de jeu actuel."
 
@@ -971,7 +971,7 @@ msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
-"Les types de jeu spéciaux « teams » et « noteams » peuvent être utilisés "
+"Les types de jeu spéciaux « teams » et « noteams » peuvent être utilisés "
 "pour\n"
 "inclure ou exclure TOUS les modes de jeu en équipe ou non."
 
@@ -992,7 +992,7 @@ msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
-"« champ3 » sera affiché uniquement en CTF, et « champ4 » sera affiché\n"
+"« champ3 » sera affiché uniquement en CTF, et « champ4 » sera affiché\n"
 "dans tous les autres modes de jeu sauf DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:603
@@ -1108,8 +1108,7 @@ msgstr "^1Vous devez répondre avant d'entrer dans la configuration de l'ATH"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
-"^2Pseudonyme ^7à la place de « ^1Anonymous player^7 » dans les statistiques"
+msgstr "^2Pseudonyme ^7à la place de « ^1Anonymous player^7 » dans les stats"
 
 #: qcsrc/client/hud/panel/vote.qc:116
 msgid "A vote has been called for:"
@@ -1573,7 +1572,7 @@ msgstr "Partie perdue !"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "Bien joué ! Cliquez sur « Niveau suivant » pour continuer !"
+msgstr "Bien joué ! Cliquez sur « Niveau suivant » pour continuer !"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
@@ -1581,11 +1580,11 @@ msgstr "Plus de chance la prochaine fois !"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1167
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr "Tubulaire ! Appuyez sur « Niveau suivant » pour continuer !"
+msgstr "Tubulaire ! Appuyez sur « Niveau suivant » pour continuer !"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1169
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr "Malicieux ! Appuyez sur « Niveau suivant » pour continuer !"
+msgstr "Malicieux ! Appuyez sur « Niveau suivant » pour continuer !"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1173
 msgid "Press the space bar to change your currently selected tile"
@@ -1715,7 +1714,7 @@ msgstr "Pousser-Tirer"
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr "Sélectionnez « ^1Partie suivante^7 » dans le menu pour une revanche !"
+msgstr "Sélectionnez « ^1Partie suivante^7 » dans le menu pour une revanche !"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1723,8 +1722,8 @@ msgstr "Sélectionnez « ^1Partie suivante^7 » dans le menu pour une revanche !
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
-"Sélectionnez « ^1Partie suivante^7 » dans le menu pour commencer un nouveau "
-"match !"
+"Sélectionnez « ^1Partie suivante^7 » dans le menu pour commencer un nouveau "
+"match !"
 
 #: qcsrc/common/minigames/minigame/pp.qc:451
 #: qcsrc/common/minigames/minigame/ttt.qc:332
@@ -7169,7 +7168,7 @@ msgstr "Requis (chiffrement activé)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr "Utiliser la cvar « crypto_aeslevel » pour changer vos préférences"
+msgstr "Utiliser la cvar « crypto_aeslevel » pour changer vos préférences"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
 msgid "Hostname:"
@@ -7716,7 +7715,7 @@ msgid ""
 "Enable spatialization (blend the right and left channel slightly to decrease "
 "stereo separation a bit for headphones)"
 msgstr ""
-"Essayer de diminuer le « contraste » entre la partie gauche et droite du "
+"Essayer de diminuer le « contraste » entre la partie gauche et droite du "
 "casque pour un meilleur son"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -8148,7 +8147,7 @@ msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
-"Activer l'effet « bloom », qui éclaire les pixels voisins de pixels très "
+"Activer l'effet « bloom », qui éclaire les pixels voisins de pixels très "
 "brillants. Cela a un gros impact sur les performances."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:226
@@ -8698,7 +8697,7 @@ msgstr "Vitesse du zoom :"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:83
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr "Facteur « d'adoucissement » du zoom, 0 le désactive complètement"
+msgstr "Facteur « d'adoucissement » du zoom, 0 le désactive complètement"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:92
 msgid "ZOOM^Instant"
@@ -9161,8 +9160,8 @@ msgstr "Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?"
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
 msgstr ""
-"Une sauvegarde de la configuration va être créée dans votre répertoire « "
-"data »"
+"Une sauvegarde de la configuration va être créée dans votre répertoire "
+"« data »"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:25
 msgid "Menu Skins"
@@ -9580,7 +9579,7 @@ msgstr "Autoriser les statistiques de joueur à utiliser votre pseudonyme ?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr "En répondant « Non » vous apparaîtrez en tant que « Anonymous player »"
+msgstr "En répondant « Non » vous apparaîtrez en tant que « Anonymous player »"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:87
 msgid "teamplay"
