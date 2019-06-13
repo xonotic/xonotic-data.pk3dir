@@ -8,7 +8,7 @@
 # Ari_tent <xonotic@outlook.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
-# Damian Kurek <starfire24680@gmail.com>, 2017,2019
+# Damian Kurek <starfire24680@gmail.com>, 2017-2019
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-06-11 20:12+0000\n"
+"PO-Revision-Date: 2019-06-12 20:28+0000\n"
 "Last-Translator: Damian Kurek <starfire24680@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -50,7 +50,7 @@ msgstr "^1No se pudo escribir a %s"
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Mensaje de cuenta atrás a la hora %s, segundos restantes: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:142
 #, c-format
@@ -58,11 +58,13 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Mensaje de multiples líneas a la hora %s que\n"
+"^1dura mas de lo normal"
 
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Mensaje a la hora %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
@@ -274,7 +276,7 @@ msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Enviar mensaje público a"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
@@ -298,7 +300,7 @@ msgstr "QMCMD^hola / buena suerte y diviértete"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Enviar en inglés"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
@@ -594,7 +596,8 @@ msgstr "Tiempo total reteniendo la pelota en Keepaway"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
-msgstr "Frecuencia con que una bandera(CTF) o llave (KeyHunt) fué capturada"
+msgstr ""
+"Frecuencia con la que una bandera(CTF) o llave (KeyHunt) ha sido capturada"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "SCO^caps"
@@ -892,7 +895,7 @@ msgstr "asesinatos de compañeros"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Número de ticks (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^ticks"
@@ -940,6 +943,8 @@ msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
+"^2scoreboard_columns_set ^3expand_default ^7carga el diseño actual y lo "
+"expande en la cvar scoreboard_columns para que lo puedas editar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "You can use a ^3|^7 to start the right-aligned fields."
@@ -957,12 +962,21 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
+"Después de un campo puedes poner un signo + o - , y luego una lista \n"
+"de tipos de juego separados por comas, luego una barra diagonal, \n"
+"para hacer que el campo se muestre solo en esos o en todos menos en\n"
+"esos tipos de juegos. También puedes especificar 'all' como campo \n"
+"para mostrar todos los campos disponibles para el modo de juego \n"
+"actual."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:332
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
+"Los nombres especiales de tipo de juego 'teams' y 'noteams' pueden \n"
+"ser usados para incluir/excluir TODOS los modos de juego\n"
+"teams/noteams."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:336
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -973,12 +987,16 @@ msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
+"mostrará el nombre, ping y pl alinieados a la izquierda, y los campos a la\n"
+"derecha de la barra vertical alineada a la derecha."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:339
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
+"'field3' solo será mostrado en CTF, y 'field4' será mostrado en todos los\n"
+"demás modos de juego excepto DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:603
 #: qcsrc/client/hud/panel/scoreboard.qc:610
@@ -1502,7 +1520,7 @@ msgstr "Sobrevive contra las oleadas de monstruos "
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Duel"
-msgstr ""
+msgstr "Duelo"
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -1548,7 +1566,7 @@ msgstr "Mensaje de minijuego"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Excavadora"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1092
 #: qcsrc/common/minigames/minigame/ps.qc:421
@@ -1599,7 +1617,7 @@ msgstr "Guardar"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Conecta Cuatro"
 
 #: qcsrc/common/minigames/minigame/c4.qc:311
 #: qcsrc/common/minigames/minigame/c4.qc:317
@@ -1609,7 +1627,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:368
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 ha ganado la partida!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
@@ -1647,7 +1665,7 @@ msgstr "Haz clic en el tablero para colocar tu pieza"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:7
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "Juego del Molino"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 msgid ""
@@ -1668,7 +1686,7 @@ msgstr "Puedes coger una de las piezas del oponente"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "Pong"
 
 #: qcsrc/common/minigames/minigame/pong.qc:589
 #: qcsrc/common/minigames/minigame/ttt.qc:299
@@ -1694,12 +1712,12 @@ msgstr "Eliminar jugador IA"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "Empujar-Halar"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr ""
+msgstr "¡Selecciona \"^1Next Match^7\" en el menú para una revancha!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -1721,15 +1739,15 @@ msgstr "Siguiente Partida"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "Uno Solo"
 
 #: qcsrc/common/minigames/minigame/ps.qc:414
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Todas las piezas despejadas!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Piezas restantes:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:481
 #, c-format
@@ -1901,7 +1919,7 @@ msgstr "Dibujar números de daño para el fuego amigo"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
-msgstr ""
+msgstr "Munición de Vaporizador"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
@@ -1943,7 +1961,7 @@ msgstr "Granada trampa"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:74
 msgid "Veil grenade"
-msgstr ""
+msgstr "Granada velo"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:34
 msgid "Grenade"
@@ -1951,23 +1969,23 @@ msgstr "Granada"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:20
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "Ametralladora Pesada Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:18
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "Ametralladora Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "Nex Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:20
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Motosierra Overkill Propulsada por Cohetes"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "Escopeta Overkill"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -3019,7 +3037,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 ha sido echado por matar a sus propios compañeros"
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
@@ -3196,12 +3214,12 @@ msgstr "^BG%s%s^K1 se comió el misil de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 se acercó demasiado al cohete de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr "^BG%s^K1 se explotó a si mismo con su Devastator%s%s"
+msgstr "^BG%s^K1 se explotó a si mismo con su Devastatora%s%s"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
@@ -3345,23 +3363,27 @@ msgstr "^BG%s^K1 se exploto a si mismo con su propio Mortero%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 fue baleado por la Ametralladora Pesada Overkill de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 fue despedazado a trozos por la Ametralladora Pesada Overkill de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
+"^BG%s%s^K1 fue acribillado por la Ametralladora Overkill de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ha sido vaporizado por el Nex Overkill de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
@@ -3369,29 +3391,37 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
+"^BG%s%s^K1 fue aserrado por la mirad por la Motosierra Overkill Propulsada "
+"por Cohetes de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s%s^K1 casi esquivó la Motosierra Overkill Propulsada por Cohetes de ^BG"
+"%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 fue aserrado por la mirad por su propia Motosierra Overkill "
+"Propulsada por Cohetes%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 se explotó a si mismo con su Motosierra Overkill Propulsada por "
+"Cohetes%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue baleado por la Escopeta Overkill de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -4373,7 +4403,7 @@ msgstr "^F2Intruso detectado, desactivando escudos!"
 
 #: qcsrc/common/notifications/all.qh:194
 msgid "Notification dump command only works with cl_cmd and sv_cmd."
-msgstr ""
+msgstr "El comando de despliegue solo funciona con cl_cmd y sv_cmd."
 
 #: qcsrc/common/notifications/all.qh:404 qcsrc/common/notifications/all.qh:405
 #, c-format
@@ -4599,7 +4629,7 @@ msgstr ", perdiendo su cadena de %d eliminaciones"
 #: qcsrc/common/notifications/all.qh:642
 #, c-format
 msgid " with %d %s"
-msgstr ""
+msgstr " con %d %s"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
@@ -4795,11 +4825,11 @@ msgstr "No Revelar"
 
 #: qcsrc/common/util.qc:1452
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<KEY NOT FOUND>"
 
 #: qcsrc/common/util.qc:1453
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<UNKNOWN KEYNUM>"
 
 #: qcsrc/common/util.qc:1458
 msgid "TAB"
@@ -4808,7 +4838,7 @@ msgstr "TAB"
 #: qcsrc/common/util.qc:1459 qcsrc/common/util.qc:1530
 #, c-format
 msgid "ENTER"
-msgstr ""
+msgstr "ENTRAR"
 
 #: qcsrc/common/util.qc:1460
 msgid "ESCAPE"
@@ -4927,12 +4957,12 @@ msgstr "BARRAINVERSA"
 #: qcsrc/common/util.qc:1499
 #, c-format
 msgid "F%d"
-msgstr ""
+msgstr "F%d"
 
 #: qcsrc/common/util.qc:1509
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "TN_%d"
 
 #: qcsrc/common/util.qc:1514 qcsrc/common/util.qc:1515
 #: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
@@ -4945,7 +4975,7 @@ msgstr ""
 #: qcsrc/common/util.qc:1530 qcsrc/common/util.qc:1531
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "TN_%s"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
@@ -4989,30 +5019,30 @@ msgstr "CAPTURADEPANTALLA"
 #: qcsrc/common/util.qc:1539
 #, c-format
 msgid "MOUSE%d"
-msgstr ""
+msgstr "RATÓN%d"
 
 #: qcsrc/common/util.qc:1541
 msgid "MWHEELUP"
-msgstr ""
+msgstr "RRUEDAARRIBA"
 
 #: qcsrc/common/util.qc:1542
 msgid "MWHEELDOWN"
-msgstr ""
+msgstr "RRUEDAABAJO"
 
 #: qcsrc/common/util.qc:1545
 #, c-format
 msgid "JOY%d"
-msgstr ""
+msgstr "JOY%d"
 
 #: qcsrc/common/util.qc:1548
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "DPAD_UP"
-msgstr ""
+msgstr "CRUCETA_ARRIBA"
 
 #: qcsrc/common/util.qc:1555 qcsrc/common/util.qc:1556
 #: qcsrc/common/util.qc:1557 qcsrc/common/util.qc:1558
@@ -5026,108 +5056,108 @@ msgstr ""
 #: qcsrc/common/util.qc:1573 qcsrc/common/util.qc:1574
 #, c-format
 msgid "X360_%s"
-msgstr ""
+msgstr "X360_%s"
 
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "DPAD_DOWN"
-msgstr ""
+msgstr "CRUCETA_ABAJO"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "DPAD_LEFT"
-msgstr ""
+msgstr "CRUCETA_IZQUIERDA"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr ""
+msgstr "CRUCETA_DERECHA"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
 msgid "START"
-msgstr ""
+msgstr "INICIO"
 
 #: qcsrc/common/util.qc:1560
 #, c-format
 msgid "BACK"
-msgstr ""
+msgstr "ATRÁS"
 
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "LEFT_THUMB"
-msgstr ""
+msgstr "PULGAR_IZQUIERDO"
 
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr ""
+msgstr "PULGAR_DERECHO"
 
 #: qcsrc/common/util.qc:1563
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr ""
+msgstr "HOMBRO_IZQUIERDO"
 
 #: qcsrc/common/util.qc:1564
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr ""
+msgstr "HOMBRO_DERECHO"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr ""
+msgstr "GATILLO_IZQUIERDO"
 
 #: qcsrc/common/util.qc:1566
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr ""
+msgstr "GATILLO_DERECHO"
 
 #: qcsrc/common/util.qc:1567
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr ""
+msgstr "PULGAR_IZQUIERDO_ARRIBA"
 
 #: qcsrc/common/util.qc:1568
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr ""
+msgstr "PULGAR_IZQUIERDO_ABAJO"
 
 #: qcsrc/common/util.qc:1569
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr ""
+msgstr "PULGAR_IZQUIERDO_IZQUIERDA"
 
 #: qcsrc/common/util.qc:1570
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr ""
+msgstr "PULGAR_IZQUIERDO_DERECHA"
 
 #: qcsrc/common/util.qc:1571
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr ""
+msgstr "PULGAR_DERECHO_ARRIBA"
 
 #: qcsrc/common/util.qc:1572
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr ""
+msgstr "PULGAR_DERECHO_ABAJO"
 
 #: qcsrc/common/util.qc:1573
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr ""
+msgstr "PULGAR_DERECHO_IZQUIERDA"
 
 #: qcsrc/common/util.qc:1574
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr ""
+msgstr "PULGAR_DERECHO_DERECHA"
 
 #: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
 #: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
 #, c-format
 msgid "JOY_%s"
-msgstr ""
+msgstr "JOY_%s"
 
 #: qcsrc/common/util.qc:1584
 #, c-format
@@ -5152,7 +5182,7 @@ msgstr "DERECHA"
 #: qcsrc/common/util.qc:1593
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "NOTAMIDI%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 #, c-format
@@ -5217,7 +5247,7 @@ msgstr "Crylink"
 
 #: qcsrc/common/weapons/weapon/devastator.qh:18
 msgid "Devastator"
-msgstr "Devastador"
+msgstr "Devastadora"
 
 #: qcsrc/common/weapons/weapon/electro.qh:18
 msgid "Electro"
@@ -5522,7 +5552,7 @@ msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:51
 msgid "  dumptree - dump the state of the menu as a tree to the console"
-msgstr "dumptree - vertir el estado el menú en forma de árbol a la consola"
+msgstr "dumptree - vertir el estado del menú en forma de árbol a la consola"
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available options:"
@@ -6703,7 +6733,7 @@ msgid ""
 "Delete to clear; Enter when done."
 msgstr ""
 "Haz click aqui o presiona Ctrl-F para proveer una palabra clave para reducir "
-"la lista de mapas. Ctrl-Delete para despejar; Presione enter cuando haya "
+"la lista de mapas. Ctrl-Suprimir para despejar; Presione entrar cuando haya "
 "acabado."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:184
@@ -6947,6 +6977,8 @@ msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr ""
+"A los jugadores se les dará un conjunto de armas al aparecer como también "
+"munición ilimitada sin recoger armas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:243
 msgid "Weapon arenas:"
@@ -6975,11 +7007,10 @@ msgid ""
 "to find some or if he fails to do so, face death. The secondary fire mode "
 "does not inflict any damage but is good for doing trickjumps."
 msgstr ""
-"Los jugadores recibirán solo una arma, la cual puede eliminar "
-"instantáneamente al oponente con un solo disparo. Si el jugador se queda sin "
-"munición, tiene 10 segundos para encontrar algo de munición, pero si no lo "
-"logra, morirá. El modo disparo secundario no inflige ningún daño pero es "
-"bueno para hacer saltos."
+"Los jugadores recibirán una arma, la cual puede eliminar instantáneamente al "
+"oponente con un solo disparo. Si el jugador se queda sin munición, tiene 10 "
+"segundos para encontrar munición, pero si no lo logra, morirá. El modo "
+"disparo secundario no inflige ningún daño pero es bueno para hacer saltos."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:284
 msgid ""
@@ -6993,7 +7024,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:288
 msgid "with blaster"
-msgstr "con blaster"
+msgstr "Con el blaster"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:289
 msgid "Always carry the blaster as an additional weapon in Nix"
@@ -7324,11 +7355,11 @@ msgstr "Estadísticas "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:129
 msgid "Allow player statistics to track your client"
-msgstr "Permitir estadistica de jugadores rastrear a su cliente"
+msgstr "Permitir a la estadística de jugadores rastrear a su cliente"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:133
 msgid "Allow player statistics to use your nickname"
-msgstr "Permitir estadistica de jugadores usar su sobrenombre"
+msgstr "Permitir a la estadística de jugadores usar su sobrenombre"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:149
 msgid "Country"
@@ -7745,7 +7776,7 @@ msgstr "Informacion de depuracion sobre sonidos"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
-msgstr "¿Está seguro que desea reiniciar las asignaciones de teclas?"
+msgstr "¿Está seguro que desea reiniciar todas las asignaciones de teclas?"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qh:6
 msgid "Reset key bindings"
@@ -8250,7 +8281,7 @@ msgstr "Velocidad de desvanecimiento:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:51
 msgid "Enable rows / columns highlighting"
-msgstr "Habilitar destacación de filas / columnas"
+msgstr "Habilitar resaltado de filas / columnas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:53
 msgid "Show accuracy underneath scoreboard"
@@ -8265,6 +8296,9 @@ msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
+"Posición del tamaño de equipo: Off=no mostrar; Left=en la parte izquierda "
+"del marcador y mueve la puntuación del equipo a la derecha; Right=en la "
+"parte derecha del marcador"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
@@ -9232,7 +9266,7 @@ msgstr "Invertir vista horizontalmente"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:68
 msgid "Poor man's left handed mode"
-msgstr ""
+msgstr "Invertir la imagen horizontalmente"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "Anisotropy:"
