@@ -7,6 +7,7 @@
 # Antoni Das <Antonidas159@gmail.com>, 2015,2017
 # sapphireliu <balancedliu@gmail.com>, 2014
 # kalawore <kalawore@outlook.com>, 2015
+# Liang Liu <dxkliu@126.com>, 2019
 # Losier Blackheath <losier.cc@gmail.com>, 2018
 # sapphireliu <balancedliu@gmail.com>, 2014
 # 杜茂森 <dumaosen_main01@outlook.com>, 2018-2019
@@ -17,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-06-14 06:43+0000\n"
+"Last-Translator: Liang Liu <dxkliu@126.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -40,7 +41,7 @@ msgstr "无法将^1写入到 %s"
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3倒计时时间 %s, 剩余秒数: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:142
 #, c-format
@@ -52,11 +53,11 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "消息显示时长 %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "基本消息"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -296,15 +297,15 @@ msgstr "QMCMD^团队对话"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
-msgstr ""
+msgstr "QMCMD^四倍伤害即将出现"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^免费物品 %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^免费物品, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item (l:%l^7)"
@@ -312,7 +313,7 @@ msgstr "QMCMD^捡起物品 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^物品已取走, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^negative"
@@ -348,27 +349,27 @@ msgstr "QMCMD^找到旗帜, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^防守中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending, icon"
-msgstr ""
+msgstr "QMCMD^防守中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^漫游中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^roaming, icon"
-msgstr ""
+msgstr "QMCMD^漫游中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^攻击中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking, icon"
-msgstr ""
+msgstr "QMCMD^攻击中, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
@@ -376,16 +377,16 @@ msgstr "QMCMD^killed flagcarrier (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^夺旗人已被干掉, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr ""
+msgstr "QMCMD^已弃旗 (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^dropped flag, icon"
-msgstr ""
+msgstr "QMCMD^已弃旗, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^drop weapon, icon"
