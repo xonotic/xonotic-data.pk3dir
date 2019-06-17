@@ -868,6 +868,9 @@ void waypoint_think(entity this)
 	navigation_testtracewalk = 0;
 	this.wplinked = true;
 	this.dphitcontentsmask = dphitcontentsmask_save;
+
+	setthink(this, func_null);
+	this.nextthink = 0;
 }
 
 void waypoint_clearlinks(entity wp)
