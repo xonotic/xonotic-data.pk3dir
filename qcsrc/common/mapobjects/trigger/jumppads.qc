@@ -352,18 +352,17 @@ float trigger_push_get_push_time(entity this, vector endpos)
 {
 	vector org = trigger_push_get_start_point(this);
 
-	entity e = spawn();
-	setsize(e, PL_MIN_CONST, PL_MAX_CONST);
-	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	float grav = PHYS_GRAVITY(NULL);
-	if (e && PHYS_ENTGRAVITY(e))
-		grav *= PHYS_ENTGRAVITY(e);
 
 	entity t = this.enemy;
 	if (t)
 	{
+		entity e = spawn();
+		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 		vector v = trigger_push_calculatevelocity(org, t, this.height, e);
 		vector v2 = trigger_push_calculatevelocity(endpos, t, this.height, e);
+		delete(e);
 		return (v.z + v2.z) / grav;
 	}
 	else if (!(this.target && this.target != ""))

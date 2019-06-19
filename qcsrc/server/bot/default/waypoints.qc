@@ -461,7 +461,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 		if(!start_wp)
 		{
 			// should not happen
-			LOG_INFOF("Couldn't find custom jumppad waypoint at %v\n", start_org);
+			LOG_INFOF("Couldn't find start waypoint at %v\n", start_org);
 			waypoint_clear_start_wp(pl);
 			return;
 		}
