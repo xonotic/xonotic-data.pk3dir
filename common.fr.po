@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-06-18 13:13+0000\n"
+"PO-Revision-Date: 2019-06-19 07:16+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -6725,7 +6725,7 @@ msgstr "Inhumain"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "Godlike"
-msgstr "Comme un Dieu"
+msgstr "Divin"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:155
 msgid "Mutators..."
@@ -6749,7 +6749,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:184
 msgid "Add shown"
-msgstr "Ajouter les filtrés"
+msgstr "Ajouter les filtrées"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:185
 msgid "Add the maps shown in the list to your selection"
@@ -6757,7 +6757,7 @@ msgstr "Ajouter les cartes affichées dans la liste à votre sélection"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Remove shown"
-msgstr "Supprimer les filtrés"
+msgstr "Supprimer les filtrées"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
 msgid "Remove the maps shown in the list from your selection"
@@ -6810,11 +6810,11 @@ msgstr "Informations sur la carte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "All Weapons Arena"
-msgstr "Arène avec toutes les Armes"
+msgstr "Arène avec toutes les armes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:30
 msgid "Most Weapons Arena"
-msgstr "Arène avec la plupart des Armes"
+msgstr "Arène avec la plupart des armes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:46
 #, c-format
@@ -6844,12 +6844,12 @@ msgstr "NIX"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:65
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid "Rocket Flying"
-msgstr "Roquettes Volantes"
+msgstr "Roquettes volantes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:67
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:217
 msgid "Invincible Projectiles"
-msgstr "Projectiles Invincibles"
+msgstr "Projectiles invincibles"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:293
@@ -6934,7 +6934,7 @@ msgstr "Activer les esquives"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:171
 msgid "All players are almost invisible"
-msgstr "Tous les joueurs sont presque invisibles"
+msgstr "Les joueurs sont tous quasi invisibles"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:179
 msgid "Only possible to inflict damage on your enemy while they're airborne"
@@ -8744,7 +8744,7 @@ msgstr "Vue"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:34
 msgid "Weapon Priority List (* = mutator weapon)"
-msgstr "Liste de priorité des armes (* = arme de mutateur)"
+msgstr "Liste de priorité des armes (* = arme de mutateur)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:40
 msgid "Up"
@@ -9440,7 +9440,7 @@ msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
-"Ajustement de la saturation (0 = niveaux de gris, 1 = normal, 2 = "
+"Ajustement de la saturation (0 = niveaux de gris, 1 = normal, 2 = "
 "sursaturé), nécessite le contrôle de couleur GLSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
