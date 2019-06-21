@@ -509,6 +509,10 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 			start_wp_origin = org_save;
 		}
 	}
+	else if (start_wp_is_spawned)
+	{
+		waypoint_clear_start_wp(pl);
+	}
 }
 
 void waypoint_remove(entity wp)
