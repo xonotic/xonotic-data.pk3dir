@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 08:17+0000\n"
+"PO-Revision-Date: 2019-06-23 04:05+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -7104,7 +7104,7 @@ msgstr "Требуется (будет шифрование)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr "Используйте cvar \"crypto_aeslevel\" для изменения настроек"
+msgstr "Используйте переменную \"crypto_aeslevel\" для изменения настроек"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
 msgid "Hostname:"
@@ -7307,7 +7307,7 @@ msgstr "Статистика"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:129
 msgid "Allow player statistics to track your client"
-msgstr "Разрешить статистке отслеживать клиента"
+msgstr "Разрешить статистике отслеживать клиента"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:133
 msgid "Allow player statistics to use your nickname"
@@ -8948,7 +8948,7 @@ msgstr "Компенсация ошибок движения"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Use encryption (AES) when available"
-msgstr "Использовать шифрование (AES), если возможно"
+msgstr "Использовать шифрование AES по возможности"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
 msgid "Framerate"
@@ -9772,7 +9772,7 @@ msgstr "Спортивный режим"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Modified Servers"
-msgstr "Модифицированные:"
+msgstr "Модифицированные"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
