@@ -237,7 +237,7 @@ NET_HANDLE(damagetext, bool isNew)
 
     if (can_use_3d && !prefer_2d) {
         // world coords
-        // using 1 as minimum because of shotgun (same as menu)
+        // 1 as min because shotgun sends damagetext per pellet (see https://gitlab.com/xonotic/xonotic-data.pk3dir/issues/1994).
         for (entity e = findradius(entcs.origin, max(autocvar_cl_damagetext_accumulate_range, 1)); e; e = e.chain) {
             if (e.instanceOfDamageText
                 && !e.m_screen_coords // we're using origin for both world coords and screen coords so avoid mismatches
