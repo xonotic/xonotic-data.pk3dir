@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-06-23 04:05+0000\n"
+"PO-Revision-Date: 2019-06-24 04:35+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -923,7 +923,7 @@ msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
-"^2scoreboard_columns_set ^7 без аргументов считывает конфигурацию из cvar'а "
+"^2scoreboard_columns_set ^7 без аргументов считывает значение из переменной "
 "scoreboard_columns"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:317
@@ -5594,7 +5594,7 @@ msgstr "Компилятор"
 
 #: qcsrc/menu/xonotic/credits.qc:142
 msgid "Other Active Contributors"
-msgstr "Другие активные соучастники"
+msgstr "Другие активные участники"
 
 #: qcsrc/menu/xonotic/credits.qc:149
 msgid "Translators"
@@ -6534,7 +6534,7 @@ msgstr "Игра по сети"
 msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
-msgstr "Играть по сети, посмотреть демки или изменить настройки игрока"
+msgstr "Играть по сети, смотреть демки или изменить настройки игрока"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
@@ -7051,7 +7051,7 @@ msgstr "Присоединиться!"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
 #: qcsrc/menu/xonotic/serverlist.qc:1044
 msgid "MOD^Default"
-msgstr "MOD^По умолчанию"
+msgstr "MOD^Стандартный"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
 #, c-format
@@ -7319,7 +7319,7 @@ msgstr "Страна"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:153
 msgid "Select language..."
-msgstr "Выберите язык..."
+msgstr "Выбрать язык..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:169
 msgid "Gender:"
@@ -8233,7 +8233,7 @@ msgstr "Показывать точность под таблицей резул
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show team sizes:"
-msgstr "Показывать размеры команд:"
+msgstr "Размеры команд:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:56
 msgid ""
@@ -8405,7 +8405,7 @@ msgstr "Добавлять расширенную информацию о фра
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
-msgstr "Указывать место фрага в сообщения о смерти, если возможно"
+msgstr "Указывать место фрага в сообщениях о смерти по возможности"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
@@ -8516,7 +8516,7 @@ msgstr "Применять мою модель к игрокам"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:53
 msgid "Force player colors to mine"
-msgstr "Применять мои цвета к игрокам"
+msgstr "Применять мои цвета"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "In non teamplay modes only"
@@ -9252,7 +9252,7 @@ msgstr "Высококачественный буфер кадров"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:97
 msgid "Depth first:"
-msgstr "Сначала глубина:"
+msgstr "Буфер глубин:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:99
 msgid ""
