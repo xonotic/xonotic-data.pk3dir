@@ -542,18 +542,7 @@ float preMenuInit()
 
 string campaign_name_previous;
 float campaign_won_previous;
-#ifdef WATERMARK
-string autocvar_menu_watermark = WATERMARK;
-#else
-string autocvar_menu_watermark = "";
-#endif
-void postMenuDraw()
-{
-	if(autocvar_menu_watermark != "")
-	{
-		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
-	}
-}
+void postMenuDraw() {}
 void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrigin, vector theSize);
 .entity winnerDialog;
 void preMenuDraw()
