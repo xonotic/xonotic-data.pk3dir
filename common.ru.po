@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-06-24 04:35+0000\n"
+"PO-Revision-Date: 2019-06-24 06:22+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -923,7 +923,7 @@ msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
-"^2scoreboard_columns_set ^7 без аргументов считывает значение из переменной "
+"^2scoreboard_columns_set ^7без аргументов считывает значение из переменной "
 "scoreboard_columns"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:317
@@ -7104,7 +7104,8 @@ msgstr "Требуется (будет шифрование)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr "Используйте переменную \"crypto_aeslevel\" для изменения настроек"
+msgstr ""
+"Используйте переменную \"crypto_aeslevel\" для изменения ваших настроек"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
 msgid "Hostname:"
