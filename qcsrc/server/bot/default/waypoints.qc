@@ -31,7 +31,7 @@ void waypoint_unreachable(entity pl)
 	entity e2 = navigation_findnearestwaypoint(pl, false);
 	if(!e2)
 	{
-		LOG_INFOF("Can't find any waypoint nearby\n");
+		LOG_INFO("Can't find any waypoint nearby\n");
 		return;
 	}
 

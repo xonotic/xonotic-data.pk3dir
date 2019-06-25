@@ -27,6 +27,10 @@ void XonoticProfileTab_draw(entity me)
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
 	SUPER(XonoticProfileTab).draw(me);
 }
+void language_selector_click(entity me, entity btn)
+{
+	localcmd("\nmenu_cmd languageselect\n");
+}
 void XonoticProfileTab_fill(entity me)
 {
 	entity e, pms, label, box;
@@ -145,8 +149,14 @@ void XonoticProfileTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Country")));
 
 	me.TR(me);
+		me.TDempty(me, 0.75);
+		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Select language..."), '0 0 0'));
+			e.onClick = language_selector_click;
+			e.onClickEntity = me;
+		/*
 		me.TDempty(me, 0.5);
 		me.TD(me, 4.5, 2, e = makeXonoticLanguageList()); // todo: cl_country: create proper country list
+		*/
 
 
 	// ================

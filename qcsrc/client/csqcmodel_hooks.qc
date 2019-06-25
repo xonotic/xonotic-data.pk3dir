@@ -341,10 +341,10 @@ void CSQCPlayer_FallbackFrame_PostUpdate(entity this, bool isnew)
 	// player "pops in"
 	if(isnew)
 	{
-#define FIX_FRAMETIME(f,ft) MACRO_BEGIN {																			\
-		if(IS_DEAD_FRAME(this.f) && this.ft != 0 && this.death_time != 0)											\
-			this.ft = this.death_time;																				\
-} MACRO_END
+#define FIX_FRAMETIME(f,ft) MACRO_BEGIN \
+		if(IS_DEAD_FRAME(this.f) && this.ft != 0 && this.death_time != 0) \
+			this.ft = this.death_time; \
+MACRO_END
 		FIX_FRAMETIME(frame, frame1time);
 		FIX_FRAMETIME(frame2, frame2time);
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
@@ -441,7 +441,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it");
 						}
 					}
-					else if(this.tag_entity.isplayermodel)
+					else if((this.tag_entity.isplayermodel & ISPLAYER_MODEL))
 					{
 						skeleton_loadinfo(this.tag_entity);
 						this.tag_index = this.tag_entity.bone_weapon;
@@ -601,12 +601,17 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 	if(!this.modelindex || this.model == "null" || this.alpha < 0)
 	{
 		this.drawmask = 0;
+		if(this.snd_looping > 0)
+		{
+			sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
+			this.snd_looping = 0;
+		}
 		return;
 	}
 	else
 		this.drawmask = MASK_NORMAL;
 
-	if(this.isplayermodel && this.drawmask) // this checks if it's a player MODEL!
+	if((this.isplayermodel & ISPLAYER_MODEL) && this.drawmask) // this checks if it's a player MODEL!
 	{
 		CSQCPlayer_ModelAppearance_Apply(this, (this.isplayermodel & ISPLAYER_LOCAL));
 		CSQCPlayer_LOD_Apply(this);
@@ -697,7 +702,7 @@ void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool isloc
 	this.iflags |= IFLAG_V_ANGLE_X;
 	// revert to values from server
 	CSQCModel_Effects_PreUpdate(this);
-	if(this.isplayermodel)
+	if((this.isplayermodel & ISPLAYER_MODEL))
 	{
 		if(!isplayer)
 			CSQCPlayer_FallbackFrame_PreUpdate(this);
@@ -713,7 +718,7 @@ void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islo
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
 
 	// save values set by server
-	if(this.isplayermodel)
+	if((this.isplayermodel & ISPLAYER_MODEL))
 	{
 		CSQCPlayer_ModelAppearance_PostUpdate(this);
 		if(isplayer)

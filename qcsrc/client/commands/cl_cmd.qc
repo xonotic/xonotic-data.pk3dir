@@ -565,11 +565,12 @@ void GameCommand(string command)
 
 // These functions are here specifically to add special + - commands to the game, and are not really normal commands.
 // Please add client commands to the function above this, as this is only for special reasons.
+// NOTE: showaccuracy is kept as legacy command
 #define CONSOLE_COMMANDS_NORMAL() \
 	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = true; }) \
 	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = false; }) \
-	CONSOLE_COMMAND("+showaccuracy", { scoreboard_showaccuracy = true; }) \
-	CONSOLE_COMMAND("-showaccuracy", { scoreboard_showaccuracy = false; }) \
+	CONSOLE_COMMAND("+showaccuracy", { }) \
+	CONSOLE_COMMAND("-showaccuracy", { }) \
 	/* nothing */
 
 #define CONSOLE_COMMANDS_MOVEMENT() \

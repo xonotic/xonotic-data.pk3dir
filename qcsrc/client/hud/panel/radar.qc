@@ -342,7 +342,7 @@ void HUD_Radar()
 
 	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
-		if ( GetResourceAmount(it, RESOURCE_HEALTH) >= 0 )
+		if ( GetResource(it, RES_HEALTH) >= 0 )
 		if ( it.team == myteam + 1 || ISGAMETYPE(RACE) || !teamplay )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
@@ -370,11 +370,11 @@ void HUD_Radar()
 
 	if ( hud_panel_radar_mouse )
 	{
-		string message = "Click to select teleport destination";
+		string message = _("Click to select teleport destination");
 
 		if ( STAT(HEALTH) <= 0 )
 		{
-			message = "Click to select spawn location";
+			message = _("Click to select spawn location");
 		}
 
 		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, true, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,

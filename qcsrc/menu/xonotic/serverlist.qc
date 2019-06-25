@@ -6,6 +6,36 @@
 #include "dialog_multiplayer_join_serverinfo.qh"
 #include <common/mapinfo.qh>
 
+void SL_ProcessCategoryOverrides(.string override_field_string, .float override_field)
+{
+	string s;
+	for (int i = 0; i < category_ent_count; ++i)
+	{
+		s = categories[i].override_field_string;
+		if (s != "" && s != categories[i].cat_name)
+		{
+			int catnum = 0;
+			for (int x = 0; x < category_ent_count; ++x)
+			{
+				if(categories[x].cat_name == s)
+				{
+					catnum = x + 1;
+					break;
+				}
+			}
+			if (catnum)
+			{
+				strfree(categories[i].override_field_string);
+				categories[i].override_field = catnum;
+				continue;
+			}
+			LOG_INFOF("RegisterSLCategories(): Improper override '%s' for category '%s'!", s, categories[i].cat_name);
+		}
+		strfree(categories[i].override_field_string);
+		categories[i].override_field = 0;
+	}
+}
+
 void RegisterSLCategories()
 {
 	entity cat;
@@ -20,45 +50,8 @@ void RegisterSLCategories()
 	SLIST_CATEGORIES
 	#undef SLIST_CATEGORY
 
-	int i, x, catnum;
-	string s;
-
-	#define PROCESS_OVERRIDE(override_string,override_field) \
-		for(i = 0; i < category_ent_count; ++i) \
-		{ \
-			s = categories[i].override_string; \
-			if(s != "" && s != categories[i].cat_name) \
-			{ \
-				catnum = 0; \
-				for(x = 0; x < category_ent_count; ++x) \
-				{ \
-					if(categories[x].cat_name == s) \
-					{ \
-						catnum = x + 1; \
-						break; \
-					} \
-				} \
-				if(catnum) \
-				{ \
-					strfree(categories[i].override_string); \
-					categories[i].override_field = catnum; \
-					continue; \
-				} \
-				else \
-				{ \
-					LOG_INFOF( \
-						"RegisterSLCategories(): Improper override '%s' for category '%s'!", \
-						s, \
-						categories[i].cat_name \
-					); \
-				} \
-			} \
-			strfree(categories[i].override_string); \
-			categories[i].override_field = 0; \
-		}
-	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
-	PROCESS_OVERRIDE(cat_dioverride_string, cat_dioverride)
-	#undef PROCESS_OVERRIDE
+	SL_ProcessCategoryOverrides(cat_enoverride_string, cat_enoverride);
+	SL_ProcessCategoryOverrides(cat_dioverride_string, cat_dioverride);
 }
 
 // Supporting Functions
@@ -810,7 +803,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
 #define SET_YRANGE(start,end) \
-	draw_scale = boxToGlobalSize(eX * 1 + eY * (end - start), oldscale); \
+	draw_scale = boxToGlobalSize(eX + eY * (end - start), oldscale); \
 	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
 
 	for (j = 0; j < category_draw_count; ++j) {
@@ -1102,11 +1095,6 @@ float XonoticServerList_mouseMove(entity me, vector pos)
 
 bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 {
-	vector org, sz;
-
-	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
-	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
-
 	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		ServerList_Connect_Click(NULL, me);
@@ -1116,6 +1104,8 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 	{
 		if(me.nItems != 0)
 		{
+			vector org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
+			vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
 			m_play_click_sound(MENU_SOUND_OPEN);
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);

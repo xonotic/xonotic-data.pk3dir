@@ -583,7 +583,7 @@ METHOD(Crylink, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapon
     if(actor.(weaponentity).crylink_lastgroup && actor.(weaponentity).crylink_waitrelease)
         return true;
 
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(crylink, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(crylink, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
     return ammo_amount;
 }
@@ -593,7 +593,7 @@ METHOD(Crylink, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
     if(actor.(weaponentity).crylink_lastgroup && actor.(weaponentity).crylink_waitrelease)
         return true;
 
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(crylink, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(crylink, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
     return ammo_amount;
 }

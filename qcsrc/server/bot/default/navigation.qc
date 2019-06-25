@@ -1332,10 +1332,10 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
-			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResourceAmount(this, RESOURCE_FUEL)));
+			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResource(this, RES_FUEL)));
 
 			// enough fuel ?
-			if(GetResourceAmount(this, RESOURCE_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
+			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship
@@ -1819,7 +1819,7 @@ void navigation_goalrating_end(entity this)
 	this.goalstack31 = NULL;
 
 	navigation_routetogoal(this, navigation_bestgoal, this.origin);
-	LOG_DEBUG("best goal ", this.goalcurrent.classname);
+	LOG_DEBUG("best goal ", navigation_bestgoal.classname);
 
 	if (wp && this.goalcurrent == wp)
 		navigation_poproute(this);
@@ -1903,7 +1903,7 @@ void navigation_unstuck(entity this)
 	{
 		// evaluate the next goal on the queue
 		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
-		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
+		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with squared distance ", ftos(d));
 		set_tracewalk_dest(bot_waypoint_queue_goal, this.origin, false);
 		if (tracewalk(this, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
 			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))

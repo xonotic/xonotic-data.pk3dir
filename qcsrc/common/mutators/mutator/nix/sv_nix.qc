@@ -57,12 +57,12 @@ REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED
 	{
 		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-			SetResourceAmount(it, RESOURCE_SHELLS, start_ammo_shells);
-			SetResourceAmount(it, RESOURCE_BULLETS, start_ammo_nails);
-			SetResourceAmount(it, RESOURCE_ROCKETS, start_ammo_rockets);
-			SetResourceAmount(it, RESOURCE_CELLS, start_ammo_cells);
-			SetResourceAmount(it, RESOURCE_PLASMA, start_ammo_plasma);
-			SetResourceAmount(it, RESOURCE_FUEL, start_ammo_fuel);
+			SetResource(it, RES_SHELLS, start_ammo_shells);
+			SetResource(it, RES_BULLETS, start_ammo_nails);
+			SetResource(it, RES_ROCKETS, start_ammo_rockets);
+			SetResource(it, RES_CELLS, start_ammo_cells);
+			SetResource(it, RES_PLASMA, start_ammo_plasma);
+			SetResource(it, RES_FUEL, start_ammo_fuel);
 			STAT(WEAPONS, it) = start_weapons;
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
@@ -134,34 +134,34 @@ void NIX_GiveCurrentWeapon(entity this)
 
 	if(nix_nextchange != this.nix_lastchange_id) // this shall only be called once per round!
 	{
-		SetResourceAmount(this, RESOURCE_SHELLS, 0);
-		SetResourceAmount(this, RESOURCE_BULLETS, 0);
-		SetResourceAmount(this, RESOURCE_ROCKETS, 0);
-		SetResourceAmount(this, RESOURCE_CELLS, 0);
-		SetResourceAmount(this, RESOURCE_PLASMA, 0);
-		SetResourceAmount(this, RESOURCE_FUEL, 0);
+		SetResource(this, RES_SHELLS, 0);
+		SetResource(this, RES_BULLETS, 0);
+		SetResource(this, RES_ROCKETS, 0);
+		SetResource(this, RES_CELLS, 0);
+		SetResource(this, RES_PLASMA, 0);
+		SetResource(this, RES_FUEL, 0);
 		if(this.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
 			switch (wpn.ammo_type)
 			{
-				case RESOURCE_SHELLS:  SetResourceAmount(this, RESOURCE_SHELLS, autocvar_g_pickup_shells_max);  break;
-				case RESOURCE_BULLETS: SetResourceAmount(this, RESOURCE_BULLETS, autocvar_g_pickup_nails_max);   break;
-				case RESOURCE_ROCKETS: SetResourceAmount(this, RESOURCE_ROCKETS, autocvar_g_pickup_rockets_max); break;
-				case RESOURCE_CELLS:   SetResourceAmount(this, RESOURCE_CELLS, autocvar_g_pickup_cells_max);   break;
-				case RESOURCE_PLASMA:  SetResourceAmount(this, RESOURCE_PLASMA, autocvar_g_pickup_plasma_max);   break;
-				case RESOURCE_FUEL:    SetResourceAmount(this, RESOURCE_FUEL, autocvar_g_pickup_fuel_max);    break;
+				case RES_SHELLS:  SetResource(this, RES_SHELLS, autocvar_g_pickup_shells_max);  break;
+				case RES_BULLETS: SetResource(this, RES_BULLETS, autocvar_g_pickup_nails_max);   break;
+				case RES_ROCKETS: SetResource(this, RES_ROCKETS, autocvar_g_pickup_rockets_max); break;
+				case RES_CELLS:   SetResource(this, RES_CELLS, autocvar_g_pickup_cells_max);   break;
+				case RES_PLASMA:  SetResource(this, RES_PLASMA, autocvar_g_pickup_plasma_max);   break;
+				case RES_FUEL:    SetResource(this, RES_FUEL, autocvar_g_pickup_fuel_max);    break;
 			}
 		}
 		else
 		{
 			switch (wpn.ammo_type)
 			{
-				case RESOURCE_SHELLS:  SetResourceAmount(this, RESOURCE_SHELLS, autocvar_g_balance_nix_ammo_shells);  break;
-				case RESOURCE_BULLETS: SetResourceAmount(this, RESOURCE_BULLETS, autocvar_g_balance_nix_ammo_nails);   break;
-				case RESOURCE_ROCKETS: SetResourceAmount(this, RESOURCE_ROCKETS, autocvar_g_balance_nix_ammo_rockets); break;
-				case RESOURCE_CELLS:   SetResourceAmount(this, RESOURCE_CELLS, autocvar_g_balance_nix_ammo_cells);   break;
-				case RESOURCE_PLASMA:  SetResourceAmount(this, RESOURCE_PLASMA, autocvar_g_balance_nix_ammo_plasma);   break;
-				case RESOURCE_FUEL:    SetResourceAmount(this, RESOURCE_FUEL, autocvar_g_balance_nix_ammo_fuel);    break;
+				case RES_SHELLS:  SetResource(this, RES_SHELLS, autocvar_g_balance_nix_ammo_shells);  break;
+				case RES_BULLETS: SetResource(this, RES_BULLETS, autocvar_g_balance_nix_ammo_nails);   break;
+				case RES_ROCKETS: SetResource(this, RES_ROCKETS, autocvar_g_balance_nix_ammo_rockets); break;
+				case RES_CELLS:   SetResource(this, RES_CELLS, autocvar_g_balance_nix_ammo_cells);   break;
+				case RES_PLASMA:  SetResource(this, RES_PLASMA, autocvar_g_balance_nix_ammo_plasma);   break;
+				case RES_FUEL:    SetResource(this, RES_FUEL, autocvar_g_balance_nix_ammo_fuel);    break;
 			}
 		}
 
@@ -197,12 +197,12 @@ void NIX_GiveCurrentWeapon(entity this)
 	{
 		switch (wpn.ammo_type)
 		{
-			case RESOURCE_SHELLS:  GiveResource(this, RESOURCE_SHELLS, autocvar_g_balance_nix_ammoincr_shells);  break;
-			case RESOURCE_BULLETS: GiveResource(this, RESOURCE_BULLETS, autocvar_g_balance_nix_ammoincr_nails);   break;
-			case RESOURCE_ROCKETS: GiveResource(this, RESOURCE_ROCKETS, autocvar_g_balance_nix_ammoincr_rockets); break;
-			case RESOURCE_CELLS:   GiveResource(this, RESOURCE_CELLS, autocvar_g_balance_nix_ammoincr_cells);   break;
-			case RESOURCE_PLASMA:  GiveResource(this, RESOURCE_PLASMA, autocvar_g_balance_nix_ammoincr_plasma);   break;
-			case RESOURCE_FUEL:    GiveResource(this, RESOURCE_FUEL, autocvar_g_balance_nix_ammoincr_fuel);    break;
+			case RES_SHELLS:  GiveResource(this, RES_SHELLS, autocvar_g_balance_nix_ammoincr_shells);  break;
+			case RES_BULLETS: GiveResource(this, RES_BULLETS, autocvar_g_balance_nix_ammoincr_nails);   break;
+			case RES_ROCKETS: GiveResource(this, RES_ROCKETS, autocvar_g_balance_nix_ammoincr_rockets); break;
+			case RES_CELLS:   GiveResource(this, RES_CELLS, autocvar_g_balance_nix_ammoincr_cells);   break;
+			case RES_PLASMA:  GiveResource(this, RES_PLASMA, autocvar_g_balance_nix_ammoincr_plasma);   break;
+			case RES_FUEL:    GiveResource(this, RES_FUEL, autocvar_g_balance_nix_ammoincr_fuel);    break;
 		}
 
 		this.nix_nextincr = time + autocvar_g_balance_nix_incrtime;

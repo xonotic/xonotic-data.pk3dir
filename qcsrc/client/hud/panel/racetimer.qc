@@ -148,10 +148,11 @@ void HUD_RaceTimer ()
 		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '1 1 0' * 0.6 * mySize.y));
 		drawstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
-		s = _("^1Intermediate 1 (+15.42)");
+		s = strcat("^1", sprintf(_("Intermediate %d"), 1), " (+15.42)");
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
-		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, "missing a checkpoint");
+		s = sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
+		s = strcat("^1", s);
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
@@ -197,7 +198,8 @@ void HUD_RaceTimer ()
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if(a > 0)
 			{
-				s = sprintf(_("^1PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
+				s = sprintf(_("PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
+				s = strcat("^1", s);
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
@@ -246,10 +248,19 @@ void HUD_RaceTimer ()
 			a = bound(0, (1 + t - time), 1);
 			if(a > 0)
 			{
+				string col;
 				if(time < t)
-					s = sprintf(_("^1PENALTY: %.1f (%s)"), (t - time) * 0.1, race_penaltyreason);
+				{
+					t = (t - time) * 0.1;
+					col = "^1";
+				}
 				else
-					s = sprintf(_("^2PENALTY: %.1f (%s)"), 0, race_penaltyreason);
+				{
+					t = 0;
+					col = "^2";
+				}
+				s = sprintf(_("PENALTY: %.1f (%s)"), t, race_penaltyreason);
+				s = strcat(col, s);
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}

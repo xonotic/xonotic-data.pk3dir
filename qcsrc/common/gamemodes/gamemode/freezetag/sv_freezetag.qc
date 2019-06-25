@@ -19,7 +19,7 @@ void freezetag_count_alive_players()
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
-		if (GetResourceAmount(it, RESOURCE_HEALTH) < 1 || STAT(FROZEN, it) == FROZEN_NORMAL)
+		if (GetResource(it, RES_HEALTH) < 1 || STAT(FROZEN, it) == FROZEN_NORMAL)
 		{
 			continue;
 		}
@@ -43,12 +43,10 @@ void freezetag_count_alive_players()
 	eliminatedPlayers.SendFlags |= 1;
 }
 
-#define FREEZETAG_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
-
 bool freezetag_CheckTeams()
 {
 	static float prev_missing_teams_mask;
-	if(FREEZETAG_ALIVE_TEAMS_OK())
+	if (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
@@ -154,7 +152,7 @@ entity freezetag_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), {
-		if (STAT(FROZEN, it) != FROZEN_NORMAL && GetResourceAmount(it, RESOURCE_HEALTH) >= 1)
+		if (STAT(FROZEN, it) != FROZEN_NORMAL && GetResource(it, RES_HEALTH) >= 1)
 		{
 			if (!last_pl)
 				last_pl = it;
@@ -237,7 +235,7 @@ void havocbot_goalrating_ft_freeplayers(entity this, float ratingscale, vector o
 			navigation_routerating(this, it, ratingscale, 2000);
 		}
 		else if (best_dist2
-			&& GetResourceAmount(it, RESOURCE_HEALTH) < GetResourceAmount(this, RESOURCE_HEALTH) + 30
+			&& GetResource(it, RES_HEALTH) < GetResource(this, RES_HEALTH) + 30
 			&& vlen2(it.origin - org) < best_dist2)
 		{
 			// If teamate is not frozen still seek them out as fight better
@@ -332,7 +330,7 @@ void ft_RemovePlayer(entity this)
 		freezetag_LastPlayerForTeam_Notify(this);
 	Unfreeze(this, false);
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // neccessary to correctly count alive players
+	SetResourceExplicit(this, RES_HEALTH, 0); // neccessary to correctly count alive players
 	freezetag_count_alive_players();
 }
 
@@ -516,7 +514,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		if (STAT(FROZEN, player) == FROZEN_NORMAL)
 		{
 			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-			SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
+			SetResourceExplicit(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 		}
 		else if (!STAT(FROZEN, player))
 			STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
@@ -524,7 +522,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	else if (STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
+		SetResourceExplicit(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
@@ -619,7 +617,7 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 
 	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : CS(frag_target).ping));
 	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target,
-		GetResourceAmount(frag_attacker, RESOURCE_HEALTH), GetResourceAmount(frag_attacker, RESOURCE_ARMOR), (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
+		GetResource(frag_attacker, RES_HEALTH), GetResource(frag_attacker, RES_ARMOR), (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
 
 	return true;
 }

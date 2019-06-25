@@ -207,7 +207,6 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 		keyboard = CS(this).movement / autocvar_sv_maxspeed;
 
 		float trigger = autocvar_bot_ai_keyboard_threshold;
-		float trigger1 = -trigger;
 
 		// categorize forward movement
 		// at skill < 1.5 only forward
@@ -220,7 +219,7 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 			if (sk < 2.5)
 				keyboard.y = 0;
 		}
-		else if (keyboard.x < trigger1 && sk > 1.5)
+		else if (keyboard.x < -trigger && sk > 1.5)
 		{
 			keyboard.x = -1;
 			if (sk < 4.5)
@@ -237,27 +236,31 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 
 		if (keyboard.y > trigger)
 			keyboard.y = 1;
-		else if (keyboard.y < trigger1)
+		else if (keyboard.y < -trigger)
 			keyboard.y = -1;
 		else
 			keyboard.y = 0;
 
 		if (keyboard.z > trigger)
 			keyboard.z = 1;
-		else if (keyboard.z < trigger1)
+		else if (keyboard.z < -trigger)
 			keyboard.z = -1;
 		else
 			keyboard.z = 0;
 
+		// make sure bots don't get stuck if havocbot_keyboardtime is very high
+		if (keyboard == '0 0 0')
+			this.havocbot_keyboardtime = min(this.havocbot_keyboardtime, time + 0.2);
+
 		this.havocbot_keyboard = keyboard * autocvar_sv_maxspeed;
 		if (this.havocbot_ducktime > time)
 			PHYS_INPUT_BUTTON_CROUCH(this) = true;
-	}
 
-	keyboard = this.havocbot_keyboard;
-	float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
-	//dprint("movement ", vtos(CS(this).movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
-	CS(this).movement = CS(this).movement + (keyboard - CS(this).movement) * blend;
+		keyboard = this.havocbot_keyboard;
+		float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
+		//dprint("movement ", vtos(CS(this).movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
+		CS(this).movement = CS(this).movement + (keyboard - CS(this).movement) * blend;
+	}
 }
 
 void havocbot_bunnyhop(entity this, vector dir)
@@ -477,7 +480,7 @@ void havocbot_movetogoal(entity this)
 	// Jetpack navigation
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
-	if(GetResourceAmount(this, RESOURCE_FUEL))
+	if(GetResource(this, RES_FUEL))
 	{
 		if(autocvar_bot_debug_goalstack)
 		{
@@ -594,7 +597,10 @@ void havocbot_movetogoal(entity this)
 				}
 				vector gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
 				if (this.origin.z > gco.z && vdist(vec2(this.velocity), <, autocvar_sv_maxspeed))
-					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
+				{
+					if (this.velocity.z < 0)
+						this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
+				}
 				else if(havocbot_checkgoaldistance(this, gco))
 				{
 					navigation_clearroute(this);
@@ -606,7 +612,7 @@ void havocbot_movetogoal(entity this)
 		}
 		else //if (!(this.aistatus & AI_STATUS_OUT_JUMPPAD))
 		{
-			if(this.origin.z - this.lastteleport_origin.z > (this.maxs.z - this.mins.z) * 0.5)
+			if(this.velocity.z > 0 && this.origin.z - this.lastteleport_origin.z > (this.maxs.z - this.mins.z) * 0.5)
 			{
 				vector velxy = this.velocity; velxy_z = 0;
 				if(vdist(velxy, <, autocvar_sv_maxspeed * 0.2))
@@ -673,7 +679,7 @@ void havocbot_movetogoal(entity this)
 			return;
 		}
 		else if(!this.jumppadcount && !this.goalcurrent.wphardwired
-			&& GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR) > ROCKETJUMP_DAMAGE())
+			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
 			if(this.velocity.z < 0)
 			{
@@ -1099,7 +1105,7 @@ void havocbot_movetogoal(entity this)
 				this.bot_stop_moving_timeout = time + 0.4 + random() * 0.2;
 			}
 
-			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : v_forward * 32);
+			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : flatdir * 32);
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			vector dst_down = dst_ahead - '0 0 3000';
 			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
@@ -1112,7 +1118,7 @@ void havocbot_movetogoal(entity this)
 				// Look downwards
 				traceline(dst_ahead , dst_down, true, NULL);
 				//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
-				//te_lightning2(NULL, dst_ahead, dst_down); // Draw "downwards" look
+				//te_lightning2(NULL, dst_ahead, trace_endpos); // Draw "downwards" look
 				if(trace_endpos.z < this.origin.z + this.mins.z)
 				{
 					s = pointcontents(trace_endpos + '0 0 1');
@@ -1303,7 +1309,7 @@ void havocbot_chooseenemy(entity this)
 			traceline(this.origin+this.view_ofs, ( this.enemy.absmin + this.enemy.absmax ) * 0.5,false,NULL);
 			if (trace_ent == this.enemy || trace_fraction == 1)
 			if (vdist(((this.enemy.absmin + this.enemy.absmax) * 0.5) - this.origin, <, 1000))
-			if (GetResourceAmount(this, RESOURCE_HEALTH) > 30)
+			if (GetResource(this, RES_HEALTH) > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
 				this.havocbot_chooseenemy_finished = time + 0.5;

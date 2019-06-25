@@ -44,7 +44,7 @@ void swampslug_think(entity this)
 	this.swamp_lifetime -= 1;
 
 	//Slug dead? then remove curses.
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		this.owner.in_swamp = 0;
 		delete(this);
