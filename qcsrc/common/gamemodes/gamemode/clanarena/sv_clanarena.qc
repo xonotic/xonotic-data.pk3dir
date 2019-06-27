@@ -171,15 +171,16 @@ entity CA_SpectateNext(entity player, entity start)
 	return start;
 }
 
+// Using the same mechanism as LMS to set start weapons.
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 {
-	if (autocvar_g_ca_weapons_all && (M_ARGV(0, string) == "0" || M_ARGV(0, string) == ""))
+	// most weapons arena
+	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
 	{
 		M_ARGV(0, string) = "most";
 	}
 }
 
-// Using the same mechanism as LMS to set start weapons
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -188,8 +189,13 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 
-	if (!autocvar_g_ca_weapons_all)
+	// If no weapons, keep the fallback from SetWeaponArena.
+	if (!autocvar_g_ca_weapons_all && weaponsInMapAll != '0 0 0')
 	{
+		// Ok, so the map has weapons, clear out what SetWeaponArena put in STAT(WEAPONS, player)
+		// except blaster and shotgun - those are hardcoded since most maps don't contain them.
+		STAT(WEAPONS, player) = WEPSET(BLASTER) | WEPSET(SHOTGUN);
+
 		FOREACH(Weapons, it != WEP_Null, {
 			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
 			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;

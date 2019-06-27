@@ -402,13 +402,27 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	return true;
 }
 
+// Using the same mechanism as LMS to set start weapons.
+MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
+{
+	// most weapons arena
+	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+	{
+		M_ARGV(0, string) = "most";
+	}
+}
+
 MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	// same mechanism as LMS to set start weapons
-	if (!autocvar_g_freezetag_weapons_all)
+	// If no weapons, keep the fallback from SetWeaponArena.
+	if (!autocvar_g_freezetag_weapons_all && weaponsInMapAll != '0 0 0')
 	{
+		// Ok, so the map has weapons, clear out what SetWeaponArena put in STAT(WEAPONS, player)
+		// except blaster and shotgun - those are hardcoded since most maps don't contain them.
+		STAT(WEAPONS, player) = WEPSET(BLASTER) | WEPSET(SHOTGUN);
+
 		FOREACH(Weapons, it != WEP_Null, {
 			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
 			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
@@ -593,15 +607,6 @@ MUTATOR_HOOKFUNCTION(ft, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = freezetag_teams;
 	return true;
-}
-
-MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
-{
-	// most weapons arena
-	if(autocvar_g_freezetag_weapons_all && (M_ARGV(0, string) == "0" || M_ARGV(0, string) == ""))
-	{
-		M_ARGV(0, string) = "most";
-	}
 }
 
 MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
