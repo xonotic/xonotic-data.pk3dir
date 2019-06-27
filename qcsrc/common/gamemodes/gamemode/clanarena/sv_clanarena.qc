@@ -192,14 +192,18 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	// If no weapons, keep the fallback from SetWeaponArena.
 	if (!autocvar_g_ca_weapons_all && weaponsInMapAll != '0 0 0')
 	{
-		// Ok, so the map has weapons, clear out what SetWeaponArena put in STAT(WEAPONS, player)
-		// except blaster and shotgun - those are hardcoded since most maps don't contain them.
-		STAT(WEAPONS, player) = WEPSET(BLASTER) | WEPSET(SHOTGUN);
-
+		// Ok, so the map has weapons, clear out what SetWeaponArena put in STAT(WEAPONS, player),
+		// then add normal spawn weapons and weapons available on the map.
+		STAT(WEAPONS, player) = '0 0 0';
 		FOREACH(Weapons, it != WEP_Null, {
+			bool start = it.weaponstartoverride == 1 || (it.weaponstart == 1 && it.weaponstartoverride != 0);
+			if (start) {
+				STAT(WEAPONS, player) |= WepSet_FromWeapon(it);
+			}
 			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
 			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
-			if (normal && !blocked) {
+			bool disabled = it.weaponstartoverride == 0;
+			if (normal && !blocked && !disabled) {
 				STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
 			}
 		});
