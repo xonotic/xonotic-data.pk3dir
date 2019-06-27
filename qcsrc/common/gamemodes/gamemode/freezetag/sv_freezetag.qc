@@ -423,14 +423,12 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 		// then add normal spawn weapons and weapons available on the map.
 		STAT(WEAPONS, player) = '0 0 0';
 		FOREACH(Weapons, it != WEP_Null, {
-			bool start = it.weaponstartoverride == 1 || (it.weaponstart == 1 && it.weaponstartoverride != 0);
-			if (start) {
+			if (it.weaponstart) {
 				STAT(WEAPONS, player) |= WepSet_FromWeapon(it);
 			}
 			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
 			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
-			bool disabled = it.weaponstartoverride == 0;
-			if (normal && !blocked && !disabled) {
+			if (normal && !blocked) {
 				STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
 			}
 		});
