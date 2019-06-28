@@ -336,6 +336,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if (!(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL))
 					if(fabs(gco.z - this.origin.z) < this.maxs.z - this.mins.z)
 					if(this.goalstack01 && !wasfreed(this.goalstack01))
+					if (!(this.goalstack01.wpflags & WAYPOINTFLAG_JUMP))
 					{
 						vector gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
 						deviation = vectoangles(gno - this.origin) - vectoangles(gco - this.origin);
@@ -410,6 +411,8 @@ void havocbot_bunnyhop(entity this, vector dir)
 // return true when bot isn't getting closer to the current goal
 bool havocbot_checkgoaldistance(entity this, vector gco)
 {
+	if (this.bot_stop_moving_timeout > time)
+		return false;
 	float curr_dist_z = max(20, fabs(this.origin.z - gco.z));
 	float curr_dist_2d = max(20, vlen(vec2(this.origin - gco)));
 	float distance_time = this.goalcurrent_distance_time;
@@ -679,6 +682,7 @@ void havocbot_movetogoal(entity this)
 			return;
 		}
 		else if(!this.jumppadcount && !this.goalcurrent.wphardwired
+			&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
 			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
 			if(this.velocity.z < 0)
@@ -993,7 +997,26 @@ void havocbot_movetogoal(entity this)
 			vector flat_diff = vec2(diff);
 			offset = max(32, current_speed * cos(deviation.y * DEG2RAD) * 0.3) * flatdir;
 			vector actual_destorg = this.origin + offset;
-			if (!this.goalstack01 || this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER))
+			if (this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
+			{
+				if (time > this.bot_stop_moving_timeout
+					&& fabs(deviation.y) > 20 && current_speed > maxspeed * 0.4
+					&& vdist(vec2(this.origin - this.goalcurrent_prev.origin), <, 50))
+				{
+					this.bot_stop_moving_timeout = time + 0.1;
+				}
+				if (current_speed > autocvar_sv_maxspeed * 0.9
+					&& vlen2(flat_diff) < vlen2(vec2(this.goalcurrent_prev.origin - destorg))
+					&& vdist(vec2(this.origin - this.goalcurrent_prev.origin), >, 50)
+					&& vdist(vec2(this.origin - this.goalcurrent_prev.origin), <, 150)
+				)
+				{
+					PHYS_INPUT_BUTTON_JUMP(this) = true;
+					// avoid changing route while bot is jumping a gap
+					navigation_goalrating_timeout_extend_if_needed(this, 1.5);
+				}
+			}
+			else if (!this.goalstack01 || this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER))
 			{
 				if (vlen2(flat_diff) < vlen2(offset))
 				{
@@ -1029,7 +1052,7 @@ void havocbot_movetogoal(entity this)
 				turning = true;
 			}
 
-			LABEL(jump_check);
+			LABEL(jumpobstacle_check);
 			dir = flatdir = normalize(actual_destorg - this.origin);
 
 			if (turning || fabs(deviation.y) < 50) // don't even try to jump if deviation is too high
@@ -1048,7 +1071,7 @@ void havocbot_movetogoal(entity this)
 							actual_destorg = destorg;
 							turning = false;
 							this.bot_tracewalk_time = time + 0.25;
-							goto jump_check;
+							goto jumpobstacle_check;
 						}
 						s = trace_fraction;
 						// don't artificially reduce max jump height in real-time
@@ -1112,7 +1135,8 @@ void havocbot_movetogoal(entity this)
 
 			bool unreachable = false;
 			s = CONTENT_SOLID;
-			if(trace_fraction == 1 && this.jumppadcount == 0 && !this.goalcurrent.wphardwired )
+			if (trace_fraction == 1 && !this.jumppadcount && !this.goalcurrent.wphardwired
+				&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP) )
 			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
 			{
 				// Look downwards

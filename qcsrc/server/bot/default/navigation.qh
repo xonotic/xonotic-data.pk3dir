@@ -10,6 +10,7 @@ float navigation_testtracewalk;
 vector jumpstepheightvec;
 vector stepheightvec;
 vector jumpheight_vec;
+float jumpheight_time;
 
 entity navigation_bestgoal;
 

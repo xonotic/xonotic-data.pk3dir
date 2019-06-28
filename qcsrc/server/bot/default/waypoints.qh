@@ -70,7 +70,7 @@ bool waypoint_load_links();
 #define waypoint_remove_links_hardwired() waypoint_load_or_remove_links_hardwired(true)
 void waypoint_load_or_remove_links_hardwired(bool removal_mode);
 
-void waypoint_spawn_fromeditor(entity pl, bool at_crosshair);
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp);
 entity waypoint_spawn(vector m1, vector m2, float f);
 entity waypoint_spawnpersonal(entity this, vector position);
 

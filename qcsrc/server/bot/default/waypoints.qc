@@ -285,16 +285,25 @@ void waypoint_setupmodel(entity wp)
 		wp.model = "";
 }
 
+entity waypoint_get(vector m1, vector m2)
+{
+	if (m1 == m2)
+	{
+		m1 -= '8 8 8';
+		m2 += '8 8 8';
+	}
+	IL_EACH(g_waypoints, boxesoverlap(m1, m2, it.absmin, it.absmax), { return it; });
+
+	return NULL;
+}
+
 entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	if(!(f & (WAYPOINTFLAG_PERSONAL | WAYPOINTFLAG_GENERATED)) && m1 == m2)
 	{
-		vector em1 = m1 - '8 8 8';
-		vector em2 = m2 + '8 8 8';
-		IL_EACH(g_waypoints, boxesoverlap(em1, em2, it.absmin, it.absmax),
-		{
-			return it;
-		});
+		entity wp_found = waypoint_get(m1, m2);
+		if (wp_found)
+			return wp_found;
 	}
 	// spawn only one destination waypoint for teleports teleporting player to the exact same spot
 	// otherwise links loaded from file would be applied only to the first destination
@@ -355,7 +364,11 @@ void waypoint_addlink_for_custom_jumppad(entity wp_from, entity wp_to)
 	IL_EACH(g_jumppads, boxesoverlap(wp_from.absmin, wp_from.absmax, it.absmin, it.absmax),
 	{
 		jp = it;
+		break;
 	});
+	if (!jp)
+		return;
+
 	float cost = trigger_push_get_push_time(jp, wp_to.origin);
 	wp_from.wp00 = wp_to;
 	wp_from.wp00mincost = cost;
@@ -366,15 +379,16 @@ void waypoint_addlink_for_custom_jumppad(entity wp_from, entity wp_to)
 bool start_wp_is_spawned;
 vector start_wp_origin;
 
-void waypoint_clear_start_wp(entity pl)
+void waypoint_clear_start_wp(entity pl, bool warn)
 {
 	start_wp_is_spawned = false;
 	start_wp_origin = '0 0 0';
 	pl.wp_locked = NULL;
-	LOG_INFO("^xf80Start waypoint has been cleared\n");
+	if (warn)
+		LOG_INFO("^xf80Start waypoint has been cleared.\n");
 }
 
-void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
 {
 	entity e = NULL, jp = NULL;
 	vector org = pl.origin;
@@ -387,9 +401,12 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 			jp = it;
 			break;
 		});
-		if (jp && start_wp_is_spawned)
+	}
+	if (jp || is_jump_wp)
+	{
+		if (start_wp_is_spawned)
 			start_wp_is_spawned = false;
-		LOG_INFO("^xf80Spawning start waypoint\n");
+		LOG_INFO("^xf80Spawning start waypoint...\n");
 	}
 	int ctf_flags = havocbot_symmetry_origin_order;
 	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
@@ -400,7 +417,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 		ctf_flags = 2;
 	int wp_num = ctf_flags;
 
-	if(!PHYS_INPUT_BUTTON_CROUCH(pl) && !at_crosshair)
+	if(!PHYS_INPUT_BUTTON_CROUCH(pl) && !at_crosshair && !is_jump_wp)
 	{
 		// snap waypoint to item's origin if close enough
 		IL_EACH(g_items, true,
@@ -418,12 +435,13 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 	vector start_org = '0 0 0';
 	if (start_wp_is_spawned)
 	{
-		LOG_INFO("^xf80Spawning destination waypoint\n");
+		LOG_INFO("^xf80Spawning destination waypoint...\n");
 		start_org = start_wp_origin;
 	}
 
 	// save org as it can be modified spawning symmetrycal waypoints
-	vector org_save = org;
+	vector initial_origin = '0 0 0';
+	bool initial_origin_is_set = false;
 
 	LABEL(add_wp);
 
@@ -440,14 +458,32 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 		if (!pl.wp_locked)
 			pl.wp_locked = e;
 	}
+	else if (is_jump_wp)
+	{
+		entity wp_found = waypoint_get(org, org);
+		if (wp_found && !(wp_found.wpflags & WAYPOINTFLAG_JUMP))
+		{
+			LOG_INFO("Error: can't spawn a jump waypoint over an existent waypoint of a different type\n");
+			return;
+		}
+		e = waypoint_spawn(org, org, WAYPOINTFLAG_JUMP | WAYPOINTFLAG_NORELINK);
+		if (!pl.wp_locked)
+			pl.wp_locked = e;
+	}
 	else
 		e = waypoint_spawn(org, org, 0);
 	if(!e)
 	{
 		LOG_INFOF("Couldn't spawn waypoint at %v\n", org);
 		if (start_wp_is_spawned)
-			waypoint_clear_start_wp(pl);
+			waypoint_clear_start_wp(pl, true);
 		return;
+	}
+
+	if (!initial_origin_is_set)
+	{
+		initial_origin = e.origin;
+		initial_origin_is_set = true;
 	}
 
 	entity start_wp = NULL;
@@ -462,13 +498,14 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 		{
 			// should not happen
 			LOG_INFOF("Couldn't find start waypoint at %v\n", start_org);
-			waypoint_clear_start_wp(pl);
+			waypoint_clear_start_wp(pl, true);
 			return;
 		}
-		waypoint_addlink_for_custom_jumppad(start_wp, e);
+		waypoint_addlink(start_wp, e);
 	}
 
-	waypoint_schedulerelink(e);
+	if (!(jp || is_jump_wp))
+		waypoint_schedulerelink(e);
 	bprint(strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 
 	if (start_wp_is_spawned)
@@ -498,20 +535,19 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair)
 			goto add_wp;
 		}
 	}
-
-	if (jp)
+	if (jp || is_jump_wp)
 	{
 		if (!start_wp_is_spawned)
 		{
 			// we've just created a custom jumppad waypoint
 			// the next one created by the user will be the destination waypoint
 			start_wp_is_spawned = true;
-			start_wp_origin = org_save;
+			start_wp_origin = initial_origin;
 		}
 	}
 	else if (start_wp_is_spawned)
 	{
-		waypoint_clear_start_wp(pl);
+		waypoint_clear_start_wp(pl, false);
 	}
 }
 
@@ -543,7 +579,7 @@ void waypoint_remove_fromeditor(entity pl)
 	if (e.wpflags & WAYPOINTFLAG_GENERATED)
 	{
 		if (start_wp_is_spawned)
-			waypoint_clear_start_wp(pl);
+			waypoint_clear_start_wp(pl, true);
 		return;
 	}
 
@@ -580,12 +616,12 @@ void waypoint_remove_fromeditor(entity pl)
 	}
 
 	if (start_wp_is_spawned)
-		waypoint_clear_start_wp(pl);
+		waypoint_clear_start_wp(pl, true);
 }
 
 void waypoint_removelink(entity from, entity to)
 {
-	if (from == to || (from.wpflags & WAYPOINTFLAG_NORELINK))
+	if (from == to || (from.wpflags & WAYPOINTFLAG_NORELINK && !(from.wpflags & WAYPOINTFLAG_JUMP)))
 		return;
 
 	entity fromwp31_prev = from.wp31;
@@ -713,7 +749,11 @@ float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_
 	float height = from.z - to.z;
 	if(height > jumpheight_vec.z && autocvar_sv_gravity > 0)
 	{
-		float height_cost = sqrt(height / (autocvar_sv_gravity / 2));
+		float height_cost;
+		if (boolean(from_ent.wpflags & WAYPOINTFLAG_JUMP))
+			height_cost = jumpheight_time + sqrt((height + jumpheight_vec.z) / (autocvar_sv_gravity / 2));
+		else
+			height_cost = sqrt(height / (autocvar_sv_gravity / 2));
 		c = waypoint_getlinearcost(vlen(vec2(to - from))); // xy distance cost
 		if(height_cost > c)
 			c = height_cost;
@@ -751,7 +791,7 @@ void waypoint_addlink_customcost(entity from, entity to, float c)
 {
 	if (from == to || waypoint_islinked(from, to))
 		return;
-	if (c == -1 && (from.wpflags & WAYPOINTFLAG_NORELINK))
+	if (c == -1 && (from.wpflags & WAYPOINTFLAG_NORELINK) && !(from.wpflags & WAYPOINTFLAG_JUMP))
 		return;
 
 	if(c == -1)
@@ -794,7 +834,10 @@ void waypoint_addlink_customcost(entity from, entity to, float c)
 
 void waypoint_addlink(entity from, entity to)
 {
-	waypoint_addlink_customcost(from, to, -1);
+	if ((from.wpflags & WAYPOINTFLAG_NORELINK) && !(from.wpflags & (WAYPOINTFLAG_JUMP)))
+		waypoint_addlink_for_custom_jumppad(from, to);
+	else
+		waypoint_addlink_customcost(from, to, -1);
 }
 
 // relink this spawnfunc_waypoint
@@ -848,7 +891,7 @@ void waypoint_think(entity this)
 
 			//traceline(this.origin, it.origin, false, NULL);
 			//if (trace_fraction == 1)
-			if (this.wpisbox)
+			if (this.wpisbox || this.wpflags & WAYPOINTFLAG_JUMP)
 				relink_walkculled += 0.5;
 			else
 			{
@@ -858,7 +901,7 @@ void waypoint_think(entity this)
 					relink_walkculled += 0.5;
 			}
 
-			if (it.wpisbox)
+			if (it.wpisbox || it.wpflags & WAYPOINTFLAG_JUMP)
 				relink_walkculled += 0.5;
 			else
 			{
@@ -1062,10 +1105,7 @@ bool waypoint_load_links()
 		}
 
 		++c;
-		if ((wp_from.wpflags & WAYPOINTFLAG_NORELINK) && !(wp_from.wpflags & WAYPOINTFLAG_GENERATED))
-			waypoint_addlink_for_custom_jumppad(wp_from, wp_to);
-		else
-			waypoint_addlink(wp_from, wp_to);
+		waypoint_addlink(wp_from, wp_to);
 	}
 
 	fclose(file);
