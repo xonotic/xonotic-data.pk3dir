@@ -14,6 +14,7 @@ const int WAYPOINTFLAG_USEFUL = BIT(17);  // Useless WP detection temporary flag
 const int WAYPOINTFLAG_DEAD_END = BIT(16);  // Useless WP detection temporary flag.
 const int WAYPOINTFLAG_LADDER = BIT(15);
 const int WAYPOINTFLAG_JUMP = BIT(14);
+const int WAYPOINTFLAG_CUSTOM_JP = BIT(13);  // jumppad with different destination waypoint (changed in the editor)
 
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
