@@ -499,12 +499,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	allow_mutatorblocked = M_ARGV(3, bool);
 
 	if(allguns)
-	{
-		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
-			d = true;
-		else
-			d = false;
-	}
+		d = boolean(weaponinfo.spawnflags & WEP_FLAG_NORMAL);
 	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
 

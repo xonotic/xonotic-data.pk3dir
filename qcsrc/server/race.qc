@@ -19,6 +19,7 @@
 #include <common/mapobjects/triggers.qh>
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
+#include <common/vehicles/sv_vehicles.qh>
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 
 IntrusiveList g_race_targets;
@@ -566,6 +567,9 @@ void race_ClearTime(entity e)
 
 void checkpoint_passed(entity this, entity player)
 {
+	if(IS_VEHICLE(player) && player.owner)
+		player = player.owner;
+
 	if(player.personal && autocvar_g_allow_checkpoints)
 		return; // practice mode!
 

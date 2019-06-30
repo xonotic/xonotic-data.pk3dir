@@ -82,8 +82,7 @@ void DamageEffect_Think(entity this)
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
-	vector org;
-	org = gettaginfo(this, 0); // origin at attached location
+	vector org = gettaginfo(this, 0); // origin at attached location
 	__pointparticles(this.team, org, '0 0 0', 1);
 }
 
@@ -108,8 +107,8 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 	int nearestbone = 0;
 	float life;
-	string specstr, effectname;
-	entity e;
+	string effectname;
+	entity e, wep;
 
 	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
@@ -149,15 +148,15 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, thedamage * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
-	effectname = DEATH_WEAPONOF(type).netname;
-
-	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
+	wep = DEATH_WEAPONOF(type);
+	effectname = strcat("damage_", wep.netname);
+	if((wep.spawnflags & WEP_FLAG_BLEED))
 	{
+		// if this weapon induces bleeding, use the effect name with the proper species prefix (blood type)
 		if((this.isplayermodel & ISPLAYER_MODEL))
 		{
-			specstr = species_prefix(specnum);
-			specstr = substring(specstr, 0, strlen(specstr) - 1);
-			effectname = strreplace("BLOOD", specstr, effectname);
+			string specstr = species_prefix(specnum);
+			effectname = strcat(specstr, effectname);
 		}
 		else { return; } // objects don't bleed
 	}

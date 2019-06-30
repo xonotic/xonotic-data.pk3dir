@@ -12,5 +12,13 @@ CLASS(MachineGunTurret, Turret)
 /* netname    */ ATTRIB(MachineGunTurret, netname, string, "machinegun");
 /* fullname   */ ATTRIB(MachineGunTurret, turret_name, string, _("Machinegun Turret"));
     ATTRIB(MachineGunTurret, m_weapon, Weapon, WEP_TUR_MACHINEGUN);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+	END()
+	TR_PROPS(X, MachineGunTurret, machinegun)
+#undef X
+
 ENDCLASS(MachineGunTurret)
 REGISTER_TURRET(MACHINEGUN, NEW(MachineGunTurret));

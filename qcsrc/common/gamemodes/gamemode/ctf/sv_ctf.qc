@@ -341,7 +341,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	set_movetype(flag, MOVETYPE_TOSS);
 	flag.takedamage = DAMAGE_YES;
 	flag.angles = '0 0 0';
-	SetResourceExplicit(flag, RES_HEALTH, flag.max_flag_health);
+	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
 	flag.ctf_droptime = time;
 	flag.ctf_dropper = player;
 	flag.ctf_status = FLAG_DROPPED;
@@ -363,7 +363,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 
 	if(autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health))
 	{
-		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_flag_health);
+		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_health);
 		WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH));
 	}
 
@@ -679,7 +679,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	switch(pickuptype)
 	{
 		case PICKUP_BASE: flag.ctf_pickuptime = time; break; // used for timing runs
-		case PICKUP_DROPPED: SetResourceExplicit(flag, RES_HEALTH, flag.max_flag_health); break; // reset health/return timelimit
+		case PICKUP_DROPPED: SetResourceExplicit(flag, RES_HEALTH, flag.max_health); break; // reset health/return timelimit
 		default: break;
 	}
 
@@ -954,13 +954,13 @@ void ctf_FlagThink(entity this)
 			}
 			if(this.ctf_flagdamaged_byworld)
 			{
-				TakeResource(this, RES_HEALTH, ((this.max_flag_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE));
+				TakeResource(this, RES_HEALTH, (this.max_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
 				return;
 			}
 			else if(autocvar_g_ctf_flag_return_time)
 			{
-				TakeResource(this, RES_HEALTH, ((this.max_flag_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE));
+				TakeResource(this, RES_HEALTH, (this.max_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_TIMEOUT);
 				return;
 			}
@@ -1162,9 +1162,10 @@ void ctf_RespawnFlag(entity flag)
 	setattachment(flag, NULL, "");
 	setorigin(flag, flag.ctf_spawnorigin);
 
-	set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS));
+	//set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS)); // would be desired, except maps that want floating flags have it set to fall!
+	set_movetype(flag, MOVETYPE_NONE); // match the initial setup handling (flag doesn't move when spawned)
 	flag.takedamage = DAMAGE_NO;
-	SetResourceExplicit(flag, RES_HEALTH, flag.max_flag_health);
+	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
 	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.angles = flag.mangle;
@@ -1250,8 +1251,8 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_NO;
 	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;
-	flag.max_flag_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
-	SetResourceExplicit(flag, RES_HEALTH, flag.max_flag_health);
+	flag.max_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
+	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = true;
 	flag.teleportable = TELEPORT_NORMAL;

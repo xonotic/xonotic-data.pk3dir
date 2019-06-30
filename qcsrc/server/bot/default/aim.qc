@@ -206,6 +206,11 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	// invalid aim dir (can happen when bot overlaps target)
 	if(!v) return;
 
+	float skill_save = skill;
+	// allow turning in a more natural way when bot is walking
+	if (!this.bot_aimtarg)
+		skill = max(4, skill);
+
 	// get the desired angles to aim at
 	//dprint(" at:", vtos(v));
 	v = normalize(v);
@@ -326,10 +331,21 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//if (diffang_y >= 180)
 	//	diffang_y = diffang_y - 360;
 
+	skill = skill_save;
+
 	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
+	if (maxfiredeviation <= 0)
+		return;
+
+	if (!autocvar_bot_ai_aimskill_firetolerance)
+	{
+		this.bot_firetimer = time + 0.2;
+		return;
+	}
+
 	// decide whether to fire this time
-	if (maxfiredeviation != 0 && v * shotdir > cos(maxfiredeviation * DEG2RAD))
+	if (v * shotdir > cos(maxfiredeviation * DEG2RAD))
 	{
 		traceline(shotorg, shotorg + shotdir * 1000, false, NULL);
 		if (vdist(trace_endpos - shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10))
@@ -340,8 +356,6 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	}
 	//dprint(ftos(maxfiredeviation),"\n");
 	//dprint(" diff:", vtos(diffang), "\n");
-
-	//return this.bot_canfire && (time < this.bot_firetimer);
 }
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay)

@@ -212,7 +212,7 @@ void IL_INIT(IntrusiveList this)
 			return;
 		}
 	}
-	LOG_WARNF("IntrusiveList overflow");
+	LOG_WARN("IntrusiveList overflow");
 }
 
 ERASEABLE

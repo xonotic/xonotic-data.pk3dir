@@ -137,16 +137,16 @@ void HUD_CenterPrint ()
 				float r;
 				r = random();
 				if (r > 0.8)
-					centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: ^COUNT"), 1, 10);
+					centerprint_generic(floor(r*1000), sprintf(_("^3Countdown message at time %s, seconds left: ^COUNT"), seconds_tostring(time)), 1, 10);
 				else if (r > 0.55)
-					centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
+					centerprint_generic(0, sprintf(_("^1Multiline message at time %s that\n^1lasts longer than normal"), seconds_tostring(time)), 20, 0);
 				else
-					centerprint_hud(sprintf("Message at time %s", seconds_tostring(time)));
+					centerprint_hud(sprintf(_("Message at time %s"), seconds_tostring(time)));
 				hud_configure_cp_generation_time = time + 1 + random()*4;
 			}
 			else
 			{
-				centerprint_generic(0, sprintf("Centerprint message", seconds_tostring(time)), 10, 0);
+				centerprint_generic(0, _("Generic message"), 10, 0);
 				hud_configure_cp_generation_time = time + 10 - random()*3;
 			}
 		}

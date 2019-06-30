@@ -464,8 +464,8 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		team_ent.m_num_bots = 0;
 	}
 	setthink(balance, TeamBalance_Destroy);
-	
-	int teams_mask = 0;	
+
+	int teams_mask = 0;
 	string teament_name = string_null;
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(TeamBalance_CheckAllowedTeams,
 		teams_mask, teament_name, for_whom);

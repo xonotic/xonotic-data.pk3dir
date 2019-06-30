@@ -230,30 +230,6 @@ void TakeResourceWithLimit(entity receiver, int res_type, float amount, float li
 	TakeResource(receiver, res_type, amount);
 }
 
-void GiveOrTakeResource(entity receiver, int res_type, float amount)
-{
-	if(amount < 0)
-	{
-		TakeResource(receiver, res_type, amount * -1);
-	}
-	else
-	{
-		GiveResource(receiver, res_type, amount);
-	}
-}
-
-void GiveOrTakeResourceWithLimit(entity receiver, int res_type, float amount, float limit)
-{
-	if(amount < 0)
-	{
-		TakeResourceWithLimit(receiver, res_type, amount * -1, limit);
-	}
-	else
-	{
-		GiveResourceWithLimit(receiver, res_type, amount, limit);
-	}
-}
-
 int GetResourceType(.float res_field)
 {
 	switch (res_field)

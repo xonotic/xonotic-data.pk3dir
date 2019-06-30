@@ -601,6 +601,11 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 	if(!this.modelindex || this.model == "null" || this.alpha < 0)
 	{
 		this.drawmask = 0;
+		if(this.snd_looping > 0)
+		{
+			sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
+			this.snd_looping = 0;
+		}
 		return;
 	}
 	else

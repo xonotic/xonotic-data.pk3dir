@@ -306,7 +306,7 @@ void football_touch(entity this, entity toucher)
 			this.nextthink = time + autocvar_g_nexball_delay_idle;
 		return;
 	}
-	if (!IS_PLAYER(toucher))
+	if (!IS_PLAYER(toucher) && !IS_VEHICLE(toucher))
 		return;
 	if(GetResource(toucher, RES_HEALTH) < 1)
 		return;

@@ -287,7 +287,7 @@ bool racer_frame(entity this, float dt)
 
 	Weapon wep1 = WEP_RACER;
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	if (!forbidWeaponUse(player))
+	if (!weaponLocked(player) && !weaponUseForbidden(player))
 	if (PHYS_INPUT_BUTTON_ATCK(player))
 	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
@@ -327,7 +327,7 @@ bool racer_frame(entity this, float dt)
 		}
 	}
 
-	if(!forbidWeaponUse(player))
+	if(!weaponLocked(player))
 	if(time > vehic.delay)
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
 	{

@@ -334,7 +334,7 @@ IMPULSE(weapon_reload)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	if (forbidWeaponUse(this)) return;
+	if (weaponLocked(this)) return;
 	entity actor = this;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{

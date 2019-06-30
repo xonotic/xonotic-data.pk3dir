@@ -22,7 +22,7 @@ float Handicap_GetVoluntaryHandicap(entity player)
 
 float Handicap_GetForcedHandicap(entity player)
 {
-	return CS(player).m_handicap;
+	return (CS(player)) ? CS(player).m_handicap : 1;
 }
 
 void Handicap_SetForcedHandicap(entity player, float value)
