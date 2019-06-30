@@ -390,6 +390,13 @@ void waypoint_clear_start_wp(entity pl, bool warn)
 
 void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
 {
+	if (WAYPOINT_VERSION < waypoint_version_loaded)
+	{
+		LOG_INFOF("^1Editing waypoints with a higher version number (%f) is not allowed.\n"
+			"Update Xonotic to make them editable.", waypoint_version_loaded);
+		return;
+	}
+
 	entity e = NULL, jp = NULL;
 	vector org = pl.origin;
 	if (at_crosshair)
@@ -570,6 +577,13 @@ void waypoint_remove(entity wp)
 
 void waypoint_remove_fromeditor(entity pl)
 {
+	if (WAYPOINT_VERSION < waypoint_version_loaded)
+	{
+		LOG_INFOF("^1Editing waypoints with a higher version number (%f) is not allowed.\n"
+			"Update Xonotic to make them editable.", waypoint_version_loaded);
+		return;
+	}
+
 	entity e = navigation_findnearestwaypoint(pl, false);
 
 	int ctf_flags = havocbot_symmetry_origin_order;
@@ -1443,6 +1457,12 @@ void waypoint_save_links()
 // save waypoints to gamedir/data/maps/mapname.waypoints
 void waypoint_saveall()
 {
+	if (WAYPOINT_VERSION < waypoint_version_loaded)
+	{
+		LOG_INFOF("^1Overwriting waypoints with a higher version number (%f) is not allowed.\n"
+			"Update Xonotic to make them editable.", waypoint_version_loaded);
+		return;
+	}
 	string gt_ext = GET_GAMETYPE_EXTENSION();
 
 	string filename = sprintf("maps/%s.waypoints", strcat(mapname, gt_ext));
@@ -1512,6 +1532,7 @@ void waypoint_saveall()
 
 	botframe_loadedforcedlinks = false;
 
+	waypoint_version_loaded = WAYPOINT_VERSION;
 	LOG_INFOF("saved %d waypoints to %s", c, filename);
 }
 
@@ -1593,6 +1614,7 @@ float waypoint_loadall()
 			cwb = cwb + 1;
 	}
 	fclose(file);
+	waypoint_version_loaded = ver;
 	LOG_TRACE("loaded ", ftos(cwp), " waypoints and ", ftos(cwb), " wayboxes from maps/", mapname, ".waypoints");
 
 	if (autocvar_g_waypointeditor && autocvar_g_waypointeditor_symmetrical_allowload)
@@ -1623,6 +1645,10 @@ float waypoint_loadall()
 			LOG_INFO("Waypoint editor: loaded symmetry ", ftos(sym));
 		LOG_INFO(strcat("g_waypointeditor_symmetrical", " has been set to ", cvar_string("g_waypointeditor_symmetrical")));
 	}
+
+	if (WAYPOINT_VERSION < waypoint_version_loaded)
+		LOG_INFOF("^1Editing waypoints with a higher version number (%f) is not allowed.\n"
+			"Update Xonotic to make them editable.", waypoint_version_loaded);
 
 	return cwp + cwb;
 }
