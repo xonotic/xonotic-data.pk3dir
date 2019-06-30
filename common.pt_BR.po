@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-06-29 18:20+0000\n"
+"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -37,7 +37,7 @@ msgstr "^1Não foi possível escrever para %s"
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Mensagem de contagem regressiva em %s. Segundos restantes: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:142
 #, c-format
@@ -45,11 +45,13 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Mensagem de multilinha em %s que\n"
+"^1dura mais que o normal"
 
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Mensagem em %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
@@ -555,7 +557,7 @@ msgstr "PENALIDADE: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154 qcsrc/client/main.qc:1129
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "falta um ponto de checagem"
 
 #: qcsrc/client/hud/panel/radar.qc:373
 msgid "Click to select teleport destination"
@@ -1547,7 +1549,7 @@ msgstr "Minijogos"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:567
 msgid "Minigame message"
-msgstr ""
+msgstr "Mensagem de minijogo"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
@@ -1734,7 +1736,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Peças restantes:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:481
 #, c-format
@@ -4353,7 +4355,7 @@ msgstr "^F4Pausa acabará em ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:786
 msgid "^K1Cannot join given minigame session!"
-msgstr "^K1Não foi possível entrar na sessão de mini jogo fornecida!"
+msgstr "^K1Não foi possível entrar nesta sessão de minijogo!"
 
 #: qcsrc/common/notifications/all.inc:788
 #, c-format
@@ -4914,11 +4916,11 @@ msgstr "SCROLLOCK"
 
 #: qcsrc/common/util.qc:1486
 msgid "SEMICOLON"
-msgstr ""
+msgstr "PONTO-E-VÍRGULA"
 
 #: qcsrc/common/util.qc:1487
 msgid "TILDE"
-msgstr ""
+msgstr "TIL"
 
 #: qcsrc/common/util.qc:1488
 msgid "BACKQUOTE"
@@ -4926,15 +4928,15 @@ msgstr ""
 
 #: qcsrc/common/util.qc:1489
 msgid "QUOTE"
-msgstr ""
+msgstr "ASPAS"
 
 #: qcsrc/common/util.qc:1490
 msgid "APOSTROPHE"
-msgstr ""
+msgstr "APÓSTROFO"
 
 #: qcsrc/common/util.qc:1491
 msgid "BACKSLASH"
-msgstr ""
+msgstr "BARRAINVERTIDA"
 
 #: qcsrc/common/util.qc:1499
 #, c-format
@@ -4944,7 +4946,7 @@ msgstr "F%d"
 #: qcsrc/common/util.qc:1509
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "TN_%d"
 
 #: qcsrc/common/util.qc:1514 qcsrc/common/util.qc:1515
 #: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
@@ -4957,7 +4959,7 @@ msgstr ""
 #: qcsrc/common/util.qc:1530 qcsrc/common/util.qc:1531
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "TN_%s"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
@@ -4967,32 +4969,32 @@ msgstr "PONTO"
 #: qcsrc/common/util.qc:1525
 #, c-format
 msgid "DIVIDE"
-msgstr ""
+msgstr "DIVIDIR"
 
 #: qcsrc/common/util.qc:1526
 #, c-format
 msgid "SLASH"
-msgstr ""
+msgstr "BARRA"
 
 #: qcsrc/common/util.qc:1527
 #, c-format
 msgid "MULTIPLY"
-msgstr ""
+msgstr "MULTIPLICAR"
 
 #: qcsrc/common/util.qc:1528
 #, c-format
 msgid "MINUS"
-msgstr ""
+msgstr "MENOS"
 
 #: qcsrc/common/util.qc:1529
 #, c-format
 msgid "PLUS"
-msgstr ""
+msgstr "MAIS"
 
 #: qcsrc/common/util.qc:1531
 #, c-format
 msgid "EQUALS"
-msgstr ""
+msgstr "IGUAL"
 
 #: qcsrc/common/util.qc:1536
 msgid "PRINTSCREEN"
@@ -5014,17 +5016,17 @@ msgstr "RODAPARABAIXO"
 #: qcsrc/common/util.qc:1545
 #, c-format
 msgid "JOY%d"
-msgstr ""
+msgstr "JOY%d"
 
 #: qcsrc/common/util.qc:1548
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "DPAD_UP"
-msgstr ""
+msgstr "DIRECIONAL_CIMA"
 
 #: qcsrc/common/util.qc:1555 qcsrc/common/util.qc:1556
 #: qcsrc/common/util.qc:1557 qcsrc/common/util.qc:1558
@@ -5043,17 +5045,17 @@ msgstr "X360_%s"
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "DPAD_DOWN"
-msgstr ""
+msgstr "DIRECIONAL_BAIXO"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "DPAD_LEFT"
-msgstr ""
+msgstr "DIRECIONAL_ESQUERDA"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr ""
+msgstr "DIRECIONAL_DIREITA"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
@@ -5068,22 +5070,22 @@ msgstr "BACK"
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "LEFT_THUMB"
-msgstr ""
+msgstr "ANALÓGICO_ESQUERDO"
 
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr ""
+msgstr "ANALÓGICO_DIREITO"
 
 #: qcsrc/common/util.qc:1563
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr ""
+msgstr "SUPERIOR_ESQUERDO"
 
 #: qcsrc/common/util.qc:1564
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr ""
+msgstr "SUPERIOR_DIREITO"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
@@ -5098,48 +5100,48 @@ msgstr "GATILHO_DIREITO"
 #: qcsrc/common/util.qc:1567
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr ""
+msgstr "ANALÓGICO_ESQUERDO_CIMA"
 
 #: qcsrc/common/util.qc:1568
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr ""
+msgstr "ANALÓGICO_ESQUERDO_BAIXO"
 
 #: qcsrc/common/util.qc:1569
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr ""
+msgstr "ANALÓGICO_ESQUERDO_ESQUERDA"
 
 #: qcsrc/common/util.qc:1570
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr ""
+msgstr "ANALÓGICO_ESQUERDO_DIREITA"
 
 #: qcsrc/common/util.qc:1571
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr ""
+msgstr "ANALÓGICO_DIREITO_CIMA"
 
 #: qcsrc/common/util.qc:1572
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr ""
+msgstr "ANALÓGICO_DIREITO_BAIXO"
 
 #: qcsrc/common/util.qc:1573
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr ""
+msgstr "ANALÓGICO_DIREITO_ESQUERDA"
 
 #: qcsrc/common/util.qc:1574
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr ""
+msgstr "ANALÓGICO_DIREITO_DIREITA"
 
 #: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
 #: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
 #, c-format
 msgid "JOY_%s"
-msgstr ""
+msgstr "JOY_%s"
 
 #: qcsrc/common/util.qc:1584
 #, c-format
@@ -5164,7 +5166,7 @@ msgstr "DIREITA"
 #: qcsrc/common/util.qc:1593
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "MIDINOTE%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 #, c-format
@@ -7357,7 +7359,7 @@ msgstr "Idioma"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:153
 msgid "Select language..."
-msgstr ""
+msgstr "Selecione um idioma..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:169
 msgid "Gender:"
@@ -8283,6 +8285,9 @@ msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
+"Posição do tamanho da equipe: Desativado = não exibir; Esquerda = no lado "
+"esquerdo do placar e move as pontuações da equipe para a direita; Direita = "
+"no lado direito do placar"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
