@@ -1,15 +1,29 @@
 #pragma once
 
 #ifdef SVQC
+// ==========================
+//  Balance Config Generator
+// ==========================
 
 void Dump_Turret_Settings();
 float tur_config_file;
 float tur_config_alsoprint;
 
 float TUR_CONFIG_COUNT;
-#define TUR_CONFIG_WRITETOFILE(a) { \
-	fputs(tur_config_file, a); \
-	if(tur_config_alsoprint) { LOG_INFO(a); } }
+void T_Config_Queue(string setting);
 
+#define TUR_CONFIG_WRITE_CVARS(turname, name, T) TUR_CONFIG_WRITE_PROPS_##T(turname, name)
+
+#define TUR_CONFIG_WRITE_PROPS_string(turname, name) {\
+	T_Config_Queue( \
+		sprintf("set g_turrets_unit_%s_%s \"%s\"\n", #turname, #name, \
+		cvar_string(sprintf("g_turrets_unit_%s_%s", #turname, #name)))); \
+}
+
+#define TUR_CONFIG_WRITE_PROPS_float(turname, name) {\
+	T_Config_Queue( \
+		sprintf("set g_turrets_unit_%s_%s %g\n", #turname, #name, \
+		cvar(sprintf("g_turrets_unit_%s_%s", #turname, #name)))); \
+}
 
 #endif

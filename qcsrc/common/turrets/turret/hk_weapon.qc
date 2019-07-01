@@ -251,7 +251,7 @@ bool hk_is_valid_target(entity this, entity proj, entity targ)
         return false;
 
     // Cant touch this
-    if ((targ.takedamage == DAMAGE_NO) || (GetResourceAmount(targ, RESOURCE_HEALTH) < 0))
+    if ((targ.takedamage == DAMAGE_NO) || (GetResource(targ, RES_HEALTH) < 0))
         return false;
 
     // player

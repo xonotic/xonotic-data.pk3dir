@@ -425,7 +425,11 @@ void HUD_Panel_Draw(entity panent)
 	}
 
 	bool draw_allowed = false;
-	if (active_minigame && HUD_MinigameMenu_IsOpened())
+	if (scoreboard_fade_alpha && panel.panel_showflags & PANEL_SHOW_WITH_SB)
+	{
+		draw_allowed = true;
+	}
+	else if (active_minigame && HUD_MinigameMenu_IsOpened())
 	{
 		if (panel.panel_showflags & PANEL_SHOW_MINIGAME)
 			draw_allowed = true;
@@ -441,7 +445,12 @@ void HUD_Panel_Draw(entity panent)
 	if (draw_allowed)
 	{
 		if (panel.panel_showflags & PANEL_SHOW_WITH_SB)
-			panel_fade_alpha = 1;
+		{
+			if (scoreboard_fade_alpha && intermission == 2 && !(panel.panel_showflags & PANEL_SHOW_MAPVOTE))
+				panel_fade_alpha = scoreboard_fade_alpha;
+			else
+				panel_fade_alpha = 1;
+		}
 		else
 		{
 			panel_fade_alpha = 1 - scoreboard_fade_alpha;
@@ -564,8 +573,6 @@ void Hud_Dynamic_Frame()
 bool HUD_WouldShowCursor()
 {
 	if(autocvar__hud_configure)
-		return true;
-	if(hud_panel_radar_mouse)
 		return true;
 	if(mv_active)
 		return true;
@@ -700,10 +707,15 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 
-	bool cursor_active_prev = cursor_active;
+	int cursor_active_prev = cursor_active;
 	cursor_active = HUD_WouldShowCursor();
 	if (cursor_active_prev != cursor_active && autocvar_hud_cursormode)
+	{
 		setcursormode(cursor_active);
+		// cursor inactive this frame, will be set to 1 the next frame
+		if (cursor_active)
+			cursor_active = -1;
+	}
 
 	if (intermission == 2)
 		HUD_Reset();

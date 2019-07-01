@@ -77,10 +77,12 @@ void viewloc_SetTags(entity this)
 		this.viewloc = NULL;
 
 	if(this.viewloc.entnum != this.tag_networkviewloc)
-	if(this.tag_networkviewloc == 0)
-		this.viewloc = NULL;
-	else
-		this.viewloc = findfloat(NULL, entnum, this.tag_networkviewloc);
+	{
+		if(this.tag_networkviewloc == 0)
+			this.viewloc = NULL;
+		else
+			this.viewloc = findfloat(NULL, entnum, this.tag_networkviewloc);
+	}
 }
 
 vector CursorToWorldCoord(vector mpos)

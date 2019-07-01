@@ -32,7 +32,7 @@ void W_Hagar_Explode2_use(entity this, entity actor, entity trigger)
 
 void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	float is_linkexplode = ( ((inflictor.owner != NULL) ? (inflictor.owner == this.owner) : true)
@@ -47,10 +47,10 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, is_linkexplode))
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
@@ -91,7 +91,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR_PRI(hagar, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_PRI(hagar, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_PRI(hagar, health));
 	missile.damageforcescale = WEP_CVAR_PRI(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
@@ -137,7 +137,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_SEC(hagar, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_SEC(hagar, health));
 	missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
@@ -200,7 +200,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 		missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
 		missile.takedamage = DAMAGE_YES;
-		SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_SEC(hagar, health));
+		SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_SEC(hagar, health));
 		missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 		missile.event_damage = W_Hagar_Damage;
 		missile.damagedbycontents = true;
@@ -257,7 +257,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 	// loadable hagar secondary attack, must always run each frame
 	if(time < game_starttime || time < actor.race_penalty || timeout_status == TIMEOUT_ACTIVE)
 		return;
-	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if (weaponUseForbidden(actor))
 		return;
 
 	bool loaded = actor.(weaponentity).hagar_load >= WEP_CVAR_SEC(hagar, load_max);
@@ -269,7 +269,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 	else if(autocvar_g_balance_hagar_reload_ammo)
 		enough_ammo = actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
-		enough_ammo = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
+		enough_ammo = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
 
 	bool stopped = loaded || !enough_ammo;
 
@@ -435,13 +435,13 @@ METHOD(Hagar, wr_setup, void(entity thiswep, entity actor, .entity weaponentity)
 }
 METHOD(Hagar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hagar, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hagar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
     return ammo_amount;
 }
 METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
     return ammo_amount;
 }

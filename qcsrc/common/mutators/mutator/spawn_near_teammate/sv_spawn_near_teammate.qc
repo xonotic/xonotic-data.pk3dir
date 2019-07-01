@@ -91,11 +91,11 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 			if (PHYS_INPUT_BUTTON_CHAT(it)) continue;
 			if (DIFF_TEAM(player, it)) continue;
-			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && GetResourceAmount(it, RESOURCE_HEALTH) < autocvar_g_balance_health_regenstable) continue;
+			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && GetResource(it, RES_HEALTH) < autocvar_g_balance_health_regenstable) continue;
 			if (IS_DEAD(it)) continue;
 			if (time < it.msnt_timer) continue;
 			if (time < it.spawnshieldtime) continue;
-			if (forbidWeaponUse(it)) continue;
+			if (weaponLocked(it)) continue;
 			if (it == player) continue;
 
 			tested++; // i consider a teammate to be available when he passes the checks above

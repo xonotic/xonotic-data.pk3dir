@@ -10,7 +10,28 @@ REGISTRY(EntCSProps, BITS(16) - 1)
 REGISTER_REGISTRY(EntCSProps)
 REGISTRY_SORT(EntCSProps)
 REGISTRY_CHECK(EntCSProps)
-STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
+STATIC_INIT(EntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
+
+// these entcs_props ids need to be referenced directly
+int ENTCS_PROP_ENTNUM_id = 0;
+int ENTCS_PROP_ORIGIN_id = 0;
+STATIC_INIT(EntCSProps_setglobalids)
+{
+	FOREACH(EntCSProps, true, {
+		if (it.registered_id == "ENTCS_PROP_ENTNUM")
+			ENTCS_PROP_ENTNUM_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_ORIGIN")
+			ENTCS_PROP_ORIGIN_id = it.m_id;
+	});
+}
+
+#ifdef SVQC
+// Force an origin update, for player sounds
+void entcs_force_origin(entity player)
+{
+	CS(player).entcs.m_forceupdate = BIT(ENTCS_PROP_ORIGIN_id);
+}
+#endif
 
 .bool m_public;
 .bool(entity ent, entity player) m_check;
@@ -19,9 +40,8 @@ STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i
 .void(entity ent) m_receive;
 
 #ifdef SVQC
-#define ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive) \
-	bool id##_check(entity ent, entity player) { return (ent.(checkprop) != player.(checkprop)); } \
-	void id##_set(entity ent, entity player) { setprop(ent.(checkprop), player.(checkprop)); } \
+#define _ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
+	void id##_set(entity ent, entity player) { setprop(ent.(checkprop), player.(checkprop_pl)); } \
 	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
 		this.m_public = ispublic; \
@@ -29,19 +49,35 @@ STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i
 		this.m_set = id##_set; \
 		this.m_send = id##_send; \
 	}
+
+#define ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
+	bool id##_check(entity ent, entity player) { return (ent.(checkprop) != player.(checkprop_pl)); } \
+	_ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive)
+
+#define ENTCS_PROP_CODED(id, ispublic, checkprop, checkprop_pl, setprop, decfactor, svsend, clreceive) \
+	bool id##_check(entity ent, entity player) { \
+		return (floor(ent.(checkprop)) / decfactor != floor(player.(checkprop_pl)) / decfactor); \
+	} \
+	_ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive)
+
 #elif defined(CSQC)
-#define ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive) \
+#define ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
 	void id##_receive(entity ent) { LAMBDA(clreceive); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
 		this.m_public = ispublic; \
 		this.m_receive = id##_receive; \
 	}
+
+#define ENTCS_PROP_CODED(id, ispublic, checkprop, checkprop_pl, setprop, decfactor, svsend, clreceive) \
+	ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive)
 #endif
 
 #ifdef SVQC
-#define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, svsend, clreceive) \
-	bool id##_check(entity ent, entity player) { return (GetResourceAmount(ent, checkprop) != GetResourceAmount(player, checkprop)); } \
-	void id##_set(entity ent, entity player) { SetResourceAmountExplicit(ent, checkprop, GetResourceAmount(player, checkprop)); } \
+#define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, decfactor, svsend, clreceive) \
+	bool id##_check(entity ent, entity player) { \
+		return (floor(GetResource(ent, checkprop) / decfactor) != floor(GetResource(player, checkprop) / decfactor)); \
+	} \
+	void id##_set(entity ent, entity player) { SetResourceExplicit(ent, checkprop, GetResource(player, checkprop)); } \
 	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
 		this.m_public = ispublic; \
@@ -50,7 +86,7 @@ STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i
 		this.m_send = id##_send; \
 	}
 #elif defined(CSQC)
-#define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, svsend, clreceive) \
+#define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, decfactor, svsend, clreceive) \
 	void id##_receive(entity ent) { LAMBDA(clreceive); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
 		this.m_public = ispublic; \
@@ -67,43 +103,53 @@ MACRO_END
 	strcpy(var, x); \
 MACRO_END
 
-ENTCS_PROP(ENTNUM, false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
+ENTCS_PROP(ENTNUM, false, sv_entnum, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
 
-ENTCS_PROP(ORIGIN, false, origin, ENTCS_SET_NORMAL,
+ENTCS_PROP(ORIGIN, false, origin, origin, ENTCS_SET_NORMAL,
 	{ WriteVector(chan, ent.origin); },
 	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
 
-ENTCS_PROP(ANGLES, false, angles_y, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, ent.angles.y / 360 * 256); },
-	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; ent.angles = v; })
+#define DEC_FACTOR (360 / 32)
+ENTCS_PROP_CODED(ANGLES, false, angles_y, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
+	{ WriteByte(chan, ent.angles.y / DEC_FACTOR); },
+	{ vector v = '0 0 0'; v.y = ReadByte() * DEC_FACTOR; ent.angles = v; })
+#undef DEC_FACTOR
 
-ENTCS_PROP_RESOURCE(HEALTH, false, RESOURCE_HEALTH, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_HEALTH) / 10, 255));  /* FIXME: use a better scale? */ },
-	{ ent.healthvalue = ReadByte() * 10; })
+// FIXME: use a better scale?
+#define DEC_FACTOR 10
+ENTCS_PROP_RESOURCE(HEALTH, false, RES_HEALTH, ENTCS_SET_NORMAL, DEC_FACTOR,
+	{ WriteByte(chan, bound(0, GetResource(ent, RES_HEALTH) / DEC_FACTOR, 255)); },
+	{ ent.healthvalue = ReadByte() * DEC_FACTOR; })
 
-ENTCS_PROP_RESOURCE(ARMOR, false, RESOURCE_ARMOR, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, bound(0, GetResourceAmount(ent, RESOURCE_ARMOR) / 10, 255));  /* FIXME: use a better scale? */ },
-	{ SetResourceAmountExplicit(ent, RESOURCE_ARMOR, ReadByte() * 10); })
+ENTCS_PROP_RESOURCE(ARMOR, false, RES_ARMOR, ENTCS_SET_NORMAL, DEC_FACTOR,
+	{ WriteByte(chan, bound(0, GetResource(ent, RES_ARMOR) / DEC_FACTOR, 255)); },
+	{ SetResourceExplicit(ent, RES_ARMOR, ReadByte() * DEC_FACTOR); })
+#undef DEC_FACTOR
 
-ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,
+ENTCS_PROP(NAME, true, netname, netname, ENTCS_SET_MUTABLE_STRING,
 	{ WriteString(chan, ent.netname); },
 	{ strcpy(ent.netname, ReadString()); })
 
-ENTCS_PROP(MODEL, true, model, ENTCS_SET_NORMAL,
+ENTCS_PROP(MODEL, true, model, model, ENTCS_SET_NORMAL,
 	{ WriteString(chan, ent.model); },
 	{ strcpy(ent.model, ReadString()); })
 
-ENTCS_PROP(SKIN, true, skin, ENTCS_SET_NORMAL,
+ENTCS_PROP(SKIN, true, skin, skin, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.skin); },
 	{ ent.skin = ReadByte(); })
 
-ENTCS_PROP(CLIENTCOLORS, true, clientcolors, ENTCS_SET_NORMAL,
+ENTCS_PROP(CLIENTCOLORS, true, clientcolors, clientcolors, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.clientcolors); },
 	{ ent.colormap = ReadByte(); })
 
-ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
+ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
 	{ WriteShort(chan, ent.frags); },
 	{ ent.frags = ReadShort(); })
+
+// use sv_solid to avoid changing solidity state of entcs entities
+ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.sv_solid); },
+	{ ent.sv_solid = ReadByte(); })
 
 #ifdef SVQC
 
@@ -119,7 +165,7 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 	bool _entcs_send(entity this, entity to, int sf, int chan)
 	{
 		entity player = this.owner;
-		sf |= BIT(0); // assume private
+		sf |= BIT(ENTCS_PROP_ENTNUM_id); // assume private
 		do {
 			if (IS_PLAYER(player))
 			{
@@ -153,13 +199,13 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 	void entcs_think(entity this)
 	{
 		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
-		entity o = this.owner;
-		FOREACH(EntCSProps, it.m_check(this, o),
+		entity player = this.owner;
+		FOREACH(EntCSProps, it.m_check(this, player),
 		{
-			it.m_set(this, o);
+			it.m_set(this, player);
 			this.SendFlags |= BIT(it.m_id);
 		});
-	    setorigin(this, this.origin);  // relink
+		setorigin(this, this.origin); // relink
 	}
 
 	void entcs_attach(entity player)
@@ -242,7 +288,7 @@ ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
 		e.sv_entnum = n;
 		int sf = ReadShort();
 		e.has_sv_origin = false;
-		e.m_entcs_private = boolean(sf & BIT(0));
+		e.m_entcs_private = boolean(sf & BIT(ENTCS_PROP_ENTNUM_id));
 		FOREACH(EntCSProps, sf & BIT(it.m_id),
 		{
 			it.m_receive(e);

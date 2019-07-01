@@ -55,6 +55,7 @@ float skill;
 .int wpflags;
 
 bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
+void bot_aim_reset(entity this);
 void bot_clientconnect(entity this);
 void bot_clientdisconnect(entity this);
 void bot_cmdhelp(string scmd);
@@ -123,3 +124,6 @@ void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent);
 void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);
 void waypoint_unreachable(entity pl);
+
+void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx);
+void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx);

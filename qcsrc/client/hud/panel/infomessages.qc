@@ -50,10 +50,10 @@ vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector 
 	return pos;
 }
 
-#define InfoMessage(s) MACRO_BEGIN { \
+#define InfoMessage(s) MACRO_BEGIN \
 	pos = InfoMessages_drawstring(s, pos, mySize, ((img_curr_group >= 0) ? panel_fg_alpha * img_fade[img_curr_group] : panel_fg_alpha), fontsize); \
 	img_curr_group = -1; \
-} MACRO_END
+MACRO_END
 
 void HUD_InfoMessages()
 {

@@ -111,7 +111,7 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 METHOD(OverkillMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount;
-	ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okmachinegun, ammo);
+	ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okmachinegun, ammo);
 	if (WEP_CVAR(okmachinegun, reload_ammo))
 	{
 		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_MACHINEGUN.m_id]) >= WEP_CVAR_PRI(okmachinegun, ammo);

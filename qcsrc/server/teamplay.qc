@@ -181,7 +181,7 @@ bool Player_SetTeamIndex(entity player, int index)
 		{
 			// This is important when players join the game and one of their
 			// color matches the team color while other doesn't. For example
-			// [BOT]Lion.
+			// [BOT]Lion: color 0 4.
 			SetPlayerColors(player, new_team - 1);
 		}
 		return true;
@@ -227,16 +227,17 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE,
 					player.netname);
 			}
-			else
-			{
-				CS(player).just_joined = false;
-			}
 		}
 		KillPlayerForTeamChange(player);
 		if (!IS_BOT_CLIENT(player))
 		{
 			TeamBalance_AutoBalanceBots();
 		}
+	}
+	else if (team_index == -1)
+	{
+		if (!CS(player).just_joined && player.frags != FRAGS_SPECTATOR)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, player.netname);
 	}
 	return true;
 }
@@ -463,8 +464,8 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		team_ent.m_num_bots = 0;
 	}
 	setthink(balance, TeamBalance_Destroy);
-	
-	int teams_mask = 0;	
+
+	int teams_mask = 0;
 	string teament_name = string_null;
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(TeamBalance_CheckAllowedTeams,
 		teams_mask, teament_name, for_whom);
@@ -1013,7 +1014,7 @@ void LogTeamChange(float player_id, float team_number, int type)
 	{
 		return;
 	}
-	GameLogEcho(sprintf(":team:%f:%f:%f", player_id, team_number, type));
+	GameLogEcho(sprintf(":team:%d:%d:%d", player_id, team_number, type));
 }
 
 void KillPlayerForTeamChange(entity player)
