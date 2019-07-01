@@ -15,7 +15,8 @@ void WarpZoneLib_ExactTrigger_Init(entity this)
 	if (this.movedir == '0 0 0')
 	if (this.angles != '0 0 0')
 	{
-		MAKE_VECTORS_NEW(this.angles, forward, _r, _u);
+		vector forward, _r, _u;
+		MAKE_VECTORS(this.angles, forward, _r, _u);
 		this.movedir = forward;
 	}
 	if(this.model == "")

@@ -193,7 +193,8 @@ void sys_phys_simulate(entity this, float dt)
 		// this mimics quakeworld code
 		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc) {
 			vector yawangles = '0 1 0' * this.v_angle.y;
-			MAKE_VECTORS_NEW(yawangles, forward, right, up);
+			vector forward, right, up;
+			MAKE_VECTORS(yawangles, forward, right, up);
 			vector spot = this.origin + 24 * forward;
 			spot_z += 8;
 			traceline(spot, spot, MOVE_NOMONSTERS, this);
@@ -210,7 +211,8 @@ void sys_phys_simulate(entity this, float dt)
 		}
 	}
 
-	MAKE_VECTORS_NEW(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')), forward, right, up);
+	vector forward, right, up;
+	MAKE_VECTORS(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')), forward, right, up);
 	// wishvel = forward * PHYS_CS(this).movement.x + right * PHYS_CS(this).movement.y + up * PHYS_CS(this).movement.z;
 	vector wishvel = forward * PHYS_CS(this).movement.x
 	    + right * PHYS_CS(this).movement.y

@@ -4,13 +4,15 @@
 // angles in fixedmakevectors/fixedvectoangles space
 vector AnglesTransform_Apply(vector transform, vector v)
 {
-	FIXED_MAKE_VECTORS_NEW(transform, forward, right, up);
+	vector forward, right, up;
+	FIXED_MAKE_VECTORS(transform, forward, right, up);
 	return forward * v.x + right * (-v.y) + up * v.z;
 }
 
 vector AnglesTransform_Multiply(vector t1, vector t2)
 {
-	FIXED_MAKE_VECTORS_NEW(t2, forward, right, up);
+	vector forward, right, up;
+	FIXED_MAKE_VECTORS(t2, forward, right, up);
 	forward = AnglesTransform_Apply(t1, forward);
 	up = AnglesTransform_Apply(t1, up);
 	return fixedvectoangles2(forward, up);
@@ -19,7 +21,8 @@ vector AnglesTransform_Multiply(vector t1, vector t2)
 vector AnglesTransform_Invert(vector transform)
 {
 	vector i_forward, i_up;
-	FIXED_MAKE_VECTORS_NEW(transform, forward, right, up);
+	vector forward, right, up;
+	FIXED_MAKE_VECTORS(transform, forward, right, up);
 	// we want angles that turn forward into '1 0 0', right into '0 1 0' and up into '0 0 1'
 	// but these are orthogonal unit vectors!
 	// so to invert, we can simply fixedvectoangles the TRANSPOSED matrix

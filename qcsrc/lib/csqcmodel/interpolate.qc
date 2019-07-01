@@ -58,7 +58,8 @@ void InterpolateOrigin_Note(entity this)
 
 	if (this.iflags & IFLAG_ANGLES)
 	{
-		FIXED_MAKE_VECTORS_NEW(this.angles, forward, right, up);
+		vector forward, right, up;
+		FIXED_MAKE_VECTORS(this.angles, forward, right, up);
 		if (f0 & IFLAG_VALID)
 		{
 			this.iforward1 = this.iforward2;
@@ -75,7 +76,8 @@ void InterpolateOrigin_Note(entity this)
 
 	if (this.iflags & IFLAG_V_ANGLE)
 	{
-		FIXED_MAKE_VECTORS_NEW(this.v_angle, forward, right, up);
+		vector forward, right, up;
+		FIXED_MAKE_VECTORS(this.v_angle, forward, right, up);
 		if (f0 & IFLAG_VALID)
 		{
 			this.ivforward1 = this.ivforward2;

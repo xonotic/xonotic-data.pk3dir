@@ -602,7 +602,8 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 		if(area > 0)
 		{
 			org = org - ((org - point) * norm) * norm; // project to plane
-			MAKE_VECTORS_NEW(ang, forward, right, up);
+			vector forward, right, up;
+			MAKE_VECTORS(ang, forward, right, up);
 			if(norm * forward < 0)
 			{
 				LOG_INFO("Position target of trigger_warpzone near ", vtos(this.aiment.origin), " points into trigger_warpzone. BEWARE.");

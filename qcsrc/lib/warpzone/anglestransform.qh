@@ -7,7 +7,6 @@
 #if POSITIVE_PITCH_IS_DOWN
     #define fixedmakevectors makevectors
     #define FIXED_MAKE_VECTORS MAKE_VECTORS
-    #define FIXED_MAKE_VECTORS_NEW MAKE_VECTORS_NEW
     noref vector _fixedvectoangles;
     #define fixedvectoangles(a) (_fixedvectoangles = vectoangles(a), _fixedvectoangles.x *= -1, _fixedvectoangles)
     noref vector _fixedvectoangles2;
@@ -24,9 +23,6 @@
         GET_V_GLOBALS(forward, right, up); \
         CLEAR_V_GLOBALS(); \
     MACRO_END
-    #define FIXED_MAKE_VECTORS_NEW(angles, forward, right, up) \
-        VECS_NEW(forward, right, up); \
-        FIXED_MAKE_VECTORS(angles, forward, right, up);
     #define fixedvectoangles2 vectoangles2
     #define fixedvectoangles vectoangles
 #endif

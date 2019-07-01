@@ -180,7 +180,8 @@ bool PM_dodging_checkpressedkeys(entity this)
 	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
 		return false;
 
-	MAKE_VECTORS_NEW(this.angles, forward, right, up);
+	vector forward, right, up;
+	MAKE_VECTORS(this.angles, forward, right, up);
 
 	bool can_dodge = (is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD, up) && (PHYS_DODGING_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_MAXSPEED)));
 	bool can_wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD, forward, right));
@@ -221,7 +222,7 @@ void PM_dodging(entity this)
 		return;
 	}
 
-	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
+	vector forward, right, up;
 	if(PHYS_DODGING_AIR)
 		MAKE_VECTORS(this.v_angle, forward, right, up);
 	else

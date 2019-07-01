@@ -133,7 +133,8 @@ void calc_followmodel_ofs(entity view)
 		vel = view.velocity;
 	else
 	{
-		MAKE_VECTORS_NEW(view_angles, forward, right, up);
+		vector forward, right, up;
+		MAKE_VECTORS(view_angles, forward, right, up);
 		vel.x = view.velocity * forward;
 		vel.y = view.velocity * right * -1;
 		vel.z = view.velocity * up;
@@ -158,7 +159,8 @@ void calc_followmodel_ofs(entity view)
 	if (autocvar_cl_followmodel_velocity_absolute)
 	{
 		vector fixed_gunorg;
-		MAKE_VECTORS_NEW(view_angles, forward, right, up);
+		vector forward, right, up;
+		MAKE_VECTORS(view_angles, forward, right, up);
 		fixed_gunorg.x = gunorg * forward;
 		fixed_gunorg.y = gunorg * right * -1;
 		fixed_gunorg.z = gunorg * up;
@@ -415,7 +417,8 @@ void Porto_Draw(entity this)
 
 		vector pos = view_origin;
 		vector dir = view_forward;
-		MAKE_VECTORS_NEW(autocvar_chase_active ? warpzone_save_view_angles : view_angles, forward, right, up);
+		vector forward, right, up;
+		MAKE_VECTORS(autocvar_chase_active ? warpzone_save_view_angles : view_angles, forward, right, up);
 		pos += right * -wepent.movedir.y
 			+  up * wepent.movedir.z;
 
@@ -569,7 +572,8 @@ vector GetCurrentFov(float fov)
 			curspeed = 0;
 		else
 		{
-			MAKE_VECTORS_NEW(view_angles, forward, right, up);
+			vector forward, right, up;
+			MAKE_VECTORS(view_angles, forward, right, up);
 			v = pmove_vel;
 			if(csqcplayer)
 				v = csqcplayer.velocity;
@@ -1808,7 +1812,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 			else if(eventchase_current_distance != chase_distance)
 				eventchase_current_distance = chase_distance;
 
-			MAKE_VECTORS_NEW(view_angles, forward, right, up);
+			vector forward, right, up;
+			MAKE_VECTORS(view_angles, forward, right, up);
 
 			vector eventchase_target_origin = (current_view_origin - (forward * eventchase_current_distance));
 			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, this);
@@ -2497,7 +2502,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 		setproperty(VF_ORIGIN, '0 0 0');
 		setproperty(VF_ANGLES, '0 0 0');
 		setproperty(VF_PERSPECTIVE, 1);
-		MAKE_VECTORS_NEW('0 0 0', forward, right, up);
+		vector forward, right, up;
+		MAKE_VECTORS('0 0 0', forward, right, up);
 		vector v1, v2;
 		cvar_set("vid_conwidth", "800");
 		cvar_set("vid_conheight", "600");

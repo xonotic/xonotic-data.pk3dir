@@ -71,7 +71,8 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 	e.warpzone_targetorigin = other_org;
 	e.warpzone_angles = my_ang;
 	e.warpzone_targetangles = other_ang;
-	FIXED_MAKE_VECTORS_NEW(my_ang, forward, right, up);
+	vector forward, right, up;
+	FIXED_MAKE_VECTORS(my_ang, forward, right, up);
 	e.warpzone_forward = forward;
 	FIXED_MAKE_VECTORS(other_ang, forward, right, up);
 	e.warpzone_targetforward = forward;

@@ -40,21 +40,12 @@ STATIC_INIT(globals) {
 	CLEAR_V_GLOBALS(); \
 MACRO_END
 
-/// Same as `MAKE_VECTORS` but also creates the locals for convenience.
-#define MAKE_VECTORS_NEW(angles, forward, right, up) \
-	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0'; \
-	MAKE_VECTORS(angles, forward, right, up);
-
 /// Returns all 4 vectors by assigning to them (instead of returning a value) for consistency (and sanity)
 #define SKEL_GET_BONE_ABS(skel, bonenum, forward, right, up, origin) MACRO_BEGIN \
 	origin = _skel_get_boneabs_hidden(skel, bonenum) \
 	GET_V_GLOBALS(forward, right, up); \
 	CLEAR_V_GLOBALS(); \
 MACRO_END
-
-#define SKEL_GET_BONE_ABS_NEW(skel, bonenum, forward, right, up, origin) \
-	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0', origin = '0 0 0'; \
-	SKEL_GET_BONE_ABS(skel, bonenum, forward, right, up, origin)
 
 #define SKEL_SET_BONE(skel, bonenum, org, forward, right, up) MACRO_BEGIN \
 	SET_V_GLOBALS(forward, right, up); \
@@ -74,17 +65,9 @@ MACRO_END
 	CLEAR_V_GLOBALS(); \
 MACRO_END
 
-#define VECTOR_VECTORS_NEW(forward_in, forward, right, up) \
-	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0'; \
-	VECTOR_VECTORS(forward_in, forward, right, up);
-
 /// Note that this only avoids the v_* globals, not the gettaginfo_* ones
 #define GET_TAG_INFO(ent, tagindex, forward, right, up, origin) MACRO_BEGIN \
 	origin = _gettaginfo_hidden(ent, tagindex); \
 	GET_V_GLOBALS(forward, right, up); \
 	CLEAR_V_GLOBALS(); \
 MACRO_END
-
-#define GET_TAG_INFO_NEW(ent, tagindex, forward, right, up, origin) \
-	vector forward = '0 0 0', right = '0 0 0', up = '0 0 0', origin = '0 0 0'; \
-	GET_TAG_INFO(ent, tagindex, forward, right, up, origin);
