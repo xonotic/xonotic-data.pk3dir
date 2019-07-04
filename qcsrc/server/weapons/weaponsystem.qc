@@ -808,7 +808,9 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 			}
 		}
 	}
-
+	
+	actor.(weaponentity).misc_bulletcounter = 0;
+	
 	if (this)
 	{
 		if (this.wframe == WFRAME_RELOAD) return;
