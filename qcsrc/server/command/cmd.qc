@@ -240,13 +240,19 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
-			sprint(caller, "  Where 'action' can be: spawn, remove, unreachable, saveall, relinkall,\n");
-			sprint(caller, "   symorigin get|set\n");
-			sprint(caller, "   symorigin get|set p1 p2 ... pX\n");
-			sprint(caller, "   symaxis get|set p1 p2\n");
-			sprint(caller, "    where p1 p2 ... pX are positions \"x y z\" (z can be omitted)\n");
-			sprint(caller, " symorigin and symaxis commands are useful to determine origin/axis of symmetry"
-							" on maps without ctf flags or where flags aren't perfectly symmetrical\n");
+			sprint(caller, "  Where 'action' can be:\n");
+			sprint(caller, "   ^5spawn^7: spawns a waypoint at player's position\n");
+			sprint(caller, "   ^5remove^7: remove player's nearest waypoint\n");
+			sprint(caller, "   ^5unreachable^7: useful to reveal waypoints and items unreachable from the current position and spawnpoints without a nearest waypoint\n");
+			sprint(caller, "   ^5saveall^7: saves all waypoints and links to file\n");
+			sprint(caller, "   ^5relinkall^7: relink all waypoints as if they were respawned\n");
+			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position (useful to spawn custom jumppad waypoints)\n");
+			sprint(caller, "   ^5spawn jump^7: spawns a jump waypoint\n");
+			sprint(caller, "   ^5symorigin get|set\n");
+			sprint(caller, "   ^5symorigin get|set p1 p2 ... pX\n");
+			sprint(caller, "   ^5symaxis get|set p1 p2\n");
+			sprint(caller, "   ^7 where p1 p2 ... pX are positions (\"x y z\", z can be omitted) that you know are perfectly symmetrical");
+			sprint(caller, "   ^7 so you can determine origin/axis of symmetry of maps without ctf flags or where flags aren't perfectly symmetrical\n");
 			return;
 		}
 	}
