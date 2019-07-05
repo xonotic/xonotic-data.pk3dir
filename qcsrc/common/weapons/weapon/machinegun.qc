@@ -283,7 +283,9 @@ METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity wea
     return ammo_amount;
 }
 METHOD(MachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-{   
+{
+	if(actor.(weaponentity).misc_bulletcounter < 0)
+		return;
     W_Reload(actor, weaponentity, min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), SND_RELOAD);
 }
 METHOD(MachineGun, wr_suicidemessage, Notification(entity thiswep))
