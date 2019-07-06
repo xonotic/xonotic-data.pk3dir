@@ -681,7 +681,7 @@ void havocbot_movetogoal(entity this)
 
 			return;
 		}
-		else if(!this.jumppadcount && !this.goalcurrent.wphardwired
+		else if(!this.jumppadcount && !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 			&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
 			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
@@ -1135,7 +1135,8 @@ void havocbot_movetogoal(entity this)
 
 			bool unreachable = false;
 			s = CONTENT_SOLID;
-			if (trace_fraction == 1 && !this.jumppadcount && !this.goalcurrent.wphardwired
+			if (trace_fraction == 1 && !this.jumppadcount
+				&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 				&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP) )
 			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
 			{
@@ -1183,7 +1184,7 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// slow down if bot is in the air and goal is under it
-			if (!this.goalcurrent.wphardwired
+			if (!waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 				&& vdist(flat_diff, <, 250) && this.origin.z - destorg.z > 120
 				&& (!IS_ONGROUND(this) || vdist(vec2(this.velocity), >, maxspeed * 0.3)))
 			{

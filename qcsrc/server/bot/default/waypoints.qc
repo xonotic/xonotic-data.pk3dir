@@ -260,6 +260,76 @@ vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 	return new_org;
 }
 
+bool waypoint_has_hardwiredlinks(entity wp)
+{
+	if (!wp)
+		return false;
+	return (wp.wphw00 != NULL);
+}
+
+bool waypoint_is_hardwiredlink(entity wp_from, entity wp_to)
+{
+	if (!(wp_from && wp_to))
+		return false;
+
+	if (!wp_from.wphw00) return false; else if (wp_from.wphw00 == wp_to) return true;
+	if (!wp_from.wphw01) return false; else if (wp_from.wphw01 == wp_to) return true;
+	if (!wp_from.wphw02) return false; else if (wp_from.wphw02 == wp_to) return true;
+	if (!wp_from.wphw03) return false; else if (wp_from.wphw03 == wp_to) return true;
+	if (!wp_from.wphw04) return false; else if (wp_from.wphw04 == wp_to) return true;
+	if (!wp_from.wphw05) return false; else if (wp_from.wphw05 == wp_to) return true;
+	if (!wp_from.wphw06) return false; else if (wp_from.wphw06 == wp_to) return true;
+	if (!wp_from.wphw07) return false; else if (wp_from.wphw07 == wp_to) return true;
+
+	return false;
+}
+
+void waypoint_mark_hardwiredlink(entity wp_from, entity wp_to)
+{
+	if (!(wp_from && wp_to))
+		return;
+
+	if (!wp_from.wphw00 || wp_from.wphw00 == wp_to) { wp_from.wphw00 = wp_to; return; }
+	if (!wp_from.wphw01 || wp_from.wphw01 == wp_to) { wp_from.wphw01 = wp_to; return; }
+	if (!wp_from.wphw02 || wp_from.wphw02 == wp_to) { wp_from.wphw02 = wp_to; return; }
+	if (!wp_from.wphw03 || wp_from.wphw03 == wp_to) { wp_from.wphw03 = wp_to; return; }
+	if (!wp_from.wphw04 || wp_from.wphw04 == wp_to) { wp_from.wphw04 = wp_to; return; }
+	if (!wp_from.wphw05 || wp_from.wphw05 == wp_to) { wp_from.wphw05 = wp_to; return; }
+	if (!wp_from.wphw06 || wp_from.wphw06 == wp_to) { wp_from.wphw06 = wp_to; return; }
+	if (!wp_from.wphw07 || wp_from.wphw07 == wp_to) { wp_from.wphw07 = wp_to; return; }
+
+	return;
+}
+
+void waypoint_unmark_hardwiredlink(entity wp_from, entity wp_to)
+{
+	if (!(wp_from && wp_to))
+		return;
+
+	int removed = -1;
+	if (removed < 0 && wp_from.wphw00 == wp_to) removed = 0;
+	if (removed < 0 && wp_from.wphw01 == wp_to) removed = 1;
+	if (removed < 0 && wp_from.wphw02 == wp_to) removed = 2;
+	if (removed < 0 && wp_from.wphw03 == wp_to) removed = 3;
+	if (removed < 0 && wp_from.wphw04 == wp_to) removed = 4;
+	if (removed < 0 && wp_from.wphw05 == wp_to) removed = 5;
+	if (removed < 0 && wp_from.wphw06 == wp_to) removed = 6;
+	if (removed < 0 && wp_from.wphw07 == wp_to) removed = 7;
+
+	if (removed >= 0)
+	{
+		if (removed <= 0) wp_from.wphw00 = wp_from.wphw01;
+		if (removed <= 1) wp_from.wphw01 = wp_from.wphw02;
+		if (removed <= 2) wp_from.wphw02 = wp_from.wphw03;
+		if (removed <= 3) wp_from.wphw03 = wp_from.wphw04;
+		if (removed <= 4) wp_from.wphw04 = wp_from.wphw05;
+		if (removed <= 5) wp_from.wphw05 = wp_from.wphw06;
+		if (removed <= 6) wp_from.wphw06 = wp_from.wphw07;
+	}
+
+	return;
+}
+
 void waypoint_setupmodel(entity wp)
 {
 	if (autocvar_g_waypointeditor)
@@ -276,7 +346,7 @@ void waypoint_setupmodel(entity wp)
 			wp.colormod = '1 1 0';
 		else if (wp.wpflags & WAYPOINTFLAG_NORELINK)
 			wp.colormod = '1 0.5 0'; // orange
-		else if (wp.wphardwired)
+		else if (waypoint_has_hardwiredlinks(wp))
 			wp.colormod = '0.5 0 1'; // violet
 		else
 			wp.colormod = '1 1 1';
@@ -570,7 +640,11 @@ void waypoint_remove(entity wp)
 	IL_EACH(g_waypoints, it != wp,
 	{
 		if (waypoint_islinked(it, wp))
+		{
+			if (waypoint_is_hardwiredlink(it, wp))
+				waypoint_unmark_hardwiredlink(it, wp);
 			waypoint_removelink(it, wp);
+		}
 	});
 	delete(wp);
 }
@@ -605,7 +679,7 @@ void waypoint_remove_fromeditor(entity pl)
 		return;
 	}
 
-	if (e.wphardwired)
+	if (waypoint_has_hardwiredlinks(e))
 	{
 		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired\n");
 		return;
@@ -1253,6 +1327,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 		++c;
 		if (removal_mode && !is_special)
 		{
+			waypoint_unmark_hardwiredlink(wp_from, wp_to);
 			waypoint_removelink(wp_from, wp_to);
 			continue;
 		}
@@ -1260,8 +1335,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 		if (!is_special)
 		{
 			waypoint_addlink(wp_from, wp_to);
-			wp_from.wphardwired = true;
-			wp_to.wphardwired = true;
+			waypoint_mark_hardwiredlink(wp_from, wp_to);
 			waypoint_setupmodel(wp_from);
 			waypoint_setupmodel(wp_to);
 		} else if (wp_from.wpflags & WAYPOINTFLAG_NORELINK
@@ -1790,7 +1864,7 @@ void waypoint_showlink(entity wp1, entity wp2, int display_type)
 	if (!(wp1 && wp2))
 		return;
 
-	if (wp1.wphardwired && wp2.wphardwired)
+	if (waypoint_is_hardwiredlink(wp1, wp2))
 		te_beam(NULL, wp1.origin, wp2.origin);
 	else if (display_type == 1)
 		te_lightning2(NULL, wp1.origin, wp2.origin);
@@ -1807,22 +1881,22 @@ void waypoint_showlinks_to(entity wp, int display_type)
 
 void waypoint_showlinks_from(entity wp, int display_type)
 {
-	waypoint_showlink(wp.wp00, wp, display_type); waypoint_showlink(wp.wp16, wp, display_type);
-	waypoint_showlink(wp.wp01, wp, display_type); waypoint_showlink(wp.wp17, wp, display_type);
-	waypoint_showlink(wp.wp02, wp, display_type); waypoint_showlink(wp.wp18, wp, display_type);
-	waypoint_showlink(wp.wp03, wp, display_type); waypoint_showlink(wp.wp19, wp, display_type);
-	waypoint_showlink(wp.wp04, wp, display_type); waypoint_showlink(wp.wp20, wp, display_type);
-	waypoint_showlink(wp.wp05, wp, display_type); waypoint_showlink(wp.wp21, wp, display_type);
-	waypoint_showlink(wp.wp06, wp, display_type); waypoint_showlink(wp.wp22, wp, display_type);
-	waypoint_showlink(wp.wp07, wp, display_type); waypoint_showlink(wp.wp23, wp, display_type);
-	waypoint_showlink(wp.wp08, wp, display_type); waypoint_showlink(wp.wp24, wp, display_type);
-	waypoint_showlink(wp.wp09, wp, display_type); waypoint_showlink(wp.wp25, wp, display_type);
-	waypoint_showlink(wp.wp10, wp, display_type); waypoint_showlink(wp.wp26, wp, display_type);
-	waypoint_showlink(wp.wp11, wp, display_type); waypoint_showlink(wp.wp27, wp, display_type);
-	waypoint_showlink(wp.wp12, wp, display_type); waypoint_showlink(wp.wp28, wp, display_type);
-	waypoint_showlink(wp.wp13, wp, display_type); waypoint_showlink(wp.wp29, wp, display_type);
-	waypoint_showlink(wp.wp14, wp, display_type); waypoint_showlink(wp.wp30, wp, display_type);
-	waypoint_showlink(wp.wp15, wp, display_type); waypoint_showlink(wp.wp31, wp, display_type);
+	waypoint_showlink(wp, wp.wp00, display_type); waypoint_showlink(wp, wp.wp16, display_type);
+	waypoint_showlink(wp, wp.wp01, display_type); waypoint_showlink(wp, wp.wp17, display_type);
+	waypoint_showlink(wp, wp.wp02, display_type); waypoint_showlink(wp, wp.wp18, display_type);
+	waypoint_showlink(wp, wp.wp03, display_type); waypoint_showlink(wp, wp.wp19, display_type);
+	waypoint_showlink(wp, wp.wp04, display_type); waypoint_showlink(wp, wp.wp20, display_type);
+	waypoint_showlink(wp, wp.wp05, display_type); waypoint_showlink(wp, wp.wp21, display_type);
+	waypoint_showlink(wp, wp.wp06, display_type); waypoint_showlink(wp, wp.wp22, display_type);
+	waypoint_showlink(wp, wp.wp07, display_type); waypoint_showlink(wp, wp.wp23, display_type);
+	waypoint_showlink(wp, wp.wp08, display_type); waypoint_showlink(wp, wp.wp24, display_type);
+	waypoint_showlink(wp, wp.wp09, display_type); waypoint_showlink(wp, wp.wp25, display_type);
+	waypoint_showlink(wp, wp.wp10, display_type); waypoint_showlink(wp, wp.wp26, display_type);
+	waypoint_showlink(wp, wp.wp11, display_type); waypoint_showlink(wp, wp.wp27, display_type);
+	waypoint_showlink(wp, wp.wp12, display_type); waypoint_showlink(wp, wp.wp28, display_type);
+	waypoint_showlink(wp, wp.wp13, display_type); waypoint_showlink(wp, wp.wp29, display_type);
+	waypoint_showlink(wp, wp.wp14, display_type); waypoint_showlink(wp, wp.wp30, display_type);
+	waypoint_showlink(wp, wp.wp15, display_type); waypoint_showlink(wp, wp.wp31, display_type);
 }
 
 void crosshair_trace_waypoints(entity pl)
@@ -1865,7 +1939,7 @@ void botframe_showwaypointlinks()
 		it.nearestwaypointtimeout = time + 2; // while I'm at it...
 		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE || it.wp_locked)
 			display_type = 1; // default
-		else if(head && (head.wphardwired))
+		else if(waypoint_has_hardwiredlinks(head))
 			display_type = 2; // only hardwired
 
 		if (display_type)
