@@ -11,7 +11,7 @@ bool autocvar_g_ca_team_spawns;
 //int autocvar_g_ca_teams;
 int autocvar_g_ca_teams_override;
 float autocvar_g_ca_warmup;
-bool autocvar_g_ca_weapons_all;
+bool autocvar_g_ca_weapons_all = true;
 
 
 int ca_teams;
