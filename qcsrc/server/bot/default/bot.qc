@@ -757,7 +757,7 @@ void bot_serverframe()
 		if(botframe_cachedwaypointlinks)
 		{
 			if(!botframe_loadedforcedlinks)
-				waypoint_load_links_hardwired();
+				waypoint_load_hardwiredlinks();
 		}
 		else
 		{

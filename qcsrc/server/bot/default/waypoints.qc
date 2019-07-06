@@ -284,12 +284,13 @@ bool waypoint_is_hardwiredlink(entity wp_from, entity wp_to)
 	return false;
 }
 
+void waypoint_setupmodel(entity wp);
 void waypoint_mark_hardwiredlink(entity wp_from, entity wp_to)
 {
 	if (!(wp_from && wp_to))
 		return;
 
-	if (!wp_from.wphw00 || wp_from.wphw00 == wp_to) { wp_from.wphw00 = wp_to; return; }
+	if (!wp_from.wphw00 || wp_from.wphw00 == wp_to) { wp_from.wphw00 = wp_to; waypoint_setupmodel(wp_from); return; }
 	if (!wp_from.wphw01 || wp_from.wphw01 == wp_to) { wp_from.wphw01 = wp_to; return; }
 	if (!wp_from.wphw02 || wp_from.wphw02 == wp_to) { wp_from.wphw02 = wp_to; return; }
 	if (!wp_from.wphw03 || wp_from.wphw03 == wp_to) { wp_from.wphw03 = wp_to; return; }
@@ -325,6 +326,9 @@ void waypoint_unmark_hardwiredlink(entity wp_from, entity wp_to)
 		if (removed <= 4) wp_from.wphw04 = wp_from.wphw05;
 		if (removed <= 5) wp_from.wphw05 = wp_from.wphw06;
 		if (removed <= 6) wp_from.wphw06 = wp_from.wphw07;
+		if (removed <= 7) wp_from.wphw07 = NULL;
+		if (!wp_from.wphw00)
+			waypoint_setupmodel(wp_from);
 	}
 
 	return;
@@ -1072,7 +1076,7 @@ void waypoint_schedulerelinkall()
 	{
 		waypoint_schedulerelink(it);
 	});
-	waypoint_load_links_hardwired();
+	waypoint_load_hardwiredlinks();
 }
 
 #define GET_GAMETYPE_EXTENSION() ((g_race) ? ".race" : "")
@@ -1226,7 +1230,24 @@ bool waypoint_load_links()
 	return true;
 }
 
-void waypoint_load_or_remove_links_hardwired(bool removal_mode)
+
+void waypoint_remove_hardwiredlinks()
+{
+	IL_EACH(g_waypoints, waypoint_has_hardwiredlinks(it),
+	{
+		if (it.wphw00) { waypoint_removelink(it, it.wphw00); it.wphw00 = NULL; }
+		if (it.wphw01) { waypoint_removelink(it, it.wphw01); it.wphw01 = NULL; }
+		if (it.wphw02) { waypoint_removelink(it, it.wphw02); it.wphw02 = NULL; }
+		if (it.wphw03) { waypoint_removelink(it, it.wphw03); it.wphw03 = NULL; }
+		if (it.wphw04) { waypoint_removelink(it, it.wphw04); it.wphw04 = NULL; }
+		if (it.wphw05) { waypoint_removelink(it, it.wphw05); it.wphw05 = NULL; }
+		if (it.wphw06) { waypoint_removelink(it, it.wphw06); it.wphw06 = NULL; }
+		if (it.wphw07) { waypoint_removelink(it, it.wphw07); it.wphw07 = NULL; }
+		waypoint_setupmodel(it);
+	});
+}
+
+void waypoint_load_hardwiredlinks()
 {
 	string s;
 	float file, tokens, c = 0, found;
@@ -1249,8 +1270,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 
 	if (file < 0)
 	{
-		if(!removal_mode)
-			LOG_TRACE("waypoint links load from ", filename, " failed");
+		LOG_TRACE("waypoint links load from ", filename, " failed");
 		return;
 	}
 
@@ -1297,8 +1317,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 
 			if(!found)
 			{
-				if(!removal_mode)
-					LOG_INFO("NOTICE: Can not find origin waypoint for the hardwired link ", s, ". Path skipped");
+				LOG_INFO("NOTICE: Can not find origin waypoint for the hardwired link ", s, ". Path skipped");
 				continue;
 			}
 		}
@@ -1319,25 +1338,16 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 
 		if(!found)
 		{
-			if(!removal_mode)
-				LOG_INFO("NOTICE: Can not find destination waypoint for the hardwired link ", s, ". Path skipped");
+			LOG_INFO("NOTICE: Can not find destination waypoint for the hardwired link ", s, ". Path skipped");
 			continue;
 		}
 
 		++c;
-		if (removal_mode && !is_special)
-		{
-			waypoint_unmark_hardwiredlink(wp_from, wp_to);
-			waypoint_removelink(wp_from, wp_to);
-			continue;
-		}
 
 		if (!is_special)
 		{
 			waypoint_addlink(wp_from, wp_to);
 			waypoint_mark_hardwiredlink(wp_from, wp_to);
-			waypoint_setupmodel(wp_from);
-			waypoint_setupmodel(wp_to);
 		} else if (wp_from.wpflags & WAYPOINTFLAG_NORELINK
 			&& (wp_from.wpflags & WAYPOINTFLAG_JUMP || (wp_from.wpisbox && wp_from.wpflags & WAYPOINTFLAG_TELEPORT)))
 		{
@@ -1347,8 +1357,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 
 	fclose(file);
 
-	LOG_TRACE(((removal_mode) ? "unloaded " : "loaded "),
-		ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
+	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
 }
 
 entity waypoint_get_link(entity w, float i)
@@ -1392,7 +1401,7 @@ entity waypoint_get_link(entity w, float i)
 }
 
 // Save all hardwired waypoint links to a file
-void waypoint_save_links_hardwired()
+void waypoint_save_hardwiredlinks()
 {
 	string gt_ext = GET_GAMETYPE_EXTENSION();
 
@@ -1488,7 +1497,7 @@ void waypoint_save_links_hardwired()
 void waypoint_save_links()
 {
 	// temporarily remove hardwired links so they don't get saved among normal links
-	waypoint_remove_links_hardwired();
+	waypoint_remove_hardwiredlinks();
 
 	string gt_ext = GET_GAMETYPE_EXTENSION();
 
@@ -1525,7 +1534,7 @@ void waypoint_save_links()
 
 	LOG_INFOF("saved %d waypoint links to %s", c, filename);
 
-	waypoint_load_links_hardwired();
+	waypoint_load_hardwiredlinks();
 }
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
@@ -1602,7 +1611,7 @@ void waypoint_saveall()
 	});
 	fclose(file);
 	waypoint_save_links();
-	waypoint_save_links_hardwired();
+	waypoint_save_hardwiredlinks();
 
 	botframe_loadedforcedlinks = false;
 
