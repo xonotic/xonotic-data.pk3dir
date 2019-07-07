@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-06-29 18:20+0000\n"
+"PO-Revision-Date: 2019-07-07 02:23+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
@@ -1528,11 +1528,11 @@ msgstr "Convidar"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:390
 msgid "Current Game"
-msgstr "Jogo Atual"
+msgstr "Jogo atual"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:415
 msgid "Exit Menu"
-msgstr "Sair do Menu"
+msgstr "Sair do menu"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:427
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
@@ -1553,7 +1553,7 @@ msgstr "Mensagem de minijogo"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Buldôzer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1092
 #: qcsrc/common/minigames/minigame/ps.qc:421
@@ -1606,7 +1606,7 @@ msgstr "Salvar"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Lig 4"
 
 #: qcsrc/common/minigames/minigame/c4.qc:311
 #: qcsrc/common/minigames/minigame/c4.qc:317
@@ -1654,7 +1654,7 @@ msgstr "Clique no tabuleiro de jogo para posicionar sua peça"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:7
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "Trilha"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 msgid ""
@@ -1685,11 +1685,11 @@ msgstr "IA"
 #: qcsrc/common/minigames/minigame/pong.qc:606
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
-"Aperte ^1Iniciar Partida^7 para iniciar a partida com os jogadores atuais"
+"Aperte ^1Iniciar partida^7 para iniciar a partida com os jogadores atuais"
 
 #: qcsrc/common/minigames/minigame/pong.qc:674
 msgid "Start Match"
-msgstr "Iniciar Partida"
+msgstr "Iniciar partida"
 
 #: qcsrc/common/minigames/minigame/pong.qc:675
 msgid "Add AI player"
@@ -1701,7 +1701,7 @@ msgstr "Remover bot"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "Empurrar e Puxar"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
@@ -1728,11 +1728,11 @@ msgstr "Próxima partida"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "Resta Um"
 
 #: qcsrc/common/minigames/minigame/ps.qc:414
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Todas as peças removidas!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
@@ -1757,11 +1757,11 @@ msgstr "Faça uma peça saltar sobre outra para capturá-la"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "Jogo-da-velha"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Single Player"
-msgstr "Um Jogador"
+msgstr "Um jogador"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -1770,7 +1770,7 @@ msgstr "Mago"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
-msgstr "Prego de mago"
+msgstr "Espinho de mago"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
@@ -1978,7 +1978,7 @@ msgstr "Escopeta Suprema"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr "Ponto de passagem"
+msgstr "Ponto de interesse"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
@@ -4924,7 +4924,7 @@ msgstr "TIL"
 
 #: qcsrc/common/util.qc:1488
 msgid "BACKQUOTE"
-msgstr ""
+msgstr "APÓSTROFO"
 
 #: qcsrc/common/util.qc:1489
 msgid "QUOTE"
@@ -4932,7 +4932,7 @@ msgstr "ASPAS"
 
 #: qcsrc/common/util.qc:1490
 msgid "APOSTROPHE"
-msgstr "APÓSTROFO"
+msgstr "~"
 
 #: qcsrc/common/util.qc:1491
 msgid "BACKSLASH"
@@ -6994,11 +6994,11 @@ msgid ""
 "to find some or if he fails to do so, face death. The secondary fire mode "
 "does not inflict any damage but is good for doing trickjumps."
 msgstr ""
-"Os jogadores terão uma arma, a qual pode instantaneamente matar o oponente "
-"com um único disparo. Se o jogador ficar sem munição, ele terá 10 segundos "
-"para encontrar alguma e se não conseguir fazer isso, irá morrer. O modo de "
-"disparo secundário não causa nenhum dano, mas é útil para executar truques "
-"de movimento."
+"Os jogadores terão uma arma que pode instantaneamente matar o oponente com "
+"um único disparo. Se o jogador ficar sem munição, ele terá 10 segundos para "
+"encontrar alguma e, se não conseguir fazer isso, morrerá. O modo de disparo "
+"secundário não causa nenhum dano, mas é útil para executar truques de "
+"movimento."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:284
 msgid ""
@@ -7007,8 +7007,8 @@ msgid ""
 "switch to another weapon."
 msgstr ""
 "Sem itens Xonotic - em vez de pegar itens espalhados pelo mapa, todo mundo "
-"joga com a mesma arma. Depois de um certo tempo, uma contagem regressiva irá "
-"iniciar, e depois disso todos irão trocar para uma outra arma."
+"joga com a mesma arma. Após um certo tempo, inciará uma contagem regressiva "
+"e, depois disso, todos trocarão para outra arma."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:288
 msgid "with blaster"
@@ -7040,7 +7040,7 @@ msgstr "Cheio"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:48
 msgid "Show full servers that have no slots available"
-msgstr "Exibir servidores cheios que não contêm vagas disponíveis"
+msgstr "Exibir servidores cheios que não têm vagas disponíveis"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "Pause"
@@ -8291,19 +8291,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
-msgstr "Caminhos"
+msgstr "Pontos de interesse"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:66
 msgid "Display waypoint markers for objectives on the map"
-msgstr "Mostra os marcadores de caminhos para objetivos no mapa"
+msgstr "Exibe os marcadores de ponto de interesse para objetivos no mapa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:67
 msgid "Show various gametype specific waypoints"
-msgstr "Mostra diversos caminhos específicos de modos de jogo"
+msgstr "Exibe diversos pontos de interesse específicos de modos de jogo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:73
 msgid "Control transparency of the waypoints"
-msgstr "Transparência dos caminhos"
+msgstr "Transparência dos pontos de interesse"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
