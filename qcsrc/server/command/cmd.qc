@@ -198,6 +198,11 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 						waypoint_remove_fromeditor(caller);
 					return;
 				}
+				else if (argv(1) == "hardwire")
+				{
+					waypoint_start_hardwiredlink(caller);
+					return;
+				}
 				else if (argv(1) == "unreachable")
 				{
 					if (!IS_PLAYER(caller))
@@ -246,8 +251,9 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 			sprint(caller, "   ^5unreachable^7: useful to reveal waypoints and items unreachable from the current position and spawnpoints without a nearest waypoint\n");
 			sprint(caller, "   ^5saveall^7: saves all waypoints and links to file\n");
 			sprint(caller, "   ^5relinkall^7: relink all waypoints as if they were respawned\n");
-			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position (useful to spawn custom jumppad waypoints)\n");
-			sprint(caller, "   ^5spawn jump^7: spawns a jump waypoint\n");
+			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position (useful to spawn custom jumppad waypoints (spawn another waypoint to create destination))\n");
+			sprint(caller, "   ^5spawn jump^7: spawns a jump waypoint (spawn another waypoint to create destination)\n");
+			sprint(caller, "   ^5hardwire^7: marks the nearest waypoint as origin of a new hardwired link (spawn another waypoint over an existing one to create destination)\n");
 			sprint(caller, "   ^5symorigin get|set\n");
 			sprint(caller, "   ^5symorigin get|set p1 p2 ... pX\n");
 			sprint(caller, "   ^5symaxis get|set p1 p2\n");

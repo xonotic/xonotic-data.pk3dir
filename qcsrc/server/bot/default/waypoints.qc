@@ -351,7 +351,7 @@ void waypoint_setupmodel(entity wp)
 		else if (wp.wpflags & WAYPOINTFLAG_NORELINK)
 			wp.colormod = '1 0.5 0'; // orange
 		else if (waypoint_has_hardwiredlinks(wp))
-			wp.colormod = '0.5 0 1'; // violet
+			wp.colormod = '0.5 0 1'; // purple
 		else
 			wp.colormod = '1 1 1';
 	}
@@ -371,6 +371,7 @@ entity waypoint_get(vector m1, vector m2)
 	return NULL;
 }
 
+.float createdtime;
 entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	if(!(f & (WAYPOINTFLAG_PERSONAL | WAYPOINTFLAG_GENERATED)) && m1 == m2)
@@ -395,6 +396,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	w.wpflags = f;
 	w.solid = SOLID_TRIGGER;
+	w.createdtime = time;
 	setorigin(w, (m1 + m2) * 0.5);
 	setsize(w, m1 - w.origin, m2 - w.origin);
 	if (w.size)
@@ -452,14 +454,31 @@ void waypoint_addlink_for_custom_jumppad(entity wp_from, entity wp_to)
 
 bool start_wp_is_spawned;
 vector start_wp_origin;
+bool start_wp_is_hardwired;
 
 void waypoint_clear_start_wp(entity pl, bool warn)
 {
 	start_wp_is_spawned = false;
 	start_wp_origin = '0 0 0';
 	pl.wp_locked = NULL;
+	start_wp_is_hardwired = false;
 	if (warn)
 		LOG_INFO("^xf80Start waypoint has been cleared.\n");
+}
+
+void waypoint_start_hardwiredlink(entity pl)
+{
+	entity wp = pl.nearestwaypoint;
+	if ((!start_wp_is_spawned || start_wp_is_hardwired) && wp && !(wp.wpflags & WAYPOINTFLAG_NORELINK))
+	{
+		start_wp_is_hardwired = true;
+		start_wp_is_spawned = true;
+		start_wp_origin = wp.origin;
+		pl.wp_locked = wp;
+		LOG_INFOF("^x80fNearest waypoint %s marked as hardwired link origin.\n", vtos(wp.origin));
+	}
+	else
+		start_wp_is_hardwired = false;
 }
 
 void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
@@ -516,7 +535,8 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
 	vector start_org = '0 0 0';
 	if (start_wp_is_spawned)
 	{
-		LOG_INFO("^xf80Spawning destination waypoint...\n");
+		if (!start_wp_is_hardwired)
+			LOG_INFO("^xf80Spawning destination waypoint...\n");
 		start_org = start_wp_origin;
 	}
 
@@ -570,7 +590,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
 	entity start_wp = NULL;
 	if (start_wp_is_spawned)
 	{
-		IL_EACH(g_waypoints, it.wpflags & WAYPOINTFLAG_NORELINK
+		IL_EACH(g_waypoints, (start_wp_is_hardwired || it.wpflags & WAYPOINTFLAG_NORELINK)
 			&& boxesoverlap(start_org, start_org, it.absmin, it.absmax),
 		{
 			start_wp = it; break;
@@ -582,17 +602,56 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
 			waypoint_clear_start_wp(pl, true);
 			return;
 		}
-		waypoint_addlink(start_wp, e);
+		if (start_wp_is_hardwired)
+		{
+			if (waypoint_is_hardwiredlink(start_wp, e))
+			{
+				waypoint_unmark_hardwiredlink(start_wp, e);
+				waypoint_removelink(start_wp, e);
+				string s = strcat(vtos(start_wp.origin), "*", vtos(e.origin));
+				LOG_INFOF("^x80fRemoved hardwired link %s.\n", s);
+			}
+			else
+			{
+				if (e.createdtime == time)
+				{
+					LOG_INFO("Error: hardwired links can be created only between 2 existing (and unconnected) waypoints.\n");
+					waypoint_remove(e);
+					waypoint_clear_start_wp(pl, true);
+					waypoint_spawn_fromeditor(pl, at_crosshair, is_jump_wp);
+					return;
+				}
+				if (start_wp == e)
+				{
+					LOG_INFO("Error: start and destination waypoints coincide.\n");
+					waypoint_clear_start_wp(pl, true);
+					return;
+				}
+				if (waypoint_islinked(start_wp, e))
+				{
+					LOG_INFO("Error: waypoints are already linked.\n");
+					waypoint_clear_start_wp(pl, true);
+					return;
+				}
+				waypoint_addlink(start_wp, e);
+				waypoint_mark_hardwiredlink(start_wp, e);
+				string s = strcat(vtos(start_wp.origin), "*", vtos(e.origin));
+				LOG_INFOF("^x80fAdded hardwired link %s.\n", s);
+			}
+		}
+		else
+			waypoint_addlink(start_wp, e);
 	}
 
-	if (!(jp || is_jump_wp))
+	if (!(jp || is_jump_wp || start_wp_is_hardwired))
 		waypoint_schedulerelink(e);
 	bprint(strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 
 	if (start_wp_is_spawned)
 	{
 		pl.wp_locked = NULL;
-		waypoint_schedulerelink(start_wp);
+		if (!start_wp_is_hardwired)
+			waypoint_schedulerelink(start_wp);
 		if (start_wp.wpflags & WAYPOINTFLAG_TELEPORT)
 		{
 			if (start_wp.wp00_original == start_wp.wp00)
@@ -1406,51 +1465,31 @@ void waypoint_save_hardwiredlinks()
 	string gt_ext = GET_GAMETYPE_EXTENSION();
 
 	string filename = sprintf("maps/%s.waypoints.hardwired", strcat(mapname, gt_ext));
-	int file = fopen(filename, FILE_READ);
-
-	if (gt_ext != "" && file < 0)
-	{
-		// if race waypoint file doesn't exist load the default one
-		filename = sprintf("maps/%s.waypoints.hardwired", mapname);
-		file = fopen(filename, FILE_READ);
-	}
-
+	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
-		filename = sprintf("maps/%s.waypoints.hardwired", strcat(mapname, gt_ext));
-		file = fopen(filename, FILE_WRITE);
-		if (file < 0)
-		{
-			LOG_TRACE("waypoint hardwired links ", filename, " creation failed");
-			return;
-		}
-		fputs(file, "// HARDWIRED LINKS\n\n");
-		fclose(file);
-		fopen(filename, FILE_READ);
-		if (file < 0)
-		{
-			LOG_TRACE("waypoint hardwired links load from ", filename, " failed");
-			return;
-		}
+		LOG_TRACE("waypoint hardwired links ", filename, " creation failed");
+		return;
 	}
 
-	int buf = buf_create();
-	string s;
-	int pos = 0;
-
-	// read comments and hardwired links from file to buf, they won't be changed
-	while ((s = fgets(file)))
+	// write hardwired links to file
+	fputs(file, "// HARDWIRED LINKS\n");
+	IL_EACH(g_waypoints, waypoint_has_hardwiredlinks(it),
 	{
-		// special links start with *, so old xonotic versions don't load them
-		if (substring(s, 0, 1) == "*")
-			break;
-		bufstr_add(buf, s, false);
-		++pos;
-	}
-	fclose(file);
+		for (int j = 0; j < 32; ++j)
+		{
+			entity link = waypoint_get_link(it, j);
+			if (waypoint_is_hardwiredlink(it, link))
+			{
+				// NOTE: vtos rounds vector components to 1 decimal place
+				string s = strcat(vtos(it.origin), "*", vtos(link.origin), "\n");
+				fputs(file, s);
+			}
+		}
+	});
 
-	// read links to buf
-	bool special_link_found = false;
+	// write special links to file
+	fputs(file, "\n// SPECIAL LINKS\n");
 	IL_EACH(g_waypoints, it.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_CUSTOM_JP),
 	{
 		for (int j = 0; j < 32; ++j)
@@ -1458,36 +1497,13 @@ void waypoint_save_hardwiredlinks()
 			entity link = waypoint_get_link(it, j);
 			if (link)
 			{
-				if (!special_link_found)
-				{
-					special_link_found = true;
-					if (pos == 0 || substring(bufstr_get(buf, pos - 1), 0, 16) != "// SPECIAL LINKS")
-					{
-						bufstr_add(buf, "// SPECIAL LINKS (saved in the waypoint editor, comments added hereby won't be preserved)", false);
-					}
-				}
 				// NOTE: vtos rounds vector components to 1 decimal place
-				string s = strcat("*", vtos(it.origin), "*", vtos(link.origin));
-				bufstr_add(buf, s, false);
+				string s = strcat("*", vtos(it.origin), "*", vtos(link.origin), "\n");
+				fputs(file, s);
 			}
 		}
 	});
 
-	// write buf to file
-	gt_ext = GET_GAMETYPE_EXTENSION();
-	filename = sprintf("maps/%s.waypoints.hardwired", strcat(mapname, gt_ext));
-	file = fopen(filename, FILE_WRITE);
-	if (file < 0)
-	{
-		LOG_INFOF("waypoint hardwired link save to %s failed", filename);
-		return;
-	}
-	int n = buf_getsize(buf);
-	for (int i = 0; i < n; ++i)
-	{
-		fputs(file, (strcat(bufstr_get(buf, i), "\n")));
-	}
-	buf_del(buf);
 	fclose(file);
 
 	LOG_INFOF("saved hardwired waypoint links to %s", filename);
@@ -1496,9 +1512,6 @@ void waypoint_save_hardwiredlinks()
 // Save all waypoint links to a file
 void waypoint_save_links()
 {
-	// temporarily remove hardwired links so they don't get saved among normal links
-	waypoint_remove_hardwiredlinks();
-
 	string gt_ext = GET_GAMETYPE_EXTENSION();
 
 	string filename = sprintf("maps/%s.waypoints.cache", strcat(mapname, gt_ext));
@@ -1519,7 +1532,7 @@ void waypoint_save_links()
 		for(int j = 0; j < 32; ++j)
 		{
 			entity link = waypoint_get_link(it, j);
-			if(link)
+			if (link && !waypoint_is_hardwiredlink(it, link))
 			{
 				// NOTE: vtos rounds vector components to 1 decimal place
 				string s = strcat(vtos(it.origin), "*", vtos(link.origin), "\n");
@@ -1533,8 +1546,6 @@ void waypoint_save_links()
 	botframe_cachedwaypointlinks = true;
 
 	LOG_INFOF("saved %d waypoint links to %s", c, filename);
-
-	waypoint_load_hardwiredlinks();
 }
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
@@ -1975,13 +1986,13 @@ void botframe_showwaypointlinks()
 				wp = trace_ent;
 				if (wp != it.wp_aimed)
 				{
-					str = sprintf("\necho ^2WP info^7: entity: %d, flags: %d, origin: '%s'\n", etof(wp), wp.wpflags, vtos(wp.origin));
+					str = sprintf("\necho ^2WP info^7: entity: %d, flags: %d, origin: %s\n", etof(wp), wp.wpflags, vtos(wp.origin));
 					if (wp.wpisbox)
-						str = strcat(str, sprintf("echo \" absmin: '%s', absmax: '%s'\"\n", vtos(wp.absmin), vtos(wp.absmax)));
+						str = strcat(str, sprintf("echo \" absmin: %s, absmax: %s\"\n", vtos(wp.absmin), vtos(wp.absmax)));
 					stuffcmd(it, str);
-					str = sprintf("entity: %d\nflags: %d\norigin: \'%s\'", etof(wp), wp.wpflags, vtos(wp.origin));
+					str = sprintf("entity: %d\nflags: %d\norigin: %s", etof(wp), wp.wpflags, vtos(wp.origin));
 					if (wp.wpisbox)
-						str = strcat(str, sprintf(" \nabsmin: '%s'\nabsmax: '%s'", vtos(wp.absmin), vtos(wp.absmax)));
+						str = strcat(str, sprintf(" \nabsmin: %s\nabsmax: %s", vtos(wp.absmin), vtos(wp.absmax)));
 					debug_text_3d(wp.origin, str, 0, 7, '0 0 0');
 				}
 			}
