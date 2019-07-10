@@ -1289,23 +1289,6 @@ bool waypoint_load_links()
 	return true;
 }
 
-
-void waypoint_remove_hardwiredlinks()
-{
-	IL_EACH(g_waypoints, waypoint_has_hardwiredlinks(it),
-	{
-		if (it.wphw00) { waypoint_removelink(it, it.wphw00); it.wphw00 = NULL; }
-		if (it.wphw01) { waypoint_removelink(it, it.wphw01); it.wphw01 = NULL; }
-		if (it.wphw02) { waypoint_removelink(it, it.wphw02); it.wphw02 = NULL; }
-		if (it.wphw03) { waypoint_removelink(it, it.wphw03); it.wphw03 = NULL; }
-		if (it.wphw04) { waypoint_removelink(it, it.wphw04); it.wphw04 = NULL; }
-		if (it.wphw05) { waypoint_removelink(it, it.wphw05); it.wphw05 = NULL; }
-		if (it.wphw06) { waypoint_removelink(it, it.wphw06); it.wphw06 = NULL; }
-		if (it.wphw07) { waypoint_removelink(it, it.wphw07); it.wphw07 = NULL; }
-		waypoint_setupmodel(it);
-	});
-}
-
 void waypoint_load_hardwiredlinks()
 {
 	string s;
