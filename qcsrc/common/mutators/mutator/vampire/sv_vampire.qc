@@ -14,12 +14,13 @@ MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
         float armor_take = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
         float damage_take = (autocvar_g_vampire_use_total_damage) ? health_take + armor_take : health_take;
 
-	if(time >= frag_target.spawnshieldtime)
-	if(frag_target != frag_attacker)
-        if(IS_PLAYER(frag_attacker))
-	if(!IS_DEAD(frag_target))
+        if(time >= frag_target.spawnshieldtime &&
+           frag_target != frag_attacker &&
+           IS_PLAYER(frag_attacker) &&
+           !IS_DEAD(frag_target))
 	{
-		GiveResource(frag_attacker, RES_HEALTH, autocvar_g_vampire_factor * damage_take);
+		GiveResource(frag_attacker, RES_HEALTH,
+			autocvar_g_vampire_factor * damage_take);
 	}
 }
 
