@@ -5,7 +5,7 @@
 
 .float lms_spectate_warning;
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
-bool autocvar_g_lms_weapons_all;
+bool autocvar_g_lms_weapons_all = true;
 
 void lms_Initialize();
 

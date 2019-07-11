@@ -5,7 +5,7 @@
 int autocvar_g_freezetag_point_limit;
 int autocvar_g_freezetag_point_leadlimit;
 bool autocvar_g_freezetag_team_spawns;
-bool autocvar_g_freezetag_weapons_all;
+bool autocvar_g_freezetag_weapons_all = true;
 
 void freezetag_Initialize();
 
