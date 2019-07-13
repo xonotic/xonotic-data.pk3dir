@@ -429,9 +429,41 @@ MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms, WantWeapon)
+// First SetWeaponArena runs, then we find out what weapons the map has and save them to weaponsInMapAll and then PlayerSpawn runs.
+// These weapons will be used as fallback in case PlayerSpawn finds out the map doesn't have any.
+// The same mechanism is used in CA and FT.
+MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
 {
-	M_ARGV(2, bool) = true; // all weapons
+	// most weapons arena
+	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+	{
+		M_ARGV(0, string) = "most";
+	}
+}
+
+// We need to set weapons *after* weaponsInMapAll is initialized so we can't use WantWeapon/SetStartItems/SetWeaponArena.
+// Not CBC_ORDER_LAST since this needs to be overriden by several other mutators otherwise they get vanilla weapons.
+MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
+{
+	// If no weapons, keep the fallback from SetWeaponArena.
+	if (!autocvar_g_lms_weapons_all && weaponsInMapAll != '0 0 0')
+	{
+		entity player = M_ARGV(0, entity);
+
+		// Ok, so the map has weapons, clear out what SetWeaponArena put in STAT(WEAPONS, player),
+		// then add normal spawn weapons and weapons available on the map.
+		STAT(WEAPONS, player) = '0 0 0';
+		FOREACH(Weapons, it != WEP_Null, {
+			if (it.weaponstart) {
+				STAT(WEAPONS, player) |= WepSet_FromWeapon(it);
+			}
+			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
+			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
+			if (normal && !blocked) {
+				STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
+			}
+		});
+	}
 }
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)

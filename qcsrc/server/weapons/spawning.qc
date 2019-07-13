@@ -30,6 +30,12 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 {
 	Weapon wpn = e;
 	e = wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
+
+	if (wpn.m_pickup.instanceOfWeaponPickup)
+	{
+		weaponsInMapAll |= wpn.m_pickup.m_weapon.m_wepset;
+	}
+
 	this.classname = wpn.m_canonical_spawnfunc;
 	if (!Item_IsLoot(this) && !this.m_isreplaced)
 	{

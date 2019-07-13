@@ -43,7 +43,10 @@ const int MAX_CL_STATS = 256;
 #endif
 
 #ifdef SVQC
+/// weapons that can spawn on the map as pickups in the current game (e.g. nothing in LMS or Overkill)
 vector weaponsInMap;
+/// weapons that can spawn on the map as pickups before any filters (modes, mutators, rulesets, ...) are applied
+vector weaponsInMapAll;
 #endif
 REGISTER_STAT(WEAPONS, vectori)
 REGISTER_STAT(WEAPONSINMAP, vectori, weaponsInMap)

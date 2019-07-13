@@ -508,7 +508,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 
 	float t = weaponinfo.weaponstartoverride;
 
-	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
+	//LOG_INFOF("want_weapon: %s - d: %d t: %d\n", weaponinfo.netname, d, t);
 
 	// bit order in t:
 	// 1: want or not

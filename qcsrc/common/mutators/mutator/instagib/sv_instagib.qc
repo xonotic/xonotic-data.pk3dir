@@ -204,10 +204,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidRandomStartWeapons)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
+// Overrides LMS and similar
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn, CBC_ORDER_LAST)
 {
 	entity player = M_ARGV(0, entity);
 
+	STAT(WEAPONS, player) = WEPSET(VAPORIZER);
 	player.effects |= EF_FULLBRIGHT;
 }
 
@@ -398,7 +400,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 	start_ammo_rockets = warmup_start_ammo_rockets = 0;
 	//start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
-	start_weapons = warmup_start_weapons = WEPSET(VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 }
 
