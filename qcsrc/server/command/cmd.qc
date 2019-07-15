@@ -187,7 +187,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 					if (!IS_PLAYER(caller))
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
-						waypoint_spawn_fromeditor(caller, (argv(2) == "crosshair"), (argv(2) == "jump"));
+						waypoint_spawn_fromeditor(caller, (argv(2) == "crosshair"), (argv(2) == "jump"), (argv(2) == "crouch"));
 					return;
 				}
 				else if (argv(1) == "remove")

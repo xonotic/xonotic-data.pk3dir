@@ -288,7 +288,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 		return;
 	}
 
-	if(this.waterlevel > WATERLEVEL_WETFEET)
+	if(this.waterlevel > WATERLEVEL_WETFEET || this.maxs.z == PL_CROUCH_MAX_CONST.z)
 	{
 		this.aistatus &= ~AI_STATUS_RUNNING;
 		return;
@@ -478,6 +478,11 @@ void havocbot_movetogoal(entity this)
 	//	te_lightning2(this, this.origin, (this.goalentity.absmin + this.goalentity.absmax) * 0.5);
 	CS(this).movement = '0 0 0';
 	maxspeed = autocvar_sv_maxspeed;
+
+	if (this.goalcurrent.wpflags & WAYPOINTFLAG_CROUCH)
+		PHYS_INPUT_BUTTON_CROUCH(this) = true;
+	else
+		PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
 	PHYS_INPUT_BUTTON_JETPACK(this) = false;
 	// Jetpack navigation
@@ -1055,7 +1060,17 @@ void havocbot_movetogoal(entity this)
 			LABEL(jumpobstacle_check);
 			dir = flatdir = normalize(actual_destorg - this.origin);
 
-			if (turning || fabs(deviation.y) < 50) // don't even try to jump if deviation is too high
+			bool jump_forbidden = false;
+			if (!turning && fabs(deviation.y) > 50)
+				jump_forbidden = true;
+			else if (this.maxs.z == PL_CROUCH_MAX_CONST.z)
+			{
+				tracebox(this.origin, PL_MIN_CONST, PL_MAX_CONST, this.origin, false, this);
+				if (trace_startsolid)
+					jump_forbidden = true;
+			}
+
+			if (!jump_forbidden)
 			{
 				tracebox(this.origin, this.mins, this.maxs, actual_destorg, false, this);
 				if (trace_fraction < 1 && trace_plane_normal.z < 0.7)

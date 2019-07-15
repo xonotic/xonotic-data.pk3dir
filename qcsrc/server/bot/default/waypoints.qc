@@ -345,11 +345,13 @@ void waypoint_setupmodel(entity wp)
 		setsize(wp, m1, m2);
 		wp.effects = EF_LOWPRECISION;
 		if (wp.wpflags & WAYPOINTFLAG_ITEM)
-			wp.colormod = '1 0 0';
+			wp.colormod = '1 0 0'; // red
 		else if (wp.wpflags & WAYPOINTFLAG_GENERATED)
-			wp.colormod = '1 1 0';
+			wp.colormod = '1 1 0'; // yellow
 		else if (wp.wpflags & WAYPOINTFLAG_NORELINK)
 			wp.colormod = '1 0.5 0'; // orange
+		else if (wp.wpflags & WAYPOINTFLAG_CROUCH)
+			wp.colormod = '0 1 1'; // cyan
 		else if (waypoint_has_hardwiredlinks(wp))
 			wp.colormod = '0.5 0 1'; // purple
 		else
@@ -404,7 +406,10 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 
 	if(!w.wpisbox)
 	{
-		setsize(w, PL_MIN_CONST - '1 1 0', PL_MAX_CONST + '1 1 0');
+		if (f & WAYPOINTFLAG_CROUCH)
+			setsize(w, PL_CROUCH_MIN_CONST - '1 1 0', PL_CROUCH_MAX_CONST + '1 1 0');
+		else
+			setsize(w, PL_MIN_CONST - '1 1 0', PL_MAX_CONST + '1 1 0');
 		if(!move_out_of_solid(w))
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
@@ -481,7 +486,7 @@ void waypoint_start_hardwiredlink(entity pl)
 		start_wp_is_hardwired = false;
 }
 
-void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp)
 {
 	if (WAYPOINT_VERSION < waypoint_version_loaded)
 	{
@@ -572,7 +577,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
 			pl.wp_locked = e;
 	}
 	else
-		e = waypoint_spawn(org, org, 0);
+		e = waypoint_spawn(org, org, (is_crouch_wp) ? WAYPOINTFLAG_CROUCH : 0);
 	if(!e)
 	{
 		LOG_INFOF("Couldn't spawn waypoint at %v\n", org);
@@ -618,7 +623,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp)
 					LOG_INFO("Error: hardwired links can be created only between 2 existing (and unconnected) waypoints.\n");
 					waypoint_remove(e);
 					waypoint_clear_start_wp(pl, true);
-					waypoint_spawn_fromeditor(pl, at_crosshair, is_jump_wp);
+					waypoint_spawn_fromeditor(pl, at_crosshair, is_jump_wp, is_crouch_wp);
 					return;
 				}
 				if (start_wp == e)
@@ -889,10 +894,16 @@ float waypoint_getlinearcost(float dist)
 		return dist / (autocvar_sv_maxspeed * 1.25);
 	return dist / autocvar_sv_maxspeed;
 }
+
 float waypoint_getlinearcost_underwater(float dist)
 {
 	// NOTE: underwater speed factor is hardcoded in the engine too, see SV_WaterMove
 	return dist / (autocvar_sv_maxspeed * 0.7);
+}
+
+float waypoint_getlinearcost_crouched(float dist)
+{
+	return dist / (autocvar_sv_maxspeed * 0.5);
 }
 
 float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_ent)
@@ -903,12 +914,15 @@ float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_
 	if (submerged_from && submerged_to)
 		return waypoint_getlinearcost_underwater(vlen(to - from));
 
+	if (from_ent.wpflags & WAYPOINTFLAG_CROUCH && to_ent.wpflags & WAYPOINTFLAG_CROUCH)
+		return waypoint_getlinearcost_crouched(vlen(to - from));
+
 	float c = waypoint_getlinearcost(vlen(to - from));
 
 	float height = from.z - to.z;
 	if(height > jumpheight_vec.z && autocvar_sv_gravity > 0)
 	{
-		float height_cost;
+		float height_cost; // fall cost
 		if (boolean(from_ent.wpflags & WAYPOINTFLAG_JUMP))
 			height_cost = jumpheight_time + sqrt((height + jumpheight_vec.z) / (autocvar_sv_gravity / 2));
 		else
@@ -918,8 +932,14 @@ float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_
 			c = height_cost;
 	}
 
+	// consider half path underwater
 	if (submerged_from || submerged_to)
 		return (c + waypoint_getlinearcost_underwater(vlen(to - from))) / 2;
+
+	// consider half path crouched
+	if (from_ent.wpflags & WAYPOINTFLAG_CROUCH || to_ent.wpflags & WAYPOINTFLAG_CROUCH)
+		return (c + waypoint_getlinearcost_crouched(vlen(to - from))) / 2;
+
 	return c;
 }
 
@@ -1040,7 +1060,22 @@ void waypoint_think(entity this)
 
 			dv = ev - sv;
 			dv.z = 0;
-			if(vdist(dv, >=, 1050)) // max search distance in XY
+			int maxdist = 1050;
+			vector m1 = PL_MIN_CONST;
+			vector m2 = PL_MAX_CONST;
+
+			if (this.wpflags & WAYPOINTFLAG_CROUCH || it.wpflags & WAYPOINTFLAG_CROUCH)
+			{
+				m1 = PL_CROUCH_MIN_CONST;
+				m2 = PL_CROUCH_MAX_CONST;
+				// links from crouch wp to normal wp (and viceversa) are very short to avoid creating many links
+				// that would be wasted due to rough travel cost calculation (the longer link is, the higher cost is)
+				// links from crouch wp to crouch wp can be as long as normal links
+				if (!(this.wpflags & WAYPOINTFLAG_CROUCH && it.wpflags & WAYPOINTFLAG_CROUCH))
+					maxdist = 100;
+			}
+
+			if (vdist(dv, >=, maxdist)) // max search distance in XY
 			{
 				++relink_lengthculled;
 				continue;
@@ -1054,7 +1089,7 @@ void waypoint_think(entity this)
 				relink_walkculled += 0.5;
 			else
 			{
-				if (tracewalk(this, sv, PL_MIN_CONST, PL_MAX_CONST, ev2, ev2_height, MOVE_NOMONSTERS))
+				if (tracewalk(this, sv, m1, m2, ev2, ev2_height, MOVE_NOMONSTERS))
 					waypoint_addlink(this, it);
 				else
 					relink_walkculled += 0.5;
@@ -1064,7 +1099,7 @@ void waypoint_think(entity this)
 				relink_walkculled += 0.5;
 			else
 			{
-				if (tracewalk(this, ev, PL_MIN_CONST, PL_MAX_CONST, sv2, sv2_height, MOVE_NOMONSTERS))
+				if (tracewalk(this, ev, m1, m2, sv2, sv2_height, MOVE_NOMONSTERS))
 					waypoint_addlink(it, this);
 				else
 					relink_walkculled += 0.5;

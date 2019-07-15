@@ -84,7 +84,7 @@ float waypoint_loadall();
 bool waypoint_load_links();
 void waypoint_load_hardwiredlinks();
 
-void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp);
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp);
 entity waypoint_spawn(vector m1, vector m2, float f);
 entity waypoint_spawnpersonal(entity this, vector position);
 
