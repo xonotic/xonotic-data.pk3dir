@@ -445,24 +445,10 @@ MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
 // Not CBC_ORDER_LAST since this needs to be overriden by several other mutators otherwise they get vanilla weapons.
 MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 {
-	// If no weapons, keep the fallback from SetWeaponArena.
-	if (!autocvar_g_lms_weapons_all && weaponsInMapAll != '0 0 0')
+	if (!autocvar_g_lms_weapons_all)
 	{
 		entity player = M_ARGV(0, entity);
-
-		// Ok, so the map has weapons, clear out what SetWeaponArena put in STAT(WEAPONS, player),
-		// then add normal spawn weapons and weapons available on the map.
-		STAT(WEAPONS, player) = '0 0 0';
-		FOREACH(Weapons, it != WEP_Null, {
-			if (it.weaponstart) {
-				STAT(WEAPONS, player) |= WepSet_FromWeapon(it);
-			}
-			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
-			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
-			if (normal && !blocked) {
-				STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
-			}
-		});
+		give_weapons_from_map(player);
 	}
 }
 

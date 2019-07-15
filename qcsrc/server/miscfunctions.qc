@@ -752,6 +752,32 @@ void readplayerstartcvars()
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
+/// If the map has weapon pickups, set those as start weapons for the player (together with the normal spawn weapons).
+/// This has to be called after `weaponsInMapAll` is initialized - e.g. from the `PlayerSpawn` hook.
+/// It's recommended to set a fallback set of weapons using SetWeaponArena in case the map has no pickups.
+void give_weapons_from_map(entity player)
+{
+	// If no weapons, keep the fallback.
+	if (weaponsInMapAll == '0 0 0')
+	{
+		return;
+	}
+
+	// Ok, so the map has weapons, clear out the fallback,
+	// then add normal spawn weapons and weapons available on the map.
+	STAT(WEAPONS, player) = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		if (it.weaponstart) {
+			STAT(WEAPONS, player) |= WepSet_FromWeapon(it);
+		}
+		bool normal = it.spawnflags & WEP_FLAG_NORMAL;
+		bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
+		if (normal && !blocked) {
+			STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
+		}
+	});
+}
+
 void precache_playermodel(string m)
 {
 	float globhandle, i, n;

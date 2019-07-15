@@ -189,22 +189,9 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 
-	// If no weapons, keep the fallback from SetWeaponArena.
-	if (!autocvar_g_ca_weapons_all && weaponsInMapAll != '0 0 0')
+	if (!autocvar_g_ca_weapons_all)
 	{
-		// Ok, so the map has weapons, clear out what SetWeaponArena put in STAT(WEAPONS, player),
-		// then add normal spawn weapons and weapons available on the map.
-		STAT(WEAPONS, player) = '0 0 0';
-		FOREACH(Weapons, it != WEP_Null, {
-			if (it.weaponstart) {
-				STAT(WEAPONS, player) |= WepSet_FromWeapon(it);
-			}
-			bool normal = it.spawnflags & WEP_FLAG_NORMAL;
-			bool blocked = it.spawnflags & WEP_FLAG_MUTATORBLOCKED;
-			if (normal && !blocked) {
-				STAT(WEAPONS, player) |= WepSet_FromWeapon(it) & weaponsInMapAll;
-			}
-		});
+		give_weapons_from_map(player);
 	}
 }
 
