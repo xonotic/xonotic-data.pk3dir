@@ -288,7 +288,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 		return;
 	}
 
-	if(this.waterlevel > WATERLEVEL_WETFEET || this.maxs.z == PL_CROUCH_MAX_CONST.z)
+	if(this.waterlevel > WATERLEVEL_WETFEET || IS_DUCKED(this))
 	{
 		this.aistatus &= ~AI_STATUS_RUNNING;
 		return;
@@ -1063,7 +1063,7 @@ void havocbot_movetogoal(entity this)
 			bool jump_forbidden = false;
 			if (!turning && fabs(deviation.y) > 50)
 				jump_forbidden = true;
-			else if (this.maxs.z == PL_CROUCH_MAX_CONST.z)
+			else if (IS_DUCKED(this))
 			{
 				tracebox(this.origin, PL_MIN_CONST, PL_MAX_CONST, this.origin, false, this);
 				if (trace_startsolid)
