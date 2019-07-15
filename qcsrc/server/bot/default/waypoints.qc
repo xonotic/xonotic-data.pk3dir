@@ -1491,6 +1491,7 @@ void waypoint_save_hardwiredlinks()
 	}
 
 	// write hardwired links to file
+	int count = 0;
 	fputs(file, "// HARDWIRED LINKS\n");
 	IL_EACH(g_waypoints, waypoint_has_hardwiredlinks(it),
 	{
@@ -1502,11 +1503,13 @@ void waypoint_save_hardwiredlinks()
 				// NOTE: vtos rounds vector components to 1 decimal place
 				string s = strcat(vtos(it.origin), "*", vtos(link.origin), "\n");
 				fputs(file, s);
+				++count;
 			}
 		}
 	});
 
 	// write special links to file
+	int count2 = 0;
 	fputs(file, "\n// SPECIAL LINKS\n");
 	IL_EACH(g_waypoints, it.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_CUSTOM_JP),
 	{
@@ -1518,13 +1521,14 @@ void waypoint_save_hardwiredlinks()
 				// NOTE: vtos rounds vector components to 1 decimal place
 				string s = strcat("*", vtos(it.origin), "*", vtos(link.origin), "\n");
 				fputs(file, s);
+				++count2;
 			}
 		}
 	});
 
 	fclose(file);
 
-	LOG_INFOF("saved hardwired waypoint links to %s", filename);
+	LOG_INFOF("saved %d hardwired links and %d special links to %s", count, count2, filename);
 }
 
 // Save all waypoint links to a file
