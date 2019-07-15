@@ -719,14 +719,6 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
-	WepSet precache_weapons = start_weapons;
-	if (g_warmup_allguns != 1)
-		precache_weapons |= warmup_start_weapons;
-	FOREACH(Weapons, it != WEP_Null, {
-		if(precache_weapons & (it.m_wepset))
-			it.wr_init(it);
-	});
-
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_rockets = max(0, start_ammo_rockets);
