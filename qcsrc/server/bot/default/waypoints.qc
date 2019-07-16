@@ -650,7 +650,13 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 
 	if (!(jp || is_jump_wp || start_wp_is_hardwired))
 		waypoint_schedulerelink(e);
-	bprint(strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
+
+	string wp_type_str = "Waypoint";
+	if (is_crouch_wp)		wp_type_str = "Crouch waypoint";
+	else if (is_jump_wp)	wp_type_str = "Jump waypoint";
+	else if (jp)			wp_type_str = "Custom jumppad waypoint";
+
+	bprint(strcat(wp_type_str, " spawned at ", vtos(e.origin), "\n"));
 
 	if (start_wp_is_spawned)
 	{
