@@ -222,9 +222,13 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
                 return;
             }
 
+			float burst_percent = actor.(weaponentity).clip_load / WEP_CVAR(machinegun, burst_ammo);
+			if (burst_percent > 1)
+				burst_percent = 1;
+
             W_DecreaseAmmo(thiswep, actor, WEP_CVAR(machinegun, burst_ammo), weaponentity);
 
-            actor.(weaponentity).misc_bulletcounter = WEP_CVAR(machinegun, burst) * -1;
+            actor.(weaponentity).misc_bulletcounter = floor(WEP_CVAR(machinegun, burst) * burst_percent) * -1;
             W_MachineGun_Attack_Burst(thiswep, actor, weaponentity, fire);
         }
     }
