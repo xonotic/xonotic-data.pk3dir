@@ -2047,7 +2047,7 @@ void PrintWelcomeMessage(entity this)
 			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
 		else if(CS(this).motd_actived_time == -2 || IS_PLAYER(this) || IS_SPEC(this))
 		{
-			// instanctly hide MOTD
+			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 		}
