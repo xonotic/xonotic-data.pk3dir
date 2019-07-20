@@ -221,15 +221,16 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
                 w_ready(thiswep, actor, weaponentity, fire);
                 return;
             }
+ 
+			// We don't want to shoot 3 rounds if there's 2 left in the mag. So calculate a fraction...
+			float burst_percent = min(1,actor.(weaponentity).clip_load / WEP_CVAR(machinegun, burst_ammo));
 
-			float burst_percent = actor.(weaponentity).clip_load / WEP_CVAR(machinegun, burst_ammo);
-			if (burst_percent > 1)
-				burst_percent = 1;
-
-            W_DecreaseAmmo(thiswep, actor, WEP_CVAR(machinegun, burst_ammo), weaponentity);
-
-            actor.(weaponentity).misc_bulletcounter = floor(WEP_CVAR(machinegun, burst) * burst_percent) * -1;
-            W_MachineGun_Attack_Burst(thiswep, actor, weaponentity, fire);
+			// ...before we decrease ammo.
+			W_DecreaseAmmo(thiswep, actor, WEP_CVAR(machinegun, burst_ammo), weaponentity);
+			
+			// Then apply it to the bullet counter before firing.
+			actor.(weaponentity).misc_bulletcounter = floor(WEP_CVAR(machinegun, burst) * burst_percent) * -1;
+			W_MachineGun_Attack_Burst(thiswep, actor, weaponentity, fire);
         }
     }
     else
