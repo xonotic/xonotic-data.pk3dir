@@ -321,8 +321,10 @@ string ttt_turn_to_string(int turnflags)
 	if ( turnflags & TTT_TURN_WIN )
 	{
 		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
-			return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!"); // TODO: proper "you win" banner instead of hijacking the help message
-		return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
+			//return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!"); // TODO: proper "you win" banner instead of hijacking the help message
+			return _("You lost the game!"); // TODO: proper "you win" banner instead of hijacking the help message
+		//return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
+		return _("You win!");
 	}
 
 	if ( turnflags & TTT_TURN_NEXT )

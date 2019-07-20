@@ -440,8 +440,10 @@ string pp_turn_to_string(int turnflags)
 	if ( turnflags & PP_TURN_WIN )
 	{
 		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
-			return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!");
-		return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
+			//return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!");
+			return _("You lost the game!");
+		//return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
+		return _("You win!");
 	}
 
 	if ( turnflags & PP_TURN_NEXT )
