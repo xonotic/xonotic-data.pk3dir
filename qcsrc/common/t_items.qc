@@ -1249,6 +1249,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	{
 		if(!have_pickup_item(this))
 		{
+			if(g_weaponarena == 2 && weaponid)
+				weaponsInMap |= WepSet_FromWeapon(Weapons_from(weaponid));
 			startitem_failed = true;
 			delete(this);
 			return;
@@ -1858,7 +1860,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_RES_ROT(e, RES_HEALTH, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
 	if(e.superweapons_finished <= 0)
-		if(!g_weaponarena && STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS)
+		if(!g_weaponarena && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.strength_finished <= 0)

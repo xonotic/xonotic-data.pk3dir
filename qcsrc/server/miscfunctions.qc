@@ -522,6 +522,22 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	return t;
 }
 
+void weaponarena_available_update(entity this)
+{
+	if(!weaponsInMap)
+	{
+		// if no weapons are available, just fall back to most weapons arena
+		FOREACH(Weapons, it != WEP_Null, {
+			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN))
+				g_weaponarena_weapons |= (it.m_wepset);
+		});
+		start_weapons = g_weaponarena_weapons;
+		return;
+	}
+	g_weaponarena_weapons |= weaponsInMap;
+	start_weapons = g_weaponarena_weapons;
+}
+
 void readplayerstartcvars()
 {
 	float i, t;
@@ -586,6 +602,18 @@ void readplayerstartcvars()
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN))
 				g_weaponarena_weapons |= (it.m_wepset);
 		});
+	}
+	else if (s == "available")
+	{
+		g_weaponarena = 2;
+		g_weaponarena_list = "Most Weapons";
+		// include weapons the player would start with
+		FOREACH(Weapons, it != WEP_Null, {
+			int w = want_weapon(it, false);
+			if(w & 1)
+				g_weaponarena_weapons |= (it.m_wepset);
+		});
+		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 	}
 	else if (s == "none")
 	{
