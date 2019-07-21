@@ -464,7 +464,7 @@ vector start_wp_origin;
 bool start_wp_is_hardwired;
 bool start_wp_is_support;
 
-void waypoint_clear_start_wp(entity pl, bool warn)
+void waypoint_clear_start_wp_globals(entity pl, bool warn)
 {
 	start_wp_is_spawned = false;
 	start_wp_origin = '0 0 0';
@@ -505,7 +505,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	{
 		crosshair_trace(pl);
 		org = trace_endpos - eZ * PL_MIN_CONST.z;
-		if (!start_wp_is_support)
+		if (!(start_wp_is_hardwired || start_wp_is_support))
 			IL_EACH(g_jumppads, boxesoverlap(org + PL_MIN_CONST, org + PL_MAX_CONST, it.absmin, it.absmax),
 			{
 				jp = it;
@@ -599,7 +599,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	{
 		LOG_INFOF("Couldn't spawn waypoint at %v\n", org);
 		if (start_wp_is_spawned)
-			waypoint_clear_start_wp(pl, true);
+			waypoint_clear_start_wp_globals(pl, true);
 		return;
 	}
 
@@ -621,7 +621,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 		{
 			// should not happen
 			LOG_INFOF("Couldn't find start waypoint at %v\n", start_org);
-			waypoint_clear_start_wp(pl, true);
+			waypoint_clear_start_wp_globals(pl, true);
 			return;
 		}
 		if (start_wp_is_hardwired)
@@ -639,20 +639,20 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 				{
 					LOG_INFO("Error: hardwired links can be created only between 2 existing (and unconnected) waypoints.\n");
 					waypoint_remove(e);
-					waypoint_clear_start_wp(pl, true);
+					waypoint_clear_start_wp_globals(pl, true);
 					waypoint_spawn_fromeditor(pl, at_crosshair, is_jump_wp, is_crouch_wp, is_support_wp);
 					return;
 				}
 				if (start_wp == e)
 				{
 					LOG_INFO("Error: start and destination waypoints coincide.\n");
-					waypoint_clear_start_wp(pl, true);
+					waypoint_clear_start_wp_globals(pl, true);
 					return;
 				}
 				if (waypoint_islinked(start_wp, e))
 				{
 					LOG_INFO("Error: waypoints are already linked.\n");
-					waypoint_clear_start_wp(pl, true);
+					waypoint_clear_start_wp_globals(pl, true);
 					return;
 				}
 				waypoint_addlink(start_wp, e);
@@ -668,7 +668,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 				if (e.SUPPORT_WP)
 				{
 					LOG_INFOF("Waypoint %v has already a support waypoint, delete it first.\n", e.origin);
-					waypoint_clear_start_wp(pl, true);
+					waypoint_clear_start_wp_globals(pl, true);
 					return;
 				}
 				// clear all links to e
@@ -742,7 +742,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	}
 	else if (start_wp_is_spawned)
 	{
-		waypoint_clear_start_wp(pl, false);
+		waypoint_clear_start_wp_globals(pl, false);
 	}
 }
 
@@ -794,13 +794,13 @@ void waypoint_remove_fromeditor(entity pl)
 	if (e.wpflags & WAYPOINTFLAG_GENERATED)
 	{
 		if (start_wp_is_spawned)
-			waypoint_clear_start_wp(pl, true);
+			waypoint_clear_start_wp_globals(pl, true);
 		return;
 	}
 
 	if (waypoint_has_hardwiredlinks(e))
 	{
-		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired\n");
+		LOG_INFO("Can't remove a waypoint with hardwired links, remove them with \"wpeditor hardwire\" first\n");
 		return;
 	}
 
@@ -831,7 +831,7 @@ void waypoint_remove_fromeditor(entity pl)
 	}
 
 	if (start_wp_is_spawned)
-		waypoint_clear_start_wp(pl, true);
+		waypoint_clear_start_wp_globals(pl, true);
 }
 
 void waypoint_removelink(entity from, entity to)
