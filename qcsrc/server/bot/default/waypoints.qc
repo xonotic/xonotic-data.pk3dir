@@ -363,6 +363,29 @@ void waypoint_setupmodel(entity wp)
 		wp.model = "";
 }
 
+string waypoint_get_type_name(entity wp)
+{
+	if (wp.wpflags & WAYPOINTFLAG_ITEM) return "^1Item waypoint";
+	else if (wp.wpflags & WAYPOINTFLAG_CROUCH) return "^5Crouch waypoint";
+	else if (wp.wpflags & WAYPOINTFLAG_JUMP) return "^xf80Jump waypoint";
+	else if (wp.wpflags & WAYPOINTFLAG_SUPPORT) return "^2Support waypoint";
+	else if (waypoint_has_hardwiredlinks(wp)) return "^x80fHardwired waypoint";
+	else if (wp.wpflags & WAYPOINTFLAG_LADDER) return "^3Ladder waypoint";
+	else if (wp.wpflags & WAYPOINTFLAG_TELEPORT)
+	{
+		if (!wp.wpisbox) return "^3Warpzone waypoint";
+		else if (wp.wpflags & WAYPOINTFLAG_CUSTOM_JP) return "^3Custom jumppad waypoint";
+		else
+		{
+			IL_EACH(g_jumppads, boxesoverlap(wp.absmin, wp.absmax, it.absmin, it.absmax),
+				{ return "^3Jumppad waypoint"; });
+			return "^3Teleport waypoint";
+		}
+	}
+
+	return "^7Waypoint";
+}
+
 entity waypoint_get(vector m1, vector m2)
 {
 	if (m1 == m2)
@@ -685,13 +708,9 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	if (!(jp || is_jump_wp || is_support_wp || start_wp_is_hardwired))
 		waypoint_schedulerelink(e);
 
-	string wp_type_str = "Waypoint";
-	if (is_crouch_wp)		wp_type_str = "Crouch waypoint";
-	else if (is_jump_wp)	wp_type_str = "Jump waypoint";
-	else if (is_support_wp)	wp_type_str = "Support waypoint";
-	else if (jp)			wp_type_str = "Custom jumppad waypoint";
+	string wp_type_str = waypoint_get_type_name(e);
 
-	bprint(strcat(wp_type_str, " spawned at ", vtos(e.origin), "\n"));
+	bprint(strcat(wp_type_str, "^7 spawned at ", vtos(e.origin), "\n"));
 
 	if (start_wp_is_spawned)
 	{
@@ -2072,11 +2091,12 @@ void botframe_showwaypointlinks()
 				wp = trace_ent;
 				if (wp != it.wp_aimed)
 				{
-					str = sprintf("\necho ^2WP info^7: entity: %d, flags: %d, origin: %s\n", etof(wp), wp.wpflags, vtos(wp.origin));
+					string wp_type_str = waypoint_get_type_name(wp);
+					str = sprintf("\necho Entity %d: %s^7, flags: %d, origin: %s\n", etof(wp), wp_type_str, wp.wpflags, vtos(wp.origin));
 					if (wp.wpisbox)
 						str = strcat(str, sprintf("echo \" absmin: %s, absmax: %s\"\n", vtos(wp.absmin), vtos(wp.absmax)));
 					stuffcmd(it, str);
-					str = sprintf("entity: %d\nflags: %d\norigin: %s", etof(wp), wp.wpflags, vtos(wp.origin));
+					str = sprintf("Entity %d: %s^7\nflags: %d\norigin: %s", etof(wp), wp_type_str, wp.wpflags, vtos(wp.origin));
 					if (wp.wpisbox)
 						str = strcat(str, sprintf(" \nabsmin: %s\nabsmax: %s", vtos(wp.absmin), vtos(wp.absmax)));
 					debug_text_3d(wp.origin, str, 0, 7, '0 0 0');
