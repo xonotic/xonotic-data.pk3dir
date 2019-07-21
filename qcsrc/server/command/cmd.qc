@@ -184,10 +184,11 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 			{
 				if (argv(1) == "spawn")
 				{
+					string s = argv(2);
 					if (!IS_PLAYER(caller))
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
-						waypoint_spawn_fromeditor(caller, (argv(2) == "crosshair"), (argv(2) == "jump"), (argv(2) == "crouch"));
+						waypoint_spawn_fromeditor(caller, (s == "crosshair"), (s == "jump"), (s == "crouch"), (s == "support"));
 					return;
 				}
 				else if (argv(1) == "remove")

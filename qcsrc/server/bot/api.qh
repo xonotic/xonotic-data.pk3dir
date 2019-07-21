@@ -16,6 +16,7 @@ const int WAYPOINTFLAG_LADDER = BIT(15);
 const int WAYPOINTFLAG_JUMP = BIT(14);
 const int WAYPOINTFLAG_CUSTOM_JP = BIT(13);  // jumppad with different destination waypoint (changed in the editor)
 const int WAYPOINTFLAG_CROUCH = BIT(12);
+const int WAYPOINTFLAG_SUPPORT = BIT(11);
 
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
@@ -124,7 +125,7 @@ void waypoint_spawnforitem(entity e);
 void waypoint_spawnforitem_force(entity e, vector org);
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent);
 void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent);
-void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp);
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp, bool is_support_wp);
 entity waypoint_spawn(vector m1, vector m2, float f);
 void waypoint_unreachable(entity pl);
 void waypoint_start_hardwiredlink(entity pl);
