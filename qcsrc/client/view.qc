@@ -2188,7 +2188,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		R_EndPolygon();
 	}
 
-	if(autocvar_cl_reticle)
+	if(autocvar_cl_reticle && !MUTATOR_CALLHOOK(DrawReticle))
 	{
 		string reticle_image = string_null;
 		bool wep_zoomed = false;

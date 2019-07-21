@@ -583,9 +583,8 @@ void readplayerstartcvars()
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
 		FOREACH(Weapons, it != WEP_Null, {
-			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				if(it.spawnflags & WEP_FLAG_NORMAL)
-					g_weaponarena_weapons |= (it.m_wepset);
+			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN))
+				g_weaponarena_weapons |= (it.m_wepset);
 		});
 	}
 	else if (s == "none")

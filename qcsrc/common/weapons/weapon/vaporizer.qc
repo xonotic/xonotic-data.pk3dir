@@ -295,7 +295,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     } else if(WEP_CVAR(vaporizer, reload_ammo) && actor.(weaponentity).clip_load < vaporizer_ammo) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     }
-    if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !forbidWeaponUse(actor))
+    if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !weaponLocked(actor))
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vaporizer, refire)))
         {

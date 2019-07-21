@@ -40,8 +40,8 @@ void entcs_force_origin(entity player)
 .void(entity ent) m_receive;
 
 #ifdef SVQC
-#define _ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive) \
-	void id##_set(entity ent, entity player) { setprop(ent.(checkprop), player.(checkprop)); } \
+#define _ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
+	void id##_set(entity ent, entity player) { setprop(ent.(checkprop), player.(checkprop_pl)); } \
 	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
 		this.m_public = ispublic; \
@@ -50,26 +50,26 @@ void entcs_force_origin(entity player)
 		this.m_send = id##_send; \
 	}
 
-#define ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive) \
-	bool id##_check(entity ent, entity player) { return (ent.(checkprop) != player.(checkprop)); } \
-	_ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive)
+#define ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
+	bool id##_check(entity ent, entity player) { return (ent.(checkprop) != player.(checkprop_pl)); } \
+	_ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive)
 
-#define ENTCS_PROP_CODED(id, ispublic, checkprop, setprop, decfactor, svsend, clreceive) \
+#define ENTCS_PROP_CODED(id, ispublic, checkprop, checkprop_pl, setprop, decfactor, svsend, clreceive) \
 	bool id##_check(entity ent, entity player) { \
-		return (floor(ent.(checkprop)) / decfactor != floor(player.(checkprop)) / decfactor); \
+		return (floor(ent.(checkprop)) / decfactor != floor(player.(checkprop_pl)) / decfactor); \
 	} \
-	_ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive)
+	_ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive)
 
 #elif defined(CSQC)
-#define ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive) \
+#define ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
 	void id##_receive(entity ent) { LAMBDA(clreceive); } \
 	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
 		this.m_public = ispublic; \
 		this.m_receive = id##_receive; \
 	}
 
-#define ENTCS_PROP_CODED(id, ispublic, checkprop, setprop, decfactor, svsend, clreceive) \
-	ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive)
+#define ENTCS_PROP_CODED(id, ispublic, checkprop, checkprop_pl, setprop, decfactor, svsend, clreceive) \
+	ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive)
 #endif
 
 #ifdef SVQC
@@ -103,14 +103,14 @@ MACRO_END
 	strcpy(var, x); \
 MACRO_END
 
-ENTCS_PROP(ENTNUM, false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
+ENTCS_PROP(ENTNUM, false, sv_entnum, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
 
-ENTCS_PROP(ORIGIN, false, origin, ENTCS_SET_NORMAL,
+ENTCS_PROP(ORIGIN, false, origin, origin, ENTCS_SET_NORMAL,
 	{ WriteVector(chan, ent.origin); },
 	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
 
 #define DEC_FACTOR (360 / 32)
-ENTCS_PROP_CODED(ANGLES, false, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
+ENTCS_PROP_CODED(ANGLES, false, angles_y, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
 	{ WriteByte(chan, ent.angles.y / DEC_FACTOR); },
 	{ vector v = '0 0 0'; v.y = ReadByte() * DEC_FACTOR; ent.angles = v; })
 #undef DEC_FACTOR
@@ -126,25 +126,30 @@ ENTCS_PROP_RESOURCE(ARMOR, false, RES_ARMOR, ENTCS_SET_NORMAL, DEC_FACTOR,
 	{ SetResourceExplicit(ent, RES_ARMOR, ReadByte() * DEC_FACTOR); })
 #undef DEC_FACTOR
 
-ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,
+ENTCS_PROP(NAME, true, netname, netname, ENTCS_SET_MUTABLE_STRING,
 	{ WriteString(chan, ent.netname); },
 	{ strcpy(ent.netname, ReadString()); })
 
-ENTCS_PROP(MODEL, true, model, ENTCS_SET_NORMAL,
+ENTCS_PROP(MODEL, true, model, model, ENTCS_SET_NORMAL,
 	{ WriteString(chan, ent.model); },
 	{ strcpy(ent.model, ReadString()); })
 
-ENTCS_PROP(SKIN, true, skin, ENTCS_SET_NORMAL,
+ENTCS_PROP(SKIN, true, skin, skin, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.skin); },
 	{ ent.skin = ReadByte(); })
 
-ENTCS_PROP(CLIENTCOLORS, true, clientcolors, ENTCS_SET_NORMAL,
+ENTCS_PROP(CLIENTCOLORS, true, clientcolors, clientcolors, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.clientcolors); },
 	{ ent.colormap = ReadByte(); })
 
-ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
+ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
 	{ WriteShort(chan, ent.frags); },
 	{ ent.frags = ReadShort(); })
+
+// use sv_solid to avoid changing solidity state of entcs entities
+ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.sv_solid); },
+	{ ent.sv_solid = ReadByte(); })
 
 #ifdef SVQC
 

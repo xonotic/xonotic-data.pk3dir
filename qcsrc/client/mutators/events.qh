@@ -199,3 +199,6 @@ MUTATOR_HOOKABLE(ForcePlayermodels_Skip, EV_ForcePlayermodels_Skip);
 	/** hit origin */ 		i(vector, MUTATOR_ARGV_2_vector) \
 	/**/
 MUTATOR_HOOKABLE(DamageInfo, EV_DamageInfo);
+
+/** Return true to not draw zoom reticle */
+MUTATOR_HOOKABLE(DrawReticle, EV_NO_ARGS);

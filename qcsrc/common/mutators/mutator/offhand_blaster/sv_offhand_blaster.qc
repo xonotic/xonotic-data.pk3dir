@@ -16,7 +16,7 @@ MUTATOR_HOOKFUNCTION(offhand_blaster, BuildMutatorsPrettyString)
 
 MUTATOR_HOOKFUNCTION(offhand_blaster, BuildGameplayTipsString)
 {
-    M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3offhand blaster^8 is enabled, press 'e' to use it\n");
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3offhand blaster^8 is enabled, press 'e' (+hook) to use it\n");
 }
 
 MUTATOR_HOOKFUNCTION(offhand_blaster, PlayerSpawn)

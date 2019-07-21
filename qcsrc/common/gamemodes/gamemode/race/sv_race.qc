@@ -261,7 +261,7 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 	if(g_race_qualifying)
 	{
 		if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-			player.frags = FRAGS_LMS_LOSER;
+			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 		else
 			player.frags = FRAGS_SPECTATOR;
 	}

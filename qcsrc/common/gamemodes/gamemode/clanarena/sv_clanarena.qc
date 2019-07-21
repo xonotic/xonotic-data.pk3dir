@@ -147,7 +147,7 @@ bool CA_CheckTeams()
 
 bool ca_isEliminated(entity e)
 {
-	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_LMS_LOSER))
+	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
 	if(e.caplayer == 0.5)
 		return true;
@@ -312,7 +312,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
-		player.frags = FRAGS_LMS_LOSER;
+		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	if (!player.caplayer)

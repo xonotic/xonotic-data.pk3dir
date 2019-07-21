@@ -99,6 +99,8 @@ void CampaignPreInit()
 	if(baseskill < 0)
 		baseskill = 0;
 
+	campaign_forcewin = false;
+
 	cvar_set("sv_public", "0");
 	cvar_set("pausable", "1");
 
@@ -205,6 +207,11 @@ void CampaignPreIntermission()
 	{
 		campaign_won = 1;
 		bprint("Campaign test run, advancing level.\n");
+	}
+	else if(campaign_forcewin)
+	{
+		campaign_won = 1;
+		bprint("The current level has been WON.\n");
 	}
 	else if(won == 1 && lost == 0 && checkrules_equality == 0)
 	{

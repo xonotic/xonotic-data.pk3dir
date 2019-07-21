@@ -97,7 +97,7 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 }
 
 #ifdef TURRET_DEBUG
-void marker_think(entity this, )
+void marker_think(entity this)
 {
 	if(this.cnt)
 	if(this.cnt < time)
@@ -129,7 +129,7 @@ void mark_error(vector where,float lifetime)
 
 void mark_info(vector where,float lifetime)
 {
-	entity err = spawn(info_marker);
+	entity err = new(info_marker);
 	setmodel(err, MDL_MARKER);
 	setorigin(err, where);
 	set_movetype(err, MOVETYPE_NONE);
@@ -142,7 +142,7 @@ void mark_info(vector where,float lifetime)
 
 entity mark_misc(vector where,float lifetime)
 {
-	entity err = spawn(mark_misc);
+	entity err = new(mark_misc);
 	setmodel(err, MDL_MARKER);
 	setorigin(err, where);
 	set_movetype(err, MOVETYPE_NONE);

@@ -735,10 +735,12 @@ void PutPlayerInServer(entity this)
 	});
 
 	{
-		//string s = spot.target;
-		//spot.target = string_null;
+		string s = spot.target;
+		if(g_assault || g_race) // TODO: make targeting work in assault & race without this hack
+			spot.target = string_null;
 		SUB_UseTargets(spot, this, NULL);
-		//spot.target = s;
+		if(g_assault || g_race)
+			spot.target = s;
 	}
 
 	Unfreeze(this, false);
@@ -1032,6 +1034,7 @@ string getwelcomemessage(entity this)
 
 	string versionmessage = GetClientVersionMessage(this);
 	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
+	s = strcat(s, "^8\nCurrent map: ^2", GetMapname(), "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
@@ -1319,12 +1322,14 @@ void respawn(entity this)
 	PutClientInServer(this);
 }
 
+ERASEABLE
 void PrintToChat(entity client, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
 	sprint(client, text);
 }
 
+ERASEABLE
 void DebugPrintToChat(entity client, string text)
 {
 	if (autocvar_developer)
@@ -1333,12 +1338,14 @@ void DebugPrintToChat(entity client, string text)
 	}
 }
 
+ERASEABLE
 void PrintToChatAll(string text)
 {
 	text = strcat("\{1}^7", text, "\n");
 	bprint(text);
 }
 
+ERASEABLE
 void DebugPrintToChatAll(string text)
 {
 	if (autocvar_developer)
@@ -1347,6 +1354,7 @@ void DebugPrintToChatAll(string text)
 	}
 }
 
+ERASEABLE
 void PrintToChatTeam(int team_num, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
@@ -1359,6 +1367,7 @@ void PrintToChatTeam(int team_num, string text)
 	});
 }
 
+ERASEABLE
 void DebugPrintToChatTeam(int team_num, string text)
 {
 	if (autocvar_developer)
@@ -2038,7 +2047,7 @@ void PrintWelcomeMessage(entity this)
 			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
 		else if(CS(this).motd_actived_time == -2 || IS_PLAYER(this) || IS_SPEC(this))
 		{
-			// instanctly hide MOTD
+			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 		}
@@ -2322,19 +2331,15 @@ void PlayerUseKey(entity this)
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if(!STAT(FROZEN, this))
-		if(!IS_DEAD(this))
-		if(!game_stopped)
+		if(!game_stopped && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 		{
 			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
 
 			while(head) // find the closest acceptable target to enter
 			{
-				if(IS_VEHICLE(head))
-				if(!IS_DEAD(head))
+				if(IS_VEHICLE(head) && !IS_DEAD(head) && head.takedamage != DAMAGE_NO)
 				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this)))
-				if(head.takedamage != DAMAGE_NO)
 				{
 					if(closest_target)
 					{
@@ -2388,9 +2393,18 @@ void PlayerPreThink (entity this)
 	if (this.netname == "" || this.netname != CS(this).netname_previous)
 	{
 		bool assume_unchanged = (CS(this).netname_previous == "");
+		if (autocvar_name_maxlength > 0 && strlennocol(this.netname) > autocvar_name_maxlength)
+		{
+			int new_length = textLengthUpToLength(this.netname, autocvar_name_maxlength, strlennocol);
+			this.netname = strzone(strcat(substring(this.netname, 0, new_length), "^7"));
+			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_name_maxlength));
+			assume_unchanged = false;
+			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+		}
 		if (isInvisibleString(this.netname))
 		{
 			this.netname = strzone(sprintf("Player#%d", this.playerid));
+			sprint(this, "Warning: invisible names are not allowed.\n");
 			assume_unchanged = false;
 			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 		}
@@ -2455,21 +2469,20 @@ void PlayerPreThink (entity this)
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
 
 	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
-	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this))
+	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 	{
-		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it),
+		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
 		{
-			if(!IS_DEAD(it) && it.takedamage != DAMAGE_NO)
-			if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
-			{
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
-			}
-			else if(!it.owner)
+			if(!it.owner)
 			{
 				if(!it.team || SAME_TEAM(this, it))
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
 				else if(autocvar_g_vehicles_steal)
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+			}
+			else if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
+			{
+				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
 			}
 		});
 

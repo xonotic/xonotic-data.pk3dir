@@ -70,6 +70,7 @@
 #include <menu/xonotic/dialog_settings_game_weapons.qh>
 #include <menu/xonotic/dialog_settings_input.qh>
 #include <menu/xonotic/dialog_settings_input_userbind.qh>
+#include <menu/xonotic/dialog_settings_bindings_reset.qh>
 #include <menu/xonotic/dialog_settings_misc.qh>
 #include <menu/xonotic/dialog_settings_misc_cvars.qh>
 #include <menu/xonotic/dialog_settings_misc_reset.qh>
