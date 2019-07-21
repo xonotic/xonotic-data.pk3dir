@@ -43,6 +43,10 @@ float botframe_cachedwaypointlinks;
 
 .vector wpnearestpoint;
 
+// holds reference to the support waypoint, if any
+.entity goalentity;
+#define SUPPORT_WP goalentity
+
 /*
  * Functions
  */

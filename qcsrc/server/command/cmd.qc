@@ -255,6 +255,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position (useful to spawn custom jumppad waypoints (spawn another waypoint to create destination))\n");
 			sprint(caller, "   ^5spawn jump^7: spawns a jump waypoint (spawn another waypoint to create destination)\n");
 			sprint(caller, "   ^5spawn crouch^7: spawns a crouch waypoint\n");
+			sprint(caller, "   ^5spawn support^7: spawns a support waypoint (spawn another waypoint to create destination from which all incoming links are removed), useful to replace links to preblematic jumppad/teleport waypoints\n");
 			sprint(caller, "   ^5hardwire^7: marks the nearest waypoint as origin of a new hardwired link (spawn another waypoint over an existing one to create destination)\n");
 			sprint(caller, "   ^5symorigin get|set\n");
 			sprint(caller, "   ^5symorigin get|set p1 p2 ... pX\n");
