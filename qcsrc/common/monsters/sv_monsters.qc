@@ -362,7 +362,6 @@ void Monster_Sound(entity this, .string samplefield, float sound_delay, bool del
 	string sample = this.(samplefield);
 	if (sample != "") sample = GlobalSound_sample(sample, random());
 	float myscale = ((this.scale) ? this.scale : 1); // safety net
-	// TODO: change volume depending on size too?
 	sound7(this, chan, sample, VOL_BASE, ATTEN_NORM, 100 / myscale, 0);
 
 	this.msound_delay = time + sound_delay;
@@ -493,7 +492,7 @@ void Monster_UpdateModel(entity this)
 
 void Monster_Touch(entity this, entity toucher)
 {
-	if(toucher == NULL) { return; }
+	if(!toucher) { return; }
 
 	if(toucher.monster_attack && this.enemy != toucher && !IS_MONSTER(toucher) && time >= this.spawn_time)
 	if(Monster_ValidTarget(this, toucher, true))
@@ -572,7 +571,6 @@ void Monster_Use(entity this, entity actor, entity trigger)
 	if(Monster_ValidTarget(this, actor, true)) { this.enemy = actor; }
 }
 
-.float pass_distance;
 vector Monster_Move_Target(entity this, entity targ)
 {
 	// enemy is always preferred target
@@ -593,7 +591,6 @@ vector Monster_Move_Target(entity this, entity targ)
 			)
 		{
 			this.enemy = NULL;
-			//this.pass_distance = 0;
 		}
 
 		if(this.enemy)
@@ -1207,7 +1204,6 @@ void Monster_Enemy_Check(entity this)
 		this.monster_moveto = '0 0 0';
 		this.monster_face = '0 0 0';
 
-		//this.pass_distance = vlen((('1 0 0' * this.enemy.origin_x) + ('0 1 0' * this.enemy.origin_y)) - (('1 0 0' *  this.origin_x) + ('0 1 0' *  this.origin_y)));
 		Monster_Sound(this, monstersound_sight, 0, false, CH_VOICE);
 	}
 }
@@ -1382,7 +1378,6 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.monster_attackfunc	= mon.monster_attackfunc;
 	this.candrop			= true;
 	this.oldtarget2			= this.target2;
-	//this.pass_distance		= 0;
 	this.deadflag			= DEAD_NO;
 	this.spawn_time			= time;
 	this.gravity			= 1;
