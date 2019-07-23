@@ -757,9 +757,6 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 
 void waypoint_remove(entity wp)
 {
-	if (wp.SUPPORT_WP)
-		waypoint_remove(wp.SUPPORT_WP); // remove support waypoint too
-
 	IL_EACH(g_waypoints, it != wp,
 	{
 		if (it.SUPPORT_WP == wp)
