@@ -592,27 +592,17 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 		if (!pl.wp_locked)
 			pl.wp_locked = e;
 	}
-	else if (is_jump_wp)
+	else if (is_jump_wp || is_support_wp)
 	{
+		int type_flag = (is_jump_wp) ? WAYPOINTFLAG_JUMP : WAYPOINTFLAG_SUPPORT;
+
 		entity wp_found = waypoint_get(org, org);
-		if (wp_found && !(wp_found.wpflags & WAYPOINTFLAG_JUMP))
+		if (wp_found && !(wp_found.wpflags & type_flag))
 		{
-			LOG_INFO("Error: can't spawn a jump waypoint over an existent waypoint of a different type\n");
+			LOG_INFOF("Error: can't spawn a %s waypoint over an existent waypoint of a different type\n", (is_jump_wp) ? "Jump" : "Support");
 			return;
 		}
-		e = waypoint_spawn(org, org, WAYPOINTFLAG_JUMP | WAYPOINTFLAG_NORELINK);
-		if (!pl.wp_locked)
-			pl.wp_locked = e;
-	}
-	else if (is_support_wp)
-	{
-		entity wp_found = waypoint_get(org, org);
-		if (wp_found && !(wp_found.wpflags & WAYPOINTFLAG_SUPPORT))
-		{
-			LOG_INFO("Error: can't spawn a support waypoint over an existent waypoint of a different type\n");
-			return;
-		}
-		e = waypoint_spawn(org, org, WAYPOINTFLAG_SUPPORT | WAYPOINTFLAG_NORELINK);
+		e = waypoint_spawn(org, org, type_flag | WAYPOINTFLAG_NORELINK);
 		if (!pl.wp_locked)
 			pl.wp_locked = e;
 	}
