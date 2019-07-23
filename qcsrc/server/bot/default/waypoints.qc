@@ -350,7 +350,13 @@ void waypoint_setupmodel(entity wp)
 			wp.colormod = '1 1 0'; // yellow
 		else if (wp.wpflags & WAYPOINTFLAG_SUPPORT)
 			wp.colormod = '0 1 0'; // green
-		else if (wp.wpflags & WAYPOINTFLAG_NORELINK)
+		else if (wp.wpflags & WAYPOINTFLAG_CUSTOM_JP)
+			wp.colormod = '1 0.5 0'; // orange
+		else if (wp.wpflags & WAYPOINTFLAG_TELEPORT)
+			wp.colormod = '1 0.5 0'; // orange
+		else if (wp.wpflags & WAYPOINTFLAG_LADDER)
+			wp.colormod = '1 0.5 0'; // orange
+		else if (wp.wpflags & WAYPOINTFLAG_JUMP)
 			wp.colormod = '1 0.5 0'; // orange
 		else if (wp.wpflags & WAYPOINTFLAG_CROUCH)
 			wp.colormod = '0 1 1'; // cyan
@@ -410,7 +416,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	// spawn only one destination waypoint for teleports teleporting player to the exact same spot
 	// otherwise links loaded from file would be applied only to the first destination
 	// waypoint since link format doesn't specify waypoint entities but just positions
-	if((f & WAYPOINTFLAG_GENERATED) && !(f & (WAYPOINTFLAG_NORELINK | WAYPOINTFLAG_PERSONAL)) && m1 == m2)
+	if((f & WAYPOINTFLAG_GENERATED) && !(f & (WPFLAGMASK_NORELINK | WAYPOINTFLAG_PERSONAL)) && m1 == m2)
 	{
 		IL_EACH(g_waypoints, boxesoverlap(m1, m2, it.absmin, it.absmax),
 		{
@@ -501,7 +507,7 @@ void waypoint_clear_start_wp_globals(entity pl, bool warn)
 void waypoint_start_hardwiredlink(entity pl)
 {
 	entity wp = pl.nearestwaypoint;
-	if ((!start_wp_is_spawned || start_wp_is_hardwired) && wp && !(wp.wpflags & WAYPOINTFLAG_NORELINK))
+	if ((!start_wp_is_spawned || start_wp_is_hardwired) && wp && !(wp.wpflags & WPFLAGMASK_NORELINK))
 	{
 		start_wp_is_hardwired = true;
 		start_wp_is_spawned = true;
@@ -582,13 +588,13 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	if (jp)
 	{
 		e = NULL;
-		IL_EACH(g_waypoints, it.wpflags & WAYPOINTFLAG_NORELINK
+		IL_EACH(g_waypoints, it.wpflags & WPFLAGMASK_NORELINK
 			&& boxesoverlap(org + PL_MIN_CONST, org + PL_MAX_CONST, it.absmin, it.absmax),
 		{
 			e = it; break;
 		});
 		if (!e)
-			e = waypoint_spawn(jp.absmin - PL_MAX_CONST + '1 1 1', jp.absmax - PL_MIN_CONST + '-1 -1 -1', WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
+			e = waypoint_spawn(jp.absmin - PL_MAX_CONST + '1 1 1', jp.absmax - PL_MIN_CONST + '-1 -1 -1', WAYPOINTFLAG_TELEPORT);
 		if (!pl.wp_locked)
 			pl.wp_locked = e;
 	}
@@ -602,7 +608,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 			LOG_INFOF("Error: can't spawn a %s waypoint over an existent waypoint of a different type\n", (is_jump_wp) ? "Jump" : "Support");
 			return;
 		}
-		e = waypoint_spawn(org, org, type_flag | WAYPOINTFLAG_NORELINK);
+		e = waypoint_spawn(org, org, type_flag);
 		if (!pl.wp_locked)
 			pl.wp_locked = e;
 	}
@@ -625,7 +631,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	entity start_wp = NULL;
 	if (start_wp_is_spawned)
 	{
-		IL_EACH(g_waypoints, (start_wp_is_hardwired || it.wpflags & WAYPOINTFLAG_NORELINK)
+		IL_EACH(g_waypoints, (start_wp_is_hardwired || it.wpflags & WPFLAGMASK_NORELINK)
 			&& boxesoverlap(start_org, start_org, it.absmin, it.absmax),
 		{
 			start_wp = it; break;
@@ -842,7 +848,7 @@ void waypoint_remove_fromeditor(entity pl)
 
 void waypoint_removelink(entity from, entity to)
 {
-	if (from == to || (from.wpflags & WAYPOINTFLAG_NORELINK && !(from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))))
+	if (from == to || (from.wpflags & WPFLAGMASK_NORELINK && !(from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))))
 		return;
 
 	entity fromwp31_prev = from.wp31;
@@ -1027,7 +1033,7 @@ void waypoint_addlink_customcost(entity from, entity to, float c)
 {
 	if (from == to || waypoint_islinked(from, to))
 		return;
-	if (c == -1 && (from.wpflags & WAYPOINTFLAG_NORELINK) && !(from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT)))
+	if (c == -1 && (from.wpflags & WPFLAGMASK_NORELINK) && !(from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT)))
 		return;
 
 	if(c == -1)
@@ -1070,7 +1076,7 @@ void waypoint_addlink_customcost(entity from, entity to, float c)
 
 void waypoint_addlink(entity from, entity to)
 {
-	if ((from.wpflags & WAYPOINTFLAG_NORELINK) && !(from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT)))
+	if ((from.wpflags & WPFLAGMASK_NORELINK) && !(from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT)))
 		waypoint_addlink_for_custom_jumppad(from, to);
 	else
 		waypoint_addlink_customcost(from, to, -1);
@@ -1099,9 +1105,9 @@ void waypoint_think(entity this)
 	{
 		if (boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
 		{
-			if (!(this.wpflags & WAYPOINTFLAG_NORELINK))
+			if (!(this.wpflags & WPFLAGMASK_NORELINK))
 				waypoint_addlink(this, it);
-			if (!(it.wpflags & WAYPOINTFLAG_NORELINK))
+			if (!(it.wpflags & WPFLAGMASK_NORELINK))
 				waypoint_addlink(it, this);
 		}
 		else
@@ -1211,7 +1217,7 @@ void waypoint_schedulerelink(entity wp)
 	wp.enemy = NULL;
 	if (!(wp.wpflags & WAYPOINTFLAG_PERSONAL))
 		wp.owner = NULL;
-	if (!(wp.wpflags & WAYPOINTFLAG_NORELINK))
+	if (!(wp.wpflags & WPFLAGMASK_NORELINK))
 		waypoint_clearlinks(wp);
 	// schedule an actual relink on next frame
 	setthink(wp, waypoint_think);
@@ -1494,7 +1500,7 @@ void waypoint_load_hardwiredlinks()
 		{
 			waypoint_addlink(wp_from, wp_to);
 			waypoint_mark_hardwiredlink(wp_from, wp_to);
-		} else if (wp_from.wpflags & WAYPOINTFLAG_NORELINK
+		} else if (wp_from.wpflags & WPFLAGMASK_NORELINK
 			&& (wp_from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT)
 				|| (wp_from.wpisbox && wp_from.wpflags & WAYPOINTFLAG_TELEPORT)))
 		{
@@ -1726,7 +1732,7 @@ void waypoint_saveall()
 float waypoint_loadall()
 {
 	string s;
-	float file, cwp, cwb, fl;
+	int file, cwp, cwb, fl;
 	vector m1, m2;
 	cwp = 0;
 	cwb = 0;
@@ -1793,6 +1799,8 @@ float waypoint_loadall()
 		if (!s)
 			break;
 		fl = stof(s);
+		if (fl & WAYPOINTFLAG_NORELINK__DEPRECATED)
+			fl &= ~WAYPOINTFLAG_NORELINK__DEPRECATED;
 		waypoint_spawn(m1, m2, fl);
 		if (m1 == m2)
 			cwp = cwp + 1;
@@ -1896,7 +1904,7 @@ void waypoint_spawnforteleporter_boxes(entity e, int teleport_flag, vector org1,
 {
 	entity w;
 	entity dw;
-	w = waypoint_spawn(org1, org2, WAYPOINTFLAG_GENERATED | teleport_flag | WAYPOINTFLAG_NORELINK);
+	w = waypoint_spawn(org1, org2, WAYPOINTFLAG_GENERATED | teleport_flag);
 	dw = waypoint_spawn(destination1, destination2, WAYPOINTFLAG_GENERATED);
 	// one way link to the destination
 	w.wp00_original = dw;
@@ -2153,7 +2161,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		}
 
 		float bestdist = maxdist;
-		IL_EACH(g_waypoints, it != wp && !(it.wpflags & WAYPOINTFLAG_NORELINK),
+		IL_EACH(g_waypoints, it != wp && !(it.wpflags & WPFLAGMASK_NORELINK),
 		{
 			float d = vlen(wp.origin - it.origin) + vlen(it.origin - porg);
 			if(d < bestdist)

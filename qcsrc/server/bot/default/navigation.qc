@@ -953,7 +953,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 		waypoint_clearlinks(ent); // initialize wpXXmincost fields
 		IL_EACH(g_waypoints, it != ent,
 		{
-			if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
+			if (walkfromwp && (it.wpflags & WPFLAGMASK_NORELINK))
 				continue;
 
 			set_tracewalk_dest(ent, it.origin, false);
@@ -969,7 +969,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	// box check failed, try walk
 	IL_EACH(g_waypoints, it != ent,
 	{
-		if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
+		if (walkfromwp && (it.wpflags & WPFLAGMASK_NORELINK))
 			continue;
 		v = it.origin;
 
