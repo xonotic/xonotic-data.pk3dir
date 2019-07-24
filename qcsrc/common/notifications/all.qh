@@ -699,7 +699,9 @@ REGISTRY_SORT(Notifications);
 STATIC_INIT(Notifications) { FOREACH(Notifications, true, it.m_id = i); }
 REGISTRY_CHECK(Notifications)
 
-const int NOTIF_CHOICE_MAX = 50;
+const int NOTIF_CHOICE_MAX = 20;
+// NOTE: a team choice is actually made of 4 choices (one per team) with the same nent_choice_idx
+// thus they are counted as 1 in nent_choice_count
 int nent_choice_count = 0;
 .int nent_choice_idx;
 .int msg_choice_choices[NOTIF_CHOICE_MAX]; // set on each player containing MSG_CHOICE choices
@@ -707,12 +709,11 @@ int nent_choice_count = 0;
 bool notif_error;
 bool notif_global_error;
 
-STATIC_INIT_LATE(Notif_Choices) {
-	int c = 0;
-	FOREACH(Notifications, it.nent_type == MSG_CHOICE, { c++; });
-	if (c > NOTIF_CHOICE_MAX) {
-		LOG_FATALF("Too many MSG_CHOICE notifications (%d)", c);
-	}
+STATIC_INIT_LATE(Notif_Choices)
+{
+	if (nent_choice_count > NOTIF_CHOICE_MAX)
+		LOG_FATALF("Too many MSG_CHOICE notifications (%d), hit NOTIF_CHOICE_MAX (%d) limit",
+			nent_choice_count, NOTIF_CHOICE_MAX);
 }
 
 string Get_Notif_CvarName(Notification notif)
@@ -831,7 +832,9 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 
 #define MSG_CHOICE_NOTIF_(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_choice_notification)) { \
-		this.nent_choice_idx = nent_choice_count++; \
+		this.nent_choice_idx = nent_choice_count; \
+		if (!teamnum || teamnum == NUM_TEAM_4) \
+			nent_choice_count++; \
 		Create_Notification_Entity       (this, default, ACVNN(cvarname), MSG_CHOICE, strtoupper(#name), teamnum); \
 		Create_Notification_Entity_Choice(this, ACVNN(cvarname), strtoupper(#name), \
 			challow,                                 /* challow_def */ \
