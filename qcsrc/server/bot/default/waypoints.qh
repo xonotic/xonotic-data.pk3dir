@@ -6,7 +6,7 @@
 // increase by 0.01 when changes require only waypoint relinking
 // increase by 1 when changes require to manually edit waypoints
 // max 2 decimal places, always specified
-const float WAYPOINT_VERSION = 1.03;
+const float WAYPOINT_VERSION = 1.04;
 float waypoint_version_loaded;
 string waypoint_time;
 
