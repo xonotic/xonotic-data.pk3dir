@@ -1743,7 +1743,6 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 }
 
 // automatically create missing waypoints
-.entity botframe_autowaypoints_lastwp0, botframe_autowaypoints_lastwp1;
 void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 {
 	float r = botframe_autowaypoints_fix_from(p, walkfromwp, p.(fld), fld);
@@ -1839,6 +1838,8 @@ LABEL(next)
 	});
 }
 
+//.entity botframe_autowaypoints_lastwp0;
+.entity botframe_autowaypoints_lastwp1;
 void botframe_autowaypoints()
 {
 	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && !IS_DEAD(it), {
