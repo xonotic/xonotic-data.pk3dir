@@ -216,7 +216,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	entity pseudoprojectile = NULL;
 
 	vector dir = normalize(end - start);
-	float length = vlen(end - start);
+	//float max_length = vlen(end - start);
 	vector force = dir * bforce;
 
 	// go a little bit into the wall because we need to hit this wall later
@@ -277,6 +277,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	//explosion = spawn();
 
 	// Find all non-hit players the beam passed close by
+	float length = vlen(trace_endpos - start);
 	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id) // WEAPONTODO
 	{
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
