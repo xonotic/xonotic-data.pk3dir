@@ -270,9 +270,6 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		it.solid = it.railgunhitsolidbackup;
 	});
 
-	// spawn a temporary explosion entity for RadiusDamage calls
-	//explosion = spawn(); FIXME kill?
-
 	// Find all players the beam passed close by (even those hit)
 	float length = vlen(endpoint - start);
 	entity pseudoprojectile = NULL;
@@ -309,11 +306,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 		// apply the damage
 		if (it.takedamage)
-			Damage (it, this, this, bdamage * foff, deathtype, weaponentity, hitloc, it.railgunforce * ffs);
-
-		// create a small explosion to throw gibs around (if applicable)
-		//setorigin(explosion, hitloc);
-		//RadiusDamage (explosion, this, 10, 0, 50, NULL, NULL, 300, deathtype);
+			Damage(it, this, this, bdamage * foff, deathtype, weaponentity, hitloc, it.railgunforce * ffs);
 
 		it.railgunhitloc = '0 0 0';
 		it.railgunhitsolidbackup = SOLID_NOT;
