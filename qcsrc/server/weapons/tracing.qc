@@ -273,26 +273,25 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	// spawn a temporary explosion entity for RadiusDamage calls
 	//explosion = spawn();
 
-	// Find all non-hit players the beam passed close by
+	// Find all players the beam passed close by (even those hit)
 	float length = vlen(endpoint - start);
 	entity pseudoprojectile = NULL;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
-		if (!it.railgunhit && !(IS_SPEC(it) && it.enemy == this))
-		{
-			// nearest point on the beam
-			vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
+		// not when spectating the shooter
+		if (IS_SPEC(it) && it.enemy == this) continue;
 
-			float f = bound(0, 1 - vlen(beampos - it.origin) / 512, 1);
-			if(f <= 0)
-				continue;
+		// nearest point on the beam
+		vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
 
-			if(!pseudoprojectile)
-				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-			msg_entity = it;
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
-		}
+		float f = bound(0, 1 - vlen(beampos - it.origin) / 512, 1);
+		if(f <= 0)
+			continue;
+
+		if(!pseudoprojectile)
+			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+		msg_entity = it;
+		soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
 	});
-
 	if(pseudoprojectile)
 		delete(pseudoprojectile);
 
