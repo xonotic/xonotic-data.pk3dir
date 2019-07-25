@@ -295,9 +295,6 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	{
 		// removal from the list is handled below
 
-		// get the details we need to call the damage function
-		vector hitloc = it.railgunhitloc;
-
 		float foff = ExponentialFalloff(mindist, maxdist, halflifedist, it.railgundistance);
 		float ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, it.railgundistance);
 
@@ -306,7 +303,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 		// apply the damage
 		if (it.takedamage)
-			Damage(it, this, this, bdamage * foff, deathtype, weaponentity, hitloc, it.railgunforce * ffs);
+			Damage(it, this, this, bdamage * foff, deathtype, weaponentity, it.railgunhitloc, it.railgunforce * ffs);
 
 		it.railgunhitloc = '0 0 0';
 		it.railgunhitsolidbackup = SOLID_NOT;
