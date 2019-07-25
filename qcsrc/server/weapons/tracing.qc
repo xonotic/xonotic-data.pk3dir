@@ -211,11 +211,6 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 //  Ballistics Tracing
 // ====================
 
-bool autocvar_debug;
-bool autocvar_debug_real;
-bool autocvar_debug_vol = 1;
-bool autocvar_debug_atten;
-bool autocvar_debug_old;
 void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector dir = normalize(end - start);
@@ -282,33 +277,18 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	float length = vlen(endpoint - start);
 	entity pseudoprojectile = NULL;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
-		if (autocvar_debug && it.railgunhit) continue;
 		// not when spectating the shooter
 		if (IS_SPEC(it) && it.enemy == this) continue;
 
 		// nearest point on the beam
 		vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
 
-		float f = bound(0, 1 - vlen(beampos - it.origin) / 512, 1);
-		//if(f <= 0)
-		//	continue;
-
-		if (f > 0) {
-			debug_text_3d(beampos, sprintf("this %s -> it %s | %f", this.netname, it.netname, f));
-			LOG_INFOF("this %s -> it %s | %f", this.netname, it.netname, f);
-		}
-
 		if(!pseudoprojectile)
 			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+
 		msg_entity = it;
-		if (autocvar_debug_old == 2) {
-			// we want this to be very loud when close but fall off quickly -> using max base volume and high attenuation
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_LARGE);
-		}else if (autocvar_debug_old == 1) {
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
-		} else {
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * autocvar_debug_vol, autocvar_debug_atten);
-		}
+		// we want this to be very loud when close but fall off quickly -> using max base volume and high attenuation
+		soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_IDLE);
 	});
 	if(pseudoprojectile)
 		delete(pseudoprojectile);
