@@ -281,19 +281,18 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id) // WEAPONTODO
 	{
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
-			if(!it.railgunhit)
-			if(!(IS_SPEC(it) && it.enemy == this))
+			if (!it.railgunhit && !(IS_SPEC(it) && it.enemy == this))
 			{
-				msg_entity = it;
 				// nearest point on the beam
-				vector beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
+				vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
 
-				float f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
+				float f = bound(0, 1 - vlen(beampos - it.origin) / 512, 1);
 				if(f <= 0)
 					continue;
 
 				if(!pseudoprojectile)
 					pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+				msg_entity = it;
 				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
 			}
 		});
