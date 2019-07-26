@@ -174,7 +174,6 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 {
-	const float ATTEN_LOW = 0.2;
 	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
 	int species, forcemul;
