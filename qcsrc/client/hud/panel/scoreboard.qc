@@ -1299,10 +1299,14 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 {
+	float scoreboard_acc_fade_alpha_save = scoreboard_acc_fade_alpha; // debug
+	scoreboard_acc_fade_alpha = 1; // debug: make Item Stats always visible
+
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
 	FOREACH(Items, true, {
 		int q = g_inventory.inv_items[it.m_id];
+		//q = 1; // debug: display all items
 		if (!q) ++disownedcnt;
 	});
 
@@ -1315,26 +1319,53 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	float height = 40;
 	float fontsize = height * 1/3;
 	float item_height = height * 2/3;
-	float item_width = panel_size.x / columnns / rows;
 
 	drawstring(pos, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
-	vector tmp = '0 0 0';
-	tmp.x = panel_size.x;
-	tmp.y = height * rows;
+	if(panel.current_panel_bg != "0")
+		pos.y += panel_bg_border;
 
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, panel_bg_color, panel_bg_alpha, DRAWFLAG_NORMAL);
+	panel_pos = pos;
+	panel_size.y = height * rows;
+	panel_size.y += panel_bg_padding * 2;
 
-	// column highlighting
-	for (int i = 0; i < columnns; ++i) if ((i % 2) == 0) {
-		drawfill(pos + '1 0 0' * item_width * rows * i, '0 1 0' * height * rows + '1 0 0' * item_width * rows, '0 0 0', panel_bg_alpha * 0.2, DRAWFLAG_NORMAL);
+	float panel_bg_alpha_save = panel_bg_alpha;
+	panel_bg_alpha *= scoreboard_acc_fade_alpha;
+	HUD_Panel_DrawBg();
+	panel_bg_alpha = panel_bg_alpha_save;
+
+	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	if(panel.current_panel_bg != "0")
+		end_pos.y += panel_bg_border * 2;
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 	}
-	// row highlighting
-	for (int i = 0; i < rows; ++i) {
-		drawfill(pos + '0 1 0' * item_height + '0 1 0' * height * i, '1 0 0' * panel_size.x + '0 1 0' * fontsize, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+
+	pos = panel_pos;
+	vector tmp = panel_size;
+
+	float item_width = tmp.x / columnns / rows;
+
+	if (sbt_bg_alpha)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+
+	if(sbt_highlight)
+	{
+		// column highlighting
+		for (int i = 0; i < columnns; ++i)
+			if ((i % 2) == 0)
+				drawfill(pos + '1 0 0' * item_width * rows * i, '0 1 0' * height * rows + '1 0 0' * item_width * rows, '0 0 0', panel_bg_alpha * 0.2, DRAWFLAG_NORMAL);
+
+		// row highlighting
+		for (int i = 0; i < rows; ++i)
+			drawfill(pos + '0 1 0' * item_height + '0 1 0' * height * i, '1 0 0' * panel_size.x + '0 1 0' * fontsize, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
-	if (rows == 2) pos.x += item_width / 2;
+	if (rows == 2)
+		pos.x += item_width / 2;
 
 	float oldposx = pos.x;
 	vector tmpos = pos;
@@ -1342,6 +1373,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	int column = 0;
 	FOREACH(Items, true, {
 		int n = g_inventory.inv_items[it.m_id];
+		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;
 		drawpic_aspect_skin(tmpos, it.m_icon, '1 0 0' * item_width + '0 1 0' * item_height, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		string s = ftos(n);
@@ -1359,6 +1391,10 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	pos.y += height;
 	pos.y += 1.25 * hud_fontsize.y;
 	pos.x = initial_posx;
+
+	panel_size.x += panel_bg_padding * 2; // restore initial width
+
+	scoreboard_acc_fade_alpha = scoreboard_acc_fade_alpha_save; // debug
 	return pos;
 }
 
