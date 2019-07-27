@@ -234,7 +234,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 			W_DecreaseAmmo(thiswep, actor, WEP_CVAR(machinegun, burst_ammo), weaponentity);
 			
 			// Then apply it to the bullet counter before firing.
-			actor.(weaponentity).misc_bulletcounter = to_shoot * -1;
+			actor.(weaponentity).misc_bulletcounter = -to_shoot;
 			W_MachineGun_Attack_Burst(thiswep, actor, weaponentity, fire);
         }
     }
