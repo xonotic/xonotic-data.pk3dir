@@ -392,7 +392,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
-		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
+		if(trace_fraction < 1 && !(hitwep.spawnflags & WEP_TYPE_HITSCAN))
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
