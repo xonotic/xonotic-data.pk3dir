@@ -891,13 +891,16 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		damage = this.max_health * 0.1;
 	else if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	{
-		if(deathtype & HITTYPE_SECONDARY)
-		{
-			damage = this.max_health * 0.1;
-			force *= 10;
-		}
-		else
+		if(!(deathtype & HITTYPE_SECONDARY))
 			damage = this.max_health * 1.15;
+	}
+
+	// melee slaps
+	entity death_weapon = DEATH_WEAPONOF(deathtype);
+	if(((deathtype & HITTYPE_SECONDARY) ? (death_weapon.spawnflags & WEP_TYPE_MELEE_SEC) : (death_weapon.spawnflags & WEP_TYPE_MELEE_PRI)))
+	{
+		damage = this.max_health * 0.1;
+		force *= 10;
 	}
 
 	this.velocity += force;
@@ -1444,7 +1447,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 
 	if(IS_PLAYER(frag_attacker))
 	{
-		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
+		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) 
+																	: autocvar_g_nades_bonus_score_minor);
 
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
