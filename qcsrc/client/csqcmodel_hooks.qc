@@ -542,7 +542,7 @@ void CSQCModel_Effects_Apply(entity this)
 	{
 		// This will be hard to replace with MAKE_VECTORS because it's called as part of the predraw function
 		// as documented in csprogs.h in the engine. The globals can then be read in many places in the engine.
-		// However MR_ROTATE is currently only used in one place - might be possible to get rid of it entirely.
+		// However MF_ROTATE is currently only used in one place - might be possible to get rid of it entirely.
 		this.renderflags |= RF_USEAXIS;
 		makevectors(this.angles + '0 100 0' * fmod(time, 3.6));
 	}
