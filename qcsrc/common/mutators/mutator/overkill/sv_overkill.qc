@@ -10,17 +10,6 @@ bool autocvar_g_overkill_itemwaypoints = true;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
-IntrusiveList g_overkill_items;
-STATIC_INIT(overkill)
-{
-	g_overkill_items = IL_NEW();
-	IL_PUSH(g_overkill_items, ITEM_HealthMega);
-	IL_PUSH(g_overkill_items, ITEM_ArmorSmall);
-	IL_PUSH(g_overkill_items, ITEM_ArmorMedium);
-	IL_PUSH(g_overkill_items, ITEM_ArmorBig);
-	IL_PUSH(g_overkill_items, ITEM_ArmorMega);
-}
-
 /// \brief Returns a random classname of the overkill item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
 /// \return Random classname of the overkill item.
