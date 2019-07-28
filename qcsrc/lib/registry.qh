@@ -155,7 +155,7 @@ MACRO_END
 #define REGISTRY_HASH(id) Registry_hash_##id
 
 ERASEABLE
-ACCUMULATE void Registry_check(string r, string server) { }
+ACCUMULATE void Registry_check(string r, string sv) { }
 ERASEABLE
 ACCUMULATE void Registry_send_all() { }
 
@@ -170,9 +170,9 @@ void Registry_send(string id, string hash);
 	STATIC_INIT(Registry_check_##id) \
 	{ \
 		/* Note: SHA256 isn't always available, use MD4 instead */ \
-		string s = "", join = ":"; \
-		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
-		s = substring(s, strlen(join), -1); \
+		string s = ""; \
+		FOREACH(id, true, s = strcat(s, ":", it.registered_id)); \
+		s = substring(s, 1, -1); /* remove initial ":" */ \
 		string h = REGISTRY_HASH(id) = strzone(digest_hex("MD4", s)); \
 		LOG_DEBUGF(#id ": %s\n[%s]", h, s); \
 	} \

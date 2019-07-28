@@ -1022,6 +1022,9 @@ bool MapHasRightSize(string map)
 		LOG_TRACE(checkwp_msg, ": has waypoints");
 	}
 
+	if(autocvar_g_maplist_ignore_sizes)
+		return true;
+
 	// open map size restriction file
 	string opensize_msg = strcat("opensize ", map);
 	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);

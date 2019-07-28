@@ -50,7 +50,8 @@ SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER)
 
 CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
-OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+OffhandBlaster OFFHAND_BLASTER;
+STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
 
 #ifdef SVQC
 .float blaster_damage;

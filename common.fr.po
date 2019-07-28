@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-06-19 07:16+0000\n"
+"PO-Revision-Date: 2019-07-14 15:44+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -1572,7 +1572,7 @@ msgstr "Partie perdue !"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "Bien joué ! Cliquez sur « Niveau suivant » pour continuer !"
+msgstr "Bien joué ! Cliquez sur « Niveau suivant » pour continuer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
@@ -4456,7 +4456,7 @@ msgstr "%s^K1 a fait un TRIPLE SCORE ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:450
 msgid "TRIPLE FRAG! "
-msgstr "TRIPLE FRAG !"
+msgstr "TRIPLE FRAG ! "
 
 #: qcsrc/common/notifications/all.qh:451
 #, c-format
@@ -4470,7 +4470,7 @@ msgstr "%s^K1 est ENRAGÉ ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:451
 msgid "RAGE! "
-msgstr "RAGE !"
+msgstr "RAGE ! "
 
 #: qcsrc/common/notifications/all.qh:452
 #, c-format
@@ -4484,7 +4484,7 @@ msgstr "%s^K1 a commencé un MASSACRE ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:452
 msgid "MASSACRE! "
-msgstr "MASSACRE !"
+msgstr "MASSACRE ! "
 
 #: qcsrc/common/notifications/all.qh:453
 #, c-format
@@ -4498,7 +4498,7 @@ msgstr "%s^K1 a marqué QUINZE POINTS D'AFFILÉE ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:453
 msgid "MAYHEM! "
-msgstr "GRABUGE !"
+msgstr "GRABUGE ! "
 
 #: qcsrc/common/notifications/all.qh:454
 #, c-format
@@ -4512,7 +4512,7 @@ msgstr "%s^K1 a marqué VINGT POINTS D'AFFILÉE ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:454
 msgid "BERSERKER! "
-msgstr "FOU FURIEUX !"
+msgstr "FOU FURIEUX ! "
 
 #: qcsrc/common/notifications/all.qh:455
 #, c-format
@@ -4526,7 +4526,7 @@ msgstr "%s^K1 a marqué VINGT-CINQ POINTS D'AFFILÉE ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:455
 msgid "CARNAGE! "
-msgstr "CARNAGE !"
+msgstr "CARNAGE ! "
 
 #: qcsrc/common/notifications/all.qh:456
 #, c-format
@@ -4540,7 +4540,7 @@ msgstr "%s^K1 est en mode ARMAGEDDON ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:456
 msgid "ARMAGEDDON! "
-msgstr "ARMAGEDDON !"
+msgstr "ARMAGEDDON ! "
 
 #: qcsrc/common/notifications/all.qh:463
 #, c-format
@@ -4578,15 +4578,15 @@ msgstr "%d points d'affilée ! "
 #: qcsrc/common/notifications/all.qh:507
 #, c-format
 msgid "%d frag spree! "
-msgstr "%d frags d'affilée !"
+msgstr "%d frags d'affilée ! "
 
 #: qcsrc/common/notifications/all.qh:520
 msgid "First blood! "
-msgstr "Premier sang !"
+msgstr "Premier sang ! "
 
 #: qcsrc/common/notifications/all.qh:520
 msgid "First score! "
-msgstr "Premier point !"
+msgstr "Premier point ! "
 
 #: qcsrc/common/notifications/all.qh:524
 msgid "First casualty! "
@@ -4594,7 +4594,7 @@ msgstr "Première victime ! "
 
 #: qcsrc/common/notifications/all.qh:524
 msgid "First victim! "
-msgstr "Première victime !"
+msgstr "Première victime ! "
 
 #: qcsrc/common/notifications/all.qh:565
 #, c-format

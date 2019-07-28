@@ -156,6 +156,7 @@ string autocvar_g_maplist_votable_screenshot_dir;
 bool autocvar_g_maplist_votable_suggestions;
 bool autocvar_g_maplist_votable_suggestions_override_mostrecent;
 float autocvar_g_maplist_votable_timeout;
+bool autocvar_g_maplist_ignore_sizes;
 int autocvar_g_maxplayers;
 float autocvar_g_maxplayers_spectator_blocktime;
 float autocvar_g_maxpushtime;

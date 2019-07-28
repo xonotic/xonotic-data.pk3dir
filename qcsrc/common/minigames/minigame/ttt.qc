@@ -320,6 +320,8 @@ string ttt_turn_to_string(int turnflags)
 
 	if ( turnflags & TTT_TURN_WIN )
 	{
+		// translator-friendly messages composed of 2 existing messages
+		// TODO: proper "you win" banner instead of hijacking the help message
 		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
 			strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
 		return strcat(_("You win!"), "\n", _("Select \"^1Next Match^7\" on the menu to start a new match!"));
@@ -520,7 +522,7 @@ void ttt_aimove(entity minigame)
 		else
 			ttt_move(minigame,aiplayer,pos);
 	}
-	minigame.message = ttt_turn_to_string(minigame.minigame_flags);
+	strcpy(minigame.message, ttt_turn_to_string(minigame.minigame_flags));
 }
 
 // Make the correct move
@@ -554,7 +556,12 @@ int ttt_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			ttt_set_curr_pos("");
-			minigame.message = ttt_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, ttt_turn_to_string(minigame.minigame_flags));
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
@@ -629,7 +636,7 @@ int ttt_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = ttt_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, ttt_turn_to_string(sent.minigame_flags));
 					if ( sent.minigame_flags & minigame_self.team )
 						minigame_prompt();
 				}
