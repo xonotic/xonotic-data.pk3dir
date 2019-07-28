@@ -46,7 +46,7 @@ string autocvar_g_forced_team_pink;
 
 entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
-STATIC_INIT(g_team_entities)
+void Team_InitTeams()
 {
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
