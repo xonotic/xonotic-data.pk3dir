@@ -315,7 +315,7 @@ float autocvar_sv_mapchange_delay;
 float autocvar_sv_maxairspeed;
 float autocvar_sv_maxspeed;
 string autocvar_sv_motd;
-int autocvar_sv_name_maxlength;
+int autocvar_sv_name_maxlength = 64;
 bool autocvar_sv_precacheplayermodels;
 bool autocvar_sv_q3acompat_machineshotgunswap;
 bool autocvar_sv_servermodelsonly;
