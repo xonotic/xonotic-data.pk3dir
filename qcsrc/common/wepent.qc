@@ -36,10 +36,10 @@ MACRO_END
     \
     PROP(false, porto_v_angle_held, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.porto_v_angle_held); if(this.porto_v_angle_held) { \
-		 WriteAngle(chan, this.porto_v_angle.x); WriteAngle(chan, this.porto_v_angle.y); \
+		 WriteAngle(chan, this.owner.porto_v_angle.x); WriteAngle(chan, this.owner.porto_v_angle.y); \
 		} }, \
 	{ (viewmodels[this.m_wepent_slot]).angles_held_status = ReadByte(); if((viewmodels[this.m_wepent_slot]).angles_held_status) { \
-		(viewmodels[this.m_wepent_slot]).angles_held_x = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_y = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_z = 0; } \
+		(viewmodels[this.m_wepent_slot]).angles_held = vec2(ReadAngle(), ReadAngle()); } \
 		else { (viewmodels[this.m_wepent_slot]).angles_held = '0 0 0'; } }) \
     \
     PROP(false, tuba_instrument, WEPENT_SET_NORMAL, \

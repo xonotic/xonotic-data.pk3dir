@@ -26,6 +26,7 @@ const int CH_AMBIENT_SINGLE = 9;
 
 const float ATTEN_NONE = 0;
 const float ATTEN_MIN = 0.015625;
+const float ATTEN_LOW = 0.2;
 const float ATTEN_NORM = 0.5;
 const float ATTEN_LARGE = 1;
 const float ATTEN_IDLE = 2;

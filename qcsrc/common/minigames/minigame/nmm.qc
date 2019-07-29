@@ -628,12 +628,13 @@ int nmm_client_event(entity minigame, string event, ...)
 	{
 		nmm_fromtile = NULL;
 		nmm_init_tiles(minigame);
-		minigame.message = nmm_turn_to_string(minigame.minigame_flags);
+		strcpy(minigame.message, nmm_turn_to_string(minigame.minigame_flags));
 	}
 	else if ( event == "deactivate" )
 	{
 		nmm_fromtile = NULL;
 		nmm_kill_tiles(minigame);
+		strfree(minigame.message);
 	}
 	else if ( event == "key_pressed" && (minigame.minigame_flags&NMM_TURN_TEAM) == minigame_self.team )
 	{
@@ -755,7 +756,7 @@ int nmm_client_event(entity minigame, string event, ...)
 		}
 		else if ( sent.classname == "minigame" && ( ...(1,int) & MINIG_SF_UPDATE ) )
 		{
-			sent.message = nmm_turn_to_string(sent.minigame_flags);
+			strcpy(sent.message, nmm_turn_to_string(sent.minigame_flags));
 			if ( sent.minigame_flags & minigame_self.team )
 				minigame_prompt();
 		}

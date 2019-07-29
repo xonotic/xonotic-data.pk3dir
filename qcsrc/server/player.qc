@@ -329,9 +329,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
 			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
 
-		if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
+		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
 		{
-			// tuba causes blood to come out of the ears
 			vector ear1, ear2;
 			vector d;
 			float f;

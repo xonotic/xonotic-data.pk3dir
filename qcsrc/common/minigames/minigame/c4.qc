@@ -413,7 +413,12 @@ int c4_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			c4_set_curr_pos("");
-			minigame.message = c4_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, c4_turn_to_string(minigame.minigame_flags));
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
@@ -490,7 +495,7 @@ int c4_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = c4_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, c4_turn_to_string(sent.minigame_flags));
 					if ( sent.minigame_flags & minigame_self.team )
 						minigame_prompt();
 				}

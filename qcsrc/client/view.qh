@@ -6,8 +6,6 @@ vector crosshair_getcolor(entity this, float health_stat);
 
 void calc_followmodel_ofs(entity view);
 
-void Porto_Draw(entity this);
-
 void CSQC_Demo_Camera();
 
 void TrueAim_Init();
