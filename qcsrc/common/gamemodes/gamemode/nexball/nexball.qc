@@ -947,7 +947,7 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 	M_ARGV(2, int) &= ~0x80;
 }
 
-REGISTER_MUTATOR(nb, g_nexball)
+REGISTER_MUTATOR(nb, false)
 {
     MUTATOR_STATIC();
 	MUTATOR_ONADD
