@@ -439,6 +439,7 @@ string pp_turn_to_string(int turnflags)
 
 	if ( turnflags & PP_TURN_WIN )
 	{
+		// translator-friendly messages composed of 2 existing messages
 		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
 			return strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
 		return strcat(_("You win!"), "\n", _("Select \"^1Next Match^7\" on the menu to start a new match!"));
@@ -485,7 +486,12 @@ int pp_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			pp_set_curr_pos("");
-			minigame.message = pp_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, pp_turn_to_string(minigame.minigame_flags));
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
@@ -560,7 +566,7 @@ int pp_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = pp_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, pp_turn_to_string(sent.minigame_flags));
 					if ( sent.minigame_flags & minigame_self.team )
 						minigame_prompt();
 					sent.pp_team1_score = ReadByte();

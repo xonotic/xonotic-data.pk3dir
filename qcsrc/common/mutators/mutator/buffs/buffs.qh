@@ -35,10 +35,10 @@ CLASS(Buff, Pickup)
 ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {
-    FOREACH(Buffs, true, {
-        it.m_itemid = BIT(it.m_id - 1); \
-        it.m_sprite = strzone(strcat("buff-", it.netname)); \
-    });
+	FOREACH(Buffs, true, {
+		it.m_itemid = BIT(it.m_id - 1);
+		it.m_sprite = strzone(strcat("buff-", it.netname));
+	});
 }
 
 #ifdef SVQC

@@ -306,7 +306,7 @@ void football_touch(entity this, entity toucher)
 			this.nextthink = time + autocvar_g_nexball_delay_idle;
 		return;
 	}
-	if (!IS_PLAYER(toucher))
+	if (!IS_PLAYER(toucher) && !IS_VEHICLE(toucher))
 		return;
 	if(GetResource(toucher, RES_HEALTH) < 1)
 		return;
@@ -947,7 +947,7 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 	M_ARGV(2, int) &= ~0x80;
 }
 
-REGISTER_MUTATOR(nb, g_nexball)
+REGISTER_MUTATOR(nb, false)
 {
     MUTATOR_STATIC();
 	MUTATOR_ONADD

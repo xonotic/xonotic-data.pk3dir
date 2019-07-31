@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Hector Champipis <hector-hab@hotmail.com>, 2019
 # MasterWord, 2016
 # Vindex <kon14.inside@gmail.com>, 2014
 # Konstantinos Mihalenas <ldinos99@gmail.com>, 2014
@@ -16,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-28 05:23+0000\n"
-"Last-Translator: MasterWord\n"
+"POT-Creation-Date: 2019-05-19 07:23+0200\n"
+"PO-Revision-Date: 2019-05-28 16:16+0000\n"
+"Last-Translator: Hector Champipis <hector-hab@hotmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/team-xonotic/xonotic/language/"
 "el/)\n"
 "Language: el\n"
@@ -30,7 +31,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Επιτυχώς εξήχθη στο %s! (Σημείωση: Αποθηκεύθη στο data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
@@ -41,6 +42,8 @@ msgstr "^1Δεν μπορεις να γραψείς στο %s"
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
 msgstr ""
+"^3Μήνυμα αντίστροφης μέτρησης στη στιγμή %s, δευτερόλεπτα που απομένουν: "
+"^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:142
 #, c-format
@@ -48,15 +51,17 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Μήνυμα πολλαπλών σειρών στη στιγμή %s το οποίο\n"
+"^1διαρκεί περισσότερο του κανονικού"
 
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Μήνυμα στη στιγμή %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "Κοινότυπο μήνυμα"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -84,7 +89,7 @@ msgstr "^1Πατήστε ^3%s^1 για παρακολούθηση"
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/menu/xonotic/keybinder.qc:47
 msgid "primary fire"
-msgstr "πρωταρχικά πυρά "
+msgstr "βασική λειτουργία όπλου"
 
 #: qcsrc/client/hud/panel/infomessages.qc:104
 #, c-format
@@ -109,7 +114,7 @@ msgstr "^1Χρησιμοποιήστε ^3%s^1 ή ^3%s^1 για αλλαγή τα
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Πιέστε^3%s^1 για παρατήρηση, ^3%s^1 για αλλαγή λειτουργίας κάμερας"
 
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
@@ -119,7 +124,7 @@ msgstr "ρίξτε το όπλο"
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/menu/xonotic/keybinder.qc:48
 msgid "secondary fire"
-msgstr "δευτερεύοντα πυρά"
+msgstr "εναλλακτική λειτουργία όπλου"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
@@ -169,12 +174,12 @@ msgstr "%sΠατήστε ^3%s%s για να τελειώσετε την προθ
 #: qcsrc/client/hud/panel/infomessages.qc:177
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "ready"
-msgstr "έτοιμος"
+msgstr "έτοιμος/η"
 
 #: qcsrc/client/hud/panel/infomessages.qc:164
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%sΠατήστε ^3%s%s μόλις είστε έτοιμος"
+msgstr "%sΠατήστε ^3%s%s μόλις είστε έτοιμος/η"
 
 #: qcsrc/client/hud/panel/infomessages.qc:169
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -191,12 +196,12 @@ msgstr "^2Πατήστε ^3%s^2 για να τελειώσετε την προθ
 
 #: qcsrc/client/hud/panel/infomessages.qc:198
 msgid "Teamnumbers are unbalanced!"
-msgstr ""
+msgstr "Οι πληθυσμοί των ομάδων είναι εκτός ισορροπίας!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:201
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr ""
+msgstr "Πατήστε ^3%s%s για ρύθμιση"
 
 #: qcsrc/client/hud/panel/infomessages.qc:201
 #: qcsrc/menu/xonotic/keybinder.qc:117
@@ -205,27 +210,31 @@ msgstr "μενού ομάδας"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating this player:"
-msgstr "^1Παρακολουθής αυτόν τον παίκτη:"
+msgstr "^1Παρακολουθείτε αυτόν τον παίκτη:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating you:"
-msgstr "^1Εσύ παρακουλουθής:"
+msgstr "^1Σε παρακολουθούν:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr ""
+"^7Πατήστε ^3ESC ^7για να δείτε τις επιλογές προβολής στοιχείων στην οθόνη."
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
+"^3Κάντε διπλό κλικ ^7σε κάποιο ταμπλό για επιλογές ειδικευμένες για αυτό το "
+"ταμπλό."
 
 #: qcsrc/client/hud/panel/infomessages.qc:229
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
+"^3CTRL ^7για να απενεργοποιήσετε την δοκιμασία σύγκρουσης, ^3SHIFT ^7 και"
 
 #: qcsrc/client/hud/panel/infomessages.qc:230
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3ΚΑΤΕΥΘΗΝΤΗΡΙΑ ΒΕΛΗ ^7για λεπτομερείς ρυθμίσεις."
 
 #: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Personal best"
@@ -245,12 +254,12 @@ msgstr "Παίχτης %d"
 #: qcsrc/client/hud/panel/quickmenu.qc:593
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Υπό - μενού%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:598
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "Εντολή%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:624
 msgid "Continue..."
@@ -259,23 +268,23 @@ msgstr "Συνέχεια..."
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr "Συζήτηση"
+msgstr "Συνομιλία"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Στείλτε δημόσιο μήνυμα σε"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / καλό!"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^καλό!"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:784
 msgid "QMCMD^good game"
-msgstr "QMCMD^Ωραίο παιχνίδι"
+msgstr "QMCMD^ωραίο παιχνίδι"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck"
@@ -283,7 +292,7 @@ msgstr "QMCMD^γεια / καλή τύχη"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "QMCMD^γεια / καλή τύχη και καλά να περάσουμε"
+msgstr "QMCMD^γεια / καλή τύχη και καλή διασκέδαση"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
@@ -292,11 +301,11 @@ msgstr "QMCMD^Στέιλε στα αγγλικά"
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Team chat"
-msgstr "QMCMD^Συζήτηση ομάδας"
+msgstr "QMCMD^Συνομιλία ομάδας"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
-msgstr ""
+msgstr "QMCMD^τετραπλασιασμός προσεχώς"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -304,15 +313,15 @@ msgstr "QMCMD^Ελέυθερο αντικείμενο %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^Ελέυθερο αντικείμενο, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^αντικείμενο πάρθηκε (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^αντικείμενο πάρθηκε, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^negative"
@@ -324,7 +333,7 @@ msgstr "QMCMD^θετικό"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^χρειάζομαι βοήθεια (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help, icon"
@@ -332,43 +341,43 @@ msgstr "QMCMD^χρειάζομαι βοήθεια, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^εχθρός εθεάθη (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen, icon"
-msgstr ""
+msgstr "QMCMD^εχθρός εθεάθη, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^η σημαία εθεάθη (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^flag seen, icon"
-msgstr ""
+msgstr "QMCMD^η σημαία εθεάθη, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^αμυνόμενος/η (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending, icon"
-msgstr ""
+msgstr "QMCMD^αμυνόμενος/η, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^περιπλανώμενος/η (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^roaming, icon"
-msgstr ""
+msgstr "QMCMD^περιπλανώμενος/η, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^επιτιθέμενος/η (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking, icon"
-msgstr "QMCMD^μαχειτικό, εικονίδιο"
+msgstr "QMCMD^επιτιθέμενος/η, εικονίδιο"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
@@ -4241,224 +4250,224 @@ msgstr ""
 msgid "Notification dump command only works with cl_cmd and sv_cmd."
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:405 qcsrc/common/notifications/all.qh:406
+#: qcsrc/common/notifications/all.qh:404 qcsrc/common/notifications/all.qh:405
 #, c-format
 msgid " (near %s)"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:413 qcsrc/common/notifications/all.qh:414
+#: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
 msgid "primary"
 msgstr "Βασικό"
 
-#: qcsrc/common/notifications/all.qh:413 qcsrc/common/notifications/all.qh:414
+#: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
 msgid "secondary"
 msgstr "Δεύτερο"
 
-#: qcsrc/common/notifications/all.qh:416
+#: qcsrc/common/notifications/all.qh:415
 msgid "point"
 msgstr "πόντος"
 
-#: qcsrc/common/notifications/all.qh:416
+#: qcsrc/common/notifications/all.qh:415
 msgid "points"
 msgstr "πόντοι"
 
-#: qcsrc/common/notifications/all.qh:425
+#: qcsrc/common/notifications/all.qh:424
 msgid "drop flag"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:426
+#: qcsrc/common/notifications/all.qh:425
 msgid "throw nade"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:450
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:450
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:450
 msgid "TRIPLE FRAG! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:451
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:451
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:451
 msgid "RAGE! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:452
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:452
 #, c-format
 msgid "%s^K1 started a MASSACRE! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:452
 msgid "MASSACRE! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:453
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:453
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:453
 msgid "MAYHEM! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:454
 msgid "BERSERKER! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 inflicts CARNAGE! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:455
 msgid "CARNAGE! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:456
 msgid "ARMAGEDDON! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:464
+#: qcsrc/common/notifications/all.qh:463
 #, c-format
 msgid "%s(^F1Bot^BG)"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:466
+#: qcsrc/common/notifications/all.qh:465
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:473
+#: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid ""
 "\n"
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:475
+#: qcsrc/common/notifications/all.qh:474
 #, c-format
 msgid ""
 "\n"
 "(^F4Dead^BG)%s"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:496 qcsrc/common/notifications/all.qh:509
+#: qcsrc/common/notifications/all.qh:495 qcsrc/common/notifications/all.qh:508
 #, c-format
 msgid "%d score spree! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:508
+#: qcsrc/common/notifications/all.qh:507
 #, c-format
 msgid "%d frag spree! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:521
+#: qcsrc/common/notifications/all.qh:520
 msgid "First blood! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:521
+#: qcsrc/common/notifications/all.qh:520
 msgid "First score! "
 msgstr "Πρώτο σκορ!"
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:524
 msgid "First casualty! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:524
 msgid "First victim! "
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:566
+#: qcsrc/common/notifications/all.qh:565
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:567
+#: qcsrc/common/notifications/all.qh:566
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:585
+#: qcsrc/common/notifications/all.qh:584
 #, c-format
 msgid "%s^K1 drew first blood! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:586
+#: qcsrc/common/notifications/all.qh:585
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:602
+#: qcsrc/common/notifications/all.qh:601
 #, c-format
 msgid ", ending their %d frag spree"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:603
+#: qcsrc/common/notifications/all.qh:602
 #, c-format
 msgid ", ending their %d score spree"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:617
+#: qcsrc/common/notifications/all.qh:616
 #, c-format
 msgid ", losing their %d frag spree"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:618
+#: qcsrc/common/notifications/all.qh:617
 #, c-format
 msgid ", losing their %d score spree"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:643
+#: qcsrc/common/notifications/all.qh:642
 #, c-format
 msgid " with %d %s"
 msgstr ""
@@ -4535,7 +4544,7 @@ msgstr "GENERATOR^Κίτρινο"
 msgid "GENERATOR^Pink"
 msgstr "GENERATOR^Ρόζ"
 
-#: qcsrc/common/turrets/all.qh:94
+#: qcsrc/common/turrets/all.qh:96
 msgid "Turrets dump command only works with sv_cmd."
 msgstr ""
 
@@ -4638,20 +4647,20 @@ msgid "Walker"
 msgstr ""
 
 #: qcsrc/common/util.qc:1403
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:163
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:173
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:183
 msgid "Male"
 msgstr "Άντρας"
 
 #: qcsrc/common/util.qc:1404
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:162
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:182
 msgid "Female"
 msgstr "Γυναίκα"
 
 #: qcsrc/common/util.qc:1405
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:161
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:174
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:171
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:184
 msgid "Undisclosed"
 msgstr "Μυστικό"
 
@@ -5641,7 +5650,7 @@ msgid "Name:"
 msgstr "Όνομα:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:60
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:64
 msgid "Name under which you will appear in the game"
 msgstr ""
 
@@ -7134,7 +7143,7 @@ msgstr "Επόμενο"
 msgid "Slide show"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:34
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:38
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:37
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:25
@@ -7143,43 +7152,47 @@ msgstr ""
 msgid "Apply immediately"
 msgstr "Άμεση εφαρμογή"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:48
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:52
 msgid "Name"
 msgstr "Όνομα"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:77
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:81
 msgid "Model"
 msgstr "Μοντέλο"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:100
 msgid "Glowing color"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:106
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:110
 msgid "Detail color"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:125
 msgid "Statistics"
 msgstr "Στατιστικά"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:125
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:129
 msgid "Allow player statistics to track your client"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:129
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:133
 msgid "Allow player statistics to use your nickname"
 msgstr "Επιτρέψτε στα στατιστικά παίκτη να χρησιμοποιήσουν το ψευδώνυμό σας"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:149
 msgid "Country"
 msgstr "Χώρα"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:153
+msgid "Select language..."
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:169
 msgid "Gender:"
 msgstr "Φύλο"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:166
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:176
 msgid "Gender"
 msgstr "Φύλο"
 

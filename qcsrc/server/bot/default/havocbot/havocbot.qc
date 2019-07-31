@@ -1299,9 +1299,15 @@ void havocbot_movetogoal(entity this)
 	if(skill+this.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(this, dir);
 
-	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (IS_ONGROUND(this))) PHYS_INPUT_BUTTON_JUMP(this) = true;
-	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-this.bot_dodgeskill)*0.1,1)) PHYS_INPUT_BUTTON_JUMP(this) = true;
-	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-this.bot_dodgeskill)*0.1,1)) this.havocbot_ducktime=time+0.3/bound(0.1,skill+this.bot_dodgeskill,10);
+	if (dir * v_up >= autocvar_sv_jumpvelocity * 0.5 && IS_ONGROUND(this))
+		PHYS_INPUT_BUTTON_JUMP(this) = true;
+	if (dodge)
+	{
+		if (dodge * v_up > 0 && random() * frametime >= 0.2 * bound(0, (10 - skill - this.bot_dodgeskill) * 0.1, 1))
+			PHYS_INPUT_BUTTON_JUMP(this) = true;
+		if (dodge * v_up < 0 && random() * frametime >= 0.5 * bound(0, (10 - skill - this.bot_dodgeskill) * 0.1, 1))
+			this.havocbot_ducktime = time + 0.3 / bound(0.1, skill + this.bot_dodgeskill, 10);
+	}
 }
 
 entity havocbot_gettarget(entity this, bool secondary)

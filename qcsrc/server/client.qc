@@ -1034,7 +1034,6 @@ string getwelcomemessage(entity this)
 
 	string versionmessage = GetClientVersionMessage(this);
 	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
-	s = strcat(s, "^8\nCurrent map: ^2", GetMapname(), "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
@@ -2045,11 +2044,20 @@ void PrintWelcomeMessage(entity this)
 	{
 		if(PHYS_INPUT_BUTTON_INFO(this)) // BUTTON_INFO hides initial MOTD
 			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(CS(this).motd_actived_time == -2 || IS_PLAYER(this) || IS_SPEC(this))
+		else if (CS(this).motd_actived_time == -2)
 		{
-			// instanctly hide MOTD
+			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+		}
+		else if (IS_PLAYER(this) || IS_SPEC(this))
+		{
+			// FIXME occasionally for some reason MOTD never goes away
+			// delay MOTD removal a little bit in the hope it fixes this bug
+			if (CS(this).motd_actived_time == -1) // MOTD marked to fade away as soon as client becomes player or spectator
+				CS(this).motd_actived_time = -(5 + floor(random() * 10)); // add small delay
+			else //if (CS(this).motd_actived_time < -2)
+				CS(this).motd_actived_time++;
 		}
 	}
 }
@@ -2331,19 +2339,15 @@ void PlayerUseKey(entity this)
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if(!STAT(FROZEN, this))
-		if(!IS_DEAD(this))
-		if(!game_stopped)
+		if(!game_stopped && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 		{
 			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
 
 			while(head) // find the closest acceptable target to enter
 			{
-				if(IS_VEHICLE(head))
-				if(!IS_DEAD(head))
+				if(IS_VEHICLE(head) && !IS_DEAD(head) && head.takedamage != DAMAGE_NO)
 				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this)))
-				if(head.takedamage != DAMAGE_NO)
 				{
 					if(closest_target)
 					{
@@ -2397,11 +2401,11 @@ void PlayerPreThink (entity this)
 	if (this.netname == "" || this.netname != CS(this).netname_previous)
 	{
 		bool assume_unchanged = (CS(this).netname_previous == "");
-		if (autocvar_name_maxlength > 0 && strlennocol(this.netname) > autocvar_name_maxlength)
+		if (autocvar_sv_name_maxlength > 0 && strlennocol(this.netname) > autocvar_sv_name_maxlength)
 		{
-			int new_length = textLengthUpToLength(this.netname, autocvar_name_maxlength, strlennocol);
+			int new_length = textLengthUpToLength(this.netname, autocvar_sv_name_maxlength, strlennocol);
 			this.netname = strzone(strcat(substring(this.netname, 0, new_length), "^7"));
-			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_name_maxlength));
+			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_sv_name_maxlength));
 			assume_unchanged = false;
 			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 		}
@@ -2473,21 +2477,20 @@ void PlayerPreThink (entity this)
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
 
 	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
-	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this))
+	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 	{
-		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it),
+		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
 		{
-			if(!IS_DEAD(it) && it.takedamage != DAMAGE_NO)
-			if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
-			{
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
-			}
-			else if(!it.owner)
+			if(!it.owner)
 			{
 				if(!it.team || SAME_TEAM(this, it))
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
 				else if(autocvar_g_vehicles_steal)
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+			}
+			else if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
+			{
+				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
 			}
 		});
 

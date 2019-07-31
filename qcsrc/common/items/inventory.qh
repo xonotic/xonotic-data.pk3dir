@@ -2,6 +2,7 @@
 
 #include "all.qh"
 
+#ifdef GAMEQC
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
     ATTRIBARRAY(Inventory, inv_items, int, Items_MAX);
@@ -19,6 +20,7 @@ const int Inventory_groups_minor = 8; // ceil(Items_MAX / Inventory_groups_major
 
 #define G_MAJOR(id) (floor((id) / Inventory_groups_minor))
 #define G_MINOR(id) ((id) % Inventory_groups_minor)
+#endif
 
 #ifdef CSQC
 Inventory g_inventory;

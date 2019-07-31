@@ -47,13 +47,15 @@ REGISTRY_CHECK(Turrets)
 	/**/
 
 #define TR_CONFIG(class, turname, fld, T)     _TR_CONFIG(class, fld, T, turname)
-#define TR_CONFIG_BEGIN(class) METHOD(class, tr_config, void(class this)) {
-	#ifdef SVQC
+#ifdef SVQC
+	#define TR_CONFIG_BEGIN(class) METHOD(class, tr_config, void(class this)) {
 		#define _TR_CONFIG(class, fld, T, turname) if (#turname == this.netname) TUR_CONFIG_WRITE_CVARS(turname, fld, T);
-	#else
+	#define TR_CONFIG_END() }
+#else
+	#define TR_CONFIG_BEGIN(class)
 		#define _TR_CONFIG(class, fld, T, turname)
-	#endif
-#define TR_CONFIG_END() }
+	#define TR_CONFIG_END()
+#endif
 
 GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")
 {

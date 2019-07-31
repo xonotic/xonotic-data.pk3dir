@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-28 07:23+0200\n"
-"PO-Revision-Date: 2019-04-30 20:17+0000\n"
+"POT-Creation-Date: 2019-05-19 07:23+0200\n"
+"PO-Revision-Date: 2019-05-20 17:49+0000\n"
 "Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -4423,144 +4423,144 @@ msgstr "^F2Rilevato intruso, scudi disabilitati!"
 msgid "Notification dump command only works with cl_cmd and sv_cmd."
 msgstr "Il commando di dump delle notifiche funziona solo con cl_cmd e sv_cmd."
 
-#: qcsrc/common/notifications/all.qh:405 qcsrc/common/notifications/all.qh:406
+#: qcsrc/common/notifications/all.qh:404 qcsrc/common/notifications/all.qh:405
 #, c-format
 msgid " (near %s)"
 msgstr " (vicino %s)"
 
-#: qcsrc/common/notifications/all.qh:413 qcsrc/common/notifications/all.qh:414
+#: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
 msgid "primary"
 msgstr "primario"
 
-#: qcsrc/common/notifications/all.qh:413 qcsrc/common/notifications/all.qh:414
+#: qcsrc/common/notifications/all.qh:412 qcsrc/common/notifications/all.qh:413
 msgid "secondary"
 msgstr "secondario"
 
-#: qcsrc/common/notifications/all.qh:416
+#: qcsrc/common/notifications/all.qh:415
 msgid "point"
 msgstr "punto"
 
-#: qcsrc/common/notifications/all.qh:416
+#: qcsrc/common/notifications/all.qh:415
 msgid "points"
 msgstr "punti"
 
-#: qcsrc/common/notifications/all.qh:425
+#: qcsrc/common/notifications/all.qh:424
 msgid "drop flag"
 msgstr "abbandona bandiera"
 
-#: qcsrc/common/notifications/all.qh:426
+#: qcsrc/common/notifications/all.qh:425
 msgid "throw nade"
 msgstr "lancia granata"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:450
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
 msgstr "%s^K1 ha realizzato un TRIPLO FRAG! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:450
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
 msgstr "%s^K1 ha realizzato un TRIPLO PUNTO! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:450
 msgid "TRIPLE FRAG! "
 msgstr "TRIPLO FRAG! "
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:451
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 ha realizzato QUINDICI PUNTI DI FILA! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:451
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
 msgstr "%s^K1 scatena la FURIA! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:452
+#: qcsrc/common/notifications/all.qh:451
 msgid "RAGE! "
 msgstr "FURIA! "
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:452
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 ha realizzato ^1DIECI PUNTI DI FILA! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:452
 #, c-format
 msgid "%s^K1 started a MASSACRE! %s^BG"
 msgstr "%s^K1 ha iniziato un MASSACRO! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/notifications/all.qh:452
 msgid "MASSACRE! "
 msgstr "MASSACRO! "
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:453
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
 msgstr "%s^K1 ha causato un CAOS! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:453
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 ha realizzato QUINDICI PUNTI DI FILA! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:454
+#: qcsrc/common/notifications/all.qh:453
 msgid "MAYHEM! "
 msgstr "CAOS! "
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
 msgstr "%s^K1 è un BERSERKER! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:454
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 ha realizzato VENTI PUNTI DI FILA! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:455
+#: qcsrc/common/notifications/all.qh:454
 msgid "BERSERKER! "
 msgstr "BERSERKER! "
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 inflicts CARNAGE! %s^BG"
 msgstr "%s^K1 inflige una CARNEFICINA! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 ha realizzato VENTICINQUE PUNTI DI FILA! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:456
+#: qcsrc/common/notifications/all.qh:455
 msgid "CARNAGE! "
 msgstr "CARNEFICINA! "
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
 msgstr "%s^K1 ha realizzato TRENTA PUNTI DI FILA! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
 msgstr "%s^K1 scatena l'ARMAGEDDON! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:457
+#: qcsrc/common/notifications/all.qh:456
 msgid "ARMAGEDDON! "
 msgstr "ARMAGEDDON! "
 
-#: qcsrc/common/notifications/all.qh:464
+#: qcsrc/common/notifications/all.qh:463
 #, c-format
 msgid "%s(^F1Bot^BG)"
 msgstr "%s(^F1Bot^BG)"
 
-#: qcsrc/common/notifications/all.qh:466
+#: qcsrc/common/notifications/all.qh:465
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
 msgstr "%s(Ping ^F1%d^BG)"
 
-#: qcsrc/common/notifications/all.qh:473
+#: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid ""
 "\n"
@@ -4569,7 +4569,7 @@ msgstr ""
 "\n"
 "(Vita ^1%d^BG / Armatura ^2%d^BG)%s"
 
-#: qcsrc/common/notifications/all.qh:475
+#: qcsrc/common/notifications/all.qh:474
 #, c-format
 msgid ""
 "\n"
@@ -4578,73 +4578,73 @@ msgstr ""
 "\n"
 "(^F4Morto^BG)%s"
 
-#: qcsrc/common/notifications/all.qh:496 qcsrc/common/notifications/all.qh:509
+#: qcsrc/common/notifications/all.qh:495 qcsrc/common/notifications/all.qh:508
 #, c-format
 msgid "%d score spree! "
 msgstr "serie di %d punti! "
 
-#: qcsrc/common/notifications/all.qh:508
+#: qcsrc/common/notifications/all.qh:507
 #, c-format
 msgid "%d frag spree! "
 msgstr "serie di %d frag! "
 
-#: qcsrc/common/notifications/all.qh:521
+#: qcsrc/common/notifications/all.qh:520
 msgid "First blood! "
 msgstr "Prima uccisione! "
 
-#: qcsrc/common/notifications/all.qh:521
+#: qcsrc/common/notifications/all.qh:520
 msgid "First score! "
 msgstr "Primo punto! "
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:524
 msgid "First casualty! "
 msgstr "Primo incidente! "
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:524
 msgid "First victim! "
 msgstr "Prima vittima! "
 
-#: qcsrc/common/notifications/all.qh:566
+#: qcsrc/common/notifications/all.qh:565
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
 msgstr "%s^K1 ha %d frag di fila! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:567
+#: qcsrc/common/notifications/all.qh:566
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
 msgstr "%s^K1 ha fatto %d punti di fila! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:585
+#: qcsrc/common/notifications/all.qh:584
 #, c-format
 msgid "%s^K1 drew first blood! %s^BG"
 msgstr "%s^K1 ha fatto la prima uccisione! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:586
+#: qcsrc/common/notifications/all.qh:585
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
 msgstr "%s^K1 ha ottenuto il primo punto! %s^BG"
 
-#: qcsrc/common/notifications/all.qh:602
+#: qcsrc/common/notifications/all.qh:601
 #, c-format
 msgid ", ending their %d frag spree"
 msgstr ", finendo la sua serie di %d frag"
 
-#: qcsrc/common/notifications/all.qh:603
+#: qcsrc/common/notifications/all.qh:602
 #, c-format
 msgid ", ending their %d score spree"
 msgstr ", finendo la sua serie di %d punti"
 
-#: qcsrc/common/notifications/all.qh:617
+#: qcsrc/common/notifications/all.qh:616
 #, c-format
 msgid ", losing their %d frag spree"
 msgstr ", perdendo la sua serie di %d frag"
 
-#: qcsrc/common/notifications/all.qh:618
+#: qcsrc/common/notifications/all.qh:617
 #, c-format
 msgid ", losing their %d score spree"
 msgstr ", perdendo la sua serie di %d punti"
 
-#: qcsrc/common/notifications/all.qh:643
+#: qcsrc/common/notifications/all.qh:642
 #, c-format
 msgid " with %d %s"
 msgstr " con %d %s"
@@ -4721,7 +4721,7 @@ msgstr "Giallo"
 msgid "GENERATOR^Pink"
 msgstr "Rosa"
 
-#: qcsrc/common/turrets/all.qh:94
+#: qcsrc/common/turrets/all.qh:96
 msgid "Turrets dump command only works with sv_cmd."
 msgstr "Il commando di dump delle torrette funziona solo con sv_cmd."
 
@@ -4824,20 +4824,20 @@ msgid "Walker"
 msgstr "Walker"
 
 #: qcsrc/common/util.qc:1403
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:163
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:173
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:183
 msgid "Male"
 msgstr "Maschio"
 
 #: qcsrc/common/util.qc:1404
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:162
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:182
 msgid "Female"
 msgstr "Femmina"
 
 #: qcsrc/common/util.qc:1405
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:161
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:174
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:171
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:184
 msgid "Undisclosed"
 msgstr "Nascosto"
 
@@ -5832,7 +5832,7 @@ msgid "Name:"
 msgstr "Nome:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:60
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:64
 msgid "Name under which you will appear in the game"
 msgstr "Nome col quale apparirai nel gioco"
 
@@ -7350,7 +7350,7 @@ msgstr "Successivo"
 msgid "Slide show"
 msgstr "Presentazione"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:34
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:38
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:37
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:25
@@ -7359,43 +7359,47 @@ msgstr "Presentazione"
 msgid "Apply immediately"
 msgstr "Applica immediatamente"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:48
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:52
 msgid "Name"
 msgstr "Nome"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:77
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:81
 msgid "Model"
 msgstr "Modello"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:100
 msgid "Glowing color"
 msgstr "Colore glow"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:106
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:110
 msgid "Detail color"
 msgstr "Colore dettaglio"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:125
 msgid "Statistics"
 msgstr "Statistiche"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:125
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:129
 msgid "Allow player statistics to track your client"
 msgstr "Consenti alle statistiche dei giocatori di tracciare il tuo client"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:129
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:133
 msgid "Allow player statistics to use your nickname"
 msgstr "Consenti alle statistiche dei giocatori di usare il tuo nome"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:149
 msgid "Country"
 msgstr "Nazione"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:153
+msgid "Select language..."
+msgstr "Scegli lingua..."
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:169
 msgid "Gender:"
 msgstr "Genere:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:166
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:176
 msgid "Gender"
 msgstr "Genere"
 

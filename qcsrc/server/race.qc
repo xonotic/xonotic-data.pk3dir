@@ -19,10 +19,16 @@
 #include <common/mapobjects/triggers.qh>
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
+#include <common/vehicles/sv_vehicles.qh>
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 
 IntrusiveList g_race_targets;
-STATIC_INIT(g_race_targets) { g_race_targets = IL_NEW(); }
+IntrusiveList g_racecheckpoints;
+STATIC_INIT(g_race)
+{
+	g_race_targets = IL_NEW();
+	g_racecheckpoints = IL_NEW();
+}
 
 void race_InitSpectator()
 {
@@ -566,6 +572,9 @@ void race_ClearTime(entity e)
 
 void checkpoint_passed(entity this, entity player)
 {
+	if(IS_VEHICLE(player) && player.owner)
+		player = player.owner;
+
 	if(player.personal && autocvar_g_allow_checkpoints)
 		return; // practice mode!
 

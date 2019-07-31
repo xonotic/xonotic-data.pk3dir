@@ -756,6 +756,9 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 
 			if (e_turret.team != e_target.owner.team)
 				return -12;
+
+			if (e_turret.team != e_target.aiment.team)
+				return -12; // portals
 		}
 		else
 		{
@@ -764,6 +767,9 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 
 			if (e_turret.team == e_target.owner.team)
 				return -14;
+
+			if (e_turret.team == e_target.aiment.team)
+				return -14; // portals
 		}
 	}
 
