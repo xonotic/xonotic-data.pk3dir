@@ -830,6 +830,7 @@ void waypoint_remove_fromeditor(entity pl)
 	}
 
 	bprint(strcat("Waypoint removed at ", vtos(e.origin), "\n"));
+	te_explosion(e.origin);
 	waypoint_remove(e);
 
 	if (sym && wp_sym)
