@@ -48,6 +48,8 @@ entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
 void Team_InitTeams()
 {
+	if (g_team_entities[0])
+		return;
 	for (int i = 0; i < NUM_TEAMS; ++i)
 	{
 		g_team_entities[i] = spawn();
