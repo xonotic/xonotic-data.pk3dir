@@ -812,7 +812,7 @@ void waypoint_remove_fromeditor(entity pl)
 
 	if (waypoint_has_hardwiredlinks(e))
 	{
-		LOG_INFO("Can't remove a waypoint with hardwired links, remove them with \"wpeditor hardwire\" first\n");
+		LOG_INFO("Can't remove a waypoint with hardwired links, remove links with \"wpeditor hardwire\" first\n");
 		return;
 	}
 
@@ -1469,7 +1469,8 @@ void waypoint_load_hardwiredlinks()
 
 			if(!found)
 			{
-				LOG_INFO("NOTICE: Can not find origin waypoint for the hardwired link ", s, ". Path skipped");
+				s = strcat(((is_special) ? "special link " : "hardwired link "), s);
+				LOG_INFO("NOTICE: Can not find origin waypoint of the ", s, ". Path skipped");
 				continue;
 			}
 		}
@@ -1490,7 +1491,8 @@ void waypoint_load_hardwiredlinks()
 
 		if(!found)
 		{
-			LOG_INFO("NOTICE: Can not find destination waypoint for the hardwired link ", s, ". Path skipped");
+			s = strcat(((is_special) ? "special link " : "hardwired link "), s);
+			LOG_INFO("NOTICE: Can not find destination waypoint of the ", s, ". Path skipped");
 			continue;
 		}
 
