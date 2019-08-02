@@ -1202,11 +1202,17 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 
 void Maplist_Init()
 {
-	Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-	float i;
-	for (i = 0; i < Map_Count; ++i)
-		if (Map_Check(i, 2))
-			break;
+	float i = Map_Count = 0;
+	if(autocvar_g_maplist != "")
+	{
+		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		for (i = 0; i < Map_Count; ++i)
+		{
+			if (Map_Check(i, 2))
+				break;
+		}
+	}
+	
 	if (i == Map_Count)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
