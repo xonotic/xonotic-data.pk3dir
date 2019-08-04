@@ -201,7 +201,8 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 				}
 				else if (argv(1) == "hardwire")
 				{
-					waypoint_start_hardwiredlink(caller);
+					string s = argv(2);
+					waypoint_start_hardwiredlink(caller, (s == "crosshair"));
 					return;
 				}
 				else if (argv(1) == "unreachable")
@@ -252,11 +253,12 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 			sprint(caller, "   ^5unreachable^7: useful to reveal waypoints and items unreachable from the current position and spawnpoints without a nearest waypoint\n");
 			sprint(caller, "   ^5saveall^7: saves all waypoints and links to file\n");
 			sprint(caller, "   ^5relinkall^7: relink all waypoints as if they were respawned\n");
-			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position (useful to spawn custom jumppad waypoints (spawn another waypoint to create destination))\n");
+			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position (in general useful to create special and hardwired links with ease from existing waypoints, in particular it's the only way to create custom jumppad waypoints (spawn another waypoint to create destination))\n");
 			sprint(caller, "   ^5spawn jump^7: spawns a jump waypoint (spawn another waypoint to create destination)\n");
 			sprint(caller, "   ^5spawn crouch^7: spawns a crouch waypoint\n");
 			sprint(caller, "   ^5spawn support^7: spawns a support waypoint (spawn another waypoint to create destination from which all incoming links are removed), useful to replace links to preblematic jumppad/teleport waypoints\n");
 			sprint(caller, "   ^5hardwire^7: marks the nearest waypoint as origin of a new hardwired link (spawn another waypoint over an existing one to create destination)\n");
+			sprint(caller, "   ^5hardwire crosshair^7: marks the waypoint at crosshair instead of the nearest waypoint\n");
 			sprint(caller, "   ^5symorigin get|set\n");
 			sprint(caller, "   ^5symorigin get|set p1 p2 ... pX\n");
 			sprint(caller, "   ^5symaxis get|set p1 p2\n");

@@ -505,19 +505,40 @@ void waypoint_clear_start_wp_globals(entity pl, bool warn)
 }
 
 void crosshair_trace_waypoints(entity pl);
-void waypoint_start_hardwiredlink(entity pl)
+void waypoint_start_hardwiredlink(entity pl, bool at_crosshair)
 {
 	entity wp = pl.nearestwaypoint;
-	if ((!start_wp_is_spawned || start_wp_is_hardwired) && wp && !(wp.wpflags & WPFLAGMASK_NORELINK))
+	if (at_crosshair)
+	{
+		crosshair_trace_waypoints(pl);
+		wp = trace_ent;
+	}
+	string err = "";
+	if (start_wp_is_spawned && !start_wp_is_hardwired)
+		err = "can't hardwire while in the process of creating a special link";
+	else if (!wp)
+	{
+		if (at_crosshair)
+			err = "couldn't find any waypoint at crosshair";
+		else
+			err = "couldn't find any waypoint nearby";
+	}
+	else if (wp.wpflags & WPFLAGMASK_NORELINK)
+		err = "can't hardwire a waypoint with special links";
+
+	if (err == "")
 	{
 		start_wp_is_hardwired = true;
 		start_wp_is_spawned = true;
 		start_wp_origin = wp.origin;
 		pl.wp_locked = wp;
-		LOG_INFOF("^x80fNearest waypoint %s marked as hardwired link origin.\n", vtos(wp.origin));
+		LOG_INFOF("^x80fWaypoint %s marked as hardwired link origin.\n", vtos(wp.origin));
 	}
 	else
+	{
 		start_wp_is_hardwired = false;
+		LOG_INFO("Error: ", err, "\n");
+	}
 }
 
 void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp, bool is_support_wp)
