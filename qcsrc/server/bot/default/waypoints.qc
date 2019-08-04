@@ -504,6 +504,7 @@ void waypoint_clear_start_wp_globals(entity pl, bool warn)
 		LOG_INFO("^xf80Start waypoint has been cleared.\n");
 }
 
+void crosshair_trace_waypoints(entity pl);
 void waypoint_start_hardwiredlink(entity pl)
 {
 	entity wp = pl.nearestwaypoint;
@@ -532,14 +533,23 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	vector org = pl.origin;
 	if (at_crosshair)
 	{
-		crosshair_trace(pl);
-		org = trace_endpos - eZ * PL_MIN_CONST.z;
+		crosshair_trace_waypoints(pl);
+		org = trace_endpos;
+		if (!trace_ent)
+			org.z -= PL_MIN_CONST.z;
 		if (!(start_wp_is_hardwired || start_wp_is_support))
 			IL_EACH(g_jumppads, boxesoverlap(org + PL_MIN_CONST, org + PL_MAX_CONST, it.absmin, it.absmax),
 			{
 				jp = it;
 				break;
 			});
+		if (!jp && !start_wp_is_spawned && trace_ent)
+		{
+			if (trace_ent.wpflags & (WAYPOINTFLAG_JUMP))
+				is_jump_wp = true;
+			else if (trace_ent.wpflags & (WAYPOINTFLAG_SUPPORT))
+				is_support_wp = true;
+		}
 	}
 	if (jp || is_jump_wp || is_support_wp)
 	{
@@ -2030,15 +2040,18 @@ void crosshair_trace_waypoints(entity pl)
 			setsize(it, '-16 -16 -16', '16 16 16');
 	});
 
-	crosshair_trace(pl);
+	WarpZone_crosshair_trace(pl);
 
 	IL_EACH(g_waypoints, true, {
 		it.solid = SOLID_TRIGGER;
 		if (!it.wpisbox)
 			setsize(it, '0 0 0', '0 0 0');
 	});
+
 	if (trace_ent.classname != "waypoint")
 		trace_ent = NULL;
+	else if (!trace_ent.wpisbox)
+		trace_endpos = trace_ent.origin;
 }
 
 void botframe_showwaypointlinks()
