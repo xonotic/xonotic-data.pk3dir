@@ -761,14 +761,14 @@ spawnfunc(worldspawn)
 	// 63 testing
 	lightstyle(63, "a");
 
+	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
+
+	InitGameplayMode();
 	if(autocvar_g_campaign)
 		CampaignPreInit();
 
 	Map_MarkAsRecent(mapname);
 
-	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
-
-	InitGameplayMode();
 	static_init_late();
 	static_init_precache();
 	readlevelcvars();
