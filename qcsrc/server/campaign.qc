@@ -21,9 +21,11 @@ string campaign_index_var;
 
 float CampaignBailout(string s)
 {
+#if 0
 	cvar = cvar_normal;
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
+#endif
 	cvar_set("g_campaign", "0");
 	LOG_INFO("^4campaign initialization failed: ", s);
 	if(autocvar__campaign_testrun)
@@ -31,6 +33,7 @@ float CampaignBailout(string s)
 	return 1;
 }
 
+#if 0
 string cvar_campaignwrapper_list; // string of format ; var value; var value; var value;
 string cvar_string_campaignwrapper(string theCvar)
 {
@@ -57,6 +60,7 @@ void cvar_set_campaignwrapper(string theCvar, string theValue)
 	strunzone(s);
 	//print(cvar_campaignwrapper_list, "\n");
 }
+#endif
 
 float Campaign_Invalid()
 {
@@ -104,16 +108,36 @@ void CampaignPreInit()
 	cvar_set("sv_public", "0");
 	cvar_set("pausable", "1");
 
+#if 0
 	cvar_campaignwrapper_list = strzone(strcat("; ", campaign_mutators[0], "; "));
+#else
+	string cvar_campaignwrapper_list = strcat("; ", campaign_mutators[0], "; ");
+	int argc = tokenizebyseparator(cvar_campaignwrapper_list, "; ");
+	if(argc > 0)
+	{
+		for(int j = 0; j < argc; ++j)
+		{
+			string arg = argv(j);
+			if(arg == "") continue;
+			_MapInfo_Parse_Settemp(mapname, MAPINFO_SETTEMP_ACL_USER, 0, arg, 0); // no recursion!
+		}
+	}
+#endif
 
+#if 0
 	cvar = cvar_campaignwrapper;
 	cvar_string = cvar_string_campaignwrapper;
 	cvar_set = cvar_set_campaignwrapper;
-
 	cvar_set("g_campaign", "1");
 	cvar_set("g_dm", "0");
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[0]));
+#else
+	cvar_settemp("g_campaign", "1");
+	cvar_settemp("g_dm", "0");
+	cvar_settemp("skill", ftos(baseskill));
+	cvar_settemp("bot_number", ftos(campaign_bots[0]));
+#endif
 	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0]));
 
 	// copy sv_gravity cvar, as the engine needs it too (sorry, this will mess
