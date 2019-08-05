@@ -1095,7 +1095,7 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	if(trace_ent && IS_MONSTER(trace_ent))
 		reverse = true;
 
-	if(!allow_jumpoff)
+	if(!allow_jumpoff && IS_ONGROUND(this))
 	{
 		traceline(b, b - '0 0 32', MOVE_NORMAL, this);
 		if(trace_fraction == 1.0)
