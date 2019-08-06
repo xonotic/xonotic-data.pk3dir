@@ -272,7 +272,7 @@ void Net_TargetMusic()
 
 void Ent_TriggerMusic_Think(entity this)
 {
-	if(this.active == ACTIVE_NOT)
+	if(this.active == ACTIVE_NOT || intermission)
 	{
 		return;
 	}
