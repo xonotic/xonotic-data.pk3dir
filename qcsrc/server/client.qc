@@ -604,7 +604,7 @@ void PutPlayerInServer(entity this)
 		this.pauseregen_finished += f;
 	}
 
-	this.damageforcescale = 2;
+	this.damageforcescale = autocvar_g_player_damageforcescale;
 	this.death_time = 0;
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
