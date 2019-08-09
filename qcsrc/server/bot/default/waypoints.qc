@@ -260,6 +260,13 @@ vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 	return new_org;
 }
 
+void crosshair_trace_waypoints(entity pl);
+void waypoint_lock(entity pl)
+{
+	crosshair_trace_waypoints(pl);
+	pl.wp_locked = trace_ent;
+}
+
 bool waypoint_has_hardwiredlinks(entity wp)
 {
 	if (!wp)
@@ -504,7 +511,6 @@ void waypoint_clear_start_wp_globals(entity pl, bool warn)
 		LOG_INFO("^xf80Start waypoint has been cleared.\n");
 }
 
-void crosshair_trace_waypoints(entity pl);
 void waypoint_start_hardwiredlink(entity pl, bool at_crosshair)
 {
 	entity wp = pl.nearestwaypoint;
@@ -2087,8 +2093,6 @@ void botframe_showwaypointlinks()
 			it.wp_aimed = NULL;
 		if (wasfreed(it.wp_locked))
 			it.wp_locked = NULL;
-		if (PHYS_INPUT_BUTTON_USE(it))
-			it.wp_locked = it.wp_aimed;
 		entity head = it.wp_locked;
 		if (!head)
 			head = navigation_findnearestwaypoint(it, false);
