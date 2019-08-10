@@ -860,8 +860,14 @@ spawnfunc(worldspawn)
 					continue;
 				if(argv(0) == "cd")
 				{
+					string trackname = argv(2);
 					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:");
-					LOG_INFO("  cdtrack ", argv(2));
+					LOG_INFO("  cdtrack ", trackname);
+					if (cvar_value_issafe(trackname))
+					{
+						string newstuff = strcat(clientstuff, "cd loop \"", trackname, "\"\n");
+						strcpy(clientstuff, newstuff);
+					}
 				}
 				else if(argv(0) == "fog")
 				{
