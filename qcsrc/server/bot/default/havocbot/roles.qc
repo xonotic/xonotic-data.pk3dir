@@ -11,14 +11,6 @@
 #include "../bot.qh"
 #include "../navigation.qh"
 
-.float bot_ratingscale;
-.float bot_ratingscale_time;
-.float max_armorvalue;
-.float havocbot_role_timeout;
-
-.void(entity this) havocbot_previous_role;
-.void(entity this) havocbot_role;
-
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius)
 {
 	// rate waypoints only if there's no alternative goal
@@ -111,8 +103,6 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
-	float rating;
-	vector o;
 	ratingscale = ratingscale * 0.0001;
 
 	IL_EACH(g_items, it.bot_pickup,
@@ -144,7 +134,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 			it.bot_pickup_respawning = true;
 		}
-		o = (it.absmin + it.absmax) * 0.5;
+		vector o = (it.absmin + it.absmax) * 0.5;
 		if(vdist(o - org, >, sradius) || (it == this.ignoregoal && time < this.ignoregoaltime) )
 			continue;
 
@@ -175,25 +165,23 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 		it.bot_ratingscale_time = time;
 		it.bot_ratingscale = ratingscale;
-		rating = it.bot_pickupevalfunc(this, it);
+		float rating = it.bot_pickupevalfunc(this, it);
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
 	});
 }
 
-#define BOT_RATING_ENEMY 2500
 void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius)
 {
 	if (autocvar_bot_nofire)
 		return;
 
 	// don't chase players if we're under water
-	if(this.waterlevel>WATERLEVEL_WETFEET)
+	if(this.waterlevel > WATERLEVEL_WETFEET)
 		return;
 
 	ratingscale = ratingscale * 0.0001;
 
-	float t;
 	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), {
 		// TODO: Merge this logic with the bot_shouldattack function
 		if(vdist(it.origin - org, <, 100) || vdist(it.origin - org, >, sradius))
@@ -208,7 +196,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 			continue;
 		*/
 
-		t = ((GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR)) - (GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR))) / 150;
+		float t = ((GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR)) - (GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR))) / 150;
 		t = bound(0, 1 + t, 3);
 		if (skill > 3)
 		{
