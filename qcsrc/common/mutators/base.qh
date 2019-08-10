@@ -171,7 +171,8 @@ void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 .bool m_added;
 
-#define MUTATOR_IS_ENABLED(this) MUTATOR_##this.mutatorcheck()
+#define _MUTATOR_IS_ENABLED(this) this.mutatorcheck()
+#define MUTATOR_IS_ENABLED(this) _MUTATOR_IS_ENABLED(MUTATOR_##this)
 
 #ifdef GAMEQC
 /** server mutators activate corresponding client mutators for all clients */
@@ -259,15 +260,15 @@ void Mutator_Remove(Mutator mut)
 }
 
 #define REGISTER_MUTATOR(id, dependence) \
-    bool MUTATORFUNCTION_##id##_hooks(int mode) { return = false; } \
-    bool MUTATORFUNCTION_##id(int mode) { \
+    bool MUTATORFUNC_##id##_hooks(int mode) { return = false; } \
+    bool MUTATORFUNC_##id(int mode) { \
         return = false; \
-        bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
+        bool ret = MUTATORFUNC_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNC_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
-    ACCUMULATE bool MUTATORFUNCTION_##id(int mode)
+    ACCUMULATE bool MUTATORFUNC_##id(int mode)
 
 STATIC_INIT(Mutators) {
     RegisterHooks();
@@ -276,14 +277,14 @@ STATIC_INIT(Mutators) {
 }
 
 STATIC_INIT_LATE(Mutators) {
-    FOREACH(Mutators, it.mutatorcheck(), Mutator_Add(it));
+    FOREACH(Mutators, _MUTATOR_IS_ENABLED(it), Mutator_Add(it));
 }
 
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)
 #define MUTATOR_ONREMOVE                if (mode == MUTATOR_REMOVING)
 #define MUTATOR_ONROLLBACK_OR_REMOVE    if (mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
 
-#define MUTATOR_STATIC() MACRO_BEGIN { \
+#define MUTATOR_STATIC() MACRO_BEGIN \
     MUTATOR_ONADD { \
         /* game loads at time 1 */ \
         if (time > 1) { \
@@ -294,16 +295,16 @@ STATIC_INIT_LATE(Mutators) {
 		LOG_INFO("This is a game type and it cannot be removed at runtime."); \
 		return -1; \
 	} \
-} MACRO_END
+MACRO_END
 
 #define MUTATOR_ADD(name)               Mutator_Add(MUTATOR_##name)
 #define MUTATOR_REMOVE(name)            Mutator_Remove(MUTATOR_##name)
 #define MUTATOR_RETURNVALUE             CallbackChain_ReturnValue
 
 #define _MUTATOR_CALLBACK(name, func) \
-    Callback CALLBACK_##name; \
+    Callback CB_##name; \
     bool func(); \
-    ACCUMULATE void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
+    ACCUMULATE void RegisterCallbacks() { CB_##name = NEW(Callback, func); }
 
 #define MUTATOR_HOOKFUNCTION(...) \
     EVAL_MUTATOR_HOOKFUNCTION(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
@@ -314,20 +315,26 @@ STATIC_INIT_LATE(Mutators) {
 
 #define MUTATOR_HOOKFUNCTION_3(mut, cb, order) \
     _MUTATOR_CALLBACK(mut##_##cb, mut##_##cb) \
-    ACCUMULATE bool MUTATORFUNCTION_##mut##_hooks(int mode) { MUTATOR_HOOK(cb, mut##_##cb, order); } \
+    ACCUMULATE bool MUTATORFUNC_##mut##_hooks(int mode) { MUTATOR_HOOK(cb, mut##_##cb, order); } \
     bool mut##_##cb() { return = false; } \
     ACCUMULATE bool mut##_##cb()
 
-#define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN {                     \
-    MUTATOR_ONADD {                                                     \
-        if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
-            LOG_INFO("HOOK FAILED: ", #cb, ":", #func);                 \
-            return true;                                                \
-        }                                                               \
-    }                                                                   \
-    MUTATOR_ONROLLBACK_OR_REMOVE {                                      \
-        CallbackChain_Remove(HOOK_##cb, CALLBACK_##func);               \
-    }                                                                   \
-} MACRO_END
+void _mutPrintFail(string cb, string func)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	LOG_INFO("HOOK FAILED: ", cb, ":", func);
+}
+
+#define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN \
+    MUTATOR_ONADD { \
+        if (!CallbackChain_Add(HOOK_##cb, CB_##func, order)) { \
+            _mutPrintFail(#cb, #func); \
+            return true; \
+        } \
+    } \
+    MUTATOR_ONROLLBACK_OR_REMOVE { \
+        CallbackChain_Remove(HOOK_##cb, CB_##func); \
+    } \
+MACRO_END
 
 #include "events.qh"

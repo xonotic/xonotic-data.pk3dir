@@ -2,7 +2,7 @@
 
 CLASS(Blaster, Weapon)
 /* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
-/* ammotype  */ //ATTRIB(Blaster, ammo_type, int, RESOURCE_NONE);
+/* ammotype  */ //ATTRIB(Blaster, ammo_type, int, RES_NONE);
 /* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
@@ -50,7 +50,8 @@ SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER)
 
 CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
-OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+OffhandBlaster OFFHAND_BLASTER;
+STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
 
 #ifdef SVQC
 .float blaster_damage;

@@ -5632,7 +5632,7 @@ effect tr_hagar
 	trailspacing 16
 	underwater
 	velocityjitter 16 16 16
-effect damage_laser
+effect damage_blaster
 	type smoke
 	airfriction -0.350000
 	alpha 128 16 128
@@ -5667,7 +5667,7 @@ effect damage_shotgun
 	originjitter 1 1 1
 	size 8 16
 	tex 0 8
-effect damage_shotgun_alien
+effect alien_damage_shotgun
 	type blood
 	airfriction 1
 	alpha 256 256 64
@@ -5681,7 +5681,7 @@ effect damage_shotgun_alien
 	tex 24 32
 	velocityjitter 64 64 64
 	velocitymultiplier 5
-effect damage_shotgun_alien
+effect alien_damage_shotgun
 	type alphastatic
 	alpha 100 256 400
 	color 0x000000 0x204010
@@ -5689,7 +5689,7 @@ effect damage_shotgun_alien
 	originjitter 1 1 1
 	size 8 16
 	tex 0 8
-effect damage_shotgun_robot
+effect robot_damage_shotgun
 	type blood
 	airfriction 1
 	alpha 256 256 64
@@ -5703,7 +5703,7 @@ effect damage_shotgun_robot
 	tex 24 32
 	velocityjitter 64 64 64
 	velocitymultiplier 5
-effect damage_shotgun_robot
+effect robot_damage_shotgun
 	type alphastatic
 	alpha 100 256 400
 	color 0x000000 0x301860
@@ -5711,7 +5711,7 @@ effect damage_shotgun_robot
 	originjitter 1 1 1
 	size 8 16
 	tex 0 8
-effect damage_uzi
+effect damage_machinegun
 	type blood
 	airfriction 1
 	alpha 256 256 64
@@ -5725,14 +5725,14 @@ effect damage_uzi
 	tex 24 32
 	velocityjitter 32 32 32
 	velocitymultiplier 5
-effect damage_uzi
+effect damage_machinegun
 	type alphastatic
 	alpha 100 256 400
 	color 0x000000 0x420000
 	count 1
 	size 6 12
 	tex 0 8
-effect damage_uzi_alien
+effect alien_damage_machinegun
 	type blood
 	airfriction 1
 	alpha 256 256 64
@@ -5746,14 +5746,14 @@ effect damage_uzi_alien
 	tex 24 32
 	velocityjitter 32 32 32
 	velocitymultiplier 5
-effect damage_uzi_alien
+effect alien_damage_machinegun
 	type alphastatic
 	alpha 100 256 400
 	color 0x000000 0x204010
 	count 1
 	size 6 12
 	tex 0 8
-effect damage_uzi_robot
+effect robot_damage_machinegun
 	type blood
 	airfriction 1
 	alpha 256 256 64
@@ -5767,7 +5767,7 @@ effect damage_uzi_robot
 	tex 24 32
 	velocityjitter 32 32 32
 	velocitymultiplier 5
-effect damage_uzi_robot
+effect robot_damage_machinegun
 	type alphastatic
 	alpha 100 256 400
 	color 0x000000 0x301860
@@ -5798,7 +5798,7 @@ effect damage_minelayer
 	size 4 8
 	tex 0 8
 	velocityjitter 11 11 50
-effect damage_grenadelauncher
+effect damage_mortar
 	type smoke
 	alpha 512 64 1024
 	color 0x8f0d00 0xff5a00
@@ -5810,7 +5810,7 @@ effect damage_grenadelauncher
 	size 4 8
 	tex 48 55
 	velocityjitter 22 22 50
-effect damage_grenadelauncher
+effect damage_mortar
 	type alphastatic
 	alpha 128 32 128
 	color 0x000000 0x111111
@@ -5822,6 +5822,46 @@ effect damage_grenadelauncher
 	size 4 8
 	tex 0 8
 	velocityjitter 11 11 50
+effect damage_arc
+	type static
+	airfriction -0.650000
+	alpha 48 8 48
+	color 0x66ffff 0x2288ff
+	count 2
+	gravity -0.000100
+	liquidfriction 0.600000
+	notunderwater
+	originjitter 2 2 2
+	rotate 180 360 -30 30
+	sizeincrease -14
+	size 4 8
+	tex 47 47
+	velocityjitter 6 6 12
+effect damage_arc
+	type smoke
+	airfriction -0.500000
+	alpha 64 16 64
+	color 0x2244ff 0x002266
+	count 4
+	notunderwater
+	originjitter 3 3 3
+	rotate 0 180 -30 30
+	sizeincrease 10
+	size 3 6
+	tex 0 8
+	velocityjitter 0.3 0.3 0.5
+effect damage_arc
+	type spark
+	airfriction 1
+	alpha 768 64 256
+	bounce 1.500000
+	color 0x003090 0x00CCFF
+	count 0.500000
+	gravity 0.150000
+	liquidfriction 0.600000
+	size 1 1
+	tex 66 68
+	velocityjitter 24 24 24
 effect damage_electro
 	type static
 	airfriction -0.500000
@@ -5914,7 +5954,7 @@ effect damage_hlac
 	size 2 4
 	tex 0 8
 	velocityjitter 0.4 0.4 0.6
-effect damage_nex
+effect damage_vortex
 	type static
 	airfriction -0.500000
 	alpha 64 8 64
@@ -5928,7 +5968,7 @@ effect damage_nex
 	size 5 10
 	tex 47 47
 	velocityjitter 8 8 16
-effect damage_nex
+effect damage_vortex
 	type smoke
 	airfriction -0.350000
 	alpha 64 16 64
@@ -5940,7 +5980,7 @@ effect damage_nex
 	size 4 8
 	tex 0 8
 	velocityjitter 0.5 0.5 0.8
-effect damage_nex
+effect damage_vortex
 	type spark
 	airfriction 2
 	alpha 255 255 112
@@ -5953,7 +5993,7 @@ effect damage_nex
 	tex 41 41
 	velocityjitter 100 100 300
 	velocitymultiplier 3
-effect damage_minstanex
+effect damage_vaporizer
 	type static
 	airfriction -0.500000
 	alpha 64 8 64
@@ -5967,7 +6007,7 @@ effect damage_minstanex
 	size 5 10
 	tex 47 47
 	velocityjitter 8 8 16
-effect damage_minstanex
+effect damage_vaporizer
 	type smoke
 	airfriction -0.350000
 	alpha 64 16 64
@@ -5979,7 +6019,7 @@ effect damage_minstanex
 	size 4 8
 	tex 0 8
 	velocityjitter 0.5 0.5 0.8
-effect damage_minstanex
+effect damage_vaporizer
 	type spark
 	airfriction 2
 	alpha 255 255 112
@@ -6127,7 +6167,7 @@ effect damage_fireball
 	size 4 8
 	tex 0 8
 	velocityjitter 11 11 50
-effect damage_rocketlauncher
+effect damage_devastator
 	type smoke
 	alpha 512 64 1024
 	color 0x8f0c00 0xff2a00
@@ -6139,7 +6179,7 @@ effect damage_rocketlauncher
 	size 5 10
 	tex 48 55
 	velocityjitter 22 22 30
-effect damage_rocketlauncher
+effect damage_devastator
 	type alphastatic
 	alpha 128 32 128
 	color 0x000000 0x111111

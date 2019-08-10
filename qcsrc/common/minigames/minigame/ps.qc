@@ -1,5 +1,5 @@
 #include "ps.qh"
-REGISTER_MINIGAME(ps, "Peg Solitaire");
+REGISTER_MINIGAME(ps, _("Peg Solitaire"));
 
 const float PS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board
 const float PS_TURN_WIN   = 0x0200; // player has won
@@ -39,15 +39,19 @@ bool ps_tile_blacklisted(string tile)
 	int number = minigame_tile_number(tile);
 	int letter = minigame_tile_letter(tile);
 	if(letter < 2)
+	{
 		if(number < 2)
 			return true;
 		else if(number > PS_NUM_CNT - 3)
 			return true;
+	}
 	if(letter > PS_LET_CNT - 3)
+	{
 		if(number < 2)
 			return true;
 		else if(number > PS_NUM_CNT - 3)
 			return true;
+	}
 
 	return false;
 }
@@ -407,20 +411,20 @@ void ps_hud_board(vector pos, vector mySize)
 		vector winfs = hud_fontsize*2;
 		string remaining_text;
 		if(active_minigame.minigame_flags & PS_TURN_WIN)
-			remaining_text = "All pieces cleared!";
+			remaining_text = _("All pieces cleared!");
 		else
-			remaining_text = strcat("Remaining pieces: ", ftos(remaining));
+			remaining_text = strcat(_("Remaining pieces:"), " ", ftos(remaining));
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("Game over! %s", remaining_text),
+			strcat(_("Game over!"), " ", remaining_text),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("Game over! %s", remaining_text),
+			strcat(_("Game over!"), " ", remaining_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -528,7 +532,12 @@ int ps_client_event(entity minigame, string event, ...)
 		{
 			ps_set_curr_pos("");
 			ps_curr_piece = NULL;
-			minigame.message = ps_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, ps_turn_to_string(minigame.minigame_flags));
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
@@ -605,7 +614,7 @@ int ps_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = ps_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, ps_turn_to_string(sent.minigame_flags));
 					//if ( sent.minigame_flags & minigame_self.team )
 						//minigame_prompt();
 				}

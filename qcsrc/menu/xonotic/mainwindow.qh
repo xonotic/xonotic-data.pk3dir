@@ -10,6 +10,7 @@ CLASS(MainWindow, ModalController)
 	ATTRIB(MainWindow, mutatorsDialog, entity);
 	ATTRIB(MainWindow, mapInfoDialog, entity);
 	ATTRIB(MainWindow, userbindEditDialog, entity);
+	ATTRIB(MainWindow, bindingsResetDialog, entity);
 	ATTRIB(MainWindow, winnerDialog, entity);
 	ATTRIB(MainWindow, serverInfoDialog, entity);
 	ATTRIB(MainWindow, cvarsDialog, entity);

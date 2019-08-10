@@ -34,7 +34,7 @@ float PreviewExists(string name);
 vector Rotate(vector v, float a);
 
 
-#define IS_DEAD(s) (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : (GetResourceAmount((s), RESOURCE_HEALTH) <= 0))
+#define IS_DEAD(s) (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : (GetResource((s), RES_HEALTH) <= 0))
 
 
 // decolorizes and team colors the player name when needed
@@ -110,7 +110,7 @@ vector _drawpic_sz;
 float _drawpic_oldsz;
 string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
-	MACRO_BEGIN {\
+	MACRO_BEGIN \
 		_drawpic_imgsize = draw_getimagesize(pic);\
 		if(_drawpic_imgsize != '0 0 0') {\
 			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;\
@@ -127,35 +127,35 @@ string _drawpic_picpath;
 					drawpic(pos + eY * 0.5 * (_drawpic_oldsz - _drawpic_sz.y), pic, _drawpic_sz, color, theAlpha, drawflag);\
 			}\
 		}\
-	} MACRO_END
+	MACRO_END
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)\
-	MACRO_BEGIN {\
+	MACRO_BEGIN \
 		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
 		if(precache_pic(_drawpic_picpath) == "") {\
 			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		}\
 		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
 		_drawpic_picpath = string_null;\
-	} MACRO_END
+	MACRO_END
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)\
-	MACRO_BEGIN {\
+	MACRO_BEGIN \
 		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
 		if(precache_pic(_drawpic_picpath) == "") {\
 			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		}\
 		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
 		_drawpic_picpath = string_null;\
-	} MACRO_END
+	MACRO_END
 
 void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
 
 void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
 
-#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN {															\
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN															\
 	float textaspect, oldsz;																						\
 	vector dfs = drawfontscale; \
 	drawfontscale = '1 1 0'; \
@@ -170,7 +170,7 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theSc
 		sz.y = sz.x / textaspect; 																					\
 		pos.y += (oldsz - sz.y) * 0.5;																				\
 	}																												\
-} MACRO_END
+MACRO_END
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag);

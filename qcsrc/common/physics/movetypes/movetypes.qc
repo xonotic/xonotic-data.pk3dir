@@ -540,7 +540,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
+			LOG_DEBUG("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;
@@ -582,7 +582,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
+			LOG_DEBUG("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;

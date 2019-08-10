@@ -39,7 +39,10 @@ CLASS(XonoticGameSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5);
 	ATTRIB(XonoticGameSettingsTab, source, DataSource, NEW(SettingSource));
 	ATTRIB(XonoticGameSettingsTab, topicList, entity, NEW(XonoticRegisteredSettingsList, this.source));
-	ATTRIB(XonoticGameSettingsTab, currentPanel, entity, NEW(XonoticScrollPanel));
+	// XonoticScrollPanel disabled because it's broken, see https://gitlab.com/xonotic/xonotic-data.pk3dir/merge_requests/548
+	// It will probably require a different implementation since XonoticScrollPanel should be an instance of Container, not ListBox
+	//ATTRIB(XonoticGameSettingsTab, currentPanel, entity, NEW(XonoticScrollPanel));
+	ATTRIB(XonoticGameSettingsTab, currentPanel, entity, NEW(XonoticTab));
 	ATTRIB(XonoticGameSettingsTab, currentItem, entity);
 	METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this));
 	METHOD(XonoticGameSettingsTab, fill, void(entity this));

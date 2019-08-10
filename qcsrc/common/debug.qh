@@ -205,8 +205,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 		{
 			int bufhandle = stof(argv(1));
 			int string_index = stof(argv(2));
-			string s = bufstr_get(bufhandle, string_index);
-			LOG_INFOF("%s", s);
+			LOG_INFO(bufstr_get(bufhandle, string_index));
 			return;
 		}
 
@@ -407,7 +406,7 @@ CLASS(DebugText3d, Object)
 		CONSTRUCT(DebugText3d);
 		this.origin = pos;
 		this.message = strzone(msg);
-		SetResourceAmount(this, RESOURCE_HEALTH, align);
+		SetResource(this, RES_HEALTH, align);
 		this.hit_time = time;
 		this.fade_rate = fade_rate_;
 		this.velocity = vel;
@@ -432,7 +431,7 @@ CLASS(DebugText3d, Object)
 		if (screen_pos.z < 0) return; // behind camera
 
 		screen_pos.z = 0;
-		float align = GetResourceAmount(this, RESOURCE_HEALTH);
+		float align = GetResource(this, RES_HEALTH);
 		string msg;
 		vector msg_pos;
 

@@ -7,6 +7,7 @@
 REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 REGISTER_NET_TEMP(CLIENT_ENTCS)
 
+#ifdef CSQC
 /** True when private information such as origin is available */
 .bool m_entcs_private;
 
@@ -18,6 +19,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 /** True when a recent server sent origin has been received */
 .bool has_sv_origin;
+#endif
+.int sv_solid;
 
 #ifdef SVQC
 /*
@@ -36,14 +39,13 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 	void entcs_think(entity this);
 
-	void entcs_attach(entity e);
+	void entcs_attach(entity player);
 
-	void entcs_detach(entity e);
+	void entcs_detach(entity player);
 
 	.int m_forceupdate;
 
-/** Force an origin update, for player sounds */
-	#define entcs_force_origin(e) (CS(e).entcs.m_forceupdate = BIT(2))
+	void entcs_force_origin(entity player);
 
 #endif
 
@@ -68,11 +70,21 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
      * @param i zero indexed player
      */
     .int frags;
-	bool entcs_IsSpectating(int i)
+	const int ENTCS_SPEC_PURE = 1; // real spectator
+	const int ENTCS_SPEC_IN_SCOREBOARD = 2; // spectator but still in game (can be in a team)
+	#define entcs_IsSpectating(i) boolean(entcs_GetSpecState(i))
+
+	int entcs_GetSpecState(int i)
 	{
 		bool unconnected = !playerslots[i].gotscores;
 		entity e = entcs_receiver(i);
-		return unconnected || ((e) ? e.frags : stof(getplayerkeyvalue(i, "frags"))) == FRAGS_SPECTATOR;
+		int fr = ((e) ? e.frags : stof(getplayerkeyvalue(i, "frags")));
+		if (unconnected || fr == FRAGS_SPECTATOR)
+			return ENTCS_SPEC_PURE;
+		int sol = ((e) ? e.sv_solid : SOLID_NOT);
+		if (fr == FRAGS_PLAYER_OUT_OF_GAME && sol == SOLID_NOT)
+			return ENTCS_SPEC_IN_SCOREBOARD;
+		return 0;
 	}
 
 	/**
@@ -95,11 +107,10 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 	/**
 	* @param i zero indexed player
-	* @returns 0 if not teamplay | NUM_TEAM_##N | NUM_SPECTATOR
 	*/
 	int entcs_GetTeam(int i)
 	{
-		return entcs_IsSpectating(i) ? NUM_SPECTATOR : entcs_GetTeamColor(i);
+		return (entcs_GetSpecState(i) == ENTCS_SPEC_PURE) ? NUM_SPECTATOR : entcs_GetTeamColor(i);
 	}
 
 	/**

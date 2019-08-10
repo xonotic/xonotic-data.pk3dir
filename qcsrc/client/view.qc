@@ -76,54 +76,46 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	ret = ref_store = ref_store * (1 - frac) + (value) * frac;
 
 #define lowpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
-{ \
 	float __ignore; lowpass(value, frac, ref_store, __ignore); \
 	ret = ref_store = bound((value) - (limit), ref_store, (value) + (limit)); \
-} MACRO_END
+MACRO_END
 
 #define highpass(value, frac, ref_store, ret) MACRO_BEGIN \
-{ \
 	float __f = 0; lowpass(value, frac, ref_store, __f); \
 	ret = (value) - __f; \
-} MACRO_END
+MACRO_END
 
 #define highpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
-{ \
 	float __f = 0; lowpass_limited(value, frac, limit, ref_store, __f); \
 	ret = (value) - __f; \
-} MACRO_END
+MACRO_END
 
 #define lowpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
-{ \
 	lowpass(value.x, frac, ref_store.x, ref_out.x); \
 	lowpass(value.y, frac, ref_store.y, ref_out.y); \
-} MACRO_END
+MACRO_END
 
 #define highpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
-{ \
 	highpass(value.x, frac, ref_store.x, ref_out.x); \
 	highpass(value.y, frac, ref_store.y, ref_out.y); \
-} MACRO_END
+MACRO_END
 
 #define highpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
 	highpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
 	highpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-} MACRO_END
+MACRO_END
 
 #define lowpass3(value, frac, ref_store, ref_out) MACRO_BEGIN \
-{ \
 	lowpass(value.x, frac, ref_store.x, ref_out.x); \
 	lowpass(value.y, frac, ref_store.y, ref_out.y); \
 	lowpass(value.z, frac, ref_store.z, ref_out.z); \
-} MACRO_END
+MACRO_END
 
 #define highpass3(value, frac, ref_store, ref_out) MACRO_BEGIN \
-{ \
 	highpass(value.x, frac, ref_store.x, ref_out.x); \
 	highpass(value.y, frac, ref_store.y, ref_out.y); \
 	highpass(value.z, frac, ref_store.z, ref_out.z); \
-} MACRO_END
+MACRO_END
 
 void calc_followmodel_ofs(entity view)
 {
@@ -400,86 +392,6 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
-STATIC_INIT(Porto)
-{
-	entity e = new_pure(porto);
-	e.draw = Porto_Draw;
-	IL_PUSH(g_drawables, e);
-	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-}
-
-const int polyline_length = 16;
-.vector polyline[polyline_length];
-void Porto_Draw(entity this)
-{
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		entity wepent = viewmodels[slot];
-
-		if (wepent.activeweapon != WEP_PORTO) continue;
-		if (spectatee_status) continue;
-		if (WEP_CVAR(porto, secondary)) continue;
-		if (intermission == 1) continue;
-		if (intermission == 2) continue;
-		if (STAT(HEALTH) <= 0) continue;
-
-		vector pos = view_origin;
-		vector dir = view_forward;
-		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
-		pos += v_right * -wepent.movedir.y
-			+  v_up * wepent.movedir.z;
-
-		if (wepent.angles_held_status)
-		{
-			makevectors(wepent.angles_held);
-			dir = v_forward;
-		}
-
-		wepent.polyline[0] = pos;
-
-		int portal_number = 0, portal1_idx = 1, portal_max = 2;
-		int n = 1 + 2;  // 2 lines == 3 points
-		for (int idx = 0; idx < n && idx < polyline_length - 1; )
-		{
-			traceline(pos, pos + 65536 * dir, true, this);
-			dir = reflect(dir, trace_plane_normal);
-			pos = trace_endpos;
-			wepent.polyline[++idx] = pos;
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
-			{
-				n += 1;
-				continue;
-			}
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-			{
-				n = max(2, idx);
-				break;
-			}
-			// check size
-			{
-				vector ang = vectoangles2(trace_plane_normal, dir);
-				ang.x = -ang.x;
-				makevectors(ang);
-				if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
-				{
-					n = max(2, idx);
-					break;
-				}
-			}
-			portal_number += 1;
-			if (portal_number >= portal_max) break;
-			if (portal_number == 1) portal1_idx = idx;
-		}
-		for (int idx = 0; idx < n - 1; ++idx)
-		{
-			vector p = wepent.polyline[idx], q = wepent.polyline[idx + 1];
-			if (idx == 0) p -= view_up * 16;  // line from player
-			vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
-			Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
-		}
-	}
-}
-
 float drawtime;
 float avgspeed;
 vector GetCurrentFov(float fov)
@@ -687,6 +599,9 @@ float EnemyHitCheck()
 
 float TrueAimCheck(entity wepent)
 {
+	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
+		return SHOTTYPE_HITWORLD;
+	
 	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
 	vector mi, ma, dv;
@@ -700,12 +615,6 @@ float TrueAimCheck(entity wepent)
 
 	switch(wepent.activeweapon) // WEAPONTODO
 	{
-		case WEP_TUBA: // no aim
-		case WEP_PORTO: // shoots from eye
-		case WEP_NEXBALL: // shoots from eye
-		case WEP_HOOK: // no trueaim
-		case WEP_MORTAR: // toss curve
-			return SHOTTYPE_HITWORLD;
 		case WEP_VORTEX:
 		case WEP_OVERKILL_NEX:
 		case WEP_VAPORIZER:
@@ -1356,21 +1265,22 @@ void HUD_Crosshair(entity this)
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
-			MACRO_BEGIN { \
+			MACRO_BEGIN \
+				vector scaled_sz = sz * wcross_size; \
 				if(wcross_blur > 0) \
 				{ \
 					for(i = -2; i <= 2; ++i) \
 					for(j = -2; j <= 2; ++j) \
-					M(i,j,sz,wcross_name,wcross_alpha*0.04); \
+					M(i,j,sz,scaled_sz,wcross_name,wcross_alpha*0.04); \
 				} \
 				else \
 				{ \
-					M(0,0,sz,wcross_name,wcross_alpha); \
+					M(0,0,sz,scaled_sz,wcross_name,wcross_alpha); \
 				} \
-			} MACRO_END
+			MACRO_END
 
-#define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
-			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size.x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size.y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+#define CROSSHAIR_DRAW_SINGLE(i,j,sz,scaled_sz,wcross_name,wcross_alpha) \
+			drawpic(wcross_origin - ('0.5 0 0' * (scaled_sz.x + i * wcross_blur) + '0 0.5 0' * (scaled_sz.y + j * wcross_blur)), wcross_name, scaled_sz, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
 			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
@@ -1588,6 +1498,15 @@ void HUD_Mouse(entity player)
 	{
 		if(player.viewloc && (player.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			ViewLocation_Mouse(); // NOTE: doesn't use cursormode
+		return;
+	}
+
+	if (cursor_active == -1) // starting to display the cursor
+	{
+		// since HUD_Mouse is called by CSQC_UpdateView before CSQC_InputEvent,
+		// in the first frame mousepos is the mouse position of the last time
+		// the cursor was displayed, thus we ignore it to avoid a glictch
+		cursor_active = 1;
 		return;
 	}
 
@@ -2019,13 +1938,13 @@ void CSQC_UpdateView(entity this, float w, float h)
 	{
 		if(!minigame_wasactive)
 		{
-			localcmd("+button14\n");
+			localcmd("+button12\n");
 			minigame_wasactive = true;
 		}
 	}
 	else if(minigame_wasactive)
 	{
-		localcmd("-button14\n");
+		localcmd("-button12\n");
 		minigame_wasactive = false;
 	}
 
@@ -2186,7 +2105,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		R_EndPolygon();
 	}
 
-	if(autocvar_cl_reticle)
+	if(autocvar_cl_reticle && !MUTATOR_CALLHOOK(DrawReticle))
 	{
 		string reticle_image = string_null;
 		bool wep_zoomed = false;
