@@ -60,10 +60,10 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 	if(!teamplay)
 		return true;
 
-	// actually these variables hold the squared distances in order to optimize code
-	float friend_distance = FLOAT_MAX;
-	float enemy_distance = FLOAT_MAX;
-	float dist;
+	// these variables hold squared distances in order to optimize code
+	float friend_dist2 = FLOAT_MAX;
+	float enemy_dist2 = FLOAT_MAX;
+	float dist2;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !(IS_DEAD(it) || STAT(FROZEN, it)),
 	{
@@ -72,13 +72,13 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 			if (!IS_REAL_CLIENT(it))
 				continue;
 
-			dist = vlen2(it.origin - item_org);
-			if(dist > friend_distance)
+			dist2 = vlen2(it.origin - item_org);
+			if (dist2 > friend_dist2)
 				continue;
 
 			if(havocbot_goalrating_item_can_be_left_to_teammate(this, it, item))
 			{
-				friend_distance = dist;
+				friend_dist2 = dist2;
 				continue;
 			}
 		}
@@ -86,17 +86,17 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 		{
 			// If enemy only track distances
 			// TODO: track only if visible ?
-			dist = vlen2(it.origin - item_org);
-			if(dist < enemy_distance)
-				enemy_distance = dist;
+			dist2 = vlen2(it.origin - item_org);
+			if (dist2 < enemy_dist2)
+				enemy_dist2 = dist2;
 		}
 	});
 
 	// Rate the item only if no one needs it, or if an enemy is closer to it
-	dist = vlen2(item_org - org);
-	if ((enemy_distance < friend_distance && dist < enemy_distance) ||
-		(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ** 2) ||
-		(dist < friend_distance && dist < 200 ** 2))
+	dist2 = vlen2(item_org - org);
+	if ((enemy_dist2 < friend_dist2 && dist2 < enemy_dist2)
+		|| (friend_dist2 > autocvar_bot_ai_friends_aware_pickup_radius ** 2)
+		|| (dist2 < friend_dist2 && dist2 < 200 ** 2))
 		return true;
 	return false;
 };
