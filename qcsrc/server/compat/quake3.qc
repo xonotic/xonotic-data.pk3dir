@@ -7,6 +7,7 @@
 #include <common/t_items.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mapobjects/trigger/counter.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
 #include <common/weapons/_all.qh>
 
 //***********************
