@@ -40,6 +40,7 @@
 #include "../common/mapobjects/teleporters.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
 #include <common/mapobjects/trigger/counter.qh>
+#include <common/mapobjects/trigger/swamp.qh>
 
 #include "../common/vehicles/all.qh"
 
@@ -678,6 +679,9 @@ void PutPlayerInServer(entity this)
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
 	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
+	if(this.swampslug)
+		delete(this.swampslug);
+	this.in_swamp = false;
 	STAT(HUD, this) = HUD_NORMAL;
 
 	this.event_damage = PlayerDamage;
