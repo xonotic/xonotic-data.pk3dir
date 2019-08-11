@@ -950,7 +950,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					hitloc = nearest;
 
 					if(deathtype & WEP_BLASTER.m_id)
-						force *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
+						force.z *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
 
 					if(targ != directhitentity)
 					{
