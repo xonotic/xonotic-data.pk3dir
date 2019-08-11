@@ -171,7 +171,8 @@ void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 .bool m_added;
 
-#define MUTATOR_IS_ENABLED(this) MUTATOR_##this.mutatorcheck()
+#define _MUTATOR_IS_ENABLED(this) this.mutatorcheck()
+#define MUTATOR_IS_ENABLED(this) _MUTATOR_IS_ENABLED(MUTATOR_##this)
 
 #ifdef GAMEQC
 /** server mutators activate corresponding client mutators for all clients */
@@ -276,7 +277,7 @@ STATIC_INIT(Mutators) {
 }
 
 STATIC_INIT_LATE(Mutators) {
-    FOREACH(Mutators, it.mutatorcheck(), Mutator_Add(it));
+    FOREACH(Mutators, _MUTATOR_IS_ENABLED(it), Mutator_Add(it));
 }
 
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)

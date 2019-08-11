@@ -1,6 +1,8 @@
 #pragma once
 
 #include <common/mutators/base.qh>
+#include <server/command/sv_cmd.qh>
+
 int autocvar_g_freezetag_point_limit;
 int autocvar_g_freezetag_point_leadlimit;
 bool autocvar_g_freezetag_team_spawns;

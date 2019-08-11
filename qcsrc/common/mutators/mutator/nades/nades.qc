@@ -1031,7 +1031,7 @@ void nades_GiveBonus(entity player, float score)
 		if ( STAT(NADE_BONUS_SCORE, player) >= 1 )
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
-			play2(player, SND(KH_ALARM));
+			play2(player, SND(NADE_BONUS));
 			STAT(NADE_BONUS, player)++;
 			STAT(NADE_BONUS_SCORE, player) -= 1;
 		}

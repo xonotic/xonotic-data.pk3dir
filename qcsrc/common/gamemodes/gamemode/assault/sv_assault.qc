@@ -1,5 +1,7 @@
 #include "sv_assault.qh"
 
+#include <common/mapobjects/func/breakable.qh>
+
 .entity sprite;
 #define AS_ROUND_DELAY 5
 
@@ -337,7 +339,6 @@ bool destructible_heal(entity targ, entity inflictor, float amount, float limit)
 	return true;
 }
 
-spawnfunc(func_breakable);
 spawnfunc(func_assault_destructible)
 {
 	if (!g_assault) { delete(this); return; }
