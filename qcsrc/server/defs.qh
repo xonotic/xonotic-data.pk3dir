@@ -298,11 +298,6 @@ string matchid;
 
 bool radar_showennemies;
 
-#ifdef PROFILING
-float client_cefc_accumulator;
-float client_cefc_accumulatortime;
-#endif
-
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
 .int clip_load;

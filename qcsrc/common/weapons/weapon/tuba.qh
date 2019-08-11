@@ -51,3 +51,7 @@ classfield(Tuba) .float tuba_volume;
 classfield(Tuba) .float tuba_volume_initial;
 classfield(Tuba) .int tuba_instrument;
 #endif
+
+#ifdef SVQC
+bool W_Tuba_HasPlayed(entity pl, .entity weaponentity, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo);
+#endif

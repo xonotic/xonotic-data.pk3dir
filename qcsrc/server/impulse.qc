@@ -507,7 +507,7 @@ IMPULSE(waypoint_here_here)
 
 IMPULSE(waypoint_here_crosshair)
 {
-	WarpZone_crosshair_trace(this);
+	WarpZone_crosshair_trace_plusvisibletriggers(this);
 	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, trace_endpos, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at crosshair\n");
