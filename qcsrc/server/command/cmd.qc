@@ -270,6 +270,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 			sprint(caller, "   ^5symaxis get|set p1 p2\n");
 			sprint(caller, "   ^7 where p1 p2 ... pX are positions (\"x y z\", z can be omitted) that you know are perfectly symmetrical");
 			sprint(caller, "   ^7 so you can determine origin/axis of symmetry of maps without ctf flags or where flags aren't perfectly symmetrical\n");
+			sprint(caller, "  See 'wpeditor_menu' for a selectable list of various commands and useful settings to edit waypoints.\n");
 			return;
 		}
 	}

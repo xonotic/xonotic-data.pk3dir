@@ -122,6 +122,7 @@ void KeyBinds_Read()
 	KEYBIND_DEF("kill"                                  , _("respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
 	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
+	KEYBIND_DEF("wpeditor_menu"                         , _("waypoint editor menu"));
 	KEYBIND_DEF("+button8"                              , _("drag object"));
 	KEYBIND_EMPTY_LINE();
 
