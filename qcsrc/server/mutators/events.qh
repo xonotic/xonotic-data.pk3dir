@@ -1222,3 +1222,11 @@ MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);
     /**/                            o(int, MUTATOR_ARGV_0_int) \
     /**/
 MUTATOR_HOOKABLE(GetPlayerLimit, EV_GetPlayerLimit);
+
+/** include special item codes for a death to the game log */
+#define EV_LogDeath_AppendItemCodes(i, o) \
+    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
+    /** item codes */     i(string, MUTATOR_ARGV_1_string) \
+    /**/                  o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(LogDeath_AppendItemCodes, EV_LogDeath_AppendItemCodes);

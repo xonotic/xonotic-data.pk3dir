@@ -74,8 +74,6 @@ void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity wea
 		UpdateFrags(attacker, f);
 }
 
-.entity kh_next;
-
 string AppendItemcodes(string s, entity player)
 {
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -91,12 +89,11 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
 		s = strcat(s, "I");
-	if(player.flagcarried != NULL)
-		s = strcat(s, "F");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
-	if(player.kh_next)
-		s = strcat(s, "K");
+	// TODO: include these codes as a flag on the item itself
+	MUTATOR_CALLHOOK(LogDeath_AppendItemCodes, player, s);
+	s = M_ARGV(1, string);
 	return s;
 }
 

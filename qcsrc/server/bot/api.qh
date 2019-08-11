@@ -15,9 +15,6 @@ const int WAYPOINTFLAG_DEAD_END = BIT(16);  // Useless WP detection temporary fl
 const int WAYPOINTFLAG_LADDER = BIT(15);
 const int WAYPOINTFLAG_JUMP = BIT(14);
 
-entity kh_worldkeylist;
-.entity kh_worldkeynext;
-
 float bot_custom_weapon;
 float bot_weapons_close[Weapons_MAX];
 float bot_weapons_far[Weapons_MAX];

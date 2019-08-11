@@ -61,8 +61,6 @@ int kh_Team_ByID(int t)
 	return 0;
 }
 
-//entity kh_worldkeylist;
-.entity kh_worldkeynext;
 entity kh_controller;
 //bool kh_tracking_enabled;
 int kh_teams;
@@ -1291,6 +1289,13 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 		bot.havocbot_role = havocbot_role_kh_freelancer;
 
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(kh, LogDeath_AppendItemCodes)
+{
+	entity player = M_ARGV(0, entity);
+	if(player.kh_next)
+		M_ARGV(1, string) = strcat(M_ARGV(1, string), "K"); // item codes
 }
 
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
