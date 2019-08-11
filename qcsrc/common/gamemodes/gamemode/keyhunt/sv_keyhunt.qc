@@ -23,6 +23,7 @@ float autocvar_g_balance_keyhunt_throwvelocity;
 int autocvar_g_keyhunt_teams_override;
 
 // #define KH_PLAYER_USE_ATTACHMENT
+// TODO? no model exists for this
 // #define KH_PLAYER_USE_CARRIEDMODEL
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
