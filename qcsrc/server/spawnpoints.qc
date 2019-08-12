@@ -262,7 +262,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 			}
 		}
 
-		if(!found)
+		if(!found && !g_cts)
 		{
 			LOG_TRACE("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target);
 			return '-1 0 0';
