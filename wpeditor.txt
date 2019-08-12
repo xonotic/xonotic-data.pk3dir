@@ -11,7 +11,7 @@
 "Lock/Unlock"                "wpeditor lock"
 "Relink all"                 "wpeditor relinkall"
 "Find unreachable"           "wpeditor unreachable"
-"Show help in console"       "wpeditor"
+"Show help in console"       "cmd help wpeditor"
 "Settings"
 	"Waypoint editor"             "toggle g_waypointeditor"
 	"On screen console messages"  "toggle con_notify 4 0"
