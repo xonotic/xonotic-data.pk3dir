@@ -927,6 +927,9 @@ void Item_Touch(entity this, entity toucher)
 
 LABEL(pickup)
 
+	if(this.target && this.target != "" && this.target != "###item###") // defrag support
+		SUB_UseTargets(this, toucher, NULL);
+
 	STAT(LAST_PICKUP, toucher) = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
@@ -1314,7 +1317,11 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
 			|| (itemid & (IT_KEY1 | IT_KEY2))
-		) this.target = "###item###"; // for finding the nearest item using findnearest
+		) 
+		{
+			if(!this.target || this.target == "")
+				this.target = "###item###"; // for finding the nearest item using findnearest
+		}
 
 		Item_ItemsTime_SetTime(this, 0);
 	}
