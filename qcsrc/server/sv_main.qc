@@ -30,7 +30,7 @@
 
 void CreatureFrame_hotliquids(entity this)
 {
-	if (this.dmgtime > time)
+	if (this.dmgtime >= time)
 	{
 		return;
 	}
