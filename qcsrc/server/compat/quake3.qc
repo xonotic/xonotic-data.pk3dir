@@ -215,6 +215,57 @@ spawnfunc(target_fragsFilter)
 	this.use = fragsfilter_use;
 }
 
+// rough implementation of target_speed
+const int TSPEED_PERCENTAGE = BIT(0);
+const int TSPEED_ADD = BIT(1);
+const int TSPEED_PLUSX = BIT(2);
+const int TSPEED_MINUSX = BIT(3);
+const int TSPEED_PLUSY = BIT(4);
+const int TSPEED_MINUSY = BIT(5);
+const int TSPEED_PLUSZ = BIT(6);
+const int TSPEED_MINUSZ = BIT(7);
+const int TSPEED_LAUNCHER = BIT(8);
+// .speed .targetname
+
+float target_speed_getspeed(bool plusflag, int spflag, float vel, float spd)
+{
+	if(!plusflag)
+		spd = -spd;
+	if(spflag & TSPEED_ADD)
+		return vel + spd;
+	else if(spflag & TSPEED_PERCENTAGE)
+		return vel / spd;
+	else
+		return spd;
+}
+
+void target_speed_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+
+	bool launcher = (this.spawnflags & TSPEED_LAUNCHER);
+
+#define HAVE_ONE(flg, plusflg, minusflg) (((flg & plusflg) && !(flg & minusflg)) || ((flg & minusflg) && !(flg & plusflg)))
+	if(HAVE_ONE(this.spawnflags, TSPEED_PLUSX, TSPEED_MINUSX) && (actor.velocity_x || launcher))
+		actor.velocity_x = target_speed_getspeed((this.spawnflags & TSPEED_PLUSX), this.spawnflags, actor.velocity_x, this.speed);
+	if(HAVE_ONE(this.spawnflags, TSPEED_PLUSY, TSPEED_MINUSY) && (actor.velocity_y || launcher))
+		actor.velocity_y = target_speed_getspeed((this.spawnflags & TSPEED_PLUSY), this.spawnflags, actor.velocity_y, this.speed);
+	if(HAVE_ONE(this.spawnflags, TSPEED_PLUSZ, TSPEED_MINUSZ) && (actor.velocity_z || launcher))
+		actor.velocity_z = target_speed_getspeed((this.spawnflags & TSPEED_PLUSZ), this.spawnflags, actor.velocity_z, this.speed);
+	actor.oldvelocity = actor.velocity; // even if speed isn't changed, don't do fall damage?
+#undef HAVE_ONE
+}
+
+spawnfunc(target_speed)
+{
+	if(!g_cts) { delete(this); return; }
+
+	if(!this.speed)
+		this.speed = 100;
+	this.use = target_speed_use;
+}
+
 //spawnfunc(item_flight)       /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
