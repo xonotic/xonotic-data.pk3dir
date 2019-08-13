@@ -102,5 +102,4 @@ float turret_count;
 vector tvt_thadv; // turret head angle diff vector, updated by a successful call to turret_validate_target
 vector tvt_tadv; // turret angle diff vector, updated by a successful call to turret_validate_target
 float tvt_thadf; // turret head angle diff float, updated by a successful call to turret_validate_target
-float tvt_tadf; // turret angle diff float, updated by a successful call to turret_validate_target
 float tvt_dist; // turret distance, updated by a successful call to turret_validate_target
