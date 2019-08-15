@@ -641,6 +641,10 @@ void PutPlayerInServer(entity this)
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
 
+	// TODO: we can't set these in the PlayerSpawn hook since the target code is called before it!
+	STAT(BUFFS, this) = 0;
+	STAT(BUFF_TIME, this) = 0;
+
 	this.air_finished = time + 12;
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
