@@ -105,7 +105,12 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
 
-	me.gotoRC(me, 15, 0);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Weapon respawn time:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 15, 0.5, "g_pickup_respawntime_weapon",
+			_("Fix the weapon respawn time (default 10)")));
+
+	me.gotoRC(me, 16, 0);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
 		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticTextSlider(string_null));
 			e.addValue(e, _("Default"), "0");
@@ -140,23 +145,30 @@ void XonoticServerCreateTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "bot_number", 0, -1);
 
-	me.gotoRC(me, me.rows - 3.8, 0);
+	/*me.gotoRC(me, me.rows - 3.8, 0);
 		me.TD(me, 1, 3, e0 = makeXonoticTextLabel(0.5, string_null));
 			e0.textEntity = main.mutatorsDialog;
 			e0.allowCut = 1;
 			//e0.allowWrap = 1;
+	*/
 
 	// mapListBox is in the right column but the ref is needed for mutators dialog here
 	me.mapListBox = makeXonoticMapList();
 	// here we use the following line instead of me.TR(me) for better visual spacing;
 	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
+	
 	me.gotoRC(me, me.rows - 2.5, 0);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Mutators..."), '0 0 0',
+		// me.TDempty(me, 0.5);
+		me.TD(me, 1, 1, e = makeXonoticButton_T(_("Mutators"), '0 0 0',
 			_("Mutators and weapon arenas")));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
 			main.mutatorsDialog.refilterEntity = me.mapListBox;
+
+		me.TD(me, 1, 2, e0 = makeXonoticTextLabel(0.5, string_null));
+			e0.textEntity = main.mutatorsDialog;
+			e0.allowCut = 1;
+			//e0.allowWrap = 1;
 
 	// The right half begins here
 
