@@ -234,10 +234,13 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_weapon_stay", _("Weapons stay"),
 			_("Weapons stay after they are picked up")));
 			setDependentWeird(e, checkCompatibility_weaponstay);
+
 	me.TR(me);
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
+	
+	//Weapon arena
 	string weaponarena_tooltip = strzone(_("Players will be given a set of weapons at spawn as well as unlimited ammo, without weapon pickups"));
 	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon arenas:")));
@@ -267,17 +270,38 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "most", _("Most weapons"), weaponarena_tooltip));
 			e.cvarOffValue = "0";
+
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "all", _("All weapons"), weaponarena_tooltip));
 			e.cvarOffValue = "0";
+
+	//----------------------------------
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
+	
+	//InstaGib
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_instagib", "1", _("InstaGib"),
 			_("Players will be given only one weapon, which can instantly kill the opponent with a single shot. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode does not inflict any damage but is good for doing trickjumps.")));
 			e.cvarOffValue = "0";
+
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 1.6, e = makeXonoticCheckBox_T(0, "g_instagib_unlimited_ammo", _("Inifinity ammo"),
+			_("Add infinity ammo for mode")));
+			setDependent(e, "g_instagib", 1, 1);
+
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Reload time: ")));
+			setDependent(e, "g_instagib", 1, 1);
+		me.TD(me, 1, 1.6, e = makeXonoticSlider_T(0.3, 2.3, 0.1, "g_instagib_weapon_animtime",
+			_("Set weapon reloading time (default 0.3)")));
+			setDependent(e, "g_instagib", 1, 1);
+
+	//NIX
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_nix", "1", _("NIX"),
@@ -285,9 +309,11 @@ void XonoticMutatorsDialog_fill(entity me)
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1.6, e = makeXonoticCheckBox_T(0, "g_nix_with_blaster", _("with blaster"),
+		me.TD(me, 1, 1.6, e = makeXonoticCheckBox_T(0, "g_nix_with_blaster", _("With blaster"),
 			_("Always carry the blaster as an additional weapon in Nix")));
 			setDependent(e, "g_nix", 1, 1);
+	
+	//No start weapons
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_balance_blaster_weaponstartoverride", "0", _("No start weapons"), "-"));

@@ -14,8 +14,11 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
+bool autocvar_g_instagib_unlimited_ammo;
 int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
+float autocvar_g_instagib_default_weapon_animtime;
+float autocvar_g_instagib_weapon_animtime;
 
 IntrusiveList g_instagib_items;
 STATIC_INIT(instagib)
@@ -154,6 +157,12 @@ void instagib_ammocheck(entity this)
 		}
 	}
 	this.instagib_nextthink = time + 1;
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, ClientDisconnect)
+{
+	//Restore animtime
+	cvar_set("g_balance_vaporizer_primary_animtime", ftos(autocvar_g_instagib_default_weapon_animtime));
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
@@ -388,6 +397,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 {
+
 	start_health       = warmup_start_health       = 100;
 	start_armorvalue   = warmup_start_armorvalue   = 0;
 
@@ -400,6 +410,15 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 
 	start_weapons = warmup_start_weapons = WEPSET(VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
+
+	//Unlimited ammo cvar for instagib
+	if (autocvar_g_instagib_unlimited_ammo) {
+		start_items |= IT_UNLIMITED_AMMO;
+	}
+
+	//Save and replace animtime
+	autocvar_g_instagib_default_weapon_animtime = cvar("g_balance_vaporizer_primary_animtime");
+	cvar_set("g_balance_vaporizer_primary_animtime", ftos(autocvar_g_instagib_weapon_animtime));
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
@@ -456,7 +475,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item))
+	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item) && !autocvar_g_instagib_unlimited_ammo)
 	{
 		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;
@@ -472,6 +491,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return false;
 
 	float cells = GetResource(item, RES_CELLS);
+
 	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
 		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 
