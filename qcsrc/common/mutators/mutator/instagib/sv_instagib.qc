@@ -14,6 +14,7 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
+bool autocvar_g_instagib_unlimited_ammo;
 int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
@@ -400,6 +401,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 
 	start_weapons = warmup_start_weapons = WEPSET(VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
+
+	//Unlimited ammo cvar for instagib
+	if (autocvar_g_instagib_unlimited_ammo) {
+		start_items |= IT_UNLIMITED_AMMO;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
@@ -456,7 +462,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item))
+	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item) && !autocvar_g_instagib_unlimited_ammo)
 	{
 		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;
@@ -472,6 +478,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return false;
 
 	float cells = GetResource(item, RES_CELLS);
+
 	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
 		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 
