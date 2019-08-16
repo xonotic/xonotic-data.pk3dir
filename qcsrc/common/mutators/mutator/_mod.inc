@@ -36,6 +36,7 @@
 #include <common/mutators/mutator/stale_move_negation/_mod.inc>
 #include <common/mutators/mutator/superspec/_mod.inc>
 #include <common/mutators/mutator/touchexplode/_mod.inc>
+#include <common/mutators/mutator/unlimitedammo/_mod.inc>
 #include <common/mutators/mutator/vampire/_mod.inc>
 #include <common/mutators/mutator/vampirehook/_mod.inc>
 #include <common/mutators/mutator/walljump/_mod.inc>
