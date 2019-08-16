@@ -10,8 +10,15 @@
 REGISTER_NET_TEMP(casings)
 
 #ifdef SVQC
+
+.bool cvar_cl_casings;
+REPLICATE(cvar_cl_casings, bool, "cl_casings");
+
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
+	if (!(CS(casingowner).cvar_cl_casings))
+		return;
+
     entity wep = casingowner.(weaponentity);
     vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
