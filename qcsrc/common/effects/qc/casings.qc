@@ -136,8 +136,6 @@ NET_HANDLE(casings, bool isNew)
     ang_z = ReadByte() * 360 / 256;
     return = true;
 
-    if (!autocvar_cl_casings) return;
-
     Casing casing = RubbleNew("casing");
     casing.silent = (_state & 0x80);
     casing.state = (_state & 0x7F);
