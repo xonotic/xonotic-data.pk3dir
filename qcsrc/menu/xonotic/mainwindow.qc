@@ -49,7 +49,7 @@
 #include "dialog_credits.qh"
 #include "dialog_quit.qh"
 
-#include "dialog_disconnect.qc" //Including QH file breaking build, IDK why
+#include "dialog_disconnect.qh"
 
 
 
