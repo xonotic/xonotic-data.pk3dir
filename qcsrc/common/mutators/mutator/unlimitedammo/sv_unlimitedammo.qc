@@ -11,8 +11,10 @@ MUTATOR_HOOKFUNCTION(unlimitedammo, SetStartItems)
 MUTATOR_HOOKFUNCTION(unlimitedammo, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
+
 	//Check is item a loot and is item a weapon
-	if (Item_IsLoot(item) && autocvar_g_unlimitedammo_remove_loot && item.itemdef.instanceOfWeaponPickup) {
-		remove(item);
+	if (autocvar_g_unlimitedammo_remove_loot && Item_IsLoot(item) && item.itemdef.instanceOfWeaponPickup) {
+		// remove(item); //Hmm interesting, when use return true, weapon doesn't spawns, but if remove returning line, and uncomment this, it sends a lot of error when kill bot
+		return true;
 	}
 }
