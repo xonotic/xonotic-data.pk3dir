@@ -119,9 +119,10 @@ void relocate_spawnpoint(entity this)
     if (autocvar_r_showbboxes)
     {
         // show where spawnpoints point at too
-        makevectors(this.angles);
+        vector forward, right, up;
+        MAKE_VECTORS(this.angles, forward, right, up);
         entity e = new(info_player_foo);
-        setorigin(e, this.origin + v_forward * 24);
+        setorigin(e, this.origin + forward * 24);
         setsize(e, '-8 -8 -8', '8 8 8');
         e.solid = SOLID_TRIGGER;
     }

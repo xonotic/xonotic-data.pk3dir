@@ -38,6 +38,7 @@ QCCDEFS="${QCCDEFS[@]}"
 
 declare -a QCCFLAGS=(
     -std=gmqcc
+    -O3 # optimization to accept variable initialization inside `if (1)` blocks and avoid warnings
     -Wall -Werror
     -futf8
     -freturn-assignments

@@ -295,7 +295,7 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 			it.solid = SOLID_BBOX;
 		});
 		vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
-		MAKEVECTORS(makevectors, it.v_angle, forward, right, up);
+		MAKE_VECTORS(it.v_angle, forward, right, up);
 		vector pos = it.origin + it.view_ofs;
 		traceline(pos, pos + forward * max_shot_distance, MOVE_NORMAL, it);
 		FOREACH_ENTITY(true, {
