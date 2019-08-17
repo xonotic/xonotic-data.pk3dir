@@ -11,7 +11,8 @@ MUTATOR_HOOKFUNCTION(unlimitedammo, SetStartItems)
 MUTATOR_HOOKFUNCTION(unlimitedammo, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
-	if (Item_IsLoot(item) && autocvar_g_unlimitedammo_remove_loot) {
+	//Check is item a loot and is item a weapon
+	if (Item_IsLoot(item) && autocvar_g_unlimitedammo_remove_loot && item.itemdef.instanceOfWeaponPickup) {
 		remove(item);
 	}
 }
