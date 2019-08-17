@@ -4,6 +4,10 @@
 #include <common/util.qh>
 
 #ifdef GAMEQC
+#include <common/mutators/mutator/waypoints/all.qh>
+#endif
+
+#ifdef GAMEQC
 REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
 #endif
