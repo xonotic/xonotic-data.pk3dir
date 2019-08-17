@@ -35,6 +35,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 		P(class, prefix, delay, float, SEC) \
 		P(class, prefix, edgedamage, float, SEC) \
 		P(class, prefix, force, float, SEC) \
+		P(class, prefix, force_zscale, float, SEC) \
 		P(class, prefix, lifetime, float, SEC) \
 		P(class, prefix, radius, float, SEC) \
 		P(class, prefix, refire, float, SEC) \
