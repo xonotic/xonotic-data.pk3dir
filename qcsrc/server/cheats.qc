@@ -161,6 +161,8 @@ float CheatImpulse(entity this, int imp)
 			SetResource(this.personal, RES_HEALTH, max(1, GetResource(this, RES_HEALTH)));
 			SetResource(this.personal, RES_ARMOR, GetResource(this, RES_ARMOR));
 			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
+			STAT(BUFFS, this.personal) = STAT(BUFFS, this);
+			STAT(BUFF_TIME, this.personal) = STAT(BUFF_TIME, this);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
 			this.personal.pauserothealth_finished = this.pauserothealth_finished;
@@ -220,6 +222,8 @@ float CheatImpulse(entity this, int imp)
 				SetResource(this, RES_HEALTH, GetResource(this.personal, RES_HEALTH));
 				SetResource(this, RES_ARMOR, GetResource(this.personal, RES_ARMOR));
 				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
+				STAT(BUFFS, this) = STAT(BUFFS, this.personal);
+				STAT(BUFF_TIME, this) = STAT(BUFF_TIME, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
 				this.pauserothealth_finished = time + this.personal.pauserothealth_finished - this.personal.teleport_time;

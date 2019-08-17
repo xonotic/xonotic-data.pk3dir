@@ -7,6 +7,8 @@
 #include <common/t_items.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mapobjects/trigger/counter.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/notifications/all.qh>
 #include <common/weapons/_all.qh>
 
 //***********************
@@ -119,7 +121,16 @@ void target_init_use(entity this, entity actor, entity trigger)
 	{
 		actor.strength_finished = 0;
 		actor.invincible_finished = 0;
-		STAT(BUFFS, actor) = 0;
+		if(STAT(BUFFS, actor)) // TODO: make a dropbuffs function to handle this
+		{
+			int buffid = buff_FirstFromFlags(STAT(BUFFS, actor)).m_id;
+			Send_Notification(NOTIF_ONE, actor, MSG_MULTI, ITEM_BUFF_DROP, buffid);
+			sound(actor, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+			if(!IS_INDEPENDENT_PLAYER(actor))
+				Send_Notification(NOTIF_ALL_EXCEPT, actor, MSG_INFO, INFO_ITEM_BUFF_LOST, actor.netname, buffid);
+			STAT(BUFFS, actor) = 0;
+			STAT(BUFF_TIME, actor) = 0;
+		}
 	}
 
 	if (!(this.spawnflags & 16))
@@ -169,6 +180,12 @@ void target_give_init(entity this)
 			SetResourceExplicit(this, RES_ARMOR, 100);
 		else if (it.classname == "item_health_mega")
 			SetResourceExplicit(this, RES_HEALTH, 200);
+		else if (it.classname == "item_buff") {
+			entity buff = buff_FirstFromFlags(STAT(BUFFS, it));
+			this.netname = cons(this.netname, buff.netname);
+			STAT(BUFF_TIME, this) = it.count;
+		}
+
 		//remove(it); // removing ents in init functions causes havoc, workaround:
         setthink(it, SUB_Remove);
         it.nextthink = time;
