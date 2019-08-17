@@ -3,6 +3,7 @@
 #include <common/mutators/base.qh>
 #include <server/round_handler.qh>
 #include <server/miscfunctions.qh>
+#include <server/command/sv_cmd.qh>
 
 int autocvar_g_ca_point_limit;
 int autocvar_g_ca_point_leadlimit;

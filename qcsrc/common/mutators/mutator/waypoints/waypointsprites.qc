@@ -485,7 +485,7 @@ void Draw_WaypointSprite(entity this)
     if (autocvar_cl_hidewaypoints >= 2)
         return;
 
-    if (this.hideflags & 1 && autocvar_cl_hidewaypoints)
+    if ((this.hideflags & 1) && autocvar_cl_hidewaypoints)
         return; // fixed waypoint
 
     InterpolateOrigin_Do(this);

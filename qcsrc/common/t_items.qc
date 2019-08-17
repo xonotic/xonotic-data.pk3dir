@@ -927,6 +927,9 @@ void Item_Touch(entity this, entity toucher)
 
 LABEL(pickup)
 
+	if(this.target && this.target != "" && this.target != "###item###") // defrag support
+		SUB_UseTargets(this, toucher, NULL);
+
 	STAT(LAST_PICKUP, toucher) = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
@@ -1314,7 +1317,11 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
 			|| (itemid & (IT_KEY1 | IT_KEY2))
-		) this.target = "###item###"; // for finding the nearest item using findnearest
+		) 
+		{
+			if(!this.target || this.target == "")
+				this.target = "###item###"; // for finding the nearest item using findnearest
+		}
 
 		Item_ItemsTime_SetTime(this, 0);
 	}
@@ -1503,9 +1510,11 @@ spawnfunc(target_items)
 				FOREACH(Buffs, it != BUFF_Null,
 				{
 					s = Buff_UndeprecateName(argv(j));
-					if(s == it.m_name)
+					if(s == it.netname)
 					{
 						STAT(BUFFS, this) |= (it.m_itemid);
+						if(!STAT(BUFF_TIME, this))
+							STAT(BUFF_TIME, this) = it.m_time(it);
 						break;
 					}
 				});
@@ -1565,7 +1574,7 @@ spawnfunc(target_items)
 		if(GetResource(this, RES_FUEL) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_FUEL)), "fuel");
 		if(GetResource(this, RES_HEALTH) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_HEALTH)), "health");
 		if(GetResource(this, RES_ARMOR) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_ARMOR)), "armor");
-		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(BUFFS, this) & (it.m_itemid)), it.m_name));
+		FOREACH(Buffs, it != BUFF_Null && (STAT(BUFFS, this) & it.m_itemid), this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
 		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
 	}
 	this.netname = strzone(this.netname);
@@ -1615,28 +1624,28 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 bool GiveBuff(entity e, Buff thebuff, int op, int val)
 {
 	bool had_buff = (STAT(BUFFS, e) & thebuff.m_itemid);
-	switch(op)
+	switch (op)
 	{
 		case OP_SET:
-			if(val > 0)
-				STAT(BUFFS, e) |= thebuff.m_itemid;
-			else
-				STAT(BUFFS, e) &= ~thebuff.m_itemid;
+			STAT(BUFF_TIME, e) = val;
 			break;
 		case OP_MIN:
-		case OP_PLUS:
-			if(val > 0)
-				STAT(BUFFS, e) |= thebuff.m_itemid;
+			STAT(BUFF_TIME, e) = max(STAT(BUFF_TIME, e), val);
 			break;
 		case OP_MAX:
-			if(val <= 0)
-				STAT(BUFFS, e) &= ~thebuff.m_itemid;
+			STAT(BUFF_TIME, e) = min(STAT(BUFF_TIME, e), val);
+			break;
+		case OP_PLUS:
+			STAT(BUFF_TIME, e) += val;
 			break;
 		case OP_MINUS:
-			if(val > 0)
-				STAT(BUFFS, e) &= ~thebuff.m_itemid;
+			STAT(BUFF_TIME, e) -= val;
 			break;
 	}
+	if(STAT(BUFF_TIME, e) <= 0)
+		STAT(BUFFS, e) &= ~thebuff.m_itemid;
+	else
+		STAT(BUFFS, e) = thebuff.m_itemid; // NOTE: replaces any existing buffs on the player!
 	bool have_buff = (STAT(BUFFS, e) & thebuff.m_itemid);
 	return (had_buff != have_buff);
 }
@@ -1706,6 +1715,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	e.strength_finished = max(0, e.strength_finished - time);
 	e.invincible_finished = max(0, e.invincible_finished - time);
 	e.superweapons_finished = max(0, e.superweapons_finished - time);
+	STAT(BUFF_TIME, e) = max(0, STAT(BUFF_TIME, e) - time);
 
 	PREGIVE(e, items);
 	PREGIVE_WEAPONS(e);
@@ -1759,7 +1769,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_HEALTH, op, val);
 				got += GiveResourceValue(e, RES_ARMOR, op, val);
 			case "allweapons":
-				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED), got += GiveWeapon(e, it.m_id, op, val));
+				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)), got += GiveWeapon(e, it.m_id, op, val));
 			//case "allbuffs": // all buffs makes a player god, do not want!
 				//FOREACH(Buffs, it != BUFF_Null, got += GiveBuff(e, it.m_itemid, op, val));
 			case "allammo":
@@ -1820,7 +1830,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			default:
-				FOREACH(Buffs, it != BUFF_Null && Buff_UndeprecateName(cmd) == it.m_name,
+				FOREACH(Buffs, it != BUFF_Null && Buff_UndeprecateName(cmd) == it.netname,
 				{
 					got += GiveBuff(e, it, op, val);
 					break;
@@ -1858,7 +1868,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_RES_ROT(e, RES_HEALTH, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
 	if(e.superweapons_finished <= 0)
-		if(!g_weaponarena && STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS)
+		if(!g_weaponarena && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.strength_finished <= 0)
@@ -1873,6 +1883,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 		e.superweapons_finished = 0;
 	else
 		e.superweapons_finished += time;
+	if(STAT(BUFF_TIME, e) <= 0)
+		STAT(BUFF_TIME, e) = 0;
+	else
+		STAT(BUFF_TIME, e) += time;
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{

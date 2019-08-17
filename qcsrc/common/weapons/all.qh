@@ -319,7 +319,7 @@ STATIC_INIT(register_weapons_done)
     FOREACH(Weapons, true, {
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
-        if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
+        if (it.spawnflags & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
         if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)

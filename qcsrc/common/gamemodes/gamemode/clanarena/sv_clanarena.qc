@@ -505,3 +505,9 @@ MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 	// most weapons arena
 	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
 }
+
+MUTATOR_HOOKFUNCTION(ca, SV_ParseServerCommand)
+{
+	shuffleteams_on_reset_map = !allowed_to_spawn;
+	return false;
+}

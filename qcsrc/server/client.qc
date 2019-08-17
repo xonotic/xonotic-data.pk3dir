@@ -40,6 +40,7 @@
 #include "../common/mapobjects/teleporters.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
 #include <common/mapobjects/trigger/counter.qh>
+#include <common/mapobjects/trigger/swamp.qh>
 
 #include "../common/vehicles/all.qh"
 
@@ -604,7 +605,7 @@ void PutPlayerInServer(entity this)
 		this.pauseregen_finished += f;
 	}
 
-	this.damageforcescale = 2;
+	this.damageforcescale = autocvar_g_player_damageforcescale;
 	this.death_time = 0;
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
@@ -639,6 +640,10 @@ void PutPlayerInServer(entity this)
 	this.fire_endtime = -1;
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
+
+	// TODO: we can't set these in the PlayerSpawn hook since the target code is called before it!
+	STAT(BUFFS, this) = 0;
+	STAT(BUFF_TIME, this) = 0;
 
 	this.air_finished = time + 12;
 	this.waterlevel = WATERLEVEL_NONE;
@@ -678,6 +683,9 @@ void PutPlayerInServer(entity this)
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
 	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
+	if(this.swampslug)
+		delete(this.swampslug);
+	this.in_swamp = false;
 	STAT(HUD, this) = HUD_NORMAL;
 
 	this.event_damage = PlayerDamage;
@@ -1034,7 +1042,6 @@ string getwelcomemessage(entity this)
 
 	string versionmessage = GetClientVersionMessage(this);
 	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
-	s = strcat(s, "^8\nCurrent map: ^2", GetMapname(), "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
@@ -2045,11 +2052,20 @@ void PrintWelcomeMessage(entity this)
 	{
 		if(PHYS_INPUT_BUTTON_INFO(this)) // BUTTON_INFO hides initial MOTD
 			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(CS(this).motd_actived_time == -2 || IS_PLAYER(this) || IS_SPEC(this))
+		else if (CS(this).motd_actived_time == -2)
 		{
 			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+		}
+		else if (IS_PLAYER(this) || IS_SPEC(this))
+		{
+			// FIXME occasionally for some reason MOTD never goes away
+			// delay MOTD removal a little bit in the hope it fixes this bug
+			if (CS(this).motd_actived_time == -1) // MOTD marked to fade away as soon as client becomes player or spectator
+				CS(this).motd_actived_time = -(5 + floor(random() * 10)); // add small delay
+			else //if (CS(this).motd_actived_time < -2)
+				CS(this).motd_actived_time++;
 		}
 	}
 }
@@ -2393,11 +2409,11 @@ void PlayerPreThink (entity this)
 	if (this.netname == "" || this.netname != CS(this).netname_previous)
 	{
 		bool assume_unchanged = (CS(this).netname_previous == "");
-		if (autocvar_name_maxlength > 0 && strlennocol(this.netname) > autocvar_name_maxlength)
+		if (autocvar_sv_name_maxlength > 0 && strlennocol(this.netname) > autocvar_sv_name_maxlength)
 		{
-			int new_length = textLengthUpToLength(this.netname, autocvar_name_maxlength, strlennocol);
+			int new_length = textLengthUpToLength(this.netname, autocvar_sv_name_maxlength, strlennocol);
 			this.netname = strzone(strcat(substring(this.netname, 0, new_length), "^7"));
-			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_name_maxlength));
+			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_sv_name_maxlength));
 			assume_unchanged = false;
 			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 		}
