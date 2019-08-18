@@ -862,7 +862,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 }
 
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
-								float inflictorselfdamage, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
+								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
@@ -949,8 +949,10 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = force * (finaldmg / coredamage) * forceintensity;
 					hitloc = nearest;
 
-					if(deathtype & WEP_BLASTER.m_id)
-						force.z *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
+					// apply special scaling along the z axis if set
+					// NOTE: 0 value is not allowed for compatibility, in the case of weapon cvars not being set
+					if(forcezscale)
+						force.z *= forcezscale;
 
 					if(targ != directhitentity)
 					{
@@ -1053,7 +1055,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, 
+									cantbe, mustbe, false, forceintensity, 1, deathtype, weaponentity, directhitentity);
 }
 
 bool Heal(entity targ, entity inflictor, float amount, float limit)

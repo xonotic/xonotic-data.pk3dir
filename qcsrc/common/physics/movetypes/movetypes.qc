@@ -348,6 +348,10 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
 			trace_ent = this;
+			trace_dpstartcontents = 0;
+			trace_dphitcontents = 0;
+			trace_dphitq3surfaceflags = 0;
+			trace_dphittexturename = string_null;
 
 			gettouch(it)(it, this);
 		}

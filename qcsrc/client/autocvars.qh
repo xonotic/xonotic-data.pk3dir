@@ -25,7 +25,6 @@ float autocvar_cl_announcer_antispam = 2;
 float autocvar_cl_announcer_maptime = 3;
 bool autocvar_cl_autodemo_delete;
 bool autocvar_cl_autodemo_delete_keeprecords;
-bool autocvar_cl_casings;
 float autocvar_cl_casings_bronze_time;
 int autocvar_cl_casings_maxcount = 100;
 float autocvar_cl_casings_shell_time;
