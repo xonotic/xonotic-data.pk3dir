@@ -634,7 +634,7 @@ void readplayerstartcvars()
 		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	if(!cvar("g_use_ammunition"))
-		start_items |= IT_UNLIMITED_BOTH;
+		start_items |= IT_UNLIMITED_WEAPON_AMMO;
 
 	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
