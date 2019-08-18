@@ -348,7 +348,7 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	Weapon thiswep = WEP_SEEKER;
 	.entity weaponentity = this.weaponentity_fld;
-	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != thiswep))
+	if((!(this.realowner.items & IT_UNLIMITED_BOTH) && GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != thiswep))
 	{
 		delete(this);
 		return;

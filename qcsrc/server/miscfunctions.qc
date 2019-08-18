@@ -614,7 +614,7 @@ void readplayerstartcvars()
 	{
 		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena_weapons;
-		start_items |= IT_UNLIMITED_AMMO;
+		start_items |= IT_UNLIMITED_BOTH;
 	}
 	else
 	{
@@ -634,7 +634,7 @@ void readplayerstartcvars()
 		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	if(!cvar("g_use_ammunition"))
-		start_items |= IT_UNLIMITED_AMMO;
+		start_items |= IT_UNLIMITED_WEAPON_AMMO;
 
 	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
