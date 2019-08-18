@@ -246,7 +246,7 @@ void target_speed_use(entity this, entity actor, entity trigger)
 
 	bool launcher = (this.spawnflags & TSPEED_LAUNCHER);
 
-#define HAVE_ONE(flg, plusflg, minusflg) (((flg & plusflg) && !(flg & minusflg)) || ((flg & minusflg) && !(flg & plusflg)))
+#define HAVE_ONE(flg, plusflg, minusflg) (((flg & plusflg) && (!(flg & minusflg) || !launcher)) || ((flg & minusflg) && (!(flg & plusflg) || !launcher)))
 	if(HAVE_ONE(this.spawnflags, TSPEED_PLUSX, TSPEED_MINUSX) && (actor.velocity_x || launcher))
 		actor.velocity_x = target_speed_getspeed((this.spawnflags & TSPEED_PLUSX), this.spawnflags, actor.velocity_x, this.speed);
 	if(HAVE_ONE(this.spawnflags, TSPEED_PLUSY, TSPEED_MINUSY) && (actor.velocity_y || launcher))
