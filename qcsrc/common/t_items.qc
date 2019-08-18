@@ -1497,7 +1497,7 @@ spawnfunc(target_items)
 	{
 		for(int j = 0; j < n; ++j)
 		{
-			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
+			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_BOTH;
 			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
 			else if(argv(j) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
 			else if(argv(j) == "strength")               this.items |= ITEM_Strength.m_itemid;
@@ -1763,7 +1763,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, strength_finished, op, val);
 				got += GiveValue(e, invincible_finished, op, val);
 				got += GiveValue(e, superweapons_finished, op, val);
-				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
+				got += GiveBit(e, items, IT_UNLIMITED_BOTH, op, val);
 			case "all":
 				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
 				got += GiveResourceValue(e, RES_HEALTH, op, val);
@@ -1781,7 +1781,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			case "unlimited_ammo":
-				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
+				got += GiveBit(e, items, IT_UNLIMITED_BOTH, op, val);
 				break;
 			case "unlimited_weapon_ammo":
 				got += GiveBit(e, items, IT_UNLIMITED_WEAPON_AMMO, op, val);

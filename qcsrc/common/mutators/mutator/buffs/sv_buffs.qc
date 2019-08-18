@@ -212,7 +212,7 @@ float buff_Available(entity buff)
 {
 	if (buff == BUFF_Null)
 		return false;
-	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
+	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_BOTH) || (cvar("g_melee_only"))))
 		return false;
 	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
