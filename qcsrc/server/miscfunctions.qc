@@ -429,6 +429,9 @@ void GetCvars(entity this, entity store, int f)
 {
 	string s = string_null;
 
+	if (f == 0)
+		LOG_INFO("Warning: requesting cvar values is deprecated. Client should send them automatically using REPLICATE.\n");
+
 	if (f > 0)
 		s = strcat1(argv(f));
 

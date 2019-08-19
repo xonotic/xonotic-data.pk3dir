@@ -1565,7 +1565,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// TODO maybe don't send cvar values until the menu is open
 	// TODO remove CheckSendCvars from menu code (it seems broken anyway)
 	// TODO remove references to sendcvar from cvar descriptions
-	// TODO stop server from requesting cvar values to the client on connection as it's no longer necessary
 
 	ReplicateVars(false);
 	if (ReplicateVars_NOT_SENDING())
