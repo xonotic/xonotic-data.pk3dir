@@ -59,6 +59,10 @@
 				store.fld = field; \
 			}
 	#elif defined(CSQC)
+		float ReplicateVars_time;
+		#define ReplicateVars_NOT_SENDING() (time > ReplicateVars_time)
+		#define ReplicateVars_DELAY(t) ReplicateVars_time = time + t
+		#define ReplicateVars_DELAY_1FRAME() ReplicateVars_time = time
 		#define REPLICATE_string(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar_string(var)), { strcpy(fld, cvar_string(var)); }, { strfree(fld); })
 		#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
@@ -68,18 +72,22 @@
 			void ReplicateVars(bool would_destroy) \
 			{ \
 				if (would_destroy > 0) { destroy } \
-				else if (check) \
+				else if (ReplicateVars_NOT_SENDING() && check) \
 				{ \
 					localcmd(strcat("cl_cmd sendcvar ", var, "\n")); \
+					ReplicateVars_DELAY_1FRAME(); \
 					update \
+					return; \
 				} \
 			}
 
 		#define REPLICATE_SIMPLE(field, cvarname) MACRO_BEGIN \
-			if (field != cvar(cvarname)) \
+			if (ReplicateVars_NOT_SENDING() && field != cvar(cvarname)) \
 			{ \
 				localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); \
+				ReplicateVars_DELAY_1FRAME(); \
 				field = cvar(cvarname); \
+				return; \
 			} \
 		MACRO_END
 	#endif

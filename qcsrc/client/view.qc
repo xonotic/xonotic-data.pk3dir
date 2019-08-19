@@ -1541,7 +1541,6 @@ float oldr_useinfinitefarclip;
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
-float ReplicateVars_time;
 void CSQC_UpdateView(entity this, float w, float h)
 {
 	TC(int, w); TC(int, h);
@@ -1568,11 +1567,9 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// TODO remove references to sendcvar from cvar descriptions
 	// TODO stop server from requesting cvar values to the client on connection as it's no longer necessary
 
-	if (time > ReplicateVars_time) // prevents network spam
-	{
-		ReplicateVars(false);
-		ReplicateVars_time = time + 0.8 + random() * 0.4;
-	}
+	ReplicateVars(false);
+	if (ReplicateVars_NOT_SENDING())
+		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
 
 	HUD_Scale_Disable();
 
