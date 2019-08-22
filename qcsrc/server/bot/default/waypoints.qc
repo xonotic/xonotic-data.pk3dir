@@ -625,7 +625,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	if (jp)
 	{
 		e = NULL;
-		IL_EACH(g_waypoints, it.wpflags & WPFLAGMASK_NORELINK
+		IL_EACH(g_waypoints, (it.wpflags & WPFLAGMASK_NORELINK)
 			&& boxesoverlap(org + PL_MIN_CONST, org + PL_MAX_CONST, it.absmin, it.absmax),
 		{
 			e = it; break;
@@ -668,7 +668,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 	entity start_wp = NULL;
 	if (start_wp_is_spawned)
 	{
-		IL_EACH(g_waypoints, (start_wp_is_hardwired || it.wpflags & WPFLAGMASK_NORELINK)
+		IL_EACH(g_waypoints, (start_wp_is_hardwired || (it.wpflags & WPFLAGMASK_NORELINK))
 			&& boxesoverlap(start_org, start_org, it.absmin, it.absmax),
 		{
 			start_wp = it; break;
@@ -886,7 +886,7 @@ void waypoint_remove_fromeditor(entity pl)
 
 void waypoint_removelink(entity from, entity to)
 {
-	if (from == to || (from.wpflags & WPFLAGMASK_NORELINK && !(from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))))
+	if (from == to || ((from.wpflags & WPFLAGMASK_NORELINK) && !(from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))))
 		return;
 
 	entity fromwp31_prev = from.wp31;
@@ -1015,7 +1015,7 @@ float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_
 	if (submerged_from && submerged_to)
 		return waypoint_getlinearcost_underwater(vlen(to - from));
 
-	if (from_ent.wpflags & WAYPOINTFLAG_CROUCH && to_ent.wpflags & WAYPOINTFLAG_CROUCH)
+	if ((from_ent.wpflags & WAYPOINTFLAG_CROUCH) && (to_ent.wpflags & WAYPOINTFLAG_CROUCH))
 		return waypoint_getlinearcost_crouched(vlen(to - from));
 
 	float c = waypoint_getlinearcost(vlen(to - from));
@@ -1038,7 +1038,7 @@ float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_
 		return (c + waypoint_getlinearcost_underwater(vlen(to - from))) / 2;
 
 	// consider half path crouched
-	if (from_ent.wpflags & WAYPOINTFLAG_CROUCH || to_ent.wpflags & WAYPOINTFLAG_CROUCH)
+	if ((from_ent.wpflags & WAYPOINTFLAG_CROUCH) || (to_ent.wpflags & WAYPOINTFLAG_CROUCH))
 		return (c + waypoint_getlinearcost_crouched(vlen(to - from))) / 2;
 
 	return c;
@@ -1170,14 +1170,14 @@ void waypoint_think(entity this)
 			vector m1 = PL_MIN_CONST;
 			vector m2 = PL_MAX_CONST;
 
-			if (this.wpflags & WAYPOINTFLAG_CROUCH || it.wpflags & WAYPOINTFLAG_CROUCH)
+			if ((this.wpflags & WAYPOINTFLAG_CROUCH) || (it.wpflags & WAYPOINTFLAG_CROUCH))
 			{
 				m1 = PL_CROUCH_MIN_CONST;
 				m2 = PL_CROUCH_MAX_CONST;
 				// links from crouch wp to normal wp (and viceversa) are very short to avoid creating many links
 				// that would be wasted due to rough travel cost calculation (the longer link is, the higher cost is)
 				// links from crouch wp to crouch wp can be as long as normal links
-				if (!(this.wpflags & WAYPOINTFLAG_CROUCH && it.wpflags & WAYPOINTFLAG_CROUCH))
+				if (!((this.wpflags & WAYPOINTFLAG_CROUCH) && (it.wpflags & WAYPOINTFLAG_CROUCH)))
 					maxdist = 100;
 			}
 
@@ -1191,7 +1191,7 @@ void waypoint_think(entity this)
 
 			//traceline(this.origin, it.origin, false, NULL);
 			//if (trace_fraction == 1)
-			if (this.wpisbox || this.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT) // forbid outgoing links
+			if (this.wpisbox || (this.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT)) // forbid outgoing links
 				|| it.SUPPORT_WP) // forbid incoming links
 			{
 				relink_walkculled += 0.5;
@@ -1205,7 +1205,7 @@ void waypoint_think(entity this)
 			}
 
 			// reverse direction
-			if (it.wpisbox || it.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT) // forbid incoming links
+			if (it.wpisbox || (it.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT)) // forbid incoming links
 				|| this.SUPPORT_WP) // forbid outgoing links
 			{
 				relink_walkculled += 0.5;
@@ -1541,7 +1541,7 @@ void waypoint_load_hardwiredlinks()
 			waypoint_addlink(wp_from, wp_to);
 			waypoint_mark_hardwiredlink(wp_from, wp_to);
 		} else if (wp_from.wpflags & WPFLAGMASK_NORELINK
-			&& (wp_from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT)
+			&& ((wp_from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))
 				|| (wp_from.wpisbox && wp_from.wpflags & WAYPOINTFLAG_TELEPORT)))
 		{
 			waypoint_addlink(wp_from, wp_to);
@@ -2027,7 +2027,7 @@ void waypoint_showlink(entity wp1, entity wp2, int display_type)
 	if (!(wp1 && wp2))
 		return;
 
-	if (waypoint_is_hardwiredlink(wp1, wp2) || wp1.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT | WAYPOINTFLAG_CUSTOM_JP))
+	if (waypoint_is_hardwiredlink(wp1, wp2) || (wp1.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT | WAYPOINTFLAG_CUSTOM_JP)))
 		te_beam(NULL, wp1.origin, wp2.origin);
 	else if (display_type == 1)
 		te_lightning2(NULL, wp1.origin, wp2.origin);

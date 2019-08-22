@@ -964,7 +964,7 @@ void havocbot_movetogoal(entity this)
 			vector flat_diff = vec2(diff);
 			offset = max(32, current_speed * cos(deviation.y * DEG2RAD) * 0.3) * flatdir;
 			vector actual_destorg = this.origin + offset;
-			if (this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
+			if (this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP))
 			{
 				if (time > this.bot_stop_moving_timeout
 					&& fabs(deviation.y) > 20 && current_speed > maxspeed * 0.4
@@ -983,7 +983,7 @@ void havocbot_movetogoal(entity this)
 					navigation_goalrating_timeout_extend_if_needed(this, 1.5);
 				}
 			}
-			else if (!this.goalstack01 || this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER))
+			else if (!this.goalstack01 || (this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER)))
 			{
 				if (vlen2(flat_diff) < vlen2(offset))
 				{
@@ -1114,7 +1114,7 @@ void havocbot_movetogoal(entity this)
 			s = CONTENT_SOLID;
 			if (trace_fraction == 1 && !this.jumppadcount
 				&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
-				&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP) )
+				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
 			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
 			{
 				// Look downwards

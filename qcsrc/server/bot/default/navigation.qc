@@ -1582,7 +1582,7 @@ bool navigation_shortenpath(entity this)
 
 	next = this.goalstack01;
 	// if for some reason the bot is closer to the next goal, pop the current one
-	if (!IS_MOVABLE(next) && !this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)
+	if (!IS_MOVABLE(next) && !(this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP))
 		&& vlen2(this.goalcurrent.origin - next.origin) > vlen2(next.origin - this.origin)
 		&& checkpvs(this.origin + this.view_ofs, next))
 	{
