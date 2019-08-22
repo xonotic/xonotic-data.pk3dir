@@ -1024,7 +1024,7 @@ float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_
 	if(height > jumpheight_vec.z && autocvar_sv_gravity > 0)
 	{
 		float height_cost; // fall cost
-		if (boolean(from_ent.wpflags & WAYPOINTFLAG_JUMP))
+		if (from_ent.wpflags & WAYPOINTFLAG_JUMP)
 			height_cost = jumpheight_time + sqrt((height + jumpheight_vec.z) / (autocvar_sv_gravity / 2));
 		else
 			height_cost = sqrt(height / (autocvar_sv_gravity / 2));
@@ -1839,8 +1839,7 @@ float waypoint_loadall()
 		if (!s)
 			break;
 		fl = stof(s);
-		if (fl & WAYPOINTFLAG_NORELINK__DEPRECATED)
-			fl &= ~WAYPOINTFLAG_NORELINK__DEPRECATED;
+		fl &= ~WAYPOINTFLAG_NORELINK__DEPRECATED;
 		waypoint_spawn(m1, m2, fl);
 		if (m1 == m2)
 			cwp = cwp + 1;

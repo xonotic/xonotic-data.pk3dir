@@ -441,10 +441,7 @@ void havocbot_movetogoal(entity this)
 	CS(this).movement = '0 0 0';
 	maxspeed = autocvar_sv_maxspeed;
 
-	if (this.goalcurrent.wpflags & WAYPOINTFLAG_CROUCH)
-		PHYS_INPUT_BUTTON_CROUCH(this) = true;
-	else
-		PHYS_INPUT_BUTTON_CROUCH(this) = false;
+	PHYS_INPUT_BUTTON_CROUCH(this) = boolean(this.goalcurrent.wpflags & WAYPOINTFLAG_CROUCH);
 
 	PHYS_INPUT_BUTTON_JETPACK(this) = false;
 	// Jetpack navigation
