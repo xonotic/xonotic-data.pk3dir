@@ -860,8 +860,14 @@ spawnfunc(worldspawn)
 					continue;
 				if(argv(0) == "cd")
 				{
+					string trackname = argv(2);
 					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:");
-					LOG_INFO("  cdtrack ", argv(2));
+					LOG_INFO("  cdtrack ", trackname);
+					if (cvar_value_issafe(trackname))
+					{
+						string newstuff = strcat(clientstuff, "cd loop \"", trackname, "\"\n");
+						strcpy(clientstuff, newstuff);
+					}
 				}
 				else if(argv(0) == "fog")
 				{
@@ -984,22 +990,27 @@ float Map_Count, Map_Current;
 string Map_Current_Name;
 
 // NOTE: this now expects the map list to be already tokenized and the count in Map_Count
-float GetMaplistPosition()
+int GetMaplistPosition()
 {
-	float pos, idx;
-	string map;
-
-	map = GetMapname();
-	idx = autocvar_g_maplist_index;
+	string map = GetMapname();
+	int idx = autocvar_g_maplist_index;
 
 	if(idx >= 0)
+	{
 		if(idx < Map_Count)
+		{
 			if(map == argv(idx))
+			{
 				return idx;
+			}
+		}
+	}
 
-	for(pos = 0; pos < Map_Count; ++pos)
+	for(int pos = 0; pos < Map_Count; ++pos)
+	{
 		if(map == argv(pos))
 			return pos;
+	}
 
 	// resume normal maplist rotation if current map is not in g_maplist
 	return idx;
@@ -1202,18 +1213,25 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 
 void Maplist_Init()
 {
-	Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-	float i;
-	for (i = 0; i < Map_Count; ++i)
-		if (Map_Check(i, 2))
-			break;
+	float i = Map_Count = 0;
+	if(autocvar_g_maplist != "")
+	{
+		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		for (i = 0; i < Map_Count; ++i)
+		{
+			if (Map_Check(i, 2))
+				break;
+		}
+	}
+	
 	if (i == Map_Count)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
 		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags() | MAPINFO_FLAG_NOAUTOMAPLIST));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
-		localcmd("\nmenu_cmd sync\n");
+		if(!server_is_dedicated)
+			localcmd("\nmenu_cmd sync\n");
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 	}
 	if(Map_Count == 0)
@@ -1227,10 +1245,8 @@ void Maplist_Init()
 
 string GetNextMap()
 {
-	float nextMap;
-
 	Maplist_Init();
-	nextMap = -1;
+	float nextMap = -1;
 
 	if(nextMap == -1)
 		if(autocvar_g_maplist_shuffle > 0)
@@ -1325,9 +1341,7 @@ void GotoNextMap(float reinit)
 		return;
 	alreadychangedlevel = true;
 
-	string nextMap;
-
-	nextMap = GetNextMap();
+	string nextMap = GetNextMap();
 	if(nextMap == "")
 		error("Everything is broken - cannot find a next map. Please report this to the developers.");
 	Map_Goto(reinit);

@@ -1853,6 +1853,7 @@ float waypoint_loadall()
 
 	if (autocvar_g_waypointeditor && autocvar_g_waypointeditor_symmetrical_allowload)
 	{
+		string sym_str = "";
 		cvar_set("g_waypointeditor_symmetrical", ftos(sym));
 		if (sym == 1 && sym_param3 < 2)
 			cvar_set("g_waypointeditor_symmetrical_order", "0"); // make sure this is reset if not loaded
@@ -1867,16 +1868,18 @@ float waypoint_loadall()
 				cvar_set("g_waypointeditor_symmetrical_origin", params);
 			}
 			cvar_set("g_waypointeditor_symmetrical_order", ftos(sym_param3));
-			LOG_INFO("Waypoint editor: loaded symmetry ", ftos(sym), " with origin ", params, " and order ", ftos(sym_param3));
+			sym_str = strcat(ftos(sym), " with origin ", params, " and order ", ftos(sym_param3));
 		}
 		else if (sym == -2)
 		{
 			string params = strcat(ftos(sym_param1), " ", ftos(sym_param2));
 			cvar_set("g_waypointeditor_symmetrical_axis", params);
-			LOG_INFO("Waypoint editor: loaded symmetry ", ftos(sym), " with axis ", params);
+			sym_str = strcat(ftos(sym), " with axis ", params);
 		}
 		else
-			LOG_INFO("Waypoint editor: loaded symmetry ", ftos(sym));
+			sym_str = ftos(sym);
+		if (sym_str != "")
+			LOG_INFO("Waypoint editor: loaded symmetry ", sym_str);
 		LOG_INFO(strcat("g_waypointeditor_symmetrical", " has been set to ", cvar_string("g_waypointeditor_symmetrical")));
 	}
 

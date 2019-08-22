@@ -159,6 +159,12 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 .float vortex_chargepool_pauseregen_finished;
 
+void W_Vortex_Charge(entity actor, .entity weaponentity, float dt)
+{
+    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
+        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt / W_TICSPERFRAME);
+}
+
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(bot_aim(actor, weaponentity, 1000000, 0, 1, false))
@@ -171,8 +177,8 @@ METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 }
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
-        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
+    if(!WEP_CVAR(vortex, charge_always))
+        W_Vortex_Charge(actor, weaponentity, frametime);
 
     if(WEP_CVAR_SEC(vortex, chargepool))
         if(actor.(weaponentity).vortex_chargepool_ammo < 1)

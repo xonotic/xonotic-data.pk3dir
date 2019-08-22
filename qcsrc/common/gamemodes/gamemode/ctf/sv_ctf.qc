@@ -2593,6 +2593,13 @@ MUTATOR_HOOKFUNCTION(ctf, DropSpecialItems)
 		ctf_Handle_Throw(frag_target, NULL, DROP_THROW);
 }
 
+MUTATOR_HOOKFUNCTION(ctf, LogDeath_AppendItemCodes)
+{
+	entity player = M_ARGV(0, entity);
+	if(player.flagcarried)
+		M_ARGV(1, string) = strcat(M_ARGV(1, string), "F"); // item codes
+}
+
 
 // ==========
 // Spawnfuncs

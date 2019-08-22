@@ -17,7 +17,7 @@
 /**
     Uniform push from a point
 **/
-#define steerlib_push(ent,point) normalize(ent.origin - point)
+#define steerlib_push(ent,point) normalize((ent).origin - point)
 /*
 vector steerlib_push(entity this, vector point)
 {
@@ -29,7 +29,7 @@ vector steerlib_push(entity this, vector point)
 **/
 vector steerlib_arrive(entity this, vector point, float maximal_distance)
 {
-    float distance = bound(0.001,vlen(this.origin - point),maximal_distance);
+    float distance = bound(0.001, vlen(this.origin - point), maximal_distance);
     vector direction = normalize(point - this.origin);
     return  direction * (distance / maximal_distance);
 }
@@ -39,21 +39,21 @@ vector steerlib_arrive(entity this, vector point, float maximal_distance)
 **/
 vector steerlib_attract(entity this, vector point, float maximal_distance)
 {
-    float distance = bound(0.001,vlen(this.origin - point),maximal_distance);
+    float distance = bound(0.001, vlen(this.origin - point), maximal_distance);
     vector direction = normalize(point - this.origin);
 
-    return  direction * (1-(distance / maximal_distance));
+    return  direction * (1 - (distance / maximal_distance));
 }
 
-vector steerlib_attract2(entity this, vector point, float min_influense,float max_distance,float max_influense)
+vector steerlib_attract2(entity this, vector point, float min_influense, float max_distance, float max_influense)
 {
-    float distance  = bound(0.00001,vlen(this.origin - point),max_distance);
+    float distance = bound(0.00001, vlen(this.origin - point), max_distance);
     vector direction = normalize(point - this.origin);
 
     float influense = 1 - (distance / max_distance);
     influense = min_influense + (influense * (max_influense - min_influense));
 
-    return  direction * influense;
+    return direction * influense;
 }
 
 /*
@@ -89,27 +89,21 @@ vector steerlib_attract2(vector point, float maximal_distance,float min_influens
 /**
     Move away from a point.
 **/
-vector steerlib_repell(entity this, vector point,float maximal_distance)
+vector steerlib_repel(entity this, vector point, float maximal_distance)
 {
-    float distance;
-    vector direction;
+    float distance = bound(0.001, vlen(this.origin - point), maximal_distance);
+    vector direction = normalize(this.origin - point);
 
-    distance = bound(0.001,vlen(this.origin - point),maximal_distance);
-    direction = normalize(this.origin - point);
-
-    return  direction * (1-(distance / maximal_distance));
+    return  direction * (1 - (distance / maximal_distance));
 }
 
 /**
     Try to keep at ideal_distance away from point
 **/
-vector steerlib_standoff(entity this, vector point,float ideal_distance)
+vector steerlib_standoff(entity this, vector point, float ideal_distance)
 {
-    float distance;
     vector direction;
-
-    distance = vlen(this.origin - point);
-
+    float distance = vlen(this.origin - point);
 
     if(distance < ideal_distance)
     {
@@ -123,22 +117,22 @@ vector steerlib_standoff(entity this, vector point,float ideal_distance)
 }
 
 /**
-    A random heading in a forward halfcicrle
+    A random heading in a forward semicircle
 
-    use like:
-    this.target = steerlib_wander(256,32,this.target)
+    usage:
+    this.target = steerlib_wander(256, 32, this.target)
 
-    where range is the cicrle radius and tresh is how close we need to be to pick a new heading.
+    where range is the circle radius and threshold is how close we need to be to pick a new heading.
+    Assumes v_forward is set by makevectors
 **/
-vector steerlib_wander(entity this, float range, float tresh, vector oldpoint)
+vector steerlib_wander(entity this, float range, float threshold, vector oldpoint)
 {
-    vector wander_point;
-    wander_point = v_forward - oldpoint;
+    vector wander_point = v_forward - oldpoint;
 
-    if (vdist(wander_point, >, tresh))
+    if (vdist(wander_point, >, threshold))
         return oldpoint;
 
-    range = bound(0,range,1);
+    range = bound(0, range, 1);
 
     wander_point = this.origin + v_forward * 128;
     wander_point = wander_point + randomvec() * (range * 128) - randomvec() * (range * 128);
@@ -147,17 +141,15 @@ vector steerlib_wander(entity this, float range, float tresh, vector oldpoint)
 }
 
 /**
-    Dodge a point. dont work to well.
+    Dodge a point NOTE: doesn't work well
 **/
 vector steerlib_dodge(entity this, vector point, vector dodge_dir, float min_distance)
 {
-    float distance;
-
-    distance = max(vlen(this.origin - point),min_distance);
+    float distance = max(vlen(this.origin - point), min_distance);
     if (min_distance < distance)
         return '0 0 0';
 
-    return dodge_dir * (min_distance/distance);
+    return dodge_dir * (min_distance / distance);
 }
 
 /**
@@ -165,20 +157,19 @@ vector steerlib_dodge(entity this, vector point, vector dodge_dir, float min_dis
     Group will move towards the unified direction while keeping close to eachother.
 **/
 .float flock_id;
-vector steerlib_flock(entity this, float _radius, float standoff,float separation_force,float flock_force)
+vector steerlib_flock(entity this, float _radius, float standoff, float separation_force, float flock_force)
 {
-    entity flock_member;
     vector push = '0 0 0', pull = '0 0 0';
-    float ccount = 0;
+    int ccount = 0;
 
-    flock_member = findradius(this.origin, _radius);
+    entity flock_member = findradius(this.origin, _radius);
     while(flock_member)
     {
         if(flock_member != this)
         if(flock_member.flock_id == this.flock_id)
         {
             ++ccount;
-            push = push + (steerlib_repell(this, flock_member.origin,standoff) * separation_force);
+            push = push + (steerlib_repel(this, flock_member.origin,standoff) * separation_force);
             pull = pull + (steerlib_arrive(this, flock_member.origin + flock_member.velocity, _radius) * flock_force);
         }
         flock_member = flock_member.chain;
@@ -191,20 +182,19 @@ vector steerlib_flock(entity this, float _radius, float standoff,float separatio
     Group will move towards the unified direction while keeping close to eachother.
     xy only version (for ground movers).
 **/
-vector steerlib_flock2d(entity this, float _radius, float standoff,float separation_force,float flock_force)
+vector steerlib_flock2d(entity this, float _radius, float standoff, float separation_force, float flock_force)
 {
-    entity flock_member;
     vector push = '0 0 0', pull = '0 0 0';
-    float ccount = 0;
+    int ccount = 0;
 
-    flock_member = findradius(this.origin,_radius);
+    entity flock_member = findradius(this.origin,_radius);
     while(flock_member)
     {
         if(flock_member != this)
         if(flock_member.flock_id == this.flock_id)
         {
             ++ccount;
-            push = push + (steerlib_repell(this, flock_member.origin, standoff) * separation_force);
+            push = push + (steerlib_repel(this, flock_member.origin, standoff) * separation_force);
             pull = pull + (steerlib_arrive(this, flock_member.origin + flock_member.velocity, _radius) * flock_force);
         }
         flock_member = flock_member.chain;
@@ -218,25 +208,23 @@ vector steerlib_flock2d(entity this, float _radius, float standoff,float separat
 
 /**
     All members want to be in the center, and keep away from eachother.
-    The furtehr form the center the more they want to be there.
+    The further from the center the more they want to be there.
 
     This results in a aligned movement (?!) much like flocking.
 **/
-vector steerlib_swarm(entity this, float _radius, float standoff,float separation_force,float swarm_force)
+vector steerlib_swarm(entity this, float _radius, float standoff, float separation_force, float swarm_force)
 {
-    entity swarm_member;
     vector force = '0 0 0', center = '0 0 0';
-    float ccount = 0;
+    int ccount = 0;
 
-    swarm_member = findradius(this.origin,_radius);
-
+    entity swarm_member = findradius(this.origin,_radius);
     while(swarm_member)
     {
         if(swarm_member.flock_id == this.flock_id)
         {
             ++ccount;
             center = center + swarm_member.origin;
-            force = force + (steerlib_repell(this, swarm_member.origin,standoff) * separation_force);
+            force = force + (steerlib_repel(this, swarm_member.origin,standoff) * separation_force);
         }
         swarm_member = swarm_member.chain;
     }
@@ -252,93 +240,80 @@ vector steerlib_swarm(entity this, float _radius, float standoff,float separatio
     Run four tracelines in a forward funnel, bias each diretion negative if something is found there.
     You need to call makevectors() (or equivalent) before this function to set v_forward and v_right
 **/
-vector steerlib_traceavoid(entity this, float pitch,float length)
+vector steerlib_traceavoid(entity this, float pitch, float length)
 {
-    vector vup_left,vup_right,vdown_left,vdown_right;
-    float fup_left,fup_right,fdown_left,fdown_right;
-    vector upwish,downwish,leftwish,rightwish;
-    vector v_left,v_down;
+    vector v_left = v_right * -1;
+    vector v_down = v_up * -1;
 
-
-    v_left = v_right * -1;
-    v_down = v_up * -1;
-
-    vup_left = (v_forward + (v_left * pitch + v_up * pitch)) * length;
-    traceline(this.origin, this.origin +  vup_left,MOVE_NOMONSTERS,this);
-    fup_left = trace_fraction;
+    vector vup_left = (v_forward + (v_left * pitch + v_up * pitch)) * length;
+    traceline(this.origin, this.origin +  vup_left, MOVE_NOMONSTERS, this);
+    float fup_left = trace_fraction;
 
     //te_lightning1(NULL,this.origin, trace_endpos);
 
-    vup_right = (v_forward + (v_right * pitch + v_up * pitch)) * length;
-    traceline(this.origin,this.origin + vup_right ,MOVE_NOMONSTERS,this);
-    fup_right = trace_fraction;
+    vector vup_right = (v_forward + (v_right * pitch + v_up * pitch)) * length;
+    traceline(this.origin, this.origin + vup_right, MOVE_NOMONSTERS, this);
+    float fup_right = trace_fraction;
 
     //te_lightning1(NULL,this.origin, trace_endpos);
 
-    vdown_left = (v_forward + (v_left * pitch + v_down * pitch)) * length;
-    traceline(this.origin,this.origin + vdown_left,MOVE_NOMONSTERS,this);
-    fdown_left = trace_fraction;
+    vector vdown_left = (v_forward + (v_left * pitch + v_down * pitch)) * length;
+    traceline(this.origin, this.origin + vdown_left, MOVE_NOMONSTERS, this);
+    float fdown_left = trace_fraction;
 
     //te_lightning1(NULL,this.origin, trace_endpos);
 
-    vdown_right = (v_forward + (v_right * pitch + v_down * pitch)) * length;
-    traceline(this.origin,this.origin + vdown_right,MOVE_NOMONSTERS,this);
-    fdown_right = trace_fraction;
+    vector vdown_right = (v_forward + (v_right * pitch + v_down * pitch)) * length;
+    traceline(this.origin, this.origin + vdown_right, MOVE_NOMONSTERS, this);
+    float fdown_right = trace_fraction;
 
     //te_lightning1(NULL,this.origin, trace_endpos);
-    upwish    = v_up    * (fup_left   + fup_right);
-    downwish  = v_down  * (fdown_left + fdown_right);
-    leftwish  = v_left  * (fup_left   + fdown_left);
-    rightwish = v_right * (fup_right  + fdown_right);
+    vector upwish    = v_up    * (fup_left   + fup_right);
+    vector downwish  = v_down  * (fdown_left + fdown_right);
+    vector leftwish  = v_left  * (fup_left   + fdown_left);
+    vector rightwish = v_right * (fup_right  + fdown_right);
 
-    return (upwish+leftwish+downwish+rightwish) * 0.25;
+    return (upwish + leftwish + downwish + rightwish) * 0.25;
 
 }
 
 /**
     Steer towards the direction least obstructed.
     Run tracelines in a forward trident, bias each direction negative if something is found there.
+    You need to call makevectors() (or equivalent) before this function to set v_forward and v_right
 **/
 vector steerlib_traceavoid_flat(entity this, float pitch, float length, vector vofs)
 {
-    vector vt_left, vt_right,vt_front;
-    float f_left, f_right,f_front;
-    vector leftwish, rightwish,frontwish, v_left;
+    vector v_left = v_right * -1;
 
-    v_left = v_right * -1;
-
-
-    vt_front = v_forward * length;
+    vector vt_front = v_forward * length;
     traceline(this.origin + vofs, this.origin + vofs + vt_front,MOVE_NOMONSTERS,this);
-    f_front = trace_fraction;
+    float f_front = trace_fraction;
 
-    vt_left = (v_forward + (v_left * pitch)) * length;
+    vector vt_left = (v_forward + (v_left * pitch)) * length;
     traceline(this.origin + vofs, this.origin + vofs + vt_left,MOVE_NOMONSTERS,this);
-    f_left = trace_fraction;
+    float f_left = trace_fraction;
 
     //te_lightning1(NULL,this.origin, trace_endpos);
 
-    vt_right = (v_forward + (v_right * pitch)) * length;
+    vector vt_right = (v_forward + (v_right * pitch)) * length;
     traceline(this.origin + vofs, this.origin + vofs + vt_right ,MOVE_NOMONSTERS,this);
-    f_right = trace_fraction;
+    float f_right = trace_fraction;
 
     //te_lightning1(NULL,this.origin, trace_endpos);
 
-    leftwish  = v_left    * f_left;
-    rightwish = v_right   * f_right;
-    frontwish = v_forward * f_front;
+    vector leftwish  = v_left    * f_left;
+    vector rightwish = v_right   * f_right;
+    vector frontwish = v_forward * f_front;
 
     return normalize(leftwish + rightwish + frontwish);
 }
 
 //#define BEAMSTEER_VISUAL
-float beamsweep(entity this, vector from, vector dir,float length, float step,float step_up, float step_down)
+float beamsweep(entity this, vector from, vector dir, float length, float step, float step_up, float step_down)
 {
-    float i;
-    vector a, b, u, d;
-
-    u = '0 0 1' * step_up;
-    d = '0 0 1' * step_down;
+    vector u = '0 0 1' * step_up;
+    vector d = '0 0 1' * step_down;
 
     traceline(from + u, from - d,MOVE_NORMAL,this);
     if(trace_fraction == 1.0)
@@ -347,11 +322,11 @@ float beamsweep(entity this, vector from, vector dir,float length, float step,fl
     if(!location_isok(trace_endpos, false, false))
         return 0;
 
-    a = trace_endpos;
-    for(i = 0; i < length; i += step)
+    vector a = trace_endpos;
+    for(int i = 0; i < length; i += step)
     {
 
-        b = a + dir * step;
+        vector b = a + dir * step;
         tracebox(a + u,'-4 -4 -4','4 4 4', b + u,MOVE_NORMAL,this);
         if(trace_fraction != 1.0)
             return i / length;
@@ -374,31 +349,27 @@ float beamsweep(entity this, vector from, vector dir,float length, float step,fl
 
 vector steerlib_beamsteer(entity this, vector dir, float length, float step, float step_up, float step_down)
 {
-    float bm_forward, bm_right, bm_left,p;
-    vector vr,vl;
-
     dir.z *= 0.15;
-    vr = vectoangles(dir);
-    //vr_x *= -1;
+    vector vr = vectoangles(dir);
+    //vr.x *= -1;
 
     tracebox(this.origin + '0 0 1' * step_up, this.mins, this.maxs, ('0 0 1' * step_up) + this.origin +  (dir * length), MOVE_NOMONSTERS, this);
     if(trace_fraction == 1.0)
     {
-        //te_lightning1(this,this.origin,this.origin +  (dir * length));
+        //te_lightning1(this,this.origin,this.origin + (dir * length));
         return dir;
     }
 
     makevectors(vr);
-    bm_forward = beamsweep(this, this.origin, v_forward, length, step, step_up, step_down);
+    float bm_forward = beamsweep(this, this.origin, v_forward, length, step, step_up, step_down);
 
     vr = normalize(v_forward + v_right * 0.125);
-    vl = normalize(v_forward - v_right * 0.125);
+    vector vl = normalize(v_forward - v_right * 0.125);
 
-    bm_right = beamsweep(this, this.origin, vr, length, step, step_up, step_down);
-    bm_left  = beamsweep(this, this.origin, vl, length, step, step_up, step_down);
+    float bm_right = beamsweep(this, this.origin, vr, length, step, step_up, step_down);
+    float bm_left  = beamsweep(this, this.origin, vl, length, step, step_up, step_down);
 
-
-    p = bm_left + bm_right;
+    float p = bm_left + bm_right;
     if(p == 2)
     {
         //te_lightning1(this,this.origin + '0 0 32',this.origin + '0 0 32' + vr * length);
@@ -435,5 +406,4 @@ vector steerlib_beamsteer(entity this, vector dir, float length, float step, flo
     vl = vl * bm_left;
 
     return normalize(vr + vl);
-
 }

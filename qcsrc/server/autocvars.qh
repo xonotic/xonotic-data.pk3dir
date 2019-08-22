@@ -180,6 +180,7 @@ float autocvar_g_items_maxdist;
 int autocvar_g_pickup_items;
 float autocvar_g_player_alpha;
 float autocvar_g_player_brightness;
+float autocvar_g_player_damageforcescale = 2;
 bool autocvar_g_playerclip_collisions;
 int autocvar_g_powerups;
 int autocvar_g_projectiles_damage;
