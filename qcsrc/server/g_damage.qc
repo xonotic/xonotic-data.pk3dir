@@ -220,6 +220,11 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 	return MUTATOR_CALLHOOK(FragCenterMessage, attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target);
 }
 
+void announce_spree(int counta, entity achv, entity element) {
+	achv.inc_kill_achievement(achv, counta);
+	achv.announce(achv, element, achv.get_achievement_title_from_kills(counta), achv.get_achievement_name_from_kills(counta));
+}
+
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity)
 {
 	// Sanity check
@@ -314,6 +319,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			attacker.killsound += 1;
 
+			entity achv = attacker.achievements;
+
 			// TODO: improve SPREE_ITEM and KILL_SPREE_LIST
 			// these 2 macros are spread over multiple files
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
@@ -321,6 +328,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
 					if (!warmup_stage) \
 						PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
+						announce_spree(counta, achv, attacker); \
 					break;
 
 			switch(CS(attacker).killcount)
@@ -336,6 +344,11 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				notif_firstblood = true; // modify the current messages so that they too show firstblood information
 				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
+
+				//Send achievement for first blood
+				entity achv = attacker.achievements;
+				achv.set_achievement_value(achv, "firstblood", 1);
+				achv.announce(achv, attacker, "First Blood!", "firstblood");
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
