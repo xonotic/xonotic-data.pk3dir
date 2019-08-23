@@ -1562,10 +1562,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	lasthud = hud;
 
-	// TODO maybe don't send cvar values until the menu is open
-	// TODO remove CheckSendCvars from menu code (it seems broken anyway)
-	// TODO remove references to sendcvar from cvar descriptions
-
 	ReplicateVars(false);
 	if (ReplicateVars_NOT_SENDING())
 		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame

@@ -172,17 +172,6 @@ REPLICATE(cvar_cl_weaponpriorities[7], string, "cl_weaponpriority7");
 REPLICATE(cvar_cl_weaponpriorities[8], string, "cl_weaponpriority8");
 REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9");
 
-.int cvar_value;
-void ReplicateVars(bool would_destroy)
-{
-	if (!would_destroy)
-		FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
-			string cvarname = sprintf("notification_%s", Get_Notif_CvarName(it));
-			// NOTE: REPLICATE_SIMPLE can return;
-			REPLICATE_SIMPLE(it.cvar_value, cvarname);
-		});
-}
-
 float bgmtime;
 
 string weaponorder_byimpulse;

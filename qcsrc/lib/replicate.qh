@@ -71,7 +71,7 @@
 		#define REPLICATE_7(fld, type, var, func, check, update, destroy) \
 			void ReplicateVars(bool would_destroy) \
 			{ \
-				if (would_destroy > 0) { destroy } \
+				if (would_destroy) { destroy } \
 				else if (ReplicateVars_NOT_SENDING() && check) \
 				{ \
 					localcmd(strcat("cl_cmd sendcvar ", var, "\n")); \
