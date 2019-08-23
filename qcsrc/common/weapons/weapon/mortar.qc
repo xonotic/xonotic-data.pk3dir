@@ -4,12 +4,16 @@
 
 void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 {
+	entity achs = this.realowner.achievements;
 	if(directhitentity.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(directhitentity))
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
-					if(IsFlying(directhitentity))
+					if(IsFlying(directhitentity)) {
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
+						achs.inc_achievement(achs, "airshot");
+						achs.announce(achs, this.realowner, "Air Shot!", "airshot");
+					}
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
@@ -29,12 +33,16 @@ void W_Mortar_Grenade_Explode_use(entity this, entity actor, entity trigger)
 
 void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 {
+	entity achs = this.realowner.achievements;
 	if(directhitentity.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(directhitentity))
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
-					if(IsFlying(directhitentity))
+					if(IsFlying(directhitentity)){
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
+						achs.inc_achievement(achs, "airshot");
+						achs.announce(achs, this.realowner, "Air Shot!", "airshot");
+					}
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;

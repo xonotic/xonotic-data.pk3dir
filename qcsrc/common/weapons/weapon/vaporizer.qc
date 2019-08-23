@@ -130,11 +130,23 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	// do this now, as goodhits is disabled below
 	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
 
-	if(yoda && flying)
+	entity achs = actor.achievements;
+	if (damage_goodhits > 1) {
+		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
+		achs.inc_achievement(achs, "multirailed");
+		achs.announce(achs, actor, "Multi Railed!", "multirailed");
+	}
+
+	if(yoda && flying) {
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+		achs.inc_achievement(achs, "flyingyoda");
+	}
+
 	if(damage_goodhits && actor.vaporizer_lasthit)
 	{
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		achs.inc_achievement(achs, "impressive");
+		achs.announce(achs, actor, "Impressive!", "impressive");
 		damage_goodhits = 0; // only every second time
 	}
 
@@ -149,12 +161,16 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 void W_RocketMinsta_Laser_Explode (entity this, entity directhitentity)
 {
+	entity achs = this.realowner.achievements;
 	if(directhitentity.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(directhitentity))
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
-					if(IsFlying(directhitentity))
+					if(IsFlying(directhitentity)) {
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
+						achs.inc_achievement(achs, "electrobitch");
+						achs.announce(achs, this.realowner, "Electro-BITCH!", "electrobitch");
+					}
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;

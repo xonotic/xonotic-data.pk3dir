@@ -74,12 +74,16 @@ void W_Electro_ExplodeCombo(entity this)
 
 void W_Electro_Explode(entity this, entity directhitentity)
 {
+	entity achs = this.realowner.achievements;
 	if(directhitentity.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(directhitentity))
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
-					if(IsFlying(directhitentity))
+					if(IsFlying(directhitentity)) {
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
+						achs.inc_achievement(achs, "electrobitch");
+						achs.announce(achs, this.realowner, "Electro-BITCH!", "electrobitch");
+					}
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;

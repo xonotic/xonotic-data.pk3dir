@@ -141,11 +141,23 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	damage_goodhits = 0;
 	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, dtype);
 
-	if(yoda && flying)
+    entity achs = actor.achievements;
+	if (damage_goodhits > 1) {
+		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
+		achs.inc_achievement(achs, "multirailed");
+		achs.announce(achs, actor, "Multi Railed!", "multirailed");
+	}
+
+	if(yoda && flying) {
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+		achs.inc_achievement(achs, "flyingyoda"); 
+    }
+
 	if(damage_goodhits && actor.vortex_lasthit)
 	{
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		achs.inc_achievement(achs, "impressive"); 
+		achs.announce(achs, actor, "Impressive!", "impressive");
 		damage_goodhits = 0; // only every second time
 	}
 
