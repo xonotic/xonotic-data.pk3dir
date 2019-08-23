@@ -12,3 +12,4 @@
 #include <common/util.qc>
 #include <common/viewloc.qc>
 #include <common/wepent.qc>
+#include <common/achievements.qc>

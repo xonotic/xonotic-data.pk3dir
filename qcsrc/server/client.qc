@@ -73,6 +73,8 @@
 
 #include <common/mutators/mutator/overkill/oknex.qh>
 
+#include <common/achievements.qh>
+
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
     ClientConnect(this);
@@ -1101,6 +1103,8 @@ void ClientConnect(entity this)
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
+	Achievements_attach(this);
+
 	// always track bots, don't ask for cl_allow_uidtracking
 	if (IS_BOT_CLIENT(this))
 		PlayerStats_GameReport_AddPlayer(this);
@@ -1239,6 +1243,8 @@ void ClientDisconnect(entity this)
 	this.playerid = 0;
 	ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
+
+	Achievements_detach(this);
 
 	ONREMOVE(this);
 }

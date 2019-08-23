@@ -1,0 +1,46 @@
+#pragma once
+
+CLASS(Achievements, Object)
+
+	ATTRIB(Achievements, player, entity);
+	
+	//Kill achievements
+	ATTRIB(Achievements, triple_kill, int, 0);
+	ATTRIB(Achievements, rage, int, 0);
+	ATTRIB(Achievements, massacre, int, 0);
+	ATTRIB(Achievements, mayhem, int, 0);
+	ATTRIB(Achievements, berserker, int, 0);
+	ATTRIB(Achievements, carnage, int, 0);
+	ATTRIB(Achievements, armageddon, int, 0);
+
+	//Boolean achievements (can be set only once)
+	ATTRIB(Achievements, firstblood, bool, 0);
+
+	//Notificated achievements
+	ATTRIB(Achievements, airshot, int, 0);
+	ATTRIB(Achievements, amazing, int, 0);
+	ATTRIB(Achievements, awesome, int, 0);
+	ATTRIB(Achievements, botlike, int, 0);
+	ATTRIB(Achievements, electrobitch, int, 0);
+	ATTRIB(Achievements, impressive, int, 0);
+	ATTRIB(Achievements, flyingyoda, int, 0); //In Yoda maybe incorrect conditions
+	ATTRIB(Achievements, multirailed, int, 0);
+
+	METHOD(Achievements, set_achievement_value, void(Achievements this, string achieve, int value));
+	METHOD(Achievements, get_achievement_value, int(Achievements this, string achieve));
+	METHOD(Achievements, add_achievement_value, void(Achievements this, string achieve, int value));
+	METHOD(Achievements, inc_achievement, void(Achievements this, string achieve));
+	METHOD(Achievements, announce, void(Achievements this, entity whom, string title, string achieve));
+
+	CONSTRUCTOR(Achievements, entity aplayer) 
+	{
+		CONSTRUCT(Achievements);
+		this.player = aplayer;
+	}
+
+ENDCLASS(Achievements)
+
+.Achievements achievements;
+
+void Achievements_attach(entity this);
+void Achievements_detach(entity this);
