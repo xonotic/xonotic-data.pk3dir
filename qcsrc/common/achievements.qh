@@ -26,12 +26,19 @@ CLASS(Achievements, Object)
 	ATTRIB(Achievements, flyingyoda, int, 0); //In Yoda maybe incorrect conditions
 	ATTRIB(Achievements, multirailed, int, 0);
 
+	//Getters and setters for achievements	
 	METHOD(Achievements, set_achievement_value, void(Achievements this, string achieve, int value));
 	METHOD(Achievements, get_achievement_value, int(Achievements this, string achieve));
 	METHOD(Achievements, add_achievement_value, void(Achievements this, string achieve, int value));
+	METHOD(Achievements, inc_kill_achievement, void(Achievements this, int kills));
 	METHOD(Achievements, inc_achievement, void(Achievements this, string achieve));
-	METHOD(Achievements, announce, void(Achievements this, entity whom, string title, string achieve));
 
+	METHOD(Achievements, get_achievement_name_from_kills, string(int kills));
+	METHOD(Achievements, get_achievement_title_from_kills, string(int kills));
+
+	//Announce functions
+	METHOD(Achievements, announce, void(Achievements this, entity whom, string title, string achieve));
+	
 	CONSTRUCTOR(Achievements, entity aplayer) 
 	{
 		CONSTRUCT(Achievements);
