@@ -161,7 +161,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 void W_Vortex_Charge(entity actor, .entity weaponentity, float dt)
 {
-    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
+    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit) && !WEP_CVAR_SEC(vortex, chargepool))
         actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt / W_TICSPERFRAME);
 }
 
@@ -180,7 +180,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
     if(!WEP_CVAR(vortex, charge_always))
         W_Vortex_Charge(actor, weaponentity, frametime);
 
-    if(WEP_CVAR_SEC(vortex, chargepool))
+    if(WEP_CVAR_SEC(vortex, chargepool) && WEP_CVAR_SEC(vortex, ammo))
         if(actor.(weaponentity).vortex_chargepool_ammo < 1)
         {
             if(actor.vortex_chargepool_pauseregen_finished < time)
@@ -200,7 +200,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
             }
         }
-        if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
+        if(((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (CS(actor).zoomstate || PHYS_INPUT_BUTTON_ZOOM(actor) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2)))
         {
             if(WEP_CVAR(vortex, charge))
             {
@@ -215,14 +215,16 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                         {
                             // always deplete if secondary is held
                             actor.(weaponentity).vortex_chargepool_ammo = max(0, actor.(weaponentity).vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
-
-                            dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
+                        }
+                        dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
+                        if(WEP_CVAR_SEC(vortex, ammo))
+                        {
                             actor.vortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(vortex, chargepool_pause_regen);
                             dt = min(dt, actor.(weaponentity).vortex_chargepool_ammo);
-                            dt = max(0, dt);
-
-                            actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
                         }
+                        dt = max(0, dt);
+
+                        actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
                     }
 
                     else if(WEP_CVAR_SEC(vortex, ammo))
@@ -272,6 +274,13 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
                 }
             }
+        }
+        else if(WEP_CVAR(vortex, charge) && WEP_CVAR_SEC(vortex, chargepool) && !WEP_CVAR_SEC(vortex, ammo) && !WEP_CVAR(vortex, secondary))
+        {
+            float dt = frametime / W_TICSPERFRAME;
+
+            // TODO: add a special cvar for this functionality (charge_rot_rate is taken!)
+            actor.(weaponentity).vortex_charge = max(0, actor.(weaponentity).vortex_charge - dt * (WEP_CVAR(vortex, charge_rate) * 2)); // rots twice as fast
         }
     }
 }
