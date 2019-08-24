@@ -2394,6 +2394,7 @@ Called every frame for each client before the physics are run
 =============
 */
 .float last_vehiclecheck;
+.int shotgun_timer_time;
 void PlayerPreThink (entity this)
 {
 
@@ -2606,15 +2607,16 @@ void PlayerPreThink (entity this)
 		} else {
 
 			if (this.shotgun_inc_pointblank) {
+
 				entity attaker = this.shotgun_bullets_received_from;
 				entity achv = attaker.achievements;
+				
 				achv.inc_achievement(achv, "pointblank");
 				achv.announce(achv, attaker, "Point Blank!", "pointblank");
 			}
 
 			this.shotgun_timer = 0;
 			this.shotgun_timer_time = 0;
-			this.shotgun_bullets_received = 0;
 			this.shotgun_inc_pointblank = 0;
 		}
 	}

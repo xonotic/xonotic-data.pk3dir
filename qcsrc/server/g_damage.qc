@@ -879,16 +879,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		float distance = vlen(targ.origin-attacker.origin);
 		
-		if (targ.shotgun_timer) {
-			targ.shotgun_bullets_received += 1;
-		} else {
-			targ.shotgun_bullets_received_from = attacker_save;
-			targ.shotgun_bullets_received = 1;
-			targ.shotgun_timer = 1;			
-		}
+		targ.shotgun_timer = 1;	
+		targ.shotgun_bullets_received_from = attacker;	
 
 		//Add condition to look at, not only for distance
-		if (distance < 65 && targ.shotgun_bullets_received) {
+		if (distance < 65) {
 			targ.shotgun_inc_pointblank = 1;
 		}
 	}

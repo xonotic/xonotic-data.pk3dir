@@ -200,8 +200,6 @@ CLASS(Player, Client)
     ATTRIB(Player, buff_shield, float, this.buff_shield);
 
     ATTRIB(Player, shotgun_timer, bool, this.shotgun_timer);
-    ATTRIB(Player, shotgun_timer_time, int, this.shotgun_timer_time);
-    ATTRIB(Player, shotgun_bullets_received, int, this.shotgun_bullets_received);
     ATTRIB(Player, shotgun_bullets_received_from, entity, this.shotgun_bullets_received_from);
     ATTRIB(Player, shotgun_inc_pointblank, bool, this.shotgun_inc_pointblank);
 
