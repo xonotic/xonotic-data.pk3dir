@@ -79,6 +79,9 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 	}
 
+	if(!Item_IsLoot(this))
+		weaponsInMapAll |= WepSet_FromWeapon(wpn);
+
 	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
 	{
 		delete(this);

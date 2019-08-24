@@ -1249,8 +1249,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	{
 		if(!have_pickup_item(this))
 		{
-			if(g_weaponarena == 2 && weaponid)
-				weaponsInMap |= WepSet_FromWeapon(Weapons_from(weaponid));
 			startitem_failed = true;
 			delete(this);
 			return;

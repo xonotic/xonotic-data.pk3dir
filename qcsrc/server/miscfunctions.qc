@@ -524,18 +524,15 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 
 void weaponarena_available_update(entity this)
 {
-	if(!weaponsInMap)
-	{
-		// if no weapons are available, just fall back to most weapons arena
-		FOREACH(Weapons, it != WEP_Null, {
-			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN))
-				g_weaponarena_weapons |= (it.m_wepset);
-		});
-		start_weapons = g_weaponarena_weapons;
-		return;
-	}
-	g_weaponarena_weapons |= weaponsInMap;
+	FOREACH(Weapons, it != WEP_Null, {
+		// if no weapons are available, just fall back to normal weapons (most weapons arena)
+		bool wep_available = ((weaponsInMapAll) ? !!(weaponsInMapAll & WepSet_FromWeapon(it)) : (it.spawnflags & WEP_FLAG_NORMAL));
+		if(wep_available && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN))
+			g_weaponarena_weapons |= WepSet_FromWeapon(it);
+	});
 	start_weapons = g_weaponarena_weapons;
+	if(warmup_stage)
+		warmup_start_weapons = start_weapons;
 }
 
 void readplayerstartcvars()
