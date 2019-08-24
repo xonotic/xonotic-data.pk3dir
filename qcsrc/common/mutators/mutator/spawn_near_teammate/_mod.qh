@@ -1,4 +1,7 @@
 // generated file; do not modify
+#ifdef CSQC
+    #include <common/mutators/mutator/spawn_near_teammate/cl_spawn_near_teammate.qh>
+#endif
 #ifdef SVQC
     #include <common/mutators/mutator/spawn_near_teammate/sv_spawn_near_teammate.qh>
 #endif
