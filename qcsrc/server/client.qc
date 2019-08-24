@@ -2396,6 +2396,7 @@ Called every frame for each client before the physics are run
 .float last_vehiclecheck;
 void PlayerPreThink (entity this)
 {
+
 	STAT(GUNALIGN, this) = CS(this).cvar_cl_gunalign; // TODO
 	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS(this).cvar_cl_movement_track_canjump;
 
@@ -2594,6 +2595,28 @@ void PlayerPreThink (entity this)
 		.entity weaponentity = weaponentities[slot];
 		if(this.(weaponentity).m_weapon == WEP_Null)
 			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
+	}
+
+	//Bullets timer
+	if (this.shotgun_timer) {
+	
+		if (this.shotgun_timer_time < 2) { //2 frames for reloading weapon
+			this.shotgun_timer_time++;
+	
+		} else {
+
+			if (this.shotgun_inc_pointblank) {
+				entity attaker = this.shotgun_bullets_received_from;
+				entity achv = attaker.achievements;
+				achv.inc_achievement(achv, "pointblank");
+				achv.announce(achv, attaker, "Point Blank!", "pointblank");
+			}
+
+			this.shotgun_timer = 0;
+			this.shotgun_timer_time = 0;
+			this.shotgun_bullets_received = 0;
+			this.shotgun_inc_pointblank = 0;
+		}
 	}
 }
 

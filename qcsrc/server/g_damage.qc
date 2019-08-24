@@ -875,15 +875,21 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 
 	//Weapons achievements
-	entity attacker_achv = attacker_save.achievements;
 	if (DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) {
 
 		float distance = vlen(targ.origin-attacker.origin);
+		
+		if (targ.shotgun_timer) {
+			targ.shotgun_bullets_received += 1;
+		} else {
+			targ.shotgun_bullets_received_from = attacker_save;
+			targ.shotgun_bullets_received = 1;
+			targ.shotgun_timer = 1;			
+		}
 
 		//Add condition to look at, not only for distance
-		if (distance < 60) {
-			attacker_achv.inc_achievement(attacker_achv, "pointblank");
-			attacker_achv.announce(attacker_achv, attacker_save, "Point Blank!", "pointblank");
+		if (distance < 65 && targ.shotgun_bullets_received) {
+			targ.shotgun_inc_pointblank = 1;
 		}
 	}
 }
