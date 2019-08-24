@@ -24,7 +24,10 @@ CLASS(Achievements, Object)
 	ATTRIB(Achievements, electrobitch, int, 0);
 	ATTRIB(Achievements, impressive, int, 0);
 	ATTRIB(Achievements, flyingyoda, int, 0); //In Yoda maybe incorrect conditions
+
+	//New achievements
 	ATTRIB(Achievements, multirailed, int, 0);
+	ATTRIB(Achievements, pointblank, int, 0);
 
 	//Getters and setters for achievements	
 	METHOD(Achievements, set_achievement_value, void(Achievements this, string achieve, int value));

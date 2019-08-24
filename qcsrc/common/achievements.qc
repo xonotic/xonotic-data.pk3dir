@@ -31,7 +31,9 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	if (achieve == "electrobitch") this.electrobitch = value;
 	if (achieve == "impressive") this.impressive = value;
 	if (achieve == "flyingyoda") this.flyingyoda = value;
+	
 	if (achieve == "multirailed") this.multirailed = value;
+	if (achieve == "pointblank") this.pointblank = value;
 
 	return;
 }
@@ -55,7 +57,9 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 	if (achieve == "electrobitch") return this.electrobitch;
 	if (achieve == "impressive") return this.impressive;
 	if (achieve == "flyingyoda") return this.flyingyoda;
+
 	if (achieve == "multirailed") return this.multirailed;
+	if (achieve == "pointblank") return this.pointblank;
 
 	return 0;
 }

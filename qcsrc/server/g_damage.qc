@@ -872,6 +872,20 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
 		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE.m_id, weaponentity, attacker.origin, force);
 	}
+
+
+	//Weapons achievements
+	entity attacker_achv = attacker_save.achievements;
+	if (DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) {
+
+		float distance = vlen(targ.origin-attacker.origin);
+
+		//Add condition to look at, not only for distance
+		if (distance < 60) {
+			attacker_achv.inc_achievement(attacker_achv, "pointblank");
+			attacker_achv.announce(attacker_achv, attacker_save, "Point Blank!", "pointblank");
+		}
+	}
 }
 
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
