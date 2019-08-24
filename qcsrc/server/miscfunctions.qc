@@ -530,9 +530,9 @@ void weaponarena_available_update(entity this)
 		if(wep_available && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN))
 			g_weaponarena_weapons |= WepSet_FromWeapon(it);
 	});
-	start_weapons = g_weaponarena_weapons;
+	start_weapons |= g_weaponarena_weapons;
 	if(warmup_stage)
-		warmup_start_weapons = start_weapons;
+		warmup_start_weapons |= g_weaponarena_weapons;
 }
 
 void readplayerstartcvars()
