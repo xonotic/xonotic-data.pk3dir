@@ -43,7 +43,10 @@ spawnfunc(info_teleport_destination)
 	{
 	}
 	else
+	{
 		objerror (this, "^3Teleport destination without a targetname");
+		return; // don't link it to CSQC in this case!
+	}
 
 	teleport_dest_link(this);
 }
