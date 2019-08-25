@@ -434,7 +434,7 @@ void LocalCommand_sendcvar(int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_INFO("Usage:^3 cl_cmd sendcvar <cvar>");
-			LOG_INFO("  Where 'cvar' is the cvar plus arguments to send to the server.");
+			LOG_INFO("  Where 'cvar' is the cvar to send to the server.");
 			return;
 		}
 	}
@@ -477,7 +477,7 @@ CLIENT_COMMAND(handlevote, "System to handle selecting a vote or option") { Loca
 CLIENT_COMMAND(hud, "Commands regarding/controlling the HUD system") { LocalCommand_hud(request, arguments); }
 CLIENT_COMMAND(localprint, "Create your own centerprint sent to yourself") { LocalCommand_localprint(request, arguments); }
 CLIENT_COMMAND(mv_download, "Retrieve mapshot picture from the server") { LocalCommand_mv_download(request, arguments); }
-CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
+CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like cl_weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
 
 void LocalCommand_macro_help()
 {

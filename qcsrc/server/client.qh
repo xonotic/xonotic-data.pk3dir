@@ -139,6 +139,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_weaponimpulsemode, int, this.cvar_cl_weaponimpulsemode);
     ATTRIB(Client, cvar_g_xonoticversion, string, this.cvar_g_xonoticversion);
     ATTRIB(Client, autoswitch, bool, this.autoswitch);
+    ATTRIB(Client, cvar_cl_casings, bool, this.cvar_cl_casings);
     ATTRIB(Client, cvar_cl_dodging_timeout, float, this.cvar_cl_dodging_timeout);
     ATTRIB(Client, cvar_cl_multijump, bool, this.cvar_cl_multijump);
     ATTRIB(Client, cvar_cl_accuracy_data_share, bool, this.cvar_cl_accuracy_data_share);

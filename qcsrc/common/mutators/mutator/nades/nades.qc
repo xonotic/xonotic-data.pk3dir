@@ -10,6 +10,9 @@ float autocvar_g_nades_spread = 0.04;
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
+REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
+REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
+
 entity Nade_TrailEffect(int proj, int nade_team)
 {
     switch (proj)
@@ -1545,9 +1548,6 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
 }
-
-REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
-REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {

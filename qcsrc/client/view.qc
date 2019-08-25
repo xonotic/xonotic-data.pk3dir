@@ -601,7 +601,7 @@ float TrueAimCheck(entity wepent)
 {
 	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
 		return SHOTTYPE_HITWORLD;
-	
+
 	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
 	vector mi, ma, dv;
@@ -1561,6 +1561,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
 
 	lasthud = hud;
+
+	ReplicateVars(false);
+	if (ReplicateVars_NOT_SENDING())
+		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
 
 	HUD_Scale_Disable();
 

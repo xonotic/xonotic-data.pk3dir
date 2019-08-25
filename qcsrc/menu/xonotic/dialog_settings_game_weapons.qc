@@ -23,9 +23,7 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 {
 	entity e;
 	entity weaponsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"sendcvar cl_autoswitch;"
 		"sendcvar cl_weaponpriority;"
-		"sendcvar cl_weaponimpulsemode;"
 		, COMMANDBUTTON_APPLY);
 	weaponsApplyButton.disableOnClick = true;
 
@@ -51,12 +49,12 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			_("Make use of the list above when cycling through weapons with the mouse wheel")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_weaponimpulsemode", _("Cycle through only usable weapon selections")));
-			e.applyButton = weaponsApplyButton;
+			e.sendCvars = true;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "cl_autoswitch", _("Auto switch weapons on pickup"),
 			_("Automatically switch to newly picked up weapons if they are better than what you are carrying")));
-			e.applyButton = weaponsApplyButton;
+			e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_attack_on_weapon_switch", _("Release attack buttons when you switch weapons")));
 	me.TR(me);

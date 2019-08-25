@@ -429,6 +429,9 @@ void GetCvars(entity this, entity store, int f)
 {
 	string s = string_null;
 
+	if (f == 0)
+		LOG_INFO("Warning: requesting cvar values is deprecated. Client should send them automatically using REPLICATE.\n");
+
 	if (f > 0)
 		s = strcat1(argv(f));
 
@@ -498,7 +501,7 @@ float want_weapon(entity weaponinfo, float allguns)
 	allow_mutatorblocked = M_ARGV(3, bool);
 
 	if(allguns)
-		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & WEP_FLAG_HIDDEN));
+		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
 
@@ -527,7 +530,7 @@ WepSet weapons_start()
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
 		int w = want_weapon(it, false);
-		if(w & 1)
+		if (w & 1)
 			ret |= it.m_wepset;
 	});
 	return ret;
@@ -537,7 +540,7 @@ WepSet weapons_all()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
-		if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
 			ret |= it.m_wepset;
 	});
 	return ret;
@@ -557,7 +560,7 @@ WepSet weapons_most()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
-		if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN))
+		if ((it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)))
 			ret |= it.m_wepset;
 	});
 	return ret;

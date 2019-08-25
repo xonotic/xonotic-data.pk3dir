@@ -641,6 +641,10 @@ void PutPlayerInServer(entity this)
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
 
+	// TODO: we can't set these in the PlayerSpawn hook since the target code is called before it!
+	STAT(BUFFS, this) = 0;
+	STAT(BUFF_TIME, this) = 0;
+
 	this.air_finished = time + 12;
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
@@ -1679,6 +1683,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	SetResourceExplicit(this, RES_HEALTH, GetResource(spectatee, RES_HEALTH));
 	CS(this).impulse = 0;
+	this.disableclientprediction = 1; // no need to run prediction on a spectator
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
 	STAT(HIT_TIME, this) = STAT(HIT_TIME, spectatee);
@@ -2190,6 +2195,8 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
+			if(WEP_CVAR(vortex, charge_always))
+				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
 
