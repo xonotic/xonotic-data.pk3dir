@@ -106,5 +106,6 @@ void Achievements_inc_achievement(entity this, string achieve) {
 void Achievements_announce(Achievements this, entity whom, string title, string achieve) {
 	#ifdef SVQC
 		centerprint(whom, strcat(title, " [", ftos(this.get_achievement_value(this, achieve)), "]"));
+		print(strcat(whom.netname, " got ", achieve, " achievement.\n"));
 	#endif
 }
