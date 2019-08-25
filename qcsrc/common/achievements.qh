@@ -23,7 +23,7 @@ CLASS(Achievements, Object)
 	ATTRIB(Achievements, botlike, int, 0);
 	ATTRIB(Achievements, electrobitch, int, 0);
 	ATTRIB(Achievements, impressive, int, 0);
-	ATTRIB(Achievements, flyingyoda, int, 0); //In Yoda maybe incorrect conditions
+	ATTRIB(Achievements, likeyoda, int, 0);
 
 	//New achievements
 	ATTRIB(Achievements, multirailed, int, 0);

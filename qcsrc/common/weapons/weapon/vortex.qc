@@ -150,7 +150,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 	if(yoda && flying) {
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-		achs.inc_achievement(achs, "flyingyoda"); 
+		achs.inc_achievement(achs, "likeyoda"); 
     }
 
 	if(damage_goodhits && actor.vortex_lasthit)

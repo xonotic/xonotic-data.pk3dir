@@ -139,7 +139,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	if(yoda && flying) {
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-		achs.inc_achievement(achs, "flyingyoda");
+		achs.inc_achievement(achs, "likeyoda");
 	}
 
 	if(damage_goodhits && actor.vaporizer_lasthit)

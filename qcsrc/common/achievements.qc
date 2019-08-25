@@ -30,7 +30,7 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	if (achieve == "botlike") this.botlike = value;
 	if (achieve == "electrobitch") this.electrobitch = value;
 	if (achieve == "impressive") this.impressive = value;
-	if (achieve == "flyingyoda") this.flyingyoda = value;
+	if (achieve == "likeyoda") this.likeyoda = value;
 	
 	if (achieve == "multirailed") this.multirailed = value;
 	if (achieve == "pointblank") this.pointblank = value;
@@ -57,7 +57,7 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 	if (achieve == "botlike") return this.botlike;
 	if (achieve == "electrobitch") return this.electrobitch;
 	if (achieve == "impressive") return this.impressive;
-	if (achieve == "flyingyoda") return this.flyingyoda;
+	if (achieve == "likeyoda") return this.likeyoda;
 
 	if (achieve == "multirailed") return this.multirailed;
 	if (achieve == "pointblank") return this.pointblank;
@@ -84,7 +84,7 @@ string Achievements_get_achievement_title(string achieve) {
 	if (achieve == "botlike") return "Botlike!";
 	if (achieve == "electrobitch") return "Electro-BITCH!";
 	if (achieve == "impressive") return "Impressive!";
-	if (achieve == "flyingyoda") return "Yoda!";
+	if (achieve == "likeyoda") return "Like Yoda!";
 
 	if (achieve == "multirailed") return "Multi Railed!";
 	if (achieve == "pointblank") return "Point Blank!";
