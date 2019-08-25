@@ -875,7 +875,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 
 	//Weapons achievements
-	if (DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) {
+	if (DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) || DEATH_ISWEAPON(deathtype, WEP_CRYLINK)) {
 
 		float distance = vlen(targ.origin-attacker.origin);
 		
@@ -883,7 +883,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		targ.shotgun_bullets_received_from = attacker;	
 
 		//Add condition to look at, not only for distance
-		if (distance < 65) {
+		if (distance < 65 && targ != attacker) {
 			targ.shotgun_inc_pointblank = 1;
 		}
 	}

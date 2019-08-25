@@ -2394,7 +2394,6 @@ Called every frame for each client before the physics are run
 =============
 */
 .float last_vehiclecheck;
-.int shotgun_timer_time;
 void PlayerPreThink (entity this)
 {
 
@@ -2600,25 +2599,18 @@ void PlayerPreThink (entity this)
 
 	//Bullets timer
 	if (this.shotgun_timer) {
-	
-		if (this.shotgun_timer_time < 2) { //2 frames for reloading weapon
-			this.shotgun_timer_time++;
-	
-		} else {
 
-			if (this.shotgun_inc_pointblank) {
+		if (this.shotgun_inc_pointblank) {
 
-				entity attaker = this.shotgun_bullets_received_from;
-				entity achv = attaker.achievements;
-				
-				achv.inc_achievement(achv, "pointblank");
-				achv.announce(achv, attaker, "Point Blank!", "pointblank");
-			}
-
-			this.shotgun_timer = 0;
-			this.shotgun_timer_time = 0;
-			this.shotgun_inc_pointblank = 0;
+			entity attaker = this.shotgun_bullets_received_from;
+			entity achv = attaker.achievements;
+			
+			achv.inc_achievement(achv, "pointblank");
+			achv.announce(achv, attaker, "Point Blank!", "pointblank");
 		}
+
+		this.shotgun_timer = 0;
+		this.shotgun_inc_pointblank = 0;
 	}
 
 	//Check suicide
