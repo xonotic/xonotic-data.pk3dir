@@ -526,7 +526,7 @@ WepSet weapons_start()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
-		int w = want_weapon(it, false); // TODO too complicated? see my MR, test CTS/courtfun - ballstealer
+		int w = want_weapon(it, false);
 		if(w & 1)
 			ret |= it.m_wepset;
 	});
@@ -635,7 +635,7 @@ void readplayerstartcvars()
 	{
 		// no arena
 	}
-	else if (s == "off") // TODO remove? CA and others don't respect this
+	else if (s == "off")
 	{
 		// forcibly turn off weaponarena
 	}
@@ -748,16 +748,11 @@ void readplayerstartcvars()
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 		random_start_weapons_count = cvar("g_random_start_weapons_count");
-		SetResource(random_start_ammo, RES_SHELLS, cvar(
-			"g_random_start_shells"));
-		SetResource(random_start_ammo, RES_BULLETS, cvar(
-			"g_random_start_bullets"));
-		SetResource(random_start_ammo, RES_ROCKETS,
-			cvar("g_random_start_rockets"));
-		SetResource(random_start_ammo, RES_CELLS, cvar(
-			"g_random_start_cells"));
-		SetResource(random_start_ammo, RES_PLASMA, cvar(
-			"g_random_start_plasma"));
+		SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
+		SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
+		SetResource(random_start_ammo, RES_ROCKETS,cvar("g_random_start_rockets"));
+		SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
+		SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
 	}
 
 	warmup_start_ammo_shells = start_ammo_shells;
@@ -815,16 +810,16 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
-	SetResource(random_start_ammo, RES_SHELLS, max(0,
-		GetResource(random_start_ammo, RES_SHELLS)));
-	SetResource(random_start_ammo, RES_BULLETS, max(0,
-		GetResource(random_start_ammo, RES_BULLETS)));
-	SetResource(random_start_ammo, RES_ROCKETS, max(0,
-		GetResource(random_start_ammo, RES_ROCKETS)));
-	SetResource(random_start_ammo, RES_CELLS, max(0,
-		GetResource(random_start_ammo, RES_CELLS)));
-	SetResource(random_start_ammo, RES_PLASMA, max(0,
-		GetResource(random_start_ammo, RES_PLASMA)));
+	SetResource(random_start_ammo, RES_SHELLS,
+		max(0, GetResource(random_start_ammo, RES_SHELLS)));
+	SetResource(random_start_ammo, RES_BULLETS,
+		max(0, GetResource(random_start_ammo, RES_BULLETS)));
+	SetResource(random_start_ammo, RES_ROCKETS,
+		max(0, GetResource(random_start_ammo, RES_ROCKETS)));
+	SetResource(random_start_ammo, RES_CELLS,
+		max(0, GetResource(random_start_ammo, RES_CELLS)));
+	SetResource(random_start_ammo, RES_PLASMA,
+		max(0, GetResource(random_start_ammo, RES_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
