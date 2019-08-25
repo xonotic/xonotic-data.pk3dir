@@ -497,8 +497,6 @@ MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 {
-	LOG_INFOF("CA SetWeaponArena %s", autocvar_g_ca_weaponarena);
-	// most weapons arena
 	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
 		M_ARGV(0, string) = autocvar_g_ca_weaponarena;
 }

@@ -269,7 +269,6 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 
 MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 {
-	LOG_INFOF("OK SetStartItems\n");
 	WepSet ok_start_items = (WEPSET(OVERKILL_MACHINEGUN) | WEPSET(OVERKILL_NEX) | WEPSET(OVERKILL_SHOTGUN));
 
 	if(WEP_OVERKILL_RPC.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_RPC); }
@@ -281,7 +280,6 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 
 MUTATOR_HOOKFUNCTION(ok, SetWeaponArena)
 {
-	LOG_INFOF("OK SetWeaponArena\n");
 	// turn weapon arena off
 	M_ARGV(0, string) = "off";
 }
