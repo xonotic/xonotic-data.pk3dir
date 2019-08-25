@@ -587,7 +587,7 @@ MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
 {
 	// most weapons arena
 	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
-		M_ARGV(0, string) = "most";
+		M_ARGV(0, string) = autocvar_g_freezetag_weaponarena;
 }
 
 MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)

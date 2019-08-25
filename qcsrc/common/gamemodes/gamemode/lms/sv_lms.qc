@@ -429,9 +429,12 @@ MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms, WantWeapon)
+MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
 {
-	M_ARGV(2, bool) = true; // all weapons
+	LOG_INFOF("LMS SetWeaponArena %s", autocvar_g_ca_weaponarena);
+	// most weapons arena
+	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+		M_ARGV(0, string) = autocvar_g_lms_weaponarena;
 }
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)

@@ -508,7 +508,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 
 	float t = weaponinfo.weaponstartoverride;
 
-	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
+	//LOG_INFOF("want_weapon: %s - d: %d t: %d\n", weaponinfo.netname, d, t);
 
 	// bit order in t:
 	// 1: want or not
@@ -522,23 +522,97 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	return t;
 }
 
-void weaponarena_available_update(entity this)
+/// Weapons the player normally starts with outside weapon arena.
+WepSet weapons_start()
 {
+	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
-		// if no weapons are available, just fall back to normal weapons (most weapons arena)
-		bool wep_available = ((weaponsInMapAll) ? !!(weaponsInMapAll & WepSet_FromWeapon(it)) : (it.spawnflags & WEP_FLAG_NORMAL));
-		if(wep_available && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN))
-			g_weaponarena_weapons |= WepSet_FromWeapon(it);
+		int w = want_weapon(it, false); // TODO too complicated? see my MR, test CTS/courtfun - ballstealer
+		if(w & 1)
+			ret |= it.m_wepset;
 	});
-	start_weapons |= g_weaponarena_weapons;
-	if(warmup_stage)
-		warmup_start_weapons |= g_weaponarena_weapons;
+	return ret;
+}
+
+WepSet weapons_all()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_devall()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_most()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN))
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+void weaponarena_available_all_update(entity this)
+{
+	LOG_INFOF("weaponarena_available_all_update %v\n", weaponsInMapAll);
+
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & weapons_all());
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to all weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_all();
+	}
+}
+
+void weaponarena_available_devall_update(entity this)
+{
+	LOG_INFOF("weaponarena_available_devall_update %v\n", weaponsInMapAll);
+
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | weaponsInMapAll;
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to devall weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_devall();
+	}
+}
+
+void weaponarena_available_most_update(entity this) // TODO cleanup
+{
+	LOG_INFOF("weaponarena_available_most_update %v\n", weaponsInMapAll);
+
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & weapons_most());
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to most weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_most();
+	}
 }
 
 void readplayerstartcvars()
 {
+	LOG_INFOF("readplayerstartcvars\n");
 	float i, t;
-	string s;
 
 	// initialize starting values for players
 	start_weapons = '0 0 0';
@@ -560,16 +634,17 @@ void readplayerstartcvars()
 	g_weaponarena = 0;
 	g_weaponarena_weapons = '0 0 0';
 
-	s = cvar_string("g_weaponarena");
+	string s = cvar_string("g_weaponarena");
 
 	MUTATOR_CALLHOOK(SetWeaponArena, s);
 	s = M_ARGV(0, string);
+	LOG_INFOF("arena: %s", s);
 
 	if (s == "0" || s == "")
 	{
 		// no arena
 	}
-	else if (s == "off")
+	else if (s == "off") // TODO remove? CA and others don't respect this
 	{
 		// forcibly turn off weaponarena
 	}
@@ -577,40 +652,43 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
-		FOREACH(Weapons, it != WEP_Null, {
-			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				g_weaponarena_weapons |= (it.m_wepset);
-		});
+		g_weaponarena_weapons = weapons_all();
 	}
 	else if (s == "devall")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "All Weapons"; // TODO: report as more than just all weapons?
-		FOREACH(Weapons, it != WEP_Null,
-		{
-			g_weaponarena_weapons |= (it.m_wepset);
-		});
+		g_weaponarena_list = "Dev All Weapons";
+		g_weaponarena_weapons = weapons_devall();
 	}
 	else if (s == "most")
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
-		FOREACH(Weapons, it != WEP_Null, {
-			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN))
-				g_weaponarena_weapons |= (it.m_wepset);
-		});
+		g_weaponarena_weapons = weapons_most();
 	}
-	else if (s == "available")
+	else if (s == "all_available")
 	{
-		g_weaponarena = 2;
-		g_weaponarena_list = "Most Weapons";
-		// include weapons the player would start with
-		FOREACH(Weapons, it != WEP_Null, {
-			int w = want_weapon(it, false);
-			if(w & 1)
-				g_weaponarena_weapons |= (it.m_wepset);
-		});
-		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+		g_weaponarena = 1;
+		g_weaponarena_list = "All Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_all_update, INITPRIO_FINDTARGET);
+	}
+	else if (s == "devall_available")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "Dev All Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_devall_update, INITPRIO_FINDTARGET);
+	}
+	else if (s == "most_available")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "Most Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_most_update, INITPRIO_FINDTARGET);
 	}
 	else if (s == "none")
 	{
@@ -691,7 +769,7 @@ void readplayerstartcvars()
 			"g_random_start_plasma"));
 	}
 
-	if (warmup_stage)
+	if (warmup_stage && !g_ca && !g_freezetag) // TODO remove?
 	{
 		warmup_start_ammo_shells = start_ammo_shells;
 		warmup_start_ammo_nails = start_ammo_nails;
@@ -705,7 +783,7 @@ void readplayerstartcvars()
 		warmup_start_weapons_default = start_weapons_default;
 		warmup_start_weapons_defaultmask = start_weapons_defaultmask;
 
-		if (!g_weaponarena && !g_ca && !g_freezetag)
+		if (!g_weaponarena)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
 			warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
@@ -773,9 +851,9 @@ void precache_playermodel(string m)
 	float globhandle, i, n;
 	string f;
 
-	if(substring(m, -9,5) == "_lod1")
+	if(substring(m, -9, 5) == "_lod1")
 		return;
-	if(substring(m, -9,5) == "_lod2")
+	if(substring(m, -9, 5) == "_lod2")
 		return;
 	precache_model(m);
 	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));

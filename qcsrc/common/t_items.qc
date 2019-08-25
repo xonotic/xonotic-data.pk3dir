@@ -1307,6 +1307,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.is_item = true;
 		}
 
+		LOG_INFOF("adding weapid 2: %d\n", weaponid);
 		weaponsInMap |= WepSet_FromWeapon(Weapons_from(weaponid));
 
 		if (   def.instanceOfPowerup

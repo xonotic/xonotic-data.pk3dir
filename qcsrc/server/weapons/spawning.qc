@@ -28,7 +28,7 @@ string W_Apply_Weaponreplace(string in)
 
 void weapon_defaultspawnfunc(entity this, Weapon e)
 {
-	Weapon wpn = e;
+	Weapon wpn = e; // TODO unify wpn and e
 	e = wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
 	this.classname = wpn.m_canonical_spawnfunc;
 	if (!Item_IsLoot(this) && !this.m_isreplaced)
