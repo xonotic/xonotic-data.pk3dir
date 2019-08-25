@@ -2620,6 +2620,19 @@ void PlayerPreThink (entity this)
 			this.shotgun_inc_pointblank = 0;
 		}
 	}
+
+	//Check suicide
+	if (this.check_suicide) {
+
+		if (this.suicide) {
+			entity achv = this.achievements;
+			achv.inc_achievement(achv, "selfimmolation");
+			achv.announce(achv, this, "Self-Immolation!", "selfimmolation");
+		}
+
+		this.suicide = 0;
+		this.check_suicide = 0;
+	}
 }
 
 void DrownPlayer(entity this)

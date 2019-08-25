@@ -34,6 +34,7 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	
 	if (achieve == "multirailed") this.multirailed = value;
 	if (achieve == "pointblank") this.pointblank = value;
+	if (achieve == "selfimmolation") this.selfimmolation = value;
 
 	return;
 }
@@ -60,6 +61,7 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 
 	if (achieve == "multirailed") return this.multirailed;
 	if (achieve == "pointblank") return this.pointblank;
+	if (achieve == "selfimmolation") return this.selfimmolation;
 
 	return 0;
 }

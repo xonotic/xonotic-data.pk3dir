@@ -28,6 +28,7 @@ CLASS(Achievements, Object)
 	//New achievements
 	ATTRIB(Achievements, multirailed, int, 0);
 	ATTRIB(Achievements, pointblank, int, 0);
+	ATTRIB(Achievements, selfimmolation, int, 0);
 
 	//Getters and setters for achievements	
 	METHOD(Achievements, set_achievement_value, void(Achievements this, string achieve, int value));

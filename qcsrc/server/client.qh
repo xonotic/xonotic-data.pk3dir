@@ -202,6 +202,8 @@ CLASS(Player, Client)
     ATTRIB(Player, shotgun_timer, bool, this.shotgun_timer);
     ATTRIB(Player, shotgun_bullets_received_from, entity, this.shotgun_bullets_received_from);
     ATTRIB(Player, shotgun_inc_pointblank, bool, this.shotgun_inc_pointblank);
+    ATTRIB(Player, check_suicide, bool, this.check_suicide);
+    ATTRIB(Player, suicide, bool, this.suicide);
 
     INIT(Player) {
         this.classname = STR_PLAYER;
