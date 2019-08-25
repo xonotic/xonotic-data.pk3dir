@@ -888,7 +888,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		}
 	}
 
-	if (IS_DEAD(targ)) {
+	if (IS_DEAD(targ) && IS_PLAYER(attacker)) {
 		if (targ != attacker) {
 			attacker.check_suicide = 1;
 		} else {
