@@ -199,9 +199,9 @@ CLASS(Player, Client)
     ATTRIB(Player, prevstrengthsoundattempt, float, this.prevstrengthsoundattempt);
     ATTRIB(Player, buff_shield, float, this.buff_shield);
 
-    ATTRIB(Player, shotgun_timer, bool, this.shotgun_timer);
-    ATTRIB(Player, shotgun_bullets_received_from, entity, this.shotgun_bullets_received_from);
-    ATTRIB(Player, shotgun_inc_pointblank, bool, this.shotgun_inc_pointblank);
+    ATTRIB(Player, pointblank_checker, bool, this.pointblank_checker);
+    ATTRIB(Player, pointblank_attacker, entity, this.pointblank_attacker);
+    ATTRIB(Player, pointblank_increase, bool, this.pointblank_increase);
     ATTRIB(Player, check_suicide, bool, this.check_suicide);
     ATTRIB(Player, suicide, bool, this.suicide);
 

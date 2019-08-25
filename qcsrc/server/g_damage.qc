@@ -879,18 +879,18 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		float distance = vlen(targ.origin-attacker.origin);
 		
-		targ.shotgun_timer = 1;	
-		targ.shotgun_bullets_received_from = attacker;	
+		attacker.pointblank_checker = 1;	
 
 		//Add condition to look at, not only for distance
 		if (distance < 65 && targ != attacker) {
-			targ.shotgun_inc_pointblank = 1;
+			attacker.pointblank_increase = 1;
 		}
 	}
 
 	if (IS_DEAD(targ) && IS_PLAYER(attacker)) {
 		if (targ != attacker) {
 			attacker.check_suicide = 1;
+			attacker.suicide = 0;
 		} else {
 			attacker.suicide = 1;
 		}

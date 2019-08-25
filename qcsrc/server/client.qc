@@ -2598,19 +2598,18 @@ void PlayerPreThink (entity this)
 	}
 
 	//Bullets timer
-	if (this.shotgun_timer) {
+	if (this.pointblank_checker) {
 
-		if (this.shotgun_inc_pointblank) {
+		if (this.pointblank_increase) {
 
-			entity attaker = this.shotgun_bullets_received_from;
-			entity achv = attaker.achievements;
+			entity achv = this.achievements;
 			
 			achv.inc_achievement(achv, "pointblank");
-			achv.announce(achv, attaker, "Point Blank!", "pointblank");
+			achv.announce(achv, this, "Point Blank!", "pointblank");
 		}
 
-		this.shotgun_timer = 0;
-		this.shotgun_inc_pointblank = 0;
+		this.pointblank_checker = 0;
+		this.pointblank_increase = 0;
 	}
 
 	//Check suicide
