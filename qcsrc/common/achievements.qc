@@ -39,8 +39,8 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	return;
 }
 
-int Achievements_get_achievement_value(entity this, string achieve) {
 
+int Achievements_get_achievement_value(entity this, string achieve) {
 	if (achieve == "triple_kill") return this.triple_kill;
 	if (achieve == "rage") return this.rage;
 	if (achieve == "massacre") return this.massacre;
@@ -66,6 +66,32 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 	return 0;
 }
 
+string Achievements_get_achievement_title(string achieve) {
+	
+	if (achieve == "triple_kill") return "Tripple Kill!";
+	if (achieve == "rage") return "Rage!";
+	if (achieve == "massacre") return "Massacre!";
+	if (achieve == "mayhem") return "Mayhem!";
+	if (achieve == "berserker") return "Berserker!";
+	if (achieve == "carnage") return "Carnage!";
+	if (achieve == "armageddon") return "Armageddon!";
+
+	if (achieve == "firstblood") return "First Blood!";
+
+	if (achieve == "airshot") return "Air Shot!";
+	if (achieve == "amazing") return "Amazing!";
+	if (achieve == "awesome") return "Awesome!";
+	if (achieve == "botlike") return "Botlike!";
+	if (achieve == "electrobitch") return "Electro-BITCH!";
+	if (achieve == "impressive") return "Impressive!";
+	if (achieve == "flyingyoda") return "Yoda!";
+
+	if (achieve == "multirailed") return "Multi Railed!";
+	if (achieve == "pointblank") return "Point Blank!";
+	if (achieve == "selfimmolation") return "Self-Immolation!";
+	return "";
+}
+
 string Achievements_get_achievement_name_from_kills(int kills) {
 
 	if (kills == 3) return "triple_kill";
@@ -75,18 +101,6 @@ string Achievements_get_achievement_name_from_kills(int kills) {
 	if (kills == 20) return "berserker";
 	if (kills == 25) return "carnage";
 	if (kills == 30) return "armageddon";
-	return "";
-}
-
-string Achievements_get_achievement_title_from_kills(int kills) {
-
-	if (kills == 3) return "Tripple Kill!";
-	if (kills == 5) return "Rage!";
-	if (kills == 10) return "Massacre!";
-	if (kills == 15) return "Mayhem!";
-	if (kills == 20) return "Berserker!";
-	if (kills == 25) return "Carnage!";
-	if (kills == 30) return "Armageddon!";
 	return "";
 }
 
@@ -103,8 +117,9 @@ void Achievements_inc_achievement(entity this, string achieve) {
 	return Achievements_add_achievement_value(this, achieve, 1);
 }
 
-void Achievements_announce(Achievements this, entity whom, string title, string achieve) {
+void Achievements_announce(Achievements this, entity whom, string achieve) {
 	#ifdef SVQC
+		string title = Achievements_get_achievement_title(achieve);
 		centerprint(whom, strcat(title, " [", ftos(this.get_achievement_value(this, achieve)), "]"));
 		print(strcat(whom.netname, " got ", achieve, " achievement.\n"));
 	#endif

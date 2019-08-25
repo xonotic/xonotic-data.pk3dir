@@ -222,7 +222,7 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 
 void announce_spree(int counta, entity achv, entity element) {
 	achv.inc_kill_achievement(achv, counta);
-	achv.announce(achv, element, achv.get_achievement_title_from_kills(counta), achv.get_achievement_name_from_kills(counta));
+	achv.announce(achv, element, achv.get_achievement_name_from_kills(counta));
 }
 
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity)
@@ -348,7 +348,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				//Send achievement for first blood
 				entity achv = attacker.achievements;
 				achv.set_achievement_value(achv, "firstblood", 1);
-				achv.announce(achv, attacker, "First Blood!", "firstblood");
+				achv.announce(achv, attacker, "firstblood");
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;

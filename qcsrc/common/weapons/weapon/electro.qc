@@ -82,7 +82,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 					if(IsFlying(directhitentity)) {
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 						achs.inc_achievement(achs, "electrobitch");
-						achs.announce(achs, this.realowner, "Electro-BITCH!", "electrobitch");
+						achs.announce(achs, this.realowner, "electrobitch");
 					}
 
 	this.event_damage = func_null;

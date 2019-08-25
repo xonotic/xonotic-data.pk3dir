@@ -12,7 +12,7 @@ void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 					if(IsFlying(directhitentity)) {
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 						achs.inc_achievement(achs, "airshot");
-						achs.announce(achs, this.realowner, "Air Shot!", "airshot");
+						achs.announce(achs, this.realowner, "airshot");
 					}
 
 	this.event_damage = func_null;
@@ -41,7 +41,7 @@ void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 					if(IsFlying(directhitentity)){
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 						achs.inc_achievement(achs, "airshot");
-						achs.announce(achs, this.realowner, "Air Shot!", "airshot");
+						achs.announce(achs, this.realowner, "airshot");
 					}
 
 	this.event_damage = func_null;

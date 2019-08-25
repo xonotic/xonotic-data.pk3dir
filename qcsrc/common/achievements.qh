@@ -37,11 +37,12 @@ CLASS(Achievements, Object)
 	METHOD(Achievements, inc_kill_achievement, void(Achievements this, int kills));
 	METHOD(Achievements, inc_achievement, void(Achievements this, string achieve));
 
+	//Static methods
 	METHOD(Achievements, get_achievement_name_from_kills, string(int kills));
-	METHOD(Achievements, get_achievement_title_from_kills, string(int kills));
+	METHOD(Achievements, get_achievement_title, string(string achieve));
 
 	//Announce functions
-	METHOD(Achievements, announce, void(Achievements this, entity whom, string title, string achieve));
+	METHOD(Achievements, announce, void(Achievements this, entity whom, string achieve));
 	
 	CONSTRUCTOR(Achievements, entity aplayer) 
 	{

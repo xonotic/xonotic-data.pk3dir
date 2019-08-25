@@ -2605,7 +2605,7 @@ void PlayerPreThink (entity this)
 			entity achv = this.achievements;
 			
 			achv.inc_achievement(achv, "pointblank");
-			achv.announce(achv, this, "Point Blank!", "pointblank");
+			achv.announce(achv, this, "pointblank");
 		}
 
 		this.pointblank_checker = 0;
@@ -2618,7 +2618,7 @@ void PlayerPreThink (entity this)
 		if (this.suicide) {
 			entity achv = this.achievements;
 			achv.inc_achievement(achv, "selfimmolation");
-			achv.announce(achv, this, "Self-Immolation!", "selfimmolation");
+			achv.announce(achv, this, "selfimmolation");
 		}
 
 		this.suicide = 0;

@@ -134,7 +134,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	if (damage_goodhits > 1) {
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 		achs.inc_achievement(achs, "multirailed");
-		achs.announce(achs, actor, "Multi Railed!", "multirailed");
+		achs.announce(achs, actor, "multirailed");
 	}
 
 	if(yoda && flying) {
@@ -146,7 +146,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	{
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
 		achs.inc_achievement(achs, "impressive");
-		achs.announce(achs, actor, "Impressive!", "impressive");
+		achs.announce(achs, actor, "impressive");
 		damage_goodhits = 0; // only every second time
 	}
 
@@ -169,7 +169,7 @@ void W_RocketMinsta_Laser_Explode (entity this, entity directhitentity)
 					if(IsFlying(directhitentity)) {
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 						achs.inc_achievement(achs, "electrobitch");
-						achs.announce(achs, this.realowner, "Electro-BITCH!", "electrobitch");
+						achs.announce(achs, this.realowner, "electrobitch");
 					}
 
 	this.event_damage = func_null;
