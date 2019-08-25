@@ -288,12 +288,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 		LogDeath("suicide", deathtype, targ, targ);
 		if(deathtype != DEATH_AUTOTEAMCHANGE.m_id) // special case: don't negate frags if auto switched
 			GiveFrags(attacker, targ, -1, deathtype, weaponentity);
-		
-		attacker.suicide = 1;
-	}
-
-	if (targ != attacker) {
-		attacker.check_suicide = 1;
 	}
 
 	// ======
@@ -891,6 +885,14 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		//Add condition to look at, not only for distance
 		if (distance < 65) {
 			targ.shotgun_inc_pointblank = 1;
+		}
+	}
+
+	if (IS_DEAD(targ)) {
+		if (targ != attacker) {
+			attacker.check_suicide = 1;
+		} else {
+			attacker.suicide = 1;
 		}
 	}
 }
