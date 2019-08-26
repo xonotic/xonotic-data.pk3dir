@@ -541,7 +541,9 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 		midpoint += thisorigin;
 
 		if(!first)
-			te_lightning2(NULL, lastorigin, thisorigin);
+		{
+			//te_lightning2(NULL, lastorigin, thisorigin);
+		}
 		lastorigin = thisorigin;
 		if(first)
 			firstorigin = thisorigin;
@@ -549,7 +551,7 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 	}
 	if(NumTeams(kh_teams) > 2)
 	{
-		te_lightning2(NULL, lastorigin, firstorigin);
+		//te_lightning2(NULL, lastorigin, firstorigin);
 	}
 	midpoint = midpoint * (1 / NumTeams(kh_teams));
 	te_customflash(midpoint, 1000, 1, Team_ColorRGB(winner_team) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
