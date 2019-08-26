@@ -6,7 +6,7 @@
 int autocvar_g_freezetag_point_limit;
 int autocvar_g_freezetag_point_leadlimit;
 bool autocvar_g_freezetag_team_spawns;
-string autocvar_g_freezetag_weaponarena;
+string autocvar_g_freezetag_weaponarena = "most_available";
 
 void freezetag_Initialize();
 
