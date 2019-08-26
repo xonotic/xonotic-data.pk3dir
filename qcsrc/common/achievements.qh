@@ -15,6 +15,10 @@ CLASS(Achievements, Object)
 
 	//Boolean achievements (can be set only once)
 	ATTRIB(Achievements, firstblood, bool, 0);
+	ATTRIB(Achievements, firstplace, bool, 0);
+	ATTRIB(Achievements, secondplace, bool, 0);
+	ATTRIB(Achievements, thirdplace, bool, 0);
+	ATTRIB(Achievements, mostdamage, bool, 0);
 
 	//Notificated achievements
 	ATTRIB(Achievements, airshot, int, 0);
@@ -29,6 +33,7 @@ CLASS(Achievements, Object)
 	ATTRIB(Achievements, multirailed, int, 0);
 	ATTRIB(Achievements, pointblank, int, 0);
 	ATTRIB(Achievements, selfimmolation, int, 0);
+
 
 	//Getters and setters for achievements	
 	METHOD(Achievements, set_achievement_value, void(Achievements this, string achieve, int value));

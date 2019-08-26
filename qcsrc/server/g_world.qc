@@ -1573,6 +1573,11 @@ void FixIntermissionClient(entity e)
 	}
 }
 
+void increase_achieve(entity player, string name) {
+	player.achievements.inc_achievement(player.achievements, name);
+	player.achievements.announce(player.achievements, player, name);
+}
+
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1626,6 +1631,46 @@ void NextLevel()
 	MUTATOR_CALLHOOK(MatchEnd);
 
 	localcmd("\nsv_hook_gameend\n");
+
+
+	//Achievements
+	entity firstplace = spawn();
+	entity secondplace = spawn();
+	entity thirdplace = spawn();
+	entity mostdamage = spawn();
+
+	FOREACH_CLIENT(IS_PLAYER(it), {
+
+		if (!firstplace) {
+			firstplace = it;
+		}
+
+		if (!mostdamage) {
+			mostdamage = it;
+		}
+		
+		float itaverage = PlayerScore_Get(it, SP_KILLS) / PlayerScore_Get(it, SP_SUICIDES);
+		float plaverage = PlayerScore_Get(firstplace, SP_KILLS) / PlayerScore_Get(firstplace, SP_SUICIDES);
+		bool cond = (firstplace.totalfrags == it.totalfrags && itaverage > plaverage);
+		
+		if (it.totalfrags > firstplace.totalfrags || cond) {
+			thirdplace = secondplace;
+			secondplace = firstplace;
+			firstplace = it;
+		}
+
+		if (PlayerScore_Get(it, SP_DMG) > PlayerScore_Get(mostdamage, SP_DMG)) {
+			mostdamage = it;
+		}
+
+	});
+
+	if (IS_PLAYER(firstplace)) increase_achieve(firstplace, "firstplace");
+	if (IS_PLAYER(secondplace)) increase_achieve(secondplace, "secondplace");
+	if (IS_PLAYER(thirdplace)) increase_achieve(thirdplace, "thirdplace");
+	if (IS_PLAYER(mostdamage)) increase_achieve(mostdamage, "mostdamage");
+
+
 }
 
 

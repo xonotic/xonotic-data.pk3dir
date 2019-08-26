@@ -23,6 +23,10 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	if (achieve == "armageddon") this.armageddon = value;
 
 	if (achieve == "firstblood") this.firstblood = value;
+	if (achieve == "firstplace") this.firstplace = value;
+	if (achieve == "secondplace") this.secondplace = value;
+	if (achieve == "thirdplace") this.thirdplace = value;
+	if (achieve == "mostdamage") this.mostdamage = value;
 
 	if (achieve == "airshot") this.airshot = value;
 	if (achieve == "amazing") this.amazing = value;
@@ -50,6 +54,10 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 	if (achieve == "armageddon") return this.armageddon;
 
 	if (achieve == "firstblood") return this.firstblood;
+	if (achieve == "firstplace") return this.firstplace;
+	if (achieve == "secondplace") return this.secondplace;
+	if (achieve == "thirdplace") return this.thirdplace;
+	if (achieve == "mostdamage") return this.mostdamage;
 
 	if (achieve == "airshot") return this.airshot;
 	if (achieve == "amazing") return this.amazing;
@@ -77,6 +85,10 @@ string Achievements_get_achievement_title(string achieve) {
 	if (achieve == "armageddon") return "Armageddon!";
 
 	if (achieve == "firstblood") return "First Blood!";
+	if (achieve == "firstplace") return "First Place!";
+	if (achieve == "secondplace") return "Second Place!";
+	if (achieve == "thirdplace") return "Third Place!";
+	if (achieve == "mostdamage") return "Most Damage!";
 
 	if (achieve == "airshot") return "Air Shot!";
 	if (achieve == "amazing") return "Amazing!";
