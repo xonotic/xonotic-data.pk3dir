@@ -612,7 +612,9 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 
 MUTATOR_HOOKFUNCTION(ft, SV_ParseServerCommand)
 {
-	shuffleteams_on_reset_map = !(round_handler_IsActive() && !round_handler_IsRoundStarted());
+	string cmd_name = M_ARGV(0, string);
+	if (cmd_name == "shuffleteams")
+		shuffleteams_on_reset_map = !(round_handler_IsActive() && !round_handler_IsRoundStarted());
 	return false;
 }
 

@@ -1563,6 +1563,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	lasthud = hud;
 
+	ReplicateVars(false);
+	if (ReplicateVars_NOT_SENDING())
+		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
+
 	HUD_Scale_Disable();
 
 	if(autocvar__hud_showbinds_reload) // menu can set this one

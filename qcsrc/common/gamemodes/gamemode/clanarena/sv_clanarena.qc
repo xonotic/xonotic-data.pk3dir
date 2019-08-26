@@ -508,6 +508,8 @@ MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 
 MUTATOR_HOOKFUNCTION(ca, SV_ParseServerCommand)
 {
-	shuffleteams_on_reset_map = !allowed_to_spawn;
+	string cmd_name = M_ARGV(0, string);
+	if (cmd_name == "shuffleteams")
+		shuffleteams_on_reset_map = !allowed_to_spawn;
 	return false;
 }
