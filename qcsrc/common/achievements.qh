@@ -19,6 +19,7 @@ CLASS(Achievements, Object)
 	ATTRIB(Achievements, secondplace, bool, 0);
 	ATTRIB(Achievements, thirdplace, bool, 0);
 	ATTRIB(Achievements, mostdamage, bool, 0);
+	ATTRIB(Achievements, suicider, bool, 0);
 
 	//Notificated achievements
 	ATTRIB(Achievements, airshot, int, 0);

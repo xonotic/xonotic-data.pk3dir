@@ -27,6 +27,7 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	if (achieve == "secondplace") this.secondplace = value;
 	if (achieve == "thirdplace") this.thirdplace = value;
 	if (achieve == "mostdamage") this.mostdamage = value;
+	if (achieve == "suicider") this.suicider = value;
 
 	if (achieve == "airshot") this.airshot = value;
 	if (achieve == "amazing") this.amazing = value;
@@ -58,6 +59,7 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 	if (achieve == "secondplace") return this.secondplace;
 	if (achieve == "thirdplace") return this.thirdplace;
 	if (achieve == "mostdamage") return this.mostdamage;
+	if (achieve == "suicider") return this.suicider;
 
 	if (achieve == "airshot") return this.airshot;
 	if (achieve == "amazing") return this.amazing;
@@ -89,6 +91,7 @@ string Achievements_get_achievement_title(string achieve) {
 	if (achieve == "secondplace") return "Second Place!";
 	if (achieve == "thirdplace") return "Third Place!";
 	if (achieve == "mostdamage") return "Most Damage!";
+	if (achieve == "suicider") return "Master of Suicide!";
 
 	if (achieve == "airshot") return "Air Shot!";
 	if (achieve == "amazing") return "Amazing!";

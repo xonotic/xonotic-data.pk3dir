@@ -1638,6 +1638,7 @@ void NextLevel()
 	entity secondplace = spawn();
 	entity thirdplace = spawn();
 	entity mostdamage = spawn();
+	entity suicider = spawn();
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
 
@@ -1647,6 +1648,10 @@ void NextLevel()
 
 		if (!mostdamage) {
 			mostdamage = it;
+		}
+
+		if (!suicider) {
+			suicider = it;
 		}
 		
 		float itaverage = PlayerScore_Get(it, SP_KILLS) / PlayerScore_Get(it, SP_SUICIDES);
@@ -1663,12 +1668,17 @@ void NextLevel()
 			mostdamage = it;
 		}
 
+		if (PlayerScore_Get(it, SP_SUICIDES) > PlayerScore_Get(suicider, SP_SUICIDES)) {
+			suicider = it;
+		}
+
 	});
 
 	if (IS_PLAYER(firstplace)) increase_achieve(firstplace, "firstplace");
 	if (IS_PLAYER(secondplace)) increase_achieve(secondplace, "secondplace");
 	if (IS_PLAYER(thirdplace)) increase_achieve(thirdplace, "thirdplace");
 	if (IS_PLAYER(mostdamage)) increase_achieve(mostdamage, "mostdamage");
+	if (IS_PLAYER(suicider)) increase_achieve(suicider, "suicider");
 
 
 }
