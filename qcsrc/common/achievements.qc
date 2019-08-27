@@ -42,6 +42,7 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	if (achieve == "selfimmolation") this.selfimmolation = value;
 	if (achieve == "telefrag") this.telefrag = value;
 	if (achieve == "surprise") this.surprise = value;
+	if (achieve == "bitchslap") this.bitchslap = value;
 
 	return;
 }
@@ -76,6 +77,7 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 	if (achieve == "selfimmolation") return this.selfimmolation;
 	if (achieve == "telefrag") return this.telefrag;
 	if (achieve == "surprise") return this.surprise;
+	if (achieve == "bitchslap") return this.bitchslap;
 
 	return 0;
 }
@@ -110,6 +112,7 @@ string Achievements_get_achievement_title(string achieve) {
 	if (achieve == "selfimmolation") return "Self-Immolation!";
 	if (achieve == "telefrag") return "Unexpected Kill!";
 	if (achieve == "surprise") return "Surprise!";
+	if (achieve == "bitchslap") return "Bitch Slap!";
 	return "";
 }
 

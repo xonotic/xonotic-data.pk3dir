@@ -36,6 +36,7 @@ CLASS(Achievements, Object)
 	ATTRIB(Achievements, selfimmolation, int, 0);
 	ATTRIB(Achievements, telefrag, int, 0);
 	ATTRIB(Achievements, surprise, int, 0);
+	ATTRIB(Achievements, bitchslap, int, 0);
 
 
 	//Getters and setters for achievements	

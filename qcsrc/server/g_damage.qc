@@ -877,14 +877,27 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	//Weapons achievements
 	if (DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) || DEATH_ISWEAPON(deathtype, WEP_CRYLINK)) {
 
-		float distance = vlen(targ.origin-attacker.origin);
-		
-		attacker.pointblank_checker = 1;	
+		if (deathtype != WEP_SHOTGUN.m_id && !DEATH_ISWEAPON(deathtype, WEP_CRYLINK)) {
+			//It means melee attack
 
-		//Add condition to look at, not only for distance
-		if (distance < 65 && targ != attacker) {
-			attacker.pointblank_increase = 1;
+			if (IS_DEAD(targ)) {
+
+				entity achv = attacker.achievements;
+				achv.inc_achievement(achv, "bitchslap");
+				achv.announce(achv, attacker, "bitchslap");
+			}
+
+		} else {
+			float distance = vlen(targ.origin-attacker.origin);
+			
+			attacker.pointblank_checker = 1;	
+
+			//Add condition to look at, not only for distance
+			if (distance < 65 && targ != attacker) {
+				attacker.pointblank_increase = 1;
+			}
 		}
+
 	}
 
 	if (IS_DEAD(targ) && IS_PLAYER(attacker)) {
