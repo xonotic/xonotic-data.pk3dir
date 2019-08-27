@@ -40,6 +40,8 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	if (achieve == "multirailed") this.multirailed = value;
 	if (achieve == "pointblank") this.pointblank = value;
 	if (achieve == "selfimmolation") this.selfimmolation = value;
+	if (achieve == "telefrag") this.telefrag = value;
+	if (achieve == "surprise") this.surprise = value;
 
 	return;
 }
@@ -72,6 +74,8 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 	if (achieve == "multirailed") return this.multirailed;
 	if (achieve == "pointblank") return this.pointblank;
 	if (achieve == "selfimmolation") return this.selfimmolation;
+	if (achieve == "telefrag") return this.telefrag;
+	if (achieve == "surprise") return this.surprise;
 
 	return 0;
 }
@@ -104,6 +108,8 @@ string Achievements_get_achievement_title(string achieve) {
 	if (achieve == "multirailed") return "Multi Railed!";
 	if (achieve == "pointblank") return "Point Blank!";
 	if (achieve == "selfimmolation") return "Self-Immolation!";
+	if (achieve == "telefrag") return "Unexpected Kill!";
+	if (achieve == "surprise") return "Surprise!";
 	return "";
 }
 

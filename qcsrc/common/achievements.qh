@@ -34,6 +34,8 @@ CLASS(Achievements, Object)
 	ATTRIB(Achievements, multirailed, int, 0);
 	ATTRIB(Achievements, pointblank, int, 0);
 	ATTRIB(Achievements, selfimmolation, int, 0);
+	ATTRIB(Achievements, telefrag, int, 0);
+	ATTRIB(Achievements, surprise, int, 0);
 
 
 	//Getters and setters for achievements	

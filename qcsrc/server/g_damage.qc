@@ -895,6 +895,15 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			attacker.suicide = 1;
 		}
 	}
+
+	if(deathtype == DEATH_TELEFRAG.m_id) {
+		entity att_achv = attacker.achievements;
+		entity trg_achv = targ.achievements;
+		att_achv.inc_achievement(att_achv, "telefrag");
+		trg_achv.inc_achievement(trg_achv, "surprise");
+		att_achv.announce(att_achv, attacker, "telefrag");
+		trg_achv.announce(trg_achv, targ, "surprise");
+	}
 }
 
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
