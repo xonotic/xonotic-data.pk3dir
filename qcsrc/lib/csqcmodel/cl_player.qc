@@ -565,21 +565,29 @@ void CSQCPlayer_SetCamera()
 		else
 		{
 			vector vieworg = view.origin;
-			vieworg = CSQCPlayer_ApplySmoothing(view, vieworg);
-			if(autocvar_chase_active)
-				vieworg = CSQCPlayer_ApplyChase(view, vieworg);
+			if(intermission)
+			{
+				// just update view offset, don't need to do anything else
+				vieworg.z += view.view_ofs.z;
+			}
 			else
 			{
-				// angles
-				CSQCPlayer_ApplyDeathTilt(view);
-				view_angles = view_angles + view_punchangle;
-				view_angles.z += CSQCPlayer_CalcRoll(view);
-				// TODO? we don't have damage time accessible here
-				// origin
-				vieworg = vieworg + view_punchvector;
-				vieworg = CSQCPlayer_ApplyBobbing(view, vieworg);
+				vieworg = CSQCPlayer_ApplySmoothing(view, vieworg);
+				if(autocvar_chase_active)
+					vieworg = CSQCPlayer_ApplyChase(view, vieworg);
+				else
+				{
+					// angles
+					CSQCPlayer_ApplyDeathTilt(view);
+					view_angles = view_angles + view_punchangle;
+					view_angles.z += CSQCPlayer_CalcRoll(view);
+					// TODO? we don't have damage time accessible here
+					// origin
+					vieworg = vieworg + view_punchvector;
+					vieworg = CSQCPlayer_ApplyBobbing(view, vieworg);
+				}
+				CSQCPlayer_ApplyIdleScaling(view);
 			}
-			CSQCPlayer_ApplyIdleScaling(view);
 			setproperty(VF_ORIGIN, vieworg);
 			setproperty(VF_ANGLES, view_angles);
 		}
