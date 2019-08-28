@@ -212,11 +212,6 @@ float autocvar_cl_stairsmoothspeed;
 float autocvar_cl_smoothviewheight;
 float smooth_prevtime;
 float viewheightavg;
-float autocvar_cl_bobfall;
-float autocvar_cl_bobfallcycle;
-float autocvar_cl_bobfallminspeed;
-float bobfall_swing;
-float bobfall_speed;
 vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 {
 	if(this.csqcmodel_teleported || !IS_ONGROUND(this) || autocvar_cl_stairsmoothspeed <= 0)
@@ -233,24 +228,6 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 	viewheightavg = viewheightavg * (1 - viewheight) + this.view_ofs.z * viewheight;
 	v.z += viewheightavg;
 
-	if(autocvar_cl_bobfall && autocvar_cl_bobfallcycle)
-	{
-		if(!IS_ONGROUND(this))
-		{
-			bobfall_speed = bound(-400, this.velocity.z, 0) * bound(0, autocvar_cl_bobfall, 0.1);
-			if(this.velocity.z < -autocvar_cl_bobfallminspeed)
-				bobfall_swing = 1;
-			else
-				bobfall_swing = 0; // really?
-		}
-		else
-		{
-			bobfall_swing = max(0, bobfall_swing - autocvar_cl_bobfallcycle * frametime);
-			float bobfall = sin(M_PI * bobfall_swing) * bobfall_speed;
-			v.z += bobfall;
-		}
-	}
-
 	smooth_prevtime = time;
 
 	return v;
@@ -260,7 +237,7 @@ bool autocvar_v_deathtilt;
 float autocvar_v_deathtiltangle;
 void CSQCPlayer_ApplyDeathTilt(entity this)
 {
-	if(!autocvar_v_deathtilt)
+	if(!IS_DEAD(this) || !autocvar_v_deathtilt)
 		return;
 	view_angles.y = autocvar_v_deathtiltangle;
 }
@@ -280,6 +257,147 @@ void CSQCPlayer_ApplyIdleScaling(entity this)
 	view_angles.y += autocvar_v_idlescale * sin(time * autocvar_v_iyaw_cycle) * autocvar_v_iyaw_level;
 	view_angles.z += autocvar_v_idlescale * sin(time * autocvar_v_iroll_cycle) * autocvar_v_iroll_level;
 	//setproperty(VF_CL_VIEWANGLES, view_angles); // update view angles as well so we can aim
+}
+
+float autocvar_cl_bob;
+float autocvar_cl_bobcycle;
+float autocvar_cl_bob_limit;
+float autocvar_cl_bob_limit_heightcheck;
+float autocvar_cl_bob_velocity_limit;
+float autocvar_cl_bobup;
+float autocvar_cl_bobfall;
+float autocvar_cl_bobfallcycle;
+float autocvar_cl_bobfallminspeed;
+float autocvar_cl_bob2;
+float autocvar_cl_bob2cycle;
+float autocvar_cl_bob2smooth;
+float bobfall_swing;
+float bobfall_speed;
+float bob2_smooth;
+vector CSQCPlayer_ApplyBobbing(entity this, vector v)
+{
+	if(IS_DEAD(this))
+		return v;
+
+	// bounded XY speed, used by several effects below
+	float xyspeed = bound(0, sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y), autocvar_cl_bob_velocity_limit);
+	float bob, cycle;
+
+	// vertical view bobbing code
+	if(autocvar_cl_bob && autocvar_cl_bobcycle)
+	{
+		float bob_limit = autocvar_cl_bob_limit;
+
+		if(autocvar_cl_bob_limit_heightcheck)
+		{
+			// use traces to determine what range the view can bob in, and scale down the bob as needed
+			vector bob_height_check_dest = v;
+			bob_height_check_dest.z += autocvar_cl_bob_limit * 1.1;
+			traceline(v, bob_height_check_dest, MOVE_NOMONSTERS, NULL);
+			float trace1fraction = trace_fraction;
+
+			bob_height_check_dest = v;
+			bob_height_check_dest.z += autocvar_cl_bob_limit * -0.5;
+			traceline(v, bob_height_check_dest, MOVE_NOMONSTERS, NULL);
+			float trace2fraction = trace_fraction;
+
+			bob_limit *= min(trace1fraction, trace2fraction);
+		}
+
+		// LordHavoc: figured out bobup: the time at which the sin is at 180
+		// degrees (which allows lengthening or squishing the peak or valley)
+		cycle = time / autocvar_cl_bobcycle;
+		cycle -= rint(cycle);
+		if(cycle < autocvar_cl_bobup)
+			cycle = sin(M_PI * cycle / autocvar_cl_bobup);
+		else
+			cycle = sin(M_PI + M_PI * (cycle - autocvar_cl_bobup) / (1.0 - autocvar_cl_bobup));
+		// bob is proportional to velocity in the xy plane
+		// (don't count Z, or jumping messes it up)
+		bob = xyspeed * autocvar_cl_bob;
+		bob = bound(0, bob, bob_limit);
+		bob = bob * 0.3 + bob * 0.7 * cycle;
+		v.z += bob;
+	}
+
+	// horizontal view bobbing code
+	if(autocvar_cl_bob2 && autocvar_cl_bob2cycle)
+	{
+		cycle = time / autocvar_cl_bob2cycle;
+		cycle -= rint(cycle);
+		if(cycle < 0.5)
+			cycle = cos(M_PI * cycle / 0.5); // cos looks better here with the other view bobbing using sin
+		else
+			cycle = cos(M_PI + M_PI * (cycle - 0.5) / 0.5);
+		bob = autocvar_cl_bob2 * cycle;
+
+		// this value slowly decreases from 1 to 0 when we stop touching the ground.
+		// The cycle is later multiplied with it so the view smooths back to normal
+		if(IS_ONGROUND(this) && !(input_buttons & BIT(1))) // also block the effect while the jump button is pressed, to avoid twitches when bunny-hopping
+			bob2_smooth = 1;
+		else
+		{
+			if(bob2_smooth > 0)
+				bob2_smooth -= bound(0, autocvar_cl_bob2smooth, 1);
+			else
+				bob2_smooth = 0;
+		}
+
+		// calculate the front and side of the player between the X and Y axes
+		makevectors(view_angles);
+		// now get the speed based on those angles. The bounds should match the same value as xyspeed's
+		float side = bound(-autocvar_cl_bob_velocity_limit, (this.velocity * v_right) * bob2_smooth, autocvar_cl_bob_velocity_limit);
+		float front = bound(-autocvar_cl_bob_velocity_limit, (this.velocity * v_forward) * bob2_smooth, autocvar_cl_bob_velocity_limit);
+		v_forward = v_forward * bob;
+		v_right = v_right * bob;
+		// we use side with forward and front with right, so the bobbing goes
+		// to the side when we walk forward and to the front when we strafe
+		vector bob2vel;
+		bob2vel.x = side * v_forward.x + front * v_right.x + 0 * v_up.x;
+		bob2vel.y = side * v_forward.y + front * v_right.y + 0 * v_up.y;
+		bob2vel.z = side * v_forward.z + front * v_right.z + 0 * v_up.z;
+		v.x += bob2vel.x;
+		v.y += bob2vel.y;
+	}
+
+	// fall bobbing code
+	// causes the view to swing down and back up when touching the ground
+	if(autocvar_cl_bobfall && autocvar_cl_bobfallcycle)
+	{
+		if(!IS_ONGROUND(this))
+		{
+			bobfall_speed = bound(-400, this.velocity.z, 0) * bound(0, autocvar_cl_bobfall, 0.1);
+			if(this.velocity.z < -autocvar_cl_bobfallminspeed)
+				bobfall_swing = 1;
+			else
+				bobfall_swing = 0; // really?
+		}
+		else
+		{
+			bobfall_swing = max(0, bobfall_swing - autocvar_cl_bobfallcycle * frametime);
+			float bobfall = sin(M_PI * bobfall_swing) * bobfall_speed;
+			v.z += bobfall;
+		}
+	}
+
+	return v;
+}
+
+float autocvar_cl_rollangle;
+float autocvar_cl_rollspeed;
+float CSQCPlayer_CalcRoll(entity this)
+{
+	makevectors(view_angles);
+	float side = (this.velocity * v_right);
+	float sign = (side < 0) ? -1 : 1;
+	side = fabs(side);
+
+	if(side < autocvar_cl_rollspeed)
+		side = side * autocvar_cl_rollangle / autocvar_cl_rollspeed;
+	else
+		side = autocvar_cl_rollangle;
+
+	return side * sign;
 }
 
 float autocvar_chase_back;
@@ -449,9 +567,18 @@ void CSQCPlayer_SetCamera()
 			vieworg = CSQCPlayer_ApplySmoothing(view, vieworg);
 			if(autocvar_chase_active)
 				vieworg = CSQCPlayer_ApplyChase(view, vieworg);
-			else if(IS_DEAD(view))
+			else
+			{
+				// angles
 				CSQCPlayer_ApplyDeathTilt(view);
-			CSQCPlayer_ApplyIdleScaling(view);
+				view_angles = view_angles + view_punchangle;
+				view_angles.z += CSQCPlayer_CalcRoll(view);
+				// TODO? we don't have damage time accessible here
+				// origin
+				vieworg = vieworg + view_punchvector;
+				vieworg = CSQCPlayer_ApplyBobbing(view, vieworg);
+				CSQCPlayer_ApplyIdleScaling(view);
+			}
 			setproperty(VF_ORIGIN, vieworg);
 			setproperty(VF_ANGLES, view_angles);
 		}
