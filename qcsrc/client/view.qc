@@ -974,6 +974,20 @@ void HUD_Crosshair(entity this)
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
+		else if(autocvar_chase_active && autocvar_crosshair_chase)
+		{
+			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
+			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
+			{
+				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
+				if(trace_ent == csqcplayer)
+					csqcplayer.alpha = crosshair_chase_playeralpha;
+				else
+					csqcplayer.alpha = csqcplayer.m_alpha;
+			}
+			traceline(player_org, player_org + max_shot_distance * view_forward, MOVE_WORLDONLY, NULL);
+			wcross_origin = project_3d_to_2d(trace_endpos);
+		}
 		else
 			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
