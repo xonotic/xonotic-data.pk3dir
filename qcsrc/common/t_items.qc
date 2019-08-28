@@ -1008,8 +1008,8 @@ void Item_FindTeam(entity this)
 		});
 
 		e = RandomSelection_chosen_ent;
-		e.state = 0;
-		Item_Show(e, 1);
+		if (!e)
+			return;
 
 		IL_EACH(g_items, it.team == this.team,
 		{
@@ -1021,11 +1021,11 @@ void Item_FindTeam(entity this)
 					Item_Show(it, -1);
 					it.state = 1; // state 1 = initially hidden item, apparently
 				}
+				else
+					Item_Reset(it);
 				it.effects &= ~EF_NODRAW;
 			}
 		});
-
-		Item_Reset(this);
 	}
 }
 
@@ -1360,7 +1360,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 
 	this.state = 0;
-	if(this.team) // broken, no idea why.
+	if(this.team)
 	{
 		if(!this.cnt)
 			this.cnt = 1; // item probability weight
