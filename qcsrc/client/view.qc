@@ -973,7 +973,7 @@ void HUD_Crosshair(entity this)
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
-		else if(autocvar_chase_active && autocvar_crosshair_chase)
+		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
 			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
