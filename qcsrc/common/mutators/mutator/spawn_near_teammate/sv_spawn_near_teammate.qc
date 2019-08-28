@@ -95,7 +95,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (IS_DEAD(it)) continue;
 			if (time < it.msnt_timer) continue;
 			if (time < it.spawnshieldtime) continue;
-			if (forbidWeaponUse(it)) continue;
+			if (weaponLocked(it)) continue;
 			if (it == player) continue;
 
 			tested++; // i consider a teammate to be available when he passes the checks above

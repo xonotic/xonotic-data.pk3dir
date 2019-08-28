@@ -2,7 +2,16 @@
 
 .float swamp_interval;	//Hurt players in swamp with this interval
 .float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
-.entity swampslug;
 
-.float in_swamp;              // bool
+.bool in_swamp;
 .entity swampslug;            // Uses this to release from swamp ("untouch" fix)
+
+.float swamp_interval;	//Hurt players in swamp with this interval
+.float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
+.float swamp_lifetime;  // holds the points remaining until slug dies (not quite health!)
+
+#ifdef SVQC
+spawnfunc(trigger_swamp);
+#endif
+void swamp_touch(entity this, entity toucher);
+void swampslug_think(entity this);

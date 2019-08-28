@@ -21,8 +21,6 @@
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
 
-.int state;
-
 /*============================================
 
       Wazat's Xonotic Grappling Hook
@@ -71,8 +69,6 @@ And you should be done!
 
 
 ============================================*/
-
-.float hook_length;
 
 void RemoveGrapplingHooks(entity pl)
 {
@@ -360,7 +356,7 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 
 void FireGrapplingHook(entity actor, .entity weaponentity)
 {
-	if(forbidWeaponUse(actor)) return;
+	if(weaponLocked(actor)) return;
 	if(actor.vehicle) return;
 
 	// TODO: offhand hook shoots from eye

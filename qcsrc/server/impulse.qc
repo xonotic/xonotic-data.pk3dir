@@ -334,7 +334,7 @@ IMPULSE(weapon_reload)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	if (forbidWeaponUse(this)) return;
+	if (weaponLocked(this)) return;
 	entity actor = this;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -507,7 +507,7 @@ IMPULSE(waypoint_here_here)
 
 IMPULSE(waypoint_here_crosshair)
 {
-	WarpZone_crosshair_trace(this);
+	WarpZone_crosshair_trace_plusvisibletriggers(this);
 	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, trace_endpos, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at crosshair\n");

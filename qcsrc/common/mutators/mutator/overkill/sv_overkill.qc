@@ -11,7 +11,7 @@ bool autocvar_g_overkill_itemwaypoints = true;
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
 IntrusiveList g_overkill_items;
-STATIC_INIT()
+STATIC_INIT(overkill)
 {
 	g_overkill_items = IL_NEW();
 	IL_PUSH(g_overkill_items, ITEM_HealthMega);
@@ -143,7 +143,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	{
 		return;
 	}
-	if (!PHYS_INPUT_BUTTON_ATCK2(player) || forbidWeaponUse(player) ||
+	if (!PHYS_INPUT_BUTTON_ATCK2(player) || weaponLocked(player) ||
 		!(round_handler_IsActive() && !round_handler_IsRoundStarted()))
 	{
 		return;
@@ -274,7 +274,6 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 	if(WEP_OVERKILL_RPC.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_RPC); }
 	if(WEP_OVERKILL_HMG.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_HMG); }
 
-	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
 }
 

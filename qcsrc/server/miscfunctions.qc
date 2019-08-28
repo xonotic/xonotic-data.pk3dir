@@ -429,6 +429,9 @@ void GetCvars(entity this, entity store, int f)
 {
 	string s = string_null;
 
+	if (f == 0)
+		LOG_INFO("Warning: requesting cvar values is deprecated. Client should send them automatically using REPLICATE.\n");
+
 	if (f > 0)
 		s = strcat1(argv(f));
 
@@ -499,7 +502,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	allow_mutatorblocked = M_ARGV(3, bool);
 
 	if(allguns)
-		d = boolean(weaponinfo.spawnflags & WEP_FLAG_NORMAL);
+		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
 
@@ -565,7 +568,7 @@ void readplayerstartcvars()
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		FOREACH(Weapons, it != WEP_Null, {
-			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+			if(!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
 				g_weaponarena_weapons |= (it.m_wepset);
 		});
 	}
@@ -583,9 +586,8 @@ void readplayerstartcvars()
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
 		FOREACH(Weapons, it != WEP_Null, {
-			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				if(it.spawnflags & WEP_FLAG_NORMAL)
-					g_weaponarena_weapons |= (it.m_wepset);
+			if ((it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)))
+				g_weaponarena_weapons |= (it.m_wepset);
 		});
 	}
 	else if (s == "none")
@@ -718,14 +720,6 @@ void readplayerstartcvars()
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
-
-	WepSet precache_weapons = start_weapons;
-	if (g_warmup_allguns != 1)
-		precache_weapons |= warmup_start_weapons;
-	FOREACH(Weapons, it != WEP_Null, {
-		if(precache_weapons & (it.m_wepset))
-			it.wr_init(it);
-	});
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);

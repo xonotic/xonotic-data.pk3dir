@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(BallStealer, PortoLaunch)
-/* flags     */ ATTRIB(BallStealer, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(BallStealer, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SPECIALATTACK | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NOTRUEAIM);
 /* impulse   */ ATTRIB(BallStealer, impulse, int, 0);
 /* refname   */ ATTRIB(BallStealer, netname, string, "ballstealer");
 /* wepname   */ ATTRIB(BallStealer, m_name, string, _("Ball Stealer"));

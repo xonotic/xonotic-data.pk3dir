@@ -178,12 +178,10 @@ vector hud_scale_center;
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
 
 .int panel_showflags;
-const int PANEL_SHOW_NEVER    = 0x00;
-const int PANEL_SHOW_MAINGAME = 0x01;
-const int PANEL_SHOW_MINIGAME = 0x02;
-const int PANEL_SHOW_MAPVOTE  = 0x04;
-const int PANEL_SHOW_WITH_SB  = 0x08;
-const int PANEL_SHOW_ALWAYS   = 0xff;
+const int PANEL_SHOW_MAINGAME = BIT(0); // show in the main HUD
+const int PANEL_SHOW_MINIGAME = BIT(1); // show when minigames panels are shown
+const int PANEL_SHOW_MAPVOTE  = BIT(2); // show during map vote
+const int PANEL_SHOW_WITH_SB  = BIT(3); // show when scoreboard is on
 
 .int panel_configflags;
 const int PANEL_CONFIG_NO        = 0x00;
@@ -225,7 +223,7 @@ REGISTER_HUD_PANEL(CENTERPRINT,     HUD_CenterPrint,    PANEL_CONFIG_MAIN | PANE
 REGISTER_HUD_PANEL(MINIGAMEBOARD,   HUD_MinigameBoard,  PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMEBOARD
 REGISTER_HUD_PANEL(MINIGAMESTATUS,  HUD_MinigameStatus, PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMESTATUS
 REGISTER_HUD_PANEL(MINIGAMEHELP,    HUD_MinigameHelp,   PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMEHELP
-REGISTER_HUD_PANEL(MINIGAMEMENU,    HUD_MinigameMenu,   PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // MINIGAMEMENU
+REGISTER_HUD_PANEL(MINIGAMEMENU,    HUD_MinigameMenu,   PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMEMENU
 REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       PANEL_CONFIG_NO                          ,                                             PANEL_SHOW_MAPVOTE                     ) // MAPVOTE
 REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // ITEMSTIME
 REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // QUICKMENU

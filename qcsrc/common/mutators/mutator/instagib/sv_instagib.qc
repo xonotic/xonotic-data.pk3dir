@@ -18,7 +18,7 @@ int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
 IntrusiveList g_instagib_items;
-STATIC_INIT()
+STATIC_INIT(instagib)
 {
 	g_instagib_items = IL_NEW();
 	IL_PUSH(g_instagib_items, ITEM_VaporizerCells);

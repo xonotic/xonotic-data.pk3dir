@@ -57,6 +57,7 @@ float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
 float autocvar_hud_panel_scoreboard_namesize = 15;
+float autocvar_hud_panel_scoreboard_team_size_position = 0;
 
 bool autocvar_hud_panel_scoreboard_accuracy = true;
 bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
@@ -578,6 +579,7 @@ string Scoreboard_GetName(entity pl)
 	}
 	return entcs_GetName(pl.sv_entnum);
 }
+
 string Scoreboard_GetField(entity pl, PlayerScoreField field)
 {
 	float tmp, num, denom;
@@ -594,7 +596,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 	{
 		case SP_PING:
 			if (!pl.gotscores)
-				return "\xE2\x96\xB6\xE2\x96\xB6\xE2\x96\xB6"; // >>> sign using U+25B6
+				return "\xE2\x96\xB6\xE2\x96\xB6\xE2\x96\xB6"; // >>> sign using U+25B6 (Black Right-Pointing Triangle)
 			//str = getplayerkeyvalue(pl.sv_entnum, "ping");
 			f = pl.ping;
 			if(f == 0)
@@ -824,7 +826,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 {
 	TC(bool, is_self); TC(int, pl_number);
 	string str;
-	bool is_spec = entcs_IsSpectating(pl.sv_entnum);
+	bool is_spec = (entcs_GetSpecState(pl.sv_entnum) == ENTCS_SPEC_PURE);
 
 	vector h_pos = item_pos;
 	vector h_size = vec2(panel_size.x, hud_fontsize.y * 1.25);
@@ -837,6 +839,10 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	float fg_alpha = (is_self ? sbt_fg_alpha_self : sbt_fg_alpha);
 
 	vector pos = item_pos;
+	// put a "self indicator" beside the self row, unicode U+25C0 (black left-pointing triangle)
+	if (is_self)
+		drawstring(pos+eX*(panel_size.x+.5*hud_fontsize.x)+eY, "\xE2\x97\x80", vec2(hud_fontsize.x, hud_fontsize.y), rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+
 	pos.x += hud_fontsize.x * 0.5;
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
 	vector tmp = '0 0 0';
@@ -1047,7 +1053,7 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg();
 
-	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + 0.5* hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
 		end_pos.y += panel_bg_border * 2;
 
@@ -1124,8 +1130,11 @@ bool Scoreboard_WouldDraw()
 		return true;
 	else if (intermission == 2)
 		return false;
-	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !ISGAMETYPE(CTS) && !active_minigame)
+	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !ISGAMETYPE(CTS)
+		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
+	{
 		return true;
+	}
 	else if (scoreboard_showscores_force)
 		return true;
 	return false;
@@ -1158,7 +1167,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		}
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 		{
-			if (((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)))
+			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
 				++nHidden;
 			else
 				++disownedcnt;
@@ -1582,14 +1591,76 @@ void Scoreboard_Draw()
 	string str;
 	vector str_pos;
 
-	// Heading
-	vector sb_heading_fontsize;
-	sb_heading_fontsize = hud_fontsize * 2;
+	vector sb_gameinfo_type_fontsize, sb_gameinfo_detail_fontsize;
+
+	// Begin of Game Info Section
+	sb_gameinfo_type_fontsize = hud_fontsize * 2.5;
+	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
+
+	// Game Info: Game Type
+	str = MapInfo_Type_ToText(gametype);
 	draw_beginBoldFont();
-	drawstring(pos + eX * panel_bg_padding, _("Scoreboard"), sb_heading_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_type_fontsize)), str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	draw_endBoldFont();
 
-	pos.y += sb_heading_fontsize.y;
+	// Game Info: Game Detail
+	float tl, fl, ll;
+	str = ""; // optionally "^7Limits: "
+	tl = STAT(TIMELIMIT);
+	fl = STAT(FRAGLIMIT);
+	ll = STAT(LEADLIMIT);
+	if(tl > 0)
+		str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
+	if(!ISGAMETYPE(LMS))
+	{
+		if(fl > 0)
+		{
+			if(tl > 0)
+				str = strcat(str, "^7 / "); // delimiter
+			if(teamplay)
+			{
+				str = strcat(str, sprintf(_("^5%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
+					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
+					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(teamscores_label(ts_primary))));
+			}
+			else
+			{
+				str = strcat(str, sprintf(_("^5%s %s"), ScoreString(scores_flags(ps_primary), fl),
+					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
+					(scores_label(ps_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(scores_label(ps_primary))));
+			}
+		}
+		if(ll > 0)
+		{
+			if(tl > 0 || fl > 0)
+				str = strcat(str, "^7 / "); // delimiter
+			if(teamplay)
+			{
+				str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(teamscores_flags(ts_primary), ll),
+					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
+					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(teamscores_label(ts_primary))));
+			}
+			else
+			{
+				str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(scores_flags(ps_primary), ll),
+					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
+					(scores_label(ps_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(scores_label(ps_primary))));
+			}
+		}
+	}
+
+	pos.y += sb_gameinfo_type_fontsize.y;
+	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
+	// map name
+	str = sprintf(_("^7Map: ^2%s"), shortmapname);
+	drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
+	// End of Game Info Section
+
+	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3; // space between Game Info Section and score table
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
 
@@ -1602,9 +1673,40 @@ void Scoreboard_Draw()
 	if(teamplay)
 	{
 		vector panel_bg_color_save = panel_bg_color;
-		vector team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
-		if(panel.current_panel_bg != "0")
-			team_score_baseoffset.x -= panel_bg_border;
+		vector team_score_baseoffset;
+		vector team_size_baseoffset;
+		if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
+		{
+			// put team score to the left of scoreboard (and team size to the right)
+			team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
+			team_size_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
+			if(panel.current_panel_bg != "0")
+			{
+				team_score_baseoffset.x -= panel_bg_border;
+				team_size_baseoffset.x += panel_bg_border;
+			}
+		}
+		else
+		{
+			// put team score to the right of scoreboard (and team size to the left)
+			team_score_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
+			team_size_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
+			if(panel.current_panel_bg != "0")
+			{
+				team_score_baseoffset.x += panel_bg_border;
+				team_size_baseoffset.x -= panel_bg_border;
+			}
+		}
+
+		int team_size_total = 0;
+		if (autocvar_hud_panel_scoreboard_team_size_position != 0) // team size not off
+		{
+			// calculate team size total (sum of all team sizes)
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				if(tm.team != NUM_SPECTATOR)
+					team_size_total += tm.team_size;
+		}
+
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
@@ -1615,13 +1717,56 @@ void Scoreboard_Draw()
 			draw_beginBoldFont();
 			vector rgb = Team_ColorRGB(tm.team);
 			str = ftos(tm.(teamscores(ts_primary)));
-			str_pos = pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
+			if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
+			{
+				// team score on the left (default)
+				str_pos = pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
+			}
+			else
+			{
+				// team score on the right
+				str_pos = pos + team_score_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.5);
+			}
 			drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
+			// team size (if set to show on the side)
+			if (autocvar_hud_panel_scoreboard_team_size_position != 0) // team size not off
+			{
+				// calculate the starting position for the whole team size info string
+				str = sprintf("%d/%d", tm.team_size, team_size_total);
+				if (autocvar_hud_panel_scoreboard_team_size_position == 1)
+				{
+					// team size on the left
+					str_pos = pos + team_size_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
+				}
+				else
+				{
+					// team size on the right
+					str_pos = pos + team_size_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.5);
+				}
+				str = sprintf("%d", tm.team_size);
+				drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+				str_pos += eX * stringwidth(str, true, hud_fontsize * 1.5) + eY * hud_fontsize.y * .5;
+				str = sprintf("/%d", team_size_total);
+				drawstring(str_pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+
+
+			// secondary score, e.g. keyhunt
 			if(ts_primary != ts_secondary)
 			{
 				str = ftos(tm.(teamscores(ts_secondary)));
-				str_pos = pos + team_score_baseoffset - vec2(stringwidth(str, false, hud_fontsize), hud_fontsize.y * 1.5);
+				if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
+				{
+					// left
+					str_pos = pos + team_score_baseoffset - vec2(stringwidth(str, false, hud_fontsize), hud_fontsize.y * -1.5);
+				}
+				else
+				{
+					// right
+					str_pos = pos + team_score_baseoffset + vec2(panel_size.x + hud_fontsize.x * 1.5, hud_fontsize.y * 1.5);
+				}
+
 				drawstring(str_pos, str, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			draw_endBoldFont();
@@ -1640,6 +1785,7 @@ void Scoreboard_Draw()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 			if(tm.team != NUM_SPECTATOR)
 				break;
+
 		// display it anyway
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
@@ -1682,63 +1828,6 @@ void Scoreboard_Draw()
 		}
 	}
 
-	// Print info string
-	float tl, fl, ll;
-	str = sprintf(_("playing ^3%s^7 on ^2%s^7"), MapInfo_Type_ToText(gametype), shortmapname);
-	tl = STAT(TIMELIMIT);
-	fl = STAT(FRAGLIMIT);
-	ll = STAT(LEADLIMIT);
-	if(ISGAMETYPE(LMS))
-	{
-		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%1.0f minutes^7"), tl));
-	}
-	else
-	{
-		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%1.0f minutes^7"), tl));
-		if(fl > 0)
-		{
-			if(tl > 0)
-				str = strcat(str, _(" or"));
-			if(teamplay)
-			{
-				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags(ts_primary), fl),
-					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
-					TranslateScoresLabel(teamscores_label(ts_primary))));
-			}
-			else
-			{
-				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags(ps_primary), fl),
-					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-					(scores_label(ps_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
-					TranslateScoresLabel(scores_label(ps_primary))));
-			}
-		}
-		if(ll > 0)
-		{
-			if(tl > 0 || fl > 0)
-				str = strcat(str, _(" or"));
-			if(teamplay)
-			{
-				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags(ts_primary), ll),
-					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
-					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
-					TranslateScoresLabel(teamscores_label(ts_primary))));
-			}
-			else
-			{
-				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags(ps_primary), ll),
-					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
-					(scores_label(ps_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
-					TranslateScoresLabel(scores_label(ps_primary))));
-			}
-		}
-	}
-
-	pos.y += 1.2 * hud_fontsize.y;
-	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print information about respawn status
 	float respawn_time = STAT(RESPAWN_TIME);

@@ -345,6 +345,11 @@ void reset_map(bool dorespawn)
 			round_handler_Reset(game_starttime);
 	}
 
+	if (shuffleteams_on_reset_map)
+	{
+		shuffleteams();
+		shuffleteams_on_reset_map = false;
+	}
 	MUTATOR_CALLHOOK(reset_map_global);
 
 	FOREACH_ENTITY_FLOAT_ORDERED(pure_data, false,

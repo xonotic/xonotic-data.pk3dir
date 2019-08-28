@@ -37,7 +37,7 @@ int WinningCondition_LMS()
 {
 	entity first_player = NULL;
 	int totalplayers = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 		if (!totalplayers)
 			first_player = it;
 		++totalplayers;
@@ -185,21 +185,21 @@ void lms_RemovePlayer(entity player)
 	if (!player_rank)
 	{
 		int pl_cnt = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 			pl_cnt++;
 		});
 		if (player.lms_spectate_warning < 2)
 		{
 			if(IS_BOT_CLIENT(player))
 				bot_clear(player);
-			player.frags = FRAGS_LMS_LOSER;
+			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			GameRules_scoring_add(player, LMS_RANK, pl_cnt + 1);
 		}
 		else
 		{
 			lms_lowest_lives = 999;
 			FOREACH_CLIENT(true, {
-				if (it.frags == FRAGS_LMS_LOSER)
+				if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
 				{
 					float it_rank = GameRules_scoring_add(it, LMS_RANK, 0);
 					if (it_rank > player_rank && it_rank <= 256)
@@ -219,7 +219,7 @@ void lms_RemovePlayer(entity player)
 				GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
 				++quitters;
 			}
-			player.frags = FRAGS_LMS_LOSER;
+			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			TRANSMUTE(Observer, player);
 		}
 	}
@@ -307,12 +307,12 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		if(tl <= 0)
 		{
 			int pl_cnt = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 				pl_cnt++;
 			});
 			if(IS_BOT_CLIENT(frag_target))
 				bot_clear(frag_target);
-			frag_target.frags = FRAGS_LMS_LOSER;
+			frag_target.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			GameRules_scoring_add(frag_target, LMS_RANK, pl_cnt);
 		}
 	}
@@ -413,7 +413,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 	}
 	else
 	{
-		if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_LMS_LOSER)
+		if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_PLAYER_OUT_OF_GAME)
 		{
 			player.lms_spectate_warning = 1;
 			sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");

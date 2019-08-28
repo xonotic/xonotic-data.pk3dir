@@ -3,7 +3,7 @@
 #include "plasma_weapon.qh"
 
 CLASS(PlasmaDualAttack, PlasmaAttack)
-/* flags     */ ATTRIB(PlasmaDualAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(PlasmaDualAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "turret_plasma_dual");
 /* wepname   */ ATTRIB(PlasmaDualAttack, m_name, string, _("Dual plasma"));
 ENDCLASS(PlasmaDualAttack)
@@ -19,5 +19,13 @@ CLASS(DualPlasmaTurret, PlasmaTurret)
 /* netname    */ ATTRIB(DualPlasmaTurret, netname, string, "plasma_dual");
 /* fullname   */ ATTRIB(DualPlasmaTurret, turret_name, string, _("Dual Plasma Cannon"));
     ATTRIB(DualPlasmaTurret, m_weapon, Weapon, WEP_PLASMA_DUAL);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+	END()
+	TR_PROPS(X, DualPlasmaTurret, plasma_dual)
+#undef X
+
 ENDCLASS(DualPlasmaTurret)
 REGISTER_TURRET(PLASMA_DUAL, NEW(DualPlasmaTurret));

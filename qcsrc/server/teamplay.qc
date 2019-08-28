@@ -464,8 +464,8 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		team_ent.m_num_bots = 0;
 	}
 	setthink(balance, TeamBalance_Destroy);
-	
-	int teams_mask = 0;	
+
+	int teams_mask = 0;
 	string teament_name = string_null;
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(TeamBalance_CheckAllowedTeams,
 		teams_mask, teament_name, for_whom);
@@ -865,12 +865,10 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 
 void TeamBalance_AutoBalanceBots()
 {
-	if (!autocvar_g_balance_teams ||
-		!autocvar_g_balance_teams_prevent_imbalance)
-	{
-		return;
-	}
-	//PrintToChatAll("TeamBalance_AutoBalanceBots");
+	// checks disabled because we always want auto-balanced bots
+	//if (!(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance))
+	//	return;
+
 	entity balance = TeamBalance_CheckAllowedTeams(NULL);
 	TeamBalance_GetTeamCounts(balance, NULL);
 	int smallest_team_index = 0;

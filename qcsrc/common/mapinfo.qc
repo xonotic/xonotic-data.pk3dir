@@ -589,10 +589,10 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 	}
 }
 
-Gametype MapInfo_Type_FromString(string str)
+Gametype MapInfo_Type_FromString(string gtype)
 {
 	string replacement = "";
-	switch (str)
+	switch (gtype)
 	{
 		case "nexball":   replacement = "nb"; break;
 		case "freezetag": replacement = "ft"; break;
@@ -603,10 +603,10 @@ Gametype MapInfo_Type_FromString(string str)
 	}
 	if (replacement != "" && WARN_COND)
 	{
-		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, str, replacement);
-		str = replacement;
+		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
+		gtype = replacement;
 	}
-	FOREACH(Gametypes, it.mdl == str, return it);
+	FOREACH(Gametypes, it.mdl == gtype, return it);
 	return NULL;
 }
 

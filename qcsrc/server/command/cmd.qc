@@ -328,7 +328,7 @@ void ClientCommand_physics(entity caller, int request, int argc)
 
 			if (Physics_Valid(command) || command == "default")
 			{
-				stuffcmd(caller, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
+				stuffcmd(caller, strcat("\nseta cl_physics ", command, "\n"));
 				sprint(caller, strcat("^2Physics set successfully changed to ^3", command, "\n"));
 				return;
 			}
@@ -883,6 +883,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
+		case "color": case "topcolor": case "bottomcolor": if(teamplay) return; else break; // handled by engine in host_cmd.c
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		default:

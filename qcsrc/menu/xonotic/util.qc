@@ -414,7 +414,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			// update needed
 			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
-			if(un_download) { LOG_INFOF(_("Update can be downloaded at:\n%s"), un_download); }
+			if(un_download) { LOG_INFO(_("Update can be downloaded at:"), "\n", un_download); }
 			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
 			DisableServerBackwardsCompatibility();
 		}
@@ -542,18 +542,7 @@ float preMenuInit()
 
 string campaign_name_previous;
 float campaign_won_previous;
-#ifdef WATERMARK
-string autocvar_menu_watermark = WATERMARK;
-#else
-string autocvar_menu_watermark = "";
-#endif
-void postMenuDraw()
-{
-	if(autocvar_menu_watermark != "")
-	{
-		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
-	}
-}
+void postMenuDraw() {}
 void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrigin, vector theSize);
 .entity winnerDialog;
 void preMenuDraw()

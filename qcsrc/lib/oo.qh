@@ -56,11 +56,11 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 #ifndef QCC_SUPPORT_ENTITYCLASS
 	#define entityclass_2(name, base) USING(name, entity)
 	#define classfield(name)
-	#define _new(class, pure) __spawn( #class, __FILE__ ":" STR(__LINE__), pure)
+	#define _new(class, pure) __spawn(#class, __FILE__ ":" STR(__LINE__), pure)
 #else
 	#define entityclass_2(name, base) entityclass name : base {}
 	#define classfield(name) [[class(name)]]
-	#define _new(class, pure) ((class) __spawn( #class, __FILE__ ":" STR(__LINE__), pure))
+	#define _new(class, pure) ((class) __spawn(#class, __FILE__ ":" STR(__LINE__), pure))
 #endif
 /** entities you care about seeing (.origin works) */
 #define new(class) _new(class, false)

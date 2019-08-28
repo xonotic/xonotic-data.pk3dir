@@ -163,6 +163,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
     Weapon wep = this.owner.(weaponentity).m_weapon;
 	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner, this.owner.clientcolors, this.owner.(weaponentity));
 	this.colormap = this.owner.colormap;
+	this.skin = w_ent.skin;
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -435,13 +436,20 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	}
 }
 
-bool forbidWeaponUse(entity player)
+bool weaponUseForbidden(entity player)
+{
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
+	if (MUTATOR_CALLHOOK(ForbidWeaponUse, player)) return true;
+	return false;
+}
+
+bool weaponLocked(entity player)
 {
 	if (time < game_starttime && !sv_ready_restart_after_countdown) return true;
 	if (player.player_blocked) return true;
 	if (game_stopped) return true;
 	if (STAT(FROZEN, player)) return true;
-	if (MUTATOR_CALLHOOK(ForbidWeaponUse, player)) return true;
+	if (MUTATOR_CALLHOOK(LockWeapon, player)) return true;
 	return false;
 }
 
@@ -459,10 +467,10 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	int button_atck = PHYS_INPUT_BUTTON_ATCK(actor);
 	int button_atck2 = PHYS_INPUT_BUTTON_ATCK2(actor);
 
-	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if (weaponUseForbidden(actor))
 		button_atck = button_atck2 = 0; // forbid primary and secondary fire, switching is allowed
 
-	if (forbidWeaponUse(actor))
+	if (weaponLocked(actor))
 	{
 		if (this.state != WS_CLEAR)
 		{
@@ -591,7 +599,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		bool block_weapon = false;
 		{
 			bool key_pressed = PHYS_INPUT_BUTTON_HOOK(actor) && !actor.vehicle;
-			if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+			if (weaponUseForbidden(actor))
 				key_pressed = false;
 
 			Weapon off = actor.offhand;

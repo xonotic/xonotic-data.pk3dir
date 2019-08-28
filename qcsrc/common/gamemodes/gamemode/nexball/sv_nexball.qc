@@ -1,18 +1,5 @@
-#include "nexball.qh"
+#include "sv_nexball.qh"
 
-#ifdef CSQC
-int autocvar_cl_eventchase_nexball = 1;
-
-REGISTER_MUTATOR(cl_nb, true);
-
-MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
-{
-	if(autocvar_cl_eventchase_nexball && ISGAMETYPE(NEXBALL) && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
-		return true;
-	return false;
-}
-#endif
-#ifdef SVQC
 .entity ballcarried;
 
 int autocvar_g_nexball_goalleadlimit;
@@ -306,7 +293,7 @@ void football_touch(entity this, entity toucher)
 			this.nextthink = time + autocvar_g_nexball_delay_idle;
 		return;
 	}
-	if (!IS_PLAYER(toucher))
+	if (!IS_PLAYER(toucher) && !IS_VEHICLE(toucher))
 		return;
 	if(GetResource(toucher, RES_HEALTH) < 1)
 		return;
@@ -947,7 +934,7 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 	M_ARGV(2, int) &= ~0x80;
 }
 
-REGISTER_MUTATOR(nb, g_nexball)
+REGISTER_MUTATOR(nb, false)
 {
     MUTATOR_STATIC();
 	MUTATOR_ONADD
@@ -980,5 +967,3 @@ REGISTER_MUTATOR(nb, g_nexball)
 	}
 	return 0;
 }
-
-#endif

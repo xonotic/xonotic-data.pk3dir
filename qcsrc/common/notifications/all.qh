@@ -310,7 +310,6 @@ float autocvar_notification_lifetime_mapload = 10;
 #endif
 
 #ifdef SVQC
-.float FRAG_VERBOSE;
 void Notification_GetCvars(entity this);
 float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
 #else
@@ -856,5 +855,18 @@ REGISTRY_END(Notifications)
 	else
 		LOG_SEVERE("Notification initialization failed! Read above and fix the errors!");
 }
+
+#ifdef CSQC
+.int cvar_value;
+void ReplicateVars(bool would_destroy)
+{
+	if (!would_destroy)
+		FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
+			string cvarname = sprintf("notification_%s", Get_Notif_CvarName(it));
+			// NOTE: REPLICATE_SIMPLE can return;
+			REPLICATE_SIMPLE(it.cvar_value, cvarname);
+		});
+}
+#endif
 
 #include "all.inc"
