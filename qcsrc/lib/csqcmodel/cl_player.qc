@@ -242,7 +242,7 @@ void CSQCPlayer_ApplyDeathTilt(entity this)
 {
 	if(!IS_DEAD(this) || !autocvar_v_deathtilt)
 		return;
-	view_angles.y = autocvar_v_deathtiltangle;
+	view_angles.z = autocvar_v_deathtiltangle;
 }
 
 float autocvar_v_idlescale;
