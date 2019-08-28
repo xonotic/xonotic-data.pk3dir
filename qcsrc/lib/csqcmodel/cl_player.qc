@@ -214,14 +214,17 @@ float smooth_prevtime;
 float viewheightavg;
 vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 {
-	if(this.csqcmodel_teleported || !IS_ONGROUND(this) || autocvar_cl_stairsmoothspeed <= 0)
+	float smoothtime = bound(0, time - smooth_prevtime, 0.1);
+	smooth_prevtime = max(smooth_prevtime, drawtime); // drawtime is the previous frame's time at this point
+
+	if(this.csqcmodel_teleported || !(this.pmove_flags & PMF_ONGROUND) || autocvar_cl_stairsmoothspeed <= 0)
 		stairsmoothz = v.z;
 	else
 	{
-		if(v.z > stairsmoothz)
-			v.z = stairsmoothz = bound(v.z - PHYS_STEPHEIGHT(this), stairsmoothz + frametime * autocvar_cl_stairsmoothspeed, v.z);
-		else if(v.z < stairsmoothz)
-			v.z = stairsmoothz = bound(v.z, stairsmoothz - frametime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
+		if(stairsmoothz < v.z)
+			v.z = stairsmoothz = bound(v.z - PHYS_STEPHEIGHT(this), stairsmoothz + smoothtime * autocvar_cl_stairsmoothspeed, v.z);
+		else if(stairsmoothz > v.z)
+			v.z = stairsmoothz = bound(v.z, stairsmoothz - smoothtime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
 	}
 
 	float viewheight = bound(0, (time - smooth_prevtime) / max(0.0001, autocvar_cl_smoothviewheight), 1);
@@ -406,8 +409,6 @@ bool autocvar_chase_overhead;
 float autocvar_chase_pitchangle;
 vector CSQCPlayer_ApplyChase(entity this, vector v)
 {
-	// don't need to do offset for view height here, it's done in smoothing!
-	//v += this.view_ofs;
 	vector forward;
 	vector chase_dest;
 
@@ -577,8 +578,8 @@ void CSQCPlayer_SetCamera()
 				// origin
 				vieworg = vieworg + view_punchvector;
 				vieworg = CSQCPlayer_ApplyBobbing(view, vieworg);
-				CSQCPlayer_ApplyIdleScaling(view);
 			}
+			CSQCPlayer_ApplyIdleScaling(view);
 			setproperty(VF_ORIGIN, vieworg);
 			setproperty(VF_ANGLES, view_angles);
 		}
