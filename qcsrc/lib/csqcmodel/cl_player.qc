@@ -282,15 +282,72 @@ void CSQCPlayer_ApplyIdleScaling(entity this)
 
 float autocvar_chase_back;
 float autocvar_chase_up;
+bool autocvar_chase_overhead;
+float autocvar_chase_pitchangle;
 vector CSQCPlayer_ApplyChase(entity this, vector v)
 {
-	// TODO: chase_overhead
-	v += this.view_ofs;
-	makevectors(view_angles);
+	// don't need to do offset for view height here, it's done in smoothing!
+	//v += this.view_ofs;
+	vector forward;
+	vector chase_dest;
+
+	if(autocvar_chase_overhead)
+	{
+		view_angles.x = 0;
+		makevectors(view_angles);
+		forward = v_forward;
+		vector up = v_up;
+		// trace a little further so it hits a surface more consistently (to avoid 'snapping' on the edge of the range)
+		chase_dest.x = v.x - forward.x * autocvar_chase_back + up.x * autocvar_chase_up;
+		chase_dest.y = v.y - forward.y * autocvar_chase_back + up.y * autocvar_chase_up;
+		chase_dest.z = v.z - forward.z * autocvar_chase_back + up.z * autocvar_chase_up;
+
+		// trace from first person view location to our chosen third person view location
+		traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+
+		vector bestvieworg = trace_endpos;
+		vector offset = '0 0 0';
+		for(offset.x = -16; offset.x <= 16; offset.x += 8)
+		{
+			for(offset.y = -16; offset.y <= 16; offset.y += 8)
+			{
+				makevectors(view_angles);
+				up = v_up;
+				chase_dest.x = v.x - forward.x * autocvar_chase_back + up.x * autocvar_chase_up + offset.x;
+				chase_dest.y = v.y - forward.y * autocvar_chase_back + up.y * autocvar_chase_up + offset.y;
+				chase_dest.z = v.z - forward.z * autocvar_chase_back + up.z * autocvar_chase_up + offset.z;
+				traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+				if(bestvieworg.z > trace_endpos.z)
+					bestvieworg.z = trace_endpos.z;
+			}
+		}
+		bestvieworg.z -= 8;
+		v = bestvieworg;
+
+		view_angles.x = autocvar_chase_pitchangle;
+		//setproperty(VF_CL_VIEWANGLES, view_angles); // update view angles as well so we can aim
+	}
+	else
+	{
+		makevectors(view_angles);
+		forward = v_forward;
+		// trace a little further so it hits a surface more consistently (to avoid 'snapping' on the edge of the range)
+		float cdist = -autocvar_chase_back - 8;
+		chase_dest.x = v.x + forward.x * cdist;
+		chase_dest.y = v.y + forward.y * cdist;
+		chase_dest.z = v.z + forward.z * cdist + autocvar_chase_up;
+		traceline(v, chase_dest, MOVE_NOMONSTERS, NULL);
+		v.x = 1 * trace_endpos.x + 8 * forward.x + 4 * trace_plane_normal.x;
+		v.y = 1 * trace_endpos.y + 8 * forward.y + 4 * trace_plane_normal.y;
+		v.z = 1 * trace_endpos.z + 8 * forward.z + 4 * trace_plane_normal.z;
+	}
+
+#if 0
 	tracebox(v, '-4 -4 -4', '4 4 4', v - v_forward * autocvar_chase_back, MOVE_NORMAL, this);
 	v = trace_endpos;
 	tracebox(v, '-4 -4 -4', '4 4 4', v + v_up * autocvar_chase_up, MOVE_NORMAL, this);
 	v = trace_endpos;
+#endif
 	return v;
 }
 
@@ -379,13 +436,12 @@ void CSQCPlayer_SetCamera()
 		//if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
 		//if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
 		vector vieworg = view.origin;
+		vieworg = CSQCPlayer_ApplySmoothing(view, vieworg);
 		if(autocvar_chase_active)
 			vieworg = CSQCPlayer_ApplyChase(view, vieworg);
-		else
+		else if(IS_DEAD(view))
 		{
-			vieworg = CSQCPlayer_ApplySmoothing(view, vieworg);
-			if(IS_DEAD(view))
-				CSQCPlayer_ApplyDeathTilt(view);
+			CSQCPlayer_ApplyDeathTilt(view);
 		}
 		if(autocvar_v_idlescale)
 			CSQCPlayer_ApplyIdleScaling(view);
