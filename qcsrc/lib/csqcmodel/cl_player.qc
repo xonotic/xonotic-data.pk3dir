@@ -280,7 +280,6 @@ vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 		return v;
 
 	// bounded XY speed, used by several effects below
-	float xyspeed = bound(0, sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y), autocvar_cl_bob_velocity_limit);
 	float bob, cycle;
 
 	// vertical view bobbing code
@@ -314,6 +313,7 @@ vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 			cycle = sin(M_PI + M_PI * (cycle - autocvar_cl_bobup) / (1.0 - autocvar_cl_bobup));
 		// bob is proportional to velocity in the xy plane
 		// (don't count Z, or jumping messes it up)
+		float xyspeed = bound(0, sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y), autocvar_cl_bob_velocity_limit);
 		bob = xyspeed * autocvar_cl_bob;
 		bob = bound(0, bob, bob_limit);
 		bob = bob * 0.3 + bob * 0.7 * cycle;
