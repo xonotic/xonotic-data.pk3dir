@@ -532,7 +532,12 @@ int ps_client_event(entity minigame, string event, ...)
 		{
 			ps_set_curr_pos("");
 			ps_curr_piece = NULL;
-			minigame.message = ps_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, ps_turn_to_string(minigame.minigame_flags));
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
@@ -609,7 +614,7 @@ int ps_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = ps_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, ps_turn_to_string(sent.minigame_flags));
 					//if ( sent.minigame_flags & minigame_self.team )
 						//minigame_prompt();
 				}

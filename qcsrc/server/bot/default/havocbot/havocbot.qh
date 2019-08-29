@@ -51,9 +51,6 @@ float havocbot_moveto_refresh_route(entity this);
 
 vector havocbot_dodge(entity this);
 
-.void(entity this) havocbot_role;
-.void(entity this) havocbot_previous_role;
-
 void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_items;
 void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 

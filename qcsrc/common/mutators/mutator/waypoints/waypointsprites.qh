@@ -53,6 +53,7 @@ float autocvar_g_waypointsprite_timealphaexponent;
 bool autocvar_g_waypointsprite_turrets = true;
 float autocvar_g_waypointsprite_turrets_maxdist = 5000;
 bool autocvar_g_waypointsprite_turrets_text = false;
+bool autocvar_g_waypointsprite_turrets_onlyhurt = false;
 bool autocvar_g_waypointsprite_uppercase;
 bool autocvar_g_waypointsprite_text;
 float autocvar_g_waypointsprite_iconsize = 32;

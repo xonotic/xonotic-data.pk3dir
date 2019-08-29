@@ -792,7 +792,7 @@ bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 {
-	float eps = 0.0625;
+	const float eps = 0.0625;
 	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 		return;

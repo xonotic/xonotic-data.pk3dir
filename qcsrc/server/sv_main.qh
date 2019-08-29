@@ -2,6 +2,11 @@
 
 bool expr_evaluate(string s);
 
+#ifdef PROFILING
+float client_cefc_accumulator;
+float client_cefc_accumulatortime;
+#endif
+
 /*
 ==================
 main

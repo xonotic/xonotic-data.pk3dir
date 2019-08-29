@@ -1311,9 +1311,14 @@ int bd_client_event(entity minigame, string event, ...)
 	{
 		case "activate":
 		{
-			minigame.message = bd_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, bd_turn_to_string(minigame.minigame_flags));
 			bd_set_curr_pos("");
 			bd_curr_tile = BD_TILE_BRICK1;
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
@@ -1370,7 +1375,7 @@ int bd_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = bd_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, bd_turn_to_string(sent.minigame_flags));
 					//if ( sent.minigame_flags & minigame_self.team )
 						//minigame_prompt();
 				}

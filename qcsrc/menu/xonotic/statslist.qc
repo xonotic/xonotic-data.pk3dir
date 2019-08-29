@@ -41,12 +41,11 @@ string XonoticStatsList_convertDate(string input)
 		default: return input; // failed, why?
 	}
 
-	return sprintf(
-		"%s %s, %d",
-		monthname,
-		count_ordinal(stof(substring(input, 8, 2))),
-		stof(substring(input, 0, 4))
-	);
+	string date = ZCTX(_("DATE^%m %d, %Y"));
+	date = strreplace("%Y", substring(input, 0, 4), date);
+	date = strreplace("%d", ftos(stof(substring(input, 8, 2))), date); // ftos-stof removes leading 0
+	date = strreplace("%m", monthname, date);
+	return date;
 }
 
 void XonoticStatsList_getStats(entity me)

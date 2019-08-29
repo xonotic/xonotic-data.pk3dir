@@ -5,7 +5,7 @@ void counter_reset(entity this);
 void counter_use(entity this, entity actor, entity trigger)
 {
 	entity store = this;
-	if(this.spawnflags & COUNTER_PER_PLAYER)
+	if(this.spawnflags & COUNTER_PER_PLAYER) // FIXME: multiple counters in the map will not function correctly, and upon trigger reset the player won't be able to use it again!
 	{
 		if(!IS_PLAYER(actor))
 			return;

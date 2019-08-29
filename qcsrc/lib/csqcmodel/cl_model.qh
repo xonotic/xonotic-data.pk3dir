@@ -27,7 +27,8 @@
 #define CSQCMODEL_ENDIF
 #define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	.t f;
-#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
+	.t f;
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY

@@ -181,6 +181,7 @@ float default_weapon_alpha;
 
 .float cvar_cl_allow_uid2name;
 .float cvar_cl_allow_uidtracking;
+.bool cvar_cl_allow_uidranking;
 .string stored_netname;
 
 string gamemode_name;
@@ -189,9 +190,6 @@ string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
-
-// WEAPONTODO: remove this
-//WepSet weaponsInMap;
 
 .float respawn_countdown; // next number to count
 
@@ -297,11 +295,6 @@ float servertime, serverprevtime, serverframetime;
 string matchid;
 
 bool radar_showennemies;
-
-#ifdef PROFILING
-float client_cefc_accumulator;
-float client_cefc_accumulatortime;
-#endif
 
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0

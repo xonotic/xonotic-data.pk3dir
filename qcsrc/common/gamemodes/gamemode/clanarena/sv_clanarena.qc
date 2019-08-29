@@ -483,11 +483,6 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(ca, WantWeapon)
-{
-	M_ARGV(2, bool) = true; // all weapons
-}
-
 MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
 {
 	return true; // doesn't work well with the whole spectator as player thing
@@ -502,6 +497,14 @@ MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 {
-	// most weapons arena
-	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
+	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+		M_ARGV(0, string) = autocvar_g_ca_weaponarena;
+}
+
+MUTATOR_HOOKFUNCTION(ca, SV_ParseServerCommand)
+{
+	string cmd_name = M_ARGV(0, string);
+	if (cmd_name == "shuffleteams")
+		shuffleteams_on_reset_map = !allowed_to_spawn;
+	return false;
 }

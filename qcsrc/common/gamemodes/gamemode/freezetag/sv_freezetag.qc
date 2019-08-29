@@ -361,7 +361,9 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
 			Unfreeze(frag_target, true);
 		freezetag_count_alive_players();
-		return true; // let the player die so that he can respawn whenever he wants
+		frag_target.respawn_time = time;
+		frag_target.respawn_flags |= RESPAWN_FORCE;
+		return true;
 	}
 
 	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
@@ -585,9 +587,8 @@ MUTATOR_HOOKFUNCTION(ft, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
 {
-	// most weapons arena
 	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
-		M_ARGV(0, string) = "most";
+		M_ARGV(0, string) = autocvar_g_freezetag_weaponarena;
 }
 
 MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
@@ -606,6 +607,14 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 		GetResource(frag_attacker, RES_HEALTH), GetResource(frag_attacker, RES_ARMOR), (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
 
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ft, SV_ParseServerCommand)
+{
+	string cmd_name = M_ARGV(0, string);
+	if (cmd_name == "shuffleteams")
+		shuffleteams_on_reset_map = !(round_handler_IsActive() && !round_handler_IsRoundStarted());
+	return false;
 }
 
 void freezetag_Initialize()
