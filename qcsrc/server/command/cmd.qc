@@ -762,6 +762,12 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 					sprint(caller, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 					return;
 				}
+				if (IS_DEAD(caller))
+				{
+					// don't warn the caller when trying to taunt while dead, just don't play any sounds!
+					// we still allow them to see warnings if it's invalid, so a dead player can find out the sounds in peace
+					return;
+				}
 				string msg = "";
 				if (argc >= 3)
 					msg = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
