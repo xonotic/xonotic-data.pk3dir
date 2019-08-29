@@ -777,17 +777,12 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 
 	if(this.play_time < time)
 	{
-		float wc = vlen(this.velocity - this.oldvelocity);
-		//dprint("oldvel: ", vtos(this.oldvelocity), "\n");
-		//dprint("vel: ", vtos(this.velocity), "\n");
-		if(_minspeed < wc)
+		if(vdist(this.velocity - this.oldvelocity, >, _minspeed))
 		{
+			float wc = vlen(this.velocity - this.oldvelocity);
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			Damage(this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.play_time = time + 0.25;
-
-			//dprint("wc: ", ftos(wc), "\n");
-			//dprint("take: ", ftos(take), "\n");
 		}
 	}
 }
