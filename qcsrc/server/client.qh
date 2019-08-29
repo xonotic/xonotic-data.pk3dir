@@ -98,7 +98,7 @@ CLASS(Client, Object)
     ATTRIB(Client, zoomstate, bool, this.zoomstate);
     ATTRIB(Client, just_joined, bool, this.just_joined);
     ATTRIB(Client, race_completed, bool, this.race_completed);
-    ATTRIBARRAY(Client, msg_choice_choices, int, 50); // TODO: actually NOTIF_CHOICE_MAX
+    ATTRIBARRAY(Client, msg_choice_choices, int, 20); // TODO: actually NOTIF_CHOICE_MAX
     ATTRIB(Client, latency_sum, float, this.latency_sum);
     ATTRIB(Client, latency_cnt, int, this.latency_cnt);
     ATTRIB(Client, latency_time, float, this.latency_time);
