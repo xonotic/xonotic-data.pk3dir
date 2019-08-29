@@ -50,13 +50,15 @@ SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER)
 
 CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
-OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+OffhandBlaster OFFHAND_BLASTER;
+STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
 
 #ifdef SVQC
 .float blaster_damage;
 .float blaster_edgedamage;
 .float blaster_radius;
 .float blaster_force;
+.float blaster_force_zscale;
 .float blaster_lifetime;
 
 // Will be demacroed after WEP_CVAR macros are also demacroed.
@@ -71,6 +73,7 @@ OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER =
 		WEP_CVAR_SEC(weapon_name, edgedamage), \
 		WEP_CVAR_SEC(weapon_name, radius), \
 		WEP_CVAR_SEC(weapon_name, force), \
+		WEP_CVAR_SEC(weapon_name, force_zscale), \
 		WEP_CVAR_SEC(weapon_name, speed), \
 		WEP_CVAR_SEC(weapon_name, spread), \
 		WEP_CVAR_SEC(weapon_name, delay), \

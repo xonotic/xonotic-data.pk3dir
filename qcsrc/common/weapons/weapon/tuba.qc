@@ -268,7 +268,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	vector o;
 	float n = W_Tuba_GetNote(actor, hittype);
 
-	hittype = 0;
+	hittype = HITTYPE_SOUND;
 	if(actor.(weaponentity).tuba_instrument & 1)
 		hittype |= HITTYPE_SECONDARY;
 	if(actor.(weaponentity).tuba_instrument & 2)

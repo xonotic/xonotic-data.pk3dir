@@ -184,10 +184,11 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 			{
 				if (argv(1) == "spawn")
 				{
+					string s = argv(2);
 					if (!IS_PLAYER(caller))
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
-						waypoint_spawn_fromeditor(caller);
+						waypoint_spawn_fromeditor(caller, (s == "crosshair"), (s == "jump"), (s == "crouch"), (s == "support"));
 					return;
 				}
 				else if (argv(1) == "remove")
@@ -196,6 +197,17 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 						sprint(caller, "ERROR: this command works only if you are player\n");
 					else
 						waypoint_remove_fromeditor(caller);
+					return;
+				}
+				else if (argv(1) == "hardwire")
+				{
+					string s = argv(2);
+					waypoint_start_hardwiredlink(caller, (s == "crosshair"));
+					return;
+				}
+				else if (argv(1) == "lock")
+				{
+					waypoint_lock(caller);
 					return;
 				}
 				else if (argv(1) == "unreachable")
@@ -240,13 +252,28 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
-			sprint(caller, "  Where 'action' can be: spawn, remove, unreachable, saveall, relinkall,\n");
-			sprint(caller, "   symorigin get|set\n");
-			sprint(caller, "   symorigin get|set p1 p2 ... pX\n");
-			sprint(caller, "   symaxis get|set p1 p2\n");
-			sprint(caller, "    where p1 p2 ... pX are positions \"x y z\" (z can be omitted)\n");
-			sprint(caller, " symorigin and symaxis commands are useful to determine origin/axis of symmetry"
-							" on maps without ctf flags or where flags aren't perfectly symmetrical\n");
+			sprint(caller, "  Where 'action' can be:\n");
+			sprint(caller, "   ^5spawn^7: spawns a waypoint at player's position\n");
+			sprint(caller, "   ^5remove^7: removes player's nearest waypoint\n");
+			sprint(caller, "   ^5unreachable^7: reveals waypoints and items unreachable from the current position and spawnpoints without a nearest waypoint\n");
+			sprint(caller, "   ^5saveall^7: saves all waypoints and links to file\n");
+			sprint(caller, "   ^5relinkall^7: relinks all waypoints as if they were respawned\n");
+			sprint(caller, "   ^5spawn crosshair^7: spawns a waypoint at crosshair's position\n");
+			sprint(caller, "   ^7 in general useful to create special and hardwired links with ease from existing waypoints\n");
+			sprint(caller, "   ^7 in particular it's the only way to create custom jumppad waypoints (spawn another waypoint to create destination))\n");
+			sprint(caller, "   ^5spawn jump^7: spawns a jump waypoint (place it at least 60 qu before jump start, spawn another waypoint to create destination)\n");
+			sprint(caller, "   ^5spawn crouch^7: spawns a crouch waypoint (it links only to very close waypoints)\n");
+			sprint(caller, "   ^5spawn support^7: spawns a support waypoint (spawn another waypoint to create destination from which all incoming links are removed)\n");
+			sprint(caller, "   ^7 useful to replace links to problematic jumppad/teleport waypoints\n");
+			sprint(caller, "   ^5hardwire^7: marks the nearest waypoint as origin of a new hardwired link (spawn another waypoint over an existing one to create destination)\n");
+			sprint(caller, "   ^5hardwire crosshair^7: marks the waypoint at crosshair instead of the nearest waypoint\n");
+			sprint(caller, "   ^5lock^7: locks link display of the aimed waypoint (unlocks if no waypoint is found at crosshair's position)\n");
+			sprint(caller, "   ^5symorigin get|set\n");
+			sprint(caller, "   ^5symorigin get|set p1 p2 ... pX\n");
+			sprint(caller, "   ^5symaxis get|set p1 p2\n");
+			sprint(caller, "   ^7 where p1 p2 ... pX are positions (\"x y z\", z can be omitted) that you know are perfectly symmetrical"
+								" so you can determine origin/axis of symmetry of maps without ctf flags or where flags aren't perfectly symmetrical\n");
+			sprint(caller, "  See 'wpeditor_menu' for a selectable list of various commands and useful settings to edit waypoints.\n");
 			return;
 		}
 	}
@@ -328,7 +355,7 @@ void ClientCommand_physics(entity caller, int request, int argc)
 
 			if (Physics_Valid(command) || command == "default")
 			{
-				stuffcmd(caller, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
+				stuffcmd(caller, strcat("\nseta cl_physics ", command, "\n"));
 				sprint(caller, strcat("^2Physics set successfully changed to ^3", command, "\n"));
 				return;
 			}
@@ -883,6 +910,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
+		case "color": case "topcolor": case "bottomcolor": if(teamplay) return; else break; // handled by engine in host_cmd.c
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		default:

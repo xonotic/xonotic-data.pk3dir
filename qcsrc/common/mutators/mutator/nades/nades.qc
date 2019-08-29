@@ -10,6 +10,9 @@ float autocvar_g_nades_spread = 0.04;
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
+REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
+REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
+
 entity Nade_TrailEffect(int proj, int nade_team)
 {
     switch (proj)
@@ -891,13 +894,16 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		damage = this.max_health * 0.1;
 	else if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	{
-		if(deathtype & HITTYPE_SECONDARY)
-		{
-			damage = this.max_health * 0.1;
-			force *= 10;
-		}
-		else
+		if(!(deathtype & HITTYPE_SECONDARY))
 			damage = this.max_health * 1.15;
+	}
+
+	// melee slaps
+	entity death_weapon = DEATH_WEAPONOF(deathtype);
+	if(((deathtype & HITTYPE_SECONDARY) ? (death_weapon.spawnflags & WEP_TYPE_MELEE_SEC) : (death_weapon.spawnflags & WEP_TYPE_MELEE_PRI)))
+	{
+		damage = this.max_health * 0.1;
+		force *= 10;
 	}
 
 	this.velocity += force;
@@ -1030,7 +1036,7 @@ void nades_GiveBonus(entity player, float score)
 		if ( STAT(NADE_BONUS_SCORE, player) >= 1 )
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
-			play2(player, SND(KH_ALARM));
+			play2(player, SND(NADE_BONUS));
 			STAT(NADE_BONUS, player)++;
 			STAT(NADE_BONUS_SCORE, player) -= 1;
 		}
@@ -1247,7 +1253,8 @@ CLASS(NadeOffhand, OffhandWeapon)
 		}
     }
 ENDCLASS(NadeOffhand)
-NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOffhand); }
+NadeOffhand OFFHAND_NADE;
+STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOffhand); }
 
 MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
@@ -1444,7 +1451,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 
 	if(IS_PLAYER(frag_attacker))
 	{
-		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
+		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) 
+																	: autocvar_g_nades_bonus_score_minor);
 
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
@@ -1540,9 +1548,6 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(VEIL_ORB, client) = STAT(VEIL_ORB, spectatee);
 	STAT(VEIL_ORB_ALPHA, client) = STAT(VEIL_ORB_ALPHA, spectatee);
 }
-
-REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
-REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {

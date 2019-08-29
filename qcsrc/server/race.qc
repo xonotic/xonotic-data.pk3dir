@@ -23,7 +23,12 @@
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 
 IntrusiveList g_race_targets;
-STATIC_INIT(g_race_targets) { g_race_targets = IL_NEW(); }
+IntrusiveList g_racecheckpoints;
+STATIC_INIT(g_race)
+{
+	g_race_targets = IL_NEW();
+	g_racecheckpoints = IL_NEW();
+}
 
 void race_InitSpectator()
 {

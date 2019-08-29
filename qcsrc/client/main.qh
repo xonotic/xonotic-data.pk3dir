@@ -45,20 +45,24 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .bool ready;
 .bool eliminated;
 
-.void(entity) draw;
 IntrusiveList g_drawables;
-STATIC_INIT(g_drawables) { g_drawables = IL_NEW(); }
-.void(entity) draw2d;
 IntrusiveList g_drawables_2d;
-STATIC_INIT(g_drawables_2d) { g_drawables_2d = IL_NEW(); }
+IntrusiveList g_radarlinks;
+IntrusiveList g_radaricons;
+STATIC_INIT(main)
+{
+	g_drawables = IL_NEW();
+	g_drawables_2d = IL_NEW();
+	g_radarlinks = IL_NEW();
+	g_radaricons = IL_NEW();
+}
+
+.void(entity) draw;
+.void(entity) draw2d;
 .void(entity) entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
-IntrusiveList g_radarlinks;
-STATIC_INIT(g_radarlinks) { g_radarlinks = IL_NEW(); }
-IntrusiveList g_radaricons;
-STATIC_INIT(g_radaricons) { g_radaricons = IL_NEW(); }
 
 bool button_zoom;
 bool spectatorbutton_zoom;

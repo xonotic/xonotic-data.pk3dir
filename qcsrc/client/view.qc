@@ -291,6 +291,7 @@ void viewmodel_draw(entity this)
 		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
+	int wepskin = this.m_skin;
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
 	Weapon wep = this.activeweapon;
@@ -304,6 +305,7 @@ void viewmodel_draw(entity this)
 	{
 		e.drawmask = mask;
 		e.alpha = a;
+		e.skin = wepskin;
 		e.colormap = 256 + c;  // colormap == 0 is black, c == 0 is white
 		e.glowmod = g;
 		e.csqcmodel_effects = fx;
@@ -390,86 +392,6 @@ STATIC_INIT(fpscounter_init)
 {
 	float currentTime = gettime(GETTIME_REALTIME);
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
-}
-
-STATIC_INIT(Porto)
-{
-	entity e = new_pure(porto);
-	e.draw = Porto_Draw;
-	IL_PUSH(g_drawables, e);
-	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-}
-
-const int polyline_length = 16;
-.vector polyline[polyline_length];
-void Porto_Draw(entity this)
-{
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		entity wepent = viewmodels[slot];
-
-		if (wepent.activeweapon != WEP_PORTO) continue;
-		if (spectatee_status) continue;
-		if (WEP_CVAR(porto, secondary)) continue;
-		if (intermission == 1) continue;
-		if (intermission == 2) continue;
-		if (STAT(HEALTH) <= 0) continue;
-
-		vector pos = view_origin;
-		vector dir = view_forward;
-		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
-		pos += v_right * -wepent.movedir.y
-			+  v_up * wepent.movedir.z;
-
-		if (wepent.angles_held_status)
-		{
-			makevectors(wepent.angles_held);
-			dir = v_forward;
-		}
-
-		wepent.polyline[0] = pos;
-
-		int portal_number = 0, portal1_idx = 1, portal_max = 2;
-		int n = 1 + 2;  // 2 lines == 3 points
-		for (int idx = 0; idx < n && idx < polyline_length - 1; )
-		{
-			traceline(pos, pos + 65536 * dir, true, this);
-			dir = reflect(dir, trace_plane_normal);
-			pos = trace_endpos;
-			wepent.polyline[++idx] = pos;
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
-			{
-				n += 1;
-				continue;
-			}
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-			{
-				n = max(2, idx);
-				break;
-			}
-			// check size
-			{
-				vector ang = vectoangles2(trace_plane_normal, dir);
-				ang.x = -ang.x;
-				makevectors(ang);
-				if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
-				{
-					n = max(2, idx);
-					break;
-				}
-			}
-			portal_number += 1;
-			if (portal_number >= portal_max) break;
-			if (portal_number == 1) portal1_idx = idx;
-		}
-		for (int idx = 0; idx < n - 1; ++idx)
-		{
-			vector p = wepent.polyline[idx], q = wepent.polyline[idx + 1];
-			if (idx == 0) p -= view_up * 16;  // line from player
-			vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
-			Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
-		}
-	}
 }
 
 float drawtime;
@@ -679,6 +601,9 @@ float EnemyHitCheck()
 
 float TrueAimCheck(entity wepent)
 {
+	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
+		return SHOTTYPE_HITWORLD;
+
 	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
 	vector mi, ma, dv;
@@ -692,12 +617,6 @@ float TrueAimCheck(entity wepent)
 
 	switch(wepent.activeweapon) // WEAPONTODO
 	{
-		case WEP_TUBA: // no aim
-		case WEP_PORTO: // shoots from eye
-		case WEP_NEXBALL: // shoots from eye
-		case WEP_HOOK: // no trueaim
-		case WEP_MORTAR: // toss curve
-			return SHOTTYPE_HITWORLD;
 		case WEP_VORTEX:
 		case WEP_OVERKILL_NEX:
 		case WEP_VAPORIZER:
@@ -1055,6 +974,20 @@ void HUD_Crosshair(entity this)
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
+		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
+		{
+			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
+			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
+			{
+				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
+				if(trace_ent == csqcplayer)
+					csqcplayer.alpha = crosshair_chase_playeralpha;
+				else
+					csqcplayer.alpha = csqcplayer.m_alpha;
+			}
+			traceline(player_org, player_org + max_shot_distance * view_forward, MOVE_WORLDONLY, NULL);
+			wcross_origin = project_3d_to_2d(trace_endpos);
+		}
 		else
 			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
@@ -1644,6 +1577,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
 
 	lasthud = hud;
+
+	ReplicateVars(false);
+	if (ReplicateVars_NOT_SENDING())
+		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
 
 	HUD_Scale_Disable();
 

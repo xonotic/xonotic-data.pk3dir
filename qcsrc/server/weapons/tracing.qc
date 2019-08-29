@@ -213,10 +213,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 
 void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
-	entity pseudoprojectile = NULL;
-
 	vector dir = normalize(end - start);
-	float length = vlen(end - start);
 	vector force = dir * bforce;
 
 	// go a little bit into the wall because we need to hit this wall later
@@ -273,41 +270,30 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		it.solid = it.railgunhitsolidbackup;
 	});
 
-	// spawn a temporary explosion entity for RadiusDamage calls
-	//explosion = spawn();
+	// Find all players the beam passed close by (even those hit)
+	float length = vlen(endpoint - start);
+	entity pseudoprojectile = NULL;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
+		// not when spectating the shooter
+		if (IS_SPEC(it) && it.enemy == this) continue;
 
-	// Find all non-hit players the beam passed close by
-	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id) // WEAPONTODO
-	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
-			if(!it.railgunhit)
-			if(!(IS_SPEC(it) && it.enemy == this))
-			{
-				msg_entity = it;
-				// nearest point on the beam
-				vector beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
+		// nearest point on the beam
+		vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
 
-				float f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
-				if(f <= 0)
-					continue;
+		if(!pseudoprojectile)
+			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
 
-				if(!pseudoprojectile)
-					pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
-			}
-		});
-
-		if(pseudoprojectile)
-			delete(pseudoprojectile);
-	}
+		msg_entity = it;
+		// we want this to be very loud when close but fall off quickly -> using max base volume and high attenuation
+		soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_IDLE);
+	});
+	if(pseudoprojectile)
+		delete(pseudoprojectile);
 
 	// find all the entities the railgun hit and hurt them
 	IL_EACH(g_railgunhit, it.railgunhit,
 	{
 		// removal from the list is handled below
-
-		// get the details we need to call the damage function
-		vector hitloc = it.railgunhitloc;
 
 		float foff = ExponentialFalloff(mindist, maxdist, halflifedist, it.railgundistance);
 		float ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, it.railgundistance);
@@ -317,11 +303,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 		// apply the damage
 		if (it.takedamage)
-			Damage (it, this, this, bdamage * foff, deathtype, weaponentity, hitloc, it.railgunforce * ffs);
-
-		// create a small explosion to throw gibs around (if applicable)
-		//setorigin(explosion, hitloc);
-		//RadiusDamage (explosion, this, 10, 0, 50, NULL, NULL, 300, deathtype);
+			Damage(it, this, this, bdamage * foff, deathtype, weaponentity, it.railgunhitloc, it.railgunforce * ffs);
 
 		it.railgunhitloc = '0 0 0';
 		it.railgunhitsolidbackup = SOLID_NOT;
