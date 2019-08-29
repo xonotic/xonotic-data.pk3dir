@@ -230,6 +230,8 @@ void Shutdown()
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
+
+	ReplicateVars(true); // destroy
 }
 
 .float has_team;

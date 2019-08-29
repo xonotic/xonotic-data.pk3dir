@@ -1683,6 +1683,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	SetResourceExplicit(this, RES_HEALTH, GetResource(spectatee, RES_HEALTH));
 	CS(this).impulse = 0;
+	this.disableclientprediction = 1; // no need to run prediction on a spectator
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
 	STAT(HIT_TIME, this) = STAT(HIT_TIME, spectatee);

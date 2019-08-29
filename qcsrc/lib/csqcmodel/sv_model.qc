@@ -48,7 +48,11 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 	{ \
 		w(MSG_ENTITY, this.csqcmodel_##f); \
 	}
-#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
+	if(sf & flag) \
+	{ \
+		w(MSG_ENTITY, this.csqcmodel_##f); \
+	}
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY

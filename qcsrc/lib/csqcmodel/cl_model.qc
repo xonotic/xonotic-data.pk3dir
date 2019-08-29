@@ -277,6 +277,9 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 		this.csqcmodel_teleported = 1;
 	}
 
+	if(sf & BIT(3))
+		this.alpha = this.m_alpha;
+
 	if(sf & BIT(14))
 		viewloc_SetTags(this);
 

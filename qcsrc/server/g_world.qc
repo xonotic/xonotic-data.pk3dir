@@ -283,6 +283,7 @@ void cvar_changes_init()
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
 		BADCVAR("g_runematch");
+		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
@@ -343,6 +344,7 @@ void cvar_changes_init()
 		BADCVAR("g_physics_predictall");
 		BADCVAR("g_piggyback");
 		BADCVAR("g_playerclip_collisions");
+		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
@@ -473,6 +475,12 @@ void cvar_changes_init()
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
+
+		// temporary for testing
+		// TODO remove before 0.8.3 release
+		BADCVAR("g_ca_weaponarena");
+		BADCVAR("g_freezetag_weaponarena");
+		BADCVAR("g_lms_weaponarena");
 
 #undef BADPRESUFFIX
 #undef BADPREFIX

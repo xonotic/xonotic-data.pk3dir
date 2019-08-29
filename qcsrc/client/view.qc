@@ -291,6 +291,7 @@ void viewmodel_draw(entity this)
 		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
+	int wepskin = this.m_skin;
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
 	Weapon wep = this.activeweapon;
@@ -304,6 +305,7 @@ void viewmodel_draw(entity this)
 	{
 		e.drawmask = mask;
 		e.alpha = a;
+		e.skin = wepskin;
 		e.colormap = 256 + c;  // colormap == 0 is black, c == 0 is white
 		e.glowmod = g;
 		e.csqcmodel_effects = fx;
@@ -972,6 +974,20 @@ void HUD_Crosshair(entity this)
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
+		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
+		{
+			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
+			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
+			{
+				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
+				if(trace_ent == csqcplayer)
+					csqcplayer.alpha = crosshair_chase_playeralpha;
+				else
+					csqcplayer.alpha = csqcplayer.m_alpha;
+			}
+			traceline(player_org, player_org + max_shot_distance * view_forward, MOVE_WORLDONLY, NULL);
+			wcross_origin = project_3d_to_2d(trace_endpos);
+		}
 		else
 			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
@@ -1561,6 +1577,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
 
 	lasthud = hud;
+
+	ReplicateVars(false);
+	if (ReplicateVars_NOT_SENDING())
+		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
 
 	HUD_Scale_Disable();
 
