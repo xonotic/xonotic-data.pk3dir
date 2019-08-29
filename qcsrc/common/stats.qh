@@ -43,8 +43,12 @@ const int MAX_CL_STATS = 256;
 #endif
 
 #ifdef SVQC
+/// all the weapons actually spawned in the map, does not include filtered items
 vector weaponsInMap;
+/// all the weapons placed by the mapper (weaponreplace applied), ignores most filters
+vector weaponsInMapAll;
 #endif
+
 REGISTER_STAT(WEAPONS, vectori)
 REGISTER_STAT(WEAPONSINMAP, vectori, weaponsInMap)
 
@@ -302,6 +306,11 @@ bool autocvar_sv_slick_applygravity;
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
 #ifdef SVQC
+bool autocvar_sv_vq3compat;
+#endif
+REGISTER_STAT(VQ3COMPAT, bool, autocvar_sv_vq3compat)
+
+#ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
 float warmup_limit;
 #endif
@@ -360,6 +369,10 @@ REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
 REGISTER_STAT(MOVEVARS_SPECIALCOMMAND, bool)
+#ifdef SVQC
+int autocvar_sv_wallclip;
+#endif
+REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
 
 
 #ifdef CSQC
@@ -367,8 +380,8 @@ noref int autocvar_cl_gunalign;
 #endif
 #ifdef SVQC
 .int cvar_cl_gunalign;
-REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 #endif
+
 REGISTER_STAT(GUNALIGN, int)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))

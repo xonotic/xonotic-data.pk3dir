@@ -45,7 +45,7 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 	}
 	if (fire & 1) // Primary attack
 	{
-		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okshotgun, animtime)))
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okshotgun, refire)))
 		{
 			return;
 		}
@@ -55,7 +55,8 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 			WEP_CVAR_PRI(okshotgun, bullets),
 			WEP_CVAR_PRI(okshotgun, spread),
 			WEP_CVAR_PRI(okshotgun, solidpenetration),
-			WEP_CVAR_PRI(okshotgun, force));
+			WEP_CVAR_PRI(okshotgun, force),
+			EFFECT_RIFLE_WEAK);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okshotgun, animtime), w_ready);
 		return;
 	}
@@ -72,7 +73,7 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 
 METHOD(OverkillShotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okshotgun, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okshotgun, ammo);
 	ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_SHOTGUN.m_id]) >= WEP_CVAR_PRI(okshotgun, ammo);
 	return ammo_amount;
 }

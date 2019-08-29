@@ -240,7 +240,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 
 void W_SwitchWeapon_Force(Player this, Weapon wep, .entity weaponentity)
 {
-    TC(Weapon, wep);
+	TC(Weapon, wep);
 	this.(weaponentity).cnt = this.(weaponentity).m_switchweapon.m_id;
 	this.(weaponentity).m_switchweapon = wep;
 	this.(weaponentity).selectweapon = wep.m_id;
@@ -266,20 +266,34 @@ void W_SwitchToOtherWeapon(entity this, .entity weaponentity)
 	W_SwitchWeapon_Force(this, ww, weaponentity);
 }
 
-void W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
+bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 {
 	if(this.(weaponentity).m_switchweapon != w)
 	{
 		if(client_hasweapon(this, w, weaponentity, true, true))
+		{
 			W_SwitchWeapon_Force(this, w, weaponentity);
+			return true;
+		}
 		else
+		{
 			this.(weaponentity).selectweapon = w.m_id; // update selectweapon anyway
+			return false;
+		}
 	}
-	else if(!forbidWeaponUse(this))
+	else if(!weaponLocked(this) && CS(this).cvar_cl_weapon_switch_reload)
 	{
 		entity actor = this;
 		w.wr_reload(w, actor, weaponentity);
 	}
+
+	return true; // player already has the weapon out or needs to reload
+}
+
+void W_SwitchWeapon_TryOthers(entity this, Weapon w, .entity weaponentity)
+{
+	if(!W_SwitchWeapon(this, w, weaponentity) && CS(this).cvar_cl_weapon_switch_fallback_to_impulse)
+		W_NextWeaponOnImpulse(this, w.impulse, weaponentity);
 }
 
 void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity)

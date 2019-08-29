@@ -4,6 +4,19 @@
 
 vector crosshair_getcolor(entity this, float health_stat);
 
+void calc_followmodel_ofs(entity view);
+
+void CSQC_Demo_Camera();
+
+void TrueAim_Init();
+
 entity viewmodels[MAX_WEAPONSLOTS];
 
 vector viewloc_mousepos;
+
+int cursor_active;
+int cursor_type;
+const int CURSOR_NORMAL = 0;
+const int CURSOR_MOVE = 1;
+const int CURSOR_RESIZE = 2;
+const int CURSOR_RESIZE2 = 3;

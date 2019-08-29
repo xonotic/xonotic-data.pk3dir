@@ -27,6 +27,10 @@ void XonoticProfileTab_draw(entity me)
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
 	SUPER(XonoticProfileTab).draw(me);
 }
+void language_selector_click(entity me, entity btn)
+{
+	localcmd("\nmenu_cmd languageselect\n");
+}
 void XonoticProfileTab_fill(entity me)
 {
 	entity e, pms, label, box;
@@ -36,8 +40,6 @@ void XonoticProfileTab_fill(entity me)
 		"name \"$_cl_name\";"
 		"playermodel $_cl_playermodel;"
 		"playerskin $_cl_playerskin;"
-		"sendcvar cl_allow_uidtracking;"
-		"sendcvar cl_allow_uid2name;"
 		, COMMANDBUTTON_APPLY);
 	profileApplyButton.disableOnClick = true;
 
@@ -123,11 +125,11 @@ void XonoticProfileTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client")));
-			e.applyButton = profileApplyButton;
+			e.sendCvars = true;
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
-			e.applyButton = profileApplyButton;
+			e.sendCvars = true;
 			setDependent(e, "cl_allow_uidtracking", 1, 1);
 	me.gotoRC(me, 4, 3.1); // TOP RIGHT
 	//me.gotoRC(me, 12.5, 3.1); // BOTTOM RIGHT
@@ -145,8 +147,14 @@ void XonoticProfileTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Country")));
 
 	me.TR(me);
+		me.TDempty(me, 0.75);
+		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Select language..."), '0 0 0'));
+			e.onClick = language_selector_click;
+			e.onClickEntity = me;
+		/*
 		me.TDempty(me, 0.5);
 		me.TD(me, 4.5, 2, e = makeXonoticLanguageList()); // todo: cl_country: create proper country list
+		*/
 
 
 	// ================

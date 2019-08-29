@@ -175,7 +175,7 @@ void spiderbot_rocket_do(entity this)
     if(!PHYS_INPUT_BUTTON_ATCK2(this.owner))
         return;
 
-    if(forbidWeaponUse(this.owner))
+    if(weaponLocked(this.owner) || weaponUseForbidden(this.owner))
         return;
 
     v = gettaginfo(this.tur_head,gettagindex(this.tur_head,"tag_fire"));

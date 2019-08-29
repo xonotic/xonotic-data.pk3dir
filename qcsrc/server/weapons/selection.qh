@@ -18,7 +18,8 @@ void W_SwitchWeapon_Force(Player this, Weapon w, .entity weaponentity);
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity this, .entity weaponentity);
-void W_SwitchWeapon(entity this, Weapon imp, .entity weaponentity);
+bool W_SwitchWeapon(entity this, Weapon imp, .entity weaponentity); // returns false if the player does not have the weapon
+void W_SwitchWeapon_TryOthers(entity this, Weapon imp, .entity weaponentity);
 
 void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity);
 

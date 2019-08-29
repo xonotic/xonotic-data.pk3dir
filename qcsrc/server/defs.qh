@@ -25,9 +25,7 @@ float currentbots;
 float bots_would_leave;
 
 void UpdateFrags(entity player, int f);
-.float totalfrags;
-
-float team1_score, team2_score, team3_score, team4_score;
+.int totalfrags;
 
 // flag set on worldspawn so that the code knows if it is dedicated or not
 float server_is_dedicated;
@@ -36,12 +34,14 @@ float server_is_dedicated;
 
 .void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 
+.bool(entity targ, entity inflictor, float amount, float limit) event_heal;
+
 //.string	wad;
 //.string	map;
 
 //.float	worldtype;
 // Needed for dynamic clientwalls
-.float inactive; // Clientwall disappears when inactive
+.bool inactive; // Clientwall disappears when inactive
 .float alpha_max, alpha_min;
 .float fade_start, fade_end, fade_vertical_offset;
 .float default_solid; // Variable to store default .solid for clientwalls
@@ -50,7 +50,7 @@ float server_is_dedicated;
 .float	pain_frame;			//"
 .float  crouch;	// Crouching or not?
 
-.float	superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
+const .float superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
 
 .float cnt; // used in too many places
 .float count;
@@ -168,6 +168,9 @@ float default_weapon_alpha;
 .float cvar_cl_jetpack_jump;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
+.float cvar_cl_cts_noautoswitch;
+.bool cvar_cl_weapon_switch_reload;
+.bool cvar_cl_weapon_switch_fallback_to_impulse;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
@@ -188,9 +191,6 @@ string W_Apply_Weaponreplace(string in);
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
-// WEAPONTODO: remove this
-//WepSet weaponsInMap;
-
 .float respawn_countdown; // next number to count
 
 float bot_waypoints_for_items;
@@ -202,10 +202,7 @@ float bot_waypoints_for_items;
 #else
 #define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
 #endif
-#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, ent.(weaponentity).m_weapon.m_id, slot)
-
-// assault game mode: Which team is attacking in this round?
-float assault_attacker_team;
+#define ATTACK_FINISHED(ent, w) ATTACK_FINISHED_FOR(ent, ent.(w).m_weapon.m_id, weaponslot(w))
 
 // speedrun: when 1, player auto teleports back when capture timeout happens
 .float speedrunning;
@@ -214,14 +211,11 @@ float assault_attacker_team;
 float ServerProgsDB;
 float TemporaryDB;
 
-.float team_saved;
+.int team_saved;
 
 bool some_spawn_has_been_used;
 int have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
 int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it has no spawns; team 0 is the "no-team"
-
-// set when showing a kill countdown
-.entity killindicator;
 
 .bool canteamdamage;
 
@@ -229,8 +223,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 // WEAPONTODO
 #define DMG_NOWEP (weaponentities[0])
-
-float lockteams;
 
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
@@ -250,7 +242,7 @@ int autocvar__independent_players;
 bool independent_players;
 #define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
-#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_NONSOLID))
+#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_OUT_OF_GAME))
 
 string clientstuff;
 .float phase;
@@ -304,16 +296,11 @@ string matchid;
 
 bool radar_showennemies;
 
-#ifdef PROFILING
-float client_cefc_accumulator;
-float client_cefc_accumulatortime;
-#endif
-
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
-.float clip_load;
-.float old_clip_load;
-.float clip_size;
+.int clip_load;
+.int old_clip_load;
+.int clip_size;
 
 .int minelayer_mines;
 .float vortex_charge;
@@ -330,9 +317,9 @@ float client_cefc_accumulatortime;
 // when doing this, hagar can go through clones
 // #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
 
-.float spectatee_status;
-.float zoomstate;
-.float restriction;
+.int spectatee_status;
+.bool zoomstate;
+.int restriction;
 
 .entity clientdata;
 .entity personal;
@@ -342,24 +329,27 @@ string deathmessage;
 .bool just_joined;
 
 .float cvar_cl_weaponimpulsemode;
-.float selectweapon; // last selected weapon of the player
+.int selectweapon; // last selected weapon of the player
 
 .float ballistics_density; // wall piercing factor, larger = bullet can pass through more
 
-const float ACTIVE_NOT 		= 0;
-const float ACTIVE_ACTIVE 	= 1;
-const float ACTIVE_IDLE 	= 2;
-const float ACTIVE_BUSY 	= 2;
-const float ACTIVE_TOGGLE 	= 3;
-.float active;
+//const int FROZEN_NOT				= 0;
+const int FROZEN_NORMAL				= 1;
+const int FROZEN_TEMP_REVIVING		= 2;
+const int FROZEN_TEMP_DYING			= 3;
+
+const int ACTIVE_NOT 		= 0;
+const int ACTIVE_ACTIVE 	= 1;
+const int ACTIVE_IDLE	 	= 2;
+const int ACTIVE_BUSY	 	= 2;
+const int ACTIVE_TOGGLE 	= 3;
+.int active;
 .void (entity this, int act_state) setactive;
 .entity realowner;
 
 //float serverflags;
 
-.float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
-
-.float player_blocked;
+.bool player_blocked;
 
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
@@ -370,8 +360,6 @@ const float ACTIVE_TOGGLE 	= 3;
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
-.int killindicator_teamchange;
-
 void PlayerUseKey(entity this);
 
 USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector current));
@@ -379,7 +367,7 @@ USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector c
 
 string modname;
 
-.float missile_flags;
+.int missile_flags;
 const int MIF_SPLASH = BIT(1);
 const int MIF_ARC = BIT(2);
 const int MIF_PROXY = BIT(3);

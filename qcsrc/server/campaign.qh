@@ -17,3 +17,5 @@ void CampaignLevelWarp(float n);
  * in other game modes, this is ignored
  */
 bool campaign_bots_may_start;
+
+bool campaign_forcewin;

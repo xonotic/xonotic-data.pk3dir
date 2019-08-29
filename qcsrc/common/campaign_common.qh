@@ -29,4 +29,4 @@ void CampaignFile_Unload();
 
 // Sets up the campaign for the n-th array item (meaning: campaign_offset+nth
 // level) using localcmd()
-void CampaignSetup(float n);
+void CampaignSetup(int n);

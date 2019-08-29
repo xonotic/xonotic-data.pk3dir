@@ -10,6 +10,7 @@
 
 #include "../g_damage.qh"
 #include "../g_world.qh"
+#include "../teamplay.qh"
 #include "../race.qh"
 #include "../round_handler.qh"
 #include "../scores.qh"
@@ -344,6 +345,11 @@ void reset_map(bool dorespawn)
 			round_handler_Reset(game_starttime);
 	}
 
+	if (shuffleteams_on_reset_map)
+	{
+		shuffleteams();
+		shuffleteams_on_reset_map = false;
+	}
 	MUTATOR_CALLHOOK(reset_map_global);
 
 	FOREACH_ENTITY_FLOAT_ORDERED(pure_data, false,
@@ -364,7 +370,7 @@ void reset_map(bool dorespawn)
 		if (it.reset2) it.reset2(it);
 	});
 
-	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), { Unfreeze(it); });
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), { Unfreeze(it, false); });
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
@@ -514,7 +520,7 @@ float Votecommand_check_assignment(entity caller, float assignment)
 	return false;
 }
 
-string VoteCommand_extractcommand(string input, float startpos, float argc)
+string VoteCommand_extractcommand(string input, float startpos, int argc)
 {
 	string output;
 
@@ -571,7 +577,7 @@ string ValidateMap(string validated_map, entity caller)
 	return validated_map;
 }
 
-float VoteCommand_checkargs(float startpos, float argc)
+float VoteCommand_checkargs(float startpos, int argc)
 {
 	float p, q, check, minargs;
 	string cvarname = strcat("sv_vote_command_restriction_", argv(startpos));
@@ -645,7 +651,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 	return true;
 }
 
-int VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
+int VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, int argc)
 {
 	string first_command = argv(startpos);
 	int missing_chars = argv_start_index(startpos);
@@ -713,6 +719,16 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
+		case "restart":
+		{
+			// add a delay so that vote result can be seen and announcer can be heard
+			// if the vote is accepted
+			vote_parsed_command = strcat("defer 1 ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_command));
+
+			break;
+		}
+
 		default:
 		{
 			vote_parsed_command = vote_command;
@@ -730,7 +746,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 //  Command Sub-Functions
 // =======================
 
-void VoteCommand_abstain(float request, entity caller)  // CLIENT ONLY
+void VoteCommand_abstain(int request, entity caller)  // CLIENT ONLY
 {
 	switch (request)
 	{
@@ -762,7 +778,7 @@ void VoteCommand_abstain(float request, entity caller)  // CLIENT ONLY
 	}
 }
 
-void VoteCommand_call(float request, entity caller, float argc, string vote_command)  // BOTH
+void VoteCommand_call(int request, entity caller, int argc, string vote_command)  // BOTH
 {
 	switch (request)
 	{
@@ -824,14 +840,15 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				}
 
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++tmp_playercount; });
-				if (tmp_playercount > 1)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_CALL);
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");
 				if (autocvar_sv_eventlog)
 					GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display));
 				Nagger_VoteChanged();
 				VoteCount(true);  // needed if you are the only one
+
+				if (tmp_playercount > 1 && vote_called != VOTE_NULL)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_CALL);
 			}
 
 			return;
@@ -849,7 +866,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	}
 }
 
-void VoteCommand_master(float request, entity caller, float argc, string vote_command)  // CLIENT ONLY
+void VoteCommand_master(int request, entity caller, int argc, string vote_command)  // CLIENT ONLY
 {
 	switch (request)
 	{
@@ -964,7 +981,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 	}
 }
 
-void VoteCommand_no(float request, entity caller)  // CLIENT ONLY
+void VoteCommand_no(int request, entity caller)  // CLIENT ONLY
 {
 	switch (request)
 	{
@@ -1002,7 +1019,7 @@ void VoteCommand_no(float request, entity caller)  // CLIENT ONLY
 	}
 }
 
-void VoteCommand_status(float request, entity caller)  // BOTH
+void VoteCommand_status(int request, entity caller)  // BOTH
 {
 	switch (request)
 	{
@@ -1024,7 +1041,7 @@ void VoteCommand_status(float request, entity caller)  // BOTH
 	}
 }
 
-void VoteCommand_stop(float request, entity caller)  // BOTH
+void VoteCommand_stop(int request, entity caller)  // BOTH
 {
 	switch (request)
 	{
@@ -1046,7 +1063,7 @@ void VoteCommand_stop(float request, entity caller)  // BOTH
 	}
 }
 
-void VoteCommand_yes(float request, entity caller)  // CLIENT ONLY
+void VoteCommand_yes(int request, entity caller)  // CLIENT ONLY
 {
 	switch (request)
 	{
@@ -1081,7 +1098,7 @@ void VoteCommand_yes(float request, entity caller)  // CLIENT ONLY
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void VoteCommand_(float request)
+void VoteCommand_(int request)
 {
     switch(request)
     {
@@ -1119,7 +1136,7 @@ void VoteCommand_(float request)
 	VOTE_COMMAND("yes", VoteCommand_yes(request, caller), "Select yes in current vote", VC_ASGNMNT_CLIENTONLY) \
 	/* nothing */
 
-void VoteCommand_macro_help(entity caller, float argc)
+void VoteCommand_macro_help(entity caller, int argc)
 {
 	string command_origin = GetCommandPrefix(caller);
 
@@ -1152,7 +1169,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 	}
 }
 
-float VoteCommand_macro_command(entity caller, float argc, string vote_command)
+float VoteCommand_macro_command(entity caller, int argc, string vote_command)
 {
 	#define VOTE_COMMAND(name, function, description, assignment) \
 		{ if (Votecommand_check_assignment(caller, assignment)) { if (name == strtolower(argv(1))) { function; return true; } } }
@@ -1168,7 +1185,7 @@ float VoteCommand_macro_command(entity caller, float argc, string vote_command)
 //  Main function handling vote commands
 // ======================================
 
-void VoteCommand(float request, entity caller, float argc, string vote_command)
+void VoteCommand(int request, entity caller, int argc, string vote_command)
 {
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4

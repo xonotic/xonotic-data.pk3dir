@@ -10,6 +10,7 @@ float navigation_testtracewalk;
 vector jumpstepheightvec;
 vector stepheightvec;
 vector jumpheight_vec;
+float jumpheight_time;
 
 entity navigation_bestgoal;
 
@@ -29,7 +30,10 @@ entity navigation_bestgoal;
 .float goalcurrent_distance_2d;
 .float goalcurrent_distance_time;
 
+// final goal (item, object or player) is also saved in this field
+.entity goalentity;
 .float goalentity_lock_timeout;
+.bool goalentity_shouldbefrozen;
 
 .entity nearestwaypoint;
 .float nearestwaypointtimeout;
@@ -51,8 +55,7 @@ entity navigation_bestgoal;
 	waypoint_addlink_customcost(to_item, from_wp, waypoint_getlinkcost(from_wp, to_item))
 
 #define TELEPORT_USED(pl, tele_wp) \
-	(time - pl.lastteleporttime < ((tele_wp.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15) \
-	&& boxesoverlap(tele_wp.absmin, tele_wp.absmax, pl.lastteleport_origin + STAT(PL_MIN, pl), pl.lastteleport_origin + STAT(PL_MAX, pl)))
+	boxesoverlap(tele_wp.absmin, tele_wp.absmax, pl.lastteleport_origin + STAT(PL_MIN, pl), pl.lastteleport_origin + STAT(PL_MAX, pl))
 
 vector tracewalk_dest;
 float tracewalk_dest_height;
@@ -82,7 +85,7 @@ float bot_waypoint_queue_bestgoalrating;
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
-void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_set(entity this, entity dropper);
 void navigation_dynamicgoal_unset(entity this);
 
 .int nav_submerged_state;
@@ -114,7 +117,7 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
 void navigation_routerating(entity this, entity e, float f, float rangebias);
-void navigation_shortenpath(entity this);
+bool navigation_shortenpath(entity this);
 int navigation_poptouchedgoals(entity this);
 void navigation_goalrating_start(entity this);
 void navigation_goalrating_end(entity this);

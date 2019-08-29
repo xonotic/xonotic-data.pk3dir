@@ -28,7 +28,7 @@ Entity:
 -> This will spawn as Rifle in this mutator ONLY, and as Vortex otherwise.
 
 {
-"classname" "weapon_vortext"
+"classname" "weapon_vortex"
 "new_toys" "vortex rifle"
 }
 -> This will spawn as either Vortex or Rifle in this mutator ONLY, and as Vortex otherwise.
@@ -108,7 +108,7 @@ REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENA
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
-bool autocvar_g_new_toys_use_pickupsound = true;
+bool autocvar_g_new_toys_use_pickupsound = false;
 const float NT_AUTOREPLACE_NEVER = 0;
 const float NT_AUTOREPLACE_ALWAYS = 1;
 const float NT_AUTOREPLACE_RANDOM = 2;

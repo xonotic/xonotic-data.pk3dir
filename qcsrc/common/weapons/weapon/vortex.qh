@@ -2,7 +2,7 @@
 
 CLASS(Vortex, Weapon)
 /* spawnfunc */ ATTRIB(Vortex, m_canonical_spawnfunc, string, "weapon_vortex");
-/* ammotype  */ ATTRIB(Vortex, ammo_type, int, RESOURCE_CELLS);
+/* ammotype  */ ATTRIB(Vortex, ammo_type, int, RES_CELLS);
 /* impulse   */ ATTRIB(Vortex, impulse, int, 7);
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
@@ -27,6 +27,7 @@ CLASS(Vortex, Weapon)
 		P(class, prefix, chargepool_pause_regen, float, SEC) \
 		P(class, prefix, chargepool_regen, float, SEC) \
 		P(class, prefix, charge, float, NONE) \
+		P(class, prefix, charge_always, float, NONE) \
 		P(class, prefix, charge_animlimit, float, NONE) \
 		P(class, prefix, charge_limit, float, NONE) \
 		P(class, prefix, charge_maxspeed, float, NONE) \
@@ -66,4 +67,6 @@ SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX)
 
 #ifdef SVQC
 .float vortex_lasthit;
+
+void W_Vortex_Charge(entity actor, .entity weaponentity, float dt);
 #endif

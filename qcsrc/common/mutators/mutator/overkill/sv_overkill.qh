@@ -2,8 +2,8 @@
 
 string autocvar_g_overkill;
 bool autocvar_g_overkill_filter_healthmega;
-bool autocvar_g_overkill_filter_armormedium;
-bool autocvar_g_overkill_filter_armorbig;
+bool autocvar_g_overkill_filter_armormedium = true;
+bool autocvar_g_overkill_filter_armorbig = true;
 bool autocvar_g_overkill_filter_armormega;
 
 .float ok_item;

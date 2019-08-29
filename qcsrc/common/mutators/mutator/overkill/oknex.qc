@@ -12,16 +12,21 @@ METHOD(OverkillNex, wr_glow, vector(OverkillNex this, entity actor, entity wepen
 	if (!WEP_CVAR(oknex, charge)) return '0 0 0';
 	float charge = wepent.oknex_charge;
 	float animlimit = WEP_CVAR(oknex, charge_animlimit);
+	float f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
 	vector g;
-	g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, charge / animlimit);
-	g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, charge / animlimit);
-	g.z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, charge / animlimit);
+	g.x = f * autocvar_g_weapon_charge_colormod_red_half;
+	g.y = f * autocvar_g_weapon_charge_colormod_green_half;
+	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
 	if (charge > animlimit)
 	{
-		g.x += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (charge - animlimit) / (1 - animlimit);
-		g.y += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (charge - animlimit) / (1 - animlimit);
-		g.z += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (charge - animlimit) / (1 - animlimit);
+		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
+		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
+		g.y += f * autocvar_g_weapon_charge_colormod_green_full;
+		g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
 	}
+	// transition color can't be '0 0 0' as it defaults to player model glow color
+	if (g == '0 0 0')
+		g = '0 0 0.000001';
 	return g;
 }
 #endif
@@ -82,7 +87,7 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg, WEP_OVERKILL_NEX.m_id);
+	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg, thiswep.m_id);
 	if(charge > WEP_CVAR(oknex, charge_animlimit) && WEP_CVAR(oknex, charge_animlimit)) // if the OverkillNex is overcharged, we play an extra sound
 	{
 		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(oknex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(oknex, charge_animlimit)), ATTN_NORM);
@@ -90,7 +95,7 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_OVERKILL_NEX.m_id);
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, thiswep.m_id);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
@@ -268,8 +273,8 @@ METHOD(OverkillNex, wr_setup, void(entity thiswep, entity actor, .entity weapone
 
 METHOD(OverkillNex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(oknex, ammo);
-	ammo_amount += (autocvar_g_balance_oknex_reload_ammo && actor.(weaponentity).(weapon_load[WEP_OVERKILL_NEX.m_id]) >= WEP_CVAR_PRI(oknex, ammo));
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(oknex, ammo);
+	ammo_amount += (autocvar_g_balance_oknex_reload_ammo && actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(oknex, ammo));
 	return ammo_amount;
 }
 
@@ -278,8 +283,8 @@ METHOD(OverkillNex, wr_checkammo2, bool(entity thiswep, entity actor, .entity we
 	if (WEP_CVAR(oknex, secondary))
 	{
 		// don't allow charging if we don't have enough ammo
-		float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(oknex, ammo);
-		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_NEX.m_id]) >= WEP_CVAR_SEC(oknex, ammo);
+		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(oknex, ammo);
+		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(oknex, ammo);
 		return ammo_amount;
 	}
 	else

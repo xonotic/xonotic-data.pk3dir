@@ -2,6 +2,7 @@
 
 #include "all.qh"
 
+#ifdef GAMEQC
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
     ATTRIBARRAY(Inventory, inv_items, int, Items_MAX);
@@ -19,6 +20,7 @@ const int Inventory_groups_minor = 8; // ceil(Items_MAX / Inventory_groups_major
 
 #define G_MAJOR(id) (floor((id) / Inventory_groups_minor))
 #define G_MINOR(id) ((id) % Inventory_groups_minor)
+#endif
 
 #ifdef CSQC
 Inventory g_inventory;
@@ -106,20 +108,23 @@ bool Inventory_Send(Inventory this, Client to, int sf)
 {
     TC(Inventory, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
-    entity e = this.owner;
-    if (IS_SPEC(e)) e = e.enemy;
-    TC(Player, e);
-    Inventory data = e.inventory;
-    Inventory_Write(data);
+    TC(PlayerState, this.owner);
+    Inventory_Write(this);
     return true;
 }
 
-void Inventory_new(entity e)
+bool Inventory_customize(entity this, entity client)
+{
+    // sends to spectators too!
+    return (PS(client) && PS(client).inventory == this);
+}
+
+void Inventory_new(PlayerState this)
 {
     Inventory inv = NEW(Inventory), bak = NEW(Inventory);
     inv.inventory = bak;
-    inv.drawonlytoclient = e;
-    Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);
+    setcefc(inv, Inventory_customize);
+    Net_LinkEntity((inv.owner = this).inventory = inv, false, 0, Inventory_Send);
 }
 void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }

@@ -36,7 +36,8 @@ CLASS(OffhandMageTeleport, OffhandWeapon)
         player.OffhandMageTeleport_key_pressed = key_pressed;
     }
 ENDCLASS(OffhandMageTeleport)
-OffhandMageTeleport OFFHAND_MAGE_TELEPORT; STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
+OffhandMageTeleport OFFHAND_MAGE_TELEPORT;
+STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
 
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_damageforcescale = 0.5;
@@ -87,31 +88,31 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
 	if(targ == NULL)
 		return false;
-	if(targ.health <= 0)
+	if(GetResource(targ, RES_HEALTH) <= 0)
 		return false;
 	if(DIFF_TEAM(targ, this) && targ != this.monster_follow)
 		return false;
 	if(STAT(FROZEN, targ))
 		return false;
 	if(!IS_PLAYER(targ))
-		return (IS_MONSTER(targ) && targ.health < targ.max_health);
+		return (IS_MONSTER(targ) && GetResource(targ, RES_HEALTH) < targ.max_health);
 	if(targ.items & ITEM_Shield.m_itemid)
 		return false;
 
 	switch(this.skin)
 	{
-		case 0: return (targ.health < autocvar_g_balance_health_regenstable);
+		case 0: return (GetResource(targ, RES_HEALTH) < autocvar_g_balance_health_regenstable);
 		case 1:
 		{
-			return ((GetResourceAmount(targ, RESOURCE_CELLS) && GetResourceAmount(targ, RESOURCE_CELLS) < g_pickup_cells_max)
-				||  (GetResourceAmount(targ, RESOURCE_PLASMA) && GetResourceAmount(targ, RESOURCE_PLASMA) < g_pickup_plasma_max)
-				||  (GetResourceAmount(targ, RESOURCE_ROCKETS) && GetResourceAmount(targ, RESOURCE_ROCKETS) < g_pickup_rockets_max)
-				||  (GetResourceAmount(targ, RESOURCE_BULLETS) && GetResourceAmount(targ, RESOURCE_BULLETS) < g_pickup_nails_max)
-				||  (GetResourceAmount(targ, RESOURCE_SHELLS) && GetResourceAmount(targ, RESOURCE_SHELLS) < g_pickup_shells_max)
+			return ((GetResource(targ, RES_CELLS) && GetResource(targ, RES_CELLS) < g_pickup_cells_max)
+				||  (GetResource(targ, RES_PLASMA) && GetResource(targ, RES_PLASMA) < g_pickup_plasma_max)
+				||  (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < g_pickup_rockets_max)
+				||  (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < g_pickup_nails_max)
+				||  (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < g_pickup_shells_max)
 					);
 		}
-		case 2: return (targ.armorvalue < autocvar_g_balance_armor_regenstable);
-		case 3: return (targ.health > 0);
+		case 2: return (GetResource(targ, RES_ARMOR) < autocvar_g_balance_armor_regenstable);
+		case 3: return (GetResource(targ, RES_HEALTH) > 0);
 	}
 
 	return false;
@@ -144,7 +145,7 @@ void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think(entity this)
 {
-	if (time > this.ltime || (this.enemy && this.enemy.health <= 0) || this.owner.health <= 0) {
+	if (time > this.ltime || (this.enemy && GetResource(this.enemy, RES_HEALTH) <= 0) || GetResource(this.owner, RES_HEALTH) <= 0) {
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 		M_Mage_Attack_Spike_Explode(this, NULL);
 	}
@@ -234,29 +235,32 @@ void M_Mage_Defend_Heal(entity this)
 			switch(this.skin)
 			{
 				case 0:
-					if(it.health < autocvar_g_balance_health_regenstable) it.health = bound(0, it.health + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_health_regenstable);
+				{
+					Heal(it, this, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_health_regenstable);
 					fx = EFFECT_HEALING;
 					break;
+				}
 				case 1:
 				{
-					float tmpfld;
-					tmpfld = GetResourceAmount(it, RESOURCE_CELLS); if(tmpfld) SetResourceAmount(it, RESOURCE_CELLS, bound(tmpfld, tmpfld + 1, g_pickup_cells_max));
-					tmpfld = GetResourceAmount(it, RESOURCE_PLASMA); if(tmpfld) SetResourceAmount(it, RESOURCE_PLASMA, bound(tmpfld, tmpfld + 1, g_pickup_plasma_max));
-					tmpfld = GetResourceAmount(it, RESOURCE_ROCKETS); if(tmpfld) SetResourceAmount(it, RESOURCE_ROCKETS, bound(tmpfld, tmpfld + 1, g_pickup_rockets_max));
-					tmpfld = GetResourceAmount(it, RESOURCE_SHELLS); if(tmpfld) SetResourceAmount(it, RESOURCE_SHELLS, bound(tmpfld, tmpfld + 2, g_pickup_shells_max));
-					tmpfld = GetResourceAmount(it, RESOURCE_BULLETS); if(tmpfld) SetResourceAmount(it, RESOURCE_BULLETS, bound(tmpfld, tmpfld + 5, g_pickup_nails_max));
+					if(GetResource(this, RES_CELLS)) GiveResourceWithLimit(it, RES_CELLS, 1, g_pickup_cells_max);
+					if(GetResource(this, RES_PLASMA)) GiveResourceWithLimit(it, RES_PLASMA, 1, g_pickup_plasma_max);
+					if(GetResource(this, RES_ROCKETS)) GiveResourceWithLimit(it, RES_ROCKETS, 1, g_pickup_rockets_max);
+					if(GetResource(this, RES_SHELLS)) GiveResourceWithLimit(it, RES_SHELLS, 2, g_pickup_shells_max);
+					if(GetResource(this, RES_BULLETS)) GiveResourceWithLimit(it, RES_BULLETS, 5, g_pickup_nails_max);
+					// TODO: fuel?
 					fx = EFFECT_AMMO_REGEN;
 					break;
 				}
 				case 2:
-					if(it.armorvalue < autocvar_g_balance_armor_regenstable)
+					if(GetResource(it, RES_ARMOR) < autocvar_g_balance_armor_regenstable)
 					{
-						it.armorvalue = bound(0, it.armorvalue + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_armor_regenstable);
+						GiveResourceWithLimit(it, RES_ARMOR, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_armor_regenstable);
 						fx = EFFECT_ARMOR_REPAIR;
 					}
 					break;
 				case 3:
-					it.health = bound(0, it.health - ((it == this)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
+					float hp = ((it == this) ? autocvar_g_monster_mage_heal_self : autocvar_g_monster_mage_heal_allies);
+					TakeResource(it, RES_HEALTH, hp); // TODO: use regular damage functions? needs a way to bypass friendly fire checks
 					fx = EFFECT_RAGE;
 					break;
 			}
@@ -266,9 +270,9 @@ void M_Mage_Defend_Heal(entity this)
 		else
 		{
 			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-			it.health = bound(0, it.health + (autocvar_g_monster_mage_heal_allies), it.max_health);
+			Heal(it, this, autocvar_g_monster_mage_heal_allies, RES_LIMIT_NONE);
 			if(!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
-				WaypointSprite_UpdateHealth(it.sprite, it.health);
+				WaypointSprite_UpdateHealth(it.sprite, GetResource(it, RES_HEALTH));
 		}
 	});
 
@@ -322,14 +326,14 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 void M_Mage_Defend_Shield_Remove(entity this)
 {
 	this.effects &= ~(EF_ADDITIVE | EF_BLUE);
-	this.armorvalue = autocvar_g_monsters_armor_blockpercent;
+	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monsters_armor_blockpercent);
 }
 
 void M_Mage_Defend_Shield(entity this)
 {
 	this.effects |= (EF_ADDITIVE | EF_BLUE);
 	this.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
-	this.armorvalue = (autocvar_g_monster_mage_shield_blockpercent);
+	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monster_mage_shield_blockpercent);
 	this.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
 	setanim(this, this.anim_shoot, true, true, true);
 	this.attack_finished_single[0] = time + 1;
@@ -416,16 +420,16 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
     	});
     }
 
-    if(actor.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
+    if(GetResource(actor, RES_HEALTH) < (autocvar_g_monster_mage_heal_minhealth) || need_help)
     if(time >= actor.attack_finished_single[0])
     if(random() < 0.5)
         M_Mage_Defend_Heal(actor);
 
-    if(time >= actor.mage_shield_time && actor.armorvalue)
+    if(time >= actor.mage_shield_time && GetResource(actor, RES_ARMOR))
         M_Mage_Defend_Shield_Remove(actor);
 
     if(actor.enemy)
-    if(actor.health < actor.max_health)
+    if(GetResource(actor, RES_HEALTH) < actor.max_health)
     if(time >= actor.mage_shield_delay)
     if(random() < 0.5)
         M_Mage_Defend_Shield(actor);
@@ -466,7 +470,7 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 {
     TC(Mage, this);
-    if(!actor.health) actor.health = (autocvar_g_monster_mage_health);
+    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_mage_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_mage_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_mage_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }

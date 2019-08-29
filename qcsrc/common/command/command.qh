@@ -8,6 +8,6 @@ CLASS(Command, Object)
 	ATTRIB(Command, m_description, string);
 	METHOD(Command, m_invokecmd, void(Command this, int request, entity caller, int arguments, string command))
 	{
-        TC(Command, this);
+		TC(Command, this);
 	}
 ENDCLASS(Command)

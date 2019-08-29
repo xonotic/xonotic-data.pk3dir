@@ -36,8 +36,9 @@ string getrecords(int page)  // 50 records per page
 
 	MapInfo_ClearTemps();
 
-	if (s == "" && page == 0) return "No records are available on this server.\n";
-	else return s;
+	if (s == "" && page == 0)
+		return "No records are available on this server for the current game mode.\n";
+	return s;
 }
 
 string getrankings()

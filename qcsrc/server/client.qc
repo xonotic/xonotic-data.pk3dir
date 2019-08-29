@@ -10,13 +10,14 @@
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
-#include "playerdemo.qh"
 #include "spawnpoints.qh"
 #include "resources.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
+#include "command/vote.qh"
+#include "clientkill.qh"
 #include "cheats.qh"
 #include "g_world.qh"
 #include "race.qh"
@@ -31,11 +32,15 @@
 #include "../common/wepent.qh"
 #include <common/state.qh>
 
+#include "compat/quake3.qh"
+
 #include <common/effects/qc/globalsound.qh>
 
 #include "../common/mapobjects/func/conveyor.qh"
 #include "../common/mapobjects/teleporters.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
+#include <common/mapobjects/trigger/counter.qh>
+#include <common/mapobjects/trigger/swamp.qh>
 
 #include "../common/vehicles/all.qh"
 
@@ -45,6 +50,8 @@
 #include "../common/net_notice.qh"
 #include "../common/net_linked.qh"
 #include "../common/physics/player.qh"
+
+#include <common/vehicles/sv_vehicles.qh>
 
 #include "../common/items/_mod.qh"
 
@@ -74,8 +81,6 @@ STATIC_METHOD(Client, Add, void(Client this, int _team))
     this.team = _team;
     PutClientInServer(this);
 }
-
-void PutObserverInServer(entity this);
 
 STATIC_METHOD(Client, Remove, void(Client this))
 {
@@ -167,9 +172,6 @@ void ClientData_Touch(entity e)
 	});
 }
 
-void SetSpectatee(entity this, entity spectatee);
-void SetSpectatee_status(entity this, int spectatee_num);
-
 
 /*
 =============
@@ -223,7 +225,6 @@ void setplayermodel(entity e, string modelname)
 		UpdatePlayerSounds(e);
 }
 
-void FixPlayermodel(entity player);
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this)
 {
@@ -232,7 +233,7 @@ void PutObserverInServer(entity this)
 
 	if (IS_PLAYER(this))
 	{
-		if(this.health >= 1)
+		if(GetResource(this, RES_HEALTH) >= 1)
 		{
 			// despawn effect
 			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
@@ -274,7 +275,7 @@ void PutObserverInServer(entity this)
 
     RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
-	Unfreeze(this);
+	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
 
 	if (this.alivetime)
@@ -288,27 +289,11 @@ void PutObserverInServer(entity this)
 
 	WaypointSprite_PlayerDead(this);
 
-	if (mutator_returnvalue) {
-	    // mutator prevents resetting teams+score
-	} else {
-		int oldteam = this.team;
-		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
-		MUTATOR_CALLHOOK(Player_ChangedTeam, this, oldteam, this.team);
-        this.frags = FRAGS_SPECTATOR;
-        PlayerScore_Clear(this);  // clear scores when needed
-    }
-
 	if (CS(this).killcount != FRAGS_SPECTATOR)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
 		if(!game_stopped)
 		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
-
-		if(!CS(this).just_joined)
-			LogTeamchange(this.playerid, -1, 4);
-		else
-			CS(this).just_joined = false;
 	}
 
 	accuracy_resend(this);
@@ -327,15 +312,14 @@ void PutObserverInServer(entity this)
 	if(this.damagedbycontents)
 		IL_REMOVE(g_damagedbycontents, this);
 	this.damagedbycontents = false;
-	this.health = FRAGS_SPECTATOR;
+	SetResourceExplicit(this, RES_HEALTH, FRAGS_SPECTATOR);
 	SetSpectatee_status(this, etof(this));
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_FLY_WORLDONLY); // user preference is controlled by playerprethink
 	this.flags = FL_CLIENT | FL_NOTARGET;
-	this.armorvalue = 666;
 	this.effects = 0;
-	this.armorvalue = autocvar_g_balance_armor_start;
+	SetResourceExplicit(this, RES_ARMOR, autocvar_g_balance_armor_start); // was 666?!
 	this.pauserotarmor_finished = 0;
 	this.pauserothealth_finished = 0;
 	this.pauseregen_finished = 0;
@@ -352,7 +336,10 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
-	this.dphitcontentsmask = 0;
+	//this.dphitcontentsmask = 0;
+	this.dphitcontentsmask = DPCONTENTS_SOLID;
+	if (autocvar_g_playerclip_collisions)
+		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 	this.pushltime = 0;
 	this.istypefrag = 0;
 	setthink(this, func_null);
@@ -361,6 +348,7 @@ void PutObserverInServer(entity this)
 	this.crouch = false;
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
+	this.draggable = drag_undraggable;
 
 	this.items = 0;
 	STAT(WEAPONS, this) = '0 0 0';
@@ -384,6 +372,7 @@ void PutObserverInServer(entity this)
 	this.oldvelocity = this.velocity;
 	this.fire_endtime = -1;
 	this.event_damage = func_null;
+	this.event_heal = func_null;
 
 	for(int slot = 0; slot < MAX_AXH; ++slot)
 	{
@@ -393,6 +382,18 @@ void PutObserverInServer(entity this)
 		if(axh.owner == this && axh != NULL && !wasfreed(axh))
 			delete(axh);
 	}
+
+	if (mutator_returnvalue)
+	{
+		// mutator prevents resetting teams+score
+	}
+	else
+	{
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
+		this.frags = FRAGS_SPECTATOR;
+	}
+	if (CS(this).just_joined)
+		CS(this).just_joined = false;
 }
 
 int player_getspecies(entity this)
@@ -525,7 +526,7 @@ void PutPlayerInServer(entity this)
 	accuracy_resend(this);
 
 	if (this.team < 0)
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -557,24 +558,24 @@ void PutPlayerInServer(entity this)
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 
 	if (warmup_stage) {
-		SetResourceAmount(this, RESOURCE_SHELLS, warmup_start_ammo_shells);
-		SetResourceAmount(this, RESOURCE_BULLETS, warmup_start_ammo_nails);
-		SetResourceAmount(this, RESOURCE_ROCKETS, warmup_start_ammo_rockets);
-		SetResourceAmount(this, RESOURCE_CELLS, warmup_start_ammo_cells);
-		SetResourceAmount(this, RESOURCE_PLASMA, warmup_start_ammo_plasma);
-		SetResourceAmount(this, RESOURCE_FUEL, warmup_start_ammo_fuel);
-		this.health = warmup_start_health;
-		this.armorvalue = warmup_start_armorvalue;
+		SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
+		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
+		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
+		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
+		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
+		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
+		SetResource(this, RES_HEALTH, warmup_start_health);
+		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
 		STAT(WEAPONS, this) = WARMUP_START_WEAPONS;
 	} else {
-		SetResourceAmount(this, RESOURCE_SHELLS, start_ammo_shells);
-		SetResourceAmount(this, RESOURCE_BULLETS, start_ammo_nails);
-		SetResourceAmount(this, RESOURCE_ROCKETS, start_ammo_rockets);
-		SetResourceAmount(this, RESOURCE_CELLS, start_ammo_cells);
-		SetResourceAmount(this, RESOURCE_PLASMA, start_ammo_plasma);
-		SetResourceAmount(this, RESOURCE_FUEL, start_ammo_fuel);
-		this.health = start_health;
-		this.armorvalue = start_armorvalue;
+		SetResource(this, RES_SHELLS, start_ammo_shells);
+		SetResource(this, RES_BULLETS, start_ammo_nails);
+		SetResource(this, RES_ROCKETS, start_ammo_rockets);
+		SetResource(this, RES_CELLS, start_ammo_cells);
+		SetResource(this, RES_PLASMA, start_ammo_plasma);
+		SetResource(this, RES_FUEL, start_ammo_fuel);
+		SetResource(this, RES_HEALTH, start_health);
+		SetResource(this, RES_ARMOR, start_armorvalue);
 		STAT(WEAPONS, this) = start_weapons;
 		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
 		{
@@ -604,7 +605,7 @@ void PutPlayerInServer(entity this)
 		this.pauseregen_finished += f;
 	}
 
-	this.damageforcescale = 2;
+	this.damageforcescale = autocvar_g_player_damageforcescale;
 	this.death_time = 0;
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
@@ -624,7 +625,10 @@ void PutPlayerInServer(entity this)
 	this.angles = spot.angles;
 	this.angles_z = 0; // never spawn tilted even if the spot says to
 	if (IS_BOT_CLIENT(this))
+	{
 		this.v_angle = this.angles;
+		bot_aim_reset(this);
+	}
 	this.fixangle = true; // turn this way immediately
 	this.oldvelocity = this.velocity = '0 0 0';
 	this.avelocity = '0 0 0';
@@ -636,6 +640,10 @@ void PutPlayerInServer(entity this)
 	this.fire_endtime = -1;
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
+
+	// TODO: we can't set these in the PlayerSpawn hook since the target code is called before it!
+	STAT(BUFFS, this) = 0;
+	STAT(BUFF_TIME, this) = 0;
 
 	this.air_finished = time + 12;
 	this.waterlevel = WATERLEVEL_NONE;
@@ -675,9 +683,15 @@ void PutPlayerInServer(entity this)
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
 	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
+	if(this.swampslug)
+		delete(this.swampslug);
+	this.in_swamp = false;
 	STAT(HUD, this) = HUD_NORMAL;
 
 	this.event_damage = PlayerDamage;
+	this.event_heal = PlayerHeal;
+
+	this.draggable = func_null;
 
 	if(!this.bot_attack)
 		IL_PUSH(g_bot_targets, this);
@@ -710,6 +724,9 @@ void PutPlayerInServer(entity this)
 
 	this.speedrunning = false;
 
+	this.counter_cnt = 0;
+	this.fragsfilter_cnt = 0;
+
 	target_voicescript_clear(this);
 
 	// reset fields the weapons may use
@@ -727,12 +744,14 @@ void PutPlayerInServer(entity this)
 
 	{
 		string s = spot.target;
-		spot.target = string_null;
+		if(g_assault || g_race) // TODO: make targeting work in assault & race without this hack
+			spot.target = string_null;
 		SUB_UseTargets(spot, this, NULL);
-		spot.target = s;
+		if(g_assault || g_race)
+			spot.target = s;
 	}
 
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 
@@ -756,6 +775,14 @@ void PutPlayerInServer(entity this)
 	}
 
 	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
+
+	if (CS(this).impulse) ImpulseCommands(this);
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_WeaponFrame(this, weaponentity);
+	}
 
 	if (!warmup_stage && !this.alivetime)
 		this.alivetime = time;
@@ -790,8 +817,6 @@ void PutClientInServer(entity this)
 		PutPlayerInServer(this);
 	}
 }
-
-void ClientInit_misc(entity this);
 
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
@@ -899,202 +924,6 @@ void DecodeLevelParms(entity this)
 	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
 
-/*
-=============
-ClientKill
-
-Called when a client types 'kill' in the console
-=============
-*/
-
-.float clientkill_nexttime;
-void ClientKill_Now_TeamChange(entity this)
-{
-	if(this.killindicator_teamchange == -1)
-	{
-		JoinBestTeam( this, true );
-	}
-	else if(this.killindicator_teamchange == -2)
-	{
-		if(blockSpectators)
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-		PutObserverInServer(this);
-	}
-	else
-		SV_ChangeTeam(this, this.killindicator_teamchange - 1);
-	this.killindicator_teamchange = 0;
-}
-
-void ClientKill_Now(entity this)
-{
-	if(this.vehicle)
-	{
-	    vehicles_exit(this.vehicle, VHEF_RELEASE);
-	    if(!this.killindicator_teamchange)
-	    {
-            this.vehicle_health = -1;
-            Damage(this, this, this, 1 , DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
-	    }
-	}
-
-	if(this.killindicator && !wasfreed(this.killindicator))
-		delete(this.killindicator);
-
-	this.killindicator = NULL;
-
-	if(this.killindicator_teamchange)
-		ClientKill_Now_TeamChange(this);
-
-	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
-	{
-		Damage(this, this, this, 100000, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
-	}
-
-	// now I am sure the player IS dead
-}
-void KillIndicator_Think(entity this)
-{
-	if (game_stopped)
-	{
-		this.owner.killindicator = NULL;
-		delete(this);
-		return;
-	}
-
-	if (this.owner.alpha < 0 && !this.owner.vehicle)
-	{
-		this.owner.killindicator = NULL;
-		delete(this);
-		return;
-	}
-
-	if(this.cnt <= 0)
-	{
-		ClientKill_Now(this.owner);
-		return;
-	}
-    else if(this.health == 1) // health == 1 means that it's silent
-    {
-        this.nextthink = time + 1;
-        this.cnt -= 1;
-    }
-	else
-	{
-		if(this.cnt <= 10)
-			setmodel(this, MDL_NUM(this.cnt));
-		if(IS_REAL_CLIENT(this.owner))
-		{
-			if(this.cnt <= 10)
-				{ Send_Notification(NOTIF_ONE, this.owner, MSG_ANNCE, Announcer_PickNumber(CNT_KILL, this.cnt)); }
-		}
-		this.nextthink = time + 1;
-		this.cnt -= 1;
-	}
-}
-
-float clientkilltime;
-void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, -1 = auto, -2 = spec
-{
-	float killtime;
-	float starttime;
-
-	if (game_stopped)
-		return;
-
-	killtime = autocvar_g_balance_kill_delay;
-
-    if(MUTATOR_CALLHOOK(ClientKill, this, killtime))
-    	return;
-    killtime = M_ARGV(1, float);
-
-	this.killindicator_teamchange = targetteam;
-
-    if(!this.killindicator)
-	{
-		if(!IS_DEAD(this))
-		{
-			killtime = max(killtime, this.clientkill_nexttime - time);
-			this.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
-		}
-
-		if(killtime <= 0 || !IS_PLAYER(this) || IS_DEAD(this))
-		{
-			ClientKill_Now(this);
-		}
-		else
-		{
-			starttime = max(time, clientkilltime);
-
-			this.killindicator = spawn();
-			this.killindicator.owner = this;
-			this.killindicator.scale = 0.5;
-			setattachment(this.killindicator, this, "");
-			setorigin(this.killindicator, '0 0 52');
-			setthink(this.killindicator, KillIndicator_Think);
-			this.killindicator.nextthink = starttime + (this.lip) * 0.05;
-			clientkilltime = max(clientkilltime, this.killindicator.nextthink + 0.05);
-			this.killindicator.cnt = ceil(killtime);
-			this.killindicator.count = bound(0, ceil(killtime), 10);
-			//sprint(this, strcat("^1You'll be dead in ", ftos(this.killindicator.cnt), " seconds\n"));
-
-			IL_EACH(g_clones, it.enemy == this && !(it.effects & CSQCMODEL_EF_RESPAWNGHOST),
-			{
-				it.killindicator = spawn();
-				it.killindicator.owner = it;
-				it.killindicator.scale = 0.5;
-				setattachment(it.killindicator, it, "");
-				setorigin(it.killindicator, '0 0 52');
-				setthink(it.killindicator, KillIndicator_Think);
-				it.killindicator.nextthink = starttime + (it.lip) * 0.05;
-				//clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
-				it.killindicator.cnt = ceil(killtime);
-			});
-			this.lip = 0;
-		}
-	}
-	if(this.killindicator)
-	{
-		if(targetteam == 0) // just die
-		{
-			this.killindicator.colormod = '0 0 0';
-			if(IS_REAL_CLIENT(this))
-			if(this.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_SUICIDE, this.killindicator.cnt);
-		}
-		else if(targetteam == -1) // auto
-		{
-			this.killindicator.colormod = '0 1 0';
-			if(IS_REAL_CLIENT(this))
-			if(this.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_AUTO, this.killindicator.cnt);
-		}
-		else if(targetteam == -2) // spectate
-		{
-			this.killindicator.colormod = '0.5 0.5 0.5';
-			if(IS_REAL_CLIENT(this))
-			if(this.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_SPECTATE, this.killindicator.cnt);
-		}
-		else
-		{
-			this.killindicator.colormod = Team_ColorRGB(targetteam);
-			if(IS_REAL_CLIENT(this))
-			if(this.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(targetteam, CENTER_TEAMCHANGE), this.killindicator.cnt);
-		}
-	}
-
-}
-
-void ClientKill (entity this)
-{
-	if(game_stopped) return;
-	if(this.player_blocked) return;
-	if(STAT(FROZEN, this)) return;
-
-	ClientKill_TeamChange(this, 0);
-}
-
 void FixClientCvars(entity e)
 {
 	// send prediction settings to the client
@@ -1170,6 +999,78 @@ void ClientPreConnect(entity this)
 }
 #endif
 
+string GetClientVersionMessage(entity this)
+{
+	if (CS(this).version_mismatch) {
+		if(CS(this).version < autocvar_gameversion) {
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
+		} else {
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8");
+		}
+	} else {
+		return strcat("Welcome to Xonotic ", autocvar_g_xonoticversion);
+	}
+}
+
+string getwelcomemessage(entity this)
+{
+	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
+	string modifications = M_ARGV(0, string);
+
+	if(g_weaponarena)
+	{
+		if(g_weaponarena_random)
+			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena");
+		else
+			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
+	}
+	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
+		modifications = strcat(modifications, ", No start weapons");
+	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
+		modifications = strcat(modifications, ", Low gravity");
+	if(g_weapon_stay && !g_cts)
+		modifications = strcat(modifications, ", Weapons stay");
+	if(g_jetpack)
+		modifications = strcat(modifications, ", Jet pack");
+	if(autocvar_g_powerups == 0)
+		modifications = strcat(modifications, ", No powerups");
+	if(autocvar_g_powerups > 0)
+		modifications = strcat(modifications, ", Powerups");
+	modifications = substring(modifications, 2, strlen(modifications) - 2);
+
+	string versionmessage = GetClientVersionMessage(this);
+	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
+
+	if(modifications != "")
+		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
+
+	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
+	{
+		strcpy(cache_lastmutatormsg, autocvar_g_mutatormsg);
+		strcpy(cache_mutatormsg, cache_lastmutatormsg);
+	}
+
+	if (cache_mutatormsg != "") {
+		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
+	}
+
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = M_ARGV(0, string);
+
+	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
+
+	string motd = autocvar_sv_motd;
+	if (motd != "") {
+		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
+	}
+	return s;
+}
+
+bool autocvar_sv_qcphysics = false; // TODO this is for testing - remove when qcphysics work
+
 /**
 =============
 ClientConnect
@@ -1190,54 +1091,13 @@ void ClientConnect(entity this)
 	TRANSMUTE(Client, this);
 	CS(this).version_nagtime = time + 10 + random() * 10;
 
-	// identify the right forced team
-	if (autocvar_g_campaign)
-	{
-		if (IS_REAL_CLIENT(this)) // only players, not bots
-		{
-			switch (autocvar_g_campaign_forceteam)
-			{
-				case 1: this.team_forced = NUM_TEAM_1; break;
-				case 2: this.team_forced = NUM_TEAM_2; break;
-				case 3: this.team_forced = NUM_TEAM_3; break;
-				case 4: this.team_forced = NUM_TEAM_4; break;
-				default: this.team_forced = 0;
-			}
-		}
-	}
-	else if (PlayerInList(this, autocvar_g_forced_team_red))    this.team_forced = NUM_TEAM_1;
-	else if (PlayerInList(this, autocvar_g_forced_team_blue))   this.team_forced = NUM_TEAM_2;
-	else if (PlayerInList(this, autocvar_g_forced_team_yellow)) this.team_forced = NUM_TEAM_3;
-	else if (PlayerInList(this, autocvar_g_forced_team_pink))   this.team_forced = NUM_TEAM_4;
-	else switch (autocvar_g_forced_team_otherwise)
-	{
-		default: this.team_forced = 0; break;
-		case "red": this.team_forced = NUM_TEAM_1; break;
-		case "blue": this.team_forced = NUM_TEAM_2; break;
-		case "yellow": this.team_forced = NUM_TEAM_3; break;
-		case "pink": this.team_forced = NUM_TEAM_4; break;
-		case "spectate":
-		case "spectator":
-			this.team_forced = -1;
-			break;
-	}
-	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
-	int playerid_save = this.playerid;
-	this.playerid = 0; // silent
-	JoinBestTeam(this, false); // if the team number is valid, keep it
-	this.playerid = playerid_save;
+	bot_clientconnect(this);
 
-	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
-		TRANSMUTE(Observer, this);
-	} else {
-		if (!teamplay || autocvar_g_balance_teams) {
-			TRANSMUTE(Player, this);
-			campaign_bots_may_start = true;
-		} else {
-			TRANSMUTE(Observer, this); // do it anyway
-		}
-	}
+	Player_DetermineForcedTeam(this);
+
+	TRANSMUTE(Observer, this);
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
@@ -1250,14 +1110,7 @@ void ClientConnect(entity this)
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
 
-	LogTeamchange(this.playerid, this.team, 1);
-
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
-
-	if(teamplay && IS_PLAYER(this))
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_CONNECT_TEAM), this.netname);
-	else
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1270,12 +1123,9 @@ void ClientConnect(entity this)
 	// notify about available teams
 	if (teamplay)
 	{
-		CheckAllowedTeams(this);
-		int t = 0;
-		if (c1 >= 0) t |= BIT(0);
-		if (c2 >= 0) t |= BIT(1);
-		if (c3 >= 0) t |= BIT(2);
-		if (c4 >= 0) t |= BIT(3);
+		entity balance = TeamBalance_CheckAllowedTeams(this);
+		int t = TeamBalance_GetAllowedTeams(balance);
+		TeamBalance_Destroy(balance);
 		stuffcmd(this, sprintf("set _teams_available %d\n", t));
 	}
 	else
@@ -1313,6 +1163,8 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
+	this.move_qcphysics = autocvar_sv_qcphysics;
+
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
 
@@ -1341,7 +1193,6 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
-void ReadyCount();
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -1367,7 +1218,7 @@ void ClientDisconnect(entity this)
 
 	Portal_ClearAll(this);
 
-	Unfreeze(this);
+	Unfreeze(this, false);
 
 	RemoveGrapplingHooks(this);
 
@@ -1407,7 +1258,7 @@ void ChatBubbleThink(entity this)
 
 	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) )
 	{
-		if ( CS(this.owner).active_minigame )
+		if ( CS(this.owner).active_minigame && PHYS_INPUT_BUTTON_MINIGAME(this.owner) )
 			this.mdl = "models/sprites/minigame_busy.iqm";
 		else if (PHYS_INPUT_BUTTON_CHAT(this.owner))
 			this.mdl = "models/misc/chatbubble.spr";
@@ -1478,9 +1329,63 @@ void respawn(entity this)
 	PutClientInServer(this);
 }
 
+ERASEABLE
+void PrintToChat(entity client, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	sprint(client, text);
+}
+
+ERASEABLE
+void DebugPrintToChat(entity client, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChat(client, text);
+	}
+}
+
+ERASEABLE
+void PrintToChatAll(string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	bprint(text);
+}
+
+ERASEABLE
+void DebugPrintToChatAll(string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatAll(text);
+	}
+}
+
+ERASEABLE
+void PrintToChatTeam(int team_num, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		if (it.team == team_num)
+		{
+			sprint(it, text);
+		}
+	});
+}
+
+ERASEABLE
+void DebugPrintToChatTeam(int team_num, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatTeam(team_num, text);
+	}
+}
+
 void play_countdown(entity this, float finished, Sound samp)
 {
-    TC(Sound, samp);
+	TC(Sound, samp);
 	if(IS_REAL_CLIENT(this))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
@@ -1579,9 +1484,12 @@ void player_powerups(entity this)
 			if (time < this.superweapons_finished || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				this.items = this.items | IT_SUPERWEAPON;
-				if(!g_cts)
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
+				if(!(this.items & IT_UNLIMITED_SUPERWEAPONS))
+				{
+					if(!g_cts)
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
+				}
 			}
 			else
 			{
@@ -1683,21 +1591,25 @@ void player_regen(entity this)
 		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
 		mina = autocvar_g_balance_armor_regenstable;
-		limith = GetResourceLimit(this, RESOURCE_HEALTH);
-		limita = GetResourceLimit(this, RESOURCE_ARMOR);
+		limith = GetResourceLimit(this, RES_HEALTH);
+		limita = GetResourceLimit(this, RES_ARMOR);
 
 		regen_health_rotstable = regen_health_rotstable * max_mod;
 		regen_health_stable = regen_health_stable * max_mod;
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
 
-		this.armorvalue = CalcRotRegen(this.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > this.pauserotarmor_finished), limita);
-		this.health = CalcRotRegen(this.health, regen_health_stable, regen_health, regen_health_linear, regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear, rot_mod * frametime * (time > this.pauserothealth_finished), limith);
+		SetResource(this, RES_ARMOR, CalcRotRegen(GetResource(this, RES_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
+									regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
+									rot_mod * frametime * (time > this.pauserotarmor_finished), limita));
+		SetResource(this, RES_HEALTH, CalcRotRegen(GetResource(this, RES_HEALTH), regen_health_stable, regen_health, regen_health_linear,
+									regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear,
+									rot_mod * frametime * (time > this.pauserothealth_finished), limith));
 	}
 
 	// if player rotted to death...  die!
 	// check this outside above checks, as player may still be able to rot to death
-	if(this.health < 1)
+	if(GetResource(this, RES_HEALTH) < 1)
 	{
 		if(this.vehicle)
 			vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -1711,22 +1623,12 @@ void player_regen(entity this)
 
 		maxf = autocvar_g_balance_fuel_rotstable;
 		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = GetResourceLimit(this, RESOURCE_FUEL);
+		limitf = GetResourceLimit(this, RES_FUEL);
 
-		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
+		SetResource(this, RES_FUEL, CalcRotRegen(GetResource(this, RES_FUEL), minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, 
+										frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
+										maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf));
 	}
-	// Ugly hack to make sure the health and armor don't go beyond hard limit.
-	// TODO: Remove this hack when all code uses GivePlayerHealth and
-	// GivePlayerArmor.
-	if (this.health > RESOURCE_AMOUNT_HARD_LIMIT)
-	{
-		this.health = RESOURCE_AMOUNT_HARD_LIMIT;
-	}
-	if (this.armorvalue > RESOURCE_AMOUNT_HARD_LIMIT)
-	{
-		this.armorvalue = RESOURCE_AMOUNT_HARD_LIMIT;
-	}
-	// End hack.
 }
 
 bool zoomstate_set;
@@ -1750,7 +1652,7 @@ void GetPressedKeys(entity this)
 	keys = BITSET(keys, KEY_LEFT, 		CS(this).movement.y < 0);
 
 	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
-	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
+	keys = BITSET(keys, KEY_CROUCH, 	IS_DUCKED(this)); // workaround: player can't un-crouch until their path is clear, so we keep the button held here
 	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
 	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
 	CS(this).pressedkeys = keys; // store for other users
@@ -1766,21 +1668,22 @@ spectate mode routines
 
 void SpectateCopy(entity this, entity spectatee)
 {
-    TC(Client, this); TC(Client, spectatee);
+	TC(Client, this); TC(Client, spectatee);
 
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
-	this.armorvalue = spectatee.armorvalue;
-	this.ammo_cells = spectatee.ammo_cells; // TODO: these will be a part of inventory, so no need to worry about setting them later!
-	this.ammo_plasma = spectatee.ammo_plasma;
-	this.ammo_shells = spectatee.ammo_shells;
-	this.ammo_nails = spectatee.ammo_nails;
-	this.ammo_rockets = spectatee.ammo_rockets;
-	this.ammo_fuel = spectatee.ammo_fuel;
+	SetResourceExplicit(this, RES_ARMOR, GetResource(spectatee, RES_ARMOR));
+	SetResourceExplicit(this, RES_CELLS, GetResource(spectatee, RES_CELLS));
+	SetResourceExplicit(this, RES_PLASMA, GetResource(spectatee, RES_PLASMA));
+	SetResourceExplicit(this, RES_SHELLS, GetResource(spectatee, RES_SHELLS));
+	SetResourceExplicit(this, RES_BULLETS, GetResource(spectatee, RES_BULLETS));
+	SetResourceExplicit(this, RES_ROCKETS, GetResource(spectatee, RES_ROCKETS));
+	SetResourceExplicit(this, RES_FUEL, GetResource(spectatee, RES_FUEL));
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
-	this.health = spectatee.health;
+	SetResourceExplicit(this, RES_HEALTH, GetResource(spectatee, RES_HEALTH));
 	CS(this).impulse = 0;
+	this.disableclientprediction = 1; // no need to run prediction on a spectator
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
 	STAT(HIT_TIME, this) = STAT(HIT_TIME, spectatee);
@@ -2008,7 +1911,7 @@ void ShowRespawnCountdown(entity this)
 .bool team_selected;
 bool ShowTeamSelection(entity this)
 {
-	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
+	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
 		return false;
 	stuffcmd(this, "menu_showteamselect\n");
 	return true;
@@ -2019,7 +1922,7 @@ void Join(entity this)
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		JoinBestTeam(this, true);
+		TeamBalance_JoinBestTeam(this);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
@@ -2030,10 +1933,19 @@ void Join(entity this)
 
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+	{
+	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
+}
+
+int GetPlayerLimit()
+{
+	int player_limit = autocvar_g_maxplayers;
+	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
+	player_limit = M_ARGV(0, int);
+	return player_limit;
 }
 
 /**
@@ -2054,7 +1966,7 @@ int nJoinAllowed(entity this, entity ignore)
 			return 0;
 	}
 
-	if(this && this.team_forced < 0)
+	if(this && (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 		return 0; // forced spectators can never join
 
 	// TODO simplify this
@@ -2068,11 +1980,13 @@ int nJoinAllowed(entity this, entity ignore)
 			++currentlyPlaying;
 	});
 
+	int player_limit = GetPlayerLimit();
+
 	float free_slots = 0;
-	if (!autocvar_g_maxplayers)
+	if (!player_limit)
 		free_slots = maxclients - totalClients;
-	else if(currentlyPlaying < autocvar_g_maxplayers)
-		free_slots = min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
+	else if(currentlyPlaying < player_limit)
+		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
 	static float join_prevent_msg_time = 0;
 	if(this && ignore && !free_slots && time > join_prevent_msg_time)
@@ -2139,18 +2053,29 @@ void PrintWelcomeMessage(entity this)
 	{
 		if(PHYS_INPUT_BUTTON_INFO(this)) // BUTTON_INFO hides initial MOTD
 			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(CS(this).motd_actived_time == -2 || IS_PLAYER(this) || IS_SPEC(this))
+		else if (CS(this).motd_actived_time == -2)
 		{
-			// instanctly hide MOTD
+			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+		}
+		else if (IS_PLAYER(this) || IS_SPEC(this))
+		{
+			// FIXME occasionally for some reason MOTD never goes away
+			// delay MOTD removal a little bit in the hope it fixes this bug
+			if (CS(this).motd_actived_time == -1) // MOTD marked to fade away as soon as client becomes player or spectator
+				CS(this).motd_actived_time = -(5 + floor(random() * 10)); // add small delay
+			else //if (CS(this).motd_actived_time < -2)
+				CS(this).motd_actived_time++;
 		}
 	}
 }
 
+const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
+	if (time < CS(this).jointime + MIN_SPEC_TIME) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
@@ -2270,11 +2195,13 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
+			if(WEP_CVAR(vortex, charge_always))
+				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
 
 		this.items_added = 0;
-		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || this.ammo_fuel >= 0.01))
+		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || GetResource(this, RES_FUEL) >= 0.01))
             this.items_added |= IT_FUEL;
 
 		this.items |= this.items_added;
@@ -2408,7 +2335,6 @@ void SpectatorThink(entity this)
 	this.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
-void vehicles_enter (entity pl, entity veh);
 void PlayerUseKey(entity this)
 {
 	if (!IS_PLAYER(this))
@@ -2424,19 +2350,15 @@ void PlayerUseKey(entity this)
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if(!STAT(FROZEN, this))
-		if(!IS_DEAD(this))
-		if(!game_stopped)
+		if(!game_stopped && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 		{
 			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
 
 			while(head) // find the closest acceptable target to enter
 			{
-				if(IS_VEHICLE(head))
-				if(!IS_DEAD(head))
+				if(IS_VEHICLE(head) && !IS_DEAD(head) && head.takedamage != DAMAGE_NO)
 				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this)))
-				if(head.takedamage != DAMAGE_NO)
 				{
 					if(closest_target)
 					{
@@ -2490,9 +2412,18 @@ void PlayerPreThink (entity this)
 	if (this.netname == "" || this.netname != CS(this).netname_previous)
 	{
 		bool assume_unchanged = (CS(this).netname_previous == "");
+		if (autocvar_sv_name_maxlength > 0 && strlennocol(this.netname) > autocvar_sv_name_maxlength)
+		{
+			int new_length = textLengthUpToLength(this.netname, autocvar_sv_name_maxlength, strlennocol);
+			this.netname = strzone(strcat(substring(this.netname, 0, new_length), "^7"));
+			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_sv_name_maxlength));
+			assume_unchanged = false;
+			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+		}
 		if (isInvisibleString(this.netname))
 		{
 			this.netname = strzone(sprintf("Player#%d", this.playerid));
+			sprint(this, "Warning: invisible names are not allowed.\n");
 			assume_unchanged = false;
 			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 		}
@@ -2528,21 +2459,21 @@ void PlayerPreThink (entity this)
 
 	if(IS_PLAYER(this))
 	{
-		if (STAT(FROZEN, this) == 2)
+		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
-			this.health = max(1, STAT(REVIVE_PROGRESS, this) * start_health);
+			SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 			if (STAT(REVIVE_PROGRESS, this) >= 1)
-				Unfreeze(this);
+				Unfreeze(this, false);
 		}
-		else if (STAT(FROZEN, this) == 3)
+		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 		{
 			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
-			this.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this) );
+			SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
-			if (this.health < 1)
+			if (GetResource(this, RES_HEALTH) < 1)
 			{
 				if (this.vehicle)
 					vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -2550,28 +2481,27 @@ void PlayerPreThink (entity this)
 					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			}
 			else if (STAT(REVIVE_PROGRESS, this) <= 0)
-				Unfreeze(this);
+				Unfreeze(this, false);
 		}
 	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
 
 	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
-	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this))
+	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 	{
-		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it),
+		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
 		{
-			if(!IS_DEAD(it) && it.takedamage != DAMAGE_NO)
-			if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
-			{
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
-			}
-			else if(!it.owner)
+			if(!it.owner)
 			{
 				if(!it.team || SAME_TEAM(this, it))
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
 				else if(autocvar_g_vehicles_steal)
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+			}
+			else if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
+			{
+				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
 			}
 		});
 
@@ -2589,6 +2519,8 @@ void PlayerPreThink (entity this)
 		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
+		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)
+			error("Client can't be spawned as player on connection!");
 		if(!PlayerThink(this))
 			return;
 	}
@@ -2596,6 +2528,20 @@ void PlayerPreThink (entity this)
 		if(intermission_running)
 			IntermissionThink(this);
 		return;
+	}
+	else if (IS_REAL_CLIENT(this) && !CS(this).autojoin_checked && time >= CS(this).jointime + MIN_SPEC_TIME)
+	{
+		CS(this).autojoin_checked = true;
+		// don't do this in ClientConnect
+		// many things can go wrong if a client is spawned as player on connection
+		if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
+			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
+				&& (!teamplay || autocvar_g_balance_teams)))
+		{
+			campaign_bots_may_start = true;
+			Join(this);
+			return;
+		}
 	}
 	else if (IS_OBSERVER(this)) {
 		ObserverThink(this);
@@ -2670,7 +2616,7 @@ void DrownPlayer(entity this)
 
 void Player_Physics(entity this)
 {
-	set_movetype(this, this.move_movetype);
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCPLAYER : this.move_movetype;
 
 	if(!this.move_qcphysics)
 		return;
@@ -2768,13 +2714,342 @@ void PlayerPostThink (entity this)
 	}
 
 	if (this.waypointsprite_attachedforcarrier) {
-	    vector v = healtharmor_maxdamage(this.health, this.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id);
-		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, '1 0 0' * v);
-    }
-
-	playerdemo_write(this);
+		float hp = healtharmor_maxdamage(GetResource(this, RES_HEALTH), GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x;
+		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, hp);
+	}
 
 	CSQCMODEL_AUTOUPDATE(this);
+}
+
+/**
+ * message "": do not say, just test flood control
+ * return value:
+ *   1 = accept
+ *   0 = reject
+ *  -1 = fake accept
+ */
+int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
+{
+	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
+		msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
+
+	if (source)
+		msgin = formatmessage(source, msgin);
+
+	string colorstr;
+	if (!(IS_PLAYER(source) || source.caplayer))
+		colorstr = "^0"; // black for spectators
+	else if(teamplay)
+		colorstr = Team_ColorCode(source.team);
+	else
+	{
+		colorstr = "";
+		teamsay = false;
+	}
+
+	if (!source) {
+		colorstr = "";
+		teamsay = false;
+	}
+
+	if(msgin != "")
+		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
+
+	/*
+	 * using bprint solves this... me stupid
+	// how can we prevent the message from appearing in a listen server?
+	// for now, just give "say" back and only handle say_team
+	if(!teamsay)
+	{
+		clientcommand(source, strcat("say ", msgin));
+		return;
+	}
+	*/
+
+	string namestr = "";
+	if (source)
+		namestr = playername(source, autocvar_g_chat_teamcolors);
+
+	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
+
+	string msgstr = "", cmsgstr = "";
+	string privatemsgprefix = string_null;
+	int privatemsgprefixlen = 0;
+	if (msgin != "")
+	{
+		bool found_me = false;
+		if(strstrofs(msgin, "/me", 0) >= 0)
+		{
+			string newmsgin = "";
+			string newnamestr = ((teamsay) ? strcat(colorstr, "(", colorprefix, namestr, colorstr, ")", "^7") : strcat(colorprefix, namestr, "^7"));
+			FOREACH_WORD(msgin, true,
+			{
+				if(strdecolorize(it) == "/me")
+				{
+					found_me = true;
+					newmsgin = cons(newmsgin, newnamestr);
+				}
+				else
+					newmsgin = cons(newmsgin, it);
+			});
+			msgin = newmsgin;
+		}
+
+		if(privatesay)
+		{
+			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
+			privatemsgprefixlen = strlen(msgstr);
+			msgstr = strcat(msgstr, msgin);
+			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
+			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay, autocvar_g_chat_teamcolors), ": ^7");
+		}
+		else if(teamsay)
+		{
+			if(found_me)
+			{
+				//msgin = strreplace("/me", "", msgin);
+				//msgin = substring(msgin, 3, strlen(msgin));
+				//msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
+				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
+			}
+			else
+				msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
+		}
+		else
+		{
+			if(found_me)
+			{
+				//msgin = strreplace("/me", "", msgin);
+				//msgin = substring(msgin, 3, strlen(msgin));
+				//msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
+				msgstr = strcat("\{1}^4* ^7", msgin);
+			}
+			else {
+				msgstr = "\{1}";
+				msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
+				msgstr = strcat(msgstr, msgin);
+			}
+			cmsgstr = "";
+		}
+		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
+	}
+
+	string fullmsgstr = msgstr;
+	string fullcmsgstr = cmsgstr;
+
+	// FLOOD CONTROL
+	int flood = 0;
+	var .float flood_field = floodcontrol_chat;
+	if(floodcontrol && source)
+	{
+		float flood_spl;
+		float flood_burst;
+		float flood_lmax;
+		float lines;
+		if(privatesay)
+		{
+			flood_spl = autocvar_g_chat_flood_spl_tell;
+			flood_burst = autocvar_g_chat_flood_burst_tell;
+			flood_lmax = autocvar_g_chat_flood_lmax_tell;
+			flood_field = floodcontrol_chattell;
+		}
+		else if(teamsay)
+		{
+			flood_spl = autocvar_g_chat_flood_spl_team;
+			flood_burst = autocvar_g_chat_flood_burst_team;
+			flood_lmax = autocvar_g_chat_flood_lmax_team;
+			flood_field = floodcontrol_chatteam;
+		}
+		else
+		{
+			flood_spl = autocvar_g_chat_flood_spl;
+			flood_burst = autocvar_g_chat_flood_burst;
+			flood_lmax = autocvar_g_chat_flood_lmax;
+			flood_field = floodcontrol_chat;
+		}
+		flood_burst = max(0, flood_burst - 1);
+		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
+
+		// do flood control for the default line size
+		if(msgstr != "")
+		{
+			getWrappedLine_remaining = msgstr;
+			msgstr = "";
+			lines = 0;
+			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
+			{
+				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
+				++lines;
+			}
+			msgstr = substring(msgstr, 1, strlen(msgstr) - 1);
+
+			if(getWrappedLine_remaining != "")
+			{
+				msgstr = strcat(msgstr, "\n");
+				flood = 2;
+			}
+
+			if (time >= source.(flood_field))
+			{
+				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
+			}
+			else
+			{
+				flood = 1;
+				msgstr = fullmsgstr;
+			}
+		}
+		else
+		{
+			if (time >= source.(flood_field))
+				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
+			else
+				flood = 1;
+		}
+
+		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
+			source.(flood_field) = flood = 0;
+	}
+
+	string sourcemsgstr, sourcecmsgstr;
+	if(flood == 2) // cannot happen for empty msgstr
+	{
+		if(autocvar_g_chat_flood_notify_flooder)
+		{
+			sourcemsgstr = strcat(msgstr, "\n^3FLOOD CONTROL: ^7message too long, trimmed\n");
+			sourcecmsgstr = "";
+		}
+		else
+		{
+			sourcemsgstr = fullmsgstr;
+			sourcecmsgstr = fullcmsgstr;
+		}
+		cmsgstr = "";
+	}
+	else
+	{
+		sourcemsgstr = msgstr;
+		sourcecmsgstr = cmsgstr;
+	}
+
+	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer))
+	{
+		if (!game_stopped)
+		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			teamsay = -1; // spectators
+	}
+
+	if(flood)
+		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.");
+
+	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
+	if(privatesay)
+		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
+
+	int ret;
+	if(source && CS(source).muted)
+	{
+		// always fake the message
+		ret = -1;
+	}
+	else if(flood == 1)
+	{
+		if (autocvar_g_chat_flood_notify_flooder)
+		{
+			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			ret = 0;
+		}
+		else
+			ret = -1;
+	}
+	else
+	{
+		ret = 1;
+	}
+
+	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer))
+	{
+		if (!game_stopped)
+		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
+			ret = -1; // just hide the message completely
+	}
+
+	MUTATOR_CALLHOOK(ChatMessage, source, ret);
+	ret = M_ARGV(1, int);
+
+	string event_log_msg = "";
+
+	if(sourcemsgstr != "" && ret != 0)
+	{
+		if(ret < 0) // faked message, because the player is muted
+		{
+			sprint(source, sourcemsgstr);
+			if(sourcecmsgstr != "" && !privatesay)
+				centerprint(source, sourcecmsgstr);
+		}
+		else if(privatesay) // private message, between 2 people only
+		{
+			sprint(source, sourcemsgstr);
+			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
+			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
+			{
+				sprint(privatesay, msgstr);
+				if(cmsgstr != "")
+					centerprint(privatesay, cmsgstr);
+			}
+		}
+		else if ( teamsay && CS(source).active_minigame )
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
+			event_log_msg = sprintf(":chat_minigame:%d:%s:%s", source.playerid, CS(source).active_minigame.netname, msgin);
+
+		}
+		else if(teamsay > 0) // team message, only sent to team mates
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			if(sourcecmsgstr != "")
+				centerprint(source, sourcecmsgstr);
+			FOREACH_CLIENT((IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+				if(cmsgstr != "")
+					centerprint(it, cmsgstr);
+			});
+			event_log_msg = sprintf(":chat_team:%d:%d:%s", source.playerid, source.team, strreplace("\n", " ", msgin));
+		}
+		else if(teamsay < 0) // spectator message, only sent to spectators
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
+			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
+		}
+		else
+		{
+			if (source) {
+				sprint(source, sourcemsgstr);
+				dedicated_print(msgstr); // send to server console too
+				MX_Say(strcat(playername(source, true), "^7: ", msgin));
+			}
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				sprint(it, msgstr);
+			});
+			event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
+		}
+	}
+
+	if (autocvar_sv_eventlog && (event_log_msg != "")) {
+		GameLogEcho(event_log_msg);
+	}
+
+	return ret;
 }
 
 // hack to copy the button fields from the client entity to the Client State
@@ -2784,7 +3059,7 @@ void PM_UpdateButtons(entity this, entity store)
 		store.impulse = this.impulse;
 	this.impulse = 0;
 
-	bool typing = this.buttonchat;
+	bool typing = this.buttonchat || this.button12;
 
 	store.button0 = (typing) ? 0 : this.button0;
 	//button1?!

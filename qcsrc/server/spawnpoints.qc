@@ -7,6 +7,7 @@
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
+#include <common/mapinfo.qh>
 #include "../common/mapobjects/subs.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
 #include "../common/util.qh"
@@ -248,7 +249,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
-	if(spot.target != "")
+	if(spot.target && spot.target != "")
 	{
 		int found = 0;
 		for(entity targ = findchain(targetname, spot.target); targ; targ = targ.chain)
@@ -262,7 +263,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 			}
 		}
 
-		if(!found)
+		if(!found && !g_cts)
 		{
 			LOG_TRACE("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target);
 			return '-1 0 0';
@@ -327,14 +328,21 @@ SelectSpawnPoint
 Finds a point to respawn
 =============
 */
+bool testspawn_checked;
+entity testspawn_point;
 entity SelectSpawnPoint(entity this, bool anypoint)
 {
 	float teamcheck;
-	entity spot, firstspot;
+	entity spot = NULL;
 
-	spot = find(NULL, classname, "testplayerstart");
-	if (spot)
-		return spot;
+	if(!testspawn_checked)
+	{
+		testspawn_point = find(NULL, classname, "testplayerstart");
+		testspawn_checked = true;
+	}
+
+	if(testspawn_point)
+		return testspawn_point;
 
 	if(this.spawnpoint_targ)
 		return this.spawnpoint_targ;
@@ -365,7 +373,16 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 
 
 	// get the entire list of spots
-	firstspot = findchain(classname, "info_player_deathmatch");
+	//entity firstspot = findchain(classname, "info_player_deathmatch");
+	entity firstspot = IL_FIRST(g_spawnpoints);
+	entity prev = NULL;
+	IL_EACH(g_spawnpoints, true,
+	{
+		if(prev)
+			prev.chain = it;
+		it.chain = NULL;
+		prev = it;
+	});
 	// filter out the bad ones
 	// (note this returns the original list if none survived)
 	if(anypoint)

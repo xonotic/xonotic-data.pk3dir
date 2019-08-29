@@ -18,7 +18,7 @@ void HUD_Physics()
 	{
 		if(!autocvar_hud_panel_physics) return;
 		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
+		if(autocvar_hud_panel_physics == 3 && !(ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
 	}
 
 	HUD_Panel_LoadCvars();

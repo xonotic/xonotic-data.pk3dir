@@ -26,20 +26,20 @@ void item_healthsmall_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthsmall_max;
-    if(!item.health)
-        item.health = g_pickup_healthsmall;
+    if(!GetResource(item, RES_HEALTH))
+        SetResourceExplicit(item, RES_HEALTH, g_pickup_healthsmall);
 }
 #endif
 
 REGISTER_ITEM(HealthSmall, Health) {
     this.m_canonical_spawnfunc = "item_health_small";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthSmall_ITEM;
     this.m_sound                =   SND_HealthSmall;
 #endif
     this.netname                =   "health_small";
-    this.m_name                 =   "5 Health";
+    this.m_name                 =   _("Small health");
     this.m_icon                 =   "health";
 #ifdef SVQC
     this.m_itemid               =   IT_5HP;
@@ -64,20 +64,20 @@ void item_healthmedium_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthmedium_max;
-    if(!item.health)
-        item.health = g_pickup_healthmedium;
+    if(!GetResource(item, RES_HEALTH))
+        SetResourceExplicit(item, RES_HEALTH, g_pickup_healthmedium);
 }
 #endif
 
 REGISTER_ITEM(HealthMedium, Health) {
     this.m_canonical_spawnfunc = "item_health_medium";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthMedium_ITEM;
     this.m_sound                =   SND_HealthMedium;
 #endif
     this.netname                =   "health_medium";
-    this.m_name                 =   "25 Health";
+    this.m_name                 =   _("Medium health");
     this.m_icon                 =   "health";
 #ifdef SVQC
     this.m_itemid               =   IT_25HP;
@@ -102,20 +102,20 @@ void item_healthbig_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthbig_max;
-    if(!item.health)
-        item.health = g_pickup_healthbig;
+    if(!GetResource(item, RES_HEALTH))
+        SetResourceExplicit(item, RES_HEALTH, g_pickup_healthbig);
 }
 #endif
 
 REGISTER_ITEM(HealthBig, Health) {
     this.m_canonical_spawnfunc = "item_health_big";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthBig_ITEM;
     this.m_sound                =   SND_HealthBig;
 #endif
     this.netname                =   "health_big";
-    this.m_name                 =   "50 Health";
+    this.m_name                 =   _("Big health");
     this.m_icon                 =   "health";
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Big health");
@@ -142,20 +142,20 @@ void item_healthmega_init(Pickup this, entity item)
 {
     if(!item.max_health)
         item.max_health = g_pickup_healthmega_max;
-    if(!item.health)
-        item.health = g_pickup_healthmega;
+    if(!GetResource(item, RES_HEALTH))
+        SetResourceExplicit(item, RES_HEALTH, g_pickup_healthmega);
 }
 #endif
 
 REGISTER_ITEM(HealthMega, Health) {
     this.m_canonical_spawnfunc = "item_health_mega";
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthMega_ITEM;
     this.m_sound                =   SND_HealthMega;
 #endif
     this.netname                =   "health_mega";
-    this.m_name                 =   "100 Health";
+    this.m_name                 =   _("Mega health");
     this.m_icon                 =   "item_mega_health";
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Mega health");

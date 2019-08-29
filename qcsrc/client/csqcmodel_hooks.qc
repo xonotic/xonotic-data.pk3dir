@@ -18,10 +18,6 @@
 .float death_time;
 .int modelflags;
 
-void CSQCModel_Hook_PreDraw(entity this, bool isplayer);
-
-.bool isplayermodel;
-
 // FEATURE: LOD
 .int lodmodelindex0;
 .int lodmodelindex1;
@@ -345,10 +341,10 @@ void CSQCPlayer_FallbackFrame_PostUpdate(entity this, bool isnew)
 	// player "pops in"
 	if(isnew)
 	{
-#define FIX_FRAMETIME(f,ft) MACRO_BEGIN {																			\
-		if(IS_DEAD_FRAME(this.f) && this.ft != 0 && this.death_time != 0)											\
-			this.ft = this.death_time;																				\
-} MACRO_END
+#define FIX_FRAMETIME(f,ft) MACRO_BEGIN \
+		if(IS_DEAD_FRAME(this.f) && this.ft != 0 && this.death_time != 0) \
+			this.ft = this.death_time; \
+MACRO_END
 		FIX_FRAMETIME(frame, frame1time);
 		FIX_FRAMETIME(frame2, frame2time);
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
@@ -364,7 +360,7 @@ void CSQCPlayer_AnimDecide_PostUpdate(entity this, bool isnew)
 }
 int CSQCPlayer_FallbackFrame(entity this, int f)
 {
-    TC(int, f);
+	TC(int, f);
 	if(frameduration(this.modelindex, f) > 0)
 		return f; // goooooood
 	if(frameduration(this.modelindex, 1) <= 0)
@@ -417,7 +413,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
 		if(this.tag_entity.classname == "csqcmodel")
 		{
-			CSQCModel_Hook_PreDraw(this.tag_entity, (this.tag_entity.entnum >= 1 && this.tag_entity.entnum <= maxclients));
+			CSQCModel_Hook_PreDraw(this.tag_entity, (this.tag_entity.isplayermodel & ISPLAYER_CLIENT));
 		}
 
 		if(this.tag_entity.modelindex != this.tag_entity_lastmodelindex)
@@ -445,7 +441,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it");
 						}
 					}
-					else if(this.tag_entity.isplayermodel)
+					else if((this.tag_entity.isplayermodel & ISPLAYER_MODEL))
 					{
 						skeleton_loadinfo(this.tag_entity);
 						this.tag_index = this.tag_entity.bone_weapon;
@@ -545,7 +541,7 @@ void CSQCModel_Effects_Apply(entity this)
 	if(this.csqcmodel_modelflags & MF_ROTATE)
 	{
 		this.renderflags |= RF_USEAXIS;
-		makevectors(this.angles + '0 100 0' * fmod(time, 3.6));
+		MAKEVECTORS(makevectors, this.angles + '0 100 0' * fmod(time, 3.6), v_forward, v_right, v_up);
 	}
 	if(this.csqcmodel_modelflags & MF_TRACER)
 		tref = EFFECT_TR_WIZSPIKE.m_id;
@@ -602,17 +598,22 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		return;
 	this.csqcmodel_predraw_run = framecount;
 
-	if(!this.modelindex || this.model == "null")
+	if(!this.modelindex || this.model == "null" || this.alpha < 0)
 	{
 		this.drawmask = 0;
+		if(this.snd_looping > 0)
+		{
+			sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
+			this.snd_looping = 0;
+		}
 		return;
 	}
 	else
 		this.drawmask = MASK_NORMAL;
 
-	if(this.isplayermodel) // this checks if it's a player MODEL!
+	if((this.isplayermodel & ISPLAYER_MODEL) && this.drawmask) // this checks if it's a player MODEL!
 	{
-		CSQCPlayer_ModelAppearance_Apply(this, this.entnum == player_localnum + 1);
+		CSQCPlayer_ModelAppearance_Apply(this, (this.isplayermodel & ISPLAYER_LOCAL));
 		CSQCPlayer_LOD_Apply(this);
 
 		if(!isplayer)
@@ -701,7 +702,7 @@ void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool isloc
 	this.iflags |= IFLAG_V_ANGLE_X;
 	// revert to values from server
 	CSQCModel_Effects_PreUpdate(this);
-	if(this.isplayermodel)
+	if((this.isplayermodel & ISPLAYER_MODEL))
 	{
 		if(!isplayer)
 			CSQCPlayer_FallbackFrame_PreUpdate(this);
@@ -712,10 +713,12 @@ void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool isloc
 void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
-	this.isplayermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || (substring(this.model, 0, 16) == "models/monsters/" && (this.entnum >= 1 && this.entnum <= maxclients)));
+	bool is_playermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
+							(substring(this.model, 0, 16) == "models/monsters/" && (this.isplayermodel & BIT(1))));
+	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
 
 	// save values set by server
-	if(this.isplayermodel)
+	if((this.isplayermodel & ISPLAYER_MODEL))
 	{
 		CSQCPlayer_ModelAppearance_PostUpdate(this);
 		if(isplayer)

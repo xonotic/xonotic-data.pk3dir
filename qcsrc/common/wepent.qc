@@ -20,7 +20,7 @@ MACRO_END
     \
     PROP(false, m_alpha, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, rint(bound(-1, 254 * this.m_alpha, 254) - -1)); }, \
-	{ (viewmodels[this.m_wepent_slot]).alpha = (ReadByte() + -1) / 254; }) \
+	{ (viewmodels[this.m_wepent_slot]).m_alpha = (ReadByte() + -1) / 254; }) \
     \
     PROP(false, vortex_charge, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.vortex_charge * 255); }, \
@@ -36,10 +36,10 @@ MACRO_END
     \
     PROP(false, porto_v_angle_held, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.porto_v_angle_held); if(this.porto_v_angle_held) { \
-		 WriteAngle(chan, this.porto_v_angle.x); WriteAngle(chan, this.porto_v_angle.y); \
+		 WriteAngle(chan, this.owner.porto_v_angle.x); WriteAngle(chan, this.owner.porto_v_angle.y); \
 		} }, \
 	{ (viewmodels[this.m_wepent_slot]).angles_held_status = ReadByte(); if((viewmodels[this.m_wepent_slot]).angles_held_status) { \
-		(viewmodels[this.m_wepent_slot]).angles_held_x = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_y = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_z = 0; } \
+		(viewmodels[this.m_wepent_slot]).angles_held = vec2(ReadAngle(), ReadAngle()); } \
 		else { (viewmodels[this.m_wepent_slot]).angles_held = '0 0 0'; } }) \
     \
     PROP(false, tuba_instrument, WEPENT_SET_NORMAL, \
@@ -73,6 +73,10 @@ MACRO_END
     PROP(false, clip_size, WEPENT_SET_NORMAL, \
 	{ WriteShort(chan, this.clip_size); }, \
 	{ (viewmodels[this.m_wepent_slot]).clip_size = ReadShort(); }) \
+    \
+    PROP(false, skin, WEPENT_SET_NORMAL, \
+	{ WriteShort(chan, this.skin); }, \
+	{ (viewmodels[this.m_wepent_slot]).m_skin = ReadShort(); }) \
     \
 	/**/
 

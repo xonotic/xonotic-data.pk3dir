@@ -41,6 +41,8 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
+
 // TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
 void bot_setclientfields(entity this)
 {
@@ -73,12 +75,6 @@ void bot_think(entity this)
 		this.flags |= FL_GODMODE;
 
 	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
-
-	//if (this.bot_painintensity > 0)
-	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
-
-	//this.bot_painintensity = this.bot_painintensity + this.bot_oldhealth - this.health;
-	//this.bot_painintensity = bound(0, this.bot_painintensity, 100);
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
@@ -129,6 +125,9 @@ void bot_think(entity this)
 	// if dead, just wait until we can respawn
 	if (IS_DEAD(this))
 	{
+		if (bot_waypoint_queue_owner == this)
+			bot_waypoint_queue_owner = NULL;
+		this.aistatus = 0;
 		CS(this).movement = '0 0 0';
 		if (this.deadflag == DEAD_DEAD)
 		{
@@ -216,13 +215,13 @@ void bot_setnameandstuff(entity this)
 
 	prio = 6;
 
-	#define READSKILL(f, w, r) MACRO_BEGIN { \
+	#define READSKILL(f, w, r) MACRO_BEGIN \
 		if(argv(prio) != "") \
 			this.f = stof(argv(prio)) * w; \
 		else \
 			this.f = (!autocvar_g_campaign) * (2 * random() - 1) * r * w; \
 		prio++; \
-	} MACRO_END
+	MACRO_END
 	//print(bot_name, ": ping=", argv(9), "\n");
 
 	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboard skill
@@ -242,9 +241,12 @@ void bot_setnameandstuff(entity this)
 	READSKILL(bot_thinkskill, 1, 0.5); // think skill
 	READSKILL(bot_aiskill, 2, 0); // "ai" skill
 
+	if (file >= 0 && argv(prio) != "")
+		LOG_INFOF("^1Warning^7: too many parameters for bot %s, please check format of %s", bot_name, autocvar_bot_config_file);
+
 	this.bot_config_loaded = true;
 
-	// this is really only a default, JoinBestTeam is called later
+	// this is really only a default, TeamBalance_JoinBestTeam is called later
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
 	this.bot_preferredcolors = this.clientcolors;
 
@@ -255,16 +257,23 @@ void bot_setnameandstuff(entity this)
 		name = bot_name;
 
 	// number bots with identical names
-	int j = 0;
-	FOREACH_CLIENT(IS_BOT_CLIENT(it), {
-		if(it.cleanname == name)
-			++j;
-	});
-	if (j)
-		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
-	else
+	if (name == "")
+	{
+		name = ftos(etof(this));
 		this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
-
+	}
+	else
+	{
+		int j = 0;
+		FOREACH_CLIENT(IS_BOT_CLIENT(it), {
+			if(it.cleanname == name)
+				++j;
+		});
+		if (j)
+			this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
+		else
+			this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
+	}
 	this.cleanname = strzone(name);
 
 	// pick the model and skin
@@ -421,24 +430,23 @@ void bot_clientconnect(entity this)
 		bot_setclientfields(this);
 	}
 
-	if(this.bot_forced_team==1)
-		this.team = NUM_TEAM_1;
-	else if(this.bot_forced_team==2)
-		this.team = NUM_TEAM_2;
-	else if(this.bot_forced_team==3)
-		this.team = NUM_TEAM_3;
-	else if(this.bot_forced_team==4)
-		this.team = NUM_TEAM_4;
+	if (teamplay && Team_IsValidIndex(this.bot_forced_team))
+	{
+		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
+	}
 	else
-		JoinBestTeam(this, true);
+	{
+		this.bot_forced_team = 0;
+		TeamBalance_JoinBestTeam(this);
+	}
 
 	havocbot_setupbot(this);
 }
 
 void bot_removefromlargestteam()
 {
-	CheckAllowedTeams(NULL);
-	GetTeamCounts(NULL);
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	TeamBalance_GetTeamCounts(balance, NULL);
 
 	entity best = NULL;
 	float besttime = 0;
@@ -457,12 +465,10 @@ void bot_removefromlargestteam()
 
 		int thiscount = 0;
 
-		switch(it.team)
+		if (Team_IsValidTeam(it.team))
 		{
-			case NUM_TEAM_1: thiscount = c1; break;
-			case NUM_TEAM_2: thiscount = c2; break;
-			case NUM_TEAM_3: thiscount = c3; break;
-			case NUM_TEAM_4: thiscount = c4; break;
+			thiscount = TeamBalance_GetNumberOfPlayers(balance,
+				Team_TeamToIndex(it.team));
 		}
 
 		if(thiscount > bestcount)
@@ -477,6 +483,7 @@ void bot_removefromlargestteam()
 			best = it;
 		}
 	});
+	TeamBalance_Destroy(balance);
 	if(!bcount)
 		return; // no bots to remove
 	currentbots = currentbots - 1;
@@ -573,9 +580,10 @@ void bot_calculate_stepheightvec()
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
 	jumpheight_vec = (autocvar_sv_jumpvelocity ** 2) / (2 * autocvar_sv_gravity) * '0 0 1';
 	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
+	jumpheight_time = autocvar_sv_jumpvelocity / autocvar_sv_gravity;
 }
 
-float bot_fixcount()
+bool bot_fixcount()
 {
 	int activerealplayers = 0;
 	int realplayers = 0;
@@ -591,8 +599,6 @@ float bot_fixcount()
 	}
 
 	int bots;
-	// add/remove bots if needed to make sure there are at least
-	// minplayers+bot_number, or remove all bots if no one is playing
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
@@ -600,15 +606,19 @@ float bot_fixcount()
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
-		float realminplayers, minplayers;
-		realminplayers = autocvar_minplayers;
-		minplayers = max(0, floor(realminplayers));
+		int minplayers = max(0, floor(autocvar_minplayers));
+		if (teamplay)
+			minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
+		int minbots = max(0, floor(autocvar_bot_number));
 
-		float realminbots, minbots;
-		realminbots = autocvar_bot_number;
-		minbots = max(0, floor(realminbots));
+		// add bots to reach minplayers if needed
+		bots = max(minbots, minplayers - activerealplayers);
+		// cap bots to the max players allowed by the server
+		int player_limit = GetPlayerLimit();
+		if(player_limit)
+			bots = min(bots, max(player_limit - activerealplayers, 0));
+		bots = min(bots, maxclients - realplayers);
 
-		bots = min(max(minbots, minplayers - activerealplayers), maxclients - realplayers);
 		if(bots > minbots)
 			bots_would_leave = true;
 	}
@@ -629,7 +639,7 @@ float bot_fixcount()
 				return false;
 			}
 		}
-		while (currentbots > bots)
+		while (currentbots > bots && bots >= 0)
 			bot_removenewest();
 	}
 
@@ -747,7 +757,7 @@ void bot_serverframe()
 		if(botframe_cachedwaypointlinks)
 		{
 			if(!botframe_loadedforcedlinks)
-				waypoint_load_links_hardwired();
+				waypoint_load_hardwiredlinks();
 		}
 		else
 		{

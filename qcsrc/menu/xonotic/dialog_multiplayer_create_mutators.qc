@@ -37,10 +37,11 @@ string WeaponArenaString()
 	s = "";
 	for(int j = 0; j < n; ++j)
 	{
-		FOREACH(Weapons, it != WEP_Null, {
-			if(argv(j) == it.netname)
-				s = cons_mid(s, " & ", it.m_name);
-		});
+		Weapon wep = Weapons_fromstr(argv(j));
+		if(wep != WEP_Null)
+		{
+			s = cons_mid(s, " & ", wep.m_name);
+		}
 	}
 	s = sprintf(_("%s Arena"), s);
 
@@ -87,7 +88,7 @@ string XonoticMutatorsDialog_toString(entity me)
 	if(cvar("g_bloodloss") > 0)
 		s = cons_mid(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
-		s = cons_mid(s, ", ", _("Jet pack"));
+		s = cons_mid(s, ", ", _("Jetpack"));
 	if(cvar("g_buffs") > 0)
 		s = cons_mid(s, ", ", _("Buffs"));
 	if(cvar("g_overkill"))
@@ -209,7 +210,7 @@ void XonoticMutatorsDialog_fill(entity me)
 			_("Players spawn with the grappling hook")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_jetpack", _("Jet pack"),
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_jetpack", _("Jetpack"),
 			_("Players spawn with the jetpack")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -250,16 +251,14 @@ void XonoticMutatorsDialog_fill(entity me)
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
 		w = Weapons_from(i);
-		if(w.spawnflags & WEP_FLAG_HIDDEN)
+		if (w.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK))
 			continue;
-		if((j & 1) == 0)
-			me.TDempty(me, 0.2);
-		else
+		if ((j % 3) == 0)
 		{
 			me.TR(me);
 			me.TDempty(me, 0.4);
 		}
-		me.TD(me, 1, 1.7, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.m_name)));
+		me.TD(me, 1, 1.2, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.m_name)));
 			setDependentWeird(e, checkCompatibility_weaponarena_weapon);
 		++j;
 	}

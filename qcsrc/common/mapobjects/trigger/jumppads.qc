@@ -133,9 +133,20 @@ bool jumppad_push(entity this, entity targ)
 	if (!isPushable(targ))
 		return false;
 
+	vector org = targ.origin;
+#ifdef SVQC
+	if(autocvar_sv_vq3compat)
+#elif defined(CSQC)
+	if(STAT(VQ3COMPAT))
+#endif
+	{
+		org.z += targ.mins_z;
+		org.z += 1; // off by 1!
+	}
+
 	if(this.enemy)
 	{
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height, targ);
+		targ.velocity = trigger_push_calculatevelocity(org, this.enemy, this.height, targ);
 	}
 	else if(this.target && this.target != "")
 	{
@@ -148,7 +159,7 @@ bool jumppad_push(entity this, entity targ)
 			else
 				RandomSelection_AddEnt(e, 1, 1);
 		}
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height, targ);
+		targ.velocity = trigger_push_calculatevelocity(org, RandomSelection_chosen_ent, this.height, targ);
 	}
 	else
 	{
@@ -328,13 +339,57 @@ bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector 
 }
 #endif
 
+#ifdef SVQC
+vector trigger_push_get_start_point(entity this)
+{
+	// calculate a typical start point for the jump
+	vector org = (this.absmin + this.absmax) * 0.5;
+	org.z = this.absmax.z - PL_MIN_CONST.z - 7;
+	return org;
+}
+
+float trigger_push_get_push_time(entity this, vector endpos)
+{
+	vector org = trigger_push_get_start_point(this);
+
+	float grav = PHYS_GRAVITY(NULL);
+
+	entity t = this.enemy;
+	if (t)
+	{
+		entity e = spawn();
+		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+		vector v = trigger_push_calculatevelocity(org, t, this.height, e);
+		vector v2 = trigger_push_calculatevelocity(endpos, t, this.height, e);
+		delete(e);
+		return (v.z + v2.z) / grav;
+	}
+	else if (!(this.target && this.target != ""))
+	{
+		if (!this.team)
+		{
+			vector v = this.movedir;
+
+			float t = v.z / grav;
+			float jump_height = 1/2 * grav * (t ** 2);
+			float remaining_height = org.z + jump_height - endpos.z;
+			float v2_z = sqrt(2 * grav * remaining_height);
+
+			return (v.z + v2_z) / grav;
+		}
+	}
+	return 0;
+}
+#endif
+
 /// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
 /// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
 bool trigger_push_test(entity this, entity item)
 {
-	// first calculate a typical start point for the jump
-	vector org = (this.absmin + this.absmax) * 0.5;
-	org.z = this.absmax.z - PL_MIN_CONST.z - 7;
+#ifdef SVQC
+	vector org = trigger_push_get_start_point(this);
+#endif
 
 	if (this.target)
 	{
@@ -347,6 +402,10 @@ bool trigger_push_test(entity this, entity item)
 			++n;
 #ifdef SVQC
 			if(t.move_movetype != MOVETYPE_NONE)
+				continue;
+
+			// bots can't tell teamed jumppads from normal ones
+			if (this.team)
 				continue;
 
 			entity e = spawn();
@@ -455,32 +514,41 @@ bool trigger_push_test(entity this, entity item)
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			this.enemy = find(NULL, targetname, this.target);
+			if (!this.team)
+				this.enemy = find(NULL, targetname, this.target);
+			else // bots can't tell teamed jumppads from normal ones
+				this.enemy = NULL;
 		}
 		else
 		{
 			// have to use random selection every single time
 			this.enemy = NULL;
 		}
+
 	}
 #ifdef SVQC
 	else
 	{
-		entity e = spawn();
-		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
-		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-		setorigin(e, org);
-		e.velocity = this.movedir;
-		tracetoss(e, e);
-		if (item)
+		if (!this.team)
 		{
-			bool r = (trace_ent == item);
+			entity e = spawn();
+			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+			setorigin(e, org);
+			e.velocity = this.movedir;
+			tracetoss(e, e);
+			if (item)
+			{
+				bool r = (trace_ent == item);
+				delete(e);
+				return r;
+			}
+			if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
+				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
 			delete(e);
-			return r;
 		}
-		if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
-			waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
-		delete(e);
+		else if (item)
+			return false;
 	}
 
 	defer(this, 0.1, trigger_push_updatelink);

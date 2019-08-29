@@ -30,7 +30,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 	}
 
 	okmachinegun_spread = bound(WEP_CVAR_PRI(okmachinegun, spread_min), WEP_CVAR_PRI(okmachinegun, spread_min) + (WEP_CVAR_PRI(okmachinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR_PRI(okmachinegun, spread_max));
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, okmachinegun_spread, WEP_CVAR_PRI(okmachinegun, solidpenetration), WEP_CVAR_PRI(okmachinegun, damage), WEP_CVAR_PRI(okmachinegun, force), WEP_OVERKILL_MACHINEGUN.m_id, 0);
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, okmachinegun_spread, WEP_CVAR_PRI(okmachinegun, solidpenetration), WEP_CVAR_PRI(okmachinegun, damage), WEP_CVAR_PRI(okmachinegun, force), WEP_OVERKILL_MACHINEGUN.m_id, EFFECT_RIFLE);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
@@ -45,8 +45,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor, weaponentity);
 	}
 
-	int slot = weaponslot(weaponentity);
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(okmachinegun, refire) * W_WeaponRateFactor(actor);
+	ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(okmachinegun, refire) * W_WeaponRateFactor(actor);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okmachinegun, refire), W_OverkillMachineGun_Attack_Auto);
 }
 
@@ -112,7 +111,7 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 METHOD(OverkillMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount;
-	ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okmachinegun, ammo);
+	ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okmachinegun, ammo);
 	if (WEP_CVAR(okmachinegun, reload_ammo))
 	{
 		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_MACHINEGUN.m_id]) >= WEP_CVAR_PRI(okmachinegun, ammo);
@@ -153,4 +152,3 @@ METHOD(OverkillMachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
-

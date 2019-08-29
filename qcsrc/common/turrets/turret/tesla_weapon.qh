@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(TeslaCoilTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(TeslaCoilTurretAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(TeslaCoilTurretAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(TeslaCoilTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(TeslaCoilTurretAttack, netname, string, "turret_tesla");
 /* wepname   */ ATTRIB(TeslaCoilTurretAttack, m_name, string, _("Tesla Coil"));

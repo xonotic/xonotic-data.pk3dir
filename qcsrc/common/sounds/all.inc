@@ -198,6 +198,7 @@ SOUND(ONS_CONTROLPOINT_BUILT, "onslaught/controlpoint_built");
 SOUND(ONS_CONTROLPOINT_UNDERATTACK, "onslaught/controlpoint_underattack");
 SOUND(ONS_DAMAGEBLOCKEDBYSHIELD, "onslaught/damageblockedbyshield");
 SOUND(ONS_ELECTRICITY_EXPLODE, "onslaught/electricity_explode");
+SOUND(ONS_GENERATOR_ALARM, "kh/alarm"); // FIXME: unique sound
 SOUND(ONS_GENERATOR_DECAY, "onslaught/generator_decay");
 SOUND(ONS_GENERATOR_UNDERATTACK, "onslaught/generator_underattack");
 SOUND(ONS_HIT1, "onslaught/ons_hit1");
@@ -236,6 +237,7 @@ SOUND(VEH_SPIDERBOT_STRAFE, "vehicles/spiderbot_strafe");
 SOUND(VEH_SPIDERBOT_WALK, "vehicles/spiderbot_walk");
 
 SOUND(NADE_BEEP, "overkill/grenadebip");
+SOUND(NADE_BONUS, "kh/alarm"); // FIXME: unique sound
 
 SOUND(BUFF_LOST, "relics/relic_effect");
 
