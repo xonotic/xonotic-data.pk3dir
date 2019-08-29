@@ -761,7 +761,7 @@ void Create_Notification_Entity_Choice(entity notif,
 #ifdef SVQC
 void Notification_GetCvars(entity this)
 {
-	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
+	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		GetCvars_handleFloat(
 			this,
 			CS(this),
