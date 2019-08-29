@@ -131,7 +131,12 @@ void XonoticProfileTab_fill(entity me)
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
 			e.sendCvars = true;
 			setDependent(e, "cl_allow_uidtracking", 1, 1);
-	me.gotoRC(me, 4, 3.1); // TOP RIGHT
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uidranking", _("Allow player statistics to rank you in leaderboards")));
+			e.sendCvars = true;
+			setDependent(e, "cl_allow_uidtracking", 1, 1);
+	me.gotoRC(me, 4.5, 3.1); // TOP RIGHT
 	//me.gotoRC(me, 12.5, 3.1); // BOTTOM RIGHT
 	//me.gotoRC(me, 12.5, 0); // BOTTOM LEFT
 		me.TDempty(me, 0.25);

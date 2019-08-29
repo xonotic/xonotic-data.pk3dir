@@ -181,6 +181,7 @@ float default_weapon_alpha;
 
 .float cvar_cl_allow_uid2name;
 .float cvar_cl_allow_uidtracking;
+.bool cvar_cl_allow_uidranking;
 .string stored_netname;
 
 string gamemode_name;

@@ -111,6 +111,7 @@ vector w_org, w_backoff;
 
 float autoswitch;
 bool cvar_cl_allow_uid2name;
+bool cvar_cl_allow_uidranking;
 float cvar_cl_autoscreenshot;
 float cvar_cl_autotaunt;
 float cvar_cl_clippedspectating;
@@ -129,6 +130,7 @@ bool cvar_cl_weapon_switch_fallback_to_impulse;
 
 REPLICATE(autoswitch, bool, "cl_autoswitch");
 REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
+REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
