@@ -400,6 +400,8 @@ REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
 
 REPLICATE(cvar_cl_handicap, float, "cl_handicap");
 
+REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
+
 REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
 
 REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");

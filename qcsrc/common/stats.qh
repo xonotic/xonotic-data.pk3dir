@@ -374,14 +374,6 @@ int autocvar_sv_wallclip;
 #endif
 REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
 
-
-#ifdef CSQC
-noref int autocvar_cl_gunalign;
-#endif
-#ifdef SVQC
-.int cvar_cl_gunalign;
-#endif
-
 REGISTER_STAT(GUNALIGN, int)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))
