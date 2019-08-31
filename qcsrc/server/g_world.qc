@@ -321,6 +321,7 @@ void cvar_changes_init()
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("condump_stripcolors");
 		BADCVAR("gameversion");
+		BADCVAR("fs_gamedir");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_buffs_pickup_anyway");
