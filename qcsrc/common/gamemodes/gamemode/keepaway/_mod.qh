@@ -1,4 +1,5 @@
 // generated file; do not modify
+#include <common/gamemodes/gamemode/keepaway/keepaway.qh>
 #ifdef CSQC
     #include <common/gamemodes/gamemode/keepaway/cl_keepaway.qh>
 #endif
