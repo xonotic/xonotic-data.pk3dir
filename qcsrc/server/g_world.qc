@@ -340,6 +340,7 @@ void cvar_changes_init()
 		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_new_toys_autoreplace");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
 		BADCVAR("g_piggyback");
