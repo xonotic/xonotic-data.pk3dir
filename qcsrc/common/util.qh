@@ -201,7 +201,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	#else
 		#define GENTLE autocvar_sv_gentle
 	#endif
-	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
+	#define normal_or_gentle(normal, gentle) ((GENTLE && (gentle != "")) ? gentle : normal)
 #endif
 
 #ifdef GAMEQC
