@@ -6,7 +6,8 @@
 // increase by 0.01 when changes require only waypoint relinking
 // increase by 1 when changes require to manually edit waypoints
 // max 2 decimal places, always specified
-const float WAYPOINT_VERSION = 1.02;
+const float WAYPOINT_VERSION = 1.04;
+float waypoint_version_loaded;
 string waypoint_time;
 
 // fields you can query using prvm_global server to get some statistics about waypoint linking culling
@@ -21,23 +22,42 @@ float botframe_cachedwaypointlinks;
 .entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
 .entity wp16, wp17, wp18, wp19, wp20, wp21, wp22, wp23, wp24, wp25, wp26, wp27, wp28, wp29, wp30, wp31;
 
+// used by jumppads to store original destination wp, used in case it gets changed in the editor
+.entity wp00_original;
+
 .float wp00mincost, wp01mincost, wp02mincost, wp03mincost, wp04mincost, wp05mincost, wp06mincost, wp07mincost;
 .float wp08mincost, wp09mincost, wp10mincost, wp11mincost, wp12mincost, wp13mincost, wp14mincost, wp15mincost;
 .float wp16mincost, wp17mincost, wp18mincost, wp19mincost, wp20mincost, wp21mincost, wp22mincost, wp23mincost;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 
-.float wpfire, wpcost, wpconsidered, wpisbox, wplinked, wphardwired;
+// hardwired links are saved to the .wpXX fields among normal links
+// AND to the supporting .wphwXX fields to allow identifying them precisely
+// these links are not sorted, unlike normal links
+.entity wphw00, wphw01, wphw02, wphw03, wphw04, wphw05, wphw06, wphw07;
+
+.float wpcost;
+.int wpfire, wpconsidered, wpisbox, wplinked;
 .int wpflags;
 .entity wp_aimed;
 .entity wp_locked;
 
 .vector wpnearestpoint;
 
+// holds reference to the support waypoint, if any
+.entity goalentity;
+#define SUPPORT_WP goalentity
+
 /*
  * Functions
  */
 
 spawnfunc(waypoint);
+
+bool waypoint_has_hardwiredlinks(entity wp);
+bool waypoint_is_hardwiredlink(entity wp_from, entity wp_to);
+void waypoint_mark_hardwiredlink(entity wp_from, entity wp_to);
+void waypoint_unmark_hardwiredlink(entity wp_from, entity wp_to);
+
 void waypoint_removelink(entity from, entity to);
 int waypoint_getlinknum(entity from, entity to);
 bool waypoint_islinked(entity from, entity to);
@@ -66,11 +86,9 @@ void botframe_showwaypointlinks();
 
 float waypoint_loadall();
 bool waypoint_load_links();
-#define waypoint_load_links_hardwired() waypoint_load_or_remove_links_hardwired(false)
-#define waypoint_remove_links_hardwired() waypoint_load_or_remove_links_hardwired(true)
-void waypoint_load_or_remove_links_hardwired(bool removal_mode);
+void waypoint_load_hardwiredlinks();
 
-void waypoint_spawn_fromeditor(entity pl);
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp, bool is_support_wp);
 entity waypoint_spawn(vector m1, vector m2, float f);
 entity waypoint_spawnpersonal(entity this, vector position);
 

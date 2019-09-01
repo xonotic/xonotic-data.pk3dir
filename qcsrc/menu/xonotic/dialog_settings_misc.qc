@@ -36,8 +36,8 @@ void XonoticMiscSettingsTab_fill(entity me)
 			_("Specify your network speed")));
 			e.addValue(e, _("56k"), "4000");
 			e.addValue(e, _("ISDN"), "7000");
-			e.addValue(e, _("Slow ADSL"), "15000");
-			e.addValue(e, _("Fast ADSL"), "20000");
+			e.addValue(e, _("Slow ADSL"), "20000");
+			e.addValue(e, _("Fast ADSL"), "40000");
 			e.addValue(e, _("Broadband"), "66666");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);

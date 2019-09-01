@@ -163,6 +163,7 @@ float default_player_alpha;
 float default_weapon_alpha;
 
 .float cvar_cl_handicap;
+.int cvar_cl_gunalign;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
 .float cvar_cl_jetpack_jump;
@@ -181,6 +182,7 @@ float default_weapon_alpha;
 
 .float cvar_cl_allow_uid2name;
 .float cvar_cl_allow_uidtracking;
+.bool cvar_cl_allow_uidranking;
 .string stored_netname;
 
 string gamemode_name;
@@ -189,9 +191,6 @@ string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
-
-// WEAPONTODO: remove this
-//WepSet weaponsInMap;
 
 .float respawn_countdown; // next number to count
 

@@ -9,11 +9,14 @@
 
 REGISTER_NET_TEMP(casings)
 
-#ifdef SVQC
-
+#if defined(SVQC)
 .bool cvar_cl_casings;
+#elif defined(CSQC)
+bool cvar_cl_casings;
+#endif
 REPLICATE(cvar_cl_casings, bool, "cl_casings");
 
+#ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
 	if (!(CS(casingowner).cvar_cl_casings))

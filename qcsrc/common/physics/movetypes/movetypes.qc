@@ -509,10 +509,11 @@ bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool 
 {
 	_Movetype_PushEntityTrace(this, push);
 
+	// NOTE: this is a workaround for the QC's lack of a worldstartsolid trace parameter
 	if(trace_startsolid && failonstartsolid)
 	{
 		int oldtype = this.move_nomonsters;
-		this.move_nomonsters = MOVE_NOMONSTERS;
+		this.move_nomonsters = MOVE_WORLDONLY;
 		_Movetype_PushEntityTrace(this, push);
 		this.move_nomonsters = oldtype;
 		if(trace_startsolid)
@@ -527,7 +528,7 @@ bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool 
 		_Movetype_LinkEdict(this, true);
 
 	if(trace_fraction < 1)
-		if(this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
+		if(this.solid >= SOLID_TRIGGER && trace_ent && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
 			_Movetype_Impact(this, trace_ent);
 
 	return (this.origin == last_origin); // false if teleported by touch

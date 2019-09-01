@@ -43,8 +43,12 @@ const int MAX_CL_STATS = 256;
 #endif
 
 #ifdef SVQC
+/// all the weapons actually spawned in the map, does not include filtered items
 vector weaponsInMap;
+/// all the weapons placed by the mapper (weaponreplace applied), ignores most filters
+vector weaponsInMapAll;
 #endif
+
 REGISTER_STAT(WEAPONS, vectori)
 REGISTER_STAT(WEAPONSINMAP, vectori, weaponsInMap)
 
@@ -370,14 +374,6 @@ int autocvar_sv_wallclip;
 #endif
 REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
 
-
-#ifdef CSQC
-noref int autocvar_cl_gunalign;
-#endif
-#ifdef SVQC
-.int cvar_cl_gunalign;
-REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
-#endif
 REGISTER_STAT(GUNALIGN, int)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))
