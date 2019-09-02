@@ -472,7 +472,7 @@ void CheckPlayerJump(entity this)
 
 		bool air_jump = !playerjump || M_ARGV(2, bool);
 		bool activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
-		bool has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO);
+		bool has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_AMMO);
 
 		if (!(ITEMS_STAT(this) & ITEM_Jetpack.m_itemid)) { }
 		else if (this.jetpack_stopped) { }
@@ -785,7 +785,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);
 
 	fvel = min(1, vlen(wishvel) / best);
-	if (PHYS_JETPACK_FUEL(this) && !(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
+	if (PHYS_JETPACK_FUEL(this) && !(ITEMS_STAT(this) & IT_UNLIMITED_AMMO))
 		f = min(1, PHYS_AMMO_FUEL(this) / (PHYS_JETPACK_FUEL(this) * dt * fvel));
 	else
 		f = 1;
@@ -798,7 +798,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 		UNSET_ONGROUND(this);
 
 #ifdef SVQC
-		if (!(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
+		if (!(ITEMS_STAT(this) & IT_UNLIMITED_AMMO))
 			TakeResource(this, RES_FUEL, PHYS_JETPACK_FUEL(this) * dt * fvel * f);
 
 		ITEMS_STAT(this) |= IT_USING_JETPACK;

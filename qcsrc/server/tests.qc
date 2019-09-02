@@ -23,7 +23,7 @@ TEST(Weapons, Hurt)
 
     it = a;
     PHYS_INPUT_BUTTON_ATCK(it) = true;
-    it.items |= IT_UNLIMITED_BOTH;
+    it.items |= IT_UNLIMITED_AMMO;
     Weapon wep = WEP_VORTEX;
     W_GiveWeapon(it, wep.m_id);
     W_SwitchWeapon_Force(it, wep, weaponentities[0]);
