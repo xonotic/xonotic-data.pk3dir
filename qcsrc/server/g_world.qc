@@ -293,6 +293,8 @@ void cvar_changes_init()
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
 		BADCVAR("g_mapinfo_ignore_warnings");
+		BADCVAR("g_maplist_ignore_sizes");
+		BADCVAR("g_maplist_sizes_count_bots");
 
 		// long
 		BADCVAR("hostname");
@@ -406,6 +408,7 @@ void cvar_changes_init()
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
+		BADCVAR("g_ctf_fullbrightflags");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
@@ -1049,18 +1052,21 @@ bool MapHasRightSize(string map)
 	// open map size restriction file
 	string opensize_msg = strcat("opensize ", map);
 	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
+	int pcount = player_count;
+	if(!autocvar_g_maplist_sizes_count_bots)
+		pcount -= currentbots;
 	if(fh >= 0)
 	{
 		opensize_msg = strcat(opensize_msg, ": ok, ");
 		int mapmin = stoi(fgets(fh));
 		int mapmax = stoi(fgets(fh));
 		fclose(fh);
-		if(player_count < mapmin)
+		if(pcount < mapmin)
 		{
 			LOG_TRACE(opensize_msg, "not enough");
 			return false;
 		}
-		if(mapmax && player_count > mapmax)
+		if(mapmax && pcount > mapmax)
 		{
 			LOG_TRACE(opensize_msg, "too many");
 			return false;
