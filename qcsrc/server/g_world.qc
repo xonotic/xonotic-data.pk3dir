@@ -293,6 +293,8 @@ void cvar_changes_init()
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
 		BADCVAR("g_mapinfo_ignore_warnings");
+		BADCVAR("g_maplist_ignore_sizes");
+		BADCVAR("g_maplist_sizes_count_bots");
 
 		// long
 		BADCVAR("hostname");
@@ -1049,6 +1051,9 @@ bool MapHasRightSize(string map)
 	// open map size restriction file
 	string opensize_msg = strcat("opensize ", map);
 	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
+	int pcount = player_count;
+	if(!autocvar_g_maplist_sizes_count_bots)
+		pcount -= currentbots;
 	if(fh >= 0)
 	{
 		opensize_msg = strcat(opensize_msg, ": ok, ");
