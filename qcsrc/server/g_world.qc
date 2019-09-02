@@ -293,6 +293,8 @@ void cvar_changes_init()
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
 		BADCVAR("g_mapinfo_ignore_warnings");
+		BADCVAR("g_maplist_ignore_sizes");
+		BADCVAR("g_maplist_sizes_count_bots");
 
 		// long
 		BADCVAR("hostname");
@@ -406,6 +408,7 @@ void cvar_changes_init()
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
+		BADCVAR("g_ctf_fullbrightflags");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
