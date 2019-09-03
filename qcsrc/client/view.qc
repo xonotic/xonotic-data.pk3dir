@@ -714,7 +714,7 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-int WantEventchase(entity this)
+int WantEventchase(entity this, bool want_vehiclechase)
 {
 	if(autocvar_cl_orthoview)
 		return 0;
@@ -724,7 +724,7 @@ int WantEventchase(entity this)
 		return 1;
 	if(spectatee_status >= 0)
 	{
-		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
+		if(want_vehiclechase)
 			return 1;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return 1;
@@ -1671,7 +1671,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		else if(autocvar_chase_active == -2)
 			cvar_set("chase_active", "0");
 
-		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
+		bool vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 
 		float vehicle_viewdist = 0;
 		vector vehicle_viewofs = '0 0 0';
@@ -1683,10 +1683,14 @@ void CSQC_UpdateView(entity this, float w, float h)
 				Vehicle info = Vehicles_from(hud);
 				vehicle_viewdist = info.height;
 				vehicle_viewofs = info.view_ofs;
+				if(vehicle_viewdist < 0) // when set below 0, this vehicle doesn't use third person view (gunner slots)
+					vehicle_chase = false;
 			}
+			else
+				vehicle_chase = false;
 		}
 
-		int eventchase = WantEventchase(this);
+		int eventchase = WantEventchase(this, vehicle_chase);
 		if (eventchase)
 		{
 			vector current_view_origin_override = '0 0 0';
