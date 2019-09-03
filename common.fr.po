@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-07-14 15:44+0000\n"
+"PO-Revision-Date: 2019-08-29 09:07+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -143,7 +143,7 @@ msgstr "^1La partie a déjà commencé"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 msgid "^1You have no more lives left"
-msgstr "^1Vous n'avez plus aucune vie"
+msgstr "^1Il ne vous reste plus aucune vie"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/client/hud/panel/infomessages.qc:133
@@ -9289,7 +9289,7 @@ msgstr "Retourner la vue horizontalement"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:68
 msgid "Poor man's left handed mode"
-msgstr "Mode mirroir"
+msgstr "Mode miroir"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "Anisotropy:"

@@ -980,7 +980,7 @@ void HUD_Crosshair(entity this)
 			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
 			{
 				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
-				if(trace_ent == csqcplayer)
+				if(trace_ent == csqcplayer && STAT(HEALTH) > 0)
 					csqcplayer.alpha = crosshair_chase_playeralpha;
 				else
 					csqcplayer.alpha = csqcplayer.m_alpha;
