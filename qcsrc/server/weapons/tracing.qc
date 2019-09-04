@@ -330,7 +330,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
+void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect, bool do_antilag)
 {
 	vector  end;
 
@@ -343,12 +343,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	float solid_penetration_left = 1;
 	float total_damage = 0;
 
-	float lag = ((IS_REAL_CLIENT(this)) ? ANTILAG_LATENCY(this) : 0);
-	if(lag < 0.001)
-		lag = 0;
-	bool noantilag = ((IS_CLIENT(this)) ? CS(this).cvar_cl_noantilag : false);
-	if(autocvar_g_antilag == 0 || noantilag)
-		lag = 0; // only do hitscan, but no antilag
+	float lag = ((do_antilag) ? antilag_getlag(this) : 0);
 	if(lag)
 		antilag_takeback_all(this, lag);
 
@@ -472,4 +467,9 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	// restore shooter solid type
 	if(this)
 		this.dphitcontentsmask = oldsolid;
+}
+
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
+{
+	fireBullet_antilag(this, weaponentity, start, dir, spread, max_solid_penetration, damage, force, dtype, tracer_effect, true);
 }
