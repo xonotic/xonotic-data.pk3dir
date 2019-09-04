@@ -266,6 +266,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_duel");
+		BADCVAR("g_duel_not_dm_maps");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
@@ -286,6 +287,7 @@ void cvar_changes_init()
 		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
+		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
