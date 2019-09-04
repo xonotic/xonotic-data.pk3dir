@@ -89,6 +89,9 @@ void havocbot_ai(entity this)
 		bot_strategytoken_taken = true;
 	}
 
+	if (this.goalcurrent && wasfreed(this.goalcurrent))
+		navigation_clearroute(this);
+
 	if(IS_DEAD(this) || STAT(FROZEN, this))
 	{
 		if (this.goalcurrent)
