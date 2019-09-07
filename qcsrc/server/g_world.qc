@@ -431,6 +431,7 @@ void cvar_changes_init()
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
 		BADCVAR("g_player_brightness");
+		BADCVAR("g_rocket_flying");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
