@@ -11,7 +11,7 @@ MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 	if(autocvar_g_rocket_flying_disabledelays && (proj.classname == "rocket" || proj.classname == "mine"))
 	{
 		// kill detonate delay of rockets
-		proj.spawnshieldtime = time;
+		proj.spawnshieldtime = -1;
 	}
 }
 
