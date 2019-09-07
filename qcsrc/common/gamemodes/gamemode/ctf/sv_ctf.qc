@@ -440,7 +440,8 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 	// reset the flag
 	setattachment(flag, NULL, "");
-	setorigin(flag, player.origin + FLAG_DROP_OFFSET);
+	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+	setorigin(flag, trace_endpos);
 	flag.owner.flagcarried = NULL;
 	GameRules_scoring_vip(flag.owner, false);
 	flag.owner = NULL;
