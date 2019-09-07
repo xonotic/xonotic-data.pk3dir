@@ -1231,3 +1231,10 @@ MUTATOR_HOOKABLE(GetPlayerLimit, EV_GetPlayerLimit);
     /**/                  o(string, MUTATOR_ARGV_1_string) \
     /**/
 MUTATOR_HOOKABLE(LogDeath_AppendItemCodes, EV_LogDeath_AppendItemCodes);
+
+/** Allows disabling or enabling rocket jumping independently of balance, use the parameter to force a preferred setting */
+#define EV_AllowRocketJumping(i, o) \
+    /** allow_rocketjump */         i(bool, MUTATOR_ARGV_0_bool) \
+    /**/                            o(bool, MUTATOR_ARGV_0_bool) \
+    /**/
+MUTATOR_HOOKABLE(AllowRocketJumping, EV_AllowRocketJumping);

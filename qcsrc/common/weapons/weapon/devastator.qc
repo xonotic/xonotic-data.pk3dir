@@ -71,8 +71,11 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 
 	bool handled_as_rocketjump = false;
 	entity head = NULL;
+	bool allow_rocketjump = WEP_CVAR(devastator, remote_jump);
+	MUTATOR_CALLHOOK(AllowRocketJumping, allow_rocketjump);
+	allow_rocketjump = M_ARGV(0, bool);
 
-	if(WEP_CVAR(devastator, remote_jump_radius))
+	if(allow_rocketjump && WEP_CVAR(devastator, remote_jump_radius))
 	{
 		head = WarpZone_FindRadius(
 			this.origin,

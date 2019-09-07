@@ -40,6 +40,7 @@ CLASS(Devastator, Weapon)
         P(class, prefix, remote_damage, float, NONE) \
         P(class, prefix, remote_edgedamage, float, NONE) \
         P(class, prefix, remote_force, float, NONE) \
+        P(class, prefix, remote_jump, float, NONE) \
         P(class, prefix, remote_jump_damage, float, NONE) \
         P(class, prefix, remote_jump_force, float, NONE) \
         P(class, prefix, remote_jump_radius, float, NONE) \
