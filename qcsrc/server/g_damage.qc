@@ -407,6 +407,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				);
 			}
 
+			if (deathtype == DEATH_HURTTRIGGER.m_id || deathtype == DEATH_LAVA.m_id) {
+				entity achv = attacker.achievements;
+				achv.inc_achievement(achv, "threwaway");
+				achv.announce(achv, attacker, "threwaway");
+			}
+			
 			int f3 = 0;
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;

@@ -43,6 +43,7 @@ void Achievements_set_achievement_value(entity this, string achieve, int value) 
 	if (achieve == "telefrag") this.telefrag = value;
 	if (achieve == "surprise") this.surprise = value;
 	if (achieve == "bitchslap") this.bitchslap = value;
+	if (achieve == "threwaway") this.threwaway = value;
 
 	return;
 }
@@ -78,6 +79,7 @@ int Achievements_get_achievement_value(entity this, string achieve) {
 	if (achieve == "telefrag") return this.telefrag;
 	if (achieve == "surprise") return this.surprise;
 	if (achieve == "bitchslap") return this.bitchslap;
+	if (achieve == "threwaway") return this.threwaway;
 
 	return 0;
 }
@@ -113,6 +115,8 @@ string Achievements_get_achievement_title(string achieve) {
 	if (achieve == "telefrag") return "Unexpected Kill!";
 	if (achieve == "surprise") return "Surprise!";
 	if (achieve == "bitchslap") return "Bitch Slap!";
+	if (achieve == "threwaway") return "Threw Away!";
+	
 	return "";
 }
 
