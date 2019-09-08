@@ -901,21 +901,22 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	}
 
 	if (IS_DEAD(targ) && IS_PLAYER(attacker)) {
+		
 		if (targ != attacker) {
 			attacker.check_suicide = 1;
 			attacker.suicide = 0;
 		} else {
 			attacker.suicide = 1;
 		}
-	}
 
-	if(deathtype == DEATH_TELEFRAG.m_id) {
-		entity att_achv = attacker.achievements;
-		entity trg_achv = targ.achievements;
-		att_achv.inc_achievement(att_achv, "telefrag");
-		trg_achv.inc_achievement(trg_achv, "surprise");
-		att_achv.announce(att_achv, attacker, "telefrag");
-		trg_achv.announce(trg_achv, targ, "surprise");
+		if (deathtype == DEATH_TELEFRAG.m_id) {
+			entity att_achv = attacker.achievements;
+			entity trg_achv = targ.achievements;
+			att_achv.inc_achievement(att_achv, "telefrag");
+			trg_achv.inc_achievement(trg_achv, "surprise");
+			att_achv.announce(att_achv, attacker, "telefrag");
+			trg_achv.announce(trg_achv, targ, "surprise");
+		}
 	}
 }
 
