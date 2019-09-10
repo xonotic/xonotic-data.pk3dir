@@ -7,6 +7,11 @@ const int DB_BUCKETS = 8192;
 ERASEABLE
 void db_save(int db, string filename)
 {
+        string lock_filename = strcat(filename, ".lock");
+        int fh_lock = fopen(lock_filename, FILE_WRITE);
+        fputs(fh_lock, "LOCKED\n");
+        fclose(fh_lock);
+
 	int fh = fopen(filename, FILE_WRITE);
 	if (fh < 0)
 	{
@@ -17,6 +22,9 @@ void db_save(int db, string filename)
 	for (int i = 0, n = buf_getsize(db); i < n; ++i)
 		fputs(fh, strcat(bufstr_get(db, i), "\n"));
 	fclose(fh);
+                fh_lock = fopen(lock_filename, FILE_WRITE);
+        fputs(fh_lock, "UNLOCKED\n");
+        fclose(fh_lock);
 }
 
 USING(HashMap, int);
