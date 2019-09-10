@@ -324,9 +324,9 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 	// store new ranking
 	race_writeTime(GetMapname(), t, myuid);
 
-	if (newpos == 1 && showmessage)
+	if (showmessage)
 	{
-		write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
+                write_recordmarker(e, newpos, time - TIME_DECODE(t), TIME_DECODE(t));
 		race_send_recordtime(MSG_ALL);
 	}
 

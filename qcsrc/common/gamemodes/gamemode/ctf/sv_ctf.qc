@@ -118,7 +118,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 		ctf_captimerecord = cap_time;
 		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
 		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
-		write_recordmarker(player, flag.ctf_pickuptime, cap_time);
+		write_recordmarker(player, 1, flag.ctf_pickuptime, cap_time);
 	}
 
 	if(autocvar_g_ctf_leaderboard && !ctf_oneflag)

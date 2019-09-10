@@ -34,7 +34,7 @@ float cvar_normal(string n)
 entity eliminatedPlayers;
 void EliminatedPlayers_Init(float(entity) isEliminated_func);
 
-void write_recordmarker(entity pl, float tstart, float dt);
+void write_recordmarker(entity pl, float newpos, float tstart, float dt);
 
 void play2all(string samp);
 
