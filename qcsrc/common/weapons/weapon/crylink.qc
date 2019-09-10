@@ -45,7 +45,8 @@ void W_Crylink_Dequeue(entity e)
 
 void W_Crylink_DeleteLink(entity this)
 {
-	W_Crylink_Dequeue(this);
+	if(this.classname != "spike_oktoremove")
+		W_Crylink_Dequeue(this);
 	delete_fn(this);
 }
 
