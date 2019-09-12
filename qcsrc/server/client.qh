@@ -98,7 +98,7 @@ CLASS(Client, Object)
     ATTRIB(Client, zoomstate, bool, this.zoomstate);
     ATTRIB(Client, just_joined, bool, this.just_joined);
     ATTRIB(Client, race_completed, bool, this.race_completed);
-    ATTRIBARRAY(Client, msg_choice_choices, int, 50); // TODO: actually NOTIF_CHOICE_MAX
+    ATTRIBARRAY(Client, msg_choice_choices, int, 20); // TODO: actually NOTIF_CHOICE_MAX
     ATTRIB(Client, latency_sum, float, this.latency_sum);
     ATTRIB(Client, latency_cnt, int, this.latency_cnt);
     ATTRIB(Client, latency_time, float, this.latency_time);
@@ -139,6 +139,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_weaponimpulsemode, int, this.cvar_cl_weaponimpulsemode);
     ATTRIB(Client, cvar_g_xonoticversion, string, this.cvar_g_xonoticversion);
     ATTRIB(Client, autoswitch, bool, this.autoswitch);
+    ATTRIB(Client, cvar_cl_casings, bool, this.cvar_cl_casings);
     ATTRIB(Client, cvar_cl_dodging_timeout, float, this.cvar_cl_dodging_timeout);
     ATTRIB(Client, cvar_cl_multijump, bool, this.cvar_cl_multijump);
     ATTRIB(Client, cvar_cl_accuracy_data_share, bool, this.cvar_cl_accuracy_data_share);

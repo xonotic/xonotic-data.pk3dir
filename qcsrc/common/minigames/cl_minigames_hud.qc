@@ -219,7 +219,7 @@ bool HUD_MinigameMenu_Click_ExpandCollapse(entity this)
 	{
 		for ( e = HUD_MinigameMenu_entries; e != NULL; e = e.list_next )
 		{
-			if ( e.flags & 2 && e.origin_x == this.origin_x)
+			if ( (e.flags & 2) && e.origin_x == this.origin_x)
 				HUD_MinigameMenu_Click(e);
 		}
 

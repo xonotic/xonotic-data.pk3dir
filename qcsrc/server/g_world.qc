@@ -266,6 +266,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_duel");
+		BADCVAR("g_duel_not_dm_maps");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
@@ -283,8 +284,10 @@ void cvar_changes_init()
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
 		BADCVAR("g_runematch");
+		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
+		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
@@ -292,6 +295,8 @@ void cvar_changes_init()
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
 		BADCVAR("g_mapinfo_ignore_warnings");
+		BADCVAR("g_maplist_ignore_sizes");
+		BADCVAR("g_maplist_sizes_count_bots");
 
 		// long
 		BADCVAR("hostname");
@@ -320,6 +325,7 @@ void cvar_changes_init()
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("condump_stripcolors");
 		BADCVAR("gameversion");
+		BADCVAR("fs_gamedir");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_buffs_pickup_anyway");
@@ -339,10 +345,12 @@ void cvar_changes_init()
 		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_new_toys_autoreplace");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
 		BADCVAR("g_piggyback");
 		BADCVAR("g_playerclip_collisions");
+		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
@@ -402,6 +410,7 @@ void cvar_changes_init()
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
+		BADCVAR("g_ctf_fullbrightflags");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
@@ -421,6 +430,9 @@ void cvar_changes_init()
 		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
+		BADCVAR("g_player_brightness");
+		BADCVAR("g_rocket_flying");
+		BADCVAR("g_rocket_flying_disabledelays");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
@@ -473,6 +485,18 @@ void cvar_changes_init()
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
+
+		// temporary for testing
+		// TODO remove before 0.8.3 release
+		BADCVAR("g_ca_weaponarena");
+		BADCVAR("g_freezetag_weaponarena");
+		BADCVAR("g_lms_weaponarena");
+
+		if(cvar_string("g_mod_balance") == "Testing")
+		{
+			// (temporary) while using the Testing balance, any weapon balance cvars are allowed to be changed
+			BADPREFIX("g_balance_");
+		}
 
 #undef BADPRESUFFIX
 #undef BADPREFIX
@@ -860,8 +884,14 @@ spawnfunc(worldspawn)
 					continue;
 				if(argv(0) == "cd")
 				{
+					string trackname = argv(2);
 					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:");
-					LOG_INFO("  cdtrack ", argv(2));
+					LOG_INFO("  cdtrack ", trackname);
+					if (cvar_value_issafe(trackname))
+					{
+						string newstuff = strcat(clientstuff, "cd loop \"", trackname, "\"\n");
+						strcpy(clientstuff, newstuff);
+					}
 				}
 				else if(argv(0) == "fog")
 				{
@@ -947,7 +977,7 @@ spawnfunc(worldspawn)
 	// physics/balance/config changes that count as mod
 	if(cvar_string("g_mod_physics") != cvar_defstring("g_mod_physics"))
 		modname = cvar_string("g_mod_physics");
-	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance"))
+	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance") && cvar_string("g_mod_balance") != "Testing")
 		modname = cvar_string("g_mod_balance");
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
@@ -984,22 +1014,27 @@ float Map_Count, Map_Current;
 string Map_Current_Name;
 
 // NOTE: this now expects the map list to be already tokenized and the count in Map_Count
-float GetMaplistPosition()
+int GetMaplistPosition()
 {
-	float pos, idx;
-	string map;
-
-	map = GetMapname();
-	idx = autocvar_g_maplist_index;
+	string map = GetMapname();
+	int idx = autocvar_g_maplist_index;
 
 	if(idx >= 0)
+	{
 		if(idx < Map_Count)
+		{
 			if(map == argv(idx))
+			{
 				return idx;
+			}
+		}
+	}
 
-	for(pos = 0; pos < Map_Count; ++pos)
+	for(int pos = 0; pos < Map_Count; ++pos)
+	{
 		if(map == argv(pos))
 			return pos;
+	}
 
 	// resume normal maplist rotation if current map is not in g_maplist
 	return idx;
@@ -1022,21 +1057,27 @@ bool MapHasRightSize(string map)
 		LOG_TRACE(checkwp_msg, ": has waypoints");
 	}
 
+	if(autocvar_g_maplist_ignore_sizes)
+		return true;
+
 	// open map size restriction file
 	string opensize_msg = strcat("opensize ", map);
 	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
+	int pcount = player_count;
+	if(!autocvar_g_maplist_sizes_count_bots)
+		pcount -= currentbots;
 	if(fh >= 0)
 	{
 		opensize_msg = strcat(opensize_msg, ": ok, ");
 		int mapmin = stoi(fgets(fh));
 		int mapmax = stoi(fgets(fh));
 		fclose(fh);
-		if(player_count < mapmin)
+		if(pcount < mapmin)
 		{
 			LOG_TRACE(opensize_msg, "not enough");
 			return false;
 		}
-		if(mapmax && player_count > mapmax)
+		if(mapmax && pcount > mapmax)
 		{
 			LOG_TRACE(opensize_msg, "too many");
 			return false;
@@ -1199,18 +1240,25 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 
 void Maplist_Init()
 {
-	Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-	float i;
-	for (i = 0; i < Map_Count; ++i)
-		if (Map_Check(i, 2))
-			break;
+	float i = Map_Count = 0;
+	if(autocvar_g_maplist != "")
+	{
+		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		for (i = 0; i < Map_Count; ++i)
+		{
+			if (Map_Check(i, 2))
+				break;
+		}
+	}
+	
 	if (i == Map_Count)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
 		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags() | MAPINFO_FLAG_NOAUTOMAPLIST));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
-		localcmd("\nmenu_cmd sync\n");
+		if(!server_is_dedicated)
+			localcmd("\nmenu_cmd sync\n");
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 	}
 	if(Map_Count == 0)
@@ -1224,10 +1272,8 @@ void Maplist_Init()
 
 string GetNextMap()
 {
-	float nextMap;
-
 	Maplist_Init();
-	nextMap = -1;
+	float nextMap = -1;
 
 	if(nextMap == -1)
 		if(autocvar_g_maplist_shuffle > 0)
@@ -1322,9 +1368,7 @@ void GotoNextMap(float reinit)
 		return;
 	alreadychangedlevel = true;
 
-	string nextMap;
-
-	nextMap = GetNextMap();
+	string nextMap = GetNextMap();
 	if(nextMap == "")
 		error("Everything is broken - cannot find a next map. Please report this to the developers.");
 	Map_Goto(reinit);

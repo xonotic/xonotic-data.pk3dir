@@ -40,10 +40,12 @@
 #endif
 
 #ifdef CSQC
+	float cvar_cl_dodging_timeout;
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
 	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 #elif defined(SVQC)
+	.float cvar_cl_dodging_timeout;
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING_TIMEOUT(s) 			CS(s).cvar_cl_dodging_timeout
 	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
@@ -55,8 +57,6 @@ bool autocvar_sv_dodging_sound;
 
 #include <common/animdecide.qh>
 #include <common/physics/player.qh>
-
-.float cvar_cl_dodging_timeout;
 
 REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 {

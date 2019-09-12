@@ -5,6 +5,9 @@ void Inventory_delete(entity this);
 
 void PlayerState_attach(entity this)
 {
+	if (PS(this))
+		return;
+
 	this._ps = NEW(PlayerState, this);
 
 	Inventory_new(PS(this));
@@ -37,8 +40,6 @@ void bot_clientconnect(entity this);
 void ClientState_attach(entity this)
 {
 	this._cs = NEW(ClientState, this);
-
-    GetCvars(this, CS(this), 0);  // get other cvars from player
 
 	// TODO: fold all of these into ClientState
 

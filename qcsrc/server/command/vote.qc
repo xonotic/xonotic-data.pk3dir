@@ -345,6 +345,11 @@ void reset_map(bool dorespawn)
 			round_handler_Reset(game_starttime);
 	}
 
+	if (shuffleteams_on_reset_map)
+	{
+		shuffleteams();
+		shuffleteams_on_reset_map = false;
+	}
 	MUTATOR_CALLHOOK(reset_map_global);
 
 	FOREACH_ENTITY_FLOAT_ORDERED(pure_data, false,
@@ -435,6 +440,8 @@ void ReadyRestart_force()
 	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
+	if(warmup_stage)
+		localcmd("\nsv_hook_warmupend\n");
 	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)

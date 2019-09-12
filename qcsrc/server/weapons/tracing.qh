@@ -57,4 +57,5 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 entity fireBullet_trace_callback_eff;
 entity fireBullet_last_hit;
 void fireBullet_trace_callback(vector start, vector hit, vector end);
+void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect, bool do_antilag);
 void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect);
