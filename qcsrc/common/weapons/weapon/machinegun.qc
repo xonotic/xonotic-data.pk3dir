@@ -192,8 +192,8 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 {
     // forced reload - wait until the bulletcounter is 0 so a burst loop can finish
     if(WEP_CVAR(machinegun, reload_ammo)
-    && actor.(weaponentity).clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))
-    && actor.(weaponentity).misc_bulletcounter >= 0)
+        && actor.(weaponentity).clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))
+        && actor.(weaponentity).misc_bulletcounter >= 0)
     {
         thiswep.wr_reload(thiswep, actor, weaponentity);
     }
