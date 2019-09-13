@@ -36,7 +36,8 @@ CLASS(OffhandMageTeleport, OffhandWeapon)
         player.OffhandMageTeleport_key_pressed = key_pressed;
     }
 ENDCLASS(OffhandMageTeleport)
-OffhandMageTeleport OFFHAND_MAGE_TELEPORT; STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
+OffhandMageTeleport OFFHAND_MAGE_TELEPORT;
+STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
 
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_damageforcescale = 0.5;

@@ -23,7 +23,7 @@ REGISTER_MONSTER(MAGE, NEW(Mage));
 #include <common/items/_mod.qh>
 
 CLASS(MageSpike, PortoLaunch)
-/* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(MageSpike, impulse, int, 9);
 /* refname   */ ATTRIB(MageSpike, netname, string, "magespike");
 /* wepname   */ ATTRIB(MageSpike, m_name, string, _("Mage spike"));

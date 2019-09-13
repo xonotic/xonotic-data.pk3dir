@@ -1089,15 +1089,12 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	if(trace_ent && IS_MONSTER(trace_ent))
 		reverse = true;
 
-	// TODO: fix this... tracing is broken if the floor is thin
-	/*
-	if(!allow_jumpoff)
+	if(!allow_jumpoff && IS_ONGROUND(this))
 	{
-		a = b - '0 0 32';
-		traceline(b, a, MOVE_WORLDONLY, this);
+		traceline(b, b - '0 0 32', MOVE_NORMAL, this);
 		if(trace_fraction == 1.0)
 			reverse = true;
-	} */
+	}
 
 	if(reverse)
 	{
@@ -1315,7 +1312,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
-	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED) && !(this.flags & FL_MONSTER))
 	{
 		IL_PUSH(g_monsters, this);
 		if(this.mdl && this.mdl != "")

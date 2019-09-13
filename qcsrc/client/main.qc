@@ -143,6 +143,8 @@ void CSQC_Init()
 	registercvar("cl_weapon_switch_reload", "1");
 	registercvar("cl_weapon_switch_fallback_to_impulse", "1");
 
+	registercvar("cl_allow_uidranking", "1");
+
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
 
@@ -230,6 +232,8 @@ void Shutdown()
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
+
+	ReplicateVars(true); // destroy
 }
 
 .float has_team;
