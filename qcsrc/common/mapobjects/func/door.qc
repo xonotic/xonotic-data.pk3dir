@@ -735,12 +735,9 @@ spawnfunc(func_door)
         {
                 this.speed = 750;
         }
-        else
+        else if (!this.speed)
         {
-                if (!this.speed)
-                {
-                        this.speed = 100;
-                }
+                this.speed = 100;
         }
 
 	settouch(this, door_touch);
