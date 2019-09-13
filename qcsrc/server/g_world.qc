@@ -492,7 +492,7 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag_weaponarena");
 		BADCVAR("g_lms_weaponarena");
 
-		if(cvar_string("g_mod_balance") == "Testing")
+		if(startsWith(cvar_string("g_mod_balance"), "Testing"))
 		{
 			// (temporary) while using the Testing balance, any weapon balance cvars are allowed to be changed
 			BADPREFIX("g_balance_");
@@ -977,7 +977,7 @@ spawnfunc(worldspawn)
 	// physics/balance/config changes that count as mod
 	if(cvar_string("g_mod_physics") != cvar_defstring("g_mod_physics"))
 		modname = cvar_string("g_mod_physics");
-	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance") && cvar_string("g_mod_balance") != "Testing")
+	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance") && !startsWith(cvar_string("g_mod_balance"), "Testing"))
 		modname = cvar_string("g_mod_balance");
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
