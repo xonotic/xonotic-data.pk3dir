@@ -674,12 +674,9 @@ void door_init_shared(entity this)
         {
                  this.wait = -1;
         }
-        else
+        else if (!this.wait)
         {
-                 if (!this.wait)
-                 {
-                 	this.wait = 3;
-                 }
+              	this.wait = 3;
         }
 
 	if (!this.lip)
