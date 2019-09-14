@@ -490,7 +490,7 @@ void(string s) changelevel = #70;
 
 //#71 was removed
 
-void(string var_, string val) cvar_set = #72;	// sets cvar.value
+void(string var, string val) cvar_set = #72;	// sets cvar.value
 
 void(entity client, string s, ...) centerprint = #73;	// sprint, but in middle
 
