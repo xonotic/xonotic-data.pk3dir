@@ -1069,7 +1069,7 @@ string getwelcomemessage(entity this)
 	return s;
 }
 
-bool autocvar_sv_qcphysics = false; // TODO this is for testing - remove when qcphysics work
+bool autocvar_sv_qcphysics = true; // TODO this is for testing - remove when qcphysics work
 
 /**
 =============
@@ -2388,6 +2388,7 @@ Called every frame for each client before the physics are run
 =============
 */
 .float last_vehiclecheck;
+void Player_Physics(entity this);
 void PlayerPreThink (entity this)
 {
 	STAT(GUNALIGN, this) = CS(this).cvar_cl_gunalign; // TODO
@@ -2589,6 +2590,8 @@ void PlayerPreThink (entity this)
 		if(this.(weaponentity).m_weapon == WEP_Null)
 			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
 	}
+
+	Player_Physics(this);
 }
 
 void DrownPlayer(entity this)
@@ -2614,9 +2617,11 @@ void DrownPlayer(entity this)
 
 .bool move_qcphysics;
 
+.vector morigin, mvelocity;
+
 void Player_Physics(entity this)
 {
-	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCPLAYER : this.move_movetype;
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_WALK : this.move_movetype;
 
 	if(!this.move_qcphysics)
 		return;
@@ -2624,9 +2629,26 @@ void Player_Physics(entity this)
 	if(!frametime && !CS(this).pm_frametime)
 		return;
 
+	vector old_origin = this.origin;
+	vector old_angles = this.angles;
+	vector old_vangle = this.v_angle;
+	vector old_velocity = this.velocity;
+	vector old_avelocity = this.avelocity;
+	int old_flags = this.flags;
 	Movetype_Physics_NoMatchTicrate(this, CS(this).pm_frametime, true);
 
 	CS(this).pm_frametime = 0;
+
+	//if(this.velocity)
+		//LOG_INFO("QC physics origin: ", vtos(this.origin), ", velocity: ", vtos(this.velocity));
+	this.morigin = this.origin;
+	this.mvelocity = this.velocity;
+	setorigin(this, old_origin);
+	this.angles = old_angles;
+	this.v_angle = old_vangle;
+	this.velocity = old_velocity;
+	this.avelocity = old_avelocity;
+	this.flags = old_flags;
 }
 
 /*
@@ -2638,7 +2660,10 @@ Called every frame for each client after the physics are run
 */
 void PlayerPostThink (entity this)
 {
-	Player_Physics(this);
+	//if(this.velocity)
+		//LOG_INFO("Engine physics origin: ", vtos(this.origin), ", velocity: ", vtos(this.velocity));
+	if(this.morigin != this.origin || this.velocity != this.mvelocity)
+		LOG_INFOF("DIFFERS: QC %v %v, Engine %v %v", this.morigin, this.mvelocity, this.origin, this.velocity);
 
 	if (sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
