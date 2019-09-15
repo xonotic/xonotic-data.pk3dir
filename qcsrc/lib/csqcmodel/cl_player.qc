@@ -472,7 +472,37 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 	return v;
 }
 
-bool autocvar_cl_useenginerefdef;
+void CSQCPlayer_CalcRefdef(entity this)
+{
+	vector vieworg = this.origin;
+	if(intermission)
+	{
+		// just update view offset, don't need to do anything else
+		vieworg.z += this.view_ofs.z;
+	}
+	else
+	{
+		vieworg = CSQCPlayer_ApplySmoothing(this, vieworg);
+		if(autocvar_chase_active)
+			vieworg = CSQCPlayer_ApplyChase(this, vieworg);
+		else
+		{
+			// angles
+			CSQCPlayer_ApplyDeathTilt(this);
+			view_angles = view_angles + view_punchangle;
+			view_angles.z += CSQCPlayer_CalcRoll(this);
+			// TODO? we don't have damage time accessible here
+			// origin
+			vieworg = vieworg + view_punchvector;
+			vieworg = CSQCPlayer_ApplyBobbing(this, vieworg);
+		}
+		CSQCPlayer_ApplyIdleScaling(this);
+	}
+	setproperty(VF_ORIGIN, vieworg);
+	setproperty(VF_ANGLES, view_angles);
+}
+
+bool autocvar_cl_useenginerefdef = true;
 
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
@@ -564,32 +594,7 @@ void CSQCPlayer_SetCamera()
 		}
 		else
 		{
-			vector vieworg = view.origin;
-			if(intermission)
-			{
-				// just update view offset, don't need to do anything else
-				vieworg.z += view.view_ofs.z;
-			}
-			else
-			{
-				vieworg = CSQCPlayer_ApplySmoothing(view, vieworg);
-				if(autocvar_chase_active)
-					vieworg = CSQCPlayer_ApplyChase(view, vieworg);
-				else
-				{
-					// angles
-					CSQCPlayer_ApplyDeathTilt(view);
-					view_angles = view_angles + view_punchangle;
-					view_angles.z += CSQCPlayer_CalcRoll(view);
-					// TODO? we don't have damage time accessible here
-					// origin
-					vieworg = vieworg + view_punchvector;
-					vieworg = CSQCPlayer_ApplyBobbing(view, vieworg);
-				}
-				CSQCPlayer_ApplyIdleScaling(view);
-			}
-			setproperty(VF_ORIGIN, vieworg);
-			setproperty(VF_ANGLES, view_angles);
+			CSQCPlayer_CalcRefdef(view);
 		}
 			
 	}
