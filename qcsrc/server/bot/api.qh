@@ -7,13 +7,22 @@
 const int WAYPOINTFLAG_GENERATED = BIT(23);
 const int WAYPOINTFLAG_ITEM = BIT(22);
 const int WAYPOINTFLAG_TELEPORT = BIT(21); // teleports, warpzones and jumppads
-const int WAYPOINTFLAG_NORELINK = BIT(20);
+//const int WAYPOINTFLAG_NORELINK = BIT(20); // deprecated, see explanation below. Do not recycle this bit.
 const int WAYPOINTFLAG_PERSONAL = BIT(19);
 const int WAYPOINTFLAG_PROTECTED = BIT(18);  // Useless WP detection never kills these.
 const int WAYPOINTFLAG_USEFUL = BIT(17);  // Useless WP detection temporary flag.
 const int WAYPOINTFLAG_DEAD_END = BIT(16);  // Useless WP detection temporary flag.
 const int WAYPOINTFLAG_LADDER = BIT(15);
 const int WAYPOINTFLAG_JUMP = BIT(14);
+const int WAYPOINTFLAG_CUSTOM_JP = BIT(13);  // jumppad with different destination waypoint (changed in the editor)
+const int WAYPOINTFLAG_CROUCH = BIT(12);
+const int WAYPOINTFLAG_SUPPORT = BIT(11);
+
+// removed WAYPOINTFLAG_NORELINK since it breaks backward compatibility
+// e.g. support waypoints would have no outgoing links in old Xonotic versions
+// In general, old Xonotic versions should spawn a normal waypoint for each unknown waypoint type
+const int WAYPOINTFLAG_NORELINK__DEPRECATED = BIT(20);
+const int WPFLAGMASK_NORELINK = (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER | WAYPOINTFLAG_JUMP | WAYPOINTFLAG_CUSTOM_JP | WAYPOINTFLAG_SUPPORT);
 
 float bot_custom_weapon;
 float bot_weapons_close[Weapons_MAX];
@@ -48,8 +57,8 @@ float skill;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 .float wpconsidered;
 .float wpcost;
-.float wphardwired;
 .int wpflags;
+.entity wphw00, wphw01, wphw02, wphw03, wphw04, wphw05, wphw06, wphw07;
 
 bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
 void bot_aim_reset(entity this);
@@ -98,6 +107,7 @@ void navigation_goalrating_timeout_set(entity this);
 void navigation_goalrating_timeout_force(entity this);
 void navigation_goalrating_timeout_expire(entity this, float seconds);
 bool navigation_goalrating_timeout(entity this);
+void navigation_goalrating_timeout_extend_if_needed(entity this, float seconds);
 bool navigation_goalrating_timeout_can_be_anticipated(entity this);
 void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
@@ -118,9 +128,11 @@ void waypoint_spawnforitem(entity e);
 void waypoint_spawnforitem_force(entity e, vector org);
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent);
 void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent);
-void waypoint_spawn_fromeditor(entity pl);
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp, bool is_support_wp);
 entity waypoint_spawn(vector m1, vector m2, float f);
 void waypoint_unreachable(entity pl);
+void waypoint_start_hardwiredlink(entity pl, bool at_crosshair);
+void waypoint_lock(entity pl);
 
 void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx);
 void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx);

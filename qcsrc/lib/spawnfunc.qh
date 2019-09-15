@@ -202,8 +202,12 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, target_range) \
 		FIELD_SCALAR(fld, team) \
 		FIELD_SCALAR(fld, trigger_reverse) \
+		FIELD_SCALAR(fld, turret_scale_aim) \
+		FIELD_SCALAR(fld, turret_scale_ammo) \
+		FIELD_SCALAR(fld, turret_scale_damage) \
 		FIELD_SCALAR(fld, turret_scale_health) \
 		FIELD_SCALAR(fld, turret_scale_range) \
+		FIELD_SCALAR(fld, turret_scale_refire) \
 		FIELD_SCALAR(fld, turret_scale_respawn) \
 		FIELD_SCALAR(fld, volume) \
 		FIELD_SCALAR(fld, wait) \

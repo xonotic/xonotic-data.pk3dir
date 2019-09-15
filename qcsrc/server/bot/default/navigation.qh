@@ -10,6 +10,7 @@ float navigation_testtracewalk;
 vector jumpstepheightvec;
 vector stepheightvec;
 vector jumpheight_vec;
+float jumpheight_time;
 
 entity navigation_bestgoal;
 
@@ -29,6 +30,8 @@ entity navigation_bestgoal;
 .float goalcurrent_distance_2d;
 .float goalcurrent_distance_time;
 
+// final goal (item, object or player) is also saved in this field
+.entity goalentity;
 .float goalentity_lock_timeout;
 .bool goalentity_shouldbefrozen;
 

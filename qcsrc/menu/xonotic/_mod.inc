@@ -59,6 +59,7 @@
 #include <menu/xonotic/dialog_sandboxtools.qc>
 #include <menu/xonotic/dialog_settings.qc>
 #include <menu/xonotic/dialog_settings_audio.qc>
+#include <menu/xonotic/dialog_settings_bindings_reset.qc>
 #include <menu/xonotic/dialog_settings_effects.qc>
 #include <menu/xonotic/dialog_settings_game.qc>
 #include <menu/xonotic/dialog_settings_game_crosshair.qc>
@@ -70,7 +71,6 @@
 #include <menu/xonotic/dialog_settings_game_weapons.qc>
 #include <menu/xonotic/dialog_settings_input.qc>
 #include <menu/xonotic/dialog_settings_input_userbind.qc>
-#include <menu/xonotic/dialog_settings_bindings_reset.qc>
 #include <menu/xonotic/dialog_settings_misc.qc>
 #include <menu/xonotic/dialog_settings_misc_cvars.qc>
 #include <menu/xonotic/dialog_settings_misc_reset.qc>

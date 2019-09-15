@@ -324,14 +324,17 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		goto cleanup;
+		delete(this);
+		return;
 	}
 	if (this.cvarfilter != "" && !expr_evaluate(this.cvarfilter)) {
-        goto cleanup;
+		delete(this);
+		return;
 	}
 
 	if (DoesQ3ARemoveThisEntity(this)) {
-		goto cleanup;
+		delete(this);
+		return;
 	}
 
 	set_movetype(this, this.movetype);
@@ -356,11 +359,9 @@ void SV_OnEntityPreSpawnFunction(entity this)
     #undef X
 
 	if (MUTATOR_CALLHOOK(OnEntityPreSpawn, this)) {
-		goto cleanup;
+		delete(this);
+		return;
 	}
-	return;
-LABEL(cleanup)
-    delete(this);
 }
 
 void WarpZone_PostInitialize_Callback()

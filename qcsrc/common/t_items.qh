@@ -1,6 +1,6 @@
 #pragma once
 
-const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
+const int AMMO_COUNT = 4; // amount of ammo types to show in the ammo panel
 
 // item networking
 const int ISF_LOCATION 			= BIT(1);
