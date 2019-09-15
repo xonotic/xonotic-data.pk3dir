@@ -12,6 +12,7 @@ bool autocvar_g_ca_team_spawns;
 //int autocvar_g_ca_teams;
 int autocvar_g_ca_teams_override;
 float autocvar_g_ca_warmup;
+string autocvar_g_ca_weaponarena = "most";
 
 
 int ca_teams;

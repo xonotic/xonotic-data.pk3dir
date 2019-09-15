@@ -111,9 +111,11 @@ vector w_org, w_backoff;
 
 float autoswitch;
 bool cvar_cl_allow_uid2name;
+bool cvar_cl_allow_uidranking;
 float cvar_cl_autoscreenshot;
 float cvar_cl_autotaunt;
 float cvar_cl_clippedspectating;
+int cvar_cl_gunalign;
 float cvar_cl_handicap;
 float cvar_cl_jetpack_jump;
 float cvar_cl_movement_track_canjump;
@@ -129,9 +131,11 @@ bool cvar_cl_weapon_switch_fallback_to_impulse;
 
 REPLICATE(autoswitch, bool, "cl_autoswitch");
 REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
+REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
+REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 REPLICATE(cvar_cl_handicap, float, "cl_handicap");
 REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
 REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
@@ -145,11 +149,6 @@ REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
 REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
 REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
 /*
-// this is also a STAT
-// pointless sending this cvars since server can't change gun alignment during the match
-int cvar_cl_gunalign;
-REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
-
 // cvar cl_newusekeysupported doesn't exist
 float cvar_cl_newusekeysupported;
 REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");

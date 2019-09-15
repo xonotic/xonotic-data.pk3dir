@@ -5,13 +5,14 @@
 # Translators:
 # Çağlar Turalı <caglarturali@gmail.com>, 2018
 # Demiray Muhterem <mdemiray@msn.com>, 2018
+# ibra kap <ibrakap@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-09-11 17:17+0000\n"
+"Last-Translator: ibra kap <ibrakap@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
@@ -253,7 +254,7 @@ msgstr "Devam..."
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "Sohbet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
@@ -488,7 +489,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "Tam Ekran"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 #: qcsrc/client/hud/panel/quickmenu.qc:860

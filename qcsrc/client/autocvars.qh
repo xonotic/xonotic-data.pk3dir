@@ -76,7 +76,7 @@ bool autocvar_cl_spawnzoom = 1;
 float autocvar_cl_spawnzoom_speed = 1;
 float autocvar_cl_spawnzoom_factor = 2;
 bool autocvar_cl_stripcolorcodes;
-bool autocvar_cl_vehicles_alarm = true;
+bool autocvar_cl_vehicles_alarm = false;
 bool autocvar_cl_vehicles_hud_tactical = true;
 float autocvar_cl_vehicles_hudscale = 0.5;
 float autocvar_cl_vehicles_notify_time = 15;

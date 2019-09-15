@@ -71,8 +71,11 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 
 	bool handled_as_rocketjump = false;
 	entity head = NULL;
+	bool allow_rocketjump = WEP_CVAR(devastator, remote_jump);
+	MUTATOR_CALLHOOK(AllowRocketJumping, allow_rocketjump);
+	allow_rocketjump = M_ARGV(0, bool);
 
-	if(WEP_CVAR(devastator, remote_jump_radius))
+	if(allow_rocketjump && WEP_CVAR(devastator, remote_jump_radius))
 	{
 		head = WarpZone_FindRadius(
 			this.origin,
@@ -314,7 +317,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	if(WEP_CVAR(devastator, detonatedelay) >= 0)
 		missile.spawnshieldtime = time + WEP_CVAR(devastator, detonatedelay);
 	else
-		missile.spawnshieldtime = -1;
+		missile.spawnshieldtime = -1; // NOTE: proximity based when rocket jumping
 	missile.pushltime = time + WEP_CVAR(devastator, guidedelay);
 	missile.classname = "rocket";
 	missile.bot_dodge = true;

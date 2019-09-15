@@ -809,7 +809,6 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 			}
 		}
 	}
-
 	if (this)
 	{
 		if (this.wframe == WFRAME_RELOAD) return;

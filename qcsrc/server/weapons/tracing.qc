@@ -330,25 +330,19 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
+void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect, bool do_antilag)
 {
-	vector  end;
-
 	dir = normalize(dir + randomvec() * spread);
-	end = start + dir * max_shot_distance;
+	vector end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
 	fireBullet_trace_callback_eff = tracer_effect;
 
-	float solid_penetration_left = 1;
+	float solid_penetration_fraction = 1;
+	float damage_fraction = 1;
 	float total_damage = 0;
 
-	float lag = ((IS_REAL_CLIENT(this)) ? ANTILAG_LATENCY(this) : 0);
-	if(lag < 0.001)
-		lag = 0;
-	bool noantilag = ((IS_CLIENT(this)) ? CS(this).cvar_cl_noantilag : false);
-	if(autocvar_g_antilag == 0 || noantilag)
-		lag = 0; // only do hitscan, but no antilag
+	float lag = ((do_antilag) ? antilag_getlag(this) : 0);
 	if(lag)
 		antilag_takeback_all(this, lag);
 
@@ -361,7 +355,6 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 
 	for (;;)
 	{
-		// TODO also show effect while tracing
 		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, false, WarpZone_trace_forent, NULL, fireBullet_trace_callback);
 		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
@@ -399,7 +392,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			is_weapclip = true;
 
 		if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
-			Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, this);
+			Damage_DamageInfo(start, damage * damage_fraction, 0, 0, max(1, force) * dir * damage_fraction, dtype, hit.species, this);
 
 		if (hit && hit != WarpZone_trace_forent && hit != fireBullet_last_hit)  // Avoid self-damage (except after going through a warp); avoid hitting the same entity twice (engine bug).
 		{
@@ -408,13 +401,13 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
 			bool gooddamage = accuracy_isgooddamage(this, hit);
-			Damage(hit, this, this, damage * solid_penetration_left, dtype, weaponentity, start, force * dir * solid_penetration_left);
+			Damage(hit, this, this, damage * damage_fraction, dtype, weaponentity, start, force * dir * damage_fraction);
 			// calculate hits for ballistic weapons
 			if(gooddamage)
 			{
 				// do not exceed 100%
-				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
-				total_damage += damage * solid_penetration_left;
+				float added_damage = min(damage - total_damage, damage * damage_fraction);
+				total_damage += damage * damage_fraction;
 				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage);
 			}
 		}
@@ -436,9 +429,9 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 		else if(hitstore.ballistics_density < 0)
 			maxdist = vlen(hit.maxs - hit.mins) + 1; // -1: infinite travel distance
 		else if(hitstore.ballistics_density == 0)
-			maxdist = max_solid_penetration * solid_penetration_left;
+			maxdist = max_solid_penetration * solid_penetration_fraction;
 		else
-			maxdist = max_solid_penetration * solid_penetration_left * hitstore.ballistics_density;
+			maxdist = max_solid_penetration * solid_penetration_fraction / hitstore.ballistics_density;
 
 		if(maxdist <= autocvar_g_ballistics_mindistance)
 			break;
@@ -450,10 +443,10 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			break;
 
 		float dist_taken = max(autocvar_g_ballistics_mindistance, vlen(trace_endpos - start));
-		// fraction_used_of_what_is_left = dist_taken / maxdist
-		// solid_penetration_left = solid_penetration_left - solid_penetration_left * fraction_used_of_what_is_left
-		solid_penetration_left *= 1 - dist_taken / maxdist;
-		solid_penetration_left = max(solid_penetration_left, 0);
+		float fraction_used_of_what_is_left = dist_taken / maxdist;
+		solid_penetration_fraction -= solid_penetration_fraction * fraction_used_of_what_is_left;
+		solid_penetration_fraction = max(solid_penetration_fraction, 0);
+		damage_fraction = pow(solid_penetration_fraction, autocvar_g_ballistics_solidpenetration_exponent);
 
 		// Only show effect when going through a player (invisible otherwise)
 		if (hit && (hit.solid != SOLID_BSP))
@@ -463,7 +456,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 		start = trace_endpos;
 
 		if(hit.solid == SOLID_BSP)
-			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -solid_penetration_left, dtype, 0, this);
+			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -damage_fraction, dtype, 0, this);
 	}
 
 	if(lag)
@@ -472,4 +465,9 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	// restore shooter solid type
 	if(this)
 		this.dphitcontentsmask = oldsolid;
+}
+
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
+{
+	fireBullet_antilag(this, weaponentity, start, dir, spread, max_solid_penetration, damage, force, dtype, tracer_effect, true);
 }

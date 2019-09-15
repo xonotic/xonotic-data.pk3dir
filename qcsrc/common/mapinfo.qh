@@ -594,10 +594,13 @@ CLASS(Duel, Gametype)
     }
     METHOD(Duel, m_isForcedSupported, bool(Gametype this))
     {
-        // force all DM maps to work in duel?!
-        // TODO: we should really check the size of maps, some DM maps do not work for duel!
-        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
-            return true;
+        if(!cvar("g_duel_not_dm_maps"))
+        {
+            // if this is set, all DM maps support duel too
+            // TODO: we should really check the size of maps, some DM maps do not work for duel!
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
         return false;
     }
 ENDCLASS(Duel)
