@@ -291,6 +291,7 @@ void viewmodel_draw(entity this)
 		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
+	int wepskin = this.m_skin;
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
 	Weapon wep = this.activeweapon;
@@ -304,6 +305,7 @@ void viewmodel_draw(entity this)
 	{
 		e.drawmask = mask;
 		e.alpha = a;
+		e.skin = wepskin;
 		e.colormap = 256 + c;  // colormap == 0 is black, c == 0 is white
 		e.glowmod = g;
 		e.csqcmodel_effects = fx;
@@ -601,7 +603,7 @@ float TrueAimCheck(entity wepent)
 {
 	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
 		return SHOTTYPE_HITWORLD;
-	
+
 	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
 	vector mi, ma, dv;
@@ -712,7 +714,7 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-int WantEventchase(entity this)
+int WantEventchase(entity this, bool want_vehiclechase)
 {
 	if(autocvar_cl_orthoview)
 		return 0;
@@ -722,7 +724,7 @@ int WantEventchase(entity this)
 		return 1;
 	if(spectatee_status >= 0)
 	{
-		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
+		if(want_vehiclechase)
 			return 1;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return 1;
@@ -972,6 +974,21 @@ void HUD_Crosshair(entity this)
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
+		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
+		{
+			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
+			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
+			{
+				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
+				float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
+				if(trace_ent == csqcplayer && STAT(HEALTH) > 0)
+					csqcplayer.alpha = min(crosshair_chase_playeralpha, myalpha);
+				else
+					csqcplayer.alpha = csqcplayer.m_alpha;
+			}
+			traceline(player_org, player_org + max_shot_distance * view_forward, MOVE_WORLDONLY, NULL);
+			wcross_origin = project_3d_to_2d(trace_endpos);
+		}
 		else
 			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
@@ -1562,6 +1579,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	lasthud = hud;
 
+	ReplicateVars(false);
+	if (ReplicateVars_NOT_SENDING())
+		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
+
 	HUD_Scale_Disable();
 
 	if(autocvar__hud_showbinds_reload) // menu can set this one
@@ -1651,7 +1672,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		else if(autocvar_chase_active == -2)
 			cvar_set("chase_active", "0");
 
-		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
+		bool vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 
 		float vehicle_viewdist = 0;
 		vector vehicle_viewofs = '0 0 0';
@@ -1663,10 +1684,14 @@ void CSQC_UpdateView(entity this, float w, float h)
 				Vehicle info = Vehicles_from(hud);
 				vehicle_viewdist = info.height;
 				vehicle_viewofs = info.view_ofs;
+				if(vehicle_viewdist < 0) // when set below 0, this vehicle doesn't use third person view (gunner slots)
+					vehicle_chase = false;
 			}
+			else
+				vehicle_chase = false;
 		}
 
-		int eventchase = WantEventchase(this);
+		int eventchase = WantEventchase(this, vehicle_chase);
 		if (eventchase)
 		{
 			vector current_view_origin_override = '0 0 0';

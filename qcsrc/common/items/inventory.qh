@@ -15,8 +15,8 @@ ENDCLASS(Inventory)
 
 REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
 
-const int Inventory_groups_major = 16;
-const int Inventory_groups_minor = 8; // ceil(Items_MAX / Inventory_groups_major)
+const int Inventory_groups_minor = 8; // exactly 1 byte
+const int Inventory_groups_major = 3; // ceil(Items_MAX / Inventory_groups_minor)
 
 #define G_MAJOR(id) (floor((id) / Inventory_groups_minor))
 #define G_MINOR(id) ((id) % Inventory_groups_minor)
@@ -28,7 +28,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
     g_inventory = this;
-    const int majorBits = ReadShort();
+    const int majorBits = ReadByte();
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
             continue;
@@ -50,6 +50,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 #endif
 
 #ifdef SVQC
+int minorBitsArr[Inventory_groups_major];
 void Inventory_Write(Inventory data)
 {
     if (!data) {
@@ -58,45 +59,37 @@ void Inventory_Write(Inventory data)
     }
     TC(Inventory, data);
 
+	for (int i = 0; i < Inventory_groups_major; ++i)
+		minorBitsArr[i] = 0;
+
     int majorBits = 0;
     FOREACH(Items, true, {
         .int fld = inv_items[it.m_id];
         const bool changed = data.inventory.(fld) != data.(fld);
         if (changed) {
-            majorBits = BITSET(majorBits, BIT(G_MAJOR(it.m_id)), true);
+			int maj = G_MAJOR(it.m_id);
+			majorBits = BITSET(majorBits, BIT(maj), true);
+			minorBitsArr[maj] = BITSET(minorBitsArr[maj], BIT(G_MINOR(it.m_id)), true);
         }
     });
-    WriteShort(MSG_ENTITY, majorBits);
+    WriteByte(MSG_ENTITY, majorBits);
 
-    int minorBits = 0;
-    int lastMaj = 0;
-    int maj = 0;
-    FOREACH(Items, majorBits & BIT(maj = G_MAJOR(it.m_id)), {
-        .int fld = inv_items[it.m_id];
-        const bool changed = data.inventory.(fld) != (data.inventory.(fld) = data.(fld));
-        if (changed) {
-            if (maj != lastMaj) {
-                lastMaj = maj;
-#define X() MACRO_BEGIN \
-    if (minorBits) { \
-        WriteByte(MSG_ENTITY, minorBits); \
-        for (int j = 0; j < Inventory_groups_minor; ++j) { \
-            if (!(minorBits & BIT(j))) { \
-                continue; \
-            } \
-            const entity it = Items_from(Inventory_groups_minor * maj + j); \
-            WriteByte(MSG_ENTITY, data.inv_items[it.m_id]); \
-        } \
-    } \
-MACRO_END
-                X();
-                minorBits = 0;
-            }
-            minorBits = BITSET(minorBits, BIT(G_MINOR(it.m_id)), true);
-        }
-    });
-    X();
-#undef X
+	for (int i = 0; i < Inventory_groups_major; ++i)
+	{
+		if (!(majorBits & BIT(i)))
+			continue;
+
+		const int minorBits = minorBitsArr[i];
+		WriteByte(MSG_ENTITY, minorBits);
+		for (int j = 0; j < Inventory_groups_minor; ++j)
+		{
+			if (!(minorBits & BIT(j)))
+				continue;
+
+			const entity it = Items_from(Inventory_groups_minor * i + j);
+			WriteByte(MSG_ENTITY, data.inv_items[it.m_id]);
+		}
+	}
 }
 #endif
 

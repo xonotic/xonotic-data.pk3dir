@@ -130,7 +130,7 @@ CLASS(Sound, Object)
 		TC(Sound, this);
 		string s = _Sound_fixpath(this.sound_str());
 		if (!s) return;
-		profile(sprintf("precache_sound(\"%s\")", s));
+		//profile(sprintf("precache_sound(\"%s\")", s));
 		precache_sound(s);
 		strcpy(this.sound_str_, s);
 	}

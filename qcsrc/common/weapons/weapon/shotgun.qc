@@ -2,13 +2,31 @@
 
 #ifdef SVQC
 
+METHOD(Shotgun, m_spawnfunc_hookreplace, Weapon(Shotgun this, entity e))
+{
+	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
+	{
+		return WEP_MACHINEGUN;
+	}
+	return this;
+}
+
 void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary, float ammocount, float damage, float bullets, float spread, float solidpenetration, float force, entity bullet_trail_effect)
 {
 	W_DecreaseAmmo(thiswep, actor, ammocount, weaponentity);
 
 	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, thiswep.m_id);
+
+	// TRICK: do the antilag outside the regular fireBullet function, so it isn't performed unnecessarily on every single bullet!
+	float lag = antilag_getlag(actor);
+	if(lag && bullets > 0)
+		antilag_takeback_all(actor, lag);
+
 	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, thiswep.m_id, bullet_trail_effect);
+		fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, thiswep.m_id, bullet_trail_effect, false);
+	
+	if(lag && bullets > 0)
+		antilag_restore_all(actor);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, ammocount);
 

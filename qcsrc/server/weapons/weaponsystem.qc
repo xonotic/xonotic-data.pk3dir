@@ -163,6 +163,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
     Weapon wep = this.owner.(weaponentity).m_weapon;
 	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner, this.owner.clientcolors, this.owner.(weaponentity));
 	this.colormap = this.owner.colormap;
+	this.skin = w_ent.skin;
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -808,7 +809,6 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 			}
 		}
 	}
-
 	if (this)
 	{
 		if (this.wframe == WFRAME_RELOAD) return;

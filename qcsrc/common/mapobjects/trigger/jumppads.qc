@@ -339,13 +339,57 @@ bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector 
 }
 #endif
 
+#ifdef SVQC
+vector trigger_push_get_start_point(entity this)
+{
+	// calculate a typical start point for the jump
+	vector org = (this.absmin + this.absmax) * 0.5;
+	org.z = this.absmax.z - PL_MIN_CONST.z - 7;
+	return org;
+}
+
+float trigger_push_get_push_time(entity this, vector endpos)
+{
+	vector org = trigger_push_get_start_point(this);
+
+	float grav = PHYS_GRAVITY(NULL);
+
+	entity t = this.enemy;
+	if (t)
+	{
+		entity e = spawn();
+		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+		vector v = trigger_push_calculatevelocity(org, t, this.height, e);
+		vector v2 = trigger_push_calculatevelocity(endpos, t, this.height, e);
+		delete(e);
+		return (v.z + v2.z) / grav;
+	}
+	else if (!(this.target && this.target != ""))
+	{
+		if (!this.team)
+		{
+			vector v = this.movedir;
+
+			float t = v.z / grav;
+			float jump_height = 1/2 * grav * (t ** 2);
+			float remaining_height = org.z + jump_height - endpos.z;
+			float v2_z = sqrt(2 * grav * remaining_height);
+
+			return (v.z + v2_z) / grav;
+		}
+	}
+	return 0;
+}
+#endif
+
 /// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
 /// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
 bool trigger_push_test(entity this, entity item)
 {
-	// first calculate a typical start point for the jump
-	vector org = (this.absmin + this.absmax) * 0.5;
-	org.z = this.absmax.z - PL_MIN_CONST.z - 7;
+#ifdef SVQC
+	vector org = trigger_push_get_start_point(this);
+#endif
 
 	if (this.target)
 	{

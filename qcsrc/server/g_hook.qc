@@ -21,8 +21,6 @@
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
 
-.int state;
-
 /*============================================
 
       Wazat's Xonotic Grappling Hook
@@ -71,8 +69,6 @@ And you should be done!
 
 
 ============================================*/
-
-.float hook_length;
 
 void RemoveGrapplingHooks(entity pl)
 {

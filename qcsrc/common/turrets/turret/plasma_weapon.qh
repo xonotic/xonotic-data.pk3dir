@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(PlasmaAttack, PortoLaunch)
-/* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(PlasmaAttack, impulse, int, 5);
 /* refname   */ ATTRIB(PlasmaAttack, netname, string, "turret_plasma");
 /* wepname   */ ATTRIB(PlasmaAttack, m_name, string, _("Plasma"));

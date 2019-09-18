@@ -43,9 +43,15 @@ void W_Crylink_Dequeue(entity e)
 	W_Crylink_Dequeue_Raw(e.crylink_owner, e.queueprev, e, e.queuenext);
 }
 
+void W_Crylink_DeleteLink(entity this)
+{
+	if(this.classname != "spike_oktoremove")
+		W_Crylink_Dequeue(this);
+	delete_fn(this);
+}
+
 void W_Crylink_Reset(entity this)
 {
-	W_Crylink_Dequeue(this);
 	delete(this);
 }
 
@@ -263,7 +269,6 @@ void W_Crylink_Touch(entity this, entity toucher)
 	else if(finalhit)
 	{
 		// just unlink
-		W_Crylink_Dequeue(this);
 		delete(this);
 		return;
 	}
@@ -278,7 +283,6 @@ void W_Crylink_Touch(entity this, entity toucher)
 
 void W_Crylink_Fadethink(entity this)
 {
-	W_Crylink_Dequeue(this);
 	delete(this);
 }
 
@@ -308,6 +312,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
+		proj.dtor = W_Crylink_DeleteLink;
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
 		proj.crylink_owner = actor;
@@ -420,6 +425,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
+		proj.dtor = W_Crylink_DeleteLink;
 		proj.weaponentity_fld = weaponentity;
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
