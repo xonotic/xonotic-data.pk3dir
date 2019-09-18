@@ -217,14 +217,24 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
                 w_ready(thiswep, actor, weaponentity, fire);
                 return;
             }
- 
+
+            float ammo_available;
+            if (WEP_CVAR(machinegun, reload_ammo) > 0)
+            {
+                ammo_available = actor.(weaponentity).clip_load;
+            }
+            else
+            {
+                ammo_available = GetResource(actor, thiswep.ammo_type);
+            }
+
             // We don't want to shoot 3 rounds if there's 2 left in the mag, so we'll use a fraction.
             // Also keep the fraction <= 1 otherwise we'd mag dump in one burst.
-            float burst_fraction = min(1, actor.(weaponentity).clip_load / WEP_CVAR(machinegun, burst_ammo));
+            float burst_fraction = min(1, ammo_available / WEP_CVAR(machinegun, burst_ammo));
             int to_shoot = floor(WEP_CVAR(machinegun, burst) * burst_fraction);
 
             // We also don't want to use 3 rounds if there's only 2 left.
-            int to_use = min(WEP_CVAR(machinegun, burst_ammo), actor.(weaponentity).clip_load);
+            int to_use = min(WEP_CVAR(machinegun, burst_ammo), ammo_available);
             W_DecreaseAmmo(thiswep, actor, to_use, weaponentity);
 
             // Bursting counts up to 0 from a negative.
