@@ -2065,7 +2065,7 @@ string GotoMap(string m)
 		return "Map switch will happen after scoreboard.";
 }
 
-bool autocvar_sv_gameplayfix_multiplethinksperframe;
+bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
 void RunThink(entity this)
 {
 	// don't let things stay in the past.
@@ -2094,7 +2094,7 @@ void RunThink(entity this)
 }
 
 bool autocvar_sv_freezenonclients;
-bool autocvar_sv_gameplayfix_delayprojectiles;
+bool autocvar_sv_gameplayfix_delayprojectiles = false;
 void Physics_Frame()
 {
 	if(autocvar_sv_freezenonclients)
