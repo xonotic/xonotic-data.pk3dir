@@ -300,7 +300,7 @@ string autocvar_sv_eventlog_files_namesuffix;
 bool autocvar_sv_eventlog_files_timestamps;
 float autocvar_sv_friction_on_land;
 var float autocvar_sv_friction_slick = 0.5;
-float autocvar_sv_gameplayfix_q2airaccelerate;
+float autocvar_sv_gameplayfix_q2airaccelerate = 1;
 int autocvar_sv_gentle;
 #define autocvar_sv_gravity cvar("sv_gravity")
 string autocvar_sv_intermission_cdtrack;
@@ -374,8 +374,8 @@ float autocvar_timelimit_overtime;
 int autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
 #define autocvar_utf8_enable cvar("utf8_enable")
-float autocvar_sv_gameplayfix_gravityunaffectedbyticrate;
-bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag;
+bool autocvar_sv_gameplayfix_gravityunaffectedbyticrate = true;
+bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag = true;
 float autocvar_g_trueaim_minrange;
 float autocvar_g_grab_range;
 int autocvar_g_max_info_autoscreenshot;
