@@ -393,7 +393,7 @@ string(entity ent) etos = #65;
 string(string s) precache_file = #68;
 void(entity e) makestatic = #69;
 
-void(string var, string val) cvar_set = #72;
+void(string var_, string val) cvar_set = #72;
 
 void(vector pos, string samp, float vol, float atten) ambientsound = #74;
 string(string s) precache_model2 = #75;
