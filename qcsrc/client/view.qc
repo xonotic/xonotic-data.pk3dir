@@ -1094,8 +1094,10 @@ void HUD_Crosshair(entity this)
 			wcross_color.z += sin(hitindication_crosshair_size) * hitindication_color.z;
 		}
 
-		if(shottype == SHOTTYPE_HITENEMY)
-			wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
+		// no effects needed for targeting enemies, this can't possibly span all valid targets!
+		// just show for teammates to give a sign that they're an invalid target
+		//if(shottype == SHOTTYPE_HITENEMY)
+			//wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
 		if(shottype == SHOTTYPE_HITTEAM)
 			wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
 
