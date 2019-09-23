@@ -10,22 +10,11 @@
 
 /*
 *		t_swamp.c
-*		Adds spawnfunc_trigger_swamp and suppoart routines for xonotic 1.2.1+
+*		Adds spawnfunc_trigger_swamp and support routines for nexuiz 1.2.1+ and xonotic
 *		Author tZork (Jakob MG)
 *		jakob@games43.se
 *		2005 11 29
 */
-
-.float swamp_interval;	//Hurt players in swamp with this interval
-.float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
-.float swamp_lifetime;  // holds the points remaining until slug dies (not quite health!) 
-.entity swampslug;
-
-#ifdef SVQC
-spawnfunc(trigger_swamp);
-#endif
-void swamp_touch(entity this, entity toucher);
-void swampslug_think(entity this);
 
 
 /*
@@ -44,9 +33,13 @@ void swampslug_think(entity this)
 	this.swamp_lifetime -= 1;
 
 	//Slug dead? then remove curses.
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
-		this.owner.in_swamp = 0;
+		if(this.owner.swampslug == this)
+		{
+			this.owner.in_swamp = false;
+			this.owner.swampslug = NULL;
+		}
 		delete(this);
 		//centerprint(this.owner,"Killing slug...\n");
 		return;
@@ -72,11 +65,12 @@ void swamp_touch(entity this, entity toucher)
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 	// Chech if player alredy got a swampslug.
-	if(toucher.in_swamp != 1)
+	if(!toucher.in_swamp)
 	{
 		// If not attach one.
 		//centerprint(toucher,"Entering swamp!\n");
-		toucher.swampslug = spawn();
+		if(!toucher.swampslug) // just incase
+			toucher.swampslug = spawn();
 		toucher.swampslug.swamp_lifetime = 2;
 		setthink(toucher.swampslug, swampslug_think);
 		toucher.swampslug.nextthink = time;
@@ -84,11 +78,11 @@ void swamp_touch(entity this, entity toucher)
 		toucher.swampslug.dmg = this.dmg;
 		toucher.swampslug.swamp_interval = this.swamp_interval;
 		toucher.swamp_slowdown = this.swamp_slowdown;
-		toucher.in_swamp = 1;
+		toucher.in_swamp = true;
 		return;
 	}
 
-	//toucher.in_swamp = 1;
+	//toucher.in_swamp = true;
 
 	//Revitalize players swampslug
 	toucher.swampslug.swamp_lifetime = 2;
@@ -116,8 +110,8 @@ void swamp_link(entity this)
 }
 
 /*QUAKED spawnfunc_trigger_swamp (.5 .5 .5) ?
-Players gettin into the swamp will
-get slowd down and damaged
+Players in the swamp will be
+slowed down and damaged over time
 */
 spawnfunc(trigger_swamp)
 {

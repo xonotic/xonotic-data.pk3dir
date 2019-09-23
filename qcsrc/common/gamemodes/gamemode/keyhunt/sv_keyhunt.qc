@@ -23,6 +23,7 @@ float autocvar_g_balance_keyhunt_throwvelocity;
 int autocvar_g_keyhunt_teams_override;
 
 // #define KH_PLAYER_USE_ATTACHMENT
+// TODO? no model exists for this
 // #define KH_PLAYER_USE_CARRIEDMODEL
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
@@ -61,8 +62,6 @@ int kh_Team_ByID(int t)
 	return 0;
 }
 
-//entity kh_worldkeylist;
-.entity kh_worldkeynext;
 entity kh_controller;
 //bool kh_tracking_enabled;
 int kh_teams;
@@ -686,10 +685,12 @@ LABEL(not_winning)
 		kh_interferemsg_time = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(it.team == kh_interferemsg_team)
+			{
 				if(it.kh_next)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_MEET);
 				else
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
+			}
 			else
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
 		});
@@ -1289,6 +1290,13 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 		bot.havocbot_role = havocbot_role_kh_freelancer;
 
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(kh, LogDeath_AppendItemCodes)
+{
+	entity player = M_ARGV(0, entity);
+	if(player.kh_next)
+		M_ARGV(1, string) = strcat(M_ARGV(1, string), "K"); // item codes
 }
 
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)

@@ -281,7 +281,7 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 			return false;
 		}
 	}
-	else if(!forbidWeaponUse(this) && CS(this).cvar_cl_weapon_switch_reload)
+	else if(!weaponLocked(this) && CS(this).cvar_cl_weapon_switch_reload)
 	{
 		entity actor = this;
 		w.wr_reload(w, actor, weaponentity);

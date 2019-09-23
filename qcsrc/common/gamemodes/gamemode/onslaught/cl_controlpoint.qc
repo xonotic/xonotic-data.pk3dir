@@ -30,7 +30,7 @@ void cpicon_draw(entity this)
 	this.cp_bob_spd = this.cp_bob_spd + 1.875 * frametime;
 	this.colormod = '1 1 1' * (2 - bound(0, (this.pain_finished - time) / 10, 1));
 
-	if(!this.iscaptured) this.alpha = GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health;
+	if(!this.iscaptured) this.alpha = GetResource(this, RES_HEALTH) / this.max_health;
 
 	if(this.iscaptured)
 	{
@@ -165,14 +165,14 @@ NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, ReadByte());
+		SetResourceExplicit(this, RES_HEALTH, ReadByte());
 		this.max_health = ReadByte();
 		this.count = ReadByte();
 		this.team = ReadByte();
 		this.iscaptured = ReadByte();
 
 		if(!this.count)
-			this.count = (GetResourceAmount(this, RESOURCE_HEALTH) - this.max_health) * frametime;
+			this.count = (GetResource(this, RES_HEALTH) - this.max_health) * frametime;
 
 		cpicon_changeteam(this);
 		cpicon_construct(this, isnew);
@@ -189,9 +189,9 @@ NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
 
 		_tmp = ReadByte();
 
-		if(_tmp != GetResourceAmount(this, RESOURCE_HEALTH))
+		if(_tmp != GetResource(this, RES_HEALTH))
 			cpicon_damage(this, _tmp);
 
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, _tmp);
+		SetResourceExplicit(this, RES_HEALTH, _tmp);
 	}
 }

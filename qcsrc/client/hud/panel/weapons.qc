@@ -26,18 +26,18 @@ int weaponorder_cmp(int i, int j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
-#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN { \
+#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN \
 	int nHidden = 0; \
 	FOREACH(Weapons, it != WEP_Null, { \
 		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
-		if ((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) nHidden += 1; \
+		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)) nHidden += 1; \
 	}); \
 	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
 	columns = table_size.x; \
 	rows = table_size.y; \
 	weapon_size.x = panel_size.x / columns; \
 	weapon_size.y = panel_size.y / rows; \
-} MACRO_END
+MACRO_END
 
 void HUD_Weapons()
 {
@@ -123,7 +123,7 @@ void HUD_Weapons()
 		{
 			int j = 0;
 			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6, {
-				if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_SPECIALATTACK))
 				{
 					if(!panel_switchweapon || j < 4)
 						panel_switchweapon = it;
@@ -418,8 +418,11 @@ void HUD_Weapons()
 		}
 		else
 		{
-			if (((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)) && !(weapons_stat & WepSet_FromWeapon(it)))
+			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)
+				&& !(weapons_stat & WepSet_FromWeapon(it)))
+			{
 				continue;
+			}
 		}
 
 		// figure out the drawing position of weapon
@@ -490,7 +493,7 @@ void HUD_Weapons()
 			}
 
 			// draw ammo status bar
-			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RESOURCE_NONE))
+			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RES_NONE))
 			{
 				float ammo_full;
 				a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
@@ -499,12 +502,12 @@ void HUD_Weapons()
 				{
 					switch (it.ammo_type)
 					{
-						case RESOURCE_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
-						case RESOURCE_BULLETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
-						case RESOURCE_ROCKETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
-						case RESOURCE_CELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
-						case RESOURCE_PLASMA:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
-						case RESOURCE_FUEL:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
+						case RES_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
+						case RES_BULLETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
+						case RES_ROCKETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case RES_CELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case RES_PLASMA:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
+						case RES_FUEL:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
 

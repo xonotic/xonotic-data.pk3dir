@@ -85,8 +85,11 @@ const int UNSTICK_FINE = 0;
 const int UNSTICK_FIXED = 1;
 const int UNSTICK_STUCK = 2;
 
+// set by _Movetype_FlyMove
+vector move_stepnormal;
+
 void _Movetype_WallFriction(entity this, vector stepnormal);
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight);
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
 void _Movetype_CheckVelocity(entity this);
 void _Movetype_CheckWaterTransition(entity ent);
 void _Movetype_CheckStuck(entity this);

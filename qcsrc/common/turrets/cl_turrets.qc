@@ -37,7 +37,7 @@ void turret_draw(entity this)
 
 	this.tur_head.angles += dt * this.tur_head.avelocity;
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) < 127)
+	if (GetResource(this, RES_HEALTH) < 127)
 	{
 		dt = random();
 
@@ -45,11 +45,11 @@ void turret_draw(entity this)
 			te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 	}
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 85)
+	if(GetResource(this, RES_HEALTH) < 85)
 	if(dt < 0.01)
 		pointparticles(EFFECT_SMOKE_LARGE, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 32)
+	if(GetResource(this, RES_HEALTH) < 32)
 	if(dt < 0.015)
 		pointparticles(EFFECT_SMOKE_SMALL, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
@@ -175,28 +175,37 @@ void turret_draw2d(entity this)
 		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
 	}
 
-	o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
-	if(autocvar_g_waypointsprite_turrets_text)
+	bool draw_healthbar = ((this.helpme && time < this.helpme) || !autocvar_g_waypointsprite_turrets_onlyhurt || hud != HUD_NORMAL);
+	bool draw_text = autocvar_g_waypointsprite_turrets_text;
+
+	if(draw_healthbar || draw_text) // make sure it's actually being drawn
+	{
+		o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
+	}
+	if(draw_text)
 	{
 		o = drawsprite_TextOrIcon(true, o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 	}
-	drawhealthbar(
-			o,
-			0,
-			GetResourceAmount(this, RESOURCE_HEALTH) / 255,
-			'0 0 0',
-			'0 0 0',
-			0.5 * SPRITE_HEALTHBAR_WIDTH * t,
-			0.5 * SPRITE_HEALTHBAR_HEIGHT * t,
-			SPRITE_HEALTHBAR_MARGIN * t + 0.5 * waypointsprite_fontsize,
-			SPRITE_HEALTHBAR_BORDER * t,
-			0,
-			rgb,
-			a * SPRITE_HEALTHBAR_BORDERALPHA,
-			rgb,
-			a * SPRITE_HEALTHBAR_HEALTHALPHA,
-			DRAWFLAG_NORMAL
-			);
+	if(draw_healthbar)
+	{
+		drawhealthbar(
+				o,
+				0,
+				GetResource(this, RES_HEALTH) / 255,
+				'0 0 0',
+				'0 0 0',
+				0.5 * SPRITE_HEALTHBAR_WIDTH * t,
+				0.5 * SPRITE_HEALTHBAR_HEIGHT * t,
+				SPRITE_HEALTHBAR_MARGIN * t + 0.5 * waypointsprite_fontsize,
+				SPRITE_HEALTHBAR_BORDER * t,
+				0,
+				rgb,
+				a * SPRITE_HEALTHBAR_BORDERALPHA,
+				rgb,
+				a * SPRITE_HEALTHBAR_HEALTHALPHA,
+				DRAWFLAG_NORMAL
+				);
+	}
 }
 
 void turret_construct(entity this, bool isnew)
@@ -224,7 +233,7 @@ void turret_construct(entity this, bool isnew)
 	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.tur_head.angles			= this.angles;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 255);
+	SetResourceExplicit(this, RES_HEALTH, 255);
 	this.solid						= SOLID_BBOX;
 	this.tur_head.solid				= SOLID_NOT;
 	set_movetype(this, MOVETYPE_NOCLIP);
@@ -425,7 +434,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		}
 
 		_tmp = ReadByte();
-		float myhp = GetResourceAmount(this, RESOURCE_HEALTH);
+		float myhp = GetResource(this, RES_HEALTH);
 		if(_tmp == 0 && myhp != 0)
 			turret_die(this);
 		else if(myhp && myhp > _tmp)
@@ -433,7 +442,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		else if(myhp && myhp < _tmp)
 			this.helpme = 0; // we're being healed, don't spam help me waypoints
 
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, _tmp);
+		SetResourceExplicit(this, RES_HEALTH, _tmp);
 	}
 	return true;
 }

@@ -28,44 +28,43 @@
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
 
-.float lastground;
-.int state;
-
 void CreatureFrame_hotliquids(entity this)
 {
-	if (this.dmgtime < time)
+	if (this.dmgtime >= time)
 	{
-		this.dmgtime = time + autocvar_g_balance_contents_damagerate;
+		return;
+	}
 
-		if (this.flags & FL_PROJECTILE)
+	this.dmgtime = time + autocvar_g_balance_contents_damagerate;
+
+	if (this.flags & FL_PROJECTILE)
+	{
+		if (this.watertype == CONTENT_LAVA)
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		else if (this.watertype == CONTENT_SLIME)
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
+	}
+	else
+	{
+		if (this.watertype == CONTENT_LAVA)
 		{
-			if (this.watertype == CONTENT_LAVA)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
-			else if (this.watertype == CONTENT_SLIME)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			if (this.watersound_finished < time)
+			{
+				this.watersound_finished = time + 0.5;
+				sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
+			}
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			if(autocvar_g_balance_contents_playerdamage_lava_burn)
+				Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
 		}
-		else
+		else if (this.watertype == CONTENT_SLIME)
 		{
-			if (this.watertype == CONTENT_LAVA)
+			if (this.watersound_finished < time)
 			{
-				if (this.watersound_finished < time)
-				{
-					this.watersound_finished = time + 0.5;
-					sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
-				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
-				if(autocvar_g_balance_contents_playerdamage_lava_burn)
-					Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
+				this.watersound_finished = time + 0.5;
+				sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 			}
-			else if (this.watertype == CONTENT_SLIME)
-			{
-				if (this.watersound_finished < time)
-				{
-					this.watersound_finished = time + 0.5;
-					sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
-				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
-			}
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 	}
 }
@@ -96,35 +95,36 @@ void CreatureFrame_Liquids(entity this)
 
 void CreatureFrame_FallDamage(entity this)
 {
-	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
-	if(this.velocity || this.oldvelocity) // moving or has moved
-	{
-		// check for falling damage
-		float velocity_len = vlen(this.velocity);
-		bool have_hook = false;
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(this.(weaponentity).hook && this.(weaponentity).hook.state)
-	    	{
-	    		have_hook = true;
-	    		break;
-	    	}
-	    }
-		if(!have_hook)
-		{
-			float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-			if (IS_DEAD(this))
-				dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
-			else
-				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
-			if (dm > 0)
-				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
-		}
+	if(IS_VEHICLE(this) || (this.flags & FL_PROJECTILE))
+		return; // vehicles and projectiles don't receive fall damage
+	if(!(this.velocity || this.oldvelocity))
+		return; // if the entity hasn't moved and isn't moving, then don't do anything
 
-		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
+	// check for falling damage
+	float velocity_len = vlen(this.velocity);
+	bool have_hook = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+	    .entity weaponentity = weaponentities[slot];
+	    if(this.(weaponentity).hook && this.(weaponentity).hook.state)
+	    {
+	    	have_hook = true;
+	    	break;
+	    }
 	}
+	if(!have_hook)
+	{
+		float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+		if (IS_DEAD(this))
+			dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
+		else
+			dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
+		if (dm > 0)
+			Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+	}
+
+	if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
+		Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
 }
 
 void CreatureFrame_All()
@@ -278,12 +278,11 @@ bool expr_evaluate(string s)
         string k, v;
         s = argv(i);
         #define X(expr) \
-            if (expr) { \
+            if (expr) \
                 continue; \
-            } else { \
-                expr_fail = true; \
-                break; \
-            }
+            expr_fail = true; \
+            break;
+
         #define BINOP(op, len, expr) \
             if ((o = strstrofs(s, op, 0)) >= 0) { \
                 k = substring(s, 0, o); \
@@ -325,14 +324,17 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		goto cleanup;
+		delete(this);
+		return;
 	}
 	if (this.cvarfilter != "" && !expr_evaluate(this.cvarfilter)) {
-        goto cleanup;
+		delete(this);
+		return;
 	}
 
 	if (DoesQ3ARemoveThisEntity(this)) {
-		goto cleanup;
+		delete(this);
+		return;
 	}
 
 	set_movetype(this, this.movetype);
@@ -357,11 +359,9 @@ void SV_OnEntityPreSpawnFunction(entity this)
     #undef X
 
 	if (MUTATOR_CALLHOOK(OnEntityPreSpawn, this)) {
-		goto cleanup;
+		delete(this);
+		return;
 	}
-	return;
-LABEL(cleanup)
-    delete(this);
 }
 
 void WarpZone_PostInitialize_Callback()
@@ -372,16 +372,7 @@ void WarpZone_PostInitialize_Callback()
 	tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	//for(entity e = warpzone_first; e; e = e.warpzone_next)
 	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-	{
-		vector src, dst;
-		src = (e.absmin + e.absmax) * 0.5;
-		makevectors(e.warpzone_angles);
-		src = src + ((e.warpzone_origin - src) * v_forward) * v_forward + 16 * v_right;
-		dst = (e.enemy.absmin + e.enemy.absmax) * 0.5;
-		makevectors(e.enemy.warpzone_angles);
-		dst = dst + ((e.enemy.warpzone_origin - dst) * v_forward) * v_forward - 16 * v_right;
-		waypoint_spawnforteleporter_wz(e, src, dst, 0, -v_up, tracetest_ent);
-	}
+		waypoint_spawnforteleporter_wz(e, tracetest_ent);
 	delete(tracetest_ent);
 }
 

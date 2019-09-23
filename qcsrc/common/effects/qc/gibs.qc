@@ -16,7 +16,7 @@ bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 	WriteShort(channel, floor(this.origin.x / 4)); // not using a coord here, as gibs don't need this accuracy
 	WriteShort(channel, floor(this.origin.y / 4)); // not using a coord here, as gibs don't need this accuracy
 	WriteShort(channel, floor(this.origin.z / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(channel, this.oldorigin.x); // acrually compressed velocity
+	WriteShort(channel, this.oldorigin.x); // actually compressed velocity
 	return true;
 }
 

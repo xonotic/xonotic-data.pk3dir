@@ -202,12 +202,21 @@ void OnlineBanList_Think(entity this)
 	float i, n;
 
 	if(autocvar_g_ban_sync_uri == "")
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 	if(autocvar_g_ban_sync_interval == 0) // < 0 is okay, it means "sync on level start only"
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 	argc = tokenize_console(autocvar_g_ban_sync_trusted_servers);
 	if(argc == 0)
-		goto killme;
+	{
+		delete(this);
+		return;
+	}
 
 	string s = argv(0); for(i = 1; i < argc; ++i) s = strcat(s, ";", argv(i));
 	strcpy(OnlineBanList_Servers, s);
@@ -231,14 +240,13 @@ void OnlineBanList_Think(entity this)
 			uri_get(strcat(argv(i), "?", uri), URI_GET_IPBAN + i); // 1000 = "banlist" callback target
 	}
 
-	if(autocvar_g_ban_sync_interval > 0)
-		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
-	else
-		goto killme;
-	return;
+	if(autocvar_g_ban_sync_interval <= 0)
+	{
+		delete(this);
+		return;
+	}
 
-LABEL(killme)
-	delete(this);
+	this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 }
 
 const float BAN_MAX = 256;

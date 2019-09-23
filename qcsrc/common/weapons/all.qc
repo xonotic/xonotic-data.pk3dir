@@ -215,12 +215,12 @@ string GetAmmoPicture(int ammotype)
 {
 	switch (ammotype)
 	{
-		case RESOURCE_SHELLS:  return ITEM_Shells.m_icon;
-		case RESOURCE_BULLETS: return ITEM_Bullets.m_icon;
-		case RESOURCE_ROCKETS: return ITEM_Rockets.m_icon;
-		case RESOURCE_CELLS:   return ITEM_Cells.m_icon;
-		case RESOURCE_PLASMA:  return ITEM_Plasma.m_icon;
-		case RESOURCE_FUEL:    return ITEM_JetpackFuel.m_icon;
+		case RES_SHELLS:  return ITEM_Shells.m_icon;
+		case RES_BULLETS: return ITEM_Bullets.m_icon;
+		case RES_ROCKETS: return ITEM_Rockets.m_icon;
+		case RES_CELLS:   return ITEM_Cells.m_icon;
+		case RES_PLASMA:  return ITEM_Plasma.m_icon;
+		case RES_FUEL:    return ITEM_JetpackFuel.m_icon;
 		default: return "";  // wtf, no ammo type?
 	}
 }
@@ -230,13 +230,13 @@ int GetAmmoTypeFromNum(int i)
 {
 	switch (i)
 	{
-		case 0: return RESOURCE_SHELLS;
-		case 1: return RESOURCE_BULLETS;
-		case 2: return RESOURCE_ROCKETS;
-		case 3: return RESOURCE_CELLS;
-		case 4: return RESOURCE_PLASMA;
-		case 5: return RESOURCE_FUEL;
-		default: return RESOURCE_NONE;
+		case 0: return RES_SHELLS;
+		case 1: return RES_BULLETS;
+		case 2: return RES_ROCKETS;
+		case 3: return RES_CELLS;
+		case 4: return RES_PLASMA;
+		case 5: return RES_FUEL;
+		default: return RES_NONE;
 	}
 }
 
@@ -244,12 +244,12 @@ int GetAmmoStat(int ammotype)
 {
 	switch (ammotype)
 	{
-		case RESOURCE_SHELLS: return STAT_SHELLS;
-		case RESOURCE_BULLETS: return STAT_NAILS;
-		case RESOURCE_ROCKETS: return STAT_ROCKETS;
-		case RESOURCE_CELLS: return STAT_CELLS;
-		case RESOURCE_PLASMA: return STAT_PLASMA.m_id;
-		case RESOURCE_FUEL: return STAT_FUEL.m_id;
+		case RES_SHELLS: return STAT_SHELLS;
+		case RES_BULLETS: return STAT_NAILS;
+		case RES_ROCKETS: return STAT_ROCKETS;
+		case RES_CELLS: return STAT_CELLS;
+		case RES_PLASMA: return STAT_PLASMA.m_id;
+		case RES_FUEL: return STAT_FUEL.m_id;
 		default: return -1;
 	}
 }

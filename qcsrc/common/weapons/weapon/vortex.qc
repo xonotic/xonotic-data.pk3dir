@@ -17,16 +17,21 @@ METHOD(Vortex, wr_glow, vector(Vortex this, entity actor, entity wepent))
 	if (!WEP_CVAR(vortex, charge)) return '0 0 0';
 	float charge = wepent.vortex_charge;
 	float animlimit = WEP_CVAR(vortex, charge_animlimit);
+	float f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
 	vector g;
-	g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, charge / animlimit);
-	g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, charge / animlimit);
-	g.z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, charge / animlimit);
+	g.x = f * autocvar_g_weapon_charge_colormod_red_half;
+	g.y = f * autocvar_g_weapon_charge_colormod_green_half;
+	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
 	if (charge > animlimit)
 	{
-		g.x += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (charge - animlimit) / (1 - animlimit);
-		g.y += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (charge - animlimit) / (1 - animlimit);
-		g.z += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (charge - animlimit) / (1 - animlimit);
+		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
+		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
+		g.y += f * autocvar_g_weapon_charge_colormod_green_full;
+		g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
 	}
+	// transition color can't be '0 0 0' as it defaults to player model glow color
+	if (g == '0 0 0')
+		g = '0 0 0.000001';
 	return g;
 }
 #endif
@@ -57,10 +62,12 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 	particles_alphamin = particles_alphamax = particles_fade = charge;
 
 	if(!MUTATOR_CALLHOOK(Particles_VortexBeam, shotorg, endpos))
-	if(autocvar_cl_particles_oldvortexbeam && (STAT(ALLOW_OLDVORTEXBEAM) || isdemo()))
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
-	else
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	{
+		if(autocvar_cl_particles_oldvortexbeam && (STAT(ALLOW_OLDVORTEXBEAM) || isdemo()))
+			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+		else
+			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	}
 	return true;
 }
 #endif
@@ -152,6 +159,12 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 .float vortex_chargepool_pauseregen_finished;
 
+void W_Vortex_Charge(entity actor, .entity weaponentity, float dt)
+{
+    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
+        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * dt / W_TICSPERFRAME);
+}
+
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(bot_aim(actor, weaponentity, 1000000, 0, 1, false))
@@ -164,8 +177,8 @@ METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 }
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
-        actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
+    if(!WEP_CVAR(vortex, charge_always))
+        W_Vortex_Charge(actor, weaponentity, frametime);
 
     if(WEP_CVAR_SEC(vortex, chargepool))
         if(actor.(weaponentity).vortex_chargepool_ammo < 1)
@@ -232,11 +245,11 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                                 }
                                 else
                                 {
-                                    dt = min(dt, (GetResourceAmount(actor, thiswep.ammo_type) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+                                    dt = min(dt, (GetResource(actor, thiswep.ammo_type) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
                                     dt = max(0, dt);
                                     if(dt > 0)
                                     {
-                                        SetResourceAmount(actor, thiswep.ammo_type, max(WEP_CVAR_SEC(vortex, ammo), GetResourceAmount(actor, thiswep.ammo_type) - WEP_CVAR_SEC(vortex, ammo) * dt));
+                                        SetResource(actor, thiswep.ammo_type, max(WEP_CVAR_SEC(vortex, ammo), GetResource(actor, thiswep.ammo_type) - WEP_CVAR_SEC(vortex, ammo) * dt));
                                     }
                                 }
                             }
@@ -268,7 +281,7 @@ METHOD(Vortex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity
 }
 METHOD(Vortex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(vortex, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(vortex, ammo);
     ammo_amount += (autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
     return ammo_amount;
 }
@@ -277,7 +290,7 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
     if(WEP_CVAR(vortex, secondary))
     {
         // don't allow charging if we don't have enough ammo
-        float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vortex, ammo);
+        float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vortex, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
         return ammo_amount;
     }

@@ -3,6 +3,8 @@
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 
 #ifdef SVQC
+// enable when shockwave replaces shotgun
+#if 0
 METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 {
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
@@ -12,6 +14,7 @@ METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 	}
 	return this;
 }
+#endif
 
 const float MAX_SHOCKWAVE_HITS = 10;
 //#define DEBUG_SHOCKWAVE
@@ -658,7 +661,7 @@ void Draw_Shockwave(entity this)
 	if(a < ALPHA_MIN_VISIBLE) { delete(this); }
 
 	// WEAPONTODO: save this only once when creating the entity
-	vector sw_color = entcs_GetColor(this.sv_entnum - 1); // GetTeamRGB(entcs_GetTeam(this.sv_entnum));
+	vector sw_color = entcs_GetColor(this.sv_entnum - 1); // Team_ColorRGB(entcs_GetTeam(this.sv_entnum));
 
 	// WEAPONTODO: trace to find what we actually hit
 	vector endpos = (this.sw_shotorg + (this.sw_shotdir * this.sw_distance));

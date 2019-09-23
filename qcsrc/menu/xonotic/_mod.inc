@@ -59,6 +59,7 @@
 #include <menu/xonotic/dialog_sandboxtools.qc>
 #include <menu/xonotic/dialog_settings.qc>
 #include <menu/xonotic/dialog_settings_audio.qc>
+#include <menu/xonotic/dialog_settings_bindings_reset.qc>
 #include <menu/xonotic/dialog_settings_effects.qc>
 #include <menu/xonotic/dialog_settings_game.qc>
 #include <menu/xonotic/dialog_settings_game_crosshair.qc>

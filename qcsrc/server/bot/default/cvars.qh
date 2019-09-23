@@ -1,6 +1,7 @@
 #pragma once
 
 float autocvar_bot_ai_aimskill_blendrate;
+int autocvar_bot_ai_aimskill_firetolerance;
 float autocvar_bot_ai_aimskill_firetolerance_distdegrees;
 float autocvar_bot_ai_aimskill_firetolerance_maxdegrees;
 float autocvar_bot_ai_aimskill_firetolerance_mindegrees;

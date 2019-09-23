@@ -12,16 +12,21 @@ METHOD(OverkillNex, wr_glow, vector(OverkillNex this, entity actor, entity wepen
 	if (!WEP_CVAR(oknex, charge)) return '0 0 0';
 	float charge = wepent.oknex_charge;
 	float animlimit = WEP_CVAR(oknex, charge_animlimit);
+	float f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
 	vector g;
-	g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, charge / animlimit);
-	g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, charge / animlimit);
-	g.z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, charge / animlimit);
+	g.x = f * autocvar_g_weapon_charge_colormod_red_half;
+	g.y = f * autocvar_g_weapon_charge_colormod_green_half;
+	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
 	if (charge > animlimit)
 	{
-		g.x += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (charge - animlimit) / (1 - animlimit);
-		g.y += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (charge - animlimit) / (1 - animlimit);
-		g.z += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (charge - animlimit) / (1 - animlimit);
+		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
+		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
+		g.y += f * autocvar_g_weapon_charge_colormod_green_full;
+		g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
 	}
+	// transition color can't be '0 0 0' as it defaults to player model glow color
+	if (g == '0 0 0')
+		g = '0 0 0.000001';
 	return g;
 }
 #endif
@@ -268,7 +273,7 @@ METHOD(OverkillNex, wr_setup, void(entity thiswep, entity actor, .entity weapone
 
 METHOD(OverkillNex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(oknex, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(oknex, ammo);
 	ammo_amount += (autocvar_g_balance_oknex_reload_ammo && actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(oknex, ammo));
 	return ammo_amount;
 }
@@ -278,7 +283,7 @@ METHOD(OverkillNex, wr_checkammo2, bool(entity thiswep, entity actor, .entity we
 	if (WEP_CVAR(oknex, secondary))
 	{
 		// don't allow charging if we don't have enough ammo
-		float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(oknex, ammo);
+		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(oknex, ammo);
 		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(oknex, ammo);
 		return ammo_amount;
 	}
