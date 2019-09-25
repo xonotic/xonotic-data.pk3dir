@@ -733,7 +733,7 @@ spawnfunc(func_door)
 
         if(autocvar_sv_doors_always_open)
         {
-                this.speed = 750;
+                this.speed = max(750, this.speed);
         }
         else if (!this.speed)
         {
