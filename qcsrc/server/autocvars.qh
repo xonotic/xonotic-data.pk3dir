@@ -169,6 +169,7 @@ float autocvar_g_maxspeed;
 bool autocvar_g_mirrordamage_onlyweapons;
 
 float autocvar_g_movement_highspeed = 1;
+bool autocvar_g_movement_highspeed_q3_compat = 0;
 string autocvar_g_mutatormsg;
 //float autocvar_g_nick_flood_penalty;
 int autocvar_g_nick_flood_penalty_red;
