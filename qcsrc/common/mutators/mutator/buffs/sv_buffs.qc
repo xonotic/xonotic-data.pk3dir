@@ -212,7 +212,7 @@ float buff_Available(entity buff)
 {
 	if (buff == BUFF_Null)
 		return false;
-	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
+	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_AMMO) || cvar("g_melee_only")))
 		return false;
 	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
@@ -917,8 +917,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONADD(BUFF_AMMO)
 		{
-			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_WEAPON_AMMO);
-			player.items |= IT_UNLIMITED_WEAPON_AMMO;
+			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_AMMO);
+			player.items |= IT_UNLIMITED_AMMO;
 
 			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{
@@ -936,9 +936,9 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		BUFF_ONREM(BUFF_AMMO)
 		{
 			if(player.buff_ammo_prev_infitems)
-				player.items |= IT_UNLIMITED_WEAPON_AMMO;
+				player.items |= IT_UNLIMITED_AMMO;
 			else
-				player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
+				player.items &= ~IT_UNLIMITED_AMMO;
 
 			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{

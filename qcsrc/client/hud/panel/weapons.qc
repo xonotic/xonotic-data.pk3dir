@@ -63,7 +63,7 @@ void HUD_Weapons()
 	float when = max(1, autocvar_hud_panel_weapons_complainbubble_time);
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
-	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
 
 	vector weapon_pos, weapon_size = '0 0 0';
 	vector color;

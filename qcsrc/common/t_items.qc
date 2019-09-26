@@ -1477,9 +1477,6 @@ void target_items_use(entity this, entity actor, entity trigger)
 
 spawnfunc(target_items)
 {
-	int n;
-	string s;
-
 	this.use = target_items_use;
 	if(!this.strength_finished)
 		this.strength_finished = autocvar_g_balance_powerup_strength_time;
@@ -1488,7 +1485,7 @@ spawnfunc(target_items)
 	if(!this.superweapons_finished)
 		this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
-	n = tokenize_console(this.netname);
+	int n = tokenize_console(this.netname);
 	if(argv(0) == "give")
 	{
 		this.netname = substring(this.netname, argv_start_index(1), argv_end_index(-1) - argv_start_index(1));
@@ -1497,8 +1494,9 @@ spawnfunc(target_items)
 	{
 		for(int j = 0; j < n; ++j)
 		{
-			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
-			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
+			// this is from a time when unlimited superweapons were handled together with ammo in some parts of the code
+			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
+			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_AMMO;
 			else if(argv(j) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
 			else if(argv(j) == "strength")               this.items |= ITEM_Strength.m_itemid;
 			else if(argv(j) == "invincible")             this.items |= ITEM_Shield.m_itemid;
@@ -1509,7 +1507,7 @@ spawnfunc(target_items)
 			{
 				FOREACH(Buffs, it != BUFF_Null,
 				{
-					s = Buff_UndeprecateName(argv(j));
+					string s = Buff_UndeprecateName(argv(j));
 					if(s == it.netname)
 					{
 						STAT(BUFFS, this) |= (it.m_itemid);
@@ -1519,7 +1517,7 @@ spawnfunc(target_items)
 					}
 				});
 				FOREACH(Weapons, it != WEP_Null, {
-					s = W_UndeprecateName(argv(j));
+					string s = W_UndeprecateName(argv(j));
 					if(s == it.netname)
 					{
 						STAT(WEAPONS, this) |= (it.m_wepset);
@@ -1559,7 +1557,7 @@ spawnfunc(target_items)
 		}
 
 		this.netname = "";
-		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_AMMO), "unlimited_weapon_ammo");
 		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
 		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.strength_finished * boolean(this.items & ITEM_Strength.m_itemid), "strength");
 		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.invincible_finished * boolean(this.items & ITEM_Shield.m_itemid), "invincible");
@@ -1763,7 +1761,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, strength_finished, op, val);
 				got += GiveValue(e, invincible_finished, op, val);
 				got += GiveValue(e, superweapons_finished, op, val);
-				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
+				got += GiveBit(e, items, IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS, op, val);
 			case "all":
 				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
 				got += GiveResourceValue(e, RES_HEALTH, op, val);
@@ -1781,10 +1779,11 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			case "unlimited_ammo":
-				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
+				// this is from a time when unlimited superweapons were handled together with ammo in some parts of the code
+				got += GiveBit(e, items, IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS, op, val);
 				break;
 			case "unlimited_weapon_ammo":
-				got += GiveBit(e, items, IT_UNLIMITED_WEAPON_AMMO, op, val);
+				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
 				break;
 			case "unlimited_superweapons":
 				got += GiveBit(e, items, IT_UNLIMITED_SUPERWEAPONS, op, val);
@@ -1847,7 +1846,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND_POWERUP, SND_POWEROFF);
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_AMMO, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND_ITEMPICKUP, SND_Null);
 	FOREACH(Weapons, it != WEP_Null, {
 		POSTGIVE_WEAPON(e, it, SND_WEAPONPICKUP, SND_Null);
