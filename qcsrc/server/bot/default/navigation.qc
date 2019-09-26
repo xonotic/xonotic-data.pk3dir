@@ -1340,7 +1340,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResource(this, RES_FUEL)));
 
 			// enough fuel ?
-			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
+			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship

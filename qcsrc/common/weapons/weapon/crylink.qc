@@ -574,7 +574,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             }
             actor.(weaponentity).crylink_waitrelease = 0;
             if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-            if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+            if(!(actor.items & IT_UNLIMITED_AMMO))
             {
                 // ran out of ammo!
                 actor.cnt = thiswep.m_id;

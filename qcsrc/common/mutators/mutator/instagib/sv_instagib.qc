@@ -82,7 +82,7 @@ void instagib_ammocheck(entity this)
 
 	if(IS_DEAD(this) || game_stopped)
 		instagib_stop_countdown(this);
-	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
+	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_AMMO) || (this.flags & FL_GODMODE))
 		instagib_stop_countdown(this);
 	else if(autocvar_g_rm && autocvar_g_rm_laser)
 	{
