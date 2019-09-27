@@ -65,11 +65,12 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
+			e.sendCvars = true;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(60, 130, 5, "fov",
-			_("Field of vision in degrees (default: 100)")));
+			_("Field of vision in degrees")));
 	me.TR(me);
 	me.TR(me);
 		//me.TDempty(me, 0.2);

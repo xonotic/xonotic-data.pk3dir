@@ -141,7 +141,7 @@ void spiderbot_rocket_do(entity this)
 
     if (this.wait != -10)
     {
-        if (PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.vehicle_weapon2mode == SBRM_GUIDE)
+        if (PHYS_INPUT_BUTTON_ATCK2(this.owner) && STAT(VEHICLESTAT_W2MODE, this) == SBRM_GUIDE)
         {
             if (this.wait == 1)
             if (this.tur_head.frame == 9 || this.tur_head.frame == 1)
@@ -175,12 +175,12 @@ void spiderbot_rocket_do(entity this)
     if(!PHYS_INPUT_BUTTON_ATCK2(this.owner))
         return;
 
-    if(forbidWeaponUse(this.owner))
+    if(weaponLocked(this.owner) || weaponUseForbidden(this.owner))
         return;
 
     v = gettaginfo(this.tur_head,gettagindex(this.tur_head,"tag_fire"));
 
-    switch(this.vehicle_weapon2mode)
+    switch(STAT(VEHICLESTAT_W2MODE, this))
     {
         case SBRM_VOLLY:
             rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
@@ -240,7 +240,7 @@ void spiderbot_rocket_do(entity this)
     if (this.tur_head.frame == 9)
         this.attack_finished_single[0] = autocvar_g_vehicle_spiderbot_rocket_reload;
     else
-        this.attack_finished_single[0] = ((this.vehicle_weapon2mode ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
+        this.attack_finished_single[0] = ((STAT(VEHICLESTAT_W2MODE, this) ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
 
     this.gun2.cnt = time + this.attack_finished_single[0];
 }

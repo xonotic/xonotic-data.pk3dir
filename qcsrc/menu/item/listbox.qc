@@ -182,10 +182,10 @@
 		if (me.pressed == 1)
 		{
 			hit = 1;
-			if (pos.x < 1 - me.controlWidth - me.tolerance.y * me.controlWidth) hit = 0;
-			if (pos.y < 0 - me.tolerance.x) hit = 0;
-			if (pos.x >= 1 + me.tolerance.y * me.controlWidth) hit = 0;
-			if (pos.y >= 1 + me.tolerance.x) hit = 0;
+			if (pos.x < 1 - me.controlWidth - me.tolerance.x * me.controlWidth) hit = 0;
+			if (pos.y < 0 - me.tolerance.y) hit = 0;
+			if (pos.x >= 1 + me.tolerance.x * me.controlWidth) hit = 0;
+			if (pos.y >= 1 + me.tolerance.y) hit = 0;
 			if (hit)
 			{
 				// calculate new pos to v
@@ -208,43 +208,43 @@
 		}
 		return 1;
 	}
-	float ListBox_mousePress(entity me, vector pos)
+	METHOD(ListBox, mousePress, bool(ListBox this, vector pos))
 	{
-		if (pos.x < 0) return 0;
-		if (pos.y < 0) return 0;
-		if (pos.x >= 1) return 0;
-		if (pos.y >= 1) return 0;
-		me.dragScrollPos = pos;
-		me.updateControlTopBottom(me);
-		if (pos.x >= 1 - me.controlWidth)
+		if (pos.x < 0) return false;
+		if (pos.y < 0) return false;
+		if (pos.x >= 1) return false;
+		if (pos.y >= 1) return false;
+		this.dragScrollPos = pos;
+		this.updateControlTopBottom(this);
+		if (pos.x >= 1 - this.controlWidth)
 		{
-			// if hit, set me.pressed, otherwise scroll by one page
-			if (pos.y < me.controlTop)
+			// if hit, set this.pressed, otherwise scroll by one page
+			if (pos.y < this.controlTop)
 			{
 				// page up
-				me.scrollPosTarget = max(me.scrollPosTarget - 1, 0);
+				this.scrollPosTarget = max(this.scrollPosTarget - 1, 0);
 			}
-			else if (pos.y > me.controlBottom)
+			else if (pos.y > this.controlBottom)
 			{
 				// page down
-				me.scrollPosTarget = min(me.scrollPosTarget + 1, me.getTotalHeight(me) - 1);
+				this.scrollPosTarget = min(this.scrollPosTarget + 1, this.getTotalHeight(this) - 1);
 			}
 			else
 			{
-				me.pressed = 1;
-				me.pressOffset = pos.y;
-				me.previousValue = me.scrollPos;
+				this.pressed = 1;
+				this.pressOffset = pos.y;
+				this.previousValue = this.scrollPos;
 			}
 		}
 		else
 		{
 			// continue doing that while dragging (even when dragging outside). When releasing, forward the click to the then selected item.
-			me.pressed = 2;
+			this.pressed = 2;
 			// an item has been clicked. Select it, ...
-			me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
-			me.setFocusedItem(me, me.selectedItem);
+			this.setSelected(this, this.getItemAtPos(this, this.scrollPos + pos.y));
+			this.setFocusedItem(this, this.selectedItem);
 		}
-		return 1;
+		return true;
 	}
 	void ListBox_setFocusedItem(entity me, int item)
 	{
@@ -331,13 +331,11 @@
 		}
 	}
 	AUTOCVAR(menu_scroll_averaging_time, float, 0.16, "smooth scroll averaging time");
-// scroll faster while dragging the scrollbar
+	// scroll faster while dragging the scrollbar
 	AUTOCVAR(menu_scroll_averaging_time_pressed, float, 0.06, "smooth scroll averaging time when dragging the scrollbar");
 	void ListBox_draw(entity me)
 	{
-		float i;
-		vector absSize, fillSize = '0 0 0';
-		vector oldshift, oldscale;
+		vector fillSize = '0 0 0';
 
 		// we can't do this in mouseMove as the list can scroll without moving the cursor
 		if (me.mouseMoveOffset != -1) me.setFocusedItem(me, me.getItemAtPos(me, me.scrollPos + me.mouseMoveOffset));
@@ -350,7 +348,7 @@
 		if (me.scrollPos != me.scrollPosTarget)
 		{
 			float averaging_time = (me.pressed == 1)
-			    ? autocvar_menu_scroll_averaging_time_pressed
+				? autocvar_menu_scroll_averaging_time_pressed
 				: autocvar_menu_scroll_averaging_time;
 			// this formula works with whatever framerate
 			float f = averaging_time ? exp(-frametime / averaging_time) : 0;
@@ -376,19 +374,19 @@
 			}
 		}
 		draw_SetClip();
-		oldshift = draw_shift;
-		oldscale = draw_scale;
+		vector oldshift = draw_shift;
+		vector oldscale = draw_scale;
 
-		i = me.getItemAtPos(me, me.scrollPos);
-		float j = me.getItemStart(me, i) - me.scrollPos;
-		for ( ; i < me.nItems && j < 1; ++i)
+		int i = me.getItemAtPos(me, me.scrollPos);
+		float y = me.getItemStart(me, i) - me.scrollPos;
+		for ( ; i < me.nItems && y < 1; ++i)
 		{
-			draw_shift = boxToGlobal(eY * j, oldshift, oldscale);
+			draw_shift = boxToGlobal(eY * y, oldshift, oldscale);
 			vector relSize = eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, i);
-			absSize = boxToGlobalSize(relSize, me.size);
+			vector absSize = boxToGlobalSize(relSize, me.size);
 			draw_scale = boxToGlobalSize(relSize, oldscale);
 			me.drawListBoxItem(me, i, absSize, (me.selectedItem == i), (me.focusedItem == i));
-			j += relSize.y;
+			y += relSize.y;
 		}
 		draw_ClearClip();
 

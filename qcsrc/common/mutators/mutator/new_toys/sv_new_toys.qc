@@ -1,5 +1,7 @@
 #include "sv_new_toys.qh"
 
+#include "../random_items/sv_random_items.qh"
+
 /*
 
 CORE    laser   vortex     lg      rl      cry     gl      elec    hagar   fireb   hook
@@ -26,7 +28,7 @@ Entity:
 -> This will spawn as Rifle in this mutator ONLY, and as Vortex otherwise.
 
 {
-"classname" "weapon_vortext"
+"classname" "weapon_vortex"
 "new_toys" "vortex rifle"
 }
 -> This will spawn as either Vortex or Rifle in this mutator ONLY, and as Vortex otherwise.
@@ -68,9 +70,11 @@ roflsound "New toys, new toys!" sound.
 
 */
 
+//string autocvar_g_new_toys;
+
 bool nt_IsNewToy(int w);
 
-REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overkill"))
+REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok))
 {
 	MUTATOR_ONADD
 	{
@@ -104,7 +108,7 @@ REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overk
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
-bool autocvar_g_new_toys_use_pickupsound = true;
+bool autocvar_g_new_toys_use_pickupsound = false;
 const float NT_AUTOREPLACE_NEVER = 0;
 const float NT_AUTOREPLACE_ALWAYS = 1;
 const float NT_AUTOREPLACE_RANDOM = 2;
@@ -191,6 +195,11 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
 {
+	if (MUTATOR_IS_ENABLED(random_items))
+	{
+		// Do not replace weapons when random items are enabled.
+		return;
+	}
 	entity wep = M_ARGV(0, entity);
 	entity wepinfo = M_ARGV(1, entity);
 	string ret_string = M_ARGV(2, string);

@@ -109,16 +109,8 @@ void MapVote_UnzoneStrings()
 {
 	for(int j = 0; j < mapvote_count; ++j)
 	{
-		if ( mapvote_maps[j] )
-		{
-			strunzone(mapvote_maps[j]);
-			mapvote_maps[j] = string_null;
-		}
-		if ( mapvote_maps_pakfile[j] )
-		{
-			strunzone(mapvote_maps_pakfile[j]);
-			mapvote_maps_pakfile[j] = string_null;
-		}
+		strfree(mapvote_maps[j]);
+		strfree(mapvote_maps_pakfile[j]);
 	}
 }
 
@@ -599,9 +591,9 @@ void MapVote_Tick()
 	int totalvotes = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		// hide scoreboard again
-		if(it.health != 2342)
+		if(GetResource(it, RES_HEALTH) != 2342)
 		{
-			it.health = 2342;
+			SetResourceExplicit(it, RES_HEALTH, 2342);
 			CS(it).impulse = 0;
 
 			msg_entity = it;

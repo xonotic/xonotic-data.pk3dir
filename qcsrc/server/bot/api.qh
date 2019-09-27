@@ -2,18 +2,27 @@
 
 #include <server/defs.qh>
 #include <common/weapons/_all.qh>
+#include <common/physics/player.qh>
 
 const int WAYPOINTFLAG_GENERATED = BIT(23);
 const int WAYPOINTFLAG_ITEM = BIT(22);
-const int WAYPOINTFLAG_TELEPORT = BIT(21);
-const int WAYPOINTFLAG_NORELINK = BIT(20);
+const int WAYPOINTFLAG_TELEPORT = BIT(21); // teleports, warpzones and jumppads
+//const int WAYPOINTFLAG_NORELINK = BIT(20); // deprecated, see explanation below. Do not recycle this bit.
 const int WAYPOINTFLAG_PERSONAL = BIT(19);
 const int WAYPOINTFLAG_PROTECTED = BIT(18);  // Useless WP detection never kills these.
 const int WAYPOINTFLAG_USEFUL = BIT(17);  // Useless WP detection temporary flag.
 const int WAYPOINTFLAG_DEAD_END = BIT(16);  // Useless WP detection temporary flag.
+const int WAYPOINTFLAG_LADDER = BIT(15);
+const int WAYPOINTFLAG_JUMP = BIT(14);
+const int WAYPOINTFLAG_CUSTOM_JP = BIT(13);  // jumppad with different destination waypoint (changed in the editor)
+const int WAYPOINTFLAG_CROUCH = BIT(12);
+const int WAYPOINTFLAG_SUPPORT = BIT(11);
 
-entity kh_worldkeylist;
-.entity kh_worldkeynext;
+// removed WAYPOINTFLAG_NORELINK since it breaks backward compatibility
+// e.g. support waypoints would have no outgoing links in old Xonotic versions
+// In general, old Xonotic versions should spawn a normal waypoint for each unknown waypoint type
+const int WAYPOINTFLAG_NORELINK__DEPRECATED = BIT(20);
+const int WPFLAGMASK_NORELINK = (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER | WAYPOINTFLAG_JUMP | WAYPOINTFLAG_CUSTOM_JP | WAYPOINTFLAG_SUPPORT);
 
 float bot_custom_weapon;
 float bot_weapons_close[Weapons_MAX];
@@ -21,6 +30,7 @@ float bot_weapons_far[Weapons_MAX];
 float bot_weapons_mid[Weapons_MAX];
 float skill;
 
+.float bot_tracewalk_time;
 .float bot_attack;
 .float bot_dodgerating;
 .float bot_dodge;
@@ -28,11 +38,13 @@ float skill;
 .float bot_moveskill; // moving technique
 .float bot_pickup;
 .float(entity player, entity item) bot_pickupevalfunc;
-.float bot_strategytime;
 .string cleanname;
 .float havocbot_role_timeout;
+.void(entity this) havocbot_role;
+.void(entity this) havocbot_previous_role;
 .float isbot; // true if this client is actually a bot
 .float lastteleporttime;
+.vector lastteleport_origin;
 .float navigation_hasgoals;
 .float nearestwaypointtimeout;
 .entity nearestwaypoint;
@@ -45,10 +57,11 @@ float skill;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 .float wpconsidered;
 .float wpcost;
-.float wphardwired;
 .int wpflags;
+.entity wphw00, wphw01, wphw02, wphw03, wphw04, wphw05, wphw06, wphw07;
 
 bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
+void bot_aim_reset(entity this);
 void bot_clientconnect(entity this);
 void bot_clientdisconnect(entity this);
 void bot_cmdhelp(string scmd);
@@ -70,33 +83,56 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius);
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius);
 
+bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, entity item, vector item_org);
+
 vector havocbot_middlepoint;
 float havocbot_middlepoint_radius;
-vector havocbot_symmetryaxis_equation;
+float havocbot_symmetry_axis_m;
+float havocbot_symmetry_axis_q;
+float havocbot_symmetry_origin_order;
+
+.float goalentity_lock_timeout;
+.float ignoregoaltime;
+.entity ignoregoal;
 
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
-void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_set(entity this, entity dropper);
 void navigation_dynamicgoal_unset(entity this);
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
 void navigation_goalrating_end(entity this);
 void navigation_goalrating_start(entity this);
+void navigation_goalrating_timeout_set(entity this);
+void navigation_goalrating_timeout_force(entity this);
+void navigation_goalrating_timeout_expire(entity this, float seconds);
+bool navigation_goalrating_timeout(entity this);
+void navigation_goalrating_timeout_extend_if_needed(entity this, float seconds);
+bool navigation_goalrating_timeout_can_be_anticipated(entity this);
 void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
 void navigation_routerating(entity this, entity e, float f, float rangebias);
 
-bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
+vector get_closer_dest(entity ent, vector org);
 
-void waypoint_remove(entity e);
+void set_tracewalk_dest(entity ent, vector org, bool fix_player_dest);
+vector set_tracewalk_dest_2(entity ent, vector org);
+bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode);
+
+void waypoint_remove_fromeditor(entity pl);
+void waypoint_remove(entity wp);
 void waypoint_saveall();
 void waypoint_schedulerelinkall();
 void waypoint_schedulerelink(entity wp);
 void waypoint_spawnforitem(entity e);
 void waypoint_spawnforitem_force(entity e, vector org);
-void waypoint_spawnforteleporter(entity e, vector destination, float timetaken);
-void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken);
+void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent);
+void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent);
+void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bool is_crouch_wp, bool is_support_wp);
 entity waypoint_spawn(vector m1, vector m2, float f);
+void waypoint_unreachable(entity pl);
+void waypoint_start_hardwiredlink(entity pl, bool at_crosshair);
+void waypoint_lock(entity pl);
 
-.entity goalcurrent;
-void navigation_clearroute(entity this);
+void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx);
+void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx);

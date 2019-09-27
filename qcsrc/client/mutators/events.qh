@@ -2,6 +2,11 @@
 
 #include <common/mutators/base.qh>
 
+// register all possible hooks here
+
+// to use a hook, first register your mutator using REGISTER_MUTATOR
+// then create your function using MUTATOR_HOOKFUNCTION
+
 /**
  * Called when a client command is parsed
  * NOTE: hooks MUST start with if (MUTATOR_RETURNVALUE) return false;
@@ -194,3 +199,6 @@ MUTATOR_HOOKABLE(ForcePlayermodels_Skip, EV_ForcePlayermodels_Skip);
 	/** hit origin */ 		i(vector, MUTATOR_ARGV_2_vector) \
 	/**/
 MUTATOR_HOOKABLE(DamageInfo, EV_DamageInfo);
+
+/** Return true to not draw zoom reticle */
+MUTATOR_HOOKABLE(DrawReticle, EV_NO_ARGS);

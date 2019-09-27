@@ -9,6 +9,8 @@ float navigation_testtracewalk;
 
 vector jumpstepheightvec;
 vector stepheightvec;
+vector jumpheight_vec;
+float jumpheight_time;
 
 entity navigation_bestgoal;
 
@@ -22,13 +24,47 @@ entity navigation_bestgoal;
 .entity goalstack20, goalstack21, goalstack22, goalstack23;
 .entity goalstack24, goalstack25, goalstack26, goalstack27;
 .entity goalstack28, goalstack29, goalstack30, goalstack31;
+
+.entity goalcurrent_prev;
+.float goalcurrent_distance_z;
+.float goalcurrent_distance_2d;
+.float goalcurrent_distance_time;
+
+// final goal (item, object or player) is also saved in this field
+.entity goalentity;
+.float goalentity_lock_timeout;
+.bool goalentity_shouldbefrozen;
+
 .entity nearestwaypoint;
+.float nearestwaypointtimeout;
+
+/*
+// item it is linked from waypoint it.wpXX (INCOMING link)
+// links are sorted by their cost (wpXXmincost)
+.entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
+.entity wp16, wp17, wp18, wp19, wp20, wp21, wp22, wp23, wp24, wp25, wp26, wp27, wp28, wp29, wp30, wp31;
+
+.float wp00mincost, wp01mincost, wp02mincost, wp03mincost, wp04mincost, wp05mincost, wp06mincost, wp07mincost;
+.float wp08mincost, wp09mincost, wp10mincost, wp11mincost, wp12mincost, wp13mincost, wp14mincost, wp15mincost;
+.float wp16mincost, wp17mincost, wp18mincost, wp19mincost, wp20mincost, wp21mincost, wp22mincost, wp23mincost;
+.float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
+*/
+
+#define navigation_item_islinked(from_wp, to_item) waypoint_islinked(to_item, from_wp)
+#define navigation_item_addlink(from_wp, to_item) \
+	waypoint_addlink_customcost(to_item, from_wp, waypoint_getlinkcost(from_wp, to_item))
+
+#define TELEPORT_USED(pl, tele_wp) \
+	boxesoverlap(tele_wp.absmin, tele_wp.absmax, pl.lastteleport_origin + STAT(PL_MIN, pl), pl.lastteleport_origin + STAT(PL_MAX, pl))
+
+vector tracewalk_dest;
+float tracewalk_dest_height;
 
 .entity wp_goal_prev0;
 .entity wp_goal_prev1;
 
-.float nearestwaypointtimeout;
 .float lastteleporttime;
+.vector lastteleport_origin;
 
 .float blacklisted;
 
@@ -49,8 +85,14 @@ float bot_waypoint_queue_bestgoalrating;
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
-void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_set(entity this, entity dropper);
 void navigation_dynamicgoal_unset(entity this);
+
+.int nav_submerged_state;
+#define SUBMERGED_UNDEFINED 0
+#define SUBMERGED_NO 1
+#define SUBMERGED_YES 2
+bool navigation_check_submerged_state(entity ent, vector pos);
 
 
 /*
@@ -63,7 +105,7 @@ void debugnodestatus(vector position, float status);
 
 void debuggoalstack(entity this);
 
-float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
+float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode);
 
 float navigation_markroutes_nearestwaypoints(entity this, float maxdist);
 float navigation_routetogoal(entity this, entity e, vector startposition);
@@ -75,12 +117,16 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
 void navigation_routerating(entity this, entity e, float f, float rangebias);
-void navigation_poptouchedgoals(entity this);
+bool navigation_shortenpath(entity this);
+int navigation_poptouchedgoals(entity this);
 void navigation_goalrating_start(entity this);
 void navigation_goalrating_end(entity this);
+void navigation_goalrating_timeout_set(entity this);
+void navigation_goalrating_timeout_force(entity this);
+bool navigation_goalrating_timeout(entity this);
 void navigation_unstuck(entity this);
 
 void botframe_updatedangerousobjects(float maxupdate);
 
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
-float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist);
+float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2, float v2_height, vector o2, float o2_height, float walkfromwp, float bestdist);

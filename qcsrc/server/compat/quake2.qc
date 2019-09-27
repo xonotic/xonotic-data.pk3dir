@@ -1,15 +1,12 @@
 #include "quake2.qh"
 
-spawnfunc(item_armor_medium);
-
-spawnfunc(item_invincible);
-
+#include <common/items/_mod.qh>
 
 //***********************
 //QUAKE 2 ENTITIES - So people can play quake2 maps with the xonotic weapons
 //***********************
-spawnfunc(item_armor_jacket) {spawnfunc_item_armor_medium(this);}
+SPAWNFUNC_ITEM(item_armor_jacket, ITEM_ArmorMedium)
 
-spawnfunc(item_invulnerability) {spawnfunc_item_invincible(this);}
+SPAWNFUNC_ITEM(item_invulnerability, ITEM_Shield)
 
 // rest of the quake 2 entities are handled by q1 and q3 compat

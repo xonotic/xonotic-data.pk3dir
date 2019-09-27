@@ -43,8 +43,12 @@ const int MAX_CL_STATS = 256;
 #endif
 
 #ifdef SVQC
+/// all the weapons actually spawned in the map, does not include filtered items
 vector weaponsInMap;
+/// all the weapons placed by the mapper (weaponreplace applied), ignores most filters
+vector weaponsInMapAll;
 #endif
+
 REGISTER_STAT(WEAPONS, vectori)
 REGISTER_STAT(WEAPONSINMAP, vectori, weaponsInMap)
 
@@ -73,7 +77,6 @@ REGISTER_STAT(GAMESTARTTIME, float, game_starttime)
 REGISTER_STAT(STRENGTH_FINISHED, float)
 REGISTER_STAT(INVINCIBLE_FINISHED, float)
 /** arc heat in [0,1] */
-REGISTER_STAT(ARC_HEAT, float)
 REGISTER_STAT(PRESSED_KEYS, int)
 /** this stat could later contain some other bits of info, like, more server-side particle config */
 REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool, autocvar_g_allow_oldvortexbeam)
@@ -82,18 +85,12 @@ REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
 REGISTER_STAT(SHOTORG, int)
 REGISTER_STAT(LEADLIMIT, float, autocvar_leadlimit)
-REGISTER_STAT(WEAPON_CLIPLOAD, int)
-REGISTER_STAT(WEAPON_CLIPSIZE, int)
 
-REGISTER_STAT(VORTEX_CHARGE, float)
 REGISTER_STAT(LAST_PICKUP, float)
 REGISTER_STAT(HUD, int)
-REGISTER_STAT(VORTEX_CHARGEPOOL, float)
 REGISTER_STAT(HIT_TIME, float)
 REGISTER_STAT(DAMAGE_DEALT_TOTAL, int)
 REGISTER_STAT(TYPEHIT_TIME, float)
-REGISTER_STAT(LAYED_MINES, int)
-REGISTER_STAT(HAGAR_LOAD, int)
 REGISTER_STAT(SUPERWEAPONS_FINISHED, float)
 REGISTER_STAT(VEHICLESTAT_HEALTH, int)
 REGISTER_STAT(VEHICLESTAT_SHIELD, int)
@@ -127,6 +124,13 @@ REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
+REGISTER_STAT(VEIL_ORB, float)
+REGISTER_STAT(VEIL_ORB_ALPHA, float)
+
+#ifdef SVQC
+float autocvar_sv_showfps = 5;
+#endif
+REGISTER_STAT(SHOWFPS, float, autocvar_sv_showfps)
 
 #ifdef SVQC
 bool autocvar_g_ctf_leaderboard;
@@ -183,12 +187,12 @@ REGISTER_STAT(BUGRIGS_SPEED_REF, float, g_bugrigs_speed_ref)
 REGISTER_STAT(BUGRIGS_STEER, float, g_bugrigs_steer)
 
 #ifdef SVQC
-int autocvar_sv_gameplayfix_downtracesupportsongroundflag;
-int autocvar_sv_gameplayfix_easierwaterjump;
-int autocvar_sv_gameplayfix_stepdown;
-int autocvar_sv_gameplayfix_stepmultipletimes;
-int autocvar_sv_gameplayfix_unstickplayers;
-int autocvar_sv_gameplayfix_fixedcheckwatertransition;
+int autocvar_sv_gameplayfix_downtracesupportsongroundflag = 1;
+int autocvar_sv_gameplayfix_easierwaterjump = 1;
+int autocvar_sv_gameplayfix_stepdown = 2;
+int autocvar_sv_gameplayfix_stepmultipletimes = 1;
+int autocvar_sv_gameplayfix_unstickplayers = 1;
+int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
 #endif
 REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
@@ -217,28 +221,36 @@ float autocvar_sv_dodging_wall_distance_threshold;
 bool autocvar_sv_dodging_frozen;
 bool autocvar_sv_dodging_frozen_doubletap;
 float autocvar_sv_dodging_height_threshold;
-float autocvar_sv_dodging_horiz_speed;
-float autocvar_sv_dodging_horiz_speed_frozen;
+float autocvar_sv_dodging_horiz_speed_min;
+float autocvar_sv_dodging_horiz_speed_max;
+float autocvar_sv_dodging_horiz_force_slowest;
+float autocvar_sv_dodging_horiz_force_fastest;
+float autocvar_sv_dodging_horiz_force_frozen;
 float autocvar_sv_dodging_ramp_time;
 float autocvar_sv_dodging_up_speed;
 bool autocvar_sv_dodging_wall_dodging;
 bool autocvar_sv_dodging_air_dodging;
-float autocvar_sv_dodging_maxspeed = 450;
+float autocvar_sv_dodging_maxspeed;
+float autocvar_sv_dodging_air_maxspeed;
 #endif
 
 #if 0
 REGISTER_STAT(DODGING, int, g_dodging)
 REGISTER_STAT(DODGING_DELAY, float, autocvar_sv_dodging_delay)
 REGISTER_STAT(DODGING_DISTANCE_THRESHOLD, float, autocvar_sv_dodging_wall_distance_threshold)
-REGISTER_STAT(DODGING_FROZEN_NO_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
+REGISTER_STAT(DODGING_FROZEN_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
 REGISTER_STAT(DODGING_HEIGHT_THRESHOLD, float, autocvar_sv_dodging_height_threshold)
-REGISTER_STAT(DODGING_HORIZ_SPEED, float, autocvar_sv_dodging_horiz_speed)
-REGISTER_STAT(DODGING_HORIZ_SPEED_FROZEN, float, autocvar_sv_dodging_horiz_speed_frozen)
+REGISTER_STAT(DODGING_HORIZ_SPEED_MIN, float, autocvar_sv_dodging_horiz_speed_min)
+REGISTER_STAT(DODGING_HORIZ_SPEED_MAX, float, autocvar_sv_dodging_horiz_speed_max)
+REGISTER_STAT(DODGING_HORIZ_FORCE_SLOWEST, float, autocvar_sv_dodging_horiz_force_slowest)
+REGISTER_STAT(DODGING_HORIZ_FORCE_FASTEST, float, autocvar_sv_dodging_horiz_force_fastest)
+REGISTER_STAT(DODGING_HORIZ_FORCE_FROZEN, float, autocvar_sv_dodging_horiz_force_frozen)
 REGISTER_STAT(DODGING_RAMP_TIME, float, autocvar_sv_dodging_ramp_time)
 REGISTER_STAT(DODGING_UP_SPEED, float, autocvar_sv_dodging_up_speed)
 REGISTER_STAT(DODGING_WALL, bool, autocvar_sv_dodging_wall_dodging)
 REGISTER_STAT(DODGING_AIR, bool, autocvar_sv_dodging_air_dodging)
 REGISTER_STAT(DODGING_MAXSPEED, float, autocvar_sv_dodging_maxspeed)
+REGISTER_STAT(DODGING_AIR_MAXSPEED, float, autocvar_sv_dodging_air_maxspeed)
 #endif
 /** cvar loopback */
 REGISTER_STAT(DODGING_FROZEN, int, autocvar_sv_dodging_frozen)
@@ -294,8 +306,21 @@ bool autocvar_sv_slick_applygravity;
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
 #ifdef SVQC
-#include "physics/movetypes/movetypes.qh"
+bool autocvar_sv_vq3compat;
 #endif
+REGISTER_STAT(VQ3COMPAT, bool, autocvar_sv_vq3compat)
+
+#ifdef SVQC
+#include "physics/movetypes/movetypes.qh"
+float warmup_limit;
+#endif
+
+#ifdef SVQC
+bool autocvar_g_shootfromcenter;
+bool autocvar_g_shootfromeye;
+#endif
+REGISTER_STAT(SHOOTFROMEYE, bool, autocvar_g_shootfromeye)
+REGISTER_STAT(SHOOTFROMCENTER, bool, autocvar_g_shootfromcenter)
 
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_PENALTY, float)
@@ -304,7 +329,7 @@ REGISTER_STAT(MOVEVARS_AIRSTRAFEACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_POWER, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_BACKWARDS, bool)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_SIDEWARDS, bool)
-noref bool autocvar_sv_gameplayfix_nogravityonground;
+noref bool autocvar_sv_gameplayfix_nogravityonground = true;
 REGISTER_STAT(MOVEFLAGS, int, MOVEFLAG_VALID
                               | (autocvar_sv_gameplayfix_q2airaccelerate ? MOVEFLAG_Q2AIRACCELERATE : 0)
                               | (autocvar_sv_gameplayfix_nogravityonground ? MOVEFLAG_NOGRAVITYONGROUND : 0)
@@ -338,20 +363,17 @@ REGISTER_STAT(MOVEVARS_AIRACCELERATE, float)
 // FIXME: Was 0 on server, 1 on client. Still want that?
 REGISTER_STAT(MOVEVARS_ENTGRAVITY, float, (this.gravity) ? this.gravity : 1)
 REGISTER_STAT(MOVEVARS_JUMPVELOCITY, float)
+REGISTER_STAT(MOVEVARS_JUMPVELOCITY_CROUCH, float)
 REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
 REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
 REGISTER_STAT(MOVEVARS_SPECIALCOMMAND, bool)
-
-
-#ifdef CSQC
-noref int autocvar_cl_gunalign;
-#endif
 #ifdef SVQC
-.int cvar_cl_gunalign;
-REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
+int autocvar_sv_wallclip;
 #endif
+REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
+
 REGISTER_STAT(GUNALIGN, int)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))

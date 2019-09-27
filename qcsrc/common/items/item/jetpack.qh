@@ -17,22 +17,28 @@ MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_fuel_jetpack);
-void powerup_jetpack_init(entity item)
+void powerup_jetpack_init(Pickup this, entity item)
 {
-    if(!item.ammo_fuel)
-        item.ammo_fuel = g_pickup_fuel_jetpack;
+    if(!GetResource(item, RES_FUEL))
+        SetResourceExplicit(item, RES_FUEL, g_pickup_fuel_jetpack);
 }
 #endif
+
+CLASS(Jetpack, Powerup)
+ENDCLASS(Jetpack)
+
 REGISTER_ITEM(Jetpack, Powerup) {
+    this.m_canonical_spawnfunc = "item_jetpack";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_Jetpack_ITEM;
     this.m_itemid               =   IT_JETPACK;
 #endif
     this.netname                =   "jetpack";
-    this.m_name                 =   "Jet pack";
+    this.m_name                 =   _("Jetpack");
     this.m_icon                 =   "jetpack";
     this.m_color                =   '0.5 0.5 0.5';
-    this.m_waypoint             =   _("Jet Pack");
+    this.m_waypoint             =   _("Jetpack");
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_botvalue             =   3000;
@@ -41,24 +47,28 @@ REGISTER_ITEM(Jetpack, Powerup) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_jetpack, ITEM_Jetpack)
+
 #ifdef GAMEQC
 MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
 #endif
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_fuel);
-void ammo_fuel_init(entity item)
+void ammo_fuel_init(Pickup this, entity item)
 {
-    if(!item.ammo_fuel)
-        item.ammo_fuel = g_pickup_fuel;
+    if(!GetResource(item, RES_FUEL))
+        SetResourceExplicit(item, RES_FUEL, g_pickup_fuel);
 }
 #endif
 REGISTER_ITEM(JetpackFuel, Ammo) {
+    this.m_canonical_spawnfunc = "item_fuel";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model    =   MDL_JetpackFuel_ITEM;
 #endif
     this.netname    =   "fuel";
-    this.m_name     =   "Fuel";
+    this.m_name     =   _("fuel");
     this.m_icon     =   "ammo_fuel";
 #ifdef SVQC
     this.m_botvalue =   2000;
@@ -67,16 +77,23 @@ REGISTER_ITEM(JetpackFuel, Ammo) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_fuel, ITEM_JetpackFuel)
+
 #ifdef GAMEQC
 MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
 #endif
 
-REGISTER_ITEM(JetpackRegen, Powerup) {
+CLASS(JetpackRegen, Powerup)
+ENDCLASS(JetpackRegen)
+
+REGISTER_ITEM(JetpackRegen, JetpackRegen) {
+    this.m_canonical_spawnfunc = "item_fuel_regen";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_JetpackRegen_ITEM;
 #endif
     this.netname                =   "fuel_regen";
-    this.m_name                 =   "Fuel regenerator";
+    this.m_name                 =   _("Fuel regenerator");
     this.m_icon                 =   "fuelregen";
     this.m_color                =   '1 0.5 0';
     this.m_waypoint             =   _("Fuel regen");
@@ -87,3 +104,5 @@ REGISTER_ITEM(JetpackRegen, Powerup) {
     this.m_pickupevalfunc       =   ammo_pickupevalfunc;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_fuel_regen, ITEM_JetpackRegen)

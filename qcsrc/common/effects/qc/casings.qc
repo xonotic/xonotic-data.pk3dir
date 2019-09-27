@@ -9,9 +9,19 @@
 
 REGISTER_NET_TEMP(casings)
 
+#if defined(SVQC)
+.bool cvar_cl_casings;
+#elif defined(CSQC)
+bool cvar_cl_casings;
+#endif
+REPLICATE(cvar_cl_casings, bool, "cl_casings");
+
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
+	if (!(CS(casingowner).cvar_cl_casings))
+		return;
+
     entity wep = casingowner.(weaponentity);
     vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
@@ -20,9 +30,7 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 
     WriteHeader(MSG_ALL, casings);
     WriteByte(MSG_ALL, casingtype);
-    WriteCoord(MSG_ALL, org.x);
-    WriteCoord(MSG_ALL, org.y);
-    WriteCoord(MSG_ALL, org.z);
+    WriteVector(MSG_ALL, org);
     WriteShort(MSG_ALL, compressShortVector(vel)); // actually compressed velocity
     WriteByte(MSG_ALL, ang.x * 256 / 360);
     WriteByte(MSG_ALL, ang.y * 256 / 360);
@@ -32,10 +40,10 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 
 #ifdef CSQC
 entityclass(Casing);
-class(Casing) .float alpha;
-class(Casing) .bool silent;
-class(Casing) .int state;
-class(Casing) .float cnt;
+classfield(Casing) .float alpha;
+classfield(Casing) .bool silent;
+classfield(Casing) .int state;
+classfield(Casing) .float cnt;
 
 void Casing_Delete(entity this)
 {
@@ -123,18 +131,13 @@ void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector t
 NET_HANDLE(casings, bool isNew)
 {
     int _state = ReadByte();
-    vector org;
-    org_x = ReadCoord();
-    org_y = ReadCoord();
-    org_z = ReadCoord();
+    vector org = ReadVector();
     vector vel = decompressShortVector(ReadShort());
     vector ang;
     ang_x = ReadByte() * 360 / 256;
     ang_y = ReadByte() * 360 / 256;
     ang_z = ReadByte() * 360 / 256;
     return = true;
-
-    if (!autocvar_cl_casings) return;
 
     Casing casing = RubbleNew("casing");
     casing.silent = (_state & 0x80);

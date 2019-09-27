@@ -1,10 +1,9 @@
 #pragma once
 
-#define setmodel(e, m) _setmodel((e), (m).model_str())
-
 CLASS(Model, Object)
     ATTRIB(Model, m_id, int, 0);
     ATTRIB(Model, model_str, string());
+    ATTRIB(Model, model_str_, string);
     CONSTRUCTOR(Model, string() path)
     {
         CONSTRUCT(Model);
@@ -18,7 +17,14 @@ CLASS(Model, Object)
             LOG_WARNF("Missing model: \"%s\"", s);
             return;
         }
-        profile(sprintf("precache_model(\"%s\")", s));
+        //profile(sprintf("precache_model(\"%s\")", s));
         precache_model(s);
+        strcpy(this.model_str_, s);
     }
 ENDCLASS(Model)
+
+#define setmodel(this, m) MACRO_BEGIN \
+    Model _setmodel_model = (m); \
+    string _setmodel_cached = _setmodel_model.model_str_; \
+    _setmodel((this), _setmodel_cached ? _setmodel_cached : _setmodel_model.model_str()); \
+MACRO_END

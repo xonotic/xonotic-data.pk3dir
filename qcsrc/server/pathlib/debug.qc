@@ -8,9 +8,7 @@ MODEL(SQUARE_BAD,   "models/pathlib/badsquare.md3");
 MODEL(EDGE,         "models/pathlib/edge.md3");
 
 #ifdef TURRET_DEBUG
-void mark_error(vector where,float lifetime);
-void mark_info(vector where,float lifetime);
-entity mark_misc(vector where,float lifetime);
+#include <common/turrets/util.qh>
 #endif
 
 void pathlib_showpath(entity start)

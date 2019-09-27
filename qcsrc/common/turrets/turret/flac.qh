@@ -12,5 +12,13 @@ CLASS(Flac, Turret)
 /* netname    */ ATTRIB(Flac, netname, string, "flac");
 /* fullname   */ ATTRIB(Flac, turret_name, string, _("FLAC Cannon"));
     ATTRIB(Flac, m_weapon, Weapon, WEP_FLAC);
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+	END()
+	TR_PROPS(X, Flac, flac)
+#undef X
+
 ENDCLASS(Flac)
 REGISTER_TURRET(FLAC, NEW(Flac));

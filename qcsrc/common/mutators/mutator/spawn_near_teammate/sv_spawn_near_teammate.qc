@@ -2,6 +2,7 @@
 
 #include <lib/float.qh>
 
+string autocvar_g_spawn_near_teammate;
 float autocvar_g_spawn_near_teammate_distance;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint_max;
@@ -10,7 +11,7 @@ float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health;
 bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath;
 
-REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
+REGISTER_MUTATOR(spawn_near_teammate, expr_evaluate(autocvar_g_spawn_near_teammate));
 
 .entity msnt_lookat;
 
@@ -20,6 +21,8 @@ REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 {
+	if (!teamplay) return;
+
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 	vector spawn_score = M_ARGV(2, vector);
@@ -28,9 +31,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 		return;
 
 	spawn_spot.msnt_lookat = NULL;
-
-	if(!teamplay)
-		return;
 
 	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it) && it != player && SAME_TEAM(it, player) && !IS_DEAD(it), {
@@ -56,7 +56,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {
-	if(!teamplay) { return; }
+	if (!teamplay) return;
+
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 
@@ -89,12 +90,12 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_max && tested >= autocvar_g_spawn_near_teammate_ignore_spawnpoint_max) break;
 
 			if (PHYS_INPUT_BUTTON_CHAT(it)) continue;
-			if (!SAME_TEAM(player, it)) continue;
-			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && it.health < autocvar_g_balance_health_regenstable) continue;
+			if (DIFF_TEAM(player, it)) continue;
+			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && GetResource(it, RES_HEALTH) < autocvar_g_balance_health_regenstable) continue;
 			if (IS_DEAD(it)) continue;
 			if (time < it.msnt_timer) continue;
 			if (time < it.spawnshieldtime) continue;
-			if (forbidWeaponUse(it)) continue;
+			if (weaponLocked(it)) continue;
 			if (it == player) continue;
 
 			tested++; // i consider a teammate to be available when he passes the checks above

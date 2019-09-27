@@ -33,8 +33,8 @@ int g_magic_stats_hole = 0;
 	void stats_get() {}
 	#define STAT(...) EVAL_STAT(OVERLOAD(STAT, __VA_ARGS__))
 	#define EVAL_STAT(...) __VA_ARGS__
-    #define STAT_1(id) STAT_2(id, NULL)
-	#define STAT_2(id, cl) (0, _STAT(id))
+    #define STAT_1(id) (RVALUE, _STAT(id))
+	#define STAT_2(id, cl) STAT_1(id)
 
 	#define getstat_int(id) getstati(id, 0, 24)
 	#define getstat_bool(id) boolean(getstati(id))
@@ -53,7 +53,7 @@ int g_magic_stats_hole = 0;
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
 			} \
 		} \
-		[[accumulate]] void stats_get() \
+		ACCUMULATE void stats_get() \
 		{ \
 			T it = getstat_##T(STAT_##id.m_id); \
 			/* if (it != CAT(_STAT(id), _prev)) \
@@ -61,31 +61,37 @@ int g_magic_stats_hole = 0;
 		}
 	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
 #elif defined(SVQC)
+    /** Internal use only */
+    entity STATS;
 	/** Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat` */
 	void stats_add() {}
-	#define STAT(id, cl) (cl)._STAT(id)
+	#define STAT(...) EVAL_STAT(OVERLOAD_(STAT, __VA_ARGS__))
+    #define EVAL_STAT(...) __VA_ARGS__
+    #define STAT_1(id) (RVALUE, STAT_2(id, STATS))
+	#define STAT_2(id, cl) (cl)._STAT(id)
 
 	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_float(id, fld) addstat(id, AS_FLOAT, fld)
-	#define addstat_vector(id, fld) MACRO_BEGIN { \
+	#define addstat_vector(id, fld) MACRO_BEGIN \
 		addstat_float(id + 0, fld##_x); \
 		addstat_float(id + 1, fld##_y); \
 		addstat_float(id + 2, fld##_z); \
-	} MACRO_END
-	#define addstat_vectori(id, fld) MACRO_BEGIN { \
+	MACRO_END
+	#define addstat_vectori(id, fld) MACRO_BEGIN \
 		addstat_int(id + 0, fld##_x); \
 		addstat_int(id + 1, fld##_y); \
 		addstat_int(id + 2, fld##_z); \
-	} MACRO_END
+	MACRO_END
 	const int AS_STRING = 1;
 	const int AS_INT = 2;
 	const int AS_FLOAT = 8;
 
 	.int __stat_null;
-	/** Prevent engine stats being sent */
-	STATIC_INIT(stats_clear)
+	STATIC_INIT(stats)
 	{
+	    STATS = new(stats);
+	    // Prevent engine stats being sent
 		int r = STATS_ENGINE_RESERVE;
 		for (int i = 0, n = 256 - r; i < n; ++i) {
 			#define X(_, name, id) if (i == id) continue;
@@ -105,16 +111,17 @@ int g_magic_stats_hole = 0;
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
 			} \
 		} \
-		[[accumulate]] void stats_add() \
+		ACCUMULATE void stats_add() \
 		{ \
 			.T fld = _STAT(id); \
 			addstat_##T(STAT_##id.m_id, fld); \
 		}
 	void GlobalStats_update(entity this) {}
+    /** TODO: do we want the global copy to update? */
     #define REGISTER_STAT_3(id, T, expr) \
     	REGISTER_STAT_2(id, T); \
-    	[[accumulate]] void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
-    	STATIC_INIT(worldstat_##id) { entity this = NULL; STAT(id, this) = (expr); }
+    	ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
+    	STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)
     #define REGISTER_STAT_3(id, T, expr)
@@ -124,7 +131,7 @@ REGISTRY(Stats, 256 - STATS_ENGINE_RESERVE)
 REGISTER_REGISTRY(Stats)
 REGISTRY_SORT(Stats)
 REGISTRY_CHECK(Stats)
-STATIC_INIT(RegisterStats_renumber)
+STATIC_INIT(Stats_renumber)
 {
 	FOREACH(Stats, true, {
 		it.m_id = STATS_ENGINE_RESERVE + i;

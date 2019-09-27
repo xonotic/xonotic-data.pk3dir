@@ -204,7 +204,8 @@ void MX_Say_(entity fh, entity pass, int status)
             fh.url_verb = "PUT";
             fh.url_content_type = "application/json";
             url_fputs(fh, sprintf("{\"msgtype\": \"m.text\", \"body\": \"%s\"}", pass.message));
-            strunzone(pass.message); delete(pass);
+            strfree(pass.message);
+            delete(pass);
             url_fclose(fh);
             break;
         }

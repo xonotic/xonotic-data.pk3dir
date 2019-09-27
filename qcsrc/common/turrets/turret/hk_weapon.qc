@@ -18,7 +18,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
 		if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_HunterKillerAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_HunterKillerAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_HK.m_id);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -58,7 +58,7 @@ void turret_hk_missile_think(entity this)
     //if (this.cnt < time)
     //	turret_hk_missile_explode();
 
-    if (IS_DEAD(this.enemy))
+    if (IS_DEAD(this.enemy) || IS_SPEC(this.enemy) || IS_OBSERVER(this.enemy))
         this.enemy = NULL;
 
     // Pick the closest valid target.
@@ -251,7 +251,7 @@ bool hk_is_valid_target(entity this, entity proj, entity targ)
         return false;
 
     // Cant touch this
-    if ((targ.takedamage == DAMAGE_NO) || (targ.health < 0))
+    if ((targ.takedamage == DAMAGE_NO) || (GetResource(targ, RES_HEALTH) < 0))
         return false;
 
     // player

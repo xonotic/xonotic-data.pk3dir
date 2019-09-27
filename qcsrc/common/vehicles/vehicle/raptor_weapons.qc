@@ -10,7 +10,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
     float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + veh.misc_bulletcounter == 4);
     if (fire & 1)
     if (weapon_prepareattack(thiswep, player, weaponentity, false, t)) {
-        if (isPlayer) W_SetupShot_Dir(player, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
+        if (isPlayer) W_SetupShot_Dir(player, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0, DEATH_VH_RAPT_CANNON.m_id);
         vector org = w_shotorg;
         vector dir = w_shotdir;
         if (veh) {
@@ -50,7 +50,7 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
 }
 
 void raptor_flare_think(entity this);
-void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 void raptor_flare_touch(entity this, entity toucher);
 
 METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -74,7 +74,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             _flare.solid = SOLID_CORPSE;
             _flare.takedamage = DAMAGE_YES;
             _flare.event_damage = raptor_flare_damage;
-            _flare.health = 20;
+            SetResourceExplicit(_flare, RES_HEALTH, 20);
             _flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
             settouch(_flare, raptor_flare_touch);
         }
@@ -88,7 +88,7 @@ void raptor_bomblet_boom(entity this)
     RadiusDamage (this, this.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
                                     autocvar_g_vehicle_raptor_bomblet_radius, NULL, NULL,
-                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, NULL);
+                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, DMG_NOWEP, NULL);
     delete(this);
 }
 
@@ -189,10 +189,10 @@ void raptor_flare_touch(entity this, entity toucher)
     delete(this);
 }
 
-void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-    this.health -= damage;
-    if(this.health <= 0)
+    TakeResource(this, RES_HEALTH, damage);
+    if(GetResource(this, RES_HEALTH) <= 0)
         delete(this);
 }
 

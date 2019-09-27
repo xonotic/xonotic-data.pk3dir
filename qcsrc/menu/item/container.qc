@@ -178,19 +178,17 @@
 		}
 		return 0;
 	}
-	float Container_mousePress(entity me, vector pos)
+	METHOD(Container, mousePress, bool(Container this, vector pos))
 	{
-		entity f;
-		float r;
-		f = me.focusedChild;
+		entity f = this.focusedChild;
 		if (f)
 		{
-			me.enterSubitem(me, f);
-			r = f.mousePress(f, globalToBox(pos, f.Container_origin, f.Container_size));
-			me.leaveSubitem(me);
+			this.enterSubitem(this, f);
+			bool r = f.mousePress(f, globalToBox(pos, f.Container_origin, f.Container_size));
+			this.leaveSubitem(this);
 			return r;
 		}
-		return 0;
+		return false;
 	}
 	float Container_mouseDrag(entity me, vector pos)
 	{
@@ -310,7 +308,8 @@
 				me.focusedChild.focused = 1;
 				me.focusedChild.focusEnter(me.focusedChild);
 
-				if (me.focusedChild.instanceOfContainer) me.focusedChild.setFocus(me.focusedChild, me.focusedChild.savedFocus);
+				if (me.focusedChild.instanceOfContainer)
+					me.focusedChild.setFocus(me.focusedChild, me.focusedChild.savedFocus);
 			}
 			else
 			{

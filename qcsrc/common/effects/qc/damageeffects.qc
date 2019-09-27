@@ -6,11 +6,10 @@ REGISTER_NET_LINKED(ENT_CLIENT_DAMAGEINFO)
 
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
+	vector org = vec3(floor(this.origin.x), floor(this.origin.y), floor(this.origin.z));
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, this.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(this.origin.x));
-	WriteCoord(MSG_ENTITY, floor(this.origin.y));
-	WriteCoord(MSG_ENTITY, floor(this.origin.z));
+	WriteVector(MSG_ENTITY, org);
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
@@ -54,7 +53,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 
 .float cnt;
 .int state;
-.bool isplayermodel;
 
 void DamageEffect_Think(entity this)
 {
@@ -80,12 +78,11 @@ void DamageEffect_Think(entity this)
 		return;
 	}
 	this.state = this.owner.csqcmodel_isdead;
-	if(this.owner.isplayermodel && (this.owner.entnum == player_localentnum) && !autocvar_chase_active)
+	if((this.owner.isplayermodel & ISPLAYER_LOCAL) && !autocvar_chase_active)
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
-	vector org;
-	org = gettaginfo(this, 0); // origin at attached location
+	vector org = gettaginfo(this, 0); // origin at attached location
 	__pointparticles(this.team, org, '0 0 0', 1);
 }
 
@@ -110,8 +107,8 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 	int nearestbone = 0;
 	float life;
-	string specstr, effectname;
-	entity e;
+	string effectname;
+	entity e, wep;
 
 	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
@@ -151,15 +148,15 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, thedamage * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
-	effectname = DEATH_WEAPONOF(type).netname;
-
-	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
+	wep = DEATH_WEAPONOF(type);
+	effectname = strcat("damage_", wep.netname);
+	if((wep.spawnflags & WEP_FLAG_BLEED))
 	{
-		if(this.isplayermodel)
+		// if this weapon induces bleeding, use the effect name with the proper species prefix (blood type)
+		if((this.isplayermodel & ISPLAYER_MODEL))
 		{
-			specstr = species_prefix(specnum);
-			specstr = substring(specstr, 0, strlen(specstr) - 1);
-			effectname = strreplace("BLOOD", specstr, effectname);
+			string specstr = species_prefix(specnum);
+			effectname = strcat(specstr, effectname);
 		}
 		else { return; } // objects don't bleed
 	}
@@ -177,7 +174,6 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 {
-	const float ATTEN_LOW = 0.2;
 	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
 	int species, forcemul;
@@ -187,9 +183,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	w_issilent = (w_deathtype & 0x8000);
 	w_deathtype = (w_deathtype & 0x7FFF);
 
-	w_org.x = ReadCoord();
-	w_org.y = ReadCoord();
-	w_org.z = ReadCoord();
+	w_org = ReadVector();
 
 	thedamage = ReadByte();
 	rad = ReadByte();
@@ -254,7 +248,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if(it.isplayermodel)
+		if((it.isplayermodel & ISPLAYER_MODEL))
 			hitplayer = true; // this impact damaged a player
 	});
 
@@ -398,7 +392,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
-		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
+		if(trace_fraction < 1 && !(hitwep.spawnflags & WEP_TYPE_HITSCAN))
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);

@@ -14,3 +14,12 @@ electro_plasma_hull
 	rgbGen Vertex
         }
 }
+
+electro
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/electronew.tga
+		rgbgen lightingDiffuse
+	}
+}

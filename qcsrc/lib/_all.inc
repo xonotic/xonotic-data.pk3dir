@@ -24,10 +24,24 @@
 	#define bool float
 #endif
 
+#ifndef QCC_SUPPORT_ACCUMULATE
+	#warning "QCC does not support accumulate, may not compile correctly"
+	#define ACCUMULATE
+#else
+	#define ACCUMULATE [[accumulate]]
+#endif
+
 #ifndef QCC_SUPPORT_ERASEABLE
 	#define ERASEABLE
 #else
 	#define ERASEABLE [[eraseable]]
+#endif
+
+#ifndef QCC_SUPPORT_ALIAS
+    #warning "QCC does not support alias, may not compile correctly"
+    #define ALIAS(var)
+#else
+    #define ALIAS(var) [[alias(var)]]
 #endif
 
 #include <dpdefs/pre.qh>
@@ -46,6 +60,12 @@
 #endif
 
 #include <dpdefs/post.qh>
+
+#ifndef QCC_SUPPORT_POW
+    #define pow(a, b) pow(a, b)
+#else
+    #define pow(a, b) ((a) ** (b))
+#endif
 
 #include "self.qh"
 
@@ -113,6 +133,7 @@
 #include "oo.qh"
 #include "p2mathlib.qc"
 #include "progname.qh"
+#include "promise.qc"
 #include "random.qc"
 #include "registry.qh"
 #include "registry_net.qh"
@@ -141,14 +162,14 @@ void make_safe_for_remove(entity this);
     #define objerror_safe(e) make_safe_for_remove(e)
 #endif
 
-#define objerror(this, msg) MACRO_BEGIN { \
+#define objerror(this, msg) MACRO_BEGIN \
 	LOG_WARN("======OBJECT ERROR======"); \
 	entity _e = (this); \
 	eprint(_e); \
 	objerror_safe(_e); \
 	delete(_e); \
 	LOG_WARNF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); \
-} MACRO_END
+MACRO_END
 
 #ifdef MENUQC
 	void _m_init();
@@ -182,7 +203,17 @@ void make_safe_for_remove(entity this);
 	#define SV_Shutdown _SV_Shutdown
 
 	void _StartFrame();
-	void StartFrame() { if (_StartFrame) _StartFrame(); }
+	bool _StartFrame_init;
+	void spawnfunc_worldspawn(entity);
+	void StartFrame() {
+		if (!_StartFrame_init) {
+			_StartFrame_init = true;
+			float oldtime = time; time = 1;
+			__spawnfunc_expecting = 2; NULL.__spawnfunc_constructor(NULL);
+			time = oldtime;
+        }
+        if (_StartFrame) _StartFrame();
+	}
 	#define StartFrame _StartFrame
 
 	void _SetNewParms();
@@ -231,7 +262,8 @@ void make_safe_for_remove(entity this);
 	void SV_OnEntityPreSpawnFunction()
 	{
 		ENGINE_EVENT();
-		if (_SV_OnEntityPreSpawnFunction) _SV_OnEntityPreSpawnFunction(this);
+		__spawnfunc_expecting = true;
+		__spawnfunc_expect = this;
 	}
 	#define SV_OnEntityPreSpawnFunction _SV_OnEntityPreSpawnFunction
 

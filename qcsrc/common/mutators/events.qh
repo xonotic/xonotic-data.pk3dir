@@ -65,6 +65,7 @@ MUTATOR_HOOKABLE(IsFlying, EV_IsFlying);
     /**/ i(string, MUTATOR_ARGV_1_string) \
     /**/ o(vector, MUTATOR_ARGV_2_vector) \
     /**/ o(string, MUTATOR_ARGV_3_string) \
+    /**/ o(string, MUTATOR_ARGV_4_string) \
     /**/
 MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
 

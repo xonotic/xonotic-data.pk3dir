@@ -28,6 +28,11 @@ void WarpZone_Fade_PreDraw(entity this)
 void WarpZone_Touch(entity this, entity toucher);
 NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 {
+	if(!warpzone_warpzones_exist)
+	{
+		cvar_settemp("r_water", "1"); // HACK for DarkPlaces: always enable reflections when a map has warpzones
+		cvar_settemp("r_water_resolutionmultiplier", "1"); // HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+	}
 	warpzone_warpzones_exist = 1;
 	if (!this.enemy)
 	{
@@ -42,32 +47,18 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 	this.warpzone_isboxy = (f & 1);
 	if(f & 4)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 	}
 	else
 		this.origin = '0 0 0';
 	this.modelindex = ReadShort();
-	this.mins_x = ReadCoord();
-	this.mins_y = ReadCoord();
-	this.mins_z = ReadCoord();
-	this.maxs_x = ReadCoord();
-	this.maxs_y = ReadCoord();
-	this.maxs_z = ReadCoord();
+	this.mins = ReadVector();
+	this.maxs = ReadVector();
 	this.scale = ReadByte() / 16;
-	this.enemy.oldorigin_x = ReadCoord();
-	this.enemy.oldorigin_y = ReadCoord();
-	this.enemy.oldorigin_z = ReadCoord();
-	this.enemy.avelocity_x = ReadCoord();
-	this.enemy.avelocity_y = ReadCoord();
-	this.enemy.avelocity_z = ReadCoord();
-	this.oldorigin_x = ReadCoord();
-	this.oldorigin_y = ReadCoord();
-	this.oldorigin_z = ReadCoord();
-	this.avelocity_x = ReadCoord();
-	this.avelocity_y = ReadCoord();
-	this.avelocity_z = ReadCoord();
+	this.enemy.oldorigin = ReadVector();
+	this.enemy.avelocity = ReadVector();
+	this.oldorigin = ReadVector();
+	this.avelocity = ReadVector();
 
 	if(f & 2)
 	{
@@ -98,32 +89,27 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 
 NET_HANDLE(ENT_CLIENT_WARPZONE_CAMERA, bool isnew)
 {
+	if(!warpzone_cameras_exist)
+	{
+		cvar_settemp("r_water", "1"); // HACK for DarkPlaces: always enable reflections when a map has cameras
+		cvar_settemp("r_water_resolutionmultiplier", "1"); // HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+	}
 	warpzone_cameras_exist = 1;
 	this.classname = "func_warpzone_camera";
 
 	int f = ReadByte();
 	if(f & 4)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 	}
 	else
 		this.origin = '0 0 0';
 	this.modelindex = ReadShort();
-	this.mins_x = ReadCoord();
-	this.mins_y = ReadCoord();
-	this.mins_z = ReadCoord();
-	this.maxs_x = ReadCoord();
-	this.maxs_y = ReadCoord();
-	this.maxs_z = ReadCoord();
+	this.mins = ReadVector();
+	this.maxs = ReadVector();
 	this.scale = ReadByte() / 16;
-	this.oldorigin_x = ReadCoord();
-	this.oldorigin_y = ReadCoord();
-	this.oldorigin_z = ReadCoord();
-	this.avelocity_x = ReadCoord();
-	this.avelocity_y = ReadCoord();
-	this.avelocity_z = ReadCoord();
+	this.oldorigin = ReadVector();
+	this.avelocity = ReadVector();
 
 	if(f & 2)
 	{
@@ -157,10 +143,7 @@ void CL_RotateMoves(vector ang) = #638;
 NET_HANDLE(ENT_CLIENT_WARPZONE_TELEPORTED, bool isnew)
 {
 	this.classname = "warpzone_teleported";
-	vector v;
-	v.x = ReadCoord();
-	v.y = ReadCoord();
-	v.z = ReadCoord();
+	vector v = ReadVector();
 	return = true;
 	if (!isnew) return;
 	this.warpzone_transform = v;

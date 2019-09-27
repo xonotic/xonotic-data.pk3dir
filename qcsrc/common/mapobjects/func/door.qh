@@ -1,0 +1,18 @@
+#pragma once
+
+
+const int DOOR_START_OPEN = BIT(0);
+const int DOOR_DONT_LINK = BIT(2);
+const int SPAWNFLAGS_GOLD_KEY = BIT(3); // Quake 1 compat, can only be used with func_door!
+const int SPAWNFLAGS_SILVER_KEY = BIT(4); // Quake 1 compat, can only be used with func_door!
+const int DOOR_TOGGLE = BIT(5);
+
+const int DOOR_NONSOLID = BIT(10);
+const int DOOR_CRUSH = BIT(11); // can't use CRUSH cause that is the same as DOOR_DONT_LINK
+
+
+#ifdef CSQC
+// stuff for preload
+
+.float door_finished;
+#endif

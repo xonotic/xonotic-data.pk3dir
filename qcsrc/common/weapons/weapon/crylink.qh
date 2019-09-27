@@ -1,9 +1,10 @@
 #pragma once
 
 CLASS(Crylink, Weapon)
-/* ammotype  */ ATTRIB(Crylink, ammo_field, .int, ammo_cells);
+/* spawnfunc */ ATTRIB(Crylink, m_canonical_spawnfunc, string, "weapon_crylink");
+/* ammotype  */ ATTRIB(Crylink, ammo_type, int, RES_CELLS);
 /* impulse   */ ATTRIB(Crylink, impulse, int, 6);
-/* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CANCLIMB | WEP_FLAG_NODUAL);
+/* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CANCLIMB);
 /* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Crylink, wpcolor, vector, '1 0.5 1');
 /* modelname */ ATTRIB(Crylink, mdl, string, "crylink");
@@ -59,6 +60,8 @@ CLASS(Crylink, Weapon)
 ENDCLASS(Crylink)
 REGISTER_WEAPON(CRYLINK, crylink, NEW(Crylink));
 
+SPAWNFUNC_WEAPON(weapon_crylink, WEP_CRYLINK)
+
 #ifdef SVQC
 .float gravity;
 .float crylink_waitrelease;
@@ -68,4 +71,6 @@ REGISTER_WEAPON(CRYLINK, crylink, NEW(Crylink));
 
 .entity queuenext;
 .entity queueprev;
+
+void W_Crylink_Dequeue(entity e);
 #endif

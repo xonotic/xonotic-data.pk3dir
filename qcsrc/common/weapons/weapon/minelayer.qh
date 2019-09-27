@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(MineLayer, Weapon)
-/* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets);
+/* spawnfunc */ ATTRIB(MineLayer, m_canonical_spawnfunc, string, "weapon_minelayer");
+/* ammotype  */ ATTRIB(MineLayer, ammo_type, int, RES_ROCKETS);
 /* impulse   */ ATTRIB(MineLayer, impulse, int, 4);
 /* flags     */ ATTRIB(MineLayer, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, 7000);
@@ -52,6 +53,8 @@ CLASS(MineLayer, Weapon)
 #undef X
 ENDCLASS(MineLayer)
 REGISTER_WEAPON(MINE_LAYER, minelayer, NEW(MineLayer));
+
+SPAWNFUNC_WEAPON(weapon_minelayer, WEP_MINE_LAYER)
 
 #ifdef SVQC
 void W_MineLayer_Think(entity this);

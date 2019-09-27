@@ -20,11 +20,15 @@ MACRO_END
     \
     PROP(false, m_alpha, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, rint(bound(-1, 254 * this.m_alpha, 254) - -1)); }, \
-	{ (viewmodels[this.m_wepent_slot]).alpha = (ReadByte() + -1) / 254; }) \
+	{ (viewmodels[this.m_wepent_slot]).m_alpha = (ReadByte() + -1) / 254; }) \
     \
     PROP(false, vortex_charge, WEPENT_SET_NORMAL, \
-	{ WriteByte(chan, this.vortex_charge * 16); }, \
-	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 16; }) \
+	{ WriteByte(chan, this.vortex_charge * 255); }, \
+	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 255; }) \
+    \
+    PROP(false, oknex_charge, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.oknex_charge * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).oknex_charge = ReadByte() / 16; }) \
     \
     PROP(false, m_gunalign, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_gunalign); }, \
@@ -32,15 +36,47 @@ MACRO_END
     \
     PROP(false, porto_v_angle_held, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.porto_v_angle_held); if(this.porto_v_angle_held) { \
-		 WriteAngle(chan, this.porto_v_angle.x); WriteAngle(chan, this.porto_v_angle.y); \
+		 WriteAngle(chan, this.owner.porto_v_angle.x); WriteAngle(chan, this.owner.porto_v_angle.y); \
 		} }, \
 	{ (viewmodels[this.m_wepent_slot]).angles_held_status = ReadByte(); if((viewmodels[this.m_wepent_slot]).angles_held_status) { \
-		(viewmodels[this.m_wepent_slot]).angles_held_x = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_y = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_z = 0; } \
+		(viewmodels[this.m_wepent_slot]).angles_held = vec2(ReadAngle(), ReadAngle()); } \
 		else { (viewmodels[this.m_wepent_slot]).angles_held = '0 0 0'; } }) \
     \
     PROP(false, tuba_instrument, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.tuba_instrument); }, \
 	{ (viewmodels[this.m_wepent_slot]).tuba_instrument = ReadByte(); }) \
+    \
+    PROP(false, hagar_load, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.hagar_load); }, \
+	{ (viewmodels[this.m_wepent_slot]).hagar_load = ReadByte(); }) \
+    \
+    PROP(false, minelayer_mines, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.minelayer_mines); }, \
+	{ (viewmodels[this.m_wepent_slot]).minelayer_mines = ReadByte(); }) \
+    \
+    PROP(false, arc_heat_percent, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.arc_heat_percent * 255); }, \
+	{ (viewmodels[this.m_wepent_slot]).arc_heat_percent = ReadByte() / 255; }) \
+    \
+    PROP(false, vortex_chargepool_ammo, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.vortex_chargepool_ammo * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).vortex_chargepool_ammo = ReadByte() / 16; }) \
+    \
+	PROP(false, oknex_chargepool_ammo, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.oknex_chargepool_ammo * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).oknex_chargepool_ammo = ReadByte() / 16; }) \
+    \
+	PROP(false, clip_load, WEPENT_SET_NORMAL, \
+	{ WriteShort(chan, this.clip_load); }, \
+	{ (viewmodels[this.m_wepent_slot]).clip_load = ReadShort(); }) \
+    \
+    PROP(false, clip_size, WEPENT_SET_NORMAL, \
+	{ WriteShort(chan, this.clip_size); }, \
+	{ (viewmodels[this.m_wepent_slot]).clip_size = ReadShort(); }) \
+    \
+    PROP(false, skin, WEPENT_SET_NORMAL, \
+	{ WriteShort(chan, this.skin); }, \
+	{ (viewmodels[this.m_wepent_slot]).m_skin = ReadShort(); }) \
     \
 	/**/
 
@@ -58,7 +94,7 @@ MACRO_END
 		}
 		WEPENT_NETPROPS(X);
 	#undef X
-		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded WEPENT_NETPROPS limit");
+		if (i >= BITS(24 - 1)) LOG_FATAL("Exceeded WEPENT_NETPROPS limit");
 	}
 
 	bool _wepent_send(entity this, entity to, int sf, int chan)
@@ -71,7 +107,7 @@ MACRO_END
 			WriteHeader(chan, CLIENT_WEPENT);
 		.entity weaponentity = this.owner.weaponentity_fld;
 		WriteByte(chan, weaponslot(weaponentity));
-		WriteShort(chan, sf);
+		WriteInt24_t(chan, sf);
 		int i = 0;
 		#define X(public, fld, set, sv, cl) { \
 			if (sf & BIT(i)) { \
@@ -115,9 +151,9 @@ MACRO_END
 
 	bool wepent_customize(entity this, entity client)
 	{
-		//entity e = WaypointSprite_getviewentity(client);
+		entity e = WaypointSprite_getviewentity(client);
 		.entity weaponentity = this.owner.weaponentity_fld;
-		return client.(weaponentity) == this.owner;
+		return e.(weaponentity) == this.owner;
 	}
 
 	void wepent_link(entity wep)
@@ -140,7 +176,7 @@ MACRO_END
 		int slot = ReadByte();
 		this.m_wepent_slot = slot;
 		viewmodels[slot].m_wepent_slot = slot;
-		int sf = ReadShort();
+		int sf = ReadInt24_t();
 		int i = 0;
 		#define X(public, fld, set, sv, cl) { \
 			if (sf & BIT(i)) { \

@@ -2,14 +2,16 @@
 
 #include "anticheat.qh"
 #include "g_hook.qh"
+#include "g_damage.qh"
 #include "g_world.qh"
 
 #include "bot/api.qh"
 
 #include "command/common.qh"
 
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "weapons/csqcprojectile.qh"
+#include <server/compat/quake3.qh>
 
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
@@ -18,6 +20,7 @@
 #include "../common/util.qh"
 
 #include "../common/vehicles/all.qh"
+#include <common/monsters/sv_monsters.qh>
 #include <common/weapons/_all.qh>
 
 #include "../lib/csqcmodel/sv_model.qh"
@@ -25,44 +28,43 @@
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
 
-.float lastground;
-.int state;
-
 void CreatureFrame_hotliquids(entity this)
 {
-	if (this.dmgtime < time)
+	if (this.dmgtime >= time)
 	{
-		this.dmgtime = time + autocvar_g_balance_contents_damagerate;
+		return;
+	}
 
-		if (this.flags & FL_PROJECTILE)
+	this.dmgtime = time + autocvar_g_balance_contents_damagerate;
+
+	if (this.flags & FL_PROJECTILE)
+	{
+		if (this.watertype == CONTENT_LAVA)
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		else if (this.watertype == CONTENT_SLIME)
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
+	}
+	else
+	{
+		if (this.watertype == CONTENT_LAVA)
 		{
-			if (this.watertype == CONTENT_LAVA)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
-			else if (this.watertype == CONTENT_SLIME)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+			if (this.watersound_finished < time)
+			{
+				this.watersound_finished = time + 0.5;
+				sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
+			}
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			if(autocvar_g_balance_contents_playerdamage_lava_burn)
+				Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
 		}
-		else
+		else if (this.watertype == CONTENT_SLIME)
 		{
-			if (this.watertype == CONTENT_LAVA)
+			if (this.watersound_finished < time)
 			{
-				if (this.watersound_finished < time)
-				{
-					this.watersound_finished = time + 0.5;
-					sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
-				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
-				if(autocvar_g_balance_contents_playerdamage_lava_burn)
-					Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
+				this.watersound_finished = time + 0.5;
+				sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 			}
-			else if (this.watertype == CONTENT_SLIME)
-			{
-				if (this.watersound_finished < time)
-				{
-					this.watersound_finished = time + 0.5;
-					sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
-				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
-			}
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 	}
 }
@@ -88,45 +90,48 @@ void CreatureFrame_Liquids(entity this)
 			this.dmgtime = 0;
 		}
 		this.air_finished = time + 12;
-		this.dmg = 2;
 	}
 }
 
 void CreatureFrame_FallDamage(entity this)
 {
-	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
-	if(this.velocity || this.oldvelocity) // moving or has moved
-	{
-		// check for falling damage
-		float velocity_len = vlen(this.velocity);
-		bool have_hook = false;
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(this.(weaponentity).hook && this.(weaponentity).hook.state)
-	    	{
-	    		have_hook = true;
-	    		break;
-	    	}
-	    }
-		if(!have_hook)
-		{
-			float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-			if (IS_DEAD(this))
-				dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
-			else
-				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
-			if (dm > 0)
-				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, this.origin, '0 0 0');
-		}
+	if(IS_VEHICLE(this) || (this.flags & FL_PROJECTILE))
+		return; // vehicles and projectiles don't receive fall damage
+	if(!(this.velocity || this.oldvelocity))
+		return; // if the entity hasn't moved and isn't moving, then don't do anything
 
-		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, this.origin, '0 0 0');
+	// check for falling damage
+	float velocity_len = vlen(this.velocity);
+	bool have_hook = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+	    .entity weaponentity = weaponentities[slot];
+	    if(this.(weaponentity).hook && this.(weaponentity).hook.state)
+	    {
+	    	have_hook = true;
+	    	break;
+	    }
 	}
+	if(!have_hook)
+	{
+		float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+		if (IS_DEAD(this))
+			dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
+		else
+			dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
+		if (dm > 0)
+			Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+	}
+
+	if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
+		Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
 }
 
 void CreatureFrame_All()
 {
+	if(game_stopped || time < game_starttime)
+		return;
+
 	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
@@ -163,7 +168,6 @@ Called before each frame by the server
 bool game_delay_last;
 
 bool autocvar_sv_autopause = false;
-float RedirectionThink();
 void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
@@ -217,8 +221,6 @@ void StartFrame()
 	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
 
-	skill = autocvar_skill;
-
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	bool game_delay = (time < game_starttime);
 	if (autocvar_sv_eventlog && game_delay_last && !game_delay)
@@ -246,167 +248,118 @@ void StartFrame()
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
-bool DoesQ3ARemoveThisEntity(entity this);
+
+/**
+ * Evaluate an expression of the form: [+ | -]? [var[op]val | [op]var | val | var] ...
+ * +: all must match. this is the default
+ * -: one must NOT match
+ *
+ * var>x
+ * var<x
+ * var>=x
+ * var<=x
+ * var==x
+ * var!=x
+ * var===x
+ * var!==x
+ */
+bool expr_evaluate(string s)
+{
+    bool ret = false;
+    if (str2chr(s, 0) == '+') {
+        s = substring(s, 1, -1);
+    } else if (str2chr(s, 0) == '-') {
+        ret = true;
+        s = substring(s, 1, -1);
+    }
+    bool expr_fail = false;
+    for (int i = 0, n = tokenize_console(s); i < n; ++i) {
+        int o;
+        string k, v;
+        s = argv(i);
+        #define X(expr) \
+            if (expr) \
+                continue; \
+            expr_fail = true; \
+            break;
+
+        #define BINOP(op, len, expr) \
+            if ((o = strstrofs(s, op, 0)) >= 0) { \
+                k = substring(s, 0, o); \
+                v = substring(s, o + len, -1); \
+                X(expr); \
+            }
+        BINOP(">=", 2, cvar(k) >= stof(v));
+        BINOP("<=", 2, cvar(k) <= stof(v));
+        BINOP(">",  1, cvar(k) >  stof(v));
+        BINOP("<",  1, cvar(k) <  stof(v));
+        BINOP("==", 2, cvar(k) == stof(v));
+        BINOP("!=", 2, cvar(k) != stof(v));
+        BINOP("===", 3, cvar_string(k) == v);
+        BINOP("!==", 3, cvar_string(k) != v);
+        {
+            k = s;
+            bool b = true;
+            if (str2chr(k, 0) == '!') {
+                k = substring(s, 1, -1);
+                b = false;
+            }
+            float f = stof(k);
+            bool isnum = ftos(f) == k;
+            X(boolean(isnum ? f : cvar(k)) == b);
+        }
+        #undef BINOP
+        #undef X
+    }
+    if (!expr_fail) {
+        ret = !ret;
+    }
+    // now ret is true if we want to keep the item, and false if we want to get rid of it
+    return ret;
+}
+
 void SV_OnEntityPreSpawnFunction(entity this)
 {
-	__spawnfunc_expecting = true;
-	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
 		delete(this);
-		__spawnfunc_expecting = false;
 		return;
 	}
-	if(this.cvarfilter != "")
-	{
-		float n, i, o, inv;
-		string s, k, v;
-		inv = 0;
-
-		s = this.cvarfilter;
-		if(substring(s, 0, 1) == "+")
-		{
-			s = substring(s, 1, -1);
-		}
-		else if(substring(s, 0, 1) == "-")
-		{
-			inv = 1;
-			s = substring(s, 1, -1);
-		}
-
-		n = tokenize_console(s);
-		for(i = 0; i < n; ++i)
-		{
-			s = argv(i);
-			// syntax:
-			// var>x
-			// var<x
-			// var>=x
-			// var<=x
-			// var==x
-			// var!=x
-			// var===x
-			// var!==x
-			if((o = strstrofs(s, ">=", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar(k) < stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "<=", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar(k) > stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, ">", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+1, -1);
-				if(cvar(k) <= stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "<", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+1, -1);
-				if(cvar(k) >= stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "==", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar(k) != stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "!=", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar(k) == stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "===", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar_string(k) != v)
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "!==", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar_string(k) == v)
-					goto cvar_fail;
-			}
-			else if(substring(s, 0, 1) == "!")
-			{
-				k = substring(s, 1, -1);
-				if(cvar(k))
-					goto cvar_fail;
-			}
-			else
-			{
-				k = s;
-				if (!cvar(k))
-					goto cvar_fail;
-			}
-		}
-		inv = !inv;
-LABEL(cvar_fail)
-		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
-		if (!inv)
-		{
-			//print("cvarfilter fail\n");
-			delete(this);
-			__spawnfunc_expecting = false;
-			return;
-		}
+	if (this.cvarfilter != "" && !expr_evaluate(this.cvarfilter)) {
+		delete(this);
+		return;
 	}
 
-	if(DoesQ3ARemoveThisEntity(this))
-	{
+	if (DoesQ3ARemoveThisEntity(this)) {
 		delete(this);
-		__spawnfunc_expecting = false;
 		return;
 	}
 
 	set_movetype(this, this.movetype);
 
-	if(this.monster_attack)
+	if (this.monster_attack) {
 		IL_PUSH(g_monster_targets, this);
+    }
 
 	// support special -1 and -2 angle from radiant
-	if (this.angles == '0 -1 0')
+	if (this.angles == '0 -1 0') {
 		this.angles = '-90 0 0';
-	else if (this.angles == '0 -2 0')
+	} else if (this.angles == '0 -2 0') {
 		this.angles = '+90 0 0';
+    }
 
-	if(this.originjitter.x != 0)
-		this.origin_x = this.origin.x + (random() * 2 - 1) * this.originjitter.x;
-	if(this.originjitter.y != 0)
-		this.origin_y = this.origin.y + (random() * 2 - 1) * this.originjitter.y;
-	if(this.originjitter.z != 0)
-		this.origin_z = this.origin.z + (random() * 2 - 1) * this.originjitter.z;
-	if(this.anglesjitter.x != 0)
-		this.angles_x = this.angles.x + (random() * 2 - 1) * this.anglesjitter.x;
-	if(this.anglesjitter.y != 0)
-		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglesjitter.y;
-	if(this.anglesjitter.z != 0)
-		this.angles_z = this.angles.z + (random() * 2 - 1) * this.anglesjitter.z;
-	if(this.anglejitter != 0)
-		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglejitter;
+    #define X(out, in) MACRO_BEGIN \
+        if (in != 0) { out = out + (random() * 2 - 1) * in; } \
+    MACRO_END
+    X(this.origin.x, this.originjitter.x); X(this.origin.y, this.originjitter.y); X(this.origin.z, this.originjitter.z);
+    X(this.angles.x, this.anglesjitter.x); X(this.angles.y, this.anglesjitter.y); X(this.angles.z, this.anglesjitter.z);
+    X(this.angles.y, this.anglejitter);
+    #undef X
 
-	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
-	{
+	if (MUTATOR_CALLHOOK(OnEntityPreSpawn, this)) {
 		delete(this);
-		__spawnfunc_expecting = false;
 		return;
 	}
 }
@@ -414,16 +367,23 @@ LABEL(cvar_fail)
 void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
+	entity tracetest_ent = spawn();
+	setsize(tracetest_ent, PL_MIN_CONST, PL_MAX_CONST);
+	tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	//for(entity e = warpzone_first; e; e = e.warpzone_next)
 	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-	{
-		vector src, dst;
-		src = (e.absmin + e.absmax) * 0.5;
-		makevectors(e.warpzone_angles);
-		src = src + ((e.warpzone_origin - src) * v_forward) * v_forward + 16 * v_right;
-		dst = (e.enemy.absmin + e.enemy.absmax) * 0.5;
-		makevectors(e.enemy.warpzone_angles);
-		dst = dst + ((e.enemy.warpzone_origin - dst) * v_forward) * v_forward - 16 * v_right;
-		waypoint_spawnforteleporter_v(e, src, dst, 0);
-	}
+		waypoint_spawnforteleporter_wz(e, tracetest_ent);
+	delete(tracetest_ent);
+}
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main ()
+{
+
 }

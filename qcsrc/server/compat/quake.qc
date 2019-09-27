@@ -4,29 +4,15 @@
 #include <server/miscfunctions.qh>
 #include <common/weapons/_all.qh>
 
-spawnfunc(weapon_electro);
-spawnfunc(weapon_hagar);
-spawnfunc(weapon_machinegun);
-spawnfunc(item_bullets);
-spawnfunc(item_armor_mega);
-spawnfunc(item_health_mega);
-spawnfunc(item_health_medium);
-
 //***********************
 //QUAKE 1 ENTITIES - So people can play quake1 maps with the xonotic weapons
 //***********************
-spawnfunc(weapon_nailgun) {spawnfunc_weapon_electro(this);}
-spawnfunc(weapon_supernailgun) {spawnfunc_weapon_hagar(this);}
-spawnfunc(weapon_supershotgun) {spawnfunc_weapon_machinegun(this);}
+SPAWNFUNC_WEAPON(weapon_nailgun, WEP_ELECTRO)
+SPAWNFUNC_WEAPON(weapon_supernailgun, WEP_HAGAR)
+SPAWNFUNC_WEAPON(weapon_supershotgun, WEP_MACHINEGUN)
 
-spawnfunc(item_spikes) {spawnfunc_item_bullets(this);}
+SPAWNFUNC_ITEM(item_spikes, ITEM_Bullets)
 //spawnfunc(item_armor1) {spawnfunc_item_armor_medium(this);}  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-spawnfunc(item_armor2) {spawnfunc_item_armor_mega(this);}
-spawnfunc(item_armorInv) {spawnfunc_item_armor_mega(this);} // TODO: make sure we actually want this
-spawnfunc(item_health) {if (this.spawnflags & 2) spawnfunc_item_health_mega(this);else spawnfunc_item_health_medium(this);}
-
-//spawnfunc_item_spikes
-//spawnfunc_item_health
-
-
-
+SPAWNFUNC_ITEM(item_armor2, ITEM_ArmorMega)
+SPAWNFUNC_ITEM(item_armorInv, ITEM_ArmorMega) // TODO: make sure we actually want this
+SPAWNFUNC_ITEM_COND(item_health, (this.spawnflags & 2), ITEM_HealthMega, ITEM_HealthMedium)

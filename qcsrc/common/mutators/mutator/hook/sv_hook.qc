@@ -5,7 +5,7 @@
 #ifdef SVQC
 AUTOCVAR(g_grappling_hook_useammo, bool, false, "Use ammunition with the off-hand grappling hook");
 
-REGISTER_MUTATOR(hook, cvar("g_grappling_hook")) {
+REGISTER_MUTATOR(hook, expr_evaluate(cvar_string("g_grappling_hook"))) {
     MUTATOR_ONADD {
         g_grappling_hook = true;
         if(!autocvar_g_grappling_hook_useammo)
@@ -32,7 +32,7 @@ MUTATOR_HOOKFUNCTION(hook, BuildMutatorsPrettyString)
 
 MUTATOR_HOOKFUNCTION(hook, BuildGameplayTipsString)
 {
-    M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3grappling hook^8 is enabled, press 'e' (+hook) to use it\n");
 }
 
 MUTATOR_HOOKFUNCTION(hook, SetStartItems)

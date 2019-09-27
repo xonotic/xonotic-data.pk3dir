@@ -1,9 +1,10 @@
 #pragma once
 
 CLASS(Devastator, Weapon)
-/* ammotype  */ ATTRIB(Devastator, ammo_field, .int, ammo_rockets);
+/* spawnfunc */ ATTRIB(Devastator, m_canonical_spawnfunc, string, "weapon_devastator");
+/* ammotype  */ ATTRIB(Devastator, ammo_type, int, RES_ROCKETS);
 /* impulse   */ ATTRIB(Devastator, impulse, int, 9);
-/* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
+/* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Devastator, mdl, string, "rl");
@@ -39,6 +40,7 @@ CLASS(Devastator, Weapon)
         P(class, prefix, remote_damage, float, NONE) \
         P(class, prefix, remote_edgedamage, float, NONE) \
         P(class, prefix, remote_force, float, NONE) \
+        P(class, prefix, remote_jump, float, NONE) \
         P(class, prefix, remote_jump_damage, float, NONE) \
         P(class, prefix, remote_jump_force, float, NONE) \
         P(class, prefix, remote_jump_radius, float, NONE) \
@@ -61,6 +63,9 @@ CLASS(Devastator, Weapon)
 
 ENDCLASS(Devastator)
 REGISTER_WEAPON(DEVASTATOR, devastator, NEW(Devastator));
+
+SPAWNFUNC_WEAPON(weapon_devastator, WEP_DEVASTATOR)
+SPAWNFUNC_WEAPON(weapon_rocketlauncher, WEP_DEVASTATOR)
 
 #ifdef SVQC
 .float rl_release;

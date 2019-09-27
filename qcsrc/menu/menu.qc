@@ -217,8 +217,7 @@ void m_init_delayed()
 	if (m_goto_buffer)
 	{
 		m_goto(m_goto_buffer);
-		strunzone(m_goto_buffer);
-		m_goto_buffer = string_null;
+		strfree(m_goto_buffer);
 	}
 
 	if (Menu_Active) m_display();  // delayed menu display
@@ -336,7 +335,8 @@ void drawBackground(string img, float a, string algn, float force1)
 	if (main.mainNexposee.ModalController_state == 0) return;
 	vector v = '0 0 0';
 	int scalemode = SCALEMODE_CROP;
-	for (int i = 0, l = 0; i < strlen(algn); ++i)
+	int len = strlen(algn);
+	for (int i = 0, l = 0; i < len; ++i)
 	{
 		string c = substring(algn, i, 1);
 		switch (c)
@@ -550,8 +550,7 @@ void m_tooltip(vector pos)
 			{
 				// fade out if tooltip of a certain item has changed
 				menuTooltipState = 3;
-				if (prev_tooltip) strunzone(prev_tooltip);
-				prev_tooltip = strzone(it.tooltip);
+				strcpy(prev_tooltip, it.tooltip);
 			}
 			else if (menuTooltipItem && !m_testmousetooltipbox(pos))
 			{
@@ -584,8 +583,7 @@ void m_tooltip(vector pos)
 
 					menuTooltipOrigin.x = -1;  // unallocated
 
-					if (menuTooltipText) strunzone(menuTooltipText);
-					menuTooltipText = strzone(gettooltip());
+					strcpy(menuTooltipText, gettooltip());
 
 					int i = 0;
 					float w = 0;
@@ -635,11 +633,7 @@ void m_tooltip(vector pos)
 
 	if (menuTooltipItem == NULL)
 	{
-		if (menuTooltipText)
-		{
-			strunzone(menuTooltipText);
-			menuTooltipText = string_null;
-		}
+		strfree(menuTooltipText);
 		return;
 	}
 	else
@@ -953,8 +947,7 @@ void m_goto(string itemname)
 {
 	if (!menuInitialized)
 	{
-		if (m_goto_buffer) strunzone(m_goto_buffer);
-		m_goto_buffer = strzone(itemname);
+		strcpy(m_goto_buffer, itemname);
 		return;
 	}
 	if (itemname == "")  // this can be called by GameCommand

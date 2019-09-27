@@ -9,8 +9,10 @@ vector mi_scale;
 // Minimap
 string minimapname;
 
-float postinit;
+bool postinit;
 entity gametype;
+// temporary hack
+#define ISGAMETYPE(NAME) (gametype == MAPINFO_TYPE_##NAME)
 
 float FONT_USER = 8;
 
@@ -21,33 +23,46 @@ void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
 void draw_cursor_normal(vector pos, vector col, float a);
 void LoadMenuSkinValues();
 
+void PostInit();
+
+void Ent_Remove(entity this);
+
+void Gamemode_Init();
+
+bool SetTeam(entity pl, int Team);
+
 vector hud_fontsize;
 
 float RANKINGS_RECEIVED_CNT;
+float RANKINGS_DISPLAY_CNT;
 string grecordholder[RANKINGS_CNT];
 float grecordtime[RANKINGS_CNT];
 
 entity playerslots[255]; // 255 is engine limit on maxclients
 entity teamslots[17];    // 17 teams (including "spectator team")
-.float gotscores;
+.bool gotscores;
 .entity owner;
-.float ready;
-.float eliminated;
+.bool ready;
+.bool eliminated;
+
+IntrusiveList g_drawables;
+IntrusiveList g_drawables_2d;
+IntrusiveList g_radarlinks;
+IntrusiveList g_radaricons;
+STATIC_INIT(main)
+{
+	g_drawables = IL_NEW();
+	g_drawables_2d = IL_NEW();
+	g_radarlinks = IL_NEW();
+	g_radaricons = IL_NEW();
+}
 
 .void(entity) draw;
-IntrusiveList g_drawables;
-STATIC_INIT(g_drawables) { g_drawables = IL_NEW(); }
 .void(entity) draw2d;
-IntrusiveList g_drawables_2d;
-STATIC_INIT(g_drawables_2d) { g_drawables_2d = IL_NEW(); }
 .void(entity) entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
-IntrusiveList g_radarlinks;
-STATIC_INIT(g_radarlinks) { g_radarlinks = IL_NEW(); }
-IntrusiveList g_radaricons;
-STATIC_INIT(g_radaricons) { g_radaricons = IL_NEW(); }
 
 bool button_zoom;
 bool spectatorbutton_zoom;
@@ -55,7 +70,7 @@ bool button_attack2;
 
 float current_viewzoom;
 float zoomin_effect;
-float warmup_stage;
+bool warmup_stage;
 
 void Fog_Force();
 
@@ -64,15 +79,16 @@ string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
 
 string vote_called_vote;
-float ready_waiting;
-float ready_waiting_for_me;
-float vote_waiting;
-float vote_waiting_for_me;
+bool ready_waiting;
+bool ready_waiting_for_me;
+bool vote_waiting;
+bool vote_waiting_for_me;
 
 float current_zoomfraction;
 
-float cs_project_is_b0rked;
-float vid_width, vid_height, vid_pixelheight;
+int cs_project_is_b0rked;
+int vid_width, vid_height;
+float vid_pixelheight;
 
 float camera_active;		// Demo camera is active if set to true
 float chase_active_backup;
@@ -105,7 +121,6 @@ const int MAX_SPECTATORS = 7;
 int spectatorlist[MAX_SPECTATORS];
 
 int framecount;
-.float health;
 
 float GetSpeedUnitFactor(int speed_unit);
 string GetSpeedUnit(int speed_unit);

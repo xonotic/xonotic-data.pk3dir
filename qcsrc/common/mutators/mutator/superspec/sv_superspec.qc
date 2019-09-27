@@ -1,6 +1,7 @@
 #include "sv_superspec.qh"
 
-REGISTER_MUTATOR(superspec, cvar("g_superspectate"));
+string autocvar_g_superspectate;
+REGISTER_MUTATOR(superspec, expr_evaluate(autocvar_g_superspectate));
 
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL(ent) ((edict_num(1) == (ent)) ? true : false)

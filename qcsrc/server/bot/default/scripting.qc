@@ -308,9 +308,7 @@ float bot_decodecommand(string cmdstring)
 				bot_cmd.bot_cmd_parm_float = stof(parm);
 				break;
 			case BOT_CMD_PARAMETER_STRING:
-				if(bot_cmd.bot_cmd_parm_string)
-					strunzone(bot_cmd.bot_cmd_parm_string);
-				bot_cmd.bot_cmd_parm_string = strzone(parm);
+				strcpy(bot_cmd.bot_cmd_parm_string, parm);
 				break;
 			case BOT_CMD_PARAMETER_VECTOR:
 				if(substring(parm, 0, 1) != "\'")
@@ -622,10 +620,11 @@ float bot_cmd_eval(entity this, string expr)
 		return cvar(substring(expr, 5, strlen(expr)));
 
 	// Search for fields
+	// TODO: expand with support for more fields (key carrier, ball carrier, armor etc)
 	switch(expr)
 	{
 		case "health":
-			return this.health;
+			return GetResource(this, RES_HEALTH);
 		case "speed":
 			return vlen(this.velocity);
 		case "flagcarrier":
@@ -1085,12 +1084,12 @@ float bot_cmd_debug_assert_canfire(entity this)
 			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state");
 		}
 	}
-	else if(ATTACK_FINISHED(this, slot) > time)
+	else if(ATTACK_FINISHED(this, weaponentity) > time)
 	{
 		if(f)
 		{
 			this.colormod = '8 0 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, weaponentity) - time), " seconds left)");
 		}
 	}
 	else if(this.(weaponentity).tuba_note)
@@ -1106,7 +1105,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(!f)
 		{
 			this.colormod = '8 8 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, weaponentity) - time), " seconds left");
 		}
 	}
 
@@ -1170,8 +1169,7 @@ void bot_resetqueues()
 		it.bot_barrier = 0;
 		for(int i = 0; i < it.bot_places_count; ++i)
 		{
-			strunzone(it.(bot_placenames[i]));
-			it.(bot_placenames[i]) = string_null;
+			strfree(it.(bot_placenames[i]));
 		}
 		it.bot_places_count = 0;
 	});

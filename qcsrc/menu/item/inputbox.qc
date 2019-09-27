@@ -22,7 +22,7 @@
 
 	void InputBox_setText(entity me, string txt)
 	{
-		if (me.text) strunzone(me.text);
+		strfree(me.text);
 		SUPER(InputBox).setText(me, strzone(txt));
 	}
 
@@ -71,17 +71,17 @@
 		return 1;
 	}
 
-	float InputBox_mousePress(entity me, vector pos)
+	METHOD(InputBox, mousePress, bool(InputBox this, vector pos))
 	{
-		if (me.enableClearButton)
-			if (over_ClearButton(me, pos))
+		if (this.enableClearButton)
+			if (over_ClearButton(this, pos))
 			{
-				me.cb_pressed = 1;
-				return 1;
+				this.cb_pressed = 1;
+				return true;
 			}
-		me.dragScrollTimer = time;
-		me.pressed = 1;
-		return InputBox_mouseDrag(me, pos);
+		this.dragScrollTimer = time;
+		this.pressed = 1;
+		return InputBox_mouseDrag(this, pos);
 	}
 
 	float InputBox_mouseRelease(entity me, vector pos)
@@ -106,19 +106,19 @@
 
 	void InputBox_enterText(entity me, string ch)
 	{
-		float i;
-		for (i = 0; i < strlen(ch); ++i)
+		int len = strlen(ch);
+		for (int i = 0; i < len; ++i)
 			if (strstrofs(me.forbiddenCharacters, substring(ch, i, 1), 0) > -1) return;
 		if (me.maxLength > 0)
 		{
-			if (strlen(ch) + strlen(me.text) > me.maxLength) return;
+			if (len + strlen(me.text) > me.maxLength) return;
 		}
 		else if (me.maxLength < 0)
 		{
 			if (u8_strsize(ch) + u8_strsize(me.text) > -me.maxLength) return;
 		}
 		me.setText(me, strcat(substring(me.text, 0, me.cursorPos), ch, substring(me.text, me.cursorPos, strlen(me.text) - me.cursorPos)));
-		me.cursorPos += strlen(ch);
+		me.cursorPos += len;
 	}
 
 	float InputBox_keyDown(entity me, float key, float ascii, float shift)
@@ -356,7 +356,7 @@
 			}
 
 		// skipping SUPER(InputBox).draw(me);
-		Item_draw(me);
+		MenuItem_draw(me);
 	}
 
 	void InputBox_showNotify(entity me)

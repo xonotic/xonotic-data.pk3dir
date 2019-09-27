@@ -1,12 +1,17 @@
 #pragma once
-#include <common/t_items.qh>
 
 #ifdef GAMEQC
+#include <common/models/all.qh>
 #include <common/sounds/all.qh>
 #include <common/sounds/all.inc>
+#include <common/stats.qh>
 #endif
 
-const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+#ifdef SVQC
+#include <server/items.qh>
+#endif
+
+const int IT_UNLIMITED_AMMO 			=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
 
 const int IT_JETPACK               		=  BIT(2); // actual item
@@ -39,17 +44,53 @@ const int IT_SUPERWEAPON				= BIT(21); // suit
 const int IT_STRENGTH   				= BIT(22);
 
 // item masks
-const int IT_UNLIMITED_AMMO            	= IT_UNLIMITED_WEAPON_AMMO | IT_UNLIMITED_SUPERWEAPONS;
-const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
+const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
 
 #ifdef SVQC
-.float  strength_finished = _STAT(STRENGTH_FINISHED);
-.float  invincible_finished = _STAT(INVINCIBLE_FINISHED);
+const .float strength_finished = _STAT(STRENGTH_FINISHED);
+const .float invincible_finished = _STAT(INVINCIBLE_FINISHED);
+
+#define spawnfunc_body(item) \
+	if (!Item_IsDefinitionAllowed(item)) \
+	{ \
+		startitem_failed = true; \
+		delete(this); \
+		return; \
+	} \
+	StartItem(this, item)
+
+#define SPAWNFUNC_ITEM(name, item) \
+	spawnfunc(name) \
+	{ \
+		spawnfunc_body(item); \
+	}
+
+#define SPAWNFUNC_ITEM_COND(name, cond, item1, item2) \
+	spawnfunc(name) \
+	{ \
+		entity item = (cond) ? item1 : item2; \
+		spawnfunc_body(item); \
+	}
+
+#else
+
+#define SPAWNFUNC_ITEM(name, item)
+
 #endif
+
+enum
+{
+	ITEM_FLAG_NORMAL = BIT(0), ///< Item is usable during normal gameplay.
+	ITEM_FLAG_MUTATORBLOCKED = BIT(1),
+	ITEM_FLAG_RESOURCE = BIT(2) ///< Item is is a resource, not a held item.
+};
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)
     ATTRIB(GameItem, m_id, int, 0);
+    /** the canonical spawnfunc name */
+    ATTRIB(GameItem, m_canonical_spawnfunc, string);
+    METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
     ATTRIB(GameItem, m_name, string);
     ATTRIB(GameItem, m_icon, string);
     ATTRIB(GameItem, m_color, vector, '1 1 1');

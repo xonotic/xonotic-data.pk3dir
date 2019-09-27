@@ -52,8 +52,7 @@ void cvar_set_campaignwrapper(string theCvar, string theValue)
 {
 	if(cvar_string_campaignwrapper(theCvar) == theValue)
 		return;
-	string s;
-	s = cvar_campaignwrapper_list;
+	string s = cvar_campaignwrapper_list;
 	cvar_campaignwrapper_list = strzone(strcat("; ", theCvar, " ", theValue, s));
 	strunzone(s);
 	//print(cvar_campaignwrapper_list, "\n");
@@ -99,6 +98,8 @@ void CampaignPreInit()
 	baseskill = baseskill + campaign_botskill[0];
 	if(baseskill < 0)
 		baseskill = 0;
+
+	campaign_forcewin = false;
 
 	cvar_set("sv_public", "0");
 	cvar_set("pausable", "1");
@@ -206,6 +207,11 @@ void CampaignPreIntermission()
 	{
 		campaign_won = 1;
 		bprint("Campaign test run, advancing level.\n");
+	}
+	else if(campaign_forcewin)
+	{
+		campaign_won = 1;
+		bprint("The current level has been WON.\n");
 	}
 	else if(won == 1 && lost == 0 && checkrules_equality == 0)
 	{

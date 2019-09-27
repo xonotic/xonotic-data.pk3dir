@@ -74,6 +74,12 @@ function check() {
     done
 }
 
-check client
-check server
-check menu
+if [ ${#@} -eq 0 ]; then
+    check client
+    check server
+    check menu
+else
+    for var in ${@}; do
+        check ${var}
+    done
+fi

@@ -9,7 +9,7 @@
 
 void HUD_Vote()
 {
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
+	if(autocvar_cl_allow_uid2name == -1 && (ISGAMETYPE(CTS) || ISGAMETYPE(RACE) || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		// this dialog gets overriden by the uid2name menu dialog, if it exists
 		// TODO remove this client side uid2name dialog in the next release
@@ -27,9 +27,7 @@ void HUD_Vote()
 			LOG_INFO(_("^1You must answer before entering hud configure mode"));
 			cvar_set("_hud_configure", "0");
 		}
-		if(vote_called_vote)
-			strunzone(vote_called_vote);
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));
+		strcpy(vote_called_vote, _("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));
 		uid2name_dialog = 1;
 	}
 

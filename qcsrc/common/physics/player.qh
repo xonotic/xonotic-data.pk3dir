@@ -15,12 +15,7 @@
 .float swamp_slowdown;
 .float lastflags;
 .float lastground;
-.float wasFlying;
-#ifdef SVQC
-.float spectatorspeed = _STAT(SPECTATORSPEED);
-#elif defined(CSQC)
-.float spectatorspeed;
-#endif
+.bool wasFlying;
 
 .int buttons_old;
 .vector movement_old;
@@ -80,8 +75,9 @@ bool IsFlying(entity a);
 #define PHYS_JETPACK_MAXSPEED_UP(s)         STAT(JETPACK_MAXSPEED_UP, s)
 #define PHYS_JETPACK_REVERSE_THRUST(s)		STAT(JETPACK_REVERSE_THRUST, s)
 
-#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, NULL)
+#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
 #define PHYS_JUMPVELOCITY(s)                STAT(MOVEVARS_JUMPVELOCITY, s)
+#define PHYS_JUMPVELOCITY_CROUCH(s)         STAT(MOVEVARS_JUMPVELOCITY_CROUCH, s)
 
 #define PHYS_MAXAIRSPEED(s)                 STAT(MOVEVARS_MAXAIRSPEED, s)
 #define PHYS_MAXAIRSTRAFESPEED(s)           STAT(MOVEVARS_MAXAIRSTRAFESPEED, s)
@@ -97,7 +93,7 @@ bool IsFlying(entity a);
 #define PHYS_WARSOWBUNNY_TOPSPEED(s)        STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, s)
 #define PHYS_WARSOWBUNNY_TURNACCEL(s)       STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, s)
 
-#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY, NULL)
+#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY)
 
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)
@@ -105,15 +101,6 @@ bool IsFlying(entity a);
 #define PHYS_INPUT_BUTTON_ZOOM(s)           PHYS_INPUT_BUTTON_BUTTON4(s)
 #define PHYS_INPUT_BUTTON_CROUCH(s)         PHYS_INPUT_BUTTON_BUTTON5(s)
 #define PHYS_INPUT_BUTTON_HOOK(s)           PHYS_INPUT_BUTTON_BUTTON6(s)
-
-#ifdef CSQC
-STATIC_INIT(PHYS_INPUT_BUTTON_HOOK)
-{
-	localcmd("alias +hook +button6\n");
-	localcmd("alias -hook -button6\n");
-}
-#endif
-
 #define PHYS_INPUT_BUTTON_INFO(s)           PHYS_INPUT_BUTTON_BUTTON7(s)
 #define PHYS_INPUT_BUTTON_DRAG(s)           PHYS_INPUT_BUTTON_BUTTON8(s)
 #define PHYS_INPUT_BUTTON_USE(s)            PHYS_INPUT_BUTTON_BUTTON_USE(s)
@@ -122,18 +109,19 @@ STATIC_INIT(PHYS_INPUT_BUTTON_HOOK)
 #define PHYS_INPUT_BUTTON_ZOOMSCRIPT(s)     PHYS_INPUT_BUTTON_BUTTON9(s)
 #define PHYS_INPUT_BUTTON_JETPACK(s)        PHYS_INPUT_BUTTON_BUTTON10(s)
 #define PHYS_INPUT_BUTTON_DODGE(s)			PHYS_INPUT_BUTTON_BUTTON11(s)
+#define PHYS_INPUT_BUTTON_MINIGAME(s)		PHYS_INPUT_BUTTON_BUTTON12(s)
 
 #ifdef CSQC
-STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
+STATIC_INIT(PHYS_INPUT_BUTTON)
 {
-	localcmd("alias +jetpack +button10\n");
-    localcmd("alias -jetpack -button10\n");
-}
+	localcmd("alias +hook +button6\n");
+	localcmd("alias -hook -button6\n");
 
-STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
-{
-    localcmd("alias +dodge +button11\n");
-    localcmd("alias -dodge -button11\n");
+	localcmd("alias +jetpack +button10\n");
+	localcmd("alias -jetpack -button10\n");
+
+	localcmd("alias +dodge +button11\n");
+	localcmd("alias -dodge -button11\n");
 }
 #endif
 
@@ -202,8 +190,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	.entity hook;
 
 // TODO
-	#define IS_CLIENT(s)                        ((s).isplayermodel || (s) == csqcplayer)
-	#define IS_PLAYER(s)                        ((s).isplayermodel)
+	#define IS_CLIENT(s)                        (((s).isplayermodel & ISPLAYER_CLIENT) || (s) == csqcplayer)
+	#define IS_PLAYER(s)                        ((s).isplayermodel & ISPLAYER_PLAYER)
 	#define IS_NOT_A_CLIENT(s)                  (!(s).isplayermodel && (s) != csqcplayer)
 	#define isPushable(s)                       ((s).isplayermodel || (s).pushable || ((s).flags & FL_PROJECTILE))
 
@@ -244,6 +232,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define SET_DUCKED(s)                       ((s).flags |= FL_DUCKED)
 	#define UNSET_DUCKED(s)                     ((s).flags &= ~FL_DUCKED)
 
+	#define PHYS_INVEHICLE(s) 					(boolean(hud != HUD_NORMAL))
+
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_cl_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_cl_jumpspeedcap_max
 
@@ -258,9 +248,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	void Physics_UpdateStats(entity this);
 
 	void PM_UpdateButtons(entity this, entity store);
-
-	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
-	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
 
 	/** Not real stats */
 	.string jumpspeedcap_min;
@@ -298,6 +285,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define IS_DUCKED(s)                        ((s).crouch)
 	#define SET_DUCKED(s)                       ((s).crouch = true)
 	#define UNSET_DUCKED(s)                     ((s).crouch = false)
+
+	#define PHYS_INVEHICLE(s) 					(boolean((s).vehicle != NULL))
 
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max

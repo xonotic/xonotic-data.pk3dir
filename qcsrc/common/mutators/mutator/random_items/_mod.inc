@@ -1,0 +1,4 @@
+// generated file; do not modify
+#ifdef SVQC
+    #include <common/mutators/mutator/random_items/sv_random_items.qc>
+#endif

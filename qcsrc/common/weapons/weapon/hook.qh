@@ -1,9 +1,10 @@
 #pragma once
 
 CLASS(Hook, Weapon)
-/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel);
+/* spawnfunc */ ATTRIB(Hook, m_canonical_spawnfunc, string, "weapon_hook");
+/* ammotype  */ ATTRIB(Hook, ammo_type, int, RES_FUEL);
 /* impulse   */ ATTRIB(Hook, impulse, int, 0);
-/* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
 /* modelname */ ATTRIB(Hook, mdl, string, "hookgun");
@@ -49,6 +50,8 @@ CLASS(Hook, Weapon)
 ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, hook, NEW(Hook));
 
+SPAWNFUNC_WEAPON(weapon_hook, WEP_HOOK)
+
 CLASS(OffhandHook, OffhandWeapon)
 #ifdef SVQC
     METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
@@ -59,7 +62,8 @@ CLASS(OffhandHook, OffhandWeapon)
     }
 #endif
 ENDCLASS(OffhandHook)
-OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
+OffhandHook OFFHAND_HOOK;
+STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
 
 #ifdef SVQC
 

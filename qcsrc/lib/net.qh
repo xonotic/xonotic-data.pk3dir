@@ -4,19 +4,30 @@
 #include "sort.qh"
 #include "yenc.qh"
 
+// netcode mismatch and not sure what caused it? developer_csqcentities 1
+
 .string netname;
 .int m_id;
 .bool(entity this, entity sender, bool isNew) m_read;
 #define NET_HANDLE(id, param) bool Net_Handle_##id(entity this, entity sender, param)
 
+#define NET_GUARD(id) \
+    bool Net_Handle_##id##_guard(entity this, entity sender, bool isNew) { \
+        bool valid = false; \
+        serialize_marker(to, valid); \
+        if (!valid) LOG_FATALF("Last message not fully parsed: %s", _net_prevmsgstr); \
+        _net_prevmsgstr = #id; \
+        return Net_Handle_##id(this, sender, isNew); \
+    }
 
 #ifdef CSQC
+string _net_prevmsgstr;
 	#define REGISTER_NET_TEMP(id) \
 		NET_HANDLE(id, bool); \
-		REGISTER(TempEntities, NET, id, m_id, new_pure(net_temp_packet)) \
-		{ \
+        NET_GUARD(id); \
+		REGISTER(TempEntities, NET, id, m_id, new_pure(net_temp_packet)) { \
 			this.netname = #id; \
-			this.m_read = Net_Handle_##id; \
+			this.m_read = Net_Handle_##id##_guard; \
 		}
 #else
 	#define REGISTER_NET_TEMP(id) \
@@ -33,22 +44,23 @@ REGISTRY(TempEntities, BITS(8) - 80)
 REGISTER_REGISTRY(TempEntities)
 REGISTRY_SORT(TempEntities)
 REGISTRY_CHECK(TempEntities)
-STATIC_INIT(RegisterTempEntities_renumber) { FOREACH(TempEntities, true, it.m_id = 80 + i); }
+STATIC_INIT(TempEntities_renumber) { FOREACH(TempEntities, true, it.m_id = 80 + i); }
 
 
 
 #ifdef CSQC
 	#define REGISTER_NET_LINKED(id) \
-		[[accumulate]] NET_HANDLE(id, bool isnew) \
+		ACCUMULATE NET_HANDLE(id, bool isnew) \
 		{ \
 			this = __self; \
-			this.sourceLoc = __FILE__ ":" STR(__LINE__); \
+			this.sourceLoc = __FILE__":"STR(__LINE__); \
 			if (!this) isnew = true; \
 		} \
+		NET_GUARD(id); \
 		REGISTER(LinkedEntities, NET, id, m_id, new_pure(net_linked_packet)) \
 		{ \
 			this.netname = #id; \
-			this.m_read = Net_Handle_##id; \
+			this.m_read = Net_Handle_##id##_guard; \
 		}
 #else
 	#define REGISTER_NET_LINKED(id) \
@@ -64,7 +76,7 @@ REGISTRY(LinkedEntities, BITS(8) - 1)
 REGISTER_REGISTRY(LinkedEntities)
 REGISTRY_SORT(LinkedEntities)
 REGISTRY_CHECK(LinkedEntities)
-STATIC_INIT(RegisterLinkedEntities_renumber) { FOREACH(LinkedEntities, true, it.m_id = 1 + i); }
+STATIC_INIT(LinkedEntities_renumber) { FOREACH(LinkedEntities, true, it.m_id = 1 + i); }
 
 
 
@@ -95,7 +107,6 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 #ifdef SVQC
 	const int MSG_ENTITY = 5;
 
-	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
 
 	IntrusiveList g_uncustomizables;
@@ -176,13 +187,13 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	const int MSG_C2S = 0;
 
 	#define Net_Accept(classname) \
-		MACRO_BEGIN { \
-			if (!this)    this = new(classname); \
-		} MACRO_END
+		MACRO_BEGIN \
+			if (!this) this = new(classname); \
+		MACRO_END
 	#define Net_Reject() \
-		MACRO_BEGIN { \
-			if (this)     delete(this); \
-		} MACRO_END
+		MACRO_BEGIN \
+			if (this) delete(this); \
+		MACRO_END
 
 	string g_buf;
 
@@ -190,22 +201,20 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	{
 		if (g_buf == "") return;
 		localcmd("\ncmd c2s \"", strreplace("$", "$$", g_buf), "\"\n");
-		strunzone(g_buf);
-		g_buf = string_null;
+		strfree(g_buf);
 	}
 #endif
 
 #if defined(CSQC)
 	#define WriteHeader(to, id) \
-		MACRO_BEGIN { \
-			WriteByte(to, NET_##id.m_id); \
-		} MACRO_END
+		WriteByte(to, NET_##id.m_id)
 #elif defined(SVQC)
 	#define WriteHeader(to, id) \
-		MACRO_BEGIN { \
+		MACRO_BEGIN \
 			if (NET_##id##_istemp) WriteByte(to, SVC_TEMPENTITY); \
 			WriteByte(to, NET_##id.m_id); \
-		} MACRO_END
+			bool _net_valid = false; serialize_marker(to, _net_valid); \
+		MACRO_END
 #endif
 
 // serialization: new style
@@ -219,7 +228,11 @@ USING(Stream, int);
 	#define stream_writing(stream) false
 #endif
 
-#define serialize(T, stream, ...) serialize_##T(stream, __VA_ARGS__)
+#define serialize(T, stream, ...) \
+MACRO_BEGIN \
+    noref Stream _stream = stream; \
+    serialize_##T(_stream, __VA_ARGS__); \
+MACRO_END
 
 #if defined(SVQC)
 	#define serialize_byte(stream, this) \
@@ -246,13 +259,27 @@ USING(Stream, int);
 #endif
 
 #define serialize_vector(stream, this) \
-    MACRO_BEGIN \
+MACRO_BEGIN \
     vector _v = this; \
     serialize_float(stream, _v.x); \
     serialize_float(stream, _v.y); \
     serialize_float(stream, _v.z); \
     this = _v; \
-    MACRO_END
+MACRO_END
+
+#define serialize_marker(stream, this) \
+MACRO_BEGIN \
+    if (NDEBUG) { \
+        this = true; \
+    } else { \
+        int _de = 0xDE, _ad = 0xAD, _be = 0xBE, _ef = 0xEF; \
+        serialize_byte(stream, _de); \
+        serialize_byte(stream, _ad); \
+        serialize_byte(stream, _be); \
+        serialize_byte(stream, _ef); \
+        this = (_de == 0xDE && _ad == 0xAD && _be == 0xBE && _ef == 0xEF); \
+    } \
+MACRO_END
 
 // serialization: old
 
@@ -270,8 +297,12 @@ USING(Stream, int);
 		string s = string_null;
 		yenc_single(b, s);
 		string tmp = strcat(g_buf, s);
-		if (g_buf) strunzone(g_buf);
-		g_buf = strzone(tmp);
+		strcpy(g_buf, tmp);
+	}
+	void WriteShort(int to, int b)
+	{
+		WriteByte(to, (b >> 8) & 0xFF);
+		WriteByte(to, b & 0xFF);
 	}
 #elif defined(SVQC)
 	int ReadByte()
@@ -279,6 +310,10 @@ USING(Stream, int);
 		int ret = -1;
 		ydec_single(g_buf, ret);
 		return ret;
+	}
+	int ReadShort()
+	{
+		return (ReadByte() << 8) | (ReadByte());
 	}
 	void WriteByte(int to, int b);
 #endif
@@ -349,9 +384,9 @@ USING(Stream, int);
 			WriteInt24_t(dst, val.z);
 		}
 
-        #define WriteFloat(to, f) WriteCoord(to, f)
-		#define WriteVector(to, v) MACRO_BEGIN { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } MACRO_END
-        #define WriteVector2D(to, v) MACRO_BEGIN { WriteFloat(to, v.x); WriteFloat(to, v.y); } MACRO_END
+		#define WriteFloat(to, f) WriteCoord(to, f)
+		#define WriteVector(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); MACRO_END
+		#define WriteVector2D(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); MACRO_END
 
 		// this will use the value:
 		//   128
@@ -376,7 +411,7 @@ USING(Stream, int);
 		}
 
 		// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
-		#define WRITESPECTATABLE_MSG_ONE(to, statement) MACRO_BEGIN { \
+		#define WRITESPECTATABLE_MSG_ONE(to, statement) MACRO_BEGIN \
 			entity prev = msg_entity; \
 			entity dst = to; \
 			FOREACH_CLIENT(IS_REAL_CLIENT(it), { \
@@ -387,6 +422,6 @@ USING(Stream, int);
 				} \
 			}); \
 			msg_entity = prev; \
-		} MACRO_END
+		MACRO_END
 	#endif
 #endif

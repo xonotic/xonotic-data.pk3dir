@@ -14,20 +14,24 @@ ENABLE_DEBUGTRACE ?= 0
 BUILD_MOD ?=
 
 ifndef ZIP
-	ifneq ($(shell which zip),)
+	ifneq ($(shell which zip 2>/dev/null),)
 		ZIP := zip -9
 	endif
-	ifneq ($(shell which 7z),)
+	ifneq ($(shell which 7z 2>/dev/null),)
 		ZIP := 7z a -tzip -mx=9
 	endif
-	ifneq ($(shell which 7za),)
+	ifneq ($(shell which 7za 2>/dev/null),)
 		ZIP := 7za a -tzip -mx=9
 	endif
     ifndef ZIP
-        $(warning "No zip in ($(PATH))")
+        $(warning "No zip / 7z / 7za in ($(PATH))")
         ZIP := : zip_not_found
     endif
 endif
+
+# Set to empty string to temporarily enable warnings when debugging
+QCCFLAGS_WERROR ?= \
+	-Werror
 
 # We eventually need to get rid of these
 QCCFLAGS_WTFS ?= \
@@ -48,7 +52,8 @@ QCCFLAGS ?= \
 	-std=gmqcc \
 	-Ooverlap-locals \
 	-O3 \
-	-Werror -Wall \
+	$(QCCFLAGS_WERROR) \
+	-Wall \
 	$(QCCFLAGS_WTFS) \
 	-flno -futf8 -fno-bail-on-werror \
 	-frelaxed-switch -freturn-assignments \

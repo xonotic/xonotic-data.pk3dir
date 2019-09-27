@@ -18,9 +18,10 @@
 
 	void Image_draw(entity me)
 	{
-		if (me.imgSize.x > 1 || me.imgSize.y > 1) draw_SetClip();
+		bool willClip = me.imgSize.x > 1 || me.imgSize.y > 1;
+		if (willClip) draw_SetClip();
 		draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
-		if (me.imgSize.x > 1 || me.imgSize.y > 1) draw_ClearClip();
+		if (willClip) draw_ClearClip();
 		SUPER(Image).draw(me);
 	}
 	void Image_updateAspect(entity me)

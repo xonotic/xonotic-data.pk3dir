@@ -32,7 +32,7 @@ function qpp() {
     err=$?
     set -e
     if [ ${err} -ne 0 ]; then return ${err}; fi
-    sed 's/^#\(line\)\? \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\3)\n#pragma line(\2)/g' "${WORKDIR}/${MODE}.txt"
+    sed -E 's/^#(line)? ([[:digit:]]+) "(.*)".*/'$'\\\n''#pragma file(\3)'$'\\\n''#pragma line(\2)/g' "${WORKDIR}/${MODE}.txt"
 }
 
 function qcc() {

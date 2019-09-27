@@ -1,15 +1,16 @@
 #include "sv_invincibleproj.qh"
 
-REGISTER_MUTATOR(invincibleprojectiles, cvar("g_invincible_projectiles"));
+string autocvar_g_invincible_projectiles;
+REGISTER_MUTATOR(invincibleprojectiles, expr_evaluate(autocvar_g_invincible_projectiles));
 
 MUTATOR_HOOKFUNCTION(invincibleprojectiles, EditProjectile)
 {
 	entity proj = M_ARGV(1, entity);
 
-	if(proj.health)
+	if(GetResource(proj, RES_HEALTH))
 	{
 		// disable health which in effect disables damage calculations
-		proj.health = 0;
+		SetResourceExplicit(proj, RES_HEALTH, 0);
 	}
 }
 

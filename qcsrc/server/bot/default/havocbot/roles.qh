@@ -1,1 +1,10 @@
 #pragma once
+
+const float BOT_RATING_ENEMY = 2500;
+
+.float bot_ratingscale;
+.float bot_ratingscale_time;
+.float havocbot_role_timeout;
+
+.void(entity this) havocbot_previous_role;
+.void(entity this) havocbot_role;

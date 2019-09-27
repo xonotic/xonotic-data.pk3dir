@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(HLAC, Weapon)
-/* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells);
+/* spawnfunc */ ATTRIB(HLAC, m_canonical_spawnfunc, string, "weapon_hlac");
+/* ammotype  */ ATTRIB(HLAC, ammo_type, int, RES_CELLS);
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
@@ -48,3 +49,5 @@ CLASS(HLAC, Weapon)
 
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, hlac, NEW(HLAC));
+
+SPAWNFUNC_WEAPON(weapon_hlac, WEP_HLAC)

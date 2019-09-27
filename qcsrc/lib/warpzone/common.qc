@@ -792,7 +792,7 @@ bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 {
-	float eps = 0.0625;
+	const float eps = 0.0625;
 	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 		return;
@@ -819,12 +819,12 @@ bool WarpZoneLib_MoveOutOfSolid(entity e)
 	vector m1 = e.maxs;
 	e.mins = '0 0 0';
 	e.maxs = '0 0 0';
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m0.x); e.mins.x = m0.x;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m1.x); e.maxs.x = m1.x;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m0.y); e.mins.y = m0.y;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m1.y); e.maxs.y = m1.y;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m0.z); e.mins.z = m0.z;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m1.z); e.maxs.z = m1.z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m0.x); e.mins_x = m0.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m1.x); e.maxs_x = m1.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m0.y); e.mins_y = m0.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m1.y); e.maxs_y = m1.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m0.z); e.mins_z = m0.z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m1.z); e.maxs_z = m1.z;
 	setorigin(e, e.origin);
 
 	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);

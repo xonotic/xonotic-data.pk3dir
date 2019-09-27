@@ -1,6 +1,7 @@
 #include "sv_cloaked.qh"
 
-REGISTER_MUTATOR(cloaked, cvar("g_cloaked"));
+//string autocvar_g_cloaked;
+REGISTER_MUTATOR(cloaked, expr_evaluate(cvar_string("g_cloaked")));
 
 float autocvar_g_balance_cloaked_alpha;
 

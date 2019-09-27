@@ -1,14 +1,5 @@
 #pragma once
 
-void __static_init() {}
-#define static_init() CALL_ACCUMULATED_FUNCTION(__static_init)
-void __static_init_late() {}
-#define static_init_late() CALL_ACCUMULATED_FUNCTION(__static_init_late)
-void __static_init_precache() {}
-#define static_init_precache() CALL_ACCUMULATED_FUNCTION(__static_init_precache)
-void __shutdown() {}
-#define shutdownhooks() CALL_ACCUMULATED_FUNCTION(__shutdown)
-
 #define GETTIME_REALTIME 1
 #ifdef MENUQC
 float(int tmr) _gettime = #67;
@@ -25,12 +16,36 @@ void profile(string s)
 	LOG_TRACEF("[%f] %s", rt - g_starttime, s);
 }
 
-#define _STATIC_INIT(where, func) \
-	[[accumulate]] void _static_##func() { profile(#func); } \
+#define _STATIC_INIT(func, where) \
+	ACCUMULATE void _static_##func##profile() { profile(#func); } \
+	ACCUMULATE_FUNCTION(where, _static_##func##profile) \
+	ACCUMULATE void _static_##func(); \
 	ACCUMULATE_FUNCTION(where, _static_##func) \
 	void _static_##func()
 
-#define STATIC_INIT(func) _STATIC_INIT(__static_init,           func)
-#define STATIC_INIT_LATE(func) _STATIC_INIT(__static_init_late, func##_late)
-#define PRECACHE(func) _STATIC_INIT(__static_init_precache,     func##_precache)
-#define SHUTDOWN(func) _STATIC_INIT(__shutdown,     			func##_shutdown)
+/** before worldspawn */
+#define STATIC_INIT_EARLY(func) _STATIC_INIT(func##_0,    __static_init_0)
+#define static_init_early()     CALL_ACCUMULATED_FUNCTION(__static_init_0)
+void __static_init_0() {}
+
+/** during worldspawn */
+#define STATIC_INIT(func)       _STATIC_INIT(func##_1,    __static_init_1)
+#define static_init()           CALL_ACCUMULATED_FUNCTION(__static_init_1)
+void __static_init_1() {}
+
+/** directly after STATIC_INIT */
+#define STATIC_INIT_LATE(func)  _STATIC_INIT(func##_2,    __static_init_2)
+#define static_init_late()      CALL_ACCUMULATED_FUNCTION(__static_init_2)
+void __static_init_2() {}
+
+/** directly after STATIC_INIT_LATE */
+#define PRECACHE(func)          _STATIC_INIT(func##_3,    __static_init_3)
+#define static_init_precache()  CALL_ACCUMULATED_FUNCTION(__static_init_3)
+void __static_init_3() {}
+
+/* other map entities spawn now */
+
+/** before shutdown */
+#define SHUTDOWN(func)          _STATIC_INIT(func##_shutdown, __shutdown)
+#define shutdownhooks()         CALL_ACCUMULATED_FUNCTION(    __shutdown)
+void __shutdown() {}

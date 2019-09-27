@@ -4,6 +4,7 @@
 #include <server/miscfunctions.qh>
 #include "pathlib.qh"
 #include "utility.qh"
+#include <common/turrets/util.qh>
 #include "../command/common.qh"
 
 void pathlib_deletepath(entity start)
@@ -30,9 +31,7 @@ void dumpnode(entity n)
 }
 
 #if DEBUGPATHING
-void pathlib_showpath(entity start);
-void pathlib_showpath2(entity path);
-void pathlib_showsquare(vector where,float goodsquare,float _lifetime);
+#include "debug.qh"
 #endif
 
 

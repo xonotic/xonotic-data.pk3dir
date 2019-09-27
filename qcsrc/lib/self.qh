@@ -1,5 +1,7 @@
 #pragma once
 
+#include "macro.qh"
+
 // Transition from global 'self' to local 'this'
 
 // Step 1: auto oldself
@@ -9,10 +11,10 @@
 
 // Step 2: const self
 #if 1
-    #define self (0, self)
-    [[alias("self")]] entity __self;
+    #define self (RVALUE, self)
+    ALIAS("self") entity __self;
     #define setself(s) (__self = s)
-    #define WITHSELF(value, block) WITH(entity, __self, value, (0, block))
+    #define WITHSELF(value, block) WITH(entity, __self, value, (RVALUE, block))
 #endif
 
 // Step 3: propagate SELFPARAM()
@@ -32,7 +34,7 @@
 // Step 5: this should work
 #if 1
     #undef self
-    #define self (0, this)
+    #define self (RVALUE, this)
 #endif
 
 // Step 6: remove SELFPARAM, add parameters
@@ -56,11 +58,11 @@ noref entity _selftemp;
 #define SELFWRAP_SET(T, e, f) \
     (_selftemp = (e), _selftemp.__##T = ((f) ? T##_self : func_null), _selftemp.self##T = (f))
 #define SELFWRAP_GET(T, e) \
-    (0, (e).self##T)
+    (RVALUE, (e).self##T)
 #define _SELFWRAP_SET(T, e, f) \
     ((e).__##T = (f))
 #define _SELFWRAP_GET(T, e) \
-    (0, (e).__##T)
+    (RVALUE, (e).__##T)
 
 SELFWRAP(think, void, (), (entity this), (this))
 #define setthink(e, f) SELFWRAP_SET(think, e, f)

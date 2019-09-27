@@ -18,6 +18,8 @@ const int PROJECTILE_NADE_MONSTER = 82;
 const int PROJECTILE_NADE_MONSTER_BURN = 83;
 const int PROJECTILE_NADE_ENTRAP = 84;
 const int PROJECTILE_NADE_ENTRAP_BURN = 85;
+const int PROJECTILE_NADE_VEIL = 86;
+const int PROJECTILE_NADE_VEIL_BURN = 87;
 
 REGISTRY(Nades, BITS(4))
 #define Nades_from(i) _Nades_from(i, NADE_TYPE_Null)
@@ -31,6 +33,7 @@ CLASS(Nade, Object)
     ATTRIB(Nade, m_color, vector, '0 0 0');
     ATTRIB(Nade, m_name, string, _("Grenade"));
     ATTRIB(Nade, m_icon, string, "nade_normal");
+    ATTRIB(Nade, m_alpha, float, 1);
     ATTRIBARRAY(Nade, m_projectile, int, 2);
     ATTRIBARRAY(Nade, m_trail, entity, 2);
     METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
@@ -64,20 +67,15 @@ Nade Nade_FromProjectile(int proj)
 
 .entity nade;
 .entity fake_nade;
-.float nade_timer = _STAT(NADE_TIMER);
 .float nade_refire;
-.float bonus_nades = _STAT(NADE_BONUS);
 .float nade_special_time;
-.float bonus_nade_score = _STAT(NADE_BONUS_SCORE);
-.int nade_type = _STAT(NADE_BONUS_TYPE);
 .string pokenade_type;
 .entity nade_damage_target;
 .float cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
 .float toss_time;
-.float stat_healing_orb = _STAT(HEALING_ORB);
-.float stat_healing_orb_alpha = _STAT(HEALING_ORB_ALPHA);
 .float nade_show_particles;
+.float nade_veil_prevalpha;
 
 bool orb_send(entity this, entity to, int sf);
 
@@ -100,4 +98,12 @@ void nades_GiveBonus(entity player, float score);
     /**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 
+#endif
+
+#ifdef CSQC
+float cvar_cl_nade_type;
+string cvar_cl_pokenade_type;
+bool Projectile_isnade(int proj); // TODO: remove
+
+void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
 #endif

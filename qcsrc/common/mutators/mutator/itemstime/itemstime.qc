@@ -28,16 +28,12 @@ NET_HANDLE(itemstime, bool isNew)
 #endif
 
 #ifdef CSQC
-void Item_ItemsTime_Init()
-{
-    FOREACH(Items, true, {
-        ItemsTime_time[it.m_id] = -1;
-    });
-    ItemsTime_time[Items_MAX] = -1;
-}
 
 STATIC_INIT(ItemsTime_Init) {
-    Item_ItemsTime_Init();
+	FOREACH(Items, true, {
+		ItemsTime_time[it.m_id] = -1;
+	});
+	ItemsTime_time[Items_MAX] = -1;
 }
 
 int autocvar_hud_panel_itemstime = 2;
@@ -77,17 +73,11 @@ bool Item_ItemsTime_Allow(GameItem it)
 // reserve one more spot for superweapons time
 float it_times[Items_MAX + 1];
 
-void Item_ItemsTime_Init()
-{
-    FOREACH(Items, Item_ItemsTime_Allow(it), {
-        it_times[it.m_id] = -1;
-    });
-    it_times[Items_MAX] = -1;
-}
-
 STATIC_INIT(ItemsTime_Init) {
-    // items time
-    Item_ItemsTime_Init();
+	FOREACH(Items, Item_ItemsTime_Allow(it), {
+		it_times[it.m_id] = -1;
+	});
+	it_times[Items_MAX] = -1;
 }
 
 void Item_ItemsTime_ResetTimes()
@@ -124,7 +114,7 @@ void Item_ItemsTime_SetTime(entity e, float t)
     {
 		if (!item.instanceOfWeaponPickup)
 			it_times[item.m_id] = t;
-		else if (e.weapons & WEPSET_SUPERWEAPONS)
+		else if (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS)
 			it_times[Items_MAX] = t;
     }
 }
@@ -139,7 +129,7 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
     bool isavailable = (t == 0);
     IL_EACH(g_items, it != e,
     {
-        if(!(it.itemdef == e.itemdef || ((e.weapons & WEPSET_SUPERWEAPONS) && (it.weapons & WEPSET_SUPERWEAPONS))))
+        if(!(it.itemdef == e.itemdef || ((STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, it) & WEPSET_SUPERWEAPONS))))
             continue;
         if (it.scheduledrespawntime <= time)
             isavailable = true;

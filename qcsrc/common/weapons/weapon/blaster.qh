@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(Blaster, Weapon)
-/* ammotype  */ //ATTRIB(Blaster, ammo_field, .int, ammo_none);
+/* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
+/* ammotype  */ //ATTRIB(Blaster, ammo_type, int, RES_NONE);
 /* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
@@ -44,10 +45,39 @@ CLASS(Blaster, Weapon)
 ENDCLASS(Blaster)
 REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
 
+SPAWNFUNC_WEAPON(weapon_blaster, WEP_BLASTER)
+SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER)
+
+CLASS(OffhandBlaster, OffhandWeapon)
+ENDCLASS(OffhandBlaster)
+OffhandBlaster OFFHAND_BLASTER;
+STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+
 #ifdef SVQC
 .float blaster_damage;
 .float blaster_edgedamage;
 .float blaster_radius;
 .float blaster_force;
+.float blaster_force_zscale;
 .float blaster_lifetime;
+
+// Will be demacroed after WEP_CVAR macros are also demacroed.
+#define BLASTER_SECONDARY_ATTACK(weapon_name, actor, weaponentity) \
+	makevectors(actor.v_angle); \
+	W_Blaster_Attack( \
+		actor, \
+		weaponentity, \
+		WEP_BLASTER.m_id | HITTYPE_SECONDARY, \
+		WEP_CVAR_SEC(weapon_name, shotangle), \
+		WEP_CVAR_SEC(weapon_name, damage), \
+		WEP_CVAR_SEC(weapon_name, edgedamage), \
+		WEP_CVAR_SEC(weapon_name, radius), \
+		WEP_CVAR_SEC(weapon_name, force), \
+		WEP_CVAR_SEC(weapon_name, force_zscale), \
+		WEP_CVAR_SEC(weapon_name, speed), \
+		WEP_CVAR_SEC(weapon_name, spread), \
+		WEP_CVAR_SEC(weapon_name, delay), \
+		WEP_CVAR_SEC(weapon_name, lifetime) \
+	);
+
 #endif

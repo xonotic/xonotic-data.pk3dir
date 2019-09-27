@@ -4,6 +4,25 @@
 #include "sort.qh"
 #include "oo.qh"
 
+// string logic
+//
+// true: is truthy
+// == "": is equal to ""
+// is "": has the same string index as the string constant ""
+// strunzone: can be strunzoned
+//
+// |              | true | == "" | is "" | strunzone |
+// | :----------: | :--: | :---: | :---: | :-------: |
+// | nil          |      | yes   |       |           |
+// | strcat(nil)  | yes  | yes   |       |           |
+// | strzone(nil) | yes  | yes   |       | yes       |
+// | ""           | yes  | yes   | yes   |           |
+// | strcat("")   | yes  | yes   |       |           |
+// | strzone("")  | yes  | yes   |       | yes       |
+// | "s"          | yes  |       |       |           |
+// | strcat("s")  | yes  |       |       |           |
+// | strzone("s") | yes  |       |       | yes       |
+
 #ifdef CSQC
 	float stringwidth_colors(string s, vector theSize)
 	{
@@ -26,6 +45,20 @@
 		return stringwidth(s, false, theSize);
 	}
 #endif
+
+#define strcpy(this, s) MACRO_BEGIN \
+	if (this) { \
+		strunzone(this); \
+	} \
+	this = strzone(s); \
+MACRO_END
+
+#define strfree(this) MACRO_BEGIN \
+	if (this) { \
+		strunzone(this); \
+	} \
+	this = string_null; \
+MACRO_END
 
 ERASEABLE
 string seconds_tostring(float sec)
@@ -162,6 +195,14 @@ string cons(string a, string b)
 }
 
 ERASEABLE
+string cons_mid(string a, string mid, string b)
+{
+	if (a == "") return b;
+	if (b == "") return a;
+	return strcat(a, mid, b);
+}
+
+ERASEABLE
 string substring_range(string s, float b, float e)
 {
 	return substring(s, b, e - b);
@@ -256,6 +297,7 @@ int u8_strsize(string s)
 	return l;
 }
 
+// List of Unicode spaces: http://jkorpela.fi/chars/spaces.html
 ERASEABLE
 bool isInvisibleString(string s)
 {
@@ -272,8 +314,26 @@ bool isInvisibleString(string s)
 			case 192:          // charmap space
 				if (!utf8) break;
 				return false;
-			case 160:          // space in unicode fonts
 			case 0xE000 + 192: // utf8 charmap space
+			case 0x00A0: // NO-BREAK SPACE
+			//case 0x1680: // OGHAM SPACE MARK
+			case 0x180E: // MONGOLIAN VOWEL SEPARATOR
+			case 0x2000: // EN QUAD
+			case 0x2001: // EM QUAD
+			case 0x2002: // EN SPACE
+			case 0x2003: // EM SPACE
+			case 0x2004: // THREE-PER-EM SPACE
+			case 0x2005: // FOUR-PER-EM SPACE
+			case 0x2006: // SIX-PER-EM SPACE
+			case 0x2007: // FIGURE SPACE
+			case 0x2008: // PUNCTUATION SPACE
+			case 0x2009: // THIN SPACE
+			case 0x200A: // HAIR SPACE
+			case 0x200B: // ZERO WIDTH SPACE
+			case 0x202F: // NARROW NO-BREAK SPACE
+			case 0x205F: // MEDIUM MATHEMATICAL SPACE
+			case 0x3000: // IDEOGRAPHIC SPACE
+			case 0xFEFF: // ZERO WIDTH NO-BREAK SPACE
 				if (utf8) break;
 			default:
 				return false;

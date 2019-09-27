@@ -21,8 +21,6 @@
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
 
-.int state;
-
 /*============================================
 
       Wazat's Xonotic Grappling Hook
@@ -72,8 +70,6 @@ And you should be done!
 
 ============================================*/
 
-.float hook_length;
-
 void RemoveGrapplingHooks(entity pl)
 {
 	if(pl.move_movetype == MOVETYPE_FLY)
@@ -110,7 +106,6 @@ void GrapplingHookReset(entity this)
 	RemoveHook(this);
 }
 
-void GrapplingHookThink(entity this);
 void GrapplingHook_Stop(entity this)
 {
 	Send_Effect(EFFECT_HOOK_IMPACT, this.origin, '0 0 0', 1);
@@ -140,15 +135,11 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.hook_start.x);
-		WriteCoord(MSG_ENTITY, this.hook_start.y);
-		WriteCoord(MSG_ENTITY, this.hook_start.z);
+		WriteVector(MSG_ENTITY, this.hook_start);
 	}
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, this.hook_end.x);
-		WriteCoord(MSG_ENTITY, this.hook_end.y);
-		WriteCoord(MSG_ENTITY, this.hook_end.z);
+		WriteVector(MSG_ENTITY, this.hook_end);
 	}
 	return true;
 }
@@ -332,7 +323,7 @@ void GrapplingHookTouch(entity this, entity toucher)
 	GrapplingHook_Stop(this);
 
 	if(toucher)
-		if(toucher.move_movetype != MOVETYPE_NONE)
+		//if(toucher.move_movetype != MOVETYPE_NONE)
 		{
 			SetMovetypeFollow(this, toucher);
 			WarpZone_RefSys_BeginAddingIncrementally(this, this.aiment);
@@ -341,17 +332,17 @@ void GrapplingHookTouch(entity this, entity toucher)
 	//this.realowner.disableclientprediction = true;
 }
 
-void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RES_HEALTH, damage);
 
-	if (this.health <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(attacker != this.realowner)
 		{
@@ -365,22 +356,12 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 
 void FireGrapplingHook(entity actor, .entity weaponentity)
 {
-	if(forbidWeaponUse(actor)) return;
+	if(weaponLocked(actor)) return;
 	if(actor.vehicle) return;
 
-	makevectors(actor.v_angle);
-
-	int s = W_GunAlign(actor.(weaponentity), STAT(GUNALIGN, actor)) - 1;
-	vector vs = hook_shotorigin[s];
-
-	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-	sound (actor, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
-	vector org = actor.origin + actor.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
-
-	tracebox(actor.origin + actor.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, actor);
-	org = trace_endpos;
-
-	Send_Effect(EFFECT_HOOK_MUZZLEFLASH, org, '0 0 0', 1);
+	// TODO: offhand hook shoots from eye
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', true, 0, SND_HOOK_FIRE, CH_WEAPON_B, 0, WEP_HOOK.m_id);
+	Send_Effect(EFFECT_HOOK_MUZZLEFLASH, w_shotorg, '0 0 0', 1);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.owner = missile.realowner = actor;
@@ -397,11 +378,11 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 
 	//setmodel (missile, MDL_HOOK); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
-	setorigin(missile, org);
+	setorigin(missile, w_shotorg);
 
 	missile.state = 0; // not latched onto anything
 
-	W_SetupProjVelocity_Explicit(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, false);
+	W_SetupProjVelocity_Explicit(missile, w_shotdir, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, false);
 
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
@@ -412,7 +393,7 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
 
-	missile.health = autocvar_g_balance_grapplehook_health;//120
+	SetResourceExplicit(missile, RES_HEALTH, autocvar_g_balance_grapplehook_health);
 	missile.event_damage = GrapplingHook_Damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;

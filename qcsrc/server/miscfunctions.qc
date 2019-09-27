@@ -5,20 +5,24 @@
 #include "constants.qh"
 #include "g_hook.qh"
 #include "ipban.qh"
-#include "mutators/_mod.qh"
+#include <server/mutators/_mod.qh>
 #include "../common/t_items.qh"
+#include "resources.qh"
+#include "items.qh"
+#include "player.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
 #include "../common/command/_mod.qh"
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
+#include <common/weapons/weapon/crylink.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications/all.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
-#include "../common/triggers/subs.qh"
+#include "../common/mapobjects/subs.qh"
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include <common/weapons/_all.qh>
@@ -36,34 +40,47 @@ void crosshair_trace(entity pl)
 {
 	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
-.bool ctrace_solidchanged;
+
 void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, false);
+}
+
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, true);
+}
+
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz)
 {
 	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
 	{
 		if(it.model != "")
 		{
 			it.solid = SOLID_BSP;
-			it.ctrace_solidchanged = true;
 			IL_PUSH(g_ctrace_changed, it);
 		}
 	});
 
-	crosshair_trace(pl);
+	if (is_wz)
+		WarpZone_crosshair_trace(pl);
+	else
+		crosshair_trace(pl);
 
-	IL_EACH(g_ctrace_changed, it.ctrace_solidchanged,
-	{
-		it.solid = SOLID_TRIGGER;
-		it.ctrace_solidchanged = false;
-	});
+	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
 
 	IL_CLEAR(g_ctrace_changed);
 }
+
 void WarpZone_crosshair_trace(entity pl)
 {
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
 
 void GameLogEcho(string s)
 {
@@ -196,17 +213,17 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string AmmoNameFromWeaponentity(entity wpn)
+string AmmoNameFromWeaponentity(Weapon wep)
 {
 	string ammoitems = "batteries";
-	switch((wpn.m_weapon).ammo_field)
+	switch (wep.ammo_type)
 	{
-		case ammo_shells:  ammoitems = ITEM_Shells.m_name;      break;
-		case ammo_nails:   ammoitems = ITEM_Bullets.m_name;     break;
-		case ammo_rockets: ammoitems = ITEM_Rockets.m_name;     break;
-		case ammo_cells:   ammoitems = ITEM_Cells.m_name;       break;
-		case ammo_plasma:  ammoitems = ITEM_Plasma.m_name;      break;
-		case ammo_fuel:    ammoitems = ITEM_JetpackFuel.m_name; break;
+		case RES_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
+		case RES_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
+		case RES_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
+		case RES_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
+		case RES_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
+		case RES_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
 	}
 	return ammoitems;
 }
@@ -215,16 +232,13 @@ string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
 	float n;
-	vector cursor;
-	entity cursor_ent;
+	vector cursor = '0 0 0';
+	entity cursor_ent = NULL;
 	string escape;
 	string replacement;
 	p = 0;
 	n = 7;
-
-	WarpZone_crosshair_trace(this);
-	cursor = trace_endpos;
-	cursor_ent = trace_ent;
+	bool traced = false;
 
 	MUTATOR_CALLHOOK(PreFormatMessage, this, msg);
 	msg = M_ARGV(1, string);
@@ -248,6 +262,14 @@ string formatmessage(entity this, string msg)
 		if (p < 0)
 			break;
 
+		if(!traced)
+		{
+			WarpZone_crosshair_trace_plusvisibletriggers(this);
+			cursor = trace_endpos;
+			cursor_ent = trace_ent;
+			traced = true;
+		}
+
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
@@ -258,13 +280,13 @@ string formatmessage(entity this, string msg)
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(this.armorvalue)); break;
-			case "h": replacement = ftos(floor(this.health)); break;
+			case "a": replacement = ftos(floor(GetResource(this, RES_ARMOR))); break;
+			case "h": replacement = ftos(floor(GetResource(this, RES_HEALTH))); break;
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
 			case "w": replacement = ((this.(weaponentity).m_weapon == WEP_Null) ? ((this.(weaponentity).m_switchweapon == WEP_Null) ? Weapons_from(this.(weaponentity).cnt) : this.(weaponentity).m_switchweapon) : this.(weaponentity).m_weapon).m_name; break;
-			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity)); break;
+			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity).m_weapon); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;
@@ -296,17 +318,13 @@ void GetCvars_handleString(entity this, entity store, string thisname, float f, 
 {
 	if (f < 0)
 	{
-		if (store.(field))
-			strunzone(store.(field));
-		store.(field) = string_null;
+		strfree(store.(field));
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (store.(field))
-				strunzone(store.(field));
-			store.(field) = strzone(argv(f + 1));
+			strcpy(store.(field), argv(f + 1));
 		}
 	}
 	else
@@ -321,8 +339,7 @@ void GetCvars_handleString_Fixup(entity this, entity store, string thisname, flo
 			string s = func(this, strcat1(store.(field)));
 			if (s != store.(field))
 			{
-				strunzone(store.(field));
-				store.(field) = strzone(s);
+				strcpy(store.(field), s);
 			}
 		}
 }
@@ -364,20 +381,16 @@ void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float 
 }
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
 {
-	string o;
-	o = W_FixWeaponOrder_ForceComplete(wo);
-	if(this.weaponorder_byimpulse)
-	{
-		strunzone(this.weaponorder_byimpulse);
-		this.weaponorder_byimpulse = string_null;
-	}
-	this.weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
+	string o = W_FixWeaponOrder_ForceComplete(wo);
+	strcpy(CS(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
 
 REPLICATE(autoswitch, bool, "cl_autoswitch");
 
 REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
+
+REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
 
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 
@@ -386,6 +399,8 @@ REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
 
 REPLICATE(cvar_cl_handicap, float, "cl_handicap");
+
+REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 
 REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
 
@@ -405,12 +420,21 @@ REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
 
 REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 
+REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
+
+REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
+
+REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
+
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
 void GetCvars(entity this, entity store, int f)
 {
 	string s = string_null;
+
+	if (f == 0)
+		LOG_INFO("Warning: requesting cvar values is deprecated. Client should send them automatically using REPLICATE.\n");
 
 	if (f > 0)
 		s = strcat1(argv(f));
@@ -467,13 +491,12 @@ string playername(entity p, bool team_colorize)
         return p.netname;
 }
 
-float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
+float want_weapon(entity weaponinfo, float allguns)
 {
-	int i = weaponinfo.m_id;
 	int d = 0;
 	bool allow_mutatorblocked = false;
 
-	if(!i)
+	if(!weaponinfo.m_id)
 		return 0;
 
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
@@ -482,12 +505,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	allow_mutatorblocked = M_ARGV(3, bool);
 
 	if(allguns)
-	{
-		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
-			d = true;
-		else
-			d = false;
-	}
+		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
 
@@ -496,7 +514,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 
 	float t = weaponinfo.weaponstartoverride;
 
-	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
+	//LOG_INFOF("want_weapon: %s - d: %d t: %d\n", weaponinfo.netname, d, t);
 
 	// bit order in t:
 	// 1: want or not
@@ -510,10 +528,90 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	return t;
 }
 
+/// Weapons the player normally starts with outside weapon arena.
+WepSet weapons_start()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		int w = want_weapon(it, false);
+		if (w & 1)
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_all()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_devall()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_most()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		if ((it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)))
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+void weaponarena_available_all_update(entity this)
+{
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & weapons_all());
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to all weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_all();
+	}
+}
+
+void weaponarena_available_devall_update(entity this)
+{
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | weaponsInMapAll;
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to devall weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_devall();
+	}
+}
+
+void weaponarena_available_most_update(entity this)
+{
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & weapons_most());
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to most weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_most();
+	}
+}
+
 void readplayerstartcvars()
 {
 	float i, t;
-	string s;
 
 	// initialize starting values for players
 	start_weapons = '0 0 0';
@@ -525,13 +623,17 @@ void readplayerstartcvars()
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
 	start_ammo_plasma = 0;
+	if (random_start_ammo == NULL)
+	{
+		random_start_ammo = spawn();
+	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
 	g_weaponarena = 0;
 	g_weaponarena_weapons = '0 0 0';
 
-	s = cvar_string("g_weaponarena");
+	string s = cvar_string("g_weaponarena");
 
 	MUTATOR_CALLHOOK(SetWeaponArena, s);
 	s = M_ARGV(0, string);
@@ -548,29 +650,43 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
-		FOREACH(Weapons, it != WEP_Null, {
-			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				g_weaponarena_weapons |= (it.m_wepset);
-		});
+		g_weaponarena_weapons = weapons_all();
 	}
 	else if (s == "devall")
 	{
 		g_weaponarena = 1;
-		g_weaponarena_list = "All Weapons"; // TODO: report as more than just all weapons?
-		FOREACH(Weapons, it != WEP_Null,
-		{
-			g_weaponarena_weapons |= (it.m_wepset);
-		});
+		g_weaponarena_list = "Dev All Weapons";
+		g_weaponarena_weapons = weapons_devall();
 	}
 	else if (s == "most")
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
-		FOREACH(Weapons, it != WEP_Null, {
-			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				if(it.spawnflags & WEP_FLAG_NORMAL)
-					g_weaponarena_weapons |= (it.m_wepset);
-		});
+		g_weaponarena_weapons = weapons_most();
+	}
+	else if (s == "all_available")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "All Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_all_update, INITPRIO_FINDTARGET);
+	}
+	else if (s == "devall_available")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "Dev All Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_devall_update, INITPRIO_FINDTARGET);
+	}
+	else if (s == "most_available")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "Most Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_most_update, INITPRIO_FINDTARGET);
 	}
 	else if (s == "none")
 	{
@@ -585,29 +701,21 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			FOREACH(Weapons, it != WEP_Null, {
-				if(it.netname == s)
-				{
-					g_weaponarena_weapons |= (it.m_wepset);
-					g_weaponarena_list = strcat(g_weaponarena_list, it.m_name, " & ");
-					break;
-				}
-			});
+			Weapon wep = Weapons_fromstr(s);
+			if(wep != WEP_Null)
+			{
+				g_weaponarena_weapons |= (wep.m_wepset);
+				g_weaponarena_list = strcat(g_weaponarena_list, wep.m_name, " & ");
+			}
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
-
-	if(g_weaponarena)
-		g_weaponarena_random = cvar("g_weaponarena_random");
-	else
-		g_weaponarena_random = 0;
-	g_weaponarena_random_with_blaster = cvar("g_weaponarena_random_with_blaster");
 
 	if (g_weaponarena)
 	{
 		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena_weapons;
-		start_items |= IT_UNLIMITED_AMMO;
+		start_items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
 	}
 	else
 	{
@@ -623,10 +731,13 @@ void readplayerstartcvars()
 		});
 	}
 
+	if(cvar("g_balance_superweapons_time") < 0)
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
+
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
-	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
+	if(start_items & IT_UNLIMITED_AMMO)
 	{
 		start_ammo_shells = 999;
 		start_ammo_nails = 999;
@@ -643,46 +754,49 @@ void readplayerstartcvars()
 		start_ammo_cells = cvar("g_start_ammo_cells");
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
+		random_start_weapons_count = cvar("g_random_start_weapons_count");
+		SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
+		SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
+		SetResource(random_start_ammo, RES_ROCKETS,cvar("g_random_start_rockets"));
+		SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
+		SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
 	}
 
-	if (warmup_stage)
-	{
-		warmup_start_ammo_shells = start_ammo_shells;
-		warmup_start_ammo_nails = start_ammo_nails;
-		warmup_start_ammo_rockets = start_ammo_rockets;
-		warmup_start_ammo_cells = start_ammo_cells;
-		warmup_start_ammo_plasma = start_ammo_plasma;
-		warmup_start_ammo_fuel = start_ammo_fuel;
-		warmup_start_health = start_health;
-		warmup_start_armorvalue = start_armorvalue;
-		warmup_start_weapons = start_weapons;
-		warmup_start_weapons_default = start_weapons_default;
-		warmup_start_weapons_defaultmask = start_weapons_defaultmask;
+	warmup_start_ammo_shells = start_ammo_shells;
+	warmup_start_ammo_nails = start_ammo_nails;
+	warmup_start_ammo_rockets = start_ammo_rockets;
+	warmup_start_ammo_cells = start_ammo_cells;
+	warmup_start_ammo_plasma = start_ammo_plasma;
+	warmup_start_ammo_fuel = start_ammo_fuel;
+	warmup_start_health = start_health;
+	warmup_start_armorvalue = start_armorvalue;
+	warmup_start_weapons = start_weapons;
+	warmup_start_weapons_default = start_weapons_default;
+	warmup_start_weapons_defaultmask = start_weapons_defaultmask;
 
-		if (!g_weaponarena && !g_ca && !g_freezetag)
-		{
-			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
-			warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
-			warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
-			warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
-			warmup_start_ammo_plasma = cvar("g_warmup_start_ammo_plasma");
-			warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
-			warmup_start_health = cvar("g_warmup_start_health");
-			warmup_start_armorvalue = cvar("g_warmup_start_armor");
-			warmup_start_weapons = '0 0 0';
-			warmup_start_weapons_default = '0 0 0';
-			warmup_start_weapons_defaultmask = '0 0 0';
-			FOREACH(Weapons, it != WEP_Null, {
-				int w = want_weapon(it, g_warmup_allguns);
-				WepSet s = (it.m_wepset);
-				if(w & 1)
-					warmup_start_weapons |= s;
-				if(w & 2)
-					warmup_start_weapons_default |= s;
-				if(w & 4)
-					warmup_start_weapons_defaultmask |= s;
-			});
-		}
+	if (!g_weaponarena)
+	{
+		warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
+		warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
+		warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
+		warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
+		warmup_start_ammo_plasma = cvar("g_warmup_start_ammo_plasma");
+		warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
+		warmup_start_health = cvar("g_warmup_start_health");
+		warmup_start_armorvalue = cvar("g_warmup_start_armor");
+		warmup_start_weapons = '0 0 0';
+		warmup_start_weapons_default = '0 0 0';
+		warmup_start_weapons_defaultmask = '0 0 0';
+		FOREACH(Weapons, it != WEP_Null, {
+			int w = want_weapon(it, g_warmup_allguns);
+			WepSet s = it.m_wepset;
+			if(w & 1)
+				warmup_start_weapons |= s;
+			if(w & 2)
+				warmup_start_weapons_default |= s;
+			if(w & 4)
+				warmup_start_weapons_defaultmask |= s;
+		});
 	}
 
 	if (g_jetpack)
@@ -697,20 +811,22 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
-	WepSet precache_weapons = start_weapons;
-	if (g_warmup_allguns != 1)
-		precache_weapons |= warmup_start_weapons;
-	FOREACH(Weapons, it != WEP_Null, {
-		if(precache_weapons & (it.m_wepset))
-			it.wr_init(it);
-	});
-
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_rockets = max(0, start_ammo_rockets);
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
+	SetResource(random_start_ammo, RES_SHELLS,
+		max(0, GetResource(random_start_ammo, RES_SHELLS)));
+	SetResource(random_start_ammo, RES_BULLETS,
+		max(0, GetResource(random_start_ammo, RES_BULLETS)));
+	SetResource(random_start_ammo, RES_ROCKETS,
+		max(0, GetResource(random_start_ammo, RES_ROCKETS)));
+	SetResource(random_start_ammo, RES_CELLS,
+		max(0, GetResource(random_start_ammo, RES_CELLS)));
+	SetResource(random_start_ammo, RES_PLASMA,
+		max(0, GetResource(random_start_ammo, RES_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
@@ -725,9 +841,9 @@ void precache_playermodel(string m)
 	float globhandle, i, n;
 	string f;
 
-	if(substring(m, -9,5) == "_lod1")
+	if(substring(m, -9, 5) == "_lod1")
 		return;
-	if(substring(m, -9,5) == "_lod2")
+	if(substring(m, -9, 5) == "_lod2")
 		return;
 	precache_model(m);
 	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
@@ -859,7 +975,7 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void(entity this) func, float order)
+void InitializeEntity(entity e, void(entity this) func, int order)
 {
     entity prev, cur;
 
@@ -933,24 +1049,21 @@ void InitializeEntitiesRun()
 .float(entity) isEliminated;
 bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
-	float i, f, b;
-	entity e;
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
-	WriteByte(MSG_ENTITY, sendflags);
-
-	if(sendflags & 1)
-	{
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
-			{
-				if(eliminatedPlayers.isEliminated(e))
-					f |= b;
+	Stream out = MSG_ENTITY;
+	WriteHeader(out, ENT_CLIENT_ELIMINATEDPLAYERS);
+	serialize(byte, out, sendflags);
+	if (sendflags & 1) {
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			entity e = edict_num(i);
+			for (int b = 0; b < 8; ++b, e = nextent(e)) {
+				if (eliminatedPlayers.isEliminated(e)) {
+					f |= BIT(b);
+				}
 			}
-			WriteByte(MSG_ENTITY, f);
+			serialize(byte, out, f);
 		}
 	}
-
 	return true;
 }
 
@@ -1047,7 +1160,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	if(trace_dphitcontents == 0)
 	{
 		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
-		checkclient(this);
+		checkclient(this); // TODO: .health is checked in the engine with this, possibly replace with a QC function?
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return true;
@@ -1073,7 +1186,6 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 #define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
 
-void W_Crylink_Dequeue(entity e);
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
 	if(SUB_OwnerCheck(this, toucher))
@@ -1084,11 +1196,6 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 			return false; // no checks here
 		else if(this.classname == "grapplinghook")
 			RemoveHook(this);
-		else if(this.classname == "spike")
-		{
-			W_Crylink_Dequeue(this);
-			delete(this);
-		}
 		else
 			delete(this);
 		return true;
@@ -1220,6 +1327,7 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
     });
 	if(!sp)
 	{
+		int items_checked = 0;
 		IL_EACH(g_items, checkpvs(mstart, it),
 		{
 			if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
@@ -1227,6 +1335,10 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
 				sp = it;
 				break;
 			}
+
+			++items_checked;
+			if(items_checked >= attempts)
+				break; // sanity
 		});
 
 		if(!sp)
@@ -1414,10 +1526,13 @@ bool isPushable(entity e)
 		return false;
 	if(e.iscreature)
 		return true;
+	if (Item_IsLoot(e))
+	{
+		return true;
+	}
 	switch(e.classname)
 	{
 		case "body":
-		case "droppedweapon":
 			return true;
 		case "bullet": // antilagged bullets can't hit this either
 			return false;

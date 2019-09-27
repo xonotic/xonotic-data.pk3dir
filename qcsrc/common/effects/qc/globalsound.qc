@@ -11,8 +11,6 @@
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
 
-	string GlobalSound_sample(string pair, float r);
-
 	#ifdef SVQC
 		/**
 		 * @param from the source entity, its position is sent
@@ -44,9 +42,7 @@
 			WriteByte(channel, floor(_atten * 64));
 			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
-			WriteCoord(channel, o.x);
-			WriteCoord(channel, o.y);
-			WriteCoord(channel, o.z);
+			WriteVector(channel, o);
 		}
 
 		/**
@@ -81,9 +77,7 @@
 			WriteByte(channel, floor(_atten * 64));
 			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
-			WriteCoord(channel, o.x);
-			WriteCoord(channel, o.y);
-			WriteCoord(channel, o.z);
+			WriteVector(channel, o);
 		}
 	#endif
 
@@ -99,10 +93,7 @@
 			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
-			vector o;
-			o.x = ReadCoord();
-			o.y = ReadCoord();
-			o.z = ReadCoord();
+			vector o = ReadVector();
 			// TODO: is this really what we want to be doing? Footsteps that follow the player at head height?
 			if (who == player_currententnum) e = findfloat(NULL, entnum, who);  // play at camera position for full volume
 			else if (e) e.origin = o;
@@ -131,10 +122,7 @@
 			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
-			vector o;
-			o.x = ReadCoord();
-			o.y = ReadCoord();
-			o.z = ReadCoord();
+			vector o = ReadVector();
 			if (who == player_currententnum) e = findfloat(NULL, entnum, who);  // play at camera position for full volume
 			else if (e) e.origin = o;
 			if (e)
@@ -249,8 +237,7 @@
 				.string fld = it.m_playersoundfld;
 				if (this.(fld))
 				{
-					strunzone(this.(fld));
-					this.(fld) = string_null;
+					strfree(this.(fld));
 				}
 			});
 		}
@@ -281,8 +268,7 @@
 				}
 				string file = argv(1);
 				string variants = argv(2);
-				if (this.(field)) strunzone(this.(field));
-				this.(field) = strzone(strcat(file, " ", variants));
+				strcpy(this.(field), strcat(file, " ", variants));
 			}
 			fclose(fh);
 			return true;
@@ -296,8 +282,7 @@
 		void UpdatePlayerSounds(entity this)
 		{
 			if (this.model == this.model_for_playersound && this.skin == this.skin_for_playersound) return;
-			if (this.model_for_playersound) strunzone(this.model_for_playersound);
-			this.model_for_playersound = strzone(this.model);
+			strcpy(this.model_for_playersound, this.model);
 			this.skin_for_playersound = this.skin;
 			ClearPlayerSounds(this);
 			LoadPlayerSounds(this, "sound/player/default.sounds", true);
@@ -352,12 +337,11 @@
 				{
 					#define X() \
 						MACRO_BEGIN \
-						{ \
 							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
 							else soundto(MSG_ONE, this, chan, sample, vol, atten); \
-						} MACRO_END
+						MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
 					else
@@ -382,7 +366,6 @@
 					if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
 					#define X() \
 						MACRO_BEGIN \
-						{ \
 							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < CS(msg_entity).cvar_cl_autotaunt) \
 							{ \
 								float atten = (CS(msg_entity).cvar_cl_voice_directional >= 1) \
@@ -393,7 +376,7 @@
 								else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
 								else soundto(MSG_ONE, this, chan, sample, vol, atten); \
 							} \
-						} MACRO_END
+						MACRO_END
 					if (fake)
 					{
 						msg_entity = this;

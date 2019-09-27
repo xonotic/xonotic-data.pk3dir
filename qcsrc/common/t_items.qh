@@ -1,13 +1,6 @@
 #pragma once
 
-#ifdef SVQC
-#include <server/defs.qh>
-#endif
-
-/// \brief Unconditional maximum amount of resources the player can have.
-const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
-
-const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
+const int AMMO_COUNT = 4; // amount of ammo types to show in the ammo panel
 
 // item networking
 const int ISF_LOCATION 			= BIT(1);
@@ -33,6 +26,8 @@ const int ISF_SIZE 				= BIT(7);
 
 #ifdef SVQC
 void StartItem(entity this, entity a);
+.int item_group;
+.int item_group_count;
 #endif
 
 #ifdef CSQC
@@ -51,32 +46,23 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 .vector colormod;
 
 void ItemDraw(entity this);
-void ItemDrawSimple(entity this);
 
 #endif
 #ifdef SVQC
-spawnfunc(item_strength);
-spawnfunc(item_invincible);
-spawnfunc(item_armor_small);
-spawnfunc(item_shells);
-spawnfunc(item_bullets);
-spawnfunc(item_rockets);
 
 float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
-
 
 bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
-#define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
-	// range: 10 .. respawntime + respawntimejitter
-
 .float max_armorvalue;
 .float pickup_anyway;
 
-void Item_Show (entity e, float mode);
+.float item_respawncounter;
+
+void Item_Show (entity e, int mode);
 
 void Item_Respawn (entity this);
 
@@ -87,41 +73,17 @@ void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
 
-/// \brief Gives player a resource such as health, armor or ammo.
-/// \param[in,out] player Player to give resource to.
-/// \param[in] resource_type Type of the resource.
-/// \param[in] amount Amount of resource to give.
+/// \brief Give several random weapons and ammo to the entity.
+/// \param[in,out] receiver Entity to give weapons to.
+/// \param[in] num_weapons Number of weapons to give.
+/// \param[in] weapon_names Names of weapons to give separated by spaces.
+/// \param[in] ammo Entity containing the ammo amount for each possible weapon.
 /// \return No return.
-void GivePlayerResource(entity player, .float resource_type, float amount);
+void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names, entity ammo_entity);
 
-/// \brief Gives health to the player.
-/// \param[in,out] player Player to give health to.
-/// \param[in] amount Amount of health to give.
-/// \return No return.
-void GivePlayerHealth(entity player, float amount);
+bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax);
 
-/// \brief Gives armor to the player.
-/// \param[in,out] player Player to give armor to.
-/// \param[in] amount Amount of armor to give.
-/// \return No return.
-void GivePlayerArmor(entity player, float amount);
-
-/// \brief Gives ammo of the specified type to the player.
-/// \param[in,out] player Player to give ammo to.
-/// \param[in] type Ammo type property.
-/// \param[in] amount Amount of ammo to give.
-/// \return No return.
-void GivePlayerAmmo(entity player, .float ammotype, float amount);
-
-/// \brief Gives fuel to the player.
-/// \param[in,out] player Player to give fuel to.
-/// \param[in] amount Amount of fuel to give.
-/// \return No return.
-void GivePlayerFuel(entity player, float amount);
-
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax);
-
-float Item_GiveTo(entity item, entity player);
+bool Item_GiveTo(entity item, entity player);
 
 void Item_Touch(entity this, entity toucher);
 
@@ -144,7 +106,7 @@ float weapon_pickupevalfunc(entity player, entity item);
 float ammo_pickupevalfunc(entity player, entity item);
 float healtharmor_pickupevalfunc(entity player, entity item);
 
-.float is_item;
+.bool is_item;
 .entity itemdef;
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 
@@ -161,10 +123,15 @@ void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_
 
 void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime);
 
-#define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = e.weapons
+spawnfunc(target_items);
+
+#define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = STAT(WEAPONS, e)
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
-#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(e.weapons & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
+#define PREGIVE_RESOURCE(e,f) float save_##f = GetResource((e), (f))
+#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(STAT(WEAPONS, e) & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
 #define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
+#define POSTGIVE_RESOURCE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, GetResource((e), (f)), t, snd_incr, snd_decr)
+#define POSTGIVE_RES_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e),save_##f,GetResource((e),(f)),rotfield,rottime,regenfield,regentime);GiveSound((e),save_##f,GetResource((e),(f)),t,snd_incr,snd_decr)
 #define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 

@@ -1,5 +1,6 @@
 #pragma once
 
+bool W_DualWielding(entity player);
 void W_GiveWeapon (entity e, float wep);
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
