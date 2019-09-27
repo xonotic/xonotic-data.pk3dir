@@ -726,7 +726,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		case "timelimit": // include restrictions on the maximum votable time limit
 		{
 			float timelimit_vote = stof(argv(startpos + 1));
-			if(timelimit_vote <= 0 || timelimit_vote > autocvar_timelimit_max || timelimit_vote < autocvar_timelimit_min)
+			if(timelimit_vote > autocvar_timelimit_max || timelimit_vote < autocvar_timelimit_min)
 			{
 				print_to(caller, strcat("Invalid timelimit vote, accepted values are between ", ftos(autocvar_timelimit_min), " and ", ftos(autocvar_timelimit_max), "."));
 				return -1;
