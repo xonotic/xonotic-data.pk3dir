@@ -921,19 +921,33 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector pm1 = ent.origin + ent.mins;
 	vector pm2 = ent.origin + ent.maxs;
 
-	// do two scans, because box test is cheaper
-	IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
+	if (autocvar_g_waypointeditor && !IS_BOT_CLIENT(ent))
 	{
-		if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+		// this code allows removing waypoints in the air and seeing jumppad/telepport waypoint links
+		// FIXME it causes a bug where a waypoint spawned really close to another one (max 16 qu)
+		// isn't detected as the nearest waypoint
+		IL_EACH(g_waypoints, it != ent && it != except,
 		{
-			if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
+			if (boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+				return it;
+		});
+	}
+	else
+	{
+		// do two scans, because box test is cheaper
+		IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
+		{
+			if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
 			{
-				waypoint_clearlinks(ent); // initialize wpXXmincost fields
-				navigation_item_addlink(it, ent);
+				if(walkfromwp && !ent.navigation_dynamicgoal)
+				{
+					waypoint_clearlinks(ent); // initialize wpXXmincost fields
+					navigation_item_addlink(it, ent);
+				}
+				return it;
 			}
-			return it;
-		}
-	});
+		});
+	}
 
 	vector org = ent.origin;
 	if (navigation_testtracewalk)

@@ -360,6 +360,7 @@ void cvar_changes_init()
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
 		BADCVAR("sv_intermission_cdtrack");
+		BADCVAR("sv_mapchange_delay");
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
