@@ -768,6 +768,12 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 					// we still allow them to see warnings if it's invalid, so a dead player can find out the sounds in peace
 					return;
 				}
+				if (IS_SPEC(caller) || IS_OBSERVER(caller))
+				{
+					// observers/spectators have no player model of their own to play taunts from
+					// again, allow them to see warnings
+					return;
+				}
 				string msg = "";
 				if (argc >= 3)
 					msg = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
