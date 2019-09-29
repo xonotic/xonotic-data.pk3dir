@@ -47,7 +47,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
-		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!(this.realowner.items & IT_UNLIMITED_AMMO))
 		{
 			this.realowner.cnt = thiswep.m_id;
 			ATTACK_FINISHED(this.realowner, weaponentity) = time;
@@ -143,7 +143,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
-		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!(this.realowner.items & IT_UNLIMITED_AMMO))
 		{
 			this.realowner.cnt = thiswep.m_id;
 			ATTACK_FINISHED(this.realowner, weaponentity) = time;

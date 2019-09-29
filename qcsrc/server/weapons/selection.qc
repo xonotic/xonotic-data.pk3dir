@@ -70,7 +70,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 	{
 		if (andammo)
 		{
-			if(this.items & IT_UNLIMITED_WEAPON_AMMO)
+			if(this.items & IT_UNLIMITED_AMMO)
 			{
 				f = 1;
 			}

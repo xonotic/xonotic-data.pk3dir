@@ -133,8 +133,8 @@ void calc_followmodel_ofs(entity view)
 		vel = view.velocity;
 	else
 	{
-		vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		vector forward, right, up;
+		MAKE_VECTORS(view_angles, forward, right, up);
 		vel.x = view.velocity * forward;
 		vel.y = view.velocity * right * -1;
 		vel.z = view.velocity * up;
@@ -159,8 +159,8 @@ void calc_followmodel_ofs(entity view)
 	if (autocvar_cl_followmodel_velocity_absolute)
 	{
 		vector fixed_gunorg;
-		vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		vector forward, right, up;
+		MAKE_VECTORS(view_angles, forward, right, up);
 		fixed_gunorg.x = gunorg * forward;
 		fixed_gunorg.y = gunorg * right * -1;
 		fixed_gunorg.z = gunorg * up;
@@ -493,15 +493,16 @@ vector GetCurrentFov(float fov)
 			curspeed = 0;
 		else
 		{
-			makevectors(view_angles);
+			vector forward, right, up;
+			MAKE_VECTORS(view_angles, forward, right, up);
 			v = pmove_vel;
 			if(csqcplayer)
 				v = csqcplayer.velocity;
 
 			switch(autocvar_cl_velocityzoom_type)
 			{
-				case 3: curspeed = max(0, v_forward * v); break;
-				case 2: curspeed = (v_forward * v); break;
+				case 3: curspeed = max(0, forward * v); break;
+				case 2: curspeed = (forward * v); break;
 				case 1: default: curspeed = vlen(v); break;
 			}
 		}
@@ -1094,8 +1095,10 @@ void HUD_Crosshair(entity this)
 			wcross_color.z += sin(hitindication_crosshair_size) * hitindication_color.z;
 		}
 
-		if(shottype == SHOTTYPE_HITENEMY)
-			wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
+		// no effects needed for targeting enemies, this can't possibly span all valid targets!
+		// just show for teammates to give a sign that they're an invalid target
+		//if(shottype == SHOTTYPE_HITENEMY)
+			//wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
 		if(shottype == SHOTTYPE_HITTEAM)
 			wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
 
@@ -1752,18 +1755,19 @@ void CSQC_UpdateView(entity this, float w, float h)
 			else if(eventchase_current_distance != chase_distance)
 				eventchase_current_distance = chase_distance;
 
-			makevectors(view_angles);
+			vector forward, right, up;
+			MAKE_VECTORS(view_angles, forward, right, up);
 
-			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
+			vector eventchase_target_origin = (current_view_origin - (forward * eventchase_current_distance));
 			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, this);
 
 			// If the boxtrace fails, revert back to line tracing.
 			if(!local_player.viewloc)
 			if(trace_startsolid)
 			{
-				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
+				eventchase_target_origin = (current_view_origin - (forward * eventchase_current_distance));
 				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, this);
-				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins.z)));
+				setproperty(VF_ORIGIN, (trace_endpos - (forward * autocvar_cl_eventchase_mins.z)));
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
@@ -1890,7 +1894,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
-	MAKEVECTORS(makevectors, view_angles, view_forward, view_right, view_up);
+	MAKE_VECTORS(view_angles, view_forward, view_right, view_up);
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)
@@ -2441,14 +2445,15 @@ void CSQC_UpdateView(entity this, float w, float h)
 		setproperty(VF_ORIGIN, '0 0 0');
 		setproperty(VF_ANGLES, '0 0 0');
 		setproperty(VF_PERSPECTIVE, 1);
-		makevectors('0 0 0');
+		vector forward, right, up;
+		MAKE_VECTORS('0 0 0', forward, right, up);
 		vector v1, v2;
 		cvar_set("vid_conwidth", "800");
 		cvar_set("vid_conheight", "600");
-		v1 = cs_project(v_forward);
+		v1 = cs_project(forward);
 		cvar_set("vid_conwidth", "640");
 		cvar_set("vid_conheight", "480");
-		v2 = cs_project(v_forward);
+		v2 = cs_project(forward);
 		if(v1 == v2)
 			cs_project_is_b0rked = 1;
 		else
