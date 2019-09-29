@@ -93,13 +93,6 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 #define YAW(v) ((v).y)
 #define ROLL(v) ((v).z)
 
-#define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN \
-	f(angles); \
-	forward = v_forward; \
-	right = v_right; \
-	up = v_up; \
-MACRO_END
-
 //pseudo prototypes:
 // vector vec2(vector v); // returns a vector with just the x and y components of the given vector
 // vector vec2(float x, float y); // returns a vector with the given x and y components
@@ -111,6 +104,13 @@ noref vector _vec2;
 
 noref vector _vec3;
 #define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
+
+#define VEC_NAN vec3(FLOAT_NAN, FLOAT_NAN, FLOAT_NAN);
+
+ERASEABLE
+bool is_all_nans(vector v) {
+	return isnan(v.x) && isnan(v.y) && isnan(v.z);
+}
 
 ERASEABLE
 vector Rotate(vector v, float a)

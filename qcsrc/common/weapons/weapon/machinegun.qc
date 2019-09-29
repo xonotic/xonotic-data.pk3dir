@@ -84,7 +84,7 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!(actor.items & IT_UNLIMITED_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w_ready(thiswep, actor, weaponentity, fire);
@@ -110,7 +110,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	}
 
 	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -211,7 +211,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
             if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-            if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+            if(!(actor.items & IT_UNLIMITED_AMMO))
             {
                 W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
                 w_ready(thiswep, actor, weaponentity, fire);

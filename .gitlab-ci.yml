@@ -56,6 +56,9 @@ test_sv_unit:
       done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
     - exit 1
 
+# NOTE: The generated docs are incomplete - they don't contain code behind SVQC CSQC MENUQC GAMEQC ifdefs.
+# With them added to PREDEFINED, it would take over half an hour to generate the docs and even then
+# they might not be complete. Doxygen doesn't handle #elif and might not understand some QC definitions.
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy
   script:

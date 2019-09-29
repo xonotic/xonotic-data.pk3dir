@@ -549,7 +549,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
-	start_items &= ~IT_UNLIMITED_AMMO;
+	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
 	//start_health       = warmup_start_health       = cvar("g_lms_start_health");
 	//start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
