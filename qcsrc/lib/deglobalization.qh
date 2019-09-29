@@ -1,0 +1,73 @@
+#include "lib/float.qh"
+#include "lib/misc.qh"
+#include "lib/static.qh"
+#include "lib/vector.qh"
+
+// These macros wrap functions which use globals so mutation only occurs inside them and is not visible from outside.
+// Functions for which all usages are replaced with these macros can be hidden by #defines inside our `*defs.qh` files
+// to prevent anyone from using them accidentally in the future
+
+// TODO stuff in the engine that uses the v_forward/v_right/v_up globals and is not wrapped yet:
+//  - RF_USEAXIS, addentities, predraw,
+//    - CL_GetEntityMatrix (in engine but is called from other functions so transitively any of them can use the globals - e.g. V_CalcRefdef, maybe others)
+//    - however RF_USEAXIS is only used if MF_ROTATE is used which is only set in one place
+//  - e.camera_transform / CL_VM_TransformView (in engine)
+//    - this is the only used function that both sets and gets the globals (aim does too but isn't used in our code)
+
+// convenience for deglobalization code - don't use these just to hide that globals are still used
+#define CLEAR_V_GLOBALS() v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN
+#define GET_V_GLOBALS(forward, right, up) forward = v_forward; right = v_right; up = v_up
+#define SET_V_GLOBALS(forward, right, up) v_forward = forward; v_right = right; v_up = up
+
+#ifdef GAMEQC
+STATIC_INIT(globals) {
+	// set to NaN to more easily detect uninitialized use
+	// TODO when all functions are wrapped and the raw functions are not used anymore,
+	// uncomment the defines in *progs.qh files that hide the raw functions
+	// and assert that the global vectors are NaN before calling the raw functions here
+	// to make sure nobody (even builtins) is accidentally using them - NaN is the most likely value to expose remaining usages
+
+	CLEAR_V_GLOBALS();
+}
+#endif
+
+/// Same as the `makevectors` builtin but uses the provided locals instead of the `v_*` globals.
+/// Always use this instead of raw `makevectors` to make the data flow clear.
+/// Note that you might prefer `FIXED_MAKE_VECTORS` for new code.
+#define MAKE_VECTORS(angles, forward, right, up) MACRO_BEGIN \
+	_makevectors_hidden(angles); \
+	GET_V_GLOBALS(forward, right, up); \
+	CLEAR_V_GLOBALS(); \
+MACRO_END
+
+/// Returns all 4 vectors by assigning to them (instead of returning a value) for consistency (and sanity)
+#define SKEL_GET_BONE_ABS(skel, bonenum, forward, right, up, origin) MACRO_BEGIN \
+	origin = _skel_get_boneabs_hidden(skel, bonenum) \
+	GET_V_GLOBALS(forward, right, up); \
+	CLEAR_V_GLOBALS(); \
+MACRO_END
+
+#define SKEL_SET_BONE(skel, bonenum, org, forward, right, up) MACRO_BEGIN \
+	SET_V_GLOBALS(forward, right, up); \
+	_skel_set_bone_hidden(skel, bonenum, org); \
+	CLEAR_V_GLOBALS(); \
+MACRO_END
+
+#define ADD_DYNAMIC_LIGHT(org, radius, lightcolours, forward, right, up) MACRO_BEGIN \
+	SET_V_GLOBALS(forward, right, up); \
+	_adddynamiclight_hidden(org, radius, lightcolours); \
+	CLEAR_V_GLOBALS(); \
+MACRO_END
+
+#define VECTOR_VECTORS(forward_in, forward, right, up) MACRO_BEGIN \
+	_vectorvectors_hidden(forward_in); \
+	GET_V_GLOBALS(forward, right, up); \
+	CLEAR_V_GLOBALS(); \
+MACRO_END
+
+/// Note that this only avoids the v_* globals, not the gettaginfo_* ones
+#define GET_TAG_INFO(ent, tagindex, forward, right, up, origin) MACRO_BEGIN \
+	origin = _gettaginfo_hidden(ent, tagindex); \
+	GET_V_GLOBALS(forward, right, up); \
+	CLEAR_V_GLOBALS(); \
+MACRO_END

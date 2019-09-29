@@ -323,7 +323,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(lms, SetStartItems)
 {
-	start_items &= ~IT_UNLIMITED_AMMO;
+	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
 	start_health       = warmup_start_health       = cvar("g_lms_start_health");
 	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
@@ -429,9 +429,10 @@ MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms, WantWeapon)
+MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
 {
-	M_ARGV(2, bool) = true; // all weapons
+	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+		M_ARGV(0, string) = autocvar_g_lms_weaponarena;
 }
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)

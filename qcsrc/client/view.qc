@@ -133,8 +133,8 @@ void calc_followmodel_ofs(entity view)
 		vel = view.velocity;
 	else
 	{
-		vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		vector forward, right, up;
+		MAKE_VECTORS(view_angles, forward, right, up);
 		vel.x = view.velocity * forward;
 		vel.y = view.velocity * right * -1;
 		vel.z = view.velocity * up;
@@ -159,8 +159,8 @@ void calc_followmodel_ofs(entity view)
 	if (autocvar_cl_followmodel_velocity_absolute)
 	{
 		vector fixed_gunorg;
-		vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		vector forward, right, up;
+		MAKE_VECTORS(view_angles, forward, right, up);
 		fixed_gunorg.x = gunorg * forward;
 		fixed_gunorg.y = gunorg * right * -1;
 		fixed_gunorg.z = gunorg * up;
@@ -291,6 +291,7 @@ void viewmodel_draw(entity this)
 		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
+	int wepskin = this.m_skin;
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
 	Weapon wep = this.activeweapon;
@@ -304,6 +305,7 @@ void viewmodel_draw(entity this)
 	{
 		e.drawmask = mask;
 		e.alpha = a;
+		e.skin = wepskin;
 		e.colormap = 256 + c;  // colormap == 0 is black, c == 0 is white
 		e.glowmod = g;
 		e.csqcmodel_effects = fx;
@@ -491,15 +493,16 @@ vector GetCurrentFov(float fov)
 			curspeed = 0;
 		else
 		{
-			makevectors(view_angles);
+			vector forward, right, up;
+			MAKE_VECTORS(view_angles, forward, right, up);
 			v = pmove_vel;
 			if(csqcplayer)
 				v = csqcplayer.velocity;
 
 			switch(autocvar_cl_velocityzoom_type)
 			{
-				case 3: curspeed = max(0, v_forward * v); break;
-				case 2: curspeed = (v_forward * v); break;
+				case 3: curspeed = max(0, forward * v); break;
+				case 2: curspeed = (forward * v); break;
 				case 1: default: curspeed = vlen(v); break;
 			}
 		}
@@ -601,7 +604,7 @@ float TrueAimCheck(entity wepent)
 {
 	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
 		return SHOTTYPE_HITWORLD;
-	
+
 	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
 	vector mi, ma, dv;
@@ -712,7 +715,7 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-int WantEventchase(entity this)
+int WantEventchase(entity this, bool want_vehiclechase)
 {
 	if(autocvar_cl_orthoview)
 		return 0;
@@ -722,7 +725,7 @@ int WantEventchase(entity this)
 		return 1;
 	if(spectatee_status >= 0)
 	{
-		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
+		if(want_vehiclechase)
 			return 1;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return 1;
@@ -972,6 +975,21 @@ void HUD_Crosshair(entity this)
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
+		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
+		{
+			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
+			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
+			{
+				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
+				float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
+				if(trace_ent == csqcplayer && STAT(HEALTH) > 0)
+					csqcplayer.alpha = min(crosshair_chase_playeralpha, myalpha);
+				else
+					csqcplayer.alpha = csqcplayer.m_alpha;
+			}
+			traceline(player_org, player_org + max_shot_distance * view_forward, MOVE_WORLDONLY, NULL);
+			wcross_origin = project_3d_to_2d(trace_endpos);
+		}
 		else
 			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
@@ -1077,8 +1095,10 @@ void HUD_Crosshair(entity this)
 			wcross_color.z += sin(hitindication_crosshair_size) * hitindication_color.z;
 		}
 
-		if(shottype == SHOTTYPE_HITENEMY)
-			wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
+		// no effects needed for targeting enemies, this can't possibly span all valid targets!
+		// just show for teammates to give a sign that they're an invalid target
+		//if(shottype == SHOTTYPE_HITENEMY)
+			//wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
 		if(shottype == SHOTTYPE_HITTEAM)
 			wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
 
@@ -1562,6 +1582,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	lasthud = hud;
 
+	ReplicateVars(false);
+	if (ReplicateVars_NOT_SENDING())
+		ReplicateVars_DELAY(0.8 + random() * 0.4); // no need to check cvars every frame
+
 	HUD_Scale_Disable();
 
 	if(autocvar__hud_showbinds_reload) // menu can set this one
@@ -1651,7 +1675,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		else if(autocvar_chase_active == -2)
 			cvar_set("chase_active", "0");
 
-		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
+		bool vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 
 		float vehicle_viewdist = 0;
 		vector vehicle_viewofs = '0 0 0';
@@ -1663,10 +1687,14 @@ void CSQC_UpdateView(entity this, float w, float h)
 				Vehicle info = Vehicles_from(hud);
 				vehicle_viewdist = info.height;
 				vehicle_viewofs = info.view_ofs;
+				if(vehicle_viewdist < 0) // when set below 0, this vehicle doesn't use third person view (gunner slots)
+					vehicle_chase = false;
 			}
+			else
+				vehicle_chase = false;
 		}
 
-		int eventchase = WantEventchase(this);
+		int eventchase = WantEventchase(this, vehicle_chase);
 		if (eventchase)
 		{
 			vector current_view_origin_override = '0 0 0';
@@ -1727,18 +1755,19 @@ void CSQC_UpdateView(entity this, float w, float h)
 			else if(eventchase_current_distance != chase_distance)
 				eventchase_current_distance = chase_distance;
 
-			makevectors(view_angles);
+			vector forward, right, up;
+			MAKE_VECTORS(view_angles, forward, right, up);
 
-			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
+			vector eventchase_target_origin = (current_view_origin - (forward * eventchase_current_distance));
 			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, this);
 
 			// If the boxtrace fails, revert back to line tracing.
 			if(!local_player.viewloc)
 			if(trace_startsolid)
 			{
-				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
+				eventchase_target_origin = (current_view_origin - (forward * eventchase_current_distance));
 				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, this);
-				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins.z)));
+				setproperty(VF_ORIGIN, (trace_endpos - (forward * autocvar_cl_eventchase_mins.z)));
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
@@ -1865,7 +1894,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
-	MAKEVECTORS(makevectors, view_angles, view_forward, view_right, view_up);
+	MAKE_VECTORS(view_angles, view_forward, view_right, view_up);
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)
@@ -2416,14 +2445,15 @@ void CSQC_UpdateView(entity this, float w, float h)
 		setproperty(VF_ORIGIN, '0 0 0');
 		setproperty(VF_ANGLES, '0 0 0');
 		setproperty(VF_PERSPECTIVE, 1);
-		makevectors('0 0 0');
+		vector forward, right, up;
+		MAKE_VECTORS('0 0 0', forward, right, up);
 		vector v1, v2;
 		cvar_set("vid_conwidth", "800");
 		cvar_set("vid_conheight", "600");
-		v1 = cs_project(v_forward);
+		v1 = cs_project(forward);
 		cvar_set("vid_conwidth", "640");
 		cvar_set("vid_conheight", "480");
-		v2 = cs_project(v_forward);
+		v2 = cs_project(forward);
 		if(v1 == v2)
 			cs_project_is_b0rked = 1;
 		else

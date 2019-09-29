@@ -1318,7 +1318,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
-	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED) && !(this.flags & FL_MONSTER))
 	{
 		IL_PUSH(g_monsters, this);
 		if(this.mdl && this.mdl != "")

@@ -175,28 +175,37 @@ void turret_draw2d(entity this)
 		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
 	}
 
-	o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
-	if(autocvar_g_waypointsprite_turrets_text)
+	bool draw_healthbar = ((this.helpme && time < this.helpme) || !autocvar_g_waypointsprite_turrets_onlyhurt || hud != HUD_NORMAL);
+	bool draw_text = autocvar_g_waypointsprite_turrets_text;
+
+	if(draw_healthbar || draw_text) // make sure it's actually being drawn
+	{
+		o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
+	}
+	if(draw_text)
 	{
 		o = drawsprite_TextOrIcon(true, o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 	}
-	drawhealthbar(
-			o,
-			0,
-			GetResource(this, RES_HEALTH) / 255,
-			'0 0 0',
-			'0 0 0',
-			0.5 * SPRITE_HEALTHBAR_WIDTH * t,
-			0.5 * SPRITE_HEALTHBAR_HEIGHT * t,
-			SPRITE_HEALTHBAR_MARGIN * t + 0.5 * waypointsprite_fontsize,
-			SPRITE_HEALTHBAR_BORDER * t,
-			0,
-			rgb,
-			a * SPRITE_HEALTHBAR_BORDERALPHA,
-			rgb,
-			a * SPRITE_HEALTHBAR_HEALTHALPHA,
-			DRAWFLAG_NORMAL
-			);
+	if(draw_healthbar)
+	{
+		drawhealthbar(
+				o,
+				0,
+				GetResource(this, RES_HEALTH) / 255,
+				'0 0 0',
+				'0 0 0',
+				0.5 * SPRITE_HEALTHBAR_WIDTH * t,
+				0.5 * SPRITE_HEALTHBAR_HEIGHT * t,
+				SPRITE_HEALTHBAR_MARGIN * t + 0.5 * waypointsprite_fontsize,
+				SPRITE_HEALTHBAR_BORDER * t,
+				0,
+				rgb,
+				a * SPRITE_HEALTHBAR_BORDERALPHA,
+				rgb,
+				a * SPRITE_HEALTHBAR_HEALTHALPHA,
+				DRAWFLAG_NORMAL
+				);
+	}
 }
 
 void turret_construct(entity this, bool isnew)

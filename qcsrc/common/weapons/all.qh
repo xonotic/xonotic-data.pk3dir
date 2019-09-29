@@ -319,7 +319,7 @@ STATIC_INIT(register_weapons_done)
     FOREACH(Weapons, true, {
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
-        if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
+        if (it.spawnflags & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
         if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)
@@ -383,6 +383,13 @@ ENUMCLASS_END(WFRAME)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
+
+#ifdef CSQC
+bool cvar_cl_accuracy_data_share;
+REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
+bool cvar_cl_accuracy_data_receive;
+REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
+#endif
 
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);

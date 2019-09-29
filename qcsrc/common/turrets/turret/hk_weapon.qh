@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(HunterKillerAttack, PortoLaunch)
-/* flags     */ ATTRIB(HunterKillerAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(HunterKillerAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(HunterKillerAttack, impulse, int, 9);
 /* refname   */ ATTRIB(HunterKillerAttack, netname, string, "turret_hk");
 /* wepname   */ ATTRIB(HunterKillerAttack, m_name, string, _("Hunter-Killer"));

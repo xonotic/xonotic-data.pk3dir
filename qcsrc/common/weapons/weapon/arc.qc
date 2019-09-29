@@ -232,7 +232,7 @@ void W_Arc_Beam_Think(entity this)
 		}
 
 		if(this == own.(weaponentity).arc_beam) { own.(weaponentity).arc_beam = NULL; }
-		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity) && !(own.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity) && !(own.items & IT_UNLIMITED_AMMO))
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(own, weaponentity);
@@ -244,7 +244,7 @@ void W_Arc_Beam_Think(entity this)
 
 	// decrease ammo
 	float coefficient = frametime;
-	if(!(own.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(own.items & IT_UNLIMITED_AMMO))
 	{
 		float rootammo;
 		if(burst)

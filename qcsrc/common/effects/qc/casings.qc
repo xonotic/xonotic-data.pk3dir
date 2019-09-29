@@ -9,9 +9,19 @@
 
 REGISTER_NET_TEMP(casings)
 
+#if defined(SVQC)
+.bool cvar_cl_casings;
+#elif defined(CSQC)
+bool cvar_cl_casings;
+#endif
+REPLICATE(cvar_cl_casings, bool, "cl_casings");
+
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
+	if (!(CS(casingowner).cvar_cl_casings))
+		return;
+
     entity wep = casingowner.(weaponentity);
     vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
@@ -128,8 +138,6 @@ NET_HANDLE(casings, bool isNew)
     ang_y = ReadByte() * 360 / 256;
     ang_z = ReadByte() * 360 / 256;
     return = true;
-
-    if (!autocvar_cl_casings) return;
 
     Casing casing = RubbleNew("casing");
     casing.silent = (_state & 0x80);

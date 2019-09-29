@@ -68,9 +68,9 @@ void KeyBinds_Read()
 	for(int imp = 1; imp <= 9; ++imp)
 	{
 		string w_list = "";
-		ADD_TO_W_LIST(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON));
+		ADD_TO_W_LIST(!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK | WEP_FLAG_SUPERWEAPON)));
 		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_SUPERWEAPON) && !(it.spawnflags & WEP_FLAG_HIDDEN));
-		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN));
+		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 		if(w_list)
 			KEYBIND_DEF(strcat("weapon_group_", itos(imp)), substring(w_list, 0, -4));
 		if(imp == 0)
@@ -122,6 +122,7 @@ void KeyBinds_Read()
 	KEYBIND_DEF("kill"                                  , _("respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
 	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
+	KEYBIND_DEF("wpeditor_menu"                         , _("waypoint editor menu"));
 	KEYBIND_DEF("+button8"                              , _("drag object"));
 	KEYBIND_EMPTY_LINE();
 

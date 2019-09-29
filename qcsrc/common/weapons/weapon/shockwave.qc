@@ -3,6 +3,8 @@
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 
 #ifdef SVQC
+// enable when shockwave replaces shotgun
+#if 0
 METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 {
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
@@ -12,6 +14,7 @@ METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 	}
 	return this;
 }
+#endif
 
 const float MAX_SHOCKWAVE_HITS = 10;
 //#define DEBUG_SHOCKWAVE
@@ -663,9 +666,8 @@ void Draw_Shockwave(entity this)
 	// WEAPONTODO: trace to find what we actually hit
 	vector endpos = (this.sw_shotorg + (this.sw_shotdir * this.sw_distance));
 
-	vectorvectors(this.sw_shotdir);
-	vector right = v_right; // save this for when we do makevectors later
-	vector up = v_up; // save this for when we do makevectors later
+	vector _forward, right, up;
+	VECTOR_VECTORS(this.sw_shotdir, _forward, right, up);
 
 	// WEAPONTODO: combine and simplify these calculations
 	vector min_end = ((this.sw_shotorg + (this.sw_shotdir * SW_DISTTOMIN)) + (up * this.sw_spread_min));

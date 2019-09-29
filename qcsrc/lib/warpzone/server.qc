@@ -602,15 +602,16 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 		if(area > 0)
 		{
 			org = org - ((org - point) * norm) * norm; // project to plane
-			makevectors(ang);
-			if(norm * v_forward < 0)
+			vector forward, right, up;
+			MAKE_VECTORS(ang, forward, right, up);
+			if(norm * forward < 0)
 			{
 				LOG_INFO("Position target of trigger_warpzone near ", vtos(this.aiment.origin), " points into trigger_warpzone. BEWARE.");
 				norm = -1 * norm;
 			}
-			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
+			ang = vectoangles2(norm, up); // keep rotation, but turn exactly against plane
 			ang.x = -ang.x;
-			if(norm * v_forward < 0.99)
+			if(norm * forward < 0.99)
 				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been turned to match plane orientation (", vtos(this.aiment.angles), " -> ", vtos(ang));
 			if(vdist(org - this.aiment.origin, >, 0.5))
 				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been moved to match the plane (", vtos(this.aiment.origin), " -> ", vtos(org), ").");
