@@ -528,6 +528,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if  (STAT(FROZEN, player) == FROZEN_NORMAL && autocvar_g_freezetag_revive_auto
 		&& autocvar_g_freezetag_frozen_maxtime > 0 && autocvar_g_freezetag_revive_auto_progress)
 	{
+		// NOTE if auto-revival is in progress, manual revive speed is reduced so that it always takes the same amount of time
 		base_progress = bound(0, (1 - (player.freezetag_frozen_timeout - time) / autocvar_g_freezetag_frozen_maxtime), 1);
 	}
 
@@ -535,7 +536,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	{
 		if (STAT(FROZEN, player) == FROZEN_NORMAL)
 		{
-			STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+			STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed * (1 - base_progress), 1);
 			SetResourceExplicit(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 		}
 		else if (!STAT(FROZEN, player))
@@ -543,7 +544,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	}
 	else if (STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
 	{
-		STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+		STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed * (1 - base_progress)), 1);
 		SetResourceExplicit(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
