@@ -540,8 +540,11 @@ void CSQCModel_Effects_Apply(entity this)
 		tref = EFFECT_TR_BLOOD.m_id;
 	if(this.csqcmodel_modelflags & MF_ROTATE)
 	{
+		// This will be hard to replace with MAKE_VECTORS because it's called as part of the predraw function
+		// as documented in csprogs.h in the engine. The globals can then be read in many places in the engine.
+		// However MF_ROTATE is currently only used in one place - might be possible to get rid of it entirely.
 		this.renderflags |= RF_USEAXIS;
-		MAKEVECTORS(makevectors, this.angles + '0 100 0' * fmod(time, 3.6), v_forward, v_right, v_up);
+		makevectors(this.angles + '0 100 0' * fmod(time, 3.6));
 	}
 	if(this.csqcmodel_modelflags & MF_TRACER)
 		tref = EFFECT_TR_WIZSPIKE.m_id;

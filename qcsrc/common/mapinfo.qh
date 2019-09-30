@@ -124,7 +124,7 @@ REGISTER_GAMETYPE(DEATHMATCH, NEW(Deathmatch));
 CLASS(LastManStanding, Gametype)
     INIT(LastManStanding)
     {
-        this.gametype_init(this, _("Last Man Standing"),"lms","g_lms",false,true,"","timelimit=20 lives=9 leadlimit=0",_("Survive and kill until the enemies have no lives left"));
+        this.gametype_init(this, _("Last Man Standing"),"lms","g_lms",false,true,"","timelimit=20 lives=5 leadlimit=0",_("Survive and kill until the enemies have no lives left"));
     }
     METHOD(LastManStanding, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
@@ -302,7 +302,7 @@ void HUD_Mod_CA(vector pos, vector mySize);
 CLASS(ClanArena, Gametype)
     INIT(ClanArena)
     {
-        this.gametype_init(this, _("Clan Arena"),"ca","g_ca",true,true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill all enemy teammates to win the round"));
+        this.gametype_init(this, _("Clan Arena"),"ca","g_ca",true,true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill all enemy teammates to win the round"));
     }
     METHOD(ClanArena, m_parse_mapinfo, bool(string k, string v))
     {
@@ -497,7 +497,7 @@ REGISTER_GAMETYPE(NEXBALL, NEW(NexBall));
 CLASS(FreezeTag, Gametype)
     INIT(FreezeTag)
     {
-        this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",true,true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win"));
+        this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",true,true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win"));
     }
     METHOD(FreezeTag, m_parse_mapinfo, bool(string k, string v))
     {
@@ -671,6 +671,8 @@ Gametype MapInfo_LoadedGametype; // game type that was active during map load
 void MapInfo_Cache_Destroy(); // disable caching
 void MapInfo_Cache_Create(); // enable caching
 void MapInfo_Cache_Invalidate(); // delete cache if any, but keep enabled
+
+void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, float recurse);
 
 void MapInfo_ClearTemps(); // call this when done with mapinfo for this frame
 
