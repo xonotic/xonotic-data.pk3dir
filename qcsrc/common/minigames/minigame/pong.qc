@@ -1,5 +1,5 @@
 #include "pong.qh"
-REGISTER_MINIGAME(pong, "Pong");
+REGISTER_MINIGAME(pong, _("Pong"));
 
 // minigame flags
 const int PONG_STATUS_WAIT = 0x0010; // waiting for players to join
@@ -614,6 +614,11 @@ int pong_client_event(entity minigame, string event, ...)
 	{
 		case "activate":
 			return false;
+		case "deactivate":
+		{
+			strfree(minigame.message);
+			return false;
+		}
 		case "key_pressed":
 			switch ( ...(0,int) )
 			{
@@ -664,7 +669,7 @@ int pong_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = pong_message(sent.minigame_flags);
+					strcpy(sent.message, pong_message(sent.minigame_flags));
 				}
 			}
 			return false;

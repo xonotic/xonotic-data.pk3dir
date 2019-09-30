@@ -45,7 +45,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 	if(!STAT(FROZEN, player))
 	if(!PHYS_INPUT_BUTTON_CHAT(player))
 	if(IS_REAL_CLIENT(player)) // bots may camp, but that's no reason to constantly kill them
-	if(!forbidWeaponUse(player))
+	if(!weaponLocked(player))
 	{
 		// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
 		vector dist = vec2(player.campcheck_prevorigin - player.origin);

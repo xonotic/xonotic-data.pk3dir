@@ -38,6 +38,11 @@ QCCDEFS="${QCCDEFS[@]}"
 
 declare -a QCCFLAGS=(
     -std=gmqcc
+    # Without -O3, GMQCC thinks some variables are used uninitialized if the initialization is done inside an `if (1)` block
+    # (which is created by e.g. BEGIN_MACRO) which would cause the compilation units test to fail.
+    # There doesn't appear to be any measurable increase in compile time
+    # and it allows us to get rid of some explicit initializations which are just useless noise.
+    -O3
     -Wall -Werror
     -futf8
     -freturn-assignments

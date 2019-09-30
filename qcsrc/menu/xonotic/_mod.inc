@@ -19,6 +19,7 @@
 #include <menu/xonotic/demolist.qc>
 #include <menu/xonotic/dialog.qc>
 #include <menu/xonotic/dialog_credits.qc>
+#include <menu/xonotic/dialog_disconnect.qc>
 #include <menu/xonotic/dialog_firstrun.qc>
 #include <menu/xonotic/dialog_hudpanel_ammo.qc>
 #include <menu/xonotic/dialog_hudpanel_centerprint.qc>
@@ -59,6 +60,7 @@
 #include <menu/xonotic/dialog_sandboxtools.qc>
 #include <menu/xonotic/dialog_settings.qc>
 #include <menu/xonotic/dialog_settings_audio.qc>
+#include <menu/xonotic/dialog_settings_bindings_reset.qc>
 #include <menu/xonotic/dialog_settings_effects.qc>
 #include <menu/xonotic/dialog_settings_game.qc>
 #include <menu/xonotic/dialog_settings_game_crosshair.qc>

@@ -26,8 +26,8 @@ vector real_origin(entity ent);
 #endif
 
 #ifdef SVQC
-// temporary array used to dump weapon and turret settings
-const int MAX_CONFIG_SETTINGS = 256;
+// temporary array used to dump settings for each weapon / turret
+const int MAX_CONFIG_SETTINGS = 70;
 string config_queue[MAX_CONFIG_SETTINGS];
 #endif
 
@@ -156,6 +156,9 @@ float get_model_parameters_fixbone;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
 
+ERASEABLE
+string translate_key(string key);
+
 // x-encoding (encoding as zero length invisible string)
 // encodes approx. 14 bits into 5 bytes of color code string
 const float XENCODE_MAX = 21295; // 2*22*22*22-1
@@ -198,7 +201,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	#else
 		#define GENTLE autocvar_sv_gentle
 	#endif
-	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
+	#define normal_or_gentle(normal, gentle) ((GENTLE && (gentle != "")) ? gentle : normal)
 #endif
 
 #ifdef GAMEQC

@@ -2,8 +2,12 @@
 
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
+
 .float lms_spectate_warning;
+
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
+string autocvar_g_lms_weaponarena = "most_available";
+
 void lms_Initialize();
 
 REGISTER_MUTATOR(lms, false)

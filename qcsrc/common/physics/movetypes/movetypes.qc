@@ -34,8 +34,10 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 }
 
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
 {
+	move_stepnormal = '0 0 0';
+
 	if(dt <= 0)
 		return 0;
 
@@ -150,8 +152,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			// step - return it to caller
 			blocked |= 2;
 			// save the trace for player extrafriction
-			if(stepnormal)
-				stepnormal = trace_plane_normal;
+			if(applystepnormal)
+				move_stepnormal = trace_plane_normal;
 		}
 
 		if(my_trace_fraction >= 0.001)
@@ -348,6 +350,10 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
 			trace_ent = this;
+			trace_dpstartcontents = 0;
+			trace_dphitcontents = 0;
+			trace_dphitq3surfaceflags = 0;
+			trace_dphittexturename = string_null;
 
 			gettouch(it)(it, this);
 		}
@@ -505,10 +511,11 @@ bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool 
 {
 	_Movetype_PushEntityTrace(this, push);
 
+	// NOTE: this is a workaround for the QC's lack of a worldstartsolid trace parameter
 	if(trace_startsolid && failonstartsolid)
 	{
 		int oldtype = this.move_nomonsters;
-		this.move_nomonsters = MOVE_NOMONSTERS;
+		this.move_nomonsters = MOVE_WORLDONLY;
 		_Movetype_PushEntityTrace(this, push);
 		this.move_nomonsters = oldtype;
 		if(trace_startsolid)
@@ -523,7 +530,7 @@ bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool 
 		_Movetype_LinkEdict(this, true);
 
 	if(trace_fraction < 1)
-		if(this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
+		if(this.solid >= SOLID_TRIGGER && trace_ent && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
 			_Movetype_Impact(this, trace_ent);
 
 	return (this.origin == last_origin); // false if teleported by touch

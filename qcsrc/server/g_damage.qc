@@ -74,8 +74,6 @@ void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity wea
 		UpdateFrags(attacker, f);
 }
 
-.entity kh_next;
-
 string AppendItemcodes(string s, entity player)
 {
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -91,12 +89,11 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
 		s = strcat(s, "I");
-	if(player.flagcarried != NULL)
-		s = strcat(s, "F");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
-	if(player.kh_next)
-		s = strcat(s, "K");
+	// TODO: include these codes as a flag on the item itself
+	MUTATOR_CALLHOOK(LogDeath_AppendItemCodes, player, s);
+	s = M_ARGV(1, string);
 	return s;
 }
 
@@ -863,7 +860,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 }
 
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
-								float inflictorselfdamage, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
+								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
@@ -950,8 +947,10 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = force * (finaldmg / coredamage) * forceintensity;
 					hitloc = nearest;
 
-					if(deathtype & WEP_BLASTER.m_id)
-						force *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
+					// apply special scaling along the z axis if set
+					// NOTE: 0 value is not allowed for compatibility, in the case of weapon cvars not being set
+					if(forcezscale)
+						force.z *= forcezscale;
 
 					if(targ != directhitentity)
 					{
@@ -1054,7 +1053,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, 
+									cantbe, mustbe, false, forceintensity, 1, deathtype, weaponentity, directhitentity);
 }
 
 bool Heal(entity targ, entity inflictor, float amount, float limit)

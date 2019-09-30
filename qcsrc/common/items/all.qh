@@ -4,7 +4,8 @@
 
 #include "item.qh"
 
-REGISTRY(Items, BITS(7))
+// 24 so it matches the limit for the .items field
+REGISTRY(Items, 24)
 #define Items_from(i) _Items_from(i, NULL)
 #ifdef GAMEQC
 REGISTRY_DEPENDS(Items, Models)

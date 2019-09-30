@@ -74,9 +74,10 @@ CLASS(DamageText, Object)
         if (this.m_screen_coords) {
             screen_pos = this.origin + since_hit * autocvar_cl_damagetext_2d_velocity;
         } else {
-            makevectors(view_angles);
+            vector forward, right, up;
+            MAKE_VECTORS(view_angles, forward, right, up);
             vector world_offset = since_hit * autocvar_cl_damagetext_velocity_world + autocvar_cl_damagetext_offset_world;
-            vector world_pos = this.origin + world_offset.x * v_forward + world_offset.y * v_right + world_offset.z * v_up;
+            vector world_pos = this.origin + world_offset.x * forward + world_offset.y * right + world_offset.z * up;
             screen_pos = project_3d_to_2d(world_pos) + since_hit * autocvar_cl_damagetext_velocity_screen + autocvar_cl_damagetext_offset_screen;
         }
         screen_pos.y += size / 2;
@@ -237,7 +238,7 @@ NET_HANDLE(damagetext, bool isNew)
 
     if (can_use_3d && !prefer_2d) {
         // world coords
-        // using 1 as minimum because of shotgun (same as menu)
+        // 1 as min because shotgun sends damagetext per pellet (see https://gitlab.com/xonotic/xonotic-data.pk3dir/issues/1994).
         for (entity e = findradius(entcs.origin, max(autocvar_cl_damagetext_accumulate_range, 1)); e; e = e.chain) {
             if (e.instanceOfDamageText
                 && !e.m_screen_coords // we're using origin for both world coords and screen coords so avoid mismatches

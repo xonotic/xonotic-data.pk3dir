@@ -180,9 +180,11 @@ void buff_Touch(entity this, entity toucher)
 	{
 		if (CS(toucher).cvar_cl_buffs_autoreplace && STAT(BUFFS, toucher) != STAT(BUFFS, this))
 		{
+			// TODO: lost-gained notification for this case
 			int buffid = buff_FirstFromFlags(STAT(BUFFS, toucher)).m_id;
-			//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_DROP, STAT(BUFFS, toucher));
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
+			Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
+			if(!IS_INDEPENDENT_PLAYER(toucher))
+				Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
 
 			STAT(BUFFS, toucher) = 0;
 			//sound(toucher, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
@@ -193,20 +195,24 @@ void buff_Touch(entity this, entity toucher)
 	this.owner = toucher;
 	this.buff_active = false;
 	this.lifetime = 0;
-	int buffid = buff_FirstFromFlags(STAT(BUFFS, this)).m_id;
-	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_GOT, buffid);
-	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_INFO, INFO_ITEM_BUFF, toucher.netname, buffid);
+	entity thebuff = buff_FirstFromFlags(STAT(BUFFS, this));
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_GOT, thebuff.m_id);
+	if(!IS_INDEPENDENT_PLAYER(toucher))
+		Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_INFO, INFO_ITEM_BUFF, toucher.netname, thebuff.m_id);
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
 	STAT(BUFFS, toucher) |= (STAT(BUFFS, this));
+	float bufftime = ((this.count) ? this.count : thebuff.m_time(thebuff));
+	if(bufftime)
+		STAT(BUFF_TIME, toucher) = min(time + bufftime, max(STAT(BUFF_TIME, toucher), time) + bufftime);
 }
 
 float buff_Available(entity buff)
 {
 	if (buff == BUFF_Null)
 		return false;
-	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
+	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_AMMO) || cvar("g_melee_only")))
 		return false;
 	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
@@ -339,6 +345,12 @@ bool buff_Customize(entity this, entity client)
 	return true;
 }
 
+void buff_Delete(entity this)
+{
+	WaypointSprite_Kill(this.buff_waypoint);
+	delete_fn(this);
+}
+
 void buff_Init(entity this)
 {
 	if(!cvar("g_buffs")) { delete(this); return; }
@@ -374,6 +386,7 @@ void buff_Init(entity this)
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate + max(0, game_starttime - time));
 	this.buff_active = !this.buff_activetime;
 	this.pflags = PFLAGS_FULLDYNAMIC;
+	this.dtor = buff_Delete;
 
 	if(this.spawnflags & 1)
 		this.noalign = true;
@@ -562,9 +575,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	STAT(BUFFS, player) = 0;
-	STAT(BUFF_TIME, player) = 0;
-	PS(player).buff_shield = time + 0.5; // prevent picking up buffs immediately
+	player.oldbuffs = 0;
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
@@ -609,8 +620,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 	if(STAT(BUFFS, frag_target))
 	{
 		int buffid = buff_FirstFromFlags(STAT(BUFFS, frag_target)).m_id;
-		Send_Notification(NOTIF_ALL_EXCEPT, frag_target, MSG_INFO, INFO_ITEM_BUFF_LOST, frag_target.netname, buffid);
+		if(!IS_INDEPENDENT_PLAYER(frag_target))
+			Send_Notification(NOTIF_ALL_EXCEPT, frag_target, MSG_INFO, INFO_ITEM_BUFF_LOST, frag_target.netname, buffid);
 		STAT(BUFFS, frag_target) = 0;
+		STAT(BUFF_TIME, frag_target) = 0;
 
 		if(frag_target.buff_model)
 		{
@@ -630,11 +643,12 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 	{
 		int buffid = buff_FirstFromFlags(STAT(BUFFS, player)).m_id;
 		Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid);
-		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
+		if(!IS_INDEPENDENT_PLAYER(player))
+			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		STAT(BUFFS, player) = 0;
+		STAT(BUFF_TIME, player) = 0;
 		PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
-		//STAT(BUFF_TIME, player) = 0; // already notified
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
@@ -846,7 +860,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 				Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
 				sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 			}
-			else
+			else if(!IS_INDEPENDENT_PLAYER(player))
 				Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 			STAT(BUFFS, player) = 0;
 			PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
@@ -898,12 +912,13 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	{
 		entity buff = buff_FirstFromFlags(STAT(BUFFS, player));
 		float bufftime = buff != BUFF_Null ? buff.m_time(buff) : 0;
-		STAT(BUFF_TIME, player) = (bufftime) ? time + bufftime : 0;
+		if(STAT(BUFF_TIME, player) <= time) // if the player still has a buff countdown, don't reset it!
+			STAT(BUFF_TIME, player) = (bufftime) ? time + bufftime : 0;
 
 		BUFF_ONADD(BUFF_AMMO)
 		{
-			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_WEAPON_AMMO);
-			player.items |= IT_UNLIMITED_WEAPON_AMMO;
+			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_AMMO);
+			player.items |= IT_UNLIMITED_AMMO;
 
 			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{
@@ -921,9 +936,9 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		BUFF_ONREM(BUFF_AMMO)
 		{
 			if(player.buff_ammo_prev_infitems)
-				player.items |= IT_UNLIMITED_WEAPON_AMMO;
+				player.items |= IT_UNLIMITED_AMMO;
 			else
-				player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
+				player.items &= ~IT_UNLIMITED_AMMO;
 
 			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{

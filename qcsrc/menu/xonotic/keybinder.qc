@@ -26,7 +26,13 @@ void KeyBinds_Read()
 		} \
 	MACRO_END
 
-	KEYBIND_DEF(""                                      , _("Moving"));
+	#define KEYBIND_EMPTY_LINE() KEYBIND_DEF("", "")
+	#define KEYBIND_HEADER(str) KEYBIND_DEF("", str)
+
+	#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
+	#define KEYBIND_SPECIAL_DEF(key) KEYBIND_DEF(strcat("*", key), "")
+
+	KEYBIND_HEADER(_("Moving"));
 	KEYBIND_DEF("+forward"                              , _("forward"));
 	KEYBIND_DEF("+back"                                 , _("backpedal"));
 	KEYBIND_DEF("+moveleft"                             , _("strafe left"));
@@ -35,12 +41,14 @@ void KeyBinds_Read()
 	KEYBIND_DEF("+crouch"                               , _("crouch / sink"));
 	KEYBIND_DEF("+hook"                                 , _("off-hand hook"));
 	KEYBIND_DEF("+jetpack"                              , _("jetpack"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Attacking"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Attacking"));
 	KEYBIND_DEF("+fire"                                 , _("primary fire"));
 	KEYBIND_DEF("+fire2"                                , _("secondary fire"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Weapons"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Weapons"));
 	KEYBIND_DEF("weapprev"                              , CTX(_("WEAPON^previous")));
 	KEYBIND_DEF("weapnext"                              , CTX(_("WEAPON^next")));
 	KEYBIND_DEF("weaplast"                              , CTX(_("WEAPON^previously used")));
@@ -60,9 +68,9 @@ void KeyBinds_Read()
 	for(int imp = 1; imp <= 9; ++imp)
 	{
 		string w_list = "";
-		ADD_TO_W_LIST(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON));
+		ADD_TO_W_LIST(!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK | WEP_FLAG_SUPERWEAPON)));
 		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_SUPERWEAPON) && !(it.spawnflags & WEP_FLAG_HIDDEN));
-		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN));
+		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 		if(w_list)
 			KEYBIND_DEF(strcat("weapon_group_", itos(imp)), substring(w_list, 0, -4));
 		if(imp == 0)
@@ -72,8 +80,9 @@ void KeyBinds_Read()
 	}
 	#undef ADD_TO_W_LIST
 
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("View"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("View"));
 	KEYBIND_DEF("+zoom"                                 , _("hold zoom"));
 	KEYBIND_DEF("togglezoom"                            , _("toggle zoom"));
 	KEYBIND_DEF("+showscores"                           , _("show scores"));
@@ -81,34 +90,43 @@ void KeyBinds_Read()
 	KEYBIND_DEF("+hud_panel_radar_maximized"            , _("maximize radar"));
 	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
 	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Communicate"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Communicate"));
 	KEYBIND_DEF("messagemode"                           , _("public chat"));
 	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("+con_chat_maximize"                    , _("show chat history"));
 	KEYBIND_DEF("vyes"                                  , _("vote YES"));
 	KEYBIND_DEF("vno"                                   , _("vote NO"));
 	KEYBIND_DEF("ready"                                 , _("ready"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Client"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Client"));
 	KEYBIND_DEF("+show_info"                            , _("server info"));
+	// display the hardcoded shortcut to open the console as it works for all
+	// non-English keyboard layouts, unlike default keys (` and ~)
 	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
+		KEYBIND_SPECIAL_DEF(strcat(translate_key("SHIFT"), "+", translate_key("ESCAPE")));
 	KEYBIND_DEF("disconnect"                            , _("disconnect"));
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Teamplay"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Teamplay"));
 	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
 	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
 	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Misc"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("Misc"));
 	KEYBIND_DEF("kill"                                  , _("respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
 	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
+	KEYBIND_DEF("wpeditor_menu"                         , _("waypoint editor menu"));
 	KEYBIND_DEF("+button8"                              , _("drag object"));
-	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("User defined"));
+	KEYBIND_EMPTY_LINE();
+
+	KEYBIND_HEADER(_("User defined"));
 
 	for(i = 1; i <= 32; ++i)
 		KEYBIND_DEF(strcat("+userbind ", itos(i)), strcat("$userbind", itos(i)));
@@ -185,7 +203,7 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 void KeyBinder_Bind_Change(entity btn, entity me)
 {
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	me.keyGrabButton.forcePressed = 1;
@@ -211,7 +229,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 	}
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
@@ -255,7 +273,7 @@ void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandP
 		return;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	string descr = KeyBinds_Descriptions[me.selectedItem];
@@ -274,7 +292,7 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 		return;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	string descr = KeyBinds_Descriptions[me.selectedItem];
@@ -292,7 +310,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	float n, j, k;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "")
+	if(func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
@@ -313,6 +331,7 @@ void KeyBinder_Bind_Reset_All(entity btn, entity me)
 	localcmd("exec binds-xonotic.cfg\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
+	me.close(me);
 }
 void XonoticKeyBinder_doubleClickListBoxItem(entity me, float i, vector where)
 {
@@ -322,6 +341,11 @@ void XonoticKeyBinder_setSelected(entity me, int i)
 {
 	// handling of "unselectable" items
 	i = floor(0.5 + bound(0, i, me.nItems - 1));
+	if (KEYBIND_IS_SPECIAL(KeyBinds_Functions[i]))
+	{
+		SUPER(XonoticKeyBinder).setSelected(me, i - 1);
+		return;
+	}
 	if(me.pressed == 0 || me.pressed == 1) // keyboard or scrolling - skip unselectable items
 	{
 		if(i > me.previouslySelected)
@@ -366,6 +390,7 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 	}
 	return r;
 }
+
 void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
@@ -418,10 +443,16 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 
 	s = draw_TextShortenToWidth(descr, me.columnFunctionSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	if(func != "")
+
+	if (func == "")
+		return;
+
+	s = "";
+	if (KEYBIND_IS_SPECIAL(func))
+		s = substring(func, 1, -1);
+	else
 	{
 		n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
-		s = "";
 		for(j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));
@@ -429,10 +460,10 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 			{
 				if(s != "")
 					s = strcat(s, ", ");
-				s = strcat(s, keynumtostring(k));
+				s = strcat(s, translate_key(keynumtostring(k)));
 			}
 		}
-		s = draw_TextShortenToWidth(s, me.columnKeysSize, 0, me.realFontSize);
-		draw_CenterText(me.realUpperMargin * eY + (me.columnKeysOrigin + 0.5 * me.columnKeysSize) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	}
+	s = draw_TextShortenToWidth(s, me.columnKeysSize, 0, me.realFontSize);
+	draw_CenterText(me.realUpperMargin * eY + (me.columnKeysOrigin + 0.5 * me.columnKeysSize) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }

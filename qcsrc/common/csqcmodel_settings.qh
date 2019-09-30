@@ -18,12 +18,17 @@
 # define TAG_VIEWLOC_NAME tag_networkviewloc
 # define TAG_VIEWLOC_TYPE int
 .float tag_networkviewloc;
+
+# define ALPHA m_alpha
+.float m_alpha;
 #else
 # define TAG_ENTITY_NAME tag_entity
 # define TAG_ENTITY_TYPE entity
 
 # define TAG_VIEWLOC_NAME viewloc
 # define TAG_VIEWLOC_TYPE entity
+
+# define ALPHA alpha
 #endif
 
 // add properties you want networked to CSQC here
@@ -31,7 +36,7 @@
 	CSQCMODEL_PROPERTY(BIT(0), int, ReadShort, WriteShort, colormap) \
 	CSQCMODEL_PROPERTY(BIT(1), int, ReadInt24_t, WriteInt24_t, effects) \
 	CSQCMODEL_PROPERTY(BIT(2), int, ReadByte, WriteByte, modelflags) \
-	CSQCMODEL_PROPERTY_SCALED(BIT(3), float, ReadByte, WriteByte, alpha, 254, -1, 254) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(3), float, ReadByte, WriteByte, ALPHA, 254, -1, 254) \
 	CSQCMODEL_PROPERTY(BIT(4), int, ReadByte, WriteByte, skin) \
 	CSQCMODEL_PROPERTY(BIT(5), float, ReadApproxPastTime, WriteApproxPastTime, death_time) \
 	CSQCMODEL_PROPERTY(BIT(6), float, ReadByte, WriteByte, solid) \

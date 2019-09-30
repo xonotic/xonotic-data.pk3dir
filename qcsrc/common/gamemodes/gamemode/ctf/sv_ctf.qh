@@ -28,7 +28,8 @@ CLASS(Flag, Pickup)
     ATTRIB(Flag, m_mins, vector, (PL_MIN_CONST + '0 0 -13') * 1.4); // scaling be damned
     ATTRIB(Flag, m_maxs, vector, (PL_MAX_CONST + '0 0 -13') * 1.4);
 ENDCLASS(Flag)
-Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
+Flag CTF_FLAG;
+STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
 void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }
 
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
@@ -128,7 +129,6 @@ float ctf_captimerecord; // record time for capturing the flag
 .float ctf_droptime;
 .int ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
 .entity ctf_dropper; // don't allow spam of dropping the flag
-.int max_flag_health;
 .float next_take_time;
 .bool ctf_flagdamaged_byworld;
 int ctf_teams;

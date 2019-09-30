@@ -542,7 +542,7 @@ void XonoticServerList_draw(entity me)
 	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
 
 	me.connectButton.disabled = (me.lockedSelectedItem || (me.nItems == 0 && me.ipAddressBox.text == ""));
-	me.disconnectButton.disabled = (!(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)));
+	//me.disconnectButton.disabled = (!(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)));
 	me.infoButton.disabled = (me.lockedSelectedItem || me.nItems == 0 || !owned);
 	me.favoriteButton.disabled = (me.lockedSelectedItem || (me.nItems == 0 && me.ipAddressBox.text == ""));
 
@@ -1095,11 +1095,6 @@ float XonoticServerList_mouseMove(entity me, vector pos)
 
 bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 {
-	vector org, sz;
-
-	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
-	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
-
 	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		ServerList_Connect_Click(NULL, me);
@@ -1109,6 +1104,8 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 	{
 		if(me.nItems != 0)
 		{
+			vector org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
+			vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
 			m_play_click_sound(MENU_SOUND_OPEN);
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);

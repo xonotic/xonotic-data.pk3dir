@@ -12,16 +12,21 @@ METHOD(OverkillNex, wr_glow, vector(OverkillNex this, entity actor, entity wepen
 	if (!WEP_CVAR(oknex, charge)) return '0 0 0';
 	float charge = wepent.oknex_charge;
 	float animlimit = WEP_CVAR(oknex, charge_animlimit);
+	float f = autocvar_g_weapon_charge_colormod_hdrmultiplier * min(1, charge / animlimit);
 	vector g;
-	g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, charge / animlimit);
-	g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, charge / animlimit);
-	g.z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, charge / animlimit);
+	g.x = f * autocvar_g_weapon_charge_colormod_red_half;
+	g.y = f * autocvar_g_weapon_charge_colormod_green_half;
+	g.z = f * autocvar_g_weapon_charge_colormod_blue_half;
 	if (charge > animlimit)
 	{
-		g.x += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (charge - animlimit) / (1 - animlimit);
-		g.y += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (charge - animlimit) / (1 - animlimit);
-		g.z += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (charge - animlimit) / (1 - animlimit);
+		f = autocvar_g_weapon_charge_colormod_hdrmultiplier * (charge - animlimit) / (1 - animlimit);
+		g.x += f * autocvar_g_weapon_charge_colormod_red_full;
+		g.y += f * autocvar_g_weapon_charge_colormod_green_full;
+		g.z += f * autocvar_g_weapon_charge_colormod_blue_full;
 	}
+	// transition color can't be '0 0 0' as it defaults to player model glow color
+	if (g == '0 0 0')
+		g = '0 0 0.000001';
 	return g;
 }
 #endif
@@ -216,7 +221,7 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 	//				if(fire & 2) // only eat ammo when the button is pressed
 	//				{
 	//					dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
-	//					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	//					if(!(actor.items & IT_UNLIMITED_AMMO))
 	//					{
 	//						// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	//						if(autocvar_g_balance_vortex_reload_ammo)

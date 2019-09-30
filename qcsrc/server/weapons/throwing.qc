@@ -134,9 +134,9 @@ bool W_IsWeaponThrowable(entity this, int w)
 	if (!autocvar_g_pickup_items)
 		return false;
 	if (g_weaponarena)
-		return 0;
-    if(w == WEP_Null.m_id)
-        return false;
+		return false;
+	if (w == WEP_Null.m_id)
+		return false;
 
 	return (Weapons_from(w)).weaponthrowable;
 }

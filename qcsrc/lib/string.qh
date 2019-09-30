@@ -297,7 +297,7 @@ int u8_strsize(string s)
 	return l;
 }
 
-//List of Unicode spaces: https://www.cs.tut.fi/~jkorpela/chars/spaces.html
+// List of Unicode spaces: http://jkorpela.fi/chars/spaces.html
 ERASEABLE
 bool isInvisibleString(string s)
 {

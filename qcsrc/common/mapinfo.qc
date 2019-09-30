@@ -589,10 +589,10 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 	}
 }
 
-Gametype MapInfo_Type_FromString(string str)
+Gametype MapInfo_Type_FromString(string gtype)
 {
 	string replacement = "";
-	switch (str)
+	switch (gtype)
 	{
 		case "nexball":   replacement = "nb"; break;
 		case "freezetag": replacement = "ft"; break;
@@ -603,10 +603,10 @@ Gametype MapInfo_Type_FromString(string str)
 	}
 	if (replacement != "" && WARN_COND)
 	{
-		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, str, replacement);
-		str = replacement;
+		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
+		gtype = replacement;
 	}
-	FOREACH(Gametypes, it.mdl == str, return it);
+	FOREACH(Gametypes, it.mdl == gtype, return it);
 	return NULL;
 }
 
@@ -717,9 +717,11 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 		if(type == 0) // server set
 		{
 			LOG_TRACE("Applying temporary setting ", t, " := ", s);
+		#if 0
 			if(cvar("g_campaign"))
 				cvar_set(t, s); // this is a wrapper and is always temporary anyway; no need to backup old values then
 			else
+		#endif
 				cvar_settemp(t, s);
 		}
 		else

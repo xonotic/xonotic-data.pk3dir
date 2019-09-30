@@ -9,6 +9,15 @@ bool turret_firecheck(entity this);
 entity turret_select_target(entity this);
 
 // turret fields
+
+#define X(class, prefix, fld, type) .type fld;
+TR_PROPS_COMMON(X, , )
+#undef X
+/*
+.float shot_volly; // smaller than 1 = shoot # times at target
+.float shot_volly_refire; // refire after completed volly
+*/
+
 .float ticrate; // interal ai think rate
 .entity tur_head; // top part of the turret
 .entity tur_defend; // defend this entity
@@ -21,36 +30,11 @@ entity turret_select_target(entity this);
 .float tur_dist_impact_to_aimpos; // distance impact<->aim
 .float volly_counter; // decrement counter from .shot_volly to 0
 
-.float shot_refire; // attack refire
-.float shot_speed; // projectile speed
-.float shot_spread; // inaccuracy
-.float shot_dmg; // core damage of projectile
-.float shot_radius; // projectile damage radius
-.float shot_force; // projectile damage force
-.float shot_volly; // smaller than 1 = shoot # times at target
-.float shot_volly_refire; // refire after completed volly
-
-.float target_range;
-.float target_range_min;
-.float target_range_optimal;
-
-.float target_select_rangebias;
-.float target_select_samebias;
-.float target_select_anglebias;
-.float target_select_missilebias;
-.float target_select_playerbias;
 .float target_select_time; // last time turret had a valid target
 .float target_validate_time; // throttle re-validation of current target
 
-.float aim_firetolerance_dist;
-.float aim_speed;
-.float aim_maxpitch;
-.float aim_maxrotate;
 
 .float ammo; // current ammo
-.float ammo_recharge; // recharge rate
-.float ammo_max; // maximum ammo
-
 .vector idle_aim;
 
 /// Map time control over pain inflicted
@@ -69,13 +53,9 @@ entity turret_select_target(entity this);
 .float turret_scale_respawn;
 
 // tracking type
-.float track_type;
 const float TFL_TRACKTYPE_STEPMOTOR = 1; // hard angle increments, ugly for fast turning with best accuracy
 const float TFL_TRACKTYPE_FLUIDPRECISE = 2; // smooth absolute movement, looks OK with fair accuracy
 const float TFL_TRACKTYPE_FLUIDINERTIA = 3; // simulated inertia ("wobbly" mode), worst accuracy, depends on below flags
-.float track_accel_pitch;
-.float track_accel_rotate;
-.float track_blendrate;
 
 void turret_respawn(entity this);
 
@@ -122,5 +102,4 @@ float turret_count;
 vector tvt_thadv; // turret head angle diff vector, updated by a successful call to turret_validate_target
 vector tvt_tadv; // turret angle diff vector, updated by a successful call to turret_validate_target
 float tvt_thadf; // turret head angle diff float, updated by a successful call to turret_validate_target
-float tvt_tadf; // turret angle diff float, updated by a successful call to turret_validate_target
 float tvt_dist; // turret distance, updated by a successful call to turret_validate_target

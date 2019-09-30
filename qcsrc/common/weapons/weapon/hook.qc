@@ -145,7 +145,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         actor.(weaponentity).hook_refire = max(actor.(weaponentity).hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor(actor));
 
         // hook also inhibits health regeneration, but only for 1 second
-        if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+        if(!(actor.items & IT_UNLIMITED_AMMO))
             actor.pauseregen_finished = max(actor.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
     }
 
@@ -163,7 +163,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         {
             if( time > actor.(weaponentity).hook_time_fueldecrease )
             {
-                if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+                if(!(actor.items & IT_UNLIMITED_AMMO))
                 {
                     if( GetResource(actor, RES_FUEL) >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
                     {
