@@ -26,10 +26,17 @@ bool HUD_mouse_over(entity somepanel)
 // Draws the minigame game board
 void HUD_MinigameBoard ()
 {
+	if (!HUD_MinigameMenu_IsOpened())
+		return;
+
 	entity hud_minigame = NULL;
 
 	if(!autocvar__hud_configure)
+	{
+		if (!active_minigame)
+			return;
 		hud_minigame = active_minigame.descriptor;
+	}
 	else
 		hud_minigame = minigame_get_descriptor("nmm");
 
@@ -52,10 +59,17 @@ void HUD_MinigameBoard ()
 // Draws the minigame status panel
 void HUD_MinigameStatus ()
 {
+	if (!HUD_MinigameMenu_IsOpened())
+		return;
+
 	entity hud_minigame = NULL;
 
 	if(!autocvar__hud_configure)
+	{
+		if (!active_minigame)
+			return;
 		hud_minigame = active_minigame.descriptor;
+	}
 	else
 		hud_minigame = minigame_get_descriptor("nmm");
 
@@ -205,7 +219,7 @@ bool HUD_MinigameMenu_Click_ExpandCollapse(entity this)
 	{
 		for ( e = HUD_MinigameMenu_entries; e != NULL; e = e.list_next )
 		{
-			if ( e.flags & 2 && e.origin_x == this.origin_x)
+			if ( (e.flags & 2) && e.origin_x == this.origin_x)
 				HUD_MinigameMenu_Click(e);
 		}
 
@@ -407,7 +421,7 @@ void HUD_MinigameMenu_CurrentButton()
 // Open the minigame menu panel
 void HUD_MinigameMenu_Open()
 {
-	if ( !HUD_MinigameMenu_IsOpened() )
+	if ( !mv_active && !HUD_MinigameMenu_IsOpened() )
 	{
 		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnEntry(
 			_("Create"), '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCreate),
@@ -468,6 +482,13 @@ void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
 // Minigame menu panel UI
 void HUD_MinigameMenu ()
 {
+	if (mv_active)
+	{
+		if (HUD_MinigameMenu_IsOpened())
+			HUD_MinigameMenu_Close(NULL, NULL, NULL);
+		return;
+	}
+
 	if ( !HUD_MinigameMenu_IsOpened() )
 		return;
 
@@ -531,12 +552,19 @@ void HUD_MinigameMenu ()
 
 void HUD_MinigameHelp()
 {
+	if (!HUD_MinigameMenu_IsOpened())
+		return;
+
 	string help_message;
 
 	if(!autocvar__hud_configure)
+	{
+		if (!active_minigame)
+			return;
 		help_message = active_minigame.message;
+	}
 	else
-		help_message = "Minigame message";
+		help_message = _("Minigame message");
 
 	if ( !help_message )
 		return;

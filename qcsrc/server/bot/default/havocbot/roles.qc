@@ -11,14 +11,6 @@
 #include "../bot.qh"
 #include "../navigation.qh"
 
-.float bot_ratingscale;
-.float bot_ratingscale_time;
-.float max_armorvalue;
-.float havocbot_role_timeout;
-
-.void(entity this) havocbot_previous_role;
-.void(entity this) havocbot_role;
-
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius)
 {
 	// rate waypoints only if there's no alternative goal
@@ -50,14 +42,14 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 
 bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player, entity item)
 {
-	if (GetResourceAmount(item, RESOURCE_HEALTH) && GetResourceAmount(player, RESOURCE_HEALTH) <= GetResourceAmount(this, RESOURCE_HEALTH)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_ARMOR) && GetResourceAmount(player, RESOURCE_ARMOR) <= GetResourceAmount(this, RESOURCE_ARMOR)) {return true;}
+	if (GetResource(item, RES_HEALTH) && GetResource(player, RES_HEALTH) <= GetResource(this, RES_HEALTH)) {return true;}
+	if (GetResource(item, RES_ARMOR) && GetResource(player, RES_ARMOR) <= GetResource(this, RES_ARMOR)) {return true;}
 	if (STAT(WEAPONS, item) && !(STAT(WEAPONS, player) & STAT(WEAPONS, item))) {return true;}
-	if (GetResourceAmount(item, RESOURCE_SHELLS) && GetResourceAmount(player, RESOURCE_SHELLS) <= GetResourceAmount(this, RESOURCE_SHELLS)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_BULLETS) && GetResourceAmount(player, RESOURCE_BULLETS) <= GetResourceAmount(this, RESOURCE_BULLETS)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_ROCKETS) && GetResourceAmount(player, RESOURCE_ROCKETS) <= GetResourceAmount(this, RESOURCE_ROCKETS)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_CELLS) && GetResourceAmount(player, RESOURCE_CELLS) <= GetResourceAmount(this, RESOURCE_CELLS)) {return true;}
-	if (GetResourceAmount(item, RESOURCE_PLASMA) && GetResourceAmount(player, RESOURCE_PLASMA) <= GetResourceAmount(this, RESOURCE_PLASMA)) {return true;}
+	if (GetResource(item, RES_SHELLS) && GetResource(player, RES_SHELLS) <= GetResource(this, RES_SHELLS)) {return true;}
+	if (GetResource(item, RES_BULLETS) && GetResource(player, RES_BULLETS) <= GetResource(this, RES_BULLETS)) {return true;}
+	if (GetResource(item, RES_ROCKETS) && GetResource(player, RES_ROCKETS) <= GetResource(this, RES_ROCKETS)) {return true;}
+	if (GetResource(item, RES_CELLS) && GetResource(player, RES_CELLS) <= GetResource(this, RES_CELLS)) {return true;}
+	if (GetResource(item, RES_PLASMA) && GetResource(player, RES_PLASMA) <= GetResource(this, RES_PLASMA)) {return true;}
 	if (item.itemdef.instanceOfPowerup) {return true;}
 
 	return false;
@@ -68,10 +60,10 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 	if(!teamplay)
 		return true;
 
-	// actually these variables hold the squared distances in order to optimize code
-	float friend_distance = FLOAT_MAX;
-	float enemy_distance = FLOAT_MAX;
-	float dist;
+	// these variables hold squared distances in order to optimize code
+	float friend_dist2 = FLOAT_MAX;
+	float enemy_dist2 = FLOAT_MAX;
+	float dist2;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !(IS_DEAD(it) || STAT(FROZEN, it)),
 	{
@@ -80,13 +72,13 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 			if (!IS_REAL_CLIENT(it))
 				continue;
 
-			dist = vlen2(it.origin - item_org);
-			if(dist > friend_distance)
+			dist2 = vlen2(it.origin - item_org);
+			if (dist2 > friend_dist2)
 				continue;
 
 			if(havocbot_goalrating_item_can_be_left_to_teammate(this, it, item))
 			{
-				friend_distance = dist;
+				friend_dist2 = dist2;
 				continue;
 			}
 		}
@@ -94,25 +86,23 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 		{
 			// If enemy only track distances
 			// TODO: track only if visible ?
-			dist = vlen2(it.origin - item_org);
-			if(dist < enemy_distance)
-				enemy_distance = dist;
+			dist2 = vlen2(it.origin - item_org);
+			if (dist2 < enemy_dist2)
+				enemy_dist2 = dist2;
 		}
 	});
 
 	// Rate the item only if no one needs it, or if an enemy is closer to it
-	dist = vlen2(item_org - org);
-	if ((enemy_distance < friend_distance && dist < enemy_distance) ||
-		(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ** 2) ||
-		(dist < friend_distance && dist < 200 ** 2))
+	dist2 = vlen2(item_org - org);
+	if ((enemy_dist2 < friend_dist2 && dist2 < enemy_dist2)
+		|| (friend_dist2 > autocvar_bot_ai_friends_aware_pickup_radius ** 2)
+		|| (dist2 < friend_dist2 && dist2 < 200 ** 2))
 		return true;
 	return false;
 };
 
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
-	float rating;
-	vector o;
 	ratingscale = ratingscale * 0.0001;
 
 	IL_EACH(g_items, it.bot_pickup,
@@ -144,7 +134,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 			it.bot_pickup_respawning = true;
 		}
-		o = (it.absmin + it.absmax) * 0.5;
+		vector o = (it.absmin + it.absmax) * 0.5;
 		if(vdist(o - org, >, sradius) || (it == this.ignoregoal && time < this.ignoregoaltime) )
 			continue;
 
@@ -175,25 +165,23 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 		it.bot_ratingscale_time = time;
 		it.bot_ratingscale = ratingscale;
-		rating = it.bot_pickupevalfunc(this, it);
+		float rating = it.bot_pickupevalfunc(this, it);
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
 	});
 }
 
-#define BOT_RATING_ENEMY 2500
 void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius)
 {
 	if (autocvar_bot_nofire)
 		return;
 
 	// don't chase players if we're under water
-	if(this.waterlevel>WATERLEVEL_WETFEET)
+	if(this.waterlevel > WATERLEVEL_WETFEET)
 		return;
 
 	ratingscale = ratingscale * 0.0001;
 
-	float t;
 	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), {
 		// TODO: Merge this logic with the bot_shouldattack function
 		if(vdist(it.origin - org, <, 100) || vdist(it.origin - org, >, sradius))
@@ -208,7 +196,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 			continue;
 		*/
 
-		t = ((GetResourceAmount(this, RESOURCE_HEALTH) + GetResourceAmount(this, RESOURCE_ARMOR)) - (GetResourceAmount(it, RESOURCE_HEALTH) + GetResourceAmount(it, RESOURCE_ARMOR))) / 150;
+		float t = ((GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR)) - (GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR))) / 150;
 		t = bound(0, 1 + t, 3);
 		if (skill > 3)
 		{

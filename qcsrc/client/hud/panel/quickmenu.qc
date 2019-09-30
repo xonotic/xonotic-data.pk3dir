@@ -259,6 +259,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 	TC(bool, new_page);
 	string s = string_null, cmd = string_null, z_submenu;
 
+	QuickMenu_Page_ActivatedEntry = -1;
 	if (new_page == 0)
 		QuickMenu_Page = 0;
 	else
@@ -384,6 +385,7 @@ bool QuickMenu_ActionForNumber(int num)
 
 	if (QuickMenu_Page_Command[num] != "")
 	{
+		QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
 		QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
 		return true;
@@ -397,7 +399,6 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 {
 	TC(int, entry_num);
 	QuickMenu_Page_ActivatedEntry = entry_num;
-	QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 	if(QuickMenu_Page_Command[QuickMenu_Page_ActivatedEntry])
 	{
 		bool f = QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
@@ -513,19 +514,22 @@ void QuickMenu_Mouse()
 		int entry_num = min(QuickMenu_Page_Entries - 1, floor((mousepos.y - first_entry_pos) / fontsize.y));
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
-			// recycling panel_pos as entry_pos
-			panel_pos.y = first_entry_pos + entry_num * fontsize.y;
-			vector color;
-			if(mouseClicked & S_MOUSE1)
-				color = '0.5 1 0.5';
-			else if(hudShiftState & S_CTRL)
-				color = '1 1 0.3';
-			else
-				color = '1 1 1';
-			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), color, .2, DRAWFLAG_NORMAL);
-
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
 				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
+
+			if (time > QuickMenu_Page_ActivatedEntry_Time)
+			{
+				vector entry_pos = panel_pos;
+				entry_pos.y = first_entry_pos + entry_num * fontsize.y;
+				vector color;
+				if (mouseClicked & S_MOUSE1)
+					color = '0.5 1 0.5';
+				else if (hudShiftState & S_CTRL)
+					color = '1 1 0.3';
+				else
+					color = '1 1 1';
+				drawfill(entry_pos, vec2(panel_size.x, fontsize.y), color, .2, DRAWFLAG_NORMAL);
+			}
 		}
 	}
 }
@@ -664,8 +668,7 @@ void HUD_QuickMenu()
 		}
 		HUD_Quickmenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Page_Description[i]), option, fontsize);
 
-		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
-			&& QuickMenu_Page_ActivatedEntry == i)
+		if (time < QuickMenu_Page_ActivatedEntry_Time && QuickMenu_Page_ActivatedEntry == i)
 			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
 
 		panel_pos.y += fontsize.y;
@@ -776,6 +779,7 @@ void QuickMenu_Default(string target_submenu)
 	string tc_cmd;
 
 	QUICKMENU_SMENU(_("Chat"), "Chat")
+		QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send public message to")), "Send public message to", "commandmode say %s:^7", 0, 1)
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))

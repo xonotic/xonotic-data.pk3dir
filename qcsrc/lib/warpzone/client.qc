@@ -29,7 +29,10 @@ void WarpZone_Touch(entity this, entity toucher);
 NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 {
 	if(!warpzone_warpzones_exist)
+	{
 		cvar_settemp("r_water", "1"); // HACK for DarkPlaces: always enable reflections when a map has warpzones
+		cvar_settemp("r_water_resolutionmultiplier", "1"); // HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+	}
 	warpzone_warpzones_exist = 1;
 	if (!this.enemy)
 	{
@@ -87,7 +90,10 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 NET_HANDLE(ENT_CLIENT_WARPZONE_CAMERA, bool isnew)
 {
 	if(!warpzone_cameras_exist)
+	{
 		cvar_settemp("r_water", "1"); // HACK for DarkPlaces: always enable reflections when a map has cameras
+		cvar_settemp("r_water_resolutionmultiplier", "1"); // HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+	}
 	warpzone_cameras_exist = 1;
 	this.classname = "func_warpzone_camera";
 

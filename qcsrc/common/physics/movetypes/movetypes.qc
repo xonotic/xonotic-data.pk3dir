@@ -34,13 +34,19 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 }
 
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
 {
+	move_stepnormal = '0 0 0';
+
+	if(dt <= 0)
+		return 0;
+
 	int blocked = 0;
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
-	vector primal_velocity, original_velocity, restore_velocity;
+	vector primal_velocity, original_velocity;
+	vector restore_velocity = this.velocity;
 
 	for(i = 0; i < MAX_CLIP_PLANES; ++i)
 		planes[i] = '0 0 0';
@@ -59,7 +65,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		}
 	}
 
-	original_velocity = primal_velocity = restore_velocity = this.velocity;
+	original_velocity = primal_velocity = this.velocity;
 
 	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
 	{
@@ -67,8 +73,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			break;
 
 		push = this.velocity * time_left;
-		_Movetype_PushEntity(this, push, true);
-		if(trace_startsolid)
+		if(!_Movetype_PushEntity(this, push, true, false))
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -113,22 +118,19 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			vector org = this.origin;
 			vector steppush = '0 0 1' * stepheight;
 
-			_Movetype_PushEntity(this, steppush, true);
-			if(trace_startsolid)
+			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
 				blocked |= 8;
 				break;
 			}
-			_Movetype_PushEntity(this, push, true);
-			if(trace_startsolid)
+			if(!_Movetype_PushEntity(this, push, true, false))
 			{
 				blocked |= 8;
 				break;
 			}
 			float trace2_fraction = trace_fraction;
-			steppush = '0 0 1' * (org.z - this.origin_z);
-			_Movetype_PushEntity(this, steppush, true);
-			if(trace_startsolid)
+			steppush = vec3(0, 0, org.z - this.origin_z);
+			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
 				blocked |= 8;
 				break;
@@ -150,8 +152,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			// step - return it to caller
 			blocked |= 2;
 			// save the trace for player extrafriction
-			if(stepnormal)
-				stepnormal = trace_plane_normal;
+			if(applystepnormal)
+				move_stepnormal = trace_plane_normal;
 		}
 
 		if(my_trace_fraction >= 0.001)
@@ -348,6 +350,10 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
 			trace_ent = this;
+			trace_dpstartcontents = 0;
+			trace_dphitcontents = 0;
+			trace_dphitq3surfaceflags = 0;
+			trace_dphittexturename = string_null;
 
 			gettouch(it)(it, this);
 		}
@@ -437,8 +443,8 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         #define X(i) \
             if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
             if (_Movetype_TestEntityPosition('0 0 1' * i))
-        X(01) X(02) X(03) X(04) X(05) X(06) X(07) X(08)
-        X(09) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
+        X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8)
+        X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
         X(17)
         #undef X
         {
@@ -501,20 +507,33 @@ void _Movetype_PushEntityTrace(entity this, vector push)
 	tracebox(this.origin, this.mins, this.maxs, end, type, this);
 }
 
-float _Movetype_PushEntity(entity this, vector push, bool failonstartsolid)  // SV_PushEntity
+bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool dolink)  // SV_PushEntity
 {
 	_Movetype_PushEntityTrace(this, push);
 
+	// NOTE: this is a workaround for the QC's lack of a worldstartsolid trace parameter
 	if(trace_startsolid && failonstartsolid)
-		return trace_fraction;
+	{
+		int oldtype = this.move_nomonsters;
+		this.move_nomonsters = MOVE_WORLDONLY;
+		_Movetype_PushEntityTrace(this, push);
+		this.move_nomonsters = oldtype;
+		if(trace_startsolid)
+			return true;
+	}
 
 	this.origin = trace_endpos;
 
+	vector last_origin = this.origin;
+
+	if(dolink)
+		_Movetype_LinkEdict(this, true);
+
 	if(trace_fraction < 1)
-		if(this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
+		if(this.solid >= SOLID_TRIGGER && trace_ent && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
 			_Movetype_Impact(this, trace_ent);
 
-	return trace_fraction;
+	return (this.origin == last_origin); // false if teleported by touch
 }
 
 
@@ -528,7 +547,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
+			LOG_DEBUG("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;
@@ -570,7 +589,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
+			LOG_DEBUG("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;

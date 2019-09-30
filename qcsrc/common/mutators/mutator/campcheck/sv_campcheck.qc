@@ -45,7 +45,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 	if(!STAT(FROZEN, player))
 	if(!PHYS_INPUT_BUTTON_CHAT(player))
 	if(IS_REAL_CLIENT(player)) // bots may camp, but that's no reason to constantly kill them
-	if(!forbidWeaponUse(player))
+	if(!weaponLocked(player))
 	{
 		// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
 		vector dist = vec2(player.campcheck_prevorigin - player.origin);
@@ -65,7 +65,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 				if(player.vehicle)
 					Damage(player.vehicle, NULL, NULL, autocvar_g_campcheck_damage * 2, DEATH_CAMP.m_id, DMG_NOWEP, player.vehicle.origin, '0 0 0');
 				else
-					Damage(player, NULL, NULL, bound(0, autocvar_g_campcheck_damage, GetResourceAmount(player, RESOURCE_HEALTH) + GetResourceAmount(player, RESOURCE_ARMOR) * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP.m_id, DMG_NOWEP, player.origin, '0 0 0');
+					Damage(player, NULL, NULL, bound(0, autocvar_g_campcheck_damage, GetResource(player, RES_HEALTH) + GetResource(player, RES_ARMOR) * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP.m_id, DMG_NOWEP, player.origin, '0 0 0');
 			}
 			player.campcheck_nextcheck = time + autocvar_g_campcheck_interval;
 			player.campcheck_traveled_distance = 0;

@@ -94,9 +94,15 @@ CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source) {
 
 METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this))
 {
-    entity s = this.currentPanel;
-    s.viewportHeight = 15.5;
-    entity c = s.currentPanel;
+	entity s = NULL;
+	entity c = this.currentPanel;
+	if (c.classname == "XonoticScrollPanel")
+	{
+		s = this.currentPanel;
+		s.viewportHeight = 15.5;
+		c = s.currentPanel;
+	}
+
     entity removing = this.currentItem;
     DataSource data = this.topicList.source;
     entity adding = data.getEntry(data, this.topicList.selectedItem, func_null);
@@ -109,7 +115,8 @@ METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this))
         this.currentItem = adding;
         adding.resizeNotify(adding, '0 0 0', c.size, '0 0 0', c.size);
         c.addItem(c, adding, '0 0 0', '1 1 0', 1);
-		s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
+		if (s)
+			s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
     }
 }
 METHOD(XonoticGameSettingsTab, fill, void(entity this))

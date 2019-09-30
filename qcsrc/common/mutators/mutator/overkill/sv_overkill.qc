@@ -11,7 +11,7 @@ bool autocvar_g_overkill_itemwaypoints = true;
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
 IntrusiveList g_overkill_items;
-STATIC_INIT()
+STATIC_INIT(overkill)
 {
 	g_overkill_items = IL_NEW();
 	IL_PUSH(g_overkill_items, ITEM_HealthMega);
@@ -102,7 +102,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
+	entity targ = ((IS_PLAYER(frag_attacker)) ? frag_attacker : frag_target);
 
 	ok_DropItem(frag_target, targ);
 
@@ -143,7 +143,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	{
 		return;
 	}
-	if (!PHYS_INPUT_BUTTON_ATCK2(player) || forbidWeaponUse(player) ||
+	if (!PHYS_INPUT_BUTTON_ATCK2(player) || weaponLocked(player) ||
 		!(round_handler_IsActive() && !round_handler_IsRoundStarted()))
 	{
 		return;
@@ -274,7 +274,10 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 	if(WEP_OVERKILL_RPC.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_RPC); }
 	if(WEP_OVERKILL_HMG.weaponstart > 0) { ok_start_items |= WEPSET(OVERKILL_HMG); }
 
-	start_items |= IT_UNLIMITED_WEAPON_AMMO;
+	// this gives unlimited ammo (the 4 types) but not fuel
+	// using `g_use_ammunition` instead gives also fuel which is unnecessary and distracting in the HUD
+	start_items |= IT_UNLIMITED_AMMO;
+
 	start_weapons = warmup_start_weapons = ok_start_items;
 }
 

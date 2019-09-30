@@ -4,6 +4,10 @@
 #include <common/util.qh>
 
 #ifdef GAMEQC
+#include <common/mutators/mutator/waypoints/all.qh>
+#endif
+
+#ifdef GAMEQC
 REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
 #endif
@@ -35,10 +39,10 @@ CLASS(Buff, Pickup)
 ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {
-    FOREACH(Buffs, true, {
-        it.m_itemid = BIT(it.m_id - 1); \
-        it.m_sprite = strzone(strcat("buff-", it.netname)); \
-    });
+	FOREACH(Buffs, true, {
+		it.m_itemid = BIT(it.m_id - 1);
+		it.m_sprite = strzone(strcat("buff-", it.netname));
+	});
 }
 
 #ifdef SVQC

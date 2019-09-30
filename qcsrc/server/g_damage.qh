@@ -91,13 +91,13 @@ void Unfreeze(entity targ, bool reset_health);
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
 float RadiusDamage_running;
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity);
 	// Returns total damage applies to creatures
 
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
 
 // Calls .event_heal on the target so that they can handle healing themselves
-// a limit of RESOURCE_LIMIT_NONE should be handled by the entity as its max health (if applicable)
+// a limit of RES_LIMIT_NONE should be handled by the entity as its max health (if applicable)
 bool Heal(entity targ, entity inflictor, float amount, float limit);
 
 .float fire_damagepersec;

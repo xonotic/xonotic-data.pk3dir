@@ -68,7 +68,7 @@ void button_return(entity this)
 	this.state = STATE_DOWN;
 	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, button_done);
 	this.frame = 0;			// use normal textures
-	if (GetResourceAmount(this, RESOURCE_HEALTH))
+	if (GetResource(this, RES_HEALTH))
 		this.takedamage = DAMAGE_YES;	// can be shot again
 	this.wait_remaining = -1;
 	this.activation_time = -1;
@@ -83,7 +83,7 @@ void button_blocked(entity this, entity blocker)
 
 void button_fire(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	this.takedamage = DAMAGE_NO;    // will be reset upon return
 
 	if (this.state == STATE_UP || this.state == STATE_TOP)
@@ -100,7 +100,7 @@ void button_fire(entity this)
 
 void button_reset(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	setorigin(this, this.pos1);
 	this.frame = 0;			// use normal textures
 	this.state = STATE_BOTTOM;
@@ -110,7 +110,7 @@ void button_reset(entity this)
 	this.active = ACTIVE_ACTIVE;
 	setthink(this, func_null);
 	this.nextthink = 0;
-	if (GetResourceAmount(this, RESOURCE_HEALTH))
+	if (GetResource(this, RES_HEALTH))
 		this.takedamage = DAMAGE_YES;	// can be shot again
 }
 
@@ -148,7 +148,7 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 			return;
 	if (this.spawnflags & BUTTON_DONTACCUMULATEDMG)
 	{
-		if (GetResourceAmount(this, RESOURCE_HEALTH) <= damage)
+		if (GetResource(this, RES_HEALTH) <= damage)
 		{
 			this.enemy = attacker;
 			button_fire(this);
@@ -156,8 +156,8 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	}
 	else
 	{
-		TakeResource(this, RESOURCE_HEALTH, damage);
-		if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+		TakeResource(this, RES_HEALTH, damage);
+		if (GetResource(this, RES_HEALTH) <= 0)
 		{
 			this.enemy = attacker;
 			button_fire(this);
@@ -190,9 +190,9 @@ spawnfunc(func_button)
 
 //	if (this.health == 0) // all buttons are now shootable
 //		this.health = 10;
-	if (GetResourceAmount(this, RESOURCE_HEALTH))
+	if (GetResource(this, RES_HEALTH))
 	{
-		this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
+		this.max_health = GetResource(this, RES_HEALTH);
 		this.event_damage = button_damage;
 		this.takedamage = DAMAGE_YES;
 	}

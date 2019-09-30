@@ -41,6 +41,8 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
+
 // TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
 void bot_setclientfields(entity this)
 {
@@ -213,13 +215,13 @@ void bot_setnameandstuff(entity this)
 
 	prio = 6;
 
-	#define READSKILL(f, w, r) MACRO_BEGIN { \
+	#define READSKILL(f, w, r) MACRO_BEGIN \
 		if(argv(prio) != "") \
 			this.f = stof(argv(prio)) * w; \
 		else \
 			this.f = (!autocvar_g_campaign) * (2 * random() - 1) * r * w; \
 		prio++; \
-	} MACRO_END
+	MACRO_END
 	//print(bot_name, ": ping=", argv(9), "\n");
 
 	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboard skill
@@ -238,6 +240,9 @@ void bot_setnameandstuff(entity this)
 
 	READSKILL(bot_thinkskill, 1, 0.5); // think skill
 	READSKILL(bot_aiskill, 2, 0); // "ai" skill
+
+	if (file >= 0 && argv(prio) != "")
+		LOG_INFOF("^1Warning^7: too many parameters for bot %s, please check format of %s", bot_name, autocvar_bot_config_file);
 
 	this.bot_config_loaded = true;
 
@@ -425,16 +430,15 @@ void bot_clientconnect(entity this)
 		bot_setclientfields(this);
 	}
 
-	if(this.bot_forced_team==1)
-		this.team = NUM_TEAM_1;
-	else if(this.bot_forced_team==2)
-		this.team = NUM_TEAM_2;
-	else if(this.bot_forced_team==3)
-		this.team = NUM_TEAM_3;
-	else if(this.bot_forced_team==4)
-		this.team = NUM_TEAM_4;
+	if (teamplay && Team_IsValidIndex(this.bot_forced_team))
+	{
+		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
+	}
 	else
+	{
+		this.bot_forced_team = 0;
 		TeamBalance_JoinBestTeam(this);
+	}
 
 	havocbot_setupbot(this);
 }
@@ -576,9 +580,10 @@ void bot_calculate_stepheightvec()
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
 	jumpheight_vec = (autocvar_sv_jumpvelocity ** 2) / (2 * autocvar_sv_gravity) * '0 0 1';
 	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
+	jumpheight_time = autocvar_sv_jumpvelocity / autocvar_sv_gravity;
 }
 
-float bot_fixcount()
+bool bot_fixcount()
 {
 	int activerealplayers = 0;
 	int realplayers = 0;
@@ -602,6 +607,8 @@ float bot_fixcount()
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
 		int minplayers = max(0, floor(autocvar_minplayers));
+		if (teamplay)
+			minplayers = max(0, floor(autocvar_minplayers_per_team) * AvailableTeams());
 		int minbots = max(0, floor(autocvar_bot_number));
 
 		// add bots to reach minplayers if needed
@@ -609,7 +616,7 @@ float bot_fixcount()
 		// cap bots to the max players allowed by the server
 		int player_limit = GetPlayerLimit();
 		if(player_limit)
-			bots = min(bots, player_limit - activerealplayers);
+			bots = min(bots, max(player_limit - activerealplayers, 0));
 		bots = min(bots, maxclients - realplayers);
 
 		if(bots > minbots)
@@ -632,7 +639,7 @@ float bot_fixcount()
 				return false;
 			}
 		}
-		while (currentbots > bots)
+		while (currentbots > bots && bots >= 0)
 			bot_removenewest();
 	}
 
@@ -750,7 +757,7 @@ void bot_serverframe()
 		if(botframe_cachedwaypointlinks)
 		{
 			if(!botframe_loadedforcedlinks)
-				waypoint_load_links_hardwired();
+				waypoint_load_hardwiredlinks();
 		}
 		else
 		{

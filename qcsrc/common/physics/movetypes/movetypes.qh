@@ -85,8 +85,11 @@ const int UNSTICK_FINE = 0;
 const int UNSTICK_FIXED = 1;
 const int UNSTICK_STUCK = 2;
 
+// set by _Movetype_FlyMove
+vector move_stepnormal;
+
 void _Movetype_WallFriction(entity this, vector stepnormal);
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight);
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
 void _Movetype_CheckVelocity(entity this);
 void _Movetype_CheckWaterTransition(entity ent);
 void _Movetype_CheckStuck(entity this);
@@ -95,7 +98,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
 void _Movetype_PushEntityTrace(entity this, vector push);
-float _Movetype_PushEntity(entity this, vector push, float failonstartsolid);
+bool _Movetype_PushEntity(entity this, vector push, float failonstartsolid, bool dolink);
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient);
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy);

@@ -24,8 +24,13 @@ bool isinf(float e)
 }
 bool isnan(float e)
 {
-	float f = e;
-	return (e != f);
+	// the sane way to detect NaN is broken because of a compiler bug
+	// (works with constants but breaks when assigned to variables)
+	// use conversion to string instead
+
+	//float f = e;
+	//return (e != f);
+	return ftos(e) == "-nan";
 }
 bool isnormal(float e)
 {
@@ -217,6 +222,7 @@ float copysign(float e, float f)
 {
 	return fabs(e) * ((f>0) ? 1 : -1);
 }
+/// Always use `isnan` function to compare because `float x = nan(); x == x;` gives true
 float nan(string tag)
 {
 	return sqrt(-1);

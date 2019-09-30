@@ -1,5 +1,84 @@
 #include "porto.qh"
 
+#ifdef CSQC
+STATIC_INIT(Porto)
+{
+	entity e = new_pure(porto);
+	e.draw = Porto_Draw;
+	IL_PUSH(g_drawables, e);
+	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+}
+
+const int polyline_length = 16;
+.vector polyline[polyline_length];
+void Porto_Draw(entity this)
+{
+	if (spectatee_status || intermission == 1 || intermission == 2 || STAT(HEALTH) <= 0 || WEP_CVAR(porto, secondary)) return;
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wepent = viewmodels[slot];
+
+		if (wepent.activeweapon != WEP_PORTO) continue;
+
+		vector pos = view_origin;
+		vector dir = view_forward;
+		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
+		pos += v_right * -wepent.movedir.y
+			+  v_up * wepent.movedir.z;
+
+		if (wepent.angles_held_status)
+		{
+			makevectors(wepent.angles_held);
+			dir = v_forward;
+		}
+
+		wepent.polyline[0] = pos;
+
+		int portal_number = 0, portal1_idx = 1, portal_max = 2;
+		int n = 1 + 2;  // 2 lines == 3 points
+		for (int idx = 0; idx < n && idx < polyline_length - 1; )
+		{
+			traceline(pos, pos + 65536 * dir, true, this);
+			dir = reflect(dir, trace_plane_normal);
+			pos = trace_endpos;
+			wepent.polyline[++idx] = pos;
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+			{
+				n += 1;
+				continue;
+			}
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+			{
+				n = max(2, idx);
+				break;
+			}
+			// check size
+			{
+				vector ang = vectoangles2(trace_plane_normal, dir);
+				ang.x = -ang.x;
+				makevectors(ang);
+				if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+				{
+					n = max(2, idx);
+					break;
+				}
+			}
+			portal_number += 1;
+			if (portal_number >= portal_max) break;
+			if (portal_number == 1) portal1_idx = idx;
+		}
+		for (int idx = 0; idx < n - 1; ++idx)
+		{
+			vector p = wepent.polyline[idx], q = wepent.polyline[idx + 1];
+			if (idx == 0) p -= view_up * 16;  // line from player
+			vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
+			Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
+		}
+	}
+}
+#endif
+
 #ifdef SVQC
 #include <common/mapobjects/trigger/jumppads.qh>
 #include <server/weapons/throwing.qh>

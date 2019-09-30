@@ -26,6 +26,7 @@ const int CH_AMBIENT_SINGLE = 9;
 
 const float ATTEN_NONE = 0;
 const float ATTEN_MIN = 0.015625;
+const float ATTEN_LOW = 0.2;
 const float ATTEN_NORM = 0.5;
 const float ATTEN_LARGE = 1;
 const float ATTEN_IDLE = 2;
@@ -41,11 +42,10 @@ const float VOL_MUFFLED = 0.35;
 #ifdef SVQC
 	#define _sound(e, c, s, v, a) \
 		MACRO_BEGIN \
-		{ \
 			entity __e = e; \
 			if (sound_allowed(MSG_BROADCAST, __e)) \
 				sound7(__e, c, s, v, a, 0, 0); \
-		} MACRO_END
+		MACRO_END
 #else
 	#define _sound(e, c, s, v, a) sound7(e, c, s, v, a, 0, 0)
 #endif
@@ -65,7 +65,6 @@ const float VOL_MUFFLED = 0.35;
  */
 #define sound8(e, o, chan, samp, vol, atten, speed, sf) \
 	MACRO_BEGIN \
-	{ \
 		entity __e; \
 		int __chan = chan; \
 		string __samp = samp; \
@@ -90,7 +89,7 @@ const float VOL_MUFFLED = 0.35;
 			setorigin(__e, old_origin); \
 			setsize(__e, old_mins, old_maxs); \
 		} \
-	} MACRO_END
+	MACRO_END
 
 string _Sound_fixpath(string base)
 {
@@ -131,7 +130,7 @@ CLASS(Sound, Object)
 		TC(Sound, this);
 		string s = _Sound_fixpath(this.sound_str());
 		if (!s) return;
-		profile(sprintf("precache_sound(\"%s\")", s));
+		//profile(sprintf("precache_sound(\"%s\")", s));
 		precache_sound(s);
 		strcpy(this.sound_str_, s);
 	}

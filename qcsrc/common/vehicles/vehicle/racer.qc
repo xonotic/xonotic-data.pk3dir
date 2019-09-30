@@ -287,7 +287,7 @@ bool racer_frame(entity this, float dt)
 
 	Weapon wep1 = WEP_RACER;
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	if (!forbidWeaponUse(player))
+	if (!weaponLocked(player) && !weaponUseForbidden(player))
 	if (PHYS_INPUT_BUTTON_ATCK(player))
 	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
@@ -327,7 +327,7 @@ bool racer_frame(entity this, float dt)
 		}
 	}
 
-	if(!forbidWeaponUse(player))
+	if(!weaponLocked(player))
 	if(time > vehic.delay)
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
 	{
@@ -359,12 +359,12 @@ bool racer_frame(entity this, float dt)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags & VHF_HEALTHREGEN)
-		vehicles_regen_resource(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, dt, false, RESOURCE_HEALTH);
+		vehicles_regen_resource(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, dt, false, RES_HEALTH);
 
 	if(vehic.vehicle_flags & VHF_ENERGYREGEN)
 		vehicles_regen(vehic, vehic.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, dt, false);
 
-	VEHICLE_UPDATE_PLAYER_RESOURCE(player, vehic, health, racer, RESOURCE_HEALTH);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(player, vehic, health, racer, RES_HEALTH);
 	VEHICLE_UPDATE_PLAYER(player, vehic, energy, racer);
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
@@ -514,7 +514,7 @@ METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
     set_movetype(instance, MOVETYPE_BOUNCE);
-    instance.owner.vehicle_health = (GetResourceAmount(instance, RESOURCE_HEALTH) / autocvar_g_vehicle_racer_health)  * 100;
+    instance.owner.vehicle_health = (GetResource(instance, RES_HEALTH) / autocvar_g_vehicle_racer_health)  * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
 
     if(instance.owner.flagcarried)
@@ -544,7 +544,7 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 
     setthink(instance, racer_think);
     instance.nextthink	  = time;
-    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_racer_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
     instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
     set_movetype(instance, MOVETYPE_TOSS);
@@ -557,7 +557,7 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
     instance.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
     instance.bouncestop = autocvar_g_vehicle_racer_bouncestop;
     instance.damageforcescale = 0.5;
-    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_racer_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
     instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 #endif
 }
@@ -566,7 +566,7 @@ METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
     setSendEntity(instance, func_null); // stop networking this racer (for now)
-    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, 0);
+    SetResourceExplicit(instance, RES_HEALTH, 0);
     instance.event_damage	= func_null;
     instance.solid			= SOLID_CORPSE;
     instance.takedamage		= DAMAGE_NO;
@@ -625,9 +625,9 @@ METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
         instance.vehicle_flags |= VHF_HEALTHREGEN;
 
     instance.respawntime = autocvar_g_vehicle_racer_respawntime;
-    SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_racer_health);
+    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
     instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
-    instance.max_health = GetResourceAmount(instance, RESOURCE_HEALTH);
+    instance.max_health = GetResource(instance, RES_HEALTH);
 #endif
 
 #ifdef CSQC

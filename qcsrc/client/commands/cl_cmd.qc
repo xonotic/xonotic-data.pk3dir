@@ -434,7 +434,7 @@ void LocalCommand_sendcvar(int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_INFO("Usage:^3 cl_cmd sendcvar <cvar>");
-			LOG_INFO("  Where 'cvar' is the cvar plus arguments to send to the server.");
+			LOG_INFO("  Where 'cvar' is the cvar to send to the server.");
 			return;
 		}
 	}
@@ -477,7 +477,7 @@ CLIENT_COMMAND(handlevote, "System to handle selecting a vote or option") { Loca
 CLIENT_COMMAND(hud, "Commands regarding/controlling the HUD system") { LocalCommand_hud(request, arguments); }
 CLIENT_COMMAND(localprint, "Create your own centerprint sent to yourself") { LocalCommand_localprint(request, arguments); }
 CLIENT_COMMAND(mv_download, "Retrieve mapshot picture from the server") { LocalCommand_mv_download(request, arguments); }
-CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
+CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like cl_weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
 
 void LocalCommand_macro_help()
 {
@@ -565,11 +565,12 @@ void GameCommand(string command)
 
 // These functions are here specifically to add special + - commands to the game, and are not really normal commands.
 // Please add client commands to the function above this, as this is only for special reasons.
+// NOTE: showaccuracy is kept as legacy command
 #define CONSOLE_COMMANDS_NORMAL() \
 	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = true; }) \
 	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = false; }) \
-	CONSOLE_COMMAND("+showaccuracy", { scoreboard_showaccuracy = true; }) \
-	CONSOLE_COMMAND("-showaccuracy", { scoreboard_showaccuracy = false; }) \
+	CONSOLE_COMMAND("+showaccuracy", { }) \
+	CONSOLE_COMMAND("-showaccuracy", { }) \
 	/* nothing */
 
 #define CONSOLE_COMMANDS_MOVEMENT() \

@@ -93,7 +93,7 @@ void plat_center_touch(entity this, entity toucher)
 	if (!toucher.iscreature)
 		return;
 
-	if (GetResourceAmount(toucher, RESOURCE_HEALTH) <= 0)
+	if (GetResource(toucher, RES_HEALTH) <= 0)
 		return;
 #elif defined(CSQC)
 	if (!IS_PLAYER(toucher))
@@ -114,7 +114,7 @@ void plat_outside_touch(entity this, entity toucher)
 	if (!toucher.iscreature)
 		return;
 
-	if (GetResourceAmount(toucher, RESOURCE_HEALTH) <= 0)
+	if (GetResource(toucher, RES_HEALTH) <= 0)
 		return;
 #elif defined(CSQC)
 	if (!IS_PLAYER(toucher))
