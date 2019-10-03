@@ -26,8 +26,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-23 12:22+0000\n"
-"Last-Translator: Mirio <opivy@hotmail.de>\n"
+"PO-Revision-Date: 2019-10-03 00:31+0000\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -1061,7 +1061,7 @@ msgstr "Punkte"
 #: qcsrc/client/hud/panel/scoreboard.qc:1643
 #: qcsrc/client/hud/panel/scoreboard.qc:1650
 msgid "SCO^is beaten"
-msgstr "wurde geschlagen"
+msgstr "geschlagen wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1641
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
@@ -1581,7 +1581,7 @@ msgstr "Spiel vorbei!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "Gut gemacht! Klicke 'Nächstes Level' um fortzufahren"
+msgstr "Gut gemacht! Klicke „Nächstes Level“, um fortzufahren"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
@@ -1723,7 +1723,7 @@ msgstr "Drücken-Ziehen"
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr "Wähle im Menü \"^1Nächstes Spiel^7\" für eine Revanche!"
+msgstr "Wähle im Menü „^1Nächstes Spiel^7“ für eine Revanche!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/pp.qc:450
