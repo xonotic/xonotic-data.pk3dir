@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-10-03 00:31+0000\n"
+"PO-Revision-Date: 2019-10-04 04:38+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -187,7 +187,7 @@ msgstr "Bereit"
 #: qcsrc/client/hud/panel/infomessages.qc:164
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%sDrücke ^3%s%s, sobald Du bereit bist"
+msgstr "%sDrücke ^3%s%s, sobald du bereit bist"
 
 #: qcsrc/client/hud/panel/infomessages.qc:169
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -569,7 +569,7 @@ msgstr "STRAFE: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154 qcsrc/client/main.qc:1129
 msgid "missing a checkpoint"
-msgstr "einen Checkpoint verpasst"
+msgstr "einen Kontrollpunkt verpasst"
 
 #: qcsrc/client/hud/panel/radar.qc:373
 msgid "Click to select teleport destination"
@@ -948,7 +948,7 @@ msgid ""
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7lädt das Standard-Layout und "
-"expandiert es in die cvar scoreboard_columns, damit Du sie bearbeiten kannst"
+"expandiert es in die cvar scoreboard_columns, damit du sie bearbeiten kannst"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "You can use a ^3|^7 to start the right-aligned fields."
@@ -966,7 +966,7 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
-"Vor einem Feld kannst Du ein Plus- oder Minuszeichen setzen, dann\n"
+"Vor einem Feld kannst du ein Plus- oder Minuszeichen setzen, dann\n"
 "eine kommagetrennte Liste an Spieltypen, dann ein Schrägstrich,\n"
 "um das Feld nur in diesen oder in allen ausser diesen Spieltypen\n"
 "anzuzeigen. Du kannst ausserdem „all“ als ein Feld angeben, um\n"
@@ -1016,7 +1016,7 @@ msgstr "N/V"
 #: qcsrc/client/hud/panel/scoreboard.qc:1188
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr "Genauigkeit (Durchschn.: %d%%)"
+msgstr "Genauigkeitsstatistik (Durchschnitt: %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1336
 msgid "Map stats:"
@@ -1047,7 +1047,7 @@ msgstr "^3%1.0f Minuten"
 #: qcsrc/client/hud/panel/scoreboard.qc:1629
 #, c-format
 msgid "^5%s %s"
-msgstr "^5%s%s"
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1623
 #: qcsrc/client/hud/panel/scoreboard.qc:1630
@@ -1067,7 +1067,7 @@ msgstr "geschlagen wurde"
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
 #, c-format
 msgid "^2+%s %s"
-msgstr "^2+%s%s"
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1659
 #, c-format
@@ -1110,7 +1110,7 @@ msgstr "AUFWÄRMPHASE"
 
 #: qcsrc/client/hud/panel/vote.qc:27
 msgid "^1You must answer before entering hud configure mode"
-msgstr "^1Du musst antworten, bevor Du den HUD-Konfigurationsmodus betrittst"
+msgstr "^1Du musst antworten, bevor du den HUD-Konfigurationsmodus betrittst"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1253,7 +1253,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
-msgstr "Ball-Dieb"
+msgstr "Balldieb"
 
 #: qcsrc/common/items/item/ammo.qh:66
 msgid "bullets"
@@ -1765,7 +1765,7 @@ msgstr "Keine verbleibenden gültigen Züge"
 
 #: qcsrc/common/minigames/minigame/ps.qc:494
 msgid "Well done, you win!"
-msgstr "Gut gemacht, Du gewinnst!"
+msgstr "Gut gemacht, du gewinnst!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:497
 msgid "Jump a piece over another to capture it"
@@ -2018,7 +2018,7 @@ msgstr "Gegenstand"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:12
 msgid "Checkpoint"
-msgstr "Checkpoint"
+msgstr "Kontrollpunkt"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
@@ -2303,7 +2303,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:271
 msgid "^F1Round already started, you will join the game in the next round"
 msgstr ""
-"^F1Die Runde hat bereits begonnen, daher musst Du auf die nächste Runde "
+"^F1Die Runde hat bereits begonnen, daher musst du auf die nächste Runde "
 "warten"
 
 #: qcsrc/common/notifications/all.inc:272
@@ -2844,7 +2844,7 @@ msgstr "^BGDie Runde ist vorbei, aber es gibt keinen Gewinner"
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
 msgid "^BGGodmode saved you %s units of damage, cheater!"
-msgstr "^BGGodmode ersparte Dir %s Schaden, Du Cheater!"
+msgstr "^BGGodmode ersparte dir %s Schaden, du Cheater!"
 
 #: qcsrc/common/notifications/all.inc:377
 #, c-format
@@ -3039,7 +3039,7 @@ msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment."
 msgstr ""
-"^F2Du wurdest vom Server gekickt, weil Du Zuschauer bist, und Beobachter "
+"^F2Du wurdest vom Server gekickt, weil du Zuschauer bist, und Beobachter "
 "sind im Moment nicht erlaubt."
 
 #: qcsrc/common/notifications/all.inc:424
@@ -3124,7 +3124,7 @@ msgid ""
 "^F2You have to become a player within the next %s, otherwise you will be "
 "kicked, because spectating isn't allowed at this time!"
 msgstr ""
-"^F2Du musst in den nächsten %s Spieler werden, oder Du wirst gekickt, denn "
+"^F2Du musst in den nächsten %s Spieler werden, oder du wirst gekickt, denn "
 "zuschauen ist momentan nicht erlaubt."
 
 #: qcsrc/common/notifications/all.inc:443
@@ -3146,7 +3146,7 @@ msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have "
 "^F2Xonotic %s"
 msgstr ""
-"^F4Anmerkung: ^BGDer Server läuft unter ^F1Xonotic %s (beta)^BG, Du hast "
+"^F4Anmerkung: ^BGDer Server läuft unter ^F1Xonotic %s (beta)^BG, du hast "
 "^F2Xonotic %s"
 
 #: qcsrc/common/notifications/all.inc:449
@@ -3154,7 +3154,7 @@ msgstr ""
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"
 msgstr ""
-"^F4Anmerkung: ^BGDer Server läuft unter ^F1Xonotic %s^BG, Du hast^F2Xonotic "
+"^F4Anmerkung: ^BGDer Server läuft unter ^F1Xonotic %s^BG, du hast^F2Xonotic "
 "%s"
 
 #: qcsrc/common/notifications/all.inc:450
@@ -3163,8 +3163,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3http://www.xonotic.org/^BG!"
 msgstr ""
-"^F4Anmerkung: ^F1Xonotic %s^BG ist raus und Du hast noch ^F2Xonotic %s^BG - "
-"hol Dir das Update von ^F3http://www.xonotic.org/^BG!"
+"^F4Anmerkung: ^F1Xonotic %s^BG ist raus und du hast noch ^F2Xonotic %s^BG - "
+"hol dir das Update von ^F3http://www.xonotic.org/^BG!"
 
 #: qcsrc/common/notifications/all.inc:452
 #, c-format
@@ -3336,7 +3336,7 @@ msgstr "^BG%s%s^K1 wurde durch ^BG%s^K1s Maschinengewehr durchsiebt%s%s"
 #: qcsrc/common/notifications/all.inc:794
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
-msgstr "^BGMehr als ^F2%s^BG Minen kannst Du nicht auf einmal legen"
+msgstr "^BGMehr als ^F2%s^BG Minen kannst du nicht auf einmal legen"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
@@ -3561,7 +3561,7 @@ msgid ""
 msgstr ""
 "^BGDu bist jetzt frei.\n"
 "^BGDu kannst ^F2versuchen^BG, die Flage noch einmal\n"
-"^BGzu erobern, wenn Du glaubst, es zu schaffen."
+"^BGzu erobern, wenn du glaubst, es zu schaffen."
 
 #: qcsrc/common/notifications/all.inc:560
 msgid "^BGThis flag is currently inactive"
@@ -3576,7 +3576,7 @@ msgstr ""
 "^BGDu bist jetzt von der Flagge ^F1abgeschirmt\n"
 "^BGaufgrund ^F2zu vieler fehlgeschlagenen Versuchen^BG,\n"
 "^BGdie Flagge zu erobern. Gewinne Punkte in der Verteidigung,\n"
-"^BGbevor Du es noch einmal versuchst."
+"^BGbevor du es noch einmal versuchst."
 
 #: qcsrc/common/notifications/all.inc:562
 msgid "^BGYou captured the ^TC^TT^BG flag!"
@@ -3619,7 +3619,7 @@ msgstr "^BGDrücke ^F2%s^BG, um die Flagge von %s zu erhalten^BG"
 #: qcsrc/common/notifications/all.inc:570
 #, c-format
 msgid "^BGRequesting %s^BG to pass you the flag"
-msgstr "^BG%s^BG wird darum gebeten, Dir die Flagge zu passen"
+msgstr "^BG%s^BG wird darum gebeten, dir die Flagge zu passen"
 
 #: qcsrc/common/notifications/all.inc:571
 #, c-format
@@ -3842,7 +3842,7 @@ msgstr "^K1Du wurdest etwas zu knusprig!"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1You killed your own dumb self!"
-msgstr "^K1Du hast dich selbst umgebracht, Du Trottel!"
+msgstr "^K1Du hast dich selbst umgebracht, du Trottel!"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1You need to be more careful!"
@@ -3886,11 +3886,11 @@ msgstr "^K1Deine Medizin-Granate ist ein wenig defekt"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You are respawning for running out of ammo..."
-msgstr "^K1Du wirst wiederbelebt, weil Du keine Munition mehr hast …"
+msgstr "^K1Du wirst wiederbelebt, weil du keine Munition mehr hast …"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You were killed for running out of ammo..."
-msgstr "^K1Du wurdest getötet, weil Du keine Munition mehr hast…"
+msgstr "^K1Du wurdest getötet, weil du keine Munition mehr hast …"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You grew too old without taking your medicine"
@@ -3990,17 +3990,17 @@ msgstr "^K1Du konntest keinen Schutz vor der Rakete eines Rasers finden!"
 
 #: qcsrc/common/notifications/all.inc:667
 msgid "^K1Watch your step!"
-msgstr "^K1Achte darauf, wo Du hintrittst!"
+msgstr "^K1Achte darauf, wo du hintrittst!"
 
 #: qcsrc/common/notifications/all.inc:669
 #, c-format
 msgid "^K1Moron! You fragged ^BG%s^K1, a team mate!"
-msgstr "^K1Idiot! Du hast ^BG%s^K1 getötet, einen Teamkollegen von Dir!"
+msgstr "^K1Idiot! Du hast ^BG%s^K1 getötet, einen Teamkollegen von dir!"
 
 #: qcsrc/common/notifications/all.inc:669
 #, c-format
 msgid "^K1Moron! You went against ^BG%s^K1, a team mate!"
-msgstr "^K1Idiot! Du hast ^BG%s^K1 getroffen, einen Teamkollegen von Dir!"
+msgstr "^K1Idiot! Du hast ^BG%s^K1 getroffen, einen Teamkollegen von dir!"
 
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
@@ -4071,7 +4071,7 @@ msgstr "^K1Du hast dich selbst eingefroren"
 
 #: qcsrc/common/notifications/all.inc:692
 msgid "^K1Round already started, you spawn as frozen"
-msgstr "^K1Die Runde hat bereits begonnen, Du spawnst eingefroren"
+msgstr "^K1Die Runde hat bereits begonnen, du spawnst eingefroren"
 
 #: qcsrc/common/notifications/all.inc:694
 #, c-format
@@ -4109,7 +4109,7 @@ msgstr "^BGDu hast den Ball aufgenommen"
 #: qcsrc/common/notifications/all.inc:713
 msgid "^BGKilling people while you don't have the ball gives no points!"
 msgstr ""
-"^BGSpieler zu töten, während Du den Ball nicht hast, bringt Dir keine Punkte!"
+"^BGSpieler zu töten, während du den Ball nicht hast, bringt dir keine Punkte!"
 
 #: qcsrc/common/notifications/all.inc:715
 msgid ""
@@ -4167,7 +4167,7 @@ msgstr "^BGEs wird auf %s Spieler gewartet …"
 
 #: qcsrc/common/notifications/all.inc:727
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
-msgstr "^BGDeine Waffe wurde verschlechtert, bis Du etwas Munition findest!"
+msgstr "^BGDeine Waffe wurde verschlechtert, bis du etwas Munition findest!"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^F4^COUNT^BG left to find some ammo!"
@@ -4175,7 +4175,7 @@ msgstr "^F4^COUNT^BG verbleiben, um etwas Munition zu finden!"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
-msgstr "^BGHole dir etwas Munition oder Du stirbst in ^F4^COUNT^BG!"
+msgstr "^BGHole dir etwas Munition oder du stirbst in ^F4^COUNT^BG!"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
@@ -5538,7 +5538,7 @@ msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
 "please file an issue."
 msgstr ""
-"Entity-Feld %s.%s (%s) ist nicht auf der weissen Liste. Falls Du glaubst, "
+"Entity-Feld %s.%s (%s) ist nicht auf der weissen Liste. Falls du glaubst, "
 "dass das ein Programmfehler ist, melde ihn bitte."
 
 #: qcsrc/lib/string.qh:81
@@ -6306,7 +6306,7 @@ msgstr "Rein"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
-msgstr "Punkte-Panel"
+msgstr "Punktetafel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
 msgid "Timer:"
@@ -6594,7 +6594,7 @@ msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
 msgstr ""
-"Spiele online, gegen deine Freunde im LAN, schaue Dir Demos an oder ändere "
+"Spiele online, gegen deine Freunde im LAN, schaue dir Demos an oder ändere "
 "deine Spieler-Einstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
@@ -6948,7 +6948,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:183
 msgid "Damage done to your enemy gets added to your own health"
 msgstr ""
-"Der Schaden, dem Du anderen Spielern zufügst, wird Deiner eigenen Gesundheit "
+"Der Schaden, dem du anderen Spielern zufügst, wird deiner eigenen Gesundheit "
 "hinzugefügt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:188
@@ -7103,7 +7103,7 @@ msgstr "Info …"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:80
 msgid "Show more information about the currently highlighted server"
-msgstr "Lass Dir mehr Informationen über den markierten Server anzeigen"
+msgstr "Lass dir mehr Informationen über den markierten Server anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:85
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
@@ -7254,7 +7254,7 @@ msgstr "Zeitwiederholung"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
 msgid "Benchmark how fast your computer can run the highlighted demo"
 msgstr ""
-"Mach einen Benchmark, mit dem Du testest, wie schnell dein Computer die "
+"Mach einen Benchmark, mit dem du testest, wie schnell dein Computer die "
 "markierte Wiederholung abspielen kann"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
@@ -7408,7 +7408,7 @@ msgstr "Geschlecht"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
-msgstr "Willst Du das Spiel wirklich beenden?"
+msgstr "Willst du das Spiel wirklich beenden?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 msgid "Back to work..."
@@ -7807,7 +7807,7 @@ msgstr "Sound-Info einblenden"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
-msgstr "Willst Du wirklich alle Einstellungen zurücksetzen?"
+msgstr "Willst du wirklich alle Einstellungen zurücksetzen?"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qh:6
 msgid "Reset key bindings"
@@ -8229,7 +8229,7 @@ msgid ""
 "models"
 msgstr ""
 "Stelle für jede Waffe ein anderes Fadenkreuz ein. Diese Option ist zu "
-"empfehlen, wenn Du ohne dargestelltes Waffenmodel spielst"
+"empfehlen, wenn du ohne dargestelltes Waffenmodel spielst"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:81
@@ -8269,7 +8269,7 @@ msgid ""
 msgstr ""
 "Keine: Für das Fadenkreuz keine Treffertests ausführen; TrueAim: Das "
 "Fadenkreuz verschwimmt, wenn ein Hindernis zwischen deiner Waffen und dem "
-"Ziel ist; Feinde: Das Fadenkreuz wird auch vergrössert, wenn Du einen Feind "
+"Ziel ist; Feinde: Das Fadenkreuz wird auch vergrössert, wenn du einen Feind "
 "treffen würdest"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
@@ -8343,7 +8343,7 @@ msgstr "Wegpunkte für feste Ziele auf der Karte anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:67
 msgid "Show various gametype specific waypoints"
-msgstr "Lass Dir verschiedene Spieltyp spezifische Wegpunkte anzeigen"
+msgstr "Lass dir verschiedene Spieltyp spezifische Wegpunkte anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:73
 msgid "Control transparency of the waypoints"
@@ -8442,7 +8442,7 @@ msgstr "Um den HUD-Editor zu starten, muss ein Spiel gestartet werden."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr "Willst Du ein lokales Spiel starten, um das HUD zu bearbeiten?"
+msgstr "Willst du ein lokales Spiel starten, um das HUD zu bearbeiten?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
@@ -8792,7 +8792,7 @@ msgid ""
 "you are carrying"
 msgstr ""
 "Wechsel automatisch zu der neu aufgesammelten Waffe, wenn diese in der Liste "
-"weiter oben steht als die, welche Du gerade trägst"
+"weiter oben steht als die, welche du gerade trägst"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:61
 msgid "Release attack buttons when you switch weapons"
@@ -9136,7 +9136,7 @@ msgstr "Erweiterte Einstellungen …"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:152
 msgid "Advanced settings where you can tweak every single variable of the game"
 msgstr ""
-"Erweiterte Einstellungen, in denen Du jede beliebige Variable des Spiels "
+"Erweiterte Einstellungen, in denen du jede beliebige Variable des Spiels "
 "ändern kannst"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:157
@@ -9600,7 +9600,7 @@ msgstr "Dürfen Spielerstatistiken deinen Spitznamen aufnehmen?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr "Wenn Du „Nein“ sagst, wirst Du als „Anonymer Spieler“ erscheinen"
+msgstr "Wenn du „Nein“ sagst, wirst du als „Anonymer Spieler“ erscheinen"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:87
 msgid "teamplay"
