@@ -397,7 +397,9 @@
     MULTITEAM_INFO(NEXBALL_RETURN_HELD,                     N_CONSOLE,  0, 0, "", "",           "",     _("^BGThe ^TC^TT^BG team held the ball for too long"), "", NAME)
 
     MSG_INFO_NOTIF(ONSLAUGHT_CAPTURE,                       N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^BG captured %s^BG control point"), "")
+    MSG_INFO_NOTIF(ONSLAUGHT_CAPTURE_NONAME,                N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^BG captured a control point"), "")
     MULTITEAM_INFO(ONSLAUGHT_CPDESTROYED,                   N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^TC^TT^BG team %s^BG control point has been destroyed by %s"), "", NAME)
+    MULTITEAM_INFO(ONSLAUGHT_CPDESTROYED_NONAME,            N_CONSOLE,  1, 0, "s1", "",         "",     _("^TC^TT^BG team control point has been destroyed by %s"), "", NAME)
     MULTITEAM_INFO(ONSLAUGHT_GENDESTROYED,                  N_CONSOLE,  0, 0, "", "",           "",     _("^TC^TT^BG generator has been destroyed"), "", GENERATOR)
     MULTITEAM_INFO(ONSLAUGHT_GENDESTROYED_OVERTIME,         N_CONSOLE,  0, 0, "", "",           "",     _("^TC^TT^BG generator spontaneously combusted due to overtime!"), "", GENERATOR)
 
@@ -717,7 +719,9 @@
     MSG_CENTER_NOTIF(NIX_NEWWEAPON,                     N_ENABLE,    0, 1, "item_wepname",   CPID_NIX,               "0 0",  _("^F2Active weapon: ^F1%s"), "")
 
     MSG_CENTER_NOTIF(ONS_CAPTURE,                       N_ENABLE,    1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^BGYou captured %s^BG control point"), "")
+    MSG_CENTER_NOTIF(ONS_CAPTURE_NONAME,                N_ENABLE,    0, 0, "",               CPID_ONSLAUGHT,         "0 0",  _("^BGYou captured a control point"), "")
     MULTITEAM_CENTER(ONS_CAPTURE_TEAM,                  N_ENABLE,    1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^TC^TT^BG team captured %s^BG control point"), "", NAME)
+    MULTITEAM_CENTER(ONS_CAPTURE_TEAM_NONAME,           N_ENABLE,    0, 0, "",               CPID_ONSLAUGHT,         "0 0",  _("^TC^TT^BG team captured a control point"), "", NAME)
     MSG_CENTER_NOTIF(ONS_CONTROLPOINT_SHIELDED,         N_ENABLE,    0, 0, "",               CPID_ONS_CAPSHIELD,     "0 0",  _("^BGThis control point currently cannot be captured"), "")
     MSG_CENTER_NOTIF(ONS_GENERATOR_SHIELDED,            N_ENABLE,    0, 0, "",               CPID_ONS_CAPSHIELD,     "0 0",  _("^BGThe enemy generator cannot be destroyed yet\n^F2Capture some control points to unshield it"), "")
     MULTITEAM_CENTER(ONS_NOTSHIELDED,                   N_ENABLE,    0, 0, "",               CPID_ONSLAUGHT,         "0 0",  _("^BGThe ^TCenemy^BG generator is no longer shielded!"), "", NAME)
