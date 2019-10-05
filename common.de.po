@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-10-04 04:38+0000\n"
+"PO-Revision-Date: 2019-10-04 17:55+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -281,259 +281,259 @@ msgstr "QMCMD^Sende öffentliche Nachricht an"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
-msgstr ":-) / gut gemacht"
+msgstr "QMCMD^:-) / gut gemacht"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^nice one"
-msgstr "gut gemacht"
+msgstr "QMCMD^Gut gemacht"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:784
 msgid "QMCMD^good game"
-msgstr "gutes Spiel"
+msgstr "QMCMD^Gut gespielt"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck"
-msgstr "Hallo / Viel Glück"
+msgstr "QMCMD^Hallo / Viel Glück"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "Hallo / Viel Glück und habt Spaß"
+msgstr "QMCMD^Hallo / Viel Glück und habt Spaß"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^Sende in Englisch"
+msgstr "QMCMD^Auf Englisch senden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Team chat"
-msgstr "Teamchat"
+msgstr "QMCMD^Teamchat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
-msgstr "Quad kommt bald"
+msgstr "QMCMD^Quad kommt bald"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr "freier Gegenstand %x^7 (l:%y^7)"
+msgstr "QMCMD^Freier Gegenstand %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item, icon"
-msgstr "freier Gegenstand, Icon"
+msgstr "QMCMD^Freier Gegenstand, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item (l:%l^7)"
-msgstr "Gegenstand genommen (l:%l^7)"
+msgstr "QMCMD^Gegenstand genommen (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item, icon"
-msgstr "Gegenstand genommen, Icon"
+msgstr "QMCMD^Gegenstand genommen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^negative"
-msgstr "Negativ"
+msgstr "QMCMD^Negativ"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^positive"
-msgstr "Positiv"
+msgstr "QMCMD^Positiv"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "brauche Hilfe (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "QMCMD^Brauche Hilfe (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help, icon"
-msgstr "brauche Hilfe, Icon"
+msgstr "QMCMD^Brauche Hilfe, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr "Gegner gesehen (l:%y^7)"
+msgstr "QMCMD^Gegner gesehen (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen, icon"
-msgstr "Gegner gesehen, icon"
+msgstr "QMCMD^Gegner gesehen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr "Flagge gesehen (l:%y^7)"
+msgstr "QMCMD^Flagge gesehen (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^flag seen, icon"
-msgstr "Flagge gesehen, Icon"
+msgstr "QMCMD^Flagge gesehen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "verteidigen (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "QMCMD^Verteidigend (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending, icon"
-msgstr "verteidigen, Icon"
+msgstr "QMCMD^Verteidigend, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "wandernd (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "QMCMD^Wandernd (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^roaming, icon"
-msgstr "wandernd, Icon"
+msgstr "QMCMD^Wandernd, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "angreifen (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "QMCMD^Angreifend (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking, icon"
-msgstr "angreifen, Icon"
+msgstr "QMCMD^Angreifend, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr "Flaggenträger getötet (l:%y^7)"
+msgstr "QMCMD^Flaggenträger getötet (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr "Flaggenträger getötet, Icon"
+msgstr "QMCMD^Flaggenträger getötet, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr "Flagge fallen gelassen (l:%d^7)"
+msgstr "QMCMD^Flagge weggeworfen (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^dropped flag, icon"
-msgstr "Flagge fallen gelassen, Icon"
+msgstr "QMCMD^Flagge weggeworfen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^drop weapon, icon"
-msgstr "Waffe wegwerfen, Icon"
+msgstr "QMCMD^Waffe weggeworfen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr "Waffe fallen gelassen %w^7 (l:%l^7)"
+msgstr "QMCMD^Waffe weggeworfen %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^drop flag/key, icon"
-msgstr "Flagge/Schlüssel fallen gelassen, Icon"
+msgstr "QMCMD^Flagge/Schlüssel weggeworfen, Icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr "Flagge/Schlüssel fallen gelassen %w^7 (l:%l^7)"
+msgstr "QMCMD^Flagge/Schlüssel weggeworfen %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^Send private message to"
-msgstr "Sende private Nachricht an"
+msgstr "QMCMD^Sende private Nachricht an"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Settings"
-msgstr "Einstellungen"
+msgstr "QMCMD^Einstellungen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^View/HUD settings"
-msgstr "Ansicht/HUD-Einstellungen"
+msgstr "QMCMD^Ansicht/HUD-Einstellungen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^3rd person view"
-msgstr "Dritte-Person-Ansicht"
+msgstr "QMCMD^Dritte-Person-Ansicht"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^Player models like mine"
-msgstr "Spielermodelle wie meins"
+msgstr "QMCMD^Spielermodelle wie meins"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^Names above players"
-msgstr "Namen über Spieler"
+msgstr "QMCMD^Namen über Spieler"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^Crosshair per weapon"
-msgstr "Fadenkreuz je nach Waffe"
+msgstr "QMCMD^Fadenkreuz je nach Waffe"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^FPS"
-msgstr "FPS"
+msgstr "QMCMD^FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^Net graph"
-msgstr "Netzwerkgraph"
+msgstr "QMCMD^Netzwerkgraph"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 #: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Sound settings"
-msgstr "Ton-Einstellungen"
+msgstr "QMCMD^Ton-Einstellungen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Hit sound"
-msgstr "Ton bei Treffer"
+msgstr "QMCMD^Ton bei Treffer"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Chat sound"
-msgstr "Chat-Ton"
+msgstr "QMCMD^Chat-Ton"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Spectator camera"
-msgstr "Zuschauerkamera"
+msgstr "QMCMD^Zuschauerkamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^1st person"
-msgstr "Ego-Perspektive"
+msgstr "QMCMD^Ego-Perspektive"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^3rd person around player"
-msgstr "Dritte-Person-Ansicht um Spieler"
+msgstr "QMCMD^Dritte-Person-Ansicht um Spieler"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^3rd person behind"
-msgstr "Dritte-Person-Ansicht (hinter)"
+msgstr "QMCMD^Dritte-Person-Ansicht (hinter)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Observer camera"
-msgstr "Beobachterkamera"
+msgstr "QMCMD^Beobachterkamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Increase speed"
-msgstr "Tempo erhöhen"
+msgstr "QMCMD^Tempo erhöhen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^Decrease speed"
-msgstr "Tempo verringern"
+msgstr "QMCMD^Tempo verringern"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Wall collision off"
-msgstr "Wandkollision aus"
+msgstr "QMCMD^Wandkollision aus"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^Wall collision on"
-msgstr "Wandkollision an"
+msgstr "QMCMD^Wandkollision an"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Fullscreen"
-msgstr "Vollbild"
+msgstr "QMCMD^Vollbild"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Call a vote"
-msgstr "Abstimmung starten"
+msgstr "QMCMD^Abstimmung starten"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Restart the map"
-msgstr "Karte neustarten"
+msgstr "QMCMD^Karte neustarten"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^End match"
-msgstr "Spiel beenden"
+msgstr "QMCMD^Spiel beenden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "QMCMD^Reduce match time"
-msgstr "Spielzeit verringern"
+msgstr "QMCMD^Spielzeit verringern"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Extend match time"
-msgstr "Spielzeit erhöhen"
+msgstr "QMCMD^Spielzeit erhöhen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^Shuffle teams"
-msgstr "Teams mischen"
+msgstr "QMCMD^Teams mischen"
 
 #: qcsrc/client/hud/panel/racetimer.qc:54
 #, c-format
@@ -585,11 +585,11 @@ msgstr "Anzahl an Ballbesitzer-Kills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "SCO^bckills"
-msgstr "bbkills"
+msgstr "Bbkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "SCO^bctime"
-msgstr "bbzeit"
+msgstr "Bbzeit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "Total amount of time holding the ball in Keepaway"
@@ -602,11 +602,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "SCO^caps"
-msgstr "caps"
+msgstr "Caps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "SCO^captime"
-msgstr "capzeit"
+msgstr "Capzeit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "Time of fastest capture (CTF)"
@@ -618,7 +618,7 @@ msgstr "Anzahl Tode"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^deaths"
-msgstr "tode"
+msgstr "Tode"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "Number of keys destroyed by pushing them into void"
@@ -631,7 +631,7 @@ msgstr "zerstört"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^damage"
-msgstr "schaden"
+msgstr "Schaden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "The total damage done"
@@ -639,11 +639,11 @@ msgstr "Angerichteter Gesamtschaden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^dmgtaken"
-msgstr "scherhal"
+msgstr "Scherhal"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "The total damage taken"
-msgstr "Erhaltenen Gesamtschaden"
+msgstr "Erhaltener Gesamtschaden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "Number of flag drops"
@@ -651,19 +651,19 @@ msgstr "Anzahl fallengelassener Flaggen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "SCO^drops"
-msgstr "fallen"
+msgstr "Falleng"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "Player ELO"
-msgstr "Spieler-ELO"
+msgstr "Spieler-Elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "SCO^elo"
-msgstr "elo"
+msgstr "Elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^fastest"
-msgstr "schnellste"
+msgstr "Schnellste"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "Time of fastest lap (Race/CTS)"
@@ -683,7 +683,7 @@ msgstr "Anzahl an Flaggenträgerkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^fckills"
-msgstr "fckills"
+msgstr "Ftkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "FPS"
@@ -691,7 +691,7 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^fps"
-msgstr "fps"
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "Number of kills minus suicides"
@@ -699,7 +699,7 @@ msgstr "Anzahl Kills minus Suizide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "SCO^frags"
-msgstr "frags"
+msgstr "Frags"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "Number of goals scored"
@@ -707,7 +707,7 @@ msgstr "Anzahl geschossener Tore"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "SCO^goals"
-msgstr "tore"
+msgstr "Tore"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:103
 msgid "Number of keys carrier kills"
@@ -715,11 +715,11 @@ msgstr "Anzahl an Schlüsselträgerkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:103
 msgid "SCO^kckills"
-msgstr "kckills"
+msgstr "Stkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:104
 msgid "SCO^k/d"
-msgstr "k/d"
+msgstr "K/T"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:104
 #: qcsrc/client/hud/panel/scoreboard.qc:105
@@ -729,11 +729,11 @@ msgstr "Das Kill-/Tod-Verhältnis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "SCO^kdr"
-msgstr "kdr"
+msgstr "KTV"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "SCO^kdratio"
-msgstr "kdratio"
+msgstr "KT-Verh."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "Number of kills"
@@ -741,7 +741,7 @@ msgstr "Anzahl an Kills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^kills"
-msgstr "kills"
+msgstr "Kills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "Number of laps finished (Race/CTS)"
@@ -749,7 +749,7 @@ msgstr "Anzahl gedrehter Runden (Rennen/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^laps"
-msgstr "runden"
+msgstr "Runden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "Number of lives (LMS)"
@@ -757,7 +757,7 @@ msgstr "Anzahl Leben (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^lives"
-msgstr "leben"
+msgstr "Leben"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "Number of times a key was lost"
@@ -765,7 +765,7 @@ msgstr "Wie oft ein Schlüssel verloren wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^losses"
-msgstr "verloren"
+msgstr "Verlor"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 #: qcsrc/client/hud/panel/scoreboard.qc:112
@@ -774,19 +774,19 @@ msgstr "Spielername"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^name"
-msgstr "name"
+msgstr "Name"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^nick"
-msgstr "nick"
+msgstr "Nick"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "Number of objectives destroyed"
-msgstr "Anzahl an zerstörten Zielen"
+msgstr "Anzahl an zerstörten Angriffszielen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^objectives"
-msgstr "ziele"
+msgstr "Ziele"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid ""
@@ -797,7 +797,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "SCO^pickups"
-msgstr "aufheb"
+msgstr "Aufheb"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "Ping time"
@@ -805,7 +805,7 @@ msgstr "Latenz"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "SCO^ping"
-msgstr "ping"
+msgstr "Ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "Packet loss"
@@ -813,7 +813,7 @@ msgstr "Paketverlust"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "SCO^pl"
-msgstr "pl"
+msgstr "Pv"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "Number of players pushed into void"
@@ -821,7 +821,7 @@ msgstr "Anzahl der Spieler, die in die Leere geschubst wurden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "SCO^pushes"
-msgstr "schubser"
+msgstr "Schubser"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "Player rank"
@@ -829,7 +829,7 @@ msgstr "Spielerrang"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "SCO^rank"
-msgstr "rang"
+msgstr "Rang"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "Number of flag returns"
@@ -845,7 +845,7 @@ msgstr "Anzahl Wiederbelebungen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^revivals"
-msgstr "wiederbelebungen"
+msgstr "Wiederbe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of rounds won"
@@ -853,11 +853,11 @@ msgstr "Anzahl gewonnener Runden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^rounds won"
-msgstr "gewonnene Runden"
+msgstr "Rundensiege"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^score"
-msgstr "punkte"
+msgstr "Punkte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Total score"
@@ -869,7 +869,7 @@ msgstr "Anzahl Suizide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^suicides"
-msgstr "suizide"
+msgstr "Suizide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of kills minus deaths"
@@ -877,7 +877,7 @@ msgstr "Anzahl der Kills minus der Tode"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^sum"
-msgstr "summe"
+msgstr "Summe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of domination points taken (Domination)"
@@ -885,7 +885,7 @@ msgstr "Anzahl eroberter Dominationspunkte (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^takes"
-msgstr "takes"
+msgstr "erobert"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of teamkills"
@@ -893,19 +893,19 @@ msgstr "Anzahl der Teamkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^teamkills"
-msgstr "teamkills"
+msgstr "Teamkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Number of ticks (Domination)"
-msgstr "Anzahl Ticks (Domination)"
+msgstr "Anzahl der Ticks/Zeiteinheiten (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^ticks"
-msgstr "ticks"
+msgstr "Ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^time"
-msgstr "zeit"
+msgstr "Zeit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Total time raced (Race/CTS)"
@@ -1061,7 +1061,7 @@ msgstr "Punkte"
 #: qcsrc/client/hud/panel/scoreboard.qc:1643
 #: qcsrc/client/hud/panel/scoreboard.qc:1650
 msgid "SCO^is beaten"
-msgstr "geschlagen wurde"
+msgstr "geschlagen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1641
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
@@ -1082,7 +1082,7 @@ msgstr "Geschwindigkeitspreis: %d%s ^7(%s^7)"
 #: qcsrc/client/hud/panel/scoreboard.qc:1802
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr "Rekordzeit: %d%s ^7(%s^7)"
+msgstr "Rekordtempo: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1818
 #, c-format
@@ -2171,7 +2171,7 @@ msgid ""
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert, und damit ^BG"
-"%s^BGs Rekord von ^F2%s^BG Sekunden gebrochen"
+"%s^BGs Rekord von ^F2%s^BG Sekunden geschlagen"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
@@ -2190,7 +2190,7 @@ msgid ""
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
 "^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert, konnte "
-"jedoch nicht ^BG%s^BGs Rekord von ^F2%s^BG Sekunden brechen"
+"jedoch nicht ^BG%s^BGs Rekord von ^F2%s^BG Sekunden schlagen"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
@@ -2224,8 +2224,8 @@ msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
 msgstr ""
-"^BGDie ^TC^TT^BG Flagge fiel an einen unerreichbaren Ort und ist daher aus "
-"Langeweile heimgeflogen"
+"^BGDie ^TC^TT^BG Flagge fiel an einen unerreichbaren Ort und ist daher "
+"heimgeflogen"
 
 #: qcsrc/common/notifications/all.inc:253
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
@@ -2987,12 +2987,12 @@ msgstr "^BGTeam ^TC^TT^BG hielt den Ball zu lange fest"
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^BG captured %s^BG control point"
-msgstr "^BG%s^BG hat einen Kontrollpunkt erobert: %s^BG"
+msgstr "^BG%s^BG hat Kontrollpunkt „%s^BG“ erobert"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^TC^TT^BG team %s^BG control point has been destroyed by %s"
-msgstr "^TC^TT^BGEin Kontrollpunkt vom Team %s^BG wurde von %s zerstört"
+msgstr "Team ^TC^TT^BG ihr Kontrollpunkt „%s^BG“ wurde von %s zerstört"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid "^TC^TT^BG generator has been destroyed"
@@ -3060,12 +3060,15 @@ msgstr "^BG%s^BG hat das Rennen aufgegeben"
 #: qcsrc/common/notifications/all.inc:428
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
-msgstr "^BG%s^BG konnte seinen %s%s^BG Platz nicht brechen von %s%s %s"
+msgstr ""
+"^BG%s^BG konnte den eigenen Rekord auf dem %s%s^BG Platz von %s%s %s nicht "
+"schlagen"
 
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"
-msgstr "^BG%s^BG konnte den %s%s^BG Platz von %s%s nicht brechen%s"
+msgstr ""
+"^BG%s^BG konnte den Rekord auf dem %s%s^BG Platz von %s%s %s nicht schlagen"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3080,7 +3083,8 @@ msgstr "^BG%s^BG brach %s^BGs %s%s^BG Rekord mit %s%s %s"
 #: qcsrc/common/notifications/all.inc:432
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
-msgstr "^BG%s^BG verbesserte seinen %s%s^BG Rekord mit %s%s %s"
+msgstr ""
+"^BG%s^BG verbesserte den eigenen Rekord auf dem %s%s^BG Platz mit %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
@@ -3088,8 +3092,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
 "and will be lost."
 msgstr ""
-"^BG%s^BG hat einen neuen Rekord ^F2%s^BG erziehlt, aber unglücklicherweise "
-"hat er keine UID und der Rekord wird verloren gehen."
+"^BG%s^BG hat einen neuen Rekord ^F2%s^BG erzielt, aber unglücklicherweise "
+"ist keine UID vorhanden und der Rekord wird verloren gehen."
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
@@ -3097,8 +3101,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be "
 "lost."
 msgstr ""
-"^BG%s^BG hat einen neuen Rekord mit ^F2%s^BG erziehlt, aber er ist "
-"anonymisiert und wird verloren gehen."
+"^BG%s^BG hat einen neuen Rekord mit ^F2%s^BG erzielt, aber er ist anonym und "
+"wird verloren gehen."
 
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
@@ -4115,7 +4119,7 @@ msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
 msgstr ""
-"^BGAlle Schlüssel sind in der Hand deines Teams!\n"
+"^BGDein Team hat alle Schlüssel!\n"
 "Hilf den Schlüsselträgern, sich zu treffen!"
 
 #: qcsrc/common/notifications/all.inc:716
@@ -4123,7 +4127,7 @@ msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
-"^BGAlle Schlüssel sind in der Hand von Team ^TC^TT^BG!\n"
+"^BGTeam ^TC^TT^BG hat alle Schlüssel!\n"
 "^F4SOFORT^BG eingreifen!"
 
 #: qcsrc/common/notifications/all.inc:717
@@ -4131,8 +4135,8 @@ msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Meet the other key carriers ^F4NOW^BG!"
 msgstr ""
-"^BGAlle Schlüssel sind in der Hand deines Teams!\n"
-"Triff dich ^F4SOFORT^BG mit den anderen Schlüsselträgern!"
+"^BGDein Team hat alle Schlüssel!\n"
+"Triff ^F4SOFORT^BG die anderen Schlüsselträger!"
 
 #: qcsrc/common/notifications/all.inc:718
 msgid "^F4Round will start in ^COUNT"
@@ -4202,12 +4206,12 @@ msgstr "^F2Aktive Waffe: ^F1%s"
 #: qcsrc/common/notifications/all.inc:737
 #, c-format
 msgid "^BGYou captured %s^BG control point"
-msgstr "^BGDu hast einen Kontrollpunkt erobert: %s^BG"
+msgstr "^BGDu hast Kontrollpunkt „%s^BG“ erobert"
 
 #: qcsrc/common/notifications/all.inc:738
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr "Team ^TC^TT^BG hat einen Kontrollpunkt erobert: %s^BG"
+msgstr "Team ^TC^TT^BG hat Kontrollpunkt „%s^BG“ erobert"
 
 #: qcsrc/common/notifications/all.inc:739
 msgid "^BGThis control point currently cannot be captured"
@@ -4361,11 +4365,11 @@ msgstr "^F2Du hast jetzt eine Superwaffe"
 
 #: qcsrc/common/notifications/all.inc:778
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
-msgstr "^K1Dein Team wird zu ^TC^TT^K1 geändert in ^COUNT"
+msgstr "^K1Teamwechsel zu ^TC^TT^K1 in ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:779
 msgid "^K1Changing team in ^COUNT"
-msgstr "^K1Du wechselst das Team in ^COUNT"
+msgstr "^K1Teamwechsel in ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:780
 msgid "^K1Spectating in ^COUNT"
@@ -4838,15 +4842,15 @@ msgstr "Keine Angabe"
 
 #: qcsrc/common/util.qc:1452
 msgid "<KEY NOT FOUND>"
-msgstr "<KEY NOT FOUND>"
+msgstr "<TASTE NICHT GEFUNDEN>"
 
 #: qcsrc/common/util.qc:1453
 msgid "<UNKNOWN KEYNUM>"
-msgstr "<UNKNOWN KEYNUM>"
+msgstr "<UNBEKANNTE TASTENNR.>"
 
 #: qcsrc/common/util.qc:1458
 msgid "TAB"
-msgstr "TABULATOR"
+msgstr "TAB"
 
 #: qcsrc/common/util.qc:1459 qcsrc/common/util.qc:1530
 #, c-format
@@ -4868,22 +4872,22 @@ msgstr "RÜCKTASTE"
 #: qcsrc/common/util.qc:1464 qcsrc/common/util.qc:1521
 #, c-format
 msgid "UPARROW"
-msgstr "PFEIL-NACHOBEN"
+msgstr "PFEIL_RAUF"
 
 #: qcsrc/common/util.qc:1465 qcsrc/common/util.qc:1516
 #, c-format
 msgid "DOWNARROW"
-msgstr "PFEIL-NACHUNTEN"
+msgstr "PFEIL_RUNTER"
 
 #: qcsrc/common/util.qc:1466 qcsrc/common/util.qc:1518
 #, c-format
 msgid "LEFTARROW"
-msgstr "PFEIL-LINKS"
+msgstr "PFEIL_LINKS"
 
 #: qcsrc/common/util.qc:1467 qcsrc/common/util.qc:1519
 #, c-format
 msgid "RIGHTARROW"
-msgstr "PFEIL-RECHTS"
+msgstr "PFEIL_RECHTS"
 
 #: qcsrc/common/util.qc:1469
 msgid "ALT"
@@ -4895,7 +4899,7 @@ msgstr "STRG"
 
 #: qcsrc/common/util.qc:1471
 msgid "SHIFT"
-msgstr "UMSCHALTTASTE"
+msgstr "UMSCHALT"
 
 #: qcsrc/common/util.qc:1473 qcsrc/common/util.qc:1514
 #, c-format
@@ -4910,12 +4914,12 @@ msgstr "ENTF"
 #: qcsrc/common/util.qc:1475 qcsrc/common/util.qc:1517
 #, c-format
 msgid "PGDN"
-msgstr "BILD-AB"
+msgstr "BILD_AB"
 
 #: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1522
 #, c-format
 msgid "PGUP"
-msgstr "BILD-AUF"
+msgstr "BILD_AUF"
 
 #: qcsrc/common/util.qc:1477 qcsrc/common/util.qc:1520
 #, c-format
@@ -4933,7 +4937,7 @@ msgstr "PAUSE"
 
 #: qcsrc/common/util.qc:1482
 msgid "NUMLOCK"
-msgstr "NUM"
+msgstr "NUMLOCK"
 
 #: qcsrc/common/util.qc:1483
 msgid "CAPSLOCK"
@@ -4975,7 +4979,7 @@ msgstr "F%d"
 #: qcsrc/common/util.qc:1509
 #, c-format
 msgid "KP_%d"
-msgstr "KP_%d"
+msgstr "ZB_%d"
 
 #: qcsrc/common/util.qc:1514 qcsrc/common/util.qc:1515
 #: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
@@ -4988,7 +4992,7 @@ msgstr "KP_%d"
 #: qcsrc/common/util.qc:1530 qcsrc/common/util.qc:1531
 #, c-format
 msgid "KP_%s"
-msgstr "KP_%s"
+msgstr "ZB_%s"
 
 #: qcsrc/common/util.qc:1523
 #, c-format
@@ -5023,7 +5027,7 @@ msgstr "PLUS"
 #: qcsrc/common/util.qc:1531
 #, c-format
 msgid "EQUALS"
-msgstr "GLEICHHEITSZEICHEN"
+msgstr "GLEICH"
 
 #: qcsrc/common/util.qc:1536
 msgid "PRINTSCREEN"
@@ -5040,7 +5044,7 @@ msgstr "MRADHOCH"
 
 #: qcsrc/common/util.qc:1542
 msgid "MWHEELDOWN"
-msgstr "MRADHERAB"
+msgstr "MRADRUNTER"
 
 #: qcsrc/common/util.qc:1545
 #, c-format
@@ -5074,7 +5078,7 @@ msgstr "X360_%s"
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "DPAD_DOWN"
-msgstr "STEUERKREUZ_HERAB"
+msgstr "STEUERKREUZ_RUNTER"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
@@ -5099,72 +5103,72 @@ msgstr "ZURÜCK"
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "LEFT_THUMB"
-msgstr "ANALOGSTICK_LINKS"
+msgstr "LINKER_ANALOGSTICK"
 
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr "ANALOGSTICK_RECHTS"
+msgstr "RECHTER_ANALOGSTICK"
 
 #: qcsrc/common/util.qc:1563
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr "SCHULTERTASTE_LINKS"
+msgstr "LINKE_SCHULTERTASTE"
 
 #: qcsrc/common/util.qc:1564
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr "SCHULTERTASTE_RECHTS"
+msgstr "RECHTE_SCHULTERTASTE"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr "TRIGGERTASTE_LINKS"
+msgstr "LINKER_TRIGGER"
 
 #: qcsrc/common/util.qc:1566
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr "TRIGGERTASTE_RECHTS"
+msgstr "RECHTER_TRIGGER"
 
 #: qcsrc/common/util.qc:1567
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr "ANALOGSTICK_LINKS_HOCH"
+msgstr "LINKER_ANALOGSTICK_HOCH"
 
 #: qcsrc/common/util.qc:1568
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr "ANALOGSTICK_LINKS_HERAB"
+msgstr "LINKER_ANALOGSTICK_RUNTER"
 
 #: qcsrc/common/util.qc:1569
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr "ANALOGSTICK_LINKS_LINKS"
+msgstr "LINKER_ANALOGSTICK_LINKS"
 
 #: qcsrc/common/util.qc:1570
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr "ANALOGSTICK_LINKS_RECHTS"
+msgstr "LINKER_ANALOGSTICK_RECHTS"
 
 #: qcsrc/common/util.qc:1571
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr "ANALOGSTICK_RECHTS_HOCH"
+msgstr "RECHTER_ANALOGSTICK_HOCH"
 
 #: qcsrc/common/util.qc:1572
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr "ANALOGSTICK_RECHTS_HERAB"
+msgstr "RECHTER_ANALOGSTICK_RUNTER"
 
 #: qcsrc/common/util.qc:1573
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr "ANALOGSTICK_RECHTS_LINKS"
+msgstr "RECHTER_ANALOGSTICK_LINKS"
 
 #: qcsrc/common/util.qc:1574
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr "ANALOGSTICK_RECHTS_RECHTS"
+msgstr "RECHTER_ANALOGSTICK_RECHTS"
 
 #: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
 #: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
@@ -5180,7 +5184,7 @@ msgstr "HOCH"
 #: qcsrc/common/util.qc:1585
 #, c-format
 msgid "DOWN"
-msgstr "HERAB"
+msgstr "RUNTER"
 
 #: qcsrc/common/util.qc:1586
 #, c-format
@@ -8309,7 +8313,7 @@ msgstr "Punktetafel"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:48
 msgid "Fading speed:"
-msgstr "Ausblendegeschwindigkeit:"
+msgstr "Ausblendgeschwindigkeit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:51
 msgid "Enable rows / columns highlighting"
