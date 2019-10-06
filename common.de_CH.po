@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-10-04 17:55+0000\n"
+"PO-Revision-Date: 2019-10-06 00:10+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -1718,7 +1718,7 @@ msgstr "KI-Spieler entfernen"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr "Drücken-Ziehen"
+msgstr "Schiebezieh"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
@@ -1748,11 +1748,11 @@ msgstr "Solitär"
 
 #: qcsrc/common/minigames/minigame/ps.qc:414
 msgid "All pieces cleared!"
-msgstr "Alle Teile abgeräumt!"
+msgstr "Alle Figuren abgeräumt!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
-msgstr "Übrige Teile:"
+msgstr "Verbleibende Figuren:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:481
 #, c-format
@@ -1769,7 +1769,7 @@ msgstr "Gut gemacht, du gewinnst!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:497
 msgid "Jump a piece over another to capture it"
-msgstr "Spring mit einer Spielfigur über einer anderen, um sie zu stehlen"
+msgstr "Spring mit einer Spielfigur über einer anderen, um sie zu schnappen"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
@@ -7512,7 +7512,7 @@ msgstr "Beweglich"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:68
 msgid "Physical"
-msgstr "Physik-Eigenschaften"
+msgstr "Physisch"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:70
 msgid "Set scale:"
@@ -7528,15 +7528,15 @@ msgstr "* beanspruchen"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:78
 msgid "* object info"
-msgstr "* Objekteigeschaften"
+msgstr "* Objektinfo"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
 msgid "* mesh info"
-msgstr "* Modelleigenschaften"
+msgstr "* Modellinfo"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:80
 msgid "* attachment info"
-msgstr "* Anhängerkupplung"
+msgstr "* Anhangsinfo"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "Show help"
@@ -8396,7 +8396,7 @@ msgstr "Namen über Spielern anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Max distance:"
-msgstr "Maximale Entferung:"
+msgstr "Max. Entfernung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:142
 msgid "Decolorize:"
