@@ -563,7 +563,7 @@ float CheatCommand(entity this, int argc)
 					effectnum = 0;
 					for(entity ent = NULL; (ent = find(ent, classname, "dragbox_box")); )
 					{
-						if(e.cnt <= 0 && ent.cnt == 0 || e.cnt == ent.cnt)
+						if((e.cnt <= 0 && ent.cnt == 0) || e.cnt == ent.cnt)
 						{
 							start = start + ent.origin;
 							++effectnum;

@@ -273,7 +273,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 	if (!this.goalcurrent || IS_PLAYER(this.goalcurrent))
 		return;
 
-	if((this.aistatus & AI_STATUS_RUNNING) && vdist(this.velocity, <, autocvar_sv_maxspeed * 0.75)
+	if(((this.aistatus & AI_STATUS_RUNNING) && vdist(this.velocity, <, autocvar_sv_maxspeed * 0.75))
 		|| (this.aistatus & AI_STATUS_DANGER_AHEAD))
 	{
 		this.aistatus &= ~AI_STATUS_RUNNING;
