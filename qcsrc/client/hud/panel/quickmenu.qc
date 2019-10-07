@@ -839,8 +839,7 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "+use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "-use")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision")), "toggle cl_clippedspectating")
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 		}
 
