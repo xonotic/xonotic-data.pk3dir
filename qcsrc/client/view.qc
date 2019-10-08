@@ -1794,7 +1794,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	LABEL(skip_eventchase_death);
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
-	if(autocvar_cl_lockview || (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened())))
+	if(autocvar_cl_lockview || (!autocvar_hud_cursormode && ((autocvar__hud_configure && spectatee_status <= 0) || intermission > 1 || QuickMenu_IsOpened())))
 	{
 		setproperty(VF_ORIGIN, freeze_org);
 		setproperty(VF_ANGLES, freeze_ang);
