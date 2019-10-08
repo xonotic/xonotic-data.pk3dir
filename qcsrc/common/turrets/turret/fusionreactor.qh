@@ -10,4 +10,12 @@ CLASS(FusionReactor, Turret)
 /* netname    */ ATTRIB(FusionReactor, netname, string, "fusreac");
 /* fullname   */ ATTRIB(FusionReactor, turret_name, string, _("Fusion Reactor"));
 ENDCLASS(FusionReactor)
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		TR_PROPS_COMMON(P, class, prefix) \
+	END()
+	TR_PROPS(X, FusionReactor, fusreac)
+#undef X
+
 REGISTER_TURRET(FUSIONREACTOR, NEW(FusionReactor));

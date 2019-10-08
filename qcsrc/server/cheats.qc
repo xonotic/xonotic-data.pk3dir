@@ -95,8 +95,7 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 }
 
 #define BEGIN_CHEAT_FUNCTION() \
-	float cheating, attempting; \
-	cheating = 0; attempting = 0
+	float cheating = 0, attempting = 0
 #define DID_CHEAT() \
 	++cheating
 #define ADD_CHEATS(e,n) \
@@ -153,15 +152,17 @@ float CheatImpulse(entity this, int imp)
 			this.personal.origin = this.origin;
 			this.personal.v_angle = this.v_angle;
 			this.personal.velocity = this.velocity;
-			SetResourceAmount(this.personal, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS));
-			SetResourceAmount(this.personal, RESOURCE_BULLETS, GetResourceAmount(this, RESOURCE_BULLETS));
-			SetResourceAmount(this.personal, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS));
-			SetResourceAmount(this.personal, RESOURCE_PLASMA, GetResourceAmount(this, RESOURCE_PLASMA));
-			SetResourceAmount(this.personal, RESOURCE_SHELLS, GetResourceAmount(this, RESOURCE_SHELLS));
-			SetResourceAmount(this.personal, RESOURCE_FUEL, GetResourceAmount(this, RESOURCE_FUEL));
-			SetResourceAmount(this.personal, RESOURCE_HEALTH, max(1, GetResourceAmount(this, RESOURCE_HEALTH)));
-			SetResourceAmount(this.personal, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR));
+			SetResource(this.personal, RES_ROCKETS, GetResource(this, RES_ROCKETS));
+			SetResource(this.personal, RES_BULLETS, GetResource(this, RES_BULLETS));
+			SetResource(this.personal, RES_CELLS, GetResource(this, RES_CELLS));
+			SetResource(this.personal, RES_PLASMA, GetResource(this, RES_PLASMA));
+			SetResource(this.personal, RES_SHELLS, GetResource(this, RES_SHELLS));
+			SetResource(this.personal, RES_FUEL, GetResource(this, RES_FUEL));
+			SetResource(this.personal, RES_HEALTH, max(1, GetResource(this, RES_HEALTH)));
+			SetResource(this.personal, RES_ARMOR, GetResource(this, RES_ARMOR));
 			STAT(WEAPONS, this.personal) = STAT(WEAPONS, this);
+			STAT(BUFFS, this.personal) = STAT(BUFFS, this);
+			STAT(BUFF_TIME, this.personal) = STAT(BUFF_TIME, this);
 			this.personal.items = this.items;
 			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
 			this.personal.pauserothealth_finished = this.pauserothealth_finished;
@@ -212,15 +213,17 @@ float CheatImpulse(entity this, int imp)
 					MUTATOR_CALLHOOK(AbortSpeedrun, this);
 				}
 
-				SetResourceAmount(this, RESOURCE_ROCKETS, GetResourceAmount(this.personal, RESOURCE_ROCKETS));
-				SetResourceAmount(this, RESOURCE_BULLETS, GetResourceAmount(this.personal, RESOURCE_BULLETS));
-				SetResourceAmount(this, RESOURCE_CELLS, GetResourceAmount(this.personal, RESOURCE_CELLS));
-				SetResourceAmount(this, RESOURCE_PLASMA, GetResourceAmount(this.personal, RESOURCE_PLASMA));
-				SetResourceAmount(this, RESOURCE_SHELLS, GetResourceAmount(this.personal, RESOURCE_SHELLS));
-				SetResourceAmount(this, RESOURCE_FUEL, GetResourceAmount(this.personal, RESOURCE_FUEL));
-				SetResourceAmount(this, RESOURCE_HEALTH, GetResourceAmount(this.personal, RESOURCE_HEALTH));
-				SetResourceAmount(this, RESOURCE_ARMOR, GetResourceAmount(this.personal, RESOURCE_ARMOR));
+				SetResource(this, RES_ROCKETS, GetResource(this.personal, RES_ROCKETS));
+				SetResource(this, RES_BULLETS, GetResource(this.personal, RES_BULLETS));
+				SetResource(this, RES_CELLS, GetResource(this.personal, RES_CELLS));
+				SetResource(this, RES_PLASMA, GetResource(this.personal, RES_PLASMA));
+				SetResource(this, RES_SHELLS, GetResource(this.personal, RES_SHELLS));
+				SetResource(this, RES_FUEL, GetResource(this.personal, RES_FUEL));
+				SetResource(this, RES_HEALTH, GetResource(this.personal, RES_HEALTH));
+				SetResource(this, RES_ARMOR, GetResource(this.personal, RES_ARMOR));
 				STAT(WEAPONS, this) = STAT(WEAPONS, this.personal);
+				STAT(BUFFS, this) = STAT(BUFFS, this.personal);
+				STAT(BUFF_TIME, this) = STAT(BUFF_TIME, this.personal);
 				this.items = this.personal.items;
 				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
 				this.pauserothealth_finished = time + this.personal.pauserothealth_finished - this.personal.teleport_time;
@@ -356,7 +359,7 @@ float CheatCommand(entity this, int argc)
 					entity e = spawn();
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
-					SetResourceAmountExplicit(e, RESOURCE_HEALTH, 1000);
+					SetResourceExplicit(e, RES_HEALTH, 1000);
 					setorigin(e, trace_endpos);
 					e.effects = EF_NOMODELFLAGS;
 					if(f == 1)

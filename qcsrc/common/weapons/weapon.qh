@@ -45,7 +45,7 @@ CLASS(Weapon, Object)
     /** control what happens when this weapon is spawned */
     METHOD(Weapon, m_spawnfunc_hookreplace, Weapon(Weapon this, entity e)) { return this; }
     /** M: ammotype  : main ammo type */
-    ATTRIB(Weapon, ammo_type, int, RESOURCE_NONE);
+    ATTRIB(Weapon, ammo_type, int, RES_NONE);
     /** M: impulse   : weapon impulse */
     ATTRIB(Weapon, impulse, int, -1);
     /** M: flags     : WEPSPAWNFLAG_... combined */
@@ -99,7 +99,7 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_playerdeath, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) logic to run when weapon is lost */
     METHOD(Weapon, wr_gonethink, void(Weapon this, entity actor, .entity weaponentity)) {}
-    /** (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
+    /** (SERVER) dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
     METHOD(Weapon, wr_config, void(Weapon this)) {}
     /** (BOTH) weapon specific zoom reticle */
     METHOD(Weapon, wr_zoom, bool(Weapon this, entity actor)) {
@@ -110,7 +110,7 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_zoomdir, bool(Weapon this)) {return false;}
     /** (CLIENT) weapon specific view model */
     METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
-    /** (CLIENT) weapon specific glow */
+    /** (BOTH) weapon specific glow */
     METHOD(Weapon, wr_glow, vector(Weapon this, entity actor, entity wepent)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
     METHOD(Weapon, wr_drop, void(Weapon this, entity actor, .entity weaponentity)) {}
@@ -197,6 +197,9 @@ const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing
 const int WEP_FLAG_DUALWIELD      =  BIT(11); // weapon can be dual wielded
 const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
 const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
+const int WEP_FLAG_BLEED          =  BIT(14); // weapon pierces and causes bleeding (used for damage effects)
+const int WEP_FLAG_NOTRUEAIM      =  BIT(15); // weapon doesn't aim directly at targets
+const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // marked as a special attack (not a true weapon), hidden from most weapon lists
 
 // variables:
 string weaponorder_byid;

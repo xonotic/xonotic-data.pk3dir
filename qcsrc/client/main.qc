@@ -143,6 +143,8 @@ void CSQC_Init()
 	registercvar("cl_weapon_switch_reload", "1");
 	registercvar("cl_weapon_switch_fallback_to_impulse", "1");
 
+	registercvar("cl_allow_uidranking", "1");
+
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
 
@@ -226,10 +228,12 @@ void Shutdown()
 
 	localcmd("\ncl_hook_shutdown\n");
 
-	localcmd("\n-button14\n");
+	localcmd("\n-button12\n");
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
+
+	ReplicateVars(true); // destroy
 }
 
 .float has_team;
@@ -308,7 +312,7 @@ bool SetTeam(entity o, int Team)
 
 void Playerchecker_Think(entity this)
 {
-    int i;
+	int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)
 	{
@@ -801,7 +805,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(entity this, bool isnew)
 {
-	this.sourceLoc = __FILE__ ":" STR(__LINE__);
+	this.sourceLoc = __FILE__":"STR(__LINE__);
 	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
@@ -1121,17 +1125,15 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			break;
 
 		case RACE_NET_PENALTY_RACE:
-			race_penaltyeventtime = time;
-			race_penaltytime = ReadShort();
-			//race_penaltyaccumulator += race_penaltytime;
-			strcpy(race_penaltyreason, ReadString());
-			break;
-
 		case RACE_NET_PENALTY_QUALIFYING:
 			race_penaltyeventtime = time;
 			race_penaltytime = ReadShort();
-			race_penaltyaccumulator += race_penaltytime;
-			strcpy(race_penaltyreason, ReadString());
+			string reason = ReadString();
+			if (reason == "missing a checkpoint")
+				reason = _("missing a checkpoint");
+			strcpy(race_penaltyreason, reason);
+			if (b == RACE_NET_PENALTY_QUALIFYING)
+				race_penaltyaccumulator += race_penaltytime;
 			break;
 
 		case RACE_NET_SERVER_RECORD:
@@ -1152,12 +1154,12 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			break;
 		case RACE_NET_SERVER_RANKINGS:
 			float prevpos, del;
-            int pos = ReadShort();
+			int pos = ReadShort();
 			prevpos = ReadShort();
 			del = ReadShort();
 
 			// move other rankings out of the way
-            int i;
+			int i;
 			if (prevpos) {
 				int m = min(prevpos, RANKINGS_DISPLAY_CNT);
 				for (i=m-1; i>pos-1; --i) {
@@ -1260,6 +1262,8 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 				string key = keynumtostring(k);
 				if(!joy_active && substring(key, 0, 3) == "JOY")
 					continue;
+
+				key = translate_key(key);
 
 				if (keys == "")
 					keys = key;

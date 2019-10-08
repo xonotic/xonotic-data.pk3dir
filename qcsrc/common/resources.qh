@@ -6,19 +6,19 @@
 /// \copyright GNU GPLv2 or any later version.
 
 /// \brief Unconditional maximum amount of resources the entity can have.
-const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
-const int RESOURCE_LIMIT_NONE = -1;
+const int RES_AMOUNT_HARD_LIMIT = 999;
+const int RES_LIMIT_NONE = -1;
 
 /// \brief Describes the available resource types.
 enum
 {
-	RESOURCE_NONE, ///< Indicates the lack of resource. Use with caution.
-	RESOURCE_HEALTH, ///< Health.
-	RESOURCE_ARMOR, ///< Armor.
-	RESOURCE_SHELLS, ///< Shells (used by shotgun).
-	RESOURCE_BULLETS, ///< Bullets (used by machinegun, rifle, HMG)
-	RESOURCE_ROCKETS, ///< Rockets (used by mortar, hagar, devastator, etc).
-	RESOURCE_CELLS, ///< Cells (used by electro, crylink, vortex, etc)
-	RESOURCE_PLASMA, ///< Plasma (unused).
-	RESOURCE_FUEL ///< Fuel (used by jetpack).
+	RES_NONE, ///< Indicates the lack of resource. Use with caution.
+	RES_HEALTH, ///< Health.
+	RES_ARMOR, ///< Armor.
+	RES_SHELLS, ///< Shells (used by shotgun).
+	RES_BULLETS, ///< Bullets (used by machinegun, rifle, HMG)
+	RES_ROCKETS, ///< Rockets (used by mortar, hagar, devastator, etc).
+	RES_CELLS, ///< Cells (used by electro, crylink, vortex, etc)
+	RES_PLASMA, ///< Plasma (unused).
+	RES_FUEL ///< Fuel (used by jetpack).
 };

@@ -134,6 +134,8 @@ Weapon Weapons_fromstr(string s)
 }
 
 
+#ifdef GAMEQC
+
 // legacy w_prop mappings
 #define X(fld, T) .T fld; .T wepvar_##fld = fld;
 X(switchdelay_drop, float)
@@ -144,11 +146,13 @@ X(weaponstart, float)
 X(weaponthrowable, float)
 #ifdef SVQC
 X(reload_ammo, float)
-.float reloading_ammo = reload_ammo;
+const .float reloading_ammo = reload_ammo;
 X(reload_time, float)
-.float reloading_time = reload_time;
+const .float reloading_time = reload_time;
 #endif
 #undef X
+
+#endif
 
 
 
@@ -167,12 +171,17 @@ X(reload_time, float)
     #define W_PROP_BOTH(class, fld, T, wepname) \
             W_PROP_PRI(class, fld, T, wepname) \
             W_PROP_SEC(class, fld, T, wepname)
-    #define W_PROP_BEGIN(class)
-        #define _W_PROP(class, fld, T, wepname) \
-            /* static */ T _W_PROP_CVAR(wepname, fld); \
-            ATTRIB(class, wepvar_##fld, T, _W_PROP_CVAR(wepname, fld));
-        #define _W_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
-    #define W_PROP_END()
+	#define W_PROP_BEGIN(class)
+		#ifdef GAMEQC
+			#define _W_PROP(class, fld, T, wepname) \
+				/* static */ T _W_PROP_CVAR(wepname, fld); \
+				ATTRIB(class, wepvar_##fld, T, _W_PROP_CVAR(wepname, fld));
+			#define _W_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
+		#else
+			#define _W_PROP(class, fld, T, wepname)
+			#define _W_PROP_CVAR(wepname, fld)
+		#endif
+	#define W_PROP_END()
 
 
 
@@ -183,13 +192,15 @@ X(reload_time, float)
     #define W_CONFIG_BOTH(class, fld, T, wepname) \
             W_CONFIG_PRI(class, fld, T, wepname) \
             W_CONFIG_SEC(class, fld, T, wepname)
-    #define W_CONFIG_BEGIN(class) METHOD(class, wr_config, void(class this)) {
-        #ifdef SVQC
-            #define _W_CONFIG(class, fld, T, wepname) if (#wepname == this.netname) WEP_CONFIG_WRITE_CVARS(wepname, fld, T);
-        #else
-            #define _W_CONFIG(class, fld, T, wepname)
-        #endif
-    #define W_CONFIG_END() }
+	#ifdef SVQC
+		#define W_CONFIG_BEGIN(class) METHOD(class, wr_config, void(class this)) {
+			#define _W_CONFIG(class, fld, T, wepname) if (#wepname == this.netname) WEP_CONFIG_WRITE_CVARS(wepname, fld, T);
+		#define W_CONFIG_END() }
+	#else
+		#define W_CONFIG_BEGIN(class)
+			#define _W_CONFIG(class, fld, T, wepname)
+		#define W_CONFIG_END()
+	#endif
 
 
     #define W_UPDATE(class, wepname, fld, T, m)     W_UPDATE_##m(class, fld, T, wepname)
@@ -199,27 +210,33 @@ X(reload_time, float)
     #define W_UPDATE_BOTH(class, fld, T, wepname) \
             W_UPDATE_PRI(class, fld, T, wepname) \
             W_UPDATE_SEC(class, fld, T, wepname)
-    .entity baseline, baseline_target;
-    #define W_UPDATE_BEGIN(class) \
-        METHOD(class, wr_update, void(class this)) \
-        { \
-            noref entity b = this.baseline; \
-            if (!b) \
-            { \
-                b = this.baseline = new_pure(baseline); \
-                b.baseline_target = this; \
-            }
-        #ifdef SVQC
-            #define _W_UPDATE(class, fld, T, wepname) \
-                { \
-                    T it = _W_PROP_CVAR(wepname, fld); \
-                    b.wepvar_##fld = this.wepvar_##fld; \
-                    this.wepvar_##fld = it; \
-                }
-        #else
-            #define _W_UPDATE(class, fld, T, wepname)
-        #endif
-    #define W_UPDATE_END() }
+	#ifdef GAMEQC
+		.entity baseline, baseline_target;
+		#define W_UPDATE_BEGIN(class) \
+			METHOD(class, wr_update, void(class this)) \
+			{ \
+				noref entity b = this.baseline; \
+				if (!b) \
+				{ \
+					b = this.baseline = new_pure(baseline); \
+					b.baseline_target = this; \
+				}
+			#ifdef SVQC
+				#define _W_UPDATE(class, fld, T, wepname) \
+					{ \
+						T it = _W_PROP_CVAR(wepname, fld); \
+						b.wepvar_##fld = this.wepvar_##fld; \
+						this.wepvar_##fld = it; \
+					}
+			#else
+				#define _W_UPDATE(class, fld, T, wepname)
+			#endif
+		#define W_UPDATE_END() }
+	#else
+		#define W_UPDATE_BEGIN(class)
+			#define _W_UPDATE(class, fld, T, wepname)
+		#define W_UPDATE_END()
+	#endif
 
 
     #define W_NET(class, wepname, fld, T, m)     W_NET_##m(class, fld, T, wepname)
@@ -229,8 +246,8 @@ X(reload_time, float)
     #define W_NET_BOTH(class, fld, T, wepname) \
             W_NET_PRI(class, fld, T, wepname) \
             W_NET_SEC(class, fld, T, wepname)
-    REGISTER_NET_TEMP(WeaponUpdate)
     #if defined(CSQC)
+        REGISTER_NET_TEMP(WeaponUpdate)
         #define W_NET_BEGIN(class) METHOD(class, wr_net, void(class this, int i)) { int n = 0;
             #define _W_NET(class, fld, T, wepname) \
             { \
@@ -248,12 +265,13 @@ X(reload_time, float)
             }
         #define W_NET_END() }
     #elif defined(SVQC)
+        REGISTER_NET_TEMP(WeaponUpdate)
         #define W_NET_BEGIN(class) \
             METHOD(class, wr_net, void(class this, int chan)) \
             { \
                 bool commit = false; \
                 int i = 0;
-    #define _W_NET(class, fld, T, wepname) \
+            #define _W_NET(class, fld, T, wepname) \
                 { \
                     ++i; \
                     T it = this.wepvar_##fld; \
@@ -263,9 +281,7 @@ X(reload_time, float)
                         WriteByte(chan, i); Write_##T(chan, it); \
                     } \
                 }
-    #define W_NET_END() \
-                if (commit) WriteByte(chan, 0); \
-            }
+        #define W_NET_END() if (commit) WriteByte(chan, 0); }
     #else
         #define W_NET_BEGIN(class)
             #define _W_NET(class, fld, T, wepname)
@@ -303,7 +319,7 @@ STATIC_INIT(register_weapons_done)
     FOREACH(Weapons, true, {
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
-        if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
+        if (it.spawnflags & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
         if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)
@@ -367,6 +383,13 @@ ENUMCLASS_END(WFRAME)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
+
+#ifdef CSQC
+bool cvar_cl_accuracy_data_share;
+REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
+bool cvar_cl_accuracy_data_receive;
+REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
+#endif
 
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);

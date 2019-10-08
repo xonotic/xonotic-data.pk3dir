@@ -7,6 +7,7 @@
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
+#include <common/mapinfo.qh>
 #include "../common/mapobjects/subs.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
 #include "../common/util.qh"
@@ -118,9 +119,10 @@ void relocate_spawnpoint(entity this)
     if (autocvar_r_showbboxes)
     {
         // show where spawnpoints point at too
-        makevectors(this.angles);
+        vector forward, right, up;
+        MAKE_VECTORS(this.angles, forward, right, up);
         entity e = new(info_player_foo);
-        setorigin(e, this.origin + v_forward * 24);
+        setorigin(e, this.origin + forward * 24);
         setsize(e, '-8 -8 -8', '8 8 8');
         e.solid = SOLID_TRIGGER;
     }
@@ -262,7 +264,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 			}
 		}
 
-		if(!found)
+		if(!found && !g_cts)
 		{
 			LOG_TRACE("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target);
 			return '-1 0 0';
