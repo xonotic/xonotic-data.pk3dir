@@ -19,22 +19,25 @@ REPLICATE(cvar_cl_casings, bool, "cl_casings");
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
-	if (!(CS(casingowner).cvar_cl_casings))
-		return;
+	entity wep = casingowner.(weaponentity);
+	vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
-    entity wep = casingowner.(weaponentity);
-    vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
+	FOREACH_CLIENT(true, {
+		if (!(CS(it).cvar_cl_casings))
+			continue;
 
-    if (!sound_allowed(MSG_BROADCAST, casingowner))
-        casingtype |= 0x80;
+		msg_entity = it;
+		if (!sound_allowed(MSG_ONE, it))
+			casingtype |= 0x80; // silent
 
-    WriteHeader(MSG_ALL, casings);
-    WriteByte(MSG_ALL, casingtype);
-    WriteVector(MSG_ALL, org);
-    WriteShort(MSG_ALL, compressShortVector(vel)); // actually compressed velocity
-    WriteByte(MSG_ALL, ang.x * 256 / 360);
-    WriteByte(MSG_ALL, ang.y * 256 / 360);
-    WriteByte(MSG_ALL, ang.z * 256 / 360);
+		WriteHeader(MSG_ONE, casings);
+		WriteByte(MSG_ONE, casingtype);
+		WriteVector(MSG_ONE, org);
+		WriteShort(MSG_ONE, compressShortVector(vel)); // actually compressed velocity
+		WriteByte(MSG_ONE, ang.x * 256 / 360);
+		WriteByte(MSG_ONE, ang.y * 256 / 360);
+		WriteByte(MSG_ONE, ang.z * 256 / 360);
+	});
 }
 #endif
 
