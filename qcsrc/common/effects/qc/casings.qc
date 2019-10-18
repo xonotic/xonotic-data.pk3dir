@@ -156,6 +156,7 @@ NET_HANDLE(casings, bool isNew)
     casing.velocity = casing.velocity + 2 * prandomvec();
     casing.avelocity = '0 250 0' + 100 * prandomvec();
     set_movetype(casing, MOVETYPE_BOUNCE);
+    casing.bouncefactor = 0.25;
     settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;
