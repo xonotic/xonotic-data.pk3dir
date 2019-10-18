@@ -19,6 +19,7 @@
 # divVerent <divVerent@xonotic.org>, 2011
 # Sless <sless@gmx.net>, 2014
 # Sless <sless@gmx.net>, 2014
+# TheTrueBrot <noah.schluessel@gmail.com>, 2015
 # Wuzzy <almikes@aol.com>, 2016
 # Yepoleb <huberg18@gmail.com>, 2013
 msgid ""
