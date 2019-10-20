@@ -656,6 +656,9 @@ float TrueAimCheck(entity wepent)
 
 	traceline(traceorigin, traceorigin + view_forward * max_shot_distance, mv, ta);
 	trueaimpoint = trace_endpos;
+	// move trueaimpoint a little bit forward to make the final tracebox reliable
+	// since it sometimes doesn't reach a teammate by a hair
+	trueaimpoint += view_forward;
 
 	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
@@ -672,10 +675,7 @@ float TrueAimCheck(entity wepent)
 	tracebox(w_shotorg, mi, ma, w_shotorg + view_forward * (vecs.x + nudge), MOVE_NORMAL, ta); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
 	w_shotorg = trace_endpos - view_forward * nudge;
 
-	if (mi == '0 0 0')
-		traceline(w_shotorg, trueaimpoint, MOVE_NORMAL, ta);
-	else
-		tracebox(w_shotorg, mi, ma, trueaimpoint, MOVE_NORMAL, ta);
+	tracebox(w_shotorg, mi, ma, trueaimpoint, MOVE_NORMAL, ta);
 	shottype = EnemyHitCheck();
 	if(shottype != SHOTTYPE_HITWORLD)
 		return shottype;
