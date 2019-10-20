@@ -672,7 +672,10 @@ float TrueAimCheck(entity wepent)
 	tracebox(w_shotorg, mi, ma, w_shotorg + view_forward * (vecs.x + nudge), MOVE_NORMAL, ta); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
 	w_shotorg = trace_endpos - view_forward * nudge;
 
-	tracebox(w_shotorg, mi, ma, trueaimpoint, MOVE_NORMAL, ta);
+	if (mi == '0 0 0')
+		traceline(w_shotorg, trueaimpoint, MOVE_NORMAL, ta);
+	else
+		tracebox(w_shotorg, mi, ma, trueaimpoint, MOVE_NORMAL, ta);
 	shottype = EnemyHitCheck();
 	if(shottype != SHOTTYPE_HITWORLD)
 		return shottype;
