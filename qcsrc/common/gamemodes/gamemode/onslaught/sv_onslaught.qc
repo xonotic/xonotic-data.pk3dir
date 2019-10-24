@@ -411,7 +411,10 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	{
 		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
+		if (this.owner.message != "")
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
+		else
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED_NONAME), attacker.netname);
 
 		GameRules_scoring_add(attacker, ONS_TAKES, 1);
 		GameRules_scoring_add(attacker, SCORE, 10);
@@ -554,9 +557,18 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 
 		if(IS_PLAYER(this.owner.ons_toucher))
 		{
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
-			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM), this.owner.message);
-			Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
+			if(this.owner.message != "")
+			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
+				Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM), this.owner.message);
+				Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
+			}
+			else
+			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE_NONAME, this.owner.ons_toucher.netname);
+				Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM_NONAME));
+				Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE_NONAME);
+			}
 			GameRules_scoring_add(this.owner.ons_toucher, ONS_CAPS, 1);
 			GameRules_scoring_add_team(this.owner.ons_toucher, SCORE, 10);
 		}
@@ -771,8 +783,6 @@ void ons_ControlPoint_Setup(entity cp)
 	cp.iscaptured = false;
 	cp.islinked = false;
 	cp.isshielded = true;
-
-	if(cp.message == "") { cp.message = "a"; }
 
 	// appearence
 	setmodel(cp, MDL_ONS_CP_PAD1);
