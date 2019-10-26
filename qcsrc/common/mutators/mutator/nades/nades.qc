@@ -1293,7 +1293,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		held_nade.angles_y = player.angles.y;
 
 		if (time + 0.1 >= held_nade.wait)
+		{
 			toss_nade(player, false, '0 0 0', time + 0.05);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_THROW);
+		}
 	}
 
 	if(IS_PLAYER(player))
@@ -1452,8 +1455,6 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	{
 		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) 
 																	: autocvar_g_nades_bonus_score_minor);
-		if (frag_attacker == frag_target)
-			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_NADE_THROW);
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
 		else if(GameRules_scoring_is_vip(frag_target))
