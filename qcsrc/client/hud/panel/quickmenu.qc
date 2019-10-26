@@ -790,7 +790,7 @@ void QuickMenu_Default(string target_submenu)
 	if(teamplay)
 	{
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
-		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^strength soon")), "say_team %s", "strength soon", CTX(_("QMCMD^strength soon")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^took item, icon")), "say_team %s; g_waypointsprite_team_here", "took item (l:%l^7)", CTX(_("QMCMD^took item (l:%l^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^negative")), "say_team %s", "negative", CTX(_("QMCMD^negative")))
