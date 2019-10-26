@@ -1189,7 +1189,6 @@ void nades_CheckThrow(entity this)
 		this.nade_altbutton = true;
 		if(time > this.nade_refire)
 		{
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_NADE_THROW);
 			nade_prime(this);
 			this.nade_refire = time + autocvar_g_nades_nade_refire;
 		}
@@ -1453,7 +1452,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	{
 		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) 
 																	: autocvar_g_nades_bonus_score_minor);
-
+		if (frag_attacker == frag_target)
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_NADE_THROW);
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
 		else if(GameRules_scoring_is_vip(frag_target))
