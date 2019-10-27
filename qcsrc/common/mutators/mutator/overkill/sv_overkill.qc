@@ -81,7 +81,6 @@ MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 		if(!STAT(FROZEN, frag_target))
 		if(!IS_DEAD(frag_target))
 		{
-			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 			M_ARGV(6, vector) = '0 0 0'; // force
 		}
 

@@ -751,8 +751,6 @@
 
     MSG_CENTER_NOTIF(RACE_FINISHLAP,                    N_ENABLE,    0, 0, "",               CPID_RACE_FINISHLAP,    "0 0",  _("^F2The race is over, finish your lap!"), "")
 
-    MSG_CENTER_NOTIF(SECONDARY_NODAMAGE,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGSecondary fire inflicts no damage!"), "")
-
     MSG_CENTER_NOTIF(SEQUENCE_COMPLETED,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGSequence completed!"), "")
     MSG_CENTER_NOTIF(SEQUENCE_COUNTER,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGThere are more to go..."), "")
     MSG_CENTER_NOTIF(SEQUENCE_COUNTER_FEWMORE,          N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^BGOnly %s^BG more to go..."), "")
