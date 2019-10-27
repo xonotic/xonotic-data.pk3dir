@@ -656,6 +656,9 @@ float TrueAimCheck(entity wepent)
 
 	traceline(traceorigin, traceorigin + view_forward * max_shot_distance, mv, ta);
 	trueaimpoint = trace_endpos;
+	// move trueaimpoint a little bit forward to make the final tracebox reliable
+	// since it sometimes doesn't reach a teammate by a hair
+	trueaimpoint += view_forward;
 
 	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
@@ -1124,7 +1127,8 @@ void HUD_Crosshair(entity this)
 		wcross_alpha_goal_prev = wcross_alpha;
 		wcross_color_goal_prev = wcross_color;
 
-		if(shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active)
+		if((shottype == SHOTTYPE_HITTEAM && autocvar_crosshair_hittest_blur_teammate)
+			|| (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur_wall && !autocvar_chase_active))
 		{
 			wcross_blur = 1;
 			wcross_alpha *= 0.75;

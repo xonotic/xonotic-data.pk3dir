@@ -90,7 +90,11 @@ void havocbot_ai(entity this)
 	}
 
 	if (this.goalcurrent && wasfreed(this.goalcurrent))
+	{
 		navigation_clearroute(this);
+		navigation_goalrating_timeout_force(this);
+		return;
+	}
 
 	if(IS_DEAD(this) || STAT(FROZEN, this))
 	{

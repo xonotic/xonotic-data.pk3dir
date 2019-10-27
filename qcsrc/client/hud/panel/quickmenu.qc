@@ -827,11 +827,7 @@ void QuickMenu_Default(string target_submenu)
 
 		if(spectatee_status > 0)
 		{
-		QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^1st person")), "chase_active 0; -use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person around player")), "chase_active 1; +use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person behind")), "chase_active 1; -use")
-		QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Change spectator camera")), "dropweapon")
 		}
 
 		if(spectatee_status == -1)
@@ -839,8 +835,7 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "+use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "-use")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision")), "toggle cl_clippedspectating")
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 		}
 

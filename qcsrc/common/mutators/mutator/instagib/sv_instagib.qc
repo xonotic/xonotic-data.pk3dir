@@ -353,7 +353,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 
 				if(frag_target != frag_attacker)
 				{
-					if(frag_damage <= 0 && GetResource(frag_target, RES_HEALTH) > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
 					if(!autocvar_g_instagib_blaster_keepforce)
 						frag_force = '0 0 0';
 				}
