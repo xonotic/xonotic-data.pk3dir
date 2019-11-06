@@ -384,7 +384,10 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 
 	if(item.itemdef == ITEM_ExtraLife)
 	{
-		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
+		if(autocvar_g_lms_extra_lives == 1)
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIFE);
+		else
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
 		GameRules_scoring_add(toucher, LMS_LIVES, autocvar_g_lms_extra_lives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
