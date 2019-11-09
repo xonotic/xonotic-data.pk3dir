@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-11-06 18:32+0000\n"
+"PO-Revision-Date: 2019-11-08 16:03+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -6856,7 +6856,7 @@ msgstr "Raketenflug"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:67
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:217
 msgid "Invincible Projectiles"
-msgstr "Unzerstörbare Schüsse"
+msgstr "Unzerstörbare Projektile"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:293
