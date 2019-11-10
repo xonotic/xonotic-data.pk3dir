@@ -528,7 +528,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	if(item.itemdef == ITEM_ExtraLife)
 	{
 		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives);
-		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_instagib_extralives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 

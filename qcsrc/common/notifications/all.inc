@@ -659,7 +659,7 @@
     MSG_CENTER_NOTIF(DOOR_LOCKED_ALSONEED,              N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou also need %s^BG!"), "")
     MSG_CENTER_NOTIF(DOOR_UNLOCKED,                     N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGDoor unlocked!"), "")
 
-    MSG_CENTER_NOTIF(EXTRALIVES,                        N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F2You picked up some extra lives"), "")
+    MSG_CENTER_NOTIF(EXTRALIVES,                        N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^F2Extra lives taken: ^K1%s"), "")
 
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE,                  N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You revived ^BG%s"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE_SELF,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K3You revived yourself"), "")
