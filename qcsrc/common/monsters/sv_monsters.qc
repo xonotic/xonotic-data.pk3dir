@@ -424,6 +424,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if(vdist(targ.origin - this.origin, <=, this.attack_range))
 	{
+		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
@@ -433,6 +434,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if(vdist(targ.origin - this.origin, >, this.attack_range))
 	{
+		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
