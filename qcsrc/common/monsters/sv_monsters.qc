@@ -189,7 +189,11 @@ void monster_changeteam(entity this, int newteam)
 .void(entity) monster_delayedfunc;
 void Monster_Delay_Action(entity this)
 {
-	if(Monster_ValidTarget(this.owner, this.owner.enemy)) { this.monster_delayedfunc(this.owner); }
+	if(Monster_ValidTarget(this.owner, this.owner.enemy))
+	{
+		monster_makevectors(this.owner, this.owner.enemy);
+		this.monster_delayedfunc(this.owner);
+	}
 
 	if(this.cnt > 1)
 	{
@@ -358,8 +362,6 @@ bool Monster_Attack_Melee(entity this, entity targ, float damg, vector anim, flo
 		this.attack_finished_single[0] = this.anim_finished = this.animstate_endtime;
 	else
 		this.attack_finished_single[0] = this.anim_finished = time + animtime;
-
-	monster_makevectors(this, targ);
 
 	traceline(this.origin + this.view_ofs, this.origin + v_forward * er, 0, this);
 
