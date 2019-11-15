@@ -385,7 +385,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 	M_ARGV(6, vector) = frag_force;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems, CBC_ORDER_LAST)
 {
 	start_health       = warmup_start_health       = 100;
 	start_armorvalue   = warmup_start_armorvalue   = 0;
