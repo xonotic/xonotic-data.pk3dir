@@ -221,7 +221,7 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 	//				if(fire & 2) // only eat ammo when the button is pressed
 	//				{
 	//					dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
-	//					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	//					if(!(actor.items & IT_UNLIMITED_AMMO))
 	//					{
 	//						// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	//						if(autocvar_g_balance_vortex_reload_ammo)

@@ -224,7 +224,7 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 .float prevwarntime;
 bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary, .entity weaponentity)
 {
-	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
+	if ((actor.items & IT_UNLIMITED_AMMO)) return true;
 	bool ammo = false;
 	if (secondary) ammo = thiswep.wr_checkammo2(thiswep, actor, weaponentity);
 	else ammo = thiswep.wr_checkammo1(thiswep, actor, weaponentity);
@@ -374,10 +374,6 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		restartanim = fr != WFRAME_IDLE;
 	}
 
-	vector of = v_forward;
-	vector or = v_right;
-	vector ou = v_up;
-
 	vector a = '0 0 0';
     this.wframe = fr;
     if (fr == WFRAME_IDLE) a = this.anim_idle;
@@ -386,10 +382,6 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
     else  // if (fr == WFRAME_RELOAD)
         a = this.anim_reload;
     a.z *= g_weaponratefactor;
-
-	v_forward = of;
-	v_right = or;
-	v_up = ou;
 
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
@@ -508,10 +500,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		return;
 	}
 
-	makevectors(actor.v_angle);
-	vector fo = v_forward;  // save them in case the weapon think functions change it
-	vector ri = v_right;
-	vector up = v_up;
+	vector fo, ri, up;
+	MAKE_VECTORS(actor.v_angle, fo, ri, up);
 
 	// Change weapon
 	if (this.m_weapon != this.m_switchweapon)
@@ -688,7 +678,7 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponentity)
 {
 	if (MUTATOR_CALLHOOK(W_DecreaseAmmo, actor, actor.(weaponentity), ammo_use)) return;
-	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO) && !wep.reloading_ammo) return;
+	if ((actor.items & IT_UNLIMITED_AMMO) && !wep.reloading_ammo) return;
 
 	ammo_use = M_ARGV(2, float);
 
@@ -735,7 +725,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	w_ent.clip_load = w_ent.old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || wpn.ammo_type == RES_NONE)
+	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_AMMO) || wpn.ammo_type == RES_NONE)
 	{
 		w_ent.clip_load = w_ent.reload_ammo_amount;
 	}
@@ -791,7 +781,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	{
 		if (!GetResource(actor, e.ammo_type) && this.reload_ammo_min)
 		{
-			if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+			if (!(actor.items & IT_UNLIMITED_AMMO))
 			{
 				if (IS_REAL_CLIENT(actor) && actor.reload_complain < time)
 				{

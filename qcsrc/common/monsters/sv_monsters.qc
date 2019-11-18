@@ -214,7 +214,11 @@ void monster_changeteam(entity this, int newteam)
 void Monster_Delay_Action(entity this)
 {
 	// TODO: maybe do check for facing here
-	if(Monster_ValidTarget(this.owner, this.owner.enemy, false)) { this.monster_delayedfunc(this.owner); }
+	if(Monster_ValidTarget(this.owner, this.owner.enemy, false))
+	{
+		monster_makevectors(this.owner, this.owner.enemy);
+		this.monster_delayedfunc(this.owner);
+	}
 
 	if(this.cnt > 1)
 	{
@@ -383,8 +387,6 @@ bool Monster_Attack_Melee(entity this, entity targ, float damg, vector anim, flo
 	else
 		this.attack_finished_single[0] = this.anim_finished = time + animtime;
 
-	monster_makevectors(this, targ);
-
 	traceline(this.origin + this.view_ofs, this.origin + v_forward * er, 0, this);
 
 	if(trace_ent.takedamage)
@@ -449,6 +451,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if(vdist(targ.origin - this.origin, <=, this.attack_range))
 	{
+		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
@@ -458,6 +461,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if(vdist(targ.origin - this.origin, >, this.attack_range))
 	{
+		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);

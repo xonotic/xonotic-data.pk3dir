@@ -342,8 +342,6 @@ void W_Seeker_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seeker_Attack
 {
-	float c;
-	entity oldenemy;
 	this.cnt = this.cnt - 1;
 
 	Weapon thiswep = WEP_SEEKER;
@@ -358,11 +356,10 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	entity own = this.realowner;
 
-	oldenemy = own.enemy;
+	entity oldenemy = own.enemy;
 	own.enemy = this.enemy;
 
-	c = own.cnt % 4;
-	switch(c)
+	switch(own.cnt % 4)
 	{
 		case 0:
 			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 -3.75 0', own.enemy); // TODO
