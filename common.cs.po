@@ -5,6 +5,7 @@
 # Translators:
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # GamingasCZ <gamingforyou875@gmail.com>, 2019
+# Jan Kocka <kockahonza@gmail.com>, 2019
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # NONE <nechtom@gmail.com>, 2015
 # Tomáš Volavka <czheron@gmail.com>, 2015,2018
@@ -14,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-11-15 18:28+0000\n"
-"Last-Translator: GamingasCZ <gamingforyou875@gmail.com>\n"
+"PO-Revision-Date: 2019-11-27 23:34+0000\n"
+"Last-Translator: Jan Kocka <kockahonza@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -28,7 +29,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Úspěšně exportováno do %s! (Poznámka: Uloženo v data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
@@ -46,15 +47,17 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Víceřádková zpráva v čase %s že\n"
+"^1trvá déle než normálně"
 
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Zpráva v čase %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "Obecná zpráva"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -155,12 +158,12 @@ msgstr "^1Hra začíná za ^3%d^1 sekund"
 
 #: qcsrc/client/hud/panel/infomessages.qc:147
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2Momentálně v ^1zahřívací^2 fázi!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sZmáčkni ^3%s%s pro ukončení zahřívací fáze"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #: qcsrc/client/hud/panel/infomessages.qc:164
@@ -172,20 +175,20 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:164
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%sZmáčkni ^3%s%s až budeš připravený"
 
 #: qcsrc/client/hud/panel/infomessages.qc:169
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr ""
+msgstr "^2Čeká se než ostatní hráči ukončí zahřívací fázi..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:171
 msgid "^2Waiting for others to ready up..."
-msgstr ""
+msgstr "^2Čeká se než budou ostatní hráči připraveni..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:177
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Zmáčkni ^3%s^2 pro ukončení zahřívací fáze"
 
 #: qcsrc/client/hud/panel/infomessages.qc:198
 msgid "Teamnumbers are unbalanced!"
@@ -194,7 +197,7 @@ msgstr "Týmy jsou nevyvážené"
 #: qcsrc/client/hud/panel/infomessages.qc:201
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr ""
+msgstr " Zmáčkni ^3%s%s pro upravení"
 
 #: qcsrc/client/hud/panel/infomessages.qc:201
 #: qcsrc/menu/xonotic/keybinder.qc:117
@@ -203,15 +206,15 @@ msgstr "týmové menu"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Sleduješ tohoto hráče:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Sledují tě:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "^7Zmáčkni ^3ESC ^7pro zobrazení nastavení HUD."
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -261,36 +264,36 @@ msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Poslat veřejnou zprávu do"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / hezký"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^hezký"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:784
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^dobrá hra"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^ahoj/hodně štěstí"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^ahoj/hodně štěstí a užijte si hru"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Pošli v angličtině"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Týmový chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
