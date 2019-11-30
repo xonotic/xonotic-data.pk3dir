@@ -177,7 +177,7 @@ void HUD_Ammo()
 
 	Weapon wep = wepent.switchweapon;
 	int i;
-	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
 	row = column = 0;
 	if(autocvar_hud_panel_ammo_onlycurrent)
 	{

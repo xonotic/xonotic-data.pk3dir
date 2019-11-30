@@ -22,7 +22,6 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		if (IS_MONSTER(actor)) {
 			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;
-			monster_makevectors(actor, actor.enemy);
 		}
 
 		entity missile = spawn();

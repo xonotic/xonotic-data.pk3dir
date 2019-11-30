@@ -1617,7 +1617,7 @@ void player_regen(entity this)
 			this.event_damage(this, this, this, 1, DEATH_ROT.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	}
 
-	if (!(this.items & IT_UNLIMITED_WEAPON_AMMO))
+	if (!(this.items & IT_UNLIMITED_AMMO))
 	{
 		float minf, maxf, limitf;
 

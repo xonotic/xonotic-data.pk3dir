@@ -549,7 +549,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
-	start_items &= ~IT_UNLIMITED_BOTH;
+	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
 	//start_health       = warmup_start_health       = cvar("g_lms_start_health");
 	//start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
@@ -587,9 +587,8 @@ MUTATOR_HOOKFUNCTION(ft, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
 {
-	// most weapons arena
 	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
-		M_ARGV(0, string) = "most";
+		M_ARGV(0, string) = autocvar_g_freezetag_weaponarena;
 }
 
 MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)

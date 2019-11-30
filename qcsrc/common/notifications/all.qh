@@ -295,7 +295,7 @@ void Send_Notification_WOCOVA(
 // MAKE SURE THIS IS ALWAYS SYNCHRONIZED WITH THE DUMP
 // NOTIFICATIONS FUNCTION IN THE .QC FILE!
 
-#define NOTIF_ADD_AUTOCVAR(name,default) float autocvar_notification_##name = default;
+#define NOTIF_ADD_AUTOCVAR(name,defaultvalue) float autocvar_notification_##name = defaultvalue;
 
 float autocvar_notification_show_location = false;
 string autocvar_notification_show_location_string = ""; //_(" at the %s");
@@ -699,7 +699,9 @@ REGISTRY_SORT(Notifications);
 STATIC_INIT(Notifications) { FOREACH(Notifications, true, it.m_id = i); }
 REGISTRY_CHECK(Notifications)
 
-const int NOTIF_CHOICE_MAX = 50;
+const int NOTIF_CHOICE_MAX = 20;
+// NOTE: a team choice is actually made of 4 choices (one per team) with the same nent_choice_idx
+// thus they are counted as 1 in nent_choice_count
 int nent_choice_count = 0;
 .int nent_choice_idx;
 .int msg_choice_choices[NOTIF_CHOICE_MAX]; // set on each player containing MSG_CHOICE choices
@@ -707,12 +709,11 @@ int nent_choice_count = 0;
 bool notif_error;
 bool notif_global_error;
 
-STATIC_INIT_LATE(Notif_Choices) {
-	int c = 0;
-	FOREACH(Notifications, it.nent_type == MSG_CHOICE, { c++; });
-	if (c > NOTIF_CHOICE_MAX) {
-		LOG_FATALF("Too many MSG_CHOICE notifications (%d)", c);
-	}
+STATIC_INIT_LATE(Notif_Choices)
+{
+	if (nent_choice_count > NOTIF_CHOICE_MAX)
+		LOG_FATALF("Too many MSG_CHOICE notifications (%d), hit NOTIF_CHOICE_MAX (%d) limit",
+			nent_choice_count, NOTIF_CHOICE_MAX);
 }
 
 string Get_Notif_CvarName(Notification notif)
@@ -736,16 +737,16 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	return it;
 }
 
-#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, default, sound, channel, volume, position) \
-	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, default, sound, channel, volume, position)
+#define MSG_ANNCE_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, sound, channel, volume, position) \
+	MSG_ANNCE_NOTIF_(teamnum, ANNCE_##name, ANNCE_##cvarname, defaultvalue, sound, channel, volume, position)
 
-#define MSG_ANNCE_NOTIF(name, default, sound, channel, volume, position) \
-	NOTIF_ADD_AUTOCVAR(ANNCE_##name, default) \
-	MSG_ANNCE_NOTIF_(0, ANNCE_##name, ANNCE_##name, default, sound, channel, volume, position)
+#define MSG_ANNCE_NOTIF(name, defaultvalue, sound, channel, volume, position) \
+	NOTIF_ADD_AUTOCVAR(ANNCE_##name, defaultvalue) \
+	MSG_ANNCE_NOTIF_(0, ANNCE_##name, ANNCE_##name, defaultvalue, sound, channel, volume, position)
 
-#define MSG_ANNCE_NOTIF_(teamnum, name, cvarname, default, sound, channel, volume, position) \
+#define MSG_ANNCE_NOTIF_(teamnum, name, cvarname, defaultvalue, sound, channel, volume, position) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_annce_notification)) { \
-		Create_Notification_Entity      (this, default, ACVNN(cvarname), MSG_ANNCE, strtoupper(#name), teamnum); \
+		Create_Notification_Entity      (this, defaultvalue, ACVNN(cvarname), MSG_ANNCE, strtoupper(#name), teamnum); \
 		Create_Notification_Entity_Annce(this, ACVNN(cvarname), strtoupper(#name), \
 			channel,   /* channel  */ \
 			sound,     /* snd      */ \
@@ -753,16 +754,16 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 			position); /* position */ \
 	}
 
-#define MSG_INFO_NOTIF_TEAM(teamnum, name, cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
-	MSG_INFO_NOTIF_(teamnum, INFO_##name, INFO_##cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle)
+#define MSG_INFO_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, strnum, flnum, args, hudargs, icon, normal, gentle) \
+	MSG_INFO_NOTIF_(teamnum, INFO_##name, INFO_##cvarname, defaultvalue, strnum, flnum, args, hudargs, icon, normal, gentle)
 
-#define MSG_INFO_NOTIF(name, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
-	NOTIF_ADD_AUTOCVAR(INFO_##name, default) \
-	MSG_INFO_NOTIF_(0, INFO_##name, INFO_##name, default, strnum, flnum, args, hudargs, icon, normal, gentle)
+#define MSG_INFO_NOTIF(name, defaultvalue, strnum, flnum, args, hudargs, icon, normal, gentle) \
+	NOTIF_ADD_AUTOCVAR(INFO_##name, defaultvalue) \
+	MSG_INFO_NOTIF_(0, INFO_##name, INFO_##name, defaultvalue, strnum, flnum, args, hudargs, icon, normal, gentle)
 
-#define MSG_INFO_NOTIF_(teamnum, name, cvarname, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
+#define MSG_INFO_NOTIF_(teamnum, name, cvarname, defaultvalue, strnum, flnum, args, hudargs, icon, normal, gentle) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_info_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(cvarname), MSG_INFO, strtoupper(#name), teamnum); \
+		Create_Notification_Entity           (this, defaultvalue, ACVNN(cvarname), MSG_INFO, strtoupper(#name), teamnum); \
 		Create_Notification_Entity_InfoCenter(this, ACVNN(cvarname), strtoupper(#name), strnum, flnum, \
 			args,     /* args    */ \
 			hudargs,  /* hudargs */ \
@@ -774,12 +775,12 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	}
 
 .string nent_iconargs;
-#define MULTIICON_INFO(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
-	MULTIICON_INFO_(INFO_##name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle)
-#define MULTIICON_INFO_(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
-	NOTIF_ADD_AUTOCVAR(name, default) \
+#define MULTIICON_INFO(name, defaultvalue, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
+	MULTIICON_INFO_(INFO_##name, defaultvalue, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle)
+#define MULTIICON_INFO_(name, defaultvalue, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
+	NOTIF_ADD_AUTOCVAR(name, defaultvalue) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_info_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(name), MSG_INFO, strtoupper(#name), 0); \
+		Create_Notification_Entity           (this, defaultvalue, ACVNN(name), MSG_INFO, strtoupper(#name), 0); \
 		Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, \
 			args,     /* args    */ \
 			hudargs,  /* hudargs */ \
@@ -791,16 +792,16 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 		this.nent_iconargs = iconargs; \
 	}
 
-#define MSG_CENTER_NOTIF_TEAM(teamnum, name, cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	MSG_CENTER_NOTIF_(teamnum, CENTER_##name, CENTER_##cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
+#define MSG_CENTER_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, strnum, flnum, args, cpid, durcnt, normal, gentle) \
+	MSG_CENTER_NOTIF_(teamnum, CENTER_##name, CENTER_##cvarname, defaultvalue, strnum, flnum, args, cpid, durcnt, normal, gentle)
 
-#define MSG_CENTER_NOTIF(name, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	NOTIF_ADD_AUTOCVAR(CENTER_##name, default) \
-	MSG_CENTER_NOTIF_(0, CENTER_##name, CENTER_##name, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
+#define MSG_CENTER_NOTIF(name, defaultvalue, strnum, flnum, args, cpid, durcnt, normal, gentle) \
+	NOTIF_ADD_AUTOCVAR(CENTER_##name, defaultvalue) \
+	MSG_CENTER_NOTIF_(0, CENTER_##name, CENTER_##name, defaultvalue, strnum, flnum, args, cpid, durcnt, normal, gentle)
 
-#define MSG_CENTER_NOTIF_(teamnum, name, cvarname, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
+#define MSG_CENTER_NOTIF_(teamnum, name, cvarname, defaultvalue, strnum, flnum, args, cpid, durcnt, normal, gentle) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_center_notification)) { \
-		Create_Notification_Entity           (this, default, ACVNN(cvarname), MSG_CENTER, strtoupper(#name), teamnum); \
+		Create_Notification_Entity           (this, defaultvalue, ACVNN(cvarname), MSG_CENTER, strtoupper(#name), teamnum); \
 		Create_Notification_Entity_InfoCenter(this, ACVNN(cvarname), strtoupper(#name), strnum, flnum, \
 			args,    /* args    */ \
 			"",      /* hudargs */ \
@@ -811,28 +812,30 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 			gentle); /* gentle  */ \
 	}
 
-#define MSG_MULTI_NOTIF(name, default, anncename, infoname, centername) \
-	NOTIF_ADD_AUTOCVAR(name, default) \
+#define MSG_MULTI_NOTIF(name, defaultvalue, anncename, infoname, centername) \
+	NOTIF_ADD_AUTOCVAR(name, defaultvalue) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_multi_notification)) { \
-		Create_Notification_Entity      (this, default, ACVNN(name), MSG_MULTI, strtoupper(#name), 0); \
+		Create_Notification_Entity      (this, defaultvalue, ACVNN(name), MSG_MULTI, strtoupper(#name), 0); \
 		Create_Notification_Entity_Multi(this, ACVNN(name), strtoupper(#name), \
 			anncename,   /* anncename  */ \
 			infoname,    /* infoname   */ \
 			centername); /* centername */ \
 	}
 
-#define MSG_CHOICE_NOTIF_TEAM(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) \
-	MSG_CHOICE_NOTIF_(teamnum, CHOICE_##name, CHOICE_##cvarname, default, challow, chtype, optiona, optionb)
+#define MSG_CHOICE_NOTIF_TEAM(teamnum, name, cvarname, defaultvalue, challow, chtype, optiona, optionb) \
+	MSG_CHOICE_NOTIF_(teamnum, CHOICE_##name, CHOICE_##cvarname, defaultvalue, challow, chtype, optiona, optionb)
 
-#define MSG_CHOICE_NOTIF(name, default, challow, chtype, optiona, optionb) \
-	NOTIF_ADD_AUTOCVAR(CHOICE_##name, default) \
+#define MSG_CHOICE_NOTIF(name, defaultvalue, challow, chtype, optiona, optionb) \
+	NOTIF_ADD_AUTOCVAR(CHOICE_##name, defaultvalue) \
 	NOTIF_ADD_AUTOCVAR(CHOICE_##name##_ALLOWED, challow) \
-	MSG_CHOICE_NOTIF_(0, CHOICE_##name, CHOICE_##name, default, challow, chtype, optiona, optionb)
+	MSG_CHOICE_NOTIF_(0, CHOICE_##name, CHOICE_##name, defaultvalue, challow, chtype, optiona, optionb)
 
-#define MSG_CHOICE_NOTIF_(teamnum, name, cvarname, default, challow, chtype, optiona, optionb) \
+#define MSG_CHOICE_NOTIF_(teamnum, name, cvarname, defaultvalue, challow, chtype, optiona, optionb) \
 	REGISTER(Notifications, name, m_id, new_pure(msg_choice_notification)) { \
-		this.nent_choice_idx = nent_choice_count++; \
-		Create_Notification_Entity       (this, default, ACVNN(cvarname), MSG_CHOICE, strtoupper(#name), teamnum); \
+		this.nent_choice_idx = nent_choice_count; \
+		if (!teamnum || teamnum == NUM_TEAM_4) \
+			nent_choice_count++; \
+		Create_Notification_Entity       (this, defaultvalue, ACVNN(cvarname), MSG_CHOICE, strtoupper(#name), teamnum); \
 		Create_Notification_Entity_Choice(this, ACVNN(cvarname), strtoupper(#name), \
 			challow,                                 /* challow_def */ \
 			autocvar_notification_##cvarname##_ALLOWED,  /* challow_var */ \

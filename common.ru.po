@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-06-24 06:22+0000\n"
+"PO-Revision-Date: 2019-11-21 19:30+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -551,7 +551,7 @@ msgstr "Линия финиша"
 #: qcsrc/client/hud/panel/racetimer.qc:151
 #, c-format
 msgid "Intermediate %d"
-msgstr "Промежуточное %d"
+msgstr "Участок %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:154
 #: qcsrc/client/hud/panel/racetimer.qc:201
@@ -1032,7 +1032,7 @@ msgstr "Рейтинг"
 #: qcsrc/client/hud/panel/scoreboard.qc:1613
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr "^3%1.0f минуты"
+msgstr "^3%1.0f минут(ы)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1622
 #: qcsrc/client/hud/panel/scoreboard.qc:1629
@@ -1155,7 +1155,7 @@ msgstr "Недоступен"
 
 #: qcsrc/client/main.qc:1027
 msgid " qu/s"
-msgstr "юнит/с"
+msgstr " юнит/с"
 
 #: qcsrc/client/main.qc:1029
 msgid " m/s"
@@ -1326,7 +1326,7 @@ msgstr "Щит"
 #: qcsrc/common/mapinfo.qc:626
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr "@!#%'n Швыряние Трубой"
+msgstr "@!#%'n Швыряние Тубой"
 
 #: qcsrc/common/mapinfo.qh:72 qcsrc/common/mapinfo.qh:333
 #: qcsrc/common/mapinfo.qh:528
@@ -3024,7 +3024,7 @@ msgstr "^BG%s^BG отказался от гонки"
 #: qcsrc/common/notifications/all.inc:428
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
-msgstr "^BG%s^BG не смог побить рекорд %s%s^BG места со временем %s%s %s"
+msgstr "^BG%s^BG не смог побить свой рекорд %s%s^BG места со временем %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
@@ -3933,7 +3933,7 @@ msgstr "^K1Вы не смогли укрыться от ракеты Гонщи�
 
 #: qcsrc/common/notifications/all.inc:667
 msgid "^K1Watch your step!"
-msgstr "^K1Смотри под ноги!"
+msgstr "^K1Смотрите под ноги!"
 
 #: qcsrc/common/notifications/all.inc:669
 #, c-format
@@ -4100,7 +4100,7 @@ msgid ""
 "Need active players for: %s"
 msgstr ""
 "^BGОжидание игроков...\n"
-"Активные игроки необходимы для: %s"
+"%s нуждается в активных игроках"
 
 #: qcsrc/common/notifications/all.inc:725
 #, c-format
@@ -4589,19 +4589,19 @@ msgstr " с %d %s"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
-msgstr "TEAM^Красные"
+msgstr "TEAM^Красная"
 
 #: qcsrc/common/teams.qh:32
 msgid "TEAM^Blue"
-msgstr "TEAM^Синие"
+msgstr "TEAM^Синяя"
 
 #: qcsrc/common/teams.qh:33
 msgid "TEAM^Yellow"
-msgstr "TEAM^Жёлтые"
+msgstr "TEAM^Жёлтая"
 
 #: qcsrc/common/teams.qh:34
 msgid "TEAM^Pink"
-msgstr "TEAM^Розовые"
+msgstr "TEAM^Розовая"
 
 #: qcsrc/common/teams.qh:35
 msgid "Team"
@@ -5260,7 +5260,7 @@ msgstr "Дробовик"
 #: qcsrc/common/weapons/weapon/tuba.qh:18
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'n Труба"
+msgstr "@!#%'n Туба"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:19
 msgid "Vaporizer"
@@ -5393,12 +5393,12 @@ msgstr "%d часов"
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr "%s минут"
+msgstr "%s минут(ы)"
 
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr "%d минут"
+msgstr "%d минут(ы)"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
@@ -5408,17 +5408,17 @@ msgstr "%d минута"
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr "%d минуты"
+msgstr "%d минут(ы)"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr "%d минуты"
+msgstr "%d минут(ы)"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr "%d минут"
+msgstr "%d минут(ы)"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
@@ -6564,7 +6564,7 @@ msgstr "Ограничение времени в минутах, после ко
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:82
 #, c-format
 msgid "%d minutes"
-msgstr "%d минуты"
+msgstr "%d минут(ы)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "TIMLIM^Default"
@@ -9519,7 +9519,7 @@ msgstr "вправо"
 
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "jump / swim"
-msgstr "прыжок / плыть"
+msgstr "прыжок / всплыть"
 
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "crouch / sink"
@@ -9559,7 +9559,7 @@ msgstr "перезарядить"
 
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "drop weapon / throw nade"
-msgstr "бросить оружие / кинуть гранату"
+msgstr "бросить оружие / гранату"
 
 #: qcsrc/menu/xonotic/keybinder.qc:86
 msgid "hold zoom"
@@ -9635,7 +9635,7 @@ msgstr "автовыбор команды"
 
 #: qcsrc/menu/xonotic/keybinder.qc:118
 msgid "drop key / drop flag"
-msgstr "бросить ключ или флаг"
+msgstr "бросить ключ / флаг"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "respawn"

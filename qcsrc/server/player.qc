@@ -398,7 +398,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
-		if (save > 10)
+		if (save > 10 && (dh - take) > 0) // don't play armor sound if the attack is fatal
 			sound (this, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
 			sound (this, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);

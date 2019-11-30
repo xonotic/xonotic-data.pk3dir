@@ -47,6 +47,11 @@ bool navigation_goalrating_timeout(entity this)
 	return this.bot_strategytime < time;
 }
 
+void navigation_goalrating_timeout_extend_if_needed(entity this, float seconds)
+{
+	this.bot_strategytime = max(this.bot_strategytime, time + seconds);
+}
+
 #define MAX_CHASE_DISTANCE 700
 bool navigation_goalrating_timeout_can_be_anticipated(entity this)
 {
@@ -916,19 +921,33 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector pm1 = ent.origin + ent.mins;
 	vector pm2 = ent.origin + ent.maxs;
 
-	// do two scans, because box test is cheaper
-	IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+	if (autocvar_g_waypointeditor && !IS_BOT_CLIENT(ent))
 	{
-		if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+		// this code allows removing waypoints in the air and seeing jumppad/telepport waypoint links
+		// FIXME it causes a bug where a waypoint spawned really close to another one (max 16 qu)
+		// isn't detected as the nearest waypoint
+		IL_EACH(g_waypoints, it != ent && it != except,
 		{
-			if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
+			if (boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+				return it;
+		});
+	}
+	else
+	{
+		// do two scans, because box test is cheaper
+		IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
+		{
+			if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
 			{
-				waypoint_clearlinks(ent); // initialize wpXXmincost fields
-				navigation_item_addlink(it, ent);
+				if(walkfromwp && !ent.navigation_dynamicgoal)
+				{
+					waypoint_clearlinks(ent); // initialize wpXXmincost fields
+					navigation_item_addlink(it, ent);
+				}
+				return it;
 			}
-			return it;
-		}
-	});
+		});
+	}
 
 	vector org = ent.origin;
 	if (navigation_testtracewalk)
@@ -948,7 +967,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 		waypoint_clearlinks(ent); // initialize wpXXmincost fields
 		IL_EACH(g_waypoints, it != ent,
 		{
-			if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
+			if (walkfromwp && (it.wpflags & WPFLAGMASK_NORELINK))
 				continue;
 
 			set_tracewalk_dest(ent, it.origin, false);
@@ -964,7 +983,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	// box check failed, try walk
 	IL_EACH(g_waypoints, it != ent,
 	{
-		if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
+		if (walkfromwp && (it.wpflags & WPFLAGMASK_NORELINK))
 			continue;
 		v = it.origin;
 
@@ -1335,7 +1354,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResource(this, RES_FUEL)));
 
 			// enough fuel ?
-			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
+			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship
@@ -1577,7 +1596,7 @@ bool navigation_shortenpath(entity this)
 
 	next = this.goalstack01;
 	// if for some reason the bot is closer to the next goal, pop the current one
-	if (!IS_MOVABLE(next) // already checked in the previous case
+	if (!IS_MOVABLE(next) && !(this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP))
 		&& vlen2(this.goalcurrent.origin - next.origin) > vlen2(next.origin - this.origin)
 		&& checkpvs(this.origin + this.view_ofs, next))
 	{
@@ -1771,7 +1790,7 @@ entity navigation_get_really_close_waypoint(entity this)
 	if(vdist(wp.origin - this.origin, >, 50))
 	{
 		wp = NULL;
-		IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+		IL_EACH(g_waypoints, !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
 		{
 			if(vdist(it.origin - this.origin, <, 50))
 			{
