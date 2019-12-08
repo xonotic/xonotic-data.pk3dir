@@ -715,7 +715,7 @@ void readplayerstartcvars()
 	{
 		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena_weapons;
-		start_items |= IT_UNLIMITED_AMMO;
+		start_items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
 	}
 	else
 	{
@@ -737,7 +737,7 @@ void readplayerstartcvars()
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
-	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
+	if(start_items & IT_UNLIMITED_AMMO)
 	{
 		start_ammo_shells = 999;
 		start_ammo_nails = 999;
@@ -1196,11 +1196,6 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 			return false; // no checks here
 		else if(this.classname == "grapplinghook")
 			RemoveHook(this);
-		else if(this.classname == "spike")
-		{
-			W_Crylink_Dequeue(this);
-			delete(this);
-		}
 		else
 			delete(this);
 		return true;

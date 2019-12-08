@@ -128,8 +128,6 @@ void adaptor_think2use_hittype_splash(entity this);
 
 void M_Spider_Attack_Web(entity this)
 {
-	monster_makevectors(this, this.enemy);
-
 	sound(this, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
 
 	entity proj = new(plasma);

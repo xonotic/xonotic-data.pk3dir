@@ -266,6 +266,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_duel");
+		BADCVAR("g_duel_not_dm_maps");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
@@ -286,6 +287,7 @@ void cvar_changes_init()
 		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
+		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
@@ -358,6 +360,7 @@ void cvar_changes_init()
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
 		BADCVAR("sv_intermission_cdtrack");
+		BADCVAR("sv_mapchange_delay");
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
@@ -428,6 +431,9 @@ void cvar_changes_init()
 		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
+		BADCVAR("g_player_brightness");
+		BADCVAR("g_rocket_flying");
+		BADCVAR("g_rocket_flying_disabledelays");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
@@ -486,6 +492,12 @@ void cvar_changes_init()
 		BADCVAR("g_ca_weaponarena");
 		BADCVAR("g_freezetag_weaponarena");
 		BADCVAR("g_lms_weaponarena");
+
+		if(cvar_string("g_mod_balance") == "Testing")
+		{
+			// (temporary) while using the Testing balance, any weapon balance cvars are allowed to be changed
+			BADPREFIX("g_balance_");
+		}
 
 #undef BADPRESUFFIX
 #undef BADPREFIX
@@ -966,7 +978,7 @@ spawnfunc(worldspawn)
 	// physics/balance/config changes that count as mod
 	if(cvar_string("g_mod_physics") != cvar_defstring("g_mod_physics"))
 		modname = cvar_string("g_mod_physics");
-	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance"))
+	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance") && cvar_string("g_mod_balance") != "Testing")
 		modname = cvar_string("g_mod_balance");
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
@@ -2054,7 +2066,7 @@ string GotoMap(string m)
 		return "Map switch will happen after scoreboard.";
 }
 
-bool autocvar_sv_gameplayfix_multiplethinksperframe;
+bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
 void RunThink(entity this)
 {
 	// don't let things stay in the past.
@@ -2083,7 +2095,7 @@ void RunThink(entity this)
 }
 
 bool autocvar_sv_freezenonclients;
-bool autocvar_sv_gameplayfix_delayprojectiles;
+bool autocvar_sv_gameplayfix_delayprojectiles = false;
 void Physics_Frame()
 {
 	if(autocvar_sv_freezenonclients)

@@ -34,8 +34,10 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 }
 
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
 {
+	move_stepnormal = '0 0 0';
+
 	if(dt <= 0)
 		return 0;
 
@@ -150,8 +152,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			// step - return it to caller
 			blocked |= 2;
 			// save the trace for player extrafriction
-			if(stepnormal)
-				stepnormal = trace_plane_normal;
+			if(applystepnormal)
+				move_stepnormal = trace_plane_normal;
 		}
 
 		if(my_trace_fraction >= 0.001)

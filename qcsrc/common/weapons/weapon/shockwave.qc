@@ -666,9 +666,8 @@ void Draw_Shockwave(entity this)
 	// WEAPONTODO: trace to find what we actually hit
 	vector endpos = (this.sw_shotorg + (this.sw_shotdir * this.sw_distance));
 
-	vectorvectors(this.sw_shotdir);
-	vector right = v_right; // save this for when we do makevectors later
-	vector up = v_up; // save this for when we do makevectors later
+	vector _forward, right, up;
+	VECTOR_VECTORS(this.sw_shotdir, _forward, right, up);
 
 	// WEAPONTODO: combine and simplify these calculations
 	vector min_end = ((this.sw_shotorg + (this.sw_shotdir * SW_DISTTOMIN)) + (up * this.sw_spread_min));

@@ -341,6 +341,18 @@ void waypoint_unmark_hardwiredlink(entity wp_from, entity wp_to)
 	return;
 }
 
+void waypoint_restore_hardwiredlinks(entity wp)
+{
+	if (wp.wphw00) waypoint_addlink(wp, wp.wphw00);
+	if (wp.wphw01) waypoint_addlink(wp, wp.wphw01);
+	if (wp.wphw02) waypoint_addlink(wp, wp.wphw02);
+	if (wp.wphw03) waypoint_addlink(wp, wp.wphw03);
+	if (wp.wphw04) waypoint_addlink(wp, wp.wphw04);
+	if (wp.wphw05) waypoint_addlink(wp, wp.wphw05);
+	if (wp.wphw06) waypoint_addlink(wp, wp.wphw06);
+	if (wp.wphw07) waypoint_addlink(wp, wp.wphw07);
+}
+
 void waypoint_setupmodel(entity wp)
 {
 	if (autocvar_g_waypointeditor)
@@ -1219,6 +1231,11 @@ void waypoint_think(entity this)
 			}
 		}
 	});
+
+	// waypoint_clearlinks preserves references to old hardwired links (.wphwXX links)
+	// so they can be restored here when a wp is spawned over an existing one
+	waypoint_restore_hardwiredlinks(this);
+
 	navigation_testtracewalk = 0;
 	this.wplinked = true;
 	this.dphitcontentsmask = dphitcontentsmask_save;
@@ -1240,6 +1257,8 @@ void waypoint_clearlinks(entity wp)
 	wp.wp08mincost = wp.wp09mincost = wp.wp10mincost = wp.wp11mincost = wp.wp12mincost = wp.wp13mincost = wp.wp14mincost = wp.wp15mincost = f;
 	wp.wp16mincost = wp.wp17mincost = wp.wp18mincost = wp.wp19mincost = wp.wp20mincost = wp.wp21mincost = wp.wp22mincost = wp.wp23mincost = f;
 	wp.wp24mincost = wp.wp25mincost = wp.wp26mincost = wp.wp27mincost = wp.wp28mincost = wp.wp29mincost = wp.wp30mincost = wp.wp31mincost = f;
+
+	// don't remove references to hardwired links (.wphwXX fields)
 
 	wp.wplinked = false;
 }

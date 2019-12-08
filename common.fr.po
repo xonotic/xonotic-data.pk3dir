@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-08-29 09:07+0000\n"
+"PO-Revision-Date: 2019-10-06 08:21+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -5332,7 +5332,7 @@ msgstr "%s ans"
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr "%d ans"
+msgstr "%d an"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
@@ -5362,7 +5362,7 @@ msgstr "%s semaines"
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr "%d semaines"
+msgstr "%d semaine"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
@@ -5392,7 +5392,7 @@ msgstr "%s jours"
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr "%d jours"
+msgstr "%d jour"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
@@ -5422,7 +5422,7 @@ msgstr "%s heures"
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr "%d heures"
+msgstr "%d heure"
 
 #: qcsrc/lib/counting.qh:40
 #, c-format
@@ -5452,7 +5452,7 @@ msgstr "%s minutes"
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr "%d minutes"
+msgstr "%d minute"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
@@ -5482,7 +5482,7 @@ msgstr "%s secondes"
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr "%d secondes"
+msgstr "%d seconde"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format

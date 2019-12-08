@@ -89,6 +89,13 @@ void havocbot_ai(entity this)
 		bot_strategytoken_taken = true;
 	}
 
+	if (this.goalcurrent && wasfreed(this.goalcurrent))
+	{
+		navigation_clearroute(this);
+		navigation_goalrating_timeout_force(this);
+		return;
+	}
+
 	if(IS_DEAD(this) || STAT(FROZEN, this))
 	{
 		if (this.goalcurrent)
@@ -267,7 +274,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 	if(this.aistatus & AI_STATUS_ATTACKING)
 		return;
 
-	if(IS_PLAYER(this.goalcurrent))
+	if (!this.goalcurrent || IS_PLAYER(this.goalcurrent))
 		return;
 
 	if((this.aistatus & AI_STATUS_RUNNING) && vdist(this.velocity, <, autocvar_sv_maxspeed * 0.75)
@@ -292,8 +299,6 @@ void havocbot_bunnyhop(entity this, vector dir)
 		this.bot_timelastseengoal = 0;
 	}
 
-	vector gco = get_closer_dest(this.goalcurrent, this.origin);
-
 	// Run only to visible goals
 	if(IS_ONGROUND(this))
 	if(vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed))
@@ -304,6 +309,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 		// seen it before
 		if(this.bot_timelastseengoal)
 		{
+			vector gco = get_closer_dest(this.goalcurrent, this.origin);
 			// for a period of time
 			if(time - this.bot_timelastseengoal > autocvar_bot_ai_bunnyhop_firstjumpdelay)
 			{
@@ -1253,9 +1259,7 @@ void havocbot_movetogoal(entity this)
 		havocbot_keyboard_movement(this, destorg);
 
 	// Bunnyhop!
-	//if(this.aistatus & AI_STATUS_ROAMING)
-	if(!bunnyhop_forbidden && this.goalcurrent)
-	if(skill+this.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
+	if (!bunnyhop_forbidden && skill + this.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(this, dir);
 
 	if (dir * v_up >= autocvar_sv_jumpvelocity * 0.5 && IS_ONGROUND(this))
