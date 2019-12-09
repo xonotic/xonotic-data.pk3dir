@@ -88,20 +88,18 @@ void ItemDraw(entity this)
             this.onground_time = time + 0.5;
         }
     }
-    else if (autocvar_cl_animate_items)
+    else if (autocvar_cl_animate_items && !this.item_simple) // no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
         {
-        	if(!this.item_simple)
-            	this.angles += this.avelocity * frametime;
+        	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
-        	if(!this.item_simple)
-            	this.angles += this.avelocity * frametime;
+        	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
         }
