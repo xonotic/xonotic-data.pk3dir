@@ -184,9 +184,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         Item_SetAlpha(this);
 
-        if(autocvar_cl_fullbright_items)
-            if(this.ItemStatus & ITS_ALLOWFB)
-                this.effects |= EF_FULLBRIGHT;
+        if(this.ItemStatus & ITS_ALLOWFB)
+           this.effects |= EF_FULLBRIGHT;
 
         if(this.ItemStatus & ITS_GLOW)
         {
