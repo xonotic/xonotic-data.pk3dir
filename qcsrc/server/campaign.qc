@@ -144,6 +144,16 @@ void CampaignPreInit()
 	// with the menu a little still...)
 	cvar_set_normal("sv_gravity", ftos(autocvar_sv_gravity));
 
+	// execute the global campaign cfg file if one exists
+	string filename = strcat("maps/campaign", campaign_name, ".cfg");
+	if(fexists(filename))
+		localcmd(strcat("exec \"", filename, "\"\n"));
+
+	// execute the campaign level cfg file if one exists
+	string filename_level = strcat("maps/campaign", campaign_name, "_", ftos(campaign_level + 1), ".cfg");
+	if(fexists(filename_level))
+		localcmd(strcat("exec \"", filename_level, "\"\n"));
+
 	if(Campaign_Invalid())
 		return;
 
