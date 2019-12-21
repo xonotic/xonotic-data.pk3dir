@@ -1387,7 +1387,7 @@ void havocbot_ctf_calculate_middlepoint()
 		// for symmetrical editing of waypoints
 		entity f1 = ctf_worldflaglist;
 		entity f2 = f1.ctf_worldflagnext;
-		float m = -(f1.origin.y - f2.origin.y) / (f1.origin.x - f2.origin.x);
+		float m = -(f1.origin.y - f2.origin.y) / (max(f1.origin.x - f2.origin.x, FLOAT_EPSILON));
 		float q = havocbot_middlepoint.y - m * havocbot_middlepoint.x;
 		havocbot_symmetry_axis_m = m;
 		havocbot_symmetry_axis_q = q;
