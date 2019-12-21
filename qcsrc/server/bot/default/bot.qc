@@ -211,7 +211,10 @@ void bot_setnameandstuff(entity this)
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	this.bot_forced_team = stof(argv(5));
+	if (teamplay && autocvar_bot_vs_human && AvailableTeams() == 2)
+		this.bot_forced_team = 0;
+	else
+		this.bot_forced_team = stof(argv(5));
 
 	prio = 6;
 
