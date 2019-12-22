@@ -905,6 +905,23 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			else if(WARN_COND)
 				LOG_WARN("Map ", pFilename, " supports unknown feature ", t, ", ignored");
 		}
+		else if(t == "locked")
+		{
+			t = car(s); s = cdr(s); f = stof(s);
+			// hide the map based on campaign status
+			if(f > 0)
+			{
+				// we need to have reached this level
+				if(cvar(strcat("g_campaign_", t, "_index")) < f);
+					f |= MAPINFO_FLAG_LOCKED;
+			}
+			else
+			{
+				// we need to have won the campaign
+				if(!cvar(strcat("g_campaign_", t, "_won")));
+					f |= MAPINFO_FLAG_LOCKED;
+			}
+		}
 		else if(t == "hidden")
 		{
 			MapInfo_Map_flags |= MAPINFO_FLAG_HIDDEN;
@@ -1312,6 +1329,11 @@ void MapInfo_Shutdown()
 int MapInfo_ForbiddenFlags()
 {
 	int f = MAPINFO_FLAG_FORBIDDEN;
+
+#ifdef GAMEQC
+	if (!cvar("g_maplist_allow_locked"))
+#endif
+		f |= MAPINFO_FLAG_LOCKED;
 
 #ifdef GAMEQC
 	if (!cvar("g_maplist_allow_hidden"))

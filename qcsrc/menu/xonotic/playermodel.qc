@@ -22,6 +22,19 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	me.configureXonoticImage(me, string_null, -1);
 }
 
+bool XonoticPlayerModelSelector_loadModels_isLocked()
+{
+	bool hidden = false; // hide the player model based on campaign status
+	if(get_model_parameters_locked_name)
+	{
+		if(get_model_parameters_locked_level > 0) // we need to have reached this level
+			hidden = cvar(strcat("g_campaign_", get_model_parameters_locked_name, "_index")) < get_model_parameters_locked_level;
+		else // we need to have won the campaign
+			hidden = !cvar(strcat("g_campaign_", get_model_parameters_locked_name, "_won"));
+	}
+	return hidden;
+}
+
 void XonoticPlayerModelSelector_loadModels(entity me)
 {
 	int i;
@@ -38,7 +51,7 @@ void XonoticPlayerModelSelector_loadModels(entity me)
 		fn = search_getfilename(glob, i);
 		if(!get_model_parameters(fn, -1))
 			continue;
-		if(get_model_parameters_hidden)
+		if(get_model_parameters_hidden || XonoticPlayerModelSelector_loadModels_isLocked())
 			continue;
 		bufstr_add(sortbuf, sprintf("%-128s%s", get_model_parameters_name, fn), 1);
 	}
@@ -51,7 +64,7 @@ void XonoticPlayerModelSelector_loadModels(entity me)
 		fn = substring(bufstr_get(sortbuf, i), 128, -1);
 		if(!get_model_parameters(fn, -1))
 			error("But it JUST worked!");
-		if(get_model_parameters_hidden)
+		if(get_model_parameters_hidden || XonoticPlayerModelSelector_loadModels_isLocked())
 			continue;
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_TITLE, get_model_parameters_name);
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_IMAGE, strcat("/", substring(get_model_datafilename(get_model_parameters_modelname, get_model_parameters_modelskin, "tga"), 0, -5)));
