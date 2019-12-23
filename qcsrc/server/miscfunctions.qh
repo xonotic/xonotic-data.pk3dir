@@ -11,7 +11,7 @@
 #include <common/mapinfo.qh>
 #include <common/turrets/all.qh>
 
-#ifdef RELEASE
+#if 1
 #define cvar_string_normal builtin_cvar_string
 #define cvar_normal builtin_cvar
 #else
