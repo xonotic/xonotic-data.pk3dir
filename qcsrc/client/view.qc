@@ -780,7 +780,7 @@ void UpdateDamage()
 	if (damage_dealt_time != damage_dealt_time_prev)
 	{
 		unaccounted_damage += unaccounted_damage_new;
-		LOG_TRACE("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")");
+		//LOG_TRACE("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")");
 	}
 	damage_dealt_time_prev = damage_dealt_time;
 
