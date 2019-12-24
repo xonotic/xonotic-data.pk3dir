@@ -82,12 +82,16 @@
 			}
 
 		#define REPLICATE_SIMPLE(field, cvarname) MACRO_BEGIN \
-			if (ReplicateVars_NOT_SENDING() && field != cvar(cvarname)) \
+			if (ReplicateVars_NOT_SENDING()) \
 			{ \
-				localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); \
-				ReplicateVars_DELAY_1FRAME(); \
-				field = cvar(cvarname); \
-				return; \
+				float thecvar = cvar(cvarname); \
+				if(field != thecvar) \
+				{ \
+					localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); \
+					ReplicateVars_DELAY_1FRAME(); \
+					field = thecvar; \
+					return; \
+				} \
 			} \
 		MACRO_END
 	#endif
