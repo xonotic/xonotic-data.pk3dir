@@ -177,6 +177,10 @@ void bot_setnameandstuff(entity this)
 				continue;
 			if(substring(readfile, 0, 1) == "#")
 				continue;
+			// NOTE if the line is empty tokenizebyseparator(readfile, "\t")
+			// will create 1 empty token because there's no separator (bug?)
+			if (readfile == "")
+				continue;
 			tokens = tokenizebyseparator(readfile, "\t");
 			if(tokens == 0)
 				continue;
