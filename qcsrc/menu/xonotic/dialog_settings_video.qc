@@ -62,7 +62,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate")));
 
 	me.TR(me);
-		if(cvar("developer"))
+		if(cvar("developer") > 0)
 		{
 			me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "v_flipped", _("Flip view horizontally"),
 				_("Poor man's left handed mode")));
@@ -162,7 +162,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "v_glslgamma", _("Use GLSL to handle color control"),
 			_("Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot")));
 			setDependent(e, "vid_gl20", 1, 1);
-	if(cvar("developer"))
+	if(cvar("developer") > 0)
 	{
 		me.TR(me);
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));

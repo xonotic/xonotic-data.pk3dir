@@ -2262,7 +2262,7 @@ void Shutdown()
 			else
 				db_save(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 		}
-		if(autocvar_developer)
+		if(autocvar_developer > 0)
 		{
 			if(autocvar_sv_db_saveasdump)
 				db_dump(TemporaryDB, "server-temp.db");
