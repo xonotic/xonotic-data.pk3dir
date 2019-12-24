@@ -864,7 +864,7 @@ REGISTRY_END(Notifications)
 void ReplicateVars(bool would_destroy)
 {
 	if (!would_destroy)
-		FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
+		FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 			string cvarname = strcat("notification_", Get_Notif_CvarName(it));
 			// NOTE: REPLICATE_SIMPLE can return;
 			REPLICATE_SIMPLE(it.cvar_value, cvarname);
