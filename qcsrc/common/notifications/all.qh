@@ -865,7 +865,7 @@ void ReplicateVars(bool would_destroy)
 {
 	if (!would_destroy)
 		FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
-			string cvarname = sprintf("notification_%s", Get_Notif_CvarName(it));
+			string cvarname = strcat("notification_", Get_Notif_CvarName(it));
 			// NOTE: REPLICATE_SIMPLE can return;
 			REPLICATE_SIMPLE(it.cvar_value, cvarname);
 		});
