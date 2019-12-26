@@ -126,7 +126,7 @@ void Draw_Snow(entity this)
 
 	if(boxesoverlap(view_origin - maxdist, view_origin + maxdist, this.absmin, this.absmax))
 	//if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
-    	te_particlesnow(effbox_min, effbox_max, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
+    	te_particlesnow(effbox_min, effbox_max, this.velocity, floor(mycount * drawframetime + random()), this.glow_color);
 }
 
 NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
