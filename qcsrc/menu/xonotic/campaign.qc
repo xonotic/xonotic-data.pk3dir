@@ -30,7 +30,7 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 			getWrappedLine_remaining = s;
 			while(getWrappedLine_remaining)
 			{
-				s = getWrappedLine(w, theFontSize, stringwidth_colors);
+				s = getWrappedLine(w, theFontSize, draw_TextWidth_WithColors);
 				if(--l < 0) goto toolong;
 				r = strcat(r, s, "\n");
 			}
