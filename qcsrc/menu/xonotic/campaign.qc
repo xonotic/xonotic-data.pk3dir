@@ -30,7 +30,7 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 			getWrappedLine_remaining = s;
 			while(getWrappedLine_remaining)
 			{
-				s = getWrappedLine(w, theFontSize, draw_TextWidth_WithoutColors);
+				s = getWrappedLine(w, theFontSize, stringwidth_colors);
 				if(--l < 0) goto toolong;
 				r = strcat(r, s, "\n");
 			}
@@ -232,8 +232,8 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 		s = campaign_shortdesc[i]; // fteqcc sucks
 	else
 		s = "???";
-	s = draw_TextShortenToWidth(sprintf(_("Level %d: %s"), i+1, s), me.columnNameSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+	s = draw_TextShortenToWidth(sprintf(_("Level %d: %s"), i+1, s), me.columnNameSize, 1, me.realFontSize);
+	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 1, me.realFontSize))) * eX, s, me.realFontSize, theColor, theAlpha, 1);
 
 	if(i <= me.campaignIndex)
 	{
@@ -243,7 +243,7 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 		for(j = 0; j < n; ++j)
 			if(argv(j) != "")
 			{
-				draw_Text(o, argv(j), me.realFontSize, theColor, theAlpha * SKINALPHA_CAMPAIGN_DESCRIPTION, 0);
+				draw_Text(o, argv(j), me.realFontSize, theColor, theAlpha * SKINALPHA_CAMPAIGN_DESCRIPTION, 1);
 				o.y += me.realFontSize.y;
 			}
 			else
