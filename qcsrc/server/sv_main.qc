@@ -120,7 +120,11 @@ void CreatureFrame_FallDamage(entity this)
 		else
 			dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 		if (dm > 0)
-			Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		{
+			tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODAMAGE))
+				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		}
 	}
 
 	if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)

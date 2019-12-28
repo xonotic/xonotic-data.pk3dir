@@ -43,7 +43,7 @@ void Porto_Draw(entity this)
 			dir = reflect(dir, trace_plane_normal);
 			pos = trace_endpos;
 			wepent.polyline[++idx] = pos;
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
 			{
 				n += 1;
 				continue;
