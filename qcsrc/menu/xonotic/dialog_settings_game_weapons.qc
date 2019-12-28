@@ -73,6 +73,19 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			_("Position of the weapon model; requires reconnect")));
 			setDependent(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
+			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
+				setDependent(e, "r_drawviewmodel", 1, 1);
+
+			me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_viewmodel_alpha"));
+				setDependent(e, "r_drawviewmodel", 1, 1);
+				e.addValue(e, _("Invisible"), "-1");
+				e.addValue(e, "15%", "0.15");
+				e.addValue(e, "25%", "0.25");
+				e.addValue(e, "50%", "0.5");
+				e.addValue(e, "75%", "0.75");
+				e.addValue(e, "100%", "1");
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "cl_followmodel", _("Gun model swaying"), "-"));
