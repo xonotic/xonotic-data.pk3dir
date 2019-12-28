@@ -21,12 +21,15 @@ vector PlayerTouchWall(entity this)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) \
 		return trace_plane_normal;
 
+	vector forward, right, up;
+	MAKE_VECTORS(this.angles, forward, right, up);
+
 	float dist = 10, max_normal = 0.2, scaler = 100;
 	vector start = this.origin;
-	TRACE(start + v_forward * scaler)
-	TRACE(start - v_forward * scaler)
-	TRACE(start + v_right * scaler)
-	TRACE(start - v_right * scaler)
+	TRACE(start + forward * scaler)
+	TRACE(start - forward * scaler)
+	TRACE(start + right * scaler)
+	TRACE(start - right * scaler)
 #undef TRACE
 	return '0 0 0';
 }
