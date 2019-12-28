@@ -16,6 +16,7 @@
 #include "../lib/warpzone/common.qh"
 #include "../common/vehicles/vehicle.qh"
 #include "../common/vehicles/sv_vehicles.qh"
+#include <server/player.qh>
 
 #define PORTALS_ARE_NOT_SOLID
 
