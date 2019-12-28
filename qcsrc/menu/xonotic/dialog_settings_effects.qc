@@ -125,10 +125,11 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			}
 		}
 	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show skyboxes"), _("Disable skyboxes for performance and visibility")));
 		if(cvar("developer") > 0)
 		{
-			me.TDempty(me, 0.2);
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(3, 0, "r_showsurfaces", _("Show surfaces"),
+			me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(3, 0, "r_showsurfaces", _("Show surfaces"),
 				_("Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly.")));
 		}
 	me.TR(me);
