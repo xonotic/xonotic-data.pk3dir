@@ -160,7 +160,7 @@ void Create_Notification_Entity_Choice(entity notif,
 
 void Dump_Notifications(int fh, bool alsoprint);
 
-GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt")
+GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt", false)
 {
 	switch (request)
 	{
