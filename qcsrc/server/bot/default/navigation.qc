@@ -943,10 +943,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
 			{
 				if(walkfromwp && !ent.navigation_dynamicgoal)
-				{
 					waypoint_clearlinks(ent); // initialize wpXXmincost fields
-					navigation_item_addlink(it, ent);
-				}
 				return it;
 			}
 		});
@@ -963,24 +960,6 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	{
 		org += 0.5 * (ent.mins + ent.maxs);
 		org.z = ent.origin.z + ent.mins.z - PL_MIN_CONST.z; // player height
-	}
-
-	if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
-	{
-		waypoint_clearlinks(ent); // initialize wpXXmincost fields
-		IL_EACH(g_waypoints, it != ent,
-		{
-			if (walkfromwp && (it.wpflags & WPFLAGMASK_NORELINK))
-				continue;
-
-			set_tracewalk_dest(ent, it.origin, false);
-			if (vdist(tracewalk_dest - it.origin, <, 1050)
-				&& tracewalk(ent, it.origin, PL_MIN_CONST, PL_MAX_CONST,
-				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
-			{
-				navigation_item_addlink(it, ent);
-			}
-		});
 	}
 
 	// box check failed, try walk
@@ -1507,7 +1486,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if(e == NULL)
 		return false;
 
-	if(nearest_wp && nearest_wp.enemy)
+	if(nearest_wp && nearest_wp.enemy && !(nearest_wp.enemy.wpflags & WPFLAGMASK_NORELINK))
 	{
 		// often path can be optimized by not adding the nearest waypoint
 		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
@@ -1529,8 +1508,35 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 				}
 			}
 		}
-		else if(navigation_item_islinked(nearest_wp.enemy, this.goalentity))
-			e = nearest_wp.enemy;
+		else
+		{
+			// NOTE unlike waypoints, items hold incoming links
+			navigation_item_initlinks_ifneeded(this.goalentity);
+			int link_num = navigation_item_getlinknum(this.goalentity, nearest_wp.enemy);
+			if (link_num >= 0)
+			{
+				if (navigation_item_iswalkablelink(this.goalentity, link_num))
+					e = nearest_wp.enemy;
+			}
+			else // untested link
+			{
+				entity wp = nearest_wp.enemy;
+				entity goal = this.goalentity;
+				bool walkable = false;
+				if (checkpvs(wp.origin, goal))
+				{
+					set_tracewalk_dest(goal, wp.origin, false);
+					if (vdist(tracewalk_dest - wp.origin, <, 1050)
+						&& tracewalk(goal, wp.origin, PL_MIN_CONST, PL_MAX_CONST,
+						tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+					{
+						walkable = true;
+						e = nearest_wp.enemy;
+					}
+				}
+				navigation_item_add_link(wp, goal, walkable);
+			}
+		}
 	}
 
 	for (;;)
