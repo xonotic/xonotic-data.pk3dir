@@ -48,6 +48,8 @@
 #include <menu/xonotic/dialog_multiplayer_create_mutators.qc>
 #include <menu/xonotic/dialog_multiplayer_join.qc>
 #include <menu/xonotic/dialog_multiplayer_join_serverinfo.qc>
+#include <menu/xonotic/dialog_multiplayer_join_serverinfotab.qc>
+#include <menu/xonotic/dialog_multiplayer_join_ToS.qc>
 #include <menu/xonotic/dialog_multiplayer_media.qc>
 #include <menu/xonotic/dialog_multiplayer_media_demo.qc>
 #include <menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc>
