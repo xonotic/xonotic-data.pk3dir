@@ -243,6 +243,7 @@ void StartFrame()
 	anticheat_startframe();
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
+	GlobalStats_updateglobal();
     FOREACH_CLIENT(true, GlobalStats_update(it));
     IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }
