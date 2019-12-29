@@ -170,7 +170,7 @@ void CampaignPostInit()
 	else
 	{
 		// use "" if a limit isn't set, interpreted as don't override
-		float fl; fl = tokenizebyseparator(campaign_fraglimit[0], "+");
+		tokenizebyseparator(campaign_fraglimit[0], "+");
 		string fraglimit = argv(0) ? argv(0) : "";
 		string leadlimit = argv(1) ? argv(1) : "";
 		string timelimit = ftos(stof(campaign_timelimit[0]));
