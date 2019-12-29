@@ -161,16 +161,25 @@ void CampaignPostInit()
 	if(autocvar__campaign_testrun)
 	{
 		cvar_set("fraglimit", "0");
+		cvar_set("leadlimit", "0");
 		cvar_set("timelimit", "0.01");
 		cvar_set_normal("fraglimit", "0");
+		cvar_set_normal("leadlimit", "0");
 		cvar_set_normal("timelimit", "0.01");
 	}
 	else
 	{
-		cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
-		cvar_set("timelimit", ftos(campaign_timelimit[0]));
-		cvar_set_normal("fraglimit", ftos(campaign_fraglimit[0]));
-		cvar_set_normal("timelimit", ftos(campaign_timelimit[0]));
+		// use "" if a limit isn't set, interpreted as don't override
+		float fl; fl = tokenizebyseparator(campaign_fraglimit[0], "+");
+		string fraglimit = argv(0) ? argv(0) : "";
+		string leadlimit = argv(1) ? argv(1) : "";
+		string timelimit = ftos(stof(campaign_timelimit[0]));
+		cvar_set("fraglimit", fraglimit);
+		cvar_set("leadlimit", leadlimit);
+		cvar_set("timelimit", timelimit);
+		cvar_set_normal("fraglimit", fraglimit);
+		cvar_set_normal("leadlimit", leadlimit);
+		cvar_set_normal("timelimit", timelimit);
 	}
 }
 
