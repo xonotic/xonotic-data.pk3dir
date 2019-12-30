@@ -59,7 +59,7 @@
 				store.fld = field; \
 			}
 	#elif defined(CSQC)
-		float ReplicateVars_time;
+		noref float ReplicateVars_time;
 		#define ReplicateVars_NOT_SENDING() (time > ReplicateVars_time)
 		#define ReplicateVars_DELAY(t) ReplicateVars_time = time + t
 		#define ReplicateVars_DELAY_1FRAME() ReplicateVars_time = time
@@ -82,12 +82,16 @@
 			}
 
 		#define REPLICATE_SIMPLE(field, cvarname) MACRO_BEGIN \
-			if (ReplicateVars_NOT_SENDING() && field != cvar(cvarname)) \
+			if (ReplicateVars_NOT_SENDING()) \
 			{ \
-				localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); \
-				ReplicateVars_DELAY_1FRAME(); \
-				field = cvar(cvarname); \
-				return; \
+				float thecvar = cvar(cvarname); \
+				if(field != thecvar) \
+				{ \
+					localcmd(strcat("cl_cmd sendcvar ", cvarname, "\n")); \
+					ReplicateVars_DELAY_1FRAME(); \
+					field = thecvar; \
+					return; \
+				} \
 			} \
 		MACRO_END
 	#endif

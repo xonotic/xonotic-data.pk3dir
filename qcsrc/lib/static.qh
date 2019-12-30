@@ -17,8 +17,8 @@ void profile(string s)
 }
 
 #define _STATIC_INIT(func, where) \
-	ACCUMULATE void _static_##func##profile() { profile(#func); } \
-	ACCUMULATE_FUNCTION(where, _static_##func##profile) \
+	/* ACCUMULATE void _static_##func##profile() { profile(#func); } */ \
+	/* ACCUMULATE_FUNCTION(where, _static_##func##profile) */ \
 	ACCUMULATE void _static_##func(); \
 	ACCUMULATE_FUNCTION(where, _static_##func) \
 	void _static_##func()

@@ -1037,7 +1037,7 @@ void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingsca
 			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 	}
 
-	havocbot_goalrating_items(this, 1, this.origin, 10000);
+	havocbot_goalrating_items(this, 80000, this.origin, 10000);
 }
 
 void havocbot_role_kh_carrier(entity this)

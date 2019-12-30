@@ -9,10 +9,10 @@
     #include <common/monsters/_mod.qh>
 #endif
 
-bool autocvar_g_mapinfo_ignore_warnings;
 #ifdef MENUQC
-#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings)
+#define WARN_COND false
 #else
+bool autocvar_g_mapinfo_ignore_warnings;
 #define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
 #endif
 

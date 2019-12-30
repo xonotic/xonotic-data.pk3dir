@@ -170,6 +170,26 @@ void bot_setnameandstuff(entity this)
 	}
 	else
 	{
+		entity balance = TeamBalance_CheckAllowedTeams(NULL);
+		TeamBalance_GetTeamCounts(balance, NULL);
+		int smallest_team = -1;
+		int smallest_count = -1;
+		if (teamplay)
+		{
+			for (int i = 1; i <= AvailableTeams(); ++i)
+			{
+				// NOTE if (autocvar_g_campaign && autocvar_g_campaign_forceteam == i)
+				// TeamBalance_GetNumberOfPlayers(balance, i); returns the number of players + 1
+				// since it keeps a spot for the real player in the desired team
+				int count = TeamBalance_GetNumberOfPlayers(balance, i);
+				if (smallest_count < 0 || count < smallest_count)
+				{
+					smallest_team = i;
+					smallest_count = count;
+				}
+			}
+		}
+		TeamBalance_Destroy(balance);
 		RandomSelection_Init();
 		while((readfile = fgets(file)))
 		{
@@ -177,18 +197,33 @@ void bot_setnameandstuff(entity this)
 				continue;
 			if(substring(readfile, 0, 1) == "#")
 				continue;
+			// NOTE if the line is empty tokenizebyseparator(readfile, "\t")
+			// will create 1 empty token because there's no separator (bug?)
+			if (readfile == "")
+				continue;
 			tokens = tokenizebyseparator(readfile, "\t");
 			if(tokens == 0)
 				continue;
 			s = argv(0);
-			prio = 1;
+			prio = 0;
+			bool conflict = false;
 			FOREACH_CLIENT(IS_BOT_CLIENT(it), {
-				if(s == it.cleanname)
+				if (s == it.cleanname)
 				{
-					prio = 0;
+					conflict = true;
 					break;
 				}
 			});
+			if (!conflict)
+				prio += 1;
+			if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+			{
+				int forced_team = stof(argv(5));
+				if (!Team_IsValidIndex(forced_team))
+					forced_team = 0;
+				if (!forced_team || forced_team == smallest_team)
+					prio += 2;
+			}
 			RandomSelection_AddString(readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
@@ -211,7 +246,10 @@ void bot_setnameandstuff(entity this)
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	this.bot_forced_team = stof(argv(5));
+	if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+		this.bot_forced_team = stof(argv(5));
+	else
+		this.bot_forced_team = 0;
 
 	prio = 6;
 

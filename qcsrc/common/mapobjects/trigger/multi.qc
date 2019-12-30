@@ -176,6 +176,9 @@ spawnfunc(trigger_multiple)
 		this.wait = 0;
 	this.use = multi_use;
 
+	if(this.wait == -1 && autocvar_sv_vq3compat)
+		this.wait = 0.1; // compatibility for q3df: "instant" return
+
 	EXACTTRIGGER_INIT;
 
 	this.team_saved = this.team;

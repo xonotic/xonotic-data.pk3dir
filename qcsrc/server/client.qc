@@ -1339,7 +1339,7 @@ void PrintToChat(entity client, string text)
 ERASEABLE
 void DebugPrintToChat(entity client, string text)
 {
-	if (autocvar_developer)
+	if (autocvar_developer > 0)
 	{
 		PrintToChat(client, text);
 	}
@@ -1355,7 +1355,7 @@ void PrintToChatAll(string text)
 ERASEABLE
 void DebugPrintToChatAll(string text)
 {
-	if (autocvar_developer)
+	if (autocvar_developer > 0)
 	{
 		PrintToChatAll(text);
 	}
@@ -1377,7 +1377,7 @@ void PrintToChatTeam(int team_num, string text)
 ERASEABLE
 void DebugPrintToChatTeam(int team_num, string text)
 {
-	if (autocvar_developer)
+	if (autocvar_developer > 0)
 	{
 		PrintToChatTeam(team_num, text);
 	}

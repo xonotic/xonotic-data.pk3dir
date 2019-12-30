@@ -239,6 +239,9 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 	return false;
 }
 
+// Unfortuntely we can't use trace_inwater since it doesn't hold the fraction of the total
+// distance that was traveled before impact as the description in the engine (collision.h) says.
+// It would have helped to speed up tracewalk underwater
 vector resurface_limited(vector org, float lim, vector m1)
 {
 	if (WETFEET(org + eZ * (lim - org.z)))

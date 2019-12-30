@@ -39,6 +39,7 @@ float autocvar_g_balance_falldamage_deadminspeed;
 float autocvar_g_balance_falldamage_factor;
 int autocvar_g_balance_falldamage_maxdamage;
 float autocvar_g_balance_falldamage_minspeed;
+bool autocvar_g_balance_falldamage_onlyvertical;
 int autocvar_g_balance_firetransfer_damage;
 int autocvar_g_balance_firetransfer_time;
 float autocvar_g_balance_fuel_limit;

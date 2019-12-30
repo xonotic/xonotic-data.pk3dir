@@ -783,6 +783,8 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 		{
 			if (!(actor.items & IT_UNLIMITED_AMMO))
 			{
+				if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0)
+					return; // in this case the primary weapon will do the switching when it runs out of ammo (TODO: do this same check but for other slots)
 				if (IS_REAL_CLIENT(actor) && actor.reload_complain < time)
 				{
 					play2(actor, SND(UNAVAILABLE));

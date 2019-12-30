@@ -206,6 +206,9 @@ spawnfunc(func_button)
 	if (!this.lip)
 		this.lip = 4;
 
+	if(this.wait == -1 && autocvar_sv_vq3compat)
+		this.wait = 0.1; // compatibility for q3df: "instant" return
+
     if(this.noise != "")
         precache_sound(this.noise);
 

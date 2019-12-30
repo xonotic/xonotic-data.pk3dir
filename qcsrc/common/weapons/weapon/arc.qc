@@ -892,10 +892,9 @@ void Draw_ArcBeam(entity this)
 		// into a weapon system for client code.
 
 		// find where we are aiming
-		makevectors(((autocvar_chase_active) ? warpzone_save_view_angles : view_angles));
-		vector forward = v_forward;
-		vector right = v_right;
-		vector up = v_up;
+		vector myviewangle = ((autocvar_chase_active) ? warpzone_save_view_angles : view_angles);
+		vector forward, right, up;
+		MAKE_VECTORS(myviewangle, forward, right, up);
 		entity wepent = viewmodels[this.beam_slot];
 
 		if(autocvar_chase_active)
@@ -911,11 +910,6 @@ void Draw_ArcBeam(entity this)
 		else
 			{ start_pos = this.origin; }
 
-		int v_shot_idx;  // used later
-		(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
-		if(v_shot_idx && this.beam_usevieworigin == 2)
-			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
-
 		// trace forward with an estimation
 		WarpZone_TraceLine(
 			start_pos,
@@ -923,6 +917,11 @@ void Draw_ArcBeam(entity this)
 			MOVE_NOMONSTERS,
 			this
 		);
+
+		int v_shot_idx;  // used later
+		(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
+		if(v_shot_idx && this.beam_usevieworigin == 2)
+			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
 
 		// untransform in case our trace went through a warpzone
 		vector end_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
@@ -956,6 +955,8 @@ void Draw_ArcBeam(entity this)
 		{
 			this.beam_dir = wantdir;
 			this.beam_initialized = true;
+
+			this.beam_muzzleentity.drawmask = MASK_NORMAL; // NOTE: this works around the muzzle entity flashing on the middle of the screen for a frame
 		}
 
 		if(this.beam_dir != wantdir)
@@ -972,7 +973,7 @@ void Draw_ArcBeam(entity this)
 				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
 				float blendfactor = bound(
 					0,
-					(1 - (this.beam_returnspeed * frametime)),
+					(1 - (this.beam_returnspeed * dt)),
 					min(this.beam_maxangle / angle, 1)
 				);
 				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
@@ -982,7 +983,7 @@ void Draw_ArcBeam(entity this)
 				// the radius is not too far yet, no worries :D
 				float blendfactor = bound(
 					0,
-					(1 - (this.beam_returnspeed * frametime)),
+					(1 - (this.beam_returnspeed * dt)),
 					1
 				);
 				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
@@ -1132,7 +1133,7 @@ void Draw_ArcBeam(entity this)
 			this.beam_hiteffect,
 			last_origin,
 			beamdir * -1,
-			frametime * 2
+			dt * 2
 		);
 	}
 	if(this.beam_hitlight[0])
@@ -1153,7 +1154,7 @@ void Draw_ArcBeam(entity this)
 			this.beam_muzzleeffect,
 			original_start_pos + wantdir * 20,
 			wantdir * 1000,
-			frametime * 0.1
+			dt * 0.1
 		);
 	}
 	if(this.beam_muzzlelight[0])
@@ -1206,7 +1207,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		flash = spawn();
 		flash.owner = this;
 		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
-		flash.drawmask = MASK_NORMAL;
+		//flash.drawmask = MASK_NORMAL;
 		flash.solid = SOLID_NOT;
 		flash.avelocity_z = 5000;
 		setattachment(flash, this, "");

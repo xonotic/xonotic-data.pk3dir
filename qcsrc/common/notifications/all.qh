@@ -160,7 +160,7 @@ void Create_Notification_Entity_Choice(entity notif,
 
 void Dump_Notifications(int fh, bool alsoprint);
 
-GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt")
+GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt", false)
 {
 	switch (request)
 	{
@@ -864,8 +864,8 @@ REGISTRY_END(Notifications)
 void ReplicateVars(bool would_destroy)
 {
 	if (!would_destroy)
-		FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
-			string cvarname = sprintf("notification_%s", Get_Notif_CvarName(it));
+		FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
+			string cvarname = strcat("notification_", Get_Notif_CvarName(it));
 			// NOTE: REPLICATE_SIMPLE can return;
 			REPLICATE_SIMPLE(it.cvar_value, cvarname);
 		});
