@@ -436,8 +436,6 @@ void havocbot_movetogoal(entity this)
 	vector diff;
 	vector dir;
 	vector flatdir;
-	vector evadeobstacle;
-	vector evadelava;
 	float dodge_enemy_factor = 1;
 	float maxspeed;
 	//float dist;
@@ -910,12 +908,13 @@ void havocbot_movetogoal(entity this)
 		dir = normalize(diff);
 	flatdir = (diff.z == 0) ? dir : normalize(vec2(diff));
 
+	vector evadeobstacle = '0 0 0';
+	vector evadelava = '0 0 0';
+
 	//if (this.bot_dodgevector_time < time)
 	{
 		//this.bot_dodgevector_time = time + cvar("bot_ai_dodgeupdateinterval");
 		//this.bot_dodgevector_jumpbutton = 1;
-		evadeobstacle = '0 0 0';
-		evadelava = '0 0 0';
 
 		this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 		makevectors(this.v_angle.y * '0 1 0');
@@ -1186,7 +1185,6 @@ void havocbot_movetogoal(entity this)
 		dodge = havocbot_dodge(this);
 		if (dodge)
 			dodge *= bound(0, 0.5 + (skill + this.bot_dodgeskill) * 0.1, 1);
-		dodge += evadeobstacle + evadelava;
 		evadelava = evadelava * bound(1,3-(skill+this.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
 		if (this.enemy)
 		{
@@ -1243,7 +1241,7 @@ void havocbot_movetogoal(entity this)
 	if (!ladder_zdir)
 	{
 		dir *= dodge_enemy_factor;
-		dir = normalize(dir + dodge);
+		dir = normalize(dir + dodge + evadeobstacle + evadelava);
 	}
 
 	makevectors(this.v_angle);
