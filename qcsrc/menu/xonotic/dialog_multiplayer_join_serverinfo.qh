@@ -7,7 +7,7 @@ CLASS(XonoticServerInfoDialog, XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, title, string, _("Server Info"));
 	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_MULTIPLAYER);
 	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.96);
-	ATTRIB(XonoticServerInfoDialog, rows, float, 18);
+	ATTRIB(XonoticServerInfoDialog, rows, float, 19);
 	ATTRIB(XonoticServerInfoDialog, columns, float, 2);
     ATTRIB(XonoticServerInfoDialog, infoTab, entity);
     ATTRIB(XonoticServerInfoDialog, ToSTab, entity);

@@ -18,13 +18,13 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 void XonoticServerInfoDialog_fill(entity me)
 {
 	entity mc, e;
-	mc = makeXonoticTabController(me.rows - 1);
+	mc = makeXonoticTabController(me.rows - 2);
 	me.TR(me);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Status"), me.infoTab = makeXonoticServerInfoTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Terms of Service"), makeXonoticServerToSTab()));
 
 	me.TR(me);
-		me.TD(me, me.rows - 1, me.columns, mc);
+		me.TD(me, me.rows - 2, me.columns, mc);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Close"), '0 0 0'));
