@@ -115,6 +115,7 @@
 #include <menu/xonotic/statslist.qc>
 #include <menu/xonotic/tab.qc>
 #include <menu/xonotic/tabcontroller.qc>
+#include <menu/xonotic/textbox.qc>
 #include <menu/xonotic/textlabel.qc>
 #include <menu/xonotic/textslider.qc>
 #include <menu/xonotic/util.qc>
