@@ -101,7 +101,6 @@ void CreatureFrame_FallDamage(entity this)
 		return; // if the entity hasn't moved and isn't moving, then don't do anything
 
 	// check for falling damage
-	float velocity_len = vlen(this.velocity);
 	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -116,9 +115,9 @@ void CreatureFrame_FallDamage(entity this)
 	{
 		float dm;
 		if(autocvar_g_balance_falldamage_onlyvertical)
-			dm = vlen('0 0 1' * this.oldvelocity.z) - vlen('0 0 1' * this.velocity.z);
+			dm = fabs(this.oldvelocity.z) - fabs(this.velocity.z);
 		else
-			dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+			dm = vlen(this.oldvelocity) - vlen(this.velocity); // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 		if (IS_DEAD(this))
 			dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
 		else
@@ -131,7 +130,7 @@ void CreatureFrame_FallDamage(entity this)
 		}
 	}
 
-	if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
+	if(autocvar_g_maxspeed > 0 && vdist(this.velocity, >, autocvar_g_maxspeed))
 		Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
 }
 
