@@ -115,7 +115,7 @@ void CreatureFrame_FallDamage(entity this)
 	{
 		float dm; // dm is the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 		if(autocvar_g_balance_falldamage_onlyvertical)
-			dm = fabs(this.oldvelocity.z) - fabs(this.velocity.z);
+			dm = fabs(this.oldvelocity.z) - vlen(this.velocity);
 		else
 			dm = vlen(this.oldvelocity) - vlen(this.velocity);
 		if (IS_DEAD(this))
