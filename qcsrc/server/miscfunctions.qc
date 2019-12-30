@@ -228,6 +228,18 @@ string AmmoNameFromWeaponentity(Weapon wep)
 	return ammoitems;
 }
 
+string PlayerHealth(entity this)
+{
+	float myhealth = floor(GetResource(this, RES_HEALTH));
+	if(myhealth == -666)
+		return "spectating";
+	else if(myhealth == -2342)
+		return "observing";
+	else if(myhealth <= 0 || IS_DEAD(this))
+		return "dead";
+	return ftos(myhealth);
+}
+
 string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
@@ -281,7 +293,7 @@ string formatmessage(entity this, string msg)
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
 			case "a": replacement = ftos(floor(GetResource(this, RES_ARMOR))); break;
-			case "h": replacement = ftos(floor(GetResource(this, RES_HEALTH))); break;
+			case "h": replacement = PlayerHealth(this); break;
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
