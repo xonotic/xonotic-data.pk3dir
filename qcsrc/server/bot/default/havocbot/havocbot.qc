@@ -908,8 +908,7 @@ void havocbot_movetogoal(entity this)
 		dir = normalize(diff);
 	flatdir = (diff.z == 0) ? dir : normalize(vec2(diff));
 
-	vector evadeobstacle = '0 0 0';
-	vector evadelava = '0 0 0';
+	vector evadedanger = '0 0 0';
 
 	//if (this.bot_dodgevector_time < time)
 	{
@@ -1098,14 +1097,14 @@ void havocbot_movetogoal(entity this)
 				this.goalcurrent_distance_time = -time; // mark second try
 			}
 
-			// Check for water/slime/lava and dangerous edges
-			// (only when the bot is on the ground or jumping intentionally)
-
 			if (skill + this.bot_moveskill <= 3 && time > this.bot_stop_moving_timeout
 				&& current_speed > maxspeed * 0.9 && fabs(deviation.y) > 70)
 			{
 				this.bot_stop_moving_timeout = time + 0.4 + random() * 0.2;
 			}
+
+			// Check for water/slime/lava and dangerous edges
+			// (only when the bot is on the ground or jumping intentionally)
 
 			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : flatdir * 32);
 			vector dst_ahead = this.origin + this.view_ofs + offset;
@@ -1114,6 +1113,7 @@ void havocbot_movetogoal(entity this)
 
 			bool unreachable = false;
 			s = CONTENT_SOLID;
+			bool danger_detected = false;
 			if (trace_fraction == 1 && !this.jumppadcount
 				&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
@@ -1128,9 +1128,9 @@ void havocbot_movetogoal(entity this)
 					s = pointcontents(trace_endpos + '0 0 1');
 					if (s != CONTENT_SOLID)
 					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
-						evadelava = normalize(this.velocity) * -1;
+						danger_detected = true;
 					else if (s == CONTENT_SKY)
-						evadeobstacle = normalize(this.velocity) * -1;
+						danger_detected = true;
 					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 					{
 						// the traceline check isn't enough but is good as optimization,
@@ -1144,18 +1144,22 @@ void havocbot_movetogoal(entity this)
 								unreachable = true;
 							}
 							else
-								evadelava = normalize(this.velocity) * -1;
+								danger_detected = true;
 						}
 					}
 				}
 			}
+			if (danger_detected && fabs(deviation.y) < 80
+				&& (fabs(deviation.y) > 5 || vdist(vec2(this.velocity), >, maxspeed * 1.5)))
+			{
+				evadedanger = normalize(this.velocity) * -1;
+				evadedanger.z = 0;
+			}
 
 			dir = flatdir;
-			evadeobstacle.z = 0;
-			evadelava.z = 0;
 			makevectors(this.v_angle.y * '0 1 0');
 
-			if(evadeobstacle || evadelava || (s == CONTENT_WATER))
+			if (danger_detected || (s == CONTENT_WATER))
 			{
 				this.aistatus |= AI_STATUS_DANGER_AHEAD;
 				if(IS_PLAYER(this.goalcurrent))
@@ -1170,7 +1174,7 @@ void havocbot_movetogoal(entity this)
 				// tracebox wouldn't work when bot is still on the ledge
 				traceline(this.origin, this.origin - '0 0 200', true, this);
 				if (this.origin.z - trace_endpos.z > 120)
-					evadeobstacle = normalize(this.velocity) * -1;
+					evadedanger = normalize(this.velocity) * -1;
 			}
 
 			if(unreachable)
@@ -1185,7 +1189,7 @@ void havocbot_movetogoal(entity this)
 		dodge = havocbot_dodge(this);
 		if (dodge)
 			dodge *= bound(0, 0.5 + (skill + this.bot_dodgeskill) * 0.1, 1);
-		evadelava = evadelava * bound(1,3-(skill+this.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
+		evadedanger *= bound(1, 3 - (skill + this.bot_dodgeskill), 3); // Noobs fear dangers a lot and take more distance from them
 		if (this.enemy)
 		{
 			traceline(this.origin, (this.enemy.absmin + this.enemy.absmax) * 0.5, true, NULL);
@@ -1241,7 +1245,7 @@ void havocbot_movetogoal(entity this)
 	if (!ladder_zdir)
 	{
 		dir *= dodge_enemy_factor;
-		dir = normalize(dir + dodge + evadeobstacle + evadelava);
+		dir = normalize(dir + dodge + evadedanger);
 	}
 
 	makevectors(this.v_angle);
