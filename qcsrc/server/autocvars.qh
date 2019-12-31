@@ -273,6 +273,7 @@ int autocvar_spawn_debug;
 bool autocvar_speedmeter;
 float autocvar_sv_accuracy_data_share = 1;
 string autocvar_sv_adminnick;
+string autocvar_sv_ToSurl;
 bool autocvar_sv_autoscreenshot;
 int autocvar_sv_cheats;
 float autocvar_sv_clientcommand_antispam_time;

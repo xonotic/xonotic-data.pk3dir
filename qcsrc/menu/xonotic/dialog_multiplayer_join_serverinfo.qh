@@ -12,6 +12,22 @@ CLASS(XonoticServerInfoDialog, XonoticDialog)
     ATTRIB(XonoticServerInfoDialog, infoTab, entity);
     ATTRIB(XonoticServerInfoDialog, ToSTab, entity);
 
+	ATTRIB(XonoticServerInfoTab, currentServerName, string);
+	ATTRIB(XonoticServerInfoTab, currentServerCName, string);
+	ATTRIB(XonoticServerInfoTab, currentServerType, string);
+	ATTRIB(XonoticServerInfoTab, currentServerMap, string);
+	ATTRIB(XonoticServerInfoTab, currentServerPlayers, string);
+	ATTRIB(XonoticServerInfoTab, currentServerNumPlayers, string);
+	ATTRIB(XonoticServerInfoTab, currentServerNumBots, string);
+	ATTRIB(XonoticServerInfoTab, currentServerNumFreeSlots, string);
+	ATTRIB(XonoticServerInfoTab, currentServerMod, string);
+	ATTRIB(XonoticServerInfoTab, currentServerVersion, string);
+	ATTRIB(XonoticServerInfoTab, currentServerKey, string);
+	ATTRIB(XonoticServerInfoTab, currentServerID, string);
+	ATTRIB(XonoticServerInfoTab, currentServerEncrypt, string);
+	ATTRIB(XonoticServerInfoTab, currentServerPure, string);
+	ATTRIB(XonoticServerInfoTab, currentServerStatsStatus, string);
+
 ENDCLASS(XonoticServerInfoDialog)
 
 void Join_Click(entity btn, entity me);

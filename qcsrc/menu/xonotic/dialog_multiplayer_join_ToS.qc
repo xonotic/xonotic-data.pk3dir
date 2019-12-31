@@ -1,6 +1,6 @@
 #include "dialog_multiplayer_join_ToS.qh"
 
-#include "textlabel.qh"
+#include "textbox.qh"
 #include <lib/urllib.qh>
 
 
@@ -12,21 +12,48 @@ entity makeXonoticServerToSTab()
 	return me;
 }
 
-void XonoticServerToSTab_loadToS(entity me, float i)
+void XonoticServerToSTab_loadToS(entity me, string downloadurl)
 {
-    //TODO: download ToS from server
-    localcmd("echo test1");
+	url_single_fopen(downloadurl, FILE_READ, AdditionalServerInfo_OnGet, me);
 }
 
 void XonoticServerToSTab_fill(entity me)
 {
 	entity e;
     me.TR(me);
-        me.TD(me, 1, 6.2, e = makeXonoticTextLabel(0, _("ToS")));
-        me.nameLabel = e;
+        me.TD(me, me.rows, me.columns, e = makeXonoticTextBox());
+        me.textBox = e;
 }
 
-void AdditionalServerInfo_OnGet(entity fh, entity pass, int status)
+void AdditionalServerInfo_OnGet(entity fh, entity me, int status)
 {
-    localcmd("echo test2");
+	switch (status) {
+		case URL_READY_CLOSED:
+		{
+			break;
+		}
+        case URL_READY_ERROR:
+        {
+            me.text = strzone("Error reading ToS");
+            me.textBox.setText(me.textBox, me.text);
+            break;
+        }
+		case URL_READY_CANREAD:
+		{
+            strfree(me.text);
+            string temp = "";
+			for (string s; (s = url_fgets(fh)); )
+			{
+				temp = strcat(temp, "\n", s);
+			}
+			url_fclose(fh);
+            me.text = strzone(temp);
+            me.textBox.setText(me.textBox, me.text);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
 }
