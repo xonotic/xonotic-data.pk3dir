@@ -394,7 +394,6 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
-float drawtime;
 float avgspeed;
 vector GetCurrentFov(float fov)
 {
