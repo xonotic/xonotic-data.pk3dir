@@ -14,6 +14,7 @@ CLASS(XonoticTextBox, XonoticListBox)
 	ATTRIB(XonoticTextBox, itemAbsSize, vector, '0 0 0');
 	METHOD(XonoticTextBox, setText, void(entity, string));
 	METHOD(XonoticTextBox, getTextBoxContent, string(entity, int));
+    ATTRIB(XonoticTextBox, nItems, int, 0);
 	ATTRIB(XonoticTextBox, stringList, int, -1);
 	ATTRIB(XonoticTextBox, selectionDoesntMatter, bool, true);
 ENDCLASS(XonoticTextBox)
