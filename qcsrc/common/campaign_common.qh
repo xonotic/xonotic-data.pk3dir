@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef CAMPAIGN_MAX_ENTRIES
-#define CAMPAIGN_MAX_ENTRIES 128
+#define CAMPAIGN_MAX_ENTRIES 100
 #endif
 
 // each i-th array element corresponds to the list entry campaign_offset+i
