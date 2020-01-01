@@ -2207,8 +2207,6 @@ bool PlayerThink(entity this)
 		this.items |= this.items_added;
 	}
 
-	player_regen(this);
-
 	// WEAPONTODO: Add a weapon request for this
 	// rot vortex charge to the charge limit
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -2218,15 +2216,15 @@ bool PlayerThink(entity this)
 			this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 	}
 
-	if (frametime) player_anim(this);
+	if (frametime)
+	{
+		player_regen(this);
+		player_anim(this);
+		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
+	}
 
-	// secret status
 	secrets_setstatus(this);
-
-	// monsters status
 	monsters_setstatus(this);
-
-	this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 	return true;
 }
@@ -2457,7 +2455,7 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if(IS_PLAYER(this))
+	if (frametime && IS_PLAYER(this))
 	{
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{
