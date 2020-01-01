@@ -187,7 +187,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider_T(10, 50, 1, "g_bloodloss",
-			_("Amount of health below which your player gets stunned because of blood loss"));
+			_("Amount of health below which players start bleeding out (health rots and they can't jump)"));
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
@@ -196,7 +196,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider_T(80, 400, 8, "sv_gravity",
-			_("Make things fall to the ground slower, lower value means lower gravity"));
+			_("Make things fall to the ground slower (percentage of normal gravity)"));
 			s.valueDigits = 0;
 			s.valueDisplayMultiplier = 0.125; // show gravity in percent
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(800, 1, s, _("Low gravity")));
