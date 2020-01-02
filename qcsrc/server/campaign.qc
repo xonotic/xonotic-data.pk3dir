@@ -98,11 +98,7 @@ void CampaignPreInit()
 		return;
 	}
 
-	baseskill = autocvar_g_campaign_skill;
-	baseskill = baseskill + campaign_botskill[0];
-	if(baseskill < 0)
-		baseskill = 0;
-
+	baseskill = max(0, autocvar_g_campaign_skill + campaign_botskill[0]);
 	campaign_forcewin = false;
 
 	cvar_set("sv_public", "0");

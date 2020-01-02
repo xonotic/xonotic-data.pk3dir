@@ -128,8 +128,8 @@ void XonoticSingleplayerDialog_fill(entity me)
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Campaign Difficulty:")));
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "-2", ZCTX(_("CSKL^Easy"))));
-		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "-1", ZCTX(_("CSKL^Medium"))));
-		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "0", ZCTX(_("CSKL^Hard"))));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "0", ZCTX(_("CSKL^Medium"))));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "2", ZCTX(_("CSKL^Hard"))));
 		me.TR(me);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Singleplayer!"), '0 0 0'));
 			e.onClick = CampaignList_LoadMap;
