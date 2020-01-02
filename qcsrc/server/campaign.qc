@@ -98,7 +98,7 @@ void CampaignPreInit()
 		return;
 	}
 
-	baseskill = bound(0, autocvar_g_campaign_skill + campaign_botskill[0], 10);
+	baseskill = max(0, autocvar_g_campaign_skill + campaign_botskill[0]);
 	campaign_forcewin = false;
 
 	cvar_set("sv_public", "0");
