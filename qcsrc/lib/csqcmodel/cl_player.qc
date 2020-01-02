@@ -240,7 +240,7 @@ bool autocvar_v_deathtilt;
 float autocvar_v_deathtiltangle;
 void CSQCPlayer_ApplyDeathTilt(entity this)
 {
-	if(!IS_DEAD(this) || !autocvar_v_deathtilt)
+	if(!this.csqcmodel_isdead || !autocvar_v_deathtilt)
 		return;
 	view_angles.z = autocvar_v_deathtiltangle;
 }
@@ -279,7 +279,7 @@ float bobfall_speed;
 float bob2_smooth;
 vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 {
-	if(IS_DEAD(this))
+	if(this.csqcmodel_isdead)
 		return v;
 
 	// bounded XY speed, used by several effects below
