@@ -44,7 +44,14 @@ void AdditionalServerInfo_OnGet(entity fh, entity me, int status)
             string temp = "";
 			for (string s; (s = url_fgets(fh)); )
 			{
-				temp = strcat(temp, "\n", s);
+                if (temp != "")
+                {
+				    temp = strcat(temp, "\n", s);
+                }
+                else
+                {
+                    temp = s;
+                }
 			}
 			url_fclose(fh);
             me.text = strzone(temp);
