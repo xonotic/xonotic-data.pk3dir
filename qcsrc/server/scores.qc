@@ -429,7 +429,7 @@ void WinningConditionHelper(entity this)
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(this, NULL)));
 	s = strcat(s, ":F", ftos(serverflags));
-    string downloadurl = autocvar_sv_ToSurl ? autocvar_sv_ToSurl : "INVALID";
+    string downloadurl = autocvar_sv_termsofservice_url ? autocvar_sv_termsofservice_url : "INVALID";
     // replace : by | in downloadurl since : is the separator
     int i = strstrofs(downloadurl, ":", 0);
     while (i != -1)
