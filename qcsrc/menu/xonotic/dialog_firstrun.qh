@@ -3,6 +3,7 @@
 #include "rootdialog.qh"
 CLASS(XonoticFirstRunDialog, XonoticRootDialog)
 	METHOD(XonoticFirstRunDialog, fill, void(entity));
+	METHOD(XonoticFirstRunDialog, shouldShow, bool());
 	ATTRIB(XonoticFirstRunDialog, title, string, _("Welcome"));
 	ATTRIB(XonoticFirstRunDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN);
 	ATTRIB(XonoticFirstRunDialog, intendedWidth, float, 0.7);

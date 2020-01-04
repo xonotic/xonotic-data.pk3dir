@@ -20,6 +20,7 @@
 #include <menu/xonotic/dialog.qc>
 #include <menu/xonotic/dialog_credits.qc>
 #include <menu/xonotic/dialog_disconnect.qc>
+#include <menu/xonotic/dialog_termsofservice.qc>
 #include <menu/xonotic/dialog_firstrun.qc>
 #include <menu/xonotic/dialog_hudpanel_ammo.qc>
 #include <menu/xonotic/dialog_hudpanel_centerprint.qc>

@@ -5,6 +5,7 @@
 CLASS(MainWindow, ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity));
 	METHOD(MainWindow, draw, void(entity));
+	ATTRIB(MainWindow, ToSDialog, entity);
 	ATTRIB(MainWindow, firstRunDialog, entity);
 	ATTRIB(MainWindow, advancedDialog, entity);
 	ATTRIB(MainWindow, mutatorsDialog, entity);
