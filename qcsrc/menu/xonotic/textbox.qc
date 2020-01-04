@@ -48,6 +48,19 @@ void XonoticTextBox_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
+    string temp = string_null;
+    for (int i = 0; i < me.nItems; ++i)
+    {
+        if (!temp)
+        {
+            temp = me.getTextBoxContent(me, i);
+        }
+        else
+        {
+            temp = strcat(temp, "\n", me.getTextBoxContent(me, i));
+        }
+    }
+    me.setText(me, temp);
 }
 
 void XonoticTextBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
