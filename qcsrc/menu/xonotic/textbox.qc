@@ -8,8 +8,23 @@ entity makeXonoticTextBox()
 	return me;
 }
 
+void XonoticTextBox_destroy(entity me)
+{
+    if (me.stringList >= 0)
+    {
+        buf_del(me.stringList);
+        me.stringList = -1;
+    }
+}
+
 void XonoticTextBox_setText(entity me, string text)
 {
+    if (me.stringList >= 0)
+    {
+        buf_del(me.stringList);
+        me.stringList = -1;
+    }
+
 	int buf;
     int line = 0;
 
@@ -34,7 +49,11 @@ void XonoticTextBox_setText(entity me, string text)
 
 string XonoticTextBox_getTextBoxContent(entity me, int i)
 {
-	return bufstr_get(me.stringList, i);
+    if (me.stringList >= 0)
+    {
+	    return bufstr_get(me.stringList, i);
+    }
+    return string_null;
 }
 
 // mostly copied from playerlist

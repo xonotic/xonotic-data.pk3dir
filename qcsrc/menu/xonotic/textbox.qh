@@ -4,6 +4,7 @@
 
 // slightly hacky multiline textbox with scrollbar
 CLASS(XonoticTextBox, XonoticListBox)
+    METHOD(XonoticTextBox, destroy, void(entity));
 	ATTRIB(XonoticTextBox, rowsPerItem, float, 1);
 	METHOD(XonoticTextBox, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticTextBox, drawListBoxItem, void(entity, int, vector, bool, bool));
