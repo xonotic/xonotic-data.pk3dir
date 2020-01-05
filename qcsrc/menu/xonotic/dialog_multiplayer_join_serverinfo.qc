@@ -7,7 +7,7 @@
 #include "textlabel.qh"
 #include "button.qh"
 #include "dialog_multiplayer_join_serverinfotab.qh"
-#include "dialog_multiplayer_join_ToS.qh"
+#include "dialog_multiplayer_join_termsofservice.qh"
 
 
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)

@@ -1,4 +1,4 @@
-#include "dialog_multiplayer_join_ToS.qh"
+#include "dialog_multiplayer_join_termsofservice.qh"
 
 #include "textbox.qh"
 #include <lib/urllib.qh>
