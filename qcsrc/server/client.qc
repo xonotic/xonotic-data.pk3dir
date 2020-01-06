@@ -25,6 +25,7 @@
 #include "campaign.qh"
 #include "command/common.qh"
 #include "scores_rules.qh"
+#include "weapons/common.qh"
 
 #include "bot/api.qh"
 
