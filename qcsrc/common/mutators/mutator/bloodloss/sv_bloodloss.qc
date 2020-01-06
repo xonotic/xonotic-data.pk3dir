@@ -9,6 +9,9 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
+	if(game_stopped)
+		return; // during intermission, the player's health changes to strange values for the engine, let's not cause damage during this phase!
+
 	if(IS_PLAYER(player))
 	if(GetResource(player, RES_HEALTH) <= autocvar_g_bloodloss && !IS_DEAD(player))
 	{
