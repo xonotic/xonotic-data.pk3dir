@@ -78,7 +78,6 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 
 			me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_viewmodel_alpha"));
 				setDependent(e, "r_drawviewmodel", 1, 1);
-				e.addValue(e, _("Invisible"), "-1");
 				e.addValue(e, "15%", "0.15");
 				e.addValue(e, "25%", "0.25");
 				e.addValue(e, "50%", "0.5");
