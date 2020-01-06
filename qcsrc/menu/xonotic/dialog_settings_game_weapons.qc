@@ -3,6 +3,7 @@
 #include "weaponslist.qh"
 #include "commandbutton.qh"
 #include "textlabel.qh"
+#include "textslider.qh"
 #include "checkbox.qh"
 #include "button.qh"
 #include "radiobutton.qh"
