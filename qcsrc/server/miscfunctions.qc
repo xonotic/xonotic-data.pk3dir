@@ -500,6 +500,8 @@ void GetCvars(entity this, entity store, int f)
 		}
 		if (s == "cl_allow_uidtracking")
 			PlayerStats_GameReport_AddPlayer(this);
+		//if (s == "cl_gunalign")
+			//W_ResetGunAlign(this, store.cvar_cl_gunalign);
 	}
 }
 

@@ -445,6 +445,28 @@ bool weaponLocked(entity player)
 	return false;
 }
 
+void W_ResetGunAlign(entity player, int preferred_alignment)
+{
+	if(W_DualWielding(player))
+		preferred_alignment = 3; // right align, the second gun will default to left
+
+	// clear current weapon slots' alignments so we can redo the calculations!
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = 0;
+	}
+
+	// now set the new values
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = W_GunAlign(player.(weaponentity), preferred_alignment);
+	}
+}
+
 .bool hook_switchweapon;
 
 void W_WeaponFrame(Player actor, .entity weaponentity)

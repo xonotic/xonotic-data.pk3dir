@@ -713,10 +713,7 @@ void PutPlayerInServer(entity this)
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		entity oldwep = this.(weaponentity);
 		CL_SpawnWeaponentity(this, weaponentity);
-		if(oldwep && oldwep.owner == this)
-			this.(weaponentity).m_gunalign = oldwep.m_gunalign;
 	}
 	this.alpha = default_player_alpha;
 	this.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -778,6 +775,7 @@ void PutPlayerInServer(entity this)
 
 	if (CS(this).impulse) ImpulseCommands(this);
 
+	W_ResetGunAlign(this, CS(this).cvar_cl_gunalign);
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
@@ -2085,6 +2083,7 @@ bool joinAllowed(entity this)
 
 .int items_added;
 .string shootfromfixedorigin;
+.bool dualwielding_prev;
 bool PlayerThink(entity this)
 {
 	if (game_stopped || intermission_running) {
@@ -2185,6 +2184,15 @@ bool PlayerThink(entity this)
 	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
 		this.shootfromfixedorigin = autocvar_g_shootfromfixedorigin;
 		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
+	}
+
+	// reset gun alignment when dual wielding status changes
+	// to ensure guns are always aligned right and left
+	bool dualwielding = W_DualWielding(this);
+	if(this.dualwielding_prev != dualwielding)
+	{
+		W_ResetGunAlign(this, CS(this).cvar_cl_gunalign);
+		this.dualwielding_prev = dualwielding;
 	}
 
 	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
