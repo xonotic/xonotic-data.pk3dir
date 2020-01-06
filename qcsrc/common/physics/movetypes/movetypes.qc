@@ -427,16 +427,20 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
     entity this = _Movetype_TestEntityPosition_ent;
 	vector org = this.origin + ofs;
 
-	int cont = this.dphitcontentsmask;
-	this.dphitcontentsmask = DPCONTENTS_SOLID;
+	//int cont = this.dphitcontentsmask;
+	//this.dphitcontentsmask = DPCONTENTS_SOLID;
 	tracebox(org, this.mins, this.maxs, org, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
-	this.dphitcontentsmask = cont;
+	//this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
 		return true;
 
 	if(vdist(trace_endpos - this.origin, >, 0.0001))
-		this.origin = trace_endpos;
+	{
+		tracebox(trace_endpos, this.mins, this.maxs, trace_endpos, MOVE_NOMONSTERS, this);
+		if(!trace_startsolid)
+			this.origin = trace_endpos;
+	}
 	return false;
 }
 
@@ -447,6 +451,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	    return UNSTICK_FINE;
 	}
 	#define X(v) if (_Movetype_TestEntityPosition(v))
+	X('0  0  -1') X(' 0  0  1')
 	X('-1  0  0') X(' 1  0  0')
 	X(' 0 -1  0') X(' 0  1  0')
 	X('-1 -1  0') X(' 1 -1  0')
@@ -456,7 +461,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         #define X(i) \
             if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
             if (_Movetype_TestEntityPosition('0 0 1' * i))
-        X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8)
+        X(2) X(3) X(4) X(5) X(6) X(7) X(8)
         X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
         X(17)
         #undef X
@@ -468,7 +473,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
-	_Movetype_LinkEdict(this, true);
+	_Movetype_LinkEdict(this, false);
 	return UNSTICK_FIXED;
 }
 
