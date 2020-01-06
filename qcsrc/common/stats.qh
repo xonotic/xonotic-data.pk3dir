@@ -288,6 +288,11 @@ REGISTER_STAT(WALLJUMP_DELAY, float, autocvar_g_walljump_delay)
 REGISTER_STAT(WALLJUMP_FORCE, float, autocvar_g_walljump_force)
 REGISTER_STAT(LASTWJ, float)
 
+#ifdef SVQC
+float autocvar_g_bloodloss;
+#endif
+REGISTER_STAT(BLOODLOSS, float, autocvar_g_bloodloss)
+
 // freeze tag, clan arena
 REGISTER_STAT(REDALIVE, int)
 REGISTER_STAT(BLUEALIVE, int)

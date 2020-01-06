@@ -1,8 +1,13 @@
-#include "sv_bloodloss.qh"
+#include "bloodloss.qh"
 
-float autocvar_g_bloodloss;
+#ifdef GAMEQC
+#ifdef SVQC
 REGISTER_MUTATOR(bloodloss, autocvar_g_bloodloss);
+#elif defined(CSQC)
+REGISTER_MUTATOR(bloodloss, true);
+#endif
 
+#ifdef SVQC
 .float bloodloss_timer;
 
 MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
@@ -20,7 +25,7 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 		if(time >= player.bloodloss_timer)
 		{
 			if(player.vehicle)
-				vehicles_exit(player.vehicle, VHEF_RELEASE);
+				vehicles_exit(player.vehicle, VHEF_RELEASE); // TODO: boots player out of their vehicle each health rot tick!
 			if(player.event_damage)
 				player.event_damage(player, player, player, 1, DEATH_ROT.m_id, DMG_NOWEP, player.origin, '0 0 0');
 			player.bloodloss_timer = time + 0.5 + random() * 0.5;
@@ -45,3 +50,14 @@ MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsPrettyString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Blood loss");
 }
+#endif
+
+#ifdef CSQC
+MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
+{
+	if(STAT(HEALTH) <= STAT(BLOODLOSS))
+		return true;
+}
+#endif
+
+#endif
