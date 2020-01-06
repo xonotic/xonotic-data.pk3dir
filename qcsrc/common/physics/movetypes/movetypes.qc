@@ -331,17 +331,7 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 		gettouch(this)(this, oth);
 
 	if(oth.solid != SOLID_NOT && gettouch(oth))
-	{
-		trace_endpos = oth.origin;
-		trace_plane_normal = -trace_plane_normal;
-		trace_plane_dist = -trace_plane_dist;
-		trace_ent = this;
-		trace_dpstartcontents = 0;
-		trace_dphitcontents = 0;
-		trace_dphitq3surfaceflags = 0;
-		trace_dphittexturename = string_null;
 		gettouch(oth)(oth, this);
-	}
 }
 
 void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
