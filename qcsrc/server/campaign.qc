@@ -129,6 +129,9 @@ void CampaignPreInit()
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[0]));
 #else
+	// since g_campaign is already set to 1 by the menu when starting a campaign level, we first need
+	// to set it back to 0 before settemping it to 1 so it'll be correctly restored to 0 on disconnection
+	cvar_set("g_campaign", "0");
 	cvar_settemp("g_campaign", "1");
 	cvar_settemp("g_dm", "0");
 	cvar_settemp("skill", ftos(baseskill));
