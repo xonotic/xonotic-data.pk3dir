@@ -9,10 +9,10 @@
     #include <common/monsters/_mod.qh>
 #endif
 
-bool autocvar_g_mapinfo_ignore_warnings;
 #ifdef MENUQC
-#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings)
+#define WARN_COND false
 #else
+bool autocvar_g_mapinfo_ignore_warnings;
 #define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
 #endif
 
@@ -717,9 +717,11 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 		if(type == 0) // server set
 		{
 			LOG_TRACE("Applying temporary setting ", t, " := ", s);
+		#if 0
 			if(cvar("g_campaign"))
 				cvar_set(t, s); // this is a wrapper and is always temporary anyway; no need to backup old values then
 			else
+		#endif
 				cvar_settemp(t, s);
 		}
 		else

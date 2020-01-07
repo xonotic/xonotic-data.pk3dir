@@ -145,6 +145,9 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		do_crouch = false;
     }
 
+    MUTATOR_CALLHOOK(PlayerCanCrouch, this, do_crouch);
+    do_crouch = M_ARGV(1, bool);
+
 	if (do_crouch) {
 		if (!IS_DUCKED(this)) {
 			SET_DUCKED(this);

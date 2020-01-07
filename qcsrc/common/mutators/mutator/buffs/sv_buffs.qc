@@ -227,7 +227,8 @@ void buff_NewType(entity ent)
 	FOREACH(Buffs, buff_Available(it),
 	{
 		// if it's already been chosen, give it a lower priority
-		RandomSelection_AddEnt(it, max(0.2, 1 / it.buff_seencount), 1);
+		float myseencount = (it.buff_seencount > 0) ? it.buff_seencount : 1; // no division by zero please!
+		RandomSelection_AddEnt(it, max(0.2, 1 / myseencount), 1);
 	});
 	entity newbuff = RandomSelection_chosen_ent;
 	newbuff.buff_seencount += 1; // lower chances of seeing this buff again soon

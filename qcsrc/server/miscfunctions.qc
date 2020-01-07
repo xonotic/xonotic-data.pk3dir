@@ -7,6 +7,7 @@
 #include "ipban.qh"
 #include <server/mutators/_mod.qh>
 #include "../common/t_items.qh"
+#include "mapvoting.qh"
 #include "resources.qh"
 #include "items.qh"
 #include "player.qh"
@@ -228,6 +229,30 @@ string AmmoNameFromWeaponentity(Weapon wep)
 	return ammoitems;
 }
 
+string PlayerHealth(entity this)
+{
+	float myhealth = floor(GetResource(this, RES_HEALTH));
+	if(myhealth == -666)
+		return "spectating";
+	else if(myhealth == -2342 || (myhealth == 2342 && mapvote_initialized))
+		return "observing";
+	else if(myhealth <= 0 || IS_DEAD(this))
+		return "dead";
+	return ftos(myhealth);
+}
+
+string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
+{
+	entity wepent = this.(weaponentity);
+	if(!wepent)
+		return "none";
+	else if(wepent.m_weapon != WEP_Null)
+		return wepent.m_weapon.m_name;
+	else if(wepent.m_switchweapon != WEP_Null)
+		return wepent.m_switchweapon.m_name;
+	return "none"; //Weapons_from(wepent.cnt).m_name;
+}
+
 string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
@@ -281,11 +306,11 @@ string formatmessage(entity this, string msg)
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
 			case "a": replacement = ftos(floor(GetResource(this, RES_ARMOR))); break;
-			case "h": replacement = ftos(floor(GetResource(this, RES_HEALTH))); break;
+			case "h": replacement = PlayerHealth(this); break;
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
-			case "w": replacement = ((this.(weaponentity).m_weapon == WEP_Null) ? ((this.(weaponentity).m_switchweapon == WEP_Null) ? Weapons_from(this.(weaponentity).cnt) : this.(weaponentity).m_switchweapon) : this.(weaponentity).m_weapon).m_name; break;
+			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
 			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity).m_weapon); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
@@ -475,6 +500,8 @@ void GetCvars(entity this, entity store, int f)
 		}
 		if (s == "cl_allow_uidtracking")
 			PlayerStats_GameReport_AddPlayer(this);
+		//if (s == "cl_gunalign")
+			//W_ResetGunAlign(this, store.cvar_cl_gunalign);
 	}
 }
 

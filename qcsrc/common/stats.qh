@@ -193,6 +193,10 @@ int autocvar_sv_gameplayfix_stepdown = 2;
 int autocvar_sv_gameplayfix_stepmultipletimes = 1;
 int autocvar_sv_gameplayfix_unstickplayers = 1;
 int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
+int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
+int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;
+int autocvar_sv_gameplayfix_noairborncorpse = 1;
+int autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems = 1;
 #endif
 REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
@@ -201,6 +205,10 @@ REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int, autocvar_sv_gameplayfix_stepmu
 REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, autocvar_sv_gameplayfix_unstickplayers)
 REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, int, autocvar_sv_gameplayfix_fixedcheckwatertransition)
+REGISTER_STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES, int, autocvar_sv_gameplayfix_slidemoveprojectiles)
+REGISTER_STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES, int, autocvar_sv_gameplayfix_grenadebouncedownslopes)
+REGISTER_STAT(GAMEPLAYFIX_NOAIRBORNCORPSE, int, autocvar_sv_gameplayfix_noairborncorpse)
+REGISTER_STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED, int, autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems)
 
 REGISTER_STAT(MOVEVARS_JUMPSTEP, int, cvar("sv_jumpstep"))
 REGISTER_STAT(NOSTEP, int, cvar("sv_nostep"))
@@ -279,6 +287,11 @@ REGISTER_STAT(WALLJUMP_VELOCITY_XY_FACTOR, float, autocvar_g_walljump_velocity_x
 REGISTER_STAT(WALLJUMP_DELAY, float, autocvar_g_walljump_delay)
 REGISTER_STAT(WALLJUMP_FORCE, float, autocvar_g_walljump_force)
 REGISTER_STAT(LASTWJ, float)
+
+#ifdef SVQC
+float autocvar_g_bloodloss;
+#endif
+REGISTER_STAT(BLOODLOSS, float, autocvar_g_bloodloss)
 
 // freeze tag, clan arena
 REGISTER_STAT(REDALIVE, int)

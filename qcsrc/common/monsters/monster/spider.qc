@@ -66,6 +66,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 			actor.anim_finished = time + 1;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
+        monster_makevectors(actor, actor.enemy);
         W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_SPIDER.m_id);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web(actor);
@@ -128,8 +129,6 @@ void adaptor_think2use_hittype_splash(entity this);
 
 void M_Spider_Attack_Web(entity this)
 {
-	monster_makevectors(this, this.enemy);
-
 	sound(this, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
 
 	entity proj = new(plasma);

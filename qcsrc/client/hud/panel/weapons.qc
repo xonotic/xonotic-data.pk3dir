@@ -91,11 +91,15 @@ void HUD_Weapons()
 	HUD_Panel_LoadCvars();
 
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
-	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
+	if(weaponorder_bypriority != autocvar_cl_weaponpriority || autocvar_hud_panel_weapons_orderbyimpulse != weapons_orderbyimpulse || !weaponorder[0])
 	{
 		int weapon_cnt;
+		weapons_orderbyimpulse = autocvar_hud_panel_weapons_orderbyimpulse;
 		strcpy(weaponorder_bypriority, autocvar_cl_weaponpriority);
-		strcpy(weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
+		string weporder = W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority));
+		if(autocvar_hud_panel_weapons_orderbyimpulse)
+			weporder = W_FixWeaponOrder_BuildImpulseList(weporder);
+		strcpy(weaponorder_byimpulse, weporder);
 		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
 
 		weapon_cnt = 0;
