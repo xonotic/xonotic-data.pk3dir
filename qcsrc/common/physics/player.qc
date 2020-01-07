@@ -690,13 +690,12 @@ void PM_check_slick(entity this)
 	if(!IS_ONGROUND(this))
 		return;
 
-	if(!PHYS_SLICK_APPLYGRAVITY(this))
-		return;
-
+	trace_dphitq3surfaceflags = 0;
 	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
 	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
 	{
-		UNSET_ONGROUND(this);
+		if(PHYS_SLICK_APPLYGRAVITY(this))
+			UNSET_ONGROUND(this);
 		SET_ONSLICK(this);
 	}
 	else
