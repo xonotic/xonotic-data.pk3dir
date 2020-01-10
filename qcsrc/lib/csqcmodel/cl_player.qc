@@ -208,8 +208,8 @@ bool CSQCPlayer_IsLocalPlayer(entity this)
 }
 
 float stairsmoothz;
-float autocvar_cl_stairsmoothspeed;
-float autocvar_cl_smoothviewheight;
+float autocvar_cl_stairsmoothspeed = 160;
+float autocvar_cl_smoothviewheight = 0;
 float smooth_prevtime;
 float viewheightavg;
 vector CSQCPlayer_ApplySmoothing(entity this, vector v)
