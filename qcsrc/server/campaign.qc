@@ -169,20 +169,19 @@ void CampaignPostInit()
 	}
 	else
 	{
-		// use "" if a limit isn't set, interpreted as don't override
+		// "default" uses implicit values, "" or "0" means no limit
 		tokenizebyseparator(campaign_fraglimit[0], "+");
-		string fraglimit = argv(0) != "" ? argv(0) : string_null;
-		string leadlimit = argv(1) != "" ? argv(1) : string_null;
-		string timelimit = campaign_timelimit[0] != "" ? campaign_timelimit[0] : string_null;
-		if(fraglimit) {
-			cvar_set("fraglimit", fraglimit);
-			cvar_set_normal("fraglimit", fraglimit);
-		} if(leadlimit) {
-			cvar_set("leadlimit", leadlimit);
-			cvar_set_normal("leadlimit", leadlimit);
-		} if(timelimit) {
-			cvar_set("timelimit", timelimit);
-			cvar_set_normal("timelimit", timelimit);
+		if(argv(0) != "default") {
+			cvar_set("fraglimit", argv(0));
+			cvar_set_normal("fraglimit", argv(0));
+		}
+		if(argv(1) != "default") {
+			cvar_set("leadlimit", argv(1));
+			cvar_set_normal("leadlimit", argv(1));
+		}
+		if(campaign_timelimit[0] != "default") {
+			cvar_set("timelimit", campaign_timelimit[0]);
+			cvar_set_normal("timelimit", campaign_timelimit[0]);
 		}
 	}
 }
