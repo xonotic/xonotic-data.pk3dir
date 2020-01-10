@@ -174,15 +174,16 @@ void CampaignPostInit()
 		string fraglimit = argv(0) != "" ? argv(0) : string_null;
 		string leadlimit = argv(1) != "" ? argv(1) : string_null;
 		string timelimit = campaign_timelimit[0] != "" ? campaign_timelimit[0] : string_null;
-		if(fraglimit)
+		if(fraglimit) {
 			cvar_set("fraglimit", fraglimit);
-		if(leadlimit)
+			cvar_set_normal("fraglimit", fraglimit);
+		} if(leadlimit) {
 			cvar_set("leadlimit", leadlimit);
-		if(timelimit)
+			cvar_set_normal("leadlimit", leadlimit);
+		} if(timelimit) {
 			cvar_set("timelimit", timelimit);
-		cvar_set_normal("fraglimit", fraglimit);
-		cvar_set_normal("leadlimit", leadlimit);
-		cvar_set_normal("timelimit", timelimit);
+			cvar_set_normal("timelimit", timelimit);
+		}
 	}
 }
 
