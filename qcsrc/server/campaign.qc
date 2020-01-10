@@ -171,12 +171,15 @@ void CampaignPostInit()
 	{
 		// use "" if a limit isn't set, interpreted as don't override
 		tokenizebyseparator(campaign_fraglimit[0], "+");
-		string fraglimit = ftos(stof(argv(0))) != "" ? argv(0) : "";
-		string leadlimit = ftos(stof(argv(1))) != "" ? argv(1) : "";
-		string timelimit = ftos(stof(campaign_timelimit[0]));
-		cvar_set("fraglimit", fraglimit);
-		cvar_set("leadlimit", leadlimit);
-		cvar_set("timelimit", timelimit);
+		string fraglimit = argv(0) != "" ? argv(0) : string_null;
+		string leadlimit = argv(1) != "" ? argv(1) : string_null;
+		string timelimit = campaign_timelimit[0] != "" ? campaign_timelimit[0] : string_null;
+		if(fraglimit)
+			cvar_set("fraglimit", fraglimit);
+		if(leadlimit)
+			cvar_set("leadlimit", leadlimit);
+		if(timelimit)
+			cvar_set("timelimit", timelimit);
 		cvar_set_normal("fraglimit", fraglimit);
 		cvar_set_normal("leadlimit", leadlimit);
 		cvar_set_normal("timelimit", timelimit);
