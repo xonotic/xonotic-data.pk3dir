@@ -1120,12 +1120,12 @@ void HUD_Crosshair(entity this)
 		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
-			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
+			if(csqcplayer && autocvar_crosshair_chase_playeralpha && autocvar_crosshair_chase_playeralpha < 1)
 			{
 				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
 				float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
 				if(trace_ent == csqcplayer && STAT(HEALTH) > 0)
-					csqcplayer.alpha = min(crosshair_chase_playeralpha, myalpha);
+					csqcplayer.alpha = min(autocvar_crosshair_chase_playeralpha, myalpha);
 				else
 					csqcplayer.alpha = csqcplayer.m_alpha;
 			}

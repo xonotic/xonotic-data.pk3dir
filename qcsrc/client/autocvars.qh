@@ -151,7 +151,7 @@ float autocvar_crosshair_ring_reload_alpha;
 float autocvar_crosshair_ring_reload_size;
 float autocvar_crosshair_size;
 bool autocvar_crosshair_chase = true;
-float crosshair_chase_playeralpha = 0.25;
+float autocvar_crosshair_chase_playeralpha = 0.25;
 int autocvar_ekg;
 float autocvar_fov;
 bool autocvar_hud_cursormode = true;
