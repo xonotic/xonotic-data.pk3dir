@@ -54,11 +54,11 @@ void Physics_UpdateStats(entity this)
           STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
         }
 	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox; // NOTE: these hitboxes are off by 1 due to engine differences
-	STAT(PL_MIN, this) = (q3dfcompat) ? '-15 -15 -24' : autocvar_sv_player_mins;
-	STAT(PL_MAX, this) = (q3dfcompat) ? '15 15 32' : autocvar_sv_player_maxs;
+	STAT(PL_MIN, this) = (q3dfcompat) ? '-15 -15 -20' : autocvar_sv_player_mins;
+	STAT(PL_MAX, this) = (q3dfcompat) ? '15 15 36' : autocvar_sv_player_maxs;
 	STAT(PL_VIEW_OFS, this) = (q3dfcompat) ? '0 0 26' : autocvar_sv_player_viewoffset;
-	STAT(PL_CROUCH_MIN, this) = (q3dfcompat) ? '-15 -15 -24' : autocvar_sv_player_crouch_mins;
-	STAT(PL_CROUCH_MAX, this) = (q3dfcompat) ? '15 15 16' : autocvar_sv_player_crouch_maxs;
+	STAT(PL_CROUCH_MIN, this) = (q3dfcompat) ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
+	STAT(PL_CROUCH_MAX, this) = (q3dfcompat) ? '15 15 20' : autocvar_sv_player_crouch_maxs;
 	STAT(PL_CROUCH_VIEW_OFS, this) = (q3dfcompat) ? '0 0 12' : autocvar_sv_player_crouch_viewoffset;
 
 	// old stats
