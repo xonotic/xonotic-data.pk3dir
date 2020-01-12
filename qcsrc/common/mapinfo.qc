@@ -843,9 +843,6 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 				fputs(fh, sprintf("gametype %s // defaults: %s\n", MapInfo_Type_ToString(it), _MapInfo_GetDefaultEx(it)));
 			});
 
-			if(fexists(strcat("scripts/", pFilename, ".arena")))
-				fputs(fh, "settemp_for_type all sv_q3acompat_machineshotgunswap 1\n");
-
 			fputs(fh, "// optional: fog density red green blue alpha mindist maxdist\n");
 			fputs(fh, "// optional: settemp_for_type (all|gametypename) cvarname value\n");
 			fputs(fh, "// optional: clientsettemp_for_type (all|gametypename) cvarname value\n");
