@@ -129,9 +129,6 @@ void CampaignPreInit()
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[0]));
 #else
-	// since g_campaign is already set to 1 by the menu when starting a campaign level, we first need
-	// to set it back to 0 before settemping it to 1 so it'll be correctly restored to 0 on disconnection
-	cvar_set("g_campaign", "0");
 	cvar_settemp("g_campaign", "1");
 	cvar_settemp("g_dm", "0");
 	cvar_settemp("skill", ftos(baseskill));
@@ -160,16 +157,28 @@ void CampaignPostInit()
 	if(autocvar__campaign_testrun)
 	{
 		cvar_set("fraglimit", "0");
+		cvar_set("leadlimit", "0");
 		cvar_set("timelimit", "0.01");
 		cvar_set_normal("fraglimit", "0");
+		cvar_set_normal("leadlimit", "0");
 		cvar_set_normal("timelimit", "0.01");
 	}
 	else
 	{
-		cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
-		cvar_set("timelimit", ftos(campaign_timelimit[0]));
-		cvar_set_normal("fraglimit", ftos(campaign_fraglimit[0]));
-		cvar_set_normal("timelimit", ftos(campaign_timelimit[0]));
+		// "default" uses implicit values, "" or "0" means no limit
+		tokenizebyseparator(campaign_fraglimit[0], "+");
+		if(argv(0) != "default") {
+			cvar_set("fraglimit", argv(0));
+			cvar_set_normal("fraglimit", argv(0));
+		}
+		if(argv(1) != "default") {
+			cvar_set("leadlimit", argv(1));
+			cvar_set_normal("leadlimit", argv(1));
+		}
+		if(campaign_timelimit[0] != "default") {
+			cvar_set("timelimit", campaign_timelimit[0]);
+			cvar_set_normal("timelimit", campaign_timelimit[0]);
+		}
 	}
 }
 
