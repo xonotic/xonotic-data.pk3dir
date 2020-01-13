@@ -2,6 +2,15 @@
 
 #ifdef SVQC
 
+METHOD(MineLayer, m_spawnfunc_hookreplace, Weapon(MineLayer this, entity e))
+{
+    if (autocvar_sv_nexuizcompat_weaponswap && !Item_IsLoot(e))
+    {
+        return ITEM_HealthBig;
+    }
+    return this;
+}
+
 void W_MineLayer_Stick(entity this, entity to)
 {
 	spamsound(this, CH_SHOTS, SND_MINE_STICK, VOL_BASE, ATTN_NORM);

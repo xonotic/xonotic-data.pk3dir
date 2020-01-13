@@ -2,6 +2,15 @@
 
 #ifdef SVQC
 
+METHOD(Rifle, m_spawnfunc_hookreplace, Weapon(Rifle this, entity e))
+{
+    if (autocvar_sv_nexuizcompat_weaponswap && !Item_IsLoot(e))
+    {
+        return ITEM_ArmorBig;
+    }
+    return this;
+}
+
 void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
 {
 	float i;

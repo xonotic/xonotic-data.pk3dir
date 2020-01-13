@@ -2,6 +2,15 @@
 
 #ifdef SVQC
 
+METHOD(HLAC, m_spawnfunc_hookreplace, Weapon(HLAC this, entity e))
+{
+    if (autocvar_sv_nexuizcompat_weaponswap && !Item_IsLoot(e))
+    {
+        return ITEM_ArmorBig;
+    }
+    return this;
+}
+
 void W_HLAC_Touch(entity this, entity toucher)
 {
 	float isprimary;

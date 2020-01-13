@@ -2,6 +2,15 @@
 
 #ifdef SVQC
 
+METHOD(Seeker, m_spawnfunc_hookreplace, Weapon(Seeker this, entity e))
+{
+    if (autocvar_sv_nexuizcompat_weaponswap && !Item_IsLoot(e))
+    {
+        return ITEM_HealthBig;
+    }
+    return this;
+}
+
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
 // ============================

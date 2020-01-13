@@ -29,6 +29,11 @@ string W_Apply_Weaponreplace(string in)
 void weapon_defaultspawnfunc(entity this, Weapon wpn)
 {
 	wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
+	if (!wpn.instanceOfWeapon)
+	{
+		StartItem(this, wpn);
+		return;
+	}
 	this.classname = wpn.m_canonical_spawnfunc;
 	if (!Item_IsLoot(this) && !this.m_isreplaced)
 	{

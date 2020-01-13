@@ -86,6 +86,8 @@ REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENA
 			if(nt_IsNewToy(it.m_id))
 				it.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 		});
+
+		cvar_settemp("sv_nexuizcompat_weaponswap", "0"); // disable compatibility so these weapons aren't auto replaced elsewhere
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
