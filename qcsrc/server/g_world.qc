@@ -330,6 +330,7 @@ void cvar_changes_init()
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_buffs_pickup_anyway");
 		BADCVAR("g_buffs_randomize");
+		BADCVAR("g_buffs_randomize_teamplay");
 		BADCVAR("g_campcheck_distance");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
