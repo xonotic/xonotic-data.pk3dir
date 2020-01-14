@@ -2329,6 +2329,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	vid_width = vf_size.x;
 	vid_height = vf_size.y;
 
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
 	WaypointSprite_Load();
 
 	CSQCPlayer_SetCamera();
@@ -2338,8 +2340,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else // then player_localentnum is the vehicle I'm driving
 		current_player = player_localnum;
 	myteam = entcs_GetTeam(current_player);
-
-	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
 	// abused multiple places below
 	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
