@@ -7,7 +7,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     // 1 [wait] 1 [wait] 2 [wait] 2 [wait] [wait]
-    float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + veh.misc_bulletcounter == 4);
+    float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + ((veh.misc_bulletcounter + 1) >= 4));
     if (fire & 1)
     if (weapon_prepareattack(thiswep, player, weaponentity, false, t)) {
         if (isPlayer) W_SetupShot_Dir(player, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0, DEATH_VH_RAPT_CANNON.m_id);
@@ -16,7 +16,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
         if (veh) {
             veh.misc_bulletcounter += 1;
             org = (veh.misc_bulletcounter <= 2) ? gettaginfo(veh.gun1, gettagindex(veh.gun1, "fire1"))
-              : (((veh.misc_bulletcounter == 4) ? veh.misc_bulletcounter = 0 : 0), gettaginfo(veh.gun2, gettagindex(veh.gun2, "fire1")));
+              : (((veh.misc_bulletcounter >= 4) ? veh.misc_bulletcounter = 0 : 0), gettaginfo(veh.gun2, gettagindex(veh.gun2, "fire1")));
             dir = v_forward;
             veh.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
             actor.cnt = time;
