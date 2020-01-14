@@ -21,7 +21,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
             veh.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
             actor.cnt = time;
         }
-        vehicles_projectile(veh, EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
+        vehicles_projectile(veh, EFFECT_RAPTOR_MUZZLEFLASH, SND_LASERGUN_FIRE,
                                org, normalize(dir + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                                autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
                                DEATH_VH_RAPT_CANNON.m_id, PROJECTILE_RAPTORCANNON, 0, true, true, player);
