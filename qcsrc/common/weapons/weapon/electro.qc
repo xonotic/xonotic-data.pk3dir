@@ -51,7 +51,7 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 
 void W_Electro_ExplodeComboThink(entity this)
 {
-	float dt = time - this.teleport_time + this.dmg_rate;
+	float dt = time - this.teleport_time + this.dmg_interval;
 	float dmg_remaining_next = (bound(0, 1 - dt / this.dmg_duration, 1) ** this.dmg_power);
 
 	float f = this.dmg_last - dmg_remaining_next;
@@ -61,7 +61,7 @@ void W_Electro_ExplodeComboThink(entity this)
 	this.projectiledeathtype |= HITTYPE_BOUNCE; // ensure it doesn't spam its effect
 
 	if(dt < this.dmg_duration)
-		this.nextthink = time + this.dmg_rate; // soon
+		this.nextthink = time + this.dmg_interval; // soon
 	else
 		delete(this);
 }
@@ -87,7 +87,7 @@ void W_Electro_ExplodeCombo(entity this)
 		this.dmg_force = WEP_CVAR(electro, combo_force);
 		this.dmg_power = WEP_CVAR(electro, combo_power);
 		this.dmg_duration = WEP_CVAR(electro, combo_duration);
-		this.dmg_rate = WEP_CVAR(electro, combo_damagerate);
+		this.dmg_interval = WEP_CVAR(electro, combo_damage_interval);
 		this.teleport_time = time;
 		this.dmg_last = 1;
 		set_movetype(this, MOVETYPE_NONE);
