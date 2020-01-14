@@ -82,7 +82,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 
 	csqcplayer_predictionerroro = CSQCPlayer_GetPredictionErrorO() + o;
 	csqcplayer_predictionerrorv = CSQCPlayer_GetPredictionErrorV() + v;
-	csqcplayer_predictionerrorfactor = autocvar_cl_movement_errorcompensation / ticrate;
+	csqcplayer_predictionerrorfactor = autocvar_cl_movement_errorcompensation / ((ticrate) ? ticrate : 1);
 	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
