@@ -235,7 +235,7 @@ match (string)this.target and call their .use function
 ==============================
 */
 
-void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventReuse)
+void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventReuse, int skiptargets)
 {
 //
 // check for a delay
@@ -249,10 +249,10 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		t.enemy = actor;
 		t.message = this.message;
 		t.killtarget = this.killtarget;
-		t.target = this.target;
-		t.target2 = this.target2;
-		t.target3 = this.target3;
-		t.target4 = this.target4;
+		if(!(skiptargets & BIT(1))) t.target = this.target;
+		if(!(skiptargets & BIT(2))) t.target2 = this.target2;
+		if(!(skiptargets & BIT(3))) t.target3 = this.target3;
+		if(!(skiptargets & BIT(4))) t.target4 = this.target4;
 		t.antiwall_flag = this.antiwall_flag;
 		return;
 	}
@@ -292,6 +292,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 
 	for(int i = 0; i < 4; ++i)
 	{
+		if(skiptargets & BIT(i + 1))
+			continue;
 		switch(i)
 		{
 			default:
@@ -329,5 +331,6 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 	}
 }
 
-void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false); }
-void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true); }
+void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false, 0); }
+void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true, 0); }
+void SUB_UseTargets_SkipTargets(entity this, entity actor, entity trigger, int skiptargets) { SUB_UseTargets_Ex(this, actor, trigger, false, skiptargets); }
