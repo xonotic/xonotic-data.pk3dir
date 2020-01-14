@@ -701,11 +701,11 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	{
 		Movetype_Physics_NoMatchServer(this);
 
-		this.tic_saved_flags = this.flags;
-		this.tic_saved_velocity = this.velocity;
-		this.tic_saved_origin = this.origin;
-		this.tic_saved_avelocity = this.avelocity;
-		this.tic_saved_angles = this.angles;
+		this.tic_saved_flags = this.tic_flags = this.flags;
+		this.tic_saved_velocity = this.tic_velocity = this.velocity;
+		this.tic_saved_origin = this.tic_origin = this.origin;
+		this.tic_saved_avelocity = this.tic_avelocity = this.avelocity;
+		this.tic_saved_angles = this.tic_angles = this.angles;
 		return;
 	}
 
