@@ -59,6 +59,8 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
     entity veh = player.vehicle;
     if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, player, weaponentity, true, autocvar_g_vehicle_raptor_flare_refire)) {
+        vector forward, right, up;
+        MAKE_VECTORS(player.v_angle, forward, right, up);
         for(int i = 0; i < 3; ++i) {
             entity _flare = spawn();
             setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
@@ -67,7 +69,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             setorigin(_flare, actor.origin - '0 0 16');
             set_movetype(_flare, MOVETYPE_TOSS);
             _flare.gravity = 0.15;
-            _flare.velocity = 0.25 * actor.velocity + (v_forward + randomvec() * 0.25)* -500;
+            _flare.velocity = 0.25 * actor.velocity + (forward + randomvec() * 0.25)* -500;
             setthink(_flare, raptor_flare_think);
             _flare.nextthink = time;
             _flare.owner = veh ? veh : player;

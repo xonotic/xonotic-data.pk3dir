@@ -4,6 +4,8 @@
 #
 # Translators:
 # Martin Taibr <taibr.martin@gmail.com>, 2017
+# GamingasCZ <gamingforyou875@gmail.com>, 2019
+# Jan Kocka <kockahonza@gmail.com>, 2019
 # Martin Taibr <taibr.martin@gmail.com>, 2017
 # NONE <nechtom@gmail.com>, 2015
 # Tomáš Volavka <czheron@gmail.com>, 2015,2018
@@ -13,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-12-11 18:36+0000\n"
+"Last-Translator: GamingasCZ <gamingforyou875@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -27,12 +29,12 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Úspěšně exportováno do %s! (Poznámka: Uloženo v data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Nešlo zapsat do 1%s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
@@ -45,15 +47,17 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Víceřádková zpráva v čase %s že\n"
+"^1trvá déle než normálně"
 
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Zpráva v čase %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "Obecná zpráva"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -126,7 +130,7 @@ msgstr "^1Stiskni ^3%s^1 pro informace o herním módu"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "server info"
-msgstr ""
+msgstr "info o serveru"
 
 #: qcsrc/client/hud/panel/infomessages.qc:126
 msgid "^1Match has already begun"
@@ -154,37 +158,37 @@ msgstr "^1Hra začíná za ^3%d^1 sekund"
 
 #: qcsrc/client/hud/panel/infomessages.qc:147
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2Momentálně v ^1zahřívací^2 fázi!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sZmáčkni ^3%s%s pro ukončení zahřívací fáze"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #: qcsrc/client/hud/panel/infomessages.qc:164
 #: qcsrc/client/hud/panel/infomessages.qc:177
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "ready"
-msgstr ""
+msgstr "připraven"
 
 #: qcsrc/client/hud/panel/infomessages.qc:164
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%sZmáčkni ^3%s%s až budeš připravený"
 
 #: qcsrc/client/hud/panel/infomessages.qc:169
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr ""
+msgstr "^2Čeká se než ostatní hráči ukončí zahřívací fázi..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:171
 msgid "^2Waiting for others to ready up..."
-msgstr ""
+msgstr "^2Čeká se než budou ostatní hráči připraveni..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:177
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Zmáčkni ^3%s^2 pro ukončení zahřívací fáze"
 
 #: qcsrc/client/hud/panel/infomessages.qc:198
 msgid "Teamnumbers are unbalanced!"
@@ -193,24 +197,24 @@ msgstr "Týmy jsou nevyvážené"
 #: qcsrc/client/hud/panel/infomessages.qc:201
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr ""
+msgstr " Zmáčkni ^3%s%s pro upravení"
 
 #: qcsrc/client/hud/panel/infomessages.qc:201
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team menu"
-msgstr ""
+msgstr "týmové menu"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Sleduješ tohoto hráče:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Sledují tě:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "^7Zmáčkni ^3ESC ^7pro zobrazení nastavení HUD."
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -247,49 +251,49 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:598
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "Příkaz%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:624
 msgid "Continue..."
-msgstr ""
+msgstr "Pokračovat..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Poslat veřejnou zprávu do"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / hezký"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^hezký"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:784
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^dobrá hra"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^ahoj/hodně štěstí"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^ahoj/hodně štěstí a užijte si hru"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Pošli v angličtině"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Týmový chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
@@ -313,11 +317,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^negative"
-msgstr ""
+msgstr "QMCMD^negativní"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^positive"
-msgstr ""
+msgstr "QMCMD^pozitivní"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -432,7 +436,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^FPS"
-msgstr ""
+msgstr "QMCMD^FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^Net graph"
@@ -441,15 +445,15 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 #: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Sound settings"
-msgstr ""
+msgstr "QMCMD^Nastavení zvuku"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Hit sound"
-msgstr ""
+msgstr "QMCMD^Zvuk zásahu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Chat sound"
-msgstr ""
+msgstr "QMCMD^Zvuk chatu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 #: qcsrc/client/hud/panel/quickmenu.qc:834
@@ -596,7 +600,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "Number of deaths"
-msgstr ""
+msgstr "Počet smrtí"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^deaths"
@@ -608,7 +612,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "SCO^destroyed"
-msgstr ""
+msgstr "SCO^zničen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^damage"
@@ -616,7 +620,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "The total damage done"
-msgstr ""
+msgstr "Celkový udělený damage"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^dmgtaken"
@@ -644,7 +648,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^fastest"
-msgstr ""
+msgstr "SCO^nejrychlejší"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "Time of fastest lap (Race/CTS)"
@@ -668,11 +672,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^fps"
-msgstr ""
+msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "Number of kills minus suicides"
@@ -730,36 +734,36 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^laps"
-msgstr ""
+msgstr "SCO^kola"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "Počet životů (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^lives"
-msgstr ""
+msgstr "SCO^životy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "Number of times a key was lost"
-msgstr ""
+msgstr "Kolikrát byl ztracen klíč"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^losses"
-msgstr ""
+msgstr "SCO^prohry"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "Player name"
-msgstr ""
+msgstr "Jméno hráče"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^name"
-msgstr ""
+msgstr "SCO^jméno"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^nick"
-msgstr ""
+msgstr "SCO^přezdívka"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "Number of objectives destroyed"
@@ -780,11 +784,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "Ping time"
-msgstr ""
+msgstr "Čas pingu"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "SCO^ping"
-msgstr ""
+msgstr "SCO^ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "Packet loss"
@@ -828,27 +832,27 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Počet vyhraných kol"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "SCO^vyhraných kol"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^score"
-msgstr ""
+msgstr "SCO^skóre"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "Total score"
-msgstr ""
+msgstr "Celkové skóre"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Number of suicides"
-msgstr ""
+msgstr "Počet sebevražd"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^suicides"
-msgstr ""
+msgstr "SCO^sebevraždy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "Number of kills minus deaths"
@@ -856,7 +860,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^sum"
-msgstr ""
+msgstr "SCO^součet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of domination points taken (Domination)"
@@ -884,7 +888,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^time"
-msgstr ""
+msgstr "SCO^čas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Total time raced (Race/CTS)"
@@ -897,7 +901,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:313
 msgid "Usage:"
-msgstr ""
+msgstr "Použití:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
@@ -978,11 +982,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1336
 msgid "Map stats:"
-msgstr ""
+msgstr "Statistiky mapy:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1366
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Zabitých monster:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1373
 msgid "Secrets found:"
@@ -999,38 +1003,38 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1613
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f minuty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1622
 #: qcsrc/client/hud/panel/scoreboard.qc:1629
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1623
 #: qcsrc/client/hud/panel/scoreboard.qc:1630
 #: qcsrc/client/hud/panel/scoreboard.qc:1642
 #: qcsrc/client/hud/panel/scoreboard.qc:1649
 msgid "SCO^points"
-msgstr ""
+msgstr "SCO^body"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1624
 #: qcsrc/client/hud/panel/scoreboard.qc:1631
 #: qcsrc/client/hud/panel/scoreboard.qc:1643
 #: qcsrc/client/hud/panel/scoreboard.qc:1650
 msgid "SCO^is beaten"
-msgstr ""
+msgstr "SCO^je poražen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1641
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1659
 #, c-format
 msgid "^7Map: ^2%s"
-msgstr ""
+msgstr "^7Mapa: ^2%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1798
 #, c-format
@@ -1060,7 +1064,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1864
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Jsi mrtvý, zmáčkni ^2%s^7 pro respawnutí"
 
 #: qcsrc/client/hud/panel/timer.qc:67
 msgid "WARMUP"
@@ -1095,7 +1099,7 @@ msgstr "^1Nastavit HUD"
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Ano"
 
 #: qcsrc/client/hud/panel/vote.qc:128 qcsrc/menu/xonotic/dialog_firstrun.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1106,7 +1110,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Ne"
 
 #: qcsrc/client/hud/panel/weapons.qc:546
 msgid "Out of ammo"
@@ -1126,15 +1130,15 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1029
 msgid " m/s"
-msgstr ""
+msgstr " m/s"
 
 #: qcsrc/client/main.qc:1031
 msgid " km/h"
-msgstr ""
+msgstr " km/h"
 
 #: qcsrc/client/main.qc:1033
 msgid " mph"
-msgstr ""
+msgstr " mph"
 
 #: qcsrc/client/main.qc:1035
 msgid " knots"
@@ -1147,12 +1151,12 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:52
 msgid " (1 vote)"
-msgstr ""
+msgstr "(1 hlas)"
 
 #: qcsrc/client/mapvoting.qc:54
 #, c-format
 msgid " (%d votes)"
-msgstr ""
+msgstr " (%d hlasů)"
 
 #: qcsrc/client/mapvoting.qc:274
 msgid "Don't care"
@@ -1164,12 +1168,12 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:375
 msgid "Vote for a map"
-msgstr ""
+msgstr "Hlasovat pro mapu"
 
 #: qcsrc/client/mapvoting.qc:392
 #, c-format
 msgid "%d seconds left"
-msgstr ""
+msgstr "zbývá%d sekund"
 
 #: qcsrc/client/mapvoting.qc:505
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
@@ -1213,7 +1217,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:66
 msgid "bullets"
-msgstr ""
+msgstr "náboje"
 
 #: qcsrc/common/items/item/ammo.qh:96
 msgid "cells"
@@ -1221,11 +1225,11 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:126
 msgid "plasma"
-msgstr ""
+msgstr "plazma"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "rockets"
-msgstr ""
+msgstr "rakety"
 
 #: qcsrc/common/items/item/ammo.qh:190
 msgid "shells"
@@ -1233,7 +1237,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "malé brnění"
 
 #: qcsrc/common/items/item/armor.qh:80
 msgid "Medium armor"
@@ -4987,32 +4991,32 @@ msgstr ""
 #: qcsrc/common/util.qc:1584
 #, c-format
 msgid "UP"
-msgstr ""
+msgstr "NAHORU"
 
 #: qcsrc/common/util.qc:1585
 #, c-format
 msgid "DOWN"
-msgstr ""
+msgstr "DOLŮ"
 
 #: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT"
-msgstr ""
+msgstr "DOLEVA"
 
 #: qcsrc/common/util.qc:1587
 #, c-format
 msgid "RIGHT"
-msgstr ""
+msgstr "DOPRAVA"
 
 #: qcsrc/common/util.qc:1593
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "MIDI NOTA%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 #, c-format
 msgid "Press %s"
-msgstr ""
+msgstr "Zmáčkni %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:947
 msgid "No right gunner!"
@@ -5080,11 +5084,11 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/fireball.qh:18
 msgid "Fireball"
-msgstr ""
+msgstr "Ohnivá koule"
 
 #: qcsrc/common/weapons/weapon/hagar.qh:18
 msgid "Hagar"
-msgstr ""
+msgstr "Hagar"
 
 #: qcsrc/common/weapons/weapon/hlac.qh:18
 msgid "Heavy Laser Assault Cannon"
@@ -5322,26 +5326,26 @@ msgstr ""
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
-msgstr ""
+msgstr "%d."
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%d."
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%d."
 
 #: qcsrc/lib/counting.qh:82 qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%d."
 
 #: qcsrc/lib/oo.qh:330
 msgid "No description"
-msgstr ""
+msgstr "Bez popisu"
 
 #: qcsrc/lib/spawnfunc.qh:240
 #, c-format
@@ -5378,7 +5382,7 @@ msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available options:"
-msgstr ""
+msgstr "Dostupné možnosti:"
 
 #: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
@@ -5387,19 +5391,19 @@ msgstr ""
 #: qcsrc/menu/item/listbox.qc:413
 #, c-format
 msgid "Item %d"
-msgstr ""
+msgstr "Item %d"
 
 #: qcsrc/menu/item/textslider.qc:11 qcsrc/menu/item/textslider.qc:12
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:37
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:115
 msgid "Custom"
-msgstr ""
+msgstr "Vlastní"
 
 #: qcsrc/menu/xonotic/campaign.qc:235
 #, c-format
 msgid "Level %d: %s"
-msgstr ""
+msgstr "Level %d: %s"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -5411,11 +5415,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:48
 msgid "Website"
-msgstr ""
+msgstr "Stránka"
 
 #: qcsrc/menu/xonotic/credits.qc:53
 msgid "Stats"
-msgstr ""
+msgstr "Statistiky"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Art"
@@ -5423,19 +5427,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:65
 msgid "Animation"
-msgstr ""
+msgstr "Animace"
 
 #: qcsrc/menu/xonotic/credits.qc:69
 msgid "Level Design"
-msgstr ""
+msgstr "Design levelů"
 
 #: qcsrc/menu/xonotic/credits.qc:92
 msgid "Music / Sound FX"
-msgstr ""
+msgstr "Hudba / Zvuky FX"
 
 #: qcsrc/menu/xonotic/credits.qc:108
 msgid "Game Code"
-msgstr ""
+msgstr "Kód hry"
 
 #: qcsrc/menu/xonotic/credits.qc:116
 msgid "Marketing / PR"
@@ -5583,23 +5587,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
-msgstr ""
+msgstr "nebude uloženo"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:84
 msgid "will be saved to config.cfg"
-msgstr ""
+msgstr "bude uloženo do config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
-msgstr ""
+msgstr "soukromé"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:95
 msgid "engine setting"
-msgstr ""
+msgstr "nastavení enginu"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:97
 msgid "read only"
-msgstr ""
+msgstr "jen ke čtení"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:38
@@ -5608,7 +5612,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
@@ -5624,20 +5628,22 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
+"Vítej v Xonotic, abys mohl začít, vyber si prosím svůj jazyk a zvol si "
+"jméno. Tyto možnosti si potom můžeš změnit v nastavení."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
-msgstr ""
+msgstr "Jméno:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:64
 msgid "Name under which you will appear in the game"
-msgstr ""
+msgstr "Jméno pod kterým budeš vystupovat ve hře"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
-msgstr ""
+msgstr "Jazyk textu:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:78
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
@@ -5646,15 +5652,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Undecided"
-msgstr ""
+msgstr "Nerozhodnutý"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 msgid "Save settings"
-msgstr ""
+msgstr "Uložit nastavení"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qh:6
 msgid "Welcome"
-msgstr ""
+msgstr "Vítej"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
@@ -5689,7 +5695,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid "Left"
-msgstr ""
+msgstr "Levý"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:34
@@ -5701,7 +5707,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:23
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:59
 msgid "Right"
-msgstr ""
+msgstr "Pravý"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
@@ -5728,11 +5734,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:22
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Center"
-msgstr ""
+msgstr "Střed"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
 msgid "Font scale:"
-msgstr ""
+msgstr "Škála písma"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
@@ -5744,23 +5750,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat size:"
-msgstr ""
+msgstr "Velikost chatu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
 msgid "Chat lifetime:"
-msgstr ""
+msgstr "Životnost chatu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
 msgid "Chat beep sound"
-msgstr ""
+msgstr "Zvuk pípnutí chatu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
-msgstr ""
+msgstr "Panel chatu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:16
 msgid "Engine info:"
-msgstr ""
+msgstr "Info o enginu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
 msgid "Use an averaging algorithm for fps"
@@ -5772,7 +5778,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
 msgid "Combine health and armor"
-msgstr ""
+msgstr "Kombinovat životy a brnění"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
@@ -5835,7 +5841,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:778 qcsrc/menu/xonotic/util.qc:794
 #: qcsrc/menu/xonotic/util.qc:811
 msgid "Disable"
-msgstr ""
+msgstr "Zákázat"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
@@ -5852,7 +5858,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "Poměr textu/ikon:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
@@ -5864,7 +5870,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Dynamic size"
-msgstr ""
+msgstr "Dynamická velikost"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
@@ -5876,7 +5882,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:17
 msgid "Notifications:"
-msgstr ""
+msgstr "Notifikace:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:20
 msgid "Also print notifications to the console"
@@ -5896,12 +5902,12 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
-msgstr ""
+msgstr "Panel notifikací"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/util.qc:766
 msgid "Enable"
-msgstr ""
+msgstr "Povolit"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Enable even observing"
@@ -5939,7 +5945,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
-msgstr ""
+msgstr "Rychlost:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
 msgid "Include vertical speed"
@@ -5951,19 +5957,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
@@ -5971,15 +5977,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:57
 msgid "Show"
-msgstr ""
+msgstr "Ukázat"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:60
 msgid "Top speed"
-msgstr ""
+msgstr "Nejvyšší rychlost"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
 msgid "Acceleration:"
-msgstr ""
+msgstr "Zrychlování:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:67
 msgid "Include vertical acceleration"
@@ -5987,7 +5993,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
-msgstr ""
+msgstr "Panel fyziky"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -5996,7 +6002,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
-msgstr ""
+msgstr "Vždy povolit"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
@@ -6020,7 +6026,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
-msgstr ""
+msgstr "Radar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:68
@@ -6041,39 +6047,39 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
 msgid "Forward"
-msgstr ""
+msgstr "Vpřed"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:33
 msgid "West"
-msgstr ""
+msgstr "Západ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:34
 msgid "South"
-msgstr ""
+msgstr "Jih"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
 msgid "East"
-msgstr ""
+msgstr "Východ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:36
 msgid "North"
-msgstr ""
+msgstr "Sever"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
 msgid "Scale:"
-msgstr ""
+msgstr "Škála:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:44
 msgid "Zoom mode:"
-msgstr ""
+msgstr "Režim přibližování:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr ""
+msgstr "Přiblížen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr ""
+msgstr "Oddálený"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
@@ -8501,11 +8507,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:40
 msgid "Up"
-msgstr ""
+msgstr "Nahoru"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:44
 msgid "Down"
-msgstr ""
+msgstr "Dolů"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid "Use priority list for weapon cycling"
@@ -8518,17 +8524,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:53
 msgid "Cycle through only usable weapon selections"
-msgstr ""
+msgstr "Cyklovat jen mezi použitelnými výběry zbraní"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid "Auto switch weapons on pickup"
-msgstr ""
+msgstr "Automaticky měnit zbraň po sebrání"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:58
 msgid ""
 "Automatically switch to newly picked up weapons if they are better than what "
 "you are carrying"
 msgstr ""
+"Automaticky změnit na právě sebranou zbraň, jestli je novější lepší než "
+"starší"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:61
 msgid "Release attack buttons when you switch weapons"
@@ -8563,39 +8571,39 @@ msgstr "Zbraně"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:34
 msgid "Key Bindings"
-msgstr ""
+msgstr "Klávesové zkratky"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:38
 msgid "Change key..."
-msgstr ""
+msgstr "Změnit klávesu"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:42
 msgid "Edit..."
-msgstr ""
+msgstr "Upravit"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:48
 msgid "Clear"
-msgstr ""
+msgstr "Vymazat"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:53
 msgid "Reset all"
-msgstr ""
+msgstr "Resetovat vše"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:58
 msgid "Mouse"
-msgstr ""
+msgstr "Myš"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:60
 msgid "Sensitivity:"
-msgstr ""
+msgstr "Sensitivita:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:62
 msgid "Mouse speed multiplier"
-msgstr ""
+msgstr "Násobič rychlosti myši"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:64
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Jemné míření"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:65
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
@@ -8603,7 +8611,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:67
 msgid "Invert aiming"
-msgstr ""
+msgstr "Invertovat míření"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:68
 msgid "Invert mouse movement on the Y-axis"
@@ -8615,13 +8623,13 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:75
 msgid "Enable built in mouse acceleration"
-msgstr ""
+msgstr "Použít zabudované zrychlení myši"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:83
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:86
 msgid "Disable system mouse acceleration"
-msgstr ""
+msgstr "Zakázat systémové zrychlení myši"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:80
 msgid "Make use of DGA mouse input"
@@ -8649,7 +8657,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Air only"
-msgstr ""
+msgstr "Jen vzduch"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:104
 msgid "JPJUMP^All"
@@ -8659,7 +8667,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:115
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:120
 msgid "Use joystick input"
-msgstr ""
+msgstr "Použít vstup joysticku"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:31
 msgid "Command when pressed:"
@@ -8671,30 +8679,30 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
-msgstr ""
+msgstr "Uživatelem definovaná kláv. zkratka"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:11
 #, c-format
 msgid "%d fps"
-msgstr ""
+msgstr "%d fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
 msgid "%d KB/s"
-msgstr ""
+msgstr "%d KB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d MB/s"
-msgstr ""
+msgstr "%d MB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:27
 msgid "Network"
-msgstr ""
+msgstr "Síť"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:29
 msgid "Client UDP port:"
@@ -8710,7 +8718,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Specify your network speed"
-msgstr ""
+msgstr "Upřesní svou rychlost internetu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "56k"
@@ -8718,15 +8726,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:38
 msgid "ISDN"
-msgstr ""
+msgstr "ISDN"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Slow ADSL"
-msgstr ""
+msgstr "Pomalé ADSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:40
 msgid "Fast ADSL"
-msgstr ""
+msgstr "Rychlé ADSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:41
 msgid "Broadband"
@@ -8746,7 +8754,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:52
 msgid "Downloads:"
-msgstr ""
+msgstr "Stahování:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:54
 msgid "Maximum number of concurrent HTTP/FTP downloads"
@@ -8754,7 +8762,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:56
 msgid "Download speed:"
-msgstr ""
+msgstr "Rychlost stahování:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Local latency:"
@@ -8786,7 +8794,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
 msgid "Maximum:"
-msgstr ""
+msgstr "Maximum:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:99
 msgid "MAXFPS^Unlimited"
@@ -8794,7 +8802,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:102
 msgid "Target:"
-msgstr ""
+msgstr "Cíl:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:104
 msgid "TRGT^Disabled"
@@ -8814,11 +8822,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:129
 msgid "Show frames per second"
-msgstr ""
+msgstr "Ukázat snímky za sekundu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:130
 msgid "Show your rendered frames per second"
-msgstr ""
+msgstr "Ukáže tvé vyrenderované snímky za sekundu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:135
 msgid "Menu tooltips:"
@@ -8844,23 +8852,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:143
 msgid "Show current date and time"
-msgstr ""
+msgstr "Ukázat aktuální datum a čas"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:144
 msgid "Show current date and time of day, useful on screenshots"
-msgstr ""
+msgstr "Ukázat aktuální datum a čas, užitečné na snímcích obrazovky"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:147
 msgid "Enable developer mode"
-msgstr ""
+msgstr "Povolit vývojářský režim"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:151
 msgid "Advanced settings..."
-msgstr ""
+msgstr "Pokročilé nastavení..."
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:152
 msgid "Advanced settings where you can tweak every single variable of the game"
-msgstr ""
+msgstr "Pokročilé nastavení, kde můžeš měnit každou proměnou ve hře"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:157
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
@@ -8869,43 +8877,43 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
-msgstr ""
+msgstr "Filtr cvar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
-msgstr ""
+msgstr "Jen modifikované cvary"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
-msgstr ""
+msgstr "Nastavení:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:49
 msgid "Type:"
-msgstr ""
+msgstr "Typ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Value:"
-msgstr ""
+msgstr "Hodnota:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:70
 msgid "Description:"
-msgstr ""
+msgstr "Popis:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qh:7
 msgid "Advanced settings"
-msgstr ""
+msgstr "Pokročilé nastavení"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr ""
+msgstr "Jsi si jistý, že chceš resetovat všechna nastavení?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
-msgstr ""
+msgstr "Tohle vytvoří zálohu configu v tvé data složce"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:25
 msgid "Menu Skins"
-msgstr ""
+msgstr "Skiny menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:64
 msgid "Text Language"
@@ -8913,11 +8921,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:69
 msgid "Set language"
-msgstr ""
+msgstr "Nastavit jazyk"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:74
 msgid "Disable gore effects and harsh language"
-msgstr ""
+msgstr "Zakázat násilí a sprostý jazyk"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:75
 msgid "Replace blood and gibs with content that does not have any gore effects"
@@ -8933,23 +8941,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
-msgstr ""
+msgstr "Odpojit teď"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
 msgid "Switch language"
-msgstr ""
+msgstr "Změnit jazyk"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
-msgstr ""
+msgstr "Varování"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:33
 msgid "Resolution:"
-msgstr ""
+msgstr "Rozlišení:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:37
 msgid "Font/UI size:"
-msgstr ""
+msgstr "Velikost písma/UI"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "SZ^Unreadable"
@@ -8989,7 +8997,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:51
 msgid "Color depth:"
-msgstr ""
+msgstr "Hloubka barev:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:53
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
@@ -8997,19 +9005,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:54
 msgid "16bit"
-msgstr ""
+msgstr "16bitový"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:55
 msgid "32bit"
-msgstr ""
+msgstr "32bitový"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "Full screen"
-msgstr ""
+msgstr "Celá obrazovka"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:61
 msgid "Vertical Synchronization"
-msgstr ""
+msgstr "Vertikální synchronizace"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:62
 msgid ""
@@ -9031,7 +9039,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:73
 msgid "Anisotropic filtering quality"
-msgstr ""
+msgstr "Kvalita anizotropního filtrování"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:74
 msgid "ANISO^Disabled"
@@ -9040,20 +9048,20 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:75
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:86
 msgid "2x"
-msgstr ""
+msgstr "2x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:87
 msgid "4x"
-msgstr ""
+msgstr "4x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:77
 msgid "8x"
-msgstr ""
+msgstr "8x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:78
 msgid "16x"
-msgstr ""
+msgstr "16x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:81
 msgid "Antialiasing:"
@@ -9075,7 +9083,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:97
 msgid "Depth first:"
-msgstr ""
+msgstr "Hloubka prvně:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:99
 msgid ""
@@ -9125,23 +9133,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:119
 msgid "Brightness:"
-msgstr ""
+msgstr "Jas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:121
 msgid "Brightness of black"
-msgstr ""
+msgstr "Jas černé"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:123
 msgid "Contrast:"
-msgstr ""
+msgstr "Kontrast:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:125
 msgid "Brightness of white"
-msgstr ""
+msgstr "Jas bílé"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:127
 msgid "Gamma:"
-msgstr ""
+msgstr "Gamma:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:130
 msgid ""
@@ -9155,17 +9163,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:136
 msgid "By how much to multiply the contrast in dark areas"
-msgstr ""
+msgstr "Kolikati násobit kontrast v tmavých oblastech"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid "Saturation:"
-msgstr ""
+msgstr "Sytost:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:142
 msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
+"Upravení sytosti (0 = černobílé, 1 = normální, 2 = přesycené), potřebuje "
+"kontrolování barev GLSL "
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
 msgid "LIT^Ambient:"
@@ -9179,15 +9189,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Intensity:"
-msgstr ""
+msgstr "Intenzita:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:152
 msgid "Global rendering brightness"
-msgstr ""
+msgstr "Globální jas renderování"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:155
 msgid "Wait for GPU to finish each frame"
-msgstr ""
+msgstr "Počkat než GPU dokončí každý snímek"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:156
 msgid ""
@@ -9197,7 +9207,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr ""
+msgstr "Použít OpenGL 2.0 shadery (GLSL)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:162
 msgid "Use GLSL to handle color control"
@@ -9219,7 +9229,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:110
 msgid "Instant action! (random map with bots)"
-msgstr ""
+msgstr "Instantní akce! (náhodná mapa s boty)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:117
 msgid "???"
@@ -9243,11 +9253,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:135
 msgid "Start Singleplayer!"
-msgstr ""
+msgstr "Začít hru jednoho hráče"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
-msgstr ""
+msgstr "Hra jednoho hráče"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
@@ -9255,31 +9265,31 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
-msgstr ""
+msgstr "Vítěz"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr ""
+msgstr "připojit se k 'nejlepšímu' týmu (automatický výběr)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
-msgstr ""
+msgstr "Automaticky vybrat tým (doporučeno)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
-msgstr ""
+msgstr "červená"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:38
 msgid "blue"
-msgstr ""
+msgstr "modrá"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:39
 msgid "yellow"
-msgstr ""
+msgstr "žlutá"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:40
 msgid "pink"
-msgstr ""
+msgstr "růžová"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:43
 msgid "spectate"
@@ -9287,15 +9297,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
-msgstr ""
+msgstr "Vybírání týmů"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
-msgstr ""
+msgstr "Povolit používání Vaší přezdívky v hráčské statistice?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr ""
+msgstr "Pokud odpovíš \"ne\", objevíš se jako \"Anonymní hráč\""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:87
 msgid "teamplay"
@@ -9311,7 +9321,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "forward"
-msgstr ""
+msgstr "dopředu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "backpedal"
@@ -9339,11 +9349,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
-msgstr ""
+msgstr "jetpack"
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "Attacking"
-msgstr ""
+msgstr "Útočení"
 
 #: qcsrc/menu/xonotic/keybinder.qc:52
 msgid "WEAPON^previous"
@@ -9379,19 +9389,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:88
 msgid "show scores"
-msgstr ""
+msgstr "ukázat skóre"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "screen shot"
-msgstr ""
+msgstr "snímek obrazovky"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "maximize radar"
-msgstr ""
+msgstr "maximalizovat radar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "3rd person view"
-msgstr ""
+msgstr "pohled 3. osoby"
 
 #: qcsrc/menu/xonotic/keybinder.qc:92
 msgid "enter spectator mode"
@@ -9399,43 +9409,43 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:95
 msgid "Communicate"
-msgstr ""
+msgstr "Komunikovat"
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "public chat"
-msgstr ""
+msgstr "veřejný chat"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97 qcsrc/menu/xonotic/keybinder.qc:115
 msgid "team chat"
-msgstr ""
+msgstr "týmový chat"
 
 #: qcsrc/menu/xonotic/keybinder.qc:98
 msgid "show chat history"
-msgstr ""
+msgstr "ukázat historii chatu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "vote YES"
-msgstr ""
+msgstr "volit ANO"
 
 #: qcsrc/menu/xonotic/keybinder.qc:100
 msgid "vote NO"
-msgstr ""
+msgstr "volit NE"
 
 #: qcsrc/menu/xonotic/keybinder.qc:104
 msgid "Client"
-msgstr ""
+msgstr "Klient"
 
 #: qcsrc/menu/xonotic/keybinder.qc:108
 msgid "enter console"
-msgstr ""
+msgstr "vstoupit do konzole"
 
 #: qcsrc/menu/xonotic/keybinder.qc:110
 msgid "disconnect"
-msgstr ""
+msgstr "odpojit"
 
 #: qcsrc/menu/xonotic/keybinder.qc:111
 msgid "quit"
-msgstr ""
+msgstr "opustit"
 
 #: qcsrc/menu/xonotic/keybinder.qc:116
 msgid "auto-join team"
@@ -9467,7 +9477,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mainwindow.qc:65 qcsrc/menu/xonotic/mainwindow.qc:68
 msgid "Do not press this button again!"
-msgstr ""
+msgstr "Neklikej znova na tohle tlačítko!"
 
 #: qcsrc/menu/xonotic/maplist.qc:288
 msgid ""
@@ -9491,21 +9501,22 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/playermodel.qc:161
 msgid "<no model found>"
-msgstr ""
+msgstr "<no model found>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "Favorite"
-msgstr ""
+msgstr "Oblíbené"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
 msgstr ""
+"Přidat označený server do záložek, aby byl jednodušší najít v budoucnosti."
 
 #: qcsrc/menu/xonotic/serverlist.qc:747
 msgid "Ping"
-msgstr ""
+msgstr "Odezva"
 
 #: qcsrc/menu/xonotic/serverlist.qc:748
 msgid "Hostname"
@@ -9513,11 +9524,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Map"
-msgstr ""
+msgstr "Mapa"
 
 #: qcsrc/menu/xonotic/serverlist.qc:750
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
@@ -9530,7 +9541,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:1043
 msgid "encryption:"
-msgstr ""
+msgstr "šifrování:"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1044
 #, c-format
@@ -9540,20 +9551,20 @@ msgstr ""
 #: qcsrc/menu/xonotic/serverlist.qc:1046
 #, c-format
 msgid "modified settings"
-msgstr ""
+msgstr "modifikované nastavení"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1046
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "oficiální nastavení"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1048
 msgid "stats disabled"
-msgstr ""
+msgstr "statistiky zakázány"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1048
 msgid "stats enabled"
-msgstr ""
+msgstr "statistiky povoleny"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
@@ -9593,11 +9604,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
-msgstr ""
+msgstr "<TITLE>"
 
 #: qcsrc/menu/xonotic/skinlist.qc:71
 msgid "<AUTHOR>"
-msgstr ""
+msgstr "<AUTHOR>"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"
@@ -9610,7 +9621,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/slider_decibels.qc:82
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s db"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:14
 msgid "PART^OMG"
@@ -9649,7 +9660,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:115
 msgid "Screen resolution"
-msgstr ""
+msgstr "Rozlišení obrazovky"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "PART^Slow"
@@ -9665,51 +9676,51 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
-msgstr ""
+msgstr "Leden"
 
 #: qcsrc/menu/xonotic/statslist.qc:30
 msgid "February"
-msgstr ""
+msgstr "Únor"
 
 #: qcsrc/menu/xonotic/statslist.qc:31
 msgid "March"
-msgstr ""
+msgstr "Březen"
 
 #: qcsrc/menu/xonotic/statslist.qc:32
 msgid "April"
-msgstr ""
+msgstr "Duben"
 
 #: qcsrc/menu/xonotic/statslist.qc:33
 msgid "May"
-msgstr ""
+msgstr "Květen"
 
 #: qcsrc/menu/xonotic/statslist.qc:34
 msgid "June"
-msgstr ""
+msgstr "Červen"
 
 #: qcsrc/menu/xonotic/statslist.qc:35
 msgid "July"
-msgstr ""
+msgstr "Červenec"
 
 #: qcsrc/menu/xonotic/statslist.qc:36
 msgid "August"
-msgstr ""
+msgstr "Srpen"
 
 #: qcsrc/menu/xonotic/statslist.qc:37
 msgid "September"
-msgstr ""
+msgstr "Září"
 
 #: qcsrc/menu/xonotic/statslist.qc:38
 msgid "October"
-msgstr ""
+msgstr "Říjen"
 
 #: qcsrc/menu/xonotic/statslist.qc:39
 msgid "November"
-msgstr ""
+msgstr "Listopad"
 
 #: qcsrc/menu/xonotic/statslist.qc:40
 msgid "December"
-msgstr ""
+msgstr "Prosinec"
 
 #: qcsrc/menu/xonotic/statslist.qc:96
 msgid "Joined:"
@@ -9717,26 +9728,26 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
-msgstr ""
+msgstr "Poslední zápas:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
-msgstr ""
+msgstr "Odehraný čas:"
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:230
 msgid "Favorite map:"
-msgstr ""
+msgstr "Oblíbená mapa:"
 
 #: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
 #: qcsrc/menu/xonotic/statslist.qc:244
 #, c-format
 msgid "Matches:"
-msgstr ""
+msgstr "Zápasy:"
 
 #: qcsrc/menu/xonotic/statslist.qc:154
 #, c-format
 msgid "Wins/Losses:"
-msgstr ""
+msgstr "Výhry/Prohry:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
@@ -9772,7 +9783,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:417
 msgid "Update can be downloaded at:"
-msgstr ""
+msgstr "Update je ke stažení na:"
 
 #: qcsrc/menu/xonotic/util.qc:525
 msgid "Autogenerating mapinfo for newly added maps..."
@@ -9786,7 +9797,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:574
 #, c-format
 msgid "Update to %s now!"
-msgstr ""
+msgstr "Updatuj na 1%s teď!"
 
 #: qcsrc/menu/xonotic/util.qc:658
 msgid ""
@@ -9796,8 +9807,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:788
 msgid "Use default"
-msgstr ""
+msgstr "Použít výchozí"
 
 #: qcsrc/menu/xonotic/util.qc:808
 msgid "Team Color:"
-msgstr ""
+msgstr "Barva týmu:"

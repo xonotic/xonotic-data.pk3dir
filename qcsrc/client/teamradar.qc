@@ -68,7 +68,7 @@ void draw_teamradar_background(float fg)
 	{
 		fga = 1;
 		fgc = '1 1 1' * fg;
-		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP);
+		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP, true);
 		if(v_flipped)
 		{
 			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord3), yinvert(mi_pictexcoord3), fgc, fga);
@@ -112,14 +112,14 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	else
 		rgb2 = '1 1 1';
 
-	R_BeginPolygon("", 0);
+	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(coord+forward*3, '0 0 0', rgb2, panel_fg_alpha);
 	R_PolygonVertex(coord+right*4-forward*2.5, '0 1 0', rgb2, panel_fg_alpha);
 	R_PolygonVertex(coord-forward*2, '1 0 0', rgb2, panel_fg_alpha);
 	R_PolygonVertex(coord-right*4-forward*2.5, '1 1 0', rgb2, panel_fg_alpha);
 	R_EndPolygon();
 
-	R_BeginPolygon("", 0);
+	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(coord+forward*2, '0 0 0', rgb, panel_fg_alpha);
 	R_PolygonVertex(coord+right*3-forward*2, '0 1 0', rgb, panel_fg_alpha);
 	R_PolygonVertex(coord-forward, '1 0 0', rgb, panel_fg_alpha);
@@ -164,7 +164,7 @@ void draw_teamradar_link(vector start, vector end, int colors)
 	c0 = colormapPaletteColor(colors & 0x0F, false);
 	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
 
-	R_BeginPolygon("", 0);
+	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(start - norm, '0 0 0', c0, panel_fg_alpha);
 	R_PolygonVertex(start + norm, '0 1 0', c0, panel_fg_alpha);
 	R_PolygonVertex(end + norm, '1 1 0', c1, panel_fg_alpha);

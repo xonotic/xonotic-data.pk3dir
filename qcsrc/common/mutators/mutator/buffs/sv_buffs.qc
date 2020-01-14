@@ -227,7 +227,8 @@ void buff_NewType(entity ent)
 	FOREACH(Buffs, buff_Available(it),
 	{
 		// if it's already been chosen, give it a lower priority
-		RandomSelection_AddEnt(it, max(0.2, 1 / it.buff_seencount), 1);
+		float myseencount = (it.buff_seencount > 0) ? it.buff_seencount : 1; // no division by zero please!
+		RandomSelection_AddEnt(it, max(0.2, 1 / myseencount), 1);
 	});
 	entity newbuff = RandomSelection_chosen_ent;
 	newbuff.buff_seencount += 1; // lower chances of seeing this buff again soon
@@ -271,7 +272,7 @@ void buff_Think(entity this)
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
-		if(autocvar_g_buffs_randomize)
+		if(autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
 			buff_NewType(this);
 
 		if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
@@ -315,7 +316,7 @@ void buff_Waypoint_Reset(entity this)
 
 void buff_Reset(entity this)
 {
-	if(autocvar_g_buffs_randomize)
+	if(autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
 		buff_NewType(this);
 	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
