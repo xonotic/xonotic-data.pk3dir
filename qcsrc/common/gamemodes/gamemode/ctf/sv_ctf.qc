@@ -1235,7 +1235,7 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 
 .bool pushable;
 
-void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
+void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {
 	// main setup
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
@@ -1243,8 +1243,8 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	setattachment(flag, NULL, "");
 
-	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber)));
-	flag.team = teamnumber;
+	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnum), Team_ColorName_Upper(teamnum)));
+	flag.team = teamnum;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // for finding the nearest item using findnearest
 	flag.flags = FL_ITEM | FL_NOTARGET;
@@ -1274,24 +1274,24 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	if(autocvar_g_ctf_score_ignore_fields)
 		flag.cnt = flag.score_assist = flag.score_team_capture = flag.score_capture = flag.score_drop = flag.score_pickup = flag.score_return = 0;
 
-	string teamname = Static_Team_ColorName_Lower(teamnumber);
+	string teamname = Static_Team_ColorName_Lower(teamnum);
 	// appearence
 	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
 	if(flag.skin == 0)			{ flag.skin = cvar(sprintf("g_ctf_flag_%s_skin", teamname)); }
 	if(flag.model == "")		{ flag.model = cvar_string(sprintf("g_ctf_flag_%s_model", teamname)); }
-	if (flag.toucheffect == "") { flag.toucheffect = EFFECT_FLAG_TOUCH(teamnumber).eent_eff_name; }
-	if (flag.passeffect == "") 	{ flag.passeffect = EFFECT_PASS(teamnumber).eent_eff_name; }
-	if (flag.capeffect == "") 	{ flag.capeffect = EFFECT_CAP(teamnumber).eent_eff_name; }
+	if (flag.toucheffect == "") { flag.toucheffect = EFFECT_FLAG_TOUCH(teamnum).eent_eff_name; }
+	if (flag.passeffect == "") 	{ flag.passeffect = EFFECT_PASS(teamnum).eent_eff_name; }
+	if (flag.capeffect == "") 	{ flag.capeffect = EFFECT_CAP(teamnum).eent_eff_name; }
 
 	// sounds
 #define X(s,b) \
 		if(flag.s == "") flag.s = b; \
 		precache_sound(flag.s);
 
-	X(snd_flag_taken, 		strzone(SND(CTF_TAKEN(teamnumber))))
-	X(snd_flag_returned, 	strzone(SND(CTF_RETURNED(teamnumber))))
-	X(snd_flag_capture, 	strzone(SND(CTF_CAPTURE(teamnumber))))
-	X(snd_flag_dropped, 	strzone(SND(CTF_DROPPED(teamnumber))))
+	X(snd_flag_taken, 		strzone(SND(CTF_TAKEN(teamnum))))
+	X(snd_flag_returned, 	strzone(SND(CTF_RETURNED(teamnum))))
+	X(snd_flag_capture, 	strzone(SND(CTF_CAPTURE(teamnum))))
+	X(snd_flag_dropped, 	strzone(SND(CTF_DROPPED(teamnum))))
 	X(snd_flag_respawn, 	strzone(SND(CTF_RESPAWN)))
 	X(snd_flag_touch, 		strzone(SND(CTF_TOUCH)))
 	X(snd_flag_pass, 		strzone(SND(CTF_PASS)))
@@ -1309,7 +1309,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	if(autocvar_g_ctf_flag_glowtrails)
 	{
-		switch(teamnumber)
+		switch(teamnum)
 		{
 			case NUM_TEAM_1: flag.glow_color = 251; break;
 			case NUM_TEAM_2: flag.glow_color = 210; break;
@@ -1325,7 +1325,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	if(autocvar_g_ctf_fullbrightflags) { flag.effects |= EF_FULLBRIGHT; }
 	if(autocvar_g_ctf_dynamiclights)
 	{
-		switch(teamnumber)
+		switch(teamnum)
 		{
 			case NUM_TEAM_1: flag.effects |= EF_RED; break;
 			case NUM_TEAM_2: flag.effects |= EF_BLUE; break;
@@ -1387,7 +1387,7 @@ void havocbot_ctf_calculate_middlepoint()
 		// for symmetrical editing of waypoints
 		entity f1 = ctf_worldflaglist;
 		entity f2 = f1.ctf_worldflagnext;
-		float m = -(f1.origin.y - f2.origin.y) / (f1.origin.x - f2.origin.x);
+		float m = -(f1.origin.y - f2.origin.y) / (max(f1.origin.x - f2.origin.x, FLOAT_EPSILON));
 		float q = havocbot_middlepoint.y - m * havocbot_middlepoint.x;
 		havocbot_symmetry_axis_m = m;
 		havocbot_symmetry_axis_q = q;

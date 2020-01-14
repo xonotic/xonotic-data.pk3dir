@@ -183,6 +183,9 @@ void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSiz
 
 	me.checkMarkOrigin = eY + eX * (me.columnCheckMarkOrigin + me.columnCheckMarkSize) - me.checkMarkSize;
 
+	me.typeIconOrigin = vec3(me.columnPreviewSize - me.checkMarkSize.x, me.checkMarkOrigin.y, 0);
+	me.typeIconSize = me.checkMarkSize;
+
 	rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 }
 void XonoticCampaignList_doubleClickListBoxItem(entity me, float i, vector where)
@@ -225,6 +228,10 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	else
 		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+
+	s = strcat("/gfx/menu/", cvar_string("menu_skin"), "/gametype_", campaign_gametype[i]);
+	if(i <= me.campaignIndex && draw_PictureSize(s) != '0 0 0')
+		draw_Picture(me.typeIconOrigin, s, me.typeIconSize, '1 1 1', 1);
 
 	if(i < me.campaignIndex)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);

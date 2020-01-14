@@ -444,7 +444,7 @@ STATIC_INIT(compressShortVector)
 		l *= f;
 	}
 
-	if(cvar("developer"))
+	if(cvar("developer") > 0)
 	{
 		LOG_TRACE("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)

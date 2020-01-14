@@ -490,6 +490,21 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 	}
 }
 
+SHUTDOWN(PlayerStats_PlayerBasic_Shutdown)
+{
+	if(PS_B_IN_DB >= 0)
+	{
+		db_close(PS_B_IN_DB);
+		PS_B_IN_DB = -1;
+	}
+
+	if(PS_GR_OUT_DB >= 0)
+	{
+		db_close(PS_GR_OUT_DB);
+		PS_GR_OUT_DB = -1;
+	}
+}
+
 void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer)
 {
 	// determine whether we should retrieve playerbasic information again

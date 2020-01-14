@@ -360,11 +360,9 @@ void sys_phys_simulate(entity this, float dt)
 			// apply edge friction
 			const float f2 = vlen2(vec2(this.velocity));
 			if (f2 > 0) {
-				trace_dphitq3surfaceflags = 0;
-				tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
 				// TODO: apply edge friction
 				// apply ground friction
-				const int realfriction = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+				const int realfriction = (IS_ONSLICK(this))
 				    ? PHYS_FRICTION_SLICK(this)
 					: PHYS_FRICTION(this);
 

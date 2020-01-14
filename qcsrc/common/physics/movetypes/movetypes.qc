@@ -54,7 +54,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	if(applygravity)
 	{
 		this.move_didgravity = 1;
-		grav = dt * (PHYS_ENTGRAVITY(this) ? PHYS_ENTGRAVITY(this) : 1) * PHYS_GRAVITY(this);
+		grav = dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
 		{
@@ -324,10 +324,13 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 
 void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 {
-	if(gettouch(this))
+	if(!this && !oth)
+		return;
+
+	if(this.solid != SOLID_NOT && gettouch(this))
 		gettouch(this)(this, oth);
 
-	if(gettouch(oth))
+	if(oth.solid != SOLID_NOT && gettouch(oth))
 		gettouch(oth)(oth, this);
 }
 
@@ -414,16 +417,20 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
     entity this = _Movetype_TestEntityPosition_ent;
 	vector org = this.origin + ofs;
 
-	int cont = this.dphitcontentsmask;
-	this.dphitcontentsmask = DPCONTENTS_SOLID;
+	//int cont = this.dphitcontentsmask;
+	//this.dphitcontentsmask = DPCONTENTS_SOLID;
 	tracebox(org, this.mins, this.maxs, org, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
-	this.dphitcontentsmask = cont;
+	//this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
 		return true;
 
 	if(vdist(trace_endpos - this.origin, >, 0.0001))
-		this.origin = trace_endpos;
+	{
+		tracebox(trace_endpos, this.mins, this.maxs, trace_endpos, MOVE_NOMONSTERS, this);
+		if(!trace_startsolid)
+			this.origin = trace_endpos;
+	}
 	return false;
 }
 
@@ -434,6 +441,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	    return UNSTICK_FINE;
 	}
 	#define X(v) if (_Movetype_TestEntityPosition(v))
+	X('0  0  -1') X(' 0  0  1')
 	X('-1  0  0') X(' 1  0  0')
 	X(' 0 -1  0') X(' 0  1  0')
 	X('-1 -1  0') X(' 1 -1  0')
@@ -443,7 +451,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         #define X(i) \
             if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
             if (_Movetype_TestEntityPosition('0 0 1' * i))
-        X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8)
+        X(2) X(3) X(4) X(5) X(6) X(7) X(8)
         X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
         X(17)
         #undef X
@@ -455,7 +463,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
-	_Movetype_LinkEdict(this, true);
+	_Movetype_LinkEdict(this, false);
 	return UNSTICK_FIXED;
 }
 
@@ -526,12 +534,10 @@ bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool 
 
 	vector last_origin = this.origin;
 
-	if(dolink)
-		_Movetype_LinkEdict(this, true);
+	_Movetype_LinkEdict(this, dolink);
 
-	if(trace_fraction < 1)
-		if(this.solid >= SOLID_TRIGGER && trace_ent && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
-			_Movetype_Impact(this, trace_ent);
+	if((this.solid >= SOLID_TRIGGER && trace_fraction < 1 && (!IS_ONGROUND(this) || this.groundentity != trace_ent)))
+		_Movetype_Impact(this, trace_ent);
 
 	return (this.origin == last_origin); // false if teleported by touch
 }
@@ -657,12 +663,14 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 	Movetype_Physics_MatchTicrate(this, TICRATE, sloppy);
 }
 
+// saved .move_*
 .vector tic_origin;
 .vector tic_velocity;
 .int tic_flags;
 .vector tic_avelocity;
 .vector tic_angles;
 
+// saved .*
 .vector tic_saved_origin;
 .vector tic_saved_velocity;
 .int tic_saved_flags;
@@ -670,6 +678,8 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 .vector tic_saved_angles;
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Physics_Entity
 {
+	// this hack exists to contain the physics feature
+	// (so entities can place themselves in the world and not need to update .tic_* themselves)
 #define X(s) \
 	if(this.(s) != this.tic_saved_##s) \
 		this.tic_##s = this.(s)
@@ -681,19 +691,15 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	X(angles);
 #undef X
 
+	this.flags = this.tic_flags;
+	this.velocity = this.tic_velocity;
+	setorigin(this, this.tic_origin);
+	this.avelocity = this.tic_avelocity;
+	this.angles = this.tic_angles;
+
 	if(tr <= 0)
 	{
-		this.flags = this.tic_flags;
-		this.velocity = this.tic_velocity;
-		this.origin = this.tic_origin;
-		this.avelocity = this.tic_avelocity;
-		this.angles = this.tic_angles;
 		Movetype_Physics_NoMatchServer(this);
-		this.tic_origin = this.origin;
-		this.tic_velocity = this.velocity;
-		this.tic_avelocity = this.avelocity;
-		this.tic_angles = this.angles;
-		this.tic_flags = this.flags;
 
 		this.tic_saved_flags = this.flags;
 		this.tic_saved_velocity = this.velocity;
@@ -712,22 +718,26 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	if(!this.move_didgravity)
 		this.move_didgravity = ((this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS) && !(this.tic_flags & FL_ONGROUND));
 
-	for (int i = 0; i < n; ++i)
+	for (int j = 0; j < n; ++j)
 	{
-		this.flags = this.tic_flags;
-		this.velocity = this.tic_velocity;
-		setorigin(this, this.tic_origin);
-		this.avelocity = this.tic_avelocity;
-		this.angles = this.tic_angles;
 		_Movetype_Physics_Frame(this, tr);
-		this.tic_origin = this.origin;
-		this.tic_velocity = this.velocity;
-		this.tic_avelocity = this.avelocity;
-		this.tic_angles = this.angles;
-		this.tic_flags = this.flags;
 		if(wasfreed(this))
 			return;
 	}
+
+	// update the physics fields
+	this.tic_origin = this.origin;
+	this.tic_velocity = this.velocity;
+	this.tic_avelocity = this.avelocity;
+	this.tic_angles = this.angles;
+	this.tic_flags = this.flags;
+
+	// restore their actual values
+	this.flags = this.tic_saved_flags;
+	this.velocity = this.tic_saved_velocity;
+	setorigin(this, this.tic_saved_origin);
+	//this.avelocity = this.tic_saved_avelocity;
+	this.angles = this.tic_saved_angles;
 
 	this.avelocity = this.tic_avelocity;
 
@@ -740,7 +750,7 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		{
 			this.velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 			    * dt
-			    * (this.gravity ? this.gravity : 1)
+			    * ((this.gravity) ? this.gravity : 1)
 			    * PHYS_GRAVITY(this);
 		}
 
@@ -752,16 +762,16 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		}
 		else
 		{
-			vector oldorg = this.origin;
-			this.origin = this.tic_origin;
+			setorigin(this, this.tic_origin);
 			_Movetype_PushEntityTrace(this, dt * this.velocity);
-			this.origin = oldorg;
 			if(!trace_startsolid)
 				setorigin(this, trace_endpos);
+			else
+				setorigin(this, this.tic_saved_origin);
 		}
 
 		if(this.move_didgravity > 0 && GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-			this.velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
+			this.velocity_z -= 0.5 * dt * ((this.gravity) ? this.gravity : 1) * PHYS_GRAVITY(this);
 	}
 	else
 	{
@@ -769,6 +779,8 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		this.angles = this.tic_angles;
 		setorigin(this, this.tic_origin);
 	}
+
+	this.flags = this.tic_flags;
 
 	this.tic_saved_flags = this.flags;
 	this.tic_saved_velocity = this.velocity;

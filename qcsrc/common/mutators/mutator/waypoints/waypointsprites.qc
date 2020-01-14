@@ -296,7 +296,7 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
     v4 = Rotate(v4, rot) + org;
 
     // draw them
-    R_BeginPolygon(pic, f);
+    R_BeginPolygon(pic, f, true);
     R_PolygonVertex(v1, '0 0 0', rgb, a);
     R_PolygonVertex(v2, '1 0 0', rgb, a);
     R_PolygonVertex(v3, '1 1 0', rgb, a);
@@ -306,7 +306,7 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
 void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, float f)
 {
-    R_BeginPolygon(pic, f);
+    R_BeginPolygon(pic, f, true);
     R_PolygonVertex(o, '0 0 0', rgb, a);
     R_PolygonVertex(o + ri, '1 0 0', rgb, a);
     R_PolygonVertex(o + up + ri, '1 1 0', rgb, a);
@@ -354,7 +354,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
     vector borderX = eX * (size+borderDiag);
     vector borderY = eY * (size+borderDiag+border);
 
-    R_BeginPolygon("", DRAWFLAG_NORMAL);
+    R_BeginPolygon("", DRAWFLAG_NORMAL, true);
     R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
     R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
     R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
@@ -362,7 +362,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
     R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
     R_EndPolygon();
 
-    R_BeginPolygon("", DRAWFLAG_ADDITIVE);
+    R_BeginPolygon("", DRAWFLAG_ADDITIVE, true);
     R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
     R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
     R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);

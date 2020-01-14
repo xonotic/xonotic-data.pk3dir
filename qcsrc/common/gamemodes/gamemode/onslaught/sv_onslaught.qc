@@ -313,15 +313,15 @@ void ons_DelayedLinkSetup(entity this)
 // Main Control Point Functions
 // =============================
 
-int ons_ControlPoint_CanBeLinked(entity cp, int teamnumber)
+int ons_ControlPoint_CanBeLinked(entity cp, int teamnum)
 {
-	if(cp.aregensneighbor & BIT(teamnumber)) return 2;
-	if(cp.arecpsneighbor & BIT(teamnumber)) return 1;
+	if(cp.aregensneighbor & BIT(teamnum)) return 2;
+	if(cp.arecpsneighbor & BIT(teamnum)) return 1;
 
 	return 0;
 }
 
-int ons_ControlPoint_Attackable(entity cp, int teamnumber)
+int ons_ControlPoint_Attackable(entity cp, int teamnum)
 	// -2: SAME TEAM, attackable by enemy!
 	// -1: SAME TEAM!
 	// 0: off limits
@@ -339,16 +339,16 @@ int ons_ControlPoint_Attackable(entity cp, int teamnumber)
 	else if(cp.goalentity)
 	{
 		// if there's already an icon built, nothing happens
-		if(cp.team == teamnumber)
+		if(cp.team == teamnum)
 		{
-			a = ons_ControlPoint_CanBeLinked(cp, teamnumber);
+			a = ons_ControlPoint_CanBeLinked(cp, teamnum);
 			if(a) // attackable by enemy?
 				return -2; // EMERGENCY!
 			return -1;
 		}
 		// we know it can be linked, so no need to check
 		// but...
-		a = ons_ControlPoint_CanBeLinked(cp, teamnumber);
+		a = ons_ControlPoint_CanBeLinked(cp, teamnum);
 		if(a == 2) // near our generator?
 			return 3; // EMERGENCY!
 		return 1;
@@ -356,9 +356,9 @@ int ons_ControlPoint_Attackable(entity cp, int teamnumber)
 	else
 	{
 		// free point
-		if(ons_ControlPoint_CanBeLinked(cp, teamnumber))
+		if(ons_ControlPoint_CanBeLinked(cp, teamnum))
 		{
-			a = ons_ControlPoint_CanBeLinked(cp, teamnumber); // why was this here NUM_TEAM_1 + NUM_TEAM_2 - t
+			a = ons_ControlPoint_CanBeLinked(cp, teamnum); // why was this here NUM_TEAM_1 + NUM_TEAM_2 - t
 			if(a == 2)
 				return 4; // GET THIS ONE NOW!
 			else
@@ -1063,16 +1063,16 @@ void onslaught_generator_touch(entity this, entity toucher)
 void ons_GeneratorSetup(entity gen) // called when spawning a generator entity on the map as a spawnfunc
 {
 	// declarations
-	int teamnumber = gen.team;
+	int teamnum = gen.team;
 
 	// main setup
 	gen.ons_worldgeneratornext = ons_worldgeneratorlist; // link generator into ons_worldgeneratorlist
 	ons_worldgeneratorlist = gen;
 
-	gen.netname = sprintf("%s generator", Team_ColoredFullName(teamnumber));
+	gen.netname = sprintf("%s generator", Team_ColoredFullName(teamnum));
 	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
-	gen.team_saved = teamnumber;
+	gen.team_saved = teamnum;
 	IL_PUSH(g_saved_team, gen);
 	set_movetype(gen, MOVETYPE_NONE);
 	gen.lasthealth = gen.max_health = autocvar_g_onslaught_gen_health;
@@ -1094,7 +1094,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	// model handled by CSQC
 	setsize(gen, GENERATOR_MIN, GENERATOR_MAX);
 	setorigin(gen, (gen.origin + CPGEN_SPAWN_OFFSET));
-	gen.colormap = 1024 + (teamnumber - 1) * 17;
+	gen.colormap = 1024 + (teamnum - 1) * 17;
 
 	// generator placement
 	droptofloor(gen);
