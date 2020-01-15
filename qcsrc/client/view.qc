@@ -2445,10 +2445,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS); // TODO: .health is used in cl_deathfade (a feature we have turned off currently)
 	renderscene();
 
-	// now switch to 2D drawing mode by calling a 2D drawing function
-	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
-	// next R_RenderScene call
-	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+	// Now the the scene has been rendered, begin with the 2D drawing functions
 
 	View_NightVision();
 	DrawReticle(local_player);
