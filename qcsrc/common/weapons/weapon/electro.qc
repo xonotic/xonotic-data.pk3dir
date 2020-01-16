@@ -160,7 +160,8 @@ void W_Electro_Bolt_Think(entity this)
 				e.classname = "electro_orb_chain";
 
 				// explode first orb immediately, other orbs will chain with delay
-				W_Electro_ExplodeCombo(e);
+				setthink(e, W_Electro_ExplodeCombo);
+				e.nextthink = time;
 
 				++found;
 			}
