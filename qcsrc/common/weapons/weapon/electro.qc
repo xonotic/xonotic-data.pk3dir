@@ -152,18 +152,35 @@ void W_Electro_Bolt_Think(entity this)
 		// loop through nearby orbs and trigger them
 		while(e)
 		{
-			if(e.classname == "electro_orb" && (WEP_CVAR_PRI(electro, midaircombo_own) || DIFF_TEAM(this.owner, e.owner)))
+			if(e.classname == "electro_orb")
 			{
-				// change owner to whoever caused the combo explosion
-				e.realowner = this.realowner;
-				e.takedamage = DAMAGE_NO;
-				e.classname = "electro_orb_chain";
+				bool explode;
+				if (this.owner == e.owner)
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_own);
+				}
+				else if (SAME_TEAM(this.owner, e.owner))
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_teammate);
+				}
+				else
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_enemy);
+				}
 
-				// explode first orb immediately, other orbs will chain with delay
-				setthink(e, W_Electro_ExplodeCombo);
-				e.nextthink = time;
+				if (explode)
+				{
+					// change owner to whoever caused the combo explosion
+					e.realowner = this.realowner;
+					e.takedamage = DAMAGE_NO;
+					e.classname = "electro_orb_chain";
 
-				++found;
+					// explode first orb immediately, other orbs will chain with delay
+					setthink(e, W_Electro_ExplodeCombo);
+					e.nextthink = time;
+
+					++found;
+				}
 			}
 			e = e.chain;
 		}
