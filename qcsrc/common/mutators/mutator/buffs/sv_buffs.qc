@@ -212,7 +212,7 @@ float buff_Available(entity buff)
 {
 	if (buff == BUFF_Null)
 		return false;
-	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
+	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_AMMO) || cvar("g_melee_only")))
 		return false;
 	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
@@ -227,7 +227,8 @@ void buff_NewType(entity ent)
 	FOREACH(Buffs, buff_Available(it),
 	{
 		// if it's already been chosen, give it a lower priority
-		RandomSelection_AddEnt(it, max(0.2, 1 / it.buff_seencount), 1);
+		float myseencount = (it.buff_seencount > 0) ? it.buff_seencount : 1; // no division by zero please!
+		RandomSelection_AddEnt(it, max(0.2, 1 / myseencount), 1);
 	});
 	entity newbuff = RandomSelection_chosen_ent;
 	newbuff.buff_seencount += 1; // lower chances of seeing this buff again soon
@@ -271,7 +272,7 @@ void buff_Think(entity this)
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
-		if(autocvar_g_buffs_randomize)
+		if(autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
 			buff_NewType(this);
 
 		if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
@@ -315,7 +316,7 @@ void buff_Waypoint_Reset(entity this)
 
 void buff_Reset(entity this)
 {
-	if(autocvar_g_buffs_randomize)
+	if(autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
 		buff_NewType(this);
 	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
@@ -576,7 +577,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.oldbuffs = 0;
-	PS(player).buff_shield = time + 0.5; // prevent picking up buffs immediately
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
@@ -918,8 +918,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONADD(BUFF_AMMO)
 		{
-			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_WEAPON_AMMO);
-			player.items |= IT_UNLIMITED_WEAPON_AMMO;
+			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_AMMO);
+			player.items |= IT_UNLIMITED_AMMO;
 
 			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{
@@ -937,9 +937,9 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		BUFF_ONREM(BUFF_AMMO)
 		{
 			if(player.buff_ammo_prev_infitems)
-				player.items |= IT_UNLIMITED_WEAPON_AMMO;
+				player.items |= IT_UNLIMITED_AMMO;
 			else
-				player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
+				player.items &= ~IT_UNLIMITED_AMMO;
 
 			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{

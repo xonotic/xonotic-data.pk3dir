@@ -13,7 +13,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 	}
 
 	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);

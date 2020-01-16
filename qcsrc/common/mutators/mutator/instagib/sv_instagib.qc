@@ -82,7 +82,7 @@ void instagib_ammocheck(entity this)
 
 	if(IS_DEAD(this) || game_stopped)
 		instagib_stop_countdown(this);
-	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
+	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_AMMO) || (this.flags & FL_GODMODE))
 		instagib_stop_countdown(this);
 	else if(autocvar_g_rm && autocvar_g_rm_laser)
 	{
@@ -353,7 +353,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 
 				if(frag_target != frag_attacker)
 				{
-					if(frag_damage <= 0 && GetResource(frag_target, RES_HEALTH) > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
 					if(!autocvar_g_instagib_blaster_keepforce)
 						frag_force = '0 0 0';
 				}
@@ -386,7 +385,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 	M_ARGV(6, vector) = frag_force;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems, CBC_ORDER_LAST)
 {
 	start_health       = warmup_start_health       = 100;
 	start_armorvalue   = warmup_start_armorvalue   = 0;
@@ -529,7 +528,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	if(item.itemdef == ITEM_ExtraLife)
 	{
 		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives);
-		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_instagib_extralives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 

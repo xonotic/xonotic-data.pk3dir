@@ -24,7 +24,6 @@ void XonoticGameViewSettingsTab_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
-		makeMulti(e, "crosshair_hittest_showimpact");
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_eventchase_death", _("Slide to third person upon death")));
@@ -49,7 +48,6 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "1", _("3rd person perspective")));
-		makeMulti(e, "crosshair_hittest_showimpact");
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Back distance")));

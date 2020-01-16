@@ -39,8 +39,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	float n;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Quality preset:")));
-		n = 5 + 2 * boolean(cvar("developer"));
-		if(cvar("developer"))
+		n = 5 + 2 * boolean(cvar("developer") > 0);
+		if(cvar("developer") > 0)
 		{
 			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^OMG!")), '1 0 1', "exec effects-omg.cfg", 0));
 				e.applyButton = effectsApplyButton;
@@ -55,7 +55,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultra")), '0 0 0', "exec effects-ultra.cfg", 0));
 			e.applyButton = effectsApplyButton;
-		if(cvar("developer"))
+		if(cvar("developer") > 0)
 		{
 			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultimate")), '0.5 0 0', "exec effects-ultimate.cfg", 0));
 				e.applyButton = effectsApplyButton;
@@ -87,7 +87,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 			setDependent(e, "r_showsurfaces", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
-			if(cvar("developer"))
+			if(cvar("developer") > 0)
 				e.addValue(e, ZCTX(_("RES^Leet")), "1337");
 			e.addValue(e, ZCTX(_("RES^Lowest")), "3");
 			e.addValue(e, ZCTX(_("RES^Very low")), "2");
@@ -125,10 +125,11 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			}
 		}
 	me.TR(me);
-		if(cvar("developer"))
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show skyboxes"), _("Disable skyboxes for performance and visibility")));
+		if(cvar("developer") > 0)
 		{
-			me.TDempty(me, 0.2);
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(3, 0, "r_showsurfaces", _("Show surfaces"),
+			me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(3, 0, "r_showsurfaces", _("Show surfaces"),
 				_("Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly.")));
 		}
 	me.TR(me);

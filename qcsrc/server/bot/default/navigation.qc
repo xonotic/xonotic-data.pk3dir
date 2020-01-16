@@ -239,6 +239,9 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 	return false;
 }
 
+// Unfortuntely we can't use trace_inwater since it doesn't hold the fraction of the total
+// distance that was traveled before impact as the description in the engine (collision.h) says.
+// It would have helped to speed up tracewalk underwater
 vector resurface_limited(vector org, float lim, vector m1)
 {
 	if (WETFEET(org + eZ * (lim - org.z)))
@@ -921,19 +924,33 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector pm1 = ent.origin + ent.mins;
 	vector pm2 = ent.origin + ent.maxs;
 
-	// do two scans, because box test is cheaper
-	IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
+	if (autocvar_g_waypointeditor && !IS_BOT_CLIENT(ent))
 	{
-		if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+		// this code allows removing waypoints in the air and seeing jumppad/telepport waypoint links
+		// FIXME it causes a bug where a waypoint spawned really close to another one (max 16 qu)
+		// isn't detected as the nearest waypoint
+		IL_EACH(g_waypoints, it != ent && it != except,
 		{
-			if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
+			if (boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+				return it;
+		});
+	}
+	else
+	{
+		// do two scans, because box test is cheaper
+		IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
+		{
+			if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
 			{
-				waypoint_clearlinks(ent); // initialize wpXXmincost fields
-				navigation_item_addlink(it, ent);
+				if(walkfromwp && !ent.navigation_dynamicgoal)
+				{
+					waypoint_clearlinks(ent); // initialize wpXXmincost fields
+					navigation_item_addlink(it, ent);
+				}
+				return it;
 			}
-			return it;
-		}
-	});
+		});
+	}
 
 	vector org = ent.origin;
 	if (navigation_testtracewalk)
@@ -1340,7 +1357,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResource(this, RES_FUEL)));
 
 			// enough fuel ?
-			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
+			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship

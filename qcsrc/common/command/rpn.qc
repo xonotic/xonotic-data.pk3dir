@@ -53,6 +53,12 @@ float rpn_popf() { return stof(rpn_pop()); }
 void rpn_pushf(float f) { return rpn_push(sprintf("%.9g", f)); }
 void rpn_setf(float f) { return rpn_set(sprintf("%.9g", f)); }
 
+SHUTDOWN(_rpndb)
+{
+	if(rpn_db)
+		db_close(rpn_db);
+}
+
 void GenericCommand_rpn(int request, int argc, string command)
 {
 	switch(request)

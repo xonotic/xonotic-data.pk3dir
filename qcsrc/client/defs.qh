@@ -173,9 +173,6 @@ REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9");
 
 float bgmtime;
 
-string weaponorder_byimpulse;
-string weaponorder_bypriority;
-
 float vortex_charge_movingavg;
 
 int serverflags;

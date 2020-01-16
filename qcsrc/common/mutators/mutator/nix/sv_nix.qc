@@ -140,7 +140,7 @@ void NIX_GiveCurrentWeapon(entity this)
 		SetResource(this, RES_CELLS, 0);
 		SetResource(this, RES_PLASMA, 0);
 		SetResource(this, RES_FUEL, 0);
-		if(this.items & IT_UNLIMITED_WEAPON_AMMO)
+		if(this.items & IT_UNLIMITED_AMMO)
 		{
 			switch (wpn.ammo_type)
 			{
@@ -193,7 +193,7 @@ void NIX_GiveCurrentWeapon(entity this)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_NIX_COUNTDOWN, nix_nextweapon, dt);
 	}
 
-	if(!(this.items & IT_UNLIMITED_WEAPON_AMMO) && time > this.nix_nextincr)
+	if(!(this.items & IT_UNLIMITED_AMMO) && time > this.nix_nextincr)
 	{
 		switch (wpn.ammo_type)
 		{

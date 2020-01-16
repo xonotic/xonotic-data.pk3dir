@@ -472,15 +472,18 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if(!round_handler_IsRoundStarted())
 		return true;
 
-	int n;
 	entity player = M_ARGV(0, entity);
 	//if (STAT(FROZEN, player) == FROZEN_NORMAL)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
 
+	if (!(frametime && IS_PLAYER(player)))
+		return true;
+
 	entity reviving_players_last = NULL;
 	entity reviving_players_first = NULL;
 
+	int n;
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 	else
@@ -549,7 +552,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
-	start_items &= ~IT_UNLIMITED_AMMO;
+	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
 	//start_health       = warmup_start_health       = cvar("g_lms_start_health");
 	//start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");

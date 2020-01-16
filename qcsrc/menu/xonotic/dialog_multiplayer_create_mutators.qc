@@ -161,17 +161,19 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_dodging", _("Dodging"),
-			_("Enable dodging")));
+			_("Enable dodging (quick acceleration in a given direction). Double-tap a directional key to dodge")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_touchexplode", _("Touch explode")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_touchexplode", _("Touch explode"),
+                        _("An explosion occurs when two players collide")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_cloaked", _("Cloaked"),
 			_("All players are almost invisible")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_buffs", _("Buffs")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_buffs", _("Buffs"),
+                        _("Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps that support it")));
 			e.cvarOffValue = "-1"; // TODO: make this a radio button?
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -185,7 +187,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider_T(10, 50, 1, "g_bloodloss",
-			_("Amount of health below which your player gets stunned because of blood loss"));
+			_("Amount of health below which players start bleeding out (health rots and they can't jump)"));
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
@@ -194,7 +196,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider_T(80, 400, 8, "sv_gravity",
-			_("Make things fall to the ground slower, lower value means lower gravity"));
+			_("Make things fall to the ground slower (percentage of normal gravity)"));
 			s.valueDigits = 0;
 			s.valueDisplayMultiplier = 0.125; // show gravity in percent
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(800, 1, s, _("Low gravity")));
@@ -207,22 +209,25 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_grappling_hook", _("Grappling hook"),
-			_("Players spawn with the grappling hook")));
+			_("Players spawn with the grappling hook. Press the 'hook' key to use it")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_jetpack", _("Jetpack"),
-			_("Players spawn with the jetpack")));
+			_("Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key to use it")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_invincible_projectiles", _("Invincible Projectiles"),
+                        _("Projectiles can't be destroyed. However, Electro combos still work")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_new_toys", _("New Toys")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
+                        _("Some weapon spawns will be randomly replaced with new weapons: Heavy Laser Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker")));
 			setDependentWeird(e, checkCompatibility_newtoys);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_rocket_flying", _("Rocket Flying"),
+                        _("Devastator rockets can be detonated instantly (otherwise, there's a short delay). This allows players to fire and detonate a Devastator rocket while in the air for a strong mid-air boost even while moving fast")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
