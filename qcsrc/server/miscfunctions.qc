@@ -624,8 +624,6 @@ void weaponarena_available_most_update(entity this)
 
 void readplayerstartcvars()
 {
-	float i, t;
-
 	// initialize starting values for players
 	start_weapons = '0 0 0';
 	start_weapons_default = '0 0 0';
@@ -709,11 +707,11 @@ void readplayerstartcvars()
 	else
 	{
 		g_weaponarena = 1;
-		t = tokenize_console(s);
+		float t = tokenize_console(s);
 		g_weaponarena_list = "";
-		for (i = 0; i < t; ++i)
+		for (int j = 0; j < t; ++j)
 		{
-			s = argv(i);
+			s = argv(j);
 			Weapon wep = Weapons_fromstr(s);
 			if(wep != WEP_Null)
 			{
@@ -1197,11 +1195,10 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
     return false;
 }
 
-#define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
-
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
-	if(SUB_OwnerCheck(this, toucher))
+	// owner check
+	if(toucher && toucher == this.owner)
 		return true;
 	if(SUB_NoImpactCheck(this, toucher))
 	{
@@ -1249,9 +1246,9 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 }
 
-string uid2name(string myuid) {
-	string s;
-	s = db_get(ServerProgsDB, strcat("/uid2name/", myuid));
+string uid2name(string myuid)
+{
+	string s = db_get(ServerProgsDB, strcat("/uid2name/", myuid));
 
 	// FIXME remove this later after 0.6 release
 	// convert old style broken records to correct style
@@ -1270,20 +1267,18 @@ string uid2name(string myuid) {
 	return s;
 }
 
-float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance)
 {
-    float m, i;
-    vector start, org, delta, end, enddown, mstart;
-
-    m = e.dphitcontentsmask;
+    float m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
 
-    org = boundmin;
-    delta = boundmax - boundmin;
+    vector org = boundmin;
+    vector delta = boundmax - boundmin;
 
+    vector start, end;
     start = end = org;
-
-    for (i = 0; i < attempts; ++i)
+    int j; // used after the loop
+    for(j = 0; j < attempts; ++j)
     {
         start.x = org.x + random() * delta.x;
         start.y = org.y + random() * delta.y;
@@ -1305,13 +1300,13 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
         // rule 2: if we are too high, lower the point
         if (trace_fraction * delta.z > maxaboveground)
             start = trace_endpos + '0 0 1' * maxaboveground;
-        enddown = trace_endpos;
+        vector enddown = trace_endpos;
 
         // rule 3: make sure we aren't outside the map. This only works
         // for somewhat well formed maps. A good rule of thumb is that
         // the map should have a convex outside hull.
         // these can be traceLINES as we already verified the starting box
-        mstart = start + 0.5 * (e.mins + e.maxs);
+        vector mstart = start + 0.5 * (e.mins + e.maxs);
         traceline(mstart, mstart + '1 0 0' * delta.x, MOVE_NORMAL, e);
         if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
@@ -1328,35 +1323,35 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
         if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
 
-	// rule 4: we must "see" some spawnpoint or item
-    entity sp = NULL;
-    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
-    {
-    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
-    	{
-    		sp = it;
-    		break;
-    	}
-    });
-	if(!sp)
-	{
-		int items_checked = 0;
-		IL_EACH(g_items, checkpvs(mstart, it),
-		{
-			if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
-			{
-				sp = it;
-				break;
-			}
-
-			++items_checked;
-			if(items_checked >= attempts)
-				break; // sanity
-		});
-
+		// rule 4: we must "see" some spawnpoint or item
+	    entity sp = NULL;
+	    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+	    {
+	    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+	    	{
+	    		sp = it;
+	    		break;
+	    	}
+	    });
 		if(!sp)
-			continue;
-	}
+		{
+			int items_checked = 0;
+			IL_EACH(g_items, checkpvs(mstart, it),
+			{
+				if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
+				{
+					sp = it;
+					break;
+				}
+
+				++items_checked;
+				if(items_checked >= attempts)
+					break; // sanity
+			});
+
+			if(!sp)
+				continue;
+		}
 
         // find a random vector to "look at"
         end.x = org.x + random() * delta.x;
@@ -1366,17 +1361,17 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
 
         // rule 4: start TO end must not be too short
         tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
-        if (trace_startsolid)
+        if(trace_startsolid)
             continue;
-        if (trace_fraction < minviewdistance / vlen(delta))
+        if(trace_fraction < minviewdistance / vlen(delta))
             continue;
 
         // rule 5: don't want to look at sky
-        if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+        if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
             continue;
 
         // rule 6: we must not end up in trigger_hurt
-        if (tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
+        if(tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
             continue;
 
         break;
@@ -1384,15 +1379,14 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
 
     e.dphitcontentsmask = m;
 
-    if (i < attempts)
+    if(j < attempts)
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
-        LOG_DEBUG("Needed ", ftos(i + 1), " attempts");
+        LOG_DEBUG("Needed ", ftos(j + 1), " attempts");
         return true;
     }
-    else
-        return false;
+    return false;
 }
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
