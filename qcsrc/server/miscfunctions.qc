@@ -33,6 +33,7 @@
 #include "../common/state.qh"
 #include "../common/effects/qc/globalsound.qh"
 #include "../common/wepent.qh"
+#include <common/weapons/weapon.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/server.qh"
@@ -214,21 +215,6 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string AmmoNameFromWeaponentity(Weapon wep)
-{
-	string ammoitems = "batteries";
-	switch (wep.ammo_type)
-	{
-		case RES_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
-		case RES_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
-		case RES_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
-		case RES_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
-		case RES_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
-		case RES_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
-	}
-	return ammoitems;
-}
-
 string PlayerHealth(entity this)
 {
 	float myhealth = floor(GetResource(this, RES_HEALTH));
@@ -311,7 +297,7 @@ string formatmessage(entity this, string msg)
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
 			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
-			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity).m_weapon); break;
+			case "W": replacement = GetAmmoName(this.(weaponentity).m_weapon.ammo_type); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;

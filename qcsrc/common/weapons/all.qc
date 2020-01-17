@@ -225,6 +225,20 @@ string GetAmmoPicture(int ammotype)
 	}
 }
 
+string GetAmmoName(int ammotype)
+{
+	switch (ammotype)
+	{
+		case RES_SHELLS:  return ITEM_Shells.m_name;
+		case RES_BULLETS: return ITEM_Bullets.m_name;
+		case RES_ROCKETS: return ITEM_Rockets.m_name;
+		case RES_CELLS:   return ITEM_Cells.m_name;
+		case RES_PLASMA:  return ITEM_Plasma.m_name;
+		case RES_FUEL:    return ITEM_JetpackFuel.m_name;
+		default:          return "batteries";
+	}
+}
+
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i)
 {
