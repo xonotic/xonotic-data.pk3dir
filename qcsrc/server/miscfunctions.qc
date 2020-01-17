@@ -1474,24 +1474,13 @@ void follow_sameorigin(entity e, entity to)
     e.v_angle = e.angles - to.angles; // relative angles
 }
 
+#if 0
+// TODO: unused, likely for a reason, possibly needs extensions (allow setting the new movetype as a parameter?)
 void unfollow_sameorigin(entity e)
 {
     set_movetype(e, MOVETYPE_NONE);
 }
-
-entity gettaginfo_relative_ent;
-vector gettaginfo_relative(entity e, float tag)
-{
-    if (!gettaginfo_relative_ent)
-    {
-        gettaginfo_relative_ent = spawn();
-        gettaginfo_relative_ent.effects = EF_NODRAW;
-    }
-    gettaginfo_relative_ent.model = e.model;
-    gettaginfo_relative_ent.modelindex = e.modelindex;
-    gettaginfo_relative_ent.frame = e.frame;
-    return gettaginfo(gettaginfo_relative_ent, tag);
-}
+#endif
 
 .string aiment_classname;
 .float aiment_deadflag;
