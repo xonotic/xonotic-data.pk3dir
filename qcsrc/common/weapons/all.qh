@@ -392,6 +392,6 @@ REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 #endif
 
 #ifdef SVQC
-void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
+void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim);
 #endif
 #endif
