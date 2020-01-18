@@ -175,9 +175,22 @@ void W_Electro_Bolt_Think(entity this)
 					e.takedamage = DAMAGE_NO;
 					e.classname = "electro_orb_chain";
 
-					// explode first orb immediately, other orbs will chain with delay
+					// Only first orb explosion uses midaircombo_speed, others use the normal combo_speed.
+					// This allows to avoid the delay on the first explosion which looks better
+					// (the bolt and orb should explode together because they interacted together)
+					// while keeping the chaining delay.
 					setthink(e, W_Electro_ExplodeCombo);
-					e.nextthink = time;
+					e.nextthink =
+					(
+						time
+						+
+						(WEP_CVAR_PRI(electro, midaircombo_speed) ?
+							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(electro, midaircombo_speed))
+							:
+							0
+						)
+					);
+
 
 					++found;
 				}
