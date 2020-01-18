@@ -57,7 +57,7 @@ REGISTRY_CHECK(Turrets)
 	#define TR_CONFIG_END()
 #endif
 
-GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")
+GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt", false)
 {
     switch(request)
     {

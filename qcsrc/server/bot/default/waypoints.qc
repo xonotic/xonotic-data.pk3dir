@@ -470,7 +470,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			}
 			else
 			{
-				if(autocvar_developer)
+				if(autocvar_developer > 0)
 				{
 					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin));
 					backtrace("Waypoint stuck");

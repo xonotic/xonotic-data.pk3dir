@@ -382,7 +382,7 @@ float PolyDrawModelSurface(entity e, float i_s)
 	for(i_t = 0; i_t < n_t; ++i_t)
 	{
 		tri = getsurfacetriangle(e, i_s, i_t);
-		R_BeginPolygon(tex, 0);
+		R_BeginPolygon(tex, 0, false);
 		R_PolygonVertex(getsurfacepoint(e, i_s, tri.x), getsurfacepointattribute(e, i_s, tri.x, SPA_TEXCOORDS0), '1 1 1', 1);
 		R_PolygonVertex(getsurfacepoint(e, i_s, tri.y), getsurfacepointattribute(e, i_s, tri.y, SPA_TEXCOORDS0), '1 1 1', 1);
 		R_PolygonVertex(getsurfacepoint(e, i_s, tri.z), getsurfacepointattribute(e, i_s, tri.z, SPA_TEXCOORDS0), '1 1 1', 1);
@@ -415,7 +415,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	if(f >= 1)
 	{
 		// draw full rectangle
-		R_BeginPolygon(pic, drawflag);
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
@@ -436,7 +436,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 		d = q - 1;
 		if(d > 0)
 		{
-			R_BeginPolygon(pic, drawflag);
+			R_BeginPolygon(pic, drawflag, true);
 				v = centre;			t = '0.5 0.5 0';
 				R_PolygonVertex(v, t, rgb, a);
 
@@ -448,7 +448,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	else if(f > 0.75)
 	{
 		// draw upper and first triangle
-		R_BeginPolygon(pic, drawflag);
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
@@ -461,7 +461,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
-		R_BeginPolygon(pic, drawflag);
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
@@ -480,7 +480,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	else if(f > 0.5)
 	{
 		// draw upper triangle
-		R_BeginPolygon(pic, drawflag);
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
@@ -497,7 +497,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 		d = q - 0.5;
 		if(d > 0)
 		{
-			R_BeginPolygon(pic, drawflag);
+			R_BeginPolygon(pic, drawflag, true);
 				v = centre;			t = '0.5 0.5 0';
 				R_PolygonVertex(v, t, rgb, a);
 
@@ -509,7 +509,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	else if(f > 0.25)
 	{
 		// draw first triangle
-		R_BeginPolygon(pic, drawflag);
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
@@ -530,7 +530,7 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 		d = q;
 		if(d > 0)
 		{
-			R_BeginPolygon(pic, drawflag);
+			R_BeginPolygon(pic, drawflag, true);
 				v = centre;			t = '0.5 0.5 0';
 				R_PolygonVertex(v, t, rgb, a);
 

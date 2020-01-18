@@ -16,6 +16,7 @@
 #include "../lib/warpzone/common.qh"
 #include "../common/vehicles/vehicle.qh"
 #include "../common/vehicles/sv_vehicles.qh"
+#include <server/player.qh>
 
 #define PORTALS_ARE_NOT_SOLID
 
@@ -103,7 +104,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 }
 
 .vector right_vector;
-float Portal_TeleportPlayer(entity teleporter, entity player)
+float Portal_TeleportPlayer(entity teleporter, entity player, entity portal_owner)
 {
 	vector from, to, safe, step, transform, ang, newvel;
 	float planeshift, s, t;
@@ -188,6 +189,12 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 		// telefrag within 1 second of portal creation = amazing
 		if(time < teleporter.teleport_time + 1)
 			Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_ACHIEVEMENT_AMAZING);
+	}
+	else if(player != portal_owner && IS_PLAYER(portal_owner) && IS_PLAYER(player))
+	{
+		player.pusher = portal_owner;
+		player.pushltime = time + autocvar_g_maxpushtime;
+		player.istypefrag = PHYS_INPUT_BUTTON_CHAT(player);
 	}
 
 	if (!teleporter.enemy)
@@ -317,7 +324,7 @@ void Portal_Touch(entity this, entity toucher)
 	}
 	*/
 
-	if(Portal_TeleportPlayer(this, toucher))
+	if(Portal_TeleportPlayer(this, toucher, this.aiment))
 		if(toucher.classname == "porto")
 			if(toucher.effects & EF_RED)
 				toucher.effects += EF_BLUE - EF_RED;
@@ -440,7 +447,7 @@ void Portal_Damage(entity this, entity inflictor, entity attacker, float damage,
 		Portal_Remove(this, 1);
 }
 
-void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g)
+void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g, entity portal_owner)
 {
 	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
@@ -449,7 +456,7 @@ void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g)
 	// already teleport him
 	tracebox(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, MOVE_NORMAL, e);
 	if(trace_ent == this)
-		Portal_TeleportPlayer(this, e);
+		Portal_TeleportPlayer(this, e, portal_owner);
 }
 
 void Portal_Think(entity this)
@@ -479,13 +486,13 @@ void Portal_Think(entity this)
 				continue; // cannot go through someone else's portal
 
 		if(it != o || time >= this.portal_activatetime)
-			Portal_Think_TryTeleportPlayer(this, it, g);
+			Portal_Think_TryTeleportPlayer(this, it, g, o);
 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	    {
 	    	.entity weaponentity = weaponentities[slot];
 	    	if(it.(weaponentity).hook)
-	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g);
+	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g, o);
 	    }
 	});
 	this.solid = SOLID_TRIGGER;

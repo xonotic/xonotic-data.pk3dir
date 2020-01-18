@@ -39,6 +39,8 @@ int weaponorder_cmp(int i, int j, entity pass)
 	weapon_size.y = panel_size.y / rows; \
 MACRO_END
 
+string cl_weaponpriority_old;
+bool weapons_orderbyimpulse_old;
 void HUD_Weapons()
 {
 	// declarations
@@ -90,19 +92,19 @@ void HUD_Weapons()
 	// update generic hud functions
 	HUD_Panel_LoadCvars();
 
-	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
-	if(weaponorder_bypriority != autocvar_cl_weaponpriority || autocvar_hud_panel_weapons_orderbyimpulse != weapons_orderbyimpulse || !weaponorder[0])
+	if(cl_weaponpriority_old != autocvar_cl_weaponpriority || weapons_orderbyimpulse_old != autocvar_hud_panel_weapons_orderbyimpulse || weaponorder[0] == NULL)
 	{
-		int weapon_cnt;
-		weapons_orderbyimpulse = autocvar_hud_panel_weapons_orderbyimpulse;
-		strcpy(weaponorder_bypriority, autocvar_cl_weaponpriority);
-		string weporder = W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority));
+		weapons_orderbyimpulse_old = autocvar_hud_panel_weapons_orderbyimpulse;
+		strcpy(cl_weaponpriority_old, autocvar_cl_weaponpriority);
+		string weporder = W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(cl_weaponpriority_old));
 		if(autocvar_hud_panel_weapons_orderbyimpulse)
+		{
 			weporder = W_FixWeaponOrder_BuildImpulseList(weporder);
-		strcpy(weaponorder_byimpulse, weporder);
-		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
+		}
 
-		weapon_cnt = 0;
+		weaponorder_cmp_str = strcat(" ", weporder, " ");
+
+		int weapon_cnt = 0;
 		FOREACH(Weapons, it != WEP_Null && it.impulse >= 0, weaponorder[weapon_cnt++] = it);
 		for(i = weapon_cnt; i < Weapons_MAX; ++i)
 			weaponorder[i] = NULL;

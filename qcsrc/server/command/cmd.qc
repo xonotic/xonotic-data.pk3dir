@@ -635,15 +635,22 @@ void ClientCommand_spectate(entity caller, int request)
 		{
 			if (!intermission_running && IS_CLIENT(caller))
 			{
-				if((IS_SPEC(caller) || IS_OBSERVER(caller)) && argv(1) != "")
+				if(argv(1) != "")
 				{
-					entity client = GetFilteredEntity(argv(1));
-					int spec_accepted = VerifyClientEntity(client, false, false);
-					if(spec_accepted > 0 && IS_PLAYER(client))
+					if(IS_SPEC(caller) || IS_OBSERVER(caller))
 					{
-						if(Spectate(caller, client))
-							return; // fall back to regular handling
+						entity client = GetFilteredEntity(argv(1));
+						int spec_accepted = VerifyClientEntity(client, false, false);
+						if(spec_accepted > 0 && IS_PLAYER(client))
+						{
+							Spectate(caller, client);
+						}
+						else
+							sprint(caller, "can't spectate ", argv(1), "^7\n");
 					}
+					else
+						sprint(caller, "cmd spectate client only works when you are spectator/observer\n");
+					return;
 				}
 
 				int mutator_returnvalue = MUTATOR_CALLHOOK(ClientCommand_Spectate, caller);
@@ -660,7 +667,7 @@ void ClientCommand_spectate(entity caller, int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd spectate <client>\n");
+			sprint(caller, "\nUsage:^3 cmd spectate [client]\n");
 			sprint(caller, "  Where 'client' can be the player to spectate.\n");
 			return;
 		}

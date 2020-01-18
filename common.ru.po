@@ -6,7 +6,7 @@
 # adem4ik, 2014
 # Alex Talker <alextalker7@gmail.com>, 2014-2015
 # Andrei Stepanov, 2014
-# Andrei Stepanov <adem4ik@gmail.com>, 2014-2019
+# Andrei Stepanov <adem4ik@gmail.com>, 2014-2020
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # Lord Canistra <lordcanistra@gmail.com>, 2011
@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-11-21 19:30+0000\n"
+"PO-Revision-Date: 2020-01-14 18:19+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -1202,7 +1202,7 @@ msgstr "Голосование за карту"
 #: qcsrc/client/mapvoting.qc:392
 #, c-format
 msgid "%d seconds left"
-msgstr "Секунд осталось: %d"
+msgstr "Осталось секунд: %d"
 
 #: qcsrc/client/mapvoting.qc:505
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"

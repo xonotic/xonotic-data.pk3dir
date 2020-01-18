@@ -291,15 +291,6 @@ bool racer_frame(entity this, float dt)
 	if (PHYS_INPUT_BUTTON_ATCK(player))
 	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
-		string tagname = (vehic.cnt)
-		    ? (vehic.cnt = 0, "tag_fire1")
-		    : (vehic.cnt = 1, "tag_fire2");
-		vector org = gettaginfo(vehic, gettagindex(vehic, tagname));
-		w_shotorg = org;
-		w_shotdir = v_forward;
-		// Fix z-aim (for chase mode)
-		crosshair_trace(player);
-		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
 		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 

@@ -60,7 +60,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		e.addValue(e, strzone(_("Unlimited")), "0");
 		e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		if(cvar("developer"))
+		if(cvar("developer") > 0)
 		{
 			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Local latency:")));
 			me.TD(me, 1, 2, e = makeXonoticSlider(0, 1000, 25, "cl_netlocalping"));

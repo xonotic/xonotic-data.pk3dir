@@ -25,6 +25,7 @@
 #include "campaign.qh"
 #include "command/common.qh"
 #include "scores_rules.qh"
+#include "weapons/common.qh"
 
 #include "bot/api.qh"
 
@@ -610,7 +611,8 @@ void PutPlayerInServer(entity this)
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
 	STAT(RESPAWN_TIME, this) = 0;
-	this.scale = autocvar_sv_player_scale;
+	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox;
+	this.scale = ((q3dfcompat) ? 0.9 : autocvar_sv_player_scale);
 	this.fade_time = 0;
 	this.pain_frame = 0;
 	this.pain_finished = 0;
@@ -713,10 +715,7 @@ void PutPlayerInServer(entity this)
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		entity oldwep = this.(weaponentity);
 		CL_SpawnWeaponentity(this, weaponentity);
-		if(oldwep && oldwep.owner == this)
-			this.(weaponentity).m_gunalign = oldwep.m_gunalign;
 	}
 	this.alpha = default_player_alpha;
 	this.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -778,6 +777,7 @@ void PutPlayerInServer(entity this)
 
 	if (CS(this).impulse) ImpulseCommands(this);
 
+	W_ResetGunAlign(this, CS(this).cvar_cl_gunalign);
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
@@ -1339,7 +1339,7 @@ void PrintToChat(entity client, string text)
 ERASEABLE
 void DebugPrintToChat(entity client, string text)
 {
-	if (autocvar_developer)
+	if (autocvar_developer > 0)
 	{
 		PrintToChat(client, text);
 	}
@@ -1355,7 +1355,7 @@ void PrintToChatAll(string text)
 ERASEABLE
 void DebugPrintToChatAll(string text)
 {
-	if (autocvar_developer)
+	if (autocvar_developer > 0)
 	{
 		PrintToChatAll(text);
 	}
@@ -1377,7 +1377,7 @@ void PrintToChatTeam(int team_num, string text)
 ERASEABLE
 void DebugPrintToChatTeam(int team_num, string text)
 {
-	if (autocvar_developer)
+	if (autocvar_developer > 0)
 	{
 		PrintToChatTeam(team_num, text);
 	}
@@ -2085,6 +2085,7 @@ bool joinAllowed(entity this)
 
 .int items_added;
 .string shootfromfixedorigin;
+.bool dualwielding_prev;
 bool PlayerThink(entity this)
 {
 	if (game_stopped || intermission_running) {
@@ -2187,6 +2188,15 @@ bool PlayerThink(entity this)
 		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
 	}
 
+	// reset gun alignment when dual wielding status changes
+	// to ensure guns are always aligned right and left
+	bool dualwielding = W_DualWielding(this);
+	if(this.dualwielding_prev != dualwielding)
+	{
+		W_ResetGunAlign(this, CS(this).cvar_cl_gunalign);
+		this.dualwielding_prev = dualwielding;
+	}
+
 	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 	//if(frametime)
 	{
@@ -2207,26 +2217,24 @@ bool PlayerThink(entity this)
 		this.items |= this.items_added;
 	}
 
-	player_regen(this);
-
-	// WEAPONTODO: Add a weapon request for this
-	// rot vortex charge to the charge limit
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	if (frametime)
 	{
-		.entity weaponentity = weaponentities[slot];
-		if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
-			this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		// WEAPONTODO: Add a weapon request for this
+		// rot vortex charge to the charge limit
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		}
+
+		player_regen(this);
+		player_anim(this);
+		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
 
-	if (frametime) player_anim(this);
-
-	// secret status
 	secrets_setstatus(this);
-
-	// monsters status
 	monsters_setstatus(this);
-
-	this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 	return true;
 }
@@ -2457,7 +2465,7 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if(IS_PLAYER(this))
+	if (frametime && IS_PLAYER(this))
 	{
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{

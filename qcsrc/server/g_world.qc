@@ -330,6 +330,7 @@ void cvar_changes_init()
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_buffs_pickup_anyway");
 		BADCVAR("g_buffs_randomize");
+		BADCVAR("g_buffs_randomize_teamplay");
 		BADCVAR("g_campcheck_distance");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
@@ -871,6 +872,12 @@ spawnfunc(worldspawn)
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
+
+	if(fexists(strcat("scripts/", mapname, ".arena")))
+		cvar_settemp("sv_q3acompat_machineshotgunswap", "1");
+
+	if(fexists(strcat("scripts/", mapname, ".defi")))
+		cvar_settemp("sv_q3defragcompat", "1");
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -2262,7 +2269,7 @@ void Shutdown()
 			else
 				db_save(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 		}
-		if(autocvar_developer)
+		if(autocvar_developer > 0)
 		{
 			if(autocvar_sv_db_saveasdump)
 				db_dump(TemporaryDB, "server-temp.db");
