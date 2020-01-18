@@ -40,9 +40,13 @@ CLASS(Electro, Weapon)
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, health, float, SEC) \
 		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, midaircombo_enemy, bool, PRI) \
 		P(class, prefix, midaircombo_explode, float, PRI) \
 		P(class, prefix, midaircombo_interval, float, PRI) \
+		P(class, prefix, midaircombo_own, bool, PRI) \
 		P(class, prefix, midaircombo_radius, float, PRI) \
+		P(class, prefix, midaircombo_speed, float, PRI) \
+		P(class, prefix, midaircombo_teammate, float, PRI) \
 		P(class, prefix, radius, float, BOTH) \
 		P(class, prefix, refire2, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \
