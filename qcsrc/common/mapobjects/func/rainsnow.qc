@@ -13,6 +13,7 @@ bool rainsnow_SendEntity(entity this, entity to, float sf)
 	WriteShort(MSG_ENTITY, compressShortVector(this.dest));
 	WriteShort(MSG_ENTITY, this.count);
 	WriteByte(MSG_ENTITY, this.cnt);
+	WriteShort(MSG_ENTITY, bound(0, this.fade_end, 65535));
 	return true;
 }
 
@@ -99,7 +100,8 @@ float autocvar_cl_rainsnow_maxdrawdist = 1000;
 
 void Draw_RainSnow(entity this)
 {
-	vector maxdist = '1 1 1' * autocvar_cl_rainsnow_maxdrawdist;
+	float drawdist = ((this.fade_end) ? this.fade_end : autocvar_cl_rainsnow_maxdrawdist);
+	vector maxdist = '1 1 1' * drawdist;
 
 	vector effbox_min = vec_to_max(view_origin - maxdist, this.origin + this.mins);
 	vector effbox_max = vec_to_min(view_origin + maxdist, this.origin + this.maxs);
@@ -124,6 +126,7 @@ NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 	this.velocity = decompressShortVector(ReadShort());
 	this.count = ReadShort();
 	this.glow_color = ReadByte(); // color
+	this.fade_end = ReadShort();
 
 	return = true;
 
