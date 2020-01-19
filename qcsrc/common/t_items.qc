@@ -174,8 +174,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_SIZE)
     {
-        float use_bigsize = ReadByte();
-        setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+        setsize(this, '-16 -16 0', '16 16 48');
     }
 
     if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
@@ -204,8 +203,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.draw       = ItemDraw;
         this.solid = SOLID_TRIGGER;
         //this.flags |= FL_ITEM;
-
-        bool use_bigsize = ReadByte();
 
         this.fade_end = ReadShort();
         this.fade_start = ReadShort();
@@ -257,7 +254,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
 
-        setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+        setsize(this, '-16 -16 0', '16 16 48');
     }
 
     if(sf & ISF_COLORMAP)
@@ -326,19 +323,14 @@ bool ItemSend(entity this, entity to, int sf)
 		WriteAngle(MSG_ENTITY, this.angles_z);
 	}
 
-	if(sf & ISF_SIZE)
-	{
-		Pickup p = this.itemdef;
-		WriteByte(MSG_ENTITY, p.instanceOfPowerup || p.instanceOfHealth || p.instanceOfArmor);
-	}
+	// sets size on the client, unused on server
+	//if(sf & ISF_SIZE)
 
 	if(sf & ISF_STATUS)
 		WriteByte(MSG_ENTITY, this.ItemStatus);
 
 	if(sf & ISF_MODEL)
 	{
-		Pickup p = this.itemdef;
-		WriteByte(MSG_ENTITY, p.instanceOfPowerup || p.instanceOfHealth || p.instanceOfArmor);
 		WriteShort(MSG_ENTITY, this.fade_end);
 		WriteShort(MSG_ENTITY, this.fade_start);
 
