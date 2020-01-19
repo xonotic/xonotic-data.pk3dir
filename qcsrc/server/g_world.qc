@@ -2108,7 +2108,7 @@ void Physics_Frame()
 	if(autocvar_sv_freezenonclients)
 		return;
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
+	IL_EACH(g_moveables, true,
 	{
 		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
@@ -2134,7 +2134,7 @@ void Physics_Frame()
 	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)
 		return;
 
-	FOREACH_ENTITY_FLOAT(move_qcphysics, true,
+	IL_EACH(g_moveables, it.move_qcphysics,
 	{
 		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
 			continue;
