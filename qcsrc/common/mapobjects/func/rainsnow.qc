@@ -95,7 +95,7 @@ spawnfunc(func_snow)
 	Net_LinkEntity(this, false, 0, rainsnow_SendEntity);
 }
 #elif defined(CSQC)
-float autocvar_cl_rainsnow_maxdrawdist = 700;
+float autocvar_cl_rainsnow_maxdrawdist = 1000;
 
 void Draw_RainSnow(entity this)
 {
