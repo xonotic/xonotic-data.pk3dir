@@ -493,6 +493,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca_weaponarena");
 		BADCVAR("g_freezetag_weaponarena");
 		BADCVAR("g_lms_weaponarena");
+		BADCVAR("g_ctf_stalemate_time");
 
 		if(cvar_string("g_mod_balance") == "Testing")
 		{
