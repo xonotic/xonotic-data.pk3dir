@@ -86,7 +86,9 @@ void dedicated_print(string input)
 
 string GameLog_ProcessIP(string s)
 {
-	return strreplace(":", autocvar_sv_eventlog_ipv6_delimiter, s);
+	if(!autocvar_sv_eventlog_ipv6_delimiter)
+		return s;
+	return strreplace(":", "_", s);
 }
 
 void GameLogEcho(string s)
