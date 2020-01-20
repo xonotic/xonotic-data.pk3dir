@@ -502,7 +502,7 @@ void CSQCPlayer_CalcRefdef(entity this)
 	setproperty(VF_ANGLES, view_angles);
 }
 
-bool autocvar_cl_useenginerefdef = true;
+bool autocvar_cl_useenginerefdef = false;
 
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
