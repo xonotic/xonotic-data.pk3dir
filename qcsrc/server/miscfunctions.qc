@@ -84,6 +84,11 @@ void dedicated_print(string input)
 	if (server_is_dedicated) print(input);
 }
 
+string GameLog_ProcessIP(string s)
+{
+	return strreplace(":", autocvar_sv_eventlog_ipv6_delimiter, s);
+}
+
 void GameLogEcho(string s)
 {
     string fn;
