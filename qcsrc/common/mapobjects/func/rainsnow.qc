@@ -13,6 +13,7 @@ bool rainsnow_SendEntity(entity this, entity to, float sf)
 	WriteShort(MSG_ENTITY, compressShortVector(this.dest));
 	WriteShort(MSG_ENTITY, this.count);
 	WriteByte(MSG_ENTITY, this.cnt);
+	WriteShort(MSG_ENTITY, bound(0, this.fade_end, 65535));
 	return true;
 }
 
@@ -44,7 +45,7 @@ spawnfunc(func_rain)
 	if (!this.count)
 		this.count = 2000;
 	// relative to absolute particle count
-	this.count = 0.1 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
+	//this.count = 0.1 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
 	if (this.count < 1)
 		this.count = 1;
 	if(this.count > 65535)
@@ -84,7 +85,7 @@ spawnfunc(func_snow)
 	if (!this.count)
 		this.count = 2000;
 	// relative to absolute particle count
-	this.count = 0.1 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
+	//this.count = 0.1 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
 	if (this.count < 1)
 		this.count = 1;
 	if(this.count > 65535)
@@ -95,24 +96,26 @@ spawnfunc(func_snow)
 	Net_LinkEntity(this, false, 0, rainsnow_SendEntity);
 }
 #elif defined(CSQC)
-float autocvar_cl_rainsnow_maxdrawdist = 2048;
+float autocvar_cl_rainsnow_maxdrawdist = 1000;
 
-void Draw_Rain(entity this)
+void Draw_RainSnow(entity this)
 {
-	vector maxdist = '1 1 0' * autocvar_cl_rainsnow_maxdrawdist;
-	maxdist.z = 5;
-	if(boxesoverlap(vec2(view_origin) - maxdist, vec2(view_origin) + maxdist, vec2(this.absmin) - '0 0 5', vec2(this.absmax) + '0 0 5'))
-	//if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
-    	te_particlerain(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
-}
+	float drawdist = ((this.fade_end) ? this.fade_end : autocvar_cl_rainsnow_maxdrawdist);
+	vector maxdist = '1 1 1' * drawdist;
 
-void Draw_Snow(entity this)
-{
-	vector maxdist = '1 1 0' * autocvar_cl_rainsnow_maxdrawdist;
-	maxdist.z = 5;
-	if(boxesoverlap(vec2(view_origin) - maxdist, vec2(view_origin) + maxdist, vec2(this.absmin) - '0 0 5', vec2(this.absmax) + '0 0 5'))
-	//if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
-    	te_particlesnow(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
+	vector effbox_min = vec_to_max(view_origin - maxdist, this.origin + this.mins);
+	vector effbox_max = vec_to_min(view_origin + maxdist, this.origin + this.maxs);
+
+	vector mysize = effbox_max - effbox_min;
+	float mycount = bound(1, 0.1 * this.count * (mysize.x / 1024) * (mysize.y / 1024), 65535);
+
+	if(boxesoverlap(view_origin - maxdist, view_origin + maxdist, this.absmin, this.absmax)) // optimisation: don't render any rain if the player is outside the view distance
+	{
+		if(this.state == RAINSNOW_RAIN)
+    		te_particlerain(effbox_min, effbox_max, this.velocity, floor(mycount * drawframetime + random()), this.glow_color);
+    	else
+    		te_particlesnow(effbox_min, effbox_max, this.velocity, floor(mycount * drawframetime + random()), this.glow_color);
+	}
 }
 
 NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
@@ -123,6 +126,7 @@ NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 	this.velocity = decompressShortVector(ReadShort());
 	this.count = ReadShort();
 	this.glow_color = ReadByte(); // color
+	this.fade_end = ReadShort();
 
 	return = true;
 
@@ -134,9 +138,6 @@ NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 	setsize(this, this.mins, this.maxs);
 	this.solid = SOLID_NOT;
 	if (isnew) IL_PUSH(g_drawables, this);
-	if(this.state == RAINSNOW_RAIN)
-		this.draw = Draw_Rain;
-	else
-		this.draw = Draw_Snow;
+	this.draw = Draw_RainSnow;
 }
 #endif
