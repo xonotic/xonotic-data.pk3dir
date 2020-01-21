@@ -19,7 +19,7 @@ STATIC_INIT(Items) { FOREACH(Items, true, it.m_id = i); }
 
 void Dump_Items();
 
-GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
+GENERIC_COMMAND(dumpitems, "Dump all items to the console", false) {
     switch (request) {
         case CMD_REQUEST_COMMAND: {
             Dump_Items();

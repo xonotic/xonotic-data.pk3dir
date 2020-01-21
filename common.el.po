@@ -12,7 +12,7 @@
 # MasterWord, 2016
 # Mensious Mensious <ektoras@tutanota.com>, 2018-2019
 # Vindex <kon14.inside@gmail.com>, 2014
-# Γιάννης Ανθυμίδης, 2011-2012
+# Yannis Anthymidis, 2011-2012
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"

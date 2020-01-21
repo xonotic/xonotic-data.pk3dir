@@ -225,6 +225,20 @@ string GetAmmoPicture(int ammotype)
 	}
 }
 
+string GetAmmoName(int ammotype)
+{
+	switch (ammotype)
+	{
+		case RES_SHELLS:  return ITEM_Shells.m_name;
+		case RES_BULLETS: return ITEM_Bullets.m_name;
+		case RES_ROCKETS: return ITEM_Rockets.m_name;
+		case RES_CELLS:   return ITEM_Cells.m_name;
+		case RES_PLASMA:  return ITEM_Plasma.m_name;
+		case RES_FUEL:    return ITEM_JetpackFuel.m_name;
+		default:          return "batteries";
+	}
+}
+
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i)
 {
@@ -551,14 +565,27 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	vector a = ReadVector();
+	int fr = ReadByte();
+	float t = ReadFloat();
     int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
-	if(a.x == wepent.anim_idle_x) // we don't need to enforce idle animation
-		wepent.animstate_looping = false;
+	if(fr == WFRAME_IDLE)
+		wepent.animstate_looping = false; // we don't need to enforce idle animation
 	else
+	{
+		vector a = '0 0 0';
+		switch(fr)
+		{
+			case WFRAME_IDLE: a = wepent.anim_idle; break;
+			case WFRAME_FIRE1: a = wepent.anim_fire1; break;
+			case WFRAME_FIRE2: a = wepent.anim_fire2; break;
+			default:
+			case WFRAME_RELOAD: a = wepent.anim_reload; break;
+		}
+		a.z *= t;
 		anim_set(wepent, a, !restartanim, restartanim, restartanim);
+	}
 	wepent.state = ReadByte();
 	wepent.weapon_nextthink = ReadFloat();
 	switch (wepent.state)
@@ -578,13 +605,14 @@ NET_HANDLE(wframe, bool isNew)
 #endif
 
 #ifdef SVQC
-void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
+void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim)
 {
 	if (!IS_REAL_CLIENT(actor)) return;
 	int channel = MSG_ONE;
 	msg_entity = actor;
 	WriteHeader(channel, wframe);
-	WriteVector(channel, a);
+	WriteByte(channel, wepframe);
+	WriteFloat(channel, attackrate);
 	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);

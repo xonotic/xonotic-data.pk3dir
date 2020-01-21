@@ -472,15 +472,18 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if(!round_handler_IsRoundStarted())
 		return true;
 
-	int n;
 	entity player = M_ARGV(0, entity);
 	//if (STAT(FROZEN, player) == FROZEN_NORMAL)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
 
+	if (!(frametime && IS_PLAYER(player)))
+		return true;
+
 	entity reviving_players_last = NULL;
 	entity reviving_players_first = NULL;
 
+	int n;
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 	else

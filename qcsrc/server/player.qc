@@ -369,7 +369,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(attacker == this)
 	{
-		// don't reset pushltime for this damage as it may be an attempt to
+		// don't reset pushltime for self damage as it may be an attempt to
 		// escape a lava pit or similar
 		//this.pushltime = 0;
 		this.istypefrag = 0;

@@ -197,7 +197,7 @@ bool autocvar_debugdraw;
 #endif
 
 
-GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
+GENERIC_COMMAND(bufstr_get, "Examine a string buffer object", false)
 {
 	switch (request)
 	{
@@ -219,7 +219,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 }
 
 
-GENERIC_COMMAND(version, "Print the current version")
+GENERIC_COMMAND(version, "Print the current version", false)
 {
 	switch (request)
 	{
@@ -241,7 +241,7 @@ GENERIC_COMMAND(version, "Print the current version")
 #ifdef CSQC
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
 #endif
-GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
+GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars", false)
 {
 	switch (request)
 	{
@@ -332,7 +332,7 @@ STATIC_INIT(TRACE_ENT)
 #endif
 
 
-GENERIC_COMMAND(find, "Search through entities for matching classname")
+GENERIC_COMMAND(find, "Search through entities for matching classname", false)
 {
 	switch (request)
 	{
@@ -363,7 +363,7 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 }
 
 
-GENERIC_COMMAND(findat, "Search through entities for matching origin")
+GENERIC_COMMAND(findat, "Search through entities for matching origin", false)
 {
 	switch (request)
 	{

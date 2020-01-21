@@ -11,7 +11,7 @@
 #include <common/mapinfo.qh>
 #include <common/turrets/all.qh>
 
-#ifdef RELEASE
+#if 1
 #define cvar_string_normal builtin_cvar_string
 #define cvar_normal builtin_cvar
 #else
@@ -74,6 +74,8 @@ string formatmessage(entity this, string msg);
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 
+string GameLog_ProcessIP(string s);
+
 void GameLogEcho(string s);
 
 void GameLogInit();
@@ -95,8 +97,6 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 bool MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
 
 string NearestLocation(vector p);
-
-string AmmoNameFromWeaponentity(Weapon wep);
 
 void play2(entity e, string filename);
 

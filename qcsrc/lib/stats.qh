@@ -11,7 +11,42 @@ USING(vectori, vector);
 const int STATS_ENGINE_RESERVE = 32;
 // must be listed in ascending order
 #define MAGIC_STATS(_, x) \
+	_(x, MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, 220) \
+	_(x, MOVEVARS_AIRCONTROL_PENALTY, 221) \
+	_(x, MOVEVARS_AIRSPEEDLIMIT_NONQW, 222) \
+	_(x, MOVEVARS_AIRSTRAFEACCEL_QW, 223) \
+	_(x, MOVEVARS_AIRCONTROL_POWER, 224) \
+	_(x, MOVEFLAGS, 225) \
+	_(x, MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, 226) \
+	_(x, MOVEVARS_WARSOWBUNNY_ACCEL, 227) \
+	_(x, MOVEVARS_WARSOWBUNNY_TOPSPEED, 228) \
+	_(x, MOVEVARS_WARSOWBUNNY_TURNACCEL, 229) \
+	_(x, MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, 230) \
+	_(x, MOVEVARS_AIRSTOPACCELERATE, 231) \
+	_(x, MOVEVARS_AIRSTRAFEACCELERATE, 232) \
+	_(x, MOVEVARS_MAXAIRSTRAFESPEED, 233) \
+	_(x, MOVEVARS_AIRCONTROL, 234) \
+	_(x, FRAGLIMIT, 235) \
+	_(x, TIMELIMIT, 236) \
+	_(x, MOVEVARS_WALLFRICTION, 237) \
+	_(x, MOVEVARS_FRICTION, 238) \
+	_(x, MOVEVARS_WATERFRICTION, 239) \
+	_(x, MOVEVARS_TICRATE, 240) \
 	_(x, MOVEVARS_TIMESCALE, 241) \
+	_(x, MOVEVARS_GRAVITY, 242) \
+	_(x, MOVEVARS_STOPSPEED, 243) \
+	_(x, MOVEVARS_MAXSPEED, 244) \
+	_(x, MOVEVARS_SPECTATORMAXSPEED, 245) \
+	_(x, MOVEVARS_ACCELERATE, 246) \
+	_(x, MOVEVARS_AIRACCELERATE, 247) \
+	_(x, MOVEVARS_WATERACCELERATE, 248) \
+	_(x, MOVEVARS_ENTGRAVITY, 249) \
+	_(x, MOVEVARS_JUMPVELOCITY, 250) \
+	_(x, MOVEVARS_EDGEFRICTION, 251) \
+	_(x, MOVEVARS_MAXAIRSPEED, 252) \
+	_(x, MOVEVARS_STEPHEIGHT, 253) \
+	_(x, MOVEVARS_AIRACCEL_QW, 254) \
+	_(x, MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, 255) \
 	/**/
 
 int g_magic_stats_hole = 0;
@@ -117,10 +152,12 @@ int g_magic_stats_hole = 0;
 			addstat_##T(STAT_##id.m_id, fld); \
 		}
 	void GlobalStats_update(entity this) {}
+	void GlobalStats_updateglobal() {}
     /** TODO: do we want the global copy to update? */
     #define REGISTER_STAT_3(id, T, expr) \
     	REGISTER_STAT_2(id, T); \
     	ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
+    	ACCUMULATE void GlobalStats_updateglobal() { entity this = STATS; STAT(id, this) = (expr); } \
     	STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)

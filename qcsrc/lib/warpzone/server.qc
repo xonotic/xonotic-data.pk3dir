@@ -13,6 +13,10 @@
 	#include <server/utils.qh>
 #endif
 
+#ifdef SVQC
+bool autocvar_sv_warpzone_allow_selftarget;
+#endif
+
 #ifdef WARPZONELIB_KEEPDEBUG
 #define WARPZONELIB_REMOVEHACK
 #endif
@@ -213,19 +217,8 @@ void WarpZone_Touch(entity this, entity toucher)
 	if(WarpZone_Teleport(this, toucher, f, 0))
 	{
 #ifdef SVQC
-		string save1, save2;
-
-		save1 = this.target; this.target = string_null;
-		save2 = this.target3; this.target3 = string_null;
-		SUB_UseTargets(this, toucher, toucher); // use toucher too?
-		if (!this.target) this.target = save1;
-		if (!this.target3) this.target3 = save2;
-
-		save1 = this.target; this.target = string_null;
-		save2 = this.target2; this.target2 = string_null;
-		SUB_UseTargets(this.enemy, toucher, toucher); // use toucher too?
-		if (!this.target) this.target = save1;
-		if (!this.target2) this.target2 = save2;
+		SUB_UseTargets_SkipTargets(this, toucher, toucher, BIT(1) | BIT(3)); // use toucher too?
+		SUB_UseTargets_SkipTargets(this.enemy, toucher, toucher, BIT(1) | BIT(2)); // use toucher too?
 #endif
 	}
 	else
@@ -369,19 +362,8 @@ float WarpZone_CheckProjectileImpact(entity player)
 	player.velocity = player.warpzone_oldvelocity;
 	if(WarpZone_Teleport(wz, player, 0, 1))
 	{
-		string save1, save2;
-
-		save1 = wz.target; wz.target = string_null;
-		save2 = wz.target3; wz.target3 = string_null;
-		SUB_UseTargets(wz, player, player);
-		if (!wz.target) wz.target = save1;
-		if (!wz.target3) wz.target3 = save2;
-
-		save1 = wz.enemy.target; wz.enemy.target = string_null;
-		save2 = wz.enemy.target2; wz.enemy.target2 = string_null;
-		SUB_UseTargets(wz.enemy, player, player);
-		if (!wz.enemy.target) wz.enemy.target = save1;
-		if (!wz.enemy.target2) wz.enemy.target2 = save2;
+		SUB_UseTargets_SkipTargets(wz, player, player, BIT(1) | BIT(3));
+		SUB_UseTargets_SkipTargets(wz.enemy, player, player, BIT(1) | BIT(2));
 	}
 	else
 	{
@@ -648,7 +630,8 @@ void WarpZone_InitStep_FindTarget(entity this)
 	// this way only one of the two ents needs to target
 	if(this.target != "")
 	{
-		this.enemy = this; // so the if(!e.enemy) check also skips this, saves one IF
+		if(!autocvar_sv_warpzone_allow_selftarget)
+			this.enemy = this; // so the if(!e.enemy) check also skips this, saves one IF
 
 		e2 = NULL;
 		for(e = NULL, i = 0; (e = find(e, targetname, this.target)); )

@@ -42,7 +42,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             .int fld = inv_items[it.m_id];
             int prev = this.(fld);
             int next = this.(fld) = ReadByte();
-            LOG_TRACEF("%s: %.0f -> %.0f", it.m_name, prev, next);
+            LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
     return true;

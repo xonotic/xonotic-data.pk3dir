@@ -70,6 +70,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 			actor.attack_finished_single[0] = actor.anim_finished + 0.2;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
+        monster_makevectors(actor, actor.enemy);
         W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_SPIDER.m_id);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web(actor);
