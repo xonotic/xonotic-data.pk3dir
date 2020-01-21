@@ -74,6 +74,8 @@ string formatmessage(entity this, string msg);
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 
+string GameLog_ProcessIP(string s);
+
 void GameLogEcho(string s);
 
 void GameLogInit();
