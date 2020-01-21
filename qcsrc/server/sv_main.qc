@@ -101,7 +101,6 @@ void CreatureFrame_FallDamage(entity this)
 		return; // if the entity hasn't moved and isn't moving, then don't do anything
 
 	// check for falling damage
-	float velocity_len = vlen(this.velocity);
 	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -114,16 +113,24 @@ void CreatureFrame_FallDamage(entity this)
 	}
 	if(!have_hook)
 	{
-		float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+		float dm; // dm is the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+		if(autocvar_g_balance_falldamage_onlyvertical)
+			dm = fabs(this.oldvelocity.z) - vlen(this.velocity);
+		else
+			dm = vlen(this.oldvelocity) - vlen(this.velocity);
 		if (IS_DEAD(this))
 			dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
 		else
 			dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 		if (dm > 0)
-			Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		{
+			tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODAMAGE))
+				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		}
 	}
 
-	if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
+	if(autocvar_g_maxspeed > 0 && vdist(this.velocity, >, autocvar_g_maxspeed))
 		Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
 }
 
@@ -239,6 +246,7 @@ void StartFrame()
 	anticheat_startframe();
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
+	GlobalStats_updateglobal();
     FOREACH_CLIENT(true, GlobalStats_update(it));
     IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }

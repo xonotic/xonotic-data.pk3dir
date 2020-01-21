@@ -240,7 +240,7 @@ void Shutdown()
 bool SetTeam(entity o, int Team)
 {
 	TC(int, Team);
-	devassert_once(Team);
+	//devassert_once(Team);
 	entity tm;
 	if(teamplay)
 	{

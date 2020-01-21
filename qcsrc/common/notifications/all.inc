@@ -659,7 +659,7 @@
     MSG_CENTER_NOTIF(DOOR_LOCKED_ALSONEED,              N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou also need %s^BG!"), "")
     MSG_CENTER_NOTIF(DOOR_UNLOCKED,                     N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGDoor unlocked!"), "")
 
-    MSG_CENTER_NOTIF(EXTRALIVES,                        N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F2You picked up some extra lives"), "")
+    MSG_CENTER_NOTIF(EXTRALIVES,                        N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^F2Extra lives taken: ^K1%s"), "")
 
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE,                  N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You revived ^BG%s"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE_SELF,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K3You revived yourself"), "")
@@ -750,8 +750,6 @@
     MSG_CENTER_NOTIF(POWERDOWN_INVISIBILITY,            N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Invisibility has worn off"), "")
 
     MSG_CENTER_NOTIF(RACE_FINISHLAP,                    N_ENABLE,    0, 0, "",               CPID_RACE_FINISHLAP,    "0 0",  _("^F2The race is over, finish your lap!"), "")
-
-    MSG_CENTER_NOTIF(SECONDARY_NODAMAGE,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGSecondary fire inflicts no damage!"), "")
 
     MSG_CENTER_NOTIF(SEQUENCE_COMPLETED,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGSequence completed!"), "")
     MSG_CENTER_NOTIF(SEQUENCE_COUNTER,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGThere are more to go..."), "")

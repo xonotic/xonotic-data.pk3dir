@@ -285,7 +285,7 @@ void effectinfo_dump(int fh, bool alsoprint)
     #undef WRITE
 }
 
-GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt")
+GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt", false)
 {
     switch (request) {
         case CMD_REQUEST_COMMAND: {

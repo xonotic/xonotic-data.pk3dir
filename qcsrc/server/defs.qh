@@ -412,6 +412,7 @@ IntrusiveList g_locations;
 IntrusiveList g_saved_team;
 IntrusiveList g_monster_targets;
 IntrusiveList g_pathlib_nodes;
+IntrusiveList g_moveables;
 STATIC_INIT(defs)
 {
 	g_monsters = IL_NEW();
@@ -433,4 +434,5 @@ STATIC_INIT(defs)
 	g_saved_team = IL_NEW();
 	g_monster_targets = IL_NEW();
 	g_pathlib_nodes = IL_NEW();
+	g_moveables = IL_NEW();
 }

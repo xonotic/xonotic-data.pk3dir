@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-10-06 00:10+0000\n"
+"PO-Revision-Date: 2019-11-09 23:02+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -236,7 +236,7 @@ msgstr "^3Doppelklicke ^7ein Panel für Panel-spezifische Optionen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:229
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr "^3CTRL^7, um Kollisionstests zu deaktivieren, ^3SHIFT ^7und"
+msgstr "^3STRG^7, um Kollisionstests zu deaktivieren, ^3UMSCHALT ^7und"
 
 #: qcsrc/client/hud/panel/infomessages.qc:230
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -1833,7 +1833,7 @@ msgstr "Geschwindigkeit"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:43
 msgid "Medic"
-msgstr "Medizin"
+msgstr "Sanitäter"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:54
 msgid "Bash"
@@ -1955,7 +1955,7 @@ msgstr "Spawn-Granate"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:50
 msgid "Heal grenade"
-msgstr "Heilgranate"
+msgstr "Medizingranate"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:58
 msgid "Monster grenade"
@@ -2314,13 +2314,13 @@ msgstr "^F2Du wirst in der nächsten Runde zuschauen"
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 wurde durch ^BG%s^K1s ^BG%s^K1 Bonus getötet ^K1%s%s"
+msgstr "^BG%s%s^K1 wurde durch ^BG%s^K1s ^BG%s^K1-Bonus getötet ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 wurde durch ^BG%s^K1s ^BG%s^K1 Bonus zu Punkten verarbeitet ^K1%s"
+"^BG%s%s^K1 wurde durch ^BG%s^K1s ^BG%s^K1-Bonus zu Punkten verarbeitet ^K1%s"
 "%s"
 
 #: qcsrc/common/notifications/all.inc:275
@@ -2366,12 +2366,12 @@ msgstr "^BG%s%s^K1 wurde in die Luft gejagt von ^BG%s^K1s Granate%s%s"
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
-msgstr "^BG%s%s^K1 trat einer Napalm-Explosion ein wenig zu nahe%s%s"
+msgstr "^BG%s%s^K1 trat einer Napalmexplosion ein wenig zu nahe%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Napalm-Granate abgefackelt%s%s"
+msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Napalmgranate abgefackelt%s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
@@ -2606,12 +2606,12 @@ msgstr "^BG%s^K1 meisterte die Kunst der Selbstsprengung%s%s"
 #, c-format
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
-msgstr "^BG%s^K1 wollte sich so eine Napalm-Explosion mal genauer ansehen%s%s"
+msgstr "^BG%s^K1 wollte sich so eine Napalmexplosion mal genauer ansehen%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
 msgid "^BG%s^K1 was burned to death by their own Napalm Nade%s%s"
-msgstr "^BG%s^K1 wurde von der eigenen Napalm-Granate verbrannt%s%s"
+msgstr "^BG%s^K1 wurde von der eigenen Napalmgranate verbrannt%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
@@ -2626,7 +2626,7 @@ msgstr "^BG%s^K1 erfror durch die eigene Eisgranate%s%s"
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr "^BG%s^K1s Medizin-Granate war nicht sehr heilsam%s%s"
+msgstr "^BG%s^K1s Medizingranate war nicht sehr heilsam%s%s"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
@@ -2783,7 +2783,7 @@ msgstr "^BG%s^K1 konnte keinen Schutz vor der Raserrakete finden%s%s"
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
 msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s"
-msgstr "^BG%s^K1 wurde von ^BG%s^K1 betrogen%s%s"
+msgstr "^BG%s^K1 wurde von ^BG%s^K1 verraten%s%s"
 
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
@@ -2793,12 +2793,12 @@ msgstr "^BG%s^BG%s^BG (%s %s alle %s Sekunden)"
 #: qcsrc/common/notifications/all.inc:363
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr "^BG%s^K1 wurde von ^BG vereist%s"
+msgstr "^BG%s^K1 wurde von ^BG%s^K1 vereist"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr "^BG%s^K3 wurde von ^BG wiederbelebt%s"
+msgstr "^BG%s^K3 wurde von ^BG%s^K3 wiederbelebt"
 
 #: qcsrc/common/notifications/all.inc:365
 #, c-format
@@ -3588,7 +3588,7 @@ msgstr "^BGDu hast die ^TC^TT^BG Flagge erobert!"
 
 #: qcsrc/common/notifications/all.inc:563
 msgid "^BGYou captured the flag!"
-msgstr "^BGDu hast die Flagge erobert"
+msgstr "^BGDu hast die Flagge erobert!"
 
 #: qcsrc/common/notifications/all.inc:564
 #, c-format
@@ -3676,12 +3676,12 @@ msgstr "^BGDer %sFeind (^BG%s%s)^BG hat die Flagge! Bringt sie zurück!"
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
 msgid "^BGThe %senemy^BG got their flag! Retrieve it!"
-msgstr "^BGDer %sFeind^BG hat seine Flagge! Hole sie!"
+msgstr "^BGDer %sFeind^BG hat seine Flagge! Hol sie!"
 
 #: qcsrc/common/notifications/all.inc:582
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"
-msgstr "^BGDer %sFeind (^BG%s%s)^BG hat seine Flagge! Hole sie!"
+msgstr "^BGDer %sFeind (^BG%s%s)^BG hat seine Flagge! Hol sie!"
 
 #: qcsrc/common/notifications/all.inc:583
 #, c-format
@@ -3874,7 +3874,7 @@ msgstr "^K1Du has vergessen, den Pin wieder reinzustecken!"
 
 #: qcsrc/common/notifications/all.inc:645
 msgid "^K1Hanging around a napalm explosion is bad!"
-msgstr "^K1Bei einer Napalm-Explosion herumzuhängen ist schlecht!"
+msgstr "^K1Es ist schlecht, bei einer Napalmexplosion herumzuhängen!"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You felt a little chilly!"
@@ -3886,7 +3886,7 @@ msgstr "^K1Dir wurde ein wenig zu kalt!"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1Your Healing Nade is a bit defective"
-msgstr "^K1Deine Medizin-Granate ist ein wenig defekt"
+msgstr "^K1Deine Medizingranate ist ein wenig defekt"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You are respawning for running out of ammo..."
@@ -3898,7 +3898,7 @@ msgstr "^K1Du wurdest getötet, weil du keine Munition mehr hast …"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You grew too old without taking your medicine"
-msgstr "^K1Du wurdest zu alt, und hast deine Medizin nicht genommen"
+msgstr "^K1Du wurdest zu alt, denn du hast deine Medizin nicht genommen"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You need to preserve your health"
@@ -4175,15 +4175,15 @@ msgstr "^BGDeine Waffe wurde verschlechtert, bis du etwas Munition findest!"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^F4^COUNT^BG left to find some ammo!"
-msgstr "^F4^COUNT^BG verbleiben, um etwas Munition zu finden!"
+msgstr "^BGNoch ^F4^COUNT^BG, um etwas Munition zu finden!"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
-msgstr "^BGHole dir etwas Munition oder du stirbst in ^F4^COUNT^BG!"
+msgstr "^BGHol dir etwas Munition oder du stirbst in ^F4^COUNT^BG!"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
-msgstr "^BGHole dir etwas Munition! ^F4^COUNT^BG übrig!"
+msgstr "^BGHol dir etwas Munition! Noch ^F4^COUNT^BG!"
 
 #: qcsrc/common/notifications/all.inc:730
 #, c-format
@@ -4586,7 +4586,7 @@ msgstr "%d Punkte hintereinander! "
 #: qcsrc/common/notifications/all.qh:507
 #, c-format
 msgid "%d frag spree! "
-msgstr "%d Kills in Folge!"
+msgstr "%d Kills in Folge! "
 
 #: qcsrc/common/notifications/all.qh:520
 msgid "First blood! "
@@ -5837,7 +5837,7 @@ msgstr "Leg deinen Namen im Spiel fest"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
-msgstr "Sprache:"
+msgstr "Textsprache:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:78
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
@@ -6310,7 +6310,7 @@ msgstr "Rein"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
-msgstr "Punktetafel"
+msgstr "Punkte-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
 msgid "Timer:"
@@ -6856,7 +6856,7 @@ msgstr "Raketenflug"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:67
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:217
 msgid "Invincible Projectiles"
-msgstr "Unzerstörbare Schüsse"
+msgstr "Unzerstörbare Projektile"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:293
@@ -9079,7 +9079,7 @@ msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:116
 msgid "Idle limit:"
-msgstr "wenn inaktiv:"
+msgstr "Wenn inaktiv:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
 msgid "IDLFPS^Unlimited"
@@ -9215,7 +9215,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
-msgstr "volle Sprachänderungen finden erst nach dem Neustart des Spiels statt."
+msgstr "volle Sprachänderungen finden erst nach dem Neustart des Spiels statt"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"

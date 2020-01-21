@@ -328,7 +328,7 @@ CLASS(Object)
 	{
 		TC(Object, this);
 		string s = _("No description");
-		if (cvar("developer"))
+		if (cvar("developer") > 0)
 		{
 			for (int i = 0, n = numentityfields(); i < n; ++i)
 			{
