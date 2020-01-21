@@ -173,10 +173,6 @@ REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9");
 
 float bgmtime;
 
-string weaponorder_byimpulse; // NOTE: this is a misnomer, weapon order is not always sorted by impulse
-string weaponorder_bypriority;
-bool weapons_orderbyimpulse; // update priority list when toggling this
-
 float vortex_charge_movingavg;
 
 int serverflags;

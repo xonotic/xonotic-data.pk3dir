@@ -82,7 +82,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 
 	csqcplayer_predictionerroro = CSQCPlayer_GetPredictionErrorO() + o;
 	csqcplayer_predictionerrorv = CSQCPlayer_GetPredictionErrorV() + v;
-	csqcplayer_predictionerrorfactor = autocvar_cl_movement_errorcompensation / ticrate;
+	csqcplayer_predictionerrorfactor = autocvar_cl_movement_errorcompensation / ((ticrate) ? ticrate : 1);
 	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
@@ -208,8 +208,8 @@ bool CSQCPlayer_IsLocalPlayer(entity this)
 }
 
 float stairsmoothz;
-float autocvar_cl_stairsmoothspeed;
-float autocvar_cl_smoothviewheight;
+float autocvar_cl_stairsmoothspeed = 200;
+float autocvar_cl_smoothviewheight = 0.05;
 float smooth_prevtime;
 float viewheightavg;
 vector CSQCPlayer_ApplySmoothing(entity this, vector v)
@@ -262,18 +262,18 @@ void CSQCPlayer_ApplyIdleScaling(entity this)
 	//setproperty(VF_CL_VIEWANGLES, view_angles); // update view angles as well so we can aim
 }
 
-float autocvar_cl_bob;
-float autocvar_cl_bobcycle;
-float autocvar_cl_bob_limit;
-float autocvar_cl_bob_limit_heightcheck;
-float autocvar_cl_bob_velocity_limit;
-float autocvar_cl_bobup;
-float autocvar_cl_bobfall;
-float autocvar_cl_bobfallcycle;
-float autocvar_cl_bobfallminspeed;
-float autocvar_cl_bob2;
-float autocvar_cl_bob2cycle;
-float autocvar_cl_bob2smooth;
+float autocvar_cl_bob = 0;
+float autocvar_cl_bobcycle = 0.5;
+float autocvar_cl_bob_limit = 7;
+float autocvar_cl_bob_limit_heightcheck = 0;
+float autocvar_cl_bob_velocity_limit = 400;
+float autocvar_cl_bobup = 0.5;
+float autocvar_cl_bobfall = 0.05;
+float autocvar_cl_bobfallcycle = 3;
+float autocvar_cl_bobfallminspeed = 200;
+float autocvar_cl_bob2 = 0;
+float autocvar_cl_bob2cycle = 1;
+float autocvar_cl_bob2smooth = 0.05;
 float bobfall_swing;
 float bobfall_speed;
 float bob2_smooth;
@@ -502,7 +502,7 @@ void CSQCPlayer_CalcRefdef(entity this)
 	setproperty(VF_ANGLES, view_angles);
 }
 
-bool autocvar_cl_useenginerefdef = true;
+bool autocvar_cl_useenginerefdef = false;
 
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()

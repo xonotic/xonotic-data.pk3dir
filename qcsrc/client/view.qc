@@ -1120,12 +1120,12 @@ void HUD_Crosshair(entity this)
 		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
-			if(csqcplayer && crosshair_chase_playeralpha && crosshair_chase_playeralpha < 1)
+			if(csqcplayer && autocvar_crosshair_chase_playeralpha && autocvar_crosshair_chase_playeralpha < 1)
 			{
 				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
 				float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
 				if(trace_ent == csqcplayer && STAT(HEALTH) > 0)
-					csqcplayer.alpha = min(crosshair_chase_playeralpha, myalpha);
+					csqcplayer.alpha = min(autocvar_crosshair_chase_playeralpha, myalpha);
 				else
 					csqcplayer.alpha = csqcplayer.m_alpha;
 			}
@@ -1722,7 +1722,7 @@ void View_NightVision()
 	tc_10 = '1.5 0 0' - '0.2 0 0' * sin(time * 0.5) + '0 0.5 0' * cos(time * 1.7);
 	//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
 	tc_11 = tc_01 + tc_10 - tc_00;
-	R_BeginPolygon("gfx/nightvision-bg.tga", DRAWFLAG_ADDITIVE);
+	R_BeginPolygon("gfx/nightvision-bg.tga", DRAWFLAG_ADDITIVE, true);
 	R_PolygonVertex('0 0 0', tc_00, rgb, a);
 	R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
 	R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
@@ -1736,7 +1736,7 @@ void View_NightVision()
 	tc_01 = tc_00 + '0 3 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.2);
 	tc_10 = tc_00 + '2 0 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.3);
 	tc_11 = tc_01 + tc_10 - tc_00;
-	R_BeginPolygon("gfx/nightvision-fg.tga", DRAWFLAG_ADDITIVE);
+	R_BeginPolygon("gfx/nightvision-fg.tga", DRAWFLAG_ADDITIVE, true);
 	R_PolygonVertex('0 0 0', tc_00, rgb, a);
 	R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
 	R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
@@ -2329,6 +2329,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	vid_width = vf_size.x;
 	vid_height = vf_size.y;
 
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
 	WaypointSprite_Load();
 
 	CSQCPlayer_SetCamera();
@@ -2338,8 +2340,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else // then player_localentnum is the vehicle I'm driving
 		current_player = player_localnum;
 	myteam = entcs_GetTeam(current_player);
-
-	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
 	// abused multiple places below
 	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
@@ -2445,10 +2445,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS); // TODO: .health is used in cl_deathfade (a feature we have turned off currently)
 	renderscene();
 
-	// now switch to 2D drawing mode by calling a 2D drawing function
-	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
-	// next R_RenderScene call
-	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+	// Now the the scene has been rendered, begin with the 2D drawing functions
 
 	View_NightVision();
 	DrawReticle(local_player);

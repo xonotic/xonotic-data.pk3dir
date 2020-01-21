@@ -712,14 +712,14 @@ void Draw_Shockwave(entity this)
 		if(counter >= 1)
 		{
 			// draw from shot origin to min spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
@@ -734,14 +734,14 @@ void Draw_Shockwave(entity this)
 		if((counter + 1) == divisions)
 		{
 			// draw from shot origin to min spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);

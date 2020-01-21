@@ -245,7 +245,7 @@ void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
 	vehicles_projectile_explode(this, trigger);
 }
 
-entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
+entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
 						   int _deahtype, float _projtype, float _health,
@@ -290,8 +290,8 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	if(_mzlsound != SND_Null)
 		sound (this, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
-	if(_mzlfx)
-		Send_Effect_(_mzlfx, proj.origin, proj.velocity, 1);
+	if(_mzlfx != EFFECT_Null)
+		Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
 
 	setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 

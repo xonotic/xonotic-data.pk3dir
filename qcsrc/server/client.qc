@@ -611,7 +611,8 @@ void PutPlayerInServer(entity this)
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
 	STAT(RESPAWN_TIME, this) = 0;
-	this.scale = autocvar_sv_player_scale;
+	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox;
+	this.scale = ((q3dfcompat) ? 0.9 : autocvar_sv_player_scale);
 	this.fade_time = 0;
 	this.pain_frame = 0;
 	this.pain_finished = 0;
@@ -1107,7 +1108,7 @@ void ClientConnect(entity this)
 		CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
@@ -2216,26 +2217,24 @@ bool PlayerThink(entity this)
 		this.items |= this.items_added;
 	}
 
-	player_regen(this);
-
-	// WEAPONTODO: Add a weapon request for this
-	// rot vortex charge to the charge limit
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	if (frametime)
 	{
-		.entity weaponentity = weaponentities[slot];
-		if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
-			this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		// WEAPONTODO: Add a weapon request for this
+		// rot vortex charge to the charge limit
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		}
+
+		player_regen(this);
+		player_anim(this);
+		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
 
-	if (frametime) player_anim(this);
-
-	// secret status
 	secrets_setstatus(this);
-
-	// monsters status
 	monsters_setstatus(this);
-
-	this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 	return true;
 }
@@ -2466,7 +2465,7 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if(IS_PLAYER(this))
+	if (frametime && IS_PLAYER(this))
 	{
 		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 		{

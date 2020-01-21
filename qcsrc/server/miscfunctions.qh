@@ -74,6 +74,8 @@ string formatmessage(entity this, string msg);
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 
+string GameLog_ProcessIP(string s);
+
 void GameLogEcho(string s);
 
 void GameLogInit();
@@ -90,13 +92,11 @@ float LostMovetypeFollow(entity ent);
 
 string uid2name(string myuid);
 
-float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
 
 string NearestLocation(vector p);
-
-string AmmoNameFromWeaponentity(Weapon wep);
 
 void play2(entity e, string filename);
 

@@ -7,6 +7,8 @@ void set_movetype(entity this, int mt)
 	if (mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH) {
 		this.move_qcphysics = false;
 	}
+	if(!IL_CONTAINS(g_moveables, this))
+		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
 	this.movetype = (this.move_qcphysics) ? MOVETYPE_NONE : mt;
 }
 #elif defined(CSQC)
@@ -701,11 +703,11 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	{
 		Movetype_Physics_NoMatchServer(this);
 
-		this.tic_saved_flags = this.flags;
-		this.tic_saved_velocity = this.velocity;
-		this.tic_saved_origin = this.origin;
-		this.tic_saved_avelocity = this.avelocity;
-		this.tic_saved_angles = this.angles;
+		this.tic_saved_flags = this.tic_flags = this.flags;
+		this.tic_saved_velocity = this.tic_velocity = this.velocity;
+		this.tic_saved_origin = this.tic_origin = this.origin;
+		this.tic_saved_avelocity = this.tic_avelocity = this.avelocity;
+		this.tic_saved_angles = this.tic_angles = this.angles;
 		return;
 	}
 
