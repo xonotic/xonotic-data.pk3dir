@@ -3,7 +3,10 @@
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
 
-.float lms_spectate_warning;
+// 1 when player presses F3 to spectate for the first time (he only gets a warning)
+// 2 when player goes spectator (presses F3 to spectate for the second time)
+// 3 when player disconnects
+.int lms_spectate_warning;
 
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
 string autocvar_g_lms_weaponarena = "most_available";
@@ -29,5 +32,5 @@ REGISTER_MUTATOR(lms, false)
 }
 
 // lives related defs
-float lms_lowest_lives;
-float LMS_NewPlayerLives();
+int lms_lowest_lives;
+int LMS_NewPlayerLives();

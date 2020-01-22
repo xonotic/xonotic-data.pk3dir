@@ -10,11 +10,10 @@ int autocvar_g_lms_last_join;
 bool autocvar_g_lms_regenerate;
 
 // main functions
-float LMS_NewPlayerLives()
+int LMS_NewPlayerLives()
 {
-	float fl;
-	fl = autocvar_fraglimit;
-	if(fl == 0)
+	int fl = floor(autocvar_fraglimit);
+	if(fl == 0 || fl > 999)
 		fl = 999;
 
 	// first player has left the game for dying too much? Nobody else can get in.
@@ -22,7 +21,7 @@ float LMS_NewPlayerLives()
 		return 0;
 
 	if(!autocvar_g_lms_join_anytime)
-		if(lms_lowest_lives < fl - autocvar_g_lms_last_join)
+		if(lms_lowest_lives < fl - max(0, floor(autocvar_g_lms_last_join)))
 			return 0;
 
 	return bound(1, lms_lowest_lives, fl);
@@ -447,5 +446,5 @@ MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 
 void lms_Initialize()
 {
-	lms_lowest_lives = 9999;
+	lms_lowest_lives = 999;
 }
