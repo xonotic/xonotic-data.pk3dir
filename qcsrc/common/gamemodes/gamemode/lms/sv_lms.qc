@@ -197,14 +197,12 @@ void lms_RemovePlayer(entity player)
 		}
 		else
 		{
-			lms_lowest_lives = 999;
 			FOREACH_CLIENT(true, {
 				if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
 				{
 					float it_rank = GameRules_scoring_add(it, LMS_RANK, 0);
 					if (it_rank > player_rank && it_rank <= 256)
 						GameRules_scoring_add(it, LMS_RANK, -1);
-					lms_lowest_lives = 0;
 				}
 				else if (it.frags != FRAGS_SPECTATOR)
 				{
