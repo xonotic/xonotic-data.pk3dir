@@ -184,15 +184,15 @@ void lms_RemovePlayer(entity player)
 	float player_rank = GameRules_scoring_add(player, LMS_RANK, 0);
 	if (!player_rank)
 	{
-		int pl_cnt = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
-			pl_cnt++;
-		});
 		if (player.lms_spectate_warning < 2)
 		{
 			if(IS_BOT_CLIENT(player))
 				bot_clear(player);
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+			int pl_cnt = 0;
+			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+				pl_cnt++;
+			});
 			GameRules_scoring_add(player, LMS_RANK, pl_cnt + 1);
 		}
 		else
