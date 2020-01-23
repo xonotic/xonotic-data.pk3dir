@@ -809,7 +809,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 		Draw_CylindricLine(start, end, thickness, beam.beam_image, 0.25, -time * 3, beam.beam_color, beam.beam_alpha, DRAWFLAG_NORMAL, transformed_view_org);
 	else
 	{
-		R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
+		R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL, false); // DRAWFLAG_ADDITIVE
 		R_PolygonVertex(
 			top,
 			'0 0.5 0' + ('0 0.5 0' * (thickness / beam.beam_thickness)),

@@ -7,6 +7,8 @@ void set_movetype(entity this, int mt)
 	if (mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH) {
 		this.move_qcphysics = false;
 	}
+	if(!IL_CONTAINS(g_moveables, this))
+		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
 	this.movetype = (this.move_qcphysics) ? MOVETYPE_NONE : mt;
 }
 #elif defined(CSQC)
@@ -331,17 +333,7 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 		gettouch(this)(this, oth);
 
 	if(oth.solid != SOLID_NOT && gettouch(oth))
-	{
-		trace_endpos = oth.origin;
-		trace_plane_normal = -trace_plane_normal;
-		trace_plane_dist = -trace_plane_dist;
-		trace_ent = this;
-		trace_dpstartcontents = 0;
-		trace_dphitcontents = 0;
-		trace_dphitq3surfaceflags = 0;
-		trace_dphittexturename = string_null;
 		gettouch(oth)(oth, this);
-	}
 }
 
 void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
@@ -427,16 +419,20 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
     entity this = _Movetype_TestEntityPosition_ent;
 	vector org = this.origin + ofs;
 
-	int cont = this.dphitcontentsmask;
-	this.dphitcontentsmask = DPCONTENTS_SOLID;
+	//int cont = this.dphitcontentsmask;
+	//this.dphitcontentsmask = DPCONTENTS_SOLID;
 	tracebox(org, this.mins, this.maxs, org, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
-	this.dphitcontentsmask = cont;
+	//this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
 		return true;
 
 	if(vdist(trace_endpos - this.origin, >, 0.0001))
-		this.origin = trace_endpos;
+	{
+		tracebox(trace_endpos, this.mins, this.maxs, trace_endpos, MOVE_NOMONSTERS, this);
+		if(!trace_startsolid)
+			this.origin = trace_endpos;
+	}
 	return false;
 }
 
@@ -447,6 +443,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	    return UNSTICK_FINE;
 	}
 	#define X(v) if (_Movetype_TestEntityPosition(v))
+	X('0  0  -1') X(' 0  0  1')
 	X('-1  0  0') X(' 1  0  0')
 	X(' 0 -1  0') X(' 0  1  0')
 	X('-1 -1  0') X(' 1 -1  0')
@@ -456,7 +453,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         #define X(i) \
             if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
             if (_Movetype_TestEntityPosition('0 0 1' * i))
-        X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8)
+        X(2) X(3) X(4) X(5) X(6) X(7) X(8)
         X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
         X(17)
         #undef X
@@ -468,7 +465,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
-	_Movetype_LinkEdict(this, true);
+	_Movetype_LinkEdict(this, false);
 	return UNSTICK_FIXED;
 }
 
@@ -706,11 +703,11 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	{
 		Movetype_Physics_NoMatchServer(this);
 
-		this.tic_saved_flags = this.flags;
-		this.tic_saved_velocity = this.velocity;
-		this.tic_saved_origin = this.origin;
-		this.tic_saved_avelocity = this.avelocity;
-		this.tic_saved_angles = this.angles;
+		this.tic_saved_flags = this.tic_flags = this.flags;
+		this.tic_saved_velocity = this.tic_velocity = this.velocity;
+		this.tic_saved_origin = this.tic_origin = this.origin;
+		this.tic_saved_avelocity = this.tic_avelocity = this.avelocity;
+		this.tic_saved_angles = this.tic_angles = this.angles;
 		return;
 	}
 

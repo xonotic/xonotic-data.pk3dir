@@ -854,6 +854,11 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 
+	if(spectatee_status != 0)
+	{
+	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Spectate a player")), "Spectate a player", "spectate \"%s^7\"", 0, 1)
+	}
+
 	if(target_submenu != "" && !target_submenu_found)
 	{
 		LOG_INFOF("Couldn't find submenu \"%s\"", target_submenu);

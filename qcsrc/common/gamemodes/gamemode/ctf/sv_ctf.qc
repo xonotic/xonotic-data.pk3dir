@@ -48,6 +48,8 @@ bool autocvar_g_ctf_flag_return_when_unreachable;
 float autocvar_g_ctf_flag_return_damage;
 float autocvar_g_ctf_flag_return_damage_delay;
 float autocvar_g_ctf_flag_return_dropped;
+bool autocvar_g_ctf_flag_waypoint = true;
+float autocvar_g_ctf_flag_waypoint_maxdistance;
 float autocvar_g_ctf_flagcarrier_auto_helpme_damage;
 float autocvar_g_ctf_flagcarrier_auto_helpme_time;
 float autocvar_g_ctf_flagcarrier_selfdamagefactor;
@@ -1224,10 +1226,14 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 		default: basename = WP_FlagBaseNeutral; break;
 	}
 
-	entity wp = WaypointSprite_SpawnFixed(basename, this.origin + FLAG_WAYPOINT_OFFSET, this, wps_flagbase, RADARICON_FLAG);
-	wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
-	WaypointSprite_UpdateTeamRadar(this.wps_flagbase, RADARICON_FLAG, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
-	setcefc(wp, ctf_FlagBase_Customize);
+	if(autocvar_g_ctf_flag_waypoint)
+	{
+		entity wp = WaypointSprite_SpawnFixed(basename, this.origin + FLAG_WAYPOINT_OFFSET, this, wps_flagbase, RADARICON_FLAG);
+		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
+		wp.fade_rate = autocvar_g_ctf_flag_waypoint_maxdistance;
+		WaypointSprite_UpdateTeamRadar(this.wps_flagbase, RADARICON_FLAG, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
+		setcefc(wp, ctf_FlagBase_Customize);
+	}
 
 	// captureshield setup
 	ctf_CaptureShield_Spawn(this);
