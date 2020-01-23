@@ -852,7 +852,7 @@ void vehicles_exit(entity vehic, bool eject)
 		set_movetype(player, MOVETYPE_WALK);
 		player.effects		   &= ~EF_NODRAW;
 		player.teleportable		= TELEPORT_NORMAL;
-		player.alpha			= 1;
+		player.alpha			= default_player_alpha;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
 		player.view_ofs			= STAT(PL_VIEW_OFS, player);
