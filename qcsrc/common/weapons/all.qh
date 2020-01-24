@@ -394,4 +394,8 @@ REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim);
 #endif
+
+#ifdef SVQC
+void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, vector shotorg, vector shotdir);
+#endif
 #endif

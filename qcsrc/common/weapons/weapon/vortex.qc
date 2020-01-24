@@ -55,7 +55,7 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
     vector endpos = ReadVector();
 	charge = ReadByte() / 255.0;
 
-	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
+	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
 
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
@@ -152,6 +152,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	actor.vortex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
+    W_MuzzleFlash(actor, weaponentity, EFFECT_VORTEX_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 	SendCSQCVortexBeamParticle(charge);
 
 	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);

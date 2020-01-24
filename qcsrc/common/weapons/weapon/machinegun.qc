@@ -55,7 +55,7 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity we
 	else
 		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), deathtype, EFFECT_BULLET);
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 
 	W_MachineGun_MuzzleFlash(actor, weaponentity);
 	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
@@ -131,7 +131,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 
 	W_MachineGun_MuzzleFlash(actor, weaponentity);
 	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
@@ -157,7 +157,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, burst_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 
 	W_MachineGun_MuzzleFlash(actor, weaponentity);
 	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');

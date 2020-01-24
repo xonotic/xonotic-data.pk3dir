@@ -273,7 +273,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage), thiswep.m_id);
-	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(actor);
 	mine.weaponentity_fld = weaponentity;
@@ -318,6 +318,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	CSQCProjectile(mine, true, PROJECTILE_MINE, true);
 
 	// muzzle flash for 1st person view
+	// TODO: handle on the client
 	flash = spawn();
 	setmodel(flash, MDL_MINELAYER_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);

@@ -34,7 +34,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 
 	W_MachineGun_MuzzleFlash(actor, weaponentity);
 	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');

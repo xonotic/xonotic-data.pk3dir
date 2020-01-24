@@ -673,6 +673,57 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 }
 #endif
 
+REGISTER_NET_TEMP(w_muzzleflash)
+
+#ifdef SVQC
+void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, vector shotorg, vector shotdir)
+{
+	Send_Effect_Except(eff, shotorg, shotdir * 1000, 1, actor);
+
+	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
+	{
+		if(!IS_REAL_CLIENT(it))
+			continue;
+		int channel = MSG_ONE;
+		msg_entity = it;
+		WriteHeader(channel, w_muzzleflash);
+		WriteByte(channel, weaponslot(weaponentity));
+		(Effects_COUNT >= 255)
+		? WriteShort(channel, eff.m_id)
+		: WriteByte(channel, eff.m_id);
+	});
+}
+#elif defined(CSQC)
+NET_HANDLE(w_muzzleflash, bool isNew)
+{
+	return = true;
+    int slot = ReadByte();
+    int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
+
+    if(!autocvar_r_drawviewmodel || autocvar_chase_active) return;
+	entity wepent = viewmodels[slot];
+	entity eff = Effects_from(net_name);
+
+	vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
+	vector forward, right, up;
+	MAKE_VECTORS(viewangles, forward, right, up);
+
+	// get the local player entity to calculate shot origin
+	entity rlplayer = CSQCModel_server2csqc(player_localentnum - 1);
+	if(!rlplayer)
+		rlplayer = csqcplayer; // fall back to the global
+
+	vector md = wepent.movedir;
+	vector vecs = ((md.x > 0) ? md : '0 0 0');
+	vector dv = right * -vecs.y + up * vecs.z;
+	vector org = rlplayer.origin + rlplayer.view_ofs + dv;
+	tracebox(org, '0 0 0', '0 0 0', org + forward * (vecs.x + 1), MOVE_NORMAL, rlplayer);
+	org = trace_endpos - forward * 1;
+
+	pointparticles(eff, org, forward * 1000, 1);
+}
+#endif
+
 
 #endif
 

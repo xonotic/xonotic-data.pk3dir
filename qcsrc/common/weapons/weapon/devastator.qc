@@ -308,7 +308,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), thiswep.m_id);
-	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.weaponentity_fld = weaponentity;
@@ -352,6 +352,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	CSQCProjectile(missile, WEP_CVAR(devastator, guiderate) == 0 && WEP_CVAR(devastator, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound
 
 	// muzzle flash for 1st person view
+	// TODO: handle on the client side
 	entity flash = spawn();
 	setmodel(flash, MDL_DEVASTATOR_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);

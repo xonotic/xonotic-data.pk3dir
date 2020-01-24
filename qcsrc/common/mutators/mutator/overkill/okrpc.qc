@@ -91,7 +91,7 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(okrpc, ammo), weaponentity);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okrpc, damage), thiswep.m_id);
-	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	missile.owner = missile.realowner = actor;
@@ -124,6 +124,7 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 
 	CSQCProjectile(missile, true, PROJECTILE_RPC, false);
 
+	// TODO: move to client
 	setmodel(flash, MDL_RPC_MUZZLEFLASH); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;

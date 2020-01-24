@@ -31,7 +31,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 	if(lag && bullets > 0)
 		antilag_restore_all(actor);
 
-	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, ammocount);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 
 	// casing code
 	if(autocvar_g_casings >= 1)
@@ -42,6 +42,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 	}
 
 	// muzzle flash for 1st person view
+	// TODO: handle on the client
 	entity flash = spawn();
 	setmodel(flash, MDL_SHOTGUN_MUZZLEFLASH); // precision set below
 	setthink(flash, SUB_Remove);
