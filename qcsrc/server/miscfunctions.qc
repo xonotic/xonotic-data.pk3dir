@@ -901,10 +901,8 @@ void precache_playermodels(string s)
 	FOREACH_WORD(s, true, { precache_playermodel(it); });
 }
 
-void precache()
+PRECACHE(PlayerModels)
 {
-    // gamemode related things
-
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
     {
@@ -924,20 +922,6 @@ void precache()
 		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
 		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
-
-#if 0
-    // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
-
-    if (!this.noise && this.music) // quake 3 uses the music field
-        this.noise = this.music;
-
-    // plays music for the level if there is any
-    if (this.noise)
-    {
-        precache_sound (this.noise);
-        ambientsound ('0 0 0', this.noise, VOL_BASE, ATTEN_NONE);
-    }
-#endif
 }
 
 
