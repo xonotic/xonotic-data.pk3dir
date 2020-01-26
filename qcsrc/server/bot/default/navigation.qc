@@ -1748,7 +1748,7 @@ int navigation_poptouchedgoals(entity this)
 		if(this.goalcurrent.classname == "waypoint" && !this.goalcurrent.wpisbox)
 		{
 			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
-			gc_max = this.goalcurrent.origin + '1 1 1' * 12;
+			gc_max = this.goalcurrent.origin + '1 1 1' * 12 + eZ * (jumpheight_vec.z + STAT(PL_MIN, this).z);
 		}
 		if (time < this.ladder_time)
 		{
