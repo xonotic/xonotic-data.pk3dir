@@ -10,8 +10,8 @@
 # Jakub P. <pedziszewski@gmail.com>, 2015
 # Jakub P. <pedziszewski@gmail.com>, 2015
 # John Smith <myrangd@gmail.com>, 2016
-# karol kosek <krkkx@protonmail.com>, 2020
-# karol kosek <krkkx@protonmail.com>, 2020
+# Karol Kosek <krkkx@protonmail.com>, 2020
+# Karol Kosek <krkkx@protonmail.com>, 2020
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Piotr Kozica <koza91@gmail.com>, 2016
 # Rafał Szymański <okavasly@gmail.com>, 2017
@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2020-02-08 00:07+0000\n"
-"Last-Translator: karol kosek <krkkx@protonmail.com>\n"
+"PO-Revision-Date: 2020-02-08 12:09+0000\n"
+"Last-Translator: Karol Kosek <krkkx@protonmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -63,7 +63,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "Ogólna wiadomość"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -2614,7 +2614,7 @@ msgstr "^BG%s^K1 zginął w wypadku%s%s"
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 wbiegł w wieżyczkę%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
@@ -4266,7 +4266,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:788
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
-msgstr ""
+msgstr "^BGWciśnij ^F2%s^BG aby wejść/wyjść z pojazdu"
 
 #: qcsrc/common/notifications/all.inc:789
 #, c-format
@@ -4276,7 +4276,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:790
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
-msgstr ""
+msgstr "^BGWciśnij ^F2%s^BG aby ukraść pojazd"
 
 #: qcsrc/common/notifications/all.inc:791
 msgid ""
@@ -6361,7 +6361,7 @@ msgstr "Ustawienia siatki:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 msgid "Snap panels to grid"
-msgstr ""
+msgstr "Przyciągaj panele do siatki"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
 msgid "Grid size:"
@@ -8855,7 +8855,7 @@ msgstr "Wyłączone"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:116
 msgid "Idle limit:"
-msgstr "Brak limitu:"
+msgstr "Limit w trybie nieaktywnym:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
 msgid "IDLFPS^Unlimited"
