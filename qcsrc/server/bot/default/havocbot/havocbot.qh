@@ -12,8 +12,6 @@
 
 .float havocbot_keyboardtime;
 .float havocbot_ducktime;
-.float bot_timelastseengoal;
-.float bot_canruntogoal;
 .float bot_chooseweapontime;
 .float rocketjumptime;
 .float nextaim;

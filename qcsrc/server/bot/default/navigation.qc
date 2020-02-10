@@ -1716,11 +1716,15 @@ int navigation_poptouchedgoals(entity this)
 	}
 
 	// Loose goal touching check when running
-	if(this.aistatus & AI_STATUS_RUNNING)
-	if(this.goalcurrent.classname=="waypoint")
-	if(vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed)) // if -really- running
+	// check goalstack01 to make sure waypoint isn't the final goal
+	if(this.aistatus & AI_STATUS_RUNNING && this.goalcurrent.classname == "waypoint" && !(this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP)
+		&& this.goalstack01 && !wasfreed(this.goalstack01) && vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed))
 	{
-		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
+		vector gco = this.goalcurrent.origin;
+		vector gno = this.goalstack01.origin;
+		float min_dist = 100;
+		if(vdist(this.origin - gco, <, min_dist)
+			|| (vdist(this.origin + eZ * 0.5 * min_dist - gco, <, min_dist) && vlen2(this.origin - gno) < vlen2(gco - gno)))
 		{
 			traceline(this.origin + this.view_ofs , this.goalcurrent.origin, true, NULL);
 			if(trace_fraction==1)
@@ -1784,7 +1788,8 @@ entity navigation_get_really_close_waypoint(entity this)
 		wp = this.goalcurrent_prev;
 	if(!wp)
 		return NULL;
-	if(wp != this.goalcurrent_prev && vdist(wp.origin - this.origin, >, 50))
+	float min_dist = ((this.aistatus & AI_STATUS_RUNNING) ? 100 : 50);
+	if(wp != this.goalcurrent_prev && vdist(wp.origin - this.origin, >, min_dist))
 	{
 		wp = this.goalcurrent_prev;
 		if(!wp)
@@ -1796,12 +1801,12 @@ entity navigation_get_really_close_waypoint(entity this)
 		if(!wp)
 			return NULL;
 	}
-	if(vdist(wp.origin - this.origin, >, 50))
+	if(vdist(wp.origin - this.origin, >, min_dist))
 	{
 		wp = NULL;
 		IL_EACH(g_waypoints, !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
 		{
-			if(vdist(it.origin - this.origin, <, 50))
+			if(vdist(it.origin - this.origin, <, min_dist))
 			{
 				wp = it;
 				break;

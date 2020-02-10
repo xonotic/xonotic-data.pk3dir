@@ -198,6 +198,62 @@ void havocbot_ai(entity this)
 	}
 }
 
+void havocbot_bunnyhop(entity this, vector dir)
+{
+	bool can_run = false;
+	if (!(this.aistatus & AI_STATUS_ATTACKING) && this.goalcurrent && !IS_PLAYER(this.goalcurrent)
+		&& vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed) && !(this.aistatus & AI_STATUS_DANGER_AHEAD)
+		&& this.waterlevel <= WATERLEVEL_WETFEET && !IS_DUCKED(this)
+		&& IS_ONGROUND(this) && !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
+	{
+		vector vel_angles = vectoangles(this.velocity);
+		vector deviation = vel_angles - vectoangles(dir);
+		while (deviation.y < -180) deviation.y = deviation.y + 360;
+		while (deviation.y > 180) deviation.y = deviation.y - 360;
+		if (fabs(deviation.y) < autocvar_bot_ai_bunnyhop_dir_deviation_max)
+		{
+			vector gco = get_closer_dest(this.goalcurrent, this.origin);
+			float vel = vlen(vec2(this.velocity));
+
+			// with the current physics, jump distance grows linearly with the speed
+			float jump_distance = 52.661 + 0.606 * vel;
+			jump_distance += this.origin.z - gco.z; // roughly take into account vertical distance too
+			if (vdist(vec2(gco - this.origin), >, max(0, jump_distance)))
+				can_run = true;
+			else if (!(this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP)
+				&& !(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+				&& this.goalstack01 && !wasfreed(this.goalstack01) && !(this.goalstack01.wpflags & WAYPOINTFLAG_JUMP)
+				&& vdist(vec2(gco - this.goalstack01.origin), >, 70))
+			{
+				vector gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
+				vector ang = vectoangles(gco - this.origin);
+				deviation = vectoangles(gno - gco) - vel_angles;
+				while (deviation.y < -180) deviation.y = deviation.y + 360;
+				while (deviation.y > 180) deviation.y = deviation.y - 360;
+
+				float max_turn_angle = autocvar_bot_ai_bunnyhop_turn_angle_max;
+				max_turn_angle -= autocvar_bot_ai_bunnyhop_turn_angle_reduction * ((vel - autocvar_sv_maxspeed) / autocvar_sv_maxspeed);
+				if ((ang.x < 90 || ang.x > 360 - autocvar_bot_ai_bunnyhop_downward_pitch_max)
+					&& fabs(deviation.y) < max(autocvar_bot_ai_bunnyhop_turn_angle_min, max_turn_angle))
+				{
+					can_run = true;
+				}
+			}
+		}
+	}
+
+	if (can_run)
+	{
+		PHYS_INPUT_BUTTON_JUMP(this) = true;
+		this.aistatus |= AI_STATUS_RUNNING;
+	}
+	else
+	{
+		if (IS_ONGROUND(this) || this.waterlevel > WATERLEVEL_WETFEET)
+			this.aistatus &= ~AI_STATUS_RUNNING;
+	}
+}
+
 void havocbot_keyboard_movement(entity this, vector destorg)
 {
 	if(time <= this.havocbot_keyboardtime)
@@ -266,114 +322,6 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 	float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
 	//dprint("movement ", vtos(CS(this).movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
 	CS(this).movement = CS(this).movement + (keyboard - CS(this).movement) * blend;
-}
-
-void havocbot_bunnyhop(entity this, vector dir)
-{
-	// Don't jump when attacking
-	if(this.aistatus & AI_STATUS_ATTACKING)
-		return;
-
-	if (!this.goalcurrent || IS_PLAYER(this.goalcurrent))
-		return;
-
-	if((this.aistatus & AI_STATUS_RUNNING) && vdist(this.velocity, <, autocvar_sv_maxspeed * 0.75)
-		|| (this.aistatus & AI_STATUS_DANGER_AHEAD))
-	{
-		this.aistatus &= ~AI_STATUS_RUNNING;
-		PHYS_INPUT_BUTTON_JUMP(this) = false;
-		this.bot_canruntogoal = 0;
-		this.bot_timelastseengoal = 0;
-		return;
-	}
-
-	if(this.waterlevel > WATERLEVEL_WETFEET || IS_DUCKED(this))
-	{
-		this.aistatus &= ~AI_STATUS_RUNNING;
-		return;
-	}
-
-	if(this.bot_lastseengoal != this.goalcurrent && !(this.aistatus & AI_STATUS_RUNNING))
-	{
-		this.bot_canruntogoal = 0;
-		this.bot_timelastseengoal = 0;
-	}
-
-	// Run only to visible goals
-	if(IS_ONGROUND(this))
-	if(vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed))
-	if(checkpvs(this.origin + this.view_ofs, this.goalcurrent))
-	{
-		this.bot_lastseengoal = this.goalcurrent;
-
-		// seen it before
-		if(this.bot_timelastseengoal)
-		{
-			vector gco = get_closer_dest(this.goalcurrent, this.origin);
-			// for a period of time
-			if(time - this.bot_timelastseengoal > autocvar_bot_ai_bunnyhop_firstjumpdelay)
-			{
-				bool checkdistance = true;
-
-				// don't run if it is too close
-				if(this.bot_canruntogoal==0)
-				{
-					if(vdist(this.origin - gco, >, autocvar_bot_ai_bunnyhop_startdistance))
-						this.bot_canruntogoal = 1;
-					else
-						this.bot_canruntogoal = -1;
-				}
-
-				if(this.bot_canruntogoal != 1)
-					return;
-
-				if(this.aistatus & AI_STATUS_ROAMING)
-				if(this.goalcurrent.classname == "waypoint")
-				if (!(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL))
-				if(fabs(gco.z - this.origin.z) < this.maxs.z - this.mins.z)
-				if (this.goalstack01 && !wasfreed(this.goalstack01))
-				if (!(this.goalstack01.wpflags & WAYPOINTFLAG_JUMP))
-				{
-					vector gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
-					vector deviation = vectoangles(gno - this.origin) - vectoangles(gco - this.origin);
-					while (deviation.y < -180) deviation.y = deviation.y + 360;
-					while (deviation.y > 180) deviation.y = deviation.y - 360;
-
-					if(fabs(deviation.y) < 20)
-					if(vlen2(this.origin - gco) < vlen2(this.origin - gno))
-					if(fabs(gno.z - gco.z) < this.maxs.z - this.mins.z)
-					{
-						if(vdist(gco - gno, >, autocvar_bot_ai_bunnyhop_startdistance))
-						if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
-						{
-							checkdistance = false;
-						}
-					}
-				}
-
-				if(checkdistance)
-				{
-					this.aistatus &= ~AI_STATUS_RUNNING;
-					// increase stop distance in case the goal is on a slope or a lower platform
-					if(vdist(this.origin - gco, >, autocvar_bot_ai_bunnyhop_stopdistance + (this.origin.z - gco.z)))
-						PHYS_INPUT_BUTTON_JUMP(this) = true;
-				}
-				else
-				{
-					this.aistatus |= AI_STATUS_RUNNING;
-					PHYS_INPUT_BUTTON_JUMP(this) = true;
-				}
-			}
-		}
-		else
-		{
-			this.bot_timelastseengoal = time;
-		}
-	}
-	else
-	{
-		this.bot_timelastseengoal = 0;
-	}
 }
 
 // return true when bot isn't getting closer to the current goal
