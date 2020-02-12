@@ -1265,9 +1265,10 @@ void havocbot_chooseenemy(entity this)
 			// and not really really far away
 			// and we're not severely injured
 			// then keep tracking for a half second into the future
-			traceline(this.origin+this.view_ofs, ( this.enemy.absmin + this.enemy.absmax ) * 0.5,false,NULL);
+			vector targ_pos = (this.enemy.absmin + this.enemy.absmax) * 0.5;
+			traceline(this.origin + this.view_ofs, targ_pos, false, NULL);
 			if (trace_ent == this.enemy || trace_fraction == 1)
-			if (vdist(((this.enemy.absmin + this.enemy.absmax) * 0.5) - this.origin, <, 1000))
+			if (vdist(targ_pos - this.origin, <, 1000))
 			if (GetResource(this, RES_HEALTH) > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
@@ -1285,7 +1286,7 @@ void havocbot_chooseenemy(entity this)
 	this.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
 	vector eye = this.origin + this.view_ofs;
 	entity best = NULL;
-	float bestrating = 100000000;
+	float bestrating = autocvar_bot_ai_enemydetectionradius ** 2;
 
 	// Backup hit flags
 	int hf = this.dphitcontentsmask;
@@ -1316,9 +1317,7 @@ LABEL(scan_targets)
 
 			vector v = (it.absmin + it.absmax) * 0.5;
 			float rating = vlen2(v - eye);
-			if (vdist(v - eye, <, autocvar_bot_ai_enemydetectionradius))
-			if (bestrating > rating)
-			if (bot_shouldattack(this, it))
+			if (rating < bestrating && bot_shouldattack(this, it))
 			{
 				traceline(eye, v, true, this);
 				if (trace_ent == it || trace_fraction >= 1)
@@ -1333,7 +1332,7 @@ LABEL(scan_targets)
 		{
 			scan_secondary_targets = true;
 			// restart the loop
-			bestrating = 100000000;
+			bestrating = autocvar_bot_ai_enemydetectionradius ** 2;
 			goto scan_targets;
 		}
 
