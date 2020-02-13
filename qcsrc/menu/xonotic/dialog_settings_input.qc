@@ -72,7 +72,8 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.onClick = CheckBox_Click_Redisplay;
 			e.onClickEntity = e;
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Acceleration factor:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(1, 4, 0.1, "m_accelerate"));
 	me.TR(me);
 		if(cvar_type("vid_dgamouse") & CVAR_TYPEFLAG_ENGINE)
 		{
