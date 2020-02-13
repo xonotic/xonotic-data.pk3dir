@@ -224,13 +224,7 @@ GENERIC_COMMAND(version, "Print the current version", false)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-#if defined(CSQC)
-			LOG_INFO("CSQC version: ", WATERMARK);
-#elif defined(SVQC)
-			LOG_INFO("SVQC version: ", WATERMARK);
-#elif defined(MENUQC)
-			LOG_INFO("MENUQC version: ", WATERMARK);
-#endif
+			LOG_INFO(PROGNAME, " version: ", WATERMARK);
 			return;
 		}
 		default:
