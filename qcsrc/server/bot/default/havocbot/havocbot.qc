@@ -1250,6 +1250,7 @@ void havocbot_chooseenemy(entity this)
 		this.enemy = NULL;
 		return;
 	}
+
 	if (this.enemy)
 	{
 		if (!bot_shouldattack(this, this.enemy))
@@ -1258,27 +1259,21 @@ void havocbot_chooseenemy(entity this)
 			this.enemy = NULL;
 			this.havocbot_chooseenemy_finished = time;
 		}
-		else if (this.havocbot_stickenemy)
+		else if (this.havocbot_stickenemy_time && time < this.havocbot_stickenemy_time)
 		{
 			// tracking last chosen enemy
-			// if enemy is visible
-			// and not really really far away
-			// and we're not severely injured
-			// then keep tracking for a half second into the future
 			vector targ_pos = (this.enemy.absmin + this.enemy.absmax) * 0.5;
 			traceline(this.origin + this.view_ofs, targ_pos, false, NULL);
 			if (trace_ent == this.enemy || trace_fraction == 1)
 			if (vdist(targ_pos - this.origin, <, 1000))
-			if (GetResource(this, RES_HEALTH) > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
 				this.havocbot_chooseenemy_finished = time + 0.5;
 				return;
 			}
-			// enemy isn't visible, or is far away, or we're injured severely
-			// so stop preferring this enemy
-			// (it will still take a half second until a new one is chosen)
-			this.havocbot_stickenemy = 0;
+
+			// stop preferring this enemy
+			this.havocbot_stickenemy_time = 0;
 		}
 	}
 	if (time < this.havocbot_chooseenemy_finished)
@@ -1353,9 +1348,9 @@ LABEL(scan_targets)
 	this.dphitcontentsmask = hf;
 
 	this.enemy = best;
-	this.havocbot_stickenemy = true;
+	this.havocbot_stickenemy_time = time + autocvar_bot_ai_enemydetectioninterval_stickingtoenemy;
 	if(best && best.classname == "misc_breakablemodel")
-		this.havocbot_stickenemy = false;
+		this.havocbot_stickenemy_time = 0;
 }
 
 float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)

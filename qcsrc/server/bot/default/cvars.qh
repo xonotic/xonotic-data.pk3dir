@@ -33,6 +33,7 @@ string autocvar_bot_ai_custom_weapon_priority_mid;
 float autocvar_bot_ai_dangerdetectioninterval;
 float autocvar_bot_ai_dangerdetectionupdates;
 float autocvar_bot_ai_enemydetectioninterval;
+float autocvar_bot_ai_enemydetectioninterval_stickingtoenemy;
 float autocvar_bot_ai_enemydetectionradius;
 float autocvar_bot_ai_friends_aware_pickup_radius;
 float autocvar_bot_ai_ignoregoal_timeout;
