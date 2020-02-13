@@ -2720,6 +2720,11 @@ void PlayerPostThink (entity this)
 		}
 		GetPressedKeys(this);
 	}
+	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
+	}
 
 	if (this.waypointsprite_attachedforcarrier) {
 		float hp = healtharmor_maxdamage(GetResource(this, RES_HEALTH), GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x;
