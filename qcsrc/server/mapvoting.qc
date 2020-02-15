@@ -525,7 +525,7 @@ bool MapVote_CheckRules_2()
 			}
 		}
 	firstPlaceVotes = RandomSelection_best_priority;
-	if ( autocvar_sv_vote_gametype_default_current && currentVotes == firstPlaceVotes )
+	if ( autocvar_sv_vote_gametype_default_current && firstPlaceVotes == 0 )
 		firstPlace = currentPlace;
 	else
 		firstPlace = RandomSelection_chosen_float;
