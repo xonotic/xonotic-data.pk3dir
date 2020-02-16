@@ -323,6 +323,10 @@ void bot_setnameandstuff(entity this)
 
 void bot_custom_weapon_priority_setup()
 {
+	static string bot_priority_far_prev;
+	static string bot_priority_mid_prev;
+	static string bot_priority_close_prev;
+	static string bot_priority_distances_prev;
 	float tokens, i, w;
 
 	bot_custom_weapon = false;
@@ -334,35 +338,41 @@ void bot_custom_weapon_priority_setup()
 	)
 		return;
 
-	// Parse distances
-	tokens = tokenizebyseparator(autocvar_bot_ai_custom_weapon_priority_distances," ");
+	if (bot_priority_distances_prev != autocvar_bot_ai_custom_weapon_priority_distances)
+	{
+		strcpy(bot_priority_distances_prev, autocvar_bot_ai_custom_weapon_priority_distances);
+		tokens = tokenizebyseparator(autocvar_bot_ai_custom_weapon_priority_distances," ");
 
-	if (tokens!=2)
-		return;
+		if (tokens!=2)
+			return;
 
-	bot_distance_far = stof(argv(0));
-	bot_distance_close = stof(argv(1));
+		bot_distance_far = stof(argv(0));
+		bot_distance_close = stof(argv(1));
 
-	if(bot_distance_far < bot_distance_close){
-		bot_distance_far = stof(argv(1));
-		bot_distance_close = stof(argv(0));
+		if(bot_distance_far < bot_distance_close){
+			bot_distance_far = stof(argv(1));
+			bot_distance_close = stof(argv(0));
+		}
 	}
 
 	int c;
 
 	#define PARSE_WEAPON_PRIORITIES(dist) MACRO_BEGIN \
-		tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
-		bot_weapons_##dist[0] = -1; \
-		c = 0; \
-		for(i = 0; i < tokens && c < Weapons_COUNT; ++i) { \
-			w = stof(argv(i)); \
-			if (w >= WEP_FIRST && w <= WEP_LAST) { \
-				bot_weapons_##dist[c] = w; \
-				++c; \
+		if (bot_priority_##dist##_prev != autocvar_bot_ai_custom_weapon_priority_##dist) { \
+			strcpy(bot_priority_##dist##_prev, autocvar_bot_ai_custom_weapon_priority_##dist); \
+			tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
+			bot_weapons_##dist[0] = -1; \
+			c = 0; \
+			for(i = 0; i < tokens && c < Weapons_COUNT; ++i) { \
+				w = stof(argv(i)); \
+				if (w >= WEP_FIRST && w <= WEP_LAST) { \
+					bot_weapons_##dist[c] = w; \
+					++c; \
+				} \
 			} \
+			if (c < Weapons_COUNT) \
+				bot_weapons_##dist[c] = -1; \
 		} \
-		if (c < Weapons_COUNT) \
-			bot_weapons_##dist[c] = -1; \
 	MACRO_END
 
 	PARSE_WEAPON_PRIORITIES(far);
@@ -834,10 +844,6 @@ void bot_serverframe()
 	if (autocvar_g_waypointeditor_auto)
 		botframe_autowaypoints();
 
-	if(time > bot_cvar_nextthink)
-	{
-		if(currentbots>0)
-			bot_custom_weapon_priority_setup();
-		bot_cvar_nextthink = time + 5;
-	}
+	if (currentbots > 0)
+		bot_custom_weapon_priority_setup();
 }

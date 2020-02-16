@@ -75,7 +75,6 @@ entity bot_strategytoken;
 float botframe_spawnedwaypoints;
 float botframe_nextthink;
 float botframe_nextdangertime;
-float bot_cvar_nextthink;
 
 int _content_type;
 #define IN_LAVA(pos) (_content_type = pointcontents(pos), (_content_type == CONTENT_LAVA || _content_type == CONTENT_SLIME))
