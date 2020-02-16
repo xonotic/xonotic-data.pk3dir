@@ -503,7 +503,7 @@
     MSG_INFO_NOTIF(WEAPON_TUBA_MURDER,                      N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weapontuba",               _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_TUBA_SUICIDE,                     N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapontuba",               _("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_VAPORIZER_MURDER,                 N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponminstanex",          _("^BG%s%s^K1 has been sublimated by ^BG%s^K1's Vaporizer%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_VORTEX_MURDER,                    N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponnex",                _("^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"), "")
+    MSG_INFO_NOTIF(WEAPON_VORTEX_MURDER,                    N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponnex",                _("^BG%s%s^K1 has been shitscanned by ^BG%s^K1's Vortex%s%s"), "")
 
 #undef N_DISABLE
 #undef N_CONSOLE
