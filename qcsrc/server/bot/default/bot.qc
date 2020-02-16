@@ -385,7 +385,7 @@ void bot_custom_weapon_priority_setup()
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_close)," ");
 
 	c = 0;
-	for(i=0; i < tokens && i < Weapons_COUNT; ++i){
+	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {
 			bot_weapons_close[c] = w;
