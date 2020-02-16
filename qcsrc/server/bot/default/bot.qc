@@ -104,7 +104,8 @@ void bot_think(entity this)
 
 	// clear buttons
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
-	PHYS_INPUT_BUTTON_JUMP(this) = false;
+	// keep jump button pressed for a short while, useful with ramp jumps
+	PHYS_INPUT_BUTTON_JUMP(this) = (!IS_DEAD(this) && time < this.bot_jump_time + 0.2);
 	PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	PHYS_INPUT_BUTTON_ZOOM(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;

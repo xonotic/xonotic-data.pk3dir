@@ -245,6 +245,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 	if (can_run)
 	{
 		PHYS_INPUT_BUTTON_JUMP(this) = true;
+		this.bot_jump_time = time;
 		this.aistatus |= AI_STATUS_RUNNING;
 	}
 	else
@@ -649,8 +650,6 @@ void havocbot_movetogoal(entity this)
 			dir.z = 1;
 		else if(this.velocity.z >= 0 && !(this.waterlevel == WATERLEVEL_WETFEET && this.watertype == CONTENT_WATER))
 			PHYS_INPUT_BUTTON_JUMP(this) = true;
-		else
-			PHYS_INPUT_BUTTON_JUMP(this) = false;
 		makevectors(this.v_angle.y * '0 1 0');
 		vector v = dir * maxspeed;
 		CS(this).movement.x = v * v_forward;
@@ -884,7 +883,6 @@ void havocbot_movetogoal(entity this)
 				}
 				else
 				{
-					PHYS_INPUT_BUTTON_JUMP(this) = false;
 					if (destorg.z > this.origin.z)
 						dir = flatdir;
 				}
@@ -928,6 +926,7 @@ void havocbot_movetogoal(entity this)
 				)
 				{
 					PHYS_INPUT_BUTTON_JUMP(this) = true;
+					this.bot_jump_time = time;
 					// avoid changing route while bot is jumping a gap
 					navigation_goalrating_timeout_extend_if_needed(this, 1.5);
 				}
@@ -1005,13 +1004,19 @@ void havocbot_movetogoal(entity this)
 						vector jump_height = (IS_ONGROUND(this)) ? stepheightvec + jumpheight_vec : jumpstepheightvec;
 						tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
 						if (trace_fraction > s)
+						{
 							PHYS_INPUT_BUTTON_JUMP(this) = true;
+							this.bot_jump_time = time;
+						}
 						else
 						{
 							jump_height = stepheightvec + jumpheight_vec / 2;
 							tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
 							if (trace_fraction > s)
+							{
 								PHYS_INPUT_BUTTON_JUMP(this) = true;
+								this.bot_jump_time = time;
+							}
 						}
 					}
 				}
