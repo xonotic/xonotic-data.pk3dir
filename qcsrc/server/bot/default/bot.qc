@@ -330,7 +330,7 @@ void bot_custom_weapon_priority_setup()
 	if(	autocvar_bot_ai_custom_weapon_priority_far == "" ||
 		autocvar_bot_ai_custom_weapon_priority_mid == "" ||
 		autocvar_bot_ai_custom_weapon_priority_close == "" ||
- 		autocvar_bot_ai_custom_weapon_priority_distances == ""
+		autocvar_bot_ai_custom_weapon_priority_distances == ""
 	)
 		return;
 
@@ -348,52 +348,26 @@ void bot_custom_weapon_priority_setup()
 		bot_distance_close = stof(argv(0));
 	}
 
-	// Initialize list of weapons
-	bot_weapons_far[0] = -1;
-	bot_weapons_mid[0] = -1;
-	bot_weapons_close[0] = -1;
+	int c;
 
-	// Parse far distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_far)," ");
+	#define PARSE_WEAPON_PRIORITIES(dist) MACRO_BEGIN \
+		tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
+		bot_weapons_##dist[0] = -1; \
+		c = 0; \
+		for(i = 0; i < tokens && c < Weapons_COUNT; ++i) { \
+			w = stof(argv(i)); \
+			if (w >= WEP_FIRST && w <= WEP_LAST) { \
+				bot_weapons_##dist[c] = w; \
+				++c; \
+			} \
+		} \
+		if (c < Weapons_COUNT) \
+			bot_weapons_##dist[c] = -1; \
+	MACRO_END
 
-	int c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_far[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_far[c] = -1;
-
-	// Parse mid distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_mid)," ");
-
-	c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_mid[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_mid[c] = -1;
-
-	// Parse close distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_close)," ");
-
-	c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_close[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_close[c] = -1;
+	PARSE_WEAPON_PRIORITIES(far);
+	PARSE_WEAPON_PRIORITIES(mid);
+	PARSE_WEAPON_PRIORITIES(close);
 
 	bot_custom_weapon = true;
 }
