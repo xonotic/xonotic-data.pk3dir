@@ -235,6 +235,6 @@ void XonoticServerInfoDialog_fill(entity me)
 
 void Join_Click(entity btn, entity me)
 {
-	localcmd("connect ", me.infoTab.currentServerCName, "\n");
+	localcmd("connect ", me.currentServerCName, "\n");
 }
 
