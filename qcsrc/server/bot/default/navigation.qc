@@ -1721,10 +1721,11 @@ int navigation_poptouchedgoals(entity this)
 		&& this.goalstack01 && !wasfreed(this.goalstack01) && vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed))
 	{
 		vector gco = this.goalcurrent.origin;
-		vector gno = this.goalstack01.origin;
-		float min_dist = 100;
+		float min_dist = BOT_BUNNYHOP_WP_DETECTION_RANGE;
+		// also detect waypoints when bot is way above them but with a narrower horizontal range
+		// so to increase chances bot ends up in the standard range (optimizes nearest waypoint finding)
 		if(vdist(this.origin - gco, <, min_dist)
-			|| (vdist(this.origin + eZ * 0.5 * min_dist - gco, <, min_dist) && vlen2(this.origin - gno) < vlen2(gco - gno)))
+			|| (vdist(vec2(this.origin - gco), <, min_dist * 0.5) && vdist(this.origin - eZ * 1.5 * min_dist - gco, <, min_dist)))
 		{
 			traceline(this.origin + this.view_ofs , this.goalcurrent.origin, true, NULL);
 			if(trace_fraction==1)
@@ -1788,7 +1789,7 @@ entity navigation_get_really_close_waypoint(entity this)
 		wp = this.goalcurrent_prev;
 	if(!wp)
 		return NULL;
-	float min_dist = ((this.aistatus & AI_STATUS_RUNNING) ? 100 : 50);
+	float min_dist = ((this.aistatus & AI_STATUS_RUNNING) ? BOT_BUNNYHOP_WP_DETECTION_RANGE : 50);
 	if(wp != this.goalcurrent_prev && vdist(wp.origin - this.origin, >, min_dist))
 	{
 		wp = this.goalcurrent_prev;

@@ -88,6 +88,8 @@ entity bot_waypoint_queue_goal;		// Head of the temporary list of goals
 entity bot_waypoint_queue_bestgoal;
 float bot_waypoint_queue_bestgoalrating;
 
+const float BOT_BUNNYHOP_WP_DETECTION_RANGE = 100;
+
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
