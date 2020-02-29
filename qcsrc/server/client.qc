@@ -1781,6 +1781,11 @@ void SetSpectatee_status(entity this, int spectatee_num)
 
 	if (CS(this).spectatee_status != oldspectatee_status)
 	{
+		if (STAT(PRESSED_KEYS, this))
+		{
+			CS(this).pressedkeys = 0;
+			STAT(PRESSED_KEYS, this) = 0;
+		}
 		ClientData_Touch(this);
 		if (g_race || g_cts) race_InitSpectator();
 	}
@@ -2719,6 +2724,11 @@ void PlayerPostThink (entity this)
 			return;
 		}
 		GetPressedKeys(this);
+	}
+	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
 	}
 
 	if (this.waypointsprite_attachedforcarrier) {
