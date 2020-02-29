@@ -224,7 +224,7 @@ GENERIC_COMMAND(version, "Print the current version", false)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			LOG_INFO(WATERMARK);
+			LOG_INFO(PROGNAME, " version: ", WATERMARK);
 			return;
 		}
 		default:
