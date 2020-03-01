@@ -1078,26 +1078,31 @@ void havocbot_movetogoal(entity this)
 				//te_lightning2(NULL, dst_ahead, trace_endpos); // Draw "downwards" look
 				if(trace_endpos.z < this.origin.z + this.mins.z)
 				{
-					s = pointcontents(trace_endpos + '0 0 1');
-					if (s != CONTENT_SOLID)
-					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+					if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
 						danger_detected = true;
-					else if (s == CONTENT_SKY)
-						danger_detected = true;
-					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+					else
 					{
-						// the traceline check isn't enough but is good as optimization,
-						// when not true (most of the time) this tracebox call is avoided
-						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
-						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+						s = pointcontents(trace_endpos + '0 0 1');
+						if (s != CONTENT_SOLID)
 						{
-							if (destorg.z > this.origin.z + jumpstepheightvec.z)
-							{
-								// the goal is probably on an upper platform, assume bot can't get there
-								unreachable = true;
-							}
-							else
+							if (s == CONTENT_LAVA || s == CONTENT_SLIME)
 								danger_detected = true;
+							else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+							{
+								// the traceline check isn't enough but is good as optimization,
+								// when not true (most of the time) this tracebox call is avoided
+								tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
+								if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+								{
+									if (destorg.z > this.origin.z + jumpstepheightvec.z)
+									{
+										// the goal is probably on an upper platform, assume bot can't get there
+										unreachable = true;
+									}
+									else
+										danger_detected = true;
+								}
+							}
 						}
 					}
 				}
