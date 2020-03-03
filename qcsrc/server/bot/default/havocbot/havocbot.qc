@@ -558,9 +558,28 @@ void havocbot_movetogoal(entity this)
 			* ((this.strength_finished > time) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
 			* ((this.invincible_finished > time) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
-		tracebox(this.origin, this.mins, this.maxs, this.origin + '0 0 -65536', MOVE_NOMONSTERS, this);
-		if(tracebox_hits_trigger_hurt(this.origin, this.mins, this.maxs, trace_endpos ))
-		if(this.items & IT_JETPACK)
+		// save some CPU cycles by checking trigger_hurt after checking
+		// that something can be done to evade it (cheaper checks)
+		int action_for_trigger_hurt = 0;
+		if (this.items & IT_JETPACK)
+			action_for_trigger_hurt = 1;
+		else if (!this.jumppadcount && !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
+			&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
+			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
+		{
+			action_for_trigger_hurt = 2;
+		}
+		else if (!this.goalcurrent)
+			action_for_trigger_hurt = 3;
+
+		if (action_for_trigger_hurt)
+		{
+			tracebox(this.origin, this.mins, this.maxs, this.origin + '0 0 -65536', MOVE_NOMONSTERS, this);
+			if(!tracebox_hits_trigger_hurt(this.origin, this.mins, this.maxs, trace_endpos))
+				action_for_trigger_hurt = 0;
+		}
+
+		if(action_for_trigger_hurt == 1) // jetpack
 		{
 			tracebox(this.origin, this.mins, this.maxs, this.origin + '0 0 65536', MOVE_NOMONSTERS, this);
 			if(tracebox_hits_trigger_hurt(this.origin, this.mins, this.maxs, trace_endpos + '0 0 1' ))
@@ -598,9 +617,7 @@ void havocbot_movetogoal(entity this)
 
 			return;
 		}
-		else if(!this.jumppadcount && !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
-			&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
-			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
+		else if(action_for_trigger_hurt == 2) // rocketjump
 		{
 			if(this.velocity.z < 0)
 			{
@@ -634,11 +651,10 @@ void havocbot_movetogoal(entity this)
 				}
 			}
 		}
-		else
+		else if(action_for_trigger_hurt == 3) // no goal
 		{
 			// If there is no goal try to move forward
-			if(this.goalcurrent==NULL)
-				CS(this).movement_x = maxspeed;
+			CS(this).movement_x = maxspeed;
 		}
 	}
 
