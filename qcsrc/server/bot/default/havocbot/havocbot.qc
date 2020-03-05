@@ -47,8 +47,12 @@ void havocbot_ai(entity this)
 		}
 		else
 		{
-			if (!this.jumppadcount && !STAT(FROZEN, this))
+			if (!this.jumppadcount && !STAT(FROZEN, this)
+				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
+			{
+				// find a new goal
 				this.havocbot_role(this); // little too far down the rabbit hole
+			}
 		}
 
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
@@ -943,8 +947,6 @@ void havocbot_movetogoal(entity this)
 				{
 					PHYS_INPUT_BUTTON_JUMP(this) = true;
 					this.bot_jump_time = time;
-					// avoid changing route while bot is jumping a gap
-					navigation_goalrating_timeout_extend_if_needed(this, 1.5);
 				}
 			}
 			else if (!this.goalstack01 || (this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER)))

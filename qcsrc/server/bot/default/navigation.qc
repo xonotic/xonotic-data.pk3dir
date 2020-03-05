@@ -47,6 +47,7 @@ bool navigation_goalrating_timeout(entity this)
 	return this.bot_strategytime < time;
 }
 
+ERASEABLE
 void navigation_goalrating_timeout_extend_if_needed(entity this, float seconds)
 {
 	this.bot_strategytime = max(this.bot_strategytime, time + seconds);
