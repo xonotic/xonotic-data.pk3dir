@@ -3,6 +3,7 @@
 #include "items.qh"
 
 float autocvar_g_instagib_invis_alpha;
+int autocvar_g_instagib_extralives;
 
 void instagib_invisibility(entity this);
 void instagib_extralife(entity this);

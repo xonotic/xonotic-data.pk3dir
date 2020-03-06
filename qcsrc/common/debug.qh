@@ -69,7 +69,7 @@ REGISTER_NET_TEMP(net_debug)
  * 6: on (.solid != 0)
  */
 bool autocvar_debugdraw;
-#endif
+#endif // GAMEQC
 
 #ifdef CSQC
 	string autocvar_debugdraw_filter, autocvar_debugdraw_filterout;
@@ -161,8 +161,7 @@ bool autocvar_debugdraw;
             });
 		});
 	}
-#endif
-
+#endif // CSQC
 
 #ifdef SVQC
 	COMMON_COMMAND(debugdraw_sv, "Dump all server entities")
@@ -193,8 +192,8 @@ bool autocvar_debugdraw;
 			}
 		}
 	}
-#endif
-#endif
+#endif // SVQC
+#endif // ENABLE_DEBUGDRAW
 
 
 GENERIC_COMMAND(bufstr_get, "Examine a string buffer object", false)
@@ -225,7 +224,7 @@ GENERIC_COMMAND(version, "Print the current version", false)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			LOG_INFO(WATERMARK);
+			LOG_INFO(PROGNAME, " version: ", WATERMARK);
 			return;
 		}
 		default:
@@ -241,6 +240,7 @@ GENERIC_COMMAND(version, "Print the current version", false)
 #ifdef CSQC
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
 #endif
+
 GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars", false)
 {
 	switch (request)
@@ -275,6 +275,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars", false)
 
 #if ENABLE_DEBUGTRACE
 REGISTER_STAT(TRACE_ENT, int)
+
 #ifdef SVQC
 bool autocvar_debugtrace;
 
@@ -310,7 +311,8 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		stuffcmd(it, sprintf("prvm_edict server %d\n", i));
 	});
 }
-#endif
+#endif // SVQC
+
 #ifdef CSQC
 entity TRACE_ENT;
 void Trace_draw2d(entity this)
@@ -328,7 +330,8 @@ STATIC_INIT(TRACE_ENT)
 	e.draw2d = Trace_draw2d;
 	IL_PUSH(g_drawables_2d, e);
 }
-#endif
+#endif // CSQC
+
 #endif
 
 
@@ -399,7 +402,7 @@ CLASS(DebugText3d, Object)
 	ATTRIB(DebugText3d, message, string); // the text (i wanted to use the .text field but then this whole macro-based-inheritance thing shat itself)
 	ATTRIB(DebugText3d, health, float); // text alignment (recycled field)
 	ATTRIB(DebugText3d, hit_time, float); // when it was created
-	ATTRIB(DebugText3d, fade_rate, float); // how fast is should disappear
+	ATTRIB(DebugText3d, fade_rate, float); // how fast it should disappear
 	ATTRIB(DebugText3d, velocity, vector);
 
 	CONSTRUCTOR(DebugText3d, vector pos, string msg, float align, float fade_rate_, vector vel) {

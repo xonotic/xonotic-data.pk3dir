@@ -10,11 +10,10 @@ int autocvar_g_lms_last_join;
 bool autocvar_g_lms_regenerate;
 
 // main functions
-float LMS_NewPlayerLives()
+int LMS_NewPlayerLives()
 {
-	float fl;
-	fl = autocvar_fraglimit;
-	if(fl == 0)
+	int fl = floor(autocvar_fraglimit);
+	if(fl == 0 || fl > 999)
 		fl = 999;
 
 	// first player has left the game for dying too much? Nobody else can get in.
@@ -22,7 +21,7 @@ float LMS_NewPlayerLives()
 		return 0;
 
 	if(!autocvar_g_lms_join_anytime)
-		if(lms_lowest_lives < fl - autocvar_g_lms_last_join)
+		if(lms_lowest_lives < fl - max(0, floor(autocvar_g_lms_last_join)))
 			return 0;
 
 	return bound(1, lms_lowest_lives, fl);
@@ -184,27 +183,25 @@ void lms_RemovePlayer(entity player)
 	float player_rank = GameRules_scoring_add(player, LMS_RANK, 0);
 	if (!player_rank)
 	{
-		int pl_cnt = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
-			pl_cnt++;
-		});
 		if (player.lms_spectate_warning < 2)
 		{
 			if(IS_BOT_CLIENT(player))
 				bot_clear(player);
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+			int pl_cnt = 0;
+			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+				pl_cnt++;
+			});
 			GameRules_scoring_add(player, LMS_RANK, pl_cnt + 1);
 		}
 		else
 		{
-			lms_lowest_lives = 999;
 			FOREACH_CLIENT(true, {
 				if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
 				{
 					float it_rank = GameRules_scoring_add(it, LMS_RANK, 0);
 					if (it_rank > player_rank && it_rank <= 256)
 						GameRules_scoring_add(it, LMS_RANK, -1);
-					lms_lowest_lives = 0;
 				}
 				else if (it.frags != FRAGS_SPECTATOR)
 				{
@@ -449,5 +446,5 @@ MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 
 void lms_Initialize()
 {
-	lms_lowest_lives = 9999;
+	lms_lowest_lives = 999;
 }

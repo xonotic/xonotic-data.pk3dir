@@ -74,6 +74,8 @@ string formatmessage(entity this, string msg);
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 
+string GameLog_ProcessIP(string s);
+
 void GameLogEcho(string s);
 
 void GameLogInit();
@@ -99,8 +101,6 @@ string NearestLocation(vector p);
 void play2(entity e, string filename);
 
 string playername(entity p, bool team_colorize);
-
-void precache();
 
 void remove_safely(entity e);
 

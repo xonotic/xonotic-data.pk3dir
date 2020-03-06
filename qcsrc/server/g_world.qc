@@ -336,6 +336,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
+		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
@@ -493,6 +494,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca_weaponarena");
 		BADCVAR("g_freezetag_weaponarena");
 		BADCVAR("g_lms_weaponarena");
+		BADCVAR("g_ctf_stalemate_time");
 
 		if(cvar_string("g_mod_balance") == "Testing")
 		{
@@ -810,8 +812,6 @@ spawnfunc(worldspawn)
 	if(bot_waypoints_for_items == 1)
 		if(this.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
-
-	precache();
 
 	WaypointSprite_Init();
 
@@ -1415,54 +1415,6 @@ void IntermissionThink(entity this)
 
 	MapVote_Start();
 }
-
-/*
-============
-FindIntermission
-
-Returns the entity to view from
-============
-*/
-/*
-entity FindIntermission()
-{
-	local	entity spot;
-	local	float cyc;
-
-// look for info_intermission first
-	spot = find(NULL, classname, "info_intermission");
-	if (spot)
-	{	// pick a random one
-		cyc = random() * 4;
-		while (cyc > 1)
-		{
-			spot = find(spot, classname, "info_intermission");
-			if (!spot)
-				spot = find(spot, classname, "info_intermission");
-			cyc = cyc - 1;
-		}
-		return spot;
-	}
-
-// then look for the start position
-	spot = find(NULL, classname, "info_player_start");
-	if (spot)
-		return spot;
-
-// testinfo_player_start is only found in regioned levels
-	spot = find(NULL, classname, "testplayerstart");
-	if (spot)
-		return spot;
-
-// then look for the start position
-	spot = find(NULL, classname, "info_player_deathmatch");
-	if (spot)
-		return spot;
-
-	//objerror ("FindIntermission: no spot");
-	return NULL;
-}
-*/
 
 /*
 ===============================================================================

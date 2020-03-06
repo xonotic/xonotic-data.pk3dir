@@ -1069,7 +1069,7 @@ string getwelcomemessage(entity this)
 	return s;
 }
 
-bool autocvar_sv_qcphysics = false; // TODO this is for testing - remove when qcphysics work
+bool autocvar_sv_qcphysics = true; // TODO this is for testing - remove when qcphysics work
 
 /**
 =============
@@ -1108,7 +1108,7 @@ void ClientConnect(entity this)
 		CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
@@ -1781,6 +1781,11 @@ void SetSpectatee_status(entity this, int spectatee_num)
 
 	if (CS(this).spectatee_status != oldspectatee_status)
 	{
+		if (STAT(PRESSED_KEYS, this))
+		{
+			CS(this).pressedkeys = 0;
+			STAT(PRESSED_KEYS, this) = 0;
+		}
 		ClientData_Touch(this);
 		if (g_race || g_cts) race_InitSpectator();
 	}
@@ -2719,6 +2724,11 @@ void PlayerPostThink (entity this)
 			return;
 		}
 		GetPressedKeys(this);
+	}
+	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
 	}
 
 	if (this.waypointsprite_attachedforcarrier) {

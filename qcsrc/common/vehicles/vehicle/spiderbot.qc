@@ -1,5 +1,7 @@
 #include "spiderbot.qh"
 
+#ifdef GAMEQC
+
 const int SBRM_FIRST = 1;
 const int SBRM_VOLLY = 1;
 const int SBRM_GUIDE = 2;
@@ -635,5 +637,7 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
     AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
     AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
 }
+
+#endif
 
 #endif
