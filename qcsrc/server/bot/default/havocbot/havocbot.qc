@@ -875,7 +875,8 @@ void havocbot_movetogoal(entity this)
 		dir = normalize(diff);
 	flatdir = (diff.z == 0) ? dir : normalize(vec2(diff));
 
-	vector evadedanger = '0 0 0';
+	bool danger_detected = false;
+	vector do_break = '0 0 0';
 
 	//if (this.bot_dodgevector_time < time)
 	{
@@ -1084,7 +1085,6 @@ void havocbot_movetogoal(entity this)
 
 			bool unreachable = false;
 			s = CONTENT_SOLID;
-			bool danger_detected = false;
 			if (trace_fraction == 1 && !this.jumppadcount
 				&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
@@ -1097,6 +1097,8 @@ void havocbot_movetogoal(entity this)
 				if(trace_endpos.z < this.origin.z + this.mins.z)
 				{
 					if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+						danger_detected = true;
+					else if (trace_endpos.z < min(this.origin.z + this.mins.z, this.goalcurrent.origin.z) - 100)
 						danger_detected = true;
 					else
 					{
@@ -1125,12 +1127,6 @@ void havocbot_movetogoal(entity this)
 					}
 				}
 			}
-			if (danger_detected && fabs(deviation.y) < 80
-				&& (fabs(deviation.y) > 5 || vdist(vec2(this.velocity), >, maxspeed * 1.5)))
-			{
-				evadedanger = normalize(this.velocity) * -1;
-				evadedanger.z = 0;
-			}
 
 			dir = flatdir;
 			makevectors(this.v_angle.y * '0 1 0');
@@ -1150,7 +1146,7 @@ void havocbot_movetogoal(entity this)
 				// tracebox wouldn't work when bot is still on the ledge
 				traceline(this.origin, this.origin - '0 0 200', true, this);
 				if (this.origin.z - trace_endpos.z > 120)
-					evadedanger = normalize(this.velocity) * -1;
+					do_break = normalize(this.velocity) * -1;
 			}
 
 			if(unreachable)
@@ -1165,7 +1161,6 @@ void havocbot_movetogoal(entity this)
 		dodge = havocbot_dodge(this);
 		if (dodge)
 			dodge *= bound(0, 0.5 + (skill + this.bot_dodgeskill) * 0.1, 1);
-		evadedanger *= bound(1, 3 - (skill + this.bot_dodgeskill), 3); // Noobs fear dangers a lot and take more distance from them
 		if (this.enemy)
 		{
 			traceline(this.origin, (this.enemy.absmin + this.enemy.absmax) * 0.5, true, NULL);
@@ -1218,10 +1213,27 @@ void havocbot_movetogoal(entity this)
 			bot_aimdir(this, dir, 0);
 	}
 
+	vector evadedanger = '0 0 0';
 	if (!ladder_zdir)
 	{
 		dir *= dodge_enemy_factor;
-		dir = normalize(dir + dodge + evadedanger);
+		if (danger_detected && vdist(this.velocity, >, maxspeed * 0.8) && this.goalcurrent_prev
+			&& this.goalcurrent.classname == "waypoint")
+		{
+			vector p = this.origin + this.velocity * 0.2;
+			vector evadedanger = point_line_vec(p, vec2(this.goalcurrent_prev.origin) + eZ * p.z,
+				vec2(destorg - this.goalcurrent_prev.origin));
+			if (vdist(evadedanger, >, 20))
+			{
+				if (vdist(evadedanger, >, 40))
+					do_break = normalize(this.velocity) * -1;
+				evadedanger = normalize(evadedanger);
+				evadedanger *= bound(1, 3 - (skill + this.bot_dodgeskill), 3); // Noobs fear dangers a lot and take more distance from them
+			}
+			else
+				evadedanger = '0 0 0';
+		}
+		dir = normalize(dir + dodge + do_break + evadedanger);
 	}
 
 	makevectors(this.v_angle);
@@ -1237,7 +1249,7 @@ void havocbot_movetogoal(entity this)
 		havocbot_keyboard_movement(this, destorg);
 
 	// Bunnyhop!
-	if (!bunnyhop_forbidden && skill + this.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
+	if (!bunnyhop_forbidden && !evadedanger && !do_break && skill + this.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(this, dir);
 
 	if (dir * v_up >= autocvar_sv_jumpvelocity * 0.5 && IS_ONGROUND(this))
