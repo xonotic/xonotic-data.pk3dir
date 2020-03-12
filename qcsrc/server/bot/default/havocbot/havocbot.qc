@@ -104,6 +104,8 @@ void havocbot_ai(entity this)
 	{
 		if (this.goalcurrent)
 			navigation_clearroute(this);
+		this.enemy = NULL;
+		this.bot_aimtarg = NULL;
 		return;
 	}
 
