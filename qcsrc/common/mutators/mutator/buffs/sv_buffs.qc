@@ -203,6 +203,7 @@ void buff_Touch(entity this, entity toucher)
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
 	STAT(BUFFS, toucher) |= (STAT(BUFFS, this));
+	STAT(LAST_PICKUP, toucher) = time;
 	float bufftime = ((this.count) ? this.count : thebuff.m_time(thebuff));
 	if(bufftime)
 		STAT(BUFF_TIME, toucher) = min(time + bufftime, max(STAT(BUFF_TIME, toucher), time) + bufftime);
