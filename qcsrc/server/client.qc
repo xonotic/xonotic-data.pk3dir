@@ -2027,7 +2027,7 @@ void PrintWelcomeMessage(entity this)
 		if (autocvar_g_campaign) {
 			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
 				CS(this).motd_actived_time = time;
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, campaign_message);
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_CAMPAIGN_MESSAGE, Campaign_GetMessage(), Campaign_GetLevelNum());
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this)) {
@@ -2043,7 +2043,7 @@ void PrintWelcomeMessage(entity this)
 				CS(this).motd_actived_time = time;
 			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
 				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this))
@@ -2062,7 +2062,10 @@ void PrintWelcomeMessage(entity this)
 		{
 			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+			if (autocvar_g_campaign)
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
+			else
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 		}
 		else if (IS_PLAYER(this) || IS_SPEC(this))
 		{
