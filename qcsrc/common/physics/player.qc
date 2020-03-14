@@ -359,7 +359,7 @@ bool PlayerJump(entity this)
 	}
 
 	if (!doublejump)
-		if (!IS_ONGROUND(this) && !IS_ONSLICK(this))
+		if (!IS_ONGROUND(this))
 			return IS_JUMP_HELD(this);
 
 	if(PHYS_TRACK_CANJUMP(this))
@@ -693,11 +693,7 @@ void PM_check_slick(entity this)
 	trace_dphitq3surfaceflags = 0;
 	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
 	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-	{
-		if(PHYS_SLICK_APPLYGRAVITY(this))
-			UNSET_ONGROUND(this);
 		SET_ONSLICK(this);
-	}
 	else
 		UNSET_ONSLICK(this);
 }
