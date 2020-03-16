@@ -596,7 +596,6 @@ void CSQCPlayer_SetCamera()
 		{
 			CSQCPlayer_CalcRefdef(view);
 		}
-			
 	}
 	else
 	{
