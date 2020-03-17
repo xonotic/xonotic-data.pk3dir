@@ -620,6 +620,12 @@ MUTATOR_HOOKFUNCTION(ft, SV_ParseServerCommand)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ft, Scores_CountFragsRemaining)
+{
+	// announce remaining frags
+	return true;
+}
+
 void freezetag_Initialize()
 {
 	freezetag_teams = autocvar_g_freezetag_teams_override;
