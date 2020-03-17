@@ -96,7 +96,7 @@ pk3: csprogs-$(VER).pk3
 	@ cp -f $(PROGS_OUT)/$(PROG).dat $(DAT)
 	@ cp -f $(PROGS_OUT)/$(PROG).lno $(LNO)
 	@ $(RM) *.pk3
-	$(ZIP) $(PK3) $(TXT) $(DAT) $(LNO)
+	$(ZIP) $(PK3) $(TXT) $(DAT)
 	@ $(RM) $(TXT) $(DAT) $(LNO)
 
 QCCVERSION := $(shell cd lib && $(QCC) --version)
