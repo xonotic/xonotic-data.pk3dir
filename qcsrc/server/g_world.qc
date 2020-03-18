@@ -1770,7 +1770,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 					fragsleft |= BIT(3);
 			}
 
-			fragsleft = fragsleft & -fragsleft; // lowest significant bit
+			fragsleft = fragsleft & -fragsleft; // least significant bit where 1 is set
 
 			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 			{
