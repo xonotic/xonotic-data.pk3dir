@@ -1707,7 +1707,7 @@ void ShuffleMaplist()
 
 float leaderscore;
 float secondscore;
-int fragsleftlast;
+int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
 	float limitreached;
@@ -1772,7 +1772,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 			fragsleft = fragsleft & -fragsleft; // lowest significant bit
 
-			if (fragsleftlast != fragsleft) // do not announce same remaining frags multiple times
+			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 			{
 				if (fragsleft & BIT(1))
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
@@ -1781,7 +1781,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 				else if (fragsleft & BIT(3))
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 
-				fragsleftlast = fragsleft;
+				fragsleft_last = fragsleft;
 			}
 		}
 	}
