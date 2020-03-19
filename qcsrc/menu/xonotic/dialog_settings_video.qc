@@ -125,16 +125,16 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Brightness of white")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gamma:")));
-			setDependentAND(e, "vid_gl20", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "v_gamma",
 			_("Inverse gamma correction value, a brightness effect that does not affect white or black")));
-			setDependentAND(e, "vid_gl20", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Contrast boost:")));
-			setDependentAND(e, "vid_gl20", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1.0, 5.0, 0.1, "v_contrastboost",
 			_("By how much to multiply the contrast in dark areas")));
-			setDependentAND(e, "vid_gl20", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Saturation:")));
 			setDependent(e, "vid_gl20", 1, 1);
