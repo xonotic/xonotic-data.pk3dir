@@ -125,16 +125,16 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Brightness of white")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gamma:")));
-			setDependentAND(e, "vid_gl20", 1, 1, "v_glslgamma", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "v_gamma",
 			_("Inverse gamma correction value, a brightness effect that does not affect white or black")));
-			setDependentAND(e, "vid_gl20", 1, 1, "v_glslgamma", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Contrast boost:")));
-			setDependentAND(e, "vid_gl20", 1, 1, "v_glslgamma", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1.0, 5.0, 0.1, "v_contrastboost",
 			_("By how much to multiply the contrast in dark areas")));
-			setDependentAND(e, "vid_gl20", 1, 1, "v_glslgamma", 1, 1);
+			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Saturation:")));
 			setDependent(e, "vid_gl20", 1, 1);
@@ -157,11 +157,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 			e.applyButton = videoApplyButton;
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "v_glslgamma", _("Use GLSL to handle color control"),
-			_("Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot")));
-			setDependent(e, "vid_gl20", 1, 1);
 	if(cvar("developer") > 0)
 	{
 		me.TR(me);
