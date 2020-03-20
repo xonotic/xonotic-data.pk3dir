@@ -2617,6 +2617,7 @@ void DrownPlayer(entity this)
 		if(this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
+		this.air_finished_stat = 0;
 	}
 	else if (this.air_finished < time)
 	{	// drown!
@@ -2625,7 +2626,10 @@ void DrownPlayer(entity this)
 			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.pain_finished = time + 0.5;
 		}
+		this.air_finished_stat = this.air_finished;
 	}
+	else
+		this.air_finished_stat = this.air_finished;
 }
 
 .bool move_qcphysics;
