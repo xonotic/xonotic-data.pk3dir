@@ -1740,6 +1740,23 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
+	limitreached = false;
+	if (limit && WinningConditionHelper_topscore >= limit)
+		limitreached = true;
+	if(leadlimit)
+	{
+		float leadlimitreached;
+		leadlimitreached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
+		if(autocvar_leadlimit_and_fraglimit)
+			limitreached = (limitreached && leadlimitreached);
+		else
+			limitreached = (limitreached || leadlimitreached);
+	}
+
+	if(limit)
+		game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / limit, 1));
+
+	if (!limitreached)
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	// these modes always score in increments of 1, thus this makes sense
 	{
@@ -1785,22 +1802,6 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			}
 		}
 	}
-
-	limitreached = false;
-	if (limit && WinningConditionHelper_topscore >= limit)
-		limitreached = true;
-	if(leadlimit)
-	{
-		float leadlimitreached;
-		leadlimitreached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
-		if(autocvar_leadlimit_and_fraglimit)
-			limitreached = (limitreached && leadlimitreached);
-		else
-			limitreached = (limitreached || leadlimitreached);
-	}
-
-	if(limit)
-		game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / limit, 1));
 
 	return GetWinningCode(
 		WinningConditionHelper_topscore && limitreached,
