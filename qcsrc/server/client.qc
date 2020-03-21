@@ -337,6 +337,7 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
+	this.air_finished_stat = 0;
 	//this.dphitcontentsmask = 0;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
 	if (autocvar_g_playerclip_collisions)
@@ -1690,6 +1691,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
 	this.superweapons_finished = spectatee.superweapons_finished;
+	this.air_finished_stat = spectatee.air_finished_stat;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	STAT(WEAPONS, this) = STAT(WEAPONS, spectatee);
 	this.punchangle = spectatee.punchangle;
