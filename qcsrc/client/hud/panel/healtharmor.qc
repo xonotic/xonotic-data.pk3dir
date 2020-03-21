@@ -81,6 +81,16 @@ void HUD_HealthArmor()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	float BLINK_FACTOR = 0.5;
+	float BLINK_BASE = 0.5;
+	float BLINK_FREQ = 7;
+	float air_alpha = 1;
+	if (STAT(AIR_FINISHED) && time > STAT(AIR_FINISHED))
+	{
+		air_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+		air_time = 10;
+	}
+
 	int baralign = autocvar_hud_panel_healtharmor_baralign;
 	int iconalign = autocvar_hud_panel_healtharmor_iconalign;
 
@@ -115,7 +125,7 @@ void HUD_HealthArmor()
 		if(fuel)
 			HUD_Panel_DrawProgressBar(pos, vec2(mySize.x, 0.2 * mySize.y), "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 		if(air_time)
-			HUD_Panel_DrawProgressBar(pos + eY * 0.8 * mySize.y, vec2(mySize.x, 0.2 * mySize.y), "progressbar", air_time / 10, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_oxygen_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(pos + eY * 0.8 * mySize.y, vec2(mySize.x, 0.2 * mySize.y), "progressbar", air_time / 10, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_oxygen_color, air_alpha * panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 	}
 	else
 	{
@@ -283,7 +293,7 @@ void HUD_HealthArmor()
 					pos.x += cell_size.x - mySize.x;
 				else
 					pos.y += cell_size.y - mySize.y;
-				HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", air_time / 10, is_vertical, air_align, autocvar_hud_progressbar_oxygen_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", air_time / 10, is_vertical, air_align, autocvar_hud_progressbar_oxygen_color, air_alpha * panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 			}
 		}
 	}
