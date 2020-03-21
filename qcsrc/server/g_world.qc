@@ -1737,7 +1737,8 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		limit = -limit;
 	}
 
-	if(WinningConditionHelper_zeroisworst || (limit && leadlimit >= fabs(limit)))
+	if(WinningConditionHelper_zeroisworst
+		|| (!autocvar_leadlimit_and_fraglimit && limit && leadlimit >= fabs(limit)))
 		leadlimit = 0; // not supported in this mode
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
