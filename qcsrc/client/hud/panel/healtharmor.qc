@@ -84,7 +84,7 @@ void HUD_HealthArmor()
 	float air_alpha = 1;
 	if (STAT(AIR_FINISHED) && time > STAT(AIR_FINISHED))
 	{
-		air_alpha = blink(0.5, 0.5, 7);
+		air_alpha = blink_synced(0.5, 0.5, 7, STAT(AIR_FINISHED), -1);
 		air_time = 10;
 	}
 

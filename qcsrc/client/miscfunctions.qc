@@ -216,7 +216,11 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 
 // NOTE base is the central value
 // freq: circle frequency, = 2*pi*frequency in hertz
-float blink(float base, float range, float freq)
+// start_pos:
+//  -1 start from the lower value
+//   0 start from the base value
+//   1 start from the higher value
+float blink_synced(float base, float range, float freq, float start_time, int start_pos)
 {
 	// note:
 	//   RMS = sqrt(base^2 + 0.5 * range^2)
@@ -224,7 +228,12 @@ float blink(float base, float range, float freq)
 	//   base = sqrt(RMS^2 - 0.5 * range^2)
 	// ensure RMS == 1
 
-	return base + range * cos(time * freq);
+	return base + range * sin((time - start_time - (M_PI / 2) * start_pos) * freq);
+}
+
+float blink(float base, float range, float freq)
+{
+	return blink_synced(base, range, freq, 0, 0);
 }
 
 void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag)
