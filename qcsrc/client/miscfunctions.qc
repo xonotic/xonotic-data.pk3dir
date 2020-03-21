@@ -214,6 +214,19 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 	return boxsize * (0.5 * (1 - sz));
 }
 
+// NOTE base is the central value
+// freq: circle frequency, = 2*pi*frequency in hertz
+float blink(float base, float range, float freq)
+{
+	// note:
+	//   RMS = sqrt(base^2 + 0.5 * range^2)
+	// thus
+	//   base = sqrt(RMS^2 - 0.5 * range^2)
+	// ensure RMS == 1
+
+	return base + range * cos(time * freq);
+}
+
 void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag)
 {
 	vector line_dim = '0 0 0';

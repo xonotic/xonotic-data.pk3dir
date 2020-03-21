@@ -81,13 +81,10 @@ void HUD_HealthArmor()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float BLINK_FACTOR = 0.5;
-	float BLINK_BASE = 0.5;
-	float BLINK_FREQ = 7;
 	float air_alpha = 1;
 	if (STAT(AIR_FINISHED) && time > STAT(AIR_FINISHED))
 	{
-		air_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+		air_alpha = blink(0.5, 0.5, 7);
 		air_time = 10;
 	}
 
@@ -211,10 +208,7 @@ void HUD_HealthArmor()
 
 					if (health <= autocvar_hud_panel_healtharmor_progressbar_gfx_lowhealth)
 					{
-						float BLINK_FACTOR = 0.15;
-						float BLINK_BASE = 0.85;
-						float BLINK_FREQ = 9;
-						pain_health_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+						pain_health_alpha = blink(0.85, 0.15, 9);
 					}
 				}
 				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
