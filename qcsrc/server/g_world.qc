@@ -1751,27 +1751,23 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			leaderscore = WinningConditionHelper_topscore;
 			secondscore = WinningConditionHelper_secondscore;
 
+			if (limit)
+				fragsleft = limit - leaderscore;
 			if (leadlimit)
 				leadingfragsleft = secondscore + leadlimit - leaderscore;
-			if (autocvar_leadlimit_and_fraglimit && leadlimit && limit)
-			{
-				fragsleft = limit - leaderscore;
-				fragsleft = max(leadingfragsleft, fragsleft);
-			}
-			else
+
+			if (autocvar_leadlimit_and_fraglimit && leadlimit)
 			{
 				if (limit)
-				{
-					fragsleft = limit - leaderscore;
-					if (leadlimit)
-						fragsleft = min(fragsleft, leadingfragsleft);
-				}
-				else if (leadlimit)
+					fragsleft = max(leadingfragsleft, fragsleft);
+			}
+			else if (leadlimit)
+			{
+				if (limit)
+					fragsleft = min(fragsleft, leadingfragsleft);
+				else
 					fragsleft = leadingfragsleft;
 			}
-
-			if (fragsleft > 3)
-				fragsleft = 0;
 
 			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 			{
