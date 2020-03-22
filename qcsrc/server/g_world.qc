@@ -1710,8 +1710,6 @@ float secondscore;
 int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
-	float limitreached;
-
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper(NULL);
 
@@ -1787,18 +1785,14 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		}
 	}
 
-	limitreached = false;
-	if (limit && WinningConditionHelper_topscore >= limit)
-		limitreached = true;
-	if(leadlimit)
-	{
-		float leadlimitreached;
-		leadlimitreached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
-		if(autocvar_leadlimit_and_fraglimit)
-			limitreached = (limitreached && leadlimitreached);
-		else
-			limitreached = (limitreached || leadlimitreached);
-	}
+	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
+	bool leadlimit_reached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
+
+	bool limitreached;
+	if(autocvar_leadlimit_and_fraglimit)
+		limitreached = (fraglimit_reached && leadlimit_reached);
+	else
+		limitreached = (fraglimit_reached || leadlimit_reached);
 
 	return GetWinningCode(
 		WinningConditionHelper_topscore && limitreached,
