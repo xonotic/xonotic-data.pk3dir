@@ -1748,38 +1748,44 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			secondscore != WinningConditionHelper_secondscore)
 		{
 			int fragsleft = 0;
+			int fragsleft_limit;
+			int fragsleft_leadlimit;
 
 			leaderscore = WinningConditionHelper_topscore;
 			secondscore = WinningConditionHelper_secondscore;
 
+			if (autocvar_leadlimit_and_fraglimit)
+			{
+				// any number below ANNCE_REMAINING_FRAG_MIN works
+				fragsleft_limit = 0;
+				fragsleft_leadlimit = 0;
+			}
+			else
+			{
+				// any number above ANNCE_REMAINING_FRAG_MAX works
+				fragsleft_limit = 99;
+				fragsleft_leadlimit = 99;
+			}
+
+
 			if (limit)
-			{
-				if (leaderscore == limit - 1)
-					fragsleft |= BIT(1);
-				else if (leaderscore == limit - 2)
-					fragsleft |= BIT(2);
-				else if (leaderscore == limit - 3)
-					fragsleft |= BIT(3);
-			}
+				fragsleft_limit = limit - leaderscore;
+
 			if (leadlimit)
-			{
-				if (leaderscore == leadlimit + secondscore - 1)
-					fragsleft |= BIT(1);
-				else if (leaderscore == leadlimit + secondscore - 2)
-					fragsleft |= BIT(2);
-				else if (leaderscore == leadlimit + secondscore - 3)
-					fragsleft |= BIT(3);
-			}
+				fragsleft_leadlimit = leadlimit + secondscore - leaderscore;
 
-			fragsleft = fragsleft & -fragsleft; // least significant bit where 1 is set
+			if (autocvar_leadlimit_and_fraglimit)
+				fragsleft = max(fragsleft_limit, fragsleft_leadlimit);
+			else
+				fragsleft = min(fragsleft_limit, fragsleft_leadlimit);
 
-			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
+			if (fragsleft != fragsleft_last)
 			{
-				if (fragsleft & BIT(1))
+				if (fragsleft == 1)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-				else if (fragsleft & BIT(2))
+				else if (fragsleft == 2)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-				else if (fragsleft & BIT(3))
+				else if (fragsleft == 3)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 
 				fragsleft_last = fragsleft;
