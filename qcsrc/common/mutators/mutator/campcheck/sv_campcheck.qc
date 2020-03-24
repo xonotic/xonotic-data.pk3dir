@@ -4,6 +4,7 @@ string autocvar_g_campcheck;
 float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;
+bool autocvar_g_campcheck_typecheck;
 
 REGISTER_MUTATOR(campcheck, expr_evaluate(autocvar_g_campcheck));
 
@@ -43,7 +44,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 	if(IS_PLAYER(player))
 	if(!IS_DEAD(player))
 	if(!STAT(FROZEN, player))
-	if(!PHYS_INPUT_BUTTON_CHAT(player))
+	if(autocvar_g_campcheck_typecheck || !PHYS_INPUT_BUTTON_CHAT(player))
 	if(IS_REAL_CLIENT(player)) // bots may camp, but that's no reason to constantly kill them
 	if(!weaponLocked(player))
 	{
