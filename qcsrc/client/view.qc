@@ -1447,6 +1447,8 @@ void HUD_Crosshair(entity this)
 #define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
 			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
 
+			vector wcross_origin_save = wcross_origin;
+			wcross_origin += autocvar_crosshair_offset * wcross_scale;
 			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
 			{
 				f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
@@ -1463,6 +1465,7 @@ void HUD_Crosshair(entity this)
 			wcross_name_alpha_goal_prev = f;
 
 			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
+			wcross_origin = wcross_origin_save;
 
 			if(autocvar_crosshair_dot)
 			{

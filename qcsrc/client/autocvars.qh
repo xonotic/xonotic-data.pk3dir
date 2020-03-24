@@ -124,6 +124,7 @@ bool autocvar_crosshair_hittest;
 bool autocvar_crosshair_hittest_blur;
 //float autocvar_crosshair_hittest_scale = 1.25;
 bool autocvar_crosshair_hittest_showimpact;
+vector autocvar_crosshair_offset;
 bool autocvar_crosshair_per_weapon;
 float autocvar_crosshair_pickup;
 float autocvar_crosshair_pickup_speed;
