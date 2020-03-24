@@ -45,6 +45,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write_Cvar("hud_progressbar_health_color");
 		HUD_Write_Cvar("hud_progressbar_armor_color");
 		HUD_Write_Cvar("hud_progressbar_fuel_color");
+		HUD_Write_Cvar("hud_progressbar_oxygen_color");
 		HUD_Write_Cvar("hud_progressbar_nexball_color");
 		HUD_Write_Cvar("hud_progressbar_speed_color");
 		HUD_Write_Cvar("hud_progressbar_acceleration_color");

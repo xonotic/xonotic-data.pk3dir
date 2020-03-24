@@ -52,6 +52,9 @@ float expandingbox_sizefactor_from_fadelerp(float fadelerp);
 
 vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float boxxsizefactor);
 
+float blink_synced(float base, float range, float freq, float start_time, int start_blink);
+float blink(float base, float range, float freq);
+
 void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag);
 
 void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag);

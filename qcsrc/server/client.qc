@@ -337,6 +337,7 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
+	this.air_finished_stat = 0;
 	//this.dphitcontentsmask = 0;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
 	if (autocvar_g_playerclip_collisions)
@@ -647,7 +648,7 @@ void PutPlayerInServer(entity this)
 	STAT(BUFFS, this) = 0;
 	STAT(BUFF_TIME, this) = 0;
 
-	this.air_finished = time + 12;
+	this.air_finished = time + autocvar_g_balance_contents_drowndelay;
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
 
@@ -1690,6 +1691,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
 	this.superweapons_finished = spectatee.superweapons_finished;
+	this.air_finished_stat = spectatee.air_finished_stat;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	STAT(WEAPONS, this) = STAT(WEAPONS, spectatee);
 	this.punchangle = spectatee.punchangle;
@@ -2617,6 +2619,7 @@ void DrownPlayer(entity this)
 		if(this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
+		this.air_finished_stat = 0;
 	}
 	else if (this.air_finished < time)
 	{	// drown!
@@ -2625,7 +2628,10 @@ void DrownPlayer(entity this)
 			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.pain_finished = time + 0.5;
 		}
+		this.air_finished_stat = this.air_finished;
 	}
+	else
+		this.air_finished_stat = this.air_finished;
 }
 
 .bool move_qcphysics;

@@ -51,6 +51,7 @@ float server_is_dedicated;
 .float  crouch;	// Crouching or not?
 
 const .float superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
+const .float air_finished_stat = _STAT(AIR_FINISHED);
 
 .float cnt; // used in too many places
 .float count;
