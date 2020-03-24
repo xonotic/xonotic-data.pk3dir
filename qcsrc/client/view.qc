@@ -1450,8 +1450,10 @@ void HUD_Crosshair(entity this)
 			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
 			{
 				f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
+				vector wcross_size_save = wcross_size;
 				wcross_size = draw_getimagesize(wcross_name_goal_prev_prev) * wcross_scale;
 				CROSSHAIR_DRAW(wcross_resolution_goal_prev_prev, wcross_name_goal_prev_prev, wcross_alpha * f * wcross_name_alpha_goal_prev_prev);
+				wcross_size = wcross_size_save;
 				f = 1 - f;
 			}
 			else
@@ -1460,7 +1462,6 @@ void HUD_Crosshair(entity this)
 			}
 			wcross_name_alpha_goal_prev = f;
 
-			wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
 			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
 
 			if(autocvar_crosshair_dot)
