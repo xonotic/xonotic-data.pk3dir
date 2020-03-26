@@ -1604,19 +1604,17 @@ void Scoreboard_Draw()
 	draw_endBoldFont();
 
 	// Game Info: Game Detail
-	float tl, fl, ll;
-	str = ""; // optionally "^7Limits: "
-	tl = STAT(TIMELIMIT);
-	fl = STAT(FRAGLIMIT);
-	ll = STAT(LEADLIMIT);
+	float tl = STAT(TIMELIMIT);
+	float fl = STAT(FRAGLIMIT);
+	float ll = STAT(LEADLIMIT);
+	float ll_and_fl = STAT(LEADLIMIT_AND_FRAGLIMIT);
+	str = "";
 	if(tl > 0)
 		str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
 	if(!ISGAMETYPE(LMS))
 	{
 		if(fl > 0)
 		{
-			if(tl > 0)
-				str = strcat(str, "^7 / "); // delimiter
 			if(teamplay)
 			{
 				str = strcat(str, sprintf(_("^5%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
@@ -1634,8 +1632,17 @@ void Scoreboard_Draw()
 		}
 		if(ll > 0)
 		{
+			//if(tl > 0 || fl > 0)
+			//	str = strcat(str, "^7 / "); // delimiter
 			if(tl > 0 || fl > 0)
-				str = strcat(str, "^7 / "); // delimiter
+			{
+				// delimiter
+				if (ll_and_fl)
+					str = strcat(str, "^7 and ");
+				else
+					str = strcat(str, "^7 / ");
+			}
+
 			if(teamplay)
 			{
 				str = strcat(str, sprintf(_("^2+%s %s"), ScoreString(teamscores_flags(ts_primary), ll),
