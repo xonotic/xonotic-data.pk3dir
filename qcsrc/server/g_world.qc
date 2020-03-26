@@ -1744,28 +1744,19 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		if (leaderscore != WinningConditionHelper_topscore ||
 			secondscore != WinningConditionHelper_secondscore)
 		{
-			int fragsleft = 0, leadingfragsleft = 0;
-
 			leaderscore = WinningConditionHelper_topscore;
 			secondscore = WinningConditionHelper_secondscore;
 
+			int fragsleft = FLOAT_MAX, leadingfragsleft = FLOAT_MAX;
 			if (limit)
 				fragsleft = limit - leaderscore;
 			if (leadlimit)
 				leadingfragsleft = secondscore + leadlimit - leaderscore;
 
-			if (autocvar_leadlimit_and_fraglimit && leadlimit)
-			{
-				if (limit)
-					fragsleft = max(leadingfragsleft, fragsleft);
-			}
-			else if (leadlimit)
-			{
-				if (limit)
-					fragsleft = min(fragsleft, leadingfragsleft);
-				else
-					fragsleft = leadingfragsleft;
-			}
+			if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+				fragsleft = max(leadingfragsleft, fragsleft);
+			else
+				fragsleft = min(fragsleft, leadingfragsleft);
 
 			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 			{
@@ -1782,10 +1773,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	}
 
 	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
-	bool leadlimit_reached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
+	bool leadlimit_reached = (leadlimit && WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
 
 	bool limit_reached;
-	if(autocvar_leadlimit_and_fraglimit)
+	// only respect leadlimit_and_fraglimit when both limits are set or the game will never end
+	if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
 		limit_reached = (fraglimit_reached && leadlimit_reached);
 	else
 		limit_reached = (fraglimit_reached || leadlimit_reached);
