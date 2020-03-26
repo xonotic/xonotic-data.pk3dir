@@ -1705,8 +1705,6 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
-float leaderscore;
-float secondscore;
 int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
@@ -1739,36 +1737,28 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		leadlimit = 0; // not supported in this mode
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
-	// these modes always score in increments of 1, thus this makes sense
 	{
-		if (leaderscore != WinningConditionHelper_topscore ||
-			secondscore != WinningConditionHelper_secondscore)
+		float fragsleft = FLOAT_MAX, leadingfragsleft = FLOAT_MAX;
+		if (limit)
+			fragsleft = limit - WinningConditionHelper_topscore;
+		if (leadlimit)
+			leadingfragsleft = WinningConditionHelper_secondscore + leadlimit - WinningConditionHelper_topscore;
+
+		if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+			fragsleft = max(leadingfragsleft, fragsleft);
+		else
+			fragsleft = min(fragsleft, leadingfragsleft);
+
+		if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 		{
-			leaderscore = WinningConditionHelper_topscore;
-			secondscore = WinningConditionHelper_secondscore;
+			if (fragsleft == 1)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
+			else if (fragsleft == 2)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
+			else if (fragsleft == 3)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 
-			int fragsleft = FLOAT_MAX, leadingfragsleft = FLOAT_MAX;
-			if (limit)
-				fragsleft = limit - leaderscore;
-			if (leadlimit)
-				leadingfragsleft = secondscore + leadlimit - leaderscore;
-
-			if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
-				fragsleft = max(leadingfragsleft, fragsleft);
-			else
-				fragsleft = min(fragsleft, leadingfragsleft);
-
-			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
-			{
-				if (fragsleft == 1)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-				else if (fragsleft == 2)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-				else if (fragsleft == 3)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
-
-				fragsleft_last = fragsleft;
-			}
+			fragsleft_last = fragsleft;
 		}
 	}
 
