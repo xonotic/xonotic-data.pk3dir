@@ -1788,14 +1788,14 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
 	bool leadlimit_reached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
 
-	bool limitreached;
+	bool limit_reached;
 	if(autocvar_leadlimit_and_fraglimit)
-		limitreached = (fraglimit_reached && leadlimit_reached);
+		limit_reached = (fraglimit_reached && leadlimit_reached);
 	else
-		limitreached = (fraglimit_reached || leadlimit_reached);
+		limit_reached = (fraglimit_reached || leadlimit_reached);
 
 	return GetWinningCode(
-		WinningConditionHelper_topscore && limitreached,
+		WinningConditionHelper_topscore && limit_reached,
 		WinningConditionHelper_equality
 	);
 }
@@ -1886,10 +1886,6 @@ Exit deathmatch games upon conditions
 */
 void CheckRules_World()
 {
-	float timelimit;
-	float fraglimit;
-	float leadlimit;
-
 	VoteThink();
 	MapVote_Think();
 
@@ -1904,9 +1900,10 @@ void CheckRules_World()
 		return;
 	}
 
-	timelimit = autocvar_timelimit * 60;
-	fraglimit = autocvar_fraglimit;
-	leadlimit = autocvar_leadlimit;
+	float timelimit = autocvar_timelimit * 60;
+	float fraglimit = autocvar_fraglimit;
+	float leadlimit = autocvar_leadlimit;
+	if (leadlimit < 0) leadlimit = 0;
 
 	if(warmup_stage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
