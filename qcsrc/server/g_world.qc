@@ -1745,7 +1745,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			leadingfragsleft = WinningConditionHelper_secondscore + leadlimit - WinningConditionHelper_topscore;
 
 		if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
-			fragsleft = max(leadingfragsleft, fragsleft);
+			fragsleft = max(fragsleft, leadingfragsleft);
 		else
 			fragsleft = min(fragsleft, leadingfragsleft);
 
