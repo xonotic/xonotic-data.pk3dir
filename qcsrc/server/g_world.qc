@@ -1735,8 +1735,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		limit = -limit;
 	}
 
-	if(WinningConditionHelper_zeroisworst
-		|| (!autocvar_leadlimit_and_fraglimit && limit && leadlimit >= fabs(limit)))
+	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
@@ -1745,39 +1744,36 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		if (leaderscore != WinningConditionHelper_topscore ||
 			secondscore != WinningConditionHelper_secondscore)
 		{
-			int fragsleft = 0;
+			int fragsleft = 0, leadingfragsleft = 0;
 
 			leaderscore = WinningConditionHelper_topscore;
 			secondscore = WinningConditionHelper_secondscore;
 
 			if (limit)
-			{
-				if (leaderscore == limit - 1)
-					fragsleft |= BIT(1);
-				else if (leaderscore == limit - 2)
-					fragsleft |= BIT(2);
-				else if (leaderscore == limit - 3)
-					fragsleft |= BIT(3);
-			}
+				fragsleft = limit - leaderscore;
 			if (leadlimit)
-			{
-				if (leaderscore == leadlimit + secondscore - 1)
-					fragsleft |= BIT(1);
-				else if (leaderscore == leadlimit + secondscore - 2)
-					fragsleft |= BIT(2);
-				else if (leaderscore == leadlimit + secondscore - 3)
-					fragsleft |= BIT(3);
-			}
+				leadingfragsleft = secondscore + leadlimit - leaderscore;
 
-			fragsleft = fragsleft & -fragsleft; // least significant bit where 1 is set
+			if (autocvar_leadlimit_and_fraglimit && leadlimit)
+			{
+				if (limit)
+					fragsleft = max(leadingfragsleft, fragsleft);
+			}
+			else if (leadlimit)
+			{
+				if (limit)
+					fragsleft = min(fragsleft, leadingfragsleft);
+				else
+					fragsleft = leadingfragsleft;
+			}
 
 			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 			{
-				if (fragsleft & BIT(1))
+				if (fragsleft == 1)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-				else if (fragsleft & BIT(2))
+				else if (fragsleft == 2)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-				else if (fragsleft & BIT(3))
+				else if (fragsleft == 3)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 
 				fragsleft_last = fragsleft;
