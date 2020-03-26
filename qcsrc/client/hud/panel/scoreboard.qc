@@ -1632,8 +1632,6 @@ void Scoreboard_Draw()
 		}
 		if(ll > 0)
 		{
-			//if(tl > 0 || fl > 0)
-			//	str = strcat(str, "^7 / "); // delimiter
 			if(tl > 0 || fl > 0)
 			{
 				// delimiter
