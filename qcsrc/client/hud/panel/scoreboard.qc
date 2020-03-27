@@ -1638,7 +1638,7 @@ void Scoreboard_Draw()
 			{
 				// delimiter
 				if (ll_and_fl)
-					str = strcat(str, "^7 and ");
+					str = strcat(str, "^7 & ");
 				else
 					str = strcat(str, "^7 / ");
 			}
