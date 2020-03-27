@@ -1615,6 +1615,8 @@ void Scoreboard_Draw()
 	{
 		if(fl > 0)
 		{
+			if(tl > 0)
+				str = strcat(str, "^7 / "); // delimiter
 			if(teamplay)
 			{
 				str = strcat(str, sprintf(_("^5%s %s"), ScoreString(teamscores_flags(ts_primary), fl),
