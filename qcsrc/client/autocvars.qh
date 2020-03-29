@@ -416,7 +416,7 @@ float autocvar_cl_hitsound_nom_damage = 25;
 float autocvar_cl_hitsound_antispam_time;
 bool autocvar_cl_eventchase_spectated_change = false;
 float autocvar_cl_eventchase_spectated_change_time = 1;
-int autocvar_cl_eventchase_death = 1;
+int autocvar_cl_eventchase_death = 2;
 float autocvar_cl_eventchase_distance = 140;
 bool autocvar_cl_eventchase_frozen = false;
 float autocvar_cl_eventchase_speed = 1.3;
