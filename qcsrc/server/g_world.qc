@@ -1258,7 +1258,7 @@ void Maplist_Init()
 				break;
 		}
 	}
-	
+
 	if (i == Map_Count)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
@@ -1705,7 +1705,9 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
-float leaderfrags;
+float leaderscore;
+float secondscore;
+int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
 	float limitreached;
@@ -1741,18 +1743,42 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	// these modes always score in increments of 1, thus this makes sense
 	{
-		if(leaderfrags != WinningConditionHelper_topscore)
+		if (leaderscore != WinningConditionHelper_topscore ||
+			secondscore != WinningConditionHelper_secondscore)
 		{
-			leaderfrags = WinningConditionHelper_topscore;
+			int fragsleft = 0, leadingfragsleft = 0;
+
+			leaderscore = WinningConditionHelper_topscore;
+			secondscore = WinningConditionHelper_secondscore;
 
 			if (limit)
+				fragsleft = limit - leaderscore;
+			if (leadlimit)
+				leadingfragsleft = secondscore + leadlimit - leaderscore;
+
+			if (autocvar_leadlimit_and_fraglimit && leadlimit)
 			{
-				if (leaderfrags == limit - 1)
+				if (limit)
+					fragsleft = max(leadingfragsleft, fragsleft);
+			}
+			else if (leadlimit)
+			{
+				if (limit)
+					fragsleft = min(fragsleft, leadingfragsleft);
+				else
+					fragsleft = leadingfragsleft;
+			}
+
+			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
+			{
+				if (fragsleft == 1)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-				else if (leaderfrags == limit - 2)
+				else if (fragsleft == 2)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-				else if (leaderfrags == limit - 3)
+				else if (fragsleft == 3)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+
+				fragsleft_last = fragsleft;
 			}
 		}
 	}

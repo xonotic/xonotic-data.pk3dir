@@ -26,7 +26,7 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_eventchase_death", _("Slide to third person upon death")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(2, 0, "cl_eventchase_death", _("Slide to third person upon death")));
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);

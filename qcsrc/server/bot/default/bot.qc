@@ -146,21 +146,7 @@ void bot_think(entity this)
 void bot_setnameandstuff(entity this)
 {
 	string readfile, s;
-	float file, tokens, prio;
-
-	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
-	string name, prefix, suffix;
-
- 	if(autocvar_g_campaign)
-	{
-		prefix = "";
-		suffix = "";
-	}
-	else
-	{
-		prefix = autocvar_bot_prefix;
-		suffix = autocvar_bot_suffix;
-	}
+	int file, tokens, prio;
 
 	file = fopen(autocvar_bot_config_file, FILE_READ);
 
@@ -231,6 +217,8 @@ void bot_setnameandstuff(entity this)
 		fclose(file);
 	}
 
+	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
+
 	tokens = tokenizebyseparator(readfile, "\t");
 	if(argv(0) != "") bot_name = argv(0);
 	else bot_name = "Bot";
@@ -289,13 +277,10 @@ void bot_setnameandstuff(entity this)
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
 	this.bot_preferredcolors = this.clientcolors;
 
-	// pick the name
-	if (autocvar_bot_usemodelnames)
-		name = bot_model;
-	else
-		name = bot_name;
+	string prefix = (autocvar_g_campaign ? "" : autocvar_bot_prefix);
+	string suffix = (autocvar_g_campaign ? "" : autocvar_bot_suffix);
+	string name = (autocvar_bot_usemodelnames ? bot_model : bot_name);
 
-	// number bots with identical names
 	if (name == "")
 	{
 		name = ftos(etof(this));
@@ -303,6 +288,7 @@ void bot_setnameandstuff(entity this)
 	}
 	else
 	{
+		// number bots with identical names
 		int j = 0;
 		FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 			if(it.cleanname == name)
