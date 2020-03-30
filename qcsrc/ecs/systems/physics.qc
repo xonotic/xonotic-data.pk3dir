@@ -33,7 +33,12 @@ void sys_phys_update(entity this, float dt)
 	if (IS_SVQC) {
 		if (this.move_movetype == MOVETYPE_NONE) { return; }
 		// when we get here, disableclientprediction cannot be 2
-		this.disableclientprediction = (this.move_qcphysics) ? -1 : 0;
+		if(this.move_movetype == MOVETYPE_FOLLOW) // not compatible with prediction
+			this.disableclientprediction = 1;
+		else if(this.move_qcphysics)
+			this.disableclientprediction = -1;
+		else
+			this.disableclientprediction = 0;
 	}
 
 	viewloc_PlayerPhysics(this);
