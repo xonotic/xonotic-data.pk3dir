@@ -136,7 +136,7 @@ void CSQC_Init()
 
 	registercvar("cl_shootfromfixedorigin", "");
 
-	registercvar("cl_multijump", "1");
+	registercvar("cl_multijump", "-1");
 
 	registercvar("cl_spawn_near_teammate", "1");
 
