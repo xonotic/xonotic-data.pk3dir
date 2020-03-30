@@ -243,6 +243,7 @@ bool autocvar_sv_dodging_wall_dodging;
 bool autocvar_sv_dodging_air_dodging;
 float autocvar_sv_dodging_maxspeed;
 float autocvar_sv_dodging_air_maxspeed;
+bool autocvar_sv_dodging_clientselect;
 #endif
 
 #if 0
@@ -262,6 +263,7 @@ REGISTER_STAT(DODGING_WALL, bool, autocvar_sv_dodging_wall_dodging)
 REGISTER_STAT(DODGING_AIR, bool, autocvar_sv_dodging_air_dodging)
 REGISTER_STAT(DODGING_MAXSPEED, float, autocvar_sv_dodging_maxspeed)
 REGISTER_STAT(DODGING_AIR_MAXSPEED, float, autocvar_sv_dodging_air_maxspeed)
+REGISTER_STAT(DODGING_CLIENTSELECT, bool, autocvar_sv_dodging_clientselect)
 #endif
 /** cvar loopback */
 REGISTER_STAT(DODGING_FROZEN, int, autocvar_sv_dodging_frozen)
