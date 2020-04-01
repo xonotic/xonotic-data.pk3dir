@@ -20,3 +20,5 @@ const int CURSOR_NORMAL = 0;
 const int CURSOR_MOVE = 1;
 const int CURSOR_RESIZE = 2;
 const int CURSOR_RESIZE2 = 3;
+
+float drawtime;

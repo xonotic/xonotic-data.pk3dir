@@ -25,7 +25,7 @@ void trigger_hurt_touch(entity this, entity toucher)
 		if (toucher.triggerhurttime < time)
 		{
 			EXACTTRIGGER_TOUCH(this, toucher);
-			toucher.triggerhurttime = time + ((autocvar_sv_vq3compat && !(this.spawnflags & HURT_SLOW)) ? 0.1 : 1);
+			toucher.triggerhurttime = time + ((autocvar_sv_q3defragcompat && !(this.spawnflags & HURT_SLOW)) ? 0.1 : 1);
 
 			entity own;
 			own = this.enemy;
@@ -66,7 +66,7 @@ spawnfunc(trigger_hurt)
 	this.use = trigger_hurt_use;
 	this.enemy = world; // I hate you all
 	if (!this.dmg)
-		this.dmg = ((autocvar_sv_vq3compat) ? 5 : 10000);
+		this.dmg = ((autocvar_sv_q3defragcompat) ? 5 : 10000);
 	if (this.message == "")
 		this.message = "was in the wrong place";
 	if (this.message2 == "")

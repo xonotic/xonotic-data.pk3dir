@@ -1189,7 +1189,6 @@ void nades_CheckThrow(entity this)
 		this.nade_altbutton = true;
 		if(time > this.nade_refire)
 		{
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_NADE_THROW);
 			nade_prime(this);
 			this.nade_refire = time + autocvar_g_nades_nade_refire;
 		}
@@ -1294,7 +1293,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		held_nade.angles_y = player.angles.y;
 
 		if (time + 0.1 >= held_nade.wait)
+		{
 			toss_nade(player, false, '0 0 0', time + 0.05);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_THROW);
+		}
 	}
 
 	if(IS_PLAYER(player))
@@ -1345,44 +1347,47 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		}
 	}
 
-	int n = 0;
-
-	IntrusiveList reviving_players = NULL;
-
-	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
-		n = -1;
-	else if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
+	if (frametime && IS_PLAYER(player))
 	{
-		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
-			if (!reviving_players)
-				reviving_players = IL_NEW();
-			IL_PUSH(reviving_players, it);
-			++n;
-		});
-	}
+		int n = 0;
 
-	if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
-	{
-		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
+		IntrusiveList reviving_players = NULL;
 
-		if(STAT(REVIVE_PROGRESS, player) >= 1)
+		if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
+			n = -1;
+		else if (STAT(FROZEN, player) == FROZEN_TEMP_DYING)
 		{
-			Unfreeze(player, false);
-
-			entity first = IL_FIRST(reviving_players);
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
-			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+			n = 0;
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+				if (!reviving_players)
+					reviving_players = IL_NEW();
+				IL_PUSH(reviving_players, it);
+				++n;
+			});
 		}
 
-		IL_EACH(reviving_players, true, {
-			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-		});
+		if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
+		{
+			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+			SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
+
+			if(STAT(REVIVE_PROGRESS, player) >= 1)
+			{
+				Unfreeze(player, false);
+
+				entity first = IL_FIRST(reviving_players);
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
+				Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			}
+
+			IL_EACH(reviving_players, true, {
+				STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
+			});
+		}
+		if (reviving_players)
+			IL_DELETE(reviving_players);
 	}
-	if (reviving_players)
-		IL_DELETE(reviving_players);
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)
@@ -1453,7 +1458,6 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	{
 		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) 
 																	: autocvar_g_nades_bonus_score_minor);
-
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
 		else if(GameRules_scoring_is_vip(frag_target))

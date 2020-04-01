@@ -10,7 +10,7 @@ void HUD_PressedKeys()
 {
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_pressedkeys) return;
+		if(!autocvar_hud_panel_pressedkeys || spectatee_status < 0) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
 	}
 

@@ -2,7 +2,7 @@
 
 #include <common/command/_mod.qh>
 
-GENERIC_COMMAND(mx, "Send a matrix command") {
+GENERIC_COMMAND(mx, "Send a matrix command", false) {
     switch (argv(1)) {
         case "user":
             strcpy(matrix_user, substring(command, argv_start_index(2), -1));

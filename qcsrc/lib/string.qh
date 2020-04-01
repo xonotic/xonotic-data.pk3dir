@@ -127,8 +127,6 @@ string autocvar_hud_colorset_background = "7";   // BG - White // neutral/unimpo
 /** color code replace, place inside of sprintf and parse the string */
 string CCR(string input)
 {
-	// See the autocvar declarations in util.qh for default values
-
 	// foreground/normal colors
 	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
 	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);

@@ -4,8 +4,9 @@
 #
 # Translators:
 # Ximielga <dorian@openmailbox.org>, 2014-2015
-# Ḷḷumex03 <tornes@opmbx.org>, 2014
-# Ḷḷumex03 <tornes@opmbx.org>, 2014-2015
+# Ḷḷumex03, 2014
+# Ḷḷumex03, 2014
+# Ḷḷumex03, 2014-2015
 # Tornes Ḷḷume <tornes.llume@openmailbox.org>, 2015-2017
 # Ximielga <dorian@openmailbox.org>, 2014
 msgid ""

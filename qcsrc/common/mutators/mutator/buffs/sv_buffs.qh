@@ -9,6 +9,7 @@ float autocvar_g_buffs_waypoint_distance;
 bool autocvar_g_buffs_pickup_anyway = false;
 float autocvar_g_buffs_pickup_delay = 0.7;
 bool autocvar_g_buffs_randomize;
+bool autocvar_g_buffs_randomize_teamplay = true;
 float autocvar_g_buffs_random_lifetime;
 bool autocvar_g_buffs_random_location;
 int autocvar_g_buffs_random_location_attempts;

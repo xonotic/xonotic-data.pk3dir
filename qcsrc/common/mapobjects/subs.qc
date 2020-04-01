@@ -398,7 +398,7 @@ void ApplyMinMaxScaleAngles(entity e)
 		setsize(e, e.mins, e.maxs);
 }
 
-void SetBrushEntityModel(entity this)
+void SetBrushEntityModel(entity this, bool with_lod)
 {
  	if(this.model != "")
  	{
@@ -412,26 +412,11 @@ void SetBrushEntityModel(entity this)
 		}
 		else
 			_setmodel(this, this.model); // no precision needed
-		InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
- 	}
-	setorigin(this, this.origin);
-	ApplyMinMaxScaleAngles(this);
-}
+		if(with_lod)
+			InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
 
-void SetBrushEntityModelNoLOD(entity this)
-{
- 	if(this.model != "")
- 	{
- 		precache_model(this.model);
-		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
-		{
-			vector mi = this.mins;
-			vector ma = this.maxs;
-			_setmodel(this, this.model); // no precision needed
-			setsize(this, mi, ma);
-		}
-		else
-			_setmodel(this, this.model); // no precision needed
+		if(endsWith(this.model, ".obj")) // WORKAROUND: darkplaces currently rotates .obj models on entities incorrectly, we need to add 180 degrees to the Y axis
+			this.angles_y = anglemods(this.angles_y - 180);
  	}
 	setorigin(this, this.origin);
 	ApplyMinMaxScaleAngles(this);
@@ -553,7 +538,7 @@ void InitTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
-	SetBrushEntityModelNoLOD(this);
+	SetBrushEntityModel(this, false);
 	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
@@ -565,7 +550,7 @@ void InitSolidBSPTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir(this);
 	this.solid = SOLID_BSP;
-	SetBrushEntityModelNoLOD(this);
+	SetBrushEntityModel(this, false);
 	set_movetype(this, MOVETYPE_NONE); // why was this PUSH? -div0
 //	this.modelindex = 0;
 	this.model = "";
@@ -576,7 +561,7 @@ bool InitMovingBrushTrigger(entity this)
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	this.solid = SOLID_BSP;
-	SetBrushEntityModel(this);
+	SetBrushEntityModel(this, true);
 	set_movetype(this, MOVETYPE_PUSH);
 	if(this.modelindex == 0)
 	{

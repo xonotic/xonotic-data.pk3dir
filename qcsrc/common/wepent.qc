@@ -74,6 +74,10 @@ MACRO_END
 	{ WriteShort(chan, this.clip_size); }, \
 	{ (viewmodels[this.m_wepent_slot]).clip_size = ReadShort(); }) \
     \
+    PROP(false, skin, WEPENT_SET_NORMAL, \
+	{ WriteShort(chan, this.skin); }, \
+	{ (viewmodels[this.m_wepent_slot]).m_skin = ReadShort(); }) \
+    \
 	/**/
 
 #ifdef SVQC

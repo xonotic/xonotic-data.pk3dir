@@ -26,6 +26,10 @@ void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger);
 
+// allow excluding certain .target* fields without needing to nullify them
+// use BIT(1) through BIT(4)
+void SUB_UseTargets_SkipTargets(entity this, entity actor, entity trigger, int skiptargets);
+
 void generic_setactive(entity this, int act);
 // generic methods for netlinked entities
 void generic_netlinked_reset(entity this);

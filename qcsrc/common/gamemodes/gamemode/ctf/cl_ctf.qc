@@ -69,15 +69,6 @@ void HUD_Mod_CTF(vector pos, vector mySize)
     X(neutral);
     #undef X
 
-    const float BLINK_FACTOR = 0.15;
-    const float BLINK_BASE = 0.85;
-    // note:
-    //   RMS = sqrt(BLINK_BASE^2 + 0.5 * BLINK_FACTOR^2)
-    // thus
-    //   BLINK_BASE = sqrt(RMS^2 - 0.5 * BLINK_FACTOR^2)
-    // ensure RMS == 1
-    const float BLINK_FREQ = 5; // circle frequency, = 2*pi*frequency in hertz
-
     #define X(team, cond) \
     string team##_icon = string_null, team##_icon_prevstatus = string_null; \
     int team##_alpha, team##_alpha_prevstatus; \
@@ -86,7 +77,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
         switch (team##flag) { \
             case 1: team##_icon = "flag_" #team "_taken"; break; \
             case 2: team##_icon = "flag_" #team "_lost"; break; \
-            case 3: team##_icon = "flag_" #team "_carrying"; team##_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; \
+            case 3: team##_icon = "flag_" #team "_carrying"; team##_alpha = blink(0.85, 0.15, 5); break; \
             default: \
                 if ((stat_items & CTF_SHIELDED) && (cond)) { \
                     team##_icon = "flag_" #team "_shielded"; \
@@ -98,7 +89,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
         switch (team##flag_prevstatus) { \
             case 1: team##_icon_prevstatus = "flag_" #team "_taken"; break; \
             case 2: team##_icon_prevstatus = "flag_" #team "_lost"; break; \
-            case 3: team##_icon_prevstatus = "flag_" #team "_carrying"; team##_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; \
+            case 3: team##_icon_prevstatus = "flag_" #team "_carrying"; team##_alpha_prevstatus = blink(0.85, 0.15, 5); break; \
             default: \
                 if (team##flag == 3) { \
                     team##_icon_prevstatus = "flag_" #team "_carrying"; /* make it more visible */\

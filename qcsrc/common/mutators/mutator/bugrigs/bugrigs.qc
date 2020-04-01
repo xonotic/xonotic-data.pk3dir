@@ -309,6 +309,8 @@ MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 #ifdef SVQC
 	entity player = M_ARGV(0, entity);
 	player.bugrigs_prevangles = player.angles;
+
+	player.disableclientprediction = 2;
 #endif
 }
 

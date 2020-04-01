@@ -103,10 +103,15 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			vector horiz_vel = vec2(it.velocity);
 			// when walking slowly sideways, we assume the player wants a clear shot ahead - spawn behind him according to where he's looking
 			// when running fast, spawn behind him according to his direction of movement to prevent colliding with the newly spawned player
+			vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
 			if (vdist(horiz_vel, >, autocvar_sv_maxspeed + 50))
-				fixedmakevectors(vectoangles(horiz_vel));
+			{
+				FIXED_MAKE_VECTORS(vectoangles(horiz_vel), forward, right, up);
+			}
 			else
-				fixedmakevectors(it.angles); // .angles is the angle of the model - usually/always 0 pitch
+			{
+				FIXED_MAKE_VECTORS(it.angles, forward, right, up);
+			}
 
 			// test different spots close to mate - trace upwards so it works on uneven surfaces
 			// don't spawn in front of player or directly behind to avoid players shooting each other
@@ -117,22 +122,22 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				switch(i)
 				{
 					case 0:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_forward * 64 + v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - forward * 64 + right * 128 + up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 1:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_forward * 64 - v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - forward * 64 - right * 128 + up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 2:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin + v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin + right * 192 + up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 3:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - right * 192 + up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 4:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_forward * 128 + v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - forward * 128 + right * 64 + up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 5:
-						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - v_forward * 128 - v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin - forward * 128 - right * 64 + up * 64, MOVE_NOMONSTERS, it);
 						break;
 				}
 
@@ -142,7 +147,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 				// 400 is about the height of a typical laser jump (in overkill)
 				// not traceline because we need space for the whole player, not just his origin
-				tracebox(horizontal_trace_endpos, STAT(PL_MIN, player), STAT(PL_MAX, player), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
+				tracebox(horizontal_trace_endpos, STAT(PL_MIN, player), STAT(PL_MAX, player), horizontal_trace_endpos - 400 * up, MOVE_NORMAL, it);
 				vector vectical_trace_endpos = trace_endpos;
 				//te_lightning1(NULL, horizontal_trace_endpos, vectical_trace_endpos);
 				if (trace_startsolid) goto skip; // inside another player
@@ -152,8 +157,9 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, player), STAT(PL_MAX, player), vectical_trace_endpos)) goto skip;
 
 				// make sure the spawned player will have floor ahead (or at least a wall - he shouldn't fall as soon as he starts moving)
-				vector floor_test_start = vectical_trace_endpos + v_up * STAT(PL_MAX, player).z + v_forward * STAT(PL_MAX, player).x; // top front of player's bbox - highest point we know is not inside solid
-				traceline(floor_test_start, floor_test_start + v_forward * 100 - v_up * 128, MOVE_NOMONSTERS, it);
+				// top front of player's bbox - highest point we know is not inside solid
+				vector floor_test_start = vectical_trace_endpos + up * STAT(PL_MAX, player).z + forward * STAT(PL_MAX, player).x; 
+				traceline(floor_test_start, floor_test_start + forward * 100 - up * 128, MOVE_NOMONSTERS, it);
 				//te_beam(NULL, floor_test_start, trace_endpos);
 				if (trace_fraction == 1.0) goto skip;
 
@@ -171,7 +177,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 				// here, we know we found a good spot
 				RandomSelection_Add(it, 0, string_null, vectical_trace_endpos, 1, 1);
-				//te_lightning1(NULL, vectical_trace_endpos, vectical_trace_endpos + v_forward * 10);
+				//te_lightning1(NULL, vectical_trace_endpos, vectical_trace_endpos + forward * 10);
 
 LABEL(skip)
 				if (i % 2 == 1 && RandomSelection_chosen_ent)

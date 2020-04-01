@@ -33,7 +33,6 @@ void Draw_VaporizerBeam_trace_callback(vector start, vector hit, vector end)
 }
 
 .vector vorg1, vorg2;
-.float spawn_time;
 void VaporizerBeam_Draw(entity this)
 {
 	//draw either the old v2.3 beam or the new beam

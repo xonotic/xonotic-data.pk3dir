@@ -9,7 +9,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
 void bumblebee_fire_cannon(entity this, entity _gun, string _tagname, entity _owner)
 {
     vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-    vehicles_projectile(this, EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, SND_VEH_BUMBLEBEE_FIRE,
+    vehicles_projectile(this, EFFECT_BIGPLASMA_MUZZLEFLASH, SND_VEH_BUMBLEBEE_FIRE,
                         v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
                         autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
                         DEATH_VH_BUMB_GUN.m_id, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);

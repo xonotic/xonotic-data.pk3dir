@@ -245,7 +245,7 @@ void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
 	vehicles_projectile_explode(this, trigger);
 }
 
-entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
+entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
 						   int _deahtype, float _projtype, float _health,
@@ -290,8 +290,8 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	if(_mzlsound != SND_Null)
 		sound (this, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
-	if(_mzlfx)
-		Send_Effect_(_mzlfx, proj.origin, proj.velocity, 1);
+	if(_mzlfx != EFFECT_Null)
+		Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
 
 	setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
@@ -777,17 +777,12 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 
 	if(this.play_time < time)
 	{
-		float wc = vlen(this.velocity - this.oldvelocity);
-		//dprint("oldvel: ", vtos(this.oldvelocity), "\n");
-		//dprint("vel: ", vtos(this.velocity), "\n");
-		if(_minspeed < wc)
+		if(vdist(this.velocity - this.oldvelocity, >, _minspeed))
 		{
+			float wc = vlen(this.velocity - this.oldvelocity);
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			Damage(this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.play_time = time + 0.25;
-
-			//dprint("wc: ", ftos(wc), "\n");
-			//dprint("take: ", ftos(take), "\n");
 		}
 	}
 }
@@ -857,7 +852,7 @@ void vehicles_exit(entity vehic, bool eject)
 		set_movetype(player, MOVETYPE_WALK);
 		player.effects		   &= ~EF_NODRAW;
 		player.teleportable		= TELEPORT_NORMAL;
-		player.alpha			= 1;
+		player.alpha			= default_player_alpha;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
 		player.view_ofs			= STAT(PL_VIEW_OFS, player);
@@ -924,12 +919,12 @@ void vehicles_touch(entity this, entity toucher)
 	// Vehicle currently in use
 	if(this.owner)
 	{
-		if(!weaponLocked(this.owner))
 		if(toucher != NULL)
 		if((this.origin_z + this.maxs_z) > (toucher.origin_z))
 		if(vehicles_crushable(toucher))
+		if(!weaponLocked(this.owner))
 		{
-			if(vdist(this.velocity, >=, 30))
+			if(vdist(this.velocity, >=, autocvar_g_vehicles_crush_minspeed))
 				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, DMG_NOWEP, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".

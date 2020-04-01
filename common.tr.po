@@ -3,15 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Abdurrahman AKKUŞ <a.rahmanakkus@hotmail.com>, 2019
 # Çağlar Turalı <caglarturali@gmail.com>, 2018
 # Demiray Muhterem <mdemiray@msn.com>, 2018
+# ibra kap <ibrakap@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2019-12-18 07:52+0000\n"
+"Last-Translator: Abdurrahman AKKUŞ <a.rahmanakkus@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
@@ -23,12 +25,12 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Başarıyla %s'e aktarıldı! (Dikkat: data/data/'ya kaydedildi)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1 %s'e yazılamadı"
 
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
@@ -253,7 +255,7 @@ msgstr "Devam..."
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "Sohbet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
@@ -488,7 +490,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "Tam Ekran"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 #: qcsrc/client/hud/panel/quickmenu.qc:860

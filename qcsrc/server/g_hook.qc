@@ -359,9 +359,13 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	if(weaponLocked(actor)) return;
 	if(actor.vehicle) return;
 
-	// TODO: offhand hook shoots from eye
+	int s = W_GunAlign(actor.(weaponentity), STAT(GUNALIGN, actor)) - 1;
+	vector vs = hook_shotorigin[s];
+	vector oldmovedir = actor.(weaponentity).movedir;
+	actor.(weaponentity).movedir = vs;
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', true, 0, SND_HOOK_FIRE, CH_WEAPON_B, 0, WEP_HOOK.m_id);
 	Send_Effect(EFFECT_HOOK_MUZZLEFLASH, w_shotorg, '0 0 0', 1);
+	actor.(weaponentity).movedir = oldmovedir;
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.owner = missile.realowner = actor;

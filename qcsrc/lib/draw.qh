@@ -26,7 +26,7 @@
 		C = to + thickdir * (thickness / 2);
 		D = to - thickdir * (thickness / 2);
 
-		R_BeginPolygon(texture, drawflag);
+		R_BeginPolygon(texture, drawflag, false);
 		R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
 		R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, theAlpha);
 		R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);

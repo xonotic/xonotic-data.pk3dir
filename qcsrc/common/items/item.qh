@@ -11,7 +11,7 @@
 #include <server/items.qh>
 #endif
 
-const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+const int IT_UNLIMITED_AMMO 			=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
 
 const int IT_JETPACK               		=  BIT(2); // actual item
@@ -44,8 +44,7 @@ const int IT_SUPERWEAPON				= BIT(21); // suit
 const int IT_STRENGTH   				= BIT(22);
 
 // item masks
-const int IT_UNLIMITED_AMMO            	= IT_UNLIMITED_WEAPON_AMMO | IT_UNLIMITED_SUPERWEAPONS;
-const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
+const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
 
 #ifdef SVQC
 const .float strength_finished = _STAT(STRENGTH_FINISHED);

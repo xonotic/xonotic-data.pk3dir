@@ -45,6 +45,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write_Cvar("hud_progressbar_health_color");
 		HUD_Write_Cvar("hud_progressbar_armor_color");
 		HUD_Write_Cvar("hud_progressbar_fuel_color");
+		HUD_Write_Cvar("hud_progressbar_oxygen_color");
 		HUD_Write_Cvar("hud_progressbar_nexball_color");
 		HUD_Write_Cvar("hud_progressbar_speed_color");
 		HUD_Write_Cvar("hud_progressbar_acceleration_color");
@@ -97,6 +98,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_Cvar("hud_panel_weapons_timeout_speed_in");
 					HUD_Write_Cvar("hud_panel_weapons_timeout_speed_out");
 					HUD_Write_Cvar("hud_panel_weapons_onlyowned");
+					HUD_Write_Cvar("hud_panel_weapons_orderbyimpulse");
 					HUD_Write_Cvar("hud_panel_weapons_noncurrent_alpha");
 					HUD_Write_Cvar("hud_panel_weapons_noncurrent_scale");
 					HUD_Write_Cvar("hud_panel_weapons_selection_radius");

@@ -40,11 +40,11 @@ REGISTER_PLAYERSOUND(pain75)
 
 .bool instanceOfVoiceMessage;
 .int m_playersoundvt;
-#define REGISTER_VOICEMSG(id, vt) \
+#define REGISTER_VOICEMSG(id, vt, listed) \
 	.string _playersound_##id; \
 	REGISTER(PlayerSounds, playersound, id, m_id, new_pure(VoiceMessage)) \
 	{ \
-		this.instanceOfVoiceMessage = true; \
+		this.instanceOfVoiceMessage = listed; \
 		this.m_playersoundstr = #id; \
 		this.m_playersoundfld = _playersound_##id; \
 		this.m_playersoundvt = vt; \
@@ -57,30 +57,30 @@ const int VOICETYPE_LASTATTACKER_ONLY = 13;
 const int VOICETYPE_AUTOTAUNT = 14;
 const int VOICETYPE_TAUNT = 15;
 
-REGISTER_VOICEMSG(attack, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(attackinfive, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(coverme, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(defend, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(freelance, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(incoming, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(meet, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(needhelp, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(seenflag, VOICETYPE_TEAMRADIO)
-REGISTER_VOICEMSG(taunt, VOICETYPE_TAUNT)
-REGISTER_VOICEMSG(teamshoot, VOICETYPE_LASTATTACKER)
+REGISTER_VOICEMSG(attack, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(attackinfive, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(coverme, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(defend, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(freelance, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(incoming, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(meet, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(needhelp, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(seenflag, VOICETYPE_TEAMRADIO, true)
+REGISTER_VOICEMSG(taunt, VOICETYPE_TAUNT, true)
+REGISTER_VOICEMSG(teamshoot, VOICETYPE_LASTATTACKER, true)
 
-// reserved sound names for the future (some models lack sounds for them):
-// _VOICEMSG(flagcarriertakingdamage)
-// _VOICEMSG(getflag)
-// reserved sound names for the future (ALL models lack sounds for them):
-// _VOICEMSG(affirmative)
-// _VOICEMSG(attacking)
-// _VOICEMSG(defending)
-// _VOICEMSG(roaming)
-// _VOICEMSG(onmyway)
-// _VOICEMSG(droppedflag)
-// _VOICEMSG(negative)
-// _VOICEMSG(seenenemy)
+//NOTE: some models lack sounds for these:
+REGISTER_VOICEMSG(flagcarriertakingdamage, VOICETYPE_TEAMRADIO, false)
+REGISTER_VOICEMSG(getflag, VOICETYPE_TEAMRADIO, false)
+//NOTE: ALL models lack sounds for these (only available in default sounds currently):
+REGISTER_VOICEMSG(affirmative, VOICETYPE_TEAMRADIO, false)
+REGISTER_VOICEMSG(attacking, VOICETYPE_TEAMRADIO, false)
+REGISTER_VOICEMSG(defending, VOICETYPE_TEAMRADIO, false)
+REGISTER_VOICEMSG(roaming, VOICETYPE_TEAMRADIO, false)
+REGISTER_VOICEMSG(onmyway, VOICETYPE_TEAMRADIO, false)
+REGISTER_VOICEMSG(droppedflag, VOICETYPE_TEAMRADIO, false)
+REGISTER_VOICEMSG(negative, VOICETYPE_TEAMRADIO, false)
+REGISTER_VOICEMSG(seenenemy, VOICETYPE_TEAMRADIO, false)
 
 .string m_globalsoundstr;
 REGISTRY(GlobalSounds, BITS(8) - 1)

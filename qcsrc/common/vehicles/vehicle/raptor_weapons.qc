@@ -7,7 +7,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     // 1 [wait] 1 [wait] 2 [wait] 2 [wait] [wait]
-    float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + veh.misc_bulletcounter == 4);
+    float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + ((veh.misc_bulletcounter + 1) >= 4));
     if (fire & 1)
     if (weapon_prepareattack(thiswep, player, weaponentity, false, t)) {
         if (isPlayer) W_SetupShot_Dir(player, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0, DEATH_VH_RAPT_CANNON.m_id);
@@ -16,12 +16,12 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
         if (veh) {
             veh.misc_bulletcounter += 1;
             org = (veh.misc_bulletcounter <= 2) ? gettaginfo(veh.gun1, gettagindex(veh.gun1, "fire1"))
-              : (((veh.misc_bulletcounter == 4) ? veh.misc_bulletcounter = 0 : 0), gettaginfo(veh.gun2, gettagindex(veh.gun2, "fire1")));
+              : (((veh.misc_bulletcounter >= 4) ? veh.misc_bulletcounter = 0 : 0), gettaginfo(veh.gun2, gettagindex(veh.gun2, "fire1")));
             dir = v_forward;
             veh.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
             actor.cnt = time;
         }
-        vehicles_projectile(veh, EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
+        vehicles_projectile(veh, EFFECT_RAPTOR_MUZZLEFLASH, SND_LASERGUN_FIRE,
                                org, normalize(dir + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                                autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
                                DEATH_VH_RAPT_CANNON.m_id, PROJECTILE_RAPTORCANNON, 0, true, true, player);
@@ -59,6 +59,8 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
     entity veh = player.vehicle;
     if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, player, weaponentity, true, autocvar_g_vehicle_raptor_flare_refire)) {
+        vector forward, right, up;
+        MAKE_VECTORS(player.v_angle, forward, right, up);
         for(int i = 0; i < 3; ++i) {
             entity _flare = spawn();
             setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
@@ -67,7 +69,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             setorigin(_flare, actor.origin - '0 0 16');
             set_movetype(_flare, MOVETYPE_TOSS);
             _flare.gravity = 0.15;
-            _flare.velocity = 0.25 * actor.velocity + (v_forward + randomvec() * 0.25)* -500;
+            _flare.velocity = 0.25 * actor.velocity + (forward + randomvec() * 0.25)* -500;
             setthink(_flare, raptor_flare_think);
             _flare.nextthink = time;
             _flare.owner = veh ? veh : player;

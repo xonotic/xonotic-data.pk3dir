@@ -705,7 +705,7 @@ int GameType_GetCount()
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-	#define GAMETYPE(it) { if (dev) ++i; }
+	#define GAMETYPE(it) { if (dev > 0) ++i; }
 	HIDDEN_GAMETYPES
 	#undef GAMETYPE
 	return i;

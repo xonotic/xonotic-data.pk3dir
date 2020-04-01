@@ -440,6 +440,8 @@ void ReadyRestart_force()
 	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
+	if(warmup_stage)
+		localcmd("\nsv_hook_warmupend\n");
 	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
@@ -475,7 +477,7 @@ void ReadyRestart_force()
 void ReadyRestart()
 {
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
-	else localcmd("\nsv_hook_gamerestart\n");
+	else localcmd("\nsv_hook_readyrestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
@@ -540,11 +542,21 @@ float VoteCommand_checknasty(string vote_command)
 	return true;
 }
 
+// NOTE: requires input to be surrounded by spaces
+string VoteCommand_checkreplacements(string input)
+{
+	string output = input;
+	// allow gotomap replacements
+	output = strreplace(" map ", " gotomap ", output);
+	output = strreplace(" chmap ", " gotomap ", output);
+	return output;
+}
+
 float VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = strcat(" ", list, " ");
+	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
 
-	if (strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0) return true;
+	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
 
 	return false;
 }
@@ -709,11 +721,28 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
-		case "nextmap": // TODO: replicate the old behaviour of being able to vote for maps from different modes on multimode servers (possibly support it in gotomap too), maybe fallback instead of aborting if map name is invalid?
+		// TODO: replicate the old behaviour of being able to vote for maps from different modes on multimode servers (possibly support it in gotomap too)
+		// maybe fallback instead of aborting if map name is invalid?
+		case "nextmap":
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
 			vote_parsed_command = strcat("nextmap ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+
+			break;
+		}
+
+		case "timelimit": // include restrictions on the maximum votable time limit
+		{
+			float timelimit_vote = stof(argv(startpos + 1));
+			if(timelimit_vote > autocvar_timelimit_max || timelimit_vote < autocvar_timelimit_min)
+			{
+				print_to(caller, strcat("Invalid timelimit vote, accepted values are between ", ftos(autocvar_timelimit_min), " and ", ftos(autocvar_timelimit_max), "."));
+				return -1;
+			}
+			timelimit_vote = bound(autocvar_timelimit_min, timelimit_vote, autocvar_timelimit_max);
+			vote_parsed_command = strcat("timelimit ", ftos(timelimit_vote));
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
 			break;

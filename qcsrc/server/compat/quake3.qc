@@ -59,10 +59,7 @@ SPAWNFUNC_ITEM(item_armor_shard, ITEM_ArmorSmall)
 SPAWNFUNC_ITEM(item_enviro, ITEM_Shield)
 
 // medkit -> armor (we have no holdables)
-SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorMega)
-
-// doubler -> strength
-SPAWNFUNC_ITEM(item_doubler, ITEM_Strength)
+SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorBig)
 
 .float wait;
 .float delay;
@@ -233,6 +230,7 @@ spawnfunc(target_fragsFilter)
 }
 
 //spawnfunc(item_flight)       /* handled by buffs mutator */
+//spawnfunc(item_doubler)        /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
 //spawnfunc(item_health_large) /* handled in t_items.qc */

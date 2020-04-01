@@ -398,6 +398,8 @@ Main HUD system
 ==================
 */
 
+float lasthud;
+float vh_notice_time;
 void HUD_Vehicle()
 {
 	if(autocvar__hud_configure) return;
@@ -409,6 +411,11 @@ void HUD_Vehicle()
 		Vehicle info = Vehicles_from(hud);
 		info.vr_hud(info);
 	}
+
+	if(hud != HUD_NORMAL && lasthud == HUD_NORMAL)
+		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
+
+	lasthud = hud;
 }
 
 void HUD_Panel_Draw(entity panent)
@@ -588,6 +595,7 @@ bool HUD_WouldShowCursor()
 	return false;
 }
 
+float prev_myteam;
 void HUD_Main()
 {
 	int i;
@@ -595,6 +603,13 @@ void HUD_Main()
 		hud_fade_alpha = 1;
 	else
 		hud_fade_alpha = 1 - autocvar__menu_alpha;
+
+	if(myteam != prev_myteam)
+	{
+		myteamcolors = colormapPaletteColor(myteam, 1);
+		FOREACH(hud_panels, true, it.update_time = time);
+		prev_myteam = myteam;
+	}
 
 	HUD_Configure_Frame();
 

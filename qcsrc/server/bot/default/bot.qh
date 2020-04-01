@@ -65,6 +65,7 @@ entity bot_list;
 .bool bot_pickup_respawning;
 .float bot_canfire;
 .float bot_strategytime;
+.float bot_jump_time;
 
 .float bot_forced_team;
 .float bot_config_loaded;
@@ -75,7 +76,6 @@ entity bot_strategytoken;
 float botframe_spawnedwaypoints;
 float botframe_nextthink;
 float botframe_nextdangertime;
-float bot_cvar_nextthink;
 
 int _content_type;
 #define IN_LAVA(pos) (_content_type = pointcontents(pos), (_content_type == CONTENT_LAVA || _content_type == CONTENT_SLIME))

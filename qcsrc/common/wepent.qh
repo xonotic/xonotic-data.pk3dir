@@ -37,6 +37,8 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 
 	.float m_alpha;
 
+	.int m_skin;
+
 	// only for Porto
 	.bool angles_held_status;
 	.vector angles_held;

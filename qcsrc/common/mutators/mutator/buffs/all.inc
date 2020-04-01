@@ -57,6 +57,7 @@ REGISTER_BUFF(BASH) {
     this.m_color = '1 0.39 0';
 }
 BUFF_SPAWNFUNCS(bash, BUFF_BASH)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler, BUFF_BASH)
 
 REGISTER_BUFF(VAMPIRE) {
     this.m_name = _("Vampire");

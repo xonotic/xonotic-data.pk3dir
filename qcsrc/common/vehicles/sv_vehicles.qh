@@ -12,6 +12,7 @@ AUTOCVAR(g_vehicles_steal, bool, true, "allow stealing enemy vehicles in teampla
 AUTOCVAR(g_vehicles_steal_show_waypoint, bool, true, "show a waypoint above the thief");
 float autocvar_g_vehicles_crush_dmg = 70;
 float autocvar_g_vehicles_crush_force = 50;
+float autocvar_g_vehicles_crush_minspeed = 100;
 bool autocvar_g_vehicles_delayspawn = true;
 float autocvar_g_vehicles_delayspawn_jitter = 10;
 float autocvar_g_vehicles_allow_bots;

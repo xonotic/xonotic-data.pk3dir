@@ -4,7 +4,7 @@
 //float PS_PM_IN_DB = -1;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
 int PS_GR_OUT_DB = -1;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
 //float PS_GR_IN_DB = -1;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
-int PS_B_IN_DB = -1;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
+float PS_B_IN_DB = -1;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
 #endif
 
 #ifdef MENUQC

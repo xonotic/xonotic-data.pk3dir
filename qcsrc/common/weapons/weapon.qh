@@ -216,6 +216,8 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
 
 string GetAmmoPicture(int ammotype);
 
+string GetAmmoName(int ammotype);
+
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i);
 int GetAmmoStat(int ammotype);

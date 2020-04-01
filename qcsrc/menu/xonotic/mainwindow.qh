@@ -24,4 +24,6 @@ CLASS(MainWindow, ModalController)
 	ATTRIB(MainWindow, demostartconfirmDialog, entity);
 	ATTRIB(MainWindow, demotimeconfirmDialog, entity);
 	ATTRIB(MainWindow, resetDialog, entity);
+	ATTRIB(MainWindow, disconnectDialog, entity);
+	ATTRIB(MainWindow, disconnectDialogVisibility, float, 1);
 ENDCLASS(MainWindow)

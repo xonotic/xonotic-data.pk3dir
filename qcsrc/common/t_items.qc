@@ -88,20 +88,18 @@ void ItemDraw(entity this)
             this.onground_time = time + 0.5;
         }
     }
-    else if (autocvar_cl_animate_items)
+    else if (autocvar_cl_animate_items && !this.item_simple) // no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
         {
-        	if(!this.item_simple)
-            	this.angles += this.avelocity * frametime;
+        	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
-        	if(!this.item_simple)
-            	this.angles += this.avelocity * frametime;
+        	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
         }
@@ -176,8 +174,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_SIZE)
     {
-        float use_bigsize = ReadByte();
-        setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+        setsize(this, '-16 -16 0', '16 16 48');
     }
 
     if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
@@ -186,9 +183,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         Item_SetAlpha(this);
 
-        if(autocvar_cl_fullbright_items)
-            if(this.ItemStatus & ITS_ALLOWFB)
-                this.effects |= EF_FULLBRIGHT;
+        if(this.ItemStatus & ITS_ALLOWFB)
+           this.effects |= EF_FULLBRIGHT;
 
         if(this.ItemStatus & ITS_GLOW)
         {
@@ -207,8 +203,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.draw       = ItemDraw;
         this.solid = SOLID_TRIGGER;
         //this.flags |= FL_ITEM;
-
-        bool use_bigsize = ReadByte();
 
         this.fade_end = ReadShort();
         this.fade_start = ReadShort();
@@ -260,7 +254,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
 
-        setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+        setsize(this, '-16 -16 0', '16 16 48');
     }
 
     if(sf & ISF_COLORMAP)
@@ -329,19 +323,14 @@ bool ItemSend(entity this, entity to, int sf)
 		WriteAngle(MSG_ENTITY, this.angles_z);
 	}
 
-	if(sf & ISF_SIZE)
-	{
-		Pickup p = this.itemdef;
-		WriteByte(MSG_ENTITY, p.instanceOfPowerup || p.instanceOfHealth || p.instanceOfArmor);
-	}
+	// sets size on the client, unused on server
+	//if(sf & ISF_SIZE)
 
 	if(sf & ISF_STATUS)
 		WriteByte(MSG_ENTITY, this.ItemStatus);
 
 	if(sf & ISF_MODEL)
 	{
-		Pickup p = this.itemdef;
-		WriteByte(MSG_ENTITY, p.instanceOfPowerup || p.instanceOfHealth || p.instanceOfArmor);
 		WriteShort(MSG_ENTITY, this.fade_end);
 		WriteShort(MSG_ENTITY, this.fade_start);
 
@@ -356,8 +345,8 @@ bool ItemSend(entity this, entity to, int sf)
 	{
 		WriteShort(MSG_ENTITY, this.colormap);
 		WriteByte(MSG_ENTITY, this.glowmod.x * 255.0);
-        WriteByte(MSG_ENTITY, this.glowmod.y * 255.0);
-        WriteByte(MSG_ENTITY, this.glowmod.z * 255.0);
+		WriteByte(MSG_ENTITY, this.glowmod.y * 255.0);
+		WriteByte(MSG_ENTITY, this.glowmod.z * 255.0);
 	}
 
 	if(sf & ISF_DROP)
@@ -402,7 +391,7 @@ bool have_pickup_item(entity this)
 	return true;
 }
 
-void Item_Show (entity e, int mode)
+void Item_Show(entity e, int mode)
 {
 	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
 	e.ItemStatus &= ~ITS_STAYWEP;
@@ -479,13 +468,13 @@ float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
 
-void Item_Respawn (entity this)
+void Item_Respawn(entity this)
 {
 	Item_Show(this, 1);
 	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin(this, this.origin);
 
-    if (Item_ItemsTime_Allow(this.itemdef) || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
+	if (Item_ItemsTime_Allow(this.itemdef) || (STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 	{
 		float t = Item_ItemsTime_UpdateTime(this, 0);
 		Item_ItemsTime_SetTime(this, t);
@@ -499,7 +488,7 @@ void Item_Respawn (entity this)
 	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 }
 
-void Item_RespawnCountdown (entity this)
+void Item_RespawnCountdown(entity this)
 {
 	if(this.item_respawncounter >= ITEM_RESPAWN_TICKS)
 	{
@@ -624,7 +613,7 @@ float adjust_respawntime(float normal_respawntime) {
 		}
 	}
 	TeamBalance_Destroy(balance);
-	
+
 	if (players >= 2) {
 		return normal_respawntime * (r / (players + o) + l);
 	} else {
@@ -746,7 +735,11 @@ bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
 			return false;
 	}
 	else if (g_weapon_stay == 2)
+	{
 		ammomax = min(amount, ammomax);
+		if(player_amount >= ammomax)
+			return false;
+	}
 	else
 		return false;
 	if (amount < 0)
@@ -780,14 +773,14 @@ bool Item_GiveTo(entity item, entity player)
 		}
 	}
 	bool pickedup = false;
-	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_HEALTH, item.max_health));
-	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_ARMOR, item.max_armorvalue));
-	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_SHELLS, g_pickup_shells_max));
-	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_BULLETS, g_pickup_nails_max));
-	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_ROCKETS, g_pickup_rockets_max));
-	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_CELLS, g_pickup_cells_max));
-	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_PLASMA, g_pickup_plasma_max));
-	pickedup = (pickedup || Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max));
+	pickedup |= Item_GiveAmmoTo(item, player, RES_HEALTH, item.max_health);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_ARMOR, item.max_armorvalue);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_SHELLS, g_pickup_shells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_BULLETS, g_pickup_nails_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_ROCKETS, g_pickup_rockets_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_CELLS, g_pickup_cells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_PLASMA, g_pickup_plasma_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w;
@@ -1008,8 +1001,8 @@ void Item_FindTeam(entity this)
 		});
 
 		e = RandomSelection_chosen_ent;
-		e.state = 0;
-		Item_Show(e, 1);
+		if (!e)
+			return;
 
 		IL_EACH(g_items, it.team == this.team,
 		{
@@ -1021,11 +1014,11 @@ void Item_FindTeam(entity this)
 					Item_Show(it, -1);
 					it.state = 1; // state 1 = initially hidden item, apparently
 				}
+				else
+					Item_Reset(it);
 				it.effects &= ~EF_NODRAW;
 			}
 		});
-
-		Item_Reset(this);
 	}
 }
 
@@ -1172,7 +1165,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 {
 	string itemname = def.m_name;
 	Model itemmodel = def.m_model;
-    Sound pickupsound = def.m_sound;
+	Sound pickupsound = def.m_sound;
 	float(entity player, entity item) pickupevalfunc = def.m_pickupevalfunc;
 	float pickupbasevalue = def.m_botvalue;
 	int itemflags = def.m_itemflags;
@@ -1180,10 +1173,10 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	startitem_failed = false;
 
 	this.item_model_ent = itemmodel;
-    this.item_pickupsound_ent = pickupsound;
+	this.item_pickupsound_ent = pickupsound;
 
-    if(def.m_iteminit)
-    	def.m_iteminit(def, this);
+	if(def.m_iteminit)
+		def.m_iteminit(def, this);
 
 	if(!this.respawntime) // both need to be set
 	{
@@ -1317,7 +1310,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
 			|| (itemid & (IT_KEY1 | IT_KEY2))
-		) 
+		)
 		{
 			if(!this.target || this.target == "")
 				this.target = "###item###"; // for finding the nearest item using findnearest
@@ -1360,7 +1353,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 
 	this.state = 0;
-	if(this.team) // broken, no idea why.
+	if(this.team)
 	{
 		if(!this.cnt)
 			this.cnt = 1; // item probability weight
@@ -1477,9 +1470,6 @@ void target_items_use(entity this, entity actor, entity trigger)
 
 spawnfunc(target_items)
 {
-	int n;
-	string s;
-
 	this.use = target_items_use;
 	if(!this.strength_finished)
 		this.strength_finished = autocvar_g_balance_powerup_strength_time;
@@ -1488,7 +1478,7 @@ spawnfunc(target_items)
 	if(!this.superweapons_finished)
 		this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
-	n = tokenize_console(this.netname);
+	int n = tokenize_console(this.netname);
 	if(argv(0) == "give")
 	{
 		this.netname = substring(this.netname, argv_start_index(1), argv_end_index(-1) - argv_start_index(1));
@@ -1497,8 +1487,9 @@ spawnfunc(target_items)
 	{
 		for(int j = 0; j < n; ++j)
 		{
-			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
-			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
+			// this is from a time when unlimited superweapons were handled together with ammo in some parts of the code
+			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
+			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_AMMO;
 			else if(argv(j) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
 			else if(argv(j) == "strength")               this.items |= ITEM_Strength.m_itemid;
 			else if(argv(j) == "invincible")             this.items |= ITEM_Shield.m_itemid;
@@ -1509,7 +1500,7 @@ spawnfunc(target_items)
 			{
 				FOREACH(Buffs, it != BUFF_Null,
 				{
-					s = Buff_UndeprecateName(argv(j));
+					string s = Buff_UndeprecateName(argv(j));
 					if(s == it.netname)
 					{
 						STAT(BUFFS, this) |= (it.m_itemid);
@@ -1519,7 +1510,7 @@ spawnfunc(target_items)
 					}
 				});
 				FOREACH(Weapons, it != WEP_Null, {
-					s = W_UndeprecateName(argv(j));
+					string s = W_UndeprecateName(argv(j));
 					if(s == it.netname)
 					{
 						STAT(WEAPONS, this) |= (it.m_wepset);
@@ -1559,7 +1550,7 @@ spawnfunc(target_items)
 		}
 
 		this.netname = "";
-		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_AMMO), "unlimited_weapon_ammo");
 		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
 		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.strength_finished * boolean(this.items & ITEM_Strength.m_itemid), "strength");
 		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.invincible_finished * boolean(this.items & ITEM_Shield.m_itemid), "invincible");
@@ -1584,8 +1575,8 @@ spawnfunc(target_items)
 	for(int j = 0; j < n; ++j)
 	{
 		FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(argv(j)) == it.netname, {
-            it.wr_init(it);
-            break;
+			it.wr_init(it);
+			break;
 		});
 	}
 }
@@ -1763,7 +1754,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, strength_finished, op, val);
 				got += GiveValue(e, invincible_finished, op, val);
 				got += GiveValue(e, superweapons_finished, op, val);
-				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
+				got += GiveBit(e, items, IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS, op, val);
 			case "all":
 				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
 				got += GiveResourceValue(e, RES_HEALTH, op, val);
@@ -1781,10 +1772,11 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			case "unlimited_ammo":
-				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
+				// this is from a time when unlimited superweapons were handled together with ammo in some parts of the code
+				got += GiveBit(e, items, IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS, op, val);
 				break;
 			case "unlimited_weapon_ammo":
-				got += GiveBit(e, items, IT_UNLIMITED_WEAPON_AMMO, op, val);
+				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
 				break;
 			case "unlimited_superweapons":
 				got += GiveBit(e, items, IT_UNLIMITED_SUPERWEAPONS, op, val);
@@ -1847,7 +1839,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND_POWERUP, SND_POWEROFF);
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_AMMO, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND_ITEMPICKUP, SND_Null);
 	FOREACH(Weapons, it != WEP_Null, {
 		POSTGIVE_WEAPON(e, it, SND_WEAPONPICKUP, SND_Null);

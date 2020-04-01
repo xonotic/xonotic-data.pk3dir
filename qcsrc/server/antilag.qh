@@ -9,6 +9,8 @@ void antilag_clear(entity e, entity store);
 void antilag_takeback_all(entity ignore, float lag);
 void antilag_restore_all(entity ignore);
 
+float antilag_getlag(entity e); // returns antilag latency for clients, plus any modifiers (such as noantilag)
+
 .float antilag_debug;
 
 #define ANTILAG_LATENCY(e) min(0.4, CS(e).ping * 0.001)

@@ -13,10 +13,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 {
 	mod_active = 1; // keepaway should always show the mod HUD
 
-	float BLINK_FACTOR = 0.15;
-	float BLINK_BASE = 0.85;
-	float BLINK_FREQ = 5;
-	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+	float kaball_alpha = blink(0.85, 0.15, 5);
 
 	int stat_items = STAT(ITEMS);
 	int kaball = (stat_items/IT_KEY1) & 1;

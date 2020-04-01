@@ -136,12 +136,14 @@ void CSQC_Init()
 
 	registercvar("cl_shootfromfixedorigin", "");
 
-	registercvar("cl_multijump", "1");
+	registercvar("cl_multijump", "-1");
 
 	registercvar("cl_spawn_near_teammate", "1");
 
 	registercvar("cl_weapon_switch_reload", "1");
 	registercvar("cl_weapon_switch_fallback_to_impulse", "1");
+
+	registercvar("cl_allow_uidranking", "1");
 
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
@@ -238,7 +240,7 @@ void Shutdown()
 bool SetTeam(entity o, int Team)
 {
 	TC(int, Team);
-	devassert_once(Team);
+	//devassert_once(Team);
 	entity tm;
 	if(teamplay)
 	{

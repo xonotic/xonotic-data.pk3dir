@@ -35,7 +35,7 @@ const int PMF_JUMP_HELD = 1;
 //const int PMF_DUCKED = 4;
 //const int PMF_ONGROUND = 8;
 
-const int FL_DUCKED = 524288;
+const int FL_DUCKED = BIT(19);
 
 void CSQCPlayer_SetCamera();
 float CSQCPlayer_PreUpdate(entity this);

@@ -67,7 +67,7 @@ float ons_notification_time[17];
 // declarations for functions used outside gamemode_onslaught.qc
 void ons_Generator_UpdateSprite(entity e);
 void ons_ControlPoint_UpdateSprite(entity e);
-bool ons_ControlPoint_Attackable(entity cp, int teamnumber);
+bool ons_ControlPoint_Attackable(entity cp, int teamnum);
 
 // CaptureShield: Prevent capturing or destroying control point/generator if it is not available yet
 float ons_captureshield_force; // push force of the shield

@@ -93,8 +93,8 @@ pk3: csprogs-$(VER).pk3
 	$(eval DAT=$(PROG)-$(VER).dat)
 	$(eval LNO=$(PROG)-$(VER).lno)
 	@ echo "http://xonotic.org" > $(TXT)
-	@ ln -f $(PROGS_OUT)/$(PROG).dat $(DAT)
-	@ ln -f $(PROGS_OUT)/$(PROG).lno $(LNO)
+	@ cp -f $(PROGS_OUT)/$(PROG).dat $(DAT)
+	@ cp -f $(PROGS_OUT)/$(PROG).lno $(LNO)
 	@ $(RM) *.pk3
 	$(ZIP) $(PK3) $(TXT) $(DAT) $(LNO)
 	@ $(RM) $(TXT) $(DAT) $(LNO)

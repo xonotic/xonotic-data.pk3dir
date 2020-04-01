@@ -43,7 +43,7 @@ void Porto_Draw(entity this)
 			dir = reflect(dir, trace_plane_normal);
 			pos = trace_endpos;
 			wepent.polyline[++idx] = pos;
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
 			{
 				n += 1;
 				continue;
@@ -118,7 +118,7 @@ void W_Porto_Fail(entity this, float failhard)
 
 	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(STAT(WEAPONS, this.realowner) & WEPSET(PORTO)))
 	{
-		setsize(this, '-16 -16 0', '16 16 32');
+		setsize(this, '-16 -16 0', '16 16 48');
 		setorigin(this, this.origin + trace_plane_normal);
 		if(move_out_of_solid(this))
 		{

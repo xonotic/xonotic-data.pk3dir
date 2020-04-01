@@ -10,6 +10,10 @@
 # Jakub P. <pedziszewski@gmail.com>, 2015
 # Jakub P. <pedziszewski@gmail.com>, 2015
 # John Smith <myrangd@gmail.com>, 2016
+# karol kosek <transifex@krkk.ct8.pl>, 2020
+# karol kosek <transifex@krkk.ct8.pl>, 2020
+# karol kosek <transifex@krkk.ct8.pl>, 2020
+# karol kosek <transifex@krkk.ct8.pl>, 2020
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Piotr Kozica <koza91@gmail.com>, 2016
 # Rafał Szymański <okavasly@gmail.com>, 2017
@@ -20,8 +24,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-02-08 12:09+0000\n"
+"Last-Translator: karol kosek <transifex@krkk.ct8.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -35,12 +39,12 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Wyeksportowano do %s! (Uwaga: Zapisano w data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:247
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Nie można zapisać do %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:140
 #, c-format
@@ -61,7 +65,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "Ogólna wiadomość"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
@@ -265,7 +269,7 @@ msgstr "Kontynuuj..."
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "Czat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
@@ -605,7 +609,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "Number of deaths"
-msgstr ""
+msgstr "Liczba zgonów"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^deaths"
@@ -637,7 +641,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "Number of flag drops"
-msgstr ""
+msgstr "Liczba upuszczeń flagi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "SCO^drops"
@@ -677,11 +681,11 @@ msgstr "fckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^fps"
-msgstr ""
+msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "Number of kills minus suicides"
@@ -760,7 +764,7 @@ msgstr "straty"
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "Player name"
-msgstr ""
+msgstr "Nazwa gracza"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^name"
@@ -797,7 +801,7 @@ msgstr "ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "Packet loss"
-msgstr ""
+msgstr "Utrata pakietu"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "SCO^pl"
@@ -853,7 +857,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "Number of suicides"
-msgstr ""
+msgstr "Liczba samobójstw"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^suicides"
@@ -893,7 +897,7 @@ msgstr "SCO^ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^time"
-msgstr ""
+msgstr "czas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Total time raced (Race/CTS)"
@@ -906,11 +910,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:313
 msgid "Usage:"
-msgstr ""
+msgstr "Użycie:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:315
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr ""
+msgstr "^2scoreboard_columns_set ^3pole1 pole2 …"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:316
 msgid ""
@@ -937,6 +941,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:320
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
+"Następujące nazwy pól są rozpoznawane (wielkość liter nie ma znaczenia)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:326
 msgid ""
@@ -955,6 +960,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:336
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr ""
+"Na przykład: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:337
 msgid ""
@@ -1008,13 +1014,13 @@ msgstr "Rankingi"
 #: qcsrc/client/hud/panel/scoreboard.qc:1613
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f minut"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1622
 #: qcsrc/client/hud/panel/scoreboard.qc:1629
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1623
 #: qcsrc/client/hud/panel/scoreboard.qc:1630
@@ -1073,7 +1079,7 @@ msgstr "Jesteś martwy, wciśnij ^2%s^7 by się wskrzesić"
 
 #: qcsrc/client/hud/panel/timer.qc:67
 msgid "WARMUP"
-msgstr ""
+msgstr "ROZGRZEWKA"
 
 #: qcsrc/client/hud/panel/vote.qc:27
 msgid "^1You must answer before entering hud configure mode"
@@ -1186,11 +1192,11 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:515
 msgid "^1Error:^7 Couldn't find pak index."
-msgstr ""
+msgstr "^1Błąd:^7 Nie można znaleźć indeksu pak."
 
 #: qcsrc/client/mapvoting.qc:524
 msgid "Requesting preview..."
-msgstr ""
+msgstr "Oczekiwanie podglądu…"
 
 #: qcsrc/client/miscfunctions.qc:111
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1312,7 +1318,7 @@ msgstr "Limit zabójstw:"
 #: qcsrc/common/mapinfo.qh:72 qcsrc/common/mapinfo.qh:333
 #: qcsrc/common/mapinfo.qh:528
 msgid "The amount of frags needed before the match will end"
-msgstr ""
+msgstr "Ilość zabójstw potrzebnych przed końcem meczu"
 
 #: qcsrc/common/mapinfo.qh:114
 msgid "Deathmatch"
@@ -1320,7 +1326,7 @@ msgstr "Deathmatch"
 
 #: qcsrc/common/mapinfo.qh:114
 msgid "Score as many frags as you can"
-msgstr "Zdobądź jak najwięcej frag"
+msgstr "Zdobądź jak najwięcej zabójstw"
 
 #: qcsrc/common/mapinfo.qh:127
 msgid "Last Man Standing"
@@ -1726,7 +1732,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "Kółko i krzyżyk"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Single Player"
@@ -2610,7 +2616,7 @@ msgstr "^BG%s^K1 zginął w wypadku%s%s"
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 wbiegł w wieżyczkę%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
@@ -3593,7 +3599,7 @@ msgstr "^BGTwój %steam mate (^BG%s%s)^BG dostał flagę! Obroń go!"
 
 #: qcsrc/common/notifications/all.inc:587
 msgid "^BGEnemies can now see you on radar!"
-msgstr ""
+msgstr "^BGPrzeciwnicy mogą teraz Cię widzieć na radarze!"
 
 #: qcsrc/common/notifications/all.inc:588
 msgid "^BGYou returned the ^TC^TT^BG flag!"
@@ -3601,7 +3607,7 @@ msgstr "^BGPrzywróciłeś ^TC^TTĄ^BG flagę!"
 
 #: qcsrc/common/notifications/all.inc:589
 msgid "^BGStalemate! Enemies can now see you on radar!"
-msgstr ""
+msgstr "^BGMartwy punkt! Przeciwnicy mogą teraz Cię widzieć na radarze!"
 
 #: qcsrc/common/notifications/all.inc:590
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
@@ -4262,7 +4268,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:788
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
-msgstr ""
+msgstr "^BGWciśnij ^F2%s^BG aby wejść/wyjść z pojazdu"
 
 #: qcsrc/common/notifications/all.inc:789
 #, c-format
@@ -4272,7 +4278,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:790
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
-msgstr ""
+msgstr "^BGWciśnij ^F2%s^BG aby ukraść pojazd"
 
 #: qcsrc/common/notifications/all.inc:791
 msgid ""
@@ -5418,7 +5424,7 @@ msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr ""
+msgstr "Użycie: menu_cmd polecenie…, gdzie dostępnymi poleceniami są:"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
 msgid "  sync - reloads all cvars on the current menu page"
@@ -6211,7 +6217,7 @@ msgstr "Zanikanie:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "EF^None"
-msgstr ""
+msgstr "EF^Brak"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Alpha"
@@ -6357,7 +6363,7 @@ msgstr "Ustawienia siatki:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 msgid "Snap panels to grid"
-msgstr ""
+msgstr "Przyciągaj panele do siatki"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
 msgid "Grid size:"
@@ -6479,7 +6485,7 @@ msgstr "Limit czasu:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
 msgid "Timelimit in minutes that when hit, will end the match"
-msgstr ""
+msgstr "Limit czasowy w minutach, który po trafieniu zakończy mecz"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:82
 #, c-format
@@ -6705,7 +6711,7 @@ msgstr "Latanie Rakietami"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:67
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:217
 msgid "Invincible Projectiles"
-msgstr "Niezniszczalne Pociski"
+msgstr "Niezniszczalne pociski"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:293
@@ -6849,7 +6855,7 @@ msgstr "Areny broni:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:246
 msgid "Custom weapons"
-msgstr ""
+msgstr "Niestandardowe bronie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:268
 msgid "Most weapons"
@@ -7222,7 +7228,7 @@ msgstr "Kraj"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:153
 msgid "Select language..."
-msgstr ""
+msgstr "Wybierz język…"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:169
 msgid "Gender:"
@@ -8851,7 +8857,7 @@ msgstr "Wyłączone"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:116
 msgid "Idle limit:"
-msgstr "Brak limitu:"
+msgstr "Limit w trybie nieaktywnym:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
 msgid "IDLFPS^Unlimited"
@@ -9181,7 +9187,7 @@ msgstr "Jasność:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:121
 msgid "Brightness of black"
-msgstr ""
+msgstr "Jasność czerni"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:123
 msgid "Contrast:"
@@ -9189,7 +9195,7 @@ msgstr "Kontrast:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:125
 msgid "Brightness of white"
-msgstr ""
+msgstr "Jasność bieli"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:127
 msgid "Gamma:"
@@ -9770,7 +9776,7 @@ msgstr "Dołączył:"
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last match:"
-msgstr ""
+msgstr "Ostatni mecz:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
@@ -9778,7 +9784,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:230
 msgid "Favorite map:"
-msgstr ""
+msgstr "Ulubiona mapa:"
 
 #: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
 #: qcsrc/menu/xonotic/statslist.qc:244

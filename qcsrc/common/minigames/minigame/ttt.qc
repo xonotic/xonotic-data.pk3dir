@@ -322,14 +322,14 @@ string ttt_turn_to_string(int turnflags)
 	{
 		// translator-friendly messages composed of 2 existing messages
 		// TODO: proper "you win" banner instead of hijacking the help message
-		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
-			strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
+		if ( (turnflags & TTT_TURN_TEAM) != minigame_self.team )
+			return strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
 		return strcat(_("You win!"), "\n", _("Select \"^1Next Match^7\" on the menu to start a new match!"));
 	}
 
 	if ( turnflags & TTT_TURN_NEXT )
 	{
-		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags & TTT_TURN_TEAM) != minigame_self.team )
 			return _("Select \"^1Next Match^7\" on the menu to start a new match!");
 		return _("Wait for your opponent to confirm the rematch");
 	}

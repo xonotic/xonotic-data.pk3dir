@@ -33,7 +33,12 @@ void sys_phys_update(entity this, float dt)
 	if (IS_SVQC) {
 		if (this.move_movetype == MOVETYPE_NONE) { return; }
 		// when we get here, disableclientprediction cannot be 2
-		this.disableclientprediction = (this.move_qcphysics) ? -1 : 0;
+		if(this.move_movetype == MOVETYPE_FOLLOW) // not compatible with prediction
+			this.disableclientprediction = 1;
+		else if(this.move_qcphysics)
+			this.disableclientprediction = -1;
+		else
+			this.disableclientprediction = 0;
 	}
 
 	viewloc_PlayerPhysics(this);
@@ -126,7 +131,7 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_gravity = '0 0 0';
 	} else if (ITEMS_STAT(this) & IT_USING_JETPACK) {
 		PM_jetpack(this, maxspeed_mod, dt);
-	} else if (IS_ONGROUND(this)) {
+	} else if (IS_ONGROUND(this) && (!IS_ONSLICK(this) || !PHYS_SLICK_APPLYGRAVITY(this))) {
 		if (!WAS_ONGROUND(this)) {
 			emit(phys_land, this);
 			if (this.lastground < time - 0.3) {
@@ -193,8 +198,8 @@ void sys_phys_simulate(entity this, float dt)
 		// this mimics quakeworld code
 		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc) {
 			vector yawangles = '0 1 0' * this.v_angle.y;
-			makevectors(yawangles);
-			vector forward = v_forward;
+			vector forward, right, up;
+			MAKE_VECTORS(yawangles, forward, right, up);
 			vector spot = this.origin + 24 * forward;
 			spot_z += 8;
 			traceline(spot, spot, MOVE_NOMONSTERS, this);
@@ -210,10 +215,12 @@ void sys_phys_simulate(entity this, float dt)
 			}
 		}
 	}
-	makevectors(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')));
-	// wishvel = v_forward * PHYS_CS(this).movement.x + v_right * PHYS_CS(this).movement.y + v_up * PHYS_CS(this).movement.z;
-	vector wishvel = v_forward * PHYS_CS(this).movement.x
-	    + v_right * PHYS_CS(this).movement.y
+
+	vector forward, right, up;
+	MAKE_VECTORS(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')), forward, right, up);
+	// wishvel = forward * PHYS_CS(this).movement.x + right * PHYS_CS(this).movement.y + up * PHYS_CS(this).movement.z;
+	vector wishvel = forward * PHYS_CS(this).movement.x
+	    + right * PHYS_CS(this).movement.y
 	    + '0 0 1' * PHYS_CS(this).movement.z * (this.com_phys_vel_2d ? 0 : 1);
 	if (this.com_phys_water) {
 		if (PHYS_INPUT_BUTTON_CROUCH(this)) {
@@ -358,11 +365,9 @@ void sys_phys_simulate(entity this, float dt)
 			// apply edge friction
 			const float f2 = vlen2(vec2(this.velocity));
 			if (f2 > 0) {
-				trace_dphitq3surfaceflags = 0;
-				tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
 				// TODO: apply edge friction
 				// apply ground friction
-				const int realfriction = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+				const int realfriction = (IS_ONSLICK(this))
 				    ? PHYS_FRICTION_SLICK(this)
 					: PHYS_FRICTION(this);
 

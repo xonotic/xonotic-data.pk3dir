@@ -148,6 +148,16 @@ void antilag_restore_all(entity ignore)
 	});
 }
 
+float antilag_getlag(entity e)
+{
+	float lag = ((IS_REAL_CLIENT(e)) ? ANTILAG_LATENCY(e) : 0);
+	bool noantilag = ((IS_CLIENT(e)) ? CS(e).cvar_cl_noantilag : false);
+	if(autocvar_g_antilag == 0 || noantilag || lag < 0.001)
+		lag = 0;
+
+	return lag;
+}
+
 /*
 ==================
 traceline_antilag

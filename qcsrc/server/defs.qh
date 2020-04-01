@@ -51,6 +51,7 @@ float server_is_dedicated;
 .float  crouch;	// Crouching or not?
 
 const .float superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
+const .float air_finished_stat = _STAT(AIR_FINISHED);
 
 .float cnt; // used in too many places
 .float count;
@@ -163,6 +164,7 @@ float default_player_alpha;
 float default_weapon_alpha;
 
 .float cvar_cl_handicap;
+.int cvar_cl_gunalign;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
 .float cvar_cl_jetpack_jump;
@@ -181,6 +183,7 @@ float default_weapon_alpha;
 
 .float cvar_cl_allow_uid2name;
 .float cvar_cl_allow_uidtracking;
+.bool cvar_cl_allow_uidranking;
 .string stored_netname;
 
 string gamemode_name;
@@ -189,9 +192,6 @@ string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
-
-// WEAPONTODO: remove this
-//WepSet weaponsInMap;
 
 .float respawn_countdown; // next number to count
 
@@ -333,7 +333,7 @@ string deathmessage;
 .float cvar_cl_weaponimpulsemode;
 .int selectweapon; // last selected weapon of the player
 
-.float ballistics_density; // wall piercing factor, larger = bullet can pass through more
+.float ballistics_density;
 
 //const int FROZEN_NOT				= 0;
 const int FROZEN_NORMAL				= 1;
@@ -413,6 +413,7 @@ IntrusiveList g_locations;
 IntrusiveList g_saved_team;
 IntrusiveList g_monster_targets;
 IntrusiveList g_pathlib_nodes;
+IntrusiveList g_moveables;
 STATIC_INIT(defs)
 {
 	g_monsters = IL_NEW();
@@ -434,4 +435,5 @@ STATIC_INIT(defs)
 	g_saved_team = IL_NEW();
 	g_monster_targets = IL_NEW();
 	g_pathlib_nodes = IL_NEW();
+	g_moveables = IL_NEW();
 }

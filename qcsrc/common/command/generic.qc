@@ -169,7 +169,7 @@ void GenericCommand_qc_curl(int request, int argc)
 	}
 }
 
-GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd_dump.txt")
+GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd_dump.txt", false)
 {
 	switch(request)
 	{
@@ -532,16 +532,16 @@ void GenericCommand_(int request)
 */
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-GENERIC_COMMAND(addtolist, "Add a string to a cvar") { GenericCommand_addtolist(request, arguments); }
-GENERIC_COMMAND(maplist, "Automatic control of maplist") { GenericCommand_maplist(request, arguments); }
-GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM") { GenericCommand_nextframe(request, command); }
-GENERIC_COMMAND(qc_curl, "Queries a URL") { GenericCommand_qc_curl(request, arguments); }
-GENERIC_COMMAND(removefromlist, "Remove a string from a cvar") { GenericCommand_removefromlist(request, arguments); }
-GENERIC_COMMAND(restartnotifs, "Re-initialize all notifications") { GenericCommand_restartnotifs(request); }
-GENERIC_COMMAND(rpn, "RPN calculator") { GenericCommand_rpn(request, arguments, command); }
-GENERIC_COMMAND(settemp, "Temporarily set a value to a cvar which is restored later") { GenericCommand_settemp(request, arguments); }
-GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command") { GenericCommand_settemp_restore(request); }
-GENERIC_COMMAND(runtest, "Run unit tests") { GenericCommand_runtest(request, arguments); }
+GENERIC_COMMAND(addtolist, "Add a string to a cvar", true) { GenericCommand_addtolist(request, arguments); }
+GENERIC_COMMAND(maplist, "Automatic control of maplist", true) { GenericCommand_maplist(request, arguments); }
+GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM", true) { GenericCommand_nextframe(request, command); }
+GENERIC_COMMAND(qc_curl, "Queries a URL", true) { GenericCommand_qc_curl(request, arguments); }
+GENERIC_COMMAND(removefromlist, "Remove a string from a cvar", true) { GenericCommand_removefromlist(request, arguments); }
+GENERIC_COMMAND(restartnotifs, "Re-initialize all notifications", false) { GenericCommand_restartnotifs(request); }
+GENERIC_COMMAND(rpn, "RPN calculator", true) { GenericCommand_rpn(request, arguments, command); }
+GENERIC_COMMAND(settemp, "Temporarily set a value to a cvar which is restored later", false) { GenericCommand_settemp(request, arguments); }
+GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command", false) { GenericCommand_settemp_restore(request); }
+GENERIC_COMMAND(runtest, "Run unit tests", false) { GenericCommand_runtest(request, arguments); }
 
 void GenericCommand_macro_help()
 {

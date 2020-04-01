@@ -50,6 +50,8 @@ const int SERVERFLAG_PLAYERSTATS = 4;
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';
 const vector PL_MIN_CONST = '-16 -16 -24';
+const vector PL_CROUCH_MAX_CONST = '16 16 25';
+const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 // gametype vote flags
 const int GTV_FORBIDDEN = 0; // Cannot be voted

@@ -316,20 +316,7 @@ string ScoreString(int pFlags, float pValue)
 	if((pValue == 0) && (pFlags & (SFL_HIDE_ZERO | SFL_RANK | SFL_TIME)))
 		valstr = "";
 	else if(pFlags & SFL_RANK)
-	{
-		valstr = ftos(pValue);
-		l = strlen(valstr);
-		if((l >= 2) && (substring(valstr, l - 2, 1) == "1"))
-			valstr = strcat(valstr, "th");
-		else if(substring(valstr, l - 1, 1) == "1")
-			valstr = strcat(valstr, "st");
-		else if(substring(valstr, l - 1, 1) == "2")
-			valstr = strcat(valstr, "nd");
-		else if(substring(valstr, l - 1, 1) == "3")
-			valstr = strcat(valstr, "rd");
-		else
-			valstr = strcat(valstr, "th");
-	}
+		valstr = count_ordinal(pValue);
 	else if(pFlags & SFL_TIME)
 		valstr = TIME_ENCODED_TOSTRING(pValue);
 	else
@@ -457,7 +444,7 @@ STATIC_INIT(compressShortVector)
 		l *= f;
 	}
 
-	if(cvar("developer"))
+	if(cvar("developer") > 0)
 	{
 		LOG_TRACE("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)

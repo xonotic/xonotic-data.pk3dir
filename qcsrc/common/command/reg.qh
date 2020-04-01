@@ -6,14 +6,17 @@ REGISTRY(GENERIC_COMMANDS, BITS(7))
 REGISTER_REGISTRY(GENERIC_COMMANDS)
 REGISTRY_SORT(GENERIC_COMMANDS)
 
-#define GENERIC_COMMAND(id, description) \
+.bool m_menubased; // switch to tell whether this alias should be registered as a menu or client based command
+
+#define GENERIC_COMMAND(id, description, menubased) \
 	CLASS(genericcommand_##id, Command) \
 		ATTRIB(genericcommand_##id, m_name, string, #id); \
     	ATTRIB(genericcommand_##id, m_description, string, description); \
+    	ATTRIB(genericcommand_##id, m_menubased, bool, menubased); \
 	ENDCLASS(genericcommand_##id) \
     REGISTER(GENERIC_COMMANDS, CMD_G, id, m_id, NEW(genericcommand_##id)); \
 	METHOD(genericcommand_##id, m_invokecmd, void(genericcommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(GENERIC_COMMANDS_aliases) {
-	FOREACH(GENERIC_COMMANDS, true, localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svmenu")));
+	FOREACH(GENERIC_COMMANDS, true, localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, ((it.m_menubased) ? "qc_cmd_svmenu" : "qc_cmd_svcl"))));
 }

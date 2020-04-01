@@ -263,7 +263,7 @@
 				if (GetPlayerSoundSampleField_notFound) field = GetVoiceMessageSampleField(key);
 				if (GetPlayerSoundSampleField_notFound)
 				{
-					LOG_TRACEF("Invalid sound info field: %s", key);
+					LOG_TRACEF("Invalid sound info field in player sound file '%s': %s", f, key);
 					continue;
 				}
 				string file = argv(1);

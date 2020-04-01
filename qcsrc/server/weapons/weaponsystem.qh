@@ -23,6 +23,8 @@ void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, floa
 
 void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sent_sound);
 
+void W_ResetGunAlign(entity player, int preferred_alignment);
+
 void W_WeaponFrame(Player actor, .entity weaponentity);
 
 float W_WeaponRateFactor(entity this);

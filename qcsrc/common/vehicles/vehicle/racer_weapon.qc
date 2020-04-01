@@ -14,10 +14,20 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
             veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
             veh.wait = time;
         }
+        string tagname = (veh.cnt)
+            ? (veh.cnt = 0, "tag_fire1")
+            : (veh.cnt = 1, "tag_fire2");
+        vector shotorg = gettaginfo(veh, gettagindex(veh, tagname));
+        w_shotorg = shotorg;
+        w_shotdir = v_forward;
+        // Fix z-aim (for chase mode)
+        crosshair_trace(player);
+        w_shotdir.z = normalize(trace_endpos - shotorg).z * 0.5;
+
         if (isPlayer) W_SetupShot_Dir(player, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0, DEATH_VH_WAKI_GUN.m_id);
         vector org = w_shotorg;
         vector dir = w_shotdir;
-        entity bolt = vehicles_projectile(veh, EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
+        entity bolt = vehicles_projectile(veh, EFFECT_RACER_MUZZLEFLASH, SND_LASERGUN_FIRE,
                                org, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                                autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
                                DEATH_VH_WAKI_GUN.m_id, PROJECTILE_WAKICANNON, 0, true, true, player);
@@ -45,7 +55,7 @@ void racer_rocket_groundhugger(entity this);
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
 {
-    entity rocket = vehicles_projectile(player.vehicle, EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+    entity rocket = vehicles_projectile(player.vehicle, EFFECT_RACER_ROCKETLAUNCH, SND_ROCKET_FIRE,
                            org, dir * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
                            DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, player);

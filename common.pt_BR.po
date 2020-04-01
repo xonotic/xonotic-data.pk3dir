@@ -4,7 +4,7 @@
 #
 # Translators:
 # Ivan Paulos Tomé <greylica@gmail.com>, 2016
-# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2018-2019
+# Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015,2018-2020
 # Mirio <opivy@hotmail.de>, 2017
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-07-07 02:23+0000\n"
+"PO-Revision-Date: 2020-01-27 18:03+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"

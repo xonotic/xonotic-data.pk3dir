@@ -38,7 +38,7 @@ STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPicku
 #define WepSet_FromWeapon(it) ((it).m_wepset)
 WepSet _WepSet_FromWeapon(int i);
 
-GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
+GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt", false) // WEAPONTODO: make this work with other progs than just server
 {
     switch(request)
     {
@@ -392,6 +392,6 @@ REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 #endif
 
 #ifdef SVQC
-void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
+void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim);
 #endif
 #endif

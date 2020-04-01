@@ -343,7 +343,7 @@ spawnfunc(func_breakable)
 		this.dmg_force = 200;
 
 	this.mdl = this.model;
-	SetBrushEntityModel(this);
+	SetBrushEntityModel(this, true);
 
 	if(this.spawnflags & BREAKABLE_NODAMAGE)
 		this.use = func_breakable_destroy;

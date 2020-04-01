@@ -4,7 +4,8 @@
 
 #include "item.qh"
 
-REGISTRY(Items, BITS(7))
+// 24 so it matches the limit for the .items field
+REGISTRY(Items, 24)
 #define Items_from(i) _Items_from(i, NULL)
 #ifdef GAMEQC
 REGISTRY_DEPENDS(Items, Models)
@@ -18,7 +19,7 @@ STATIC_INIT(Items) { FOREACH(Items, true, it.m_id = i); }
 
 void Dump_Items();
 
-GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
+GENERIC_COMMAND(dumpitems, "Dump all items to the console", false) {
     switch (request) {
         case CMD_REQUEST_COMMAND: {
             Dump_Items();

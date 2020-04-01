@@ -183,7 +183,7 @@ void spiderbot_rocket_do(entity this)
     switch(STAT(VEHICLESTAT_W2MODE, this))
     {
         case SBRM_VOLLY:
-            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH, SND_ROCKET_FIRE,
                                    v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
                                    DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, this.owner);
@@ -197,7 +197,7 @@ void spiderbot_rocket_do(entity this)
                 this.wait = -10;
             break;
         case SBRM_GUIDE:
-            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH, SND_ROCKET_FIRE,
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
                                    DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, false, this.owner);
@@ -209,7 +209,7 @@ void spiderbot_rocket_do(entity this)
 
         break;
         case SBRM_ARTILLERY:
-            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH, SND_ROCKET_FIRE,
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
                                    DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, this.owner);
