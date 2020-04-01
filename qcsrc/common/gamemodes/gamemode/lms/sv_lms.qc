@@ -8,6 +8,10 @@ int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
 bool autocvar_g_lms_regenerate;
+float autocvar_g_lms_rot_base;
+float autocvar_g_lms_rot_increase;
+float autocvar_g_lms_rot_max;
+
 
 // main functions
 int LMS_NewPlayerLives()
@@ -280,6 +284,29 @@ MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(lms, PlayerRegen)
 {
+	if (autocvar_g_lms_regenerate == -1)
+	{
+		int totalplayers = 0;
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+			++totalplayers;
+		});
+		entity player = M_ARGV(0, entity);
+		float max_mod = 1;
+		float regen_mod = 1;
+		float rot_mod = 1;
+		float limit_mod = 1;
+		float regen_health = 0;
+		float regen_health_linear = 1;
+		float regen_health_rot = autocvar_g_lms_rot_base + autocvar_g_lms_rot_increase * max(0, totalplayers - 2);
+		regen_health_rot = min(autocvar_g_lms_rot_max, regen_health_rot);
+		float regen_health_rotlinear = 1;
+		float regen_health_stable = 0;
+		float regen_health_rotstable = 0;
+		RotRegen(player, RES_HEALTH, regen_health_stable * max_mod, regen_health, regen_health_linear,
+			regen_mod * frametime * (time > player.pauseregen_finished), regen_health_rotstable * max_mod, regen_health_rot, regen_health_rotlinear,
+			rot_mod * frametime * (time > player.pauserothealth_finished), limit_mod);
+		return true;
+	}
 	if(autocvar_g_lms_regenerate)
 		return false;
 	return true;
