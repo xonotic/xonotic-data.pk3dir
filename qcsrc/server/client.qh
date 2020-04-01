@@ -266,7 +266,7 @@ void DebugPrintToChatTeam(int team_num, string text);
 
 void play_countdown(entity this, float finished, Sound samp);
 
-void RotRegen(entity this, float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
+void RotRegen(entity this, float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod);
 
 bool Spectate(entity this, entity pl);
 
