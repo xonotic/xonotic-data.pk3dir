@@ -542,6 +542,7 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 
 		if(!first)
 		{
+			// TODO te_lightning2 might cause segfaults: https://gitlab.com/xonotic/darkplaces/issues/123
 			//te_lightning2(NULL, lastorigin, thisorigin);
 		}
 		lastorigin = thisorigin;
