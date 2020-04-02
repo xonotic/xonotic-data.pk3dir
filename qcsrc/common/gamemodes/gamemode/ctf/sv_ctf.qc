@@ -438,7 +438,19 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	if(!flag) { return; }
 	if((droptype == DROP_PASS) && !receiver) { return; }
 
-	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
+	if(flag.speedrunning)
+	{
+		// ensure old waypoints are removed before resetting the flag
+		WaypointSprite_Kill(player.wps_flagcarrier);
+
+		if(player.wps_enemyflagcarrier)
+			WaypointSprite_Kill(player.wps_enemyflagcarrier);
+
+		if(player.wps_flagreturn)
+			WaypointSprite_Kill(player.wps_flagreturn);
+		ctf_RespawnFlag(flag);
+		return;
+	}
 
 	// reset the flag
 	setattachment(flag, NULL, "");
