@@ -812,8 +812,6 @@ spawnfunc(worldspawn)
 		if(this.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
 
-	precache();
-
 	WaypointSprite_Init();
 
 	GameLogInit(); // prepare everything
@@ -1259,7 +1257,7 @@ void Maplist_Init()
 				break;
 		}
 	}
-	
+
 	if (i == Map_Count)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
@@ -1416,54 +1414,6 @@ void IntermissionThink(entity this)
 
 	MapVote_Start();
 }
-
-/*
-============
-FindIntermission
-
-Returns the entity to view from
-============
-*/
-/*
-entity FindIntermission()
-{
-	local	entity spot;
-	local	float cyc;
-
-// look for info_intermission first
-	spot = find(NULL, classname, "info_intermission");
-	if (spot)
-	{	// pick a random one
-		cyc = random() * 4;
-		while (cyc > 1)
-		{
-			spot = find(spot, classname, "info_intermission");
-			if (!spot)
-				spot = find(spot, classname, "info_intermission");
-			cyc = cyc - 1;
-		}
-		return spot;
-	}
-
-// then look for the start position
-	spot = find(NULL, classname, "info_player_start");
-	if (spot)
-		return spot;
-
-// testinfo_player_start is only found in regioned levels
-	spot = find(NULL, classname, "testplayerstart");
-	if (spot)
-		return spot;
-
-// then look for the start position
-	spot = find(NULL, classname, "info_player_deathmatch");
-	if (spot)
-		return spot;
-
-	//objerror ("FindIntermission: no spot");
-	return NULL;
-}
-*/
 
 /*
 ===============================================================================
@@ -1754,7 +1704,9 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
-float leaderfrags;
+float leaderscore;
+float secondscore;
+int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
 	float limitreached;
@@ -1790,18 +1742,42 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	// these modes always score in increments of 1, thus this makes sense
 	{
-		if(leaderfrags != WinningConditionHelper_topscore)
+		if (leaderscore != WinningConditionHelper_topscore ||
+			secondscore != WinningConditionHelper_secondscore)
 		{
-			leaderfrags = WinningConditionHelper_topscore;
+			int fragsleft = 0, leadingfragsleft = 0;
+
+			leaderscore = WinningConditionHelper_topscore;
+			secondscore = WinningConditionHelper_secondscore;
 
 			if (limit)
+				fragsleft = limit - leaderscore;
+			if (leadlimit)
+				leadingfragsleft = secondscore + leadlimit - leaderscore;
+
+			if (autocvar_leadlimit_and_fraglimit && leadlimit)
 			{
-				if (leaderfrags == limit - 1)
+				if (limit)
+					fragsleft = max(leadingfragsleft, fragsleft);
+			}
+			else if (leadlimit)
+			{
+				if (limit)
+					fragsleft = min(fragsleft, leadingfragsleft);
+				else
+					fragsleft = leadingfragsleft;
+			}
+
+			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
+			{
+				if (fragsleft == 1)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-				else if (leaderfrags == limit - 2)
+				else if (fragsleft == 2)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-				else if (leaderfrags == limit - 3)
+				else if (fragsleft == 3)
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+
+				fragsleft_last = fragsleft;
 			}
 		}
 	}

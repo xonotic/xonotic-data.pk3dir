@@ -4,14 +4,15 @@
 #
 # Translators:
 # nad le <nadavlevi726@gmail.com>, 2018
+# Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2020
 # Tal Leibman <leibman2@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2019-05-19 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-03-05 22:01+0000\n"
+"Last-Translator: Roi Asher Gerszkoviez <gerszkoviez@gmail.com>\n"
 "Language-Team: Hebrew (http://www.transifex.com/team-xonotic/xonotic/"
 "language/he/)\n"
 "Language: he\n"
@@ -46,24 +47,24 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:144
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "הודעה בזמן %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:149
 msgid "Generic message"
-msgstr ""
+msgstr "הודעה גנרית"
 
 #: qcsrc/client/hud/panel/chat.qc:84
 msgid "^3Player^7: This is the chat area."
-msgstr ""
+msgstr "^3שחקן^7: זהו אזור הצ'אט."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:72
 #, c-format
 msgid "FPS: %.*f"
-msgstr ""
+msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:89
 msgid "^1Observing"
-msgstr ""
+msgstr "^1משקיף"
 
 #: qcsrc/client/hud/panel/infomessages.qc:91
 #, c-format
@@ -73,7 +74,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr ""
+msgstr "^1לחץ ^3%s^1 כדי להשקיף"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/menu/xonotic/keybinder.qc:47
@@ -88,12 +89,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:104
 #: qcsrc/client/hud/panel/infomessages.qc:108
 msgid "next weapon"
-msgstr "נשק הבא"
+msgstr "הנשק הבא"
 
 #: qcsrc/client/hud/panel/infomessages.qc:104
 #: qcsrc/client/hud/panel/infomessages.qc:108
 msgid "previous weapon"
-msgstr "נשק קודם"
+msgstr "הנשק הקודם"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
@@ -108,7 +109,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 msgid "drop weapon"
-msgstr ""
+msgstr "זרוק נשק"
 
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/menu/xonotic/keybinder.qc:48
@@ -233,18 +234,18 @@ msgstr ""
 #: qcsrc/client/hud/panel/score.qc:63
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "שחקן %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:591
 #: qcsrc/client/hud/panel/quickmenu.qc:593
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "תת-תפריט%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:598
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "פקודה%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:624
 msgid "Continue..."
@@ -253,11 +254,11 @@ msgstr "המשך..."
 #: qcsrc/client/hud/panel/quickmenu.qc:781
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "Chat"
-msgstr ""
+msgstr "צ'אט"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:782
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^שלח הודעה פומבית אל"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:783
 msgid "QMCMD^:-) / nice one"
@@ -5951,15 +5952,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "m/s"
-msgstr ""
+msgstr "מ\"ש"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "km/h"
-msgstr ""
+msgstr "קמ\"ש"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:54
 msgid "mph"
-msgstr ""
+msgstr "מייל לשעה"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
@@ -5971,11 +5972,11 @@ msgstr "הצג"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:60
 msgid "Top speed"
-msgstr ""
+msgstr "מהירות מקסימלית"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
 msgid "Acceleration:"
-msgstr ""
+msgstr "האצה:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:67
 msgid "Include vertical acceleration"
@@ -6061,23 +6062,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:44
 msgid "Zoom mode:"
-msgstr ""
+msgstr "מצב זום:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr ""
+msgstr "זום אין"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr ""
+msgstr "זום אאוט"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr ""
+msgstr "תמיד בזום"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr ""
+msgstr "לעולם לא בזום"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -6154,7 +6155,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Alpha"
-msgstr ""
+msgstr "אלפא"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
 msgid "Slide"
@@ -6194,23 +6195,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
 msgid "Show Accuracy"
-msgstr ""
+msgstr "הצג דיוק"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:67
 msgid "Show Ammo"
-msgstr ""
+msgstr "הצג תחמושת"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
 msgid "Ammo bar alpha:"
-msgstr ""
+msgstr "אלפא של סרגל התחמושת:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:76
 msgid "Ammo bar color:"
-msgstr ""
+msgstr "צבע סרגל התחמושת:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qh:6
 msgid "Weapons Panel"
-msgstr ""
+msgstr "פאנל הנשקים"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:19
 msgid "HUD skins"
@@ -6406,7 +6407,7 @@ msgstr "ברירת מחדל"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Unlimited"
-msgstr "לא מוגבל"
+msgstr "בלתי מוגבל"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:74
 msgid "Gametype"
@@ -8609,11 +8610,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:94
 msgid "Pressing \"enter console\" key also closes it"
-msgstr ""
+msgstr "כפתור \"כניסה לקונסול\" גם סוגר אותו"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
-msgstr ""
+msgstr "אפשר לכפתור שפותח את הקונסול גם לסגור אותו"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "Automatically repeat jumping if holding jump"
@@ -8621,19 +8622,19 @@ msgstr "המשך לקפוץ באופן אוטומטי אם מקש קפיצה ל�
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:100
 msgid "Jetpack on jump:"
-msgstr ""
+msgstr "תיק סילון בקפיצה:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
-msgstr ""
+msgstr "JPJUMP^מבוטל"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Air only"
-msgstr ""
+msgstr "אוויר בלבד"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:104
 msgid "JPJUMP^All"
-msgstr ""
+msgstr "JPJUMP^הכל"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:110
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:115
@@ -8678,11 +8679,11 @@ msgstr "רשת"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:29
 msgid "Client UDP port:"
-msgstr ""
+msgstr "פתחת UDP של לקוח:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Force client to use chosen port unless it is set to 0"
-msgstr ""
+msgstr "הכרח את הלקוח להשתמש בפורט הנבחר, אלא אם הערך הוא 0"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
 msgid "Bandwidth:"
@@ -8694,31 +8695,31 @@ msgstr "צין את מהירות הרשת שלך"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "56k"
-msgstr ""
+msgstr "56k"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:38
 msgid "ISDN"
-msgstr ""
+msgstr "ISDN"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Slow ADSL"
-msgstr ""
+msgstr "ADSL איטי"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:40
 msgid "Fast ADSL"
-msgstr ""
+msgstr "ADSL מהיר"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:41
 msgid "Broadband"
-msgstr ""
+msgstr "פס רחב"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:44
 msgid "Input packets/s:"
-msgstr ""
+msgstr "פאקטות קלט/שנייה:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 msgid "How many input packets to send to the server each second"
-msgstr ""
+msgstr "כמה פאקטות קלט לשלוח לשרת בכל שנייה"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Server queries/s:"
@@ -8742,7 +8743,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:73
 msgid "Show netgraph"
-msgstr ""
+msgstr "הצג גרף רשת"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:74
 msgid "Show a graph of packet sizes and other information"
@@ -8750,27 +8751,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:76
 msgid "Client-side movement prediction"
-msgstr ""
+msgstr "חיזוי תנועה בצד-לקוח"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Movement error compensation"
-msgstr ""
+msgstr "פיצוי על שגיאות תנועה"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Use encryption (AES) when available"
-msgstr ""
+msgstr "השתמש בהצפנה (AES) כשזה אפשרי"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
 msgid "Framerate"
-msgstr ""
+msgstr "קצב פריימים"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
 msgid "Maximum:"
-msgstr ""
+msgstr "מקסימום:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:99
 msgid "MAXFPS^Unlimited"
-msgstr ""
+msgstr "MAXFPS^בלתי מוגבל"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:102
 msgid "Target:"
@@ -8778,15 +8779,15 @@ msgstr "מטרה:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:104
 msgid "TRGT^Disabled"
-msgstr ""
+msgstr "TRGT^מבוטל"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:116
 msgid "Idle limit:"
-msgstr ""
+msgstr "מגבלה בזמן idle:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
 msgid "IDLFPS^Unlimited"
-msgstr ""
+msgstr "IDLFPS^בלתי מוגבל"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:126
 msgid "Save processing time for other apps"
@@ -8845,7 +8846,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:157
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
-msgstr ""
+msgstr "איפוס להגדרות מקוריות"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
@@ -9109,7 +9110,7 @@ msgstr "בהירות:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:121
 msgid "Brightness of black"
-msgstr ""
+msgstr "בהירות הצבע השחור:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:123
 msgid "Contrast:"
@@ -9117,11 +9118,11 @@ msgstr "ניגודיות:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:125
 msgid "Brightness of white"
-msgstr ""
+msgstr "בהירות הצבע הלבן:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:127
 msgid "Gamma:"
-msgstr ""
+msgstr "גמא:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:130
 msgid ""
@@ -9167,13 +9168,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:155
 msgid "Wait for GPU to finish each frame"
-msgstr ""
+msgstr "חכה עד שהמעבד הגרפי יסיים כל פריים"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:156
 msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines"
 msgstr ""
+"גרום למעבד להמתין שהמעבד הגרפי יסיים כל פריים. זה יכול לעזור במקרים של לאגים "
+"מוזרים בקלט או בוידאו במחשבים מסויימים."
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
@@ -9199,39 +9202,39 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:110
 msgid "Instant action! (random map with bots)"
-msgstr ""
+msgstr "פעולה מיידית! (מפה אקראית עם בוטים)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:117
 msgid "???"
-msgstr ""
+msgstr "???"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:130
 msgid "Campaign Difficulty:"
-msgstr ""
+msgstr "דרגת קושי של הקמפיין:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:131
 msgid "CSKL^Easy"
-msgstr ""
+msgstr "CSKL^קל"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:132
 msgid "CSKL^Medium"
-msgstr ""
+msgstr "CSKL^בינוני"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:133
 msgid "CSKL^Hard"
-msgstr ""
+msgstr "CSKL^קשה"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:135
 msgid "Start Singleplayer!"
-msgstr ""
+msgstr "התחל במצב שחקן יחיד!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
-msgstr ""
+msgstr "שחקן יחיד"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
-msgstr ""
+msgstr "שחק בקמפיין לשחקן יחיד או במשחקי פעולה מיידית נגד בוטים"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -9239,11 +9242,11 @@ msgstr "מנצח"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr ""
+msgstr "הצטרף לקבוצה הטובה ביותר (בחירה אוטומטית)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
-msgstr ""
+msgstr "בחר קבוצה אוטומטית (מומלץ)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -9271,11 +9274,11 @@ msgstr "בחירת צוות"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
-msgstr ""
+msgstr "האם להרשות לסטטיסטיקות השחקן להשתמש בכינוי שלך?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr ""
+msgstr "אם תענה \"לא\" אתה תופיע בתור \"שחקן אנונימי\""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:87
 msgid "teamplay"
@@ -9319,7 +9322,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
-msgstr ""
+msgstr "תיק סילון"
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "Attacking"
@@ -9327,19 +9330,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:52
 msgid "WEAPON^previous"
-msgstr ""
+msgstr "WEAPON^הקודם"
 
 #: qcsrc/menu/xonotic/keybinder.qc:53
 msgid "WEAPON^next"
-msgstr ""
+msgstr "WEAPON^הבא"
 
 #: qcsrc/menu/xonotic/keybinder.qc:54
 msgid "WEAPON^previously used"
-msgstr ""
+msgstr "WEAPON^האחרון שהיה בשימוש"
 
 #: qcsrc/menu/xonotic/keybinder.qc:55
 msgid "WEAPON^best"
-msgstr ""
+msgstr "WEAPON^הטוב ביותר"
 
 #: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "reload"
@@ -9447,41 +9450,41 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mainwindow.qc:65 qcsrc/menu/xonotic/mainwindow.qc:68
 msgid "Do not press this button again!"
-msgstr ""
+msgstr "אל תלחץ על כפתור זה שוב!"
 
 #: qcsrc/menu/xonotic/maplist.qc:288
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
-msgstr ""
+msgstr "מה? אי אפשר לשחק בזה (m הוא NULL). מסנן מחדש כדי שזה לא יקרה שוב."
 
 #: qcsrc/menu/xonotic/maplist.qc:296
 #, c-format
 msgid "%s's Xonotic Server"
-msgstr ""
+msgstr "שרת ה-Xonotic של %s"
 
 #: qcsrc/menu/xonotic/maplist.qc:301
 msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
-msgstr ""
+msgstr "מה? אי אפשר לשחק בזה (סוג המשחק שגוי). מסנן מחדש כדי שזה לא יקרה שוב."
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
-msgstr ""
+msgstr "צופה"
 
 #: qcsrc/menu/xonotic/playermodel.qc:161
 msgid "<no model found>"
-msgstr ""
+msgstr "<no model found>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "Favorite"
-msgstr ""
+msgstr "מועדף"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
-msgstr ""
+msgstr "הוסף סימניה עבור השרת המודגש כרגע כדי שיהיה קל למצוא אותו שוב בעתיד"
 
 #: qcsrc/menu/xonotic/serverlist.qc:747
 msgid "Ping"
@@ -9489,7 +9492,7 @@ msgstr "פינג"
 
 #: qcsrc/menu/xonotic/serverlist.qc:748
 msgid "Hostname"
-msgstr ""
+msgstr "שם השרת"
 
 #: qcsrc/menu/xonotic/serverlist.qc:749
 msgid "Map"
@@ -9502,7 +9505,7 @@ msgstr "סוג"
 #: qcsrc/menu/xonotic/serverlist.qc:1043
 #, c-format
 msgid "AES level %d"
-msgstr ""
+msgstr "רמת AES %d"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1043
 msgid "ENC^none"
@@ -9510,30 +9513,30 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:1043
 msgid "encryption:"
-msgstr ""
+msgstr "הצפנה:"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1044
 #, c-format
 msgid "mod: %s"
-msgstr ""
+msgstr "מוד: %s"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1046
 #, c-format
 msgid "modified settings"
-msgstr ""
+msgstr "הגדרות שנערכו"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1046
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "הגדרות רשמיות"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1048
 msgid "stats disabled"
-msgstr ""
+msgstr "סטטיסטיקות מכובות"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1048
 msgid "stats enabled"
-msgstr ""
+msgstr "סטטיסטיקות מופעלות"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
@@ -9626,6 +9629,8 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
+"שנה את החדות של טקסטורות. הנמכה תגרום לצמצום יעיל של זיכרון שמשומש על ידי "
+"טקסטורות, אבל יגרום לטקסטורות להראות מאוד מטושטשות."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:115
 msgid "Screen resolution"
@@ -9701,7 +9706,7 @@ msgstr "משחק אחרון:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time played:"
-msgstr ""
+msgstr "זמן ששוחק:"
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:230
 msgid "Favorite map:"
@@ -9711,7 +9716,7 @@ msgstr "מפה מועדפת:"
 #: qcsrc/menu/xonotic/statslist.qc:244
 #, c-format
 msgid "Matches:"
-msgstr ""
+msgstr "משחקים:"
 
 #: qcsrc/menu/xonotic/statslist.qc:154
 #, c-format
@@ -9726,7 +9731,7 @@ msgstr "אחוז ניצחונות:"
 #: qcsrc/menu/xonotic/statslist.qc:166
 #, c-format
 msgid "Kills/Deaths:"
-msgstr ""
+msgstr "הריגות/מיתות:"
 
 #: qcsrc/menu/xonotic/statslist.qc:172
 #, c-format
@@ -9735,7 +9740,7 @@ msgstr "יחס הריגות:"
 
 #: qcsrc/menu/xonotic/statslist.qc:207
 msgid "ELO:"
-msgstr ""
+msgstr "דירוג ELO:"
 
 #: qcsrc/menu/xonotic/statslist.qc:214
 msgid "Rank:"
@@ -9752,7 +9757,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:417
 msgid "Update can be downloaded at:"
-msgstr ""
+msgstr "ניתן להוריד עדכון ב:"
 
 #: qcsrc/menu/xonotic/util.qc:525
 msgid "Autogenerating mapinfo for newly added maps..."
@@ -9766,7 +9771,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:574
 #, c-format
 msgid "Update to %s now!"
-msgstr ""
+msgstr "עדכן לגרסה %s עכשיו!"
 
 #: qcsrc/menu/xonotic/util.qc:658
 msgid ""

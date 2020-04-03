@@ -9,7 +9,7 @@ ga    "Irish" "Irish" 32%
 it    "Italian" "Italiano" 100%
 hu    "Hungarian" "Magyar" 48%
 nl    "Dutch" "Nederlands" 63%
-pl    "Polish" "Polski" 72%
+pl    "Polish" "Polski" 74%
 pt    "Portuguese" "Português" 86%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 75%

@@ -735,7 +735,11 @@ bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax)
 			return false;
 	}
 	else if (g_weapon_stay == 2)
+	{
 		ammomax = min(amount, ammomax);
+		if(player_amount >= ammomax)
+			return false;
+	}
 	else
 		return false;
 	if (amount < 0)

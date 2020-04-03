@@ -14,7 +14,6 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
-int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
 IntrusiveList g_instagib_items;

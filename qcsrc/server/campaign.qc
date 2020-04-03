@@ -75,10 +75,19 @@ float Campaign_Invalid()
 	return 0;
 }
 
+int Campaign_GetLevelNum()
+{
+	return campaign_level + 1;
+}
+
+string Campaign_GetMessage()
+{
+	return strcat(campaign_shortdesc[0], "\n^3\n", campaign_longdesc[0]);
+}
+
 void CampaignPreInit()
 {
 	float baseskill;
-	string title;
 	campaign_level = autocvar__campaign_index;
 	campaign_name = strzone(autocvar__campaign_name);
 	campaign_index_var = strzone(strcat("g_campaign", campaign_name, "_index"));
@@ -142,11 +151,6 @@ void CampaignPreInit()
 
 	if(Campaign_Invalid())
 		return;
-
-	title = campaign_shortdesc[0];
-	title = strzone(strcat("Level ", ftos(campaign_level + 1), ": ", title));
-	campaign_message = strzone(strcat(title, "\n^3\n", campaign_longdesc[0], "\n\n^1press jump to enter the game"));
-	strunzone(title);
 }
 
 void CampaignPostInit()
@@ -309,7 +313,6 @@ void CampaignPostIntermission()
 
 	CampaignSetup(campaign_won);
 	CampaignFile_Unload();
-	strunzone(campaign_message);
 	strunzone(campaign_index_var);
 	strunzone(campaign_name);
 	campaign_name = "";

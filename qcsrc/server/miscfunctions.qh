@@ -102,8 +102,6 @@ void play2(entity e, string filename);
 
 string playername(entity p, bool team_colorize);
 
-void precache();
-
 void remove_safely(entity e);
 
 void remove_unsafely(entity e);

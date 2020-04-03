@@ -89,7 +89,7 @@ void CreatureFrame_Liquids(entity this)
 			this.flags &= ~FL_INWATER;
 			this.dmgtime = 0;
 		}
-		this.air_finished = time + 12;
+		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
 	}
 }
 

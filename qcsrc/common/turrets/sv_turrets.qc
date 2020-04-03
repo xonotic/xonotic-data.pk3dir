@@ -402,7 +402,7 @@ void load_unit_settings(entity ent, bool is_reload)
 	ent.ammo_max             *= ent.turret_scale_ammo;
 	ent.ammo_recharge        *= ent.turret_scale_ammo;
 	ent.aim_speed            *= ent.turret_scale_aim;
-	ent.health               *= ent.turret_scale_health;
+	SetResourceExplicit(ent, RES_HEALTH, GetResource(ent, RES_HEALTH) * ent.turret_scale_health);
 	ent.respawntime          *= ent.turret_scale_respawn;
 	ent.shot_dmg             *= ent.turret_scale_damage;
 	ent.shot_refire          *= ent.turret_scale_refire;

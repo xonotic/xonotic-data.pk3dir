@@ -18,6 +18,7 @@
 #define PHYS_DODGING_AIR 					autocvar_sv_dodging_air_dodging
 #define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed
 #define PHYS_DODGING_AIR_MAXSPEED			autocvar_sv_dodging_air_maxspeed
+#define PHYS_DODGING_CLIENTSELECT			autocvar_sv_dodging_clientselect
 
 // we ran out of stats slots! TODO: re-enable this when prediction is available for dodging
 #if 0
@@ -37,18 +38,24 @@
 #define PHYS_DODGING_AIR 					STAT(DODGING_AIR, this)
 #define PHYS_DODGING_MAXSPEED 				STAT(DODGING_MAXSPEED, this)
 #define PHYS_DODGING_AIR_MAXSPEED 			STAT(DODGING_AIR_MAXSPEED, this)
+#define PHYS_DODGING_CLIENTSELECT 			STAT(DODGING_CLIENTSELECT, this)
 #endif
 
 #ifdef CSQC
 	float cvar_cl_dodging_timeout;
+	bool cvar_cl_dodging;
+	bool autocvar_cl_dodging;
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
 	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
+	#define PHYS_DODGING_ENABLED(s)				autocvar_cl_dodging
 #elif defined(SVQC)
 	.float cvar_cl_dodging_timeout;
+	.bool cvar_cl_dodging;
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING_TIMEOUT(s) 			CS(s).cvar_cl_dodging_timeout
 	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
+	#define PHYS_DODGING_ENABLED(s)				CS(s).cvar_cl_dodging
 #endif
 
 #ifdef SVQC
@@ -214,7 +221,7 @@ void PM_dodging(entity this)
 	if (!this.dodging_action) return;
 
 	// when swimming or dead, no dodging allowed..
-	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this))
+	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this) || (PHYS_DODGING_CLIENTSELECT && !PHYS_DODGING_ENABLED(this)))
 	{
 		this.dodging_action = 0;
 		this.dodging_direction.x = 0;
@@ -299,6 +306,7 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 #ifdef SVQC
 
 REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
+REPLICATE(cvar_cl_dodging, bool, "cl_dodging");
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {

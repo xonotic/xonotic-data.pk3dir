@@ -104,7 +104,8 @@ void bot_think(entity this)
 
 	// clear buttons
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
-	PHYS_INPUT_BUTTON_JUMP(this) = false;
+	// keep jump button pressed for a short while, useful with ramp jumps
+	PHYS_INPUT_BUTTON_JUMP(this) = (!IS_DEAD(this) && time < this.bot_jump_time + 0.2);
 	PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	PHYS_INPUT_BUTTON_ZOOM(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
@@ -145,21 +146,7 @@ void bot_think(entity this)
 void bot_setnameandstuff(entity this)
 {
 	string readfile, s;
-	float file, tokens, prio;
-
-	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
-	string name, prefix, suffix;
-
- 	if(autocvar_g_campaign)
-	{
-		prefix = "";
-		suffix = "";
-	}
-	else
-	{
-		prefix = autocvar_bot_prefix;
-		suffix = autocvar_bot_suffix;
-	}
+	int file, tokens, prio;
 
 	file = fopen(autocvar_bot_config_file, FILE_READ);
 
@@ -230,6 +217,8 @@ void bot_setnameandstuff(entity this)
 		fclose(file);
 	}
 
+	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
+
 	tokens = tokenizebyseparator(readfile, "\t");
 	if(argv(0) != "") bot_name = argv(0);
 	else bot_name = "Bot";
@@ -288,13 +277,10 @@ void bot_setnameandstuff(entity this)
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
 	this.bot_preferredcolors = this.clientcolors;
 
-	// pick the name
-	if (autocvar_bot_usemodelnames)
-		name = bot_model;
-	else
-		name = bot_name;
+	string prefix = (autocvar_g_campaign ? "" : autocvar_bot_prefix);
+	string suffix = (autocvar_g_campaign ? "" : autocvar_bot_suffix);
+	string name = (autocvar_bot_usemodelnames ? bot_model : bot_name);
 
-	// number bots with identical names
 	if (name == "")
 	{
 		name = ftos(etof(this));
@@ -302,6 +288,7 @@ void bot_setnameandstuff(entity this)
 	}
 	else
 	{
+		// number bots with identical names
 		int j = 0;
 		FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 			if(it.cleanname == name)
@@ -323,6 +310,10 @@ void bot_setnameandstuff(entity this)
 
 void bot_custom_weapon_priority_setup()
 {
+	static string bot_priority_far_prev;
+	static string bot_priority_mid_prev;
+	static string bot_priority_close_prev;
+	static string bot_priority_distances_prev;
 	float tokens, i, w;
 
 	bot_custom_weapon = false;
@@ -330,70 +321,50 @@ void bot_custom_weapon_priority_setup()
 	if(	autocvar_bot_ai_custom_weapon_priority_far == "" ||
 		autocvar_bot_ai_custom_weapon_priority_mid == "" ||
 		autocvar_bot_ai_custom_weapon_priority_close == "" ||
- 		autocvar_bot_ai_custom_weapon_priority_distances == ""
+		autocvar_bot_ai_custom_weapon_priority_distances == ""
 	)
 		return;
 
-	// Parse distances
-	tokens = tokenizebyseparator(autocvar_bot_ai_custom_weapon_priority_distances," ");
+	if (bot_priority_distances_prev != autocvar_bot_ai_custom_weapon_priority_distances)
+	{
+		strcpy(bot_priority_distances_prev, autocvar_bot_ai_custom_weapon_priority_distances);
+		tokens = tokenizebyseparator(autocvar_bot_ai_custom_weapon_priority_distances," ");
 
-	if (tokens!=2)
-		return;
+		if (tokens!=2)
+			return;
 
-	bot_distance_far = stof(argv(0));
-	bot_distance_close = stof(argv(1));
+		bot_distance_far = stof(argv(0));
+		bot_distance_close = stof(argv(1));
 
-	if(bot_distance_far < bot_distance_close){
-		bot_distance_far = stof(argv(1));
-		bot_distance_close = stof(argv(0));
-	}
-
-	// Initialize list of weapons
-	bot_weapons_far[0] = -1;
-	bot_weapons_mid[0] = -1;
-	bot_weapons_close[0] = -1;
-
-	// Parse far distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_far)," ");
-
-	int c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_far[c] = w;
-			++c;
+		if(bot_distance_far < bot_distance_close){
+			bot_distance_far = stof(argv(1));
+			bot_distance_close = stof(argv(0));
 		}
 	}
-	if(c < Weapons_COUNT)
-		bot_weapons_far[c] = -1;
 
-	// Parse mid distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_mid)," ");
+	int c;
 
-	c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_mid[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_mid[c] = -1;
+	#define PARSE_WEAPON_PRIORITIES(dist) MACRO_BEGIN \
+		if (bot_priority_##dist##_prev != autocvar_bot_ai_custom_weapon_priority_##dist) { \
+			strcpy(bot_priority_##dist##_prev, autocvar_bot_ai_custom_weapon_priority_##dist); \
+			tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
+			bot_weapons_##dist[0] = -1; \
+			c = 0; \
+			for(i = 0; i < tokens && c < Weapons_COUNT; ++i) { \
+				w = stof(argv(i)); \
+				if (w >= WEP_FIRST && w <= WEP_LAST) { \
+					bot_weapons_##dist[c] = w; \
+					++c; \
+				} \
+			} \
+			if (c < Weapons_COUNT) \
+				bot_weapons_##dist[c] = -1; \
+		} \
+	MACRO_END
 
-	// Parse close distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_close)," ");
-
-	c = 0;
-	for(i=0; i < tokens && i < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_close[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_close[c] = -1;
+	PARSE_WEAPON_PRIORITIES(far);
+	PARSE_WEAPON_PRIORITIES(mid);
+	PARSE_WEAPON_PRIORITIES(close);
 
 	bot_custom_weapon = true;
 }
@@ -860,10 +831,6 @@ void bot_serverframe()
 	if (autocvar_g_waypointeditor_auto)
 		botframe_autowaypoints();
 
-	if(time > bot_cvar_nextthink)
-	{
-		if(currentbots>0)
-			bot_custom_weapon_priority_setup();
-		bot_cvar_nextthink = time + 5;
-	}
+	if (currentbots > 0)
+		bot_custom_weapon_priority_setup();
 }

@@ -130,7 +130,7 @@ bool freezetag_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
+		TeamScore_AddToTeam(winner_team, ST_FT_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
@@ -620,6 +620,12 @@ MUTATOR_HOOKFUNCTION(ft, SV_ParseServerCommand)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ft, Scores_CountFragsRemaining)
+{
+	// announce remaining frags
+	return true;
+}
+
 void freezetag_Initialize()
 {
 	freezetag_teams = autocvar_g_freezetag_teams_override;
@@ -628,6 +634,7 @@ void freezetag_Initialize()
 
 	freezetag_teams = BITS(bound(2, freezetag_teams, 4));
 	GameRules_scoring(freezetag_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
+		field_team(ST_FT_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 		field(SP_FREEZETAG_REVIVALS, "revivals", 0);
 	});
 

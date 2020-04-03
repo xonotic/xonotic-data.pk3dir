@@ -1420,10 +1420,10 @@ void HUD_Crosshair(entity this)
 				}
 
 				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
-					DrawCircleClippedPic(wcross_origin, wcross_size.x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size.x * wcross_resolution * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
 
 				if (ring_value)
-					DrawCircleClippedPic(wcross_origin, wcross_size.x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size.x * wcross_resolution * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
