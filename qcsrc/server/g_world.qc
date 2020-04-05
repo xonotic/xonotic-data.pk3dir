@@ -1705,13 +1705,9 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
-float leaderscore;
-float secondscore;
 int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
-	float limitreached;
-
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper(NULL);
 
@@ -1741,66 +1737,43 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		leadlimit = 0; // not supported in this mode
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
-	// these modes always score in increments of 1, thus this makes sense
 	{
-		if (leaderscore != WinningConditionHelper_topscore ||
-			secondscore != WinningConditionHelper_secondscore)
+		float fragsleft = FLOAT_MAX, leadingfragsleft = FLOAT_MAX;
+		if (limit)
+			fragsleft = limit - WinningConditionHelper_topscore;
+		if (leadlimit)
+			leadingfragsleft = WinningConditionHelper_secondscore + leadlimit - WinningConditionHelper_topscore;
+
+		if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+			fragsleft = max(fragsleft, leadingfragsleft);
+		else
+			fragsleft = min(fragsleft, leadingfragsleft);
+
+		if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 		{
-			int fragsleft = 0, leadingfragsleft = 0;
+			if (fragsleft == 1)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
+			else if (fragsleft == 2)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
+			else if (fragsleft == 3)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 
-			leaderscore = WinningConditionHelper_topscore;
-			secondscore = WinningConditionHelper_secondscore;
-
-			if (limit)
-				fragsleft = limit - leaderscore;
-			if (leadlimit)
-				leadingfragsleft = secondscore + leadlimit - leaderscore;
-
-			if (autocvar_leadlimit_and_fraglimit && leadlimit)
-			{
-				if (limit)
-					fragsleft = max(leadingfragsleft, fragsleft);
-			}
-			else if (leadlimit)
-			{
-				if (limit)
-					fragsleft = min(fragsleft, leadingfragsleft);
-				else
-					fragsleft = leadingfragsleft;
-			}
-
-			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
-			{
-				if (fragsleft == 1)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-				else if (fragsleft == 2)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-				else if (fragsleft == 3)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
-
-				fragsleft_last = fragsleft;
-			}
+			fragsleft_last = fragsleft;
 		}
 	}
 
-	limitreached = false;
-	if (limit && WinningConditionHelper_topscore >= limit)
-		limitreached = true;
-	if(leadlimit)
-	{
-		float leadlimitreached;
-		leadlimitreached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
-		if(autocvar_leadlimit_and_fraglimit)
-			limitreached = (limitreached && leadlimitreached);
-		else
-			limitreached = (limitreached || leadlimitreached);
-	}
+	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
+	bool leadlimit_reached = (leadlimit && WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
 
-	if(limit)
-		game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / limit, 1));
+	bool limit_reached;
+	// only respect leadlimit_and_fraglimit when both limits are set or the game will never end
+	if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+		limit_reached = (fraglimit_reached && leadlimit_reached);
+	else
+		limit_reached = (fraglimit_reached || leadlimit_reached);
 
 	return GetWinningCode(
-		WinningConditionHelper_topscore && limitreached,
+		WinningConditionHelper_topscore && limit_reached,
 		WinningConditionHelper_equality
 	);
 }
@@ -1891,10 +1864,6 @@ Exit deathmatch games upon conditions
 */
 void CheckRules_World()
 {
-	float timelimit;
-	float fraglimit;
-	float leadlimit;
-
 	VoteThink();
 	MapVote_Think();
 
@@ -1909,9 +1878,10 @@ void CheckRules_World()
 		return;
 	}
 
-	timelimit = autocvar_timelimit * 60;
-	fraglimit = autocvar_fraglimit;
-	leadlimit = autocvar_leadlimit;
+	float timelimit = autocvar_timelimit * 60;
+	float fraglimit = autocvar_fraglimit;
+	float leadlimit = autocvar_leadlimit;
+	if (leadlimit < 0) leadlimit = 0;
 
 	if(warmup_stage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
@@ -1935,11 +1905,6 @@ void CheckRules_World()
 
 	float wantovertime;
 	wantovertime = 0;
-
-	if(timelimit > game_starttime)
-		game_completion_ratio = (time - game_starttime) / (timelimit - game_starttime);
-	else
-		game_completion_ratio = 0;
 
 	if(checkrules_suddendeathend)
 	{
