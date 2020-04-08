@@ -14,6 +14,7 @@
 # Karol Kosek, 2020
 # Karol Kosek, 2020
 # Karol Kosek, 2020
+# Karol Kosek, 2020
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Piotr Kozica <koza91@gmail.com>, 2016
 # Rafał Szymański <okavasly@gmail.com>, 2017
