@@ -163,6 +163,8 @@ bool racer_frame(entity this, float dt)
 
 	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(vehic.origin));
 	if(!(cont & DPCONTENTS_WATER))
+		vehic.air_finished = 0;
+	else if (!vehic.air_finished)
 		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(IS_DEAD(vehic))
