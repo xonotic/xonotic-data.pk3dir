@@ -1050,58 +1050,20 @@ void GameCommand_moveplayer(int request, int argc)
 								Player_SetForcedTeamIndex(client, save);
 
 								// Check to see if the destination team is even available
-								switch (team_id)
+								int real_team_id = Team_TeamToIndex(team_id);
+								if (real_team_id == -1)
 								{
-									case NUM_TEAM_1:
-									{
-										if (!TeamBalance_IsTeamAllowed(balance, 1))
-										{
-											LOG_INFO("Sorry, can't move player to red team if it doesn't exist.");
-											TeamBalance_Destroy(balance);
-											return;
-										}
-										TeamBalance_Destroy(balance);
-										break;
-									}
-									case NUM_TEAM_2:
-									{
-										if (!TeamBalance_IsTeamAllowed(balance, 2))
-										{
-											LOG_INFO("Sorry, can't move player to blue team if it doesn't exist.");
-											TeamBalance_Destroy(balance);
-											return;
-										}
-										TeamBalance_Destroy(balance);
-										break;
-									}
-									case NUM_TEAM_3:
-									{
-										if (!TeamBalance_IsTeamAllowed(balance, 3))
-										{
-											LOG_INFO("Sorry, can't move player to yellow team if it doesn't exist.");
-											TeamBalance_Destroy(balance);
-											return;
-										}
-										TeamBalance_Destroy(balance);
-										break;
-									}
-									case NUM_TEAM_4:
-									{
-										if (!TeamBalance_IsTeamAllowed(balance, 4))
-										{
-											LOG_INFO("Sorry, can't move player to pink team if it doesn't exist.");
-											TeamBalance_Destroy(balance);
-											return;
-										}
-										TeamBalance_Destroy(balance);
-										break;
-									}
-									default:
-									{
-										LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
-										return;
-									}
+									LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
+									TeamBalance_Destroy(balance);
+									return;
 								}
+								if (!TeamBalance_IsTeamAllowed(balance, real_team_id))
+								{
+									LOG_INFOF("Sorry, can't move player to %s team if it doesn't exist.", destination);
+									TeamBalance_Destroy(balance);
+									return;
+								}
+								TeamBalance_Destroy(balance);
 
 								// If so, lets continue and finally move the player
 								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
