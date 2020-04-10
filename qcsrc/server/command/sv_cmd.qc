@@ -1025,23 +1025,22 @@ void GameCommand_moveplayer(int request, int argc)
 							if (teamplay)
 							{
 								// set up
-								float team_id;
 								int save = Player_GetForcedTeamIndex(client);
 								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 
 								// find the team to move the player to
-								team_id = Team_ColorToTeam(destination);
+								int team_num = Team_ColorToTeam(destination);
 								entity balance;
-								if (team_id == client.team)  // already on the destination team
+								if (team_num == client.team)  // already on the destination team
 								{
 									// keep the forcing undone
 									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7."));
 									continue;
 								}
-								else if (team_id == 0)  // auto team
+								else if (team_num == 0)  // auto team
 								{
 									balance = TeamBalance_CheckAllowedTeams(client);
-									team_id = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
+									team_num = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
 								}
 								else
 								{
@@ -1050,14 +1049,14 @@ void GameCommand_moveplayer(int request, int argc)
 								Player_SetForcedTeamIndex(client, save);
 
 								// Check to see if the destination team is even available
-								int real_team_id = Team_TeamToIndex(team_id);
-								if (real_team_id == -1)
+								int team_id = Team_TeamToIndex(team_num);
+								if (team_id == -1)
 								{
 									LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
 									TeamBalance_Destroy(balance);
 									return;
 								}
-								if (!TeamBalance_IsTeamAllowed(balance, real_team_id))
+								if (!TeamBalance_IsTeamAllowed(balance, team_id))
 								{
 									LOG_INFOF("Sorry, can't move player to %s team if it doesn't exist.", destination);
 									TeamBalance_Destroy(balance);
@@ -1067,7 +1066,7 @@ void GameCommand_moveplayer(int request, int argc)
 
 								// If so, lets continue and finally move the player
 								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
-								if (MoveToTeam(client, Team_TeamToIndex(team_id), 6))
+								if (MoveToTeam(client, team_id, 6))
 								{
 									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
 									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
