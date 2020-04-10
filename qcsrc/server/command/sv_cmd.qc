@@ -1145,8 +1145,8 @@ void GameCommand_moveplayer(int request, int argc)
 			LOG_INFO("  'clients' is a list (separated by commas) of player entity ID's or nicknames");
 			LOG_INFO("  'destination' is what to send the player to, be it team or spectating");
 			LOG_INFO("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"");
-			LOG_INFO("Examples: sv_cmd moveplayer 1,3,5 red 3");
-			LOG_INFO("          sv_cmd moveplayer 2 spec ");
+			LOG_INFO("Examples: sv_cmd moveplayer 1,3,5 red");
+			LOG_INFO("          sv_cmd moveplayer 2 spec");
 			LOG_INFO("See also: ^2allspec, shuffleteams^7");
 			return;
 		}
