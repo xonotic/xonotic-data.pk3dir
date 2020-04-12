@@ -92,7 +92,7 @@ bool IsServerInList(string list, string srv)
 	return false;
 }
 
-int CheckCategoryOverride(int cat)
+int CategoryOverride(int cat)
 {
 	entity catent = RetrieveCategoryEnt(cat);
 	if(catent)
@@ -103,12 +103,12 @@ int CheckCategoryOverride(int cat)
 	}
 	else
 	{
-		error(sprintf("CheckCategoryOverride(%d): Improper category number!\n", cat));
+		error(sprintf("CategoryOverride(%d): Improper category number!\n", cat));
 		return cat;
 	}
 }
 
-int CheckCategoryForEntry(int entry)
+int CategoryForEntry(int entry)
 {
 	string s, k, v, modtype = "";
 	int j, m, impure = 0, freeslots = 0, sflags = 0;
