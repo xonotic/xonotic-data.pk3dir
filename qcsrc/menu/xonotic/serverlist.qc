@@ -195,8 +195,6 @@ int CategoryForEntry(int entry)
 			case "minstagib":
 			case "instagib": { return CAT_INSTAGIB; }
 			case "overkill": { return CAT_OVERKILL; }
-			//case "nix": { return CAT_NIX; }
-			//case "newtoys": { return CAT_NEWTOYS; }
 
 			// "cts" is allowed as compat, xdf is replacement
 			case "cts":
