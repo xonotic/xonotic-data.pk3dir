@@ -1667,17 +1667,19 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 bool GiveResourceValue(entity e, int res_type, int op, int val)
 {
 	int v0 = GetResource(e, res_type);
+	float new_val = 0;
 	switch (op)
 	{
 		// min 100 cells = at least 100 cells
-		case OP_SET: SetResource(e, res_type, val); break;
-		case OP_MIN: SetResource(e, res_type, max(v0, val)); break;
-		case OP_MAX: SetResource(e, res_type, min(v0, val)); break;
-		case OP_PLUS: SetResource(e, res_type, v0 + val); break;
-		case OP_MINUS: SetResource(e, res_type, v0 - val); break;
+		case OP_SET: new_val = val; break;
+		case OP_MIN: new_val = max(v0, val); break;
+		case OP_MAX: new_val = min(v0, val); break;
+		case OP_PLUS: new_val = v0 + val; break;
+		case OP_MINUS: new_val = v0 - val; break;
+		default: return false;
 	}
-	int v1 = GetResource(e, res_type);
-	return v0 != v1;
+
+	return SetResourceExplicit(e, res_type, new_val);
 }
 
 float GiveItems(entity e, float beginarg, float endarg)
