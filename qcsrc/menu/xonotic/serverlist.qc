@@ -394,9 +394,6 @@ void XonoticServerList_focusEnter(entity me)
 
 void XonoticServerList_draw(entity me)
 {
-	int i;
-	bool found = false, owned;
-
 	if(_Nex_ExtResponseSystem_BannedServersNeedsRefresh)
 	{
 		if(!me.needsRefresh)
@@ -438,9 +435,9 @@ void XonoticServerList_draw(entity me)
 		me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 	}
 
-	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
+	bool owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
 
-	for(i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
+	for(int i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
 	category_draw_count = 0;
 
 	if(autocvar_menu_slist_categories >= 0) // if less than 0, don't even draw a category heading for favorites
@@ -536,6 +533,7 @@ void XonoticServerList_draw(entity me)
 	me.infoButton.disabled = (me.lockedSelectedItem || me.nItems == 0 || !owned);
 	me.favoriteButton.disabled = (me.lockedSelectedItem || (me.nItems == 0 && me.ipAddressBox.text == ""));
 
+	bool found = false;
 	if(me.lockedSelectedItem)
 	{
 		if(me.nItems > 0)
@@ -549,7 +547,7 @@ void XonoticServerList_draw(entity me)
 	}
 	else if(me.selectedServer)
 	{
-		for(i = 0; i < me.nItems; ++i)
+		for(int i = 0; i < me.nItems; ++i)
 		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
 			{
@@ -1120,8 +1118,7 @@ float XonoticServerList_getTotalHeight(entity me)
 int XonoticServerList_getItemAtPos(entity me, float pos)
 {
 	pos = pos / me.itemHeight;
-	int i;
-	for (i = category_draw_count - 1; i >= 0; --i) {
+	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
 		float itempos = i * me.categoriesHeight + category_item[i];
 		if (pos >= itempos + me.categoriesHeight + 1)
@@ -1134,8 +1131,7 @@ int XonoticServerList_getItemAtPos(entity me, float pos)
 }
 float XonoticServerList_getItemStart(entity me, int item)
 {
-	int i;
-	for (i = category_draw_count - 1; i >= 0; --i) {
+	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
 		float itempos = i * me.categoriesHeight + category_item[i];
 		if (item >= itemidx + 1)
@@ -1148,8 +1144,7 @@ float XonoticServerList_getItemStart(entity me, int item)
 }
 float XonoticServerList_getItemHeight(entity me, int item)
 {
-	int i;
-	for (i = 0; i < category_draw_count; ++i) {
+	for (int i = 0; i < category_draw_count; ++i) {
 		// Matches exactly the headings with increased height.
 		if (item == category_item[i])
 			return me.itemHeight * (me.categoriesHeight + 1);
