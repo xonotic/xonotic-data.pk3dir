@@ -16,18 +16,16 @@ const int MAX_CL_STATS = 256;
 // const int STAT_NAILS = 7;
 // const int STAT_ROCKETS = 8;
 // const int STAT_CELLS = 9;
-// const int STAT_ACTIVEWEAPON = 10;
 // const int STAT_ITEMS = 15; // .items | .items2 << 23 | serverflags << 28
 // const int STAT_VIEWHEIGHT = 16;
 
 #if defined(CSQC)
     #define g_stat_HEALTH getstati(STAT_HEALTH)
-    #define g_stat_ARMOR getstat_int(STAT_ARMOR)
-    #define g_stat_SHELLS getstat_int(STAT_SHELLS)
-    #define g_stat_NAILS getstat_int(STAT_NAILS)
-    #define g_stat_ROCKETS getstat_int(STAT_ROCKETS)
-    #define g_stat_CELLS getstat_int(STAT_CELLS)
-    #define g_stat_ACTIVEWEAPON getstat_int(STAT_ACTIVEWEAPON)
+    #define g_stat_ARMOR getstati(STAT_ARMOR)
+    #define g_stat_SHELLS getstati(STAT_SHELLS)
+    #define g_stat_NAILS getstati(STAT_NAILS)
+    #define g_stat_ROCKETS getstati(STAT_ROCKETS)
+    #define g_stat_CELLS getstati(STAT_CELLS)
     #define g_stat_ITEMS getstat_int(STAT_ITEMS)
     #define g_stat_VIEWHEIGHT getstati(STAT_VIEWHEIGHT)
 #elif defined(SVQC)
@@ -37,7 +35,6 @@ const int MAX_CL_STATS = 256;
     #define stat_NAILS ammo_nails
     #define stat_ROCKETS ammo_rockets
     #define stat_CELLS ammo_cells
-    #define stat_ACTIVEWEAPON weapon
     #define stat_ITEMS items
     #define stat_VIEWHEIGHT view_ofs_z
 #endif
