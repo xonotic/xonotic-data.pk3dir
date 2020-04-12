@@ -8,10 +8,9 @@
 
 void SL_ProcessCategoryOverrides(.string override_field_string, .float override_field)
 {
-	string s;
 	for (int i = 0; i < category_ent_count; ++i)
 	{
-		s = categories[i].override_field_string;
+		string s = categories[i].override_field_string;
 		if (s != "" && s != categories[i].cat_name)
 		{
 			int catnum = 0;
@@ -70,22 +69,19 @@ entity RetrieveCategoryEnt(int catnum)
 
 bool IsServerInList(string list, string srv)
 {
-	string p;
-	int i, n;
 	if(srv == "")
 		return false;
 	srv = netaddress_resolve(srv, 26000);
 	if(srv == "")
 		return false;
-	p = crypto_getidfp(srv);
-	n = tokenize_console(list);
-	for(i = 0; i < n; ++i)
+	string p = crypto_getidfp(srv);
+	int n = tokenize_console(list);
+	for(int i = 0; i < n; ++i)
 	{
 		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
 		{
-			if(p)
-				if(argv(i) == p)
-					return true;
+			if(p && argv(i) == p)
+				return true;
 		}
 		else
 		{
