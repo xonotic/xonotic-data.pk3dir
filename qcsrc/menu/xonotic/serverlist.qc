@@ -310,14 +310,10 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 
 	if(mode >= REFRESHSERVERLIST_REFILTER)
 	{
-		float m;
-		int i, n;
-		int listflags = 0;
-		string s, typestr, modstr;
+		string s = me.filterString;
 
-		s = me.filterString;
-
-		m = strstrofs(s, ":", 0);
+		string typestr;
+		int m = strstrofs(s, ":", 0);
 		if(m >= 0)
 		{
 			typestr = substring(s, 0, m);
@@ -328,7 +324,7 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		else
 			typestr = "";
 
-		modstr = cvar_string("menu_slist_modfilter");
+		string modstr = cvar_string("menu_slist_modfilter");
 
 		m = SLIST_MASK_AND - 1;
 		resethostcachemasks();
@@ -361,8 +357,8 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		}
 
 		// server banning
-		n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
-		for(i = 0; i < n; ++i)
+		int n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
+		for(int i = 0; i < n; ++i)
 			if(argv(i) != "")
 				sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
 
@@ -375,11 +371,11 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
 		}
 
-		// sorting flags
-		//listflags |= SLSF_FAVORITES;
-		listflags |= SLSF_CATEGORIES;
-		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
-		sethostcachesort(me.currentSortField, listflags);
+		int sorting_flags = 0;
+		//sorting_flags |= SLSF_FAVORITES;
+		sorting_flags |= SLSF_CATEGORIES;
+		if(me.currentSortOrder < 0) { sorting_flags |= SLSF_DESCENDING; }
+		sethostcachesort(me.currentSortField, sorting_flags);
 	}
 
 	resorthostcache();
@@ -704,13 +700,11 @@ void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 }
 void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
 {
-	vector originInLBSpace, sizeInLBSpace;
-	originInLBSpace = eY * (-me.itemHeight);
-	sizeInLBSpace = eY * me.itemHeight + eX * (1 - me.controlWidth);
+	vector originInLBSpace = eY * (-me.itemHeight);
+	vector sizeInLBSpace = eY * me.itemHeight + eX * (1 - me.controlWidth);
 
-	vector originInDialogSpace, sizeInDialogSpace;
-	originInDialogSpace = boxToGlobal(originInLBSpace, me.Container_origin, me.Container_size);
-	sizeInDialogSpace = boxToGlobalSize(sizeInLBSpace, me.Container_size);
+	vector originInDialogSpace = boxToGlobal(originInLBSpace, me.Container_origin, me.Container_size);
+	vector sizeInDialogSpace = boxToGlobalSize(sizeInLBSpace, me.Container_size);
 
 	btn.Container_origin_x = originInDialogSpace.x + sizeInDialogSpace.x * theOrigin;
 	btn.Container_size_x   =                         sizeInDialogSpace.x * theSize;
