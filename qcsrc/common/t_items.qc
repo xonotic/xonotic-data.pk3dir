@@ -1565,6 +1565,8 @@ spawnfunc(target_items)
 		if(GetResource(this, RES_FUEL) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_FUEL)), "fuel");
 		if(GetResource(this, RES_HEALTH) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_HEALTH)), "health");
 		if(GetResource(this, RES_ARMOR) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_ARMOR)), "armor");
+		// HACK: buffs share a single timer, so we need to include enabled buffs AFTER disabled ones to avoid loss
+		FOREACH(Buffs, it != BUFF_Null && !(STAT(BUFFS, this) & it.m_itemid), this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
 		FOREACH(Buffs, it != BUFF_Null && (STAT(BUFFS, this) & it.m_itemid), this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
 		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
 	}
