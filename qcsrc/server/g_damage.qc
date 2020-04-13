@@ -85,7 +85,7 @@ string AppendItemcodes(string s, entity player)
 		if(w != 0 || slot == 0)
 			s = strcat(s, ftos(w));
 	}
-	if(time < player.strength_finished)
+	if(time < STAT(STRENGTH_FINISHED, player))
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
 		s = strcat(s, "I");

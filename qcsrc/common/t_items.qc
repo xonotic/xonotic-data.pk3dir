@@ -825,7 +825,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.strength_finished)
 	{
 		pickedup = true;
-		player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
+		STAT(STRENGTH_FINISHED, player) = max(STAT(STRENGTH_FINISHED, player), time) + item.strength_finished;
 	}
 	if (item.invincible_finished)
 	{
@@ -1705,14 +1705,14 @@ float GiveItems(entity e, float beginarg, float endarg)
 		}
 	}
 
-	e.strength_finished = max(0, e.strength_finished - time);
+	STAT(STRENGTH_FINISHED, e) = max(0, STAT(STRENGTH_FINISHED, e) - time);
 	e.invincible_finished = max(0, e.invincible_finished - time);
 	e.superweapons_finished = max(0, e.superweapons_finished - time);
 	STAT(BUFF_TIME, e) = max(0, STAT(BUFF_TIME, e) - time);
 
 	PREGIVE(e, items);
 	PREGIVE_WEAPONS(e);
-	PREGIVE(e, strength_finished);
+	PREGIVE(e, stat_STRENGTH_FINISHED);
 	PREGIVE(e, invincible_finished);
 	PREGIVE(e, superweapons_finished);
 	PREGIVE_RESOURCE(e, RES_BULLETS);
@@ -1753,7 +1753,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				continue;
 			case "ALL":
 				got += GiveBit(e, items, ITEM_JetpackRegen.m_itemid, op, val);
-				got += GiveValue(e, strength_finished, op, val);
+				got += GiveValue(e, stat_STRENGTH_FINISHED, op, val);
 				got += GiveValue(e, invincible_finished, op, val);
 				got += GiveValue(e, superweapons_finished, op, val);
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS, op, val);
@@ -1790,7 +1790,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveBit(e, items, ITEM_JetpackRegen.m_itemid, op, val);
 				break;
 			case "strength":
-				got += GiveValue(e, strength_finished, op, val);
+				got += GiveValue(e, stat_STRENGTH_FINISHED, op, val);
 				break;
 			case "invincible":
 				got += GiveValue(e, invincible_finished, op, val);
@@ -1849,7 +1849,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 			if(STAT(WEAPONS, e) & (it.m_wepset))
 				it.wr_init(it);
 	});
-	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_VALUE(e, stat_STRENGTH_FINISHED, 1, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_VALUE(e, invincible_finished, 1, SND_Shield, SND_POWEROFF);
 	//POSTGIVE_VALUE(e, superweapons_finished, 1, SND_Null, SND_Null);
 	POSTGIVE_RESOURCE(e, RES_BULLETS, 0, SND_ITEMPICKUP, SND_Null);
@@ -1865,10 +1865,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 		if(!g_weaponarena && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
-	if(e.strength_finished <= 0)
-		e.strength_finished = 0;
+	if(STAT(STRENGTH_FINISHED, e) <= 0)
+		STAT(STRENGTH_FINISHED, e) = 0;
 	else
-		e.strength_finished += time;
+		STAT(STRENGTH_FINISHED, e) += time;
 	if(e.invincible_finished <= 0)
 		e.invincible_finished = 0;
 	else

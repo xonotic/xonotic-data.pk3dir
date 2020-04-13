@@ -232,8 +232,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(player, player.strength_finished, SND_POWEROFF);
-		if (time > player.strength_finished)
+		play_countdown(player, STAT(STRENGTH_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(STRENGTH_FINISHED, player))
 		{
 			player.alpha = default_player_alpha;
 			player.exteriorweaponentity.alpha = default_weapon_alpha;
@@ -243,7 +243,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 	else
 	{
-		if (time < player.strength_finished)
+		if (time < STAT(STRENGTH_FINISHED, player))
 		{
 			player.alpha = autocvar_g_instagib_invis_alpha;
 			player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;

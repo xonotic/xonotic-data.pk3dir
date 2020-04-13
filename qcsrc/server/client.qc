@@ -334,7 +334,7 @@ void PutObserverInServer(entity this)
 	this.fade_time = 0;
 	this.pain_frame = 0;
 	this.pain_finished = 0;
-	this.strength_finished = 0;
+	STAT(STRENGTH_FINISHED, this) = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
 	this.air_finished = 0;
@@ -638,7 +638,7 @@ void PutPlayerInServer(entity this)
 	this.punchangle = '0 0 0';
 	this.punchvector = '0 0 0';
 
-	this.strength_finished = 0;
+	STAT(STRENGTH_FINISHED, this) = 0;
 	this.invincible_finished = 0;
 	this.fire_endtime = -1;
 	STAT(REVIVE_PROGRESS, this) = 0;
@@ -1415,9 +1415,9 @@ void player_powerups(entity this)
 	{
 		if (this.items & ITEM_Strength.m_itemid)
 		{
-			play_countdown(this, this.strength_finished, SND_POWEROFF);
+			play_countdown(this, STAT(STRENGTH_FINISHED, this), SND_POWEROFF);
 			this.effects = this.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > this.strength_finished)
+			if (time > STAT(STRENGTH_FINISHED, this))
 			{
 				this.items = this.items - (this.items & ITEM_Strength.m_itemid);
 				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_STRENGTH, this.netname);
@@ -1426,7 +1426,7 @@ void player_powerups(entity this)
 		}
 		else
 		{
-			if (time < this.strength_finished)
+			if (time < STAT(STRENGTH_FINISHED, this))
 			{
 				this.items = this.items | ITEM_Strength.m_itemid;
 				if(!g_cts)
@@ -1682,7 +1682,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.items = spectatee.items;
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
 	STAT(HIT_TIME, this) = STAT(HIT_TIME, spectatee);
-	this.strength_finished = spectatee.strength_finished;
+	STAT(STRENGTH_FINISHED, this) = STAT(STRENGTH_FINISHED, spectatee);
 	this.invincible_finished = spectatee.invincible_finished;
 	this.superweapons_finished = spectatee.superweapons_finished;
 	this.air_finished = spectatee.air_finished;
