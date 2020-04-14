@@ -1478,10 +1478,11 @@ spawnfunc(target_items)
 	if(!this.superweapons_finished)
 		this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
+	string str;
 	int n = tokenize_console(this.netname);
 	if(argv(0) == "give")
 	{
-		this.netname = substring(this.netname, argv_start_index(1), argv_end_index(-1) - argv_start_index(1));
+		str = substring(this.netname, argv_start_index(1), argv_end_index(-1) - argv_start_index(1));
 	}
 	else
 	{
@@ -1549,29 +1550,28 @@ spawnfunc(target_items)
 			itemprefix = valueprefix = string_null;
 		}
 
-		this.netname = "";
-		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_AMMO), "unlimited_weapon_ammo");
-		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
-		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.strength_finished * boolean(this.items & ITEM_Strength.m_itemid), "strength");
-		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.invincible_finished * boolean(this.items & ITEM_Shield.m_itemid), "invincible");
-		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
-		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
-		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
-		if(GetResource(this, RES_SHELLS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_SHELLS)), "shells");
-		if(GetResource(this, RES_BULLETS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_BULLETS)), "nails");
-		if(GetResource(this, RES_ROCKETS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_ROCKETS)), "rockets");
-		if(GetResource(this, RES_CELLS) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_CELLS)), "cells");
-		if(GetResource(this, RES_PLASMA) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_PLASMA)), "plasma");
-		if(GetResource(this, RES_FUEL) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_FUEL)), "fuel");
-		if(GetResource(this, RES_HEALTH) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_HEALTH)), "health");
-		if(GetResource(this, RES_ARMOR) != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, GetResource(this, RES_ARMOR)), "armor");
+		str = "";
+		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & IT_UNLIMITED_AMMO), "unlimited_weapon_ammo");
+		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
+		str = sprintf("%s %s%d %s", str, valueprefix, this.strength_finished * boolean(this.items & ITEM_Strength.m_itemid), "strength");
+		str = sprintf("%s %s%d %s", str, valueprefix, this.invincible_finished * boolean(this.items & ITEM_Shield.m_itemid), "invincible");
+		str = sprintf("%s %s%d %s", str, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
+		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
+		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
+		if(GetResource(this, RES_SHELLS) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_SHELLS)), "shells");
+		if(GetResource(this, RES_BULLETS) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_BULLETS)), "nails");
+		if(GetResource(this, RES_ROCKETS) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_ROCKETS)), "rockets");
+		if(GetResource(this, RES_CELLS) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_CELLS)), "cells");
+		if(GetResource(this, RES_PLASMA) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_PLASMA)), "plasma");
+		if(GetResource(this, RES_FUEL) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_FUEL)), "fuel");
+		if(GetResource(this, RES_HEALTH) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_HEALTH)), "health");
+		if(GetResource(this, RES_ARMOR) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_ARMOR)), "armor");
 		// HACK: buffs share a single timer, so we need to include enabled buffs AFTER disabled ones to avoid loss
-		FOREACH(Buffs, it != BUFF_Null && !(STAT(BUFFS, this) & it.m_itemid), this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
-		FOREACH(Buffs, it != BUFF_Null && (STAT(BUFFS, this) & it.m_itemid), this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
-		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
+		FOREACH(Buffs, it != BUFF_Null && !(STAT(BUFFS, this) & it.m_itemid), str = sprintf("%s %s%d %s", str, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
+		FOREACH(Buffs, it != BUFF_Null && (STAT(BUFFS, this) & it.m_itemid), str = sprintf("%s %s%d %s", str, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
+		FOREACH(Weapons, it != WEP_Null, str = sprintf("%s %s%d %s", str, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
 	}
-	this.netname = strzone(this.netname);
-	//print(this.netname, "\n");
+	this.netname = strzone(str);
 
 	n = tokenize_console(this.netname);
 	for(int j = 0; j < n; ++j)
