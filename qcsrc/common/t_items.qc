@@ -1558,14 +1558,15 @@ spawnfunc(target_items)
 		str = sprintf("%s %s%d %s", str, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
 		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
 		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
-		if(GetResource(this, RES_SHELLS) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_SHELLS)), "shells");
-		if(GetResource(this, RES_BULLETS) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_BULLETS)), "nails");
-		if(GetResource(this, RES_ROCKETS) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_ROCKETS)), "rockets");
-		if(GetResource(this, RES_CELLS) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_CELLS)), "cells");
-		if(GetResource(this, RES_PLASMA) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_PLASMA)), "plasma");
-		if(GetResource(this, RES_FUEL) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_FUEL)), "fuel");
-		if(GetResource(this, RES_HEALTH) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_HEALTH)), "health");
-		if(GetResource(this, RES_ARMOR) != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, GetResource(this, RES_ARMOR)), "armor");
+		float res;
+		res = GetResource(this, RES_SHELLS);  if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "shells");
+		res = GetResource(this, RES_BULLETS); if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "nails");
+		res = GetResource(this, RES_ROCKETS); if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "rockets");
+		res = GetResource(this, RES_CELLS);   if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "cells");
+		res = GetResource(this, RES_PLASMA);  if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "plasma");
+		res = GetResource(this, RES_FUEL);    if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "fuel");
+		res = GetResource(this, RES_HEALTH);  if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "health");
+		res = GetResource(this, RES_ARMOR);   if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "armor");
 		// HACK: buffs share a single timer, so we need to include enabled buffs AFTER disabled ones to avoid loss
 		FOREACH(Buffs, it != BUFF_Null && !(STAT(BUFFS, this) & it.m_itemid), str = sprintf("%s %s%d %s", str, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
 		FOREACH(Buffs, it != BUFF_Null && (STAT(BUFFS, this) & it.m_itemid), str = sprintf("%s %s%d %s", str, valueprefix, max(0, STAT(BUFF_TIME, this)), it.netname));
