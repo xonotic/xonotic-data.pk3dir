@@ -12,6 +12,9 @@
 #include <client/autocvars.qh>
 #endif
 
+// Operator for bold notifications
+#define BOLD_OPERATOR "^BOLD"
+
 /** main types/groups of notifications */
 ENUMCLASS(MSG)
 	/** "Global" AND "personal" announcer messages */
