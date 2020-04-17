@@ -243,6 +243,7 @@ float autocvar_hud_panel_centerprint_fade_subsequent_minfontsize = 0.75;
 float autocvar_hud_panel_centerprint_fade_minfontsize = 0;
 bool autocvar_hud_panel_centerprint_flip;
 float autocvar_hud_panel_centerprint_fontscale;
+float autocvar_hud_panel_centerprint_fontscale_bold;
 float autocvar_hud_panel_centerprint_time;
 bool autocvar_hud_panel_chat;
 bool autocvar_hud_panel_engineinfo;

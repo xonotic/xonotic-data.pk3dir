@@ -194,6 +194,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_Cvar("hud_panel_centerprint_align");
 					HUD_Write_Cvar("hud_panel_centerprint_flip");
 					HUD_Write_Cvar("hud_panel_centerprint_fontscale");
+					HUD_Write_Cvar("hud_panel_centerprint_fontscale_bold");
 					HUD_Write_Cvar("hud_panel_centerprint_time");
 					HUD_Write_Cvar("hud_panel_centerprint_fade_in");
 					HUD_Write_Cvar("hud_panel_centerprint_fade_out");
