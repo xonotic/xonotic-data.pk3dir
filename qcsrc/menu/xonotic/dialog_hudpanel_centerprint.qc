@@ -40,12 +40,12 @@ void XonoticHUDCenterprintDialog_fill(entity me)
 		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Frag messages:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_centerprint_bold", _("Enable bold frag messages")));
+		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_centerprint_fragmessage_bold", _("Enable bold frag messages")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_centerprint_capitalize", _("Capitalize frag messages")));
+		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_centerprint_fragmessage_capitalize", _("Capitalize frag messages")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Font scale:")));
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.5, 3, 0.2, "hud_panel_centerprint_fontscale_bold"));
+		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.5, 3, 0.2, "hud_panel_centerprint_fragmessage_fontscale"));
 }

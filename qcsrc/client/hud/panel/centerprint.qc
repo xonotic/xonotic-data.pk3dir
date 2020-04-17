@@ -215,9 +215,9 @@ void HUD_CenterPrint ()
 	{
 		// if the notification starts with ^BOLD make it bold (e.g. frag messages)
 		is_bold = (substring(centerprint_messages[j], 0, 5) == BOLD_OPERATOR);
-		// remove ^BOLD so it doesn't get printed onscreen. also capitalize the text if hud_panel_centerprint_capitalize is true
+		// remove ^BOLD so it doesn't get printed onscreen. also capitalize the text if hud_panel_centerprint_fragmessage_capitalize is true
 		if (is_bold) {
-			if (autocvar_hud_panel_centerprint_capitalize) {
+			if (autocvar_hud_panel_centerprint_fragmessage_capitalize) {
 				centerprint_message = strzone(strtoupper(substring(centerprint_messages[j], 5, -1)));
 			} else {
 				centerprint_message = strzone(substring(centerprint_messages[j], 5, -1));
@@ -229,7 +229,7 @@ void HUD_CenterPrint ()
 		// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
 		// height = panel_size_y/entries;
 		// fontsize = '1 1 0' * height;
-		height = (is_bold) ? vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale_bold : vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
+		height = (is_bold) ? vid_conheight/50 * autocvar_hud_panel_centerprint_fragmessage_fontscale : vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
 		fontsize = '1 1 0' * height;
 		entries = bound(1, floor(panel_size.y/height), CENTERPRINT_MAX_ENTRIES);
 
@@ -326,9 +326,9 @@ void HUD_CenterPrint ()
 					if (align)
 						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize) * sz) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
-						if (is_bold && autocvar_hud_panel_centerprint_bold) draw_beginBoldFont();
+						if (is_bold && autocvar_hud_panel_centerprint_fragmessage_bold) draw_beginBoldFont();
 						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz * hud_scale.x) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
-						if (is_bold && autocvar_hud_panel_centerprint_bold) draw_endBoldFont();
+						if (is_bold && autocvar_hud_panel_centerprint_fragmessage_bold) draw_endBoldFont();
 					pos.y += fontsize.y;
 				}
 				else
