@@ -89,7 +89,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
             string downloadurl = v;
             if (downloadurl == "INVALID")
             {
-                me.ToSTab.textBox.setText(me.ToSTab.textBox, "No Terms of Service specified");
+                me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
             }
             else
             {
@@ -106,7 +106,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 
     if (!ToSSpecified)
     {
-        me.ToSTab.textBox.setText(me.ToSTab.textBox, "No Terms of Service specified");
+        me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
     }
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
