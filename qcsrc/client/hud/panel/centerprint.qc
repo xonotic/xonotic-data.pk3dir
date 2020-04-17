@@ -213,8 +213,8 @@ void HUD_CenterPrint ()
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
-		// if the notification starts with ^BOLD make it bold (e.g. frag messages);
-		is_bold = (substring(centerprint_messages[j], 0, 5) == BOLD_OPERATOR);
+		// if the notification starts with ^BOLD make it bold (e.g. frag messages), but only if hud_panel_centerprint_bold is true
+		is_bold = (autocvar_hud_panel_centerprint_bold && substring(centerprint_messages[j], 0, 5) == BOLD_OPERATOR);
 		// remove ^BOLD so it doesn't get printed onscreen
 		centerprint_message = is_bold ? strzone(substring(centerprint_messages[j], 5, -1)) : strzone(centerprint_messages[j]);
 
