@@ -215,8 +215,16 @@ void HUD_CenterPrint ()
 	{
 		// if the notification starts with ^BOLD make it bold (e.g. frag messages)
 		is_bold = (substring(centerprint_messages[j], 0, 5) == BOLD_OPERATOR);
-		// remove ^BOLD so it doesn't get printed onscreen
-		centerprint_message = is_bold ? strzone(substring(centerprint_messages[j], 5, -1)) : strzone(centerprint_messages[j]);
+		// remove ^BOLD so it doesn't get printed onscreen. also capitalize the text if hud_panel_centerprint_capitalize is true
+		if (is_bold) {
+			if (autocvar_hud_panel_centerprint_capitalize) {
+				centerprint_message = strzone(strtoupper(substring(centerprint_messages[j], 5, -1)));
+			} else {
+				centerprint_message = strzone(substring(centerprint_messages[j], 5, -1));
+			}
+		} else {
+			centerprint_message = strzone(centerprint_messages[j]);
+		}
 
 		// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
 		// height = panel_size_y/entries;
