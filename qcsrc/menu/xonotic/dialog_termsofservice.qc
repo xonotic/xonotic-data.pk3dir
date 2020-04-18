@@ -37,14 +37,14 @@ void XonoticToSDialog_loadXonoticToS(entity me)
                 ToSText = line;
             }
         }
+        fclose(fh);
     }
-    fclose(fh);
     me.textBox.setText(me.textBox, ToSText);
 }
 
 bool XonoticToSDialog_shouldShow()
 {
-    return !autocvar__termsofservice_accepted;
+    return (fexists("TermsOfService") && !autocvar__termsofservice_accepted);
 }
 
 void XonoticToSDialog_fill(entity me)
