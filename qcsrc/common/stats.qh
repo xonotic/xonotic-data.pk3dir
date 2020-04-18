@@ -125,6 +125,7 @@ REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
 REGISTER_STAT(VEIL_ORB, float)
 REGISTER_STAT(VEIL_ORB_ALPHA, float)
+REGISTER_STAT(TKA_BALLSTATUS, int)
 
 #ifdef SVQC
 float autocvar_sv_showfps = 5;

@@ -1,0 +1,8 @@
+#pragma once
+
+const int TKA_BALL_TAKEN_RED			= 1;
+const int TKA_BALL_TAKEN_BLUE			= 2;
+const int TKA_BALL_TAKEN_YELLOW			= 3;
+const int TKA_BALL_TAKEN_PINK			= 4;
+const int TKA_BALL_CARRYING				= 8;
+const int TKA_BALL_DROPPED				= 12;
