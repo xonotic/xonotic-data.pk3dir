@@ -245,7 +245,7 @@ bool autocvar_hud_panel_centerprint_flip;
 bool autocvar_hud_panel_centerprint_fragmessage_bold;
 bool autocvar_hud_panel_centerprint_fragmessage_capitalize;
 float autocvar_hud_panel_centerprint_fontscale;
-float autocvar_hud_panel_centerprint_fragmessage_fontscale;
+float autocvar_hud_panel_centerprint_fragmessage_fontscale = 1.8;
 float autocvar_hud_panel_centerprint_time;
 bool autocvar_hud_panel_chat;
 bool autocvar_hud_panel_engineinfo;
