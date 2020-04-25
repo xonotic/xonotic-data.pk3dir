@@ -8,6 +8,12 @@ int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
 bool autocvar_g_lms_regenerate;
+int autocvar_g_lms_leader_wp_lives;
+float autocvar_g_lms_leader_wp_max_relative;
+float autocvar_g_lms_leader_wp_time;
+float autocvar_g_lms_leader_wp_time_repeat;
+
+.float lms_wp_time;
 
 // main functions
 int LMS_NewPlayerLives()
@@ -125,6 +131,8 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 		it.frags = FRAGS_PLAYER;
 		GameRules_scoring_add(it, LMS_LIVES, LMS_NewPlayerLives());
 		PutClientInServer(it);
+		if (it.waypointsprite_attachedforcarrier)
+			WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 	});
 }
 
@@ -289,6 +297,79 @@ MUTATOR_HOOKFUNCTION(lms, ForbidThrowCurrentWeapon)
 {
 	// forbode!
 	return true;
+}
+
+bool lms_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
+{
+	if(view.lms_wp_time)
+		if(IS_SPEC(player))
+			return false; // we don't want spectators of leaders to see the attached waypoint on the top of their screen
+
+	float leader_time = autocvar_g_lms_leader_wp_time;
+	float leader_repeat_time = leader_time + autocvar_g_lms_leader_wp_time_repeat;
+	float wp_time = this.owner.lms_wp_time;
+	if (wp_time && (time - wp_time) % leader_repeat_time > leader_time)
+		return false;
+
+	return true;
+}
+
+void lms_UpdateWaypoints()
+{
+	int max_lives = 0;
+	int pl_cnt = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+		if (lives > max_lives)
+			max_lives = lives;
+		pl_cnt++;
+	});
+
+	int second_max_lives = 0;
+	int pl_cnt_with_max_lives = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+		if (lives == max_lives)
+			pl_cnt_with_max_lives++;
+		else if (lives > second_max_lives)
+			second_max_lives = lives;
+	});
+
+	int lives_diff = autocvar_g_lms_leader_wp_lives;
+	if (max_lives - second_max_lives >= lives_diff && pl_cnt_with_max_lives <= pl_cnt * autocvar_g_lms_leader_wp_max_relative)
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+			int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+			if (lives == max_lives)
+			{
+				if (!it.waypointsprite_attachedforcarrier)
+				{
+					WaypointSprite_AttachCarrier(WP_LmsLeader, it, RADARICON_FLAGCARRIER);
+					it.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = lms_waypointsprite_visible_for_player;
+					WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+					WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
+				}
+				if (!it.lms_wp_time)
+					it.lms_wp_time = time;
+			}
+			else
+			{
+				if (it.waypointsprite_attachedforcarrier)
+					WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
+				it.lms_wp_time = 0;
+			}
+		});
+	else
+		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+			if (it.waypointsprite_attachedforcarrier)
+				WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
+			it.lms_wp_time = 0;
+		});
+}
+
+MUTATOR_HOOKFUNCTION(lms, PlayerDied)
+{
+	if (!warmup_stage && autocvar_g_lms_leader_wp_lives > 0)
+		lms_UpdateWaypoints();
 }
 
 MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
