@@ -427,12 +427,6 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	centre = HUD_Shift(centre);
 	ringsize = HUD_Scale(ringsize);
 
-	float co = cos(f * 2 * M_PI);
-	float si = sin(f * 2 * M_PI);
-	float q = fabs(co) + fabs(si);
-	co /= q;
-	si /= q;
-
 	if(f >= 1)
 	{
 		// draw full rectangle
@@ -455,7 +449,14 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 		R_EndPolygon();
 		return;  // Complete rectangle, nothing more needed.
 	}
-	else if(f > 0.75)
+
+	float co = cos(f * 2 * M_PI);
+	float si = sin(f * 2 * M_PI);
+	float q = fabs(co) + fabs(si);
+	co /= q;
+	si /= q;
+
+	if(f > 0.75)
 	{
 		// draw upper half in full
 		R_BeginPolygon(pic, drawflag, true);
