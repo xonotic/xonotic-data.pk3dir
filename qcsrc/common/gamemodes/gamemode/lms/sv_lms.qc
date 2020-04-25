@@ -12,6 +12,9 @@ int autocvar_g_lms_leader_wp_lives;
 float autocvar_g_lms_leader_wp_max_relative;
 float autocvar_g_lms_leader_wp_time;
 float autocvar_g_lms_leader_wp_time_repeat;
+float autocvar_g_lms_dynamic_respawn_delay;
+float autocvar_g_lms_dynamic_respawn_delay_base;
+float autocvar_g_lms_dynamic_respawn_delay_increase;
 
 .float lms_wp_time;
 
@@ -162,6 +165,33 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
+{
+	entity player = M_ARGV(0, entity);
+	player.respawn_flags |= RESPAWN_FORCE;
+
+	if (autocvar_g_lms_dynamic_respawn_delay <= 0)
+		return false;
+
+	int pl_lives = GameRules_scoring_add(player, LMS_LIVES, 0);
+	int max_lives = 0;
+	int pl_cnt = 0;
+	FOREACH_CLIENT(it != player && IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+		if (lives > max_lives)
+			max_lives = lives;
+		pl_cnt++;
+	});
+
+	// min delay with only 2 players
+	if (pl_cnt == 1) // player wasn't counted
+		max_lives = 0;
+
+	player.respawn_time = time + autocvar_g_lms_dynamic_respawn_delay_base +
+		autocvar_g_lms_dynamic_respawn_delay_increase * max(0, max_lives - pl_lives);
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -176,13 +206,6 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 		return true;
 	}
 	return false;
-}
-
-MUTATOR_HOOKFUNCTION(lms, PlayerDies)
-{
-	entity frag_target = M_ARGV(2, entity);
-
-	frag_target.respawn_flags |= RESPAWN_FORCE;
 }
 
 void lms_RemovePlayer(entity player)
