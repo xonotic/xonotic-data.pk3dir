@@ -15,6 +15,11 @@ float autocvar_g_lms_leader_wp_time_repeat;
 float autocvar_g_lms_dynamic_respawn_delay;
 float autocvar_g_lms_dynamic_respawn_delay_base;
 float autocvar_g_lms_dynamic_respawn_delay_increase;
+bool autocvar_g_lms_dynamic_vampire;
+float autocvar_g_lms_dynamic_vampire_factor_base;
+float autocvar_g_lms_dynamic_vampire_factor_increase;
+float autocvar_g_lms_dynamic_vampire_factor_max;
+int autocvar_g_lms_dynamic_vampire_min_lives_diff;
 
 .float lms_wp_time;
 
@@ -320,6 +325,34 @@ MUTATOR_HOOKFUNCTION(lms, ForbidThrowCurrentWeapon)
 {
 	// forbode!
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(lms, Damage_Calculate)
+{
+	if (!autocvar_g_lms_dynamic_vampire)
+		return;
+
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(4, float);
+
+	if (IS_PLAYER(frag_attacker) && !IS_DEAD(frag_target) && frag_attacker != frag_target)
+	{
+		float vampire_factor = 0;
+
+		int frag_attacker_lives = GameRules_scoring_add(frag_attacker, LMS_LIVES, 0);
+		int frag_target_lives = GameRules_scoring_add(frag_target, LMS_LIVES, 0);
+		int diff = frag_target_lives - frag_attacker_lives - autocvar_g_lms_dynamic_vampire_min_lives_diff;
+
+		if (diff >= 0)
+			vampire_factor = autocvar_g_lms_dynamic_vampire_factor_base + diff * autocvar_g_lms_dynamic_vampire_factor_increase;
+		if (vampire_factor > 0)
+		{
+			vampire_factor = min(vampire_factor, autocvar_g_lms_dynamic_vampire_factor_max);
+			SetResourceExplicit(frag_attacker, RES_HEALTH,
+				min(GetResource(frag_attacker, RES_HEALTH) + frag_damage * vampire_factor, start_health));
+		}
+	}
 }
 
 bool lms_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
