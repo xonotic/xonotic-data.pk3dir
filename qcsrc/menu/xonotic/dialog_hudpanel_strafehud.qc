@@ -2,7 +2,8 @@
 
 #include "textlabel.qh"
 #include "textslider.qh"
-#include "checkbox.qh"
+#include "checkbox_string.qh"
+#include "colorpicker_string.qh"
 #include "slider.qh"
 
 void XonoticHUDStrafeHUDDialog_fill(entity me)

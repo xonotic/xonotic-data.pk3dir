@@ -1,15 +1,17 @@
 // Name:   StrafeHUD
 // Author: Juhu
 
-// FIXME: strafehud disabled in spectate due to lack of IS_ONGROUND()
+// FIXME: strafehud doesn't properly work in spectate due to lack of IS_ONGROUND()
 
 #include "strafehud.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
 #include <client/miscfunctions.qh>
-#include <client/main.qh>
+#include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/trigger/swamp.qh>
+#include <common/physics/movetypes/movetypes.qh>
+#include <common/physics/player.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
 bool strafehud_fwd = true;
