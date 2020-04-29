@@ -228,6 +228,7 @@ REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       PANEL_CONFIG_NO         
 REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // ITEMSTIME
 REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // QUICKMENU
 REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
+REGISTER_HUD_PANEL(STRAFEHUD,       HUD_StrafeHUD,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // STRAFEHUD
 // always add new panels to the end of list
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:

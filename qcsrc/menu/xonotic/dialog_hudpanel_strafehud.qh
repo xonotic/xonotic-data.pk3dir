@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDStrafeHUDDialog, XonoticRootDialog)
+    METHOD(XonoticHUDStrafeHUDDialog, fill, void(entity));
+    ATTRIB(XonoticHUDStrafeHUDDialog, title, string, _("StrafeHUD Panel"));
+    ATTRIB(XonoticHUDStrafeHUDDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+    ATTRIB(XonoticHUDStrafeHUDDialog, intendedWidth, float, 0.4);
+    ATTRIB(XonoticHUDStrafeHUDDialog, rows, float, 21.5);
+    ATTRIB(XonoticHUDStrafeHUDDialog, columns, float, 4);
+    ATTRIB(XonoticHUDStrafeHUDDialog, name, string, "HUDstrafehud");
+    ATTRIB(XonoticHUDStrafeHUDDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDStrafeHUDDialog)
