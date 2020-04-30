@@ -1,7 +1,7 @@
 // Name:   StrafeHUD
 // Author: Juhu
 
-// FIXME: strafehud doesn't properly work in spectate due to lack of IS_ONGROUND()
+// FIXME: strafehud doesn't work properly in spectate due to lack of IS_ONGROUND()
 
 #include "strafehud.qh"
 
@@ -38,8 +38,6 @@ void HUD_StrafeHUD()
 
     HUD_Panel_LoadCvars();
 
-    draw_beginBoldFont();
-
     if (autocvar_hud_panel_strafehud_dynamichud)
         HUD_Scale_Enable();
     else
@@ -64,39 +62,17 @@ void HUD_StrafeHUD()
     if(csqcplayer && strafeplayer)
     {
         // autocvars
-        float strafehud_bar_alpha                 = autocvar_hud_panel_strafehud_bar_alpha_default
-                                                  ? .2
-                                                  : autocvar_hud_panel_strafehud_bar_alpha;
-        vector strafehud_bar_color                = autocvar_hud_panel_strafehud_bar_color_default
-                                                  ? '1 1 1'
-                                                  : autocvar_hud_panel_strafehud_bar_color;
-        vector strafehud_bestangle_color          = autocvar_hud_panel_strafehud_indicator_color_default
-                                                  ? '0 1 0'
-                                                  : autocvar_hud_panel_strafehud_indicator_color;
-        vector strafehud_bestangle_opposite_color = autocvar_hud_panel_strafehud_indicator_color_default
-                                                  ? '1 1 0'
-                                                  : autocvar_hud_panel_strafehud_indicator_switch_color;
-        vector strafehud_good_color               = autocvar_hud_panel_strafehud_angle_color_default
-                                                  ? '0 1 1'
-                                                  : autocvar_hud_panel_strafehud_good_color;
-        vector strafehud_warning_color            = autocvar_hud_panel_strafehud_angle_color_default
-                                                  ? '1 1 0'
-                                                  : autocvar_hud_panel_strafehud_warning_color;
-        vector strafehud_alert_color              = autocvar_hud_panel_strafehud_angle_color_default
-                                                  ? '1 0 1'
-                                                  : autocvar_hud_panel_strafehud_alert_color;
-        vector strafehud_direction_color          = autocvar_hud_panel_strafehud_direction_color_default
-                                                  ? '.5 .25 1'
-                                                  : autocvar_hud_panel_strafehud_direction_color;
-        float strafehud_timeout_air               = autocvar_hud_panel_strafehud_timeout_air_default // timeout for slick ramps
-                                                  ? 0
-                                                  : autocvar_hud_panel_strafehud_timeout_air;
-        float strafehud_timeout_ground            = autocvar_hud_panel_strafehud_timeout_ground_default // timeout for strafe jumping in general
-                                                  ? .03333333
-                                                  : autocvar_hud_panel_strafehud_timeout_ground;
-        float strafehud_timeout_strafe            = autocvar_hud_panel_strafehud_timeout_strafe_default // timeout for jumping with strafe keys only
-                                                  ? .1
-                                                  : autocvar_hud_panel_strafehud_timeout_strafe;
+        float strafehud_bar_alpha                 = autocvar_hud_panel_strafehud_bar_alpha;
+        vector strafehud_bar_color                = autocvar_hud_panel_strafehud_bar_color;
+        vector strafehud_bestangle_color          = autocvar_hud_panel_strafehud_indicator_color;
+        vector strafehud_bestangle_opposite_color = autocvar_hud_panel_strafehud_indicator_switch_color;
+        vector strafehud_good_color               = autocvar_hud_panel_strafehud_good_color;
+        vector strafehud_warning_color            = autocvar_hud_panel_strafehud_warning_color;
+        vector strafehud_alert_color              = autocvar_hud_panel_strafehud_alert_color;
+        vector strafehud_direction_color          = autocvar_hud_panel_strafehud_direction_color;
+        float strafehud_timeout_air               = autocvar_hud_panel_strafehud_timeout_air;    // timeout for slick ramps
+        float strafehud_timeout_ground            = autocvar_hud_panel_strafehud_timeout_ground; // timeout for strafe jumping in general
+        float strafehud_timeout_strafe            = autocvar_hud_panel_strafehud_timeout_strafe; // timeout for jumping with strafe keys only
         float strafehud_indicator_minspeed        = autocvar_hud_panel_strafehud_indicator_minspeed;
 
         // physics
@@ -457,5 +433,4 @@ void HUD_StrafeHUD()
                 // TODO: implement angle centered strafehud
         }
     }
-    draw_endBoldFont();
 }
