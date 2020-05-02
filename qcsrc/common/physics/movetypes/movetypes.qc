@@ -413,6 +413,30 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 		_Movetype_LinkEdict_TouchAreaGrid(this);
 }
 
+int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
+{
+	if(this)
+	{
+		if(this.dphitcontentsmask)
+			return this.dphitcontentsmask;
+		else if(this.solid == SOLID_SLIDEBOX)
+		{
+			if(this.flags & 32) // TODO: FL_MONSTER
+				return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP;
+			else
+				return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+		}
+		else if(this.solid == SOLID_CORPSE)
+			return DPCONTENTS_SOLID | DPCONTENTS_BODY;
+		else if(this.solid == SOLID_TRIGGER)
+			return DPCONTENTS_SOLID | DPCONTENTS_BODY;
+		else
+			return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	}
+	else
+		return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+}
+
 entity _Movetype_TestEntityPosition_ent;
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
@@ -421,19 +445,35 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 
 	//int cont = this.dphitcontentsmask;
 	//this.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(org, this.mins, this.maxs, org, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
+	tracebox(org, this.mins, this.maxs, this.origin, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
 	//this.dphitcontentsmask = cont;
-
-	if(trace_startsolid)
+	if(trace_dpstartcontents & _Movetype_ContentsMask(this))
 		return true;
 
-	if(vdist(trace_endpos - this.origin, >, 0.0001))
+	if(vlen2(trace_endpos - this.origin) >= 0.0001)
 	{
 		tracebox(trace_endpos, this.mins, this.maxs, trace_endpos, MOVE_NOMONSTERS, this);
 		if(!trace_startsolid)
 			this.origin = trace_endpos;
 	}
 	return false;
+}
+
+bool _Movetype_TestEntityPosition_Offset(int offset)
+{
+	// NOTE: expects _Movetype_TestEntityPosition_ent to be set to the correct entity
+	// returns true if stuck
+
+    // start at 2, since the first position has already been checked
+    for(int j = 2; j <= offset; ++j)
+    {
+    	if(!_Movetype_TestEntityPosition('0 0 -1' * j))
+    		return false;
+    	if(!_Movetype_TestEntityPosition('0 0 1' * j))
+    		return false;
+    }
+
+	return true;
 }
 
 int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
@@ -450,13 +490,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	X('-1  1  0') X(' 1  1  0')
 	#undef X
 	{
-        #define X(i) \
-            if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
-            if (_Movetype_TestEntityPosition('0 0 1' * i))
-        X(2) X(3) X(4) X(5) X(6) X(7) X(8)
-        X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
-        X(17)
-        #undef X
+        if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
         {
             LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
                 etof(this), this.classname, vtos(this.origin));

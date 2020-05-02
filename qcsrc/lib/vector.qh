@@ -69,18 +69,6 @@ float vlen_minnorm2d(vector v)
 	return min(max(v.x, -v.x), max(v.y, -v.y));
 }
 
-ERASEABLE
-float dist_point_line(vector p, vector l0, vector ldir)
-{
-	ldir = normalize(ldir);
-
-	// remove the component in line direction
-	p = p - (p * ldir) * ldir;
-
-	// vlen of the remaining vector
-	return vlen(p);
-}
-
 /** requires that m2>m1 in all coordinates, and that m4>m3 */
 ERASEABLE
 float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z; }
@@ -121,6 +109,19 @@ vector Rotate(vector v, float a)
 
 noref vector _yinvert;
 #define yinvert(v) (_yinvert = (v), _yinvert.y = 1 - _yinvert.y, _yinvert)
+
+/// \param[in] p point
+/// \param[in] l0 starting point of ldir
+/// \param[in] ldir line
+/// \return Vector starting from p perpendicular to ldir
+ERASEABLE
+vector point_line_vec(vector p, vector l0, vector ldir)
+{
+	ldir = normalize(ldir);
+	p = l0 - p;
+	// remove the component in line direction from p
+	return p - ((p * ldir) * ldir);
+}
 
 /**
  * @param dir the directional vector

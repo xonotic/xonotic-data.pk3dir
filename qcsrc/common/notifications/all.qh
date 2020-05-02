@@ -12,6 +12,9 @@
 #include <client/autocvars.qh>
 #endif
 
+// Operator for bold notifications
+#define BOLD_OPERATOR "^BOLD"
+
 /** main types/groups of notifications */
 ENUMCLASS(MSG)
 	/** "Global" AND "personal" announcer messages */
@@ -62,6 +65,7 @@ ENUMCLASS(CPID)
 	CASE(CPID, MISSING_TEAMS)
 	CASE(CPID, MISSING_PLAYERS)
 	CASE(CPID, INSTAGIB_FINDAMMO)
+	CASE(CPID, CAMPAIGN_MESSAGE)
 	CASE(CPID, MOTD)
 	CASE(CPID, NIX)
 	CASE(CPID, ONSLAUGHT)
@@ -423,6 +427,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
 	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) \
 	ARG_CASE(ARG_CS,        "nade_key",      getcommandkey(_("throw nade"), "dropweapon")) \
+	ARG_CASE(ARG_CS,        "join_key",      getcommandkey(_("jump"), "+jump")) \
 	ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(true, f2)) \
 	ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) \
 	/*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \

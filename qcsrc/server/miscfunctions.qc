@@ -856,8 +856,13 @@ void readplayerstartcvars()
 
 void precache_playermodel(string m)
 {
-	float globhandle, i, n;
+	int globhandle, i, n;
 	string f;
+
+	// remove :<skinnumber> suffix
+	int j = strstrofs(m, ":", 0);
+	if(j >= 0)
+		m = substring(m, 0, j);
 
 	if(substring(m, -9, 5) == "_lod1")
 		return;

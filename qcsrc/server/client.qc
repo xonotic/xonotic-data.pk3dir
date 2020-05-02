@@ -337,6 +337,7 @@ void PutObserverInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.superweapons_finished = 0;
+	this.air_finished = 0;
 	//this.dphitcontentsmask = 0;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
 	if (autocvar_g_playerclip_collisions)
@@ -647,7 +648,7 @@ void PutPlayerInServer(entity this)
 	STAT(BUFFS, this) = 0;
 	STAT(BUFF_TIME, this) = 0;
 
-	this.air_finished = time + 12;
+	this.air_finished = 0;
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
 
@@ -1536,8 +1537,10 @@ float CalcRot(float current, float stable, float rotfactor, float rotframetime)
 		return max(stable, current + (stable - current) * rotfactor * rotframetime);
 }
 
-float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit)
+void RotRegen(entity this, int res, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod)
 {
+	float old = GetResource(this, res);
+	float current = old;
 	if(current > rotstable)
 	{
 		if(rotframetime > 0)
@@ -1555,10 +1558,12 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 		}
 	}
 
+	float limit = GetResourceLimit(this, res) * limit_mod;
 	if(current > limit)
 		current = limit;
 
-	return current;
+	if (current != old)
+		SetResource(this, res, current);
 }
 
 void player_regen(entity this)
@@ -1588,23 +1593,16 @@ void player_regen(entity this)
 	if(!mutator_returnvalue)
 	if(!STAT(FROZEN, this))
 	{
-		float mina, maxa, limith, limita;
-		maxa = autocvar_g_balance_armor_rotstable;
-		mina = autocvar_g_balance_armor_regenstable;
-		limith = GetResourceLimit(this, RES_HEALTH);
-		limita = GetResourceLimit(this, RES_ARMOR);
+		float maxa = autocvar_g_balance_armor_rotstable;
+		float mina = autocvar_g_balance_armor_regenstable;
 
-		regen_health_rotstable = regen_health_rotstable * max_mod;
-		regen_health_stable = regen_health_stable * max_mod;
-		limith = limith * limit_mod;
-		limita = limita * limit_mod;
+		RotRegen(this, RES_ARMOR, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear,
+			regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
+			rot_mod * frametime * (time > this.pauserotarmor_finished), limit_mod);
 
-		SetResource(this, RES_ARMOR, CalcRotRegen(GetResource(this, RES_ARMOR), mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 
-									regen_mod * frametime * (time > this.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear,
-									rot_mod * frametime * (time > this.pauserotarmor_finished), limita));
-		SetResource(this, RES_HEALTH, CalcRotRegen(GetResource(this, RES_HEALTH), regen_health_stable, regen_health, regen_health_linear,
-									regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear,
-									rot_mod * frametime * (time > this.pauserothealth_finished), limith));
+		RotRegen(this, RES_HEALTH, regen_health_stable * max_mod, regen_health, regen_health_linear,
+			regen_mod * frametime * (time > this.pauseregen_finished), regen_health_rotstable * max_mod, regen_health_rot, regen_health_rotlinear,
+			rot_mod * frametime * (time > this.pauserothealth_finished), limit_mod);
 	}
 
 	// if player rotted to death...  die!
@@ -1619,15 +1617,12 @@ void player_regen(entity this)
 
 	if (!(this.items & IT_UNLIMITED_AMMO))
 	{
-		float minf, maxf, limitf;
+		float maxf = autocvar_g_balance_fuel_rotstable;
+		float minf = autocvar_g_balance_fuel_regenstable;
 
-		maxf = autocvar_g_balance_fuel_rotstable;
-		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = GetResourceLimit(this, RES_FUEL);
-
-		SetResource(this, RES_FUEL, CalcRotRegen(GetResource(this, RES_FUEL), minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, 
-										frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
-										maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf));
+		RotRegen(this, RES_FUEL, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear,
+			frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0),
+			maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), 1);
 	}
 }
 
@@ -1690,6 +1685,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
 	this.superweapons_finished = spectatee.superweapons_finished;
+	this.air_finished = spectatee.air_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	STAT(WEAPONS, this) = STAT(WEAPONS, spectatee);
 	this.punchangle = spectatee.punchangle;
@@ -2027,7 +2023,7 @@ void PrintWelcomeMessage(entity this)
 		if (autocvar_g_campaign) {
 			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
 				CS(this).motd_actived_time = time;
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, campaign_message);
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_CAMPAIGN_MESSAGE, Campaign_GetMessage(), Campaign_GetLevelNum());
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this)) {
@@ -2043,7 +2039,7 @@ void PrintWelcomeMessage(entity this)
 				CS(this).motd_actived_time = time;
 			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
 				CS(this).motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this))
@@ -2062,7 +2058,10 @@ void PrintWelcomeMessage(entity this)
 		{
 			// instantly hide MOTD
 			CS(this).motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
+			if (autocvar_g_campaign)
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_CAMPAIGN_MESSAGE);
+			else
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 		}
 		else if (IS_PLAYER(this) || IS_SPEC(this))
 		{
@@ -2272,7 +2271,8 @@ void ObserverThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				Join(this);
+				if(joinAllowed(this))
+					Join(this);
 				return;
 			}
 		}
@@ -2611,16 +2611,21 @@ void DrownPlayer(entity this)
 
 	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)
 	{
-		if(this.air_finished < time)
+		if(this.air_finished && this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
-		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
+		this.air_finished = 0;
 	}
-	else if (this.air_finished < time)
-	{	// drown!
-		if (this.pain_finished < time)
-		{
-			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, DMG_NOWEP, this.origin, '0 0 0');
-			this.pain_finished = time + 0.5;
+	else
+	{
+		if (!this.air_finished)
+			this.air_finished = time + autocvar_g_balance_contents_drowndelay;
+		if (this.air_finished < time)
+		{	// drown!
+			if (this.pain_finished < time)
+			{
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, DMG_NOWEP, this.origin, '0 0 0');
+				this.pain_finished = time + 0.5;
+			}
 		}
 	}
 }

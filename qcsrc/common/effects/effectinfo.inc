@@ -9043,3 +9043,46 @@ SUB(tr_bullet_weak) {
 	MY(underwater) = true;
 	MY(velocityjitter) = '16.0 16.0 16.0';
 }
+
+// Vaporizer hit effect
+DEF(TE_TEI_G3_HIT);
+SUB(TE_TEI_G3_HIT) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3_HIT) /* rings */ {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = -2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(trailspacing) = 20;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '2.0 2.0 2.0';
+}
+SUB(TE_TEI_G3_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = -6;
+	MY(size_min) = 10;
+	MY(size_max) = 10;
+	MY(trailspacing) = 40;
+	MY(type) = "smoke";
+}

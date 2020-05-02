@@ -104,6 +104,9 @@
 
 #include "warpzone/mathlib.qc"
 
+// needs to be included before any of the functions which use globals are called
+#include "deglobalization.qh"
+
 #include "accumulate.qh"
 #include "angle.qc"
 #include "arraylist.qh"
@@ -112,7 +115,6 @@
 #include "counting.qh"
 #include "cvar.qh"
 #include "defer.qh"
-#include "deglobalization.qh"
 #include "draw.qh"
 #include "enumclass.qh"
 #include "file.qh"

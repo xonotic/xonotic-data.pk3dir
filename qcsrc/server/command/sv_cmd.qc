@@ -1025,23 +1025,22 @@ void GameCommand_moveplayer(int request, int argc)
 							if (teamplay)
 							{
 								// set up
-								float team_id;
 								int save = Player_GetForcedTeamIndex(client);
 								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 
 								// find the team to move the player to
-								team_id = Team_ColorToTeam(destination);
+								int team_num = Team_ColorToTeam(destination);
 								entity balance;
-								if (team_id == client.team)  // already on the destination team
+								if (team_num == client.team)  // already on the destination team
 								{
 									// keep the forcing undone
 									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7."));
 									continue;
 								}
-								else if (team_id == 0)  // auto team
+								else if (team_num == 0)  // auto team
 								{
 									balance = TeamBalance_CheckAllowedTeams(client);
-									team_id = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
+									team_num = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
 								}
 								else
 								{
@@ -1050,62 +1049,24 @@ void GameCommand_moveplayer(int request, int argc)
 								Player_SetForcedTeamIndex(client, save);
 
 								// Check to see if the destination team is even available
-								switch (team_id)
+								int team_id = Team_TeamToIndex(team_num);
+								if (team_id == -1)
 								{
-									case NUM_TEAM_1:
-									{
-										if (!TeamBalance_IsTeamAllowed(balance, 1))
-										{
-											LOG_INFO("Sorry, can't move player to red team if it doesn't exist.");
-											TeamBalance_Destroy(balance);
-											return;
-										}
-										TeamBalance_Destroy(balance);
-										break;
-									}
-									case NUM_TEAM_2:
-									{
-										if (!TeamBalance_IsTeamAllowed(balance, 2))
-										{
-											LOG_INFO("Sorry, can't move player to blue team if it doesn't exist.");
-											TeamBalance_Destroy(balance);
-											return;
-										}
-										TeamBalance_Destroy(balance);
-										break;
-									}
-									case NUM_TEAM_3:
-									{
-										if (!TeamBalance_IsTeamAllowed(balance, 3))
-										{
-											LOG_INFO("Sorry, can't move player to yellow team if it doesn't exist.");
-											TeamBalance_Destroy(balance);
-											return;
-										}
-										TeamBalance_Destroy(balance);
-										break;
-									}
-									case NUM_TEAM_4:
-									{
-										if (!TeamBalance_IsTeamAllowed(balance, 4))
-										{
-											LOG_INFO("Sorry, can't move player to pink team if it doesn't exist.");
-											TeamBalance_Destroy(balance);
-											return;
-										}
-										TeamBalance_Destroy(balance);
-										break;
-									}
-									default:
-									{
-										LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
-										return;
-									}
+									LOG_INFO("Sorry, can't move player here if team ", destination, " doesn't exist.");
+									TeamBalance_Destroy(balance);
+									return;
 								}
+								if (!TeamBalance_IsTeamAllowed(balance, team_id))
+								{
+									LOG_INFOF("Sorry, can't move player to %s team if it doesn't exist.", destination);
+									TeamBalance_Destroy(balance);
+									return;
+								}
+								TeamBalance_Destroy(balance);
 
 								// If so, lets continue and finally move the player
 								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
-								if (MoveToTeam(client, Team_TeamToIndex(team_id), 6))
+								if (MoveToTeam(client, team_id, 6))
 								{
 									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
 									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
@@ -1145,8 +1106,8 @@ void GameCommand_moveplayer(int request, int argc)
 			LOG_INFO("  'clients' is a list (separated by commas) of player entity ID's or nicknames");
 			LOG_INFO("  'destination' is what to send the player to, be it team or spectating");
 			LOG_INFO("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"");
-			LOG_INFO("Examples: sv_cmd moveplayer 1,3,5 red 3");
-			LOG_INFO("          sv_cmd moveplayer 2 spec ");
+			LOG_INFO("Examples: sv_cmd moveplayer 1,3,5 red");
+			LOG_INFO("          sv_cmd moveplayer 2 spec");
 			LOG_INFO("See also: ^2allspec, shuffleteams^7");
 			return;
 		}

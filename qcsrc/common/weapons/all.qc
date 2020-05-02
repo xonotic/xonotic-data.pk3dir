@@ -577,10 +577,10 @@ NET_HANDLE(wframe, bool isNew)
 		vector a = '0 0 0';
 		switch(fr)
 		{
+			default:
 			case WFRAME_IDLE: a = wepent.anim_idle; break;
 			case WFRAME_FIRE1: a = wepent.anim_fire1; break;
 			case WFRAME_FIRE2: a = wepent.anim_fire2; break;
-			default:
 			case WFRAME_RELOAD: a = wepent.anim_reload; break;
 		}
 		a.z *= t;

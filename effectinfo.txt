@@ -8355,3 +8355,27 @@ effect tr_bullet_weak
 	trailspacing 32
 	underwater
 	velocityjitter 16 16 16
+effect TE_TEI_G3_HIT
+	type beam
+	alpha 128 128 256
+	color 0xFFFFFF 0xFFFFFF
+	countabsolute 1
+	size 8 8
+	tex 200 200
+effect TE_TEI_G3_HIT
+	type smoke
+	airfriction -4
+	alpha 256 256 512
+	color 0xFFFFFF 0xFFFFFF
+	sizeincrease -2
+	size 2 2
+	trailspacing 20
+	velocityjitter 2 2 2
+effect TE_TEI_G3_HIT
+	type smoke
+	airfriction -4
+	alpha 256 256 512
+	color 0xFFFFFF 0xFFFFFF
+	sizeincrease -6
+	size 10 10
+	trailspacing 40

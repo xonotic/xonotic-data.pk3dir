@@ -6,6 +6,9 @@
 #include <client/miscfunctions.qh>
 
 // CenterPrint (#16)
+// These are the functions that draw the text at the center of the screen (e.g. frag messages and server MOTDs).
+// Usually local_notification_centerprint_generic() is called, which in turn calls centerprint_generic(), which
+// uses some kind of macro magic to call HUD_CenterPrint, which draws them on screen using drawcolorcodedstring().
 
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
@@ -113,6 +116,7 @@ void reset_centerprint_messages()
 		strfree(centerprint_messages[i]);
 	}
 }
+
 float hud_configure_cp_generation_time;
 void HUD_CenterPrint ()
 {
@@ -191,15 +195,11 @@ void HUD_CenterPrint ()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
+	bool is_bold;
+	string centerprint_message;
 	int entries;
 	float height;
 	vector fontsize;
-	// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
-	// height = panel_size_y/entries;
-	// fontsize = '1 1 0' * height;
-	height = vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
-	fontsize = '1 1 0' * height;
-	entries = bound(1, floor(panel_size.y/height), CENTERPRINT_MAX_ENTRIES);
 
 	int i, j, k, n, g;
 	float a, sz, align, current_msg_posY = 0, msg_size;
@@ -213,6 +213,18 @@ void HUD_CenterPrint ()
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
+		// if the notification starts with ^BOLD make it bold (e.g. frag messages);
+		is_bold = (substring(centerprint_messages[j], 0, 5) == BOLD_OPERATOR);
+		// remove ^BOLD so it doesn't get printed onscreen
+		centerprint_message = is_bold ? strzone(substring(centerprint_messages[j], 5, -1)) : strzone(centerprint_messages[j]);
+
+		// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
+		// height = panel_size_y/entries;
+		// fontsize = '1 1 0' * height;
+		height = (is_bold) ? vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale_bold : vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
+		fontsize = '1 1 0' * height;
+		entries = bound(1, floor(panel_size.y/height), CENTERPRINT_MAX_ENTRIES);
+
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
 		if (centerprint_expire_time[j] == -1)
@@ -272,9 +284,9 @@ void HUD_CenterPrint ()
 		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
-			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
+			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_message), "\n");
 		else
-			n = tokenizebyseparator(centerprint_messages[j], "\n");
+			n = tokenizebyseparator(centerprint_message, "\n");
 
 		if (autocvar_hud_panel_centerprint_flip)
 		{
@@ -306,7 +318,9 @@ void HUD_CenterPrint ()
 					if (align)
 						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize) * sz) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
+						if (is_bold) draw_beginBoldFont();
 						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz * hud_scale.x) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
+						if (is_bold) draw_endBoldFont();
 					pos.y += fontsize.y;
 				}
 				else
@@ -341,6 +355,9 @@ void HUD_CenterPrint ()
 				return;
 			}
 		}
+
+		// free up memory
+		strunzone(centerprint_message);
 	}
 	drawfontscale = hud_scale;
 	if (all_messages_expired)

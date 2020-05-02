@@ -41,6 +41,9 @@ entity navigation_bestgoal;
 /*
 // item it is linked from waypoint it.wpXX (INCOMING link)
 // links are sorted by their cost (wpXXmincost)
+// one of these links is added in game every time a bot heads to an item
+// even links that are not walkable are added (marked with a high cost)
+// so that bots next time know if they can walk it or not saving a tracewalk call
 .entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
 .entity wp16, wp17, wp18, wp19, wp20, wp21, wp22, wp23, wp24, wp25, wp26, wp27, wp28, wp29, wp30, wp31;
 
@@ -50,9 +53,12 @@ entity navigation_bestgoal;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 */
 
-#define navigation_item_islinked(from_wp, to_item) waypoint_islinked(to_item, from_wp)
-#define navigation_item_addlink(from_wp, to_item) \
-	waypoint_addlink_customcost(to_item, from_wp, waypoint_getlinkcost(from_wp, to_item))
+#define navigation_item_initlinks_ifneeded(e) MACRO_BEGIN if (!e.wp00) waypoint_clearlinks(e); MACRO_END // initialize wpXXmincost fields
+#define navigation_item_getlinknum(to_item, from_wp) waypoint_getlinknum(to_item, from_wp)
+#define navigation_item_iswalkablelink(to_item, from_wp) (waypoint_get_assigned_link_cost(to_item, from_wp) < 999)
+
+#define navigation_item_add_link(from_wp, to_item, walkable) \
+	waypoint_addlink_customcost(to_item, from_wp, (walkable ? waypoint_getlinkcost(from_wp, to_item) : 999))
 
 #define TELEPORT_USED(pl, tele_wp) \
 	boxesoverlap(tele_wp.absmin, tele_wp.absmax, pl.lastteleport_origin + STAT(PL_MIN, pl), pl.lastteleport_origin + STAT(PL_MAX, pl))
@@ -81,6 +87,8 @@ entity bot_waypoint_queue_goal;		// Head of the temporary list of goals
 .entity bot_waypoint_queue_nextgoal;
 entity bot_waypoint_queue_bestgoal;
 float bot_waypoint_queue_bestgoalrating;
+
+const float BOT_BUNNYHOP_WP_DETECTION_RANGE = 100;
 
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;

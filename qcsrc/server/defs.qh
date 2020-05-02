@@ -51,6 +51,7 @@ float server_is_dedicated;
 .float  crouch;	// Crouching or not?
 
 const .float superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
+const .float air_finished = _STAT(AIR_FINISHED);
 
 .float cnt; // used in too many places
 .float count;
@@ -92,7 +93,6 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float railgunhitsolidbackup;
 .vector railgunhitloc;
 
-.float		air_finished;
 .float		dmgtime;
 
 .float		killcount;
@@ -140,7 +140,6 @@ float blockSpectators; //if set, new or existing spectators or observers will be
 .float spectatortime; //point in time since the client is spectating or observing
 void checkSpectatorBlock(entity this);
 
-float game_completion_ratio; // 0 at start, 1 near end
 .float winning;
 .float jointime; // time of connecting
 .float startplaytime; // time of switching from spectator to player

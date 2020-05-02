@@ -3,10 +3,11 @@
 REGISTER_MUTATOR(cl_buffs, true);
 MUTATOR_HOOKFUNCTION(cl_buffs, HUD_Powerups_add)
 {
-    int allBuffs = STAT(BUFFS);
-    FOREACH(Buffs, it.m_itemid & allBuffs, {
-		addPowerupItem(it.m_name, strcat("buff_", it.netname), it.m_color, bound(0, STAT(BUFF_TIME) - time, 99), 60);
-	});
+	int allBuffs = STAT(BUFFS);
+	if (allBuffs)
+		FOREACH(Buffs, it.m_itemid & allBuffs, {
+			addPowerupItem(it.m_name, strcat("buff_", it.netname), it.m_color, bound(0, STAT(BUFF_TIME) - time, 99), 60);
+		});
 }
 MUTATOR_HOOKFUNCTION(cl_buffs, WP_Format)
 {

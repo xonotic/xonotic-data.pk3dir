@@ -16,18 +16,16 @@ const int MAX_CL_STATS = 256;
 // const int STAT_NAILS = 7;
 // const int STAT_ROCKETS = 8;
 // const int STAT_CELLS = 9;
-// const int STAT_ACTIVEWEAPON = 10;
 // const int STAT_ITEMS = 15; // .items | .items2 << 23 | serverflags << 28
 // const int STAT_VIEWHEIGHT = 16;
 
 #if defined(CSQC)
     #define g_stat_HEALTH getstati(STAT_HEALTH)
-    #define g_stat_ARMOR getstat_int(STAT_ARMOR)
-    #define g_stat_SHELLS getstat_int(STAT_SHELLS)
-    #define g_stat_NAILS getstat_int(STAT_NAILS)
-    #define g_stat_ROCKETS getstat_int(STAT_ROCKETS)
-    #define g_stat_CELLS getstat_int(STAT_CELLS)
-    #define g_stat_ACTIVEWEAPON getstat_int(STAT_ACTIVEWEAPON)
+    #define g_stat_ARMOR getstati(STAT_ARMOR)
+    #define g_stat_SHELLS getstati(STAT_SHELLS)
+    #define g_stat_NAILS getstati(STAT_NAILS)
+    #define g_stat_ROCKETS getstati(STAT_ROCKETS)
+    #define g_stat_CELLS getstati(STAT_CELLS)
     #define g_stat_ITEMS getstat_int(STAT_ITEMS)
     #define g_stat_VIEWHEIGHT getstati(STAT_VIEWHEIGHT)
 #elif defined(SVQC)
@@ -37,7 +35,6 @@ const int MAX_CL_STATS = 256;
     #define stat_NAILS ammo_nails
     #define stat_ROCKETS ammo_rockets
     #define stat_CELLS ammo_cells
-    #define stat_ACTIVEWEAPON weapon
     #define stat_ITEMS items
     #define stat_VIEWHEIGHT view_ofs_z
 #endif
@@ -85,6 +82,7 @@ REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
 REGISTER_STAT(SHOTORG, int)
 REGISTER_STAT(LEADLIMIT, float, autocvar_leadlimit)
+REGISTER_STAT(LEADLIMIT_AND_FRAGLIMIT, float, autocvar_leadlimit_and_fraglimit)
 
 REGISTER_STAT(LAST_PICKUP, float)
 REGISTER_STAT(HUD, int)
@@ -92,6 +90,7 @@ REGISTER_STAT(HIT_TIME, float)
 REGISTER_STAT(DAMAGE_DEALT_TOTAL, int)
 REGISTER_STAT(TYPEHIT_TIME, float)
 REGISTER_STAT(SUPERWEAPONS_FINISHED, float)
+REGISTER_STAT(AIR_FINISHED, float)
 REGISTER_STAT(VEHICLESTAT_HEALTH, int)
 REGISTER_STAT(VEHICLESTAT_SHIELD, int)
 REGISTER_STAT(VEHICLESTAT_ENERGY, int)
@@ -143,11 +142,13 @@ float autocvar_g_multijump_add;
 float autocvar_g_multijump_speed;
 float autocvar_g_multijump_maxspeed;
 float autocvar_g_multijump_dodging = 1;
+bool autocvar_g_multijump_client = true;
 #endif
 REGISTER_STAT(MULTIJUMP_DODGING, int, autocvar_g_multijump_dodging)
 REGISTER_STAT(MULTIJUMP_MAXSPEED, float, autocvar_g_multijump_maxspeed)
 REGISTER_STAT(MULTIJUMP_ADD, int, autocvar_g_multijump_add)
 REGISTER_STAT(MULTIJUMP_SPEED, float, autocvar_g_multijump_speed)
+REGISTER_STAT(MULTIJUMP_CLIENT, bool, autocvar_g_multijump_client)
 .int multijump_count;
 REGISTER_STAT(MULTIJUMP_COUNT, int, this.multijump_count)
 REGISTER_STAT(MULTIJUMP, int, autocvar_g_multijump)
@@ -242,6 +243,7 @@ bool autocvar_sv_dodging_wall_dodging;
 bool autocvar_sv_dodging_air_dodging;
 float autocvar_sv_dodging_maxspeed;
 float autocvar_sv_dodging_air_maxspeed;
+bool autocvar_sv_dodging_clientselect;
 #endif
 
 #if 0
@@ -261,6 +263,7 @@ REGISTER_STAT(DODGING_WALL, bool, autocvar_sv_dodging_wall_dodging)
 REGISTER_STAT(DODGING_AIR, bool, autocvar_sv_dodging_air_dodging)
 REGISTER_STAT(DODGING_MAXSPEED, float, autocvar_sv_dodging_maxspeed)
 REGISTER_STAT(DODGING_AIR_MAXSPEED, float, autocvar_sv_dodging_air_maxspeed)
+REGISTER_STAT(DODGING_CLIENTSELECT, bool, autocvar_sv_dodging_clientselect)
 #endif
 /** cvar loopback */
 REGISTER_STAT(DODGING_FROZEN, int, autocvar_sv_dodging_frozen)

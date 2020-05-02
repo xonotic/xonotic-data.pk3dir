@@ -141,6 +141,7 @@ CLASS(Client, Object)
     ATTRIB(Client, autoswitch, bool, this.autoswitch);
     ATTRIB(Client, cvar_cl_casings, bool, this.cvar_cl_casings);
     ATTRIB(Client, cvar_cl_dodging_timeout, float, this.cvar_cl_dodging_timeout);
+    ATTRIB(Client, cvar_cl_dodging, float, this.cvar_cl_dodging);
     ATTRIB(Client, cvar_cl_multijump, bool, this.cvar_cl_multijump);
     ATTRIB(Client, cvar_cl_accuracy_data_share, bool, this.cvar_cl_accuracy_data_share);
     ATTRIB(Client, cvar_cl_accuracy_data_receive, bool, this.cvar_cl_accuracy_data_receive);
@@ -265,7 +266,7 @@ void DebugPrintToChatTeam(int team_num, string text);
 
 void play_countdown(entity this, float finished, Sound samp);
 
-float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
+void RotRegen(entity this, float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit_mod);
 
 bool Spectate(entity this, entity pl);
 

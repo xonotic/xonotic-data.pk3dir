@@ -194,12 +194,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, 
     if (autocvar_hud_panel_itemstime_hidespawned == 2)
         picalpha = 1;
     else if (item_available)
-    {
-        float BLINK_FACTOR = 0.15;
-        float BLINK_BASE = 0.85;
-        float BLINK_FREQ = 5;
-        picalpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
-    }
+        picalpha = blink(0.85, 0.15, 5);
     else
         picalpha = 0.5;
     t = floor(item_time - time + 0.999);

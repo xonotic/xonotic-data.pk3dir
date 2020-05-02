@@ -8,10 +8,9 @@
 
 void SL_ProcessCategoryOverrides(.string override_field_string, .float override_field)
 {
-	string s;
 	for (int i = 0; i < category_ent_count; ++i)
 	{
-		s = categories[i].override_field_string;
+		string s = categories[i].override_field_string;
 		if (s != "" && s != categories[i].cat_name)
 		{
 			int catnum = 0;
@@ -70,22 +69,19 @@ entity RetrieveCategoryEnt(int catnum)
 
 bool IsServerInList(string list, string srv)
 {
-	string p;
-	int i, n;
 	if(srv == "")
 		return false;
 	srv = netaddress_resolve(srv, 26000);
 	if(srv == "")
 		return false;
-	p = crypto_getidfp(srv);
-	n = tokenize_console(list);
-	for(i = 0; i < n; ++i)
+	string p = crypto_getidfp(srv);
+	int n = tokenize_console(list);
+	for(int i = 0; i < n; ++i)
 	{
 		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
 		{
-			if(p)
-				if(argv(i) == p)
-					return true;
+			if(p && argv(i) == p)
+				return true;
 		}
 		else
 		{
@@ -96,7 +92,7 @@ bool IsServerInList(string list, string srv)
 	return false;
 }
 
-int CheckCategoryOverride(int cat)
+int CategoryOverride(int cat)
 {
 	entity catent = RetrieveCategoryEnt(cat);
 	if(catent)
@@ -107,12 +103,12 @@ int CheckCategoryOverride(int cat)
 	}
 	else
 	{
-		error(sprintf("CheckCategoryOverride(%d): Improper category number!\n", cat));
+		error(sprintf("CategoryOverride(%d): Improper category number!\n", cat));
 		return cat;
 	}
 }
 
-int CheckCategoryForEntry(int entry)
+int CategoryForEntry(int entry)
 {
 	string s, k, v, modtype = "";
 	int j, m, impure = 0, freeslots = 0, sflags = 0;
@@ -199,8 +195,6 @@ int CheckCategoryForEntry(int entry)
 			case "minstagib":
 			case "instagib": { return CAT_INSTAGIB; }
 			case "overkill": { return CAT_OVERKILL; }
-			//case "nix": { return CAT_NIX; }
-			//case "newtoys": { return CAT_NEWTOYS; }
 
 			// "cts" is allowed as compat, xdf is replacement
 			case "cts":
@@ -259,8 +253,8 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 	entity e = me.favoriteButton;
 	if(IsFavorite(me.ipAddressBox.text))
 	{
-		e.setText(e, _("Remove"));
-		clearTooltip(e);
+		e.setText(e, _("Remove favorite"));
+		setZonedTooltip(e, _("Remove the currently highlighted server from bookmarks"), string_null);
 	}
 	else
 	{
@@ -314,14 +308,10 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 
 	if(mode >= REFRESHSERVERLIST_REFILTER)
 	{
-		float m;
-		int i, n;
-		int listflags = 0;
-		string s, typestr, modstr;
+		string s = me.filterString;
 
-		s = me.filterString;
-
-		m = strstrofs(s, ":", 0);
+		string typestr;
+		int m = strstrofs(s, ":", 0);
 		if(m >= 0)
 		{
 			typestr = substring(s, 0, m);
@@ -332,7 +322,7 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		else
 			typestr = "";
 
-		modstr = cvar_string("menu_slist_modfilter");
+		string modstr = cvar_string("menu_slist_modfilter");
 
 		m = SLIST_MASK_AND - 1;
 		resethostcachemasks();
@@ -365,8 +355,8 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		}
 
 		// server banning
-		n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
-		for(i = 0; i < n; ++i)
+		int n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
+		for(int i = 0; i < n; ++i)
 			if(argv(i) != "")
 				sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
 
@@ -379,11 +369,11 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
 		}
 
-		// sorting flags
-		//listflags |= SLSF_FAVORITES;
-		listflags |= SLSF_CATEGORIES;
-		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
-		sethostcachesort(me.currentSortField, listflags);
+		int sorting_flags = 0;
+		//sorting_flags |= SLSF_FAVORITES;
+		sorting_flags |= SLSF_CATEGORIES;
+		if(me.currentSortOrder < 0) { sorting_flags |= SLSF_DESCENDING; }
+		sethostcachesort(me.currentSortField, sorting_flags);
 	}
 
 	resorthostcache();
@@ -404,9 +394,6 @@ void XonoticServerList_focusEnter(entity me)
 
 void XonoticServerList_draw(entity me)
 {
-	int i;
-	bool found = false, owned;
-
 	if(_Nex_ExtResponseSystem_BannedServersNeedsRefresh)
 	{
 		if(!me.needsRefresh)
@@ -448,9 +435,9 @@ void XonoticServerList_draw(entity me)
 		me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 	}
 
-	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
+	bool owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
 
-	for(i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
+	for(int i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
 	category_draw_count = 0;
 
 	if(autocvar_menu_slist_categories >= 0) // if less than 0, don't even draw a category heading for favorites
@@ -546,6 +533,7 @@ void XonoticServerList_draw(entity me)
 	me.infoButton.disabled = (me.lockedSelectedItem || me.nItems == 0 || !owned);
 	me.favoriteButton.disabled = (me.lockedSelectedItem || (me.nItems == 0 && me.ipAddressBox.text == ""));
 
+	bool found = false;
 	if(me.lockedSelectedItem)
 	{
 		if(me.nItems > 0)
@@ -559,7 +547,7 @@ void XonoticServerList_draw(entity me)
 	}
 	else if(me.selectedServer)
 	{
-		for(i = 0; i < me.nItems; ++i)
+		for(int i = 0; i < me.nItems; ++i)
 		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
 			{
@@ -708,13 +696,11 @@ void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 }
 void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
 {
-	vector originInLBSpace, sizeInLBSpace;
-	originInLBSpace = eY * (-me.itemHeight);
-	sizeInLBSpace = eY * me.itemHeight + eX * (1 - me.controlWidth);
+	vector originInLBSpace = eY * (-me.itemHeight);
+	vector sizeInLBSpace = eY * me.itemHeight + eX * (1 - me.controlWidth);
 
-	vector originInDialogSpace, sizeInDialogSpace;
-	originInDialogSpace = boxToGlobal(originInLBSpace, me.Container_origin, me.Container_size);
-	sizeInDialogSpace = boxToGlobalSize(sizeInLBSpace, me.Container_size);
+	vector originInDialogSpace = boxToGlobal(originInLBSpace, me.Container_origin, me.Container_size);
+	vector sizeInDialogSpace = boxToGlobalSize(sizeInLBSpace, me.Container_size);
 
 	btn.Container_origin_x = originInDialogSpace.x + sizeInDialogSpace.x * theOrigin;
 	btn.Container_size_x   =                         sizeInDialogSpace.x * theSize;
@@ -788,33 +774,22 @@ void XonoticServerList_doubleClickListBoxItem(entity me, int i, vector where)
 }
 void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	// layout: Ping, Server name, Map name, NP, TP, MP
-	float p;
-	int q;
-	bool isv4, isv6;
-	vector theColor;
-	float theAlpha;
-	bool pure = false, pure_available = false;
-	int freeslots = -1, sflags = -1, j, m;
-	string s, typestr, versionstr, k, v, modname;
-
-	//printf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems);
-
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
 #define SET_YRANGE(start,end) \
 	draw_scale = boxToGlobalSize(eX + eY * (end - start), oldscale); \
 	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
 
-	for (j = 0; j < category_draw_count; ++j) {
+	int c;
+	for (c = 0; c < category_draw_count; ++c) {
 		// Matches exactly the headings with increased height.
-		if (i == category_item[j])
+		if (i == category_item[c])
 			break;
 	}
 
-	if (j < category_draw_count)
+	if (c < category_draw_count)
 	{
-		entity catent = RetrieveCategoryEnt(category_name[j]);
+		entity catent = RetrieveCategoryEnt(category_name[c]);
 		if(catent)
 		{
 			SET_YRANGE(
@@ -848,33 +823,34 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
 
-	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
-	m = tokenizebyseparator(s, ":");
-	typestr = "";
+	string s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
+	int m = tokenizebyseparator(s, ":");
+	string typestr = "", versionstr = "";
 	if(m >= 2)
 	{
 		typestr = argv(0);
 		versionstr = argv(1);
 	}
-	freeslots = -1;
-	modname = "";
-	for(j = 2; j < m; ++j)
+	bool pure = false, pure_available = false;
+	int freeslots = -1, sflags = -1;
+	string modname = "";
+	for(int j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
 			break;
-		k = substring(argv(j), 0, 1);
-		v = substring(argv(j), 1, -1);
-		if(k == "P")
+		string key = substring(argv(j), 0, 1);
+		string value = substring(argv(j), 1, -1);
+		if(key == "P")
 		{
-			pure = (stof(v) == 0);
+			pure = (stof(value) == 0);
 			pure_available = true;
 		}
-		else if(k == "S")
-			freeslots = stof(v);
-		else if(k == "F")
-			sflags = stoi(v);
-		else if(k == "M")
-			modname = v;
+		else if(key == "S")
+			freeslots = stof(value);
+		else if(key == "F")
+			sflags = stoi(value);
+		else if(key == "M")
+			modname = value;
 	}
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
@@ -901,6 +877,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(modname != "newtoys")
 		pure_available = false;
 
+	float theAlpha;
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
 	else if(freeslots == 0)
@@ -910,18 +887,19 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	else
 		theAlpha = 1;
 
-	p = gethostcachenumber(SLIST_FIELD_PING, i);
+	float ping = gethostcachenumber(SLIST_FIELD_PING, i);
 	const int PING_LOW = 75;
 	const int PING_MED = 200;
 	const int PING_HIGH = 500;
-	if(p < PING_LOW)
-		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * (p / PING_LOW);
-	else if(p < PING_MED)
-		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((p - PING_LOW) / (PING_MED - PING_LOW));
-	else if(p < PING_HIGH)
+	vector theColor;
+	if(ping < PING_LOW)
+		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * (ping / PING_LOW);
+	else if(ping < PING_MED)
+		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((ping - PING_LOW) / (PING_MED - PING_LOW));
+	else if(ping < PING_HIGH)
 	{
 		theColor = SKINCOLOR_SERVERLIST_HIGHPING;
-		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((p - PING_MED) / (PING_HIGH - PING_MED));
+		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((ping - PING_MED) / (PING_HIGH - PING_MED));
 	}
 	else
 	{
@@ -937,7 +915,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	s = gethostcachestring(SLIST_FIELD_CNAME, i);
 
-	isv4 = isv6 = false;
+	bool isv4 = false, isv6 = false;
 	if(substring(s, 0, 1) == "[")
 	{
 		isv6 = true;
@@ -949,27 +927,27 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		me.seenIPv4 += 1;
 	}
 
-	q = stof(substring(crypto_getencryptlevel(s), 0, 1));
-	if((q <= 0 && cvar("crypto_aeslevel") >= 3) || (q >= 3 && cvar("crypto_aeslevel") <= 0))
+	int crypto = stof(substring(crypto_getencryptlevel(s), 0, 1));
+	if((crypto <= 0 && cvar("crypto_aeslevel") >= 3) || (crypto >= 3 && cvar("crypto_aeslevel") <= 0))
 	{
 		theColor = SKINCOLOR_SERVERLIST_IMPOSSIBLE;
 		theAlpha = SKINALPHA_SERVERLIST_IMPOSSIBLE;
 	}
 
-	if(q == 1)
+	if(crypto == 1)
 	{
 		if(cvar("crypto_aeslevel") >= 2)
-			q |= 4;
+			crypto |= 4;
 	}
-	if(q == 2)
+	if(crypto == 2)
 	{
 		if(cvar("crypto_aeslevel") >= 1)
-			q |= 4;
+			crypto |= 4;
 	}
-	if(q == 3)
-		q = 5;
-	else if(q >= 3)
-		q -= 2;
+	if(crypto == 3)
+		crypto = 5;
+	else if(crypto >= 3)
+		crypto -= 2;
 	// possible status:
 	// 0: crypto off
 	// 1: AES possible
@@ -1001,8 +979,8 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	iconPos.x += iconSize.x;
 
 	// AES
-	if(q > 0)
-		draw_Picture(iconPos, strcat("icon_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+	if(crypto > 0)
+		draw_Picture(iconPos, strcat("icon_aeslevel", ftos(crypto)), iconSize, '1 1 1', 1);
 
 	iconPos.x += iconSize.x;
 
@@ -1040,7 +1018,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		string t = "";
 		if(me.seenIPv4 && me.seenIPv6)
 			t = strcat(t, (isv6) ? "IPv6, " : "IPv4, ");
-		t = strcat(t, _("encryption:"), " ", (q ? sprintf(_("AES level %d"), q) : ZCTX(_("ENC^none"))), ", ");
+		t = strcat(t, _("encryption:"), " ", (crypto ? sprintf(_("AES level %d"), crypto) : ZCTX(_("ENC^none"))), ", ");
 		t = strcat(t, sprintf(_("mod: %s"), ((modname == "xonotic") ? ZCTX(_("MOD^Default")) : original_modname)));
 		if(pure_available)
 			t = strcat(t, sprintf(" (%s)", (pure) ? _("official settings") : _("modified settings")));
@@ -1053,7 +1031,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	// --------------
 
 	// ping
-	s = ftos(p);
+	s = ftos(ping);
 	draw_Text(me.realUpperMargin * eY + (me.columnPingOrigin + me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 
 	// server name
@@ -1140,8 +1118,7 @@ float XonoticServerList_getTotalHeight(entity me)
 int XonoticServerList_getItemAtPos(entity me, float pos)
 {
 	pos = pos / me.itemHeight;
-	int i;
-	for (i = category_draw_count - 1; i >= 0; --i) {
+	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
 		float itempos = i * me.categoriesHeight + category_item[i];
 		if (pos >= itempos + me.categoriesHeight + 1)
@@ -1154,8 +1131,7 @@ int XonoticServerList_getItemAtPos(entity me, float pos)
 }
 float XonoticServerList_getItemStart(entity me, int item)
 {
-	int i;
-	for (i = category_draw_count - 1; i >= 0; --i) {
+	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
 		float itempos = i * me.categoriesHeight + category_item[i];
 		if (item >= itemidx + 1)
@@ -1168,8 +1144,7 @@ float XonoticServerList_getItemStart(entity me, int item)
 }
 float XonoticServerList_getItemHeight(entity me, int item)
 {
-	int i;
-	for (i = 0; i < category_draw_count; ++i) {
+	for (int i = 0; i < category_draw_count; ++i) {
 		// Matches exactly the headings with increased height.
 		if (item == category_item[i])
 			return me.itemHeight * (me.categoriesHeight + 1);
