@@ -1,8 +1,6 @@
 // Name:   StrafeHUD
 // Author: Juhu
 
-// FIXME: strafehud doesn't work properly in spectate due to lack of IS_ONGROUND()
-
 #include "strafehud.qh"
 
 #include <client/autocvars.qh>
@@ -76,7 +74,7 @@ void HUD_StrafeHUD()
         float strafehud_indicator_minspeed         = autocvar_hud_panel_strafehud_indicator_minspeed;
 
         // physics
-        float  strafehud_onground                  = IS_ONGROUND(strafeplayer);
+        float  strafehud_onground                  = strafeplayer == csqcplayer ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
         float  strafehud_speed                     = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
         float  strafehud_maxspeed_crouch_mod       = IS_DUCKED(strafeplayer) ? .5 : 1;
         float  strafehud_maxspeed_swamp_mod        = strafeplayer.in_swamp ? strafeplayer.swamp_slowdown : 1;
