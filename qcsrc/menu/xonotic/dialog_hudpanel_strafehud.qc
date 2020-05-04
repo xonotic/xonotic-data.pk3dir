@@ -34,14 +34,6 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
     dialog_hudpanel_main_settings(me, panelname);
 
     me.TR(me);
-        me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD mode:")));
-
-        me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_mode"));
-            e.addValue(e, _("View centered"), "0");
-            e.addValue(e, _("Angle centered"), "1");
-            e.configureXonoticTextSliderValues(e);
-            setDependentStringNotEqual(e, "hud_panel_strafehud_mode", "0"); // until multiple modes are actually supported
-    me.TR(me);
         me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_demo", _("Demo mode")));
         me.TDempty(me, 0.4);
 
