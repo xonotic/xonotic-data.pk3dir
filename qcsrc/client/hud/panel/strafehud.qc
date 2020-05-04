@@ -5,6 +5,7 @@
 
 #include <client/autocvars.qh>
 #include <client/miscfunctions.qh>
+#include <common/animdecide.qh>
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/trigger/swamp.qh>
