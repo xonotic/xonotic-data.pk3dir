@@ -322,6 +322,7 @@ bool autocvar_hud_panel_score;
 bool autocvar_hud_panel_score_rankings;
 bool autocvar_hud_panel_strafehud;
 bool autocvar__hud_panel_strafehud_demo;
+bool autocvar__hud_panel_strafehud_center;
 float autocvar_hud_panel_strafehud_bar_alpha;
 vector autocvar_hud_panel_strafehud_bar_color;
 vector autocvar_hud_panel_strafehud_indicator_color;

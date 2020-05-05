@@ -35,10 +35,18 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
     me.TR(me);
         me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_demo", _("Demo mode")));
-        me.TDempty(me, 0.4);
+            setDependentStringNotEqual(e, "_hud_panel_strafehud_center", "1");
 
+        me.TDempty(me, 0.4);
         me.TD(me, 1, 0.6, e = makeXonoticTextLabel(0, _("Range:")));
         me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 360, 5, "hud_panel_strafehud_angle"));
+    me.TR(me);
+        me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_center", _("Center angle")));
+
+        me.TDempty(me, 0.9);
+        me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
+            e.onClick = StrafeHUD_ColorReset;
+            e.onClickEntity = me;
     me.TR(me);
         me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Strafe bar:")));
 
@@ -77,17 +85,12 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
         me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Active:")));
         me.TDempty(me, 0.1);
         me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Inactive:")));
-
-        me.TDempty(me, 0.1);
-        me.TD(me, 2, 1.9, e = makeXonoticColorpickerString("hud_panel_strafehud_direction_color", "hud_panel_strafehud_direction_color"));
     me.TR(me);
         me.TDempty(me, 0.1);
         me.TD(me, 2, 0.9, e = makeXonoticColorpickerString("hud_panel_strafehud_indicator_color", "hud_panel_strafehud_indicator_color"));
         me.TDempty(me, 0.1);
         me.TD(me, 2, 0.9, e = makeXonoticColorpickerString("hud_panel_strafehud_indicator_switch_color", "hud_panel_strafehud_indicator_switch_color"));
-    me.TR(me);
-        me.TDempty(me, 2.1);
-        me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
-            e.onClick = StrafeHUD_ColorReset;
-            e.onClickEntity = me;
+
+        me.TDempty(me, 0.1);
+        me.TD(me, 2, 1.9, e = makeXonoticColorpickerString("hud_panel_strafehud_direction_color", "hud_panel_strafehud_direction_color"));
 }

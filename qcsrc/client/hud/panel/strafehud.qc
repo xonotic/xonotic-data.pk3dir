@@ -300,17 +300,26 @@ void HUD_StrafeHUD()
         }
         else // simulate turning for HUD setup
         {
-            if(autocvar__hud_panel_strafehud_demo && ((time - strafehud_demo_time) >= .025))
+            if(autocvar__hud_panel_strafehud_center)
             {
-                strafehud_demo_time = time;
-                strafehud_demo_angle += 1 * strafehud_demo_direction;
-                if(fabs(strafehud_demo_angle) >= 55)
-                {
-                    strafehud_demo_direction = -strafehud_demo_direction;
-                }
+                strafehud_angle = strafehud_demo_angle = 0;
+                strafehud_demo_time = 0;
+                strafehud_wishangle = 0;
             }
-            strafehud_angle = strafehud_demo_angle;
-            strafehud_wishangle = 45 * (strafehud_demo_angle > 0 ? 1 : -1);
+            else
+            {
+                if(autocvar__hud_panel_strafehud_demo && ((time - strafehud_demo_time) >= .025))
+                {
+                    strafehud_demo_time = time;
+                    strafehud_demo_angle += strafehud_demo_direction;
+                    if(fabs(strafehud_demo_angle) >= 55)
+                    {
+                        strafehud_demo_direction = -strafehud_demo_direction;
+                    }
+                }
+                strafehud_angle = strafehud_demo_angle;
+                strafehud_wishangle = 45 * (strafehud_demo_angle > 0 ? 1 : -1);
+            }
         }
 
         if (autocvar_v_flipped)
