@@ -92,20 +92,22 @@ void HUD_StrafeHUD()
 
         // HUD
         float  strafehud_hudangle;
+        float  strafehud_bar_offset;
+        vector strafehud_bar_size                  = panel_size;
         vector strafehud_currentangle_color        = strafehud_warning_color;
-        vector strafehud_currentangle_size         = '0 0 0';
         float  strafehud_currentangle_offset;
-        vector strafehud_bestangle_size            = '0 0 0';
-        bool   strafehud_bestangle_anywhere        = false;
+        vector strafehud_currentangle_size         = '0 0 0';
         float  strafehud_bestangle                 = 0;
+        bool   strafehud_bestangle_anywhere        = false;
         float  strafehud_bestangle_offset;
         float  strafehud_bestangle_opposite_offset;
+        vector strafehud_bestangle_size            = '0 0 0';
         float  strafehud_accelzone_offset;
         vector strafehud_accelzone_size            = panel_size;
         float  strafehud_overturn_offset;
         vector strafehud_overturn_size             = panel_size;
         float  strafehud_mirrorangle;
-        float  strafehud_mirror_overturn_offset;
+        float  strafehud_mirror_overturn_offset    = 0;
         vector strafehud_mirror_overturn_size      = panel_size;
         vector strafehud_direction_size_vertical   = '0 0 0';
         vector strafehud_direction_size_horizontal = '0 0 0';
@@ -262,12 +264,6 @@ void HUD_StrafeHUD()
 
         strafehud_indicator_minspeed = strafehud_indicator_minspeed < 0 ? strafehud_maxspeed + .1 : strafehud_indicator_minspeed;
 
-        // add a background to the strafe-o-meter
-        if(panel_size.x != 0 && panel_size.y != 0)
-        {
-            HUD_Panel_DrawProgressBar(panel_pos, panel_size, "progressbar", 1, 0, 0, strafehud_bar_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-        }
-
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
         {
@@ -358,6 +354,16 @@ void HUD_StrafeHUD()
         strafehud_overturn_size.x = floor((panel_size.x * (strafehud_hudangle - strafehud_maxangle) / strafehud_hudangle) / 2 + .5);
         strafehud_mirror_overturn_size.x = floor(panel_size.x * strafehud_mirrorangle / (strafehud_hudangle * 2) + .5);
 
+        // if the strafe bar fills the whole hud panel
+        if(!(strafehud_speed >= strafehud_indicator_minspeed) || !(fabs(strafehud_bestangle) <= strafehud_hudangle) || !(strafehud_direction != 0))
+        {
+            // add a background to the strafe-o-meter
+            if(panel_size.x != 0 && panel_size.y != 0)
+            {
+                HUD_Panel_DrawProgressBar(panel_pos, panel_size, "progressbar", 1, 0, 0, strafehud_bar_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            }
+        }
+
         // mark the ideal strafe angle
         if(strafehud_speed >= strafehud_indicator_minspeed) // draw indicators if strafing is required to gain speed
         {
@@ -414,6 +420,22 @@ void HUD_StrafeHUD()
                     if(strafehud_accelzone_size.x != 0 && strafehud_accelzone_size.y != 0)
                     {
                         HUD_Panel_DrawProgressBar(panel_pos + eX * strafehud_accelzone_offset, strafehud_accelzone_size, "progressbar", 1, 0, 0, strafehud_bestangle_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    }
+
+                    // add a background to the strafe-o-meter
+                    if(strafehud_direction < 0)
+                    {
+                        strafehud_bar_offset = strafehud_accelzone_offset + strafehud_accelzone_size.x;
+                        strafehud_bar_size.x = panel_size.x - strafehud_bar_offset - (panel_size.x - (strafehud_mirrorangle > 0 ? strafehud_mirror_overturn_offset : panel_size.x));
+                    }
+                    else
+                    {
+                        strafehud_bar_offset = strafehud_mirrorangle > 0 ? strafehud_mirror_overturn_size.x : 0;
+                        strafehud_bar_size.x = panel_size.x - strafehud_bar_offset - (panel_size.x - strafehud_accelzone_offset);
+                    }
+                    if(strafehud_bar_size.x != 0 && strafehud_bar_size.y != 0)
+                    {
+                        HUD_Panel_DrawProgressBar(panel_pos + eX * strafehud_bar_offset, strafehud_bar_size, "progressbar", 1, 0, 0, strafehud_bar_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                     }
 
                     // draw the direction indicator caps at the sides of the hud
