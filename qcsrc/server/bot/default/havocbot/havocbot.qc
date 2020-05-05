@@ -48,7 +48,7 @@ void havocbot_ai(entity this)
 		else
 		{
 			if (!this.jumppadcount && !STAT(FROZEN, this)
-				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
+				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP) && !IS_ONGROUND(this)))
 			{
 				// find a new goal
 				this.havocbot_role(this); // little too far down the rabbit hole
