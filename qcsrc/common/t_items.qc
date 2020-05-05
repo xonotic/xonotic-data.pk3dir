@@ -23,6 +23,7 @@
     #include <common/weapons/_all.qh>
 
     #include <common/mutators/mutator/buffs/buffs.qh>
+	#include <common/mutators/mutator/buffs/sv_buffs.qh>
 
     #include "../lib/warpzone/util_server.qh"
 #elif defined(CSQC)
@@ -1827,7 +1828,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			default:
-				FOREACH(Buffs, it != BUFF_Null && Buff_UndeprecateName(cmd) == it.netname,
+				FOREACH(Buffs, it != BUFF_Null && buff_Available(it) && Buff_UndeprecateName(cmd) == it.netname,
 				{
 					got += GiveBuff(e, it, op, val);
 					break;
