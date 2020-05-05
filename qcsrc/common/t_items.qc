@@ -1619,28 +1619,36 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 bool GiveBuff(entity e, Buff thebuff, int op, int val)
 {
 	bool had_buff = (STAT(BUFFS, e) & thebuff.m_itemid);
+	float new_buff_time = ((had_buff) ? STAT(BUFF_TIME, e) : 0);
 	switch (op)
 	{
 		case OP_SET:
-			STAT(BUFF_TIME, e) = val;
+			new_buff_time = val;
 			break;
 		case OP_MIN:
-			STAT(BUFF_TIME, e) = max(STAT(BUFF_TIME, e), val);
+			new_buff_time = max(new_buff_time, val);
 			break;
 		case OP_MAX:
-			STAT(BUFF_TIME, e) = min(STAT(BUFF_TIME, e), val);
+			new_buff_time = min(new_buff_time, val);
 			break;
 		case OP_PLUS:
-			STAT(BUFF_TIME, e) += val;
+			new_buff_time += val;
 			break;
 		case OP_MINUS:
-			STAT(BUFF_TIME, e) -= val;
+			new_buff_time -= val;
 			break;
 	}
-	if(STAT(BUFF_TIME, e) <= 0)
+	if(new_buff_time <= 0)
+	{
+		if(had_buff)
+			STAT(BUFF_TIME, e) = new_buff_time;
 		STAT(BUFFS, e) &= ~thebuff.m_itemid;
+	}
 	else
+	{
+		STAT(BUFF_TIME, e) = new_buff_time;
 		STAT(BUFFS, e) = thebuff.m_itemid; // NOTE: replaces any existing buffs on the player!
+	}
 	bool have_buff = (STAT(BUFFS, e) & thebuff.m_itemid);
 	return (had_buff != have_buff);
 }
