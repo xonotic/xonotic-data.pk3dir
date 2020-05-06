@@ -116,7 +116,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 8))
 	{
-		actor.strength_finished = 0;
+		STAT(STRENGTH_FINISHED, actor) = 0;
 		actor.invincible_finished = 0;
 		if(STAT(BUFFS, actor)) // TODO: make a dropbuffs function to handle this
 		{

@@ -264,6 +264,7 @@ bool racer_frame(entity this, float dt)
 			vehic.invincible_finished = time + 0.1 + (random() * 0.1);
 		}
 
+		// NOTE: reusing .strength_finished here as a sound delay counter
 		if(vehic.strength_finished < time)
 		{
 			vehic.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
