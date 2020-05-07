@@ -367,7 +367,7 @@ void HUD_StrafeHUD()
         if(!(strafehud_speed >= strafehud_indicator_minspeed) || !(fabs(strafehud_bestangle) <= strafehud_hudangle) || !(strafehud_direction != 0))
         {
             // add a background to the strafe-o-meter
-            if(panel_size.x != 0 && panel_size.y != 0)
+            if(panel_size.x > 0 && panel_size.y > 0)
             {
                 HUD_Panel_DrawProgressBar(panel_pos, panel_size, "progressbar", 1, 0, 0, strafehud_bar_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
@@ -381,12 +381,12 @@ void HUD_StrafeHUD()
                 if (strafehud_direction != 0) // only draw acceleration zones if strafe direction can be determined
                 {
                     // calculate zone in which strafe acceleration happens
-                    if(strafehud_direction < 0) // moving left
+                    if(strafehud_direction < 0) // turning left
                     {
                         strafehud_accelzone_offset = 0;
-                        strafehud_accelzone_size.x = strafehud_bestangle_offset;
+                        strafehud_accelzone_size.x = strafehud_bestangle_offset - strafehud_bestangle_size.x;
                     }
-                    else // moving right
+                    else // turning right
                     {
                         strafehud_accelzone_offset = strafehud_bestangle_offset + strafehud_bestangle_size.x;
                         strafehud_accelzone_size.x = panel_size.x - strafehud_accelzone_offset;
@@ -394,7 +394,7 @@ void HUD_StrafeHUD()
 
                     if(strafehud_hudangle > strafehud_maxangle) // draw overturn area and move acceleration zone
                     {
-                        if(strafehud_direction < 0) // moving left
+                        if(strafehud_direction < 0) // turning left
                         {
                             // calculate offset of overturn area
                             strafehud_overturn_offset = 0;
@@ -404,7 +404,7 @@ void HUD_StrafeHUD()
                             // calculate the remainder of the overturn zone on the opposite side
                             strafehud_mirror_overturn_offset = panel_size.x - strafehud_mirror_overturn_size.x;
                         }
-                        else // moving right
+                        else // turning right
                         {
                             // calculate offset of overturn area
                             strafehud_overturn_offset = panel_size.x - strafehud_overturn_size.x;
@@ -414,35 +414,35 @@ void HUD_StrafeHUD()
                             strafehud_mirror_overturn_offset = 0;
                         }
                         // draw overturn area
-                        if(strafehud_overturn_size.x != 0 && strafehud_overturn_size.y != 0)
+                        if(strafehud_overturn_size.x > 0 && strafehud_overturn_size.y > 0)
                         {
                             HUD_Panel_DrawProgressBar(panel_pos + eX * strafehud_overturn_offset, strafehud_overturn_size, "progressbar", 1, 0, 0, strafehud_alert_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                         }
                         // draw remaining overturn area on the opposite side if there is any (180 degree in total)
-                        if(strafehud_mirrorangle > 0 && strafehud_mirror_overturn_size.x != 0 && strafehud_mirror_overturn_size.y != 0)
+                        if(strafehud_mirrorangle > 0 && strafehud_mirror_overturn_size.x > 0 && strafehud_mirror_overturn_size.y > 0)
                         {
                             HUD_Panel_DrawProgressBar(panel_pos + eX * strafehud_mirror_overturn_offset, strafehud_mirror_overturn_size, "progressbar", 1, 0, 0, strafehud_alert_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                         }
                     }
 
                     // draw acceleration zone
-                    if(strafehud_accelzone_size.x != 0 && strafehud_accelzone_size.y != 0)
+                    if(strafehud_accelzone_size.x > 0 && strafehud_accelzone_size.y > 0)
                     {
                         HUD_Panel_DrawProgressBar(panel_pos + eX * strafehud_accelzone_offset, strafehud_accelzone_size, "progressbar", 1, 0, 0, strafehud_bestangle_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                     }
 
                     // add a background to the strafe-o-meter
-                    if(strafehud_direction < 0)
+                    if(strafehud_direction < 0) // turning left
                     {
-                        strafehud_bar_offset = strafehud_accelzone_offset + strafehud_accelzone_size.x;
+                        strafehud_bar_offset = strafehud_accelzone_offset + strafehud_accelzone_size.x + strafehud_bestangle_size.x;
                         strafehud_bar_size.x = panel_size.x - strafehud_bar_offset - (panel_size.x - (strafehud_mirrorangle > 0 ? strafehud_mirror_overturn_offset : panel_size.x));
                     }
-                    else
+                    else // turning right
                     {
                         strafehud_bar_offset = strafehud_mirrorangle > 0 ? strafehud_mirror_overturn_size.x : 0;
-                        strafehud_bar_size.x = panel_size.x - strafehud_bar_offset - (panel_size.x - strafehud_accelzone_offset);
+                        strafehud_bar_size.x = panel_size.x - strafehud_bar_offset - (panel_size.x - strafehud_accelzone_offset) - strafehud_bestangle_size.x;
                     }
-                    if(strafehud_bar_size.x != 0 && strafehud_bar_size.y != 0)
+                    if(strafehud_bar_size.x > 0 && strafehud_bar_size.y > 0)
                     {
                         HUD_Panel_DrawProgressBar(panel_pos + eX * strafehud_bar_offset, strafehud_bar_size, "progressbar", 1, 0, 0, strafehud_bar_color, strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                     }
