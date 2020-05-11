@@ -348,13 +348,16 @@ void HUD_StrafeHUD()
         strafehud_bestangle_offset          = floor( strafehud_bestangle/strafehud_hudangle * panel_size.x/2 + panel_size.x/2 + .5);
         strafehud_bestangle_opposite_offset = floor(-strafehud_bestangle/strafehud_hudangle * panel_size.x/2 + panel_size.x/2 + .5);
         strafehud_bestangle_size.x = floor(panel_size.x * .01 + .5);
+        if(strafehud_bestangle_size.x < 1) strafehud_bestangle_size.x = 1;
         strafehud_bestangle_size.y = panel_size.y;
         // current angle
-        strafehud_currentangle_offset = floor(bound(-strafehud_hudangle, strafehud_angle, strafehud_hudangle)/strafehud_hudangle * panel_size.x/2 + panel_size.x/2 + .5);
         strafehud_currentangle_size.x = floor(panel_size.x * .005 + .5);
+        if(strafehud_currentangle_size.x < 1) strafehud_currentangle_size.x = 1;
+        strafehud_currentangle_offset = floor(bound(-strafehud_hudangle, strafehud_angle, strafehud_hudangle)/strafehud_hudangle * panel_size.x/2 + panel_size.x/2 - strafehud_currentangle_size.x/2 + .5);
         strafehud_currentangle_size.y = floor(panel_size.y * 1.5 + .5);
         // direction indicator
         strafehud_direction_size_vertical.x = floor(panel_size.x * .0075 + .5);
+        if(strafehud_direction_size_vertical.x < 1) strafehud_direction_size_vertical.x = 1;
         strafehud_direction_size_vertical.y = panel_size.y;
         strafehud_direction_size_horizontal.x = floor(strafehud_direction_size_vertical.x * 3 + .5);
         strafehud_direction_size_horizontal.y = strafehud_direction_size_vertical.x;
@@ -491,6 +494,6 @@ void HUD_StrafeHUD()
             strafehud_currentangle_color = strafehud_good_color;
         }
 
-        drawfill(panel_pos - '0 1 0'*floor(panel_size.y * .25 + .5) + eX * (strafehud_currentangle_offset - strafehud_currentangle_size.x/2), strafehud_currentangle_size, strafehud_currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+        drawfill(panel_pos - eY * floor((strafehud_currentangle_size.y - panel_size.y) / 2 + .5) + eX * strafehud_currentangle_offset, strafehud_currentangle_size, strafehud_currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
     }
 }
