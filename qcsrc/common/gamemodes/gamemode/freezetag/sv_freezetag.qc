@@ -366,6 +366,9 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		return true;
 	}
 
+	frag_target.respawn_time = time + 1;
+	frag_target.respawn_flags |= RESPAWN_FORCE;
+
 	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
 	// you succeed changing team through the menu: you both really die (gibbing) and get frozen
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
