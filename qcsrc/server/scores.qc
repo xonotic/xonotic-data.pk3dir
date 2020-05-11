@@ -107,8 +107,11 @@ float TeamScore_AddToTeam(int t, float scorefield, float score)
 {
 	entity s;
 
-	if(game_stopped)
+	if(game_stopped || time < game_starttime
+		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()))
+	{
 		score = 0;
+	}
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
 	if(t <= 0 || t >= 16)
@@ -334,9 +337,11 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score, player);
 	score = M_ARGV(1, float);
 
-	if(game_stopped)
-	if(!mutator_returnvalue)
+	if((!mutator_returnvalue && game_stopped) || time < game_starttime
+		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()))
+	{
 		score = 0;
+	}
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
 	entity s = CS(player).scorekeeper;
