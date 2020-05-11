@@ -5,6 +5,7 @@
 #include <server/g_world.qh>
 #include <server/miscfunctions.qh>
 #include <server/mutators/_mod.qh>
+#include <server/round_handler.qh>
 #include <common/net_linked.qh>
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
