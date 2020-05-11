@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
-"PO-Revision-Date: 2020-05-08 14:02+0000\n"
+"PO-Revision-Date: 2020-05-10 20:57+0000\n"
 "Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
@@ -528,7 +528,7 @@ msgstr " (-%dL)"
 #: qcsrc/client/hud/panel/racetimer.qc:59
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:78
 msgid "Start line"
@@ -1479,10 +1479,13 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Tapa viholliset heidät jäädyttääksesi, seiso jäädytettyjen "
+"joukkuekavereidesi vieressä elvyttääksesi heidät; jäädytä kaikki viholliset "
+"voittaaksesi"
 
 #: qcsrc/common/mapinfo.qh:544
 msgid "Hold the ball to get points for kills"
-msgstr ""
+msgstr "Pidä palloa saadaksesi tappopisteitä"
 
 #: qcsrc/common/mapinfo.qh:544
 msgid "Keepaway"
@@ -1490,23 +1493,24 @@ msgstr "Pakomatka (Keepaway)"
 
 #: qcsrc/common/mapinfo.qh:559
 msgid "Invasion"
-msgstr ""
+msgstr "Tunkeutuminen"
 
 #: qcsrc/common/mapinfo.qh:559
 msgid "Survive against waves of monsters"
-msgstr ""
+msgstr "Selviydy hirviöaaltoja vastaan"
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Duel"
-msgstr ""
+msgstr "Kaksintaistelu"
 
 #: qcsrc/common/mapinfo.qh:589
 msgid "Fight in a one versus one arena battle to decide the winner"
 msgstr ""
+"Taistele areenalla yksi-vastaan-yksi kamppailu voittajan selvittämiseksi"
 
 #: qcsrc/common/minigames/cl_minigames.qc:383
 msgid "It's your turn"
-msgstr ""
+msgstr "Sinun vuorosi"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:346
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
@@ -1515,15 +1519,15 @@ msgstr "Lopeta"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:351
 msgid "Invite"
-msgstr ""
+msgstr "Kutsu"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:390
 msgid "Current Game"
-msgstr ""
+msgstr "Tämänhetkinen peli"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:415
 msgid "Exit Menu"
-msgstr ""
+msgstr "Poistu"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:427
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
@@ -1536,57 +1540,57 @@ msgstr "Liity"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:506
 msgid "Minigames"
-msgstr ""
+msgstr "Pienpelit"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:567
 msgid "Minigame message"
-msgstr ""
+msgstr "Pienpeliviesti"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Jyrä"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1092
 #: qcsrc/common/minigames/minigame/ps.qc:421
 #: qcsrc/common/minigames/minigame/ps.qc:427
 msgid "Game over!"
-msgstr ""
+msgstr "Peli on ohi!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Hienosti meni! Napsauta 'Seuraava Taso' jatkaaksesi"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
-msgstr ""
+msgstr "Paremmin ensi kerralla!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1167
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Se meni putkeen! Paina \"Seuraava Taso\" jatkaaksesi!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1169
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Päheetä! Paina \"Seuraava taso\" jatkaaksesi!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1173
 msgid "Press the space bar to change your currently selected tile"
-msgstr ""
+msgstr "Paina välilyöntiä vaihtaaksesi valitsemasi murikan"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1176
 msgid "Push the boulders onto the targets"
-msgstr ""
+msgstr "Työnnä lohkareet kohteita kohti"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1398
 msgid "Next Level"
-msgstr ""
+msgstr "Seuraava Taso"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1399
 msgid "Restart"
-msgstr ""
+msgstr "Aloita uudelleen"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1400
 msgid "Editor"
-msgstr ""
+msgstr "Muokkain"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1401
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
@@ -1595,7 +1599,7 @@ msgstr "Tallenna"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Neljän suora"
 
 #: qcsrc/common/minigames/minigame/c4.qc:311
 #: qcsrc/common/minigames/minigame/c4.qc:317
@@ -1605,205 +1609,209 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:368
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 voitti pelin!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
 #: qcsrc/common/minigames/minigame/ttt.qc:319
 msgid "Draw"
-msgstr ""
+msgstr "Tasapeli"
 
 #: qcsrc/common/minigames/minigame/c4.qc:378
 #: qcsrc/common/minigames/minigame/nmm.qc:606
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
 msgid "You lost the game!"
-msgstr ""
+msgstr "Hävisit pelin!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:379
 #: qcsrc/common/minigames/minigame/nmm.qc:607
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:325
 msgid "You win!"
-msgstr ""
+msgstr "Voitto on sinun!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
 #: qcsrc/common/minigames/minigame/nmm.qc:611
 #: qcsrc/common/minigames/minigame/pp.qc:455
 #: qcsrc/common/minigames/minigame/ttt.qc:336
 msgid "Wait for your opponent to make their move"
-msgstr ""
+msgstr "Odota että vastustajasi toteuttaa liikkeensä"
 
 #: qcsrc/common/minigames/minigame/c4.qc:386
 #: qcsrc/common/minigames/minigame/nmm.qc:613
 #: qcsrc/common/minigames/minigame/pp.qc:458
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Click on the game board to place your piece"
-msgstr ""
+msgstr "Napsauta pelilaudalla asettaaksesi nappulasi"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:7
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "Mylly"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
 msgstr ""
+"Voit valita nappuloistasi yhden siirtääksesi sen yhteen ympäröivistä "
+"paikoista"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:617
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr ""
+"Voit valita yhden nappuloistasi siirtääksesi sen laudalla mihin tahansa "
 
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 msgid "You can take one of the opponent's pieces"
-msgstr ""
+msgstr "Voit syödä yhden vastustajasi nappuloista"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "Pong-mailapeli"
 
 #: qcsrc/common/minigames/minigame/pong.qc:589
 #: qcsrc/common/minigames/minigame/ttt.qc:299
 msgid "AI"
-msgstr ""
+msgstr "AI-tekoäly"
 
 #: qcsrc/common/minigames/minigame/pong.qc:606
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
+"Paina ^1Aloita Ottelu^7 aloittaaksesi ottelun tämänhetkisillä pelaajilla"
 
 #: qcsrc/common/minigames/minigame/pong.qc:674
 msgid "Start Match"
-msgstr ""
+msgstr "Aloita Ottelu"
 
 #: qcsrc/common/minigames/minigame/pong.qc:675
 msgid "Add AI player"
-msgstr ""
+msgstr "Lisää AI-tekoälypelaajia"
 
 #: qcsrc/common/minigames/minigame/pong.qc:676
 msgid "Remove AI player"
-msgstr ""
+msgstr "Poista AI-tekoälypelaaja"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "Työnnä-Vedä"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr ""
+msgstr "Valitse valikossa \"^1Seuraava Ottelu^7\" uusintaottelua varten!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ttt.qc:325
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr ""
+msgstr "Valitse valikossa \"^1Seuraava Ottelu^7\" aloittaaksesi uuden ottelun!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:451
 #: qcsrc/common/minigames/minigame/ttt.qc:332
 msgid "Wait for your opponent to confirm the rematch"
-msgstr ""
+msgstr "Odota vastustajasi vahvistusta uusintaottelulle"
 
 #: qcsrc/common/minigames/minigame/pp.qc:581
 #: qcsrc/common/minigames/minigame/ttt.qc:664
 msgid "Next Match"
-msgstr ""
+msgstr "Seuraava Ottelu"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "Lautapasianssi"
 
 #: qcsrc/common/minigames/minigame/ps.qc:414
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Kaikki nappulat poisputsattu!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Jäljelläolevat nappulat:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:481
 #, c-format
 msgid "Pieces left: %s"
-msgstr ""
+msgstr "Nappuloita jäljellä: %s"
 
 #: qcsrc/common/minigames/minigame/ps.qc:491
 msgid "No more valid moves"
-msgstr ""
+msgstr "Ei enempää kelvollisia siirtoja"
 
 #: qcsrc/common/minigames/minigame/ps.qc:494
 msgid "Well done, you win!"
-msgstr ""
+msgstr "Hienosti meni, voitto on sinun!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:497
 msgid "Jump a piece over another to capture it"
-msgstr ""
+msgstr "Pompsauta nappula toisen päälle kaapataksesi sen"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "Ristinolla"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Single Player"
-msgstr ""
+msgstr "Yksinpeli"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
 msgid "Mage"
-msgstr ""
+msgstr "Velho"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
-msgstr ""
+msgstr "Velhontähkä"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Shambler"
-msgstr ""
+msgstr "Värisyttäjä"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
 msgid "Spider"
-msgstr ""
+msgstr "Hämähäkki"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
-msgstr ""
+msgstr "Hämähäkin hyökkäys"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
-msgstr ""
+msgstr "Lohikäärme"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
-msgstr ""
+msgstr "Lohikäärmeen hyökkäys"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
-msgstr ""
+msgstr "Zombie"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:15
 msgid "Ammo"
-msgstr ""
+msgstr "Ammukset"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:24
 msgid "Resistance"
-msgstr ""
+msgstr "Vastarinta"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:33
 #: qcsrc/common/mutators/mutator/instagib/items.qh:126
 #: qcsrc/common/mutators/mutator/instagib/items.qh:129
 msgid "Speed"
-msgstr ""
+msgstr "Nopeus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:43
 msgid "Medic"
-msgstr ""
+msgstr "Lääkintämies"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:54
 msgid "Bash"
-msgstr ""
+msgstr "Murjaisu"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:62
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
@@ -1813,67 +1821,67 @@ msgstr "Vampyyri"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:70
 msgid "Disability"
-msgstr ""
+msgstr "Vammaisuus"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:78
 msgid "Vengeance"
-msgstr ""
+msgstr "Kosto"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:86
 msgid "Jump"
-msgstr ""
+msgstr "Hyppy"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:95
 msgid "Invisible"
-msgstr ""
+msgstr "Näkymätön"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:104
 msgid "Inferno"
-msgstr ""
+msgstr "Pätsi"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:112
 msgid "Swapper"
-msgstr ""
+msgstr "Vaihdokki"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:120
 msgid "Magnet"
-msgstr ""
+msgstr "Magneetti"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:128
 msgid "Luck"
-msgstr ""
+msgstr "Lykästys"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:136
 msgid "Flight"
-msgstr ""
+msgstr "Lento"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:7
 msgid "Buff"
-msgstr ""
+msgstr "Puhvi"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
-msgstr ""
+msgstr "Vahinkoteksti"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:18
 msgid "Draw damage numbers"
-msgstr ""
+msgstr "Piirrä vahinkonumerot"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
-msgstr ""
+msgstr "Pienin kirjasinkoko:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
-msgstr ""
+msgstr "Suurin kirjasinkoko:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 msgid "Accumulate range:"
-msgstr ""
+msgstr "Kerääntymän kantama:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:38
 msgid "Lifetime:"
-msgstr ""
+msgstr "Elinaika:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:43
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:53
@@ -1887,164 +1895,164 @@ msgstr "Väri:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:50
 msgid "Draw damage numbers for friendly fire"
-msgstr ""
+msgstr "Piirrä vahinkonumerot koskien vahinkolaukauksia"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
-msgstr ""
+msgstr "Höyrystimen ammukset"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
 msgid "Extra life"
-msgstr ""
+msgstr "Lisäelämä"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:91
 #: qcsrc/common/mutators/mutator/instagib/items.qh:94
 msgid "Invisibility"
-msgstr ""
+msgstr "Näkymättömyys"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
-msgstr ""
+msgstr "Napalmikranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:26
 msgid "Ice grenade"
-msgstr ""
+msgstr "Jääkranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:34
 msgid "Translocate grenade"
-msgstr ""
+msgstr "Erikohdistuskranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:42
 msgid "Spawn grenade"
-msgstr ""
+msgstr "Uudelleensyntykranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:50
 msgid "Heal grenade"
-msgstr ""
+msgstr "Toipumiskranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:58
 msgid "Monster grenade"
-msgstr ""
+msgstr "Hirviökranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:66
 msgid "Entrap grenade"
-msgstr ""
+msgstr "Ansakranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:74
 msgid "Veil grenade"
-msgstr ""
+msgstr "Huntukranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:34
 msgid "Grenade"
-msgstr ""
+msgstr "Kranaatti"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:20
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "Ylimalkaallinen raskaskonepistooli"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:18
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "Ylimalkaallinen konepistooli"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "Ylimalkaallinen Nex"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:20
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Ylimalkaallinen rakettikäyttöinen moottorisaha"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "Ylimalkaallinen haulikko"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr ""
+msgstr "Välietappi"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr ""
+msgstr "Auta minua!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
-msgstr ""
+msgstr "Tässä"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
-msgstr ""
+msgstr "VAARA"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:8
 msgid "Frozen!"
-msgstr ""
+msgstr "Jäässä!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Item"
-msgstr ""
+msgstr "Esine"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:12
 msgid "Checkpoint"
-msgstr ""
+msgstr "Jatkopiste"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
 msgid "Finish"
-msgstr ""
+msgstr "Loppu"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:14
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
 msgid "Start"
-msgstr ""
+msgstr "Alku"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 msgid "Defend"
-msgstr ""
+msgstr "Puolusta"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
 msgid "Destroy"
-msgstr ""
+msgstr "Tuhoa"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:19
 msgid "Push"
-msgstr ""
+msgstr "Työnnä"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Flag carrier"
-msgstr ""
+msgstr "Lipunkantaja"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Enemy carrier"
-msgstr ""
+msgstr "Viholliskantaja"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:23
 msgid "Dropped flag"
-msgstr ""
+msgstr "Pudotettu lippu"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "White base"
-msgstr ""
+msgstr "Valkoinen tukikohta"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Red base"
-msgstr ""
+msgstr "Punainen tukikohta"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Blue base"
-msgstr ""
+msgstr "Sininen tukikohta"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "Yellow base"
-msgstr ""
+msgstr "Keltainen tukikohta"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Pink base"
-msgstr ""
+msgstr "Vaaleanpunainen tukikohta"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr ""
+msgstr "Palauta lippu tänne"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -2055,11 +2063,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:52
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Control point"
-msgstr ""
+msgstr "Hallintapiste"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 msgid "Dropped key"
-msgstr ""
+msgstr "Pudotettu avain"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
@@ -2067,54 +2075,54 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
 msgid "Key carrier"
-msgstr ""
+msgstr "Avaimenkantaja"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
-msgstr ""
+msgstr "Juokse tänne"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Ball"
-msgstr ""
+msgstr "Pallo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
-msgstr ""
+msgstr "Pallonkantaja"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
-msgstr ""
+msgstr "Maali"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Generator"
-msgstr ""
+msgstr "Generaattori"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Weapon"
-msgstr ""
+msgstr "Ase"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 msgid "Monster"
-msgstr ""
+msgstr "Hirviö"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Vehicle"
-msgstr ""
+msgstr "Ajoneuvo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
-msgstr ""
+msgstr "Tunkeutuja!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Tagged"
-msgstr ""
+msgstr "Korvamerkitty"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:695
 #, c-format
 msgid "%s needing help!"
-msgstr ""
+msgstr "%s avuntarpeessa!"
 
 #: qcsrc/common/net_notice.qc:90
 msgid "^1Server notices:"
@@ -2123,11 +2131,12 @@ msgstr "^1Palvelimen ilmoitukset:"
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
+"^F4HUOMAUTUS: ^BGKatselijakeskustelua ei lähetetä pelaajille ottelun aikana"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG kaappasi ^TC^TT^BG lipun"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -2135,16 +2144,18 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
+"^BG%s^BG kaappasi ^TC^TT^BG lipun ^F1%s^BG sekunnissa, rikkoen ^BG%s^BG's "
+"edellisen ennätyksen ^F2%s^BG sekuntia"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr ""
+msgstr "^BG%s^BG kaappasi lipun"
 
 #: qcsrc/common/notifications/all.inc:244
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr ""
+msgstr "^BG%s^BG kaappasi ^TC^TT^BG lipun ^F1%s^BG sekunnissa"
 
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
@@ -2152,40 +2163,43 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
+"^BG%s^BG kaappasi ^TC^TT^BG lipun ^F2%s^BG sekunnissa, onnistumatta "
+"rikkomaan ^BG%s^BG's edellistä ennätystä ^F1%s^BG sekuntia"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr ""
+msgstr "^BGThe ^TC^TT^BG lippu palautettiin tukikohtaan omistajansa toimesta"
 
 #: qcsrc/common/notifications/all.inc:247
 msgid "^BGThe flag was returned by its owner"
-msgstr ""
+msgstr "^BGLippu palautettiin omistajansa toimesta"
 
 #: qcsrc/common/notifications/all.inc:248
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGLippu ^TC^TT^BG tuhottiin ja palautettiin tukikohtaan"
 
 #: qcsrc/common/notifications/all.inc:249
 msgid "^BGThe flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGLippu tuhottiin ja palautettiin tukikohtaan"
 
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BGLippu ^TC^TT^BG pudotettiin tukikohtaan palauttaen itse itsensä"
 
 #: qcsrc/common/notifications/all.inc:251
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BGLippu pudotettiin tukikohtaan palauttaen itsensä"
 
 #: qcsrc/common/notifications/all.inc:252
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
 msgstr ""
+"^BGLippu ^TC^TT^BG putosi johonkin saavuttamattomiin tukikohtapalautukselle"
 
 #: qcsrc/common/notifications/all.inc:253
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
-msgstr ""
+msgstr "^BGLippu putosi johonkin saavuttamattomiin tukikohtapalautukselle"
 
 #: qcsrc/common/notifications/all.inc:254
 #, c-format
@@ -2193,800 +2207,819 @@ msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
 msgstr ""
+"^BGLippu ^TC^TT^BG muuttui malttamattomaksi ^F1%.2f^BG sekunnin jälkeen "
+"palauttaen itsensä"
 
 #: qcsrc/common/notifications/all.inc:255
 #, c-format
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
 msgstr ""
+"^BGLippu muuttui malttamattomaksi ^F1%.2f^BG sekunnin jälkeen palauttaen "
+"itsensä"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr ""
+msgstr "^BGLippu ^TC^TT^BG palautui tukikohtaan"
 
 #: qcsrc/common/notifications/all.inc:257
 msgid "^BGThe flag has returned to the base"
-msgstr ""
+msgstr "^BGLippu palautui tukikohtaan"
 
 #: qcsrc/common/notifications/all.inc:258
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG menetti ^TC^TT^BG lipun"
 
 #: qcsrc/common/notifications/all.inc:259
 #, c-format
 msgid "^BG%s^BG lost the flag"
-msgstr ""
+msgstr "^BG%s^BG menetti lipun"
 
 #: qcsrc/common/notifications/all.inc:260
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG sai ^TC^TT^BG lipun"
 
 #: qcsrc/common/notifications/all.inc:261
 #, c-format
 msgid "^BG%s^BG got the flag"
-msgstr ""
+msgstr "^BG%s^BG sai lipun"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:263
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG palautti ^TC^TT^BG lipun"
 
 #: qcsrc/common/notifications/all.inc:265
 #: qcsrc/common/notifications/all.inc:557
 #, c-format
 msgid "^F2Throwing coin... Result: %s^F2!"
-msgstr ""
+msgstr "^F2Kolikonheitto... Tulos: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:267
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr ""
+msgstr "^BGSinulla ei ole polttoainetta ^F1Lentopakkaukseen"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
-msgstr ""
+msgstr "^F2Sinulta uupuu UID, superspes valintoja ei tallenneta/palauteta"
 
 #: qcsrc/common/notifications/all.inc:271
 msgid "^F1Round already started, you will join the game in the next round"
-msgstr ""
+msgstr "^F1Kierros on jo alkanut, pääset mukaan ensi kierrokselle"
 
 #: qcsrc/common/notifications/all.inc:272
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2Seuraava kierros menee sinun osaltasi katsellessa"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1's ^BG%s^K1 puhvilla ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1's ^BG%s^K1 puhvilla ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:275
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 lopetettiin epärehellisesti ja syyllinen oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 hukutettiin syyllisen ollen ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 palautettiin maanpinnalle syyllisen ollen ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:278
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
 msgstr ""
+"^BG%s%s^K1 tunsi mitä se on kun tekee poppaa ^BG%s^K1's tulen polttaessa^K1%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:278
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
 msgstr ""
+"^BG%s%s^K1 poltettiin täydeksi paistiksi syyllisen ollessa ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:279
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 päätyi murkinaksi kokin ollessa ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 työnnettiin hirviön eteen ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 posautettiin taivaan tuuliin ^BG%s^K1's Naatilla%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 erehtyi liian lähelle napalmiräjähdystä%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
 msgstr ""
+"^BG%s%s^K1 poltettiin kuoliaaksi ^BG%s^K1's Napalminaatin toimesta %s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 posautettiin ^BG%s^K1's Jäänaatin toimesta %s%s"
 
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 jäätyi pakastelihaksi ^BG%s^K1's Jäänaatin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ei tervehtynyt ^BG%s^K1's Terveysnaatista %s%s"
 
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
 msgstr ""
+"^BG%s%s^K1 ammuttiin planeettaa kiertävälle radalle syyllisen ollen ^BG"
+"%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 limakyllästettiin ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 säilöttiin säilöjän ollen ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
 msgstr ""
+"^BG%s%s^K1 yritti koijailla ^BG%s^K1's etäsiirtomääränpään tonteilla%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 etäsurmattiin syyllisen ollen ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:290
 #, c-format
 msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 menehtyi onnettomuudessa ja kanssansa oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 otti osumaa töräyksestä kun ^BG%s^K1'n Bumblebee räjähti%s%s"
 
 #: qcsrc/common/notifications/all.inc:292
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s"
 msgstr ""
+"^BG%s%s^K1 koki kauniit valot joita ^BG%s^K1'n Bumblebee-ase tuottaa%s%s"
 
 #: qcsrc/common/notifications/all.inc:293
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 tuli rusennetuksi syypään ollen ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 sai maistaa sirpalepommia ^BG%s^K1'n Raptorin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:295
 #, c-format
 msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ei voinut vastustaa ^BG%s^K1'n purppurakimpaleita%s%s"
 
 #: qcsrc/common/notifications/all.inc:296
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 otti osumaa töräyksestä kun ^BG%s^K1'n Raptor räjähti%s%s"
 
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 otti osumaa töräyksestä kun ^BG%s^K1'n Hämisbotti räjähti%s%s"
 
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 silppuuntui ^BG%s^K1'n Hämisbotin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 posautettiin päreiksi ^BG%s^K1'n Hämisbotin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 otti osumaa töräyksestä kun ^BG%s^K1'n Kilpuri räjähti%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 iskettiin alas ^BG%s^K1'n Kilpurin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ei löytänyt suojaa ^BG%s^K1'n Kilpurilta%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"
 msgstr ""
+"^BG%s%s^K1 linkaistiin tuskien taipaleelle syyllisen ollen ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was moved into the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 siirrettiin tänne %s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
 msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s"
-msgstr ""
+msgstr "^BG%s^K1 tuli viholliseksi Joukkuepelin Isännän kanssa %s%s"
 
 #: qcsrc/common/notifications/all.inc:307
 #, c-format
 msgid "^BG%s^K1 thought they found a nice camping ground%s%s"
-msgstr ""
+msgstr "^BG%s^K1 luulivat löytäneensä lokoisan retkeilyalueen%s%s"
 
 #: qcsrc/common/notifications/all.inc:308
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themself%s%s"
-msgstr ""
+msgstr "^BG%s^K1 lopettivat itsensä epäreilusti%s%s"
 
 #: qcsrc/common/notifications/all.inc:310
 #, c-format
 msgid "^BG%s^K1 couldn't catch their breath%s%s"
-msgstr ""
+msgstr "^BG%s^K1 eivät saaneet henkeä%s%s"
 
 #: qcsrc/common/notifications/all.inc:310
 #, c-format
 msgid "^BG%s^K1 was in the water for too long%s%s"
-msgstr ""
+msgstr "^BG%s^K1 oli vedessä liian pitkään%s%s"
 
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
-msgstr ""
+msgstr "^BG%s^K1 kohtasi maankamaran hiukan liiallisella voimalla%s%s"
 
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 hit the ground with a crunch%s%s"
-msgstr ""
+msgstr "^BG%s^K1 kohtasi maankamaran kanssa niin että narskui%s%s"
 
 #: qcsrc/common/notifications/all.inc:312
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s"
-msgstr ""
+msgstr "^BG%s^K1 muuttui hiukan liian rapeaksi%s%s"
 
 #: qcsrc/common/notifications/all.inc:312
 #, c-format
 msgid "^BG%s^K1 felt a little hot%s%s"
-msgstr ""
+msgstr "^BG%s^K1 tunsi pientä kuumotusta%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
 msgid "^BG%s^K1 died%s%s"
-msgstr ""
+msgstr "^BG%s^K1 delasi%s%s"
 
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1 found a hot place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ja kuumat paikat%s%s"
 
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1 turned into hot slag%s%s"
-msgstr ""
+msgstr "^BG%s^K1 muuntui kuumaksi kuonaksi%s%s"
 
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
 msgid "^BG%s^K1 was exploded by a Mage%s%s"
-msgstr ""
+msgstr "^BG%s^K1 joutui Velhon räjäyttämäksi%s%s"
 
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr ""
+msgstr "^BG%s^K1'n sisimmät tulivat ulos Värisyttäjän toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
 msgid "^BG%s^K1 was smashed by a Shambler%s%s"
-msgstr ""
+msgstr "^BG%s^K1 murskattiin Värisyttäjän toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sai kuolettavan sähköiskun Värisyttäjän toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1 was bitten by a Spider%s%s"
-msgstr ""
+msgstr "^BG%s^K1 purtiin Hämähäkin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 was fireballed by a Wyvern%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sai Lohikäärmeen tulipallon kohtalokseen%s%s"
 
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
 msgid "^BG%s^K1 joins the Zombies%s%s"
-msgstr ""
+msgstr "^BG%s^K1 liittyi eläviin kuolleisiin%s%s"
 
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sai kung fu -oppia Zombielta%s%s"
 
 #: qcsrc/common/notifications/all.inc:323
 #: qcsrc/common/notifications/all.inc:325
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
 msgstr ""
+"^BG%s^K1 saavutti mestarillisuuden itsenaatittamisen jalossa taidossa%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 päätti katsoa napalmiräjäytyksensä tulokset%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
 msgid "^BG%s^K1 was burned to death by their own Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 paloi poroksi omien Napalminaattiensa ansiosta%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid "^BG%s^K1 felt a little chilly%s%s"
-msgstr ""
+msgstr "^BG%s^K1 tunsi pientä kylmetystä%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid "^BG%s^K1 was frozen to death by their own Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 jäätyi kuoliaaksi omien Jäänaattiensa takia%s%s"
 
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr ""
+msgstr "^BG%s^K1'n Terveysnaatti ei heitä aivan tervehdyttänyt%s%s"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
 msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?"
-msgstr ""
+msgstr "^BG%s^K1 kuoli%s%s. Onko elämällä jokin tarkoitus ilman ammuksia?"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
 msgid "^BG%s^K1 ran out of ammo%s%s"
-msgstr ""
+msgstr "^BG%s^K1 huomasi ammustensa loppuneen%s%s"
 
 #: qcsrc/common/notifications/all.inc:329
 #, c-format
 msgid "^BG%s^K1 rotted away%s%s"
-msgstr ""
+msgstr "^BG%s^K1 mätäni pois%s%s"
 
 #: qcsrc/common/notifications/all.inc:330
 #, c-format
 msgid "^BG%s^K1 became a shooting star%s%s"
-msgstr ""
+msgstr "^BG%s^K1 muuttui tähdenlennoksi%s%s"
 
 #: qcsrc/common/notifications/all.inc:331
 #, c-format
 msgid "^BG%s^K1 was slimed%s%s"
-msgstr ""
+msgstr "^BG%s^K1 kuorrutettiin limalla%s%s"
 
 #: qcsrc/common/notifications/all.inc:332
 #, c-format
 msgid "^BG%s^K1 couldn't take it anymore%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sai tarpeekseen%s%s"
 
 #: qcsrc/common/notifications/all.inc:333
 #, c-format
 msgid "^BG%s^K1 is now preserved for centuries to come%s%s"
-msgstr ""
+msgstr "^BG%s^K1 on nyt säilötty tuleville sukupolville%s%s"
 
 #: qcsrc/common/notifications/all.inc:334
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 vaihtoi tähän %s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid "^BG%s^K1 died in an accident%s%s"
-msgstr ""
+msgstr "^BG%s^K1 menehtyi onnettomuudessa%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 porhalsi tykkitorniin%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
 msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 töräytettiin taivaan tuuliin eWheel-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s"
-msgstr ""
+msgstr "^BG%s^K1 otti osumaa FLAC-tykkitornin tulesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 töräytettiin taivaan tuuliin Hellion-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
 msgid "^BG%s^K1 could not hide from the Hunter turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ei kyennyt piiloutumaan Hunter-tykkitornilta%s%s"
 
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ammuttiin seulaksi Machinegun-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 muuntui kyteviksi viipaleiksi MLRS-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
 msgid "^BG%s^K1 was phased out by a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 poistettiin tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sai tykkitornin tarjoamaa äärikuumennettua plasmaa %s%s"
 
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
 msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sai shokkihoitoa Tesla-tykkitornilta%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sai tuta lyijyn arvon Walker-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:347
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 seivästettiin Walker-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 posautettiin taivaan tuuliin Walker-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:349
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 otti osumaa Bumblebee:n töräyksestä%s%s"
 
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
 msgid "^BG%s^K1 was crushed by a vehicle%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ajautui ajoneuvon murskaamaksi%s%s"
 
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
 msgid "^BG%s^K1 was caught in a Raptor cluster bomb%s%s"
-msgstr ""
+msgstr "^BG%s^K1 otti osumaa Raptor-sirpalepommista%s%s"
 
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 otti osumaa Raptor:in töräyksestä%s%s"
 
 #: qcsrc/common/notifications/all.inc:353
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 otti osumaa Hämisbot:in räjähdyksen töräyksestä%s%s"
 
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
 msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 posautettiin palasiksi Hämisbot:in raketin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Racer explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 otti osumaa Kilpurin räjähdyksestä%s%s"
 
 #: qcsrc/common/notifications/all.inc:356
 #, c-format
 msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ei löytänyt suojaa Kilpurin raketin edessä%s%s"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
 msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s^K1 petettiin ja syyllinen on ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
 msgid "^BG%s^BG%s^BG (%s %s every %s seconds)"
-msgstr ""
+msgstr "^BG%s^BG%s^BG (%s %s joka %s sekunti)"
 
 #: qcsrc/common/notifications/all.inc:363
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K1 jäädytettiin ja pakkasukkona toimi ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K3 elvytettiin ja auttaja oli ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:365
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr ""
+msgstr "^BG%s^K3 elvytettiin kaatumalla"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr ""
+msgstr "^BG%s^K3 elvytettiin heidän Naattiräjähdyksellään"
 
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s second(s)"
-msgstr ""
+msgstr "^BG%s^K3 elvytettiin automaattisesti %s sekunnin (sekuntien) kuluttua"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
 msgid "^BG%s^K1 froze themself"
-msgstr ""
+msgstr "^BG%s^K1 jäädyttivät itsensä"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:688
 msgid "^TC^TT^BG team wins the round"
-msgstr ""
+msgstr "^TC^TT^BG joukkue voitti kierroksen"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:689
 #, c-format
 msgid "^BG%s^BG wins the round"
-msgstr ""
+msgstr "^BG%s^BG voitti kierroksen"
 
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:552
 msgid "^BGRound tied"
-msgstr ""
+msgstr "^BGKierros päättyi tasapeliin"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:553
 msgid "^BGRound over, there's no winner"
-msgstr ""
+msgstr "^BGKierros ohi, ei voittajaa"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
 msgid "^BGGodmode saved you %s units of damage, cheater!"
-msgstr ""
+msgstr "^BGJumaltila pelasti sinut %s yksikköä vahinkoa, huiputtaja!"
 
 #: qcsrc/common/notifications/all.inc:377
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr ""
+msgstr "^BG%s^BG sai %s^BG puhvin!"
 
 #: qcsrc/common/notifications/all.inc:378
 #, c-format
 msgid "^BG%s^BG lost the %s^BG buff!"
-msgstr ""
+msgstr "^BG%s^BG menetti %s^BG puhvin!"
 
 #: qcsrc/common/notifications/all.inc:379
 #: qcsrc/common/notifications/all.inc:696
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr ""
+msgstr "^BGSinä pudotit %s^BG puhvin!"
 
 #: qcsrc/common/notifications/all.inc:380
 #: qcsrc/common/notifications/all.inc:697
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr ""
+msgstr "^BGSinulla on %s^BG puhvi!"
 
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:700
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr ""
+msgstr "^BGSinulla ei ole ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:383
 #: qcsrc/common/notifications/all.inc:701
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr ""
+msgstr "^BGSinä pudotit ^F1%s^BG%s"
 
 #: qcsrc/common/notifications/all.inc:384
 #: qcsrc/common/notifications/all.inc:702
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr ""
+msgstr "^BGSinulla on ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:385
 #: qcsrc/common/notifications/all.inc:703
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr ""
+msgstr "^BGSinulla ei ole tarpeeksi ammuksia tähän ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:386
 #: qcsrc/common/notifications/all.inc:704
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
 msgstr ""
+"^F1%s %s^BG on kykenemätön tulittamaan, mutta sen ^F1%s^BG kykenee siihen"
 
 #: qcsrc/common/notifications/all.inc:387
 #: qcsrc/common/notifications/all.inc:705
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr ""
+msgstr "^F1%s^BG ei ^F4ole saatavissa^BG tässä kartassa"
 
 #: qcsrc/common/notifications/all.inc:389
 #, c-format
 msgid "^BG%s^BG is connecting..."
-msgstr ""
+msgstr "^BG%s^BG yhdistää..."
 
 #: qcsrc/common/notifications/all.inc:390
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr ""
+msgstr "^BG%s^F3 yhdistetty"
 
 #: qcsrc/common/notifications/all.inc:391
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr ""
+msgstr "^BG%s^F3 on nyt pelaamassa"
 
 #: qcsrc/common/notifications/all.inc:392
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 pelaa nyt ^TC^TT joukkueessa"
 
 #: qcsrc/common/notifications/all.inc:394
 #: qcsrc/common/notifications/all.inc:710
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
-msgstr ""
+msgstr "^BG%s^BG on pudottanut pallon!"
 
 #: qcsrc/common/notifications/all.inc:395
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
-msgstr ""
+msgstr "^BG%s^BG on poiminut pallon!"
 
 #: qcsrc/common/notifications/all.inc:397
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^BG kaappasi avaimet ^TC^TT joukkueelle"
 
 #: qcsrc/common/notifications/all.inc:398
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG pudotti ^TC^TT Avaimen"
 
 #: qcsrc/common/notifications/all.inc:399
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG menetti ^TC^TT Avaimen"
 
 #: qcsrc/common/notifications/all.inc:400
 #, c-format
 msgid "^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"
-msgstr ""
+msgstr "^BG%s^BG työnsi %s^BG aiheuttaen ^TC^TT Avaimen ^BGtuhoutumisen"
 
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
 msgid "^BG%s^BG destroyed the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG tuhosi ^TC^TT Avaimen"
 
 #: qcsrc/common/notifications/all.inc:402
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG poimi ^TC^TT Avaimen"
 
 #: qcsrc/common/notifications/all.inc:404
 #, c-format
 msgid "^BG%s^F3 forfeited"
-msgstr ""
+msgstr "^BG%s^F3 luovutti"
 
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^BG%s^F3 has no more lives left"
-msgstr ""
+msgstr "^BG%s^F3 on menettänyt kaikki elämänsä"
 
 #: qcsrc/common/notifications/all.inc:407
 msgid "^BGMonsters are currently disabled"
-msgstr ""
+msgstr "^BGHirviöt ovat tällä hetkellä otettu pelistä pois"
 
 #: qcsrc/common/notifications/all.inc:409
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
-msgstr ""
+msgstr "^BGJoukkue ^TC^TT^BG piti palloa hallussa liian pitkään "
 
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^BG captured %s^BG control point"
-msgstr ""
+msgstr "^BG%s^BG kaappasi %s^BG hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^TC^TT^BG team %s^BG control point has been destroyed by %s"
-msgstr ""
+msgstr "^TC^TT^BG joukkueen %s^BG hallintapiste on tuhottu täten %s"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid "^TC^TT^BG generator has been destroyed"
-msgstr ""
+msgstr "^TC^TT^BG generaattori on tuhottu"
 
 #: qcsrc/common/notifications/all.inc:414
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr ""
+msgstr "^TC^TT^BG generaattori syttyi oma-aloitteisesti yliajan johdosta!"
 
 #: qcsrc/common/notifications/all.inc:416
 #, c-format
 msgid "^BG%s^K1 picked up Invisibility"
-msgstr ""
+msgstr "^BG%s^K1 poimi Näkymättömyyden"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
 msgid "^BG%s^K1 picked up Shield"
-msgstr ""
+msgstr "^BG%s^K1 poimi Suojan"
 
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
 msgid "^BG%s^K1 picked up Speed"
-msgstr ""
+msgstr "^BG%s^K1 keräsi Nopeutta"
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
 msgid "^BG%s^K1 picked up Strength"
-msgstr ""
+msgstr "^BG%s^K1 keräsi Vahvennusta"
 
 #: qcsrc/common/notifications/all.inc:421
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr ""
+msgstr "^BG%s^F3 yhteys katkesi"
 
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
 msgid "^BG%s^F3 was kicked for idling"
-msgstr ""
+msgstr "^BG%s^F3 potkaistiin joutilaisuuden takia"
 
 #: qcsrc/common/notifications/all.inc:423
 msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment."
 msgstr ""
+"^F2Sinut potkaistiin palvelimelta koska olet katsoja ja katsojat eivät ole "
+"sallittuja tällä hetkellä."
 
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr ""
+msgstr "^BG%s^F3 potkaistiin jatkuvien oman joukkueen jäsenten tappamisesta"
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
 msgid "^BG%s^F3 is now spectating"
-msgstr ""
+msgstr "^BG%s^F3 katselee "
 
 #: qcsrc/common/notifications/all.inc:427
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr ""
+msgstr "^BG%s^BG hylkäsi kilvan"
 
 #: qcsrc/common/notifications/all.inc:428
 #, c-format
