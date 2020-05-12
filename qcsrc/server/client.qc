@@ -1989,11 +1989,11 @@ int nJoinAllowed(entity this, entity ignore)
 	else if(currentlyPlaying < player_limit)
 		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
-	static float join_prevent_msg_time = 0;
-	if(this && ignore && !free_slots && time > join_prevent_msg_time)
+	static float msg_time = 0;
+	if(this && !this.caplayer && ignore && !free_slots && time > msg_time)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
-		join_prevent_msg_time = time + 3;
+		msg_time = time + 0.5;
 	}
 
 	return free_slots;
