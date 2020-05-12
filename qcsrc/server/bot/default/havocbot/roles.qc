@@ -202,8 +202,8 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		{
 			if (time < STAT(STRENGTH_FINISHED, this) - 1) t += 0.5;
 			if (time < STAT(STRENGTH_FINISHED, it) - 1) t -= 0.5;
-			if (time < this.invincible_finished - 1) t += 0.2;
-			if (time < it.invincible_finished - 1) t -= 0.4;
+			if (time < STAT(INVINCIBLE_FINISHED, this) - 1) t += 0.2;
+			if (time < STAT(INVINCIBLE_FINISHED, it) - 1) t -= 0.4;
 		}
 		t += max(0, 8 - skill) * 0.05; // less skilled bots attack more mindlessly
 		ratingscale *= t;

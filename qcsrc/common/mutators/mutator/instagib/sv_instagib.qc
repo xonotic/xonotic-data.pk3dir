@@ -255,8 +255,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(player, player.invincible_finished, SND_POWEROFF);
-		if (time > player.invincible_finished)
+		play_countdown(player, STAT(INVINCIBLE_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(INVINCIBLE_FINISHED, player))
 		{
 			player.items &= ~ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_SPEED);
@@ -264,7 +264,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	}
 	else
 	{
-		if (time < player.invincible_finished)
+		if (time < STAT(INVINCIBLE_FINISHED, player))
 		{
 			player.items |= ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SPEED, player.netname);

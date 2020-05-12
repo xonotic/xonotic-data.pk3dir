@@ -335,7 +335,7 @@ void PutObserverInServer(entity this)
 	this.pain_frame = 0;
 	this.pain_finished = 0;
 	STAT(STRENGTH_FINISHED, this) = 0;
-	this.invincible_finished = 0;
+	STAT(INVINCIBLE_FINISHED, this) = 0;
 	this.superweapons_finished = 0;
 	this.air_finished = 0;
 	//this.dphitcontentsmask = 0;
@@ -639,7 +639,7 @@ void PutPlayerInServer(entity this)
 	this.punchvector = '0 0 0';
 
 	STAT(STRENGTH_FINISHED, this) = 0;
-	this.invincible_finished = 0;
+	STAT(INVINCIBLE_FINISHED, this) = 0;
 	this.fire_endtime = -1;
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
@@ -1436,9 +1436,9 @@ void player_powerups(entity this)
 		}
 		if (this.items & ITEM_Shield.m_itemid)
 		{
-			play_countdown(this, this.invincible_finished, SND_POWEROFF);
+			play_countdown(this, STAT(INVINCIBLE_FINISHED, this), SND_POWEROFF);
 			this.effects = this.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > this.invincible_finished)
+			if (time > STAT(INVINCIBLE_FINISHED, this))
 			{
 				this.items = this.items - (this.items & ITEM_Shield.m_itemid);
 				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_SHIELD, this.netname);
@@ -1447,7 +1447,7 @@ void player_powerups(entity this)
 		}
 		else
 		{
-			if (time < this.invincible_finished)
+			if (time < STAT(INVINCIBLE_FINISHED, this))
 			{
 				this.items = this.items | ITEM_Shield.m_itemid;
 				if(!g_cts)
@@ -1683,7 +1683,7 @@ void SpectateCopy(entity this, entity spectatee)
 	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
 	STAT(HIT_TIME, this) = STAT(HIT_TIME, spectatee);
 	STAT(STRENGTH_FINISHED, this) = STAT(STRENGTH_FINISHED, spectatee);
-	this.invincible_finished = spectatee.invincible_finished;
+	STAT(INVINCIBLE_FINISHED, this) = STAT(INVINCIBLE_FINISHED, spectatee);
 	this.superweapons_finished = spectatee.superweapons_finished;
 	this.air_finished = spectatee.air_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);

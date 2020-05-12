@@ -87,7 +87,7 @@ string AppendItemcodes(string s, entity player)
 	}
 	if(time < STAT(STRENGTH_FINISHED, player))
 		s = strcat(s, "S");
-	if(time < player.invincible_finished)
+	if(time < STAT(INVINCIBLE_FINISHED, player))
 		s = strcat(s, "I");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");

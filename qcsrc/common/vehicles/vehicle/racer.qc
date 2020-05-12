@@ -255,6 +255,7 @@ bool racer_frame(entity this, float dt)
 		}
 
 #ifdef SVQC
+		// NOTE: reusing .invincible_finished here as delay counter for the smoke effect
 		if(vehic.invincible_finished < time)
 		{
 			traceline(vehic.origin, vehic.origin - '0 0 256', MOVE_NORMAL, vehic);

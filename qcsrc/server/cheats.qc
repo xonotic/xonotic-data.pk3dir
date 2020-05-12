@@ -169,7 +169,7 @@ float CheatImpulse(entity this, int imp)
 			this.personal.pauserotfuel_finished = this.pauserotfuel_finished;
 			this.personal.pauseregen_finished = this.pauseregen_finished;
 			STAT(STRENGTH_FINISHED, this.personal) = STAT(STRENGTH_FINISHED, this);
-			this.personal.invincible_finished = this.invincible_finished;
+			STAT(INVINCIBLE_FINISHED, this.personal) = STAT(INVINCIBLE_FINISHED, this);
 			this.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING.impulse:
@@ -230,7 +230,7 @@ float CheatImpulse(entity this, int imp)
 				this.pauserotfuel_finished = time + this.personal.pauserotfuel_finished - this.personal.teleport_time;
 				this.pauseregen_finished = time + this.personal.pauseregen_finished - this.personal.teleport_time;
 				STAT(STRENGTH_FINISHED, this) = time + STAT(STRENGTH_FINISHED, this.personal) - this.personal.teleport_time;
-				this.invincible_finished = time + this.personal.invincible_finished - this.personal.teleport_time;
+				STAT(INVINCIBLE_FINISHED, this) = time + STAT(INVINCIBLE_FINISHED, this.personal) - this.personal.teleport_time;
 
 				if(!autocvar_g_allow_checkpoints)
 					DID_CHEAT();
