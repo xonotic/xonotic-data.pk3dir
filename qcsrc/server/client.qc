@@ -2606,10 +2606,14 @@ void PlayerPreThink (entity this)
 
 void DrownPlayer(entity this)
 {
-	if(IS_DEAD(this) || game_stopped || time < game_starttime)
+	if(IS_DEAD(this) || game_stopped || time < game_starttime || this.vehicle
+		|| STAT(FROZEN, this) || this.watertype != CONTENT_WATER)
+	{
+		this.air_finished = 0;
 		return;
+	}
 
-	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)
+	if (this.waterlevel != WATERLEVEL_SUBMERGED)
 	{
 		if(this.air_finished && this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);

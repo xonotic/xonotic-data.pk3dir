@@ -80,8 +80,6 @@ void CreatureFrame_Liquids(entity this)
 		}
 
 		CreatureFrame_hotliquids(this);
-		if (!this.air_finished)
-			this.air_finished = time + autocvar_g_balance_contents_drowndelay;
 	}
 	else
 	{
@@ -91,7 +89,6 @@ void CreatureFrame_Liquids(entity this)
 			this.flags &= ~FL_INWATER;
 			this.dmgtime = 0;
 		}
-		this.air_finished = 0;
 	}
 }
 
