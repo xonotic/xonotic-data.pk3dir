@@ -683,7 +683,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		    }
 		}
 
-		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id && STAT(FROZEN, targ))
+		if(STAT(FROZEN, targ) && !ITEM_DAMAGE_NEEDKILL(deathtype)
+			&& deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			if(autocvar_g_frozen_revive_falldamage > 0 && deathtype == DEATH_FALL.m_id && damage >= autocvar_g_frozen_revive_falldamage)
 			{
@@ -698,12 +699,12 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			force *= autocvar_g_frozen_force;
 		}
 
-		if(IS_PLAYER(targ) && STAT(FROZEN, targ) && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_frozen_damage_trigger)
+		if(IS_PLAYER(targ) && STAT(FROZEN, targ)
+			&& ITEM_DAMAGE_NEEDKILL(deathtype) && !autocvar_g_frozen_damage_trigger)
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
-			entity spot = SelectSpawnPoint (targ, false);
-
+			entity spot = SelectSpawnPoint(targ, false);
 			if(spot)
 			{
 				damage = 0;
