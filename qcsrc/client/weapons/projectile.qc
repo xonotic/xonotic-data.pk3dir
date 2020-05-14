@@ -281,7 +281,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		// TODO: projectiles use glowmaps for their color, not teams
 		#if 0
 		if(this.colormap > 0)
-			this.glowmod = colormapPaletteColor(this.colormap & 0x0F, true) * 2;
+			this.glowmod = colormapPaletteColor(this.colormap & 0x0F, true);
 		else
 			this.glowmod = '1 1 1';
 		#endif

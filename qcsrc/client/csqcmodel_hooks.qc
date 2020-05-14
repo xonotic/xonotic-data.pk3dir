@@ -286,7 +286,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
-		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true) * 2;
+		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true);
 	else
 		this.glowmod = '1 1 1';
 
