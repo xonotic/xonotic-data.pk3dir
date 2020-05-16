@@ -88,7 +88,7 @@ void Draw_ShowNames(entity this)
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
 			if (vdist((vec2(o) - eo), <, autocvar_hud_shownames_antioverlap_distance)
-			    && vlen2(it.origin - view_origin) < vlen2(this.origin - view_origin))
+				&& vlen2(it.origin - view_origin) < vlen2(this.origin - view_origin))
 			{
 				overlap = 1;
 				break;
@@ -97,14 +97,14 @@ void Draw_ShowNames(entity this)
 	}
 	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
 	if (!this.fadedelay) this.fadedelay = time + SHOWNAMES_FADEDELAY;
-	if (this.csqcmodel_isdead)                                                                   // dead player, fade out slowly
+	if (this.csqcmodel_isdead) // dead player, fade out slowly
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
 	}
 	else if (!onscreen || (!this.sameteam && !hit)) // out of view, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
-		this.fadedelay = 0;                         // reset fade in delay, enemy has left the view
+		this.fadedelay = 0; // reset fade in delay, enemy has left the view
 	}
 	else if (overlap > 0) // tag overlap detected, fade out
 	{
@@ -178,8 +178,8 @@ void Draw_ShowNames(entity this)
 			}
 		}
 		string s = entcs_GetName(this.sv_entnum - 1);
-		if ((autocvar_hud_shownames_decolorize == 1 && teamplay)
-		    || autocvar_hud_shownames_decolorize == 2) s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
+		if ((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
+			s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
 		drawfontscale = '1 1 0' * resize;
 		s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 		float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);
