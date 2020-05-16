@@ -261,7 +261,7 @@ void buff_Think(entity this)
 	}
 
 	if(!game_stopped)
-	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
+	if((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
 	if(!this.buff_activetime_updated)
 	{
 		buff_SetCooldown(this, this.buff_activetime);
@@ -282,7 +282,7 @@ void buff_Think(entity this)
 
 	if(this.buff_activetime)
 	if(!game_stopped)
-	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
+	if((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
 	{
 		this.buff_activetime = max(0, this.buff_activetime - frametime);
 
