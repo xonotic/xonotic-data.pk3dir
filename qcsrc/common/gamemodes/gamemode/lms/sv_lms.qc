@@ -402,6 +402,8 @@ void lms_UpdateWaypoints()
 					WaypointSprite_AttachCarrier(WP_LmsLeader, it, RADARICON_FLAGCARRIER);
 					it.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = lms_waypointsprite_visible_for_player;
 					WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+					vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
+					WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
 					WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
 				}
 				if (!it.lms_wp_time)
