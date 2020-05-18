@@ -690,6 +690,10 @@ void PutPlayerInServer(entity this)
 		IL_REMOVE(g_swamped, this);
 	this.swampslug = NULL;
 	this.swamp_interval = 0;
+	IL_EACH(g_counters, it.realowner == this,
+	{
+		delete(it);
+	});
 	STAT(HUD, this) = HUD_NORMAL;
 
 	this.event_damage = PlayerDamage;
@@ -1232,6 +1236,11 @@ void ClientDisconnect(entity this)
 
 	if (this.chatbubbleentity) delete(this.chatbubbleentity);
 	if (this.killindicator) delete(this.killindicator);
+
+	IL_EACH(g_counters, it.realowner == this,
+	{
+		delete(it);
+	});
 
 	WaypointSprite_PlayerGone(this);
 
