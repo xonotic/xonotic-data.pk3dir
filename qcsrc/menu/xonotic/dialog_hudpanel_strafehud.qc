@@ -34,6 +34,13 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
     dialog_hudpanel_main_settings(me, panelname);
 
     me.TR(me);
+        me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD mode:")));
+
+        me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_mode"));
+            e.addValue(e, _("View centered"), "0");
+            e.addValue(e, _("Angle centered"), "1");
+            e.configureXonoticTextSliderValues(e);
+    me.TR(me);
         me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_demo", _("Demo mode")));
             setDependentStringNotEqual(e, "_hud_panel_strafehud_center", "1");
 
@@ -43,8 +50,8 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
     me.TR(me);
         me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_center", _("Center angle")));
 
-        me.TDempty(me, 0.9);
-        me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
+        me.TDempty(me, 0.4);
+        me.TD(me, 1, 2.4, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
             e.onClick = StrafeHUD_ColorReset;
             e.onClickEntity = me;
     me.TR(me);
