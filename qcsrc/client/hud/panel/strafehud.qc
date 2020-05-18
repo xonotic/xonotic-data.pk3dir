@@ -8,7 +8,6 @@
 #include <common/animdecide.qh>
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
-#include <common/mapobjects/trigger/swamp.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
 #include <lib/csqcmodel/cl_player.qh>
@@ -78,9 +77,8 @@ void HUD_StrafeHUD()
         float  strafehud_onground                  = strafeplayer == csqcplayer ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
         float  strafehud_speed                     = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
         float  strafehud_maxspeed_crouch_mod       = IS_DUCKED(strafeplayer) ? .5 : 1;
-        float  strafehud_maxspeed_swamp_mod        = strafeplayer.in_swamp ? strafeplayer.swamp_slowdown : 1;
         float  strafehud_maxspeed_phys             = strafehud_onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
-        float  strafehud_maxspeed                  = !autocvar__hud_configure ? (strafehud_maxspeed_phys * strafehud_maxspeed_crouch_mod * strafehud_maxspeed_swamp_mod) : 320;
+        float  strafehud_maxspeed                  = !autocvar__hud_configure ? (strafehud_maxspeed_phys * strafehud_maxspeed_crouch_mod) : 320;
         float  strafehud_vel_angle                 = vectoangles(strafeplayer.velocity).y;
         float  strafehud_view_angle                = view_angles.y + 180;
         float  strafehud_angle;
@@ -260,7 +258,7 @@ void HUD_StrafeHUD()
             }
             if(strafehud_turn)
             {
-                strafehud_maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer) * strafehud_maxspeed_swamp_mod; // no crouching here because it doesn't affect air strafing
+                strafehud_maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer); // no crouching here because it doesn't affect air strafing
                 strafehud_wishangle = strafehud_turnangle;
             }
         }
