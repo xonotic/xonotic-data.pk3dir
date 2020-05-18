@@ -687,8 +687,9 @@ void PutPlayerInServer(entity this)
 		IL_REMOVE(g_conveyed, this);
 	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
 	if(this.swampslug)
-		delete(this.swampslug);
-	this.in_swamp = false;
+		IL_REMOVE(g_swamped, this);
+	this.swampslug = NULL;
+	this.swamp_interval = 0;
 	STAT(HUD, this) = HUD_NORMAL;
 
 	this.event_damage = PlayerDamage;

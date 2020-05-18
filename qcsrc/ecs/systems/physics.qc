@@ -47,7 +47,7 @@ void sys_phys_update(entity this, float dt)
 
 	PM_check_blocked(this);
 
-	float maxspeed_mod = (!this.in_swamp) ? 1 : this.swamp_slowdown;  // cvar("g_balance_swamp_moverate");
+	float maxspeed_mod = 1;
 
 // conveyors: first fix velocity
 	if (this.conveyor.active) { this.velocity -= this.conveyor.movedir; }
