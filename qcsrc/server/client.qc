@@ -1042,7 +1042,9 @@ string getwelcomemessage(entity this)
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage = GetClientVersionMessage(this);
-	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
+	string s = strcat(versionmessage, "^8\n^8\nhost is ^9", autocvar_hostname, "^8\n");
+
+	s = strcat(s, "^8\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
