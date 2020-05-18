@@ -119,14 +119,12 @@ void Draw_ShowNames(entity this)
 		this.alpha = min(1, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}
 	float a = autocvar_hud_shownames_alpha * this.alpha;
-	// multiply by player alpha
 	if (!this.sameteam || (this.sv_entnum == player_localentnum))
 	{
 		float f = entcs_GetAlpha(this.sv_entnum - 1);
 		if (f == 0) f = 1;
 		if (f < 0) f = 0;
-		// FIXME: alpha is negative when dead, breaking death fade
-		if (!this.csqcmodel_isdead) a *= f;
+		a *= f;
 	}
 	if (a < ALPHA_MIN_VISIBLE && ISGAMETYPE(CTS)) return;
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
