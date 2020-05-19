@@ -296,12 +296,14 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		{
 			// Fade out to black now...
 			if(this.old_glowmod == '0 0 0') { this.old_glowmod = this.glowmod; }
-			this.colormap = 0;
 
-			this.glowmod = this.old_glowmod * bound(0, 1 - (time - this.death_time) / autocvar_cl_deathglow, 1);
-			this.glowmod_x = max(this.glowmod.x, 0.0001);
-			this.glowmod_y = max(this.glowmod.y, 0.0001);
-			this.glowmod_z = max(this.glowmod.z, 0.0001);
+			float min_factor = bound(0, autocvar_cl_deathglow_min, 1);
+			if(this.colormap > 0)
+				min_factor /= 2;
+			float glow_fade = bound(0, 1 - (time - this.death_time) / autocvar_cl_deathglow, 1);
+			this.glowmod *= (min_factor + glow_fade * (1 - min_factor));
+			if (this.glowmod == '0 0 0')
+				this.glowmod.x = 0.000001;
 		}
 		else if(this.old_glowmod != '0 0 0') { this.old_glowmod = '0 0 0'; }
 	}
