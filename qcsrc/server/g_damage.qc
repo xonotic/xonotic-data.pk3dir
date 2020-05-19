@@ -199,9 +199,9 @@ float Obituary_WeaponDeath(
 	else
 	{
 		LOG_TRACEF(
-			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
+			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %s!\n",
 			deathtype,
-			death_weapon
+			death_weapon.netname
 		);
 	}
 

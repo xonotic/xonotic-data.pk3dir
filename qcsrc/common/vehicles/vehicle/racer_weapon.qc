@@ -17,12 +17,12 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
         string tagname = (veh.cnt)
             ? (veh.cnt = 0, "tag_fire1")
             : (veh.cnt = 1, "tag_fire2");
-        vector shotorg = gettaginfo(veh, gettagindex(veh, tagname));
-        w_shotorg = shotorg;
+        vector vshotorg = gettaginfo(veh, gettagindex(veh, tagname));
+        w_shotorg = vshotorg;
         w_shotdir = v_forward;
         // Fix z-aim (for chase mode)
         crosshair_trace(player);
-        w_shotdir.z = normalize(trace_endpos - shotorg).z * 0.5;
+        w_shotdir.z = normalize(trace_endpos - vshotorg).z * 0.5;
 
         if (isPlayer) W_SetupShot_Dir(player, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0, DEATH_VH_WAKI_GUN.m_id);
         vector org = w_shotorg;

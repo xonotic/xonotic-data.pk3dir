@@ -823,7 +823,7 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
