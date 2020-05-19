@@ -1654,7 +1654,7 @@ int navigation_poptouchedgoals(entity this)
 		if(this.lastteleporttime > 0 && TELEPORT_USED(this, this.goalcurrent))
 		{
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+			if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 			{
 				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1696,7 +1696,7 @@ int navigation_poptouchedgoals(entity this)
 		if (tele_ent && TELEPORT_USED(this, tele_ent))
 		{
 			if (this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-			if (tele_ent.wpflags & WAYPOINTFLAG_PERSONAL && tele_ent.owner == this)
+			if ((tele_ent.wpflags & WAYPOINTFLAG_PERSONAL) && tele_ent.owner == this)
 			{
 				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1718,7 +1718,7 @@ int navigation_poptouchedgoals(entity this)
 
 	// Loose goal touching check when running
 	// check goalstack01 to make sure waypoint isn't the final goal
-	if(this.aistatus & AI_STATUS_RUNNING && this.goalcurrent.classname == "waypoint" && !(this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP)
+	if((this.aistatus & AI_STATUS_RUNNING) && this.goalcurrent.classname == "waypoint" && !(this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP)
 		&& this.goalstack01 && !wasfreed(this.goalstack01) && vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed))
 	{
 		vector gco = this.goalcurrent.origin;
@@ -1733,7 +1733,7 @@ int navigation_poptouchedgoals(entity this)
 			{
 				// Detect personal waypoints
 				if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-				if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+				if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 				{
 					this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 					this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1769,7 +1769,7 @@ int navigation_poptouchedgoals(entity this)
 
 		// Detect personal waypoints
 		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-		if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+		if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 		{
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;

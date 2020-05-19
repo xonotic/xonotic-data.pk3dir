@@ -956,7 +956,7 @@ void havocbot_movetogoal(entity this)
 			{
 				if (vlen2(flat_diff) < vlen2(offset))
 				{
-					if (this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP && this.goalstack01)
+					if ((this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP) && this.goalstack01)
 					{
 						// oblique warpzones need a jump otherwise bots gets stuck
 						PHYS_INPUT_BUTTON_JUMP(this) = true;
