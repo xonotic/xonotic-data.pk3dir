@@ -635,7 +635,9 @@ void PM_check_frozen(entity this)
 		this.velocity = this.velocity * 0.5;
 
 		if (pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
-			this.velocity_z = 200;
+			this.velocity.z = 200;
+		else
+			this.velocity.z = 28; // reduces view jitter
 	}
 }
 
