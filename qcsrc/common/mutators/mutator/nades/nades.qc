@@ -1,6 +1,7 @@
 #include "nades.qh"
 
 #include "../overkill/okmachinegun.qh"
+#include "../overkill/okshotgun.qh"
 
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
