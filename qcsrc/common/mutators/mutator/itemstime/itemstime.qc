@@ -185,6 +185,20 @@ MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
 
 #ifdef CSQC
 
+// ItemsTime (#22)
+
+void HUD_ItemsTime_Export(entity panel, int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_itemstime_iconalign");
+	HUD_Write_Cvar("hud_panel_itemstime_progressbar");
+	HUD_Write_Cvar("hud_panel_itemstime_progressbar_name");
+	HUD_Write_Cvar("hud_panel_itemstime_progressbar_reduced");
+	HUD_Write_Cvar("hud_panel_itemstime_text");
+	HUD_Write_Cvar("hud_panel_itemstime_ratio");
+	HUD_Write_Cvar("hud_panel_itemstime_dynamicsize");
+}
+
 void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, float item_time, bool item_available, float item_availableTime)
 {
     float t = 0;

@@ -8,6 +8,35 @@
 
 // Weapons (#0)
 
+void HUD_Weapons_Export(entity panel, int fh)
+{
+	HUD_Write_Cvar("hud_panel_weapons_accuracy");
+	HUD_Write_Cvar("hud_panel_weapons_label");
+	HUD_Write_Cvar("hud_panel_weapons_label_scale");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_padding");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_time");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_fadetime");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_outofammo");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_donthave");
+	HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_unavailable");
+	HUD_Write_Cvar("hud_panel_weapons_ammo");
+	HUD_Write_Cvar("hud_panel_weapons_ammo_color");
+	HUD_Write_Cvar("hud_panel_weapons_ammo_alpha");
+	HUD_Write_Cvar("hud_panel_weapons_aspect");
+	HUD_Write_Cvar("hud_panel_weapons_timeout");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_effect");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_fadebgmin");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_fadefgmin");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_speed_in");
+	HUD_Write_Cvar("hud_panel_weapons_timeout_speed_out");
+	HUD_Write_Cvar("hud_panel_weapons_onlyowned");
+	HUD_Write_Cvar("hud_panel_weapons_noncurrent_alpha");
+	HUD_Write_Cvar("hud_panel_weapons_noncurrent_scale");
+	HUD_Write_Cvar("hud_panel_weapons_selection_radius");
+	HUD_Write_Cvar("hud_panel_weapons_selection_speed");
+}
+
 entity weaponorder[Weapons_MAX];
 void weaponorder_swap(int i, int j, entity pass)
 {
