@@ -72,10 +72,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 			HUD_Write_PanelCvar("_bg_alpha");
 			HUD_Write_PanelCvar("_bg_border");
 			HUD_Write_PanelCvar("_bg_padding");
-			panel.panel_export(panel, fh);
+			panel.panel_export(fh);
 			HUD_Write("\n");
 		}
-		MUTATOR_CALLHOOK(HUD_WriteCvars, fh);
 
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 

@@ -7,7 +7,7 @@
 
 // Vote (#9)
 
-void HUD_Vote_Export(entity panel, int fh)
+void HUD_Vote_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_vote_alreadyvoted_alpha");

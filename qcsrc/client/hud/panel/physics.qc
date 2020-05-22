@@ -9,7 +9,7 @@
 
 // Physics (#15)
 
-void HUD_Physics_Export(entity panel, int fh)
+void HUD_Physics_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_physics_speed_unit_show");

@@ -9,7 +9,7 @@
 
 // Mod icons (#10)
 
-void HUD_ModIcons_Export(entity panel, int fh)
+void HUD_ModIcons_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_modicons_ca_layout");

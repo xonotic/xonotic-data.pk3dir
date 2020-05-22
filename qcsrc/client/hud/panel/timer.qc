@@ -6,7 +6,7 @@
 
 // Timer (#5)
 
-void HUD_Timer_Export(entity panel, int fh)
+void HUD_Timer_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }

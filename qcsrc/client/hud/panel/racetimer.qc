@@ -7,7 +7,7 @@
 
 // Race timer (#8)
 
-void HUD_RaceTimer_Export(entity panel, int fh)
+void HUD_RaceTimer_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }

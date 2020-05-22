@@ -8,7 +8,7 @@
 
 // Weapons (#0)
 
-void HUD_Weapons_Export(entity panel, int fh)
+void HUD_Weapons_Export(int fh)
 {
 	HUD_Write_Cvar("hud_panel_weapons_accuracy");
 	HUD_Write_Cvar("hud_panel_weapons_label");

@@ -7,7 +7,7 @@
 
 // Powerups (#2)
 
-void HUD_Powerups_Export(entity panel, int fh)
+void HUD_Powerups_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_powerups_iconalign");

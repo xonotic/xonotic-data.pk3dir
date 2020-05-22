@@ -5,7 +5,7 @@
 
 // Notifications (#4)
 
-void HUD_Notify_Export(entity panel, int fh)
+void HUD_Notify_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_notify_flip");

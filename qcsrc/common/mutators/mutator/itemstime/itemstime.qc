@@ -187,7 +187,7 @@ MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
 
 // ItemsTime (#22)
 
-void HUD_ItemsTime_Export(entity panel, int fh)
+void HUD_ItemsTime_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_itemstime_iconalign");

@@ -7,7 +7,7 @@
 
 // CenterPrint (#16)
 
-void HUD_CenterPrint_Export(entity panel, int fh)
+void HUD_CenterPrint_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_centerprint_align");
