@@ -1072,7 +1072,8 @@ bool MapHasRightSize(string map)
 	// open map size restriction file
 	string opensize_msg = strcat("opensize ", map);
 	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
-	int pcount = player_count;
+	int player_limit = ((autocvar_g_maplist_sizes_count_maxplayers) ? GetPlayerLimit() : 0);
+	int pcount = ((player_limit > 0) ? min(player_count, player_limit) : player_count); // bind it to the player limit so that forced spectators don't influence the limits
 	if(!autocvar_g_maplist_sizes_count_bots)
 		pcount -= currentbots;
 	if(fh >= 0)
