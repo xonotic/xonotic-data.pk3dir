@@ -138,6 +138,8 @@ void CSQC_Init()
 
 	registercvar("cl_multijump", "-1");
 
+	registercvar("cl_dodging", "0");
+
 	registercvar("cl_spawn_near_teammate", "1");
 
 	registercvar("cl_weapon_switch_reload", "1");

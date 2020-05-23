@@ -65,8 +65,14 @@ void spawnpoint_use(entity this, entity actor, entity trigger)
 	{
 		this.team = actor.team;
 		some_spawn_has_been_used = true;
+		this.SendFlags |= 1; // update team on the client side
 	}
 	//LOG_INFO("spawnpoint was used!\n");
+}
+
+void spawnpoint_reset(entity this)
+{
+	this.SendFlags |= 1; // update team since it was restored during reset
 }
 
 void relocate_spawnpoint(entity this)
@@ -106,6 +112,7 @@ void relocate_spawnpoint(entity this)
     this.use = spawnpoint_use;
     setthink(this, spawnpoint_think);
     this.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
+    this.reset2 = spawnpoint_reset; // restores team, allows re-sending the spawnpoint
     this.team_saved = this.team;
     IL_PUSH(g_saved_team, this);
     if (!this.cnt)
