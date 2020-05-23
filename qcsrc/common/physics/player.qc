@@ -616,11 +616,7 @@ void PM_check_frozen(entity this)
 {
 	if (!PHYS_FROZEN(this))
 		return;
-	if (PHYS_DODGING_FROZEN(this)
-#ifdef SVQC
-	&& IS_REAL_CLIENT(this)
-#endif
-	)
+	if (PHYS_DODGING_FROZEN(this) && IS_CLIENT(this))
 	{
 		// bind movement to a very slow speed so dodging can use .movement for directional calculations
 		PHYS_CS(this).movement_x = bound(-2, PHYS_CS(this).movement.x, 2);
@@ -630,13 +626,11 @@ void PM_check_frozen(entity this)
 	else
 		PHYS_CS(this).movement = '0 0 0';
 
-	vector midpoint = ((this.absmin + this.absmax) * 0.5);
-	if (pointcontents(midpoint) == CONTENT_WATER)
+	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		this.velocity = this.velocity * 0.5;
-
-		if (pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
-			this.velocity_z = 200;
+		if(this.waterlevel >= WATERLEVEL_SUBMERGED)
+			this.velocity.z = 160;
 	}
 }
 
