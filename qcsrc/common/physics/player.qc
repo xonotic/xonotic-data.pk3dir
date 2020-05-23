@@ -163,11 +163,8 @@ void PM_ClientMovement_UpdateStatus(entity this)
             setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
         }
 	}
-#ifdef CSQC
 
-	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_WATERJUMP_TIME(this) <= 0)
-		PHYS_WATERJUMP_TIME(this) = 0;
-#endif
+	_Movetype_CheckWater(this); // needs to be run on the client, might as well use the latest on the server too!
 }
 
 void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
@@ -453,11 +450,6 @@ void CheckWaterJump(entity this)
 			this.velocity_z = 225;
 			this.flags |= FL_WATERJUMP;
 			SET_JUMP_HELD(this);
-		#ifdef SVQC
-			PHYS_TELEPORT_TIME(this) = time + 2;	// safety net
-		#elif defined(CSQC)
-			PHYS_WATERJUMP_TIME(this) = 2;
-		#endif
 		}
 	}
 }

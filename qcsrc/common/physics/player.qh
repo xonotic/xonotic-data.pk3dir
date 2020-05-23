@@ -158,10 +158,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 #define ITEMS_STAT(s)                       ((s).items)
 
 .float teleport_time;
-#define PHYS_TELEPORT_TIME(s)               ((s).teleport_time)
-
-.float waterjump_time;
-#define PHYS_WATERJUMP_TIME(s)               ((s).waterjump_time)
 
 #ifdef CSQC
 

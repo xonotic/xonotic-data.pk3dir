@@ -90,13 +90,8 @@ void sys_phys_update(entity this, float dt)
 	if (this.flags & FL_WATERJUMP) {
 		this.velocity_x = this.movedir.x;
 		this.velocity_y = this.movedir.y;
-		if (this.waterlevel == WATERLEVEL_NONE
-		    || time > PHYS_TELEPORT_TIME(this)
-		    || PHYS_WATERJUMP_TIME(this) <= 0
-		   ) {
+		if (this.waterlevel == WATERLEVEL_NONE) {
 			this.flags &= ~FL_WATERJUMP;
-			PHYS_TELEPORT_TIME(this) = 0;
-			PHYS_WATERJUMP_TIME(this) = 0;
 		}
 	} else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod, dt)) {
 		// handled
@@ -261,8 +256,7 @@ void sys_phys_simulate(entity this, float dt)
 	float wishspeed = min(vlen(wishvel), this.com_phys_vel_max);
 
 	if (this.com_phys_air) {
-		if ((IS_SVQC && time >= PHYS_TELEPORT_TIME(this))
-		    ||  (IS_CSQC && PHYS_WATERJUMP_TIME(this) <= 0)) {
+		if (!(this.flags & FL_WATERJUMP)) {
 			// apply air speed limit
 			float airaccelqw = PHYS_AIRACCEL_QW(this);
 			float wishspeed0 = wishspeed;
@@ -323,7 +317,7 @@ void sys_phys_simulate(entity this, float dt)
 		if (this.com_phys_water) {
 			wishspeed *= 0.7;
 
-			//	if (PHYS_WATERJUMP_TIME(this) <= 0) // TODO: use
+			//	if (!(this.flags & FL_WATERJUMP)) // TODO: use
 			{
 				// water friction
 				float f = 1 - dt * PHYS_FRICTION(this);
@@ -407,7 +401,7 @@ void sys_phys_simulate(entity this, float dt)
 			return;
 		}
 
-		if (IS_CSQC ? PHYS_WATERJUMP_TIME(this) <= 0 : time >= PHYS_TELEPORT_TIME(this)) {
+		if (!(this.flags & FL_WATERJUMP)) {
 			PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 		}
 	}
