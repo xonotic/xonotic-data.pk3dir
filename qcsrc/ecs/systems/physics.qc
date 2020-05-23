@@ -196,7 +196,7 @@ void sys_phys_simulate(entity this, float dt)
 	if (this.com_phys_water) {
 		// water jump only in certain situations
 		// this mimics quakeworld code
-		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc) {
+		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc && !PHYS_FROZEN(this)) {
 			vector yawangles = '0 1 0' * this.v_angle.y;
 			vector forward, right, up;
 			MAKE_VECTORS(yawangles, forward, right, up);
@@ -222,7 +222,7 @@ void sys_phys_simulate(entity this, float dt)
 	vector wishvel = forward * PHYS_CS(this).movement.x
 	    + right * PHYS_CS(this).movement.y
 	    + '0 0 1' * PHYS_CS(this).movement.z * (this.com_phys_vel_2d ? 0 : 1);
-	if (this.com_phys_water) {
+	if (this.com_phys_water && !PHYS_FROZEN(this)) {
 		if (PHYS_INPUT_BUTTON_CROUCH(this)) {
 			wishvel.z = -PHYS_MAXSPEED(this);
 		}
@@ -337,7 +337,7 @@ void sys_phys_simulate(entity this, float dt)
 				}
 
 				// holding jump button swims upward slowly
-				if (this.com_in_jump && !this.viewloc) {
+				if (this.com_in_jump && !this.viewloc && !PHYS_FROZEN(this)) {
 					// was:
 					// lava: 50
 					// slime: 80
