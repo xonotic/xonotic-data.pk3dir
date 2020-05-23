@@ -622,9 +622,10 @@ void PM_check_frozen(entity this)
 #endif
 	)
 	{
-		PHYS_CS(this).movement_x = bound(-5, PHYS_CS(this).movement.x, 5);
-		PHYS_CS(this).movement_y = bound(-5, PHYS_CS(this).movement.y, 5);
-		PHYS_CS(this).movement_z = bound(-5, PHYS_CS(this).movement.z, 5);
+		// bind movement to a very slow speed so dodging can use .movement for directional calculations
+		PHYS_CS(this).movement_x = bound(-2, PHYS_CS(this).movement.x, 2);
+		PHYS_CS(this).movement_y = bound(-2, PHYS_CS(this).movement.y, 2);
+		PHYS_CS(this).movement_z = bound(-2, PHYS_CS(this).movement.z, 2);
 	}
 	else
 		PHYS_CS(this).movement = '0 0 0';
