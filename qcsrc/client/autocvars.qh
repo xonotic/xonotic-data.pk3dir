@@ -446,6 +446,7 @@ int autocvar__cl_color;
 int autocvar__cl_playerskin;
 string autocvar__cl_playermodel;
 float autocvar_cl_deathglow;
+float autocvar_cl_deathglow_min = 0.5;
 bool autocvar_developer_csqcentities;
 float autocvar_cl_jetpack_attenuation = 2;
 bool autocvar_cl_showspectators;
