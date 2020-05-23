@@ -12,6 +12,19 @@
 
 // Radar (#6)
 
+void HUD_Radar_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_radar_foreground_alpha");
+	HUD_Write_Cvar("hud_panel_radar_rotation");
+	HUD_Write_Cvar("hud_panel_radar_zoommode");
+	HUD_Write_Cvar("hud_panel_radar_scale");
+	HUD_Write_Cvar("hud_panel_radar_maximized_scale");
+	HUD_Write_Cvar("hud_panel_radar_maximized_size");
+	HUD_Write_Cvar("hud_panel_radar_maximized_rotation");
+	HUD_Write_Cvar("hud_panel_radar_maximized_zoommode");
+}
+
 bool HUD_Radar_Clickable()
 {
 	return hud_panel_radar_mouse && !hud_panel_radar_temp_hidden;

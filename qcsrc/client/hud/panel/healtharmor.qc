@@ -7,6 +7,21 @@
 
 // Health/armor (#3)
 
+void HUD_HealthArmor_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_healtharmor_combined");
+	HUD_Write_Cvar("hud_panel_healtharmor_flip");
+	HUD_Write_Cvar("hud_panel_healtharmor_iconalign");
+	HUD_Write_Cvar("hud_panel_healtharmor_baralign");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar_health");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar_armor");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx");
+	HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx_smooth");
+	HUD_Write_Cvar("hud_panel_healtharmor_text");
+}
+
 void HUD_HealthArmor()
 {
 	int armor, health, fuel, air_time;

@@ -6,6 +6,11 @@
 
 // Timer (#5)
 
+void HUD_Timer_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
 void HUD_Timer()
 {
 	if(!autocvar__hud_configure)
