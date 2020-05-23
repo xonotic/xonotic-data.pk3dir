@@ -40,7 +40,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
 
 	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this);
-	float maxspd_mod = PHYS_HIGHSPEED(this);
+	float maxspd_mod = PHYS_HIGHSPEED(this) * ((this.swampslug.active) ? this.swampslug.swamp_slowdown : 1);
         STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
         if (autocvar_g_movement_highspeed_q3_compat) {
           STAT(MOVEVARS_AIRACCEL_QW, this) = Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw);

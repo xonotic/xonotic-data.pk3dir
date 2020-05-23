@@ -47,8 +47,8 @@ const int IT_STRENGTH   				= BIT(22);
 const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
 
 #ifdef SVQC
-const .float strength_finished = _STAT(STRENGTH_FINISHED);
-const .float invincible_finished = _STAT(INVINCIBLE_FINISHED);
+.float strength_finished; // NOTE: this field is used only by map entities, it does not directly apply the strength stat
+.float invincible_finished; // ditto
 
 #define spawnfunc_body(item) \
 	if (!Item_IsDefinitionAllowed(item)) \

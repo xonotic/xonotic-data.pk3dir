@@ -196,7 +196,7 @@ void HUD_CenterPrint ()
 	}
 
 	bool is_bold;
-	string centerprint_message;
+	string centerprint_message = strzone("");
 	int entries;
 	float height;
 	vector fontsize;
@@ -216,7 +216,10 @@ void HUD_CenterPrint ()
 		// if the notification starts with ^BOLD make it bold (e.g. frag messages);
 		is_bold = (substring(centerprint_messages[j], 0, 5) == BOLD_OPERATOR);
 		// remove ^BOLD so it doesn't get printed onscreen
-		centerprint_message = is_bold ? strzone(substring(centerprint_messages[j], 5, -1)) : strzone(centerprint_messages[j]);
+		if (is_bold)
+			strcpy(centerprint_message, substring(centerprint_messages[j], 5, -1));
+		else
+			strcpy(centerprint_message, centerprint_messages[j]);
 
 		// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
 		// height = panel_size_y/entries;
@@ -340,6 +343,7 @@ void HUD_CenterPrint ()
 			if (pos.y < panel_pos.y) // check if the next message can be shown
 			{
 				drawfontscale = hud_scale;
+				strfree(centerprint_message);
 				return;
 			}
 		}
@@ -352,13 +356,13 @@ void HUD_CenterPrint ()
 			if(pos.y > panel_pos.y + panel_size.y - fontsize.y) // check if the next message can be shown
 			{
 				drawfontscale = hud_scale;
+				strfree(centerprint_message);
 				return;
 			}
 		}
-
-		// free up memory
-		strunzone(centerprint_message);
 	}
+	strfree(centerprint_message);
+
 	drawfontscale = hud_scale;
 	if (all_messages_expired)
 	{

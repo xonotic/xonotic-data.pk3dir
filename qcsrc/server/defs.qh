@@ -50,7 +50,7 @@ float server_is_dedicated;
 .float	pain_frame;			//"
 .float  crouch;	// Crouching or not?
 
-const .float superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
+.float superweapons_finished; // NOTE: this field is used only by map entities, it does not directly apply the superweapons stat
 const .float air_finished = _STAT(AIR_FINISHED);
 
 .float cnt; // used in too many places

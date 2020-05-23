@@ -863,7 +863,7 @@ void QuickMenu_Default(string target_submenu)
 	{
 		LOG_INFOF("Couldn't find submenu \"%s\"", target_submenu);
 		if(prvm_language != "en")
-			LOG_INFOF("^3Warning: submenu title must be in English", target_submenu);
+			LOG_INFO("^3Warning: submenu title must be in English");
 		QuickMenu_Buffer_Size = 0;
 	}
 }

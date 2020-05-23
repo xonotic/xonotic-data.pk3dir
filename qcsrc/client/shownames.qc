@@ -88,7 +88,7 @@ void Draw_ShowNames(entity this)
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
 			if (vdist((vec2(o) - eo), <, autocvar_hud_shownames_antioverlap_distance)
-			    && vlen2(it.origin - view_origin) < vlen2(this.origin - view_origin))
+				&& vlen2(it.origin - view_origin) < vlen2(this.origin - view_origin))
 			{
 				overlap = 1;
 				break;
@@ -97,14 +97,14 @@ void Draw_ShowNames(entity this)
 	}
 	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
 	if (!this.fadedelay) this.fadedelay = time + SHOWNAMES_FADEDELAY;
-	if (this.csqcmodel_isdead)                                                                   // dead player, fade out slowly
+	if (this.csqcmodel_isdead) // dead player, fade out slowly
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
 	}
 	else if (!onscreen || (!this.sameteam && !hit)) // out of view, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
-		this.fadedelay = 0;                         // reset fade in delay, enemy has left the view
+		this.fadedelay = 0; // reset fade in delay, enemy has left the view
 	}
 	else if (overlap > 0) // tag overlap detected, fade out
 	{
@@ -119,14 +119,12 @@ void Draw_ShowNames(entity this)
 		this.alpha = min(1, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}
 	float a = autocvar_hud_shownames_alpha * this.alpha;
-	// multiply by player alpha
 	if (!this.sameteam || (this.sv_entnum == player_localentnum))
 	{
 		float f = entcs_GetAlpha(this.sv_entnum - 1);
 		if (f == 0) f = 1;
 		if (f < 0) f = 0;
-		// FIXME: alpha is negative when dead, breaking death fade
-		if (!this.csqcmodel_isdead) a *= f;
+		a *= f;
 	}
 	if (a < ALPHA_MIN_VISIBLE && ISGAMETYPE(CTS)) return;
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
@@ -156,11 +154,10 @@ void Draw_ShowNames(entity this)
 		myPos.x += 0.5 * (mySize.x / resize - mySize.x);
 		myPos.y += (mySize.y / resize - mySize.y);
 		// this is where the origin of the string
-		vector namepos = myPos;
 		float namewidth = mySize.x;
 		if (autocvar_hud_shownames_status && this.sameteam)
 		{
-			vector pos = namepos + eY * autocvar_hud_shownames_fontsize * resize;
+			vector pos = myPos + eY * autocvar_hud_shownames_fontsize * resize;
 			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
 			if (autocvar_hud_shownames_statusbar_highlight)
 				drawfill(pos + eX * 0.25 * mySize.x, sz, '0.7 0.7 0.7', a / 2, DRAWFLAG_NORMAL);
@@ -178,13 +175,13 @@ void Draw_ShowNames(entity this)
 			}
 		}
 		string s = entcs_GetName(this.sv_entnum - 1);
-		if ((autocvar_hud_shownames_decolorize == 1 && teamplay)
-		    || autocvar_hud_shownames_decolorize == 2) s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
+		if ((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
+			s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
 		drawfontscale = '1 1 0' * resize;
 		s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 		float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);
-		if (width != namewidth) namepos.x += (namewidth - width) / 2;
-		drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
+		myPos.x = o.x - (width * resize) / 2;
+		drawcolorcodedstring(myPos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
 		drawfontscale = '1 1 0';
 	}
 }
@@ -216,7 +213,8 @@ void Draw_ShowNames_All()
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
-		if (!it.csqcmodel_isdead) setorigin(it, entcs.origin);
+		if (!it.csqcmodel_isdead || it.alpha > 0)
+			setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
 	});

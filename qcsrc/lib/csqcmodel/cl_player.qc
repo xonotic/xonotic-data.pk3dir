@@ -108,6 +108,8 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 	{
 		this.mins = PHYS_PL_MIN(this);
 		this.maxs = PHYS_PL_MAX(this);
+		if (IS_DEAD(this))
+			this.maxs.z = 5;
 		this.view_ofs = PHYS_PL_VIEWOFS(this);
 	}
 }
@@ -567,7 +569,8 @@ void CSQCPlayer_SetCamera()
 #endif
 			CSQCPlayer_SetMinsMaxs(e);
 
-			e.angles_y = input_angles.y;
+			if (!IS_DEAD(e))
+				e.angles.y = input_angles.y;
 		}
 
 		// relink
