@@ -129,7 +129,7 @@ void CSQCPlayer_Physics(entity this)
 {
 	if(!autocvar_cl_movement) { return; }
 
-	_Movetype_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
+	//_Movetype_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
 	vector oldv_angle = this.v_angle;
 	vector oldangles = this.angles; // we need to save these, as they're abused by other code
