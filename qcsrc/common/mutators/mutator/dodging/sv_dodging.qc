@@ -221,7 +221,8 @@ void PM_dodging(entity this)
 	if (!this.dodging_action) return;
 
 	// when swimming or dead, no dodging allowed..
-	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this) || (PHYS_DODGING_CLIENTSELECT && !PHYS_DODGING_ENABLED(this)))
+	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
+	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this) || (PHYS_DODGING_CLIENTSELECT && !PHYS_DODGING_ENABLED(this) && !frozen_dodging))
 	{
 		this.dodging_action = 0;
 		this.dodging_direction.x = 0;
