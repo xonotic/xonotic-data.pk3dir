@@ -6,6 +6,11 @@
 
 // Chat (#12)
 
+void HUD_Chat_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
 void HUD_Chat()
 {
 	if(!autocvar__hud_configure)

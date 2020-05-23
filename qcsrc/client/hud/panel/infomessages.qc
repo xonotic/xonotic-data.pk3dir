@@ -8,6 +8,12 @@
 
 // Info messages (#14)
 
+void HUD_InfoMessages_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_infomessages_flip");
+}
+
 float autocvar_hud_panel_infomessages_group0 = 1;
 float autocvar_hud_panel_infomessages_group_fadetime = 0.4;
 float autocvar_hud_panel_infomessages_group_time = 6;

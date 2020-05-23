@@ -9,6 +9,14 @@
 
 // Mod icons (#10)
 
+void HUD_ModIcons_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_modicons_ca_layout");
+	HUD_Write_Cvar("hud_panel_modicons_dom_layout");
+	HUD_Write_Cvar("hud_panel_modicons_freezetag_layout");
+}
+
 void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
 	TC(int, layout); TC(int, i);

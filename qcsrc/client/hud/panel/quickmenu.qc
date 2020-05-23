@@ -10,6 +10,12 @@
 
 // QuickMenu (#23)
 
+void HUD_QuickMenu_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_quickmenu_align");
+}
+
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
 // visible entries are loaded from QuickMenu_Buffer into QuickMenu_Page_* arrays

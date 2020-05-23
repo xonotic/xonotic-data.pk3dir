@@ -5,6 +5,13 @@
 
 // Engine info (#13)
 
+void HUD_EngineInfo_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_engineinfo_framecounter_time");
+	HUD_Write_Cvar("hud_panel_engineinfo_framecounter_decimals");
+}
+
 float prevfps;
 float prevfps_time;
 int framecounter;

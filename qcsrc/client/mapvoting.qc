@@ -8,6 +8,13 @@
 
 #include <common/mapinfo.qh>
 
+// MapVote (#21)
+
+void MapVote_Draw_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_mapvote_highlight_border");
+}
 
 int mv_num_maps;
 

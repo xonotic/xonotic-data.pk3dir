@@ -6,6 +6,26 @@
 #include <client/miscfunctions.qh>
 
 // CenterPrint (#16)
+
+void HUD_CenterPrint_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_centerprint_align");
+	HUD_Write_Cvar("hud_panel_centerprint_flip");
+	HUD_Write_Cvar("hud_panel_centerprint_fontscale");
+	HUD_Write_Cvar("hud_panel_centerprint_fontscale_bold");
+	HUD_Write_Cvar("hud_panel_centerprint_time");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_in");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_out");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone_minalpha");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo_minalpha");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_minfontsize");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_minfontsize");
+}
+
 // These are the functions that draw the text at the center of the screen (e.g. frag messages and server MOTDs).
 // Usually local_notification_centerprint_generic() is called, which in turn calls centerprint_generic(), which
 // uses some kind of macro magic to call HUD_CenterPrint, which draws them on screen using drawcolorcodedstring().

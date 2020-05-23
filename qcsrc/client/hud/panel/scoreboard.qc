@@ -16,6 +16,24 @@
 
 // Scoreboard (#24)
 
+void Scoreboard_Draw_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_scoreboard_fadeinspeed");
+	HUD_Write_Cvar("hud_panel_scoreboard_fadeoutspeed");
+	HUD_Write_Cvar("hud_panel_scoreboard_respawntime_decimals");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_bg_alpha");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_bg_scale");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_fg_alpha");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_fg_alpha_self");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_self");
+	HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
+	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_doublerows");
+	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_nocolors");
+}
+
 const int MAX_SBT_FIELDS = MAX_SCORE;
 
 PlayerScoreField sbt_field[MAX_SBT_FIELDS + 1];
