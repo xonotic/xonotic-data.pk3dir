@@ -216,12 +216,15 @@
 #define N_CONSOLE 1
 #define N_CHATCON 2
 
+// hack to work around the limitations of sprintf
+string multiteam_info_sprintf(string input, string teamname) { return ((input != "") ? sprintf(input, teamname) : ""); }
+
 #define MULTITEAM_INFO(prefix, defaultvalue, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
     NOTIF_ADD_AUTOCVAR(INFO_##prefix, defaultvalue) \
-    MSG_INFO_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, defaultvalue, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, type, 1), TCR(gentle, type, 1)) \
-    MSG_INFO_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, defaultvalue, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, type, 2), TCR(gentle, type, 2)) \
-    MSG_INFO_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, defaultvalue, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, type, 3), TCR(gentle, type, 3)) \
-    MSG_INFO_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
+    MSG_INFO_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, defaultvalue, strnum, flnum, args, hudargs, multiteam_info_sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, type, 1), TCR(gentle, type, 1)) \
+    MSG_INFO_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, defaultvalue, strnum, flnum, args, hudargs, multiteam_info_sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, type, 2), TCR(gentle, type, 2)) \
+    MSG_INFO_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, defaultvalue, strnum, flnum, args, hudargs, multiteam_info_sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, type, 3), TCR(gentle, type, 3)) \
+    MSG_INFO_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, strnum, flnum, args, hudargs, multiteam_info_sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
 
 // MSG_INFO_NOTIFICATIONS
     MSG_INFO_NOTIF(CHAT_NOSPECTATORS,                       N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "")
@@ -352,7 +355,7 @@
     MSG_INFO_NOTIF(FREEZETAG_REVIVED,                       N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K3 was revived by ^BG%s"), "")
     MSG_INFO_NOTIF(FREEZETAG_REVIVED_FALL,                  N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^K3 was revived by falling"), "")
     MSG_INFO_NOTIF(FREEZETAG_REVIVED_NADE,                  N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^K3 was revived by their Nade explosion"), "")
-    MSG_INFO_NOTIF(FREEZETAG_AUTO_REVIVED,                  N_CONSOLE,  1, 1, "s1 f1", "",      "",     _("^BG%s^K3 was automatically revived after %s second(s)"), "")
+    MSG_INFO_NOTIF(FREEZETAG_AUTO_REVIVED,                  N_CONSOLE,  1, 1, "s1 f1", "",      "",     _("^BG%s^K3 was automatically revived after %s seconds"), "")
     MSG_INFO_NOTIF(FREEZETAG_SELF,                          N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^K1 froze themself"), "")
 
     MULTITEAM_INFO(ROUND_TEAM_WIN,                          N_CONSOLE,  0, 0, "", "",           "",     _("^TC^TT^BG team wins the round"), "", NAME)
@@ -575,8 +578,8 @@
 
     #define VERBOSE_MURDER(type) strcat(MURDER_##type, "^BG%s")
 
-    #define MURDER_FRAG             _("^K3%sYou fragged ^BG%s")
-    #define MURDER_FRAG2            _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAG             strcat(BOLD_OPERATOR, _("^K3%sYou fragged ^BG%s"))
+    #define MURDER_FRAG2            strcat(BOLD_OPERATOR, _("^K3%sYou scored against ^BG%s"))
     #define MURDER_FRAGGED          _("^K1%sYou were fragged by ^BG%s")
     #define MURDER_FRAGGED2         _("^K1%sYou were scored against by ^BG%s")
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAG,                   N_ENABLE,  1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG,                    MURDER_FRAG2                   )
@@ -584,8 +587,8 @@
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,        N_ENABLE,  1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED),        VERBOSE_MURDER(FRAGGED2)       )
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_VERBOSE,           N_ENABLE,  1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG),           VERBOSE_MURDER(FRAG2)          )
 
-    #define MURDER_FRAG_FIRE        _("^K3%sYou burned ^BG%s")
-    #define MURDER_FRAG_FIRE2       _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAG_FIRE        strcat(BOLD_OPERATOR, _("^K3%sYou burned ^BG%s"))
+    #define MURDER_FRAG_FIRE2       strcat(BOLD_OPERATOR, _("^K3%sYou scored against ^BG%s"))
     #define MURDER_FRAGGED_FIRE     _("^K1%sYou were burned by ^BG%s")
     #define MURDER_FRAGGED_FIRE2    _("^K1%sYou were scored against by ^BG%s")
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FIRE,              N_ENABLE,  1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG_FIRE,               MURDER_FRAG_FIRE2              )
@@ -593,8 +596,8 @@
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FIRE_VERBOSE,   N_ENABLE,  1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED_FIRE),   VERBOSE_MURDER(FRAGGED_FIRE2)  )
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FIRE_VERBOSE,      N_ENABLE,  1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG_FIRE),      VERBOSE_MURDER(FRAG_FIRE2)     )
 
-    #define MURDER_FRAG_FREEZE      _("^K3%sYou froze ^BG%s")
-    #define MURDER_FRAG_FREEZE2     _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAG_FREEZE      strcat(BOLD_OPERATOR, _("^K3%sYou froze ^BG%s"))
+    #define MURDER_FRAG_FREEZE2     strcat(BOLD_OPERATOR, _("^K3%sYou scored against ^BG%s"))
     #define MURDER_FRAGGED_FREEZE   _("^K1%sYou were frozen by ^BG%s")
     #define MURDER_FRAGGED_FREEZE2  _("^K1%sYou were scored against by ^BG%s")
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FREEZE,            N_ENABLE,  1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG_FREEZE,             MURDER_FRAG_FREEZE2            )
@@ -602,8 +605,8 @@
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FREEZE_VERBOSE, N_ENABLE,  1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED_FREEZE), VERBOSE_MURDER(FRAGGED_FREEZE2))
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FREEZE_VERBOSE,    N_ENABLE,  1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG_FREEZE),    VERBOSE_MURDER(FRAG_FREEZE2)   )
 
-    #define MURDER_TYPEFRAG         _("^K1%sYou typefragged ^BG%s")
-    #define MURDER_TYPEFRAG2        _("^K1%sYou scored against ^BG%s^K1 while they were typing")
+    #define MURDER_TYPEFRAG         strcat(BOLD_OPERATOR, _("^K1%sYou typefragged ^BG%s"))
+    #define MURDER_TYPEFRAG2        strcat(BOLD_OPERATOR, _("^K1%sYou scored against ^BG%s^K1 while they were typing"))
     #define MURDER_TYPEFRAGGED      _("^K1%sYou were typefragged by ^BG%s")
     #define MURDER_TYPEFRAGGED2     _("^K1%sYou were scored against by ^BG%s^K1 while typing")
     MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG,               N_ENABLE,  1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_TYPEFRAG,                MURDER_TYPEFRAG2               )
@@ -664,7 +667,7 @@
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE,                  N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You revived ^BG%s"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE_SELF,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K3You revived yourself"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVED,                 N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You were revived by ^BG%s"), "")
-    MSG_CENTER_NOTIF(FREEZETAG_AUTO_REVIVED,            N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^K3You were automatically revived after %s second(s)"), "")
+    MSG_CENTER_NOTIF(FREEZETAG_AUTO_REVIVED,            N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^K3You were automatically revived after %s seconds"), "")
 
     MSG_CENTER_NOTIF(GENERATOR_UNDERATTACK,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGThe generator is under attack!"), "")
 
@@ -714,7 +717,7 @@
     MSG_CENTER_NOTIF(INSTAGIB_LIVES_REMAINING,          N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^F2Extra lives remaining: ^K1%s"), "")
 
     MSG_CENTER_NOTIF(CAMPAIGN_MESSAGE,                  N_ENABLE,    1, 1, "f1 s1 join_key", CPID_CAMPAIGN_MESSAGE,  "-1 0", strcat(_("Level %s: "), "^BG%s\n^3\n", _("^BGPress ^F2%s^BG to enter the game")), "")
-    MSG_CENTER_NOTIF(MOTD,                              N_ENABLE,    1, 0, "s1 join_key",    CPID_MOTD,              "-1 0", strcat("^BG%s\n^3\n", _("^BGPress ^F2%s^BG to enter the game")), "")
+    MSG_CENTER_NOTIF(MOTD,                              N_ENABLE,    1, 0, "s1",             CPID_MOTD,              "-1 0", "^BG%s", "")
 
     MSG_CENTER_NOTIF(NIX_COUNTDOWN,                     N_ENABLE,    0, 2, "item_wepname",   CPID_NIX,               "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "")
     MSG_CENTER_NOTIF(NIX_NEWWEAPON,                     N_ENABLE,    0, 1, "item_wepname",   CPID_NIX,               "0 0",  _("^F2Active weapon: ^F1%s"), "")

@@ -65,8 +65,14 @@ void spawnpoint_use(entity this, entity actor, entity trigger)
 	{
 		this.team = actor.team;
 		some_spawn_has_been_used = true;
+		this.SendFlags |= 1; // update team on the client side
 	}
 	//LOG_INFO("spawnpoint was used!\n");
+}
+
+void spawnpoint_reset(entity this)
+{
+	this.SendFlags |= 1; // update team since it was restored during reset
 }
 
 void relocate_spawnpoint(entity this)
@@ -106,6 +112,7 @@ void relocate_spawnpoint(entity this)
     this.use = spawnpoint_use;
     setthink(this, spawnpoint_think);
     this.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
+    this.reset2 = spawnpoint_reset; // restores team, allows re-sending the spawnpoint
     this.team_saved = this.team;
     IL_PUSH(g_saved_team, this);
     if (!this.cnt)
@@ -215,7 +222,7 @@ spawnfunc(info_player_team4)
 // Returns:
 //   _x: prio (-1 if unusable)
 //   _y: weight
-vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
+vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck, bool targetcheck)
 {
 	// filter out spots for the wrong team
 	if(teamcheck >= 0)
@@ -223,7 +230,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 			return '-1 0 0';
 
 	if(race_spawns)
-		if(spot.target == "")
+		if(!spot.target || spot.target == "")
 			return '-1 0 0';
 
 	if(IS_REAL_CLIENT(this))
@@ -250,7 +257,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
-	if(spot.target && spot.target != "")
+	if(spot.target && spot.target != "" && targetcheck)
 	{
 		int found = 0;
 		for(entity targ = findchain(targetname, spot.target); targ; targ = targ.chain)
@@ -276,21 +283,21 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	return spawn_score;
 }
 
-void Spawn_ScoreAll(entity this, entity firstspot, float mindist, float teamcheck)
+void Spawn_ScoreAll(entity this, entity firstspot, float mindist, float teamcheck, bool targetcheck)
 {
 	entity spot;
 	for(spot = firstspot; spot; spot = spot.chain)
-		spot.spawnpoint_score = Spawn_Score(this, spot, mindist, teamcheck);
+		spot.spawnpoint_score = Spawn_Score(this, spot, mindist, teamcheck, targetcheck);
 }
 
-entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, float teamcheck)
+entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, float teamcheck, bool targetcheck)
 {
 	entity spot, spotlist, spotlistend;
 
 	spotlist = NULL;
 	spotlistend = NULL;
 
-	Spawn_ScoreAll(this, firstspot, mindist, teamcheck);
+	Spawn_ScoreAll(this, firstspot, mindist, teamcheck, targetcheck);
 
 	for(spot = firstspot; spot; spot = spot.chain)
 	{
@@ -392,7 +399,23 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	}
 	else
 	{
-		firstspot = Spawn_FilterOutBadSpots(this, firstspot, 100, teamcheck);
+		firstspot = Spawn_FilterOutBadSpots(this, firstspot, 100, teamcheck, true);
+
+		// emergency fallback! double check without targets
+		// fixes some crashes with improperly repacked maps
+		if(!firstspot)
+		{
+			firstspot = IL_FIRST(g_spawnpoints);
+			prev = NULL;
+			IL_EACH(g_spawnpoints, true,
+			{
+				if(prev)
+					prev.chain = it;
+				it.chain = NULL;
+				prev = it;
+			});
+			firstspot = Spawn_FilterOutBadSpots(this, firstspot, 100, teamcheck, false);
+		}
 
 		// there is 50/50 chance of choosing a random spot or the furthest spot
 		// (this means that roughly every other spawn will be furthest, so you

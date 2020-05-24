@@ -9,6 +9,26 @@
 
 // Physics (#15)
 
+void HUD_Physics_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_physics_speed_unit_show");
+	HUD_Write_Cvar("hud_panel_physics_speed_max");
+	HUD_Write_Cvar("hud_panel_physics_speed_vertical");
+	HUD_Write_Cvar("hud_panel_physics_topspeed");
+	HUD_Write_Cvar("hud_panel_physics_topspeed_time");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_max");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_vertical");
+	HUD_Write_Cvar("hud_panel_physics_flip");
+	HUD_Write_Cvar("hud_panel_physics_baralign");
+	HUD_Write_Cvar("hud_panel_physics_progressbar");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_mode");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_scale");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_nonlinear");
+	HUD_Write_Cvar("hud_panel_physics_text");
+	HUD_Write_Cvar("hud_panel_physics_text_scale");
+}
+
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;
 float physics_update_time, discrete_speed, discrete_acceleration;

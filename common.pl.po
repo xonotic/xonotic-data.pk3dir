@@ -10,10 +10,11 @@
 # Jakub P. <pedziszewski@gmail.com>, 2015
 # Jakub P. <pedziszewski@gmail.com>, 2015
 # John Smith <myrangd@gmail.com>, 2016
-# karol kosek <transifex@krkk.ct8.pl>, 2020
-# karol kosek <transifex@krkk.ct8.pl>, 2020
-# karol kosek <transifex@krkk.ct8.pl>, 2020
-# karol kosek <transifex@krkk.ct8.pl>, 2020
+# Karol Kosek, 2020
+# Karol Kosek, 2020
+# Karol Kosek, 2020
+# Karol Kosek, 2020
+# Karol Kosek, 2020
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Piotr Kozica <koza91@gmail.com>, 2016
 # Rafał Szymański <okavasly@gmail.com>, 2017
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-19 07:23+0200\n"
 "PO-Revision-Date: 2020-02-08 12:09+0000\n"
-"Last-Translator: karol kosek <transifex@krkk.ct8.pl>\n"
+"Last-Translator: Karol Kosek\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"

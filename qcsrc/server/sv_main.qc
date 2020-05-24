@@ -46,7 +46,14 @@ void CreatureFrame_hotliquids(entity this)
 	}
 	else
 	{
-		if (this.watertype == CONTENT_LAVA)
+		if (STAT(FROZEN, this))
+		{
+			if (this.watertype == CONTENT_LAVA)
+				Damage(this, NULL, NULL, 10000, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			else if (this.watertype == CONTENT_SLIME)
+				Damage(this, NULL, NULL, 10000, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		}
+		else if (this.watertype == CONTENT_LAVA)
 		{
 			if (this.watersound_finished < time)
 			{
@@ -89,7 +96,6 @@ void CreatureFrame_Liquids(entity this)
 			this.flags &= ~FL_INWATER;
 			this.dmgtime = 0;
 		}
-		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
 	}
 }
 

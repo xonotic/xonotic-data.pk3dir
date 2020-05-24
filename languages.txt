@@ -13,7 +13,7 @@ pl    "Polish" "Polski" 74%
 pt    "Portuguese" "Português" 86%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 75%
-fi    "Finnish" "Suomi" 30%
+fi    "Finnish" "Suomi" 100%
 el    "Greek" "Ελληνική" 47%
 be    "Belarusian" "Беларуская" 55%
 bg    "Bulgarian" "Български" 60%

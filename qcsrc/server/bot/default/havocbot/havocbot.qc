@@ -48,7 +48,7 @@ void havocbot_ai(entity this)
 		else
 		{
 			if (!this.jumppadcount && !STAT(FROZEN, this)
-				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
+				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP) && !IS_ONGROUND(this)))
 			{
 				// find a new goal
 				this.havocbot_role(this); // little too far down the rabbit hole
@@ -561,8 +561,8 @@ void havocbot_movetogoal(entity this)
 	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
 		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
-			* ((this.strength_finished > time) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
-			* ((this.invincible_finished > time) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
+			* ((STAT(STRENGTH_FINISHED, this) > time) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
+			* ((STAT(INVINCIBLE_FINISHED, this) > time) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
 		// save some CPU cycles by checking trigger_hurt after checking
 		// that something can be done to evade it (cheaper checks)
@@ -956,7 +956,7 @@ void havocbot_movetogoal(entity this)
 			{
 				if (vlen2(flat_diff) < vlen2(offset))
 				{
-					if (this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP && this.goalstack01)
+					if ((this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP) && this.goalstack01)
 					{
 						// oblique warpzones need a jump otherwise bots gets stuck
 						PHYS_INPUT_BUTTON_JUMP(this) = true;

@@ -67,15 +67,15 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 			});
 			if(superweapons <= 1)
 			{
-				wep.superweapons_finished = own.superweapons_finished;
-				own.superweapons_finished = 0;
+				wep.superweapons_finished = STAT(SUPERWEAPONS_FINISHED, own);
+				STAT(SUPERWEAPONS_FINISHED, own) = 0;
 			}
 			else
 			{
-				float timeleft = own.superweapons_finished - time;
+				float timeleft = STAT(SUPERWEAPONS_FINISHED, own) - time;
 				float weptimeleft = timeleft / superweapons;
 				wep.superweapons_finished = time + weptimeleft;
-				own.superweapons_finished -= weptimeleft;
+				STAT(SUPERWEAPONS_FINISHED, own) -= weptimeleft;
 			}
 		}
 	}

@@ -163,6 +163,8 @@ bool racer_frame(entity this, float dt)
 
 	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(vehic.origin));
 	if(!(cont & DPCONTENTS_WATER))
+		vehic.air_finished = 0;
+	else if (!vehic.air_finished)
 		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(IS_DEAD(vehic))
@@ -253,6 +255,7 @@ bool racer_frame(entity this, float dt)
 		}
 
 #ifdef SVQC
+		// NOTE: reusing .invincible_finished here as delay counter for the smoke effect
 		if(vehic.invincible_finished < time)
 		{
 			traceline(vehic.origin, vehic.origin - '0 0 256', MOVE_NORMAL, vehic);
@@ -262,6 +265,7 @@ bool racer_frame(entity this, float dt)
 			vehic.invincible_finished = time + 0.1 + (random() * 0.1);
 		}
 
+		// NOTE: reusing .strength_finished here as a sound delay counter
 		if(vehic.strength_finished < time)
 		{
 			vehic.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");

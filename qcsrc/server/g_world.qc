@@ -337,6 +337,8 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADPRESUFFIX("g_ctf_flag_", "_model");
+		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_freezetag_point_leadlimit");
@@ -357,6 +359,7 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
+		BADCVAR("sv_announcer");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
@@ -397,6 +400,7 @@ void cvar_changes_init()
 		//   :%s,//\([^ ]*\).*,BADCVAR("\1");,
 		//   :%!sort
 		// yes, this does contain some redundant stuff, don't really care
+		BADPREFIX("bot_ai_");
 		BADCVAR("bot_config_file");
 		BADCVAR("bot_number");
 		BADCVAR("bot_prefix");
@@ -821,7 +825,7 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -1070,7 +1074,8 @@ bool MapHasRightSize(string map)
 	// open map size restriction file
 	string opensize_msg = strcat("opensize ", map);
 	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
-	int pcount = player_count;
+	int player_limit = ((autocvar_g_maplist_sizes_count_maxplayers) ? GetPlayerLimit() : 0);
+	int pcount = ((player_limit > 0) ? min(player_count, player_limit) : player_count); // bind it to the player limit so that forced spectators don't influence the limits
 	if(!autocvar_g_maplist_sizes_count_bots)
 		pcount -= currentbots;
 	if(fh >= 0)
@@ -1103,7 +1108,7 @@ string Map_Filename(float position)
 
 void Map_MarkAsRecent(string m)
 {
-	cvar_set("g_maplist_mostrecent", strwords(strcat(m, " ", autocvar_g_maplist_mostrecent), max(0, autocvar_g_maplist_mostrecent_count)));
+	cvar_set("g_maplist_mostrecent", strwords(cons(m, autocvar_g_maplist_mostrecent), max(0, autocvar_g_maplist_mostrecent_count)));
 }
 
 float Map_IsRecent(string m)
@@ -1704,13 +1709,9 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
-float leaderscore;
-float secondscore;
 int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
-	float limitreached;
-
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper(NULL);
 
@@ -1740,66 +1741,43 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		leadlimit = 0; // not supported in this mode
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
-	// these modes always score in increments of 1, thus this makes sense
 	{
-		if (leaderscore != WinningConditionHelper_topscore ||
-			secondscore != WinningConditionHelper_secondscore)
+		float fragsleft = FLOAT_MAX, leadingfragsleft = FLOAT_MAX;
+		if (limit)
+			fragsleft = limit - WinningConditionHelper_topscore;
+		if (leadlimit)
+			leadingfragsleft = WinningConditionHelper_secondscore + leadlimit - WinningConditionHelper_topscore;
+
+		if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+			fragsleft = max(fragsleft, leadingfragsleft);
+		else
+			fragsleft = min(fragsleft, leadingfragsleft);
+
+		if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 		{
-			int fragsleft = 0, leadingfragsleft = 0;
+			if (fragsleft == 1)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
+			else if (fragsleft == 2)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
+			else if (fragsleft == 3)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 
-			leaderscore = WinningConditionHelper_topscore;
-			secondscore = WinningConditionHelper_secondscore;
-
-			if (limit)
-				fragsleft = limit - leaderscore;
-			if (leadlimit)
-				leadingfragsleft = secondscore + leadlimit - leaderscore;
-
-			if (autocvar_leadlimit_and_fraglimit && leadlimit)
-			{
-				if (limit)
-					fragsleft = max(leadingfragsleft, fragsleft);
-			}
-			else if (leadlimit)
-			{
-				if (limit)
-					fragsleft = min(fragsleft, leadingfragsleft);
-				else
-					fragsleft = leadingfragsleft;
-			}
-
-			if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
-			{
-				if (fragsleft == 1)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-				else if (fragsleft == 2)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-				else if (fragsleft == 3)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
-
-				fragsleft_last = fragsleft;
-			}
+			fragsleft_last = fragsleft;
 		}
 	}
 
-	limitreached = false;
-	if (limit && WinningConditionHelper_topscore >= limit)
-		limitreached = true;
-	if(leadlimit)
-	{
-		float leadlimitreached;
-		leadlimitreached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
-		if(autocvar_leadlimit_and_fraglimit)
-			limitreached = (limitreached && leadlimitreached);
-		else
-			limitreached = (limitreached || leadlimitreached);
-	}
+	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
+	bool leadlimit_reached = (leadlimit && WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
 
-	if(limit)
-		game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / limit, 1));
+	bool limit_reached;
+	// only respect leadlimit_and_fraglimit when both limits are set or the game will never end
+	if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+		limit_reached = (fraglimit_reached && leadlimit_reached);
+	else
+		limit_reached = (fraglimit_reached || leadlimit_reached);
 
 	return GetWinningCode(
-		WinningConditionHelper_topscore && limitreached,
+		WinningConditionHelper_topscore && limit_reached,
 		WinningConditionHelper_equality
 	);
 }
@@ -1890,10 +1868,6 @@ Exit deathmatch games upon conditions
 */
 void CheckRules_World()
 {
-	float timelimit;
-	float fraglimit;
-	float leadlimit;
-
 	VoteThink();
 	MapVote_Think();
 
@@ -1908,9 +1882,10 @@ void CheckRules_World()
 		return;
 	}
 
-	timelimit = autocvar_timelimit * 60;
-	fraglimit = autocvar_fraglimit;
-	leadlimit = autocvar_leadlimit;
+	float timelimit = autocvar_timelimit * 60;
+	float fraglimit = autocvar_fraglimit;
+	float leadlimit = autocvar_leadlimit;
+	if (leadlimit < 0) leadlimit = 0;
 
 	if(warmup_stage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
@@ -1934,11 +1909,6 @@ void CheckRules_World()
 
 	float wantovertime;
 	wantovertime = 0;
-
-	if(timelimit > game_starttime)
-		game_completion_ratio = (time - game_starttime) / (timelimit - game_starttime);
-	else
-		game_completion_ratio = 0;
 
 	if(checkrules_suddendeathend)
 	{
