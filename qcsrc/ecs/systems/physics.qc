@@ -220,8 +220,10 @@ void sys_phys_simulate(entity this, float dt)
 	if (this.com_phys_water) {
 		if (PHYS_FROZEN(this))
 		{
-			if(this.waterlevel >= WATERLEVEL_SUBMERGED)
+			if(this.waterlevel >= WATERLEVEL_SUBMERGED && this.velocity.z >= -70) // don't change the speed too abruptally
 				wishvel = '0 0 160'; // resurface
+			else if(this.waterlevel >= WATERLEVEL_SWIMMING && this.velocity.z > 0)
+				wishvel = eZ * 1.3 * min(this.velocity.z, 160); // resurface a bit more above the surface
 		}
 		else
 		{
