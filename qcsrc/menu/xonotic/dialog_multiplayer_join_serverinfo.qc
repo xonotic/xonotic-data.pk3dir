@@ -1,4 +1,5 @@
 #include "dialog_multiplayer_join_serverinfo.qh"
+#include <common/mapinfo.qh>
 
 #include "tabcontroller.qh"
 #include "serverlist.qh"

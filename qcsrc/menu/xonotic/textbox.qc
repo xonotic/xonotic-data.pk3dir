@@ -1,4 +1,5 @@
 #include "textbox.qh"
+#include "../item/label.qh"
 
 entity makeXonoticTextBox()
 {

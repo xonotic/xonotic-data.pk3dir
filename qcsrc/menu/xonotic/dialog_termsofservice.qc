@@ -1,8 +1,10 @@
 #include "dialog_termsofservice.qh"
 
 #include "../menu.qh"
+#include "mainwindow.qh"
 #include "dialog_firstrun.qh"
 #include "textbox.qh"
+#include "textlabel.qh"
 #include "button.qh"
 
 void Close_Clicked(entity btn, entity me)
