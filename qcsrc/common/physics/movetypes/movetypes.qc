@@ -747,7 +747,7 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 
 	float dt = time - this.move_time;
 
-	int n = max(0, floor(dt / tr));
+	int n = bound(0, floor(dt / tr), 32); // limit the number of frames to 32 (CL_MAX_USERCMDS, using DP_SMALLMEMORY value for consideration of QC's limitations)
 	dt -= n * tr;
 	this.move_time += n * tr;
 
