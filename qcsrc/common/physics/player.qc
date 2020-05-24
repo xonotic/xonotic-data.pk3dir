@@ -617,13 +617,6 @@ void PM_check_frozen(entity this)
 	}
 	else
 		PHYS_CS(this).movement = '0 0 0';
-
-	if(this.waterlevel >= WATERLEVEL_SWIMMING)
-	{
-		this.velocity = this.velocity * 0.5;
-		if(this.waterlevel >= WATERLEVEL_SUBMERGED)
-			this.velocity.z = 160;
-	}
 }
 
 void PM_check_hitground(entity this)

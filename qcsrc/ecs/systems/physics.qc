@@ -217,14 +217,24 @@ void sys_phys_simulate(entity this, float dt)
 	vector wishvel = forward * PHYS_CS(this).movement.x
 	    + right * PHYS_CS(this).movement.y
 	    + '0 0 1' * PHYS_CS(this).movement.z * (this.com_phys_vel_2d ? 0 : 1);
-	if (this.com_phys_water && !PHYS_FROZEN(this)) {
-		if (PHYS_INPUT_BUTTON_CROUCH(this)) {
-			wishvel.z = -PHYS_MAXSPEED(this);
+	if (this.com_phys_water) {
+		if (PHYS_FROZEN(this))
+		{
+			if(this.waterlevel >= WATERLEVEL_SUBMERGED && this.velocity.z >= -70) // don't change the speed too abruptally
+				wishvel = '0 0 160'; // resurface
+			else if(this.waterlevel >= WATERLEVEL_SWIMMING && this.velocity.z > 0)
+				wishvel = eZ * 1.3 * min(this.velocity.z, 160); // resurface a bit more above the surface
 		}
-		if (this.viewloc) {
-			wishvel.z = -160;    // drift anyway
-		} else if (wishvel == '0 0 0') {
-			wishvel = '0 0 -60'; // drift towards bottom
+		else
+		{
+			if (PHYS_INPUT_BUTTON_CROUCH(this)) {
+				wishvel.z = -PHYS_MAXSPEED(this);
+			}
+			if (this.viewloc) {
+				wishvel.z = -160;    // drift anyway
+			} else if (wishvel == '0 0 0') {
+				wishvel = '0 0 -60'; // drift towards bottom
+			}
 		}
 	}
 	if (this.com_phys_ladder) {
