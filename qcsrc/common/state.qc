@@ -52,6 +52,7 @@ void ClientState_attach(entity this)
 	entcs_attach(this);
 	anticheat_init(this);
 	W_HitPlotOpen(this);
+	Stats_new(this);
 }
 
 void bot_clientdisconnect(entity this);
@@ -72,6 +73,7 @@ void ClientState_detach(entity this)
     entcs_detach(this);
 	delete(CS(this));
 	this._cs = NULL;
+	Stats_delete(this);
 
     bot_clientdisconnect(this);
 

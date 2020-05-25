@@ -48,7 +48,7 @@ void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, boo
 		ammo = 60;
 	}
 	else
-		ammo = getstati(GetAmmoStat(ammoType));
+		ammo = GetAmmoStat(ammoType);
 
 	if(!isCurrent)
 	{

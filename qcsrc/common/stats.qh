@@ -19,6 +19,7 @@ const int MAX_CL_STATS = 256;
 // const int STAT_ITEMS = 15; // .items | .items2 << 23 | serverflags << 28
 // const int STAT_VIEWHEIGHT = 16;
 
+#if 0
 #if defined(CSQC)
     #define g_stat_HEALTH getstati(STAT_HEALTH)
     #define g_stat_ARMOR getstati(STAT_ARMOR)
@@ -38,6 +39,16 @@ const int MAX_CL_STATS = 256;
     #define stat_ITEMS items
     #define stat_VIEWHEIGHT view_ofs_z
 #endif
+#endif
+
+REGISTER_STAT(HEALTH, int, this.health)
+REGISTER_STAT(ARMOR, int, this.armorvalue)
+REGISTER_STAT(SHELLS, int, this.ammo_shells)
+REGISTER_STAT(NAILS, int, this.ammo_nails)
+REGISTER_STAT(ROCKETS, int, this.ammo_rockets)
+REGISTER_STAT(CELLS, int, this.ammo_cells)
+REGISTER_STAT(ITEMS, int, this.items)
+REGISTER_STAT(VIEWHEIGHT, int, this.view_ofs_z)
 
 #ifdef SVQC
 /// all the weapons actually spawned in the map, does not include filtered items

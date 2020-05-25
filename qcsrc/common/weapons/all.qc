@@ -258,12 +258,12 @@ int GetAmmoStat(int ammotype)
 {
 	switch (ammotype)
 	{
-		case RES_SHELLS: return STAT_SHELLS;
-		case RES_BULLETS: return STAT_NAILS;
-		case RES_ROCKETS: return STAT_ROCKETS;
-		case RES_CELLS: return STAT_CELLS;
-		case RES_PLASMA: return STAT_PLASMA.m_id;
-		case RES_FUEL: return STAT_FUEL.m_id;
+		case RES_SHELLS: return STAT(SHELLS);
+		case RES_BULLETS: return STAT(NAILS);
+		case RES_ROCKETS: return STAT(ROCKETS);
+		case RES_CELLS: return STAT(CELLS);
+		case RES_PLASMA: return STAT(PLASMA);
+		case RES_FUEL: return STAT(FUEL);
 		default: return -1;
 	}
 }

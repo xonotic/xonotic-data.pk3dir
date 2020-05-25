@@ -531,7 +531,7 @@ void HUD_Weapons()
 			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RES_NONE))
 			{
 				float ammo_full;
-				a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
+				a = floor(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
 
 				if(a > 0)
 				{

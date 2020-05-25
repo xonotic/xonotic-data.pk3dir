@@ -2300,7 +2300,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	++framecount;
 
-	stats_get();
 	hud = STAT(HUD);
 
 	ReplicateVars(false);
