@@ -146,9 +146,12 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 #ifdef SVQC
 	if(IS_PLAYER(player))
 	{
-		if(tflags & TELEPORT_FLAG_TDEATH)
-			if(player.takedamage && !IS_DEAD(player) && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
-				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
+		if((tflags & TELEPORT_FLAG_TDEATH) && player.takedamage && !IS_DEAD(player)
+			&& !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH))
+			&& !(round_handler_IsActive() && !round_handler_IsRoundStarted()))
+		{
+			tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
+		}
 
 		// player no longer is on ground
 		UNSET_ONGROUND(player);
