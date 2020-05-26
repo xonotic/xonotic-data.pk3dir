@@ -297,7 +297,7 @@ const .float reloading_time = reload_time;
 #define WEP_CVAR_BOTH(wepname, isprimary, name) ((isprimary) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
 
 const int WEP_FIRST = 1;
-#define WEP_LAST (Weapons_COUNT - 1)
+#define WEP_LAST (REGISTRY_COUNT(Weapons) - 1)
 WepSet WEPSET_ALL;
 WepSet WEPSET_SUPERWEAPONS;
 
@@ -308,7 +308,7 @@ WepSet WEPSET_SUPERWEAPONS;
 
 // TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
 #define WEP_IMPULSE_BEGIN 230
-#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (Weapons_COUNT - 1) - 1, 253)
+#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (REGISTRY_COUNT(Weapons) - 1) - 1, 253)
 
 REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
 REGISTRY_CHECK(Weapons)
@@ -332,7 +332,7 @@ STATIC_INIT(register_weapons_done)
     FOREACH(Weapons, true, it.wr_init(it));
     #endif
     weaponorder_byid = "";
-    for (int i = Weapons_MAX - 1; i >= 1; --i)
+    for (int i = REGISTRY_MAX(Weapons) - 1; i >= 1; --i)
         if (Weapons_from(i))
             weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
     weaponorder_byid = strzone(substring(weaponorder_byid, 1, -1));

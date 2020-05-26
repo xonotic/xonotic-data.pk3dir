@@ -8,7 +8,7 @@ REGISTER_REGISTRY(Vehicles)
 REGISTRY_CHECK(Vehicles)
 
 const int VEH_FIRST = 1;
-#define VEH_LAST (Vehicles_COUNT - 1)
+#define VEH_LAST (REGISTRY_COUNT(Vehicles) - 1)
 
 #define REGISTER_VEHICLE(id, inst) REGISTER(Vehicles, VEH, id, vehicleid, inst)
 

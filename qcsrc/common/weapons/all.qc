@@ -59,11 +59,11 @@
 WepSet _WepSet_FromWeapon(int a)
 {
 	a -= WEP_FIRST;
-	if (Weapons_MAX > 24)
+	if (REGISTRY_MAX(Weapons) > 24)
 		if (a >= 24)
 		{
 			a -= 24;
-			if (Weapons_MAX > 48)
+			if (REGISTRY_MAX(Weapons) > 48)
 				if (a >= 24)
 				{
 					a -= 24;
@@ -76,8 +76,8 @@ WepSet _WepSet_FromWeapon(int a)
 #ifdef SVQC
 	void WriteWepSet(float dst, WepSet w)
 	{
-		if (Weapons_MAX > 48) WriteInt72_t(dst, w);
-		else if (Weapons_MAX > 24) WriteInt48_t(dst, w);
+		if (REGISTRY_MAX(Weapons) > 48) WriteInt72_t(dst, w);
+		else if (REGISTRY_MAX(Weapons) > 24) WriteInt48_t(dst, w);
 		else WriteInt24_t(dst, w.x);
 	}
 #endif
@@ -92,8 +92,8 @@ WepSet _WepSet_FromWeapon(int a)
 	}
 	WepSet ReadWepSet()
 	{
-		if (Weapons_MAX > 48) return ReadInt72_t();
-		if (Weapons_MAX > 24) return ReadInt48_t();
+		if (REGISTRY_MAX(Weapons) > 48) return ReadInt72_t();
+		if (REGISTRY_MAX(Weapons) > 24) return ReadInt48_t();
 		return ReadInt24_t() * '1 0 0';
 	}
 #endif
@@ -144,7 +144,7 @@ string W_NumberWeaponOrder(string order)
 	return mapPriorityList(order, W_NumberWeaponOrder_MapFunc);
 }
 
-float W_FixWeaponOrder_BuildImpulseList_buf[Weapons_MAX];
+float W_FixWeaponOrder_BuildImpulseList_buf[REGISTRY_MAX(Weapons)];
 string W_FixWeaponOrder_BuildImpulseList_order;
 void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 {

@@ -5,7 +5,7 @@
 #ifdef GAMEQC
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
-    ATTRIBARRAY(Inventory, inv_items, int, Items_MAX);
+    ATTRIBARRAY(Inventory, inv_items, int, REGISTRY_MAX(Items));
     /** Previous state */
     ATTRIB(Inventory, inventory, Inventory);
 ENDCLASS(Inventory)
@@ -16,7 +16,7 @@ ENDCLASS(Inventory)
 REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
 
 const int Inventory_groups_minor = 8; // exactly 1 byte
-const int Inventory_groups_major = 3; // ceil(Items_MAX / Inventory_groups_minor)
+const int Inventory_groups_major = 3; // ceil(REGISTRY_MAX(Items) / Inventory_groups_minor)
 
 #define G_MAJOR(id) (floor((id) / Inventory_groups_minor))
 #define G_MINOR(id) ((id) % Inventory_groups_minor)

@@ -60,7 +60,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write("\n");
 
 		// common cvars for all panels
-		for (int i = 0; i < hud_panels_COUNT; ++i)
+		for (int i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 		{
 			panel = hud_panels_from(i);
 
@@ -102,7 +102,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	vector myCenter, targCenter;
 	vector myTarget = myPos;
 	int i;
-	for (i = 0; i < hud_panels_COUNT; ++i) {
+	for (i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
 		panel = hud_panels_from(i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN)) continue;
 		if(panel == highlightedPanel) continue;
@@ -199,7 +199,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	vector dist;
 	float ratio = mySize.x/mySize.y;
 	int i;
-	for (i = 0; i < hud_panels_COUNT; ++i) {
+	for (i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
 		panel = hud_panels_from(i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN)) continue;
 		if(panel == highlightedPanel) continue;
@@ -500,13 +500,13 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
-entity tab_panels[hud_panels_MAX];
+entity tab_panels[REGISTRY_MAX(hud_panels)];
 entity tab_panel;
 vector tab_panel_pos;
 float tab_backward;
 void reset_tab_panels()
 {
-	for (int i = 0; i < hud_panels_COUNT; ++i)
+	for (int i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 		tab_panels[i] = NULL;
 }
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
@@ -645,7 +645,7 @@ LABEL(find_tab_panel)
 		k=0;
 		while(++k)
 		{
-			for(i = 0; i < hud_panels_COUNT; ++i)
+			for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 			{
 				panel = hud_panels_from(i);
 				if(!(panel.panel_configflags & PANEL_CONFIG_MAIN))
@@ -794,7 +794,7 @@ LABEL(find_tab_panel)
 int HUD_Panel_Check_Mouse_Pos(bool allow_move)
 {
 	int i, j = 0;
-	while(j < hud_panels_COUNT)
+	while(j < REGISTRY_COUNT(hud_panels))
 	{
 		i = panel_order[j];
 		j += 1;
@@ -840,7 +840,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	int i;
 	int place = -1;
 	// find out where in the array our current id is, save into place
-	for(i = 0; i < hud_panels_COUNT; ++i)
+	for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 	{
 		if(panel_order[i] == id)
 		{
@@ -850,7 +850,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	}
 	// place last if we didn't find a place for it yet (probably new panel, or screwed up cvar)
 	if(place == -1)
-		place = hud_panels_COUNT - 1;
+		place = REGISTRY_COUNT(hud_panels) - 1;
 
 	// move all ids up by one step in the array until "place"
 	for(i = place; i > 0; --i)
@@ -862,7 +862,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 
 	// let's save them into the cvar by some strcat trickery
 	string s = "";
-	for(i = 0; i < hud_panels_COUNT; ++i)
+	for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 	{
 		s = strcat(s, ftos(panel_order[i]), " ");
 	}
@@ -874,7 +874,7 @@ void HUD_Panel_Highlight(float allow_move)
 {
 	int i, j = 0;
 
-	while(j < hud_panels_COUNT)
+	while(j < REGISTRY_COUNT(hud_panels))
 	{
 		i = panel_order[j];
 		j += 1;
@@ -1082,7 +1082,7 @@ void HUD_Configure_Frame()
 		if(!hud_configure_prev)
 		{
 			hudShiftState = 0;
-			for(i = hud_panels_COUNT - 1; i >= 0; --i)
+			for(i = REGISTRY_COUNT(hud_panels) - 1; i >= 0; --i)
 				hud_panels_from(panel_order[i]).update_time = time;
 		}
 

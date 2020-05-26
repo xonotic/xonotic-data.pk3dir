@@ -14,6 +14,8 @@
 	#define _R_DEL(r)
 #endif
 
+#define REGISTRY_MAX(id) id##_MAX
+#define REGISTRY_COUNT(id) id##_COUNT
 /**
  * Declare a new registry.
  *
@@ -129,14 +131,14 @@ MACRO_END
 		entity a = _R_GET(_##id, i), b = _R_GET(_##id, j); \
 		_R_SET(_##id, i, b); \
 		_R_SET(_##id, j, a); \
-        \
+		\
 		entity a_next = a.REGISTRY_NEXT, b_next = b.REGISTRY_NEXT; \
 		a.REGISTRY_NEXT = b_next; \
 		b.REGISTRY_NEXT = a_next; \
-        \
+		\
 		if (i == 0) id##_first = b; \
 		else _R_GET(_##id, i - 1).REGISTRY_NEXT = b; \
-        \
+		\
 		if (j == 0) id##_first = a; \
 		else _R_GET(_##id, j - 1).REGISTRY_NEXT = a; \
 	} \
@@ -201,6 +203,6 @@ void Registry_send(string id, string hash);
 	ENDCLASS(id##Registry) \
 	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry)); \
 	METHOD(id##Registry, m_reload, void()) { \
-	    id##_state = 0; \
+		id##_state = 0; \
 		Register##id(); \
 	}
