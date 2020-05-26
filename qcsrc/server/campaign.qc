@@ -124,7 +124,7 @@ void CampaignPreInit()
 		{
 			string arg = argv(j);
 			if(arg == "") continue;
-			_MapInfo_Parse_Settemp(mapname, MAPINFO_SETTEMP_ACL_USER, 0, arg, 0); // no recursion!
+			_MapInfo_Parse_Settemp(mapname, MAPINFO_SETTEMP_ACL_USER, 0, arg, 1);
 		}
 	}
 #endif

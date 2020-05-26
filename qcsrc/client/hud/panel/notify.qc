@@ -5,6 +5,16 @@
 
 // Notifications (#4)
 
+void HUD_Notify_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_notify_flip");
+	HUD_Write_Cvar("hud_panel_notify_fontsize");
+	HUD_Write_Cvar("hud_panel_notify_time");
+	HUD_Write_Cvar("hud_panel_notify_fadetime");
+	HUD_Write_Cvar("hud_panel_notify_icon_aspect");
+}
+
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
 	if (icon == "")

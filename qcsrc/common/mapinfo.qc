@@ -671,11 +671,8 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 			}
 			else
 			{
-				for (;;)
+				while((s = fgets(fh)))
 				{
-					if (!((s = fgets(fh))))
-						break;
-
 					// catch different sorts of comments
 					if(s == "")                    // empty lines
 						continue;

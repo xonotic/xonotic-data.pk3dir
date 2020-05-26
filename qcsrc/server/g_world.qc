@@ -338,6 +338,8 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADPRESUFFIX("g_ctf_flag_", "_model");
+		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_freezetag_point_leadlimit");
@@ -358,6 +360,7 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
+		BADCVAR("sv_announcer");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
@@ -1072,7 +1075,8 @@ bool MapHasRightSize(string map)
 	// open map size restriction file
 	string opensize_msg = strcat("opensize ", map);
 	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
-	int pcount = player_count;
+	int player_limit = ((autocvar_g_maplist_sizes_count_maxplayers) ? GetPlayerLimit() : 0);
+	int pcount = ((player_limit > 0) ? min(player_count, player_limit) : player_count); // bind it to the player limit so that forced spectators don't influence the limits
 	if(!autocvar_g_maplist_sizes_count_bots)
 		pcount -= currentbots;
 	if(fh >= 0)
@@ -1105,7 +1109,7 @@ string Map_Filename(float position)
 
 void Map_MarkAsRecent(string m)
 {
-	cvar_set("g_maplist_mostrecent", strwords(strcat(m, " ", autocvar_g_maplist_mostrecent), max(0, autocvar_g_maplist_mostrecent_count)));
+	cvar_set("g_maplist_mostrecent", strwords(cons(m, autocvar_g_maplist_mostrecent), max(0, autocvar_g_maplist_mostrecent_count)));
 }
 
 float Map_IsRecent(string m)

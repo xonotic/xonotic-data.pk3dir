@@ -1955,6 +1955,8 @@ void Join(entity this)
 
 int GetPlayerLimit()
 {
+	if(g_duel)
+		return 2; // TODO: this workaround is needed since the mutator hook from duel can't be activated before the gametype is loaded (e.g. switching modes via gametype vote screen)
 	int player_limit = autocvar_g_maxplayers;
 	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
 	player_limit = M_ARGV(0, int);
