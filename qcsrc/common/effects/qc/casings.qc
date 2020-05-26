@@ -62,10 +62,6 @@ void Casing_Draw(entity this)
         //UNSET_ONGROUND(this);
     }
 
-    Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
-    if (wasfreed(this))
-        return; // deleted by touch function
-
     this.renderflags = 0;
     this.alpha = bound(0, this.cnt - time, 1);
 
@@ -73,7 +69,12 @@ void Casing_Draw(entity this)
     {
         Casing_Delete(this);
         this.drawmask = 0;
+        return;
     }
+
+    Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
+    //if (wasfreed(this))
+    //    return; // deleted by touch function
 }
 
 SOUND(BRASS1, W_Sound("brass1"));
