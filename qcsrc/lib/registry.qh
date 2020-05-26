@@ -191,10 +191,7 @@ void Registry_send(string id, string hash);
 	} \
 	void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
 
-#define REGISTER_REGISTRY(...) EVAL_REGISTER_REGISTRY(OVERLOAD(REGISTER_REGISTRY, __VA_ARGS__))
-#define EVAL_REGISTER_REGISTRY(...) __VA_ARGS__
-#define REGISTER_REGISTRY_1(id) REGISTER_REGISTRY_2(id, #id)
-#define REGISTER_REGISTRY_2(id, str) \
+#define _REGISTER_REGISTRY(id, str) \
 	ACCUMULATE_FUNCTION(__static_init_1, Register##id) \
 	CLASS(id##Registry, Object) \
 		ATTRIB(id##Registry, m_name, string, str); \
@@ -206,3 +203,5 @@ void Registry_send(string id, string hash);
 		id##_state = 0; \
 		Register##id(); \
 	}
+
+#define REGISTER_REGISTRY(id) _REGISTER_REGISTRY(id, #id)
