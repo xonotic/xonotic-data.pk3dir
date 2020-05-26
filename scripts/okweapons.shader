@@ -31,6 +31,8 @@ OK_shotgun
 
 minsta
 {
+	nopicmip
+	nomipmaps
 	dpglossexponentmod  64
 	dpreflectcube env/exomorph/exomorph
  	{
