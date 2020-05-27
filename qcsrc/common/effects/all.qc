@@ -6,7 +6,7 @@ NET_HANDLE(net_effect, bool isNew)
 {
 	int net_name = (REGISTRY_COUNT(Effects) >= 255) ? ReadShort() : ReadByte();
 
-	entity eff = Effects_from(net_name);
+	entity eff = REGISTRY_GET(Effects, net_name);
 
 	vector vel = '0 0 0';
 	int eff_cnt = 1;

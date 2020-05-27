@@ -35,7 +35,11 @@
 	noref entity id##_first, id##_last; \
 	_R_MAP(_##id, id##_MAX); \
 	SHUTDOWN(id) { _R_DEL(_##id); } \
-	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+
+#define REGISTRY_DEFINE_GET(id, null) \
+	entity id##_from(int i) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+
+#define REGISTRY_GET(id, i) id##_from(i)
 
 /** Add registry dependencies to a registry */
 #define REGISTRY_DEPENDS(id, dep) void Register##dep(); void REGISTRY_DEPENDS_(id) { Register##dep(); }

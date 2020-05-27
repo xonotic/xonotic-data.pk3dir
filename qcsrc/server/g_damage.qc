@@ -129,7 +129,7 @@ void Obituary_SpecialDeath(
 		return;
 	}
 
-	entity deathent = Deathtypes_from(deathtype - DT_FIRST);
+	entity deathent = REGISTRY_GET(Deathtypes, deathtype - DT_FIRST);
 	if (!deathent)
 	{
 		backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n");

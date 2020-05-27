@@ -1478,11 +1478,11 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
+				if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
 				{
 					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 						continue;
-					this.(weaponentity).m_switchweapon = Weapons_from(w);
+					this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 					return;
 				}
 			}
@@ -1492,11 +1492,11 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		if ( distance > bot_distance_close) {
 			for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
+				if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
 				{
 					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 						continue;
-					this.(weaponentity).m_switchweapon = Weapons_from(w);
+					this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 					return;
 				}
 			}
@@ -1505,11 +1505,11 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		// Choose weapons for close distance
 		for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
+			if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
 			{
 				if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 					continue;
-				this.(weaponentity).m_switchweapon = Weapons_from(w);
+				this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 				return;
 			}
 		}

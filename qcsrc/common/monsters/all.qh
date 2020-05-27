@@ -3,8 +3,7 @@
 string M_Model(string m_mdl);
 
 REGISTRY(Monsters, BITS(5))
-#define Monsters_from(i) _Monsters_from(i, MON_Null)
-#define get_monsterinfo(i) Monsters_from(i)
+#define get_monsterinfo(i) REGISTRY_GET(Monsters, i)
 REGISTER_REGISTRY(Monsters)
 REGISTRY_CHECK(Monsters)
 const int MON_FIRST = 1;
@@ -14,3 +13,4 @@ const int MON_FIRST = 1;
 #include "monster.qh"
 
 REGISTER_MONSTER(Null, NEW(Monster));
+REGISTRY_DEFINE_GET(Monsters, MON_Null)

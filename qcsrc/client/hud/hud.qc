@@ -408,7 +408,7 @@ void HUD_Vehicle()
 	if(hud == HUD_BUMBLEBEE_GUN)
 		CSQC_BUMBLE_GUN_HUD();
 	else {
-		Vehicle info = Vehicles_from(hud);
+		Vehicle info = REGISTRY_GET(Vehicles, hud);
 		info.vr_hud(info);
 	}
 
@@ -708,7 +708,7 @@ void HUD_Main()
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
 	for(i = REGISTRY_COUNT(hud_panels) - 1; i >= 0; --i)
-		HUD_Panel_Draw(hud_panels_from(panel_order[i]));
+		HUD_Panel_Draw(REGISTRY_GET(hud_panels, panel_order[i]));
 
 	HUD_Vehicle();
 

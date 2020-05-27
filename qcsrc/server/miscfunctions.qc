@@ -243,7 +243,7 @@ string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
 		return wepent.m_weapon.m_name;
 	else if(wepent.m_switchweapon != WEP_Null)
 		return wepent.m_switchweapon.m_name;
-	return "none"; //Weapons_from(wepent.cnt).m_name;
+	return "none"; //REGISTRY_GET(Weapons, wepent.cnt).m_name;
 }
 
 string formatmessage(entity this, string msg)

@@ -107,7 +107,7 @@ string W_NameWeaponOrder_MapFunc(string s)
 	int i = stof(s);
 	if (s == "0" || i)
 	{
-		entity wi = Weapons_from(i);
+		entity wi = REGISTRY_GET(Weapons, i);
 		if (wi != WEP_Null) return wi.netname;
 	}
 	return s;
@@ -156,9 +156,9 @@ void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 float W_FixWeaponOrder_BuildImpulseList_cmp(int i, int j, entity pass)
 {
 	int si = W_FixWeaponOrder_BuildImpulseList_buf[i];
-	Weapon e1 = Weapons_from(si);
+	Weapon e1 = REGISTRY_GET(Weapons, si);
 	int sj = W_FixWeaponOrder_BuildImpulseList_buf[j];
-	Weapon e2 = Weapons_from(sj);
+	Weapon e2 = REGISTRY_GET(Weapons, sj);
 	int d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
 	if (d != 0) return -d;  // high impulse first!
 	return strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "),
