@@ -185,14 +185,16 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         Item_SetAlpha(this);
 
         if(this.ItemStatus & ITS_ALLOWFB)
-           this.effects |= EF_FULLBRIGHT;
+            this.effects |= EF_FULLBRIGHT;
+        else
+            this.effects &= ~EF_FULLBRIGHT;
 
         if(this.ItemStatus & ITS_GLOW)
         {
             if(this.ItemStatus & ITS_AVAILABLE)
                 this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
             else
-                 this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+                this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
         }
     }
 
@@ -444,9 +446,10 @@ void Item_Show(entity e, int mode)
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
 
-
 	if (autocvar_g_fullbrightitems)
 		e.ItemStatus |= ITS_ALLOWFB;
+	else
+		e.ItemStatus &= ~ITS_ALLOWFB;
 
 	if (autocvar_sv_simple_items)
 		e.ItemStatus |= ITS_ALLOWSI;
