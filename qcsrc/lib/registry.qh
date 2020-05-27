@@ -19,8 +19,9 @@
 /**
  * Declare a new registry.
  *
- * Don't forget to call `REGISTER_REGISTRY`:
+ * Don't forget to call REGISTER_REGISTRY and REGISTRY_DEFINE_GET:
  *     REGISTER_REGISTRY(Foos)
+ *     REGISTRY_DEFINE_GET(Foos, null_ent)
  */
 #define REGISTRY(id, max) \
 	void Register##id(); \
