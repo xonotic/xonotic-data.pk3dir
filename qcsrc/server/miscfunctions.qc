@@ -719,7 +719,7 @@ void readplayerstartcvars()
 		for (int j = 0; j < t; ++j)
 		{
 			s = argv(j);
-			Weapon wep = Weapons_fromstr(s);
+			Weapon wep = Weapon_from_name(s);
 			if(wep != WEP_Null)
 			{
 				g_weaponarena_weapons |= (wep.m_wepset);
