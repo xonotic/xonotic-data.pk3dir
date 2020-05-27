@@ -1635,6 +1635,7 @@ void ViewLocation_Mouse()
 	viewloc_mousepos.y = bound(0, viewloc_mousepos.y, vid_conheight);
 
 	//float cursor_alpha = 1 - autocvar__menu_alpha;
+	//cursor_type = CURSOR_NORMAL;
 	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
 }
 
@@ -1675,6 +1676,7 @@ void HUD_Mouse(entity player)
 	if(!autocvar_hud_cursormode)
 		update_mousepos();
 
+	cursor_type = CURSOR_NORMAL;
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
 	else
