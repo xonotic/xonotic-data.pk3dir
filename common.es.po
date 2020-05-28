@@ -14,7 +14,7 @@
 # kammy smb <kammysmb@gmail.com>, 2013
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
-# Simon <inactive+0000simon@transifex.com>, 2014-2015
+# f0318285068af6a23b2bced52c20e7ad_5b405a0 <dd7053d9f4e5c78579dd2ad9ce71aaa5_243277>, 2014-2015
 # Damian Kurek <starfire24680@gmail.com>, 2018
 # Damian Kurek <starfire24680@gmail.com>, 2017-2018
 # Damian Kurek <starfire24680@gmail.com>, 2017
