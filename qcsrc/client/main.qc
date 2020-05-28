@@ -11,6 +11,7 @@
 #include "commands/cl_cmd.qh"
 #include "mapvoting.qh"
 #include <client/mutators/_mod.qh>
+#include "hud/panel/centerprint.qh"
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
@@ -920,11 +921,11 @@ void CSQC_Parse_Print(string strMessage)
 	print(ColorTranslateRGB(strMessage));
 }
 
-// CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
+// CSQC_Parse_CenterPrint : Provides the centerprint_AddStandard string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
-	centerprint_hud(strMessage);
+	centerprint_AddStandard(strMessage);
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
