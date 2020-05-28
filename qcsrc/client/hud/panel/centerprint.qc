@@ -26,9 +26,11 @@ void HUD_CenterPrint_Export(int fh)
 	HUD_Write_Cvar("hud_panel_centerprint_fade_minfontsize");
 }
 
-// These are the functions that draw the text at the center of the screen (e.g. frag messages and server MOTDs).
-// Usually local_notification_centerprint_generic() is called, which in turn calls centerprint_generic(), which
-// uses some kind of macro magic to call HUD_CenterPrint, which draws them on screen using drawcolorcodedstring().
+// These are the functions that draw the text at the center of the screen (e.g. frag messages and server MOTD).
+// centerprint_generic parses a message and puts it in the circular buffer centerprint_messages
+// centerprint_generic is usually called by Local_Notification_centerprint_generic, which is called
+// by Local_Notification.
+// HUD_CenterPrint draws all the messages on screen
 
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
@@ -36,6 +38,7 @@ const float CENTERPRINT_SPACING = 0.7;
 int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 int centerprint_msgID[CENTERPRINT_MAX_MSGS];
+bool centerprint_bold[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
@@ -49,6 +52,11 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 
 	if(strMessage == "" && new_id == 0)
 		return;
+
+	// strip BOLD_OPERATOR
+	bool is_bold = (substring(strMessage, 0, 5) == BOLD_OPERATOR);
+	if (is_bold)
+		strMessage = substring(strMessage, 5, -1);
 
 	// strip trailing newlines
 	j = strlen(strMessage) - 1;
@@ -99,6 +107,7 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 		j = cpm_index;
 	}
 	strcpy(centerprint_messages[j], strMessage);
+	centerprint_bold[j] = is_bold;
 	centerprint_msgID[j] = new_id;
 	if (duration < 0)
 	{
@@ -133,6 +142,7 @@ void reset_centerprint_messages()
 		centerprint_expire_time[i] = 0;
 		centerprint_time[i] = 1;
 		centerprint_msgID[i] = 0;
+		centerprint_bold[i] = false;
 		strfree(centerprint_messages[i]);
 	}
 }
@@ -215,8 +225,6 @@ void HUD_CenterPrint ()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	bool is_bold;
-	string centerprint_message = strzone("");
 	int entries;
 	float height;
 	vector fontsize;
@@ -233,13 +241,7 @@ void HUD_CenterPrint ()
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
-		// if the notification starts with ^BOLD make it bold (e.g. frag messages);
-		is_bold = (substring(centerprint_messages[j], 0, 5) == BOLD_OPERATOR);
-		// remove ^BOLD so it doesn't get printed onscreen
-		if (is_bold)
-			strcpy(centerprint_message, substring(centerprint_messages[j], 5, -1));
-		else
-			strcpy(centerprint_message, centerprint_messages[j]);
+		bool is_bold = centerprint_bold[j];
 
 		// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
 		// height = panel_size_y/entries;
@@ -307,9 +309,9 @@ void HUD_CenterPrint ()
 		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
-			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_message), "\n");
+			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
 		else
-			n = tokenizebyseparator(centerprint_message, "\n");
+			n = tokenizebyseparator(centerprint_messages[j], "\n");
 
 		if (autocvar_hud_panel_centerprint_flip)
 		{
@@ -363,7 +365,6 @@ void HUD_CenterPrint ()
 			if (pos.y < panel_pos.y) // check if the next message can be shown
 			{
 				drawfontscale = hud_scale;
-				strfree(centerprint_message);
 				return;
 			}
 		}
@@ -376,12 +377,10 @@ void HUD_CenterPrint ()
 			if(pos.y > panel_pos.y + panel_size.y - fontsize.y) // check if the next message can be shown
 			{
 				drawfontscale = hud_scale;
-				strfree(centerprint_message);
 				return;
 			}
 		}
 	}
-	strfree(centerprint_message);
 
 	drawfontscale = hud_scale;
 	if (all_messages_expired)

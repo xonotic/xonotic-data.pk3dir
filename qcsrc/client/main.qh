@@ -96,8 +96,8 @@ float camera_roll;
 vector camera_direction;
 
 void centerprint_hud(string strMessage);
-void centerprint_kill(float id);
-void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
+void centerprint_kill(int id);
+void centerprint_generic(int new_id, string strMessage, float duration, int countdown_num);
 
 const float ALPHA_MIN_VISIBLE = 0.003;
 
