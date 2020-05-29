@@ -99,8 +99,8 @@ STATIC_INIT(Stats_renumber) { FOREACH(Stats, true, it.m_id = i); }
 
 REGISTER_NET_LINKED(ENT_CLIENT_STATS)
 
-const int Stats_groups_minor = 24;
-const int Stats_groups_major = 11; // ceil(Stats_MAX / Stats_groups_minor)
+const int Stats_groups_minor = 12;
+const int Stats_groups_major = 22; // ceil(Stats_MAX / Stats_groups_minor)
 
 #define G_MAJOR(id) (floor((id) / Stats_groups_minor))
 #define G_MINOR(id) ((id) % Stats_groups_minor)
@@ -180,7 +180,7 @@ bool Stats_Send(entity this, entity to, int sf)
 {
     TC(entity, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_STATS);
-    TC(PlayerState, this.owner);
+    TC(entity, this.owner);
     Stats_Write(this);
     return true;
 }
