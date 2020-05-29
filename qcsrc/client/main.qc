@@ -674,7 +674,7 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 
 void Spawn_Draw(entity this)
 {
-	if(this.alpha <= 0)
+	if(!this.alpha)
 		return;
 
 	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
@@ -682,25 +682,15 @@ void Spawn_Draw(entity this)
 
 void Spawn_PreDraw(entity this)
 {
-	float alph;
-	vector org = getpropertyvec(VF_ORIGIN);
-	if(this.fade_start)
+	bool dodraw = true;
+	if(autocvar_cl_spawn_point_dist_max)
 	{
-		if(vdist(org - this.origin, >, this.fade_end))
-			alph = 0; // save on some processing
-		else if(vdist(org - this.origin, <, this.fade_start))
-			alph = 1; // more processing saved
-		else
-			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+		vector org = getpropertyvec(VF_ORIGIN);
+		dodraw = vdist(org - this.origin, <, autocvar_cl_spawn_point_dist_max);
 	}
-	else
-		alph = 1;
 	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
-	this.alpha = alph;
-	if(alph <= 0)
-		this.drawmask = 0;
-	else
-		this.drawmask = MASK_NORMAL;
+	this.alpha = dodraw;
+	this.drawmask = (dodraw) ? MASK_NORMAL : 0;
 }
 
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
@@ -745,8 +735,6 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			this.draw = Spawn_Draw;
 			if (is_new) IL_PUSH(g_drawables, this);
 			setpredraw(this, Spawn_PreDraw);
-			this.fade_start = autocvar_cl_spawn_point_dist_min;
-			this.fade_end = autocvar_cl_spawn_point_dist_max;
 		}
 	//}
 
