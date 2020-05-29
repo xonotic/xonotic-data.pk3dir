@@ -100,8 +100,8 @@ REGISTRY_DEFINE_GET(Stats, NULL)
 
 REGISTER_NET_LINKED(ENT_CLIENT_STATS)
 
-const int Stats_groups_minor = 12;
-const int Stats_groups_major = 22; // ceil(REGISTRY_MAX(Stats) / Stats_groups_minor)
+const int Stats_groups_minor = 16;
+const int Stats_groups_major = 16; // ceil(REGISTRY_MAX(Stats) / Stats_groups_minor)
 
 #define G_MAJOR(id) (floor((id) / Stats_groups_minor))
 #define G_MINOR(id) ((id) % Stats_groups_minor)
@@ -111,12 +111,12 @@ const int Stats_groups_major = 22; // ceil(REGISTRY_MAX(Stats) / Stats_groups_mi
 NET_HANDLE(ENT_CLIENT_STATS, bool isnew)
 {
     make_pure(this);
-    const int majorBits = ReadInt24_t();
+    const int majorBits = ReadShort();
     for (int i = 0; i < Stats_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
             continue;
         }
-        const int minorBits = ReadInt24_t();
+        const int minorBits = ReadShort();
         for (int j = 0; j < Stats_groups_minor; ++j) {
             if (!(minorBits & BIT(j))) {
                 continue;
@@ -152,7 +152,7 @@ void Stats_Write(entity data)
 			statsminorBitsArr[maj] = BITSET(statsminorBitsArr[maj], BIT(G_MINOR(it.m_id)), true);
         }
     });
-    WriteInt24_t(MSG_ENTITY, majorBits);
+    WriteShort(MSG_ENTITY, majorBits);
 
 	for (int i = 0; i < Stats_groups_major; ++i)
 	{
@@ -160,7 +160,7 @@ void Stats_Write(entity data)
 			continue;
 
 		const int minorBits = statsminorBitsArr[i];
-		WriteInt24_t(MSG_ENTITY, minorBits);
+		WriteShort(MSG_ENTITY, minorBits);
 		for (int j = 0; j < Stats_groups_minor; ++j)
 		{
 			if (!(minorBits & BIT(j)))
