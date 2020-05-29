@@ -9,11 +9,12 @@
 USING(vectori, vector);
 
 REGISTRY(Stats, 256)
-#define Stats_from(i) _Stats_from(i, NULL)
 REGISTER_REGISTRY(Stats)
 REGISTRY_SORT(Stats)
 REGISTRY_CHECK(Stats)
 STATIC_INIT(Stats_renumber) { FOREACH(Stats, true, it.m_id = i); }
+
+REGISTRY_DEFINE_GET(Stats, NULL)
 
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
@@ -100,7 +101,7 @@ STATIC_INIT(Stats_renumber) { FOREACH(Stats, true, it.m_id = i); }
 REGISTER_NET_LINKED(ENT_CLIENT_STATS)
 
 const int Stats_groups_minor = 12;
-const int Stats_groups_major = 22; // ceil(Stats_MAX / Stats_groups_minor)
+const int Stats_groups_major = 22; // ceil(REGISTRY_MAX(Stats) / Stats_groups_minor)
 
 #define G_MAJOR(id) (floor((id) / Stats_groups_minor))
 #define G_MINOR(id) ((id) % Stats_groups_minor)
@@ -120,7 +121,7 @@ NET_HANDLE(ENT_CLIENT_STATS, bool isnew)
             if (!(minorBits & BIT(j))) {
                 continue;
             }
-            const entity it = Stats_from(Stats_groups_minor * i + j);
+            const entity it = REGISTRY_GET(Stats, Stats_groups_minor * i + j);
             it.m_receive(it);
         }
     }
@@ -165,7 +166,7 @@ void Stats_Write(entity data)
 			if (!(minorBits & BIT(j)))
 				continue;
 
-			const entity it = Stats_from(Stats_groups_minor * i + j);
+			const entity it = REGISTRY_GET(Stats, Stats_groups_minor * i + j);
             it.m_send(MSG_ENTITY, data);
 		}
 	}

@@ -5,7 +5,7 @@
 #ifdef GAMEQC
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
-    ATTRIBARRAY(Inventory, inv_items, int, Items_MAX);
+    ATTRIBARRAY(Inventory, inv_items, int, REGISTRY_MAX(Items));
     /** Previous state */
     ATTRIB(Inventory, inventory, Inventory);
 ENDCLASS(Inventory)
@@ -16,7 +16,7 @@ ENDCLASS(Inventory)
 REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
 
 const int Inventory_groups_minor = 8; // exactly 1 byte
-const int Inventory_groups_major = 3; // ceil(Items_MAX / Inventory_groups_minor)
+const int Inventory_groups_major = 3; // ceil(REGISTRY_MAX(Items) / Inventory_groups_minor)
 
 #define G_MAJOR(id) (floor((id) / Inventory_groups_minor))
 #define G_MINOR(id) ((id) % Inventory_groups_minor)
@@ -38,7 +38,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             if (!(minorBits & BIT(j))) {
                 continue;
             }
-            const GameItem it = Items_from(Inventory_groups_minor * i + j);
+            const GameItem it = REGISTRY_GET(Items, Inventory_groups_minor * i + j);
             .int fld = inv_items[it.m_id];
             int prev = this.(fld);
             int next = this.(fld) = ReadByte();
@@ -86,7 +86,7 @@ void Inventory_Write(Inventory data)
 			if (!(minorBits & BIT(j)))
 				continue;
 
-			const entity it = Items_from(Inventory_groups_minor * i + j);
+			const entity it = REGISTRY_GET(Items, Inventory_groups_minor * i + j);
 			WriteByte(MSG_ENTITY, data.inv_items[it.m_id]);
 		}
 	}

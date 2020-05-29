@@ -1,0 +1,7 @@
+Args: F:\msys64\home\Admin\xonotic\fteqw\engine\release\fteqcc64.exe -std=gmqcc -Ooverlap-locals -O3 -Werror -Wall -Wno-field-redeclared -flno -futf8 -fno-bail-on-werror -frelaxed-switch -freturn-assignments -o F:/msys64/home/Admin/xonotic/data/xonotic-data.pk3dir/qcsrc/../progs.dat ../../.tmp/server.qc
+:: warning: Disabling -Ofilenames to satisfy -flno request
+FTEQCC: May 19 2020
+Source file: ../../.tmp/server.qc
+Globals exceeds 32k - an enhanced QCVM will be required
+Compile finished: F:/msys64/home/Admin/xonotic/data/xonotic-data.pk3dir/qcsrc/../progs.dat (id format)
+Done. 0 warnings
