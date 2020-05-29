@@ -475,7 +475,7 @@ void CommonCommand_info(int request, entity caller, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string command = builtin_cvar_string(strcat("sv_info_", argv(1)));
+			string command = cvar_string(strcat("sv_info_", argv(1)));
 
 			if (command) wordwrap_sprint(caller, command, 1000);
 			else print_to(caller, "ERROR: unsupported info command");

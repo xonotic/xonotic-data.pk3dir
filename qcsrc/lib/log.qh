@@ -96,23 +96,17 @@ string(string, string...) strcat1n = #115;
 noref int autocvar_developer;
 noref bool autocvar_prvm_backtraceforwarnings;
 
-#ifdef SVQC
-#define bt_cvar_set(cvar, value) builtin_cvar_set(cvar, value)
-#else
-#define bt_cvar_set(cvar, value) cvar_set(cvar, value)
-#endif
-
 #define backtrace(msg) \
 	MACRO_BEGIN \
 		int dev = autocvar_developer; \
 		bool war = autocvar_prvm_backtraceforwarnings; \
-		bt_cvar_set("developer", "1"); \
-		bt_cvar_set("prvm_backtraceforwarnings", "1"); \
+		cvar_set("developer", "1"); \
+		cvar_set("prvm_backtraceforwarnings", "1"); \
 		print("\n--- CUT HERE ---\n", msg); \
 		_backtrace(); \
 		print("\n--- CUT UNTIL HERE ---\n"); \
-		bt_cvar_set("developer", ftos(dev)); \
-		bt_cvar_set("prvm_backtraceforwarnings", ftos(war)); \
+		cvar_set("developer", ftos(dev)); \
+		cvar_set("prvm_backtraceforwarnings", ftos(war)); \
 	MACRO_END
 
 void print_assertfailed_severe(string expr)
