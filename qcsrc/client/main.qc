@@ -674,23 +674,15 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 
 void Spawn_Draw(entity this)
 {
-	if(!this.alpha)
-		return;
-
-	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
-}
-
-void Spawn_PreDraw(entity this)
-{
 	bool dodraw = true;
 	if(autocvar_cl_spawn_point_dist_max)
 	{
 		vector org = getpropertyvec(VF_ORIGIN);
 		dodraw = vdist(org - this.origin, <, autocvar_cl_spawn_point_dist_max);
 	}
-	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
-	this.alpha = dodraw;
-	this.drawmask = (dodraw) ? MASK_NORMAL : 0;
+
+	if(dodraw)
+		__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
@@ -734,7 +726,6 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 
 			this.draw = Spawn_Draw;
 			if (is_new) IL_PUSH(g_drawables, this);
-			setpredraw(this, Spawn_PreDraw);
 		}
 	//}
 
