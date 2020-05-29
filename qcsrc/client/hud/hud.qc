@@ -408,7 +408,7 @@ void HUD_Vehicle()
 	if(hud == HUD_BUMBLEBEE_GUN)
 		CSQC_BUMBLE_GUN_HUD();
 	else {
-		Vehicle info = Vehicles_from(hud);
+		Vehicle info = REGISTRY_GET(Vehicles, hud);
 		info.vr_hud(info);
 	}
 
@@ -667,18 +667,18 @@ void HUD_Main()
 
 	// cache the panel order into the panel_order array
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
-		for(i = 0; i < hud_panels_COUNT; ++i)
+		for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 			panel_order[i] = -1;
 		string s = "";
 		int p_num;
 		bool warning = false;
 		int argc = tokenize_console(autocvar__hud_panelorder);
-		if (argc > hud_panels_COUNT)
+		if (argc > REGISTRY_COUNT(hud_panels))
 			warning = true;
 		//first detect wrong/missing panel numbers
-		for(i = 0; i < hud_panels_COUNT; ++i) {
+		for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
 			p_num = stoi(argv(i));
-			if (p_num >= 0 && p_num < hud_panels_COUNT) { //correct panel number?
+			if (p_num >= 0 && p_num < REGISTRY_COUNT(hud_panels)) { //correct panel number?
 				if (panel_order[p_num] == -1) //found for the first time?
 					s = strcat(s, ftos(p_num), " ");
 				panel_order[p_num] = 1; //mark as found
@@ -686,7 +686,7 @@ void HUD_Main()
 			else
 				warning = true;
 		}
-		for(i = 0; i < hud_panels_COUNT; ++i) {
+		for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
 			if (panel_order[i] == -1) {
 				warning = true;
 				s = strcat(s, ftos(i), " "); //add missing panel number
@@ -700,15 +700,15 @@ void HUD_Main()
 
 		//now properly set panel_order
 		tokenize_console(s);
-		for(i = 0; i < hud_panels_COUNT; ++i) {
+		for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
 			panel_order[i] = stof(argv(i));
 		}
 	}
 
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
-	for(i = hud_panels_COUNT - 1; i >= 0; --i)
-		HUD_Panel_Draw(hud_panels_from(panel_order[i]));
+	for(i = REGISTRY_COUNT(hud_panels) - 1; i >= 0; --i)
+		HUD_Panel_Draw(REGISTRY_GET(hud_panels, panel_order[i]));
 
 	HUD_Vehicle();
 

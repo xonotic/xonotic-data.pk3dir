@@ -96,7 +96,8 @@ void bumble_raygun_draw(entity this)
 
     if(this.bumble_raygun_nextdraw < time)
     {
-        boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, this.origin, this.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+        entity eff = REGISTRY_GET(Effects, this.traileffect);
+        boxparticles(particleeffectnum(eff), this, this.origin, this.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
         boxparticles(this.lip, this, this.bumble_origin, this.bumble_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
         this.bumble_raygun_nextdraw = time + 0.1;
     }

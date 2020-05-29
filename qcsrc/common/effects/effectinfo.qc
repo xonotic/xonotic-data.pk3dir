@@ -322,8 +322,9 @@ GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt", fa
 
 
 REGISTRY(EffectInfos, BITS(9))
-#define EffectInfos_from(i) _EffectInfos_from(i, NULL)
 REGISTER_REGISTRY(EffectInfos)
+
+REGISTRY_DEFINE_GET(EffectInfos, NULL)
 #define EFFECTINFO(name) \
     ACCUMULATE void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { } \
     REGISTER(EffectInfos, EFFECTINFO, name, m_id, NEW(EffectInfoGroup)) { \

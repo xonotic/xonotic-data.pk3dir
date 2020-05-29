@@ -36,7 +36,7 @@ void thrown_wep_think(entity this)
 // returns amount of ammo used, or -1 for failure, or 0 for no ammo count
 float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
 {
-	Weapon info = Weapons_from(wpn);
+	Weapon info = REGISTRY_GET(Weapons, wpn);
 	int ammotype = info.ammo_type;
 
 	entity wep = spawn();
@@ -51,7 +51,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 
 	W_DropEvent(wr_drop,own,wpn,wep,weaponentity);
 
-	if(WepSet_FromWeapon(Weapons_from(wpn)) & WEPSET_SUPERWEAPONS)
+	if(WepSet_FromWeapon(REGISTRY_GET(Weapons, wpn)) & WEPSET_SUPERWEAPONS)
 	{
 		Item_SetExpiring(wep, true);
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
@@ -138,7 +138,7 @@ bool W_IsWeaponThrowable(entity this, int w)
 	if (w == WEP_Null.m_id)
 		return false;
 
-	return (Weapons_from(w)).weaponthrowable;
+	return (REGISTRY_GET(Weapons, w)).weaponthrowable;
 }
 
 // toss current weapon

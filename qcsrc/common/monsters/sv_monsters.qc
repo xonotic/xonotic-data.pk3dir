@@ -78,7 +78,7 @@ bool Monster_ValidTarget(entity this, entity targ)
 
 	if((targ == this)
 	|| (autocvar_g_monsters_lineofsight && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
-	|| (IS_VEHICLE(targ) && !((Monsters_from(this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
+	|| (IS_VEHICLE(targ) && !((REGISTRY_GET(Monsters, this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| (time < game_starttime) // monsters do nothing before match has started
 	|| (targ.takedamage == DAMAGE_NO)
 	|| (game_stopped)
@@ -260,7 +260,7 @@ void Monster_Sound_Precache(string f)
 
 void Monster_Sounds_Precache(entity this)
 {
-	string m = (Monsters_from(this.monsterid)).m_model.model_str();
+	string m = (REGISTRY_GET(Monsters, this.monsterid)).m_model.model_str();
 	float globhandle, n, i;
 	string f;
 
@@ -465,7 +465,7 @@ void Monster_UpdateModel(entity this)
 	this.anim_die2   = animfixfps(this, '9 1 0.01', '0 0 0');*/
 
 	// then get the real values
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_anim(mon, this);
 }
 
@@ -977,7 +977,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	CSQCModel_UnlinkEntity(this);
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_death(mon, this);
 
 	if(this.candrop && this.weapon)
@@ -1008,7 +1008,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	float take = v.x;
 	//float save = v.y;
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	take = mon.mr_pain(mon, this, take, attacker, deathtype);
 
 	if(take)
@@ -1235,7 +1235,7 @@ void Monster_Think(entity this)
 		this.last_enemycheck = time + 1; // check for enemies every second
 	}
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	if(mon.mr_think(mon, this))
 	{
 		Monster_Move(this, this.speed2, this.speed, this.stopspeed);
@@ -1251,7 +1251,7 @@ void Monster_Think(entity this)
 
 bool Monster_Spawn_Setup(entity this)
 {
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_setup(mon, this);
 
 	// ensure some basic needs are met
@@ -1317,7 +1317,7 @@ bool Monster_Spawn_Setup(entity this)
 bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 {
 	// setup the basic required properties for a monster
-	entity mon = Monsters_from(mon_id);
+	entity mon = REGISTRY_GET(Monsters, mon_id);
 	if(!mon.monsterid) { return false; } // invalid monster
 
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }

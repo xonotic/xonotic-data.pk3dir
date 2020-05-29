@@ -14,11 +14,14 @@
 	#define _R_DEL(r)
 #endif
 
+#define REGISTRY_MAX(id) id##_MAX
+#define REGISTRY_COUNT(id) id##_COUNT
 /**
  * Declare a new registry.
  *
- * Don't forget to call `REGISTER_REGISTRY`:
+ * Don't forget to call REGISTER_REGISTRY and REGISTRY_DEFINE_GET:
  *     REGISTER_REGISTRY(Foos)
+ *     REGISTRY_DEFINE_GET(Foos, null_ent)
  */
 #define REGISTRY(id, max) \
 	void Register##id(); \
@@ -33,7 +36,11 @@
 	noref entity id##_first, id##_last; \
 	_R_MAP(_##id, id##_MAX); \
 	SHUTDOWN(id) { _R_DEL(_##id); } \
-	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+
+#define REGISTRY_DEFINE_GET(id, null) \
+	entity id##_from(int i) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+
+#define REGISTRY_GET(id, i) id##_from(i)
 
 /** Add registry dependencies to a registry */
 #define REGISTRY_DEPENDS(id, dep) void Register##dep(); void REGISTRY_DEPENDS_(id) { Register##dep(); }
@@ -129,14 +136,14 @@ MACRO_END
 		entity a = _R_GET(_##id, i), b = _R_GET(_##id, j); \
 		_R_SET(_##id, i, b); \
 		_R_SET(_##id, j, a); \
-        \
+		\
 		entity a_next = a.REGISTRY_NEXT, b_next = b.REGISTRY_NEXT; \
 		a.REGISTRY_NEXT = b_next; \
 		b.REGISTRY_NEXT = a_next; \
-        \
+		\
 		if (i == 0) id##_first = b; \
 		else _R_GET(_##id, i - 1).REGISTRY_NEXT = b; \
-        \
+		\
 		if (j == 0) id##_first = a; \
 		else _R_GET(_##id, j - 1).REGISTRY_NEXT = a; \
 	} \
@@ -189,10 +196,7 @@ void Registry_send(string id, string hash);
 	} \
 	void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
 
-#define REGISTER_REGISTRY(...) EVAL_REGISTER_REGISTRY(OVERLOAD(REGISTER_REGISTRY, __VA_ARGS__))
-#define EVAL_REGISTER_REGISTRY(...) __VA_ARGS__
-#define REGISTER_REGISTRY_1(id) REGISTER_REGISTRY_2(id, #id)
-#define REGISTER_REGISTRY_2(id, str) \
+#define _REGISTER_REGISTRY(id, str) \
 	ACCUMULATE_FUNCTION(__static_init_1, Register##id) \
 	CLASS(id##Registry, Object) \
 		ATTRIB(id##Registry, m_name, string, str); \
@@ -201,6 +205,8 @@ void Registry_send(string id, string hash);
 	ENDCLASS(id##Registry) \
 	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry)); \
 	METHOD(id##Registry, m_reload, void()) { \
-	    id##_state = 0; \
+		id##_state = 0; \
 		Register##id(); \
 	}
+
+#define REGISTER_REGISTRY(id) _REGISTER_REGISTRY(id, #id)

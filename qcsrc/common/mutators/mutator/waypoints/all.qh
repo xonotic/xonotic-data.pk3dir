@@ -3,7 +3,6 @@
 #include "waypointsprites.qh"
 
 REGISTRY(Waypoints, BITS(7))
-#define Waypoints_from(i) _Waypoints_from(i, WP_Null)
 REGISTER_REGISTRY(Waypoints)
 REGISTRY_CHECK(Waypoints)
 
@@ -30,7 +29,6 @@ ENDCLASS(Waypoint)
 #define REGISTER_WAYPOINT(id, text, icon, color, blink) REGISTER_WAYPOINT_(id, NEW(Waypoint, #id, text, icon, color, blink))
 
 REGISTRY(RadarIcons, BITS(7))
-#define RadarIcons_from(i) _RadarIcons_from(i, RADARICON_NONE)
 REGISTER_REGISTRY(RadarIcons)
 REGISTRY_CHECK(RadarIcons)
 
@@ -38,8 +36,11 @@ REGISTRY_CHECK(RadarIcons)
 #define REGISTER_RADARICON(id, num) REGISTER(RadarIcons, RADARICON, id, m_id, new_pure(RadarIcon)) { this.m_radaricon = num; this.netname = #id; }
 
 REGISTER_WAYPOINT(Null, "", "", '0 0 0', 1);
+REGISTRY_DEFINE_GET(Waypoints, WP_Null)
 
 REGISTER_RADARICON(NONE,            0);
+REGISTRY_DEFINE_GET(RadarIcons, RADARICON_NONE)
+
 REGISTER_RADARICON(FLAG,            1);
 REGISTER_RADARICON(FLAGCARRIER,     1);
 

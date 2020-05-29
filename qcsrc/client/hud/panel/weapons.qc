@@ -37,7 +37,7 @@ void HUD_Weapons_Export(int fh)
 	HUD_Write_Cvar("hud_panel_weapons_selection_speed");
 }
 
-entity weaponorder[Weapons_MAX];
+entity weaponorder[REGISTRY_MAX(Weapons)];
 void weaponorder_swap(int i, int j, entity pass)
 {
 	TC(int, i); TC(int, j);
@@ -61,7 +61,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
 		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)) nHidden += 1; \
 	}); \
-	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
+	vector table_size = HUD_GetTableSize_BestItemAR((REGISTRY_COUNT(Weapons) - 1) - nHidden, panel_size, aspect); \
 	columns = table_size.x; \
 	rows = table_size.y; \
 	weapon_size.x = panel_size.x / columns; \
@@ -135,7 +135,7 @@ void HUD_Weapons()
 
 		int weapon_cnt = 0;
 		FOREACH(Weapons, it != WEP_Null && it.impulse >= 0, weaponorder[weapon_cnt++] = it);
-		for(i = weapon_cnt; i < Weapons_MAX; ++i)
+		for(i = weapon_cnt; i < REGISTRY_MAX(Weapons); ++i)
 			weaponorder[i] = NULL;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, NULL);
 
@@ -178,8 +178,8 @@ void HUD_Weapons()
 				if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
 			});
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((Weapons_COUNT - 1) - nHidden));
-			for(i = 0, j = 0; i <= (Weapons_COUNT - 1) && j < countw; ++i)
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((REGISTRY_COUNT(Weapons) - 1) - nHidden));
+			for(i = 0, j = 0; i <= (REGISTRY_COUNT(Weapons) - 1) && j < countw; ++i)
 			{
 				if(weaponorder[i].spawnflags & WEP_FLAG_MUTATORBLOCKED)
 					continue;
@@ -272,7 +272,7 @@ void HUD_Weapons()
 			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
-		weapon_count = (Weapons_COUNT - 1);
+		weapon_count = (REGISTRY_COUNT(Weapons) - 1);
 
 	// animation for fading in/out the panel respectively when not in use
 	if(!autocvar__hud_configure)

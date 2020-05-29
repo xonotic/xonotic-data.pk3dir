@@ -85,7 +85,7 @@
 
 		NET_HANDLE(globalsound, bool isnew)
 		{
-			entity gs = GlobalSounds_from(ReadByte());
+			entity gs = REGISTRY_GET(GlobalSounds, ReadByte());
 			float r = ReadByte() / 255;
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
@@ -112,7 +112,7 @@
 
 		NET_HANDLE(playersound, bool isnew)
 		{
-			entity ps = PlayerSounds_from(ReadByte());
+			entity ps = REGISTRY_GET(PlayerSounds, ReadByte());
 			float r = ReadByte() / 255;
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);

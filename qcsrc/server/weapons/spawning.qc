@@ -14,7 +14,7 @@ string W_Apply_Weaponreplace(string in)
 	string out = "";
 	FOREACH_WORD(in, true, {
 		string replacement = "";
-		Weapon w = Weapons_fromstr(it);
+		Weapon w = Weapon_from_name(it);
 		if (w)
 		{
             replacement = w.weaponreplace;
@@ -55,7 +55,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				Weapon wep = Weapons_fromstr(s);
+				Weapon wep = Weapon_from_name(s);
 				if(wep != WEP_Null)
 				{
 					entity replacement = spawn();
@@ -68,7 +68,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
-			wpn = Weapons_fromstr(s);
+			wpn = Weapon_from_name(s);
 		}
 		if (wpn == WEP_Null)
 		{

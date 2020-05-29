@@ -14,7 +14,7 @@ MUTATOR_HOOKFUNCTION(mutator_smneg, BuildMutatorsPrettyString) {
     M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Stale-move negation");
 }
 
-.float x_smneg_weight[Weapons_MAX];
+.float x_smneg_weight[REGISTRY_MAX(Weapons)];
 
 float smneg_multiplier(float weight) {
     float a = autocvar_g_smneg_bonus_asymptote;

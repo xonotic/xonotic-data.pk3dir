@@ -165,7 +165,8 @@ CLASS(Mutator, Object)
 ENDCLASS(Mutator)
 
 REGISTRY(Mutators, BITS(7))
-#define Mutators_from(i) _Mutators_from(i, NULL)
+
+REGISTRY_DEFINE_GET(Mutators, NULL)
 bool Mutator_Add(Mutator mut);
 void Mutator_Remove(Mutator mut);
 bool mutator_log = false;

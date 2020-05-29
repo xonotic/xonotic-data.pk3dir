@@ -213,10 +213,10 @@ void Ent_WaypointSprite(entity this, bool isnew)
 float spritelookupblinkvalue(entity this, string s)
 {
     if (s == WP_Weapon.netname) {
-        if (Weapons_from(this.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
+        if (REGISTRY_GET(Weapons, this.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
             return 2;
     }
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypointblink;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_waypointblink;
     if(s == WP_FlagReturn.netname) return 2;
 
     return 1;
@@ -224,8 +224,8 @@ float spritelookupblinkvalue(entity this, string s)
 
 vector spritelookupcolor(entity this, string s, vector def)
 {
-    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return Weapons_from(this.wp_extra).wpcolor;
-    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return Items_from(this.wp_extra).m_color;
+    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).wpcolor;
+    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_color;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
         return M_ARGV(2, vector);
@@ -238,8 +238,8 @@ string spritelookuptext(entity this, string s)
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		return "Spam"; // no need to translate this debug string
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_name;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint;
+    if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).m_name;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_waypoint;
     if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -257,9 +257,9 @@ string spritelookuptext(entity this, string s)
 string spritelookupicon(entity this, string s)
 {
     // TODO: needs icons! //if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
-    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_icon;
-    if (s == WP_Vehicle.netname) return Vehicles_from(this.wp_extra).m_icon;
+    if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).model2;
+    if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_icon;
+    if (s == WP_Vehicle.netname) return REGISTRY_GET(Vehicles, this.wp_extra).m_icon;
     //if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_icon;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {

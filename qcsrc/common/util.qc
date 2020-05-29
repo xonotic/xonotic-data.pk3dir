@@ -508,7 +508,7 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 		n = tokenize_console(neworder);
 		for(w = to; w >= from; --w)
 		{
-			int wflags = Weapons_from(w).spawnflags;
+			int wflags = REGISTRY_GET(Weapons, w).spawnflags;
 			if(wflags & WEP_FLAG_SPECIALATTACK)
 				continue;
 			for(i = 0; i < n; ++i)

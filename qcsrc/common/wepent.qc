@@ -8,15 +8,15 @@ MACRO_END
 #define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
 	PROP(false, m_switchweapon, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_switchweapon.m_id); }, \
-	{ (viewmodels[this.m_wepent_slot]).switchweapon = Weapons_from(ReadByte()); }) \
+	{ (viewmodels[this.m_wepent_slot]).switchweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
     \
     PROP(false, m_switchingweapon, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_switchingweapon.m_id); }, \
-	{ (viewmodels[this.m_wepent_slot]).switchingweapon = Weapons_from(ReadByte()); }) \
+	{ (viewmodels[this.m_wepent_slot]).switchingweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
     \
     PROP(false, m_weapon, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_weapon.m_id); }, \
-	{ (viewmodels[this.m_wepent_slot]).activeweapon = Weapons_from(ReadByte()); }) \
+	{ (viewmodels[this.m_wepent_slot]).activeweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
     \
     PROP(false, m_alpha, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, rint(bound(-1, 254 * this.m_alpha, 254) - -1)); }, \

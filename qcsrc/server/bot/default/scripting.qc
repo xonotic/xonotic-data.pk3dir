@@ -588,10 +588,10 @@ float bot_cmd_select_weapon(entity this)
 		if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
 			continue;
 
-		if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
+		if(client_hasweapon(this, REGISTRY_GET(Weapons, id), weaponentity, true, false))
 		{
 			success = true;
-			this.(weaponentity).m_switchweapon = Weapons_from(id);
+			this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, id);
 		}
 	}
 

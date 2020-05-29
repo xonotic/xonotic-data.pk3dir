@@ -25,7 +25,6 @@ WepSet ReadWepSet();
 #include <common/util.qh>
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
-#define Weapons_from(i) _Weapons_from(i, WEP_Null)
 REGISTER_REGISTRY(Weapons)
 STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPickup, it)); }
 
@@ -126,8 +125,9 @@ STATIC_INIT_LATE(W_PROP_reloader)
     [[alias("WEP_" #id)]] Weapon _wep_##sname
 
 REGISTER_WEAPON(Null, NEW(Weapon));
+REGISTRY_DEFINE_GET(Weapons, WEP_Null)
 
-Weapon Weapons_fromstr(string s)
+Weapon Weapon_from_name(string s)
 {
     FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
     return WEP_Null;
@@ -256,7 +256,7 @@ const .float reloading_time = reload_time;
             .void(Weapon this, int i) wr_net;
             NET_HANDLE(WeaponUpdate, bool isnew)
             {
-                Weapon w = Weapons_from(ReadByte());
+                Weapon w = REGISTRY_GET(Weapons, ReadByte());
                 for (int i; (i = ReadByte()); )
                 {
                     w.wr_net(w, i);
@@ -297,7 +297,7 @@ const .float reloading_time = reload_time;
 #define WEP_CVAR_BOTH(wepname, isprimary, name) ((isprimary) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
 
 const int WEP_FIRST = 1;
-#define WEP_LAST (Weapons_COUNT - 1)
+#define WEP_LAST (REGISTRY_COUNT(Weapons) - 1)
 WepSet WEPSET_ALL;
 WepSet WEPSET_SUPERWEAPONS;
 
@@ -308,7 +308,7 @@ WepSet WEPSET_SUPERWEAPONS;
 
 // TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
 #define WEP_IMPULSE_BEGIN 230
-#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (Weapons_COUNT - 1) - 1, 253)
+#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (REGISTRY_COUNT(Weapons) - 1) - 1, 253)
 
 REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
 REGISTRY_CHECK(Weapons)
@@ -332,8 +332,8 @@ STATIC_INIT(register_weapons_done)
     FOREACH(Weapons, true, it.wr_init(it));
     #endif
     weaponorder_byid = "";
-    for (int i = Weapons_MAX - 1; i >= 1; --i)
-        if (Weapons_from(i))
+    for (int i = REGISTRY_MAX(Weapons) - 1; i >= 1; --i)
+        if (REGISTRY_GET(Weapons, i))
             weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
     weaponorder_byid = strzone(substring(weaponorder_byid, 1, -1));
 }

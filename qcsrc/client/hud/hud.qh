@@ -11,8 +11,9 @@ bool HUD_WouldShowCursor();
 bool QuickMenu_IsOpened();
 
 REGISTRY(hud_panels, BITS(6))
-#define hud_panels_from(i) _hud_panels_from(i, NULL)
 REGISTER_REGISTRY(hud_panels)
+
+REGISTRY_DEFINE_GET(hud_panels, NULL)
 
 #define _REGISTER_HUD_PANEL(id, draw_func, export_func, configflags, showflags) \
 	void draw_func(); \
@@ -43,7 +44,7 @@ REGISTER_REGISTRY(hud_panels)
 		); \
 MACRO_END
 
-int panel_order[hud_panels_MAX];
+int panel_order[REGISTRY_MAX(hud_panels)];
 string hud_panelorder_prev;
 
 bool hud_draw_maximized;
@@ -89,7 +90,7 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 4;
 float scoreboard_bottom;
-int weapon_accuracy[Weapons_MAX];
+int weapon_accuracy[REGISTRY_MAX(Weapons)];
 
 entity complain_weapon;
 int complain_weapon_type;

@@ -623,7 +623,7 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 		// the type was found
 		// choose the next one
 		flag = true;
-		s = MapInfo_Type_ToString(Gametypes_from(it.m_id + 1));
+		s = MapInfo_Type_ToString(REGISTRY_GET(Gametypes, it.m_id + 1));
 		if (s == "") s = MapInfo_Type_ToString(first);
 		break;
 	});

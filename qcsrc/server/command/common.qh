@@ -2,9 +2,10 @@
 
 #include <common/command/_mod.qh>
 REGISTRY(COMMON_COMMANDS, BITS(7))
-#define COMMON_COMMANDS_from(i) _COMMON_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(COMMON_COMMANDS)
 REGISTRY_SORT(COMMON_COMMANDS)
+
+REGISTRY_DEFINE_GET(COMMON_COMMANDS, NULL)
 
 #define COMMON_COMMAND(id, description) \
 	CLASS(commoncommand_##id, Command) \
