@@ -358,7 +358,7 @@ void LocalCommand_localprint(int request, int argc)
 		{
 			if (argv(1))
 			{
-				centerprint_hud(argv(1));
+				centerprint_AddStandard(argv(1));
 				return;
 			}
 		}

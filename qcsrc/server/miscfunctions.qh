@@ -11,24 +11,6 @@
 #include <common/mapinfo.qh>
 #include <common/turrets/all.qh>
 
-#if 1
-#define cvar_string_normal builtin_cvar_string
-#define cvar_normal builtin_cvar
-#else
-string cvar_string_normal(string n)
-{
-	if (!(cvar_type(n) & CVAR_TYPEFLAG_EXISTS))
-		backtrace(strcat("Attempt to access undefined cvar: ", n));
-	return builtin_cvar_string(n);
-}
-
-float cvar_normal(string n)
-{
-	return stof(cvar_string_normal(n));
-}
-#endif
-#define cvar_set_normal builtin_cvar_set
-
 .vector dropped_origin;
 
 entity eliminatedPlayers;
