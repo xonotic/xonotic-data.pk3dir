@@ -75,6 +75,17 @@ void spawnpoint_reset(entity this)
 	this.SendFlags |= 1; // update team since it was restored during reset
 }
 
+void link_spawnpoint(entity this)
+{
+	bool anypoint = (autocvar_g_spawn_useallspawns || (teamplay && have_team_spawns <= 0)); // TODO: check if available teams is equal to spawnpoints available
+
+	// Don't show team spawns in non-team matches,
+	// and don't show non-team spawns in team matches.
+	// (Unless useallspawns is activated)
+	if(anypoint || !((teamplay && !Team_IsValidTeam(this.team)) || (!teamplay && Team_IsValidTeam(this.team))))
+		Net_LinkEntity(this, false, 0, SpawnPoint_Send);
+}
+
 void relocate_spawnpoint(entity this)
 {
     // nudge off the floor
@@ -134,11 +145,8 @@ void relocate_spawnpoint(entity this)
         e.solid = SOLID_TRIGGER;
     }
 
-	// Don't show team spawns in non-team matches,
-	// and don't show non-team spawns in team matches.
-	// (Unless useallspawns is activated)
-	if(autocvar_g_spawn_useallspawns || !((teamplay && !Team_IsValidTeam(this.team)) || (!teamplay && Team_IsValidTeam(this.team))))
-		Net_LinkEntity(this, false, 0, SpawnPoint_Send);
+    // network it after all spawnpoints are setup, so that we can check if team spawnpoints are used
+	InitializeEntity(this, link_spawnpoint, INITPRIO_FINDTARGET);
 }
 
 spawnfunc(info_player_survivor)
