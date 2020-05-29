@@ -2,6 +2,7 @@
 
 #include <server/mutators/_mod.qh>
 #include "g_world.qh"
+#include "miscfunctions.qh"
 #include "race.qh"
 #include "defs.qh"
 #include "../common/constants.qh"
