@@ -658,6 +658,7 @@ void PutPlayerInServer(entity this)
 
 	// Cut off any still running player sounds.
 	stopsound(this, CH_PLAYER_SINGLE);
+	stopsound(this, CH_TRIGGER_SINGLE);
 
 	this.model = "";
 	FixPlayermodel(this);
