@@ -99,7 +99,7 @@ STATIC_INIT(Stats_renumber) { FOREACH(Stats, true, it.m_id = i); }
 
 REGISTER_NET_LINKED(ENT_CLIENT_STATS)
 
-const int Stats_groups_minor = 24; // exactly 1 byte
+const int Stats_groups_minor = 24;
 const int Stats_groups_major = 11; // ceil(Stats_MAX / Stats_groups_minor)
 
 #define G_MAJOR(id) (floor((id) / Stats_groups_minor))
@@ -110,7 +110,7 @@ const int Stats_groups_major = 11; // ceil(Stats_MAX / Stats_groups_minor)
 NET_HANDLE(ENT_CLIENT_STATS, bool isnew)
 {
     make_pure(this);
-    const int majorBits = ReadByte();
+    const int majorBits = ReadInt24_t();
     for (int i = 0; i < Stats_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
             continue;
@@ -151,7 +151,7 @@ void Stats_Write(entity data)
 			statsminorBitsArr[maj] = BITSET(statsminorBitsArr[maj], BIT(G_MINOR(it.m_id)), true);
         }
     });
-    WriteByte(MSG_ENTITY, majorBits);
+    WriteInt24_t(MSG_ENTITY, majorBits);
 
 	for (int i = 0; i < Stats_groups_major; ++i)
 	{
