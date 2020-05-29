@@ -15,9 +15,23 @@ ENDCLASS(Inventory)
 
 REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
 
-const int Inventory_groups_minor = 8; // exactly 1 byte
-const int Inventory_groups_major = 4; // ceil(REGISTRY_MAX(Items) / Inventory_groups_minor)
+const int Inventory_groups_minor = 8; // must be a multiple of 8 (one byte) to optimize bandwidth usage
+const int Inventory_groups_major = 4; // must be >= ceil(REGISTRY_COUNT(Items) / Inventory_groups_minor)
+#endif
 
+// no need to perform these checks on both server and client
+#ifdef CSQC
+STATIC_INIT(Inventory)
+{
+	if (Inventory_groups_minor / 8 != floor(Inventory_groups_minor / 8))
+		error("Inventory_groups_minor is not a multiple of 8.");
+	int min_major_value = ceil(REGISTRY_COUNT(Items) / Inventory_groups_minor);
+	if (Inventory_groups_major < min_major_value)
+		error(sprintf("Inventory_groups_major can not be < %d.", min_major_value));
+}
+#endif
+
+#ifdef SVQC
 #define G_MAJOR(id) (floor((id) / Inventory_groups_minor))
 #define G_MINOR(id) ((id) % Inventory_groups_minor)
 #endif
@@ -28,12 +42,12 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
     g_inventory = this;
-    const int majorBits = ReadByte();
+    const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
             continue;
         }
-        const int minorBits = ReadByte();
+        const int minorBits = Readbits(Inventory_groups_minor);
         for (int j = 0; j < Inventory_groups_minor; ++j) {
             if (!(minorBits & BIT(j))) {
                 continue;
@@ -72,15 +86,15 @@ void Inventory_Write(Inventory data)
 			minorBitsArr[maj] = BITSET(minorBitsArr[maj], BIT(G_MINOR(it.m_id)), true);
         }
     });
-    WriteByte(MSG_ENTITY, majorBits);
 
+	Writebits(MSG_ENTITY, majorBits, Inventory_groups_major);
 	for (int i = 0; i < Inventory_groups_major; ++i)
 	{
 		if (!(majorBits & BIT(i)))
 			continue;
 
 		const int minorBits = minorBitsArr[i];
-		WriteByte(MSG_ENTITY, minorBits);
+		Writebits(MSG_ENTITY, minorBits, Inventory_groups_minor);
 		for (int j = 0; j < Inventory_groups_minor; ++j)
 		{
 			if (!(minorBits & BIT(j)))

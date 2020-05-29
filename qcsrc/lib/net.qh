@@ -358,6 +358,13 @@ MACRO_END
 		#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
 		#define ReadVector2D() vec2(ReadFloat(), ReadFloat())
 
+		int Readbits(int num)
+		{
+			if (num > 16) return ReadInt24_t();
+			if (num > 8) return ReadShort();
+			return ReadByte();
+		}
+
 		float ReadApproxPastTime()
 		{
 			float dt = ReadByte();
@@ -390,6 +397,13 @@ MACRO_END
 		#define WriteFloat(to, f) WriteCoord(to, f)
 		#define WriteVector(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); MACRO_END
 		#define WriteVector2D(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); MACRO_END
+
+		void Writebits(float dst, float val, int num)
+		{
+			if (num > 16) { WriteInt24_t(dst, val); return; }
+			if (num > 8) { WriteShort(dst, val); return; }
+			WriteByte(dst, val);
+		}
 
 		// this will use the value:
 		//   128
