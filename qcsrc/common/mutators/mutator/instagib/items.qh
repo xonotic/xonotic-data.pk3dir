@@ -34,7 +34,7 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
     this.m_icon                 =   "ammo_supercells";
 #ifdef SVQC
     this.m_botvalue             =   2000;
-    this.m_itemid               =   IT_CELLS;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(instagib_respawntime_ammo);
     this.m_respawntimejitter    =   GET(instagib_respawntimejitter_ammo);
     this.m_iteminit             =   ammo_vaporizercells_init;
@@ -61,7 +61,7 @@ REGISTER_ITEM(ExtraLife, Powerup) {
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Extra life");
     this.m_waypointblink        =   2;
-    this.m_itemid               =   IT_NAILS;
+    this.m_itemid               =   IT_RESOURCE;
 }
 
 SPAWNFUNC_ITEM(item_extralife, ITEM_ExtraLife)
