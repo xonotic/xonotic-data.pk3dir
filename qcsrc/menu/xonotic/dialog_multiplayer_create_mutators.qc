@@ -37,7 +37,7 @@ string WeaponArenaString()
 	s = "";
 	for(int j = 0; j < n; ++j)
 	{
-		Weapon wep = Weapons_fromstr(argv(j));
+		Weapon wep = Weapon_from_name(argv(j));
 		if(wep != WEP_Null)
 		{
 			s = cons_mid(s, " & ", wep.m_name);
@@ -255,7 +255,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.1); // fix initial position
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
-		w = Weapons_from(i);
+		w = REGISTRY_GET(Weapons, i);
 		if (w.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK))
 			continue;
 		if ((j % 3) == 0)

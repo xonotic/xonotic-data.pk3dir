@@ -1229,7 +1229,7 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
 	int weapon_id = ReadByte();
-	complain_weapon = Weapons_from(weapon_id);
+	complain_weapon = REGISTRY_GET(Weapons, weapon_id);
 	complain_weapon_type = ReadByte();
 	return = true;
 

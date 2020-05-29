@@ -787,7 +787,7 @@ void View_EventChase(entity this)
 		{
 			if(hud != HUD_BUMBLEBEE_GUN)
 			{
-				Vehicle info = Vehicles_from(hud);
+				Vehicle info = REGISTRY_GET(Vehicles, hud);
 				vehicle_viewdist = info.height;
 				vehicle_viewofs = info.view_ofs;
 				if(vehicle_viewdist < 0) // when set below 0, this vehicle doesn't use third person view (gunner slots)
@@ -898,7 +898,7 @@ void HUD_Crosshair_Vehicle(entity this)
 {
 	if(hud != HUD_BUMBLEBEE_GUN)
 	{
-		Vehicle info = Vehicles_from(hud);
+		Vehicle info = REGISTRY_GET(Vehicles, hud);
 		info.vr_crosshair(info, this);
 	}
 }
@@ -1538,7 +1538,7 @@ void SpecialCommand()
 			{
 				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
 				slot.y = 1; // start it off 0 so we can use it
-				slot.z = floor(random() * Weapons_MAX);
+				slot.z = floor(random() * REGISTRY_MAX(Weapons));
 				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
 				vector newcolor = randomvec() * 2;
 				newcolor.x = bound(0.4, newcolor.x, 1);
@@ -1552,7 +1552,7 @@ void SpecialCommand()
 			vector splash_size = '0 0 0';
 			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
 			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
-			entity wep = Weapons_from(slot.z);
+			entity wep = REGISTRY_GET(Weapons, slot.z);
 			if(wep == WEP_Null)
 				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
 			else

@@ -350,14 +350,14 @@ void bot_custom_weapon_priority_setup()
 			tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
 			bot_weapons_##dist[0] = -1; \
 			c = 0; \
-			for(i = 0; i < tokens && c < Weapons_COUNT; ++i) { \
+			for(i = 0; i < tokens && c < REGISTRY_COUNT(Weapons); ++i) { \
 				w = stof(argv(i)); \
 				if (w >= WEP_FIRST && w <= WEP_LAST) { \
 					bot_weapons_##dist[c] = w; \
 					++c; \
 				} \
 			} \
-			if (c < Weapons_COUNT) \
+			if (c < REGISTRY_COUNT(Weapons)) \
 				bot_weapons_##dist[c] = -1; \
 		} \
 	MACRO_END

@@ -2,9 +2,10 @@
 
 #include "command.qh"
 REGISTRY(GENERIC_COMMANDS, BITS(7))
-#define GENERIC_COMMANDS_from(i) _GENERIC_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(GENERIC_COMMANDS)
 REGISTRY_SORT(GENERIC_COMMANDS)
+
+REGISTRY_DEFINE_GET(GENERIC_COMMANDS, NULL)
 
 .bool m_menubased; // switch to tell whether this alias should be registered as a menu or client based command
 
