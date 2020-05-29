@@ -674,15 +674,15 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 
 void Spawn_Draw(entity this)
 {
-	bool dodraw = true;
-	if(autocvar_cl_spawn_point_dist_max)
+	bool dodraw = autocvar_cl_spawn_point_particles;
+	if(dodraw && autocvar_cl_spawn_point_dist_max)
 	{
 		vector org = getpropertyvec(VF_ORIGIN);
 		dodraw = vdist(org - this.origin, <, autocvar_cl_spawn_point_dist_max);
 	}
 
 	if(dodraw)
-		__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
+		pointparticles(((!teamplay) ? EFFECT_SPAWNPOINT_NEUTRAL : EFFECT_SPAWNPOINT(this.team - 1)), this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
@@ -709,24 +709,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			//this.draw = Spawn_Draw;
 			IL_PUSH(g_drawables, this);
 		}*/
-		if(autocvar_cl_spawn_point_particles)
-		{
-			if(teamplay)
-			{
-				switch(teamnum)
-				{
-					case NUM_TEAM_1: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_RED); break;
-					case NUM_TEAM_2: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_BLUE); break;
-					case NUM_TEAM_3: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_YELLOW); break;
-					case NUM_TEAM_4: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_PINK); break;
-					default: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); break;
-				}
-			}
-			else { this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
-
-			this.draw = Spawn_Draw;
-			if (is_new) IL_PUSH(g_drawables, this);
-		}
+		this.draw = Spawn_Draw;
+		if (is_new) IL_PUSH(g_drawables, this);
 	//}
 
 	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(this.origin), teamnum, this.cnt);

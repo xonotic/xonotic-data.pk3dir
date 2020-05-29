@@ -137,31 +137,8 @@ void relocate_spawnpoint(entity this)
 	// Don't show team spawns in non-team matches,
 	// and don't show non-team spawns in team matches.
 	// (Unless useallspawns is activated)
-	if(
-		!(
-			( // if this passes, there is a DM spawn on a team match
-				teamplay
-				&& (this.team != NUM_TEAM_1)
-				&& (this.team != NUM_TEAM_2)
-				&& (this.team != NUM_TEAM_3)
-				&& (this.team != NUM_TEAM_4)
-			)
-			||
-			( // if this passes, there is a team spawn on a DM match
-				!teamplay
-				&&
-				(
-					(this.team == NUM_TEAM_1)
-					|| (this.team == NUM_TEAM_2)
-					|| (this.team == NUM_TEAM_3)
-					|| (this.team == NUM_TEAM_4)
-				)
-			)
-		)
-		||
-		autocvar_g_spawn_useallspawns
-	)
-	{ Net_LinkEntity(this, false, 0, SpawnPoint_Send); }
+	if(autocvar_g_spawn_useallspawns || !((teamplay && !Team_IsValidTeam(this.team)) || (!teamplay && Team_IsValidTeam(this.team))))
+		Net_LinkEntity(this, false, 0, SpawnPoint_Send);
 }
 
 spawnfunc(info_player_survivor)
