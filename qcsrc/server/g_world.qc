@@ -332,6 +332,7 @@ void cvar_changes_init()
 		BADCVAR("g_buffs_randomize");
 		BADCVAR("g_buffs_randomize_teamplay");
 		BADCVAR("g_campcheck_distance");
+		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ctf_captimerecord_always");
@@ -344,6 +345,7 @@ void cvar_changes_init()
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_glowtrails");
 		BADCVAR("g_hats");
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
@@ -374,6 +376,7 @@ void cvar_changes_init()
 		BADCVAR("sv_timeout");
 		BADCVAR("sv_weapons_modeloverride");
 		BADCVAR("w_prop_interval");
+		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
