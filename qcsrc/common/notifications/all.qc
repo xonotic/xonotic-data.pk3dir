@@ -1410,7 +1410,7 @@ NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
         if (net_name == CPID_Null) {
             centerprint_KillAll();
         } else {
-            centerprint_kill(ORDINAL(net_name));// kill group
+            centerprint_Kill(ORDINAL(net_name));// kill group
         }
         return;
     }

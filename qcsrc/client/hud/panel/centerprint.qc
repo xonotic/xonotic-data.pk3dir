@@ -47,7 +47,7 @@ bool centerprint_showing;
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
 	TC(int, new_id); TC(int, countdown_num);
-	//printf("centerprint_Add(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num);
+	//LOG_INFOF("centerprint_Add: ^2id: %d ^3dur: %d ^5countdown: %d\n'%s'", new_id, duration, countdown_num, strreplace("\n", "^7\\n^7", strMessage));
 	int i, j;
 
 	if(strMessage == "" && new_id == 0)
@@ -124,7 +124,7 @@ void centerprint_Add(int new_id, string strMessage, float duration, int countdow
 	centerprint_countdown_num[j] = countdown_num;
 }
 
-void centerprint_kill(int id)
+void centerprint_Kill(int id)
 {
 	TC(int, id);
 	centerprint_Add(id, "", 0, 0);

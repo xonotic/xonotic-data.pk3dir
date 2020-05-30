@@ -3,5 +3,5 @@
 
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num);
 void centerprint_AddStandard(string strMessage);
-void centerprint_kill(int id);
+void centerprint_Kill(int id);
 void centerprint_KillAll();
