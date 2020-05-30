@@ -8,7 +8,6 @@
 		PERSON(Merlijn Hofstra) \
 		PERSON(Peter "Morphed" Pielak) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
-		PERSON(Samual "Ares" Lenks) \
 		PERSON(TimePath) \
 		PERSON(Tyler "-z-" Mulligan) \
 		PERSON(Zac "Mario" Jardine) \
@@ -43,6 +42,7 @@
 		PERSON(Soelen) \
 		PERSON(Sydes) \
 		PERSON(unfa) \
+		PERSON(David "Cloudwalk" Knapp) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
@@ -126,7 +126,7 @@
 	NL() \
 	TITLE(_("Game Engine")) \
 		FUNCTION("DarkPlaces") \
-			PERSON(Forest "LordHavoc" Hale) \
+			PERSON(Ashley Rose "LadyHavoc" Hale) \
 		NL() \
 		FUNCTION(_("Engine Additions")) \
 			PERSON(Rudolf "divVerent" Polzer) \
