@@ -658,7 +658,6 @@ void PutPlayerInServer(entity this)
 
 	// Cut off any still running player sounds.
 	stopsound(this, CH_PLAYER_SINGLE);
-	stopsound(this, CH_TRIGGER_SINGLE);
 
 	this.model = "";
 	FixPlayermodel(this);
@@ -1408,9 +1407,6 @@ void play_countdown(entity this, float finished, Sound samp)
 
 void player_powerups(entity this)
 {
-	// add a way to see what the items were BEFORE all of these checks for the mutator hook
-	int items_prev = this.items;
-
 	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
 		this.modelflags |= MF_ROCKET;
 	else
@@ -1418,8 +1414,23 @@ void player_powerups(entity this)
 
 	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
+	if (IS_DEAD(this))
+	{
+		if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+		{
+			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
+			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+			this.items &= ~ITEM_Strength.m_itemid;
+			this.items &= ~ITEM_Shield.m_itemid;
+			this.items -= (this.items & IT_SUPERWEAPON);
+		}
+	}
+
 	if((this.alpha < 0 || IS_DEAD(this)) && !this.vehicle) // don't apply the flags if the player is gibbed
 		return;
+
+	// add a way to see what the items were BEFORE all of these checks for the mutator hook
+	int items_prev = this.items;
 
 	Fire_ApplyDamage(this);
 	Fire_ApplyEffect(this);
