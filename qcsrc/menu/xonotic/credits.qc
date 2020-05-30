@@ -130,6 +130,7 @@
 		NL() \
 		FUNCTION(_("Engine Additions")) \
 			PERSON(Rudolf "divVerent" Polzer) \
+			PERSON(David "Cloudwalk" Knapp) \
 			PERSON(Samual "Ares" Lenks) \
 		NL() \
 	NL() \
