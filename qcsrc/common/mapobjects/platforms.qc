@@ -179,7 +179,7 @@ void plat_use(entity this, entity actor, entity trigger)
 
 void plat_reset(entity this)
 {
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		setorigin(this, this.pos1);
 		this.state = STATE_UP;
