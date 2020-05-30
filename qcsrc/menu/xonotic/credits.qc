@@ -17,15 +17,14 @@
 		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Archer) \
 		PERSON(BuddyFriendGuy) \
+		PERSON(David "Cloudwalk" Knapp) \
 		PERSON(Debugger) \
 		PERSON(Diomedes) \
 		PERSON(Freddy) \
 		PERSON(GATTS) \
 		PERSON(Halogene) \
-		PERSON(IDWMaster) \
 		PERSON(Jan "zykure" Behrens) \
 		PERSON(JH0nny) \
-		PERSON(Jubilant) \
 		PERSON(Łukasz "kuniu the frogg" Polek) \
 		PERSON(martin-t) \
 		PERSON(Matthias "matthiaskrgr" Krüger) \
@@ -42,7 +41,6 @@
 		PERSON(Soelen) \
 		PERSON(Sydes) \
 		PERSON(unfa) \
-		PERSON(David "Cloudwalk" Knapp) \
 	NL() \
 	NL() \
 	FUNCTION(_("Website")) \
@@ -129,8 +127,8 @@
 			PERSON(Ashley Rose "LadyHavoc" Hale) \
 		NL() \
 		FUNCTION(_("Engine Additions")) \
-			PERSON(Rudolf "divVerent" Polzer) \
 			PERSON(David "Cloudwalk" Knapp) \
+			PERSON(Rudolf "divVerent" Polzer) \
 			PERSON(Samual "Ares" Lenks) \
 		NL() \
 	NL() \
@@ -342,6 +340,7 @@
 		PERSON(Jitspoe) \
 		PERSON(Jody Gallagher) \
 		PERSON(Jope "Sless" Withers) \
+		PERSON(Jubilant) \
 		PERSON(Juergen "LowDragon" Timm) \
 		PERSON(KadaverJack) \
 		PERSON(Kevin "Tyrann" Shanahan) \
@@ -378,6 +377,7 @@
 		PERSON(Robert "ai" Kuroto) \
 		PERSON(Ronan) \
 		PERSON(Sajt) \
+		PERSON(Samual "Ares" Lenks) \
 		PERSON(Saulo "mand1nga" Gil) \
 		PERSON(Shaggy) \
 		PERSON(Shank) \
