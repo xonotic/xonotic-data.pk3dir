@@ -897,10 +897,7 @@ void Draw_ArcBeam(entity this)
 		MAKE_VECTORS(myviewangle, forward, right, up);
 		entity wepent = viewmodels[this.beam_slot];
 
-		if(autocvar_chase_active)
-			this.beam_usevieworigin = 1;
-		else
-			this.beam_usevieworigin = 2;
+		this.beam_usevieworigin = (autocvar_chase_active) ? 1 : 2;
 
 		// decide upon start position
 		if(this.beam_usevieworigin == 2)
@@ -1231,10 +1228,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 		if(ReadByte())
 		{
-			if(autocvar_chase_active)
-				{ this.beam_usevieworigin = 1; }
-			else // use view origin
-				{ this.beam_usevieworigin = 2; }
+			this.beam_usevieworigin = (autocvar_chase_active) ? 1 : 2;
 		}
 		else
 		{

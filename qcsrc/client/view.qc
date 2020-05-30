@@ -1079,6 +1079,10 @@ LABEL(normalcolor)
 
 void HUD_Crosshair(entity this)
 {
+	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
+	if(autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
+		csqcplayer.alpha = csqcplayer.m_alpha;
+
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) &&
@@ -1124,7 +1128,7 @@ void HUD_Crosshair(entity this)
 			{
 				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
 				float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
-				if(trace_ent == csqcplayer && STAT(HEALTH) > 0)
+				if(trace_ent == csqcplayer)
 					csqcplayer.alpha = min(autocvar_crosshair_chase_playeralpha, myalpha);
 				else
 					csqcplayer.alpha = csqcplayer.m_alpha;
@@ -1159,7 +1163,7 @@ void HUD_Crosshair(entity this)
 		string wcross_name = "";
 		float wcross_scale, wcross_blur;
 
-        entity e = WEP_Null;
+		entity e = WEP_Null;
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
 			entity wepent = viewmodels[0]; // TODO: unhardcode

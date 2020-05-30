@@ -658,6 +658,7 @@ void PutPlayerInServer(entity this)
 
 	// Cut off any still running player sounds.
 	stopsound(this, CH_PLAYER_SINGLE);
+	stopsound(this, CH_TRIGGER_SINGLE);
 
 	this.model = "";
 	FixPlayermodel(this);
@@ -2101,7 +2102,6 @@ bool joinAllowed(entity this)
 	return true;
 }
 
-.int items_added;
 .string shootfromfixedorigin;
 .bool dualwielding_prev;
 bool PlayerThink(entity this)
@@ -2218,8 +2218,6 @@ bool PlayerThink(entity this)
 	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 	//if(frametime)
 	{
-		this.items &= ~this.items_added;
-
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
@@ -2227,12 +2225,6 @@ bool PlayerThink(entity this)
 				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
-
-		this.items_added = 0;
-		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || GetResource(this, RES_FUEL) >= 0.01))
-            this.items_added |= IT_FUEL;
-
-		this.items |= this.items_added;
 	}
 
 	if (frametime)
