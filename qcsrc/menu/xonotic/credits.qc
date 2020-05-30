@@ -398,6 +398,7 @@
 		PERSON(William "Willis" Weilep) \
 		PERSON(Yves "EviLair" Allaire) \
 		PERSON(Zenex) \
+		PERSON(... and a goat) \
 		/**/
 
 int credits_get()
