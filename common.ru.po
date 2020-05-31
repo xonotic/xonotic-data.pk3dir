@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-29 22:02+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-05-31 01:03+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -304,7 +304,7 @@ msgstr "QMCMD^Командный чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^скоро сила"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -464,7 +464,7 @@ msgstr "QMCMD^Звук чата"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Сменить камеру зрителя"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 #: qcsrc/client/hud/panel/quickmenu.qc:845
@@ -481,7 +481,7 @@ msgstr "QMCMD^Уменьшить скорость"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Столкновение со стенами"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Fullscreen"
@@ -514,7 +514,7 @@ msgstr "QMCMD^Перемешать команды"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Наблюдать за игроком"
 
 #: qcsrc/client/hud/panel/racetimer.qc:59
 #, c-format
@@ -5751,15 +5751,15 @@ msgstr "Благодарности"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
-msgstr ""
+msgstr "Вы точно хотите отсоединиться от сервера?"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
-msgstr ""
+msgstr "Я хочу отсоединиться от сервер…"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
 msgid "I would play more!"
-msgstr ""
+msgstr "Я хочу продолжить игру!"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
@@ -5769,7 +5769,7 @@ msgstr "Отключиться"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect server"
-msgstr ""
+msgstr "Отсоединиться от сервера"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -9626,7 +9626,7 @@ msgstr "стать зрителем"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Communication"
-msgstr ""
+msgstr "Связь"
 
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "public chat"
@@ -9686,7 +9686,7 @@ msgstr "Определенно пользователем"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "Development"
-msgstr ""
+msgstr "Разработка"
 
 #: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "sandbox menu"
@@ -9734,7 +9734,7 @@ msgstr "<модель игрока не найдена>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "Remove favorite"
-msgstr ""
+msgstr "Удалить из избранного"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
@@ -9962,7 +9962,7 @@ msgstr "Декабрь"
 
 #: qcsrc/menu/xonotic/statslist.qc:44
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "DATE^%d %m %Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:95
 msgid "Joined:"

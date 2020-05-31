@@ -12,14 +12,14 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2019
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2020
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-29 22:02+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-05-30 10:06+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -481,7 +481,7 @@ msgstr "Réduire la vitesse"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "Collision avec les murs"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Fullscreen"
@@ -514,7 +514,7 @@ msgstr "Mélanger les équipes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "Regarder un joueur"
 
 #: qcsrc/client/hud/panel/racetimer.qc:59
 #, c-format
@@ -2782,7 +2782,7 @@ msgstr "^BG%s^K3 a été dégelé par l'explosion de sa Grenade"
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 a été automatiquement dégelé après %s secondes"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
@@ -2961,7 +2961,7 @@ msgstr "^BG%s^BG a capturé le point de contrôle %s^BG"
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^BG captured a control point"
-msgstr ""
+msgstr "^BG%s^BG a capturé un point de contrôle"
 
 #: qcsrc/common/notifications/all.inc:404
 #, c-format
@@ -2971,7 +2971,7 @@ msgstr "^BGLe point de contrôle %s de l'équipe ^TC^TT^BG a été détruit par 
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr ""
+msgstr "^BGLe point de contrôle de l'équipe ^TC^TT^BG a été détruit par %s"
 
 #: qcsrc/common/notifications/all.inc:406
 msgid "^TC^TT^BG generator has been destroyed"
@@ -4016,7 +4016,7 @@ msgstr "^BGPorte déverrouillée !"
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr ""
+msgstr "^F2Vies supplémentaires acquises : ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:667
 #, c-format
@@ -4035,7 +4035,7 @@ msgstr "^K3Vous avez été dégelé par ^BG%s"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^K3You were automatically revived after %s seconds"
-msgstr ""
+msgstr "^K3Vous avez été automatiquement dégelé après %s secondes"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -4170,12 +4170,12 @@ msgstr "^F2Vies supplémentaires restantes : ^K1%s"
 #: qcsrc/common/notifications/all.inc:719 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
-msgstr ""
+msgstr "Niveau %s :"
 
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGAppuyez sur ^F2%s^BG pour rejoindre la partie"
 
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
@@ -4198,7 +4198,7 @@ msgstr "^BGVous avez capturé le point de contrôle %s^BG"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGVous avez capturé un point de contrôle"
 
 #: qcsrc/common/notifications/all.inc:727
 #, c-format
@@ -5807,15 +5807,15 @@ msgstr "Les crédits de Xonotic"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
-msgstr ""
+msgstr "Êtes-vous sûr de vous déconnecter du serveur ?"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
-msgstr ""
+msgstr "Je voudrais me déconnecter du serveur…"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
 msgid "I would play more!"
-msgstr ""
+msgstr "Je voudrais jouer encore !"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
@@ -5825,7 +5825,7 @@ msgstr "Se déconnecter"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect server"
-msgstr ""
+msgstr "Se déconnecter du serveur"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -6950,10 +6950,12 @@ msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr ""
+"Activer l’esquive (accélération rapide dans une direction donnée). Appuyer "
+"deux fois sur une touche directionnelle pour esquiver"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:168
 msgid "An explosion occurs when two players collide"
-msgstr ""
+msgstr "Une explosion survient quand deux joueurs entrent en collision"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:172
 msgid "All players are almost invisible"
@@ -7960,11 +7962,11 @@ msgstr "Éviter les compressions de texture avec pertes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Disable skyboxes for performance and visibility"
-msgstr ""
+msgstr "Désactiver les skyboxes pour la performance et la visibilité"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show skyboxes"
-msgstr ""
+msgstr "Afficher les skyboxes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -8849,7 +8851,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr ""
+msgstr "Opacité des modèles d'armes :"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
@@ -9712,7 +9714,7 @@ msgstr "mode spectateur"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Communication"
-msgstr ""
+msgstr "Communication"
 
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "public chat"
@@ -9772,7 +9774,7 @@ msgstr "Raccourcis personnalisés"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "Development"
-msgstr ""
+msgstr "Développement"
 
 #: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "sandbox menu"
