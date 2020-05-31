@@ -1323,17 +1323,22 @@ void UpdateChatBubble(entity this)
 
 void respawn(entity this)
 {
-	if(this.alpha >= 0 && autocvar_g_respawn_ghosts)
+	if(this.alpha >= 0)
 	{
-		this.solid = SOLID_NOT;
-		this.takedamage = DAMAGE_NO;
-		set_movetype(this, MOVETYPE_FLY);
-		this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
-		this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
-		this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
-		Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
-		if(autocvar_g_respawn_ghosts_maxtime)
-			SUB_SetFade (this, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
+		if(autocvar_g_respawn_ghosts)
+		{
+			this.solid = SOLID_NOT;
+			this.takedamage = DAMAGE_NO;
+			set_movetype(this, MOVETYPE_FLY);
+			this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
+			this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
+			this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
+			Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
+			if(autocvar_g_respawn_ghosts_maxtime)
+				SUB_SetFade (this, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
+		}
+		else
+			SUB_SetFade (this, time, 1); // fade out the corpse immediately
 	}
 
 	CopyBody(this, 1);
