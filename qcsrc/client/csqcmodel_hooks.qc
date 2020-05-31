@@ -227,14 +227,6 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		this.skin = this.forceplayermodels_saveskin;
 	}
 
-	if(this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
-	{
-		// no glowmod or team colors for ghosts
-		this.glowmod = '0 0 0';
-		this.colormap = 0;
-		return;
-	}
-
 	// forceplayercolors too
 	if(teamplay)
 	{
@@ -289,6 +281,14 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	}
 
 	LABEL(skipforcemodels)
+
+	if(this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+	{
+		// no glowmod or team colors for ghosts
+		this.glowmod = '0 0 0';
+		this.colormap = 0;
+		return;
+	}
 
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
