@@ -92,11 +92,14 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 void buff_Waypoint_Spawn(entity e)
 {
-	entity buff = buff_FirstFromFlags(STAT(BUFFS, e));
-	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, NULL, e.team, e, buff_waypoint, true, RADARICON_Buff);
-	wp.wp_extra = buff.m_id;
-	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_Buff, e.glowmod);
-	e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
+	if(autocvar_g_buffs_waypoint_distance)
+	{
+		entity buff = buff_FirstFromFlags(STAT(BUFFS, e));
+		entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, NULL, e.team, e, buff_waypoint, true, RADARICON_Buff);
+		wp.wp_extra = buff.m_id;
+		WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_Buff, e.glowmod);
+		e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
+	}
 }
 
 void buff_SetCooldown(entity this, float cd)
@@ -106,7 +109,9 @@ void buff_SetCooldown(entity this, float cd)
 	if(!this.buff_waypoint)
 		buff_Waypoint_Spawn(this);
 
-	WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + cd);
+	if(this.buff_waypoint)
+		WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + cd);
+
 	this.buff_activetime = cd;
 	this.buff_active = !cd;
 }
@@ -238,6 +243,9 @@ void buff_NewType(entity ent)
 
 void buff_Think(entity this)
 {
+	if(this.buff_waypoint && !autocvar_g_buffs_waypoint_distance)
+		WaypointSprite_Kill(this.buff_waypoint);
+
 	if(STAT(BUFFS, this) != this.oldbuffs)
 	{
 		entity buff = buff_FirstFromFlags(STAT(BUFFS, this));
