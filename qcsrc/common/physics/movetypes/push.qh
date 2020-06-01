@@ -9,4 +9,6 @@ STATIC_INIT(g_pushmove_moved) { g_pushmove_moved = IL_NEW(); }
 
 #ifdef CSQC
 .float ltime;
+
+const int MOVE_HITMODEL = 4;
 #endif

@@ -71,9 +71,9 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 
 	IL_CLEAR(g_pushmove_moved); // make sure it's not somehow uncleared
 
-	FOREACH_ENTITY_RADIUS(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true,
+	for(entity check = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); check; check = check.chain)
 	{
-		switch(it.move_movetype)
+		switch(check.move_movetype)
 		{
 			case MOVETYPE_NONE:
 			case MOVETYPE_PUSH:
@@ -85,24 +85,24 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 				break;
 		}
 
-		if(it.owner == this || this.owner == it)
+		if(check.owner == this || this.owner == check)
 			continue;
 
 		// if the entity is standing on the pusher, it will definitely be moved
 		// if the entity is not standing on the pusher, but is in the pusher's
 		// final position, move it
-		if (!IS_ONGROUND(it) || it.groundentity != this)
+		if (!IS_ONGROUND(check) || check.groundentity != this)
 		{
-			tracebox(it.origin, it.mins, it.maxs, it.origin, MOVE_NORMAL, it);
+			tracebox(check.origin, check.mins, check.maxs, check.origin, MOVE_NORMAL, check);
 			if(!trace_startsolid)
 				continue;
 		}
-		vector pivot = it.mins + 0.5 * it.maxs;
+		vector pivot = check.mins + 0.5 * check.maxs;
 		vector move;
 
 		if(rotated)
 		{
-			vector org = it.origin - this.origin;
+			vector org = check.origin - this.origin;
 			org = org + pivot;
 
 			vector org2;
@@ -115,47 +115,47 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		else
 			move = move1;
 
-		it.moved_from = it.origin;
-		it.moved_fromangles = it.angles;
-		IL_PUSH(g_pushmove_moved, it);
+		check.moved_from = check.origin;
+		check.moved_fromangles = check.angles;
+		IL_PUSH(g_pushmove_moved, check);
 
 		// physics objects need better collisions than this code can do
-		if(it.move_movetype == MOVETYPE_PHYSICS)
+		if(check.move_movetype == MOVETYPE_PHYSICS)
 		{
-			it.origin = it.origin + move;
-			_Movetype_LinkEdict(it, true);
+			check.origin = check.origin + move;
+			_Movetype_LinkEdict(check, true);
 			continue;
 		}
 
 		// try moving the contacted entity
 		int savesolid = this.solid;
 		this.solid = SOLID_NOT;
-		if(!_Movetype_PushEntity(it, move, true, false))
+		if(!_Movetype_PushEntity(check, move, true, true))
 		{
 			// entity "check" got teleported
-			it.angles_y += trace_fraction * moveangle.y;
+			check.angles_y += trace_fraction * moveangle.y;
 			this.solid = savesolid;
 			continue; // pushed enough
 		}
 		// FIXME: turn players specially
-		it.angles_y += trace_fraction * moveangle.y;
+		check.angles_y += trace_fraction * moveangle.y;
 		this.solid = savesolid;
 
 		// this trace.fraction < 1 check causes items to fall off of pushers
 		// if they pass under or through a wall
 		// the groundentity check causes items to fall off of ledges
-		if(it.move_movetype != MOVETYPE_WALK && (trace_fraction < 1 || it.groundentity != this))
-			UNSET_ONGROUND(it);
+		if(check.move_movetype != MOVETYPE_WALK && (trace_fraction < 1 || check.groundentity != this))
+			UNSET_ONGROUND(check);
 
 		// if it is still inside the pusher, block
-		tracebox(it.origin, it.mins, it.maxs, it.origin, MOVE_NORMAL, it);
+		tracebox(check.origin, check.mins, check.maxs, check.origin, MOVE_HITMODEL, check);
 		if(trace_startsolid)
 		{
-			if(_Movetype_NudgeOutOfSolid_PivotIsKnownGood(it, pivot))
+			if(_Movetype_NudgeOutOfSolid_PivotIsKnownGood(check, pivot))
 			{
 				// hack to invoke all necessary movement triggers
 				vector move2 = '0 0 0';
-				if(!_Movetype_PushEntity(it, move2, true, false))
+				if(!_Movetype_PushEntity(check, move2, true, true))
 				{
 					// entity "check" got teleported
 					continue;
@@ -167,13 +167,13 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			// still inside pusher, so it's really blocked
 
 			// fail the move
-			if(it.mins_x == it.maxs_x)
+			if(check.mins_x == check.maxs_x)
 				continue;
-			if(it.solid == SOLID_NOT || it.solid == SOLID_TRIGGER)
+			if(check.solid == SOLID_NOT || check.solid == SOLID_TRIGGER)
 			{
 				// corpse
-				it.mins_x = it.mins_y = 0;
-				it.maxs = it.mins;
+				check.mins_x = check.mins_y = 0;
+				check.maxs = check.mins;
 				continue;
 			}
 
@@ -185,17 +185,17 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			// move back any entities we already moved
 			IL_EACH(g_pushmove_moved, true,
 			{
-				it.origin = it.moved_from;
-				it.angles = it.moved_fromangles;
-				_Movetype_LinkEdict(it, false);
+				check.origin = check.moved_from;
+				check.angles = check.moved_fromangles;
+				_Movetype_LinkEdict(check, false);
 			});
 
 			// if the pusher has a "blocked" function, call it, otherwise just stay in place until the obstacle is gone
 			if(getblocked(this))
-				getblocked(this)(this, it);
+				getblocked(this)(this, check);
 			break;
 		}
-	});
+	}
 	this.angles_x -= 360.0 * floor(this.angles_x * (1.0 / 360.0));
 	this.angles_y -= 360.0 * floor(this.angles_y * (1.0 / 360.0));
 	this.angles_z -= 360.0 * floor(this.angles_z * (1.0 / 360.0));

@@ -25,7 +25,7 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 	for(int bump = 0; bump < 6; bump++)
 	{
 		int coord = 2 - (bump >> 1);
-		int dir = (bump & 1);
+		bool dir = (bump & 1);
 
 		for(int subbump = 0; ; ++subbump)
 		{
@@ -52,7 +52,7 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 			}
 
 			tracebox(stuckorigin, goodmins, goodmaxs, testorigin, MOVE_NOMONSTERS, this);
-			if(trace_startsolid) // NOTE: this checks for bmodelstartsolid in the engine
+			if(trace_startsolid && trace_ent.solid == SOLID_BSP) // NOTE: this checks for bmodelstartsolid in the engine
 			{
 				
 				// BAD BAD, can't fix that
