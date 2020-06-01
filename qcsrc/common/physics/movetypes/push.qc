@@ -97,7 +97,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			if(!trace_startsolid)
 				continue;
 		}
-		vector pivot = check.mins + 0.5 * check.maxs;
+		vector pivot = check.mins + 0.5 * (check.maxs - check.mins);
 		vector move;
 
 		if(rotated)
@@ -154,13 +154,8 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			if(_Movetype_NudgeOutOfSolid_PivotIsKnownGood(check, pivot))
 			{
 				// hack to invoke all necessary movement triggers
-				vector move2 = '0 0 0';
-				if(!_Movetype_PushEntity(check, move2, true, true))
-				{
-					// entity "check" got teleported
-					continue;
-				}
-				// we could fix it
+				_Movetype_PushEntity(check, '0 0 0', true, true);
+				// we could fix it or entity "check" was telported
 				continue;
 			}
 
