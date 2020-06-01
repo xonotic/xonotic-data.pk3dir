@@ -2064,7 +2064,7 @@ void Physics_Frame()
 
 	IL_EACH(g_moveables, true,
 	{
-		if(IS_CLIENT(it) || it.classname == "" /*|| it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH*/ || it.move_movetype == MOVETYPE_PHYSICS)
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
 		//set_movetype(it, it.move_movetype);
@@ -2092,7 +2092,7 @@ void Physics_Frame()
 
 	IL_EACH(g_moveables, it.move_qcphysics,
 	{
-		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
 			continue;
 		Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 	});

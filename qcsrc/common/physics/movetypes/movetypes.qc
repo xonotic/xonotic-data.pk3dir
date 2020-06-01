@@ -4,7 +4,7 @@
 void set_movetype(entity this, int mt)
 {
 	this.move_movetype = mt;
-	if (mt == MOVETYPE_PHYSICS /*|| mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH*/) {
+	if (mt == MOVETYPE_PHYSICS) {
 		this.move_qcphysics = false;
 	}
 	if(!IL_CONTAINS(g_moveables, this))
@@ -127,7 +127,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	if(dt <= 0)
 		return 0;
 
-	int blocked = 0;
+	int blockedflag = 0;
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
@@ -163,7 +163,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		{
 			// we got teleported by a touch function
 			// let's abort the move
-			blocked |= 8;
+			blockedflag |= 8;
 			break;
 		}
 
@@ -186,7 +186,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			if(trace_plane_normal.z > 0.7)
 			{
 				// floor
-				blocked |= 1;
+				blockedflag |= 1;
 
 				if(!trace_ent)
 				{
@@ -206,19 +206,19 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
-				blocked |= 8;
+				blockedflag |= 8;
 				break;
 			}
 			if(!_Movetype_PushEntity(this, push, true, false))
 			{
-				blocked |= 8;
+				blockedflag |= 8;
 				break;
 			}
 			float trace2_fraction = trace_fraction;
 			steppush = vec3(0, 0, org.z - this.origin_z);
 			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
-				blocked |= 8;
+				blockedflag |= 8;
 				break;
 			}
 
@@ -236,7 +236,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		else
 		{
 			// step - return it to caller
-			blocked |= 2;
+			blockedflag |= 2;
 			// save the trace for player extrafriction
 			if(applystepnormal)
 				move_stepnormal = trace_plane_normal;
@@ -256,7 +256,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		{
 			// this shouldn't really happen
 			this.velocity = '0 0 0';
-			blocked = 3;
+			blockedflag = 3;
 			break;
 		}
 
@@ -292,7 +292,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			if(numplanes != 2)
 			{
 				this.velocity = '0 0 0';
-				blocked = 7;
+				blockedflag = 7;
 				break;
 			}
 			vector dir = cross(planes[0], planes[1]);
@@ -317,10 +317,10 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	}
 
 	// LordHavoc: this came from QW and allows you to get out of water more easily
-	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blocked & 8))
+	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
-	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blocked & 8))
+	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
 	if(applygravity)
@@ -332,7 +332,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		}
 	}
 
-	return blocked;
+	return blockedflag;
 }
 
 void _Movetype_CheckVelocity(entity this)  // SV_CheckVelocity
@@ -661,10 +661,6 @@ bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool 
 
 	return (this.origin == last_origin); // false if teleported by touch
 }
-
-
-.float ltime;
-.void() blocked;
 
 void _Movetype_Physics_Frame(entity this, float movedt)
 {

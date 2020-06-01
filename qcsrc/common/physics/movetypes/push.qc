@@ -21,9 +21,9 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		{
 			this.origin = this.origin + dt * this.velocity;
 			this.angles = this.angles + dt * this.avelocity;
-			this.angles_x -= 360.0 * floor(this.angles_x) * (1.0 / 360.0);
-			this.angles_y -= 360.0 * floor(this.angles_y) * (1.0 / 360.0);
-			this.angles_z -= 360.0 * floor(this.angles_z) * (1.0 / 360.0);
+			this.angles_x -= 360.0 * floor(this.angles_x * (1.0 / 360.0));
+			this.angles_y -= 360.0 * floor(this.angles_y * (1.0 / 360.0));
+			this.angles_z -= 360.0 * floor(this.angles_z * (1.0 / 360.0));
 			this.ltime += dt;
 			_Movetype_LinkEdict(this, false);
 			return;
@@ -63,9 +63,9 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 
 	if(this.move_movetype == MOVETYPE_FAKEPUSH) // Tenebrae's MOVETYPE_PUSH variant that doesn't push...
 	{
-		this.angles_x -= 360.0 * floor(this.angles_x) * (1.0 / 360.0);
-		this.angles_y -= 360.0 * floor(this.angles_y) * (1.0 / 360.0);
-		this.angles_z -= 360.0 * floor(this.angles_z) * (1.0 / 360.0);
+		this.angles_x -= 360.0 * floor(this.angles_x * (1.0 / 360.0));
+		this.angles_y -= 360.0 * floor(this.angles_y * (1.0 / 360.0));
+		this.angles_z -= 360.0 * floor(this.angles_z * (1.0 / 360.0));
 		return;
 	}
 
@@ -128,18 +128,18 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		}
 
 		// try moving the contacted entity
-		int savesolid = it.solid;
-		it.solid = SOLID_NOT;
+		int savesolid = this.solid;
+		this.solid = SOLID_NOT;
 		if(!_Movetype_PushEntity(it, move, true, false))
 		{
 			// entity "check" got teleported
 			it.angles_y += trace_fraction * moveangle.y;
-			it.solid = savesolid;
+			this.solid = savesolid;
 			continue; // pushed enough
 		}
 		// FIXME: turn players specially
 		it.angles_y += trace_fraction * moveangle.y;
-		it.solid = savesolid;
+		this.solid = savesolid;
 
 		// this trace.fraction < 1 check causes items to fall off of pushers
 		// if they pass under or through a wall
@@ -196,9 +196,9 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			break;
 		}
 	});
-	this.angles_x -= 360.0 * floor(this.angles_x) * (1.0 / 360.0);
-	this.angles_y -= 360.0 * floor(this.angles_y) * (1.0 / 360.0);
-	this.angles_z -= 360.0 * floor(this.angles_z) * (1.0 / 360.0);
+	this.angles_x -= 360.0 * floor(this.angles_x * (1.0 / 360.0));
+	this.angles_y -= 360.0 * floor(this.angles_y * (1.0 / 360.0));
+	this.angles_z -= 360.0 * floor(this.angles_z * (1.0 / 360.0));
 	IL_CLEAR(g_pushmove_moved); // clean up
 }
 
@@ -216,7 +216,7 @@ void _Movetype_Physics_Push(entity this, float dt) // SV_Physics_Pusher
 	if(movetime)
 	{
 		// advances this.ltime if not blocked
-		_Movetype_PushMove(this, dt);
+		_Movetype_PushMove(this, movetime);
 	}
 
 	if(this.nextthink > oldltime && this.nextthink <= this.ltime)
