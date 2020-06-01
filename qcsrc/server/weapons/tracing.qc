@@ -211,6 +211,17 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 //  Ballistics Tracing
 // ====================
 
+bool Headshot(entity targ, entity ent, vector start, vector end)
+{
+	if(!IS_PLAYER(targ) || IS_DEAD(targ) || STAT(FROZEN, targ) || !targ.takedamage)
+		return false;
+	vector org = targ.origin; // antilag is already taken into consideration //antilag_takebackorigin(targ, CS(targ), time - ANTILAG_LATENCY(ent));
+	vector headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
+	vector headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+
+	return trace_hits_box(start, end, headmins, headmaxs);
+}
+
 void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector dir = normalize(end - start);
@@ -330,7 +341,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect, bool do_antilag)
+void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect, bool do_antilag)
 {
 	dir = normalize(dir + randomvec() * spread);
 	vector end = start + dir * max_shot_distance;
@@ -400,6 +411,11 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 			yoda = 0;
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
+			if(headshot_multiplier && Headshot(hit, this, start, end))
+			{
+				damage *= headshot_multiplier;
+				// TODO: sound/announcement
+			}
 			bool gooddamage = accuracy_isgooddamage(this, hit);
 			Damage(hit, this, this, damage * damage_fraction, dtype, weaponentity, start, force * dir * damage_fraction);
 			// calculate hits for ballistic weapons
@@ -467,7 +483,7 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 		this.dphitcontentsmask = oldsolid;
 }
 
-void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect)
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect)
 {
-	fireBullet_antilag(this, weaponentity, start, dir, spread, max_solid_penetration, damage, force, dtype, tracer_effect, true);
+	fireBullet_antilag(this, weaponentity, start, dir, spread, max_solid_penetration, damage, headshot_multiplier, force, dtype, tracer_effect, true);
 }
