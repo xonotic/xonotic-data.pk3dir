@@ -1333,9 +1333,10 @@ void respawn(entity this)
 			this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 			this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 			this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
+			this.alpha = min(this.alpha, autocvar_g_respawn_ghosts_alpha);
 			Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
-			if(autocvar_g_respawn_ghosts_maxtime)
-				SUB_SetFade (this, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
+			if(autocvar_g_respawn_ghosts_time > 0)
+				SUB_SetFade(this, time + autocvar_g_respawn_ghosts_time, autocvar_g_respawn_ghosts_fadetime);
 		}
 		else
 			SUB_SetFade (this, time, 1); // fade out the corpse immediately
