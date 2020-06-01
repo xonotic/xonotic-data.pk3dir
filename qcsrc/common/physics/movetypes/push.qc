@@ -93,7 +93,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		// final position, move it
 		if (!IS_ONGROUND(check) || check.groundentity != this)
 		{
-			tracebox(check.origin, check.mins, check.maxs, check.origin, MOVE_NORMAL, check);
+			tracebox(check.origin, check.mins, check.maxs, check.origin, MOVE_NOMONSTERS, check);
 			if(!trace_startsolid)
 				continue;
 		}
@@ -148,7 +148,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			UNSET_ONGROUND(check);
 
 		// if it is still inside the pusher, block
-		tracebox(check.origin, check.mins, check.maxs, check.origin, MOVE_HITMODEL, check);
+		tracebox(check.origin, check.mins, check.maxs, check.origin, MOVE_NOMONSTERS, check);
 		if(trace_startsolid)
 		{
 			if(_Movetype_NudgeOutOfSolid_PivotIsKnownGood(check, pivot))
