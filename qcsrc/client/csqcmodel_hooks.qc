@@ -282,9 +282,8 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	LABEL(skipforcemodels)
 
-	if(this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+	if((this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST) && !autocvar_cl_respawn_ghosts_keepcolors)
 	{
-		// no glowmod or team colors for ghosts
 		this.glowmod = '0 0 0';
 		this.colormap = 0;
 		return;
