@@ -3142,7 +3142,7 @@ void PM_UpdateButtons(entity this, entity store)
 	store.ping_movementloss = this.ping_movementloss;
 
 	store.v_angle = this.v_angle;
-	store.movement = (typing) ? '0 0 0' : this.movement;
+	store.movement = this.movement;
 }
 
 NET_HANDLE(fpsreport, bool)

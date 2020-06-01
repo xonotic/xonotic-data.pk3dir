@@ -325,6 +325,9 @@ bool PlayerJump(entity this)
 	if (PHYS_FROZEN(this))
 		return true; // no jumping in freezetag when frozen
 
+	if(PHYS_INPUT_BUTTON_CHAT(this) || PHYS_INPUT_BUTTON_MINIGAME(this))
+		return true; // no jumping while typing
+
 #ifdef SVQC
 	if (this.player_blocked)
 		return true; // no jumping while blocked
@@ -680,6 +683,8 @@ void PM_check_slick(entity this)
 
 void PM_check_blocked(entity this)
 {
+	if(PHYS_INPUT_BUTTON_CHAT(this) || PHYS_INPUT_BUTTON_MINIGAME(this))
+		PHYS_CS(this).movement = '0 0 0';
 #ifdef SVQC
 	if (!this.player_blocked)
 		return;
