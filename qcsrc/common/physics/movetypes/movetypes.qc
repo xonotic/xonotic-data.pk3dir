@@ -4,12 +4,12 @@
 void set_movetype(entity this, int mt)
 {
 	this.move_movetype = mt;
-	if (mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH) {
+	if (mt == MOVETYPE_PHYSICS /*|| mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH*/) {
 		this.move_qcphysics = false;
 	}
 	if(!IL_CONTAINS(g_moveables, this))
 		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
-	this.movetype = (this.move_qcphysics) ? MOVETYPE_NONE : mt;
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCENTITY : mt;
 }
 #elif defined(CSQC)
 void set_movetype(entity this, int mt)
@@ -17,6 +17,90 @@ void set_movetype(entity this, int mt)
 	this.move_movetype = mt;
 }
 #endif
+
+bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV_NudgeOutOfSolid_PivotIsKnownGood
+{
+	vector stuckorigin = this.origin;
+	vector goodmins = pivot, goodmaxs = pivot;
+	for(int bump = 0; bump < 6; bump++)
+	{
+		int coord = 2 - (bump >> 1);
+		int dir = (bump & 1);
+
+		for(int subbump = 0; ; ++subbump)
+		{
+			vector testorigin = stuckorigin;
+			if(dir)
+			{
+				// pushing maxs
+				switch(coord)
+				{
+					case 0: testorigin.x += this.maxs_x - goodmaxs.x; break;
+					case 1: testorigin.y += this.maxs_y - goodmaxs.y; break;
+					case 2: testorigin.z += this.maxs_z - goodmaxs.z; break;
+				}
+			}
+			else
+			{
+				// pushing mins
+				switch(coord)
+				{
+					case 0: testorigin.x += this.mins_x - goodmins.x; break;
+					case 1: testorigin.y += this.mins_y - goodmins.y; break;
+					case 2: testorigin.z += this.mins_z - goodmins.z; break;
+				}
+			}
+
+			tracebox(stuckorigin, goodmins, goodmaxs, testorigin, MOVE_NOMONSTERS, this);
+			if(trace_startsolid) // NOTE: this checks for bmodelstartsolid in the engine
+			{
+				
+				// BAD BAD, can't fix that
+				return false;
+			}
+
+			if(trace_fraction >= 1)
+				break; // it WORKS!
+
+			if(subbump >= 10)
+			{
+				// BAD BAD, can't fix that
+				return false;
+			}
+
+			// we hit something... let's move out of it
+			vector move = trace_endpos - testorigin;
+			float nudge = (trace_plane_normal * move) + 0.03125f; // FIXME cvar this constant
+			stuckorigin = stuckorigin + nudge * trace_plane_normal;
+		}
+
+		if(dir)
+		{
+			// pushing maxs
+			switch(coord)
+			{
+				case 0: goodmaxs.x = this.maxs_x; break;
+				case 1: goodmaxs.y = this.maxs_y; break;
+				case 2: goodmaxs.z = this.maxs_z; break;
+			}
+		}
+		else
+		{
+			// pushing mins
+			switch(coord)
+			{
+				case 0: goodmins.x = this.mins_x; break;
+				case 1: goodmins.y = this.mins_y; break;
+				case 2: goodmins.z = this.mins_z; break;
+			}
+		}
+	}
+
+	// WE WIN
+	this.origin = stuckorigin;
+
+	return true;
+}
 
 void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 {
@@ -589,7 +673,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUG("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
+			_Movetype_Physics_Push(this, movedt);
 			break;
 		case MOVETYPE_NONE:
 			break;
