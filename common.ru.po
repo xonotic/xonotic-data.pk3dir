@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-31 01:03+0000\n"
+"PO-Revision-Date: 2020-05-31 13:52+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -4118,7 +4118,7 @@ msgstr "^F2Осталось дополнительных жизней: ^K1%s"
 #: qcsrc/common/notifications/all.inc:719 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
-msgstr ""
+msgstr "Уровень %s:"
 
 #: qcsrc/common/notifications/all.inc:719
 #, c-format

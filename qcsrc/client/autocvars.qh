@@ -61,6 +61,7 @@ bool autocvar_cl_particles_oldvortexbeam;
 float autocvar_cl_particles_quality;
 bool autocvar_cl_projectiles_sloppy;
 bool autocvar_cl_readpicture_force;
+bool autocvar_cl_respawn_ghosts_keepcolors;
 bool autocvar_cl_reticle = 1;
 float autocvar_cl_reticle_normal_alpha = 1;
 bool autocvar_cl_reticle_weapon = 1;
