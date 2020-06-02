@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Antonio <piuntn@gmail.com>, 2013-2019
+# Antonio <piuntn@gmail.com>, 2013-2020
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
 # Costa <yesbubu@hotmail.it>, 2014
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-29 22:02+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-06-02 01:43+0000\n"
+"Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -4182,12 +4182,12 @@ msgstr "^F2Vite extra rimanenti: ^K1%s"
 #: qcsrc/common/notifications/all.inc:719 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
-msgstr ""
+msgstr "Livello %s: "
 
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGPremi ^F2%s^BG per entrare nella partita"
 
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
@@ -4210,7 +4210,7 @@ msgstr "^BGHai catturato il punto di controllo %s"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGHai catturato un punto di controllo"
 
 #: qcsrc/common/notifications/all.inc:727
 #, c-format
@@ -4219,7 +4219,7 @@ msgstr "^BGLa squadra ^TC^TT^BG ha catturato il punto di controllo %s"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "^BG La squadra ^TC^TT^BG ha catturato un punto di controllo"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGThis control point currently cannot be captured"
@@ -5822,7 +5822,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
 msgid "I would play more!"
-msgstr ""
+msgstr "Giocherei ancora!"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
@@ -5832,7 +5832,7 @@ msgstr "Disconnetti"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect server"
-msgstr ""
+msgstr "Disconnetti dal server"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -6960,7 +6960,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:168
 msgid "An explosion occurs when two players collide"
-msgstr ""
+msgstr "Succede un'esplosione quando due giocatori collidono"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:172
 msgid "All players are almost invisible"
@@ -9716,7 +9716,7 @@ msgstr "modalità spettatore"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Communication"
-msgstr ""
+msgstr "Comunicazione"
 
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "public chat"
@@ -9760,11 +9760,11 @@ msgstr "auto-scegli squadra"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "lascia chiave/bandiera, esci dal veicolo"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "suicide / respawn"
-msgstr ""
+msgstr "suicidati / rinasci"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "quick menu"
@@ -9776,7 +9776,7 @@ msgstr "Definiti dall'utente"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "Development"
-msgstr ""
+msgstr "Sviluppo"
 
 #: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "sandbox menu"
@@ -10054,7 +10054,7 @@ msgstr "Dicembre"
 
 #: qcsrc/menu/xonotic/statslist.qc:44
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "DATE^%d/%m/%Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:95
 msgid "Joined:"
