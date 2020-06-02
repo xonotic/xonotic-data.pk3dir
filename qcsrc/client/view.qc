@@ -486,7 +486,7 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
+	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type && !autocvar_cl_lockview) // _type = 0 disables velocity zoom too
 	{
 		if (intermission || (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2))
 			curspeed = 0;
@@ -1085,9 +1085,9 @@ void HUD_Crosshair(entity this)
 
 	float f, i, j;
 	vector v;
-	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) &&
-		spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair) &&
-		!HUD_MinigameMenu_IsOpened() )
+	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) && !autocvar_cl_lockview
+		&& spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair)
+		&& !HUD_MinigameMenu_IsOpened())
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;

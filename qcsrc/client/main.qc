@@ -754,8 +754,11 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
 	{
-		zoomin_effect = 1;
-		current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+		if(autocvar_cl_spawnzoom && !autocvar_cl_lockview)
+		{
+			zoomin_effect = 1;
+			current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+		}
 
 		if(autocvar_cl_unpress_zoom_on_spawn)
 		{
