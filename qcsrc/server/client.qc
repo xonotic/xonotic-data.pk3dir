@@ -2363,7 +2363,8 @@ void SpectatorThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				Join(this);
+				if(joinAllowed(this))
+					Join(this);
 				return;
 			}
 		}
