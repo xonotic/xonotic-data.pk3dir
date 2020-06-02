@@ -1323,7 +1323,7 @@ void UpdateChatBubble(entity this)
 
 void respawn(entity this)
 {
-	int damagedbycontents_prev = this.damagedbycontents;
+	bool damagedbycontents_prev = this.damagedbycontents;
 	if(this.alpha >= 0)
 	{
 		if(autocvar_g_respawn_ghosts)
