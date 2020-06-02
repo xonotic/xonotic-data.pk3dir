@@ -23,6 +23,17 @@ bool strafehud_state_strafekeys = false;
 bool strafehud_turn = false;
 float strafehud_turnangle;
 
+// provide basic panel cvars to old clients
+// TODO remove them after a future release (0.8.2+)
+noref string autocvar_hud_panel_scoreboard_pos = "0.320000 0.570000";
+noref string autocvar_hud_panel_scoreboard_size = "0.360000 0.020000";
+noref string autocvar_hud_panel_scoreboard_bg = "0";
+noref string autocvar_hud_panel_scoreboard_bg_color = "";
+noref string autocvar_hud_panel_scoreboard_bg_color_team = "";
+noref string autocvar_hud_panel_scoreboard_bg_alpha = "0.7";
+noref string autocvar_hud_panel_scoreboard_bg_border = "";
+noref string autocvar_hud_panel_scoreboard_bg_padding = "";
+
 void HUD_StrafeHUD()
 {
     entity strafeplayer;
@@ -89,6 +100,7 @@ void HUD_StrafeHUD()
         float  strafehud_moveangle;
 
         // HUD
+        int    strafehud_mode                      = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
         float  strafehud_hudangle;
         float  strafehud_bar_offset;
         vector strafehud_bar_size                  = panel_size;
@@ -350,13 +362,13 @@ void HUD_StrafeHUD()
         // current angle
         strafehud_currentangle_size.x = panel_size.x * .005;
         if(strafehud_currentangle_size.x < 1) strafehud_currentangle_size.x = 1;
-        if(!autocvar_hud_panel_strafehud_mode)
-        {
-            strafehud_currentangle_offset = bound(-strafehud_hudangle, strafehud_angle, strafehud_hudangle)/strafehud_hudangle * panel_size.x/2 + panel_size.x/2;
-        }
-        else
+        if(strafehud_mode == 0)
         {
             strafehud_currentangle_offset = strafehud_angle/strafehud_hudangle * panel_size.x/2;
+        }
+        else if(strafehud_mode == 1)
+        {
+            strafehud_currentangle_offset = bound(-strafehud_hudangle, strafehud_angle, strafehud_hudangle)/strafehud_hudangle * panel_size.x/2 + panel_size.x/2;
         }
         strafehud_currentangle_size.y = panel_size.y * 1.5;
         // best strafe acceleration angle
@@ -366,13 +378,13 @@ void HUD_StrafeHUD()
         if(strafehud_bestangle_size.x < 1) strafehud_bestangle_size.x = 1;
         strafehud_mirror_bestangle_size = strafehud_bestangle_size;
         // shift offset of best strafe angle in angle centered mode
-        if(autocvar_hud_panel_strafehud_mode)
+        if(strafehud_mode == 0)
         {
             strafehud_bestangle_offset -= strafehud_currentangle_offset;
             strafehud_mirror_bestangle_offset -= strafehud_currentangle_offset;
         }
         // remove indicator width from offset
-        if( strafehud_direction < 0)
+        if(strafehud_direction < 0)
         {
             strafehud_bestangle_offset -= strafehud_bestangle_size.x;
         }
@@ -470,7 +482,7 @@ void HUD_StrafeHUD()
                     strafehud_accelzone_size.x -= strafehud_overturn_size.x;
                     // calculate the remainder of the overturn zone on the opposite side
                     strafehud_mirror_overturn_offset = panel_size.x - strafehud_mirror_overturn_size.x;
-                    if(autocvar_hud_panel_strafehud_mode)
+                    if(strafehud_mode == 0)
                     {
                         // acceleration zone shifts in angle centered
                         strafehud_accelzone_size.x += strafehud_currentangle_offset; // make sure the size is correct even when the offset is shifted
@@ -503,7 +515,7 @@ void HUD_StrafeHUD()
                     strafehud_accelzone_size.x -= strafehud_overturn_size.x;
                     // calculate the remainder of the overturn zone on the opposite side
                     strafehud_mirror_overturn_offset = 0;
-                    if(autocvar_hud_panel_strafehud_mode == 1)
+                    if(strafehud_mode == 0)
                     {
                         // acceleration zone shifts if angle centered
                         strafehud_accelzone_size.x -= strafehud_currentangle_offset; // make sure the size is correct even when the offset is shifted
@@ -660,13 +672,13 @@ void HUD_StrafeHUD()
             strafehud_currentangle_color = strafehud_good_color;
         }
 
-        if(!autocvar_hud_panel_strafehud_mode)
-        {
-            drawfill(panel_pos - eY * ((strafehud_currentangle_size.y - panel_size.y) / 2) + eX * (strafehud_currentangle_offset - strafehud_currentangle_size.x/2), strafehud_currentangle_size, strafehud_currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-        }
-        else
+        if(strafehud_mode == 0)
         {
             drawfill(panel_pos - eY * ((strafehud_currentangle_size.y - panel_size.y) / 2) + eX * (panel_size.x/2 - strafehud_currentangle_size.x/2), strafehud_currentangle_size, strafehud_currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+        }
+        else if(strafehud_mode == 1)
+        {
+            drawfill(panel_pos - eY * ((strafehud_currentangle_size.y - panel_size.y) / 2) + eX * (strafehud_currentangle_offset - strafehud_currentangle_size.x/2), strafehud_currentangle_size, strafehud_currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
         }
     }
 }
