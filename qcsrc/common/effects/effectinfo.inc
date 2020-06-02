@@ -2,6 +2,7 @@
 // use `cl_particles_reloadeffects` to reload effects without restarting engine
 // use `chase_active 1` and `cl_lockview 1` to see effects from different perspectives
 // `dumpeffectinfo` currently doesn't work so edit effectinfo.txt manually, just try to keep the files in sync
+// always add new effects to the bottom of the list
 
 // `tex` are indices into particles/particlefont.tga (see particles/particlefont-template.tga for numbers)
 // the first index is inclusive, second exclusive (so `tex 0 8` will use images 0 though 7)
@@ -9105,3 +9106,5 @@ SUB(RESPAWN_GHOST) {
 	MY(originjitter) = '28 28 16';
 	MY(velocityjitter) = '0 0 256';
 }
+
+// always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
