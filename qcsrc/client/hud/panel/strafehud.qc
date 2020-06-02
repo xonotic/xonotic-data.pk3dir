@@ -25,14 +25,14 @@ float strafehud_turnangle;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
-noref string autocvar_hud_panel_scoreboard_pos = "0.320000 0.570000";
-noref string autocvar_hud_panel_scoreboard_size = "0.360000 0.020000";
-noref string autocvar_hud_panel_scoreboard_bg = "0";
-noref string autocvar_hud_panel_scoreboard_bg_color = "";
-noref string autocvar_hud_panel_scoreboard_bg_color_team = "";
-noref string autocvar_hud_panel_scoreboard_bg_alpha = "0.7";
-noref string autocvar_hud_panel_scoreboard_bg_border = "";
-noref string autocvar_hud_panel_scoreboard_bg_padding = "";
+noref string autocvar_hud_panel_strafehud_pos = "0.320000 0.570000";
+noref string autocvar_hud_panel_strafehud_size = "0.360000 0.020000";
+noref string autocvar_hud_panel_strafehud_bg = "0";
+noref string autocvar_hud_panel_strafehud_bg_color = "";
+noref string autocvar_hud_panel_strafehud_bg_color_team = "";
+noref string autocvar_hud_panel_strafehud_bg_alpha = "0.7";
+noref string autocvar_hud_panel_strafehud_bg_border = "";
+noref string autocvar_hud_panel_strafehud_bg_padding = "";
 
 void HUD_StrafeHUD()
 {
