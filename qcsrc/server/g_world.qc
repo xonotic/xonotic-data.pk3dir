@@ -1585,6 +1585,8 @@ void NextLevel()
 	*/
 
 	//pos = FindIntermission ();
+	
+	sound(NULL, CH_INFO, SND_ENDMATCH, VOL_BASE, ATTN_NONE);
 
 	VoteReset();
 
@@ -1651,6 +1653,10 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
+	
+	sound(NULL, CH_INFO, SND_OVERTIME, VOL_BASE, ATTN_NONE);
+	if(checkrules_overtimesadded == 1)
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_OVERTIME);
 }
 
 float GetWinningCode(float fraglimitreached, float equality)

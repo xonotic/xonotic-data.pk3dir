@@ -991,7 +991,7 @@ void HitSound()
 	float kill_time = STAT(KILL_TIME);
 	if (COMPARE_INCREASING(kill_time, kill_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
-		sound(NULL, CH_INFO, SND_KILL, VOL_BASE, ATTN_NONE);
+		sound(NULL, CH_INFO, SND_KILL, VOL_BASE * 1.15, ATTN_NONE);
 		kill_time_prev = kill_time;
 	}
 }
@@ -1938,6 +1938,12 @@ void HUD_Damage()
 		{
 			myhealth_flash += autocvar_hud_damage_fade_rate * frametime; // dead
 		}
+	}
+	
+	if(myhealth_prev > 1 && myhealth <= 0 && !intermission)
+	{
+		// Just died
+		sound(NULL, CH_INFO, SND_DEATH, VOL_BASE, ATTN_NONE);
 	}
 
 	if(spectatee_status == -1 || intermission)

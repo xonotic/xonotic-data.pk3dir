@@ -201,6 +201,9 @@
     MSG_ANNCE_NOTIF(REMAINING_MIN_5,            N__ALWAYS, "5minutesremain",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 
     MSG_ANNCE_NOTIF(TIMEOUT,                    N__ALWAYS, "timeoutcalled",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(OVERTIME,                   N__ALWAYS, "overtime",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(SUICIDE,                    N_GNTLOFF, "suicide",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(ACCIDENT,                   N_GNTLOFF, "accident",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 
     MSG_ANNCE_NOTIF(VOTE_ACCEPT,                N__ALWAYS, "voteaccept",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
     MSG_ANNCE_NOTIF(VOTE_CALL,                  N__ALWAYS, "votecall",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)

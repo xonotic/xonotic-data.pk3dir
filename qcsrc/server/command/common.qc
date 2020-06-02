@@ -753,6 +753,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 
+					sound(NULL, CH_INFO, SND_TIMEOUT, VOL_BASE, ATTN_NONE);
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TIMEOUT);
 				}
 			}

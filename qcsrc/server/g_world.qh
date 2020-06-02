@@ -3,7 +3,7 @@
 float checkrules_equality;
 float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
-float checkrules_overtimesadded; //how many overtimes have been already added
+//float checkrules_overtimesadded; //how many overtimes have been already added
 
 string cache_mutatormsg;
 string cache_lastmutatormsg;

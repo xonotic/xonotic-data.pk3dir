@@ -81,6 +81,11 @@ void HUD_Timer()
 		else
 			timer = seconds_tostring(timeleft);
 	}
+	
+	if(STAT(OVERTIMESADDED) >= 1)
+	{
+		timer = sprintf("%s (OT #%d)", timer, floor(STAT(OVERTIMESADDED)));
+	}
 
 	drawstring_aspect(pos, timer, mySize, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 

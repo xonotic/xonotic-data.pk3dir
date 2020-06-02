@@ -271,6 +271,10 @@ Sound SND_GIB_SPLAT_RANDOM() {
 SOUND(HIT, "misc/hit");
 SOUND(TYPEHIT, "misc/typehit");
 SOUND(KILL, "misc/kill");
+SOUND(DEATH, "misc/death");
+SOUND(ENDMATCH, "misc/endmatch");
+SOUND(OVERTIME, "misc/overtime");
+SOUND(TIMEOUT, "misc/timeout");
 
 SOUND(SPAWN, "misc/spawn");
 

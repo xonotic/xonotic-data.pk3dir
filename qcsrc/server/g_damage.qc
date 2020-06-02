@@ -281,6 +281,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			return;
 		}
 		LogDeath("suicide", deathtype, targ, targ);
+		Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_SUICIDE);
 		if(deathtype != DEATH_AUTOTEAMCHANGE.m_id) // special case: don't negate frags if auto switched
 			GiveFrags(attacker, targ, -1, deathtype, weaponentity);
 	}
@@ -445,6 +446,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 		}
 
 		LogDeath("accident", deathtype, targ, targ);
+		Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACCIDENT);
 		GiveFrags(targ, targ, -1, deathtype, weaponentity);
 
 		if(GameRules_scoring_add(targ, SCORE, 0) == -5)
