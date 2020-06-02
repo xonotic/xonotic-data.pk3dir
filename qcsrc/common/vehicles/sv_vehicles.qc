@@ -450,7 +450,7 @@ void vehicles_reset_colors(entity this, entity player)
 	this.velocity  = '0 0 0';
 	this.effects   = eff;
 
-	Vehicle info = REGISTRY_GET(Vehicles, this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_setcolors(info, this);
 }
 
@@ -741,7 +741,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 
 		antilag_clear(this, this);
 
-		Vehicle info = REGISTRY_GET(Vehicles, this.vehicleid);
+		Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 		info.vr_death(info, this);
 		vehicles_setreturn(this);
 	}
@@ -931,7 +931,7 @@ void vehicles_touch(entity this, entity toucher)
 		}
 
 		if(this.play_time < time) {
-			Vehicle info = REGISTRY_GET(Vehicles, this.vehicleid);
+			Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 			info.vr_impact(info, this);
 		}
 
@@ -976,7 +976,7 @@ void vehicles_enter(entity pl, entity veh)
 	|| (pl.vehicle)
 	) { return; }
 
-	Vehicle info = REGISTRY_GET(Vehicles, veh.vehicleid);
+	Vehicle info = veh.vehicledef; //REGISTRY_GET(Vehicles, veh.vehicleid);
 
 	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
@@ -1115,7 +1115,7 @@ void vehicles_think(entity this)
 	if(this.owner)
 		STAT(VEHICLESTAT_W2MODE, this.owner) = STAT(VEHICLESTAT_W2MODE, this);
 
-	Vehicle info = REGISTRY_GET(Vehicles, this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_think(info, this);
 
 	vehicles_painframe(this);
@@ -1188,7 +1188,7 @@ void vehicles_spawn(entity this)
 	});
 
 
-	Vehicle info = REGISTRY_GET(Vehicles, this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_spawn(info, this);
 
 	vehicles_reset_colors(this, NULL);
@@ -1256,6 +1256,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.damagedbycontents		= true;
 	IL_PUSH(g_damagedbycontents, this);
 	this.vehicleid				= info.vehicleid;
+	this.vehicledef 			= info;
 	this.PlayerPhysplug			= info.PlayerPhysplug;
 	this.event_damage			= func_null;
 	this.event_heal 			= func_null;
