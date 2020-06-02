@@ -366,7 +366,7 @@ void HUD_StrafeHUD()
         {
             strafehud_currentangle_offset = strafehud_angle/strafehud_hudangle * panel_size.x/2;
         }
-        else if(strafehud_mode == 1)
+        else
         {
             strafehud_currentangle_offset = bound(-strafehud_hudangle, strafehud_angle, strafehud_hudangle)/strafehud_hudangle * panel_size.x/2 + panel_size.x/2;
         }
@@ -676,7 +676,7 @@ void HUD_StrafeHUD()
         {
             drawfill(panel_pos - eY * ((strafehud_currentangle_size.y - panel_size.y) / 2) + eX * (panel_size.x/2 - strafehud_currentangle_size.x/2), strafehud_currentangle_size, strafehud_currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
         }
-        else if(strafehud_mode == 1)
+        else
         {
             drawfill(panel_pos - eY * ((strafehud_currentangle_size.y - panel_size.y) / 2) + eX * (strafehud_currentangle_offset - strafehud_currentangle_size.x/2), strafehud_currentangle_size, strafehud_currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
         }
