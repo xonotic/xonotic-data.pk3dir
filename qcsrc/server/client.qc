@@ -1323,12 +1323,14 @@ void UpdateChatBubble(entity this)
 
 void respawn(entity this)
 {
+	int damagedbycontents_prev = this.damagedbycontents;
 	if(this.alpha >= 0)
 	{
 		if(autocvar_g_respawn_ghosts)
 		{
 			this.solid = SOLID_NOT;
 			this.takedamage = DAMAGE_NO;
+			this.damagedbycontents = false;
 			set_movetype(this, MOVETYPE_FLY);
 			this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 			this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
@@ -1343,6 +1345,7 @@ void respawn(entity this)
 	}
 
 	CopyBody(this, 1);
+	this.damagedbycontents = damagedbycontents_prev;
 
 	this.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer(this);
