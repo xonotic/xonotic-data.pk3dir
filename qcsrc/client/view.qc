@@ -2044,16 +2044,20 @@ void View_PostProcessing()
 
 void View_Lock()
 {
-	if(autocvar_cl_lockview || (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened())))
-	{
+	int lock_type = (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened()));
+	if (lock_type == 0)
+		lock_type = autocvar_cl_lockview;
+
+	// lock_type 1: lock origin and angles
+	// lock_type 2: lock only origin
+	if(lock_type >= 1)
 		setproperty(VF_ORIGIN, freeze_org);
-		setproperty(VF_ANGLES, freeze_ang);
-	}
 	else
-	{
 		freeze_org = getpropertyvec(VF_ORIGIN);
+	if(lock_type == 1)
+		setproperty(VF_ANGLES, freeze_ang);
+	else
 		freeze_ang = getpropertyvec(VF_ANGLES);
-	}
 }
 
 void View_DemoCamera()
