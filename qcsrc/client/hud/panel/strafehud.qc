@@ -37,6 +37,7 @@ noref string autocvar_hud_panel_strafehud_bg_padding = "";
 void HUD_StrafeHUD()
 {
     entity strafeplayer;
+    bool strafehud_islocal;
 
     if(!autocvar__hud_configure)
     {
@@ -58,12 +59,14 @@ void HUD_StrafeHUD()
         panel_size -= '2 2 0' * panel_bg_padding;
     }
 
-    if(spectatee_status > 0)
+    if(spectatee_status > 0 || isdemo())
     {
+        strafehud_islocal = false;
         strafeplayer = CSQCModel_server2csqc(player_localentnum - 1);
     }
     else
     {
+        strafehud_islocal = true;
         strafeplayer = csqcplayer;
     }
 
@@ -85,7 +88,7 @@ void HUD_StrafeHUD()
         float strafehud_indicator_minspeed         = autocvar_hud_panel_strafehud_indicator_minspeed;
 
         // physics
-        float  strafehud_onground                  = strafeplayer == csqcplayer ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+        float  strafehud_onground                  = strafehud_islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
         float  strafehud_speed                     = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
         float  strafehud_maxspeed_crouch_mod       = IS_DUCKED(strafeplayer) ? .5 : 1;
         float  strafehud_maxspeed_phys             = strafehud_onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
@@ -128,7 +131,7 @@ void HUD_StrafeHUD()
         float  strafehud_range_minangle;
 
         // determine whether the player is strafing forwards or backwards
-        if(strafeplayer == csqcplayer) // if entity is local player
+        if(strafehud_islocal) // if entity is local player
         {
             if(strafehud_movement_x > 0)
             {
@@ -152,7 +155,7 @@ void HUD_StrafeHUD()
         }
 
         // determine player wishdir
-        if(strafeplayer == csqcplayer) // if entity is local player
+        if(strafehud_islocal) // if entity is local player
         {
             if(strafehud_movement_x == 0)
             {
@@ -229,7 +232,7 @@ void HUD_StrafeHUD()
             strafehud_hudangle = bound(1, fabs(autocvar_hud_panel_strafehud_angle), 360) / 2; // limit HUD range to 360 degrees, higher values don't make sense
         }
 
-        // detecting strafe turning
+        // detect strafe turning
         if(!autocvar__hud_configure)
         {
             if(strafehud_onground != strafehud_state_onground)
