@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-31 13:52+0000\n"
+"PO-Revision-Date: 2020-06-02 14:46+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -3469,7 +3469,7 @@ msgstr "^BGЦель разрушена в ^F4%s^BG!"
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^F4Begin!"
-msgstr "^F4Начали!"
+msgstr "^F4В бой!"
 
 #: qcsrc/common/notifications/all.inc:535
 msgid "^F4Game starts in ^COUNT"
@@ -9748,7 +9748,8 @@ msgstr "В избранные"
 msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
-msgstr "Добавить выбранный сервер в закладки, так найти его будет быстрее"
+msgstr ""
+"Добавить выбранный сервер в закладки, чтобы быстрее найти его в будущем"
 
 #: qcsrc/menu/xonotic/serverlist.qc:733
 msgid "Ping"
