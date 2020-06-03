@@ -413,6 +413,7 @@ void cvar_changes_init()
 		BADCVAR("capturelimit_override");
 		BADCVAR("fraglimit_override");
 		BADCVAR("gametype");
+		BADCVAR("g_allow_noncore_weapons");
 		BADCVAR("g_antilag");
 		BADCVAR("g_balance_teams");
 		BADCVAR("g_balance_teams_prevent_imbalance");
@@ -484,7 +485,6 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
-		BADCVAR("sv_nexuizcompat_weaponswap");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
