@@ -1384,6 +1384,11 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 void StartItem(entity this, GameItem def)
 {
     def = def.m_spawnfunc_hookreplace(def, this);
+    if (def.instanceOfWeapon)
+    {
+    	weapon_defaultspawnfunc(this, def);
+    	return;
+    }
     if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
     {
         delete(this);

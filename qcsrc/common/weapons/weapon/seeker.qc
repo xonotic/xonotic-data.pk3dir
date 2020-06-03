@@ -2,6 +2,15 @@
 
 #ifdef SVQC
 
+METHOD(Seeker, m_spawnfunc_hookreplace, Weapon(Seeker this, entity e))
+{
+    if (autocvar_g_weapons_noncore == 2 && !Item_IsLoot(e) && (this.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+    {
+        return WEP_HAGAR;
+    }
+    return this;
+}
+
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
 // ============================

@@ -2,6 +2,15 @@
 
 #ifdef SVQC
 
+METHOD(HLAC, m_spawnfunc_hookreplace, Weapon(HLAC this, entity e))
+{
+    if (autocvar_g_weapons_noncore == 2 && !Item_IsLoot(e) && (this.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+    {
+        return WEP_CRYLINK;
+    }
+    return this;
+}
+
 void W_HLAC_Touch(entity this, entity toucher)
 {
 	float isprimary;
