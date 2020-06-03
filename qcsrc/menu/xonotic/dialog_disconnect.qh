@@ -4,7 +4,7 @@
 CLASS(XonoticDisconnectDialog, XonoticDialog)
 	METHOD(XonoticDisconnectDialog, fill, void(entity));
 	ATTRIB(XonoticDisconnectDialog, title, string, _("Disconnect"));
-	ATTRIB(XonoticDisconnectDialog, tooltip, string, _("Disconnect server"));
+	ATTRIB(XonoticDisconnectDialog, tooltip, string, _("Disconnect from the server you are connected to"));
 	ATTRIB(XonoticDisconnectDialog, color, vector, SKINCOLOR_DIALOG_QUIT);
 	ATTRIB(XonoticDisconnectDialog, intendedWidth, float, 0.5);
 	ATTRIB(XonoticDisconnectDialog, rows, float, 3);

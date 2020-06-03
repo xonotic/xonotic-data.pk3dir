@@ -1,3 +1,5 @@
+#if ENABLE_EFFECTINFO
+
 #include "effectinfo.qh"
 #define EFFECTINFO_PARSER(on, MY) \
     on(type,                                        MY(type) \
@@ -340,3 +342,5 @@ REGISTRY_DEFINE_GET(EffectInfos, NULL)
 #undef MY
 #undef DEF
 #undef SUB
+
+#endif

@@ -1323,12 +1323,14 @@ void UpdateChatBubble(entity this)
 
 void respawn(entity this)
 {
+	bool damagedbycontents_prev = this.damagedbycontents;
 	if(this.alpha >= 0)
 	{
 		if(autocvar_g_respawn_ghosts)
 		{
 			this.solid = SOLID_NOT;
 			this.takedamage = DAMAGE_NO;
+			this.damagedbycontents = false;
 			set_movetype(this, MOVETYPE_FLY);
 			this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 			this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
@@ -1343,6 +1345,7 @@ void respawn(entity this)
 	}
 
 	CopyBody(this, 1);
+	this.damagedbycontents = damagedbycontents_prev;
 
 	this.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer(this);
@@ -2107,7 +2110,6 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
-const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
@@ -2276,7 +2278,7 @@ void ObserverThink(entity this)
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this) || time < CS(this).jointime + MIN_SPEC_TIME)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch || this.would_spectate) {
@@ -2296,6 +2298,8 @@ void ObserverThink(entity this)
 				this.flags &= ~FL_SPAWNING;
 				if(joinAllowed(this))
 					Join(this);
+				else if(time < CS(this).jointime + MIN_SPEC_TIME)
+					CS(this).autojoin_checked = -1;
 				return;
 			}
 		}
@@ -2318,7 +2322,7 @@ void SpectatorThink(entity this)
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this) || time < CS(this).jointime + MIN_SPEC_TIME)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)) {
@@ -2360,7 +2364,10 @@ void SpectatorThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				Join(this);
+				if(joinAllowed(this))
+					Join(this);
+				else if(time < CS(this).jointime + MIN_SPEC_TIME)
+					CS(this).autojoin_checked = -1;
 				return;
 			}
 		}
@@ -2565,17 +2572,19 @@ void PlayerPreThink (entity this)
 			IntermissionThink(this);
 		return;
 	}
-	else if (IS_REAL_CLIENT(this) && !CS(this).autojoin_checked && time >= CS(this).jointime + MIN_SPEC_TIME)
+	else if (IS_REAL_CLIENT(this) && CS(this).autojoin_checked <= 0 && time >= CS(this).jointime + MIN_SPEC_TIME)
 	{
-		CS(this).autojoin_checked = true;
+		bool early_join_requested = (CS(this).autojoin_checked < 0);
+		CS(this).autojoin_checked = 1;
 		// don't do this in ClientConnect
 		// many things can go wrong if a client is spawned as player on connection
-		if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
+		if (early_join_requested || MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
 			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
 			campaign_bots_may_start = true;
-			Join(this);
+			if(joinAllowed(this))
+				Join(this);
 			return;
 		}
 	}
@@ -2597,7 +2606,7 @@ void PlayerPreThink (entity this)
 				wep_zoomed += thiswep.wr_zoom(thiswep, this);
 		}
 		SetZoomState(this, PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this) || wep_zoomed);
-    }
+	}
 
 	if (CS(this).teamkill_soundtime && time > CS(this).teamkill_soundtime)
 	{

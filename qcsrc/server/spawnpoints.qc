@@ -232,7 +232,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck, boo
 
 	float prio = 0;
 	float shortest = vlen(world.maxs - world.mins);
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && it != this, {
 		float thisdist = vlen(it.origin - spot.origin);
 		if (thisdist < shortest)
 			shortest = thisdist;
