@@ -283,6 +283,7 @@ void ClientInit_misc(entity this);
 
 int GetPlayerLimit();
 
+const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this);
 void Join(entity this);
 

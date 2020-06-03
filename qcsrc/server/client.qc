@@ -2110,7 +2110,6 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
-const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
