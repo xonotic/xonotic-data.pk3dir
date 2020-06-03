@@ -328,7 +328,7 @@ string autocvar_sv_motd;
 int autocvar_sv_name_maxlength = 64;
 bool autocvar_sv_precacheplayermodels;
 bool autocvar_sv_q3acompat_machineshotgunswap;
-bool autocvar_g_weapon_noncore_allow = true;
+int autocvar_g_weapon_noncore = 2;
 bool autocvar_sv_servermodelsonly;
 int autocvar_sv_spectate;
 float autocvar_sv_spectator_speed_multiplier;
