@@ -38,40 +38,15 @@
 #undef STAT_MOVEVARS_TIMESCALE
 #undef STAT_MOVEVARS_GRAVITY
 
-#pragma noref 0
-
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
 #define touch move_touch
 
-// deglobalization:
-
 void(vector ang) _makevectors_hidden = #1;
-//#define makevectors DO_NOT_USE_GLOBALS_PREFER_MAKE_VECTORS_MACRO_INSTEAD
-
-#define makestatic DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
-
-#define skel_get_bonerel DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
-
 vector(float skel, float bonenum) _skel_get_boneabs_hidden = #270;
-//#define skel_get_boneabs DO_NOT_USE_GLOBALS_PREFER_SKEL_GET_BONE_ABS_MACRO_INSTEAD
-
 void(float skel, float bonenum, vector org) _skel_set_bone_hidden = #271;
-//#define skel_set_bone DO_NOT_USE_GLOBALS_PREFER_SKEL_SET_BONE_MACRO_INSTEAD
-
-#define skel_mul_bone DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
-
-#define skel_mul_bones DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
-
 void(vector org, float radius, vector lightcolours) _adddynamiclight_hidden = #305;
-//#define adddynamiclight DO_NOT_USE_GLOBALS_PREFER_ADD_DYNAMIC_LIGHT_MACRO_INSTEAD
-#define adddynamiclight2 DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
-
 void(vector dir) _vectorvectors_hidden = #432;
-#define vectorvectors DO_NOT_USE_GLOBALS_PREFER_VECTOR_VECTORS_MACRO_INSTEAD
-
 vector(entity ent, float tagindex) _gettaginfo_hidden = #452;
-//#define gettaginfo DO_NOT_USE_GLOBALS_PREFER_GET_TAG_INFO_MACRO_INSTEAD
 
-#define getentity DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
-#define getentityvec DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
+#pragma noref 0

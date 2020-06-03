@@ -98,7 +98,7 @@ void conveyor_init(entity this)
 	setthink(this, conveyor_think);
 	this.nextthink = time;
 	this.setactive = generic_netlinked_setactive;
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		// backwards compatibility
 		this.use = generic_netlinked_legacy_use;

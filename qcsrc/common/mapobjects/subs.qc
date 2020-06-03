@@ -70,14 +70,16 @@ void SUB_SetFade_Think (entity this)
 ==================
 SUB_SetFade
 
-Fade 'ent' out when time >= 'when'
+Fade ent out when time >= vanish_time
 ==================
 */
-void SUB_SetFade (entity ent, float when, float fading_time)
+void SUB_SetFade(entity ent, float vanish_time, float fading_time)
 {
+	if (fading_time <= 0)
+		fading_time = 0.01;
 	ent.fade_rate = 1/fading_time;
 	setthink(ent, SUB_SetFade_Think);
-	ent.nextthink = when;
+	ent.nextthink = vanish_time;
 }
 
 /*
@@ -287,7 +289,7 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
-        // The only currently implemented alternative movement is linear (value 1)
+	// The only currently implemented alternative movement is linear (value 1)
 	if (traveltime < 0.15 || (this.platmovetype_start == 1 && this.platmovetype_end == 1)) // is this correct?
 	{
 		this.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
@@ -400,9 +402,9 @@ void ApplyMinMaxScaleAngles(entity e)
 
 void SetBrushEntityModel(entity this, bool with_lod)
 {
- 	if(this.model != "")
- 	{
- 		precache_model(this.model);
+	if(this.model != "")
+	{
+		precache_model(this.model);
 		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
 			vector mi = this.mins;
@@ -417,7 +419,7 @@ void SetBrushEntityModel(entity this, bool with_lod)
 
 		if(endsWith(this.model, ".obj")) // WORKAROUND: darkplaces currently rotates .obj models on entities incorrectly, we need to add 180 degrees to the Y axis
 			this.angles_y = anglemods(this.angles_y - 180);
- 	}
+	}
 	setorigin(this, this.origin);
 	ApplyMinMaxScaleAngles(this);
 }

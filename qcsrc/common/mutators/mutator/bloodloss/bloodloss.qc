@@ -57,12 +57,12 @@ MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsPrettyString)
 #ifdef CSQC
 MUTATOR_HOOKFUNCTION(bloodloss, PlayerCanCrouch)
 {
-	if(STAT(HEALTH) <= STAT(BLOODLOSS))
+	if(STAT(HEALTH) > 0 && STAT(HEALTH) <= STAT(BLOODLOSS))
 		M_ARGV(1, bool) = true; // do_crouch
 }
 MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
 {
-	if(STAT(HEALTH) <= STAT(BLOODLOSS))
+	if(STAT(HEALTH) > 0 && STAT(HEALTH) <= STAT(BLOODLOSS))
 		return true;
 }
 #endif

@@ -486,7 +486,7 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
+	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type && !autocvar_cl_lockview) // _type = 0 disables velocity zoom too
 	{
 		if (intermission || (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2))
 			curspeed = 0;
@@ -787,7 +787,7 @@ void View_EventChase(entity this)
 		{
 			if(hud != HUD_BUMBLEBEE_GUN)
 			{
-				Vehicle info = Vehicles_from(hud);
+				Vehicle info = REGISTRY_GET(Vehicles, hud);
 				vehicle_viewdist = info.height;
 				vehicle_viewofs = info.view_ofs;
 				if(vehicle_viewdist < 0) // when set below 0, this vehicle doesn't use third person view (gunner slots)
@@ -898,7 +898,7 @@ void HUD_Crosshair_Vehicle(entity this)
 {
 	if(hud != HUD_BUMBLEBEE_GUN)
 	{
-		Vehicle info = Vehicles_from(hud);
+		Vehicle info = REGISTRY_GET(Vehicles, hud);
 		info.vr_crosshair(info, this);
 	}
 }
@@ -1079,11 +1079,15 @@ LABEL(normalcolor)
 
 void HUD_Crosshair(entity this)
 {
+	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
+	if(autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
+		csqcplayer.alpha = csqcplayer.m_alpha;
+
 	float f, i, j;
 	vector v;
-	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) &&
-		spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair) &&
-		!HUD_MinigameMenu_IsOpened() )
+	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) && !autocvar_cl_lockview
+		&& spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair)
+		&& !HUD_MinigameMenu_IsOpened())
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;
@@ -1124,7 +1128,7 @@ void HUD_Crosshair(entity this)
 			{
 				traceline(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
 				float myalpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
-				if(trace_ent == csqcplayer && STAT(HEALTH) > 0)
+				if(trace_ent == csqcplayer)
 					csqcplayer.alpha = min(autocvar_crosshair_chase_playeralpha, myalpha);
 				else
 					csqcplayer.alpha = csqcplayer.m_alpha;
@@ -1159,7 +1163,7 @@ void HUD_Crosshair(entity this)
 		string wcross_name = "";
 		float wcross_scale, wcross_blur;
 
-        entity e = WEP_Null;
+		entity e = WEP_Null;
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
 			entity wepent = viewmodels[0]; // TODO: unhardcode
@@ -1420,10 +1424,10 @@ void HUD_Crosshair(entity this)
 				}
 
 				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
-					DrawCircleClippedPic(wcross_origin, wcross_size.x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size.x * wcross_resolution * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
 
 				if (ring_value)
-					DrawCircleClippedPic(wcross_origin, wcross_size.x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size.x * wcross_resolution * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
@@ -1538,7 +1542,7 @@ void SpecialCommand()
 			{
 				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
 				slot.y = 1; // start it off 0 so we can use it
-				slot.z = floor(random() * Weapons_MAX);
+				slot.z = floor(random() * REGISTRY_MAX(Weapons));
 				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
 				vector newcolor = randomvec() * 2;
 				newcolor.x = bound(0.4, newcolor.x, 1);
@@ -1552,7 +1556,7 @@ void SpecialCommand()
 			vector splash_size = '0 0 0';
 			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
 			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
-			entity wep = Weapons_from(slot.z);
+			entity wep = REGISTRY_GET(Weapons, slot.z);
 			if(wep == WEP_Null)
 				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
 			else
@@ -1635,6 +1639,7 @@ void ViewLocation_Mouse()
 	viewloc_mousepos.y = bound(0, viewloc_mousepos.y, vid_conheight);
 
 	//float cursor_alpha = 1 - autocvar__menu_alpha;
+	//cursor_type = CURSOR_NORMAL;
 	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
 }
 
@@ -1675,6 +1680,7 @@ void HUD_Mouse(entity player)
 	if(!autocvar_hud_cursormode)
 		update_mousepos();
 
+	cursor_type = CURSOR_NORMAL;
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
 	else
@@ -2329,6 +2335,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	vid_width = vf_size.x;
 	vid_height = vf_size.y;
 
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
 	WaypointSprite_Load();
 
 	CSQCPlayer_SetCamera();
@@ -2338,8 +2346,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else // then player_localentnum is the vehicle I'm driving
 		current_player = player_localnum;
 	myteam = entcs_GetTeam(current_player);
-
-	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
 	// abused multiple places below
 	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
@@ -2445,10 +2451,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS); // TODO: .health is used in cl_deathfade (a feature we have turned off currently)
 	renderscene();
 
-	// now switch to 2D drawing mode by calling a 2D drawing function
-	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
-	// next R_RenderScene call
-	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+	// Now the the scene has been rendered, begin with the 2D drawing functions
 
 	View_NightVision();
 	DrawReticle(local_player);

@@ -588,10 +588,10 @@ float bot_cmd_select_weapon(entity this)
 		if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
 			continue;
 
-		if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
+		if(client_hasweapon(this, REGISTRY_GET(Weapons, id), weaponentity, true, false))
 		{
 			success = true;
-			this.(weaponentity).m_switchweapon = Weapons_from(id);
+			this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, id);
 		}
 	}
 
@@ -1211,12 +1211,12 @@ float bot_execute_commands_once(entity this)
 
 	// Handle conditions
 	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
-	if(this.bot_cmd_condition_status & CMD_CONDITION_true && this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
+	if((this.bot_cmd_condition_status & CMD_CONDITION_true) && this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
 	{
 		bot_command_executed(this, true);
 		return -1;
 	}
-	else if(this.bot_cmd_condition_status & CMD_CONDITION_false && this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
+	else if((this.bot_cmd_condition_status & CMD_CONDITION_false) && this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
 	{
 		bot_command_executed(this, true);
 		return -1;

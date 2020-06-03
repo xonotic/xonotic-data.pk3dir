@@ -671,11 +671,8 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 			}
 			else
 			{
-				for (;;)
+				while((s = fgets(fh)))
 				{
-					if (!((s = fgets(fh))))
-						break;
-
 					// catch different sorts of comments
 					if(s == "")                    // empty lines
 						continue;
@@ -1141,14 +1138,16 @@ string MapInfo_FixName(string s)
 int MapInfo_CurrentFeatures()
 {
 	int req = 0;
-	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
+    // TODO: find a better way to check if weapons are required on the map
+	if(!(cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") 
+		|| cvar("g_race") || cvar("g_cts") || cvar("g_nexball") || cvar("g_ca") || cvar("g_freezetag") || cvar("g_lms")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;
 }
 
 Gametype MapInfo_CurrentGametype()
 {
-	Gametype prev = Gametypes_from(cvar("gamecfg"));
+	Gametype prev = REGISTRY_GET(Gametypes, cvar("gamecfg"));
 	FOREACH(Gametypes, cvar(it.netname) && it != prev, return it);
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }

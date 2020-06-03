@@ -67,6 +67,8 @@ void waypoint_think(entity this);
 void waypoint_clearlinks(entity wp);
 void waypoint_schedulerelink(entity wp);
 
+float waypoint_get_assigned_link_cost(entity w, float i);
+
 float waypoint_getlinkcost(entity from, entity to);
 float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_ent);
 float waypoint_getlinearcost(float dist);

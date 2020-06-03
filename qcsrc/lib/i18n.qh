@@ -8,7 +8,7 @@
 string prvm_language;
 
 /**
- * @deprecated prefer _("translated") - GMQCC's -ftranslatable-strings feature
+ * @deprecated prefer _("translatable text") - GMQCC's -ftranslatable-strings feature
  */
 ERASEABLE
 string language_filename(string s)

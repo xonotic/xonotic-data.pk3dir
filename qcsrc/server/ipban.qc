@@ -453,11 +453,16 @@ bool Ban_MaybeEnforceBan(entity client)
 {
 	if (Ban_IsClientBanned(client, -1))
 	{
-		string s = sprintf("^1NOTE:^7 banned client %s just tried to enter\n", client.netaddress);
+		if (!client.crypto_idfp)
+			LOG_INFOF("^1NOTE:^7 banned client %s just tried to enter\n",
+				client.netaddress);
+		else
+			LOG_INFOF("^1NOTE:^7 banned client %s (%s) just tried to enter\n",
+				client.netaddress, client.crypto_idfp);
+
 		if(autocvar_g_ban_telluser)
 			sprint(client, "You are banned from this server.\n");
 		dropclient(client);
-		bprint(s);
 		return true;
 	}
 	return false;
@@ -489,7 +494,7 @@ string Ban_Enforce(float j, string reason)
 					reason = strcat(reason, ", ");
 				reason = strcat(reason, it.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", it.netaddress, "^7 has to go\n");
+			s = strcat(s, "^1NOTE:^7 banned client ", it.netname, "^7 has to go\n");
 			dropclient(it);
 		}
 	});

@@ -48,6 +48,8 @@ bool autocvar_g_ctf_flag_return_when_unreachable;
 float autocvar_g_ctf_flag_return_damage;
 float autocvar_g_ctf_flag_return_damage_delay;
 float autocvar_g_ctf_flag_return_dropped;
+bool autocvar_g_ctf_flag_waypoint = true;
+float autocvar_g_ctf_flag_waypoint_maxdistance;
 float autocvar_g_ctf_flagcarrier_auto_helpme_damage;
 float autocvar_g_ctf_flagcarrier_auto_helpme_time;
 float autocvar_g_ctf_flagcarrier_selfdamagefactor;
@@ -436,7 +438,19 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	if(!flag) { return; }
 	if((droptype == DROP_PASS) && !receiver) { return; }
 
-	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
+	if(flag.speedrunning)
+	{
+		// ensure old waypoints are removed before resetting the flag
+		WaypointSprite_Kill(player.wps_flagcarrier);
+
+		if(player.wps_enemyflagcarrier)
+			WaypointSprite_Kill(player.wps_enemyflagcarrier);
+
+		if(player.wps_flagreturn)
+			WaypointSprite_Kill(player.wps_flagreturn);
+		ctf_RespawnFlag(flag);
+		return;
+	}
 
 	// reset the flag
 	setattachment(flag, NULL, "");
@@ -1133,6 +1147,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 .float last_respawn;
 void ctf_RespawnFlag(entity flag)
 {
+	flag.watertype = CONTENT_EMPTY; // TODO: it is unclear why this workaround is needed, likely many other potential breakage points!!
 	// check for flag respawn being called twice in a row
 	if(flag.last_respawn > time - 0.5)
 		{ backtrace("flag respawn called twice quickly! please notify Samual about this..."); }
@@ -1224,10 +1239,14 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 		default: basename = WP_FlagBaseNeutral; break;
 	}
 
-	entity wp = WaypointSprite_SpawnFixed(basename, this.origin + FLAG_WAYPOINT_OFFSET, this, wps_flagbase, RADARICON_FLAG);
-	wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
-	WaypointSprite_UpdateTeamRadar(this.wps_flagbase, RADARICON_FLAG, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
-	setcefc(wp, ctf_FlagBase_Customize);
+	if(autocvar_g_ctf_flag_waypoint)
+	{
+		entity wp = WaypointSprite_SpawnFixed(basename, this.origin + FLAG_WAYPOINT_OFFSET, this, wps_flagbase, RADARICON_FLAG);
+		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
+		wp.fade_rate = autocvar_g_ctf_flag_waypoint_maxdistance;
+		WaypointSprite_UpdateTeamRadar(this.wps_flagbase, RADARICON_FLAG, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
+		setcefc(wp, ctf_FlagBase_Customize);
+	}
 
 	// captureshield setup
 	ctf_CaptureShield_Spawn(this);

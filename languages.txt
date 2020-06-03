@@ -1,25 +1,25 @@
-ast   "Asturian" "Asturianu" 65%
-de    "German" "Deutsch" 100%
-de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
+ast   "Asturian" "Asturianu" 64%
+de    "German" "Deutsch" 98%
+de_CH "German (Switzerland)" "Deutsch (Schweiz)" 98%
 en    "English" "English" 100%
-en_AU "English (Australia)" "English (Australia)" 76%
-es    "Spanish" "Español" 100%
-fr    "French" "Français" 100%
+en_AU "English (Australia)" "English (Australia)" 75%
+es    "Spanish" "Español" 98%
+fr    "French" "Français" 99%
 ga    "Irish" "Irish" 32%
-it    "Italian" "Italiano" 100%
-hu    "Hungarian" "Magyar" 48%
-nl    "Dutch" "Nederlands" 63%
+it    "Italian" "Italiano" 98%
+hu    "Hungarian" "Magyar" 47%
+nl    "Dutch" "Nederlands" 62%
 pl    "Polish" "Polski" 72%
-pt    "Portuguese" "Português" 86%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
-ro    "Romanian" "Romana" 75%
-fi    "Finnish" "Suomi" 30%
+pt    "Portuguese" "Português" 84%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
+ro    "Romanian" "Romana" 74%
+fi    "Finnish" "Suomi" 98%
 el    "Greek" "Ελληνική" 47%
-be    "Belarusian" "Беларуская" 55%
-bg    "Bulgarian" "Български" 60%
-ru    "Russian" "Русский" 100%
-sr    "Serbian" "Српски" 65%
+be    "Belarusian" "Беларуская" 54%
+bg    "Bulgarian" "Български" 59%
+ru    "Russian" "Русский" 98%
+sr    "Serbian" "Српски" 64%
 uk    "Ukrainian" "Українська" 50%
-zh_CN "Chinese (China)" "中文" 58%
-zh_TW "Chinese (Taiwan)" "國語" 62%
-ko    "Korean" "한국의" 30%
+zh_CN "Chinese (China)" "中文" 57%
+zh_TW "Chinese (Taiwan)" "國語" 61%
+ko    "Korean" "한국의" 29%

@@ -7,6 +7,12 @@
 
 // Vote (#9)
 
+void HUD_Vote_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_vote_alreadyvoted_alpha");
+}
+
 void HUD_Vote()
 {
 	if(autocvar_cl_allow_uid2name == -1 && (ISGAMETYPE(CTS) || ISGAMETYPE(RACE) || (serverflags & SERVERFLAG_PLAYERSTATS)))

@@ -377,6 +377,9 @@ MUTATOR_HOOKFUNCTION(ca, FilterItem)
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 {
+	if (time < game_starttime || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
+		return;
+
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_damage = M_ARGV(7, float);

@@ -59,11 +59,11 @@
 WepSet _WepSet_FromWeapon(int a)
 {
 	a -= WEP_FIRST;
-	if (Weapons_MAX > 24)
+	if (REGISTRY_MAX(Weapons) > 24)
 		if (a >= 24)
 		{
 			a -= 24;
-			if (Weapons_MAX > 48)
+			if (REGISTRY_MAX(Weapons) > 48)
 				if (a >= 24)
 				{
 					a -= 24;
@@ -76,8 +76,8 @@ WepSet _WepSet_FromWeapon(int a)
 #ifdef SVQC
 	void WriteWepSet(float dst, WepSet w)
 	{
-		if (Weapons_MAX > 48) WriteInt72_t(dst, w);
-		else if (Weapons_MAX > 24) WriteInt48_t(dst, w);
+		if (REGISTRY_MAX(Weapons) > 48) WriteInt72_t(dst, w);
+		else if (REGISTRY_MAX(Weapons) > 24) WriteInt48_t(dst, w);
 		else WriteInt24_t(dst, w.x);
 	}
 #endif
@@ -92,8 +92,8 @@ WepSet _WepSet_FromWeapon(int a)
 	}
 	WepSet ReadWepSet()
 	{
-		if (Weapons_MAX > 48) return ReadInt72_t();
-		if (Weapons_MAX > 24) return ReadInt48_t();
+		if (REGISTRY_MAX(Weapons) > 48) return ReadInt72_t();
+		if (REGISTRY_MAX(Weapons) > 24) return ReadInt48_t();
 		return ReadInt24_t() * '1 0 0';
 	}
 #endif
@@ -107,7 +107,7 @@ string W_NameWeaponOrder_MapFunc(string s)
 	int i = stof(s);
 	if (s == "0" || i)
 	{
-		entity wi = Weapons_from(i);
+		entity wi = REGISTRY_GET(Weapons, i);
 		if (wi != WEP_Null) return wi.netname;
 	}
 	return s;
@@ -144,7 +144,7 @@ string W_NumberWeaponOrder(string order)
 	return mapPriorityList(order, W_NumberWeaponOrder_MapFunc);
 }
 
-float W_FixWeaponOrder_BuildImpulseList_buf[Weapons_MAX];
+float W_FixWeaponOrder_BuildImpulseList_buf[REGISTRY_MAX(Weapons)];
 string W_FixWeaponOrder_BuildImpulseList_order;
 void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 {
@@ -156,9 +156,9 @@ void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 float W_FixWeaponOrder_BuildImpulseList_cmp(int i, int j, entity pass)
 {
 	int si = W_FixWeaponOrder_BuildImpulseList_buf[i];
-	Weapon e1 = Weapons_from(si);
+	Weapon e1 = REGISTRY_GET(Weapons, si);
 	int sj = W_FixWeaponOrder_BuildImpulseList_buf[j];
-	Weapon e2 = Weapons_from(sj);
+	Weapon e2 = REGISTRY_GET(Weapons, sj);
 	int d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
 	if (d != 0) return -d;  // high impulse first!
 	return strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "),
@@ -222,6 +222,20 @@ string GetAmmoPicture(int ammotype)
 		case RES_PLASMA:  return ITEM_Plasma.m_icon;
 		case RES_FUEL:    return ITEM_JetpackFuel.m_icon;
 		default: return "";  // wtf, no ammo type?
+	}
+}
+
+string GetAmmoName(int ammotype)
+{
+	switch (ammotype)
+	{
+		case RES_SHELLS:  return ITEM_Shells.m_name;
+		case RES_BULLETS: return ITEM_Bullets.m_name;
+		case RES_ROCKETS: return ITEM_Rockets.m_name;
+		case RES_CELLS:   return ITEM_Cells.m_name;
+		case RES_PLASMA:  return ITEM_Plasma.m_name;
+		case RES_FUEL:    return ITEM_JetpackFuel.m_name;
+		default:          return "batteries";
 	}
 }
 
@@ -551,14 +565,27 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	vector a = ReadVector();
+	int fr = ReadByte();
+	float t = ReadFloat();
     int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
-	if(a.x == wepent.anim_idle_x) // we don't need to enforce idle animation
-		wepent.animstate_looping = false;
+	if(fr == WFRAME_IDLE)
+		wepent.animstate_looping = false; // we don't need to enforce idle animation
 	else
+	{
+		vector a = '0 0 0';
+		switch(fr)
+		{
+			default:
+			case WFRAME_IDLE: a = wepent.anim_idle; break;
+			case WFRAME_FIRE1: a = wepent.anim_fire1; break;
+			case WFRAME_FIRE2: a = wepent.anim_fire2; break;
+			case WFRAME_RELOAD: a = wepent.anim_reload; break;
+		}
+		a.z *= t;
 		anim_set(wepent, a, !restartanim, restartanim, restartanim);
+	}
 	wepent.state = ReadByte();
 	wepent.weapon_nextthink = ReadFloat();
 	switch (wepent.state)
@@ -578,13 +605,14 @@ NET_HANDLE(wframe, bool isNew)
 #endif
 
 #ifdef SVQC
-void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
+void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim)
 {
 	if (!IS_REAL_CLIENT(actor)) return;
 	int channel = MSG_ONE;
 	msg_entity = actor;
 	WriteHeader(channel, wframe);
-	WriteVector(channel, a);
+	WriteByte(channel, wepframe);
+	WriteFloat(channel, attackrate);
 	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);

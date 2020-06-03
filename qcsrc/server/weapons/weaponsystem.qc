@@ -55,7 +55,7 @@ bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 
 vector CL_Weapon_GetShotOrg(int wpn)
 {
-	entity wi = Weapons_from(wpn);
+	entity wi = REGISTRY_GET(Weapons, wpn);
 	entity e = spawn();
 	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
@@ -366,6 +366,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
+		// this can happen when the weapon entity is newly spawned, since it has a clear state and no previous weapon frame
+		if (this.wframe == WFRAME_DONTCHANGE)
+			this.wframe = WFRAME_IDLE;
 		fr = this.wframe;
 		restartanim = false;
 	}
@@ -374,14 +377,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		restartanim = fr != WFRAME_IDLE;
 	}
 
-	vector a = '0 0 0';
     this.wframe = fr;
-    if (fr == WFRAME_IDLE) a = this.anim_idle;
-    else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
-    else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
-    else  // if (fr == WFRAME_RELOAD)
-        a = this.anim_reload;
-    a.z *= g_weaponratefactor;
 
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
@@ -408,7 +404,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	{
 		FOREACH_CLIENT(true, {
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
-				wframe_send(it, this, a, restartanim);
+				wframe_send(it, this, fr, g_weaponratefactor, restartanim);
 		});
 	}
 
@@ -850,7 +846,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)
 {
-	Weapon w = Weapons_from(weapon_type);
+	Weapon w = REGISTRY_GET(Weapons, weapon_type);
 	weapon_dropevent_item = weapon_item;
 	w.event(w, player, weaponentity);
 }
