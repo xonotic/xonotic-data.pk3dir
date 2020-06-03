@@ -4,7 +4,7 @@
 
 METHOD(Seeker, m_spawnfunc_hookreplace, Weapon(Seeker this, entity e))
 {
-    if (autocvar_g_allow_noncore_weapons && !Item_IsLoot(e) && (this.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+    if (autocvar_g_weapon_noncore_allow && !Item_IsLoot(e) && (this.spawnflags & WEP_FLAG_MUTATORBLOCKED))
     {
         return WEP_HAGAR;
     }

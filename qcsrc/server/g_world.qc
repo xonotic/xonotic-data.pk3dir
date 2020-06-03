@@ -413,7 +413,7 @@ void cvar_changes_init()
 		BADCVAR("capturelimit_override");
 		BADCVAR("fraglimit_override");
 		BADCVAR("gametype");
-		BADCVAR("g_allow_noncore_weapons");
+		BADCVAR("g_weapon_noncore_allow");
 		BADCVAR("g_antilag");
 		BADCVAR("g_balance_teams");
 		BADCVAR("g_balance_teams_prevent_imbalance");
