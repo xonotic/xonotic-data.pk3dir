@@ -364,6 +364,7 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 
 	WarpZone_trace_forent = this;
 
+	bool headshot = false; // indicates that one of the hit targets was a headshot
 	for (;;)
 	{
 		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, false, WarpZone_trace_forent, NULL, fireBullet_trace_callback);
@@ -414,7 +415,7 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 			if(headshot_multiplier && Headshot(hit, this, start, end))
 			{
 				damage *= headshot_multiplier;
-				// TODO: sound/announcement
+				headshot = true;
 			}
 			bool gooddamage = accuracy_isgooddamage(this, hit);
 			Damage(hit, this, this, damage * damage_fraction, dtype, weaponentity, start, force * dir * damage_fraction);
@@ -474,6 +475,9 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 		if(hit.solid == SOLID_BSP)
 			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -damage_fraction, dtype, 0, this);
 	}
+
+	if(headshot)
+		Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_HEADSHOT);
 
 	if(lag)
 		antilag_restore_all(this);
