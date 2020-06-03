@@ -222,7 +222,7 @@ bool Headshot(entity targ, entity ent, vector start, vector end)
 	return trace_hits_box(start, end, headmins, headmaxs);
 }
 
-void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
+void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector dir = normalize(end - start);
 	vector force = dir * bforce;
@@ -231,6 +231,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	end = end + dir;
 
 	float totaldmg = 0;
+	bool headshot = false; // indicates that one of the targets hit was a headshot
 
 	// trace multiple times until we hit a wall, each obstacle will be made
 	// non-solid so we can hit the next, while doing this we spawn effects and
@@ -254,6 +255,9 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		// if it is NULL we can't hurt it so stop now
 		if (trace_ent == NULL || trace_fraction == 1)
 			break;
+
+		if(headshot_notify && !headshot && Headshot(trace_ent, this, start, end))
+			headshot = true;
 
 		// make the entity non-solid so we can hit the next one
 		IL_PUSH(g_railgunhit, trace_ent);
@@ -323,6 +327,9 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	});
 
 	IL_CLEAR(g_railgunhit);
+
+	if(headshot)
+		Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_HEADSHOT);
 
 	// calculate hits and fired shots for hitscan
 	if(this.(weaponentity))
