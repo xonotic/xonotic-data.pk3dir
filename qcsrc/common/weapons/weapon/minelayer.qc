@@ -4,7 +4,7 @@
 
 METHOD(MineLayer, m_spawnfunc_hookreplace, Weapon(MineLayer this, entity e))
 {
-    if (autocvar_sv_nexuizcompat_weaponswap && !Item_IsLoot(e))
+    if (autocvar_sv_nexuizcompat_weaponswap && !Item_IsLoot(e) && (this.spawnflags & WEP_FLAG_MUTATORBLOCKED))
     {
         return ITEM_HealthBig;
     }
