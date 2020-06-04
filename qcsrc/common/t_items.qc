@@ -558,6 +558,12 @@ void Item_RespawnThink(entity this)
 
 	if(time >= this.wait)
 		Item_Respawn(this);
+	else if(autocvar_g_items_respawnpulses)
+	{
+		float finished = this.wait - time;
+		if(finished < 3 && finished >= 1 && floor(finished - frametime) != floor(finished)) // at least 2 seconds remain until the item will respawn
+			sound(this, CH_TRIGGER, SND_ITEMRESPAWNCOUNTDOWN, VOL_BASE, ATTEN_NORM);
+	}
 }
 
 void Item_ScheduleRespawnIn(entity e, float t)

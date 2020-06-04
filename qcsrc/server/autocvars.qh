@@ -182,6 +182,7 @@ bool autocvar_g_nodepthtestplayers;
 bool autocvar_g_norecoil;
 float autocvar_g_items_mindist;
 float autocvar_g_items_maxdist;
+bool autocvar_g_items_respawnpulses = true;
 int autocvar_g_pickup_items;
 float autocvar_g_player_alpha;
 float autocvar_g_player_brightness;
