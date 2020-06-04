@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-30 10:06+0000\n"
+"PO-Revision-Date: 2020-06-03 21:13+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -4207,7 +4207,7 @@ msgstr "L'équipe ^TC^TT^BG a capturé le point de contrôle %s^BG"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "^BGL'équipe ^TC^TT^BG a capturé un point de contrôle"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGThis control point currently cannot be captured"
@@ -6984,6 +6984,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:199
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr ""
+"Faire tomber les choses au sol plus lentement (pourcentage de la gravité "
+"normale)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "Weapon & item mutators:"
@@ -7006,6 +7008,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
 msgid "Projectiles can't be destroyed. However, Electro combos still work"
 msgstr ""
+"Les projectiles ne peuvent pas être détruits. Cependant, les combos Electro "
+"fonctionnent toujours."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid ""
@@ -9822,11 +9826,11 @@ msgstr "<aucun modèle trouvé>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "Remove favorite"
-msgstr ""
+msgstr "Supprimer le favori"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr ""
+msgstr "Supprimer le serveur actuellement sélectionné des favoris"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
 msgid "Favorite"
