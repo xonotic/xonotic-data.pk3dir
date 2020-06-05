@@ -2291,7 +2291,7 @@ void ObserverOrSpectatorThink(entity this)
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
-			|| (!is_spec && (PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch || this.would_spectate))) {
+			|| (!is_spec && ((PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) || this.would_spectate))) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);

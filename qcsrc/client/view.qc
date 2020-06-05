@@ -2005,7 +2005,7 @@ void View_PostProcessing()
 
 void View_Lock()
 {
-	int lock_type = (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened()));
+	int lock_type = (!autocvar_hud_cursormode && ((autocvar__hud_configure && spectatee_status <= 0) || intermission > 1 || QuickMenu_IsOpened()));
 	if (lock_type == 0)
 		lock_type = autocvar_cl_lockview;
 
