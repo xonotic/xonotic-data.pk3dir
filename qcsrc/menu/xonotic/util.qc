@@ -17,7 +17,7 @@ float GL_CheckExtension(string ext)
 
 float GL_Have_TextureCompression()
 {
-	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
+	return GL_CheckExtension("GL_EXT_texture_compression_s3tc");
 }
 
 .entity parent, firstChild, nextSibling;
