@@ -1003,7 +1003,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 	vector wcross_color = '0 0 0';
 	switch(autocvar_crosshair_color_special)
 	{
-		case 1: // crosshair_color_per_weapon
+		case 1: // weapon color
 		{
 			if(this != WEP_Null && hud == HUD_NORMAL)
 			{
@@ -1013,7 +1013,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 			else { goto normalcolor; }
 		}
 
-		case 2: // crosshair_color_by_health
+		case 2: // color based on health and armor
 		{
 			vector v = healtharmor_maxdamage(health_stat, STAT(ARMOR), armorblockpercent, DEATH_WEAPON.m_id);
 			float hp = floor(v.x + 1);
@@ -1060,7 +1060,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 			break;
 		}
 
-		case 3: // crosshair_color_rainbow
+		case 3: // rainbow/random color
 		{
 			if(time >= rainbow_last_flicker)
 			{
