@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Aodren Le Gloanec <aodren.legloanec@gmail.com>, 2020
 # Calinou, 2013-2014
 # Calinou <calinou9999@gmail.com>, 2012
 # Hugo Locurcio, 2014
@@ -18,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-06-03 21:13+0000\n"
-"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
+"PO-Revision-Date: 2020-06-04 10:05+0000\n"
+"Last-Translator: Aodren Le Gloanec <aodren.legloanec@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -9786,7 +9787,7 @@ msgstr "menu bac à sable"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "traîner l'objet (bac à sable)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "waypoint editor menu"
