@@ -658,7 +658,6 @@ void PutPlayerInServer(entity this)
 
 	// Cut off any still running player sounds.
 	stopsound(this, CH_PLAYER_SINGLE);
-	stopsound(this, CH_TRIGGER_SINGLE);
 
 	this.model = "";
 	FixPlayermodel(this);
@@ -1324,20 +1323,29 @@ void UpdateChatBubble(entity this)
 
 void respawn(entity this)
 {
-	if(this.alpha >= 0 && autocvar_g_respawn_ghosts)
+	bool damagedbycontents_prev = this.damagedbycontents;
+	if(this.alpha >= 0)
 	{
-		this.solid = SOLID_NOT;
-		this.takedamage = DAMAGE_NO;
-		set_movetype(this, MOVETYPE_FLY);
-		this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
-		this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
-		this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
-		Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
-		if(autocvar_g_respawn_ghosts_maxtime)
-			SUB_SetFade (this, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
+		if(autocvar_g_respawn_ghosts)
+		{
+			this.solid = SOLID_NOT;
+			this.takedamage = DAMAGE_NO;
+			this.damagedbycontents = false;
+			set_movetype(this, MOVETYPE_FLY);
+			this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
+			this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
+			this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
+			this.alpha = min(this.alpha, autocvar_g_respawn_ghosts_alpha);
+			Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
+			if(autocvar_g_respawn_ghosts_time > 0)
+				SUB_SetFade(this, time + autocvar_g_respawn_ghosts_time, autocvar_g_respawn_ghosts_fadetime);
+		}
+		else
+			SUB_SetFade (this, time, 1); // fade out the corpse immediately
 	}
 
 	CopyBody(this, 1);
+	this.damagedbycontents = damagedbycontents_prev;
 
 	this.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer(this);
@@ -1408,9 +1416,6 @@ void play_countdown(entity this, float finished, Sound samp)
 
 void player_powerups(entity this)
 {
-	// add a way to see what the items were BEFORE all of these checks for the mutator hook
-	int items_prev = this.items;
-
 	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
 		this.modelflags |= MF_ROCKET;
 	else
@@ -1418,8 +1423,23 @@ void player_powerups(entity this)
 
 	this.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
+	if (IS_DEAD(this))
+	{
+		if (this.items & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON))
+		{
+			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
+			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+			this.items &= ~ITEM_Strength.m_itemid;
+			this.items &= ~ITEM_Shield.m_itemid;
+			this.items -= (this.items & IT_SUPERWEAPON);
+		}
+	}
+
 	if((this.alpha < 0 || IS_DEAD(this)) && !this.vehicle) // don't apply the flags if the player is gibbed
 		return;
+
+	// add a way to see what the items were BEFORE all of these checks for the mutator hook
+	int items_prev = this.items;
 
 	Fire_ApplyDamage(this);
 	Fire_ApplyEffect(this);
@@ -2090,7 +2110,6 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
-const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
@@ -2250,49 +2269,16 @@ bool PlayerThink(entity this)
 }
 
 .bool would_spectate;
-void ObserverThink(entity this)
+void ObserverOrSpectatorThink(entity this)
 {
+	bool is_spec = IS_SPEC(this);
 	if ( CS(this).impulse )
 	{
-		MinigameImpulse(this, CS(this).impulse);
-		CS(this).impulse = 0;
-	}
-
-	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
-			this.flags &= ~FL_JUMPRELEASED;
-			this.flags |= FL_SPAWNING;
-		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch || this.would_spectate) {
-			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectateNext(this)) {
-				TRANSMUTE(Spectator, this);
-			}
-		} else {
-			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS(this).cvar_cl_clippedspectating : !CS(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
-			set_movetype(this, preferred_movetype);
-		}
-	} else {
-		if (!(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this))) {
-			this.flags |= FL_JUMPRELEASED;
-			if(this.flags & FL_SPAWNING)
-			{
-				this.flags &= ~FL_SPAWNING;
-				if(joinAllowed(this))
-					Join(this);
-				return;
-			}
-		}
-	}
-}
-
-void SpectatorThink(entity this)
-{
-	if ( CS(this).impulse )
-	{
-		if(MinigameImpulse(this, CS(this).impulse))
+		int r = MinigameImpulse(this, CS(this).impulse);
+		if (!is_spec || r)
 			CS(this).impulse = 0;
 
-		if (CS(this).impulse == IMP_weapon_drop.impulse)
+		if (is_spec && CS(this).impulse == IMP_weapon_drop.impulse)
 		{
 			STAT(CAMERA_SPECTATOR, this) = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
 			CS(this).impulse = 0;
@@ -2301,57 +2287,63 @@ void SpectatorThink(entity this)
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this) || time < CS(this).jointime + MIN_SPEC_TIME)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if(PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)) {
+		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
+			|| (!is_spec && (PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch || this.would_spectate))) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
-			} else {
+			} else if (is_spec) {
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			}
-			CS(this).impulse = 0;
-		} else if(CS(this).impulse == 12 || CS(this).impulse == 16  || CS(this).impulse == 19 || (CS(this).impulse >= 220 && CS(this).impulse <= 229)) {
-			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectatePrev(this)) {
-				TRANSMUTE(Spectator, this);
-			} else {
-				TRANSMUTE(Observer, this);
-				PutClientInServer(this);
-			}
-			CS(this).impulse = 0;
-		} else if (PHYS_INPUT_BUTTON_ATCK2(this)) {
-			this.would_spectate = false;
-			this.flags &= ~FL_JUMPRELEASED;
-			TRANSMUTE(Observer, this);
-			PutClientInServer(this);
-		} else {
-			if(!SpectateUpdate(this))
-			{
-				if(!SpectateNext(this))
-				{
-					PutObserverInServer(this);
-					this.would_spectate = true;
+			if (is_spec)
+				CS(this).impulse = 0;
+		} else if (is_spec) {
+			if(CS(this).impulse == 12 || CS(this).impulse == 16  || CS(this).impulse == 19 || (CS(this).impulse >= 220 && CS(this).impulse <= 229)) {
+				this.flags &= ~FL_JUMPRELEASED;
+				if(SpectatePrev(this)) {
+					TRANSMUTE(Spectator, this);
+				} else {
+					TRANSMUTE(Observer, this);
+					PutClientInServer(this);
 				}
+				CS(this).impulse = 0;
+			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
+				this.would_spectate = false;
+				this.flags &= ~FL_JUMPRELEASED;
+				TRANSMUTE(Observer, this);
+				PutClientInServer(this);
+			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
+				PutObserverInServer(this);
+				this.would_spectate = true;
 			}
 		}
+		else {
+			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS(this).cvar_cl_clippedspectating : !CS(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			set_movetype(this, preferred_movetype);
+		}
 	} else {
-		if (!(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this))) {
+		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
+			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				Join(this);
+				if(joinAllowed(this))
+					Join(this);
+				else if(time < CS(this).jointime + MIN_SPEC_TIME)
+					CS(this).autojoin_checked = -1;
 				return;
 			}
 		}
-		if(!SpectateUpdate(this))
+		if(is_spec && !SpectateUpdate(this))
 			PutObserverInServer(this);
 	}
-
-	this.flags |= FL_CLIENT | FL_NOTARGET;
+	if (is_spec)
+		this.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
 void PlayerUseKey(entity this)
@@ -2548,25 +2540,24 @@ void PlayerPreThink (entity this)
 			IntermissionThink(this);
 		return;
 	}
-	else if (IS_REAL_CLIENT(this) && !CS(this).autojoin_checked && time >= CS(this).jointime + MIN_SPEC_TIME)
+	else if (IS_REAL_CLIENT(this) && CS(this).autojoin_checked <= 0 && time >= CS(this).jointime + MIN_SPEC_TIME)
 	{
-		CS(this).autojoin_checked = true;
+		bool early_join_requested = (CS(this).autojoin_checked < 0);
+		CS(this).autojoin_checked = 1;
 		// don't do this in ClientConnect
 		// many things can go wrong if a client is spawned as player on connection
-		if (MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
+		if (early_join_requested || MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
 			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
 			campaign_bots_may_start = true;
-			Join(this);
+			if(joinAllowed(this))
+				Join(this);
 			return;
 		}
 	}
-	else if (IS_OBSERVER(this)) {
-		ObserverThink(this);
-	}
-	else if (IS_SPEC(this)) {
-		SpectatorThink(this);
+	else if (IS_OBSERVER(this) || IS_SPEC(this)) {
+		ObserverOrSpectatorThink(this);
 	}
 
 	// WEAPONTODO: Add weapon request for this
@@ -2580,7 +2571,7 @@ void PlayerPreThink (entity this)
 				wep_zoomed += thiswep.wr_zoom(thiswep, this);
 		}
 		SetZoomState(this, PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this) || wep_zoomed);
-    }
+	}
 
 	if (CS(this).teamkill_soundtime && time > CS(this).teamkill_soundtime)
 	{
@@ -3125,7 +3116,7 @@ void PM_UpdateButtons(entity this, entity store)
 	store.ping_movementloss = this.ping_movementloss;
 
 	store.v_angle = this.v_angle;
-	store.movement = (typing) ? '0 0 0' : this.movement;
+	store.movement = this.movement;
 }
 
 NET_HANDLE(fpsreport, bool)

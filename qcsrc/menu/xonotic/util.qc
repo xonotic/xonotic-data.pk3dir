@@ -830,9 +830,9 @@ void CheckSendCvars(entity me, string cvarnamestring)
 {
 	if(me.sendCvars)
 	{
-		LOG_INFOF("Sending cvar: %s -> %s", cvarnamestring, cvar_string(cvarnamestring));
 		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 		{
+			LOG_INFOF("Sending cvar: %s -> %s", cvarnamestring, cvar_string(cvarnamestring));
 			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));
 		}
 	}

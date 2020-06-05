@@ -486,7 +486,7 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
+	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type && !autocvar_cl_lockview) // _type = 0 disables velocity zoom too
 	{
 		if (intermission || (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2))
 			curspeed = 0;
@@ -1085,9 +1085,9 @@ void HUD_Crosshair(entity this)
 
 	float f, i, j;
 	vector v;
-	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) &&
-		spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair) &&
-		!HUD_MinigameMenu_IsOpened() )
+	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) && !autocvar_cl_lockview
+		&& spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair)
+		&& !HUD_MinigameMenu_IsOpened())
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;
@@ -2044,16 +2044,20 @@ void View_PostProcessing()
 
 void View_Lock()
 {
-	if(autocvar_cl_lockview || (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened())))
-	{
+	int lock_type = (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened()));
+	if (lock_type == 0)
+		lock_type = autocvar_cl_lockview;
+
+	// lock_type 1: lock origin and angles
+	// lock_type 2: lock only origin
+	if(lock_type >= 1)
 		setproperty(VF_ORIGIN, freeze_org);
-		setproperty(VF_ANGLES, freeze_ang);
-	}
 	else
-	{
 		freeze_org = getpropertyvec(VF_ORIGIN);
+	if(lock_type == 1)
+		setproperty(VF_ANGLES, freeze_ang);
+	else
 		freeze_ang = getpropertyvec(VF_ANGLES);
-	}
 }
 
 void View_DemoCamera()

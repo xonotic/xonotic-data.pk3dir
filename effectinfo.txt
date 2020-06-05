@@ -8379,3 +8379,14 @@ effect TE_TEI_G3_HIT
 	sizeincrease -6
 	size 10 10
 	trailspacing 40
+effect respawn_ghost
+	count 75
+	type static
+	color 0xA0A0A0 0xFFFFFF
+	size 2 2
+	alpha 32 64 128
+	airfriction 1
+	liquidfriction 4
+	originoffset 0 0 -8
+	originjitter 28 28 16
+	velocityjitter 0 0 256

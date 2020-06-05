@@ -536,10 +536,12 @@ void Draw_WaypointSprite(entity this)
     float dist = vlen(this.origin - view_origin);
     float a = this.alpha * autocvar_hud_panel_fg_alpha;
 
-    if (this.maxdistance > waypointsprite_normdistance)
-        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent);
-    else if (this.maxdistance > 0)
-        a *= (bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+    if(this.maxdistance > 0)
+    {
+        // restrict maximum normal distance to the waypoint's maximum distance to prevent exploiting cvars
+        float maxnormdistance = bound(0, waypointsprite_normdistance, this.maxdistance - 1);
+        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - maxnormdistance), 1) ** waypointsprite_distancealphaexponent);
+    }
 
     vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')

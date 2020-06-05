@@ -285,10 +285,13 @@ void ClientCommand_join(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!game_stopped)
-			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
-			if (joinAllowed(caller))
-				Join(caller);
+			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
+			{
+				if (joinAllowed(caller))
+					Join(caller);
+				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
+					CS(caller).autojoin_checked = -1;
+			}
 
 			return;  // never fall through to usage
 		}

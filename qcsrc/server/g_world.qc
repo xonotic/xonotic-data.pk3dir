@@ -349,6 +349,8 @@ void cvar_changes_init()
 		BADCVAR("g_hats");
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
+		BADCVAR("g_keepaway_ballcarrier_effects");
+		BADCVAR("g_keepawayball_effects");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_autoreplace");

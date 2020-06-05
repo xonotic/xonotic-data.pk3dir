@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-29 22:02+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-05-30 11:39+0000\n"
+"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -476,7 +476,7 @@ msgstr "Reduzir velocidade"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "Colisão de parede"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Fullscreen"
@@ -509,7 +509,7 @@ msgstr "Misturar as equipes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "Assistir a um jogador"
 
 #: qcsrc/client/hud/panel/racetimer.qc:59
 #, c-format
@@ -2764,7 +2764,7 @@ msgstr "^BG%s^K3 foi ressuscitado pela explosão da Granada deles"
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 foi automaticamente ressuscitado(a) depois de %s segundos"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
@@ -2943,7 +2943,7 @@ msgstr "^BG%s^BG capturou o ponto de controle %s^BG"
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^BG captured a control point"
-msgstr ""
+msgstr "^BG%s^BG capturou um ponto de controle"
 
 #: qcsrc/common/notifications/all.inc:404
 #, c-format
@@ -4145,7 +4145,7 @@ msgstr "^F2Vidas extras restantes: ^K1%s"
 #: qcsrc/common/notifications/all.inc:719 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
-msgstr ""
+msgstr "Nível %s: "
 
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
@@ -4173,7 +4173,7 @@ msgstr "^BGVocê capturou o ponto de controle %s^BG"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGVocê capturou um ponto de controle"
 
 #: qcsrc/common/notifications/all.inc:727
 #, c-format
@@ -4182,7 +4182,7 @@ msgstr "A equipe ^TC^TT^BG capturou o ponto de controle %s^BG"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "A equipe ^TC^TT^BG capturou um ponto de controle"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGThis control point currently cannot be captured"
@@ -5779,7 +5779,7 @@ msgstr "Créditos - Xonotic"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
-msgstr ""
+msgstr "Deseja mesmo desconectar-se do servidor?"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
@@ -6967,12 +6967,16 @@ msgstr "Gancho de escalada"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr ""
+"Os jogadores surgem com o gancho de escalada. Aperte o botão de gancho para "
+"usá-lo."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:216
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
+"Os jogadores surgem com a mochila a jato. Aperte duas vezes o botão de pular "
+"ou aperte o botão de mochila a jato para usá-lo."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
 msgid "Projectiles can't be destroyed. However, Electro combos still work"
@@ -7938,11 +7942,11 @@ msgstr "Evitar compressão de texturas com perdas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Disable skyboxes for performance and visibility"
-msgstr ""
+msgstr "Desativa skyboxes para melhorar o desempenho e a visibilidade"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show skyboxes"
-msgstr ""
+msgstr "Exibir skyboxes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -8817,7 +8821,7 @@ msgstr "Posicionamento do modelo de arma; é preciso reconectar-se"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr ""
+msgstr "Opacidade do modelo das armas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
@@ -9685,7 +9689,7 @@ msgstr "entrar no modo de espectador"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Communication"
-msgstr ""
+msgstr "Comunicação"
 
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "public chat"
@@ -9733,7 +9737,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "suicide / respawn"
-msgstr ""
+msgstr "suicidar-se / ressurgir"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "quick menu"
@@ -9745,7 +9749,7 @@ msgstr "Definido pelo usuário"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "Development"
-msgstr ""
+msgstr "Desenvolvimento"
 
 #: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "sandbox menu"
@@ -9793,7 +9797,7 @@ msgstr "<nenhum modelo encontrado>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "Remove favorite"
-msgstr ""
+msgstr "Remover favorito"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
