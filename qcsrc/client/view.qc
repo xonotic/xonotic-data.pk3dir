@@ -1016,47 +1016,8 @@ vector crosshair_getcolor(entity this, float health_stat)
 		case 2: // color based on health and armor
 		{
 			vector v = healtharmor_maxdamage(health_stat, STAT(ARMOR), armorblockpercent, DEATH_WEAPON.m_id);
-			float hp = floor(v.x + 1);
-
-			//x = red
-			//y = green
-			//z = blue
-
-			wcross_color.z = 0;
-
-			if(hp > 200)
-			{
-				wcross_color.x = 0;
-				wcross_color.y = 1;
-			}
-			else if(hp > 150)
-			{
-				wcross_color.x = 0.4 - (hp-150)*0.02 * 0.4;
-				wcross_color.y = 0.9 + (hp-150)*0.02 * 0.1;
-			}
-			else if(hp > 100)
-			{
-				wcross_color.x = 1 - (hp-100)*0.02 * 0.6;
-				wcross_color.y = 1 - (hp-100)*0.02 * 0.1;
-				wcross_color.z = 1 - (hp-100)*0.02;
-			}
-			else if(hp > 50)
-			{
-				wcross_color.x = 1;
-				wcross_color.y = 1;
-				wcross_color.z = 0.2 + (hp-50)*0.02 * 0.8;
-			}
-			else if(hp > 20)
-			{
-				wcross_color.x = 1;
-				wcross_color.y = (hp-20)*90/27/100;
-				wcross_color.z = (hp-20)*90/27/100 * 0.2;
-			}
-			else
-			{
-				wcross_color.x = 1;
-				wcross_color.y = 0;
-			}
+			float health_and_armor = floor(v.x + 1);
+			wcross_color = HUD_Get_Num_Color(health_and_armor, 200, false);
 			break;
 		}
 

@@ -28,48 +28,45 @@ Misc HUD functions
 ==================
 */
 
-vector HUD_Get_Num_Color (float hp, float maxvalue)
+vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink)
 {
-	float blinkingamt;
+	const vector COLOR100 = '0 1 0'; // green
+	const vector COLOR75 = '0.4 0.9 0'; // lightgreen
+	const vector COLOR50 = '1 1 1'; // white
+	const vector COLOR25 = '1 1 0.2'; // lightyellow
+	const vector COLOR10 = '1 0 0'; // red
 	vector color;
-	if(hp >= maxvalue) {
-		color.x = sin(2*M_PI*time);
-		color.y = 1;
-		color.z = sin(2*M_PI*time);
-	}
-	else if(hp > maxvalue * 0.75) {
-		color.x = 0.4 - (hp-150)*0.02 * 0.4; //red value between 0.4 -> 0
-		color.y = 0.9 + (hp-150)*0.02 * 0.1; // green value between 0.9 -> 1
-		color.z = 0;
-	}
-	else if(hp > maxvalue * 0.5) {
-		color.x = 1 - (hp-100)*0.02 * 0.6; //red value between 1 -> 0.4
-		color.y = 1 - (hp-100)*0.02 * 0.1; // green value between 1 -> 0.9
-		color.z = 1 - (hp-100)*0.02; // blue value between 1 -> 0
-	}
-	else if(hp > maxvalue * 0.25) {
-		color.x = 1;
-		color.y = 1;
-		color.z = 0.2 + (hp-50)*0.02 * 0.8; // blue value between 0.2 -> 1
-	}
-	else if(hp > maxvalue * 0.1) {
-		color.x = 1;
-		color.y = (hp-20)*90/27/100; // green value between 0 -> 1
-		color.z = (hp-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
-	}
-	else {
-		color.x = 1;
-		color.y = 0;
-		color.z = 0;
+
+	float hp_percent = hp / maxvalue * 100;
+	#define CASE_COLOR_BETWEEN(min, max) \
+		if(hp_percent > min) \
+			color = COLOR##min + (COLOR##max - COLOR##min) * ((hp_percent - min) / (max - min))
+
+	if(hp_percent > 100) color = COLOR100;
+	else CASE_COLOR_BETWEEN(75, 100);
+	else CASE_COLOR_BETWEEN(50, 75);
+	else CASE_COLOR_BETWEEN(25, 50);
+	else CASE_COLOR_BETWEEN(10, 25);
+	else color = COLOR10;
+
+	#undef CASE_COLOR_BETWEEN
+
+	if (blink)
+	{
+		if(hp_percent >= 100)
+		{
+			float f = sin(2*M_PI*time);
+			if (color.x == 0) color.x = f;
+			if (color.y == 0) color.y = f;
+			if (color.z == 0) color.z = f;
+		}
+		else if(hp_percent < 25)
+		{
+			float f = (1 - hp_percent / 25) * sin(2*M_PI*time);
+			color -= color * f;
+		}
 	}
 
-	blinkingamt = (1 - hp/maxvalue/0.25);
-	if(blinkingamt > 0)
-	{
-		color.x = color.x - color.x * blinkingamt * sin(2*M_PI*time);
-		color.y = color.y - color.y * blinkingamt * sin(2*M_PI*time);
-		color.z = color.z - color.z * blinkingamt * sin(2*M_PI*time);
-	}
 	return color;
 }
 
