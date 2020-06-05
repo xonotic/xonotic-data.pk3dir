@@ -1231,7 +1231,8 @@ void HUD_Crosshair(entity this)
 		wcross_alpha_goal_prev = wcross_alpha;
 		wcross_color_goal_prev = wcross_color;
 
-		if(spectatee_status == 0 && (shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active)))
+		if((shottype == SHOTTYPE_HITTEAM && autocvar_crosshair_hittest_blur_teammate)
+			|| (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur_wall && !autocvar_chase_active))
 		{
 			wcross_blur = 1;
 			wcross_alpha *= 0.75;
