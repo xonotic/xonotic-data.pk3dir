@@ -253,12 +253,12 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 	entity e = me.favoriteButton;
 	if(IsFavorite(me.ipAddressBox.text))
 	{
-		e.setText(e, _("SERVER^Remove favorite"));
+		e.setText(e, ZCTX(_("SERVER^Remove favorite")));
 		setZonedTooltip(e, _("Remove the currently highlighted server from bookmarks"), string_null);
 	}
 	else
 	{
-		e.setText(e, _("SERVER^Favorite"));
+		e.setText(e, ZCTX(_("SERVER^Favorite")));
 		setZonedTooltip(e, _("Bookmark the currently highlighted server so that it's faster to find in the future"), string_null);
 	}
 }
