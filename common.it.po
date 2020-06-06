@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-06-02 01:43+0000\n"
+"PO-Revision-Date: 2020-06-06 00:17+0000\n"
 "Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -296,7 +296,7 @@ msgstr "Chat di squadra"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "la forza, presto"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -456,7 +456,7 @@ msgstr "Suono chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "Cambia camera spettatore"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 #: qcsrc/client/hud/panel/quickmenu.qc:845
@@ -473,7 +473,7 @@ msgstr "Diminuisci velocità"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "Collisione con i muri"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Fullscreen"
@@ -506,7 +506,7 @@ msgstr "Mischia le squadre"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "Guarda un giocatore"
 
 #: qcsrc/client/hud/panel/racetimer.qc:59
 #, c-format
@@ -2783,7 +2783,7 @@ msgstr "^BG%s^K3 è stato risvegliato dall'esplosione della propria Granata"
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 è stato risvegliato automaticamente dopo %s secondi"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
@@ -2962,7 +2962,7 @@ msgstr "^BG%s^BG ha catturato il punto di controllo %s"
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^BG captured a control point"
-msgstr ""
+msgstr "^BG%s^BG ha catturato un punto di controllo"
 
 #: qcsrc/common/notifications/all.inc:404
 #, c-format
@@ -2975,6 +2975,7 @@ msgstr ""
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
 msgstr ""
+"^BGIl punto di controllo della squadra ^TC^TT^BG è stato distrutto da %s"
 
 #: qcsrc/common/notifications/all.inc:406
 msgid "^TC^TT^BG generator has been destroyed"
@@ -4030,7 +4031,7 @@ msgstr "^BGPorta aperta!"
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr ""
+msgstr "^F2Vite extra prese: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:667
 #, c-format
@@ -4049,7 +4050,7 @@ msgstr "^K3Sei stato risvegliato da ^BG%s"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^K3You were automatically revived after %s seconds"
-msgstr ""
+msgstr "^K3Sei stato automaticamente risvegliato dopo %s secondi"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -5814,11 +5815,11 @@ msgstr "I crediti di Xonotic"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
-msgstr ""
+msgstr "Vuoi veramente disconnetterti dal server"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
-msgstr ""
+msgstr "Mi disconnetterei dal server..."
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
 msgid "I would play more!"
@@ -7423,7 +7424,7 @@ msgstr "Consenti alle statistiche dei giocatori di usare il tuo nome"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
-msgstr ""
+msgstr "Permetti alle statistiche dei giocatori di classificarti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
 msgid "Country"
@@ -8849,7 +8850,7 @@ msgstr "Posizione del modello dell'arma; richiede riconnessione"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr ""
+msgstr "Opacità modello arma:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
@@ -9784,11 +9785,11 @@ msgstr "menu sandbox"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "trascina oggetto (sandbox)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "menu waypoint editor"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:96 qcsrc/menu/xonotic/mainwindow.qc:99
 msgid "Do not press this button again!"
@@ -9828,7 +9829,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr ""
+msgstr "Rimuovere il server attualmente evidenziato dai segnalibri"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
 msgid "Favorite"

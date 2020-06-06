@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-06-04 10:05+0000\n"
-"Last-Translator: Aodren Le Gloanec <aodren.legloanec@gmail.com>\n"
+"PO-Revision-Date: 2020-06-05 17:29+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -305,7 +305,7 @@ msgstr "Tchat d'équipe"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "bientôt la force"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -6999,6 +6999,8 @@ msgstr "Grappin"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr ""
+"Les joueurs apparaissent avec le grappin. Appuyer sur la touche « grappin » "
+"pour l'utiliser."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:216
 msgid ""
@@ -9763,11 +9765,11 @@ msgstr "auto-joindre une équipe"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "lâcher clé / drapeau, quitter véhicule"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "suicide / respawn"
-msgstr ""
+msgstr "suicide / réapparition"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "quick menu"
