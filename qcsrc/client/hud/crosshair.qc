@@ -17,7 +17,6 @@
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
 
-const float MAX_TIME_DIFF = 5;
 float pickup_crosshair_time, pickup_crosshair_size;
 float hitindication_crosshair_size;
 float use_vortex_chargepool;
@@ -345,7 +344,7 @@ void HUD_Crosshair(entity this)
 
 			if(pickup_crosshair_time < stat_pickup_time)
 			{
-				if(time - stat_pickup_time < MAX_TIME_DIFF) // don't trigger the animation if it's too old
+				if(time - stat_pickup_time < 5) // don't trigger the animation if it's too old
 					pickup_crosshair_size = 1;
 
 				pickup_crosshair_time = stat_pickup_time;
