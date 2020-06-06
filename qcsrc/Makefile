@@ -1,5 +1,5 @@
 CPP := cc -xc -E
-QCC ?= gmqcc
+QCC ?= ../../../../gmqcc/gmqcc
 
 PROGS_OUT ?= ..
 WORKDIR ?= ../.tmp
