@@ -12,6 +12,19 @@
 
 // Radar (#6)
 
+void HUD_Radar_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_radar_foreground_alpha");
+	HUD_Write_Cvar("hud_panel_radar_rotation");
+	HUD_Write_Cvar("hud_panel_radar_zoommode");
+	HUD_Write_Cvar("hud_panel_radar_scale");
+	HUD_Write_Cvar("hud_panel_radar_maximized_scale");
+	HUD_Write_Cvar("hud_panel_radar_maximized_size");
+	HUD_Write_Cvar("hud_panel_radar_maximized_rotation");
+	HUD_Write_Cvar("hud_panel_radar_maximized_zoommode");
+}
+
 bool HUD_Radar_Clickable()
 {
 	return hud_panel_radar_mouse && !hud_panel_radar_temp_hidden;
@@ -355,7 +368,7 @@ void HUD_Radar()
 				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
 			}
 		}
-		entity icon = RadarIcons_from(it.teamradar_icon);
+		entity icon = REGISTRY_GET(RadarIcons, it.teamradar_icon);
 		draw_teamradar_icon(it.origin, icon, it, spritelookupcolor(it, icon.netname, it.teamradar_color), panel_fg_alpha);
 	});
 	AL_EACH(_entcs, e, it != NULL, {

@@ -100,17 +100,27 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 4))
 	{
-		SetResource(actor, RES_SHELLS, start_ammo_shells);
-		SetResource(actor, RES_BULLETS, start_ammo_nails);
-		SetResource(actor, RES_ROCKETS, start_ammo_rockets);
-		SetResource(actor, RES_CELLS, start_ammo_cells);
-		SetResource(actor, RES_PLASMA, start_ammo_plasma);
-		SetResource(actor, RES_FUEL, start_ammo_fuel);
-
-		STAT(WEAPONS, actor) = start_weapons;
-		if (this.spawnflags & 32)
+		if(this.spawnflags & 32) // spawn with only melee
 		{
-			// TODO
+			SetResource(actor, RES_SHELLS, 0);
+			SetResource(actor, RES_BULLETS, 0);
+			SetResource(actor, RES_ROCKETS, 0);
+			SetResource(actor, RES_CELLS, 0);
+			SetResource(actor, RES_PLASMA, 0);
+			SetResource(actor, RES_FUEL, 0);
+
+			STAT(WEAPONS, actor) = WEPSET(SHOTGUN);
+		}
+		else
+		{
+			SetResource(actor, RES_SHELLS, start_ammo_shells);
+			SetResource(actor, RES_BULLETS, start_ammo_nails);
+			SetResource(actor, RES_ROCKETS, start_ammo_rockets);
+			SetResource(actor, RES_CELLS, start_ammo_cells);
+			SetResource(actor, RES_PLASMA, start_ammo_plasma);
+			SetResource(actor, RES_FUEL, start_ammo_fuel);
+
+			STAT(WEAPONS, actor) = start_weapons;
 		}
 	}
 
@@ -172,6 +182,10 @@ void target_give_init(entity this)
 		else if (it.classname == "weapon_mortar") {
 			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "mortar");
+		}
+		else if (it.classname == "weapon_shotgun") {
+			SetResourceExplicit(this, RES_SHELLS, GetResource(this, RES_SHELLS) + it.count * WEP_CVAR_PRI(shotgun, ammo)); // WEAPONTODO
+			this.netname = cons(this.netname, "shotgun");
 		}
 		else if (it.classname == "item_armor_mega")
 			SetResourceExplicit(this, RES_ARMOR, 100);

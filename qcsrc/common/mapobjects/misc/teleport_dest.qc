@@ -39,10 +39,7 @@ spawnfunc(info_teleport_destination)
 	//setorigin(this, this.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
 	setorigin(this, this.origin);
 
-	IFTARGETED
-	{
-	}
-	else
+	if(!this.targetname || this.targetname == "")
 	{
 		objerror (this, "^3Teleport destination without a targetname");
 		return; // don't link it to CSQC in this case!

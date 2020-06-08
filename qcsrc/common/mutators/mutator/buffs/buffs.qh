@@ -13,7 +13,6 @@ REGISTER_RADARICON(Buff, 1);
 #endif
 
 REGISTRY(Buffs, BITS(5))
-#define Buffs_from(i) _Buffs_from(i, BUFF_Null)
 REGISTER_REGISTRY(Buffs)
 REGISTRY_CHECK(Buffs)
 
@@ -72,4 +71,5 @@ entity buff_FirstFromFlags(int _buffs);
 REGISTER_BUFF(Null);
 BUFF_SPAWNFUNCS(random, BUFF_Null)
 
+REGISTRY_DEFINE_GET(Buffs, BUFF_Null)
 #include "all.inc"

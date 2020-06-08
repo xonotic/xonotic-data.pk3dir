@@ -443,7 +443,7 @@ void LinkDoors(entity this)
 
 		if (GetResource(this, RES_HEALTH))
 			return;
-		IFTARGETED
+		if(this.targetname && this.targetname != "")
 			return;
 		if (this.items)
 			return;
@@ -511,7 +511,7 @@ void LinkDoors(entity this)
 
 	if (GetResource(this, RES_HEALTH))
 		return;
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 		return;
 	if (this.items)
 		return;

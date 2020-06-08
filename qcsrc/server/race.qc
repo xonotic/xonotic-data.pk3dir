@@ -767,7 +767,7 @@ void trigger_race_checkpoint_verify(entity this)
 			// race only (middle of the race)
 			g_race_qualifying = false;
 			pl_race_place = 0;
-			if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false)) {
+			if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 				error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for respawning in race) - bailing out"));
             }
 
@@ -775,7 +775,7 @@ void trigger_race_checkpoint_verify(entity this)
 				// qualifying only
 				g_race_qualifying = 1;
 				pl_race_place = race_lowest_place_spawn;
-				if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false)) {
+				if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 					error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for qualifying) - bailing out"));
                 }
 
@@ -783,7 +783,7 @@ void trigger_race_checkpoint_verify(entity this)
 				g_race_qualifying = 0;
 				for (int p = 1; p <= race_highest_place_spawn; ++p) {
 					pl_race_place = p;
-					if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false)) {
+					if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 						error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for initially spawning in race) - bailing out"));
                     }
 				}
@@ -794,7 +794,7 @@ void trigger_race_checkpoint_verify(entity this)
 		pl_race_checkpoint = race_NextCheckpoint(0);
 		g_race_qualifying = 1;
 		pl_race_place = race_lowest_place_spawn;
-		if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false)) {
+		if (!Spawn_FilterOutBadSpots(this, findchain(classname, "info_player_deathmatch"), 0, false, true)) {
 			error(strcat("Checkpoint 0 misses a spawnpoint with race_place==", ftos(pl_race_place), " (used for qualifying) - bailing out"));
         }
 	} else {

@@ -95,10 +95,6 @@ float chase_active_backup;
 float camera_roll;
 vector camera_direction;
 
-void centerprint_hud(string strMessage);
-void centerprint_kill(float id);
-void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
-
 const float ALPHA_MIN_VISIBLE = 0.003;
 
 float armorblockpercent;

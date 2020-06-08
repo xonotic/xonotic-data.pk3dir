@@ -16,6 +16,24 @@
 
 // Scoreboard (#24)
 
+void Scoreboard_Draw_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_scoreboard_fadeinspeed");
+	HUD_Write_Cvar("hud_panel_scoreboard_fadeoutspeed");
+	HUD_Write_Cvar("hud_panel_scoreboard_respawntime_decimals");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_bg_alpha");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_bg_scale");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_fg_alpha");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_fg_alpha_self");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha");
+	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_self");
+	HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
+	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_doublerows");
+	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_nocolors");
+}
+
 const int MAX_SBT_FIELDS = MAX_SCORE;
 
 PlayerScoreField sbt_field[MAX_SBT_FIELDS + 1];
@@ -672,7 +690,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 				sbt_field_rgb = '1 1 1';
 				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
 			}
-			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200);
+			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200, true);
 			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, fps, 60) / 60);
 			return ftos(fps);
 		}
@@ -1174,11 +1192,11 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		}
 	});
 
-	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt - nHidden;
+	int weapon_cnt = (REGISTRY_COUNT(Weapons) - 1) - disownedcnt - nHidden;
 	if (weapon_cnt <= 0) return pos;
 
 	int rows = 1;
-	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - nHidden - 1) * 0.5))
+	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((REGISTRY_COUNT(Weapons) - nHidden - 1) * 0.5))
 		rows = 2;
 	int columnns = ceil(weapon_cnt / rows);
 

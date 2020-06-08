@@ -6,9 +6,31 @@
 #include <client/miscfunctions.qh>
 
 // CenterPrint (#16)
-// These are the functions that draw the text at the center of the screen (e.g. frag messages and server MOTDs).
-// Usually local_notification_centerprint_generic() is called, which in turn calls centerprint_generic(), which
-// uses some kind of macro magic to call HUD_CenterPrint, which draws them on screen using drawcolorcodedstring().
+
+void HUD_CenterPrint_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_centerprint_align");
+	HUD_Write_Cvar("hud_panel_centerprint_flip");
+	HUD_Write_Cvar("hud_panel_centerprint_fontscale");
+	HUD_Write_Cvar("hud_panel_centerprint_fontscale_bold");
+	HUD_Write_Cvar("hud_panel_centerprint_time");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_in");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_out");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone_minalpha");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo_minalpha");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_minfontsize");
+	HUD_Write_Cvar("hud_panel_centerprint_fade_minfontsize");
+}
+
+// These are the functions that draw the text at the center of the screen (e.g. frag messages and server MOTD).
+// centerprint_Add parses a message and puts it in the circular buffer centerprint_messages
+// centerprint_Add is usually called by Local_Notification_centerprint_Add, which is called
+// by Local_Notification.
+// HUD_CenterPrint draws all the messages on screen
 
 const int CENTERPRINT_MAX_MSGS = 10;
 const int CENTERPRINT_MAX_ENTRIES = 50;
@@ -16,19 +38,25 @@ const float CENTERPRINT_SPACING = 0.7;
 int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 int centerprint_msgID[CENTERPRINT_MAX_MSGS];
+bool centerprint_bold[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 bool centerprint_showing;
 
-void centerprint_generic(int new_id, string strMessage, float duration, int countdown_num)
+void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
 	TC(int, new_id); TC(int, countdown_num);
-	//printf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num);
+	//LOG_INFOF("centerprint_Add: ^2id: %d ^3dur: %d ^5countdown: %d\n'%s'", new_id, duration, countdown_num, strreplace("\n", "^7\\n^7", strMessage));
 	int i, j;
 
 	if(strMessage == "" && new_id == 0)
 		return;
+
+	// strip BOLD_OPERATOR
+	bool is_bold = (substring(strMessage, 0, 5) == BOLD_OPERATOR);
+	if (is_bold)
+		strMessage = substring(strMessage, 5, -1);
 
 	// strip trailing newlines
 	j = strlen(strMessage) - 1;
@@ -79,6 +107,7 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 		j = cpm_index;
 	}
 	strcpy(centerprint_messages[j], strMessage);
+	centerprint_bold[j] = is_bold;
 	centerprint_msgID[j] = new_id;
 	if (duration < 0)
 	{
@@ -95,43 +124,44 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 	centerprint_countdown_num[j] = countdown_num;
 }
 
-void centerprint_kill(int id)
+void centerprint_Kill(int id)
 {
 	TC(int, id);
-	centerprint_generic(id, "", 0, 0);
+	centerprint_Add(id, "", 0, 0);
 }
 
-void centerprint_hud(string strMessage)
+void centerprint_AddStandard(string strMessage)
 {
-	centerprint_generic(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
+	centerprint_Add(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
 }
 
-void reset_centerprint_messages()
+void centerprint_KillAll()
 {
 	for (int i=0; i<CENTERPRINT_MAX_MSGS; ++i)
 	{
 		centerprint_expire_time[i] = 0;
 		centerprint_time[i] = 1;
 		centerprint_msgID[i] = 0;
+		centerprint_bold[i] = false;
 		strfree(centerprint_messages[i]);
 	}
 }
 
 float hud_configure_cp_generation_time;
-void HUD_CenterPrint ()
+void HUD_CenterPrint()
 {
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_centerprint) return;
 
 		if(hud_configure_prev)
-			reset_centerprint_messages();
+			centerprint_KillAll();
 	}
 	else
 	{
 		if(!hud_configure_prev)
 		{
-			reset_centerprint_messages();
+			centerprint_KillAll();
 			hud_configure_cp_generation_time = time; // show a message immediately
 		}
 		if (time > hud_configure_cp_generation_time)
@@ -141,16 +171,16 @@ void HUD_CenterPrint ()
 				float r;
 				r = random();
 				if (r > 0.8)
-					centerprint_generic(floor(r*1000), sprintf(_("^3Countdown message at time %s, seconds left: ^COUNT"), seconds_tostring(time)), 1, 10);
+					centerprint_Add(floor(r*1000), sprintf(_("^3Countdown message at time %s, seconds left: ^COUNT"), seconds_tostring(time)), 1, 10);
 				else if (r > 0.55)
-					centerprint_generic(0, sprintf(_("^1Multiline message at time %s that\n^1lasts longer than normal"), seconds_tostring(time)), 20, 0);
+					centerprint_Add(0, sprintf(_("^1Multiline message at time %s that\n^1lasts longer than normal"), seconds_tostring(time)), 20, 0);
 				else
-					centerprint_hud(sprintf(_("Message at time %s"), seconds_tostring(time)));
+					centerprint_AddStandard(sprintf(_("Message at time %s"), seconds_tostring(time)));
 				hud_configure_cp_generation_time = time + 1 + random()*4;
 			}
 			else
 			{
-				centerprint_generic(0, _("Generic message"), 10, 0);
+				centerprint_Add(0, _("Generic message"), 10, 0);
 				hud_configure_cp_generation_time = time + 10 - random()*3;
 			}
 		}
@@ -195,8 +225,6 @@ void HUD_CenterPrint ()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	bool is_bold;
-	string centerprint_message = strzone("");
 	int entries;
 	float height;
 	vector fontsize;
@@ -213,13 +241,7 @@ void HUD_CenterPrint ()
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
-		// if the notification starts with ^BOLD make it bold (e.g. frag messages);
-		is_bold = (substring(centerprint_messages[j], 0, 5) == BOLD_OPERATOR);
-		// remove ^BOLD so it doesn't get printed onscreen
-		if (is_bold)
-			strcpy(centerprint_message, substring(centerprint_messages[j], 5, -1));
-		else
-			strcpy(centerprint_message, centerprint_messages[j]);
+		bool is_bold = centerprint_bold[j];
 
 		// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
 		// height = panel_size_y/entries;
@@ -252,7 +274,7 @@ void HUD_CenterPrint ()
 
 		all_messages_expired = false;
 
-		// fade the centerprint_hud in/out
+		// fade
 		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
 			a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
 		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
@@ -287,9 +309,9 @@ void HUD_CenterPrint ()
 		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
-			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_message), "\n");
+			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
 		else
-			n = tokenizebyseparator(centerprint_message, "\n");
+			n = tokenizebyseparator(centerprint_messages[j], "\n");
 
 		if (autocvar_hud_panel_centerprint_flip)
 		{
@@ -343,7 +365,6 @@ void HUD_CenterPrint ()
 			if (pos.y < panel_pos.y) // check if the next message can be shown
 			{
 				drawfontscale = hud_scale;
-				strfree(centerprint_message);
 				return;
 			}
 		}
@@ -356,17 +377,15 @@ void HUD_CenterPrint ()
 			if(pos.y > panel_pos.y + panel_size.y - fontsize.y) // check if the next message can be shown
 			{
 				drawfontscale = hud_scale;
-				strfree(centerprint_message);
 				return;
 			}
 		}
 	}
-	strfree(centerprint_message);
 
 	drawfontscale = hud_scale;
 	if (all_messages_expired)
 	{
 		centerprint_showing = false;
-		reset_centerprint_messages();
+		centerprint_KillAll();
 	}
 }

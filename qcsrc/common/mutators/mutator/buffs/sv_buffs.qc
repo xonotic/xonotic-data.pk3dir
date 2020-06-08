@@ -92,6 +92,8 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 void buff_Waypoint_Spawn(entity e)
 {
+	if(autocvar_g_buffs_waypoint_distance <= 0) return;
+
 	entity buff = buff_FirstFromFlags(STAT(BUFFS, e));
 	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, NULL, e.team, e, buff_waypoint, true, RADARICON_Buff);
 	wp.wp_extra = buff.m_id;
@@ -106,7 +108,9 @@ void buff_SetCooldown(entity this, float cd)
 	if(!this.buff_waypoint)
 		buff_Waypoint_Spawn(this);
 
-	WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + cd);
+	if(this.buff_waypoint)
+		WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + cd);
+
 	this.buff_activetime = cd;
 	this.buff_active = !cd;
 }
@@ -238,6 +242,9 @@ void buff_NewType(entity ent)
 
 void buff_Think(entity this)
 {
+	if(this.buff_waypoint && autocvar_g_buffs_waypoint_distance <= 0)
+		WaypointSprite_Kill(this.buff_waypoint);
+
 	if(STAT(BUFFS, this) != this.oldbuffs)
 	{
 		entity buff = buff_FirstFromFlags(STAT(BUFFS, this));
@@ -261,7 +268,7 @@ void buff_Think(entity this)
 	}
 
 	if(!game_stopped)
-	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
+	if((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
 	if(!this.buff_activetime_updated)
 	{
 		buff_SetCooldown(this, this.buff_activetime);
@@ -282,7 +289,7 @@ void buff_Think(entity this)
 
 	if(this.buff_activetime)
 	if(!game_stopped)
-	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
+	if((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
 	{
 		this.buff_activetime = max(0, this.buff_activetime - frametime);
 

@@ -16,8 +16,8 @@ void IT_Write(entity e, int i, float f) {
 
 #ifdef CSQC
 // reserve one more spot for superweapons time
-float ItemsTime_time[Items_MAX + 1];
-float ItemsTime_availableTime[Items_MAX + 1];
+float ItemsTime_time[REGISTRY_MAX(Items) + 1];
+float ItemsTime_availableTime[REGISTRY_MAX(Items) + 1];
 NET_HANDLE(itemstime, bool isNew)
 {
     int i = ReadByte();
@@ -33,7 +33,7 @@ STATIC_INIT(ItemsTime_Init) {
 	FOREACH(Items, true, {
 		ItemsTime_time[it.m_id] = -1;
 	});
-	ItemsTime_time[Items_MAX] = -1;
+	ItemsTime_time[REGISTRY_MAX(Items)] = -1;
 }
 
 int autocvar_hud_panel_itemstime = 2;
@@ -71,13 +71,13 @@ bool Item_ItemsTime_Allow(GameItem it)
 #ifdef SVQC
 
 // reserve one more spot for superweapons time
-float it_times[Items_MAX + 1];
+float it_times[REGISTRY_MAX(Items) + 1];
 
 STATIC_INIT(ItemsTime_Init) {
 	FOREACH(Items, Item_ItemsTime_Allow(it), {
 		it_times[it.m_id] = -1;
 	});
-	it_times[Items_MAX] = -1;
+	it_times[REGISTRY_MAX(Items)] = -1;
 }
 
 void Item_ItemsTime_ResetTimes()
@@ -85,7 +85,7 @@ void Item_ItemsTime_ResetTimes()
     FOREACH(Items, Item_ItemsTime_Allow(it), {
         it_times[it.m_id] = (it_times[it.m_id] == -1) ? -1 : 0;
     });
-    it_times[Items_MAX] = (it_times[Items_MAX] == -1) ? -1 : 0;
+    it_times[REGISTRY_MAX(Items)] = (it_times[REGISTRY_MAX(Items)] == -1) ? -1 : 0;
 }
 
 void Item_ItemsTime_ResetTimesForPlayer(entity e)
@@ -93,7 +93,7 @@ void Item_ItemsTime_ResetTimesForPlayer(entity e)
     FOREACH(Items, Item_ItemsTime_Allow(it), {
         IT_Write(e, it.m_id, (it_times[it.m_id] == -1) ? -1 : 0);
     });
-    IT_Write(e, Items_MAX, (it_times[Items_MAX] == -1) ? -1 : 0);
+    IT_Write(e, REGISTRY_MAX(Items), (it_times[REGISTRY_MAX(Items)] == -1) ? -1 : 0);
 }
 
 void Item_ItemsTime_SetTimesForPlayer(entity e)
@@ -101,7 +101,7 @@ void Item_ItemsTime_SetTimesForPlayer(entity e)
     FOREACH(Items, Item_ItemsTime_Allow(it), {
         IT_Write(e, it.m_id, it_times[it.m_id]);
     });
-    IT_Write(e, Items_MAX, it_times[Items_MAX]);
+    IT_Write(e, REGISTRY_MAX(Items), it_times[REGISTRY_MAX(Items)]);
 }
 
 void Item_ItemsTime_SetTime(entity e, float t)
@@ -115,7 +115,7 @@ void Item_ItemsTime_SetTime(entity e, float t)
 		if (!item.instanceOfWeaponPickup)
 			it_times[item.m_id] = t;
 		else if (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS)
-			it_times[Items_MAX] = t;
+			it_times[REGISTRY_MAX(Items)] = t;
     }
 }
 
@@ -184,6 +184,20 @@ MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
 #endif
 
 #ifdef CSQC
+
+// ItemsTime (#22)
+
+void HUD_ItemsTime_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_itemstime_iconalign");
+	HUD_Write_Cvar("hud_panel_itemstime_progressbar");
+	HUD_Write_Cvar("hud_panel_itemstime_progressbar_name");
+	HUD_Write_Cvar("hud_panel_itemstime_progressbar_reduced");
+	HUD_Write_Cvar("hud_panel_itemstime_text");
+	HUD_Write_Cvar("hud_panel_itemstime_ratio");
+	HUD_Write_Cvar("hud_panel_itemstime_dynamicsize");
+}
 
 void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, float item_time, bool item_available, float item_availableTime)
 {
@@ -281,21 +295,21 @@ void HUD_ItemsTime()
         FOREACH(Items, Item_ItemsTime_Allow(it), {
             count += (Item_ItemsTime_GetTime(it.m_id) > time || -Item_ItemsTime_GetTime(it.m_id) > time);
         });
-        count += (Item_ItemsTime_GetTime(Items_MAX) > time || -Item_ItemsTime_GetTime(Items_MAX) > time);
+        count += (Item_ItemsTime_GetTime(REGISTRY_MAX(Items)) > time || -Item_ItemsTime_GetTime(REGISTRY_MAX(Items)) > time);
     }
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
     {
         FOREACH(Items, Item_ItemsTime_Allow(it), {
             count += (Item_ItemsTime_GetTime(it.m_id) > time);
         });
-        count += (Item_ItemsTime_GetTime(Items_MAX) > time);
+        count += (Item_ItemsTime_GetTime(REGISTRY_MAX(Items)) > time);
     }
     else
     {
         FOREACH(Items, Item_ItemsTime_Allow(it), {
             count += (Item_ItemsTime_GetTime(it.m_id) != -1);
         });
-        count += (Item_ItemsTime_GetTime(Items_MAX) != -1);
+        count += (Item_ItemsTime_GetTime(REGISTRY_MAX(Items)) != -1);
     }
     if (count == 0)
         return;
@@ -412,13 +426,13 @@ LABEL(iteration)
             row = 0;
             column = column + 1;
         }
-        if(id == Items_MAX) // can happen only in the last fake iteration
+        if(id == REGISTRY_MAX(Items)) // can happen only in the last fake iteration
         	break;
     });
     // add another fake iteration for superweapons time
-    if(id < Items_MAX && Item_ItemsTime_GetTime(Items_MAX) != -1)
+    if(id < REGISTRY_MAX(Items) && Item_ItemsTime_GetTime(REGISTRY_MAX(Items)) != -1)
     {
-		id = Items_MAX;
+		id = REGISTRY_MAX(Items);
 		icon = "superweapons";
 		goto iteration;
     }
