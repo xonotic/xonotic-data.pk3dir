@@ -17,7 +17,7 @@ fi    "Finnish" "Suomi" 98%
 el    "Greek" "Ελληνική" 47%
 be    "Belarusian" "Беларуская" 54%
 bg    "Bulgarian" "Български" 59%
-ru    "Russian" "Русский" 98%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 64%
 uk    "Ukrainian" "Українська" 50%
 zh_CN "Chinese (China)" "中文" 57%

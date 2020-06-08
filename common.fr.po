@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-07 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-06-07 09:34+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -465,7 +465,7 @@ msgstr "Sons du tchat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "Changer de caméra spectateur"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 #: qcsrc/client/hud/panel/quickmenu.qc:845
@@ -3234,7 +3234,8 @@ msgstr "^BG%s^K1 a joué avec des rayons Electro%s%s"
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
 msgstr ""
-"^BG%s^K1 ne se rappelait plus où il avait laissé traîner son Electro-orb%s%s"
+"^BG%s^K1 ne se rappelait plus où il/elle avait laissé traîner son Electro-"
+"orbe%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
@@ -3751,7 +3752,7 @@ msgstr "^K1%sVous avez tué ^BG%s pendant qu'il écrivait"
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
 msgstr ""
-"^K1%sVous avez pris pour cible ^BG%s^K1 pendant qu'il tapait au clavier"
+"^K1%sVous avez pris pour cible ^BG%s^K1 pendant qu'il/elle tapait au clavier"
 
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
@@ -5826,7 +5827,7 @@ msgstr "Se déconnecter"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect from the server you are connected to"
-msgstr ""
+msgstr "Se déconnecter du serveur auquel vous êtes connecté"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -6981,6 +6982,8 @@ msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
+"Niveau de santé en dessous duquel les joueurs commencent à saigner (la santé "
+"diminue et ils ne peuvent pas sauter)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:199
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
@@ -7007,12 +7010,16 @@ msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
+"Les joueurs apparaissent avec le jetpack. Appuyer deux fois sur « sauter » "
+"ou appuyer sur la touche « jetpack » pour l'utiliser."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
 msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
+"Les projectiles ne peuvent pas être détruits. Cependant, vous pouvez "
+"toujours exploser les Electro-orbes avec le tir primaire de l'Electro."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid ""
@@ -7421,6 +7428,7 @@ msgstr "Autoriser les statistiques à utiliser votre pseudonyme"
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr ""
+"Autoriser les statistiques de joueur à vous intégrer dans les classements"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
 msgid "Country"
@@ -7969,11 +7977,11 @@ msgstr "Éviter les compressions de texture avec pertes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Disable sky for performance and visibility"
-msgstr ""
+msgstr "Désactiver le ciel pour la performance et la visibilité"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show sky"
-msgstr ""
+msgstr "Afficher le ciel"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -9829,7 +9837,7 @@ msgstr "<aucun modèle trouvé>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"
-msgstr ""
+msgstr "Supprimer le favori"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
@@ -9837,7 +9845,7 @@ msgstr "Supprimer le serveur actuellement sélectionné des favoris"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
 msgid "SERVER^Favorite"
-msgstr ""
+msgstr "Favori"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid ""
