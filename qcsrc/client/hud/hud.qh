@@ -3,6 +3,12 @@
 #include <common/weapons/_all.qh>
 #include <common/scores.qh>
 
+vector OFFSET_CURSOR = '0 0 0';
+vector SIZE_CURSOR = '32 32 0';
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
+void draw_cursor_normal(vector pos, vector col, float a);
+void LoadMenuSkinValues();
+
 void Hud_Dynamic_Frame();
 
 bool HUD_Radar_Clickable();

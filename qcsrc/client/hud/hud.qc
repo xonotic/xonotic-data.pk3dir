@@ -28,6 +28,58 @@ Misc HUD functions
 ==================
 */
 
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
+{
+	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
+	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
+}
+
+void draw_cursor_normal(vector pos, vector col, float a)
+{
+	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
+}
+
+void LoadMenuSkinValues()
+{
+	int fh = -1;
+	if(cvar_string("menu_skin") != "")
+	{
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+	if(fh < 0 && cvar_defstring("menu_skin") != "")
+	{
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+	if(fh < 0)
+	{
+		draw_currentSkin = "gfx/menu/default";
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+
+	draw_currentSkin = strzone(draw_currentSkin);
+
+	if(fh >= 0)
+	{
+		string s;
+		while((s = fgets(fh)))
+		{
+			int n = tokenize_console(s);
+			if (n < 2)
+				continue;
+			if(substring(argv(0), 0, 2) == "//")
+				continue;
+			if(argv(0) == "SIZE_CURSOR")
+				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			else if(argv(0) == "OFFSET_CURSOR")
+				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+		}
+		fclose(fh);
+	}
+}
+
 vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink)
 {
 	const vector COLOR100 = '0 1 0'; // green
