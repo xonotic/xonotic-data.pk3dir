@@ -978,16 +978,11 @@ float GetSpeedUnitFactor(int speed_unit)
 	switch(speed_unit)
 	{
 		default:
-		case 1:
-			return 1.0;
-		case 2:
-			return 0.0254;
-		case 3:
-			return 0.0254 * 3.6;
-		case 4:
-			return 0.0254 * 3.6 * 0.6213711922;
-		case 5:
-			return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
+		case 1: return 1.0;
+		case 2: return 0.0254;
+		case 3: return 0.0254 * 3.6;
+		case 4: return 0.0254 * 3.6 * 0.6213711922;
+		case 5: return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 	}
 }
 
@@ -995,17 +990,13 @@ string GetSpeedUnit(int speed_unit)
 {
 	switch(speed_unit)
 	{
+		// translator-friendly strings without the initial space
 		default:
-		case 1:
-			return _(" qu/s");
-		case 2:
-			return _(" m/s");
-		case 3:
-			return _(" km/h");
-		case 4:
-			return _(" mph");
-		case 5:
-			return _(" knots");
+		case 1: return strcat(" ", _("qu/s"));
+		case 2: return strcat(" ", _("m/s"));
+		case 3: return strcat(" ", _("km/h"));
+		case 4: return strcat(" ", _("mph"));
+		case 5: return strcat(" ", _("knots"));
 	}
 }
 
