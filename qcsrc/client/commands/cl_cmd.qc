@@ -108,13 +108,11 @@ void LocalCommand_boxparticles(int request, int argc)
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2boxparticles^7");
-		}
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP(
-				"Usage:^3 lv_cmd boxparticles effectname own org_from org_to, dir_from, dir_to, countmultiplier, flags\n"
+				"Usage:^3 cl_cmd boxparticles effectname own org_from org_to, dir_from, dir_to, countmultiplier, flags\n"
 				"  'effectname' is the name of a particle effect in effectinfo.txt\n"
 				"  'own' is the entity number of the owner (negative for csqc ent, positive for svqc ent)\n"
 				"  'org_from' is the starting origin of the box\n"
@@ -241,9 +239,7 @@ void LocalCommand_handlevote(int request, int argc)
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2handlevote^7");
-		}
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 cl_cmd handlevote vote");
@@ -333,9 +329,7 @@ void LocalCommand_hud(int request, int argc)
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2hud^7");
-		}
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 cl_cmd hud action [configname | radartoggle | layout]");
@@ -364,9 +358,7 @@ void LocalCommand_localprint(int request, int argc)
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2localprint^7");
-		}
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 cl_cmd localprint \"message\"");
@@ -391,9 +383,7 @@ void LocalCommand_mv_download(int request, int argc)
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2mv_download^7");
-		}
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 cl_cmd mv_download mapid");
@@ -428,9 +418,7 @@ void LocalCommand_sendcvar(int request, int argc)
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2sendcvar^7");
-		}
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 cl_cmd sendcvar <cvar>");

@@ -86,7 +86,7 @@ void GenericCommand_addtolist(int request, int argc)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2addtolist^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " addtolist variable value");
@@ -300,7 +300,7 @@ void GenericCommand_maplist(int request, int argc)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2maplist^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " maplist action [map]");
@@ -356,7 +356,7 @@ void GenericCommand_removefromlist(int request, int argc)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2removefromlist^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value");
@@ -444,7 +444,7 @@ void GenericCommand_settemp(int request, int argc)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2settemp^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"");

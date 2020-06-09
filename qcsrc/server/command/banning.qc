@@ -41,7 +41,7 @@ void BanCommand_ban(int request, int argc, string command)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2ban^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd ban address [bantime] [reason]");
@@ -108,7 +108,7 @@ void BanCommand_kickban(int request, int argc, string command)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2kickban^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd kickban client [bantime] [masksize] [reason]");
@@ -146,7 +146,7 @@ void BanCommand_mute(int request, int argc, string command)  // TODO: Add a sort
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2mute^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd mute client");
@@ -227,7 +227,7 @@ void BanCommand_unmute(int request, int argc)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2mute^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd unmute client");
