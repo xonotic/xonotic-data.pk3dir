@@ -358,90 +358,85 @@ void bot_cmdhelp(string scmd)
 				break;
 		}
 
-		string prelude = strcat(
-		    "Command: ", bot_cmd_string[i], "\n",
-		    "Parameter: <", stype, ">", "\n",
-		    "Description: "
-        );
+		string desc = "";
 		switch(i)
 		{
 			case BOT_CMD_PAUSE:
-				LOG_INFO(prelude, "Stops the bot completely. Any command other than 'continue' will be ignored.");
+				desc = "Stops the bot completely. Any command other than 'continue' will be ignored.";
 				break;
 			case BOT_CMD_CONTINUE:
-				LOG_INFO(prelude, "Disable paused status");
+				desc = "Disable paused status";
 				break;
 			case BOT_CMD_WAIT:
-				LOG_INFO(prelude, "Pause command parsing and bot ai for N seconds. Pressed key will remain pressed");
+				desc = "Pause command parsing and bot ai for N seconds. Pressed key will remain pressed";
 				break;
 			case BOT_CMD_WAIT_UNTIL:
-				LOG_INFO(prelude, "Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed");
+				desc = "Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed";
 				break;
 			case BOT_CMD_BARRIER:
-				LOG_INFO(prelude, "Waits till all bots that have a command queue reach this command. Pressed key will remain pressed");
+				desc = "Waits till all bots that have a command queue reach this command. Pressed key will remain pressed";
 				break;
 			case BOT_CMD_TURN:
-				LOG_INFO(prelude, "Look to the right or left N degrees. For turning to the left use positive numbers.");
+				desc = "Look to the right or left N degrees. For turning to the left use positive numbers.";
 				break;
 			case BOT_CMD_MOVETO:
-				LOG_INFO(prelude, "Walk to an specific coordinate on the map. Usage: moveto \'x y z\'");
+				desc = "Walk to an specific coordinate on the map. Usage: moveto \'x y z\'";
 				break;
 			case BOT_CMD_MOVETOTARGET:
-				LOG_INFO(prelude, "Walk to the specific target on the map");
+				desc = "Walk to the specific target on the map";
 				break;
 			case BOT_CMD_RESETGOAL:
-				LOG_INFO(prelude, "Resets the goal stack");
+				desc = "Resets the goal stack";
 				break;
 			case BOT_CMD_CC:
-				LOG_INFO(prelude, "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;");
+				desc = "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;";
 				break;
 			case BOT_CMD_IF:
-				LOG_INFO(prelude, "Perform simple conditional execution.\n"
-                    "Syntax: \n"
-                    "        sv_cmd .. if \"condition\"\n"
-                    "        sv_cmd .. 	<instruction if true>\n"
-                    "        sv_cmd .. 	<instruction if true>\n"
-                    "        sv_cmd .. else\n"
-                    "        sv_cmd .. 	<instruction if false>\n"
-                    "        sv_cmd .. 	<instruction if false>\n"
-                    "        sv_cmd .. fi\n"
-                    "Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n"
-                    "            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n"
-                    "Fields: health, speed, flagcarrier\n"
-                    "Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;"
-				);
+				desc = "Perform simple conditional execution.\n"
+					"Syntax: \n"
+					"        sv_cmd .. if \"condition\"\n"
+					"        sv_cmd .. 	<instruction if true>\n"
+					"        sv_cmd .. 	<instruction if true>\n"
+					"        sv_cmd .. else\n"
+					"        sv_cmd .. 	<instruction if false>\n"
+					"        sv_cmd .. 	<instruction if false>\n"
+					"        sv_cmd .. fi\n"
+					"Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n"
+					"            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n"
+					"Fields: health, speed, flagcarrier\n"
+					"Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;";
 				break;
 			case BOT_CMD_RESETAIM:
-				LOG_INFO(prelude, "Points the aim to the coordinates x,y 0,0");
+				desc = "Points the aim to the coordinates x,y 0,0";
 				break;
 			case BOT_CMD_AIM:
-				LOG_INFO(prelude, "Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n"
+				desc = "Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n"
 					"There is a 3rd optional parameter telling in how many seconds the aim has to reach the new position\n"
 					"Examples: aim \"90 0\"	// Turn 90 degrees inmediately (positive numbers move to the left/up)\n"
-					"          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds"
-				);
+					"          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds";
 				break;
 			case BOT_CMD_AIMTARGET:
-				LOG_INFO(prelude, "Points the aim to given target");
+				desc = "Points the aim to given target";
 				break;
 			case BOT_CMD_PRESSKEY:
-				LOG_INFO(prelude, "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use");
-				LOG_INFO("Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called");
-				LOG_INFO("Note: The script will not return the control to the bot ai until all keys are released");
+				desc = "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use"
+					"Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called"
+					"Note: The script will not return the control to the bot ai until all keys are released";
 				break;
 			case BOT_CMD_RELEASEKEY:
-				LOG_INFO(prelude, "Release previoulsy used keys. Use the parameter \"all\" to release all keys");
+				desc = "Release previoulsy used keys. Use the parameter \"all\" to release all keys";
 				break;
 			case BOT_CMD_SOUND:
-				LOG_INFO(prelude, "play sound file at bot location");
+				desc = "play sound file at bot location";
 				break;
 			case BOT_CMD_DEBUG_ASSERT_CANFIRE:
-				LOG_INFO(prelude, "verify the state of the weapon entity");
+				desc = "verify the state of the weapon entity";
 				break;
 			default:
-				LOG_INFO(prelude, "This command has no description yet.");
+				desc = "This command has no description yet.";
 				break;
 		}
+		LOG_HELP("Command: ", bot_cmd_string[i], "\nParameter: <", stype, ">", "\nDescription: ", desc);
 	}
 }
 

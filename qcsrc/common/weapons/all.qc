@@ -665,8 +665,8 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 cl_cmd weapon_find weapon");
-			LOG_INFO("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
+			LOG_HELP("Usage:^3 cl_cmd weapon_find weapon");
+			LOG_HELP("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
 		}
 	}
