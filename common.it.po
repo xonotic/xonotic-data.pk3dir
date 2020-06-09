@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-07 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-06-08 20:16+0000\n"
+"Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -3298,7 +3298,7 @@ msgstr "^BG%s^K1 è diventato un pò sovraeccitato con il proprio HLAC%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was caught in ^BG%s^K1's Hook gravity bomb%s%s"
 msgstr ""
-"^BG%s%s^K1 è stato catturato nella bomba di gravità del Gancio di ^BG%s^K1%s"
+"^BG%s%s^K1 è stato catturato nella bomba di gravità del Rampino di ^BG%s^K1%s"
 "%s"
 
 #: qcsrc/common/notifications/all.inc:473
@@ -5287,7 +5287,7 @@ msgstr "Heavy Laser Assault Cannon"
 
 #: qcsrc/common/weapons/weapon/hook.qh:18
 msgid "Grappling Hook"
-msgstr "Gancio aggrappante"
+msgstr "Rampino"
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:18
 msgid "MachineGun"
@@ -5833,7 +5833,7 @@ msgstr "Disconnetti"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect from the server you are connected to"
-msgstr ""
+msgstr "Disconnettiti dal server a cui sei connesso"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -6893,7 +6893,7 @@ msgstr "Invisibile"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
 msgid "Hook"
-msgstr "Gancio"
+msgstr "Rampino"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:79
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:180
@@ -6958,6 +6958,8 @@ msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr ""
+"Abilita lo schivamento (veloce accelerazione in una data direzione). Tocca "
+"due volte un tasto direzionale per schivare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:168
 msgid "An explosion occurs when two players collide"
@@ -6972,6 +6974,8 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Abilita i bonus da prendere (bonus casuali come Dottore, Invisibile, ecc.) "
+"sulle mappe che lo supportano"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:181
 msgid "Only possible to inflict damage on your enemy while they're airborne"
@@ -6986,10 +6990,13 @@ msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
+"Quantità di vita al di sotto della quale i giocatori iniziano a sanguinare "
+"(la vita marcisce e non possono saltare)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:199
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr ""
+"Fa cadere le cose a terra più lentamente (percentuale di gravità normale)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "Weapon & item mutators:"
@@ -6997,29 +7004,35 @@ msgstr "Mutatori di armi ed oggetti:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:211
 msgid "Grappling hook"
-msgstr "Gancio aggrappante"
+msgstr "Rampino"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
-msgstr ""
+msgstr "I giocatori nascono con il rampino. Premi il tasto 'hook' per usarlo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:216
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
+"I giocatori nascono con il jetpack. Tocca due volte 'salta' o premi il tasto "
+"'jetpack' per usarlo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
 msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
+"I proiettili non possono essere distrutti. Tuttavia, puoi ancora far "
+"esplodere le sfere dell'Electro con il fuoco primario dell'Electro"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid ""
 "Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
+"Alcune armi sono rimpiazzate a caso con nuove armi: Heavy Laser Assault "
+"Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:230
 msgid ""
@@ -7027,6 +7040,10 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
+"I razzi del Devastator possono essere fatti esplodere all'istante "
+"(altrimenti, c'è un breve ritardo). Ciò consente ai giocatori di sparare e "
+"far esplodere un razzo quando si è in aria per una forte spinta a mezz'aria "
+"anche mentre ci si muove velocemente"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "Players will drop all weapons they possessed when they are killed"
@@ -7975,11 +7992,11 @@ msgstr "Evita compressione texture con perdita"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Disable sky for performance and visibility"
-msgstr ""
+msgstr "Disabilita il cielo per prestazioni e visibilità"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show sky"
-msgstr ""
+msgstr "Mostra cielo"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -9655,7 +9672,7 @@ msgstr "abbassarsi / scendere in acqua"
 
 #: qcsrc/menu/xonotic/keybinder.qc:42
 msgid "off-hand hook"
-msgstr "gancio immediato"
+msgstr "rampino immediato"
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
@@ -9827,7 +9844,7 @@ msgstr "<nessun modello trovato>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"
-msgstr ""
+msgstr "Rimuovi favorito"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
@@ -9835,7 +9852,7 @@ msgstr "Rimuovere il server attualmente evidenziato dai segnalibri"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
 msgid "SERVER^Favorite"
-msgstr ""
+msgstr "Favorito"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid ""

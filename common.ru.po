@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-07 17:26+0000\n"
+"PO-Revision-Date: 2020-06-08 06:05+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -3308,7 +3308,7 @@ msgstr "^BG%s^K1 не уследил за гранатой, выпущенной
 #: qcsrc/common/notifications/all.inc:483
 #, c-format
 msgid "^BG%s^K1 blew themself up with their own Mortar%s%s"
-msgstr "^BG%s^K1 взорвал сам себя с помощью Мортиры %s%s"
+msgstr "^BG%s^K1 взорвал сам себя с помощью Мортиры%s%s"
 
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
@@ -8752,7 +8752,7 @@ msgstr "Использовать приоритет при переключен�
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
-msgstr "Использовать список выше при езде с оружием с помощью колёсика мыши"
+msgstr "Использовать список выше при выборе оружия с помощью колеса мыши"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:52
 msgid "Cycle through only usable weapon selections"
