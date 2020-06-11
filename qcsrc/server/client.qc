@@ -2018,10 +2018,10 @@ int nJoinAllowed(entity this, entity ignore)
 
 	int player_limit = GetPlayerLimit();
 
-	float free_slots = 0;
+	int free_slots = 0;
 	if (!player_limit)
 		free_slots = maxclients - totalClients;
-	else if(currentlyPlaying < player_limit)
+	else if(player_limit > 0 && currentlyPlaying < player_limit)
 		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
 	static float msg_time = 0;
