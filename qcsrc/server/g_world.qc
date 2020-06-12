@@ -1778,7 +1778,24 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			fragsleft_last = fragsleft;
 		}
 	}
-
+	
+	// z411
+	if (WinningConditionHelper_winner != WinningConditionHelper_winner_last && (WinningConditionHelper_second || WinningConditionHelper_equality))
+	{
+		if (WinningConditionHelper_equality)
+		{
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_one, MSG_ANNCE, ANNCE_LEAD_TIED);
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_equality_two, MSG_ANNCE, ANNCE_LEAD_TIED);
+		}
+		else
+		{
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_winner, MSG_ANNCE, ANNCE_LEAD_GAINED);
+			Send_Notification(NOTIF_ONE, WinningConditionHelper_second, MSG_ANNCE, ANNCE_LEAD_LOST);
+		}
+		
+		WinningConditionHelper_winner_last = WinningConditionHelper_winner;
+	}
+	
 	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
 	bool leadlimit_reached = (leadlimit && WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
 

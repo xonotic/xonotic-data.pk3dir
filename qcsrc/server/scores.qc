@@ -512,7 +512,15 @@ void WinningConditionHelper(entity this)
 
 		WinningConditionHelper_equality = (PlayerScore_Compare(winnerscorekeeper, secondscorekeeper, 0) == 0);
 		if(WinningConditionHelper_equality)
+		{
+			WinningConditionHelper_equality_one = WinningConditionHelper_winner;
+			WinningConditionHelper_equality_two = WinningConditionHelper_second;
 			WinningConditionHelper_winner = WinningConditionHelper_second = NULL;
+		}
+		else
+		{
+			WinningConditionHelper_equality_one = WinningConditionHelper_equality_two = NULL;
+		}
 
 		WinningConditionHelper_topscore = winnerscorekeeper.scores_primary;
 		WinningConditionHelper_secondscore = secondscorekeeper.scores_primary;
