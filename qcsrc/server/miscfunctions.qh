@@ -11,24 +11,6 @@
 #include <common/mapinfo.qh>
 #include <common/turrets/all.qh>
 
-#ifdef RELEASE
-#define cvar_string_normal builtin_cvar_string
-#define cvar_normal builtin_cvar
-#else
-string cvar_string_normal(string n)
-{
-	if (!(cvar_type(n) & CVAR_TYPEFLAG_EXISTS))
-		backtrace(strcat("Attempt to access undefined cvar: ", n));
-	return builtin_cvar_string(n);
-}
-
-float cvar_normal(string n)
-{
-	return stof(cvar_string_normal(n));
-}
-#endif
-#define cvar_set_normal builtin_cvar_set
-
 .vector dropped_origin;
 
 entity eliminatedPlayers;
@@ -74,6 +56,8 @@ string formatmessage(entity this, string msg);
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 
+string GameLog_ProcessIP(string s);
+
 void GameLogEcho(string s);
 
 void GameLogInit();
@@ -90,19 +74,15 @@ float LostMovetypeFollow(entity ent);
 
 string uid2name(string myuid);
 
-float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
 
 string NearestLocation(vector p);
 
-string AmmoNameFromWeaponentity(Weapon wep);
-
 void play2(entity e, string filename);
 
 string playername(entity p, bool team_colorize);
-
-void precache();
 
 void remove_safely(entity e);
 

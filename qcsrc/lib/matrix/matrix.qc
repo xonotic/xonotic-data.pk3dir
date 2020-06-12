@@ -147,7 +147,7 @@ void MX_JLF_(entity fh, entity pass, int status)
     switch (status) {
         case URL_READY_CANWRITE: {
             fh.url_content_type = "application/json";
-            url_fputs(fh, sprintf("{}", pass.message));
+            url_fputs(fh, sprintf("{%s}", pass.message));
             url_fclose(fh);
             break;
         }

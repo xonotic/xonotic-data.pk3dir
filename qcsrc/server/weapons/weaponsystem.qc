@@ -55,7 +55,7 @@ bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 
 vector CL_Weapon_GetShotOrg(int wpn)
 {
-	entity wi = Weapons_from(wpn);
+	entity wi = REGISTRY_GET(Weapons, wpn);
 	entity e = spawn();
 	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
@@ -366,6 +366,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
+		// this can happen when the weapon entity is newly spawned, since it has a clear state and no previous weapon frame
+		if (this.wframe == WFRAME_DONTCHANGE)
+			this.wframe = WFRAME_IDLE;
 		fr = this.wframe;
 		restartanim = false;
 	}
@@ -374,14 +377,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		restartanim = fr != WFRAME_IDLE;
 	}
 
-	vector a = '0 0 0';
     this.wframe = fr;
-    if (fr == WFRAME_IDLE) a = this.anim_idle;
-    else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
-    else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
-    else  // if (fr == WFRAME_RELOAD)
-        a = this.anim_reload;
-    a.z *= g_weaponratefactor;
 
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
@@ -408,7 +404,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	{
 		FOREACH_CLIENT(true, {
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
-				wframe_send(it, this, a, restartanim);
+				wframe_send(it, this, fr, g_weaponratefactor, restartanim);
 		});
 	}
 
@@ -443,6 +439,28 @@ bool weaponLocked(entity player)
 	if (STAT(FROZEN, player)) return true;
 	if (MUTATOR_CALLHOOK(LockWeapon, player)) return true;
 	return false;
+}
+
+void W_ResetGunAlign(entity player, int preferred_alignment)
+{
+	if(W_DualWielding(player))
+		preferred_alignment = 3; // right align, the second gun will default to left
+
+	// clear current weapon slots' alignments so we can redo the calculations!
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = 0;
+	}
+
+	// now set the new values
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = W_GunAlign(player.(weaponentity), preferred_alignment);
+	}
 }
 
 .bool hook_switchweapon;
@@ -783,6 +801,8 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 		{
 			if (!(actor.items & IT_UNLIMITED_AMMO))
 			{
+				if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0)
+					return; // in this case the primary weapon will do the switching when it runs out of ammo (TODO: do this same check but for other slots)
 				if (IS_REAL_CLIENT(actor) && actor.reload_complain < time)
 				{
 					play2(actor, SND(UNAVAILABLE));
@@ -826,7 +846,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)
 {
-	Weapon w = Weapons_from(weapon_type);
+	Weapon w = REGISTRY_GET(Weapons, weapon_type);
 	weapon_dropevent_item = weapon_item;
 	w.event(w, player, weaponentity);
 }

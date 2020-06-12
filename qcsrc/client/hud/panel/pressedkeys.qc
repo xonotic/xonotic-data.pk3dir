@@ -6,11 +6,18 @@
 
 // Pressed keys (#11)
 
+void HUD_PressedKeys_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_pressedkeys_aspect");
+	HUD_Write_Cvar("hud_panel_pressedkeys_attack");
+}
+
 void HUD_PressedKeys()
 {
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_pressedkeys) return;
+		if(!autocvar_hud_panel_pressedkeys || spectatee_status < 0) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
 	}
 

@@ -19,22 +19,25 @@ REPLICATE(cvar_cl_casings, bool, "cl_casings");
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
-	if (!(CS(casingowner).cvar_cl_casings))
-		return;
+	entity wep = casingowner.(weaponentity);
+	vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
-    entity wep = casingowner.(weaponentity);
-    vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
+	FOREACH_CLIENT(true, {
+		if (!(CS(it).cvar_cl_casings))
+			continue;
 
-    if (!sound_allowed(MSG_BROADCAST, casingowner))
-        casingtype |= 0x80;
+		msg_entity = it;
+		if (!sound_allowed(MSG_ONE, it))
+			casingtype |= 0x80; // silent
 
-    WriteHeader(MSG_ALL, casings);
-    WriteByte(MSG_ALL, casingtype);
-    WriteVector(MSG_ALL, org);
-    WriteShort(MSG_ALL, compressShortVector(vel)); // actually compressed velocity
-    WriteByte(MSG_ALL, ang.x * 256 / 360);
-    WriteByte(MSG_ALL, ang.y * 256 / 360);
-    WriteByte(MSG_ALL, ang.z * 256 / 360);
+		WriteHeader(MSG_ONE, casings);
+		WriteByte(MSG_ONE, casingtype);
+		WriteVector(MSG_ONE, org);
+		WriteShort(MSG_ONE, compressShortVector(vel)); // actually compressed velocity
+		WriteByte(MSG_ONE, ang.x * 256 / 360);
+		WriteByte(MSG_ONE, ang.y * 256 / 360);
+		WriteByte(MSG_ONE, ang.z * 256 / 360);
+	});
 }
 #endif
 
@@ -59,10 +62,6 @@ void Casing_Draw(entity this)
         //UNSET_ONGROUND(this);
     }
 
-    Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
-    if (wasfreed(this))
-        return; // deleted by touch function
-
     this.renderflags = 0;
     this.alpha = bound(0, this.cnt - time, 1);
 
@@ -70,20 +69,25 @@ void Casing_Draw(entity this)
     {
         Casing_Delete(this);
         this.drawmask = 0;
+        return;
     }
+
+    Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
+    //if (wasfreed(this))
+    //    return; // deleted by touch function
 }
 
 SOUND(BRASS1, W_Sound("brass1"));
 SOUND(BRASS2, W_Sound("brass2"));
 SOUND(BRASS3, W_Sound("brass3"));
 Sound SND_BRASS_RANDOM() {
-    return Sounds_from(SND_BRASS1.m_id + floor(prandom() * 3));
+    return REGISTRY_GET(Sounds, SND_BRASS1.m_id + floor(prandom() * 3));
 }
 SOUND(CASINGS1, W_Sound("casings1"));
 SOUND(CASINGS2, W_Sound("casings2"));
 SOUND(CASINGS3, W_Sound("casings3"));
 Sound SND_CASINGS_RANDOM() {
-    return Sounds_from(SND_CASINGS1.m_id + floor(prandom() * 3));
+    return REGISTRY_GET(Sounds, SND_CASINGS1.m_id + floor(prandom() * 3));
 }
 
 void Casing_Touch(entity this, entity toucher)
@@ -153,6 +157,7 @@ NET_HANDLE(casings, bool isNew)
     casing.velocity = casing.velocity + 2 * prandomvec();
     casing.avelocity = '0 250 0' + 100 * prandomvec();
     set_movetype(casing, MOVETYPE_BOUNCE);
+    casing.bouncefactor = 0.25;
     settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;

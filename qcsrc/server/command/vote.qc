@@ -477,7 +477,7 @@ void ReadyRestart_force()
 void ReadyRestart()
 {
 	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
-	else localcmd("\nsv_hook_gamerestart\n");
+	else localcmd("\nsv_hook_readyrestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
@@ -542,11 +542,21 @@ float VoteCommand_checknasty(string vote_command)
 	return true;
 }
 
+// NOTE: requires input to be surrounded by spaces
+string VoteCommand_checkreplacements(string input)
+{
+	string output = input;
+	// allow gotomap replacements
+	output = strreplace(" map ", " gotomap ", output);
+	output = strreplace(" chmap ", " gotomap ", output);
+	return output;
+}
+
 float VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = strcat(" ", list, " ");
+	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
 
-	if (strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0) return true;
+	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
 
 	return false;
 }

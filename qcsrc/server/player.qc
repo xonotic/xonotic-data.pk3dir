@@ -369,7 +369,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(attacker == this)
 	{
-		// don't reset pushltime for this damage as it may be an attempt to
+		// don't reset pushltime for self damage as it may be an attempt to
 		// escape a lava pit or similar
 		//this.pushltime = 0;
 		this.istypefrag = 0;
@@ -469,6 +469,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 			float realdmg = damage - excess;
 			if (this != attacker && realdmg)
+			if (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime)
 			{
 				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
@@ -491,6 +492,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	bool valid_damage_for_weaponstats = false;
 	Weapon awep = WEP_Null;
 
+	if (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime)
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && this != attacker)

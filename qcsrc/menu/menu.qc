@@ -50,7 +50,7 @@ void m_gamestatus()
 	gamestatus = 0;
 	if (isserver()) gamestatus |= GAME_ISSERVER;
 	if (clientstate() == CS_CONNECTED || isdemo()) gamestatus |= GAME_CONNECTED;
-	if (cvar("developer")) gamestatus |= GAME_DEVELOPER;
+	if (cvar("developer") > 0) gamestatus |= GAME_DEVELOPER;
 }
 
 void m_init()
@@ -73,7 +73,7 @@ void m_init()
 #endif
 
 	// list all game dirs (TEST)
-	if (cvar("developer"))
+	if (cvar("developer") > 0)
 	{
 		for (int i = 0; ; ++i)
 		{
