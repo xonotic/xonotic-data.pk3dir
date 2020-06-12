@@ -235,7 +235,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 		play_countdown(player, STAT(STRENGTH_FINISHED, player), SND_POWEROFF);
 		if (time > STAT(STRENGTH_FINISHED, player))
 		{
-			if(!this.vehicle) // already reset upon exit
+			if(!player.vehicle) // already reset upon exit
 			{
 				player.alpha = default_player_alpha;
 				player.exteriorweaponentity.alpha = default_weapon_alpha;
@@ -248,7 +248,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 	{
 		if (time < STAT(STRENGTH_FINISHED, player))
 		{
-			if(!this.vehicle) // incase the player is given powerups while inside a vehicle
+			if(!player.vehicle) // incase the player is given powerups while inside a vehicle
 			{
 				player.alpha = autocvar_g_instagib_invis_alpha;
 				player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
