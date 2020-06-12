@@ -347,6 +347,7 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag_point_limit");
 		BADCVAR("g_glowtrails");
 		BADCVAR("g_hats");
+		BADCVAR("g_casings");
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keepaway_ballcarrier_effects");
