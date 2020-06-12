@@ -16,6 +16,7 @@
 # Larson März <larson@protonmail.ch>, 2016
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
 # Mirio <opivy@hotmail.de>, 2014-2017,2019
+# Robert Katzinsky <hbmctextures.unknown@gmail.com>, 2020
 # divVerent <divVerent@xonotic.org>, 2011
 # Sless <sless@gmx.net>, 2014
 # Sless <sless@gmx.net>, 2014
@@ -27,8 +28,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-07 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-06-11 16:37+0000\n"
+"Last-Translator: Robert Katzinsky <hbmctextures.unknown@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -5831,7 +5832,7 @@ msgstr "Trennen"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect from the server you are connected to"
-msgstr ""
+msgstr "Vom derzeit verbundenen Server trennen"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -7028,6 +7029,8 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
+"Projektile können nicht zerstört werden. Elektro-Kugeln können jedoch "
+"mittels Primärfeuer ausgelöst werden."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid ""
@@ -8002,11 +8005,11 @@ msgstr "Texturkompression vermeiden"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Disable sky for performance and visibility"
-msgstr ""
+msgstr "Den Himmel für Performanz und Sichtbarkeit deaktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show sky"
-msgstr ""
+msgstr "Himmel anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -9864,7 +9867,7 @@ msgstr "<Spielermodell nicht gefunden>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"
-msgstr ""
+msgstr "Aus Favoriten entfernen"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
@@ -9872,7 +9875,7 @@ msgstr "Den momentan markierten Server aus den Favoriten entfernen"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
 msgid "SERVER^Favorite"
-msgstr ""
+msgstr "Zu Favoriten hinzufügen"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid ""
