@@ -925,9 +925,11 @@ void HUD_Draw(entity this)
 	else if(STAT(FROZEN))
 	{
 		vector col = '0.25 0.90 1';
-		if(STAT(REVIVE_PROGRESS))
-			col += vec3(STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS));
-		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
+		float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
+		if(col_fade)
+			col += vec3(col_fade, -col_fade, -col_fade);
+		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
 	}
 
 	HUD_Scale_Enable();
