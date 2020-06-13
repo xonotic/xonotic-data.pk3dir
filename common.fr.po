@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-08 21:37+0000\n"
+"PO-Revision-Date: 2020-06-12 17:07+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -6968,6 +6968,8 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Activer les bonus aléatoires (Médecin, Invisibilité, etc.) sur les cartes "
+"qui les prennent en charge."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:181
 msgid "Only possible to inflict damage on your enemy while they're airborne"
@@ -7056,7 +7058,7 @@ msgid ""
 "without weapon pickups"
 msgstr ""
 "Les joueurs se voient attribuer un ensemble d'armes ainsi que des munitions "
-"illimitées, il n'y a aucune arme à ramasser"
+"illimitées, il n'y a aucune arme à collecter."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:248
 msgid "Weapon arenas:"
@@ -10072,7 +10074,7 @@ msgstr "Décembre"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "%d %m, %Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
