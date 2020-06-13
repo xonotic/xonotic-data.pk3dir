@@ -582,8 +582,20 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 	if (STAT(FROZEN, player) == FROZEN_NORMAL)
 	{
-		WaypointSprite_UpdateMaxHealth(player.waypointsprite_attached, 1);
-		WaypointSprite_UpdateHealth(player.waypointsprite_attached, STAT(REVIVE_PROGRESS, player));
+		entity player_wp = player.waypointsprite_attached;
+		if (n > 0 || (n == 0 && STAT(REVIVE_PROGRESS, player) > 0.95))
+		{
+			WaypointSprite_UpdateSprites(player_wp, WP_Reviving, WP_Null, WP_Null);
+			WaypointSprite_UpdateTeamRadar(player_wp, RADARICON_WAYPOINT, WP_REVIVING_COLOR);
+		}
+		else
+		{
+			WaypointSprite_UpdateSprites(player_wp, WP_Frozen, WP_Null, WP_Null);
+			WaypointSprite_UpdateTeamRadar(player_wp, RADARICON_WAYPOINT, WP_FROZEN_COLOR);
+		}
+
+		WaypointSprite_UpdateMaxHealth(player_wp, 1);
+		WaypointSprite_UpdateHealth(player_wp, STAT(REVIVE_PROGRESS, player));
 	}
 
 	return true;
