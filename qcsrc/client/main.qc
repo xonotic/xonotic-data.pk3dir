@@ -38,58 +38,6 @@
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 
-void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
-{
-	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
-	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
-}
-
-void draw_cursor_normal(vector pos, vector col, float a)
-{
-	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
-}
-
-void LoadMenuSkinValues()
-{
-	int fh = -1;
-	if(cvar_string("menu_skin") != "")
-	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0 && cvar_defstring("menu_skin") != "")
-	{
-		cvar_set("menu_skin", cvar_defstring("menu_skin"));
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0)
-	{
-		draw_currentSkin = "gfx/menu/default";
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-
-	draw_currentSkin = strzone(draw_currentSkin);
-
-	if(fh >= 0)
-	{
-		string s;
-		while((s = fgets(fh)))
-		{
-			int n = tokenize_console(s);
-			if (n < 2)
-				continue;
-			if(substring(argv(0), 0, 2) == "//")
-				continue;
-			if(argv(0) == "SIZE_CURSOR")
-				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-			else if(argv(0) == "OFFSET_CURSOR")
-				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-		}
-		fclose(fh);
-	}
-}
-
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
@@ -978,16 +926,11 @@ float GetSpeedUnitFactor(int speed_unit)
 	switch(speed_unit)
 	{
 		default:
-		case 1:
-			return 1.0;
-		case 2:
-			return 0.0254;
-		case 3:
-			return 0.0254 * 3.6;
-		case 4:
-			return 0.0254 * 3.6 * 0.6213711922;
-		case 5:
-			return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
+		case 1: return 1.0;
+		case 2: return 0.0254;
+		case 3: return 0.0254 * 3.6;
+		case 4: return 0.0254 * 3.6 * 0.6213711922;
+		case 5: return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 	}
 }
 
@@ -995,17 +938,13 @@ string GetSpeedUnit(int speed_unit)
 {
 	switch(speed_unit)
 	{
+		// translator-friendly strings without the initial space
 		default:
-		case 1:
-			return _(" qu/s");
-		case 2:
-			return _(" m/s");
-		case 3:
-			return _(" km/h");
-		case 4:
-			return _(" mph");
-		case 5:
-			return _(" knots");
+		case 1: return strcat(" ", _("qu/s"));
+		case 2: return strcat(" ", _("m/s"));
+		case 3: return strcat(" ", _("km/h"));
+		case 4: return strcat(" ", _("mph"));
+		case 5: return strcat(" ", _("knots"));
 	}
 }
 

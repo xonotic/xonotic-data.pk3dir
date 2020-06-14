@@ -133,7 +133,7 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 2.9, e = makeXonoticCheckBox(0, "crosshair_hittest_blur", _("Blur crosshair if the shot is obstructed")));
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBox(0, "crosshair_hittest_blur_wall", _("Blur crosshair if the shot is obstructed")));
 			setDependentAND(e, "crosshair_hittest", 1, 100, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);

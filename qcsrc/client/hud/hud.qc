@@ -28,48 +28,97 @@ Misc HUD functions
 ==================
 */
 
-vector HUD_Get_Num_Color (float hp, float maxvalue)
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
 {
-	float blinkingamt;
-	vector color;
-	if(hp >= maxvalue) {
-		color.x = sin(2*M_PI*time);
-		color.y = 1;
-		color.z = sin(2*M_PI*time);
+	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
+	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
+}
+
+void draw_cursor_normal(vector pos, vector col, float a)
+{
+	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
+}
+
+void LoadMenuSkinValues()
+{
+	int fh = -1;
+	if(cvar_string("menu_skin") != "")
+	{
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
-	else if(hp > maxvalue * 0.75) {
-		color.x = 0.4 - (hp-150)*0.02 * 0.4; //red value between 0.4 -> 0
-		color.y = 0.9 + (hp-150)*0.02 * 0.1; // green value between 0.9 -> 1
-		color.z = 0;
+	if(fh < 0 && cvar_defstring("menu_skin") != "")
+	{
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
-	else if(hp > maxvalue * 0.5) {
-		color.x = 1 - (hp-100)*0.02 * 0.6; //red value between 1 -> 0.4
-		color.y = 1 - (hp-100)*0.02 * 0.1; // green value between 1 -> 0.9
-		color.z = 1 - (hp-100)*0.02; // blue value between 1 -> 0
-	}
-	else if(hp > maxvalue * 0.25) {
-		color.x = 1;
-		color.y = 1;
-		color.z = 0.2 + (hp-50)*0.02 * 0.8; // blue value between 0.2 -> 1
-	}
-	else if(hp > maxvalue * 0.1) {
-		color.x = 1;
-		color.y = (hp-20)*90/27/100; // green value between 0 -> 1
-		color.z = (hp-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
-	}
-	else {
-		color.x = 1;
-		color.y = 0;
-		color.z = 0;
+	if(fh < 0)
+	{
+		draw_currentSkin = "gfx/menu/default";
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 
-	blinkingamt = (1 - hp/maxvalue/0.25);
-	if(blinkingamt > 0)
+	draw_currentSkin = strzone(draw_currentSkin);
+
+	if(fh >= 0)
 	{
-		color.x = color.x - color.x * blinkingamt * sin(2*M_PI*time);
-		color.y = color.y - color.y * blinkingamt * sin(2*M_PI*time);
-		color.z = color.z - color.z * blinkingamt * sin(2*M_PI*time);
+		string s;
+		while((s = fgets(fh)))
+		{
+			int n = tokenize_console(s);
+			if (n < 2)
+				continue;
+			if(substring(argv(0), 0, 2) == "//")
+				continue;
+			if(argv(0) == "SIZE_CURSOR")
+				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			else if(argv(0) == "OFFSET_CURSOR")
+				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+		}
+		fclose(fh);
 	}
+}
+
+vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink)
+{
+	const vector COLOR100 = '0 1 0'; // green
+	const vector COLOR75 = '0.4 0.9 0'; // lightgreen
+	const vector COLOR50 = '1 1 1'; // white
+	const vector COLOR25 = '1 1 0.2'; // lightyellow
+	const vector COLOR10 = '1 0 0'; // red
+	vector color;
+
+	float hp_percent = hp / maxvalue * 100;
+	#define CASE_COLOR_BETWEEN(min, max) \
+		if(hp_percent > min) \
+			color = COLOR##min + (COLOR##max - COLOR##min) * ((hp_percent - min) / (max - min))
+
+	if(hp_percent > 100) color = COLOR100;
+	else CASE_COLOR_BETWEEN(75, 100);
+	else CASE_COLOR_BETWEEN(50, 75);
+	else CASE_COLOR_BETWEEN(25, 50);
+	else CASE_COLOR_BETWEEN(10, 25);
+	else color = COLOR10;
+
+	#undef CASE_COLOR_BETWEEN
+
+	if (blink)
+	{
+		if(hp_percent >= 100)
+		{
+			float f = sin(2*M_PI*time);
+			if (color.x == 0) color.x = f;
+			if (color.y == 0) color.y = f;
+			if (color.z == 0) color.z = f;
+		}
+		else if(hp_percent < 25)
+		{
+			float f = (1 - hp_percent / 25) * sin(2*M_PI*time);
+			color -= color * f;
+		}
+	}
+
 	return color;
 }
 
