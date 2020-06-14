@@ -1,5 +1,5 @@
 CPP := cc -xc -E
-QCC ?= gmqcc
+QCC ?= ../../../../gmqcc/gmqcc
 
 PROGS_OUT ?= ..
 WORKDIR ?= ../.tmp
@@ -72,9 +72,14 @@ clean: | $(WORKDIR)
 	$(RM) $(PROGS_OUT)/csprogs.dat
 	$(RM) $(PROGS_OUT)/menu.dat
 	$(RM) $(PROGS_OUT)/progs.dat
+	$(RM) $(PROGS_OUT)/csprogs.lno
+	$(RM) $(PROGS_OUT)/menu.lno
+	$(RM) $(PROGS_OUT)/progs.lno
 	$(RM) $(WORKDIR)/*.d
 	$(RM) $(WORKDIR)/*.qc
 	$(RM) $(WORKDIR)/*.txt
+	$(RM) $(WORKDIR)/qccversion.*
+	$(RM) csprogs-*.pk3
 
 .PHONY: qc
 qc: $(PROGS_OUT)/csprogs.dat $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat
@@ -95,7 +100,7 @@ pk3: csprogs-$(VER).pk3
 	@ echo "http://xonotic.org" > $(TXT)
 	@ cp -f $(PROGS_OUT)/$(PROG).dat $(DAT)
 	@ cp -f $(PROGS_OUT)/$(PROG).lno $(LNO)
-	@ $(RM) *.pk3
+	@ $(RM) csprogs-*.pk3
 	$(ZIP) $(PK3) $(TXT) $(DAT) $(LNO)
 	@ $(RM) $(TXT) $(DAT) $(LNO)
 
