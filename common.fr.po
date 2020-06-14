@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-12 17:07+0000\n"
+"PO-Revision-Date: 2020-06-13 15:06+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -305,7 +305,7 @@ msgstr "Tchat d'équipe"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr "bientôt la force"
+msgstr "bientôt le bonus de Force"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -7028,6 +7028,9 @@ msgid ""
 "Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
+"Certaines armes à collecter seront aléatoirement remplacées par de nouvelles "
+"armes : Heavy Laser Assault Cannon, Poseur de Mines, Fusil de précision, T.A."
+"G. Seeker."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:230
 msgid ""
@@ -9807,7 +9810,7 @@ msgstr "traîner l'objet (bac à sable)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "menu de l'éditeur de waypoints"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:96 qcsrc/menu/xonotic/mainwindow.qc:99
 msgid "Do not press this button again!"
@@ -10074,7 +10077,7 @@ msgstr "Décembre"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr "%d %m, %Y"
+msgstr "%d %m %Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
