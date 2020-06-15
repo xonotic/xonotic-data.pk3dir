@@ -472,8 +472,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 
 			float realdmg = damage - excess;
-			if (this != attacker && realdmg)
-			if (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime)
+			if (this != attacker && realdmg && !STAT(FROZEN, this)
+				&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 			{
 				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
