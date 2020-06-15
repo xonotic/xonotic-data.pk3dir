@@ -88,11 +88,14 @@ void HUD_StrafeHUD()
         float strafehud_indicator_minspeed         = autocvar_hud_panel_strafehud_indicator_minspeed;
 
         // physics
-        float  strafehud_onground                  = strafehud_islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+        bool   strafehud_onground                  = strafehud_islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+        bool   strafehud_strafekeys;
+        bool   strafehud_iswater                   = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
         float  strafehud_speed                     = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
-        float  strafehud_maxspeed_crouch_mod       = IS_DUCKED(strafeplayer) ? .5 : 1;
+        float  strafehud_maxspeed_crouch_mod       = IS_DUCKED(strafeplayer) && (!strafehud_iswater || IS_ONGROUND(strafeplayer)) ? .5 : 1;
+        float  strafehud_maxspeed_water_mod        = strafehud_iswater ? .7 : 1; // FIXME: water physics are way more complex than this
         float  strafehud_maxspeed_phys             = strafehud_onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
-        float  strafehud_maxspeed                  = !autocvar__hud_configure ? (strafehud_maxspeed_phys * strafehud_maxspeed_crouch_mod) : 320;
+        float  strafehud_maxspeed                  = !autocvar__hud_configure ? strafehud_maxspeed_phys * strafehud_maxspeed_crouch_mod * strafehud_maxspeed_water_mod : 320;
         float  strafehud_vel_angle                 = vectoangles(strafeplayer.velocity).y;
         float  strafehud_view_angle                = view_angles.y + 180;
         float  strafehud_angle;
@@ -208,6 +211,8 @@ void HUD_StrafeHUD()
             }
         }
 
+        strafehud_strafekeys = fabs(strafehud_wishangle) == 90;
+
         // determine minimum required angle to display full strafe range
         strafehud_range_minangle = fabs(strafehud_wishangle) % 90; // maximum range is 90 degree
         if(strafehud_range_minangle > 45) // minimum angle range is 45
@@ -232,50 +237,47 @@ void HUD_StrafeHUD()
             strafehud_hudangle = bound(1, fabs(autocvar_hud_panel_strafehud_angle), 360) / 2; // limit HUD range to 360 degrees, higher values don't make sense
         }
 
-        // detect strafe turning
-        if(!autocvar__hud_configure)
+        // detect air strafe turning
+        if(strafehud_onground != strafehud_state_onground)
         {
-            if(strafehud_onground != strafehud_state_onground)
-            {
-                strafehud_state_onground_time = time;
-            }
-            strafehud_state_onground = strafehud_onground;
-            if((fabs(strafehud_wishangle) == 90) != strafehud_state_strafekeys)
-            {
-                strafehud_state_strafekeys_time = time;
-            }
-            strafehud_state_strafekeys = fabs(strafehud_wishangle) == 90;
-            if((strafehud_keys & KEY_FORWARD) || (strafehud_keys & KEY_BACKWARD))
+            strafehud_state_onground_time = time;
+        }
+        strafehud_state_onground = strafehud_onground;
+        if(strafehud_strafekeys != strafehud_state_strafekeys)
+        {
+            strafehud_state_strafekeys_time = time;
+        }
+        strafehud_state_strafekeys = strafehud_strafekeys;
+        if((strafehud_keys & KEY_FORWARD) || (strafehud_keys & KEY_BACKWARD) || strafehud_iswater || autocvar__hud_configure)
+        {
+            strafehud_turn = false;
+        }
+        else if(strafehud_onground)
+        {
+            if((time - strafehud_state_onground_time) >= strafehud_timeout_ground)
             {
                 strafehud_turn = false;
             }
-            else if(strafehud_onground)
+        }
+        else // air strafe only
+        {
+            if(strafehud_strafekeys)
             {
-                if((time - strafehud_state_onground_time) >= strafehud_timeout_ground)
+                if(((time - strafehud_state_onground_time) >= strafehud_timeout_air) || (strafehud_keys & KEY_JUMP))
                 {
-                    strafehud_turn = false;
+                    strafehud_turn = true; // CPMA turning
+                    strafehud_turnangle = strafehud_wishangle;
                 }
             }
-            else // air strafe only
+            else if((time - strafehud_state_strafekeys_time) >= strafehud_timeout_strafe)
             {
-                if(fabs(strafehud_wishangle) == 90)
-                {
-                    if((time - strafehud_state_onground_time) >= strafehud_timeout_air)
-                    {
-                        strafehud_turn = true; // CPMA turning
-                        strafehud_turnangle = strafehud_wishangle;
-                    }
-                }
-                else if((time - strafehud_state_strafekeys_time) >= strafehud_timeout_strafe)
-                {
-                    strafehud_turn = false;
-                }
+                strafehud_turn = false;
             }
-            if(strafehud_turn)
-            {
-                strafehud_maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer); // no crouching here because it doesn't affect air strafing
-                strafehud_wishangle = strafehud_turnangle;
-            }
+        }
+        if(strafehud_turn)
+        {
+            strafehud_maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer); // no crouching here because it doesn't affect air strafing
+            strafehud_wishangle = strafehud_turnangle;
         }
 
         strafehud_indicator_minspeed = strafehud_indicator_minspeed < 0 ? strafehud_maxspeed + .1 : strafehud_indicator_minspeed;
