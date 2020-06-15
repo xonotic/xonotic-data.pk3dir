@@ -326,7 +326,12 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 		}
 
-		if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+		if (STAT(FROZEN, this))
+		{
+			if (!ITEM_DAMAGE_NEEDKILL(deathtype))
+				damage = 0;
+		}
+		else if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
 			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
 
 		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
@@ -411,8 +416,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	if ((time >= this.spawnshieldtime || autocvar_g_spawnshield_blockdamage < 1)
-		&& !STAT(FROZEN, this))
+	if (time >= this.spawnshieldtime || autocvar_g_spawnshield_blockdamage < 1)
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
@@ -422,7 +426,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-			if (time > this.pain_finished)		//Don't switch pain sequences like crazy
+			if (time > this.pain_finished && !STAT(FROZEN, this)) // Don't switch pain sequences like crazy
 			{
 				this.pain_finished = time + 0.5;	//Supajoe
 
