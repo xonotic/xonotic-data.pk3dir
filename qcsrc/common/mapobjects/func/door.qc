@@ -737,7 +737,10 @@ spawnfunc(func_door)
         }
         else if (!this.speed)
         {
-                this.speed = 100;
+		if (autocvar_sv_q3defragcompat)
+			this.speed = 400;
+		else
+	                this.speed = 100;
         }
 
 	settouch(this, door_touch);
