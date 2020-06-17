@@ -470,7 +470,7 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 		&& autocvar_g_freezetag_frozen_maxtime > 0 && autocvar_g_freezetag_revive_auto)
 	{
 		float t = 0;
-		if ((autocvar_g_freezetag_revive_auto_reducible > 0 || DIFF_TEAM(frag_attacker, frag_target))
+		if ((autocvar_g_freezetag_revive_auto_reducible < 0 || DIFF_TEAM(frag_attacker, frag_target))
 			&& frag_target.freezetag_frozen_timeout > time)
 		{
 			if (fabs(autocvar_g_freezetag_revive_auto_reducible) == 1)
