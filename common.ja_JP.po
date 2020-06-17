@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-15 07:30+0000\n"
+"PO-Revision-Date: 2020-06-17 03:18+0000\n"
 "Last-Translator: Space Ace <scocasso@hotmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -92,7 +92,7 @@ msgstr "次の武器"
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/client/hud/panel/infomessages.qc:114
 msgid "previous weapon"
-msgstr ""
+msgstr "前の兵器"
 
 #: qcsrc/client/hud/panel/infomessages.qc:114
 #, c-format
@@ -107,7 +107,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 msgid "drop weapon"
-msgstr ""
+msgstr "兵器を落と"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/menu/xonotic/keybinder.qc:48
@@ -142,7 +142,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #: qcsrc/common/notifications/all.qh:430
 msgid "jump"
-msgstr ""
+msgstr "飛ぶ"
 
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
@@ -151,37 +151,37 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:153
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2現在、^1準備運動^2の段階に入っています!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%s^3%s%sを押して準備運動を終了します"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #: qcsrc/client/hud/panel/infomessages.qc:170
 #: qcsrc/client/hud/panel/infomessages.qc:183
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "ready"
-msgstr ""
+msgstr "準備"
 
 #: qcsrc/client/hud/panel/infomessages.qc:170
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%s準備ができたら^3%s%sを押します"
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr ""
+msgstr "^2準備演習が終了する前に、全員の準備ができるまで待ちます..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:177
 msgid "^2Waiting for others to ready up..."
-msgstr ""
+msgstr "^2全員の準備ができるまで待ちます..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:183
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2^3%s^2を押して準備運動を終了します"
 
 #: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teamnumbers are unbalanced!"
