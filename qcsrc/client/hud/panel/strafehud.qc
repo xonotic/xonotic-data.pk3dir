@@ -13,12 +13,15 @@
 #include <lib/csqcmodel/cl_player.qh>
 
 bool strafehud_fwd = true;
+bool strafehud_state_fwd = true;
+bool strafehud_state_fwd_prev = true;
 float strafehud_demo_angle = -37;
 float strafehud_demo_direction = 1;
 float strafehud_demo_time = 0;
 float strafehud_state_onground_time = 0;
 float strafehud_state_strafekeys_time = 0;
-bool strafehud_state_onground = true;
+float strafehud_state_direction_time = 0;
+bool strafehud_state_onground = false;
 bool strafehud_state_strafekeys = false;
 bool strafehud_turn = false;
 float strafehud_turnangle;
@@ -82,9 +85,10 @@ void HUD_StrafeHUD()
         vector strafehud_warning_color             = autocvar_hud_panel_strafehud_warning_color;
         vector strafehud_alert_color               = autocvar_hud_panel_strafehud_alert_color;
         vector strafehud_direction_color           = autocvar_hud_panel_strafehud_direction_color;
-        float strafehud_timeout_air                = autocvar_hud_panel_strafehud_timeout_air;    // timeout for slick ramps
-        float strafehud_timeout_ground             = autocvar_hud_panel_strafehud_timeout_ground; // timeout for strafe jumping in general
-        float strafehud_timeout_strafe             = autocvar_hud_panel_strafehud_timeout_strafe; // timeout for jumping with strafe keys only
+        float strafehud_timeout_air                = autocvar_hud_panel_strafehud_timeout_air;       // timeout for slick ramps
+        float strafehud_timeout_ground             = autocvar_hud_panel_strafehud_timeout_ground;    // timeout for strafe jumping in general
+        float strafehud_timeout_strafe             = autocvar_hud_panel_strafehud_timeout_strafe;    // timeout for jumping with strafe keys only
+        float strafehud_timeout_direction          = autocvar_hud_panel_strafehud_timeout_direction; // timeout when changing between forwards and backwards strafe
         float strafehud_indicator_minspeed         = autocvar_hud_panel_strafehud_indicator_minspeed;
 
         // physics
@@ -102,7 +106,8 @@ void HUD_StrafeHUD()
         float  strafehud_direction;
         vector strafehud_movement                  = PHYS_INPUT_MOVEVALUES(strafeplayer);
         int    strafehud_keys                      = STAT(PRESSED_KEYS);
-        float  strafehud_wishangle;
+        int    strafehud_keys_fwd;
+        float  strafehud_wishangle                 = 0;
         float  strafehud_moveangle;
 
         // HUD
@@ -133,27 +138,35 @@ void HUD_StrafeHUD()
         float  strafehud_maxangle;
         float  strafehud_range_minangle;
 
-        // determine whether the player is strafing forwards or backwards
+        // determine whether the player is pressing forwards or backwards keys
         if(strafehud_islocal) // if entity is local player
         {
             if(strafehud_movement_x > 0)
             {
-                strafehud_fwd = true;
+                strafehud_keys_fwd = 1;
             }
             else if(strafehud_movement_x < 0)
             {
-                strafehud_fwd = false;
+                strafehud_keys_fwd = -1;
+            }
+            else
+            {
+                strafehud_keys_fwd = 0;
             }
         }
         else // alternatively determine direction by querying pressed keys
         {
             if((strafehud_keys & KEY_FORWARD) && !(strafehud_keys & KEY_BACKWARD))
             {
-                strafehud_fwd = true;
+                strafehud_keys_fwd = 1;
             }
             else if(!(strafehud_keys & KEY_FORWARD) && (strafehud_keys & KEY_BACKWARD))
             {
-                strafehud_fwd = false;
+                strafehud_keys_fwd = -1;
+            }
+            else
+            {
+                strafehud_keys_fwd = 0;
             }
         }
 
@@ -184,22 +197,21 @@ void HUD_StrafeHUD()
                 else
                 {
                     strafehud_wishangle = RAD2DEG * atan2(strafehud_movement_y, strafehud_movement_x);
+                    // wrap the wishangle if it exceeds ±90°
+                    if(fabs(strafehud_wishangle) > 90)
+                    {
+                        if(strafehud_wishangle < 0) strafehud_wishangle += 180;
+                        else strafehud_wishangle -= 180;
+                        strafehud_wishangle = -strafehud_wishangle;
+                    }
                 }
             }
         }
         else // alternatively calculate wishdir by querying pressed keys
         {
-            if(strafehud_keys & KEY_FORWARD)
+            if(strafehud_keys & KEY_FORWARD || strafehud_keys & KEY_BACKWARD)
             {
                 strafehud_wishangle = 45;
-            }
-            else if(strafehud_keys & KEY_BACKWARD)
-            {
-                strafehud_wishangle = 135;
-            }
-            else
-            {
-                strafehud_wishangle = 90;
             }
             if(strafehud_keys & KEY_LEFT)
             {
@@ -207,7 +219,7 @@ void HUD_StrafeHUD()
             }
             else if(!(strafehud_keys & KEY_RIGHT))
             {
-                strafehud_wishangle = 0;
+                strafehud_wishangle = 0; // wraps at 180°
             }
         }
 
@@ -285,19 +297,61 @@ void HUD_StrafeHUD()
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
         {
-            if(!strafehud_fwd) strafehud_wishangle += strafehud_wishangle < 0 ? 180 : strafehud_wishangle > 0 ? -180 : 0;
             if(strafehud_speed > 0)
             {
-                if(!strafehud_fwd) strafehud_view_angle += strafehud_view_angle < 0 ? 180 : strafehud_view_angle > 0 ? -180 : 0;
-                strafehud_angle = strafehud_view_angle - strafehud_vel_angle;
+                // calculate view angle relative to the players current velocity direction
+                strafehud_angle = strafehud_vel_angle - strafehud_view_angle;
 
-                if     (strafehud_angle >  180) strafehud_angle = -360 + strafehud_angle;
-                else if(strafehud_angle < -180) strafehud_angle =  360 + strafehud_angle;
+                // if the angle goes above 180° or below -180° wrap it to the opposite side
+                if (strafehud_angle > 180) strafehud_angle -= 360;
+                else if(strafehud_angle < -180) strafehud_angle += 360;
 
-                strafehud_angle = 180 - strafehud_angle;
-                if(strafehud_angle > 180)
+                // shift the strafe angle by 180° for hud calculations
+                if(strafehud_angle < 0) strafehud_angle += 180;
+                else strafehud_angle -= 180;
+
+                // determine whether the player is strafing forwards or backwards
+                // if the player isn't strafe turning use forwards/backwards keys to determine direction
+                if(!strafehud_strafekeys)
                 {
-                    strafehud_angle = -fabs(360 - strafehud_angle);
+                    if(strafehud_keys_fwd > 0)
+                    {
+                    strafehud_state_fwd = true;
+                    }
+                    else if(strafehud_keys_fwd < 0)
+                    {
+                        strafehud_state_fwd = false;
+                    }
+                }
+                // otherwise determine by examining the strafe angle
+                else
+                {
+                    if(strafehud_wishangle < 0) // detect direction since strafehud_direction is not yet set
+                    {
+                        strafehud_state_fwd = strafehud_angle <= -strafehud_wishangle;
+                    }
+                    else
+                    {
+                        strafehud_state_fwd = strafehud_angle >= -strafehud_wishangle;
+                    }
+                }
+
+                if(strafehud_state_fwd_prev != strafehud_state_fwd)
+                {
+                    strafehud_state_direction_time = time;
+                }
+                strafehud_state_fwd_prev = strafehud_state_fwd;
+
+                if((time - strafehud_state_direction_time) >= strafehud_timeout_direction)
+                {
+                    strafehud_fwd = strafehud_state_fwd;
+                }
+
+                // shift the strafe angle by 180° when strafing backwards
+                if(!strafehud_fwd)
+                {
+                    if(strafehud_angle < 0) strafehud_angle += 180;
+                    else strafehud_angle -= 180;
                 }
 
                 // making the hud less flickery in case of rounding errors
@@ -340,6 +394,13 @@ void HUD_StrafeHUD()
             }
         }
 
+        // invert the wish angle when strafing backwards
+        if(!strafehud_fwd)
+        {
+            strafehud_wishangle = -strafehud_wishangle;
+        }
+
+        // flip angles if v_flipped is enabled
         if(autocvar_v_flipped)
         {
             strafehud_angle = -strafehud_angle;
