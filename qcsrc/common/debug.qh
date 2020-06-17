@@ -335,7 +335,7 @@ STATIC_INIT(TRACE_ENT)
 #endif
 
 
-GENERIC_COMMAND(find, "Search through entities for matching classname", false)
+GENERIC_COMMAND(findent, "Search through entities for matching classname", false)
 {
 	switch (request)
 	{
