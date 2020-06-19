@@ -468,7 +468,9 @@ void Ice_Think(entity this)
 		delete(this);
 		return;
 	}
-	setorigin(this, this.owner.origin - '0 0 16');
+	vector ice_org = this.owner.origin - '0 0 16';
+	if (this.origin != ice_org)
+		setorigin(this, ice_org);
 	this.nextthink = time;
 }
 
@@ -494,6 +496,7 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	entity ice = new(ice);
 	ice.owner = targ;
 	ice.scale = targ.scale;
+	// set_movetype(ice, MOVETYPE_FOLLOW) would rotate the ice model with the player
 	setthink(ice, Ice_Think);
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames

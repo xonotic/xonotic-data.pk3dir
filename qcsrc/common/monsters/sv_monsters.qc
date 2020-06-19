@@ -1166,7 +1166,8 @@ void Monster_Frozen_Think(entity this)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
 		SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
-		this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
+		if (this.iceblock)
+			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
 			WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
