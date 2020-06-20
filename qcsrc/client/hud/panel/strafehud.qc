@@ -1,4 +1,3 @@
-// Name:   StrafeHUD
 // Author: Juhu
 
 #include "strafehud.qh"
@@ -470,7 +469,14 @@ void HUD_StrafeHUD()
             // add a background to the strafe-o-meter
             if(panel_size.x > 0 && panel_size.y > 0)
             {
-                HUD_Panel_DrawProgressBar(panel_pos, panel_size, "progressbar", 1, 0, 0, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                if(!autocvar_hud_panel_strafehud_unstyled)
+                {
+                    HUD_Panel_DrawProgressBar(panel_pos, panel_size, "progressbar", 1, 0, 0, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                }
+                else
+                {
+                    drawfill(panel_pos, panel_size, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                }
             }
         }
 
@@ -522,17 +528,34 @@ void HUD_StrafeHUD()
                     switch_bestangle_offset -= currentangle_offset;
                 }
 
-                // draw acceleration zone
-                HUD_Panel_DrawStrafeHUD_ProgressBar(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                if(!autocvar_hud_panel_strafehud_unstyled)
+                {
+                    // draw acceleration zone
+                    HUD_Panel_DrawStrafeHUD_ProgressBar(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
 
-                // draw odd acceleration zone
-                HUD_Panel_DrawStrafeHUD_ProgressBar(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                    // draw odd acceleration zone
+                    HUD_Panel_DrawStrafeHUD_ProgressBar(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
 
-                // draw overturn area
-                HUD_Panel_DrawStrafeHUD_ProgressBar(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                    // draw overturn area
+                    HUD_Panel_DrawStrafeHUD_ProgressBar(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
 
-                // draw the strafe bar background
-                HUD_Panel_DrawStrafeHUD_ProgressBar(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                    // draw the strafe bar background
+                    HUD_Panel_DrawStrafeHUD_ProgressBar(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                }
+                else
+                {
+                    // draw acceleration zone
+                    HUD_Panel_DrawStrafeHUD_drawfill(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+
+                    // draw odd acceleration zone
+                    HUD_Panel_DrawStrafeHUD_drawfill(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+
+                    // draw overturn area
+                    HUD_Panel_DrawStrafeHUD_drawfill(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+
+                    // draw the strafe bar background
+                    HUD_Panel_DrawStrafeHUD_drawfill(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                }
 
                 // draw the direction indicator caps at the sides of the hud
                 // vertical line
