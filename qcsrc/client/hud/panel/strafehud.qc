@@ -103,6 +103,7 @@ void HUD_StrafeHUD()
 
         // HUD
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
+        float  minspeed                      = autocvar_hud_panel_strafehud_minspeed;
         float  hudangle;
         float  bar_offset;
         float  bar_width;
@@ -287,7 +288,7 @@ void HUD_StrafeHUD()
             wishangle = turnangle;
         }
 
-        autocvar_hud_panel_strafehud_minspeed = autocvar_hud_panel_strafehud_minspeed < 0 ? maxspeed + .1 : autocvar_hud_panel_strafehud_minspeed;
+        minspeed = autocvar_hud_panel_strafehud_minspeed < 0 ? maxspeed + .1 : autocvar_hud_panel_strafehud_minspeed;
 
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
@@ -469,7 +470,7 @@ void HUD_StrafeHUD()
         overturn_width_visible = (hudangle/2 - maxangle) / hudangle * panel_size.x;
 
         // if the strafe bar fills the whole hud panel
-        if(!(speed >= autocvar_hud_panel_strafehud_minspeed) || !(direction != 0))
+        if(!(speed >= minspeed) || !(direction != 0))
         {
             // add a background to the strafe-o-meter
             if(panel_size.x > 0 && panel_size.y > 0)
@@ -486,7 +487,7 @@ void HUD_StrafeHUD()
         }
 
         // mark the ideal strafe angle
-        if(speed >= autocvar_hud_panel_strafehud_minspeed) // only draw indicators if strafing is required to gain speed (or when whatever configured speed is reached)
+        if(speed >= minspeed) // only draw indicators if strafing is required to gain speed (or when whatever configured speed is reached)
         {
             if(direction != 0) // only draw acceleration zones if strafe direction can be determined
             {
