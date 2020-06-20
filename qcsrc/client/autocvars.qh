@@ -340,7 +340,7 @@ float autocvar_hud_panel_strafehud_timeout_air = 0;
 float autocvar_hud_panel_strafehud_timeout_ground = 0.03333333;
 float autocvar_hud_panel_strafehud_timeout_strafe = 0.1;
 float autocvar_hud_panel_strafehud_timeout_direction = 0.5;
-float autocvar_hud_panel_strafehud_indicator_minspeed = -1;
+float autocvar_hud_panel_strafehud_minspeed = -1;
 bool autocvar_hud_panel_strafehud_unstyled = false;
 bool autocvar_hud_panel_timer;
 bool autocvar_hud_panel_timer_increment;
