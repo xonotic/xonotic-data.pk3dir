@@ -561,12 +561,12 @@ void HUD_StrafeHUD()
         // draw the actual strafe angle
         if(!bestangle_anywhere) // player gains speed with strafing
         {
-            if((direction > 0 && angle >= bestangle) ||
-                (direction < 0 && angle <= bestangle))
+            if((direction > 0 && (angle >= bestangle || angle <= -(bestangle + wishangle*2))) ||
+                (direction < 0 && (angle <= bestangle || angle >= -(bestangle + wishangle*2))))
             currentangle_color = autocvar_hud_panel_strafehud_good_color;
         }
 
-        if(fabs(moveangle) > 89.9) // player is overturning
+        if(fabs(moveangle) > 90) // player is overturning
         {
             currentangle_color = autocvar_hud_panel_strafehud_alert_color;
         }
