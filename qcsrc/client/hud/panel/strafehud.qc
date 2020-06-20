@@ -85,10 +85,10 @@ void HUD_StrafeHUD()
         // physics
         bool   onground                      = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
         bool   strafekeys;
-        bool   iswater                       = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
+        bool   is_swimming                   = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
         float  speed                         = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
-        float  maxspeed_crouch_mod           = IS_DUCKED(strafeplayer) && (!iswater || IS_ONGROUND(strafeplayer)) ? .5 : 1;
-        float  maxspeed_water_mod            = iswater ? .7 : 1; // FIXME: water physics are way more complex than this
+        float  maxspeed_crouch_mod           = IS_DUCKED(strafeplayer) && (!is_swimming || IS_ONGROUND(strafeplayer)) ? .5 : 1;
+        float  maxspeed_water_mod            = is_swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
         float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_crouch_mod * maxspeed_water_mod : 320;
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y;
@@ -256,7 +256,7 @@ void HUD_StrafeHUD()
             state_strafekeys_time = time;
         }
         state_strafekeys = strafekeys;
-        if((keys & KEY_FORWARD) || (keys & KEY_BACKWARD) || iswater || autocvar__hud_configure)
+        if((keys & KEY_FORWARD) || (keys & KEY_BACKWARD) || is_swimming || autocvar__hud_configure)
         {
             turn = false;
         }
