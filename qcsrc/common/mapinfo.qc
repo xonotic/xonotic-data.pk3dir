@@ -671,11 +671,8 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 			}
 			else
 			{
-				for (;;)
+				while((s = fgets(fh)))
 				{
-					if (!((s = fgets(fh))))
-						break;
-
 					// catch different sorts of comments
 					if(s == "")                    // empty lines
 						continue;
@@ -1150,7 +1147,7 @@ int MapInfo_CurrentFeatures()
 
 Gametype MapInfo_CurrentGametype()
 {
-	Gametype prev = Gametypes_from(cvar("gamecfg"));
+	Gametype prev = REGISTRY_GET(Gametypes, cvar("gamecfg"));
 	FOREACH(Gametypes, cvar(it.netname) && it != prev, return it);
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }

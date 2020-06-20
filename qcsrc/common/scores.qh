@@ -4,10 +4,11 @@
 
 #define REGISTER_SP(id) REGISTER(Scores, SP, id, m_id, new_pure(PlayerScoreField))
 REGISTRY(Scores, MAX_SCORE);
-#define Scores_from(i) _Scores_from(i, NULL)
 REGISTER_REGISTRY(Scores)
 REGISTRY_SORT(Scores);
 REGISTRY_CHECK(Scores);
+
+REGISTRY_DEFINE_GET(Scores, NULL)
 STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }
 
 /*

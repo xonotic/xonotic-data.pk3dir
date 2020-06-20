@@ -9,7 +9,7 @@ const int SPAWN_PRIO_GOOD_DISTANCE = 10;
 .vector spawnpoint_score;
 float spawnpoint_nag;
 bool SpawnEvent_Send(entity this, entity to, int sf);
-entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, float teamcheck);
+entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, float teamcheck, bool targetcheck);
 entity SelectSpawnPoint(entity this, bool anypoint);
 spawnfunc(info_player_deathmatch);
 void spawnpoint_use(entity this, entity actor, entity trigger);

@@ -280,7 +280,7 @@ spawnfunc(misc_laser)
 
 	this.setactive = laser_setactive;
 
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		// backwards compatibility
 		this.use = laser_use;

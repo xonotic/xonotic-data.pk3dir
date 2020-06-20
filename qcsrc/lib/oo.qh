@@ -39,12 +39,6 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 	this.sourceLoc = _sourceLoc;
 	if (pure) {
 		make_pure(this);
-		#ifdef CSQC
-		setorigin(this, (world.mins + world.maxs) * 0.5);
-		#endif
-		#ifdef SVQC
-        setorigin(this, (world.mins + world.maxs) * 0.5);
-        #endif
 	}
 	return this;
 }

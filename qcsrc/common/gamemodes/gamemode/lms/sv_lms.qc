@@ -160,9 +160,7 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 
 	if(warmup_stage)
 		return false;
-	if(player.frags == FRAGS_SPECTATOR)
-		return true;
-	if(GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
+	if(player.frags == FRAGS_SPECTATOR || GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
 		return true;

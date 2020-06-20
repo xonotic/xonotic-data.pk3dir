@@ -90,7 +90,7 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2autoswitch^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd autoswitch selection\n");
@@ -133,7 +133,7 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2clientversion^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd clientversion version\n");
@@ -158,7 +158,7 @@ void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // inter
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2mv_getpicture^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd mv_getpicture mapid\n");
@@ -248,7 +248,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2wpeditor^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
@@ -285,10 +285,13 @@ void ClientCommand_join(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!game_stopped)
-			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
-			if (joinAllowed(caller))
-				Join(caller);
+			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
+			{
+				if (joinAllowed(caller))
+					Join(caller);
+				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
+					CS(caller).autojoin_checked = -1;
+			}
 
 			return;  // never fall through to usage
 		}
@@ -558,7 +561,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			return;
 		}
 		default:
-			sprint(caller, "Incorrect parameters for ^2selectteam^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selectteam team\n");
@@ -583,7 +586,7 @@ void ClientCommand_selfstuff(entity caller, int request, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2selfstuff^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selfstuff <command>\n");
@@ -617,7 +620,7 @@ void ClientCommand_sentcvar(entity caller, int request, int argc, string command
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2sentcvar^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd sentcvar <cvar>\n");
@@ -688,7 +691,7 @@ void ClientCommand_suggestmap(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2suggestmap^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd suggestmap map\n");
@@ -745,7 +748,7 @@ void ClientCommand_tell(entity caller, int request, int argc, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2tell^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd tell client <message>\n");
@@ -791,7 +794,7 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2voice^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd voice messagetype <soundname>\n");

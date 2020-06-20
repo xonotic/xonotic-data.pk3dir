@@ -3,6 +3,12 @@
 #include <common/weapons/_all.qh>
 #include <common/scores.qh>
 
+vector OFFSET_CURSOR = '0 0 0';
+vector SIZE_CURSOR = '32 32 0';
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
+void draw_cursor_normal(vector pos, vector col, float a);
+void LoadMenuSkinValues();
+
 void Hud_Dynamic_Frame();
 
 bool HUD_Radar_Clickable();
@@ -11,18 +17,24 @@ bool HUD_WouldShowCursor();
 bool QuickMenu_IsOpened();
 
 REGISTRY(hud_panels, BITS(6))
-#define hud_panels_from(i) _hud_panels_from(i, NULL)
 REGISTER_REGISTRY(hud_panels)
 
-#define REGISTER_HUD_PANEL(id, draw_func, configflags, showflags) \
+REGISTRY_DEFINE_GET(hud_panels, NULL)
+
+#define _REGISTER_HUD_PANEL(id, draw_func, export_func, configflags, showflags) \
 	void draw_func(); \
+	void export_func(int fh); \
 	REGISTER(hud_panels, HUD_PANEL, id, m_id, new_pure(hud_panel)) { \
 		this.panel_id = this.m_id; \
 		this.panel_draw = draw_func; \
+		this.panel_export = export_func; \
 		this.panel_name = strzone(strtolower(#id)); \
 		this.panel_configflags = configflags; \
 		this.panel_showflags = showflags; \
 	}
+
+#define REGISTER_HUD_PANEL(id, draw_func, configflags, showflags) \
+	_REGISTER_HUD_PANEL(id, draw_func, draw_func##_Export, configflags, showflags)
 
 #define HUD_PANEL(NAME) HUD_PANEL_##NAME
 
@@ -38,7 +50,7 @@ REGISTER_REGISTRY(hud_panels)
 		); \
 MACRO_END
 
-int panel_order[hud_panels_MAX];
+int panel_order[REGISTRY_MAX(hud_panels)];
 string hud_panelorder_prev;
 
 bool hud_draw_maximized;
@@ -53,7 +65,7 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void HUD_Radar_Hide_Maximized();
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect);
-vector HUD_Get_Num_Color (float hp, float maxvalue);
+vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink);
 void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha);
 void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp);
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag);
@@ -84,7 +96,7 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 4;
 float scoreboard_bottom;
-int weapon_accuracy[Weapons_MAX];
+int weapon_accuracy[REGISTRY_MAX(Weapons)];
 
 entity complain_weapon;
 int complain_weapon_type;
@@ -149,6 +161,7 @@ float panel_bg_padding;
 string panel_bg_padding_str;
 
 classfield(HUDPanel) .void() panel_draw;
+classfield(HUDPanel) .void(int fh) panel_export;
 
 // chat panel can be reduced / moved while the mapvote is active
 // let know the mapvote panel about chat pos and size

@@ -114,7 +114,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
     ATTRIB(Client, wasplayer, bool, this.wasplayer);
     ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);
-    ATTRIB(Client, autojoin_checked, bool, this.wasplayer);
+    ATTRIB(Client, autojoin_checked, int, this.wasplayer);
 
     // networked cvars
 
@@ -283,6 +283,7 @@ void ClientInit_misc(entity this);
 
 int GetPlayerLimit();
 
+const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this);
 void Join(entity this);
 

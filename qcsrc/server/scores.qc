@@ -5,6 +5,7 @@
 #include <server/g_world.qh>
 #include <server/miscfunctions.qh>
 #include <server/mutators/_mod.qh>
+#include <server/round_handler.qh>
 #include <common/net_linked.qh>
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
@@ -108,7 +109,9 @@ float TeamScore_AddToTeam(int t, float scorefield, float score)
 	entity s;
 
 	if(game_stopped)
+	{
 		score = 0;
+	}
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
 	if(t <= 0 || t >= 16)
@@ -334,9 +337,10 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score, player);
 	score = M_ARGV(1, float);
 
-	if(game_stopped)
-	if(!mutator_returnvalue)
+	if(!mutator_returnvalue && game_stopped)
+	{
 		score = 0;
+	}
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
 	entity s = CS(player).scorekeeper;

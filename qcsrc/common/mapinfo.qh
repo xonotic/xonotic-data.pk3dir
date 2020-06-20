@@ -101,9 +101,10 @@ CLASS(Gametype, Object)
 ENDCLASS(Gametype)
 
 REGISTRY(Gametypes, 24)
-#define Gametypes_from(i) _Gametypes_from(i, NULL)
 REGISTER_REGISTRY(Gametypes)
 REGISTRY_CHECK(Gametypes)
+
+REGISTRY_DEFINE_GET(Gametypes, NULL)
 #define REGISTER_GAMETYPE(NAME, inst) REGISTER(Gametypes, MAPINFO_TYPE, NAME, m_id, inst)
 
 #define IS_GAMETYPE(NAME) (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
