@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-08 06:05+0000\n"
+"PO-Revision-Date: 2020-06-19 13:24+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -3442,12 +3442,12 @@ msgstr "^BGУ %s^K1 завяли уши от собственной игры @!#
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
 msgid "^BG%s%s^K1 has been sublimated by ^BG%s^K1's Vaporizer%s%s"
-msgstr "^BG%s%s^K1 преобразован в пар Испарителем ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был сублимирован Испарителем ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:509
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr "^BG%s%s^K1 испарён с помощью Вихря ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был испарён с помощью Вихря ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:528
 msgid "^F4You are now alone!"
