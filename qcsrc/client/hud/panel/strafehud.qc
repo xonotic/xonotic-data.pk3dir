@@ -114,7 +114,6 @@ void HUD_StrafeHUD()
         float  bestangle_offset;
         float  bestangle_width;
         float  switch_bestangle_offset;
-        float  switch_bestangle_width;
         float  accelzone_offset;
         float  accelzone_width;
         float  odd_accelzone_offset;
@@ -441,9 +440,15 @@ void HUD_StrafeHUD()
         // best strafe acceleration angle
         bestangle_offset        =  bestangle/hudangle * panel_size.x + panel_size.x/2;
         switch_bestangle_offset = -bestangle/hudangle * panel_size.x + panel_size.x/2;
-        bestangle_width = panel_size.x * .01;
-        if(bestangle_width < 1) bestangle_width = 1;
-        switch_bestangle_width = bestangle_width;
+        if(autocvar_hud_panel_strafehud_indicators)
+        {
+            bestangle_width = panel_size.x * .01;
+            if(bestangle_width < 1) bestangle_width = 1;
+        }
+        else
+        {
+            bestangle_width = 0;
+        }
         // remove indicator width from offset
         if(direction < 0)
         {
@@ -451,7 +456,7 @@ void HUD_StrafeHUD()
         }
         else
         {
-            switch_bestangle_offset -= switch_bestangle_width;
+            switch_bestangle_offset -= bestangle_width;
         }
         // direction indicator
         direction_size_vertical.x = panel_size.x * .0075;
@@ -565,15 +570,21 @@ void HUD_StrafeHUD()
                 // bottom horizontal line
                 drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 
-                // draw best angles for acceleration
-                HUD_Panel_DrawStrafeHUD_drawfill(switch_bestangle_offset, switch_bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
-                HUD_Panel_DrawStrafeHUD_drawfill(bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_color, 1, hidden_size);
+                if(autocvar_hud_panel_strafehud_indicators)
+                {
+                    // draw best angles for acceleration
+                    HUD_Panel_DrawStrafeHUD_drawfill(switch_bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
+                    HUD_Panel_DrawStrafeHUD_drawfill(bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_color, 1, hidden_size);
+                }
             }
             else
             {
-                // draw best angles for acceleration
-                HUD_Panel_DrawStrafeHUD_drawfill(switch_bestangle_offset, switch_bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
-                HUD_Panel_DrawStrafeHUD_drawfill(bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
+                if(autocvar_hud_panel_strafehud_indicators)
+                {
+                    // draw best angles for acceleration
+                    HUD_Panel_DrawStrafeHUD_drawfill(switch_bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
+                    HUD_Panel_DrawStrafeHUD_drawfill(bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
+                }
             }
         }
         else
