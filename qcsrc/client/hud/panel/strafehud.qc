@@ -12,6 +12,13 @@
 #include <common/physics/player.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
+// StrafeHUD (#25)
+
+void HUD_StrafeHUD_Export(int fh)
+{
+    // allow saving cvars that aesthetically change the panel into hud skin files
+}
+
 bool fwd = true;
 bool state_fwd = true;
 bool state_fwd_prev = true;
