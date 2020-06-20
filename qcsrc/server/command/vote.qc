@@ -835,7 +835,7 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			{
 				print_to(caller, "^1Only connected clients can vote.");
 			}
-			else if (timeout_status)
+			else if (timeout_status && vote_command != "timein")
 			{
 				print_to(caller, "^1You can not call a vote while a timeout is active.");
 			}

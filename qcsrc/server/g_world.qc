@@ -2213,6 +2213,11 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
+
+		// if a timeout is active, reset the slowmo value to normal
+		if(timeout_status == TIMEOUT_ACTIVE)
+			cvar_set("slowmo", ftos(orig_slowmo));
+
 		LOG_TRACE("Saving persistent data...");
 		Ban_SaveBans();
 
