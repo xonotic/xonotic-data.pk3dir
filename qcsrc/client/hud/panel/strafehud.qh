@@ -1,2 +1,4 @@
 #pragma once
 #include "../panel.qh"
+void HUD_Panel_DrawStrafeHUD_ProgressBar(float, float, vector, float, float);
+void HUD_Panel_DrawStrafeHUD_drawfill(float, float, vector, float, float);
