@@ -103,13 +103,14 @@ void HUD_StrafeHUD()
 
         // HUD
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
-        float  minspeed                      = autocvar_hud_panel_strafehud_minspeed;
+        float  minspeed;
         float  hudangle;
         float  bar_offset;
         float  bar_width;
         vector currentangle_color            = autocvar_hud_panel_strafehud_warning_color;
         float  currentangle_offset;
         vector currentangle_size             = '0 0 0';
+        bool   show_indicators;
         float  bestangle;
         bool   bestangle_anywhere            = false;
         float  bestangle_offset;
@@ -288,7 +289,8 @@ void HUD_StrafeHUD()
             wishangle = turnangle;
         }
 
-        minspeed = autocvar_hud_panel_strafehud_minspeed < 0 ? maxspeed + .1 : autocvar_hud_panel_strafehud_minspeed;
+        minspeed = autocvar_hud_panel_strafehud_indicator_minspeed < 0 ? maxspeed + .1 : autocvar_hud_panel_strafehud_indicator_minspeed;
+        show_indicators = (autocvar_hud_panel_strafehud_indicators && (speed >= minspeed));
 
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
@@ -441,7 +443,7 @@ void HUD_StrafeHUD()
         // best strafe acceleration angle
         bestangle_offset        =  bestangle/hudangle * panel_size.x + panel_size.x/2;
         switch_bestangle_offset = -bestangle/hudangle * panel_size.x + panel_size.x/2;
-        if(autocvar_hud_panel_strafehud_indicators)
+        if(show_indicators)
         {
             bestangle_width = panel_size.x * .01;
             if(bestangle_width < 1) bestangle_width = 1;
@@ -469,122 +471,102 @@ void HUD_StrafeHUD()
         overturn_width = 180/hudangle * panel_size.x;
         overturn_width_visible = (hudangle/2 - maxangle) / hudangle * panel_size.x;
 
-        // the strafe bar fills the whole hud panel
-        if(speed < minspeed)
+        // mark the ideal strafe angle
+        if(direction < 0) // turning left
         {
-            // add a background to the strafe-o-meter
-            if(panel_size.x > 0 && panel_size.y > 0)
-            {
-                if(!autocvar_hud_panel_strafehud_unstyled)
-                {
-                    HUD_Panel_DrawProgressBar(panel_pos, panel_size, "progressbar", 1, 0, 0, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                }
-                else
-                {
-                    drawfill(panel_pos, panel_size, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                }
-            }
+            // calculate zone in which strafe acceleration happens
+            accelzone_width = bestangle_offset;
+            // calculate offset of overturn area
+            overturn_offset = overturn_width_visible - overturn_width;
+            // move/adjust acceleration zone
+            accelzone_offset = overturn_width_visible;
+            accelzone_width -= overturn_width_visible;
+            // calculate zone in which strafe acceleration could also happen without changing wishdir
+            odd_accelzone_width = accelzone_width + bestangle_width;
+            odd_accelzone_offset = overturn_offset - odd_accelzone_width;
+            // calculate the background of the strafe-o-meter
+            bar_offset = bestangle_offset + bestangle_width;
+            bar_width = 360/hudangle * panel_size.x - bestangle_width - accelzone_width - odd_accelzone_width - overturn_width;
+        }
+        else // turning right or moving forward
+        {
+            // calculate zone in which strafe acceleration happens
+            accelzone_offset = bestangle_offset + bestangle_width;
+            accelzone_width = panel_size.x - accelzone_offset;
+            // calculate offset of overturn area
+            overturn_offset = panel_size.x - overturn_width_visible;
+            // adjust acceleration zone
+            accelzone_width -= overturn_width_visible;
+            // calculate zone in which strafe acceleration could also happen without changing wishdir
+            odd_accelzone_width = accelzone_width + bestangle_width;
+            odd_accelzone_offset = overturn_offset + overturn_width;
+            // calculate the background of the strafe-o-meter
+            bar_offset = odd_accelzone_offset + odd_accelzone_width;
+            bar_width = 360/hudangle * panel_size.x - bestangle_width - accelzone_width - odd_accelzone_width - overturn_width;
         }
 
-        // mark the ideal strafe angle
-        if(speed >= minspeed) // only draw indicators if strafing is required to gain speed (or when whatever configured speed is reached)
+        if(mode == 0)
         {
-            if(direction < 0) // turning left
-            {
-                // calculate zone in which strafe acceleration happens
-                accelzone_width = bestangle_offset;
-                // calculate offset of overturn area
-                overturn_offset = overturn_width_visible - overturn_width;
-                // move/adjust acceleration zone
-                accelzone_offset = overturn_width_visible;
-                accelzone_width -= overturn_width_visible;
-                // calculate zone in which strafe acceleration could also happen without changing wishdir
-                odd_accelzone_width = accelzone_width + bestangle_width;
-                odd_accelzone_offset = overturn_offset - odd_accelzone_width;
-                // calculate the background of the strafe-o-meter
-                bar_offset = bestangle_offset + bestangle_width;
-                bar_width = 360/hudangle * panel_size.x - bestangle_width - accelzone_width - odd_accelzone_width - overturn_width;
-            }
-            else // turning right or moving forward
-            {
-                // calculate zone in which strafe acceleration happens
-                accelzone_offset = bestangle_offset + bestangle_width;
-                accelzone_width = panel_size.x - accelzone_offset;
-                // calculate offset of overturn area
-                overturn_offset = panel_size.x - overturn_width_visible;
-                // adjust acceleration zone
-                accelzone_width -= overturn_width_visible;
-                // calculate zone in which strafe acceleration could also happen without changing wishdir
-                odd_accelzone_width = accelzone_width + bestangle_width;
-                odd_accelzone_offset = overturn_offset + overturn_width;
-                // calculate the background of the strafe-o-meter
-                bar_offset = odd_accelzone_offset + odd_accelzone_width;
-                bar_width = 360/hudangle * panel_size.x - bestangle_width - accelzone_width - odd_accelzone_width - overturn_width;
-            }
+            bar_offset -= currentangle_offset;
+            accelzone_offset -= currentangle_offset;
+            odd_accelzone_offset -= currentangle_offset;
+            overturn_offset -= currentangle_offset;
+            bestangle_offset -= currentangle_offset;
+            switch_bestangle_offset -= currentangle_offset;
+        }
 
-            if(mode == 0)
-            {
-                bar_offset -= currentangle_offset;
-                accelzone_offset -= currentangle_offset;
-                odd_accelzone_offset -= currentangle_offset;
-                overturn_offset -= currentangle_offset;
-                bestangle_offset -= currentangle_offset;
-                switch_bestangle_offset -= currentangle_offset;
-            }
+        if(!autocvar_hud_panel_strafehud_unstyled)
+        {
+            // draw acceleration zone
+            HUD_Panel_DrawStrafeHUD_ProgressBar(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
 
-            if(!autocvar_hud_panel_strafehud_unstyled)
-            {
-                // draw acceleration zone
-                HUD_Panel_DrawStrafeHUD_ProgressBar(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+            // draw odd acceleration zone
+            HUD_Panel_DrawStrafeHUD_ProgressBar(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
 
-                // draw odd acceleration zone
-                HUD_Panel_DrawStrafeHUD_ProgressBar(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+            // draw overturn area
+            HUD_Panel_DrawStrafeHUD_ProgressBar(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
 
-                // draw overturn area
-                HUD_Panel_DrawStrafeHUD_ProgressBar(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
-
-                // draw the strafe bar background
-                HUD_Panel_DrawStrafeHUD_ProgressBar(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
-            }
-            else
-            {
-                // draw acceleration zone
-                HUD_Panel_DrawStrafeHUD_drawfill(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
-
-                // draw odd acceleration zone
-                HUD_Panel_DrawStrafeHUD_drawfill(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
-
-                // draw overturn area
-                HUD_Panel_DrawStrafeHUD_drawfill(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
-
-                // draw the strafe bar background
-                HUD_Panel_DrawStrafeHUD_drawfill(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
-            }
-
-            if(direction != 0)
-            {
-                // draw the direction indicator caps at the sides of the hud
-                // vertical line
-                drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x), direction_size_vertical, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-                // top horizontal line
-                drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) - eY * direction_size_horizontal.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-                // bottom horizontal line
-                drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-            }
-
-            if(autocvar_hud_panel_strafehud_indicators)
-            {
-                // draw best angles for acceleration
-                vector indicator_color;
-                // both indicators are yellow if no direction can be determined
-                indicator_color = direction != 0 ? autocvar_hud_panel_strafehud_indicator_color : autocvar_hud_panel_strafehud_indicator_switch_color;
-                HUD_Panel_DrawStrafeHUD_drawfill(switch_bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
-                HUD_Panel_DrawStrafeHUD_drawfill(bestangle_offset, bestangle_width, indicator_color, 1, hidden_size);
-            }
+            // draw the strafe bar background
+            HUD_Panel_DrawStrafeHUD_ProgressBar(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
         }
         else
         {
-            bestangle_anywhere = true; // no indicators, moving forward should suffice to gain speed
+            // draw acceleration zone
+            HUD_Panel_DrawStrafeHUD_drawfill(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+
+            // draw odd acceleration zone
+            HUD_Panel_DrawStrafeHUD_drawfill(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+
+            // draw overturn area
+            HUD_Panel_DrawStrafeHUD_drawfill(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+
+            // draw the strafe bar background
+            HUD_Panel_DrawStrafeHUD_drawfill(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+        }
+
+        if(direction != 0)
+        {
+            // draw the direction indicator caps at the sides of the hud
+            // vertical line
+            drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x), direction_size_vertical, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+            // top horizontal line
+            drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) - eY * direction_size_horizontal.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+            // bottom horizontal line
+            drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+        }
+
+        if(show_indicators) // only draw indicators if enabled and minspeed is reached
+        {
+            // draw best angles for acceleration
+            vector indicator_color;
+            // both indicators are yellow if no direction can be determined
+            indicator_color = direction != 0 ? autocvar_hud_panel_strafehud_indicator_color : autocvar_hud_panel_strafehud_indicator_switch_color;
+            HUD_Panel_DrawStrafeHUD_drawfill(switch_bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
+            HUD_Panel_DrawStrafeHUD_drawfill(bestangle_offset, bestangle_width, indicator_color, 1, hidden_size);
+        }
+        if(speed < (maxspeed + .1))
+        {
+            bestangle_anywhere = true; // moving forward should suffice to gain speed
         }
 
         // draw the actual strafe angle
@@ -600,7 +582,7 @@ void HUD_StrafeHUD()
             currentangle_color = autocvar_hud_panel_strafehud_alert_color;
         }
 
-        if(speed <= (maxspeed + .1) && currentangle_color != autocvar_hud_panel_strafehud_alert_color) // player gains speed without strafing
+        if(bestangle_anywhere && currentangle_color != autocvar_hud_panel_strafehud_alert_color) // player gains speed without strafing
         {
             currentangle_color = autocvar_hud_panel_strafehud_good_color;
         }
