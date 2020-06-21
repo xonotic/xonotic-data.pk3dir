@@ -104,6 +104,7 @@ void HUD_StrafeHUD()
         // HUD
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
         float  minspeed;
+        bool   straight_overturn             = false;
         float  hudangle;
         float  bar_offset;
         float  bar_width;
@@ -359,12 +360,7 @@ void HUD_StrafeHUD()
                 // making the hud less flickery in case of rounding errors
                 if(angle > 179.9 || angle < -179.9)
                 {
-                    currentangle_color = autocvar_hud_panel_strafehud_alert_color;
-                    angle = 0;
-                }
-                if(angle < .1 && angle > -.1)
-                {
-                    angle = 0;
+                    straight_overturn = true;
                 }
             }
             else
@@ -417,17 +413,18 @@ void HUD_StrafeHUD()
         }
         else
         {
-            direction = moveangle > 0 ? 1 : moveangle < 0 ? -1 : 0;
+            direction = (angle > .1 && angle < 179.9) ? 1 : angle < -.1 && angle > -179.9 ? -1 : 0; // little margin to prevent the direction caps from flickering between left and right
         }
 
-        // how much is hidden by the current hud angle
-        hidden_angle = 360 - hudangle;
-        hidden_size = hidden_angle / hudangle * panel_size.x;
         // decelerating at this angle
         maxangle = 90 - fabs(wishangle);
         // best angle to strafe at
         bestangle = (speed > maxspeed ? acos(maxspeed / speed) : 0) * RAD2DEG * (direction < 0 ? -1 : 1) - wishangle;
+
         // various offsets and size calculations of hud indicator elements
+        // how much is hidden by the current hud angle
+        hidden_angle = 360 - hudangle;
+        hidden_size = hidden_angle / hudangle * panel_size.x;
         // current angle
         currentangle_size.x = panel_size.x * .005;
         if(currentangle_size.x < 1) currentangle_size.x = 1;
@@ -581,20 +578,16 @@ void HUD_StrafeHUD()
         {
             currentangle_color = autocvar_hud_panel_strafehud_alert_color;
         }
-
-        if(bestangle_anywhere && currentangle_color != autocvar_hud_panel_strafehud_alert_color) // player gains speed without strafing
+        else if(bestangle_anywhere) // player gains speed without strafing
         {
             currentangle_color = autocvar_hud_panel_strafehud_good_color;
         }
 
-        if(mode == 0)
+        if(mode == 0 || straight_overturn)
         {
-            drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (panel_size.x/2 - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            currentangle_offset = panel_size.x/2;
         }
-        else
-        {
-            drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-        }
+        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
     }
 }
 
