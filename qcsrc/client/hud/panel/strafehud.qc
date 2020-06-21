@@ -103,6 +103,8 @@ void HUD_StrafeHUD()
 
         // HUD
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
+        float  antiflicker_angle             = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
+        float  antiflicker_speed             = max(0, autocvar_hud_panel_strafehud_antiflicker_speed);
         float  minspeed;
         bool   straight_overturn             = false;
         float  hudangle;
@@ -286,11 +288,11 @@ void HUD_StrafeHUD()
         }
         if(turn)
         {
-            maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer); // no crouching here because it doesn't affect air strafing
+            maxspeed = PHYS_MAXAIRSTRAFESPEED(strafeplayer); // no modifiers here because they don't affect air strafing
             wishangle = turnangle;
         }
 
-        minspeed = autocvar_hud_panel_strafehud_indicator_minspeed < 0 ? maxspeed + .1 : autocvar_hud_panel_strafehud_indicator_minspeed;
+        minspeed = autocvar_hud_panel_strafehud_indicator_minspeed < 0 ? maxspeed + antiflicker_speed : autocvar_hud_panel_strafehud_indicator_minspeed;
         show_indicators = (autocvar_hud_panel_strafehud_indicators && (speed >= minspeed));
 
         // get current strafing angle ranging from -180° to +180°
@@ -357,8 +359,8 @@ void HUD_StrafeHUD()
                     else angle -= 180;
                 }
 
-                // making the hud less flickery in case of rounding errors
-                if(angle > 179.9 || angle < -179.9)
+                // don't make the angle indicator switch side too much at ±180° if anti flicker is turned on
+                if(angle > (180 - antiflicker_angle) || angle < (-180 + antiflicker_angle))
                 {
                     straight_overturn = true;
                 }
@@ -413,7 +415,7 @@ void HUD_StrafeHUD()
         }
         else
         {
-            direction = (angle > .1 && angle < 179.9) ? 1 : angle < -.1 && angle > -179.9 ? -1 : 0; // little margin to prevent the direction caps from flickering between left and right
+            direction = (angle > antiflicker_angle && angle < (180 - antiflicker_angle)) ? 1 : (angle < -antiflicker_angle && angle > (-180 + antiflicker_angle)) ? -1 : 0;
         }
 
         // decelerating at this angle
@@ -581,7 +583,7 @@ void HUD_StrafeHUD()
             }
         }
 
-        if(speed < (maxspeed + .1) && speed > 0)
+        if(speed < (maxspeed + antiflicker_speed) && speed > 0)
         {
             bestangle_anywhere = true; // moving forward should suffice to gain speed
         }
