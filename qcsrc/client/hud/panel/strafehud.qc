@@ -347,7 +347,7 @@ void HUD_StrafeHUD()
                 }
                 state_fwd_prev = state_fwd;
 
-                if((time - state_direction_time) >= autocvar_hud_panel_strafehud_timeout_direction) // timeout when changing between forwards and backwards strafe
+                if((time - state_direction_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < maxspeed) // timeout when changing between forwards and backwards strafe
                 {
                     fwd = state_fwd;
                 }
