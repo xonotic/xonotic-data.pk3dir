@@ -428,7 +428,7 @@ void HUD_StrafeHUD()
         hidden_angle = 360 - hudangle;
         hidden_size = hidden_angle / hudangle * panel_size.x;
         // current angle
-        currentangle_size.x = panel_size.x * .005;
+        currentangle_size.x = panel_size.x * autocvar_hud_panel_strafehud_angle_width;
         if(currentangle_size.x < 1) currentangle_size.x = 1;
         if(mode == 0)
         {
@@ -438,13 +438,14 @@ void HUD_StrafeHUD()
         {
             currentangle_offset = bound(-hudangle/2, angle, hudangle/2)/hudangle * panel_size.x + panel_size.x/2;
         }
-        currentangle_size.y = panel_size.y * 1.5;
+        currentangle_size.y = panel_size.y * autocvar_hud_panel_strafehud_angle_height;
+        if(currentangle_size.y < 1) currentangle_size.y = 1;
         // best strafe acceleration angle
         bestangle_offset        =  bestangle/hudangle * panel_size.x + panel_size.x/2;
         switch_bestangle_offset = -bestangle/hudangle * panel_size.x + panel_size.x/2;
         if(show_indicators)
         {
-            bestangle_width = panel_size.x * .01;
+            bestangle_width = panel_size.x * autocvar_hud_panel_strafehud_indicator_width;
             if(bestangle_width < 1) bestangle_width = 1;
         }
         else
@@ -461,7 +462,7 @@ void HUD_StrafeHUD()
             switch_bestangle_offset -= bestangle_width;
         }
         // direction indicator
-        direction_size_vertical.x = panel_size.x * .0075;
+        direction_size_vertical.x = panel_size.x * autocvar_hud_panel_strafehud_direction_width;
         if(direction_size_vertical.x < 1) direction_size_vertical.x = 1;
         direction_size_vertical.y = panel_size.y;
         direction_size_horizontal.x = direction_size_vertical.x * 3;
