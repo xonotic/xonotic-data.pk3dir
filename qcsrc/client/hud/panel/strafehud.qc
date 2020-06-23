@@ -375,26 +375,17 @@ void HUD_StrafeHUD()
         }
         else // simulate turning for HUD setup
         {
-            if(autocvar__hud_panel_strafehud_center)
+            if(autocvar__hud_panel_strafehud_demo && ((time - demo_time) >= .025))
             {
-                angle = demo_angle = 0;
-                demo_time = 0;
-                wishangle = 0;
-            }
-            else
-            {
-                if(autocvar__hud_panel_strafehud_demo && ((time - demo_time) >= .025))
+                demo_time = time;
+                demo_angle += demo_direction;
+                if(fabs(demo_angle) >= 55)
                 {
-                    demo_time = time;
-                    demo_angle += demo_direction;
-                    if(fabs(demo_angle) >= 55)
-                    {
-                        demo_direction = -demo_direction;
-                    }
+                    demo_direction = -demo_direction;
                 }
-                angle = demo_angle;
-                wishangle = 45 * (demo_angle > 0 ? 1 : -1);
             }
+            angle = demo_angle;
+            wishangle = 45 * (demo_angle > 0 ? 1 : -1);
         }
 
         // invert the wish angle when strafing backwards

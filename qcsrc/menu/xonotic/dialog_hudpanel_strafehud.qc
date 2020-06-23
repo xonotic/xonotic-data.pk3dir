@@ -7,6 +7,14 @@
 #include "textlabel.qh"
 #include "textslider.qh"
 
+void StrafeHUD_CenterPanel(entity btn, entity me)
+{
+    vector size = stov(str_cvar("hud_panel_strafehud_size"));
+    vector pos = stov(str_cvar("hud_panel_strafehud_pos"));
+    pos.x = 0.5 - size.x / 2;
+    cvar_set("hud_panel_strafehud_pos", strcat(ftos(pos.x), " ", ftos(pos.y)));
+}
+
 void StrafeHUD_ColorReset(entity btn, entity me)
 {
     cvar_set("hud_panel_strafehud_bar_color", cvar_defstring("hud_panel_strafehud_bar_color"));
@@ -42,16 +50,17 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
             e.configureXonoticTextSliderValues(e);
     me.TR(me);
         me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_demo", _("Demo mode")));
-            setDependentStringNotEqual(e, "_hud_panel_strafehud_center", "1");
 
         me.TDempty(me, 0.4);
         me.TD(me, 1, 0.6, e = makeXonoticTextLabel(0, _("Range:")));
         me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 360, 5, "hud_panel_strafehud_angle"));
     me.TR(me);
-        me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_center", _("Center angle")));
+        me.TD(me, 1, 1.9, e = makeXonoticButton(_("Center StrafeHUD"), '0 0 0'));
+            e.onClick = StrafeHUD_CenterPanel;
+            e.onClickEntity = me;
 
-        me.TDempty(me, 0.4);
-        me.TD(me, 1, 2.4, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
+        me.TDempty(me, 0.2);
+        me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
             e.onClick = StrafeHUD_ColorReset;
             e.onClickEntity = me;
     me.TR(me);
