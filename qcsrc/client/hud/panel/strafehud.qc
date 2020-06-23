@@ -567,13 +567,19 @@ void HUD_StrafeHUD()
 
             if(direction != 0)
             {
+                bool indicator_direction = direction < 0;
+                // invert left/right if strafing backwards
+                if(fwd == false)
+                {
+                    indicator_direction = !indicator_direction;
+                }
                 // draw the direction indicator caps at the sides of the hud
                 // vertical line
-                drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x), direction_size_vertical, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+                drawfill(panel_pos + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x), direction_size_vertical, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
                 // top horizontal line
-                drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) - eY * direction_size_horizontal.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+                drawfill(panel_pos + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) - eY * direction_size_horizontal.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
                 // bottom horizontal line
-                drawfill(panel_pos + eX * (direction < 0 ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+                drawfill(panel_pos + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, panel_fg_alpha, DRAWFLAG_NORMAL);
             }
 
             if(show_indicators) // only draw indicators if enabled and minspeed is reached
