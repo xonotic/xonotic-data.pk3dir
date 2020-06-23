@@ -349,7 +349,7 @@ void HUD_StrafeHUD()
                 }
                 state_fwd_prev = state_fwd;
 
-                if((time - state_fwd_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < maxspeed || strafekeys) // timeout when changing between forwards and backwards movement
+                if((time - state_fwd_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < maxspeed || (strafekeys && mode == 0)) // timeout when changing between forwards and backwards movement
                 {
                     fwd = state_fwd;
                 }
