@@ -24,6 +24,7 @@ bool state_fwd_prev = true;
 int direction = 0;
 bool state_direction = true;
 bool state_direction_prev = true;
+float hidden_width;
 float demo_angle = -37;
 float demo_direction = 1;
 float demo_time = 0;
@@ -129,8 +130,6 @@ void HUD_StrafeHUD()
         float  overturn_offset;
         float  overturn_width;
         float  overturn_width_visible;
-        float  hidden_angle;
-        float  hidden_size;
         vector direction_size_vertical       = '0 0 0';
         vector direction_size_horizontal     = '0 0 0';
         float  maxangle;
@@ -435,8 +434,7 @@ void HUD_StrafeHUD()
 
         // various offsets and size calculations of hud indicator elements
         // how much is hidden by the current hud angle
-        hidden_angle = 360 - hudangle;
-        hidden_size = hidden_angle / hudangle * panel_size.x;
+        hidden_width = (360 - hudangle) / hudangle * panel_size.x;
         // current angle
         currentangle_size.x = panel_size.x * autocvar_hud_panel_strafehud_angle_width;
         if(currentangle_size.x < 1) currentangle_size.x = 1;
@@ -546,30 +544,30 @@ void HUD_StrafeHUD()
             if(!autocvar_hud_panel_strafehud_unstyled)
             {
                 // draw acceleration zone
-                HUD_Panel_DrawStrafeHUD_ProgressBar(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                HUD_Panel_DrawStrafeHUD_ProgressBar(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha);
 
                 // draw odd acceleration zone
-                HUD_Panel_DrawStrafeHUD_ProgressBar(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                HUD_Panel_DrawStrafeHUD_ProgressBar(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha);
 
                 // draw overturn area
-                HUD_Panel_DrawStrafeHUD_ProgressBar(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                HUD_Panel_DrawStrafeHUD_ProgressBar(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha);
 
                 // draw the strafe bar background
-                HUD_Panel_DrawStrafeHUD_ProgressBar(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                HUD_Panel_DrawStrafeHUD_ProgressBar(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha);
             }
             else
             {
                 // draw acceleration zone
-                HUD_Panel_DrawStrafeHUD_drawfill(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                HUD_Panel_DrawStrafeHUD_drawfill(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha);
 
                 // draw odd acceleration zone
-                HUD_Panel_DrawStrafeHUD_drawfill(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                HUD_Panel_DrawStrafeHUD_drawfill(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha);
 
                 // draw overturn area
-                HUD_Panel_DrawStrafeHUD_drawfill(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                HUD_Panel_DrawStrafeHUD_drawfill(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha);
 
                 // draw the strafe bar background
-                HUD_Panel_DrawStrafeHUD_drawfill(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, hidden_size);
+                HUD_Panel_DrawStrafeHUD_drawfill(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha);
             }
 
             if(direction != 0)
@@ -589,8 +587,8 @@ void HUD_StrafeHUD()
                 vector indicator_color;
                 // both indicators are yellow if no direction can be determined
                 indicator_color = direction != 0 ? autocvar_hud_panel_strafehud_indicator_color : autocvar_hud_panel_strafehud_indicator_switch_color;
-                HUD_Panel_DrawStrafeHUD_drawfill(switch_bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, hidden_size);
-                HUD_Panel_DrawStrafeHUD_drawfill(bestangle_offset, bestangle_width, indicator_color, 1, hidden_size);
+                HUD_Panel_DrawStrafeHUD_drawfill(switch_bestangle_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1);
+                HUD_Panel_DrawStrafeHUD_drawfill(bestangle_offset, bestangle_width, indicator_color, 1);
             }
         }
 
@@ -625,7 +623,7 @@ void HUD_StrafeHUD()
 }
 
 // functions to make hud elements align perfectly in the hud area
-void HUD_Panel_DrawStrafeHUD_ProgressBar(float offset, float width, vector color, float alpha, float hidden)
+void HUD_Panel_DrawStrafeHUD_ProgressBar(float offset, float width, vector color, float alpha)
 {
     float mirror_offset, mirror_width;
     vector size = panel_size;
@@ -634,14 +632,14 @@ void HUD_Panel_DrawStrafeHUD_ProgressBar(float offset, float width, vector color
     if(offset < 0)
     {
         mirror_width = min(fabs(offset), width);
-        mirror_offset = panel_size.x + hidden - fabs(offset);
+        mirror_offset = panel_size.x + hidden_width - fabs(offset);
         width += offset;
         offset = 0;
     }
     else
     {
-        mirror_width = min(offset + width - panel_size.x - hidden, width);
-        mirror_offset = max(offset - panel_size.x - hidden, 0);
+        mirror_width = min(offset + width - panel_size.x - hidden_width, width);
+        mirror_offset = max(offset - panel_size.x - hidden_width, 0);
     }
     if((offset + width) > panel_size.x)
     {
@@ -663,7 +661,7 @@ void HUD_Panel_DrawStrafeHUD_ProgressBar(float offset, float width, vector color
     if(size.x > 0 && size.y > 0) HUD_Panel_DrawProgressBar(panel_pos + eX * offset, size, "progressbar", 1, 0, 0, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void HUD_Panel_DrawStrafeHUD_drawfill(float offset, float width, vector color, float alpha, float hidden)
+void HUD_Panel_DrawStrafeHUD_drawfill(float offset, float width, vector color, float alpha)
 {
     float mirror_offset, mirror_width;
     vector size = panel_size;
@@ -672,14 +670,14 @@ void HUD_Panel_DrawStrafeHUD_drawfill(float offset, float width, vector color, f
     if(offset < 0)
     {
         mirror_width = min(fabs(offset), width);
-        mirror_offset = panel_size.x + hidden - fabs(offset);
+        mirror_offset = panel_size.x + hidden_width - fabs(offset);
         width += offset;
         offset = 0;
     }
     else
     {
-        mirror_width = min(offset + width - panel_size.x - hidden, width);
-        mirror_offset = max(offset - panel_size.x - hidden, 0);
+        mirror_width = min(offset + width - panel_size.x - hidden_width, width);
+        mirror_offset = max(offset - panel_size.x - hidden_width, 0);
     }
     if((offset + width) > panel_size.x)
     {
