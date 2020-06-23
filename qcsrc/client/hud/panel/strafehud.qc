@@ -565,7 +565,7 @@ void HUD_StrafeHUD()
                 HUD_Panel_DrawStrafeHUD_drawfill(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha);
             }
 
-            if(direction != 0)
+            if(autocvar_hud_panel_strafehud_direction_show && direction != 0)
             {
                 bool indicator_direction = direction < 0;
                 // invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
