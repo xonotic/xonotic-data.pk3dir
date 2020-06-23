@@ -21,11 +21,15 @@ void HUD_StrafeHUD_Export(int fh)
 bool fwd = true;
 bool state_fwd = true;
 bool state_fwd_prev = true;
+int direction = 0;
+bool state_direction = true;
+bool state_direction_prev = true;
 float demo_angle = -37;
 float demo_direction = 1;
 float demo_time = 0;
 float state_onground_time = 0;
 float state_strafekeys_time = 0;
+float state_fwd_time = 0;
 float state_direction_time = 0;
 bool state_onground = false;
 bool state_strafekeys = false;
@@ -94,7 +98,6 @@ void HUD_StrafeHUD()
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y;
         float  view_angle                    = view_angles.y + 180;
         float  angle;
-        float  direction;
         vector movement                      = PHYS_INPUT_MOVEVALUES(strafeplayer);
         int    keys                          = STAT(PRESSED_KEYS);
         int    keys_fwd;
@@ -343,11 +346,11 @@ void HUD_StrafeHUD()
 
                 if(state_fwd_prev != state_fwd)
                 {
-                    state_direction_time = time;
+                    state_fwd_time = time;
                 }
                 state_fwd_prev = state_fwd;
 
-                if((time - state_direction_time) >= autocvar_hud_panel_strafehud_timeout_direction || speed < maxspeed) // timeout when changing between forwards and backwards strafe
+                if((time - state_fwd_time) >= autocvar_hud_panel_strafehud_timeout_fwd_bkwd || speed < maxspeed) // timeout when changing between forwards and backwards movement
                 {
                     fwd = state_fwd;
                 }
@@ -409,13 +412,29 @@ void HUD_StrafeHUD()
 
         moveangle = angle + wishangle;
 
+        // determine whether the player is strafing left or right
         if(wishangle != 0)
         {
-            direction = wishangle > 0 ? 1 : -1;
+            state_direction = wishangle > 0 ? 1 : -1;
         }
         else
         {
-            direction = (angle > antiflicker_angle && angle < (180 - antiflicker_angle)) ? 1 : (angle < -antiflicker_angle && angle > (-180 + antiflicker_angle)) ? -1 : 0;
+            state_direction = (angle > antiflicker_angle && angle < (180 - antiflicker_angle)) ? 1 : (angle < -antiflicker_angle && angle > (-180 + antiflicker_angle)) ? -1 : 0;
+        }
+
+        if(state_direction_prev != state_direction)
+        {
+            state_direction_time = time;
+        }
+        state_direction_prev = state_direction;
+
+        if((time - state_direction_time) >= autocvar_hud_panel_strafehud_timeout_left_right || speed < maxspeed || direction == 0) // timeout when changing between left and right movement
+        {
+            direction = state_direction;
+        }
+        if(direction != 0)
+        {
+            wishangle = direction * fabs(wishangle);
         }
 
         // decelerating at this angle
