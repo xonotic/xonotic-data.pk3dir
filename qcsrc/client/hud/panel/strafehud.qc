@@ -472,7 +472,7 @@ void HUD_StrafeHUD()
         overturn_width_visible = (hudangle/2 - maxangle) / hudangle * panel_size.x;
 
         // the strafe bar fills the whole hud panel
-        if(speed == 0)
+        if(speed <= (is_swimming ? antiflicker_speed : 0))
         {
             // add a background to the strafe-o-meter
             if(panel_size.x > 0 && panel_size.y > 0)
