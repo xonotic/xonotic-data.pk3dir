@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-17 03:18+0000\n"
+"PO-Revision-Date: 2020-06-23 05:42+0000\n"
 "Last-Translator: Space Ace <scocasso@hotmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -33,7 +33,7 @@ msgstr "^1%sへ書かなかった"
 #: qcsrc/client/hud/panel/centerprint.qc:174
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3時刻%s秒読み伝言, 残り秒: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:176
 #, c-format
@@ -41,38 +41,40 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1複数行伝言で時間 %s が、\n"
+"^1通常よりも長く続きます"
 
 #: qcsrc/client/hud/panel/centerprint.qc:178
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "時刻%sで伝言"
 
 #: qcsrc/client/hud/panel/centerprint.qc:183
 msgid "Generic message"
-msgstr ""
+msgstr "一般的な伝言"
 
 #: qcsrc/client/hud/panel/chat.qc:89
 msgid "^3Player^7: This is the chat area."
-msgstr ""
+msgstr "^3選手^7: ここがチャット面積."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:76
 #, c-format
 msgid "FPS: %.*f"
-msgstr ""
+msgstr "一人称射手: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:95
 msgid "^1Observing"
-msgstr ""
+msgstr "^1観察"
 
 #: qcsrc/client/hud/panel/infomessages.qc:97
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr ""
+msgstr "^7%s ^1を観戦してる"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr ""
+msgstr "^3%s ^1を押して観戦します"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:47
@@ -82,7 +84,7 @@ msgstr "一次撃つ"
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr ""
+msgstr "^3%s ^1または ^3%s ^1を押すと、次または前の選手表示されます"
 
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/client/hud/panel/infomessages.qc:114
@@ -97,12 +99,12 @@ msgstr "前の兵器"
 #: qcsrc/client/hud/panel/infomessages.qc:114
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr ""
+msgstr "^3%s^1 または ^3%s ^1を使用して速度を変更します"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^3%s ^1を押して観戦します、^3%s ^1を押してカメラモードを変更する"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
@@ -117,26 +119,26 @@ msgstr "二次撃つ"
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr ""
+msgstr "^3%s ^1を押すとゲームモード情報が表示されます"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:103
 msgid "server info"
-msgstr ""
+msgstr "サーバ情報"
 
 #: qcsrc/client/hud/panel/infomessages.qc:132
 msgid "^1Match has already begun"
-msgstr ""
+msgstr "^1試合はすでに始まっています"
 
 #: qcsrc/client/hud/panel/infomessages.qc:134
 msgid "^1You have no more lives left"
-msgstr ""
+msgstr "^1あなた は命を 使い果たです"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr ""
+msgstr "^3%s ^1を押してゲームに参加します"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #: qcsrc/client/hud/panel/infomessages.qc:139
@@ -151,7 +153,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:153
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr "^2現在、^1準備運動^2の段階に入っています!"
+msgstr "^2現在、^1準備運動 ^2の段階に入っています!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #, c-format
@@ -168,7 +170,7 @@ msgstr "準備"
 #: qcsrc/client/hud/panel/infomessages.qc:170
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%s準備ができたら^3%s%sを押します"
+msgstr "%s準備ができたら ^3%s%sを押します"
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -181,7 +183,7 @@ msgstr "^2全員の準備ができるまで待ちます..."
 #: qcsrc/client/hud/panel/infomessages.qc:183
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2^3%s^2を押して準備運動を終了します"
+msgstr "^2^3%s ^2を押して準備運動を終了します"
 
 #: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teamnumbers are unbalanced!"
@@ -195,7 +197,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:115
 msgid "team menu"
-msgstr ""
+msgstr "チームメニュー"
 
 #: qcsrc/client/hud/panel/infomessages.qc:217
 msgid "^1Spectating this player:"
@@ -223,17 +225,17 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/modicons.qc:183
 msgid "Personal best"
-msgstr ""
+msgstr "自己最高記録"
 
 #: qcsrc/client/hud/panel/modicons.qc:193
 msgid "Server best"
-msgstr ""
+msgstr "サーバ最高記録"
 
 #: qcsrc/client/hud/panel/notify.qc:127 qcsrc/client/hud/panel/notify.qc:128
 #: qcsrc/client/hud/panel/score.qc:69
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "選手 %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:597
 #: qcsrc/client/hud/panel/quickmenu.qc:599
@@ -248,12 +250,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:630
 msgid "Continue..."
-msgstr ""
+msgstr "続ける..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "Chat"
-msgstr ""
+msgstr "チャット"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "QMCMD^Send public message to"
@@ -519,7 +521,7 @@ msgstr "スタートライン"
 #: qcsrc/client/hud/panel/racetimer.qc:85
 #: qcsrc/client/hud/panel/racetimer.qc:89
 msgid "Finish line"
-msgstr "ゴール"
+msgstr "ゴールライン"
 
 #: qcsrc/client/hud/panel/racetimer.qc:87
 #: qcsrc/client/hud/panel/racetimer.qc:156
@@ -1074,7 +1076,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "はい"
 
 #: qcsrc/client/hud/panel/vote.qc:134
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
@@ -1087,7 +1089,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "いいえ"
 
 #: qcsrc/client/hud/panel/weapons.qc:584
 msgid "Out of ammo"
@@ -1107,19 +1109,19 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1002
 msgid " m/s"
-msgstr ""
+msgstr " ミリ秒"
 
 #: qcsrc/client/main.qc:1004
 msgid " km/h"
-msgstr ""
+msgstr " 時速キロ"
 
 #: qcsrc/client/main.qc:1006
 msgid " mph"
-msgstr ""
+msgstr " 時速マイル"
 
 #: qcsrc/client/main.qc:1008
 msgid " knots"
-msgstr ""
+msgstr " ノット"
 
 #: qcsrc/client/main.qc:1255
 #, c-format
