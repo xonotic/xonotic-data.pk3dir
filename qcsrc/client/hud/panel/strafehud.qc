@@ -430,7 +430,7 @@ void HUD_StrafeHUD()
         {
             currentangle_offset = bound(-hudangle/2, angle, hudangle/2)/hudangle * panel_size.x + panel_size.x/2;
         }
-        currentangle_size.y = max(panel_size.y * autocvar_hud_panel_strafehud_angle_height, 1);
+        currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 2), 1);
         // best strafe acceleration angle
         bestangle_offset        =  bestangle/hudangle * panel_size.x + panel_size.x/2;
         switch_bestangle_offset = -bestangle/hudangle * panel_size.x + panel_size.x/2;
