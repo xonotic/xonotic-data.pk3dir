@@ -3,6 +3,12 @@
 #include <common/weapons/_all.qh>
 #include <common/scores.qh>
 
+vector OFFSET_CURSOR = '0 0 0';
+vector SIZE_CURSOR = '32 32 0';
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
+void draw_cursor_normal(vector pos, vector col, float a);
+void LoadMenuSkinValues();
+
 void Hud_Dynamic_Frame();
 
 bool HUD_Radar_Clickable();
@@ -11,8 +17,9 @@ bool HUD_WouldShowCursor();
 bool QuickMenu_IsOpened();
 
 REGISTRY(hud_panels, BITS(6))
-#define hud_panels_from(i) _hud_panels_from(i, NULL)
 REGISTER_REGISTRY(hud_panels)
+
+REGISTRY_DEFINE_GET(hud_panels, NULL)
 
 #define _REGISTER_HUD_PANEL(id, draw_func, export_func, configflags, showflags) \
 	void draw_func(); \
@@ -43,7 +50,7 @@ REGISTER_REGISTRY(hud_panels)
 		); \
 MACRO_END
 
-int panel_order[hud_panels_MAX];
+int panel_order[REGISTRY_MAX(hud_panels)];
 string hud_panelorder_prev;
 
 bool hud_draw_maximized;
@@ -58,7 +65,7 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void HUD_Radar_Hide_Maximized();
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect);
-vector HUD_Get_Num_Color (float hp, float maxvalue);
+vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink);
 void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha);
 void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp);
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag);
@@ -89,7 +96,7 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 4;
 float scoreboard_bottom;
-int weapon_accuracy[Weapons_MAX];
+int weapon_accuracy[REGISTRY_MAX(Weapons)];
 
 entity complain_weapon;
 int complain_weapon_type;

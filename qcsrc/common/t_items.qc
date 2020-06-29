@@ -185,14 +185,16 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         Item_SetAlpha(this);
 
         if(this.ItemStatus & ITS_ALLOWFB)
-           this.effects |= EF_FULLBRIGHT;
+            this.effects |= EF_FULLBRIGHT;
+        else
+            this.effects &= ~EF_FULLBRIGHT;
 
         if(this.ItemStatus & ITS_GLOW)
         {
             if(this.ItemStatus & ITS_AVAILABLE)
                 this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
             else
-                 this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+                this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
         }
     }
 
@@ -444,9 +446,10 @@ void Item_Show(entity e, int mode)
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
 
-
 	if (autocvar_g_fullbrightitems)
 		e.ItemStatus |= ITS_ALLOWFB;
+	else
+		e.ItemStatus &= ~ITS_ALLOWFB;
 
 	if (autocvar_sv_simple_items)
 		e.ItemStatus |= ITS_ALLOWSI;
@@ -505,7 +508,7 @@ void Item_RespawnCountdown(entity this)
 		{
 			do {
 				{
-					entity wi = Weapons_from(this.weapon);
+					entity wi = REGISTRY_GET(Weapons, this.weapon);
 					if (wi != WEP_Null) {
 						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, this, '0 0 64', NULL, 0, this, waypointsprite_attached, true, RADARICON_Weapon);
 						wp.wp_extra = wi.m_id;
@@ -853,7 +856,7 @@ bool Item_GiveTo(entity item, entity player)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
-				W_SwitchWeapon_Force(player, Weapons_from(item.weapon), weaponentity);
+				W_SwitchWeapon_Force(player, REGISTRY_GET(Weapons, item.weapon), weaponentity);
 		}
 		return true;
 	}
@@ -1200,7 +1203,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 
 	if(weaponid)
-		STAT(WEAPONS, this) = WepSet_FromWeapon(Weapons_from(weaponid));
+		STAT(WEAPONS, this) = WepSet_FromWeapon(REGISTRY_GET(Weapons, weaponid));
 
 	this.flags = FL_ITEM | itemflags;
 	IL_PUSH(g_items, this);
@@ -1304,7 +1307,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.is_item = true;
 		}
 
-		weaponsInMap |= WepSet_FromWeapon(Weapons_from(weaponid));
+		weaponsInMap |= WepSet_FromWeapon(REGISTRY_GET(Weapons, weaponid));
 
 		if (   def.instanceOfPowerup
 			|| def.instanceOfWeaponPickup
@@ -1588,7 +1591,7 @@ spawnfunc(target_items)
 float GiveWeapon(entity e, float wpn, float op, float val)
 {
 	WepSet v0, v1;
-	WepSet s = WepSet_FromWeapon(Weapons_from(wpn));
+	WepSet s = WepSet_FromWeapon(REGISTRY_GET(Weapons, wpn));
 	v0 = (STAT(WEAPONS, e) & s);
 	switch(op)
 	{

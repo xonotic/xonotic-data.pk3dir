@@ -8,8 +8,6 @@
 
 .float height;
 
-#define IFTARGETED if(this.targetname && this.targetname != "")
-
 .float lip;
 
 // used elsewhere (will fix)

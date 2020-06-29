@@ -202,10 +202,10 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]");
-			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),");
-			LOG_INFO("  if supplied with '-' output to console as well as default,");
-			LOG_INFO("  if left blank, it will only write to default.");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]");
+			LOG_HELP("  Where 'filename' is the file to write (default is notifications_dump.cfg),");
+			LOG_HELP("  if supplied with '-' output to console as well as default,");
+			LOG_HELP("  if left blank, it will only write to default.");
 			return;
 		}
 	}
@@ -435,7 +435,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV,     "spree_inf",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
 	ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
 	ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
-	ARG_CASE(ARG_CS_SV,     "item_wepname",  Weapons_from(f1).m_name) \
+	ARG_CASE(ARG_CS_SV,     "item_wepname",  REGISTRY_GET(Weapons, f1).m_name) \
 	ARG_CASE(ARG_CS_SV,     "item_buffname", BUFF_NAME(f1)) \
 	ARG_CASE(ARG_CS_SV,     "f3buffname",    BUFF_NAME(f3)) \
 	ARG_CASE(ARG_CS_SV,     "item_wepammo",  (f2 > 0 ? notif_arg_item_wepammo(f1, f2) : "")) \
@@ -633,7 +633,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 string notif_arg_item_wepammo(float f1, float f2)
 {
 	string ammoitems = "";
-	Weapon wep = Weapons_from(f1);
+	Weapon wep = REGISTRY_GET(Weapons, f1);
 	switch (wep.ammo_type)
 	{
 		case RES_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
@@ -701,6 +701,8 @@ string notif_arg_item_wepammo(float f1, float f2)
 REGISTRY(Notifications, BITS(11))
 REGISTER_REGISTRY(Notifications)
 REGISTRY_SORT(Notifications);
+
+REGISTRY_DEFINE_GET(Notifications, NULL)
 STATIC_INIT(Notifications) { FOREACH(Notifications, true, it.m_id = i); }
 REGISTRY_CHECK(Notifications)
 
@@ -730,7 +732,7 @@ string Get_Notif_CvarName(Notification notif)
 
 Notification Get_Notif_Ent(MSG net_type, int net_name)
 {
-	Notification it = _Notifications_from(net_name, NULL);
+	Notification it = REGISTRY_GET(Notifications, net_name);
 	if (it.nent_type != net_type) {
 		LOG_WARNF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!",
 			Get_Notif_TypeName(net_type), net_type,

@@ -443,7 +443,7 @@ void LinkDoors(entity this)
 
 		if (GetResource(this, RES_HEALTH))
 			return;
-		IFTARGETED
+		if(this.targetname && this.targetname != "")
 			return;
 		if (this.items)
 			return;
@@ -511,7 +511,7 @@ void LinkDoors(entity this)
 
 	if (GetResource(this, RES_HEALTH))
 		return;
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 		return;
 	if (this.items)
 		return;
@@ -737,7 +737,10 @@ spawnfunc(func_door)
         }
         else if (!this.speed)
         {
-                this.speed = 100;
+		if (autocvar_sv_q3defragcompat)
+			this.speed = 400;
+		else
+	                this.speed = 100;
         }
 
 	settouch(this, door_touch);

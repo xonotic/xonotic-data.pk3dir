@@ -11,6 +11,7 @@
 #include "commands/cl_cmd.qh"
 #include "mapvoting.qh"
 #include <client/mutators/_mod.qh>
+#include "hud/panel/centerprint.qh"
 #include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
@@ -36,58 +37,6 @@
 //include "main.qh"
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-
-void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
-{
-	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
-	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
-}
-
-void draw_cursor_normal(vector pos, vector col, float a)
-{
-	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
-}
-
-void LoadMenuSkinValues()
-{
-	int fh = -1;
-	if(cvar_string("menu_skin") != "")
-	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0 && cvar_defstring("menu_skin") != "")
-	{
-		cvar_set("menu_skin", cvar_defstring("menu_skin"));
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0)
-	{
-		draw_currentSkin = "gfx/menu/default";
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-
-	draw_currentSkin = strzone(draw_currentSkin);
-
-	if(fh >= 0)
-	{
-		string s;
-		while((s = fgets(fh)))
-		{
-			int n = tokenize_console(s);
-			if (n < 2)
-				continue;
-			if(substring(argv(0), 0, 2) == "//")
-				continue;
-			if(argv(0) == "SIZE_CURSOR")
-				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-			else if(argv(0) == "OFFSET_CURSOR")
-				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-		}
-		fclose(fh);
-	}
-}
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
@@ -673,33 +622,15 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 
 void Spawn_Draw(entity this)
 {
-	if(this.alpha <= 0)
-		return;
-
-	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
-}
-
-void Spawn_PreDraw(entity this)
-{
-	float alph;
-	vector org = getpropertyvec(VF_ORIGIN);
-	if(this.fade_start)
+	bool dodraw = autocvar_cl_spawn_point_particles;
+	if(dodraw && autocvar_cl_spawn_point_dist_max)
 	{
-		if(vdist(org - this.origin, >, this.fade_end))
-			alph = 0; // save on some processing
-		else if(vdist(org - this.origin, <, this.fade_start))
-			alph = 1; // more processing saved
-		else
-			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+		vector org = getpropertyvec(VF_ORIGIN);
+		dodraw = vdist(org - this.origin, <, autocvar_cl_spawn_point_dist_max);
 	}
-	else
-		alph = 1;
-	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
-	this.alpha = alph;
-	if(alph <= 0)
-		this.drawmask = 0;
-	else
-		this.drawmask = MASK_NORMAL;
+
+	if(dodraw)
+		pointparticles(((!teamplay) ? EFFECT_SPAWNPOINT_NEUTRAL : EFFECT_SPAWNPOINT(this.team - 1)), this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
@@ -726,27 +657,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			//this.draw = Spawn_Draw;
 			IL_PUSH(g_drawables, this);
 		}*/
-		if(autocvar_cl_spawn_point_particles)
-		{
-			if(teamplay)
-			{
-				switch(teamnum)
-				{
-					case NUM_TEAM_1: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_RED); break;
-					case NUM_TEAM_2: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_BLUE); break;
-					case NUM_TEAM_3: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_YELLOW); break;
-					case NUM_TEAM_4: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_PINK); break;
-					default: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); break;
-				}
-			}
-			else { this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
-
-			this.draw = Spawn_Draw;
-			if (is_new) IL_PUSH(g_drawables, this);
-			setpredraw(this, Spawn_PreDraw);
-			this.fade_start = autocvar_cl_spawn_point_dist_min;
-			this.fade_end = autocvar_cl_spawn_point_dist_max;
-		}
+		this.draw = Spawn_Draw;
+		if (is_new) IL_PUSH(g_drawables, this);
 	//}
 
 	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(this.origin), teamnum, this.cnt);
@@ -790,8 +702,11 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
 	{
-		zoomin_effect = 1;
-		current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+		if(autocvar_cl_spawnzoom && !autocvar_cl_lockview)
+		{
+			zoomin_effect = 1;
+			current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+		}
 
 		if(autocvar_cl_unpress_zoom_on_spawn)
 		{
@@ -920,11 +835,11 @@ void CSQC_Parse_Print(string strMessage)
 	print(ColorTranslateRGB(strMessage));
 }
 
-// CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
+// CSQC_Parse_CenterPrint : Provides the centerprint_AddStandard string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
-	centerprint_hud(strMessage);
+	centerprint_AddStandard(strMessage);
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -1011,16 +926,11 @@ float GetSpeedUnitFactor(int speed_unit)
 	switch(speed_unit)
 	{
 		default:
-		case 1:
-			return 1.0;
-		case 2:
-			return 0.0254;
-		case 3:
-			return 0.0254 * 3.6;
-		case 4:
-			return 0.0254 * 3.6 * 0.6213711922;
-		case 5:
-			return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
+		case 1: return 1.0;
+		case 2: return 0.0254;
+		case 3: return 0.0254 * 3.6;
+		case 4: return 0.0254 * 3.6 * 0.6213711922;
+		case 5: return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 	}
 }
 
@@ -1028,17 +938,13 @@ string GetSpeedUnit(int speed_unit)
 {
 	switch(speed_unit)
 	{
+		// translator-friendly strings without the initial space
 		default:
-		case 1:
-			return _(" qu/s");
-		case 2:
-			return _(" m/s");
-		case 3:
-			return _(" km/h");
-		case 4:
-			return _(" mph");
-		case 5:
-			return _(" knots");
+		case 1: return strcat(" ", _("qu/s"));
+		case 2: return strcat(" ", _("m/s"));
+		case 3: return strcat(" ", _("km/h"));
+		case 4: return strcat(" ", _("mph"));
+		case 5: return strcat(" ", _("knots"));
 	}
 }
 
@@ -1228,7 +1134,7 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
 	int weapon_id = ReadByte();
-	complain_weapon = Weapons_from(weapon_id);
+	complain_weapon = REGISTRY_GET(Weapons, weapon_id);
 	complain_weapon_type = ReadByte();
 	return = true;
 

@@ -1147,7 +1147,7 @@ int MapInfo_CurrentFeatures()
 
 Gametype MapInfo_CurrentGametype()
 {
-	Gametype prev = Gametypes_from(cvar("gamecfg"));
+	Gametype prev = REGISTRY_GET(Gametypes, cvar("gamecfg"));
 	FOREACH(Gametypes, cvar(it.netname) && it != prev, return it);
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }

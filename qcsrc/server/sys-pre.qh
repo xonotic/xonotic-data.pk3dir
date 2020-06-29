@@ -1,9 +1,6 @@
 #pragma once
 
 #define droptofloor builtin_droptofloor
-#define cvar_set builtin_cvar_set
-#define cvar_string builtin_cvar_string
-#define cvar builtin_cvar
 
 #define IT_SHOTGUN          _IT_SHOTGUN /* BIT(0) */
 #define IT_SUPER_SHOTGUN    _IT_SUPER_SHOTGUN /* BIT(1) */

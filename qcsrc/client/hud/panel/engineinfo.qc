@@ -8,8 +8,6 @@
 void HUD_EngineInfo_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
-	HUD_Write_Cvar("hud_panel_engineinfo_framecounter_time");
-	HUD_Write_Cvar("hud_panel_engineinfo_framecounter_decimals");
 }
 
 float prevfps;
@@ -74,7 +72,6 @@ void HUD_EngineInfo()
 		}
 	}
 
-	vector color;
-	color = HUD_Get_Num_Color (prevfps, 100);
+	vector color = HUD_Get_Num_Color(prevfps, 100, true);
 	drawstring_aspect(pos, sprintf(_("FPS: %.*f"), autocvar_hud_panel_engineinfo_framecounter_decimals, prevfps), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }

@@ -331,6 +331,7 @@ void cvar_changes_init()
 		BADCVAR("g_buffs_randomize");
 		BADCVAR("g_buffs_randomize_teamplay");
 		BADCVAR("g_campcheck_distance");
+		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ctf_captimerecord_always");
@@ -343,9 +344,13 @@ void cvar_changes_init()
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_glowtrails");
 		BADCVAR("g_hats");
+		BADCVAR("g_casings");
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
+		BADCVAR("g_keepaway_ballcarrier_effects");
+		BADCVAR("g_keepawayball_effects");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_autoreplace");
@@ -368,10 +373,12 @@ void cvar_changes_init()
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_radio");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
 		BADCVAR("sv_weapons_modeloverride");
 		BADCVAR("w_prop_interval");
+		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
@@ -567,9 +574,6 @@ spawnfunc(__init_dedicated_server)
 	// handler for _init/_init map (only for dedicated server initialization)
 
 	world_initialized = -1; // don't complain
-	cvar = cvar_normal;
-	cvar_string = cvar_string_normal;
-	cvar_set = cvar_set_normal;
 
 	delete_fn = remove_unsafely;
 
@@ -679,8 +683,8 @@ spawnfunc(worldspawn)
 			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
 			// restore csqc_progname too
 			string expect = "csprogs.dat";
-			wantrestart = cvar_string_normal("csqc_progname") != expect;
-			cvar_set_normal("csqc_progname", expect);
+			wantrestart = cvar_string("csqc_progname") != expect;
+			cvar_set("csqc_progname", expect);
 		}
 		else
 		{
@@ -691,9 +695,9 @@ spawnfunc(worldspawn)
 			// This always works; fall back to it if a versioned csprogs.dat is suddenly missing
 			string select = "csprogs.dat";
 			if (fexists(pk3csprogs)) select = pk3csprogs;
-			if (cvar_string_normal("csqc_progname") != select)
+			if (cvar_string("csqc_progname") != select)
 			{
-				cvar_set_normal("csqc_progname", select);
+				cvar_set("csqc_progname", select);
 				wantrestart = true;
 			}
 			// Check for updates on startup
@@ -712,13 +716,13 @@ spawnfunc(worldspawn)
 					string newprogs = sprintf("progs-%s.dat", switchversion);
 					if (fexists(newprogs))
 					{
-						cvar_set_normal("sv_progs", newprogs);
+						cvar_set("sv_progs", newprogs);
 						wantrestart = true;
 					}
 					string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
 					if (fexists(newcsprogs))
 					{
-						cvar_set_normal("csqc_progname", newcsprogs);
+						cvar_set("csqc_progname", newcsprogs);
 						wantrestart = true;
 					}
 				}
@@ -731,10 +735,6 @@ spawnfunc(worldspawn)
 			// let initialization continue, shutdown depends on it
 		}
 	}
-
-	cvar = cvar_normal;
-	cvar_string = cvar_string_normal;
-	cvar_set = cvar_set_normal;
 
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
@@ -1742,16 +1742,25 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	{
-		float fragsleft = FLOAT_MAX, leadingfragsleft = FLOAT_MAX;
-		if (limit)
-			fragsleft = limit - WinningConditionHelper_topscore;
-		if (leadlimit)
-			leadingfragsleft = WinningConditionHelper_secondscore + leadlimit - WinningConditionHelper_topscore;
-
-		if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
-			fragsleft = max(fragsleft, leadingfragsleft);
+		float fragsleft;
+		if (checkrules_suddendeathend && time >= checkrules_suddendeathend)
+		{
+			fragsleft = 1;
+		}
 		else
-			fragsleft = min(fragsleft, leadingfragsleft);
+		{
+			fragsleft = FLOAT_MAX;
+			float leadingfragsleft = FLOAT_MAX;
+			if (limit)
+				fragsleft = limit - WinningConditionHelper_topscore;
+			if (leadlimit)
+				leadingfragsleft = WinningConditionHelper_secondscore + leadlimit - WinningConditionHelper_topscore;
+
+			if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+				fragsleft = max(fragsleft, leadingfragsleft);
+			else
+				fragsleft = min(fragsleft, leadingfragsleft);
+		}
 
 		if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
 		{
@@ -2203,6 +2212,11 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
+
+		// if a timeout is active, reset the slowmo value to normal
+		if(timeout_status == TIMEOUT_ACTIVE)
+			cvar_set("slowmo", ftos(orig_slowmo));
+
 		LOG_TRACE("Saving persistent data...");
 		Ban_SaveBans();
 

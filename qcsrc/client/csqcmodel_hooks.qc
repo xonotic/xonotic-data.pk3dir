@@ -284,6 +284,13 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	LABEL(skipforcemodels)
 
+	if((this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST) && !autocvar_cl_respawn_ghosts_keepcolors)
+	{
+		this.glowmod = '0 0 0';
+		this.colormap = 0;
+		return;
+	}
+
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
 		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true) * 2;
