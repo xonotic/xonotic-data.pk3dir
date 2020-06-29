@@ -539,16 +539,16 @@ void HUD_StrafeHUD()
             }
 
             // draw acceleration zone
-            HUD_Panel_DrawStrafeHUD(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, autocvar_hud_panel_strafehud_style);
+            HUD_Panel_DrawStrafeHUD(accelzone_offset, accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_acceleration_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
 
             // draw odd acceleration zone
-            HUD_Panel_DrawStrafeHUD(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_bar_alpha, autocvar_hud_panel_strafehud_style);
+            HUD_Panel_DrawStrafeHUD(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_indicator_color, autocvar_hud_panel_strafehud_acceleration_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
 
             // draw overturn area
-            HUD_Panel_DrawStrafeHUD(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_bar_alpha, autocvar_hud_panel_strafehud_style);
+            HUD_Panel_DrawStrafeHUD(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_alert_color, autocvar_hud_panel_strafehud_overturn_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
 
             // draw the strafe bar background
-            HUD_Panel_DrawStrafeHUD(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha, autocvar_hud_panel_strafehud_style);
+            HUD_Panel_DrawStrafeHUD(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_color, autocvar_hud_panel_strafehud_bar_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
 
             if(autocvar_hud_panel_strafehud_direction_show && direction != 0)
             {
@@ -576,8 +576,8 @@ void HUD_StrafeHUD()
                 float switch_offset = !odd_angles ? switch_bestangle_offset : switch_odd_bestangle_offset;
                 // both indicators are yellow if no direction can be determined
                 indicator_color = direction != 0 ? autocvar_hud_panel_strafehud_indicator_color : autocvar_hud_panel_strafehud_indicator_switch_color;
-                HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, 1, 0);
-                HUD_Panel_DrawStrafeHUD(offset, bestangle_width, indicator_color, 1, 0);
+                HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_indicator_switch_color, panel_fg_alpha, 0);
+                HUD_Panel_DrawStrafeHUD(offset, bestangle_width, indicator_color, panel_fg_alpha, 0);
             }
         }
 
@@ -651,12 +651,12 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alph
     {
         default:
         case 0:
-            if(mirror_width > 0) drawfill(panel_pos + eX * mirror_offset, mirror_size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-            if(width > 0) drawfill(panel_pos + eX * offset, size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            if(mirror_width > 0) drawfill(panel_pos + eX * mirror_offset, mirror_size, color, alpha, DRAWFLAG_NORMAL);
+            if(width > 0) drawfill(panel_pos + eX * offset, size, color, alpha, DRAWFLAG_NORMAL);
             break;
 
         case 1:
-            if(mirror_size.x > 0 && mirror_size.y > 0) HUD_Panel_DrawProgressBar(panel_pos + eX * mirror_offset, mirror_size, "progressbar", 1, 0, 0, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-            if(size.x > 0 && size.y > 0) HUD_Panel_DrawProgressBar(panel_pos + eX * offset, size, "progressbar", 1, 0, 0, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+            if(mirror_size.x > 0 && mirror_size.y > 0) HUD_Panel_DrawProgressBar(panel_pos + eX * mirror_offset, mirror_size, "progressbar", 1, 0, 0, color, alpha, DRAWFLAG_NORMAL);
+            if(size.x > 0 && size.y > 0) HUD_Panel_DrawProgressBar(panel_pos + eX * offset, size, "progressbar", 1, 0, 0, color, alpha, DRAWFLAG_NORMAL);
     }
 }
