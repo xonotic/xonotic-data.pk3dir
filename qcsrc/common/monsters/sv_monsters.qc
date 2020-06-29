@@ -857,7 +857,7 @@ void Monster_Dead_Think(entity this)
 {
 	this.nextthink = time + this.ticrate;
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_deadthink(mon, this);
 
 	if(this.monster_lifetime != 0)
