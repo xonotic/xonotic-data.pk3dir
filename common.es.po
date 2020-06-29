@@ -22,6 +22,7 @@
 # Ari_tent <xonotic@outlook.com>, 2014
 # Yllelder, 2016
 # Yllelder, 2016
+# LegendGuard, 2020
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
