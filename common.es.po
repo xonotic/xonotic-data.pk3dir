@@ -3565,7 +3565,7 @@ msgstr "^BG¡Has capturado la bandera!"
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
 msgid "^BGToo many flag throws! Throwing disabled for %s."
-msgstr "^BG¡Demasiados tiros de bandera! Arrojamiento desabilitado durante %s"
+msgstr "^BG¡Demasiados tiros de bandera! Arrojamiento deshabilitado durante %s"
 
 #: qcsrc/common/notifications/all.inc:552
 #, c-format
@@ -3658,22 +3658,22 @@ msgstr "^BG¡El enemigo %s (^BG%s%s)^BG tiene su bandera! ¡Recupérala!"
 #: qcsrc/common/notifications/all.inc:570
 #, c-format
 msgid "^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr "^BG¡Tu compañero %s^BG tiene la bandera ^TC^TT^BG! ¡Protegelo!"
+msgstr "^BG¡Tu compañero %s^BG tiene la bandera ^TC^TT^BG! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:571
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr "^BG¡Tu %scompañero (^BG%s%s)^BG tiene la bandera ^TC^TT^BG! ¡Protegelo!"
+msgstr "^BG¡Tu %scompañero (^BG%s%s)^BG tiene la bandera ^TC^TT^BG! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:572
 #, c-format
 msgid "^BGYour %steam mate^BG got the flag! Protect them!"
-msgstr "^BG¡Tu %scompañero ^BG tiene la bandera! ¡Protegelo!"
+msgstr "^BG¡Tu %scompañero ^BG tiene la bandera! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:573
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr "^BG¡Tu %scompañero (^BG%s%s)^BG tiene la bandera! ¡Protegelo!"
+msgstr "^BG¡Tu %scompañero (^BG%s%s)^BG tiene la bandera! ¡Protégelo!"
 
 #: qcsrc/common/notifications/all.inc:574
 msgid "^BGEnemies can now see you on radar!"
@@ -4090,7 +4090,7 @@ msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
 msgstr ""
-"^BG¡Todas las llaves están en posesión de to equipo!\n"
+"^BG¡Todas las llaves están en posesión de tu equipo!\n"
 "¡Ayuda a que los portadores de las llaves se puedan unir!"
 
 #: qcsrc/common/notifications/all.inc:703
@@ -4107,7 +4107,7 @@ msgid ""
 "Meet the other key carriers ^F4NOW^BG!"
 msgstr ""
 "^BG¡Todas las llaves están en manos de tu equipo!\n"
-"E¡ncuentra a los otros portadores de llaves ^F4AHORA^BG!"
+"¡Encuentra a los otros portadores de llaves ^F4AHORA^BG!"
 
 #: qcsrc/common/notifications/all.inc:705
 msgid "^F4Round will start in ^COUNT"
@@ -5797,7 +5797,7 @@ msgstr "Los créditos de Xonotic"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
-msgstr "¿Estás seguro de desconectarte del servidor?"
+msgstr "¿Estás seguro que quieres desconectarte del servidor?"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
