@@ -471,12 +471,12 @@ msgstr "QMCMD^Sonido de chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Cambiar cámara de espectador"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Observer camera"
-msgstr "QMCMD^Camara de observador"
+msgstr "QMCMD^Cámara de observador"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Increase speed"
@@ -488,7 +488,7 @@ msgstr "QMCMD^Reducir velocidad"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Colisión del muro"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Fullscreen"
@@ -521,7 +521,7 @@ msgstr "QMCMD^Barajar equipos"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Espectar a un jugador"
 
 #: qcsrc/client/hud/panel/racetimer.qc:59
 #, c-format
@@ -2972,7 +2972,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr "^TC^TT^BG El punto de control del equipo ha sido destruido por %s""
+msgstr "^TC^TT^BG El punto de control del equipo ha sido destruido por %s"
 
 #: qcsrc/common/notifications/all.inc:406
 msgid "^TC^TT^BG generator has been destroyed"
