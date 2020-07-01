@@ -48,7 +48,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
         me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_mode"));
             e.addValue(e, _("View angle centered"), "0");
-            e.addValue(e, _("Velocity direction centered"), "1");
+            e.addValue(e, _("Velocity angle centered"), "1");
             e.configureXonoticTextSliderValues(e);
     me.TR(me);
         me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_demo", _("Demo mode")));
@@ -132,4 +132,11 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
         me.TDempty(me, 0.2);
 
         me.TD(me, 2, 1.9, e = makeXonoticColorpickerString("hud_panel_strafehud_direction_color", "hud_panel_strafehud_direction_color"));
+    me.TR(me);
+    me.TR(me);
+        me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_alpha"));
+
+        me.TDempty(me, 0.2);
+
+        me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_direction_alpha"));
 }

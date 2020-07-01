@@ -457,10 +457,10 @@ void HUD_StrafeHUD()
         overturn_width = 180/hudangle * panel_size.x;
         overturn_width_visible = (hudangle/2 - maxangle) / hudangle * panel_size.x;
 
-        // the strafe bar fills the whole hud panel
+        // the neutral zone fills the whole strafe bar
         if(speed <= (swimming ? antiflicker_speed : 0))
         {
-            // add a background to the strafe-o-meter
+            // draw neutral zone
             if(panel_size.x > 0 && panel_size.y > 0 && autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha > 0)
             {
                 switch(autocvar_hud_panel_strafehud_style)
@@ -482,7 +482,7 @@ void HUD_StrafeHUD()
             {
                 // calculate zone in which strafe acceleration happens
                 accelzone_width = bestangle_offset;
-                // calculate offset of overturn area
+                // calculate offset of overturn zone
                 overturn_offset = overturn_width_visible - overturn_width;
                 // move/adjust acceleration zone
                 accelzone_offset = overturn_width_visible;
@@ -490,7 +490,7 @@ void HUD_StrafeHUD()
                 // calculate zone in which strafe acceleration could also happen without changing wishdir
                 odd_accelzone_width = accelzone_width;
                 odd_accelzone_offset = overturn_offset - odd_accelzone_width;
-                // calculate the background of the strafe-o-meter
+                // calculate the neutral zone of the strafe-o-meter
                 bar_offset = bestangle_offset;
             }
             else // turning right or moving forward
@@ -498,14 +498,14 @@ void HUD_StrafeHUD()
                 // calculate zone in which strafe acceleration happens
                 accelzone_offset = bestangle_offset;
                 accelzone_width = panel_size.x - accelzone_offset;
-                // calculate offset of overturn area
+                // calculate offset of overturn zone
                 overturn_offset = panel_size.x - overturn_width_visible;
                 // adjust acceleration zone
                 accelzone_width -= overturn_width_visible;
                 // calculate zone in which strafe acceleration could also happen without changing wishdir
                 odd_accelzone_width = accelzone_width;
                 odd_accelzone_offset = overturn_offset + overturn_width;
-                // calculate the background of the strafe-o-meter
+                // calculate the neutral zone of the strafe-o-meter
                 bar_offset = odd_accelzone_offset + odd_accelzone_width;
             }
             bar_width = 360/hudangle * panel_size.x - accelzone_width - odd_accelzone_width - overturn_width;
@@ -540,10 +540,10 @@ void HUD_StrafeHUD()
             // draw odd acceleration zone
             HUD_Panel_DrawStrafeHUD(odd_accelzone_offset, odd_accelzone_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
 
-            // draw overturn area
+            // draw overturn zone
             HUD_Panel_DrawStrafeHUD(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_bar_overturn_color, autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
 
-            // draw the strafe bar background
+            // draw neutral zone
             HUD_Panel_DrawStrafeHUD(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
 
             if(direction != 0 && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
@@ -571,7 +571,7 @@ void HUD_StrafeHUD()
                 float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
                 float switch_offset = !odd_angles ? switch_bestangle_offset : switch_odd_bestangle_offset;
 
-                // both indicators are yellow if no direction can be determined
+                // both indicators are inactive if no direction can be determined
                 switch_color = direction != 0 ? autocvar_hud_panel_strafehud_switch_active_color : autocvar_hud_panel_strafehud_switch_inactive_color;
                 HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_switch_inactive_color, autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha, 0);
                 HUD_Panel_DrawStrafeHUD(offset, bestangle_width, switch_color, autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha, 0);
