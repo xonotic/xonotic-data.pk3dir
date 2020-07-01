@@ -12,7 +12,8 @@
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
-# LegendGuard _ <theasixchan777@gmail.com>, 2020
+# LegendGuard, 2020
+# LegendGuard, 2020
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
 # f0318285068af6a23b2bced52c20e7ad_5b405a0 <dd7053d9f4e5c78579dd2ad9ce71aaa5_243277>, 2014-2015
@@ -28,8 +29,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-30 00:33+0000\n"
-"Last-Translator: LegendGuard _ <theasixchan777@gmail.com>\n"
+"PO-Revision-Date: 2020-06-30 10:35+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -1140,7 +1141,7 @@ msgstr "Sin munición"
 
 #: qcsrc/client/hud/panel/weapons.qc:588
 msgid "Don't have"
-msgstr "No tienes"
+msgstr "No lo/la tienes"
 
 #: qcsrc/client/hud/panel/weapons.qc:592
 msgid "Unavailable"
@@ -2847,7 +2848,7 @@ msgstr "^BGNo tienes la ^F1%s"
 #: qcsrc/common/notifications/all.inc:688
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr "^BGHas tirado la ^F1%s^BG%s"
+msgstr "^BGHas tirado el/la ^F1%s^BG%s"
 
 #: qcsrc/common/notifications/all.inc:375
 #: qcsrc/common/notifications/all.inc:689
