@@ -134,7 +134,9 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
         me.TD(me, 2, 1.9, e = makeXonoticColorpickerString("hud_panel_strafehud_direction_color", "hud_panel_strafehud_direction_color"));
     me.TR(me);
     me.TR(me);
-        me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_alpha"));
+        me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_active_alpha"));
+        me.TDempty(me, 0.1);
+        me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_inactive_alpha"));
 
         me.TDempty(me, 0.2);
 
