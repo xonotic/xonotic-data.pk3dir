@@ -618,6 +618,8 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alph
     vector size = panel_size;
     vector mirror_size = panel_size;
 
+    if(alpha <= 0 || width <= 0) return;
+
     if(offset < 0)
     {
         mirror_width = min(fabs(offset), width);
