@@ -17,13 +17,15 @@ void StrafeHUD_CenterPanel(entity btn, entity me)
 
 void StrafeHUD_ColorReset(entity btn, entity me)
 {
-    cvar_set("hud_panel_strafehud_bar_color", cvar_defstring("hud_panel_strafehud_bar_color"));
-    cvar_set("hud_panel_strafehud_good_color", cvar_defstring("hud_panel_strafehud_good_color"));
-    cvar_set("hud_panel_strafehud_warning_color", cvar_defstring("hud_panel_strafehud_warning_color"));
-    cvar_set("hud_panel_strafehud_alert_color", cvar_defstring("hud_panel_strafehud_alert_color"));
+    cvar_set("hud_panel_strafehud_bar_accel_color", cvar_defstring("hud_panel_strafehud_bar_accel_color"));
+    cvar_set("hud_panel_strafehud_bar_neutral_color", cvar_defstring("hud_panel_strafehud_bar_neutral_color"));
+    cvar_set("hud_panel_strafehud_bar_overturn_color", cvar_defstring("hud_panel_strafehud_bar_overturn_color"));
+    cvar_set("hud_panel_strafehud_angle_accel_color", cvar_defstring("hud_panel_strafehud_angle_accel_color"));
+    cvar_set("hud_panel_strafehud_angle_neutral_color", cvar_defstring("hud_panel_strafehud_angle_neutral_color"));
+    cvar_set("hud_panel_strafehud_angle_overturn_color", cvar_defstring("hud_panel_strafehud_angle_overturn_color"));
+    cvar_set("hud_panel_strafehud_switch_active_color", cvar_defstring("hud_panel_strafehud_switch_active_color"));
+    cvar_set("hud_panel_strafehud_switch_inactive_color", cvar_defstring("hud_panel_strafehud_switch_inactive_color"));
     cvar_set("hud_panel_strafehud_direction_color", cvar_defstring("hud_panel_strafehud_direction_color"));
-    cvar_set("hud_panel_strafehud_indicator_color", cvar_defstring("hud_panel_strafehud_indicator_color"));
-    cvar_set("hud_panel_strafehud_indicator_switch_color", cvar_defstring("hud_panel_strafehud_indicator_switch_color"));
 }
 
 void XonoticHUDStrafeHUDDialog_fill(entity me)
@@ -52,61 +54,82 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
         me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_demo", _("Demo mode")));
 
         me.TDempty(me, 0.4);
+
         me.TD(me, 1, 0.6, e = makeXonoticTextLabel(0, _("Range:")));
-        me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 360, 5, "hud_panel_strafehud_angle"));
+        me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 360, 5, "hud_panel_strafehud_range"));
     me.TR(me);
-        me.TD(me, 1, 1.9, e = makeXonoticButton(_("Center StrafeHUD"), '0 0 0'));
+        me.TD(me, 1, 1.9, e = makeXonoticButton(_("Center panel"), '0 0 0'));
             e.onClick = StrafeHUD_CenterPanel;
             e.onClickEntity = me;
 
         me.TDempty(me, 0.2);
+
         me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
             e.onClick = StrafeHUD_ColorReset;
             e.onClickEntity = me;
     me.TR(me);
-        me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Strafe bar:")));
+        me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Strafe bar:")));
 
-        me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Current angle:")));
+        me.TDempty(me, 0.2);
+
+        me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Angle indicator:")));
     me.TR(me);
-        me.TDempty(me, 0.1);
-        me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Color:")));
-        me.TDempty(me, 0.1);
-        me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Alpha:")));
-
+        me.TD(me, 1, 0.56666666, e = makeXonoticTextLabel(0, _("Neutral:")));
         me.TDempty(me, 0.1);
         me.TD(me, 1, 0.56666666, e = makeXonoticTextLabel(0, _("Good:")));
         me.TDempty(me, 0.1);
+        me.TD(me, 1, 0.56666666, e = makeXonoticTextLabel(0, _("Overturn:")));
+
+        me.TDempty(me, 0.2);
+
         me.TD(me, 1, 0.56666666, e = makeXonoticTextLabel(0, _("Neutral:")));
+        me.TDempty(me, 0.1);
+        me.TD(me, 1, 0.56666666, e = makeXonoticTextLabel(0, _("Good:")));
         me.TDempty(me, 0.1);
         me.TD(me, 1, 0.56666666, e = makeXonoticTextLabel(0, _("Overturn:")));
     me.TR(me);
+        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_bar_neutral_color", "hud_panel_strafehud_bar_neutral_color"));
         me.TDempty(me, 0.1);
-        me.TD(me, 2, 0.9, e = makeXonoticColorpickerString("hud_panel_strafehud_bar_color", "hud_panel_strafehud_bar_color"));
+        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_bar_accel_color", "hud_panel_strafehud_bar_accel_color"));
         me.TDempty(me, 0.1);
-        me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bar_alpha"));
+        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_bar_overturn_color", "hud_panel_strafehud_bar_overturn_color"));
 
-        me.TDempty(me, 0.1);
-        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_good_color", "hud_panel_strafehud_good_color"));
-        me.TDempty(me, 0.1);
-        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_warning_color", "hud_panel_strafehud_warning_color"));
-        me.TDempty(me, 0.1);
-        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_alert_color", "hud_panel_strafehud_alert_color"));
-    me.TR(me);
-    me.TR(me);
-        me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Ideal angle:")));
+        me.TDempty(me, 0.2);
 
-        me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Direction marker:")));
-    me.TR(me);
+        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_angle_neutral_color", "hud_panel_strafehud_angle_neutral_color"));
         me.TDempty(me, 0.1);
+        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_angle_accel_color", "hud_panel_strafehud_angle_accel_color"));
+        me.TDempty(me, 0.1);
+        me.TD(me, 2, 0.56666666, e = makeXonoticColorpickerString("hud_panel_strafehud_angle_overturn_color", "hud_panel_strafehud_angle_overturn_color"));
+    me.TR(me);
+    me.TR(me);
+        me.TD(me, 1, 0.56666666, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bar_neutral_alpha"));
+        me.TDempty(me, 0.1);
+        me.TD(me, 1, 0.56666666, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bar_accel_alpha"));
+        me.TDempty(me, 0.1);
+        me.TD(me, 1, 0.56666666, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bar_overturn_alpha"));
+
+        me.TDempty(me, 0.2);
+
+        me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_angle_alpha"));
+    me.TR(me);
+        me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Switch indicators:")));
+
+        me.TDempty(me, 0.2);
+
+        me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Direction caps:")));
+    me.TR(me);
         me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Active:")));
-        me.TDempty(me, 0.1);
+
+        me.TDempty(me, 0.2);
+
         me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Inactive:")));
     me.TR(me);
-        me.TDempty(me, 0.1);
-        me.TD(me, 2, 0.9, e = makeXonoticColorpickerString("hud_panel_strafehud_indicator_color", "hud_panel_strafehud_indicator_color"));
-        me.TDempty(me, 0.1);
-        me.TD(me, 2, 0.9, e = makeXonoticColorpickerString("hud_panel_strafehud_indicator_switch_color", "hud_panel_strafehud_indicator_switch_color"));
+        me.TD(me, 2, 0.85, e = makeXonoticColorpickerString("hud_panel_strafehud_switch_active_color", "hud_panel_strafehud_switch_active_color"));
+        me.TDempty(me, 0.2);
+        me.TD(me, 2, 0.85, e = makeXonoticColorpickerString("hud_panel_strafehud_switch_inactive_color", "hud_panel_strafehud_switch_inactive_color"));
 
-        me.TDempty(me, 0.1);
+        me.TDempty(me, 0.2);
+
         me.TD(me, 2, 1.9, e = makeXonoticColorpickerString("hud_panel_strafehud_direction_color", "hud_panel_strafehud_direction_color"));
 }
