@@ -49,26 +49,34 @@ void HUD_StrafeHUD()
     entity strafeplayer;
     bool islocal;
 
+    // generic hud routines
     if(!autocvar__hud_configure)
     {
-        if(!autocvar_hud_panel_strafehud) return;
-        if(spectatee_status == -1 && (autocvar_hud_panel_strafehud == 1 || autocvar_hud_panel_strafehud == 3)) return;
-        if(autocvar_hud_panel_strafehud == 3 && !(ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
+        if(!autocvar_hud_panel_strafehud ||
+           (spectatee_status == -1 && (autocvar_hud_panel_strafehud == 1 || autocvar_hud_panel_strafehud == 3)) ||
+           (autocvar_hud_panel_strafehud == 3 && !(ISGAMETYPE(RACE) || ISGAMETYPE(CTS)))) return;
     }
 
     HUD_Panel_LoadCvars();
 
     if(autocvar_hud_panel_strafehud_dynamichud)
+    {
         HUD_Scale_Enable();
+    }
     else
+    {
         HUD_Scale_Disable();
+    }
+
     HUD_Panel_DrawBg();
+
     if(panel_bg_padding)
     {
         panel_pos  += '1 1 0' * panel_bg_padding;
         panel_size -= '2 2 0' * panel_bg_padding;
     }
 
+    // find out whether the local csqcmodel entity is valid
     if(spectatee_status > 0 || isdemo())
     {
         islocal = false;
@@ -86,10 +94,10 @@ void HUD_StrafeHUD()
         // physics
         bool   onground                      = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
         bool   strafekeys;
-        bool   is_swimming                   = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
+        bool   swimming                      = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
         float  speed                         = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
-        float  maxspeed_crouch_mod           = IS_DUCKED(strafeplayer) && !is_swimming ? .5 : 1;
-        float  maxspeed_water_mod            = is_swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
+        float  maxspeed_crouch_mod           = IS_DUCKED(strafeplayer) && !swimming ? .5 : 1;
+        float  maxspeed_water_mod            = swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
         float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_crouch_mod * maxspeed_water_mod : 320;
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y;
@@ -100,7 +108,6 @@ void HUD_StrafeHUD()
         int    keys                          = STAT(PRESSED_KEYS);
         int    keys_fwd;
         float  wishangle                     = 0;
-        float  moveangle;
 
         // HUD
         int    mode                          = autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1 ? autocvar_hud_panel_strafehud_mode : 0;
@@ -114,7 +121,6 @@ void HUD_StrafeHUD()
         vector currentangle_color            = autocvar_hud_panel_strafehud_angle_neutral_color;
         float  currentangle_offset;
         vector currentangle_size             = '0 0 0';
-        bool   show_indicators;
         float  bestangle;
         bool   bestangle_anywhere            = false;
         float  bestangle_offset;
@@ -138,11 +144,11 @@ void HUD_StrafeHUD()
         // determine whether the player is pressing forwards or backwards keys
         if(islocal) // if entity is local player
         {
-            if(movement_x > 0)
+            if(movement.x > 0)
             {
                 keys_fwd = 1;
             }
-            else if(movement_x < 0)
+            else if(movement.x < 0)
             {
                 keys_fwd = -1;
             }
@@ -170,13 +176,13 @@ void HUD_StrafeHUD()
         // determine player wishdir
         if(islocal) // if entity is local player
         {
-            if(movement_x == 0)
+            if(movement.x == 0)
             {
-                if(movement_y < 0)
+                if(movement.y < 0)
                 {
                     wishangle = -90;
                 }
-                else if(movement_y > 0)
+                else if(movement.y > 0)
                 {
                     wishangle = 90;
                 }
@@ -187,13 +193,13 @@ void HUD_StrafeHUD()
             }
             else
             {
-                if(movement_y == 0)
+                if(movement.y == 0)
                 {
                     wishangle = 0;
                 }
                 else
                 {
-                    wishangle = RAD2DEG * atan2(movement_y, movement_x);
+                    wishangle = RAD2DEG * atan2(movement.y, movement.x);
                     // wrap the wish angle if it exceeds ±90°
                     if(fabs(wishangle) > 90)
                     {
@@ -257,12 +263,14 @@ void HUD_StrafeHUD()
             state_onground_time = time;
         }
         state_onground = onground;
+
         if(strafekeys != state_strafekeys)
         {
             state_strafekeys_time = time;
         }
         state_strafekeys = strafekeys;
-        if((keys & KEY_FORWARD) || (keys & KEY_BACKWARD) || is_swimming || autocvar__hud_configure)
+
+        if((keys & KEY_FORWARD) || (keys & KEY_BACKWARD) || swimming || autocvar__hud_configure)
         {
             turn = false;
         }
@@ -295,7 +303,6 @@ void HUD_StrafeHUD()
         }
 
         minspeed = autocvar_hud_panel_strafehud_switch_minspeed < 0 ? maxspeed + antiflicker_speed : autocvar_hud_panel_strafehud_switch_minspeed;
-        show_indicators = speed >= minspeed;
 
         // get current strafing angle ranging from -180° to +180°
         if(!autocvar__hud_configure)
@@ -400,8 +407,6 @@ void HUD_StrafeHUD()
             wishangle = -wishangle;
         }
 
-        moveangle = angle + wishangle;
-
         // determine whether the player is strafing left or right
         if(wishangle != 0)
         {
@@ -434,6 +439,7 @@ void HUD_StrafeHUD()
         // best strafe acceleration angle
         bestangle_offset        =  bestangle/hudangle * panel_size.x + panel_size.x/2;
         switch_bestangle_offset = -bestangle/hudangle * panel_size.x + panel_size.x/2;
+        bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
 
         if(((angle > -wishangle && direction < 0) || (angle < -wishangle && direction > 0)) && (direction != 0))
         {
@@ -441,15 +447,6 @@ void HUD_StrafeHUD()
             float odd_bestangle = -(bestangle + wishangle) - wishangle;
             odd_bestangle_offset        = odd_bestangle/hudangle * panel_size.x + panel_size.x/2;
             switch_odd_bestangle_offset = (odd_bestangle+bestangle*2)/hudangle * panel_size.x + panel_size.x/2;
-        }
-
-        if(show_indicators)
-        {
-            bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
-        }
-        else
-        {
-            bestangle_width = 0;
         }
         // direction indicator
         direction_size_vertical.x = max(panel_size.y * min(autocvar_hud_panel_strafehud_direction_width, .5), 1);
@@ -461,10 +458,10 @@ void HUD_StrafeHUD()
         overturn_width_visible = (hudangle/2 - maxangle) / hudangle * panel_size.x;
 
         // the strafe bar fills the whole hud panel
-        if(speed <= (is_swimming ? antiflicker_speed : 0))
+        if(speed <= (swimming ? antiflicker_speed : 0))
         {
             // add a background to the strafe-o-meter
-            if(panel_size.x > 0 && panel_size.y > 0)
+            if(panel_size.x > 0 && panel_size.y > 0 && autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha > 0)
             {
                 switch(autocvar_hud_panel_strafehud_style)
                 {
@@ -480,7 +477,7 @@ void HUD_StrafeHUD()
         }
         else
         {
-            // mark the ideal strafe angle
+            // calculate various zones of the strafe-o-meter
             if(direction < 0) // turning left
             {
                 // calculate zone in which strafe acceleration happens
@@ -495,7 +492,6 @@ void HUD_StrafeHUD()
                 odd_accelzone_offset = overturn_offset - odd_accelzone_width;
                 // calculate the background of the strafe-o-meter
                 bar_offset = bestangle_offset;
-                bar_width = 360/hudangle * panel_size.x - accelzone_width - odd_accelzone_width - overturn_width;
             }
             else // turning right or moving forward
             {
@@ -511,8 +507,8 @@ void HUD_StrafeHUD()
                 odd_accelzone_offset = overturn_offset + overturn_width;
                 // calculate the background of the strafe-o-meter
                 bar_offset = odd_accelzone_offset + odd_accelzone_width;
-                bar_width = 360/hudangle * panel_size.x - accelzone_width - odd_accelzone_width - overturn_width;
             }
+            bar_width = 360/hudangle * panel_size.x - accelzone_width - odd_accelzone_width - overturn_width;
 
             // remove indicator width from offset
             if(direction < 0)
@@ -550,7 +546,7 @@ void HUD_StrafeHUD()
             // draw the strafe bar background
             HUD_Panel_DrawStrafeHUD(bar_offset, bar_width, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
 
-            if(direction != 0)
+            if(direction != 0 && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
             {
                 bool indicator_direction = direction < 0;
                 // invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
@@ -561,19 +557,20 @@ void HUD_StrafeHUD()
                 }
                 // draw the direction indicator caps at the sides of the hud
                 // vertical line
-                drawfill(panel_pos + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x), direction_size_vertical, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                if(direction_size_vertical.y > 0) drawfill(panel_pos + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x), direction_size_vertical, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 // top horizontal line
                 drawfill(panel_pos + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) - eY * direction_size_horizontal.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 // bottom horizontal line
                 drawfill(panel_pos + eX * (indicator_direction ? -direction_size_vertical.x : panel_size.x - direction_size_horizontal.x + direction_size_vertical.x) + eY * panel_size.y, direction_size_horizontal, autocvar_hud_panel_strafehud_direction_color, autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
 
-            if(show_indicators) // only draw indicators if enabled and minspeed is reached
+            if(speed >= minspeed) // only draw indicators if minspeed is reached
             {
                 // draw best angles for acceleration
                 vector switch_color;
                 float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
                 float switch_offset = !odd_angles ? switch_bestangle_offset : switch_odd_bestangle_offset;
+
                 // both indicators are yellow if no direction can be determined
                 switch_color = direction != 0 ? autocvar_hud_panel_strafehud_switch_active_color : autocvar_hud_panel_strafehud_switch_inactive_color;
                 HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_switch_inactive_color, autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha, 0);
@@ -590,11 +587,11 @@ void HUD_StrafeHUD()
         if(!bestangle_anywhere) // player gains speed with strafing
         {
             if((direction > 0 && (angle >= bestangle || angle <= -(bestangle + wishangle*2))) ||
-                (direction < 0 && (angle <= bestangle || angle >= -(bestangle + wishangle*2))))
+               (direction < 0 && (angle <= bestangle || angle >= -(bestangle + wishangle*2))))
             currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
         }
 
-        if(fabs(moveangle) > 90) // player is overturning
+        if(fabs(angle + wishangle) > 90) // player is overturning
         {
             currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
         }
@@ -607,7 +604,10 @@ void HUD_StrafeHUD()
         {
             currentangle_offset = panel_size.x/2;
         }
-        drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+        if(currentangle_size.x > 0 && currentangle_size.y > 0 && autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0)
+        {
+            drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+        }
     }
 }
 
