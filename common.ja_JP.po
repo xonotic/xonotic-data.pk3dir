@@ -5,13 +5,14 @@
 # Translators:
 # Antoni Das <Antonidas159@gmail.com>, 2017
 # LegendGuard, 2020
+# LegendGuard, 2020
 # Lento <securemailfor28-xonotic@yahoo.co.jp>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-01 00:28+0000\n"
+"PO-Revision-Date: 2020-07-01 23:05+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -34,7 +35,7 @@ msgstr "^1%sへ書かなかった"
 #: qcsrc/client/hud/panel/centerprint.qc:174
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr "^3時刻%s秒読み伝言, 残り秒: ^COUNT"
+msgstr "^3時刻%s秒読みメッセージ, 残り秒: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:176
 #, c-format
@@ -42,17 +43,17 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
-"^1複数行伝言で時間 %s が、\n"
+"^1複数行メッセージで時刻 %s が、\n"
 "^1通常よりも長く続きます"
 
 #: qcsrc/client/hud/panel/centerprint.qc:178
 #, c-format
 msgid "Message at time %s"
-msgstr "時刻 %s で伝言"
+msgstr "時刻 %s でメッセージ"
 
 #: qcsrc/client/hud/panel/centerprint.qc:183
 msgid "Generic message"
-msgstr "一般的な伝言"
+msgstr "一般的なメッセージ"
 
 #: qcsrc/client/hud/panel/chat.qc:89
 msgid "^3Player^7: This is the chat area."
@@ -133,7 +134,7 @@ msgstr "^1試合はすでに始まっています"
 
 #: qcsrc/client/hud/panel/infomessages.qc:134
 msgid "^1You have no more lives left"
-msgstr "^1あなた は命を 使い果たです"
+msgstr "^1あなたは命を使い果たです"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #: qcsrc/client/hud/panel/infomessages.qc:139
@@ -150,7 +151,7 @@ msgstr "飛ぶ"
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr ""
+msgstr "^1ゲームは ^3%d ^1秒で始まります"
 
 #: qcsrc/client/hud/panel/infomessages.qc:153
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -171,7 +172,7 @@ msgstr "準備"
 #: qcsrc/client/hud/panel/infomessages.qc:170
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%s準備ができたら ^3%s%sを押する"
+msgstr "%s準備ができたら ^3%s%s を押する"
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -479,23 +480,23 @@ msgstr "QMCMD^全画面"
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^Call a vote"
-msgstr ""
+msgstr "QMCMD^投票を呼び出す"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Restart the map"
-msgstr ""
+msgstr "QMCMD^マップを再起動する"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^End match"
-msgstr ""
+msgstr "QMCMD^試合終了"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^Reduce match time"
-msgstr ""
+msgstr "QMCMD^試合時刻を下げる"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Extend match time"
-msgstr ""
+msgstr "QMCMD^試合時刻を拡張する"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Shuffle teams"
@@ -539,7 +540,7 @@ msgstr "ペナルティ: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:159 qcsrc/client/main.qc:1102
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "必要:1通過点"
 
 #: qcsrc/client/hud/panel/radar.qc:386
 msgid "Click to select teleport destination"
@@ -575,7 +576,7 @@ msgstr "SCO^キャプチャ"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^captime"
-msgstr "SCO^キャプチャ時間"
+msgstr "SCO^キャプチャ時刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "Time of fastest capture (CTF)"
@@ -767,7 +768,7 @@ msgstr "SCO^pickups"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Ping time"
-msgstr "PING時間"
+msgstr "PING時刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^ping"
@@ -859,7 +860,7 @@ msgstr "殺された者チーム数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^teamkills"
-msgstr "SCO^チーム"
+msgstr "SCO^殺された者チーム"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of ticks (Domination)"
@@ -871,7 +872,7 @@ msgstr "SCO^ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^time"
-msgstr "SCO^時間"
+msgstr "SCO^時刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Total time raced (Race/CTS)"
@@ -884,7 +885,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid "Usage:"
-msgstr ""
+msgstr "使用方法:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:333
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
@@ -961,45 +962,45 @@ msgstr "N/A"
 #: qcsrc/client/hud/panel/scoreboard.qc:1206
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "精度状態 (平均 %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Map stats:"
-msgstr ""
+msgstr "マップ状態:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1384
 msgid "Monsters killed:"
-msgstr ""
+msgstr "殺されたモンスター:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1391
 msgid "Secrets found:"
-msgstr ""
+msgstr "見つかった秘密:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1413
 msgid "Capture time rankings"
-msgstr ""
+msgstr "キャプチャ時刻ランキング"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1413
 msgid "Rankings"
-msgstr ""
+msgstr "ランキング"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1631
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f 分"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1640
 #: qcsrc/client/hud/panel/scoreboard.qc:1647
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1641
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
 #: qcsrc/client/hud/panel/scoreboard.qc:1667
 #: qcsrc/client/hud/panel/scoreboard.qc:1674
 msgid "SCO^points"
-msgstr ""
+msgstr "SCO^点"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1666
 #: qcsrc/client/hud/panel/scoreboard.qc:1673
@@ -1044,7 +1045,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:72
 msgid "WARMUP"
-msgstr ""
+msgstr "準備"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^1You must answer before entering hud configure mode"
@@ -1662,7 +1663,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:587
 #: qcsrc/common/minigames/minigame/ttt.qc:671
 msgid "Next Match"
-msgstr ""
+msgstr "次の試合"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
@@ -1911,38 +1912,38 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr ""
+msgstr "助けて!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
-msgstr ""
+msgstr "ここに"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
-msgstr ""
+msgstr "危険"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:8
 msgid "Frozen!"
-msgstr ""
+msgstr "冷凍した!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Item"
-msgstr ""
+msgstr "アイテム"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:12
 msgid "Checkpoint"
-msgstr ""
+msgstr "通過点"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
 msgid "Finish"
-msgstr ""
+msgstr "終了"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:14
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:240
 msgid "Start"
-msgstr ""
+msgstr "開始"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 msgid "Defend"
@@ -3383,7 +3384,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:534
 msgid "^F4Begin!"
-msgstr "^F4スタート！"
+msgstr "^F4スタート!"
 
 #: qcsrc/common/notifications/all.inc:535
 msgid "^F4Game starts in ^COUNT"
@@ -5262,32 +5263,32 @@ msgstr ""
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr ""
+msgstr "%s 分"
 
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr ""
+msgstr "%d 分"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr ""
+msgstr "%d 分"
 
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr ""
+msgstr "%d 分"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr ""
+msgstr "%d 分"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr ""
+msgstr "%d 分"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
@@ -5322,22 +5323,22 @@ msgstr ""
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
-msgstr ""
+msgstr "%dst"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%dnd"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%drd"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%dth"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
@@ -5353,12 +5354,12 @@ msgstr ""
 #: qcsrc/lib/string.qh:81
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
-msgstr ""
+msgstr "%d日, %02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:82
 #, c-format
 msgid "%02d:%02d:%02d"
-msgstr ""
+msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage: menu_cmd command..., where possible commands are:"
@@ -5410,7 +5411,7 @@ msgstr "ウェブサイト"
 
 #: qcsrc/menu/xonotic/credits.qc:51
 msgid "Stats"
-msgstr "統計"
+msgstr "状態"
 
 #: qcsrc/menu/xonotic/credits.qc:55
 msgid "Art"
@@ -5641,6 +5642,8 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
+"XONOTICへようこそ。使用する言語を選択し、選手名前を入力して開始してください。"
+"これらの設定は後でメニューシステムから変更できます。"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -5721,15 +5724,15 @@ msgstr "右"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
-msgstr ""
+msgstr "弾薬パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:19
 msgid "Message duration:"
-msgstr ""
+msgstr "メッセージ期間:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
 msgid "Fade time:"
-msgstr ""
+msgstr "フェージング時刻"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
 msgid "Flip messages order"
@@ -5738,7 +5741,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Text alignment:"
-msgstr ""
+msgstr "テキストの配置:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:22
@@ -5772,7 +5775,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
-msgstr ""
+msgstr "チャットパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:16
 msgid "Engine info:"
@@ -5818,7 +5821,7 @@ msgstr "外部"
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:32
 msgid "Icon alignment:"
-msgstr ""
+msgstr "アイコンの配置"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:42
 msgid "Flip health and armor positions"
@@ -5826,7 +5829,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
-msgstr ""
+msgstr "健康/鎧パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:16
 msgid "Info messages:"
@@ -5856,19 +5859,19 @@ msgstr "無効にする"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
-msgstr "有効にする"
+msgstr "観戦を有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr ""
+msgstr "準備でも遊べるように有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
-msgstr ""
+msgstr "下げた"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "テキスト / アイコン率"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
@@ -5892,7 +5895,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:17
 msgid "Notifications:"
-msgstr ""
+msgstr "通知:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:20
 msgid "Also print notifications to the console"
@@ -5912,12 +5915,12 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
-msgstr ""
+msgstr "通知パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
 #: qcsrc/menu/xonotic/util.qc:758
 msgid "Enable"
-msgstr ""
+msgstr "有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Enable even observing"
@@ -6442,7 +6445,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:82
 #, c-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d 分"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "TIMLIM^Default"
@@ -6451,7 +6454,7 @@ msgstr "TIMLIM^デフォルト"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "1 minute"
-msgstr ""
+msgstr "1分"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:101
 msgid "TIMLIM^Infinite"
@@ -6668,7 +6671,7 @@ msgstr "無敵の弾"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:298
 msgid "No start weapons"
-msgstr "武器なしでスタート"
+msgstr "武器なしで始まり"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:73
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
@@ -7448,7 +7451,7 @@ msgstr "周波数:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:107
 msgid "Sound output frequency"
-msgstr ""
+msgstr "サウンド出力周波数"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "8 kHz"
@@ -7488,7 +7491,7 @@ msgstr "チャネル:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:121
 msgid "Number of channels for the sound output"
-msgstr ""
+msgstr "サウンド出力のチャンネル数"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:122
 msgid "Mono"
@@ -7524,15 +7527,15 @@ msgstr "7.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:134
 msgid "Swap stereo output channels"
-msgstr ""
+msgstr "サウンド出力のチャンネルを入れ替える"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:135
 msgid "Swap left/right channels"
-msgstr ""
+msgstr "左 / 右チャンネルを反転する"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:138
 msgid "Headphone friendly mode"
-msgstr ""
+msgstr "ヘッドフォンモード"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid ""
@@ -7570,7 +7573,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:156
 msgid "Time announcer:"
-msgstr ""
+msgstr "時刻アナウンサー:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:158
 msgid "WRN^Disabled"
@@ -7578,7 +7581,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:160
 msgid "5 minutes"
-msgstr ""
+msgstr "5分"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:161
 msgid "WRN^Both"
@@ -7856,7 +7859,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:177
 msgid "Time:"
-msgstr ""
+msgstr "時刻:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:180
 msgid "Time in seconds before decals fade away"
@@ -8870,23 +8873,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:133
 msgid "TLTIP^Advanced"
-msgstr ""
+msgstr "高度"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:136
 msgid "Show current date and time"
-msgstr ""
+msgstr "現在の日付と時刻を表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:137
 msgid "Show current date and time of day, useful on screenshots"
-msgstr ""
+msgstr "現在の日付と時刻を表示す、スクリーンショットに便利"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:140
 msgid "Enable developer mode"
-msgstr ""
+msgstr "開発者モードを有効にする"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:144
 msgid "Advanced settings..."
-msgstr ""
+msgstr "高度な設定..."
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:145
 msgid "Advanced settings where you can tweak every single variable of the game"
@@ -8911,11 +8914,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:49
 msgid "Type:"
-msgstr ""
+msgstr "タイプ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Value:"
-msgstr ""
+msgstr "値:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:70
 msgid "Description:"
@@ -8923,7 +8926,7 @@ msgstr "説明:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qh:7
 msgid "Advanced settings"
-msgstr ""
+msgstr "高度な設定"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
@@ -8971,7 +8974,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:33
 msgid "Resolution:"
@@ -9577,56 +9580,56 @@ msgstr "mod: %s"
 #: qcsrc/menu/xonotic/serverlist.qc:1022
 #, c-format
 msgid "modified settings"
-msgstr ""
+msgstr "変更された設定"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1022
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "公式設定"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1024
 msgid "stats disabled"
-msgstr ""
+msgstr "無効な状態"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1024
 msgid "stats enabled"
-msgstr "状態 有効"
+msgstr "有効な状態"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
-msgstr ""
+msgstr "SLCAT^好き"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Recommended"
-msgstr ""
+msgstr "SLCAT^推奨"
 
 #: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Normal Servers"
-msgstr ""
+msgstr "SLCAT^通常のサーバー"
 
 #: qcsrc/menu/xonotic/serverlist.qh:155
 msgid "SLCAT^Servers"
-msgstr ""
+msgstr "SLCAT^サーバー"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Competitive Mode"
-msgstr ""
+msgstr "SLCAT^競争モード"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Modified Servers"
-msgstr ""
+msgstr "SLCAT^変更されたサーバー"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr ""
+msgstr "SLCAT^オーバーキル"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
-msgstr ""
+msgstr "SLCAT^インスタギブ"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr ""
+msgstr "SLCAT^デフラグモード"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
@@ -9759,11 +9762,11 @@ msgstr "参加した:"
 
 #: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
-msgstr "最終マッチ:"
+msgstr "最後の試合:"
 
 #: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
-msgstr "遊んだ時間:"
+msgstr "遊んだ時刻:"
 
 #: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
 msgid "Favorite map:"
@@ -9773,7 +9776,7 @@ msgstr "好きなマップ:"
 #: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
-msgstr "マッチ:"
+msgstr "試合:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
