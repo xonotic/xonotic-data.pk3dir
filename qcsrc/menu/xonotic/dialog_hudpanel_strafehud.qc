@@ -51,6 +51,14 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
             e.addValue(e, _("Velocity angle centered"), "1");
             e.configureXonoticTextSliderValues(e);
     me.TR(me);
+        me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD style:")));
+
+        me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_style"));
+            e.addValue(e, _("no styling"), "0");
+            e.addValue(e, _("progress bar"), "1");
+            e.addValue(e, _("gradient"), "2");
+            e.configureXonoticTextSliderValues(e);
+    me.TR(me);
         me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("1", "0", "_hud_panel_strafehud_demo", _("Demo mode")));
 
         me.TDempty(me, 0.4);

@@ -19,6 +19,7 @@ void HUD_StrafeHUD_Export(int fh)
 }
 
 float hidden_width;
+int direction;
 float demo_angle = -37;
 float demo_direction = 1;
 float demo_time = 0;
@@ -103,7 +104,6 @@ void HUD_StrafeHUD()
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y;
         float  view_angle                    = view_angles.y + 180;
         float  angle;
-        int    direction;
         vector movement                      = PHYS_INPUT_MOVEVALUES(strafeplayer);
         int    keys                          = STAT(PRESSED_KEYS);
         int    keys_fwd;
@@ -512,16 +512,16 @@ void HUD_StrafeHUD()
             overturn_offset += shift_offset;
 
             // draw left acceleration zone
-            HUD_Panel_DrawStrafeHUD(accelzone_left_offset, accelzone_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
+            HUD_Panel_DrawStrafeHUD(accelzone_left_offset, accelzone_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 1);
 
             // draw right acceleration zone
-            HUD_Panel_DrawStrafeHUD(accelzone_right_offset, accelzone_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
+            HUD_Panel_DrawStrafeHUD(accelzone_right_offset, accelzone_width, autocvar_hud_panel_strafehud_bar_accel_color, autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 2);
 
             // draw overturn zone
-            HUD_Panel_DrawStrafeHUD(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_bar_overturn_color, autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
+            HUD_Panel_DrawStrafeHUD(overturn_offset, overturn_width, autocvar_hud_panel_strafehud_bar_overturn_color, autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 3);
 
             // draw neutral zone
-            HUD_Panel_DrawStrafeHUD(neutral_offset, neutral_width, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style);
+            HUD_Panel_DrawStrafeHUD(neutral_offset, neutral_width, autocvar_hud_panel_strafehud_bar_neutral_color, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, autocvar_hud_panel_strafehud_style, 0);
 
             if(direction != 0 && direction_size_vertical.x > 0 && autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
             {
@@ -550,8 +550,8 @@ void HUD_StrafeHUD()
                 vector switch_color = direction != 0 ? autocvar_hud_panel_strafehud_switch_active_color : autocvar_hud_panel_strafehud_switch_inactive_color;
                 float switch_alpha = direction != 0 ? autocvar_hud_panel_strafehud_switch_active_alpha : autocvar_hud_panel_strafehud_switch_inactive_alpha;
                 // draw the switch indicators
-                HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_switch_inactive_color, autocvar_hud_panel_strafehud_switch_inactive_alpha * panel_fg_alpha, 0);
-                HUD_Panel_DrawStrafeHUD(offset, bestangle_width, switch_color, switch_alpha * panel_fg_alpha, 0);
+                HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_switch_inactive_color, autocvar_hud_panel_strafehud_switch_inactive_alpha * panel_fg_alpha, 0, 0);
+                HUD_Panel_DrawStrafeHUD(offset, bestangle_width, switch_color, switch_alpha * panel_fg_alpha, 0, 0);
             }
         }
 
@@ -589,13 +589,18 @@ void HUD_StrafeHUD()
 }
 
 // functions to make hud elements align perfectly in the hud area
-void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alpha, int type)
+void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alpha, int type, int gradientType)
 {
     float mirror_offset, mirror_width;
     vector size = panel_size;
     vector mirror_size = panel_size;
 
+    float original_width = width;
+    float hiddencolor_width;
+
     if(alpha <= 0 || width <= 0) return;
+
+    if(type == 2 && gradientType == 0) type = 0;
 
     if(offset < 0)
     {
@@ -623,19 +628,69 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alph
         mirror_width = panel_size.x - mirror_offset;
     }
 
+    if(width < 0) width = 0;
+    if(mirror_width < 0) mirror_width = 0;
+    hiddencolor_width = original_width - width - mirror_width;
+
+    if(direction < 0) // swap mirror and non-mirror values if direction points left
+    {
+        offset += mirror_offset;
+        mirror_offset = offset - mirror_offset;
+        offset -= mirror_offset;
+
+        width += mirror_width;
+        mirror_width = width - mirror_width;
+        width -= mirror_width;
+    }
+
     size.x = width;
     mirror_size.x = mirror_width;
 
     switch(type)
     {
         default:
-        case 0:
-            if(mirror_width > 0) drawfill(panel_pos + eX * mirror_offset, mirror_size, color, alpha, DRAWFLAG_NORMAL);
-            if(width > 0) drawfill(panel_pos + eX * offset, size, color, alpha, DRAWFLAG_NORMAL);
+        case 0: // no styling (drawfill)
+            if(mirror_size.x > 0 && mirror_size.y > 0) drawfill(panel_pos + eX * mirror_offset, mirror_size, color, alpha, DRAWFLAG_NORMAL);
+            if(size.x > 0 && size.y > 0) drawfill(panel_pos + eX * offset, size, color, alpha, DRAWFLAG_NORMAL);
             break;
 
-        case 1:
+        case 1: // progress bar style
             if(mirror_size.x > 0 && mirror_size.y > 0) HUD_Panel_DrawProgressBar(panel_pos + eX * mirror_offset, mirror_size, "progressbar", 1, 0, 0, color, alpha, DRAWFLAG_NORMAL);
             if(size.x > 0 && size.y > 0) HUD_Panel_DrawProgressBar(panel_pos + eX * offset, size, "progressbar", 1, 0, 0, color, alpha, DRAWFLAG_NORMAL);
+            break;
+
+        case 2: // gradient style (types: 1 = left, 2 = right, 3 = both)
+            StrafeHUD_drawGradient(color, autocvar_hud_panel_strafehud_bar_neutral_color, mirror_size, original_width, mirror_offset, alpha, width + (mirror_offset == 0 ? hiddencolor_width : 0), gradientType);
+            StrafeHUD_drawGradient(color, autocvar_hud_panel_strafehud_bar_neutral_color, size, original_width, offset, alpha, (offset == 0 ? hiddencolor_width : 0), gradientType);
+    }
+}
+
+vector StrafeHUD_mixColors(vector color1, vector color2, float ratio)
+{
+    vector mixedColor;
+    if(ratio <= 0) return color1;
+    if(ratio >= 1) return color2;
+    mixedColor.x = color1.x + (color2.x - color1.x) * ratio;
+    mixedColor.y = color1.y + (color2.y - color1.y) * ratio;
+    mixedColor.z = color1.z + (color2.z - color1.z) * ratio;
+    return mixedColor;
+}
+
+void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradientOffset, int gradientType)
+{
+    float ratio, alpha_ratio;
+    vector gradient_size = size;
+    float color_ratio1 = autocvar_hud_panel_strafehud_bar_neutral_alpha == 0 ? 1 : min(min(alpha, 1)/min(autocvar_hud_panel_strafehud_bar_neutral_alpha, 1), 1);
+    float color_ratio2 = alpha == 0 ? 1 : min(min(autocvar_hud_panel_strafehud_bar_neutral_alpha, 1)/min(alpha, 1), 1);
+    vector gradient_color1 = gradientType == 2 ? StrafeHUD_mixColors(color2, color1, color_ratio1) : StrafeHUD_mixColors(color1, color2, color_ratio2);
+    vector gradient_color2 = gradientType == 2 ? StrafeHUD_mixColors(color1, color2, color_ratio2) : StrafeHUD_mixColors(color2, color1, color_ratio1);
+    for(int i = 0; i < size.x; ++i)
+    {
+        gradient_size.x = size.x - i < 1 ? size.x - i : 1;
+        ratio = (i + gradientOffset) / original_width * (gradientType == 3 ? 2 : 1);
+        if(ratio > 1) ratio = 2 - ratio;
+        alpha_ratio = ratio;
+        if(gradientType != 2) alpha_ratio = 1 - alpha_ratio;
+        drawfill(panel_pos + eX * (offset + i), gradient_size, StrafeHUD_mixColors(gradient_color1, gradient_color2, ratio), alpha - (alpha - autocvar_hud_panel_strafehud_bar_neutral_alpha) * alpha_ratio, DRAWFLAG_NORMAL);
     }
 }
