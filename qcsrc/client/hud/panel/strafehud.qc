@@ -631,7 +631,7 @@ void HUD_Panel_DrawStrafeHUD(float offset, float width, vector color, float alph
     float original_width = width;
     float hiddencolor_width;
 
-    if(alpha <= 0 || width <= 0) return;
+    if(alpha <= 0 && type != 2 || width <= 0) return;
 
     if(type == 2 && gradientType == 0) type = 0;
 
@@ -711,19 +711,23 @@ vector StrafeHUD_mixColors(vector color1, vector color2, float ratio)
 
 void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradientOffset, int gradientType)
 {
-    float ratio, alpha_ratio;
+    float color_ratio, alpha1, alpha2;
     vector gradient_size = size;
-    float color_ratio1 = autocvar_hud_panel_strafehud_bar_neutral_alpha == 0 ? 1 : min(min(alpha, 1)/min(autocvar_hud_panel_strafehud_bar_neutral_alpha, 1), 1);
-    float color_ratio2 = alpha == 0 ? 1 : min(min(autocvar_hud_panel_strafehud_bar_neutral_alpha, 1)/min(alpha, 1), 1);
-    vector gradient_color1 = gradientType == 2 ? StrafeHUD_mixColors(color2, color1, color_ratio1) : StrafeHUD_mixColors(color1, color2, color_ratio2);
-    vector gradient_color2 = gradientType == 2 ? StrafeHUD_mixColors(color1, color2, color_ratio2) : StrafeHUD_mixColors(color2, color1, color_ratio1);
+    alpha1 = bound(0, alpha, 1);
+    alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha, 1);
+    if((alpha1+alpha2) == 0) return;
+    color_ratio = alpha1/(alpha1+alpha2);
     for(int i = 0; i < size.x; ++i)
     {
+        float ratio, alpha_ratio, combine_ratio1, combine_ratio2;
         gradient_size.x = size.x - i < 1 ? size.x - i : 1;
         ratio = (i + gradientOffset) / original_width * (gradientType == 3 ? 2 : 1);
         if(ratio > 1) ratio = 2 - ratio;
-        alpha_ratio = ratio;
-        if(gradientType != 2) alpha_ratio = 1 - alpha_ratio;
-        drawfill(panel_pos + eX * (offset + i), gradient_size, StrafeHUD_mixColors(gradient_color1, gradient_color2, ratio), alpha - (alpha - autocvar_hud_panel_strafehud_bar_neutral_alpha) * alpha_ratio, DRAWFLAG_NORMAL);
+        if(gradientType != 2) ratio = 1 - ratio;
+        alpha_ratio = alpha1 - (alpha1 - alpha2) * ratio;
+        combine_ratio1 = ratio*(1-color_ratio);
+        combine_ratio2 = (1-ratio)*color_ratio;
+        ratio = (combine_ratio1 + combine_ratio2) == 0 ? 1 : combine_ratio1/(combine_ratio1 + combine_ratio2);
+        if(alpha_ratio > 0) drawfill(panel_pos + eX * (offset + i), gradient_size, StrafeHUD_mixColors(color1, color2, ratio), alpha_ratio, DRAWFLAG_NORMAL);
     }
 }
