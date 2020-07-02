@@ -116,6 +116,7 @@ void HUD_StrafeHUD()
         float  minspeed;
         float  shift_offset                  = 0;
         bool   straight_overturn             = false;
+        bool   immobile                      = speed <= (swimming ? antiflicker_speed : 0);
         float  hudangle;
         float  neutral_offset;
         float  neutral_width;
@@ -455,7 +456,7 @@ void HUD_StrafeHUD()
         overturn_width = 180/hudangle * panel_size.x;
 
         // the neutral zone fills the whole strafe bar
-        if(speed <= (swimming ? antiflicker_speed : 0))
+        if(immobile)
         {
             // draw neutral zone
             if(panel_size.x > 0 && panel_size.y > 0 && autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha > 0)
@@ -555,13 +556,13 @@ void HUD_StrafeHUD()
             }
         }
 
-        if(speed < (maxspeed + antiflicker_speed) && speed > 0)
+        if(speed < (maxspeed + antiflicker_speed) && !immobile)
         {
             bestangle_anywhere = true; // moving forward should suffice to gain speed
         }
 
         // draw the actual strafe angle
-        if(!bestangle_anywhere) // player gains speed with strafing
+        if(!bestangle_anywhere && !immobile) // player gains speed with strafing
         {
             if((direction > 0 && (angle >= bestangle || angle <= -(bestangle + wishangle*2))) ||
                (direction < 0 && (angle <= bestangle || angle >= -(bestangle + wishangle*2))))
@@ -581,6 +582,38 @@ void HUD_StrafeHUD()
         {
             currentangle_offset = panel_size.x/2;
         }
+
+        if(autocvar_hud_panel_strafehud_style == 2 && !immobile)
+        {
+            float moveangle = angle + wishangle;
+            float strafeangle = (bestangle + wishangle) * (direction < 0 ? -1 : 1);
+            float strafe_ratio = 0;
+            if(fabs(moveangle) > 90)
+            {
+                strafe_ratio = -((fabs(moveangle) - 90) / 90);
+                if(strafe_ratio < -1) strafe_ratio = -1 - strafe_ratio%1;
+            }
+            else
+            {
+                if(moveangle >= strafeangle)
+                {
+                    strafe_ratio = 1 - (moveangle - strafeangle) / (90 - strafeangle);
+                }
+                else if(moveangle <= -strafeangle)
+                {
+                    strafe_ratio = 1 - (moveangle + strafeangle) / (-90 + strafeangle);
+                }
+            }
+            if(strafe_ratio < 0)
+            {
+                currentangle_color = StrafeHUD_mixColors(autocvar_hud_panel_strafehud_angle_neutral_color, autocvar_hud_panel_strafehud_angle_overturn_color, -strafe_ratio);
+            }
+            else
+            {
+                currentangle_color = StrafeHUD_mixColors(autocvar_hud_panel_strafehud_angle_neutral_color, autocvar_hud_panel_strafehud_angle_accel_color, strafe_ratio);
+            }
+        }
+
         if(currentangle_size.x > 0 && currentangle_size.y > 0 && autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha > 0)
         {
             drawfill(panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x/2), currentangle_size, currentangle_color, autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
