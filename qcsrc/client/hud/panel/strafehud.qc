@@ -114,6 +114,7 @@ void HUD_StrafeHUD()
         float  antiflicker_angle             = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
         float  antiflicker_speed             = max(0, autocvar_hud_panel_strafehud_antiflicker_speed);
         float  minspeed;
+        float  shift_offset                  = 0;
         bool   straight_overturn             = false;
         float  hudangle;
         float  neutral_offset;
@@ -478,7 +479,7 @@ void HUD_StrafeHUD()
             accelzone_right_offset = 0;
             accelzone_left_offset = overturn_offset + overturn_width;
             neutral_width = 360/hudangle * panel_size.x - accelzone_width*2 - overturn_width;
-            neutral_offset = accelzone_left_offset + accelzone_width;
+            neutral_offset = direction < 0 ? accelzone_left_offset + accelzone_width : -neutral_width;
 
             // remove switch indicator width from offset
             if(direction < 0)
@@ -493,7 +494,6 @@ void HUD_StrafeHUD()
             }
 
             // shift hud if operating in view angle centered mode
-            float shift_offset = 0;
             if(mode == 0)
             {
                 shift_offset = -currentangle_offset;
@@ -502,7 +502,7 @@ void HUD_StrafeHUD()
                 odd_bestangle_offset += shift_offset;
                 switch_odd_bestangle_offset += shift_offset;
             }
-
+            if(direction < 0) shift_offset += -360/hudangle * panel_size.x;
             // calculate how far off-center the strafe zones currently are
             shift_offset += (panel_size.x + neutral_width)/2 - wishangle/hudangle * panel_size.x;
             // shift strafe zones into correct place
