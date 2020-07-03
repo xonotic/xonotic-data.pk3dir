@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-01 23:05+0000\n"
+"PO-Revision-Date: 2020-07-02 23:53+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -66,7 +66,7 @@ msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:95
 msgid "^1Observing"
-msgstr "^1観察"
+msgstr "^1観察してる"
 
 #: qcsrc/client/hud/panel/infomessages.qc:97
 #, c-format
@@ -76,7 +76,7 @@ msgstr "^7%s ^1を観戦してる"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^3%s ^1を押して観戦します"
+msgstr "^3%s ^1を押して観戦する"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:47
@@ -101,7 +101,7 @@ msgstr "前の武器"
 #: qcsrc/client/hud/panel/infomessages.qc:114
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^3%s^1 または ^3%s ^1を使用して速度を変更する"
+msgstr "^3%s ^1または ^3%s ^1を使用して速度を変更する"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
@@ -146,7 +146,7 @@ msgstr "^3%s ^1を押してゲームに参加する"
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #: qcsrc/common/notifications/all.qh:430
 msgid "jump"
-msgstr "飛ぶ"
+msgstr "飛び越える"
 
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
@@ -160,7 +160,7 @@ msgstr "^2現在、^1準備運動 ^2の段階に入っています!"
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%s^3%s%sを押して準備運動を終了する"
+msgstr "%s^3%s%s を押して準備運動を終了する"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #: qcsrc/client/hud/panel/infomessages.qc:170
@@ -189,12 +189,12 @@ msgstr "^2^3%s ^2を押して準備運動を終了する"
 
 #: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teamnumbers are unbalanced!"
-msgstr ""
+msgstr "チーム番号はアンバランスです!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr ""
+msgstr " ^3%s%s を押して調整する"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:115
@@ -203,35 +203,35 @@ msgstr "チームメニュー"
 
 #: qcsrc/client/hud/panel/infomessages.qc:217
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1この選手を観戦する:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:217
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1あなたを観戦する:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:233
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "^3ESC ^7を押してHUDオプションを表示する。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^7パネル固有のオプションのパネルを^3ダブルクリックする。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:235
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7で衝突テストを無効にし、^3SHIFT ^7と"
 
 #: qcsrc/client/hud/panel/infomessages.qc:236
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3ARROW KEYS ^7で微調整する。"
 
 #: qcsrc/client/hud/panel/modicons.qc:183
 msgid "Personal best"
-msgstr "自己最高記録"
+msgstr "自己最高"
 
 #: qcsrc/client/hud/panel/modicons.qc:193
 msgid "Server best"
-msgstr "サーバ最高記録"
+msgstr "サーバ最高"
 
 #: qcsrc/client/hud/panel/notify.qc:127 qcsrc/client/hud/panel/notify.qc:128
 #: qcsrc/client/hud/panel/score.qc:69
@@ -261,7 +261,7 @@ msgstr "チャット"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^公開メッセージを送信する:"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:789
 msgid "QMCMD^:-) / nice one"
@@ -277,11 +277,11 @@ msgstr "よくやった"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:791
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^よー / 楽しんでね"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:791
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^よー / 頑張って楽しんでね"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^Send in English"
@@ -294,116 +294,116 @@ msgstr "QMCD^チームチャット"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^間もなく力"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^無料アイテム %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^無料アイテム、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^アイテムを取った (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^アイテムを取った、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^negative"
-msgstr "QMCMD^negative"
+msgstr "QMCMD^陰性"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^positive"
-msgstr "QMCMD^positive"
+msgstr "QMCMD^陽性"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^助けが必要 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^need help, icon"
-msgstr ""
+msgstr "QMCMD^助けが必要、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^敵が見えました (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^enemy seen, icon"
-msgstr ""
+msgstr "QMCMD^敵が見えました、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^旗が見えました (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^flag seen, icon"
-msgstr ""
+msgstr "QMCMD^旗が見えました、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^守ってる (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^defending, icon"
-msgstr ""
+msgstr "QMCMD^守ってる、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^動きてる (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^roaming, icon"
-msgstr ""
+msgstr "QMCMD^動きてる、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^攻撃してる (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^attacking, icon"
-msgstr ""
+msgstr "QMCMD^攻撃してる、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^殺された旗持ち (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^殺された旗持ち、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr ""
+msgstr "QMCMD^旗を落とした (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^dropped flag, icon"
-msgstr ""
+msgstr "QMCMD^旗を落とした、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "QMCMD^武器を落とす、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^武器を落とした、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^drop flag/key, icon"
-msgstr ""
+msgstr "QMCMD^旗/鍵を落とす、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^旗/鍵を落とした %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^Send private message to"
-msgstr ""
+msgstr "QMCMD^非公開のメッセージを送信する"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 #: qcsrc/client/hud/panel/quickmenu.qc:849
@@ -413,23 +413,23 @@ msgstr "QMCMD^設定"
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 #: qcsrc/client/hud/panel/quickmenu.qc:827
 msgid "QMCMD^View/HUD settings"
-msgstr ""
+msgstr "QMCMD^ビュー/HUD設定"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^3rd person view"
-msgstr ""
+msgstr "QMCMD^三人称視点"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^Player models like mine"
-msgstr ""
+msgstr "QMCMD^私のような選手モデルを表示する"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 msgid "QMCMD^Names above players"
-msgstr ""
+msgstr "QMCMD^上に選手の名前"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Crosshair per weapon"
-msgstr ""
+msgstr "QMCMD^武器ごとの十字線"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^FPS"
@@ -454,24 +454,24 @@ msgstr "QMCMD^チャットのサウンド"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^観客のカメラを変更する"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Observer camera"
-msgstr ""
+msgstr "QMCMD^観客のカメラ"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Increase speed"
-msgstr ""
+msgstr "QMCMD^速度を上げる"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^Decrease speed"
-msgstr ""
+msgstr "QMCMD^速度を下げる"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^壁衝突"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Fullscreen"
@@ -518,12 +518,12 @@ msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:83
 msgid "Start line"
-msgstr "スタートライン"
+msgstr "スタート"
 
 #: qcsrc/client/hud/panel/racetimer.qc:85
 #: qcsrc/client/hud/panel/racetimer.qc:89
 msgid "Finish line"
-msgstr "ゴールライン"
+msgstr "ゴール"
 
 #: qcsrc/client/hud/panel/racetimer.qc:87
 #: qcsrc/client/hud/panel/racetimer.qc:156
@@ -540,27 +540,27 @@ msgstr "ペナルティ: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:159 qcsrc/client/main.qc:1102
 msgid "missing a checkpoint"
-msgstr "必要:1通過点"
+msgstr "必要: 1通過点"
 
 #: qcsrc/client/hud/panel/radar.qc:386
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "クリックしてテレポートの宛先を選択する"
 
 #: qcsrc/client/hud/panel/radar.qc:390
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "クリックして現れる場所を選択する"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "殺されたボール持ちの数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "SCO^bckills"
-msgstr "SCO^bckills"
+msgstr "殺したボール持ち"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "SCO^bctime"
-msgstr "SCO^bctime"
+msgstr "ボール持ち時刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "Total amount of time holding the ball in Keepaway"
@@ -572,11 +572,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^caps"
-msgstr "SCO^キャプチャ"
+msgstr "取れ数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^captime"
-msgstr "SCO^キャプチャ時刻"
+msgstr "取れ時刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "Time of fastest capture (CTF)"
@@ -588,7 +588,7 @@ msgstr "死者数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^deaths"
-msgstr "SCO^死者"
+msgstr "死者"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "Number of keys destroyed by pushing them into void"
@@ -596,11 +596,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^destroyed"
-msgstr "SCO^破壊された"
+msgstr "破壊された"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^damage"
-msgstr "SCO^ダメージ"
+msgstr "ダメージ"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "The total damage done"
@@ -608,7 +608,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^dmgtaken"
-msgstr "SCO^dmgtaken"
+msgstr "dmgtaken"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "The total damage taken"
@@ -620,7 +620,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^drops"
-msgstr "SCO^ドロップ"
+msgstr "ドロップ"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "Player ELO"
@@ -628,7 +628,7 @@ msgstr "選手ELO"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "SCO^elo"
-msgstr "SCO^elo"
+msgstr "elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "SCO^fastest"
@@ -644,7 +644,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "SCO^faults"
-msgstr "SCO^フォールト"
+msgstr "フォールト"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "Number of flag carrier kills"
@@ -652,7 +652,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "SCO^fckills"
-msgstr "SCO^fckills"
+msgstr "fckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "FPS"
@@ -660,7 +660,7 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "SCO^fps"
-msgstr "SCO^fps"
+msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "Number of kills minus suicides"
@@ -676,7 +676,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^goals"
-msgstr "SCO^ゴール"
+msgstr "ゴール"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of keys carrier kills"
@@ -684,25 +684,25 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^kckills"
-msgstr "SCO^kckills"
+msgstr "kckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^k/d"
-msgstr "SCO^k/d"
+msgstr "殺/死"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "The kill-death ratio"
-msgstr "殺害率"
+msgstr "殺死害率"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^kdr"
-msgstr "SCO^kdr"
+msgstr "殺死害率"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^kdratio"
-msgstr "SCO^kdratio"
+msgstr "殺死害率"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of kills"
@@ -710,7 +710,7 @@ msgstr "殺害の数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^kills"
-msgstr "SCO^殺害"
+msgstr "殺害"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of laps finished (Race/CTS)"
@@ -718,7 +718,7 @@ msgstr "終了したラップ数（レース / CTS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^laps"
-msgstr "SCO^ラップ"
+msgstr "ラップ"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Number of lives (LMS)"
@@ -726,15 +726,15 @@ msgstr "命の数 (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^lives"
-msgstr "SCO^命"
+msgstr "命"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Number of times a key was lost"
-msgstr "キーが失われた回数"
+msgstr "鍵が失われた回数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^losses"
-msgstr "SCO^負け"
+msgstr "負け"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 #: qcsrc/client/hud/panel/scoreboard.qc:130
@@ -743,11 +743,11 @@ msgstr "選手名"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^name"
-msgstr "SCO^名前"
+msgstr "名前"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^nick"
-msgstr "SCO^ニック"
+msgstr "ニック"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Number of objectives destroyed"
@@ -755,7 +755,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^objectives"
-msgstr "SCO^目的"
+msgstr "目的"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid ""
@@ -764,7 +764,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^pickups"
-msgstr "SCO^pickups"
+msgstr "ピックアップ"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Ping time"
@@ -772,7 +772,7 @@ msgstr "PING時刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^ping"
-msgstr "SCO^ping"
+msgstr "ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Packet loss"
@@ -780,23 +780,23 @@ msgstr "失われたパケットの数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^pl"
-msgstr "SCO^pl"
+msgstr "pl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "ボイドに押し込まれた選手の数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^pushes"
-msgstr ""
+msgstr "押し込まれた"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Player rank"
-msgstr ""
+msgstr "選手ランク"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^rank"
-msgstr ""
+msgstr "ランク"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of flag returns"
@@ -824,7 +824,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^score"
-msgstr ""
+msgstr "スコア"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Total score"
@@ -832,11 +832,11 @@ msgstr "合計スコア"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of suicides"
-msgstr ""
+msgstr "自殺数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^suicides"
-msgstr ""
+msgstr "自殺"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of kills minus deaths"
@@ -856,11 +856,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of teamkills"
-msgstr "殺された者チーム数"
+msgstr "殺されたチームメイトの数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^teamkills"
-msgstr "SCO^殺された者チーム"
+msgstr "殺されたチームメイト"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of ticks (Domination)"
@@ -868,11 +868,11 @@ msgstr "ティック数 (ドミネート)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^ticks"
-msgstr "SCO^ticks"
+msgstr "ティック"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^time"
-msgstr "SCO^時刻"
+msgstr "時刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Total time raced (Race/CTS)"
@@ -978,7 +978,7 @@ msgstr "見つかった秘密:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1413
 msgid "Capture time rankings"
-msgstr "キャプチャ時刻ランキング"
+msgstr "取れ時刻ランキング"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1413
 msgid "Rankings"
@@ -1178,7 +1178,7 @@ msgstr ""
 
 #: qcsrc/client/view.qc:944
 msgid "Capture progress"
-msgstr ""
+msgstr "取れ進歩"
 
 #: qcsrc/client/view.qc:949
 msgid "Revival progress"
@@ -1252,38 +1252,38 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:215
 msgid "Jetpack"
-msgstr ""
+msgstr "ジェットパック"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
-msgstr ""
+msgstr "燃料"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "燃料再生器"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
-msgstr ""
+msgstr "燃料再生"
 
 #: qcsrc/common/items/item/powerup.qh:43 qcsrc/common/items/item/powerup.qh:46
 msgid "Strength"
-msgstr ""
+msgstr "力"
 
 #: qcsrc/common/items/item/powerup.qh:79 qcsrc/common/items/item/powerup.qh:82
 msgid "Shield"
-msgstr ""
+msgstr "盾"
 
 #: qcsrc/common/mapinfo.qc:626
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr ""
+msgstr "@!#%'nチューバ投げ"
 
 #: qcsrc/common/mapinfo.qh:72 qcsrc/common/mapinfo.qh:334
 #: qcsrc/common/mapinfo.qh:529
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:105
 msgid "Frag limit:"
-msgstr ""
+msgstr "削除制限:"
 
 #: qcsrc/common/mapinfo.qh:72 qcsrc/common/mapinfo.qh:334
 #: qcsrc/common/mapinfo.qh:529
@@ -1292,7 +1292,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:115
 msgid "Deathmatch"
-msgstr ""
+msgstr "デスマッチ (DM)"
 
 #: qcsrc/common/mapinfo.qh:115
 msgid "Score as many frags as you can"
@@ -1300,7 +1300,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:128
 msgid "Last Man Standing"
-msgstr ""
+msgstr "ラストマンスタンディング (LMS)"
 
 #: qcsrc/common/mapinfo.qh:128
 msgid "Survive and kill until the enemies have no lives left"
@@ -1308,11 +1308,11 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:137
 msgid "Lives:"
-msgstr ""
+msgstr "命数:"
 
 #: qcsrc/common/mapinfo.qh:149
 msgid "Race"
-msgstr ""
+msgstr "レース"
 
 #: qcsrc/common/mapinfo.qh:149
 msgid "Race against other players to the finish line"
@@ -1320,11 +1320,11 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:176
 msgid "Laps:"
-msgstr ""
+msgstr "ラップ数:"
 
 #: qcsrc/common/mapinfo.qh:189
 msgid "Race CTS"
-msgstr ""
+msgstr "レース CTS"
 
 #: qcsrc/common/mapinfo.qh:189
 msgid "Race for fastest time."
@@ -1343,7 +1343,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:219
 msgid "Team Deathmatch"
-msgstr ""
+msgstr "チームデスマッチ (TDM)"
 
 #: qcsrc/common/mapinfo.qh:257 qcsrc/common/mapinfo.qh:373
 #: qcsrc/common/mapinfo.qh:416
@@ -1352,7 +1352,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:271
 msgid "Capture the Flag"
-msgstr ""
+msgstr "旗を取れ"
 
 #: qcsrc/common/mapinfo.qh:271
 msgid ""
@@ -1362,7 +1362,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:289
 msgid "Capture limit:"
-msgstr ""
+msgstr "取れ制限:"
 
 #: qcsrc/common/mapinfo.qh:289
 msgid "The amount of captures needed before the match will end"
@@ -1370,7 +1370,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:306
 msgid "Clan Arena"
-msgstr ""
+msgstr "クランアリーナ"
 
 #: qcsrc/common/mapinfo.qh:306
 msgid "Kill all enemy teammates to win the round"
@@ -1390,11 +1390,11 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:388
 msgid "Key Hunt"
-msgstr ""
+msgstr "鍵の狩猟"
 
 #: qcsrc/common/mapinfo.qh:428
 msgid "Assault"
-msgstr ""
+msgstr "突撃"
 
 #: qcsrc/common/mapinfo.qh:428
 msgid ""
@@ -1408,11 +1408,11 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:452
 msgid "Onslaught"
-msgstr ""
+msgstr "猛攻撃"
 
 #: qcsrc/common/mapinfo.qh:474
 msgid "Nexball"
-msgstr ""
+msgstr "ネクスボール"
 
 #: qcsrc/common/mapinfo.qh:474
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
@@ -1420,7 +1420,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:488
 msgid "Goals:"
-msgstr ""
+msgstr "ゴール:"
 
 #: qcsrc/common/mapinfo.qh:488
 msgid "The amount of goals needed before the match will end"
@@ -1428,7 +1428,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:501
 msgid "Freeze Tag"
-msgstr ""
+msgstr "フリーズタグ (FT)"
 
 #: qcsrc/common/mapinfo.qh:501
 msgid ""
@@ -1442,7 +1442,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Keepaway"
-msgstr ""
+msgstr "キープアウェイ"
 
 #: qcsrc/common/mapinfo.qh:560
 msgid "Invasion"
@@ -1488,7 +1488,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:450
 msgid "Join"
-msgstr ""
+msgstr "参加する"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:526
 msgid "Minigames"
@@ -1621,7 +1621,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pong.qc:589
 #: qcsrc/common/minigames/minigame/ttt.qc:299
 msgid "AI"
-msgstr ""
+msgstr "AI"
 
 #: qcsrc/common/minigames/minigame/pong.qc:606
 msgid "Press ^1Start Match^7 to start the match with the current players"
@@ -1629,7 +1629,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/pong.qc:679
 msgid "Start Match"
-msgstr ""
+msgstr "試合を開始"
 
 #: qcsrc/common/minigames/minigame/pong.qc:680
 msgid "Add AI player"
@@ -2014,7 +2014,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
 msgid "Key carrier"
-msgstr ""
+msgstr "鍵持ち"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
@@ -2023,11 +2023,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Ball"
-msgstr ""
+msgstr "ボール"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
-msgstr ""
+msgstr "ボール持ち"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
@@ -2917,7 +2917,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:414
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr ""
+msgstr "^BG%s^F3 切断された"
 
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
@@ -3852,6 +3852,8 @@ msgid ""
 "^K1Stop idling!\n"
 "^BGDisconnecting in ^COUNT..."
 msgstr ""
+"不活発者であることを停止しろ!\n"
+"^BG^COUNT 後に切断してる..."
 
 #: qcsrc/common/notifications/all.inc:661
 #, c-format
@@ -3865,7 +3867,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^BGDoor unlocked!"
-msgstr ""
+msgstr "^BG扉を開けた!"
 
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
@@ -4651,144 +4653,144 @@ msgstr ""
 
 #: qcsrc/common/util.qc:1439
 msgid "<KEY NOT FOUND>"
-msgstr ""
+msgstr "<KEY NOT FOUND>"
 
 #: qcsrc/common/util.qc:1440
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<UNKNOWN KEYNUM>"
 
 #: qcsrc/common/util.qc:1445
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #: qcsrc/common/util.qc:1446 qcsrc/common/util.qc:1517
 #, c-format
 msgid "ENTER"
-msgstr ""
+msgstr "ENTER"
 
 #: qcsrc/common/util.qc:1447
 msgid "ESCAPE"
-msgstr ""
+msgstr "ESCAPE"
 
 #: qcsrc/common/util.qc:1448
 msgid "SPACE"
-msgstr ""
+msgstr "SPACE"
 
 #: qcsrc/common/util.qc:1450
 msgid "BACKSPACE"
-msgstr ""
+msgstr "BACKSPACE"
 
 #: qcsrc/common/util.qc:1451 qcsrc/common/util.qc:1508
 #, c-format
 msgid "UPARROW"
-msgstr ""
+msgstr "UPARROW"
 
 #: qcsrc/common/util.qc:1452 qcsrc/common/util.qc:1503
 #, c-format
 msgid "DOWNARROW"
-msgstr ""
+msgstr "DOWNARROW"
 
 #: qcsrc/common/util.qc:1453 qcsrc/common/util.qc:1505
 #, c-format
 msgid "LEFTARROW"
-msgstr ""
+msgstr "LEFTARROW"
 
 #: qcsrc/common/util.qc:1454 qcsrc/common/util.qc:1506
 #, c-format
 msgid "RIGHTARROW"
-msgstr ""
+msgstr "RIGHTARROW"
 
 #: qcsrc/common/util.qc:1456
 msgid "ALT"
-msgstr ""
+msgstr "ALT"
 
 #: qcsrc/common/util.qc:1457
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #: qcsrc/common/util.qc:1458
 msgid "SHIFT"
-msgstr ""
+msgstr "SHIFT"
 
 #: qcsrc/common/util.qc:1460 qcsrc/common/util.qc:1501
 #, c-format
 msgid "INS"
-msgstr ""
+msgstr "INS"
 
 #: qcsrc/common/util.qc:1461 qcsrc/common/util.qc:1511
 #, c-format
 msgid "DEL"
-msgstr ""
+msgstr "DEL"
 
 #: qcsrc/common/util.qc:1462 qcsrc/common/util.qc:1504
 #, c-format
 msgid "PGDN"
-msgstr ""
+msgstr "PGDN"
 
 #: qcsrc/common/util.qc:1463 qcsrc/common/util.qc:1509
 #, c-format
 msgid "PGUP"
-msgstr ""
+msgstr "PGUP"
 
 #: qcsrc/common/util.qc:1464 qcsrc/common/util.qc:1507
 #, c-format
 msgid "HOME"
-msgstr ""
+msgstr "HOME"
 
 #: qcsrc/common/util.qc:1465 qcsrc/common/util.qc:1502
 #, c-format
 msgid "END"
-msgstr ""
+msgstr "END"
 
 #: qcsrc/common/util.qc:1467
 msgid "PAUSE"
-msgstr ""
+msgstr "PAUSE"
 
 #: qcsrc/common/util.qc:1469
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUMLOCK"
 
 #: qcsrc/common/util.qc:1470
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "CAPSLOCK"
 
 #: qcsrc/common/util.qc:1471
 msgid "SCROLLOCK"
-msgstr ""
+msgstr "SCROLLOCK"
 
 #: qcsrc/common/util.qc:1473
 msgid "SEMICOLON"
-msgstr ""
+msgstr "SEMICOLON"
 
 #: qcsrc/common/util.qc:1474
 msgid "TILDE"
-msgstr ""
+msgstr "TILDE"
 
 #: qcsrc/common/util.qc:1475
 msgid "BACKQUOTE"
-msgstr ""
+msgstr "BACKQUOTE"
 
 #: qcsrc/common/util.qc:1476
 msgid "QUOTE"
-msgstr ""
+msgstr "QUOTE"
 
 #: qcsrc/common/util.qc:1477
 msgid "APOSTROPHE"
-msgstr ""
+msgstr "APOSTROPHE"
 
 #: qcsrc/common/util.qc:1478
 msgid "BACKSLASH"
-msgstr ""
+msgstr "BACKSLASH"
 
 #: qcsrc/common/util.qc:1486
 #, c-format
 msgid "F%d"
-msgstr ""
+msgstr "F%d"
 
 #: qcsrc/common/util.qc:1496
 #, c-format
 msgid "KP_%d"
-msgstr ""
+msgstr "KP_%d"
 
 #: qcsrc/common/util.qc:1501 qcsrc/common/util.qc:1502
 #: qcsrc/common/util.qc:1503 qcsrc/common/util.qc:1504
@@ -4801,74 +4803,74 @@ msgstr ""
 #: qcsrc/common/util.qc:1517 qcsrc/common/util.qc:1518
 #, c-format
 msgid "KP_%s"
-msgstr ""
+msgstr "KP_%s"
 
 #: qcsrc/common/util.qc:1510
 #, c-format
 msgid "PERIOD"
-msgstr ""
+msgstr "PERIOD"
 
 #: qcsrc/common/util.qc:1512
 #, c-format
 msgid "DIVIDE"
-msgstr ""
+msgstr "DIVIDE"
 
 #: qcsrc/common/util.qc:1513
 #, c-format
 msgid "SLASH"
-msgstr ""
+msgstr "SLASH"
 
 #: qcsrc/common/util.qc:1514
 #, c-format
 msgid "MULTIPLY"
-msgstr ""
+msgstr "MULTIPLY"
 
 #: qcsrc/common/util.qc:1515
 #, c-format
 msgid "MINUS"
-msgstr ""
+msgstr "MINUS"
 
 #: qcsrc/common/util.qc:1516
 #, c-format
 msgid "PLUS"
-msgstr ""
+msgstr "PLUS"
 
 #: qcsrc/common/util.qc:1518
 #, c-format
 msgid "EQUALS"
-msgstr ""
+msgstr "EQUALS"
 
 #: qcsrc/common/util.qc:1523
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "PRINTSCREEN"
 
 #: qcsrc/common/util.qc:1526
 #, c-format
 msgid "MOUSE%d"
-msgstr ""
+msgstr "MOUSE%d"
 
 #: qcsrc/common/util.qc:1528
 msgid "MWHEELUP"
-msgstr ""
+msgstr "MWHEELUP"
 
 #: qcsrc/common/util.qc:1529
 msgid "MWHEELDOWN"
-msgstr ""
+msgstr "MWHEELDOWN"
 
 #: qcsrc/common/util.qc:1532
 #, c-format
 msgid "JOY%d"
-msgstr ""
+msgstr "JOY%d"
 
 #: qcsrc/common/util.qc:1535
 #, c-format
 msgid "AUX%d"
-msgstr ""
+msgstr "AUX%d"
 
 #: qcsrc/common/util.qc:1542
 #, c-format
 msgid "DPAD_UP"
-msgstr ""
+msgstr "DPAD_UP"
 
 #: qcsrc/common/util.qc:1542 qcsrc/common/util.qc:1543
 #: qcsrc/common/util.qc:1544 qcsrc/common/util.qc:1545
@@ -4882,383 +4884,383 @@ msgstr ""
 #: qcsrc/common/util.qc:1560 qcsrc/common/util.qc:1561
 #, c-format
 msgid "X360_%s"
-msgstr ""
+msgstr "X360_%s"
 
 #: qcsrc/common/util.qc:1543
 #, c-format
 msgid "DPAD_DOWN"
-msgstr ""
+msgstr "DPAD_DOWN"
 
 #: qcsrc/common/util.qc:1544
 #, c-format
 msgid "DPAD_LEFT"
-msgstr ""
+msgstr "DPAD_LEFT"
 
 #: qcsrc/common/util.qc:1545
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr ""
+msgstr "DPAD_RIGHT"
 
 #: qcsrc/common/util.qc:1546
 #, c-format
 msgid "START"
-msgstr ""
+msgstr "START"
 
 #: qcsrc/common/util.qc:1547
 #, c-format
 msgid "BACK"
-msgstr ""
+msgstr "BACK"
 
 #: qcsrc/common/util.qc:1548
 #, c-format
 msgid "LEFT_THUMB"
-msgstr ""
+msgstr "LEFT_THUMB"
 
 #: qcsrc/common/util.qc:1549
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr ""
+msgstr "RIGHT_THUMB"
 
 #: qcsrc/common/util.qc:1550
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr ""
+msgstr "LEFT_SHOULDER"
 
 #: qcsrc/common/util.qc:1551
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr ""
+msgstr "RIGHT_SHOULDER"
 
 #: qcsrc/common/util.qc:1552
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr ""
+msgstr "LEFT_TRIGGER"
 
 #: qcsrc/common/util.qc:1553
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr ""
+msgstr "RIGHT_TRIGGER"
 
 #: qcsrc/common/util.qc:1554
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr ""
+msgstr "LEFT_THUMB_UP"
 
 #: qcsrc/common/util.qc:1555
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr ""
+msgstr "LEFT_THUMB_DOWN"
 
 #: qcsrc/common/util.qc:1556
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr ""
+msgstr "LEFT_THUMB_LEFT"
 
 #: qcsrc/common/util.qc:1557
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr ""
+msgstr "LEFT_THUMB_RIGHT"
 
 #: qcsrc/common/util.qc:1558
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr ""
+msgstr "RIGHT_THUMB_UP"
 
 #: qcsrc/common/util.qc:1559
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr ""
+msgstr "RIGHT_THUMB_DOWN"
 
 #: qcsrc/common/util.qc:1560
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr ""
+msgstr "RIGHT_THUMB_LEFT"
 
 #: qcsrc/common/util.qc:1561
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr ""
+msgstr "RIGHT_THUMB_RIGHT"
 
 #: qcsrc/common/util.qc:1571 qcsrc/common/util.qc:1572
 #: qcsrc/common/util.qc:1573 qcsrc/common/util.qc:1574
 #, c-format
 msgid "JOY_%s"
-msgstr ""
+msgstr "JOY_%s"
 
 #: qcsrc/common/util.qc:1571
 #, c-format
 msgid "UP"
-msgstr ""
+msgstr "UP"
 
 #: qcsrc/common/util.qc:1572
 #, c-format
 msgid "DOWN"
-msgstr ""
+msgstr "DOWN"
 
 #: qcsrc/common/util.qc:1573
 #, c-format
 msgid "LEFT"
-msgstr ""
+msgstr "LEFT"
 
 #: qcsrc/common/util.qc:1574
 #, c-format
 msgid "RIGHT"
-msgstr ""
+msgstr "RIGHT"
 
 #: qcsrc/common/util.qc:1580
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "MIDINOTE%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 #, c-format
 msgid "Press %s"
-msgstr ""
+msgstr "%s を押して"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:954
 msgid "No right gunner!"
-msgstr ""
+msgstr "右の砲手はない!"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:960
 msgid "No left gunner!"
-msgstr ""
+msgstr "左の砲手はない!"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:19
 msgid "Bumblebee"
-msgstr ""
+msgstr "バンブルビー"
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:19
 msgid "Racer"
-msgstr ""
+msgstr "レーサー"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
-msgstr ""
+msgstr "レーサーキャノン"
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:19
 msgid "Raptor"
-msgstr ""
+msgstr "ラプター"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:9
 msgid "Raptor cannon"
-msgstr ""
+msgstr "ラプターキャノン"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:17
 msgid "Raptor bomb"
-msgstr ""
+msgstr "ラプターボム"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:25
 msgid "Raptor flare"
-msgstr ""
+msgstr "ラプターフレア"
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:19
 msgid "Spiderbot"
-msgstr ""
+msgstr "スパイダーボット"
 
 #: qcsrc/common/weapons/all.qh:76
 msgid "Weapons dump command only works with sv_cmd."
-msgstr ""
+msgstr "武器ダンプコマンドは sv_cmd でのみ機能します。"
 
 #: qcsrc/common/weapons/weapon/arc.qh:18
 msgid "Arc"
-msgstr ""
+msgstr "アーク"
 
 #: qcsrc/common/weapons/weapon/blaster.qh:18
 msgid "Blaster"
-msgstr ""
+msgstr "ブラスター"
 
 #: qcsrc/common/weapons/weapon/crylink.qh:18
 msgid "Crylink"
-msgstr ""
+msgstr "クリリンク"
 
 #: qcsrc/common/weapons/weapon/devastator.qh:18
 msgid "Devastator"
-msgstr ""
+msgstr "デーバーステーター"
 
 #: qcsrc/common/weapons/weapon/electro.qh:18
 msgid "Electro"
-msgstr ""
+msgstr "エレクトロ"
 
 #: qcsrc/common/weapons/weapon/fireball.qh:18
 msgid "Fireball"
-msgstr ""
+msgstr "ファイアボール"
 
 #: qcsrc/common/weapons/weapon/hagar.qh:18
 msgid "Hagar"
-msgstr ""
+msgstr "ハガル"
 
 #: qcsrc/common/weapons/weapon/hlac.qh:18
 msgid "Heavy Laser Assault Cannon"
-msgstr ""
+msgstr "重いレーザー突撃キャノン"
 
 #: qcsrc/common/weapons/weapon/hook.qh:18
 msgid "Grappling Hook"
-msgstr ""
+msgstr "グラップリングフック"
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:18
 msgid "MachineGun"
-msgstr ""
+msgstr "マシンガン"
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:18
 msgid "Mine Layer"
-msgstr ""
+msgstr "鉱山レーヤー"
 
 #: qcsrc/common/weapons/weapon/mortar.qh:18
 msgid "Mortar"
-msgstr ""
+msgstr "迫撃砲"
 
 #: qcsrc/common/weapons/weapon/porto.qh:18
 msgid "Port-O-Launch"
-msgstr ""
+msgstr "ポート・オー・ローンチ"
 
 #: qcsrc/common/weapons/weapon/rifle.qh:19
 msgid "Rifle"
-msgstr ""
+msgstr "ライフル"
 
 #: qcsrc/common/weapons/weapon/seeker.qh:18
 msgid "T.A.G. Seeker"
-msgstr ""
+msgstr "T.A.G.シーカー"
 
 #: qcsrc/common/weapons/weapon/shockwave.qh:18
 msgid "Shockwave"
-msgstr ""
+msgstr "衝撃波"
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:18
 msgid "Shotgun"
-msgstr ""
+msgstr "ショットガン"
 
 #: qcsrc/common/weapons/weapon/tuba.qh:18
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr ""
+msgstr "@!#%'nチューバ"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:19
 msgid "Vaporizer"
-msgstr ""
+msgstr "ヴァポリザー"
 
 #: qcsrc/common/weapons/weapon/vortex.qh:19
 msgid "Vortex"
-msgstr ""
+msgstr "ボーテックス"
 
 #: qcsrc/lib/counting.qh:9
 #, c-format
 msgid "CI_DEC^%s years"
-msgstr ""
+msgstr "%s 年"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr ""
+msgstr "%d 年"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr ""
+msgstr "%d 年"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr ""
+msgstr "%d 年"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "CI_THI^%d years"
-msgstr ""
+msgstr "%d 年"
 
 #: qcsrc/lib/counting.qh:16
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr ""
+msgstr "%d 年"
 
 #: qcsrc/lib/counting.qh:18
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr ""
+msgstr "%s 週間"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr ""
+msgstr "%d 週間"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr ""
+msgstr "%d 週間"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr ""
+msgstr "%d 週間"
 
 #: qcsrc/lib/counting.qh:24
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr ""
+msgstr "%d 週間"
 
 #: qcsrc/lib/counting.qh:25
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr ""
+msgstr "%d 週間"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr ""
+msgstr "%s 日"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr ""
+msgstr "%d 日"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr ""
+msgstr "%d 日"
 
 #: qcsrc/lib/counting.qh:32
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr ""
+msgstr "%d 日"
 
 #: qcsrc/lib/counting.qh:33
 #, c-format
 msgid "CI_THI^%d days"
-msgstr ""
+msgstr "%d 日"
 
 #: qcsrc/lib/counting.qh:34
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr ""
+msgstr "%d 日"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr ""
+msgstr "%s 時間"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr ""
+msgstr "%d 時間"
 
 #: qcsrc/lib/counting.qh:40
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr ""
+msgstr "%d 時間"
 
 #: qcsrc/lib/counting.qh:41
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr ""
+msgstr "%d 時間"
 
 #: qcsrc/lib/counting.qh:42
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr ""
+msgstr "%d 時間"
 
 #: qcsrc/lib/counting.qh:43
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr ""
+msgstr "%d 時間"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
@@ -5293,32 +5295,32 @@ msgstr "%d 分"
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr ""
+msgstr "%s 秒"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr ""
+msgstr "%d 秒"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr ""
+msgstr "%d 秒"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr ""
+msgstr "%d 秒"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr ""
+msgstr "%d 秒"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "CI_MUL^%d seconds"
-msgstr ""
+msgstr "%d 秒"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
@@ -5342,7 +5344,7 @@ msgstr "%dth"
 
 #: qcsrc/lib/oo.qh:324
 msgid "No description"
-msgstr ""
+msgstr "説明なし"
 
 #: qcsrc/lib/spawnfunc.qh:248
 #, c-format
@@ -5379,11 +5381,13 @@ msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available options:"
-msgstr ""
+msgstr "利用可能なオプション:"
 
 #: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
+"INVALID COMMAND - サポートされているコマンドのリストについては menu_cmd help "
+"を試してください。"
 
 #: qcsrc/menu/item/listbox.qc:413
 #, c-format
@@ -5455,7 +5459,7 @@ msgstr "コンパイラ"
 
 #: qcsrc/menu/xonotic/credits.qc:141
 msgid "Other Active Contributors"
-msgstr ""
+msgstr "他の活発な貢献者"
 
 #: qcsrc/menu/xonotic/credits.qc:148
 msgid "Translators"
@@ -5463,111 +5467,111 @@ msgstr "翻訳者"
 
 #: qcsrc/menu/xonotic/credits.qc:150
 msgid "Asturian"
-msgstr ""
+msgstr "アストゥリアス語"
 
 #: qcsrc/menu/xonotic/credits.qc:155
 msgid "Belarusian"
-msgstr ""
+msgstr "ベラルーシ語"
 
 #: qcsrc/menu/xonotic/credits.qc:158
 msgid "Bulgarian"
-msgstr ""
+msgstr "ブルガリア語"
 
 #: qcsrc/menu/xonotic/credits.qc:165
 msgid "Chinese (China)"
-msgstr ""
+msgstr "中国語 (中国)"
 
 #: qcsrc/menu/xonotic/credits.qc:171
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "中国語 (台湾)"
 
 #: qcsrc/menu/xonotic/credits.qc:176
 msgid "Cornish"
-msgstr ""
+msgstr "コーニッシュ語"
 
 #: qcsrc/menu/xonotic/credits.qc:179
 msgid "Czech"
-msgstr ""
+msgstr "チェコ語"
 
 #: qcsrc/menu/xonotic/credits.qc:184
 msgid "Dutch"
-msgstr ""
+msgstr "オランダ語"
 
 #: qcsrc/menu/xonotic/credits.qc:191
 msgid "English (Australia)"
-msgstr ""
+msgstr "英語 (オーストラリア)"
 
 #: qcsrc/menu/xonotic/credits.qc:196
 msgid "Finnish"
-msgstr ""
+msgstr "フィンランド語"
 
 #: qcsrc/menu/xonotic/credits.qc:201
 msgid "French"
-msgstr ""
+msgstr "フランス語"
 
 #: qcsrc/menu/xonotic/credits.qc:209
 msgid "German"
-msgstr ""
+msgstr "ドイツ語"
 
 #: qcsrc/menu/xonotic/credits.qc:220
 msgid "Greek"
-msgstr ""
+msgstr "ギリシャ語"
 
 #: qcsrc/menu/xonotic/credits.qc:226
 msgid "Hungarian"
-msgstr ""
+msgstr "ハンガリー語"
 
 #: qcsrc/menu/xonotic/credits.qc:230
 msgid "Irish"
-msgstr ""
+msgstr "アイリッシュ語"
 
 #: qcsrc/menu/xonotic/credits.qc:233
 msgid "Italian"
-msgstr ""
+msgstr "イタリア語"
 
 #: qcsrc/menu/xonotic/credits.qc:239
 msgid "Kazakh"
-msgstr ""
+msgstr "カザフスタン語"
 
 #: qcsrc/menu/xonotic/credits.qc:242
 msgid "Korean"
-msgstr ""
+msgstr "韓国語"
 
 #: qcsrc/menu/xonotic/credits.qc:246
 msgid "Polish"
-msgstr ""
+msgstr "ポーランド語"
 
 #: qcsrc/menu/xonotic/credits.qc:254
 msgid "Portuguese"
-msgstr ""
+msgstr "ポルトガル語"
 
 #: qcsrc/menu/xonotic/credits.qc:260
 msgid "Romanian"
-msgstr ""
+msgstr "ルーマニア語"
 
 #: qcsrc/menu/xonotic/credits.qc:267
 msgid "Russian"
-msgstr ""
+msgstr "ロシア語"
 
 #: qcsrc/menu/xonotic/credits.qc:278
 msgid "Scottish Gaelic"
-msgstr ""
+msgstr "スコットランドゲール語"
 
 #: qcsrc/menu/xonotic/credits.qc:281
 msgid "Serbian"
-msgstr ""
+msgstr "セルビア語"
 
 #: qcsrc/menu/xonotic/credits.qc:287
 msgid "Spanish"
-msgstr ""
+msgstr "スペイン語"
 
 #: qcsrc/menu/xonotic/credits.qc:298
 msgid "Swedish"
-msgstr ""
+msgstr "スウェーデン語"
 
 #: qcsrc/menu/xonotic/credits.qc:302
 msgid "Ukrainian"
-msgstr ""
+msgstr "ウクライナ語"
 
 #: qcsrc/menu/xonotic/credits.qc:309
 msgid "Past Contributors"
@@ -5634,7 +5638,7 @@ msgstr "切断する"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect from the server you are connected to"
-msgstr ""
+msgstr "接続してるサーバーから切断する"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -6409,7 +6413,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
-msgstr ""
+msgstr "マルチプレイヤー"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid ""
@@ -6598,7 +6602,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:206
 msgid "Start Multiplayer!"
-msgstr ""
+msgstr "マルチプレイヤーを開始!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:50
 msgid "Title:"
@@ -6671,7 +6675,7 @@ msgstr "無敵の弾"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:298
 msgid "No start weapons"
-msgstr "武器なしで始まり"
+msgstr "武器なしで開始"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:73
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
@@ -6934,7 +6938,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:92
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:264
 msgid "Join!"
-msgstr ""
+msgstr "参加!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:114
 #: qcsrc/menu/xonotic/serverlist.qc:1020
@@ -7037,7 +7041,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:240
 msgid "ID:"
-msgstr ""
+msgstr "ID:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:245
 msgid "Key:"
@@ -7679,7 +7683,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
 msgid "DET^Best"
-msgstr ""
+msgstr "最高"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "DET^Insane"
@@ -7707,7 +7711,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "PDET^Best"
-msgstr ""
+msgstr "最高"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
 msgid "Texture resolution:"
@@ -7739,7 +7743,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
 msgid "RES^Best"
-msgstr ""
+msgstr "最高"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:110
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:115
@@ -9122,7 +9126,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:101
 msgid "DF^World"
-msgstr ""
+msgstr "マップ"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:102
 msgid "DF^All"
@@ -9266,11 +9270,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:134
 msgid "Start Singleplayer!"
-msgstr ""
+msgstr "シングルプレイヤーを開始!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
-msgstr ""
+msgstr "シングルプレイヤー"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
@@ -9383,7 +9387,7 @@ msgstr "以前に使用された"
 
 #: qcsrc/menu/xonotic/keybinder.qc:55
 msgid "WEAPON^best"
-msgstr "最良"
+msgstr "最高"
 
 #: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "reload"
@@ -9781,12 +9785,12 @@ msgstr "試合:"
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Wins/Losses:"
-msgstr "勝ち / 負け"
+msgstr "勝利 / 負け"
 
 #: qcsrc/menu/xonotic/statslist.qc:156
 #, c-format
 msgid "Win percentage:"
-msgstr "勝率:"
+msgstr "勝利率:"
 
 #: qcsrc/menu/xonotic/statslist.qc:167
 #, c-format

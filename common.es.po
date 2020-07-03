@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-01 22:33+0000\n"
+"PO-Revision-Date: 2020-07-02 22:35+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -104,7 +104,7 @@ msgstr "disparo primario"
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr "^1Presiona ^3%s^1 o ^3%s^1 para el jugador siguiente o anterior"
+msgstr "^1Pulsa ^3%s^1 o ^3%s^1 para ver el jugador siguiente o anterior"
 
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/client/hud/panel/infomessages.qc:114
@@ -139,7 +139,7 @@ msgstr "disparo secundario"
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Presiona ^3%s^1 para mostrar información del modo de juego"
+msgstr "^1Pulsa ^3%s^1 para mostrar información del modo de juego"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:103
@@ -158,7 +158,7 @@ msgstr "^1No tienes ninguna vida restante"
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Presiona ^3%s^1 para unirte"
+msgstr "^1Pulsa ^3%s^1 para unirte"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #: qcsrc/client/hud/panel/infomessages.qc:139
@@ -204,16 +204,16 @@ msgstr "^2Esperando a que los demás estén listos..."
 #: qcsrc/client/hud/panel/infomessages.qc:183
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2Presiona ^3%s^2 para terminar el calentamiento"
+msgstr "^2Pulsa ^3%s^2 para terminar el calentamiento"
 
 #: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teamnumbers are unbalanced!"
-msgstr "¡Los números de equipo están desbalanceados!"
+msgstr "¡Los números de equipo están desequilibrados!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr " Presiona ^3%s%s para ajustar"
+msgstr " Pulsa ^3%s%s para ajustar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:115
@@ -313,7 +313,7 @@ msgstr "QMCMD^Chat del equipo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr "QMCMD^próximamente la Fuerza vendrá"
+msgstr "QMCMD^la fuerza aparecerá pronto"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -432,7 +432,7 @@ msgstr "QMCMD^Ajustes"
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 #: qcsrc/client/hud/panel/quickmenu.qc:827
 msgid "QMCMD^View/HUD settings"
-msgstr "QMCMD^Ver ajustes de la HUD"
+msgstr "QMCMD^Ajustes de la Vista/HUD"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^3rd person view"
@@ -444,7 +444,7 @@ msgstr "QMCMD^Modelos del jugador como el mío"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 msgid "QMCMD^Names above players"
-msgstr "QMCMD^Nombres sobre los  jugadores"
+msgstr "QMCMD^Nombres por encima de los jugadores"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Crosshair per weapon"
@@ -571,19 +571,19 @@ msgstr "Haz click para seleccionar el lugar de reaparición"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "Number of ball carrier kills"
-msgstr "Número de asesinatos de portadores de pelotas"
+msgstr "Número de asesinatos de portadores de bolas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "SCO^bckills"
-msgstr "SCO^bckills"
+msgstr "asesin.p.bo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "SCO^bctime"
-msgstr "SCO^bctime"
+msgstr "tiempo p.bo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr "Tiempo total reteniendo la pelota en Keepaway"
+msgstr "Tiempo total reteniendo la bola en Keepaway"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
@@ -592,11 +592,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^caps"
-msgstr "SCO^capturas"
+msgstr "capturas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^captime"
-msgstr "SCO^tiempo de captura"
+msgstr "tiempo de captura"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "Time of fastest capture (CTF)"
@@ -608,7 +608,7 @@ msgstr "Número de muertes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^deaths"
-msgstr "SCO^muertes"
+msgstr "muertes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "Number of keys destroyed by pushing them into void"
@@ -616,11 +616,11 @@ msgstr "Número de llaves destruidas arrojándolas al vacío"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^destroyed"
-msgstr "SCO^destruido"
+msgstr "destruido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^damage"
-msgstr "SCO^daño"
+msgstr "daño"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "The total damage done"
@@ -628,7 +628,7 @@ msgstr "Daño total realizado"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^dmgtaken"
-msgstr "SCO^daño recibido"
+msgstr "daño recibido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "The total damage taken"
@@ -640,7 +640,7 @@ msgstr "Número de banderas soltadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^drops"
-msgstr "SCO^caídas"
+msgstr "caídas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:114
 msgid "Player ELO"
@@ -664,7 +664,7 @@ msgstr "Número de faltas cometidas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "SCO^faults"
-msgstr "SCO^faltas"
+msgstr "faltas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "Number of flag carrier kills"
@@ -672,7 +672,7 @@ msgstr "Número de asesinatos de portadores de bandera"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "SCO^fckills"
-msgstr "SCO^fckills"
+msgstr "asesin.p.ba"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "FPS"
@@ -680,7 +680,7 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:118
 msgid "SCO^fps"
-msgstr "SCO^fps"
+msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "Number of kills minus suicides"
@@ -688,7 +688,7 @@ msgstr "Número de asesinatos menos suicidios"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:119
 msgid "SCO^frags"
-msgstr "SCO^eliminaciones"
+msgstr "eliminaciones"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "Number of goals scored"
@@ -696,7 +696,7 @@ msgstr "Número de goles acertados"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:120
 msgid "SCO^goals"
-msgstr "SCO^goles"
+msgstr "goles"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of keys carrier kills"
@@ -704,11 +704,11 @@ msgstr "Número de asesinatos de portadores de llaves"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^kckills"
-msgstr "SCO^kckills"
+msgstr "asesin.p.ll"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 msgid "SCO^k/d"
-msgstr "SCO^k/d"
+msgstr "a/m"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:122
 #: qcsrc/client/hud/panel/scoreboard.qc:123
@@ -718,11 +718,11 @@ msgstr "La razón asesinato-muerte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:123
 msgid "SCO^kdr"
-msgstr "SCO^kdr"
+msgstr "amr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:124
 msgid "SCO^kdratio"
-msgstr "SCO^kdratio"
+msgstr "amratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "Number of kills"
@@ -730,7 +730,7 @@ msgstr "Número de asesinatos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^kills"
-msgstr "SCO^muertes"
+msgstr "muertes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of laps finished (Race/CTS)"
@@ -738,7 +738,7 @@ msgstr "Número de vueltas terminadas (carrera/cts)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^laps"
-msgstr "SCO^vueltas"
+msgstr "vueltas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "Number of lives (LMS)"
@@ -746,7 +746,7 @@ msgstr "Número de vidas (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:127
 msgid "SCO^lives"
-msgstr "SCO^vidas"
+msgstr "vidas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "Number of times a key was lost"
@@ -754,7 +754,7 @@ msgstr "Número de veces que se perdió la llave"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^losses"
-msgstr "SCO^derrotas"
+msgstr "derrotas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 #: qcsrc/client/hud/panel/scoreboard.qc:130
@@ -763,11 +763,11 @@ msgstr "Nombre del jugador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^name"
-msgstr "SCO^nombre"
+msgstr "nombre"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^nick"
-msgstr "SCO^nick"
+msgstr "apodo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Number of objectives destroyed"
@@ -775,7 +775,7 @@ msgstr "Número de objetivos destruidos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^objectives"
-msgstr "SCO^objetivos"
+msgstr "objetivos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid ""
@@ -786,15 +786,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^pickups"
-msgstr "SCO^recogidas"
+msgstr "recogidas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Ping time"
-msgstr "Tiempo de la latencia"
+msgstr "Tiempo de ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^ping"
-msgstr "SCO^latencia"
+msgstr "ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Packet loss"
@@ -802,7 +802,7 @@ msgstr "Pérdida de paquetes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^pl"
-msgstr "SCO^pl"
+msgstr "pl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of players pushed into void"
@@ -810,7 +810,7 @@ msgstr "Número de jugadores empujados al vacío"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^pushes"
-msgstr "SCO^ofensivas"
+msgstr "ofensivas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Player rank"
@@ -818,7 +818,7 @@ msgstr "Rango del jugador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^rank"
-msgstr "SCO^rango"
+msgstr "rango"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of flag returns"
@@ -826,7 +826,7 @@ msgstr "Número de retornos de banderas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^returns"
-msgstr "SCO^devoluciones"
+msgstr "regresos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of revivals"
@@ -834,7 +834,7 @@ msgstr "Número de reanimaciones"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^revivals"
-msgstr "SCO^reanimaciones"
+msgstr "reanimaciones"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Number of rounds won"
@@ -842,11 +842,11 @@ msgstr "Número de rondas ganadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^rounds won"
-msgstr "SCO^rondas ganadas"
+msgstr "rondas ganadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^score"
-msgstr "SCO^puntuación"
+msgstr "puntuación"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Total score"
@@ -858,7 +858,7 @@ msgstr "Número de suicidios"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^suicides"
-msgstr "SCO^suicidios"
+msgstr "suicidios"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of kills minus deaths"
@@ -866,7 +866,7 @@ msgstr "Número de asesinatos menos muertes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^sum"
-msgstr "SCO^suma"
+msgstr "suma"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of domination points taken (Domination)"
@@ -874,7 +874,7 @@ msgstr "Número de puntos de dominación tomados (Dominación)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^takes"
-msgstr "SCO^tomas"
+msgstr "tomas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of teamkills"
@@ -882,7 +882,7 @@ msgstr "Número de asesinatos de compañeros"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^teamkills"
-msgstr "SCO^asesinatos de compañeros"
+msgstr "asesinatos de compañeros"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of ticks (Domination)"
@@ -890,11 +890,11 @@ msgstr "Número de ticks (Dominación)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^ticks"
-msgstr "SCO^ticks"
+msgstr "ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^time"
-msgstr "SCO^tiempo"
+msgstr "tiempo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Total time raced (Race/CTS)"
@@ -972,15 +972,14 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:354
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
-msgstr ""
-"Ejemplo: scoreboard_columns_set nombre latencia pl | +ctf/field3 -dm/field4"
+msgstr "Ejemplo: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:355
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
-"mostrará el nombre, ping y pl alinieados a la izquierda, y los campos a la\n"
+"mostrará el nombre, ping y pl alineados a la izquierda, y los campos a la\n"
 "derecha de la barra vertical alineada a la derecha."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:357
@@ -1044,7 +1043,7 @@ msgstr "^5%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:1667
 #: qcsrc/client/hud/panel/scoreboard.qc:1674
 msgid "SCO^points"
-msgstr "SCO^puntos"
+msgstr "puntos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1666
 #: qcsrc/client/hud/panel/scoreboard.qc:1673
@@ -1094,7 +1093,7 @@ msgstr "CALENTAMIENTO"
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^1You must answer before entering hud configure mode"
 msgstr ""
-"^1Debes de responder antes de entrar al modo de configuración de la interfaz"
+"^1Debes de responder antes de entrar al modo de configuración de la HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:36
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1495,7 +1494,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Hold the ball to get points for kills"
-msgstr "Mantén la pelota para ganar puntos por asesinatos"
+msgstr "Mantén la bola para ganar puntos por asesinatos"
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Keepaway"
@@ -1687,7 +1686,7 @@ msgstr "IA"
 #: qcsrc/common/minigames/minigame/pong.qc:606
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
-"Pulsa ^1Start Match^7 para empezar la partida con los jugadores actuales"
+"Pulsa ^1Comenzar Partida^7 para empezar la partida con los jugadores actuales"
 
 #: qcsrc/common/minigames/minigame/pong.qc:679
 msgid "Start Match"
@@ -1708,7 +1707,7 @@ msgstr "Empujar-Halar"
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:326
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr "¡Selecciona \"^1Next Match^7\" en el menú para una revancha!"
+msgstr "¡Selecciona \"^1Siguiente Partida^7\" en el menú para una revancha!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:445
 #: qcsrc/common/minigames/minigame/pp.qc:451
@@ -1716,7 +1715,8 @@ msgstr "¡Selecciona \"^1Next Match^7\" en el menú para una revancha!"
 #: qcsrc/common/minigames/minigame/ttt.qc:333
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
-"¡Selecciona \"^1Next Match^7\" en el menú para empezar una nueva partida!"
+"¡Selecciona \"^Siguiente Partida^7\" en el menú para empezar una nueva "
+"partida!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:452
 #: qcsrc/common/minigames/minigame/ttt.qc:334
@@ -2268,7 +2268,7 @@ msgstr "^BGNo tienes mas combustible para la ^F1Mochila propulsora"
 #: qcsrc/common/notifications/all.inc:260
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
 msgstr ""
-"^F2Te falta un UID, las opciones superspec no serán guardadas/restaudaras"
+"^F2Te falta un UID, las opciones superspec no serán guardadas/restauradas"
 
 #: qcsrc/common/notifications/all.inc:262
 msgid "^F1Round already started, you will join the game in the next round"
@@ -2326,33 +2326,33 @@ msgstr "^BG%s%s^K1 fue empujado hacia un monstruo por ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:272
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1 fue explotado por la granada de ^BG%s^K1 %s%s"
+msgstr "^BG%s%s^K1 fue explotado por la granada de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:273
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
-msgstr "^BG%s%s^K1 se acercó demasiado a una explosión de napalm %s%s"
+msgstr "^BG%s%s^K1 se acercó demasiado a una explosión de napalm%s%s"
 
 #: qcsrc/common/notifications/all.inc:273
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr "^BG%s%s^K1 fue calcinado por la Granada de Napalm de ^BG%s^K1 %s%s"
+msgstr "^BG%s%s^K1 fue calcinado por la Granada de Napalm de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 fue explotado por la Granada de Hielo de ^BG%s^K1 %s%s"
+msgstr "^BG%s%s^K1 fue explotado por la Granada de Hielo de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:275
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 fue congelado por la Granada de Hielo de ^BG%s^K1 %s%s"
+msgstr "^BG%s%s^K1 fue congelado por la Granada de Hielo de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
 msgstr ""
-"^BG%s%s^K1 no ha sido curado por la Granada de Curación de ^BG%s^K1 %s%s"
+"^BG%s%s^K1 no ha sido curado por la Granada de Curación de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -2686,7 +2686,7 @@ msgstr "^BG%s^K1 fue eliminado por una torreta%s%s"
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s"
 msgstr ""
-"^BGa %s^K1 le sirvieron un poco de plasma sobrecalentado de una torreta%s%s"
+"^BGA%s^K1 le sirvieron un poco de plasma sobrecalentado de una torreta%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
@@ -2696,7 +2696,7 @@ msgstr "^BG%s^K1 fue electrocutado por una torreta Tesla%s%s"
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"
-msgstr "^BGa %s^K1 le llenó de plomo una torreta Walker%s%s"
+msgstr "^BGA %s^K1 le llenó de plomo una torreta Walker%s%s"
 
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
@@ -3395,7 +3395,7 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 casi esquivó la Motosierra Overkill Propulsada por Cohetes de ^BG"
+"^BG%s%s^K1 casi esquivó la Motosierra Overkill Propulsada por Cohetes d^BG"
 "%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:490
@@ -3599,7 +3599,7 @@ msgstr "^BGHas recibido la bandera por parte de %s"
 #: qcsrc/common/notifications/all.inc:556
 #, c-format
 msgid "^BGPress ^F2%s^BG to receive the flag from %s^BG"
-msgstr "^BGPresiona ^F2%s^BG para recibir la bandera de %s^BG"
+msgstr "^BGPulsa ^F2%s^BG para recibir la bandera de %s^BG"
 
 #: qcsrc/common/notifications/all.inc:557
 #, c-format
@@ -3701,7 +3701,7 @@ msgstr "^BG¡Estancamiento! ¡Los enemigos ahora te pueden ven en su radar!"
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
 msgstr ""
 "^BG¡Estancamiento! ¡Ahora puedes ver los portadores de bandera enemigos en "
-"tu radar!"
+"el radar!"
 
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
@@ -3770,7 +3770,7 @@ msgstr "^K1%sFuiste eliminado por ^BG%s^K1 mientras tecleabas"
 #: qcsrc/common/notifications/all.inc:617
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr "^BG¡Presiona ^F2%s^BG otra vez para tirar la granada!"
+msgstr "^BG¡Pulsa ^F2%s^BG otra vez para tirar la granada!"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
@@ -4092,8 +4092,7 @@ msgstr "^BGHas recogido la bola"
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGKilling people while you don't have the ball gives no points!"
-msgstr ""
-"^BG¡Eliminar a otros mientras no tienes la pelota no te consigue puntos!"
+msgstr "^BG¡Eliminar a otros mientras no tienes la bola no da puntos!"
 
 #: qcsrc/common/notifications/all.inc:702
 msgid ""
@@ -4178,7 +4177,7 @@ msgstr "Nivel %s: "
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr "^BGPresiona ^F2%s^BG para entrar en el juego"
+msgstr "^BGPulsa ^F2%s^BG para entrar en el juego"
 
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
@@ -4239,7 +4238,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:733
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
-msgstr "^BGPresiona ^F2%s^BG para teletransportarse"
+msgstr "^BGPulsa ^F2%s^BG para teletransportarse"
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
@@ -4389,17 +4388,17 @@ msgstr "^K1¡No se puede unir a la sesión del minijuego que se ha dado!"
 #: qcsrc/common/notifications/all.inc:776
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
-msgstr "^BGPress ^F2%s^BG para entrar/salir del vehículo"
+msgstr "^BGPulsa ^F2%s^BG para entrar/salir del vehículo"
 
 #: qcsrc/common/notifications/all.inc:777
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
-msgstr "^BGPresiona ^F2%s^BG para entrar en el artillero del vehículo"
+msgstr "^BGPulsa ^F2%s^BG para entrar en el artillero del vehículo"
 
 #: qcsrc/common/notifications/all.inc:778
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
-msgstr "^BGPresiona ^F2%s^BG para robar este vehículo"
+msgstr "^BGPulsa ^F2%s^BG para robar este vehículo"
 
 #: qcsrc/common/notifications/all.inc:779
 msgid ""
@@ -4553,7 +4552,7 @@ msgstr "%s(^F1Bot^BG)"
 #: qcsrc/common/notifications/all.qh:470
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
-msgstr "%s(Latencia ^F1%d^BG)"
+msgstr "%s(Ping ^F1%d^BG)"
 
 #: qcsrc/common/notifications/all.qh:477
 #, c-format
@@ -5200,7 +5199,7 @@ msgstr "NOTAMIDI%d"
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 #, c-format
 msgid "Press %s"
-msgstr "Presiona %s"
+msgstr "Pulsa %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:954
 msgid "No right gunner!"
@@ -5574,8 +5573,8 @@ msgstr "Opciones disponibles:"
 #: qcsrc/menu/command/menu_cmd.qc:130
 msgid "Invalid command. For a list of supported commands, try menu_cmd help."
 msgstr ""
-"Orden no válida. Para obtener una lista de órdenes válidas, escriba menu_cmd "
-"help."
+"Comando inválido. Para obtener una lista de comandos válidos, escriba "
+"menu_cmd help."
 
 #: qcsrc/menu/item/listbox.qc:413
 #, c-format
@@ -5849,7 +5848,7 @@ msgstr "Nombre bajo el cual aparecerás en el juego"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
-msgstr "Idioma:"
+msgstr "Texto del idioma:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:78
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
@@ -6217,7 +6216,7 @@ msgstr "Forzar aspecto:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
-msgstr "Panel de Teclas presionadas"
+msgstr "Panel de Teclas Pulsadas"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -6610,7 +6609,7 @@ msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
 msgstr ""
-"Juega online, contra tus amigos en LAN, ver demos o cambia la configuración "
+"Juega online, contra tus amigos en LAN, ver demos o cambia lconfiguración "
 "del jugador"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
@@ -6761,8 +6760,8 @@ msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
 msgstr ""
-"Haz click aquí o presiona Ctrl-F para proveer una palabra clave para reducir "
-"la lista de mapas. Ctrl-Suprimir para despejar; Presione Entrar cuando haya "
+"Haz click aquí o pulsa Ctrl-F para proveer una palabra clave para reducir la "
+"lista de mapas. Ctrl-Suprimir para despejar; Pulse Entrar cuando haya "
 "acabado."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:184
@@ -7003,8 +7002,8 @@ msgstr "Gancho de agarre"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr ""
-"Los jugadores aparecen con el gancho de agarre. Presione la tecla 'gancho' "
-"para usarlo"
+"Los jugadores aparecen con el gancho de agarre. Pulse la tecla 'gancho' para "
+"usarlo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:216
 msgid ""
@@ -7012,7 +7011,7 @@ msgid ""
 "to use it"
 msgstr ""
 "Los jugadores aparecen con la mochila propulsora. Toca dos veces 'saltar' o "
-"presiona la tecla 'mochila propulsora' para usarlo"
+"pulsa la tecla 'mochila propulsora' para usarlo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
 msgid ""
@@ -7051,7 +7050,7 @@ msgstr "Las armas se quedan después de ser recogidas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:245
 msgid "Regular (no arena)"
-msgstr "Normal (no arena)"
+msgstr "Regular (sin arena)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:246
 msgid ""
@@ -8752,7 +8751,7 @@ msgstr "Factor del zoom:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr "El tamaño del factor de zoom cuando la tecla de zoom es presionada"
+msgstr "El tamaño del factor de zoom cuando la tecla de zoom es pulsada"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:80
 msgid "ZOOM^Zoom speed:"
@@ -8899,7 +8898,7 @@ msgstr "Limpiar"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:53
 msgid "Reset all"
-msgstr "Reiniciar todo"
+msgstr "Restablecer todo"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:58
 msgid "Mouse"
@@ -8951,16 +8950,16 @@ msgstr "Hacer uso de la entrada DGA del ratón"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:94
 msgid "Pressing \"enter console\" key also closes it"
-msgstr "Presionar la tecla \"abrir consola\" y cerrarla"
+msgstr "Pulsar la tecla \"entrar en la consola\" y cerrarla"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
-msgstr "Permite el fijar un lazo de la consola para tambien cerrarla"
+msgstr "Permitir el atajo de la tecla de la consola para también cerrarla"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "Automatically repeat jumping if holding jump"
 msgstr ""
-"Repetir automáticamente el salto si se mantiene presinado la tecla de saltar"
+"Repetir automáticamente el salto si se mantiene pulsado la tecla de saltar"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:100
 msgid "Jetpack on jump:"
@@ -8986,7 +8985,7 @@ msgstr "Usar entrada de joystick"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:31
 msgid "Command when pressed:"
-msgstr "Comando cuando se presiona:"
+msgstr "Comando cuando se pulsa:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:34
 msgid "Command when released:"
@@ -9026,7 +9025,7 @@ msgstr "Puerto UDP del cliente:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Force client to use chosen port unless it is set to 0"
 msgstr ""
-"Forzar al cliente a usar un puerto elegido a menos que esté establecido en 0"
+"Forzar al cliente a usar un puerto elegido a menos que esté establecido a 0"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
 msgid "Bandwidth:"
@@ -9479,7 +9478,7 @@ msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
 msgstr ""
-"Valor de corrección de gama inverso, un efecto de brillo que no afecta a al "
+"Valor de corrección de gama inverso, un efecto de brillo que no afecta al "
 "blanco o al negro"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:133
@@ -9806,7 +9805,7 @@ msgstr "menú del editor de puntos de encuentro"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:96 qcsrc/menu/xonotic/mainwindow.qc:99
 msgid "Do not press this button again!"
-msgstr "¡No vuelva a presionar este botón!"
+msgstr "¡No vuelva a pulsar este botón!"
 
 #: qcsrc/menu/xonotic/maplist.qc:288
 msgid ""
@@ -9858,7 +9857,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:733
 msgid "Ping"
-msgstr "Latencia"
+msgstr "Ping"
 
 #: qcsrc/menu/xonotic/serverlist.qc:734
 msgid "Hostname"
