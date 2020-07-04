@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-02 22:35+0000\n"
+"PO-Revision-Date: 2020-07-03 23:46+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -1202,7 +1202,7 @@ msgstr "%d segundos restantes"
 
 #: qcsrc/client/mapvoting.qc:512
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
-msgstr "mv_mapdownload: ^3¡No deberias usar este comando por tu cuenta!"
+msgstr "mv_mapdownload: ^3¡No deberías usar este comando por tu cuenta!"
 
 #: qcsrc/client/mapvoting.qc:522
 msgid "^1Error:^7 Couldn't find pak index."
@@ -2978,8 +2978,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr ""
-"^BGEl punto de control %s^BG del equipo ^TC^TT^BG ha sido destruido por %s"
+msgstr "^BGEl punto de control del equipo ^TC^TT^BG ha sido destruido por %s"
 
 #: qcsrc/common/notifications/all.inc:406
 msgid "^TC^TT^BG generator has been destroyed"
