@@ -137,6 +137,7 @@ void HUD_StrafeHUD()
         float  accelzone_width;
         float  overturn_offset;
         float  overturn_width;
+        float  slickdetector_height;
         vector direction_size_vertical       = '0 0 0';
         vector direction_size_horizontal     = '0 0 0';
         float  range_minangle;
@@ -553,6 +554,53 @@ void HUD_StrafeHUD()
                 // draw the switch indicators
                 HUD_Panel_DrawStrafeHUD(switch_offset, bestangle_width, autocvar_hud_panel_strafehud_switch_inactive_color, autocvar_hud_panel_strafehud_switch_inactive_alpha * panel_fg_alpha, 0, 0);
                 HUD_Panel_DrawStrafeHUD(offset, bestangle_width, switch_color, switch_alpha * panel_fg_alpha, 0, 0);
+            }
+        }
+
+        slickdetector_height = panel_size.y * bound(0, autocvar_hud_panel_strafehud_slickdetector_height, 0.5);
+        if(autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0) // dunno if slick detection works in spectate
+        {
+            float slicksteps = 90 / pow(2, bound(0, autocvar_hud_panel_strafehud_slickdetector_granularity, 4));
+            vector slickoffset;
+            bool slickdetected = false;
+
+            slickdetected = IS_ONSLICK(strafeplayer); // don't need to traceline if already touching slick
+
+            // traceline into every direction
+            trace_dphitq3surfaceflags = 0;
+            for(float i = 0; i < 360 && !slickdetected; i += slicksteps)
+            {
+                float slickrotate;
+                slickoffset.z = -cos(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
+                slickrotate = sin(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
+                if(i != 0 && i != 180)
+                {
+                    for(float j = 0; j < 180 && !slickdetected; j += slicksteps)
+                    {
+                        slickoffset.x = sin(j * DEG2RAD) * slickrotate;
+                        slickoffset.y = cos(j * DEG2RAD) * slickrotate;
+
+                        traceline(strafeplayer.origin, strafeplayer.origin + slickoffset, MOVE_WORLDONLY, NULL);
+                        if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) slickdetected = true;
+                    }
+                }
+                else
+                {
+                    slickoffset.x = slickoffset.y = 0;
+                    traceline(strafeplayer.origin, strafeplayer.origin + slickoffset, MOVE_WORLDONLY, NULL);
+                    if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) slickdetected = true;
+                }
+            }
+
+            // if one traceline hit a slick surface
+            if(slickdetected)
+            {
+                vector slickdetector_size = panel_size;
+                slickdetector_size.y = slickdetector_height;
+                // top horizontal line
+                drawfill(panel_pos - eY * slickdetector_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                // bottom horizontal line
+                drawfill(panel_pos + eY * panel_size.y, slickdetector_size, autocvar_hud_panel_strafehud_slickdetector_color, autocvar_hud_panel_strafehud_slickdetector_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
             }
         }
 
