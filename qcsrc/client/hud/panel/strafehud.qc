@@ -102,7 +102,7 @@ void HUD_StrafeHUD()
         float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
         float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_crouch_mod * maxspeed_water_mod : 320;
         float  vel_angle                     = vectoangles(strafeplayer.velocity).y;
-        float  view_angle                    = view_angles.y + 180;
+        float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y + 180;
         float  angle;
         vector movement                      = PHYS_INPUT_MOVEVALUES(strafeplayer);
         int    keys                          = STAT(PRESSED_KEYS);
@@ -382,6 +382,7 @@ void HUD_StrafeHUD()
         }
         else // simulate turning for HUD setup
         {
+            fwd = true;
             if(autocvar__hud_panel_strafehud_demo && ((time - demo_time) >= .025))
             {
                 demo_time = time;
@@ -561,7 +562,6 @@ void HUD_StrafeHUD()
         if(autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0) // dunno if slick detection works in spectate
         {
             float slicksteps = 90 / pow(2, bound(0, autocvar_hud_panel_strafehud_slickdetector_granularity, 4));
-            vector slickoffset;
             bool slickdetected = false;
 
             slickdetected = IS_ONSLICK(strafeplayer); // don't need to traceline if already touching slick
@@ -570,6 +570,7 @@ void HUD_StrafeHUD()
             trace_dphitq3surfaceflags = 0;
             for(float i = 0; i < 360 && !slickdetected; i += slicksteps)
             {
+                vector slickoffset;
                 float slickrotate;
                 slickoffset.z = -cos(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
                 slickrotate = sin(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
@@ -592,7 +593,7 @@ void HUD_StrafeHUD()
                 }
             }
 
-            // if one traceline hit a slick surface
+            // if a traceline hit a slick surface
             if(slickdetected)
             {
                 vector slickdetector_size = panel_size;
@@ -639,7 +640,7 @@ void HUD_StrafeHUD()
             if(fabs(moveangle) > 90)
             {
                 strafe_ratio = -((fabs(moveangle) - 90) / 90);
-                if(strafe_ratio < -1) strafe_ratio = -1 - strafe_ratio%1;
+                if(strafe_ratio < -1) strafe_ratio = -2 - strafe_ratio;
             }
             else
             {
