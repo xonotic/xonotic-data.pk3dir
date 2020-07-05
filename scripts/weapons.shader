@@ -79,6 +79,14 @@ minelayer
 		rgbgen lightingDiffuse
 	}
 }
+shotarc
+{
+	dpreflectcube cubemaps/default/sky
+	{
+		map textures/shotarc.tga
+		rgbgen lightingDiffuse
+	}
+}
 shotgun
 {
 	dpreflectcube cubemaps/default/sky
