@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-03 22:41+0000\n"
+"PO-Revision-Date: 2020-07-04 22:02+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:81
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2%sへの書き出すに成功! (註: data/data/ に保存さる)"
+msgstr "^2%sへの書き出すに成功! (註: data/data/ に保存されました)"
 
 #: qcsrc/client/hud/hud_config.qc:85
 #, c-format
@@ -523,7 +523,7 @@ msgstr "スタート"
 #: qcsrc/client/hud/panel/racetimer.qc:85
 #: qcsrc/client/hud/panel/racetimer.qc:89
 msgid "Finish line"
-msgstr "ゴール"
+msgstr "フィニッシュライン"
 
 #: qcsrc/client/hud/panel/racetimer.qc:87
 #: qcsrc/client/hud/panel/racetimer.qc:156
@@ -564,7 +564,7 @@ msgstr "ボール持ち時刻"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr "キープアウェイでボールを保持している時刻の合計"
+msgstr "キープアウェイでボールを保持している時刻の合計の量"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
@@ -760,7 +760,8 @@ msgstr "目的"
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
-msgstr "旗 (CTF) または鍵 (KeyHunt) またはボール (Keepaway) が取り上げてた頻度"
+msgstr ""
+"旗 (CTF) または鍵 (KeyHunt) またはボール (Keepaway) が取り上げされた頻度"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^pickups"
@@ -1069,7 +1070,7 @@ msgstr "^1HUD構成モードに入る前に回答する必要があります"
 
 #: qcsrc/client/hud/panel/vote.qc:36
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr "統計では \"^1Anonymous player^7\" ではなく ^2Name"
+msgstr "統計では \"^1Anonymous player^7\" ではなく ^2名前"
 
 #: qcsrc/client/hud/panel/vote.qc:122
 msgid "A vote has been called for:"
@@ -1186,11 +1187,11 @@ msgstr "プレビューをリクエストしている..."
 
 #: qcsrc/client/miscfunctions.qc:111
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr ""
+msgstr "チームリストにないチームを削除しようとしています!"
 
 #: qcsrc/client/view.qc:939
 msgid "Nade timer"
-msgstr ""
+msgstr "手榴弾タイマー"
 
 #: qcsrc/client/view.qc:944
 msgid "Capture progress"
@@ -1202,67 +1203,67 @@ msgstr "蘇生中"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
-msgstr ""
+msgstr "error creating curl handle"
 
 #: qcsrc/common/command/generic.qc:412
 msgid "Notification restart command only works with cl_cmd and sv_cmd."
-msgstr ""
+msgstr "通知再起動コマンドは、cl_cmd および sv_cmd でのみ機能します。"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
-msgstr ""
+msgstr "ボールスティーラー"
 
 #: qcsrc/common/items/item/ammo.qh:66
 msgid "bullets"
-msgstr ""
+msgstr "弾丸"
 
 #: qcsrc/common/items/item/ammo.qh:96
 msgid "cells"
-msgstr ""
+msgstr "セル"
 
 #: qcsrc/common/items/item/ammo.qh:126
 msgid "plasma"
-msgstr ""
+msgstr "プラズマ"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "rockets"
-msgstr ""
+msgstr "ロケット"
 
 #: qcsrc/common/items/item/ammo.qh:190
 msgid "shells"
-msgstr ""
+msgstr "シェル"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
-msgstr ""
+msgstr "小さな鎧"
 
 #: qcsrc/common/items/item/armor.qh:80
 msgid "Medium armor"
-msgstr ""
+msgstr "中程度の鎧"
 
 #: qcsrc/common/items/item/armor.qh:118 qcsrc/common/items/item/armor.qh:121
 msgid "Big armor"
-msgstr ""
+msgstr "大きな鎧"
 
 #: qcsrc/common/items/item/armor.qh:158 qcsrc/common/items/item/armor.qh:161
 msgid "Mega armor"
-msgstr ""
+msgstr "メガ鎧"
 
 #: qcsrc/common/items/item/health.qh:42
 msgid "Small health"
-msgstr ""
+msgstr "小さな健康"
 
 #: qcsrc/common/items/item/health.qh:80
 msgid "Medium health"
-msgstr ""
+msgstr "中程度の健康"
 
 #: qcsrc/common/items/item/health.qh:118 qcsrc/common/items/item/health.qh:121
 msgid "Big health"
-msgstr ""
+msgstr "大きな健康"
 
 #: qcsrc/common/items/item/health.qh:158 qcsrc/common/items/item/health.qh:161
 msgid "Mega health"
-msgstr ""
+msgstr "メガ健康"
 
 #: qcsrc/common/items/item/jetpack.qh:38 qcsrc/common/items/item/jetpack.qh:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
@@ -1304,7 +1305,7 @@ msgstr "削除制限:"
 #: qcsrc/common/mapinfo.qh:72 qcsrc/common/mapinfo.qh:334
 #: qcsrc/common/mapinfo.qh:529
 msgid "The amount of frags needed before the match will end"
-msgstr ""
+msgstr "試合が終了する前に必要な削除の量"
 
 #: qcsrc/common/mapinfo.qh:115
 msgid "Deathmatch"
@@ -1312,7 +1313,7 @@ msgstr "デスマッチ (DM)"
 
 #: qcsrc/common/mapinfo.qh:115
 msgid "Score as many frags as you can"
-msgstr ""
+msgstr "できるだけ多くの削除を得点する"
 
 #: qcsrc/common/mapinfo.qh:128
 msgid "Last Man Standing"
@@ -1320,7 +1321,7 @@ msgstr "ラストマンスタンディング (LMS)"
 
 #: qcsrc/common/mapinfo.qh:128
 msgid "Survive and kill until the enemies have no lives left"
-msgstr ""
+msgstr "敵の命がなくなるまで生き残って、殺して"
 
 #: qcsrc/common/mapinfo.qh:137
 msgid "Lives:"
@@ -1332,7 +1333,7 @@ msgstr "レース"
 
 #: qcsrc/common/mapinfo.qh:149
 msgid "Race against other players to the finish line"
-msgstr ""
+msgstr "フィニッシュラインに他の選手とのレース"
 
 #: qcsrc/common/mapinfo.qh:176
 msgid "Laps:"
@@ -1344,18 +1345,18 @@ msgstr "レース (CTS)"
 
 #: qcsrc/common/mapinfo.qh:189
 msgid "Race for fastest time."
-msgstr ""
+msgstr "最高の時刻のためのレース。"
 
 #: qcsrc/common/mapinfo.qh:206 qcsrc/common/mapinfo.qh:257
 #: qcsrc/common/mapinfo.qh:373 qcsrc/common/mapinfo.qh:416
 #: qcsrc/common/mapinfo.qh:442 qcsrc/common/mapinfo.qh:462
 #: qcsrc/common/mapinfo.qh:582
 msgid "Point limit:"
-msgstr ""
+msgstr "ポイント制限:"
 
 #: qcsrc/common/mapinfo.qh:219
 msgid "Help your team score the most frags against the enemy team"
-msgstr ""
+msgstr "あなたのチームが敵チームに対して最も多くの削除を獲得するのを助けて"
 
 #: qcsrc/common/mapinfo.qh:219
 msgid "Team Deathmatch"
@@ -1364,7 +1365,7 @@ msgstr "チームデスマッチ (TDM)"
 #: qcsrc/common/mapinfo.qh:257 qcsrc/common/mapinfo.qh:373
 #: qcsrc/common/mapinfo.qh:416
 msgid "The amount of points needed before the match will end"
-msgstr ""
+msgstr "試合が終了する前に必要なポイントの量"
 
 #: qcsrc/common/mapinfo.qh:271
 msgid "Capture the Flag"
@@ -1375,6 +1376,7 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"敵の旗を見つけて基地に持ってきて、それを取れて、他のチームから基地を守って"
 
 #: qcsrc/common/mapinfo.qh:289
 msgid "Capture limit:"
@@ -1382,7 +1384,7 @@ msgstr "取れ制限:"
 
 #: qcsrc/common/mapinfo.qh:289
 msgid "The amount of captures needed before the match will end"
-msgstr ""
+msgstr "試合が終了する前に必要な取れの量"
 
 #: qcsrc/common/mapinfo.qh:306
 msgid "Clan Arena"
@@ -1390,11 +1392,11 @@ msgstr "クランアリーナ (CA)"
 
 #: qcsrc/common/mapinfo.qh:306
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "ラウンドに勝つためにすべての敵チームメイトを殺して"
 
 #: qcsrc/common/mapinfo.qh:350
 msgid "Capture and defend all the control points to win"
-msgstr ""
+msgstr "勝つためにすべてのコントロールポイントを取れて、防御して"
 
 #: qcsrc/common/mapinfo.qh:350
 msgid "Domination"
@@ -1402,7 +1404,7 @@ msgstr "ドミネート (Domination)"
 
 #: qcsrc/common/mapinfo.qh:388
 msgid "Gather all the keys to win the round"
-msgstr ""
+msgstr "ラウンドに勝つためのすべての鍵を集まる"
 
 #: qcsrc/common/mapinfo.qh:388
 msgid "Key Hunt"
@@ -1417,10 +1419,11 @@ msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
+"時刻がなくなる前に敵のパワーコアを見つけて破壊するために障害物を破壊して"
 
 #: qcsrc/common/mapinfo.qh:452
 msgid "Capture control points to reach and destroy the enemy generator"
-msgstr ""
+msgstr "コントロールポイントを取れて、敵のジェネレーターに到達して破壊して"
 
 #: qcsrc/common/mapinfo.qh:452
 msgid "Onslaught"
@@ -1432,7 +1435,7 @@ msgstr "ネクスボール (Nexball)"
 
 #: qcsrc/common/mapinfo.qh:474
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
-msgstr ""
+msgstr "ボールを撃って敵のゴールに蹴り込んで、あなたのゴールを清潔にして"
 
 #: qcsrc/common/mapinfo.qh:488
 msgid "Goals:"
@@ -1440,7 +1443,7 @@ msgstr "ゴール:"
 
 #: qcsrc/common/mapinfo.qh:488
 msgid "The amount of goals needed before the match will end"
-msgstr ""
+msgstr "試合が終了する前に必要なゴールの量"
 
 #: qcsrc/common/mapinfo.qh:501
 msgid "Freeze Tag"
@@ -1451,10 +1454,12 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"敵を凍らせてために殺して、チームメイトを復活させるために凍ったチームメイトの"
+"隣に立って；勝つためにすべての敵を凍結して"
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Hold the ball to get points for kills"
-msgstr ""
+msgstr "殺された者のポイントを獲得するためにボールを保持して"
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Keepaway"
@@ -1462,45 +1467,45 @@ msgstr "キープアウェイ (Keepaway)"
 
 #: qcsrc/common/mapinfo.qh:560
 msgid "Invasion"
-msgstr ""
+msgstr "侵入"
 
 #: qcsrc/common/mapinfo.qh:560
 msgid "Survive against waves of monsters"
-msgstr ""
+msgstr "モンスターの波に対して生き残って"
 
 #: qcsrc/common/mapinfo.qh:590
 msgid "Duel"
-msgstr ""
+msgstr "決闘"
 
 #: qcsrc/common/mapinfo.qh:590
 msgid "Fight in a one versus one arena battle to decide the winner"
-msgstr ""
+msgstr "勝者を決定しために一対一のアリーナバトルで戦って"
 
 #: qcsrc/common/minigames/cl_minigames.qc:383
 msgid "It's your turn"
-msgstr ""
+msgstr "あなたのターン"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:366
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
-msgstr ""
+msgstr "終了する"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:371
 msgid "Invite"
-msgstr ""
+msgstr "招待する"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:410
 msgid "Current Game"
-msgstr ""
+msgstr "現在のゲーム"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:435
 msgid "Exit Menu"
-msgstr ""
+msgstr "終了メニュー"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:447
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Create"
-msgstr ""
+msgstr "作成する"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:450
 msgid "Join"
@@ -1508,66 +1513,66 @@ msgstr "参加する"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:526
 msgid "Minigames"
-msgstr ""
+msgstr "ミニゲーム"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:587
 msgid "Minigame message"
-msgstr ""
+msgstr "ミニゲームメッセージ"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "ブルドーザー"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1092
 #: qcsrc/common/minigames/minigame/ps.qc:421
 #: qcsrc/common/minigames/minigame/ps.qc:427
 msgid "Game over!"
-msgstr ""
+msgstr "ゲームオーバー!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "よくやった！ 「次のレベル」をクリックして続行する"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
-msgstr ""
+msgstr "次回は頑張って!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1167
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "管状! 「次のレベル」を押して続行して!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1169
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "邪悪! 「次のレベル」を押して続行して!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1173
 msgid "Press the space bar to change your currently selected tile"
-msgstr ""
+msgstr "現在選択されているタイルを変更するためにスペースバーを押して"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1176
 msgid "Push the boulders onto the targets"
-msgstr ""
+msgstr "岩を目標に押し込んで"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1403
 msgid "Next Level"
-msgstr ""
+msgstr "次のレベル"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1404
 msgid "Restart"
-msgstr ""
+msgstr "再起動する"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1405
 msgid "Editor"
-msgstr ""
+msgstr "編集"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1406
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
-msgstr ""
+msgstr "セーブ"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "四目並べ"
 
 #: qcsrc/common/minigames/minigame/c4.qc:311
 #: qcsrc/common/minigames/minigame/c4.qc:317
@@ -1577,45 +1582,45 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:368
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 がゲームに勝利した!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
 #: qcsrc/common/minigames/minigame/ttt.qc:319
 msgid "Draw"
-msgstr ""
+msgstr "ドロー"
 
 #: qcsrc/common/minigames/minigame/c4.qc:378
 #: qcsrc/common/minigames/minigame/nmm.qc:606
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:326
 msgid "You lost the game!"
-msgstr ""
+msgstr "あなたはゲームに負けた!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:379
 #: qcsrc/common/minigames/minigame/nmm.qc:607
 #: qcsrc/common/minigames/minigame/pp.qc:445
 #: qcsrc/common/minigames/minigame/ttt.qc:327
 msgid "You win!"
-msgstr ""
+msgstr "あなたが勝つ!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
 #: qcsrc/common/minigames/minigame/nmm.qc:611
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:338
 msgid "Wait for your opponent to make their move"
-msgstr ""
+msgstr "対戦相手の動きを待って"
 
 #: qcsrc/common/minigames/minigame/c4.qc:386
 #: qcsrc/common/minigames/minigame/nmm.qc:613
 #: qcsrc/common/minigames/minigame/pp.qc:459
 #: qcsrc/common/minigames/minigame/ttt.qc:341
 msgid "Click on the game board to place your piece"
-msgstr ""
+msgstr "駒を配置しためにゲームボードをクリックして"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:7
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "ナイン・メンズ・モリス"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 msgid ""
@@ -4396,6 +4401,8 @@ msgid ""
 "\n"
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
+"\n"
+"（健康 ^1%d^BG / 鎧 ^2%d^BG）%s"
 
 #: qcsrc/common/notifications/all.qh:479
 #, c-format
@@ -4403,6 +4410,8 @@ msgid ""
 "\n"
 "(^F4Dead^BG)%s"
 msgstr ""
+"\n"
+"( ^F4^死んだBG )%s"
 
 #: qcsrc/common/notifications/all.qh:500 qcsrc/common/notifications/all.qh:513
 #, c-format
@@ -5849,7 +5858,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
-msgstr "健康/鎧パネル"
+msgstr "健康 / 鎧 パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:16
 msgid "Info messages:"

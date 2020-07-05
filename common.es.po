@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-03 23:46+0000\n"
+"PO-Revision-Date: 2020-07-04 20:39+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -656,7 +656,7 @@ msgstr "el más rápido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:115
 msgid "Time of fastest lap (Race/CTS)"
-msgstr "Tiempo de la vuelta más rápida (Race/CTS)"
+msgstr "Tiempo de la vuelta más rápida (Carrera/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:116
 msgid "Number of faults committed"
@@ -734,7 +734,7 @@ msgstr "muertes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of laps finished (Race/CTS)"
-msgstr "Número de vueltas terminadas (carrera/cts)"
+msgstr "Número de vueltas terminadas (Carrera/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "SCO^laps"
@@ -898,7 +898,7 @@ msgstr "tiempo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Total time raced (Race/CTS)"
-msgstr "Tiempo total de carrera (Race/CTS)"
+msgstr "Tiempo total de carrera (Carrera/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:330
 msgid ""
@@ -1214,7 +1214,7 @@ msgstr "Solicitando vista previa..."
 
 #: qcsrc/client/miscfunctions.qc:111
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr "¡Intentado eliminar un equipo que no esta en la lista de equipos!"
+msgstr "¡Intentado eliminar un equipo que no está en la lista de equipos!"
 
 #: qcsrc/client/view.qc:939
 msgid "Nade timer"
@@ -1361,7 +1361,7 @@ msgstr "Carrera"
 
 #: qcsrc/common/mapinfo.qh:149
 msgid "Race against other players to the finish line"
-msgstr "Carrera contra otros jugadores hasta la linea de meta"
+msgstr "Carrera contra otros jugadores hasta la línea de meta"
 
 #: qcsrc/common/mapinfo.qh:176
 msgid "Laps:"
@@ -6120,7 +6120,7 @@ msgstr "Habilitar incluso observando"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Enable only in Race/CTS"
-msgstr "Habilitar solo en Race/CTS"
+msgstr "Habilitar sólo en Carrera/CTS"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
@@ -6608,7 +6608,7 @@ msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
 msgstr ""
-"Juega online, contra tus amigos en LAN, ver demos o cambia lconfiguración "
+"Juega online, contra tus amigos en LAN, ver demos o cambiar configuración "
 "del jugador"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
