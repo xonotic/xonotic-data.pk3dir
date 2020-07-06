@@ -105,6 +105,7 @@ void HUD_StrafeHUD()
         bool   onground                      = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
         bool   strafekeys;
         bool   swimming                      = strafeplayer.waterlevel >= WATERLEVEL_SWIMMING;
+        bool   spectating                    = entcs_GetSpecState(strafeplayer.sv_entnum) == ENTCS_SPEC_PURE;
         float  speed                         = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337; // use local csqcmodel entity for this even when spectating, flickers too much otherwise
         float  maxspeed_crouch_mod           = IS_DUCKED(strafeplayer) && !swimming ? .5 : 1;
         float  maxspeed_water_mod            = swimming ? .7 : 1; // very simplified water physics, the hud will not work well (and is not supposed to) while swimming
@@ -660,9 +661,9 @@ void HUD_StrafeHUD()
             float jumpheight_min = max(autocvar_hud_panel_strafehud_jumpheight_min * length_conversion_factor, 0);
             float jumpheight_current = strafeplayer.origin.z;
             float jumpspeed_current = strafeplayer.velocity.z;
-            if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer))
+            if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
             {
-                if(IS_DEAD(strafeplayer))
+                if(IS_DEAD(strafeplayer) || spectating)
                 {
                     jumpheight_prev = jumpheight_current;
                     jumpspeed_prev = jumpspeed_current;
