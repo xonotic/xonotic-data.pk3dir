@@ -658,7 +658,7 @@ void HUD_StrafeHUD()
         if(autocvar_hud_panel_strafehud_jumpheight_fade > 0)
         {
             float text_alpha = 0;
-            float jumpheight_min = max(autocvar_hud_panel_strafehud_jumpheight_min * length_conversion_factor, 0);
+            float jumpheight_min = max(autocvar_hud_panel_strafehud_jumpheight_min, 0);
             float jumpheight_current = strafeplayer.origin.z;
             float jumpspeed_current = strafeplayer.velocity.z;
             if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
