@@ -654,7 +654,7 @@ void HUD_StrafeHUD()
             startspeed = -1;
         }
 
-        // show height achieved by a single jump
+        // show height achieved by a single jump (doesn't work in low gravity)
         if(autocvar_hud_panel_strafehud_jumpheight_fade > 0)
         {
             float text_alpha = 0;
@@ -663,11 +663,7 @@ void HUD_StrafeHUD()
             float jumpspeed_current = strafeplayer.velocity.z;
             if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
             {
-                if(IS_DEAD(strafeplayer) || spectating)
-                {
-                    jumpheight_prev = jumpheight_current;
-                    jumpspeed_prev = jumpspeed_current;
-                }
+                // doesn't catch spectating if the player instantaneously unspectates, would require to create a hook to for that (kill without respawn time seems to work fine)
                 jumprestart = true;
             }
             else
