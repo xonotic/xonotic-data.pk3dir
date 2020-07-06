@@ -681,7 +681,7 @@ void HUD_StrafeHUD()
                 {
                     jumpheight += jumpheight_current - jumpheight_prev;
                 }
-                if(jumpheight > jumpheight_min && jumpheight > jumpheight_persistent)
+                if((jumpheight * length_conversion_factor) > jumpheight_min && jumpheight > jumpheight_persistent)
                 {
                     jumptime = time;
                     jumpheight_persistent = jumpheight;
