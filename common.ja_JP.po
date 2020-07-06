@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-04 22:02+0000\n"
+"PO-Revision-Date: 2020-07-05 22:07+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:81
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr "^2%sへの書き出すに成功! (註: data/data/ に保存されました)"
+msgstr "^2%s への書き出すに成功! (註: data/data/ に保存されました)"
 
 #: qcsrc/client/hud/hud_config.qc:85
 #, c-format
@@ -934,9 +934,8 @@ msgstr ""
 "ト、\n"
 "次にスラッシュを配置して、フィールドをこれらにのみ表示することができます。ま"
 "たは、\n"
-"これらのゲームタイプ以外のすべて。また、フィールドとして「すべて」を指定し"
-"て、\n"
-"現在のゲームモードで使用可能なすべてのフィールドを表示することもできます。"
+"これらのゲームタイプ以外の全て。また、フィールドとして「全て」を指定して、\n"
+"現在のゲームモードで使用可能な全てのフィールドを表示することもできます。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:350
 msgid ""
@@ -944,7 +943,7 @@ msgid ""
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
 "特殊なゲームタイプ名 'team' および 'noteams' を使用して、\n"
-"すべてのチーム/チームなしゲームモードを含めたり、除外したりできます。"
+"全てのチーム/チームなしゲームモードを含めたり、除外したりできます。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:354
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -961,8 +960,8 @@ msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
-"'field3' はCTFでのみ表示され、'field4' は DM を除く他のすべてのゲームモードで"
-"表示される。"
+"'field3' はCTFでのみ表示され、'field4' は DM を除く他の全てのゲームモードで表"
+"示される。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:621
 #: qcsrc/client/hud/panel/scoreboard.qc:628
@@ -1033,7 +1032,7 @@ msgstr "^7マップ: ^2%s"
 #: qcsrc/client/hud/panel/scoreboard.qc:1823
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr "スピード賞: %d%s ^7(%s^7)"
+msgstr "速度の賞: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1827
 #, c-format
@@ -1392,11 +1391,11 @@ msgstr "クランアリーナ (CA)"
 
 #: qcsrc/common/mapinfo.qh:306
 msgid "Kill all enemy teammates to win the round"
-msgstr "ラウンドに勝つためにすべての敵チームメイトを殺して"
+msgstr "ラウンドに勝つために全ての敵チームメイトを殺して"
 
 #: qcsrc/common/mapinfo.qh:350
 msgid "Capture and defend all the control points to win"
-msgstr "勝つためにすべてのコントロールポイントを取れて、防御して"
+msgstr "勝つために全てのコントロールポイントを取れて、防御して"
 
 #: qcsrc/common/mapinfo.qh:350
 msgid "Domination"
@@ -1404,7 +1403,7 @@ msgstr "ドミネート (Domination)"
 
 #: qcsrc/common/mapinfo.qh:388
 msgid "Gather all the keys to win the round"
-msgstr "ラウンドに勝つためのすべての鍵を集まる"
+msgstr "ラウンドに勝つための全ての鍵を集まる"
 
 #: qcsrc/common/mapinfo.qh:388
 msgid "Key Hunt"
@@ -1455,7 +1454,7 @@ msgid ""
 "freeze all enemies to win"
 msgstr ""
 "敵を凍らせてために殺して、チームメイトを復活させるために凍ったチームメイトの"
-"隣に立って；勝つためにすべての敵を凍結して"
+"隣に立って；勝つために全ての敵を凍結して"
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Hold the ball to get points for kills"
@@ -1531,7 +1530,7 @@ msgstr "ゲームオーバー!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "よくやった！ 「次のレベル」をクリックして続行する"
+msgstr "よくやった! 「次のレベル」をクリックして続行する"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
@@ -1625,19 +1624,20 @@ msgstr "ナイン・メンズ・モリス"
 #: qcsrc/common/minigames/minigame/nmm.qc:615
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
-msgstr ""
+msgstr "駒の一つを選択して、周囲のいずれかの場所に移動できます"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:617
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr ""
+"盤上のどこにでもそれを移動するためにあなたの駒の一つを選択することができます"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 msgid "You can take one of the opponent's pieces"
-msgstr ""
+msgstr "対戦相手の駒の一つを取ることができます"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "ポン"
 
 #: qcsrc/common/minigames/minigame/pong.qc:589
 #: qcsrc/common/minigames/minigame/ttt.qc:299
@@ -1646,7 +1646,7 @@ msgstr "AI"
 
 #: qcsrc/common/minigames/minigame/pong.qc:606
 msgid "Press ^1Start Match^7 to start the match with the current players"
-msgstr ""
+msgstr "現在の選手との試合を開始するには、「^1試合開始^7」を押して"
 
 #: qcsrc/common/minigames/minigame/pong.qc:679
 msgid "Start Match"
@@ -1654,32 +1654,32 @@ msgstr "試合を開始"
 
 #: qcsrc/common/minigames/minigame/pong.qc:680
 msgid "Add AI player"
-msgstr ""
+msgstr "AI選手を追加する"
 
 #: qcsrc/common/minigames/minigame/pong.qc:681
 msgid "Remove AI player"
-msgstr ""
+msgstr "AI選手を削除する"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "プッシュプル"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:326
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr ""
+msgstr "再戦するのにメニューの「^1次の試合^7」を選択して!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:445
 #: qcsrc/common/minigames/minigame/pp.qc:451
 #: qcsrc/common/minigames/minigame/ttt.qc:327
 #: qcsrc/common/minigames/minigame/ttt.qc:333
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr ""
+msgstr "新しい試合を始めるのにメニューの「^1次の試合^7」を選択して!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:452
 #: qcsrc/common/minigames/minigame/ttt.qc:334
 msgid "Wait for your opponent to confirm the rematch"
-msgstr ""
+msgstr "対戦相手が再戦を確認するのを待って"
 
 #: qcsrc/common/minigames/minigame/pp.qc:587
 #: qcsrc/common/minigames/minigame/ttt.qc:671
@@ -1688,161 +1688,161 @@ msgstr "次の試合"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
-msgstr ""
+msgstr "ペグ・ソリテール"
 
 #: qcsrc/common/minigames/minigame/ps.qc:414
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "全ての駒をクリアした!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:416
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "残りの駒:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:481
 #, c-format
 msgid "Pieces left: %s"
-msgstr ""
+msgstr "残りの駒: %s"
 
 #: qcsrc/common/minigames/minigame/ps.qc:491
 msgid "No more valid moves"
-msgstr ""
+msgstr "もっと有効な動きがない"
 
 #: qcsrc/common/minigames/minigame/ps.qc:494
 msgid "Well done, you win!"
-msgstr ""
+msgstr "よくやった、あなたは勝った!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:497
 msgid "Jump a piece over another to capture it"
-msgstr ""
+msgstr "取れるために駒を別の駒の上に飛び越えて"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "三目並べ"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:672
 msgid "Single Player"
-msgstr ""
+msgstr "シングルプレーヤー"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
 msgid "Mage"
-msgstr ""
+msgstr "魔法使い"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
-msgstr ""
+msgstr "魔法使いのスパイク"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Shambler"
-msgstr ""
+msgstr "シャンブラー"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
 msgid "Spider"
-msgstr ""
+msgstr "蜘蛛"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
-msgstr ""
+msgstr "蜘蛛の攻撃"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
-msgstr ""
+msgstr "ワイバーン"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
-msgstr ""
+msgstr "ワイバーンの攻撃"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
-msgstr ""
+msgstr "ゾンビ"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:16
 msgid "Ammo"
-msgstr ""
+msgstr "弾薬"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:25
 msgid "Resistance"
-msgstr ""
+msgstr "抵抗"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:34
 #: qcsrc/common/mutators/mutator/instagib/items.qh:126
 #: qcsrc/common/mutators/mutator/instagib/items.qh:129
 msgid "Speed"
-msgstr ""
+msgstr "速度"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:44
 msgid "Medic"
-msgstr ""
+msgstr "再生"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:54
 msgid "Bash"
-msgstr ""
+msgstr "打撃"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:63
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:184
 msgid "Vampire"
-msgstr ""
+msgstr "吸血"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:71
 msgid "Disability"
-msgstr ""
+msgstr "障害"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:79
 msgid "Vengeance"
-msgstr ""
+msgstr "復讐"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:87
 msgid "Jump"
-msgstr ""
+msgstr "飛び越え"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:96
 msgid "Invisible"
-msgstr ""
+msgstr "不可視"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:105
 msgid "Inferno"
-msgstr ""
+msgstr "焦熱地獄"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:113
 msgid "Swapper"
-msgstr ""
+msgstr "スワッパー"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:121
 msgid "Magnet"
-msgstr ""
+msgstr "磁石"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:129
 msgid "Luck"
-msgstr ""
+msgstr "運"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:137
 msgid "Flight"
-msgstr ""
+msgstr "飛翔"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:11
 msgid "Buff"
-msgstr ""
+msgstr "バフ"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
-msgstr ""
+msgstr "ダメージテキスト"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:18
 msgid "Draw damage numbers"
-msgstr ""
+msgstr "ダメージ数を描く"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
-msgstr ""
+msgstr "最小フォントサイズ:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
-msgstr ""
+msgstr "最大フォントサイズ:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:55
@@ -1851,85 +1851,85 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
 #: qcsrc/menu/xonotic/util.qc:775
 msgid "Color:"
-msgstr ""
+msgstr "カラー:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:36
 msgid "Draw damage numbers for friendly fire"
-msgstr ""
+msgstr "同士打ちためにダメージ量を描く"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
-msgstr ""
+msgstr "気化器の弾薬"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
 msgid "Extra life"
-msgstr ""
+msgstr "余分な命"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:91
 #: qcsrc/common/mutators/mutator/instagib/items.qh:94
 msgid "Invisibility"
-msgstr ""
+msgstr "不可視"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
-msgstr ""
+msgstr "ナパーム手榴弾"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:26
 msgid "Ice grenade"
-msgstr ""
+msgstr "氷手榴弾"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:34
 msgid "Translocate grenade"
-msgstr ""
+msgstr "転座手榴弾"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:42
 msgid "Spawn grenade"
-msgstr ""
+msgstr "出現手榴弾"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:50
 msgid "Heal grenade"
-msgstr ""
+msgstr "癒し手榴弾"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:58
 msgid "Monster grenade"
-msgstr ""
+msgstr "モンスター手榴弾"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:66
 msgid "Entrap grenade"
-msgstr ""
+msgstr "閉じ込め手榴弾"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:74
 msgid "Veil grenade"
-msgstr ""
+msgstr "ベール手榴弾"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:33
 msgid "Grenade"
-msgstr ""
+msgstr "手榴弾"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:20
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "オーバーキル重機関銃"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:18
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "オーバーキル機関銃"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "オーバーキルネクス"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:20
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "オーバーキルロケット推進チェーンソー"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "オーバーキルショットガン"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr ""
+msgstr "ウェイポイント"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
@@ -1968,51 +1968,51 @@ msgstr "開始"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 msgid "Defend"
-msgstr ""
+msgstr "守る"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
 msgid "Destroy"
-msgstr ""
+msgstr "破壊する"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:19
 msgid "Push"
-msgstr ""
+msgstr "押す"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Flag carrier"
-msgstr ""
+msgstr "旗持ち"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Enemy carrier"
-msgstr ""
+msgstr "敵持ち"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:23
 msgid "Dropped flag"
-msgstr ""
+msgstr "落ちた旗"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "White base"
-msgstr ""
+msgstr "白い基地"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Red base"
-msgstr ""
+msgstr "赤い基地"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Blue base"
-msgstr ""
+msgstr "青い基地"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "Yellow base"
-msgstr ""
+msgstr "黄色い基地"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Pink base"
-msgstr ""
+msgstr "ピンク基地"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr ""
+msgstr "ここに旗を返して"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -2023,11 +2023,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:52
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Control point"
-msgstr ""
+msgstr "コントロールポイント"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 msgid "Dropped key"
-msgstr ""
+msgstr "落ちた鍵"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
@@ -2039,7 +2039,7 @@ msgstr "鍵持ち"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
-msgstr ""
+msgstr "ここに走って"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
@@ -2052,24 +2052,24 @@ msgstr "ボール持ち"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
-msgstr ""
+msgstr "目的 / ゴール"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Generator"
-msgstr ""
+msgstr "発生器"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Weapon"
-msgstr ""
+msgstr "武器"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 msgid "Monster"
-msgstr ""
+msgstr "モンスター"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Vehicle"
-msgstr ""
+msgstr "乗り物"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
@@ -5161,7 +5161,7 @@ msgstr "@!#%'nチューバ"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:19
 msgid "Vaporizer"
-msgstr "ヴァポリザー"
+msgstr "気化器"
 
 #: qcsrc/common/weapons/weapon/vortex.qh:19
 msgid "Vortex"
@@ -6656,7 +6656,7 @@ msgstr "マップ情報"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "All Weapons Arena"
-msgstr "すべての武器アリーナ"
+msgstr "全ての武器アリーナ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:30
 msgid "Most Weapons Arena"
@@ -7644,7 +7644,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
-msgstr "すべてのキーバインディングをリセットしてもよろしいですか?"
+msgstr "全てのキーバインディングをリセットしてもよろしいですか?"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qh:6
 msgid "Reset key bindings"
@@ -8959,7 +8959,7 @@ msgstr "高度な設定"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr "すべての設定をリセットしてもよろしいですか?"
+msgstr "全ての設定をリセットしてもよろしいですか?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"

@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-04 20:39+0000\n"
+"PO-Revision-Date: 2020-07-05 22:00+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -1214,7 +1214,7 @@ msgstr "Solicitando vista previa..."
 
 #: qcsrc/client/miscfunctions.qc:111
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr "¡Intentado eliminar un equipo que no está en la lista de equipos!"
+msgstr "¡Intentando eliminar un equipo que no está en la lista de equipos!"
 
 #: qcsrc/client/view.qc:939
 msgid "Nade timer"
@@ -2030,7 +2030,7 @@ msgstr "Portador enemigo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:23
 msgid "Dropped flag"
-msgstr "Bandera perdida"
+msgstr "Bandera caída"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "White base"
@@ -2069,7 +2069,7 @@ msgstr "Punto de control"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 msgid "Dropped key"
-msgstr "Llave perdida"
+msgstr "Llave caída"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
@@ -3560,7 +3560,7 @@ msgid ""
 msgstr ""
 "^BGAhora estás ^F1protegido^BG de la bandera(s)\n"
 "^BGfpor ^F2demasiados intentos fallidos^BG de captura.\n"
-"^BGAnota algún punto defensivo antes de intentarlo otra vez."
+"^BGAcierta algún punto defensivo antes de intentarlo de nuevo."
 
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGYou captured the ^TC^TT^BG flag!"
