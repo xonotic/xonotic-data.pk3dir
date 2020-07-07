@@ -71,7 +71,7 @@ ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
 void RegisterSLCategories();
-float CheckCategoryForEntry(float entry);
+float CategoryForEntry(float entry);
 void ServerList_Filter_Change(entity box, entity me);
 void ServerList_Categories_Click(entity box, entity me);
 void ServerList_ShowEmpty_Click(entity box, entity me);
@@ -127,8 +127,8 @@ float IsServerInList(string list, string srv);
 
 entity RetrieveCategoryEnt(float catnum);
 
-float CheckCategoryOverride(float cat);
-float m_gethostcachecategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
+float CategoryOverride(float cat);
+float m_gethostcachecategory(float entry) { return CategoryOverride(CategoryForEntry(entry)); }
 
 
 // fields for category entities

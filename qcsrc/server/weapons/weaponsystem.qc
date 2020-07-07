@@ -55,7 +55,7 @@ bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 
 vector CL_Weapon_GetShotOrg(int wpn)
 {
-	entity wi = Weapons_from(wpn);
+	entity wi = REGISTRY_GET(Weapons, wpn);
 	entity e = spawn();
 	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
@@ -366,6 +366,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
+		// this can happen when the weapon entity is newly spawned, since it has a clear state and no previous weapon frame
+		if (this.wframe == WFRAME_DONTCHANGE)
+			this.wframe = WFRAME_IDLE;
 		fr = this.wframe;
 		restartanim = false;
 	}
@@ -843,7 +846,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)
 {
-	Weapon w = Weapons_from(weapon_type);
+	Weapon w = REGISTRY_GET(Weapons, weapon_type);
 	weapon_dropevent_item = weapon_item;
 	w.event(w, player, weaponentity);
 }

@@ -82,3 +82,5 @@ const vector BUFF_MAX = ('16 16 60');
 
 // client side options
 .float cvar_cl_buffs_autoreplace;
+
+float buff_Available(entity buff);

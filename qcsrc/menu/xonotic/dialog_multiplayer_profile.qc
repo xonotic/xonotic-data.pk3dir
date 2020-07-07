@@ -36,7 +36,7 @@ void XonoticProfileTab_fill(entity me)
 	entity e, pms, label, box;
 	float i;
 	entity profileApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"color -1 -1;"
+		"color -1 -1;" // apply colors contained in _cl_color
 		"name \"$_cl_name\";"
 		"playermodel $_cl_playermodel;"
 		"playerskin $_cl_playerskin;"

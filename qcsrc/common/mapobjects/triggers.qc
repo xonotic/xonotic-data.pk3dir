@@ -43,7 +43,7 @@ void generic_netlinked_setactive(entity this, int act)
 
 void generic_netlinked_reset(entity this)
 {
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		if(this.spawnflags & START_ENABLED)
 		{

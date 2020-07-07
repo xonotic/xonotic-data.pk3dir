@@ -5,7 +5,7 @@ void Inventory_delete(entity this);
 
 void PlayerState_attach(entity this)
 {
-	if (PS(this))
+	if (PS(this) && PS(this).m_client == this)
 		return;
 
 	this._ps = NEW(PlayerState, this);

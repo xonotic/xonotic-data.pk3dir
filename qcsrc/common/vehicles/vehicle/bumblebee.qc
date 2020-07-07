@@ -1,5 +1,7 @@
 #include "bumblebee.qh"
 
+#ifdef GAMEQC
+
 #ifdef SVQC
 	#include <common/mutators/mutator/instagib/sv_instagib.qh>
 #endif
@@ -968,5 +970,7 @@ METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
     AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1
     AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
 }
+
+#endif
 
 #endif

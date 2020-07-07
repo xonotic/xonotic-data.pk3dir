@@ -4,6 +4,9 @@
 spawnfunc(trigger_counter);
 
 .float counter_cnt;
+
+IntrusiveList g_counters;
+STATIC_INIT(g_counters) { g_counters = IL_NEW(); }
 #endif
 
 const int COUNTER_FIRE_AT_COUNT = BIT(2);

@@ -31,11 +31,10 @@ const vector SAFERNUDGE = '8 8 8';
 
 float PlayerEdgeDistance(entity p, vector v)
 {
-	vector vbest;
-
-	if(v.x < 0) vbest.x = p.mins.x; else vbest.x = p.maxs.x;
-	if(v.y < 0) vbest.y = p.mins.y; else vbest.y = p.maxs.y;
-	if(v.z < 0) vbest.z = p.mins.z; else vbest.z = p.maxs.z;
+	vector vbest = vec3(
+		((v.x < 0) ? p.mins.x : p.maxs.x),
+		((v.y < 0) ? p.mins.y : p.maxs.y),
+		((v.z < 0) ? p.mins.z : p.maxs.z));
 
 	return vbest * v;
 }

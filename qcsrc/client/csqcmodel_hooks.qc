@@ -1,6 +1,5 @@
 #include "csqcmodel_hooks.qh"
 #include "autocvars.qh"
-#include "csqcmodel_hooks.qh"
 #include "miscfunctions.qh"
 #include <client/mutators/_mod.qh>
 #include "player_skeleton.qh"
@@ -109,7 +108,6 @@ string forceplayermodels_goodmodel;
 int forceplayermodels_goodmodelindex;
 
 .vector glowmod;
-.vector old_glowmod;
 
 void CSQCPlayer_ModelAppearance_PreUpdate(entity this)
 {
@@ -284,6 +282,13 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	LABEL(skipforcemodels)
 
+	if((this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST) && !autocvar_cl_respawn_ghosts_keepcolors)
+	{
+		this.glowmod = '0 0 0';
+		this.colormap = 0;
+		return;
+	}
+
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
 		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true) * 2;
@@ -294,16 +299,14 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	{
 		if(this.csqcmodel_isdead)
 		{
-			// Fade out to black now...
-			if(this.old_glowmod == '0 0 0') { this.old_glowmod = this.glowmod; }
-			this.colormap = 0;
-
-			this.glowmod = this.old_glowmod * bound(0, 1 - (time - this.death_time) / autocvar_cl_deathglow, 1);
-			this.glowmod_x = max(this.glowmod.x, 0.0001);
-			this.glowmod_y = max(this.glowmod.y, 0.0001);
-			this.glowmod_z = max(this.glowmod.z, 0.0001);
+			float min_factor = bound(0, autocvar_cl_deathglow_min, 1);
+			if(this.colormap > 0)
+				min_factor /= 2;
+			float glow_fade = bound(0, 1 - (time - this.death_time) / autocvar_cl_deathglow, 1);
+			this.glowmod *= (min_factor + glow_fade * (1 - min_factor));
+			if (this.glowmod == '0 0 0')
+				this.glowmod.x = 0.000001;
 		}
-		else if(this.old_glowmod != '0 0 0') { this.old_glowmod = '0 0 0'; }
 	}
 
 	//printf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (this.csqcmodel_isdead ? "DEAD" : "ALIVE"), this.colormap, vtos(this.glowmod));

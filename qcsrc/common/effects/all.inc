@@ -140,15 +140,36 @@ EFFECT(0, BIGPLASMA_MUZZLEFLASH,    "bigplasma_muzzleflash")
 EFFECT(0, TELEPORT,                 "teleport")
 
 EFFECT(0, SPAWNPOINT_RED,           "spawn_point_red")
-EFFECT(0, SPAWN_RED,                "spawn_event_red")
 EFFECT(0, SPAWNPOINT_BLUE,          "spawn_point_blue")
-EFFECT(0, SPAWN_BLUE,               "spawn_event_blue")
 EFFECT(0, SPAWNPOINT_YELLOW,        "spawn_point_yellow")
-EFFECT(0, SPAWN_YELLOW,             "spawn_event_yellow")
 EFFECT(0, SPAWNPOINT_PINK,          "spawn_point_pink")
-EFFECT(0, SPAWN_PINK,               "spawn_event_pink")
 EFFECT(0, SPAWNPOINT_NEUTRAL,       "spawn_point_neutral")
+entity EFFECT_SPAWNPOINT(int teamid)
+{
+    switch (teamid) {
+        case NUM_TEAM_1:    return EFFECT_SPAWNPOINT_RED;
+        case NUM_TEAM_2:    return EFFECT_SPAWNPOINT_BLUE;
+        case NUM_TEAM_3:    return EFFECT_SPAWNPOINT_YELLOW;
+        case NUM_TEAM_4:    return EFFECT_SPAWNPOINT_PINK;
+        default:            return EFFECT_SPAWNPOINT_NEUTRAL;
+    }
+}
+
+EFFECT(0, SPAWN_RED,                "spawn_event_red")
+EFFECT(0, SPAWN_BLUE,               "spawn_event_blue")
+EFFECT(0, SPAWN_YELLOW,             "spawn_event_yellow")
+EFFECT(0, SPAWN_PINK,               "spawn_event_pink")
 EFFECT(0, SPAWN_NEUTRAL,            "spawn_event_neutral")
+entity EFFECT_SPAWN(int teamid)
+{
+    switch (teamid) {
+        case NUM_TEAM_1:    return EFFECT_SPAWN_RED;
+        case NUM_TEAM_2:    return EFFECT_SPAWN_BLUE;
+        case NUM_TEAM_3:    return EFFECT_SPAWN_YELLOW;
+        case NUM_TEAM_4:    return EFFECT_SPAWN_PINK;
+        default:            return EFFECT_SPAWN_NEUTRAL;
+    }
+}
 
 EFFECT(0, ICEORGLASS,               "iceorglass")
 EFFECT(0, ICEFIELD,                 "icefield")

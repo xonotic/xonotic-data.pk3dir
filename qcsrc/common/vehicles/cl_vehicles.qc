@@ -134,7 +134,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		AuxiliaryXhair[0].axh_image = vCROSS_BURST; // Plasma cannons
 		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
 	} else {
-		Vehicle info = Vehicles_from(hud_id);
+		Vehicle info = REGISTRY_GET(Vehicles, hud_id);
     	info.vr_setup(info, NULL);
 	}
 }

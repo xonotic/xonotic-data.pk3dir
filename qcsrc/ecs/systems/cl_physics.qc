@@ -3,7 +3,6 @@
 void sys_phys_fix(entity this, float dt)
 {
 	this.team = myteam + 1; // is this correct?
-	PHYS_WATERJUMP_TIME(this) -= dt;
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 	this.items = STAT(ITEMS, this);
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump

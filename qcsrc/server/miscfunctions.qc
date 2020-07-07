@@ -243,7 +243,7 @@ string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
 		return wepent.m_weapon.m_name;
 	else if(wepent.m_switchweapon != WEP_Null)
 		return wepent.m_switchweapon.m_name;
-	return "none"; //Weapons_from(wepent.cnt).m_name;
+	return "none"; //REGISTRY_GET(Weapons, wepent.cnt).m_name;
 }
 
 string formatmessage(entity this, string msg)
@@ -719,7 +719,7 @@ void readplayerstartcvars()
 		for (int j = 0; j < t; ++j)
 		{
 			s = argv(j);
-			Weapon wep = Weapons_fromstr(s);
+			Weapon wep = Weapon_from_name(s);
 			if(wep != WEP_Null)
 			{
 				g_weaponarena_weapons |= (wep.m_wepset);
@@ -856,8 +856,13 @@ void readplayerstartcvars()
 
 void precache_playermodel(string m)
 {
-	float globhandle, i, n;
+	int globhandle, i, n;
 	string f;
+
+	// remove :<skinnumber> suffix
+	int j = strstrofs(m, ":", 0);
+	if(j >= 0)
+		m = substring(m, 0, j);
 
 	if(substring(m, -9, 5) == "_lod1")
 		return;
@@ -901,10 +906,8 @@ void precache_playermodels(string s)
 	FOREACH_WORD(s, true, { precache_playermodel(it); });
 }
 
-void precache()
+PRECACHE(PlayerModels)
 {
-    // gamemode related things
-
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
     {
@@ -924,20 +927,6 @@ void precache()
 		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
 		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
-
-#if 0
-    // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
-
-    if (!this.noise && this.music) // quake 3 uses the music field
-        this.noise = this.music;
-
-    // plays music for the level if there is any
-    if (this.noise)
-    {
-        precache_sound (this.noise);
-        ambientsound ('0 0 0', this.noise, VOL_BASE, ATTEN_NONE);
-    }
-#endif
 }
 
 

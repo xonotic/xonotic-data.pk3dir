@@ -12,11 +12,16 @@ vector w_shotend;
 // make sure you call makevectors first (FIXME?)
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range, int deathtype);
 
-#define W_SetupShot_Dir_ProjectileSize(ent,wepent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage,deathtype) W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, max_shot_distance, deathtype)
-#define W_SetupShot_ProjectileSize(ent,wepent,mi,ma,antilag,recoil,snd,chan,maxdamage,deathtype) W_SetupShot_Dir_ProjectileSize(ent, wepent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype)
-#define W_SetupShot_Dir(ent,wepent,s_forward,antilag,recoil,snd,chan,maxdamage,deathtype) W_SetupShot_Dir_ProjectileSize(ent, wepent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
-#define W_SetupShot(ent,wepent,antilag,recoil,snd,chan,maxdamage,deathtype) W_SetupShot_ProjectileSize(ent, wepent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
-#define W_SetupShot_Range(ent,wepent,antilag,recoil,snd,chan,maxdamage,range,deathtype) W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range, deathtype)
+#define W_SetupShot_Dir_ProjectileSize(ent, wepent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype) \
+	W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, max_shot_distance, deathtype)
+#define W_SetupShot_ProjectileSize(ent, wepent, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype) \
+	W_SetupShot_Dir_ProjectileSize(ent, wepent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype)
+#define W_SetupShot_Dir(ent, wepent, s_forward, antilag, recoil, snd, chan, maxdamage, deathtype) \
+	W_SetupShot_Dir_ProjectileSize(ent, wepent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
+#define W_SetupShot(ent, wepent, antilag, recoil, snd, chan, maxdamage, deathtype) \
+	W_SetupShot_ProjectileSize(ent, wepent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
+#define W_SetupShot_Range(ent, wepent, antilag, recoil, snd, chan, maxdamage, range, deathtype) \
+	W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range, deathtype)
 
 vector W_CalculateProjectileVelocity(entity actor, vector pvelocity, vector mvelocity, float forceAbsolute);
 
@@ -28,21 +33,28 @@ float mspercallcount;
 
 void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute);
 
-#define W_SetupProjVelocity_Basic(ent,pspeed,pspread) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, pspeed, 0, 0, pspread, false)
+#define W_SetupProjVelocity_Basic(ent,pspeed,pspread) \
+	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, pspeed, 0, 0, pspread, false)
 
-#define W_SetupProjVelocity_UP_PRE(ent,wepname,prefix) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), WEP_CVAR(wepname, prefix##speed_up), WEP_CVAR(wepname, prefix##speed_z), WEP_CVAR(wepname, prefix##spread), false)
-#define W_SetupProjVelocity_UP_PRI(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), false)
-#define W_SetupProjVelocity_UP_SEC(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), false)
+#define W_SetupProjVelocity_UP_PRE(ent, wepname, prefix) \
+	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), WEP_CVAR(wepname, prefix##speed_up), WEP_CVAR(wepname, prefix##speed_z), WEP_CVAR(wepname, prefix##spread), false)
+#define W_SetupProjVelocity_UP_PRI(ent, wepname) \
+	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), false)
+#define W_SetupProjVelocity_UP_SEC(ent, wepname) \
+	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), false)
 
-#define W_SetupProjVelocity_UP_BOTH(ent,wepname,isprimary) \
+#define W_SetupProjVelocity_UP_BOTH(ent, wepname, isprimary) \
 	if(isprimary) { W_SetupProjVelocity_UP_PRI(ent, wepname); } \
 	else { W_SetupProjVelocity_UP_SEC(ent, wepname); }
 
-#define W_SetupProjVelocity_PRE(ent,wepname,prefix) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), 0, 0, WEP_CVAR(wepname, prefix##spread), false)
-#define W_SetupProjVelocity_PRI(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), false)
-#define W_SetupProjVelocity_SEC(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), false)
+#define W_SetupProjVelocity_PRE(ent, wepname, prefix) \
+	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), 0, 0, WEP_CVAR(wepname, prefix##spread), false)
+#define W_SetupProjVelocity_PRI(ent, wepname) \
+	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), false)
+#define W_SetupProjVelocity_SEC(ent, wepname) \
+	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), false)
 
-#define W_SetupProjVelocity_BOTH(ent,wepname,isprimary) \
+#define W_SetupProjVelocity_BOTH(ent, wepname, isprimary) \
 	if(isprimary) { W_SetupProjVelocity_PRI(ent, wepname); } \
 	else { W_SetupProjVelocity_SEC(ent, wepname); }
 

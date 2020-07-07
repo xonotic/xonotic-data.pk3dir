@@ -25,16 +25,9 @@
     if (IS_REAL_CLIENT(_cl)) stuffcmd(_cl, __VA_ARGS__); \
 MACRO_END
 
-#pragma noref 0
-
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
 
-// deglobalization:
-
 void(vector ang) _makevectors_hidden = #1;
-//#define makevectors DO_NOT_USE_GLOBALS_PREFER_MAKE_VECTORS_MACRO_INSTEAD
 
-#define aim DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
-
-#define makestatic DO_NOT_USE_GLOBALS // not used anywhere so not wrapped
+#pragma noref 0

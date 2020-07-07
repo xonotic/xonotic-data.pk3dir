@@ -108,6 +108,8 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 	{
 		this.mins = PHYS_PL_MIN(this);
 		this.maxs = PHYS_PL_MAX(this);
+		if (IS_DEAD(this))
+			this.maxs.z = 5;
 		this.view_ofs = PHYS_PL_VIEWOFS(this);
 	}
 }
@@ -127,7 +129,7 @@ void CSQCPlayer_Physics(entity this)
 {
 	if(!autocvar_cl_movement) { return; }
 
-	_Movetype_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
+	//_Movetype_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
 	vector oldv_angle = this.v_angle;
 	vector oldangles = this.angles; // we need to save these, as they're abused by other code
@@ -567,7 +569,8 @@ void CSQCPlayer_SetCamera()
 #endif
 			CSQCPlayer_SetMinsMaxs(e);
 
-			e.angles_y = input_angles.y;
+			if (!IS_DEAD(e))
+				e.angles.y = input_angles.y;
 		}
 
 		// relink
@@ -596,7 +599,6 @@ void CSQCPlayer_SetCamera()
 		{
 			CSQCPlayer_CalcRefdef(view);
 		}
-			
 	}
 	else
 	{

@@ -48,11 +48,11 @@ void InterpolateOrigin_Note(entity this)
 		this.iorigin2 = this.origin;
 	}
 
-	if (this.iflags & IFLAG_AUTOANGLES
+	if ((this.iflags & IFLAG_AUTOANGLES)
 	    && this.iorigin2
 	    != this.iorigin1) this.angles = vectoangles(this.iorigin2 - this.iorigin1);
 
-	if (this.iflags & IFLAG_AUTOVELOCITY
+	if ((this.iflags & IFLAG_AUTOVELOCITY)
 	    && this.itime2
 	    != this.itime1) this.velocity = (this.iorigin2 - this.iorigin1) * (1.0 / (this.itime2 - this.itime1));
 
