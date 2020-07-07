@@ -401,7 +401,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
         });
         float desirabledamage;
         desirabledamage = enemydamage;
-        if(time > actor.invincible_finished && time > actor.spawnshieldtime)
+        if(time > STAT(INVINCIBLE_FINISHED, actor) && time > actor.spawnshieldtime)
             desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
         if(teamplay && actor.team)
             desirabledamage = desirabledamage - teamdamage;

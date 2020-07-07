@@ -17,12 +17,6 @@ entity gametype;
 float FONT_USER = 8;
 
 
-vector OFFSET_CURSOR = '0 0 0';
-vector SIZE_CURSOR = '32 32 0';
-void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
-void draw_cursor_normal(vector pos, vector col, float a);
-void LoadMenuSkinValues();
-
 void PostInit();
 
 void Ent_Remove(entity this);
@@ -94,10 +88,6 @@ float camera_active;		// Demo camera is active if set to true
 float chase_active_backup;
 float camera_roll;
 vector camera_direction;
-
-void centerprint_hud(string strMessage);
-void centerprint_kill(float id);
-void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 const float ALPHA_MIN_VISIBLE = 0.003;
 

@@ -332,6 +332,23 @@ float stringwidth(string text, float handleColors, vector sz)
 	return r;
 }
 
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN \
+	float textaspect, oldsz; \
+	vector dfs = drawfontscale; \
+	drawfontscale = '1 1 0'; \
+	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y; \
+	drawfontscale = dfs; \
+	if(sz.x/sz.y > textaspect) { \
+		oldsz = sz.x; \
+		sz.x = sz.y * textaspect; \
+		pos.x += (oldsz - sz.x) * 0.5; \
+	} else { \
+		oldsz = sz.y; \
+		sz.y = sz.x / textaspect; \
+		pos.y += (oldsz - sz.y) * 0.5; \
+	} \
+MACRO_END
+
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
 	SET_POS_AND_SZ_Y_ASPECT(false);
@@ -427,12 +444,6 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	centre = HUD_Shift(centre);
 	ringsize = HUD_Scale(ringsize);
 
-	float co = cos(f * 2 * M_PI);
-	float si = sin(f * 2 * M_PI);
-	float q = fabs(co) + fabs(si);
-	co /= q;
-	si /= q;
-
 	if(f >= 1)
 	{
 		// draw full rectangle
@@ -455,7 +466,14 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 		R_EndPolygon();
 		return;  // Complete rectangle, nothing more needed.
 	}
-	else if(f > 0.75)
+
+	float co = cos(f * 2 * M_PI);
+	float si = sin(f * 2 * M_PI);
+	float q = fabs(co) + fabs(si);
+	co /= q;
+	si /= q;
+
+	if(f > 0.75)
 	{
 		// draw upper half in full
 		R_BeginPolygon(pic, drawflag, true);

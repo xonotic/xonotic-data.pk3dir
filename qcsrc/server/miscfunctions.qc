@@ -243,7 +243,7 @@ string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
 		return wepent.m_weapon.m_name;
 	else if(wepent.m_switchweapon != WEP_Null)
 		return wepent.m_switchweapon.m_name;
-	return "none"; //Weapons_from(wepent.cnt).m_name;
+	return "none"; //REGISTRY_GET(Weapons, wepent.cnt).m_name;
 }
 
 string formatmessage(entity this, string msg)
@@ -719,7 +719,7 @@ void readplayerstartcvars()
 		for (int j = 0; j < t; ++j)
 		{
 			s = argv(j);
-			Weapon wep = Weapons_fromstr(s);
+			Weapon wep = Weapon_from_name(s);
 			if(wep != WEP_Null)
 			{
 				g_weaponarena_weapons |= (wep.m_wepset);
@@ -856,8 +856,13 @@ void readplayerstartcvars()
 
 void precache_playermodel(string m)
 {
-	float globhandle, i, n;
+	int globhandle, i, n;
 	string f;
+
+	// remove :<skinnumber> suffix
+	int j = strstrofs(m, ":", 0);
+	if(j >= 0)
+		m = substring(m, 0, j);
 
 	if(substring(m, -9, 5) == "_lod1")
 		return;

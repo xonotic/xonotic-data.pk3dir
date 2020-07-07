@@ -17,7 +17,7 @@ float GL_CheckExtension(string ext)
 
 float GL_Have_TextureCompression()
 {
-	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
+	return GL_CheckExtension("GL_EXT_texture_compression_s3tc");
 }
 
 .entity parent, firstChild, nextSibling;
@@ -127,6 +127,7 @@ void makeCallback(entity e, entity cbent, void(entity, entity) cbfunc)
 .bool disabled;
 void setDependent_Check(entity e)
 {
+	bool disabled_prev = e.disabled;
 	float f;
 	string s;
 	if(e.func_setDependent)
@@ -165,6 +166,8 @@ void setDependent_Check(entity e)
 				e.disabled = (e.disabled + ((f >= e.cvar3Max_setDependent) && (f <= e.cvar3Min_setDependent)) > e.op_setDependent);
 		}
 	}
+	if (disabled_prev != e.disabled && e.loadCvars)
+		e.loadCvars(e);
 }
 void setDependent_Draw(entity e)
 {
@@ -827,9 +830,9 @@ void CheckSendCvars(entity me, string cvarnamestring)
 {
 	if(me.sendCvars)
 	{
-		LOG_INFOF("Sending cvar: %s -> %s", cvarnamestring, cvar_string(cvarnamestring));
 		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 		{
+			LOG_INFOF("Sending cvar: %s -> %s", cvarnamestring, cvar_string(cvarnamestring));
 			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));
 		}
 	}

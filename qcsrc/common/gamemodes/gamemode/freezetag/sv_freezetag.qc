@@ -366,6 +366,9 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		return true;
 	}
 
+	frag_target.respawn_time = time + 1;
+	frag_target.respawn_flags |= RESPAWN_FORCE;
+
 	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
 	// you succeed changing team through the menu: you both really die (gibbing) and get frozen
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
@@ -483,24 +486,23 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	entity reviving_players_last = NULL;
 	entity reviving_players_first = NULL;
 
-	int n;
-	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
-		n = -1;
-	else
-	{
-		n = 0;
-		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
-			if (reviving_players_last)
-				reviving_players_last.chain = it;
-			reviving_players_last = it;
-			if (!reviving_players_first)
-				reviving_players_first = it;
-			++n;
-		});
+	int n = 0;
+	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
 		if (reviving_players_last)
-			reviving_players_last.chain = NULL;
-	}
+			reviving_players_last.chain = it;
+		reviving_players_last = it;
+		if (!reviving_players_first)
+			reviving_players_first = it;
+		++n;
+	});
+	if (reviving_players_last)
+		reviving_players_last.chain = NULL;
+
+	// allow normal revival during automatic revival
+	// (not allowing it IS_REVIVING should check freezetag_frozen_timeout too)
+	if (!n && player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
+		n = -1;
 
 	if (!n) // no teammate nearby
 	{

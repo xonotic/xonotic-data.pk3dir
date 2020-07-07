@@ -31,22 +31,11 @@ string MakeConsoleSafe(string input)
 }
 
 ERASEABLE
-void cvar_describe(string name, string desc)
-{
-	localcmd(sprintf("\nset %1$s \"$%1$s\" \"%2$s\"\n", name, MakeConsoleSafe(desc)));
-}
-
-ERASEABLE
-void cvar_archive(string name)
-{
-	localcmd(sprintf("\nseta %1$s \"$%1$s\"\n", name));
-}
-
-ERASEABLE
 void RegisterCvars_Set(string name, string def, string desc, bool archive, string file)
 {
-	cvar_describe(name, desc);
-	if (archive) cvar_archive(name);
+	localcmd(sprintf("\nset %1$s \"$%1$s\" \"%2$s\"\n", name, MakeConsoleSafe(desc)));
+	if (archive)
+		localcmd(sprintf("\nseta %1$s \"$%1$s\"\n", name));
 }
 
 int RegisterCvars_Save_fd;

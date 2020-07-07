@@ -47,7 +47,7 @@ void sys_phys_update(entity this, float dt)
 
 	PM_check_blocked(this);
 
-	float maxspeed_mod = (!this.in_swamp) ? 1 : this.swamp_slowdown;  // cvar("g_balance_swamp_moverate");
+	float maxspeed_mod = 1;
 
 // conveyors: first fix velocity
 	if (this.conveyor.active) { this.velocity -= this.conveyor.movedir; }
@@ -90,13 +90,8 @@ void sys_phys_update(entity this, float dt)
 	if (this.flags & FL_WATERJUMP) {
 		this.velocity_x = this.movedir.x;
 		this.velocity_y = this.movedir.y;
-		if (this.waterlevel == WATERLEVEL_NONE
-		    || time > PHYS_TELEPORT_TIME(this)
-		    || PHYS_WATERJUMP_TIME(this) <= 0
-		   ) {
+		if (this.waterlevel == WATERLEVEL_NONE) {
 			this.flags &= ~FL_WATERJUMP;
-			PHYS_TELEPORT_TIME(this) = 0;
-			PHYS_WATERJUMP_TIME(this) = 0;
 		}
 	} else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod, dt)) {
 		// handled
@@ -196,7 +191,7 @@ void sys_phys_simulate(entity this, float dt)
 	if (this.com_phys_water) {
 		// water jump only in certain situations
 		// this mimics quakeworld code
-		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc) {
+		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc && !PHYS_FROZEN(this)) {
 			vector yawangles = '0 1 0' * this.v_angle.y;
 			vector forward, right, up;
 			MAKE_VECTORS(yawangles, forward, right, up);
@@ -223,13 +218,23 @@ void sys_phys_simulate(entity this, float dt)
 	    + right * PHYS_CS(this).movement.y
 	    + '0 0 1' * PHYS_CS(this).movement.z * (this.com_phys_vel_2d ? 0 : 1);
 	if (this.com_phys_water) {
-		if (PHYS_INPUT_BUTTON_CROUCH(this)) {
-			wishvel.z = -PHYS_MAXSPEED(this);
+		if (PHYS_FROZEN(this))
+		{
+			if(this.waterlevel >= WATERLEVEL_SUBMERGED && this.velocity.z >= -70) // don't change the speed too abruptally
+				wishvel = '0 0 160'; // resurface
+			else if(this.waterlevel >= WATERLEVEL_SWIMMING && this.velocity.z > 0)
+				wishvel = eZ * 1.3 * min(this.velocity.z, 160); // resurface a bit more above the surface
 		}
-		if (this.viewloc) {
-			wishvel.z = -160;    // drift anyway
-		} else if (wishvel == '0 0 0') {
-			wishvel = '0 0 -60'; // drift towards bottom
+		else
+		{
+			if (PHYS_INPUT_BUTTON_CROUCH(this)) {
+				wishvel.z = -PHYS_MAXSPEED(this);
+			}
+			if (this.viewloc) {
+				wishvel.z = -160;    // drift anyway
+			} else if (wishvel == '0 0 0') {
+				wishvel = '0 0 -60'; // drift towards bottom
+			}
 		}
 	}
 	if (this.com_phys_ladder) {
@@ -261,8 +266,7 @@ void sys_phys_simulate(entity this, float dt)
 	float wishspeed = min(vlen(wishvel), this.com_phys_vel_max);
 
 	if (this.com_phys_air) {
-		if ((IS_SVQC && time >= PHYS_TELEPORT_TIME(this))
-		    ||  (IS_CSQC && PHYS_WATERJUMP_TIME(this) <= 0)) {
+		if (!(this.flags & FL_WATERJUMP)) {
 			// apply air speed limit
 			float airaccelqw = PHYS_AIRACCEL_QW(this);
 			float wishspeed0 = wishspeed;
@@ -323,7 +327,7 @@ void sys_phys_simulate(entity this, float dt)
 		if (this.com_phys_water) {
 			wishspeed *= 0.7;
 
-			//	if (PHYS_WATERJUMP_TIME(this) <= 0) // TODO: use
+			//	if (!(this.flags & FL_WATERJUMP)) // TODO: use
 			{
 				// water friction
 				float f = 1 - dt * PHYS_FRICTION(this);
@@ -337,7 +341,7 @@ void sys_phys_simulate(entity this, float dt)
 				}
 
 				// holding jump button swims upward slowly
-				if (this.com_in_jump && !this.viewloc) {
+				if (this.com_in_jump && !this.viewloc && !PHYS_FROZEN(this)) {
 					// was:
 					// lava: 50
 					// slime: 80
@@ -407,7 +411,7 @@ void sys_phys_simulate(entity this, float dt)
 			return;
 		}
 
-		if (IS_CSQC ? PHYS_WATERJUMP_TIME(this) <= 0 : time >= PHYS_TELEPORT_TIME(this)) {
+		if (!(this.flags & FL_WATERJUMP)) {
 			PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 		}
 	}

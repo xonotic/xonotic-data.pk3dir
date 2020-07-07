@@ -4,19 +4,19 @@
 
 METHOD(SettingSource, getEntry, entity(entity this, int i, void(string name, string icon) returns))
 {
-    Lazy l = Settings_from(i);
+    Lazy l = REGISTRY_GET(Settings, i);
     entity it = l.m_get();
     if (returns) returns(it.title, string_null);
     return it;
 }
 METHOD(SettingSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns))
 {
-    Lazy l = Settings_from(i);
+    Lazy l = REGISTRY_GET(Settings, i);
     entity it = l.m_get();
     if (returns) returns(it.titleTooltip);
     return it;
 }
-METHOD(SettingSource, reload, int(entity this, string filter)) { return Settings_COUNT; }
+METHOD(SettingSource, reload, int(entity this, string filter)) { return REGISTRY_COUNT(Settings); }
 
 string XonoticRegisteredSettingsList_cb_name;
 string XonoticRegisteredSettingsList_cb_tooltip;

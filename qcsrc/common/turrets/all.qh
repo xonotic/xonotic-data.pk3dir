@@ -6,8 +6,7 @@
 #include "turret.qh"
 
 REGISTRY(Turrets, BITS(5))
-#define Turrets_from(i) _Turrets_from(i, TUR_Null)
-#define get_turretinfo(i) Turrets_from(i)
+#define get_turretinfo(i) REGISTRY_GET(Turrets, i)
 REGISTER_REGISTRY(Turrets)
 REGISTRY_CHECK(Turrets)
 
@@ -101,10 +100,10 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt", false)
         default:
         case CMD_REQUEST_USAGE:
         {
-            LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpturrets [filename]");
-            LOG_INFO("  Where 'filename' is the file to write (default is turrets_dump.cfg),");
-            LOG_INFO("  if supplied with '-' output to console as well as default,");
-            LOG_INFO("  if left blank, it will only write to default.");
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpturrets [filename]");
+            LOG_HELP("  Where 'filename' is the file to write (default is turrets_dump.cfg),");
+            LOG_HELP("  if supplied with '-' output to console as well as default,");
+            LOG_HELP("  if left blank, it will only write to default.");
             return;
         }
     }
@@ -112,10 +111,11 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt", false)
 
 
 const int TUR_FIRST = 1;
-#define TUR_LAST (Turrets_COUNT - 1)
+#define TUR_LAST (REGISTRY_COUNT(Turrets) - 1)
 
 #define REGISTER_TURRET(id, inst) REGISTER(Turrets, TUR, id, m_id, inst)
 
 REGISTER_TURRET(Null, NEW(Turret));
+REGISTRY_DEFINE_GET(Turrets, TUR_Null)
 
 #include "turret/_mod.qh"

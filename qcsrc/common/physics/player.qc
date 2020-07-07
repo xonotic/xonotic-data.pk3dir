@@ -40,7 +40,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
 
 	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this);
-	float maxspd_mod = PHYS_HIGHSPEED(this);
+	float maxspd_mod = PHYS_HIGHSPEED(this) * ((this.swampslug.active) ? this.swampslug.swamp_slowdown : 1);
         STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
         if (autocvar_g_movement_highspeed_q3_compat) {
           STAT(MOVEVARS_AIRACCEL_QW, this) = Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw);
@@ -56,10 +56,10 @@ void Physics_UpdateStats(entity this)
 	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox; // NOTE: these hitboxes are off by 1 due to engine differences
 	STAT(PL_MIN, this) = (q3dfcompat) ? '-15 -15 -20' : autocvar_sv_player_mins;
 	STAT(PL_MAX, this) = (q3dfcompat) ? '15 15 36' : autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this) = (q3dfcompat) ? '0 0 26' : autocvar_sv_player_viewoffset;
+	STAT(PL_VIEW_OFS, this) = (q3dfcompat) ? '0 0 30' : autocvar_sv_player_viewoffset;
 	STAT(PL_CROUCH_MIN, this) = (q3dfcompat) ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
 	STAT(PL_CROUCH_MAX, this) = (q3dfcompat) ? '15 15 20' : autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = (q3dfcompat) ? '0 0 12' : autocvar_sv_player_crouch_viewoffset;
+	STAT(PL_CROUCH_VIEW_OFS, this) = (q3dfcompat) ? '0 0 16' : autocvar_sv_player_crouch_viewoffset;
 
 	// old stats
 	// fix some new settings
@@ -163,11 +163,8 @@ void PM_ClientMovement_UpdateStatus(entity this)
             setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
         }
 	}
-#ifdef CSQC
 
-	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_WATERJUMP_TIME(this) <= 0)
-		PHYS_WATERJUMP_TIME(this) = 0;
-#endif
+	_Movetype_CheckWater(this); // needs to be run on the client, might as well use the latest on the server too!
 }
 
 void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
@@ -328,6 +325,9 @@ bool PlayerJump(entity this)
 	if (PHYS_FROZEN(this))
 		return true; // no jumping in freezetag when frozen
 
+	if(PHYS_INPUT_BUTTON_CHAT(this) || PHYS_INPUT_BUTTON_MINIGAME(this))
+		return true; // no jumping while typing
+
 #ifdef SVQC
 	if (this.player_blocked)
 		return true; // no jumping while blocked
@@ -453,11 +453,6 @@ void CheckWaterJump(entity this)
 			this.velocity_z = 225;
 			this.flags |= FL_WATERJUMP;
 			SET_JUMP_HELD(this);
-		#ifdef SVQC
-			PHYS_TELEPORT_TIME(this) = time + 2;	// safety net
-		#elif defined(CSQC)
-			PHYS_WATERJUMP_TIME(this) = 2;
-		#endif
 		}
 	}
 }
@@ -483,7 +478,7 @@ void CheckPlayerJump(entity this)
 		bool playerjump = PlayerJump(this); // required
 
 		bool air_jump = !playerjump || M_ARGV(2, bool);
-		bool activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
+		bool activate = (JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_INPUT_BUTTON_JETPACK(this);
 		bool has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_AMMO);
 
 		if (!(ITEMS_STAT(this) & ITEM_Jetpack.m_itemid)) { }
@@ -616,27 +611,15 @@ void PM_check_frozen(entity this)
 {
 	if (!PHYS_FROZEN(this))
 		return;
-	if (PHYS_DODGING_FROZEN(this)
-#ifdef SVQC
-	&& IS_REAL_CLIENT(this)
-#endif
-	)
+	if (PHYS_DODGING_FROZEN(this) && IS_CLIENT(this))
 	{
-		PHYS_CS(this).movement_x = bound(-5, PHYS_CS(this).movement.x, 5);
-		PHYS_CS(this).movement_y = bound(-5, PHYS_CS(this).movement.y, 5);
-		PHYS_CS(this).movement_z = bound(-5, PHYS_CS(this).movement.z, 5);
+		// bind movement to a very slow speed so dodging can use .movement for directional calculations
+		PHYS_CS(this).movement_x = bound(-2, PHYS_CS(this).movement.x, 2);
+		PHYS_CS(this).movement_y = bound(-2, PHYS_CS(this).movement.y, 2);
+		PHYS_CS(this).movement_z = bound(-2, PHYS_CS(this).movement.z, 2);
 	}
 	else
 		PHYS_CS(this).movement = '0 0 0';
-
-	vector midpoint = ((this.absmin + this.absmax) * 0.5);
-	if (pointcontents(midpoint) == CONTENT_WATER)
-	{
-		this.velocity = this.velocity * 0.5;
-
-		if (pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
-			this.velocity_z = 200;
-	}
 }
 
 void PM_check_hitground(entity this)
@@ -700,6 +683,8 @@ void PM_check_slick(entity this)
 
 void PM_check_blocked(entity this)
 {
+	if(PHYS_INPUT_BUTTON_CHAT(this) || PHYS_INPUT_BUTTON_MINIGAME(this))
+		PHYS_CS(this).movement = '0 0 0';
 #ifdef SVQC
 	if (!this.player_blocked)
 		return;

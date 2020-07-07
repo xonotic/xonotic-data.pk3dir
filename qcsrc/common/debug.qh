@@ -187,7 +187,7 @@ bool autocvar_debugdraw;
 			default:
 			case CMD_REQUEST_USAGE:
 			{
-				LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
+				LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
 				return;
 			}
 		}
@@ -211,7 +211,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object", false)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index");
 			return;
 		}
 	}
@@ -230,7 +230,7 @@ GENERIC_COMMAND(version, "Print the current version", false)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " version");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " version");
 			return;
 		}
 	}
@@ -266,7 +266,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars", false)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges");
+			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges");
 			return;
 		}
 	}
@@ -335,7 +335,7 @@ STATIC_INIT(TRACE_ENT)
 #endif
 
 
-GENERIC_COMMAND(find, "Search through entities for matching classname", false)
+GENERIC_COMMAND(findent, "Search through entities for matching classname", false)
 {
 	switch (request)
 	{
@@ -353,13 +353,11 @@ GENERIC_COMMAND(find, "Search through entities for matching classname", false)
 		}
 
 		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2find^7");
-        }
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " find classname");
-			LOG_INFO("  Where 'classname' is the classname to search for.");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " find classname");
+			LOG_HELP("  Where 'classname' is the classname to search for.");
 			return;
 		}
 	}
@@ -378,10 +376,10 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin", false)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2findat^7");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"");
+			LOG_HELP("Usage:^3 " GetProgramCommandPrefix() " findat \"x y z\"");
 			return;
 		}
 	}
