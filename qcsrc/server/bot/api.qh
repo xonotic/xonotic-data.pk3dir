@@ -25,9 +25,9 @@ const int WAYPOINTFLAG_NORELINK__DEPRECATED = BIT(20);
 const int WPFLAGMASK_NORELINK = (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_LADDER | WAYPOINTFLAG_JUMP | WAYPOINTFLAG_CUSTOM_JP | WAYPOINTFLAG_SUPPORT);
 
 float bot_custom_weapon;
-float bot_weapons_close[Weapons_MAX];
-float bot_weapons_far[Weapons_MAX];
-float bot_weapons_mid[Weapons_MAX];
+float bot_weapons_close[REGISTRY_MAX(Weapons)];
+float bot_weapons_far[REGISTRY_MAX(Weapons)];
+float bot_weapons_mid[REGISTRY_MAX(Weapons)];
 float skill;
 
 .float bot_tracewalk_time;

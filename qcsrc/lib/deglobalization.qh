@@ -1,40 +1,85 @@
+#include "lib/accumulate.qh"
 #include "lib/float.qh"
+#include "lib/log.qh"
 #include "lib/misc.qh"
 #include "lib/static.qh"
 #include "lib/vector.qh"
 
-// These macros wrap functions which use globals so mutation only occurs inside them and is not visible from outside.
-// Functions for which all usages are replaced with these macros can be hidden by #defines inside our `*defs.qh` files
-// to prevent anyone from using them accidentally in the future
+// These macros wrap functions which use globals so mutation of global state only occurs inside them and is not visible from outside.
+// This helps prevent bugs where refactoring accidentally breaks implicit assumptions about global state ("pls call makevectors before calling this").
+// Currently only functions that use v_forward/v_right/v_up are wrapped since those are most common.
+// Some functions don't have wrappers because they're not used anywhere.
 
-// TODO stuff in the engine that uses the v_forward/v_right/v_up globals and is not wrapped yet:
-//  - RF_USEAXIS, addentities, predraw,
-//    - CL_GetEntityMatrix (in engine but is called from other functions so transitively any of them can use the globals - e.g. V_CalcRefdef, maybe others)
-//    - however RF_USEAXIS is only used if MF_ROTATE is used which is only set in one place
-//  - e.camera_transform / CL_VM_TransformView (in engine)
-//    - this is the only used function that both sets and gets the globals (aim does too but isn't used in our code)
+// Steps (slightly inspired by steps in self.qh):
+// 1) (done) Create alternative names for the builtins (e.g. _makevectors_hidden) to be used inside wrappers.
+//    Shadow the originals with macros that tell the user to use the wrappers instead. These are in the *defs.qh files.
+// 2) Create wrapper macros with the same name (e.g. makevectors) that still use globals but log their usage.
+//     - Would be nice to also log reads and writes to the globals themselves. Probably possible with macros, comma expressions and [[alias]].
+// 3) Create wrapper macros that use locals (e.g. MAKE_VECTORS).
+//    TODO stuff in the engine that uses the v_forward/v_right/v_up globals and is not wrapped yet:
+//     - RF_USEAXIS, addentities, predraw,
+//       - CL_GetEntityMatrix (in engine but is called from other functions so transitively any of them can use the globals - e.g. V_CalcRefdef, maybe others)
+//       - however RF_USEAXIS is only used if MF_ROTATE is used which is only set in one place
+//     - e.camera_transform / CL_VM_TransformView (in engine)
+//       - this is the only used function that both sets and gets the globals (aim does too but isn't used in our code)
+// 4) Gradually replace uses of each function with its wrapper.
+// 5) When a function is no longer used, remove the wrapper with the same name to cause compile errors that will prevent accidental use in the future.
+
+// Final checking:
+// When all functions which use a global have been replaced with the wrappers,
+// the wrappers can check that the global contains NaN before its use and set it to NaN after its use.
+// This should detect if there is any remaining global mutation (even in the engine).
+// NaN is the most likely value to expose remaining usages - e.g. functions like traceline crash on it.
+
+#ifdef GAMEQC // menu doesn't use any globals
+
+// compile time switches in case perf is an issue
+#define DEGLOB_LOGGING 1
+#define DEGLOB_CLEAR 1
+
+const int DEGLOB_ORIGINAL = 1;
+const int DEGLOB_WRAPPED = 2;
+#if DEGLOB_LOGGING
+int autocvar_debug_deglobalization_logging = 0;
+// Varargs to this should already be stringized, otherwise they're expanded first which makes them less readable.
+// The downside is redundant quotes, fortunately none of these functions take strings.
+#define DEGLOB_LOG(kind, name, ...) deglob_log(kind, name, __FILE__, __LINE__, __FUNC__, #__VA_ARGS__)
+// This needs to be a function, not a macro,
+// because some wrappers of the old functions need to use comma expressions
+// because they return values.
+void deglob_log(int kind, string name, string file, int line, string func, string more_text) {
+	if (autocvar_debug_deglobalization_logging & kind) {
+		LOG_INFOF("%s %f %s %s:%d:%s args: %s", PROGNAME, time, name, file, line, func, more_text);
+	}
+}
+#else
+#define DEGLOB_LOG(kind, name, ...)
+void deglob_log(int kind, string name, string file, int line, string func, string more_text) {}
+#endif
 
 // convenience for deglobalization code - don't use these just to hide that globals are still used
-#define CLEAR_V_GLOBALS() v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN
-#define GET_V_GLOBALS(forward, right, up) forward = v_forward; right = v_right; up = v_up
-#define SET_V_GLOBALS(forward, right, up) v_forward = forward; v_right = right; v_up = up
-
-#ifdef GAMEQC
+#define GET_V_GLOBALS(forward, right, up) MACRO_BEGIN forward = v_forward; right = v_right; up = v_up; MACRO_END
+#define SET_V_GLOBALS(forward, right, up) MACRO_BEGIN v_forward = forward; v_right = right; v_up = up; MACRO_END
+#if DEGLOB_CLEAR
+bool autocvar_debug_deglobalization_clear = true;
+#define CLEAR_V_GLOBALS() MACRO_BEGIN \
+	if (autocvar_debug_deglobalization_clear) { \
+		v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN \
+	} \
+MACRO_END
 STATIC_INIT(globals) {
 	// set to NaN to more easily detect uninitialized use
-	// TODO when all functions are wrapped and the raw functions are not used anymore,
-	// uncomment the defines in *progs.qh files that hide the raw functions
-	// and assert that the global vectors are NaN before calling the raw functions here
-	// to make sure nobody (even builtins) is accidentally using them - NaN is the most likely value to expose remaining usages
-
 	CLEAR_V_GLOBALS();
 }
+#else
+#define CLEAR_V_GLOBALS()
 #endif
 
 /// Same as the `makevectors` builtin but uses the provided locals instead of the `v_*` globals.
 /// Always use this instead of raw `makevectors` to make the data flow clear.
 /// Note that you might prefer `FIXED_MAKE_VECTORS` for new code.
 #define MAKE_VECTORS(angles, forward, right, up) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_WRAPPED, "MAKE_VECTORS", #angles); \
 	_makevectors_hidden(angles); \
 	GET_V_GLOBALS(forward, right, up); \
 	CLEAR_V_GLOBALS(); \
@@ -42,24 +87,28 @@ MACRO_END
 
 /// Returns all 4 vectors by assigning to them (instead of returning a value) for consistency (and sanity)
 #define SKEL_GET_BONE_ABS(skel, bonenum, forward, right, up, origin) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_WRAPPED, "SKEL_GET_BONE_ABS", #skel, #bonenum); \
 	origin = _skel_get_boneabs_hidden(skel, bonenum) \
 	GET_V_GLOBALS(forward, right, up); \
 	CLEAR_V_GLOBALS(); \
 MACRO_END
 
 #define SKEL_SET_BONE(skel, bonenum, org, forward, right, up) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_WRAPPED, "SKEL_SET_BONE", #skel, #bonenum, #org); \
 	SET_V_GLOBALS(forward, right, up); \
 	_skel_set_bone_hidden(skel, bonenum, org); \
 	CLEAR_V_GLOBALS(); \
 MACRO_END
 
 #define ADD_DYNAMIC_LIGHT(org, radius, lightcolours, forward, right, up) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_WRAPPED, "ADD_DYNAMIC_LIGHT", #org, #radius, #lightcolours); \
 	SET_V_GLOBALS(forward, right, up); \
 	_adddynamiclight_hidden(org, radius, lightcolours); \
 	CLEAR_V_GLOBALS(); \
 MACRO_END
 
 #define VECTOR_VECTORS(forward_in, forward, right, up) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_WRAPPED, "VECTOR_VECTORS", #forward_in); \
 	_vectorvectors_hidden(forward_in); \
 	GET_V_GLOBALS(forward, right, up); \
 	CLEAR_V_GLOBALS(); \
@@ -67,7 +116,40 @@ MACRO_END
 
 /// Note that this only avoids the v_* globals, not the gettaginfo_* ones
 #define GET_TAG_INFO(ent, tagindex, forward, right, up, origin) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_WRAPPED, "GET_TAG_INFO", #ent, #tagindex); \
 	origin = _gettaginfo_hidden(ent, tagindex); \
 	GET_V_GLOBALS(forward, right, up); \
 	CLEAR_V_GLOBALS(); \
 MACRO_END
+
+#undef makevectors
+#define makevectors(angles) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_ORIGINAL, "makevectors", #angles); \
+	_makevectors_hidden(angles); \
+MACRO_END
+
+#undef skel_get_boneabs
+#define skel_get_boneabs(skel, bonenum) ( \
+	deglob_log(DEGLOB_ORIGINAL, "skel_get_boneabs", __FILE__, __LINE__, __FUNC__, #skel ", " #bonenum), \
+	_skel_get_boneabs_hidden(skel, bonenum) \
+)
+
+#undef skel_set_bone
+#define skel_set_bone(skel, bonenum, org) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_ORIGINAL, "skel_set_bone", #skel, #bonenum, #org); \
+	_skel_set_bone_hidden(skel, bonenum, org); \
+MACRO_END
+
+#undef adddynamiclight
+#define adddynamiclight(org, radius, lightcolours) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_ORIGINAL, "adddynamiclight", #org, #radius, #lightcolours); \
+	_adddynamiclight_hidden(org, radius, lightcolours); \
+MACRO_END
+
+#undef gettaginfo
+#define gettaginfo(ent, tagindex) ( \
+	deglob_log(DEGLOB_ORIGINAL, "gettaginfo", __FILE__, __LINE__, __FUNC__, #ent ", " #tagindex), \
+	_gettaginfo_hidden(ent, tagindex) \
+)
+
+#endif // GAMEQC

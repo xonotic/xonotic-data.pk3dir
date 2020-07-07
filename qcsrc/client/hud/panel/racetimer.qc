@@ -5,7 +5,12 @@
 #include <client/miscfunctions.qh>
 #include <common/mapinfo.qh>
 
-// Race timer (#6)
+// Race timer (#8)
+
+void HUD_RaceTimer_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
 
 // return the string of the onscreen race timer
 string MakeRaceString(int cp, float mytime, float theirtime, float othertime, float lapdelta, string theirname)

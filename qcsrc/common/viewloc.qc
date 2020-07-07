@@ -94,21 +94,16 @@ vector CursorToWorldCoord(vector mpos)
 }
 
 vector old_camera_angle = '0 0 0';
-bool autocvar_cam_snap_close;
-bool autocvar_cam_track;
-bool autocvar_cam_snap_hard;
-bool autocvar_cam_snap_unlock;
-bool autocvar_cam_useangle = true;
 void viewloc_SetViewLocation()
 {
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
 	if (!view) return;
-	//NOTE: the "cam_" cvars sould probably be changed out with a spawnflag or an entity key. I have it like this for my testing -- Player_2
-	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
+	entity viewloc_ent = view.viewloc;
+	if(viewloc_ent && !wasfreed(viewloc_ent) && viewloc_ent.enemy && viewloc_ent.goalentity)
 	{
-		bool have_sidescroll = (view.viewloc.enemy != view.viewloc.goalentity);
-		vector position_a = view.viewloc.enemy.origin;
-		vector position_b = view.viewloc.goalentity.origin;
+		bool have_sidescroll = (viewloc_ent.enemy != viewloc_ent.goalentity);
+		vector position_a = viewloc_ent.enemy.origin;
+		vector position_b = viewloc_ent.goalentity.origin;
 		vector camera_angle = '0 0 0';
 		vector camera_position;
 
@@ -117,22 +112,22 @@ void viewloc_SetViewLocation()
 		camera_position = vec_bounds_in(view.origin, position_a, position_b);
 
 		// use camera's angle when possible
-		if (autocvar_cam_useangle) {
-			camera_angle = view.viewloc.enemy.movedir;
+		if (!(viewloc_ent.spawnflags & VIEWLOC_CAM_NOANGLE)) {
+			camera_angle = viewloc_ent.enemy.movedir;
 		}
 
 		// a tracking camera follows the player when it leaves the world box
-		if (autocvar_cam_track || !have_sidescroll) {
+		if ((viewloc_ent.spawnflags & VIEWLOC_CAM_TRACK) || !have_sidescroll) {
 			camera_angle = aim_vec (camera_position, view.origin);
 		}
 
 		// hard snap changes the angle as soon as it crosses over the nearest 90 degree mark
-		if (autocvar_cam_snap_hard) {
+		if (viewloc_ent.spawnflags & VIEWLOC_CAM_SNAP_HARD) {
 			camera_angle = angle_snap_vec(aim_vec(camera_position, view.origin), 90);
 		}
 
 		// tries to avoid snapping unless it *really* needs to
-		if (autocvar_cam_snap_close) {
+		if (viewloc_ent.spawnflags & VIEWLOC_CAM_SNAP_CLOSE) {
 			// like hard snap, but don't snap angles yet.
 			camera_angle = aim_vec(camera_position, view.origin);
 
@@ -150,7 +145,7 @@ void viewloc_SetViewLocation()
 		}
 
 		//unlocking this allows the camera to look up and down. this also allows a top-down view.
-		if (!autocvar_cam_snap_unlock) {
+		if (!(viewloc_ent.spawnflags & VIEWLOC_CAM_SNAP_UNLOCK)) {
 			camera_angle.x = 0;
 			camera_angle.z = 0;
 		}
@@ -171,7 +166,7 @@ void viewloc_SetViewLocation()
 
 		if (have_sidescroll) {
 			vector view_angle = view.angles;
-			if (!(view.viewloc.spawnflags & VIEWLOC_FREEAIM)) {
+			if (!(viewloc_ent.spawnflags & VIEWLOC_FREEAIM)) {
 				vector avatar_facing_dir;
 				// get the player's forward-facing direction, based on positions a and b
 				if (0 == input_movevalues.y) {
@@ -184,7 +179,7 @@ void viewloc_SetViewLocation()
 				view_angle.y = avatar_facing_dir.y; // snap avatar to look on along the correct axis
 
 				// if (0 == input_movevalues.x) look straight ahead
-				if (!(view.viewloc.spawnflags & VIEWLOC_FREEMOVE)) {
+				if (!(viewloc_ent.spawnflags & VIEWLOC_FREEMOVE)) {
 					if (0 > input_movevalues.x) { // look up
 						view_angle.x = 50;
 					} else if (0 < input_movevalues.x) { // look down

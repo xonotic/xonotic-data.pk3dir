@@ -85,9 +85,9 @@ string AppendItemcodes(string s, entity player)
 		if(w != 0 || slot == 0)
 			s = strcat(s, ftos(w));
 	}
-	if(time < player.strength_finished)
+	if(time < STAT(STRENGTH_FINISHED, player))
 		s = strcat(s, "S");
-	if(time < player.invincible_finished)
+	if(time < STAT(INVINCIBLE_FINISHED, player))
 		s = strcat(s, "I");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
@@ -129,7 +129,7 @@ void Obituary_SpecialDeath(
 		return;
 	}
 
-	entity deathent = Deathtypes_from(deathtype - DT_FIRST);
+	entity deathent = REGISTRY_GET(Deathtypes, deathtype - DT_FIRST);
 	if (!deathent)
 	{
 		backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n");
@@ -199,9 +199,9 @@ float Obituary_WeaponDeath(
 	else
 	{
 		LOG_TRACEF(
-			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
+			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %s!\n",
 			deathtype,
-			death_weapon
+			death_weapon.netname
 		);
 	}
 
@@ -468,7 +468,9 @@ void Ice_Think(entity this)
 		delete(this);
 		return;
 	}
-	setorigin(this, this.owner.origin - '0 0 16');
+	vector ice_org = this.owner.origin - '0 0 16';
+	if (this.origin != ice_org)
+		setorigin(this, ice_org);
 	this.nextthink = time;
 }
 
@@ -494,6 +496,7 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	entity ice = new(ice);
 	ice.owner = targ;
 	ice.scale = targ.scale;
+	// set_movetype(ice, MOVETYPE_FOLLOW) would rotate the ice model with the player
 	setthink(ice, Ice_Think);
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
@@ -683,7 +686,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		    }
 		}
 
-		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id && STAT(FROZEN, targ))
+		if(STAT(FROZEN, targ) && !ITEM_DAMAGE_NEEDKILL(deathtype)
+			&& deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			if(autocvar_g_frozen_revive_falldamage > 0 && deathtype == DEATH_FALL.m_id && damage >= autocvar_g_frozen_revive_falldamage)
 			{
@@ -698,12 +702,12 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			force *= autocvar_g_frozen_force;
 		}
 
-		if(IS_PLAYER(targ) && STAT(FROZEN, targ) && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_frozen_damage_trigger)
+		if(IS_PLAYER(targ) && STAT(FROZEN, targ)
+			&& ITEM_DAMAGE_NEEDKILL(deathtype) && !autocvar_g_frozen_damage_trigger)
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
-			entity spot = SelectSpawnPoint (targ, false);
-
+			entity spot = SelectSpawnPoint(targ, false);
 			if(spot)
 			{
 				damage = 0;

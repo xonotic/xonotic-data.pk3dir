@@ -62,10 +62,6 @@ void Casing_Draw(entity this)
         //UNSET_ONGROUND(this);
     }
 
-    Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
-    if (wasfreed(this))
-        return; // deleted by touch function
-
     this.renderflags = 0;
     this.alpha = bound(0, this.cnt - time, 1);
 
@@ -73,20 +69,25 @@ void Casing_Draw(entity this)
     {
         Casing_Delete(this);
         this.drawmask = 0;
+        return;
     }
+
+    Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
+    //if (wasfreed(this))
+    //    return; // deleted by touch function
 }
 
 SOUND(BRASS1, W_Sound("brass1"));
 SOUND(BRASS2, W_Sound("brass2"));
 SOUND(BRASS3, W_Sound("brass3"));
 Sound SND_BRASS_RANDOM() {
-    return Sounds_from(SND_BRASS1.m_id + floor(prandom() * 3));
+    return REGISTRY_GET(Sounds, SND_BRASS1.m_id + floor(prandom() * 3));
 }
 SOUND(CASINGS1, W_Sound("casings1"));
 SOUND(CASINGS2, W_Sound("casings2"));
 SOUND(CASINGS3, W_Sound("casings3"));
 Sound SND_CASINGS_RANDOM() {
-    return Sounds_from(SND_CASINGS1.m_id + floor(prandom() * 3));
+    return REGISTRY_GET(Sounds, SND_CASINGS1.m_id + floor(prandom() * 3));
 }
 
 void Casing_Touch(entity this, entity toucher)
