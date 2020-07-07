@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-05 22:00+0000\n"
+"PO-Revision-Date: 2020-07-06 21:37+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -2187,11 +2187,11 @@ msgstr "^BGLa bandera fue destruida y regresada a la base"
 
 #: qcsrc/common/notifications/all.inc:241
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr "^BGLa bandera ^TC^TT^BG fue soltada en la base y volvió sola"
+msgstr "^BGLa bandera ^TC^TT^BG fue soltada en la base y regresó sola"
 
 #: qcsrc/common/notifications/all.inc:242
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr "^BGLa bandera fue soltada en la base y volvió sola"
+msgstr "^BGLa bandera fue soltada en la base y regresó sola"
 
 #: qcsrc/common/notifications/all.inc:243
 msgid ""
@@ -2213,13 +2213,13 @@ msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
 msgstr ""
-"^BGLa bandera ^TC^TT^BG se desesperó tras ^F1%.2f^BG segundos y volvió sola"
+"^BGLa bandera ^TC^TT^BG se desesperó tras ^F1%.2f^BG segundos y regresó sola"
 
 #: qcsrc/common/notifications/all.inc:246
 #, c-format
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
-msgstr "^BGLa bandera se desesperó tras ^F1%.2f^BG segundos y volvió sola"
+msgstr "^BGLa bandera se desesperó tras ^F1%.2f^BG segundos y regresó sola"
 
 #: qcsrc/common/notifications/all.inc:247
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
@@ -2377,7 +2377,7 @@ msgstr "^BG%s%s^K1 intentó ocupar el espacio de teletransporte de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 fue telegrafiado por ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 fue remotamente eliminado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
@@ -2468,7 +2468,7 @@ msgstr "^BG%s^K1 fue movido al  %s%s"
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
 msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s"
-msgstr "^BG%s^K1 se hicieron enemigos Del Señor del Juego en Equipo%s%s"
+msgstr "^BG%s^K1 se hicieron enemigos del Señor del Juego en Equipo%s%s"
 
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
@@ -2483,7 +2483,7 @@ msgstr "^BG%s^K1 se eliminó injustamente a sí mismo%s%s"
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s^K1 couldn't catch their breath%s%s"
-msgstr "^BG%s^K1 no podian respirar %s%s"
+msgstr "^BG%s^K1 no podían respirar %s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
@@ -2493,7 +2493,7 @@ msgstr "^BG%s^K1 estuvo en el agua demasiado tiempo%s%s"
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
-msgstr "^BG%s^K1 chocó contra el suelo con un poquito demasiada fuerza%s%s"
+msgstr "^BG%s^K1 chocó contra el suelo con un poca fuerza%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
@@ -2503,7 +2503,7 @@ msgstr "^BG%s^K1 chocó contra el suelo con un crujido%s%s"
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s"
-msgstr "^BG%s^K1 se volvió un poco demasiado crujiente%s%s"
+msgstr "^BG%s^K1 se volvió un poco crujiente%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
@@ -2533,7 +2533,7 @@ msgstr "^BG%s^K1 fue explotado por un Mago%s%s"
 #: qcsrc/common/notifications/all.inc:307
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr "Las entrañas de ^BG%s^K1 fueron sacads por un Shambler%s%s"
+msgstr "Las entrañas de ^BG%s^K1 fueron sacadas por un Shambler%s%s"
 
 #: qcsrc/common/notifications/all.inc:308
 #, c-format
@@ -2543,7 +2543,7 @@ msgstr "^BG%s^K1 fue machacado por un Shambler%s%s"
 #: qcsrc/common/notifications/all.inc:309
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr "^BG%s^K1 fue borrado por un Shambler%s%s"
+msgstr "^BG%s^K1 fue electrocutado por un Shambler%s%s"
 
 #: qcsrc/common/notifications/all.inc:310
 #, c-format
@@ -2569,7 +2569,7 @@ msgstr "^BG%s^K1 recibió lecciones de Kung Fu de un Zombi%s%s"
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
-msgstr "^BG%s^K1 dominó el arte de auto-nadearse%s%s"
+msgstr "^BG%s^K1 dominó el arte de autodestruirse con granadas%s%s"
 
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
@@ -2645,7 +2645,7 @@ msgstr "^BG%s^K1 murió en un accidente%s%s"
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s"
-msgstr "^BG%s^K1 encontró una torreta%s%s"
+msgstr "^BG%s^K1 se topó con una torreta%s%s"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
@@ -3819,11 +3819,11 @@ msgstr "^K1¡Golpeaste la tierra con un crujido!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You felt a little too hot!"
-msgstr "^K1¡Te sentiste un poco muy caliente!"
+msgstr "^K1¡Te sentiste un poco caliente!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You got a little bit too crispy!"
-msgstr "^K1¡Te volviste un poco muy crujiente!"
+msgstr "^K1¡Te volviste un poco crujiente!"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You killed your own dumb self!"
