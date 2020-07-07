@@ -56,10 +56,10 @@ void Physics_UpdateStats(entity this)
 	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox; // NOTE: these hitboxes are off by 1 due to engine differences
 	STAT(PL_MIN, this) = (q3dfcompat) ? '-15 -15 -20' : autocvar_sv_player_mins;
 	STAT(PL_MAX, this) = (q3dfcompat) ? '15 15 36' : autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this) = (q3dfcompat) ? '0 0 26' : autocvar_sv_player_viewoffset;
+	STAT(PL_VIEW_OFS, this) = (q3dfcompat) ? '0 0 30' : autocvar_sv_player_viewoffset;
 	STAT(PL_CROUCH_MIN, this) = (q3dfcompat) ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
 	STAT(PL_CROUCH_MAX, this) = (q3dfcompat) ? '15 15 20' : autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = (q3dfcompat) ? '0 0 12' : autocvar_sv_player_crouch_viewoffset;
+	STAT(PL_CROUCH_VIEW_OFS, this) = (q3dfcompat) ? '0 0 16' : autocvar_sv_player_crouch_viewoffset;
 
 	// old stats
 	// fix some new settings
@@ -478,7 +478,7 @@ void CheckPlayerJump(entity this)
 		bool playerjump = PlayerJump(this); // required
 
 		bool air_jump = !playerjump || M_ARGV(2, bool);
-		bool activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
+		bool activate = (JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_INPUT_BUTTON_JETPACK(this);
 		bool has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_AMMO);
 
 		if (!(ITEMS_STAT(this) & ITEM_Jetpack.m_itemid)) { }

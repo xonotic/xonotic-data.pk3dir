@@ -347,8 +347,11 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag_point_limit");
 		BADCVAR("g_glowtrails");
 		BADCVAR("g_hats");
+		BADCVAR("g_casings");
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
+		BADCVAR("g_keepaway_ballcarrier_effects");
+		BADCVAR("g_keepawayball_effects");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_autoreplace");
@@ -2210,6 +2213,11 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
+
+		// if a timeout is active, reset the slowmo value to normal
+		if(timeout_status == TIMEOUT_ACTIVE)
+			cvar_set("slowmo", ftos(orig_slowmo));
+
 		LOG_TRACE("Saving persistent data...");
 		Ban_SaveBans();
 

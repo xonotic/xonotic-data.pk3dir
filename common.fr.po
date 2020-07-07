@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Aodren Le Gloanec <aodren.legloanec@gmail.com>, 2020
 # Calinou, 2013-2014
 # Calinou <calinou9999@gmail.com>, 2012
 # Hugo Locurcio, 2014
@@ -17,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-30 10:06+0000\n"
+"POT-Creation-Date: 2020-06-07 07:23+0200\n"
+"PO-Revision-Date: 2020-06-13 15:06+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -65,7 +66,7 @@ msgstr "Message générique"
 msgid "^3Player^7: This is the chat area."
 msgstr "^3Joueur^7 : Ceci est la zone de tchat."
 
-#: qcsrc/client/hud/panel/engineinfo.qc:79
+#: qcsrc/client/hud/panel/engineinfo.qc:76
 #, c-format
 msgid "FPS: %.*f"
 msgstr "IPS : %.*f"
@@ -304,7 +305,7 @@ msgstr "Tchat d'équipe"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "bientôt le bonus de Force"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -464,7 +465,7 @@ msgstr "Sons du tchat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "Changer de caméra spectateur"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 #: qcsrc/client/hud/panel/quickmenu.qc:845
@@ -548,7 +549,7 @@ msgstr "Intermédiaire %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "PÉNALITÉ : %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:159 qcsrc/client/main.qc:1099
+#: qcsrc/client/hud/panel/racetimer.qc:159 qcsrc/client/main.qc:1102
 msgid "missing a checkpoint"
 msgstr "raté un point de contrôle"
 
@@ -1141,27 +1142,27 @@ msgstr "Manquant"
 msgid "Unavailable"
 msgstr "Indisponible"
 
-#: qcsrc/client/main.qc:997
+#: qcsrc/client/main.qc:1000
 msgid " qu/s"
 msgstr " qu/s"
 
-#: qcsrc/client/main.qc:999
+#: qcsrc/client/main.qc:1002
 msgid " m/s"
 msgstr " m/s"
 
-#: qcsrc/client/main.qc:1001
+#: qcsrc/client/main.qc:1004
 msgid " km/h"
 msgstr " km/h"
 
-#: qcsrc/client/main.qc:1003
+#: qcsrc/client/main.qc:1006
 msgid " mph"
 msgstr " mph"
 
-#: qcsrc/client/main.qc:1005
+#: qcsrc/client/main.qc:1008
 msgid " knots"
 msgstr " nœuds"
 
-#: qcsrc/client/main.qc:1252
+#: qcsrc/client/main.qc:1255
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (non assigné)"
@@ -1209,15 +1210,15 @@ msgstr "Demande d'aperçu…"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Vous essayez de supprimer une équipe qui n'est pas dans la liste !"
 
-#: qcsrc/client/view.qc:1601
+#: qcsrc/client/view.qc:939
 msgid "Nade timer"
 msgstr "Minuteur de grenade"
 
-#: qcsrc/client/view.qc:1606
+#: qcsrc/client/view.qc:944
 msgid "Capture progress"
 msgstr "Capture en cours"
 
-#: qcsrc/client/view.qc:1611
+#: qcsrc/client/view.qc:949
 msgid "Revival progress"
 msgstr "Dégel en cours"
 
@@ -2113,7 +2114,7 @@ msgstr "Intrus !"
 msgid "Tagged"
 msgstr "Verrouillé pour cible"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:695
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:697
 #, c-format
 msgid "%s needing help!"
 msgstr "%s a besoin d'aide !"
@@ -3233,7 +3234,8 @@ msgstr "^BG%s^K1 a joué avec des rayons Electro%s%s"
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
 msgstr ""
-"^BG%s^K1 ne se rappelait plus où il avait laissé traîner son Electro-orb%s%s"
+"^BG%s^K1 ne se rappelait plus où il/elle avait laissé traîner son Electro-"
+"orbe%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
@@ -3750,7 +3752,7 @@ msgstr "^K1%sVous avez tué ^BG%s pendant qu'il écrivait"
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
 msgstr ""
-"^K1%sVous avez pris pour cible ^BG%s^K1 pendant qu'il tapait au clavier"
+"^K1%sVous avez pris pour cible ^BG%s^K1 pendant qu'il/elle tapait au clavier"
 
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
@@ -4207,7 +4209,7 @@ msgstr "L'équipe ^TC^TT^BG a capturé le point de contrôle %s^BG"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "^BGL'équipe ^TC^TT^BG a capturé un point de contrôle"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGThis control point currently cannot be captured"
@@ -5592,175 +5594,175 @@ msgstr "Personnalisé"
 msgid "Core Team"
 msgstr "Équipe principale"
 
-#: qcsrc/menu/xonotic/credits.qc:16
+#: qcsrc/menu/xonotic/credits.qc:15
 msgid "Extended Team"
 msgstr "Équipe étendue"
 
-#: qcsrc/menu/xonotic/credits.qc:48
+#: qcsrc/menu/xonotic/credits.qc:46
 msgid "Website"
 msgstr "Site web"
 
-#: qcsrc/menu/xonotic/credits.qc:53
+#: qcsrc/menu/xonotic/credits.qc:51
 msgid "Stats"
 msgstr "Stats"
 
-#: qcsrc/menu/xonotic/credits.qc:57
+#: qcsrc/menu/xonotic/credits.qc:55
 msgid "Art"
 msgstr "Art"
 
-#: qcsrc/menu/xonotic/credits.qc:65
+#: qcsrc/menu/xonotic/credits.qc:63
 msgid "Animation"
 msgstr "Animation"
 
-#: qcsrc/menu/xonotic/credits.qc:69
+#: qcsrc/menu/xonotic/credits.qc:67
 msgid "Level Design"
 msgstr "Conception des niveaux"
 
-#: qcsrc/menu/xonotic/credits.qc:92
+#: qcsrc/menu/xonotic/credits.qc:90
 msgid "Music / Sound FX"
 msgstr "Musique / son FX"
 
-#: qcsrc/menu/xonotic/credits.qc:108
+#: qcsrc/menu/xonotic/credits.qc:106
 msgid "Game Code"
 msgstr "Code du jeu"
 
-#: qcsrc/menu/xonotic/credits.qc:116
+#: qcsrc/menu/xonotic/credits.qc:114
 msgid "Marketing / PR"
 msgstr "Marketing / Relations publiques"
 
-#: qcsrc/menu/xonotic/credits.qc:122
+#: qcsrc/menu/xonotic/credits.qc:120
 msgid "Legal"
 msgstr "Juridique"
 
-#: qcsrc/menu/xonotic/credits.qc:127
+#: qcsrc/menu/xonotic/credits.qc:125
 msgid "Game Engine"
 msgstr "Moteur du jeu"
 
-#: qcsrc/menu/xonotic/credits.qc:131
+#: qcsrc/menu/xonotic/credits.qc:129
 msgid "Engine Additions"
 msgstr "Ajouts au moteur"
 
-#: qcsrc/menu/xonotic/credits.qc:136
+#: qcsrc/menu/xonotic/credits.qc:135
 msgid "Compiler"
 msgstr "Compilateur"
 
-#: qcsrc/menu/xonotic/credits.qc:142
+#: qcsrc/menu/xonotic/credits.qc:141
 msgid "Other Active Contributors"
 msgstr "Autres contributeurs actifs"
 
-#: qcsrc/menu/xonotic/credits.qc:149
+#: qcsrc/menu/xonotic/credits.qc:148
 msgid "Translators"
 msgstr "Traducteurs"
 
-#: qcsrc/menu/xonotic/credits.qc:151
+#: qcsrc/menu/xonotic/credits.qc:150
 msgid "Asturian"
 msgstr "Asturien"
 
-#: qcsrc/menu/xonotic/credits.qc:156
+#: qcsrc/menu/xonotic/credits.qc:155
 msgid "Belarusian"
 msgstr "Biélorusse"
 
-#: qcsrc/menu/xonotic/credits.qc:159
+#: qcsrc/menu/xonotic/credits.qc:158
 msgid "Bulgarian"
 msgstr "Bulgare"
 
-#: qcsrc/menu/xonotic/credits.qc:166
+#: qcsrc/menu/xonotic/credits.qc:165
 msgid "Chinese (China)"
 msgstr "Chinois (Chine)"
 
-#: qcsrc/menu/xonotic/credits.qc:172
+#: qcsrc/menu/xonotic/credits.qc:171
 msgid "Chinese (Taiwan)"
 msgstr "Chinois (Taïwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:177
+#: qcsrc/menu/xonotic/credits.qc:176
 msgid "Cornish"
 msgstr "Cornouaillais"
 
-#: qcsrc/menu/xonotic/credits.qc:180
+#: qcsrc/menu/xonotic/credits.qc:179
 msgid "Czech"
 msgstr "Tchèque"
 
-#: qcsrc/menu/xonotic/credits.qc:185
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "Dutch"
 msgstr "Néerlandais"
 
-#: qcsrc/menu/xonotic/credits.qc:192
+#: qcsrc/menu/xonotic/credits.qc:191
 msgid "English (Australia)"
 msgstr "Anglais (Australie)"
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:196
 msgid "Finnish"
 msgstr "Finlandais"
 
-#: qcsrc/menu/xonotic/credits.qc:202
+#: qcsrc/menu/xonotic/credits.qc:201
 msgid "French"
 msgstr "Français"
 
-#: qcsrc/menu/xonotic/credits.qc:210
+#: qcsrc/menu/xonotic/credits.qc:209
 msgid "German"
 msgstr "Allemand"
 
-#: qcsrc/menu/xonotic/credits.qc:221
+#: qcsrc/menu/xonotic/credits.qc:220
 msgid "Greek"
 msgstr "Grec"
 
-#: qcsrc/menu/xonotic/credits.qc:227
+#: qcsrc/menu/xonotic/credits.qc:226
 msgid "Hungarian"
 msgstr "Hongrois"
 
-#: qcsrc/menu/xonotic/credits.qc:231
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Irish"
 msgstr "Irlandais"
 
-#: qcsrc/menu/xonotic/credits.qc:234
+#: qcsrc/menu/xonotic/credits.qc:233
 msgid "Italian"
 msgstr "Italien"
 
-#: qcsrc/menu/xonotic/credits.qc:240
+#: qcsrc/menu/xonotic/credits.qc:239
 msgid "Kazakh"
 msgstr "Kazakh"
 
-#: qcsrc/menu/xonotic/credits.qc:243
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Korean"
 msgstr "Coréen"
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:246
 msgid "Polish"
 msgstr "Polonais"
 
-#: qcsrc/menu/xonotic/credits.qc:255
+#: qcsrc/menu/xonotic/credits.qc:254
 msgid "Portuguese"
 msgstr "Portugais"
 
-#: qcsrc/menu/xonotic/credits.qc:261
+#: qcsrc/menu/xonotic/credits.qc:260
 msgid "Romanian"
 msgstr "Roumain"
 
-#: qcsrc/menu/xonotic/credits.qc:268
+#: qcsrc/menu/xonotic/credits.qc:267
 msgid "Russian"
 msgstr "Russe"
 
-#: qcsrc/menu/xonotic/credits.qc:279
+#: qcsrc/menu/xonotic/credits.qc:278
 msgid "Scottish Gaelic"
 msgstr "Gaélique écossais"
 
-#: qcsrc/menu/xonotic/credits.qc:282
+#: qcsrc/menu/xonotic/credits.qc:281
 msgid "Serbian"
 msgstr "Serbe"
 
-#: qcsrc/menu/xonotic/credits.qc:288
+#: qcsrc/menu/xonotic/credits.qc:287
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: qcsrc/menu/xonotic/credits.qc:299
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Swedish"
 msgstr "Suédois"
 
-#: qcsrc/menu/xonotic/credits.qc:303
+#: qcsrc/menu/xonotic/credits.qc:302
 msgid "Ukrainian"
 msgstr "Ukrainien"
 
-#: qcsrc/menu/xonotic/credits.qc:310
+#: qcsrc/menu/xonotic/credits.qc:309
 msgid "Past Contributors"
 msgstr "Contributeurs passés"
 
@@ -5824,8 +5826,8 @@ msgid "Disconnect"
 msgstr "Se déconnecter"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
-msgid "Disconnect server"
-msgstr "Se déconnecter du serveur"
+msgid "Disconnect from the server you are connected to"
+msgstr "Se déconnecter du serveur auquel vous êtes connecté"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -6966,6 +6968,8 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Activer les bonus aléatoires (Médecin, Invisibilité, etc.) sur les cartes "
+"qui les prennent en charge."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:181
 msgid "Only possible to inflict damage on your enemy while they're airborne"
@@ -6980,10 +6984,14 @@ msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
+"Niveau de santé en dessous duquel les joueurs commencent à saigner (la santé "
+"diminue et ils ne peuvent pas sauter)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:199
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr ""
+"Faire tomber les choses au sol plus lentement (pourcentage de la gravité "
+"normale)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "Weapon & item mutators:"
@@ -6996,22 +7004,33 @@ msgstr "Grappin"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr ""
+"Les joueurs apparaissent avec le grappin. Appuyer sur la touche « grappin » "
+"pour l'utiliser."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:216
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
+"Les joueurs apparaissent avec le jetpack. Appuyer deux fois sur « sauter » "
+"ou appuyer sur la touche « jetpack » pour l'utiliser."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
-msgid "Projectiles can't be destroyed. However, Electro combos still work"
+msgid ""
+"Projectiles can't be destroyed. However, you can still explode Electro orbs "
+"with the Electro primary fire"
 msgstr ""
+"Les projectiles ne peuvent pas être détruits. Cependant, vous pouvez "
+"toujours exploser les Electro-orbes avec le tir primaire de l'Electro."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid ""
 "Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
+"Certaines armes à collecter seront aléatoirement remplacées par de nouvelles "
+"armes : Heavy Laser Assault Cannon, Poseur de Mines, Fusil de précision, T.A."
+"G. Seeker."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:230
 msgid ""
@@ -7019,6 +7038,10 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
+"Les roquettes du Devastator peuvent exploser instantanément (sinon, il y a "
+"un court délai). Ceci permet aux joueurs de tirer et de faire exploser une "
+"roquette de Devastator dans les airs pour créer une forte poussée, même lors "
+"de déplacements rapides."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "Players will drop all weapons they possessed when they are killed"
@@ -7038,7 +7061,7 @@ msgid ""
 "without weapon pickups"
 msgstr ""
 "Les joueurs se voient attribuer un ensemble d'armes ainsi que des munitions "
-"illimitées, il n'y a aucune arme à ramasser"
+"illimitées, il n'y a aucune arme à collecter."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:248
 msgid "Weapon arenas:"
@@ -7414,6 +7437,7 @@ msgstr "Autoriser les statistiques à utiliser votre pseudonyme"
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr ""
+"Autoriser les statistiques de joueur à vous intégrer dans les classements"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
 msgid "Country"
@@ -7961,12 +7985,12 @@ msgid "Avoid lossy texture compression"
 msgstr "Éviter les compressions de texture avec pertes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
-msgid "Disable skyboxes for performance and visibility"
-msgstr "Désactiver les skyboxes pour la performance et la visibilité"
+msgid "Disable sky for performance and visibility"
+msgstr "Désactiver le ciel pour la performance et la visibilité"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
-msgid "Show skyboxes"
-msgstr "Afficher les skyboxes"
+msgid "Show sky"
+msgstr "Afficher le ciel"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -9758,11 +9782,11 @@ msgstr "auto-joindre une équipe"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "lâcher clé / drapeau, quitter véhicule"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "suicide / respawn"
-msgstr ""
+msgstr "suicide / réapparition"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "quick menu"
@@ -9782,11 +9806,11 @@ msgstr "menu bac à sable"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "traîner l'objet (bac à sable)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "menu de l'éditeur de waypoints"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:96 qcsrc/menu/xonotic/mainwindow.qc:99
 msgid "Do not press this button again!"
@@ -9821,15 +9845,15 @@ msgid "<no model found>"
 msgstr "<aucun modèle trouvé>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
-msgid "Remove favorite"
-msgstr ""
+msgid "SERVER^Remove favorite"
+msgstr "Supprimer le favori"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr ""
+msgstr "Supprimer le serveur actuellement sélectionné des favoris"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
-msgid "Favorite"
+msgid "SERVER^Favorite"
 msgstr "Favori"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
@@ -10050,65 +10074,66 @@ msgstr "Novembre"
 msgid "December"
 msgstr "Décembre"
 
-#: qcsrc/menu/xonotic/statslist.qc:44
+#: qcsrc/menu/xonotic/statslist.qc:46
+#, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "%d %m %Y"
 
-#: qcsrc/menu/xonotic/statslist.qc:95
+#: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
 msgstr "A rejoint le :"
 
-#: qcsrc/menu/xonotic/statslist.qc:102
+#: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
 msgstr "Dernier match :"
 
-#: qcsrc/menu/xonotic/statslist.qc:109
+#: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
 msgstr "Durée de jeu :"
 
-#: qcsrc/menu/xonotic/statslist.qc:116 qcsrc/menu/xonotic/statslist.qc:229
+#: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
 msgid "Favorite map:"
 msgstr "Carte favorite :"
 
-#: qcsrc/menu/xonotic/statslist.qc:148 qcsrc/menu/xonotic/statslist.qc:200
-#: qcsrc/menu/xonotic/statslist.qc:243
+#: qcsrc/menu/xonotic/statslist.qc:150 qcsrc/menu/xonotic/statslist.qc:202
+#: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
 msgstr "Matchs :"
 
-#: qcsrc/menu/xonotic/statslist.qc:153
+#: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Wins/Losses:"
 msgstr "Victoires/Défaites :"
 
-#: qcsrc/menu/xonotic/statslist.qc:154
+#: qcsrc/menu/xonotic/statslist.qc:156
 #, c-format
 msgid "Win percentage:"
 msgstr "Pourcentage victoires :"
 
-#: qcsrc/menu/xonotic/statslist.qc:165
+#: qcsrc/menu/xonotic/statslist.qc:167
 #, c-format
 msgid "Kills/Deaths:"
 msgstr "Meurtres/Morts :"
 
-#: qcsrc/menu/xonotic/statslist.qc:171
+#: qcsrc/menu/xonotic/statslist.qc:173
 #, c-format
 msgid "Kill ratio:"
 msgstr "Taux de mortalité :"
 
-#: qcsrc/menu/xonotic/statslist.qc:206
+#: qcsrc/menu/xonotic/statslist.qc:208
 msgid "ELO:"
 msgstr "ELO :"
 
-#: qcsrc/menu/xonotic/statslist.qc:213
+#: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
 msgstr "Rang :"
 
-#: qcsrc/menu/xonotic/statslist.qc:220
+#: qcsrc/menu/xonotic/statslist.qc:222
 msgid "Percentile:"
 msgstr "Percentile :"
 
-#: qcsrc/menu/xonotic/statslist.qc:245
+#: qcsrc/menu/xonotic/statslist.qc:247
 #, c-format
 msgid "%d (unranked)"
 msgstr "%d (non classé)"

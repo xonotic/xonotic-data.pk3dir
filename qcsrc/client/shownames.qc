@@ -213,7 +213,7 @@ void Draw_ShowNames_All()
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
-		if (!it.csqcmodel_isdead || it.alpha > 0)
+		if ((!it.csqcmodel_isdead || it.alpha > 0) && entcs.origin != it.origin)
 			setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
