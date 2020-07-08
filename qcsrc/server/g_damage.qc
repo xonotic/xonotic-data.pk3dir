@@ -842,7 +842,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			farcent.nextthink = time + 0.1;
 			setthink(farcent, SUB_Remove);
 		}
-		else
+		else if(targ.move_movetype != MOVETYPE_NOCLIP)
 		{
 			targ.velocity = targ.velocity + farce;
 		}
