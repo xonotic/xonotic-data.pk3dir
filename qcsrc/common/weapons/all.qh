@@ -356,6 +356,8 @@ vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
 
 .vector spawnorigin; // for casings
 
+.vector movedir_aligned; // shot origin based on weapon alignment (unaffected by shootfromeye)
+
 // weapon animation vectors:
 .vector anim_fire1;
 .vector anim_fire2;

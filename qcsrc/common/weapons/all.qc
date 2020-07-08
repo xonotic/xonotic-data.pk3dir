@@ -384,7 +384,7 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
  * writes:
  *   this.origin, this.angles
  *   this.weaponchild
- *   this.movedir, this.view_ofs
+ *   this.movedir, this.view_ofs, this.movedir_aligned
  *   attachment stuff
  *   anim stuff
  * to free:
@@ -526,6 +526,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	}
 
 	this.view_ofs = '0 0 0';
+	this.movedir_aligned = this.movedir;
 
 	if (this.movedir.x >= 0)
 	{
@@ -536,6 +537,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	#endif
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
+		this.movedir_aligned = shotorg_adjust(v, false, true, algn);
 		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
 	}
 	int compressed_shotorg = compressShotOrigin(this.movedir);
@@ -711,7 +713,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 	if(!rlplayer)
 		rlplayer = csqcplayer; // fall back to the global
 
-	vector md = wepent.movedir;
+	vector md = wepent.movedir_aligned;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
 	vector dv = right * -vecs.y + up * vecs.z;
 	vector org = rlplayer.origin + rlplayer.view_ofs + dv;
