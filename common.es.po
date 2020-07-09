@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-07 20:19+0000\n"
+"PO-Revision-Date: 2020-07-08 20:50+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -3031,7 +3031,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr "^BG%s^F3 ha sido expulsado por matar a sus propios compañeros"
+msgstr "^BG%s^F3 ha sido expulsado por matar a tus propios compañeros"
 
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
@@ -3102,7 +3102,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:432
 msgid "^TC^TT ^BGteam scores!"
-msgstr "¡El equipo ^TC^TT^BG ha anotado!"
+msgstr "¡El equipo ^TC^TT^BG ha acertado!"
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
@@ -3528,11 +3528,11 @@ msgstr "^F4El juego inicia en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:536
 msgid "^F4Round starts in ^COUNT"
-msgstr "^F4Ronda empieza en ^COUNT"
+msgstr "^F4La ronda empieza en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:537
 msgid "^F4Round cannot start"
-msgstr "^F4Ronda no puede empezar"
+msgstr "^F4La ronda no puede empezar"
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F2Don't camp!"
@@ -9534,7 +9534,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr "Usar shaders OpenGL2.0 (GLSL)"
+msgstr "Usar shaders OpenGL 2.0 (GLSL)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:163
 msgid "Psycho coloring (easter egg)"
