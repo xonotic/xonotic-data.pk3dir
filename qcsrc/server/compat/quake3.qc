@@ -30,6 +30,10 @@ SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)
 SPAWNFUNC_WEAPON(weapon_prox_launcher, WEP_MINE_LAYER)
 SPAWNFUNC_ITEM(ammo_mines, ITEM_Rockets)
 
+// Q3TA chaingun -> HLAC
+SPAWNFUNC_WEAPON(weapon_chaingun, WEP_HLAC)
+SPAWNFUNC_ITEM(ammo_belt, ITEM_Cells)
+
 // Q3TA nails -> cells
 SPAWNFUNC_ITEM(ammo_nails, ITEM_Cells)
 
