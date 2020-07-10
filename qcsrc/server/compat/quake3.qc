@@ -258,20 +258,16 @@ spawnfunc(target_fragsFilter)
 .float notteam;
 .float notsingle;
 .float notfree;
-.float notq3a;
 .float notta;
 .string gametype;
 bool DoesQ3ARemoveThisEntity(entity this)
 {
 	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
 
-	if(this.notq3a)
-		if(!teamplay || g_tdm || g_ctf)
-			return true;
-
+	// Q3 mappers use "notq3a" or "notta" to disable an entity in Q3A or Q3TA
+	// Xonotic has ~equivalent features to Team Arena
 	if(this.notta)
-		if (!(!teamplay || g_tdm || g_ctf))
-			return true;
+		return true;
 
 	if(this.notsingle)
 		if(maxclients == 1)
