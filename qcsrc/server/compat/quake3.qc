@@ -30,6 +30,9 @@ SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)
 SPAWNFUNC_WEAPON(weapon_prox_launcher, WEP_MINE_LAYER)
 SPAWNFUNC_ITEM(ammo_mines, ITEM_Rockets)
 
+// Q3TA nails -> cells
+SPAWNFUNC_ITEM(ammo_nails, ITEM_Cells)
+
 // LG -> Lightning
 SPAWNFUNC_WEAPON(weapon_lightning, WEP_ELECTRO)
 SPAWNFUNC_ITEM(ammo_lightning, ITEM_Cells)
