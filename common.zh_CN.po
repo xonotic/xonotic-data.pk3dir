@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-29 22:02+0000\n"
+"POT-Creation-Date: 2020-06-07 07:23+0200\n"
+"PO-Revision-Date: 2020-06-07 05:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
@@ -63,7 +63,7 @@ msgstr "基本消息"
 msgid "^3Player^7: This is the chat area."
 msgstr "^3玩家^7: 这里是聊天区."
 
-#: qcsrc/client/hud/panel/engineinfo.qc:79
+#: qcsrc/client/hud/panel/engineinfo.qc:76
 #, c-format
 msgid "FPS: %.*f"
 msgstr "FPS: %.*f"
@@ -542,7 +542,7 @@ msgstr ""
 msgid "PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:159 qcsrc/client/main.qc:1099
+#: qcsrc/client/hud/panel/racetimer.qc:159 qcsrc/client/main.qc:1102
 msgid "missing a checkpoint"
 msgstr ""
 
@@ -1109,27 +1109,27 @@ msgstr "没有"
 msgid "Unavailable"
 msgstr "不可用"
 
-#: qcsrc/client/main.qc:997
+#: qcsrc/client/main.qc:1000
 msgid " qu/s"
 msgstr " qu/s"
 
-#: qcsrc/client/main.qc:999
+#: qcsrc/client/main.qc:1002
 msgid " m/s"
 msgstr " m/s"
 
-#: qcsrc/client/main.qc:1001
+#: qcsrc/client/main.qc:1004
 msgid " km/h"
 msgstr " km/h"
 
-#: qcsrc/client/main.qc:1003
+#: qcsrc/client/main.qc:1006
 msgid " mph"
 msgstr " mph"
 
-#: qcsrc/client/main.qc:1005
+#: qcsrc/client/main.qc:1008
 msgid " knots"
 msgstr "节点"
 
-#: qcsrc/client/main.qc:1252
+#: qcsrc/client/main.qc:1255
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (未绑定)"
@@ -1176,15 +1176,15 @@ msgstr ""
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "正在移除不在队伍表的队伍！"
 
-#: qcsrc/client/view.qc:1601
+#: qcsrc/client/view.qc:939
 msgid "Nade timer"
 msgstr "节点计时器"
 
-#: qcsrc/client/view.qc:1606
+#: qcsrc/client/view.qc:944
 msgid "Capture progress"
 msgstr "占领进度"
 
-#: qcsrc/client/view.qc:1611
+#: qcsrc/client/view.qc:949
 msgid "Revival progress"
 msgstr "重生进度"
 
@@ -2062,7 +2062,7 @@ msgstr "入侵者！"
 msgid "Tagged"
 msgstr "标记"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:695
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:697
 #, c-format
 msgid "%s needing help!"
 msgstr "%s 需要帮助"
@@ -5408,175 +5408,175 @@ msgstr "自定义"
 msgid "Core Team"
 msgstr "核心团队"
 
-#: qcsrc/menu/xonotic/credits.qc:16
+#: qcsrc/menu/xonotic/credits.qc:15
 msgid "Extended Team"
 msgstr "扩展团队"
 
-#: qcsrc/menu/xonotic/credits.qc:48
+#: qcsrc/menu/xonotic/credits.qc:46
 msgid "Website"
 msgstr "网址"
 
-#: qcsrc/menu/xonotic/credits.qc:53
+#: qcsrc/menu/xonotic/credits.qc:51
 msgid "Stats"
 msgstr "统计"
 
-#: qcsrc/menu/xonotic/credits.qc:57
+#: qcsrc/menu/xonotic/credits.qc:55
 msgid "Art"
 msgstr "美术"
 
-#: qcsrc/menu/xonotic/credits.qc:65
+#: qcsrc/menu/xonotic/credits.qc:63
 msgid "Animation"
 msgstr "动画"
 
-#: qcsrc/menu/xonotic/credits.qc:69
+#: qcsrc/menu/xonotic/credits.qc:67
 msgid "Level Design"
 msgstr "关卡设计"
 
-#: qcsrc/menu/xonotic/credits.qc:92
+#: qcsrc/menu/xonotic/credits.qc:90
 msgid "Music / Sound FX"
 msgstr "音乐/音效FX"
 
-#: qcsrc/menu/xonotic/credits.qc:108
+#: qcsrc/menu/xonotic/credits.qc:106
 msgid "Game Code"
 msgstr "游戏编码"
 
-#: qcsrc/menu/xonotic/credits.qc:116
+#: qcsrc/menu/xonotic/credits.qc:114
 msgid "Marketing / PR"
 msgstr "销售 / 人力资源"
 
-#: qcsrc/menu/xonotic/credits.qc:122
+#: qcsrc/menu/xonotic/credits.qc:120
 msgid "Legal"
 msgstr "法律信息"
 
-#: qcsrc/menu/xonotic/credits.qc:127
+#: qcsrc/menu/xonotic/credits.qc:125
 msgid "Game Engine"
 msgstr "游戏引擎"
 
-#: qcsrc/menu/xonotic/credits.qc:131
+#: qcsrc/menu/xonotic/credits.qc:129
 msgid "Engine Additions"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:136
+#: qcsrc/menu/xonotic/credits.qc:135
 msgid "Compiler"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:142
+#: qcsrc/menu/xonotic/credits.qc:141
 msgid "Other Active Contributors"
 msgstr "其他活跃贡献者"
 
-#: qcsrc/menu/xonotic/credits.qc:149
+#: qcsrc/menu/xonotic/credits.qc:148
 msgid "Translators"
 msgstr "翻译者"
 
-#: qcsrc/menu/xonotic/credits.qc:151
+#: qcsrc/menu/xonotic/credits.qc:150
 msgid "Asturian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:156
+#: qcsrc/menu/xonotic/credits.qc:155
 msgid "Belarusian"
 msgstr "白俄罗斯语"
 
-#: qcsrc/menu/xonotic/credits.qc:159
+#: qcsrc/menu/xonotic/credits.qc:158
 msgid "Bulgarian"
 msgstr "保加利亚语"
 
-#: qcsrc/menu/xonotic/credits.qc:166
+#: qcsrc/menu/xonotic/credits.qc:165
 msgid "Chinese (China)"
 msgstr "中文（中国）"
 
-#: qcsrc/menu/xonotic/credits.qc:172
+#: qcsrc/menu/xonotic/credits.qc:171
 msgid "Chinese (Taiwan)"
 msgstr "中文（台湾）"
 
-#: qcsrc/menu/xonotic/credits.qc:177
+#: qcsrc/menu/xonotic/credits.qc:176
 msgid "Cornish"
 msgstr "康沃尔语"
 
-#: qcsrc/menu/xonotic/credits.qc:180
+#: qcsrc/menu/xonotic/credits.qc:179
 msgid "Czech"
 msgstr "捷克语"
 
-#: qcsrc/menu/xonotic/credits.qc:185
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "Dutch"
 msgstr "荷兰语"
 
-#: qcsrc/menu/xonotic/credits.qc:192
+#: qcsrc/menu/xonotic/credits.qc:191
 msgid "English (Australia)"
 msgstr "英语（澳大利亚）"
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:196
 msgid "Finnish"
 msgstr "芬兰语"
 
-#: qcsrc/menu/xonotic/credits.qc:202
+#: qcsrc/menu/xonotic/credits.qc:201
 msgid "French"
 msgstr "法语"
 
-#: qcsrc/menu/xonotic/credits.qc:210
+#: qcsrc/menu/xonotic/credits.qc:209
 msgid "German"
 msgstr "德语"
 
-#: qcsrc/menu/xonotic/credits.qc:221
+#: qcsrc/menu/xonotic/credits.qc:220
 msgid "Greek"
 msgstr "希腊语"
 
-#: qcsrc/menu/xonotic/credits.qc:227
+#: qcsrc/menu/xonotic/credits.qc:226
 msgid "Hungarian"
 msgstr "匈牙利语"
 
-#: qcsrc/menu/xonotic/credits.qc:231
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Irish"
 msgstr "爱尔兰语"
 
-#: qcsrc/menu/xonotic/credits.qc:234
+#: qcsrc/menu/xonotic/credits.qc:233
 msgid "Italian"
 msgstr "意大利语"
 
-#: qcsrc/menu/xonotic/credits.qc:240
+#: qcsrc/menu/xonotic/credits.qc:239
 msgid "Kazakh"
 msgstr "哈萨克语"
 
-#: qcsrc/menu/xonotic/credits.qc:243
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Korean"
 msgstr "韩语"
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:246
 msgid "Polish"
 msgstr "波兰语"
 
-#: qcsrc/menu/xonotic/credits.qc:255
+#: qcsrc/menu/xonotic/credits.qc:254
 msgid "Portuguese"
 msgstr "葡萄牙语"
 
-#: qcsrc/menu/xonotic/credits.qc:261
+#: qcsrc/menu/xonotic/credits.qc:260
 msgid "Romanian"
 msgstr "罗马尼亚语"
 
-#: qcsrc/menu/xonotic/credits.qc:268
+#: qcsrc/menu/xonotic/credits.qc:267
 msgid "Russian"
 msgstr "俄文"
 
-#: qcsrc/menu/xonotic/credits.qc:279
+#: qcsrc/menu/xonotic/credits.qc:278
 msgid "Scottish Gaelic"
 msgstr "苏格兰盖尔语"
 
-#: qcsrc/menu/xonotic/credits.qc:282
+#: qcsrc/menu/xonotic/credits.qc:281
 msgid "Serbian"
 msgstr "塞尔维亚语"
 
-#: qcsrc/menu/xonotic/credits.qc:288
+#: qcsrc/menu/xonotic/credits.qc:287
 msgid "Spanish"
 msgstr "西班牙语"
 
-#: qcsrc/menu/xonotic/credits.qc:299
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Swedish"
 msgstr "瑞典语"
 
-#: qcsrc/menu/xonotic/credits.qc:303
+#: qcsrc/menu/xonotic/credits.qc:302
 msgid "Ukrainian"
 msgstr "乌克兰语"
 
-#: qcsrc/menu/xonotic/credits.qc:310
+#: qcsrc/menu/xonotic/credits.qc:309
 msgid "Past Contributors"
 msgstr "过去的贡献者"
 
@@ -5640,7 +5640,7 @@ msgid "Disconnect"
 msgstr "断开"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
-msgid "Disconnect server"
+msgid "Disconnect from the server you are connected to"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
@@ -6807,7 +6807,9 @@ msgid ""
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
-msgid "Projectiles can't be destroyed. However, Electro combos still work"
+msgid ""
+"Projectiles can't be destroyed. However, you can still explode Electro orbs "
+"with the Electro primary fire"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
@@ -7751,11 +7753,11 @@ msgid "Avoid lossy texture compression"
 msgstr "避免有损的纹理压缩"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
-msgid "Disable skyboxes for performance and visibility"
+msgid "Disable sky for performance and visibility"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
-msgid "Show skyboxes"
+msgid "Show sky"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
@@ -9529,7 +9531,7 @@ msgid "<no model found>"
 msgstr "<no model found>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
-msgid "Remove favorite"
+msgid "SERVER^Remove favorite"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
@@ -9537,8 +9539,8 @@ msgid "Remove the currently highlighted server from bookmarks"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
-msgid "Favorite"
-msgstr "偏好"
+msgid "SERVER^Favorite"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid ""
@@ -9754,65 +9756,66 @@ msgstr "十一月"
 msgid "December"
 msgstr "十二月"
 
-#: qcsrc/menu/xonotic/statslist.qc:44
+#: qcsrc/menu/xonotic/statslist.qc:46
+#, no-c-format
 msgid "DATE^%m %d, %Y"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:95
+#: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
 msgstr "加入："
 
-#: qcsrc/menu/xonotic/statslist.qc:102
+#: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:109
+#: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
 msgstr "游戏时间："
 
-#: qcsrc/menu/xonotic/statslist.qc:116 qcsrc/menu/xonotic/statslist.qc:229
+#: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
 msgid "Favorite map:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:148 qcsrc/menu/xonotic/statslist.qc:200
-#: qcsrc/menu/xonotic/statslist.qc:243
+#: qcsrc/menu/xonotic/statslist.qc:150 qcsrc/menu/xonotic/statslist.qc:202
+#: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:153
+#: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Wins/Losses:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:154
+#: qcsrc/menu/xonotic/statslist.qc:156
 #, c-format
 msgid "Win percentage:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:165
+#: qcsrc/menu/xonotic/statslist.qc:167
 #, c-format
 msgid "Kills/Deaths:"
 msgstr "击杀/死亡："
 
-#: qcsrc/menu/xonotic/statslist.qc:171
+#: qcsrc/menu/xonotic/statslist.qc:173
 #, c-format
 msgid "Kill ratio:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:206
+#: qcsrc/menu/xonotic/statslist.qc:208
 msgid "ELO:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:213
+#: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:220
+#: qcsrc/menu/xonotic/statslist.qc:222
 msgid "Percentile:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:245
+#: qcsrc/menu/xonotic/statslist.qc:247
 #, c-format
 msgid "%d (unranked)"
 msgstr "%d (未评级)"

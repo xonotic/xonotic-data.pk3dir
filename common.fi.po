@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-30 00:02+0200\n"
-"PO-Revision-Date: 2020-05-29 22:02+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2020-06-07 07:23+0200\n"
+"PO-Revision-Date: 2020-07-09 17:30+0000\n"
+"Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -60,7 +60,7 @@ msgstr "Yleisluontoinen viesti"
 msgid "^3Player^7: This is the chat area."
 msgstr "^3Pelaaja^7: Tämä on keskustelualue."
 
-#: qcsrc/client/hud/panel/engineinfo.qc:79
+#: qcsrc/client/hud/panel/engineinfo.qc:76
 #, c-format
 msgid "FPS: %.*f"
 msgstr "FPS-ruutunopeus: %.*f"
@@ -296,7 +296,7 @@ msgstr "QMCMD^joukkuekeskustelu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^voimistus pian"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -456,7 +456,7 @@ msgstr "QMCMD^Chat-keskustelun ääni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Muuta katselijakameraa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 #: qcsrc/client/hud/panel/quickmenu.qc:845
@@ -473,7 +473,7 @@ msgstr "QMCMD^Vähennä nopeutta"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Seinätörmäys"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Fullscreen"
@@ -506,7 +506,7 @@ msgstr "QMCMD^Sekoita joukkueet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Katsele pelaajaa"
 
 #: qcsrc/client/hud/panel/racetimer.qc:59
 #, c-format
@@ -540,7 +540,7 @@ msgstr "Välimuoto %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "RANGAISTUS: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:159 qcsrc/client/main.qc:1099
+#: qcsrc/client/hud/panel/racetimer.qc:159 qcsrc/client/main.qc:1102
 msgid "missing a checkpoint"
 msgstr "tarkastuspiste sivuutettu"
 
@@ -1127,27 +1127,27 @@ msgstr "Ei ole"
 msgid "Unavailable"
 msgstr "Ei saatavissa"
 
-#: qcsrc/client/main.qc:997
+#: qcsrc/client/main.qc:1000
 msgid " qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:999
+#: qcsrc/client/main.qc:1002
 msgid " m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1001
+#: qcsrc/client/main.qc:1004
 msgid " km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1003
+#: qcsrc/client/main.qc:1006
 msgid " mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1005
+#: qcsrc/client/main.qc:1008
 msgid " knots"
 msgstr "solmut"
 
-#: qcsrc/client/main.qc:1252
+#: qcsrc/client/main.qc:1255
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ei sidottu)"
@@ -1195,15 +1195,15 @@ msgstr "Pyydetään esikatselua..."
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Koetetaan poistaa joukkuetta joka ei ole joukkuelistassa!"
 
-#: qcsrc/client/view.qc:1601
+#: qcsrc/client/view.qc:939
 msgid "Nade timer"
 msgstr "Naattiajastin"
 
-#: qcsrc/client/view.qc:1606
+#: qcsrc/client/view.qc:944
 msgid "Capture progress"
 msgstr "Kaappauksen edistyminen"
 
-#: qcsrc/client/view.qc:1611
+#: qcsrc/client/view.qc:949
 msgid "Revival progress"
 msgstr "Elpymisen edistyminen"
 
@@ -1842,7 +1842,7 @@ msgstr "Lento"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:11
 msgid "Buff"
-msgstr "Puhvi"
+msgstr "Tsemppi"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
@@ -2095,7 +2095,7 @@ msgstr "Tunkeutuja!"
 msgid "Tagged"
 msgstr "Korvamerkitty"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:695
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:697
 #, c-format
 msgid "%s needing help!"
 msgstr "%s avuntarpeessa!"
@@ -2253,12 +2253,13 @@ msgstr "^F2Seuraava kierros menee sinun osaltasi katsellessa"
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1's ^BG%s^K1 puhvilla ^K1%s%s"
+msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1's ^BG%s^K1 tsempillä ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1's ^BG%s^K1 puhvilla ^K1%s%s"
+msgstr ""
+"^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1's ^BG%s^K1 tsempillä ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:266
 #, c-format
@@ -2754,7 +2755,7 @@ msgstr "^BG%s^K3 elvytettiin heidän Naattiräjähdyksellään"
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 elvytettiin automaattisesti %s sekunnin kuluttua"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
@@ -2790,24 +2791,24 @@ msgstr "^BGJumaltila pelasti sinut %s yksikköä vahinkoa, huiputtaja!"
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr "^BG%s^BG sai %s^BG puhvin!"
+msgstr "^BG%s^BG sai %s^BG tsempin!"
 
 #: qcsrc/common/notifications/all.inc:369
 #, c-format
 msgid "^BG%s^BG lost the %s^BG buff!"
-msgstr "^BG%s^BG menetti %s^BG puhvin!"
+msgstr "^BG%s^BG menetti %s^BG tsempin!"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:683
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr "^BGSinä pudotit %s^BG puhvin!"
+msgstr "^BGSinä pudotit %s^BG tsempin!"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:684
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr "^BGSinulla on %s^BG puhvi!"
+msgstr "^BGSinulla on %s^BG tsemppi!"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:687
@@ -2934,7 +2935,7 @@ msgstr "^BG%s^BG kaappasi %s^BG hallintapisteen"
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^BG captured a control point"
-msgstr ""
+msgstr "^BG%s^BG kaappasi hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:404
 #, c-format
@@ -2944,7 +2945,7 @@ msgstr "^TC^TT^BG joukkueen %s^BG hallintapiste on tuhottu täten %s"
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr ""
+msgstr "^TC^TT^BG joukkueen hallintapiste on tuhottu täten %s"
 
 #: qcsrc/common/notifications/all.inc:406
 msgid "^TC^TT^BG generator has been destroyed"
@@ -3983,7 +3984,7 @@ msgstr "^BGOvi avattu!"
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr ""
+msgstr "^F2Lisäelämiä napattu: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:667
 #, c-format
@@ -4002,7 +4003,7 @@ msgstr "^K3Sinut elvytettiin ^BG%s :n toimesta"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^K3You were automatically revived after %s seconds"
-msgstr ""
+msgstr "^K3Sinut elvytettiin automaattisesti %s sekunnissa"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -4137,12 +4138,12 @@ msgstr "^F2Lisäelämiä jäljellä: ^K1%s"
 #: qcsrc/common/notifications/all.inc:719 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
-msgstr ""
+msgstr "Taso %s: "
 
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGPaina ^F2%s^BG liittyäksesi peliin"
 
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
@@ -4165,7 +4166,7 @@ msgstr "^BGKaappasit haltuusi %s^BG hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGSinä kaappasit hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:727
 #, c-format
@@ -4174,7 +4175,7 @@ msgstr "^TC^TT^BG joukkue kaappasi %s^BG hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "^TC^TT^BG joukkue kaappasi hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGThis control point currently cannot be captured"
@@ -5559,175 +5560,175 @@ msgstr "Omavalintainen"
 msgid "Core Team"
 msgstr "Ydinjoukkue"
 
-#: qcsrc/menu/xonotic/credits.qc:16
+#: qcsrc/menu/xonotic/credits.qc:15
 msgid "Extended Team"
 msgstr "Laajennettu joukkue"
 
-#: qcsrc/menu/xonotic/credits.qc:48
+#: qcsrc/menu/xonotic/credits.qc:46
 msgid "Website"
 msgstr "Verkkosivu"
 
-#: qcsrc/menu/xonotic/credits.qc:53
+#: qcsrc/menu/xonotic/credits.qc:51
 msgid "Stats"
 msgstr "Tilastot"
 
-#: qcsrc/menu/xonotic/credits.qc:57
+#: qcsrc/menu/xonotic/credits.qc:55
 msgid "Art"
 msgstr "Taide"
 
-#: qcsrc/menu/xonotic/credits.qc:65
+#: qcsrc/menu/xonotic/credits.qc:63
 msgid "Animation"
 msgstr "Animaatio"
 
-#: qcsrc/menu/xonotic/credits.qc:69
+#: qcsrc/menu/xonotic/credits.qc:67
 msgid "Level Design"
 msgstr "Kenttäsuunnittelu"
 
-#: qcsrc/menu/xonotic/credits.qc:92
+#: qcsrc/menu/xonotic/credits.qc:90
 msgid "Music / Sound FX"
 msgstr "Musiikki / ääniefektit"
 
-#: qcsrc/menu/xonotic/credits.qc:108
+#: qcsrc/menu/xonotic/credits.qc:106
 msgid "Game Code"
 msgstr "Pelin ohjelmakoodi"
 
-#: qcsrc/menu/xonotic/credits.qc:116
+#: qcsrc/menu/xonotic/credits.qc:114
 msgid "Marketing / PR"
 msgstr "Markkinointi / PR"
 
-#: qcsrc/menu/xonotic/credits.qc:122
+#: qcsrc/menu/xonotic/credits.qc:120
 msgid "Legal"
 msgstr "Lakisääteiset asiat"
 
-#: qcsrc/menu/xonotic/credits.qc:127
+#: qcsrc/menu/xonotic/credits.qc:125
 msgid "Game Engine"
 msgstr "Pelimoottori"
 
-#: qcsrc/menu/xonotic/credits.qc:131
+#: qcsrc/menu/xonotic/credits.qc:129
 msgid "Engine Additions"
 msgstr "Moottorin lisät"
 
-#: qcsrc/menu/xonotic/credits.qc:136
+#: qcsrc/menu/xonotic/credits.qc:135
 msgid "Compiler"
 msgstr "Koonti"
 
-#: qcsrc/menu/xonotic/credits.qc:142
+#: qcsrc/menu/xonotic/credits.qc:141
 msgid "Other Active Contributors"
 msgstr "Muita aktiivisia panoksensa antajia"
 
-#: qcsrc/menu/xonotic/credits.qc:149
+#: qcsrc/menu/xonotic/credits.qc:148
 msgid "Translators"
 msgstr "Kääntäjät"
 
-#: qcsrc/menu/xonotic/credits.qc:151
+#: qcsrc/menu/xonotic/credits.qc:150
 msgid "Asturian"
 msgstr "Asturian-kieli"
 
-#: qcsrc/menu/xonotic/credits.qc:156
+#: qcsrc/menu/xonotic/credits.qc:155
 msgid "Belarusian"
 msgstr "Valko-venäjä"
 
-#: qcsrc/menu/xonotic/credits.qc:159
+#: qcsrc/menu/xonotic/credits.qc:158
 msgid "Bulgarian"
 msgstr "Bulgaria"
 
-#: qcsrc/menu/xonotic/credits.qc:166
+#: qcsrc/menu/xonotic/credits.qc:165
 msgid "Chinese (China)"
 msgstr "Kiina (Kiinassa)"
 
-#: qcsrc/menu/xonotic/credits.qc:172
+#: qcsrc/menu/xonotic/credits.qc:171
 msgid "Chinese (Taiwan)"
 msgstr "Kiina (Taiwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:177
+#: qcsrc/menu/xonotic/credits.qc:176
 msgid "Cornish"
 msgstr "Korni"
 
-#: qcsrc/menu/xonotic/credits.qc:180
+#: qcsrc/menu/xonotic/credits.qc:179
 msgid "Czech"
 msgstr "Tsekki"
 
-#: qcsrc/menu/xonotic/credits.qc:185
+#: qcsrc/menu/xonotic/credits.qc:184
 msgid "Dutch"
 msgstr "Hollanti"
 
-#: qcsrc/menu/xonotic/credits.qc:192
+#: qcsrc/menu/xonotic/credits.qc:191
 msgid "English (Australia)"
 msgstr "Englanti (Australiassa)"
 
-#: qcsrc/menu/xonotic/credits.qc:197
+#: qcsrc/menu/xonotic/credits.qc:196
 msgid "Finnish"
 msgstr "Suomi"
 
-#: qcsrc/menu/xonotic/credits.qc:202
+#: qcsrc/menu/xonotic/credits.qc:201
 msgid "French"
 msgstr "Ranska"
 
-#: qcsrc/menu/xonotic/credits.qc:210
+#: qcsrc/menu/xonotic/credits.qc:209
 msgid "German"
 msgstr "Saksa"
 
-#: qcsrc/menu/xonotic/credits.qc:221
+#: qcsrc/menu/xonotic/credits.qc:220
 msgid "Greek"
 msgstr "Kreikka"
 
-#: qcsrc/menu/xonotic/credits.qc:227
+#: qcsrc/menu/xonotic/credits.qc:226
 msgid "Hungarian"
 msgstr "Unkari"
 
-#: qcsrc/menu/xonotic/credits.qc:231
+#: qcsrc/menu/xonotic/credits.qc:230
 msgid "Irish"
 msgstr "Iiri"
 
-#: qcsrc/menu/xonotic/credits.qc:234
+#: qcsrc/menu/xonotic/credits.qc:233
 msgid "Italian"
 msgstr "Italia"
 
-#: qcsrc/menu/xonotic/credits.qc:240
+#: qcsrc/menu/xonotic/credits.qc:239
 msgid "Kazakh"
 msgstr "Kasakki"
 
-#: qcsrc/menu/xonotic/credits.qc:243
+#: qcsrc/menu/xonotic/credits.qc:242
 msgid "Korean"
 msgstr "Korea"
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:246
 msgid "Polish"
 msgstr "Puola"
 
-#: qcsrc/menu/xonotic/credits.qc:255
+#: qcsrc/menu/xonotic/credits.qc:254
 msgid "Portuguese"
 msgstr "Portugali"
 
-#: qcsrc/menu/xonotic/credits.qc:261
+#: qcsrc/menu/xonotic/credits.qc:260
 msgid "Romanian"
 msgstr "Romania"
 
-#: qcsrc/menu/xonotic/credits.qc:268
+#: qcsrc/menu/xonotic/credits.qc:267
 msgid "Russian"
 msgstr "Venäjä"
 
-#: qcsrc/menu/xonotic/credits.qc:279
+#: qcsrc/menu/xonotic/credits.qc:278
 msgid "Scottish Gaelic"
 msgstr "Skottilainen keltti"
 
-#: qcsrc/menu/xonotic/credits.qc:282
+#: qcsrc/menu/xonotic/credits.qc:281
 msgid "Serbian"
 msgstr "Serbia"
 
-#: qcsrc/menu/xonotic/credits.qc:288
+#: qcsrc/menu/xonotic/credits.qc:287
 msgid "Spanish"
 msgstr "Espanja"
 
-#: qcsrc/menu/xonotic/credits.qc:299
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Swedish"
 msgstr "Ruotsi"
 
-#: qcsrc/menu/xonotic/credits.qc:303
+#: qcsrc/menu/xonotic/credits.qc:302
 msgid "Ukrainian"
 msgstr "Ukraina"
 
-#: qcsrc/menu/xonotic/credits.qc:310
+#: qcsrc/menu/xonotic/credits.qc:309
 msgid "Past Contributors"
 msgstr "Aikaisemmat panoksensa antajat"
 
@@ -5774,15 +5775,15 @@ msgstr "Xonotic:in tunnustusmaininnat"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
-msgstr ""
+msgstr "Haluatko varmasti katkaista yhteyden palvelimelle?"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
-msgstr ""
+msgstr "Katkaisisin palvelinyhteyden..."
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
 msgid "I would play more!"
-msgstr ""
+msgstr "Pelaisin lisää!"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
@@ -5791,8 +5792,8 @@ msgid "Disconnect"
 msgstr "Katkaise yhteys"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
-msgid "Disconnect server"
-msgstr ""
+msgid "Disconnect from the server you are connected to"
+msgstr "Katkaise yhteys palvelimeen johon olet yhdistettynä"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -6879,7 +6880,7 @@ msgstr "Verenvuodatus"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:175
 msgid "Buffs"
-msgstr "Puhvit"
+msgstr "Tsempit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Overkill"
@@ -6915,10 +6916,12 @@ msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr ""
+"Kytke päälle väistöt (pikakiihdytys annettuun suuntaan). \n"
+"Kaksoistäppää nuolinäppäintä väistääksesi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:168
 msgid "An explosion occurs when two players collide"
-msgstr ""
+msgstr "Tapahtuu räjähdys kahden pelaajan törmätessä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:172
 msgid "All players are almost invisible"
@@ -6929,6 +6932,8 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Kytke tsemppipoimittavat päälle (satunnaisia lisäetuja kuten ensiapu, "
+"näkymättömyys, jne.) niitä tukevissa kartoissa"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:181
 msgid "Only possible to inflict damage on your enemy while they're airborne"
@@ -6945,10 +6950,14 @@ msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
+"Terveyden määrä jonka alittuessa pelaajat alkavat vuotamaan kuiviin (vointi "
+"repsahtaa eivätkä kykene hyppäämään)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:199
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr ""
+"Aseta esineet putoamaan maahan hitaammin (prosenttimäärä perinteiseen "
+"painovoimaan nähden)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "Weapon & item mutators:"
@@ -6961,22 +6970,32 @@ msgstr "Köysi"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr ""
+"Pelaajat syntyvät heittokoukun kera. Paina 'koukku' näppäintä sitä "
+"käyttääksesi "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:216
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
+"Pelaajat syntyvät lentopakkauksen kera. Kaksoistäppää 'hyppy' tai paina "
+"'lentopakkaus' näppäintä sitä käyttääksesi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
-msgid "Projectiles can't be destroyed. However, Electro combos still work"
+msgid ""
+"Projectiles can't be destroyed. However, you can still explode Electro orbs "
+"with the Electro primary fire"
 msgstr ""
+"Ammuksia ei voi tuhota. Voit, siltikin, räjäyttää sähköpalloja "
+"ensisijaisella sähkötulituksella  "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid ""
 "Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
+"Jotkut asesyntymät tullaan vaihtamaan satunnaisesti uusilla aseilla: Raskas-"
+"laser rynnäkkökanuuna, Miinanlevittäjä, Kivääri, T.A.G. Hakeutuja "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:230
 msgid ""
@@ -6984,6 +7003,10 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
+"Hävittäjäraketit voidaan räjäyttää välittömästi (muutoin, ilmenee pieni "
+"viive). Tämä antaa pelaajalle mahdollisuuden ampua ja räjäyttää "
+"Hävittäjäraketin ilmassa ollessaan, tuottaakseen voimakkaan lisäpotkun "
+"keskikorkeudessa jopa liikkuessaan nopeasti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "Players will drop all weapons they possessed when they are killed"
@@ -7381,7 +7404,7 @@ msgstr "Salli pelaajatilastojen käyttävän pelinimeäsi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
-msgstr ""
+msgstr "Anna lupa sijoittaa sinut pelaajatilastoissa "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
 msgid "Country"
@@ -7929,12 +7952,12 @@ msgid "Avoid lossy texture compression"
 msgstr "Vältä häviöllistä tekstuurien pakkaamista"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
-msgid "Disable skyboxes for performance and visibility"
-msgstr ""
+msgid "Disable sky for performance and visibility"
+msgstr "Kytke taivas pois päältä suorituskyvyn ja näkyvyyden lisäämiseksi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
-msgid "Show skyboxes"
-msgstr ""
+msgid "Show sky"
+msgstr "Näytä taivas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -8809,7 +8832,7 @@ msgstr "Asemallin sijainti; vaatii yhteyden uudelleenmuodostamisen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr ""
+msgstr "Asemallin läpikuultavuus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
@@ -9678,7 +9701,7 @@ msgstr "käynnistä katsojatila"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Communication"
-msgstr ""
+msgstr "Keskustelu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "public chat"
@@ -9722,11 +9745,11 @@ msgstr "liity joukkueeseen automaattisesti"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "pudota avain/lippu, poistu ajoneuvosta"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "suicide / respawn"
-msgstr ""
+msgstr "itsari / uudelleensynty"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "quick menu"
@@ -9738,7 +9761,7 @@ msgstr "Käyttäjän määrittämä"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "Development"
-msgstr ""
+msgstr "Kehitys"
 
 #: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "sandbox menu"
@@ -9746,11 +9769,11 @@ msgstr "rajattu hiekkalaatikkovalikko"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "raahaa kohde (hiekkalaatikko)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "välietapin muokkausvalikko"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:96 qcsrc/menu/xonotic/mainwindow.qc:99
 msgid "Do not press this button again!"
@@ -9785,16 +9808,16 @@ msgid "<no model found>"
 msgstr "<mallia ei löytynyt>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
-msgid "Remove favorite"
-msgstr ""
+msgid "SERVER^Remove favorite"
+msgstr "PALVELIN^Poista lemppari"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr ""
+msgstr "Poista tämänhetkinen korostettu palvelin kirjanmerkeistä"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
-msgid "Favorite"
-msgstr "Lemppari"
+msgid "SERVER^Favorite"
+msgstr "PALVELIN^Lemppari"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid ""
@@ -10014,65 +10037,66 @@ msgstr "Marraskuu"
 msgid "December"
 msgstr "Joulukuu"
 
-#: qcsrc/menu/xonotic/statslist.qc:44
+#: qcsrc/menu/xonotic/statslist.qc:46
+#, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "PÄIVÄYS^%k %d, %V"
 
-#: qcsrc/menu/xonotic/statslist.qc:95
+#: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
 msgstr "Liittyi:"
 
-#: qcsrc/menu/xonotic/statslist.qc:102
+#: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
 msgstr "Viimeisin ottelu:"
 
-#: qcsrc/menu/xonotic/statslist.qc:109
+#: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
 msgstr "Peliaika:"
 
-#: qcsrc/menu/xonotic/statslist.qc:116 qcsrc/menu/xonotic/statslist.qc:229
+#: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
 msgid "Favorite map:"
 msgstr "Lempikartta:"
 
-#: qcsrc/menu/xonotic/statslist.qc:148 qcsrc/menu/xonotic/statslist.qc:200
-#: qcsrc/menu/xonotic/statslist.qc:243
+#: qcsrc/menu/xonotic/statslist.qc:150 qcsrc/menu/xonotic/statslist.qc:202
+#: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
 msgstr "Ottelut:"
 
-#: qcsrc/menu/xonotic/statslist.qc:153
+#: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Wins/Losses:"
 msgstr "Voitot/Tappiot"
 
-#: qcsrc/menu/xonotic/statslist.qc:154
+#: qcsrc/menu/xonotic/statslist.qc:156
 #, c-format
 msgid "Win percentage:"
 msgstr "Voittoprosentti:"
 
-#: qcsrc/menu/xonotic/statslist.qc:165
+#: qcsrc/menu/xonotic/statslist.qc:167
 #, c-format
 msgid "Kills/Deaths:"
 msgstr "Tapot/Kuolemat"
 
-#: qcsrc/menu/xonotic/statslist.qc:171
+#: qcsrc/menu/xonotic/statslist.qc:173
 #, c-format
 msgid "Kill ratio:"
 msgstr "Tapposuhde:"
 
-#: qcsrc/menu/xonotic/statslist.qc:206
+#: qcsrc/menu/xonotic/statslist.qc:208
 msgid "ELO:"
 msgstr "ELO:"
 
-#: qcsrc/menu/xonotic/statslist.qc:213
+#: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
 msgstr "Rankkaustaso:"
 
-#: qcsrc/menu/xonotic/statslist.qc:220
+#: qcsrc/menu/xonotic/statslist.qc:222
 msgid "Percentile:"
 msgstr "Prosenttipiste:"
 
-#: qcsrc/menu/xonotic/statslist.qc:245
+#: qcsrc/menu/xonotic/statslist.qc:247
 #, c-format
 msgid "%d (unranked)"
 msgstr "%d (ei rankattu)"

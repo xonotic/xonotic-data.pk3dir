@@ -208,7 +208,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon & item mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_grappling_hook", _("Grappling hook"),
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_grappling_hook", _("Grappling Hook"),
 			_("Players spawn with the grappling hook. Press the 'hook' key to use it")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
