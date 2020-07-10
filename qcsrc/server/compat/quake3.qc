@@ -255,10 +255,10 @@ spawnfunc(target_fragsFilter)
 
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
-.float notteam;
-.float notsingle;
-.float notfree;
-.float notta;
+.bool notteam;
+.bool notsingle;
+.bool notfree;
+.bool notta;
 .string gametype;
 bool DoesQ3ARemoveThisEntity(entity this)
 {
