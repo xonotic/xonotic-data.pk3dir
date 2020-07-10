@@ -259,10 +259,19 @@ spawnfunc(target_fragsFilter)
 .bool notsingle;
 .bool notfree;
 .bool notta;
+.bool notvq3;
+.bool notcpm;
 .string gametype;
 bool DoesQ3ARemoveThisEntity(entity this)
 {
 	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
+
+	// DeFRaG mappers use "notcpm" or "notvq3" to disable an entity in CPM or VQ3 physics
+	// Xonotic is usually played with a CPM-based physics so we default to CPM mode
+	if(cvar_string("g_mod_physics") == "Q3") {
+		if(this.notvq3) return true;
+	}
+	else if(this.notcpm) return true;
 
 	// Q3 mappers use "notq3a" or "notta" to disable an entity in Q3A or Q3TA
 	// Xonotic has ~equivalent features to Team Arena
