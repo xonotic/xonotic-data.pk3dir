@@ -673,12 +673,93 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 }
 #endif
 
+#ifdef SVQC
+void W_MuzzleFlash_Model_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset)
+{
+	flash.owner = actor;
+	flash.angles_z = random() * 360;
+
+	entity view = actor.(weaponentity);
+	entity exterior = actor.exteriorweaponentity;
+
+	if (view.oldorigin.x > 0)
+	{
+		setattachment(flash, exterior, "");
+		setorigin(flash, view.oldorigin + offset);
+	}
+	else
+	{
+		if (gettagindex(exterior, "shot")) setattachment(flash, exterior, "shot");
+		else setattachment(flash, exterior, "tag_shot");
+		setorigin(flash, offset);
+	}
+}
+#elif defined(CSQC)
+void W_MuzzleFlash_Model_AttachToShotorg(entity wepent, entity flash, vector offset)
+{
+	flash.owner = wepent;
+	flash.angles_z = random() * 360;
+
+	if (gettagindex(wepent, "shot")) setattachment(flash, wepent, "shot");
+	else setattachment(flash, wepent, "tag_shot");
+	setorigin(flash, offset);
+}
+#endif
+
+void W_MuzzleFlash_Model_Think(entity this)
+{
+	this.frame += 2;
+	this.scale *= 0.5;
+	this.alpha -= 0.25;
+	this.nextthink = time + 0.05;
+
+	if(this.alpha <= 0)
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
+		this.realowner.muzzle_flash = NULL;
+		return;
+	}
+}
+
+void W_MuzzleFlash_Model(entity wepent, entity muzzlemodel)
+{
+	if(wepent.muzzle_flash == NULL)
+		wepent.muzzle_flash = spawn();
+
+	entity flash = wepent.muzzle_flash;
+	setmodel(flash, muzzlemodel); // precision set below
+
+	flash.scale = 0.75;
+	setthink(flash, W_MuzzleFlash_Model_Think);
+	flash.nextthink = time + 0.02;
+	flash.frame = 2;
+	flash.alpha = 0.75;
+	flash.angles_z = random() * 180;
+	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
+	flash.owner = flash.realowner = wepent;
+
+#ifdef CSQC
+	flash.drawmask = MASK_NORMAL;
+#endif
+}
+
 REGISTER_NET_TEMP(w_muzzleflash)
 
 #ifdef SVQC
-void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, vector shotorg, vector shotdir)
+void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, entity muzzlemodel, vector shotorg, vector shotdir)
 {
-	Send_Effect_Except(eff, shotorg, shotdir * 1000, 1, actor);
+	// don't show an exterior muzzle effect for the off-hand
+	if(weaponslot(weaponentity) == 0)
+	{
+		Send_Effect_Except(eff, shotorg, shotdir * 1000, 1, actor);
+
+		if(muzzlemodel != MDL_Null)
+		{
+			W_MuzzleFlash_Model(actor.exteriorweaponentity, muzzlemodel);
+			W_MuzzleFlash_Model_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '5 0 0');
+		}
+	}
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
@@ -691,6 +772,9 @@ void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, vector shotor
 		(Effects_COUNT >= 255)
 		? WriteShort(channel, eff.m_id)
 		: WriteByte(channel, eff.m_id);
+		(Models_COUNT >= 255)
+		? WriteShort(channel, muzzlemodel.m_id)
+		: WriteByte(channel, muzzlemodel.m_id);
 		WriteVector(channel, shotorg);
 	});
 }
@@ -700,6 +784,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 	return = true;
     int slot = ReadByte();
     int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
+    int net_modelname = (Models_COUNT >= 255) ? ReadShort() : ReadByte();
     vector sv_shotorg = ReadVector();
 
     entity eff = Effects_from(net_name);
@@ -716,6 +801,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 	}
     if(!autocvar_r_drawviewmodel) return;
 
+    entity muzzlemodel = Models_from(net_modelname);
 	entity wepent = viewmodels[slot];
 	// get the local player entity to calculate shot origin
 	entity rlplayer = CSQCModel_server2csqc(player_localentnum - 1);
@@ -730,6 +816,12 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 	org = trace_endpos - forward * 1;
 
 	pointparticles(eff, org, forward * 1000, 1);
+
+	if(muzzlemodel != MDL_Null)
+	{
+		W_MuzzleFlash_Model(wepent, muzzlemodel);
+		W_MuzzleFlash_Model_AttachToShotorg(wepent, wepent.muzzle_flash, '5 0 0');
+	}
 }
 #endif
 

@@ -131,7 +131,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage), WEP_ARC.m_id | HITTYPE_SECONDARY);
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_ARC_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ARC_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
 
 	missile = new(missile);
 	missile.owner = missile.realowner = actor;

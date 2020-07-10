@@ -307,7 +307,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	W_MuzzleFlash(actor, weaponentity, EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_CRYLINK_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
 	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -420,7 +420,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	W_MuzzleFlash(actor, weaponentity, EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_CRYLINK_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
 	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{

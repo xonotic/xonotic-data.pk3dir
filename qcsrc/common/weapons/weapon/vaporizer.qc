@@ -127,7 +127,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, thiswep.m_id);
 
 	// do this now, as goodhits is disabled below
-	W_MuzzleFlash(actor, weaponentity, EFFECT_VORTEX_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_VORTEX_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
 	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
 
 	if(yoda && flying)
@@ -187,7 +187,7 @@ void W_RocketMinsta_Attack2(entity actor, .entity weaponentity)
 
 	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ELECTRO_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
 
     while(counter < total)
 	{
@@ -239,7 +239,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 
 	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ELECTRO_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
 
     while(counter < total)
 	{

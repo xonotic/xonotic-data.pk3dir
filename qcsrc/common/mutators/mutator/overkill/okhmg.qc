@@ -40,10 +40,7 @@ void W_OverkillHeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
-
-	W_MachineGun_MuzzleFlash(actor, weaponentity);
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	W_MuzzleFlash(actor, weaponentity, EFFECT_MACHINEGUN_MUZZLEFLASH, MDL_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
 
 	if (autocvar_g_casings >= 2) // casing code
 	{

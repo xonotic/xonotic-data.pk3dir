@@ -227,7 +227,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 		thiswep.m_id
 	);
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ELECTRO_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
 
 	proj = new(electro_bolt);
 	proj.owner = proj.realowner = actor;
@@ -378,7 +378,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ELECTRO_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
 
 	entity proj = new(electro_orb);
 	proj.owner = proj.realowner = actor;

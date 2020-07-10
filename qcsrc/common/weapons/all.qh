@@ -364,6 +364,8 @@ vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
 .vector anim_idle;
 .vector anim_reload;
 
+.entity muzzle_flash;
+
 // static frame globals
 
 ENUMCLASS(WFRAME)
@@ -398,6 +400,6 @@ void wframe_send(entity actor, entity weaponentity, int wepframe, float attackra
 #endif
 
 #ifdef SVQC
-void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, vector shotorg, vector shotdir);
+void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, entity muzzlemodel, vector shotorg, vector shotdir);
 #endif
 #endif
