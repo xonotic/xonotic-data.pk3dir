@@ -691,6 +691,7 @@ void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, vector shotor
 		(Effects_COUNT >= 255)
 		? WriteShort(channel, eff.m_id)
 		: WriteByte(channel, eff.m_id);
+		WriteVector(channel, shotorg);
 	});
 }
 #elif defined(CSQC)
@@ -699,15 +700,23 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 	return = true;
     int slot = ReadByte();
     int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
+    vector sv_shotorg = ReadVector();
 
-    if(!autocvar_r_drawviewmodel || autocvar_chase_active) return;
-	entity wepent = viewmodels[slot];
-	entity eff = Effects_from(net_name);
-
-	vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
+    entity eff = Effects_from(net_name);
+    vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
 	vector forward, right, up;
 	MAKE_VECTORS(viewangles, forward, right, up);
 
+	if(autocvar_chase_active)
+	{
+		// in third person mode, show the muzzle flash from the server side weapon position
+		// we don't have a view model to reference in this case
+		pointparticles(eff, sv_shotorg, forward * 1000, 1);
+		return;
+	}
+    if(!autocvar_r_drawviewmodel) return;
+
+	entity wepent = viewmodels[slot];
 	// get the local player entity to calculate shot origin
 	entity rlplayer = CSQCModel_server2csqc(player_localentnum - 1);
 	if(!rlplayer)
