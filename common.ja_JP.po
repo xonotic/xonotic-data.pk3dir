@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-08 21:32+0000\n"
+"PO-Revision-Date: 2020-07-10 00:12+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -934,7 +934,7 @@ msgstr ""
 "ト、\n"
 "次にスラッシュを配置して、フィールドをこれらにのみ表示することができます。ま"
 "たは、\n"
-"これらのゲームタイプ以外の全て。また、フィールドとして「全て」を指定して、\n"
+"これらのゲームタイプ以外の全て。また、フィールドとして「全」を指定して、\n"
 "現在のゲームモードで使用可能な全てのフィールドを表示することもできます。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:350
@@ -3095,126 +3095,128 @@ msgstr "^F3SVQC Build information: ^F4%s"
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
 msgstr ""
+"^BG%s%s^K1 は @!#%%'n アコーデオン%s%s での ^BG%s^K1 の素晴らしい演奏で死んだ"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"
-msgstr ""
+msgstr "BG%s^K1 は @!#%%'n アコーデオン%s%s で耳を痛んだ"
 
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のアーク%s%s によって感電された"
 
 #: qcsrc/common/notifications/all.inc:450
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のアークボルト%s%s によって爆破された"
 
 #: qcsrc/common/notifications/all.inc:451
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のブラスター%s%sによって射殺された"
 
 #: qcsrc/common/notifications/all.inc:452
 #, c-format
 msgid "^BG%s^K1 shot themself to hell with their Blaster%s%s"
-msgstr ""
+msgstr "^BG%s^K1 がブラスター%s%sで地獄に撃てた"
 
 #: qcsrc/common/notifications/all.inc:453
 #, c-format
 msgid "^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のクリリンク%s%sの強い引きを感じた"
 
 #: qcsrc/common/notifications/all.inc:454
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s"
-msgstr ""
+msgstr "^BG%s^K1 はクリリンク%s%sの強い引きを感じた"
 
 #: qcsrc/common/notifications/all.inc:455
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 が ^BG%s^K1 のロケット%s%sを食べた"
 
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 が ^BG%s^K1 のロケット%s%sに近すぎた"
 
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr ""
+msgstr "^BG%s^K1 はデーバーステーター％s%sで自分自身を爆破した"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^ K1 のエレクトロボルト%s%sによって爆破された"
 
 #: qcsrc/common/notifications/all.inc:459
 #, c-format
 msgid "^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^K1 の電気コンボ%s%sの電撃的にした空気を感じた"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Electro orb%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 が ^BG%s^K1 のエレクトロオーブ%s%sに近すぎた"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr ""
+msgstr "^BG%s^K1 はエレクトロボルト%s%sで遊びた"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
-msgstr ""
+msgstr "^BG%s^K1 はエレクトロオーブ%s%sをどこに置いたか思い出せなかった"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's fireball%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 が ^BG%s^K1 の火の玉%s%sに近すぎた"
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
 msgid "^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のファイアマイン%s%sによって燃やされた"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr ""
+msgstr "^BG%s^K1 はもっと小さな銃%s%sを使うべきだった"
 
 #: qcsrc/common/notifications/all.inc:466
 #, c-format
 msgid "^BG%s^K1 forgot about their firemine%s%s"
-msgstr ""
+msgstr "^BG%s^K1 は自分のファイアマイン%s%sを忘れた"
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s"
 msgstr ""
+"^BG%s%s^K1 は ^BG%s^K1 のハガルロケット%s%sのバーストによって打ち負かされた"
 
 #: qcsrc/common/notifications/all.inc:468
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のハガルロケット%s%sに衝撃された"
 
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
 msgid "^BG%s^K1 played with tiny Hagar rockets%s%s"
-msgstr ""
+msgstr "^BG%s^K1 が小さなハガルロケット%s%sで遊びた"
 
 #: qcsrc/common/notifications/all.inc:470
 #, c-format
 msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のHLAC%s%sで切りされた"
 
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
 msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s"
-msgstr ""
+msgstr "^BG%s^K1 はHLAC%s%sで少しびくびくしている"
 
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
@@ -8063,12 +8065,12 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:31
 msgid "No crosshair"
-msgstr ""
+msgstr "十字線なし"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:62
 msgid "Per weapon"
-msgstr ""
+msgstr "武器ごと"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:34
 msgid ""
@@ -8084,7 +8086,7 @@ msgstr "サイズ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
-msgstr ""
+msgstr "健康で"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:76
 msgid "Use rings to indicate weapon status"
@@ -8104,7 +8106,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
 msgid "Hit testing:"
-msgstr ""
+msgstr "照準テスト:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
 msgid ""
@@ -8119,11 +8121,11 @@ msgstr "無効"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:130
 msgid "HTTST^TrueAim"
-msgstr ""
+msgstr "真の照準"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:131
 msgid "HTTST^Enemies"
-msgstr ""
+msgstr "敵"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
 msgid "Blur crosshair if the shot is obstructed"

@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-08 20:50+0000\n"
+"PO-Revision-Date: 2020-07-09 23:53+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -3213,7 +3213,7 @@ msgstr "^BG%s%s^K1 se acercó demasiado al cohete de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr "^BG%s^K1 se explotó a si mismo con su Devastador%s%s"
+msgstr "^BG%s^K1 se explotó a sí mismo con su Devastador%s%s"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
@@ -3286,7 +3286,7 @@ msgstr "^BG%s%s^K1 fue cortado por el HLAC de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
 msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s"
-msgstr "^BG%s^K1 se puso un poco acelerado con su HLAC%s%s"
+msgstr "^BG%s^K1 se puso un poco nervioso con su HLAC%s%s"
 
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
