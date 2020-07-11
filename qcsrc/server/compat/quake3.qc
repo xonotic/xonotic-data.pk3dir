@@ -26,18 +26,19 @@ SPAWNFUNC_ITEM(ammo_bullets, ITEM_Bullets)
 // GL -> Mortar
 SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)
 
-// Mines -> Rockets
+// Team Arena Proximity Launcher -> Mine Layer
 SPAWNFUNC_WEAPON(weapon_prox_launcher, WEP_MINE_LAYER)
 SPAWNFUNC_ITEM(ammo_mines, ITEM_Rockets)
 
-// Q3TA chaingun -> HLAC
+// Team Arena Chaingun -> HLAC
 SPAWNFUNC_WEAPON(weapon_chaingun, WEP_HLAC)
 SPAWNFUNC_ITEM(ammo_belt, ITEM_Cells)
 
-// Q3TA nails -> cells
+// Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
+SPAWNFUNC_WEAPON_COND(weapon_nailgun, autocvar_sv_q3acompat_machineshotgunswap, WEP_CRYLINK, WEP_ELECTRO)
 SPAWNFUNC_ITEM(ammo_nails, ITEM_Cells)
 
-// LG -> Lightning
+// LG -> Electro
 SPAWNFUNC_WEAPON(weapon_lightning, WEP_ELECTRO)
 SPAWNFUNC_ITEM(ammo_lightning, ITEM_Cells)
 
