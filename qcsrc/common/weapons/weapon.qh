@@ -140,8 +140,6 @@ void weapon_defaultspawnfunc(entity this, Weapon e);
 
 #define SPAWNFUNC_WEAPON(name, weapon)
 
-#define SPAWNFUNC_WEAPON_COND(name, weapon)
-
 #endif
 
 #include <common/items/_mod.qh>
