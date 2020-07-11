@@ -8,6 +8,7 @@
 #include <server/g_damage.qc>
 #include <server/g_hook.qc>
 #include <server/g_world.qc>
+#include <server/gamelog.qc>
 #include <server/handicap.qc>
 #include <server/impulse.qc>
 #include <server/ipban.qc>

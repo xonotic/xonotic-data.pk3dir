@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
+#include <server/gamelog.qh>
 #include <server/mutators/_mod.qh>
 #include "teamplay.qh"
 #include "scores.qh"

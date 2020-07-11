@@ -1,6 +1,8 @@
 #include "sv_minigames.qh"
 #include "minigames.qh"
 
+#include <server/gamelog.qh>
+
 void player_clear_minigame(entity player)
 {
 	CS(player).active_minigame = NULL;

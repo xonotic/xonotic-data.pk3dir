@@ -11,6 +11,7 @@
 #include "command/sv_cmd.qh"
 #include "command/vote.qh"
 #include "g_hook.qh"
+#include <server/gamelog.qh>
 #include "ipban.qh"
 #include "mapvoting.qh"
 #include <server/mutators/_mod.qh>

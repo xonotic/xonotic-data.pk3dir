@@ -2,6 +2,7 @@
 
 #include <common/effects/all.qh>
 #include <common/vehicles/all.qh>
+#include <server/gamelog.qh>
 #include <server/teamplay.qh>
 
 #include <lib/warpzone/common.qh>

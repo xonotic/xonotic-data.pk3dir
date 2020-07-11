@@ -1,6 +1,7 @@
 #include "teamplay.qh"
 
 #include "client.qh"
+#include <server/gamelog.qh>
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
