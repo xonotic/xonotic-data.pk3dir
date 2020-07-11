@@ -77,7 +77,7 @@ SELFWRAP(touch, void, (), (entity this, entity toucher), (this, other))
 #ifdef GAMEQC
 SELFWRAP(blocked, void, (), (entity this, entity blocker), (this, other))
 #define setblocked(e, f) SELFWRAP_SET(blocked, e, f)
-#define blocked stopusingthis
+#define getblocked(e) SELFWRAP_GET(blocked, e)
 #endif
 
 SELFWRAP(predraw, void, (), (entity this), (this))
