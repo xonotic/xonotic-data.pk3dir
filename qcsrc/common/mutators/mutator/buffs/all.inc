@@ -2,12 +2,14 @@ string Buff_UndeprecateName(string buffname)
 {
     switch(buffname)
     {
-        case "ammoregen": return "ammo";
-        case "haste": case "scout": return "speed";
-        case "guard": return "resistance";
-        case "revival": case "regen": return "medic";
-        case "invis": return "invisible";
-        case "jumper": return "jump";
+        case "ammoregen": return "ammo";		// ammoregen from Q3TA
+        case "haste": return "speed";			// haste from Q3A
+        case "doubler": return "inferno";		// doubler from Q3TA
+        case "scout": return "bash";			// scout from Q3TA
+        case "guard": return "resistance";		// guard from Q3TA
+        case "revival": case "regen": return "medic";	// revival from WOP, regen from Q3A
+        case "invis": return "invisible";		// invis from Q3A
+        case "jumper": return "jump";			// jumper from WOP
         default: return buffname;
     }
 }
@@ -38,7 +40,6 @@ REGISTER_BUFF(SPEED) {
 }
 BUFF_SPAWNFUNCS(speed, BUFF_SPEED)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(haste, BUFF_SPEED)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(scout, BUFF_SPEED)
 
 REGISTER_BUFF(MEDIC) {
     this.m_name = _("Medic");
@@ -57,7 +58,7 @@ REGISTER_BUFF(BASH) {
     this.m_color = '1 0.39 0';
 }
 BUFF_SPAWNFUNCS(bash, BUFF_BASH)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler, BUFF_BASH)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(scout, BUFF_BASH)
 
 REGISTER_BUFF(VAMPIRE) {
     this.m_name = _("Vampire");
@@ -108,6 +109,7 @@ REGISTER_BUFF(INFERNO) {
     this.m_color = '1 0.62 0';
 }
 BUFF_SPAWNFUNCS(inferno, BUFF_INFERNO)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler, BUFF_INFERNO)
 
 REGISTER_BUFF(SWAPPER) {
     this.m_name = _("Swapper");
