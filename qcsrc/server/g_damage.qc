@@ -619,7 +619,15 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 					damage = 0;
 				else if(attacker != targ)
 				{
-					if(autocvar_teamplay_mode == 3)
+					if(autocvar_teamplay_mode == 2)
+					{
+						if(IS_PLAYER(targ) && !IS_DEAD(targ))
+						{
+							attacker.dmg_team = attacker.dmg_team + damage;
+							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
+						}
+					}
+					else if(autocvar_teamplay_mode == 3)
 						damage = 0;
 					else if(autocvar_teamplay_mode == 4)
 					{
