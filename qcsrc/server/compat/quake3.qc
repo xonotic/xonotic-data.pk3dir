@@ -17,11 +17,11 @@
 
 // NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
 
-// SG -> SG
-SPAWNFUNC_ITEM(ammo_shells, ITEM_Shells)
+// SG -> MG || SG
+SPAWNFUNC_ITEM_COND(ammo_shells, autocvar_sv_q3acompat_machineshotgunswap, ITEM_Bullets, ITEM_Shells)
 
-// MG -> MG
-SPAWNFUNC_ITEM(ammo_bullets, ITEM_Bullets)
+// MG -> SG || MG
+SPAWNFUNC_ITEM_COND(ammo_bullets, autocvar_sv_q3acompat_machineshotgunswap, ITEM_Shells, ITEM_Bullets)
 
 // GL -> Mortar
 SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)
