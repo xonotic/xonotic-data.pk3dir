@@ -19,6 +19,7 @@
 
 // SG -> MG || SG
 SPAWNFUNC_ITEM_COND(ammo_shells, autocvar_sv_q3acompat_machineshotgunswap, ITEM_Bullets, ITEM_Shells)
+SPAWNFUNC_WEAPON_COND(weapon_shotgun, autocvar_sv_q3acompat_machineshotgunswap, WEP_MACHINEGUN, WEP_SHOTGUN)
 
 // MG -> SG || MG
 SPAWNFUNC_ITEM_COND(ammo_bullets, autocvar_sv_q3acompat_machineshotgunswap, ITEM_Shells, ITEM_Bullets)
