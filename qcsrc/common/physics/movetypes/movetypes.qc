@@ -723,17 +723,23 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			this.angles = this.angles + movedt * this.avelocity;
 			break;
 		case MOVETYPE_STEP:
+			if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
+				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Step(this, movedt);
 			break;
 		case MOVETYPE_WALK:
 		case MOVETYPE_FLY:
 		case MOVETYPE_FLY_WORLDONLY:
+			if (movedt > 0 && GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
+				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Walk(this, movedt);
 			break;
 		case MOVETYPE_TOSS:
 		case MOVETYPE_BOUNCE:
 		case MOVETYPE_BOUNCEMISSILE:
 		case MOVETYPE_FLYMISSILE:
+			if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
+				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Toss(this, movedt);
 			break;
 		case MOVETYPE_PHYSICS:
