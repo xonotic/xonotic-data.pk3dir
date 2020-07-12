@@ -209,12 +209,12 @@ float Obituary_WeaponDeath(
 	return true;
 }
 
-bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target)
+bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target, string attacker_name)
 {
 	if(deathtype == DEATH_FIRE.m_id)
 	{
 		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : CS(targ).ping));
-		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, GetResource(attacker, RES_HEALTH), GetResource(attacker, RES_ARMOR), (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
+		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker_name, kill_count_to_target, GetResource(attacker, RES_HEALTH), GetResource(attacker, RES_ARMOR), (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
 		return true;
 	}
 
@@ -229,16 +229,25 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 	// Declarations
 	float notif_firstblood = false;
 	float kill_count_to_attacker, kill_count_to_target;
+	bool notif_anonymous = false;
+	string attacker_name = attacker.netname;
 
 	// Set final information for the death
 	targ.death_origin = targ.origin;
 	string deathlocation = (autocvar_notification_server_allows_location ? NearestLocation(targ.death_origin) : "");
 
+	// Abort now if a mutator requests it
+	if (MUTATOR_CALLHOOK(ClientObituary, inflictor, attacker, targ, deathtype, attacker.(weaponentity))) { CS(targ).killcount = 0; return; }
+	notif_anonymous = M_ARGV(5, bool);
+
+	if(notif_anonymous)
+		attacker_name = "Anonymous player";
+
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(
 		sprintf(
 			"Obituary(%s, %s, %s, %s = %d);\n",
-			attacker.netname,
+			attacker_name,
 			inflictor.netname,
 			targ.netname,
 			Deathtype_Name(deathtype),
@@ -299,8 +308,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			CS(attacker).killcount = 0;
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
-			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, CS(targ).killcount);
+			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker_name);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker_name, deathlocation, CS(targ).killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -364,14 +373,14 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 					targ,
 					MSG_CHOICE,
 					CHOICE_TYPEFRAGGED,
-					attacker.netname,
+					attacker_name,
 					kill_count_to_target,
 					GetResource(attacker, RES_HEALTH),
 					GetResource(attacker, RES_ARMOR),
 					(IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping)
 				);
 			}
-			else if(!frag_centermessage_override(attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target))
+			else if(!frag_centermessage_override(attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target, attacker_name))
 			{
 				Send_Notification(
 					NOTIF_ONE,
@@ -387,7 +396,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 					targ,
 					MSG_CHOICE,
 					CHOICE_FRAGGED,
-					attacker.netname,
+					attacker_name,
 					kill_count_to_target,
 					GetResource(attacker, RES_HEALTH),
 					GetResource(attacker, RES_ARMOR),
@@ -399,8 +408,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
-			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
+			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker))
+				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}
 

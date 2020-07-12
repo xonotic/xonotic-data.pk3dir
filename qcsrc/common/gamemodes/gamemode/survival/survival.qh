@@ -1,0 +1,10 @@
+#pragma once
+
+// shared state signalling the player's survival status
+.int survival_status;
+const int SURV_STATUS_PREY = 0;
+const int SURV_STATUS_HUNTER = 1;
+
+// hardcoded player colors for survival
+const int SURV_COLOR_PREY = 51; // green
+const int SURV_COLOR_HUNTER = 68; // red

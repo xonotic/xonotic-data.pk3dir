@@ -364,13 +364,13 @@ void Cmd_Scoreboard_Help()
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
 "ping pl fps name |" \
-" -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
-" -teams,lms/deaths +ft,tdm/deaths" \
+" -teams,rc,cts,inv,lms,surv/kills +ft,tdm/kills ?+rc,inv/kills" \
+" -teams,lms,surv/deaths +ft,tdm/deaths" \
 " +tdm/sum" \
-" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
-" -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
+" -teams,lms,rc,cts,inv,ka,surv/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
+" -cts,dm,tdm,ka,ft,surv/frags" /* tdm already has this in "score" */ \
 " +tdm,ft,dom,ons,as/teamkills"\
-" -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
+" -rc,cts,nb,surv/dmg -rc,cts,nb,surv/dmgtaken" \
 " +ctf/pickups +ctf/fckills +ctf/returns +ctf/caps +ons/takes +ons/caps" \
 " +lms/lives +lms/rank" \
 " +kh/kckills +kh/losses +kh/caps" \

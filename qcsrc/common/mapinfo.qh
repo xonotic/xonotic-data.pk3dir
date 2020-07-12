@@ -608,6 +608,34 @@ ENDCLASS(Duel)
 REGISTER_GAMETYPE(DUEL, NEW(Duel));
 #define g_duel IS_GAMETYPE(DUEL)
 
+#ifdef CSQC
+void HUD_Mod_Survival(vector pos, vector mySize);
+#endif
+CLASS(Survival, Gametype)
+    INIT(Survival)
+    {
+        this.gametype_init(this, _("Survival"),"surv","g_survival",false,true,"","timelimit=20 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
+    }
+    METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return true;
+    }
+    METHOD(Survival, m_isForcedSupported, bool(Gametype this))
+    {
+        if(!cvar("g_duel_not_dm_maps"))
+        {
+            // if this is set, all DM maps support Survival too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
+        return false;
+    }
+#ifdef CSQC
+    ATTRIB(Survival, m_modicons, void(vector pos, vector mySize), HUD_Mod_Survival);
+#endif
+ENDCLASS(Survival)
+REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));
+
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;
 const int MAPINFO_FEATURE_TURRETS       = 4;
