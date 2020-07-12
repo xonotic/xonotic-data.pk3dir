@@ -114,7 +114,11 @@ float Surv_CheckWinner()
 void Surv_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
-	FOREACH_CLIENT(true, { it.survival_status = SURV_STATUS_PREY; it.survival_validkills = 0; });
+	FOREACH_CLIENT(true,
+	{
+		it.survival_status = ((IS_PLAYER(it) && !IS_DEAD(it)) ? SURV_STATUS_PREY : 0);
+		it.survival_validkills = 0;
+	});
 	Surv_count_alive_players();
 	int hunter_count = bound(1, ((autocvar_g_survival_hunter_count >= 1) ? autocvar_g_survival_hunter_count : floor(total_players * autocvar_g_survival_hunter_count)), total_players - 1); // 20%, but ensure at least 1 and less than total
 	int total_hunters = 0;
@@ -210,7 +214,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.survival_status = SURV_STATUS_PREY;
+	player.survival_status = 0;
 	player.caplayer = 1;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;

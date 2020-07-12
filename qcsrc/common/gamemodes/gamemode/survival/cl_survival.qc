@@ -6,15 +6,28 @@ void HUD_Mod_Survival(vector pos, vector mySize)
 {
 	mod_active = 1; // survival should always show the mod HUD
 
-	// since survivor state is the default value, spectators are considered survivors
-	// so we must hide them manually here
-	if(entcs_GetSpecState(player_localnum) == ENTCS_SPEC_PURE)
-		return; // no icon while spectating
-
 	int mystatus = entcs_receiver(player_localnum).survival_status;
-	//string player_icon = ((mystatus == SURV_STATUS_HUNTER) ? "player_red" : "player_neutral");
-	string player_text = ((mystatus == SURV_STATUS_HUNTER) ? _("Hunter") : _("Survivor"));
-	vector player_color = ((mystatus == SURV_STATUS_HUNTER) ? '1 0 0' : '0 1 0');
+	string player_text = "";
+	vector player_color = '1 1 1';
+	//string player_icon = "";
+	if(mystatus == SURV_STATUS_HUNTER)
+	{
+		player_text = _("Hunter");
+		player_color = '1 0 0';
+		//player_icon = "player_red";
+	}
+	else if(mystatus == SURV_STATUS_PREY)
+	{
+		player_text = _("Survivor");
+		player_color = '0 1 0';
+		//player_icon = "player_neutral";
+	}
+	else
+	{
+		// if the player has no valid status, don't draw anything
+		return;
+	}
+
 	//drawpic_aspect_skin(pos, player_icon, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawstring_aspect(pos, player_text, vec2(mySize.x, mySize.y), player_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
@@ -31,9 +44,9 @@ MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip)
 	int surv_status = ((e) ? e.survival_status : 0);
 	int mystatus = entcs_receiver(player_localnum).survival_status;
 
-	int plcolor = SURV_COLOR_PREY; // green
+	int plcolor = SURV_COLOR_PREY; // default to survivor
 	if((mystatus == SURV_STATUS_HUNTER || intermission || STAT(GAME_STOPPED)) && surv_status == SURV_STATUS_HUNTER)
-		plcolor = SURV_COLOR_HUNTER; // red
+		plcolor = SURV_COLOR_HUNTER;
 
 	player.colormap = 1024 + plcolor;
 	return true;
