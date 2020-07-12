@@ -51,9 +51,9 @@ SPAWNFUNC_ITEM(ammo_cells, ITEM_Rockets)
 SPAWNFUNC_WEAPON(weapon_railgun, WEP_VORTEX)
 SPAWNFUNC_ITEM(ammo_slugs, ITEM_Cells)
 
-// BFG -> Crylink
-SPAWNFUNC_WEAPON(weapon_bfg, WEP_CRYLINK)
-SPAWNFUNC_ITEM(ammo_bfg, ITEM_Cells)
+// BFG -> Crylink || Fireball
+SPAWNFUNC_WEAPON_COND(weapon_bfg, cvar_string("g_mod_balance") == "XDF", WEP_CRYLINK, WEP_FIREBALL)
+SPAWNFUNC_ITEM_COND(ammo_bfg, cvar_string("g_mod_balance") == "XDF", ITEM_Cells, ITEM_Rockets)
 
 // grappling hook -> hook
 SPAWNFUNC_WEAPON(weapon_grapplinghook, WEP_HOOK)
