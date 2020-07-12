@@ -315,8 +315,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	// killed an ally! punishment is death
 	if(autocvar_g_survival_punish_teamkill && frag_attacker != frag_target && IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker.survival_status == frag_target.survival_status && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't
-		ClientKill_Silent(frag_attacker, 0);
-		//Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_AUTOTEAMCHANGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
+		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 	return true;
 }
 
