@@ -260,6 +260,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca");
 		BADCVAR("g_ca_teams");
 		BADCVAR("g_conquest");
+		BADCVAR("g_conquest_teams");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
 		BADCVAR("g_dotc");
