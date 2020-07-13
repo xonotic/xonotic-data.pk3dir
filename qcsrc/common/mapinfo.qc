@@ -1266,7 +1266,6 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 		{
 			_t <<= 1;
 			MapInfo_Map_supportedGametypes = floor(MapInfo_Map_supportedGametypes >> 1);
-			LOG_INFO("_t: ", ftos(_t), ", types: ", ftos(MapInfo_Map_supportedGametypes));
 		}
 #endif
 		RandomSelection_Init();
