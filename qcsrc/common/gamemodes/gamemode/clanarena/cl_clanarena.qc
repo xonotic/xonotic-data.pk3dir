@@ -42,16 +42,8 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-// Clan Arena and Freeze Tag HUD modicons
-void HUD_Mod_CA(vector myPos, vector mySize)
+void HUD_Mod_CA_Draw(vector myPos, vector mySize, int layout)
 {
-	mod_active = 1; // required in each mod function that always shows something
-
-	int layout;
-	if(ISGAMETYPE(CA))
-		layout = autocvar_hud_panel_modicons_ca_layout;
-	else //if(ISGAMETYPE(FREEZETAG))
-		layout = autocvar_hud_panel_modicons_freezetag_layout;
 	int rows, columns;
 	float aspect_ratio;
 	aspect_ratio = (layout) ? 2 : 1;
@@ -76,4 +68,12 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 			++column;
 		}
 	}
+}
+
+// Clan Arena and Freeze Tag HUD modicons
+void HUD_Mod_CA(vector myPos, vector mySize)
+{
+	mod_active = 1; // required in each mod function that always shows something
+
+	HUD_Mod_CA_Draw(myPos, mySize, autocvar_hud_panel_modicons_ca_layout);
 }
