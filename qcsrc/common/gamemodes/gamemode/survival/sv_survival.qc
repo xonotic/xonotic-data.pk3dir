@@ -195,7 +195,6 @@ void surv_Initialize() // run at the start of a match, initiates game mode
 MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 {
 	// in survival, announcing a frag would tell everyone who the hunter is
-	// for the sake of anonymity, a barebones
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	if(IS_PLAYER(frag_attacker) && frag_attacker != frag_target)
@@ -252,6 +251,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
+		it.survival_status = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 			it.caplayer = 1;
 		if (it.caplayer)
