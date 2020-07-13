@@ -4,7 +4,7 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <common/ent_cs.qh>
-#include <common/mapinfo.qh>
+#include <common/gamemodes/_mod.qh>
 #include <client/mapvoting.qh>
 #include <client/resources.qh>
 #include <client/teamradar.qh>

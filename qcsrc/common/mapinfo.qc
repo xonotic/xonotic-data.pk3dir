@@ -1258,14 +1258,25 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 			return; // do not call Get_ByName!
 		}
 
+#if 0
+		// find the lowest bit in the supported gametypes
+		// unnecessary now that we select one at random
 		int _t = 1;
 		while(!(MapInfo_Map_supportedGametypes & 1))
 		{
 			_t <<= 1;
 			MapInfo_Map_supportedGametypes = floor(MapInfo_Map_supportedGametypes >> 1);
+			LOG_INFO("_t: ", ftos(_t), ", types: ", ftos(MapInfo_Map_supportedGametypes));
 		}
+#endif
+		RandomSelection_Init();
 		Gametype t_prev = t;
-		FOREACH(Gametypes, it.m_flags == _t, { t = it; break; });
+		FOREACH(Gametypes, MapInfo_Map_supportedGametypes & it.m_flags,
+		{
+			RandomSelection_AddEnt(it, 1, it.m_priority);
+		});
+		if(RandomSelection_chosen_ent)
+			t = RandomSelection_chosen_ent;
 
 		// t is now a supported mode!
 		LOG_WARNF("can't play the selected map in the given game mode (%s). Falling back to a supported mode (%s).", t_prev.mdl, t.mdl);

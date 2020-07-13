@@ -2,6 +2,7 @@
 
 #include <client/autocvars.qh>
 #include <client/defs.qh>
+#include <common/gamemodes/_mod.qh>
 #include <client/miscfunctions.qh>
 #include <common/mapinfo.qh>
 

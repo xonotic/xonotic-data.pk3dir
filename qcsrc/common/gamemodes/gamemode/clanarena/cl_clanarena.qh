@@ -1,0 +1,4 @@
+#pragma once
+
+void HUD_Mod_CA(vector myPos, vector mySize);
+void HUD_Mod_CA_Export(int fh);

@@ -5,6 +5,7 @@
 #include <client/miscfunctions.qh>
 #include "scoreboard.qh"
 #include <common/ent_cs.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/scores.qh>
 

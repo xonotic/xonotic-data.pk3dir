@@ -3,6 +3,7 @@
 #include <client/autocvars.qh>
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
 
 // Race timer (#8)
