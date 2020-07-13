@@ -145,3 +145,10 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		strfree(race_status_name_prev);
 	}
 }
+
+REGISTER_MUTATOR(cl_race, true);
+
+MUTATOR_HOOKFUNCTION(cl_race, HUD_Physics_showoptional)
+{
+	return ISGAMETYPE(RACE); // show the optional physics panel
+}
