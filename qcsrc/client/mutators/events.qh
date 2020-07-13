@@ -169,6 +169,9 @@ MUTATOR_HOOKABLE(DrawCrosshair, EV_NO_ARGS);
 /** Return true to not draw scoreboard */
 MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
 
+/** Return true to not draw scoreboard while dead */
+MUTATOR_HOOKABLE(DrawDeathScoreboard, EV_NO_ARGS);
+
 /** Called when drawing info messages, allows adding new info messages. Return true to hide the standard join message */
 #define EV_DrawInfoMessages(i, o) \
 	/** pos */ 			    i(vector, MUTATOR_ARGV_0_vector) \
