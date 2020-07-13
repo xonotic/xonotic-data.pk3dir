@@ -253,6 +253,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 	FOREACH_CLIENT(true, {
 		CS(it).killcount = 0;
 		it.survival_status = 0;
+		surv_FakeTimeLimit(it, -1); // restore original timelimit
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 			it.caplayer = 1;
 		if (it.caplayer)
