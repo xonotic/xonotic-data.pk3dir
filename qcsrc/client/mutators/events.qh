@@ -121,6 +121,9 @@ MUTATOR_HOOKABLE(HUD_Powerups_add, EV_NO_ARGS);
 /** return true to show the physics HUD panel when optional mode is enabled */
 MUTATOR_HOOKABLE(HUD_Physics_showoptional, EV_NO_ARGS);
 
+/** return true to hide the score HUD panel */
+MUTATOR_HOOKABLE(HUD_Score_show, EV_NO_ARGS);
+
 /** Return true to not draw any vortex beam */
 #define EV_Particles_VortexBeam(i, o) \
 	/** beam shot origin */  i(vector, MUTATOR_ARGV_0_vector) \

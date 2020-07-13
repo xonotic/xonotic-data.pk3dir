@@ -147,7 +147,7 @@ void HUD_Score()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
-		if(spectatee_status == -1 && (ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
+		if(MUTATOR_CALLHOOK(HUD_Score_show)) return;
 	}
 
 	HUD_Panel_LoadCvars();
