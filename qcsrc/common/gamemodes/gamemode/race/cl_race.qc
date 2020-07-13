@@ -157,3 +157,12 @@ MUTATOR_HOOKFUNCTION(cl_race, HUD_Score_show)
 {
 	return spectatee_status == -1 && ISGAMETYPE(RACE); // hide the score panel while observing
 }
+
+MUTATOR_HOOKFUNCTION(cl_race, ShowRankings)
+{
+	if(ISGAMETYPE(RACE))
+	{
+		M_ARGV(0, string) = _("Rankings");
+		return true;
+	}
+}

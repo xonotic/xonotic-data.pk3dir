@@ -208,3 +208,9 @@ MUTATOR_HOOKABLE(DamageInfo, EV_DamageInfo);
 
 /** Return true to not draw zoom reticle */
 MUTATOR_HOOKABLE(DrawReticle, EV_NO_ARGS);
+
+/** Return true to show leaderboard rankings, needs title argument set */
+#define EV_ShowRankings(i, o) \
+	/** rankings title */ 	o(string, MUTATOR_ARGV_0_string) \
+	/**/
+MUTATOR_HOOKABLE(ShowRankings, EV_ShowRankings);

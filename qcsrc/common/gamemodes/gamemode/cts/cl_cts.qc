@@ -16,3 +16,12 @@ MUTATOR_HOOKFUNCTION(cl_cts, DrawDeathScoreboard)
 {
 	return ISGAMETYPE(CTS); // no scoreboard shown while dead
 }
+
+MUTATOR_HOOKFUNCTION(cl_cts, ShowRankings)
+{
+	if(ISGAMETYPE(CTS))
+	{
+		M_ARGV(0, string) = _("Rankings");
+		return true;
+	}
+}
