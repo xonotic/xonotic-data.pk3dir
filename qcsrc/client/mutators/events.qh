@@ -228,3 +228,6 @@ MUTATOR_HOOKABLE(ShowNames_Draw, EV_ShowNames_Draw);
 
 /** Return true to display the race timer HUD panel */
 MUTATOR_HOOKABLE(ShowRaceTimer, EV_NO_ARGS);
+
+/** Return true to force team radar to display entities regardless of their team */
+MUTATOR_HOOKABLE(TeamRadar_Draw, EV_NO_ARGS);

@@ -176,3 +176,8 @@ MUTATOR_HOOKFUNCTION(cl_race, ShowRaceTimer)
 {
 	return ISGAMETYPE(RACE); // show the race timer panel
 }
+
+MUTATOR_HOOKFUNCTION(cl_race, TeamRadar_Draw)
+{
+	return ISGAMETYPE(RACE); // show all competitors in a race
+}
