@@ -5,7 +5,7 @@
 CLASS(LastManStanding, Gametype)
     INIT(LastManStanding)
     {
-        this.gametype_init(this, _("Last Man Standing"),"lms","g_lms",GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 lives=5 leadlimit=0",_("Survive and kill until the enemies have no lives left"));
+        this.gametype_init(this, _("Last Man Standing"),"lms","g_lms",GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_HIDELIMITS,"","timelimit=20 lives=5 leadlimit=0",_("Survive and kill until the enemies have no lives left"));
     }
     METHOD(LastManStanding, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {

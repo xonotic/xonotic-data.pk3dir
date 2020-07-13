@@ -1628,7 +1628,7 @@ void Scoreboard_Draw()
 	str = "";
 	if(tl > 0)
 		str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
-	if(!ISGAMETYPE(LMS))
+	if(!gametype.m_hidelimits)
 	{
 		if(fl > 0)
 		{
