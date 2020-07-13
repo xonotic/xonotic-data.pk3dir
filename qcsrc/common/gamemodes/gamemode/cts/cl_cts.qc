@@ -17,6 +17,11 @@ MUTATOR_HOOKFUNCTION(cl_cts, DrawDeathScoreboard)
 	return ISGAMETYPE(CTS); // no scoreboard shown while dead
 }
 
+MUTATOR_HOOKFUNCTION(cl_cts, DrawScoreboardAccuracy)
+{
+	return ISGAMETYPE(CTS); // accuracy is not a factor in this gamemode
+}
+
 MUTATOR_HOOKFUNCTION(cl_cts, ShowRankings)
 {
 	if(ISGAMETYPE(CTS))

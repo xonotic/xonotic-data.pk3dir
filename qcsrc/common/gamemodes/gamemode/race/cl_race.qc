@@ -166,3 +166,8 @@ MUTATOR_HOOKFUNCTION(cl_race, ShowRankings)
 		return true;
 	}
 }
+
+MUTATOR_HOOKFUNCTION(cl_race, DrawScoreboardAccuracy)
+{
+	return ISGAMETYPE(RACE); // accuracy is not a factor in this gamemode
+}

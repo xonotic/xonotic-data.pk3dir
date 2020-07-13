@@ -1505,7 +1505,7 @@ float scoreboard_time;
 bool have_weapon_stats;
 bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 {
-	if (ISGAMETYPE(CTS) || ISGAMETYPE(RACE) || ISGAMETYPE(NEXBALL))
+	if (MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
 		return false;
 	if (!autocvar_hud_panel_scoreboard_accuracy || warmup_stage || ypos > 0.91 * vid_conheight)
 		return false;
