@@ -19,15 +19,6 @@ void surv_FakeTimeLimit(entity e, float t)
 		WriteCoord(MSG_ONE, (t + 1) / 60);
 }
 
-void Surv_count_alive_players()
-{
-	total_players = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
-	{
-		++total_players;
-	});
-}
-
 void nades_Clear(entity player);
 
 void Surv_UpdateScores(bool timed_out)
@@ -114,13 +105,19 @@ float Surv_CheckWinner()
 void Surv_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
+	int playercount = 0;
 	FOREACH_CLIENT(true,
 	{
-		it.survival_status = ((IS_PLAYER(it) && !IS_DEAD(it)) ? SURV_STATUS_PREY : 0);
+		if(IS_PLAYER(it) && !IS_DEAD(it))
+		{
+			++playercount;
+			it.survival_status = SURV_STATUS_PREY;
+		}
+		else
+			it.survival_status = 0;
 		it.survival_validkills = 0;
 	});
-	Surv_count_alive_players();
-	int hunter_count = bound(1, ((autocvar_g_survival_hunter_count >= 1) ? autocvar_g_survival_hunter_count : floor(total_players * autocvar_g_survival_hunter_count)), total_players - 1); // 20%, but ensure at least 1 and less than total
+	int hunter_count = bound(1, ((autocvar_g_survival_hunter_count >= 1) ? autocvar_g_survival_hunter_count : floor(playercount * autocvar_g_survival_hunter_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
 	int total_hunters = 0;
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -145,15 +142,19 @@ bool Surv_CheckPlayers()
 {
 	static int prev_missing_players;
 	allowed_to_spawn = true;
-	Surv_count_alive_players();
-	if (total_players >= 2)
+	int playercount = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+	{
+		++playercount;
+	});
+	if (playercount >= 2)
 	{
 		if(prev_missing_players > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_PLAYERS);
 		prev_missing_players = -1;
 		return true;
 	}
-	if(total_players == 0)
+	if(playercount == 0)
 	{
 		if(prev_missing_players > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_PLAYERS);
