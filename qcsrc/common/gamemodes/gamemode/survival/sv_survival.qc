@@ -223,6 +223,21 @@ MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 	M_ARGV(5, bool) = true; // anonymous attacker
 }
 
+MUTATOR_HOOKFUNCTION(surv, PlayerPreThink)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(IS_PLAYER(player))
+	{
+		// update the scoreboard colour display to out the real killer at the end of the round
+		// running this every frame to avoid cheats
+		int plcolor = SURV_COLOR_PREY;
+		if(player.survival_status == SURV_STATUS_HUNTER && game_stopped)
+			plcolor = SURV_COLOR_HUNTER;
+		setcolor(player, plcolor);
+	}
+}
+
 MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
