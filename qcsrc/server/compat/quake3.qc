@@ -11,11 +11,32 @@
 #include <common/notifications/all.qh>
 #include <common/weapons/_all.qh>
 
-//***********************
-//QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
-//***********************
+/***********************
+ * QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
+ ***********************
 
-// NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
+ * Map entities NOT handled in this file:
+ holdable_invulnerability	Q3TA	currently unsupported
+ holdable_kamikaze		Q3TA	currently unsupported
+ item_ammoregen			Q3TA	handled by buffs mutator
+ item_doubler			Q3TA	handled by buffs mutator
+ item_guard			Q3TA	handled by buffs mutator
+ item_scout			Q3TA	handled by buffs mutator
+ item_armor_jacket		CPMA	handled in quake2.qc
+ item_flight			Q3A	handled by buffs mutator
+ item_haste			Q3A	handled by buffs mutator
+ item_health			Q3A	handled in quake.qc
+ item_health_large		Q3A	handled in items.qc
+ item_health_small		Q3A	handled in health.qh
+ item_health_mega		Q3A	handled in health.qh
+ item_invis			Q3A	handled by buffs mutator
+ item_quad			Q3A	handled in items.qc
+ item_regen			Q3A	handled by buffs mutator
+ CTF spawnfuncs handled in sv_ctf.qc
+
+ NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
+*/
+
 bool q3compat_arena(string mapname)
 {
 	if(fexists(strcat("scripts/", mapname, ".arena"))) return true;
@@ -257,18 +278,6 @@ spawnfunc(target_fragsFilter)
 		this.frags = 1;
 	this.use = fragsfilter_use;
 }
-
-//spawnfunc(item_flight)       /* handled by buffs mutator */
-//spawnfunc(item_doubler)        /* handled by buffs mutator */
-//spawnfunc(item_haste)        /* handled by buffs mutator */
-//spawnfunc(item_health)       /* handled in t_quake.qc */
-//spawnfunc(item_health_large) /* handled in t_items.qc */
-//spawnfunc(item_health_small) /* handled in t_items.qc */
-//spawnfunc(item_health_mega)  /* handled in t_items.qc */
-//spawnfunc(item_invis)        /* handled by buffs mutator */
-//spawnfunc(item_regen)        /* handled by buffs mutator */
-
-// CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
 .bool notteam;
 .bool notsingle;

@@ -2,14 +2,14 @@ string Buff_UndeprecateName(string buffname)
 {
     switch(buffname)
     {
-        case "ammoregen": return "ammo";		// ammoregen from Q3TA
-        case "haste": return "speed";			// haste from Q3A
-        case "doubler": return "inferno";		// doubler from Q3TA
-        case "scout": return "bash";			// scout from Q3TA
-        case "guard": return "resistance";		// guard from Q3TA
-        case "revival": case "regen": return "medic";	// revival from WOP, regen from Q3A
-        case "invis": return "invisible";		// invis from Q3A
-        case "jumper": return "jump";			// jumper from WOP
+        case "ammoregen": return "ammo";		// Q3TA ammoregen
+        case "haste": return "speed";			// Q3A haste
+        case "doubler": return "inferno";		// Q3TA doubler
+        case "scout": return "bash";			// Q3TA scout
+        case "guard": return "resistance";		// Q3TA guard
+        case "revival": case "regen": return "medic";	// WOP revival, Q3A regen
+        case "invis": return "invisible";		// Q3A invis
+        case "jumper": return "jump";			// WOP jumper
         default: return buffname;
     }
 }
