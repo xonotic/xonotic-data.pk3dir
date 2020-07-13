@@ -127,7 +127,8 @@ void Draw_ShowNames(entity this)
 		if (f < 0) f = 0;
 		a *= f;
 	}
-	if (a < ALPHA_MIN_VISIBLE && ISGAMETYPE(CTS)) return;
+	if (MUTATOR_CALLHOOK(ShowNames_Draw, this, a)) return;
+	a = M_ARGV(1, float);
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
 	float dist = vlen(this.origin - view_origin);
 	if (autocvar_hud_shownames_maxdistance)

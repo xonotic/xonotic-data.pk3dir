@@ -217,3 +217,11 @@ MUTATOR_HOOKABLE(DrawReticle, EV_NO_ARGS);
 	/** rankings title */ 	o(string, MUTATOR_ARGV_0_string) \
 	/**/
 MUTATOR_HOOKABLE(ShowRankings, EV_ShowRankings);
+
+/** Called when drawing a player's nameplate, return true to hide it */
+#define EV_ShowNames_Draw(i, o) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
+	/** alpha */     i(float, MUTATOR_ARGV_1_float) \
+	/***/            o(float, MUTATOR_ARGV_1_float) \
+	/**/
+MUTATOR_HOOKABLE(ShowNames_Draw, EV_ShowNames_Draw);
