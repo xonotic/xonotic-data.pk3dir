@@ -34,7 +34,7 @@ void HUD_Mod_Survival(vector pos, vector mySize)
 
 REGISTER_MUTATOR(cl_surv, true);
 
-MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip)
+MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 {
 	if(!ISGAMETYPE(SURVIVAL))
 		return false;
