@@ -114,7 +114,7 @@ void Surv_RoundStart()
 			it.survival_status = SURV_STATUS_PREY;
 		}
 		else
-			it.survival_status = 0;
+			it.survival_status = 0; // this is mostly a safety check; if a client manages to somehow maintain a survival status, clear it before the round starts!
 		it.survival_validkills = 0;
 	});
 	int hunter_count = bound(1, ((autocvar_g_survival_hunter_count >= 1) ? autocvar_g_survival_hunter_count : floor(playercount * autocvar_g_survival_hunter_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
@@ -215,6 +215,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.survival_status = 0;
+	player.survival_validkills = 0;
 	player.caplayer = 1;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
@@ -364,7 +365,8 @@ MUTATOR_HOOKFUNCTION(surv, Scores_CountFragsRemaining)
 MUTATOR_HOOKFUNCTION(surv, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	entity frag_attacker = M_ARGV(0, entity);
-	frag_attacker.survival_validkills += M_ARGV(2, float);
+	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
+		frag_attacker.survival_validkills += M_ARGV(2, float);
 	M_ARGV(2, float) = 0; // score will be given to the winner when the round ends
 	return true;
 }
