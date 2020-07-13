@@ -16,13 +16,19 @@
 //***********************
 
 // NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
+bool q3compat_arena(string mapname)
+{
+	if(fexists(strcat("scripts/", mapname, ".arena"))) return true;
+
+	return false;
+}
 
 // SG -> MG || SG
-SPAWNFUNC_ITEM_COND(ammo_shells, autocvar_sv_q3acompat_machineshotgunswap, ITEM_Bullets, ITEM_Shells)
-SPAWNFUNC_WEAPON_COND(weapon_shotgun, autocvar_sv_q3acompat_machineshotgunswap, WEP_MACHINEGUN, WEP_SHOTGUN)
+SPAWNFUNC_ITEM_COND(ammo_shells, q3compat_arena(mapname), ITEM_Bullets, ITEM_Shells)
+SPAWNFUNC_WEAPON_COND(weapon_shotgun, q3compat_arena(mapname), WEP_MACHINEGUN, WEP_SHOTGUN)
 
 // MG -> SG || MG
-SPAWNFUNC_ITEM_COND(ammo_bullets, autocvar_sv_q3acompat_machineshotgunswap, ITEM_Shells, ITEM_Bullets)
+SPAWNFUNC_ITEM_COND(ammo_bullets, q3compat_arena(mapname), ITEM_Shells, ITEM_Bullets)
 
 // GL -> Mortar
 SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)
@@ -36,7 +42,7 @@ SPAWNFUNC_WEAPON(weapon_chaingun, WEP_HLAC)
 SPAWNFUNC_ITEM(ammo_belt, ITEM_Cells)
 
 // Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
-SPAWNFUNC_WEAPON_COND(weapon_nailgun, autocvar_sv_q3acompat_machineshotgunswap, WEP_CRYLINK, WEP_ELECTRO)
+SPAWNFUNC_WEAPON_COND(weapon_nailgun, q3compat_arena(mapname), WEP_CRYLINK, WEP_ELECTRO)
 SPAWNFUNC_ITEM(ammo_nails, ITEM_Cells)
 
 // LG -> Electro
@@ -277,7 +283,8 @@ bool DoesQ3ARemoveThisEntity(entity this)
 
 	// DeFRaG mappers use "notcpm" or "notvq3" to disable an entity in CPM or VQ3 physics
 	// Xonotic is usually played with a CPM-based physics so we default to CPM mode
-	if(cvar_string("g_mod_physics") == "Q3") {
+	if(cvar_string("g_mod_physics") == "Q3")
+	{
 		if(this.notvq3) return true;
 	}
 	else if(this.notcpm) return true;

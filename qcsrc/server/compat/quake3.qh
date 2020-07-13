@@ -1,5 +1,6 @@
 #pragma once
 
+bool q3compat_arena(string mapname);
 bool DoesQ3ARemoveThisEntity(entity this);
 
 .int fragsfilter_cnt;
