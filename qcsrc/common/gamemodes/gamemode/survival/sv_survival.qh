@@ -9,9 +9,6 @@ REGISTER_MUTATOR(surv, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-	    GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
-        });
-
 		surv_Initialize();
 	}
 	return false;

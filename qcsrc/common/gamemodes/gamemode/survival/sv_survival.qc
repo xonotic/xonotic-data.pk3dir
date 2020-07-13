@@ -30,8 +30,16 @@ void Surv_UpdateScores(bool timed_out)
 		if(it.survival_validkills)
 			GameRules_scoring_add(it, SCORE, it.survival_validkills);
 		it.survival_validkills = 0;
-		if(autocvar_g_survival_reward_survival && timed_out && IS_PLAYER(it) && !IS_DEAD(it) && it.survival_status == SURV_STATUS_PREY)
-			GameRules_scoring_add(it, SCORE, 1); // reward survivors who make it to the end of the round time limit
+		// player survived the round
+		if(IS_PLAYER(it) && !IS_DEAD(it))
+		{
+			if(autocvar_g_survival_reward_survival && timed_out && it.survival_status == SURV_STATUS_PREY)
+				GameRules_scoring_add(it, SCORE, 1); // reward survivors who make it to the end of the round time limit
+			if(it.survival_status == SURV_STATUS_PREY)
+				GameRules_scoring_add(it, SURV_SURVIVALS, 1);
+			else if(it.survival_status == SURV_STATUS_HUNTER)
+				GameRules_scoring_add(it, SURV_HUNTS, 1);
+		}
 	});
 }
 
@@ -181,6 +189,11 @@ bool surv_isEliminated(entity e)
 
 void surv_Initialize() // run at the start of a match, initiates game mode
 {
+	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
+		field(SP_SURV_SURVIVALS, "survivals", 0);
+		field(SP_SURV_HUNTS, "hunts", SFL_SORT_PRIO_SECONDARY);
+	});
+
 	allowed_to_spawn = true;
 	round_handler_Spawn(Surv_CheckPlayers, Surv_CheckWinner, Surv_RoundStart);
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
