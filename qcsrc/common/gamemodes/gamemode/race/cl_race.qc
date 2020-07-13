@@ -171,3 +171,8 @@ MUTATOR_HOOKFUNCTION(cl_race, DrawScoreboardAccuracy)
 {
 	return ISGAMETYPE(RACE); // accuracy is not a factor in this gamemode
 }
+
+MUTATOR_HOOKFUNCTION(cl_race, ShowRaceTimer)
+{
+	return ISGAMETYPE(RACE); // show the race timer panel
+}

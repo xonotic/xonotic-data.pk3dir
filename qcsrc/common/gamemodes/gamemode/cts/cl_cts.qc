@@ -35,3 +35,8 @@ MUTATOR_HOOKFUNCTION(cl_cts, ShowNames_Draw)
 {
 	return (ISGAMETYPE(CTS) && M_ARGV(1, float) < ALPHA_MIN_VISIBLE);
 }
+
+MUTATOR_HOOKFUNCTION(cl_cts, ShowRaceTimer)
+{
+	return ISGAMETYPE(CTS); // show the race timer panel
+}
