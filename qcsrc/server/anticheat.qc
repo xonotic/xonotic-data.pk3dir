@@ -3,6 +3,7 @@
 #include "antilag.qh"
 #include "autocvars.qh"
 #include "defs.qh"
+#include <server/gamelog.qh>
 #include "miscfunctions.qh"
 
 #include "command/common.qh"

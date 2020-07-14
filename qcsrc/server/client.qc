@@ -20,6 +20,7 @@
 #include "clientkill.qh"
 #include "cheats.qh"
 #include "g_world.qh"
+#include <server/gamelog.qh>
 #include "race.qh"
 #include "antilag.qh"
 #include "campaign.qh"

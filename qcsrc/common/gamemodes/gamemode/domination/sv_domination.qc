@@ -1,5 +1,6 @@
 #include "sv_domination.qh"
 
+#include <server/gamelog.qh>
 #include <server/teamplay.qh>
 
 bool g_domination;

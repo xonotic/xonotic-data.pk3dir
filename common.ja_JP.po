@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-10 18:07+0000\n"
+"PO-Revision-Date: 2020-07-12 22:38+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -1312,7 +1312,7 @@ msgstr "デスマッチ (DM)"
 
 #: qcsrc/common/mapinfo.qh:115
 msgid "Score as many frags as you can"
-msgstr "できるだけ多くの削除を得点する"
+msgstr "できるだけ多くの削除を得点して"
 
 #: qcsrc/common/mapinfo.qh:128
 msgid "Last Man Standing"
@@ -3318,6 +3318,7 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s%s^K1 は ^BG%s^K1 のオーバーキルロケット推進チェーンソー%s%sをほぼ避けた"
 
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
@@ -3477,6 +3478,8 @@ msgid ""
 "^BGfor ^F2too many unsuccessful attempts^BG to capture.\n"
 "^BGMake some defensive scores before trying again."
 msgstr ""
+"^BGあなたは取るしようとして^F2失敗した回数が多すぎる^BGため、\n"
+"旗から^F1守っていた^BG。再試行する前にいくつかの防御得点を作成してください。"
 
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGYou captured the ^TC^TT^BG flag!"

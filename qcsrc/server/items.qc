@@ -105,7 +105,7 @@ bool Item_InitializeLoot(entity item, string class_name, vector position,
 
 bool Item_IsLoot(entity item)
 {
-	return item.m_isloot;
+	return item.m_isloot || item.classname == "droppedweapon";
 }
 
 void Item_SetLoot(entity item, bool loot)
