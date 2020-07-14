@@ -799,13 +799,15 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 			testing_map = false;
 			if(dosave)
 			{
-				MapInfo_Map_description = stored_Map_description;
-				MapInfo_Map_title = stored_Map_title;
+				if(stored_Map_description != "")
+					MapInfo_Map_description = stored_Map_description;
+				if(stored_Map_title != "")
+					MapInfo_Map_title = stored_Map_title;
 				FOREACH(Gametypes, it.m_flags & stored_supportedGametypes,
 				{
 					_MapInfo_Map_ApplyGametype ("", pGametypeToSet, it, true);
 				});
-				break; // no need to continue through the file, we have our map!
+				return true; // no need to continue through the file, we have our map!
 			}
 			else
 			{
