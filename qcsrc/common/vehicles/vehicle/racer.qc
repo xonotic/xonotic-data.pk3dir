@@ -324,7 +324,7 @@ bool racer_frame(entity this, float dt)
 		}
 	}
 
-	if(!weaponLocked(player))
+	if (!weaponLocked(player) && !weaponUseForbidden(player))
 	if(time > vehic.delay)
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
 	{
