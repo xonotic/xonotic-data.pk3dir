@@ -130,8 +130,7 @@ void Item_SetExpiring(entity item, bool expiring)
 
 // Compatibility spawn functions
 
-// FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-SPAWNFUNC_ITEM(item_armor1, ITEM_ArmorSmall)
+SPAWNFUNC_ITEM_COND(item_armor1, cvar_string("sv_mapformat_is_quake3"), ITEM_ArmorSmall, ITEM_ArmorMedium)
 
 SPAWNFUNC_ITEM(item_armor25, ITEM_ArmorMega)
 
