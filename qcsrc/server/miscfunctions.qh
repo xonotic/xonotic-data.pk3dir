@@ -56,14 +56,6 @@ string formatmessage(entity this, string msg);
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
 
-string GameLog_ProcessIP(string s);
-
-void GameLogEcho(string s);
-
-void GameLogInit();
-
-void GameLogClose();
-
 void GetCvars(entity this, entity store, int f);
 
 string GetMapname();
@@ -114,9 +106,6 @@ void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomo
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
-
-float logfile_open;
-float logfile;
 
 /*
 // NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.

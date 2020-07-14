@@ -5,7 +5,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	if (dt <= 0)
 		return;
 
-	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
+	if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 1)
 		_Movetype_CheckStuck(this);
 
 	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.flags & FL_WATERJUMP));

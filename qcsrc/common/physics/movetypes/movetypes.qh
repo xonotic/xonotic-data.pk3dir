@@ -94,6 +94,7 @@ const int UNSTICK_STUCK = 2;
 // set by _Movetype_FlyMove
 vector move_stepnormal;
 
+bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot);
 void _Movetype_WallFriction(entity this, vector stepnormal);
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
 void _Movetype_CheckVelocity(entity this);
@@ -142,6 +143,7 @@ const int MOVETYPE_ANGLECLIP        = 2;
 #endif
 
 const int MOVETYPE_QCPLAYER = 150; // QC-driven player physics, no think functions!
+const int MOVETYPE_QCENTITY = 151; // QC-driven entity physics, some think functions!
 
 const int FL_ONSLICK = BIT(20);
 
