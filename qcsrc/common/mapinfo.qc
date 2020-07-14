@@ -806,7 +806,8 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 			if(dosave)
 			{
 				MapInfo_Map_description = stored_Map_description;
-				MapInfo_Map_title = stored_Map_title;
+				if(stored_Map_title != "")
+					MapInfo_Map_title = stored_Map_title;
 				MapInfo_Map_author = stored_Map_author;
 				FOREACH(Gametypes, it.m_flags & stored_supportedGametypes,
 				{
