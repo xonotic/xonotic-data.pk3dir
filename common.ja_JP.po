@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-12 22:38+0000\n"
+"PO-Revision-Date: 2020-07-13 22:49+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -76,7 +76,7 @@ msgstr "^1観戦中: ^7%s"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^3%s ^1を押して観戦する"
+msgstr "観戦するために ^3%s ^1を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:47
@@ -86,7 +86,7 @@ msgstr "一次撃つ"
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr "^3%s ^1または ^3%s ^1を押すと、次または前の選手を表示される"
+msgstr "^1次または前の選手を表示されるために ^3%s ^1または ^3%s ^1を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/client/hud/panel/infomessages.qc:114
@@ -106,7 +106,9 @@ msgstr "^3%s ^1または ^3%s ^1を使用して速度を変更する"
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^3%s ^1を押して観戦する、^3%s ^1を押してカメラモードを変更する"
+msgstr ""
+"^1観戦するために ^3%s ^1を押して、カメラモードを変更するために ^3%s ^1を押し"
+"て"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
@@ -121,7 +123,7 @@ msgstr "二次撃つ"
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^3%s ^1を押すとゲームモード情報が表示される"
+msgstr "^1ゲームモード情報が表示されるために ^3%s ^1を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:103
@@ -140,7 +142,7 @@ msgstr "^1あなたは命を使い果たです"
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^3%s ^1を押してゲームに参加する"
+msgstr "^1参加するために ^3%s ^1を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #: qcsrc/client/hud/panel/infomessages.qc:139
@@ -160,7 +162,7 @@ msgstr "^2現在、^1準備運動 ^2の段階に入っています!"
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%s^3%s%s を押して準備運動を終了する"
+msgstr "%s準備運動を終了するために ^3%s%s を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #: qcsrc/client/hud/panel/infomessages.qc:170
@@ -172,7 +174,7 @@ msgstr "準備"
 #: qcsrc/client/hud/panel/infomessages.qc:170
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%s準備ができたら ^3%s%s を押する"
+msgstr "%s準備ができたら ^3%s%s を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -185,7 +187,7 @@ msgstr "^2全員の準備ができるまで待ち中..."
 #: qcsrc/client/hud/panel/infomessages.qc:183
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2^3%s ^2を押して準備運動を終了する"
+msgstr "^2準備運動を終了するために ^2^3%s ^2を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teamnumbers are unbalanced!"
@@ -194,7 +196,7 @@ msgstr "チーム番号はアンバランスです!"
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr " ^3%s%s を押して調整する"
+msgstr " 調整するために ^3%s%s を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:115
@@ -211,7 +213,7 @@ msgstr "^1あなたを観戦中:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:233
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^3ESC ^7を押してHUDオプションを表示する。"
+msgstr "^7HUDオプションを表示するために ^3ESC ^7を押して。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -3492,47 +3494,47 @@ msgstr "^BGあなたが旗を取れた!"
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
 msgid "^BGToo many flag throws! Throwing disabled for %s."
-msgstr ""
+msgstr "^BG旗投げが多すぎる! %s に投げが無効になっている。"
 
 #: qcsrc/common/notifications/all.inc:552
 #, c-format
 msgid "^BG%s^BG passed the ^TC^TT^BG flag to %s"
-msgstr ""
+msgstr "^BG%s^BG は ^TC^TT^BG 旗を %s に渡した"
 
 #: qcsrc/common/notifications/all.inc:553
 #, c-format
 msgid "^BG%s^BG passed the flag to %s"
-msgstr ""
+msgstr "^BG%s^BG は旗を %s に渡した"
 
 #: qcsrc/common/notifications/all.inc:554
 #, c-format
 msgid "^BGYou received the ^TC^TT^BG flag from %s"
-msgstr ""
+msgstr "^BGあなたは %s から ^TC^TT^BG 旗を受け取った"
 
 #: qcsrc/common/notifications/all.inc:555
 #, c-format
 msgid "^BGYou received the flag from %s"
-msgstr ""
+msgstr "^BGあなたは %s から旗を受け取った"
 
 #: qcsrc/common/notifications/all.inc:556
 #, c-format
 msgid "^BGPress ^F2%s^BG to receive the flag from %s^BG"
-msgstr ""
+msgstr "^BG %s^BG から旗を受け取るために ^F2%s^BG を押して"
 
 #: qcsrc/common/notifications/all.inc:557
 #, c-format
 msgid "^BGRequesting %s^BG to pass you the flag"
-msgstr ""
+msgstr "^BG旗を渡すよう %s^BG に要求している"
 
 #: qcsrc/common/notifications/all.inc:558
 #, c-format
 msgid "^BGYou passed the ^TC^TT^BG flag to %s"
-msgstr ""
+msgstr "^BGあなたは ^TC^TT^BG 旗を %s に渡した"
 
 #: qcsrc/common/notifications/all.inc:559
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr ""
+msgstr "^BGあなたは旗を %s に渡した"
 
 #: qcsrc/common/notifications/all.inc:560
 msgid "^BGYou got the ^TC^TT^BG flag!"
@@ -3605,88 +3607,88 @@ msgstr "^BGあなたの%sチームメイト (^B%s%sG)^BG は旗を手に入れ�
 
 #: qcsrc/common/notifications/all.inc:574
 msgid "^BGEnemies can now see you on radar!"
-msgstr ""
+msgstr "^BG敵はレーダーであなたを見ることができる!"
 
 #: qcsrc/common/notifications/all.inc:575
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGあなたは ^TC^TT^BG 旗を返した!"
 
 #: qcsrc/common/notifications/all.inc:576
 msgid "^BGStalemate! Enemies can now see you on radar!"
-msgstr ""
+msgstr "^BG停滞! 敵はレーダーであなたを見ることができる!"
 
 #: qcsrc/common/notifications/all.inc:577
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BG停滞! 旗持ちはレーダーで敵に見られる!"
 
 #: qcsrc/common/notifications/all.inc:581
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr ""
+msgstr "^K3%sあなたは ^BG%s を削除した"
 
 #: qcsrc/common/notifications/all.inc:582
 #: qcsrc/common/notifications/all.inc:591
 #: qcsrc/common/notifications/all.inc:600
 #, c-format
 msgid "^K3%sYou scored against ^BG%s"
-msgstr ""
+msgstr "^K3%sあなたは ^BG%s に対して得点した"
 
 #: qcsrc/common/notifications/all.inc:583
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sあなたは ^BG%s によって削除された!"
 
 #: qcsrc/common/notifications/all.inc:584
 #: qcsrc/common/notifications/all.inc:593
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr ""
+msgstr "^K1%sあなたは ^BG%s によって対して得点された"
 
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^K3%sYou burned ^BG%s"
-msgstr ""
+msgstr "^K3%sあなたは ^BG%s を燃やした"
 
 #: qcsrc/common/notifications/all.inc:592
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr ""
+msgstr "^K1%sあなたは ^BG%s によって燃やされた"
 
 #: qcsrc/common/notifications/all.inc:599
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr ""
+msgstr "^K3%sあなたは ^BG%s を凍結した"
 
 #: qcsrc/common/notifications/all.inc:601
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr ""
+msgstr "^K1%sあなたは ^BG%s によって凍結された"
 
 #: qcsrc/common/notifications/all.inc:608
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr ""
+msgstr "^K1%sあなたは彼がタイプしている間に ^BG%s を削除した"
 
 #: qcsrc/common/notifications/all.inc:609
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr ""
+msgstr "^K1%s彼らがタイプしていた間、あなたは ^BG%s^K1 に対して得点した"
 
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sあなたはタイプしている間に ^BG%s によって削除された"
 
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing"
-msgstr ""
+msgstr "^K1%sあなたはタイプしている間、 ^BG%s^K1 によって対して得点した"
 
 #: qcsrc/common/notifications/all.inc:617
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr ""
+msgstr "^BG手榴弾を投げるために ^F2%s^BG をもう一度押して!"
 
 #: qcsrc/common/notifications/all.inc:618
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
