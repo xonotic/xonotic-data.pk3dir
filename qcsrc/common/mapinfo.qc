@@ -786,7 +786,7 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 			continue;
 		if(substring(s, 0, 1) == "_")  // q3map style
 			continue;
-		if(s == "{")
+		if(strstrofs(s, "{", 0) >= 0)
 		{
 			if(in_brackets)
 				return false; // edge case? already in a bracketed section!
@@ -798,7 +798,7 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 			// if we're not inside a bracket, don't process map info
 			continue;
 		}
-		if(s == "}" || s == " }") // check for a space (common practice in kool maps)
+		if(strstrofs(s, "}", 0) >= 0)
 		{
 			if(!in_brackets)
 				return false; // no starting bracket! let the mapinfo generation system handle it
@@ -838,6 +838,7 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 			s = substring(s, 1, -1);
 
 		t = car(s); s = cdr(s);
+		t = strtolower(t); // apparently some q3 maps use capitalized parameters
 
 		//   remove trailing spaces
 		while(substring(t, -1, 1) == " ")
