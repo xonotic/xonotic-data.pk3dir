@@ -1251,10 +1251,17 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 
 		if(MapInfo_Map_supportedGametypes == 0)
 		{
-			LOG_SEVERE("Mapinfo system is not functional at all. Assuming deathmatch.");
-			MapInfo_Map_supportedGametypes = MAPINFO_TYPE_DEATHMATCH.m_flags;
-			MapInfo_LoadMapSettings_SaveGameType(MAPINFO_TYPE_DEATHMATCH);
-			_MapInfo_Map_ApplyGametypeEx("", MAPINFO_TYPE_DEATHMATCH, MAPINFO_TYPE_DEATHMATCH);
+			RandomSelection_Init();
+			FOREACH(Gametypes, it.m_priority == 2, 
+			{
+				MapInfo_Map_supportedGametypes |= it.m_flags;
+				RandomSelection_AddEnt(it, 1, 1);
+			});
+			if(RandomSelection_chosen_ent)
+				t = RandomSelection_chosen_ent;
+			LOG_SEVEREF("Mapinfo system is not functional at all. Falling back to a preferred mode (%s).", t.mdl);
+			MapInfo_LoadMapSettings_SaveGameType(t);
+			_MapInfo_Map_ApplyGametypeEx("", t, t);
 			return; // do not call Get_ByName!
 		}
 

@@ -7,9 +7,7 @@
 
 #include <common/ent_cs.qh>
 #include <common/constants.qh>
-#include <common/gamemodes/_mod.qh>
 #include <common/net_linked.qh>
-#include <common/mapinfo.qh>
 #include <common/teams.qh>
 
 #include <lib/csqcmodel/cl_model.qh>

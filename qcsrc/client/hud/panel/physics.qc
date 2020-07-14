@@ -4,8 +4,6 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <client/main.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/mapinfo.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
 // Physics (#15)
