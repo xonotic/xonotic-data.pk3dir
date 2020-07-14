@@ -39,6 +39,12 @@ void soundtoat(float _dest, entity e, vector o, float chan, string samp, float v
 
 void droptofloor(entity this);
 
+float trace_hits_box_1d(float end, float thmi, float thma);
+
+float trace_hits_box(vector start, vector end, vector thmi, vector thma);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
+
 void attach_sameorigin(entity e, entity to, string tag);
 
 void crosshair_trace(entity pl);
