@@ -194,12 +194,19 @@ MUTATOR_HOOKABLE(DrawViewModel, EV_DrawViewModel);
 /** Called when updating the view's liquid contents, return true to disable the standard checks and apply your own */
 MUTATOR_HOOKABLE(HUD_Contents, EV_NO_ARGS);
 
-/** Return true to disable player model/color forcing */
+/** Return true to disable player model forcing */
 #define EV_ForcePlayermodels_Skip(i, o) \
 	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
 	/** is local */ 		i(bool, MUTATOR_ARGV_1_bool) \
 	/**/
 MUTATOR_HOOKABLE(ForcePlayermodels_Skip, EV_ForcePlayermodels_Skip);
+
+/** Return true to disable player color forcing */
+#define EV_ForcePlayercolors_Skip(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/** is local */ 		i(bool, MUTATOR_ARGV_1_bool) \
+	/**/
+MUTATOR_HOOKABLE(ForcePlayercolors_Skip, EV_ForcePlayercolors_Skip);
 
 /** Called when damage info is received on the client, useful for playing explosion effects */
 #define EV_DamageInfo(i, o) \

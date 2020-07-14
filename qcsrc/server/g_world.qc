@@ -261,6 +261,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca");
 		BADCVAR("g_ca_teams");
 		BADCVAR("g_conquest");
+		BADCVAR("g_conquest_teams");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
 		BADCVAR("g_dotc");
@@ -288,6 +289,8 @@ void cvar_changes_init()
 		BADCVAR("g_runematch");
 		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
+		BADCVAR("g_survival");
+		BADCVAR("g_survival_not_dm_maps");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
