@@ -314,7 +314,7 @@ bool DoesQ3ARemoveThisEntity(entity this)
 	if(this.gametype)
 	{
 		string gametypename;
-		// static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"}
+		// From ioq3 g_spawn.c: static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester"};
 		gametypename = "ffa";
 		if(teamplay)
 			gametypename = "team";
@@ -326,7 +326,7 @@ bool DoesQ3ARemoveThisEntity(entity this)
 			gametypename = "tournament";
 		if(maxclients == 1)
 			gametypename = "single";
-		// we do not have the other types (obelisk, harvester, teamtournament)
+		// we do not have the other types (obelisk, harvester)
 		if(strstrofs(this.gametype, gametypename, 0) < 0)
 			return true;
 	}
