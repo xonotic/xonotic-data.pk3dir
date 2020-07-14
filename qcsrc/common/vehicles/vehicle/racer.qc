@@ -142,7 +142,7 @@ void racer_align4point(entity this, entity player, float _delta)
 void racer_fire_rocket_aim(entity this, entity player, string tagname, entity trg)
 {
 	vector v = gettaginfo(this, gettagindex(this, tagname));
-	racer_fire_rocket(player, v, v_forward, trg);
+	racer_fire_rocket(this, player, v, v_forward, trg);
 }
 
 bool racer_frame(entity this, float dt)
