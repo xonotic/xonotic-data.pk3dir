@@ -592,6 +592,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 Gametype MapInfo_Type_FromString(string gtype)
 {
 	string replacement = "";
+	bool do_warn = true;
 	switch (gtype)
 	{
 		case "nexball":   replacement = "nb"; break;
@@ -600,10 +601,18 @@ Gametype MapInfo_Type_FromString(string gtype)
 		case "invasion":  replacement = "inv"; break;
 		case "assault":   replacement = "as"; break;
 		case "race":      replacement = "rc"; break;
+		// quake 3 compat
+		case "ffa": 	  replacement = "dm"; do_warn = false; break;
+		case "cctf":
+		case "oneflag":
+		case "ctf": 	  replacement = "ctf"; do_warn = false; break;
+		case "team": 	  replacement = "tdm"; do_warn = false; break;
+		case "tourney":   replacement = "duel"; do_warn = false; break;
 	}
-	if (replacement != "" && WARN_COND)
+	if (replacement != "")
 	{
-		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
+		if(do_warn && WARN_COND)
+			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
 		gtype = replacement;
 	}
 	FOREACH(Gametypes, it.mdl == gtype, return it);
@@ -753,6 +762,119 @@ float MapInfo_isRedundant(string fn, string t)
 	return false;
 }
 
+void _MapInfo_ParseArena(int fh, Gametype pGametypeToSet, bool isdefi)
+{
+	string t, s;
+	for (;;)
+	{
+		if (!((s = fgets(fh))))
+			break;
+
+		// catch different sorts of comments
+		if(s == "")                    // empty lines
+			continue;
+		if(substring(s, 0, 1) == "#")  // UNIX style
+			continue;
+		if(substring(s, 0, 2) == "//") // C++ style
+			continue;
+		if(substring(s, 0, 1) == "_")  // q3map style
+			continue;
+		if(s == "{" || s == "}")       // opening/closing brackets TODO: make sure we're checking this map's brackets! Q3 can have multiple
+			continue;
+
+		float p = strstrofs(s, "//", 0);
+		if(p >= 0)
+			s = substring(s, 0, p);
+
+		t = car(s); s = cdr(s);
+		//   remove trailing spaces
+		while(substring(s, -1, 1) == " ")
+			s = substring(s, 0, -2);
+		//   remove leading spaces
+		while(substring(s, 0, 1) == " ")
+			s = substring(s, 1, -1);
+		// limited support of ""
+		//   remove trailing and leading " of s
+		if(substring(s, 0, 1) == "\"")
+		{
+			if(substring(s, -1, 1) == "\"")
+				s = substring(s, 1, -2);
+		}
+		if(t == "longname")
+		{
+			// in .defi files, this is the description, whereas in .arena files, this is generally the title
+			if(isdefi)
+				MapInfo_Map_description = s;
+			else
+				MapInfo_Map_title = s;
+		}
+		else if(t == "author")
+			MapInfo_Map_author = s;
+		else if(t == "type")
+		{
+			// if there is a valid gametype in this .arena file, include it in the menu
+			MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
+			// type in quake 3 holds all the supported gametypes, so we must loop through all of them
+			FOREACH_WORD(s, true,
+			{
+				Gametype f = MapInfo_Type_FromString(it);
+				if(f)
+					_MapInfo_Map_ApplyGametype ("", pGametypeToSet, f, true);
+			});
+		}
+		else if(t == "style" && isdefi)
+		{
+			// we have a defrag map on our hands, add CTS!
+			// TODO: styles
+			_MapInfo_Map_ApplyGametype ("", pGametypeToSet, MAPINFO_TYPE_CTS, true);
+		}
+		// TODO: fraglimit
+	}
+}
+
+#if defined(CSQC) || defined(MENUQC)
+string(string filename) whichpack = #503;
+#endif
+string _MapInfo_FindArenaFile(string pFilename, string extension)
+{
+	string base_pack = whichpack(strcat("maps/", pFilename, ".bsp"));
+	string fallback = strcat("scripts/", pFilename, extension);
+	if(base_pack == "") // this map isn't packaged!
+		return fallback;
+
+	int glob = search_begin(strcat("scripts/*", extension), true, true);
+	if(glob < 0)
+		return fallback;
+	int n = search_getsize(glob);
+	for(int j = 0; j < n; ++j)
+	{
+		string file = search_getfilename(glob, j);
+		if(whichpack(file) != base_pack)
+			continue; // not in the same pk3!
+
+		int fh = fopen(file, FILE_READ);
+		if(fh < 0)
+			continue; // how?
+		for(string s; (s = fgets(fh)); )
+		{
+			int offset = strstrofs(s, "map", 0);
+			if(offset >= 0)
+			{
+				if(strstrofs(strtolower(s), strcat("\"", strtolower(pFilename), "\""), offset) >= 0) // quake 3 is case insensitive
+				{
+					fclose(fh);
+					search_end(glob);
+					return file; // FOUND IT!
+				}
+			}
+		}
+		fclose(fh);
+	}
+
+	search_end(glob);
+	return fallback; // if we get here, a valid .arena file could not be found
+}
+
 // load info about a map by name into the MapInfo_Map_* globals
 float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gametype pGametypeToSet)
 {
@@ -760,7 +882,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	string s, t;
 	float fh;
 	int f, i;
-	float r, n, p;
+	float r, n;
 	string acl;
 
 	acl = MAPINFO_SETTEMP_ACL_USER;
@@ -784,6 +906,23 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
+		bool isdefi = false;
+		// try for a .arena or .defi file if no .mapinfo exists
+		fn = _MapInfo_FindArenaFile(pFilename, ".arena");
+		fh = fopen(fn, FILE_READ);
+		if(fh < 0)
+		{
+			isdefi = true;
+			fn = _MapInfo_FindArenaFile(pFilename, ".defi");
+			fh = fopen(fn, FILE_READ);
+		}
+		if(fh >= 0)
+		{
+			_MapInfo_Map_Reset();
+			_MapInfo_ParseArena(fh, pGametypeToSet, isdefi);
+			goto mapinfo_handled; // skip generation
+		}
+
 		fn = strcat("maps/autogenerated/", pFilename, ".mapinfo");
 		fh = fopen(fn, FILE_READ);
 		if(fh < 0)
@@ -874,7 +1013,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		if(substring(s, 0, 1) == "_")  // q3map style
 			continue;
 
-		p = strstrofs(s, "//", 0);
+		float p = strstrofs(s, "//", 0);
 		if(p >= 0)
 			s = substring(s, 0, p);
 
@@ -1046,6 +1185,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(WARN_COND)
 			LOG_WARN("Map ", pFilename, " provides unknown info item ", t, ", ignored");
 	}
+	LABEL(mapinfo_handled)
 	fclose(fh);
 
 	if(MapInfo_Map_title == "<TITLE>")
