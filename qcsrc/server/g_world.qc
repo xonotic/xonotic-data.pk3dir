@@ -289,7 +289,7 @@ void cvar_changes_init()
 		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
 		BADCVAR("g_survival");
-		BADCVAR("g_survival_not_dm_maps");
+		BADCVAR("g_survival_not_lms_maps");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");

@@ -614,7 +614,7 @@ void HUD_Mod_Survival(vector pos, vector mySize);
 CLASS(Survival, Gametype)
     INIT(Survival)
     {
-        this.gametype_init(this, _("Survival"),"surv","g_survival",false,true,"","timelimit=20 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
+        this.gametype_init(this, _("Survival"),"sv","g_survival",false,true,"","timelimit=20 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
     }
     METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
@@ -622,10 +622,10 @@ CLASS(Survival, Gametype)
     }
     METHOD(Survival, m_isForcedSupported, bool(Gametype this))
     {
-        if(!cvar("g_survival_not_dm_maps"))
+        if(!cvar("g_survival_not_lms_maps"))
         {
-            // if this is set, all DM maps support Survival too
-            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+            // if this is unset, all LMS maps support Survival too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_LMS.m_flags))
                 return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
         }
         return false;
