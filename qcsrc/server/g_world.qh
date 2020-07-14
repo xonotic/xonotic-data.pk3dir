@@ -31,3 +31,7 @@ void Map_MarkAsRecent(string m);
 float DoNextMapOverride(float reinit);
 void CheckRules_World();
 float RedirectionThink();
+
+// quake 3 music compatibility
+.string music;
+.string noise;
