@@ -56,7 +56,7 @@ SPAWNFUNC_WEAPON(weapon_chaingun, WEP_HLAC)
 SPAWNFUNC_ITEM(ammo_belt, ITEM_Cells)
 
 // Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
-SPAWNFUNC_WEAPON_COND(weapon_nailgun, q3compat & BIT(0), WEP_CRYLINK, WEP_ELECTRO)
+SPAWNFUNC_WEAPON_COND(weapon_nailgun, cvar_string("sv_mapformat_is_quake3"), WEP_CRYLINK, WEP_ELECTRO)
 SPAWNFUNC_ITEM(ammo_nails, ITEM_Cells)
 
 // LG -> Electro
