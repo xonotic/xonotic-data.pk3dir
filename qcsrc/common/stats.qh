@@ -3,6 +3,7 @@
 #ifdef SVQC
 #include <server/autocvars.qh>
 #include <server/client.qh>
+#include <server/compat/quake3.qh>
 #endif
 
 // Full list of all stat constants, included in a single location for easy reference
@@ -323,10 +324,7 @@ bool autocvar_sv_slick_applygravity;
 #endif
 REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
-#ifdef SVQC
-bool autocvar_sv_q3defragcompat;
-#endif
-REGISTER_STAT(Q3DEFRAGCOMPAT, bool, autocvar_sv_q3defragcompat)
+REGISTER_STAT(Q3DEFRAGCOMPAT, bool, q3compat)
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"

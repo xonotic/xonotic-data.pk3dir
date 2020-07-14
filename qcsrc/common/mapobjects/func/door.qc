@@ -737,7 +737,7 @@ spawnfunc(func_door)
         }
         else if (!this.speed)
         {
-		if (autocvar_sv_q3defragcompat)
+		if (q3compat)
 			this.speed = 400;
 		else
 	                this.speed = 100;

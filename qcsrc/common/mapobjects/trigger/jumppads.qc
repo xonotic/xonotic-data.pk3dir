@@ -135,7 +135,7 @@ bool jumppad_push(entity this, entity targ)
 
 	vector org = targ.origin;
 #ifdef SVQC
-	if(autocvar_sv_q3defragcompat)
+	if(q3compat)
 #elif defined(CSQC)
 	if(STAT(Q3DEFRAGCOMPAT))
 #endif
