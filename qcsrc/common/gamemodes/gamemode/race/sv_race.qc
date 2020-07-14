@@ -1,5 +1,6 @@
 #include "sv_race.qh"
 
+#include <server/gamelog.qh>
 #include <server/race.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
