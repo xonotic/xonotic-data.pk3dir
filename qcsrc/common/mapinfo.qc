@@ -761,12 +761,12 @@ float MapInfo_isRedundant(string fn, string t)
 	return false;
 }
 
-bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool isdefi)
+bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gametype pGametypeToSet, bool isdefi)
 {
 	// NOTE: .arena files can hold more than 1 map's information!
 	// to handle this, we're going to store gathered information in local variables and save it if we encounter the correct map name
 	bool in_brackets = false; // testing a potential mapinfo section (within brackets)
-	bool dosave = false; // variables will be stored in map info upon reaching finishing bracket
+	bool dosave = (arena_filename == strcat("scripts/", pFilename, ((isdefi) ? ".defi" : ".arena"))); // if the map is using the fallback, just accept the first found mapinfo (it's probably correct!)
 	string stored_Map_description = "";
 	string stored_Map_title = "";
 	string stored_Map_author = "";
@@ -980,7 +980,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		if(fh >= 0)
 		{
 			_MapInfo_Map_Reset();
-			if(_MapInfo_ParseArena(fh, pFilename, pGametypeToSet, isdefi))
+			if(_MapInfo_ParseArena(fn, fh, pFilename, pGametypeToSet, isdefi))
 				goto mapinfo_handled; // skip generation
 		}
 
