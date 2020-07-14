@@ -604,8 +604,7 @@ Gametype MapInfo_Type_FromString(string gtype)
 		// quake 3 compat
 		case "ffa": 	  replacement = "dm"; do_warn = false; break;
 		case "cctf":
-		case "oneflag":
-		case "ctf": 	  replacement = "ctf"; do_warn = false; break;
+		case "oneflag":   replacement = "ctf"; do_warn = false; break;
 		case "team": 	  replacement = "tdm"; do_warn = false; break;
 		case "tourney":   replacement = "duel"; do_warn = false; break;
 	}
@@ -781,6 +780,7 @@ void _MapInfo_ParseArena(int fh, Gametype pGametypeToSet, bool isdefi)
 			continue;
 		if(s == "{" || s == "}")       // opening/closing brackets TODO: make sure we're checking this map's brackets! Q3 can have multiple
 			continue;
+		s = strreplace("\t", " ", s);
 
 		float p = strstrofs(s, "//", 0);
 		if(p >= 0)
