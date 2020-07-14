@@ -765,10 +765,11 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 {
 	// NOTE: .arena files can hold more than 1 map's information!
 	// to handle this, we're going to store gathered information in local variables and save it if we encounter the correct map name
-	bool testing_map = false; // testing a potential mapinfo section (within brackets)
+	bool in_brackets = false; // testing a potential mapinfo section (within brackets)
 	bool dosave = false; // variables will be stored in map info upon reaching finishing bracket
 	string stored_Map_description = "";
 	string stored_Map_title = "";
+	string stored_Map_author = "";
 	int stored_supportedGametypes = 0;
 	string t, s;
 	for (;;)
@@ -787,22 +788,26 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 			continue;
 		if(s == "{")
 		{
-			if(testing_map)
+			if(in_brackets)
 				return false; // edge case? already in a bracketed section!
-			testing_map = true;
+			in_brackets = true;
+			continue;
+		}
+		else if(!in_brackets)
+		{
+			// if we're not inside a bracket, don't process map info
 			continue;
 		}
 		if(s == "}" || s == " }") // check for a space (common practice in kool maps)
 		{
-			if(!testing_map)
+			if(!in_brackets)
 				return false; // no starting bracket! let the mapinfo generation system handle it
-			testing_map = false;
+			in_brackets = false;
 			if(dosave)
 			{
-				if(stored_Map_description != "")
-					MapInfo_Map_description = stored_Map_description;
-				if(stored_Map_title != "")
-					MapInfo_Map_title = stored_Map_title;
+				MapInfo_Map_description = stored_Map_description;
+				MapInfo_Map_title = stored_Map_title;
+				MapInfo_Map_author = stored_Map_author;
 				FOREACH(Gametypes, it.m_flags & stored_supportedGametypes,
 				{
 					_MapInfo_Map_ApplyGametype ("", pGametypeToSet, it, true);
@@ -814,6 +819,7 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 				// discard any gathered locals, we're not using the correct map!
 				stored_Map_description = "";
 				stored_Map_title = "";
+				stored_Map_author = "";
 				stored_supportedGametypes = 0;
 				continue;
 			}
@@ -825,7 +831,17 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 		if(p >= 0)
 			s = substring(s, 0, p);
 
+		// perform an initial trim to ensure the first argument is properly obtained
+		//   remove leading spaces
+		while(substring(s, 0, 1) == " ")
+			s = substring(s, 1, -1);
+
 		t = car(s); s = cdr(s);
+
+		//   remove trailing spaces
+		while(substring(t, -1, 1) == " ")
+			t = substring(t, 0, -2);
+
 		//   remove trailing spaces
 		while(substring(s, -1, 1) == " ")
 			s = substring(s, 0, -2);
@@ -840,15 +856,9 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 				s = substring(s, 1, -2);
 		}
 		if(t == "longname")
-		{
-			// in .defi files, this is the description, whereas in .arena files, this is generally the title
-			if(isdefi)
-				stored_Map_description = s;
-			else
-				stored_Map_title = s;
-		}
+			stored_Map_title = s;
 		else if(t == "author")
-			MapInfo_Map_author = s;
+			stored_Map_author = s;
 		else if(t == "type")
 		{
 			// if there is a valid gametype in this .arena file, include it in the menu
@@ -872,14 +882,13 @@ bool _MapInfo_ParseArena(int fh, string pFilename, Gametype pGametypeToSet, bool
 			if(strtolower(s) == strtolower(pFilename))
 				dosave = true; // yay, found our map!
 		}
+		else if(t == "quote")
+			stored_Map_description = s;
 		// TODO: fraglimit
 	}
 
-	// didn't find a closing bracket, uh oh!
-	// nothing has been saved anyway, let's abort and use generated mapinfo
-	if(testing_map)
-		return false;
-	return true;
+	// if the map wasn't found in the .arena, fall back to generated .mapinfo
+	return false;
 }
 
 #if defined(CSQC) || defined(MENUQC)
