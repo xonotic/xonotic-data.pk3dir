@@ -102,6 +102,8 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DF^All")), "2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
+	if(cvar_type("gl_vbo") & CVAR_TYPEFLAG_ENGINE)
+	{
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -114,6 +116,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering")));
 		me.TD(me, 1, 1.9, e = makeXonoticRadioButton_T(1, "gl_vbo", "1", _("Vertices and Triangles"),
 			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering")));
+	}
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Brightness:")));
