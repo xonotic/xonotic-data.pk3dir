@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-10 17:23+0000\n"
+"PO-Revision-Date: 2020-07-14 22:31+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -3978,7 +3978,7 @@ msgstr "^K1¡Cuidado por dónde pisas!"
 #: qcsrc/common/notifications/all.inc:656
 #, c-format
 msgid "^K1Moron! You fragged ^BG%s^K1, a team mate!"
-msgstr "^K1¡Imbécil! ¡Has eliminado a ^BG%s^K1, un compañero!"
+msgstr "^K1¡Imbécil! ¡Has eliminado a ^BG%s^K1, un compañero tuyo!"
 
 #: qcsrc/common/notifications/all.inc:656
 #, c-format

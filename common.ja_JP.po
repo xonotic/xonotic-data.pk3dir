@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-13 22:49+0000\n"
+"PO-Revision-Date: 2020-07-14 22:31+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -1455,8 +1455,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
-"敵を凍らせてために殺して、チームメイトを復活させるために凍ったチームメイトの"
-"隣に立って；勝つために全ての敵を凍結して"
+"敵を冷凍してために殺して、チームメイトを復活させるために冷凍したチームメイト"
+"の隣に立って；勝つために全ての敵を冷凍して"
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Hold the ball to get points for kills"
@@ -2299,12 +2299,12 @@ msgstr "^BG%s%s^K1 は ^BG%s^K1 の氷手榴弾%s%sによって爆破された"
 #: qcsrc/common/notifications/all.inc:275
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 は ^BG%s^K1 の氷手榴弾%s%sにより凍死された"
+msgstr "^BG%s%s^K1 は ^BG%s^K1 の氷手榴弾%s%sにより冷凍死された"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
-msgstr "^BG%s%s^K1 は ^BG%s^K1 の癒し手榴弾%s%sによって癒されなかった"
+msgstr "^BG%s%s^K1 は ^BG%s^K1 の治癒手榴弾%s%sによって癒されなかった"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -2539,12 +2539,12 @@ msgstr "^BG%s^K1 は少し肌寒く%s%s感じた"
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
 msgid "^BG%s^K1 was frozen to death by their own Ice Nade%s%s"
-msgstr "^BG%s^K1 は自分の氷手榴弾%s%sによって凍死された"
+msgstr "^BG%s^K1 は自分の氷手榴弾%s%sによって冷凍死された"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr "^BG%s^K1 の癒し手榴弾はそれら%s%sを完全には癒しなかった"
+msgstr "^BG%s^K1 の治癒手榴弾はそれら%s%sを完全には癒しなかった"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
@@ -3700,91 +3700,93 @@ msgid ""
 "^BGYou have been moved into a different team\n"
 "You are now on: %s"
 msgstr ""
+"^BGあなたは別のチームに移動された\n"
+"現在: %s"
 
 #: qcsrc/common/notifications/all.inc:621
 msgid "^K1Don't go against your team mates!"
-msgstr ""
+msgstr "^K1チームメイトに反対しないで!"
 
 #: qcsrc/common/notifications/all.inc:621
 msgid "^K1Don't shoot your team mates!"
-msgstr ""
+msgstr "^K1チームメイトを撃たないで!"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1Die camper!"
-msgstr ""
+msgstr "^K1死ね、キャンパー!"
 
 #: qcsrc/common/notifications/all.inc:622
 msgid "^K1Reconsider your tactics, camper!"
-msgstr ""
+msgstr "^K1戦術を再考しろ、キャンパー!"
 
 #: qcsrc/common/notifications/all.inc:623
 msgid "^K1You unfairly eliminated yourself!"
-msgstr ""
+msgstr "^K1あなたは不当に自分を削除した!"
 
 #: qcsrc/common/notifications/all.inc:624
 #, c-format
 msgid "^K1You were %s"
-msgstr ""
+msgstr "^K1あなたは %s だった"
 
 #: qcsrc/common/notifications/all.inc:625
 msgid "^K1You couldn't catch your breath!"
-msgstr ""
+msgstr "^K1あなたは息ができなかった!"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1You hit the ground with a crunch!"
-msgstr ""
+msgstr "^K1あなたはクランチで地面を打ちた!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You felt a little too hot!"
-msgstr ""
+msgstr "^K1あなたは少し暑く感じすぎた!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You got a little bit too crispy!"
-msgstr ""
+msgstr "^K1あなたは少しカリカリになりすぎた!"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You killed your own dumb self!"
-msgstr ""
+msgstr "^K1あなたは自分の愚かな自己を殺した!"
 
 #: qcsrc/common/notifications/all.inc:628
 msgid "^K1You need to be more careful!"
-msgstr ""
+msgstr "^K1あなたはもっと注意する必要がある!"
 
 #: qcsrc/common/notifications/all.inc:629
 msgid "^K1You couldn't stand the heat!"
-msgstr ""
+msgstr "^K1あなたは暑さに耐えられなかった!"
 
 #: qcsrc/common/notifications/all.inc:630
 msgid "^K1You need to watch out for monsters!"
-msgstr ""
+msgstr "あなたはモンスターに気をつける必要がある!"
 
 #: qcsrc/common/notifications/all.inc:630
 msgid "^K1You were killed by a monster!"
-msgstr ""
+msgstr "^K1あなたはモンスターに殺された!"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1Tastes like chicken!"
-msgstr ""
+msgstr "^K1チキンの味!"
 
 #: qcsrc/common/notifications/all.inc:631
 msgid "^K1You forgot to put the pin back in!"
-msgstr ""
+msgstr "^K1あなたはピンを戻すのを忘れた!"
 
 #: qcsrc/common/notifications/all.inc:632
 msgid "^K1Hanging around a napalm explosion is bad!"
-msgstr ""
+msgstr "^K1ナパーム弾の周りをぶら下がることは悪い!"
 
 #: qcsrc/common/notifications/all.inc:633
 msgid "^K1You felt a little chilly!"
-msgstr ""
+msgstr "^K1あなたは少し肌寒くなった!"
 
 #: qcsrc/common/notifications/all.inc:633
 msgid "^K1You got a little bit too cold!"
-msgstr ""
+msgstr "^K1あなたは少し寒くなった!"
 
 #: qcsrc/common/notifications/all.inc:634
 msgid "^K1Your Healing Nade is a bit defective"
-msgstr ""
+msgstr "^K1あなたの治癒手榴弾は少し欠陥だ"
 
 #: qcsrc/common/notifications/all.inc:635
 msgid "^K1You are respawning for running out of ammo..."
@@ -3796,120 +3798,121 @@ msgstr "^K1あなたは弾薬が切れたために殺された..."
 
 #: qcsrc/common/notifications/all.inc:636
 msgid "^K1You grew too old without taking your medicine"
-msgstr ""
+msgstr "^K1あなたは薬を飲まずに年を取りすぎた"
 
 #: qcsrc/common/notifications/all.inc:636
 msgid "^K1You need to preserve your health"
-msgstr ""
+msgstr "^K1あなたは健康を維持する必要がある"
 
 #: qcsrc/common/notifications/all.inc:637
 msgid "^K1You became a shooting star!"
-msgstr ""
+msgstr "^K1あなたは流れ星になった!"
 
 #: qcsrc/common/notifications/all.inc:638
 msgid "^K1You melted away in slime!"
-msgstr ""
+msgstr "^K1あなたはスライムで溶かした!"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You committed suicide!"
-msgstr ""
+msgstr "^K1あなたは自殺した!"
 
 #: qcsrc/common/notifications/all.inc:639
 msgid "^K1You ended it all!"
-msgstr ""
+msgstr "^K1あなたは全て終了した!"
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You got stuck in a swamp!"
-msgstr ""
+msgstr "^K1あなたは沼で立ち往生した!"
 
 #: qcsrc/common/notifications/all.inc:641
 #, c-format
 msgid "^BGYou are now on: %s"
-msgstr ""
+msgstr "^BG現在: %s"
 
 #: qcsrc/common/notifications/all.inc:642
 msgid "^K1You died in an accident!"
-msgstr ""
+msgstr "^K1あなたは事故で死んだ!"
 
 #: qcsrc/common/notifications/all.inc:643
 msgid "^K1You had an unfortunate run in with a turret!"
-msgstr ""
+msgstr "^K1あなたは砲塔との不運な出会いがあった!"
 
 #: qcsrc/common/notifications/all.inc:643
 msgid "^K1You were fragged by a turret!"
-msgstr ""
+msgstr "^K1あなたは砲塔によって削除された!"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
-msgstr ""
+msgstr "^K1あなたはeWheel砲塔との不運な出会いがあった!"
 
 #: qcsrc/common/notifications/all.inc:644
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr ""
+msgstr "^K1あなたはeWheel砲塔によって削除された!"
 
 #: qcsrc/common/notifications/all.inc:645
 msgid "^K1You had an unfortunate run in with a Walker turret!"
-msgstr ""
+msgstr "^K1あなたはウォーカー砲塔との不運な出会いがあった!"
 
 #: qcsrc/common/notifications/all.inc:645
 msgid "^K1You were fragged by a Walker turret!"
-msgstr ""
+msgstr "^K1あなたはウォーカー砲塔によって削除された!"
 
 #: qcsrc/common/notifications/all.inc:646
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr ""
+msgstr "^K1あなたはバンブルビーの爆風に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You were crushed by a vehicle!"
-msgstr ""
+msgstr "^K1あなたは乗り物に押し潰された!"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^K1You were caught in a Raptor cluster bomb!"
-msgstr ""
+msgstr "^K1あなたはラプタークラスター爆弾に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr ""
+msgstr "^K1あなたはラプターの爆風に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:650
 msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr ""
+msgstr "^K1あなたはスパイダーボットの爆風に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
-msgstr ""
+msgstr "^K1あなたはスパイダーボットのロケットで爆破された!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr ""
+msgstr "^K1あなたはレーサーの爆風に巻き込まれた!"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1You couldn't find shelter from a Racer rocket!"
-msgstr ""
+msgstr "^K1あなたはレーサーロケットからの避難所を見つけることができなかった!"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid "^K1Watch your step!"
-msgstr ""
+msgstr "^K1あなたの足元に気を付けて!"
 
 #: qcsrc/common/notifications/all.inc:656
 #, c-format
 msgid "^K1Moron! You fragged ^BG%s^K1, a team mate!"
-msgstr ""
+msgstr "^K1馬鹿! あなたは ^BG%s^K1 を削除した、彼があんたのチームメイトだ!"
 
 #: qcsrc/common/notifications/all.inc:656
 #, c-format
 msgid "^K1Moron! You went against ^BG%s^K1, a team mate!"
-msgstr ""
+msgstr "^K1馬鹿! あなたは ^BG%s^K1 に反対した、彼があんたのチームメイトだ!"
 
 #: qcsrc/common/notifications/all.inc:657
 #, c-format
 msgid "^K1You were fragged by ^BG%s^K1, a team mate"
-msgstr ""
+msgstr "^K1あなたは ^BG%s^K1 によって削除された、彼があんたのチームメイトだ"
 
 #: qcsrc/common/notifications/all.inc:657
 #, c-format
 msgid "^K1You were scored against by ^BG%s^K1, a team mate"
 msgstr ""
+"^K1あなたは ^BG%s^K1 によって対して得点された、彼があんたのチームメイトだ"
 
 #: qcsrc/common/notifications/all.inc:659
 msgid ""
@@ -3922,12 +3925,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:661
 #, c-format
 msgid "^BGYou need %s^BG!"
-msgstr ""
+msgstr "^BGあなたは %s^BG が必要だ!"
 
 #: qcsrc/common/notifications/all.inc:662
 #, c-format
 msgid "^BGYou also need %s^BG!"
-msgstr ""
+msgstr "^BGあなたは %s^BG も必要だ!"
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^BGDoor unlocked!"
@@ -3936,47 +3939,47 @@ msgstr "^BG扉を開けた!"
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr ""
+msgstr "^F2奪った余分な命数: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:667
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr ""
+msgstr "^K3あなたは ^BG%s を復活した"
 
 #: qcsrc/common/notifications/all.inc:668
 msgid "^K3You revived yourself"
-msgstr ""
+msgstr "^K3あなた自身を復活した"
 
 #: qcsrc/common/notifications/all.inc:669
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr ""
+msgstr "^K3あなたは ^BG%s によって復活された"
 
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^K3You were automatically revived after %s seconds"
-msgstr ""
+msgstr "^K3あなたは %s 秒後に自動的に復活した"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
-msgstr ""
+msgstr "^BG発生器が攻撃を受けている!"
 
 #: qcsrc/common/notifications/all.inc:674
 msgid "^TC^TT^BG team loses the round"
-msgstr ""
+msgstr "^TC^TT^BG チームがラウンドに負けた"
 
 #: qcsrc/common/notifications/all.inc:678
 msgid "^K1You froze yourself"
-msgstr ""
+msgstr "^K1あなたは自分を冷凍した"
 
 #: qcsrc/common/notifications/all.inc:679
 msgid "^K1Round already started, you spawn as frozen"
-msgstr ""
+msgstr "^K1ラウンドはすでに開始されており、凍結状態で現れる"
 
 #: qcsrc/common/notifications/all.inc:681
 #, c-format
 msgid "^K1A %s has arrived!"
-msgstr ""
+msgstr "^K1 %s が到着した!"
 
 #: qcsrc/common/notifications/all.inc:685
 msgid "^BGYou got the ^F1Fuel regenerator"
@@ -3991,54 +3994,64 @@ msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
 msgstr ""
+"^K1利用可能な現れられるスペースがありません!\n"
+"あなたのチームがそれを修正できることを願っています..."
 
 #: qcsrc/common/notifications/all.inc:695
 msgid ""
 "^K1You may not join the game at this time.\n"
 "The player limit reached maximum capacity."
 msgstr ""
+"現在、ゲームに参加できません。\n"
+"選手の制限が最大容量に達しました。"
 
 #: qcsrc/common/notifications/all.inc:699
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BGあなたはボールを拾いた"
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGKilling people while you don't have the ball gives no points!"
-msgstr ""
+msgstr "^BGあなたにはボールを持っていない時に人を殺してもポイントを与えない!"
 
 #: qcsrc/common/notifications/all.inc:702
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
 msgstr ""
+"^BG全ての鍵はチームの手にある!\n"
+"鍵持ちが会うのを助けて!"
 
 #: qcsrc/common/notifications/all.inc:703
 msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
+"^BG全ての鍵は ^TC^TT チーム^BGの手にあ全る!\n"
+"^F4今^BGすぐ干渉して!"
 
 #: qcsrc/common/notifications/all.inc:704
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Meet the other key carriers ^F4NOW^BG!"
 msgstr ""
+"^BG全ての鍵はチームの手にある!\n"
+"^F4今^BGすぐ他の鍵持ちに会って!"
 
 #: qcsrc/common/notifications/all.inc:705
 msgid "^F4Round will start in ^COUNT"
-msgstr ""
+msgstr "^F4ラウンドは ^COUNT から開始する"
 
 #: qcsrc/common/notifications/all.inc:706
 msgid "^BGScanning frequency range..."
-msgstr ""
+msgstr "^BG周波数範囲をスキャン中..."
 
 #: qcsrc/common/notifications/all.inc:707
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr ""
+msgstr "^BGあなたは ^TC^TT 鍵で開始ている"
 
 #: qcsrc/common/notifications/all.inc:709
 msgid "^BGYou have no lives left, you must wait until the next match"
-msgstr ""
+msgstr "^BGあなたには残りの命がない、あなたは次の試合まで待つ必要がない"
 
 #: qcsrc/common/notifications/all.inc:711
 #, c-format
