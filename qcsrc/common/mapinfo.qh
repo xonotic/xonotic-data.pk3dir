@@ -113,7 +113,7 @@ CLASS(Gametype, Object)
     }
 ENDCLASS(Gametype)
 
-REGISTRY(Gametypes, 24)
+REGISTRY(Gametypes, 32)
 REGISTER_REGISTRY(Gametypes)
 REGISTRY_SORT(Gametypes);
 REGISTRY_CHECK(Gametypes)
