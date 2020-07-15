@@ -155,8 +155,11 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "gl_finish", _("Wait for GPU to finish each frame"),
 			_("Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines")));
 	me.TR(me);
+	if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+	{
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 			e.applyButton = videoApplyButton;
+	}
 	if(cvar("developer") > 0)
 	{
 		me.TR(me);
