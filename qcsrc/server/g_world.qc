@@ -882,10 +882,10 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	if(fexists(strcat("scripts/", mapname, ".arena")))
+	if(fexists(_MapInfo_FindArenaFile(mapname, ".arena")))
 		cvar_settemp("sv_q3acompat_machineshotgunswap", "1");
 
-	if(fexists(strcat("scripts/", mapname, ".defi")))
+	if(fexists(_MapInfo_FindArenaFile(mapname, ".defi")))
 		cvar_settemp("sv_q3defragcompat", "1");
 
 	// quake 3 music support
