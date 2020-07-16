@@ -40,7 +40,6 @@
 
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
-#define touch move_touch
 
 void(vector ang) _makevectors_hidden = #1;
 vector(float skel, float bonenum) _skel_get_boneabs_hidden = #270;
