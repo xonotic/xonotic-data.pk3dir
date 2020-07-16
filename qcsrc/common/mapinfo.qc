@@ -10,6 +10,7 @@
 #endif
 
 bool autocvar_g_mapinfo_arena_compat = true;
+bool autocvar_g_mapinfo_arena_generate = false;
 
 #ifdef MENUQC
 #define WARN_COND false
@@ -301,20 +302,23 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	mapMins = '0 0 0';
 	mapMaxs = '0 0 0';
 
-	// try for a .arena or .defi file if no .mapinfo exists
-	bool isdefi = false;
-	string arena_fn = _MapInfo_FindArenaFile(pFilename, ".arena");
-	int arena_fh = fopen(arena_fn, FILE_READ);
-	if(arena_fh < 0)
+	if(autocvar_g_mapinfo_arena_generate)
 	{
-		isdefi = true;
-		arena_fn = _MapInfo_FindArenaFile(pFilename, ".defi");
-		arena_fh = fopen(arena_fn, FILE_READ);
-	}
-	if(arena_fh >= 0)
-	{
-		_MapInfo_ParseArena(arena_fn, arena_fh, pFilename, NULL, isdefi, true);
-		fclose(arena_fh);
+		// try for .arena or .defi files, as they may have more accurate information
+		bool isdefi = false;
+		string arena_fn = _MapInfo_FindArenaFile(pFilename, ".arena");
+		int arena_fh = fopen(arena_fn, FILE_READ);
+		if(arena_fh < 0)
+		{
+			isdefi = true;
+			arena_fn = _MapInfo_FindArenaFile(pFilename, ".defi");
+			arena_fh = fopen(arena_fn, FILE_READ);
+		}
+		if(arena_fh >= 0)
+		{
+			_MapInfo_ParseArena(arena_fn, arena_fh, pFilename, NULL, isdefi, true);
+			fclose(arena_fh);
+		}
 	}
 
 	for (;;)
