@@ -64,7 +64,7 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 	net_eff.eent_net_count = eff_cnt;
 	net_eff.eent_eff_trail = eff.eent_eff_trail;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != ignore && !(IS_SPEC(it) && it.enemy == ignore), Net_Write_Effect(net_eff, it, 0));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != ignore && !(IS_SPEC(it) && it.enemy && it.enemy == ignore), Net_Write_Effect(net_eff, it, 0));
 	delete(net_eff);
 }
 

@@ -308,7 +308,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), thiswep.m_id);
-	W_MuzzleFlash(actor, weaponentity, EFFECT_ROCKET_MUZZLEFLASH, MDL_DEVASTATOR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ROCKET_MUZZLEFLASH, MDL_DEVASTATOR_MUZZLEFLASH, w_shotorg, w_shotdir);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.weaponentity_fld = weaponentity;

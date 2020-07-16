@@ -137,7 +137,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 {
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage), WEP_FIREBALL.m_id);
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_FIREBALL_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_FIREBALL_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir);
 
 	entity proj = new(plasma_prim);
 	proj.owner = proj.realowner = actor;
@@ -176,7 +176,7 @@ void W_Fireball_AttackEffect(entity actor, .entity weaponentity, float i, vector
 {
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0, WEP_FIREBALL.m_id); // TODO: probably doesn't need deathtype, just a prefire effect
 	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
-	W_MuzzleFlash(actor, weaponentity, EFFECT_FIREBALL_PRE_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_FIREBALL_PRE_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir);
 }
 
 void W_Fireball_Attack1_Frame4(Weapon thiswep, entity actor, .entity weaponentity, int fire)
@@ -275,7 +275,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, actor);
 	w_shotorg = trace_endpos;
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_FIREBALL_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_FIREBALL_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir);
 
 	proj = new(grenade);
 	proj.owner = proj.realowner = actor;

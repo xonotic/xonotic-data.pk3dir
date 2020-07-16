@@ -152,7 +152,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	actor.vortex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
-	W_MuzzleFlash(actor, weaponentity, EFFECT_VORTEX_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_VORTEX_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir);
 	SendCSQCVortexBeamParticle(charge);
 
 	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);

@@ -270,7 +270,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage), thiswep.m_id);
-	W_MuzzleFlash(actor, weaponentity, EFFECT_ROCKET_MUZZLEFLASH, MDL_MINELAYER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000);
+	W_MuzzleFlash(actor, weaponentity, EFFECT_ROCKET_MUZZLEFLASH, MDL_MINELAYER_MUZZLEFLASH, w_shotorg, w_shotdir);
 
 	entity mine = WarpZone_RefSys_SpawnSameRefSys(actor);
 	mine.weaponentity_fld = weaponentity;
