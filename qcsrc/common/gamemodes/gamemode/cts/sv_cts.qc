@@ -1,6 +1,7 @@
 #include "sv_cts.qh"
 
 #include <server/race.qh>
+#include <server/gamelog.qh>
 #include <server/items.qh>
 
 float autocvar_g_cts_finish_kill_delay;

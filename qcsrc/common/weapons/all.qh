@@ -291,6 +291,7 @@ const .float reloading_time = reload_time;
 
 
 // read cvars from weapon settings
+// cvars are created as such: g_balance_wepname_name
 #define WEP_CVAR(wepname, name) (_wep_##wepname.wepvar_##name)
 #define WEP_CVAR_PRI(wepname, name) WEP_CVAR(wepname, primary_##name)
 #define WEP_CVAR_SEC(wepname, name) WEP_CVAR(wepname, secondary_##name)

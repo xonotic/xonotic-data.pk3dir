@@ -1,5 +1,7 @@
 #include "sv_nexball.qh"
 
+#include <server/gamelog.qh>
+
 .entity ballcarried;
 
 int autocvar_g_nexball_goalleadlimit;
