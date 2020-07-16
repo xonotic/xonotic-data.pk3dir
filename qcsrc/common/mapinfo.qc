@@ -601,9 +601,10 @@ Gametype MapInfo_Type_FromString(string gtype)
 		case "assault":   replacement = "as"; break;
 		case "race":      replacement = "rc"; break;
 	}
-	if (replacement != "" && WARN_COND)
+	if (replacement != "")
 	{
-		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
+		if (WARN_COND)
+			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
 		gtype = replacement;
 	}
 	FOREACH(Gametypes, it.mdl == gtype, return it);

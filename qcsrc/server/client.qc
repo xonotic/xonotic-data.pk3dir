@@ -20,6 +20,7 @@
 #include "clientkill.qh"
 #include "cheats.qh"
 #include "g_world.qh"
+#include <server/gamelog.qh>
 #include "race.qh"
 #include "antilag.qh"
 #include "campaign.qh"
@@ -2712,6 +2713,9 @@ void PlayerPostThink (entity this)
 		this.solid = SOLID_NOT;
 		this.takedamage = DAMAGE_NO;
 		set_movetype(this, MOVETYPE_NONE);
+		CS(this).teamkill_complain = 0;
+		CS(this).teamkill_soundtime = 0;
+		CS(this).teamkill_soundsource = NULL;
 	}
 
 	if (IS_PLAYER(this)) {

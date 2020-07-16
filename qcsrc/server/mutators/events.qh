@@ -90,6 +90,17 @@ MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
     /**/
 MUTATOR_HOOKABLE(PlayerDied, EV_PlayerDied);
 
+/** called when showing an obituary for the player. return true to show nothing (workarounds may be needed) */
+#define EV_ClientObituary(i, o) \
+    /** inflictor       */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker        */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** target          */ i(entity, MUTATOR_ARGV_2_entity) \
+    /** deathtype       */ i(float,  MUTATOR_ARGV_3_float) \
+    /** wep entity      */ i(entity, MUTATOR_ARGV_4_entity) \
+    /** anonymous killer*/ o(bool,   MUTATOR_ARGV_5_bool) \
+    /**/
+MUTATOR_HOOKABLE(ClientObituary, EV_ClientObituary);
+
 /** allows overriding the frag centerprint messages */
 #define EV_FragCenterMessage(i, o) \
     /** attacker       */ i(entity, MUTATOR_ARGV_0_entity) \

@@ -19,6 +19,15 @@
 #define STAT_MOVEVARS_TIMESCALE _STAT_MOVEVARS_TIMESCALE
 #define STAT_MOVEVARS_GRAVITY _STAT_MOVEVARS_GRAVITY
 
+#define drawpic drawpic_builtin
+#define drawstring drawstring_builtin
+#define drawcharacter drawcharacter_builtin
+#define drawfill drawfill_builtin
+#define drawsetcliparea drawsetcliparea_builtin
+#define drawcolorcodedstring drawcolorcodedstring_builtin
+#define drawcolorcodedstring2 drawcolorcodedstring2_builtin
+#define stringwidth stringwidth_builtin
+
 #include "upstream/csprogsdefs.qc"
 
 #undef true
@@ -40,7 +49,15 @@
 
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
-#define touch move_touch
+
+#undef drawpic
+#undef drawstring
+#undef drawcharacter
+#undef drawfill
+#undef drawsetcliparea
+#undef drawcolorcodedstring
+#undef drawcolorcodedstring2
+#undef stringwidth
 
 void(vector ang) _makevectors_hidden = #1;
 vector(float skel, float bonenum) _skel_get_boneabs_hidden = #270;
