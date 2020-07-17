@@ -1,4 +1,8 @@
 // generated file; do not modify
+#include <common/gamemodes/gamemode/lms/lms.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/lms/cl_lms.qh>
+#endif
 #ifdef SVQC
     #include <common/gamemodes/gamemode/lms/sv_lms.qh>
 #endif

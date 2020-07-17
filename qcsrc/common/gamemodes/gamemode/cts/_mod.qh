@@ -1,4 +1,8 @@
 // generated file; do not modify
+#include <common/gamemodes/gamemode/cts/cts.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/cts/cl_cts.qh>
+#endif
 #ifdef SVQC
     #include <common/gamemodes/gamemode/cts/sv_cts.qh>
 #endif

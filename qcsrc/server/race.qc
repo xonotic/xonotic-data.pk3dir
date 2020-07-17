@@ -10,7 +10,7 @@
 #include "command/getreplies.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
-#include "../common/mapinfo.qh"
+#include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/rules.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>

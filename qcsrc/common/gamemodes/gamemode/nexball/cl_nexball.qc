@@ -42,3 +42,8 @@ MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
 		return true;
 	return false;
 }
+
+MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardAccuracy)
+{
+	return ISGAMETYPE(NEXBALL); // accuracy is not a factor in this gamemode
+}

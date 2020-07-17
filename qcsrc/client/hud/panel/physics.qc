@@ -4,7 +4,6 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <client/main.qh>
-#include <common/mapinfo.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
 // Physics (#15)
@@ -38,7 +37,7 @@ void HUD_Physics()
 	{
 		if(!autocvar_hud_panel_physics) return;
 		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if(autocvar_hud_panel_physics == 3 && !(ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
+		if(autocvar_hud_panel_physics == 3 && !MUTATOR_CALLHOOK(HUD_Physics_showoptional)) return;
 	}
 
 	HUD_Panel_LoadCvars();

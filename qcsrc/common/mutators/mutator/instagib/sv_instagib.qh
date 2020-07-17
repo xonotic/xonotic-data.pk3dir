@@ -1,6 +1,7 @@
 #pragma once
 
 #include "items.qh"
+#include <common/gamemodes/_mod.qh>
 
 float autocvar_g_instagib_invis_alpha;
 int autocvar_g_instagib_extralives;

@@ -4,6 +4,7 @@
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
 #include <server/resources.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/t_items.qh>
 #include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/triggers.qh>

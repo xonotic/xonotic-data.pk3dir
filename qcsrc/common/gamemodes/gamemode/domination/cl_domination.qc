@@ -2,6 +2,11 @@
 
 #include <client/hud/panel/modicons.qh>
 
+void HUD_Mod_Dom_Export(int fh)
+{
+	HUD_Write_Cvar("hud_panel_modicons_dom_layout");
+}
+
 int autocvar_hud_panel_modicons_dom_layout;
 
 void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)

@@ -8,7 +8,7 @@
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
-#include <common/mapinfo.qh>
+#include <common/gamemodes/_mod.qh>
 #include "../common/mapobjects/subs.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
 #include "../common/util.qh"

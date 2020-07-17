@@ -1252,21 +1252,38 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 
 		if(MapInfo_Map_supportedGametypes == 0)
 		{
-			LOG_SEVERE("Mapinfo system is not functional at all. Assuming deathmatch.");
-			MapInfo_Map_supportedGametypes = MAPINFO_TYPE_DEATHMATCH.m_flags;
-			MapInfo_LoadMapSettings_SaveGameType(MAPINFO_TYPE_DEATHMATCH);
-			_MapInfo_Map_ApplyGametypeEx("", MAPINFO_TYPE_DEATHMATCH, MAPINFO_TYPE_DEATHMATCH);
+			RandomSelection_Init();
+			FOREACH(Gametypes, it.m_priority == 2, 
+			{
+				MapInfo_Map_supportedGametypes |= it.m_flags;
+				RandomSelection_AddEnt(it, 1, 1);
+			});
+			if(RandomSelection_chosen_ent)
+				t = RandomSelection_chosen_ent;
+			LOG_SEVEREF("Mapinfo system is not functional at all. Falling back to a preferred mode (%s).", t.mdl);
+			MapInfo_LoadMapSettings_SaveGameType(t);
+			_MapInfo_Map_ApplyGametypeEx("", t, t);
 			return; // do not call Get_ByName!
 		}
 
+#if 0
+		// find the lowest bit in the supported gametypes
+		// unnecessary now that we select one at random
 		int _t = 1;
 		while(!(MapInfo_Map_supportedGametypes & 1))
 		{
 			_t <<= 1;
 			MapInfo_Map_supportedGametypes = floor(MapInfo_Map_supportedGametypes >> 1);
 		}
+#endif
+		RandomSelection_Init();
 		Gametype t_prev = t;
-		FOREACH(Gametypes, it.m_flags == _t, { t = it; break; });
+		FOREACH(Gametypes, MapInfo_Map_supportedGametypes & it.m_flags,
+		{
+			RandomSelection_AddEnt(it, 1, it.m_priority);
+		});
+		if(RandomSelection_chosen_ent)
+			t = RandomSelection_chosen_ent;
 
 		// t is now a supported mode!
 		LOG_WARNF("can't play the selected map in the given game mode (%s). Falling back to a supported mode (%s).", t_prev.mdl, t.mdl);

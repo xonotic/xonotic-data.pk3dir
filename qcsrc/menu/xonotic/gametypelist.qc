@@ -1,6 +1,7 @@
 #include "gametypelist.qh"
 
 #include "dialog_multiplayer_create.qh"
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
 
 entity makeXonoticGametypeList()

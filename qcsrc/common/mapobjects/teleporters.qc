@@ -16,7 +16,7 @@
     #include "../deathtypes/all.qh"
     #include "../turrets/sv_turrets.qh"
     #include "../vehicles/all.qh"
-    #include "../mapinfo.qh"
+    #include <common/gamemodes/_mod.qh>
     #include <server/anticheat.qh>
 #endif
 

@@ -7,12 +7,14 @@
     #include "notifications/all.qh"
 	#include "scores.qh"
     #include <common/deathtypes/all.qh>
+	#include <common/gamemodes/_mod.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
 	#include <server/mutators/_mod.qh>
     #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
+	#include <common/gamemodes/_mod.qh>
 	#include "scores.qh"
     #include "mapinfo.qh"
 #endif

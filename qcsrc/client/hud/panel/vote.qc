@@ -3,7 +3,6 @@
 #include <client/autocvars.qh>
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
-#include <common/mapinfo.qh>
 
 // Vote (#9)
 
@@ -15,7 +14,7 @@ void HUD_Vote_Export(int fh)
 
 void HUD_Vote()
 {
-	if(autocvar_cl_allow_uid2name == -1 && (ISGAMETYPE(CTS) || ISGAMETYPE(RACE) || (serverflags & SERVERFLAG_PLAYERSTATS)))
+	if(autocvar_cl_allow_uid2name == -1 && (MUTATOR_CALLHOOK(ShowRankings) || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		// this dialog gets overriden by the uid2name menu dialog, if it exists
 		// TODO remove this client side uid2name dialog in the next release
