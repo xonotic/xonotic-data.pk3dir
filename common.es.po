@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-06 21:37+0000\n"
+"PO-Revision-Date: 2020-07-14 22:31+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -2493,7 +2493,7 @@ msgstr "^BG%s^K1 estuvo en el agua demasiado tiempo%s%s"
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
-msgstr "^BG%s^K1 chocó contra el suelo con un poca fuerza%s%s"
+msgstr "^BG%s^K1 chocó contra el suelo con poca fuerza%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
@@ -2675,7 +2675,7 @@ msgstr "^BG%s^K1 fue acribillado por una torreta Ametralladora%s%s"
 #: qcsrc/common/notifications/all.inc:333
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
-msgstr "^BG%s^K1 fue convertido en entrañas ardientes por una torreta MLRS%s%s"
+msgstr "^BG%s^K1 fue convertido en vísceras ardientes por una torreta MLRS%s%s"
 
 #: qcsrc/common/notifications/all.inc:334
 #, c-format
@@ -2944,7 +2944,7 @@ msgstr "^BG%s^BG recogió la Llave ^TC^TT"
 #: qcsrc/common/notifications/all.inc:395
 #, c-format
 msgid "^BG%s^F3 forfeited"
-msgstr "^BG%s^F3 perdido"
+msgstr "^BG%s^F3 ha abandonado"
 
 #: qcsrc/common/notifications/all.inc:396
 #, c-format
@@ -3031,7 +3031,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr "^BG%s^F3 ha sido expulsado por matar a sus propios compañeros"
+msgstr "^BG%s^F3 ha sido expulsado por matar a tus propios compañeros"
 
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
@@ -3102,7 +3102,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:432
 msgid "^TC^TT ^BGteam scores!"
-msgstr "¡El equipo ^TC^TT^BG ha anotado!"
+msgstr "¡El equipo ^TC^TT^BG ha acertado!"
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
@@ -3213,7 +3213,7 @@ msgstr "^BG%s%s^K1 se acercó demasiado al cohete de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr "^BG%s^K1 se explotó a si mismo con su Devastador%s%s"
+msgstr "^BG%s^K1 se explotó a sí mismo con su Devastador%s%s"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
@@ -3276,7 +3276,7 @@ msgstr "^Bg%s%s^K1 fue golpeado por los misiles de Hagar de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
 msgid "^BG%s^K1 played with tiny Hagar rockets%s%s"
-msgstr "^BG%s^K1 jugó con pequeños misiles de Hagar%s%s"
+msgstr "^BG%s^K1 jugó con los pequeños misiles de Hagar%s%s"
 
 #: qcsrc/common/notifications/all.inc:470
 #, c-format
@@ -3286,7 +3286,7 @@ msgstr "^BG%s%s^K1 fue cortado por el HLAC de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:471
 #, c-format
 msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s"
-msgstr "^BG%s^K1 se puso un poco acelerado con su HLAC%s%s"
+msgstr "^BG%s^K1 se puso un poco nervioso con su HLAC%s%s"
 
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
@@ -3310,7 +3310,7 @@ msgstr "^BG%s^K1 lastimó sus propios oídos con la @!#%%'n Botella de Klein%s%s
 #: qcsrc/common/notifications/all.inc:475
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^Bg%s%s^K1 fue baleado por la Ametralladora de ^BG%s^K1%s%s"
+msgstr "^Bg%s%s^K1 fue arrebatado por la Ametralladora de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:476
 #, c-format
@@ -3358,7 +3358,8 @@ msgstr "^BG%s^K1 se explotó a sí mismo con su propio Mortero%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 fue baleado por la Ametralladora Pesada Overkill de ^BG%s^K1%s%s"
+"^BG%s%s^K1 fue arrebatado por la Ametralladora Pesada Overkill de ^BG%s^K1%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
@@ -3421,7 +3422,7 @@ msgstr "^BG%s%s^K1 fue baleado por la Escopeta Overkill de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 fue baleado por ^BG%s^K1 con un Rifle%s%s"
+msgstr "^BG%s%s^K1 fue arrebatado por ^BG%s^K1 con un Rifle%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
@@ -3528,11 +3529,11 @@ msgstr "^F4El juego inicia en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:536
 msgid "^F4Round starts in ^COUNT"
-msgstr "^F4Ronda empieza en ^COUNT"
+msgstr "^F4La ronda empieza en ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:537
 msgid "^F4Round cannot start"
-msgstr "^F4Ronda no puede empezar"
+msgstr "^F4La ronda no puede empezar"
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F2Don't camp!"
@@ -3815,7 +3816,7 @@ msgstr "^K1¡No pudiste recuperar tu aliento!"
 
 #: qcsrc/common/notifications/all.inc:626
 msgid "^K1You hit the ground with a crunch!"
-msgstr "^K1¡Golpeaste la tierra con un crujido!"
+msgstr "^K1¡Chocaste contra el suelo con un crujido!"
 
 #: qcsrc/common/notifications/all.inc:627
 msgid "^K1You felt a little too hot!"
@@ -3977,7 +3978,7 @@ msgstr "^K1¡Cuidado por dónde pisas!"
 #: qcsrc/common/notifications/all.inc:656
 #, c-format
 msgid "^K1Moron! You fragged ^BG%s^K1, a team mate!"
-msgstr "^K1¡Imbécil! ¡Has eliminado a ^BG%s^K1, un compañero!"
+msgstr "^K1¡Imbécil! ¡Has eliminado a ^BG%s^K1, un compañero tuyo!"
 
 #: qcsrc/common/notifications/all.inc:656
 #, c-format
@@ -4832,7 +4833,7 @@ msgstr "Femenino"
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:174
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:187
 msgid "Undisclosed"
-msgstr "No revelado"
+msgstr "Desconocido"
 
 #: qcsrc/common/util.qc:1439
 msgid "<KEY NOT FOUND>"
@@ -8670,7 +8671,7 @@ msgstr "Desvanecimiento de cuerpo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "Gibs:"
-msgstr "Gibs:"
+msgstr "Vísceras:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
 msgid "GIBS^None"
@@ -9230,16 +9231,16 @@ msgstr "Texto del idioma"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:67
 msgid "Set language"
-msgstr "Elegir idioma:"
+msgstr "Elegir idioma"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:72
 msgid "Disable gore effects and harsh language"
-msgstr "Deshabilitar efectos sangrientos y lenguage ofensivo"
+msgstr "Deshabilitar efectos sangrientos y lenguaje ofensivo"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:73
 msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr ""
-"Reemplazar sangre y carne por contenido que no tenga nada de efectos "
+"Reemplazar sangre y vísceras por contenido que no tenga nada de efectos "
 "sangrientos"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
@@ -9534,7 +9535,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr "Usar shaders OpenGL2.0 (GLSL)"
+msgstr "Usar shaders OpenGL 2.0 (GLSL)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:163
 msgid "Psycho coloring (easter egg)"

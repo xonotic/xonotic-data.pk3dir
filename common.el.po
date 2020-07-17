@@ -4,12 +4,13 @@
 #
 # Translators:
 # 77960155d0a4db79ed901e7c2ee242e7_4b8c532, 2016
+# aaa627661149cfc7c57d1c75ef650b07_039425b, 2018
 # Hector Champipis <hector-hab@hotmail.com>, 2019
 # 77960155d0a4db79ed901e7c2ee242e7_4b8c532, 2016
 # Vindex <kon14.inside@gmail.com>, 2014
 # Konstantinos Mihalenas <ldinos99@gmail.com>, 2014
 # Marinus Savoritias, 2018
-# Marinus Savoritias, 2018
+# aaa627661149cfc7c57d1c75ef650b07_039425b, 2018
 # MasterWord, 2016
 # Mensious Mensious <ektoras@tutanota.com>, 2018-2019
 # Vindex <kon14.inside@gmail.com>, 2014

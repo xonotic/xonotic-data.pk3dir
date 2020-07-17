@@ -337,7 +337,7 @@ void(entity e, vector min, vector max) setsize = #4;
 
 void() break_to_debugger = #6;
 float() random = #7;
-void(entity e, float chan, string samp) sound = #8;
+void(entity e, float chan, string samp, float volume, float atten, ...) sound = #8;
 vector(vector v) normalize = #9;
 void(string e) error = #10;
 void(string e) objerror = #11;
@@ -470,20 +470,20 @@ void() R_EndPolygon = #308;
 vector (vector v) cs_unproject = #310;
 vector (vector v) cs_project = #311;
 
-void(float width, vector pos1, vector pos2, float flag) drawline = #315;
+void(float width, vector pos1, vector pos2, vector rgb, float alpha, float flag) drawline = #315;
 float(string name) iscachedpic = #316;
 string(string name, ...) precache_pic = #317;
 string(string name) precache_cubemap = #317;
 vector(string picname) draw_getimagesize = #318;
 void(string name) freepic = #319;
-float(vector position, float character, vector scale, vector rgb, float alpha, float flag) drawcharacter_builtin = #320;
-float(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawstring_builtin = #321;
-float(vector position, string pic, vector size, vector rgb, float alpha, float flag) drawpic_builtin = #322;
-float(vector position, vector size, vector rgb, float alpha, float flag) drawfill_builtin = #323;
-void(float x, float y, float width, float height) drawsetcliparea_builtin = #324;
+float(vector position, float character, vector scale, vector rgb, float alpha, float flag) drawcharacter = #320;
+float(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawstring = #321;
+float(vector position, string pic, vector size, vector rgb, float alpha, float flag) drawpic = #322;
+float(vector position, vector size, vector rgb, float alpha, float flag) drawfill = #323;
+void(float x, float y, float width, float height) drawsetcliparea = #324;
 void(void) drawresetcliparea = #325;
-float(vector position, string text, vector scale, float alpha, float flag) drawcolorcodedstring_builtin = #326;
-vector(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawcolorcodedstring2_builtin = #326;
+float(vector position, string text, vector scale, float alpha, float flag) drawcolorcodedstring = #326;
+vector(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawcolorcodedstring2 = #326;
 
 float(float stnum) getstatf = #330;
 float(float stnum, ...) getstati = #331; // can optionally take first bit and count
@@ -522,7 +522,7 @@ float() ReadAngle = #365;
 string() ReadString = #366;
 float() ReadFloat = #367;
 
-// LordHavoc's range #400-#499
+// LadyHavoc's range #400-#499
 void(entity from, entity to) copyentity = #400;
 
 entity(.string fld, string match) findchain = #402;
@@ -597,7 +597,7 @@ float(float t) atan = #473;
 float(float c, float s) atan2 = #474;
 float(float a) tan = #475;
 float(string s) strippedstringlen = #476;
-float(string s) strlennocol = #476; // This is the correct name for the function, but not removing the decolorizedstring mapping.
+float(string s) strlennocol = #476; // This is the correct name for the function, but not removing the strippedstringlen mapping.
 string(string s) decolorizedstring = #477;
 string(string s) strdecolorize = #477; // This is the correct name for the function, but not removing the decolorizedstring mapping.
 string(float uselocaltime, string format, ...) strftime = #478;
@@ -846,7 +846,7 @@ float loadfont(string fontname, string fontmaps, string sizes, float slot, float
 // fix_* parms let you fix badly made fonts by applying some transformations to them
 // fix_scale : per-character center-oriented scale (doesn't change line height at all)
 // fix_voffset : vertical offset for each character, it's a multiplier to character height
-float stringwidth_builtin(string text, float allowColorCodes, vector size) = #327; // get a width of string with given font and char size
+float stringwidth(string text, float allowColorCodes, vector size) = #327; // get a width of string with given font and char size
 float stringwidth_menu(string text, float allowColorCodes, vector size) = #468; // in menu.dat it has different builtin #
 //description: engine support for custom fonts in console, hud, qc etc.
 // limits:
@@ -956,7 +956,7 @@ vector(entity e, float s, float n) getsurfacetriangle = #629;
 
 //DP_QC_ASINACOSATANATAN2TAN
 //idea: Urre
-//darkplaces implementation: LordHavoc
+//darkplaces implementation: LadyHavoc
 //constant definitions:
 float DEG2RAD = 0.0174532925199432957692369076848861271344287188854172545609719144;
 float RAD2DEG = 57.2957795130823208767981548141051703324054724665643215491602438612;
@@ -1022,8 +1022,8 @@ float GETTIME_CDTRACK = 4;
 //see DP_END_GETSOUNDTIME for similar functionality but for entity sound channels
 
 //DP_QC_TOKENIZEBYSEPARATOR
-//idea: Electro, SavageX, LordHavoc
-//darkplaces implementation: LordHavoc
+//idea: Electro, SavageX, LadyHavoc
+//darkplaces implementation: LadyHavoc
 //builtin definitions:
 float(string s, string separator1, ...) tokenizebyseparator = #479;
 //description:
@@ -1083,8 +1083,8 @@ float PRECACHE_PIC_MIPMAP = 8; // mipmap the texture for possibly better downsca
 //notes: these constants are given as optional second argument to precache_pic()
 
 //DP_QC_TRACE_MOVETYPE_WORLDONLY
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
+//idea: LadyHavoc
+//darkplaces implementation: LadyHavoc
 //constant definitions:
 float MOVE_WORLDONLY = 3;
 //description:
@@ -1112,8 +1112,8 @@ float(string sample) soundlength = #534; // returns length of sound sample in se
 float(entity num) num_for_edict = #512;
 
 //DP_TRACE_HITCONTENTSMASK_SURFACEINFO
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
+//idea: LadyHavoc
+//darkplaces implementation: LadyHavoc
 //globals:
 .float dphitcontentsmask; // if non-zero on the entity passed to traceline/tracebox/tracetoss this will override the normal collidable contents rules and instead hit these contents values (for example AI can use tracelines that hit DONOTENTER if it wants to, by simply changing this field on the entity passed to traceline), this affects normal movement as well as trace calls
 float trace_dpstartcontents; // DPCONTENTS_ value at start position of trace
@@ -1215,8 +1215,8 @@ float log(float f) = #532;
 //logarithm
 
 //FTE_CSQC_SKELETONOBJECTS
-//idea: Spike, LordHavoc
-//darkplaces implementation: LordHavoc
+//idea: Spike, LadyHavoc
+//darkplaces implementation: LadyHavoc
 //builtin definitions:
 // all skeleton numbers are 1-based (0 being no skeleton)
 // all bone numbers are 1-based (0 being invalid)
@@ -1437,6 +1437,15 @@ void(entity e, string s) parseentitydata = #608;
 //darkplaces implementation: divVerent
 //function definitions:
 void coverage() = #642;  // Reports a coverage event. The engine counts for each of the calls to this builtin whether it has been called.
+
+//DP_QC_FS_SEARCH_PACKFILE
+//idea: Mario
+//darkplaces implementation: Mario
+//builtin definitions:
+float(string pattern, float caseinsensitive, float quiet, string packfile) search_packfile_begin = #444;
+//description:
+//extension to search_begin (DP_QC_FS_SEARCH), performs a filename search with the specified pattern (for example "maps/*.bsp") and stores the results in a search slot (minimum of 128 supported by any engine with this extension), the other functions take this returned search slot number, be sure to search_free when done (they are also freed on progs reload).
+//only searches for files within the specified packfile, which is expected to match the results of whichpack().
 
 // assorted builtins
 const float		STAT_MOVEVARS_TICRATE           = 240;
