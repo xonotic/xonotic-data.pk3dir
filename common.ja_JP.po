@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-15 22:42+0000\n"
+"PO-Revision-Date: 2020-07-17 03:11+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -4414,7 +4414,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 は15つ得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:458
 msgid "MAYHEM! "
@@ -4428,7 +4428,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 は20つ得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:459
 msgid "BERSERKER! "
@@ -4442,7 +4442,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:460
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 は25つ得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:460
 msgid "CARNAGE! "
@@ -4451,7 +4451,7 @@ msgstr "大虐殺! "
 #: qcsrc/common/notifications/all.qh:461
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 は30つ得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:461
 #, c-format
