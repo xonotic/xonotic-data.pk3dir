@@ -227,7 +227,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetPlayerAlpha)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(time < player.strength_finished)
+	if(time < STAT(STRENGTH_FINISHED, player))
 	{
 		M_ARGV(1, float) = min(M_ARGV(1, float), autocvar_g_instagib_invis_alpha); // player_alpha
 		M_ARGV(2, float) = min(M_ARGV(2, float), autocvar_g_instagib_invis_alpha); // weapon_alpha

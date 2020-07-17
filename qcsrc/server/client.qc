@@ -1433,9 +1433,6 @@ void player_powerups(entity this)
 {
 	SetPlayerAlpha(this);
 
-	// add a way to see what the items were BEFORE all of these checks for the mutator hook
-	int items_prev = this.items;
-
 	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
 		this.modelflags |= MF_ROCKET;
 	else
