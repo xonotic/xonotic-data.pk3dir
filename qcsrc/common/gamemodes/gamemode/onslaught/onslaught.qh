@@ -1,7 +1,9 @@
 #pragma once
 
+#ifdef GAMEQC
 REGISTER_NET_LINKED(ENT_CLIENT_GENERATOR)
 REGISTER_NET_LINKED(ENT_CLIENT_CONTROLPOINT_ICON)
+#endif
 
 #ifdef SVQC
 IntrusiveList g_onsshields;

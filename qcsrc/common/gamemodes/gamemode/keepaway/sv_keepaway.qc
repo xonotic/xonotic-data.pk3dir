@@ -1,6 +1,7 @@
 #include "sv_keepaway.qh"
 
 #include <common/effects/all.qh>
+#include <server/gamelog.qh>
 
 .entity ballcarried;
 
@@ -350,6 +351,12 @@ MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
 	return true; // you deceptive little bugger ;3 This needs to be true in order for this function to even count.
 }
 
+MUTATOR_HOOKFUNCTION(ka, Scores_CountFragsRemaining)
+{
+	// announce remaining frags, but only when timed scoring is off
+	return !autocvar_g_keepaway_score_timepoints;
+}
+
 MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
@@ -394,7 +401,7 @@ MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force valu
 			frag_force *= autocvar_g_keepaway_ballcarrier_force;
 		}
 	}
-	else if (!frag_target.ballcarried) // if the target is a noncarrier
+	else if (IS_PLAYER(frag_attacker) && !frag_target.ballcarried) // if the target is a noncarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{

@@ -1,10 +1,12 @@
 #include "sv_cts.qh"
 
 #include <server/race.qh>
+#include <server/gamelog.qh>
 #include <server/items.qh>
 
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;
+bool autocvar_g_cts_removeprojectiles;
 
 // legacy bot roles
 .float race_checkpoint;
@@ -207,7 +209,7 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-		player.frags = FRAGS_LMS_LOSER;
+		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	else
 		player.frags = FRAGS_SPECTATOR;
 
@@ -253,6 +255,14 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
+
+	if(autocvar_g_cts_removeprojectiles)
+	{
+		IL_EACH(g_projectiles, it.owner == frag_target && (it.flags & FL_PROJECTILE),
+		{
+			delete(it);
+		});
+	}
 }
 
 MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)

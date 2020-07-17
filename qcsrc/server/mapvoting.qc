@@ -1,6 +1,7 @@
 #include "mapvoting.qh"
 
 #include <server/defs.qh>
+#include <server/gamelog.qh>
 #include <server/miscfunctions.qh>
 #include "g_world.qh"
 #include "command/cmd.qh"
@@ -525,7 +526,7 @@ bool MapVote_CheckRules_2()
 			}
 		}
 	firstPlaceVotes = RandomSelection_best_priority;
-	if ( autocvar_sv_vote_gametype_default_current && currentVotes == firstPlaceVotes )
+	if ( autocvar_sv_vote_gametype_default_current && firstPlaceVotes == 0 )
 		firstPlace = currentPlace;
 	else
 		firstPlace = RandomSelection_chosen_float;
@@ -591,9 +592,9 @@ void MapVote_Tick()
 	int totalvotes = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		// hide scoreboard again
-		if(GetResourceAmount(it, RESOURCE_HEALTH) != 2342)
+		if(GetResource(it, RES_HEALTH) != 2342)
 		{
-			SetResourceAmountExplicit(it, RESOURCE_HEALTH, 2342);
+			SetResourceExplicit(it, RES_HEALTH, 2342);
 			CS(it).impulse = 0;
 
 			msg_entity = it;
@@ -726,13 +727,13 @@ bool GameTypeVote_Finished(int pos)
 	if(!gametypevote || gametypevote_finished)
 		return false;
 
+	localcmd("sv_vote_gametype_hook_all\n");
+	localcmd("sv_vote_gametype_hook_", mapvote_maps[pos], "\n");
+
 	if ( !GameTypeVote_SetGametype(GameTypeVote_Type_FromString(mapvote_maps[pos])) )
 	{
 		LOG_TRACE("Selected gametype is not supported by any map");
 	}
-
-	localcmd("sv_vote_gametype_hook_all\n");
-	localcmd("sv_vote_gametype_hook_", mapvote_maps[pos], "\n");
 
 	gametypevote_finished = true;
 

@@ -170,12 +170,6 @@ MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
 	/**/
 MUTATOR_HOOKABLE(DrawInfoMessages, EV_DrawInfoMessages);
 
-/** Called when drawing info messages, allows adding new info messages */
-#define EV_HUD_WriteCvars(i, o) \
-	/** file */ 			i(float, MUTATOR_ARGV_0_float) \
-	/**/
-MUTATOR_HOOKABLE(HUD_WriteCvars, EV_HUD_WriteCvars);
-
 /** Called when the view model is being animated (setorigin is called after the hook, so you only need to modify origin here if desired) */
 #define EV_DrawViewModel(i, o) \
 	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
@@ -185,12 +179,19 @@ MUTATOR_HOOKABLE(DrawViewModel, EV_DrawViewModel);
 /** Called when updating the view's liquid contents, return true to disable the standard checks and apply your own */
 MUTATOR_HOOKABLE(HUD_Contents, EV_NO_ARGS);
 
-/** Return true to disable player model/color forcing */
+/** Return true to disable player model forcing */
 #define EV_ForcePlayermodels_Skip(i, o) \
 	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
 	/** is local */ 		i(bool, MUTATOR_ARGV_1_bool) \
 	/**/
 MUTATOR_HOOKABLE(ForcePlayermodels_Skip, EV_ForcePlayermodels_Skip);
+
+/** Return true to disable player color forcing */
+#define EV_ForcePlayercolors_Skip(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/** is local */ 		i(bool, MUTATOR_ARGV_1_bool) \
+	/**/
+MUTATOR_HOOKABLE(ForcePlayercolors_Skip, EV_ForcePlayercolors_Skip);
 
 /** Called when damage info is received on the client, useful for playing explosion effects */
 #define EV_DamageInfo(i, o) \
@@ -199,3 +200,6 @@ MUTATOR_HOOKABLE(ForcePlayermodels_Skip, EV_ForcePlayermodels_Skip);
 	/** hit origin */ 		i(vector, MUTATOR_ARGV_2_vector) \
 	/**/
 MUTATOR_HOOKABLE(DamageInfo, EV_DamageInfo);
+
+/** Return true to not draw zoom reticle */
+MUTATOR_HOOKABLE(DrawReticle, EV_NO_ARGS);

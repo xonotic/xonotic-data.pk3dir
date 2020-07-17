@@ -10,6 +10,12 @@
 
 // Score (#7)
 
+void HUD_Score_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_score_rankings");
+}
+
 void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
@@ -140,7 +146,7 @@ void HUD_Score()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
-		if(spectatee_status == -1 && (gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
+		if(spectatee_status == -1 && (ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
 	}
 
 	HUD_Panel_LoadCvars();

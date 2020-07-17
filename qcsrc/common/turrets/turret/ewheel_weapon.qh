@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(EWheelAttack, PortoLaunch)
-/* flags     */ ATTRIB(EWheelAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(EWheelAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(EWheelAttack, impulse, int, 5);
 /* refname   */ ATTRIB(EWheelAttack, netname, string, "turret_ewheel");
 /* wepname   */ ATTRIB(EWheelAttack, m_name, string, _("eWheel"));

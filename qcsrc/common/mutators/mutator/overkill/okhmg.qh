@@ -4,9 +4,9 @@
 
 CLASS(OverkillHeavyMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillHeavyMachineGun, m_canonical_spawnfunc, string, "weapon_okhmg");
-/* ammotype  */ ATTRIB(OverkillHeavyMachineGun, ammo_type, int, RESOURCE_BULLETS);
+/* ammotype  */ ATTRIB(OverkillHeavyMachineGun, ammo_type, int, RES_BULLETS);
 /* impulse   */ ATTRIB(OverkillHeavyMachineGun, impulse, int, 3);
-/* flags     */ ATTRIB(OverkillHeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON);
+/* flags     */ ATTRIB(OverkillHeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(OverkillHeavyMachineGun, bot_pickupbasevalue, float, 10000);
 /* color     */ ATTRIB(OverkillHeavyMachineGun, wpcolor, vector, '0.5 0.5 0');
 /* modelname */ ATTRIB(OverkillHeavyMachineGun, mdl, string, "ok_hmg");
@@ -35,6 +35,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 		P(class, prefix, delay, float, SEC) \
 		P(class, prefix, edgedamage, float, SEC) \
 		P(class, prefix, force, float, SEC) \
+		P(class, prefix, force_zscale, float, SEC) \
 		P(class, prefix, lifetime, float, SEC) \
 		P(class, prefix, radius, float, SEC) \
 		P(class, prefix, refire, float, SEC) \

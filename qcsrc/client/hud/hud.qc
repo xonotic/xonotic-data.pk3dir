@@ -28,48 +28,97 @@ Misc HUD functions
 ==================
 */
 
-vector HUD_Get_Num_Color (float hp, float maxvalue)
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
 {
-	float blinkingamt;
-	vector color;
-	if(hp >= maxvalue) {
-		color.x = sin(2*M_PI*time);
-		color.y = 1;
-		color.z = sin(2*M_PI*time);
+	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
+	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
+}
+
+void draw_cursor_normal(vector pos, vector col, float a)
+{
+	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
+}
+
+void LoadMenuSkinValues()
+{
+	int fh = -1;
+	if(cvar_string("menu_skin") != "")
+	{
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
-	else if(hp > maxvalue * 0.75) {
-		color.x = 0.4 - (hp-150)*0.02 * 0.4; //red value between 0.4 -> 0
-		color.y = 0.9 + (hp-150)*0.02 * 0.1; // green value between 0.9 -> 1
-		color.z = 0;
+	if(fh < 0 && cvar_defstring("menu_skin") != "")
+	{
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
-	else if(hp > maxvalue * 0.5) {
-		color.x = 1 - (hp-100)*0.02 * 0.6; //red value between 1 -> 0.4
-		color.y = 1 - (hp-100)*0.02 * 0.1; // green value between 1 -> 0.9
-		color.z = 1 - (hp-100)*0.02; // blue value between 1 -> 0
-	}
-	else if(hp > maxvalue * 0.25) {
-		color.x = 1;
-		color.y = 1;
-		color.z = 0.2 + (hp-50)*0.02 * 0.8; // blue value between 0.2 -> 1
-	}
-	else if(hp > maxvalue * 0.1) {
-		color.x = 1;
-		color.y = (hp-20)*90/27/100; // green value between 0 -> 1
-		color.z = (hp-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
-	}
-	else {
-		color.x = 1;
-		color.y = 0;
-		color.z = 0;
+	if(fh < 0)
+	{
+		draw_currentSkin = "gfx/menu/default";
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 
-	blinkingamt = (1 - hp/maxvalue/0.25);
-	if(blinkingamt > 0)
+	draw_currentSkin = strzone(draw_currentSkin);
+
+	if(fh >= 0)
 	{
-		color.x = color.x - color.x * blinkingamt * sin(2*M_PI*time);
-		color.y = color.y - color.y * blinkingamt * sin(2*M_PI*time);
-		color.z = color.z - color.z * blinkingamt * sin(2*M_PI*time);
+		string s;
+		while((s = fgets(fh)))
+		{
+			int n = tokenize_console(s);
+			if (n < 2)
+				continue;
+			if(substring(argv(0), 0, 2) == "//")
+				continue;
+			if(argv(0) == "SIZE_CURSOR")
+				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			else if(argv(0) == "OFFSET_CURSOR")
+				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+		}
+		fclose(fh);
 	}
+}
+
+vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink)
+{
+	const vector COLOR100 = '0 1 0'; // green
+	const vector COLOR75 = '0.4 0.9 0'; // lightgreen
+	const vector COLOR50 = '1 1 1'; // white
+	const vector COLOR25 = '1 1 0.2'; // lightyellow
+	const vector COLOR10 = '1 0 0'; // red
+	vector color;
+
+	float hp_percent = hp / maxvalue * 100;
+	#define CASE_COLOR_BETWEEN(min, max) \
+		if(hp_percent > min) \
+			color = COLOR##min + (COLOR##max - COLOR##min) * ((hp_percent - min) / (max - min))
+
+	if(hp_percent > 100) color = COLOR100;
+	else CASE_COLOR_BETWEEN(75, 100);
+	else CASE_COLOR_BETWEEN(50, 75);
+	else CASE_COLOR_BETWEEN(25, 50);
+	else CASE_COLOR_BETWEEN(10, 25);
+	else color = COLOR10;
+
+	#undef CASE_COLOR_BETWEEN
+
+	if (blink)
+	{
+		if(hp_percent >= 100)
+		{
+			float f = sin(2*M_PI*time);
+			if (color.x == 0) color.x = f;
+			if (color.y == 0) color.y = f;
+			if (color.z == 0) color.z = f;
+		}
+		else if(hp_percent < 25)
+		{
+			float f = (1 - hp_percent / 25) * sin(2*M_PI*time);
+			color -= color * f;
+		}
+	}
+
 	return color;
 }
 
@@ -398,6 +447,8 @@ Main HUD system
 ==================
 */
 
+float lasthud;
+float vh_notice_time;
 void HUD_Vehicle()
 {
 	if(autocvar__hud_configure) return;
@@ -406,9 +457,14 @@ void HUD_Vehicle()
 	if(hud == HUD_BUMBLEBEE_GUN)
 		CSQC_BUMBLE_GUN_HUD();
 	else {
-		Vehicle info = Vehicles_from(hud);
+		Vehicle info = REGISTRY_GET(Vehicles, hud);
 		info.vr_hud(info);
 	}
+
+	if(hud != HUD_NORMAL && lasthud == HUD_NORMAL)
+		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
+
+	lasthud = hud;
 }
 
 void HUD_Panel_Draw(entity panent)
@@ -425,7 +481,11 @@ void HUD_Panel_Draw(entity panent)
 	}
 
 	bool draw_allowed = false;
-	if (active_minigame && HUD_MinigameMenu_IsOpened())
+	if (scoreboard_fade_alpha && panel.panel_showflags & PANEL_SHOW_WITH_SB)
+	{
+		draw_allowed = true;
+	}
+	else if (active_minigame && HUD_MinigameMenu_IsOpened())
 	{
 		if (panel.panel_showflags & PANEL_SHOW_MINIGAME)
 			draw_allowed = true;
@@ -441,7 +501,12 @@ void HUD_Panel_Draw(entity panent)
 	if (draw_allowed)
 	{
 		if (panel.panel_showflags & PANEL_SHOW_WITH_SB)
-			panel_fade_alpha = 1;
+		{
+			if (scoreboard_fade_alpha && intermission == 2 && !(panel.panel_showflags & PANEL_SHOW_MAPVOTE))
+				panel_fade_alpha = scoreboard_fade_alpha;
+			else
+				panel_fade_alpha = 1;
+		}
 		else
 		{
 			panel_fade_alpha = 1 - scoreboard_fade_alpha;
@@ -565,8 +630,6 @@ bool HUD_WouldShowCursor()
 {
 	if(autocvar__hud_configure)
 		return true;
-	if(hud_panel_radar_mouse)
-		return true;
 	if(mv_active)
 		return true;
 	//entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1)); // TODO: doesn't use regular cursor handling
@@ -581,6 +644,7 @@ bool HUD_WouldShowCursor()
 	return false;
 }
 
+float prev_myteam;
 void HUD_Main()
 {
 	int i;
@@ -588,6 +652,13 @@ void HUD_Main()
 		hud_fade_alpha = 1;
 	else
 		hud_fade_alpha = 1 - autocvar__menu_alpha;
+
+	if(myteam != prev_myteam)
+	{
+		myteamcolors = colormapPaletteColor(myteam, 1);
+		FOREACH(hud_panels, true, it.update_time = time);
+		prev_myteam = myteam;
+	}
 
 	HUD_Configure_Frame();
 
@@ -645,18 +716,18 @@ void HUD_Main()
 
 	// cache the panel order into the panel_order array
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
-		for(i = 0; i < hud_panels_COUNT; ++i)
+		for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i)
 			panel_order[i] = -1;
 		string s = "";
 		int p_num;
 		bool warning = false;
 		int argc = tokenize_console(autocvar__hud_panelorder);
-		if (argc > hud_panels_COUNT)
+		if (argc > REGISTRY_COUNT(hud_panels))
 			warning = true;
 		//first detect wrong/missing panel numbers
-		for(i = 0; i < hud_panels_COUNT; ++i) {
+		for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
 			p_num = stoi(argv(i));
-			if (p_num >= 0 && p_num < hud_panels_COUNT) { //correct panel number?
+			if (p_num >= 0 && p_num < REGISTRY_COUNT(hud_panels)) { //correct panel number?
 				if (panel_order[p_num] == -1) //found for the first time?
 					s = strcat(s, ftos(p_num), " ");
 				panel_order[p_num] = 1; //mark as found
@@ -664,7 +735,7 @@ void HUD_Main()
 			else
 				warning = true;
 		}
-		for(i = 0; i < hud_panels_COUNT; ++i) {
+		for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
 			if (panel_order[i] == -1) {
 				warning = true;
 				s = strcat(s, ftos(i), " "); //add missing panel number
@@ -678,15 +749,15 @@ void HUD_Main()
 
 		//now properly set panel_order
 		tokenize_console(s);
-		for(i = 0; i < hud_panels_COUNT; ++i) {
+		for(i = 0; i < REGISTRY_COUNT(hud_panels); ++i) {
 			panel_order[i] = stof(argv(i));
 		}
 	}
 
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
-	for(i = hud_panels_COUNT - 1; i >= 0; --i)
-		HUD_Panel_Draw(hud_panels_from(panel_order[i]));
+	for(i = REGISTRY_COUNT(hud_panels) - 1; i >= 0; --i)
+		HUD_Panel_Draw(REGISTRY_GET(hud_panels, panel_order[i]));
 
 	HUD_Vehicle();
 
@@ -700,10 +771,15 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 
-	bool cursor_active_prev = cursor_active;
+	int cursor_active_prev = cursor_active;
 	cursor_active = HUD_WouldShowCursor();
 	if (cursor_active_prev != cursor_active && autocvar_hud_cursormode)
+	{
 		setcursormode(cursor_active);
+		// cursor inactive this frame, will be set to 1 the next frame
+		if (cursor_active)
+			cursor_active = -1;
+	}
 
 	if (intermission == 2)
 		HUD_Reset();

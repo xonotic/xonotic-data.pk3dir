@@ -47,10 +47,9 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	float r, af;
 
 	Weapon sw = actor.(weaponentity).m_switchweapon; // make it not detect weapon changes as reason to abort firing
-	int slot = weaponslot(weaponentity);
-	af = ATTACK_FINISHED(actor, slot);
+	af = ATTACK_FINISHED(actor, weaponentity);
 	actor.(weaponentity).m_switchweapon = actor.(weaponentity).m_weapon;
-	ATTACK_FINISHED(actor, slot) = time;
+	ATTACK_FINISHED(actor, weaponentity) = time;
 	r = weapon_prepareattack(thiswep, actor, weaponentity, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
 	if(actor.(weaponentity).m_switchweapon == actor.(weaponentity).m_weapon)
 		actor.(weaponentity).m_switchweapon = sw;
@@ -61,7 +60,7 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	}
 	else
 	{
-		ATTACK_FINISHED(actor, slot) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
+		ATTACK_FINISHED(actor, weaponentity) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
 	}
 }
 
@@ -147,13 +146,13 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 }
 METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(rifle, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(rifle, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(rifle, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(rifle, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
     return ammo_amount;
 }

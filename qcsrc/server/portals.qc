@@ -16,6 +16,7 @@
 #include "../lib/warpzone/common.qh"
 #include "../common/vehicles/vehicle.qh"
 #include "../common/vehicles/sv_vehicles.qh"
+#include <server/player.qh>
 
 #define PORTALS_ARE_NOT_SOLID
 
@@ -30,11 +31,10 @@ const vector SAFERNUDGE = '8 8 8';
 
 float PlayerEdgeDistance(entity p, vector v)
 {
-	vector vbest;
-
-	if(v.x < 0) vbest.x = p.mins.x; else vbest.x = p.maxs.x;
-	if(v.y < 0) vbest.y = p.mins.y; else vbest.y = p.maxs.y;
-	if(v.z < 0) vbest.z = p.mins.z; else vbest.z = p.maxs.z;
+	vector vbest = vec3(
+		((v.x < 0) ? p.mins.x : p.maxs.x),
+		((v.y < 0) ? p.mins.y : p.maxs.y),
+		((v.z < 0) ? p.mins.z : p.maxs.z));
 
 	return vbest * v;
 }
@@ -103,7 +103,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 }
 
 .vector right_vector;
-float Portal_TeleportPlayer(entity teleporter, entity player)
+float Portal_TeleportPlayer(entity teleporter, entity player, entity portal_owner)
 {
 	vector from, to, safe, step, transform, ang, newvel;
 	float planeshift, s, t;
@@ -189,6 +189,12 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 		if(time < teleporter.teleport_time + 1)
 			Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_ACHIEVEMENT_AMAZING);
 	}
+	else if(player != portal_owner && IS_PLAYER(portal_owner) && IS_PLAYER(player))
+	{
+		player.pusher = portal_owner;
+		player.pushltime = time + autocvar_g_maxpushtime;
+		player.istypefrag = PHYS_INPUT_BUTTON_CHAT(player);
+	}
 
 	if (!teleporter.enemy)
 	{
@@ -199,8 +205,8 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	// reset fade counter
 	teleporter.portal_wants_to_vanish = 0;
 	teleporter.fade_time = ((autocvar_g_balance_portal_lifetime >= 0) ? time + autocvar_g_balance_portal_lifetime : 0);
-	SetResourceAmountExplicit(teleporter, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
-	SetResourceAmountExplicit(teleporter.enemy, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
+	SetResourceExplicit(teleporter, RES_HEALTH, autocvar_g_balance_portal_health);
+	SetResourceExplicit(teleporter.enemy, RES_HEALTH, autocvar_g_balance_portal_health);
 
 	return 1;
 }
@@ -317,7 +323,7 @@ void Portal_Touch(entity this, entity toucher)
 	}
 	*/
 
-	if(Portal_TeleportPlayer(this, toucher))
+	if(Portal_TeleportPlayer(this, toucher, this.aiment))
 		if(toucher.classname == "porto")
 			if(toucher.effects & EF_RED)
 				toucher.effects += EF_BLUE - EF_RED;
@@ -435,12 +441,12 @@ void Portal_Damage(entity this, entity inflictor, entity attacker, float damage,
 	if(attacker != this.aiment)
 		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(this.aiment))
 			return;
-	TakeResource(this, RESOURCE_HEALTH, damage);
-	if(GetResourceAmount(this, RESOURCE_HEALTH) < 0)
+	TakeResource(this, RES_HEALTH, damage);
+	if(GetResource(this, RES_HEALTH) < 0)
 		Portal_Remove(this, 1);
 }
 
-void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g)
+void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g, entity portal_owner)
 {
 	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
@@ -449,7 +455,7 @@ void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g)
 	// already teleport him
 	tracebox(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, MOVE_NORMAL, e);
 	if(trace_ent == this)
-		Portal_TeleportPlayer(this, e);
+		Portal_TeleportPlayer(this, e, portal_owner);
 }
 
 void Portal_Think(entity this)
@@ -479,13 +485,13 @@ void Portal_Think(entity this)
 				continue; // cannot go through someone else's portal
 
 		if(it != o || time >= this.portal_activatetime)
-			Portal_Think_TryTeleportPlayer(this, it, g);
+			Portal_Think_TryTeleportPlayer(this, it, g, o);
 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	    {
 	    	.entity weaponentity = weaponentities[slot];
 	    	if(it.(weaponentity).hook)
-	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g);
+	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g, o);
 	    }
 	});
 	this.solid = SOLID_TRIGGER;
@@ -639,7 +645,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.takedamage = DAMAGE_AIM;
 	portal.event_damage = Portal_Damage;
 	portal.fade_time = ((autocvar_g_balance_portal_lifetime >= 0) ? time + autocvar_g_balance_portal_lifetime : 0);
-	SetResourceAmountExplicit(portal, RESOURCE_HEALTH, autocvar_g_balance_portal_health);
+	SetResourceExplicit(portal, RES_HEALTH, autocvar_g_balance_portal_health);
 	setmodel(portal, MDL_PORTAL);
 	portal.savemodelindex = portal.modelindex;
 	setcefc(portal, Portal_Customize);

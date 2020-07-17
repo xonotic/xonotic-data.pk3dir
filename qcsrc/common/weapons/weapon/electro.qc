@@ -64,7 +64,7 @@ void W_Electro_ExplodeCombo(entity this)
 		NULL,
 		NULL,
 		WEP_CVAR(electro, combo_force),
-		this.projectiledeathtype | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
+		WEP_ELECTRO.m_id | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
 		this.weaponentity_fld,
 		NULL
 	);
@@ -154,27 +154,46 @@ void W_Electro_Bolt_Think(entity this)
 		{
 			if(e.classname == "electro_orb")
 			{
-				// change owner to whoever caused the combo explosion
-				e.realowner = this.realowner;
-				e.takedamage = DAMAGE_NO;
-				e.classname = "electro_orb_chain";
+				bool explode;
+				if (this.owner == e.owner)
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_own);
+				}
+				else if (SAME_TEAM(this.owner, e.owner))
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_teammate);
+				}
+				else
+				{
+					explode = WEP_CVAR_PRI(electro, midaircombo_enemy);
+				}
 
-				// now set the next one to trigger as well
-				setthink(e, W_Electro_ExplodeCombo);
+				if (explode)
+				{
+					// change owner to whoever caused the combo explosion
+					e.realowner = this.realowner;
+					e.takedamage = DAMAGE_NO;
+					e.classname = "electro_orb_chain";
 
-				// delay combo chains, looks cooler
-				e.nextthink =
+					// Only first orb explosion uses midaircombo_speed, others use the normal combo_speed.
+					// This allows to avoid the delay on the first explosion which looks better
+					// (the bolt and orb should explode together because they interacted together)
+					// while keeping the chaining delay.
+					setthink(e, W_Electro_ExplodeCombo);
+					e.nextthink =
 					(
 						time
 						+
-						(WEP_CVAR(electro, combo_speed) ?
-							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed))
+						(WEP_CVAR_PRI(electro, midaircombo_speed) ?
+							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(electro, midaircombo_speed))
 							:
 							0
 						)
 					);
 
-				++found;
+
+					++found;
+				}
 			}
 			e = e.chain;
 		}
@@ -258,7 +277,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 
 	newproj.takedamage = this.takedamage;
 	newproj.damageforcescale = this.damageforcescale;
-	SetResourceAmountExplicit(newproj, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
+	SetResourceExplicit(newproj, RES_HEALTH, GetResource(this, RES_HEALTH));
 	newproj.event_damage = this.event_damage;
 	newproj.spawnshieldtime = this.spawnshieldtime;
 	newproj.damagedbycontents = true;
@@ -279,14 +298,14 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	delete(this);
 
 	if(to)
-		SetMovetypeFollow(this, to);
+		SetMovetypeFollow(newproj, to);
 }
 
 void W_Electro_Orb_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	if(toucher.takedamage == DAMAGE_AIM)
-		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(this, toucher); } }
+	if(toucher.takedamage == DAMAGE_AIM && WEP_CVAR_SEC(electro, touchexplode))
+		{ W_Electro_Explode(this, toucher); }
 	else if(toucher.owner != this.owner && toucher.classname != this.classname) // don't stick to player's other projectiles!
 	{
 		//UpdateCSQCProjectile(this);
@@ -300,7 +319,7 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 
 void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	// note: combos are usually triggered by W_Electro_TriggerCombo, not damage
@@ -309,8 +328,8 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_combo ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	TakeResource(this, RES_HEALTH, damage);
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		this.takedamage = DAMAGE_NO;
 		this.nextthink = time;
@@ -381,7 +400,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = WEP_CVAR_SEC(electro, damageforcescale);
-	SetResourceAmountExplicit(proj, RESOURCE_HEALTH, WEP_CVAR_SEC(electro, health));
+	SetResourceExplicit(proj, RES_HEALTH, WEP_CVAR_SEC(electro, health));
 	proj.event_damage = W_Electro_Orb_Damage;
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
@@ -393,14 +412,6 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
 	proj.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
-
-#if 0
-	entity p2;
-	p2 = spawn();
-	copyentity(proj, p2);
-	setmodel(p2, MDL_PROJECTILE_ELECTRO);
-	setsize(p2, proj.mins, proj.maxs);
-#endif
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, false); // no culling, it has sound
 
@@ -491,7 +502,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(Electro, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(electro, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(electro, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(electro, ammo);
     return ammo_amount;
 }
@@ -500,12 +511,12 @@ METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
     float ammo_amount;
     if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
     }
     else
     {
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(electro, ammo);
     }
     return ammo_amount;

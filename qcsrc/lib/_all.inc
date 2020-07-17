@@ -104,6 +104,9 @@
 
 #include "warpzone/mathlib.qc"
 
+// needs to be included before any of the functions which use globals are called
+#include "deglobalization.qh"
+
 #include "accumulate.qh"
 #include "angle.qc"
 #include "arraylist.qh"
@@ -115,6 +118,7 @@
 #include "draw.qh"
 #include "enumclass.qh"
 #include "file.qh"
+#include "float.qh"
 #include "functional.qh"
 #include "i18n.qh"
 #include "intrusivelist.qh"
@@ -162,14 +166,14 @@ void make_safe_for_remove(entity this);
     #define objerror_safe(e) make_safe_for_remove(e)
 #endif
 
-#define objerror(this, msg) MACRO_BEGIN { \
+#define objerror(this, msg) MACRO_BEGIN \
 	LOG_WARN("======OBJECT ERROR======"); \
 	entity _e = (this); \
 	eprint(_e); \
 	objerror_safe(_e); \
 	delete(_e); \
 	LOG_WARNF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); \
-} MACRO_END
+MACRO_END
 
 #ifdef MENUQC
 	void _m_init();

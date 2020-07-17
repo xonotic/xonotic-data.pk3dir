@@ -41,6 +41,11 @@ void g_clientmodel_setcolormaptoactivator(entity this, entity actor, entity trig
 
 void g_clientmodel_use(entity this, entity actor, entity trigger)
 {
+	// Flag to set func_clientwall state
+	// 1 == deactivate, 2 == activate, 0 == do nothing
+	if(this.classname == "func_clientwall" || this.classname == "func_clientillusionary")
+		this.antiwall_flag = trigger.antiwall_flag;
+
 	if (this.antiwall_flag == 1)
 	{
 		this.inactive = 1;
@@ -161,21 +166,24 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 
 
 #define G_MODEL_INIT(ent,sol) \
-	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
+	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent); \
+	SetBrushEntityModel(ent,true); \
 	ent.use = g_model_setcolormaptoactivator; \
 	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); else if(ent.solid < 0) ent.solid = SOLID_NOT;
+	if(!ent.solid) ent.solid = (sol); \
+	else if(ent.solid < 0) ent.solid = SOLID_NOT;
 
 #define G_CLIENTMODEL_INIT(ent,sol) \
-	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
+	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent); \
+	SetBrushEntityModel(ent,true); \
 	ent.use = g_clientmodel_use; \
 	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); else if(ent.solid < 0) ent.solid = SOLID_NOT; \
-	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
+	if(!ent.solid) ent.solid = (sol); \
+	else if(ent.solid < 0) ent.solid = SOLID_NOT; \
+	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; \
+	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
 	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity); \
 	ent.default_solid = sol;
 
@@ -187,11 +195,11 @@ spawnfunc(misc_models)            { this.angles_x = -this.angles.x; G_MODEL_INIT
 // non-solid brush entities:
 spawnfunc(func_illusionary)       { G_MODEL_INIT      (this, SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
 spawnfunc(func_clientillusionary) { G_CLIENTMODEL_INIT(this, SOLID_NOT) } // brush entity
-spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_NOT) } // DEPRECATED old alias name from some other game
 
 // solid brush entities
 spawnfunc(func_wall)              { G_MODEL_INIT      (this, SOLID_BSP) } // Q1 name
 spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_BSP) } // DEPRECATED old alias name from some other game
 #elif defined(CSQC)
 .float alpha;
 .float scale;

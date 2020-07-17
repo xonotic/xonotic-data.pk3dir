@@ -100,7 +100,7 @@ spawnfunc(trigger_gravity)
 
 	this.active = ACTIVE_ACTIVE;
 	this.setactive = generic_setactive;
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		// legacy use
 		this.use = trigger_gravity_use;

@@ -50,12 +50,12 @@ bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 {
 	this.viewmodelforclient = this.owner;
 	if (IS_SPEC(client) && client.enemy == this.owner) this.viewmodelforclient = client;
-	return true;
+	return false;
 }
 
 vector CL_Weapon_GetShotOrg(int wpn)
 {
-	entity wi = Weapons_from(wpn);
+	entity wi = REGISTRY_GET(Weapons, wpn);
 	entity e = spawn();
 	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
@@ -163,6 +163,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
     Weapon wep = this.owner.(weaponentity).m_weapon;
 	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner, this.owner.clientcolors, this.owner.(weaponentity));
 	this.colormap = this.owner.colormap;
+	this.skin = w_ent.skin;
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -223,7 +224,7 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 .float prevwarntime;
 bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary, .entity weaponentity)
 {
-	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
+	if ((actor.items & IT_UNLIMITED_AMMO)) return true;
 	bool ammo = false;
 	if (secondary) ammo = thiswep.wr_checkammo2(thiswep, actor, weaponentity);
 	else ammo = thiswep.wr_checkammo1(thiswep, actor, weaponentity);
@@ -292,9 +293,8 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 
 	if (attacktime >= 0)
 	{
-		int slot = weaponslot(weaponentity);
 		// don't fire if previous attack is not finished
-		if (ATTACK_FINISHED(actor, slot) > time + actor.(weaponentity).weapon_frametime * 0.5) return false;
+		if (ATTACK_FINISHED(actor, weaponentity) > time + actor.(weaponentity).weapon_frametime * 0.5) return false;
 		entity this = actor.(weaponentity);
 		// don't fire while changing weapon
 		if (this.state != WS_READY) return false;
@@ -313,16 +313,35 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 	// if the weapon hasn't been firing continuously, reset the timer
 	if (attacktime >= 0)
 	{
-		int slot = weaponslot(weaponentity);
-		if (ATTACK_FINISHED(actor, slot) < time - this.weapon_frametime * 1.5)
+		if (ATTACK_FINISHED(actor, weaponentity) < time - this.weapon_frametime * 1.5)
 		{
-			ATTACK_FINISHED(actor, slot) = time;
+			ATTACK_FINISHED(actor, weaponentity) = time;
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
-		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor(actor);
+		float arate = W_WeaponRateFactor(actor);
+		ATTACK_FINISHED(actor, weaponentity) = ATTACK_FINISHED(actor, weaponentity) + attacktime * arate;
+
+		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor))
+		{
+			int slot = weaponslot(weaponentity);
+			for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot)
+			{
+				if(slot == wepslot)
+					continue;
+				.entity wepent = weaponentities[wepslot];
+				if(actor.(wepent) && actor.(wepent).m_weapon != WEP_Null)
+				{
+					if(ATTACK_FINISHED(actor, wepent) > time + actor.(wepent).weapon_frametime * 0.5)
+						continue; // still cooling down!
+					if (ATTACK_FINISHED(actor, wepent) < time - actor.(wepent).weapon_frametime * 1.5)
+						ATTACK_FINISHED(actor, wepent) = time;
+					ATTACK_FINISHED(actor, wepent) = ATTACK_FINISHED(actor, wepent) + (attacktime * arate) / MAX_WEAPONSLOTS;
+				}
+			}
+		}
 	}
 	this.bulletcounter += 1;
-	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, slot)), "\n");
+	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, weaponentity)), "\n");
 }
 
 bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bool secondary, float attacktime)
@@ -347,6 +366,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
+		// this can happen when the weapon entity is newly spawned, since it has a clear state and no previous weapon frame
+		if (this.wframe == WFRAME_DONTCHANGE)
+			this.wframe = WFRAME_IDLE;
 		fr = this.wframe;
 		restartanim = false;
 	}
@@ -355,22 +377,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		restartanim = fr != WFRAME_IDLE;
 	}
 
-	vector of = v_forward;
-	vector or = v_right;
-	vector ou = v_up;
-
-	vector a = '0 0 0';
     this.wframe = fr;
-    if (fr == WFRAME_IDLE) a = this.anim_idle;
-    else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
-    else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
-    else  // if (fr == WFRAME_RELOAD)
-        a = this.anim_reload;
-    a.z *= g_weaponratefactor;
-
-	v_forward = of;
-	v_right = or;
-	v_up = ou;
 
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
@@ -397,7 +404,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	{
 		FOREACH_CLIENT(true, {
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
-				wframe_send(it, this, a, restartanim);
+				wframe_send(it, this, fr, g_weaponratefactor, restartanim);
 		});
 	}
 
@@ -417,14 +424,43 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	}
 }
 
-bool forbidWeaponUse(entity player)
+bool weaponUseForbidden(entity player)
+{
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
+	if (MUTATOR_CALLHOOK(ForbidWeaponUse, player)) return true;
+	return false;
+}
+
+bool weaponLocked(entity player)
 {
 	if (time < game_starttime && !sv_ready_restart_after_countdown) return true;
 	if (player.player_blocked) return true;
 	if (game_stopped) return true;
 	if (STAT(FROZEN, player)) return true;
-	if (MUTATOR_CALLHOOK(ForbidWeaponUse, player)) return true;
+	if (MUTATOR_CALLHOOK(LockWeapon, player)) return true;
 	return false;
+}
+
+void W_ResetGunAlign(entity player, int preferred_alignment)
+{
+	if(W_DualWielding(player))
+		preferred_alignment = 3; // right align, the second gun will default to left
+
+	// clear current weapon slots' alignments so we can redo the calculations!
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = 0;
+	}
+
+	// now set the new values
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = W_GunAlign(player.(weaponentity), preferred_alignment);
+	}
 }
 
 .bool hook_switchweapon;
@@ -436,15 +472,15 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	entity this = actor.(weaponentity);
 	if (frametime) this.weapon_frametime = frametime;
 
-	if (!this || GetResourceAmount(actor, RESOURCE_HEALTH) < 1) return;  // Dead player can't use weapons and injure impulse commands
+	if (!this || GetResource(actor, RES_HEALTH) < 1) return;  // Dead player can't use weapons and injure impulse commands
 
 	int button_atck = PHYS_INPUT_BUTTON_ATCK(actor);
 	int button_atck2 = PHYS_INPUT_BUTTON_ATCK2(actor);
 
-	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if (weaponUseForbidden(actor))
 		button_atck = button_atck2 = 0; // forbid primary and secondary fire, switching is allowed
 
-	if (forbidWeaponUse(actor))
+	if (weaponLocked(actor))
 	{
 		if (this.state != WS_CLEAR)
 		{
@@ -482,10 +518,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		return;
 	}
 
-	makevectors(actor.v_angle);
-	vector fo = v_forward;  // save them in case the weapon think functions change it
-	vector ri = v_right;
-	vector up = v_up;
+	vector fo, ri, up;
+	MAKE_VECTORS(actor.v_angle, fo, ri, up);
 
 	// Change weapon
 	if (this.m_weapon != this.m_switchweapon)
@@ -538,7 +572,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				entity oldwep = this.m_weapon;
 
 				// set up weapon switch think in the future, and start drop anim
-				if (INDEPENDENT_ATTACK_FINISHED || ATTACK_FINISHED(actor, weaponslot(weaponentity)) <= time + this.weapon_frametime * 0.5)
+				if (INDEPENDENT_ATTACK_FINISHED || ATTACK_FINISHED(actor, weaponentity) <= time + this.weapon_frametime * 0.5)
 				{
 					sound(actor, CH_WEAPON_SINGLE, SND_WEAPON_SWITCH, VOL_BASE, ATTN_NORM);
 					this.state = WS_DROP;
@@ -551,7 +585,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 
 	// LordHavoc: network timing test code
 	// if (actor.button0)
-	//	print(ftos(frametime), " ", ftos(time), " >= ", ftos(ATTACK_FINISHED(actor, slot)), " >= ", ftos(this.weapon_nextthink), "\n");
+	//	print(ftos(frametime), " ", ftos(time), " >= ", ftos(ATTACK_FINISHED(actor, weaponentity)), " >= ", ftos(this.weapon_nextthink), "\n");
 
 	Weapon w = this.m_weapon;
 
@@ -573,7 +607,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		bool block_weapon = false;
 		{
 			bool key_pressed = PHYS_INPUT_BUTTON_HOOK(actor) && !actor.vehicle;
-			if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+			if (weaponUseForbidden(actor))
 				key_pressed = false;
 
 			Weapon off = actor.offhand;
@@ -662,7 +696,7 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponentity)
 {
 	if (MUTATOR_CALLHOOK(W_DecreaseAmmo, actor, actor.(weaponentity), ammo_use)) return;
-	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO) && !wep.reloading_ammo) return;
+	if ((actor.items & IT_UNLIMITED_AMMO) && !wep.reloading_ammo) return;
 
 	ammo_use = M_ARGV(2, float);
 
@@ -674,14 +708,14 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 		w_ent.clip_load -= ammo_use;
 		w_ent.(weapon_load[w_ent.m_weapon.m_id]) = w_ent.clip_load;
 	}
-	else if (wep.ammo_type != RESOURCE_NONE)
+	else if (wep.ammo_type != RES_NONE)
 	{
-		float ammo = GetResourceAmount(actor, wep.ammo_type);
+		float ammo = GetResource(actor, wep.ammo_type);
 		if (ammo < ammo_use)
 		{
 			backtrace(sprintf(
 				"W_DecreaseAmmo(%.2f): '%s' subtracted too much %s from '%s', resulting with '%.2f' left... "
-				"Please notify Samual immediately with a copy of this backtrace!\n",
+				"Please notify the developers immediately with a copy of this backtrace!\n",
 				ammo_use,
 				wep.netname,
 				GetAmmoPicture(wep.ammo_type),
@@ -689,7 +723,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 				ammo
 				             ));
 		}
-		SetResourceAmount(actor, wep.ammo_type, ammo - ammo_use);
+		SetResource(actor, wep.ammo_type, ammo - ammo_use);
 	}
 }
 
@@ -709,17 +743,17 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	w_ent.clip_load = w_ent.old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || wpn.ammo_type == RESOURCE_NONE)
+	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_AMMO) || wpn.ammo_type == RES_NONE)
 	{
 		w_ent.clip_load = w_ent.reload_ammo_amount;
 	}
 	else
 	{
 		// make sure we don't add more ammo than we have
-		float ammo = GetResourceAmount(actor, wpn.ammo_type);
+		float ammo = GetResource(actor, wpn.ammo_type);
 		float load = min(w_ent.reload_ammo_amount - w_ent.clip_load, ammo);
 		w_ent.clip_load += load;
-		SetResourceAmount(actor, wpn.ammo_type, ammo - load);
+		SetResource(actor, wpn.ammo_type, ammo - load);
 	}
 	w_ent.(weapon_load[w_ent.m_weapon.m_id]) = w_ent.clip_load;
 
@@ -727,7 +761,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
 	// so your weapon is disabled for a few seconds without reason
 
-	// ATTACK_FINISHED(actor, slot) -= w_ent.reload_time - 1;
+	// ATTACK_FINISHED(actor, weaponentity) -= w_ent.reload_time - 1;
 
 	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
@@ -761,12 +795,14 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	if (this.clip_load >= this.reload_ammo_amount) return;
 
 	// no ammo, so nothing to load
-	if (e.ammo_type != RESOURCE_NONE)
+	if (e.ammo_type != RES_NONE)
 	{
-		if (!GetResourceAmount(actor, e.ammo_type) && this.reload_ammo_min)
+		if (!GetResource(actor, e.ammo_type) && this.reload_ammo_min)
 		{
-			if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+			if (!(actor.items & IT_UNLIMITED_AMMO))
 			{
+				if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0)
+					return; // in this case the primary weapon will do the switching when it runs out of ammo (TODO: do this same check but for other slots)
 				if (IS_REAL_CLIENT(actor) && actor.reload_complain < time)
 				{
 					play2(actor, SND(UNAVAILABLE));
@@ -783,7 +819,6 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 			}
 		}
 	}
-
 	if (this)
 	{
 		if (this.wframe == WFRAME_RELOAD) return;
@@ -800,7 +835,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
 	// so your weapon is disabled for a few seconds without reason
 
-	// ATTACK_FINISHED(actor, slot) = max(time, ATTACK_FINISHED(actor, slot)) + this.reload_time + 1;
+	// ATTACK_FINISHED(actor, weaponentity) = max(time, ATTACK_FINISHED(actor, weaponentity)) + this.reload_time + 1;
 
 	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, this.reload_time, W_ReloadedAndReady);
 
@@ -811,7 +846,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)
 {
-	Weapon w = Weapons_from(weapon_type);
+	Weapon w = REGISTRY_GET(Weapons, weapon_type);
 	weapon_dropevent_item = weapon_item;
 	w.event(w, player, weaponentity);
 }

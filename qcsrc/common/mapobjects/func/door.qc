@@ -113,7 +113,7 @@ void door_go_down(entity this)
 	if (this.max_health)
 	{
 		this.takedamage = DAMAGE_YES;
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	}
 
 	this.state = STATE_DOWN;
@@ -265,7 +265,7 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
 	if (this.itemkeys)
 	{
@@ -273,9 +273,9 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 		return;
 	}
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
-		SetResourceAmountExplicit(this.owner, RESOURCE_HEALTH, this.owner.max_health);
+		SetResourceExplicit(this.owner, RES_HEALTH, this.owner.max_health);
 		this.owner.takedamage = DAMAGE_NO;	// will be reset upon return
 		door_use(this.owner, attacker, NULL);
 	}
@@ -357,7 +357,7 @@ Spawned if a door lacks a real activator
 
 void door_trigger_touch(entity this, entity toucher)
 {
-	if (GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
+	if (GetResource(toucher, RES_HEALTH) < 1)
 #ifdef SVQC
 		if (!((toucher.iscreature || (toucher.flags & FL_PROJECTILE)) && !IS_DEAD(toucher)))
 #elif defined(CSQC)
@@ -441,9 +441,9 @@ void LinkDoors(entity this)
 	{
 		this.owner = this.enemy = this;
 
-		if (GetResourceAmount(this, RESOURCE_HEALTH))
+		if (GetResource(this, RES_HEALTH))
 			return;
-		IFTARGETED
+		if(this.targetname && this.targetname != "")
 			return;
 		if (this.items)
 			return;
@@ -474,8 +474,8 @@ void LinkDoors(entity this)
 	cmaxs = this.absmax;
 	for(t = this; ; t = t.enemy)
 	{
-		if(GetResourceAmount(t, RESOURCE_HEALTH) && !GetResourceAmount(this, RESOURCE_HEALTH))
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(t, RESOURCE_HEALTH));
+		if(GetResource(t, RES_HEALTH) && !GetResource(this, RES_HEALTH))
+			SetResourceExplicit(this, RES_HEALTH, GetResource(t, RES_HEALTH));
 		if((t.targetname != "") && (this.targetname == ""))
 			this.targetname = t.targetname;
 		if((t.message != "") && (this.message == ""))
@@ -499,7 +499,7 @@ void LinkDoors(entity this)
 	// distribute health, targetname, message
 	for(t = this; t; t = t.enemy)
 	{
-		SetResourceAmountExplicit(t, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
+		SetResourceExplicit(t, RES_HEALTH, GetResource(this, RES_HEALTH));
 		t.targetname = this.targetname;
 		t.message = this.message;
 		if(t.enemy == this)
@@ -509,9 +509,9 @@ void LinkDoors(entity this)
 	// shootable, or triggered doors just needed the owner/enemy links,
 	// they don't spawn a field
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH))
+	if (GetResource(this, RES_HEALTH))
 		return;
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 		return;
 	if (this.items)
 		return;
@@ -595,8 +595,6 @@ float door_send(entity this, entity to, float sf)
 
 void door_link()
 {
-	// set size now, as everything is loaded
-	//FixSize(this);
 	//Net_LinkEntity(this, false, 0, door_send);
 }
 #endif
@@ -630,7 +628,7 @@ void door_reset(entity this)
 // common code for func_door and func_door_rotating spawnfuncs
 void door_init_shared(entity this)
 {
-	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
+	this.max_health = GetResource(this, RES_HEALTH);
 
 	// unlock sound
 	if(this.noise == "")
@@ -672,10 +670,15 @@ void door_init_shared(entity this)
 		precache_sound(this.noise2);
 	}
 
-	if (!this.wait)
-	{
-		this.wait = 3;
-	}
+        if(autocvar_sv_doors_always_open)
+        {
+                 this.wait = -1;
+        }
+        else if (!this.wait)
+        {
+              	this.wait = 3;
+        }
+
 	if (!this.lip)
 	{
 		this.lip = 8;
@@ -683,7 +686,7 @@ void door_init_shared(entity this)
 
 	this.state = STATE_BOTTOM;
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH))
+	if (GetResource(this, RES_HEALTH))
 	{
 		//this.canteamdamage = true; // TODO
 		this.takedamage = DAMAGE_YES;
@@ -715,9 +718,6 @@ spawnfunc(func_door)
 	setblocked(this, door_blocked);
 	this.use = door_use;
 
-	this.pos1 = this.origin;
-	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
-
 	if(this.spawnflags & DOOR_NONSOLID)
 		this.solid = SOLID_NOT;
 
@@ -728,10 +728,20 @@ spawnfunc(func_door)
 
 	door_init_shared(this);
 
-	if (!this.speed)
-	{
-		this.speed = 100;
-	}
+	this.pos1 = this.origin;
+	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+
+        if(autocvar_sv_doors_always_open)
+        {
+                this.speed = max(750, this.speed);
+        }
+        else if (!this.speed)
+        {
+		if (autocvar_sv_q3defragcompat)
+			this.speed = 400;
+		else
+	                this.speed = 100;
+        }
 
 	settouch(this, door_touch);
 

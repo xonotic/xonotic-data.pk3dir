@@ -127,8 +127,6 @@ string autocvar_hud_colorset_background = "7";   // BG - White // neutral/unimpo
 /** color code replace, place inside of sprintf and parse the string */
 string CCR(string input)
 {
-	// See the autocvar declarations in util.qh for default values
-
 	// foreground/normal colors
 	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
 	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
@@ -297,7 +295,7 @@ int u8_strsize(string s)
 	return l;
 }
 
-//List of Unicode spaces: https://www.cs.tut.fi/~jkorpela/chars/spaces.html
+// List of Unicode spaces: http://jkorpela.fi/chars/spaces.html
 ERASEABLE
 bool isInvisibleString(string s)
 {

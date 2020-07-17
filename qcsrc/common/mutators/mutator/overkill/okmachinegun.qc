@@ -13,7 +13,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 	}
 
 	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -45,8 +45,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor, weaponentity);
 	}
 
-	int slot = weaponslot(weaponentity);
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(okmachinegun, refire) * W_WeaponRateFactor(actor);
+	ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(okmachinegun, refire) * W_WeaponRateFactor(actor);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okmachinegun, refire), W_OverkillMachineGun_Attack_Auto);
 }
 
@@ -54,8 +53,6 @@ METHOD(OverkillMachineGun, wr_aim, void(entity thiswep, entity actor, .entity we
 {
 	if(vdist(actor.origin - actor.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
 		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
-	else
-		PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 }
 
 METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -69,14 +66,11 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
 			// Set secondary fire animation.
-			vector a = '0 0 0';
 			actor.(weaponentity).wframe = WFRAME_FIRE2;
-			a = actor.(weaponentity).anim_fire2;
-			a.z *= g_weaponratefactor;
 			FOREACH_CLIENT(true, LAMBDA(
 				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
 				{
-					wframe_send(it, actor.(weaponentity), a, true);
+					wframe_send(it, actor.(weaponentity), WFRAME_FIRE2, g_weaponratefactor, true);
 				}
 			));
 			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
@@ -112,7 +106,7 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 METHOD(OverkillMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount;
-	ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okmachinegun, ammo);
+	ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okmachinegun, ammo);
 	if (WEP_CVAR(okmachinegun, reload_ammo))
 	{
 		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_MACHINEGUN.m_id]) >= WEP_CVAR_PRI(okmachinegun, ammo);

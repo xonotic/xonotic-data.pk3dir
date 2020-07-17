@@ -85,7 +85,7 @@
 
 		NET_HANDLE(globalsound, bool isnew)
 		{
-			entity gs = GlobalSounds_from(ReadByte());
+			entity gs = REGISTRY_GET(GlobalSounds, ReadByte());
 			float r = ReadByte() / 255;
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
@@ -112,7 +112,7 @@
 
 		NET_HANDLE(playersound, bool isnew)
 		{
-			entity ps = PlayerSounds_from(ReadByte());
+			entity ps = REGISTRY_GET(PlayerSounds, ReadByte());
 			float r = ReadByte() / 255;
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);
@@ -263,7 +263,7 @@
 				if (GetPlayerSoundSampleField_notFound) field = GetVoiceMessageSampleField(key);
 				if (GetPlayerSoundSampleField_notFound)
 				{
-					LOG_TRACEF("Invalid sound info field: %s", key);
+					LOG_TRACEF("Invalid sound info field in player sound file '%s': %s", f, key);
 					continue;
 				}
 				string file = argv(1);
@@ -288,9 +288,9 @@
 			LoadPlayerSounds(this, "sound/player/default.sounds", true);
 			if (this.model == "null"
 			#ifdef SVQC
-			    && autocvar_g_debug_globalsounds
+				&& autocvar_g_debug_globalsounds
 			#endif
-			 ) return;
+			) return;
 			if (autocvar_g_debug_defaultsounds) return;
 			if (LoadPlayerSounds(this, get_model_datafilename(this.model, this.skin, "sounds"), false)) return;
 			LoadPlayerSounds(this, get_model_datafilename(this.model, 0, "sounds"), true);
@@ -337,12 +337,11 @@
 				{
 					#define X() \
 						MACRO_BEGIN \
-						{ \
 							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
 							else soundto(MSG_ONE, this, chan, sample, vol, atten); \
-						} MACRO_END
+						MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
 					else
@@ -352,33 +351,37 @@
 							X();
 						});
 					}
-		#undef X
+					#undef X
 					break;
 				}
 				case VOICETYPE_AUTOTAUNT:
 				case VOICETYPE_TAUNT:
 				{
-					if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) { break; }else {}
-					else if (IS_PLAYER(this) && !IS_DEAD(this)) animdecide_setaction(this, ANIMACTION_TAUNT,
-							true);
+					if (voicetype == VOICETYPE_AUTOTAUNT)
+					{
+						if (!sv_autotaunt) break;
+					}
+					else if (IS_PLAYER(this) && !IS_DEAD(this))
+						animdecide_setaction(this, ANIMACTION_TAUNT, true);
+
 					if (!sv_taunt) break;
 					if (autocvar_sv_gentle) break;
 					float tauntrand = 0;
 					if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
+
 					#define X() \
 						MACRO_BEGIN \
-						{ \
 							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < CS(msg_entity).cvar_cl_autotaunt) \
 							{ \
 								float atten = (CS(msg_entity).cvar_cl_voice_directional >= 1) \
-								    ? bound(ATTEN_MIN, CS(msg_entity).cvar_cl_voice_directional_taunt_attenuation, \
+									? bound(ATTEN_MIN, CS(msg_entity).cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
 								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
 								else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
 								else soundto(MSG_ONE, this, chan, sample, vol, atten); \
 							} \
-						} MACRO_END
+						MACRO_END
 					if (fake)
 					{
 						msg_entity = this;
@@ -391,7 +394,7 @@
 							X();
 						});
 					}
-		#undef X
+					#undef X
 					break;
 				}
 				case VOICETYPE_PLAYERSOUND:

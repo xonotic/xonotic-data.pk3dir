@@ -14,7 +14,7 @@ void W_OverkillRocketPropelledChainsaw_Explode(entity this, entity directhitenti
 	{
 		// if chainsaw hit something, it removed fired damage (so that direct hit is 100%)
 		// now that we also damaged something by explosion we'd go over 100% so let's add the fired damage back
-		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, WEP_CVAR(okrpc, damage), 0);
+		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), WEP_CVAR(okrpc, damage), 0);
 	}
 
 	delete(this);
@@ -36,15 +36,15 @@ void W_OverkillRocketPropelledChainsaw_Touch (entity this, entity toucher)
 
 void W_OverkillRocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_OverkillRocketPropelledChainsaw_Explode_think);
 }
 
@@ -71,7 +71,7 @@ void W_OverkillRocketPropelledChainsaw_Think(entity this)
 				// We remove it here so that a direct hit that passes through and doesn't damage anything by the explosion later is still 100%.
 				float fired_damage = WEP_CVAR_PRI(okrpc, damage2) - WEP_CVAR_PRI(okrpc, damage);
 				float hit_damage = WEP_CVAR_PRI(okrpc, damage2);
-				accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, fired_damage, hit_damage);
+				accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), fired_damage, hit_damage);
 			}
 			this.m_chainsaw_damage += WEP_CVAR_PRI(okrpc, damage2);
 		}
@@ -100,7 +100,7 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR_PRI(okrpc, damageforcescale);
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_PRI(okrpc, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_PRI(okrpc, health));
 	missile.event_damage = W_OverkillRocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -149,14 +149,11 @@ METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity ac
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
 			// Set secondary fire animation.
-			vector a = '0 0 0';
 			actor.(weaponentity).wframe = WFRAME_FIRE2;
-			a = actor.(weaponentity).anim_fire2;
-			a.z *= g_weaponratefactor;
 			FOREACH_CLIENT(true, LAMBDA(
 				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
 				{
-					wframe_send(it, actor.(weaponentity), a, true);
+					wframe_send(it, actor.(weaponentity), WFRAME_FIRE2, g_weaponratefactor, true);
 				}
 			));
 			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
@@ -191,14 +188,14 @@ METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity ac
 
 METHOD(OverkillRocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okrpc, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okrpc, ammo);
 	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(okrpc, ammo);
 	return ammo_amount;
 }
 
 METHOD(OverkillRocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okrpc, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okrpc, ammo);
 	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(okrpc, ammo);
 	return ammo_amount;
 }

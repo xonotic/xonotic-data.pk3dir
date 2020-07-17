@@ -152,6 +152,8 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 			if(latency)
 				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
+
+		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
 	}
 
 	strfree(p.playerstats_id);
@@ -376,6 +378,10 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 					url_fputs(fh, sprintf("t %s\n", tt));
 				}
 
+				// elo ranking enabled
+				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_ranked", p));
+				if(nn != "") { url_fputs(fh, sprintf("r %s\n", nn)); }
+
 				// output player events
 				for(e = PS_GR_OUT_EVL; (en = db_get(PS_GR_OUT_DB, sprintf("*:%s", e))) != ""; e = en)
 				{
@@ -481,6 +487,21 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 
 			FOREACH_CLIENT(IS_REAL_CLIENT(it), it.playerstats_basicstatus = PS_B_STATUS_IDLE);
 		}
+	}
+}
+
+SHUTDOWN(PlayerStats_PlayerBasic_Shutdown)
+{
+	if(PS_B_IN_DB >= 0)
+	{
+		db_close(PS_B_IN_DB);
+		PS_B_IN_DB = -1;
+	}
+
+	if(PS_GR_OUT_DB >= 0)
+	{
+		db_close(PS_GR_OUT_DB);
+		PS_GR_OUT_DB = -1;
 	}
 }
 

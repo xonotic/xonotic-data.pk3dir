@@ -18,11 +18,11 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
     TC(WyvernAttack, thiswep);
     if (fire & 1)
     if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
+    	monster_makevectors(actor, actor.enemy);
         if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_WYVERN.m_id);
 		if (IS_MONSTER(actor)) {
 			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;
-			monster_makevectors(actor, actor.enemy);
 		}
 
 		entity missile = spawn();
@@ -152,7 +152,7 @@ METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
 METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 {
     TC(Wyvern, this);
-    if(!GetResourceAmount(this, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_wyvern_health);
+    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_wyvern_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_wyvern_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_wyvern_speed_run); }
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }

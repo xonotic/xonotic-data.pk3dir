@@ -4,6 +4,7 @@
 #include <server/miscfunctions.qh>
 #include "pathlib.qh"
 #include "utility.qh"
+#include <common/turrets/util.qh>
 #include "../command/common.qh"
 
 void pathlib_deletepath(entity start)
@@ -288,7 +289,7 @@ void pathlib_cleanup()
 
 float Cosine_Interpolate(float a, float b, float c)
 {
-	float ft = c * 3.1415927;
+	float ft = c * M_PI;
 	float f = (1 - cos(ft)) * 0.5;
 
 	return a*(1-f) + b*f;
