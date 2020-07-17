@@ -5,8 +5,11 @@
 #include <server/items.qh>
 #include <server/resources.qh>
 #include <common/t_items.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mapobjects/trigger/counter.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/notifications/all.qh>
 #include <common/weapons/_all.qh>
 
 //***********************
@@ -57,10 +60,7 @@ SPAWNFUNC_ITEM(item_armor_shard, ITEM_ArmorSmall)
 SPAWNFUNC_ITEM(item_enviro, ITEM_Shield)
 
 // medkit -> armor (we have no holdables)
-SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorMega)
-
-// doubler -> strength
-SPAWNFUNC_ITEM(item_doubler, ITEM_Strength)
+SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorBig)
 
 .float wait;
 .float delay;
@@ -101,25 +101,44 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 4))
 	{
-		SetResource(actor, RES_SHELLS, start_ammo_shells);
-		SetResource(actor, RES_BULLETS, start_ammo_nails);
-		SetResource(actor, RES_ROCKETS, start_ammo_rockets);
-		SetResource(actor, RES_CELLS, start_ammo_cells);
-		SetResource(actor, RES_PLASMA, start_ammo_plasma);
-		SetResource(actor, RES_FUEL, start_ammo_fuel);
-
-		STAT(WEAPONS, actor) = start_weapons;
-		if (this.spawnflags & 32)
+		if(this.spawnflags & 32) // spawn with only melee
 		{
-			// TODO
+			SetResource(actor, RES_SHELLS, 0);
+			SetResource(actor, RES_BULLETS, 0);
+			SetResource(actor, RES_ROCKETS, 0);
+			SetResource(actor, RES_CELLS, 0);
+			SetResource(actor, RES_PLASMA, 0);
+			SetResource(actor, RES_FUEL, 0);
+
+			STAT(WEAPONS, actor) = WEPSET(SHOTGUN);
+		}
+		else
+		{
+			SetResource(actor, RES_SHELLS, start_ammo_shells);
+			SetResource(actor, RES_BULLETS, start_ammo_nails);
+			SetResource(actor, RES_ROCKETS, start_ammo_rockets);
+			SetResource(actor, RES_CELLS, start_ammo_cells);
+			SetResource(actor, RES_PLASMA, start_ammo_plasma);
+			SetResource(actor, RES_FUEL, start_ammo_fuel);
+
+			STAT(WEAPONS, actor) = start_weapons;
 		}
 	}
 
 	if (!(this.spawnflags & 8))
 	{
-		actor.strength_finished = 0;
-		actor.invincible_finished = 0;
-		STAT(BUFFS, actor) = 0;
+		STAT(STRENGTH_FINISHED, actor) = 0;
+		STAT(INVINCIBLE_FINISHED, actor) = 0;
+		if(STAT(BUFFS, actor)) // TODO: make a dropbuffs function to handle this
+		{
+			int buffid = buff_FirstFromFlags(STAT(BUFFS, actor)).m_id;
+			Send_Notification(NOTIF_ONE, actor, MSG_MULTI, ITEM_BUFF_DROP, buffid);
+			sound(actor, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+			if(!IS_INDEPENDENT_PLAYER(actor))
+				Send_Notification(NOTIF_ALL_EXCEPT, actor, MSG_INFO, INFO_ITEM_BUFF_LOST, actor.netname, buffid);
+			STAT(BUFFS, actor) = 0;
+			STAT(BUFF_TIME, actor) = 0;
+		}
 	}
 
 	if (!(this.spawnflags & 16))
@@ -165,10 +184,20 @@ void target_give_init(entity this)
 			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "mortar");
 		}
+		else if (it.classname == "weapon_shotgun") {
+			SetResourceExplicit(this, RES_SHELLS, GetResource(this, RES_SHELLS) + it.count * WEP_CVAR_PRI(shotgun, ammo)); // WEAPONTODO
+			this.netname = cons(this.netname, "shotgun");
+		}
 		else if (it.classname == "item_armor_mega")
 			SetResourceExplicit(this, RES_ARMOR, 100);
 		else if (it.classname == "item_health_mega")
 			SetResourceExplicit(this, RES_HEALTH, 200);
+		else if (it.classname == "item_buff") {
+			entity buff = buff_FirstFromFlags(STAT(BUFFS, it));
+			this.netname = cons(this.netname, buff.netname);
+			STAT(BUFF_TIME, this) = it.count;
+		}
+
 		//remove(it); // removing ents in init functions causes havoc, workaround:
         setthink(it, SUB_Remove);
         it.nextthink = time;
@@ -216,6 +245,7 @@ spawnfunc(target_fragsFilter)
 }
 
 //spawnfunc(item_flight)       /* handled by buffs mutator */
+//spawnfunc(item_doubler)        /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
 //spawnfunc(item_health_large) /* handled in t_items.qc */
@@ -265,11 +295,13 @@ bool DoesQ3ARemoveThisEntity(entity this)
 			gametypename = "team";
 		if(g_ctf)
 			gametypename = "ctf";
+		if(g_ctf && ctf_oneflag)
+			gametypename = "oneflag";
 		if(g_duel)
 			gametypename = "tournament";
 		if(maxclients == 1)
 			gametypename = "single";
-		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
+		// we do not have the other types (obelisk, harvester, teamtournament)
 		if(strstrofs(this.gametype, gametypename, 0) < 0)
 			return true;
 	}

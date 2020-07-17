@@ -147,7 +147,7 @@ bool CA_CheckTeams()
 
 bool ca_isEliminated(entity e)
 {
-	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_LMS_LOSER))
+	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
 	if(e.caplayer == 0.5)
 		return true;
@@ -312,7 +312,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
-		player.frags = FRAGS_LMS_LOSER;
+		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	if (!player.caplayer)
@@ -333,7 +333,7 @@ MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 {
-	start_items       &= ~IT_UNLIMITED_AMMO;
+	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
 	start_health       = warmup_start_health       = cvar("g_lms_start_health");
 	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
@@ -377,6 +377,9 @@ MUTATOR_HOOKFUNCTION(ca, FilterItem)
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 {
+	if (time < game_starttime || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
+		return;
+
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_damage = M_ARGV(7, float);
@@ -483,11 +486,6 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(ca, WantWeapon)
-{
-	M_ARGV(2, bool) = true; // all weapons
-}
-
 MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
 {
 	return true; // doesn't work well with the whole spectator as player thing
@@ -502,6 +500,14 @@ MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 {
-	// most weapons arena
-	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
+	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+		M_ARGV(0, string) = autocvar_g_ca_weaponarena;
+}
+
+MUTATOR_HOOKFUNCTION(ca, SV_ParseServerCommand)
+{
+	string cmd_name = M_ARGV(0, string);
+	if (cmd_name == "shuffleteams")
+		shuffleteams_on_reset_map = !allowed_to_spawn;
+	return false;
 }

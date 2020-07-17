@@ -16,10 +16,16 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define GAMEPLAYFIX_DOWNTRACEONGROUND(s)    STAT(GAMEPLAYFIX_DOWNTRACEONGROUND)
 #define GAMEPLAYFIX_EASIERWATERJUMP(s)      STAT(GAMEPLAYFIX_EASIERWATERJUMP)
 #define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN)
+#define GAMEPLAYFIX_STEPDOWN_MAXSPEED(s)    STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED)
 #define GAMEPLAYFIX_STEPMULTIPLETIMES(s)    STAT(GAMEPLAYFIX_STEPMULTIPLETIMES)
 #define GAMEPLAYFIX_UNSTICKPLAYERS(s)       STAT(GAMEPLAYFIX_UNSTICKPLAYERS)
 #define GAMEPLAYFIX_WATERTRANSITION(s) 		STAT(GAMEPLAYFIX_WATERTRANSITION)
+#define GAMEPLAYFIX_SLIDEMOVEPROJECTILES(s) STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES)
+#define GAMEPLAYFIX_GRENADEBOUNCESLOPES(s) 	STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES)
+#define GAMEPLAYFIX_NOAIRBORNCORPSE(s) 		STAT(GAMEPLAYFIX_NOAIRBORNCORPSE)
+#define NOAIRBORNCORPSE_ALLOWSUSPENDED(s) 	STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED)
 #define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
+
 
 #define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT)
 #define PHYS_NOSTEP(s)                      STAT(NOSTEP)
@@ -85,8 +91,12 @@ const int UNSTICK_FINE = 0;
 const int UNSTICK_FIXED = 1;
 const int UNSTICK_STUCK = 2;
 
+// set by _Movetype_FlyMove
+vector move_stepnormal;
+
+bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot);
 void _Movetype_WallFriction(entity this, vector stepnormal);
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight);
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
 void _Movetype_CheckVelocity(entity this);
 void _Movetype_CheckWaterTransition(entity ent);
 void _Movetype_CheckStuck(entity this);
@@ -133,6 +143,7 @@ const int MOVETYPE_ANGLECLIP        = 2;
 #endif
 
 const int MOVETYPE_QCPLAYER = 150; // QC-driven player physics, no think functions!
+const int MOVETYPE_QCENTITY = 151; // QC-driven entity physics, some think functions!
 
 const int FL_ONSLICK = BIT(20);
 

@@ -1,13 +1,11 @@
 #include "walk.qh"
 void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 {
-	vector stepnormal = '0 0 0';
-
 	// if frametime is 0 (due to client sending the same timestamp twice), don't move
 	if (dt <= 0)
 		return;
 
-	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
+	if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 1)
 		_Movetype_CheckStuck(this);
 
 	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.flags & FL_WATERJUMP));
@@ -28,7 +26,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			this.pm_time -= dt;
 	}
 
-	int clip = _Movetype_FlyMove(this, dt, applygravity, stepnormal, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
+	int clip = _Movetype_FlyMove(this, dt, applygravity, false, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
 
 	if (GAMEPLAYFIX_DOWNTRACEONGROUND(this) && !(clip & 1))
 	{
@@ -108,7 +106,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 		// move forward
 		this.velocity_z = 0;
-		clip = _Movetype_FlyMove(this, dt, applygravity, stepnormal, 0);
+		clip = _Movetype_FlyMove(this, dt, applygravity, true, 0);
 		this.velocity_z += start_velocity.z;
 		if (clip & 8)
 		{
@@ -142,10 +140,11 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 		// extra friction based on view angle
 		if ((clip & 2) && PHYS_WALLFRICTION(this))
-			_Movetype_WallFriction(this, stepnormal);
+			_Movetype_WallFriction(this, move_stepnormal);
 	}
 	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
-	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !oldonground || IS_ONGROUND(this))
+	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) 
+				|| !oldonground || IS_ONGROUND(this) || (GAMEPLAYFIX_STEPDOWN_MAXSPEED(this) && vdist(start_velocity, >=, GAMEPLAYFIX_STEPDOWN_MAXSPEED(this)) && !IS_ONSLICK(this)))
 	{
 		return;
 	}

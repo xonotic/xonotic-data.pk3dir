@@ -78,7 +78,7 @@ bool Monster_ValidTarget(entity this, entity targ)
 
 	if((targ == this)
 	|| (autocvar_g_monsters_lineofsight && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
-	|| (IS_VEHICLE(targ) && !((Monsters_from(this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
+	|| (IS_VEHICLE(targ) && !((REGISTRY_GET(Monsters, this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| (time < game_starttime) // monsters do nothing before match has started
 	|| (targ.takedamage == DAMAGE_NO)
 	|| (game_stopped)
@@ -189,7 +189,11 @@ void monster_changeteam(entity this, int newteam)
 .void(entity) monster_delayedfunc;
 void Monster_Delay_Action(entity this)
 {
-	if(Monster_ValidTarget(this.owner, this.owner.enemy)) { this.monster_delayedfunc(this.owner); }
+	if(Monster_ValidTarget(this.owner, this.owner.enemy))
+	{
+		monster_makevectors(this.owner, this.owner.enemy);
+		this.monster_delayedfunc(this.owner);
+	}
 
 	if(this.cnt > 1)
 	{
@@ -256,7 +260,7 @@ void Monster_Sound_Precache(string f)
 
 void Monster_Sounds_Precache(entity this)
 {
-	string m = (Monsters_from(this.monsterid)).m_model.model_str();
+	string m = (REGISTRY_GET(Monsters, this.monsterid)).m_model.model_str();
 	float globhandle, n, i;
 	string f;
 
@@ -359,8 +363,6 @@ bool Monster_Attack_Melee(entity this, entity targ, float damg, vector anim, flo
 	else
 		this.attack_finished_single[0] = this.anim_finished = time + animtime;
 
-	monster_makevectors(this, targ);
-
 	traceline(this.origin + this.view_ofs, this.origin + v_forward * er, 0, this);
 
 	if(trace_ent.takedamage)
@@ -424,6 +426,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if(vdist(targ.origin - this.origin, <=, this.attack_range))
 	{
+		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
@@ -433,6 +436,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if(vdist(targ.origin - this.origin, >, this.attack_range))
 	{
+		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
@@ -461,7 +465,7 @@ void Monster_UpdateModel(entity this)
 	this.anim_die2   = animfixfps(this, '9 1 0.01', '0 0 0');*/
 
 	// then get the real values
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_anim(mon, this);
 }
 
@@ -973,7 +977,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	CSQCModel_UnlinkEntity(this);
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_death(mon, this);
 
 	if(this.candrop && this.weapon)
@@ -1004,7 +1008,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	float take = v.x;
 	//float save = v.y;
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	take = mon.mr_pain(mon, this, take, attacker, deathtype);
 
 	if(take)
@@ -1095,15 +1099,12 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	if(trace_ent && IS_MONSTER(trace_ent))
 		reverse = true;
 
-	// TODO: fix this... tracing is broken if the floor is thin
-	/*
-	if(!allow_jumpoff)
+	if(!allow_jumpoff && IS_ONGROUND(this))
 	{
-		a = b - '0 0 32';
-		traceline(b, a, MOVE_WORLDONLY, this);
+		traceline(b, b - '0 0 32', MOVE_NORMAL, this);
 		if(trace_fraction == 1.0)
 			reverse = true;
-	} */
+	}
 
 	if(reverse)
 	{
@@ -1165,7 +1166,8 @@ void Monster_Frozen_Think(entity this)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
 		SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
-		this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
+		if (this.iceblock)
+			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
 			WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
@@ -1234,7 +1236,7 @@ void Monster_Think(entity this)
 		this.last_enemycheck = time + 1; // check for enemies every second
 	}
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	if(mon.mr_think(mon, this))
 	{
 		Monster_Move(this, this.speed2, this.speed, this.stopspeed);
@@ -1250,7 +1252,7 @@ void Monster_Think(entity this)
 
 bool Monster_Spawn_Setup(entity this)
 {
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_setup(mon, this);
 
 	// ensure some basic needs are met
@@ -1316,12 +1318,12 @@ bool Monster_Spawn_Setup(entity this)
 bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 {
 	// setup the basic required properties for a monster
-	entity mon = Monsters_from(mon_id);
+	entity mon = REGISTRY_GET(Monsters, mon_id);
 	if(!mon.monsterid) { return false; } // invalid monster
 
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
-	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED) && !(this.flags & FL_MONSTER))
 	{
 		IL_PUSH(g_monsters, this);
 		if(this.mdl && this.mdl != "")

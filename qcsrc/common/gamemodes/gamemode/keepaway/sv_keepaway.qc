@@ -1,6 +1,7 @@
 #include "sv_keepaway.qh"
 
 #include <common/effects/all.qh>
+#include <server/gamelog.qh>
 
 .entity ballcarried;
 
@@ -348,6 +349,12 @@ MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
 {
 	M_ARGV(2, float) = 0; // no frags counted in keepaway
 	return true; // you deceptive little bugger ;3 This needs to be true in order for this function to even count.
+}
+
+MUTATOR_HOOKFUNCTION(ka, Scores_CountFragsRemaining)
+{
+	// announce remaining frags, but only when timed scoring is off
+	return !autocvar_g_keepaway_score_timepoints;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)

@@ -11,6 +11,7 @@
 #include "command/sv_cmd.qh"
 #include "command/vote.qh"
 #include "g_hook.qh"
+#include <server/gamelog.qh>
 #include "ipban.qh"
 #include "mapvoting.qh"
 #include <server/mutators/_mod.qh>
@@ -259,6 +260,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca");
 		BADCVAR("g_ca_teams");
 		BADCVAR("g_conquest");
+		BADCVAR("g_conquest_teams");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
 		BADCVAR("g_dotc");
@@ -266,6 +268,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_duel");
+		BADCVAR("g_duel_not_dm_maps");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
@@ -283,15 +286,22 @@ void cvar_changes_init()
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
 		BADCVAR("g_runematch");
+		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
+		BADCVAR("g_survival");
+		BADCVAR("g_survival_not_dm_maps");
 		BADCVAR("g_tdm");
+		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_settemp_acl");
 		BADCVAR("g_mapinfo_ignore_warnings");
+		BADCVAR("g_maplist_ignore_sizes");
+		BADCVAR("g_maplist_sizes_count_bots");
 
 		// long
 		BADCVAR("hostname");
@@ -320,45 +330,61 @@ void cvar_changes_init()
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("condump_stripcolors");
 		BADCVAR("gameversion");
+		BADCVAR("fs_gamedir");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_buffs_pickup_anyway");
 		BADCVAR("g_buffs_randomize");
+		BADCVAR("g_buffs_randomize_teamplay");
 		BADCVAR("g_campcheck_distance");
+		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
+		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADPRESUFFIX("g_ctf_flag_", "_model");
+		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_glowtrails");
 		BADCVAR("g_hats");
+		BADCVAR("g_casings");
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
+		BADCVAR("g_keepaway_ballcarrier_effects");
+		BADCVAR("g_keepawayball_effects");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_new_toys_autoreplace");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
 		BADCVAR("g_piggyback");
 		BADCVAR("g_playerclip_collisions");
+		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
+		BADCVAR("sv_announcer");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
 		BADCVAR("sv_intermission_cdtrack");
+		BADCVAR("sv_mapchange_delay");
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_radio");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
 		BADCVAR("sv_weapons_modeloverride");
 		BADCVAR("w_prop_interval");
+		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
@@ -387,6 +413,7 @@ void cvar_changes_init()
 		//   :%s,//\([^ ]*\).*,BADCVAR("\1");,
 		//   :%!sort
 		// yes, this does contain some redundant stuff, don't really care
+		BADPREFIX("bot_ai_");
 		BADCVAR("bot_config_file");
 		BADCVAR("bot_number");
 		BADCVAR("bot_prefix");
@@ -402,6 +429,7 @@ void cvar_changes_init()
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
+		BADCVAR("g_ctf_fullbrightflags");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
@@ -421,6 +449,9 @@ void cvar_changes_init()
 		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
+		BADCVAR("g_player_brightness");
+		BADCVAR("g_rocket_flying");
+		BADCVAR("g_rocket_flying_disabledelays");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
@@ -473,6 +504,19 @@ void cvar_changes_init()
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
+
+		// temporary for testing
+		// TODO remove before 0.8.3 release
+		BADCVAR("g_ca_weaponarena");
+		BADCVAR("g_freezetag_weaponarena");
+		BADCVAR("g_lms_weaponarena");
+		BADCVAR("g_ctf_stalemate_time");
+
+		if(cvar_string("g_mod_balance") == "Testing")
+		{
+			// (temporary) while using the Testing balance, any weapon balance cvars are allowed to be changed
+			BADPREFIX("g_balance_");
+		}
 
 #undef BADPRESUFFIX
 #undef BADPREFIX
@@ -536,9 +580,6 @@ spawnfunc(__init_dedicated_server)
 	// handler for _init/_init map (only for dedicated server initialization)
 
 	world_initialized = -1; // don't complain
-	cvar = cvar_normal;
-	cvar_string = cvar_string_normal;
-	cvar_set = cvar_set_normal;
 
 	delete_fn = remove_unsafely;
 
@@ -648,8 +689,8 @@ spawnfunc(worldspawn)
 			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
 			// restore csqc_progname too
 			string expect = "csprogs.dat";
-			wantrestart = cvar_string_normal("csqc_progname") != expect;
-			cvar_set_normal("csqc_progname", expect);
+			wantrestart = cvar_string("csqc_progname") != expect;
+			cvar_set("csqc_progname", expect);
 		}
 		else
 		{
@@ -660,9 +701,9 @@ spawnfunc(worldspawn)
 			// This always works; fall back to it if a versioned csprogs.dat is suddenly missing
 			string select = "csprogs.dat";
 			if (fexists(pk3csprogs)) select = pk3csprogs;
-			if (cvar_string_normal("csqc_progname") != select)
+			if (cvar_string("csqc_progname") != select)
 			{
-				cvar_set_normal("csqc_progname", select);
+				cvar_set("csqc_progname", select);
 				wantrestart = true;
 			}
 			// Check for updates on startup
@@ -681,13 +722,13 @@ spawnfunc(worldspawn)
 					string newprogs = sprintf("progs-%s.dat", switchversion);
 					if (fexists(newprogs))
 					{
-						cvar_set_normal("sv_progs", newprogs);
+						cvar_set("sv_progs", newprogs);
 						wantrestart = true;
 					}
 					string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
 					if (fexists(newcsprogs))
 					{
-						cvar_set_normal("csqc_progname", newcsprogs);
+						cvar_set("csqc_progname", newcsprogs);
 						wantrestart = true;
 					}
 				}
@@ -700,10 +741,6 @@ spawnfunc(worldspawn)
 			// let initialization continue, shutdown depends on it
 		}
 	}
-
-	cvar = cvar_normal;
-	cvar_string = cvar_string_normal;
-	cvar_set = cvar_set_normal;
 
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
@@ -785,8 +822,6 @@ spawnfunc(worldspawn)
 		if(this.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
 
-	precache();
-
 	WaypointSprite_Init();
 
 	GameLogInit(); // prepare everything
@@ -796,7 +831,7 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		string s = sprintf("%s.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -847,6 +882,12 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
+	if(fexists(strcat("scripts/", mapname, ".arena")))
+		cvar_settemp("sv_q3acompat_machineshotgunswap", "1");
+
+	if(fexists(strcat("scripts/", mapname, ".defi")))
+		cvar_settemp("sv_q3defragcompat", "1");
+
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
 		int fd = fopen(strcat("maps/", mapname, ".cfg"), FILE_READ);
@@ -860,8 +901,14 @@ spawnfunc(worldspawn)
 					continue;
 				if(argv(0) == "cd")
 				{
+					string trackname = argv(2);
 					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:");
-					LOG_INFO("  cdtrack ", argv(2));
+					LOG_INFO("  cdtrack ", trackname);
+					if (cvar_value_issafe(trackname))
+					{
+						string newstuff = strcat(clientstuff, "cd loop \"", trackname, "\"\n");
+						strcpy(clientstuff, newstuff);
+					}
 				}
 				else if(argv(0) == "fog")
 				{
@@ -947,7 +994,7 @@ spawnfunc(worldspawn)
 	// physics/balance/config changes that count as mod
 	if(cvar_string("g_mod_physics") != cvar_defstring("g_mod_physics"))
 		modname = cvar_string("g_mod_physics");
-	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance"))
+	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance") && cvar_string("g_mod_balance") != "Testing")
 		modname = cvar_string("g_mod_balance");
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
@@ -984,22 +1031,27 @@ float Map_Count, Map_Current;
 string Map_Current_Name;
 
 // NOTE: this now expects the map list to be already tokenized and the count in Map_Count
-float GetMaplistPosition()
+int GetMaplistPosition()
 {
-	float pos, idx;
-	string map;
-
-	map = GetMapname();
-	idx = autocvar_g_maplist_index;
+	string map = GetMapname();
+	int idx = autocvar_g_maplist_index;
 
 	if(idx >= 0)
+	{
 		if(idx < Map_Count)
+		{
 			if(map == argv(idx))
+			{
 				return idx;
+			}
+		}
+	}
 
-	for(pos = 0; pos < Map_Count; ++pos)
+	for(int pos = 0; pos < Map_Count; ++pos)
+	{
 		if(map == argv(pos))
 			return pos;
+	}
 
 	// resume normal maplist rotation if current map is not in g_maplist
 	return idx;
@@ -1022,21 +1074,28 @@ bool MapHasRightSize(string map)
 		LOG_TRACE(checkwp_msg, ": has waypoints");
 	}
 
+	if(autocvar_g_maplist_ignore_sizes)
+		return true;
+
 	// open map size restriction file
 	string opensize_msg = strcat("opensize ", map);
 	float fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
+	int player_limit = ((autocvar_g_maplist_sizes_count_maxplayers) ? GetPlayerLimit() : 0);
+	int pcount = ((player_limit > 0) ? min(player_count, player_limit) : player_count); // bind it to the player limit so that forced spectators don't influence the limits
+	if(!autocvar_g_maplist_sizes_count_bots)
+		pcount -= currentbots;
 	if(fh >= 0)
 	{
 		opensize_msg = strcat(opensize_msg, ": ok, ");
 		int mapmin = stoi(fgets(fh));
 		int mapmax = stoi(fgets(fh));
 		fclose(fh);
-		if(player_count < mapmin)
+		if(pcount < mapmin)
 		{
 			LOG_TRACE(opensize_msg, "not enough");
 			return false;
 		}
-		if(mapmax && player_count > mapmax)
+		if(mapmax && pcount > mapmax)
 		{
 			LOG_TRACE(opensize_msg, "too many");
 			return false;
@@ -1055,7 +1114,7 @@ string Map_Filename(float position)
 
 void Map_MarkAsRecent(string m)
 {
-	cvar_set("g_maplist_mostrecent", strwords(strcat(m, " ", autocvar_g_maplist_mostrecent), max(0, autocvar_g_maplist_mostrecent_count)));
+	cvar_set("g_maplist_mostrecent", strwords(cons(m, autocvar_g_maplist_mostrecent), max(0, autocvar_g_maplist_mostrecent_count)));
 }
 
 float Map_IsRecent(string m)
@@ -1199,18 +1258,25 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 
 void Maplist_Init()
 {
-	Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-	float i;
-	for (i = 0; i < Map_Count; ++i)
-		if (Map_Check(i, 2))
-			break;
+	float i = Map_Count = 0;
+	if(autocvar_g_maplist != "")
+	{
+		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		for (i = 0; i < Map_Count; ++i)
+		{
+			if (Map_Check(i, 2))
+				break;
+		}
+	}
+
 	if (i == Map_Count)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
 		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags() | MAPINFO_FLAG_NOAUTOMAPLIST));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
-		localcmd("\nmenu_cmd sync\n");
+		if(!server_is_dedicated)
+			localcmd("\nmenu_cmd sync\n");
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 	}
 	if(Map_Count == 0)
@@ -1224,10 +1290,8 @@ void Maplist_Init()
 
 string GetNextMap()
 {
-	float nextMap;
-
 	Maplist_Init();
-	nextMap = -1;
+	float nextMap = -1;
 
 	if(nextMap == -1)
 		if(autocvar_g_maplist_shuffle > 0)
@@ -1322,9 +1386,7 @@ void GotoNextMap(float reinit)
 		return;
 	alreadychangedlevel = true;
 
-	string nextMap;
-
-	nextMap = GetNextMap();
+	string nextMap = GetNextMap();
 	if(nextMap == "")
 		error("Everything is broken - cannot find a next map. Please report this to the developers.");
 	Map_Goto(reinit);
@@ -1363,54 +1425,6 @@ void IntermissionThink(entity this)
 
 	MapVote_Start();
 }
-
-/*
-============
-FindIntermission
-
-Returns the entity to view from
-============
-*/
-/*
-entity FindIntermission()
-{
-	local	entity spot;
-	local	float cyc;
-
-// look for info_intermission first
-	spot = find(NULL, classname, "info_intermission");
-	if (spot)
-	{	// pick a random one
-		cyc = random() * 4;
-		while (cyc > 1)
-		{
-			spot = find(spot, classname, "info_intermission");
-			if (!spot)
-				spot = find(spot, classname, "info_intermission");
-			cyc = cyc - 1;
-		}
-		return spot;
-	}
-
-// then look for the start position
-	spot = find(NULL, classname, "info_player_start");
-	if (spot)
-		return spot;
-
-// testinfo_player_start is only found in regioned levels
-	spot = find(NULL, classname, "testplayerstart");
-	if (spot)
-		return spot;
-
-// then look for the start position
-	spot = find(NULL, classname, "info_player_deathmatch");
-	if (spot)
-		return spot;
-
-	//objerror ("FindIntermission: no spot");
-	return NULL;
-}
-*/
 
 /*
 ===============================================================================
@@ -1701,11 +1715,9 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
-float leaderfrags;
+int fragsleft_last;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
-	float limitreached;
-
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper(NULL);
 
@@ -1735,42 +1747,52 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		leadlimit = 0; // not supported in this mode
 
 	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
-	// these modes always score in increments of 1, thus this makes sense
 	{
-		if(leaderfrags != WinningConditionHelper_topscore)
+		float fragsleft;
+		if (checkrules_suddendeathend && time >= checkrules_suddendeathend)
 		{
-			leaderfrags = WinningConditionHelper_topscore;
-
+			fragsleft = 1;
+		}
+		else
+		{
+			fragsleft = FLOAT_MAX;
+			float leadingfragsleft = FLOAT_MAX;
 			if (limit)
-			{
-				if (leaderfrags == limit - 1)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
-				else if (leaderfrags == limit - 2)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
-				else if (leaderfrags == limit - 3)
-					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
-			}
+				fragsleft = limit - WinningConditionHelper_topscore;
+			if (leadlimit)
+				leadingfragsleft = WinningConditionHelper_secondscore + leadlimit - WinningConditionHelper_topscore;
+
+			if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+				fragsleft = max(fragsleft, leadingfragsleft);
+			else
+				fragsleft = min(fragsleft, leadingfragsleft);
+		}
+
+		if (fragsleft_last != fragsleft) // do not announce same remaining frags multiple times
+		{
+			if (fragsleft == 1)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
+			else if (fragsleft == 2)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
+			else if (fragsleft == 3)
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+
+			fragsleft_last = fragsleft;
 		}
 	}
 
-	limitreached = false;
-	if (limit && WinningConditionHelper_topscore >= limit)
-		limitreached = true;
-	if(leadlimit)
-	{
-		float leadlimitreached;
-		leadlimitreached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
-		if(autocvar_leadlimit_and_fraglimit)
-			limitreached = (limitreached && leadlimitreached);
-		else
-			limitreached = (limitreached || leadlimitreached);
-	}
+	bool fraglimit_reached = (limit && WinningConditionHelper_topscore >= limit);
+	bool leadlimit_reached = (leadlimit && WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
 
-	if(limit)
-		game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / limit, 1));
+	bool limit_reached;
+	// only respect leadlimit_and_fraglimit when both limits are set or the game will never end
+	if (limit && leadlimit && autocvar_leadlimit_and_fraglimit)
+		limit_reached = (fraglimit_reached && leadlimit_reached);
+	else
+		limit_reached = (fraglimit_reached || leadlimit_reached);
 
 	return GetWinningCode(
-		WinningConditionHelper_topscore && limitreached,
+		WinningConditionHelper_topscore && limit_reached,
 		WinningConditionHelper_equality
 	);
 }
@@ -1861,10 +1883,6 @@ Exit deathmatch games upon conditions
 */
 void CheckRules_World()
 {
-	float timelimit;
-	float fraglimit;
-	float leadlimit;
-
 	VoteThink();
 	MapVote_Think();
 
@@ -1879,9 +1897,10 @@ void CheckRules_World()
 		return;
 	}
 
-	timelimit = autocvar_timelimit * 60;
-	fraglimit = autocvar_fraglimit;
-	leadlimit = autocvar_leadlimit;
+	float timelimit = autocvar_timelimit * 60;
+	float fraglimit = autocvar_fraglimit;
+	float leadlimit = autocvar_leadlimit;
+	if (leadlimit < 0) leadlimit = 0;
 
 	if(warmup_stage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
@@ -1905,11 +1924,6 @@ void CheckRules_World()
 
 	float wantovertime;
 	wantovertime = 0;
-
-	if(timelimit > game_starttime)
-		game_completion_ratio = (time - game_starttime) / (timelimit - game_starttime);
-	else
-		game_completion_ratio = 0;
 
 	if(checkrules_suddendeathend)
 	{
@@ -2021,7 +2035,7 @@ string GotoMap(string m)
 		return "Map switch will happen after scoreboard.";
 }
 
-bool autocvar_sv_gameplayfix_multiplethinksperframe;
+bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
 void RunThink(entity this)
 {
 	// don't let things stay in the past.
@@ -2050,29 +2064,28 @@ void RunThink(entity this)
 }
 
 bool autocvar_sv_freezenonclients;
-bool autocvar_sv_gameplayfix_delayprojectiles;
+bool autocvar_sv_gameplayfix_delayprojectiles = false;
 void Physics_Frame()
 {
 	if(autocvar_sv_freezenonclients)
 		return;
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
+	IL_EACH(g_moveables, true,
 	{
-		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
 		//set_movetype(it, it.move_movetype);
 		// inline the set_movetype function, since this is called a lot
-		it.movetype = (it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype;
+		it.movetype = (it.move_qcphysics) ? MOVETYPE_QCENTITY : it.move_movetype;
 
-		if(it.move_movetype == MOVETYPE_NONE)
-			continue;
-
-		if(it.move_qcphysics)
+		if(it.move_qcphysics && it.move_movetype != MOVETYPE_NONE)
 			Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 
 		if(it.movetype >= MOVETYPE_USER_FIRST && it.movetype <= MOVETYPE_USER_LAST) // these cases have no think handling
 		{
+			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
+				continue; // these movetypes have no regular think function
 			// handle thinking here
 			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
 				RunThink(it);
@@ -2082,9 +2095,9 @@ void Physics_Frame()
 	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)
 		return;
 
-	FOREACH_ENTITY_FLOAT(move_qcphysics, true,
+	IL_EACH(g_moveables, it.move_qcphysics,
 	{
-		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
 			continue;
 		Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 	});
@@ -2204,6 +2217,11 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
+
+		// if a timeout is active, reset the slowmo value to normal
+		if(timeout_status == TIMEOUT_ACTIVE)
+			cvar_set("slowmo", ftos(orig_slowmo));
+
 		LOG_TRACE("Saving persistent data...");
 		Ban_SaveBans();
 
@@ -2217,7 +2235,7 @@ void Shutdown()
 			else
 				db_save(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 		}
-		if(autocvar_developer)
+		if(autocvar_developer > 0)
 		{
 			if(autocvar_sv_db_saveasdump)
 				db_dump(TemporaryDB, "server-temp.db");

@@ -1,5 +1,7 @@
 #include "raptor.qh"
 
+#ifdef GAMEQC
+
 #ifdef SVQC
 
 bool autocvar_g_vehicle_raptor = true;
@@ -358,7 +360,7 @@ bool raptor_frame(entity this, float dt)
 
 	Weapon wep1 = WEP_RAPTOR;
 	.entity weaponentity = weaponentities[0];
-	if(!forbidWeaponUse(this))
+	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
 	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
@@ -375,7 +377,7 @@ bool raptor_frame(entity this, float dt)
 		vehicles_regen(vehic, vehic.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, dt, false);
 
 	Weapon wep2a = WEP_RAPTOR_BOMB;
-	if(!forbidWeaponUse(this))
+	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(STAT(VEHICLESTAT_W2MODE, vehic) == RSM_BOMB)
 	{
 		if(time > vehic.lip + autocvar_g_vehicle_raptor_bombs_refire)
@@ -453,7 +455,7 @@ bool raptor_takeoff(entity this, float dt)
 	// Takeoff sequense
 	if(vehic.frame < 25)
 	{
-		vehic.frame += 25 / (autocvar_g_vehicle_raptor_takeofftime / PHYS_INPUT_FRAMETIME);
+		vehic.frame += 25 / (autocvar_g_vehicle_raptor_takeofftime / dt);
 		vehic.velocity_z = min(vehic.velocity_z * 1.5, 256);
 		vehic.bomb1.gun1.avelocity_y = 90 + ((vehic.frame / 25) * 25000);
 		vehic.bomb1.gun2.avelocity_y = -vehic.bomb1.gun1.avelocity_y;
@@ -829,5 +831,7 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 {
     AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
 }
+
+#endif
 
 #endif

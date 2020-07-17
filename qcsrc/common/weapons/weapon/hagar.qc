@@ -257,14 +257,14 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 	// loadable hagar secondary attack, must always run each frame
 	if(time < game_starttime || time < actor.race_penalty || timeout_status == TIMEOUT_ACTIVE)
 		return;
-	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if (weaponUseForbidden(actor))
 		return;
 
 	bool loaded = actor.(weaponentity).hagar_load >= WEP_CVAR_SEC(hagar, load_max);
 
 	// this is different than WR_CHECKAMMO when it comes to reloading
 	bool enough_ammo;
-	if(actor.items & IT_UNLIMITED_WEAPON_AMMO)
+	if(actor.items & IT_UNLIMITED_AMMO)
 		enough_ammo = true;
 	else if(autocvar_g_balance_hagar_reload_ammo)
 		enough_ammo = actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
@@ -352,7 +352,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 
 		// we aren't checking ammo during an attack, so we must do it here
 		if(!(thiswep.wr_checkammo1(thiswep, actor, weaponentity) + thiswep.wr_checkammo2(thiswep, actor, weaponentity)))
-		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!(actor.items & IT_UNLIMITED_AMMO))
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(actor, weaponentity);
@@ -370,7 +370,7 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 	}
 
 	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);

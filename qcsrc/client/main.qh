@@ -17,12 +17,6 @@ entity gametype;
 float FONT_USER = 8;
 
 
-vector OFFSET_CURSOR = '0 0 0';
-vector SIZE_CURSOR = '32 32 0';
-void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
-void draw_cursor_normal(vector pos, vector col, float a);
-void LoadMenuSkinValues();
-
 void PostInit();
 
 void Ent_Remove(entity this);
@@ -45,20 +39,24 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .bool ready;
 .bool eliminated;
 
-.void(entity) draw;
 IntrusiveList g_drawables;
-STATIC_INIT(g_drawables) { g_drawables = IL_NEW(); }
-.void(entity) draw2d;
 IntrusiveList g_drawables_2d;
-STATIC_INIT(g_drawables_2d) { g_drawables_2d = IL_NEW(); }
+IntrusiveList g_radarlinks;
+IntrusiveList g_radaricons;
+STATIC_INIT(main)
+{
+	g_drawables = IL_NEW();
+	g_drawables_2d = IL_NEW();
+	g_radarlinks = IL_NEW();
+	g_radaricons = IL_NEW();
+}
+
+.void(entity) draw;
+.void(entity) draw2d;
 .void(entity) entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
-IntrusiveList g_radarlinks;
-STATIC_INIT(g_radarlinks) { g_radarlinks = IL_NEW(); }
-IntrusiveList g_radaricons;
-STATIC_INIT(g_radaricons) { g_radaricons = IL_NEW(); }
 
 bool button_zoom;
 bool spectatorbutton_zoom;
@@ -90,10 +88,6 @@ float camera_active;		// Demo camera is active if set to true
 float chase_active_backup;
 float camera_roll;
 vector camera_direction;
-
-void centerprint_hud(string strMessage);
-void centerprint_kill(float id);
-void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 const float ALPHA_MIN_VISIBLE = 0.003;
 

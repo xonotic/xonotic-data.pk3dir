@@ -1,5 +1,6 @@
 #include "sv_race.qh"
 
+#include <server/gamelog.qh>
 #include <server/race.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
@@ -261,7 +262,7 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 	if(g_race_qualifying)
 	{
 		if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-			player.frags = FRAGS_LMS_LOSER;
+			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 		else
 			player.frags = FRAGS_SPECTATOR;
 	}

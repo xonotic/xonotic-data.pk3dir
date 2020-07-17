@@ -149,7 +149,7 @@ X(9, next)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
 		{ \
 			.entity weaponentity = weaponentities[slot]; \
-			W_SwitchWeapon_TryOthers(this, Weapons_from(WEP_FIRST + i), weaponentity); \
+			W_SwitchWeapon_TryOthers(this, REGISTRY_GET(Weapons, WEP_FIRST + i), weaponentity); \
 			if(autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
@@ -334,7 +334,7 @@ IMPULSE(weapon_reload)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	if (forbidWeaponUse(this)) return;
+	if (weaponLocked(this)) return;
 	entity actor = this;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -507,7 +507,7 @@ IMPULSE(waypoint_here_here)
 
 IMPULSE(waypoint_here_crosshair)
 {
-	WarpZone_crosshair_trace(this);
+	WarpZone_crosshair_trace_plusvisibletriggers(this);
 	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, trace_endpos, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at crosshair\n");

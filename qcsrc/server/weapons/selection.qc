@@ -70,7 +70,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 	{
 		if (andammo)
 		{
-			if(this.items & IT_UNLIMITED_WEAPON_AMMO)
+			if(this.items & IT_UNLIMITED_AMMO)
 			{
 				f = 1;
 			}
@@ -151,7 +151,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 	while(rest != "")
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
-		wep = Weapons_from(weaponwant);
+		wep = REGISTRY_GET(Weapons, weaponwant);
 		wepset = wep.m_wepset;
 		if(imp >= 0)
 		if(wep.impulse != imp)
@@ -207,7 +207,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 		while(rest != "")
 		{
 			weaponwant = stof(car(rest)); rest = cdr(rest);
-			wep = Weapons_from(weaponwant);
+			wep = REGISTRY_GET(Weapons, weaponwant);
 			wepset = wep.m_wepset;
 			if(imp >= 0)
 				if(wep.impulse != imp)
@@ -281,7 +281,7 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 			return false;
 		}
 	}
-	else if(!forbidWeaponUse(this) && CS(this).cvar_cl_weapon_switch_reload)
+	else if(!weaponLocked(this) && CS(this).cvar_cl_weapon_switch_reload)
 	{
 		entity actor = this;
 		w.wr_reload(w, actor, weaponentity);
@@ -301,7 +301,7 @@ void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponent
 	float w;
 	w = W_GetCycleWeapon(this, weaponorder, dir, -1, 1, true, weaponentity);
 	if(w > 0)
-		W_SwitchWeapon(this, Weapons_from(w), weaponentity);
+		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }
 
 void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
@@ -309,7 +309,7 @@ void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
 	float w;
 	w = W_GetCycleWeapon(this, CS(this).cvar_cl_weaponpriority, +1, imp, 1, (CS(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
 	if(w > 0)
-		W_SwitchWeapon(this, Weapons_from(w), weaponentity);
+		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }
 
 // next weapon
@@ -337,7 +337,7 @@ void W_PreviousWeapon(entity this, float list, .entity weaponentity)
 // previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon(entity this, .entity weaponentity)
 {
-	Weapon wep = Weapons_from(this.(weaponentity).cnt);
+	Weapon wep = REGISTRY_GET(Weapons, this.(weaponentity).cnt);
 	if (client_hasweapon(this, wep, weaponentity, true, false))
 		W_SwitchWeapon(this, wep, weaponentity);
 	else

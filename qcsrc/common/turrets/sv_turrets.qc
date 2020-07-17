@@ -102,7 +102,7 @@ float turret_targetscore_generic(entity _turret, entity _target)
 		d_score = min(ikr, tvt_dist) / max(ikr, tvt_dist);
 	}
 
-	a_score = 1 - tvt_thadf / _turret.aim_maxrotate;
+	a_score = 1 - tvt_thadf / _turret.aim_maxrot;
 
 	if ((_turret.target_select_missilebias > 0) && (_target.flags & FL_PROJECTILE))
 		m_score = 1;
@@ -302,7 +302,6 @@ void turret_respawn(entity this)
 
 
 // Main functions
-#define cvar_base "g_turrets_unit_"
 .float clientframe;
 void turrets_setframe(entity this, float _frame, float client_only)
 {
@@ -376,9 +375,6 @@ bool turret_send(entity this, entity to, float sf)
 
 void load_unit_settings(entity ent, bool is_reload)
 {
-	string unitname = ent.netname;
-	string sbase;
-
 	if (ent == NULL)
 		return;
 
@@ -390,7 +386,6 @@ void load_unit_settings(entity ent, bool is_reload)
 	if(!ent.turret_scale_health)	ent.turret_scale_health = 1;
 	if(!ent.turret_scale_respawn)	ent.turret_scale_respawn = 1;
 
-	sbase = strcat(cvar_base,unitname);
 	if (is_reload)
 	{
 		ent.enemy = NULL;
@@ -399,41 +394,24 @@ void load_unit_settings(entity ent, bool is_reload)
 		ent.tur_head.angles = '0 0 0';
 	}
 
-	SetResourceExplicit(ent, RES_HEALTH, cvar(strcat(sbase,"_health")) * ent.turret_scale_health);
-	ent.respawntime = cvar(strcat(sbase,"_respawntime")) * ent.turret_scale_respawn;
+	string unitname = ent.netname;
+	#define X(class, prefix, fld, type) ent.fld = cvar(strcat("g_turrets_unit_", prefix, "_", #fld));
+	TR_PROPS_COMMON(X, , unitname)
+	#undef X
 
-	ent.shot_dmg		 = cvar(strcat(sbase,"_shot_dmg")) * ent.turret_scale_damage;
-	ent.shot_refire	  = cvar(strcat(sbase,"_shot_refire")) * ent.turret_scale_refire;
-	ent.shot_radius	  = cvar(strcat(sbase,"_shot_radius")) * ent.turret_scale_damage;
-	ent.shot_speed		= cvar(strcat(sbase,"_shot_speed"));
-	ent.shot_spread	  = cvar(strcat(sbase,"_shot_spread"));
-	ent.shot_force		= cvar(strcat(sbase,"_shot_force")) * ent.turret_scale_damage;
-	ent.shot_volly		= cvar(strcat(sbase,"_shot_volly"));
-	ent.shot_volly_refire = cvar(strcat(sbase,"_shot_volly_refire")) * ent.turret_scale_refire;
-
-	ent.target_range		 = cvar(strcat(sbase,"_target_range")) * ent.turret_scale_range;
-	ent.target_range_min	 = cvar(strcat(sbase,"_target_range_min")) * ent.turret_scale_range;
-	ent.target_range_optimal = cvar(strcat(sbase,"_target_range_optimal")) * ent.turret_scale_range;
-	//ent.target_range_fire	= cvar(strcat(sbase,"_target_range_fire")) * ent.turret_scale_range;
-
-	ent.target_select_rangebias = cvar(strcat(sbase,"_target_select_rangebias"));
-	ent.target_select_samebias  = cvar(strcat(sbase,"_target_select_samebias"));
-	ent.target_select_anglebias = cvar(strcat(sbase,"_target_select_anglebias"));
-	ent.target_select_playerbias = cvar(strcat(sbase,"_target_select_playerbias"));
-	//ent.target_select_fov = cvar(cvar_gets(sbase,"_target_select_fov"));
-
-	ent.ammo_max	 = cvar(strcat(sbase,"_ammo_max")) * ent.turret_scale_ammo;
-	ent.ammo_recharge = cvar(strcat(sbase,"_ammo_recharge")) * ent.turret_scale_ammo;
-
-	ent.aim_firetolerance_dist = cvar(strcat(sbase,"_aim_firetolerance_dist"));
-	ent.aim_speed	= cvar(strcat(sbase,"_aim_speed")) * ent.turret_scale_aim;
-	ent.aim_maxrotate  = cvar(strcat(sbase,"_aim_maxrot"));
-	ent.aim_maxpitch = cvar(strcat(sbase,"_aim_maxpitch"));
-
-	ent.track_type		= cvar(strcat(sbase,"_track_type"));
-	ent.track_accel_pitch = cvar(strcat(sbase,"_track_accel_pitch"));
-	ent.track_accel_rotate  = cvar(strcat(sbase,"_track_accel_rot"));
-	ent.track_blendrate  = cvar(strcat(sbase,"_track_blendrate"));
+	ent.ammo_max             *= ent.turret_scale_ammo;
+	ent.ammo_recharge        *= ent.turret_scale_ammo;
+	ent.aim_speed            *= ent.turret_scale_aim;
+	SetResourceExplicit(ent, RES_HEALTH, GetResource(ent, RES_HEALTH) * ent.turret_scale_health);
+	ent.respawntime          *= ent.turret_scale_respawn;
+	ent.shot_dmg             *= ent.turret_scale_damage;
+	ent.shot_refire          *= ent.turret_scale_refire;
+	ent.shot_radius          *= ent.turret_scale_damage;
+	ent.shot_force           *= ent.turret_scale_damage;
+	ent.shot_volly_refire    *= ent.turret_scale_refire;
+	ent.target_range         *= ent.turret_scale_range;
+	ent.target_range_min     *= ent.turret_scale_range;
+	ent.target_range_optimal *= ent.turret_scale_range;
 
 	if(is_reload) {
 		Turret tur = get_turretinfo(ent.m_id);
@@ -602,11 +580,11 @@ void turret_track(entity this)
 			if (this.track_flags & TFL_TRACK_ROTATE)
 			{
 				this.tur_head.angles_y += bound(-f_tmp, move_angle_y, f_tmp);
-				if(this.tur_head.angles_y > this.aim_maxrotate)
-					this.tur_head.angles_y = this.aim_maxrotate;
+				if(this.tur_head.angles_y > this.aim_maxrot)
+					this.tur_head.angles_y = this.aim_maxrot;
 
-				if(this.tur_head.angles_y  < -this.aim_maxrotate)
-					this.tur_head.angles_y = this.aim_maxrotate;
+				if(this.tur_head.angles_y  < -this.aim_maxrot)
+					this.tur_head.angles_y = this.aim_maxrot;
 			}
 
 			// CSQC
@@ -617,7 +595,7 @@ void turret_track(entity this)
 		case TFL_TRACKTYPE_FLUIDINERTIA:
 			f_tmp = this.aim_speed * this.ticrate; // dgr/sec -> dgr/tic
 			move_angle_x = bound(-this.aim_speed, move_angle_x * this.track_accel_pitch * f_tmp, this.aim_speed);
-			move_angle_y = bound(-this.aim_speed, move_angle_y * this.track_accel_rotate * f_tmp, this.aim_speed);
+			move_angle_y = bound(-this.aim_speed, move_angle_y * this.track_accel_rot * f_tmp, this.aim_speed);
 			move_angle = (this.tur_head.avelocity * this.track_blendrate) + (move_angle * (1 - this.track_blendrate));
 			break;
 
@@ -655,18 +633,18 @@ void turret_track(entity this)
 	{
 		this.tur_head.avelocity_y = move_angle_y;
 
-		if((this.tur_head.angles_y + this.tur_head.avelocity_y * this.ticrate) > this.aim_maxrotate)
+		if((this.tur_head.angles_y + this.tur_head.avelocity_y * this.ticrate) > this.aim_maxrot)
 		{
 			this.tur_head.avelocity_y = 0;
-			this.tur_head.angles_y = this.aim_maxrotate;
+			this.tur_head.angles_y = this.aim_maxrot;
 
 			this.SendFlags  |= TNSF_ANG;
 		}
 
-		if((this.tur_head.angles_y + this.tur_head.avelocity_y * this.ticrate) < -this.aim_maxrotate)
+		if((this.tur_head.angles_y + this.tur_head.avelocity_y * this.ticrate) < -this.aim_maxrot)
 		{
 			this.tur_head.avelocity_y = 0;
-			this.tur_head.angles_y = -this.aim_maxrotate;
+			this.tur_head.angles_y = -this.aim_maxrot;
 
 			this.SendFlags  |= TNSF_ANG;
 		}
@@ -778,6 +756,9 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 
 			if (e_turret.team != e_target.owner.team)
 				return -12;
+
+			if (e_turret.team != e_target.aiment.team)
+				return -12; // portals
 		}
 		else
 		{
@@ -786,6 +767,9 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 
 			if (e_turret.team == e_target.owner.team)
 				return -14;
+
+			if (e_turret.team == e_target.aiment.team)
+				return -14; // portals
 		}
 	}
 
@@ -804,7 +788,6 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	tvt_thadv = angleofs3(e_turret.tur_head.origin, e_turret.angles + e_turret.tur_head.angles, e_target.origin);
 	tvt_tadv = shortangle_vxy(angleofs(e_turret, e_target), e_turret.angles);
 	tvt_thadf = vlen(tvt_thadv);
-	tvt_tadf = vlen(tvt_tadv);
 
 	/*
 	if(validate_flags & TFL_TARGETSELECT_FOV)
@@ -819,7 +802,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 		if (fabs(tvt_tadv_x) > e_turret.aim_maxpitch)
 			return -17;
 
-		if (fabs(tvt_tadv_y) > e_turret.aim_maxrotate)
+		if (fabs(tvt_tadv_y) > e_turret.aim_maxrot)
 			return -18;
 	}
 
@@ -1244,7 +1227,7 @@ void turret_initparams(entity tur)
 	tur.target_range                = bound(0,               (TRY(tur.target_range)              :  tur.shot_speed * 0.5                       ), max_shot_distance);
 	tur.target_range_min            = bound(0,               (TRY(tur.target_range_min)          :  tur.shot_radius * 2                        ), max_shot_distance);
 	tur.target_range_optimal        = bound(0,               (TRY(tur.target_range_optimal)      :  tur.target_range * 0.5                     ), max_shot_distance);
-	tur.aim_maxrotate               = bound(0,               (TRY(tur.aim_maxrotate)             :  90                                         ), 360);
+	tur.aim_maxrot                  = bound(0,               (TRY(tur.aim_maxrot)                :  90                                         ), 360);
 	tur.aim_maxpitch                = bound(0,               (TRY(tur.aim_maxpitch)              :  20                                         ), 90);
 	tur.aim_speed                   = bound(0.1,             (TRY(tur.aim_speed)                 :  36                                         ), 1000);
 	tur.aim_firetolerance_dist      = bound(0.1,             (TRY(tur.aim_firetolerance_dist)    :  5 + (tur.shot_radius * 2)                  ), max_shot_distance);
@@ -1286,6 +1269,11 @@ void turret_findtarget(entity this)
 
 	this.tur_defend = targ;
 	this.idle_aim = this.tur_head.angles + angleofs(this.tur_head, targ);
+}
+
+void turret_reset(entity this)
+{
+	turret_respawn(this);
 }
 
 bool turret_initialize(entity this, Turret tur)
@@ -1332,7 +1320,7 @@ bool turret_initialize(entity this, Turret tur)
 		this.aim_speed = bound(0.1, ((!this.aim_speed) ? 180 : this.aim_speed), 1000);
 
 		if(!this.track_accel_pitch)		{ this.track_accel_pitch = 0.5; }
-		if(!this.track_accel_rotate)	{ this.track_accel_rotate = 0.5; }
+		if(!this.track_accel_rot)		{ this.track_accel_rot = 0.5; }
 		if(!this.track_blendrate)		{ this.track_blendrate = 0.35; }
 	}
 
@@ -1363,7 +1351,6 @@ bool turret_initialize(entity this, Turret tur)
 	setsize(this, tur.m_mins, tur.m_maxs);
 
 	this.m_id					= tur.m_id;
-	this.classname				= "turret_main";
 	this.active					= ACTIVE_ACTIVE;
 	this.effects				= EF_NODRAW;
 	this.netname				= tur.turret_name;
@@ -1382,8 +1369,8 @@ bool turret_initialize(entity this, Turret tur)
 	this.event_heal 			= turret_heal;
 	this.use					= turret_use;
 	this.bot_attack				= true;
-	this.nextthink				= time + 1;
-	this.nextthink			   += turret_count * sys_frametime;
+	this.nextthink				= time + 1 + turret_count * sys_frametime;
+	this.reset					= turret_reset;
 
 	this.tur_head = new(turret_head);
 	_setmodel(this.tur_head, tur.head_model);

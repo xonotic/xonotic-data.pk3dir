@@ -168,7 +168,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 #define G_MODEL_INIT(ent,sol) \
 	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent); \
+	SetBrushEntityModel(ent,true); \
 	ent.use = g_model_setcolormaptoactivator; \
 	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!ent.solid) ent.solid = (sol); \
@@ -177,7 +177,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 #define G_CLIENTMODEL_INIT(ent,sol) \
 	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent); \
+	SetBrushEntityModel(ent,true); \
 	ent.use = g_clientmodel_use; \
 	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!ent.solid) ent.solid = (sol); \
@@ -195,11 +195,11 @@ spawnfunc(misc_models)            { this.angles_x = -this.angles.x; G_MODEL_INIT
 // non-solid brush entities:
 spawnfunc(func_illusionary)       { G_MODEL_INIT      (this, SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
 spawnfunc(func_clientillusionary) { G_CLIENTMODEL_INIT(this, SOLID_NOT) } // brush entity
-spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_NOT) } // DEPRECATED old alias name from some other game
 
 // solid brush entities
 spawnfunc(func_wall)              { G_MODEL_INIT      (this, SOLID_BSP) } // Q1 name
 spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_BSP) } // DEPRECATED old alias name from some other game
 #elif defined(CSQC)
 .float alpha;
 .float scale;

@@ -10,6 +10,19 @@
 
 // Ammo (#1)
 
+void HUD_Ammo_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_ammo_onlycurrent");
+	HUD_Write_Cvar("hud_panel_ammo_noncurrent_alpha");
+	HUD_Write_Cvar("hud_panel_ammo_noncurrent_scale");
+	HUD_Write_Cvar("hud_panel_ammo_iconalign");
+	HUD_Write_Cvar("hud_panel_ammo_progressbar");
+	HUD_Write_Cvar("hud_panel_ammo_progressbar_name");
+	HUD_Write_Cvar("hud_panel_ammo_progressbar_xoffset");
+	HUD_Write_Cvar("hud_panel_ammo_text");
+}
+
 void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector color)
 {
 	HUD_Panel_DrawProgressBar(
@@ -177,7 +190,7 @@ void HUD_Ammo()
 
 	Weapon wep = wepent.switchweapon;
 	int i;
-	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
 	row = column = 0;
 	if(autocvar_hud_panel_ammo_onlycurrent)
 	{

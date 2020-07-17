@@ -4,6 +4,7 @@
 #include "g_hook.qh"
 #include "g_damage.qh"
 #include "g_world.qh"
+#include <server/gamelog.qh>
 
 #include "bot/api.qh"
 
@@ -28,44 +29,50 @@
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
 
-.float lastground;
-.int state;
-
 void CreatureFrame_hotliquids(entity this)
 {
-	if (this.dmgtime < time)
+	if (this.dmgtime >= time)
 	{
-		this.dmgtime = time + autocvar_g_balance_contents_damagerate;
+		return;
+	}
 
-		if (this.flags & FL_PROJECTILE)
+	this.dmgtime = time + autocvar_g_balance_contents_damagerate;
+
+	if (this.flags & FL_PROJECTILE)
+	{
+		if (this.watertype == CONTENT_LAVA)
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		else if (this.watertype == CONTENT_SLIME)
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
+	}
+	else
+	{
+		if (STAT(FROZEN, this))
 		{
 			if (this.watertype == CONTENT_LAVA)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
+				Damage(this, NULL, NULL, 10000, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			else if (this.watertype == CONTENT_SLIME)
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
+				Damage(this, NULL, NULL, 10000, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
-		else
+		else if (this.watertype == CONTENT_LAVA)
 		{
-			if (this.watertype == CONTENT_LAVA)
+			if (this.watersound_finished < time)
 			{
-				if (this.watersound_finished < time)
-				{
-					this.watersound_finished = time + 0.5;
-					sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
-				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
-				if(autocvar_g_balance_contents_playerdamage_lava_burn)
-					Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
+				this.watersound_finished = time + 0.5;
+				sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 			}
-			else if (this.watertype == CONTENT_SLIME)
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			if(autocvar_g_balance_contents_playerdamage_lava_burn)
+				Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
+		}
+		else if (this.watertype == CONTENT_SLIME)
+		{
+			if (this.watersound_finished < time)
 			{
-				if (this.watersound_finished < time)
-				{
-					this.watersound_finished = time + 0.5;
-					sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
-				}
-				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
+				this.watersound_finished = time + 0.5;
+				sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 			}
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 	}
 }
@@ -90,41 +97,48 @@ void CreatureFrame_Liquids(entity this)
 			this.flags &= ~FL_INWATER;
 			this.dmgtime = 0;
 		}
-		this.air_finished = time + 12;
 	}
 }
 
 void CreatureFrame_FallDamage(entity this)
 {
-	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
-	if(this.velocity || this.oldvelocity) // moving or has moved
+	if(IS_VEHICLE(this) || (this.flags & FL_PROJECTILE))
+		return; // vehicles and projectiles don't receive fall damage
+	if(!(this.velocity || this.oldvelocity))
+		return; // if the entity hasn't moved and isn't moving, then don't do anything
+
+	// check for falling damage
+	bool have_hook = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		// check for falling damage
-		float velocity_len = vlen(this.velocity);
-		bool have_hook = false;
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    .entity weaponentity = weaponentities[slot];
+	    if(this.(weaponentity).hook && this.(weaponentity).hook.state)
 	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(this.(weaponentity).hook && this.(weaponentity).hook.state)
-	    	{
-	    		have_hook = true;
-	    		break;
-	    	}
+	    	have_hook = true;
+	    	break;
 	    }
-		if(!have_hook)
+	}
+	if(!have_hook)
+	{
+		float dm; // dm is the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+		if(autocvar_g_balance_falldamage_onlyvertical)
+			dm = fabs(this.oldvelocity.z) - vlen(this.velocity);
+		else
+			dm = vlen(this.oldvelocity) - vlen(this.velocity);
+		if (IS_DEAD(this))
+			dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
+		else
+			dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
+		if (dm > 0)
 		{
-			float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-			if (IS_DEAD(this))
-				dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
-			else
-				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
-			if (dm > 0)
+			tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODAMAGE))
 				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
-
-		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	}
+
+	if(autocvar_g_maxspeed > 0 && vdist(this.velocity, >, autocvar_g_maxspeed))
+		Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, DMG_NOWEP, this.origin, '0 0 0');
 }
 
 void CreatureFrame_All()
@@ -239,6 +253,7 @@ void StartFrame()
 	anticheat_startframe();
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
+	GlobalStats_updateglobal();
     FOREACH_CLIENT(true, GlobalStats_update(it));
     IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }
@@ -324,14 +339,17 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		goto cleanup;
+		delete(this);
+		return;
 	}
 	if (this.cvarfilter != "" && !expr_evaluate(this.cvarfilter)) {
-        goto cleanup;
+		delete(this);
+		return;
 	}
 
 	if (DoesQ3ARemoveThisEntity(this)) {
-		goto cleanup;
+		delete(this);
+		return;
 	}
 
 	set_movetype(this, this.movetype);
@@ -356,11 +374,9 @@ void SV_OnEntityPreSpawnFunction(entity this)
     #undef X
 
 	if (MUTATOR_CALLHOOK(OnEntityPreSpawn, this)) {
-		goto cleanup;
+		delete(this);
+		return;
 	}
-	return;
-LABEL(cleanup)
-    delete(this);
 }
 
 void WarpZone_PostInitialize_Callback()

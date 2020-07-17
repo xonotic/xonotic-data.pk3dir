@@ -10,11 +10,10 @@ int autocvar_g_lms_last_join;
 bool autocvar_g_lms_regenerate;
 
 // main functions
-float LMS_NewPlayerLives()
+int LMS_NewPlayerLives()
 {
-	float fl;
-	fl = autocvar_fraglimit;
-	if(fl == 0)
+	int fl = floor(autocvar_fraglimit);
+	if(fl == 0 || fl > 999)
 		fl = 999;
 
 	// first player has left the game for dying too much? Nobody else can get in.
@@ -22,7 +21,7 @@ float LMS_NewPlayerLives()
 		return 0;
 
 	if(!autocvar_g_lms_join_anytime)
-		if(lms_lowest_lives < fl - autocvar_g_lms_last_join)
+		if(lms_lowest_lives < fl - max(0, floor(autocvar_g_lms_last_join)))
 			return 0;
 
 	return bound(1, lms_lowest_lives, fl);
@@ -37,7 +36,7 @@ int WinningCondition_LMS()
 {
 	entity first_player = NULL;
 	int totalplayers = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 		if (!totalplayers)
 			first_player = it;
 		++totalplayers;
@@ -161,9 +160,7 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 
 	if(warmup_stage)
 		return false;
-	if(player.frags == FRAGS_SPECTATOR)
-		return true;
-	if(GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
+	if(player.frags == FRAGS_SPECTATOR || GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
 		return true;
@@ -184,27 +181,25 @@ void lms_RemovePlayer(entity player)
 	float player_rank = GameRules_scoring_add(player, LMS_RANK, 0);
 	if (!player_rank)
 	{
-		int pl_cnt = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
-			pl_cnt++;
-		});
 		if (player.lms_spectate_warning < 2)
 		{
 			if(IS_BOT_CLIENT(player))
 				bot_clear(player);
-			player.frags = FRAGS_LMS_LOSER;
+			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+			int pl_cnt = 0;
+			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
+				pl_cnt++;
+			});
 			GameRules_scoring_add(player, LMS_RANK, pl_cnt + 1);
 		}
 		else
 		{
-			lms_lowest_lives = 999;
 			FOREACH_CLIENT(true, {
-				if (it.frags == FRAGS_LMS_LOSER)
+				if (it.frags == FRAGS_PLAYER_OUT_OF_GAME)
 				{
 					float it_rank = GameRules_scoring_add(it, LMS_RANK, 0);
 					if (it_rank > player_rank && it_rank <= 256)
 						GameRules_scoring_add(it, LMS_RANK, -1);
-					lms_lowest_lives = 0;
 				}
 				else if (it.frags != FRAGS_SPECTATOR)
 				{
@@ -219,7 +214,7 @@ void lms_RemovePlayer(entity player)
 				GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
 				++quitters;
 			}
-			player.frags = FRAGS_LMS_LOSER;
+			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			TRANSMUTE(Observer, player);
 		}
 	}
@@ -307,12 +302,12 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		if(tl <= 0)
 		{
 			int pl_cnt = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_LMS_LOSER, {
+			FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 				pl_cnt++;
 			});
 			if(IS_BOT_CLIENT(frag_target))
 				bot_clear(frag_target);
-			frag_target.frags = FRAGS_LMS_LOSER;
+			frag_target.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			GameRules_scoring_add(frag_target, LMS_RANK, pl_cnt);
 		}
 	}
@@ -323,7 +318,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(lms, SetStartItems)
 {
-	start_items &= ~IT_UNLIMITED_AMMO;
+	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
 	start_health       = warmup_start_health       = cvar("g_lms_start_health");
 	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
@@ -384,7 +379,7 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 
 	if(item.itemdef == ITEM_ExtraLife)
 	{
-		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_lms_extra_lives);
 		GameRules_scoring_add(toucher, LMS_LIVES, autocvar_g_lms_extra_lives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
@@ -413,7 +408,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 	}
 	else
 	{
-		if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_LMS_LOSER)
+		if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_PLAYER_OUT_OF_GAME)
 		{
 			player.lms_spectate_warning = 1;
 			sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
@@ -429,9 +424,10 @@ MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms, WantWeapon)
+MUTATOR_HOOKFUNCTION(lms, SetWeaponArena)
 {
-	M_ARGV(2, bool) = true; // all weapons
+	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+		M_ARGV(0, string) = autocvar_g_lms_weaponarena;
 }
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
@@ -448,5 +444,5 @@ MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 
 void lms_Initialize()
 {
-	lms_lowest_lives = 9999;
+	lms_lowest_lives = 999;
 }

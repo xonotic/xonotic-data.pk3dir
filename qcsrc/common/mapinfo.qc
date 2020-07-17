@@ -9,10 +9,10 @@
     #include <common/monsters/_mod.qh>
 #endif
 
-bool autocvar_g_mapinfo_ignore_warnings;
 #ifdef MENUQC
-#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings)
+#define WARN_COND false
 #else
+bool autocvar_g_mapinfo_ignore_warnings;
 #define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
 #endif
 
@@ -589,10 +589,10 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 	}
 }
 
-Gametype MapInfo_Type_FromString(string str)
+Gametype MapInfo_Type_FromString(string gtype)
 {
 	string replacement = "";
-	switch (str)
+	switch (gtype)
 	{
 		case "nexball":   replacement = "nb"; break;
 		case "freezetag": replacement = "ft"; break;
@@ -601,12 +601,13 @@ Gametype MapInfo_Type_FromString(string str)
 		case "assault":   replacement = "as"; break;
 		case "race":      replacement = "rc"; break;
 	}
-	if (replacement != "" && WARN_COND)
+	if (replacement != "")
 	{
-		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, str, replacement);
-		str = replacement;
+		if (WARN_COND)
+			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
+		gtype = replacement;
 	}
-	FOREACH(Gametypes, it.mdl == str, return it);
+	FOREACH(Gametypes, it.mdl == gtype, return it);
 	return NULL;
 }
 
@@ -671,11 +672,8 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 			}
 			else
 			{
-				for (;;)
+				while((s = fgets(fh)))
 				{
-					if (!((s = fgets(fh))))
-						break;
-
 					// catch different sorts of comments
 					if(s == "")                    // empty lines
 						continue;
@@ -717,9 +715,11 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 		if(type == 0) // server set
 		{
 			LOG_TRACE("Applying temporary setting ", t, " := ", s);
+		#if 0
 			if(cvar("g_campaign"))
 				cvar_set(t, s); // this is a wrapper and is always temporary anyway; no need to backup old values then
 			else
+		#endif
 				cvar_settemp(t, s);
 		}
 		else
@@ -840,12 +840,6 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			FOREACH(Gametypes, MapInfo_Map_supportedGametypes & it.m_flags, {
 				fputs(fh, sprintf("gametype %s // defaults: %s\n", MapInfo_Type_ToString(it), _MapInfo_GetDefaultEx(it)));
 			});
-
-			if(fexists(strcat("scripts/", pFilename, ".arena")))
-				fputs(fh, "settemp_for_type all sv_q3acompat_machineshotgunswap 1\n");
-
-			if(fexists(strcat("scripts/", pFilename, ".defi")))
-				fputs(fh, "settemp_for_type all sv_vq3compat 1\n");
 
 			fputs(fh, "// optional: fog density red green blue alpha mindist maxdist\n");
 			fputs(fh, "// optional: settemp_for_type (all|gametypename) cvarname value\n");
@@ -1145,14 +1139,16 @@ string MapInfo_FixName(string s)
 int MapInfo_CurrentFeatures()
 {
 	int req = 0;
-	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
+    // TODO: find a better way to check if weapons are required on the map
+	if(!(cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") 
+		|| cvar("g_race") || cvar("g_cts") || cvar("g_nexball") || cvar("g_ca") || cvar("g_freezetag") || cvar("g_lms")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;
 }
 
 Gametype MapInfo_CurrentGametype()
 {
-	Gametype prev = Gametypes_from(cvar("gamecfg"));
+	Gametype prev = REGISTRY_GET(Gametypes, cvar("gamecfg"));
 	FOREACH(Gametypes, cvar(it.netname) && it != prev, return it);
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }

@@ -49,12 +49,15 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticScoreboardFadeTimeSlider());
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_table_highlight", _("Enable rows / columns highlighting")));
-
-	me.TR(me);
-	//me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_respawntime_decimals", _("Show decimals in respawn countdown")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_accuracy", _("Show accuracy underneath scoreboard")));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Show team sizes:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Left=on the left side of the scoreboard and move team scores to the right; Right=on the right of the scoreboard")));
+			e.addValue(e, _("Left"), "1");
+			e.addValue(e, _("Off"), "0");
+			e.addValue(e, _("Right"), "2");
+			e.configureXonoticTextSliderValues(e);
 
 	me.TR(me);
 	me.TR(me);
@@ -84,7 +87,6 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 
 	me.TR(me);
-	//me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.25, 1, "g_waypointsprite_crosshairfadealpha", _("Fade when near the crosshair")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);

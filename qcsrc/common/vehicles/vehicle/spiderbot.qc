@@ -1,5 +1,7 @@
 #include "spiderbot.qh"
 
+#ifdef GAMEQC
+
 const int SBRM_FIRST = 1;
 const int SBRM_VOLLY = 1;
 const int SBRM_GUIDE = 2;
@@ -246,7 +248,7 @@ bool spiderbot_frame(entity this, float dt)
 	vehic.angles_x = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, vehic.angles_x, autocvar_g_vehicle_spiderbot_tiltlimit);
 	vehic.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, vehic.angles_z, autocvar_g_vehicle_spiderbot_tiltlimit);
 
-	if(!forbidWeaponUse(this))
+	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
 	{
 		vehic.cnt = time;
@@ -635,5 +637,7 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
     AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
     AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
 }
+
+#endif
 
 #endif

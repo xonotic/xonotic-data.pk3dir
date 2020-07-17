@@ -4,10 +4,12 @@
 void set_movetype(entity this, int mt)
 {
 	this.move_movetype = mt;
-	if (mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH) {
+	if (mt == MOVETYPE_PHYSICS) {
 		this.move_qcphysics = false;
 	}
-	this.movetype = (this.move_qcphysics) ? MOVETYPE_NONE : mt;
+	if(!IL_CONTAINS(g_moveables, this))
+		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCENTITY : mt;
 }
 #elif defined(CSQC)
 void set_movetype(entity this, int mt)
@@ -15,6 +17,89 @@ void set_movetype(entity this, int mt)
 	this.move_movetype = mt;
 }
 #endif
+
+bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV_NudgeOutOfSolid_PivotIsKnownGood
+{
+	vector stuckorigin = this.origin;
+	vector goodmins = pivot, goodmaxs = pivot;
+	for(int bump = 0; bump < 6; bump++)
+	{
+		int coord = 2 - (bump >> 1);
+		int dir = (bump & 1);
+
+		for(int subbump = 0; ; ++subbump)
+		{
+			vector testorigin = stuckorigin;
+			if(dir)
+			{
+				// pushing maxs
+				switch(coord)
+				{
+					case 0: testorigin.x += this.maxs_x - goodmaxs.x; break;
+					case 1: testorigin.y += this.maxs_y - goodmaxs.y; break;
+					case 2: testorigin.z += this.maxs_z - goodmaxs.z; break;
+				}
+			}
+			else
+			{
+				// pushing mins
+				switch(coord)
+				{
+					case 0: testorigin.x += this.mins_x - goodmins.x; break;
+					case 1: testorigin.y += this.mins_y - goodmins.y; break;
+					case 2: testorigin.z += this.mins_z - goodmins.z; break;
+				}
+			}
+
+			tracebox(stuckorigin, goodmins, goodmaxs, testorigin, MOVE_NOMONSTERS, this);
+			if(trace_startsolid && trace_ent.solid == SOLID_BSP) // NOTE: this checks for bmodelstartsolid in the engine
+			{
+				// BAD BAD, can't fix that
+				return false;
+			}
+
+			if(trace_fraction >= 1)
+				break; // it WORKS!
+
+			if(subbump >= 10)
+			{
+				// BAD BAD, can't fix that
+				return false;
+			}
+
+			// we hit something... let's move out of it
+			vector move = trace_endpos - testorigin;
+			float nudge = (trace_plane_normal * move) + 0.03125; // FIXME cvar this constant
+			stuckorigin = stuckorigin + nudge * trace_plane_normal;
+		}
+
+		if(dir)
+		{
+			// pushing maxs
+			switch(coord)
+			{
+				case 0: goodmaxs.x = this.maxs_x; break;
+				case 1: goodmaxs.y = this.maxs_y; break;
+				case 2: goodmaxs.z = this.maxs_z; break;
+			}
+		}
+		else
+		{
+			// pushing mins
+			switch(coord)
+			{
+				case 0: goodmins.x = this.mins_x; break;
+				case 1: goodmins.y = this.mins_y; break;
+				case 2: goodmins.z = this.mins_z; break;
+			}
+		}
+	}
+
+	// WE WIN
+	this.origin = stuckorigin;
+
+	return true;
+}
 
 void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 {
@@ -34,12 +119,14 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 }
 
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
 {
+	move_stepnormal = '0 0 0';
+
 	if(dt <= 0)
 		return 0;
 
-	int blocked = 0;
+	int blockedflag = 0;
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
@@ -52,7 +139,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	if(applygravity)
 	{
 		this.move_didgravity = 1;
-		grav = dt * (PHYS_ENTGRAVITY(this) ? PHYS_ENTGRAVITY(this) : 1) * PHYS_GRAVITY(this);
+		grav = dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
 		{
@@ -75,7 +162,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		{
 			// we got teleported by a touch function
 			// let's abort the move
-			blocked |= 8;
+			blockedflag |= 8;
 			break;
 		}
 
@@ -98,7 +185,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			if(trace_plane_normal.z > 0.7)
 			{
 				// floor
-				blocked |= 1;
+				blockedflag |= 1;
 
 				if(!trace_ent)
 				{
@@ -118,19 +205,19 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 
 			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
-				blocked |= 8;
+				blockedflag |= 8;
 				break;
 			}
 			if(!_Movetype_PushEntity(this, push, true, false))
 			{
-				blocked |= 8;
+				blockedflag |= 8;
 				break;
 			}
 			float trace2_fraction = trace_fraction;
 			steppush = vec3(0, 0, org.z - this.origin_z);
 			if(!_Movetype_PushEntity(this, steppush, true, false))
 			{
-				blocked |= 8;
+				blockedflag |= 8;
 				break;
 			}
 
@@ -148,10 +235,10 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		else
 		{
 			// step - return it to caller
-			blocked |= 2;
+			blockedflag |= 2;
 			// save the trace for player extrafriction
-			if(stepnormal)
-				stepnormal = trace_plane_normal;
+			if(applystepnormal)
+				move_stepnormal = trace_plane_normal;
 		}
 
 		if(my_trace_fraction >= 0.001)
@@ -168,7 +255,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		{
 			// this shouldn't really happen
 			this.velocity = '0 0 0';
-			blocked = 3;
+			blockedflag = 3;
 			break;
 		}
 
@@ -204,7 +291,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			if(numplanes != 2)
 			{
 				this.velocity = '0 0 0';
-				blocked = 7;
+				blockedflag = 7;
 				break;
 			}
 			vector dir = cross(planes[0], planes[1]);
@@ -229,10 +316,10 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	}
 
 	// LordHavoc: this came from QW and allows you to get out of water more easily
-	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blocked & 8))
+	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
-	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blocked & 8))
+	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
 	if(applygravity)
@@ -244,7 +331,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		}
 	}
 
-	return blocked;
+	return blockedflag;
 }
 
 void _Movetype_CheckVelocity(entity this)  // SV_CheckVelocity
@@ -322,10 +409,13 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 
 void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 {
-	if(gettouch(this))
+	if(!this && !oth)
+		return;
+
+	if(this.solid != SOLID_NOT && gettouch(this))
 		gettouch(this)(this, oth);
 
-	if(gettouch(oth))
+	if(oth.solid != SOLID_NOT && gettouch(oth))
 		gettouch(oth)(oth, this);
 }
 
@@ -348,6 +438,10 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
 			trace_ent = this;
+			trace_dpstartcontents = 0;
+			trace_dphitcontents = 0;
+			trace_dphitq3surfaceflags = 0;
+			trace_dphittexturename = string_null;
 
 			gettouch(it)(it, this);
 		}
@@ -402,23 +496,67 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 		_Movetype_LinkEdict_TouchAreaGrid(this);
 }
 
+int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
+{
+	if(this)
+	{
+		if(this.dphitcontentsmask)
+			return this.dphitcontentsmask;
+		else if(this.solid == SOLID_SLIDEBOX)
+		{
+			if(this.flags & 32) // TODO: FL_MONSTER
+				return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP;
+			else
+				return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+		}
+		else if(this.solid == SOLID_CORPSE)
+			return DPCONTENTS_SOLID | DPCONTENTS_BODY;
+		else if(this.solid == SOLID_TRIGGER)
+			return DPCONTENTS_SOLID | DPCONTENTS_BODY;
+		else
+			return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	}
+	else
+		return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+}
+
 entity _Movetype_TestEntityPosition_ent;
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
     entity this = _Movetype_TestEntityPosition_ent;
 	vector org = this.origin + ofs;
 
-	int cont = this.dphitcontentsmask;
-	this.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(org, this.mins, this.maxs, org, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
-	this.dphitcontentsmask = cont;
-
-	if(trace_startsolid)
+	//int cont = this.dphitcontentsmask;
+	//this.dphitcontentsmask = DPCONTENTS_SOLID;
+	tracebox(org, this.mins, this.maxs, this.origin, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
+	//this.dphitcontentsmask = cont;
+	if(trace_dpstartcontents & _Movetype_ContentsMask(this))
 		return true;
 
-	if(vdist(trace_endpos - this.origin, >, 0.0001))
-		this.origin = trace_endpos;
+	if(vlen2(trace_endpos - this.origin) >= 0.0001)
+	{
+		tracebox(trace_endpos, this.mins, this.maxs, trace_endpos, MOVE_NOMONSTERS, this);
+		if(!trace_startsolid)
+			this.origin = trace_endpos;
+	}
 	return false;
+}
+
+bool _Movetype_TestEntityPosition_Offset(int offset)
+{
+	// NOTE: expects _Movetype_TestEntityPosition_ent to be set to the correct entity
+	// returns true if stuck
+
+    // start at 2, since the first position has already been checked
+    for(int j = 2; j <= offset; ++j)
+    {
+    	if(!_Movetype_TestEntityPosition('0 0 -1' * j))
+    		return false;
+    	if(!_Movetype_TestEntityPosition('0 0 1' * j))
+    		return false;
+    }
+
+	return true;
 }
 
 int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
@@ -428,19 +566,14 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	    return UNSTICK_FINE;
 	}
 	#define X(v) if (_Movetype_TestEntityPosition(v))
+	X('0  0  -1') X(' 0  0  1')
 	X('-1  0  0') X(' 1  0  0')
 	X(' 0 -1  0') X(' 0  1  0')
 	X('-1 -1  0') X(' 1 -1  0')
 	X('-1  1  0') X(' 1  1  0')
 	#undef X
 	{
-        #define X(i) \
-            if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
-            if (_Movetype_TestEntityPosition('0 0 1' * i))
-        X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8)
-        X(9) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
-        X(17)
-        #undef X
+        if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
         {
             LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
                 etof(this), this.classname, vtos(this.origin));
@@ -449,7 +582,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
-	_Movetype_LinkEdict(this, true);
+	_Movetype_LinkEdict(this, false);
 	return UNSTICK_FIXED;
 }
 
@@ -505,10 +638,11 @@ bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool 
 {
 	_Movetype_PushEntityTrace(this, push);
 
+	// NOTE: this is a workaround for the QC's lack of a worldstartsolid trace parameter
 	if(trace_startsolid && failonstartsolid)
 	{
 		int oldtype = this.move_nomonsters;
-		this.move_nomonsters = MOVE_NOMONSTERS;
+		this.move_nomonsters = MOVE_WORLDONLY;
 		_Movetype_PushEntityTrace(this, push);
 		this.move_nomonsters = oldtype;
 		if(trace_startsolid)
@@ -519,19 +653,13 @@ bool _Movetype_PushEntity(entity this, vector push, bool failonstartsolid, bool 
 
 	vector last_origin = this.origin;
 
-	if(dolink)
-		_Movetype_LinkEdict(this, true);
+	_Movetype_LinkEdict(this, dolink);
 
-	if(trace_fraction < 1)
-		if(this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
-			_Movetype_Impact(this, trace_ent);
+	if((this.solid >= SOLID_TRIGGER && trace_fraction < 1 && (!IS_ONGROUND(this) || this.groundentity != trace_ent)))
+		_Movetype_Impact(this, trace_ent);
 
 	return (this.origin == last_origin); // false if teleported by touch
 }
-
-
-.float ltime;
-.void() blocked;
 
 void _Movetype_Physics_Frame(entity this, float movedt)
 {
@@ -540,7 +668,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUG("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
+			_Movetype_Physics_Push(this, movedt);
 			break;
 		case MOVETYPE_NONE:
 			break;
@@ -595,17 +723,23 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			this.angles = this.angles + movedt * this.avelocity;
 			break;
 		case MOVETYPE_STEP:
+			if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
+				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Step(this, movedt);
 			break;
 		case MOVETYPE_WALK:
 		case MOVETYPE_FLY:
 		case MOVETYPE_FLY_WORLDONLY:
+			if (movedt > 0 && GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
+				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Walk(this, movedt);
 			break;
 		case MOVETYPE_TOSS:
 		case MOVETYPE_BOUNCE:
 		case MOVETYPE_BOUNCEMISSILE:
 		case MOVETYPE_FLYMISSILE:
+			if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 2)
+				_Movetype_CheckStuck(this);
 			_Movetype_Physics_Toss(this, movedt);
 			break;
 		case MOVETYPE_PHYSICS:
@@ -650,12 +784,14 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 	Movetype_Physics_MatchTicrate(this, TICRATE, sloppy);
 }
 
+// saved .move_*
 .vector tic_origin;
 .vector tic_velocity;
 .int tic_flags;
 .vector tic_avelocity;
 .vector tic_angles;
 
+// saved .*
 .vector tic_saved_origin;
 .vector tic_saved_velocity;
 .int tic_saved_flags;
@@ -663,6 +799,8 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 .vector tic_saved_angles;
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Physics_Entity
 {
+	// this hack exists to contain the physics feature
+	// (so entities can place themselves in the world and not need to update .tic_* themselves)
 #define X(s) \
 	if(this.(s) != this.tic_saved_##s) \
 		this.tic_##s = this.(s)
@@ -674,53 +812,53 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	X(angles);
 #undef X
 
+	this.flags = this.tic_flags;
+	this.velocity = this.tic_velocity;
+	setorigin(this, this.tic_origin);
+	this.avelocity = this.tic_avelocity;
+	this.angles = this.tic_angles;
+
 	if(tr <= 0)
 	{
-		this.flags = this.tic_flags;
-		this.velocity = this.tic_velocity;
-		this.origin = this.tic_origin;
-		this.avelocity = this.tic_avelocity;
-		this.angles = this.tic_angles;
 		Movetype_Physics_NoMatchServer(this);
-		this.tic_origin = this.origin;
-		this.tic_velocity = this.velocity;
-		this.tic_avelocity = this.avelocity;
-		this.tic_angles = this.angles;
-		this.tic_flags = this.flags;
 
-		this.tic_saved_flags = this.flags;
-		this.tic_saved_velocity = this.velocity;
-		this.tic_saved_origin = this.origin;
-		this.tic_saved_avelocity = this.avelocity;
-		this.tic_saved_angles = this.angles;
+		this.tic_saved_flags = this.tic_flags = this.flags;
+		this.tic_saved_velocity = this.tic_velocity = this.velocity;
+		this.tic_saved_origin = this.tic_origin = this.origin;
+		this.tic_saved_avelocity = this.tic_avelocity = this.avelocity;
+		this.tic_saved_angles = this.tic_angles = this.angles;
 		return;
 	}
 
 	float dt = time - this.move_time;
 
-	int n = max(0, floor(dt / tr));
+	int n = bound(0, floor(dt / tr), 32); // limit the number of frames to 32 (CL_MAX_USERCMDS, using DP_SMALLMEMORY value for consideration of QC's limitations)
 	dt -= n * tr;
 	this.move_time += n * tr;
 
 	if(!this.move_didgravity)
 		this.move_didgravity = ((this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS) && !(this.tic_flags & FL_ONGROUND));
 
-	for (int i = 0; i < n; ++i)
+	for (int j = 0; j < n; ++j)
 	{
-		this.flags = this.tic_flags;
-		this.velocity = this.tic_velocity;
-		setorigin(this, this.tic_origin);
-		this.avelocity = this.tic_avelocity;
-		this.angles = this.tic_angles;
 		_Movetype_Physics_Frame(this, tr);
-		this.tic_origin = this.origin;
-		this.tic_velocity = this.velocity;
-		this.tic_avelocity = this.avelocity;
-		this.tic_angles = this.angles;
-		this.tic_flags = this.flags;
 		if(wasfreed(this))
 			return;
 	}
+
+	// update the physics fields
+	this.tic_origin = this.origin;
+	this.tic_velocity = this.velocity;
+	this.tic_avelocity = this.avelocity;
+	this.tic_angles = this.angles;
+	this.tic_flags = this.flags;
+
+	// restore their actual values
+	this.flags = this.tic_saved_flags;
+	this.velocity = this.tic_saved_velocity;
+	setorigin(this, this.tic_saved_origin);
+	//this.avelocity = this.tic_saved_avelocity;
+	this.angles = this.tic_saved_angles;
 
 	this.avelocity = this.tic_avelocity;
 
@@ -733,7 +871,7 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		{
 			this.velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 			    * dt
-			    * (this.gravity ? this.gravity : 1)
+			    * ((this.gravity) ? this.gravity : 1)
 			    * PHYS_GRAVITY(this);
 		}
 
@@ -745,16 +883,16 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		}
 		else
 		{
-			vector oldorg = this.origin;
-			this.origin = this.tic_origin;
+			setorigin(this, this.tic_origin);
 			_Movetype_PushEntityTrace(this, dt * this.velocity);
-			this.origin = oldorg;
 			if(!trace_startsolid)
 				setorigin(this, trace_endpos);
+			else
+				setorigin(this, this.tic_saved_origin);
 		}
 
 		if(this.move_didgravity > 0 && GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-			this.velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
+			this.velocity_z -= 0.5 * dt * ((this.gravity) ? this.gravity : 1) * PHYS_GRAVITY(this);
 	}
 	else
 	{
@@ -762,6 +900,8 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		this.angles = this.tic_angles;
 		setorigin(this, this.tic_origin);
 	}
+
+	this.flags = this.tic_flags;
 
 	this.tic_saved_flags = this.flags;
 	this.tic_saved_velocity = this.velocity;

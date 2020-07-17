@@ -1,5 +1,5 @@
 #include "pp.qh"
-REGISTER_MINIGAME(pp, "Push-Pull");
+REGISTER_MINIGAME(pp, _("Push-Pull"));
 
 const int PP_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int PP_TURN_WIN   = 0x0200; // player has won
@@ -359,13 +359,13 @@ void pp_hud_board(vector pos, vector mySize)
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",pname),
+			sprintf(_("%s^7 won the game!"), pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",pname),
+			sprintf(_("%s^7 won the game!"), pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -439,9 +439,10 @@ string pp_turn_to_string(int turnflags)
 
 	if ( turnflags & PP_TURN_WIN )
 	{
+		// translator-friendly messages composed of 2 existing messages
 		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
-			return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!");
-		return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
+			return strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
+		return strcat(_("You win!"), "\n", _("Select \"^1Next Match^7\" on the menu to start a new match!"));
 	}
 
 	if ( turnflags & PP_TURN_NEXT )
@@ -485,7 +486,12 @@ int pp_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			pp_set_curr_pos("");
-			minigame.message = pp_turn_to_string(minigame.minigame_flags);
+			strcpy(minigame.message, pp_turn_to_string(minigame.minigame_flags));
+			return false;
+		}
+		case "deactivate":
+		{
+			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
@@ -560,7 +566,7 @@ int pp_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = pp_turn_to_string(sent.minigame_flags);
+					strcpy(sent.message, pp_turn_to_string(sent.minigame_flags));
 					if ( sent.minigame_flags & minigame_self.team )
 						minigame_prompt();
 					sent.pp_team1_score = ReadByte();

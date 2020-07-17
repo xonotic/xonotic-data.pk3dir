@@ -52,6 +52,9 @@ float expandingbox_sizefactor_from_fadelerp(float fadelerp);
 
 vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float boxxsizefactor);
 
+float blink_synced(float base, float range, float freq, float start_time, int start_blink);
+float blink(float base, float range, float freq);
+
 void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag);
 
 void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag);
@@ -154,23 +157,6 @@ string _drawpic_picpath;
 void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
 
 void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
-
-#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN															\
-	float textaspect, oldsz;																						\
-	vector dfs = drawfontscale; \
-	drawfontscale = '1 1 0'; \
-	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;											\
-	drawfontscale = dfs; \
-	if(sz.x/sz.y > textaspect) {																					\
-		oldsz = sz.x;																								\
-		sz.x = sz.y * textaspect;																					\
-		pos.x += (oldsz - sz.x) * 0.5;																				\
-	} else {																										\
-		oldsz = sz.y;																								\
-		sz.y = sz.x / textaspect; 																					\
-		pos.y += (oldsz - sz.y) * 0.5;																				\
-	}																												\
-MACRO_END
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag);

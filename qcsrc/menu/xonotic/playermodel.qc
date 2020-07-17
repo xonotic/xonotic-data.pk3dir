@@ -27,7 +27,7 @@ void XonoticPlayerModelSelector_loadModels(entity me)
 	int i;
 	string fn;
 
-	float glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), true, true);
+	float glob = search_begin(get_model_datafilename(string_null, -1, "txt"), true, true);
 	if (glob < 0)
 		return;
 

@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
+#include <server/gamelog.qh>
 #include <server/mutators/_mod.qh>
 #include "teamplay.qh"
 #include "scores.qh"
@@ -74,8 +75,6 @@ void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity wea
 		UpdateFrags(attacker, f);
 }
 
-.entity kh_next;
-
 string AppendItemcodes(string s, entity player)
 {
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -87,16 +86,15 @@ string AppendItemcodes(string s, entity player)
 		if(w != 0 || slot == 0)
 			s = strcat(s, ftos(w));
 	}
-	if(time < player.strength_finished)
+	if(time < STAT(STRENGTH_FINISHED, player))
 		s = strcat(s, "S");
-	if(time < player.invincible_finished)
+	if(time < STAT(INVINCIBLE_FINISHED, player))
 		s = strcat(s, "I");
-	if(player.flagcarried != NULL)
-		s = strcat(s, "F");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
-	if(player.kh_next)
-		s = strcat(s, "K");
+	// TODO: include these codes as a flag on the item itself
+	MUTATOR_CALLHOOK(LogDeath_AppendItemCodes, player, s);
+	s = M_ARGV(1, string);
 	return s;
 }
 
@@ -132,7 +130,7 @@ void Obituary_SpecialDeath(
 		return;
 	}
 
-	entity deathent = Deathtypes_from(deathtype - DT_FIRST);
+	entity deathent = REGISTRY_GET(Deathtypes, deathtype - DT_FIRST);
 	if (!deathent)
 	{
 		backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n");
@@ -202,21 +200,21 @@ float Obituary_WeaponDeath(
 	else
 	{
 		LOG_TRACEF(
-			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
+			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %s!\n",
 			deathtype,
-			death_weapon
+			death_weapon.netname
 		);
 	}
 
 	return true;
 }
 
-bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target)
+bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target, string attacker_name)
 {
 	if(deathtype == DEATH_FIRE.m_id)
 	{
 		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : CS(targ).ping));
-		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, GetResource(attacker, RES_HEALTH), GetResource(attacker, RES_ARMOR), (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
+		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker_name, kill_count_to_target, GetResource(attacker, RES_HEALTH), GetResource(attacker, RES_ARMOR), (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
 		return true;
 	}
 
@@ -231,16 +229,25 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 	// Declarations
 	float notif_firstblood = false;
 	float kill_count_to_attacker, kill_count_to_target;
+	bool notif_anonymous = false;
+	string attacker_name = attacker.netname;
 
 	// Set final information for the death
 	targ.death_origin = targ.origin;
 	string deathlocation = (autocvar_notification_server_allows_location ? NearestLocation(targ.death_origin) : "");
 
+	// Abort now if a mutator requests it
+	if (MUTATOR_CALLHOOK(ClientObituary, inflictor, attacker, targ, deathtype, attacker.(weaponentity))) { CS(targ).killcount = 0; return; }
+	notif_anonymous = M_ARGV(5, bool);
+
+	if(notif_anonymous)
+		attacker_name = "Anonymous player";
+
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(
 		sprintf(
 			"Obituary(%s, %s, %s, %s = %d);\n",
-			attacker.netname,
+			attacker_name,
 			inflictor.netname,
 			targ.netname,
 			Deathtype_Name(deathtype),
@@ -301,8 +308,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			CS(attacker).killcount = 0;
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
-			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, CS(targ).killcount);
+			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker_name);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker_name, deathlocation, CS(targ).killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -366,14 +373,14 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 					targ,
 					MSG_CHOICE,
 					CHOICE_TYPEFRAGGED,
-					attacker.netname,
+					attacker_name,
 					kill_count_to_target,
 					GetResource(attacker, RES_HEALTH),
 					GetResource(attacker, RES_ARMOR),
 					(IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping)
 				);
 			}
-			else if(!frag_centermessage_override(attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target))
+			else if(!frag_centermessage_override(attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target, attacker_name))
 			{
 				Send_Notification(
 					NOTIF_ONE,
@@ -389,7 +396,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 					targ,
 					MSG_CHOICE,
 					CHOICE_FRAGGED,
-					attacker.netname,
+					attacker_name,
 					kill_count_to_target,
 					GetResource(attacker, RES_HEALTH),
 					GetResource(attacker, RES_ARMOR),
@@ -401,8 +408,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
-			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
+			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker))
+				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}
 
@@ -471,7 +478,9 @@ void Ice_Think(entity this)
 		delete(this);
 		return;
 	}
-	setorigin(this, this.owner.origin - '0 0 16');
+	vector ice_org = this.owner.origin - '0 0 16';
+	if (this.origin != ice_org)
+		setorigin(this, ice_org);
 	this.nextthink = time;
 }
 
@@ -497,6 +506,7 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	entity ice = new(ice);
 	ice.owner = targ;
 	ice.scale = targ.scale;
+	// set_movetype(ice, MOVETYPE_FOLLOW) would rotate the ice model with the player
 	setthink(ice, Ice_Think);
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
@@ -619,7 +629,15 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 					damage = 0;
 				else if(attacker != targ)
 				{
-					if(autocvar_teamplay_mode == 3)
+					if(autocvar_teamplay_mode == 2)
+					{
+						if(IS_PLAYER(targ) && !IS_DEAD(targ))
+						{
+							attacker.dmg_team = attacker.dmg_team + damage;
+							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
+						}
+					}
+					else if(autocvar_teamplay_mode == 3)
 						damage = 0;
 					else if(autocvar_teamplay_mode == 4)
 					{
@@ -686,7 +704,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		    }
 		}
 
-		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id && STAT(FROZEN, targ))
+		if(STAT(FROZEN, targ) && !ITEM_DAMAGE_NEEDKILL(deathtype)
+			&& deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			if(autocvar_g_frozen_revive_falldamage > 0 && deathtype == DEATH_FALL.m_id && damage >= autocvar_g_frozen_revive_falldamage)
 			{
@@ -701,12 +720,12 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			force *= autocvar_g_frozen_force;
 		}
 
-		if(IS_PLAYER(targ) && STAT(FROZEN, targ) && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_frozen_damage_trigger)
+		if(IS_PLAYER(targ) && STAT(FROZEN, targ)
+			&& ITEM_DAMAGE_NEEDKILL(deathtype) && !autocvar_g_frozen_damage_trigger)
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
-			entity spot = SelectSpawnPoint (targ, false);
-
+			entity spot = SelectSpawnPoint(targ, false);
 			if(spot)
 			{
 				damage = 0;
@@ -865,7 +884,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 }
 
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
-								float inflictorselfdamage, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
+								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
@@ -952,8 +971,10 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = force * (finaldmg / coredamage) * forceintensity;
 					hitloc = nearest;
 
-					if(deathtype & WEP_BLASTER.m_id)
-						force *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
+					// apply special scaling along the z axis if set
+					// NOTE: 0 value is not allowed for compatibility, in the case of weapon cvars not being set
+					if(forcezscale)
+						force.z *= forcezscale;
 
 					if(targ != directhitentity)
 					{
@@ -1056,7 +1077,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, weaponentity, directhitentity);
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, 
+									cantbe, mustbe, false, forceintensity, 1, deathtype, weaponentity, directhitentity);
 }
 
 bool Heal(entity targ, entity inflictor, float amount, float limit)

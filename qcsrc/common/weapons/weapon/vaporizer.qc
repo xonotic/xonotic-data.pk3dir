@@ -33,7 +33,6 @@ void Draw_VaporizerBeam_trace_callback(vector start, vector hit, vector end)
 }
 
 .vector vorg1, vorg2;
-.float spawn_time;
 void VaporizerBeam_Draw(entity this)
 {
 	//draw either the old v2.3 beam or the new beam
@@ -281,7 +280,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 
 METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(GetResource(actor, thiswep.ammo_type) > 0)
+    if((actor.items & IT_UNLIMITED_AMMO) || GetResource(actor, thiswep.ammo_type) > 0)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 1, false);
     else
         PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
@@ -295,7 +294,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     } else if(WEP_CVAR(vaporizer, reload_ammo) && actor.(weaponentity).clip_load < vaporizer_ammo) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     }
-    if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !forbidWeaponUse(actor))
+    if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !weaponLocked(actor))
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vaporizer, refire)))
         {

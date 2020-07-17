@@ -214,6 +214,28 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 	return boxsize * (0.5 * (1 - sz));
 }
 
+// NOTE base is the central value
+// freq: circle frequency, = 2*pi*frequency in hertz
+// start_pos:
+//  -1 start from the lower value
+//   0 start from the base value
+//   1 start from the higher value
+float blink_synced(float base, float range, float freq, float start_time, int start_pos)
+{
+	// note:
+	//   RMS = sqrt(base^2 + 0.5 * range^2)
+	// thus
+	//   base = sqrt(RMS^2 - 0.5 * range^2)
+	// ensure RMS == 1
+
+	return base + range * sin((time - start_time - (M_PI / 2) * start_pos) * freq);
+}
+
+float blink(float base, float range, float freq)
+{
+	return blink_synced(base, range, freq, 0, 0);
+}
+
 void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag)
 {
 	vector line_dim = '0 0 0';
@@ -310,6 +332,23 @@ float stringwidth(string text, float handleColors, vector sz)
 	return r;
 }
 
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN \
+	float textaspect, oldsz; \
+	vector dfs = drawfontscale; \
+	drawfontscale = '1 1 0'; \
+	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y; \
+	drawfontscale = dfs; \
+	if(sz.x/sz.y > textaspect) { \
+		oldsz = sz.x; \
+		sz.x = sz.y * textaspect; \
+		pos.x += (oldsz - sz.x) * 0.5; \
+	} else { \
+		oldsz = sz.y; \
+		sz.y = sz.x / textaspect; \
+		pos.y += (oldsz - sz.y) * 0.5; \
+	} \
+MACRO_END
+
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
 	SET_POS_AND_SZ_Y_ASPECT(false);
@@ -382,7 +421,7 @@ float PolyDrawModelSurface(entity e, float i_s)
 	for(i_t = 0; i_t < n_t; ++i_t)
 	{
 		tri = getsurfacetriangle(e, i_s, i_t);
-		R_BeginPolygon(tex, 0);
+		R_BeginPolygon(tex, 0, false);
 		R_PolygonVertex(getsurfacepoint(e, i_s, tri.x), getsurfacepointattribute(e, i_s, tri.x, SPA_TEXCOORDS0), '1 1 1', 1);
 		R_PolygonVertex(getsurfacepoint(e, i_s, tri.y), getsurfacepointattribute(e, i_s, tri.y, SPA_TEXCOORDS0), '1 1 1', 1);
 		R_PolygonVertex(getsurfacepoint(e, i_s, tri.z), getsurfacepointattribute(e, i_s, tri.z, SPA_TEXCOORDS0), '1 1 1', 1);
@@ -400,11 +439,33 @@ void PolyDrawModel(entity e)
 
 void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag)
 {
-	float d;
 	vector ringsize, v, t;
 	ringsize = radi * '1 1 0';
 	centre = HUD_Shift(centre);
 	ringsize = HUD_Scale(ringsize);
+
+	if(f >= 1)
+	{
+		// draw full rectangle
+		R_BeginPolygon(pic, drawflag, true);
+			v = centre;			t = '0.5 0.5 0';
+			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v.y += 0.5 * ringsize.y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v.y -= 0.5 * ringsize.y;	t -= '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+		return;  // Complete rectangle, nothing more needed.
+	}
 
 	float co = cos(f * 2 * M_PI);
 	float si = sin(f * 2 * M_PI);
@@ -412,43 +473,10 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	co /= q;
 	si /= q;
 
-	if(f >= 1)
+	if(f > 0.75)
 	{
-		// draw full rectangle
-		R_BeginPolygon(pic, drawflag);
-			v = centre;			t = '0.5 0.5 0';
-			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
-			R_PolygonVertex(v, t, rgb, a);
-
-			v = centre;			t = '0.5 0.5 0';
-			v.y += 0.5 * ringsize.y;	t += '0.5 -0.5 0';
-			R_PolygonVertex(v, t, rgb, a);
-
-			v = centre;			t = '0.5 0.5 0';
-			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
-			R_PolygonVertex(v, t, rgb, a);
-
-			v = centre;			t = '0.5 0.5 0';
-			v.y -= 0.5 * ringsize.y;	t -= '0.5 -0.5 0';
-			R_PolygonVertex(v, t, rgb, a);
-		R_EndPolygon();
-
-		d = q - 1;
-		if(d > 0)
-		{
-			R_BeginPolygon(pic, drawflag);
-				v = centre;			t = '0.5 0.5 0';
-				R_PolygonVertex(v, t, rgb, a);
-
-				v = centre;			t = '0.5 0.5 0';
-				v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
-				R_PolygonVertex(v, t, rgb, a);
-		}
-	}
-	else if(f > 0.75)
-	{
-		// draw upper and first triangle
-		R_BeginPolygon(pic, drawflag);
+		// draw upper half in full
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
@@ -461,7 +489,8 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
-		R_BeginPolygon(pic, drawflag);
+		// draw clipped lower half as a quad
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
@@ -472,15 +501,11 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 			v = centre;			t = '0.5 0.5 0';
 			v.y -= 0.5 * ringsize.y;	t -= '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
-
-		d = q - 0.75;
-		if(d <= 0)
-			R_EndPolygon();
 	}
 	else if(f > 0.5)
 	{
-		// draw upper triangle
-		R_BeginPolygon(pic, drawflag);
+		// draw upper half in full
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
@@ -493,23 +518,19 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
+		// draw clipped lower half as a triangle
+		R_BeginPolygon(pic, drawflag, true);
+			v = centre;			t = '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
 
-		d = q - 0.5;
-		if(d > 0)
-		{
-			R_BeginPolygon(pic, drawflag);
-				v = centre;			t = '0.5 0.5 0';
-				R_PolygonVertex(v, t, rgb, a);
-
-				v = centre;			t = '0.5 0.5 0';
-				v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
-				R_PolygonVertex(v, t, rgb, a);
-		}
+			v = centre;			t = '0.5 0.5 0';
+			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
 	}
 	else if(f > 0.25)
 	{
-		// draw first triangle
-		R_BeginPolygon(pic, drawflag);
+		// draw clipped lower half as a quad
+		R_BeginPolygon(pic, drawflag, true);
 			v = centre;			t = '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
@@ -520,34 +541,30 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 			v = centre;			t = '0.5 0.5 0';
 			v.y += 0.5 * ringsize.y;	t += '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
+	}
+	else if (f > 0)
+	{
+		// draw clipped lower half as a triangle
+		R_BeginPolygon(pic, drawflag, true);
+			v = centre;			t = '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
 
-		d = q - 0.25;
-		if(d <= 0)
-			R_EndPolygon();
+			v = centre;			t = '0.5 0.5 0';
+			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
 	}
 	else
 	{
-		d = q;
-		if(d > 0)
-		{
-			R_BeginPolygon(pic, drawflag);
-				v = centre;			t = '0.5 0.5 0';
-				R_PolygonVertex(v, t, rgb, a);
-
-				v = centre;			t = '0.5 0.5 0';
-				v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
-				R_PolygonVertex(v, t, rgb, a);
-		}
+		// Nothing to draw.
+		return;
 	}
 
-	if(d > 0)
-	{
-			v = centre;			t = '0.5 0.5 0';
-			v.x += co * 0.5 * ringsize.x;	t += co * '0.5 0.5 0';
-			v.y += si * 0.5 * ringsize.y;	t += si * '0.5 -0.5 0';
-			R_PolygonVertex(v, t, rgb, a);
-		R_EndPolygon();
-	}
+	// The last, moving vertex.
+		v = centre;			t = '0.5 0.5 0';
+		v.x += co * 0.5 * ringsize.x;	t += co * '0.5 0.5 0';
+		v.y += si * 0.5 * ringsize.y;	t += si * '0.5 -0.5 0';
+		R_PolygonVertex(v, t, rgb, a);
+	R_EndPolygon();
 }
 
 /** engine callback */

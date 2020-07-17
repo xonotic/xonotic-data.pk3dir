@@ -104,7 +104,8 @@ void bot_think(entity this)
 
 	// clear buttons
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
-	PHYS_INPUT_BUTTON_JUMP(this) = false;
+	// keep jump button pressed for a short while, useful with ramp jumps
+	PHYS_INPUT_BUTTON_JUMP(this) = (!IS_DEAD(this) && time < this.bot_jump_time + 0.2);
 	PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	PHYS_INPUT_BUTTON_ZOOM(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
@@ -145,21 +146,7 @@ void bot_think(entity this)
 void bot_setnameandstuff(entity this)
 {
 	string readfile, s;
-	float file, tokens, prio;
-
-	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
-	string name, prefix, suffix;
-
- 	if(autocvar_g_campaign)
-	{
-		prefix = "";
-		suffix = "";
-	}
-	else
-	{
-		prefix = autocvar_bot_prefix;
-		suffix = autocvar_bot_suffix;
-	}
+	int file, tokens, prio;
 
 	file = fopen(autocvar_bot_config_file, FILE_READ);
 
@@ -170,6 +157,26 @@ void bot_setnameandstuff(entity this)
 	}
 	else
 	{
+		entity balance = TeamBalance_CheckAllowedTeams(NULL);
+		TeamBalance_GetTeamCounts(balance, NULL);
+		int smallest_team = -1;
+		int smallest_count = -1;
+		if (teamplay)
+		{
+			for (int i = 1; i <= AvailableTeams(); ++i)
+			{
+				// NOTE if (autocvar_g_campaign && autocvar_g_campaign_forceteam == i)
+				// TeamBalance_GetNumberOfPlayers(balance, i); returns the number of players + 1
+				// since it keeps a spot for the real player in the desired team
+				int count = TeamBalance_GetNumberOfPlayers(balance, i);
+				if (smallest_count < 0 || count < smallest_count)
+				{
+					smallest_team = i;
+					smallest_count = count;
+				}
+			}
+		}
+		TeamBalance_Destroy(balance);
 		RandomSelection_Init();
 		while((readfile = fgets(file)))
 		{
@@ -177,23 +184,40 @@ void bot_setnameandstuff(entity this)
 				continue;
 			if(substring(readfile, 0, 1) == "#")
 				continue;
+			// NOTE if the line is empty tokenizebyseparator(readfile, "\t")
+			// will create 1 empty token because there's no separator (bug?)
+			if (readfile == "")
+				continue;
 			tokens = tokenizebyseparator(readfile, "\t");
 			if(tokens == 0)
 				continue;
 			s = argv(0);
-			prio = 1;
+			prio = 0;
+			bool conflict = false;
 			FOREACH_CLIENT(IS_BOT_CLIENT(it), {
-				if(s == it.cleanname)
+				if (s == it.cleanname)
 				{
-					prio = 0;
+					conflict = true;
 					break;
 				}
 			});
+			if (!conflict)
+				prio += 1;
+			if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+			{
+				int forced_team = stof(argv(5));
+				if (!Team_IsValidIndex(forced_team))
+					forced_team = 0;
+				if (!forced_team || forced_team == smallest_team)
+					prio += 2;
+			}
 			RandomSelection_AddString(readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
 		fclose(file);
 	}
+
+	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
 
 	tokens = tokenizebyseparator(readfile, "\t");
 	if(argv(0) != "") bot_name = argv(0);
@@ -211,7 +235,10 @@ void bot_setnameandstuff(entity this)
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	this.bot_forced_team = stof(argv(5));
+	if (teamplay && !(autocvar_bot_vs_human && AvailableTeams() == 2))
+		this.bot_forced_team = stof(argv(5));
+	else
+		this.bot_forced_team = 0;
 
 	prio = 6;
 
@@ -241,19 +268,19 @@ void bot_setnameandstuff(entity this)
 	READSKILL(bot_thinkskill, 1, 0.5); // think skill
 	READSKILL(bot_aiskill, 2, 0); // "ai" skill
 
+	if (file >= 0 && argv(prio) != "")
+		LOG_INFOF("^1Warning^7: too many parameters for bot %s, please check format of %s", bot_name, autocvar_bot_config_file);
+
 	this.bot_config_loaded = true;
 
 	// this is really only a default, TeamBalance_JoinBestTeam is called later
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
 	this.bot_preferredcolors = this.clientcolors;
 
-	// pick the name
-	if (autocvar_bot_usemodelnames)
-		name = bot_model;
-	else
-		name = bot_name;
+	string prefix = (autocvar_g_campaign ? "" : autocvar_bot_prefix);
+	string suffix = (autocvar_g_campaign ? "" : autocvar_bot_suffix);
+	string name = (autocvar_bot_usemodelnames ? bot_model : bot_name);
 
-	// number bots with identical names
 	if (name == "")
 	{
 		name = ftos(etof(this));
@@ -261,6 +288,7 @@ void bot_setnameandstuff(entity this)
 	}
 	else
 	{
+		// number bots with identical names
 		int j = 0;
 		FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 			if(it.cleanname == name)
@@ -282,6 +310,10 @@ void bot_setnameandstuff(entity this)
 
 void bot_custom_weapon_priority_setup()
 {
+	static string bot_priority_far_prev;
+	static string bot_priority_mid_prev;
+	static string bot_priority_close_prev;
+	static string bot_priority_distances_prev;
 	float tokens, i, w;
 
 	bot_custom_weapon = false;
@@ -289,70 +321,50 @@ void bot_custom_weapon_priority_setup()
 	if(	autocvar_bot_ai_custom_weapon_priority_far == "" ||
 		autocvar_bot_ai_custom_weapon_priority_mid == "" ||
 		autocvar_bot_ai_custom_weapon_priority_close == "" ||
- 		autocvar_bot_ai_custom_weapon_priority_distances == ""
+		autocvar_bot_ai_custom_weapon_priority_distances == ""
 	)
 		return;
 
-	// Parse distances
-	tokens = tokenizebyseparator(autocvar_bot_ai_custom_weapon_priority_distances," ");
+	if (bot_priority_distances_prev != autocvar_bot_ai_custom_weapon_priority_distances)
+	{
+		strcpy(bot_priority_distances_prev, autocvar_bot_ai_custom_weapon_priority_distances);
+		tokens = tokenizebyseparator(autocvar_bot_ai_custom_weapon_priority_distances," ");
 
-	if (tokens!=2)
-		return;
+		if (tokens!=2)
+			return;
 
-	bot_distance_far = stof(argv(0));
-	bot_distance_close = stof(argv(1));
+		bot_distance_far = stof(argv(0));
+		bot_distance_close = stof(argv(1));
 
-	if(bot_distance_far < bot_distance_close){
-		bot_distance_far = stof(argv(1));
-		bot_distance_close = stof(argv(0));
-	}
-
-	// Initialize list of weapons
-	bot_weapons_far[0] = -1;
-	bot_weapons_mid[0] = -1;
-	bot_weapons_close[0] = -1;
-
-	// Parse far distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_far)," ");
-
-	int c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_far[c] = w;
-			++c;
+		if(bot_distance_far < bot_distance_close){
+			bot_distance_far = stof(argv(1));
+			bot_distance_close = stof(argv(0));
 		}
 	}
-	if(c < Weapons_COUNT)
-		bot_weapons_far[c] = -1;
 
-	// Parse mid distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_mid)," ");
+	int c;
 
-	c = 0;
-	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_mid[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_mid[c] = -1;
+	#define PARSE_WEAPON_PRIORITIES(dist) MACRO_BEGIN \
+		if (bot_priority_##dist##_prev != autocvar_bot_ai_custom_weapon_priority_##dist) { \
+			strcpy(bot_priority_##dist##_prev, autocvar_bot_ai_custom_weapon_priority_##dist); \
+			tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_##dist)," "); \
+			bot_weapons_##dist[0] = -1; \
+			c = 0; \
+			for(i = 0; i < tokens && c < REGISTRY_COUNT(Weapons); ++i) { \
+				w = stof(argv(i)); \
+				if (w >= WEP_FIRST && w <= WEP_LAST) { \
+					bot_weapons_##dist[c] = w; \
+					++c; \
+				} \
+			} \
+			if (c < REGISTRY_COUNT(Weapons)) \
+				bot_weapons_##dist[c] = -1; \
+		} \
+	MACRO_END
 
-	// Parse close distance weapon priorities
-	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_close)," ");
-
-	c = 0;
-	for(i=0; i < tokens && i < Weapons_COUNT; ++i){
-		w = stof(argv(i));
-		if ( w >= WEP_FIRST && w <= WEP_LAST) {
-			bot_weapons_close[c] = w;
-			++c;
-		}
-	}
-	if(c < Weapons_COUNT)
-		bot_weapons_close[c] = -1;
+	PARSE_WEAPON_PRIORITIES(far);
+	PARSE_WEAPON_PRIORITIES(mid);
+	PARSE_WEAPON_PRIORITIES(close);
 
 	bot_custom_weapon = true;
 }
@@ -427,16 +439,15 @@ void bot_clientconnect(entity this)
 		bot_setclientfields(this);
 	}
 
-	if(this.bot_forced_team==1)
-		this.team = NUM_TEAM_1;
-	else if(this.bot_forced_team==2)
-		this.team = NUM_TEAM_2;
-	else if(this.bot_forced_team==3)
-		this.team = NUM_TEAM_3;
-	else if(this.bot_forced_team==4)
-		this.team = NUM_TEAM_4;
+	if (teamplay && Team_IsValidIndex(this.bot_forced_team))
+	{
+		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
+	}
 	else
+	{
+		this.bot_forced_team = 0;
 		TeamBalance_JoinBestTeam(this);
+	}
 
 	havocbot_setupbot(this);
 }
@@ -578,6 +589,7 @@ void bot_calculate_stepheightvec()
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
 	jumpheight_vec = (autocvar_sv_jumpvelocity ** 2) / (2 * autocvar_sv_gravity) * '0 0 1';
 	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
+	jumpheight_time = autocvar_sv_jumpvelocity / autocvar_sv_gravity;
 }
 
 bool bot_fixcount()
@@ -754,7 +766,7 @@ void bot_serverframe()
 		if(botframe_cachedwaypointlinks)
 		{
 			if(!botframe_loadedforcedlinks)
-				waypoint_load_links_hardwired();
+				waypoint_load_hardwiredlinks();
 		}
 		else
 		{
@@ -819,10 +831,6 @@ void bot_serverframe()
 	if (autocvar_g_waypointeditor_auto)
 		botframe_autowaypoints();
 
-	if(time > bot_cvar_nextthink)
-	{
-		if(currentbots>0)
-			bot_custom_weapon_priority_setup();
-		bot_cvar_nextthink = time + 5;
-	}
+	if (currentbots > 0)
+		bot_custom_weapon_priority_setup();
 }

@@ -245,7 +245,7 @@ void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
 	vehicles_projectile_explode(this, trigger);
 }
 
-entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
+entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
 						   int _deahtype, float _projtype, float _health,
@@ -290,8 +290,8 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	if(_mzlsound != SND_Null)
 		sound (this, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
-	if(_mzlfx)
-		Send_Effect_(_mzlfx, proj.origin, proj.velocity, 1);
+	if(_mzlfx != EFFECT_Null)
+		Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
 
 	setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
@@ -450,7 +450,7 @@ void vehicles_reset_colors(entity this, entity player)
 	this.velocity  = '0 0 0';
 	this.effects   = eff;
 
-	Vehicle info = Vehicles_from(this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_setcolors(info, this);
 }
 
@@ -741,7 +741,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 
 		antilag_clear(this, this);
 
-		Vehicle info = Vehicles_from(this.vehicleid);
+		Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 		info.vr_death(info, this);
 		vehicles_setreturn(this);
 	}
@@ -777,17 +777,12 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 
 	if(this.play_time < time)
 	{
-		float wc = vlen(this.velocity - this.oldvelocity);
-		//dprint("oldvel: ", vtos(this.oldvelocity), "\n");
-		//dprint("vel: ", vtos(this.velocity), "\n");
-		if(_minspeed < wc)
+		if(vdist(this.velocity - this.oldvelocity, >, _minspeed))
 		{
+			float wc = vlen(this.velocity - this.oldvelocity);
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			Damage(this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.play_time = time + 0.25;
-
-			//dprint("wc: ", ftos(wc), "\n");
-			//dprint("take: ", ftos(take), "\n");
 		}
 	}
 }
@@ -857,7 +852,7 @@ void vehicles_exit(entity vehic, bool eject)
 		set_movetype(player, MOVETYPE_WALK);
 		player.effects		   &= ~EF_NODRAW;
 		player.teleportable		= TELEPORT_NORMAL;
-		player.alpha			= 1;
+		player.alpha			= default_player_alpha;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
 		player.view_ofs			= STAT(PL_VIEW_OFS, player);
@@ -924,19 +919,19 @@ void vehicles_touch(entity this, entity toucher)
 	// Vehicle currently in use
 	if(this.owner)
 	{
-		if(!forbidWeaponUse(this.owner))
 		if(toucher != NULL)
 		if((this.origin_z + this.maxs_z) > (toucher.origin_z))
 		if(vehicles_crushable(toucher))
+		if(!weaponLocked(this.owner))
 		{
-			if(vdist(this.velocity, >=, 30))
+			if(vdist(this.velocity, >=, autocvar_g_vehicles_crush_minspeed))
 				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, DMG_NOWEP, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
 
 		if(this.play_time < time) {
-			Vehicle info = Vehicles_from(this.vehicleid);
+			Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 			info.vr_impact(info, this);
 		}
 
@@ -981,7 +976,7 @@ void vehicles_enter(entity pl, entity veh)
 	|| (pl.vehicle)
 	) { return; }
 
-	Vehicle info = Vehicles_from(veh.vehicleid);
+	Vehicle info = veh.vehicledef; //REGISTRY_GET(Vehicles, veh.vehicleid);
 
 	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
@@ -1120,7 +1115,7 @@ void vehicles_think(entity this)
 	if(this.owner)
 		STAT(VEHICLESTAT_W2MODE, this.owner) = STAT(VEHICLESTAT_W2MODE, this);
 
-	Vehicle info = Vehicles_from(this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_think(info, this);
 
 	vehicles_painframe(this);
@@ -1193,7 +1188,7 @@ void vehicles_spawn(entity this)
 	});
 
 
-	Vehicle info = Vehicles_from(this.vehicleid);
+	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_spawn(info, this);
 
 	vehicles_reset_colors(this, NULL);
@@ -1261,6 +1256,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.damagedbycontents		= true;
 	IL_PUSH(g_damagedbycontents, this);
 	this.vehicleid				= info.vehicleid;
+	this.vehicledef 			= info;
 	this.PlayerPhysplug			= info.PlayerPhysplug;
 	this.event_damage			= func_null;
 	this.event_heal 			= func_null;

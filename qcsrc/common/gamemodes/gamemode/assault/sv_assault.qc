@@ -1,5 +1,7 @@
 #include "sv_assault.qh"
 
+#include <common/mapobjects/func/breakable.qh>
+
 .entity sprite;
 #define AS_ROUND_DELAY 5
 
@@ -347,7 +349,6 @@ bool destructible_heal(entity targ, entity inflictor, float amount, float limit)
 	return true;
 }
 
-spawnfunc(func_breakable);
 spawnfunc(func_assault_destructible)
 {
 	if (!g_assault) { delete(this); return; }
@@ -579,7 +580,7 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 	entity turret = M_ARGV(0, entity);
 
 	if(!turret.team || turret.team == FLOAT_MAX)
-		turret.team = 5; // this gets reversed when match starts?
+		turret.team = assault_attacker_team; // this gets reversed when match starts (assault_roundstart_use)
 }
 
 MUTATOR_HOOKFUNCTION(as, VehicleInit)
@@ -626,7 +627,7 @@ MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
 
 MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 {
-    entity ent = M_ARGV(0, entity);
+	entity ent = M_ARGV(0, entity);
 
 	switch(ent.classname)
 	{

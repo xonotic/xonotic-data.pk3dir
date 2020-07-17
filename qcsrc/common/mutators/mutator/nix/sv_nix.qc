@@ -80,7 +80,7 @@ REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED
 
 bool NIX_CanChooseWeapon(int wpn)
 {
-	entity e = Weapons_from(wpn);
+	entity e = REGISTRY_GET(Weapons, wpn);
 	if (e == WEP_Null) return false; // skip dummies
 	if(g_weaponarena)
 	{
@@ -125,12 +125,12 @@ void NIX_GiveCurrentWeapon(entity this)
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		// Weapon w = Weapons_from(nix_weapon);
+		// Weapon w = REGISTRY_GET(Weapons, nix_weapon);
 		// w.wr_init(w); // forget it, too slow
 	}
 
 	// get weapon info
-	entity wpn = Weapons_from(nix_weapon);
+	entity wpn = REGISTRY_GET(Weapons, nix_weapon);
 
 	if(nix_nextchange != this.nix_lastchange_id) // this shall only be called once per round!
 	{
@@ -140,7 +140,7 @@ void NIX_GiveCurrentWeapon(entity this)
 		SetResource(this, RES_CELLS, 0);
 		SetResource(this, RES_PLASMA, 0);
 		SetResource(this, RES_FUEL, 0);
-		if(this.items & IT_UNLIMITED_WEAPON_AMMO)
+		if(this.items & IT_UNLIMITED_AMMO)
 		{
 			switch (wpn.ammo_type)
 			{
@@ -193,7 +193,7 @@ void NIX_GiveCurrentWeapon(entity this)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_NIX_COUNTDOWN, nix_nextweapon, dt);
 	}
 
-	if(!(this.items & IT_UNLIMITED_WEAPON_AMMO) && time > this.nix_nextincr)
+	if(!(this.items & IT_UNLIMITED_AMMO) && time > this.nix_nextincr)
 	{
 		switch (wpn.ammo_type)
 		{
