@@ -26,7 +26,7 @@ void sys_phys_spectator_control(entity this) {}
 
 void sys_phys_fixspeed(entity this, float maxspeed_mod)
 {
-	float spd = STAT(MOVEVARS_SPEED, this);
+	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
 	if (this.speed != spd) {
 		this.speed = spd;
 		string temps = ftos(spd);

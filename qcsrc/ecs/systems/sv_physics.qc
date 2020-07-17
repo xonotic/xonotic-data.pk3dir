@@ -84,9 +84,6 @@ void sys_phys_spectator_control(entity this)
 
 void sys_phys_fixspeed(entity this, float maxspeed_mod)
 {
-	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
-	STAT(MOVEVARS_SPEED, this) = spd;
-
 	if (this.jumpspeedcap_min != autocvar_sv_jumpspeedcap_min) {
 		this.jumpspeedcap_min = autocvar_sv_jumpspeedcap_min;
 		stuffcmd(this, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
