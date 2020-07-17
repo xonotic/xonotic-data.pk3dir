@@ -4,7 +4,9 @@
 #include <server/miscfunctions.qh>
 #include <server/items.qh>
 #include <server/resources.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/t_items.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
@@ -294,11 +296,13 @@ bool DoesQ3ARemoveThisEntity(entity this)
 			gametypename = "team";
 		if(g_ctf)
 			gametypename = "ctf";
+		if(g_ctf && ctf_oneflag)
+			gametypename = "oneflag";
 		if(g_duel)
 			gametypename = "tournament";
 		if(maxclients == 1)
 			gametypename = "single";
-		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
+		// we do not have the other types (obelisk, harvester, teamtournament)
 		if(strstrofs(this.gametype, gametypename, 0) < 0)
 			return true;
 	}

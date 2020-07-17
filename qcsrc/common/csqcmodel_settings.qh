@@ -65,7 +65,8 @@
 	CSQCMODEL_PROPERTY(BIT(13), int, ReadInt24_t, WriteInt24_t, dphitcontentsmask) \
 	CSQCMODEL_PROPERTY(BIT(14), TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) \
 	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, multijump_count) \
-	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, move_movetype)
+	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, move_movetype) \
+	CSQCMODEL_PROPERTY(BIT(17), int, ReadByte, WriteByte, clipgroup)
 // TODO get rid of colormod/glowmod here; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here

@@ -4,7 +4,6 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <common/ent_cs.qh>
-#include <common/mapinfo.qh>
 #include <client/mapvoting.qh>
 #include <client/resources.qh>
 #include <client/teamradar.qh>
@@ -353,10 +352,12 @@ void HUD_Radar()
 
 	IL_EACH(g_radarlinks, true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(TeamRadar_Draw); // TODO: allow players to show on the radar as well!
+
 	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
 		if ( GetResource(it, RES_HEALTH) >= 0 )
-		if ( it.team == myteam + 1 || ISGAMETYPE(RACE) || !teamplay )
+		if ( it.team == myteam + 1 || mutator_returnvalue || !teamplay )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if(vdist((mousepos - coord), <, 8))
