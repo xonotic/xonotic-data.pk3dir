@@ -119,6 +119,7 @@ REGISTRY_SORT(Gametypes);
 REGISTRY_CHECK(Gametypes)
 
 REGISTRY_DEFINE_GET(Gametypes, NULL)
+STATIC_INIT(Gametypes_renumber) { FOREACH(Gametypes, true, it.m_id = i); }
 #define REGISTER_GAMETYPE(NAME, inst) REGISTER(Gametypes, MAPINFO_TYPE, NAME, m_id, inst)
 
 #define IS_GAMETYPE(NAME) (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
