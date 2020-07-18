@@ -83,8 +83,6 @@ bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 float autocvar_hud_panel_scoreboard_accuracy_showdelay = 2;
 float autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos = 0.75;
 
-bool autocvar_hud_panel_scoreboard_ctf_leaderboard = true;
-
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
 float autocvar_hud_panel_scoreboard_maxheight = 0.6;
@@ -1151,7 +1149,7 @@ bool Scoreboard_WouldDraw()
 		return true;
 	else if (intermission == 2)
 		return false;
-	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !ISGAMETYPE(CTS)
+	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !MUTATOR_CALLHOOK(DrawDeathScoreboard)
 		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
 	{
 		return true;
@@ -1399,7 +1397,7 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 }
 
 
-vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_size)
+vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector rgb, vector bg_size)
 {
 	int i;
 	RANKINGS_RECEIVED_CNT = 0;
@@ -1413,7 +1411,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	vector hl_rgb = rgb + '0.5 0.5 0.5';
 
 	pos.y += hud_fontsize.y;
-	drawstring(pos + eX * panel_bg_padding, ((ISGAMETYPE(CTF)) ? _("Capture time rankings") : _("Rankings")), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring(pos + eX * panel_bg_padding, ranktitle, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -1509,7 +1507,7 @@ float scoreboard_time;
 bool have_weapon_stats;
 bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 {
-	if (ISGAMETYPE(CTS) || ISGAMETYPE(RACE) || ISGAMETYPE(NEXBALL))
+	if (MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
 		return false;
 	if (!autocvar_hud_panel_scoreboard_accuracy || warmup_stage || ypos > 0.91 * vid_conheight)
 		return false;
@@ -1632,7 +1630,7 @@ void Scoreboard_Draw()
 	str = "";
 	if(tl > 0)
 		str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
-	if(!ISGAMETYPE(LMS))
+	if(!gametype.m_hidelimits)
 	{
 		if(fl > 0)
 		{
@@ -1821,7 +1819,8 @@ void Scoreboard_Draw()
 	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 
-	if(ISGAMETYPE(CTS) || ISGAMETYPE(RACE) || (autocvar_hud_panel_scoreboard_ctf_leaderboard && ISGAMETYPE(CTF) && STAT(CTF_SHOWLEADERBOARD))) {
+	if(MUTATOR_CALLHOOK(ShowRankings)) {
+		string ranktitle = M_ARGV(0, string);
 		if(race_speedaward) {
 			drawcolorcodedstring(pos, sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, race_speedaward_unit, ColorTranslateRGB(race_speedaward_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y;
@@ -1830,7 +1829,7 @@ void Scoreboard_Draw()
 			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_unit, ColorTranslateRGB(race_speedaward_alltimebest_holder)), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y;
 		}
-		pos = Scoreboard_Rankings_Draw(pos, playerslots[player_localnum], panel_bg_color, bg_size);
+		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
 
 	pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);

@@ -6,7 +6,7 @@
 #include "../menu.qh"
 #include <common/campaign_common.qh>
 #include <common/constants.qh>
-#include <common/mapinfo.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/util.qh>
 #include <common/command/_mod.qh>
 
