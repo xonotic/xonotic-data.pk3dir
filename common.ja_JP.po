@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-15 22:42+0000\n"
+"PO-Revision-Date: 2020-07-17 23:32+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -1163,7 +1163,7 @@ msgstr "構わない"
 
 #: qcsrc/client/mapvoting.qc:382
 msgid "Decide the gametype"
-msgstr "ゲームタイプを決める"
+msgstr "ゲームモードを決める"
 
 #: qcsrc/client/mapvoting.qc:382
 msgid "Vote for a map"
@@ -3356,12 +3356,12 @@ msgstr "^BG%s%s^K1 が ^BG%s^K1 からのライフル弾雨%s%sで死亡した"
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr "^BG%s%s^K1 は ^BG%s^K1 のライフル弾雨%s%sから非表示にできなかった"
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のライフル弾雨%s%sから隠すことができなかった"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr "^BG%s%s^K1 は ^BG%s^K1 のライフル%s%sから非表示にできなかった"
+msgstr "^BG%s%s^K1 は ^BG%s^K1 のライフル%s%sから隠すことができなかった"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
@@ -4381,7 +4381,7 @@ msgstr "トリプル削除! "
 #: qcsrc/common/notifications/all.qh:456
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 は5つ得点を一列にした! %s^BG"
+msgstr "%s^K1 は5得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:456
 #, c-format
@@ -4395,7 +4395,7 @@ msgstr "激怒! "
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 は10つ得点を一列にした! %s^BG"
+msgstr "%s^K1 は10得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
@@ -4409,12 +4409,12 @@ msgstr "虐殺! "
 #: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
-msgstr ""
+msgstr "%s^K1 が暴力を実行した! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 は15得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:458
 msgid "MAYHEM! "
@@ -4423,12 +4423,12 @@ msgstr "暴力! "
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr ""
+msgstr "%s^K1 はバーサーカーだ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 は20得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:459
 msgid "BERSERKER! "
@@ -4437,12 +4437,12 @@ msgstr "バーサーカー! "
 #: qcsrc/common/notifications/all.qh:460
 #, c-format
 msgid "%s^K1 inflicts CARNAGE! %s^BG"
-msgstr ""
+msgstr "%s^K1 は大虐殺をやった! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:460
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 は25得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:460
 msgid "CARNAGE! "
@@ -4451,12 +4451,12 @@ msgstr "大虐殺! "
 #: qcsrc/common/notifications/all.qh:461
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 は30得点を一列にした! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:461
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
-msgstr ""
+msgstr "%s^K1 はアルマゲドンを解放する! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:461
 msgid "ARMAGEDDON! "
@@ -4465,7 +4465,7 @@ msgstr "アルマゲドン! "
 #: qcsrc/common/notifications/all.qh:468
 #, c-format
 msgid "%s(^F1Bot^BG)"
-msgstr "%s(^F1BOT^BG)"
+msgstr "%s(^F1ボット^BG)"
 
 #: qcsrc/common/notifications/all.qh:470
 #, c-format
@@ -4493,73 +4493,73 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:500 qcsrc/common/notifications/all.qh:513
 #, c-format
 msgid "%d score spree! "
-msgstr ""
+msgstr "連続 %d 得点! "
 
 #: qcsrc/common/notifications/all.qh:512
 #, c-format
 msgid "%d frag spree! "
-msgstr ""
+msgstr "連続 %d 削除! "
 
 #: qcsrc/common/notifications/all.qh:525
 msgid "First blood! "
-msgstr ""
+msgstr "初殺! "
 
 #: qcsrc/common/notifications/all.qh:525
 msgid "First score! "
-msgstr ""
+msgstr "初得点! "
 
 #: qcsrc/common/notifications/all.qh:529
 msgid "First casualty! "
-msgstr ""
+msgstr "初敗北! "
 
 #: qcsrc/common/notifications/all.qh:529
 msgid "First victim! "
-msgstr ""
+msgstr "初犠牲者! "
 
 #: qcsrc/common/notifications/all.qh:570
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr ""
+msgstr "%s^K1 には %d の削除が連続している! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:571
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
-msgstr ""
+msgstr "%s^K1 が %d 得点を連続して獲得した! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:589
 #, c-format
 msgid "%s^K1 drew first blood! %s^BG"
-msgstr ""
+msgstr "%s^K1 が初殺を引きた! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:590
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
-msgstr ""
+msgstr "%s^K1 が初得点を獲得した! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:606
 #, c-format
 msgid ", ending their %d frag spree"
-msgstr ""
+msgstr "、連続 %d 削除を終了中"
 
 #: qcsrc/common/notifications/all.qh:607
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ""
+msgstr "、連続 %d 得点を終了中"
 
 #: qcsrc/common/notifications/all.qh:621
 #, c-format
 msgid ", losing their %d frag spree"
-msgstr ""
+msgstr "、連続 %d 削除を失い中"
 
 #: qcsrc/common/notifications/all.qh:622
 #, c-format
 msgid ", losing their %d score spree"
-msgstr ""
+msgstr "、連続 %d 得点を失い中"
 
 #: qcsrc/common/notifications/all.qh:647
 #, c-format
 msgid " with %d %s"
-msgstr ""
+msgstr " の %d %s"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
@@ -4583,7 +4583,7 @@ msgstr "チーム"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
-msgstr ""
+msgstr "中立"
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Red"
@@ -4635,12 +4635,12 @@ msgstr "ピンク"
 
 #: qcsrc/common/turrets/all.qh:95
 msgid "Turrets dump command only works with sv_cmd."
-msgstr ""
+msgstr "砲塔ダンプコマンドは sv_cmd でのみ機能します。"
 
 #: qcsrc/common/turrets/cl_turrets.qc:125
 #, c-format
 msgid "%s under attack!"
-msgstr ""
+msgstr "%s 攻撃を受けている!"
 
 #: qcsrc/common/turrets/turret.qh:11
 msgid "Turret"
@@ -5454,11 +5454,13 @@ msgid ""
 "Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
 "please file an issue."
 msgstr ""
+"エンティティフィールド %s.%s (%s) がリストにありません。これがエラーだと思わ"
+"れる場合は、問題を報告してください。"
 
 #: qcsrc/lib/string.qh:81
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
-msgstr "%d日, %02d:%02d:%02d"
+msgstr "%d 日、 %02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:82
 #, c-format
@@ -5467,19 +5469,19 @@ msgstr "%02d:%02d:%02d"
 
 #: qcsrc/menu/command/menu_cmd.qc:48
 msgid "Usage: menu_cmd command..., where possible commands are:"
-msgstr ""
+msgstr "使用法: menu_cmd コマンド...、可能なコマンドは次:"
 
 #: qcsrc/menu/command/menu_cmd.qc:49
 msgid "  sync - reloads all cvars on the current menu page"
-msgstr ""
+msgstr "  sync - 現在のメニューページの全ての cvar をリロードする"
 
 #: qcsrc/menu/command/menu_cmd.qc:50
 msgid "  directmenu ITEM - select a menu item as main item"
-msgstr ""
+msgstr "  directmenu ITEM - メニューアイテムをメインアイテムとして選択する"
 
 #: qcsrc/menu/command/menu_cmd.qc:51
 msgid "  dumptree - dump the state of the menu as a tree to the console"
-msgstr ""
+msgstr "  dumptree - メニューの状態をツリー状としてコンソールにダンプする"
 
 #: qcsrc/menu/command/menu_cmd.qc:81
 msgid "Available options:"
@@ -5681,15 +5683,15 @@ msgstr "以前の貢献者"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
-msgstr ""
+msgstr "強制的に config.cfg に保存される"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
-msgstr "保存されません"
+msgstr "保存されない"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:84
 msgid "will be saved to config.cfg"
-msgstr "config.cfgに保存されます"
+msgstr "config.cfg に保存される"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
@@ -5759,7 +5761,7 @@ msgstr "名前:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
-msgstr ""
+msgstr "ゲームに登場するあなたの名前:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
@@ -5768,10 +5770,12 @@ msgstr "テキスト言語:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:78
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
+"選手の統計が stats.xonotic.org であなたのニックネームを使用できるようにします"
+"か?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Undecided"
-msgstr ""
+msgstr "未定"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 msgid "Save settings"
@@ -5783,26 +5787,26 @@ msgstr "ようこそ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
-msgstr ""
+msgstr "弾薬表示:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 msgid "Show only current ammo type"
-msgstr ""
+msgstr "現在の弾薬タイプのみを表示する"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:46
 msgid "Noncurrent alpha:"
-msgstr ""
+msgstr "非現行アルファ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
 msgid "Noncurrent scale:"
-msgstr ""
+msgstr "非現在のスケール:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "Align icon:"
-msgstr ""
+msgstr "整列アイコン:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
@@ -5842,7 +5846,7 @@ msgstr "フェージング時刻"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
 msgid "Flip messages order"
-msgstr ""
+msgstr "メッセージの順序を逆にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
@@ -5857,27 +5861,27 @@ msgstr "中央"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
 msgid "Font scale:"
-msgstr ""
+msgstr "フォントスケール:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
-msgstr ""
+msgstr "センタープリントパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:17
 msgid "Chat entries:"
-msgstr ""
+msgstr "チャットエントリ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat size:"
-msgstr ""
+msgstr "チャットサイズ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
 msgid "Chat lifetime:"
-msgstr ""
+msgstr "チャットの存続期間:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
 msgid "Chat beep sound"
-msgstr ""
+msgstr "チャットのビープ音"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
@@ -5889,7 +5893,7 @@ msgstr "エンジン情報"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
 msgid "Use an averaging algorithm for fps"
-msgstr ""
+msgstr "FPSの平均化アルゴリズムを使用する"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -5897,18 +5901,18 @@ msgstr "エンジン情報パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
 msgid "Combine health and armor"
-msgstr ""
+msgstr "健康と鎧を組み合わせる"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Enable status bar"
-msgstr ""
+msgstr "ステータスバーを有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:19
 msgid "Status bar alignment:"
-msgstr ""
+msgstr "ステータスバーの配置:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:39
@@ -5927,11 +5931,11 @@ msgstr "外部"
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:32
 msgid "Icon alignment:"
-msgstr "アイコンの配置"
+msgstr "アイコンの配置:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:42
 msgid "Flip health and armor positions"
-msgstr ""
+msgstr "健康 / 鎧の位置を逆にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
@@ -5943,7 +5947,7 @@ msgstr "情報メッセージ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:19
 msgid "Flip align"
-msgstr ""
+msgstr "配置を逆にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qh:6
 msgid "Info Messages Panel"
@@ -5981,11 +5985,11 @@ msgstr "テキスト / アイコン率"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
-msgstr ""
+msgstr "現れたアイテムを隠す"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide big armor and health"
-msgstr ""
+msgstr "大きな鎧と健康を隠す"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Dynamic size"
@@ -5993,11 +5997,11 @@ msgstr "ダイナミックサイズ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
-msgstr ""
+msgstr "アイテムの時刻パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
-msgstr ""
+msgstr "MODアイコンパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:17
 msgid "Notifications:"
@@ -6005,19 +6009,19 @@ msgstr "通知:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:20
 msgid "Also print notifications to the console"
-msgstr ""
+msgstr "コンソールにも通知を印刷する"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:23
 msgid "Flip notify order"
-msgstr ""
+msgstr "通知の順序を逆にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:26
 msgid "Entry lifetime:"
-msgstr ""
+msgstr "通知を表示する:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:30
 msgid "Entry fadetime:"
-msgstr ""
+msgstr "通知の退色を表示する:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
@@ -6030,49 +6034,49 @@ msgstr "有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Enable even observing"
-msgstr ""
+msgstr "観察さえに有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Enable only in Race/CTS"
-msgstr ""
+msgstr "レース / CTSでのみ有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
-msgstr ""
+msgstr "ステータスバー"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:67
 msgid "Left align"
-msgstr ""
+msgstr "左揃え"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:73
 msgid "Right align"
-msgstr ""
+msgstr "右揃え"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 msgid "Inward align"
-msgstr ""
+msgstr "内揃え"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "Outward align"
-msgstr ""
+msgstr "外揃え"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
-msgstr ""
+msgstr "速度/加速位置を逆にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
-msgstr ""
+msgstr "速度:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
 msgid "Include vertical speed"
-msgstr ""
+msgstr "垂直速度を含める"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
 msgid "Speed unit:"
-msgstr ""
+msgstr "速度単位:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 msgid "qu/s"
@@ -6096,52 +6100,52 @@ msgstr "ノット"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:57
 msgid "Show"
-msgstr ""
+msgstr "表示する"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:60
 msgid "Top speed"
-msgstr ""
+msgstr "トップ速度"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
 msgid "Acceleration:"
-msgstr ""
+msgstr "加速"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:67
 msgid "Include vertical acceleration"
-msgstr ""
+msgstr "垂直加速度を含める"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
-msgstr ""
+msgstr "物理パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
-msgstr ""
+msgstr "パワーアップパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
-msgstr ""
+msgstr "常に有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
-msgstr ""
+msgstr "強制アスペクト:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
-msgstr ""
+msgstr "押されたキーパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
-msgstr ""
+msgstr "クイックメニューパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
-msgstr ""
+msgstr "レースタイマーパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Enable in team games"
-msgstr ""
+msgstr "チームゲームで有効にする"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
@@ -6186,31 +6190,31 @@ msgstr "北"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
 msgid "Scale:"
-msgstr ""
+msgstr "スケール:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:44
 msgid "Zoom mode:"
-msgstr ""
+msgstr "ズームモード:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr ""
+msgstr "ズームした内"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr ""
+msgstr "ズームした外"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr ""
+msgstr "常にズームした"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr ""
+msgstr "決してズームした"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
-msgstr ""
+msgstr "レーダーパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:17
 msgid "Score:"
@@ -6223,43 +6227,43 @@ msgstr "ランキング:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:58
 msgid "Off"
-msgstr ""
+msgstr "無効"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:22
 msgid "And me"
-msgstr ""
+msgstr "私も"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:23
 msgid "Pure"
-msgstr ""
+msgstr "純粋"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
-msgstr ""
+msgstr "得点パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:16
 msgid "Timer:"
-msgstr ""
+msgstr "タイマー:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:19
 msgid "Show elapsed time"
-msgstr ""
+msgstr "経過時間を表示する:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
-msgstr ""
+msgstr "タイマーパネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
-msgstr ""
+msgstr "投票後のアルファ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
-msgstr ""
+msgstr "投票パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
 msgid "Fade out after:"
-msgstr ""
+msgstr "退色後:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:167
@@ -6275,35 +6279,35 @@ msgstr "%ds"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:30
 msgid "Fade effect:"
-msgstr ""
+msgstr "退色効果:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "EF^None"
-msgstr ""
+msgstr "なし"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Alpha"
-msgstr ""
+msgstr "アルファ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
 msgid "Slide"
-msgstr ""
+msgstr "スライド"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:36
 msgid "EF^Both"
-msgstr ""
+msgstr "両"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
 msgid "Weapon icons:"
-msgstr ""
+msgstr "武器アイコン:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Show only owned weapons"
-msgstr ""
+msgstr "所有している武器のみを表示する"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Show weapon ID as:"
-msgstr ""
+msgstr "武器IDを次として表示する:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "SHOWAS^None"
@@ -6315,35 +6319,35 @@ msgstr "番号"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:57
 msgid "Bind"
-msgstr ""
+msgstr "割り当てられたキー"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
 msgid "Weapon ID scale:"
-msgstr ""
+msgstr "武器IDスケール:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
 msgid "Show Accuracy"
-msgstr ""
+msgstr "精度を表示する"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:67
 msgid "Show Ammo"
-msgstr ""
+msgstr "弾薬を表示する"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
 msgid "Ammo bar alpha:"
-msgstr ""
+msgstr "弾薬バーアルファ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:76
 msgid "Ammo bar color:"
-msgstr ""
+msgstr "弾薬バーの色:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qh:6
 msgid "Weapons Panel"
-msgstr ""
+msgstr "武器パネル"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:19
 msgid "HUD skins"
-msgstr ""
+msgstr "HUDスキン"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:173
@@ -6364,11 +6368,11 @@ msgstr "更新する"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:28
 msgid "Set skin"
-msgstr ""
+msgstr "スキンを設定する"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:37
 msgid "Save current skin"
-msgstr ""
+msgstr "現在のスキンを保存する"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "Panel background defaults:"
@@ -6382,7 +6386,7 @@ msgstr "背景:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
 #: qcsrc/menu/xonotic/util.qc:783
 msgid "Border size:"
-msgstr ""
+msgstr "ボーダーサイズ:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:114
@@ -6392,16 +6396,16 @@ msgstr "チームカラー:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
 #: qcsrc/menu/xonotic/util.qc:809
 msgid "Test team color in configure mode"
-msgstr ""
+msgstr "構成モードでのチームカラーのテストする"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86
 #: qcsrc/menu/xonotic/util.qc:812
 msgid "Padding:"
-msgstr ""
+msgstr "パディング:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:93
 msgid "HUD Dock:"
-msgstr ""
+msgstr "HUDドック:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
 msgid "DOCK^Disabled"
@@ -6534,11 +6538,11 @@ msgstr "デフォルト"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:60
 msgid "Unlimited"
-msgstr ""
+msgstr "無制限"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:74
 msgid "Gametype"
-msgstr ""
+msgstr "ゲームモード"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:79
 msgid "Time limit:"
@@ -6584,7 +6588,7 @@ msgstr "4チーム"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:117
 msgid "Player slots:"
-msgstr "プレイヤースロット:"
+msgstr "選手スロット:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid ""
@@ -7052,11 +7056,11 @@ msgstr "MOD^デフォルト"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
 #, c-format
 msgid "%d modified"
-msgstr ""
+msgstr "%d 変更した"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:121
 msgid "Official"
-msgstr ""
+msgstr "公式"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:129
 msgid "N/A (auth library missing, can't connect)"
@@ -7104,44 +7108,44 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:178
 msgid "Hostname:"
-msgstr ""
+msgstr "ホスト名:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:192
 msgid "Gametype:"
-msgstr ""
+msgstr "ゲームモード:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:197
 msgid "Map:"
-msgstr ""
+msgstr "マップ:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:202
 msgid "Mod:"
-msgstr ""
+msgstr "MOD:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:207
 msgid "Version:"
-msgstr ""
+msgstr "バージョン:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:212
 msgid "Settings:"
-msgstr ""
+msgstr "設定:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:219
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:251
 msgid "Players:"
-msgstr ""
+msgstr "選手:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:224
 msgid "Bots:"
-msgstr ""
+msgstr "ボット:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:229
 msgid "Free slots:"
-msgstr ""
+msgstr "自由スロット:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:235
 msgid "Encryption:"
-msgstr ""
+msgstr "暗号化:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:240
 msgid "ID:"
@@ -7149,39 +7153,40 @@ msgstr "ID:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:245
 msgid "Key:"
-msgstr ""
+msgstr "キー:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Information"
-msgstr ""
+msgstr "サーバー情報"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
 msgid "Demos"
-msgstr ""
+msgstr "デモ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:26
 msgid "Screenshots"
-msgstr ""
+msgstr "スクリーンショット"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:27
 msgid "Music Player"
-msgstr ""
+msgstr "音楽プレーヤー"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
 msgid "Auto record demos"
-msgstr ""
+msgstr "自動録音デモ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
 msgid "Timedemo"
-msgstr ""
+msgstr "最高速度でデモを再生する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
 msgid "Benchmark how fast your computer can run the highlighted demo"
 msgstr ""
+"お使いのコンピューターが強調表示されたデモを実行できる速度をベンチマークする"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
 msgid "DEMO^Play"
-msgstr ""
+msgstr "再生する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
@@ -7222,15 +7227,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
 msgid "MUSICPL^Stop"
-msgstr ""
+msgstr "停止する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:63
 msgid "MUSICPL^Play"
-msgstr ""
+msgstr "再生する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:66
 msgid "MUSICPL^Pause"
-msgstr ""
+msgstr "一時停止する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:69
 msgid "MUSICPL^Prev"
@@ -7250,7 +7255,7 @@ msgstr "全て削除する"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:41
 msgid "Auto screenshot scoreboard"
-msgstr ""
+msgstr "自動スクリーンショット得点表"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:62
 msgid "Open in the viewer"
@@ -7258,7 +7263,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:137
 msgid "Reset"
-msgstr ""
+msgstr "リセット"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:142
 msgid "Previous"
@@ -8225,7 +8230,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
-msgstr ""
+msgstr "ウェイポイント"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:66
 msgid "Display waypoint markers for objectives on the map"
@@ -8931,7 +8936,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:93
 msgid "MAXFPS^Unlimited"
-msgstr ""
+msgstr "無制限"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:96
 msgid "Target:"
@@ -8947,7 +8952,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:115
 msgid "IDLFPS^Unlimited"
-msgstr ""
+msgstr "無制限"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:119
 msgid "Save processing time for other apps"
@@ -8955,11 +8960,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
 msgid "Show frames per second"
-msgstr ""
+msgstr "FPSを表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:123
 msgid "Show your rendered frames per second"
-msgstr ""
+msgstr "レンダリングしたFPSを表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:128
 msgid "Menu tooltips:"

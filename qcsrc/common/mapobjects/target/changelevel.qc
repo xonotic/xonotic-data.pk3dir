@@ -28,7 +28,7 @@ void target_changelevel_use(entity this, entity actor, entity trigger)
 	}
 
 	if(this.gametype != "")
-		MapInfo_SwitchGameType(MapInfo_Type_FromString(this.gametype));
+		MapInfo_SwitchGameType(MapInfo_Type_FromString(this.gametype, false));
 
 	if (this.chmap == "")
 	{

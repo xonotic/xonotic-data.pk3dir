@@ -9,8 +9,8 @@
 #include "../race.qh"
 
 #include <common/constants.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/net_linked.qh>
-#include <common/mapinfo.qh>
 #include <common/util.qh>
 
 #include <common/monsters/_mod.qh>
