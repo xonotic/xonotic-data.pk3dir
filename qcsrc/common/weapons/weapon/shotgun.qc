@@ -31,7 +31,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 	if(lag && bullets > 0)
 		antilag_restore_all(actor);
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_SHOTGUN_MUZZLEFLASH, MDL_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	// casing code
 	if(autocvar_g_casings >= 1)

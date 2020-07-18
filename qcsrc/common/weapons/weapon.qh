@@ -56,8 +56,14 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, wpcolor, vector, '0 0 0');
     /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
     ATTRIB(Weapon, mdl, string, "");
+#ifdef GAMEQC
     /** M: model MDL_id_ITEM */
     ATTRIB(Weapon, m_model, entity);
+    /** M: flash model MDL_id_MUZZLEFLASH */
+    ATTRIB(Weapon, m_muzzlemodel, entity, MDL_Null);
+    /** M: flash effect EFFECT_id_MUZZLEFLASH */
+    ATTRIB(Weapon, m_muzzleeffect, entity);
+#endif
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
     ATTRIB(Weapon, w_crosshair, string, "gfx/crosshairmoustache");
     /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */

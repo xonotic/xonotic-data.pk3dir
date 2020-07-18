@@ -747,16 +747,16 @@ void W_MuzzleFlash_Model(entity wepent, entity muzzlemodel)
 REGISTER_NET_TEMP(w_muzzleflash)
 
 #ifdef SVQC
-void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, entity muzzlemodel, vector shotorg, vector shotdir)
+void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir)
 {
 	// don't show an exterior muzzle effect for the off-hand
 	if(weaponslot(weaponentity) == 0)
 	{
-		Send_Effect_Except(eff, shotorg, shotdir * 1000, 1, actor);
+		Send_Effect_Except(thiswep.m_muzzleeffect, shotorg, shotdir * 1000, 1, actor);
 
-		if(muzzlemodel != MDL_Null)
+		if(thiswep.m_muzzlemodel != MDL_Null)
 		{
-			W_MuzzleFlash_Model(actor.exteriorweaponentity, muzzlemodel);
+			W_MuzzleFlash_Model(actor.exteriorweaponentity, thiswep.m_muzzlemodel);
 			W_MuzzleFlash_Model_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '5 0 0');
 		}
 	}
@@ -768,13 +768,8 @@ void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, entity muzzle
 		int channel = MSG_ONE;
 		msg_entity = it;
 		WriteHeader(channel, w_muzzleflash);
+		WriteByte(channel, thiswep.m_id);
 		WriteByte(channel, weaponslot(weaponentity));
-		(Effects_COUNT >= 255)
-		? WriteShort(channel, eff.m_id)
-		: WriteByte(channel, eff.m_id);
-		(Models_COUNT >= 255)
-		? WriteShort(channel, muzzlemodel.m_id)
-		: WriteByte(channel, muzzlemodel.m_id);
 		WriteVector(channel, shotorg);
 	});
 }
@@ -782,12 +777,11 @@ void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, entity muzzle
 NET_HANDLE(w_muzzleflash, bool isNew)
 {
 	return = true;
+	int weapon_id = ReadByte();
     int slot = ReadByte();
-    int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
-    int net_modelname = (Models_COUNT >= 255) ? ReadShort() : ReadByte();
     vector sv_shotorg = ReadVector();
 
-    entity eff = Effects_from(net_name);
+	Weapon thiswep = REGISTRY_GET(Weapons, weapon_id);
     vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
 	vector forward, right, up;
 	MAKE_VECTORS(viewangles, forward, right, up);
@@ -796,12 +790,11 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 	{
 		// in third person mode, show the muzzle flash from the server side weapon position
 		// we don't have a view model to reference in this case
-		pointparticles(eff, sv_shotorg, forward * 1000, 1);
+		pointparticles(thiswep.m_muzzleeffect, sv_shotorg, forward * 1000, 1);
 		return;
 	}
     if(!autocvar_r_drawviewmodel) return;
 
-    entity muzzlemodel = Models_from(net_modelname);
 	entity wepent = viewmodels[slot];
 	// get the local player entity to calculate shot origin
 	entity rlplayer = CSQCModel_server2csqc(player_localentnum - 1);
@@ -815,11 +808,11 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 	tracebox(org, '0 0 0', '0 0 0', org + forward * (vecs.x + 1), MOVE_NORMAL, rlplayer);
 	org = trace_endpos - forward * 1;
 
-	pointparticles(eff, org, forward * 1000, 1);
+	pointparticles(thiswep.m_muzzleeffect, org, forward * 1000, 1);
 
-	if(muzzlemodel != MDL_Null)
+	if(thiswep.m_muzzlemodel != MDL_Null)
 	{
-		W_MuzzleFlash_Model(wepent, muzzlemodel);
+		W_MuzzleFlash_Model(wepent, thiswep.m_muzzlemodel);
 		W_MuzzleFlash_Model_AttachToShotorg(wepent, wepent.muzzle_flash, '5 0 0');
 	}
 }

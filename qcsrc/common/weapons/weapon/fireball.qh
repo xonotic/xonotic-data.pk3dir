@@ -10,6 +10,8 @@ CLASS(Fireball, Weapon)
 /* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Fireball, m_model, Model, MDL_FIREBALL_ITEM);
+/* flash mdl */ ATTRIB(Fireball, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Fireball, m_muzzleeffect, entity, EFFECT_FIREBALL_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Fireball, w_crosshair, string, "gfx/crosshairfireball");
 /* crosshair */ //ATTRIB(Fireball, w_crosshair_size, float, 0.65);

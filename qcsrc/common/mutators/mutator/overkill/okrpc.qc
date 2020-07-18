@@ -90,7 +90,7 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(okrpc, ammo), weaponentity);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okrpc, damage), thiswep.m_id);
-	W_MuzzleFlash(actor, weaponentity, EFFECT_ROCKET_MUZZLEFLASH, MDL_RPC_MUZZLEFLASH, w_shotorg, w_shotdir);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	missile.owner = missile.realowner = actor;

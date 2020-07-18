@@ -20,6 +20,7 @@ WepSet ReadWepSet();
 #include "calculations.qh"
 #include "projectiles.qh"
 #include <common/models/all.qh>
+#include <common/effects/all.qh>
 #endif
 
 #include <common/util.qh>
@@ -401,6 +402,6 @@ void wframe_send(entity actor, entity weaponentity, int wepframe, float attackra
 #endif
 
 #ifdef SVQC
-void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, entity muzzlemodel, vector shotorg, vector shotdir);
+void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
 #endif
 #endif

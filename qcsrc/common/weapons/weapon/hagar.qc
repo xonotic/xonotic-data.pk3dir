@@ -83,7 +83,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage), thiswep.m_id);
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_HAGAR_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	missile = new(missile);
 	missile.owner = missile.realowner = actor;
@@ -129,7 +129,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage), thiswep.m_id | HITTYPE_SECONDARY);
 
-	W_MuzzleFlash(actor, weaponentity, EFFECT_HAGAR_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	missile = new(missile);
 	missile.owner = missile.realowner = actor;
@@ -185,7 +185,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 
 	shots = actor.(weaponentity).hagar_load;
 	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage) * shots, thiswep.m_id | HITTYPE_SECONDARY);
-	W_MuzzleFlash(actor, weaponentity, EFFECT_HAGAR_MUZZLEFLASH, MDL_Null, w_shotorg, w_shotdir);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	forward = v_forward;
 	right = v_right;
