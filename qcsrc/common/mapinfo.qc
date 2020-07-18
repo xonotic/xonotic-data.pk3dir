@@ -589,7 +589,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 	}
 }
 
-Gametype MapInfo_Type_FromString(string gtype)
+Gametype MapInfo_Type_FromString(string gtype, bool dowarn)
 {
 	string replacement = "";
 	switch (gtype)
@@ -603,7 +603,7 @@ Gametype MapInfo_Type_FromString(string gtype)
 	}
 	if (replacement != "")
 	{
-		if (WARN_COND)
+		if (dowarn && WARN_COND)
 			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, gtype, replacement);
 		gtype = replacement;
 	}
@@ -921,7 +921,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(t == "type")
 		{
 			t = car(s); s = cdr(s);
-			Gametype f = MapInfo_Type_FromString(t);
+			Gametype f = MapInfo_Type_FromString(t, true);
 			//if(WARN_COND)
 				//LOG_WARN("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.");
 			if(f)
@@ -932,7 +932,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(t == "gametype")
 		{
 			t = car(s); s = cdr(s);
-			Gametype f = MapInfo_Type_FromString(t);
+			Gametype f = MapInfo_Type_FromString(t, true);
 			if(f)
 				_MapInfo_Map_ApplyGametypeEx (s, pGametypeToSet, f);
 			else if(WARN_COND)
@@ -983,7 +983,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			t = car(s); s = cdr(s);
 			bool all = t == "all";
 			Gametype f = NULL;
-			if(all || (f = MapInfo_Type_FromString(t)))
+			if(all || (f = MapInfo_Type_FromString(t, true)))
 			{
 				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
 				{
@@ -1000,7 +1000,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			t = car(s); s = cdr(s);
 			bool all = t == "all";
 			Gametype f = NULL;
-			if(all || (f = MapInfo_Type_FromString(t)))
+			if(all || (f = MapInfo_Type_FromString(t, true)))
 			{
 				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
 				{
@@ -1148,7 +1148,7 @@ int MapInfo_CurrentFeatures()
 
 Gametype MapInfo_CurrentGametype()
 {
-	Gametype prev = REGISTRY_GET(Gametypes, cvar("gamecfg"));
+	Gametype prev = MapInfo_Type_FromString(cvar_string("gamecfg"), false);
 	FOREACH(Gametypes, cvar(it.netname) && it != prev, return it);
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1232,7 +1232,7 @@ string MapInfo_ListAllAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
 void MapInfo_LoadMapSettings_SaveGameType(Gametype t)
 {
 	MapInfo_SwitchGameType(t);
-	cvar_set("gamecfg", ftos(t.m_id));
+	cvar_set("gamecfg", t.mdl);
 	MapInfo_LoadedGametype = t;
 }
 

@@ -174,7 +174,7 @@ string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 // gets a gametype from a string
 string _MapInfo_GetDefaultEx(Gametype t);
 float _MapInfo_GetTeamPlayBool(Gametype t);
-Gametype MapInfo_Type_FromString(string t);
+Gametype MapInfo_Type_FromString(string t, bool dowarn);
 string MapInfo_Type_Description(Gametype t);
 string MapInfo_Type_ToString(Gametype t);
 string MapInfo_Type_ToText(Gametype t);
