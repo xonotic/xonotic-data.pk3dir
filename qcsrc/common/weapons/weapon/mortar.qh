@@ -10,6 +10,8 @@ CLASS(Mortar, Weapon)
 /* modelname */ ATTRIB(Mortar, mdl, string, "gl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Mortar, m_model, Model, MDL_MORTAR_ITEM);
+/* flash mdl */ ATTRIB(Mortar, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Mortar, m_muzzleeffect, entity, EFFECT_GRENADE_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Mortar, w_crosshair, string, "gfx/crosshairgrenadelauncher");
 /* crosshair */ ATTRIB(Mortar, w_crosshair_size, float, 0.7);

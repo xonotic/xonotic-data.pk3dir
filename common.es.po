@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-14 22:31+0000\n"
+"PO-Revision-Date: 2020-07-17 23:02+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -3884,7 +3884,7 @@ msgstr "^K1Te volviste muy viejo sin tomar tu medicamento"
 
 #: qcsrc/common/notifications/all.inc:636
 msgid "^K1You need to preserve your health"
-msgstr "^K1Necesitas conservar tu vida"
+msgstr "^K1Necesitas conservar tu salud"
 
 #: qcsrc/common/notifications/all.inc:637
 msgid "^K1You became a shooting star!"
@@ -4454,7 +4454,7 @@ msgstr "¡%s^K1 ha hecho una ELIMINACIÓN TRIPLE! %s^BG"
 #: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
-msgstr "¡%s^K1 ha hecho una ELIMINACIÓN TRIPLE! %s^BG"
+msgstr "¡%s^K1 ha hecho TRIPLE ACIERTO! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:455
 msgid "TRIPLE FRAG! "
@@ -4477,7 +4477,7 @@ msgstr "¡FURIA!"
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr "¡%s^K1 eliminó a DIEZ JUGADORES SEGUIDOS! %s^BG"
+msgstr "¡%s^K1 eliminó a DIEZ ACIERTOS SEGUIDOS! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
@@ -4496,7 +4496,7 @@ msgstr "¡%s^K1 ha ejecutado un CAOS! %s^BG"
 #: qcsrc/common/notifications/all.qh:458
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr "¡%s^K1 ha hecho QUINCE ELIMINACIONES SEGUIDAS! %s^BG"
+msgstr "¡%s^K1 ha hecho QUINCE ACIERTOS SEGUIDOS! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:458
 msgid "MAYHEM! "
@@ -4510,7 +4510,7 @@ msgstr "¡%s^K1 es un BERSERKER! %s^BG"
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr "¡%s^K1 ha hecho VEINTE ELIMINACIONES SEGUIDAS! %s^BG"
+msgstr "¡%s^K1 ha hecho VEINTE ACIERTOS SEGUIDOS! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:459
 msgid "BERSERKER! "
@@ -4524,7 +4524,7 @@ msgstr "¡%s^K1 ha hecho una CARNICERÍA! %s^BG"
 #: qcsrc/common/notifications/all.qh:460
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr "¡%s^K1 ha hecho VENTICINCO ELIMINACIONES SEGUIDAS! %s^BG"
+msgstr "¡%s^K1 ha hecho VENTICINCO ACIERTOS SEGUIDOS! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:460
 msgid "CARNAGE! "
@@ -4533,12 +4533,12 @@ msgstr "¡CARNICERÍA!"
 #: qcsrc/common/notifications/all.qh:461
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr "¡%s^K1 ha hecho TREINTA ELIMINACIONES SEGUIDAS! %s^BG"
+msgstr "¡%s^K1 ha hecho TREINTA ACIERTOS SEGUIDOS! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:461
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
-msgstr "¡%s^K1 destata el ARMAGEDÓN! %s^BG"
+msgstr "¡%s^K1 desata el ARMAGEDÓN! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:461
 msgid "ARMAGEDDON! "
@@ -4561,7 +4561,7 @@ msgid ""
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
 "\n"
-"(Vida ^1%d^BG / Armadura ^2%d^BG)%s"
+"(Salud ^1%d^BG / Armadura ^2%d^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:479
 #, c-format
@@ -4575,7 +4575,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:500 qcsrc/common/notifications/all.qh:513
 #, c-format
 msgid "%d score spree! "
-msgstr "¡%d puntuaciones seguidas! "
+msgstr "¡%d aciertos seguidos! "
 
 #: qcsrc/common/notifications/all.qh:512
 #, c-format
@@ -4584,15 +4584,15 @@ msgstr "¡%d eliminaciones seguidas! "
 
 #: qcsrc/common/notifications/all.qh:525
 msgid "First blood! "
-msgstr "¡Primera eliminación! "
+msgstr "¡Primer asesinato! "
 
 #: qcsrc/common/notifications/all.qh:525
 msgid "First score! "
-msgstr "¡Primera puntuación! "
+msgstr "¡Primer acierto! "
 
 #: qcsrc/common/notifications/all.qh:529
 msgid "First casualty! "
-msgstr "¡Primera baja! "
+msgstr "¡Primera derrota! "
 
 #: qcsrc/common/notifications/all.qh:529
 msgid "First victim! "
@@ -4606,7 +4606,7 @@ msgstr "¡%s^K1 tiene %d eliminaciones seguidas! %s^BG"
 #: qcsrc/common/notifications/all.qh:571
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
-msgstr "¡%s^K1 tiene %d eliminaciones seguidas! %s^BG"
+msgstr "¡%s^K1 tiene %d aciertos seguidos! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:589
 #, c-format
@@ -4616,27 +4616,27 @@ msgstr "¡%s^K1 ha sido el primero en eliminar a alguien! %s^BG"
 #: qcsrc/common/notifications/all.qh:590
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
-msgstr "¡%s^K1 fue el primero en eliminar a alguien! %s^BG"
+msgstr "¡%s^K1 fue el primero en acertar! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:606
 #, c-format
 msgid ", ending their %d frag spree"
-msgstr ", finalizando su cadena de %d eliminaciones"
+msgstr ", finalizando sus %d eliminaciones seguidas"
 
 #: qcsrc/common/notifications/all.qh:607
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ", finalizando su cadena de %d eliminaciones"
+msgstr ", finalizando sus %d aciertos seguidos"
 
 #: qcsrc/common/notifications/all.qh:621
 #, c-format
 msgid ", losing their %d frag spree"
-msgstr ", perdiendo su cadena de %d eliminaciones"
+msgstr ", perdiendo sus %d eliminaciones seguidas"
 
 #: qcsrc/common/notifications/all.qh:622
 #, c-format
 msgid ", losing their %d score spree"
-msgstr ", perdiendo su cadena de %d eliminaciones"
+msgstr ", perdiendo sus %d aciertos seguidos"
 
 #: qcsrc/common/notifications/all.qh:647
 #, c-format
@@ -4717,7 +4717,7 @@ msgstr "Rosa"
 
 #: qcsrc/common/turrets/all.qh:95
 msgid "Turrets dump command only works with sv_cmd."
-msgstr "El comando de volcado de tirar torretas sólo funciona con sv_cmd."
+msgstr "El comando de volcado de torretas sólo funciona con sv_cmd."
 
 #: qcsrc/common/turrets/cl_turrets.qc:125
 #, c-format
@@ -5858,7 +5858,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Undecided"
-msgstr "Sin determinar"
+msgstr "Indeciso"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 msgid "Save settings"
@@ -5960,7 +5960,7 @@ msgstr "Tamaño del texto:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
 msgid "Chat lifetime:"
-msgstr "Mostrar durante:"
+msgstr "Mostrar chat durante:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
 msgid "Chat beep sound"
@@ -5984,7 +5984,7 @@ msgstr "Panel de Información del Motor"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
 msgid "Combine health and armor"
-msgstr "Combinar vida y armadura"
+msgstr "Combinar salud y armadura"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
@@ -6018,11 +6018,11 @@ msgstr "Alineación de los iconos:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:42
 msgid "Flip health and armor positions"
-msgstr "Invertir la posición de vida y armadura"
+msgstr "Invertir la posición de salud y armadura"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
-msgstr "Panel de Vida/Armadura"
+msgstr "Panel de Salud/Armadura"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:16
 msgid "Info messages:"
@@ -6072,7 +6072,7 @@ msgstr "No mostrar objetos reaparecidos"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide big armor and health"
-msgstr "No mostrar gran armadura y vida"
+msgstr "No mostrar gran armadura y salud"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Dynamic size"
@@ -6975,7 +6975,7 @@ msgstr "Sólo es posible infligir daño a tus enemigos mientras estén en el air
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:185
 msgid "Damage done to your enemy gets added to your own health"
-msgstr "Daño realizado a tu enemigo será añadido a tu propia vida"
+msgstr "Daño realizado a tu enemigo será añadido a tu propia salud"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:190
 msgid ""
@@ -7259,7 +7259,7 @@ msgstr "Bots:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:229
 msgid "Free slots:"
-msgstr "Plazas libres:"
+msgstr "Espacios libres:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:235
 msgid "Encryption:"
@@ -8459,7 +8459,7 @@ msgstr "Sólo cuando cerca de apuntador"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:158
 msgid "Display health and armor"
-msgstr "Desplegar vida y armadura"
+msgstr "Desplegar salud y armadura"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
 msgid "Damage overlay:"

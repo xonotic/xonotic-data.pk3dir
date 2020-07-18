@@ -19,7 +19,7 @@ void viewloc_PlayerPhysics(entity this)
 
 		vector old_movement = PHYS_CS(this).movement;
 		PHYS_CS(this).movement_x = old_movement_y;
-		if((this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && !(time < this.ladder_time))
+		if((this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && !this.ladder_entity)
 			PHYS_CS(this).movement_y = old_movement_x;
 		else
 			PHYS_CS(this).movement_y = 0;
@@ -30,7 +30,7 @@ void viewloc_PlayerPhysics(entity this)
 		vector forward = vectoangles(normalize(level_end - level_start));
 		vector backward = vectoangles(normalize(level_start - level_end));
 
-		if((this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && this.angles_y < 0 && !(time < this.ladder_time))
+		if((this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && this.angles_y < 0 && !this.ladder_entity)
 			PHYS_CS(this).movement_y = -PHYS_CS(this).movement_y;
 
 		if(this.viewloc.spawnflags & VIEWLOC_FREEAIM)

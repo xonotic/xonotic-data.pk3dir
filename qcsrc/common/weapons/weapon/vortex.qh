@@ -10,6 +10,8 @@ CLASS(Vortex, Weapon)
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);
+/* flash mdl */ ATTRIB(Vortex, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Vortex, m_muzzleeffect, entity, EFFECT_VORTEX_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Vortex, w_crosshair, string, "gfx/crosshairnex");
 /* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);

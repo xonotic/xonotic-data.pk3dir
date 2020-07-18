@@ -39,6 +39,7 @@
 #include <common/effects/qc/globalsound.qh>
 
 #include "../common/mapobjects/func/conveyor.qh"
+#include <common/mapobjects/func/ladder.qh>
 #include "../common/mapobjects/teleporters.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
 #include <common/mapobjects/trigger/counter.qh>
@@ -691,6 +692,9 @@ void PutPlayerInServer(entity this)
 		IL_REMOVE(g_swamped, this);
 	this.swampslug = NULL;
 	this.swamp_interval = 0;
+	if(this.ladder_entity)
+		IL_REMOVE(g_ladderents, this);
+	this.ladder_entity = NULL;
 	IL_EACH(g_counters, it.realowner == this,
 	{
 		delete(it);

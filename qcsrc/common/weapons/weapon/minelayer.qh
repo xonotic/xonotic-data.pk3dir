@@ -10,6 +10,8 @@ CLASS(MineLayer, Weapon)
 /* modelname */ ATTRIB(MineLayer, mdl, string, "minelayer");
 #ifdef GAMEQC
 /* model     */ ATTRIB(MineLayer, m_model, Model, MDL_MINELAYER_ITEM);
+/* flash mdl */ ATTRIB(MineLayer, m_muzzlemodel, Model, MDL_MINELAYER_MUZZLEFLASH);
+/* flash eff */ ATTRIB(MineLayer, m_muzzleeffect, entity, EFFECT_ROCKET_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(MineLayer, w_crosshair, string, "gfx/crosshairminelayer");
 /* crosshair */ ATTRIB(MineLayer, w_crosshair_size, float, 0.9);
