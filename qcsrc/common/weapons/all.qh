@@ -357,11 +357,15 @@ vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
 
 .vector spawnorigin; // for casings
 
+.vector movedir_aligned; // shot origin based on weapon alignment (unaffected by shootfromeye)
+
 // weapon animation vectors:
 .vector anim_fire1;
 .vector anim_fire2;
 .vector anim_idle;
 .vector anim_reload;
+
+.entity muzzle_flash;
 
 // static frame globals
 
@@ -394,5 +398,9 @@ REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim);
+#endif
+
+#ifdef SVQC
+void W_MuzzleFlash(entity actor, .entity weaponentity, entity eff, entity muzzlemodel, vector shotorg, vector shotdir);
 #endif
 #endif
