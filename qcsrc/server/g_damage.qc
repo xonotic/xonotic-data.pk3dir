@@ -911,7 +911,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	total_damage_to_creatures = 0;
 
 	if(deathtype != (WEP_HOOK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
-		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
+		if(!(deathtype & HITTYPE_SOUND)) // do not send radial sound damage (bandwidth hog)
 		{
 			force = inflictorvelocity;
 			if(force == '0 0 0')
