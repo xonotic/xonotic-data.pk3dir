@@ -1,4 +1,6 @@
 #pragma once
 
-.float ladder_time;
+IntrusiveList g_ladderents;
+STATIC_INIT(g_ladderents) { g_ladderents = IL_NEW(); }
+
 .entity ladder_entity;

@@ -1756,7 +1756,7 @@ int navigation_poptouchedgoals(entity this)
 			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
 			gc_max = this.goalcurrent.origin + '1 1 1' * 12 + eZ * (jumpheight_vec.z + STAT(PL_MIN, this).z);
 		}
-		if (time < this.ladder_time)
+		if (this.ladder_entity)
 		{
 			if (!boxesoverlap(this.absmin, this.absmax - eZ * STAT(PL_MAX, this).z, gc_min, gc_max))
 				break;

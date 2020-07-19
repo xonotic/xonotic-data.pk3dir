@@ -119,6 +119,7 @@ REGISTRY_SORT(Gametypes);
 REGISTRY_CHECK(Gametypes)
 
 REGISTRY_DEFINE_GET(Gametypes, NULL)
+STATIC_INIT(Gametypes_renumber) { FOREACH(Gametypes, true, it.m_id = i); }
 #define REGISTER_GAMETYPE(NAME, inst) REGISTER(Gametypes, MAPINFO_TYPE, NAME, m_id, inst)
 
 #define IS_GAMETYPE(NAME) (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
@@ -174,7 +175,7 @@ string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 // gets a gametype from a string
 string _MapInfo_GetDefaultEx(Gametype t);
 float _MapInfo_GetTeamPlayBool(Gametype t);
-Gametype MapInfo_Type_FromString(string t);
+Gametype MapInfo_Type_FromString(string t, bool dowarn);
 string MapInfo_Type_Description(Gametype t);
 string MapInfo_Type_ToString(Gametype t);
 string MapInfo_Type_ToText(Gametype t);
