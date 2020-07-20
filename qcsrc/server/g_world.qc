@@ -885,7 +885,6 @@ spawnfunc(worldspawn)
 
 	q3compat = BITSET(q3compat, BIT(0), fexists(strcat("scripts/", mapname, ".arena")));
 	q3compat = BITSET(q3compat, BIT(1), fexists(strcat("scripts/", mapname, ".defi")));
-	LOG_INFO("CHECKED FOR: scripts/", mapname, ".arena and scripts/", mapname, ".defi, q3compat set to ", ftos(q3compat));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
