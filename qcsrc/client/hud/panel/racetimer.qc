@@ -3,7 +3,6 @@
 #include <client/autocvars.qh>
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
-#include <common/mapinfo.qh>
 
 // Race timer (#8)
 
@@ -103,7 +102,7 @@ void HUD_RaceTimer ()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
-		if(!(ISGAMETYPE(RACE) || ISGAMETYPE(CTS))) return;
+		if(!MUTATOR_CALLHOOK(ShowRaceTimer)) return;
 		if(spectatee_status == -1) return;
 	}
 

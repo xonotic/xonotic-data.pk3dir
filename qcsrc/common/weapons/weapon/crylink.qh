@@ -10,6 +10,8 @@ CLASS(Crylink, Weapon)
 /* modelname */ ATTRIB(Crylink, mdl, string, "crylink");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Crylink, m_model, Model, MDL_CRYLINK_ITEM);
+/* flash mdl */ ATTRIB(Crylink, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Crylink, m_muzzleeffect, entity, EFFECT_CRYLINK_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Crylink, w_crosshair, string, "gfx/crosshaircrylink");
 /* crosshair */ ATTRIB(Crylink, w_crosshair_size, float, 0.5);

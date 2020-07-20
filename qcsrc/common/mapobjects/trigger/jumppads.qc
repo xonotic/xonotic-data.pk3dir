@@ -571,8 +571,6 @@ float trigger_push_send(entity this, entity to, float sf)
 	WriteByte(MSG_ENTITY, this.active);
 	WriteCoord(MSG_ENTITY, this.height);
 
-	WriteVector(MSG_ENTITY, this.movedir);
-
 	trigger_common_write(this, true);
 
 	return true;
@@ -703,8 +701,6 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();
 	this.height = ReadCoord();
-
-	this.movedir = ReadVector();
 
 	trigger_common_read(this, true);
 
