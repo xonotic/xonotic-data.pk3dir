@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-17 23:02+0000\n"
+"PO-Revision-Date: 2020-07-19 19:54+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -7142,7 +7142,7 @@ msgstr "Pausar"
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
-"Pausar la actualización de la lista de servidores para evitar que salteen"
+"Pausar la actualización de la lista de servidores para evitar que se salten"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:54
 msgid "Reload the server list"
@@ -7434,7 +7434,7 @@ msgstr "Permitir que las estadísticas del jugador usen tu apodo"
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr ""
 "Permitir que las estadísticas de jugadores te clasifiquen en las tablas de "
-"puntuación"
+"puntuaciones"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
 msgid "Country"
@@ -7498,7 +7498,7 @@ msgstr "Adjuntar a *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:34
 msgid "Detach from *"
-msgstr "Desadjuntar de *"
+msgstr "Despegar de *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:37
 msgid "Visual object properties for *:"
@@ -7858,7 +7858,7 @@ msgstr "Restablecer la asignación de teclas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:41
 msgid "Quality preset:"
-msgstr "Predefinición de calidad:"
+msgstr "Ajustes preestablecidos de calidad:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^OMG!"
@@ -7918,7 +7918,7 @@ msgstr "Mejor"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "DET^Insane"
-msgstr "Insano"
+msgstr "Demente"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Player detail:"
@@ -9909,39 +9909,39 @@ msgstr "estadísticas habilitadas"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
-msgstr "SLCAT^Favoritos"
+msgstr "Favoritos"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Recommended"
-msgstr "SLCAT^Recomendado"
+msgstr "Recomendado"
 
 #: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Normal Servers"
-msgstr "SLCAT^Servidores Normales"
+msgstr "Servidores Normales"
 
 #: qcsrc/menu/xonotic/serverlist.qh:155
 msgid "SLCAT^Servers"
-msgstr "SLCAT^Servidores"
+msgstr "Servidores"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Competitive Mode"
-msgstr "SLCAT^Modo Competitivo"
+msgstr "Modo Competitivo"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Modified Servers"
-msgstr "SLCAT^Servidores Modificados"
+msgstr "Servidores Modificados"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr "SLCAT^Overkill"
+msgstr "Overkill"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
-msgstr "SLCAT^InstaGib"
+msgstr "InstaGib"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr "SLCAT^Modo Defrag"
+msgstr "Modo Defrag"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
