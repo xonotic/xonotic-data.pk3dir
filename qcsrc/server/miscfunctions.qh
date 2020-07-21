@@ -35,7 +35,7 @@ void soundat(entity e, vector o, float chan, string samp, float vol, float _atte
 void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);
-void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten, float _pitch);
 
 void droptofloor(entity this);
 
@@ -82,7 +82,7 @@ void remove_unsafely(entity e);
 
 void SetMovetypeFollow(entity ent, entity e);
 
-void soundto(float dest, entity e, float chan, string samp, float vol, float atten);
+void soundto(float dest, entity e, float chan, string samp, float vol, float atten, float _pitch);
 
 void stopsound(entity e, float chan);
 
