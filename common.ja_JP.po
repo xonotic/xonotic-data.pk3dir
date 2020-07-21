@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-19 22:51+0000\n"
+"PO-Revision-Date: 2020-07-20 21:10+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -148,7 +148,7 @@ msgstr "^1参加するために ^3%s ^1を押して"
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #: qcsrc/common/notifications/all.qh:430
 msgid "jump"
-msgstr "飛び越える"
+msgstr "ジャンプ"
 
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
@@ -945,7 +945,7 @@ msgid ""
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
 "特殊なゲームタイプ名 'team' および 'noteams' を使用して、\n"
-"全てのチーム/チームなしゲームモードを含めたり、除外したりできます。"
+"全てのチーム / チームなしゲームモードを含めたり、除外したりできます。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:354
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1167,7 +1167,7 @@ msgstr "ゲームモードを決める"
 
 #: qcsrc/client/mapvoting.qc:382
 msgid "Vote for a map"
-msgstr "マップに投票してする"
+msgstr "マップに投票する"
 
 #: qcsrc/client/mapvoting.qc:399
 #, c-format
@@ -2957,7 +2957,7 @@ msgstr "^BG%s^F3 切断された"
 #: qcsrc/common/notifications/all.inc:415
 #, c-format
 msgid "^BG%s^F3 was kicked for idling"
-msgstr "^BG%s^F3 は非活動な状態で追い出された"
+msgstr "^BG%s^F3 は不活発者で追い出された"
 
 #: qcsrc/common/notifications/all.inc:416
 msgid ""
@@ -6723,7 +6723,7 @@ msgstr "作者:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:62
 msgid "Game types:"
-msgstr "ゲームモード:"
+msgstr "ゲームタイプ:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:85
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:257
@@ -8124,7 +8124,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:233
 msgid "Motion blur strength - 0.4 recommended"
-msgstr "モーションブラーの強度-0.4を推奨"
+msgstr "モーションブラーの強度 - 0.4を勧めす"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:234
 msgid "Motion blur:"
@@ -8211,8 +8211,8 @@ msgid ""
 "when there's an obstacle between your gun and the target; Enemies: also "
 "enlarge the crosshair when you would hit an enemy"
 msgstr ""
-"なし: 十字線のヒットテストを行いません。本旨: 銃とターゲットの間に障害物があ"
-"るときに十字線をぼかす。敵：敵に当たったときに十字線を拡大する"
+"なし: 十字線のヒットテストを行いません。真の照準: 銃とターゲットの間に障害物"
+"があるときに十字線をぼかす。敵：敵に当たったときに十字線を拡大する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "HTTST^Disabled"
@@ -8220,7 +8220,7 @@ msgstr "無効"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:130
 msgid "HTTST^TrueAim"
-msgstr "本旨"
+msgstr "真の照準"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:131
 msgid "HTTST^Enemies"
@@ -8271,8 +8271,8 @@ msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
-"チームサイズの位置: オフ=表示されない。左 = 得点表の左側にあり、チームの得点"
-"を右に移動する。右 = 得点表の右側"
+"チームサイズの位置: 無効 = 表示されない。左 = 得点表の左側にあり、チームの得"
+"点を右に移動する。右 = 得点表の右側"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Waypoints"
@@ -8542,19 +8542,19 @@ msgstr "選手達"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
-msgstr ""
+msgstr "プレイヤーのモデルを私のものに強制的する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:53
 msgid "Force player colors to mine"
-msgstr ""
+msgstr "プレイヤーの色を私のものに強制的する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "In non teamplay modes only"
-msgstr ""
+msgstr "非チームプレイモードのみ"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Body fading:"
-msgstr ""
+msgstr "体フェージング:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "Gibs:"
@@ -8562,121 +8562,122 @@ msgstr "内臓:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
 msgid "GIBS^None"
-msgstr ""
+msgstr "なし"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:66
 msgid "GIBS^Few"
-msgstr ""
+msgstr "少ない"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "GIBS^Many"
-msgstr ""
+msgstr "多い"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
 msgid "GIBS^Lots"
-msgstr ""
+msgstr "たくさん"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:7
 msgid "Models"
-msgstr ""
+msgstr "モデル"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
-msgstr ""
+msgstr "ゲームでのプレーヤーとアイテムの表示方法をカスタマイズする"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "1st person perspective"
-msgstr ""
+msgstr "一人称視点"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Slide to third person upon death"
-msgstr ""
+msgstr "死後三人称視点に変更する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:33
 msgid "Smooth the view when landing from a jump"
-msgstr ""
+msgstr "ジャンプから着陸するときにビューを滑らかにする"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:37
 msgid "Smooth the view while crouching"
-msgstr ""
+msgstr "しゃがみながらビューを滑らかにする"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:41
 msgid "View waving while idle"
-msgstr ""
+msgstr "不活発に中にビューを振る"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:45
 msgid "View bobbing while walking around"
-msgstr ""
+msgstr "歩きながらビューをボビングする"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:50
 msgid "3rd person perspective"
-msgstr ""
+msgstr "三人称視点"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:53
 msgid "Back distance"
-msgstr ""
+msgstr "後方距離"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:59
 msgid "Up distance"
-msgstr ""
+msgstr "上への距離"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:65
 msgid "Allow passing through walls while spectating"
-msgstr ""
+msgstr "観戦中に壁を通過できるようにする"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:69
 msgid "Field of view:"
-msgstr ""
+msgstr "視野:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:71
 msgid "Field of vision in degrees"
-msgstr ""
+msgstr "度単位の視野"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:75
 msgid "ZOOM^Zoom factor:"
-msgstr ""
+msgstr "ズーム因子:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr ""
+msgstr "ズームボタンを押したときのズーム率頻度"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:80
 msgid "ZOOM^Zoom speed:"
-msgstr ""
+msgstr "ズーム速度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:82
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr ""
+msgstr "ビューがズームされる速度頻度、無効にするとすぐにズームされる"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
 msgid "ZOOM^Instant"
-msgstr ""
+msgstr "瞬時"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:95
 msgid "ZOOM^Zoom sensitivity:"
-msgstr ""
+msgstr "ズーム感度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:97
 msgid ""
 "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no "
 "sensitivity change)"
 msgstr ""
+"ズームが感度をどのように変更するか、0 (低い感度) から 1 (感度の変更なし)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:100
 msgid "Velocity zoom"
-msgstr ""
+msgstr "速度ズーム"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "Forward movement only"
-msgstr ""
+msgstr "前進のみ"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:105
 msgid "VZOOM^Factor"
-msgstr ""
+msgstr "因子"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:112
 msgid "Display reticle 2D overlay while zooming"
-msgstr ""
+msgstr "ズーム中にレチクル2Dオーバーレイを表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
 msgid "Release zoom when you die or respawn"
@@ -8693,7 +8694,7 @@ msgstr "ビュー"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:33
 msgid "Weapon Priority List (* = mutator weapon)"
-msgstr ""
+msgstr "武器優先リスト (* = ミューテーター武器)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:39
 msgid "Up"
@@ -8705,48 +8706,48 @@ msgstr "下"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:49
 msgid "Use priority list for weapon cycling"
-msgstr ""
+msgstr "武器のサイクリングに優先リストを使用する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
-msgstr ""
+msgstr "マウスホイールで武器をサイクリングするときは、上記のリストを使用する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:52
 msgid "Cycle through only usable weapon selections"
-msgstr ""
+msgstr "使用可能な武器の選択のみを循環する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:56
 msgid "Auto switch weapons on pickup"
-msgstr ""
+msgstr "拾ったときに自動的に武器を切り替える"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid ""
 "Automatically switch to newly picked up weapons if they are better than what "
 "you are carrying"
-msgstr ""
+msgstr "持っている武器よりも優れている場合は自動的に収集した武器に切り替える"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
 msgid "Release attack buttons when you switch weapons"
-msgstr ""
+msgstr "武器を切り替えるときに攻撃ボタンを解放する"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid "Draw 1st person weapon model"
-msgstr ""
+msgstr "一人称で武器モデルを描く"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw the weapon model"
-msgstr ""
+msgstr "武器モデルを描く"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:74
 msgid "Position of the weapon model; requires reconnect"
-msgstr ""
+msgstr "武器モデルの位置、接続が必要だ"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr ""
+msgstr "武器モデルの不透明度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
@@ -8763,85 +8764,85 @@ msgstr "武器"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:34
 msgid "Key Bindings"
-msgstr ""
+msgstr "キー割り当て"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:38
 msgid "Change key..."
-msgstr ""
+msgstr "キーを変更する..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:42
 msgid "Edit..."
-msgstr ""
+msgstr "編集する..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:48
 msgid "Clear"
-msgstr ""
+msgstr "クリアする"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:53
 msgid "Reset all"
-msgstr ""
+msgstr "全てリセットする"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:58
 msgid "Mouse"
-msgstr ""
+msgstr "マウス"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:60
 msgid "Sensitivity:"
-msgstr ""
+msgstr "感度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:62
 msgid "Mouse speed multiplier"
-msgstr ""
+msgstr "マウス速度乗数"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:64
 msgid "Smooth aiming"
-msgstr ""
+msgstr "滑らかな照準"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:65
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
-msgstr ""
+msgstr "マウスの動きを滑らかにするが、照準は少し反応が遅くなる"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:67
 msgid "Invert aiming"
-msgstr ""
+msgstr "照準を反転する"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:68
 msgid "Invert mouse movement on the Y-axis"
-msgstr ""
+msgstr "Y-軸上のマウスの動きを反転する"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:70
 msgid "Use system mouse positioning"
-msgstr ""
+msgstr "システムのマウスの位置を使用する"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:75
 msgid "Enable built in mouse acceleration"
-msgstr ""
+msgstr "組み込みのマウス加速を有効にする"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:83
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:86
 msgid "Disable system mouse acceleration"
-msgstr ""
+msgstr "システムのマウス加速を無効にする"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:80
 msgid "Make use of DGA mouse input"
-msgstr ""
+msgstr "DGAマウス入力を利用する"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:94
 msgid "Pressing \"enter console\" key also closes it"
-msgstr ""
+msgstr "「コンソールを入力する」キーを押すと、それも閉じる"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
-msgstr ""
+msgstr "コンソールのバインドの切り替えを許可して、コンソールも閉じる"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "Automatically repeat jumping if holding jump"
-msgstr ""
+msgstr "ジャンプを押し続けると自動的にジャンプを繰り返す"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:100
 msgid "Jetpack on jump:"
-msgstr ""
+msgstr "ジャンプときのジェットパック:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
@@ -8849,33 +8850,33 @@ msgstr "無効"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Air only"
-msgstr ""
+msgstr "空気のみ"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:104
 msgid "JPJUMP^All"
-msgstr ""
+msgstr "全て"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:110
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:115
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:120
 msgid "Use joystick input"
-msgstr ""
+msgstr "ジョイスティック入力を使用する"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:31
 msgid "Command when pressed:"
-msgstr ""
+msgstr "押されたときのコマンド:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:34
 msgid "Command when released:"
-msgstr ""
+msgstr "解放された時のコマンド:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセルする"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
-msgstr ""
+msgstr "ユーザー定義のキー割り当て"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:11
 #, c-format
@@ -8885,36 +8886,36 @@ msgstr "%d fps"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
 msgid "%d KB/s"
-msgstr ""
+msgstr "%d KB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d MB/s"
-msgstr ""
+msgstr "%d MB/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:27
 msgid "Network"
-msgstr ""
+msgstr "ネットワーク"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:29
 msgid "Client UDP port:"
-msgstr ""
+msgstr "クライアントUDPポート:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Force client to use chosen port unless it is set to 0"
-msgstr ""
+msgstr "0に設定されていない限り、選択したポートをクライアントに強制的する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
 msgid "Bandwidth:"
-msgstr ""
+msgstr "バンド幅:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Specify your network speed"
-msgstr ""
+msgstr "ネットワーク速度を指定する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "56k"
-msgstr ""
+msgstr "56k"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:38
 msgid "ISDN"
@@ -8922,63 +8923,63 @@ msgstr "ISDN"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Slow ADSL"
-msgstr ""
+msgstr "遅いADSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:40
 msgid "Fast ADSL"
-msgstr ""
+msgstr "速いADSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:41
 msgid "Broadband"
-msgstr ""
+msgstr "ブロードバンド"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:44
 msgid "Server queries/s:"
-msgstr ""
+msgstr "サーバークエリ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Downloads:"
-msgstr ""
+msgstr "ダウンロード:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Maximum number of concurrent HTTP/FTP downloads"
-msgstr ""
+msgstr "同時HTTP / FTPダウンロードの最大数"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:52
 msgid "Download speed:"
-msgstr ""
+msgstr "ダウンロード速度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:65
 msgid "Local latency:"
-msgstr ""
+msgstr "ローカルレイテンシ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Show netgraph"
-msgstr ""
+msgstr "ネットグラフを表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:70
 msgid "Show a graph of packet sizes and other information"
-msgstr ""
+msgstr "パケットサイズとその他の情報のグラフを表示する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:72
 msgid "Client-side movement prediction"
-msgstr ""
+msgstr "クライアント側の動き予測"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:74
 msgid "Movement error compensation"
-msgstr ""
+msgstr "エラー補償の動き"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Use encryption (AES) when available"
-msgstr ""
+msgstr "可能な場合は暗号化(AES)を使用する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:81
 msgid "Framerate"
-msgstr ""
+msgstr "フレームレート"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:83
 msgid "Maximum:"
-msgstr ""
+msgstr "最大:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:93
 msgid "MAXFPS^Unlimited"
@@ -8986,7 +8987,7 @@ msgstr "無制限"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:96
 msgid "Target:"
-msgstr ""
+msgstr "目的:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:98
 msgid "TRGT^Disabled"
@@ -8994,7 +8995,7 @@ msgstr "無効"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:109
 msgid "Idle limit:"
-msgstr ""
+msgstr "不活発の制限:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:115
 msgid "IDLFPS^Unlimited"
@@ -9002,7 +9003,7 @@ msgstr "無制限"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:119
 msgid "Save processing time for other apps"
-msgstr ""
+msgstr "他のアプリの処理時間を保存する"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
 msgid "Show frames per second"
@@ -9021,6 +9022,8 @@ msgid ""
 "Menu tooltips: disabled, standard or advanced (also shows cvar or console "
 "command bound to the menu item)"
 msgstr ""
+"メニューツールチップ: 無効、標準、高度 (メニュー項目にバインドされた cvar コ"
+"マンドまたはコンソールコマンドも表示する)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:131
 msgid "TLTIP^Disabled"
@@ -9052,7 +9055,7 @@ msgstr "高度な設定..."
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:145
 msgid "Advanced settings where you can tweak every single variable of the game"
-msgstr ""
+msgstr "各ゲーム変数を調整できる詳細設定"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:150
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
@@ -9061,11 +9064,11 @@ msgstr "工場リセット"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
-msgstr "CVARフィルター:"
+msgstr "cvarフィルター:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
-msgstr ""
+msgstr "変更されたcvarのみ"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
@@ -9093,7 +9096,7 @@ msgstr "全ての設定をリセットしてもよろしいですか?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
-msgstr ""
+msgstr "これによりデータディレクトリにバックアップ構成が作成されます"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skins"
@@ -9105,31 +9108,31 @@ msgstr "テキスト言語"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:67
 msgid "Set language"
-msgstr "言語を設定"
+msgstr "言語を設定する"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:72
 msgid "Disable gore effects and harsh language"
-msgstr ""
+msgstr "流血の効果と攻撃的な言葉を無効にする"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:73
 msgid "Replace blood and gibs with content that does not have any gore effects"
-msgstr ""
+msgstr "血と内臓を流血の効果コンテンツに置き換える"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
-msgstr ""
+msgstr "接続されている言語の変更はメニューにのみ適用されますが、"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
-msgstr ""
+msgstr "完全な言語の変更は次のゲームから有効になります"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
-msgstr "今すぐ切断"
+msgstr "今すぐ切断する"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
 msgid "Switch language"
-msgstr "言語を変更"
+msgstr "言語を変更する"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
@@ -9185,7 +9188,7 @@ msgstr "色深度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:53
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
-msgstr ""
+msgstr "レンダリングするピクセルあたりのビット数 (BPP)、32を勧めす"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:54
 msgid "16bit"
@@ -9201,29 +9204,31 @@ msgstr "フルスケ"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:61
 msgid "Vertical Synchronization"
-msgstr ""
+msgstr "垂直同期"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:62
 msgid ""
 "Enable vertical synchronization to prevent tearing, will cap your fps to the "
 "screen refresh rate"
 msgstr ""
+"垂直同期を有効にしてティアリングを防止し、fpsを画面のリフレッシュレートに制限"
+"する"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "Flip view horizontally"
-msgstr ""
+msgstr "ビューを水平に反転する"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:68
 msgid "Poor man's left handed mode"
-msgstr ""
+msgstr "左利きモード"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "Anisotropy:"
-msgstr ""
+msgstr "異方性:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:73
 msgid "Anisotropic filtering quality"
-msgstr ""
+msgstr "異方性フィルタリング品質"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:74
 msgid "ANISO^Disabled"
@@ -9249,13 +9254,15 @@ msgstr "16x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:81
 msgid "Antialiasing:"
-msgstr ""
+msgstr "アンチエイリアシング:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:84
 msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
+"3Dジオメトリのエッジを滑らかにするアンチエイリアスを有効にする。パフォーマン"
+"スが大幅に低下する可能性があることに注意してください"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "AA^Disabled"
@@ -9263,17 +9270,19 @@ msgstr "無効"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:92
 msgid "High-quality frame buffer"
-msgstr ""
+msgstr "高品質のフレームバッファ"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:97
 msgid "Depth first:"
-msgstr ""
+msgstr "深さ優先:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:99
 msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
+"通常のレンダリングが開始する前に、深度のみのバージョンのシーンをレンダリング"
+"することにより、オーバードローを排除する"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^Disabled"
@@ -9293,7 +9302,7 @@ msgstr "頂点バッファーオブジェクト (VBOs)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:108
 msgid "VBO^Off"
-msgstr ""
+msgstr "無効"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:109
 msgid "Vertices, some Tris (compatible)"
@@ -9306,6 +9315,8 @@ msgid ""
 "Make use of Vertex Buffer Objects to store static geometry in video memory "
 "for faster rendering"
 msgstr ""
+"頂点バッファオブジェクトを使用して、静的ジオメトリをビデオメモリに格納し、レ"
+"ンダリングを高速化する"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:113
 msgid "Vertices"
@@ -9339,7 +9350,7 @@ msgstr "ガンマ:"
 msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
-msgstr ""
+msgstr "逆ガンマ補正値、白または黒に影響を与えない輝度効果"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:133
 msgid "Contrast boost:"
@@ -9347,17 +9358,19 @@ msgstr "コントラストの増加:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:136
 msgid "By how much to multiply the contrast in dark areas"
-msgstr ""
+msgstr "暗い部分のコントラストをどれだけ掛けるか"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid "Saturation:"
-msgstr "飽和:"
+msgstr "彩度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:142
 msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
+"彩度調整 (0 = グレースケール、1 = 通常、2 = 過飽和)、GLSLカラーコントロールが"
+"必要する"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
 msgid "LIT^Ambient:"
@@ -9368,6 +9381,8 @@ msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
 msgstr ""
+"アンビエント照明、設定が高すぎると、マップ上のライトが鈍く平坦に見える傾向が"
+"ある"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Intensity:"
@@ -9375,17 +9390,19 @@ msgstr "強度:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:152
 msgid "Global rendering brightness"
-msgstr ""
+msgstr "グローバルレンダリングの明るさ"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:155
 msgid "Wait for GPU to finish each frame"
-msgstr ""
+msgstr "GPUが各フレームを完了するまで待つ"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:156
 msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines"
 msgstr ""
+"GPUが各フレームを完了するまでCPUを待機させる。一部のマシンでは奇妙な入力やビ"
+"デオの遅延に役立つ。"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
@@ -9393,15 +9410,15 @@ msgstr "OpenGL 2.0 シェーダー(GLSL)を使う"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:163
 msgid "Psycho coloring (easter egg)"
-msgstr ""
+msgstr "サイコカラーズ (イースターエッグ)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:166
 msgid "Trippy vertices (easter egg)"
-msgstr ""
+msgstr "幻覚の頂点 (イースターエッグ)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:109
 msgid "Instant action! (random map with bots)"
-msgstr ""
+msgstr "インスタントアクション! (ボット付きランダムマップ)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:116
 msgid "???"
@@ -9434,6 +9451,8 @@ msgstr "シングルプレイヤー"
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
 msgstr ""
+"ボットに対してシングルプレイヤーキャンペーンまたはインスタントアクションマッ"
+"チを遊ぶ"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -9441,11 +9460,11 @@ msgstr "勝者"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr ""
+msgstr "「最高」チームに参加する (自動選択)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
-msgstr ""
+msgstr "チームの自動選択する (推奨)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -9474,11 +9493,11 @@ msgstr "チームの選択"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
-msgstr ""
+msgstr "選手の統計であなたのニックネームを使用できるように許可しますか?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr ""
+msgstr "「いいえ」と答えると、 \"Anonymous player\" として表示される"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:87
 msgid "teamplay"
@@ -9498,27 +9517,27 @@ msgstr "前方"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "backpedal"
-msgstr ""
+msgstr "後方"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "strafe left"
-msgstr ""
+msgstr "左"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "strafe right"
-msgstr ""
+msgstr "右"
 
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "jump / swim"
-msgstr "ジャンプ / "
+msgstr "ジャンプする / 泳ぐ"
 
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "crouch / sink"
-msgstr ""
+msgstr "しゃがむ / 降りる"
 
 #: qcsrc/menu/xonotic/keybinder.qc:42
 msgid "off-hand hook"
-msgstr ""
+msgstr "フック"
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jetpack"
@@ -9546,35 +9565,35 @@ msgstr "最高"
 
 #: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "reload"
-msgstr "リロード"
+msgstr "リロードする"
 
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "drop weapon / throw nade"
-msgstr ""
+msgstr "武器を落とす / 手榴弾を投げる"
 
 #: qcsrc/menu/xonotic/keybinder.qc:84
 msgid "hold zoom"
-msgstr ""
+msgstr "ズームを維持する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:85
 msgid "toggle zoom"
-msgstr ""
+msgstr "ズームを切り替える"
 
 #: qcsrc/menu/xonotic/keybinder.qc:86
 msgid "show scores"
-msgstr ""
+msgstr "得点を表示する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:87
 msgid "screen shot"
-msgstr ""
+msgstr "スクリーンショット"
 
 #: qcsrc/menu/xonotic/keybinder.qc:88
 msgid "maximize radar"
-msgstr ""
+msgstr "レーダーを最大化する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "3rd person view"
-msgstr ""
+msgstr "三人称ビュー"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "enter spectator mode"
@@ -9594,15 +9613,15 @@ msgstr "チームチャット"
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "show chat history"
-msgstr ""
+msgstr "チャットの履歴を表示する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "vote YES"
-msgstr ""
+msgstr "「はい」を投票する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:98
 msgid "vote NO"
-msgstr ""
+msgstr "「いいえ」を投票する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "Client"
@@ -9610,23 +9629,23 @@ msgstr "クライアント"
 
 #: qcsrc/menu/xonotic/keybinder.qc:106 qcsrc/menu/xonotic/keybinder.qc:108
 msgid "enter console"
-msgstr ""
+msgstr "コンソールを入力する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109
 msgid "disconnect"
-msgstr "切断"
+msgstr "切断する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:110
 msgid "quit"
-msgstr ""
+msgstr "ゲームをやめる"
 
 #: qcsrc/menu/xonotic/keybinder.qc:114
 msgid "auto-join team"
-msgstr ""
+msgstr "自動的にチームに参加する"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "鍵/旗を落とす / 乗り物から降りる"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "suicide / respawn"
@@ -9634,11 +9653,11 @@ msgstr "自殺する / 再び現れる"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "quick menu"
-msgstr ""
+msgstr "クイックメニュー"
 
 #: qcsrc/menu/xonotic/keybinder.qc:125
 msgid "User defined"
-msgstr ""
+msgstr "ユーザー定義"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "Development"
@@ -9646,24 +9665,26 @@ msgstr "開発"
 
 #: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "sandbox menu"
-msgstr ""
+msgstr "サンドボックスメニュー"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "オブジェクトをドラッグ (サンドボックス)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "ウェイポイント編集メニュー"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:96 qcsrc/menu/xonotic/mainwindow.qc:99
 msgid "Do not press this button again!"
-msgstr ""
+msgstr "もう一度このボタンを押さないでください!"
 
 #: qcsrc/menu/xonotic/maplist.qc:288
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
+"あれ? これを遊べません (m is NULL)。これが再度発生しないように再フィルタリン"
+"グします。"
 
 #: qcsrc/menu/xonotic/maplist.qc:296
 #, c-format
@@ -9675,6 +9696,8 @@ msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
 msgstr ""
+"あれ? これを遊べません (invalid game type)。これが再度発生しないように再フィ"
+"ルタリングします。"
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
@@ -9690,7 +9713,7 @@ msgstr "好きなサーバーを取り除く"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr ""
+msgstr "現在ハイライト表示されているサーバーをブックマークから削除する"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
 msgid "SERVER^Favorite"
@@ -9701,6 +9724,7 @@ msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
 msgstr ""
+"現在ハイライトされているサーバーにブックマークを付けて、未来見つけやすくする"
 
 #: qcsrc/menu/xonotic/serverlist.qc:733
 msgid "Ping"

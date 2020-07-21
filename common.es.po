@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-19 19:54+0000\n"
+"PO-Revision-Date: 2020-07-20 17:35+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -8843,7 +8843,7 @@ msgid ""
 "Automatically switch to newly picked up weapons if they are better than what "
 "you are carrying"
 msgstr ""
-"Cambia automáticamente al arma recogida si es mejor que la que está llevando"
+"Cambiar automáticamente al arma recogida si es mejor que la que está llevando"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
 msgid "Release attack buttons when you switch weapons"
@@ -8997,7 +8997,7 @@ msgstr "Cancelar"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
-msgstr "Usar teclas definidas"
+msgstr "Teclas definidas por el usuario"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:11
 #, c-format
