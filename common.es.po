@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-20 17:35+0000\n"
+"PO-Revision-Date: 2020-07-21 23:25+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -124,7 +124,7 @@ msgstr "^1Usa ^3%s^1 o ^3%s^1 para cambiar la velocidad"
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^1Pulsa ^3%s^1 para observar o ^3%s^1 para cambiar el modo de cámara."
+msgstr "^1Pulsa ^3%s^1 para observar o ^3%s^1 para cambiar el modo de cámara"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
@@ -173,7 +173,7 @@ msgstr "^1El juego comienza en ^3%d^1 segundos"
 
 #: qcsrc/client/hud/panel/infomessages.qc:153
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr "^2¡Actualmente en etapa de ^1calentamiento^2 !"
+msgstr "^2¡Actualmente en etapa de ^1calentamiento^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #, c-format

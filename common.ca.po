@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# LegendGuard, 2020
 # Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-07 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-07-21 23:29+0000\n"
+"Last-Translator: LegendGuard\n"
 "Language-Team: Catalan (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ca/)\n"
 "Language: ca\n"
@@ -22,17 +23,17 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:81
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
-msgstr ""
+msgstr "^2Exportat amb èxit a %s! (Nota: Està guardat en data/data/)"
 
 #: qcsrc/client/hud/hud_config.qc:85
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1No s'ha pogut escriure a %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:174
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Missatge de compte enrere a l'hora %s, segons restants: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:176
 #, c-format
@@ -40,19 +41,21 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^1lasts longer than normal"
 msgstr ""
+"^1Missatge de múltiples línies a l'hora %s\n"
+"^1dura més del normal"
 
 #: qcsrc/client/hud/panel/centerprint.qc:178
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Missatge a l’hora %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:183
 msgid "Generic message"
-msgstr ""
+msgstr "Missatge genèric"
 
 #: qcsrc/client/hud/panel/chat.qc:89
 msgid "^3Player^7: This is the chat area."
-msgstr ""
+msgstr "^3Jugador^7: Això és l'àrea del xat."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:76
 #, c-format
@@ -61,87 +64,87 @@ msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:95
 msgid "^1Observing"
-msgstr ""
+msgstr "^1Observant"
 
 #: qcsrc/client/hud/panel/infomessages.qc:97
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr ""
+msgstr "^1Espectant: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr ""
+msgstr "^1Premeu ^3%s^1 per a observar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:47
 msgid "primary fire"
-msgstr ""
+msgstr "tret primari"
 
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr ""
+msgstr "^1Premeu ^3%s^1 o ^3%s^1 per al jugador següent o anterior"
 
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/client/hud/panel/infomessages.qc:114
 msgid "next weapon"
-msgstr ""
+msgstr "següent arma"
 
 #: qcsrc/client/hud/panel/infomessages.qc:110
 #: qcsrc/client/hud/panel/infomessages.qc:114
 msgid "previous weapon"
-msgstr ""
+msgstr "anterior arma"
 
 #: qcsrc/client/hud/panel/infomessages.qc:114
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr ""
+msgstr "^1Utilitzeu ^3%s^1 o ^3%s^1 per canviar la velocitat"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Premeu ^3%s^1 per a observar, ^3%s^1 per canviar el mode de càmera"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
 msgid "drop weapon"
-msgstr ""
+msgstr "amollar arma"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/menu/xonotic/keybinder.qc:48
 msgid "secondary fire"
-msgstr ""
+msgstr "tret secundari"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr ""
+msgstr "^1Prem ^3%s^1 per a informació del mode de joc"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:103
 msgid "server info"
-msgstr ""
+msgstr "informació de servidor"
 
 #: qcsrc/client/hud/panel/infomessages.qc:132
 msgid "^1Match has already begun"
-msgstr ""
+msgstr "^1La partida ja ha començat"
 
 #: qcsrc/client/hud/panel/infomessages.qc:134
 msgid "^1You have no more lives left"
-msgstr ""
+msgstr "^1No tens cap vida restant"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr ""
+msgstr "^1Prem ^3%s^1 per a unir-te"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #: qcsrc/common/notifications/all.qh:430
 msgid "jump"
-msgstr ""
+msgstr "saltar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
@@ -162,7 +165,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:183
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "ready"
-msgstr ""
+msgstr "preparat"
 
 #: qcsrc/client/hud/panel/infomessages.qc:170
 #, c-format

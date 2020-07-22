@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-20 21:10+0000\n"
+"PO-Revision-Date: 2020-07-21 08:46+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
@@ -2549,7 +2549,7 @@ msgstr "^BG%s^K1 の治癒手榴弾はそれら%s%sを完全には癒しなか�
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?"
-msgstr "^BG%s^K1 が死んだ。弾薬なしで生きる意味は何だの？"
+msgstr "^BG%s^K1 が死んだ%s%s。弾薬なしで生きる意味は何だの?"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
@@ -2980,7 +2980,7 @@ msgstr "^BG%s^F3 は観戦中です"
 #: qcsrc/common/notifications/all.inc:420
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr "^BG%^BG はレースを放棄した"
+msgstr "^BG%s^BG はレースを放棄した"
 
 #: qcsrc/common/notifications/all.inc:421
 #, c-format
@@ -2995,7 +2995,7 @@ msgstr "^BG%s^BG は %s%s %s の %s%s^BG 場所の記録を破ることができ
 #: qcsrc/common/notifications/all.inc:423
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr "^BG%^BG はレースを終了した"
+msgstr "^BG%s^BG はレースを終了した"
 
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
@@ -3147,7 +3147,7 @@ msgstr "^BG%s%s^K1 が ^BG%s^K1 のロケット%s%sに近すぎた"
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr "^BG%s^K1 はデーバーステーター％s%sで自分自身を爆破した"
+msgstr "^BG%s^K1 はデーバーステーター%s%sで自分自身を爆破した"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
@@ -3327,8 +3327,8 @@ msgstr ""
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 が自分自身のオーバーキルロケット推進チェーンソー%s%sによって半分に"
-"切断された"
+"^BG%s^K1 が自分自身のオーバーキルロケット推進チェーンソー%s%sによって半分に切"
+"断された"
 
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
