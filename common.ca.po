@@ -4,13 +4,14 @@
 #
 # Translators:
 # LegendGuard, 2020
+# LegendGuard, 2020
 # Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-21 23:29+0000\n"
+"PO-Revision-Date: 2020-07-22 09:54+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Catalan (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ca/)\n"
@@ -124,7 +125,7 @@ msgstr "^1Prem ^3%s^1 per a informació del mode de joc"
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:103
 msgid "server info"
-msgstr "informació de servidor"
+msgstr "informació del servidor"
 
 #: qcsrc/client/hud/panel/infomessages.qc:132
 msgid "^1Match has already begun"
@@ -153,12 +154,12 @@ msgstr "^1El joc comença en ^3%d^1 segons"
 
 #: qcsrc/client/hud/panel/infomessages.qc:153
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2Actualment en etapa d'^1escalfament^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sPrem ^3%s%s per acabar l'escalfament"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #: qcsrc/client/hud/panel/infomessages.qc:170
@@ -170,177 +171,178 @@ msgstr "preparat"
 #: qcsrc/client/hud/panel/infomessages.qc:170
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%sPrem ^3%s%s quan estiguis llest"
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
+"^2Esperant a que els altres estiguin llestos per acabar l'escalfament..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:177
 msgid "^2Waiting for others to ready up..."
-msgstr ""
+msgstr "^2Esperant a que els altres estiguin llestos..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:183
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Prem ^3%s^2 per acabar l'escalfament"
 
 #: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teamnumbers are unbalanced!"
-msgstr ""
+msgstr "Els números d'equip estan desequilibrats!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr ""
+msgstr " Prem ^3%s%s per ajustar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:115
 msgid "team menu"
-msgstr ""
+msgstr "menú d'equip"
 
 #: qcsrc/client/hud/panel/infomessages.qc:217
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Espectant a aquest jugador:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:217
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Espectant-te a tu:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:233
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "^7Prem ^3ESC ^7per veure les opcions de HUD."
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Doble clic ^7en un panell per a opcions específiques del panell."
 
 #: qcsrc/client/hud/panel/infomessages.qc:235
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7per desactivar la prova de col·lisions, ^3SHIFT ^7i"
 
 #: qcsrc/client/hud/panel/infomessages.qc:236
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3TECLES DE DIRECCIÓ ^7per ajustaments fins."
 
 #: qcsrc/client/hud/panel/modicons.qc:183
 msgid "Personal best"
-msgstr ""
+msgstr "Rècord personal"
 
 #: qcsrc/client/hud/panel/modicons.qc:193
 msgid "Server best"
-msgstr ""
+msgstr "Rècord del servidor"
 
 #: qcsrc/client/hud/panel/notify.qc:127 qcsrc/client/hud/panel/notify.qc:128
 #: qcsrc/client/hud/panel/score.qc:69
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "Jugador %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:597
 #: qcsrc/client/hud/panel/quickmenu.qc:599
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Submenú%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:604
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "Ordre%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:630
 msgid "Continue..."
-msgstr ""
+msgstr "Continuar..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "Chat"
-msgstr ""
+msgstr "Xat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Enviar missatge públic a"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:789
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / bona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:789
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^bona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:790
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^ben jugat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:791
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^hola / bona sort"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:791
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^hola / bona sort i diverteix"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Enviar en anglès"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Xat de l'equip"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^la força apareixerà aviat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^objecte gratuït %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^objecte gratuït, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^va prendre l'objecte (l:% l ^ 7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^va prendre l'objecte, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^negative"
-msgstr ""
+msgstr "QMCMD^negatiu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^positive"
-msgstr ""
+msgstr "QMCMD^positiu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^necessito ajuda (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^need help, icon"
-msgstr ""
+msgstr "QMCMD^necessito ajuda, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^enemic vist (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^enemy seen, icon"
-msgstr ""
+msgstr "QMCMD^enemic vist, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^bandera vista (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^flag seen, icon"
-msgstr ""
+msgstr "QMCMD^bandera vista, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
