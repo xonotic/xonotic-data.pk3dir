@@ -186,3 +186,15 @@ vector vec_epsilon(vector this, float eps)
 		);
 	}
 #endif
+
+ERASEABLE
+vector vec_rint(vector v)
+{
+	return vec3(rint(v.x), rint(v.y), rint(v.z));
+}
+
+ERASEABLE
+vector vec_floor(vector v)
+{
+	return vec3(floor(v.x), floor(v.y), floor(v.z));
+}

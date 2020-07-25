@@ -229,7 +229,7 @@ void HUD_HealthArmor()
 				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
 			}
 			if(autocvar_hud_panel_healtharmor_text)
-				DrawNumIcon(pos + health_offset, mySize, floor(health), "health", is_vertical, health_iconalign, HUD_Get_Num_Color(health, maxhealth, true), 1);
+				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, health_iconalign, HUD_Get_Num_Color(health, maxhealth, true), 1);
 		}
 
 		//if(armor)
@@ -276,7 +276,7 @@ void HUD_HealthArmor()
 			}
 			if(!autocvar_hud_panel_healtharmor_progressbar || p_armor)
 			if(autocvar_hud_panel_healtharmor_text)
-				DrawNumIcon(pos + armor_offset, mySize, floor(armor), "armor", is_vertical, armor_iconalign, HUD_Get_Num_Color(armor, maxarmor, true), 1);
+				DrawNumIcon(pos + armor_offset, mySize, armor, "armor", is_vertical, armor_iconalign, HUD_Get_Num_Color(armor, maxarmor, true), 1);
 		}
 
 		vector cell_size = mySize;

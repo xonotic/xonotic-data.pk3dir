@@ -41,14 +41,14 @@ const int MAX_CL_STATS = 256;
 #endif
 #endif
 
-REGISTER_STAT(HEALTH, int, this.health)
-REGISTER_STAT(ARMOR, int, this.armorvalue)
-REGISTER_STAT(SHELLS, int, this.ammo_shells)
-REGISTER_STAT(NAILS, int, this.ammo_nails)
-REGISTER_STAT(ROCKETS, int, this.ammo_rockets)
-REGISTER_STAT(CELLS, int, this.ammo_cells)
-REGISTER_STAT(ITEMS, int, this.items)
-REGISTER_STAT(VIEWHEIGHT, int, this.view_ofs_z)
+REGISTER_STAT(HEALTH, int24, this.health)
+REGISTER_STAT(ARMOR, int24, this.armorvalue)
+REGISTER_STAT(SHELLS, int24, this.ammo_shells)
+REGISTER_STAT(NAILS, int24, this.ammo_nails)
+REGISTER_STAT(ROCKETS, int24, this.ammo_rockets)
+REGISTER_STAT(CELLS, int24, this.ammo_cells)
+REGISTER_STAT(ITEMS, int24, this.items)
+REGISTER_STAT(VIEWHEIGHT, int24, this.view_ofs_z)
 
 #ifdef SVQC
 /// all the weapons actually spawned in the map, does not include filtered items
@@ -69,7 +69,7 @@ REGISTER_STAT(PL_CROUCH_MIN, vector)
 REGISTER_STAT(PL_MAX, vector)
 REGISTER_STAT(PL_CROUCH_MAX, vector)
 
-REGISTER_STAT(KH_KEYS, int)
+REGISTER_STAT(KH_KEYS, int24)
 
 #ifdef SVQC
 float W_WeaponRateFactor(entity this);
@@ -80,59 +80,59 @@ bool autocvar_g_allow_oldvortexbeam;
 int autocvar_leadlimit;
 #endif
 REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor(this))
-REGISTER_STAT(GAME_STOPPED, int, game_stopped)
+REGISTER_STAT(GAME_STOPPED, int24, game_stopped)
 REGISTER_STAT(GAMESTARTTIME, float, game_starttime)
 REGISTER_STAT(STRENGTH_FINISHED, float)
 REGISTER_STAT(INVINCIBLE_FINISHED, float)
 /** arc heat in [0,1] */
-REGISTER_STAT(PRESSED_KEYS, int)
+REGISTER_STAT(PRESSED_KEYS, int24)
 /** this stat could later contain some other bits of info, like, more server-side particle config */
 REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool, autocvar_g_allow_oldvortexbeam)
-REGISTER_STAT(FUEL, int)
+REGISTER_STAT(FUEL, int24)
 REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
-REGISTER_STAT(SHOTORG, int)
+REGISTER_STAT(SHOTORG, int24)
 REGISTER_STAT(LEADLIMIT, float, autocvar_leadlimit)
 REGISTER_STAT(LEADLIMIT_AND_FRAGLIMIT, float, autocvar_leadlimit_and_fraglimit)
 
 REGISTER_STAT(LAST_PICKUP, float)
-REGISTER_STAT(HUD, int)
+REGISTER_STAT(HUD, int24)
 REGISTER_STAT(HIT_TIME, float)
-REGISTER_STAT(DAMAGE_DEALT_TOTAL, int)
+REGISTER_STAT(DAMAGE_DEALT_TOTAL, int24)
 REGISTER_STAT(TYPEHIT_TIME, float)
 REGISTER_STAT(SUPERWEAPONS_FINISHED, float)
 REGISTER_STAT(AIR_FINISHED, float)
-REGISTER_STAT(VEHICLESTAT_HEALTH, int)
-REGISTER_STAT(VEHICLESTAT_SHIELD, int)
-REGISTER_STAT(VEHICLESTAT_ENERGY, int)
-REGISTER_STAT(VEHICLESTAT_AMMO1, int)
-REGISTER_STAT(VEHICLESTAT_RELOAD1, int)
-REGISTER_STAT(VEHICLESTAT_AMMO2, int)
-REGISTER_STAT(VEHICLESTAT_RELOAD2, int)
-REGISTER_STAT(VEHICLESTAT_W2MODE, int)
+REGISTER_STAT(VEHICLESTAT_HEALTH, int24)
+REGISTER_STAT(VEHICLESTAT_SHIELD, int24)
+REGISTER_STAT(VEHICLESTAT_ENERGY, int24)
+REGISTER_STAT(VEHICLESTAT_AMMO1, int24)
+REGISTER_STAT(VEHICLESTAT_RELOAD1, int24)
+REGISTER_STAT(VEHICLESTAT_AMMO2, int24)
+REGISTER_STAT(VEHICLESTAT_RELOAD2, int24)
+REGISTER_STAT(VEHICLESTAT_W2MODE, int24)
 REGISTER_STAT(NADE_TIMER, float)
 REGISTER_STAT(SECRETS_TOTAL, float)
 REGISTER_STAT(SECRETS_FOUND, float)
 REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
-REGISTER_STAT(MONSTERS_TOTAL, int)
-REGISTER_STAT(MONSTERS_KILLED, int)
-REGISTER_STAT(BUFFS, int)
+REGISTER_STAT(MONSTERS_TOTAL, int24)
+REGISTER_STAT(MONSTERS_KILLED, int24)
+REGISTER_STAT(BUFFS, int24)
 REGISTER_STAT(NADE_BONUS, float)
-REGISTER_STAT(NADE_BONUS_TYPE, int)
+REGISTER_STAT(NADE_BONUS_TYPE, int24)
 REGISTER_STAT(NADE_BONUS_SCORE, float)
 REGISTER_STAT(HEALING_ORB, float)
 REGISTER_STAT(HEALING_ORB_ALPHA, float)
-REGISTER_STAT(PLASMA, int)
-REGISTER_STAT(FROZEN, int)
+REGISTER_STAT(PLASMA, int24)
+REGISTER_STAT(FROZEN, int24)
 REGISTER_STAT(REVIVE_PROGRESS, float)
-REGISTER_STAT(ROUNDLOST, int)
+REGISTER_STAT(ROUNDLOST, int24)
 REGISTER_STAT(BUFF_TIME, float)
-REGISTER_STAT(CTF_FLAGSTATUS, int)
+REGISTER_STAT(CTF_FLAGSTATUS, int24)
 REGISTER_STAT(CAPTURE_PROGRESS, float)
 REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
-REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
+REGISTER_STAT(ITEMSTIME, int24, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
 REGISTER_STAT(VEIL_ORB, float)
 REGISTER_STAT(VEIL_ORB_ALPHA, float)
@@ -155,15 +155,15 @@ float autocvar_g_multijump_maxspeed;
 float autocvar_g_multijump_dodging = 1;
 bool autocvar_g_multijump_client = true;
 #endif
-REGISTER_STAT(MULTIJUMP_DODGING, int, autocvar_g_multijump_dodging)
+REGISTER_STAT(MULTIJUMP_DODGING, int24, autocvar_g_multijump_dodging)
 REGISTER_STAT(MULTIJUMP_MAXSPEED, float, autocvar_g_multijump_maxspeed)
-REGISTER_STAT(MULTIJUMP_ADD, int, autocvar_g_multijump_add)
+REGISTER_STAT(MULTIJUMP_ADD, int24, autocvar_g_multijump_add)
 REGISTER_STAT(MULTIJUMP_SPEED, float, autocvar_g_multijump_speed)
 REGISTER_STAT(MULTIJUMP_CLIENT, bool, autocvar_g_multijump_client)
 .int multijump_count;
-REGISTER_STAT(MULTIJUMP_COUNT, int, this.multijump_count)
-REGISTER_STAT(MULTIJUMP, int, autocvar_g_multijump)
-REGISTER_STAT(DOUBLEJUMP, int, autocvar_sv_doublejump)
+REGISTER_STAT(MULTIJUMP_COUNT, int24, this.multijump_count)
+REGISTER_STAT(MULTIJUMP, int24, autocvar_g_multijump)
+REGISTER_STAT(DOUBLEJUMP, int24, autocvar_sv_doublejump)
 
 #ifdef SVQC
 bool g_bugrigs;
@@ -182,18 +182,18 @@ float g_bugrigs_speed_ref;
 float g_bugrigs_speed_pow;
 float g_bugrigs_steer;
 #endif
-REGISTER_STAT(BUGRIGS, int, g_bugrigs)
+REGISTER_STAT(BUGRIGS, int24, g_bugrigs)
 REGISTER_STAT(BUGRIGS_ACCEL, float, g_bugrigs_accel)
-REGISTER_STAT(BUGRIGS_AIR_STEERING, int, g_bugrigs_air_steering)
-REGISTER_STAT(BUGRIGS_ANGLE_SMOOTHING, int, g_bugrigs_angle_smoothing)
-REGISTER_STAT(BUGRIGS_CAR_JUMPING, int, g_bugrigs_planar_movement_car_jumping)
+REGISTER_STAT(BUGRIGS_AIR_STEERING, int24, g_bugrigs_air_steering)
+REGISTER_STAT(BUGRIGS_ANGLE_SMOOTHING, int24, g_bugrigs_angle_smoothing)
+REGISTER_STAT(BUGRIGS_CAR_JUMPING, int24, g_bugrigs_planar_movement_car_jumping)
 REGISTER_STAT(BUGRIGS_FRICTION_AIR, float, g_bugrigs_friction_air)
 REGISTER_STAT(BUGRIGS_FRICTION_BRAKE, float, g_bugrigs_friction_brake)
 REGISTER_STAT(BUGRIGS_FRICTION_FLOOR, float, g_bugrigs_friction_floor)
-REGISTER_STAT(BUGRIGS_PLANAR_MOVEMENT, int, g_bugrigs_planar_movement)
-REGISTER_STAT(BUGRIGS_REVERSE_SPEEDING, int, g_bugrigs_reverse_speeding)
-REGISTER_STAT(BUGRIGS_REVERSE_SPINNING, int, g_bugrigs_reverse_spinning)
-REGISTER_STAT(BUGRIGS_REVERSE_STOPPING, int, g_bugrigs_reverse_stopping)
+REGISTER_STAT(BUGRIGS_PLANAR_MOVEMENT, int24, g_bugrigs_planar_movement)
+REGISTER_STAT(BUGRIGS_REVERSE_SPEEDING, int24, g_bugrigs_reverse_speeding)
+REGISTER_STAT(BUGRIGS_REVERSE_SPINNING, int24, g_bugrigs_reverse_spinning)
+REGISTER_STAT(BUGRIGS_REVERSE_STOPPING, int24, g_bugrigs_reverse_stopping)
 REGISTER_STAT(BUGRIGS_SPEED_POW, float, g_bugrigs_speed_pow)
 REGISTER_STAT(BUGRIGS_SPEED_REF, float, g_bugrigs_speed_ref)
 REGISTER_STAT(BUGRIGS_STEER, float, g_bugrigs_steer)
@@ -211,30 +211,30 @@ int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;
 int autocvar_sv_gameplayfix_noairborncorpse = 1;
 int autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems = 1;
 #endif
-REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
-REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
-REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, int, autocvar_sv_gameplayfix_stepdown)
+REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int24, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
+REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int24, autocvar_sv_gameplayfix_easierwaterjump)
+REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, int24, autocvar_sv_gameplayfix_stepdown)
 REGISTER_STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED, float, autocvar_sv_gameplayfix_stepdown_maxspeed)
-REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int, autocvar_sv_gameplayfix_stepmultipletimes)
-REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, autocvar_sv_gameplayfix_unstickplayers)
-REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
-REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, int, autocvar_sv_gameplayfix_fixedcheckwatertransition)
-REGISTER_STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES, int, autocvar_sv_gameplayfix_slidemoveprojectiles)
-REGISTER_STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES, int, autocvar_sv_gameplayfix_grenadebouncedownslopes)
-REGISTER_STAT(GAMEPLAYFIX_NOAIRBORNCORPSE, int, autocvar_sv_gameplayfix_noairborncorpse)
-REGISTER_STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED, int, autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems)
+REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int24, autocvar_sv_gameplayfix_stepmultipletimes)
+REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int24, autocvar_sv_gameplayfix_unstickplayers)
+REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int24, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
+REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, int24, autocvar_sv_gameplayfix_fixedcheckwatertransition)
+REGISTER_STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES, int24, autocvar_sv_gameplayfix_slidemoveprojectiles)
+REGISTER_STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES, int24, autocvar_sv_gameplayfix_grenadebouncedownslopes)
+REGISTER_STAT(GAMEPLAYFIX_NOAIRBORNCORPSE, int24, autocvar_sv_gameplayfix_noairborncorpse)
+REGISTER_STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED, int24, autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems)
 
-REGISTER_STAT(MOVEVARS_JUMPSTEP, int, cvar("sv_jumpstep"))
-REGISTER_STAT(NOSTEP, int, cvar("sv_nostep"))
+REGISTER_STAT(MOVEVARS_JUMPSTEP, int24, cvar("sv_jumpstep"))
+REGISTER_STAT(NOSTEP, int24, cvar("sv_nostep"))
 
 REGISTER_STAT(MOVEVARS_FRICTION, float)
 REGISTER_STAT(MOVEVARS_FRICTION_SLICK, float, autocvar_sv_friction_slick)
 REGISTER_STAT(MOVEVARS_FRICTION_ONLAND, float, autocvar_sv_friction_on_land)
 
-REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, int, autocvar_sv_jumpspeedcap_max_disable_on_ramps)
-REGISTER_STAT(MOVEVARS_TRACK_CANJUMP, int)
+REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, int24, autocvar_sv_jumpspeedcap_max_disable_on_ramps)
+REGISTER_STAT(MOVEVARS_TRACK_CANJUMP, int24)
 /** cvar loopback */
-REGISTER_STAT(MOVEVARS_CL_TRACK_CANJUMP, int)
+REGISTER_STAT(MOVEVARS_CL_TRACK_CANJUMP, int24)
 
 #ifdef SVQC
 int g_dodging;
@@ -258,10 +258,10 @@ bool autocvar_sv_dodging_clientselect;
 #endif
 
 #if 0
-REGISTER_STAT(DODGING, int, g_dodging)
+REGISTER_STAT(DODGING, int24, g_dodging)
 REGISTER_STAT(DODGING_DELAY, float, autocvar_sv_dodging_delay)
 REGISTER_STAT(DODGING_DISTANCE_THRESHOLD, float, autocvar_sv_dodging_wall_distance_threshold)
-REGISTER_STAT(DODGING_FROZEN_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
+REGISTER_STAT(DODGING_FROZEN_DOUBLETAP, int24, autocvar_sv_dodging_frozen_doubletap)
 REGISTER_STAT(DODGING_HEIGHT_THRESHOLD, float, autocvar_sv_dodging_height_threshold)
 REGISTER_STAT(DODGING_HORIZ_SPEED_MIN, float, autocvar_sv_dodging_horiz_speed_min)
 REGISTER_STAT(DODGING_HORIZ_SPEED_MAX, float, autocvar_sv_dodging_horiz_speed_max)
@@ -277,7 +277,7 @@ REGISTER_STAT(DODGING_AIR_MAXSPEED, float, autocvar_sv_dodging_air_maxspeed)
 REGISTER_STAT(DODGING_CLIENTSELECT, bool, autocvar_sv_dodging_clientselect)
 #endif
 /** cvar loopback */
-REGISTER_STAT(DODGING_FROZEN, int, autocvar_sv_dodging_frozen)
+REGISTER_STAT(DODGING_FROZEN, int24, autocvar_sv_dodging_frozen)
 REGISTER_STAT(DODGING_TIMEOUT, float)
 
 REGISTER_STAT(JETPACK_ACCEL_SIDE, float, autocvar_g_jetpack_acceleration_side)
@@ -297,7 +297,7 @@ AUTOCVAR(g_walljump_force, float, 300, "How far to bounce/jump off the wall");
 AUTOCVAR(g_walljump_velocity_xy_factor, float, 1.15, "How much to slow down along horizontal axis, higher value = higher deceleration, if factor is < 1, you accelerate by wall jumping");
 AUTOCVAR(g_walljump_velocity_z_factor, float, 0.5, "Upwards velocity factor, multiplied by normal jump velocity");
 #endif
-REGISTER_STAT(WALLJUMP, int, autocvar_g_walljump)
+REGISTER_STAT(WALLJUMP, int24, autocvar_g_walljump)
 REGISTER_STAT(WALLJUMP_VELOCITY_Z_FACTOR, float, autocvar_g_walljump_velocity_z_factor)
 REGISTER_STAT(WALLJUMP_VELOCITY_XY_FACTOR, float, autocvar_g_walljump_velocity_xy_factor)
 REGISTER_STAT(WALLJUMP_DELAY, float, autocvar_g_walljump_delay)
@@ -310,10 +310,10 @@ float autocvar_g_bloodloss;
 REGISTER_STAT(BLOODLOSS, float, autocvar_g_bloodloss)
 
 // freeze tag, clan arena
-REGISTER_STAT(REDALIVE, int)
-REGISTER_STAT(BLUEALIVE, int)
-REGISTER_STAT(YELLOWALIVE, int)
-REGISTER_STAT(PINKALIVE, int)
+REGISTER_STAT(REDALIVE, int24)
+REGISTER_STAT(BLUEALIVE, int24)
+REGISTER_STAT(YELLOWALIVE, int24)
+REGISTER_STAT(PINKALIVE, int24)
 
 // domination
 REGISTER_STAT(DOM_TOTAL_PPS, float)
@@ -323,9 +323,9 @@ REGISTER_STAT(DOM_PPS_YELLOW, float)
 REGISTER_STAT(DOM_PPS_PINK, float)
 
 REGISTER_STAT(TELEPORT_MAXSPEED, float, autocvar_g_teleport_maxspeed)
-REGISTER_STAT(TELEPORT_TELEFRAG_AVOID, int, autocvar_g_telefrags_avoid)
+REGISTER_STAT(TELEPORT_TELEFRAG_AVOID, int24, autocvar_g_telefrags_avoid)
 
-REGISTER_STAT(CAMERA_SPECTATOR, int)
+REGISTER_STAT(CAMERA_SPECTATOR, int24)
 
 REGISTER_STAT(SPECTATORSPEED, float)
 
@@ -359,7 +359,7 @@ REGISTER_STAT(MOVEVARS_AIRCONTROL_POWER, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_BACKWARDS, bool)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_SIDEWARDS, bool)
 noref bool autocvar_sv_gameplayfix_nogravityonground = true;
-REGISTER_STAT(MOVEFLAGS, int, MOVEFLAG_VALID
+REGISTER_STAT(MOVEFLAGS, int24, MOVEFLAG_VALID
                               | (autocvar_sv_gameplayfix_q2airaccelerate ? MOVEFLAG_Q2AIRACCELERATE : 0)
                               | (autocvar_sv_gameplayfix_nogravityonground ? MOVEFLAG_NOGRAVITYONGROUND : 0)
                               | (autocvar_sv_gameplayfix_gravityunaffectedbyticrate ? MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE : 0))
@@ -380,7 +380,7 @@ REGISTER_STAT(WARMUP_TIMELIMIT, float, warmup_limit)
 #ifdef SVQC
 float autocvar_sv_wallfriction;
 #endif
-REGISTER_STAT(MOVEVARS_WALLFRICTION, int, autocvar_sv_wallfriction)
+REGISTER_STAT(MOVEVARS_WALLFRICTION, int24, autocvar_sv_wallfriction)
 REGISTER_STAT(MOVEVARS_TICRATE, float, autocvar_sys_ticrate)
 REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
 REGISTER_STAT(MOVEVARS_GRAVITY, float, autocvar_sv_gravity)
@@ -401,9 +401,9 @@ REGISTER_STAT(MOVEVARS_SPECIALCOMMAND, bool)
 #ifdef SVQC
 int autocvar_sv_wallclip;
 #endif
-REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
+REGISTER_STAT(MOVEVARS_WALLCLIP, int24, autocvar_sv_wallclip)
 
-REGISTER_STAT(GUNALIGN, int)
+REGISTER_STAT(GUNALIGN, int24)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))
 #endif

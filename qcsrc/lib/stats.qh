@@ -7,6 +7,7 @@
 
 .int m_id;
 USING(vectori, vector);
+USING(int24, int);
 
 REGISTRY(Stats, 256)
 REGISTER_REGISTRY(Stats)
@@ -20,7 +21,7 @@ REGISTRY_DEFINE_GET(Stats, NULL)
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
 
 #if defined(CSQC)
-	#define stats_get_int() ReadInt24_t()
+	#define stats_get_int24() ReadInt24_t()
 	#define stats_get_bool() boolean(ReadByte())
 	#define stats_get_float() ReadFloat()
 	#define stats_get_vector() ReadVector()
@@ -28,11 +29,23 @@ REGISTRY_DEFINE_GET(Stats, NULL)
 
 .void(entity ent) m_receive;
 #elif defined(SVQC)
-	#define stats_write_int(chan,id,ent) WriteInt24_t(chan, STAT(id, ent))
+	#define stats_write_int24(chan,id,ent) WriteInt24_t(chan, STAT(id, ent))
 	#define stats_write_bool(chan,id,ent) WriteByte(chan, STAT(id, ent))
 	#define stats_write_float(chan,id,ent) WriteFloat(chan, STAT(id, ent))
 	#define stats_write_vector(chan,id,ent) WriteVector(chan, STAT(id, ent))
 	#define stats_write_vectori(chan,id,ent) WriteInt72_t(chan, STAT(id, ent))
+
+	#define stats_set_int24(id,ent,val) STAT(id, ent) = rint(val)
+	#define stats_set_bool(id,ent,val) STAT(id, ent) = (val)
+	#define stats_set_float(id,ent,val) STAT(id, ent) = (val)
+	#define stats_set_vector(id,ent,val) STAT(id, ent) = (val)
+	#define stats_set_vectori(id,ent,val) STAT(id, ent) = vec_rint(val)
+
+	#define stats_check_int24(id,ent,val) (STAT(id, ent) != rint(val))
+	#define stats_check_bool(id,ent,val) (STAT(id, ent) != (val))
+	#define stats_check_float(id,ent,val) (STAT(id, ent) != (val))
+	#define stats_check_vector(id,ent,val) (STAT(id, ent) != (val))
+	#define stats_check_vectori(id,ent,val) (STAT(id, ent) != vec_rint(val))
 
 .bool(entity ent, entity player) m_check;
 .void(entity ent, entity player) m_set;
@@ -72,8 +85,8 @@ REGISTRY_DEFINE_GET(Stats, NULL)
 	#define _STAT(id) stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		.T _STAT(id); \
-		bool STAT_##id##_check(entity ent, entity player) { return STAT(id, ent) != STAT(id, player); } \
-		void STAT_##id##_set(entity ent, entity player) { STAT(id, ent) = STAT(id, player); } \
+		bool STAT_##id##_check(entity ent, entity player) { return stats_check_##T(id, ent, STAT(id, player)); } \
+		void STAT_##id##_set(entity ent, entity player) { stats_set_##T(id, ent, STAT(id, player)); } \
 		void STAT_##id##_send(int chan, entity ent) { stats_write_##T(chan, id, ent); } \
 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
@@ -86,9 +99,9 @@ REGISTRY_DEFINE_GET(Stats, NULL)
     /** TODO: do we want the global copy to update? */
     #define REGISTER_STAT_3(id, T, expr) \
     	REGISTER_STAT_2(id, T); \
-    	ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
-    	ACCUMULATE void GlobalStats_updateglobal() { entity this = STATS; STAT(id, this) = (expr); } \
-    	STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
+    	ACCUMULATE void GlobalStats_update(entity this) { stats_set_##T(id, this, (expr)); } \
+    	ACCUMULATE void GlobalStats_updateglobal() { entity this = STATS; stats_set_##T(id, this, (expr)); } \
+    	STATIC_INIT(worldstat_##id) { entity this = STATS; stats_set_##T(id, this, (expr)); }
 #else
 	#define REGISTER_STAT_2(id, type)
     #define REGISTER_STAT_3(id, T, expr)
@@ -132,6 +145,7 @@ NET_HANDLE(ENT_CLIENT_STATS, bool isnew)
 #endif
 
 #ifdef SVQC
+const int STATS_MAX_UPDATES = 5; // maximum number of stats to update per frame
 int statsminorBitsArr[Stats_groups_major];
 void Stats_Write(entity data)
 {
@@ -144,10 +158,14 @@ void Stats_Write(entity data)
 	for (int i = 0; i < Stats_groups_major; ++i)
 		statsminorBitsArr[i] = 0;
 
+	int updateCount = 0;
     int majorBits = 0;
     FOREACH(Stats, true, {
+    	if(updateCount >= STATS_MAX_UPDATES)
+    		break; // no more updates this frame thank you very much!
         const bool changed = it.m_check(data, data.owner);
         if (changed) {
+        	++updateCount;
         	it.m_set(data, data.owner);
 			int maj = G_MAJOR(it.m_id);
 			majorBits = BITSET(majorBits, BIT(maj), true);

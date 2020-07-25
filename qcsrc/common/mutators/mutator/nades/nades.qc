@@ -8,7 +8,7 @@ bool autocvar_g_nades_nade_small;
 float autocvar_g_nades_spread = 0.04;
 #endif
 
-REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
+REGISTER_STAT(NADES_SMALL, int24, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");

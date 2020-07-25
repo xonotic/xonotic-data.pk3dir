@@ -274,7 +274,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars", false)
 
 
 #if ENABLE_DEBUGTRACE
-REGISTER_STAT(TRACE_ENT, int)
+REGISTER_STAT(TRACE_ENT, int24)
 
 #ifdef SVQC
 bool autocvar_debugtrace;
