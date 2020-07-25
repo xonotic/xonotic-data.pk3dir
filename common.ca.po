@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-23 16:47+0000\n"
+"PO-Revision-Date: 2020-07-24 22:50+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Catalan (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ca/)\n"
@@ -803,122 +803,130 @@ msgstr "rang"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of flag returns"
-msgstr ""
+msgstr "Nombre de retorns de bandera"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^returns"
-msgstr ""
+msgstr "retorns"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of revivals"
-msgstr ""
+msgstr "Nombre de reanimacions"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^revivals"
-msgstr ""
+msgstr "reanimacions"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Nombre de rondes guanyades"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "rondes guanyades"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^score"
-msgstr ""
+msgstr "puntuació"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Total score"
-msgstr ""
+msgstr "Puntuació total"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of suicides"
-msgstr ""
+msgstr "Nombre de suïcidis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^suicides"
-msgstr ""
+msgstr "suïcidis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Nombre d'assassinats menys morts"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^sum"
-msgstr ""
+msgstr "suma"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of domination points taken (Domination)"
-msgstr ""
+msgstr "Nombre de punts de dominació presos (Dominació)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^takes"
-msgstr ""
+msgstr "presos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Nombre d'assassinats de companys"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "assassinats de companys"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Nombre de ticks (Dominació)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^ticks"
-msgstr ""
+msgstr "ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^time"
-msgstr ""
+msgstr "temps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "Temps total de carrera (Carrera/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:330
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
+"Pots modificar la taula de puntuacions amb la comanda "
+"^2scoreboard_columns_set"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:331
 msgid "Usage:"
-msgstr ""
+msgstr "Ús:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:333
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr ""
+msgstr "^2scoreboard_columns_set ^3field1 field2 ..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:334
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
+"^2scoreboard_columns_set ^7sense arguments es llegeixen els arguments del "
+"cvar scoreboard_columns"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:335
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
+"^5Nota: ^7scoreboard_columns_set sense arguments és executat en el "
+"començament de cada partida"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:336
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
+"^2scoreboard_columns_set ^3expand_default ^7carrega el disseny actual i el "
+"s'expandeix en la cvar scoreboard_columns per a què el puguis editar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:337
 msgid "You can use a ^3|^7 to start the right-aligned fields."
-msgstr ""
+msgstr "Pots utilitzar un ^3|^7 per començar els camps alineats a la dreta."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:338
 msgid "The following field names are recognized (case insensitive):"
-msgstr ""
+msgstr "Els següents noms de camp són reconeguts (sensible a majúscules):"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:344
 msgid ""
