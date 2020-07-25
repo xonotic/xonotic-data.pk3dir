@@ -8,6 +8,7 @@
 .int m_id;
 USING(vectori, vector);
 USING(int24, int);
+USING(bool8, bool);
 
 REGISTRY(Stats, 256)
 REGISTER_REGISTRY(Stats)
@@ -22,7 +23,7 @@ REGISTRY_DEFINE_GET(Stats, NULL)
 
 #if defined(CSQC)
 	#define stats_get_int24() ReadInt24_t()
-	#define stats_get_bool() boolean(ReadByte())
+	#define stats_get_bool8() boolean(ReadByte())
 	#define stats_get_float() ReadFloat()
 	#define stats_get_vector() ReadVector()
 	#define stats_get_vectori() ReadInt72_t()
@@ -30,19 +31,19 @@ REGISTRY_DEFINE_GET(Stats, NULL)
 .void(entity ent) m_receive;
 #elif defined(SVQC)
 	#define stats_write_int24(chan,id,ent) WriteInt24_t(chan, STAT(id, ent))
-	#define stats_write_bool(chan,id,ent) WriteByte(chan, STAT(id, ent))
+	#define stats_write_bool8(chan,id,ent) WriteByte(chan, STAT(id, ent))
 	#define stats_write_float(chan,id,ent) WriteFloat(chan, STAT(id, ent))
 	#define stats_write_vector(chan,id,ent) WriteVector(chan, STAT(id, ent))
 	#define stats_write_vectori(chan,id,ent) WriteInt72_t(chan, STAT(id, ent))
 
 	#define stats_set_int24(id,ent,val) STAT(id, ent) = rint(val)
-	#define stats_set_bool(id,ent,val) STAT(id, ent) = (val)
+	#define stats_set_bool8(id,ent,val) STAT(id, ent) = boolean(val)
 	#define stats_set_float(id,ent,val) STAT(id, ent) = (val)
 	#define stats_set_vector(id,ent,val) STAT(id, ent) = (val)
 	#define stats_set_vectori(id,ent,val) STAT(id, ent) = vec_rint(val)
 
 	#define stats_check_int24(id,ent,val) (STAT(id, ent) != rint(val))
-	#define stats_check_bool(id,ent,val) (STAT(id, ent) != (val))
+	#define stats_check_bool8(id,ent,val) (STAT(id, ent) != boolean(val))
 	#define stats_check_float(id,ent,val) (STAT(id, ent) != (val))
 	#define stats_check_vector(id,ent,val) (STAT(id, ent) != (val))
 	#define stats_check_vectori(id,ent,val) (STAT(id, ent) != vec_rint(val))

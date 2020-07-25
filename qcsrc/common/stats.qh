@@ -87,7 +87,7 @@ REGISTER_STAT(INVINCIBLE_FINISHED, float)
 /** arc heat in [0,1] */
 REGISTER_STAT(PRESSED_KEYS, int24)
 /** this stat could later contain some other bits of info, like, more server-side particle config */
-REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool, autocvar_g_allow_oldvortexbeam)
+REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool8, autocvar_g_allow_oldvortexbeam)
 REGISTER_STAT(FUEL, int24)
 REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
@@ -145,7 +145,7 @@ REGISTER_STAT(SHOWFPS, float, autocvar_sv_showfps)
 #ifdef SVQC
 bool autocvar_g_ctf_leaderboard;
 #endif
-REGISTER_STAT(CTF_SHOWLEADERBOARD, bool, autocvar_g_ctf_leaderboard)
+REGISTER_STAT(CTF_SHOWLEADERBOARD, bool8, autocvar_g_ctf_leaderboard)
 
 #ifdef SVQC
 int autocvar_g_multijump;
@@ -159,7 +159,7 @@ REGISTER_STAT(MULTIJUMP_DODGING, int24, autocvar_g_multijump_dodging)
 REGISTER_STAT(MULTIJUMP_MAXSPEED, float, autocvar_g_multijump_maxspeed)
 REGISTER_STAT(MULTIJUMP_ADD, int24, autocvar_g_multijump_add)
 REGISTER_STAT(MULTIJUMP_SPEED, float, autocvar_g_multijump_speed)
-REGISTER_STAT(MULTIJUMP_CLIENT, bool, autocvar_g_multijump_client)
+REGISTER_STAT(MULTIJUMP_CLIENT, bool8, autocvar_g_multijump_client)
 .int multijump_count;
 REGISTER_STAT(MULTIJUMP_COUNT, int24, this.multijump_count)
 REGISTER_STAT(MULTIJUMP, int24, autocvar_g_multijump)
@@ -270,11 +270,11 @@ REGISTER_STAT(DODGING_HORIZ_FORCE_FASTEST, float, autocvar_sv_dodging_horiz_forc
 REGISTER_STAT(DODGING_HORIZ_FORCE_FROZEN, float, autocvar_sv_dodging_horiz_force_frozen)
 REGISTER_STAT(DODGING_RAMP_TIME, float, autocvar_sv_dodging_ramp_time)
 REGISTER_STAT(DODGING_UP_SPEED, float, autocvar_sv_dodging_up_speed)
-REGISTER_STAT(DODGING_WALL, bool, autocvar_sv_dodging_wall_dodging)
-REGISTER_STAT(DODGING_AIR, bool, autocvar_sv_dodging_air_dodging)
+REGISTER_STAT(DODGING_WALL, bool8, autocvar_sv_dodging_wall_dodging)
+REGISTER_STAT(DODGING_AIR, bool8, autocvar_sv_dodging_air_dodging)
 REGISTER_STAT(DODGING_MAXSPEED, float, autocvar_sv_dodging_maxspeed)
 REGISTER_STAT(DODGING_AIR_MAXSPEED, float, autocvar_sv_dodging_air_maxspeed)
-REGISTER_STAT(DODGING_CLIENTSELECT, bool, autocvar_sv_dodging_clientselect)
+REGISTER_STAT(DODGING_CLIENTSELECT, bool8, autocvar_sv_dodging_clientselect)
 #endif
 /** cvar loopback */
 REGISTER_STAT(DODGING_FROZEN, int24, autocvar_sv_dodging_frozen)
@@ -332,12 +332,12 @@ REGISTER_STAT(SPECTATORSPEED, float)
 #ifdef SVQC
 bool autocvar_sv_slick_applygravity;
 #endif
-REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
+REGISTER_STAT(SLICK_APPLYGRAVITY, bool8, autocvar_sv_slick_applygravity)
 
 #ifdef SVQC
 bool autocvar_sv_q3defragcompat;
 #endif
-REGISTER_STAT(Q3DEFRAGCOMPAT, bool, autocvar_sv_q3defragcompat)
+REGISTER_STAT(Q3DEFRAGCOMPAT, bool8, autocvar_sv_q3defragcompat)
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
@@ -348,16 +348,16 @@ float warmup_limit;
 bool autocvar_g_shootfromcenter;
 bool autocvar_g_shootfromeye;
 #endif
-REGISTER_STAT(SHOOTFROMEYE, bool, autocvar_g_shootfromeye)
-REGISTER_STAT(SHOOTFROMCENTER, bool, autocvar_g_shootfromcenter)
+REGISTER_STAT(SHOOTFROMEYE, bool8, autocvar_g_shootfromeye)
+REGISTER_STAT(SHOOTFROMCENTER, bool8, autocvar_g_shootfromcenter)
 
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_PENALTY, float)
 REGISTER_STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, float)
 REGISTER_STAT(MOVEVARS_AIRSTRAFEACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_POWER, float)
-REGISTER_STAT(MOVEVARS_AIRCONTROL_BACKWARDS, bool)
-REGISTER_STAT(MOVEVARS_AIRCONTROL_SIDEWARDS, bool)
+REGISTER_STAT(MOVEVARS_AIRCONTROL_BACKWARDS, bool8)
+REGISTER_STAT(MOVEVARS_AIRCONTROL_SIDEWARDS, bool8)
 noref bool autocvar_sv_gameplayfix_nogravityonground = true;
 REGISTER_STAT(MOVEFLAGS, int24, MOVEFLAG_VALID
                               | (autocvar_sv_gameplayfix_q2airaccelerate ? MOVEFLAG_Q2AIRACCELERATE : 0)
@@ -397,7 +397,7 @@ REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
 REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
-REGISTER_STAT(MOVEVARS_SPECIALCOMMAND, bool)
+REGISTER_STAT(MOVEVARS_SPECIALCOMMAND, bool8)
 #ifdef SVQC
 int autocvar_sv_wallclip;
 #endif

@@ -1,6 +1,6 @@
 #include "vortex.qh"
 
-//REGISTER_STAT(WEP_CVAR_vortex_charge, bool, WEP_CVAR(vortex, charge))
+//REGISTER_STAT(WEP_CVAR_vortex_charge, bool8, WEP_CVAR(vortex, charge))
 //REGISTER_STAT(WEP_CVAR_vortex_charge_animlimit, float, WEP_CVAR(vortex, charge_animlimit))
 
 #if defined(GAMEQC)
