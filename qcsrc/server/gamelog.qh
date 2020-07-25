@@ -1,0 +1,12 @@
+#pragma once
+
+bool logfile_open;
+float logfile;
+
+string GameLog_ProcessIP(string s);
+
+void GameLogEcho(string s);
+
+void GameLogInit();
+
+void GameLogClose();

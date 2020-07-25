@@ -35,7 +35,7 @@ void soundat(entity e, vector o, float chan, string samp, float vol, float _atte
 void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);
-void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten, float _pitch);
 
 void droptofloor(entity this);
 
@@ -55,14 +55,6 @@ string formatmessage(entity this, string msg);
 
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
-
-string GameLog_ProcessIP(string s);
-
-void GameLogEcho(string s);
-
-void GameLogInit();
-
-void GameLogClose();
 
 void GetCvars(entity this, entity store, int f);
 
@@ -90,7 +82,7 @@ void remove_unsafely(entity e);
 
 void SetMovetypeFollow(entity ent, entity e);
 
-void soundto(float dest, entity e, float chan, string samp, float vol, float atten);
+void soundto(float dest, entity e, float chan, string samp, float vol, float atten, float _pitch);
 
 void stopsound(entity e, float chan);
 
@@ -114,9 +106,6 @@ void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomo
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
-
-float logfile_open;
-float logfile;
 
 /*
 // NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.

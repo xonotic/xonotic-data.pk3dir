@@ -285,7 +285,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 		msg_entity = it;
 		// we want this to be very loud when close but fall off quickly -> using max base volume and high attenuation
-		soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_IDLE);
+		soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_IDLE, 0);
 	});
 	if(pseudoprojectile)
 		delete(pseudoprojectile);

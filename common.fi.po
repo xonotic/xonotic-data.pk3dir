@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-07 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-07-09 17:30+0000\n"
+"Last-Translator: Oi Suomi On! <oisuomion@protonmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -296,7 +296,7 @@ msgstr "QMCMD^joukkuekeskustelu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^voimistus pian"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -456,7 +456,7 @@ msgstr "QMCMD^Chat-keskustelun ääni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Muuta katselijakameraa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 #: qcsrc/client/hud/panel/quickmenu.qc:845
@@ -473,7 +473,7 @@ msgstr "QMCMD^Vähennä nopeutta"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Seinätörmäys"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Fullscreen"
@@ -506,7 +506,7 @@ msgstr "QMCMD^Sekoita joukkueet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Katsele pelaajaa"
 
 #: qcsrc/client/hud/panel/racetimer.qc:59
 #, c-format
@@ -1842,7 +1842,7 @@ msgstr "Lento"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:11
 msgid "Buff"
-msgstr "Puhvi"
+msgstr "Tsemppi"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
@@ -2253,12 +2253,13 @@ msgstr "^F2Seuraava kierros menee sinun osaltasi katsellessa"
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1's ^BG%s^K1 puhvilla ^K1%s%s"
+msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1's ^BG%s^K1 tsempillä ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1's ^BG%s^K1 puhvilla ^K1%s%s"
+msgstr ""
+"^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1's ^BG%s^K1 tsempillä ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:266
 #, c-format
@@ -2754,7 +2755,7 @@ msgstr "^BG%s^K3 elvytettiin heidän Naattiräjähdyksellään"
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 elvytettiin automaattisesti %s sekunnin kuluttua"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
@@ -2790,24 +2791,24 @@ msgstr "^BGJumaltila pelasti sinut %s yksikköä vahinkoa, huiputtaja!"
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr "^BG%s^BG sai %s^BG puhvin!"
+msgstr "^BG%s^BG sai %s^BG tsempin!"
 
 #: qcsrc/common/notifications/all.inc:369
 #, c-format
 msgid "^BG%s^BG lost the %s^BG buff!"
-msgstr "^BG%s^BG menetti %s^BG puhvin!"
+msgstr "^BG%s^BG menetti %s^BG tsempin!"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:683
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr "^BGSinä pudotit %s^BG puhvin!"
+msgstr "^BGSinä pudotit %s^BG tsempin!"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:684
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr "^BGSinulla on %s^BG puhvi!"
+msgstr "^BGSinulla on %s^BG tsemppi!"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:687
@@ -2934,7 +2935,7 @@ msgstr "^BG%s^BG kaappasi %s^BG hallintapisteen"
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^BG captured a control point"
-msgstr ""
+msgstr "^BG%s^BG kaappasi hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:404
 #, c-format
@@ -2944,7 +2945,7 @@ msgstr "^TC^TT^BG joukkueen %s^BG hallintapiste on tuhottu täten %s"
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr ""
+msgstr "^TC^TT^BG joukkueen hallintapiste on tuhottu täten %s"
 
 #: qcsrc/common/notifications/all.inc:406
 msgid "^TC^TT^BG generator has been destroyed"
@@ -3983,7 +3984,7 @@ msgstr "^BGOvi avattu!"
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr ""
+msgstr "^F2Lisäelämiä napattu: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:667
 #, c-format
@@ -4002,7 +4003,7 @@ msgstr "^K3Sinut elvytettiin ^BG%s :n toimesta"
 #: qcsrc/common/notifications/all.inc:670
 #, c-format
 msgid "^K3You were automatically revived after %s seconds"
-msgstr ""
+msgstr "^K3Sinut elvytettiin automaattisesti %s sekunnissa"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^BGThe generator is under attack!"
@@ -4137,12 +4138,12 @@ msgstr "^F2Lisäelämiä jäljellä: ^K1%s"
 #: qcsrc/common/notifications/all.inc:719 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %s: "
-msgstr ""
+msgstr "Taso %s: "
 
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGPaina ^F2%s^BG liittyäksesi peliin"
 
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
@@ -4165,7 +4166,7 @@ msgstr "^BGKaappasit haltuusi %s^BG hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGSinä kaappasit hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:727
 #, c-format
@@ -4174,7 +4175,7 @@ msgstr "^TC^TT^BG joukkue kaappasi %s^BG hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "^TC^TT^BG joukkue kaappasi hallintapisteen"
 
 #: qcsrc/common/notifications/all.inc:729
 msgid "^BGThis control point currently cannot be captured"
@@ -5774,15 +5775,15 @@ msgstr "Xonotic:in tunnustusmaininnat"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:16
 msgid "Are you sure to disconnect from server?"
-msgstr ""
+msgstr "Haluatko varmasti katkaista yhteyden palvelimelle?"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:19
 msgid "I would disconnect from server..."
-msgstr ""
+msgstr "Katkaisisin palvelinyhteyden..."
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qc:22
 msgid "I would play more!"
-msgstr ""
+msgstr "Pelaisin lisää!"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
@@ -5792,7 +5793,7 @@ msgstr "Katkaise yhteys"
 
 #: qcsrc/menu/xonotic/dialog_disconnect.qh:7
 msgid "Disconnect from the server you are connected to"
-msgstr ""
+msgstr "Katkaise yhteys palvelimeen johon olet yhdistettynä"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -6879,7 +6880,7 @@ msgstr "Verenvuodatus"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:175
 msgid "Buffs"
-msgstr "Puhvit"
+msgstr "Tsempit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Overkill"
@@ -6915,10 +6916,12 @@ msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr ""
+"Kytke päälle väistöt (pikakiihdytys annettuun suuntaan). \n"
+"Kaksoistäppää nuolinäppäintä väistääksesi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:168
 msgid "An explosion occurs when two players collide"
-msgstr ""
+msgstr "Tapahtuu räjähdys kahden pelaajan törmätessä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:172
 msgid "All players are almost invisible"
@@ -6929,6 +6932,8 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Kytke tsemppipoimittavat päälle (satunnaisia lisäetuja kuten ensiapu, "
+"näkymättömyys, jne.) niitä tukevissa kartoissa"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:181
 msgid "Only possible to inflict damage on your enemy while they're airborne"
@@ -6945,10 +6950,14 @@ msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
+"Terveyden määrä jonka alittuessa pelaajat alkavat vuotamaan kuiviin (vointi "
+"repsahtaa eivätkä kykene hyppäämään)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:199
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr ""
+"Aseta esineet putoamaan maahan hitaammin (prosenttimäärä perinteiseen "
+"painovoimaan nähden)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "Weapon & item mutators:"
@@ -6961,24 +6970,32 @@ msgstr "Köysi"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:212
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr ""
+"Pelaajat syntyvät heittokoukun kera. Paina 'koukku' näppäintä sitä "
+"käyttääksesi "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:216
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
+"Pelaajat syntyvät lentopakkauksen kera. Kaksoistäppää 'hyppy' tai paina "
+"'lentopakkaus' näppäintä sitä käyttääksesi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:220
 msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
+"Ammuksia ei voi tuhota. Voit, siltikin, räjäyttää sähköpalloja "
+"ensisijaisella sähkötulituksella  "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid ""
 "Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
+"Jotkut asesyntymät tullaan vaihtamaan satunnaisesti uusilla aseilla: Raskas-"
+"laser rynnäkkökanuuna, Miinanlevittäjä, Kivääri, T.A.G. Hakeutuja "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:230
 msgid ""
@@ -6986,6 +7003,10 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
+"Hävittäjäraketit voidaan räjäyttää välittömästi (muutoin, ilmenee pieni "
+"viive). Tämä antaa pelaajalle mahdollisuuden ampua ja räjäyttää "
+"Hävittäjäraketin ilmassa ollessaan, tuottaakseen voimakkaan lisäpotkun "
+"keskikorkeudessa jopa liikkuessaan nopeasti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "Players will drop all weapons they possessed when they are killed"
@@ -7383,7 +7404,7 @@ msgstr "Salli pelaajatilastojen käyttävän pelinimeäsi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
-msgstr ""
+msgstr "Anna lupa sijoittaa sinut pelaajatilastoissa "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
 msgid "Country"
@@ -7932,11 +7953,11 @@ msgstr "Vältä häviöllistä tekstuurien pakkaamista"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Disable sky for performance and visibility"
-msgstr ""
+msgstr "Kytke taivas pois päältä suorituskyvyn ja näkyvyyden lisäämiseksi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show sky"
-msgstr ""
+msgstr "Näytä taivas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -8811,7 +8832,7 @@ msgstr "Asemallin sijainti; vaatii yhteyden uudelleenmuodostamisen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Weapon model opacity:"
-msgstr ""
+msgstr "Asemallin läpikuultavuus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Gun model swaying"
@@ -9680,7 +9701,7 @@ msgstr "käynnistä katsojatila"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "Communication"
-msgstr ""
+msgstr "Keskustelu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "public chat"
@@ -9724,11 +9745,11 @@ msgstr "liity joukkueeseen automaattisesti"
 
 #: qcsrc/menu/xonotic/keybinder.qc:120
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "pudota avain/lippu, poistu ajoneuvosta"
 
 #: qcsrc/menu/xonotic/keybinder.qc:121
 msgid "suicide / respawn"
-msgstr ""
+msgstr "itsari / uudelleensynty"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "quick menu"
@@ -9740,7 +9761,7 @@ msgstr "Käyttäjän määrittämä"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "Development"
-msgstr ""
+msgstr "Kehitys"
 
 #: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "sandbox menu"
@@ -9748,11 +9769,11 @@ msgstr "rajattu hiekkalaatikkovalikko"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "raahaa kohde (hiekkalaatikko)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "välietapin muokkausvalikko"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:96 qcsrc/menu/xonotic/mainwindow.qc:99
 msgid "Do not press this button again!"
@@ -9788,15 +9809,15 @@ msgstr "<mallia ei löytynyt>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:256
 msgid "SERVER^Remove favorite"
-msgstr ""
+msgstr "PALVELIN^Poista lemppari"
 
 #: qcsrc/menu/xonotic/serverlist.qc:257
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr ""
+msgstr "Poista tämänhetkinen korostettu palvelin kirjanmerkeistä"
 
 #: qcsrc/menu/xonotic/serverlist.qc:261
 msgid "SERVER^Favorite"
-msgstr ""
+msgstr "PALVELIN^Lemppari"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid ""
@@ -10019,7 +10040,7 @@ msgstr "Joulukuu"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "PÄIVÄYS^%k %d, %V"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"

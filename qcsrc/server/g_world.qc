@@ -11,6 +11,7 @@
 #include "command/sv_cmd.qh"
 #include "command/vote.qh"
 #include "g_hook.qh"
+#include <server/gamelog.qh>
 #include "ipban.qh"
 #include "mapvoting.qh"
 #include <server/mutators/_mod.qh>
@@ -22,6 +23,7 @@
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/deathtypes/all.qh"
+#include <common/gamemodes/_mod.qh>
 #include "../common/gamemodes/sv_rules.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/_mod.qh"
@@ -259,6 +261,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca");
 		BADCVAR("g_ca_teams");
 		BADCVAR("g_conquest");
+		BADCVAR("g_conquest_teams");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
 		BADCVAR("g_dotc");
@@ -286,6 +289,8 @@ void cvar_changes_init()
 		BADCVAR("g_runematch");
 		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
+		BADCVAR("g_survival");
+		BADCVAR("g_survival_not_dm_maps");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
@@ -294,6 +299,7 @@ void cvar_changes_init()
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_settemp_acl");
 		BADCVAR("g_mapinfo_ignore_warnings");
 		BADCVAR("g_maplist_ignore_sizes");
 		BADCVAR("g_maplist_sizes_count_bots");
@@ -2067,21 +2073,20 @@ void Physics_Frame()
 
 	IL_EACH(g_moveables, true,
 	{
-		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
 		//set_movetype(it, it.move_movetype);
 		// inline the set_movetype function, since this is called a lot
-		it.movetype = (it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype;
+		it.movetype = (it.move_qcphysics) ? MOVETYPE_QCENTITY : it.move_movetype;
 
-		if(it.move_movetype == MOVETYPE_NONE)
-			continue;
-
-		if(it.move_qcphysics)
+		if(it.move_qcphysics && it.move_movetype != MOVETYPE_NONE)
 			Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 
 		if(it.movetype >= MOVETYPE_USER_FIRST && it.movetype <= MOVETYPE_USER_LAST) // these cases have no think handling
 		{
+			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
+				continue; // these movetypes have no regular think function
 			// handle thinking here
 			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
 				RunThink(it);
@@ -2093,7 +2098,7 @@ void Physics_Frame()
 
 	IL_EACH(g_moveables, it.move_qcphysics,
 	{
-		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
 			continue;
 		Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 	});
@@ -2213,6 +2218,11 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
+
+		// if a timeout is active, reset the slowmo value to normal
+		if(timeout_status == TIMEOUT_ACTIVE)
+			cvar_set("slowmo", ftos(orig_slowmo));
+
 		LOG_TRACE("Saving persistent data...");
 		Ban_SaveBans();
 

@@ -953,7 +953,7 @@ void HUD_Draw(entity this)
 	if(autocvar_r_letterbox == 0)
 		if(autocvar_viewsize < 120)
 		{
-			if(!(ISGAMETYPE(RACE) || ISGAMETYPE(CTS)))
+			if(!MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
 				Accuracy_LoadLevels();
 
 			HUD_Main();

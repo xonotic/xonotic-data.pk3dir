@@ -8,7 +8,6 @@
 #include <common/ent_cs.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
-#include <common/mapinfo.qh>
 #include <common/teams.qh>
 
 #include <lib/csqcmodel/cl_model.qh>
@@ -126,7 +125,8 @@ void Draw_ShowNames(entity this)
 		if (f < 0) f = 0;
 		a *= f;
 	}
-	if (a < ALPHA_MIN_VISIBLE && ISGAMETYPE(CTS)) return;
+	if (MUTATOR_CALLHOOK(ShowNames_Draw, this, a)) return;
+	a = M_ARGV(1, float);
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
 	float dist = vlen(this.origin - view_origin);
 	if (autocvar_hud_shownames_maxdistance)
@@ -213,7 +213,7 @@ void Draw_ShowNames_All()
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
-		if (!it.csqcmodel_isdead || it.alpha > 0)
+		if ((!it.csqcmodel_isdead || it.alpha > 0) && entcs.origin != it.origin)
 			setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);

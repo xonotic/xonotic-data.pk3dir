@@ -4,6 +4,7 @@
 #include "g_hook.qh"
 #include "g_damage.qh"
 #include "g_world.qh"
+#include <server/gamelog.qh>
 
 #include "bot/api.qh"
 

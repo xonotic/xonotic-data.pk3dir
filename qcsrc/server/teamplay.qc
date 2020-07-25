@@ -1,6 +1,7 @@
 #include "teamplay.qh"
 
 #include "client.qh"
+#include <server/gamelog.qh>
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
@@ -464,6 +465,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		team_ent.m_num_bots = 0;
 	}
 	setthink(balance, TeamBalance_Destroy);
+	balance.nextthink = time;
 
 	int teams_mask = 0;
 	string teament_name = string_null;

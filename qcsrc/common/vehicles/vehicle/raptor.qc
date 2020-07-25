@@ -422,7 +422,7 @@ bool raptor_frame(entity this, float dt)
 		if(incoming)
 		{
 			msg_entity = this;
-			soundto(MSG_ONE, vehic, CH_PAIN_SINGLE, SND(VEH_MISSILE_ALARM), VOL_BASE, ATTEN_NONE);
+			soundto(MSG_ONE, vehic, CH_PAIN_SINGLE, SND(VEH_MISSILE_ALARM), VOL_BASE, ATTEN_NONE, 0);
 		}
 
 		vehic.bomb1.cnt = time + 1;
