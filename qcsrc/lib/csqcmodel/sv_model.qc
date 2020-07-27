@@ -28,9 +28,10 @@
 bool CSQCModel_Send(entity this, entity to, int sf)
 {
 	// some nice flags for CSQCMODEL_IF
-	noref bool isplayer = IS_CLIENT(this);
-	noref bool islocalplayer = (this == to);
-	noref bool isnolocalplayer = (isplayer && (this != to));
+	entity client = ((this.m_client) ? this.m_client : this);
+	noref bool isplayer = IS_CLIENT(client);
+	noref bool islocalplayer = (client == to);
+	noref bool isnolocalplayer = (isplayer && (client != to));
 
 	int psf = 0;
 	psf = BITSET(psf, ISPLAYER_CLIENT, isplayer);
@@ -40,6 +41,9 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_MODEL);
 	WriteInt24_t(MSG_ENTITY, sf);
 	WriteByte(MSG_ENTITY, psf);
+
+	if(isplayer)
+		WriteByte(MSG_ENTITY, etof(client));
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }

@@ -179,9 +179,9 @@ void CSQCModel_InterpolateAnimation_Do(entity this)
 void CSQCModel_Draw(entity this)
 {
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = (this.isplayermodel & ISPLAYER_CLIENT);
-	noref bool islocalplayer = (this.entnum == player_localnum + 1);
-	noref bool isnolocalplayer = (isplayer && (this.entnum != player_localnum + 1));
+	noref bool isplayer = (this.isplayermodel & ISPLAYER_CLIENT);
+	noref bool islocalplayer = (this.isplayermodel & ISPLAYER_LOCAL);
+	noref bool isnolocalplayer = (isplayer && !islocalplayer);
 
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
@@ -193,7 +193,7 @@ void CSQCModel_Draw(entity this)
 
 	if(isplayer)
 	{
-		if(this.entnum == player_localentnum)
+		if(islocalplayer)
 			this.renderflags |= RF_EXTERNALMODEL;
 		else
 			this.renderflags &= ~RF_EXTERNALMODEL;
@@ -214,10 +214,11 @@ void CSQCModel_Draw(entity this)
 }
 
 entity CSQCModel_players[255]; // 255 is engine limit on maxclients
+.int cliententnum;
 
 void CSQCModel_remove(entity this)
 {
-	CSQCModel_players[this.entnum - 1] = NULL;
+	CSQCModel_players[this.cliententnum] = NULL;
 }
 
 NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
@@ -226,14 +227,20 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	int psf = ReadByte();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = (psf & ISPLAYER_CLIENT) || (this.entnum >= 1 && this.entnum <= maxclients);
+	noref bool isplayer = (psf & ISPLAYER_CLIENT);
+	noref bool islocalplayer = (psf & ISPLAYER_LOCAL);
+	noref bool isnolocalplayer = (isplayer && !islocalplayer);
+
+	if(isplayer)
+		this.cliententnum = ReadByte() - 1;
+	else
+		this.cliententnum = 0;
+
 	if (isnew && isplayer)
 	{
-		CSQCModel_players[this.entnum - 1] = this;
+		CSQCModel_players[this.cliententnum] = this;
 		this.entremove = CSQCModel_remove;
 	}
-	bool islocalplayer = (this.entnum == player_localnum + 1);
-	noref bool isnolocalplayer = (isplayer && !islocalplayer);
 
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_CLIENT, isplayer);
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_LOCAL, islocalplayer);
@@ -297,7 +304,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	setorigin(this, this.origin);
 
 	// set obvious render flags
-	if(this.entnum == player_localentnum)
+	if(islocalplayer)
 		this.renderflags |= RF_EXTERNALMODEL;
 	else
 		this.renderflags &= ~RF_EXTERNALMODEL;

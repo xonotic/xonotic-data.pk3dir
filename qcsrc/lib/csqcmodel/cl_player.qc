@@ -627,7 +627,7 @@ bool CSQCPlayer_PreUpdate(entity this)
 
 bool CSQCPlayer_PostUpdate(entity this)
 {
-	if (this.entnum != player_localnum + 1) return false;
+	if (!(this.isplayermodel & ISPLAYER_LOCAL)) return false;
 	csqcplayer = this;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
 	cvar_settemp("cl_movement_replay", "0");
