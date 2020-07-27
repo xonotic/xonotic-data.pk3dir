@@ -17,6 +17,7 @@ const int MON_FLAG_HIDDEN = BIT(16);
 
 // entity properties of monsterinfo:
 .bool(int, entity actor, entity targ, .entity weaponentity) monster_attackfunc;
+.entity monsterdef;
 
 // animations
 .vector anim_blockend;

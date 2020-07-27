@@ -673,7 +673,7 @@ void nade_monster_boom(entity this)
 {
 	entity e = spawn();
 	e.noalign = true; // don't drop to floor
-	e = spawnmonster(e, this.pokenade_type, 0, this.realowner, this.realowner, this.origin, false, false, 1);
+	e = spawnmonster(e, this.pokenade_type, MON_Null, this.realowner, this.realowner, this.origin, false, false, 1);
 
 	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
