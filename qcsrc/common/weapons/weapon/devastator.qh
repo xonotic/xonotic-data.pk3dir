@@ -10,6 +10,8 @@ CLASS(Devastator, Weapon)
 /* modelname */ ATTRIB(Devastator, mdl, string, "rl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Devastator, m_model, Model, MDL_DEVASTATOR_ITEM);
+/* flash mdl */ ATTRIB(Devastator, m_muzzlemodel, Model, MDL_DEVASTATOR_MUZZLEFLASH);
+/* flash eff */ ATTRIB(Devastator, m_muzzleeffect, entity, EFFECT_ROCKET_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Devastator, w_crosshair, string, "gfx/crosshairrocketlauncher");
 /* crosshair */ ATTRIB(Devastator, w_crosshair_size, float, 0.7);

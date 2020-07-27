@@ -47,7 +47,7 @@ void func_rotating_init_for_player(entity this, entity player)
 	if (this.noise && this.noise != "" && this.active == ACTIVE_ACTIVE && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
-		soundto (MSG_ONE, this, CH_AMBIENT_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+		soundto (MSG_ONE, this, CH_AMBIENT_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE, 0);
 	}
 }
 

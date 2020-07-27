@@ -137,7 +137,7 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 			this.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(this, strcat("^1You'll be dead in ", ftos(this.killindicator.cnt), " seconds\n"));
 
-			IL_EACH(g_clones, it.enemy == this && !(it.effects & CSQCMODEL_EF_RESPAWNGHOST),
+			IL_EACH(g_clones, it.enemy == this && !(it.effects & CSQCMODEL_EF_RESPAWNGHOST) && !it.killindicator,
 			{
 				it.killindicator = spawn();
 				it.killindicator.owner = it;

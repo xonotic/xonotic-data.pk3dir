@@ -31,7 +31,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage), thiswep.m_id);
-	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
@@ -81,7 +81,7 @@ void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage), thiswep.m_id | HITTYPE_SECONDARY);
-	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	missile = new(hlacbolt);
 	missile.owner = missile.realowner = actor;

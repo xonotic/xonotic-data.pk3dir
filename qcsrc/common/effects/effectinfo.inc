@@ -9089,8 +9089,8 @@ SUB(TE_TEI_G3_HIT) {
 }
 
 // respawn ghosts effect
-DEF(RESPAWN_GHOST);
-SUB(RESPAWN_GHOST) {
+DEF(respawn_ghost);
+SUB(respawn_ghost) {
 	MY(count) = 75;
 	MY(type) = "static";
 	MY(color_min) = "0xA0A0A0";
