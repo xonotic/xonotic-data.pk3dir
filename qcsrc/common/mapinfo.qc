@@ -793,6 +793,8 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 	string stored_Map_title = "";
 	string stored_Map_author = "";
 	int stored_supportedGametypes = 0;
+	int stored_supportedFeatures = 0;
+	int stored_flags = 0;
 	string t, s;
 	for (;;)
 	{
@@ -840,6 +842,8 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 						_MapInfo_Map_ApplyGametype ("", pGametypeToSet, it, true);
 					});
 				}
+				MapInfo_Map_supportedFeatures = stored_supportedFeatures;
+				MapInfo_Map_flags = stored_flags;
 				return true; // no need to continue through the file, we have our map!
 			}
 			else
@@ -849,6 +853,8 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 				stored_Map_title = "";
 				stored_Map_author = "";
 				stored_supportedGametypes = 0;
+				stored_supportedFeatures = 0;
+				stored_flags = 0;
 				continue;
 			}
 		}
@@ -891,11 +897,11 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 		else if(t == "type")
 		{
 			// if there is a valid gametype in this .arena file, include it in the menu
-			MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
+			stored_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			// type in quake 3 holds all the supported gametypes, so we must loop through all of them
 			FOREACH_WORD(s, true,
 			{
-				Gametype f = MapInfo_Type_FromString(it);
+				Gametype f = MapInfo_Type_FromString(it, false);
 				if(f)
 					stored_supportedGametypes |= f.m_flags;
 			});
