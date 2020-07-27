@@ -998,7 +998,7 @@ void ons_GeneratorThink(entity this)
 		{
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
 			msg_entity = it;
-			soundto(MSG_ONE, this, CHAN_AUTO, SND(ONS_GENERATOR_ALARM), VOL_BASE, ATTEN_NONE);
+			soundto(MSG_ONE, this, CHAN_AUTO, SND(ONS_GENERATOR_ALARM), VOL_BASE, ATTEN_NONE, 0);
 		}
 		else
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_ONS_NOTSHIELDED));

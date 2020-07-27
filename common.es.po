@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-17 23:02+0000\n"
+"PO-Revision-Date: 2020-07-24 22:49+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -124,7 +124,7 @@ msgstr "^1Usa ^3%s^1 o ^3%s^1 para cambiar la velocidad"
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^1Pulsa ^3%s^1 para observar o ^3%s^1 para cambiar el modo de cámara."
+msgstr "^1Pulsa ^3%s^1 para observar o ^3%s^1 para cambiar el modo de cámara"
 
 #: qcsrc/client/hud/panel/infomessages.qc:116
 #: qcsrc/common/vehicles/cl_vehicles.qc:190
@@ -173,7 +173,7 @@ msgstr "^1El juego comienza en ^3%d^1 segundos"
 
 #: qcsrc/client/hud/panel/infomessages.qc:153
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr "^2¡Actualmente en etapa de ^1calentamiento^2 !"
+msgstr "^2¡Actualmente en etapa de ^1calentamiento^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:168
 #, c-format
@@ -418,7 +418,7 @@ msgstr "QMCMD^tirar bandera/llave, icono"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr "QMCMD^tirada bandera/llave %w^7 (l:%l^7)"
+msgstr "QMCMD^bandera/llave tirada %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^Send private message to"
@@ -465,11 +465,11 @@ msgstr "QMCMD^Ajustes de sonido"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Hit sound"
-msgstr "QMCMD^Sonido de golpes"
+msgstr "QMCMD^Sonido de los golpes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^Chat sound"
-msgstr "QMCMD^Sonido de chat"
+msgstr "QMCMD^Sonido del chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Change spectator camera"
@@ -563,27 +563,27 @@ msgstr "falta un punto de control"
 
 #: qcsrc/client/hud/panel/radar.qc:386
 msgid "Click to select teleport destination"
-msgstr "Haz click para seleccionar el destino de teletransporte"
+msgstr "Haz clic para seleccionar el destino de teletransporte"
 
 #: qcsrc/client/hud/panel/radar.qc:390
 msgid "Click to select spawn location"
-msgstr "Haz click para seleccionar el lugar de reaparición"
+msgstr "Haz clic para seleccionar el lugar de reaparición"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "Number of ball carrier kills"
-msgstr "Número de asesinatos de portadores de bolas"
+msgstr "Número de asesinatos de portador de pelota"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "SCO^bckills"
-msgstr "asesin.p.bo"
+msgstr "asesin.p.pe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "SCO^bctime"
-msgstr "tiempo p.bo"
+msgstr "tiempo p.pe"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr "Tiempo total reteniendo la bola en Keepaway"
+msgstr "Tiempo total reteniendo la pelota en Keepaway"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
@@ -636,7 +636,7 @@ msgstr "Daño total recibido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "Number of flag drops"
-msgstr "Número de banderas soltadas"
+msgstr "Número de banderas caídas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:113
 msgid "SCO^drops"
@@ -668,7 +668,7 @@ msgstr "faltas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "Number of flag carrier kills"
-msgstr "Número de asesinatos de portadores de bandera"
+msgstr "Número de asesinatos de portador de bandera"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:117
 msgid "SCO^fckills"
@@ -700,7 +700,7 @@ msgstr "goles"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "Number of keys carrier kills"
-msgstr "Número de asesinatos de portadores de llaves"
+msgstr "Número de asesinatos de portador de llaves"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:121
 msgid "SCO^kckills"
@@ -730,7 +730,7 @@ msgstr "Número de asesinatos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:125
 msgid "SCO^kills"
-msgstr "muertes"
+msgstr "asesinatos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:126
 msgid "Number of laps finished (Race/CTS)"
@@ -754,7 +754,7 @@ msgstr "Número de veces que se perdió la llave"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:128
 msgid "SCO^losses"
-msgstr "derrotas"
+msgstr "perdidas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 #: qcsrc/client/hud/panel/scoreboard.qc:130
@@ -781,8 +781,8 @@ msgstr "objetivos"
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
-"Frecuencia con qué una bandera (CTF) o llave(KeyHunt) o bola (Keepaway) fue "
-"tomada"
+"Frecuencia con qué una bandera (CTF) o llave (KeyHunt) o pelota (Keepaway) "
+"fue tomada"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^pickups"
@@ -874,7 +874,7 @@ msgstr "Número de puntos de dominación tomados (Dominación)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^takes"
-msgstr "tomas"
+msgstr "tomados"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of teamkills"
@@ -928,7 +928,7 @@ msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
-"  ^5Note: ^7scoreboard_columns_set sin argumentos es ejecutado en el "
+"  ^5Nota: ^7scoreboard_columns_set sin argumentos es ejecutado en el "
 "comienzo de cada partida"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:336
@@ -946,7 +946,7 @@ msgstr "Puedes usar un ^3|^7 para empezar los campos alineados a la derecha."
 #: qcsrc/client/hud/panel/scoreboard.qc:338
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
-"Los siguientes nombres de campo son reconocidos (sensible a mayúsculas): "
+"Los siguientes nombres de campo son reconocidos (sensible a mayúsculas):"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:344
 msgid ""
@@ -1239,7 +1239,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
-msgstr "Ladrón de Bola"
+msgstr "Ladrón de Pelota"
 
 #: qcsrc/common/items/item/ammo.qh:66
 msgid "bullets"
@@ -1469,7 +1469,7 @@ msgstr "Nexball"
 #: qcsrc/common/mapinfo.qh:474
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
 msgstr ""
-"Dispara y golpea la bola dentro de la portería enemiga, mantén tu portería "
+"Dispara y golpea la pelota dentro de la portería enemiga, mantén tu portería "
 "limpia"
 
 #: qcsrc/common/mapinfo.qh:488
@@ -1494,7 +1494,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Hold the ball to get points for kills"
-msgstr "Mantén la bola para ganar puntos por asesinatos"
+msgstr "Retén la pelota para ganar puntos por asesinatos"
 
 #: qcsrc/common/mapinfo.qh:545
 msgid "Keepaway"
@@ -1566,7 +1566,7 @@ msgstr "¡Fin del juego!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1095
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "¡Bien hecho! Haz click en 'Próximo Nivel' para continuar"
+msgstr "¡Bien hecho! Haz clic en 'Siguiente nivel' para continuar"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1162
 msgid "Better luck next time!"
@@ -1574,11 +1574,11 @@ msgstr "¡Mejor suerte la próxima vez!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1167
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr "Tubular! ¡Pulsa \"Próximo Nivel\" para continuar!"
+msgstr "Tubular! ¡Pulsa \"Siguiente nivel\" para continuar!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1169
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr "¡Mal! ¡Pulsa \"Próximo Nivel\" para continuar!"
+msgstr "¡Mal! ¡Pulsa \"Siguiente nivel\" para continuar!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1173
 msgid "Press the space bar to change your currently selected tile"
@@ -2086,11 +2086,11 @@ msgstr "Corre aquí"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Ball"
-msgstr "Bola"
+msgstr "Pelota"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
-msgstr "Portador de la bola"
+msgstr "Portador de la pelota"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
@@ -2903,13 +2903,13 @@ msgstr "^BG%s^F3 está jugando en el equipo ^TC^TT"
 #: qcsrc/common/notifications/all.inc:697
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
-msgstr "^BG¡%s^BG ha tirado la bola!"
+msgstr "^BG¡%s^BG ha tirado la pelota!"
 
 #: qcsrc/common/notifications/all.inc:386
 #: qcsrc/common/notifications/all.inc:698
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
-msgstr "^BG¡%s^BG ha recogido la bola!"
+msgstr "^BG¡%s^BG ha recogido la pelota!"
 
 #: qcsrc/common/notifications/all.inc:388
 #, c-format
@@ -2957,7 +2957,7 @@ msgstr "^BGLos monstruos están actualmente deshabilitados"
 
 #: qcsrc/common/notifications/all.inc:400
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
-msgstr "^BGEl equipo ^TC^TT^BG mantuvo la bola demasiado tiempo"
+msgstr "^BGEl equipo ^TC^TT^BG mantuvo la pelota demasiado tiempo"
 
 #: qcsrc/common/notifications/all.inc:402
 #, c-format
@@ -4088,11 +4088,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:699
 msgid "^BGYou picked up the ball"
-msgstr "^BGHas recogido la bola"
+msgstr "^BGHas recogido la pelota"
 
 #: qcsrc/common/notifications/all.inc:700
 msgid "^BGKilling people while you don't have the ball gives no points!"
-msgstr "^BG¡Eliminar a otros mientras no tienes la bola no da puntos!"
+msgstr "^BG¡Eliminar a otros mientras no tienes la pelota no da puntos!"
 
 #: qcsrc/common/notifications/all.inc:702
 msgid ""
@@ -6760,7 +6760,7 @@ msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
 msgstr ""
-"Haz click aquí o pulsa Ctrl-F para proveer una palabra clave para reducir la "
+"Haz clic aquí o pulsa Ctrl-F para proveer una palabra clave para reducir la "
 "lista de mapas. Ctrl-Suprimir para despejar; Pulse Entrar cuando haya "
 "acabado."
 
@@ -7142,7 +7142,7 @@ msgstr "Pausar"
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
-"Pausar la actualización de la lista de servidores para evitar que salteen"
+"Pausar la actualización de la lista de servidores para evitar que se salten"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:54
 msgid "Reload the server list"
@@ -7434,7 +7434,7 @@ msgstr "Permitir que las estadísticas del jugador usen tu apodo"
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr ""
 "Permitir que las estadísticas de jugadores te clasifiquen en las tablas de "
-"puntuación"
+"puntuaciones"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:152
 msgid "Country"
@@ -7498,7 +7498,7 @@ msgstr "Adjuntar a *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:34
 msgid "Detach from *"
-msgstr "Desadjuntar de *"
+msgstr "Despegar de *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:37
 msgid "Visual object properties for *:"
@@ -7784,11 +7784,11 @@ msgstr "Sonido indicador de los golpes"
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Play a hit indicator sound when your shot hits an enemy"
 msgstr ""
-"Reproduce un sonido indicador de anotación cuando disparas a un enemigo"
+"Reproduce un sonido indicador de los golpes cuando disparas a un enemigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:147
 msgid "Chat message sound"
-msgstr "Sonido de mensaje chat"
+msgstr "Sonido del mensaje de chat"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "Menu sounds"
@@ -7796,7 +7796,7 @@ msgstr "Sonidos del menú"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:150
 msgid "Play sounds when clicking menu items"
-msgstr "Reproducir sonidos al hacer click en items del menú"
+msgstr "Reproducir sonidos al hacer clic en items del menú"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:151
 msgid "Focus sounds"
@@ -7858,7 +7858,7 @@ msgstr "Restablecer la asignación de teclas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:41
 msgid "Quality preset:"
-msgstr "Predefinición de calidad:"
+msgstr "Ajustes preestablecidos de calidad:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^OMG!"
@@ -7918,7 +7918,7 @@ msgstr "Mejor"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "DET^Insane"
-msgstr "Insano"
+msgstr "Demente"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Player detail:"
@@ -8699,7 +8699,7 @@ msgstr "Personaliza cómo los jugadores y objetos aparecen en el juego"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "1st person perspective"
-msgstr "Perspectiva en primera persona"
+msgstr "Perspectiva en 1ª persona"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Slide to third person upon death"
@@ -8843,7 +8843,7 @@ msgid ""
 "Automatically switch to newly picked up weapons if they are better than what "
 "you are carrying"
 msgstr ""
-"Cambia automáticamente al arma recogida si es mejor que la que está llevando"
+"Cambiar automáticamente al arma recogida si es mejor que la que está llevando"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
 msgid "Release attack buttons when you switch weapons"
@@ -8851,7 +8851,7 @@ msgstr "Soltar botones de ataque cuando cambia de arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid "Draw 1st person weapon model"
-msgstr "Dibujar modelo de arma en primera persona"
+msgstr "Dibujar modelo de arma en 1ª persona"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw the weapon model"
@@ -8997,7 +8997,7 @@ msgstr "Cancelar"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
-msgstr "Usar teclas definidas"
+msgstr "Teclas definidas por el usuario"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:11
 #, c-format
@@ -9909,39 +9909,39 @@ msgstr "estadísticas habilitadas"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
-msgstr "SLCAT^Favoritos"
+msgstr "Favoritos"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Recommended"
-msgstr "SLCAT^Recomendado"
+msgstr "Recomendado"
 
 #: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Normal Servers"
-msgstr "SLCAT^Servidores Normales"
+msgstr "Servidores Normales"
 
 #: qcsrc/menu/xonotic/serverlist.qh:155
 msgid "SLCAT^Servers"
-msgstr "SLCAT^Servidores"
+msgstr "Servidores"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Competitive Mode"
-msgstr "SLCAT^Modo Competitivo"
+msgstr "Modo Competitivo"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Modified Servers"
-msgstr "SLCAT^Servidores Modificados"
+msgstr "Servidores Modificados"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr "SLCAT^Overkill"
+msgstr "Overkill"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
-msgstr "SLCAT^InstaGib"
+msgstr "InstaGib"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr "SLCAT^Modo Defrag"
+msgstr "Modo Defrag"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"

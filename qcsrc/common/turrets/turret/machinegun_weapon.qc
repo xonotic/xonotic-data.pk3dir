@@ -17,7 +17,7 @@ METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, .ent
             actor.tur_head = actor;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
         }
-        fireBullet(actor, weaponentity, actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_MACHINEGUN.m_id, EFFECT_BULLET);
+        fireBullet(actor, weaponentity, actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, 0, actor.shot_force, DEATH_TURRET_MACHINEGUN.m_id, EFFECT_BULLET);
         W_MuzzleFlash_Model(actor.(weaponentity), MDL_MACHINEGUN_MUZZLEFLASH);
         setattachment(actor.(weaponentity).muzzle_flash, actor.tur_head, "tag_fire");
     }
