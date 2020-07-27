@@ -100,6 +100,108 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 	}
 }
 
+//LegendGuard calc command code, enjoy the calculator command!
+void ClientCommand_calc(entity caller, int request, int argc)
+{
+   switch (request)
+   {
+       case CMD_REQUEST_COMMAND:
+       {
+           if (argv(1) != "")
+           {
+               if (argv(1) != "+" || argv(1) != "-" || argv(1) != "*" || argv(1) != "/" || argv(1) != "^" || argv(1) != "%")
+               {
+                   if (argv(2) == "+" || argv(2) == "-" || argv(2) == "*" || argv(2) == "/" || argv(2) == "^" || argv(2) == "%")
+                   {
+                       if (argv(3) != "+" || argv(3) != "-" || argv(3) != "*" || argv(3) != "/" || argv(3) != "^" || argv(3) != "%")
+                       {
+                           string operator;
+                           float num1, num2, result;
+                           num1 = stof(argv(1));
+                           operator = argv(2);
+                           num2 = stof(argv(3));
+
+                           //if the parameter is pi number
+                           if (argv(1) == "pi" || argv(1) == "π") //if the user writes pi in the first parameter to calculate using pi number
+                           {
+                               num1 = 3.14159265358979323;
+                           }
+                           if (argv(3) == "pi" || argv(3) == "π") //if the user writes pi in the third parameter to calculate using pi number
+                           {
+                               num2 = 3.14159265358979323;
+                           }
+
+                           //if the parameter is tau number
+                           if (argv(1) == "tau" || argv(1) == "τ") //if the user writes tau in the first parameter to calculate using tau number
+                           {
+                               num1 = 2 * 3.14159265358979323;
+                           }
+                           if (argv(3) == "tau" || argv(3) == "τ") //if the user writes tau in the third parameter to calculate using tau number
+                           {
+                               num2 = 2 * 3.14159265358979323;
+                           }
+
+                           switch (operator)
+                           {
+                               case "+":
+                               {
+                                   result = num1 + num2;
+                                   sprint(caller, sprintf("^5The sum result is: ^6%f\n", result));
+                                   return;
+                               }
+                               case "-":
+                               {
+                                   result = num1 - num2;
+                                   sprint(caller, sprintf("^5The substraction result is: ^6%f\n", result));
+                                   return;
+                               }
+                               case "*":
+                               {
+                                   result = num1 * num2;
+                                   sprint(caller, sprintf("^5The multiplication result is: ^6%f\n", result));
+                                   return;
+                               }
+                               case "/":
+                               {
+                                   result = num1 / num2;
+                                   sprint(caller, sprintf("^5The division result is: ^6%f\n", result));
+                                   return;
+                               }
+                               case "^":
+                               {
+                                   result = pow(num1, num2);
+                                   sprint(caller, sprintf("^5The exponent result is: ^6%f\n", result));
+                                   return;
+                               }
+                               case "%":
+                               {
+                                   result = num1 % num2;
+                                   sprint(caller, sprintf("^5The modulus result is: ^6%f\n", result));
+                                   return;
+                               }
+                               default:
+                               {
+                                   return;
+                               }
+                           }
+                           return;
+                       }
+                   }
+               }
+           }
+       }
+       default:
+           sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
+       case CMD_REQUEST_USAGE:
+       {
+           sprint(caller, "\nUsage:^3 cmd calc\n");
+           sprint(caller, "  Where '+', '-', '*', '/', '^' and '%' are the operators to calculate.\n");
+           sprint(caller, " Examples:\n^3 cmd calc 4 + 5\n^3 cmd calc 3 ^ 2\n^3 cmd calc 8 % 2\n^3 cmd calc pi * 0.5\n^3 cmd calc 32.46 / π\n^3 cmd calc τ * 0.112\n^3 cmd calc 4.1 / tau\n");
+           return;
+       }
+   }
+}
+
 void ClientCommand_clientversion(entity caller, int request, int argc)  // internal command, used only by code
 {
 	switch (request)
@@ -836,6 +938,7 @@ void ClientCommand_(entity caller, int request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS(ent, request, arguments, command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
+	CLIENT_COMMAND("calc", ClientCommand_calc(ent, request, arguments), "Basic Calculator") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
 	CLIENT_COMMAND("kill", ClientCommand_kill(ent, request), "Become a member of the dead") \
