@@ -1174,7 +1174,7 @@ void havocbot_movetogoal(entity this)
 	}
 
 	float ladder_zdir = 0;
-	if(time < this.ladder_time)
+	if(this.ladder_entity)
 	{
 		if(this.goalcurrent.origin.z + this.goalcurrent.mins.z > this.origin.z + this.mins.z)
 		{

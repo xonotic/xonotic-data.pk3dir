@@ -1,6 +1,6 @@
 #include "dialog_singleplayer.qh"
 
-#include <common/mapinfo.qh>
+#include <common/gamemodes/_mod.qh>
 #include "bigbutton.qh"
 #include "radiobutton.qh"
 #include "textlabel.qh"

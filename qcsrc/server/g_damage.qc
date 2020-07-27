@@ -27,6 +27,7 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
+#include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/rules.qh>
 #include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
@@ -584,8 +585,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 	entity attacker_save = attacker;
 
-	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
-	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
+	// special rule: gravity bombs and sound-based attacks do not affect team mates (other than for disconnecting the hook)
+	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || (deathtype & HITTYPE_SOUND))
 	{
 		if(IS_PLAYER(targ) && SAME_TEAM(targ, attacker))
 		{
@@ -860,7 +861,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			farcent.nextthink = time + 0.1;
 			setthink(farcent, SUB_Remove);
 		}
-		else
+		else if(targ.move_movetype != MOVETYPE_NOCLIP)
 		{
 			targ.velocity = targ.velocity + farce;
 		}
@@ -910,7 +911,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	total_damage_to_creatures = 0;
 
 	if(deathtype != (WEP_HOOK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
-		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
+		if(!(deathtype & HITTYPE_SOUND)) // do not send radial sound damage (bandwidth hog)
 		{
 			force = inflictorvelocity;
 			if(force == '0 0 0')

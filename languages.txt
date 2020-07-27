@@ -14,7 +14,6 @@ pt    "Portuguese" "Português" 84%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
 ro    "Romanian" "Romana" 74%
 fi    "Finnish" "Suomi" 100%
-ja_JP "ja_JP" "ja_JP" 74%
 el    "Greek" "Ελληνική" 47%
 be    "Belarusian" "Беларуская" 54%
 bg    "Bulgarian" "Български" 59%
@@ -23,4 +22,5 @@ sr    "Serbian" "Српски" 64%
 uk    "Ukrainian" "Українська" 50%
 zh_CN "Chinese (China)" "中文" 57%
 zh_TW "Chinese (Taiwan)" "國語" 61%
+ja_JP "Japanese" "日本語" 100%
 ko    "Korean" "한국의" 29%

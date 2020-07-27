@@ -254,9 +254,6 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 
 void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	entity mine;
-	entity flash;
-
 	// scan how many mines we placed, and return if we reached our limit
 	if(WEP_CVAR(minelayer, limit))
 	{
@@ -273,9 +270,9 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage), thiswep.m_id);
-	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-	mine = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity mine = WarpZone_RefSys_SpawnSameRefSys(actor);
 	mine.weaponentity_fld = weaponentity;
 	IL_PUSH(g_mines, mine);
 	mine.owner = mine.realowner = actor;
@@ -316,13 +313,6 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	if(mine.cnt > 0) { mine.cnt += time; }
 
 	CSQCProjectile(mine, true, PROJECTILE_MINE, true);
-
-	// muzzle flash for 1st person view
-	flash = spawn();
-	setmodel(flash, MDL_MINELAYER_MUZZLEFLASH); // precision set below
-	SUB_SetFade(flash, time, 0.1);
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 
 	// common properties
 
