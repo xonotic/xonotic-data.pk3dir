@@ -512,7 +512,7 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn(entity this) { Monster_Spawn(this, true, this); }
+void Monster_Respawn(entity this) { Monster_Spawn(this, true, this.monsterdef); }
 
 .vector	pos1, pos2;
 
