@@ -29,6 +29,7 @@ CLASS(Rifle, Weapon)
 		P(class, prefix, bursttime, float, NONE) \
 		P(class, prefix, damage, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, headshot_multiplier, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
