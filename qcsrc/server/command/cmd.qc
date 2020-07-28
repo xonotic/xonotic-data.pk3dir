@@ -109,11 +109,11 @@ void ClientCommand_calc(entity caller, int request, int argc)
        {
            if (argv(1) != "")
            {
-               if (argv(1) != "+" || argv(1) != "-" || argv(1) != "*" || argv(1) != "/" || argv(1) != "^" || argv(1) != "%")
+               if (argv(1) != "+" && argv(1) != "-" && argv(1) != "*" && argv(1) != "/" && argv(1) != "^" && argv(1) != "%")
                {
                    if (argv(2) == "+" || argv(2) == "-" || argv(2) == "*" || argv(2) == "/" || argv(2) == "^" || argv(2) == "%")
                    {
-                       if (argv(3) != "+" || argv(3) != "-" || argv(3) != "*" || argv(3) != "/" || argv(3) != "^" || argv(3) != "%")
+                       if (argv(3) != "+" && argv(3) != "-" && argv(3) != "*" && argv(3) != "/" && argv(3) != "^" && argv(3) != "%")
                        {
                            string operator;
                            float num1, num2, result;
