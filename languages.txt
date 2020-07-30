@@ -16,7 +16,7 @@ ro    "Romanian" "Romana" 74%
 fi    "Finnish" "Suomi" 100%
 el    "Greek" "Ελληνική" 47%
 be    "Belarusian" "Беларуская" 54%
-bg    "Bulgarian" "Български" 62%
+bg    "Bulgarian" "Български" 63%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 64%
 uk    "Ukrainian" "Українська" 50%

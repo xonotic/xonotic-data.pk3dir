@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-28 15:00+0000\n"
+"PO-Revision-Date: 2020-07-29 08:59+0000\n"
 "Last-Translator: Nik Dim <lilo@abv.bg>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/bg/)\n"
@@ -1782,7 +1782,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:87
 msgid "Jump"
-msgstr ""
+msgstr "Скок"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:96
 msgid "Invisible"
@@ -1802,7 +1802,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:129
 msgid "Luck"
-msgstr ""
+msgstr "Късмет"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:137
 msgid "Flight"
@@ -1889,7 +1889,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:33
 msgid "Grenade"
-msgstr ""
+msgstr "Граната"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:20
 msgid "Overkill Heavy Machine Gun"
@@ -5616,7 +5616,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:260
 msgid "Romanian"
-msgstr ""
+msgstr "Румънски"
 
 #: qcsrc/menu/xonotic/credits.qc:267
 msgid "Russian"
@@ -6502,7 +6502,7 @@ msgstr "По подразбиране"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:60
 msgid "Unlimited"
-msgstr ""
+msgstr "Неограничен"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:74
 msgid "Gametype"
@@ -7228,11 +7228,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:142
 msgid "Previous"
-msgstr ""
+msgstr "Предходен"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:145
 msgid "Next"
-msgstr ""
+msgstr "Следващ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:150
 msgid "Slide show"
@@ -7284,7 +7284,7 @@ msgstr "Държава"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
-msgstr ""
+msgstr "Избери език..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
 msgid "Gender:"
@@ -9465,7 +9465,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "reload"
-msgstr ""
+msgstr "презареждане"
 
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "drop weapon / throw nade"
@@ -9525,7 +9525,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "Client"
-msgstr ""
+msgstr "Клиент"
 
 #: qcsrc/menu/xonotic/keybinder.qc:106 qcsrc/menu/xonotic/keybinder.qc:108
 msgid "enter console"
@@ -9787,47 +9787,47 @@ msgstr "Януари"
 
 #: qcsrc/menu/xonotic/statslist.qc:30
 msgid "February"
-msgstr ""
+msgstr "Февруари"
 
 #: qcsrc/menu/xonotic/statslist.qc:31
 msgid "March"
-msgstr ""
+msgstr "Март"
 
 #: qcsrc/menu/xonotic/statslist.qc:32
 msgid "April"
-msgstr ""
+msgstr "Април"
 
 #: qcsrc/menu/xonotic/statslist.qc:33
 msgid "May"
-msgstr ""
+msgstr "Май"
 
 #: qcsrc/menu/xonotic/statslist.qc:34
 msgid "June"
-msgstr ""
+msgstr "Юни"
 
 #: qcsrc/menu/xonotic/statslist.qc:35
 msgid "July"
-msgstr ""
+msgstr "Юли"
 
 #: qcsrc/menu/xonotic/statslist.qc:36
 msgid "August"
-msgstr ""
+msgstr "Август"
 
 #: qcsrc/menu/xonotic/statslist.qc:37
 msgid "September"
-msgstr ""
+msgstr "Септември"
 
 #: qcsrc/menu/xonotic/statslist.qc:38
 msgid "October"
-msgstr ""
+msgstr "Октомври"
 
 #: qcsrc/menu/xonotic/statslist.qc:39
 msgid "November"
-msgstr ""
+msgstr "Ноември"
 
 #: qcsrc/menu/xonotic/statslist.qc:40
 msgid "December"
-msgstr ""
+msgstr "Декември"
 
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
