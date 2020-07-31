@@ -10,7 +10,6 @@
 REGISTER_NET_LINKED(ENT_CLIENT_LASER)
 
 #ifdef SVQC
-.float modelscale;
 void misc_laser_aim(entity this)
 {
 	vector a;
@@ -290,19 +289,6 @@ spawnfunc(misc_laser)
 	this.reset(this);
 }
 #elif defined(CSQC)
-
-// a laser goes from origin in direction angles
-// it has color 'beam_color'
-// and stops when something is in the way
-entityclass(Laser);
-classfield(Laser) .int cnt; // end effect
-classfield(Laser) .vector colormod;
-classfield(Laser) .int state; // on-off
-classfield(Laser) .int count; // flags for the laser
-classfield(Laser) .vector velocity; // laser endpoint if it is FINITE
-classfield(Laser) .float alpha;
-classfield(Laser) .float scale; // scaling factor of the thickness
-classfield(Laser) .float modelscale; // scaling factor of the dlight
 
 void Draw_Laser(entity this)
 {

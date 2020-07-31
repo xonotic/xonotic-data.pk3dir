@@ -6,18 +6,10 @@
 #include <common/net_linked.qh>
 #include "subs.qh"
 #include "triggers.qh"
-
-entityclass(BGMScript);
-classfield(BGMScript) .string bgmscript;
-classfield(BGMScript) .float bgmscriptattack;
-classfield(BGMScript) .float bgmscriptdecay;
-classfield(BGMScript) .float bgmscriptsustain;
-classfield(BGMScript) .float bgmscriptrelease;
+#include "bgmscript.qh"
 
 #include <common/constants.qh>
-#include "../../lib/csqcmodel/sv_model.qh"
-
-.float modelscale;
+#include <lib/csqcmodel/sv_model.qh>
 
 void g_model_setcolormaptoactivator(entity this, entity actor, entity trigger)
 {
