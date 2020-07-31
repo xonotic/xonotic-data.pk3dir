@@ -39,9 +39,7 @@ bool clientcamera_send(entity this, entity to, int sf)
 
 	WriteVector(MSG_ENTITY, this.origin);
 
-	WriteAngle(MSG_ENTITY, this.angles_x);
-	WriteAngle(MSG_ENTITY, this.angles_y);
-	WriteAngle(MSG_ENTITY, this.angles_z);
+	WriteAngleVector(MSG_ENTITY, this.angles);
 
 	return true;
 }
@@ -876,6 +874,7 @@ void ons_camSetup(entity this)
 
 	FOREACH_CLIENT(true, it.clientcamera = cam;);
 
+	// NOTE: engine networked
 	WriteByte(MSG_ALL, SVC_SETVIEWANGLES);
 	WriteAngle(MSG_ALL, cam.angles_x);
 	WriteAngle(MSG_ALL, cam.angles_y);

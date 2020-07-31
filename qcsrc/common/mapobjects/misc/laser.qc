@@ -161,8 +161,7 @@ bool laser_SendEntity(entity this, entity to, float sendflags)
 		}
 		else
 		{
-			WriteAngle(MSG_ENTITY, this.mangle_x);
-			WriteAngle(MSG_ENTITY, this.mangle_y);
+			WriteAngleVector2D(MSG_ENTITY, this.mangle);
 		}
 	}
 	if(sendflags & SF_LASER_UPDATE_ACTIVE)
@@ -388,8 +387,7 @@ NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 		}
 		else
 		{
-			this.angles_x = ReadAngle();
-			this.angles_y = ReadAngle();
+			this.angles = ReadAngleVector2D();
 		}
 	}
 	if(sendflags & SF_LASER_UPDATE_ACTIVE)

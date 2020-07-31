@@ -109,11 +109,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(sf & BIT(2))
 	{
 		if(sf & 0x10)
-		{
-			WriteAngle(MSG_ENTITY, this.angles.x);
-			WriteAngle(MSG_ENTITY, this.angles.y);
-			WriteAngle(MSG_ENTITY, this.angles.z);
-		}
+			WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
 	if(sf & BIT(3))
@@ -334,11 +330,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 	if(f & 4)
 	{
 		if(f & 0x10)
-		{
-			this.angles_x = ReadAngle();
-			this.angles_y = ReadAngle();
-			this.angles_z = ReadAngle();
-		}
+			this.angles = ReadAngleVector();
 		else
 			this.angles = '0 0 0';
 	}

@@ -357,6 +357,8 @@ MACRO_END
 		#define ReadFloat() ReadCoord()
 		#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
 		#define ReadVector2D() vec2(ReadFloat(), ReadFloat())
+		#define ReadAngleVector() vec3(ReadAngle(), ReadAngle(), ReadAngle())
+		#define ReadAngleVector2D() vec2(ReadAngle(), ReadAngle())
 
 		int Readbits(int num)
 		{
@@ -397,6 +399,8 @@ MACRO_END
 		#define WriteFloat(to, f) WriteCoord(to, f)
 		#define WriteVector(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); MACRO_END
 		#define WriteVector2D(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); MACRO_END
+		#define WriteAngleVector(to, v) MACRO_BEGIN WriteAngle(to, v.x); WriteAngle(to, v.y); WriteAngle(to, v.z); MACRO_END
+		#define WriteAngleVector2D(to, v) MACRO_BEGIN WriteAngle(to, v.x); WriteAngle(to, v.y); MACRO_END
 
 		void Writebits(float dst, float val, int num)
 		{

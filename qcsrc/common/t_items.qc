@@ -168,9 +168,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_ANGLES)
     {
-        this.angles_x = ReadAngle();
-        this.angles_y = ReadAngle();
-        this.angles_z = ReadAngle();
+        this.angles = ReadAngleVector();
     }
 
     if(sf & ISF_SIZE)
@@ -321,9 +319,7 @@ bool ItemSend(entity this, entity to, int sf)
 
 	if(sf & ISF_ANGLES)
 	{
-		WriteAngle(MSG_ENTITY, this.angles_x);
-		WriteAngle(MSG_ENTITY, this.angles_y);
-		WriteAngle(MSG_ENTITY, this.angles_z);
+		WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
 	// sets size on the client, unused on server
