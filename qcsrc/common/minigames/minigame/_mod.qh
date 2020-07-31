@@ -1,6 +1,7 @@
 // generated file; do not modify
 #include <common/minigames/minigame/bd.qh>
 #include <common/minigames/minigame/c4.qh>
+#include <common/minigames/minigame/mq.qh>
 #include <common/minigames/minigame/nmm.qh>
 #include <common/minigames/minigame/pong.qh>
 #include <common/minigames/minigame/pp.qh>
