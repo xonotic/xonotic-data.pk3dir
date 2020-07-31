@@ -535,10 +535,12 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	ctf_CaptureShield_Update(player, 0); // shield player from picking up flag
 }
 
+#if 0
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 {
 	return modeleffect_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
 }
+#endif
 
 // ==============
 // Event Handlers
@@ -602,7 +604,9 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 
 	// effects
 	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
-	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+#if 0
+	shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+#endif
 
 	// other
 	if(capturetype == CAPTURE_NORMAL)
