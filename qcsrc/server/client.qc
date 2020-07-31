@@ -2267,7 +2267,6 @@ bool PlayerThink(entity this)
 		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
 
-	secrets_setstatus(this);
 	monsters_setstatus(this);
 
 	return true;
