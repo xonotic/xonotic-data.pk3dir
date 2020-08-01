@@ -2,6 +2,8 @@
 #include "sv_controlpoint.qh"
 #include "sv_generator.qh"
 
+#include <common/mapobjects/defs.qh>
+
 bool g_onslaught;
 
 float autocvar_g_onslaught_teleport_wait;

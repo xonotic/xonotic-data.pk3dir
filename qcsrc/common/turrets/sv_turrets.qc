@@ -1,6 +1,7 @@
 #include "sv_turrets.qh"
 #ifdef SVQC
 #include <server/autocvars.qh>
+#include <common/mapobjects/defs.qh>
 
 // Generic aiming
 vector turret_aim_generic(entity this)

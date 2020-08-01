@@ -1,5 +1,7 @@
 #include "sv_vehicles.qh"
 
+#include <common/mapobjects/defs.qh>
+
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);

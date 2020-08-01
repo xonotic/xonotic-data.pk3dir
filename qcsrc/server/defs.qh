@@ -318,11 +318,6 @@ const int FROZEN_NORMAL				= 1;
 const int FROZEN_TEMP_REVIVING		= 2;
 const int FROZEN_TEMP_DYING			= 3;
 
-const int ACTIVE_NOT 		= 0;
-const int ACTIVE_ACTIVE 	= 1;
-const int ACTIVE_IDLE	 	= 2;
-const int ACTIVE_BUSY	 	= 2;
-const int ACTIVE_TOGGLE 	= 3;
 .int active;
 .void (entity this, int act_state) setactive;
 .entity realowner;
