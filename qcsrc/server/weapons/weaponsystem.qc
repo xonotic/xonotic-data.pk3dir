@@ -7,7 +7,7 @@
 #include "../round_handler.qh"
 #include <server/cheats.qh>
 #include <server/resources.qh>
-#include <common/t_items.qh>
+#include <common/items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>

@@ -8,7 +8,7 @@
 #include "../mapvoting.qh"
 #include "../teamradar.qh"
 #include <common/minigames/cl_minigames.qh>
-#include <common/t_items.qh>
+#include <common/items.qh>
 #include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
 #include <common/items/_mod.qh>

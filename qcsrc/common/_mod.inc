@@ -8,7 +8,7 @@
 #include <common/net_notice.qc>
 #include <common/playerstats.qc>
 #include <common/state.qc>
-#include <common/t_items.qc>
+#include <common/items.qc>
 #include <common/util.qc>
 #include <common/viewloc.qc>
 #include <common/wepent.qc>

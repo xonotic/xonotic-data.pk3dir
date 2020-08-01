@@ -4,7 +4,7 @@
 #include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <client/view.qh>
-#include <common/t_items.qh>
+#include <common/items.qh>
 #include <common/wepent.qh>
 #include <common/mutators/mutator/nades/nades.qh>
 

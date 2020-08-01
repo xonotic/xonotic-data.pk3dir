@@ -1,4 +1,4 @@
-#include "t_items.qh"
+#include "items.qh"
 
 #include "items/_mod.qh"
 

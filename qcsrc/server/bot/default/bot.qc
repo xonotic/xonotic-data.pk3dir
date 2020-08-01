@@ -19,7 +19,7 @@
 #include "../../constants.qh"
 #include "../../defs.qh"
 #include "../../race.qh"
-#include <common/t_items.qh>
+#include <common/items.qh>
 
 #include <server/mutators/_mod.qh>
 

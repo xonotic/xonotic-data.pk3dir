@@ -7,7 +7,7 @@
 #include <server/gamelog.qh>
 #include "ipban.qh"
 #include <server/mutators/_mod.qh>
-#include "../common/t_items.qh"
+#include "../common/items.qh"
 #include "mapvoting.qh"
 #include "resources.qh"
 #include "items.qh"

@@ -10,7 +10,7 @@
 #include "spawnpoints.qh"
 #include "../common/state.qh"
 #include "../common/physics/player.qh"
-#include "../common/t_items.qh"
+#include "../common/items.qh"
 #include "resources.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"

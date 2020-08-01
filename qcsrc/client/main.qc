@@ -16,7 +16,7 @@
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
 #include "view.qh"
-#include <common/t_items.qh>
+#include <common/items.qh>
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>

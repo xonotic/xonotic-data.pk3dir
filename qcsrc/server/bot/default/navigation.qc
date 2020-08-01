@@ -7,7 +7,7 @@
 #include "bot.qh"
 #include "waypoints.qh"
 
-#include <common/t_items.qh>
+#include <common/items.qh>
 
 #include <common/items/_mod.qh>
 
