@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-07-24 22:50+0000\n"
+"PO-Revision-Date: 2020-07-31 22:16+0000\n"
 "Last-Translator: LegendGuard\n"
 "Language-Team: Catalan (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ca/)\n"
@@ -935,28 +935,39 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
+"Després d'un camp pots posar un signe + o -, i després una llista de \n"
+"tipus de joc separats per comes, després una barra diagonal, per fer \n"
+"que el camp es mostri només en aquests o en tots menys en aquests \n"
+"tipus de jocs. També pots especificar 'all' com a camp per a mostrar \n"
+"tots els camps disponibles per a la manera de joc actual."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:350
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
+"Els noms especials de tipus de joc 'teams' i 'noteams' poden ser \n"
+"utilitzats per a incloure/excloure TOTS els modes de joc teams/noteams."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:354
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
-msgstr ""
+msgstr "Exemple: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:355
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
+"mostrarà el nom, ping i pl alineats a l'esquerra, i els camps a la \n"
+"dreta de la barra vertical alineada a la dreta."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:357
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
+"'field3' només serà mostrat en CTF, i 'field4' serà mostrat en tots \n"
+"els altres modes de joc excepte DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:621
 #: qcsrc/client/hud/panel/scoreboard.qc:628
@@ -968,81 +979,81 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:164
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1206
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "Estadístiques de precisió (mitjana %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Map stats:"
-msgstr ""
+msgstr "Estadístiques de mapa:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1384
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Monstres assassinats:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1391
 msgid "Secrets found:"
-msgstr ""
+msgstr "Secrets trobats:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1413
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Classificacions de temps de captura"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1413
 msgid "Rankings"
-msgstr ""
+msgstr "Classificacions"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1631
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f minuts"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1640
 #: qcsrc/client/hud/panel/scoreboard.qc:1647
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1641
 #: qcsrc/client/hud/panel/scoreboard.qc:1648
 #: qcsrc/client/hud/panel/scoreboard.qc:1667
 #: qcsrc/client/hud/panel/scoreboard.qc:1674
 msgid "SCO^points"
-msgstr ""
+msgstr "punts"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1666
 #: qcsrc/client/hud/panel/scoreboard.qc:1673
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1684
 #, c-format
 msgid "^7Map: ^2%s"
-msgstr ""
+msgstr "^7Mapa: ^2%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1823
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Premi de velocitat: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1827
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "El més ràpid de tots els temps: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1843
 #, c-format
 msgid "Spectators"
-msgstr ""
+msgstr "Espectadors"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1870
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr ""
+msgstr "^1Reapareixent en ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1880
 #, c-format
