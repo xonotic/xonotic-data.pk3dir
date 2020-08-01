@@ -6,6 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include <server/mutators/_mod.qh>
+#include <server/weapons/spawning.qh>
 #include <common/weapons/all.qh>
 #include <common/mapobjects/subs.qh>
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/sounds/sound.qh>
+
 void StartItem(entity this, entity a);
 .int item_group;
 .int item_group_count;

@@ -4,6 +4,8 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
 #include "../cvars.qh"
 
 #include "../aim.qh"

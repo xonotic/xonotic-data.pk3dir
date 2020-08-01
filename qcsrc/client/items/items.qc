@@ -13,6 +13,7 @@ bool autocvar_cl_ghost_items_vehicle = true;
 .vector item_glowmod;
 .bool item_simple; // probably not really needed, but better safe than sorry
 .float alpha;
+.bool pushable;
 void Item_SetAlpha(entity this)
 {
 	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);

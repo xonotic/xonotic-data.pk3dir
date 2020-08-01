@@ -2,6 +2,7 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
+#include <server/weapons/selection.qh>
 #include "cvars.qh"
 
 #include <common/state.qh>

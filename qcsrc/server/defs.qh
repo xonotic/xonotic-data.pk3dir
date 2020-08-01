@@ -116,18 +116,6 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 // WEAPONTODO
 .float autoswitch;
-bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain);
-void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
-void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
-// VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
-.float weapon_nextthink;
-.void(Weapon thiswep, entity actor, .entity weaponentity, int fire) weapon_think;
-
-
-// there is 2 weapon tics that can run in one server frame
-const int W_TICSPERFRAME = 2;
-
-void weapon_defaultspawnfunc(entity this, Weapon e);
 
 float intermission_running;
 float intermission_exittime;
@@ -185,8 +173,6 @@ float default_weapon_alpha;
 .string stored_netname;
 
 string gamemode_name;
-
-string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
@@ -295,12 +281,6 @@ float servertime, serverprevtime, serverframetime;
 string matchid;
 
 bool radar_showennemies;
-
-.float weapon_load[REGISTRY_MAX(Weapons)];
-.int ammo_none; // used by the reloading system, must always be 0
-.int clip_load;
-.int old_clip_load;
-.int clip_size;
 
 .int minelayer_mines;
 .float vortex_charge;
