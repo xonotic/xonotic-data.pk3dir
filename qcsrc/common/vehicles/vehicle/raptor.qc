@@ -1,5 +1,9 @@
 #include "raptor.qh"
 
+#if defined(SVQC)
+	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#endif
+
 #ifdef GAMEQC
 
 #ifdef SVQC

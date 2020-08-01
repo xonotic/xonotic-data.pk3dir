@@ -1,6 +1,7 @@
 #include "sv_turrets.qh"
 #ifdef SVQC
 #include <server/autocvars.qh>
+#include <server/weapons/weaponsystem.qh>
 #include <common/mapobjects/defs.qh>
 
 // Generic aiming

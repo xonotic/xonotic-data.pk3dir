@@ -3,8 +3,6 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
-#define INDEPENDENT_ATTACK_FINISHED 1
-
 // Globals
 
 float g_footsteps, g_grappling_hook;
@@ -24,8 +22,7 @@ float player_count;
 float currentbots;
 float bots_would_leave;
 
-void UpdateFrags(entity player, int f);
-.int totalfrags;
+.int totalfrags; // NOTE: reused for multiple purposes
 
 // flag set on worldspawn so that the code knows if it is dedicated or not
 float server_is_dedicated;
@@ -57,14 +54,9 @@ const .float air_finished = _STAT(AIR_FINISHED);
 .float count;
 //.float cnt2;
 
-.int respawn_flags;
-.float respawn_time;
-.float respawn_time_max;
 .float death_time;
 .float fade_time;
 .float fade_rate;
-
-void player_setupanimsformodel(entity this);
 
 .string mdl;
 
@@ -139,8 +131,6 @@ int nJoinAllowed(entity this, entity ignore);
 .float spawnshieldtime;
 .float item_spawnshieldtime;
 
-.entity flagcarried;
-
 .int playerid;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
@@ -181,15 +171,6 @@ void FixClientCvars(entity e);
 
 float bot_waypoints_for_items;
 
-.float attack_finished_for[REGISTRY_MAX(Weapons) * MAX_WEAPONSLOTS];
-.float attack_finished_single[MAX_WEAPONSLOTS];
-#if INDEPENDENT_ATTACK_FINISHED
-#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).(attack_finished_for[((w) - WEP_FIRST) * MAX_WEAPONSLOTS + (slot)]))
-#else
-#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
-#endif
-#define ATTACK_FINISHED(ent, w) ATTACK_FINISHED_FOR(ent, ent.(w).m_weapon.m_id, weaponslot(w))
-
 // speedrun: when 1, player auto teleports back when capture timeout happens
 .float speedrunning;
 
@@ -216,8 +197,6 @@ int sv_maxidle_slots;
 bool sv_maxidle_slots_countbots;
 
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
-
-float next_pingtime;
 
 // autotaunt system
 .float cvar_cl_autotaunt;
@@ -258,8 +237,6 @@ float g_nexball_meter_period;
 
 .void(entity this) reset; // if set, an entity is reset using this
 .void(entity this) reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
-
-void ClientData_Touch(entity e);
 
 //vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 

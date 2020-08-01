@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
+#include "client.qh"
 #include "clientkill.qh"
 #include "g_damage.qh"
 #include "handicap.qh"
@@ -32,6 +33,7 @@
 #include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"
+#include <server/weapons/weaponsystem.qh>
 
 #include "../common/animdecide.qh"
 
@@ -220,92 +222,6 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 			IL_REMOVE(g_damagedbycontents, this);
 		this.damagedbycontents = false;
 	}
-}
-
-void calculate_player_respawn_time(entity this)
-{
-	if(MUTATOR_CALLHOOK(CalculateRespawnTime, this))
-		return;
-
-	float gametype_setting_tmp;
-	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
-	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
-	float sdelay_large = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large);
-	float sdelay_small_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small_count);
-	float sdelay_large_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large_count);
-	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
-
-	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
-	if (teamplay)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-			if(it.team == this.team)
-				++pcount;
-		});
-		if (sdelay_small_count == 0)
-			sdelay_small_count = 1;
-		if (sdelay_large_count == 0)
-			sdelay_large_count = 1;
-	}
-	else
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-			++pcount;
-		});
-		if (sdelay_small_count == 0)
-		{
-			if (IS_INDEPENDENT_PLAYER(this))
-			{
-				// Players play independently. No point in requiring enemies.
-				sdelay_small_count = 1;
-			}
-			else
-			{
-				// Players play AGAINST each other. Enemies required.
-				sdelay_small_count = 2;
-			}
-		}
-		if (sdelay_large_count == 0)
-		{
-			if (IS_INDEPENDENT_PLAYER(this))
-			{
-				// Players play independently. No point in requiring enemies.
-				sdelay_large_count = 1;
-			}
-			else
-			{
-				// Players play AGAINST each other. Enemies required.
-				sdelay_large_count = 2;
-			}
-		}
-	}
-
-	float sdelay;
-
-	if (pcount <= sdelay_small_count)
-		sdelay = sdelay_small;
-	else if (pcount >= sdelay_large_count)
-		sdelay = sdelay_large;
-	else  // NOTE: this case implies sdelay_large_count > sdelay_small_count.
-		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
-
-	if(waves)
-		this.respawn_time = ceil((time + sdelay) / waves) * waves;
-	else
-		this.respawn_time = time + sdelay;
-
-	if(sdelay < sdelay_max)
-		this.respawn_time_max = time + sdelay_max;
-	else
-		this.respawn_time_max = this.respawn_time;
-
-	if((sdelay + waves >= 5.0) && (this.respawn_time - time > 1.75))
-		this.respawn_countdown = 10; // first number to count down from is 10
-	else
-		this.respawn_countdown = -1; // do not count down
-
-	if(autocvar_g_forced_respawn)
-		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
 }
 
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)

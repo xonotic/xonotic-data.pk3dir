@@ -2,6 +2,8 @@
 
 #include <server/miscfunctions.qh>
 
+#define INDEPENDENT_ATTACK_FINISHED 1
+
 // there is 2 weapon tics that can run in one server frame
 const int W_TICSPERFRAME = 2;
 
@@ -19,6 +21,15 @@ entity weapon_dropevent_item;
 .int clip_load;
 .int old_clip_load;
 .int clip_size;
+
+.float attack_finished_for[REGISTRY_MAX(Weapons) * MAX_WEAPONSLOTS];
+.float attack_finished_single[MAX_WEAPONSLOTS];
+#if INDEPENDENT_ATTACK_FINISHED
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).(attack_finished_for[((w) - WEP_FIRST) * MAX_WEAPONSLOTS + (slot)]))
+#else
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
+#endif
+#define ATTACK_FINISHED(ent, w) ATTACK_FINISHED_FOR(ent, ent.(w).m_weapon.m_id, weaponslot(w))
 
 void CL_SpawnWeaponentity(entity e, .entity weaponentity);
 
