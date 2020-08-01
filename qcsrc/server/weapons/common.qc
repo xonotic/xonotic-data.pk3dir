@@ -1,8 +1,8 @@
 #include "common.qh"
 
 #include <server/defs.qh>
+#include <server/items/items.qh>
 #include <server/miscfunctions.qh>
-#include <common/items.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/deathtypes/all.qh>

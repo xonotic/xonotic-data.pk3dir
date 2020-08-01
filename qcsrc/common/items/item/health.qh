@@ -11,7 +11,7 @@ CLASS(Health, Pickup)
 ENDCLASS(Health)
 
 #ifdef SVQC
-    #include <common/items.qh>
+    #include <server/items/items.qh>
 #endif
 
 #ifdef GAMEQC

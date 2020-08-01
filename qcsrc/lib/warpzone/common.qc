@@ -1,7 +1,7 @@
 #include "common.qh"
 
 #if defined(CSQC)
-    #include <common/items.qh>
+    #include <client/items/items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/weapons/_all.qh>

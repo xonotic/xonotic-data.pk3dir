@@ -6,8 +6,8 @@
 #include "g_hook.qh"
 #include <server/gamelog.qh>
 #include "ipban.qh"
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
-#include "../common/items.qh"
 #include "mapvoting.qh"
 #include "resources.qh"
 #include <server/items/spawning.qh>

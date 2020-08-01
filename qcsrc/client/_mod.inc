@@ -13,5 +13,6 @@
 
 #include <client/commands/_mod.inc>
 #include <client/hud/_mod.inc>
+#include <client/items/_mod.inc>
 #include <client/mutators/_mod.inc>
 #include <client/weapons/_mod.inc>

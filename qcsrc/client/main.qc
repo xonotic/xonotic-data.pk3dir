@@ -1,6 +1,7 @@
 #include "main.qh"
 
 #include "defs.qh"
+#include <client/items/items.qh>
 #include <common/ent_cs.qh>
 #include "miscfunctions.qh"
 #include <common/effects/effect.qh>
@@ -16,7 +17,6 @@
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
 #include "view.qh"
-#include <common/items.qh>
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>

@@ -1,8 +1,8 @@
 #include "csqcprojectile.qh"
 
 #include <server/defs.qh>
+#include <server/items/items.qh>
 #include <server/miscfunctions.qh>
-#include <common/items.qh>
 
 #include "../command/common.qh"
 

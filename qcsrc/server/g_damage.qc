@@ -4,13 +4,13 @@
 #include "bot/api.qh"
 #include "g_hook.qh"
 #include <server/gamelog.qh>
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
 #include "../common/physics/player.qh"
-#include "../common/items.qh"
 #include "resources.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"

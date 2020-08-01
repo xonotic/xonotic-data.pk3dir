@@ -1,7 +1,7 @@
 #include "selection.qh"
 
 #include "weaponsystem.qh"
-#include <common/items.qh>
+#include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>

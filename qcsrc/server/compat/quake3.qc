@@ -2,10 +2,10 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
+#include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/resources.qh>
 #include <common/gamemodes/_mod.qh>
-#include <common/items.qh>
 #include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mapobjects/trigger/counter.qh>

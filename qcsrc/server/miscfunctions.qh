@@ -3,7 +3,7 @@
 #include <server/defs.qh>
 #include <server/g_world.qh>
 
-#include <common/items.qh>
+#include <server/items/items.qh>
 
 #include <server/mutators/_mod.qh>
 

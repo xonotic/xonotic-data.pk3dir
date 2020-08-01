@@ -3,11 +3,11 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
 #include <server/cheats.qh>
 #include <server/resources.qh>
-#include <common/items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>

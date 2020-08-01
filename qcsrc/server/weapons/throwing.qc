@@ -4,7 +4,7 @@
 #include "../resources.qh"
 #include <server/items/spawning.qh>
 #include <server/mutators/_mod.qh>
-#include <common/items.qh>
+#include <server/items/items.qh>
 #include "../g_damage.qh"
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
