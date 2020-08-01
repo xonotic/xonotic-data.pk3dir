@@ -384,7 +384,7 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
  * writes:
  *   this.origin, this.angles
  *   this.weaponchild
- *   this.movedir, this.view_ofs
+ *   this.movedir, this.view_ofs, this.movedir_aligned
  *   attachment stuff
  *   anim stuff
  * to free:
@@ -526,6 +526,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	}
 
 	this.view_ofs = '0 0 0';
+	this.movedir_aligned = this.movedir;
 
 	if (this.movedir.x >= 0)
 	{
@@ -536,6 +537,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	#endif
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
+		this.movedir_aligned = shotorg_adjust(v, false, true, algn);
 		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
 	}
 	int compressed_shotorg = compressShotOrigin(this.movedir);
@@ -667,6 +669,149 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 			LOG_HELP("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
 		}
+	}
+}
+#endif
+
+#ifdef SVQC
+void W_MuzzleFlash_Model_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset)
+{
+	flash.owner = actor;
+	flash.angles_z = random() * 360;
+
+	entity view = actor.(weaponentity);
+	entity exterior = actor.exteriorweaponentity;
+
+	if (view.oldorigin.x > 0)
+	{
+		setattachment(flash, exterior, "");
+		setorigin(flash, view.oldorigin + offset);
+	}
+	else
+	{
+		if (gettagindex(exterior, "shot")) setattachment(flash, exterior, "shot");
+		else setattachment(flash, exterior, "tag_shot");
+		setorigin(flash, offset);
+	}
+}
+#elif defined(CSQC)
+void W_MuzzleFlash_Model_AttachToShotorg(entity wepent, entity flash, vector offset)
+{
+	flash.owner = wepent;
+	flash.angles_z = random() * 360;
+
+	if (gettagindex(wepent, "shot")) setattachment(flash, wepent, "shot");
+	else setattachment(flash, wepent, "tag_shot");
+	setorigin(flash, offset);
+}
+#endif
+
+void W_MuzzleFlash_Model_Think(entity this)
+{
+	this.frame += 2;
+	this.scale *= 0.5;
+	this.alpha -= 0.25;
+	this.nextthink = time + 0.05;
+
+	if(this.alpha <= 0)
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
+		this.realowner.muzzle_flash = NULL;
+		return;
+	}
+}
+
+void W_MuzzleFlash_Model(entity wepent, entity muzzlemodel)
+{
+	if(wepent.muzzle_flash == NULL)
+		wepent.muzzle_flash = spawn();
+
+	entity flash = wepent.muzzle_flash;
+	setmodel(flash, muzzlemodel); // precision set below
+
+	flash.scale = 0.75;
+	setthink(flash, W_MuzzleFlash_Model_Think);
+	flash.nextthink = time + 0.02;
+	flash.frame = 2;
+	flash.alpha = 0.75;
+	flash.angles_z = random() * 180;
+	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
+	flash.owner = flash.realowner = wepent;
+
+#ifdef CSQC
+	flash.drawmask = MASK_NORMAL;
+#endif
+}
+
+REGISTER_NET_TEMP(w_muzzleflash)
+
+#ifdef SVQC
+void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir)
+{
+	// don't show an exterior muzzle effect for the off-hand
+	if(weaponslot(weaponentity) == 0)
+	{
+		Send_Effect_Except(thiswep.m_muzzleeffect, shotorg, shotdir * 1000, 1, actor);
+
+		if(thiswep.m_muzzlemodel != MDL_Null)
+		{
+			W_MuzzleFlash_Model(actor.exteriorweaponentity, thiswep.m_muzzlemodel);
+			W_MuzzleFlash_Model_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '5 0 0');
+		}
+	}
+
+	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
+	{
+		if(!IS_REAL_CLIENT(it))
+			continue;
+		int channel = MSG_ONE;
+		msg_entity = it;
+		WriteHeader(channel, w_muzzleflash);
+		WriteByte(channel, thiswep.m_id);
+		WriteByte(channel, weaponslot(weaponentity));
+		WriteVector(channel, shotorg);
+	});
+}
+#elif defined(CSQC)
+NET_HANDLE(w_muzzleflash, bool isNew)
+{
+	return = true;
+	int weapon_id = ReadByte();
+    int slot = ReadByte();
+    vector sv_shotorg = ReadVector();
+
+	Weapon thiswep = REGISTRY_GET(Weapons, weapon_id);
+    vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
+	vector forward, right, up;
+	MAKE_VECTORS(viewangles, forward, right, up);
+
+	if(autocvar_chase_active)
+	{
+		// in third person mode, show the muzzle flash from the server side weapon position
+		// we don't have a view model to reference in this case
+		pointparticles(thiswep.m_muzzleeffect, sv_shotorg, forward * 1000, 1);
+		return;
+	}
+    if(!autocvar_r_drawviewmodel) return;
+
+	entity wepent = viewmodels[slot];
+	// get the local player entity to calculate shot origin
+	entity rlplayer = CSQCModel_server2csqc(player_localentnum - 1);
+	if(!rlplayer)
+		rlplayer = csqcplayer; // fall back to the global
+
+	vector md = wepent.movedir_aligned;
+	vector vecs = ((md.x > 0) ? md : '0 0 0');
+	vector dv = forward * vecs.x + right * -vecs.y + up * vecs.z;
+	vector org = rlplayer.origin + rlplayer.view_ofs + dv;
+
+	pointparticles(thiswep.m_muzzleeffect, org, forward * 1000, 1);
+
+	if(thiswep.m_muzzlemodel != MDL_Null)
+	{
+		W_MuzzleFlash_Model(wepent, thiswep.m_muzzlemodel);
+		W_MuzzleFlash_Model_AttachToShotorg(wepent, wepent.muzzle_flash, '5 0 0');
 	}
 }
 #endif

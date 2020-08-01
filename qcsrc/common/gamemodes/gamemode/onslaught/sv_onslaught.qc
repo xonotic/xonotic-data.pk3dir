@@ -39,9 +39,7 @@ bool clientcamera_send(entity this, entity to, int sf)
 
 	WriteVector(MSG_ENTITY, this.origin);
 
-	WriteAngle(MSG_ENTITY, this.angles_x);
-	WriteAngle(MSG_ENTITY, this.angles_y);
-	WriteAngle(MSG_ENTITY, this.angles_z);
+	WriteAngleVector(MSG_ENTITY, this.angles);
 
 	return true;
 }
@@ -876,6 +874,7 @@ void ons_camSetup(entity this)
 
 	FOREACH_CLIENT(true, it.clientcamera = cam;);
 
+	// NOTE: engine networked
 	WriteByte(MSG_ALL, SVC_SETVIEWANGLES);
 	WriteAngle(MSG_ALL, cam.angles_x);
 	WriteAngle(MSG_ALL, cam.angles_y);
@@ -998,7 +997,7 @@ void ons_GeneratorThink(entity this)
 		{
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
 			msg_entity = it;
-			soundto(MSG_ONE, this, CHAN_AUTO, SND(ONS_GENERATOR_ALARM), VOL_BASE, ATTEN_NONE);
+			soundto(MSG_ONE, this, CHAN_AUTO, SND(ONS_GENERATOR_ALARM), VOL_BASE, ATTEN_NONE, 0);
 		}
 		else
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_ONS_NOTSHIELDED));

@@ -839,6 +839,7 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteByte (MSG_ONE, SVC_SETVIEWPORT);
 			WriteEntity( MSG_ONE, player);
 
+			// NOTE: engine networked
 			WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 			WriteAngle(MSG_ONE, 0);
 			WriteAngle(MSG_ONE, vehic.angles_y);
@@ -1081,6 +1082,7 @@ void vehicles_enter(entity pl, entity veh)
 		WriteByte (MSG_ONE, SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, veh.vehicle_viewport);
 
+		// NOTE: engine networked
 		WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 		if(veh.tur_head)
 		{

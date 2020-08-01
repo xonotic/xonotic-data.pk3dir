@@ -209,7 +209,7 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 	return false;
 }
 
-spawnfunc(monster_golem) { Monster_Spawn(this, true, MON_GOLEM.monsterid); }
+spawnfunc(monster_golem) { Monster_Spawn(this, true, MON_GOLEM); }
 // compatibility
 spawnfunc(monster_shambler) { spawnfunc_monster_golem(this); }
 #endif // SVQC

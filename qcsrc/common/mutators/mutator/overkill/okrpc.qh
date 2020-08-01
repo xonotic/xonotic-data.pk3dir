@@ -12,6 +12,8 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* modelname */ ATTRIB(OverkillRocketPropelledChainsaw, mdl, string, "ok_rl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillRocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
+/* flash mdl */ ATTRIB(OverkillRocketPropelledChainsaw, m_muzzlemodel, Model, MDL_RPC_MUZZLEFLASH);
+/* flash eff */ ATTRIB(OverkillRocketPropelledChainsaw, m_muzzleeffect, entity, EFFECT_ROCKET_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(OverkillRocketPropelledChainsaw, w_crosshair, string, "gfx/crosshairrocketlauncher");
 /* crosshair */ ATTRIB(OverkillRocketPropelledChainsaw, w_crosshair_size, float, 0.6);

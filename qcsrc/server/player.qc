@@ -615,8 +615,17 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.avelocity = '0 0 0';
 		// view from the floor
 		this.view_ofs = '0 0 -8';
-		// toss the corpse
-		set_movetype(this, MOVETYPE_TOSS);
+		if(this.move_movetype == MOVETYPE_NOCLIP)
+		{
+			// don't toss the corpse in this case, it can get stuck in solid (causing low fps)
+			// or fall indefinitely into the void if out of the map
+			this.velocity = '0 0 0';
+		}
+		else
+		{
+			// toss the corpse
+			set_movetype(this, MOVETYPE_TOSS);
+		}
 		// shootable corpse
 		this.solid = SOLID_CORPSE;
 		PS(this).ballistics_density = autocvar_g_ballistics_density_corpse;

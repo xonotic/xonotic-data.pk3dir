@@ -628,7 +628,7 @@ void PM_check_hitground(entity this)
 	if (!this.wasFlying) return;
     this.wasFlying = false;
     if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
-    if (time < this.ladder_time) return;
+    if (this.ladder_entity) return;
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];

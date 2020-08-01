@@ -3,6 +3,7 @@
 #ifdef SVQC
 #include <server/autocvars.qh>
 #include <server/client.qh>
+#include <common/mapobjects/trigger/secret.qh>
 #endif
 
 // Full list of all stat constants, included in a single location for easy reference
@@ -100,8 +101,8 @@ REGISTER_STAT(VEHICLESTAT_AMMO2, int)
 REGISTER_STAT(VEHICLESTAT_RELOAD2, int)
 REGISTER_STAT(VEHICLESTAT_W2MODE, int)
 REGISTER_STAT(NADE_TIMER, float)
-REGISTER_STAT(SECRETS_TOTAL, float)
-REGISTER_STAT(SECRETS_FOUND, float)
+REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
+REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
 REGISTER_STAT(MONSTERS_TOTAL, int)
@@ -193,7 +194,7 @@ int autocvar_sv_gameplayfix_easierwaterjump = 1;
 int autocvar_sv_gameplayfix_stepdown = 2;
 float autocvar_sv_gameplayfix_stepdown_maxspeed = 0;
 int autocvar_sv_gameplayfix_stepmultipletimes = 1;
-int autocvar_sv_gameplayfix_unstickplayers = 1;
+int autocvar_sv_gameplayfix_unstickplayers = 2;
 int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
 int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
 int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;

@@ -168,9 +168,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_ANGLES)
     {
-        this.angles_x = ReadAngle();
-        this.angles_y = ReadAngle();
-        this.angles_z = ReadAngle();
+        this.angles = ReadAngleVector();
     }
 
     if(sf & ISF_SIZE)
@@ -321,9 +319,7 @@ bool ItemSend(entity this, entity to, int sf)
 
 	if(sf & ISF_ANGLES)
 	{
-		WriteAngle(MSG_ENTITY, this.angles_x);
-		WriteAngle(MSG_ENTITY, this.angles_y);
-		WriteAngle(MSG_ENTITY, this.angles_z);
+		WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
 	// sets size on the client, unused on server
@@ -540,7 +536,7 @@ void Item_RespawnCountdown(entity this)
 				if(this.waypointsprite_attached.waypointsprite_visible_for_player(this.waypointsprite_attached, it, it))
 				{
 					msg_entity = it;
-					soundto(MSG_ONE, this, CH_TRIGGER, SND(ITEMRESPAWNCOUNTDOWN), VOL_BASE, ATTEN_NORM);	// play respawn sound
+					soundto(MSG_ONE, this, CH_TRIGGER, SND(ITEMRESPAWNCOUNTDOWN), VOL_BASE, ATTEN_NORM, 0);	// play respawn sound
 				}
 			});
 

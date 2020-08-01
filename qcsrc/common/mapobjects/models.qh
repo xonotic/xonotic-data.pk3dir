@@ -1,5 +1,7 @@
 #pragma once
 
+.float modelscale;
+
 #ifdef CSQC
 entityclass(Wall);
 classfield(Wall) .float lip;

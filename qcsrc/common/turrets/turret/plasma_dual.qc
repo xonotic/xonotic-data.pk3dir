@@ -8,7 +8,7 @@ METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur, entity it))
 {
     if (MUTATOR_IS_ENABLED(mutator_instagib)) {
         .entity weaponentity = weaponentities[0]; // TODO: unhardcode
-        FireRailgunBullet (it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance, 10000000000,
+        FireRailgunBullet (it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance, 10000000000, false,
                            800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
 
 

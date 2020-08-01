@@ -26,12 +26,12 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 		antilag_takeback_all(actor, lag);
 
 	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, thiswep.m_id, bullet_trail_effect, false);
+		fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, 0, force, thiswep.m_id, bullet_trail_effect, false);
 	
 	if(lag && bullets > 0)
 		antilag_restore_all(actor);
 
-	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, ammocount);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	// casing code
 	if(autocvar_g_casings >= 1)
@@ -40,14 +40,6 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 		//for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
 			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor, weaponentity);
 	}
-
-	// muzzle flash for 1st person view
-	entity flash = spawn();
-	setmodel(flash, MDL_SHOTGUN_MUZZLEFLASH); // precision set below
-	setthink(flash, SUB_Remove);
-	flash.nextthink = time + 0.06;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 }
 
 .float swing_prev;

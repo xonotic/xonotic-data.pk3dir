@@ -20,6 +20,7 @@
 #include "clientkill.qh"
 #include "cheats.qh"
 #include "g_world.qh"
+#include <server/gamelog.qh>
 #include "race.qh"
 #include "antilag.qh"
 #include "campaign.qh"
@@ -38,6 +39,7 @@
 #include <common/effects/qc/globalsound.qh>
 
 #include "../common/mapobjects/func/conveyor.qh"
+#include <common/mapobjects/func/ladder.qh>
 #include "../common/mapobjects/teleporters.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
 #include <common/mapobjects/trigger/counter.qh>
@@ -690,6 +692,9 @@ void PutPlayerInServer(entity this)
 		IL_REMOVE(g_swamped, this);
 	this.swampslug = NULL;
 	this.swamp_interval = 0;
+	if(this.ladder_entity)
+		IL_REMOVE(g_ladderents, this);
+	this.ladder_entity = NULL;
 	IL_EACH(g_counters, it.realowner == this,
 	{
 		delete(it);
@@ -2262,7 +2267,6 @@ bool PlayerThink(entity this)
 		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
 
-	secrets_setstatus(this);
 	monsters_setstatus(this);
 
 	return true;
@@ -2712,6 +2716,9 @@ void PlayerPostThink (entity this)
 		this.solid = SOLID_NOT;
 		this.takedamage = DAMAGE_NO;
 		set_movetype(this, MOVETYPE_NONE);
+		CS(this).teamkill_complain = 0;
+		CS(this).teamkill_soundtime = 0;
+		CS(this).teamkill_soundsource = NULL;
 	}
 
 	if (IS_PLAYER(this)) {

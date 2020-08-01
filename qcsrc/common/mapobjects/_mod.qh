@@ -1,4 +1,5 @@
 // generated file; do not modify
+#include <common/mapobjects/bgmscript.qh>
 #include <common/mapobjects/models.qh>
 #include <common/mapobjects/platforms.qh>
 #include <common/mapobjects/subs.qh>

@@ -125,7 +125,7 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	return false;
 }
 
-spawnfunc(monster_zombie) { Monster_Spawn(this, true, MON_ZOMBIE.monsterid); }
+spawnfunc(monster_zombie) { Monster_Spawn(this, true, MON_ZOMBIE); }
 #endif // SVQC
 
 #ifdef SVQC

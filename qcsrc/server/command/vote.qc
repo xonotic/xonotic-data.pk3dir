@@ -1,6 +1,7 @@
 #include "vote.qh"
 
 #include <server/defs.qh>
+#include <server/gamelog.qh>
 #include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
@@ -476,7 +477,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_readyrestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
