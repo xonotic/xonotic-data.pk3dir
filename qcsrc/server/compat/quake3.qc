@@ -2,7 +2,7 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
-#include <server/items.qh>
+#include <server/items/spawning.qh>
 #include <server/resources.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/items.qh>

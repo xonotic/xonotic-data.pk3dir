@@ -8,7 +8,7 @@
 #endif
 
 #ifdef SVQC
-#include <server/items.qh>
+#include <server/items/spawning.qh>
 #endif
 
 const int IT_UNLIMITED_AMMO 			=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.

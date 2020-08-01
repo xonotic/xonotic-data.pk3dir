@@ -10,7 +10,7 @@
 #include "../common/items.qh"
 #include "mapvoting.qh"
 #include "resources.qh"
-#include "items.qh"
+#include <server/items/spawning.qh>
 #include "player.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"

@@ -12,7 +12,6 @@
 #include <server/handicap.qc>
 #include <server/impulse.qc>
 #include <server/ipban.qc>
-#include <server/items.qc>
 #include <server/mapvoting.qc>
 #include <server/matrix.qc>
 #include <server/miscfunctions.qc>
@@ -34,6 +33,7 @@
 #include <server/bot/_mod.inc>
 #include <server/command/_mod.inc>
 #include <server/compat/_mod.inc>
+#include <server/items/_mod.inc>
 #include <server/mutators/_mod.inc>
 #include <server/pathlib/_mod.inc>
 #include <server/weapons/_mod.inc>
