@@ -86,6 +86,9 @@ clean: | $(WORKDIR)
 .PHONY: qc
 qc: $(PROGS_OUT)/csprogs.dat $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat
 
+.PHONY: sv
+sv: $(PROGS_OUT)/csprogs.dat $(PROGS_OUT)/progs.dat
+
 .PHONY: pk3
 pk3: csprogs-$(VER).pk3
 
