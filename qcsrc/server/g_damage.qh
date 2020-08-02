@@ -4,6 +4,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <server/defs.qh>
+    #include <server/items/items.qh>
     #include <server/miscfunctions.qh>
     #include <lib/warpzone/common.qh>
     #include <common/constants.qh>
@@ -13,7 +14,6 @@
     #include "weapons/accuracy.qh"
     #include "weapons/csqcprojectile.qh"
     #include "weapons/selection.qh"
-    #include <common/t_items.qh>
     #include "autocvars.qh"
     #include "constants.qh"
     #include "defs.qh"
@@ -51,6 +51,8 @@ float damage_gooddamage;
 .entity pusher;
 .bool istypefrag;
 .float taunt_soundtime;
+
+.int totalfrags;
 
 float IsFlying(entity a);
 
@@ -95,6 +97,11 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	// Returns total damage applies to creatures
 
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
+
+.float damageforcescale;
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
+.float damageextraradius;
 
 // Calls .event_heal on the target so that they can handle healing themselves
 // a limit of RES_LIMIT_NONE should be handled by the entity as its max health (if applicable)

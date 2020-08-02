@@ -28,7 +28,7 @@ void target_speaker_use_activator(entity this, entity actor, entity trigger)
 	else
 		snd = this.noise;
 	msg_entity = actor;
-	soundto(MSG_ONE, this, CH_TRIGGER, snd, VOL_BASE * this.volume, this.atten);
+	soundto(MSG_ONE, this, CH_TRIGGER, snd, VOL_BASE * this.volume, this.atten, 0);
 }
 void target_speaker_use_on(entity this, entity actor, entity trigger)
 {

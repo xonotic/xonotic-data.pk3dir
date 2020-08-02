@@ -4,6 +4,8 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
 #include "../cvars.qh"
 
 #include "../aim.qh"
@@ -22,6 +24,7 @@
 
 #include <common/mapobjects/func/ladder.qh>
 #include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 
 #include <lib/warpzone/common.qh>

@@ -29,16 +29,7 @@ void multi_trigger(entity this)
 		return; // only players
 	}
 
-	// TODO: restructure this so that trigger_secret is more independent
-	if (this.classname == "trigger_secret")
-	{
-		if (!IS_PLAYER(this.enemy))
-			return;
-		found_secrets = found_secrets + 1;
-		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
-	}
-
-	if (this.noise)
+	if (this.noise && this.noise != "")
 	{
 		_sound (this.enemy, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 	}
@@ -167,7 +158,7 @@ spawnfunc(trigger_multiple)
 	else if (this.sounds == 3)
 		this.noise = "misc/trigger1.wav";
 
-	if(this.noise)
+	if(this.noise && this.noise != "")
 		precache_sound(this.noise);
 
 	if (!this.wait)

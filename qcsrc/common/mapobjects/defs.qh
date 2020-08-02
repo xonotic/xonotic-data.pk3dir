@@ -26,16 +26,15 @@ const int SF_TRIGGER_RESET = BIT(2);
 //----------------
 // STATES & ACTIVE
 //----------------
-#ifdef CSQC
-// this stuff is defined in the server side engine VM, so we must define it separately here
 const int STATE_TOP = 0;
 const int STATE_BOTTOM = 1;
 const int STATE_UP = 2;
 const int STATE_DOWN = 3;
 
+.int active;
+.void (entity this, int act_state) setactive;
 const int ACTIVE_NOT = 0;
 const int ACTIVE_ACTIVE = 1;
 const int ACTIVE_IDLE = 2;
 const int ACTIVE_BUSY = 2;
 const int ACTIVE_TOGGLE = 3;
-#endif

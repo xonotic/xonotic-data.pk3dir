@@ -953,7 +953,7 @@ REGISTER_MUTATOR(nb, false)
 		CVTOV(g_nexball_delay_idle);			   //10
 		CVTOV(g_nexball_football_physics);		 //0
 		*/
-		radar_showennemies = autocvar_g_nexball_radar_showallplayers;
+		radar_showenemies = autocvar_g_nexball_radar_showallplayers;
 
 		InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;

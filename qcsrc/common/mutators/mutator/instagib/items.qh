@@ -61,7 +61,9 @@ REGISTER_ITEM(ExtraLife, Powerup) {
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Extra life");
     this.m_waypointblink        =   2;
+#ifdef SVQC
     this.m_itemid               =   IT_RESOURCE;
+#endif
 }
 
 SPAWNFUNC_ITEM(item_extralife, ITEM_ExtraLife)
@@ -93,7 +95,9 @@ REGISTER_ITEM(Invisibility, Powerup) {
     this.m_color            =   '0 0 1';
     this.m_waypoint         =   _("Invisibility");
     this.m_waypointblink    =   2;
+#ifdef GAMEQC
     this.m_itemid           =   IT_STRENGTH;
+#endif
 #ifdef SVQC
     this.m_iteminit         =   powerup_invisibility_init;
 #endif
@@ -128,7 +132,9 @@ REGISTER_ITEM(Speed, Powerup) {
     this.m_color            =   '1 0 1';
     this.m_waypoint         =   _("Speed");
     this.m_waypointblink    =   2;
+#ifdef GAMEQC
     this.m_itemid           =   IT_INVINCIBLE;
+#endif
 #ifdef SVQC
     this.m_iteminit         =   powerup_speed_init;
 #endif

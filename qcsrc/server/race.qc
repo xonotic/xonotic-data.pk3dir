@@ -1,6 +1,7 @@
 #include "race.qh"
 
 #include <server/defs.qh>
+#include <server/g_damage.qh>
 #include <server/miscfunctions.qh>
 #include "client.qh"
 #include "portals.qh"

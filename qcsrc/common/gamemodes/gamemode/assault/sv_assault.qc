@@ -1,6 +1,7 @@
 #include "sv_assault.qh"
 
 #include <common/mapobjects/func/breakable.qh>
+#include <server/spawnpoints.qh>
 
 .entity sprite;
 #define AS_ROUND_DELAY 5

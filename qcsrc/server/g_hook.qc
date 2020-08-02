@@ -1,6 +1,7 @@
 #include "g_hook.qh"
 
 #include <server/defs.qh>
+#include <server/g_damage.qh>
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include "weapons/common.qh"

@@ -1,11 +1,12 @@
-#include "items.qh"
+#include "spawning.qh"
 
 /// \file
 /// \brief Source file that contains implementation of the functions related to
-/// game items.
+/// creation of game items.
 /// \copyright GNU GPLv2 or any later version.
 
 #include <server/mutators/_mod.qh>
+#include <server/weapons/spawning.qh>
 #include <common/weapons/all.qh>
 #include <common/mapobjects/subs.qh>
 

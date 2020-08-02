@@ -634,9 +634,7 @@ bool target_push_send(entity this, entity to, float sf)
 	WriteString(MSG_ENTITY, this.targetname);
 	WriteVector(MSG_ENTITY, this.origin);
 
-	WriteAngle(MSG_ENTITY, this.angles_x);
-	WriteAngle(MSG_ENTITY, this.angles_y);
-	WriteAngle(MSG_ENTITY, this.angles_z);
+	WriteAngleVector(MSG_ENTITY, this.angles);
 
 	return true;
 }
@@ -726,9 +724,7 @@ NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 	this.targetname = strzone(ReadString());
 	this.origin = ReadVector();
 
-	this.angles_x = ReadAngle();
-	this.angles_y = ReadAngle();
-	this.angles_z = ReadAngle();
+	this.angles = ReadAngleVector();
 
 	return = true;
 

@@ -95,6 +95,11 @@ float havocbot_symmetry_origin_order;
 .float ignoregoaltime;
 .entity ignoregoal;
 
+bool bots_would_leave;
+
+int player_count;
+int currentbots;
+
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);

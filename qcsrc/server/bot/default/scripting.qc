@@ -2,9 +2,12 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
 #include "cvars.qh"
 
 #include <common/state.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/physics/player.qh>
 #include <common/wepent.qh>
 

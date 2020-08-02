@@ -17,7 +17,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 		antilag_takeback_all(actor, lag);
 
 	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, force, thiswep.m_id, bullet_trail_effect, false);
+		fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, 0, force, thiswep.m_id, bullet_trail_effect, false);
 	
 	if(lag && bullets > 0)
 		antilag_restore_all(actor);

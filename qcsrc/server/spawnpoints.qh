@@ -13,3 +13,6 @@ entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, flo
 entity SelectSpawnPoint(entity this, bool anypoint);
 spawnfunc(info_player_deathmatch);
 void spawnpoint_use(entity this, entity actor, entity trigger);
+
+USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector current));
+.spawn_evalfunc_t spawn_evalfunc;

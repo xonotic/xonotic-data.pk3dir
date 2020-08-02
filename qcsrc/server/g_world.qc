@@ -932,8 +932,6 @@ spawnfunc(worldspawn)
 
 	Nagger_Init();
 
-	next_pingtime = time + 5;
-
 	// set up information replies for clients and server to use
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());

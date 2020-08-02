@@ -445,6 +445,7 @@ void race_Initialize()
 	race_ScoreRules();
 	if(g_race_qualifying == 2)
 		warmup_stage = 0;
+	radar_showenemies = true;
 }
 
 void rc_SetLimits()

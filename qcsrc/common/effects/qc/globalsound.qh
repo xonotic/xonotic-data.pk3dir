@@ -123,6 +123,8 @@ entity GetVoiceMessage(string type);
 
 string GlobalSound_sample(string pair, float r);
 
+float GlobalSound_pitch(float _pitch);
+
 #ifdef SVQC
 
 	void _GlobalSound(entity this, entity gs, entity ps, string sample, float chan, float vol, float voicetype, bool fake);

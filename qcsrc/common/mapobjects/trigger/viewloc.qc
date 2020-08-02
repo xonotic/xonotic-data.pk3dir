@@ -125,9 +125,7 @@ bool viewloc_send(entity this, entity to, int sf)
 
 	WriteVector(MSG_ENTITY, this.origin);
 
-	WriteAngle(MSG_ENTITY, this.angles_x);
-	WriteAngle(MSG_ENTITY, this.angles_y);
-	WriteAngle(MSG_ENTITY, this.angles_z);
+	WriteAngleVector(MSG_ENTITY, this.angles);
 
 	return true;
 }
@@ -200,9 +198,7 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC, bool isnew)
 	this.origin = ReadVector();
 	setorigin(this, this.origin);
 
-	this.movedir_x = ReadAngle();
-	this.movedir_y = ReadAngle();
-	this.movedir_z = ReadAngle();
+	this.movedir = ReadAngleVector();
 
 	return = true;
 

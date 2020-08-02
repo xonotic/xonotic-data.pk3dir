@@ -12,7 +12,6 @@
 #include <server/handicap.qh>
 #include <server/impulse.qh>
 #include <server/ipban.qh>
-#include <server/items.qh>
 #include <server/mapvoting.qh>
 #include <server/matrix.qh>
 #include <server/miscfunctions.qh>
@@ -34,6 +33,7 @@
 #include <server/bot/_mod.qh>
 #include <server/command/_mod.qh>
 #include <server/compat/_mod.qh>
+#include <server/items/_mod.qh>
 #include <server/mutators/_mod.qh>
 #include <server/pathlib/_mod.qh>
 #include <server/weapons/_mod.qh>
