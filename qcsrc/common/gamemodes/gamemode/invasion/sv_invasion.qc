@@ -6,7 +6,7 @@
 #include <common/monsters/sv_monsters.qh>
 
 #include <server/bot/api.qh>
-#include <server/g_world.qh>
+#include <server/world.qh>
 #include <server/teamplay.qh>
 
 IntrusiveList g_invasion_roundends;

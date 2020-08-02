@@ -2,7 +2,7 @@
 
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/g_world.qh>
+#include <server/world.qh>
 #include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
@@ -22,7 +22,7 @@
 //  Last updated: December 30th, 2011
 // =========================================================
 
-// These strings are set usually during init in g_world.qc,
+// These strings are set usually during init in world.qc,
 // or also by some game modes or other functions manually,
 // and their purpose is to output information to clients
 // without using any extra processing time.

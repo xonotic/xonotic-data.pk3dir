@@ -41,7 +41,7 @@
     #include <server/command/_mod.qh>
     #include <lib/csqcmodel/sv_model.qh>
     #include <server/portals.qh>
-    #include <server/g_hook.qh>
+    #include <server/hook.qh>
 #endif
 #ifdef GAMEQC
 	#include "calculations.qc"

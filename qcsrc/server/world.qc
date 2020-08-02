@@ -1,4 +1,4 @@
-#include "g_world.qh"
+#include "world.qh"
 
 #include "anticheat.qh"
 #include "antilag.qh"
@@ -10,9 +10,9 @@
 #include "command/getreplies.qh"
 #include "command/sv_cmd.qh"
 #include "command/vote.qh"
-#include "g_hook.qh"
+#include "hook.qh"
 #include <server/gamelog.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include "ipban.qh"
 #include "mapvoting.qh"
 #include <server/mutators/_mod.qh>

@@ -3,7 +3,7 @@
 #include <server/client.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/g_world.qh>
+#include <server/world.qh>
 #include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>

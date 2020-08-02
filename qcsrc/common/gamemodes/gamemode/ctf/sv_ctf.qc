@@ -7,8 +7,8 @@
 #include <server/command/vote.qh>
 #include <server/client.qh>
 #include <server/gamelog.qh>
-#include <server/g_damage.qh>
-#include <server/g_world.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
 #include <server/items/items.qh>
 #include <server/race.qh>
 #include <server/teamplay.qh>
@@ -2205,7 +2205,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 		WaypointSprite_UpdateHealth(player.wps_flagcarrier, healtharmor_maxdamage(GetResource(player, RES_HEALTH), GetResource(player, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
 }
 
-MUTATOR_HOOKFUNCTION(ctf, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ctf, Damage_Calculate) // for changing damage and force values that are applied to players in damage.qc
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -2358,7 +2358,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 				if(head != player && SAME_TEAM(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{
-					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 					vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
 					vector passer_center = CENTER_OR_VIEWOFS(player);
 

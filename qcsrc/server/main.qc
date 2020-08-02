@@ -1,9 +1,9 @@
-#include "sv_main.qh"
+#include "main.qh"
 
 #include "anticheat.qh"
-#include "g_hook.qh"
-#include "g_damage.qh"
-#include "g_world.qh"
+#include "hook.qh"
+#include "damage.qh"
+#include "world.qh"
 #include "spawnpoints.qh"
 #include <server/gamelog.qh>
 

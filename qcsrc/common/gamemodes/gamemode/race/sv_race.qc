@@ -1,7 +1,7 @@
 #include "sv_race.qh"
 
 #include <server/client.qh>
-#include <server/g_world.qh>
+#include <server/world.qh>
 #include <server/gamelog.qh>
 #include <server/race.qh>
 #include <common/ent_cs.qh>

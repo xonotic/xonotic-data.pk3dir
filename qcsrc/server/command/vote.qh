@@ -38,7 +38,7 @@ string vote_called_display; // visual string of command sent by client
 string vote_parsed_command; // command which is fixed after being parsed
 string vote_parsed_display; // visual string which is fixed after being parsed
 
-// allow functions to be used in other code like g_world.qc and teamplay.qc
+// allow functions to be used in other code like world.qc and teamplay.qc
 void VoteThink();
 void VoteReset();
 void VoteCommand(int request, entity caller, int argc, string vote_command);

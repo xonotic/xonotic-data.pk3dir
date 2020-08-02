@@ -9,7 +9,7 @@
     #include "../server/anticheat.qh"
     #include <common/stats.qh>
     #include "../server/scores.qh"
-	#include <server/g_world.qh>
+	#include <server/world.qh>
     #include "../server/weapons/accuracy.qh"
 #endif
 
@@ -296,7 +296,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * G: game type
 		 * O: mod name (icon request) as in server browser
 		 * M: map name
-		 * I: match ID (see "matchid" in g_world.qc)
+		 * I: match ID (see "matchid" in world.qc)
 		 * S: "hostname" of the server
 		 * C: number of "unpure" cvar changes
 		 * U: UDP port number of the server

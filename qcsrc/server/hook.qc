@@ -1,9 +1,9 @@
-#include "g_hook.qh"
+#include "hook.qh"
 
 #include <server/bot/api.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include "weapons/common.qh"

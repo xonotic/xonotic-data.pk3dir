@@ -5,9 +5,9 @@
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include <server/resources.qh>
-#include <server/sv_main.qh>
+#include <server/main.qh>
 
-#include "g_damage.qh"
+#include "damage.qh"
 #include "clientkill.qh"
 #include "player.qh"
 #include "race.qh"

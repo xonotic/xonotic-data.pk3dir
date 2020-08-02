@@ -7,8 +7,8 @@
 #include "hitplot.qh"
 #include "weaponsystem.qh"
 
-#include "../g_damage.qh"
-#include <server/sv_main.qh>
+#include "../damage.qh"
+#include <server/main.qh>
 #include "../antilag.qh"
 
 #include <common/constants.qh>

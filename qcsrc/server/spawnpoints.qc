@@ -1,7 +1,7 @@
 #include "spawnpoints.qh"
 
 #include <server/mutators/_mod.qh>
-#include "g_world.qh"
+#include "world.qh"
 #include "miscfunctions.qh"
 #include "race.qh"
 #include <common/weapons/_all.qh>

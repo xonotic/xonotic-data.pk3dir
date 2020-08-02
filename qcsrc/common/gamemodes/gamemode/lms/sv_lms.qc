@@ -3,7 +3,7 @@
 #include <common/mutators/mutator/instagib/items.qh>
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
-#include <server/g_world.qh>
+#include <server/world.qh>
 #include <server/items/items.qh>
 
 int autocvar_g_lms_extra_lives;

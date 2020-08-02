@@ -1,14 +1,14 @@
 #include "sv_vehicles.qh"
 
 #include <server/bot/api.qh>
-#include <server/g_damage.qh>
-#include <server/g_world.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
 #include <server/items/items.qh>
 #include <common/items/_mod.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
-#include <server/sv_main.qh>
+#include <server/main.qh>
 #include <server/weapons/common.qh>
 
 bool SendAuxiliaryXhair(entity this, entity to, int sf)

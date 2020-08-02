@@ -2,7 +2,7 @@
 
 #include <server/client.qh>
 #include <server/mutators/_mod.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <server/player.qh>

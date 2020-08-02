@@ -5,7 +5,7 @@
 #include <server/client.qh>
 #include <server/player.qh>
 
-#include "g_damage.qh"
+#include "damage.qh"
 #include "teamplay.qh"
 
 #include <common/vehicles/sv_vehicles.qh>

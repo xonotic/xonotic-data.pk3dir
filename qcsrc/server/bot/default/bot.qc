@@ -18,8 +18,8 @@
 #include "../../client.qh"
 #include "../../constants.qh"
 #include <common/stats.qh>
-#include <server/g_world.qh>
-#include <server/g_damage.qh>
+#include <server/world.qh>
+#include <server/damage.qh>
 #include "../../race.qh"
 #include <server/items/items.qh>
 

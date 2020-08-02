@@ -4,7 +4,7 @@
 
 #include <server/bot/api.qh>
 #include <server/command/vote.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/items/items.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>

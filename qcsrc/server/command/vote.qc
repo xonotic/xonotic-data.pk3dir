@@ -11,8 +11,8 @@
 
 #include "common.qh"
 
-#include "../g_damage.qh"
-#include "../g_world.qh"
+#include "../damage.qh"
+#include "../world.qh"
 #include "../teamplay.qh"
 #include "../race.qh"
 #include "../round_handler.qh"

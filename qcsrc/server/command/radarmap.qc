@@ -4,7 +4,7 @@
 #include <common/command/_mod.qh>
 #include <common/mapobjects/triggers.qh>
 
-#include "../g_world.qh"
+#include "../world.qh"
 
 #include <common/util.qh>
 

@@ -4,8 +4,8 @@
 
 #include "../command/common.qh"
 #include <server/client.qh>
-#include <server/g_damage.qh>
-#include <server/g_world.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include "../round_handler.qh"

@@ -8,7 +8,7 @@
 	#include <common/teams.qh>
 	#include <server/autocvars.qh>
 	#include <server/constants.qh>
-	#include <server/g_world.qh>
+	#include <server/world.qh>
 	#include <server/mutators/_mod.qh>
 #endif
 

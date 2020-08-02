@@ -1,6 +1,6 @@
 #include "cmd.qh"
 
-#include <server/g_world.qh>
+#include <server/world.qh>
 #include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>

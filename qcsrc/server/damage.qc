@@ -1,13 +1,13 @@
-#include "g_damage.qh"
+#include "damage.qh"
 
 #include <common/effects/all.qh>
 #include "bot/api.qh"
-#include "g_hook.qh"
+#include "hook.qh"
 #include <server/client.qh>
 #include <server/gamelog.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
-#include <server/sv_main.qh>
+#include <server/main.qh>
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
