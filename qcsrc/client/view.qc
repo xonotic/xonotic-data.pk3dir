@@ -4,6 +4,7 @@
 #include "miscfunctions.qh"
 #include "announcer.qh"
 #include "hud/_mod.qh"
+#include "main.qh"
 #include "mapvoting.qh"
 #include "shownames.qh"
 #include "hud/panel/scoreboard.qh"

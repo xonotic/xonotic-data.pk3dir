@@ -1,40 +1,11 @@
 #pragma once
 
 #include "utils.qh"
+#include <common/replicate.qh>
 #include <common/sounds/all.qh>
 
-// replicated cvars TODO: needs better organisation!
-.float cvar_cl_handicap;
-.int cvar_cl_gunalign;
-.float cvar_cl_clippedspectating;
-.float cvar_cl_autoscreenshot;
-.float cvar_cl_jetpack_jump;
-.float cvar_cl_movement_track_canjump;
-.float cvar_cl_newusekeysupported;
-.float cvar_cl_cts_noautoswitch;
-.bool cvar_cl_weapon_switch_reload;
-.bool cvar_cl_weapon_switch_fallback_to_impulse;
-
-.string cvar_g_xonoticversion;
-.string cvar_cl_weaponpriority;
-.string cvar_cl_weaponpriorities[10];
-.float cvar_cl_noantilag;
-
 // WEAPONTODO
-.float autoswitch;
 .string weaponorder_byimpulse;
-.float cvar_cl_weaponimpulsemode;
-
-.float cvar_cl_allow_uid2name;
-.float cvar_cl_allow_uidtracking;
-.bool cvar_cl_allow_uidranking;
-
-.string cvar_cl_physics;
-
-// autotaunt system
-.float cvar_cl_autotaunt;
-.float cvar_cl_voice_directional;
-.float cvar_cl_voice_directional_taunt_attenuation;
 
 .entity clientdata;
 

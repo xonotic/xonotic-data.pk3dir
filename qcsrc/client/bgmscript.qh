@@ -4,5 +4,7 @@
 
 classfield(BGMScript) .float just_toggled;
 
+float bgmtime;
+
 void BGMScript_InitEntity(entity e);
 float doBGMScript(entity e);

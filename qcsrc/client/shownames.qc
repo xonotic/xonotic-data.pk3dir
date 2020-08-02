@@ -1,6 +1,7 @@
 #include "shownames.qh"
 
 #include "autocvars.qh"
+#include "main.qh"
 #include "miscfunctions.qh"
 #include "resources.qh"
 #include "hud/_mod.qh"

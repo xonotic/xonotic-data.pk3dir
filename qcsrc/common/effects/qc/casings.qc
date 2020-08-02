@@ -1,5 +1,6 @@
 #include "casings.qh"
 
+#include <common/replicate.qh>
 #include <common/util.qh>
 
 #ifdef CSQC

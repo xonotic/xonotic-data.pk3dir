@@ -1,6 +1,5 @@
 #include "main.qh"
 
-#include "defs.qh"
 #include <client/items/items.qh>
 #include <common/ent_cs.qh>
 #include "miscfunctions.qh"
@@ -20,6 +19,7 @@
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
+#include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
