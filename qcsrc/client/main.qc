@@ -8,7 +8,7 @@
 #include <common/effects/all.qh>
 #include <common/effects/all.inc>
 #include "hud/_mod.qh"
-#include "commands/cl_cmd.qh"
+#include "command/cl_cmd.qh"
 #include "mapvoting.qh"
 #include <client/mutators/_mod.qh>
 #include "hud/panel/centerprint.qh"
