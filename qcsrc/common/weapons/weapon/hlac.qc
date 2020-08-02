@@ -27,7 +27,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
     spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.(weaponentity).misc_bulletcounter);
     spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
-    if(actor.crouch)
+    if(IS_DUCKED(actor))
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage), thiswep.m_id);
@@ -77,7 +77,7 @@ void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
     spread = WEP_CVAR_SEC(hlac, spread);
 
 
-    if(actor.crouch)
+    if(IS_DUCKED(actor))
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage), thiswep.m_id | HITTYPE_SECONDARY);

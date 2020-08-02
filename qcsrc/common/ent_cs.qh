@@ -47,6 +47,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 	void entcs_force_origin(entity player);
 
+	bool radar_showenemies;
+
 #endif
 
 #ifdef CSQC

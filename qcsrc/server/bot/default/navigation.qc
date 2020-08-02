@@ -1,19 +1,22 @@
 #include "navigation.qh"
 
-#include <server/defs.qh>
+#include <server/bot/api.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include "bot.qh"
 #include "waypoints.qh"
 
-#include <common/t_items.qh>
+#include <server/items/items.qh>
 
 #include <common/items/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/mapobjects/func/ladder.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 
 .float speed;

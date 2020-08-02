@@ -1,8 +1,13 @@
 #include "race.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/g_damage.qh>
+#include <server/g_world.qh>
 #include <server/miscfunctions.qh>
+#include <server/weapons/common.qh>
 #include "client.qh"
+#include "cheats.qh"
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"

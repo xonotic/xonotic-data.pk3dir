@@ -41,11 +41,11 @@ void turret_flac_projectile_think_explode(entity this)
         setorigin(this, this.enemy.origin + randomvec() * this.owner.shot_radius);
 
 #ifdef TURRET_DEBUG
-    float d = RadiusDamage (this, this.owner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, DMG_NOWEP, NULL);
+    float d = RadiusDamage (this, this.owner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
     this.owner.tur_debug_dmg_t_h = this.owner.tur_debug_dmg_t_h + d;
     this.owner.tur_debug_dmg_t_f = this.owner.tur_debug_dmg_t_f + this.owner.shot_dmg;
 #else
-    RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, DMG_NOWEP, NULL);
+    RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
 #endif
     delete(this);
 }

@@ -12,8 +12,10 @@
     #include <server/weapons/csqcprojectile.qh>
     #include <server/autocvars.qh>
     #include <server/constants.qh>
-    #include <server/defs.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
     #include "../deathtypes/all.qh"
+    #include <server/sv_main.qh>
     #include "../turrets/sv_turrets.qh"
     #include "../vehicles/all.qh"
     #include <common/gamemodes/_mod.qh>

@@ -1,14 +1,15 @@
 #include "selection.qh"
 
 #include "weaponsystem.qh"
-#include <common/t_items.qh>
-#include <server/items.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/util.qh>
 #include <common/items/item.qh>
 #include <common/weapons/_all.qh>
 #include <common/state.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/wepent.qh>
 

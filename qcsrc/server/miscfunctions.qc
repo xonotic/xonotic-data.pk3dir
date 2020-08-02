@@ -2,17 +2,23 @@
 
 #include "antilag.qh"
 #include "command/common.qh"
+#include "client.qh"
 #include "constants.qh"
+#include "g_damage.qh"
 #include "g_hook.qh"
+#include "g_world.qh"
 #include <server/gamelog.qh>
 #include "ipban.qh"
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
-#include "../common/t_items.qh"
+#include <server/spawnpoints.qh>
+#include <server/sv_main.qh>
 #include "mapvoting.qh"
 #include "resources.qh"
-#include "items.qh"
+#include <server/items/spawning.qh>
 #include "player.qh"
 #include "weapons/accuracy.qh"
+#include "weapons/common.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
 #include "../common/command/_mod.qh"
@@ -25,6 +31,8 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/trigger/hurt.qh>
+#include <common/mapobjects/target/location.qh>
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include <common/weapons/_all.qh>

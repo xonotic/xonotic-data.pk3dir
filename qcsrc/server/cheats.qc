@@ -1,9 +1,11 @@
 #include "cheats.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include <server/resources.qh>
+#include <server/sv_main.qh>
 
 #include "g_damage.qh"
 #include "clientkill.qh"
@@ -22,6 +24,8 @@
 #include <common/physics/player.qh>
 
 #include "../common/monsters/_mod.qh"
+
+#include <common/items/_mod.qh>
 
 #include <common/weapons/_all.qh>
 

@@ -7,3 +7,32 @@ void W_GiveWeapon (entity e, float wep);
 void W_PlayStrengthSound(entity player);
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception);
 void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) explode);
+
+.float misc_bulletcounter;
+
+.int projectiledeathtype;
+
+.float fade_time;
+.float fade_rate;
+
+.entity realowner;
+
+#define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
+// when doing this, hagar can go through clones
+// #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
+
+.int missile_flags;
+const int MIF_SPLASH = BIT(1);
+const int MIF_ARC = BIT(2);
+const int MIF_PROXY = BIT(3);
+const int MIF_GUIDED_MANUAL = BIT(4);
+const int MIF_GUIDED_HEAT = BIT(5);
+const int MIF_GUIDED_LASER = BIT(6);
+const int MIF_GUIDED_AI = BIT(7);
+const int MIF_GUIDED_TAG = BIT(7);
+const int MIF_GUIDED_ALL = MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG;
+const int MIF_GUIDED_TRACKING = MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG;
+const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
+
+IntrusiveList g_projectiles;
+STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }

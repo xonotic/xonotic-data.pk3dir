@@ -29,12 +29,12 @@
     #include <common/util.qh>
     #include "../monsters/_mod.qh"
     #include "config.qh"
+    #include <server/weapons/common.qh>
     #include <server/weapons/csqcprojectile.qh>
     #include <server/weapons/tracing.qh>
-    #include "../t_items.qh"
+    #include <server/items/spawning.qh>
     #include <server/autocvars.qh>
     #include <server/constants.qh>
-    #include <server/defs.qh>
     #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
     #include <server/mutators/_mod.qh>
@@ -803,10 +803,8 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 
 	vector md = wepent.movedir_aligned;
 	vector vecs = ((md.x > 0) ? md : '0 0 0');
-	vector dv = right * -vecs.y + up * vecs.z;
+	vector dv = forward * vecs.x + right * -vecs.y + up * vecs.z;
 	vector org = rlplayer.origin + rlplayer.view_ofs + dv;
-	tracebox(org, '0 0 0', '0 0 0', org + forward * (vecs.x + 1), MOVE_NORMAL, rlplayer);
-	org = trace_endpos - forward * 1;
 
 	pointparticles(thiswep.m_muzzleeffect, org, forward * 1000, 1);
 

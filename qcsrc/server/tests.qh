@@ -1,6 +1,5 @@
 #pragma once
 
-#include "defs.qh"
 #include "miscfunctions.qh"
 #include "autocvars.qh"
 #include "client.qh"
@@ -8,6 +7,7 @@
 #include "weapons/common.qh"
 #include "weapons/selection.qh"
 #include <common/items/item.qh>
+#include <common/mapobjects/defs.qh>
 #include <common/physics/player.qh>
 #include <common/weapons/_all.qh>
 #include <common/vehicles/all.qh>

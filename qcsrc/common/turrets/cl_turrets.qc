@@ -376,8 +376,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.angles_x = ReadAngle();
-		this.angles_y = ReadAngle();
+		this.angles = ReadAngleVector2D();
 
 		turret_construct(this, isnew);
 		this.colormap = 1024;

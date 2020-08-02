@@ -175,7 +175,7 @@ ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NO
 		do {
 			if (IS_PLAYER(player))
 			{
-				if (radar_showennemies) break;
+				if (radar_showenemies) break;
 				if (SAME_TEAM(to, player)) break;
 				if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
 			}

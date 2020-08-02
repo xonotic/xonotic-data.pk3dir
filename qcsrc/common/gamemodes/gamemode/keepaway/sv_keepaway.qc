@@ -1,7 +1,10 @@
 #include "sv_keepaway.qh"
 
 #include <common/effects/all.qh>
+#include <server/client.qh>
 #include <server/gamelog.qh>
+#include <server/g_damage.qh>
+#include <server/items/items.qh>
 
 .entity ballcarried;
 

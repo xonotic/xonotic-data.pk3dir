@@ -4,17 +4,20 @@
 #include "g_world.qh"
 #include "miscfunctions.qh"
 #include "race.qh"
-#include "defs.qh"
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
 #include <common/gamemodes/_mod.qh>
 #include "../common/mapobjects/subs.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
 #include <server/utils.qh>
+#include <server/command/vote.qh>
 
 bool SpawnPoint_Send(entity this, entity to, int sf)
 {
