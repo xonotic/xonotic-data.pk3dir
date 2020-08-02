@@ -64,6 +64,11 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 
 .float ballistics_density;
 
+// for railgun damage (hitting multiple enemies)
+.bool railgunhit;
+.float railgunhitsolidbackup;
+.vector railgunhitloc;
+
 .float railgundistance;
 .vector railgunforce;
 void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype);

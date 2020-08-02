@@ -1,6 +1,7 @@
 #include "sv_vehicles.qh"
 
 #include <server/g_damage.qh>
+#include <server/items/items.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <server/sv_main.qh>

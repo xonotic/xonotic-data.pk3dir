@@ -5,6 +5,7 @@
 #include <server/g_world.qh>
 #include <server/miscfunctions.qh>
 #include "client.qh"
+#include "cheats.qh"
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"

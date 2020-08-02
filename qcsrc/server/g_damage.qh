@@ -59,7 +59,15 @@ float damage_gooddamage;
 .bool istypefrag;
 .float taunt_soundtime;
 
+.float spawnshieldtime;
+
 .int totalfrags;
+
+.bool canteamdamage;
+
+.vector death_origin;
+
+.float damage_dealt, typehitsound, killsound;
 
 // used for custom deathtype
 string deathmessage;

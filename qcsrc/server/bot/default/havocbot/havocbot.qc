@@ -2,7 +2,9 @@
 
 #include "roles.qh"
 
+#include <server/client.qh>
 #include <server/defs.qh>
+#include <server/g_damage.qh>
 #include <server/miscfunctions.qh>
 #include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>

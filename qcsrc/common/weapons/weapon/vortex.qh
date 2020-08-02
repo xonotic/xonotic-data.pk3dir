@@ -68,6 +68,8 @@ SPAWNFUNC_WEAPON(weapon_vortex, WEP_VORTEX)
 SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX)
 
 #ifdef SVQC
+.float vortex_charge_rottime;
+
 .float vortex_lasthit;
 
 void W_Vortex_Charge(entity actor, .entity weaponentity, float dt);

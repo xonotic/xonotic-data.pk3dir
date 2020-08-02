@@ -19,6 +19,7 @@
 #include "../turrets/util.qh"
 #include "../vehicles/all.qh"
 #include <server/campaign.qh>
+#include <server/cheats.qh>
 #include <server/command/_mod.qh>
 #include <common/mapobjects/teleporters.qh>
 #include "../mapobjects/triggers.qh"

@@ -49,6 +49,7 @@
 #include "../common/vehicles/all.qh"
 
 #include "weapons/hitplot.qh"
+#include "weapons/selection.qh"
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
@@ -58,6 +59,8 @@
 #include <common/vehicles/sv_vehicles.qh>
 
 #include "../common/items/_mod.qh"
+
+#include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
 
 #include "../common/mutators/mutator/waypoints/all.qh"
 #include "../common/mutators/mutator/instagib/sv_instagib.qh"
@@ -76,6 +79,8 @@
 #include "../lib/warpzone/server.qh"
 
 #include <common/mutators/mutator/overkill/oknex.qh>
+
+#include <common/weapons/weapon/vortex.qh>
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
@@ -335,7 +340,6 @@ void PutObserverInServer(entity this)
 	this.alpha = 0;
 	this.scale = 0;
 	this.fade_time = 0;
-	this.pain_frame = 0;
 	this.pain_finished = 0;
 	STAT(STRENGTH_FINISHED, this) = 0;
 	STAT(INVINCIBLE_FINISHED, this) = 0;
@@ -618,7 +622,6 @@ void PutPlayerInServer(entity this)
 	bool q3dfcompat = autocvar_sv_q3defragcompat && autocvar_sv_q3defragcompat_changehitbox;
 	this.scale = ((q3dfcompat) ? 0.9 : autocvar_sv_player_scale);
 	this.fade_time = 0;
-	this.pain_frame = 0;
 	this.pain_finished = 0;
 	this.pushltime = 0;
 	setthink(this, func_null); // players have no think function

@@ -1,5 +1,6 @@
 #include "sv_keyhunt.qh"
 
+#include <server/command/vote.qh>
 #include <server/gamelog.qh>
 #include <server/g_damage.qh>
 

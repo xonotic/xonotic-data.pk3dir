@@ -16,7 +16,14 @@ const float ITEM_RESPAWN_TICKS = 10;
 .float max_armorvalue;
 .float pickup_anyway;
 
+.float scheduledrespawntime;
+.float respawntime;
+.float respawntimejitter;
+.float respawntimestart;
+
 .float item_respawncounter;
+
+.float noalign; // if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .float superweapons_finished; // NOTE: this field is used only by map entities, it does not directly apply the superweapons stat
 

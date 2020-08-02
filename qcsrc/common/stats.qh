@@ -64,8 +64,8 @@ REGISTER_STAT(KH_KEYS, int)
 #ifdef SVQC
 float W_WeaponRateFactor(entity this);
 float game_stopped;
-float game_starttime;
-float round_starttime;
+float game_starttime; //point in time when the countdown to game start is over
+float round_starttime; //point in time when the countdown to round start is over
 bool autocvar_g_allow_oldvortexbeam;
 int autocvar_leadlimit;
 #endif

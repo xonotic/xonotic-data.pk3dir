@@ -1,5 +1,6 @@
 #include "sv_nexball.qh"
 
+#include <server/command/vote.qh>
 #include <server/gamelog.qh>
 #include <common/ent_cs.qh>
 

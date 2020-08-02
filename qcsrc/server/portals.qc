@@ -3,6 +3,7 @@
 #include <common/effects/all.qh>
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
+#include <server/client.qh>
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"

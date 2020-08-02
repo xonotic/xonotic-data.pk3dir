@@ -4,6 +4,8 @@
 
 #include <server/bot/api.qh>
 
+#include <server/command/vote.qh>
+
 #include <server/g_damage.qh>
 
 #include <server/mutators/_mod.qh>

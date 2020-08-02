@@ -11,6 +11,7 @@
 #include "weapons/tracing.qh"
 #include "player.qh"
 #include "command/common.qh"
+#include "command/vote.qh"
 #include "round_handler.qh"
 #include "../common/state.qh"
 #include "../common/physics/player.qh"

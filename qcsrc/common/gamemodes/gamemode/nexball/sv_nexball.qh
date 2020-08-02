@@ -32,3 +32,5 @@ float nb_teams;
 .float nb_droptime;
 
 .float teamtime;
+
+float g_nexball_meter_period;

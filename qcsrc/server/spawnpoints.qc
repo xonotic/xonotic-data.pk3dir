@@ -15,6 +15,7 @@
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
 #include <server/utils.qh>
+#include <server/command/vote.qh>
 
 bool SpawnPoint_Send(entity this, entity to, int sf)
 {

@@ -43,6 +43,15 @@
 .float alivetime; // time of being alive
 .float motd_actived_time; // used for both motd and campaign_message
 
+.bool wasplayer;
+
+.int spectatee_status;
+.bool zoomstate;
+
+.bool just_joined;
+
+.int pressedkeys;
+
 void ClientState_attach(entity this);
 
 IntrusiveList g_players;
@@ -270,6 +279,14 @@ METHOD(Client, m_unwind, bool(Client this))
     #undef UNWIND
     return false;
 }
+
+int autocvar__independent_players;
+bool independent_players;
+#define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
+#define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
+#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_OUT_OF_GAME))
+
+.int killcount;
 
 //flood fields
 .float nickspamtime; // time of last nick change

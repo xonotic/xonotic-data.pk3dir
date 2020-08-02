@@ -199,6 +199,19 @@ void readplayerstartcvars();
 float sv_autotaunt;
 float sv_taunt;
 
+float g_footsteps, g_grappling_hook;
+float g_warmup_allguns;
+float g_warmup_allow_timeout;
+float warmup_stage;
+float g_jetpack;
+
+bool sv_ready_restart;
+bool sv_ready_restart_after_countdown;
+bool sv_ready_restart_repeatable;
+
+float sv_clones;
+float sv_foginterval;
+
 void readlevelcvars()
 {
 	if(cvar("sv_allow_fullbright"))

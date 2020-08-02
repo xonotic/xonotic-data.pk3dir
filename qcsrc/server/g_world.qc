@@ -12,12 +12,14 @@
 #include "command/vote.qh"
 #include "g_hook.qh"
 #include <server/gamelog.qh>
+#include <server/g_damage.qh>
 #include "ipban.qh"
 #include "mapvoting.qh"
 #include <server/mutators/_mod.qh>
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
+#include "spawnpoints.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
 #include "../common/constants.qh"

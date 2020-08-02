@@ -1,5 +1,6 @@
 #include "sv_assault.qh"
 
+#include <server/command/vote.qh>
 #include <common/mapobjects/func/breakable.qh>
 #include <server/g_damage.qh>
 #include <server/spawnpoints.qh>

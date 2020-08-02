@@ -1,5 +1,6 @@
 #include "accuracy.qh"
 
+#include <server/client.qh>
 #include <server/mutators/_mod.qh>
 #include <server/g_damage.qh>
 #include <common/constants.qh>

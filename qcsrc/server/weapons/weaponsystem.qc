@@ -3,6 +3,7 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
+#include <server/g_damage.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
@@ -11,6 +12,7 @@
 #include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>

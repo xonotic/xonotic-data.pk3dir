@@ -5,6 +5,8 @@
 
 .int selectweapon; // last selected weapon of the player
 
+.WepSet dual_weapons;
+
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
 

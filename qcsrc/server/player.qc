@@ -13,6 +13,7 @@
 #include <server/sv_main.qh>
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "command/vote.qh"
 #include "../common/state.qh"
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"

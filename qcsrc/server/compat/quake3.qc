@@ -1,5 +1,6 @@
 #include "quake3.qh"
 
+#include <server/client.qh>
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include <server/items/items.qh>

@@ -4,6 +4,7 @@
 #include "command/common.qh"
 #include "client.qh"
 #include "constants.qh"
+#include "g_damage.qh"
 #include "g_hook.qh"
 #include "g_world.qh"
 #include <server/gamelog.qh>

@@ -4,6 +4,7 @@
 #include "g_hook.qh"
 #include "g_damage.qh"
 #include "g_world.qh"
+#include "spawnpoints.qh"
 #include <server/gamelog.qh>
 
 #include "bot/api.qh"
@@ -31,12 +32,12 @@
 
 void CreatureFrame_hotliquids(entity this)
 {
-	if (this.dmgtime >= time)
+	if (this.contents_damagetime >= time)
 	{
 		return;
 	}
 
-	this.dmgtime = time + autocvar_g_balance_contents_damagerate;
+	this.contents_damagetime = time + autocvar_g_balance_contents_damagerate;
 
 	if (this.flags & FL_PROJECTILE)
 	{
@@ -84,7 +85,7 @@ void CreatureFrame_Liquids(entity this)
 		if (!(this.flags & FL_INWATER))
 		{
 			this.flags |= FL_INWATER;
-			this.dmgtime = 0;
+			this.contents_damagetime = 0;
 		}
 
 		CreatureFrame_hotliquids(this);
@@ -95,7 +96,7 @@ void CreatureFrame_Liquids(entity this)
 		{
 			// play leave water sound
 			this.flags &= ~FL_INWATER;
-			this.dmgtime = 0;
+			this.contents_damagetime = 0;
 		}
 	}
 }
