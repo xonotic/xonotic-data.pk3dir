@@ -3,6 +3,7 @@
 #include <server/g_world.qh>
 #include <server/gamelog.qh>
 #include <server/race.qh>
+#include <common/ent_cs.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
 float autocvar_g_race_qualifying_timelimit;

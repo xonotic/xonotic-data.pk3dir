@@ -124,8 +124,6 @@ float g_nexball_meter_period;
 
 string matchid;
 
-bool radar_showenemies;
-
 .int minelayer_mines;
 .float vortex_charge;
 .float vortex_charge_rottime;
@@ -136,10 +134,6 @@ bool radar_showenemies;
 .int hagar_load;
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
-
-#define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
-// when doing this, hagar can go through clones
-// #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
 
 .int spectatee_status;
 .bool zoomstate;

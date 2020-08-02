@@ -16,6 +16,7 @@
 #include <server/items/spawning.qh>
 #include "player.qh"
 #include "weapons/accuracy.qh"
+#include "weapons/common.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
 #include "../common/command/_mod.qh"

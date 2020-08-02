@@ -10,6 +10,10 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 
 .float misc_bulletcounter;
 
+#define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
+// when doing this, hagar can go through clones
+// #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
+
 .int missile_flags;
 const int MIF_SPLASH = BIT(1);
 const int MIF_ARC = BIT(2);

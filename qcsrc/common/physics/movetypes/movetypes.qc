@@ -504,7 +504,7 @@ int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
 			return this.dphitcontentsmask;
 		else if(this.solid == SOLID_SLIDEBOX)
 		{
-			if(this.flags & 32) // TODO: FL_MONSTER
+			if(this.flags & FL_MONSTER)
 				return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP;
 			else
 				return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;

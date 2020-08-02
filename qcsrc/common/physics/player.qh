@@ -7,8 +7,6 @@
 	#include <common/state.qh>
 #endif
 
-const int FL_DUCKED = BIT(19);
-
 .entity conveyor;
 
 .float race_penalty;
@@ -171,9 +169,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 
 	string autocvar_cl_jumpspeedcap_min;
 	string autocvar_cl_jumpspeedcap_max;
-
-	const int FL_WATERJUMP = 2048;  // player jumping out of water
-	const int FL_JUMPRELEASED = 4096;  // for jump debouncing
 
 	.float watertype;
 	.float waterlevel;

@@ -1,6 +1,7 @@
 #include "sv_nexball.qh"
 
 #include <server/gamelog.qh>
+#include <common/ent_cs.qh>
 
 .entity ballcarried;
 
