@@ -20,6 +20,7 @@
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
+#include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>

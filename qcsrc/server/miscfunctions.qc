@@ -358,46 +358,6 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo
 	return o;
 }
 
-REPLICATE(autoswitch, bool, "cl_autoswitch");
-
-REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
-
-REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
-
-REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
-
-REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
-
-REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
-
-REPLICATE(cvar_cl_handicap, float, "cl_handicap");
-
-REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
-
-REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
-
-REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
-
-REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
-
-REPLICATE(cvar_cl_noantilag, bool, "cl_noantilag");
-
-REPLICATE(cvar_cl_physics, string, "cl_physics");
-
-REPLICATE(cvar_cl_voice_directional, int, "cl_voice_directional");
-
-REPLICATE(cvar_cl_voice_directional_taunt_attenuation, float, "cl_voice_directional_taunt_attenuation");
-
-REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
-
-REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
-
-REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
-
-REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
-
-REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
-
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */

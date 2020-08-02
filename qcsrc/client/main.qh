@@ -57,6 +57,7 @@ STATIC_INIT(main)
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
+.float renderflags; // engine field
 
 bool button_zoom;
 bool spectatorbutton_zoom;

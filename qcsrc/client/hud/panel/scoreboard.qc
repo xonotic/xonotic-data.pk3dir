@@ -4,6 +4,7 @@
 #include <client/defs.qh>
 #include <client/main.qh>
 #include <client/miscfunctions.qh>
+#include <client/hud/panel/racetimer.qh>
 #include "quickmenu.qh"
 #include <common/ent_cs.qh>
 #include <common/constants.qh>

@@ -2,6 +2,7 @@
 #include "autocvars.qh"
 #include "miscfunctions.qh"
 #include <client/mutators/_mod.qh>
+#include <client/main.qh>
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>

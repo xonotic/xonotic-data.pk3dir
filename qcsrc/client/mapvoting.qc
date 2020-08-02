@@ -7,6 +7,7 @@
 #include "hud/panel/scoreboard.qh"
 
 #include <common/mapinfo.qh>
+#include <common/util.qh>
 
 // MapVote (#21)
 

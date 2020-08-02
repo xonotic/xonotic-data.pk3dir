@@ -12,6 +12,7 @@
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/radar.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
