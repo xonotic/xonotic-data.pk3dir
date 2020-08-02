@@ -1,8 +1,10 @@
 #include "sv_nexball.qh"
 
+#include <server/client.qh>
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
 #include <common/ent_cs.qh>
+#include <common/mapobjects/triggers.qh>
 
 .entity ballcarried;
 

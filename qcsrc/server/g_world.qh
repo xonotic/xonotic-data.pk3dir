@@ -29,10 +29,14 @@ float alreadychangedlevel;
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
+float default_player_alpha;
+float default_weapon_alpha;
+
 // database
 float ServerProgsDB;
 float TemporaryDB;
 
+.float winning;
 const int WINNING_NO = 0; // no winner, but time limits may terminate the game
 const int WINNING_YES = 1; // winner found
 const int WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached

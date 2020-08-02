@@ -5,6 +5,7 @@
     #include "constants.qh"
     #include "util.qh"
     #include <common/weapons/_all.qh>
+    #include <server/client.qh>
     #include "../server/anticheat.qh"
     #include "../server/defs.qh"
     #include "../server/scores.qh"

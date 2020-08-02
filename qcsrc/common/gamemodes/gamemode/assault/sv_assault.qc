@@ -2,7 +2,9 @@
 
 #include <server/command/vote.qh>
 #include <common/mapobjects/func/breakable.qh>
+#include <common/mapobjects/triggers.qh>
 #include <server/g_damage.qh>
+#include <server/g_world.qh>
 #include <server/spawnpoints.qh>
 
 .entity sprite;

@@ -25,6 +25,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include <common/mapobjects/defs.qh>
+#include <common/mapobjects/triggers.qh>
 #include "../common/notifications/all.qh"
 #include "../common/physics/movetypes/movetypes.qh"
 #include "../common/playerstats.qh"

@@ -36,6 +36,7 @@
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../common/mapobjects/trigger/secret.qh"
 #include "../common/mapobjects/target/music.qh"
 #include "../common/util.qh"

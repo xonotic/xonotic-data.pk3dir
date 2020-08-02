@@ -4,10 +4,12 @@
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
 #include <server/client.qh>
+#include <server/weapons/common.qh>
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
 #include "../common/mapobjects/teleporters.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../common/mapobjects/subs.qh"
 #include "../common/util.qh"
 #include <common/weapons/_all.qh>

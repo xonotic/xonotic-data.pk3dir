@@ -6,11 +6,13 @@
 #include "client.qh"
 #include "clientkill.qh"
 #include "g_damage.qh"
+#include "g_world.qh"
 #include "handicap.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
 #include <server/sv_main.qh>
+#include "weapons/common.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "command/vote.qh"

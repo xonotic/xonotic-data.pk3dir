@@ -3,6 +3,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <lib/warpzone/util_server.qh>
+	#include <common/mapobjects/triggers.qh>
     #include <server/defs.qh>
 #endif
 

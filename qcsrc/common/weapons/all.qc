@@ -29,6 +29,7 @@
     #include <common/util.qh>
     #include "../monsters/_mod.qh"
     #include "config.qh"
+    #include <server/weapons/common.qh>
     #include <server/weapons/csqcprojectile.qh>
     #include <server/weapons/tracing.qh>
     #include <server/items/spawning.qh>

@@ -14,6 +14,7 @@ float servertime, serverprevtime, serverframetime;
 .float watersound_finished;
 
 .bool iscreature;
+.float species;
 
 .float contents_damagetime;
 

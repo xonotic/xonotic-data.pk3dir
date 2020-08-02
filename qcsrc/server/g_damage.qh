@@ -51,6 +51,8 @@ float yoda;
 float damage_goodhits;
 float damage_gooddamage;
 
+.float pain_finished; // Added by Supajoe
+
 .float dmg_team;
 .float teamkill_complain;
 .float teamkill_soundtime;

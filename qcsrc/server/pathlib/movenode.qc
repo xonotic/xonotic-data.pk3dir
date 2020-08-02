@@ -1,5 +1,6 @@
 #include "movenode.qh"
 
+#include <common/mapobjects/triggers.qh>
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 #include "pathlib.qh"

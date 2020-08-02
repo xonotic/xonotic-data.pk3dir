@@ -4,6 +4,7 @@
 #include <server/g_damage.qh>
 #include <server/g_world.qh>
 #include <server/miscfunctions.qh>
+#include <server/weapons/common.qh>
 #include "client.qh"
 #include "cheats.qh"
 #include "portals.qh"

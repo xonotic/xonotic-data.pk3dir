@@ -52,6 +52,11 @@
 
 .int pressedkeys;
 
+.int playerid;
+
+.string playermodel;
+.string playerskin;
+
 void ClientState_attach(entity this);
 
 IntrusiveList g_players;
@@ -306,6 +311,8 @@ bool independent_players;
 
 float blockSpectators; // if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; // point in time since the client is spectating or observing
+
+.bool player_blocked;
 
 // TODO: standardise resource regeneration
 .float pauseregen_finished;

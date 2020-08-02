@@ -1,9 +1,11 @@
 #include "sv_invasion.qh"
 
+#include <common/mapobjects/triggers.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_spawner.qh>
 #include <common/monsters/sv_monsters.qh>
 
+#include <server/g_world.qh>
 #include <server/teamplay.qh>
 
 IntrusiveList g_invasion_roundends;

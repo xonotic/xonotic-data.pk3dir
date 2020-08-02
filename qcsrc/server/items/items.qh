@@ -13,6 +13,11 @@ bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
+// string overrides entity
+.string item_pickupsound;
+.entity item_pickupsound_ent;
+.entity item_model_ent;
+
 .float max_armorvalue;
 .float pickup_anyway;
 

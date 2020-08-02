@@ -1,11 +1,13 @@
 #include "clientkill.qh"
 
 #include <server/defs.qh>
+#include <server/client.qh>
 
 #include "g_damage.qh"
 #include "teamplay.qh"
 
 #include <common/vehicles/sv_vehicles.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
 

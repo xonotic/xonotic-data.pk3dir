@@ -4,6 +4,7 @@
 
 #ifdef SVQC
 
+#include <server/client.qh>
 #include <server/miscfunctions.qh>
 #include <common/mapobjects/defs.qh>
 #include "../mapobjects/trigger/viewloc.qh"

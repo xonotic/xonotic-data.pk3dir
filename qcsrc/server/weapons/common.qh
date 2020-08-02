@@ -12,6 +12,11 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 
 .int projectiledeathtype;
 
+.float fade_time;
+.float fade_rate;
+
+.entity realowner;
+
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
 // #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX

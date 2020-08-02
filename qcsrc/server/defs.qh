@@ -3,39 +3,6 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
-// Fields
-
-.float	pain_finished;			//Added by Supajoe
-
-.float cnt; // used in too many places
-.float count;
-
-.float fade_time;
-.float fade_rate;
-
-.string mdl;
-
-.string playermodel;
-.string playerskin;
-
-.float species;
-
-// string overrides entity
-.string item_pickupsound;
-.entity item_pickupsound_ent;
-.entity item_model_ent;
-
-.float winning;
-
-.int playerid;
-
-float default_player_alpha;
-float default_weapon_alpha;
-
-.entity realowner;
-
-.bool player_blocked;
-
 ////
 
 IntrusiveList g_monsters;

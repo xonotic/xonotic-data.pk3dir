@@ -2,8 +2,10 @@
 
 #include <common/effects/all.qh>
 #include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/vehicles/all.qh>
 #include <server/command/vote.qh>
+#include <server/client.qh>
 #include <server/gamelog.qh>
 #include <server/g_damage.qh>
 #include <server/g_world.qh>

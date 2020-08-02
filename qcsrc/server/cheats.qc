@@ -24,6 +24,8 @@
 
 #include "../common/monsters/_mod.qh"
 
+#include <common/items/_mod.qh>
+
 #include <common/weapons/_all.qh>
 
 #include "../common/mapobjects/subs.qh"

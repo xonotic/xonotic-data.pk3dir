@@ -21,6 +21,7 @@
 #include <server/campaign.qh>
 #include <server/cheats.qh>
 #include <server/command/_mod.qh>
+#include <common/items/_mod.qh>
 #include <common/mapobjects/teleporters.qh>
 #include "../mapobjects/triggers.qh"
 #include <lib/csqcmodel/sv_model.qh>

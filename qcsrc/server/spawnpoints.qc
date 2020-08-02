@@ -11,6 +11,7 @@
 #include <common/gamemodes/_mod.qh>
 #include "../common/mapobjects/subs.qh"
 #include "../common/mapobjects/target/spawnpoint.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"

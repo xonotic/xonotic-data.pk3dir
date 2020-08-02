@@ -6,6 +6,7 @@
 #include <server/g_damage.qh>
 #include <server/items/items.qh>
 #include <common/mapobjects/defs.qh>
+#include <common/mapobjects/triggers.qh>
 
 bool g_onslaught;
 

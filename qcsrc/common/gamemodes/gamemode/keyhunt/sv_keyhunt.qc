@@ -3,6 +3,7 @@
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
 #include <server/g_damage.qh>
+#include <common/mapobjects/triggers.qh>
 
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
