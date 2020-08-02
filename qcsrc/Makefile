@@ -15,7 +15,7 @@ BUILD_MOD ?=
 
 ifndef ZIP
 	ifneq ($(shell which zip 2>/dev/null),)
-		ZIP := zip -9m
+		ZIP := zip -9mD
 	endif
 	ifneq ($(shell which 7z 2>/dev/null),)
 		ZIP := 7z a -tzip -mx=9 -sdel
@@ -80,6 +80,7 @@ clean: | $(WORKDIR)
 	$(RM) $(WORKDIR)/*.txt
 	$(RM) $(WORKDIR)/qccversion.*
 	$(RM) $(WORKDIR)/csprogs-*
+	$(RM) $(WORKDIR)/autoexec/csprogs-*.cfg
 	$(RM) csprogs-*.pk3
 
 .PHONY: qc
@@ -95,14 +96,16 @@ pk3: csprogs-$(VER).pk3
 %-$(VER).pk3: $(PROGS_OUT)/%.dat
 	$(eval PROG=$*)
 	$(eval PK3=$(PROG)-$(VER).pk3)
-	$(eval TXT=$(PROG)-$(VER).txt)
+	$(eval CFG=autoexec/$(PROG)-$(VER).cfg)
 	$(eval DAT=$(PROG)-$(VER).dat)
 	$(eval LNO=$(PROG)-$(VER).lno)
-	@ echo "http://xonotic.org" > $(WORKDIR)/$(TXT)
+	@ mkdir -p $(WORKDIR)/autoexec
+	@ echo "// http://xonotic.org" > $(WORKDIR)/$(CFG)
+	@ echo "set csqc_progname $(DAT)" >> $(WORKDIR)/$(CFG)
 	@ cp -f $(PROGS_OUT)/$(PROG).dat $(WORKDIR)/$(DAT)
 	@ cp -f $(PROGS_OUT)/$(PROG).lno $(WORKDIR)/$(LNO)
 	@ $(RM) $(PROG)-*.pk3
-	cd $(WORKDIR) && $(ZIP) $(CURDIR)/$(PK3) $(TXT) $(DAT) $(LNO)
+	cd $(WORKDIR) && $(ZIP) $(CURDIR)/$(PK3) $(CFG) $(DAT) $(LNO)
 
 QCCVERSION := $(shell cd lib && $(QCC) --version)
 QCCVERSIONFILE := $(WORKDIR)/qccversion.$(shell echo ${QCCVERSION} | git hash-object --stdin)
