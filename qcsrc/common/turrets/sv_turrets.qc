@@ -1,6 +1,7 @@
 #include "sv_turrets.qh"
 #ifdef SVQC
 #include <server/autocvars.qh>
+#include <server/g_damage.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <common/mapobjects/defs.qh>
 
@@ -426,11 +427,11 @@ void turret_projectile_explode(entity this)
 	this.event_damage = func_null;
 #ifdef TURRET_DEBUG
 	float d;
-	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, DMG_NOWEP, NULL);
+	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
 	this.owner.tur_debug_dmg_t_h = this.owner.tur_debug_dmg_t_h + d;
 	this.owner.tur_debug_dmg_t_f = this.owner.tur_debug_dmg_t_f + this.owner.shot_dmg;
 #else
-	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, DMG_NOWEP, NULL);
+	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
 #endif
 	delete(this);
 }
@@ -472,7 +473,7 @@ entity turret_projectile(entity actor, Sound _snd, float _size, float _health, f
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
 	proj.enemy		  = actor.enemy;
-	proj.totalfrags	 = _death;
+	proj.projectiledeathtype	 = _death;
 	PROJECTILE_MAKETRIGGER(proj);
 	if(_health)
 	{

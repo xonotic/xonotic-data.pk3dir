@@ -2,6 +2,7 @@
 
 #include "command/common.qh"
 #include "defs.qh"
+#include "client.qh"
 #include <server/g_world.qh>
 #include <server/miscfunctions.qh>
 #include <server/mutators/_mod.qh>

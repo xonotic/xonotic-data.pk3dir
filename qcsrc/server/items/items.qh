@@ -18,6 +18,9 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float item_respawncounter;
 
+// delay before this item can be picked up
+.float item_spawnshieldtime;
+
 void Item_Show (entity e, int mode);
 
 void Item_Respawn (entity this);

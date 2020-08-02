@@ -167,7 +167,7 @@ void player_anim(entity this)
 		animbits |= ANIMSTATE_FROZEN;
 	if(this.move_movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
-	if(this.crouch)
+	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, IS_ONGROUND(this));

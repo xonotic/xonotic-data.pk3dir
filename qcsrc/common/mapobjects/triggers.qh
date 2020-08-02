@@ -46,7 +46,6 @@ void generic_netlinked_legacy_use(entity this, entity actor, entity trigger);
 void trigger_common_read(entity this, bool withtarget);
 void trigger_remove_generic(entity this);
 
-.float active;
 .string target;
 .string targetname;
 #endif

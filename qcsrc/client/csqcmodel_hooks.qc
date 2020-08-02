@@ -7,6 +7,7 @@
 #include <common/animdecide.qh>
 #include <common/ent_cs.qh>
 #include <common/physics/movetypes/movetypes.qh>
+#include <common/physics/player.qh>
 #include <common/viewloc.qh>
 #include <common/effects/all.qh>
 #include <common/effects/all.inc>

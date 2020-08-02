@@ -18,6 +18,7 @@
 #include "../../client.qh"
 #include "../../constants.qh"
 #include "../../defs.qh"
+#include <server/g_damage.qh>
 #include "../../race.qh"
 #include <server/items/items.qh>
 

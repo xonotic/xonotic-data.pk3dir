@@ -4,6 +4,7 @@
 #include "command/common.qh"
 #include "constants.qh"
 #include "g_hook.qh"
+#include "g_world.qh"
 #include <server/gamelog.qh>
 #include "ipban.qh"
 #include <server/items/items.qh>
@@ -25,6 +26,7 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/trigger/hurt.qh>
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include <common/weapons/_all.qh>

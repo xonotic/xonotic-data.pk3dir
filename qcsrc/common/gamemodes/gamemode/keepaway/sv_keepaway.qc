@@ -2,6 +2,7 @@
 
 #include <common/effects/all.qh>
 #include <server/gamelog.qh>
+#include <server/g_damage.qh>
 
 .entity ballcarried;
 

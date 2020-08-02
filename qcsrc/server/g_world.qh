@@ -5,6 +5,9 @@ float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
 float checkrules_overtimesadded; //how many overtimes have been already added
 
+// flag set on worldspawn so that the code knows if it is dedicated or not
+bool server_is_dedicated;
+
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 

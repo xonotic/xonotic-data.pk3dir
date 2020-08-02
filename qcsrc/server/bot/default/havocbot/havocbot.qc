@@ -24,6 +24,7 @@
 
 #include <common/mapobjects/func/ladder.qh>
 #include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 
 #include <lib/warpzone/common.qh>

@@ -1,5 +1,6 @@
 #include "sv_vehicles.qh"
 
+#include <server/g_damage.qh>
 #include <common/mapobjects/defs.qh>
 
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
@@ -232,7 +233,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, DMG_NOWEP, toucher);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.projectiledeathtype, DMG_NOWEP, toucher);
 
 	delete(this);
 }
@@ -264,7 +265,7 @@ entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 	proj.shot_dmg		 = _dmg;
 	proj.shot_radius	  = _radi;
 	proj.shot_force	   = _force;
-	proj.totalfrags	   = _deahtype;
+	proj.projectiledeathtype	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.flags = FL_PROJECTILE;
@@ -1029,7 +1030,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	pl.crouch = false;
+	UNSET_DUCKED(pl);
 	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
 	setsize(pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 

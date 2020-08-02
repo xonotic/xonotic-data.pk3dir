@@ -4,6 +4,7 @@
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "cheats.qh"
+#include "client.qh"
 #include "clientkill.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"

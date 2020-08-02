@@ -231,9 +231,21 @@ METHOD(Client, m_unwind, bool(Client this))
     return false;
 }
 
+//flood fields
+.float nickspamtime; // time of last nick change
+.float nickspamcount;
+.float floodcontrol_chat;
+.float floodcontrol_chatteam;
+.float floodcontrol_chattell;
+.float floodcontrol_voice;
+.float floodcontrol_voiceteam;
+
+// respawning
 .int respawn_flags;
 .float respawn_time;
 .float respawn_time_max;
+
+.float respawn_countdown; // next number to count
 
 // g_<gametype>_str:
 // If 0, default is used.
@@ -251,6 +263,19 @@ void calculate_player_respawn_time(entity this);
 bool PlayerInList(entity player, string list);
 
 void ClientData_Touch(entity e);
+
+int nJoinAllowed(entity this, entity ignore);
+
+void FixIntermissionClient(entity e);
+
+void checkSpectatorBlock(entity this);
+
+void PlayerUseKey(entity this);
+
+void FixClientCvars(entity e);
+
+// called when a client connects, useful for updating sounds and such of static objects
+.void(entity this, entity player) init_for_player;
 
 /// \brief Print the string to the client's chat.
 /// \param[in] client Client to print to.

@@ -170,7 +170,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		do {
 			if (IS_PLAYER(player))
 			{
-				if (radar_showennemies) break;
+				if (radar_showenemies) break;
 				if (SAME_TEAM(to, player)) break;
 				if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
 			}

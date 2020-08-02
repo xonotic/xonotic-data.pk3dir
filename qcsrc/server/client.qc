@@ -349,7 +349,7 @@ void PutObserverInServer(entity this)
 	setthink(this, func_null);
 	this.nextthink = 0;
 	this.deadflag = DEAD_NO;
-	this.crouch = false;
+	UNSET_DUCKED(this);
 	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
 	this.draggable = drag_undraggable;
@@ -678,7 +678,7 @@ void PutPlayerInServer(entity this)
 
 	this.spawnpoint_targ = NULL;
 
-	this.crouch = false;
+	UNSET_DUCKED(this);
 	this.view_ofs = STAT(PL_VIEW_OFS, this);
 	setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
 	this.spawnorigin = spot.origin;

@@ -31,6 +31,8 @@ const int STATE_BOTTOM = 1;
 const int STATE_UP = 2;
 const int STATE_DOWN = 3;
 
+.int active;
+.void (entity this, int act_state) setactive;
 const int ACTIVE_NOT = 0;
 const int ACTIVE_ACTIVE = 1;
 const int ACTIVE_IDLE = 2;

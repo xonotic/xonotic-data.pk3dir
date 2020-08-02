@@ -52,6 +52,8 @@ float damage_gooddamage;
 .bool istypefrag;
 .float taunt_soundtime;
 
+.int totalfrags;
+
 float IsFlying(entity a);
 
 void UpdateFrags(entity player, int f);
@@ -95,6 +97,11 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	// Returns total damage applies to creatures
 
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
+
+.float damageforcescale;
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
+.float damageextraradius;
 
 // Calls .event_heal on the target so that they can handle healing themselves
 // a limit of RES_LIMIT_NONE should be handled by the entity as its max health (if applicable)

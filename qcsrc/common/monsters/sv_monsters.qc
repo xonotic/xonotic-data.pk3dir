@@ -9,7 +9,9 @@
 #include "../weapons/_mod.qh"
 #include <server/autocvars.qh>
 #include <server/defs.qh>
+#include <server/g_damage.qh>
 #include "../deathtypes/all.qh"
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/steerlib.qh>
 #include "../turrets/sv_turrets.qh"
@@ -1145,7 +1147,7 @@ void Monster_Anim(entity this)
 	int animbits = deadbits;
 	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(this.crouch)
+	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, (IS_ONGROUND(this)));

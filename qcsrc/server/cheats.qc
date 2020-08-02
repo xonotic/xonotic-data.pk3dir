@@ -4,6 +4,7 @@
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include <server/resources.qh>
+#include <server/sv_main.qh>
 
 #include "g_damage.qh"
 #include "clientkill.qh"

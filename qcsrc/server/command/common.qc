@@ -1,5 +1,6 @@
 #include "common.qh"
 
+#include <server/client.qh>
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 
