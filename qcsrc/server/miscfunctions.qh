@@ -1,6 +1,7 @@
 #pragma once
 
 #include <server/defs.qh>
+#include <server/client.qh>
 #include <server/g_world.qh>
 
 #include <server/items/items.qh>

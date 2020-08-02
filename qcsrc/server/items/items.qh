@@ -18,6 +18,8 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float item_respawncounter;
 
+.float superweapons_finished; // NOTE: this field is used only by map entities, it does not directly apply the superweapons stat
+
 // delay before this item can be picked up
 .float item_spawnshieldtime;
 

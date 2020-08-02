@@ -9,6 +9,12 @@ float client_cefc_accumulatortime;
 
 float servertime, serverprevtime, serverframetime;
 
+.vector oldvelocity; // for fall damage
+
+.float watersound_finished;
+
+.bool iscreature;
+
 /*
 ==================
 main

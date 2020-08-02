@@ -1,6 +1,7 @@
 #include "sv_cts.qh"
 
 #include <server/race.qh>
+#include <server/g_world.qh>
 #include <server/gamelog.qh>
 #include <server/items/spawning.qh>
 

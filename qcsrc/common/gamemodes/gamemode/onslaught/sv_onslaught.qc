@@ -2,6 +2,7 @@
 #include "sv_controlpoint.qh"
 #include "sv_generator.qh"
 
+#include <server/g_damage.qh>
 #include <common/mapobjects/defs.qh>
 
 bool g_onslaught;

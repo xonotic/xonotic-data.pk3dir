@@ -3,6 +3,8 @@
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
 
+.int selectweapon; // last selected weapon of the player
+
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
 

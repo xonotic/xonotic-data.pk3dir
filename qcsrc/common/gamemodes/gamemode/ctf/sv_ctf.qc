@@ -1,9 +1,12 @@
 #include "sv_ctf.qh"
 
 #include <common/effects/all.qh>
+#include <common/mapobjects/teleporters.qh>
 #include <common/vehicles/all.qh>
 #include <server/gamelog.qh>
 #include <server/g_damage.qh>
+#include <server/g_world.qh>
+#include <server/race.qh>
 #include <server/teamplay.qh>
 
 #include <lib/warpzone/common.qh>

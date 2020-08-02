@@ -8,6 +8,7 @@
     #include "../server/anticheat.qh"
     #include "../server/defs.qh"
     #include "../server/scores.qh"
+	#include <server/g_world.qh>
     #include "../server/weapons/accuracy.qh"
 #endif
 

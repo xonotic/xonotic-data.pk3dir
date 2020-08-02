@@ -18,6 +18,7 @@
 #include "../common/vehicles/sv_vehicles.qh"
 #include <common/weapons/weapon/porto.qh>
 #include <server/player.qh>
+#include <server/g_damage.qh>
 
 #define PORTALS_ARE_NOT_SOLID
 

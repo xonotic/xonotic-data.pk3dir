@@ -4,6 +4,7 @@
 #elif defined(SVQC)
     #include <common/util.qh>
     #include <server/defs.qh>
+    #include <server/g_world.qh>
 #endif
 
 #ifdef SVQC

@@ -2,6 +2,7 @@
 
 #include <server/defs.qh>
 #include <server/g_damage.qh>
+#include <server/g_world.qh>
 #include <server/miscfunctions.qh>
 #include "client.qh"
 #include "portals.qh"

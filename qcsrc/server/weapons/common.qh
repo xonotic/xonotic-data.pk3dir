@@ -8,6 +8,8 @@ void W_PlayStrengthSound(entity player);
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception);
 void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) explode);
 
+.float misc_bulletcounter;
+
 .int missile_flags;
 const int MIF_SPLASH = BIT(1);
 const int MIF_ARC = BIT(2);

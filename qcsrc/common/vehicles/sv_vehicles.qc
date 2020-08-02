@@ -2,6 +2,9 @@
 
 #include <server/g_damage.qh>
 #include <common/mapobjects/defs.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <server/sv_main.qh>
+#include <server/weapons/common.qh>
 
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {

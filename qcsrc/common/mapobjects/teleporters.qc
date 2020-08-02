@@ -14,6 +14,7 @@
     #include <server/constants.qh>
     #include <server/defs.qh>
     #include "../deathtypes/all.qh"
+    #include <server/sv_main.qh>
     #include "../turrets/sv_turrets.qh"
     #include "../vehicles/all.qh"
     #include <common/gamemodes/_mod.qh>

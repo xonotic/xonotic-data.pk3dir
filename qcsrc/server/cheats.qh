@@ -14,6 +14,9 @@ float CheatFrame(entity this);
 
 const float CHRAME_DRAG = 8;
 
+// speedrun: when 1, player auto teleports back when capture timeout happens
+.bool speedrunning;
+
 bool drag_undraggable(entity draggee, entity dragger);
 
 .bool(entity this, entity dragger) draggable;

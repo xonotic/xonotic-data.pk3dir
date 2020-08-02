@@ -14,11 +14,13 @@
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/steerlib.qh>
+#include <server/sv_main.qh>
 #include "../turrets/sv_turrets.qh"
 #include "../turrets/util.qh"
 #include "../vehicles/all.qh"
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
+#include <common/mapobjects/teleporters.qh>
 #include "../mapobjects/triggers.qh"
 #include <lib/csqcmodel/sv_model.qh>
 #include <server/round_handler.qh>

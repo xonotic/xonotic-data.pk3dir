@@ -251,6 +251,9 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	.string jumpspeedcap_min;
 	.string jumpspeedcap_max;
 
+	// footstep interval
+	.float nextstep;
+
 	#define PHYS_INPUT_ANGLES(s)                ((s).v_angle)
 	#define PHYS_WORLD_ANGLES(s)                ((s).angles)
 

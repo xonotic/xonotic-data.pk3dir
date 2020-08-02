@@ -1,6 +1,7 @@
 #include "common.qh"
 
 #include <server/defs.qh>
+#include <server/g_damage.qh>
 #include <server/items/items.qh>
 #include <server/miscfunctions.qh>
 #include <common/constants.qh>

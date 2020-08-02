@@ -6,6 +6,7 @@
 #include <server/gamelog.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
+#include <server/sv_main.qh>
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"

@@ -10,6 +10,7 @@
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
+#include <server/sv_main.qh>
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "../common/state.qh"
@@ -19,6 +20,7 @@
 #include "../common/gamemodes/sv_rules.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/teleporters.qh>
 #include "../common/playerstats.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 

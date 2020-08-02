@@ -7,6 +7,7 @@
 #include <server/miscfunctions.qh>
 #include <common/mapobjects/defs.qh>
 #include "../mapobjects/trigger/viewloc.qh"
+#include <server/sv_main.qh>
 
 // client side physics
 bool Physics_Valid(string thecvar)

@@ -8,8 +8,20 @@ float checkrules_overtimesadded; //how many overtimes have been already added
 // flag set on worldspawn so that the code knows if it is dedicated or not
 bool server_is_dedicated;
 
+string modname;
+
+string gamemode_name;
+
+float intermission_running;
+float intermission_exittime;
+float alreadychangedlevel;
+
 string cache_mutatormsg;
 string cache_lastmutatormsg;
+
+// database
+float ServerProgsDB;
+float TemporaryDB;
 
 const int WINNING_NO = 0; // no winner, but time limits may terminate the game
 const int WINNING_YES = 1; // winner found

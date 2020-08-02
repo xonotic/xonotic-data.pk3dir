@@ -1,5 +1,6 @@
 #include "sv_race.qh"
 
+#include <server/g_world.qh>
 #include <server/gamelog.qh>
 #include <server/race.qh>
 
