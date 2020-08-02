@@ -1,8 +1,8 @@
 #include "ammo.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
 #include <client/items/items.qh>
+#include <client/main.qh>
 #include <client/miscfunctions.qh>
 #include <client/view.qh>
 #include <common/wepent.qh>

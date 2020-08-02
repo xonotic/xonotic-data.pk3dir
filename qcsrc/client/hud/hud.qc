@@ -1,6 +1,5 @@
 #include "hud.qh"
 
-#include <client/defs.qh>
 #include <client/items/items.qh>
 #include <client/miscfunctions.qh>
 #include <client/view.qh>

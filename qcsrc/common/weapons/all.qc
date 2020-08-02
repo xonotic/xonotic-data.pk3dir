@@ -3,7 +3,6 @@
 #define WEAPONS_ALL_C
 
 #if defined(CSQC)
-	#include <client/defs.qh>
 	#include "../constants.qh"
 	#include "../stats.qh"
 	#include <lib/warpzone/anglestransform.qh>

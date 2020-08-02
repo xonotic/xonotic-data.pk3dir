@@ -6,4 +6,14 @@
 #include <client/mutators/_mod.qh>
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
+
+int w_deathtype;
+float w_issilent, w_random;
+vector w_org, w_backoff;
+
+.float damageforcescale;
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
+.float damageextraradius;
+.void(entity this, float thisdmg, int hittype, vector org, vector thisforce) event_damage;
 #endif

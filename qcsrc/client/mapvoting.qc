@@ -1,8 +1,8 @@
 #include "mapvoting.qh"
 
 #include "autocvars.qh"
+#include "main.qh"
 #include "miscfunctions.qh"
-#include "defs.qh"
 #include "hud/_mod.qh"
 #include "hud/panel/scoreboard.qh"
 

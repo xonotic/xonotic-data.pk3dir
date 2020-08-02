@@ -7,6 +7,9 @@
 	#ifdef SVQC
 		#include <server/player.qh>
 	#endif
+	#ifdef CSQC
+		#include <client/main.qh>
+	#endif
 
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)

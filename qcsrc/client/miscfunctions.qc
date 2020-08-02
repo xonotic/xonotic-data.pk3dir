@@ -1,8 +1,8 @@
 #include "miscfunctions.qh"
 
 #include "autocvars.qh"
-#include "defs.qh"
 #include "hud/_mod.qh"
+#include "main.qh"
 
 #include <common/command/_mod.qh>
 

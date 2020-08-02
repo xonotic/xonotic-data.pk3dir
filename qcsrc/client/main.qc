@@ -1,6 +1,5 @@
 #include "main.qh"
 
-#include "defs.qh"
 #include <client/items/items.qh>
 #include <common/ent_cs.qh>
 #include "miscfunctions.qh"

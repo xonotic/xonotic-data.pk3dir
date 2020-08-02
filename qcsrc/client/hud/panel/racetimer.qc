@@ -1,7 +1,7 @@
 #include "racetimer.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
+#include <client/main.qh>
 #include <client/miscfunctions.qh>
 
 // Race timer (#8)

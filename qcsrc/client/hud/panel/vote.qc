@@ -1,7 +1,7 @@
 #include "vote.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
+#include <client/main.qh>
 #include <client/miscfunctions.qh>
 
 // Vote (#9)
