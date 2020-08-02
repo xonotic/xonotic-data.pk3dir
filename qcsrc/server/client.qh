@@ -388,3 +388,5 @@ void Join(entity this);
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
 
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
+
+const int MAX_SPECTATORS = 7;

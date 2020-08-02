@@ -121,9 +121,13 @@ void WriteSpectators(entity player, entity to)
 {
 	if(!player) { return; } // not sure how, but best to be safe
 
+	int spec_count = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
 	{
+		if(spec_count >= MAX_SPECTATORS)
+			break;
 		WriteByte(MSG_ENTITY, num_for_edict(it));
+		++spec_count;
 	});
 }
 

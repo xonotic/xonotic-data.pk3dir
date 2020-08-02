@@ -474,11 +474,18 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		for(i = 0; i < MAX_SPECTATORS; ++i)
 			spectatorlist[i] = 0; // reset list first
 
-		for(i = 0; i < num_spectators; ++i)
+		int limit = min(num_spectators, MAX_SPECTATORS);
+		for(i = 0; i < limit; ++i)
 		{
 			slot = ReadByte();
 			spectatorlist[i] = slot - 1;
 		}
+	}
+	else
+	{
+		for(int j = 0; j < MAX_SPECTATORS; ++j)
+			spectatorlist[j] = 0; // reset list if showspectators has been turned off
+		num_spectators = 0;
 	}
 
 	return = true;
