@@ -35,7 +35,6 @@
     #include <server/items/spawning.qh>
     #include <server/autocvars.qh>
     #include <server/constants.qh>
-    #include <server/defs.qh>
     #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
     #include <server/mutators/_mod.qh>

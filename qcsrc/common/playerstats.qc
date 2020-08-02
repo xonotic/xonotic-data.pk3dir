@@ -7,7 +7,7 @@
     #include <common/weapons/_all.qh>
     #include <server/client.qh>
     #include "../server/anticheat.qh"
-    #include "../server/defs.qh"
+    #include <common/stats.qh>
     #include "../server/scores.qh"
 	#include <server/g_world.qh>
     #include "../server/weapons/accuracy.qh"

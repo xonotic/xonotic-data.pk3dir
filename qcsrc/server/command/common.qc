@@ -1,7 +1,8 @@
 #include "common.qh"
 
 #include <server/client.qh>
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/g_world.qh>
 #include <server/miscfunctions.qh>
 

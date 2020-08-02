@@ -1,6 +1,7 @@
 #include "sv_turrets.qh"
 #ifdef SVQC
 #include <server/autocvars.qh>
+#include <server/bot/api.qh>
 #include <server/g_damage.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/weaponsystem.qh>

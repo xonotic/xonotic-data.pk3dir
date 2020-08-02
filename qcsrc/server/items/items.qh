@@ -109,3 +109,6 @@ spawnfunc(target_items);
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 
 float GiveItems(entity e, float beginarg, float endarg);
+
+IntrusiveList g_items;
+STATIC_INIT(g_items) { g_items = IL_NEW(); }

@@ -356,6 +356,9 @@ void FixClientCvars(entity e);
 // called when a client connects, useful for updating sounds and such of static objects
 .void(entity this, entity player) init_for_player;
 
+IntrusiveList g_initforplayer;
+STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
+
 /// \brief Print the string to the client's chat.
 /// \param[in] client Client to print to.
 /// \param[in] text Text to print.

@@ -2,9 +2,12 @@
 
 #include "roles.qh"
 
+#include <server/bot/api.qh>
 #include <server/client.qh>
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/g_damage.qh>
+#include <server/items/items.qh>
 #include <server/miscfunctions.qh>
 #include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>

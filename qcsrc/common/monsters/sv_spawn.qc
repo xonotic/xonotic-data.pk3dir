@@ -6,7 +6,8 @@
     #include "all.qh"
     #include "sv_monsters.qh"
     #include <server/autocvars.qh>
-    #include <server/defs.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
     #include <server/weapons/common.qh>
 #endif
 entity spawnmonster (entity e, string monster, Monster monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)

@@ -10,7 +10,8 @@
 	#include <common/mapobjects/teleporters.qh>
 	#include <common/util.qh>
 	#include <server/constants.qh>
-	#include <server/defs.qh>
+	#include <common/weapons/_all.qh>
+	#include <common/stats.qh>
 	#include <server/utils.qh>
 #endif
 

@@ -4,7 +4,8 @@
 #include "g_world.qh"
 #include "miscfunctions.qh"
 #include "race.qh"
-#include "defs.qh"
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/teams.qh"

@@ -1,7 +1,8 @@
 #include "models.qh"
 
 #ifdef SVQC
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 #include <common/net_linked.qh>
 #include "subs.qh"

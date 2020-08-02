@@ -58,3 +58,6 @@ void ReadyCount();
 void ReadyRestart_force();
 void VoteCount(float first_count);
 void Nagger_Init();
+
+IntrusiveList g_saved_team;
+STATIC_INIT(g_saved_team) { g_saved_team = IL_NEW(); }

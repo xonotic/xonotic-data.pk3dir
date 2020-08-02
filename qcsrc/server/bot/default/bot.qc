@@ -17,7 +17,7 @@
 #include "../../campaign.qh"
 #include "../../client.qh"
 #include "../../constants.qh"
-#include "../../defs.qh"
+#include <common/stats.qh>
 #include <server/g_world.qh>
 #include <server/g_damage.qh>
 #include "../../race.qh"

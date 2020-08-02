@@ -22,3 +22,6 @@ USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector c
 .spawn_evalfunc_t spawn_evalfunc;
 
 .int restriction;
+
+IntrusiveList g_spawnpoints;
+STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }

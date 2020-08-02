@@ -13,6 +13,7 @@
 
 #include <server/mutators/_mod.qh>
 #include "weapons/csqcprojectile.qh"
+#include <server/weapons/common.qh>
 #include <server/compat/quake3.qh>
 
 #include "../common/constants.qh"

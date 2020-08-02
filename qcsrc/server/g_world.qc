@@ -22,6 +22,7 @@
 #include "spawnpoints.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
+#include <server/weapons/common.qh>
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/deathtypes/all.qh"

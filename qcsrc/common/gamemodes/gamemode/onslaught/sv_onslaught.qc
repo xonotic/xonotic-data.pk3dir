@@ -2,6 +2,7 @@
 #include "sv_controlpoint.qh"
 #include "sv_generator.qh"
 
+#include <server/bot/api.qh>
 #include <server/command/vote.qh>
 #include <server/g_damage.qh>
 #include <server/items/items.qh>

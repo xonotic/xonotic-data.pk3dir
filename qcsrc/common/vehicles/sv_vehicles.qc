@@ -1,5 +1,6 @@
 #include "sv_vehicles.qh"
 
+#include <server/bot/api.qh>
 #include <server/g_damage.qh>
 #include <server/g_world.qh>
 #include <server/items/items.qh>
@@ -1217,10 +1218,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		return false;
 
 	if(!this.tur_head)
-	{
 		info.vr_precache(info);
-		IL_PUSH(g_vehicles, this);
-	}
 
 	if(this.targetname && this.targetname != "")
 	{

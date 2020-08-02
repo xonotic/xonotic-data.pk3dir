@@ -5,6 +5,7 @@
 #include <server/g_world.qh>
 #include <server/gamelog.qh>
 #include <server/items/spawning.qh>
+#include <server/weapons/common.qh>
 #include <common/mapobjects/triggers.qh>
 
 float autocvar_g_cts_finish_kill_delay;

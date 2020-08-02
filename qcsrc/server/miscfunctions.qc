@@ -11,6 +11,7 @@
 #include "ipban.qh"
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
+#include <server/spawnpoints.qh>
 #include <server/sv_main.qh>
 #include "mapvoting.qh"
 #include "resources.qh"
@@ -31,6 +32,7 @@
 #include "../common/teams.qh"
 #include "../common/mapobjects/subs.qh"
 #include <common/mapobjects/trigger/hurt.qh>
+#include <common/mapobjects/target/location.qh>
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include <common/weapons/_all.qh>

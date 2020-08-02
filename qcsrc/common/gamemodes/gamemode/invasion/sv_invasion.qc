@@ -5,6 +5,7 @@
 #include <common/monsters/sv_spawner.qh>
 #include <common/monsters/sv_monsters.qh>
 
+#include <server/bot/api.qh>
 #include <server/g_world.qh>
 #include <server/teamplay.qh>
 

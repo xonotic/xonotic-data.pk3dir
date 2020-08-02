@@ -2,6 +2,7 @@
 
 #include <common/mapobjects/target/music.qh>
 #include <common/gamemodes/_mod.qh>
+#include <server/items/items.qh>
 #include <server/sv_main.qh>
 
 void buffs_DelayedInit(entity this);
