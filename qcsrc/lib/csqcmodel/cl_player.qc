@@ -238,6 +238,29 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 	return v;
 }
 
+// simplified copy of CSQCPlayer_ApplySmoothing for use on player models
+float mdl_stairsmoothz;
+float mdl_smooth_prevtime;
+vector CSQCModel_ApplyStairSmoothing(entity this, vector v)
+{
+	float smoothtime = bound(0, time - mdl_smooth_prevtime, 0.1);
+	mdl_smooth_prevtime = max(mdl_smooth_prevtime, drawtime); // drawtime is the previous frame's time at this point
+
+	if(this.csqcmodel_teleported || !(this.pmove_flags & PMF_ONGROUND) || autocvar_cl_stairsmoothspeed <= 0 || this.ground_networkentity)
+		mdl_stairsmoothz = v.z;
+	else
+	{
+		if(mdl_stairsmoothz < v.z)
+			v.z = mdl_stairsmoothz = bound(v.z - PHYS_STEPHEIGHT(this), mdl_stairsmoothz + smoothtime * autocvar_cl_stairsmoothspeed, v.z);
+		else if(mdl_stairsmoothz > v.z)
+			v.z = mdl_stairsmoothz = bound(v.z, mdl_stairsmoothz - smoothtime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
+	}
+
+	mdl_smooth_prevtime = time;
+
+	return v;
+}
+
 bool autocvar_v_deathtilt;
 float autocvar_v_deathtiltangle;
 void CSQCPlayer_ApplyDeathTilt(entity this)
@@ -574,6 +597,7 @@ void CSQCPlayer_SetCamera()
 		}
 
 		// relink
+		e.origin = CSQCModel_ApplyStairSmoothing(e, e.origin);
 		setorigin(e, e.origin);
 	}
 
