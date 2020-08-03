@@ -573,6 +573,7 @@ void HUD_StrafeHUD()
             }
         }
 
+        // experimental: slick detector
         slickdetector_height = panel_size.y * bound(0, autocvar_hud_panel_strafehud_slickdetector_height, 0.5);
         if(autocvar_hud_panel_strafehud_slickdetector_range > 0 && autocvar_hud_panel_strafehud_slickdetector_alpha > 0 && slickdetector_height > 0 && panel_size.x > 0) // dunno if slick detection works in spectate
         {
@@ -654,7 +655,7 @@ void HUD_StrafeHUD()
             startspeed = -1;
         }
 
-        // show height achieved by a single jump (doesn't work in low gravity)
+        // experimental: show height achieved by a single jump (doesn't work in low gravity and may not be 100% accurate)
         if(autocvar_hud_panel_strafehud_jumpheight_fade > 0)
         {
             float text_alpha = 0;
@@ -663,7 +664,7 @@ void HUD_StrafeHUD()
             float jumpspeed_current = strafeplayer.velocity.z;
             if(jumpspeed_prev <= jumpspeed_current || jumpheight_prev > jumpheight_current || IS_ONGROUND(strafeplayer) || swimming || IS_DEAD(strafeplayer) || spectating)
             {
-                // doesn't catch spectating if the player instantaneously unspectates, would require to create a hook to for that (kill without respawn time seems to work fine)
+                // tries to catch kill and spectate but those are not reliable, should just hook to kill/spectate/teleport and reset jump height there
                 jumprestart = true;
             }
             else
