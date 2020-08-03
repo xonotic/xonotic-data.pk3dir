@@ -239,24 +239,26 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 }
 
 // simplified copy of CSQCPlayer_ApplySmoothing for use on player models
-float mdl_stairsmoothz;
-float mdl_smooth_prevtime;
-vector CSQCModel_ApplyStairSmoothing(entity this, vector v)
+.float stairsmooth_offset;
+.float stairsmooth_prevtime;
+.float stairsmooth_drawtime; // holds the previous draw time
+vector CSQCModel_ApplyStairSmoothing(entity this, bool isonground, vector v)
 {
-	float smoothtime = bound(0, time - mdl_smooth_prevtime, 0.1);
-	mdl_smooth_prevtime = max(mdl_smooth_prevtime, drawtime); // drawtime is the previous frame's time at this point
+	float smoothtime = bound(0, time - this.stairsmooth_prevtime, 0.1);
+	this.stairsmooth_prevtime = max(this.stairsmooth_prevtime, this.stairsmooth_drawtime); // stairsmooth_drawtime is the previous frame's time at this point
 
-	if(this.csqcmodel_teleported || !(this.pmove_flags & PMF_ONGROUND) || autocvar_cl_stairsmoothspeed <= 0 || this.ground_networkentity)
-		mdl_stairsmoothz = v.z;
+	if(this.csqcmodel_teleported || !isonground || autocvar_cl_stairsmoothspeed <= 0 || this.ground_networkentity)
+		this.stairsmooth_offset = v.z;
 	else
 	{
-		if(mdl_stairsmoothz < v.z)
-			v.z = mdl_stairsmoothz = bound(v.z - PHYS_STEPHEIGHT(this), mdl_stairsmoothz + smoothtime * autocvar_cl_stairsmoothspeed, v.z);
-		else if(mdl_stairsmoothz > v.z)
-			v.z = mdl_stairsmoothz = bound(v.z, mdl_stairsmoothz - smoothtime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
+		if(this.stairsmooth_offset < v.z)
+			v.z = this.stairsmooth_offset = bound(v.z - PHYS_STEPHEIGHT(this), this.stairsmooth_offset + smoothtime * autocvar_cl_stairsmoothspeed, v.z);
+		else if(this.stairsmooth_offset > v.z)
+			v.z = this.stairsmooth_offset = bound(v.z, this.stairsmooth_offset - smoothtime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
 	}
 
-	mdl_smooth_prevtime = time;
+	this.stairsmooth_prevtime = time;
+	this.stairsmooth_drawtime = drawtime;
 
 	return v;
 }
@@ -597,7 +599,8 @@ void CSQCPlayer_SetCamera()
 		}
 
 		// relink
-		e.origin = CSQCModel_ApplyStairSmoothing(e, e.origin);
+		e.stairsmooth_drawtime = drawtime; // since drawtime is a frame old at this point, copy it now to avoid using a drawtime 2 frames old!
+		e.origin = CSQCModel_ApplyStairSmoothing(e, (e.pmove_flags & PMF_ONGROUND), e.origin);
 		setorigin(e, e.origin);
 	}
 
