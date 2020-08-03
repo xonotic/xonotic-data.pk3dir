@@ -10,8 +10,8 @@
 # Liang Liu <dxkliu@126.com>, 2019
 # Losier Blackheath <losier.cc@gmail.com>, 2018
 # sapphireliu <balancedliu@gmail.com>, 2014
-# 杜茂森 <dumaosen_main01@outlook.com>, 2018-2020
-# 杜茂森 <dumaosen_main01@outlook.com>, 2018
+# CodingJellyfish <dumaosen_main01@outlook.com>, 2018-2020
+# CodingJellyfish <dumaosen_main01@outlook.com>, 2018
 # 韬 刘 <jiegushijia@gmail.com>, 2019
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
 "PO-Revision-Date: 2020-07-25 11:27+0000\n"
-"Last-Translator: 杜茂森 <dumaosen_main01@outlook.com>\n"
+"Last-Translator: CodingJellyfish <dumaosen_main01@outlook.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
