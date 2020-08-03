@@ -45,8 +45,6 @@
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
 
-#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
-
 float autocvar_cl_viewmodel_scale;
 float autocvar_cl_viewmodel_alpha = 1;
 

@@ -11,7 +11,6 @@
     #include "../util.qh"
     #include <server/weapons/csqcprojectile.qh>
     #include <server/autocvars.qh>
-    #include <server/constants.qh>
     #include <common/weapons/_all.qh>
     #include <common/stats.qh>
     #include "../deathtypes/all.qh"

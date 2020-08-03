@@ -33,7 +33,6 @@
     #include <server/weapons/tracing.qh>
     #include <server/items/spawning.qh>
     #include <server/autocvars.qh>
-    #include <server/constants.qh>
     #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
     #include <server/mutators/_mod.qh>

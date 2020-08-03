@@ -280,10 +280,16 @@ bool independent_players;
 
 .float respawn_countdown; // next number to count
 
+const int RESPAWN_FORCE = BIT(0);
+const int RESPAWN_SILENT = BIT(1);
+const int RESPAWN_DENY = BIT(2);
+
 float blockSpectators; // if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; // point in time since the client is spectating or observing
 
 .bool player_blocked;
+
+const int SVC_SETVIEW = 5; // TODO: move to dpdefs where this belongs!
 
 // TODO: standardise resource regeneration
 .float pauseregen_finished;

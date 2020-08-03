@@ -1,5 +1,30 @@
 #pragma once
 
+const int FRAGS_PLAYER = 0;
+const int FRAGS_SPECTATOR = -666;
+const int FRAGS_PLAYER_OUT_OF_GAME = -616;
+
+///////////////////////////
+// cvar constants
+
+const int CVAR_SAVE = 1;
+const int CVAR_NOTIFY = 2;
+const int CVAR_READONLY = 4;
+
+// server flags
+const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
+const int SERVERFLAG_TEAMPLAY = 2;
+const int SERVERFLAG_PLAYERSTATS = 4;
+
+const int SPECIES_HUMAN = 0;
+const int SPECIES_ROBOT_SOLID = 1;
+const int SPECIES_ALIEN = 2;
+const int SPECIES_ANIMAL = 3;
+const int SPECIES_ROBOT_RUSTY = 4;
+const int SPECIES_ROBOT_SHINY = 5;
+const int SPECIES_RESERVED = 15;
+
+#ifdef GAMEQC
 const int RANKINGS_CNT = 99;
 
 ///////////////////////////
@@ -14,13 +39,6 @@ const int KEY_ATCK = BIT(6);
 const int KEY_ATCK2 = BIT(7);
 
 ///////////////////////////
-// cvar constants
-
-const int CVAR_SAVE = 1;
-const int CVAR_NOTIFY = 2;
-const int CVAR_READONLY = 4;
-
-///////////////////////////
 // csqc communication stuff
 
 const int HUD_NORMAL = 0;
@@ -29,23 +47,6 @@ const int HUD_BUMBLEBEE_GUN = 25;
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
 const int MAPVOTE_COUNT = 30;
-
-const int SPECIES_HUMAN = 0;
-const int SPECIES_ROBOT_SOLID = 1;
-const int SPECIES_ALIEN = 2;
-const int SPECIES_ANIMAL = 3;
-const int SPECIES_ROBOT_RUSTY = 4;
-const int SPECIES_ROBOT_SHINY = 5;
-const int SPECIES_RESERVED = 15;
-
-const int FRAGS_PLAYER = 0;
-const int FRAGS_SPECTATOR = -666;
-const int FRAGS_PLAYER_OUT_OF_GAME = -616;
-
-// server flags
-const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
-const int SERVERFLAG_TEAMPLAY = 2;
-const int SERVERFLAG_PLAYERSTATS = 4;
 
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';
@@ -82,3 +83,10 @@ const int FL_SPAWNING 				= BIT(16);
 const int FL_PICKUPITEMS 			= BIT(17);
 const int FL_DUCKED 				= BIT(18);
 const int FL_ONSLICK 				= BIT(19);
+#endif
+
+#if defined(SVQC)
+	#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT)
+#elif defined(CSQC)
+	#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
+#endif

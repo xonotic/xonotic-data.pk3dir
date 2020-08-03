@@ -3,7 +3,6 @@
 #include "antilag.qh"
 #include "command/common.qh"
 #include "client.qh"
-#include "constants.qh"
 #include "damage.qh"
 #include "hook.qh"
 #include "world.qh"

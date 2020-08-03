@@ -2,7 +2,7 @@
 
 #ifdef SVQC
     // For FL_POWERUP
-    #include <server/constants.qh>
+    #include <common/constants.qh>
 #endif
 
 #include "pickup.qh"
