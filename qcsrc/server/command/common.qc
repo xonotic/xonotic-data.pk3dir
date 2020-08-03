@@ -246,6 +246,7 @@ void timeout_handler_think(entity this)
 
 				// set the slowmo value to the timeout default slowmo value
 				cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
+				sound(NULL, CH_INFO, SND_TIMEOUT, VOL_BASE, ATTN_NONE);
 
 				// reset all the flood variables
 				FOREACH_CLIENT(true, {
@@ -678,7 +679,7 @@ void CommonCommand_timein(int request, entity caller)
 						{
 							timeout_time = autocvar_sv_timeout_resumetime;
 							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
-							bprint(strcat("^1Attention: ^7", GetCallerName(caller), " resumed the game! Prepare for battle!\n"));
+							bprint(strcat("\{1}^1Attention: ^7", GetCallerName(caller), " resumed the game! Prepare for battle!\n"));
 							return;
 						}
 
@@ -742,7 +743,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 				{
 					if (caller)   CS(caller).allowed_timeouts -= 1;
 					// write a bprint who started the timeout (and how many they have left)
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(CS(caller).allowed_timeouts), " timeout(s) left)") : ""), "!\n");
+					bprint("\{1}", GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(CS(caller).allowed_timeouts), " timeout(s) left)") : ""), "!\n");
 
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;
@@ -752,8 +753,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 					timeout_handler = spawn();
 					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
-
-					sound(NULL, CH_INFO, SND_TIMEOUT, VOL_BASE, ATTN_NONE);
+					
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TIMEOUT);
 				}
 			}
