@@ -210,8 +210,13 @@
     MSG_ANNCE_NOTIF(VOTE_FAIL,                  N__ALWAYS, "votefail",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	
 	MSG_ANNCE_NOTIF(LEAD_GAINED,                N__ALWAYS, "leadgained",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-	MSG_ANNCE_NOTIF(LEAD_LOST,                  N__ALWAYS, "leadlost",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-	MSG_ANNCE_NOTIF(LEAD_TIED,                  N__ALWAYS, "leadtied",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(LEAD_LOST,                  N__ALWAYS, "leadlost",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(LEAD_TIED,                  N__ALWAYS, "leadtied",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	
+	MSG_ANNCE_NOTIF(SCORES_RED,                 N__ALWAYS, "scoresred",         CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(SCORES_BLUE,                N__ALWAYS, "scoresblue",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(SCORES_YELLOW,              N__ALWAYS, "scoresyellow",      CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(SCORES_PINK,                N__ALWAYS, "scorespink",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 
 #undef N___NEVER
 #undef N_GNTLOFF
