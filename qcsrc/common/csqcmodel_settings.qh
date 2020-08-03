@@ -21,6 +21,10 @@
 
 # define ALPHA m_alpha
 .float m_alpha;
+
+# define GROUNDENTITY_NAME ground_networkentity
+# define GROUNDENTITY_TYPE float
+.float ground_networkentity;
 #else
 # define TAG_ENTITY_NAME tag_entity
 # define TAG_ENTITY_TYPE entity
@@ -29,6 +33,9 @@
 # define TAG_VIEWLOC_TYPE entity
 
 # define ALPHA alpha
+
+# define GROUNDENTITY_NAME groundentity
+# define GROUNDENTITY_TYPE entity
 #endif
 
 // add properties you want networked to CSQC here
@@ -66,6 +73,9 @@
 	CSQCMODEL_PROPERTY(BIT(14), TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) \
 	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, multijump_count) \
 	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, move_movetype) \
+	CSQCMODEL_IF(isplayer) \
+		CSQCMODEL_PROPERTY(BIT(17), GROUNDENTITY_TYPE, ReadShort, WriteEntity, GROUNDENTITY_NAME) \
+	CSQCMODEL_ENDIF \
 	CSQCMODEL_PROPERTY(BIT(17), int, ReadByte, WriteByte, clipgroup)
 // TODO get rid of colormod/glowmod here; also get rid of some useless properties on non-players that only exist for CopyBody
 
