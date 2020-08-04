@@ -6,6 +6,7 @@
 # Antoni Das <Antonidas159@gmail.com>, 2015
 # Antoni Das <Antonidas159@gmail.com>, 2015,2017
 # sapphireliu <balancedliu@gmail.com>, 2014
+# CodingJellyfish <dumaosen_main01@outlook.com>, 2018
 # kalawore <kalawore@outlook.com>, 2015
 # Liang Liu <dxkliu@126.com>, 2019
 # Losier Blackheath <losier.cc@gmail.com>, 2018
