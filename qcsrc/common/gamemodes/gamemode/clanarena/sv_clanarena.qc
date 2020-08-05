@@ -405,12 +405,6 @@ MUTATOR_HOOKFUNCTION(ca, PlayerRegen)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
-{
-	// announce remaining frags
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 {
 	entity client = M_ARGV(0, entity);
