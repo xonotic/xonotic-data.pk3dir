@@ -610,7 +610,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 	}
 }
 
-Gametype MapInfo_Type_FromString(string gtype, bool dowarn)
+Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 {
 	string replacement = "";
 	bool do_warn = true;
@@ -628,6 +628,7 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn)
 		case "oneflag":   replacement = "ctf"; do_warn = false; break;
 		case "team": 	  replacement = "tdm"; do_warn = false; break;
 		case "tourney":   replacement = "duel"; do_warn = false; break;
+		case "arena":     if(is_q3compat) { replacement = "ca"; do_warn = false; } break;
 	}
 	if (replacement != "")
 	{
@@ -900,7 +901,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			// type in quake 3 holds all the supported gametypes, so we must loop through all of them
 			FOREACH_WORD(s, true,
 			{
-				Gametype f = MapInfo_Type_FromString(it, false);
+				Gametype f = MapInfo_Type_FromString(it, false, true);
 				if(f)
 					stored_supportedGametypes |= f.m_flags;
 			});
@@ -1155,7 +1156,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(t == "type")
 		{
 			t = car(s); s = cdr(s);
-			Gametype f = MapInfo_Type_FromString(t, true);
+			Gametype f = MapInfo_Type_FromString(t, true, false);
 			//if(WARN_COND)
 				//LOG_WARN("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.");
 			if(f)
@@ -1166,7 +1167,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(t == "gametype")
 		{
 			t = car(s); s = cdr(s);
-			Gametype f = MapInfo_Type_FromString(t, true);
+			Gametype f = MapInfo_Type_FromString(t, true, false);
 			if(f)
 				_MapInfo_Map_ApplyGametypeEx (s, pGametypeToSet, f);
 			else if(WARN_COND)
@@ -1217,7 +1218,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			t = car(s); s = cdr(s);
 			bool all = t == "all";
 			Gametype f = NULL;
-			if(all || (f = MapInfo_Type_FromString(t, true)))
+			if(all || (f = MapInfo_Type_FromString(t, true, false)))
 			{
 				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
 				{
@@ -1234,7 +1235,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			t = car(s); s = cdr(s);
 			bool all = t == "all";
 			Gametype f = NULL;
-			if(all || (f = MapInfo_Type_FromString(t, true)))
+			if(all || (f = MapInfo_Type_FromString(t, true, false)))
 			{
 				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
 				{
@@ -1383,7 +1384,7 @@ int MapInfo_CurrentFeatures()
 
 Gametype MapInfo_CurrentGametype()
 {
-	Gametype prev = MapInfo_Type_FromString(cvar_string("gamecfg"), false);
+	Gametype prev = MapInfo_Type_FromString(cvar_string("gamecfg"), false, false);
 	FOREACH(Gametypes, cvar(it.netname) && it != prev, return it);
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }

@@ -49,10 +49,10 @@ entity mapvote_ent;
  */
 Gametype GameTypeVote_Type_FromString(string type_name)
 {
-	Gametype type = MapInfo_Type_FromString(type_name, false);
+	Gametype type = MapInfo_Type_FromString(type_name, false, false);
 	if (type == NULL)
 		type = MapInfo_Type_FromString(cvar_string(
-			strcat("sv_vote_gametype_",type_name,"_type")), false);
+			strcat("sv_vote_gametype_",type_name,"_type")), false, false);
 	return type;
 }
 
@@ -60,11 +60,11 @@ int GameTypeVote_AvailabilityStatus(string type_name)
 {
 	int flag = GTV_FORBIDDEN;
 
-	Gametype type = MapInfo_Type_FromString(type_name, false);
+	Gametype type = MapInfo_Type_FromString(type_name, false, false);
 	if ( type == NULL )
 	{
 		type = MapInfo_Type_FromString(cvar_string(
-			strcat("sv_vote_gametype_",type_name,"_type")), false);
+			strcat("sv_vote_gametype_",type_name,"_type")), false, false);
 		flag |= GTV_CUSTOM;
 	}
 
