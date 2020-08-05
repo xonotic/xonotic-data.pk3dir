@@ -2,7 +2,7 @@
 
 #ifdef SVQC
     // For FL_POWERUP
-    #include <server/constants.qh>
+    #include <common/constants.qh>
 #endif
 
 #include "pickup.qh"
@@ -45,7 +45,9 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_color            =   '0 0 1';
     this.m_waypoint         =   _("Strength");
     this.m_waypointblink    =   2;
+#ifdef GAMEQC
     this.m_itemid           =   IT_STRENGTH;
+#endif
 #ifdef SVQC
     this.m_iteminit         =   powerup_strength_init;
 #endif
@@ -81,7 +83,9 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_color            =   '1 0 1';
     this.m_waypoint         =   _("Shield");
     this.m_waypointblink    =   2;
+#ifdef GAMEQC
     this.m_itemid           =   IT_INVINCIBLE;
+#endif
 #ifdef SVQC
     this.m_iteminit         =   powerup_shield_init;
 #endif

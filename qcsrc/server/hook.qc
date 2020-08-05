@@ -1,6 +1,9 @@
-#include "g_hook.qh"
+#include "hook.qh"
 
-#include <server/defs.qh>
+#include <server/bot/api.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/damage.qh>
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include "weapons/common.qh"
@@ -10,6 +13,7 @@
 #include "weapons/tracing.qh"
 #include "player.qh"
 #include "command/common.qh"
+#include "command/vote.qh"
 #include "round_handler.qh"
 #include "../common/state.qh"
 #include "../common/physics/player.qh"

@@ -57,6 +57,7 @@ STATIC_INIT(main)
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
+.float renderflags; // engine field
 
 bool button_zoom;
 bool spectatorbutton_zoom;
@@ -114,3 +115,35 @@ int framecount;
 
 float GetSpeedUnitFactor(int speed_unit);
 string GetSpeedUnit(int speed_unit);
+
+.int enttype; // entity type sent from server
+.int sv_entnum; // entity number sent from server
+
+.int team;
+.int team_size;
+
+int binddb;
+
+// Spectating
+// -1 - observing
+// 0 - playing
+// >0 - id of spectated player
+float spectatee_status;
+float spectatee_status_changed_time;
+
+#define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
+
+// short mapname
+string shortmapname;
+
+// database for misc stuff
+int tempdb;
+int ClientProgsDB;
+vector hook_shotorigin[4]; // WEAPONTODO
+vector lightning_shotorigin[4]; // TODO: unused
+
+float serverprevtime, serverdeltatime;
+
+float ticrate;
+
+int serverflags;

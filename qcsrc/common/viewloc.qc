@@ -2,11 +2,12 @@
 #include "util.qh"
 
 #if defined(CSQC)
-    #include "../client/defs.qh"
+    #include <client/main.qh>
     #include "constants.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../server/defs.qh"
+	#include <common/weapons/_all.qh>
+	#include <common/stats.qh>
 #endif
 
 // client movement

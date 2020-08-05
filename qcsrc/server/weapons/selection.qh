@@ -1,7 +1,12 @@
 #pragma once
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
+
+.int selectweapon; // last selected weapon of the player
+
+.WepSet dual_weapons;
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);

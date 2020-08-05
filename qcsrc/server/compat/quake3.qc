@@ -1,11 +1,13 @@
 #include "quake3.qh"
 
-#include <server/defs.qh>
+#include <server/client.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
-#include <server/items.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
 #include <server/resources.qh>
 #include <common/gamemodes/_mod.qh>
-#include <common/t_items.qh>
 #include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mapobjects/trigger/counter.qh>
@@ -249,9 +251,9 @@ spawnfunc(target_fragsFilter)
 //spawnfunc(item_doubler)        /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
-//spawnfunc(item_health_large) /* handled in t_items.qc */
-//spawnfunc(item_health_small) /* handled in t_items.qc */
-//spawnfunc(item_health_mega)  /* handled in t_items.qc */
+//spawnfunc(item_health_large) /* handled in items.qc */
+//spawnfunc(item_health_small) /* handled in items.qc */
+//spawnfunc(item_health_mega)  /* handled in items.qc */
 //spawnfunc(item_invis)        /* handled by buffs mutator */
 //spawnfunc(item_regen)        /* handled by buffs mutator */
 

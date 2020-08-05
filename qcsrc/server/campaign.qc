@@ -1,10 +1,11 @@
 #include "campaign.qh"
 
-#include "defs.qh"
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 
 #include "cheats.qh"
 #include "miscfunctions.qh"
-#include "g_world.qh"
+#include "world.qh"
 
 #include "../common/campaign_common.qh"
 

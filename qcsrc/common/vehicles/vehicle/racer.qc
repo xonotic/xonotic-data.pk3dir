@@ -1,5 +1,9 @@
 #include "racer.qh"
 
+#if defined(SVQC)
+	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#endif
+
 #ifdef GAMEQC
 
 #ifdef SVQC
@@ -78,6 +82,7 @@ float autocvar_g_vehicle_racer_bouncestop = 0;
 vector autocvar_g_vehicle_racer_bouncepain = '200 0.15 150';
 
 .float racer_watertime;
+.float racer_air_finished; // TODO: use a standard air meter for entities
 
 var .vector(entity this, string tag_name, float spring_length, float max_power) racer_force_from_tag;
 
@@ -111,7 +116,7 @@ void racer_align4point(entity this, entity player, float _delta)
 	{
 		uforce = autocvar_g_vehicle_racer_water_upforcedamper;
 
-		if(PHYS_INPUT_BUTTON_CROUCH(player) && time < this.air_finished)
+		if(PHYS_INPUT_BUTTON_CROUCH(player) && time < this.racer_air_finished)
 			this.velocity_z += 30;
 		else
 			this.velocity_z += 200;
@@ -163,9 +168,9 @@ bool racer_frame(entity this, float dt)
 
 	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(vehic.origin));
 	if(!(cont & DPCONTENTS_WATER))
-		vehic.air_finished = 0;
-	else if (!vehic.air_finished)
-		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
+		vehic.racer_air_finished = 0;
+	else if (!vehic.racer_air_finished)
+		vehic.racer_air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(IS_DEAD(vehic))
 	{

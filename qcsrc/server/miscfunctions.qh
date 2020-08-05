@@ -1,9 +1,11 @@
 #pragma once
 
-#include <server/defs.qh>
-#include <server/g_world.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/client.qh>
+#include <server/world.qh>
 
-#include <common/t_items.qh>
+#include <server/items/items.qh>
 
 #include <server/mutators/_mod.qh>
 
@@ -197,6 +199,19 @@ void readplayerstartcvars();
 
 float sv_autotaunt;
 float sv_taunt;
+
+float g_footsteps, g_grappling_hook;
+float g_warmup_allguns;
+float g_warmup_allow_timeout;
+float warmup_stage;
+float g_jetpack;
+
+bool sv_ready_restart;
+bool sv_ready_restart_after_countdown;
+bool sv_ready_restart_repeatable;
+
+float sv_clones;
+float sv_foginterval;
 
 void readlevelcvars()
 {

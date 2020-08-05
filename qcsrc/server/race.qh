@@ -1,5 +1,7 @@
 #pragma once
 
+.string stored_netname; // TODO: store this information independently of race-based gamemodes
+
 float race_teams;
 
 // scores

@@ -1,6 +1,6 @@
 #include "main.qh"
 
-#include "defs.qh"
+#include <client/items/items.qh>
 #include <common/ent_cs.qh>
 #include "miscfunctions.qh"
 #include <common/effects/effect.qh>
@@ -8,7 +8,7 @@
 #include <common/effects/all.qh>
 #include <common/effects/all.inc>
 #include "hud/_mod.qh"
-#include "commands/cl_cmd.qh"
+#include "command/cl_cmd.qh"
 #include "mapvoting.qh"
 #include <client/mutators/_mod.qh>
 #include "hud/panel/centerprint.qh"
@@ -16,10 +16,10 @@
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
 #include "view.qh"
-#include <common/t_items.qh>
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
+#include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
@@ -474,11 +474,18 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		for(i = 0; i < MAX_SPECTATORS; ++i)
 			spectatorlist[i] = 0; // reset list first
 
-		for(i = 0; i < num_spectators; ++i)
+		int limit = min(num_spectators, MAX_SPECTATORS);
+		for(i = 0; i < limit; ++i)
 		{
 			slot = ReadByte();
 			spectatorlist[i] = slot - 1;
 		}
+	}
+	else
+	{
+		for(int j = 0; j < MAX_SPECTATORS; ++j)
+			spectatorlist[j] = 0; // reset list if showspectators has been turned off
+		num_spectators = 0;
 	}
 
 	return = true;

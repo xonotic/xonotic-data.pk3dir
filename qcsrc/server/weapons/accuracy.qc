@@ -1,8 +1,11 @@
 #include "accuracy.qh"
 
+#include <server/client.qh>
 #include <server/mutators/_mod.qh>
+#include <server/damage.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <server/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>

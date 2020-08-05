@@ -4,7 +4,8 @@
 
 #if defined(SVQC)
     #include "util.qh"
-    #include "../server/defs.qh"
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
 #endif
 
 bool monsters_animoverride(entity this)

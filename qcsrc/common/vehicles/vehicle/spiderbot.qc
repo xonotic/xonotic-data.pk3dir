@@ -1,5 +1,9 @@
 #include "spiderbot.qh"
 
+#if defined(SVQC)
+	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#endif
+
 #ifdef GAMEQC
 
 const int SBRM_FIRST = 1;

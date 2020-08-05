@@ -1,23 +1,16 @@
 #include "models.qh"
 
 #ifdef SVQC
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 #include <common/net_linked.qh>
 #include "subs.qh"
 #include "triggers.qh"
-
-entityclass(BGMScript);
-classfield(BGMScript) .string bgmscript;
-classfield(BGMScript) .float bgmscriptattack;
-classfield(BGMScript) .float bgmscriptdecay;
-classfield(BGMScript) .float bgmscriptsustain;
-classfield(BGMScript) .float bgmscriptrelease;
+#include "bgmscript.qh"
 
 #include <common/constants.qh>
-#include "../../lib/csqcmodel/sv_model.qh"
-
-.float modelscale;
+#include <lib/csqcmodel/sv_model.qh>
 
 void g_model_setcolormaptoactivator(entity this, entity actor, entity trigger)
 {
@@ -117,11 +110,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(sf & BIT(2))
 	{
 		if(sf & 0x10)
-		{
-			WriteAngle(MSG_ENTITY, this.angles.x);
-			WriteAngle(MSG_ENTITY, this.angles.y);
-			WriteAngle(MSG_ENTITY, this.angles.z);
-		}
+			WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
 	if(sf & BIT(3))
@@ -342,11 +331,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 	if(f & 4)
 	{
 		if(f & 0x10)
-		{
-			this.angles_x = ReadAngle();
-			this.angles_y = ReadAngle();
-			this.angles_z = ReadAngle();
-		}
+			this.angles = ReadAngleVector();
 		else
 			this.angles = '0 0 0';
 	}

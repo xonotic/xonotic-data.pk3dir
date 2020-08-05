@@ -504,7 +504,7 @@ int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
 			return this.dphitcontentsmask;
 		else if(this.solid == SOLID_SLIDEBOX)
 		{
-			if(this.flags & 32) // TODO: FL_MONSTER
+			if(this.flags & FL_MONSTER)
 				return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP;
 			else
 				return DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
@@ -755,12 +755,24 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient)  // to be run every move frame
 {
+	bool didmove = (this.move_time != 0);
 	this.move_time = time;
 
 	if(isclient)
 		_Movetype_Physics_ClientFrame(this, movedt);
 	else
+	{
+		// this doesn't apply to clients, and only applies to unmatched entities
+		// don't run think/move on newly spawned projectiles as it messes up
+		// movement interpolation and rocket trails, and is inconsistent with
+		// respect to entities spawned in the same frame
+		// (if an ent spawns a higher numbered ent, it moves in the same frame,
+		//  but if it spawns a lower numbered ent, it doesn't - this never moves
+		//  ents in the first frame regardless)
+		if(!didmove && GAMEPLAYFIX_DELAYPROJECTILES(this) > 0)
+			return;
 		_Movetype_Physics_Frame(this, movedt);
+	}
 	if(wasfreed(this))
 		return;
 

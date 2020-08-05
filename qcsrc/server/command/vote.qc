@@ -1,6 +1,8 @@
 #include "vote.qh"
 
-#include <server/defs.qh>
+#include <server/client.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/gamelog.qh>
 #include <server/miscfunctions.qh>
 
@@ -9,8 +11,8 @@
 
 #include "common.qh"
 
-#include "../g_damage.qh"
-#include "../g_world.qh"
+#include "../damage.qh"
+#include "../world.qh"
 #include "../teamplay.qh"
 #include "../race.qh"
 #include "../round_handler.qh"

@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef SVQC
-spawnfunc(trigger_counter);
+void counter_reset(entity this);
 
 .float counter_cnt;
 

@@ -67,6 +67,8 @@ const float VHSF_FACTORY = 2;
 
 .float dmg_time;
 
+.float pain_frame;
+
 .float play_time;
 
 .int volly_counter;

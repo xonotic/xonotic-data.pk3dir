@@ -11,7 +11,8 @@
 #include <client/teamradar.qh>
 #include <client/view.qh>
 
-#include <client/commands/_mod.qh>
+#include <client/command/_mod.qh>
 #include <client/hud/_mod.qh>
+#include <client/items/_mod.qh>
 #include <client/mutators/_mod.qh>
 #include <client/weapons/_mod.qh>
