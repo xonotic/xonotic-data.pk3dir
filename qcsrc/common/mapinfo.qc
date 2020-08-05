@@ -626,7 +626,6 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 		case "ffa": 	  replacement = "dm"; do_warn = false; break;
 		case "cctf":
 		case "oneflag":   replacement = "ctf"; do_warn = false; break;
-		case "team": 	  replacement = "tdm"; do_warn = false; break;
 		case "tourney":   replacement = "duel"; do_warn = false; break;
 		case "arena":     if(is_q3compat) { replacement = "ca"; do_warn = false; } break;
 	}
@@ -899,7 +898,8 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			// if there is a valid gametype in this .arena file, include it in the menu
 			stored_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			// type in quake 3 holds all the supported gametypes, so we must loop through all of them
-			FOREACH_WORD(s, true,
+			string types = strreplace("team", "tdm ft", s); // TODO: handle support here better to include more Xonotic teamplay modes
+			FOREACH_WORD(types, true,
 			{
 				Gametype f = MapInfo_Type_FromString(it, false, true);
 				if(f)
