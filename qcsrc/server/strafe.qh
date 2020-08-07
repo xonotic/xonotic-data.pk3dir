@@ -1,0 +1,3 @@
+#pragma once
+
+void calculate_strafe_efficiency(entity, vector);
