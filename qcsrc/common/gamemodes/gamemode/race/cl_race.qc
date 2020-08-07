@@ -153,6 +153,11 @@ MUTATOR_HOOKFUNCTION(cl_race, HUD_Physics_showoptional)
 	return ISGAMETYPE(RACE); // show the optional physics panel
 }
 
+MUTATOR_HOOKFUNCTION(cl_race, HUD_StrafeHUD_showoptional)
+{
+	return ISGAMETYPE(RACE); // show the optional strafehud
+}
+
 MUTATOR_HOOKFUNCTION(cl_race, HUD_Score_show)
 {
 	return spectatee_status == -1 && ISGAMETYPE(RACE); // hide the score panel while observing
