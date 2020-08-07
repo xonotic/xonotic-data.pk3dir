@@ -50,7 +50,6 @@ void cts_ScoreRules()
     GameRules_score_enabled(false);
     GameRules_scoring(0, 0, 0, {
         if (g_race_qualifying) {
-            field(SP_CTS_STRAFE, "strafe", 0);
             field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
         } else {
             field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
@@ -135,7 +134,6 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 				CS(player).movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-	calculate_strafe_efficiency(player, CS(player).movement);
 }
 
 MUTATOR_HOOKFUNCTION(cts, reset_map_global)
@@ -148,9 +146,6 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 	PlayerScore_Sort(race_place, 0, 1, 0);
 
 	FOREACH_CLIENT(true, {
-		it.strafe_efficiency_best = -2;
-		PlayerScore_Set(it, SP_CTS_STRAFE, it.strafe_efficiency_best * 10000);
-
 		if(it.race_place)
 		{
 			s = GameRules_scoring_add(it, RACE_FASTEST, 0);
@@ -197,10 +192,6 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 		{
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}
-
-		player.strafe_efficiency_average = player.strafe_efficiency_tics = 0;
-		player.strafe_efficiency_best = -2;
-		PlayerScore_Set(player, SP_CTS_STRAFE, player.strafe_efficiency_best * 10000);
 	}
 }
 
@@ -215,6 +206,7 @@ MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
 MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
+
 	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	else
@@ -262,8 +254,6 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
-
-	frag_target.strafe_efficiency_average = frag_target.strafe_efficiency_tics = 0;
 
 	if(autocvar_g_cts_removeprojectiles)
 	{
@@ -390,13 +380,6 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 {
 	entity player = M_ARGV(0, entity);
-	float strafe_efficiency_current = player.strafe_efficiency_average / player.strafe_efficiency_tics;
-
-	if(player.strafe_efficiency_best < strafe_efficiency_current)
-	{
-		player.strafe_efficiency_best = strafe_efficiency_current;
-		PlayerScore_Set(player, SP_CTS_STRAFE, player.strafe_efficiency_best * 10000);
-	}
 
 	// useful to prevent cheating by running back to the start line and starting out with more speed
 	if(autocvar_g_cts_finish_kill_delay)

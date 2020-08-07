@@ -24,7 +24,6 @@
 #include <server/scores_rules.qc>
 #include <server/spawnpoints.qc>
 #include <server/steerlib.qc>
-#include <server/strafe.qc>
 #ifdef SVQC
     #include <server/sv_main.qc>
 #endif
