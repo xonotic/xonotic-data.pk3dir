@@ -565,7 +565,7 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	int fr = ReadByte();
+	WFRAME fr = ReadByte();
 	float t = ReadFloat();
     int slot = ReadByte();
 	bool restartanim = ReadByte();
