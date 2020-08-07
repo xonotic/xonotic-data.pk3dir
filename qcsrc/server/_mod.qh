@@ -6,10 +6,9 @@
 #include <server/client.qh>
 #include <server/clientkill.qh>
 #include <server/damage.qh>
-#include <server/hook.qh>
-#include <server/world.qh>
 #include <server/gamelog.qh>
 #include <server/handicap.qh>
+#include <server/hook.qh>
 #include <server/impulse.qh>
 #include <server/ipban.qh>
 #include <server/main.qh>
@@ -27,6 +26,7 @@
 #include <server/steerlib.qh>
 #include <server/teamplay.qh>
 #include <server/tests.qh>
+#include <server/world.qh>
 
 #include <server/bot/_mod.qh>
 #include <server/command/_mod.qh>
