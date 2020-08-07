@@ -220,6 +220,7 @@ MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
 MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
+
 	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	else
