@@ -1,5 +1,7 @@
 #include "sv_spawn_near_teammate.qh"
 
+#include <common/mapobjects/trigger/hurt.qh>
+
 #include <lib/float.qh>
 
 string autocvar_g_spawn_near_teammate;

@@ -4,6 +4,7 @@
 #include "miscfunctions.qh"
 #include "announcer.qh"
 #include "hud/_mod.qh"
+#include "main.qh"
 #include "mapvoting.qh"
 #include "shownames.qh"
 #include "hud/panel/scoreboard.qh"
@@ -43,8 +44,6 @@
 
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
-
-#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
 
 float autocvar_cl_viewmodel_scale;
 float autocvar_cl_viewmodel_alpha = 1;
@@ -953,7 +952,7 @@ void HUD_Draw(entity this)
 	if(autocvar_r_letterbox == 0)
 		if(autocvar_viewsize < 120)
 		{
-			if(!(ISGAMETYPE(RACE) || ISGAMETYPE(CTS)))
+			if(!MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
 				Accuracy_LoadLevels();
 
 			HUD_Main();

@@ -3,14 +3,19 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
 #include <server/cheats.qh>
 #include <server/resources.qh>
-#include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
+#include <common/items/_mod.qh>
 #include <common/net_linked.qh>
+#include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>

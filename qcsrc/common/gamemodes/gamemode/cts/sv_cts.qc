@@ -1,7 +1,12 @@
 #include "sv_cts.qh"
 
+#include <server/client.qh>
 #include <server/race.qh>
-#include <server/items.qh>
+#include <server/world.qh>
+#include <server/gamelog.qh>
+#include <server/items/spawning.qh>
+#include <server/weapons/common.qh>
+#include <common/mapobjects/triggers.qh>
 
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;

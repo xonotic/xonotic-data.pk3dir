@@ -2,7 +2,11 @@
 
 #include "antilag.qh"
 #include "autocvars.qh"
-#include "defs.qh"
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/client.qh>
+#include <server/gamelog.qh>
+#include <server/main.qh>
 #include "miscfunctions.qh"
 
 #include "command/common.qh"

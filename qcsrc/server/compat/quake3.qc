@@ -1,10 +1,14 @@
 #include "quake3.qh"
 
-#include <server/defs.qh>
+#include <server/client.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
-#include <server/items.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
 #include <server/resources.qh>
-#include <common/t_items.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
@@ -247,9 +251,9 @@ spawnfunc(target_fragsFilter)
 //spawnfunc(item_doubler)        /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
-//spawnfunc(item_health_large) /* handled in t_items.qc */
-//spawnfunc(item_health_small) /* handled in t_items.qc */
-//spawnfunc(item_health_mega)  /* handled in t_items.qc */
+//spawnfunc(item_health_large) /* handled in items.qc */
+//spawnfunc(item_health_small) /* handled in items.qc */
+//spawnfunc(item_health_mega)  /* handled in items.qc */
 //spawnfunc(item_invis)        /* handled by buffs mutator */
 //spawnfunc(item_regen)        /* handled by buffs mutator */
 
@@ -294,11 +298,13 @@ bool DoesQ3ARemoveThisEntity(entity this)
 			gametypename = "team";
 		if(g_ctf)
 			gametypename = "ctf";
+		if(g_ctf && ctf_oneflag)
+			gametypename = "oneflag";
 		if(g_duel)
 			gametypename = "tournament";
 		if(maxclients == 1)
 			gametypename = "single";
-		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
+		// we do not have the other types (obelisk, harvester, teamtournament)
 		if(strstrofs(this.gametype, gametypename, 0) < 0)
 			return true;
 	}

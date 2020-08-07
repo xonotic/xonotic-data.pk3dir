@@ -2,6 +2,8 @@
 
 #include "ctf.qh"
 
+#include <common/gamemodes/sv_rules.qh>
+
 void ctf_Initialize();
 
 REGISTER_MUTATOR(ctf, false)
@@ -72,6 +74,9 @@ const float VEHICLE_FLAG_SCALE = 1.0;
 .float score_pickup;
 .float score_return;
 .float score_team_capture; // shouldn't be too high
+
+// property set on objects to point to the flag they're carrying (if any)
+.entity flagcarried;
 
 // effects
 .string toucheffect;

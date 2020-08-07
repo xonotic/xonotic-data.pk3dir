@@ -6,20 +6,21 @@
 # Antoni Das <Antonidas159@gmail.com>, 2015
 # Antoni Das <Antonidas159@gmail.com>, 2015,2017
 # sapphireliu <balancedliu@gmail.com>, 2014
+# CodingJellyfish <dumaosen_main01@outlook.com>, 2018
 # kalawore <kalawore@outlook.com>, 2015
 # Liang Liu <dxkliu@126.com>, 2019
 # Losier Blackheath <losier.cc@gmail.com>, 2018
 # sapphireliu <balancedliu@gmail.com>, 2014
-# 杜茂森 <dumaosen_main01@outlook.com>, 2018-2019
-# 杜茂森 <dumaosen_main01@outlook.com>, 2018
+# CodingJellyfish <dumaosen_main01@outlook.com>, 2018-2020
+# CodingJellyfish <dumaosen_main01@outlook.com>, 2018
 # 韬 刘 <jiegushijia@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-07 07:23+0200\n"
-"PO-Revision-Date: 2020-06-07 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-07-25 11:27+0000\n"
+"Last-Translator: CodingJellyfish <dumaosen_main01@outlook.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -796,7 +797,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "Player rank"
-msgstr ""
+msgstr "玩家排名"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^rank"
@@ -820,7 +821,7 @@ msgstr "SCO^重生数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Number of rounds won"
-msgstr ""
+msgstr "赢得场数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^rounds won"
@@ -1202,23 +1203,23 @@ msgstr "偷球者"
 
 #: qcsrc/common/items/item/ammo.qh:66
 msgid "bullets"
-msgstr ""
+msgstr "子弹"
 
 #: qcsrc/common/items/item/ammo.qh:96
 msgid "cells"
-msgstr ""
+msgstr "细胞"
 
 #: qcsrc/common/items/item/ammo.qh:126
 msgid "plasma"
-msgstr ""
+msgstr "等离子"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "rockets"
-msgstr ""
+msgstr "火箭"
 
 #: qcsrc/common/items/item/ammo.qh:190
 msgid "shells"
-msgstr ""
+msgstr "装甲"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
@@ -1256,11 +1257,11 @@ msgstr "超级血包"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:91
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:215
 msgid "Jetpack"
-msgstr ""
+msgstr "火箭包"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "fuel"
-msgstr ""
+msgstr "燃料"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -1504,7 +1505,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "推土机"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1092
 #: qcsrc/common/minigames/minigame/ps.qc:421
@@ -1700,7 +1701,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "井字棋"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:672
 msgid "Single Player"
@@ -1860,11 +1861,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:26
 msgid "Ice grenade"
-msgstr ""
+msgstr "冰榴弹"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:34
 msgid "Translocate grenade"
-msgstr ""
+msgstr "穿越榴弹"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:42
 msgid "Spawn grenade"

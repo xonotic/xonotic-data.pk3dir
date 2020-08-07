@@ -2,6 +2,7 @@
 
 #include "autocvars.qh"
 #include "hud/_mod.qh"
+#include <client/main.qh>
 
 #include <common/mutators/mutator/waypoints/all.qh>
 

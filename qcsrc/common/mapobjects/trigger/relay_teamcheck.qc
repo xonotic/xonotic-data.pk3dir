@@ -1,4 +1,5 @@
 #include "relay_teamcheck.qh"
+
 #ifdef SVQC
 void trigger_relay_teamcheck_use(entity this, entity actor, entity trigger)
 {

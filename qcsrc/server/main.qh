@@ -1,0 +1,28 @@
+#pragma once
+
+bool expr_evaluate(string s);
+
+#ifdef PROFILING
+float client_cefc_accumulator;
+float client_cefc_accumulatortime;
+#endif
+
+float servertime, serverprevtime, serverframetime;
+
+.vector oldvelocity; // for fall damage
+
+.float watersound_finished;
+
+.bool iscreature;
+.float species;
+
+.float contents_damagetime;
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main ();

@@ -29,4 +29,9 @@ var void delete_fn(entity e);
 #undef IT_SUIT
 #undef IT_QUAD
 
+#undef STATE_TOP
+#undef STATE_BOTTOM
+#undef STATE_UP
+#undef STATE_DOWN
+
 #pragma noref 0

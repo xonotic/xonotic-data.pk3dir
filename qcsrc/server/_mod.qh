@@ -5,13 +5,14 @@
 #include <server/cheats.qh>
 #include <server/client.qh>
 #include <server/clientkill.qh>
-#include <server/g_damage.qh>
-#include <server/g_hook.qh>
-#include <server/g_world.qh>
+#include <server/damage.qh>
+#include <server/hook.qh>
+#include <server/world.qh>
+#include <server/gamelog.qh>
 #include <server/handicap.qh>
 #include <server/impulse.qh>
 #include <server/ipban.qh>
-#include <server/items.qh>
+#include <server/main.qh>
 #include <server/mapvoting.qh>
 #include <server/matrix.qh>
 #include <server/miscfunctions.qh>
@@ -24,15 +25,13 @@
 #include <server/scores_rules.qh>
 #include <server/spawnpoints.qh>
 #include <server/steerlib.qh>
-#ifdef SVQC
-    #include <server/sv_main.qh>
-#endif
 #include <server/teamplay.qh>
 #include <server/tests.qh>
 
 #include <server/bot/_mod.qh>
 #include <server/command/_mod.qh>
 #include <server/compat/_mod.qh>
+#include <server/items/_mod.qh>
 #include <server/mutators/_mod.qh>
 #include <server/pathlib/_mod.qh>
 #include <server/weapons/_mod.qh>

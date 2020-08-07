@@ -3,7 +3,6 @@
 #include "hud.qh"
 #include "panel/scoreboard.qh"
 #include <client/autocvars.qh>
-#include <client/defs.qh>
 #include <client/miscfunctions.qh>
 #include <client/view.qh>
 

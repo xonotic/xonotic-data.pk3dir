@@ -2,16 +2,22 @@
 
 #include "antilag.qh"
 #include "command/common.qh"
-#include "constants.qh"
-#include "g_hook.qh"
+#include "client.qh"
+#include "damage.qh"
+#include "hook.qh"
+#include "world.qh"
+#include <server/gamelog.qh>
 #include "ipban.qh"
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
-#include "../common/t_items.qh"
+#include <server/spawnpoints.qh>
+#include <server/main.qh>
 #include "mapvoting.qh"
 #include "resources.qh"
-#include "items.qh"
+#include <server/items/spawning.qh>
 #include "player.qh"
 #include "weapons/accuracy.qh"
+#include "weapons/common.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
 #include "../common/command/_mod.qh"
@@ -24,6 +30,8 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/trigger/hurt.qh>
+#include <common/mapobjects/target/location.qh>
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include <common/weapons/_all.qh>
@@ -82,61 +90,6 @@ void WarpZone_crosshair_trace(entity pl)
 void dedicated_print(string input)
 {
 	if (server_is_dedicated) print(input);
-}
-
-string GameLog_ProcessIP(string s)
-{
-	if(!autocvar_sv_eventlog_ipv6_delimiter)
-		return s;
-	return strreplace(":", "_", s);
-}
-
-void GameLogEcho(string s)
-{
-    string fn;
-    int matches;
-
-    if (autocvar_sv_eventlog_files)
-    {
-        if (!logfile_open)
-        {
-            logfile_open = true;
-            matches = autocvar_sv_eventlog_files_counter + 1;
-            cvar_set("sv_eventlog_files_counter", itos(matches));
-            fn = ftos(matches);
-            if (strlen(fn) < 8)
-                fn = strcat(substring("00000000", 0, 8 - strlen(fn)), fn);
-            fn = strcat(autocvar_sv_eventlog_files_nameprefix, fn, autocvar_sv_eventlog_files_namesuffix);
-            logfile = fopen(fn, FILE_APPEND);
-            fputs(logfile, ":logversion:3\n");
-        }
-        if (logfile >= 0)
-        {
-            if (autocvar_sv_eventlog_files_timestamps)
-                fputs(logfile, strcat(":time:", strftime(true, "%Y-%m-%d %H:%M:%S", "\n", s, "\n")));
-            else
-                fputs(logfile, strcat(s, "\n"));
-        }
-    }
-    if (autocvar_sv_eventlog_console)
-    {
-        dedicated_print(strcat(s, "\n"));
-    }
-}
-
-void GameLogInit()
-{
-    logfile_open = 0;
-    // will be opened later
-}
-
-void GameLogClose()
-{
-    if (logfile_open && logfile >= 0)
-    {
-        fclose(logfile);
-        logfile = -1;
-    }
 }
 
 entity findnearest(vector point, bool checkitems, vector axismod)
@@ -403,46 +356,6 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo
 	strcpy(CS(this).weaponorder_byimpulse, W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
-
-REPLICATE(autoswitch, bool, "cl_autoswitch");
-
-REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
-
-REPLICATE(cvar_cl_allow_uidranking, bool, "cl_allow_uidranking");
-
-REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
-
-REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
-
-REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
-
-REPLICATE(cvar_cl_handicap, float, "cl_handicap");
-
-REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
-
-REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
-
-REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
-
-REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
-
-REPLICATE(cvar_cl_noantilag, bool, "cl_noantilag");
-
-REPLICATE(cvar_cl_physics, string, "cl_physics");
-
-REPLICATE(cvar_cl_voice_directional, int, "cl_voice_directional");
-
-REPLICATE(cvar_cl_voice_directional_taunt_attenuation, float, "cl_voice_directional_taunt_attenuation");
-
-REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
-
-REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
-
-REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
-
-REPLICATE(cvar_cl_weapon_switch_reload, bool, "cl_weapon_switch_reload");
-
-REPLICATE(cvar_cl_weapon_switch_fallback_to_impulse, bool, "cl_weapon_switch_fallback_to_impulse");
 
 /**
  * @param f -1: cleanup, 0: request, 1: receive

@@ -1,10 +1,10 @@
 #include "infomessages.qh"
 
 #include <client/autocvars.qh>
+#include <client/main.qh>
 #include <client/miscfunctions.qh>
 
 #include <common/ent_cs.qh>
-#include <common/mapinfo.qh>
 
 // Info messages (#14)
 
@@ -122,22 +122,15 @@ void HUD_InfoMessages()
 				InfoMessage(s);
 			}
 
-			MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize);
+			bool mutator_returnvalue = MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize, img_curr_group);
+			pos = M_ARGV(0, vector);
+			img_curr_group = M_ARGV(2, int);
 
-			if(!warmup_stage && ISGAMETYPE(LMS))
+			if(!mutator_returnvalue)
 			{
-				entity sk;
-				sk = playerslots[player_localnum];
-				if(sk.(scores(ps_primary)) >= 666)
-					s = _("^1Match has already begun");
-				else if(sk.(scores(ps_primary)) > 0)
-					s = _("^1You have no more lives left");
-				else
-					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
-			}
-			else
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
-			InfoMessage(s);
+				InfoMessage(s);
+			}
 		}
 
 		if (time < STAT(GAMESTARTTIME))

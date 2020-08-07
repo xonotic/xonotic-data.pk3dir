@@ -4,10 +4,14 @@
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "cheats.qh"
+#include "client.qh"
 #include "clientkill.qh"
+#include "damage.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
+
+#include <common/gamemodes/_mod.qh>
 
 #include <common/state.qh>
 
@@ -320,13 +324,19 @@ IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
+	bool is_dualwielding = W_DualWielding(this);
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
+		vector md = this.(weaponentity).movedir;
+		vector vecs = ((md.x > 0) ? md : '0 0 0');
+		vector dv = v_right * -vecs.y;
+		if(!is_dualwielding)
+			dv = '0 0 0'; // don't override!
+		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), dv, true);
 
-		if(autocvar_g_weaponswitch_debug != 1)
-			break;
+		if(autocvar_g_weaponswitch_debug == 2)
+			break; // in this mode, the off-hand weapon is selected based on the primary weapon, don't drop it twice!
 	}
 }
 

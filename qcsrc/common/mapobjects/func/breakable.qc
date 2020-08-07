@@ -1,7 +1,7 @@
 #include "breakable.qh"
 #ifdef SVQC
 
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/bot/api.qh>
 #include <common/csqcmodel_settings.qh>
 #include <lib/csqcmodel/sv_model.qh>
@@ -187,7 +187,7 @@ void func_breakable_init_for_player(entity this, entity player)
 	if (this.noise1 && this.state == STATE_ALIVE && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
-		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM, 0);
 	}
 }
 

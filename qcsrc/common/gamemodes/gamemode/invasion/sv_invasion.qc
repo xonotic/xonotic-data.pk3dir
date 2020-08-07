@@ -1,9 +1,12 @@
 #include "sv_invasion.qh"
 
+#include <common/mapobjects/triggers.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_spawner.qh>
 #include <common/monsters/sv_monsters.qh>
 
+#include <server/bot/api.qh>
+#include <server/world.qh>
 #include <server/teamplay.qh>
 
 IntrusiveList g_invasion_roundends;
@@ -207,7 +210,7 @@ void invasion_SpawnChosenMonster(Monster mon)
 		setsize(e, mon.m_mins, mon.m_maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-			monster = spawnmonster(e, tospawn, mon.monsterid, NULL, NULL, e.origin, false, false, 2);
+			monster = spawnmonster(e, tospawn, mon, NULL, NULL, e.origin, false, false, 2);
 		else
 		{
 			delete(e);
@@ -215,7 +218,7 @@ void invasion_SpawnChosenMonster(Monster mon)
 		}
 	}
 	else // if spawnmob field falls through (unset), fallback to mon (relying on spawnmonster for that behaviour)
-		monster = spawnmonster(spawn(), ((spawn_point.spawnmob && spawn_point.spawnmob != "") ? spawn_point.spawnmob : tospawn), mon.monsterid, spawn_point, spawn_point, spawn_point.origin, false, false, 2);
+		monster = spawnmonster(spawn(), ((spawn_point.spawnmob && spawn_point.spawnmob != "") ? spawn_point.spawnmob : tospawn), mon, spawn_point, spawn_point, spawn_point.origin, false, false, 2);
 
 	if(!monster)
 		return;
@@ -290,7 +293,7 @@ bool Invasion_CheckWinner()
 
 	IL_EACH(g_monsters, GetResource(it, RES_HEALTH) > 0,
 	{
-		if((get_monsterinfo(it.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+		if(it.monsterdef.spawnflags & MON_FLAG_SUPERMONSTER)
 			++supermonster_count;
 		++total_alive_monsters;
 
@@ -467,7 +470,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 
 	mon.monster_skill = inv_monsterskill;
 
-	if((get_monsterinfo(mon.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+	if(mon.monsterdef.spawnflags & MON_FLAG_SUPERMONSTER)
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
 }
 

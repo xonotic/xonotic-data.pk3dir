@@ -13,7 +13,7 @@
 #include "../campaign.qh"
 #include "../client.qh"
 #include "../player.qh"
-#include "../g_world.qh"
+#include "../world.qh"
 #include "../ipban.qh"
 #include "../teamplay.qh"
 
@@ -723,7 +723,7 @@ void GameCommand_gametype(int request, int argc)
 			if (argv(1) != "")
 			{
 				string s = argv(1);
-				Gametype t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
+				Gametype t = MapInfo_Type_FromString(s, false), tsave = MapInfo_CurrentGametype();
 
 				if (t)
 				{

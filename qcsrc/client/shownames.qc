@@ -1,6 +1,7 @@
 #include "shownames.qh"
 
 #include "autocvars.qh"
+#include "main.qh"
 #include "miscfunctions.qh"
 #include "resources.qh"
 #include "hud/_mod.qh"
@@ -8,7 +9,6 @@
 #include <common/ent_cs.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
-#include <common/mapinfo.qh>
 #include <common/teams.qh>
 
 #include <lib/csqcmodel/cl_model.qh>
@@ -126,7 +126,8 @@ void Draw_ShowNames(entity this)
 		if (f < 0) f = 0;
 		a *= f;
 	}
-	if (a < ALPHA_MIN_VISIBLE && ISGAMETYPE(CTS)) return;
+	if (MUTATOR_CALLHOOK(ShowNames_Draw, this, a)) return;
+	a = M_ARGV(1, float);
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
 	float dist = vlen(this.origin - view_origin);
 	if (autocvar_hud_shownames_maxdistance)

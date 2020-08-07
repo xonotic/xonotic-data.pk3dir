@@ -4,8 +4,11 @@
 
 #ifdef SVQC
 
+#include <server/client.qh>
 #include <server/miscfunctions.qh>
+#include <common/mapobjects/defs.qh>
 #include "../mapobjects/trigger/viewloc.qh"
+#include <server/main.qh>
 
 // client side physics
 bool Physics_Valid(string thecvar)
@@ -40,7 +43,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
 
 	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this);
-	float maxspd_mod = PHYS_HIGHSPEED(this) * ((this.swampslug.active) ? this.swampslug.swamp_slowdown : 1);
+	float maxspd_mod = PHYS_HIGHSPEED(this) * ((this.swampslug.active == ACTIVE_ACTIVE) ? this.swampslug.swamp_slowdown : 1);
         STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
         if (autocvar_g_movement_highspeed_q3_compat) {
           STAT(MOVEVARS_AIRACCEL_QW, this) = Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw);
@@ -628,7 +631,7 @@ void PM_check_hitground(entity this)
 	if (!this.wasFlying) return;
     this.wasFlying = false;
     if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
-    if (time < this.ladder_time) return;
+    if (this.ladder_entity) return;
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];

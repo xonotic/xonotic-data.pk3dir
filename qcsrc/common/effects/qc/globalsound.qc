@@ -7,6 +7,9 @@
 	#ifdef SVQC
 		#include <server/player.qh>
 	#endif
+	#ifdef CSQC
+		#include <client/main.qh>
+	#endif
 
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
@@ -17,7 +20,7 @@
 		 * @param gs the global sound def
 		 * @param r a random number in 0..1
 		 */
-		void globalsound(int channel, entity from, entity gs, float r, int chan, float _vol, float _atten)
+		void globalsound(int channel, entity from, entity gs, float r, int chan, float _vol, float _atten, float _pitch)
 		{
 			//assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
@@ -25,14 +28,16 @@
 				string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 				switch (channel) {
 					case MSG_ONE:
-						soundto(channel, from, chan, sample, _vol, _atten);
+						soundto(channel, from, chan, sample, _vol, _atten, _pitch);
 						break;
 					case MSG_ALL:
-						_sound(from, chan, sample, _vol, _atten);
+						if(sound_allowed(MSG_BROADCAST, from))
+							sound7(from, chan, sample, _vol, _atten, _pitch, 0);
 						break;
 				}
 				return;
 			}
+			// FIXME: pitch not implemented
 			WriteHeader(channel, globalsound);
 			WriteByte(channel, gs.m_id);
 			WriteByte(channel, r * 255);
@@ -50,7 +55,7 @@
 		* @param ps the player sound def
 		* @param r a random number in 0..1
 		*/
-		void playersound(int channel, entity from, entity ps, float r, int chan, float _vol, float _atten)
+		void playersound(int channel, entity from, entity ps, float r, int chan, float _vol, float _atten, float _pitch)
 		{
 			//assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
@@ -60,14 +65,16 @@
 				string sample = GlobalSound_sample(s, r);
 				switch (channel) {
 					case MSG_ONE:
-						soundto(channel, from, chan, sample, _vol, _atten);
+						soundto(channel, from, chan, sample, _vol, _atten, _pitch);
 						break;
 					case MSG_ALL:
-						_sound(from, chan, sample, _vol, _atten);
+						if(sound_allowed(MSG_BROADCAST, from))
+							sound7(from, chan, sample, _vol, _atten, _pitch, 0);
 						break;
 				}
 				return;
 			}
+			// FIXME: pitch not implemented
 			WriteHeader(channel, playersound);
 			WriteByte(channel, ps.m_id);
 			WriteByte(channel, r * 255);
@@ -153,6 +160,18 @@
 		if (n > 0) sample = sprintf("%s%d.wav", sample, floor(r * n + 1));  // randomization
 		else sample = sprintf("%s.wav", sample);
 		return sample;
+	}
+
+	float GlobalSound_pitch(float _pitch)
+	{
+		// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
+		float a = 1.5; // max pitch
+		float b = 0.75; // min pitch
+		float c = 100; // standard pitch (scale * 100)
+		float d = _pitch;
+		float pitch_shift = (b*d*(a-1) + a*c*(1-b)) / (d*(a-1) + c*(1-b));
+
+		return pitch_shift * 100;
 	}
 
 	void PrecacheGlobalSound(string sample)
@@ -305,6 +324,8 @@
 			if (gs == NULL && ps == NULL && sample == "") return;
 			if(this.classname == "body") return;
 			float r = random();
+			float myscale = ((this.scale) ? this.scale : 1); // safety net
+			float thepitch = ((myscale == 1) ? 0 : GlobalSound_pitch(myscale * 100));
 			if (sample != "") sample = GlobalSound_sample(sample, r);
 			switch (voicetype)
 			{
@@ -318,18 +339,18 @@
 						if (IS_REAL_CLIENT(msg_entity))
 						{
 							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
-							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten);
-							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten);
-							else soundto(MSG_ONE, this, chan, sample, vol, atten);
+							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten, thepitch);
+							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten, thepitch);
+							else soundto(MSG_ONE, this, chan, sample, vol, atten, thepitch);
 						}
 					}
 					if (voicetype == VOICETYPE_LASTATTACKER_ONLY) break;
 					msg_entity = this;
 					if (IS_REAL_CLIENT(msg_entity))
 					{
-						if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASE, ATTEN_NONE);
-						else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASE, ATTEN_NONE);
-						else soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NONE);
+						if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASE, ATTEN_NONE, thepitch);
+						else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASE, ATTEN_NONE, thepitch);
+						else soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NONE, thepitch);
 					}
 					break;
 				}
@@ -338,9 +359,9 @@
 					#define X() \
 						MACRO_BEGIN \
 							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
-							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
-							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
-							else soundto(MSG_ONE, this, chan, sample, vol, atten); \
+							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten, thepitch); \
+							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten, thepitch); \
+							else soundto(MSG_ONE, this, chan, sample, vol, atten, thepitch); \
 						MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
@@ -377,9 +398,9 @@
 									? bound(ATTEN_MIN, CS(msg_entity).cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
-								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
-								else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
-								else soundto(MSG_ONE, this, chan, sample, vol, atten); \
+								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten, thepitch); \
+								else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten, thepitch); \
+								else soundto(MSG_ONE, this, chan, sample, vol, atten, thepitch); \
 							} \
 						MACRO_END
 					if (fake)
@@ -402,15 +423,15 @@
 					msg_entity = this;
 					if (fake)
 					{
-						if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, ATTEN_NORM);
-						else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, ATTEN_NORM);
-						else soundto(MSG_ONE, this, chan, sample, vol, ATTEN_NORM);
+						if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, ATTEN_NORM, thepitch);
+						else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, ATTEN_NORM, thepitch);
+						else soundto(MSG_ONE, this, chan, sample, vol, ATTEN_NORM, thepitch);
 					}
 					else
 					{
-						if (gs) globalsound(MSG_ALL, this, gs, r, chan, vol, ATTEN_NORM);
-						else if (ps) playersound(MSG_ALL, this, ps, r, chan, vol, ATTEN_NORM);
-						else _sound(this, chan, sample, vol, ATTEN_NORM);
+						if (gs) globalsound(MSG_ALL, this, gs, r, chan, vol, ATTEN_NORM, thepitch);
+						else if (ps) playersound(MSG_ALL, this, ps, r, chan, vol, ATTEN_NORM, thepitch);
+						else if (sound_allowed(MSG_BROADCAST, this)) sound7(this, chan, sample, vol, ATTEN_NORM, thepitch, 0);
 					}
 					break;
 				}

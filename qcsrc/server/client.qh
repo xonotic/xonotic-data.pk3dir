@@ -1,7 +1,32 @@
 #pragma once
 
 #include "utils.qh"
+#include <common/replicate.qh>
 #include <common/sounds/all.qh>
+
+// WEAPONTODO
+.string weaponorder_byimpulse;
+
+.entity clientdata;
+
+.float jointime; // time of connecting
+.float startplaytime; // time of switching from spectator to player
+.float alivetime; // time of being alive
+.float motd_actived_time; // used for both motd and campaign_message
+
+.bool wasplayer;
+
+.int spectatee_status;
+.bool zoomstate;
+
+.bool just_joined;
+
+.int pressedkeys;
+
+.int playerid;
+
+.string playermodel;
+.string playerskin;
 
 void ClientState_attach(entity this);
 
@@ -231,7 +256,85 @@ METHOD(Client, m_unwind, bool(Client this))
     return false;
 }
 
+int autocvar__independent_players;
+bool independent_players;
+#define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
+#define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
+#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_OUT_OF_GAME))
+
+.int killcount;
+
+//flood fields
+.float nickspamtime; // time of last nick change
+.float nickspamcount;
+.float floodcontrol_chat;
+.float floodcontrol_chatteam;
+.float floodcontrol_chattell;
+.float floodcontrol_voice;
+.float floodcontrol_voiceteam;
+
+// respawning
+.int respawn_flags;
+.float respawn_time;
+.float respawn_time_max;
+
+.float respawn_countdown; // next number to count
+
+const int RESPAWN_FORCE = BIT(0);
+const int RESPAWN_SILENT = BIT(1);
+const int RESPAWN_DENY = BIT(2);
+
+float blockSpectators; // if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
+.float spectatortime; // point in time since the client is spectating or observing
+
+.bool player_blocked;
+
+const int SVC_SETVIEW = 5; // TODO: move to dpdefs where this belongs!
+
+// TODO: standardise resource regeneration
+.float pauseregen_finished;
+.float pauserothealth_finished;
+.float pauserotarmor_finished;
+.float pauserotfuel_finished;
+
+// idle kicking
+float sv_maxidle;
+float sv_maxidle_spectatorsareidle;
+int sv_maxidle_slots;
+bool sv_maxidle_slots_countbots;
+
+// g_<gametype>_str:
+// If 0, default is used.
+// If <0, 0 is used.
+// Otherwise, g_str (default value) is used.
+// For consistency, negative values there are mapped to zero too.
+#define GAMETYPE_DEFAULTED_SETTING(str) \
+    ((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
+    (gametype_setting_tmp < 0) ? 0 \
+    : (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) \
+    : gametype_setting_tmp)
+
+void calculate_player_respawn_time(entity this);
+
 bool PlayerInList(entity player, string list);
+
+void ClientData_Touch(entity e);
+
+int nJoinAllowed(entity this, entity ignore);
+
+void FixIntermissionClient(entity e);
+
+void checkSpectatorBlock(entity this);
+
+void PlayerUseKey(entity this);
+
+void FixClientCvars(entity e);
+
+// called when a client connects, useful for updating sounds and such of static objects
+.void(entity this, entity player) init_for_player;
+
+IntrusiveList g_initforplayer;
+STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
 
 /// \brief Print the string to the client's chat.
 /// \param[in] client Client to print to.
@@ -291,3 +394,5 @@ void Join(entity this);
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
 
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
+
+const int MAX_SPECTATORS = 7;

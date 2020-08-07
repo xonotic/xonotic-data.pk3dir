@@ -3,7 +3,7 @@ de    "German" "Deutsch" 100%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 75%
-es    "Spanish" "Español" 98%
+es    "Spanish" "Español" 100%
 fr    "French" "Français" 100%
 ga    "Irish" "Irish" 32%
 it    "Italian" "Italiano" 100%
@@ -13,13 +13,14 @@ pl    "Polish" "Polski" 72%
 pt    "Portuguese" "Português" 84%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
 ro    "Romanian" "Romana" 74%
-fi    "Finnish" "Suomi" 98%
+fi    "Finnish" "Suomi" 100%
 el    "Greek" "Ελληνική" 47%
 be    "Belarusian" "Беларуская" 54%
-bg    "Bulgarian" "Български" 59%
+bg    "Bulgarian" "Български" 63%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 64%
 uk    "Ukrainian" "Українська" 50%
 zh_CN "Chinese (China)" "中文" 57%
 zh_TW "Chinese (Taiwan)" "國語" 61%
+ja_JP "Japanese" "日本語" 100%
 ko    "Korean" "한국의" 29%
