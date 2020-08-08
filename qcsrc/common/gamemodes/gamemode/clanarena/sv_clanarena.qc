@@ -68,6 +68,7 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_OVER);
 		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
 
 		allowed_to_spawn = false;
@@ -87,13 +88,14 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(winner_team, ANNCE_SCORES));
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(winner_team, ANNCE_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_TIED);
 	}
 
 	allowed_to_spawn = false;
@@ -269,8 +271,10 @@ void ca_LastPlayerForTeam_Notify(entity this)
 	if (!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
 	{
 		entity pl = ca_LastPlayerForTeam(this);
-		if (pl)
+		if (pl) {
 			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+			Send_Notification(NOTIF_ONE, pl, MSG_ANNCE, ANNCE_ALONE);
+		}
 	}
 }
 
