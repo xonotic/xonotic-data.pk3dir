@@ -1,13 +1,15 @@
 #include "bumblebee_weapons.qh"
 
+#ifdef GAMEQC
 REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
+#endif
 
 #ifdef SVQC
 
 void bumblebee_fire_cannon(entity this, entity _gun, string _tagname, entity _owner)
 {
     vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-    vehicles_projectile(this, EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, SND_VEH_BUMBLEBEE_FIRE,
+    vehicles_projectile(this, EFFECT_BIGPLASMA_MUZZLEFLASH, SND_VEH_BUMBLEBEE_FIRE,
                         v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
                         autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
                         DEATH_VH_BUMB_GUN.m_id, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
@@ -94,7 +96,8 @@ void bumble_raygun_draw(entity this)
 
     if(this.bumble_raygun_nextdraw < time)
     {
-        boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, this.origin, this.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+        entity eff = REGISTRY_GET(Effects, this.traileffect);
+        boxparticles(particleeffectnum(eff), this, this.origin, this.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
         boxparticles(this.lip, this, this.bumble_origin, this.bumble_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
         this.bumble_raygun_nextdraw = time + 0.1;
     }

@@ -1,16 +1,41 @@
 #include "counter.qh"
-#ifdef SVQC
-void counter_reset(entity this);
 
+#ifdef SVQC
 void counter_use(entity this, entity actor, entity trigger)
 {
-	this.count -= 1;
-	if (this.count < 0)
+	if(this.active != ACTIVE_ACTIVE)
+		return;
+
+	entity store = this;
+	if(this.spawnflags & COUNTER_PER_PLAYER)
+	{
+		if(!IS_PLAYER(actor))
+			return;
+		entity mycounter = NULL;
+		IL_EACH(g_counters, it.realowner == actor && it.owner == this,
+		{
+			mycounter = it;
+			break;
+		});
+		if(!mycounter)
+		{
+			mycounter = new_pure(counter);
+			IL_PUSH(g_counters, mycounter);
+			mycounter.owner = this;
+			mycounter.realowner = actor;
+			mycounter.reset = counter_reset; // NOTE: this may be useless as the player deletes their counters upon respawning
+			mycounter.counter_cnt = 0;
+		}
+		store = mycounter;
+	}
+
+	store.counter_cnt += 1;
+	if (store.counter_cnt > this.count)
 		return;
 
 	bool doactivate = (this.spawnflags & COUNTER_FIRE_AT_COUNT);
 
-	if (this.count == 0)
+	if (store.counter_cnt == this.count)
 	{
 		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
 			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
@@ -19,18 +44,18 @@ void counter_use(entity this, entity actor, entity trigger)
 
 		if(this.respawntime)
 		{
-			setthink(this, counter_reset);
-			this.nextthink = time + this.respawntime;
+			setthink(store, counter_reset);
+			store.nextthink = time + this.respawntime;
 		}
 	}
 	else
 	{
 		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
 		{
-			if(this.count >= 4)
+			if((this.count - store.counter_cnt) >= 4)
 				Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
 			else
-				Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, this.count);
+				Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, this.count - store.counter_cnt);
 		}
 	}
 
@@ -42,7 +67,8 @@ void counter_reset(entity this)
 {
 	setthink(this, func_null);
 	this.nextthink = 0;
-	this.count = this.cnt;
+	this.counter_cnt = 0;
+	this.active = ACTIVE_ACTIVE;
 }
 
 /*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage COUNTER_FIRE_AT_COUNT
@@ -59,9 +85,10 @@ spawnfunc(trigger_counter)
 {
 	if (!this.count)
 		this.count = 2;
-	this.cnt = this.count;
 
+	this.counter_cnt = 0;
 	this.use = counter_use;
 	this.reset = counter_reset;
+	this.active = ACTIVE_ACTIVE;
 }
 #endif

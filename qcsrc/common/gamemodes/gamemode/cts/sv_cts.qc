@@ -1,10 +1,16 @@
 #include "sv_cts.qh"
 
+#include <server/client.qh>
 #include <server/race.qh>
-#include <server/items.qh>
+#include <server/world.qh>
+#include <server/gamelog.qh>
+#include <server/items/spawning.qh>
+#include <server/weapons/common.qh>
+#include <common/mapobjects/triggers.qh>
 
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;
+bool autocvar_g_cts_removeprojectiles;
 
 // legacy bot roles
 .float race_checkpoint;
@@ -62,18 +68,6 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 {
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
-}
-
-void KillIndicator_Think(entity this);
-void CTS_ClientKill(entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
-{
-    e.killindicator = spawn();
-    e.killindicator.owner = e;
-    setthink(e.killindicator, KillIndicator_Think);
-    e.killindicator.nextthink = time + (e.lip) * 0.05;
-    e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
-    e.killindicator.count = 1; // this is used to indicate that it should be silent
-    e.lip = 0;
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
@@ -219,7 +213,7 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-		player.frags = FRAGS_LMS_LOSER;
+		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	else
 		player.frags = FRAGS_SPECTATOR;
 
@@ -265,6 +259,14 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
+
+	if(autocvar_g_cts_removeprojectiles)
+	{
+		IL_EACH(g_projectiles, it.owner == frag_target && (it.flags & FL_PROJECTILE),
+		{
+			delete(it);
+		});
+	}
 }
 
 MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)
@@ -375,29 +377,18 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 	M_ARGV(1, string) = ret_string;
 }
 
-void ClientKill_Now(entity this);
 MUTATOR_HOOKFUNCTION(cts, ClientKill)
 {
-    entity player = M_ARGV(0, entity);
-
 	M_ARGV(1, float) = 0; // kill delay
-
-	if(player.killindicator && player.killindicator.count == 1) // player.killindicator.count == 1 means that the kill indicator was spawned by CTS_ClientKill
-	{
-		delete(player.killindicator);
-		player.killindicator = NULL;
-
-		ClientKill_Now(player); // allow instant kill in this case
-		return;
-	}
 }
 
 MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 {
 	entity player = M_ARGV(0, entity);
 
+	// useful to prevent cheating by running back to the start line and starting out with more speed
 	if(autocvar_g_cts_finish_kill_delay)
-		CTS_ClientKill(player);
+		ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
 }
 
 MUTATOR_HOOKFUNCTION(cts, HideTeamNagger)

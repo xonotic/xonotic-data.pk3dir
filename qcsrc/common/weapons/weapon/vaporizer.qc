@@ -33,7 +33,6 @@ void Draw_VaporizerBeam_trace_callback(vector start, vector hit, vector end)
 }
 
 .vector vorg1, vorg2;
-.float spawn_time;
 void VaporizerBeam_Draw(entity this)
 {
 	//draw either the old v2.3 beam or the new beam
@@ -86,7 +85,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	this.sv_entnum = myowner;
 	this.team = ReadByte() - 1;
 
-	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
+	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
@@ -105,7 +104,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 void W_RocketMinsta_Explosion(entity actor, .entity weaponentity, vector loc)
 {
 	if(accuracy_canbegooddamage(actor))
-		accuracy_add(actor, WEP_DEVASTATOR.m_id, autocvar_g_rm_damage, 0);
+		accuracy_add(actor, WEP_DEVASTATOR, autocvar_g_rm_damage, 0);
 	entity dmgent = spawn();
 	dmgent.owner = dmgent.realowner = actor;
 	setorigin(dmgent, loc);
@@ -118,16 +117,18 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	bool flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
 	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
-	W_SetupShot(actor, weaponentity, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage, WEP_VAPORIZER.m_id);
+	W_SetupShot(actor, weaponentity, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage, thiswep.m_id);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
 	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, WEP_VAPORIZER.m_id);
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, true, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, thiswep.m_id);
 
 	// do this now, as goodhits is disabled below
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, normalize(v - w_shotorg));
 	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
 
 	if(yoda && flying)
@@ -187,7 +188,8 @@ void W_RocketMinsta_Attack2(entity actor, .entity weaponentity)
 
 	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	// uses electro effects
+	W_MuzzleFlash(WEP_ELECTRO, actor, weaponentity, w_shotorg, w_shotdir);
 
     while(counter < total)
 	{
@@ -239,7 +241,8 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 
 	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	// uses electro effects
+	W_MuzzleFlash(WEP_ELECTRO, actor, weaponentity, w_shotorg, w_shotdir);
 
     while(counter < total)
 	{
@@ -281,7 +284,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 
 METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(GetResourceAmount(actor, thiswep.ammo_type) > 0)
+    if((actor.items & IT_UNLIMITED_AMMO) || GetResource(actor, thiswep.ammo_type) > 0)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 1, false);
     else
         PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
@@ -295,7 +298,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     } else if(WEP_CVAR(vaporizer, reload_ammo) && actor.(weaponentity).clip_load < vaporizer_ammo) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     }
-    if((fire & 1) && (GetResourceAmount(actor, RESOURCE_CELLS) || !autocvar_g_rm) && !forbidWeaponUse(actor))
+    if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !weaponLocked(actor))
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vaporizer, refire)))
         {
@@ -303,7 +306,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
         }
     }
-    if((fire & 2) || ((fire & 1) && !GetResourceAmount(actor, RESOURCE_CELLS) && autocvar_g_rm))
+    if((fire & 2) || ((fire & 1) && !GetResource(actor, RES_CELLS) && autocvar_g_rm))
     {
         if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
         {
@@ -350,16 +353,16 @@ METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor, .entity weaponent
 METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= vaporizer_ammo;
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= vaporizer_ammo;
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= vaporizer_ammo;
     return ammo_amount;
 }
 METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(!WEP_CVAR_SEC(vaporizer, ammo))
         return true;
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vaporizer, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vaporizer, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
     return ammo_amount;
 }
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep, entity actor))

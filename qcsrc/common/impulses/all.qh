@@ -3,6 +3,8 @@
 REGISTRY(IMPULSES, 255)
 REGISTER_REGISTRY(IMPULSES)
 REGISTRY_SORT(IMPULSES)
+
+REGISTRY_DEFINE_GET(IMPULSES, NULL)
 STATIC_INIT(IMPULSES_renumber)
 {
 	FOREACH(IMPULSES, true, it.m_id = i);
@@ -27,10 +29,17 @@ REGISTRY_CHECK(IMPULSES)
 
 #define LEGACY_IMPULSE_ID(alias, id) LEGACY_IMPULSE(alias, id, sprintf("impulse %d", IMP_##alias.impulse))
 
+void _impCheck(string s, string alias)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	if (s == alias)
+		LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s);
+}
+
 #define LEGACY_IMPULSE(alias, id, new) \
 	STATIC_INIT(legacy_##alias) { \
 		string s = new; \
-		if (s == #alias) LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s); \
+		_impCheck(s, #alias); \
 		IMPULSE_ALIAS(alias, s); \
 	} \
 	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
@@ -186,20 +195,6 @@ LEGACY_IMPULSE(g_waypointsprite_clear_personal, 47, "waypoint_clear_personal")
 REGISTER_IMPULSE(waypoint_clear, 48)
 LEGACY_IMPULSE(g_waypointsprite_clear, 48, "waypoint_clear")
 
-REGISTER_IMPULSE(navwaypoint_spawn, 103)
-LEGACY_IMPULSE(g_waypointeditor_spawn, 103, "navwaypoint_spawn")
-
-REGISTER_IMPULSE(navwaypoint_remove, 104)
-LEGACY_IMPULSE(g_waypointeditor_remove, 104, "navwaypoint_remove")
-
-REGISTER_IMPULSE(navwaypoint_relink, 105)
-LEGACY_IMPULSE(g_waypointeditor_relinkall, 105, "navwaypoint_relink")
-
-REGISTER_IMPULSE(navwaypoint_save, 106)
-LEGACY_IMPULSE(g_waypointeditor_saveall, 106, "navwaypoint_save")
-
-REGISTER_IMPULSE(navwaypoint_unreachable, 107)
-LEGACY_IMPULSE(g_waypointeditor_unreachable, 107, "navwaypoint_unreachable")
 
 #define CHIMPULSE(id, n) _CHIMPULSE(CHIMPULSE_##id, n)
 #define _CHIMPULSE(id, n) \

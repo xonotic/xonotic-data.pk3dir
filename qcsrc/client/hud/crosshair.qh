@@ -1,0 +1,8 @@
+#pragma once
+
+float vortex_charge_movingavg; // WEAPONTODO
+
+vector crosshair_getcolor(entity this, float health_stat);
+void TrueAim_Init();
+void HUD_Crosshair(entity this);
+void DrawReticle(entity this);

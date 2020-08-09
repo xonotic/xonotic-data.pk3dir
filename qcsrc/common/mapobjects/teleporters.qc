@@ -11,12 +11,13 @@
     #include "../util.qh"
     #include <server/weapons/csqcprojectile.qh>
     #include <server/autocvars.qh>
-    #include <server/constants.qh>
-    #include <server/defs.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
     #include "../deathtypes/all.qh"
+    #include <server/main.qh>
     #include "../turrets/sv_turrets.qh"
     #include "../vehicles/all.qh"
-    #include "../mapinfo.qh"
+    #include <common/gamemodes/_mod.qh>
     #include <server/anticheat.qh>
 #endif
 
@@ -44,12 +45,12 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 {
 	TDEATHLOOP(player.origin)
 	{
-		if (IS_PLAYER(player) && GetResourceAmount(player, RESOURCE_HEALTH) >= 1)
+		if (IS_PLAYER(player) && GetResource(player, RES_HEALTH) >= 1)
 		{
 			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 			{
 				if(IS_PLAYER(head))
-					if(GetResourceAmount(head, RESOURCE_HEALTH) >= 1)
+					if(GetResource(head, RES_HEALTH) >= 1)
 						++tdeath_hit;
 				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, DMG_NOWEP, head.origin, '0 0 0');
 			}
@@ -113,6 +114,11 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	setorigin(player, to);
 	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
+	if (IS_BOT_CLIENT(player))
+	{
+		player.v_angle = player.angles;
+		bot_aim_reset(player);
+	}
 	player.fixangle = true;
 	player.velocity = to_velocity;
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
@@ -141,9 +147,12 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 #ifdef SVQC
 	if(IS_PLAYER(player))
 	{
-		if(tflags & TELEPORT_FLAG_TDEATH)
-			if(player.takedamage && !IS_DEAD(player) && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
-				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
+		if((tflags & TELEPORT_FLAG_TDEATH) && player.takedamage && !IS_DEAD(player)
+			&& !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH))
+			&& !(round_handler_IsActive() && !round_handler_IsRoundStarted()))
+		{
+			tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
+		}
 
 		// player no longer is on ground
 		UNSET_ONGROUND(player);
@@ -252,7 +261,7 @@ void teleport_findtarget(entity this)
 	if(n == 0)
 	{
 		// no dest!
-		objerror (this, "Teleporter with nonexistant target");
+		objerror (this, "Teleporter with nonexistent target");
 		return;
 	}
 	else if(n == 1)

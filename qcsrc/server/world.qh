@@ -1,0 +1,65 @@
+#pragma once
+
+float checkrules_equality;
+float checkrules_suddendeathwarning;
+float checkrules_suddendeathend;
+float checkrules_overtimesadded; //how many overtimes have been already added
+
+// flag set on worldspawn so that the code knows if it is dedicated or not
+bool server_is_dedicated;
+
+string cvar_changes;
+string cvar_purechanges;
+float cvar_purechanges_count;
+
+string modname;
+
+string gamemode_name;
+
+string clientstuff;
+
+string matchid;
+
+.string fog;
+
+float intermission_running;
+float intermission_exittime;
+float alreadychangedlevel;
+
+string cache_mutatormsg;
+string cache_lastmutatormsg;
+
+float default_player_alpha;
+float default_weapon_alpha;
+
+// database
+float ServerProgsDB;
+float TemporaryDB;
+
+.float winning;
+const int WINNING_NO = 0; // no winner, but time limits may terminate the game
+const int WINNING_YES = 1; // winner found
+const int WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
+const int WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
+
+float WinningCondition_Scores(float limit, float leadlimit);
+void SetWinners(.float field, float value);
+void IntermissionThink(entity this);
+void GotoNextMap(float reinit);
+void ReadyRestart();
+
+string GetGametype();
+
+void DumpStats(float final);
+float Map_IsRecent(string m);
+string GetNextMap();
+void ShuffleMaplist();
+void Map_Goto_SetStr(string nextmapname);
+void Map_Goto(float reinit);
+void Map_MarkAsRecent(string m);
+float DoNextMapOverride(float reinit);
+void CheckRules_World();
+float RedirectionThink();
+
+IntrusiveList g_moveables;
+STATIC_INIT(g_moveables) { g_moveables = IL_NEW(); }

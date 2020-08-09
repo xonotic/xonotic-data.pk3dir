@@ -14,9 +14,9 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 	this.takedamage = DAMAGE_NO;
 
 	// 1. dist damage
-	d = (GetResourceAmount(this.realowner, RESOURCE_HEALTH) + GetResourceAmount(this.realowner, RESOURCE_ARMOR));
+	d = (GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR));
 	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
-	if(GetResourceAmount(this.realowner, RESOURCE_HEALTH) + GetResourceAmount(this.realowner, RESOURCE_ARMOR) >= d)
+	if(GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR) >= d)
 	if(!this.cnt)
 	{
 		modeleffect_spawn("models/sphere/sphere.md3", 0, 0, this.origin, '0 0 0', '0 0 0', '0 0 0', 0, WEP_CVAR_PRI(fireball, bfgradius), 0.2, 0.05, 0.25);
@@ -42,7 +42,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 			dir = normalize(e.origin + e.view_ofs - this.origin);
 
 			if(accuracy_isgooddamage(this.realowner, e))
-				accuracy_add(this.realowner, WEP_FIREBALL.m_id, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
+				accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
 			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, this.weaponentity_fld, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
 			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
@@ -119,14 +119,14 @@ void W_Fireball_Think(entity this)
 
 void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	TakeResource(this, RES_HEALTH, damage);
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		this.cnt = 1;
 		W_PrepareExplosionByDamage(this, attacker, W_Fireball_Explode_think);
@@ -137,7 +137,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 {
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage), WEP_FIREBALL.m_id);
 
-	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity proj = new(plasma_prim);
 	proj.owner = proj.realowner = actor;
@@ -147,7 +147,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	proj.use = W_Fireball_Explode_use;
 	setthink(proj, W_Fireball_Think);
 	proj.nextthink = time;
-	SetResourceAmountExplicit(proj, RESOURCE_HEALTH, WEP_CVAR_PRI(fireball, health));
+	SetResourceExplicit(proj, RES_HEALTH, WEP_CVAR_PRI(fireball, health));
 	proj.team = actor.team;
 	proj.event_damage = W_Fireball_Damage;
 	proj.takedamage = DAMAGE_YES;
@@ -275,7 +275,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, actor);
 	w_shotorg = trace_endpos;
 
-	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
 	proj = new(grenade);
 	proj.owner = proj.realowner = actor;

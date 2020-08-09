@@ -57,7 +57,7 @@ void XonoticCampaignList_configureXonoticCampaignList(entity me)
 	me.configureXonoticListBox(me);
 	me.campaignGlob = search_begin("maps/campaign*.txt", true, true);
 	me.loadCvars(me);
-	me.campaignGo(me, 0); // takes care of enabling/disabling buttons too
+	me.campaignGo(me, 0); // it makes work buttons too
 }
 
 void XonoticCampaignList_destroy(entity me)
@@ -96,11 +96,8 @@ void XonoticCampaignList_saveCvars(entity me)
 
 void XonoticCampaignList_campaignGo(entity me, float step)
 {
-	float canNext, canPrev;
 	string s;
 	float i, j, n;
-
-	canNext = canPrev = 0;
 
 	if(me.campaignGlob >= 0)
 	{
@@ -136,15 +133,10 @@ void XonoticCampaignList_campaignGo(entity me, float step)
 			s = substring(s, 13, strlen(s) - 17);
 			cvar_set("g_campaign_name", s);
 			me.loadCvars(me);
-			canNext = (j != n - 1);
-			canPrev = (j != 0);
+			me.hasNextCampaign = (j != n - 1);
+			me.hasPrevCampaign = (j != 0);
 		}
 	}
-
-	if(me.buttonNext)
-		me.buttonNext.disabled = !canNext;
-	if(me.buttonPrev)
-		me.buttonPrev.disabled = !canPrev;
 }
 
 void MultiCampaign_Next(entity btn, entity me)
@@ -158,6 +150,11 @@ void MultiCampaign_Prev(entity btn, entity me)
 
 void XonoticCampaignList_draw(entity me)
 {
+	if(me.buttonNext)
+		me.buttonNext.disabled = !me.hasNextCampaign;
+	if(me.buttonPrev)
+		me.buttonPrev.disabled = !me.hasPrevCampaign;
+
 	if(cvar(me.cvarName) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
 		me.loadCvars(me);
 	SUPER(XonoticCampaignList).draw(me);
@@ -185,6 +182,9 @@ void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.columnCheckMarkOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x * 2;
 
 	me.checkMarkOrigin = eY + eX * (me.columnCheckMarkOrigin + me.columnCheckMarkSize) - me.checkMarkSize;
+
+	me.typeIconOrigin = vec3(me.columnPreviewSize - me.checkMarkSize.x, me.checkMarkOrigin.y, 0);
+	me.typeIconSize = me.checkMarkSize;
 
 	rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 }
@@ -229,13 +229,19 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 	else
 		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 
+	s = strcat("/gfx/menu/", cvar_string("menu_skin"), "/gametype_", campaign_gametype[i]);
+	if(i <= me.campaignIndex && draw_PictureSize(s) != '0 0 0')
+		draw_Picture(me.typeIconOrigin, s, me.typeIconSize, '1 1 1', 1);
+
 	if(i < me.campaignIndex)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 	if(i <= me.campaignIndex)
 		s = campaign_shortdesc[i]; // fteqcc sucks
 	else
 		s = "???";
-	s = draw_TextShortenToWidth(sprintf(_("Level %d: %s"), i+1, s), me.columnNameSize, 0, me.realFontSize);
+	// NOTE the following string is equal to the one used in the campaign level notification
+	// (CAMPAIGN_MESSAGE) to avoid adding another duplicate string to translate
+	s = draw_TextShortenToWidth(strcat(sprintf(_("Level %s: "), itos(i+1)), s), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 
 	if(i <= me.campaignIndex)

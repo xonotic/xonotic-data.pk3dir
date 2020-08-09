@@ -8,15 +8,22 @@
 #include "../physics/movelib.qh"
 #include "../weapons/_mod.qh"
 #include <server/autocvars.qh>
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/damage.qh>
 #include "../deathtypes/all.qh"
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/steerlib.qh>
+#include <server/main.qh>
 #include "../turrets/sv_turrets.qh"
 #include "../turrets/util.qh"
 #include "../vehicles/all.qh"
 #include <server/campaign.qh>
+#include <server/cheats.qh>
 #include <server/command/_mod.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/teleporters.qh>
 #include "../mapobjects/triggers.qh"
 #include <lib/csqcmodel/sv_model.qh>
 #include <server/round_handler.qh>
@@ -78,13 +85,13 @@ bool Monster_ValidTarget(entity this, entity targ)
 
 	if((targ == this)
 	|| (autocvar_g_monsters_lineofsight && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
-	|| (IS_VEHICLE(targ) && !((Monsters_from(this.monsterid)).spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
+	|| (IS_VEHICLE(targ) && !(this.monsterdef.spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| (time < game_starttime) // monsters do nothing before match has started
 	|| (targ.takedamage == DAMAGE_NO)
 	|| (game_stopped)
 	|| (targ.items & IT_INVISIBILITY)
 	|| (IS_SPEC(targ) || IS_OBSERVER(targ)) // don't attack spectators
-	|| (!IS_VEHICLE(targ) && (IS_DEAD(targ) || IS_DEAD(this) || GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(this, RESOURCE_HEALTH) <= 0))
+	|| (!IS_VEHICLE(targ) && (IS_DEAD(targ) || IS_DEAD(this) || GetResource(targ, RES_HEALTH) <= 0 || GetResource(this, RES_HEALTH) <= 0))
 	|| (this.monster_follow == targ || targ.monster_follow == this)
 	|| (!IS_VEHICLE(targ) && (targ.flags & FL_NOTARGET))
 	|| (!autocvar_g_monsters_typefrag && PHYS_INPUT_BUTTON_CHAT(targ))
@@ -128,7 +135,7 @@ entity Monster_FindTarget(entity this)
 	{
 		if(Monster_ValidTarget(this, it))
 		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 			vector targ_center = CENTER_OR_VIEWOFS(it);
 
 			if(closest_target)
@@ -189,7 +196,11 @@ void monster_changeteam(entity this, int newteam)
 .void(entity) monster_delayedfunc;
 void Monster_Delay_Action(entity this)
 {
-	if(Monster_ValidTarget(this.owner, this.owner.enemy)) { this.monster_delayedfunc(this.owner); }
+	if(Monster_ValidTarget(this.owner, this.owner.enemy))
+	{
+		monster_makevectors(this.owner, this.owner.enemy);
+		this.monster_delayedfunc(this.owner);
+	}
 
 	if(this.cnt > 1)
 	{
@@ -256,7 +267,7 @@ void Monster_Sound_Precache(string f)
 
 void Monster_Sounds_Precache(entity this)
 {
-	string m = (Monsters_from(this.monsterid)).m_model.model_str();
+	string m = this.monsterdef.m_model.model_str();
 	float globhandle, n, i;
 	string f;
 
@@ -359,8 +370,6 @@ bool Monster_Attack_Melee(entity this, entity targ, float damg, vector anim, flo
 	else
 		this.attack_finished_single[0] = this.anim_finished = time + animtime;
 
-	monster_makevectors(this, targ);
-
 	traceline(this.origin + this.view_ofs, this.origin + v_forward * er, 0, this);
 
 	if(trace_ent.takedamage)
@@ -375,7 +384,7 @@ bool Monster_Attack_Leap_Check(entity this, vector vel)
 		return false; // already attacking
 	if(!IS_ONGROUND(this))
 		return false; // not on the ground
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0 || IS_DEAD(this))
+	if(GetResource(this, RES_HEALTH) <= 0 || IS_DEAD(this))
 		return false; // called when dead?
 	if(time < this.attack_finished_single[0])
 		return false; // still attacking
@@ -424,6 +433,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if(vdist(targ.origin - this.origin, <=, this.attack_range))
 	{
+		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
@@ -433,6 +443,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 
 	if(vdist(targ.origin - this.origin, >, this.attack_range))
 	{
+		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
@@ -461,7 +472,7 @@ void Monster_UpdateModel(entity this)
 	this.anim_die2   = animfixfps(this, '9 1 0.01', '0 0 0');*/
 
 	// then get the real values
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	mon.mr_anim(mon, this);
 }
 
@@ -486,7 +497,7 @@ void Monster_Miniboss_Check(entity this)
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
 	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
 	{
-		GiveResource(this, RESOURCE_HEALTH, autocvar_g_monsters_miniboss_healthboost);
+		GiveResource(this, RES_HEALTH, autocvar_g_monsters_miniboss_healthboost);
 		this.effects |= EF_RED;
 		if(!this.weapon)
 			this.weapon = WEP_VORTEX.m_id;
@@ -508,7 +519,7 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn(entity this) { Monster_Spawn(this, true, this.monsterid); }
+void Monster_Respawn(entity this) { Monster_Spawn(this, true, this.monsterdef); }
 
 .vector	pos1, pos2;
 
@@ -531,7 +542,7 @@ void Monster_Dead_Fade(entity this)
 		this.takedamage = DAMAGE_NO;
 		setorigin(this, this.pos1);
 		this.angles = this.pos2;
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		setmodel(this, MDL_Null);
 	}
 	else
@@ -560,7 +571,7 @@ vector Monster_Move_Target(entity this, entity targ)
 
 		// cases where the enemy may have changed their state (don't need to check everything here)
 		if((!this.enemy)
-			|| (IS_DEAD(this.enemy) || GetResourceAmount(this.enemy, RESOURCE_HEALTH) < 1)
+			|| (IS_DEAD(this.enemy) || GetResource(this.enemy, RES_HEALTH) < 1)
 			|| (STAT(FROZEN, this.enemy))
 			|| (this.enemy.flags & FL_NOTARGET)
 			|| (this.enemy.alpha < 0.5 && this.enemy.alpha != 0)
@@ -695,7 +706,6 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 }
 
 .entity draggedby;
-.entity target2;
 
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
@@ -804,10 +814,12 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 
 		if(time > this.pain_finished && time > this.anim_finished) // TODO: use anim_finished instead!?
 		if(!this.state)
-		if(vdist(this.velocity, >, 10))
-			setanim(this, ((do_run) ? this.anim_run : this.anim_walk), true, false, false);
-		else
-			setanim(this, this.anim_idle, true, false, false);
+		{
+			if(vdist(this.velocity, >, 10))
+				setanim(this, ((do_run) ? this.anim_run : this.anim_walk), true, false, false);
+			else
+				setanim(this, this.anim_idle, true, false, false);
+		}
 	}
 	else
 	{
@@ -873,16 +885,16 @@ void Monster_Dead_Think(entity this)
 void Monster_Appear(entity this, entity actor, entity trigger)
 {
 	this.enemy = actor;
-	Monster_Spawn(this, false, this.monsterid);
+	Monster_Spawn(this, false, this.monsterdef);
 }
 
-bool Monster_Appear_Check(entity this, int monster_id)
+bool Monster_Appear_Check(entity this, Monster monster_id)
 {
 	if(!(this.spawnflags & MONSTERFLAG_APPEAR))
 		return false;
 
 	setthink(this, func_null);
-	this.monsterid = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
+	this.monsterdef = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
 	this.nextthink = 0;
 	this.use = Monster_Appear;
 	this.flags = FL_MONSTER; // set so this monster can get butchered
@@ -895,9 +907,9 @@ void Monster_Reset(entity this)
 	setorigin(this, this.pos1);
 	this.angles = this.pos2;
 
-	Unfreeze(this); // remove any icy remains
+	Unfreeze(this, false); // remove any icy remains
 
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	this.velocity = '0 0 0';
 	this.enemy = NULL;
 	this.goalentity = NULL;
@@ -907,11 +919,11 @@ void Monster_Reset(entity this)
 
 void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= -50) // 100 health until gone?
+	if(GetResource(this, RES_HEALTH) <= -50) // 100 health until gone?
 	{
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
@@ -931,10 +943,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	this.monster_lifetime = time + 5;
 
 	if(STAT(FROZEN, this))
-	{
-		Unfreeze(this); // remove any icy remains
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // reset by Unfreeze (TODO)
-	}
+		Unfreeze(this, false); // remove any icy remains
 
 	monster_dropitem(this, attacker);
 
@@ -975,7 +984,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	CSQCModel_UnlinkEntity(this);
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	mon.mr_death(mon, this);
 
 	if(this.candrop && this.weapon)
@@ -1002,21 +1011,21 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	if(deathtype == DEATH_FALL.m_id && this.draggedby != NULL)
 		return;
 
-	vector v = healtharmor_applydamage(100, GetResourceAmount(this, RESOURCE_ARMOR) / 100, deathtype, damage);
+	vector v = healtharmor_applydamage(100, GetResource(this, RES_ARMOR) / 100, deathtype, damage);
 	float take = v.x;
 	//float save = v.y;
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	take = mon.mr_pain(mon, this, take, attacker, deathtype);
 
 	if(take)
 	{
-		TakeResource(this, RESOURCE_HEALTH, take);
+		TakeResource(this, RES_HEALTH, take);
 		Monster_Sound(this, monstersound_pain, 1.2, true, CH_PAIN);
 	}
 
 	if(this.sprite)
-		WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
 
 	this.dmg_time = time;
 
@@ -1034,7 +1043,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 			Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 	}
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(deathtype == DEATH_KILL.m_id)
 			this.candrop = false; // killed by mobkill command
@@ -1043,13 +1052,13 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 		SUB_UseTargets(this, attacker, this.enemy);
 		this.target2 = this.oldtarget2; // reset to original target on death, incase we respawn
 
-		Monster_Dead(this, attacker, (GetResourceAmount(this, RESOURCE_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id));
+		Monster_Dead(this, attacker, (GetResource(this, RES_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id));
 
 		WaypointSprite_Kill(this.sprite);
 
 		MUTATOR_CALLHOOK(MonsterDies, this, attacker, deathtype);
 
-		if(GetResourceAmount(this, RESOURCE_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
+		if(GetResource(this, RES_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
 		{
 			Violence_GibSplash(this, 1, 0.5, attacker);
 
@@ -1061,13 +1070,13 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 bool Monster_Heal(entity targ, entity inflictor, float amount, float limit)
 {
-	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
-	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= true_limit)
+	float true_limit = ((limit != RES_LIMIT_NONE) ? limit : targ.max_health);
+	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= true_limit)
 		return false;
 
-	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	GiveResourceWithLimit(targ, RES_HEALTH, amount, true_limit);
 	if(targ.sprite)
-		WaypointSprite_UpdateHealth(targ.sprite, GetResourceAmount(targ, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(targ.sprite, GetResource(targ, RES_HEALTH));
 	return true;
 }
 
@@ -1097,15 +1106,12 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	if(trace_ent && IS_MONSTER(trace_ent))
 		reverse = true;
 
-	// TODO: fix this... tracing is broken if the floor is thin
-	/*
-	if(!allow_jumpoff)
+	if(!allow_jumpoff && IS_ONGROUND(this))
 	{
-		a = b - '0 0 32';
-		traceline(b, a, MOVE_WORLDONLY, this);
+		traceline(b, b - '0 0 32', MOVE_NORMAL, this);
 		if(trace_fraction == 1.0)
 			reverse = true;
-	} */
+	}
 
 	if(reverse)
 	{
@@ -1116,10 +1122,12 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	movelib_move_simple_gravity(this, v_forward, mspeed, 1);
 
 	if(time > this.pain_finished && time > this.attack_finished_single[0])
-	if(vdist(this.velocity, >, 10))
-		setanim(this, this.anim_walk, true, false, false);
-	else
-		setanim(this, this.anim_idle, true, false, false);
+	{
+		if(vdist(this.velocity, >, 10))
+			setanim(this, this.anim_walk, true, false, false);
+		else
+			setanim(this, this.anim_idle, true, false, false);
+	}
 }
 
 void Monster_Anim(entity this)
@@ -1144,7 +1152,7 @@ void Monster_Anim(entity this)
 	int animbits = deadbits;
 	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(this.crouch)
+	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, (IS_ONGROUND(this)));
@@ -1161,36 +1169,35 @@ void Monster_Anim(entity this)
 
 void Monster_Frozen_Think(entity this)
 {
-	if(STAT(FROZEN, this) == 2)
+	if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
-		this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
+		SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
+		if (this.iceblock)
+			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
-			WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
+			WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
 
 		if(STAT(REVIVE_PROGRESS, this) >= 1)
-			Unfreeze(this);
+			Unfreeze(this, false);
 	}
-	else if(STAT(FROZEN, this) == 3)
+	else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 	{
 		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - this.ticrate * this.revive_speed, 1);
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
+		SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
-			WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
+			WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
 
-		if(GetResourceAmount(this, RESOURCE_HEALTH) < 1)
+		if(GetResource(this, RES_HEALTH) < 1)
 		{
-			Unfreeze(this);
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
+			Unfreeze(this, false);
 			if(this.event_damage)
 				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
-
 		else if ( STAT(REVIVE_PROGRESS, this) <= 0 )
-			Unfreeze(this);
+			Unfreeze(this, false);
 	}
 	// otherwise, no revival!
 
@@ -1224,7 +1231,7 @@ void Monster_Think(entity this)
 
 	if(this.monster_lifetime && time >= this.monster_lifetime)
 	{
-		Damage(this, this, this, GetResourceAmount(this, RESOURCE_HEALTH) + this.max_health, DEATH_KILL.m_id, DMG_NOWEP, this.origin, this.origin);
+		Damage(this, this, this, GetResource(this, RES_HEALTH) + this.max_health, DEATH_KILL.m_id, DMG_NOWEP, this.origin, this.origin);
 		return;
 	}
 
@@ -1236,7 +1243,7 @@ void Monster_Think(entity this)
 		this.last_enemycheck = time + 1; // check for enemies every second
 	}
 
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	if(mon.mr_think(mon, this))
 	{
 		Monster_Move(this, this.speed2, this.speed, this.stopspeed);
@@ -1252,12 +1259,12 @@ void Monster_Think(entity this)
 
 bool Monster_Spawn_Setup(entity this)
 {
-	Monster mon = Monsters_from(this.monsterid);
+	Monster mon = this.monsterdef;
 	mon.mr_setup(mon, this);
 
 	// ensure some basic needs are met
-	if(!GetResourceAmount(this, RESOURCE_HEALTH)) { SetResourceAmountExplicit(this, RESOURCE_HEALTH, 100); }
-	if(!GetResourceAmount(this, RESOURCE_ARMOR)) { SetResourceAmountExplicit(this, RESOURCE_ARMOR, bound(0.2, 0.5 * MONSTER_SKILLMOD(this), 0.9)); }
+	if(!GetResource(this, RES_HEALTH)) { SetResourceExplicit(this, RES_HEALTH, 100); }
+	if(!GetResource(this, RES_ARMOR)) { SetResourceExplicit(this, RES_ARMOR, bound(0.2, 0.5 * MONSTER_SKILLMOD(this), 0.9)); }
 	if(!this.target_range) { this.target_range = autocvar_g_monsters_target_range; }
 	if(!this.respawntime) { this.respawntime = autocvar_g_monsters_respawn_delay; }
 	if(!this.monster_moveflags) { this.monster_moveflags = MONSTER_MOVE_WANDER; }
@@ -1267,13 +1274,13 @@ bool Monster_Spawn_Setup(entity this)
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		Monster_Miniboss_Check(this);
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH) * MONSTER_SKILLMOD(this));
+		SetResourceExplicit(this, RES_HEALTH, GetResource(this, RES_HEALTH) * MONSTER_SKILLMOD(this));
 
 		if(!this.skin)
 			this.skin = rint(random() * 4);
 	}
 
-	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
+	this.max_health = GetResource(this, RES_HEALTH);
 	this.pain_finished = this.nextthink;
 
 	if(IS_PLAYER(this.monster_follow))
@@ -1297,12 +1304,12 @@ bool Monster_Spawn_Setup(entity this)
 	if(autocvar_g_monsters_healthbars)
 	{
 		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 1024, this, '0 0 1' * (this.maxs.z + 15), NULL, this.team, this, sprite, true, RADARICON_DANGER);
-		wp.wp_extra = this.monsterid;
+		wp.wp_extra = this.monsterdef.monsterid;
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0 0');
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE))
 		{
 			WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
-			WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
+			WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
 		}
 	}
 
@@ -1315,15 +1322,14 @@ bool Monster_Spawn_Setup(entity this)
 	return true;
 }
 
-bool Monster_Spawn(entity this, bool check_appear, int mon_id)
+bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 {
 	// setup the basic required properties for a monster
-	entity mon = Monsters_from(mon_id);
-	if(!mon.monsterid) { return false; } // invalid monster
 
+	if(!mon || mon == MON_Null) { return false; } // invalid monster
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
-	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED) && !(this.flags & FL_MONSTER))
 	{
 		IL_PUSH(g_monsters, this);
 		if(this.mdl && this.mdl != "")
@@ -1332,7 +1338,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 			precache_model(this.mdl_dead);
 	}
 
-	if(check_appear && Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
+	if(check_appear && Monster_Appear_Check(this, mon)) { return true; } // return true so the monster isn't removed
 
 	if(!this.monster_skill)
 		this.monster_skill = cvar("g_monsters_skill");
@@ -1365,7 +1371,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!this.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, this);
 	this.damagedbycontents	= true;
-	this.monsterid			= mon_id;
+	this.monsterdef			= mon;
 	this.event_damage		= Monster_Damage;
 	this.event_heal			= Monster_Heal;
 	settouch(this, Monster_Touch);

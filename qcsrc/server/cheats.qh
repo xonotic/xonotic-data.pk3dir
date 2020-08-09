@@ -14,12 +14,22 @@ float CheatFrame(entity this);
 
 const float CHRAME_DRAG = 8;
 
+// speedrun: when 1, player auto teleports back when capture timeout happens
+.bool speedrunning;
+
+.entity personal;
+
+.int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
+
+bool drag_undraggable(entity draggee, entity dragger);
+
+.bool(entity this, entity dragger) draggable;
 void Drag_MoveDrag(entity from, entity to); // call this from CopyBody
 void DragBox_Think(entity this);
 float Drag(entity this, float force_allow_pick, float ischeat);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
-float Drag_IsDraggable(entity draggee);
+bool Drag_IsDraggable(entity draggee, entity dragger);
 float Drag_MayChangeAngles(entity draggee);
 void Drag_MoveForward(entity dragger);
 void Drag_SetSpeed(entity dragger, float s);

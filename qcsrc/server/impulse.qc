@@ -1,14 +1,17 @@
 #include "impulse.qh"
 #include "round_handler.qh"
 
-#include "bot/api.qh"
-
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "cheats.qh"
+#include "client.qh"
+#include "clientkill.qh"
+#include "damage.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
+
+#include <common/gamemodes/_mod.qh>
 
 #include <common/state.qh>
 
@@ -52,19 +55,19 @@
 
 // weapon switching impulses
 
-#define X(slot) \
-	IMPULSE(weapon_group_##slot) \
+#define X(i) \
+	IMPULSE(weapon_group_##i) \
 	{ \
 		if (IS_DEAD(this)) \
 		{ \
-			this.impulse = IMP_weapon_group_##slot.impulse; \
+			this.impulse = IMP_weapon_group_##i.impulse; \
 			return; \
 		} \
-		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
 		{ \
-			.entity weaponentity = weaponentities[wepslot]; \
-			W_NextWeaponOnImpulse(this, slot, weaponentity); \
-			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
+			.entity weaponentity = weaponentities[slot]; \
+			W_NextWeaponOnImpulse(this, i, weaponentity); \
+			if(autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -82,23 +85,23 @@ X(0)
 
 // custom order weapon cycling
 
-#define X(slot, dir) \
-	IMPULSE(weapon_priority_##slot##_##dir) \
+#define X(i, dir) \
+	IMPULSE(weapon_priority_##i##_##dir) \
 	{ \
 		if (this.vehicle) return; \
 		if (IS_DEAD(this)) \
 		{ \
-			this.impulse = IMP_weapon_priority_##slot##_##dir.impulse; \
+			this.impulse = IMP_weapon_priority_##i##_##dir.impulse; \
 			return; \
 		} \
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
-		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
 		{ \
-			.entity weaponentity = weaponentities[wepslot]; \
-			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[slot], dir, weaponentity); \
-			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
+			.entity weaponentity = weaponentities[slot]; \
+			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[i], dir, weaponentity); \
+			if(autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -150,8 +153,8 @@ X(9, next)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
 		{ \
 			.entity weaponentity = weaponentities[slot]; \
-			W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i), weaponentity); \
-			if(slot == 0 && autocvar_g_weaponswitch_debug != 1) \
+			W_SwitchWeapon_TryOthers(this, REGISTRY_GET(Weapons, WEP_FIRST + i), weaponentity); \
+			if(autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -194,7 +197,7 @@ IMPULSE(weapon_next_byid)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 0, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -212,7 +215,7 @@ IMPULSE(weapon_prev_byid)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 0, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -230,7 +233,7 @@ IMPULSE(weapon_next_bygroup)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 1, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -248,7 +251,7 @@ IMPULSE(weapon_prev_bygroup)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 1, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -266,7 +269,7 @@ IMPULSE(weapon_next_bypriority)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 2, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -284,7 +287,7 @@ IMPULSE(weapon_prev_bypriority)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 2, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -298,7 +301,7 @@ IMPULSE(weapon_last)
 		.entity weaponentity = weaponentities[slot];
 		W_LastWeapon(this, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -312,7 +315,7 @@ IMPULSE(weapon_best)
 		.entity weaponentity = weaponentities[slot];
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -321,13 +324,19 @@ IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
+	bool is_dualwielding = W_DualWielding(this);
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
+		vector md = this.(weaponentity).movedir;
+		vector vecs = ((md.x > 0) ? md : '0 0 0');
+		vector dv = v_right * -vecs.y;
+		if(!is_dualwielding)
+			dv = '0 0 0'; // don't override!
+		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), dv, true);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
-			break;
+		if(autocvar_g_weaponswitch_debug == 2)
+			break; // in this mode, the off-hand weapon is selected based on the primary weapon, don't drop it twice!
 	}
 }
 
@@ -335,7 +344,7 @@ IMPULSE(weapon_reload)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	if (forbidWeaponUse(this)) return;
+	if (weaponLocked(this)) return;
 	entity actor = this;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -344,7 +353,7 @@ IMPULSE(weapon_reload)
 		w.wr_reload(w, actor, weaponentity);
 
 		// allow reloading all active slots?
-		//if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+		//if(autocvar_g_weaponswitch_debug != 1)
 			//break;
 	}
 }
@@ -508,7 +517,7 @@ IMPULSE(waypoint_here_here)
 
 IMPULSE(waypoint_here_crosshair)
 {
-	WarpZone_crosshair_trace(this);
+	WarpZone_crosshair_trace_plusvisibletriggers(this);
 	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, trace_endpos, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at crosshair\n");
@@ -570,34 +579,4 @@ IMPULSE(waypoint_clear)
 			ClientKill(this);
 	}
 	sprint(this, "all waypoints cleared\n");
-}
-
-IMPULSE(navwaypoint_spawn)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_spawn_fromeditor(this);
-}
-
-IMPULSE(navwaypoint_remove)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_remove_fromeditor(this);
-}
-
-IMPULSE(navwaypoint_relink)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_schedulerelinkall();
-}
-
-IMPULSE(navwaypoint_save)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_saveall();
-}
-
-IMPULSE(navwaypoint_unreachable)
-{
-	if (!autocvar_g_waypointeditor) return;
-	waypoint_unreachable(this);
 }

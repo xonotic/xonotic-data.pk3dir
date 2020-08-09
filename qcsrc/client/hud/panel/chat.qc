@@ -1,10 +1,14 @@
 #include "chat.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
 #include <client/miscfunctions.qh>
 
 // Chat (#12)
+
+void HUD_Chat_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
 
 void HUD_Chat()
 {

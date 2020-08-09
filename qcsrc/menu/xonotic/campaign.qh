@@ -23,6 +23,8 @@ CLASS(XonoticCampaignList, XonoticListBox)
 	ATTRIB(XonoticCampaignList, columnCheckMarkSize, float, 0);
 	ATTRIB(XonoticCampaignList, checkMarkOrigin, vector, '0 0 0');
 	ATTRIB(XonoticCampaignList, checkMarkSize, vector, '0 0 0');
+	ATTRIB(XonoticCampaignList, typeIconOrigin, vector, '0 0 0');
+	ATTRIB(XonoticCampaignList, typeIconSize, vector, '0 0 0');
 	ATTRIB(XonoticCampaignList, realUpperMargin1, float, 0);
 	ATTRIB(XonoticCampaignList, realUpperMargin2, float, 0);
 
@@ -34,6 +36,8 @@ CLASS(XonoticCampaignList, XonoticListBox)
 	ATTRIB(XonoticCampaignList, cvarName, string);
 	METHOD(XonoticCampaignList, loadCvars, void(entity));
 	METHOD(XonoticCampaignList, saveCvars, void(entity));
+	ATTRIB(XonoticCampaignList, hasNextCampaign, bool, false);
+	ATTRIB(XonoticCampaignList, hasPrevCampaign, bool, false);
 
 	ATTRIB(XonoticCampaignList, buttonNext, entity);
 	ATTRIB(XonoticCampaignList, buttonPrev, entity);

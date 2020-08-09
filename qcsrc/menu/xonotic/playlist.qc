@@ -147,6 +147,7 @@ void XonoticPlayList_drawListBoxItem(entity me, int i, vector absSize, bool isSe
 	if(i == me.playingTrack)
 	{
 		float f = cvar("music_playlist_sampleposition0");
+		// display Play symbol: Unicode char U+25B6: Black Right-Pointing Triangle
 		if(f <= 0 || (((time * 2) & 1) && f > 0))
 			draw_Text(me.realUpperMargin * eY + (me.columnNumberOrigin + me.columnNumberSize) * eX, "\xE2\x96\xB6", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	}

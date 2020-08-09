@@ -1,5 +1,11 @@
 #include "sv_keyhunt.qh"
 
+#include <server/command/vote.qh>
+#include <server/gamelog.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <common/mapobjects/triggers.qh>
+
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
 float autocvar_g_balance_keyhunt_delay_damage_return;
@@ -23,6 +29,7 @@ float autocvar_g_balance_keyhunt_throwvelocity;
 int autocvar_g_keyhunt_teams_override;
 
 // #define KH_PLAYER_USE_ATTACHMENT
+// TODO? no model exists for this
 // #define KH_PLAYER_USE_CARRIEDMODEL
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
@@ -52,12 +59,6 @@ bool kh_no_radar_circles;
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
 
-int kh_keystatus[17];
-//kh_keystatus[0] = status of dropped keys, kh_keystatus[1 - 16] = player #
-//replace 17 with cvar("maxplayers") or similar !!!!!!!!!
-//for(i = 0; i < maxplayers; ++i)
-//	kh_keystatus[i] = "0";
-
 int kh_Team_ByID(int t)
 {
 	if(t == 0) return NUM_TEAM_1;
@@ -67,8 +68,6 @@ int kh_Team_ByID(int t)
 	return 0;
 }
 
-//entity kh_worldkeylist;
-.entity kh_worldkeynext;
 entity kh_controller;
 //bool kh_tracking_enabled;
 int kh_teams;
@@ -340,18 +339,6 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		if(key.kh_next)
 			key.kh_next.kh_prev = key;
 
-		float i;
-		i = kh_keystatus[key.owner.playerid];
-			if(key.netname == "^1red key")
-				i += 1;
-			if(key.netname == "^4blue key")
-				i += 2;
-			if(key.netname == "^3yellow key")
-				i += 4;
-			if(key.netname == "^6pink key")
-				i += 8;
-		kh_keystatus[key.owner.playerid] = i;
-
 		kh_Key_Attach(key);
 
 		if(key.kh_next == NULL)
@@ -560,7 +547,12 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 		midpoint += thisorigin;
 
 		if(!first)
-			te_lightning2(NULL, lastorigin, thisorigin);
+		{
+			// TODO: this effect has been replaced due to a possible crash it causes
+			// see https://gitlab.com/xonotic/darkplaces/issues/123
+			//te_lightning2(NULL, lastorigin, thisorigin);
+			Send_Effect(EFFECT_TR_NEXUIZPLASMA, lastorigin, thisorigin, 1);
+		}
 		lastorigin = thisorigin;
 		if(first)
 			firstorigin = thisorigin;
@@ -568,7 +560,8 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 	}
 	if(NumTeams(kh_teams) > 2)
 	{
-		te_lightning2(NULL, lastorigin, firstorigin);
+		//te_lightning2(NULL, lastorigin, firstorigin); // TODO see above
+		Send_Effect(EFFECT_TR_NEXUIZPLASMA, lastorigin, firstorigin, 1);
 	}
 	midpoint = midpoint * (1 / NumTeams(kh_teams));
 	te_customflash(midpoint, 1000, 1, Team_ColorRGB(winner_team) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
@@ -704,10 +697,12 @@ LABEL(not_winning)
 		kh_interferemsg_time = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(it.team == kh_interferemsg_team)
+			{
 				if(it.kh_next)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_MEET);
 				else
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
+			}
 			else
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
 		});
@@ -1054,7 +1049,7 @@ void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingsca
 			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 	}
 
-	havocbot_goalrating_items(this, 1, this.origin, 10000);
+	havocbot_goalrating_items(this, 80000, this.origin, 10000);
 }
 
 void havocbot_role_kh_carrier(entity this)
@@ -1307,6 +1302,13 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 		bot.havocbot_role = havocbot_role_kh_freelancer;
 
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(kh, LogDeath_AppendItemCodes)
+{
+	entity player = M_ARGV(0, entity);
+	if(player.kh_next)
+		M_ARGV(1, string) = strcat(M_ARGV(1, string), "K"); // item codes
 }
 
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)

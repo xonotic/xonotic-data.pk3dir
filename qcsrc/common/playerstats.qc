@@ -5,9 +5,11 @@
     #include "constants.qh"
     #include "util.qh"
     #include <common/weapons/_all.qh>
+    #include <server/client.qh>
     #include "../server/anticheat.qh"
-    #include "../server/defs.qh"
+    #include <common/stats.qh>
     #include "../server/scores.qh"
+	#include <server/world.qh>
     #include "../server/weapons/accuracy.qh"
 #endif
 
@@ -152,6 +154,8 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 			if(latency)
 				PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_AVGLATENCY, latency);
 		}
+
+		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
 	}
 
 	strfree(p.playerstats_id);
@@ -258,6 +262,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 }
 
 // this... is a hack, a temporary one until we get a proper duel gametype
+// TODO: remove duel hack after servers have migrated to the proper duel gametype!
 string PlayerStats_GetGametype()
 {
 	if(IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2)
@@ -291,7 +296,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * G: game type
 		 * O: mod name (icon request) as in server browser
 		 * M: map name
-		 * I: match ID (see "matchid" in g_world.qc)
+		 * I: match ID (see "matchid" in world.qc)
 		 * S: "hostname" of the server
 		 * C: number of "unpure" cvar changes
 		 * U: UDP port number of the server
@@ -374,6 +379,10 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 					tt = db_get(PS_GR_OUT_DB, sprintf("%s:_team", p));
 					url_fputs(fh, sprintf("t %s\n", tt));
 				}
+
+				// elo ranking enabled
+				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_ranked", p));
+				if(nn != "") { url_fputs(fh, sprintf("r %s\n", nn)); }
 
 				// output player events
 				for(e = PS_GR_OUT_EVL; (en = db_get(PS_GR_OUT_DB, sprintf("*:%s", e))) != ""; e = en)
@@ -480,6 +489,21 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 
 			FOREACH_CLIENT(IS_REAL_CLIENT(it), it.playerstats_basicstatus = PS_B_STATUS_IDLE);
 		}
+	}
+}
+
+SHUTDOWN(PlayerStats_PlayerBasic_Shutdown)
+{
+	if(PS_B_IN_DB >= 0)
+	{
+		db_close(PS_B_IN_DB);
+		PS_B_IN_DB = -1;
+	}
+
+	if(PS_GR_OUT_DB >= 0)
+	{
+		db_close(PS_GR_OUT_DB);
+		PS_GR_OUT_DB = -1;
 	}
 }
 

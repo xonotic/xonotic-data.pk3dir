@@ -2,6 +2,8 @@
 
 #include "ctf.qh"
 
+#include <common/gamemodes/sv_rules.qh>
+
 void ctf_Initialize();
 
 REGISTER_MUTATOR(ctf, false)
@@ -28,7 +30,8 @@ CLASS(Flag, Pickup)
     ATTRIB(Flag, m_mins, vector, (PL_MIN_CONST + '0 0 -13') * 1.4); // scaling be damned
     ATTRIB(Flag, m_maxs, vector, (PL_MAX_CONST + '0 0 -13') * 1.4);
 ENDCLASS(Flag)
-Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
+Flag CTF_FLAG;
+STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
 void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }
 
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
@@ -43,8 +46,8 @@ const vector FLAG_DROP_OFFSET = ('0 0 32');
 const vector FLAG_CARRY_OFFSET = ('-16 0 8');
 #define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_CONST.z - 13))
 const vector FLAG_WAYPOINT_OFFSET = ('0 0 64');
-const vector FLAG_FLOAT_OFFSET = ('0 0 32');
-const vector FLAG_PASS_ARC_OFFSET = ('0 0 -10');
+const int FLAG_FLOAT_OFFSET_Z = 32;
+const int FLAG_PASS_ARC_OFFSET_Z = -10;
 
 const vector VEHICLE_FLAG_OFFSET = ('0 0 96');
 const float VEHICLE_FLAG_SCALE = 1.0;
@@ -71,6 +74,9 @@ const float VEHICLE_FLAG_SCALE = 1.0;
 .float score_pickup;
 .float score_return;
 .float score_team_capture; // shouldn't be too high
+
+// property set on objects to point to the flag they're carrying (if any)
+.entity flagcarried;
 
 // effects
 .string toucheffect;
@@ -128,7 +134,6 @@ float ctf_captimerecord; // record time for capturing the flag
 .float ctf_droptime;
 .int ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
 .entity ctf_dropper; // don't allow spam of dropping the flag
-.int max_flag_health;
 .float next_take_time;
 .bool ctf_flagdamaged_byworld;
 int ctf_teams;

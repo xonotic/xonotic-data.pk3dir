@@ -1,8 +1,10 @@
 #include "common.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
 #include <server/miscfunctions.qh>
-#include <common/t_items.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/deathtypes/all.qh>
@@ -30,7 +32,7 @@ void W_GiveWeapon(entity e, int wep)
 {
 	if (!wep) return;
 
-	STAT(WEAPONS, e) |= WepSet_FromWeapon(Weapons_from(wep));
+	STAT(WEAPONS, e) |= WepSet_FromWeapon(REGISTRY_GET(Weapons, wep));
 
 	if (IS_PLAYER(e)) {
 	    Send_Notification(NOTIF_ONE, e, MSG_MULTI, ITEM_WEAPON_GOT, wep);

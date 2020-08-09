@@ -1,7 +1,8 @@
 #include "dynlight.qh"
 
 #ifdef SVQC
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 
 const float LOOP = 1;
@@ -46,7 +47,7 @@ void dynlight_think(entity this)
 void dynlight_find_aiment(entity this)
 {
 	entity targ;
-	if (!this.target)
+	if (!this.target || this.target == "")
 		objerror (this, "dynlight: no target to follow");
 
 	targ = find(NULL, targetname, this.target);
@@ -62,7 +63,7 @@ void dynlight_find_aiment(entity this)
 void dynlight_find_path(entity this)
 {
 	entity targ;
-	if (!this.target)
+	if (!this.target || this.target == "")
 		objerror (this, "dynlight: no target to follow");
 
 	targ = find(NULL, targetname, this.target);
@@ -74,7 +75,7 @@ void dynlight_find_path(entity this)
 void dynlight_find_target(entity this)
 {
 	entity targ;
-	if (!this.target)
+	if (!this.target || this.target == "")
 		objerror (this, "dynlight: no target to follow");
 
 	targ = find(NULL, targetname, this.target);

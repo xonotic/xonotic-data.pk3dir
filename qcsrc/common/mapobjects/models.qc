@@ -1,23 +1,16 @@
 #include "models.qh"
 
 #ifdef SVQC
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 #include <common/net_linked.qh>
 #include "subs.qh"
 #include "triggers.qh"
-
-entityclass(BGMScript);
-classfield(BGMScript) .string bgmscript;
-classfield(BGMScript) .float bgmscriptattack;
-classfield(BGMScript) .float bgmscriptdecay;
-classfield(BGMScript) .float bgmscriptsustain;
-classfield(BGMScript) .float bgmscriptrelease;
+#include "bgmscript.qh"
 
 #include <common/constants.qh>
-#include "../../lib/csqcmodel/sv_model.qh"
-
-.float modelscale;
+#include <lib/csqcmodel/sv_model.qh>
 
 void g_model_setcolormaptoactivator(entity this, entity actor, entity trigger)
 {
@@ -41,6 +34,11 @@ void g_clientmodel_setcolormaptoactivator(entity this, entity actor, entity trig
 
 void g_clientmodel_use(entity this, entity actor, entity trigger)
 {
+	// Flag to set func_clientwall state
+	// 1 == deactivate, 2 == activate, 0 == do nothing
+	if(this.classname == "func_clientwall" || this.classname == "func_clientillusionary")
+		this.antiwall_flag = trigger.antiwall_flag;
+
 	if (this.antiwall_flag == 1)
 	{
 		this.inactive = 1;
@@ -112,11 +110,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(sf & BIT(2))
 	{
 		if(sf & 0x10)
-		{
-			WriteAngle(MSG_ENTITY, this.angles.x);
-			WriteAngle(MSG_ENTITY, this.angles.y);
-			WriteAngle(MSG_ENTITY, this.angles.z);
-		}
+			WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
 	if(sf & BIT(3))
@@ -148,10 +142,10 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 			WriteVector(MSG_ENTITY, this.movedir);
 			WriteByte(MSG_ENTITY, floor(this.lip * 255));
 		}
-		WriteByte(MSG_ENTITY, this.fade_start);
-		WriteByte(MSG_ENTITY, this.fade_end);
-		WriteByte(MSG_ENTITY, this.alpha_max);
-		WriteByte(MSG_ENTITY, this.alpha_min);
+		WriteShort(MSG_ENTITY, bound(0, this.fade_start, 65535));
+		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 65535));
+		WriteByte(MSG_ENTITY, floor(this.alpha_max * 256));
+		WriteByte(MSG_ENTITY, floor(this.alpha_min * 256));
 		WriteByte(MSG_ENTITY, this.inactive);
 		WriteShort(MSG_ENTITY, this.fade_vertical_offset);
 	}
@@ -161,21 +155,24 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 
 
 #define G_MODEL_INIT(ent,sol) \
-	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
+	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent); \
+	SetBrushEntityModel(ent,true); \
 	ent.use = g_model_setcolormaptoactivator; \
 	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); else if(ent.solid < 0) ent.solid = SOLID_NOT;
+	if(!ent.solid) ent.solid = (sol); \
+	else if(ent.solid < 0) ent.solid = SOLID_NOT;
 
 #define G_CLIENTMODEL_INIT(ent,sol) \
-	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
+	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent); \
+	SetBrushEntityModel(ent,true); \
 	ent.use = g_clientmodel_use; \
 	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); else if(ent.solid < 0) ent.solid = SOLID_NOT; \
-	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
+	if(!ent.solid) ent.solid = (sol); \
+	else if(ent.solid < 0) ent.solid = SOLID_NOT; \
+	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; \
+	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
 	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity); \
 	ent.default_solid = sol;
 
@@ -187,11 +184,11 @@ spawnfunc(misc_models)            { this.angles_x = -this.angles.x; G_MODEL_INIT
 // non-solid brush entities:
 spawnfunc(func_illusionary)       { G_MODEL_INIT      (this, SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
 spawnfunc(func_clientillusionary) { G_CLIENTMODEL_INIT(this, SOLID_NOT) } // brush entity
-spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_NOT) } // DEPRECATED old alias name from some other game
 
 // solid brush entities
 spawnfunc(func_wall)              { G_MODEL_INIT      (this, SOLID_BSP) } // Q1 name
 spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_BSP) } // DEPRECATED old alias name from some other game
 #elif defined(CSQC)
 .float alpha;
 .float scale;
@@ -199,42 +196,42 @@ spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // bru
 
 void Ent_Wall_PreDraw(entity this)
 {
+	float alph = this.alpha;
 	if (this.inactive)
 	{
-		this.alpha = 0;
+		alph = 0;
 	}
 	else
 	{
 		vector org = getpropertyvec(VF_ORIGIN);
 		if(!checkpvs(org, this))
-			this.alpha = 0;
+			alph = 0;
 		else if(this.fade_start || this.fade_end) {
 			vector offset = '0 0 0';
 			offset_z = this.fade_vertical_offset;
-			float player_dist = vlen(org - this.origin - 0.5 * (this.mins + this.maxs) + offset);
+			vector player_dist_math = org - this.origin - 0.5 * (this.mins + this.maxs) + offset;
 			if (this.fade_end == this.fade_start)
 			{
-				if (player_dist >= this.fade_start)
-					this.alpha = 0;
+				if (vdist(player_dist_math, >=, this.fade_start))
+					alph = 0;
 				else
-					this.alpha = 1;
+					alph = 1;
 			}
 			else
 			{
-				this.alpha = (this.alpha_min + this.alpha_max * bound(0,
+				float player_dist = vlen(player_dist_math);
+				alph = (this.alpha_min + this.alpha_max * bound(0,
 							   (this.fade_end - player_dist)
 							   / (this.fade_end - this.fade_start), 1)) / 100.0;
 			}
 		}
 		else
 		{
-			this.alpha = 1;
+			alph = 1;
 		}
 	}
-	if(this.alpha <= 0)
-		this.drawmask = 0;
-	else
-		this.drawmask = MASK_NORMAL;
+	this.alpha = alph;
+	this.drawmask = (alph <= 0) ? 0 : MASK_NORMAL;
 }
 
 void Ent_Wall_Draw(entity this)
@@ -334,11 +331,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 	if(f & 4)
 	{
 		if(f & 0x10)
-		{
-			this.angles_x = ReadAngle();
-			this.angles_y = ReadAngle();
-			this.angles_z = ReadAngle();
-		}
+			this.angles = ReadAngleVector();
 		else
 			this.angles = '0 0 0';
 	}
@@ -390,10 +383,10 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 			this.movedir = ReadVector();
 			this.lip = ReadByte() / 255.0;
 		}
-		this.fade_start = ReadByte();
-		this.fade_end = ReadByte();
-		this.alpha_max = ReadByte();
-		this.alpha_min = ReadByte();
+		this.fade_start = ReadShort();
+		this.fade_end = ReadShort();
+		this.alpha_max = ReadByte() / 255.0;
+		this.alpha_min = ReadByte() / 255.0;
 		this.inactive = ReadByte();
 		this.fade_vertical_offset = ReadShort();
 		BGMScript_InitEntity(this);

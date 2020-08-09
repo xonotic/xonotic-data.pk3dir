@@ -1,7 +1,7 @@
 #include "breakable.qh"
 #ifdef SVQC
 
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/bot/api.qh>
 #include <common/csqcmodel_settings.qh>
 #include <lib/csqcmodel/sv_model.qh>
@@ -83,7 +83,7 @@ void func_breakable_colormod(entity this)
 	float h;
 	if (!(this.spawnflags & BREAKABLE_INDICATE_DAMAGE))
 		return;
-	h = GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health;
+	h = GetResource(this, RES_HEALTH) / this.max_health;
 	if(h < 0.25)
 		this.colormod = '1 0 0';
 	else if(h <= 0.75)
@@ -129,7 +129,7 @@ void func_breakable_look_restore(entity this)
 
 void func_breakable_behave_destroyed(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	this.takedamage = DAMAGE_NO;
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
@@ -157,11 +157,11 @@ void func_breakable_think(entity this)
 void func_breakable_destroy(entity this, entity actor, entity trigger);
 void func_breakable_behave_restore(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	if(this.sprite)
 	{
 		WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
-		WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
 	}
 	if(!(this.spawnflags & BREAKABLE_NODAMAGE))
 	{
@@ -187,7 +187,7 @@ void func_breakable_init_for_player(entity this, entity player)
 	if (this.noise1 && this.state == STATE_ALIVE && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
-		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM, 0);
 	}
 }
 
@@ -272,15 +272,15 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		if(attacker.team == this.team)
 			return;
 	this.pain_finished = time;
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 	if(this.sprite)
 	{
 		WaypointSprite_Ping(this.sprite);
-		WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
 	}
 	func_breakable_colormod(this);
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		debrisforce = force;
 
@@ -315,9 +315,9 @@ void func_breakable_reset(entity this)
 spawnfunc(func_breakable)
 {
 	float n, i;
-	if(!GetResourceAmount(this, RESOURCE_HEALTH))
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 100);
-	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
+	if(!GetResource(this, RES_HEALTH))
+		SetResourceExplicit(this, RES_HEALTH, 100);
+	this.max_health = GetResource(this, RES_HEALTH);
 
 	// yes, I know, MOVETYPE_NONE is not available here, not that one would want it here anyway
 	if(!this.debrismovetype) this.debrismovetype = MOVETYPE_BOUNCE;
@@ -343,7 +343,7 @@ spawnfunc(func_breakable)
 		this.dmg_force = 200;
 
 	this.mdl = this.model;
-	SetBrushEntityModel(this);
+	SetBrushEntityModel(this, true);
 
 	if(this.spawnflags & BREAKABLE_NODAMAGE)
 		this.use = func_breakable_destroy;

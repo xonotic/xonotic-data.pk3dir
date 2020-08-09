@@ -1,11 +1,18 @@
 #include "quake3.qh"
 
-#include <server/defs.qh>
+#include <server/client.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
-#include <server/items.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
 #include <server/resources.qh>
-#include <common/t_items.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mapobjects/trigger/counter.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/notifications/all.qh>
 #include <common/weapons/_all.qh>
 
 //***********************
@@ -56,10 +63,7 @@ SPAWNFUNC_ITEM(item_armor_shard, ITEM_ArmorSmall)
 SPAWNFUNC_ITEM(item_enviro, ITEM_Shield)
 
 // medkit -> armor (we have no holdables)
-SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorMega)
-
-// doubler -> strength
-SPAWNFUNC_ITEM(item_doubler, ITEM_Strength)
+SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorBig)
 
 .float wait;
 .float delay;
@@ -87,38 +91,57 @@ void target_init_use(entity this, entity actor, entity trigger)
 {
 	if (!(this.spawnflags & 1))
 	{
-		SetResourceAmount(actor, RESOURCE_ARMOR, start_armorvalue);
+		SetResource(actor, RES_ARMOR, start_armorvalue);
 		actor.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot;
 	}
 
 	if (!(this.spawnflags & 2))
 	{
-		SetResourceAmount(actor, RESOURCE_HEALTH, start_health);
+		SetResource(actor, RES_HEALTH, start_health);
 		actor.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot;
 		actor.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 	}
 
 	if (!(this.spawnflags & 4))
 	{
-		SetResourceAmount(actor, RESOURCE_SHELLS, start_ammo_shells);
-		SetResourceAmount(actor, RESOURCE_BULLETS, start_ammo_nails);
-		SetResourceAmount(actor, RESOURCE_ROCKETS, start_ammo_rockets);
-		SetResourceAmount(actor, RESOURCE_CELLS, start_ammo_cells);
-		SetResourceAmount(actor, RESOURCE_PLASMA, start_ammo_plasma);
-		SetResourceAmount(actor, RESOURCE_FUEL, start_ammo_fuel);
-
-		STAT(WEAPONS, actor) = start_weapons;
-		if (this.spawnflags & 32)
+		if(this.spawnflags & 32) // spawn with only melee
 		{
-			// TODO
+			SetResource(actor, RES_SHELLS, 0);
+			SetResource(actor, RES_BULLETS, 0);
+			SetResource(actor, RES_ROCKETS, 0);
+			SetResource(actor, RES_CELLS, 0);
+			SetResource(actor, RES_PLASMA, 0);
+			SetResource(actor, RES_FUEL, 0);
+
+			STAT(WEAPONS, actor) = WEPSET(SHOTGUN);
+		}
+		else
+		{
+			SetResource(actor, RES_SHELLS, start_ammo_shells);
+			SetResource(actor, RES_BULLETS, start_ammo_nails);
+			SetResource(actor, RES_ROCKETS, start_ammo_rockets);
+			SetResource(actor, RES_CELLS, start_ammo_cells);
+			SetResource(actor, RES_PLASMA, start_ammo_plasma);
+			SetResource(actor, RES_FUEL, start_ammo_fuel);
+
+			STAT(WEAPONS, actor) = start_weapons;
 		}
 	}
 
 	if (!(this.spawnflags & 8))
 	{
-		actor.strength_finished = 0;
-		actor.invincible_finished = 0;
-		STAT(BUFFS, actor) = 0;
+		STAT(STRENGTH_FINISHED, actor) = 0;
+		STAT(INVINCIBLE_FINISHED, actor) = 0;
+		if(STAT(BUFFS, actor)) // TODO: make a dropbuffs function to handle this
+		{
+			int buffid = buff_FirstFromFlags(STAT(BUFFS, actor)).m_id;
+			Send_Notification(NOTIF_ONE, actor, MSG_MULTI, ITEM_BUFF_DROP, buffid);
+			sound(actor, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+			if(!IS_INDEPENDENT_PLAYER(actor))
+				Send_Notification(NOTIF_ALL_EXCEPT, actor, MSG_INFO, INFO_ITEM_BUFF_LOST, actor.netname, buffid);
+			STAT(BUFFS, actor) = 0;
+			STAT(BUFF_TIME, actor) = 0;
+		}
 	}
 
 	if (!(this.spawnflags & 16))
@@ -141,33 +164,43 @@ void target_give_init(entity this)
 	IL_EACH(g_items, it.targetname == this.target,
 	{
 		if (it.classname == "weapon_devastator") {
-			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(devastator, ammo)); // WEAPONTODO
+			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(devastator, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "devastator");
 		}
 		else if (it.classname == "weapon_vortex") {
-			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(vortex, ammo)); // WEAPONTODO
+			SetResourceExplicit(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(vortex, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "vortex");
 		}
 		else if (it.classname == "weapon_electro") {
-			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(electro, ammo)); // WEAPONTODO
+			SetResourceExplicit(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(electro, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "electro");
 		}
 		else if (it.classname == "weapon_hagar") {
-			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(hagar, ammo)); // WEAPONTODO
+			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(hagar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "hagar");
 		}
 		else if (it.classname == "weapon_crylink") {
-			SetResourceAmountExplicit(this, RESOURCE_CELLS, GetResourceAmount(this, RESOURCE_CELLS) + it.count * WEP_CVAR_PRI(crylink, ammo)); // WEAPONTODO
+			SetResourceExplicit(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(crylink, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "crylink");
 		}
 		else if (it.classname == "weapon_mortar") {
-			SetResourceAmountExplicit(this, RESOURCE_ROCKETS, GetResourceAmount(this, RESOURCE_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
+			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "mortar");
 		}
+		else if (it.classname == "weapon_shotgun") {
+			SetResourceExplicit(this, RES_SHELLS, GetResource(this, RES_SHELLS) + it.count * WEP_CVAR_PRI(shotgun, ammo)); // WEAPONTODO
+			this.netname = cons(this.netname, "shotgun");
+		}
 		else if (it.classname == "item_armor_mega")
-			SetResourceAmountExplicit(this, RESOURCE_ARMOR, 100);
+			SetResourceExplicit(this, RES_ARMOR, 100);
 		else if (it.classname == "item_health_mega")
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, 200);
+			SetResourceExplicit(this, RES_HEALTH, 200);
+		else if (it.classname == "item_buff") {
+			entity buff = buff_FirstFromFlags(STAT(BUFFS, it));
+			this.netname = cons(this.netname, buff.netname);
+			STAT(BUFF_TIME, this) = it.count;
+		}
+
 		//remove(it); // removing ents in init functions causes havoc, workaround:
         setthink(it, SUB_Remove);
         it.nextthink = time;
@@ -183,12 +216,44 @@ spawnfunc(target_give)
 	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
 }
 
+void score_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	actor.fragsfilter_cnt += this.count;
+}
+spawnfunc(target_score)
+{
+	if(!g_cts) { delete(this); return; }
+
+	if(!this.count)
+		this.count = 1;
+	this.use = score_use;
+}
+
+void fragsfilter_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	if(actor.fragsfilter_cnt >= this.frags)
+		SUB_UseTargets(this, actor, trigger);
+}
+spawnfunc(target_fragsFilter)
+{
+	if(!g_cts) { delete(this); return; }
+
+	if(!this.frags)
+		this.frags = 1;
+	this.use = fragsfilter_use;
+}
+
 //spawnfunc(item_flight)       /* handled by buffs mutator */
+//spawnfunc(item_doubler)        /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
-//spawnfunc(item_health_large) /* handled in t_items.qc */
-//spawnfunc(item_health_small) /* handled in t_items.qc */
-//spawnfunc(item_health_mega)  /* handled in t_items.qc */
+//spawnfunc(item_health_large) /* handled in items.qc */
+//spawnfunc(item_health_small) /* handled in items.qc */
+//spawnfunc(item_health_mega)  /* handled in items.qc */
 //spawnfunc(item_invis)        /* handled by buffs mutator */
 //spawnfunc(item_regen)        /* handled by buffs mutator */
 
@@ -233,9 +298,13 @@ bool DoesQ3ARemoveThisEntity(entity this)
 			gametypename = "team";
 		if(g_ctf)
 			gametypename = "ctf";
+		if(g_ctf && ctf_oneflag)
+			gametypename = "oneflag";
+		if(g_duel)
+			gametypename = "tournament";
 		if(maxclients == 1)
 			gametypename = "single";
-		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
+		// we do not have the other types (obelisk, harvester, teamtournament)
 		if(strstrofs(this.gametype, gametypename, 0) < 0)
 			return true;
 	}

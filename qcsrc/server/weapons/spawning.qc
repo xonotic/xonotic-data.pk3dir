@@ -3,8 +3,8 @@
 #include "weaponsystem.qh"
 #include "../resources.qh"
 #include <server/mutators/_mod.qh>
-#include <common/t_items.qh>
-#include <server/items.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
 #include <common/weapons/_all.qh>
 
 .bool m_isreplaced; ///< Holds whether the weapon has been replaced.
@@ -14,7 +14,7 @@ string W_Apply_Weaponreplace(string in)
 	string out = "";
 	FOREACH_WORD(in, true, {
 		string replacement = "";
-		Weapon w = Weapons_fromstr(it);
+		Weapon w = Weapon_from_name(it);
 		if (w)
 		{
             replacement = w.weaponreplace;
@@ -26,22 +26,21 @@ string W_Apply_Weaponreplace(string in)
 	return out;
 }
 
-void weapon_defaultspawnfunc(entity this, Weapon e)
+void weapon_defaultspawnfunc(entity this, Weapon wpn)
 {
-	Weapon wpn = e;
-	e = wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
+	wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
 	this.classname = wpn.m_canonical_spawnfunc;
 	if (!Item_IsLoot(this) && !this.m_isreplaced)
 	{
-		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+		if (wpn.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
-			LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
+			//LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
 			startitem_failed = true;
 			return;
 		}
 
-		string s = W_Apply_Weaponreplace(e.netname);
-		MUTATOR_CALLHOOK(SetWeaponreplace, this, e, s);
+		string s = W_Apply_Weaponreplace(wpn.netname);
+		MUTATOR_CALLHOOK(SetWeaponreplace, this, wpn, s);
 		s = M_ARGV(2, string);
 		if (s == "")
 		{
@@ -56,29 +55,20 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				FOREACH(Weapons, it != WEP_Null, {
-					if(it.netname == s)
-					{
-						entity replacement = spawn();
-						copyentity(this, replacement);
-						replacement.m_isreplaced = true;
-						weapon_defaultspawnfunc(replacement, it);
-						break;
-					}
-				});
+				Weapon wep = Weapon_from_name(s);
+				if(wep != WEP_Null)
+				{
+					entity replacement = spawn();
+					copyentity(this, replacement);
+					replacement.m_isreplaced = true;
+					weapon_defaultspawnfunc(replacement, wep);
+				}
 			}
 		}
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
-			wpn = WEP_Null;
-			FOREACH(Weapons, it != WEP_Null, {
-				if(it.netname == s)
-				{
-					wpn = it;
-					break;
-				}
-			});
+			wpn = Weapon_from_name(s);
 		}
 		if (wpn == WEP_Null)
 		{
@@ -87,6 +77,9 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			return;
 		}
 	}
+
+	if(!Item_IsLoot(this))
+		weaponsInMapAll |= WepSet_FromWeapon(wpn);
 
 	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
 	{
@@ -114,16 +107,16 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	if ((wpn.ammo_type != RESOURCE_NONE) && !GetResourceAmount(this, wpn.ammo_type))
+	if ((wpn.ammo_type != RES_NONE) && !GetResource(this, wpn.ammo_type))
 	{
 		switch (wpn.ammo_type)
 		{
-			case RESOURCE_SHELLS:  SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_shells_weapon"));  break;
-			case RESOURCE_BULLETS: SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_nails_weapon"));   break;
-			case RESOURCE_ROCKETS: SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_rockets_weapon")); break;
-			case RESOURCE_CELLS:   SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_cells_weapon"));   break;
-			case RESOURCE_PLASMA:  SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_plasma_weapon"));  break;
-			case RESOURCE_FUEL:    SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_fuel_weapon"));    break;
+			case RES_SHELLS:  SetResource(this, wpn.ammo_type, cvar("g_pickup_shells_weapon"));  break;
+			case RES_BULLETS: SetResource(this, wpn.ammo_type, cvar("g_pickup_nails_weapon"));   break;
+			case RES_ROCKETS: SetResource(this, wpn.ammo_type, cvar("g_pickup_rockets_weapon")); break;
+			case RES_CELLS:   SetResource(this, wpn.ammo_type, cvar("g_pickup_cells_weapon"));   break;
+			case RES_PLASMA:  SetResource(this, wpn.ammo_type, cvar("g_pickup_plasma_weapon"));  break;
+			case RES_FUEL:    SetResource(this, wpn.ammo_type, cvar("g_pickup_fuel_weapon"));    break;
 		}
 	}
 

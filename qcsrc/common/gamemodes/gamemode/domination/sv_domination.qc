@@ -1,6 +1,13 @@
 #include "sv_domination.qh"
 
+#include <server/client.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/items/items.qh>
 #include <server/teamplay.qh>
+#include <common/mapobjects/platforms.qh>
+#include <common/mapobjects/triggers.qh>
 
 bool g_domination;
 
@@ -69,10 +76,12 @@ void dompoint_captured(entity this)
 		this.enemy = NULL;
 
 	if (head.noise != "")
+	{
 		if(this.enemy)
 			_sound(this.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
 		else
 			_sound(this, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
+	}
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
@@ -188,7 +197,7 @@ void dompointtouch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
 		return;
-	if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1)
+	if(GetResource(toucher, RES_HEALTH) < 1)
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
@@ -466,10 +475,7 @@ MUTATOR_HOOKFUNCTION(dom, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	if(domination_roundbased)
-	if(!round_handler_IsRoundStarted())
-		player.player_blocked = 1;
-	else
-		player.player_blocked = 0;
+		player.player_blocked = !round_handler_IsRoundStarted();
 }
 
 MUTATOR_HOOKFUNCTION(dom, ClientConnect)

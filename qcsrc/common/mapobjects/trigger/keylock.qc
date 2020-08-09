@@ -30,7 +30,14 @@ void trigger_keylock_touch(entity this, entity toucher)
 
 	// check silver key
 	if(this.itemkeys)
-		key_used = item_keys_usekey(this, toucher);
+	{
+#ifdef SVQC
+		entity store = PS(toucher);
+#elif defined(CSQC)
+		entity store = toucher;
+#endif
+		key_used = item_keys_usekey(this, store);
+	}
 
 	if(this.itemkeys)
 	{
@@ -162,16 +169,6 @@ spawnfunc(trigger_keylock)
 	trigger_keylock_link(this);
 }
 #elif defined(CSQC)
-void keylock_remove(entity this)
-{
-	strfree(this.target);
-	strfree(this.target2);
-	strfree(this.target3);
-	strfree(this.target4);
-	strfree(this.killtarget);
-	strfree(this.targetname);
-}
-
 NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
 {
 	this.itemkeys = ReadInt24_t();
@@ -182,6 +179,6 @@ NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
 	return = true;
 
 	this.classname = "trigger_keylock";
-	this.entremove = keylock_remove;
+	this.entremove = trigger_remove_generic;
 }
 #endif

@@ -11,7 +11,7 @@ CLASS(Armor, Pickup)
 ENDCLASS(Armor)
 
 #ifdef SVQC
-    #include <common/t_items.qh>
+    #include <server/items/items.qh>
 #endif
 
 #ifdef GAMEQC
@@ -26,8 +26,8 @@ void item_armorsmall_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorsmall_max;
-    if(!GetResourceAmount(item, RESOURCE_ARMOR))
-        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armorsmall);
+    if(!GetResource(item, RES_ARMOR))
+        SetResourceExplicit(item, RES_ARMOR, g_pickup_armorsmall);
 }
 #endif
 
@@ -39,11 +39,11 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_sound                =   SND_ArmorSmall;
 #endif
     this.netname                =   "armor_small";
-    this.m_name                 =   "5 Armor";
+    this.m_name                 =   _("Small armor");
     this.m_icon                 =   "armor";
 	this.m_waypoint_icon        =   "waypoint_armor";
 #ifdef SVQC
-    this.m_itemid               =   IT_ARMOR_SHARD;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
     this.m_pickupanyway         =   GET(g_pickup_armorsmall_anyway);
@@ -65,8 +65,8 @@ void item_armormedium_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormedium_max;
-    if(!GetResourceAmount(item, RESOURCE_ARMOR))
-        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armormedium);
+    if(!GetResource(item, RES_ARMOR))
+        SetResourceExplicit(item, RES_ARMOR, g_pickup_armormedium);
 }
 #endif
 
@@ -78,11 +78,11 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_sound                =   SND_ArmorMedium;
 #endif
     this.netname                =   "armor_medium";
-    this.m_name                 =   "25 Armor";
+    this.m_name                 =   _("Medium armor");
     this.m_icon                 =   "armor";
 	this.m_waypoint_icon        =   "waypoint_armor";
 #ifdef SVQC
-    this.m_itemid               =   IT_ARMOR;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
     this.m_pickupanyway         =   GET(g_pickup_armormedium_anyway);
@@ -104,8 +104,8 @@ void item_armorbig_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorbig_max;
-    if(!GetResourceAmount(item, RESOURCE_ARMOR))
-        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armorbig);
+    if(!GetResource(item, RES_ARMOR))
+        SetResourceExplicit(item, RES_ARMOR, g_pickup_armorbig);
 }
 #endif
 
@@ -117,13 +117,13 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_sound                =   SND_ArmorBig;
 #endif
     this.netname                =   "armor_big";
-    this.m_name                 =   "50 Armor";
+    this.m_name                 =   _("Big armor");
     this.m_icon                 =   "armor";
     this.m_color                =   '0 1 0';
 	this.m_waypoint_text        =   _("Big armor");
 	this.m_waypoint_icon        =   "waypoint_armor";
 #ifdef SVQC
-    this.m_itemid               =   IT_ARMOR;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
     this.m_pickupanyway         =   GET(g_pickup_armorbig_anyway);
@@ -145,8 +145,8 @@ void item_armormega_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormega_max;
-    if(!GetResourceAmount(item, RESOURCE_ARMOR))
-        SetResourceAmountExplicit(item, RESOURCE_ARMOR, g_pickup_armormega);
+    if(!GetResource(item, RES_ARMOR))
+        SetResourceExplicit(item, RES_ARMOR, g_pickup_armormega);
 }
 #endif
 
@@ -158,7 +158,7 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_sound                =   SND_ArmorMega;
 #endif
     this.netname                =   "armor_mega";
-    this.m_name                 =   "100 Armor";
+    this.m_name                 =   _("Mega armor");
     this.m_icon                 =   "item_large_armor";
     this.m_color                =   '0 1 0';
 	this.m_waypoint_text        =   _("Mega armor");
@@ -166,7 +166,7 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_maxs                 =   '16 16 70';
-    this.m_itemid               =   IT_ARMOR;
+    this.m_itemid               =   IT_RESOURCE;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
     this.m_pickupanyway         =   GET(g_pickup_armormega_anyway);

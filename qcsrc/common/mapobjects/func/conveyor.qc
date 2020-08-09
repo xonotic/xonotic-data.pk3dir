@@ -98,15 +98,13 @@ void conveyor_init(entity this)
 	setthink(this, conveyor_think);
 	this.nextthink = time;
 	this.setactive = generic_netlinked_setactive;
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		// backwards compatibility
 		this.use = generic_netlinked_legacy_use;
 	}
 	this.reset = generic_netlinked_reset;
 	this.reset(this);
-
-	FixSize(this);
 
 	Net_LinkEntity(this, 0, false, conveyor_send);
 

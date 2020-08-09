@@ -35,7 +35,7 @@ spawnfunc(func_bobbing)
 	if (this.noise != "")
 	{
 		precache_sound(this.noise);
-		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
+		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE, 0);
 	}
 	if (!this.speed)
 		this.speed = 4;
@@ -47,6 +47,8 @@ spawnfunc(func_bobbing)
 	this.cnt = 360 / this.speed;
 
 	this.active = ACTIVE_ACTIVE;
+
+	this.draggable = drag_undraggable;
 
 	// damage when blocked
 	setblocked(this, generic_plat_blocked);
