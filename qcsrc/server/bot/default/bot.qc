@@ -16,9 +16,9 @@
 #include "../../autocvars.qh"
 #include "../../campaign.qh"
 #include "../../client.qh"
-#include "../../constants.qh"
-#include "../../defs.qh"
-#include <server/g_damage.qh>
+#include <common/stats.qh>
+#include <server/world.qh>
+#include <server/damage.qh>
 #include "../../race.qh"
 #include <server/items/items.qh>
 

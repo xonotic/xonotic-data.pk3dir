@@ -4,6 +4,10 @@
 
 #include <server/bot/api.qh>
 
+#include <server/command/vote.qh>
+
+#include <server/damage.qh>
+
 #include <server/mutators/_mod.qh>
 
 #include <server/teamplay.qh>

@@ -1,11 +1,13 @@
-#include "g_damage.qh"
+#include "damage.qh"
 
 #include <common/effects/all.qh>
 #include "bot/api.qh"
-#include "g_hook.qh"
+#include "hook.qh"
+#include <server/client.qh>
 #include <server/gamelog.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
+#include <server/main.qh>
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
@@ -23,6 +25,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include <common/mapobjects/defs.qh>
+#include <common/mapobjects/triggers.qh>
 #include "../common/notifications/all.qh"
 #include "../common/physics/movetypes/movetypes.qh"
 #include "../common/playerstats.qh"

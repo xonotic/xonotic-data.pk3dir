@@ -1,4 +1,4 @@
-#include "g_world.qh"
+#include "world.qh"
 
 #include "anticheat.qh"
 #include "antilag.qh"
@@ -10,16 +10,19 @@
 #include "command/getreplies.qh"
 #include "command/sv_cmd.qh"
 #include "command/vote.qh"
-#include "g_hook.qh"
+#include "hook.qh"
 #include <server/gamelog.qh>
+#include <server/damage.qh>
 #include "ipban.qh"
 #include "mapvoting.qh"
 #include <server/mutators/_mod.qh>
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
+#include "spawnpoints.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
+#include <server/weapons/common.qh>
 #include "../common/constants.qh"
 #include <common/net_linked.qh>
 #include "../common/deathtypes/all.qh"
@@ -34,6 +37,7 @@
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../common/mapobjects/trigger/secret.qh"
 #include "../common/mapobjects/target/music.qh"
 #include "../common/util.qh"
@@ -2060,7 +2064,6 @@ void RunThink(entity this)
 }
 
 bool autocvar_sv_freezenonclients;
-bool autocvar_sv_gameplayfix_delayprojectiles = false;
 void Physics_Frame()
 {
 	if(autocvar_sv_freezenonclients)
@@ -2068,7 +2071,7 @@ void Physics_Frame()
 
 	IL_EACH(g_moveables, true,
 	{
-		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PHYSICS)
+		if(IS_CLIENT(it) || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
 		//set_movetype(it, it.move_movetype);
@@ -2091,9 +2094,11 @@ void Physics_Frame()
 	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)
 		return;
 
+	// make a second pass to see if any ents spawned this frame and make
+	// sure they run their move/think. this is verified by checking .move_time, which will never be 0 if the entity has moved
 	IL_EACH(g_moveables, it.move_qcphysics,
 	{
-		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
+		if(IS_CLIENT(it) || it.move_time || it.move_movetype == MOVETYPE_NONE || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 		Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 	});

@@ -8,7 +8,9 @@
 #include <common/util.qh>
 #include <common/items/item.qh>
 #include <common/weapons/_all.qh>
+#include <common/replicate.qh>
 #include <common/state.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/wepent.qh>
 

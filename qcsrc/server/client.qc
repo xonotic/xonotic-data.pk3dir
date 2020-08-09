@@ -1,6 +1,7 @@
 #include "client.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include "anticheat.qh"
@@ -12,16 +13,17 @@
 #include "teamplay.qh"
 #include "spawnpoints.qh"
 #include "resources.qh"
-#include "g_damage.qh"
+#include "damage.qh"
 #include "handicap.qh"
-#include "g_hook.qh"
+#include "hook.qh"
 #include "command/common.qh"
 #include "command/vote.qh"
 #include "clientkill.qh"
 #include "cheats.qh"
-#include "g_world.qh"
+#include "world.qh"
 #include <server/gamelog.qh>
 #include "race.qh"
+#include <server/main.qh>
 #include "antilag.qh"
 #include "campaign.qh"
 #include "command/common.qh"
@@ -48,6 +50,7 @@
 #include "../common/vehicles/all.qh"
 
 #include "weapons/hitplot.qh"
+#include "weapons/selection.qh"
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
@@ -57,6 +60,8 @@
 #include <common/vehicles/sv_vehicles.qh>
 
 #include "../common/items/_mod.qh"
+
+#include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
 
 #include "../common/mutators/mutator/waypoints/all.qh"
 #include "../common/mutators/mutator/instagib/sv_instagib.qh"
@@ -75,6 +80,8 @@
 #include "../lib/warpzone/server.qh"
 
 #include <common/mutators/mutator/overkill/oknex.qh>
+
+#include <common/weapons/weapon/vortex.qh>
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
@@ -114,9 +121,13 @@ void WriteSpectators(entity player, entity to)
 {
 	if(!player) { return; } // not sure how, but best to be safe
 
+	int spec_count = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
 	{
+		if(spec_count >= MAX_SPECTATORS)
+			break;
 		WriteByte(MSG_ENTITY, num_for_edict(it));
+		++spec_count;
 	});
 }
 
@@ -334,12 +345,11 @@ void PutObserverInServer(entity this)
 	this.alpha = 0;
 	this.scale = 0;
 	this.fade_time = 0;
-	this.pain_frame = 0;
 	this.pain_finished = 0;
 	STAT(STRENGTH_FINISHED, this) = 0;
 	STAT(INVINCIBLE_FINISHED, this) = 0;
 	STAT(SUPERWEAPONS_FINISHED, this) = 0;
-	this.air_finished = 0;
+	STAT(AIR_FINISHED, this) = 0;
 	//this.dphitcontentsmask = 0;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
 	if (autocvar_g_playerclip_collisions)
@@ -616,7 +626,6 @@ void PutPlayerInServer(entity this)
 	STAT(RESPAWN_TIME, this) = 0;
 	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) ? 0.9 : autocvar_sv_player_scale);
 	this.fade_time = 0;
-	this.pain_frame = 0;
 	this.pain_finished = 0;
 	this.pushltime = 0;
 	setthink(this, func_null); // players have no think function
@@ -649,7 +658,7 @@ void PutPlayerInServer(entity this)
 	STAT(BUFFS, this) = 0;
 	STAT(BUFF_TIME, this) = 0;
 
-	this.air_finished = 0;
+	STAT(AIR_FINISHED, this) = 0;
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
 
@@ -1807,7 +1816,7 @@ void SpectateCopy(entity this, entity spectatee)
 	STAT(STRENGTH_FINISHED, this) = STAT(STRENGTH_FINISHED, spectatee);
 	STAT(INVINCIBLE_FINISHED, this) = STAT(INVINCIBLE_FINISHED, spectatee);
 	STAT(SUPERWEAPONS_FINISHED, this) = STAT(SUPERWEAPONS_FINISHED, spectatee);
-	this.air_finished = spectatee.air_finished;
+	STAT(AIR_FINISHED, this) = STAT(AIR_FINISHED, spectatee);
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	STAT(WEAPONS, this) = STAT(WEAPONS, spectatee);
 	this.punchangle = spectatee.punchangle;
@@ -2695,21 +2704,21 @@ void DrownPlayer(entity this)
 	if(IS_DEAD(this) || game_stopped || time < game_starttime || this.vehicle
 		|| STAT(FROZEN, this) || this.watertype != CONTENT_WATER)
 	{
-		this.air_finished = 0;
+		STAT(AIR_FINISHED, this) = 0;
 		return;
 	}
 
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)
 	{
-		if(this.air_finished && this.air_finished < time)
+		if(STAT(AIR_FINISHED, this) && STAT(AIR_FINISHED, this) < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
-		this.air_finished = 0;
+		STAT(AIR_FINISHED, this) = 0;
 	}
 	else
 	{
-		if (!this.air_finished)
-			this.air_finished = time + autocvar_g_balance_contents_drowndelay;
-		if (this.air_finished < time)
+		if (!STAT(AIR_FINISHED, this))
+			STAT(AIR_FINISHED, this) = time + autocvar_g_balance_contents_drowndelay;
+		if (STAT(AIR_FINISHED, this) < time)
 		{	// drown!
 			if (this.pain_finished < time)
 			{

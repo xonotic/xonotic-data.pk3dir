@@ -1,7 +1,11 @@
 #include "sv_race.qh"
 
+#include <server/client.qh>
+#include <server/world.qh>
 #include <server/gamelog.qh>
 #include <server/race.qh>
+#include <common/ent_cs.qh>
+#include <common/mapobjects/triggers.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
 float autocvar_g_race_qualifying_timelimit;

@@ -13,7 +13,7 @@
 #include "../campaign.qh"
 #include "../client.qh"
 #include "../player.qh"
-#include "../g_world.qh"
+#include "../world.qh"
 #include "../ipban.qh"
 #include "../teamplay.qh"
 

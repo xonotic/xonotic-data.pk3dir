@@ -6,6 +6,7 @@
 #include "cheats.qh"
 #include "client.qh"
 #include "clientkill.qh"
+#include "damage.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"

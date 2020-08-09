@@ -3,7 +3,9 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <lib/warpzone/util_server.qh>
-    #include <server/defs.qh>
+	#include <common/mapobjects/triggers.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC)

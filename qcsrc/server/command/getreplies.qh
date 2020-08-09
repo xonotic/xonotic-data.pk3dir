@@ -13,7 +13,7 @@ const int LADDER_SIZE = 30; // ladder shows the top X players
 string top_uids[LADDER_SIZE];
 float top_scores[LADDER_SIZE];
 
-// allow functions to be used in other code like g_world.qc and race.qc
+// allow functions to be used in other code like world.qc and race.qc
 string getrecords(float page);
 string getrankings();
 string getladder();

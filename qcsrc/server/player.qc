@@ -5,13 +5,17 @@
 #include "cheats.qh"
 #include "client.qh"
 #include "clientkill.qh"
-#include "g_damage.qh"
+#include "damage.qh"
+#include "world.qh"
 #include "handicap.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
+#include <server/main.qh>
+#include "weapons/common.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "command/vote.qh"
 #include "../common/state.qh"
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
@@ -19,6 +23,7 @@
 #include "../common/gamemodes/sv_rules.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/teleporters.qh>
 #include "../common/playerstats.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 

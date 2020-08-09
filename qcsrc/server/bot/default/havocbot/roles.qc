@@ -1,7 +1,9 @@
 #include "roles.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
+#include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/resources.qh>
 #include "havocbot.qh"

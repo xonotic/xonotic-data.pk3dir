@@ -3,7 +3,6 @@
 #define WEAPONS_ALL_C
 
 #if defined(CSQC)
-	#include <client/defs.qh>
 	#include "../constants.qh"
 	#include "../stats.qh"
 	#include <lib/warpzone/anglestransform.qh>
@@ -29,12 +28,11 @@
     #include <common/util.qh>
     #include "../monsters/_mod.qh"
     #include "config.qh"
+    #include <server/weapons/common.qh>
     #include <server/weapons/csqcprojectile.qh>
     #include <server/weapons/tracing.qh>
     #include <server/items/spawning.qh>
     #include <server/autocvars.qh>
-    #include <server/constants.qh>
-    #include <server/defs.qh>
     #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
     #include <server/mutators/_mod.qh>
@@ -42,7 +40,7 @@
     #include <server/command/_mod.qh>
     #include <lib/csqcmodel/sv_model.qh>
     #include <server/portals.qh>
-    #include <server/g_hook.qh>
+    #include <server/hook.qh>
 #endif
 #ifdef GAMEQC
 	#include "calculations.qc"
@@ -567,7 +565,7 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	int fr = ReadByte();
+	WFRAME fr = ReadByte();
 	float t = ReadFloat();
     int slot = ReadByte();
 	bool restartanim = ReadByte();

@@ -1,6 +1,7 @@
 #pragma once
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 
 vector w_shotorg;
@@ -61,6 +62,16 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 // ====================
 //  Ballistics Tracing
 // ====================
+
+.float ballistics_density;
+
+// for railgun damage (hitting multiple enemies)
+.bool railgunhit;
+.float railgunhitsolidbackup;
+.vector railgunhitloc;
+
+IntrusiveList g_railgunhit;
+STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
 
 .float railgundistance;
 .vector railgunforce;
