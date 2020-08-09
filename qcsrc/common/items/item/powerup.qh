@@ -43,8 +43,8 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_name             =   _("Strength");
     this.m_icon             =   "strength";
     this.m_color            =   '0 0 1';
-	this.m_waypoint_text    =   _("Strength");
-	this.m_waypoint_icon    =   "waypoint_strength";
+    this.m_waypoint_text    =   _("Strength");
+    this.m_waypoint_icon    =   "waypoint_strength";
     this.m_waypointblink    =   2;
 #ifdef GAMEQC
     this.m_itemid           =   IT_STRENGTH;
@@ -82,8 +82,8 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_name             =   _("Shield");
     this.m_icon             =   "shield";
     this.m_color            =   '1 0 1';
-	this.m_waypoint_text    =   _("Shield");
-	this.m_waypoint_icon    =   "waypoint_shield";
+    this.m_waypoint_text    =   _("Shield");
+    this.m_waypoint_icon    =   "waypoint_shield";
     this.m_waypointblink    =   2;
 #ifdef GAMEQC
     this.m_itemid           =   IT_INVINCIBLE;
