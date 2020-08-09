@@ -108,8 +108,8 @@ CLASS(GameItem, Object)
     ATTRIB(GameItem, m_name, string);
     ATTRIB(GameItem, m_icon, string);
     ATTRIB(GameItem, m_color, vector, '1 1 1');
-	ATTRIB(GameItem, m_waypoint_text, string);
-	ATTRIB(GameItem, m_waypoint_icon, string);
+    ATTRIB(GameItem, m_waypoint_text, string);
+    ATTRIB(GameItem, m_waypoint_icon, string);
     ATTRIB(GameItem, m_waypointblink, int, 1);
 #ifdef GAMEQC
     ATTRIB(GameItem, m_glow, bool, false);
