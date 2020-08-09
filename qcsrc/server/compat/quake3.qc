@@ -194,7 +194,7 @@ spawnfunc(target_init)
 	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }
 
-// weapon give ent from defrag
+// weapon give ent from Q3
 void target_give_init(entity this)
 {
 	IL_EACH(g_items, it.targetname == this.target,
@@ -226,6 +226,10 @@ void target_give_init(entity this)
 		else if (it.classname == "weapon_shotgun") {
 			SetResourceExplicit(this, RES_SHELLS, GetResource(this, RES_SHELLS) + it.count * WEP_CVAR_PRI(shotgun, ammo)); // WEAPONTODO
 			this.netname = cons(this.netname, "shotgun");
+		}
+		else if (it.classname == "weapon_machinegun") {
+			SetResourceExplicit(this, RES_BULLETS, GetResource(this, RES_BULLETS) + it.count * WEP_CVAR(machinegun, burst_ammo)); // WEAPONTODO
+			this.netname = cons(this.netname, "machinegun");
 		}
 		else if (it.classname == "item_armor_mega")
 			SetResourceExplicit(this, RES_ARMOR, 100);
