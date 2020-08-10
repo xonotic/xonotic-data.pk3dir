@@ -349,7 +349,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 		return;
 	}
 
-	if (DoesQ3ARemoveThisEntity(this)) {
+	if (q3compat && DoesQ3ARemoveThisEntity(this)) {
 		delete(this);
 		return;
 	}
