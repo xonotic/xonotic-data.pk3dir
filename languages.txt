@@ -4,7 +4,7 @@ de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 75%
 es    "Spanish" "Español" 99%
-fr    "French" "Français" 99%
+fr    "French" "Français" 100%
 ga    "Irish" "Irish" 32%
 it    "Italian" "Italiano" 99%
 hu    "Hungarian" "Magyar" 47%
@@ -17,7 +17,7 @@ fi    "Finnish" "Suomi" 99%
 el    "Greek" "Ελληνική" 47%
 be    "Belarusian" "Беларуская" 54%
 bg    "Bulgarian" "Български" 63%
-ru    "Russian" "Русский" 99%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 64%
 uk    "Ukrainian" "Українська" 50%
 zh_CN "Chinese (China)" "中文" 57%
