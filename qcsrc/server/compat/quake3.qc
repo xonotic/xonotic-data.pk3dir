@@ -51,8 +51,9 @@ SPAWNFUNC_ITEM_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), ITEM_Shells, ITEM
 // GL -> Mortar
 SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)
 
-// Team Arena Proximity Launcher -> Mine Layer
-SPAWNFUNC_WEAPON(weapon_prox_launcher, WEP_MINE_LAYER)
+// Team Arena Proximity Launcher -> Mortar
+// It's more accurate to spawn Mine Layer but players prefer Mortar, and weapon_grenadelauncher is usually disabled by "notta" and weapon_prox_launcher placed at the same origin
+SPAWNFUNC_WEAPON(weapon_prox_launcher, WEP_MORTAR)
 SPAWNFUNC_ITEM(ammo_mines, ITEM_Rockets)
 
 // Team Arena Chaingun -> HLAC
