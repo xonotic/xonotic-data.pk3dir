@@ -42,11 +42,11 @@
 */
 
 // SG -> MG || SG
-SPAWNFUNC_ITEM_COND(ammo_shells, (q3compat & BIT(0)), ITEM_Bullets, ITEM_Shells)
-SPAWNFUNC_WEAPON_COND(weapon_shotgun, (q3compat & BIT(0)), WEP_MACHINEGUN, WEP_SHOTGUN)
+SPAWNFUNC_ITEM_COND(ammo_shells, (q3compat & Q3COMPAT_ARENA), ITEM_Bullets, ITEM_Shells)
+SPAWNFUNC_WEAPON_COND(weapon_shotgun, (q3compat & Q3COMPAT_ARENA), WEP_MACHINEGUN, WEP_SHOTGUN)
 
 // MG -> SG || MG
-SPAWNFUNC_ITEM_COND(ammo_bullets, (q3compat & BIT(0)), ITEM_Shells, ITEM_Bullets)
+SPAWNFUNC_ITEM_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), ITEM_Shells, ITEM_Bullets)
 
 // GL -> Mortar
 SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)

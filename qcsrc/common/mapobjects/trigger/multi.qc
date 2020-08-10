@@ -167,7 +167,7 @@ spawnfunc(trigger_multiple)
 		this.wait = 0;
 	this.use = multi_use;
 
-	if(this.wait == -1 && (q3compat & BIT(1)))
+	if(this.wait == -1 && (q3compat & Q3COMPAT_DEFI))
 		this.wait = 0.1; // compatibility for q3df: "instant" return
 
 	EXACTTRIGGER_INIT;

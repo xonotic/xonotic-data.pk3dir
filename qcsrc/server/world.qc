@@ -887,8 +887,8 @@ spawnfunc(worldspawn)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
-	q3compat = BITSET(q3compat, BIT(0), fexists(strcat("scripts/", mapname, ".arena")));
-	q3compat = BITSET(q3compat, BIT(1), fexists(strcat("scripts/", mapname, ".defi")));
+	q3compat = BITSET(q3compat, Q3COMPAT_ARENA, fexists(strcat("scripts/", mapname, ".arena")));
+	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, fexists(strcat("scripts/", mapname, ".defi")));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
