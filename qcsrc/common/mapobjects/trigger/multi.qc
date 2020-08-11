@@ -52,6 +52,7 @@ void multi_trigger(entity this)
 	{	// we can't just delete(this) here, because this is a touch function
 		// called while C code is looping through area links...
 		settouch(this, func_null);
+		this.use = func_null;
 	}
 }
 
@@ -133,6 +134,7 @@ void multi_reset(entity this)
 	setthink(this, func_null);
 	this.nextthink = 0;
 	this.team = this.team_saved;
+	this.use = multi_use;
 }
 
 /*QUAKED spawnfunc_trigger_multiple (.5 .5 .5) ? notouch
