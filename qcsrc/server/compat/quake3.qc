@@ -241,10 +241,18 @@ void target_give_init(entity this)
 			this.netname = cons(this.netname, buff.netname);
 			STAT(BUFF_TIME, this) = it.count;
 		}
+		else if (it.classname == "item_shield") {
+			this.invincible_finished = it.count;
+			this.netname = cons(this.netname, "invincible");
+		}
+		else if (it.classname == "item_strength") {
+			this.strength_finished = it.count;
+			this.netname = cons(this.netname, "strength");
+		}
 
 		//remove(it); // removing ents in init functions causes havoc, workaround:
-        setthink(it, SUB_Remove);
-        it.nextthink = time;
+		setthink(it, SUB_Remove);
+		it.nextthink = time;
 	});
 	this.spawnflags = 2;
 	this.spawnfunc_checked = true;
