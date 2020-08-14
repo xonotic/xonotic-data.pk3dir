@@ -1745,14 +1745,14 @@ void Scoreboard_Draw()
 			if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 			{
 				// team score on the left (default)
-				str_pos = pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5);
+				str_pos = pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 3);
 			}
 			else
 			{
 				// team score on the right
-				str_pos = pos + team_score_baseoffset + eX * (panel_size.x + hud_fontsize.x * 1.5);
+				str_pos = pos + team_score_baseoffset + eX * (panel_size.x + hud_fontsize.x * 3);
 			}
-			drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(str_pos, str, hud_fontsize * 3, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// team size (if set to show on the side)
 			if (autocvar_hud_panel_scoreboard_team_size_position != 0) // team size not off
