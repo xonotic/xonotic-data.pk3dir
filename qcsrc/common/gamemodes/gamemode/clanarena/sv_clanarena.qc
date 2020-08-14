@@ -72,7 +72,8 @@ float CA_CheckWinner()
 		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
 
 		allowed_to_spawn = false;
-		game_stopped = true;
+		if(autocvar_g_ca_round_stop)
+			game_stopped = true;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		return 1;
 	}
@@ -99,7 +100,8 @@ float CA_CheckWinner()
 	}
 
 	allowed_to_spawn = false;
-	game_stopped = true;
+	if(autocvar_g_ca_round_stop)
+		game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });

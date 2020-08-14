@@ -8,6 +8,7 @@
 int autocvar_g_ca_point_limit;
 int autocvar_g_ca_point_leadlimit;
 float autocvar_g_ca_round_timelimit;
+bool autocvar_g_ca_round_stop;
 bool autocvar_g_ca_team_spawns;
 //int autocvar_g_ca_teams;
 int autocvar_g_ca_teams_override;
