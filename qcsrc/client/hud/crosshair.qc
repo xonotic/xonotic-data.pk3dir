@@ -361,7 +361,7 @@ void HUD_Crosshair(entity this)
 		// todo: make crosshair hit indication dependent on damage dealt
 		if(autocvar_crosshair_hitindication)
 		{
-			vector hitindication_color = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
+			vector col = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
 
 			if(unaccounted_damage)
 			{
@@ -374,9 +374,9 @@ void HUD_Crosshair(entity this)
 				hitindication_crosshair_size = 0;
 
 			wcross_scale += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
-			wcross_color.x += sin(hitindication_crosshair_size) * hitindication_color.x;
-			wcross_color.y += sin(hitindication_crosshair_size) * hitindication_color.y;
-			wcross_color.z += sin(hitindication_crosshair_size) * hitindication_color.z;
+			wcross_color.x += sin(hitindication_crosshair_size) * col.x;
+			wcross_color.y += sin(hitindication_crosshair_size) * col.y;
+			wcross_color.z += sin(hitindication_crosshair_size) * col.z;
 		}
 
 		// no effects needed for targeting enemies, this can't possibly span all valid targets!
@@ -484,12 +484,13 @@ void HUD_Crosshair(entity this)
 						use_vortex_chargepool = 1;
 						ring_inner_value = chargepool;
 					} else {
-						vortex_charge_movingavg = (1 - autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate) * vortex_charge_movingavg + autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate * charge;
+						float rate = autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate;
+						vortex_charge_movingavg = (1 - rate) * vortex_charge_movingavg + rate * charge;
 						ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (charge - vortex_charge_movingavg), 1);
 					}
 
 					ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
-					ring_inner_rgb = eX * autocvar_crosshair_ring_vortex_inner_color_red + eY * autocvar_crosshair_ring_vortex_inner_color_green + eZ * autocvar_crosshair_ring_vortex_inner_color_blue;
+					ring_inner_rgb = vec3(autocvar_crosshair_ring_vortex_inner_color_red, autocvar_crosshair_ring_vortex_inner_color_green, autocvar_crosshair_ring_vortex_inner_color_blue);
 					ring_inner_image = "gfx/crosshair_ring_inner.tga";
 
 					// draw the outer ring to show the current charge of the weapon
@@ -500,7 +501,7 @@ void HUD_Crosshair(entity this)
 				}
 				else if (autocvar_crosshair_ring && wepent.activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
 				{
-					ring_value = bound(0, wepent.minelayer_mines / WEP_CVAR(minelayer, limit), 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_value = bound(0, wepent.minelayer_mines / WEP_CVAR(minelayer, limit), 1);
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
