@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Muhammad Nur Hidayat Yasuyoshi <mnh48mail@gmail.com>, 2018
+# 4b0721bd8a44304c1fd21d8581e7aba4_e088d28 <64a9a0c5da22e761316957ae436b6281_676465>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
