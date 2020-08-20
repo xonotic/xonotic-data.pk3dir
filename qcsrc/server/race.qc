@@ -754,6 +754,32 @@ bool race_waypointsprite_visible_for_player(entity this, entity player, entity v
 		return false;
 }
 
+void defrag_waypointsprites(entity targeted, entity checkpoint)
+{
+	for(entity t = findchain(target, targeted.targetname); t; t = t.chain)
+	{
+		if(t.modelindex)
+		{
+			entity s = WP_RaceStart;
+
+			if(checkpoint.classname == "target_checkpoint")
+				s = WP_RaceCheckpoint;
+			else if(checkpoint.classname == "target_stopTimer")
+				s = WP_RaceFinish;
+
+			vector o = (t.absmin + t.absmax) * 0.5;
+
+			WaypointSprite_SpawnFixed(s, o, t, sprite, RADARICON_NONE);
+
+			t.sprite.realowner = checkpoint;
+			t.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
+		}
+
+		if(t.targetname)
+			defrag_waypointsprites(t, checkpoint);
+	}
+}
+
 void trigger_race_checkpoint_verify(entity this)
 {
     static bool have_verified;
@@ -832,37 +858,39 @@ void trigger_race_checkpoint_verify(entity this)
 
 	g_race_qualifying = qual;
 
-	IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
-	{
-		if(it.targetname == "" || !it.targetname) // somehow this is a case...
-			continue;
-		entity cpt = it;
-		FOREACH_ENTITY_STRING(target, cpt.targetname,
-		{
-			vector org = (it.absmin + it.absmax) * 0.5;
-			if(cpt.race_checkpoint == 0)
-				WaypointSprite_SpawnFixed(WP_RaceStart, org, it, sprite, RADARICON_NONE);
-			else
-				WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, it, sprite, RADARICON_NONE);
-
-			it.sprite.realowner = cpt;
-			it.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
-		});
-	});
+//	IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
+//	{
+//		if(it.targetname == "" || !it.targetname) // somehow this is a case...
+//			continue;
+//		entity cpt = it;
+//		FOREACH_ENTITY_STRING(target, cpt.targetname,
+//		{
+//			vector org = (it.absmin + it.absmax) * 0.5;
+//			if(cpt.race_checkpoint == 0)
+//				WaypointSprite_SpawnFixed(WP_RaceStart, org, it, sprite, RADARICON_NONE);
+//			else
+//				WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, it, sprite, RADARICON_NONE);
+//
+//			it.sprite.realowner = cpt;
+//			it.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
+//		});
+//		defrag_waypointsprites(it, it);
+//	});
 
 	if (race_timed_checkpoint) {
 		if (defrag_ents) {
 			IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
 			{
-				entity cpt = it;
-				if(it.classname == "target_startTimer" || it.classname == "target_stopTimer") {
-					if(it.targetname == "" || !it.targetname) // somehow this is a case...
-						continue;
-					FOREACH_ENTITY_STRING(target, cpt.targetname, {
-						if(it.sprite)
-							WaypointSprite_UpdateSprites(it.sprite, ((cpt.classname == "target_startTimer") ? WP_RaceStart : WP_RaceFinish), WP_Null, WP_Null);
-					});
-				}
+//				entity cpt = it;
+//				if(it.classname == "target_startTimer" || it.classname == "target_stopTimer") {
+//					if(it.targetname == "" || !it.targetname) // somehow this is a case...
+//						continue;
+//					FOREACH_ENTITY_STRING(target, cpt.targetname, {
+//						if(it.sprite)
+//							WaypointSprite_UpdateSprites(it.sprite, ((cpt.classname == "target_startTimer") ? WP_RaceStart : WP_RaceFinish), WP_Null, WP_Null);
+//					});
+//				}
+				defrag_waypointsprites(it, it);
 				if(it.classname == "target_checkpoint") {
 					if(it.race_checkpoint == -2)
 						defragcpexists = -1; // something's wrong with the defrag cp file or it has not been written yet, set defragcpexists to -1 so that it will be rewritten when someone finishes
