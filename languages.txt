@@ -1,4 +1,5 @@
 ast   "Asturian" "Asturianu" 64%
+cs    "Czech" "Čeština" 29%
 de    "German" "Deutsch" 99%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
 en    "English" "English" 100%
@@ -14,6 +15,7 @@ pt    "Portuguese" "Português" 84%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
 ro    "Romanian" "Romana" 74%
 fi    "Finnish" "Suomi" 99%
+tr    "Turkish" "Türkçe" 27%
 el    "Greek" "Ελληνική" 47%
 be    "Belarusian" "Беларуская" 54%
 bg    "Bulgarian" "Български" 63%
