@@ -212,6 +212,11 @@ void timeout_handler_think(entity this)
 				this.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
 				timeout_time -= 1;                                  // decrease the time counter
 			}
+			else if (timeout_time == -1)  // infinite timer
+			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TIMEOUT_ONGOING);
+				this.nextthink = time + TIMEOUT_SLOWMO_VALUE;
+			}
 			else  // time to end the timeout
 			{
 				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEIN);
