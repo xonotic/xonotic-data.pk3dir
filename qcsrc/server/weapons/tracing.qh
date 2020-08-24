@@ -1,6 +1,7 @@
 #pragma once
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
 
 vector w_shotorg;
@@ -62,12 +63,22 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 //  Ballistics Tracing
 // ====================
 
+.float ballistics_density;
+
+// for railgun damage (hitting multiple enemies)
+.bool railgunhit;
+.float railgunhitsolidbackup;
+.vector railgunhitloc;
+
+IntrusiveList g_railgunhit;
+STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
+
 .float railgundistance;
 .vector railgunforce;
-void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype);
+void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype);
 
 entity fireBullet_trace_callback_eff;
 entity fireBullet_last_hit;
 void fireBullet_trace_callback(vector start, vector hit, vector end);
-void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect, bool do_antilag);
-void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, entity tracer_effect);
+void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect, bool do_antilag);
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect);

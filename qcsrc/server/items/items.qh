@@ -1,0 +1,114 @@
+#pragma once
+
+#include <common/sounds/sound.qh>
+
+void StartItem(entity this, entity a);
+.int item_group;
+.int item_group_count;
+
+float autocvar_sv_simple_items;
+bool ItemSend(entity this, entity to, int sf);
+
+bool have_pickup_item(entity this);
+
+const float ITEM_RESPAWN_TICKS = 10;
+
+// string overrides entity
+.string item_pickupsound;
+.entity item_pickupsound_ent;
+.entity item_model_ent;
+
+.float max_armorvalue;
+.float pickup_anyway;
+
+.float scheduledrespawntime;
+.float respawntime;
+.float respawntimejitter;
+.float respawntimestart;
+
+.float item_respawncounter;
+
+.float noalign; // if set to 1, the item or spawnpoint won't be dropped to the floor
+
+.float superweapons_finished; // NOTE: this field is used only by map entities, it does not directly apply the superweapons stat
+
+// delay before this item can be picked up
+.float item_spawnshieldtime;
+
+void Item_Show (entity e, int mode);
+
+void Item_Respawn (entity this);
+
+void Item_RespawnCountdown(entity this);
+void Item_ScheduleRespawnIn(entity e, float t);
+
+void Item_ScheduleRespawn(entity e);
+
+void Item_ScheduleInitialRespawn(entity e);
+
+/// \brief Give several random weapons and ammo to the entity.
+/// \param[in,out] receiver Entity to give weapons to.
+/// \param[in] num_weapons Number of weapons to give.
+/// \param[in] weapon_names Names of weapons to give separated by spaces.
+/// \param[in] ammo Entity containing the ammo amount for each possible weapon.
+/// \return No return.
+void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names, entity ammo_entity);
+
+bool Item_GiveAmmoTo(entity item, entity player, int res_type, float ammomax);
+
+bool Item_GiveTo(entity item, entity player);
+
+void Item_Touch(entity this, entity toucher);
+
+void Item_Reset(entity this);
+
+void Item_FindTeam(entity this);
+// Savage: used for item garbage-collection
+
+bool ItemSend(entity this, entity to, int sf);
+void ItemUpdate(entity this);
+
+void UpdateItemAfterTeleport(entity this);
+
+// pickup evaluation functions
+// these functions decide how desirable an item is to the bots
+
+float generic_pickupevalfunc(entity player, entity item);// {return item.bot_pickupbasevalue;} // WEAPONTODO
+
+float weapon_pickupevalfunc(entity player, entity item);
+float ammo_pickupevalfunc(entity player, entity item);
+float healtharmor_pickupevalfunc(entity player, entity item);
+
+.bool is_item;
+.entity itemdef;
+void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
+
+void setItemGroup(entity this);
+void setItemGroupCount();
+
+float GiveWeapon(entity e, float wpn, float op, float val);
+
+float GiveBit(entity e, .float fld, float bit, float op, float val);
+
+float GiveValue(entity e, .float fld, float op, float val);
+
+void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_decr);
+
+void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime);
+
+spawnfunc(target_items);
+
+#define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = STAT(WEAPONS, e)
+#define PREGIVE(e,f) float save_##f; save_##f = (e).f
+#define PREGIVE_RESOURCE(e,f) float save_##f = GetResource((e), (f))
+#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(STAT(WEAPONS, e) & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
+#define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
+#define POSTGIVE_RESOURCE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, GetResource((e), (f)), t, snd_incr, snd_decr)
+#define POSTGIVE_RES_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e),save_##f,GetResource((e),(f)),rotfield,rottime,regenfield,regentime);GiveSound((e),save_##f,GetResource((e),(f)),t,snd_incr,snd_decr)
+#define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
+#define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
+
+float GiveItems(entity e, float beginarg, float endarg);
+
+IntrusiveList g_items;
+STATIC_INIT(g_items) { g_items = IL_NEW(); }

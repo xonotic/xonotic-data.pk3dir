@@ -307,7 +307,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -420,7 +420,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -505,7 +505,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 		proj.flags = FL_PROJECTILE;
 		IL_PUSH(g_projectiles, proj);
 		IL_PUSH(g_bot_dodge, proj);
-        proj.missile_flags = MIF_SPLASH;
+		proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 

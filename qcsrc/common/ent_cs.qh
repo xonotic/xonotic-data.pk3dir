@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef CSQC
-#include <client/defs.qh>
+#include <client/csqcmodel_hooks.qh>
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
@@ -46,6 +46,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	.int m_forceupdate;
 
 	void entcs_force_origin(entity player);
+
+	bool radar_showenemies;
 
 #endif
 

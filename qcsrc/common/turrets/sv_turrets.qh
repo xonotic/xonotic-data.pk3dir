@@ -103,3 +103,6 @@ vector tvt_thadv; // turret head angle diff vector, updated by a successful call
 vector tvt_tadv; // turret angle diff vector, updated by a successful call to turret_validate_target
 float tvt_thadf; // turret head angle diff float, updated by a successful call to turret_validate_target
 float tvt_dist; // turret distance, updated by a successful call to turret_validate_target
+
+IntrusiveList g_turrets;
+STATIC_INIT(g_turrets) { g_turrets = IL_NEW(); }

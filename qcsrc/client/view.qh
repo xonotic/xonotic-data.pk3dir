@@ -2,13 +2,9 @@
 
 #include <common/weapons/weapon.qh>
 
-vector crosshair_getcolor(entity this, float health_stat);
-
 void calc_followmodel_ofs(entity view);
 
 void CSQC_Demo_Camera();
-
-void TrueAim_Init();
 
 entity viewmodels[MAX_WEAPONSLOTS];
 
@@ -22,3 +18,15 @@ const int CURSOR_RESIZE = 2;
 const int CURSOR_RESIZE2 = 3;
 
 float drawtime;
+float unaccounted_damage = 0;
+float zoomscript_caught;
+
+float dmg_take;
+// float dmg_save;
+// vector dmg_origin;
+
+#ifdef BLURTEST
+float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
+#endif
+
+float intermission_time;

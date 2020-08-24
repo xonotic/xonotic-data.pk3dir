@@ -1,12 +1,17 @@
 #include "csqcmodel_hooks.qh"
 #include "autocvars.qh"
+#include "main.qh"
 #include "miscfunctions.qh"
 #include <client/mutators/_mod.qh>
+#include <client/main.qh>
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>
 #include <common/ent_cs.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
+#include <common/physics/player.qh>
 #include <common/viewloc.qh>
 #include <common/effects/all.qh>
 #include <common/effects/all.inc>
@@ -133,6 +138,9 @@ void CSQCPlayer_ModelAppearance_PostUpdate(entity this)
 }
 void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 {
+	int cm = this.forceplayermodels_savecolormap;
+	cm = (cm >= 1024) ? cm : (entcs_GetClientColors(cm - 1) + 1024);
+
 	if(MUTATOR_CALLHOOK(ForcePlayermodels_Skip, this, islocalplayer))
 		goto skipforcemodels;
 
@@ -193,9 +201,6 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	// apply it
 	bool isfriend;
-	int cm;
-	cm = this.forceplayermodels_savecolormap;
-	cm = (cm >= 1024) ? cm : (entcs_GetClientColors(cm - 1) + 1024);
 
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
@@ -227,6 +232,11 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		this.skin = this.forceplayermodels_saveskin;
 	}
 
+	LABEL(skipforcemodels)
+
+	if(MUTATOR_CALLHOOK(ForcePlayercolors_Skip, this, islocalplayer))
+		goto skipforcecolors;
+
 	// forceplayercolors too
 	if(teamplay)
 	{
@@ -237,7 +247,8 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors == 2 && team_count == 2)
+		if((autocvar_cl_forceplayercolors == 2 && team_count == 2)
+			|| (autocvar_cl_forceplayercolors == 3 && IS_GAMETYPE(DUEL)))
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
@@ -280,7 +291,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 			this.colormap = player_localnum + 1;
 	}
 
-	LABEL(skipforcemodels)
+	LABEL(skipforcecolors)
 
 	if((this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST) && !autocvar_cl_respawn_ghosts_keepcolors)
 	{
@@ -520,9 +531,15 @@ void CSQCModel_Effects_Apply(entity this)
 	if(eff & EF_FULLBRIGHT)
 		this.renderflags |= RF_FULLBRIGHT;
 	if(eff & EF_FLAME)
-		pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	{
+		boxparticles(particleeffectnum(EFFECT_EF_FLAME), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
+		//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	}
 	if(eff & EF_STARDUST)
-		pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	{
+		boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
+		//pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	}
 	if(eff & EF_NOSHADOW)
 		this.renderflags |= RF_NOSHADOW;
 	if(eff & EF_NODEPTHTEST)

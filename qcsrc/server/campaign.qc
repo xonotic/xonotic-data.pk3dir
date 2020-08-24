@@ -1,10 +1,11 @@
 #include "campaign.qh"
 
-#include "defs.qh"
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 
 #include "cheats.qh"
 #include "miscfunctions.qh"
-#include "g_world.qh"
+#include "world.qh"
 
 #include "../common/campaign_common.qh"
 
@@ -33,7 +34,7 @@ float Campaign_Invalid()
 	string thismapname, wantedmapname;
 	thismapname = GetMapname();
 	wantedmapname = campaign_gametype[0];
-	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(wantedmapname))
+	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(wantedmapname, false))
 		return CampaignBailout("wrong game type!");
 	wantedmapname = campaign_mapname[0];
 	if(wantedmapname != thismapname)
@@ -67,7 +68,7 @@ void CampaignPreInit()
 
 	if(autocvar_sv_cheats)
 	{
-		MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0]));
+		MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0], false));
 		CampaignFile_Unload();
 		CampaignBailout("JOLLY CHEATS AHAHAHAHAHAHAH))");
 		return;
@@ -96,7 +97,7 @@ void CampaignPreInit()
 	cvar_settemp("skill", ftos(baseskill));
 	cvar_settemp("bot_number", ftos(campaign_bots[0]));
 
-	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0]));
+	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0], false));
 
 	if(Campaign_Invalid())
 		return;

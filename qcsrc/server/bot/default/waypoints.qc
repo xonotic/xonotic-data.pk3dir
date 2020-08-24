@@ -1,7 +1,10 @@
 #include "waypoints.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/items/items.qh>
 #include <server/miscfunctions.qh>
+#include <server/spawnpoints.qh>
 #include "cvars.qh"
 
 #include "bot.qh"
@@ -13,6 +16,7 @@
 
 #include <common/constants.qh>
 #include <common/debug.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>

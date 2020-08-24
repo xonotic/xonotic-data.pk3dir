@@ -2,6 +2,13 @@
 #include "sv_controlpoint.qh"
 #include "sv_generator.qh"
 
+#include <server/bot/api.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <common/mapobjects/defs.qh>
+#include <common/mapobjects/triggers.qh>
+
 bool g_onslaught;
 
 float autocvar_g_onslaught_teleport_wait;
@@ -39,9 +46,7 @@ bool clientcamera_send(entity this, entity to, int sf)
 
 	WriteVector(MSG_ENTITY, this.origin);
 
-	WriteAngle(MSG_ENTITY, this.angles_x);
-	WriteAngle(MSG_ENTITY, this.angles_y);
-	WriteAngle(MSG_ENTITY, this.angles_z);
+	WriteAngleVector(MSG_ENTITY, this.angles);
 
 	return true;
 }
@@ -84,14 +89,14 @@ void ons_CaptureShield_Reset(entity this)
 	this.team = this.enemy.team;
 }
 
-void ons_CaptureShield_Spawn(entity generator, bool is_generator)
+void ons_CaptureShield_Spawn(entity this, Model shield_model)
 {
 	entity shield = new(ons_captureshield);
 	IL_PUSH(g_onsshields, shield);
 
-	shield.enemy = generator;
-	shield.team = generator.team;
-	shield.colormap = generator.colormap;
+	shield.enemy = this;
+	shield.team = this.team;
+	shield.colormap = this.colormap;
 	shield.reset = ons_CaptureShield_Reset;
 	settouch(shield, ons_CaptureShield_Touch);
 	setcefc(shield, ons_CaptureShield_Customize);
@@ -99,13 +104,12 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 	set_movetype(shield, MOVETYPE_NOCLIP);
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
-	shield.scale = 1;
-	shield.model = ((is_generator) ? "models/onslaught/generator_shield.md3" : "models/onslaught/controlpoint_shield.md3");
+	shield.scale = this.scale;
 
-	precache_model(shield.model);
-	setorigin(shield, generator.origin);
-	_setmodel(shield, shield.model);
-	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
+	float shield_extra_size = 1.20; // hitbox is 20% larger than the object itself
+	setorigin(shield, this.origin);
+	setmodel(shield, shield_model);
+	setsize(shield, shield_extra_size * this.mins, shield_extra_size * this.maxs);
 }
 
 
@@ -760,7 +764,7 @@ void ons_DelayedControlPoint_Setup(entity this)
 	onslaught_updatelinks();
 
 	// captureshield setup
-	ons_CaptureShield_Spawn(this, false);
+	ons_CaptureShield_Spawn(this, MDL_ONS_CP_SHIELD);
 
 	CSQCMODEL_AUTOINIT(this);
 }
@@ -876,6 +880,7 @@ void ons_camSetup(entity this)
 
 	FOREACH_CLIENT(true, it.clientcamera = cam;);
 
+	// NOTE: engine networked
 	WriteByte(MSG_ALL, SVC_SETVIEWANGLES);
 	WriteAngle(MSG_ALL, cam.angles_x);
 	WriteAngle(MSG_ALL, cam.angles_y);
@@ -998,7 +1003,7 @@ void ons_GeneratorThink(entity this)
 		{
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
 			msg_entity = it;
-			soundto(MSG_ONE, this, CHAN_AUTO, SND(ONS_GENERATOR_ALARM), VOL_BASE, ATTEN_NONE);
+			soundto(MSG_ONE, this, CHAN_AUTO, SND(ONS_GENERATOR_ALARM), VOL_BASE, ATTEN_NONE, 0);
 		}
 		else
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_ONS_NOTSHIELDED));
@@ -1042,7 +1047,7 @@ void ons_DelayedGeneratorSetup(entity this)
 	this.bot_basewaypoint = this.nearestwaypoint;
 
 	// captureshield setup
-	ons_CaptureShield_Spawn(this, true);
+	ons_CaptureShield_Spawn(this, MDL_ONS_GEN_SHIELD);
 
 	onslaught_updatelinks();
 

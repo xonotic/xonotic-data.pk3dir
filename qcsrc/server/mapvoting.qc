@@ -1,8 +1,11 @@
 #include "mapvoting.qh"
 
-#include <server/defs.qh>
+#include <server/client.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/gamelog.qh>
 #include <server/miscfunctions.qh>
-#include "g_world.qh"
+#include "world.qh"
 #include "command/cmd.qh"
 #include "command/getreplies.qh"
 #include "../common/constants.qh"
@@ -46,10 +49,10 @@ entity mapvote_ent;
  */
 Gametype GameTypeVote_Type_FromString(string type_name)
 {
-	Gametype type = MapInfo_Type_FromString(type_name);
+	Gametype type = MapInfo_Type_FromString(type_name, false);
 	if (type == NULL)
 		type = MapInfo_Type_FromString(cvar_string(
-			strcat("sv_vote_gametype_",type_name,"_type")));
+			strcat("sv_vote_gametype_",type_name,"_type")), false);
 	return type;
 }
 
@@ -57,11 +60,11 @@ int GameTypeVote_AvailabilityStatus(string type_name)
 {
 	int flag = GTV_FORBIDDEN;
 
-	Gametype type = MapInfo_Type_FromString(type_name);
+	Gametype type = MapInfo_Type_FromString(type_name, false);
 	if ( type == NULL )
 	{
 		type = MapInfo_Type_FromString(cvar_string(
-			strcat("sv_vote_gametype_",type_name,"_type")));
+			strcat("sv_vote_gametype_",type_name,"_type")), false);
 		flag |= GTV_CUSTOM;
 	}
 

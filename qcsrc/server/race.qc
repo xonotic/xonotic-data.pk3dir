@@ -1,8 +1,13 @@
 #include "race.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
 #include <server/miscfunctions.qh>
+#include <server/weapons/common.qh>
 #include "client.qh"
+#include "cheats.qh"
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
@@ -10,7 +15,7 @@
 #include "command/getreplies.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
-#include "../common/mapinfo.qh"
+#include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/rules.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>

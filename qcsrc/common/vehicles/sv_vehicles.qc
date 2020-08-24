@@ -1,5 +1,16 @@
 #include "sv_vehicles.qh"
 
+#include <server/bot/api.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
+#include <server/items/items.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/defs.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
+#include <server/main.qh>
+#include <server/weapons/common.qh>
+
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
@@ -230,7 +241,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, DMG_NOWEP, toucher);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.projectiledeathtype, DMG_NOWEP, toucher);
 
 	delete(this);
 }
@@ -262,7 +273,7 @@ entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 	proj.shot_dmg		 = _dmg;
 	proj.shot_radius	  = _radi;
 	proj.shot_force	   = _force;
-	proj.totalfrags	   = _deahtype;
+	proj.projectiledeathtype	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.flags = FL_PROJECTILE;
@@ -839,6 +850,7 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteByte (MSG_ONE, SVC_SETVIEWPORT);
 			WriteEntity( MSG_ONE, player);
 
+			// NOTE: engine networked
 			WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 			WriteAngle(MSG_ONE, 0);
 			WriteAngle(MSG_ONE, vehic.angles_y);
@@ -1026,7 +1038,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	pl.crouch = false;
+	UNSET_DUCKED(pl);
 	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
 	setsize(pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
@@ -1081,6 +1093,7 @@ void vehicles_enter(entity pl, entity veh)
 		WriteByte (MSG_ONE, SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, veh.vehicle_viewport);
 
+		// NOTE: engine networked
 		WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 		if(veh.tur_head)
 		{
@@ -1205,10 +1218,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		return false;
 
 	if(!this.tur_head)
-	{
 		info.vr_precache(info);
-		IL_PUSH(g_vehicles, this);
-	}
 
 	if(this.targetname && this.targetname != "")
 	{

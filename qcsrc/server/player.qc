@@ -3,14 +3,19 @@
 #include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
+#include "client.qh"
 #include "clientkill.qh"
-#include "g_damage.qh"
+#include "damage.qh"
+#include "world.qh"
 #include "handicap.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
+#include <server/main.qh>
+#include "weapons/common.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "command/vote.qh"
 #include "../common/state.qh"
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
@@ -18,6 +23,7 @@
 #include "../common/gamemodes/sv_rules.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/teleporters.qh>
 #include "../common/playerstats.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 
@@ -32,6 +38,7 @@
 #include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"
+#include <server/weapons/weaponsystem.qh>
 
 #include "../common/animdecide.qh"
 
@@ -165,7 +172,7 @@ void player_anim(entity this)
 		animbits |= ANIMSTATE_FROZEN;
 	if(this.move_movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
-	if(this.crouch)
+	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, IS_ONGROUND(this));
@@ -220,92 +227,6 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 			IL_REMOVE(g_damagedbycontents, this);
 		this.damagedbycontents = false;
 	}
-}
-
-void calculate_player_respawn_time(entity this)
-{
-	if(MUTATOR_CALLHOOK(CalculateRespawnTime, this))
-		return;
-
-	float gametype_setting_tmp;
-	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
-	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
-	float sdelay_large = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large);
-	float sdelay_small_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small_count);
-	float sdelay_large_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large_count);
-	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
-
-	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
-	if (teamplay)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-			if(it.team == this.team)
-				++pcount;
-		});
-		if (sdelay_small_count == 0)
-			sdelay_small_count = 1;
-		if (sdelay_large_count == 0)
-			sdelay_large_count = 1;
-	}
-	else
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-			++pcount;
-		});
-		if (sdelay_small_count == 0)
-		{
-			if (IS_INDEPENDENT_PLAYER(this))
-			{
-				// Players play independently. No point in requiring enemies.
-				sdelay_small_count = 1;
-			}
-			else
-			{
-				// Players play AGAINST each other. Enemies required.
-				sdelay_small_count = 2;
-			}
-		}
-		if (sdelay_large_count == 0)
-		{
-			if (IS_INDEPENDENT_PLAYER(this))
-			{
-				// Players play independently. No point in requiring enemies.
-				sdelay_large_count = 1;
-			}
-			else
-			{
-				// Players play AGAINST each other. Enemies required.
-				sdelay_large_count = 2;
-			}
-		}
-	}
-
-	float sdelay;
-
-	if (pcount <= sdelay_small_count)
-		sdelay = sdelay_small;
-	else if (pcount >= sdelay_large_count)
-		sdelay = sdelay_large;
-	else  // NOTE: this case implies sdelay_large_count > sdelay_small_count.
-		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
-
-	if(waves)
-		this.respawn_time = ceil((time + sdelay) / waves) * waves;
-	else
-		this.respawn_time = time + sdelay;
-
-	if(sdelay < sdelay_max)
-		this.respawn_time_max = time + sdelay_max;
-	else
-		this.respawn_time_max = this.respawn_time;
-
-	if((sdelay + waves >= 5.0) && (this.respawn_time - time > 1.75))
-		this.respawn_countdown = 10; // first number to count down from is 10
-	else
-		this.respawn_countdown = -1; // do not count down
-
-	if(autocvar_g_forced_respawn)
-		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
 }
 
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -615,8 +536,17 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.avelocity = '0 0 0';
 		// view from the floor
 		this.view_ofs = '0 0 -8';
-		// toss the corpse
-		set_movetype(this, MOVETYPE_TOSS);
+		if(this.move_movetype == MOVETYPE_NOCLIP)
+		{
+			// don't toss the corpse in this case, it can get stuck in solid (causing low fps)
+			// or fall indefinitely into the void if out of the map
+			this.velocity = '0 0 0';
+		}
+		else
+		{
+			// toss the corpse
+			set_movetype(this, MOVETYPE_TOSS);
+		}
 		// shootable corpse
 		this.solid = SOLID_CORPSE;
 		PS(this).ballistics_density = autocvar_g_ballistics_density_corpse;

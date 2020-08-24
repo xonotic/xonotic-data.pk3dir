@@ -3,6 +3,12 @@
 #include <common/weapons/_all.qh>
 #include <common/scores.qh>
 
+vector OFFSET_CURSOR = '0 0 0';
+vector SIZE_CURSOR = '32 32 0';
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
+void draw_cursor_normal(vector pos, vector col, float a);
+void LoadMenuSkinValues();
+
 void Hud_Dynamic_Frame();
 
 bool HUD_Radar_Clickable();
@@ -59,7 +65,7 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void HUD_Radar_Hide_Maximized();
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect);
-vector HUD_Get_Num_Color (float hp, float maxvalue);
+vector HUD_Get_Num_Color(float hp, float maxvalue, bool blink);
 void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha);
 void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp);
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag);

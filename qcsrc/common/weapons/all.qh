@@ -20,6 +20,7 @@ WepSet ReadWepSet();
 #include "calculations.qh"
 #include "projectiles.qh"
 #include <common/models/all.qh>
+#include <common/effects/all.qh>
 #endif
 
 #include <common/util.qh>
@@ -81,10 +82,10 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt", false) //
         default:
         case CMD_REQUEST_USAGE:
         {
-            LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]");
-            LOG_INFO("  Where 'filename' is the file to write (default is weapons_dump.cfg),");
-            LOG_INFO("  if supplied with '-' output to console as well as default,");
-            LOG_INFO("  if left blank, it will only write to default.");
+            LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]");
+            LOG_HELP("  Where 'filename' is the file to write (default is weapons_dump.cfg),");
+            LOG_HELP("  if supplied with '-' output to console as well as default,");
+            LOG_HELP("  if left blank, it will only write to default.");
             return;
         }
     }
@@ -291,6 +292,7 @@ const .float reloading_time = reload_time;
 
 
 // read cvars from weapon settings
+// cvars are created as such: g_balance_wepname_name
 #define WEP_CVAR(wepname, name) (_wep_##wepname.wepvar_##name)
 #define WEP_CVAR_PRI(wepname, name) WEP_CVAR(wepname, primary_##name)
 #define WEP_CVAR_SEC(wepname, name) WEP_CVAR(wepname, secondary_##name)
@@ -356,11 +358,15 @@ vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
 
 .vector spawnorigin; // for casings
 
+.vector movedir_aligned; // shot origin based on weapon alignment (unaffected by shootfromeye)
+
 // weapon animation vectors:
 .vector anim_fire1;
 .vector anim_fire2;
 .vector anim_idle;
 .vector anim_reload;
+
+.entity muzzle_flash;
 
 // static frame globals
 
@@ -393,5 +399,9 @@ REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim);
+#endif
+
+#ifdef SVQC
+void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir);
 #endif
 #endif

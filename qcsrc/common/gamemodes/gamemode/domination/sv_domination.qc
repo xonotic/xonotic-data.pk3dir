@@ -1,6 +1,13 @@
 #include "sv_domination.qh"
 
+#include <server/client.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/items/items.qh>
 #include <server/teamplay.qh>
+#include <common/mapobjects/platforms.qh>
+#include <common/mapobjects/triggers.qh>
 
 bool g_domination;
 

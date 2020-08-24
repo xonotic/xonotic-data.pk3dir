@@ -1,11 +1,15 @@
 #include "clientkill.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/client.qh>
+#include <server/player.qh>
 
-#include "g_damage.qh"
+#include "damage.qh"
 #include "teamplay.qh"
 
 #include <common/vehicles/sv_vehicles.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
 
@@ -137,7 +141,7 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 			this.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(this, strcat("^1You'll be dead in ", ftos(this.killindicator.cnt), " seconds\n"));
 
-			IL_EACH(g_clones, it.enemy == this && !(it.effects & CSQCMODEL_EF_RESPAWNGHOST),
+			IL_EACH(g_clones, it.enemy == this && !(it.effects & CSQCMODEL_EF_RESPAWNGHOST) && !it.killindicator,
 			{
 				it.killindicator = spawn();
 				it.killindicator.owner = it;

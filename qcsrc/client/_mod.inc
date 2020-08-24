@@ -11,7 +11,8 @@
 #include <client/teamradar.qc>
 #include <client/view.qc>
 
-#include <client/commands/_mod.inc>
+#include <client/command/_mod.inc>
 #include <client/hud/_mod.inc>
+#include <client/items/_mod.inc>
 #include <client/mutators/_mod.inc>
 #include <client/weapons/_mod.inc>

@@ -21,6 +21,10 @@
 
 # define ALPHA m_alpha
 .float m_alpha;
+
+# define GROUNDENTITY_NAME ground_networkentity
+# define GROUNDENTITY_TYPE float
+.float ground_networkentity;
 #else
 # define TAG_ENTITY_NAME tag_entity
 # define TAG_ENTITY_TYPE entity
@@ -29,6 +33,9 @@
 # define TAG_VIEWLOC_TYPE entity
 
 # define ALPHA alpha
+
+# define GROUNDENTITY_NAME groundentity
+# define GROUNDENTITY_TYPE entity
 #endif
 
 // add properties you want networked to CSQC here
@@ -36,7 +43,7 @@
 	CSQCMODEL_PROPERTY(BIT(0), int, ReadShort, WriteShort, colormap) \
 	CSQCMODEL_PROPERTY(BIT(1), int, ReadInt24_t, WriteInt24_t, effects) \
 	CSQCMODEL_PROPERTY(BIT(2), int, ReadByte, WriteByte, modelflags) \
-	CSQCMODEL_PROPERTY_SCALED(BIT(3), float, ReadByte, WriteByte, ALPHA, 254, -1, 254) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(3), float, ReadByte, WriteByte, ALPHA, 254, -1, 254) /* NOTE: update the use of this in cl_model.qc if you change the bitflag number! */ \
 	CSQCMODEL_PROPERTY(BIT(4), int, ReadByte, WriteByte, skin) \
 	CSQCMODEL_PROPERTY(BIT(5), float, ReadApproxPastTime, WriteApproxPastTime, death_time) \
 	CSQCMODEL_PROPERTY(BIT(6), float, ReadByte, WriteByte, solid) \
@@ -63,9 +70,15 @@
 	CSQCMODEL_PROPERTY(BIT(11), int, ReadByte, WriteByte, traileffect) \
 	CSQCMODEL_PROPERTY(BIT(12), float, ReadCoord, WriteCoord, scale) \
 	CSQCMODEL_PROPERTY(BIT(13), int, ReadInt24_t, WriteInt24_t, dphitcontentsmask) \
-	CSQCMODEL_PROPERTY(BIT(14), TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) \
+	CSQCMODEL_PROPERTY(BIT(14), TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) /* NOTE: update the use of this in cl_model.qc if you change the bitflag number! */ \
+	/* bit 15 should NOT be reused, it is large enough sending the model's hitbox vectors! */ \
 	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, multijump_count) \
-	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, move_movetype)
+	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, move_movetype) \
+	CSQCMODEL_IF(isplayer) \
+		CSQCMODEL_PROPERTY(BIT(17), GROUNDENTITY_TYPE, ReadShort, WriteEntity, GROUNDENTITY_NAME) \
+	CSQCMODEL_ENDIF \
+	CSQCMODEL_PROPERTY(BIT(17), int, ReadByte, WriteByte, clipgroup)
+// NOTE: bits above 15 are defined in lib/csqcmodel/common.qh, avoid reusing them if possible
 // TODO get rid of colormod/glowmod here; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here

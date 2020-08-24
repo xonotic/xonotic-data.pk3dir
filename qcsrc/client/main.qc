@@ -1,6 +1,6 @@
 #include "main.qh"
 
-#include "defs.qh"
+#include <client/items/items.qh>
 #include <common/ent_cs.qh>
 #include "miscfunctions.qh"
 #include <common/effects/effect.qh>
@@ -8,7 +8,7 @@
 #include <common/effects/all.qh>
 #include <common/effects/all.inc>
 #include "hud/_mod.qh"
-#include "commands/cl_cmd.qh"
+#include "command/cl_cmd.qh"
 #include "mapvoting.qh"
 #include <client/mutators/_mod.qh>
 #include "hud/panel/centerprint.qh"
@@ -16,10 +16,10 @@
 #include "hud/panel/quickmenu.qh"
 #include "shownames.qh"
 #include "view.qh"
-#include <common/t_items.qh>
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
+#include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
@@ -37,58 +37,6 @@
 //include "main.qh"
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-
-void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
-{
-	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
-	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
-}
-
-void draw_cursor_normal(vector pos, vector col, float a)
-{
-	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
-}
-
-void LoadMenuSkinValues()
-{
-	int fh = -1;
-	if(cvar_string("menu_skin") != "")
-	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0 && cvar_defstring("menu_skin") != "")
-	{
-		cvar_set("menu_skin", cvar_defstring("menu_skin"));
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0)
-	{
-		draw_currentSkin = "gfx/menu/default";
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-
-	draw_currentSkin = strzone(draw_currentSkin);
-
-	if(fh >= 0)
-	{
-		string s;
-		while((s = fgets(fh)))
-		{
-			int n = tokenize_console(s);
-			if (n < 2)
-				continue;
-			if(substring(argv(0), 0, 2) == "//")
-				continue;
-			if(argv(0) == "SIZE_CURSOR")
-				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-			else if(argv(0) == "OFFSET_CURSOR")
-				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-		}
-		fclose(fh);
-	}
-}
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
@@ -526,11 +474,18 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		for(i = 0; i < MAX_SPECTATORS; ++i)
 			spectatorlist[i] = 0; // reset list first
 
-		for(i = 0; i < num_spectators; ++i)
+		int limit = min(num_spectators, MAX_SPECTATORS);
+		for(i = 0; i < limit; ++i)
 		{
 			slot = ReadByte();
 			spectatorlist[i] = slot - 1;
 		}
+	}
+	else
+	{
+		for(int j = 0; j < MAX_SPECTATORS; ++j)
+			spectatorlist[j] = 0; // reset list if showspectators has been turned off
+		num_spectators = 0;
 	}
 
 	return = true;
@@ -978,16 +933,11 @@ float GetSpeedUnitFactor(int speed_unit)
 	switch(speed_unit)
 	{
 		default:
-		case 1:
-			return 1.0;
-		case 2:
-			return 0.0254;
-		case 3:
-			return 0.0254 * 3.6;
-		case 4:
-			return 0.0254 * 3.6 * 0.6213711922;
-		case 5:
-			return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
+		case 1: return 1.0;
+		case 2: return 0.0254;
+		case 3: return 0.0254 * 3.6;
+		case 4: return 0.0254 * 3.6 * 0.6213711922;
+		case 5: return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 	}
 }
 
@@ -995,17 +945,13 @@ string GetSpeedUnit(int speed_unit)
 {
 	switch(speed_unit)
 	{
+		// translator-friendly strings without the initial space
 		default:
-		case 1:
-			return _(" qu/s");
-		case 2:
-			return _(" m/s");
-		case 3:
-			return _(" km/h");
-		case 4:
-			return _(" mph");
-		case 5:
-			return _(" knots");
+		case 1: return strcat(" ", _("qu/s"));
+		case 2: return strcat(" ", _("m/s"));
+		case 3: return strcat(" ", _("km/h"));
+		case 4: return strcat(" ", _("mph"));
+		case 5: return strcat(" ", _("knots"));
 	}
 }
 

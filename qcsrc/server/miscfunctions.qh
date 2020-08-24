@@ -1,9 +1,11 @@
 #pragma once
 
-#include <server/defs.qh>
-#include <server/g_world.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/client.qh>
+#include <server/world.qh>
 
-#include <common/t_items.qh>
+#include <server/items/items.qh>
 
 #include <server/mutators/_mod.qh>
 
@@ -35,9 +37,15 @@ void soundat(entity e, vector o, float chan, string samp, float vol, float _atte
 void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);
-void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten, float _pitch);
 
 void droptofloor(entity this);
+
+float trace_hits_box_1d(float end, float thmi, float thma);
+
+float trace_hits_box(vector start, vector end, vector thmi, vector thma);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
 
 void attach_sameorigin(entity e, entity to, string tag);
 
@@ -55,14 +63,6 @@ string formatmessage(entity this, string msg);
 
 /** print(), but only print if the server is not local */
 void dedicated_print(string input);
-
-string GameLog_ProcessIP(string s);
-
-void GameLogEcho(string s);
-
-void GameLogInit();
-
-void GameLogClose();
 
 void GetCvars(entity this, entity store, int f);
 
@@ -90,7 +90,7 @@ void remove_unsafely(entity e);
 
 void SetMovetypeFollow(entity ent, entity e);
 
-void soundto(float dest, entity e, float chan, string samp, float vol, float atten);
+void soundto(float dest, entity e, float chan, string samp, float vol, float atten, float _pitch);
 
 void stopsound(entity e, float chan);
 
@@ -114,9 +114,6 @@ void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomo
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
-
-float logfile_open;
-float logfile;
 
 /*
 // NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.
@@ -202,6 +199,19 @@ void readplayerstartcvars();
 
 float sv_autotaunt;
 float sv_taunt;
+
+float g_footsteps, g_grappling_hook;
+float g_warmup_allguns;
+float g_warmup_allow_timeout;
+float warmup_stage;
+float g_jetpack;
+
+bool sv_ready_restart;
+bool sv_ready_restart_after_countdown;
+bool sv_ready_restart_repeatable;
+
+float sv_clones;
+float sv_foginterval;
 
 void readlevelcvars()
 {

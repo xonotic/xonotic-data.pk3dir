@@ -1,8 +1,9 @@
 #include "weaponstats.qh"
 
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <server/miscfunctions.qh>
-#include "../g_world.qh"
+#include "../world.qh"
 
 #include <common/weapons/_all.qh>
 

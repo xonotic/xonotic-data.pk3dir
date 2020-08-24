@@ -2,8 +2,11 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <server/defs.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
+    #include <server/weapons/common.qh>
     #include <common/state.qh>
+    #include <common/monsters/sv_monsters.qh>
     #include <common/vehicles/all.qh>
 	#include <lib/warpzone/common.qh>
     #include "antilag.qh"

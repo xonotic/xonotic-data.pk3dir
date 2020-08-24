@@ -10,6 +10,8 @@ CLASS(Blaster, Weapon)
 /* modelname */ ATTRIB(Blaster, mdl, string, "laser");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
+/* flash mdl */ ATTRIB(Blaster, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Blaster, m_muzzleeffect, entity, EFFECT_BLASTER_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);

@@ -2,8 +2,15 @@
 
 #include "roles.qh"
 
-#include <server/defs.qh>
+#include <server/bot/api.qh>
+#include <server/client.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
 #include <server/miscfunctions.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
 #include "../cvars.qh"
 
 #include "../aim.qh"
@@ -22,6 +29,7 @@
 
 #include <common/mapobjects/func/ladder.qh>
 #include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 
 #include <lib/warpzone/common.qh>
@@ -1174,7 +1182,7 @@ void havocbot_movetogoal(entity this)
 	}
 
 	float ladder_zdir = 0;
-	if(time < this.ladder_time)
+	if(this.ladder_entity)
 	{
 		if(this.goalcurrent.origin.z + this.goalcurrent.mins.z > this.origin.z + this.mins.z)
 		{
