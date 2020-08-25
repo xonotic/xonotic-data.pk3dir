@@ -83,6 +83,8 @@
 
 #include <common/weapons/weapon/vortex.qh>
 
+#define CHAT_NOSPECTATORS() ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
     ClientConnect(this);
@@ -306,7 +308,7 @@ void PutObserverInServer(entity this)
 	if (CS(this).killcount != FRAGS_SPECTATOR)
 	{
 		if(!game_stopped)
-		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
+		if(CHAT_NOSPECTATORS())
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 	}
 
@@ -2969,10 +2971,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	var .float flood_field = floodcontrol_chat;
 	if(floodcontrol && source)
 	{
-		float flood_spl;
-		float flood_burst;
-		float flood_lmax;
-		float lines;
+		float flood_spl, flood_burst, flood_lmax;
 		if(privatesay)
 		{
 			flood_spl = autocvar_g_chat_flood_spl_tell;
@@ -3002,7 +3001,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			getWrappedLine_remaining = msgstr;
 			msgstr = "";
-			lines = 0;
+			int lines = 0;
 			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
 			{
 				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
@@ -3062,7 +3061,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer))
 	{
 		if (!game_stopped)
-		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+		if (teamsay || CHAT_NOSPECTATORS())
 			teamsay = -1; // spectators
 	}
 
@@ -3097,7 +3096,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer))
 	{
 		if (!game_stopped)
-		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
+		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && CHAT_NOSPECTATORS())
 			ret = -1; // just hide the message completely
 	}
 
