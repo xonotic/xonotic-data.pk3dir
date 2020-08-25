@@ -244,7 +244,7 @@ void setplayermodel(entity e, string modelname)
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this)
 {
-    bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
 	if (IS_PLAYER(this))
@@ -261,35 +261,33 @@ void PutObserverInServer(entity this)
 			if (vote_called) { VoteCount(false); }
 			ReadyCount();
 		}
-    }
+	}
 
-    {
-        entity spot = SelectSpawnPoint(this, true);
-        if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
-        this.angles = vec2(spot.angles);
-        this.fixangle = true;
-        // offset it so that the spectator spawns higher off the ground, looks better this way
-        setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
-        if (IS_REAL_CLIENT(this))
-        {
-            msg_entity = this;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, this);
-        }
-        // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
-        // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
-        if(!autocvar_g_debug_globalsounds)
-        {
-        	// needed for player sounds
-        	this.model = "";
-	        FixPlayermodel(this);
-        }
-        setmodel(this, MDL_Null);
-        setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
-        this.view_ofs = '0 0 0';
-    }
+	entity spot = SelectSpawnPoint(this, true);
+	if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
+	this.angles = vec2(spot.angles);
+	this.fixangle = true;
+	// offset it so that the spectator spawns higher off the ground, looks better this way
+	setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
+	if (IS_REAL_CLIENT(this))
+	{
+		msg_entity = this;
+		WriteByte(MSG_ONE, SVC_SETVIEW);
+		WriteEntity(MSG_ONE, this);
+	}
+	// give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	// so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+	if(!autocvar_g_debug_globalsounds)
+	{
+		// needed for player sounds
+		this.model = "";
+		FixPlayermodel(this);
+	}
+	setmodel(this, MDL_Null);
+	setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
+	this.view_ofs = '0 0 0';
 
-    RemoveGrapplingHooks(this);
+	RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
 	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
@@ -317,7 +315,7 @@ void PutObserverInServer(entity this)
 	if(this.monster_attack)
 		IL_REMOVE(g_monster_targets, this);
 	this.monster_attack = false;
-    STAT(HUD, this) = HUD_NORMAL;
+	STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
@@ -1230,7 +1228,7 @@ void ClientDisconnect(entity this)
 	if(IS_SPEC(this))
 		SetSpectatee(this, NULL);
 
-    MUTATOR_CALLHOOK(ClientDisconnect, this);
+	MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
 	strfree(CS(this).weaponorder_byimpulse);
@@ -1994,10 +1992,10 @@ bool SpectatePrev(entity this)
 	switch (MUTATOR_CALLHOOK(SpectatePrev, this, ent, first))
 	{
 		case MUT_SPECPREV_FOUND:
-		    ent = M_ARGV(1, entity);
-		    break;
+			ent = M_ARGV(1, entity);
+			break;
 		case MUT_SPECPREV_RETURN:
-		    return true;
+			return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
@@ -2230,7 +2228,7 @@ bool PlayerThink(entity this)
 	}
 
 	if (timeout_status == TIMEOUT_ACTIVE) {
-        // don't allow the player to turn around while game is paused
+		// don't allow the player to turn around while game is paused
 		// FIXME turn this into CSQC stuff
 		this.v_angle = this.lastV_angle;
 		this.angles = this.lastV_angle;
@@ -2793,9 +2791,8 @@ void PlayerPostThink (entity this)
 				return;
 			}
 			else if (timeleft <= 10) {
-				if (timeleft != CS(this).idlekick_lasttimeleft) {
-				    Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
-                }
+				if (timeleft != CS(this).idlekick_lasttimeleft)
+					Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
 				CS(this).idlekick_lasttimeleft = timeleft;
 			}
 		}
