@@ -305,12 +305,8 @@ void PutObserverInServer(entity this)
 
 	WaypointSprite_PlayerDead(this);
 
-	if (CS(this).killcount != FRAGS_SPECTATOR)
-	{
-		if(!game_stopped)
-		if(CHAT_NOSPECTATORS())
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
-	}
+	if (CS(this).killcount != FRAGS_SPECTATOR && !game_stopped && CHAT_NOSPECTATORS())
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 	accuracy_resend(this);
 
@@ -3058,11 +3054,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcecmsgstr = cmsgstr;
 	}
 
-	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer))
+	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer) && !game_stopped
+		&& (teamsay || CHAT_NOSPECTATORS()))
 	{
-		if (!game_stopped)
-		if (teamsay || CHAT_NOSPECTATORS())
-			teamsay = -1; // spectators
+		teamsay = -1; // spectators
 	}
 
 	if(flood)
@@ -3093,11 +3088,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = 1;
 	}
 
-	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer))
+	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer) && !game_stopped
+		&& (IS_PLAYER(privatesay) || privatesay.caplayer) && CHAT_NOSPECTATORS())
 	{
-		if (!game_stopped)
-		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && CHAT_NOSPECTATORS())
-			ret = -1; // just hide the message completely
+		ret = -1; // just hide the message completely
 	}
 
 	MUTATOR_CALLHOOK(ChatMessage, source, ret);
