@@ -201,35 +201,35 @@ void target_give_init(entity this)
 	IL_EACH(g_items, it.targetname == this.target,
 	{
 		if (it.classname == "weapon_devastator") {
-			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(devastator, ammo)); // WEAPONTODO
+			this.ammo_rockets = it.ammo_rockets;
 			this.netname = cons(this.netname, "devastator");
 		}
 		else if (it.classname == "weapon_vortex") {
-			SetResourceExplicit(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(vortex, ammo)); // WEAPONTODO
+			this.ammo_cells = it.ammo_cells;
 			this.netname = cons(this.netname, "vortex");
 		}
 		else if (it.classname == "weapon_electro") {
-			SetResourceExplicit(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(electro, ammo)); // WEAPONTODO
+			this.ammo_cells = it.ammo_cells;
 			this.netname = cons(this.netname, "electro");
 		}
 		else if (it.classname == "weapon_hagar") {
-			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(hagar, ammo)); // WEAPONTODO
+			this.ammo_rockets = it.ammo_rockets;
 			this.netname = cons(this.netname, "hagar");
 		}
 		else if (it.classname == "weapon_crylink") {
-			SetResourceExplicit(this, RES_CELLS, GetResource(this, RES_CELLS) + it.count * WEP_CVAR_PRI(crylink, ammo)); // WEAPONTODO
+			this.ammo_cells = it.ammo_cells;
 			this.netname = cons(this.netname, "crylink");
 		}
 		else if (it.classname == "weapon_mortar") {
-			SetResourceExplicit(this, RES_ROCKETS, GetResource(this, RES_ROCKETS) + it.count * WEP_CVAR_PRI(mortar, ammo)); // WEAPONTODO
+			this.ammo_rockets = it.ammo_rockets;
 			this.netname = cons(this.netname, "mortar");
 		}
 		else if (it.classname == "weapon_shotgun") {
-			SetResourceExplicit(this, RES_SHELLS, GetResource(this, RES_SHELLS) + it.count * WEP_CVAR_PRI(shotgun, ammo)); // WEAPONTODO
+			this.ammo_shells = it.ammo_shells;
 			this.netname = cons(this.netname, "shotgun");
 		}
 		else if (it.classname == "weapon_machinegun") {
-			SetResourceExplicit(this, RES_BULLETS, GetResource(this, RES_BULLETS) + it.count * WEP_CVAR(machinegun, burst_ammo)); // WEAPONTODO
+			this.ammo_nails = it.ammo_nails;
 			this.netname = cons(this.netname, "machinegun");
 		}
 		else if (it.classname == "item_armor_mega")
