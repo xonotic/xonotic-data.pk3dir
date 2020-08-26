@@ -14,6 +14,7 @@ CLASS(Powerup, Pickup)
     ATTRIB(Powerup, m_itemflags, int, FL_POWERUP);
     ATTRIB(Powerup, m_respawntime, float(), GET(g_pickup_respawntime_powerup));
     ATTRIB(Powerup, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_powerup));
+    ATTRIB(Powerup, count, float);
 #endif
 ENDCLASS(Powerup)
 
@@ -27,7 +28,7 @@ float autocvar_g_balance_powerup_strength_time;
 void powerup_strength_init(Pickup this, entity item)
 {
     if(!item.strength_finished)
-        item.strength_finished = autocvar_g_balance_powerup_strength_time;
+        item.strength_finished = (item.count) ? item.count : autocvar_g_balance_powerup_strength_time;
 }
 #endif
 REGISTER_ITEM(Strength, Powerup) {
@@ -65,7 +66,7 @@ float autocvar_g_balance_powerup_invincible_time;
 void powerup_shield_init(Pickup this, entity item)
 {
     if(!item.invincible_finished)
-        item.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+        item.invincible_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invincible_time;
 }
 #endif
 REGISTER_ITEM(Shield, Powerup) {

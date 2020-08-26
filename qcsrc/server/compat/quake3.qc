@@ -200,54 +200,32 @@ void target_give_init(entity this)
 {
 	IL_EACH(g_items, it.targetname == this.target,
 	{
-		if (it.classname == "weapon_devastator") {
-			this.ammo_rockets = it.ammo_rockets;
-			this.netname = cons(this.netname, "devastator");
-		}
-		else if (it.classname == "weapon_vortex") {
-			this.ammo_cells = it.ammo_cells;
-			this.netname = cons(this.netname, "vortex");
-		}
-		else if (it.classname == "weapon_electro") {
-			this.ammo_cells = it.ammo_cells;
-			this.netname = cons(this.netname, "electro");
-		}
-		else if (it.classname == "weapon_hagar") {
-			this.ammo_rockets = it.ammo_rockets;
-			this.netname = cons(this.netname, "hagar");
-		}
-		else if (it.classname == "weapon_crylink") {
-			this.ammo_cells = it.ammo_cells;
-			this.netname = cons(this.netname, "crylink");
-		}
-		else if (it.classname == "weapon_mortar") {
-			this.ammo_rockets = it.ammo_rockets;
-			this.netname = cons(this.netname, "mortar");
-		}
-		else if (it.classname == "weapon_shotgun") {
-			this.ammo_shells = it.ammo_shells;
-			this.netname = cons(this.netname, "shotgun");
-		}
-		else if (it.classname == "weapon_machinegun") {
-			this.ammo_nails = it.ammo_nails;
-			this.netname = cons(this.netname, "machinegun");
-		}
-		else if (it.classname == "item_armor_mega")
-			SetResourceExplicit(this, RES_ARMOR, 100);
-		else if (it.classname == "item_health_mega")
-			SetResourceExplicit(this, RES_HEALTH, 200);
-		else if (it.classname == "item_buff") {
+		if (it.classname == "item_buff")
+		{
 			entity buff = buff_FirstFromFlags(STAT(BUFFS, it));
 			this.netname = cons(this.netname, buff.netname);
 			STAT(BUFF_TIME, this) = it.count;
 		}
-		else if (it.classname == "item_shield") {
-			this.invincible_finished = it.count;
-			this.netname = cons(this.netname, "invincible");
-		}
-		else if (it.classname == "item_strength") {
-			this.strength_finished = it.count;
-			this.netname = cons(this.netname, "strength");
+		else
+		{
+			if (it.ammo_rockets)
+				this.ammo_rockets = it.ammo_rockets;
+			else if (it.ammo_cells)
+				this.ammo_cells = it.ammo_cells;
+			else if (it.ammo_shells)
+				this.ammo_shells = it.ammo_shells;
+			else if (it.ammo_nails)
+				this.ammo_nails = it.ammo_nails;
+			else if (it.invincible_finished)
+				this.invincible_finished = it.invincible_finished;
+			else if (it.strength_finished)
+				this.strength_finished = it.strength_finished;
+			else if (it.classname == "item_armor_mega")
+				SetResourceExplicit(this, RES_ARMOR, 100);
+			else if (it.classname == "item_health_mega")
+				SetResourceExplicit(this, RES_HEALTH, 200);
+
+			this.netname = cons(this.netname, it.netname);
 		}
 
 		//remove(it); // removing ents in init functions causes havoc, workaround:
