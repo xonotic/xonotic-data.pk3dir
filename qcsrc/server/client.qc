@@ -3174,6 +3174,25 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (autocvar_sv_eventlog && (event_log_msg != "")) {
 		GameLogEcho(event_log_msg);
 	}
+	
+	var .float flood_sound = floodcontrol_chatsound;
+	
+	if(autocvar_g_chat_sounds && sourcemsgstr != "" && ret > 0) {
+		bprintf("%d < %d", source.(flood_sound), time - autocvar_g_chat_sounds_flood);
+		
+		if (source.(flood_sound) < time - autocvar_g_chat_sounds_flood) {
+			string rawmsg;
+			rawmsg = strreplace("\n", " ", msgin);
+			
+			bprintf("msg is %s and list is %s\n", rawmsg, autocvar_g_chat_sounds_list);
+			if (findinlist_abbrev(rawmsg, autocvar_g_chat_sounds_list)) {
+				bprintf("IN LIST!!!\n");
+				play2all(strcat("sound/chat/", rawmsg, ".ogg"));
+				
+				source.(flood_sound) = time;
+			}
+		}
+	}
 
 	return ret;
 }

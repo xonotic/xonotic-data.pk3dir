@@ -272,6 +272,7 @@ bool independent_players;
 .float floodcontrol_chattell;
 .float floodcontrol_voice;
 .float floodcontrol_voiceteam;
+.float floodcontrol_chatsound;
 
 // respawning
 .int respawn_flags;
