@@ -231,6 +231,8 @@ string GetAmmoPicture(int ammotype);
 
 string GetAmmoName(int ammotype);
 
+entity GetAmmoItem(int ammotype);
+
 #ifdef SVQC
 int GetAmmoConsumptionPrimary(string netname);
 #endif

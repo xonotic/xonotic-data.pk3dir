@@ -13,7 +13,6 @@
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
 #include <common/notifications/all.qh>
-#include <common/weapons/_all.qh>
 
 /***********************
  * QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
@@ -22,73 +21,71 @@
  * Map entities NOT handled in this file:
  holdable_invulnerability	Q3TA	currently unsupported
  holdable_kamikaze		Q3TA	currently unsupported
- item_ammoregen			Q3TA	handled by buffs mutator
- item_doubler			Q3TA	handled by buffs mutator
- item_guard			Q3TA	handled by buffs mutator
- item_scout			Q3TA	handled by buffs mutator
- item_armor_jacket		CPMA	handled in quake2.qc
- item_flight			Q3A	handled by buffs mutator
- item_haste			Q3A	handled by buffs mutator
- item_health			Q3A	handled in quake.qc
- item_health_large		Q3A	handled in items.qc
- item_health_small		Q3A	handled in health.qh
- item_health_mega		Q3A	handled in health.qh
- item_invis			Q3A	handled by buffs mutator
- item_quad			Q3A	handled in items.qc
- item_regen			Q3A	handled by buffs mutator
+ item_ammoregen			Q3TA	buffs mutator
+ item_doubler			Q3TA	buffs mutator
+ item_guard			Q3TA	buffs mutator
+ item_scout			Q3TA	buffs mutator
+ item_armor_jacket		CPMA	quake2.qc
+ item_flight			Q3A	buffs mutator
+ item_haste			Q3A	buffs mutator
+ item_health			Q3A	quake.qc
+ item_health_large		Q3A	items.qc
+ item_health_small		Q3A	health.qh
+ item_health_mega		Q3A	health.qh
+ item_invis			Q3A	buffs mutator
+ item_quad			Q3A	items.qc
+ item_regen			Q3A	buffs mutator
+ weapon_machinegun		Q3A	machinegun.qh
+ weapon_grenadelauncher		Q3A	mortar.qh
+ weapon_rocketlauncher		Q3A	devastator.qh
  CTF spawnfuncs handled in sv_ctf.qc
 
  NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
 */
 
 // SG -> MG || SG
-SPAWNFUNC_ITEM_COND(ammo_shells, (q3compat & Q3COMPAT_ARENA), ITEM_Bullets, ITEM_Shells)
-SPAWNFUNC_WEAPON_COND(weapon_shotgun, (q3compat & Q3COMPAT_ARENA), WEP_MACHINEGUN, WEP_SHOTGUN)
+SPAWNFUNC_Q3_COND(weapon_shotgun, ammo_shells, (q3compat & Q3COMPAT_ARENA), WEP_MACHINEGUN, WEP_SHOTGUN)
 
 // MG -> SG || MG
-SPAWNFUNC_ITEM_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), ITEM_Shells, ITEM_Bullets)
+// Technically we should replace weapon_machinegun with WEP_SHOTGUN if Q3COMPAT_ARENA, but it almost never occurs on Q3 maps
+SPAWNFUNC_Q3AMMO_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), WEP_SHOTGUN, WEP_MACHINEGUN)
 
 // GL -> Mortar
-SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)
+SPAWNFUNC_Q3AMMO(ammo_grenades, WEP_MORTAR)
 
 // Team Arena Proximity Launcher -> Mortar
 // It's more accurate to spawn Mine Layer but players prefer Mortar, and weapon_grenadelauncher is usually disabled by "notta" and weapon_prox_launcher placed at the same origin
-SPAWNFUNC_WEAPON(weapon_prox_launcher, WEP_MORTAR)
-SPAWNFUNC_ITEM(ammo_mines, ITEM_Rockets)
+SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MORTAR)
 
 // Team Arena Chaingun -> HLAC
-SPAWNFUNC_WEAPON(weapon_chaingun, WEP_HLAC)
-SPAWNFUNC_ITEM(ammo_belt, ITEM_Cells)
+SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
 
 // Quake Live Heavy Machine Gun -> HLAC
-SPAWNFUNC_WEAPON(weapon_hmg, WEP_HLAC)
-SPAWNFUNC_ITEM(ammo_hmg, ITEM_Cells)
+SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 
 // Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
-SPAWNFUNC_WEAPON_COND(weapon_nailgun, cvar("sv_mapformat_is_quake3"), WEP_CRYLINK, WEP_ELECTRO)
-SPAWNFUNC_ITEM(ammo_nails, ITEM_Cells)
+SPAWNFUNC_Q3_COND(weapon_nailgun, ammo_nails, cvar("sv_mapformat_is_quake3"), WEP_CRYLINK, WEP_ELECTRO)
 
 // LG -> Electro
-SPAWNFUNC_WEAPON(weapon_lightning, WEP_ELECTRO)
-SPAWNFUNC_ITEM(ammo_lightning, ITEM_Cells)
+SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO)
 
 // Plasma -> Hagar
-SPAWNFUNC_WEAPON(weapon_plasmagun, WEP_HAGAR)
-SPAWNFUNC_ITEM(ammo_cells, ITEM_Rockets)
+SPAWNFUNC_Q3(weapon_plasmagun, ammo_cells, WEP_HAGAR)
 
 // Rail -> Vortex
-SPAWNFUNC_WEAPON(weapon_railgun, WEP_VORTEX)
-SPAWNFUNC_ITEM(ammo_slugs, ITEM_Cells)
+SPAWNFUNC_Q3(weapon_railgun, ammo_slugs, WEP_VORTEX)
 
 // BFG -> Crylink || Fireball
-SPAWNFUNC_WEAPON_COND(weapon_bfg, cvar_string("g_mod_balance") == "XDF", WEP_CRYLINK, WEP_FIREBALL)
-SPAWNFUNC_ITEM_COND(ammo_bfg, cvar_string("g_mod_balance") == "XDF", ITEM_Cells, ITEM_Rockets)
+SPAWNFUNC_Q3_COND(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF", WEP_CRYLINK, WEP_FIREBALL)
 
 // grappling hook -> hook
 SPAWNFUNC_WEAPON(weapon_grapplinghook, WEP_HOOK)
 
 // RL -> RL
-SPAWNFUNC_ITEM(ammo_rockets, ITEM_Rockets)
+SPAWNFUNC_Q3AMMO(ammo_rockets, WEP_DEVASTATOR)
+
+// Gauntlet -> Tuba
+SPAWNFUNC_ITEM(weapon_gauntlet, WEP_TUBA)
 
 // Armor
 SPAWNFUNC_ITEM(item_armor_body, ITEM_ArmorMega)
