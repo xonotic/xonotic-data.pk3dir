@@ -432,7 +432,7 @@ string playername(entity p, bool team_colorize)
 	
 	if (IS_DEAD(p) || p.frags == FRAGS_PLAYER_OUT_OF_GAME)
 		return strcat("(DEAD) ", t);
-	else if (IS_OBSERVER(p))
+	else if (IS_OBSERVER(p) || IS_SPEC(p))
 		return strcat("(s) ", t);
 	else
 		return t;
