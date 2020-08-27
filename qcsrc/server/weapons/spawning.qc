@@ -111,19 +111,8 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	{
 		int ammo = 0;
 		if (this.count > 0)
-		{
-			switch (wpn.netname)
-			{
-				case "arc":	   ammo = cvar("g_balance_arc_beam_ammo");		break;
-				case "devastator": ammo = cvar("g_balance_devastator_ammo");		break;
-				case "machinegun": ammo = cvar("g_balance_machinegun_sustained_ammo");	break;
-				case "minelayer":  ammo = cvar("g_balance_minelayer_ammo");		break;
-				case "seeker":	   ammo = cvar("g_balance_seeker_tag_ammo");		break;
-				default:	   ammo = cvar(strcat("g_balance_", wpn.netname, "_primary_ammo"));
-			}
-
-			ammo *= this.count;
-		}
+			ammo = this.count * GetAmmoConsumptionPrimary(wpn.netname);
+			// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 		else
 		{
 			switch (wpn.ammo_type)

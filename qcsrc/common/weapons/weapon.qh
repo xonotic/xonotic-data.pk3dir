@@ -231,6 +231,10 @@ string GetAmmoPicture(int ammotype);
 
 string GetAmmoName(int ammotype);
 
+#ifdef SVQC
+int GetAmmoConsumptionPrimary(string netname);
+#endif
+
 #ifdef CSQC
 int GetAmmoTypeFromNum(int i);
 int GetAmmoStat(int ammotype);
