@@ -29,6 +29,7 @@
 .string playerskin;
 
 void ClientState_attach(entity this);
+void play_chatsound(entity source, string msgin);
 
 IntrusiveList g_players;
 STATIC_INIT(g_players) { g_players = IL_NEW(); }

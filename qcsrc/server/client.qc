@@ -3155,6 +3155,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			play_chatsound(source, msgin);
 			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
 		else
@@ -3167,6 +3168,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 			});
+			play_chatsound(source, msgin);
 			event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
 	}
@@ -3175,16 +3177,23 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		GameLogEcho(event_log_msg);
 	}
 	
-	var .float flood_sound = floodcontrol_chatsound;
 	
-	if(autocvar_g_chat_sounds && sourcemsgstr != "" && ret > 0) {
-		bprintf("%d < %d", source.(flood_sound), time - autocvar_g_chat_sounds_flood);
+
+	return ret;
+}
+
+void play_chatsound(entity source, string msgin)
+{
+	if(autocvar_g_chat_sounds) {
+		var .float flood_sound = floodcontrol_chatsound;
+		
+		//bprintf("%d < %d", source.(flood_sound), time - autocvar_g_chat_sounds_flood);
 		
 		if (source.(flood_sound) < time - autocvar_g_chat_sounds_flood) {
 			string rawmsg;
 			rawmsg = strreplace("\n", " ", msgin);
 			
-			bprintf("msg is %s and list is %s\n", rawmsg, autocvar_g_chat_sounds_list);
+			//bprintf("msg is %s and list is %s\n", rawmsg, autocvar_g_chat_sounds_list);
 			if (findinlist_abbrev(rawmsg, autocvar_g_chat_sounds_list)) {
 				bprintf("IN LIST!!!\n");
 				play2all(strcat("sound/chat/", rawmsg, ".ogg"));
@@ -3193,10 +3202,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			}
 		}
 	}
-
-	return ret;
 }
-
 // hack to copy the button fields from the client entity to the Client State
 void PM_UpdateButtons(entity this, entity store)
 {
