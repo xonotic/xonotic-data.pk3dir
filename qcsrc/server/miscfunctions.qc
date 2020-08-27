@@ -414,14 +414,30 @@ void GetCvars(entity this, entity store, int f)
 // decolorizes and team colors the player name when needed
 string playername(entity p, bool team_colorize)
 {
-    string t;
-    if (team_colorize && teamplay && !intermission_running && IS_PLAYER(p))
-    {
-        t = Team_ColorCode(p.team);
-        return strcat(t, strdecolorize(p.netname));
-    }
-    else
-        return p.netname;
+    //string t;
+    //if (team_colorize && teamplay && !intermission_running && IS_PLAYER(p))
+    //{
+    //    t = Team_ColorCode(p.team);
+    //    return strcat(t, strdecolorize(p.netname));
+    //}
+    //else
+    //    return p.netname;
+	
+	string t;
+	
+	if (team_colorize && teamplay && p.team != -1)
+		t = strcat(Team_ColorCode(p.team), strdecolorize(p.netname));
+	else
+		t = p.netname;
+	
+	if (IS_DEAD(p) || p.frags == FRAGS_PLAYER_OUT_OF_GAME)
+		return strcat("(DEAD) ", t);
+	else if (IS_OBSERVER(p))
+		return strcat("(s) ", t);
+	else
+		return t;
+		
+	//return sprintf("%s (%d) %s", p.classname, p.team, t);
 }
 
 float want_weapon(entity weaponinfo, float allguns)

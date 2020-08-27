@@ -429,6 +429,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(POWERUP_STRENGTH,                        N_CONSOLE,  1, 0, "s1", "s1",       "strength",     _("^BG%s^K1 picked up Strength"), "")
 
     MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 disconnected"), "")
+	MSG_INFO_NOTIF(QUIT_KICK,                               N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked"), "")
     MSG_INFO_NOTIF(QUIT_KICK_IDLING,                        N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for idling"), "")
     MSG_INFO_NOTIF(QUIT_KICK_SPECTATING,                    N_CONSOLE,  0, 0, "", "",           "",             _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "")
     MSG_INFO_NOTIF(QUIT_KICK_TEAMKILL,                      N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for excessive teamkilling"), "")
@@ -787,7 +788,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(TIMEOUT_BEGINNING,                 N_ENABLE,    0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout begins in ^COUNT"), "")
     MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    N_ENABLE,    0, 1, "",               CPID_TIMEIN,            "1 f1", _("^F4Timeout ends in ^COUNT"), "")
-	MSG_CENTER_NOTIF(TIMEOUT_ONGOING,                   N_ENABLE,    0, 0, "",               CPID_TIMEIN,            "1 f1", _("^F4Match paused."), "")
+	MSG_CENTER_NOTIF(TIMEOUT_ONGOING,                   N_ENABLE,    0, 0, "",               CPID_TIMEIN,            "1 f1", _("^F4Match paused"), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 

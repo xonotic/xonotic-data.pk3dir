@@ -38,9 +38,10 @@ void HUD_Timer()
 	}
 
 	string timer;
-	float timelimit, timeleft, minutesLeft;
+	float timelimit, timeleft, minutesLeft, overtimes;
 
 	timelimit = STAT(TIMELIMIT);
+	overtimes = STAT(OVERTIMESADDED);
 
 	timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
 	timeleft = ceil(timeleft);
@@ -68,25 +69,26 @@ void HUD_Timer()
 
 	if (intermission_time) {
 		timer = seconds_tostring(max(0, floor(intermission_time - STAT(GAMESTARTTIME))));
-	} else if (warmup_stage && warmup_timeleft >= 60) {
+	} else if (warmup_stage) {
 		timer = _("WARMUP");
-	} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
+	} else if (autocvar_hud_panel_timer_increment) {
 		if (time < STAT(GAMESTARTTIME))
 			timer = seconds_tostring(0); //while restart is still active, show 00:00
 		else
 			timer = seconds_tostring(floor(time - STAT(GAMESTARTTIME)));
 	} else {
-		if(warmup_stage)
-			timer = seconds_tostring(warmup_timeleft);
+		if (time < STAT(GAMESTARTTIME))
+			timer = seconds_tostring(floor(timelimit * 60));
 		else
 			timer = seconds_tostring(timeleft);
 	}
 	
-	if(STAT(OVERTIMESADDED) >= 1)
-	{
-		timer = sprintf("%s (OT #%d)", timer, floor(STAT(OVERTIMESADDED)));
+	if(overtimes == 1) {
+		timer = sprintf("%s (OT)", timer);
+	} else if (overtimes > 1) {
+		timer = sprintf("%s (OT #%d)", timer, overtimes);
 	}
-
+	
 	drawstring_aspect(pos, timer, mySize, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	draw_endBoldFont();
