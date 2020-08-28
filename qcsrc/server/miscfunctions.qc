@@ -423,19 +423,10 @@ string playername(entity p, bool team_colorize)
     //else
     //    return p.netname;
 	
-	string t;
-	
 	if (team_colorize && teamplay && p.team != -1)
-		t = strcat(Team_ColorCode(p.team), strdecolorize(p.netname));
+		return strcat(Team_ColorCode(p.team), strdecolorize(p.netname));
 	else
-		t = p.netname;
-	
-	if (IS_DEAD(p) || p.frags == FRAGS_PLAYER_OUT_OF_GAME)
-		return strcat("(DEAD) ", t);
-	else if (IS_OBSERVER(p) || IS_SPEC(p))
-		return strcat("(s) ", t);
-	else
-		return t;
+		return p.netname;
 		
 	//return sprintf("%s (%d) %s", p.classname, p.team, t);
 }
