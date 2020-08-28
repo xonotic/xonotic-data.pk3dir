@@ -201,26 +201,26 @@ void target_give_init(entity this)
 		{
 			entity buff = buff_FirstFromFlags(STAT(BUFFS, it));
 			this.netname = cons(this.netname, buff.netname);
-			STAT(BUFF_TIME, this) = it.count;
+			STAT(BUFF_TIME, this) += it.count;
 		}
 		else
 		{
 			if (it.ammo_rockets)
-				this.ammo_rockets = it.ammo_rockets;
+				this.ammo_rockets += it.ammo_rockets;
 			else if (it.ammo_cells)
-				this.ammo_cells = it.ammo_cells;
+				this.ammo_cells += it.ammo_cells;
 			else if (it.ammo_shells)
-				this.ammo_shells = it.ammo_shells;
+				this.ammo_shells += it.ammo_shells;
 			else if (it.ammo_nails)
-				this.ammo_nails = it.ammo_nails;
+				this.ammo_nails += it.ammo_nails;
 			else if (it.invincible_finished)
-				this.invincible_finished = it.invincible_finished;
+				this.invincible_finished += it.invincible_finished;
 			else if (it.strength_finished)
-				this.strength_finished = it.strength_finished;
-			else if (it.classname == "item_armor_mega")
-				SetResourceExplicit(this, RES_ARMOR, 100);
-			else if (it.classname == "item_health_mega")
-				SetResourceExplicit(this, RES_HEALTH, 200);
+				this.strength_finished += it.strength_finished;
+			else if (it.health)
+				this.health += it.health;
+			else if (it.armorvalue)
+				this.armorvalue += it.armorvalue;
 
 			this.netname = cons(this.netname, it.netname);
 		}
