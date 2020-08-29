@@ -11,6 +11,8 @@ void trigger_hurt_use(entity this, entity actor, entity trigger)
 .float triggerhurttime;
 void trigger_hurt_touch(entity this, entity toucher)
 {
+	if (!toucher.takedamage)
+		return;
 	if (this.active != ACTIVE_ACTIVE)
 		return;
 
@@ -21,11 +23,10 @@ void trigger_hurt_touch(entity this, entity toucher)
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (toucher.iscreature)
 	{
-		if (toucher.takedamage)
-		if (toucher.triggerhurttime < time)
+		if (time >= toucher.triggerhurttime + ((q3compat && !(this.spawnflags & HURT_SLOW)) ? autocvar_sys_ticrate : 1))
 		{
 			EXACTTRIGGER_TOUCH(this, toucher);
-			toucher.triggerhurttime = time + ((q3compat && !(this.spawnflags & HURT_SLOW)) ? 0.1 : 1);
+			toucher.triggerhurttime = time;
 
 			entity own;
 			own = this.enemy;
@@ -40,14 +41,9 @@ void trigger_hurt_touch(entity this, entity toucher)
 	}
 	else if(toucher.damagedbytriggers)
 	{
-		if(toucher.takedamage)
-		{
-			EXACTTRIGGER_TOUCH(this, toucher);
-			Damage(toucher, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
-		}
+		EXACTTRIGGER_TOUCH(this, toucher);
+		Damage(toucher, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 	}
-
-	return;
 }
 
 /*QUAKED spawnfunc_trigger_hurt (.5 .5 .5) ?
