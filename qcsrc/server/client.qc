@@ -2896,9 +2896,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (source) {
 		namestr = playername(source, autocvar_g_chat_teamcolors);
 		
-		if (IS_DEAD(p) || p.frags == FRAGS_PLAYER_OUT_OF_GAME)
+		if (IS_DEAD(source) || source.frags == FRAGS_PLAYER_OUT_OF_GAME)
 			namestr = strcat("(DEAD) ", namestr);
-		else if (IS_OBSERVER(p) || IS_SPEC(p))
+		else if (IS_OBSERVER(source) || IS_SPEC(source))
 			namestr = strcat("(s) ", namestr);
 	}
 
@@ -3201,7 +3201,6 @@ void play_chatsound(entity source, string msgin)
 			
 			//bprintf("msg is %s and list is %s\n", rawmsg, autocvar_g_chat_sounds_list);
 			if (findinlist_abbrev(rawmsg, autocvar_g_chat_sounds_list)) {
-				bprintf("IN LIST!!!\n");
 				play2all(strcat("sound/chat/", rawmsg, ".ogg"));
 				
 				source.(flood_sound) = time;
