@@ -79,6 +79,8 @@ void HUD_Timer()
 	} else {
 		if (time < STAT(GAMESTARTTIME))
 			timer = seconds_tostring(floor(timelimit * 60));
+		else if (overtimes > 0)
+			timer = seconds_tostring(floor(time - STAT(OVERTIMESTARTTIME)));
 		else
 			timer = seconds_tostring(timeleft);
 	}

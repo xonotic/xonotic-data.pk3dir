@@ -66,6 +66,7 @@ float W_WeaponRateFactor(entity this);
 float game_stopped;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
+float overtime_starttime; // z411 point in time where first overtime started
 float checkrules_overtimesadded; // z411 add
 bool autocvar_g_allow_oldvortexbeam;
 int autocvar_leadlimit;
@@ -106,6 +107,7 @@ REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
 REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
+REGISTER_STAT(OVERTIMESTARTTIME, float, overtime_starttime)
 REGISTER_STAT(OVERTIMESADDED, float, checkrules_overtimesadded)
 REGISTER_STAT(MONSTERS_TOTAL, int)
 REGISTER_STAT(MONSTERS_KILLED, int)

@@ -1666,8 +1666,10 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
 	
 	sound(NULL, CH_INFO, SND_OVERTIME, VOL_BASE, ATTN_NONE);
-	if(checkrules_overtimesadded == 1)
+	if(checkrules_overtimesadded == 1) {
 		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_OVERTIME);
+		overtime_starttime = time;
+	}
 }
 
 float GetWinningCode(float fraglimitreached, float equality)
