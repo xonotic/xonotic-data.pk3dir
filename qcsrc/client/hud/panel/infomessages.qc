@@ -122,15 +122,15 @@ void HUD_InfoMessages()
 				InfoMessage(s);
 			}
 
-			bool mutator_returnvalue = MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize, img_curr_group);
+			//bool mutator_returnvalue = MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize, img_curr_group);
 			pos = M_ARGV(0, vector);
 			img_curr_group = M_ARGV(2, int);
 
-			if(!mutator_returnvalue)
-			{
+			//if(!mutator_returnvalue)
+			//{
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
 				InfoMessage(s);
-			}
+			//}
 		}
 
 		if (time < STAT(GAMESTARTTIME))
@@ -220,6 +220,9 @@ void HUD_InfoMessages()
 				InfoMessage(s);
 			}
 		}
+
+		// z411
+		MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize, img_curr_group);
 	}
 	else
 	{

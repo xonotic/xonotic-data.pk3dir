@@ -1,0 +1,11 @@
+// generated file; do not modify
+#include <common/mutators/mutator/damagetext/damagetext.qh>
+#ifdef CSQC
+    #include <common/mutators/mutator/damagetext/cl_damagetext.qh>
+#endif
+#ifdef SVQC
+    #include <common/mutators/mutator/damagetext/sv_damagetext.qh>
+#endif
+#ifdef MENUQC
+    #include <common/mutators/mutator/damagetext/ui_damagetext.qh>
+#endif

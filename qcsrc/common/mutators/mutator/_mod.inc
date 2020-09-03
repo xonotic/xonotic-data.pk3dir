@@ -1,5 +1,6 @@
 // generated file; do not modify
 
+#include <common/mutators/mutator/attackertext/_mod.inc>
 #include <common/mutators/mutator/bloodloss/_mod.inc>
 #include <common/mutators/mutator/breakablehook/_mod.inc>
 #include <common/mutators/mutator/buffs/_mod.inc>
