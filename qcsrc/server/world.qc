@@ -410,6 +410,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
+		BADPREFIX("g_jingle_");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
