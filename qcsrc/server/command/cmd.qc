@@ -677,6 +677,25 @@ void ClientCommand_spectate(entity caller, int request)
 	}
 }
 
+void ClientCommand_sounds(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			sprint(caller, strcat("Available sounds: \n\n", autocvar_g_chat_sounds_list, "\n"));
+			return; // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd sounds\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_suggestmap(entity caller, int request, int argc)
 {
 	switch (request)
@@ -849,6 +868,7 @@ void ClientCommand_(entity caller, int request)
 	CLIENT_COMMAND("selfstuff", ClientCommand_selfstuff(ent, request, command), "Stuffcmd a command to your own client") \
 	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(ent, request, arguments, command), "New system for sending a client cvar to the server") \
 	CLIENT_COMMAND("spectate", ClientCommand_spectate(ent, request), "Become an observer") \
+	CLIENT_COMMAND("sounds", ClientCommand_sounds(ent, request), "Get list of commsnds") \
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
