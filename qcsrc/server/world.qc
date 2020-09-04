@@ -1621,6 +1621,29 @@ void NextLevel()
 	});
 
 	target_music_kill();
+	
+	// z411
+	if(autocvar_g_jingle_end) {
+		int jingles_len = 0;
+		string jingles[32];
+		jingles[0] = "";
+		
+		FOREACH_WORD(autocvar_g_jingle_end_list, it,
+		{
+			jingles[jingles_len] = it;
+			jingles_len++;
+		});
+		
+		if(jingles_len) {
+			int song_to_play = rint(random() * (jingles_len - 1));
+		
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
+			{
+				stuffcmd(it, "cd stop\n");
+				_sound(it, CH_INFO, strcat("jingle/", jingles[song_to_play], ".ogg"), VOL_BASE * autocvar_g_jingle_end_volume, ATTEN_NORM);
+			});
+		}
+	}
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();

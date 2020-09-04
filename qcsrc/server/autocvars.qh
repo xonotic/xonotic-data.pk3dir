@@ -124,9 +124,14 @@ bool autocvar_g_chat_teamcolors;
 bool autocvar_g_chat_tellprivacy;
 bool autocvar_g_forced_respawn;
 string autocvar_g_forced_team_otherwise; // TODO: Move to teamplay.qc
+
 bool autocvar_g_chat_sounds; // z411
 string autocvar_g_chat_sounds_list; // z411
 float autocvar_g_chat_sounds_flood; // z411
+bool autocvar_g_jingle_end; // z411
+string autocvar_g_jingle_end_list; // z411
+float autocvar_g_jingle_end_volume; // z411
+
 #define autocvar_g_friendlyfire cvar("g_friendlyfire")
 #define autocvar_g_friendlyfire_virtual cvar("g_friendlyfire_virtual")
 #define autocvar_g_friendlyfire_virtual_force cvar("g_friendlyfire_virtual_force")

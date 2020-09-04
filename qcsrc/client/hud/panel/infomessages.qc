@@ -123,8 +123,8 @@ void HUD_InfoMessages()
 			}
 
 			//bool mutator_returnvalue = MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize, img_curr_group);
-			pos = M_ARGV(0, vector);
-			img_curr_group = M_ARGV(2, int);
+			//pos = M_ARGV(0, vector);
+			//img_curr_group = M_ARGV(2, int);
 
 			//if(!mutator_returnvalue)
 			//{
