@@ -1985,6 +1985,8 @@ void CheckRules_World()
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_FRAG);
+			sound(NULL, CH_INFO, SND_OVERTIME, VOL_BASE, ATTN_NONE);
+			Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_SUDDENDEATH);
 		}
 	}
 	else

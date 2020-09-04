@@ -205,6 +205,7 @@
 
     MSG_ANNCE_NOTIF(TIMEOUT,                    N__ALWAYS, "timeoutcalled",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	MSG_ANNCE_NOTIF(OVERTIME,                   N__ALWAYS, "overtime",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(SUDDENDEATH,                N__ALWAYS, "suddendeath",       CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	MSG_ANNCE_NOTIF(SUICIDE,                    N_GNTLOFF, "suicide",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	MSG_ANNCE_NOTIF(ACCIDENT,                   N_GNTLOFF, "accident",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 
