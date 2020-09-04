@@ -270,6 +270,12 @@ void GenericCommand_maplist(int request, int argc)
 					return;
 				}
 
+                        case "rebuild": // rebuilds maplist to include available maps, useful after doing fs_rescan
+                          {
+                            cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+                            return;
+                          }
+
 				case "remove": // scans maplist and only adds back whatever maps were not provided in argv(2)
 				{
 					if(argc == 3)
