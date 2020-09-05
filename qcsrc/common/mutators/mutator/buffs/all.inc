@@ -10,6 +10,9 @@ string Buff_UndeprecateName(string buffname)
         case "revival": case "regen": return "medic";	// WOP revival, Q3A regen
         case "invis": return "invisible";		// Q3A invis
         case "jumper": return "jump";			// WOP jumper
+        case "invulnerability": return "vampire";	// Q3TA invulnerability
+        case "kamikaze": return "vengeance";		// Q3TA kamikaze
+        case "teleporter": return "swapper";		// Q3A personal teleporter
         default: return buffname;
     }
 }
@@ -21,7 +24,7 @@ REGISTER_BUFF(AMMO) {
     this.m_color = '0.76 1 0.1';
 }
 BUFF_SPAWNFUNCS(ammo, BUFF_AMMO)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(ammoregen, BUFF_AMMO)
+BUFF_SPAWNFUNC_Q3COMPAT(item_ammoregen, BUFF_AMMO)
 
 REGISTER_BUFF(RESISTANCE) {
     this.m_name = _("Resistance");
@@ -30,7 +33,7 @@ REGISTER_BUFF(RESISTANCE) {
     this.m_color = '0.36 1 0.07';
 }
 BUFF_SPAWNFUNCS(resistance, BUFF_RESISTANCE)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(guard, BUFF_RESISTANCE)
+BUFF_SPAWNFUNC_Q3COMPAT(item_guard, BUFF_RESISTANCE)
 
 REGISTER_BUFF(SPEED) {
     this.m_name = _("Speed");
@@ -39,7 +42,7 @@ REGISTER_BUFF(SPEED) {
     this.m_color = '0.1 1 0.84';
 }
 BUFF_SPAWNFUNCS(speed, BUFF_SPEED)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(haste, BUFF_SPEED)
+BUFF_SPAWNFUNC_Q3COMPAT(item_haste, BUFF_SPEED)
 
 REGISTER_BUFF(MEDIC) {
     this.m_name = _("Medic");
@@ -48,8 +51,8 @@ REGISTER_BUFF(MEDIC) {
     this.m_color = '1 0.12 0';
 }
 BUFF_SPAWNFUNCS(medic, BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(regen, BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(revival, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3COMPAT(item_regen, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3COMPAT(item_revival, BUFF_MEDIC)
 
 REGISTER_BUFF(BASH) {
     this.m_name = _("Bash");
@@ -58,7 +61,7 @@ REGISTER_BUFF(BASH) {
     this.m_color = '1 0.39 0';
 }
 BUFF_SPAWNFUNCS(bash, BUFF_BASH)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(scout, BUFF_BASH)
+BUFF_SPAWNFUNC_Q3COMPAT(item_scout, BUFF_BASH)
 
 REGISTER_BUFF(VAMPIRE) {
     this.m_name = _("Vampire");
@@ -67,6 +70,7 @@ REGISTER_BUFF(VAMPIRE) {
     this.m_color = '1 0 0.24';
 }
 BUFF_SPAWNFUNCS(vampire, BUFF_VAMPIRE)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_invulnerability, BUFF_VAMPIRE)
 
 REGISTER_BUFF(DISABILITY) {
     this.m_name = _("Disability");
@@ -83,6 +87,7 @@ REGISTER_BUFF(VENGEANCE) {
     this.m_color = '1 0.23 0.61';
 }
 BUFF_SPAWNFUNCS(vengeance, BUFF_VENGEANCE)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_kamikaze, BUFF_VENGEANCE)
 
 REGISTER_BUFF(JUMP) {
     this.m_name = _("Jump");
@@ -91,7 +96,7 @@ REGISTER_BUFF(JUMP) {
     this.m_color = '0.24 0.78 1';
 }
 BUFF_SPAWNFUNCS(jump, BUFF_JUMP)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(jumper, BUFF_JUMP)
+BUFF_SPAWNFUNC_Q3COMPAT(item_jumper, BUFF_JUMP)
 
 REGISTER_BUFF(INVISIBLE) {
     this.m_name = _("Invisible");
@@ -100,7 +105,7 @@ REGISTER_BUFF(INVISIBLE) {
     this.m_color = '0.5 0.5 1';
 }
 BUFF_SPAWNFUNCS(invisible, BUFF_INVISIBLE)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(invis, BUFF_INVISIBLE)
+BUFF_SPAWNFUNC_Q3COMPAT(item_invis, BUFF_INVISIBLE)
 
 REGISTER_BUFF(INFERNO) {
     this.m_name = _("Inferno");
@@ -109,7 +114,7 @@ REGISTER_BUFF(INFERNO) {
     this.m_color = '1 0.62 0';
 }
 BUFF_SPAWNFUNCS(inferno, BUFF_INFERNO)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler, BUFF_INFERNO)
+BUFF_SPAWNFUNC_Q3COMPAT(item_doubler, BUFF_INFERNO)
 
 REGISTER_BUFF(SWAPPER) {
     this.m_name = _("Swapper");
@@ -118,6 +123,7 @@ REGISTER_BUFF(SWAPPER) {
     this.m_color = '0.63 0.36 1';
 }
 BUFF_SPAWNFUNCS(swapper, BUFF_SWAPPER)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_teleporter, BUFF_SWAPPER)
 
 REGISTER_BUFF(MAGNET) {
     this.m_name = _("Magnet");
@@ -142,4 +148,4 @@ REGISTER_BUFF(FLIGHT) {
     this.m_color = '0.23 0.44 1';
 }
 BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(flight, BUFF_FLIGHT)
+BUFF_SPAWNFUNC_Q3COMPAT(item_flight, BUFF_FLIGHT)

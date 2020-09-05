@@ -19,8 +19,9 @@
  ***********************
 
  * Map entities NOT handled in this file:
- holdable_invulnerability	Q3TA	currently unsupported
- holdable_kamikaze		Q3TA	currently unsupported
+ holdable_invulnerability	Q3TA	buffs mutator
+ holdable_kamikaze		Q3TA	buffs mutator
+ holdable_teleporter		Q3A	buffs mutator
  item_ammoregen			Q3TA	buffs mutator
  item_doubler			Q3TA	buffs mutator
  item_guard			Q3TA	buffs mutator
