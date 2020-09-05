@@ -2074,6 +2074,10 @@ void Join(entity this)
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
+	
+	// z411
+	if(warmup_stage)
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MISSING_READY);
 }
 
 int GetPlayerLimit()

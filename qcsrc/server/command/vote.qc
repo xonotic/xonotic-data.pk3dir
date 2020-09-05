@@ -448,7 +448,10 @@ void ReadyRestart_force()
 	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), { it.ready = false; });
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+		it.ready = false;
+		Kill_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CPID_MISSING_READY);
+	});
 	readycount = 0;
 	Nagger_ReadyCounted();  // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
