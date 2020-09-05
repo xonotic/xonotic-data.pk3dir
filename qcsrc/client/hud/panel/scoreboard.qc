@@ -1624,6 +1624,7 @@ void Scoreboard_Draw()
 	draw_beginBoldFont();
 	//drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_type_fontsize)), str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawcolorcodedstring(pos, str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	draw_endBoldFont();
 	
 	vector tmp_old_sz = draw_getimagesize("gfx/bai_logo");
 	float tmp_aspect = tmp_old_sz.x/tmp_old_sz.y;
@@ -1631,8 +1632,13 @@ void Scoreboard_Draw()
 
 	drawpic(pos + '1 0 0' * (panel_size.x - tmp_new_sz.x), "gfx/bai_logo", tmp_new_sz, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	
-	draw_endBoldFont();
-
+	pos.y += sb_gameinfo_type_fontsize.y;
+	
+	// z411 servername
+	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(hostname, true, sb_gameinfo_detail_fontsize)), hostname, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	
+	pos.y += sb_gameinfo_detail_fontsize.y;
+	
 	// Game Info: Game Detail
 	float tl = STAT(TIMELIMIT);
 	float fl = STAT(FRAGLIMIT);
@@ -1690,7 +1696,6 @@ void Scoreboard_Draw()
 		}
 	}
 
-	pos.y += sb_gameinfo_type_fontsize.y + 10;
 	drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
 	// map name
 	str = sprintf(_("^7Map: ^2%s"), shortmapname);

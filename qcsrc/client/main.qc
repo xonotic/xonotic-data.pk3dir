@@ -920,6 +920,8 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	serverflags = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
+	
+	strcpy(hostname, ReadString());
 
 	return = true;
 

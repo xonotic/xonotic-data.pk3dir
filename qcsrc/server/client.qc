@@ -874,6 +874,9 @@ void ClientInit_misc(entity this)
 	WriteByte(channel, this.cnt * 255.0); // g_balance_damagepush_speedfactor
 	WriteByte(channel, serverflags);
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
+	
+	// z411 send hostname
+	WriteString(channel, autocvar_hostname);
 }
 
 void ClientInit_CheckUpdate(entity this)
