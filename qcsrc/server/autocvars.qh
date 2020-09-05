@@ -263,6 +263,7 @@ float autocvar_gameversion;
 float autocvar_gameversion_min;
 float autocvar_gameversion_max;
 string autocvar_hostname;
+string autocvar_hostname_full; // z411
 bool autocvar_lastlevel;
 //int autocvar_leadlimit;
 int autocvar_leadlimit_and_fraglimit;

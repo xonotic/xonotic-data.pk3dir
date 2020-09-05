@@ -1635,7 +1635,7 @@ void Scoreboard_Draw()
 	pos.y += sb_gameinfo_type_fontsize.y;
 	
 	// z411 servername
-	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(hostname, true, sb_gameinfo_detail_fontsize)), hostname, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(hostname_full, true, sb_gameinfo_detail_fontsize)), hostname_full, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	pos.y += sb_gameinfo_detail_fontsize.y;
 	

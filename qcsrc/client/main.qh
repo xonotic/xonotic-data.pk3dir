@@ -4,7 +4,7 @@
 #include <common/weapons/_all.qh>
 
 // z411
-string hostname;
+string hostname_full;
 
 // Map coordinate base calculations need these
 vector mi_center;

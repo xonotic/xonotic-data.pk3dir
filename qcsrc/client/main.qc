@@ -921,7 +921,7 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 
 	g_trueaim_minrange = ReadCoord();
 	
-	strcpy(hostname, ReadString());
+	strcpy(hostname_full, ReadString());
 
 	return = true;
 
