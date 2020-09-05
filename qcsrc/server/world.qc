@@ -310,6 +310,7 @@ void cvar_changes_init()
 
 		// long
 		BADCVAR("hostname");
+		BADCVAR("hostname_full");
 		BADCVAR("g_maplist");
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
