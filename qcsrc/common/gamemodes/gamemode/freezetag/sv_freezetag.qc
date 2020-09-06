@@ -111,11 +111,14 @@ bool freezetag_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_OVER);
+		
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			it.freezetag_frozen_timeout = 0;
 			nades_Clear(it);
 		});
-		game_stopped = true;
+		if(autocvar_g_freezetag_round_stop)
+			game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return true;
 	}
@@ -128,14 +131,16 @@ bool freezetag_CheckWinner()
 	int winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_SCORES));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_SCORES));
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(winner_team, ANNCE_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_FT_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_TIED);
 	}
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
@@ -143,7 +148,8 @@ bool freezetag_CheckWinner()
 		nades_Clear(it);
 	});
 
-	game_stopped = true;
+	if(autocvar_g_freezetag_round_stop)
+		game_stopped = true;
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return true;
 }
@@ -436,8 +442,12 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		CS(it).killcount = 0;
-		it.freezetag_frozen_timeout = -1;
-		PutClientInServer(it);
+		
+		if(autocvar_g_freezetag_round_respawn) {
+			it.freezetag_frozen_timeout = -1;
+			PutClientInServer(it);
+		}
+		
 		it.freezetag_frozen_timeout = 0;
 	});
 	freezetag_count_alive_players();
@@ -454,6 +464,12 @@ MUTATOR_HOOKFUNCTION(ft, Unfreeze)
 {
 	entity targ = M_ARGV(0, entity);
 	targ.freezetag_frozen_time = 0;
+	
+	if(autocvar_g_freezetag_revive_respawn) {
+		targ.freezetag_frozen_timeout = -1;
+		PutClientInServer(targ);
+	}
+	
 	targ.freezetag_frozen_timeout = 0;
 }
 

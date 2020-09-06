@@ -221,6 +221,10 @@
 	MSG_ANNCE_NOTIF(ROUND_TEAM_WIN_BLUE,        N__ALWAYS, "round_win_blue",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	MSG_ANNCE_NOTIF(ROUND_TEAM_WIN_YELLOW,      N__ALWAYS, "round_win_yellow",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	MSG_ANNCE_NOTIF(ROUND_TEAM_WIN_PINK,        N__ALWAYS, "round_win_pink",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(ROUND_TEAM_SCORES_RED,      N__ALWAYS, "scores_red",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(ROUND_TEAM_SCORES_BLUE,     N__ALWAYS, "scores_blue",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(ROUND_TEAM_SCORES_YELLOW,   N__ALWAYS, "scores_yellow",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+	MSG_ANNCE_NOTIF(ROUND_TEAM_SCORES_PINK,     N__ALWAYS, "scores_pink",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	MSG_ANNCE_NOTIF(ROUND_OVER,                 N__ALWAYS, "round_over",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	MSG_ANNCE_NOTIF(ROUND_TIED,                 N__ALWAYS, "round_tied",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 	MSG_ANNCE_NOTIF(ALONE,                      N__ALWAYS, "alone",             CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
@@ -378,6 +382,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(FREEZETAG_SELF,                          N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^K1 froze themself"), "")
 
     MULTITEAM_INFO(ROUND_TEAM_WIN,                          N_CONSOLE,  0, 0, "", "",           "",     _("^TC^TT^BG team wins the round"), "", NAME)
+	MULTITEAM_INFO(ROUND_TEAM_SCORES,                       N_CONSOLE,  0, 0, "", "",           "",     _("^TC^TT^BG scores"), "", NAME)
     MSG_INFO_NOTIF(ROUND_PLAYER_WIN,                        N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^BG wins the round"), "")
     MSG_INFO_NOTIF(ROUND_TIED,                              N_CONSOLE,  0, 0, "", "",           "",     _("^BGRound tied"), "")
     MSG_INFO_NOTIF(ROUND_OVER,                              N_CONSOLE,  0, 0, "", "",           "",     _("^BGRound over, there's no winner"), "")
@@ -693,6 +698,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MULTITEAM_CENTER(ROUND_TEAM_LOSS,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^TC^TT^BG team loses the round"), "", NAME)
     MULTITEAM_CENTER(ROUND_TEAM_WIN,                    N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^TC^TT^BG team wins the round"), "", NAME)
+	MULTITEAM_CENTER(ROUND_TEAM_SCORES,                 N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^TC^TT^BG scores"), "", NAME)
     MSG_CENTER_NOTIF(ROUND_PLAYER_WIN,                  N_ENABLE,    1, 0, "s1",             CPID_ROUND,             "0 0",  _("^BG%s^BG wins the round"), "")
 
     MSG_CENTER_NOTIF(FREEZETAG_SELF,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1You froze yourself"), "")
