@@ -446,6 +446,8 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 		if(autocvar_g_freezetag_round_respawn) {
 			it.freezetag_frozen_timeout = -1;
 			PutClientInServer(it);
+		} else {
+			ResetPlayerResources(it);
 		}
 		
 		it.freezetag_frozen_timeout = 0;
