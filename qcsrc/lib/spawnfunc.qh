@@ -7,6 +7,8 @@
 noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
 
+.string fullspawndata;
+
 // Optional type checking; increases compile time too much to be enabled by default
 #if 0
 	bool entityfieldassignablefromeditor(int i)
@@ -282,6 +284,11 @@ noref bool __spawnfunc_first;
 		} \
 		if (!this.spawnfunc_checked) { \
 			_checkWhitelisted(this, #id); \
+			if (__fullspawndata) { \
+				/* not supported in old DP */ \
+				/* must be read inside the real spawnfunc */ \
+				this.fullspawndata = __fullspawndata; \
+			} \
 			this.spawnfunc_checked = true; \
 			if (this) { \
 				/* not worldspawn, delay spawn */ \
