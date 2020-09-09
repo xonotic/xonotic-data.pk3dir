@@ -4,6 +4,7 @@
 
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
+#include <common/mapinfo.qh>
 #include "hud/panel/centerprint.qh"
 
 bool announcer_1min;
@@ -22,6 +23,12 @@ void Announcer_Countdown(entity this)
 {
 	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = STAT(ROUNDSTARTTIME);
+	
+	bool rounds;
+	float countdown;
+	
+	// z411 LOG_INFOF("time: %d - starttime: %d - roundstarttime: %d", time, starttime, roundstarttime);
+	
 	if(roundstarttime == -1)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
@@ -29,31 +36,42 @@ void Announcer_Countdown(entity this)
 		announcer_countdown = NULL;
 		return;
 	}
-	if(roundstarttime >= starttime)
-		starttime = roundstarttime;
+	//if(roundstarttime >= starttime)
+	//	starttime = roundstarttime;
 	if(starttime <= time && roundstarttime != starttime) // game start time has passed
 		announcer_5min = announcer_1min = false; // reset maptime announcers now as well
 
-	float countdown = (starttime - time);
+	if(roundstarttime && time >= starttime) {
+		rounds = true;
+		countdown = (roundstarttime - time);
+	} else {
+		rounds = false;
+		countdown = (starttime - time);
+	}
+	
 	float countdown_rounded = floor(0.5 + countdown);
 
+	if(time >= starttime) centerprint_ClearTitle();
+	
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
 		delete(this);
 		announcer_countdown = NULL;
+		centerprint_ClearTitle();
 		return;
 	}
 	else // countdown is still going
 	{
 		// if concomitant countdown to round start overrides countdown to game start
-		if(roundstarttime == starttime)
+		if(rounds)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
 			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
+			this.nextthink = (roundstarttime - (countdown - 1));
 		}
 		else
 		{
@@ -61,9 +79,10 @@ void Announcer_Countdown(entity this)
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
 			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
+			this.nextthink = (starttime - (countdown - 1));
 		}
-
-		this.nextthink = (starttime - (countdown - 1));
+		
+		
 	}
 }
 
@@ -105,9 +124,13 @@ void Announcer_Gamestart()
 				setthink(announcer_countdown, Announcer_Countdown);
 			}
 
+			// z411 set title
+			if(time < STAT(GAMESTARTTIME) && !warmup_stage)
+				centerprint_SetTitle(MapInfo_Type_ToText(gametype));
+			
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			if(time > announcer_countdown.nextthink) { // don't play it again if countdown was already going
-				if(teamplay && warmup_stage)
+			if(time > announcer_countdown.nextthink && !warmup_stage) { // don't play it again if countdown was already going
+				if(teamplay && time < startTime)
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE_TEAM);
 				else
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);

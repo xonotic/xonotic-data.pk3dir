@@ -329,12 +329,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			CS(attacker).killcount = CS(attacker).killcount + 1;
 
 			attacker.killsound += 1;
-
+			
 			// TODO: improve SPREE_ITEM and KILL_SPREE_LIST
 			// these 2 macros are spread over multiple files
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
-					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
+					Send_Notification(NOTIF_ONE, attacker, MSG_MEDAL, MEDAL_KILLSTREAK_##countb); \
 					if (!warmup_stage) \
 						PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break;
@@ -350,6 +350,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			{
 				checkrules_firstblood = true;
 				notif_firstblood = true; // modify the current messages so that they too show firstblood information
+				Send_Notification(NOTIF_ONE, attacker, MSG_MEDAL, MEDAL_FIRSTBLOOD);
 				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 

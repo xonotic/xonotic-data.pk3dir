@@ -98,10 +98,11 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, mydmg, true, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, thiswep.m_id);
 
 	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+		Send_Notification(NOTIF_ONE, actor, MSG_MEDAL, MEDAL_YODA);
 	if(damage_goodhits && actor.oknex_lasthit)
 	{
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		//Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		Send_Notification(NOTIF_ONE, actor, MSG_MEDAL, MEDAL_IMPRESSIVE);
 		damage_goodhits = 0; // only every second time
 	}
 

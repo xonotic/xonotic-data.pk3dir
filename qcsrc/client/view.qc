@@ -27,6 +27,7 @@
 #include <common/mapobjects/target/music.qh>
 #include <common/teams.qh>
 #include <common/wepent.qh>
+#include <common/notifications/_mod.qh>
 
 #include <common/weapons/weapon/tuba.qh>
 
@@ -964,6 +965,7 @@ void HUD_Draw(entity this)
 	UpdateDamage();
 	HUD_Crosshair(this);
 	HitSound();
+	Local_Notification_Queue_Process();
 }
 
 void ViewLocation_Mouse()

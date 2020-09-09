@@ -29,6 +29,8 @@ ENUMCLASS(MSG)
 	CASE(MSG, CHOICE)
 	/** Kill centerprint message @deprecated */
 	CASE(MSG, CENTER_KILL)
+	/** Medal notification */
+	CASE(MSG, MEDAL)
 ENUMCLASS_END(MSG)
 
 string Get_Notif_TypeName(MSG net_type)
@@ -40,6 +42,7 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_CENTER: return "MSG_CENTER";
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
+		case MSG_MEDAL: return "MSG_MEDAL";
 	}
 	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!", ORDINAL(net_type));
 	return "";
@@ -162,6 +165,13 @@ void Create_Notification_Entity_Choice(entity notif,
 										MSG chtype,
 										Notification optiona,
 										Notification optionb);
+
+void Create_Notification_Entity_Medal(entity notif,
+										float var_cvar,
+										string namestring,
+										/* MSG_MEDAL */
+										string icon,
+										Notification anncename);
 
 void Dump_Notifications(int fh, bool alsoprint);
 
@@ -386,6 +396,17 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 const float NOTIF_MAX_ARGS = 7;
 const float NOTIF_MAX_HUDARGS = 2;
 const float NOTIF_MAX_DURCNT = 2;
+
+#ifdef CSQC
+const int NOTIF_QUEUE_MAX = 10;
+entity notif_queue_entity[NOTIF_QUEUE_MAX];
+MSG notif_queue_type[NOTIF_QUEUE_MAX];
+float notif_queue_time[NOTIF_QUEUE_MAX];
+float notif_queue_next_time;
+int notif_queue_length;
+
+void Local_Notification_Queue_Process();
+#endif
 
 string arg_slot[NOTIF_MAX_ARGS];
 
@@ -850,6 +871,18 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 			chtype,                                  /* chtype      */ \
 			optiona,                                 /* optiona     */ \
 			optionb);                                /* optionb     */ \
+	}
+	
+#define MSG_MEDAL_NOTIF(name, defaultvalue, icon, anncename) \
+	NOTIF_ADD_AUTOCVAR(MEDAL_##name, defaultvalue) \
+	MSG_MEDAL_NOTIF_(0, MEDAL_##name, MEDAL_##name, defaultvalue, icon, anncename)
+
+#define MSG_MEDAL_NOTIF_(teamnum, name, cvarname, defaultvalue, icon, anncename) \
+	REGISTER(Notifications, name, m_id, new_pure(msg_medal_notification)) { \
+		Create_Notification_Entity      (this, defaultvalue, ACVNN(cvarname), MSG_MEDAL, strtoupper(#name), teamnum); \
+		Create_Notification_Entity_Medal(this, ACVNN(cvarname), strtoupper(#name), \
+			icon, \
+			anncename); \
 	}
 
 REGISTRY_BEGIN(Notifications)

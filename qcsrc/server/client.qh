@@ -398,3 +398,7 @@ void Join(entity this);
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 
 const int MAX_SPECTATORS = 7;
+
+#define GIVE_MEDAL(entity,medalname) \
+	Send_Notification(NOTIF_ONE, entity, MSG_ANNCE, ANNCE_ACHIEVEMENT_##medalname); \
+	Send_Notification(NOTIF_ONE, entity, MSG_MEDAL, MEDAL_##medalname);

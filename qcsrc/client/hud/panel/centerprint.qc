@@ -43,6 +43,41 @@ float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 bool centerprint_showing;
 
+float centerprint_medal_expire_time;
+string centerprint_medal_icon;
+int centerprint_medal_times;
+
+bool centerprint_title_show;
+string centerprint_title;
+
+void centerprint_ClearTitle()
+{
+	centerprint_title_show = false;
+}
+void centerprint_SetTitle(string title)
+{
+	if(title != centerprint_title) {
+		if(centerprint_title)
+			strunzone(centerprint_title);
+		centerprint_title = strzone(title);
+		
+		centerprint_title_show = true;
+	}
+}
+
+void centerprint_Medal(string icon, int times)
+{
+	LOG_INFOF("centerprint_Medal: icon: %s times: %d", icon, times);
+	
+	centerprint_medal_expire_time = time + autocvar_hud_panel_centerprint_time;
+	centerprint_medal_times = times;
+	if(centerprint_medal_icon)
+		strunzone(centerprint_medal_icon);
+	centerprint_medal_icon = strzone(strcat("gfx/medal/", icon));
+	
+	centerprint_showing = true;
+}
+
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {
 	TC(int, new_id); TC(int, countdown_num);
@@ -230,11 +265,46 @@ void HUD_CenterPrint()
 
 	int i, j, k, n, g;
 	float a, sz, align, current_msg_posY = 0, msg_size;
-	vector pos;
+	vector pos, mysize, newsize;
 	string ts;
 	bool all_messages_expired = true;
 
 	pos = panel_pos;
+	height = vid_conheight/50 * 4;
+	pos.y -= height;
+	
+	// z411 draw medals first
+	if (centerprint_medal_expire_time > time) {
+		//if(centerprint_medal_expire_time - time > 1)
+		//	a = 1;
+		//else
+		//	a = min(1, 1 - ((centerprint_medal_expire_time - time + 2) * (1/3)));
+			
+		mysize = draw_getimagesize(centerprint_medal_icon);
+		newsize = vec2(height*(mysize.x/mysize.y), height);
+		
+		//fontsize = '1 1 0' * vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
+		//drawcolorcodedstring(pos + eY * 0.5 * (1 - sz * hud_scale.x) * fontsize.y, ts, fontsize, 1, DRAWFLAG_NORMAL);
+		//drawstring(pos, centerprint_medal_icon, fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(pos + eX * 0.5 * panel_size.x - eX * (newsize.x / 2), centerprint_medal_icon, newsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+		
+		all_messages_expired = false;
+	}
+	
+	// continue with normal procedure
+	pos.y += height;
+	
+	// z411 title
+	if(centerprint_title_show) {
+		fontsize = '1 1 0' * vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale * 1.5;
+		drawstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(centerprint_title, true, fontsize)), centerprint_title, fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+		pos.y += fontsize.y + (fontsize.y / 4);
+		
+		all_messages_expired = false;
+	}
+	
+	// continue with normal procedure this time
+	
 	if (autocvar_hud_panel_centerprint_flip)
 		pos.y += panel_size.y;
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);

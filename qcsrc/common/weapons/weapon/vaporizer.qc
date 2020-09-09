@@ -132,10 +132,10 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
 
 	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+		Send_Notification(NOTIF_ONE, actor, MSG_MEDAL, MEDAL_YODA);
 	if(damage_goodhits && actor.vaporizer_lasthit)
 	{
-		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		Send_Notification(NOTIF_ONE, actor, MSG_MEDAL, MEDAL_IMPRESSIVE);
 		damage_goodhits = 0; // only every second time
 	}
 
