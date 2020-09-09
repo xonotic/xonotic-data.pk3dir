@@ -653,10 +653,23 @@ void door_init_shared(entity this)
 	}
 
 	// TODO: other soundpacks
-	if (this.sounds > 0)
+	if (this.sounds > 0 || q3compat)
 	{
+		// Doors in Q3 always have sounds (they're hard coded in Q3 engine)
 		this.noise2 = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
+	}
+
+	if (q3compat)
+	{
+		// CPMA adds these fields for overriding the engine sounds
+		string s = GetField_fullspawndata(this, "sound_start", true);
+		string e = GetField_fullspawndata(this, "sound_end", true);
+
+		if (s)
+			this.noise2 = strzone(s);
+		if (e)
+			this.noise1 = strzone(e);
 	}
 
 	// sound when door stops moving
