@@ -7,6 +7,10 @@
 #include <common/mapinfo.qh>
 #include "hud/panel/centerprint.qh"
 
+#include <common/ent_cs.qh>
+#include <common/gamemodes/gamemode/duel/duel.qh>
+#include "miscfunctions.qh"
+
 bool announcer_1min;
 bool announcer_5min;
 string AnnouncerOption()
@@ -64,7 +68,7 @@ void Announcer_Countdown(entity this)
 	}
 	else // countdown is still going
 	{
-		// if concomitant countdown to round start overrides countdown to game start
+		// counting down to rounds
 		if(rounds)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
@@ -77,12 +81,10 @@ void Announcer_Countdown(entity this)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
-			if(annce_num != NULL)
+			if(!roundstarttime && annce_num != NULL) // count only if the gametype has no rounds
 				Local_Notification(MSG_ANNCE, annce_num);
 			this.nextthink = (starttime - (countdown - 1));
 		}
-		
-		
 	}
 }
 
@@ -125,12 +127,22 @@ void Announcer_Gamestart()
 			}
 
 			// z411 set title
-			if(time < STAT(GAMESTARTTIME) && !warmup_stage)
-				centerprint_SetTitle(MapInfo_Type_ToText(gametype));
+			if(time < STAT(GAMESTARTTIME) && !warmup_stage) {
+				//if(IS_GAMETYPE(DUEL)) {
+				//if(g_duel) {
+				if(gametype == MAPINFO_TYPE_DUEL) {
+					entity pl1 = players.sort_next;
+					entity pl2 = pl1.sort_next;
+					
+					centerprint_SetTitle(strcat(entcs_GetName(pl1.sv_entnum), " vs ", entcs_GetName(pl2.sv_entnum)));
+				} else {
+					centerprint_SetTitle(MapInfo_Type_ToText(gametype));
+				}
+			}
 			
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			if(time > announcer_countdown.nextthink && !warmup_stage) { // don't play it again if countdown was already going
-				if(teamplay && time < startTime)
+			if(time > announcer_countdown.nextthink && !warmup_stage && time < STAT(GAMESTARTTIME)) { // don't play it again if countdown was already going
+				if(teamplay)
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE_TEAM);
 				else
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);

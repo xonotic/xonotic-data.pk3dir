@@ -297,7 +297,7 @@ void HUD_CenterPrint()
 	// z411 title
 	if(centerprint_title_show) {
 		fontsize = '1 1 0' * vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale * 1.5;
-		drawstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(centerprint_title, true, fontsize)), centerprint_title, fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(centerprint_title, true, fontsize)), centerprint_title, fontsize, 1, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y + (fontsize.y / 4);
 		
 		all_messages_expired = false;
