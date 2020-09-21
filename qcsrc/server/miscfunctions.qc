@@ -87,11 +87,6 @@ void WarpZone_crosshair_trace(entity pl)
 	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
-void dedicated_print(string input)
-{
-	if (server_is_dedicated) print(input);
-}
-
 entity findnearest(vector point, bool checkitems, vector axismod)
 {
     vector dist;
@@ -966,41 +961,6 @@ void InitializeEntitiesRun()
     delete_fn = remove_unsafely;
 }
 
-.float(entity) isEliminated;
-bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
-{
-	Stream out = MSG_ENTITY;
-	WriteHeader(out, ENT_CLIENT_ELIMINATEDPLAYERS);
-	serialize(byte, out, sendflags);
-	if (sendflags & 1) {
-		for (int i = 1; i <= maxclients; i += 8) {
-			int f = 0;
-			entity e = edict_num(i);
-			for (int b = 0; b < 8; ++b, e = nextent(e)) {
-				if (eliminatedPlayers.isEliminated(e)) {
-					f |= BIT(b);
-				}
-			}
-			serialize(byte, out, f);
-		}
-	}
-	return true;
-}
-
-void EliminatedPlayers_Init(float(entity) isEliminated_func)
-{
-	if(eliminatedPlayers)
-	{
-		backtrace("Can't spawn eliminatedPlayers again!");
-		return;
-	}
-	Net_LinkEntity(eliminatedPlayers = spawn(), false, 0, EliminatedPlayers_SendEntity);
-	eliminatedPlayers.isEliminated = isEliminated_func;
-}
-
-
-
-
 void adaptor_think2use_hittype_splash(entity this) // for timed projectile detonation
 {
 	if(!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
@@ -1420,29 +1380,4 @@ float LostMovetypeFollow(entity ent)
 			return 1;
 	}
 	return 0;
-}
-
-.bool pushable;
-bool isPushable(entity e)
-{
-	if(e.pushable)
-		return true;
-	if(IS_VEHICLE(e))
-		return false;
-	if(e.iscreature)
-		return true;
-	if (Item_IsLoot(e))
-	{
-		return true;
-	}
-	switch(e.classname)
-	{
-		case "body":
-			return true;
-		case "bullet": // antilagged bullets can't hit this either
-			return false;
-	}
-	if (e.projectiledeathtype)
-		return true;
-	return false;
 }

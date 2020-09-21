@@ -6,6 +6,7 @@
 #include <server/client.qc>
 #include <server/clientkill.qc>
 #include <server/damage.qc>
+#include <server/elimination.qc>
 #include <server/gamelog.qc>
 #include <server/handicap.qc>
 #include <server/hook.qc>

@@ -1,5 +1,8 @@
 #pragma once
 
+/** print(), but only print if the server is not local */
+void dedicated_print(string input);
+
 bool expr_evaluate(string s);
 
 #ifdef PROFILING

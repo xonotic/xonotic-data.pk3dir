@@ -15,9 +15,6 @@
 
 .vector dropped_origin;
 
-entity eliminatedPlayers;
-void EliminatedPlayers_Init(float(entity) isEliminated_func);
-
 void write_recordmarker(entity pl, float tstart, float dt);
 
 void play2all(string samp);
@@ -61,14 +58,9 @@ void follow_sameorigin(entity e, entity to);
 
 string formatmessage(entity this, string msg);
 
-/** print(), but only print if the server is not local */
-void dedicated_print(string input);
-
 void GetCvars(entity this, entity store, int f);
 
 string GetMapname();
-
-float isPushable(entity e);
 
 float LostMovetypeFollow(entity ent);
 

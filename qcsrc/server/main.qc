@@ -173,6 +173,11 @@ void SV_PausedTic(float elapsedtime)
 	if (!server_is_dedicated) Pause_TryPause(false);
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
+
 /*
 =============
 StartFrame
