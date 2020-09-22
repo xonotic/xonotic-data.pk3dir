@@ -2099,6 +2099,7 @@ void Physics_Frame()
 
 	// make a second pass to see if any ents spawned this frame and make
 	// sure they run their move/think. this is verified by checking .move_time, which will never be 0 if the entity has moved
+	// MOVETYPE_NONE is also checked as .move_time WILL be 0 with that movetype
 	IL_EACH(g_moveables, it.move_qcphysics,
 	{
 		if(IS_CLIENT(it) || it.move_time || it.move_movetype == MOVETYPE_NONE || it.move_movetype == MOVETYPE_PHYSICS)
