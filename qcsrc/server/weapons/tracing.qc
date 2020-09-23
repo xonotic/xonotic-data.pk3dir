@@ -196,7 +196,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	mspercallsum -= gettime(GETTIME_HIRES);
 	#endif
 
-	dir = W_CalculateSpread(dir, spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+	dir = W_CalculateSpread(dir, spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
 
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);

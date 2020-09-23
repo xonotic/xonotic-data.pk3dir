@@ -686,11 +686,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		if (!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= g_weapondamagefactor;
-			mirrordamage *= g_weapondamagefactor;
-			complainteamdamage *= g_weapondamagefactor;
-			force = force * g_weaponforcefactor;
-			mirrorforce *= g_weaponforcefactor;
+			damage *= autocvar_g_weapondamagefactor;
+			mirrordamage *= autocvar_g_weapondamagefactor;
+			complainteamdamage *= autocvar_g_weapondamagefactor;
+			force = force * autocvar_g_weaponforcefactor;
+			mirrorforce *= autocvar_g_weaponforcefactor;
 		}
 
 		// should this be changed at all? If so, in what way?

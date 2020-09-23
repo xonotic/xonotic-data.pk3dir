@@ -297,12 +297,6 @@ const int SVC_SETVIEW = 5; // TODO: move to dpdefs where this belongs!
 .float pauserotarmor_finished;
 .float pauserotfuel_finished;
 
-// idle kicking
-float sv_maxidle;
-float sv_maxidle_spectatorsareidle;
-int sv_maxidle_slots;
-bool sv_maxidle_slots_countbots;
-
 // g_<gametype>_str:
 // If 0, default is used.
 // If <0, 0 is used.

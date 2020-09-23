@@ -720,7 +720,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 				{
 					print_to(caller, "^7Error: You can not call a timeout while a vote is active.");
 				}
-				else if (warmup_stage && !g_warmup_allow_timeout)
+				else if (warmup_stage && !autocvar_g_warmup_allow_timeout)
 				{
 					print_to(caller, "^7Error: You can not call a timeout in warmup-stage.");
 				}

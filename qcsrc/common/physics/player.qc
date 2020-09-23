@@ -650,7 +650,7 @@ void PM_check_hitground(entity this)
 void PM_Footsteps(entity this)
 {
 #ifdef SVQC
-	if (!g_footsteps) return;
+	if (!autocvar_g_footsteps) return;
 	if (IS_DUCKED(this)) return;
 	if (time >= this.lastground + 0.2) return;
 	if (vdist(this.velocity, <=, autocvar_sv_maxspeed * 0.6)) return;

@@ -714,7 +714,7 @@ void readplayerstartcvars()
 		warmup_start_weapons_default = '0 0 0';
 		warmup_start_weapons_defaultmask = '0 0 0';
 		FOREACH(Weapons, it != WEP_Null, {
-			int w = want_weapon(it, g_warmup_allguns);
+			int w = want_weapon(it, autocvar_g_warmup_allguns);
 			WepSet s = it.m_wepset;
 			if(w & 1)
 				warmup_start_weapons |= s;
@@ -725,7 +725,7 @@ void readplayerstartcvars()
 		});
 	}
 
-	if (g_jetpack)
+	if (autocvar_g_jetpack)
 		start_items |= ITEM_Jetpack.m_itemid;
 
 	MUTATOR_CALLHOOK(SetStartItems);
@@ -835,59 +835,6 @@ PRECACHE(PlayerModels)
 		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
 		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
-}
-
-
-void make_safe_for_remove(entity e)
-{
-    if (e.initialize_entity)
-    {
-        entity ent, prev = NULL;
-        for (ent = initialize_entity_first; ent; )
-        {
-            if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
-            {
-                //print("make_safe_for_remove: getting rid of initializer ", etos(ent), "\n");
-                // skip it in linked list
-                if (prev)
-                {
-                    prev.initialize_entity_next = ent.initialize_entity_next;
-                    ent = prev.initialize_entity_next;
-                }
-                else
-                {
-                    initialize_entity_first = ent.initialize_entity_next;
-                    ent = initialize_entity_first;
-                }
-            }
-            else
-            {
-                prev = ent;
-                ent = ent.initialize_entity_next;
-            }
-        }
-    }
-}
-
-.float remove_except_protected_forbidden;
-void remove_except_protected(entity e)
-{
-	if(e.remove_except_protected_forbidden)
-		error("not allowed to remove this at this point");
-	builtin_remove(e);
-}
-
-void remove_unsafely(entity e)
-{
-    if(e.classname == "spike")
-        error("Removing spikes is forbidden (crylink bug), please report");
-    builtin_remove(e);
-}
-
-void remove_safely(entity e)
-{
-    make_safe_for_remove(e);
-    builtin_remove(e);
 }
 
 void InitializeEntity(entity e, void(entity this) func, int order)

@@ -862,7 +862,7 @@ void ClientInit_misc(entity this)
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[2]));
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[3]));
 
-	if(sv_foginterval && world.fog != "")
+	if(autocvar_sv_foginterval && world.fog != "")
 		WriteString(channel, world.fog);
 	else
 		WriteString(channel, "");
@@ -935,7 +935,7 @@ void DecodeLevelParms(entity this)
 		CS(this).parm_idlesince = time;
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
-	CS(this).parm_idlesince = max(CS(this).parm_idlesince, time - sv_maxidle + 60);
+	CS(this).parm_idlesince = max(CS(this).parm_idlesince, time - autocvar_sv_maxidle + 60);
 
 	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
@@ -1048,7 +1048,7 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
-	if(g_jetpack)
+	if(autocvar_g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
 	if(autocvar_g_powerups == 0)
 		modifications = strcat(modifications, ", No powerups");
@@ -1167,7 +1167,7 @@ void ClientConnect(entity this)
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 	}
 
-	if (!sv_foginterval && world.fog != "")
+	if (!autocvar_sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
@@ -2754,21 +2754,21 @@ void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
-	if (sv_maxidle > 0)
+	if (autocvar_sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
-	if (IS_PLAYER(this) || sv_maxidle_spectatorsareidle)
+	if (IS_PLAYER(this) || autocvar_sv_maxidle_spectatorsareidle)
 	{
 		int totalClients = 0;
-		if(sv_maxidle_slots > 0)
+		if(autocvar_sv_maxidle_slots > 0)
 		{
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) || sv_maxidle_slots_countbots,
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 			{
 				++totalClients;
 			});
 		}
 
-		if (sv_maxidle_slots > 0 && (maxclients - totalClients) > sv_maxidle_slots)
+		if (autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
 		{ /* do nothing */ }
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
@@ -2780,8 +2780,8 @@ void PlayerPostThink (entity this)
 		}
 		else
 		{
-			float timeleft = ceil(sv_maxidle - (time - CS(this).parm_idlesince));
-			if (timeleft == min(10, sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
+			float timeleft = ceil(autocvar_sv_maxidle - (time - CS(this).parm_idlesince));
+			if (timeleft == min(10, autocvar_sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
 				if (!CS(this).idlekick_lasttimeleft)
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}

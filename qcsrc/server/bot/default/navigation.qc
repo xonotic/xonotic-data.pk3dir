@@ -1462,8 +1462,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		this.wp_goal_prev0 = e;
 	}
 
-	if(g_jetpack)
-	if(e==this.navigation_jetpack_goal)
+	if((this.items & IT_JETPACK) && e == this.navigation_jetpack_goal)
 		return true;
 
 	// if it can reach the goal there is nothing more to do

@@ -178,6 +178,58 @@ void dedicated_print(string input)
 	if (server_is_dedicated) print(input);
 }
 
+void make_safe_for_remove(entity e)
+{
+    if (e.initialize_entity)
+    {
+        entity ent, prev = NULL;
+        for (ent = initialize_entity_first; ent; )
+        {
+            if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
+            {
+                //print("make_safe_for_remove: getting rid of initializer ", etos(ent), "\n");
+                // skip it in linked list
+                if (prev)
+                {
+                    prev.initialize_entity_next = ent.initialize_entity_next;
+                    ent = prev.initialize_entity_next;
+                }
+                else
+                {
+                    initialize_entity_first = ent.initialize_entity_next;
+                    ent = initialize_entity_first;
+                }
+            }
+            else
+            {
+                prev = ent;
+                ent = ent.initialize_entity_next;
+            }
+        }
+    }
+}
+
+.float remove_except_protected_forbidden;
+void remove_except_protected(entity e)
+{
+	if(e.remove_except_protected_forbidden)
+		error("not allowed to remove this at this point");
+	builtin_remove(e);
+}
+
+void remove_unsafely(entity e)
+{
+    if(e.classname == "spike")
+        error("Removing spikes is forbidden (crylink bug), please report");
+    builtin_remove(e);
+}
+
+void remove_safely(entity e)
+{
+    make_safe_for_remove(e);
+    builtin_remove(e);
+}
+
 /*
 =============
 StartFrame
