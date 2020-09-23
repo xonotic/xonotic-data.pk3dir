@@ -458,7 +458,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 
 			// now request the information
 			uri = strcat(uri, "/player/", uri_escape(uri_escape(uri_escape(joiningplayer.crypto_idfp))), "/elo.txt");
-			LOG_TRACE("Retrieving playerstats from URL: ", uri);
+			LOG_DEBUG("Retrieving playerstats from URL: ", uri);
 			url_single_fopen(
 				uri,
 				FILE_APPEND,
@@ -593,8 +593,8 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
                         gt = data;
                         break;
                     case "e":
-                        LOG_TRACE("G: ", gt);
-                        LOG_TRACE("e: ", data);
+                        //LOG_TRACE("G: ", gt);
+                        //LOG_TRACE("e: ", data);
                         if (gt == PlayerStats_GetGametype()) {
                             handled = true;
                             float e = stof(data);
