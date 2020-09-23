@@ -209,7 +209,6 @@ void make_safe_for_remove(entity e)
     }
 }
 
-.float remove_except_protected_forbidden;
 void remove_except_protected(entity e)
 {
 	if(e.remove_except_protected_forbidden)

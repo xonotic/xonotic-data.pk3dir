@@ -16,6 +16,7 @@
 #include "../world.qh"
 #include "../ipban.qh"
 #include "../teamplay.qh"
+#include <server/intermission.qh>
 
 #include "../bot/api.qh"
 

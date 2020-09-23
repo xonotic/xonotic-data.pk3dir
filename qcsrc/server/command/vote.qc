@@ -12,6 +12,7 @@
 #include "common.qh"
 
 #include "../damage.qh"
+#include <server/intermission.qh>
 #include "../world.qh"
 #include "../teamplay.qh"
 #include "../race.qh"

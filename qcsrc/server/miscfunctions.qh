@@ -5,6 +5,7 @@
 #include <server/client.qh>
 #include <server/world.qh>
 
+#include <server/intermission.qh>
 #include <server/items/items.qh>
 
 #include <server/mutators/_mod.qh>

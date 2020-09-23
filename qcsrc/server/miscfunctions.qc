@@ -8,6 +8,7 @@
 #include "world.qh"
 #include <server/gamelog.qh>
 #include "ipban.qh"
+#include <server/intermission.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/spawnpoints.qh>

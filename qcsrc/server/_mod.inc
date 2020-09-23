@@ -11,6 +11,7 @@
 #include <server/handicap.qc>
 #include <server/hook.qc>
 #include <server/impulse.qc>
+#include <server/intermission.qc>
 #include <server/ipban.qc>
 #include <server/main.qc>
 #include <server/mapvoting.qc>

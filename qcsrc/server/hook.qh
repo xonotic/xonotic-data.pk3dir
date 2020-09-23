@@ -18,6 +18,5 @@ const float HOOK_WAITING_FOR_RELEASE = BIT(4);
 .float hook_state;
 .int state;
 
-void GrappleHookInit();
 vector hook_shotorigin[4];
 

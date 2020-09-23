@@ -3,6 +3,7 @@
 #include <server/client.qh>
 #include <server/world.qh>
 #include <server/gamelog.qh>
+#include <server/intermission.qh>
 #include <server/race.qh>
 #include <common/ent_cs.qh>
 #include <common/mapobjects/triggers.qh>

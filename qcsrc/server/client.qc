@@ -16,6 +16,7 @@
 #include "damage.qh"
 #include "handicap.qh"
 #include "hook.qh"
+#include <server/intermission.qh>
 #include "command/common.qh"
 #include "command/vote.qh"
 #include "clientkill.qh"

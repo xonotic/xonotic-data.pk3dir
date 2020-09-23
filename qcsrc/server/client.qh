@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils.qh"
+#include <server/intermission.qh>
 #include <common/replicate.qh>
 #include <common/sounds/all.qh>
 
@@ -315,8 +316,6 @@ bool PlayerInList(entity player, string list);
 void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);
-
-void FixIntermissionClient(entity e);
 
 void checkSpectatorBlock(entity this);
 

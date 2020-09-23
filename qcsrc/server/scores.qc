@@ -3,6 +3,7 @@
 #include "command/common.qh"
 #include <common/weapons/_all.qh>
 #include "client.qh"
+#include <server/intermission.qh>
 #include <server/world.qh>
 #include <server/miscfunctions.qh>
 #include <server/mutators/_mod.qh>

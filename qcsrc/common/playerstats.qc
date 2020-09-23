@@ -8,6 +8,7 @@
     #include <server/client.qh>
     #include "../server/anticheat.qh"
     #include <common/stats.qh>
+    #include <server/intermission.qh>
     #include "../server/scores.qh"
 	#include <server/world.qh>
     #include "../server/weapons/accuracy.qh"
