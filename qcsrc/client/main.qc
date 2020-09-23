@@ -46,7 +46,7 @@ void CSQC_Init()
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	LOG_INFOF("^4CSQC Build information: ^1%s", WATERMARK);
+	LOG_TRACEF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
 
 	{

@@ -1104,9 +1104,6 @@ void ClientConnect(entity this)
 	this.flags |= FL_CLIENT;
 	assert(player_count >= 0, player_count = 0);
 
-#ifdef WATERMARK
-	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
-#endif
 	TRANSMUTE(Client, this);
 	CS(this).version_nagtime = time + 10 + random() * 10;
 
