@@ -414,7 +414,8 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
 }
 
-void GrappleHookInit()
+// NOTE: using PRECACHE here to make sure it's called after everything else
+PRECACHE(GrappleHookInit)
 {
 	if(g_grappling_hook)
 	{

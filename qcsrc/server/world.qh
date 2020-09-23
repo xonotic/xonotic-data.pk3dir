@@ -22,9 +22,7 @@ string matchid;
 
 .string fog;
 
-float intermission_running;
-float intermission_exittime;
-float alreadychangedlevel;
+string redirection_target;
 
 string cache_mutatormsg;
 string cache_lastmutatormsg;
@@ -44,20 +42,9 @@ const int WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath 
 
 float WinningCondition_Scores(float limit, float leadlimit);
 void SetWinners(.float field, float value);
-void IntermissionThink(entity this);
-void GotoNextMap(float reinit);
 void ReadyRestart();
 
-string GetGametype();
-
 void DumpStats(float final);
-float Map_IsRecent(string m);
-string GetNextMap();
-void ShuffleMaplist();
-void Map_Goto_SetStr(string nextmapname);
-void Map_Goto(float reinit);
-void Map_MarkAsRecent(string m);
-float DoNextMapOverride(float reinit);
 void CheckRules_World();
 float RedirectionThink();
 

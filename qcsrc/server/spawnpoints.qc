@@ -16,6 +16,7 @@
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
+#include <server/intermission.qh>
 #include <server/utils.qh>
 #include <server/command/vote.qh>
 

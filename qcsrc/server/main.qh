@@ -1,5 +1,15 @@
 #pragma once
 
+/** print(), but only print if the server is not local */
+void dedicated_print(string input);
+
+.float remove_except_protected_forbidden;
+void remove_except_protected(entity e);
+
+void remove_safely(entity e);
+
+void remove_unsafely(entity e);
+
 bool expr_evaluate(string s);
 
 #ifdef PROFILING

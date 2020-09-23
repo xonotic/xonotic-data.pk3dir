@@ -72,7 +72,7 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 		return 0;
 
 	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
-		if(this.lip < sv_clones)
+		if(this.lip < autocvar_sv_clones)
 			return 1;
 
 	// haha

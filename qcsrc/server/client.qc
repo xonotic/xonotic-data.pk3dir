@@ -16,6 +16,7 @@
 #include "damage.qh"
 #include "handicap.qh"
 #include "hook.qh"
+#include <server/intermission.qh>
 #include "command/common.qh"
 #include "command/vote.qh"
 #include "clientkill.qh"
@@ -82,6 +83,8 @@
 #include <common/mutators/mutator/overkill/oknex.qh>
 
 #include <common/weapons/weapon/vortex.qh>
+
+#define CHAT_NOSPECTATORS() ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
@@ -242,7 +245,7 @@ void setplayermodel(entity e, string modelname)
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this)
 {
-    bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
 	if (IS_PLAYER(this))
@@ -259,35 +262,33 @@ void PutObserverInServer(entity this)
 			if (vote_called) { VoteCount(false); }
 			ReadyCount();
 		}
-    }
+	}
 
-    {
-        entity spot = SelectSpawnPoint(this, true);
-        if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
-        this.angles = vec2(spot.angles);
-        this.fixangle = true;
-        // offset it so that the spectator spawns higher off the ground, looks better this way
-        setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
-        if (IS_REAL_CLIENT(this))
-        {
-            msg_entity = this;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, this);
-        }
-        // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
-        // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
-        if(!autocvar_g_debug_globalsounds)
-        {
-        	// needed for player sounds
-        	this.model = "";
-	        FixPlayermodel(this);
-        }
-        setmodel(this, MDL_Null);
-        setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
-        this.view_ofs = '0 0 0';
-    }
+	entity spot = SelectSpawnPoint(this, true);
+	if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
+	this.angles = vec2(spot.angles);
+	this.fixangle = true;
+	// offset it so that the spectator spawns higher off the ground, looks better this way
+	setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
+	if (IS_REAL_CLIENT(this))
+	{
+		msg_entity = this;
+		WriteByte(MSG_ONE, SVC_SETVIEW);
+		WriteEntity(MSG_ONE, this);
+	}
+	// give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	// so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+	if(!autocvar_g_debug_globalsounds)
+	{
+		// needed for player sounds
+		this.model = "";
+		FixPlayermodel(this);
+	}
+	setmodel(this, MDL_Null);
+	setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
+	this.view_ofs = '0 0 0';
 
-    RemoveGrapplingHooks(this);
+	RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
 	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
@@ -303,12 +304,8 @@ void PutObserverInServer(entity this)
 
 	WaypointSprite_PlayerDead(this);
 
-	if (CS(this).killcount != FRAGS_SPECTATOR)
-	{
-		if(!game_stopped)
-		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
-	}
+	if (CS(this).killcount != FRAGS_SPECTATOR && !game_stopped && CHAT_NOSPECTATORS())
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 	accuracy_resend(this);
 
@@ -319,7 +316,7 @@ void PutObserverInServer(entity this)
 	if(this.monster_attack)
 		IL_REMOVE(g_monster_targets, this);
 	this.monster_attack = false;
-    STAT(HUD, this) = HUD_NORMAL;
+	STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
@@ -865,7 +862,7 @@ void ClientInit_misc(entity this)
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[2]));
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[3]));
 
-	if(sv_foginterval && world.fog != "")
+	if(autocvar_sv_foginterval && world.fog != "")
 		WriteString(channel, world.fog);
 	else
 		WriteString(channel, "");
@@ -938,7 +935,7 @@ void DecodeLevelParms(entity this)
 		CS(this).parm_idlesince = time;
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
-	CS(this).parm_idlesince = max(CS(this).parm_idlesince, time - sv_maxidle + 60);
+	CS(this).parm_idlesince = max(CS(this).parm_idlesince, time - autocvar_sv_maxidle + 60);
 
 	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
@@ -1051,7 +1048,7 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
-	if(g_jetpack)
+	if(autocvar_g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
 	if(autocvar_g_powerups == 0)
 		modifications = strcat(modifications, ", No powerups");
@@ -1170,7 +1167,7 @@ void ClientConnect(entity this)
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 	}
 
-	if (!sv_foginterval && world.fog != "")
+	if (!autocvar_sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
@@ -1231,7 +1228,7 @@ void ClientDisconnect(entity this)
 	if(IS_SPEC(this))
 		SetSpectatee(this, NULL);
 
-    MUTATOR_CALLHOOK(ClientDisconnect, this);
+	MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
 	strfree(CS(this).weaponorder_byimpulse);
@@ -1995,10 +1992,10 @@ bool SpectatePrev(entity this)
 	switch (MUTATOR_CALLHOOK(SpectatePrev, this, ent, first))
 	{
 		case MUT_SPECPREV_FOUND:
-		    ent = M_ARGV(1, entity);
-		    break;
+			ent = M_ARGV(1, entity);
+			break;
 		case MUT_SPECPREV_RETURN:
-		    return true;
+			return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
@@ -2231,7 +2228,7 @@ bool PlayerThink(entity this)
 	}
 
 	if (timeout_status == TIMEOUT_ACTIVE) {
-        // don't allow the player to turn around while game is paused
+		// don't allow the player to turn around while game is paused
 		// FIXME turn this into CSQC stuff
 		this.v_angle = this.lastV_angle;
 		this.angles = this.lastV_angle;
@@ -2757,21 +2754,21 @@ void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
-	if (sv_maxidle > 0)
+	if (autocvar_sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
-	if (IS_PLAYER(this) || sv_maxidle_spectatorsareidle)
+	if (IS_PLAYER(this) || autocvar_sv_maxidle_spectatorsareidle)
 	{
 		int totalClients = 0;
-		if(sv_maxidle_slots > 0)
+		if(autocvar_sv_maxidle_slots > 0)
 		{
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) || sv_maxidle_slots_countbots,
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 			{
 				++totalClients;
 			});
 		}
 
-		if (sv_maxidle_slots > 0 && (maxclients - totalClients) > sv_maxidle_slots)
+		if (autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
 		{ /* do nothing */ }
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
@@ -2783,8 +2780,8 @@ void PlayerPostThink (entity this)
 		}
 		else
 		{
-			float timeleft = ceil(sv_maxidle - (time - CS(this).parm_idlesince));
-			if (timeleft == min(10, sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
+			float timeleft = ceil(autocvar_sv_maxidle - (time - CS(this).parm_idlesince));
+			if (timeleft == min(10, autocvar_sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
 				if (!CS(this).idlekick_lasttimeleft)
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
@@ -2794,9 +2791,8 @@ void PlayerPostThink (entity this)
 				return;
 			}
 			else if (timeleft <= 10) {
-				if (timeleft != CS(this).idlekick_lasttimeleft) {
-				    Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
-                }
+				if (timeleft != CS(this).idlekick_lasttimeleft)
+					Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
 				CS(this).idlekick_lasttimeleft = timeleft;
 			}
 		}
@@ -2968,10 +2964,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	var .float flood_field = floodcontrol_chat;
 	if(floodcontrol && source)
 	{
-		float flood_spl;
-		float flood_burst;
-		float flood_lmax;
-		float lines;
+		float flood_spl, flood_burst, flood_lmax;
 		if(privatesay)
 		{
 			flood_spl = autocvar_g_chat_flood_spl_tell;
@@ -3001,7 +2994,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			getWrappedLine_remaining = msgstr;
 			msgstr = "";
-			lines = 0;
+			int lines = 0;
 			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
 			{
 				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
@@ -3058,11 +3051,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcecmsgstr = cmsgstr;
 	}
 
-	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer))
+	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer) && !game_stopped
+		&& (teamsay || CHAT_NOSPECTATORS()))
 	{
-		if (!game_stopped)
-		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
-			teamsay = -1; // spectators
+		teamsay = -1; // spectators
 	}
 
 	if(flood)
@@ -3093,11 +3085,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = 1;
 	}
 
-	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer))
+	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer) && !game_stopped
+		&& (IS_PLAYER(privatesay) || privatesay.caplayer) && CHAT_NOSPECTATORS())
 	{
-		if (!game_stopped)
-		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
-			ret = -1; // just hide the message completely
+		ret = -1; // just hide the message completely
 	}
 
 	MUTATOR_CALLHOOK(ChatMessage, source, ret);

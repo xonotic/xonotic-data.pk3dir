@@ -4,6 +4,7 @@
 #include <common/stats.qh>
 
 #include "cheats.qh"
+#include <server/intermission.qh>
 #include "miscfunctions.qh"
 #include "world.qh"
 

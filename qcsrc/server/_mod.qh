@@ -6,10 +6,12 @@
 #include <server/client.qh>
 #include <server/clientkill.qh>
 #include <server/damage.qh>
+#include <server/elimination.qh>
 #include <server/gamelog.qh>
 #include <server/handicap.qh>
 #include <server/hook.qh>
 #include <server/impulse.qh>
+#include <server/intermission.qh>
 #include <server/ipban.qh>
 #include <server/main.qh>
 #include <server/mapvoting.qh>

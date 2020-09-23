@@ -156,7 +156,7 @@ void Draw_ShowNames(entity this)
 		myPos.y += (mySize.y / resize - mySize.y);
 		// this is where the origin of the string
 		float namewidth = mySize.x;
-		if (autocvar_hud_shownames_status && this.sameteam)
+		if (autocvar_hud_shownames_status && this.sameteam && !this.csqcmodel_isdead)
 		{
 			vector pos = myPos + eY * autocvar_hud_shownames_fontsize * resize;
 			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);

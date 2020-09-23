@@ -7,6 +7,7 @@
 #include <server/command/vote.qh>
 #include <server/client.qh>
 #include <server/gamelog.qh>
+#include <server/intermission.qh>
 #include <server/damage.qh>
 #include <server/world.qh>
 #include <server/items/items.qh>
