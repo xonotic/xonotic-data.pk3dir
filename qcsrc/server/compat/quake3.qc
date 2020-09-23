@@ -78,6 +78,7 @@ SPAWNFUNC_Q3(weapon_railgun, ammo_slugs, WEP_VORTEX)
 
 // BFG -> Crylink || Fireball
 SPAWNFUNC_Q3_COND(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF", WEP_CRYLINK, WEP_FIREBALL)
+	// FIXME: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by spawnfunc_body
 
 // grappling hook -> hook
 SPAWNFUNC_WEAPON(weapon_grapplinghook, WEP_HOOK)

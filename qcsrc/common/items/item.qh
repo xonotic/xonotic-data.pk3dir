@@ -65,7 +65,7 @@ const int ITS_GLOW              = BIT(6);
 .float invincible_finished; // ditto
 
 #define spawnfunc_body(item) \
-	if (!Item_IsDefinitionAllowed(item)) \
+	if (!(item) || !Item_IsDefinitionAllowed(item)) \
 	{ \
 		startitem_failed = true; \
 		delete(this); \
