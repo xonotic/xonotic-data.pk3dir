@@ -1,5 +1,6 @@
 #include "common.qh"
 
+#include <server/chat.qh>
 #include <server/client.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>

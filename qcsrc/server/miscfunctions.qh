@@ -46,8 +46,6 @@ void detach_sameorigin(entity e);
 
 void follow_sameorigin(entity e, entity to);
 
-string formatmessage(entity this, string msg);
-
 void GetCvars(entity this, entity store, int f);
 
 float LostMovetypeFollow(entity ent);
@@ -57,8 +55,6 @@ string uid2name(string myuid);
 bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
-
-string NearestLocation(vector p);
 
 string playername(entity p, bool team_colorize);
 
@@ -76,10 +72,6 @@ void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomo
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
-
-const float NUM_NEAREST_ENTITIES = 4;
-entity nearest_entity[NUM_NEAREST_ENTITIES];
-float nearest_length[NUM_NEAREST_ENTITIES];
 
 
 //#NO AUTOCVARS START

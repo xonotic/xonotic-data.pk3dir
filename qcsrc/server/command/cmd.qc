@@ -1,5 +1,6 @@
 #include "cmd.qh"
 
+#include <server/chat.qh>
 #include <server/world.qh>
 #include <server/miscfunctions.qh>
 

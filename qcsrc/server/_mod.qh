@@ -2,6 +2,7 @@
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
 #include <server/campaign.qh>
+#include <server/chat.qh>
 #include <server/cheats.qh>
 #include <server/client.qh>
 #include <server/clientkill.qh>
