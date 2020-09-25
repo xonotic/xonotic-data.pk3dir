@@ -6,6 +6,7 @@
 #include <server/command/vote.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
+#include <server/world.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>
 

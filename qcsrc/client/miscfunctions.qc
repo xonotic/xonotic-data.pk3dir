@@ -159,20 +159,6 @@ float PreviewExists(string name)
 	return false;
 }
 
-// decolorizes and team colors the player name when needed
-string playername(string thename, float teamid)
-{
-    TC(int, teamid);
-    string t;
-    if (teamplay)
-    {
-        t = Team_ColorCode(teamid);
-        return strcat(t, strdecolorize(thename));
-    }
-    else
-        return strdecolorize(thename);
-}
-
 float cvar_or(string cv, float v)
 {
 	string s;

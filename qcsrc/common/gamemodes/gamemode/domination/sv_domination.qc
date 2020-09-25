@@ -6,6 +6,7 @@
 #include <server/gamelog.qh>
 #include <server/items/items.qh>
 #include <server/teamplay.qh>
+#include <server/world.qh>
 #include <common/mapobjects/platforms.qh>
 #include <common/mapobjects/triggers.qh>
 

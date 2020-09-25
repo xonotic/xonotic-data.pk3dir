@@ -1,11 +1,13 @@
 #include "cmd.qh"
 
+#include <server/chat.qh>
 #include <server/world.qh>
 #include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
 
 #include "common.qh"
+#include "getreplies.qh"
 #include "vote.qh"
 
 #include "../bot/api.qh"
@@ -394,13 +396,13 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 						{
 							caller.ready = false;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!

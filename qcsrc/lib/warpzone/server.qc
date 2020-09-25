@@ -12,6 +12,7 @@
 	#include <common/weapons/_all.qh>
 	#include <common/stats.qh>
 	#include <server/utils.qh>
+	#include <server/weapons/common.qh>
 #endif
 
 #ifdef SVQC

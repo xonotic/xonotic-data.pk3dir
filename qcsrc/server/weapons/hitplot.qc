@@ -85,7 +85,7 @@ void W_HitPlotOpen(entity player)
 	if(autocvar_g_hitplots || strhasword(autocvar_g_hitplots_individuals, player.netaddress))
 	{
 		CS(player).hitplotfh = fopen(strcat("hits-", matchid, "-", player.netaddress, "-", ftos(player.playerid), ".plot"), FILE_WRITE);
-		fputs(CS(player).hitplotfh, strcat("#name ", playername(player, false), "\n"));
+		fputs(CS(player).hitplotfh, strcat("#name ", playername(player.netname, player.team, false), "\n"));
 	}
 	else { CS(player).hitplotfh = -1; }
 }

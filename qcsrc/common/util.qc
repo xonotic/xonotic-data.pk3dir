@@ -1894,3 +1894,133 @@ int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
 	return CONTENT_EMPTY;
 }
 #endif
+
+#ifdef SVQC
+void attach_sameorigin(entity e, entity to, string tag)
+{
+    vector org, t_forward, t_left, t_up, e_forward, e_up;
+    float tagscale;
+
+    org = e.origin - gettaginfo(to, gettagindex(to, tag));
+    tagscale = (vlen(v_forward) ** -2); // undo a scale on the tag
+    t_forward = v_forward * tagscale;
+    t_left = v_right * -tagscale;
+    t_up = v_up * tagscale;
+
+    e.origin_x = org * t_forward;
+    e.origin_y = org * t_left;
+    e.origin_z = org * t_up;
+
+    // current forward and up directions
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_FromVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_FromAngles(e.angles);
+    fixedmakevectors(e.angles);
+
+    // untransform forward, up!
+    e_forward.x = v_forward * t_forward;
+    e_forward.y = v_forward * t_left;
+    e_forward.z = v_forward * t_up;
+    e_up.x = v_up * t_forward;
+    e_up.y = v_up * t_left;
+    e_up.z = v_up * t_up;
+
+    e.angles = fixedvectoangles2(e_forward, e_up);
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_ToVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_ToAngles(e.angles);
+
+    setattachment(e, to, tag);
+    setorigin(e, e.origin);
+}
+
+void detach_sameorigin(entity e)
+{
+    vector org;
+    org = gettaginfo(e, 0);
+    e.angles = fixedvectoangles2(v_forward, v_up);
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_ToVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_ToAngles(e.angles);
+    setorigin(e, org);
+    setattachment(e, NULL, "");
+    setorigin(e, e.origin);
+}
+
+void follow_sameorigin(entity e, entity to)
+{
+    set_movetype(e, MOVETYPE_FOLLOW); // make the hole follow
+    e.aiment = to; // make the hole follow bmodel
+    e.punchangle = to.angles; // the original angles of bmodel
+    e.view_ofs = e.origin - to.origin; // relative origin
+    e.v_angle = e.angles - to.angles; // relative angles
+}
+
+#if 0
+// TODO: unused, likely for a reason, possibly needs extensions (allow setting the new movetype as a parameter?)
+void unfollow_sameorigin(entity e)
+{
+    set_movetype(e, MOVETYPE_NONE);
+}
+#endif
+
+.string aiment_classname;
+.float aiment_deadflag;
+void SetMovetypeFollow(entity ent, entity e)
+{
+	// FIXME this may not be warpzone aware
+	set_movetype(ent, MOVETYPE_FOLLOW); // make the hole follow
+	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
+	ent.aiment = e; // make the hole follow bmodel
+	ent.punchangle = e.angles; // the original angles of bmodel
+	ent.view_ofs = ent.origin - e.origin; // relative origin
+	ent.v_angle = ent.angles - e.angles; // relative angles
+	ent.aiment_classname = strzone(e.classname);
+	ent.aiment_deadflag = e.deadflag;
+}
+void UnsetMovetypeFollow(entity ent)
+{
+	set_movetype(ent, MOVETYPE_FLY);
+	PROJECTILE_MAKETRIGGER(ent);
+	ent.aiment = NULL;
+}
+float LostMovetypeFollow(entity ent)
+{
+/*
+	if(ent.move_movetype != MOVETYPE_FOLLOW)
+		if(ent.aiment)
+			error("???");
+*/
+	if(ent.aiment)
+	{
+		if(ent.aiment.classname != ent.aiment_classname)
+			return 1;
+		if(ent.aiment.deadflag != ent.aiment_deadflag)
+			return 1;
+	}
+	return 0;
+}
+#endif
+
+#ifdef GAMEQC
+// decolorizes and team colors the player name when needed
+string playername(string thename, int teamid, bool team_colorize)
+{
+	TC(int, teamid);
+	bool do_colorize = (teamplay && team_colorize);
+#ifdef SVQC
+	if(do_colorize && !intermission_running)
+#else
+	if(do_colorize)
+#endif
+    {
+        string t = Team_ColorCode(teamid);
+        return strcat(t, strdecolorize(thename));
+    }
+    else
+        return thename;
+}
+#endif

@@ -3,6 +3,7 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/damage.qh>
+#include <server/gamelog.qh>
 #include <server/intermission.qh>
 #include <server/world.qh>
 #include <server/miscfunctions.qh>
@@ -27,6 +28,17 @@
 #include "../lib/warpzone/common.qh"
 #include <common/vehicles/sv_vehicles.qh>
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+
+void write_recordmarker(entity pl, float tstart, float dt)
+{
+    GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
+
+    // also write a marker into demo files for demotc-race-record-extractor to find
+    stuffcmd(pl,
+             strcat(
+                 strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+                 " ", ftos(tstart), " ", ftos(dt), "\n"));
+}
 
 IntrusiveList g_race_targets;
 IntrusiveList g_racecheckpoints;

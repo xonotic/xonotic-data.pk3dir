@@ -1,5 +1,6 @@
 #include "common.qh"
 
+#include <server/chat.qh>
 #include <server/client.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
@@ -31,7 +32,7 @@ string GetCommandPrefix(entity caller)
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return playername(caller, false);
+	if (caller) return playername(caller.netname, caller.team, false);
 	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
 }
 
