@@ -84,13 +84,13 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this, false), i);
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this.netname, this.team, false), i);
 	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this, false), argv(0));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this.netname, this.team, false), argv(0));
 	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this, false), fr);
+		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this.netname, this.team, false), fr);
 	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this, false));
+		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this.netname, this.team, false));
 
 	return 0;
 }

@@ -1088,11 +1088,11 @@ void DumpStats(float final)
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, playername(it, false));
+			LOG_INFO(s, playername(it.netname, it.team, false));
 		if(to_eventlog)
-			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it, false)));
+			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it.netname, it.team, false)));
 		if(to_file)
-			fputs(file, strcat(s, playername(it, false), "\n"));
+			fputs(file, strcat(s, playername(it.netname, it.team, false), "\n"));
 	});
 
 	if(teamplay)
@@ -1171,7 +1171,7 @@ void NextLevel()
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(playername(it, false), " ^7wins.\n");
+			bprint(playername(it.netname, it.team, false), " ^7wins.\n");
 	});
 
 	target_music_kill();
@@ -1566,6 +1566,18 @@ void CheckRules_World()
 		//print("WINNING\n");
 		NextLevel();
 	}
+}
+
+// deferred dropping
+void DropToFloor_Handler(entity this)
+{
+	WITHSELF(this, builtin_droptofloor());
+	this.dropped_origin = this.origin;
+}
+
+void droptofloor(entity this)
+{
+	InitializeEntity(this, DropToFloor_Handler, INITPRIO_DROPTOFLOOR);
 }
 
 bool autocvar_sv_gameplayfix_multiplethinksperframe = true;

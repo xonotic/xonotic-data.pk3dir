@@ -8,6 +8,10 @@ void W_PlayStrengthSound(entity player);
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception);
 void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) explode);
 
+void adaptor_think2use_hittype_splash(entity this);
+
+bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher);
+
 .float misc_bulletcounter;
 
 .int projectiledeathtype;

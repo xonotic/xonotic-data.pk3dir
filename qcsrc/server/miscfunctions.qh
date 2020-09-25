@@ -16,17 +16,7 @@
 
 .vector dropped_origin;
 
-void write_recordmarker(entity pl, float tstart, float dt);
-
-void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name);
-
-void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name);
-
-void precache_all_playermodels(string pattern);
-
 void InitializeEntitiesRun();
-
-void droptofloor(entity this);
 
 float trace_hits_box_1d(float end, float thmi, float thma);
 
@@ -34,31 +24,17 @@ float trace_hits_box(vector start, vector end, vector thmi, vector thma);
 
 float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
 
-void attach_sameorigin(entity e, entity to, string tag);
-
 void crosshair_trace(entity pl);
 
 void crosshair_trace_plusvisibletriggers(entity pl);
 void WarpZone_crosshair_trace_plusvisibletriggers(entity pl);
 void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz);
 
-void detach_sameorigin(entity e);
-
-void follow_sameorigin(entity e, entity to);
-
-void GetCvars(entity this, entity store, int f);
-
-float LostMovetypeFollow(entity ent);
-
 string uid2name(string myuid);
 
 bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
-
-string playername(entity p, bool team_colorize);
-
-void SetMovetypeFollow(entity ent, entity e);
 
 float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
 

@@ -177,7 +177,7 @@ void Draw_ShowNames(entity this)
 		}
 		string s = entcs_GetName(this.sv_entnum - 1);
 		if ((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
-			s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
+			s = playername(s, entcs_GetTeam(this.sv_entnum - 1), true);
 		drawfontscale = '1 1 0' * resize;
 		s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 		float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);
