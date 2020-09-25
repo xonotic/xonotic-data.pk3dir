@@ -1,6 +1,7 @@
 #include "cl_nexball.qh"
 
 #include <client/hud/panel/modicons.qh>
+#include <common/mutators/base.qh>
 
 // Nexball HUD mod icon
 void HUD_Mod_NexBall(vector pos, vector mySize)

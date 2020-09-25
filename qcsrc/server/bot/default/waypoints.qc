@@ -3,8 +3,8 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/items/items.qh>
-#include <server/miscfunctions.qh>
 #include <server/spawnpoints.qh>
+#include <server/weapons/tracing.qh>
 #include "cvars.qh"
 
 #include "bot.qh"

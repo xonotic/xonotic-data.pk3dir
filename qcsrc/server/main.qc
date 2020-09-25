@@ -5,6 +5,7 @@
 #include "damage.qh"
 #include "world.qh"
 #include "spawnpoints.qh"
+#include <server/ipban.qh>
 #include <server/gamelog.qh>
 
 #include "bot/api.qh"
@@ -17,6 +18,7 @@
 #include <server/compat/quake3.qh>
 
 #include "../common/constants.qh"
+#include <common/command/generic.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
@@ -378,6 +380,37 @@ void WarpZone_PostInitialize_Callback()
 	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
 		waypoint_spawnforteleporter_wz(e, tracetest_ent);
 	delete(tracetest_ent);
+}
+
+/** engine callback */
+void URI_Get_Callback(float id, float status, string data)
+{
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
+	{
+		// online ban list
+		OnlineBanList_URI_Get_Callback(id, status, data);
+	}
+	else if (MUTATOR_CALLHOOK(URI_GetCallback, id, status, data))
+	{
+		// handled by a mutator
+	}
+	else
+	{
+		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".");
+	}
 }
 
 /*

@@ -3,13 +3,11 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/chat.qh>
-#include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include "anticheat.qh"
 #include "impulse.qh"
 #include "player.qh"
 #include "ipban.qh"
-#include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
 #include "spawnpoints.qh"
@@ -26,6 +24,7 @@
 #include <server/gamelog.qh>
 #include "race.qh"
 #include <server/main.qh>
+#include <server/mutators/_mod.qh>
 #include "antilag.qh"
 #include "campaign.qh"
 #include "command/common.qh"

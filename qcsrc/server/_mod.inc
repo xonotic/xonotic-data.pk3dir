@@ -17,7 +17,6 @@
 #include <server/main.qc>
 #include <server/mapvoting.qc>
 #include <server/matrix.qc>
-#include <server/miscfunctions.qc>
 #include <server/player.qc>
 #include <server/portals.qc>
 #include <server/race.qc>

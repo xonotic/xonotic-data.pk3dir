@@ -1,5 +1,6 @@
 #include "cl_ctf.qh"
 
+#include <common/mutators/base.qh>
 #include <client/hud/panel/modicons.qh>
 
 // CTF HUD modicon section

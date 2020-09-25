@@ -6,6 +6,7 @@
 #include <server/mutators/_mod.qh>
 #include <server/items/items.qh>
 #include "../damage.qh"
+#include <server/world.qh>
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
 #include <common/notifications/all.qh>

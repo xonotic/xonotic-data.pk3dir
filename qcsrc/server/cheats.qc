@@ -2,7 +2,6 @@
 
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 #include <common/effects/all.qh>
 #include <server/resources.qh>
 #include <server/main.qh>

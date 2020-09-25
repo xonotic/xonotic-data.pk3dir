@@ -11,7 +11,9 @@
 #include <server/gamelog.qh>
 #include <server/main.qh>
 #include <server/mapvoting.qh>
-#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
+#include <server/weapons/tracing.qh>
+#include <server/world.qh>
 
 /**
  * message "": do not say, just test flood control

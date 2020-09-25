@@ -7,6 +7,7 @@
 #include "client.qh"
 #include "clientkill.qh"
 #include "damage.qh"
+#include <server/mutators/_mod.qh>
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"

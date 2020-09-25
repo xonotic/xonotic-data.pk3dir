@@ -1,5 +1,7 @@
 #include "cl_lms.qh"
 
+#include <common/mutators/base.qh>
+
 REGISTER_MUTATOR(cl_lms, true);
 
 MUTATOR_HOOKFUNCTION(cl_lms, DrawInfoMessages)

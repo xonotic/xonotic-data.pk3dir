@@ -3,7 +3,6 @@
 #ifdef SVQC
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 
 const float LOOP = 1;
 

@@ -117,6 +117,11 @@ void SetWinners(.float field, float value);
 void ReadyRestart();
 
 void DumpStats(float final);
+
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance);
+
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
+
 void CheckRules_World();
 float RedirectionThink();
 
