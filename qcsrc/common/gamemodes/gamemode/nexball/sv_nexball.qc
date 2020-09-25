@@ -3,6 +3,7 @@
 #include <server/client.qh>
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
+#include <server/world.qh>
 #include <common/ent_cs.qh>
 #include <common/mapobjects/triggers.qh>
 

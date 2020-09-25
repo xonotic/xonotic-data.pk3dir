@@ -6,6 +6,7 @@
 #include <common/effects/all.qh>
 #include <server/resources.qh>
 #include <server/main.qh>
+#include <server/world.qh>
 
 #include "damage.qh"
 #include "clientkill.qh"

@@ -1568,6 +1568,503 @@ void CheckRules_World()
 	}
 }
 
+float want_weapon(entity weaponinfo, float allguns)
+{
+	int d = 0;
+	bool allow_mutatorblocked = false;
+
+	if(!weaponinfo.m_id)
+		return 0;
+
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
+	d = M_ARGV(1, float);
+	allguns = M_ARGV(2, bool);
+	allow_mutatorblocked = M_ARGV(3, bool);
+
+	if(allguns)
+		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
+	else if(!mutator_returnvalue)
+		d = !(!weaponinfo.weaponstart);
+
+	if(!allow_mutatorblocked && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
+		d = 0;
+
+	float t = weaponinfo.weaponstartoverride;
+
+	//LOG_INFOF("want_weapon: %s - d: %d t: %d\n", weaponinfo.netname, d, t);
+
+	// bit order in t:
+	// 1: want or not
+	// 2: is default?
+	// 4: is set by default?
+	if(t < 0)
+		t = 4 | (3 * d);
+	else
+		t |= (2 * d);
+
+	return t;
+}
+
+/// Weapons the player normally starts with outside weapon arena.
+WepSet weapons_start()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		int w = want_weapon(it, false);
+		if (w & 1)
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_all()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_devall()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_most()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null, {
+		if ((it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)))
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+void weaponarena_available_all_update(entity this)
+{
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & weapons_all());
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to all weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_all();
+	}
+}
+
+void weaponarena_available_devall_update(entity this)
+{
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | weaponsInMapAll;
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to devall weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_devall();
+	}
+}
+
+void weaponarena_available_most_update(entity this)
+{
+	if (weaponsInMapAll)
+	{
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & weapons_most());
+	}
+	else
+	{
+		// if no weapons are available on the map, just fall back to most weapons arena
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_most();
+	}
+}
+
+void readplayerstartcvars()
+{
+	// initialize starting values for players
+	start_weapons = '0 0 0';
+	start_weapons_default = '0 0 0';
+	start_weapons_defaultmask = '0 0 0';
+	start_items = 0;
+	start_ammo_shells = 0;
+	start_ammo_nails = 0;
+	start_ammo_rockets = 0;
+	start_ammo_cells = 0;
+	start_ammo_plasma = 0;
+	if (random_start_ammo == NULL)
+	{
+		random_start_ammo = spawn();
+	}
+	start_health = cvar("g_balance_health_start");
+	start_armorvalue = cvar("g_balance_armor_start");
+
+	g_weaponarena = 0;
+	g_weaponarena_weapons = '0 0 0';
+
+	string s = cvar_string("g_weaponarena");
+
+	MUTATOR_CALLHOOK(SetWeaponArena, s);
+	s = M_ARGV(0, string);
+
+	if (s == "0" || s == "")
+	{
+		// no arena
+	}
+	else if (s == "off")
+	{
+		// forcibly turn off weaponarena
+	}
+	else if (s == "all" || s == "1")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "All Weapons";
+		g_weaponarena_weapons = weapons_all();
+	}
+	else if (s == "devall")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "Dev All Weapons";
+		g_weaponarena_weapons = weapons_devall();
+	}
+	else if (s == "most")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "Most Weapons";
+		g_weaponarena_weapons = weapons_most();
+	}
+	else if (s == "all_available")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "All Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_all_update, INITPRIO_FINDTARGET);
+	}
+	else if (s == "devall_available")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "Dev All Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_devall_update, INITPRIO_FINDTARGET);
+	}
+	else if (s == "most_available")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "Most Available Weapons";
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_most_update, INITPRIO_FINDTARGET);
+	}
+	else if (s == "none")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "No Weapons";
+	}
+	else
+	{
+		g_weaponarena = 1;
+		float t = tokenize_console(s);
+		g_weaponarena_list = "";
+		for (int j = 0; j < t; ++j)
+		{
+			s = argv(j);
+			Weapon wep = Weapon_from_name(s);
+			if(wep != WEP_Null)
+			{
+				g_weaponarena_weapons |= (wep.m_wepset);
+				g_weaponarena_list = strcat(g_weaponarena_list, wep.m_name, " & ");
+			}
+		}
+		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
+	}
+
+	if (g_weaponarena)
+	{
+		g_weapon_stay = 0; // incompatible
+		start_weapons = g_weaponarena_weapons;
+		start_items |= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS;
+	}
+	else
+	{
+		FOREACH(Weapons, it != WEP_Null, {
+			int w = want_weapon(it, false);
+			WepSet s = it.m_wepset;
+			if(w & 1)
+				start_weapons |= s;
+			if(w & 2)
+				start_weapons_default |= s;
+			if(w & 4)
+				start_weapons_defaultmask |= s;
+		});
+	}
+
+	if(cvar("g_balance_superweapons_time") < 0)
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
+
+	if(!cvar("g_use_ammunition"))
+		start_items |= IT_UNLIMITED_AMMO;
+
+	if(start_items & IT_UNLIMITED_AMMO)
+	{
+		start_ammo_shells = 999;
+		start_ammo_nails = 999;
+		start_ammo_rockets = 999;
+		start_ammo_cells = 999;
+		start_ammo_plasma = 999;
+		start_ammo_fuel = 999;
+	}
+	else
+	{
+		start_ammo_shells = cvar("g_start_ammo_shells");
+		start_ammo_nails = cvar("g_start_ammo_nails");
+		start_ammo_rockets = cvar("g_start_ammo_rockets");
+		start_ammo_cells = cvar("g_start_ammo_cells");
+		start_ammo_plasma = cvar("g_start_ammo_plasma");
+		start_ammo_fuel = cvar("g_start_ammo_fuel");
+		random_start_weapons_count = cvar("g_random_start_weapons_count");
+		SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
+		SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
+		SetResource(random_start_ammo, RES_ROCKETS,cvar("g_random_start_rockets"));
+		SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
+		SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
+	}
+
+	warmup_start_ammo_shells = start_ammo_shells;
+	warmup_start_ammo_nails = start_ammo_nails;
+	warmup_start_ammo_rockets = start_ammo_rockets;
+	warmup_start_ammo_cells = start_ammo_cells;
+	warmup_start_ammo_plasma = start_ammo_plasma;
+	warmup_start_ammo_fuel = start_ammo_fuel;
+	warmup_start_health = start_health;
+	warmup_start_armorvalue = start_armorvalue;
+	warmup_start_weapons = start_weapons;
+	warmup_start_weapons_default = start_weapons_default;
+	warmup_start_weapons_defaultmask = start_weapons_defaultmask;
+
+	if (!g_weaponarena)
+	{
+		warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
+		warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
+		warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
+		warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
+		warmup_start_ammo_plasma = cvar("g_warmup_start_ammo_plasma");
+		warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
+		warmup_start_health = cvar("g_warmup_start_health");
+		warmup_start_armorvalue = cvar("g_warmup_start_armor");
+		warmup_start_weapons = '0 0 0';
+		warmup_start_weapons_default = '0 0 0';
+		warmup_start_weapons_defaultmask = '0 0 0';
+		FOREACH(Weapons, it != WEP_Null, {
+			int w = want_weapon(it, autocvar_g_warmup_allguns);
+			WepSet s = it.m_wepset;
+			if(w & 1)
+				warmup_start_weapons |= s;
+			if(w & 2)
+				warmup_start_weapons_default |= s;
+			if(w & 4)
+				warmup_start_weapons_defaultmask |= s;
+		});
+	}
+
+	if (autocvar_g_jetpack)
+		start_items |= ITEM_Jetpack.m_itemid;
+
+	MUTATOR_CALLHOOK(SetStartItems);
+
+	if (start_items & ITEM_Jetpack.m_itemid)
+	{
+		start_items |= ITEM_JetpackRegen.m_itemid;
+		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+	}
+
+	start_ammo_shells = max(0, start_ammo_shells);
+	start_ammo_nails = max(0, start_ammo_nails);
+	start_ammo_rockets = max(0, start_ammo_rockets);
+	start_ammo_cells = max(0, start_ammo_cells);
+	start_ammo_plasma = max(0, start_ammo_plasma);
+	start_ammo_fuel = max(0, start_ammo_fuel);
+	SetResource(random_start_ammo, RES_SHELLS,
+		max(0, GetResource(random_start_ammo, RES_SHELLS)));
+	SetResource(random_start_ammo, RES_BULLETS,
+		max(0, GetResource(random_start_ammo, RES_BULLETS)));
+	SetResource(random_start_ammo, RES_ROCKETS,
+		max(0, GetResource(random_start_ammo, RES_ROCKETS)));
+	SetResource(random_start_ammo, RES_CELLS,
+		max(0, GetResource(random_start_ammo, RES_CELLS)));
+	SetResource(random_start_ammo, RES_PLASMA,
+		max(0, GetResource(random_start_ammo, RES_PLASMA)));
+
+	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
+	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
+	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
+	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
+	warmup_start_ammo_plasma = max(0, warmup_start_ammo_plasma);
+	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
+}
+
+void readlevelcvars()
+{
+	if(cvar("sv_allow_fullbright"))
+		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
+
+	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
+
+	warmup_stage = cvar("g_warmup");
+	warmup_limit = cvar("g_warmup_limit");
+
+	if(cvar("g_campaign"))
+		warmup_stage = 0; // no warmup during campaign
+
+	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
+	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
+	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
+	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
+	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
+	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
+	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
+	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
+	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
+	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
+	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
+	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
+	g_pickup_respawntimejitter_long = cvar("g_pickup_respawntimejitter_long");
+	g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
+
+	g_pickup_shells = cvar("g_pickup_shells");
+	g_pickup_shells_max = cvar("g_pickup_shells_max");
+	g_pickup_nails = cvar("g_pickup_nails");
+	g_pickup_nails_max = cvar("g_pickup_nails_max");
+	g_pickup_rockets = cvar("g_pickup_rockets");
+	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
+	g_pickup_cells = cvar("g_pickup_cells");
+	g_pickup_cells_max = cvar("g_pickup_cells_max");
+	g_pickup_plasma = cvar("g_pickup_plasma");
+	g_pickup_plasma_max = cvar("g_pickup_plasma_max");
+	g_pickup_fuel = cvar("g_pickup_fuel");
+	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
+	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
+	g_pickup_armorsmall = cvar("g_pickup_armorsmall");
+	g_pickup_armorsmall_max = cvar("g_pickup_armorsmall_max");
+	g_pickup_armorsmall_anyway = cvar("g_pickup_armorsmall_anyway");
+	g_pickup_armormedium = cvar("g_pickup_armormedium");
+	g_pickup_armormedium_max = cvar("g_pickup_armormedium_max");
+	g_pickup_armormedium_anyway = cvar("g_pickup_armormedium_anyway");
+	g_pickup_armorbig = cvar("g_pickup_armorbig");
+	g_pickup_armorbig_max = cvar("g_pickup_armorbig_max");
+	g_pickup_armorbig_anyway = cvar("g_pickup_armorbig_anyway");
+	g_pickup_armormega = cvar("g_pickup_armormega");
+	g_pickup_armormega_max = cvar("g_pickup_armormega_max");
+	g_pickup_armormega_anyway = cvar("g_pickup_armormega_anyway");
+	g_pickup_healthsmall = cvar("g_pickup_healthsmall");
+	g_pickup_healthsmall_max = cvar("g_pickup_healthsmall_max");
+	g_pickup_healthsmall_anyway = cvar("g_pickup_healthsmall_anyway");
+	g_pickup_healthmedium = cvar("g_pickup_healthmedium");
+	g_pickup_healthmedium_max = cvar("g_pickup_healthmedium_max");
+	g_pickup_healthmedium_anyway = cvar("g_pickup_healthmedium_anyway");
+	g_pickup_healthbig = cvar("g_pickup_healthbig");
+	g_pickup_healthbig_max = cvar("g_pickup_healthbig_max");
+	g_pickup_healthbig_anyway = cvar("g_pickup_healthbig_anyway");
+	g_pickup_healthmega = cvar("g_pickup_healthmega");
+	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
+	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");
+
+	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
+	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
+
+    g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
+    if(!g_weapon_stay)
+        g_weapon_stay = cvar("g_weapon_stay");
+
+    MUTATOR_CALLHOOK(ReadLevelCvars);
+
+	if (!warmup_stage)
+		game_starttime = time + cvar("g_start_delay");
+
+	FOREACH(Weapons, it != WEP_Null, { it.wr_init(it); });
+
+	readplayerstartcvars();
+}
+
+void InitializeEntity(entity e, void(entity this) func, int order)
+{
+    entity prev, cur;
+
+    if (!e || e.initialize_entity)
+    {
+        // make a proxy initializer entity
+        entity e_old = e;
+        e = new(initialize_entity);
+        e.enemy = e_old;
+    }
+
+    e.initialize_entity = func;
+    e.initialize_entity_order = order;
+
+    cur = initialize_entity_first;
+    prev = NULL;
+    for (;;)
+    {
+        if (!cur || cur.initialize_entity_order > order)
+        {
+            // insert between prev and cur
+            if (prev)
+                prev.initialize_entity_next = e;
+            else
+                initialize_entity_first = e;
+            e.initialize_entity_next = cur;
+            return;
+        }
+        prev = cur;
+        cur = cur.initialize_entity_next;
+    }
+}
+void InitializeEntitiesRun()
+{
+    entity startoflist = initialize_entity_first;
+    initialize_entity_first = NULL;
+    delete_fn = remove_except_protected;
+    for (entity e = startoflist; e; e = e.initialize_entity_next)
+    {
+		e.remove_except_protected_forbidden = 1;
+    }
+    for (entity e = startoflist; e; )
+    {
+		e.remove_except_protected_forbidden = 0;
+        e.initialize_entity_order = 0;
+    	entity next = e.initialize_entity_next;
+        e.initialize_entity_next = NULL;
+        var void(entity this) func = e.initialize_entity;
+        e.initialize_entity = func_null;
+        if (e.classname == "initialize_entity")
+        {
+            entity wrappee = e.enemy;
+            builtin_remove(e);
+            e = wrappee;
+        }
+        //dprint("Delayed initialization: ", e.classname, "\n");
+        if (func)
+        {
+        	func(e);
+        }
+        else
+        {
+            eprint(e);
+            backtrace(strcat("Null function in: ", e.classname, "\n"));
+        }
+        e = next;
+    }
+    delete_fn = remove_unsafely;
+}
+
 // deferred dropping
 void DropToFloor_Handler(entity this)
 {

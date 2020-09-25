@@ -7,6 +7,7 @@
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
 #include <server/resources.qh>
+#include <server/world.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/triggers.qh>

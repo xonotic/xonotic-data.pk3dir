@@ -5,6 +5,7 @@
 #include <server/gamelog.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
+#include <server/world.qh>
 
 .entity ballcarried;
 
