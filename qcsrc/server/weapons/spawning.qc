@@ -5,6 +5,7 @@
 #include <server/mutators/_mod.qh>
 #include <server/items/items.qh>
 #include <server/items/spawning.qh>
+#include <server/world.qh>
 #include <common/weapons/_all.qh>
 
 .bool m_isreplaced; ///< Holds whether the weapon has been replaced.

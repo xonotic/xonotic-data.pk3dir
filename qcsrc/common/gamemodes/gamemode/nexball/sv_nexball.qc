@@ -6,6 +6,7 @@
 #include <server/world.qh>
 #include <common/ent_cs.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mutators/base.qh>
 
 .entity ballcarried;
 

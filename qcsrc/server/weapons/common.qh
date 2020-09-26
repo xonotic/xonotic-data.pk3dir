@@ -21,6 +21,8 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 
 .entity realowner;
 
+#define PROJECTILE_TOUCH(e,t) MACRO_BEGIN if (WarpZone_Projectile_Touch(e,t)) return; MACRO_END
+
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
 // #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX

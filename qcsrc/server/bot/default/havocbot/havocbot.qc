@@ -8,9 +8,10 @@
 #include <common/stats.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
-#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
 #include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 #include "../cvars.qh"
 
 #include "../aim.qh"

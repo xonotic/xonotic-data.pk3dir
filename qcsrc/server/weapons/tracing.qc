@@ -9,7 +9,8 @@
 
 #include "../damage.qh"
 #include <server/main.qh>
-#include "../antilag.qh"
+#include <server/mutators/_mod.qh>
+#include <server/antilag.qh>
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
@@ -498,4 +499,45 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect)
 {
 	fireBullet_antilag(this, weaponentity, start, dir, spread, max_solid_penetration, damage, headshot_multiplier, force, dtype, tracer_effect, true);
+}
+
+void crosshair_trace(entity pl)
+{
+	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
+}
+
+void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, false);
+}
+
+void WarpZone_crosshair_trace_plusvisibletriggers(entity pl)
+{
+	crosshair_trace_plusvisibletriggers__is_wz(pl, true);
+}
+
+void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz)
+{
+	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
+	{
+		if(it.model != "")
+		{
+			it.solid = SOLID_BSP;
+			IL_PUSH(g_ctrace_changed, it);
+		}
+	});
+
+	if (is_wz)
+		WarpZone_crosshair_trace(pl);
+	else
+		crosshair_trace(pl);
+
+	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
+
+	IL_CLEAR(g_ctrace_changed);
+}
+
+void WarpZone_crosshair_trace(entity pl)
+{
+	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }

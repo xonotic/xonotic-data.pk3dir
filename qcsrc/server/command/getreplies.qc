@@ -4,13 +4,14 @@
 #include <common/wepent.qh>
 #include <common/stats.qh>
 #include <server/intermission.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
 #include <server/world.qh>
-#include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
 #include "getreplies.qh"
 
-#include "../race.qh"
+#include <server/race.qh>
 
 #include <common/constants.qh>
 #include <common/gamemodes/_mod.qh>

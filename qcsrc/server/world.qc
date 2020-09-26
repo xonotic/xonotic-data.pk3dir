@@ -40,6 +40,7 @@
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include <common/mapobjects/triggers.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include "../common/mapobjects/trigger/secret.qh"
 #include "../common/mapobjects/target/music.qh"
 #include "../common/util.qh"
@@ -1014,6 +1015,133 @@ spawnfunc(light)
 {
 	//makestatic (this); // Who the f___ did that?
 	delete(this);
+}
+
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance)
+{
+    float m = e.dphitcontentsmask;
+    e.dphitcontentsmask = goodcontents | badcontents;
+
+    vector org = boundmin;
+    vector delta = boundmax - boundmin;
+
+    vector start, end;
+    start = end = org;
+    int j; // used after the loop
+    for(j = 0; j < attempts; ++j)
+    {
+        start.x = org.x + random() * delta.x;
+        start.y = org.y + random() * delta.y;
+        start.z = org.z + random() * delta.z;
+
+        // rule 1: start inside world bounds, and outside
+        // solid, and don't start from somewhere where you can
+        // fall down to evil
+        tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta.z, MOVE_NORMAL, e);
+        if (trace_fraction >= 1)
+            continue;
+        if (trace_startsolid)
+            continue;
+        if (trace_dphitcontents & badcontents)
+            continue;
+        if (trace_dphitq3surfaceflags & badsurfaceflags)
+            continue;
+
+        // rule 2: if we are too high, lower the point
+        if (trace_fraction * delta.z > maxaboveground)
+            start = trace_endpos + '0 0 1' * maxaboveground;
+        vector enddown = trace_endpos;
+
+        // rule 3: make sure we aren't outside the map. This only works
+        // for somewhat well formed maps. A good rule of thumb is that
+        // the map should have a convex outside hull.
+        // these can be traceLINES as we already verified the starting box
+        vector mstart = start + 0.5 * (e.mins + e.maxs);
+        traceline(mstart, mstart + '1 0 0' * delta.x, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+            continue;
+        traceline(mstart, mstart - '1 0 0' * delta.x, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+            continue;
+        traceline(mstart, mstart + '0 1 0' * delta.y, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+            continue;
+        traceline(mstart, mstart - '0 1 0' * delta.y, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+            continue;
+        traceline(mstart, mstart + '0 0 1' * delta.z, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
+            continue;
+
+		// rule 4: we must "see" some spawnpoint or item
+	    entity sp = NULL;
+	    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+	    {
+	    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+	    	{
+	    		sp = it;
+	    		break;
+	    	}
+	    });
+		if(!sp)
+		{
+			int items_checked = 0;
+			IL_EACH(g_items, checkpvs(mstart, it),
+			{
+				if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
+				{
+					sp = it;
+					break;
+				}
+
+				++items_checked;
+				if(items_checked >= attempts)
+					break; // sanity
+			});
+
+			if(!sp)
+				continue;
+		}
+
+        // find a random vector to "look at"
+        end.x = org.x + random() * delta.x;
+        end.y = org.y + random() * delta.y;
+        end.z = org.z + random() * delta.z;
+        end = start + normalize(end - start) * vlen(delta);
+
+        // rule 4: start TO end must not be too short
+        tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
+        if(trace_startsolid)
+            continue;
+        if(trace_fraction < minviewdistance / vlen(delta))
+            continue;
+
+        // rule 5: don't want to look at sky
+        if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+            continue;
+
+        // rule 6: we must not end up in trigger_hurt
+        if(tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
+            continue;
+
+        break;
+    }
+
+    e.dphitcontentsmask = m;
+
+    if(j < attempts)
+    {
+        setorigin(e, start);
+        e.angles = vectoangles(end - start);
+        LOG_DEBUG("Needed ", ftos(j + 1), " attempts");
+        return true;
+    }
+    return false;
+}
+
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+{
+	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance);
 }
 
 /*

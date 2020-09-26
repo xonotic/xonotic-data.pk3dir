@@ -2,7 +2,6 @@
 
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 #include "client.qh"
 #include "scores.qh"
 #include <common/gamemodes/rules.qh>

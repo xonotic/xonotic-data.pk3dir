@@ -3,7 +3,6 @@
 #include <server/intermission.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 #include "../world.qh"
 
 #include <common/weapons/_all.qh>

@@ -4,6 +4,7 @@
 #include <common/stats.qh>
 #include <server/client.qh>
 #include <server/player.qh>
+#include <server/mutators/_mod.qh>
 
 #include "damage.qh"
 #include "teamplay.qh"

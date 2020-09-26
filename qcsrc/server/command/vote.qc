@@ -4,7 +4,6 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/gamelog.qh>
-#include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
 #include "vote.qh"
@@ -13,7 +12,7 @@
 
 #include "../damage.qh"
 #include <server/intermission.qh>
-#include "../world.qh"
+#include <server/world.qh>
 #include "../teamplay.qh"
 #include "../race.qh"
 #include "../round_handler.qh"

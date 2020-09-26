@@ -5,7 +5,7 @@
 #include <common/stats.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
-#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/deathtypes/all.qh>

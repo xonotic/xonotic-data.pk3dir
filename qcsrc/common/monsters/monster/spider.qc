@@ -1,5 +1,9 @@
 #include "spider.qh"
 
+#if defined(SVQC)
+	#include <common/mutators/base.qh>
+#endif
+
 #ifdef SVQC
 
 .float spider_slowness; // effect time of slowness inflicted by spiders

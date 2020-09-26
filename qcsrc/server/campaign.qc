@@ -1,11 +1,11 @@
 #include "campaign.qh"
 
+#include <common/mapinfo.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
 #include "cheats.qh"
 #include <server/intermission.qh>
-#include "miscfunctions.qh"
 #include "world.qh"
 
 #include "../common/campaign_common.qh"

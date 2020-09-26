@@ -8,6 +8,7 @@
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/main.qh>
+#include <server/world.qh>
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"

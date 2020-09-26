@@ -6,9 +6,9 @@
 #include "client.qh"
 #include "clientkill.qh"
 #include "damage.qh"
+#include <server/mutators/_mod.qh>
 #include "world.qh"
 #include "handicap.qh"
-#include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
 #include <server/main.qh>

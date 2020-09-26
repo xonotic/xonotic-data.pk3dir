@@ -244,4 +244,12 @@ float LostMovetypeFollow(entity ent);
 
 #ifdef GAMEQC
 string playername(string thename, int teamid, bool team_colorize);
+
+float trace_hits_box_1d(float end, float thmi, float thma);
+
+float trace_hits_box(vector start, vector end, vector thmi, vector thma);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
 #endif

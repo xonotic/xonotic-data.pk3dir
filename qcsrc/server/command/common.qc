@@ -2,10 +2,10 @@
 
 #include <server/chat.qh>
 #include <server/client.qh>
+#include <server/mutators/_mod.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/world.qh>
-#include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
 #include "common.qh"

@@ -3,7 +3,6 @@
 #include <server/bot/api.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include "bot.qh"

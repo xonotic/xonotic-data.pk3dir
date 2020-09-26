@@ -4,7 +4,6 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/world.qh>
-#include <server/miscfunctions.qh>
 #include "../antilag.qh"
 #include <common/weapons/_all.qh>
 #include <common/state.qh>
