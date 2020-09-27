@@ -372,7 +372,8 @@ void fpscounter_update()
 	if(!STAT(SHOWFPS))
 		return;
 
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
+
 	showfps_framecounter += 1;
 	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
 	{
@@ -388,7 +389,7 @@ void fpscounter_update()
 
 STATIC_INIT(fpscounter_init)
 {
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
