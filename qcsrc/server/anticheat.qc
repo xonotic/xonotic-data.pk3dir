@@ -6,8 +6,7 @@
 #include <common/stats.qh>
 #include <server/client.qh>
 #include <server/gamelog.qh>
-#include <server/sv_main.qh>
-#include "miscfunctions.qh"
+#include <server/main.qh>
 
 #include "command/common.qh"
 #include <common/playerstats.qh>

@@ -2,9 +2,10 @@
 #ifdef SVQC
 #include <server/autocvars.qh>
 #include <server/bot/api.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 #include <common/mapobjects/defs.qh>
 
 // Generic aiming

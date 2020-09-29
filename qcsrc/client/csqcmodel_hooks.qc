@@ -1,13 +1,14 @@
 #include "csqcmodel_hooks.qh"
 #include "autocvars.qh"
 #include "main.qh"
-#include "miscfunctions.qh"
 #include <client/mutators/_mod.qh>
 #include <client/main.qh>
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>
 #include <common/ent_cs.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
 #include <common/viewloc.qh>
@@ -245,7 +246,8 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors == 2 && team_count == 2)
+		if((autocvar_cl_forceplayercolors == 2 && team_count == 2)
+			|| (autocvar_cl_forceplayercolors == 3 && IS_GAMETYPE(DUEL)))
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)

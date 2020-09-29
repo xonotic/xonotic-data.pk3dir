@@ -2,8 +2,9 @@
 
 #include <server/client.qh>
 #include <server/race.qh>
-#include <server/g_world.qh>
+#include <server/world.qh>
 #include <server/gamelog.qh>
+#include <server/intermission.qh>
 #include <server/items/spawning.qh>
 #include <server/weapons/common.qh>
 #include <common/mapobjects/triggers.qh>

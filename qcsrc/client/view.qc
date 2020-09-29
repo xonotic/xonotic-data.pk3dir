@@ -1,7 +1,7 @@
 #include "view.qh"
 
 #include "autocvars.qh"
-#include "miscfunctions.qh"
+#include <client/draw.qh>
 #include "announcer.qh"
 #include "hud/_mod.qh"
 #include "main.qh"
@@ -44,8 +44,6 @@
 
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
-
-#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
 
 float autocvar_cl_viewmodel_scale;
 float autocvar_cl_viewmodel_alpha = 1;
@@ -363,6 +361,33 @@ void viewmodel_draw(entity this)
 STATIC_INIT(viewmodel) {
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     	viewmodels[slot] = new(viewmodel);
+}
+
+vector project_3d_to_2d(vector vec)
+{
+	vec = cs_project(vec);
+	if(cs_project_is_b0rked > 0)
+	{
+		vec.x *= vid_conwidth / vid_width;
+		vec.y *= vid_conheight / vid_height;
+	}
+	return vec;
+}
+
+bool projected_on_screen(vector screen_pos)
+{
+	return screen_pos.z >= 0
+		&& screen_pos.x >= 0
+		&& screen_pos.y >= 0
+		&& screen_pos.x < vid_conwidth
+		&& screen_pos.y < vid_conheight;
+}
+
+void update_mousepos()
+{
+	mousepos += getmousepos() * autocvar_menu_mouse_speed;
+	mousepos.x = bound(0, mousepos.x, vid_conwidth);
+	mousepos.y = bound(0, mousepos.y, vid_conheight);
 }
 
 float showfps_prevfps;
@@ -1309,9 +1334,17 @@ void View_PostProcessing()
 
 void View_Lock()
 {
-	int lock_type = (!autocvar_hud_cursormode && ((autocvar__hud_configure && spectatee_status <= 0) || intermission > 1 || QuickMenu_IsOpened()));
-	if (lock_type == 0)
-		lock_type = autocvar_cl_lockview;
+	int lock_type = autocvar_cl_lockview;
+
+	if (!autocvar_hud_cursormode
+		&& ((autocvar__hud_configure && spectatee_status <= 0)
+			|| intermission > 1
+			|| HUD_Radar_Clickable()
+			|| HUD_MinigameMenu_IsOpened()
+			|| QuickMenu_IsOpened()
+		)
+	)
+		lock_type = 1;
 
 	// lock_type 1: lock origin and angles
 	// lock_type 2: lock only origin

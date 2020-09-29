@@ -51,6 +51,16 @@ void tdm_DelayedInit(entity this)
 	}
 }
 
+void tdm_Initialize()
+{
+	GameRules_teams(true);
+	GameRules_spawning_teams(autocvar_g_tdm_team_spawns);
+	GameRules_limit_score(autocvar_g_tdm_point_limit);
+	GameRules_limit_lead(autocvar_g_tdm_point_leadlimit);
+
+	InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
+}
+
 MUTATOR_HOOKFUNCTION(tdm, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "tdm_team";

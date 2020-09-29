@@ -112,3 +112,6 @@ float GiveItems(entity e, float beginarg, float endarg);
 
 IntrusiveList g_items;
 STATIC_INIT(g_items) { g_items = IL_NEW(); }
+
+#define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER.m_id) || ((dt) == DEATH_SLIME.m_id) || ((dt) == DEATH_LAVA.m_id) || ((dt) == DEATH_SWAMP.m_id))

@@ -2,7 +2,7 @@
 
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/items/items.qh>
 #include <common/mapobjects/triggers.qh>
 

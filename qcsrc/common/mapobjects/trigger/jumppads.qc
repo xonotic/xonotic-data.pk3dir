@@ -2,7 +2,7 @@
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
 #include <common/physics/movetypes/movetypes.qh>
-#include <server/sv_main.qh>
+#include <server/main.qh>
 
 void trigger_push_use(entity this, entity actor, entity trigger)
 {

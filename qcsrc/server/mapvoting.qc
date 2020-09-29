@@ -4,8 +4,8 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/gamelog.qh>
-#include <server/miscfunctions.qh>
-#include "g_world.qh"
+#include <server/intermission.qh>
+#include "world.qh"
 #include "command/cmd.qh"
 #include "command/getreplies.qh"
 #include "../common/constants.qh"

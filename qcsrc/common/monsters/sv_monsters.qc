@@ -10,12 +10,12 @@
 #include <server/autocvars.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include "../deathtypes/all.qh"
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/steerlib.qh>
-#include <server/sv_main.qh>
+#include <server/main.qh>
 #include "../turrets/sv_turrets.qh"
 #include "../turrets/util.qh"
 #include "../vehicles/all.qh"
@@ -135,7 +135,7 @@ entity Monster_FindTarget(entity this)
 	{
 		if(Monster_ValidTarget(this, it))
 		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 			vector targ_center = CENTER_OR_VIEWOFS(it);
 
 			if(closest_target)

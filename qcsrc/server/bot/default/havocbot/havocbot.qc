@@ -6,11 +6,12 @@
 #include <server/client.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/items/items.qh>
-#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
 #include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 #include "../cvars.qh"
 
 #include "../aim.qh"

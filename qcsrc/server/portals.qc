@@ -1,7 +1,7 @@
 #include "portals.qh"
 
 #include <common/effects/all.qh>
-#include "g_hook.qh"
+#include "hook.qh"
 #include "mutators/_mod.qh"
 #include <server/client.qh>
 #include <server/weapons/common.qh>
@@ -21,7 +21,7 @@
 #include "../common/vehicles/sv_vehicles.qh"
 #include <common/weapons/weapon/porto.qh>
 #include <server/player.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 
 #define PORTALS_ARE_NOT_SOLID
 

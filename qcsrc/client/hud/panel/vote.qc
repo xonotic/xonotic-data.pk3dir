@@ -1,8 +1,8 @@
 #include "vote.qh"
 
 #include <client/autocvars.qh>
+#include <client/draw.qh>
 #include <client/main.qh>
-#include <client/miscfunctions.qh>
 
 // Vote (#9)
 

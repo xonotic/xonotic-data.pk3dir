@@ -1,7 +1,6 @@
 #include "round_handler.qh"
 
-#include <server/g_world.qh>
-#include <server/miscfunctions.qh>
+#include <server/world.qh>
 #include "campaign.qh"
 #include "command/vote.qh"
 #include <common/mapobjects/triggers.qh>

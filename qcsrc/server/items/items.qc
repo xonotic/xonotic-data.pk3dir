@@ -6,11 +6,12 @@
 
 #include <server/command/vote.qh>
 
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 
 #include <server/mutators/_mod.qh>
 
 #include <server/teamplay.qh>
+#include <server/world.qh>
 
 #include <server/weapons/common.qh>
 #include <server/weapons/selection.qh>

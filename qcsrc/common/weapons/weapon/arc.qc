@@ -931,9 +931,7 @@ void Draw_ArcBeam(entity this)
 		if(!v_shot_idx || this.beam_usevieworigin != 2)
 		{
 			this.beam_shotorigin = wepent.movedir;
-			origin_offset =
-			 	 right * -this.beam_shotorigin.y
-				+ up * this.beam_shotorigin.z;
+			origin_offset = right * -this.beam_shotorigin.y + up * this.beam_shotorigin.z;
 		}
 		else
 			this.beam_shotorigin = '0 0 0';

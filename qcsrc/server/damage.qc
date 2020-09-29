@@ -1,13 +1,14 @@
-#include "g_damage.qh"
+#include "damage.qh"
 
 #include <common/effects/all.qh>
 #include "bot/api.qh"
-#include "g_hook.qh"
+#include "hook.qh"
 #include <server/client.qh>
 #include <server/gamelog.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
-#include <server/sv_main.qh>
+#include <server/main.qh>
+#include <server/world.qh>
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
@@ -686,11 +687,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		if (!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= g_weapondamagefactor;
-			mirrordamage *= g_weapondamagefactor;
-			complainteamdamage *= g_weapondamagefactor;
-			force = force * g_weaponforcefactor;
-			mirrorforce *= g_weaponforcefactor;
+			damage *= autocvar_g_weapondamagefactor;
+			mirrordamage *= autocvar_g_weapondamagefactor;
+			complainteamdamage *= autocvar_g_weapondamagefactor;
+			force = force * autocvar_g_weaponforcefactor;
+			mirrorforce *= autocvar_g_weaponforcefactor;
 		}
 
 		// should this be changed at all? If so, in what way?

@@ -4,19 +4,14 @@
 int autocvar_g_tdm_point_limit;
 int autocvar_g_tdm_point_leadlimit;
 bool autocvar_g_tdm_team_spawns;
-void tdm_DelayedInit(entity this);
+void tdm_Initialize();
 
 REGISTER_MUTATOR(tdm, false)
 {
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		GameRules_teams(true);
-        GameRules_spawning_teams(autocvar_g_tdm_team_spawns);
-		GameRules_limit_score(autocvar_g_tdm_point_limit);
-        GameRules_limit_lead(autocvar_g_tdm_point_leadlimit);
-
-		InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
+		tdm_Initialize();
 	}
 	return 0;
 }

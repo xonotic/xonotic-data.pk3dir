@@ -2,10 +2,11 @@
 
 #include <server/client.qh>
 #include <server/command/vote.qh>
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/gamelog.qh>
 #include <server/items/items.qh>
 #include <server/teamplay.qh>
+#include <server/world.qh>
 #include <common/mapobjects/platforms.qh>
 #include <common/mapobjects/triggers.qh>
 
