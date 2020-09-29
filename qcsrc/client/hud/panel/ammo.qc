@@ -1,9 +1,9 @@
 #include "ammo.qh"
 
 #include <client/autocvars.qh>
+#include <client/draw.qh>
 #include <client/items/items.qh>
 #include <client/main.qh>
-#include <client/miscfunctions.qh>
 #include <client/view.qh>
 #include <common/wepent.qh>
 #include <common/mutators/mutator/nades/nades.qh>

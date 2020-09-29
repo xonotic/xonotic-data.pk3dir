@@ -253,3 +253,9 @@ float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector t
 
 float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
 #endif
+
+float cvar_or(string cv, float v);
+
+float blink_synced(float base, float range, float freq, float start_time, int start_blink);
+
+float blink(float base, float range, float freq);

@@ -2073,3 +2073,37 @@ float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector t
     return trace_hits_box(start, end, thmi - ma, thma - mi);
 }
 #endif
+
+ERASEABLE
+float cvar_or(string cv, float v)
+{
+	string s = cvar_string(cv);
+	if(s == "")
+		return v;
+	else
+		return stof(s);
+}
+
+// NOTE base is the central value
+// freq: circle frequency, = 2*pi*frequency in hertz
+// start_pos:
+//  -1 start from the lower value
+//   0 start from the base value
+//   1 start from the higher value
+ERASEABLE
+float blink_synced(float base, float range, float freq, float start_time, int start_pos)
+{
+	// note:
+	//   RMS = sqrt(base^2 + 0.5 * range^2)
+	// thus
+	//   base = sqrt(RMS^2 - 0.5 * range^2)
+	// ensure RMS == 1
+
+	return base + range * sin((time - start_time - (M_PI / 2) * start_pos) * freq);
+}
+
+ERASEABLE
+float blink(float base, float range, float freq)
+{
+	return blink_synced(base, range, freq, 0, 0);
+}

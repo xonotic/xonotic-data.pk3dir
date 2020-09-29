@@ -2,7 +2,7 @@
 
 #include "scoreboard.qh"
 #include <common/notifications/all.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 
 // CenterPrint (#16)
 

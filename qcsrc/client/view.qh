@@ -4,6 +4,10 @@
 
 void calc_followmodel_ofs(entity view);
 
+vector project_3d_to_2d(vector vec);
+
+void update_mousepos();
+
 void CSQC_Demo_Camera();
 
 entity viewmodels[MAX_WEAPONSLOTS];
