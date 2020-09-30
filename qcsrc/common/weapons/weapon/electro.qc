@@ -57,7 +57,9 @@ void W_Electro_ExplodeComboThink(entity this)
 	float f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
 
-	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, NULL, NULL, this.dmg_force * f, this.projectiledeathtype, this.weaponentity_fld, NULL);
+	float dmg_scale = ((this.dmg_linear) ? this.dmg_interval : f);
+
+	RadiusDamage(this, this.realowner, this.dmg * dmg_scale, this.dmg_edge * dmg_scale, this.dmg_radius, NULL, NULL, this.dmg_force * f, this.projectiledeathtype, this.weaponentity_fld, NULL);
 	this.projectiledeathtype |= HITTYPE_BOUNCE; // ensure it doesn't spam its effect
 
 	if(dt < this.dmg_duration)
@@ -88,6 +90,7 @@ void W_Electro_ExplodeCombo(entity this)
 		this.dmg_power = WEP_CVAR(electro, combo_power);
 		this.dmg_duration = WEP_CVAR(electro, combo_duration);
 		this.dmg_interval = WEP_CVAR(electro, combo_damage_interval);
+		this.dmg_linear = WEP_CVAR(electro, combo_damage_linear);
 		this.teleport_time = time;
 		this.dmg_last = 1;
 		set_movetype(this, MOVETYPE_NONE);
