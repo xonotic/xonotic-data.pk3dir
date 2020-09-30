@@ -23,6 +23,24 @@ void Ent_Remove(entity this);
 
 void Gamemode_Init();
 
+entity players;
+entity teams;
+float team_count; // real teams
+
+void AuditLists();
+
+float RegisterPlayer(entity player);
+
+void RemovePlayer(entity player);
+
+void MoveToLast(entity e);
+
+float RegisterTeam(entity Team);
+
+void RemoveTeam(entity Team);
+
+entity GetTeam(int Team, bool add);
+
 bool SetTeam(entity pl, int Team);
 
 vector hud_fontsize;

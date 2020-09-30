@@ -1,9 +1,10 @@
 #include "shownames.qh"
 
 #include "autocvars.qh"
+#include <client/draw.qh>
 #include "main.qh"
-#include "miscfunctions.qh"
 #include "resources.qh"
+#include <client/view.qh>
 #include "hud/_mod.qh"
 
 #include <common/ent_cs.qh>

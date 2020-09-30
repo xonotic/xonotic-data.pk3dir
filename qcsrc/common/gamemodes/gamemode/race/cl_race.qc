@@ -1,5 +1,6 @@
 #include "cl_race.qh"
 
+#include <client/draw.qh>
 #include <common/mutators/base.qh>
 
 // Race/CTS HUD mod icons

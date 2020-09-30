@@ -1,8 +1,8 @@
 #include "weapons.qh"
 
 #include <client/autocvars.qh>
+#include <client/draw.qh>
 #include <client/main.qh>
-#include <client/miscfunctions.qh>
 #include <client/view.qh>
 #include <common/wepent.qh>
 
@@ -35,6 +35,54 @@ void HUD_Weapons_Export(int fh)
 	HUD_Write_Cvar("hud_panel_weapons_noncurrent_scale");
 	HUD_Write_Cvar("hud_panel_weapons_selection_radius");
 	HUD_Write_Cvar("hud_panel_weapons_selection_speed");
+}
+
+void Accuracy_LoadLevels()
+{
+	if(autocvar_accuracy_color_levels != acc_color_levels)
+	{
+		strcpy(acc_color_levels, autocvar_accuracy_color_levels);
+		acc_levels = tokenize_console(acc_color_levels);
+		if(acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+		if(acc_levels < 2)
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values");
+
+		int i;
+		for(i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i)) / 100.0;
+	}
+}
+
+void Accuracy_LoadColors()
+{
+	if(time > acc_col_loadtime)
+	if(acc_levels >= 2)
+	{
+		int i;
+		for(i = 0; i < acc_levels; ++i)
+			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
+		acc_col_loadtime = time + 2;
+	}
+}
+
+vector Accuracy_GetColor(float accuracy)
+{
+	float factor;
+	vector color;
+	if(acc_levels < 2)
+		return '0 0 0'; // return black, can't determine the right color
+
+	// find the max level lower than acc
+	int j = acc_levels-1;
+	while(j && accuracy < acc_lev[j])
+		--j;
+
+	// inject color j+1 in color j, how much depending on how much accuracy is higher than level j
+	factor = (accuracy - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+	color = acc_col[j];
+	color = color + factor * (acc_col[j+1] - color);
+	return color;
 }
 
 entity weaponorder[REGISTRY_MAX(Weapons)];
