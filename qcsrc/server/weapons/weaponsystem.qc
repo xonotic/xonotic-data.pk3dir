@@ -3,14 +3,19 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
 #include <server/cheats.qh>
 #include <server/resources.qh>
-#include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
+#include <common/items/_mod.qh>
 #include <common/net_linked.qh>
+#include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>
@@ -26,8 +31,8 @@
 float W_WeaponRateFactor(entity this)
 {
 	float t = 1;
-	if(g_weaponratefactor > 0)
-		t = 1.0 / g_weaponratefactor;
+	if(autocvar_g_weaponratefactor > 0)
+		t = 1.0 / autocvar_g_weaponratefactor;
 
 	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
 	t = M_ARGV(0, float);
@@ -37,7 +42,7 @@ float W_WeaponRateFactor(entity this)
 
 float W_WeaponSpeedFactor(entity this)
 {
-	float t = 1.0 * g_weaponspeedfactor;
+	float t = 1.0 * autocvar_g_weaponspeedfactor;
 
 	MUTATOR_CALLHOOK(WeaponSpeedFactor, t, this);
 	t = M_ARGV(0, float);
@@ -404,7 +409,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	{
 		FOREACH_CLIENT(true, {
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
-				wframe_send(it, this, fr, g_weaponratefactor, restartanim);
+				wframe_send(it, this, fr, autocvar_g_weaponratefactor, restartanim);
 		});
 	}
 

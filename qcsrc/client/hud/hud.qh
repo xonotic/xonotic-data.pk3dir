@@ -9,6 +9,18 @@ void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
 void draw_cursor_normal(vector pos, vector col, float a);
 void LoadMenuSkinValues();
 
+void HUD_Scale_Disable();
+void HUD_Scale_Enable();
+
+#define HUD_ScaleX(f) (f * hud_scale.x)
+#define HUD_ScaleY(f) (f * hud_scale.y)
+#define HUD_ShiftX(f) (f + hud_shift.x + hud_shift.z * (f - hud_scale_center.x))
+#define HUD_ShiftY(f) (f + hud_shift.y + hud_shift.z * (f - hud_scale_center.y))
+vector HUD_Scale(vector v);
+vector HUD_Shift(vector v);
+
+vector HUD_GetFontsize(string cvarname);
+
 void Hud_Dynamic_Frame();
 
 bool HUD_Radar_Clickable();

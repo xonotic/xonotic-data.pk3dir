@@ -1208,7 +1208,7 @@ void nades_CheckThrow(entity this)
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
 			vector dir = (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05);
-			dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+			dir = W_CalculateSpread(dir, autocvar_g_nades_spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
 			toss_nade(this, true, dir * _force, 0);
 		}
 	}
@@ -1252,7 +1252,7 @@ CLASS(NadeOffhand, OffhandWeapon)
 				_force /= autocvar_g_nades_nade_lifetime;
 				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
 				vector dir = (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1);
-				dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+				dir = W_CalculateSpread(dir, autocvar_g_nades_spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
 				toss_nade(player, false, dir * _force, 0);
 			}
 		}

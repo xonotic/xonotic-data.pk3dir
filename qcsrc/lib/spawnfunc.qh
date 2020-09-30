@@ -6,6 +6,8 @@
 /** If this global exists, only functions with spawnfunc_ name prefix qualify as spawn functions */
 noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
+/** Not for production use, provides access to a dump of the entity's fields when it is parsed from map data */
+//noref string __fullspawndata;
 
 // Optional type checking; increases compile time too much to be enabled by default
 #if 0

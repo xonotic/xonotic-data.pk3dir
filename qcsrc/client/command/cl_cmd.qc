@@ -8,13 +8,15 @@
 #include "cl_cmd.qh"
 
 #include "../autocvars.qh"
-#include "../defs.qh"
+#include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/radar.qh>
+#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/vote.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
-#include "../miscfunctions.qh"
+#include <client/view.qh>
 
 #include <client/mutators/_mod.qh>
 

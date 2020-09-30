@@ -1,6 +1,5 @@
 #include "mapinfo.qh"
 #if defined(CSQC)
-    #include "../client/defs.qh"
     #include "util.qh"
     #include <common/weapons/_all.qh>
 #elif defined(MENUQC)

@@ -329,7 +329,7 @@ STATIC_INIT(register_weapons_done)
         else
         	inaccessible = strcat(inaccessible, "\n", it.netname);
     });
-    if (inaccessible) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
+    if (inaccessible && autocvar_developer > 0) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
     #ifdef CSQC
     FOREACH(Weapons, true, it.wr_init(it));
     #endif

@@ -1,7 +1,11 @@
 #include "sv_keepaway.qh"
 
 #include <common/effects/all.qh>
+#include <server/client.qh>
 #include <server/gamelog.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/world.qh>
 
 .entity ballcarried;
 
@@ -381,7 +385,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force values that are applied to players in damage.qc
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

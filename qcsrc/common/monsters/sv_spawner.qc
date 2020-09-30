@@ -1,3 +1,4 @@
+#include "sv_monsters.qh"
 #include "sv_spawner.qh"
 #include "sv_spawn.qh"
 

@@ -1,7 +1,7 @@
 #include "breakable.qh"
 #ifdef SVQC
 
-#include <server/g_damage.qh>
+#include <server/damage.qh>
 #include <server/bot/api.qh>
 #include <common/csqcmodel_settings.qh>
 #include <lib/csqcmodel/sv_model.qh>

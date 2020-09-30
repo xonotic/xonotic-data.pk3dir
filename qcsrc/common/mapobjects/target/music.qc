@@ -4,8 +4,8 @@
 #elif defined(SVQC)
     #include <common/constants.qh>
     #include <common/net_linked.qh>
-    #include <server/constants.qh>
-    #include <server/defs.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
 #endif
 
 REGISTER_NET_TEMP(TE_CSQC_TARGET_MUSIC)

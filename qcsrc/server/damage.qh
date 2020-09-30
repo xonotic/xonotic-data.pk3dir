@@ -3,8 +3,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <server/defs.qh>
-    #include <server/miscfunctions.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
+    #include <server/items/items.qh>
     #include <lib/warpzone/common.qh>
     #include <common/constants.qh>
     #include <common/teams.qh>
@@ -13,10 +14,7 @@
     #include "weapons/accuracy.qh"
     #include "weapons/csqcprojectile.qh"
     #include "weapons/selection.qh"
-    #include <common/t_items.qh>
     #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
     #include <common/notifications/all.qh>
     #include <common/deathtypes/all.qh>
     #include <server/mutators/_mod.qh>
@@ -24,10 +22,14 @@
     #include <common/vehicles/all.qh>
     #include <lib/csqcmodel/sv_model.qh>
     #include <common/playerstats.qh>
-    #include "g_hook.qh"
+    #include "hook.qh"
     #include "scores.qh"
     #include "spawnpoints.qh"
 #endif
+
+.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
+
+.bool(entity targ, entity inflictor, float amount, float limit) event_heal;
 
 .float dmg;
 .float dmg_edge;
@@ -40,9 +42,14 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 
 float checkrules_firstblood;
 
+.float damagedbycontents;
+.float damagedbytriggers;
+
 float yoda;
 float damage_goodhits;
 float damage_gooddamage;
+
+.float pain_finished; // Added by Supajoe
 
 .float dmg_team;
 .float teamkill_complain;
@@ -51,6 +58,19 @@ float damage_gooddamage;
 .entity pusher;
 .bool istypefrag;
 .float taunt_soundtime;
+
+.float spawnshieldtime;
+
+.int totalfrags;
+
+.bool canteamdamage;
+
+.vector death_origin;
+
+.float damage_dealt, typehitsound, killsound;
+
+// used for custom deathtype
+string deathmessage;
 
 float IsFlying(entity a);
 
@@ -81,11 +101,26 @@ float Obituary_WeaponDeath(
 
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity);
 
+// Frozen status effect
+//const int FROZEN_NOT              = 0;
+const int FROZEN_NORMAL             = 1;
+const int FROZEN_TEMP_REVIVING      = 2;
+const int FROZEN_TEMP_DYING         = 3;
+
+.float revival_time; // time at which player was last revived
+.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.float freeze_time;
+.entity iceblock;
+.entity frozen_by; // for ice fields
+
 void Ice_Think(entity this);
 
-void Freeze(entity targ, float freeze_time, int frozen_type, bool show_waypoint);
+void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint);
 
 void Unfreeze(entity targ, bool reset_health);
+
+// WEAPONTODO
+#define DMG_NOWEP (weaponentities[0])
 
 // NOTE: the .weaponentity parameter can be set to DMG_NOWEP if the attack wasn't caused by a weapon or player
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
@@ -95,6 +130,11 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	// Returns total damage applies to creatures
 
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
+
+.float damageforcescale;
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
+.float damageextraradius;
 
 // Calls .event_heal on the target so that they can handle healing themselves
 // a limit of RES_LIMIT_NONE should be handled by the entity as its max health (if applicable)
@@ -116,3 +156,6 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
 void Fire_ApplyDamage(entity e);
 
 void Fire_ApplyEffect(entity e);
+
+IntrusiveList g_damagedbycontents;
+STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }

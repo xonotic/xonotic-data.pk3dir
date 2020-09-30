@@ -1,5 +1,8 @@
 #include "cl_race.qh"
 
+#include <client/draw.qh>
+#include <common/mutators/base.qh>
+
 // Race/CTS HUD mod icons
 float crecordtime_prev; // last remembered crecordtime
 float crecordtime_change_time; // time when crecordtime last changed

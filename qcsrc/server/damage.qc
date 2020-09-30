@@ -1,16 +1,19 @@
-#include "g_damage.qh"
+#include "damage.qh"
 
 #include <common/effects/all.qh>
 #include "bot/api.qh"
-#include "g_hook.qh"
+#include "hook.qh"
+#include <server/client.qh>
 #include <server/gamelog.qh>
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
+#include <server/main.qh>
+#include <server/world.qh>
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
 #include "../common/physics/player.qh"
-#include "../common/t_items.qh"
 #include "resources.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"
@@ -22,6 +25,8 @@
 #include "weapons/selection.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
+#include <common/mapobjects/defs.qh>
+#include <common/mapobjects/triggers.qh>
 #include "../common/notifications/all.qh"
 #include "../common/physics/movetypes/movetypes.qh"
 #include "../common/playerstats.qh"
@@ -682,11 +687,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		if (!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= g_weapondamagefactor;
-			mirrordamage *= g_weapondamagefactor;
-			complainteamdamage *= g_weapondamagefactor;
-			force = force * g_weaponforcefactor;
-			mirrorforce *= g_weaponforcefactor;
+			damage *= autocvar_g_weapondamagefactor;
+			mirrordamage *= autocvar_g_weapondamagefactor;
+			complainteamdamage *= autocvar_g_weapondamagefactor;
+			force = force * autocvar_g_weaponforcefactor;
+			mirrorforce *= autocvar_g_weaponforcefactor;
 		}
 
 		// should this be changed at all? If so, in what way?

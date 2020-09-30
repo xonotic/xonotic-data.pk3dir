@@ -40,9 +40,7 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 	}
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		WriteAngle(MSG_ENTITY, this.beam_dir.x);
-		WriteAngle(MSG_ENTITY, this.beam_dir.y);
-		WriteAngle(MSG_ENTITY, this.beam_dir.z);
+		WriteAngleVector(MSG_ENTITY, this.beam_dir);
 	}
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
@@ -933,9 +931,7 @@ void Draw_ArcBeam(entity this)
 		if(!v_shot_idx || this.beam_usevieworigin != 2)
 		{
 			this.beam_shotorigin = wepent.movedir;
-			origin_offset =
-			 	 right * -this.beam_shotorigin.y
-				+ up * this.beam_shotorigin.z;
+			origin_offset = right * -this.beam_shotorigin.y + up * this.beam_shotorigin.z;
 		}
 		else
 			this.beam_shotorigin = '0 0 0';
@@ -1274,9 +1270,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		this.angles_x = ReadAngle();
-		this.angles_y = ReadAngle();
-		this.angles_z = ReadAngle();
+		this.angles = ReadAngleVector();
 	}
 
 	if(sf & ARC_SF_BEAMTYPE) // beam type

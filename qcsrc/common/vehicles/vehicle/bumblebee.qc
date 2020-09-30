@@ -230,6 +230,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 		WriteByte(MSG_ONE, SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, player);
 
+		// NOTE: engine networked
 		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
 		WriteAngle(MSG_ONE, 0);
 		WriteAngle(MSG_ONE, vehic.angles.y);
@@ -340,6 +341,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 		WriteByte(MSG_ONE, 		SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, 	gunner.vehicle_viewport);
 
+		// NOTE: engine networked
 		WriteByte(MSG_ONE, 		SVC_SETVIEWANGLES);
 		WriteAngle(MSG_ONE, 	gunner.angles_x + vehic.angles_x); // tilt
 		WriteAngle(MSG_ONE, 	gunner.angles_y + vehic.angles_y); // yaw

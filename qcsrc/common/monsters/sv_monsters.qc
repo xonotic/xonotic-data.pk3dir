@@ -8,15 +8,22 @@
 #include "../physics/movelib.qh"
 #include "../weapons/_mod.qh"
 #include <server/autocvars.qh>
-#include <server/defs.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/damage.qh>
 #include "../deathtypes/all.qh"
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/steerlib.qh>
+#include <server/main.qh>
 #include "../turrets/sv_turrets.qh"
 #include "../turrets/util.qh"
 #include "../vehicles/all.qh"
 #include <server/campaign.qh>
+#include <server/cheats.qh>
 #include <server/command/_mod.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/teleporters.qh>
 #include "../mapobjects/triggers.qh"
 #include <lib/csqcmodel/sv_model.qh>
 #include <server/round_handler.qh>
@@ -128,7 +135,7 @@ entity Monster_FindTarget(entity this)
 	{
 		if(Monster_ValidTarget(this, it))
 		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 			vector targ_center = CENTER_OR_VIEWOFS(it);
 
 			if(closest_target)
@@ -512,7 +519,7 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn(entity this) { Monster_Spawn(this, true, this); }
+void Monster_Respawn(entity this) { Monster_Spawn(this, true, this.monsterdef); }
 
 .vector	pos1, pos2;
 
@@ -1145,7 +1152,7 @@ void Monster_Anim(entity this)
 	int animbits = deadbits;
 	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(this.crouch)
+	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, (IS_ONGROUND(this)));

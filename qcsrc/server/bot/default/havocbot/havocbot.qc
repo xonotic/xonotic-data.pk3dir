@@ -2,8 +2,16 @@
 
 #include "roles.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <server/bot/api.qh>
+#include <server/client.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <server/world.qh>
 #include "../cvars.qh"
 
 #include "../aim.qh"
@@ -22,6 +30,7 @@
 
 #include <common/mapobjects/func/ladder.qh>
 #include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 
 #include <lib/warpzone/common.qh>

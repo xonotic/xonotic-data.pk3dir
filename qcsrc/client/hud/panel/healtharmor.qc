@@ -1,7 +1,7 @@
 #include "healtharmor.qh"
 
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
+#include <client/main.qh>
 
 #include <common/deathtypes/all.qh>
 

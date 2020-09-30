@@ -3,8 +3,9 @@
 #include "weaponsystem.qh"
 #include "../resources.qh"
 #include <server/mutators/_mod.qh>
-#include <common/t_items.qh>
-#include <server/items.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
+#include <server/world.qh>
 #include <common/weapons/_all.qh>
 
 .bool m_isreplaced; ///< Holds whether the weapon has been replaced.
