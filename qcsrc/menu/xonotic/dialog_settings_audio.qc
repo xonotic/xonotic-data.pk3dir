@@ -140,10 +140,6 @@ void XonoticAudioSettingsTab_fill(entity me)
 		setDependent(e, "snd_channels", 1.5, 0.5);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "cl_hitsound", _("Hit indication sound"),
-			_("Play a hit indicator sound when your shot hits an enemy")));
-		e.sendCvars = true;
-	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "con_chatsound", _("Chat message sound")));
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox_T(0, "menu_sounds", _("Menu sounds"),
@@ -152,6 +148,15 @@ void XonoticAudioSettingsTab_fill(entity me)
 			_("Play sounds when hovering over menu items too")));
 		setDependent(e2, "menu_sounds", 1, 2);
 	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, makeXonoticTextLabel(0, _("Damage sound pitch:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_hitsound"));
+				e.addValue(e, _("Disabled"), "0");
+				e.addValue(e, _("Fixed pitch"), "1");
+				e.addValue(e, _("Low = More"), "2");
+				e.addValue(e, _("High = More"), "3");
+				e.configureXonoticTextSliderValues(e);
+				e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 1, makeXonoticTextLabel(0, _("Time announcer:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_announcer_maptime"));

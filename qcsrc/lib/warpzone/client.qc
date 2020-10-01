@@ -31,7 +31,15 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 	if(!warpzone_warpzones_exist)
 	{
 		cvar_settemp("r_water", "1"); // HACK for DarkPlaces: always enable reflections when a map has warpzones
-		cvar_settemp("r_water_resolutionmultiplier", "1"); // HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+			// TODO: remove this when GL 2 renderer is gone (no r_viewscale > 1 in GL 2)
+			cvar_settemp("r_water_resolutionmultiplier", "1");
+		else
+		{
+			// HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+			if(cvar("r_water_resolutionmultiplier") * cvar("r_viewscale") < 1)
+				cvar_settemp("r_water_resolutionmultiplier", ftos(1 / cvar("r_viewscale")));
+		}
 	}
 	warpzone_warpzones_exist = 1;
 	if (!this.enemy)
@@ -92,7 +100,15 @@ NET_HANDLE(ENT_CLIENT_WARPZONE_CAMERA, bool isnew)
 	if(!warpzone_cameras_exist)
 	{
 		cvar_settemp("r_water", "1"); // HACK for DarkPlaces: always enable reflections when a map has cameras
-		cvar_settemp("r_water_resolutionmultiplier", "1"); // HACK for DarkPlaces: enforce full quality so entities can be seen clearly through warpzones
+		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+			// TODO: remove this when GL 2 renderer is gone (no r_viewscale > 1 in GL 2)
+			cvar_settemp("r_water_resolutionmultiplier", "1");
+		else
+		{
+			// HACK for DarkPlaces: enforce full quality so entities can be seen clearly through cameras
+			if(cvar("r_water_resolutionmultiplier") * cvar("r_viewscale") < 1)
+				cvar_settemp("r_water_resolutionmultiplier", ftos(1 / cvar("r_viewscale")));
+		}
 	}
 	warpzone_cameras_exist = 1;
 	this.classname = "func_warpzone_camera";

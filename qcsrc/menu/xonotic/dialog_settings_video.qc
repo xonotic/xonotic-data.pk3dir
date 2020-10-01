@@ -34,20 +34,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticResolutionSlider());
 			e.applyButton = videoApplyButton;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Font/UI size:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_vid_scale"));
-			e.addValue(e, ZCTX(_("SZ^Unreadable")), "-1");
-			e.addValue(e, ZCTX(_("SZ^Tiny")), "-0.75");
-			e.addValue(e, ZCTX(_("SZ^Little")), "-0.5");
-			e.addValue(e, ZCTX(_("SZ^Small")), "-0.25");
-			e.addValue(e, ZCTX(_("SZ^Medium")), "0");
-			e.addValue(e, ZCTX(_("SZ^Large")), "0.25");
-			e.addValue(e, ZCTX(_("SZ^Huge")), "0.5");
-			e.addValue(e, ZCTX(_("SZ^Gigantic")), "0.75");
-			e.addValue(e, ZCTX(_("SZ^Colossal")), "1");
-			e.configureXonoticTextSliderValues(e);
-			e.applyButton = videoApplyButton;
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Color depth:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("vid_bitsperpixel",
 			_("How many bits per pixel (BPP) to render at, 32 is recommended")));
@@ -59,25 +45,14 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
 			e.applyButton = videoApplyButton;
 		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "vid_vsync", _("Vertical Synchronization"),
-			_("Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate")));
-
+			_("Prevent screen tearing, increases input latency and caps your fps to the screen refresh rate")));
 	me.TR(me);
-		if(cvar("developer") > 0)
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "v_flipped", _("Flip view horizontally"),
-				_("Poor man's left handed mode")));
-		}
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("gl_texture_anisotropy",
-			_("Anisotropic filtering quality")));
-			e.addValue(e, ZCTX(_("ANISO^Disabled")), "1");
-			e.addValue(e, _("2x"), "2");
-			e.addValue(e, _("4x"), "4");
-			e.addValue(e, _("8x"), "8");
-			e.addValue(e, _("16x"), "16");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
+			setDependent(e, "vid_samples", 0, 1);
 	me.TR(me);
+	if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+	{
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Antialiasing:")));
 			setDependent(e, "r_viewfbo", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("vid_samples",
@@ -88,9 +63,23 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "r_viewfbo", 0, 0);
 			e.applyButton = videoApplyButton;
+	}
+	else
+	{
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Resolution scaling:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.666, 2, 0.5, "r_viewscale",
+			_("Screen or window size multiplier, > 1 achieves antialiasing, < 1 may help slow GPUs")));
+	}
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
-			setDependent(e, "vid_samples", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("gl_texture_anisotropy",
+			_("Anisotropic filtering quality")));
+			e.addValue(e, ZCTX(_("ANISO^Disabled")), "1");
+			e.addValue(e, _("2x"), "2");
+			e.addValue(e, _("4x"), "4");
+			e.addValue(e, _("8x"), "8");
+			e.addValue(e, _("16x"), "16");
+			e.configureXonoticTextSliderValues(e);
 
 	me.TR(me);
 	me.TR(me);
@@ -101,9 +90,10 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DF^World")), "1");
 			e.addValue(e, ZCTX(_("DF^All")), "2");
 			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
 	if(cvar_type("gl_vbo") & CVAR_TYPEFLAG_ENGINE)
 	{
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -127,16 +117,16 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1.0, 3.0, 0.05, "v_contrast",
 			_("Brightness of white")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gamma:")));
-			setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "v_gamma",
-			_("Inverse gamma correction value, a brightness effect that does not affect white or black")));
-			setDependent(e, "vid_gl20", 1, 1);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Contrast boost:")));
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1.0, 5.0, 0.1, "v_contrastboost",
 			_("By how much to multiply the contrast in dark areas")));
+			setDependent(e, "vid_gl20", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gamma:")));
+			setDependent(e, "vid_gl20", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "v_gamma",
+			_("Inverse gamma correction value, a brightness effect that does not affect white or black")));
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Saturation:")));
@@ -146,13 +136,13 @@ void XonoticVideoSettingsTab_fill(entity me)
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient:"))));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient light:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 20.0, 0.25, "r_ambient",
-			_("Ambient lighting, if set too high it tends to make light on maps look dull and flat")));
+			_("If set too high it tends to make light on maps look dull and flat, default 4")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Intensity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "r_hdr_scenebrightness",
-			_("Global rendering brightness")));
+			_("Global rendering brightness, default 1")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "gl_finish", _("Wait for GPU to finish each frame"),
@@ -165,12 +155,14 @@ void XonoticVideoSettingsTab_fill(entity me)
 	}
 	if(cvar("developer") > 0)
 	{
-		me.TR(me);
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));
-				setDependent(e, "vid_gl20", 1, 1);
-		me.TR(me);
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_trippy", _("Trippy vertices (easter egg)")));
-				setDependent(e, "vid_gl20", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_flipped", _("Flip view horizontally")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));
+			setDependent(e, "vid_gl20", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_trippy", _("Trippy vertices (easter egg)")));
+			setDependent(e, "vid_gl20", 1, 1);
 	}
 
 	me.gotoRC(me, me.rows - 1, 0);
