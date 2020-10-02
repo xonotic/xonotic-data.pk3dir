@@ -20,20 +20,16 @@ REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 
 bool buffs_BuffModel_Customize(entity this, entity client)
 {
-	entity player, myowner;
-	bool same_team;
+	entity player = WaypointSprite_getviewentity(client);
+	entity myowner = this.owner;
 
-	player = WaypointSprite_getviewentity(client);
-	myowner = this.owner;
-	same_team = (SAME_TEAM(player, myowner) || SAME_TEAM(player, myowner));
-
-	if(myowner.alpha <= 0.5 && !same_team && myowner.alpha != 0)
+	if(myowner.alpha <= 0.5 && DIFF_TEAM(player, myowner) && myowner.alpha != 0)
 		return false;
 
 	if(MUTATOR_CALLHOOK(BuffModel_Customize, this, player))
 		return false;
 
-	if(player == myowner || (IS_SPEC(client) && client.enemy == myowner))
+	if(player == myowner)
 	{
 		// somewhat hide the model, but keep the glow
 		this.effects = 0;
@@ -308,8 +304,7 @@ void buff_Think(entity this)
 		if(this.team && !this.buff_waypoint)
 			buff_Waypoint_Spawn(this);
 
-		if(this.lifetime)
-		if(time >= this.lifetime)
+		if(this.lifetime && time >= this.lifetime)
 			buff_Respawn(this);
 	}
 
