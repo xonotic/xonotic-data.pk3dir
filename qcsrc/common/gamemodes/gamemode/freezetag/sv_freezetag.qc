@@ -175,8 +175,10 @@ void freezetag_LastPlayerForTeam_Notify(entity this)
 	if(round_handler_IsRoundStarted())
 	{
 		entity pl = freezetag_LastPlayerForTeam(this);
-		if(pl)
+		if(pl) {
 			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+			Send_Notification(NOTIF_ONE, pl, MSG_ANNCE, ANNCE_ALONE);
+		}
 	}
 }
 
