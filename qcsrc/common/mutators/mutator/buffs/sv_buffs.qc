@@ -59,7 +59,7 @@ void buffs_BuffModel_Spawn(entity player)
 
 vector buff_GlowColor(entity buff)
 {
-	//if(buff.team) { return Team_ColorRGB(buff.team); }
+	//if(buff.team_forced) { return Team_ColorRGB(buff.team_forced); }
 	return buff.m_color;
 }
 
@@ -93,7 +93,7 @@ void buff_Waypoint_Spawn(entity e)
 	if(autocvar_g_buffs_waypoint_distance <= 0) return;
 
 	entity buff = buff_FirstFromFlags(STAT(BUFFS, e));
-	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, NULL, e.team, e, buff_waypoint, true, RADARICON_Buff);
+	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, NULL, e.team_forced, e, buff_waypoint, true, RADARICON_Buff);
 	wp.wp_extra = buff.m_id;
 	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_Buff, e.glowmod);
 	e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
@@ -168,7 +168,7 @@ void buff_Touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return; // incase mutator changed toucher
 
-	if((this.team && DIFF_TEAM(toucher, this))
+	if((this.team_forced && toucher.team != this.team_forced)
 	|| (STAT(FROZEN, toucher))
 	|| (toucher.vehicle)
 	|| (time < PS(toucher).buff_shield)
@@ -301,7 +301,7 @@ void buff_Think(entity this)
 
 	if(this.buff_active)
 	{
-		if(this.team && !this.buff_waypoint)
+		if(this.team_forced && !this.buff_waypoint)
 			buff_Waypoint_Spawn(this);
 
 		if(this.lifetime && time >= this.lifetime)
@@ -335,7 +335,7 @@ void buff_Reset(entity this)
 bool buff_Customize(entity this, entity client)
 {
 	entity player = WaypointSprite_getviewentity(client);
-	if(!this.buff_active || (this.team && DIFF_TEAM(player, this)))
+	if(!this.buff_active || (this.team_forced && player.team != this.team_forced))
 	{
 		this.alpha = 0.3;
 		if(this.effects & EF_FULLBRIGHT) { this.effects &= ~(EF_FULLBRIGHT); }
@@ -360,8 +360,6 @@ void buff_Delete(entity this)
 void buff_Init(entity this)
 {
 	if(!cvar("g_buffs")) { delete(this); return; }
-
-	if(!teamplay && this.team) { this.team = 0; }
 
 	entity buff = buff_FirstFromFlags(STAT(BUFFS, this));
 
@@ -409,10 +407,13 @@ void buff_Init(entity this)
 
 void buff_Init_Compat(entity ent, entity replacement)
 {
-	if (ent.spawnflags & 2)
-		ent.team = NUM_TEAM_1;
-	else if (ent.spawnflags & 4)
-		ent.team = NUM_TEAM_2;
+	if (teamplay)
+	{
+		if (ent.spawnflags & 2)
+			ent.team_forced = NUM_TEAM_1;
+		else if (ent.spawnflags & 4)
+			ent.team_forced = NUM_TEAM_2;
+	}
 
 	STAT(BUFFS, ent) = replacement.m_itemid;
 
@@ -905,7 +906,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		player.alpha = ((autocvar_g_buffs_invisible_alpha) ? autocvar_g_buffs_invisible_alpha : -1); // powerups reset alpha, so we must enforce this (TODO)
 
 	if(STAT(BUFFS, player) & BUFF_MEDIC.m_itemid)
-	if(time >= player.buff_medic_healtime)
+	if(teamplay && time >= player.buff_medic_healtime)
 	{
 		buff_Medic_Heal(player);
 		player.buff_medic_healtime = time + autocvar_g_buffs_medic_heal_delay;

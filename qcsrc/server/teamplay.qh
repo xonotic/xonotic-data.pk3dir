@@ -10,6 +10,8 @@ bool autocvar_g_balance_teams_prevent_imbalance;
 
 bool lockteams;
 
+.int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
 // ========================== Global teams API ================================
 
 /// \brief Returns the global team entity at the given index.

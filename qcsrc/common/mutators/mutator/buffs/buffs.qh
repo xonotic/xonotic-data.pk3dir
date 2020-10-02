@@ -49,7 +49,8 @@ STATIC_INIT(REGISTER_BUFFS) {
 	void buff_Init_Compat(entity ent, entity replacement);
 	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
 		STAT(BUFFS, this) = b.m_itemid; \
-		this.team = t; \
+		if(teamplay) \
+			this.team_forced = t; \
 		buff_Init(this); \
 	}
 	#define BUFF_SPAWNFUNCS(e, b)                       \
