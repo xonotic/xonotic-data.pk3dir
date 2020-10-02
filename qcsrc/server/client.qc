@@ -2082,6 +2082,7 @@ void Join(entity this)
 	this.team_selected = false;
 	
 	// z411
+	// send constant ready notification
 	if(warmup_stage)
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MISSING_READY);
 }

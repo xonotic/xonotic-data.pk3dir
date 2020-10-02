@@ -24,6 +24,12 @@ bool accuracy_send(entity this, entity to, int sf)
 	entity a = this.owner;
 	if (IS_SPEC(a)) a = a.enemy;
 	a = CS(a).accuracy;
+	
+	// z411 send entity number
+	if(g_duel)
+		WriteByte(MSG_ENTITY, etof(a.owner));
+	else
+		WriteByte(MSG_ENTITY, 0);
 
 	if (to != a.owner)
 		if (!autocvar_sv_accuracy_data_share && !CS(a.owner).cvar_cl_accuracy_data_share)
@@ -31,10 +37,20 @@ bool accuracy_send(entity this, entity to, int sf)
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
 	if (sf == 0) return true;
+	
 	// note: we know that client and server agree about SendFlags...
 	int f = 1;
 	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
-		if (sf & f) WriteByte(MSG_ENTITY, accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w]));
+		if (sf & f) {
+			if(g_duel) {
+				WriteByte(MSG_ENTITY, a.accuracy_frags[w]);
+				WriteShort(MSG_ENTITY, a.accuracy_hit[w]);
+				WriteShort(MSG_ENTITY, a.accuracy_cnt_hit[w]);
+				WriteShort(MSG_ENTITY, a.accuracy_cnt_fired[w]);
+			} else {
+				WriteByte(MSG_ENTITY, accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w]));
+			}
+		}
 		f = (f == 0x800000) ? 1 : f * 2;
 	}
 	return true;
@@ -45,7 +61,8 @@ void accuracy_init(entity e)
 {
 	entity a = CS(e).accuracy = new_pure(accuracy);
 	a.owner = e;
-	a.drawonlytoclient = e;
+	if(!g_duel) // z411
+		a.drawonlytoclient = e;
 	Net_LinkEntity(a, false, 0, accuracy_send);
 }
 
@@ -87,10 +104,12 @@ void accuracy_add(entity this, Weapon w, int fired, int hit)
         a.fired_time = time;
     }
 
-	if (b == accuracy_byte(a.accuracy_hit[wepid], a.accuracy_fired[wepid])) return; // no change
+	if (!g_duel && b == accuracy_byte(a.accuracy_hit[wepid], a.accuracy_fired[wepid])) return; // no change
 	int sf = 1 << (wepid % 24);
 	a.SendFlags |= sf;
-	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, { CS(it).accuracy.SendFlags |= sf; });
+	
+	if(!g_duel)
+		FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, { CS(it).accuracy.SendFlags |= sf; });
 }
 
 bool accuracy_isgooddamage(entity attacker, entity targ)

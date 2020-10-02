@@ -604,6 +604,8 @@ NET_HANDLE(ENT_CLIENT_RANDOMSEED, bool isnew)
 NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 {
 	make_pure(this);
+	float entnum = ReadByte();
+	
 	int sf = ReadInt24_t();
 	if (sf == 0) {
 		for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
@@ -614,16 +616,28 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 	int f = 1;
 	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
 		if (sf & f) {
-			int b = ReadByte();
-			if (b == 0)
-				weapon_accuracy[w] = -1;
-			else if (b == 255)
-				weapon_accuracy[w] = 1.0; // no better error handling yet, sorry
-			else
-				weapon_accuracy[w] = (b - 1.0) / 100.0;
+			if(entnum > 0) {
+				playerslots[entnum-1].accuracy_frags[w] = ReadByte();
+				playerslots[entnum-1].accuracy_hit[w] = ReadShort();
+				playerslots[entnum-1].accuracy_cnt_hit[w] = ReadShort();
+				playerslots[entnum-1].accuracy_cnt_fired[w] = ReadShort();
+				
+				LOG_INFOF("Duel stats ?/%d", playerslots[entnum-1].accuracy_cnt_fired[w]);
+			} else {
+				int b = ReadByte();
+				if (b == 0)
+					weapon_accuracy[w] = -1;
+				else if (b == 255)
+					weapon_accuracy[w] = 1.0; // no better error handling yet, sorry
+				else
+					weapon_accuracy[w] = (b - 1.0) / 100.0;
+			}
 		}
 		f = (f == 0x800000) ? 1 : f * 2;
 	}
+
+	LOG_INFOF("Accuracy stats Client %d", entnum);
+	
 	return true;
 }
 

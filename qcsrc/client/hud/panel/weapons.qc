@@ -477,7 +477,7 @@ void HUD_Weapons()
 		}
 
 		// draw the weapon accuracy
-		if(autocvar_hud_panel_weapons_accuracy)
+		/* z411 if(autocvar_hud_panel_weapons_accuracy)
 		{
 			float panel_weapon_accuracy = weapon_accuracy[it.m_id-WEP_FIRST];
 			if(panel_weapon_accuracy >= 0)
@@ -485,7 +485,7 @@ void HUD_Weapons()
 				color = Accuracy_GetColor(panel_weapon_accuracy);
 				drawpic_aspect_skin(weapon_pos, "weapon_accuracy", weapon_size, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
-		}
+		}*/
 
 		vector weapon_size_real = noncurrent_size;
 		float weapon_alpha_real = noncurrent_alpha;
