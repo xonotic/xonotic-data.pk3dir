@@ -2,6 +2,7 @@
 
 #include <common/constants.qh>
 #include <common/weapons/_all.qh>
+#include <common/items/inventory.qh>
 
 // z411
 string hostname_full;

@@ -37,11 +37,16 @@ STATIC_INIT(Inventory)
 #endif
 
 #ifdef CSQC
-Inventory g_inventory;
+//Inventory g_inventory;
+Inventory inventoryslots[255];
 NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
-    g_inventory = this;
+    //g_inventory = this;
+	
+	float entnum = ReadByte();
+	inventoryslots[entnum-1] = this;
+	
     const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
         if (!(majorBits & BIT(i))) {
@@ -116,7 +121,11 @@ bool Inventory_Send(Inventory this, Client to, int sf)
     TC(Inventory, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     TC(PlayerState, this.owner);
-    Inventory_Write(this);
+	
+	// z411 send entity number
+	WriteByte(MSG_ENTITY, etof(this.owner.m_client));
+    
+	Inventory_Write(this);
     return true;
 }
 
@@ -130,7 +139,8 @@ void Inventory_new(PlayerState this)
 {
     Inventory inv = NEW(Inventory), bak = NEW(Inventory);
     inv.inventory = bak;
-    setcefc(inv, Inventory_customize);
+	if(!g_duel)
+		setcefc(inv, Inventory_customize);
     Net_LinkEntity((inv.owner = this).inventory = inv, false, 0, Inventory_Send);
 }
 void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }

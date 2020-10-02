@@ -13,6 +13,7 @@
 #include <common/scores.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
+#include <common/items/inventory.qh>
 
 // Scoreboard (#24)
 
@@ -1262,8 +1263,11 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		"items", hud_fontsize, '0.5 0.5 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	tmp.y += hud_fontsize.y * 1.25;
 
-	FOREACH(Items, it.m_id == ITEM_ArmorMega.m_id || it.m_id == ITEM_HealthMega.m_id, {
-		tmp = Scoreboard_Duel_DrawPickup(tmp, true, it.m_icon, icon_sz, 0, invert);
+	FOREACH(Items,
+		it.m_id == ITEM_ArmorMega.m_id ||
+		it.m_id == ITEM_HealthMega.m_id ||
+		it.m_id == ITEM_ArmorBig.m_id, {
+		tmp = Scoreboard_Duel_DrawPickup(tmp, true, it.m_icon, icon_sz, inventoryslots[pl.sv_entnum].inv_items[it.m_id], invert);
 		
 		if(it.m_id == REGISTRY_MAX(Items))
         	break;
@@ -1989,7 +1993,7 @@ void Scoreboard_Draw()
 		if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 		{
 			// put team score to the left of scoreboard (and team size to the right)
-			team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
+			team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 1.5;
 			team_size_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
 			if(panel.current_panel_bg != "0")
 			{
@@ -2000,7 +2004,7 @@ void Scoreboard_Draw()
 		else
 		{
 			// put team score to the right of scoreboard (and team size to the left)
-			team_score_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
+			team_score_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 1.5;
 			team_size_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
 			if(panel.current_panel_bg != "0")
 			{
