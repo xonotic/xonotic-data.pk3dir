@@ -1,0 +1,33 @@
+#pragma once
+
+#include <common/command/_mod.qh>
+
+#include "medal.qh"
+
+// NOTE: 24 is the limit for the .items field
+REGISTRY(Medals, 32)
+REGISTER_REGISTRY(Medals)
+#define REGISTER_MEDAL(id, class) REGISTER(Medals, MEDAL, id, m_id, NEW(class))
+
+REGISTRY_SORT(Medals)
+REGISTRY_CHECK(Medals)
+
+REGISTRY_DEFINE_GET(Medals, NULL)
+STATIC_INIT(Medals) { FOREACH(Medals, true, it.m_id = i); }
+
+CLASS(Medal)
+ENDCLASS(Medal)
+
+REGISTER_ITEM(Impressive, Medal) {
+#ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.m_model                =   MDL_HealthSmall_ITEM;
+    this.m_sound                =   SND_HealthSmall;
+#endif
+    this.netname                =   "impressive";
+    this.m_name                 =   _("Impressive");
+    this.m_icon                 =   "impressive";
+#ifdef SVQC
+	this.annce					=   ANNCE_ACHIEVEMENT_IMPRESSIVE;
+#endif
+}

@@ -759,6 +759,7 @@ void Create_Notification_Entity_Medal(entity notif,
 										string icon,
 										Notification anncename)
 	{
+		notif.nent_floatcount = 1;
 		if (icon != "") { notif.nent_icon = strzone(icon); }
 		if (anncename) { notif.nent_msgannce = anncename; }
 	}
@@ -1199,7 +1200,7 @@ void Local_Notification_centerprint_Add(
 	centerprint_Add(ORDINAL(cpid), input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
 
-void Local_Notification_Queue_Run(MSG net_type, entity notif)
+void Local_Notification_Queue_Run(MSG net_type, entity notif, float f1)
 {		
 	switch (net_type)
 	{
@@ -1211,14 +1212,14 @@ void Local_Notification_Queue_Run(MSG net_type, entity notif)
 		
 		case MSG_MEDAL:
 		{
-			centerprint_Medal(notif.nent_icon, 1);
+			centerprint_Medal(notif.nent_icon, f1);
 			Local_Notification_sound(notif.nent_msgannce.nent_channel, notif.nent_msgannce.nent_snd, notif.nent_msgannce.nent_vol, notif.nent_msgannce.nent_position);
 			break;
 		}
 	}
 }
 
-void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
+void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time, float f1)
 {	
 	if(notif_queue_length >= NOTIF_QUEUE_MAX)
 		return;
@@ -1227,13 +1228,14 @@ void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
 	
 	if(time > notif_queue_next_time) {
 		//LOG_INFOF("Running NOW!");
-		Local_Notification_Queue_Run(net_type, notif);
+		Local_Notification_Queue_Run(net_type, notif, f1);
 		notif_queue_next_time = time + queue_time;
 	} else {
 		//LOG_INFOF("Queueing: %d %d", notif_queue_length, notif_queue_next_time);
 		notif_queue_type[notif_queue_length] = net_type;
 		notif_queue_entity[notif_queue_length] = notif;
 		notif_queue_time[notif_queue_length] = notif_queue_next_time;
+		notif_queue_f1[notif_queue_length] = f1;
 		
 		notif_queue_next_time += queue_time;
 		++notif_queue_length;
@@ -1249,13 +1251,14 @@ void Local_Notification_Queue_Process()
 	
 	if(notif_queue_time[0] <= time) {
 		//LOG_INFOF("Process running: %d <= %d", notif_queue_time[0], time);
-		Local_Notification_Queue_Run(notif_queue_type[0], notif_queue_entity[0]);
+		Local_Notification_Queue_Run(notif_queue_type[0], notif_queue_entity[0], notif_queue_f1[0]);
 		
 		// Shift queue to the left
 		for (j = 0; j < notif_queue_length - 1; j++) { 
 			notif_queue_type[j] = notif_queue_type[j+1];
 			notif_queue_entity[j] = notif_queue_entity[j+1];
 			notif_queue_time[j] = notif_queue_time[j+1];
+			notif_queue_f1[j] = notif_queue_f1[j+1];
 		} 
 		
 		--notif_queue_length;
@@ -1335,7 +1338,11 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		{
 			#ifdef CSQC
 			//Local_Notification_sound(notif.nent_channel, notif.nent_snd, notif.nent_vol, notif.nent_position);
-			Local_Notification_Queue_Add(net_type, notif, 1);
+			Local_Notification_Queue_Add(
+				net_type,
+				notif,
+				1,
+				f1);
 			#else
 			backtrace("MSG_ANNCE on server?... Please notify Samual immediately!\n");
 			#endif
@@ -1449,7 +1456,11 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		#ifdef CSQC
 		case MSG_MEDAL:
 		{
-			Local_Notification_Queue_Add(net_type, notif, 3);
+			Local_Notification_Queue_Add(
+				net_type,
+				notif,
+				3,
+				f1);
 			break;
 		}
 		#endif

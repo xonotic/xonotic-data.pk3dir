@@ -402,6 +402,8 @@ const int NOTIF_QUEUE_MAX = 10;
 entity notif_queue_entity[NOTIF_QUEUE_MAX];
 MSG notif_queue_type[NOTIF_QUEUE_MAX];
 float notif_queue_time[NOTIF_QUEUE_MAX];
+float notif_queue_f1[NOTIF_QUEUE_MAX];
+
 float notif_queue_next_time;
 int notif_queue_length;
 
@@ -478,9 +480,6 @@ MACRO_END
 	SPREE_ITEM(5, 05, _("RAGE! "), _("%s^K1 unlocked RAGE! %s^BG"), _("%s^K1 made FIVE SCORES IN A ROW! %s^BG")) \
 	SPREE_ITEM(10, 10, _("MASSACRE! "), _("%s^K1 started a MASSACRE! %s^BG"), _("%s^K1 made TEN SCORES IN A ROW! %s^BG")) \
 	SPREE_ITEM(15, 15, _("MAYHEM! "), _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(20, 20, _("BERSERKER! "), _("%s^K1 is a BERSERKER! %s^BG"), _("%s^K1 made TWENTY SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(25, 25, _("CARNAGE! "), _("%s^K1 inflicts CARNAGE! %s^BG"), _("%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(30, 30, _("ARMAGEDDON! "), _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
 
 #ifdef CSQC
 string notif_arg_frag_ping(bool newline, float fping)

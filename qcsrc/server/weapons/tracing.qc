@@ -329,8 +329,9 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 	IL_CLEAR(g_railgunhit);
 
-	if(headshot)
-		Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_HEADSHOT);
+	if(headshot) {
+		Give_Medal(this, HEADSHOT);
+	}
 
 	// calculate hits and fired shots for hitscan
 	if(this.(weaponentity))
@@ -484,8 +485,9 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -damage_fraction, dtype, 0, this);
 	}
 
-	if(headshot)
-		Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_HEADSHOT);
+	if(headshot) {
+		Give_Medal(this, HEADSHOT);
+	}
 
 	if(lag)
 		antilag_restore_all(this);

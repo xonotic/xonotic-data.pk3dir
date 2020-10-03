@@ -9,8 +9,7 @@ void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
 					if(IsFlying(directhitentity)) {
-						//Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
-						Send_Notification(NOTIF_ONE, this.realowner, MSG_MEDAL, MEDAL_AIRSHOT);
+						Give_Medal(this.realowner, AIRSHOT);
 					}
 
 	this.event_damage = func_null;
@@ -36,8 +35,7 @@ void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
 					if(IsFlying(directhitentity)) {
-						//Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
-						Send_Notification(NOTIF_ONE, this.realowner, MSG_MEDAL, MEDAL_AIRSHOT);
+						Give_Medal(this.realowner, AIRSHOT);
 					}
 
 	this.event_damage = func_null;

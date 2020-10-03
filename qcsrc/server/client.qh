@@ -263,6 +263,7 @@ bool independent_players;
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
 #define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_OUT_OF_GAME))
 
+.float lastkill;
 .int killcount;
 
 //flood fields
@@ -399,6 +400,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 const int MAX_SPECTATORS = 7;
 
-#define GIVE_MEDAL(entity,medalname) \
-	Send_Notification(NOTIF_ONE, entity, MSG_ANNCE, ANNCE_ACHIEVEMENT_##medalname); \
-	Send_Notification(NOTIF_ONE, entity, MSG_MEDAL, MEDAL_##medalname);
+float _medal_times;
+#define Give_Medal(entity,medalname) \
+	_medal_times = GameRules_scoring_add(entity, MEDAL_##medalname, 1); \
+	Send_Notification(NOTIF_ONE, entity, MSG_MEDAL, MEDAL_##medalname, _medal_times);

@@ -131,11 +131,13 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, normalize(v - w_shotorg));
 	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
 
-	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, actor, MSG_MEDAL, MEDAL_YODA);
+	if(yoda && flying) {
+		Give_Medal(actor, YODA);
+	}
+		
 	if(damage_goodhits && actor.vaporizer_lasthit)
 	{
-		Send_Notification(NOTIF_ONE, actor, MSG_MEDAL, MEDAL_IMPRESSIVE);
+		Give_Medal(actor, IMPRESSIVE);
 		damage_goodhits = 0; // only every second time
 	}
 
@@ -154,8 +156,9 @@ void W_RocketMinsta_Laser_Explode (entity this, entity directhitentity)
 		if(IS_PLAYER(directhitentity))
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
-					if(IsFlying(directhitentity))
-						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
+					if(IsFlying(directhitentity)) {
+						Give_Medal(this.realowner, ELECTROBITCH);
+					}
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;

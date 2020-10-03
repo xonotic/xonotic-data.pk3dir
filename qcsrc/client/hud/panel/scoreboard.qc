@@ -49,6 +49,7 @@ float max_namesize;
 vector duel_score_fontsize;
 vector duel_name_fontsize;
 vector duel_score_size;
+int total_medals;
 
 float sbt_bg_alpha;
 float sbt_fg_alpha;
@@ -1055,6 +1056,25 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	return vec2(item_pos.x, item_pos.y + i * hud_fontsize.y * 1.25);
 }
 
+vector Scoreboard_DrawMedal(vector pos, string icon, float height, float number)
+{
+	if(!number) return pos;
+	total_medals += number;
+	
+	vector tmp_sz, tmp_sz2;
+	tmp_sz = draw_getimagesize(icon);
+	tmp_sz2 = vec2(height*(tmp_sz.x/tmp_sz.y), height);
+	string val = ftos(number);
+	
+	drawpic(pos, icon, tmp_sz2, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	
+	pos.x += tmp_sz2.x + hud_fontsize.x * 0.25;
+	drawstring(pos + eY * ((tmp_sz2.y - hud_fontsize.y) / 2), val, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	
+	pos.x += stringwidth(val, false, hud_fontsize) + hud_fontsize.x * 0.5;
+	return pos;
+}
+
 vector Scoreboard_Duel_DrawPickup(vector pos, bool skinned, string icon, vector sz, float number, bool invert)
 {
 	vector tmp_in = pos;
@@ -1082,7 +1102,7 @@ vector Scoreboard_Duel_DrawPickup(vector pos, bool skinned, string icon, vector 
 	else
 		tmp_in.x -= hud_fontsize.x * 0.25 + hud_fontsize.x;
 	tmp_in.y += (tmp_sz2.y - hud_fontsize.y) / 2;
-	drawstring(tmp_in, ftos(number), hud_fontsize, '0.5 0.5 0.5', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring(tmp_in, ftos(number), hud_fontsize, (number ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 	pos.y += sz.y * 1.1;
 	return pos;
@@ -1211,19 +1231,19 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		
 		draw_str = ftos(pl.accuracy_frags[i - WEP_FIRST]);
 		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, '0.5 0.5 0.5', panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
 		
 		draw_str = ftos(pl.accuracy_hit[i - WEP_FIRST]);
 		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, '0.5 0.5 0.5', panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 		draw_str = sprintf("%d%%", weapon_acc);
 		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * ((column_width - stringwidth(draw_str, false, hud_fontsize)) / 2),
-			draw_str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_str, hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 		draw_str = strcat(ftos(weapon_cnt_hit), " / ", ftos(weapon_cnt_fired));
 		drawstring(tmp_in + eX * column_width * (invert ? c-- : c++) + eX * (column_width / 2) - eX * stringwidth("36 /", false, hud_fontsize),
-			draw_str,hud_fontsize, '0.5 0.5 0.5', panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_str,hud_fontsize, (weapon_cnt_fired ? '1 1 1' : '0.5 0.5 0.5'), panel_fg_alpha, DRAWFLAG_NORMAL);
 	
 		// weapon icon
 		if(invert) {
@@ -1254,9 +1274,9 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		"medals", hud_fontsize, '0.5 0.5 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	tmp.y += hud_fontsize.y * 1.25;
 	
-	tmp = Scoreboard_Duel_DrawPickup(tmp, false, "gfx/medal/yoda", icon_sz, 0, invert);
-	tmp = Scoreboard_Duel_DrawPickup(tmp, false, "gfx/medal/airshot", icon_sz, 0, invert);
-	tmp = Scoreboard_Duel_DrawPickup(tmp, false, "gfx/medal/firstblood", icon_sz, 0, invert);
+	tmp = Scoreboard_Duel_DrawPickup(tmp, false, "gfx/medal/humiliation", icon_sz, pl.(scores(SP_MEDAL_HUMILIATION)), invert);
+	tmp = Scoreboard_Duel_DrawPickup(tmp, false, "gfx/medal/impressive", icon_sz, pl.(scores(SP_MEDAL_IMPRESSIVE)), invert);
+	tmp = Scoreboard_Duel_DrawPickup(tmp, false, "gfx/medal/excellent", icon_sz, pl.(scores(SP_MEDAL_EXCELLENT)), invert);
 	
 	// Item rows
 	drawstring(tmp + eX * ((column_width - stringwidth("items", false, hud_fontsize)) / 2),
@@ -1279,29 +1299,8 @@ vector Scoreboard_MakeDuelTable(vector pos, entity tm, vector rgb, vector bg_siz
 	float screen_half = panel_size.x / 2;
 	float weapon_margin = hud_fontsize.x;
 	
-	// Get weapon count
-	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
-	int disownedcnt = 0;
-	int nHidden = 0;
-	FOREACH(Weapons, it != WEP_Null, {
-		WepSet set = it.m_wepset;
-		if(it.spawnflags & WEP_TYPE_OTHER)
-		{
-			++nHidden;
-			continue;
-		}
-		if (!(weapons_inmap & set))
-		{
-			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
-				++nHidden;
-			else
-				++disownedcnt;
-		}
-	});
-
-	int weapon_cnt = (REGISTRY_COUNT(Weapons) - 1) - disownedcnt - nHidden;
 	panel_size.x = screen_half - weapon_margin;
-	panel_size.y = (duel_score_size.y * 3) + (hud_fontsize.y * 1.25 * weapon_cnt);
+	panel_size.y = (duel_score_size.y * 5.5);
 	
 	entity pl_left = players.sort_next;
 	entity pl_right = pl_left.sort_next;
@@ -1427,6 +1426,41 @@ bool Scoreboard_WouldDraw()
 	else if (scoreboard_showscores_force)
 		return true;
 	return false;
+}
+
+vector Scoreboard_MedalStats_Draw(vector pos)
+{
+	vector orig = pos;
+	float height = hud_fontsize.y * 2;
+	
+	entity pl = playerslots[current_player];
+	
+	vector title_pos = pos;
+	pos.x += 0.5 * hud_fontsize.x + panel_bg_padding;
+	pos.y += 1.25 * hud_fontsize.y;
+	
+	total_medals = 0;
+	
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/airshot", 		height, pl.(scores(SP_MEDAL_AIRSHOT)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/assist", 		height, pl.(scores(SP_MEDAL_ASSIST)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/damage", 		height, pl.(scores(SP_MEDAL_DAMAGE)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/defense", 		height, pl.(scores(SP_MEDAL_DEFENSE)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/electrobitch", 	height, pl.(scores(SP_MEDAL_ELECTROBITCH)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/excellent", 		height, pl.(scores(SP_MEDAL_EXCELLENT)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/firstblood", 	height, pl.(scores(SP_MEDAL_FIRSTBLOOD)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/headshot", 		height, pl.(scores(SP_MEDAL_HEADSHOT)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/humiliation",	height, pl.(scores(SP_MEDAL_HUMILIATION)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/impressive",		height, pl.(scores(SP_MEDAL_IMPRESSIVE)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/yoda", 			height, pl.(scores(SP_MEDAL_YODA)));
+	
+	if(!total_medals) return orig;
+	
+	drawstring(title_pos, sprintf(_("Medal stats (total %d)"), total_medals),
+		hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	
+	pos.x = orig.x;
+	pos.y += height + hud_fontsize.y * 0.5;
+	return pos;
 }
 
 float average_accuracy;
@@ -2114,6 +2148,8 @@ void Scoreboard_Draw()
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
 
+	pos = Scoreboard_MedalStats_Draw(pos);
+	
 	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
 		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 

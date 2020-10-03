@@ -45,7 +45,7 @@ bool centerprint_showing;
 
 float centerprint_medal_expire_time;
 string centerprint_medal_icon;
-int centerprint_medal_times;
+float centerprint_medal_times;
 
 bool centerprint_title_show;
 string centerprint_title;
@@ -65,7 +65,7 @@ void centerprint_SetTitle(string title)
 	}
 }
 
-void centerprint_Medal(string icon, int times)
+void centerprint_Medal(string icon, float times)
 {
 	LOG_INFOF("centerprint_Medal: icon: %s times: %d", icon, times);
 	
@@ -274,19 +274,32 @@ void HUD_CenterPrint()
 	pos.y -= height;
 	
 	// z411 draw medals first
-	if (centerprint_medal_expire_time > time) {
-		//if(centerprint_medal_expire_time - time > 1)
-		//	a = 1;
-		//else
-		//	a = min(1, 1 - ((centerprint_medal_expire_time - time + 2) * (1/3)));
+	if (time < centerprint_medal_expire_time) {
+		if(time < centerprint_medal_expire_time - 1)
+			a = 1;
+		else
+			a = centerprint_medal_expire_time - time;
+		
+		vector tmp_in = pos;
 			
 		mysize = draw_getimagesize(centerprint_medal_icon);
 		newsize = vec2(height*(mysize.x/mysize.y), height);
+		fontsize = '1 1 0' * (newsize.y/2);
 		
-		//fontsize = '1 1 0' * vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
-		//drawcolorcodedstring(pos + eY * 0.5 * (1 - sz * hud_scale.x) * fontsize.y, ts, fontsize, 1, DRAWFLAG_NORMAL);
-		//drawstring(pos, centerprint_medal_icon, fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-		drawpic(pos + eX * 0.5 * panel_size.x - eX * (newsize.x / 2), centerprint_medal_icon, newsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+		tmp_in.x += (panel_size.x - newsize.x) / 2; // center medal icon
+		
+		if(centerprint_medal_times <= 5) {
+			tmp_in.x -= ((newsize.x * 1.1) * (centerprint_medal_times - 1) / 2);
+			for(int t = 0; t < centerprint_medal_times; t++) {
+				drawpic(tmp_in, centerprint_medal_icon, newsize, '1 1 1', a, DRAWFLAG_NORMAL);
+				tmp_in.x += newsize.x * 1.1;
+			}
+		} else {
+			drawpic(tmp_in, centerprint_medal_icon, newsize, '1 1 1', a, DRAWFLAG_NORMAL);
+			tmp_in.x += newsize.x + fontsize.x * 0.25; // draw times next to it
+			tmp_in.y += (newsize.y - fontsize.y) / 2;
+			drawstring(tmp_in, ftos(centerprint_medal_times), fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
+		}
 		
 		all_messages_expired = false;
 	}

@@ -622,7 +622,7 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 				playerslots[entnum-1].accuracy_cnt_hit[w] = ReadShort();
 				playerslots[entnum-1].accuracy_cnt_fired[w] = ReadShort();
 				
-				LOG_INFOF("Duel stats ?/%d", playerslots[entnum-1].accuracy_cnt_fired[w]);
+				//LOG_INFOF("Duel stats ?/%d", playerslots[entnum-1].accuracy_cnt_fired[w]);
 			} else {
 				int b = ReadByte();
 				if (b == 0)

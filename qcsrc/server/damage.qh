@@ -63,6 +63,7 @@ float damage_gooddamage;
 .float spawnshieldtime;
 
 .int totalfrags;
+.float lastkill;
 
 .bool canteamdamage;
 

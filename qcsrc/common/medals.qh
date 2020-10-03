@@ -1,0 +1,33 @@
+#pragma once
+
+#include <common/command/_mod.qh>
+
+#include <common/notifications/all.qh>
+
+REGISTRY(Medals, 32)
+REGISTER_REGISTRY(Medals)
+#define REGISTER_MEDAL(id, class) REGISTER(Medals, MEDAL, id, m_id, NEW(class))
+
+REGISTRY_SORT(Medals)
+REGISTRY_CHECK(Medals)
+
+REGISTRY_DEFINE_GET(Medals, NULL)
+STATIC_INIT(Medals) { FOREACH(Medals, true, it.m_id = i); }
+
+CLASS(Medal, Object)
+ENDCLASS(Medal)
+
+REGISTER_MEDAL(Airshot, Medal) {
+    this.netname                =   "airshot";
+    this.m_name                 =   _("Airshot");
+    this.m_icon                 =   "airshot";
+	this.m_annce					=   ANNCE_ACHIEVEMENT_IMPRESSIVE;
+}
+
+REGISTER_MEDAL(Impressive, Medal) {
+    this.netname                =   "impressive";
+    this.m_name                 =   _("Impressive");
+    this.m_icon                 =   "impressive";
+	//this.m_annce					=   ANNCE_ACHIEVEMENT_IMPRESSIVE;
+}
+

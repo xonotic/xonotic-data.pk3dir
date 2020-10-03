@@ -334,7 +334,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			// these 2 macros are spread over multiple files
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
-					Send_Notification(NOTIF_ONE, attacker, MSG_MEDAL, MEDAL_KILLSTREAK_##countb); \
+					Give_Medal(attacker, KILLSTREAK_##countb); \
 					if (!warmup_stage) \
 						PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break;
@@ -350,7 +350,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			{
 				checkrules_firstblood = true;
 				notif_firstblood = true; // modify the current messages so that they too show firstblood information
-				Send_Notification(NOTIF_ONE, attacker, MSG_MEDAL, MEDAL_FIRSTBLOOD);
+				Give_Medal(attacker, FIRSTBLOOD);
 				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
@@ -363,6 +363,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				kill_count_to_attacker = CS(attacker).killcount;
 				kill_count_to_target = 0;
 			}
+			
+			// Excellent check
+			if(attacker.lastkill && attacker.lastkill > time - 2) {
+				Give_Medal(attacker, EXCELLENT);
+			}
+			attacker.lastkill = time;
 
 			if(targ.istypefrag)
 			{
