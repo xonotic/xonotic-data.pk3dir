@@ -62,6 +62,22 @@ int CA_GetWinnerTeam()
 
 void nades_Clear(entity player);
 
+entity ca_LastPlayer(float tm)
+{
+	entity last_pl = NULL;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.team == tm, {
+		if (!IS_DEAD(it))
+		{
+			if (!last_pl)
+				last_pl = it;
+			else
+				return NULL;
+		}
+	});
+	return last_pl;
+}
+
+
 float CA_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -87,6 +103,11 @@ float CA_CheckWinner()
 	int winner_team = CA_GetWinnerTeam();
 	if(winner_team > 0)
 	{
+		entity last_pl = ca_LastPlayer(winner_team);
+		if(last_pl) {
+			Give_Medal(last_pl, DEFENSE);
+		}
+		
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(winner_team, ANNCE_ROUND_TEAM_WIN));

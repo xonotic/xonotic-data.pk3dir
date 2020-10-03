@@ -1442,9 +1442,7 @@ vector Scoreboard_MedalStats_Draw(vector pos)
 	total_medals = 0;
 	
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/airshot", 		height, pl.(scores(SP_MEDAL_AIRSHOT)));
-	pos = Scoreboard_DrawMedal(pos, "gfx/medal/assist", 		height, pl.(scores(SP_MEDAL_ASSIST)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/damage", 		height, pl.(scores(SP_MEDAL_DAMAGE)));
-	pos = Scoreboard_DrawMedal(pos, "gfx/medal/defense", 		height, pl.(scores(SP_MEDAL_DEFENSE)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/electrobitch", 	height, pl.(scores(SP_MEDAL_ELECTROBITCH)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/excellent", 		height, pl.(scores(SP_MEDAL_EXCELLENT)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/firstblood", 	height, pl.(scores(SP_MEDAL_FIRSTBLOOD)));
@@ -1452,6 +1450,11 @@ vector Scoreboard_MedalStats_Draw(vector pos)
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/humiliation",	height, pl.(scores(SP_MEDAL_HUMILIATION)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/impressive",		height, pl.(scores(SP_MEDAL_IMPRESSIVE)));
 	pos = Scoreboard_DrawMedal(pos, "gfx/medal/yoda", 			height, pl.(scores(SP_MEDAL_YODA)));
+	
+	pos.x += hud_fontsize.x * 2;
+	
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/assist", 		height, pl.(scores(SP_MEDAL_ASSIST)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/defense", 		height, pl.(scores(SP_MEDAL_DEFENSE)));
 	
 	if(!total_medals) return orig;
 	

@@ -635,8 +635,6 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 		}
 		f = (f == 0x800000) ? 1 : f * 2;
 	}
-
-	LOG_INFOF("Accuracy stats Client %d", entnum);
 	
 	return true;
 }
