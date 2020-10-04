@@ -131,7 +131,21 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		}
 		if (team_count)
 			score_color = Team_ColorRGB(pl.team) * 0.8;
+		
+		entity entcs = entcs_receiver(pl.sv_entnum);
 		s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
+		
+		if(entcs.m_entcs_private) {
+			// z411 draw health/armor barº
+			vector bar_sz = vec2(mySize.x * 0.5, fontsize.y);
+			HUD_Panel_DrawProgressBar(pos, bar_sz, "nametag_statusbar",
+				entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', panel_fg_alpha * 0.5,
+				DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(pos + eX * bar_sz.x, bar_sz, "nametag_statusbar",
+				GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', panel_fg_alpha * 0.5,
+				DRAWFLAG_NORMAL);
+		}
+		
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;

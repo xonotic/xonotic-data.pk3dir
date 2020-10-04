@@ -47,8 +47,7 @@ REGISTER_MUTATOR(ca, false)
 
 		allowed_to_spawn = true;
 		round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
-		if(!warmup_stage)
-			round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		EliminatedPlayers_Init(ca_isEliminated);
 	}
 	return 0;

@@ -38,6 +38,7 @@ void HUD_Timer()
 	}
 
 	string timer;
+	string timer_sub = "";
 	float timelimit, timeleft, minutesLeft, overtimes;
 
 	timelimit = STAT(TIMELIMIT);
@@ -69,29 +70,43 @@ void HUD_Timer()
 
 	if (intermission_time) {
 		timer = seconds_tostring(max(0, floor(intermission_time - STAT(GAMESTARTTIME))));
-	} else if (warmup_stage) {
-		timer = _("WARMUP");
-	} else if (autocvar_hud_panel_timer_increment) {
-		if (time < STAT(GAMESTARTTIME))
-			timer = seconds_tostring(0); //while restart is still active, show 00:00
+		timer_sub = "Intermission";
+	//} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
+	} else if (autocvar_hud_panel_timer_increment || timelimit == 0) {
+		if((warmup_stage && warmup_timeleft <= 0) || time < STAT(GAMESTARTTIME))
+			timer = seconds_tostring(0);
 		else
 			timer = seconds_tostring(floor(time - STAT(GAMESTARTTIME)));
 	} else {
-		if (time < STAT(GAMESTARTTIME))
-			timer = seconds_tostring(floor(timelimit * 60));
-		else if (overtimes > 0)
-			timer = seconds_tostring(floor(time - STAT(OVERTIMESTARTTIME)));
-		else
-			timer = seconds_tostring(timeleft);
+		if(warmup_stage) {
+			if(warmup_timeleft <= 0)
+				timer = seconds_tostring(floor(timelimit * 60));
+			else
+				timer = seconds_tostring(warmup_timeleft);
+		} else {
+			if (time < STAT(GAMESTARTTIME))
+				timer = seconds_tostring(floor(timelimit * 60));
+			else if (overtimes > 0)
+				timer = seconds_tostring(floor(time - STAT(OVERTIMESTARTTIME)));
+			else
+				timer = seconds_tostring(timeleft);
+		}
 	}
 	
-	if(overtimes == 1) {
-		timer = sprintf("%s (OT)", timer);
-	} else if (overtimes > 1) {
-		timer = sprintf("%s (OT #%d)", timer, overtimes);
-	}
+	if(warmup_stage)
+		timer_sub = "Warmup";
+	else if(overtimes == 1)
+		timer_sub = "Overtime";
+	else if (overtimes > 1)
+		timer_sub = sprintf("Overtime #%d", overtimes);
 	
 	drawstring_aspect(pos, timer, mySize, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	
+	if(timer_sub != "") {
+		pos.y += mySize.y;
+		mySize.y = mySize.y / 2;
+		drawstring_aspect(pos, timer_sub, mySize, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
 	draw_endBoldFont();
 }
