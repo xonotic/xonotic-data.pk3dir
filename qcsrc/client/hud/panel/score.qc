@@ -121,7 +121,22 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 				rgb = '1 0 0'; //last: red
 			pl = me;
 		}
-
+	
+		if (team_count)
+			score_color = Team_ColorRGB(pl.team) * 0.8;
+		
+		entity entcs = entcs_receiver(pl.sv_entnum);
+		if(entcs.m_entcs_private) {
+			// z411 draw health/armor bar
+			vector bar_sz = vec2(mySize.x, fontsize.y);
+			
+			bar_sz.x *= entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth;
+			drawfill(pos, bar_sz, ((team_count) ? score_color : '0.8 0.8 0'), 0.5, DRAWFLAG_NORMAL);
+			
+			bar_sz.x *= GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor;
+			drawfill(pos + eY * (bar_sz.y * 0.7), bar_sz - eY * (bar_sz.y * 0.7), ((team_count) ? score_color : '0 0.8 0.8'), 1, DRAWFLAG_NORMAL);
+		}
+		
 		if (pl == me)
 		{
 			if (i == first_pl)
@@ -129,23 +144,8 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			me_printed = true;
 			drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
-		if (team_count)
-			score_color = Team_ColorRGB(pl.team) * 0.8;
 		
-		entity entcs = entcs_receiver(pl.sv_entnum);
 		s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
-		
-		if(entcs.m_entcs_private) {
-			// z411 draw health/armor barº
-			vector bar_sz = vec2(mySize.x * 0.5, fontsize.y);
-			HUD_Panel_DrawProgressBar(pos, bar_sz, "nametag_statusbar",
-				entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', panel_fg_alpha * 0.5,
-				DRAWFLAG_NORMAL);
-			HUD_Panel_DrawProgressBar(pos + eX * bar_sz.x, bar_sz, "nametag_statusbar",
-				GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', panel_fg_alpha * 0.5,
-				DRAWFLAG_NORMAL);
-		}
-		
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;
