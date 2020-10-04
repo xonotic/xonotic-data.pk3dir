@@ -169,6 +169,7 @@ void Obituary_SpecialDeath(
 
 float Obituary_WeaponDeath(
 	entity notif_target,
+	entity attacker,
 	float murder,
 	int deathtype,
 	string s1, string s2, string s3,
@@ -201,6 +202,20 @@ float Obituary_WeaponDeath(
 			s1, s2, s3, "",
 			f1, f2, 0, 0
 		);
+		
+		// z411 special medals
+		if(attacker) {
+			switch(death_message) {
+				case WEAPON_SHOTGUN_MURDER_SLAP:
+					if(!autocvar_g_melee_only) { // don't spam humiliation if we're in melee_only mode
+						Give_Medal(attacker, HUMILIATION);
+					}
+					break;
+				case WEAPON_ELECTRO_MURDER_COMBO:
+					Give_Medal(attacker, ELECTROBITCH);
+					break;
+			}
+		}
 	}
 	else
 	{
@@ -290,7 +305,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				}
 			}
 		}
-		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0))
+		else if (!Obituary_WeaponDeath(targ, NULL, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
@@ -421,7 +436,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(STAT(BUFFS, attacker)).m_id;
 
-			if (!Obituary_WeaponDeath(targ, true, deathtype, playername(targ, true), playername(attacker, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
+			if (!Obituary_WeaponDeath(targ, attacker, true, deathtype, playername(targ, true), playername(attacker, true), deathlocation, CS(targ).killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, true, deathtype, playername(targ, true), playername(attacker, true), deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}

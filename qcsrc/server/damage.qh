@@ -96,6 +96,7 @@ void Obituary_SpecialDeath(
 float w_deathtype;
 float Obituary_WeaponDeath(
 	entity notif_target,
+	entity target,
 	float murder,
 	int deathtype,
 	string s1, string s2, string s3,

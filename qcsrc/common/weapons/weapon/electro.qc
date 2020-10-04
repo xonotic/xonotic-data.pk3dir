@@ -74,14 +74,15 @@ void W_Electro_ExplodeCombo(entity this)
 
 void W_Electro_Explode(entity this, entity directhitentity)
 {
-	if(directhitentity.takedamage == DAMAGE_AIM)
+	/*if(directhitentity.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(directhitentity))
 			if(DIFF_TEAM(this.realowner, directhitentity))
 				if(!IS_DEAD(directhitentity))
 					if(IsFlying(directhitentity)) {
 						Give_Medal(this.realowner, ELECTROBITCH);
 					}
-
+	*/
+	
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
