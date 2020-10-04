@@ -207,7 +207,7 @@ float Obituary_WeaponDeath(
 		if(attacker) {
 			switch(death_message) {
 				case WEAPON_SHOTGUN_MURDER_SLAP:
-					if(!autocvar_g_melee_only) { // don't spam humiliation if we're in melee_only mode
+					if(!cvar("g_melee_only")) { // don't spam humiliation if we're in melee_only mode
 						Give_Medal(attacker, HUMILIATION);
 					}
 					break;
