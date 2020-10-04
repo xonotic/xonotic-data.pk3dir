@@ -105,6 +105,7 @@ void W_Shotgun_Melee_Think(entity this)
 
 			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
+			sound(target_victim, CH_SHOTS, SND_SHOTGUN_MELEE_IMPACT, VOL_BASE, ATTEN_NORM);
 			Damage(target_victim, this.realowner, this.realowner,
 				swing_damage, WEP_SHOTGUN.m_id | HITTYPE_SECONDARY, this.weaponentity_fld,
 				this.realowner.origin + this.realowner.view_ofs,

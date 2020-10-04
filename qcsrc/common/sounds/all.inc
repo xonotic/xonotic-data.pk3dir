@@ -96,6 +96,7 @@ SOUND(SEEKEREXP3, W_Sound("seekerexp3"));
 SOUND(SEEKER_FIRE, W_Sound("seeker_fire"));
 SOUND(SHOTGUN_FIRE, W_Sound("shotgun_fire"));
 SOUND(SHOTGUN_MELEE, W_Sound("shotgun_melee"));
+SOUND(SHOTGUN_MELEE_IMPACT, W_Sound("shotgun_melee_impact"));
 SOUND(STRENGTH_FIRE, W_Sound("strength_fire"));
 SOUND(TAGEXP1, W_Sound("tagexp1"));
 SOUND(TAGEXP2, W_Sound("tagexp2"));
