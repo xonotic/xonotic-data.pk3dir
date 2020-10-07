@@ -6,8 +6,6 @@ REGISTRY(Monsters, BITS(5))
 #define get_monsterinfo(i) REGISTRY_GET(Monsters, i)
 REGISTER_REGISTRY(Monsters)
 REGISTRY_CHECK(Monsters)
-const int MON_FIRST = 1;
-#define MON_LAST (REGISTRY_COUNT(Monsters) - 1)
 #define REGISTER_MONSTER(id, inst) REGISTER(Monsters, MON, id, monsterid, inst)
 
 #include "monster.qh"

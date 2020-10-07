@@ -1,5 +1,11 @@
 #include "sv_keyhunt.qh"
 
+#include <server/command/vote.qh>
+#include <server/gamelog.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <common/mapobjects/triggers.qh>
+
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
 float autocvar_g_balance_keyhunt_delay_damage_return;

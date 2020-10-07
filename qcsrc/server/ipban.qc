@@ -1,10 +1,10 @@
 #include "ipban.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include "autocvars.qh"
+#include <server/main.qh>
 #include "command/banning.qh"
-#include "defs.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
 

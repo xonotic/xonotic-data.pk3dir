@@ -1,19 +1,21 @@
 #include "navigation.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <server/bot/api.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include "cvars.qh"
 
 #include "bot.qh"
 #include "waypoints.qh"
 
-#include <common/t_items.qh>
+#include <server/items/items.qh>
 
 #include <common/items/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/mapobjects/func/ladder.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 
 .float speed;
@@ -1459,8 +1461,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		this.wp_goal_prev0 = e;
 	}
 
-	if(g_jetpack)
-	if(e==this.navigation_jetpack_goal)
+	if((this.items & IT_JETPACK) && e == this.navigation_jetpack_goal)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
@@ -1756,7 +1757,7 @@ int navigation_poptouchedgoals(entity this)
 			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
 			gc_max = this.goalcurrent.origin + '1 1 1' * 12 + eZ * (jumpheight_vec.z + STAT(PL_MIN, this).z);
 		}
-		if (time < this.ladder_time)
+		if (this.ladder_entity)
 		{
 			if (!boxesoverlap(this.absmin, this.absmax - eZ * STAT(PL_MAX, this).z, gc_min, gc_max))
 				break;

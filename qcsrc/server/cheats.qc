@@ -1,11 +1,13 @@
 #include "cheats.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 #include <common/effects/all.qh>
 #include <server/resources.qh>
+#include <server/main.qh>
+#include <server/world.qh>
 
-#include "g_damage.qh"
+#include "damage.qh"
 #include "clientkill.qh"
 #include "player.qh"
 #include "race.qh"
@@ -22,6 +24,8 @@
 #include <common/physics/player.qh>
 
 #include "../common/monsters/_mod.qh"
+
+#include <common/items/_mod.qh>
 
 #include <common/weapons/_all.qh>
 
@@ -68,7 +72,7 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 		return 0;
 
 	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
-		if(this.lip < sv_clones)
+		if(this.lip < autocvar_sv_clones)
 			return 1;
 
 	// haha
@@ -80,13 +84,13 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this, false), i);
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this.netname, this.team, false), i);
 	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this, false), argv(0));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this.netname, this.team, false), argv(0));
 	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this, false), fr);
+		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this.netname, this.team, false), fr);
 	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this, false));
+		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this.netname, this.team, false));
 
 	return 0;
 }

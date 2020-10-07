@@ -1,5 +1,7 @@
 #include "cl_ctf.qh"
 
+#include <common/mutators/base.qh>
+#include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
 
 // CTF HUD modicon section
@@ -186,4 +188,17 @@ void HUD_Mod_CTF(vector pos, vector mySize)
     X(pink);
     X(neutral);
     #undef X
+}
+
+bool autocvar_hud_panel_scoreboard_ctf_leaderboard = true;
+
+REGISTER_MUTATOR(cl_ctf, true);
+
+MUTATOR_HOOKFUNCTION(cl_ctf, ShowRankings)
+{
+    if(autocvar_hud_panel_scoreboard_ctf_leaderboard && ISGAMETYPE(CTF) && STAT(CTF_SHOWLEADERBOARD))
+    {
+        M_ARGV(0, string) = _("Capture time rankings");
+        return true;
+    }
 }

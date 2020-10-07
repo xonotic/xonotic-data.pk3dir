@@ -1,5 +1,6 @@
 #include "cl_keepaway.qh"
 
+#include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
 
 // Keepaway HUD mod icon

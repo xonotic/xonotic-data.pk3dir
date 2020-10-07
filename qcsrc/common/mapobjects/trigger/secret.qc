@@ -3,17 +3,11 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/util.qh>
-    #include <server/defs.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
 #endif
 
 #ifdef SVQC
-
-void secrets_setstatus(entity this)
-{
-	// TODO: use global stats!
-	STAT(SECRETS_TOTAL, this) = secrets_total;
-	STAT(SECRETS_FOUND, this) = secrets_found;
-}
 
 /**
  * A secret has been found (maybe :P)
@@ -24,21 +18,26 @@ void trigger_secret_touch(entity this, entity toucher)
 	if (!IS_PLAYER(toucher))
 		return;
 
+	EXACTTRIGGER_TOUCH(this, toucher);
+
 	// update secrets found counter
 	secrets_found += 1;
-	//print("Secret found: ", ftos(secret_counter.cnt), "/");
-	//print(ftos(secret_counter.count), "\n");
 
-	// centerprint message (multi_touch() doesn't always call centerprint())
-	centerprint(toucher, this.message);
-	this.message = "";
+	// message and noise handled by SUB_UseTargets
+	SUB_UseTargets(this, toucher, toucher);
 
-	// handle normal trigger features
-	multi_touch(this, toucher);
 	// we can't just delete(this) here, because this is a touch function
 	// called while C code is looping through area links...
-	//delete(this);
+	settouch(this, func_null);
 }
+
+#if 0
+void trigger_secret_reset(entity this)
+{
+	secrets_found = 0;
+	settouch(this, trigger_secret_touch);
+}
+#endif
 
 /*QUAKED trigger_secret (.5 .5 .5) ?
 Variable sized secret trigger. Can be targeted at one or more entities.
@@ -61,30 +60,32 @@ spawnfunc(trigger_secret)
 	secrets_total += 1;
 
 	// add default message
-	if (this.message == "")
+	if (!this.message || this.message == "")
 		this.message = "You found a secret!";
 
 	// set default sound
-	if (this.noise == "")
-	if (!this.sounds)
+	if ((!this.noise || this.noise == "") && !this.sounds)
 		this.sounds = 1; // misc/secret.wav
 
-	// this entity can't be a target itself!!!!
-	this.targetname = "";
+	switch(this.sounds)
+	{
+		case 1: this.noise = "misc/secret.wav"; break;
+		case 2: this.noise = strzone(SND(TALK)); break;
+		case 3: this.noise = "misc/trigger1.wav"; break;
+	}
 
-	// you can't just shoot a room to find it, can you?
-	SetResourceExplicit(this, RES_HEALTH, 0);
+	if(this.noise && this.noise != "")
+		precache_sound(this.noise);
 
-	// a secret can not be delayed
+	// a secret cannot be delayed
 	this.delay = 0;
 
-	// convert this trigger to trigger_once
-	//this.classname = "trigger_once";
-	spawnfunc_trigger_once(this);
+	EXACTTRIGGER_INIT;
 
-	// take over the touch() function, so we can mark secret as found
 	settouch(this, trigger_secret_touch);
-	// ignore triggering;
-	this.use = func_null;
+// NOTE: old maps don't expect secrets to reset, so enabling resetting can cause issues!
+#if 0
+	this.reset = trigger_secret_reset;
+#endif
 }
 #endif

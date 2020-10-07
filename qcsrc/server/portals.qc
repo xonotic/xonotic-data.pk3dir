@@ -1,12 +1,15 @@
 #include "portals.qh"
 
 #include <common/effects/all.qh>
-#include "g_hook.qh"
+#include "hook.qh"
 #include "mutators/_mod.qh"
+#include <server/client.qh>
+#include <server/weapons/common.qh>
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
 #include "../common/mapobjects/teleporters.qh"
+#include <common/mapobjects/triggers.qh>
 #include "../common/mapobjects/subs.qh"
 #include "../common/util.qh"
 #include <common/weapons/_all.qh>
@@ -16,7 +19,9 @@
 #include "../lib/warpzone/common.qh"
 #include "../common/vehicles/vehicle.qh"
 #include "../common/vehicles/sv_vehicles.qh"
+#include <common/weapons/weapon/porto.qh>
 #include <server/player.qh>
+#include <server/damage.qh>
 
 #define PORTALS_ARE_NOT_SOLID
 

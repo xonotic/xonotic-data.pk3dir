@@ -2,10 +2,11 @@
 
 #include "weaponsystem.qh"
 #include "../resources.qh"
-#include "../items.qh"
+#include <server/items/spawning.qh>
 #include <server/mutators/_mod.qh>
-#include <common/t_items.qh>
-#include "../g_damage.qh"
+#include <server/items/items.qh>
+#include "../damage.qh"
+#include <server/world.qh>
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
 #include <common/notifications/all.qh>

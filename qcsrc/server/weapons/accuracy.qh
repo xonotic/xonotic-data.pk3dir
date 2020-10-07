@@ -1,7 +1,7 @@
 #pragma once
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
 
 .bool cvar_cl_accuracy_data_share;
 REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
