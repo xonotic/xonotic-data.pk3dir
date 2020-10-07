@@ -114,6 +114,7 @@ bool freezetag_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			it.freezetag_frozen_timeout = 0;
+			it.freezetag_revive_time = 0;
 			nades_Clear(it);
 		});
 		game_stopped = true;
@@ -141,6 +142,7 @@ bool freezetag_CheckWinner()
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.freezetag_frozen_timeout = 0;
+		it.freezetag_revive_time = 0;
 		nades_Clear(it);
 	});
 
@@ -179,7 +181,7 @@ void freezetag_Add_Score(entity targ, entity attacker)
 {
 	if(attacker == targ)
 	{
-		// you froze your own dumb targ
+		// you froze your own dumb self
 		// counted as "suicide" already
 		GameRules_scoring_add(targ, SCORE, -1);
 	}
@@ -438,6 +440,7 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		CS(it).killcount = 0;
+		it.freezetag_revive_time = 0;
 		it.freezetag_frozen_timeout = -1;
 		PutClientInServer(it);
 		it.freezetag_frozen_timeout = 0;
@@ -515,6 +518,15 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	int n = 0;
 	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 	FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+		if (autocvar_g_freezetag_revive_time_to_score > 0 && STAT(FROZEN, player) == FROZEN_NORMAL)
+		{
+			it.freezetag_revive_time += frametime / autocvar_g_freezetag_revive_time_to_score;
+			while (it.freezetag_revive_time > 1)
+			{
+				GameRules_scoring_add(it, SCORE, +1);
+				it.freezetag_revive_time -= 1;
+			}
+		}
 		if (reviving_players_last)
 			reviving_players_last.chain = it;
 		reviving_players_last = it;
@@ -540,8 +552,11 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 	if (!n) // no teammate nearby
 	{
+		float clearspeed = autocvar_g_freezetag_revive_clearspeed;
+		if (autocvar_g_freezetag_revive_time_to_score > 0)
+			clearspeed = 0; // prevent stacking points by entering and exiting the revival zone many times
 		if (STAT(FROZEN, player) == FROZEN_NORMAL)
-			STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed * (1 - base_progress), 1);
+			STAT(REVIVE_PROGRESS, player) = bound(base_progress, STAT(REVIVE_PROGRESS, player) - frametime * clearspeed * (1 - base_progress), 1);
 		else if (!STAT(FROZEN, player))
 			STAT(REVIVE_PROGRESS, player) = base_progress; // thawing nobody
 	}
