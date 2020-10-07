@@ -134,17 +134,13 @@ void W_Arc_Bolt_Touch(entity this, entity toucher)
 	}
 }
 
-void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
+void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	entity missile;
-
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(arc, bolt_ammo), weaponentity);
-
 	W_SetupShot(actor, weaponentity, false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage), thiswep.m_id | HITTYPE_SECONDARY);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-	missile = new(missile);
+	entity missile = new(missile);
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 	IL_PUSH(g_bot_dodge, missile);
@@ -179,6 +175,17 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	CSQCProjectile(missile, true, PROJECTILE_ARC_BOLT, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+
+	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	if(actor.(weaponentity).misc_bulletcounter == 0)
+	{
+		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(arc, bolt_refire2) * W_WeaponRateFactor(actor);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);
+	}
+	else
+	{
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), W_Arc_Attack_Bolt);
+	}
 }
 
 void W_Arc_Beam_Think(entity this)
@@ -671,10 +678,28 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     }
     else if(fire & 2)
     {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(arc, bolt_refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
-            W_Arc_Attack_Bolt(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);
+        	if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
+            if(!(actor.items & IT_UNLIMITED_AMMO))
+            {
+                W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
+                w_ready(thiswep, actor, weaponentity, fire);
+                return;
+            }
+            float ammo_available = GetResource(actor, thiswep.ammo_type);
+            // We don't want to shoot 3 rounds if there's 2 left in the mag, so we'll use a fraction.
+            // Also keep the fraction <= 1 otherwise we'd mag dump in one burst.
+            float burst_fraction = min(1, ammo_available / WEP_CVAR(arc, bolt_ammo));
+            int to_shoot = floor(WEP_CVAR(arc, bolt_count) * burst_fraction);
+
+            // We also don't want to use 3 rounds if there's only 2 left.
+            int to_use = min(WEP_CVAR(arc, bolt_ammo), ammo_available);
+            W_DecreaseAmmo(thiswep, actor, to_use, weaponentity);
+
+            // Bursting counts up to 0 from a negative.
+            actor.(weaponentity).misc_bulletcounter = -to_shoot;
+            W_Arc_Attack_Bolt(thiswep, actor, weaponentity, fire);
         }
     }
 
