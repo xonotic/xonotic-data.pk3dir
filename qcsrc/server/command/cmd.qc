@@ -647,10 +647,13 @@ void ClientCommand_spectate(entity caller, int request)
 						int spec_accepted = VerifyClientEntity(client, false, false);
 						if(spec_accepted > 0 && IS_PLAYER(client))
 						{
+							bool caller_is_observer = (IS_OBSERVER(caller));
 							Spectate(caller, client);
+							if (caller_is_observer)
+								TRANSMUTE(Spectator, caller);
 						}
 						else
-							sprint(caller, "can't spectate ", argv(1), "^7\n");
+							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
 					else
 						sprint(caller, "cmd spectate client only works when you are spectator/observer\n");
