@@ -118,7 +118,20 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 void W_Arc_Bolt_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	this.use(this, NULL, toucher);
+	if(this.cnt > WEP_CVAR(arc, bolt_bounce_count) || !WEP_CVAR(arc, bolt_bounce_count) || toucher.takedamage == DAMAGE_AIM) {
+		this.use(this, NULL, toucher);
+	} else {
+		if(!this.cnt && WEP_CVAR(arc, bolt_bounce_lifetime))
+			this.nextthink = min(this.nextthink, time + WEP_CVAR(arc, bolt_bounce_lifetime));
+		this.cnt++;
+		Send_Effect(EFFECT_BALL_SPARKS, this.origin, this.velocity, 1);
+		this.angles = vectoangles(this.velocity);
+		this.owner = NULL;
+		// initial blast doesn't count as bounce damage!
+		if(WEP_CVAR(arc, bolt_bounce_damage))
+			RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, toucher);
+		this.projectiledeathtype |= HITTYPE_BOUNCE;
+	}
 }
 
 void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
@@ -127,7 +140,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(arc, bolt_ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage), WEP_ARC.m_id | HITTYPE_SECONDARY);
+	W_SetupShot(actor, weaponentity, false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage), thiswep.m_id | HITTYPE_SECONDARY);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
@@ -145,20 +158,22 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	IL_PUSH(g_damagedbycontents, missile);
 
 	settouch(missile, W_Arc_Bolt_Touch);
+	missile.cnt = 0;
 	missile.use = W_Arc_Bolt_Explode_use;
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_ARC.m_id | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	set_movetype(missile, MOVETYPE_FLY);
+	set_movetype(missile, MOVETYPE_BOUNCEMISSILE);
 	W_SetupProjVelocity_PRE(missile, arc, bolt_);
 
 	missile.angles = vectoangles(missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, true, PROJECTILE_ARC_BOLT, true);
@@ -761,8 +776,8 @@ METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
     {
         vector org2;
         org2 = w_org + w_backoff * 6;
-        pointparticles(EFFECT_ARC_BOLT_EXPLODE, org2, w_backoff * 1000, 1);
-        if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
+        pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
+        if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
     }
 }
 
