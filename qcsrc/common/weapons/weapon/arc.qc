@@ -118,19 +118,18 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 void W_Arc_Bolt_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	if(this.cnt > WEP_CVAR(arc, bolt_bounce_count) || !WEP_CVAR(arc, bolt_bounce_count) || toucher.takedamage == DAMAGE_AIM) {
+	if(this.cnt >= WEP_CVAR(arc, bolt_bounce_count) || !WEP_CVAR(arc, bolt_bounce_count) || toucher.takedamage == DAMAGE_AIM) {
 		this.use(this, NULL, toucher);
 	} else {
-		if(!this.cnt && WEP_CVAR(arc, bolt_bounce_lifetime))
-			this.nextthink = min(this.nextthink, time + WEP_CVAR(arc, bolt_bounce_lifetime));
 		this.cnt++;
 		Send_Effect(EFFECT_BALL_SPARKS, this.origin, this.velocity, 1);
 		this.angles = vectoangles(this.velocity);
 		this.owner = NULL;
-		// initial blast doesn't count as bounce damage!
-		if(WEP_CVAR(arc, bolt_bounce_damage))
-			RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, toucher);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
+		if(WEP_CVAR(arc, bolt_bounce_explode))
+			RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, toucher);
+		if(this.cnt == 1 && WEP_CVAR(arc, bolt_bounce_lifetime))
+			this.nextthink = time + WEP_CVAR(arc, bolt_bounce_lifetime);
 	}
 }
 

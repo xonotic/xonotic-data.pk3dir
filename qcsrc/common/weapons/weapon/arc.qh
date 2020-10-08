@@ -24,7 +24,7 @@ CLASS(Arc, Weapon)
 		P(class, prefix, bolt, float, NONE) \
 		P(class, prefix, bolt_ammo, float, NONE) \
         P(class, prefix, bolt_bounce_count, float, NONE) \
-        P(class, prefix, bolt_bounce_damage, float, NONE) \
+        P(class, prefix, bolt_bounce_explode, float, NONE) \
         P(class, prefix, bolt_bounce_lifetime, float, NONE) \
         P(class, prefix, bolt_count, float, NONE) \
         P(class, prefix, bolt_damageforcescale, float, NONE) \
