@@ -78,9 +78,11 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		}
 		return;
 	}
-
+	
 	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
 		Scoreboard_UpdatePlayerTeams();
+		
+	/*
 	if (team_count)
 	{
 		// show team scores in the first line
@@ -99,59 +101,95 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		first_pl = 1;
 		pos.y += fontsize.y;
 		tm = teams.sort_next;
-	}
-	i = first_pl;
-
-	do
-	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
-	{
-		if ((team_count && pl.team != tm.team) || pl.team == NUM_SPECTATOR)
-			continue;
-
-		if (i == entries-1 && !me_printed && pl != me)
-		if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
-		{
-			for (pl = me.sort_next; pl; pl = pl.sort_next)
-				if (pl.team != NUM_SPECTATOR)
-					break;
-
-			if (pl)
-				rgb = '1 1 0'; //not last but not among the leading players: yellow
-			else
-				rgb = '1 0 0'; //last: red
-			pl = me;
-		}
+	}*/
 	
-		if (team_count)
-			score_color = Team_ColorRGB(pl.team) * 0.8;
-		
-		entity entcs = entcs_receiver(pl.sv_entnum);
-		if(entcs.m_entcs_private) {
-			// z411 draw health/armor bar
-			vector bar_sz = vec2(mySize.x, fontsize.y);
+	
+	// Basic team stats
+	if (team_count)
+	{
+		i = 0;
+		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
+			if(tm.team == NUM_SPECTATOR)
+				continue;
+			if(!tm.team)
+				continue;
+
+			/*if (tm.team == myteam)
+				drawfill(pos + eX * score_size * i, vec2(score_size, fontsize.y), '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores(ts_primary))), vec2(score_size, fontsize.y), Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+			++i;*/
 			
-			bar_sz.x *= entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth;
-			drawfill(pos, bar_sz, ((team_count) ? score_color : '0.8 0.8 0'), 0.5, DRAWFLAG_NORMAL);
+			if (tm.team == myteam)
+			{
+				if (i == 0)
+					rgb = '0 1 0'; //first: green
+				me_printed = true;
+				drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
 			
-			bar_sz.x *= GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor;
-			drawfill(pos + eY * (bar_sz.y * 0.7), bar_sz - eY * (bar_sz.y * 0.7), ((team_count) ? score_color : '0 0.8 0.8'), 1, DRAWFLAG_NORMAL);
+			s = strcat(Team_ColorCode(tm.team), strtoupper(Team_ColorName(tm.team)), "^7 team");
+			//s = textShortenToWidth(Team_ColorName(tm.team), name_size, fontsize, stringwidth_colors);
+			score_color = Team_ColorRGB(tm.team) * 0.8;
+			
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * (name_size + spacing_size), ftos(tm.(teamscores(ts_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			pos.y += fontsize.y;
+			++i;
 		}
+	} else {
+		i = first_pl;
 		
-		if (pl == me)
+		do
+		for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
 		{
-			if (i == first_pl)
-				rgb = '0 1 0'; //first: green
-			me_printed = true;
-			drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		}
+			if ((team_count && pl.team != tm.team) || pl.team == NUM_SPECTATOR)
+				continue;
+
+			if (i == entries-1 && !me_printed && pl != me)
+			if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
+			{
+				for (pl = me.sort_next; pl; pl = pl.sort_next)
+					if (pl.team != NUM_SPECTATOR)
+						break;
+
+				if (pl)
+					rgb = '1 1 0'; //not last but not among the leading players: yellow
+				else
+					rgb = '1 0 0'; //last: red
+				pl = me;
+			}
 		
-		s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
-		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		pos.y += fontsize.y;
-		++i;
+			if (team_count)
+				score_color = Team_ColorRGB(pl.team) * 0.8;
+			
+			entity entcs = entcs_receiver(pl.sv_entnum);
+			if(entcs.m_entcs_private) {
+				// z411 draw health/armor bar
+				vector bar_sz = vec2(mySize.x, fontsize.y);
+				
+				bar_sz.x *= entcs.healthvalue / autocvar_hud_panel_healtharmor_maxhealth;
+				drawfill(pos, bar_sz, ((team_count) ? score_color : '0.8 0.8 0'), 0.5, DRAWFLAG_NORMAL);
+				
+				bar_sz.x *= GetResource(entcs, RES_ARMOR) / autocvar_hud_panel_healtharmor_maxarmor;
+				drawfill(pos + eY * (bar_sz.y * 0.7), bar_sz - eY * (bar_sz.y * 0.7), ((team_count) ? score_color : '0 0.8 0.8'), 1, DRAWFLAG_NORMAL);
+			}
+			
+			if (pl == me)
+			{
+				if (i == first_pl)
+					rgb = '0 1 0'; //first: green
+				me_printed = true;
+				drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+			
+			s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			pos.y += fontsize.y;
+			++i;
+		}
+		while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != NUM_SPECTATOR || (tm = tm.sort_next)));
 	}
-	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != NUM_SPECTATOR || (tm = tm.sort_next)));
 }
 
 void HUD_Score()
