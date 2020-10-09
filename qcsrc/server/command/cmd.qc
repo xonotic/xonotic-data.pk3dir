@@ -683,7 +683,7 @@ void ClientCommand_sounds(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(caller, strcat("Available sounds: \n\n", autocvar_g_chat_sounds_list, "\n"));
+			sprint(caller, strcat("Available sounds: \n\n", autocvar_sv_chat_sounds_list, "\n"));
 			return; // never fall through to usage
 		}
 

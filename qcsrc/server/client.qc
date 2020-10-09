@@ -3204,18 +3204,17 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 bool play_chatsound(entity source, string msgin)
 {
-	if(autocvar_g_chat_sounds) {
+	if(autocvar_sv_chat_sounds && CS(source).cvar_cl_chat_sounds) {
 		var .float flood_sound = floodcontrol_chatsound;
 		
-		//bprintf("%d < %d", source.(flood_sound), time - autocvar_g_chat_sounds_flood);
-		
-		if (source.(flood_sound) < time - autocvar_g_chat_sounds_flood) {
+		if (source.(flood_sound) < time - autocvar_sv_chat_sounds_flood) {
 			string rawmsg;
 			rawmsg = strreplace("\n", " ", msgin);
 			
-			//bprintf("msg is %s and list is %s\n", rawmsg, autocvar_g_chat_sounds_list);
-			if (findinlist_abbrev(rawmsg, autocvar_g_chat_sounds_list)) {
-				play2all(strcat("sound/chat/", rawmsg, ".ogg"));
+			if (findinlist_abbrev(rawmsg, autocvar_sv_chat_sounds_list)) {
+				string sndname = strcat("sound/chat/", rawmsg, ".ogg");
+				
+				FOREACH_CLIENT(IS_REAL_CLIENT(it) && CS(it).cvar_cl_chat_sounds, play2(it, sndname));
 				source.(flood_sound) = time;
 				
 				return true;

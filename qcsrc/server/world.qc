@@ -414,7 +414,8 @@ void cvar_changes_init()
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
-		BADPREFIX("g_jingle_");
+		BADPREFIX("sv_chat_");
+		BADPREFIX("sv_jingle_");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -1628,12 +1629,12 @@ void NextLevel()
 	target_music_kill();
 	
 	// z411
-	if(autocvar_g_jingle_end) {
+	if(autocvar_sv_jingle_end) {
 		int jingles_len = 0;
 		string jingles[32];
 		jingles[0] = "";
 		
-		FOREACH_WORD(autocvar_g_jingle_end_list, it,
+		FOREACH_WORD(autocvar_sv_jingle_end_list, it,
 		{
 			jingles[jingles_len] = it;
 			jingles_len++;
@@ -1645,7 +1646,7 @@ void NextLevel()
 			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
 				stuffcmd(it, "cd stop\n");
-				_sound(it, CH_INFO, strcat("jingle/", jingles[song_to_play], ".ogg"), VOL_BASE * autocvar_g_jingle_end_volume, ATTEN_NORM);
+				_sound(it, CH_INFO, strcat("jingle/", jingles[song_to_play], ".ogg"), VOL_BASE * autocvar_sv_jingle_end_volume, ATTEN_NORM);
 			});
 		}
 	}
