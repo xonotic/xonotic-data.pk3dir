@@ -58,6 +58,12 @@ const string STATIC_NAME_TEAM_4 = "Pink";
 #ifdef CSQC
 bool teamplay;
 int myteam;
+
+// z411 used for custom names
+string teamname_red;
+string teamname_blue;
+string teamname_yellow;
+string teamname_pink;
 #endif
 
 string Team_ColorCode(int teamid)
@@ -85,6 +91,21 @@ vector Team_ColorRGB(int teamid)
 
     return '0 0 0';
 }
+
+#ifdef CSQC
+string Team_CustomName(int teamid)
+{
+	switch(teamid)
+	{
+		case NUM_TEAM_1: return ((teamname_red != "") ? teamname_red : "^1RED^7 team");
+		case NUM_TEAM_2: return ((teamname_blue != "")? teamname_blue : "^4BLUE^7 team");
+		case NUM_TEAM_3: return ((teamname_yellow != "") ? teamname_yellow : "^3YELLOW^7 team");
+		case NUM_TEAM_4: return ((teamname_pink != "") ? teamname_pink : "^6PINK^7 team");
+	}
+
+    return NAME_NEUTRAL;
+}
+#endif
 
 string Team_ColorName(int teamid)
 {

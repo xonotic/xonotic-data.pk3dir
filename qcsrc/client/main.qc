@@ -26,6 +26,7 @@
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
 #include <common/scores.qh>
+#include <common/teams.qh>
 #include <common/mapobjects/_mod.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>
@@ -943,6 +944,16 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	MUTATOR_CALLHOOK(Ent_Init);
 
 	if (!postinit) PostInit();
+}
+
+NET_HANDLE(TE_CSQC_TEAMNAMES, bool isNew)
+{
+	teamname_red = strzone(ReadString());
+	teamname_blue = strzone(ReadString());
+	teamname_yellow = strzone(ReadString());
+	teamname_pink = strzone(ReadString());
+
+	return = true;
 }
 
 float GetSpeedUnitFactor(int speed_unit)

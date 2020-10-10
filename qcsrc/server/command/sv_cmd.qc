@@ -160,6 +160,25 @@ void GameCommand_adminmsg(int request, int argc)
 	}
 }
 
+void GameCommand_sendteams(int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			send_TeamNames(MSG_BROADCAST, NULL);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd sendteams");
+			LOG_HELP("  No arguments required.");
+			return;
+		}
+	}
+}
 void GameCommand_allready(int request)
 {
 	switch (request)
@@ -922,7 +941,7 @@ void GameCommand_lockteams(int request)
 			if (teamplay)
 			{
 				lockteams = 1;
-				bprint("^1The teams are now locked.\n");
+				bprint("\{1}^1The teams are now locked.\n");
 			}
 			else
 			{
@@ -1538,7 +1557,7 @@ void GameCommand_unlockteams(int request)
 			if (teamplay)
 			{
 				lockteams = 0;
-				bprint("^1The teams are now unlocked.\n");
+				bprint("\{1}^1The teams are now unlocked.\n");
 			}
 			else
 			{
@@ -1625,6 +1644,7 @@ void GameCommand_(int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
+SERVER_COMMAND(sendteams, "Send team names") { GameCommand_sendteams(request); }
 SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
 SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }

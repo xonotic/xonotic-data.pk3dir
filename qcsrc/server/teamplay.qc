@@ -35,6 +35,7 @@ const int TEAM_NOT_ALLOWED = -1;
 .int m_team_balance_state; ///< Holds the state of the team balance entity.
 .entity m_team_balance_team[NUM_TEAMS]; ///< ???
 
+.string m_team_name; // z411 team name
 .float m_team_score; ///< The score of the team.
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_bots; ///< Number of bots in a team.
@@ -72,6 +73,16 @@ entity Team_GetTeam(int team_num)
 		LOG_FATALF("Team_GetTeam: Value is invalid: %f", team_num);
 	}
 	return g_team_entities[Team_TeamToIndex(team_num) - 1];
+}
+
+string Team_GetTeamName(entity team_ent)
+{
+	return team_ent.m_team_name;
+}
+
+void Team_SetTeamName(entity team_ent, string name)
+{
+	team_ent.m_team_name = name;
 }
 
 float Team_GetTeamScore(entity team_ent)

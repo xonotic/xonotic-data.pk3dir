@@ -103,6 +103,17 @@ void send_CSQC_teamnagger() {
 	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
+void send_TeamNames(int channel, entity to) {
+	msg_entity = to;
+	
+	LOG_INFOF("Sending team names");
+	WriteHeader(channel, TE_CSQC_TEAMNAMES);
+	WriteString(channel, autocvar_g_teamnames_red);
+	WriteString(channel, autocvar_g_teamnames_blue);
+	WriteString(channel, autocvar_g_teamnames_yellow);
+	WriteString(channel, autocvar_g_teamnames_pink);
+}
+
 int CountSpectators(entity player, entity to)
 {
 	if(!player) { return 0; } // not sure how, but best to be safe
@@ -842,6 +853,10 @@ void PutClientInServer(entity this)
 	} else if (IS_PLAYER(this)) {
 		PutPlayerInServer(this);
 	}
+	
+	// send team names
+	if(teamplay && IS_REAL_CLIENT(this))
+		send_TeamNames(MSG_ONE, this);
 }
 
 // TODO do we need all these fields, or should we stop autodetecting runtime
@@ -858,6 +873,7 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	ClientInit_misc(this);
 	MUTATOR_CALLHOOK(Ent_Init);
 }
+
 void ClientInit_misc(entity this)
 {
 	int channel = MSG_ONE;
@@ -3180,7 +3196,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
 		else
-		{
+		{	
 			if (source) {
 				sprint(source, sourcemsgstr);
 				dedicated_print(msgstr); // send to server console too
@@ -3204,7 +3220,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 bool play_chatsound(entity source, string msgin)
 {
-	if(autocvar_sv_chat_sounds && CS(source).cvar_cl_chat_sounds) {
+	//bprintf("Source (%s) has cl_chat_sounds = %d\n", source.netname, CS(source).cvar_cl_chat_sounds);
+	//if(autocvar_sv_chat_sounds && CS(source).cvar_cl_chat_sounds) {
+	if(autocvar_sv_chat_sounds) {
 		var .float flood_sound = floodcontrol_chatsound;
 		
 		if (source.(flood_sound) < time - autocvar_sv_chat_sounds_flood) {
@@ -3214,9 +3232,20 @@ bool play_chatsound(entity source, string msgin)
 			if (findinlist_abbrev(rawmsg, autocvar_sv_chat_sounds_list)) {
 				string sndname = strcat("sound/chat/", rawmsg, ".ogg");
 				
-				FOREACH_CLIENT(IS_REAL_CLIENT(it) && CS(it).cvar_cl_chat_sounds, play2(it, sndname));
-				source.(flood_sound) = time;
+				/*FOREACH_CLIENT(true, {
+					if(IS_REAL_CLIENT(it)) {
+						bprintf("Destination (%s) has cl_chat_sounds = %d\n", it.netname, CS(it).cvar_cl_chat_sounds);
+						if(CS(it).cvar_cl_chat_sounds) {
+							precache_sound(sndname);
+							play2(it, sndname);
+						}
+					} else {
+						bprintf("Destination (%s) has cl_chat_sounds = %d but it's not a real client\n", it.netname, CS(it).cvar_cl_chat_sounds);
+					}
+				});*/
+				play2all(sndname);
 				
+				source.(flood_sound) = time;
 				return true;
 			}
 		}

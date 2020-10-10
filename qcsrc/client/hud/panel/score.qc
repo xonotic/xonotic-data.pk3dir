@@ -127,7 +127,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 				drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			
-			s = strcat(Team_ColorCode(tm.team), strtoupper(Team_ColorName(tm.team)), "^7 team");
+			s = Team_CustomName(tm.team);
 			//s = textShortenToWidth(Team_ColorName(tm.team), name_size, fontsize, stringwidth_colors);
 			score_color = Team_ColorRGB(tm.team) * 0.8;
 			

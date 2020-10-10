@@ -49,6 +49,9 @@ float max_namesize;
 vector duel_score_fontsize;
 vector duel_name_fontsize;
 vector duel_score_size;
+vector team_score_fontsize;
+vector team_name_fontsize;
+vector team_score_size;
 int total_medals;
 
 float sbt_bg_alpha;
@@ -439,6 +442,10 @@ void Cmd_Scoreboard_SetFields(int argc)
 	duel_score_fontsize = hud_fontsize * 3;
 	duel_name_fontsize = hud_fontsize * 1.5;
 	duel_score_size = vec2(duel_score_fontsize.x * 1.5, duel_score_fontsize.y * 1.25);
+	
+	team_score_fontsize = hud_fontsize * 2;
+	team_name_fontsize = hud_fontsize * 1.5;
+	team_score_size = vec2(team_score_fontsize.x * 1.5, team_score_fontsize.y * 1.25);
 
 	for(i = 1; i < argc - 1; ++i)
 	{
@@ -2066,8 +2073,8 @@ void Scoreboard_Draw()
 			if(!tm.team)
 				continue;
 
-			draw_beginBoldFont();
 			vector rgb = Team_ColorRGB(tm.team);
+			/*draw_beginBoldFont();
 			str = ftos(tm.(teamscores(ts_primary)));
 			if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 			{
@@ -2122,6 +2129,31 @@ void Scoreboard_Draw()
 				drawstring(str_pos, str, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			draw_endBoldFont();
+			*/
+			
+			// z411 My team header
+			// Score: highlight
+			drawfill(pos, team_score_size, rgb * 0.5, sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			
+			// Score: text
+			str = ftos(tm.(teamscores(ts_primary)));
+			str_pos = pos;
+			str_pos.x += (team_score_size.x / 2) - (stringwidth(str, true, team_score_fontsize) / 2);
+			str_pos.y += (team_score_size.y / 2) - (team_score_fontsize.y / 2);
+			
+			draw_beginBoldFont();
+			drawstring(str_pos, str, team_score_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_endBoldFont();
+			
+			// Team name
+			str = Team_CustomName(tm.team);
+			str_pos = pos;
+			str_pos.x += team_score_size.x + team_name_fontsize.x * 0.5;
+			str_pos.y += (team_score_size.y / 2) - (team_name_fontsize.y / 2);
+			drawcolorcodedstring(str_pos, str, team_name_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			
+			pos.y += team_score_size.y + (hud_fontsize.y * 0.5);
+			
 			if(autocvar_hud_panel_scoreboard_bg_teams_color_team > 0)
 				panel_bg_color = rgb * autocvar_hud_panel_scoreboard_bg_teams_color_team;
 			else if(panel_bg_color_team > 0)

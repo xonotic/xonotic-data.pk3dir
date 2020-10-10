@@ -131,6 +131,10 @@ float autocvar_sv_chat_sounds_flood; // z411
 bool autocvar_sv_jingle_end; // z411
 string autocvar_sv_jingle_end_list; // z411
 float autocvar_sv_jingle_end_volume; // z411
+string autocvar_g_teamnames_red;
+string autocvar_g_teamnames_blue;
+string autocvar_g_teamnames_yellow;
+string autocvar_g_teamnames_pink;
 
 #define autocvar_g_friendlyfire cvar("g_friendlyfire")
 #define autocvar_g_friendlyfire_virtual cvar("g_friendlyfire_virtual")

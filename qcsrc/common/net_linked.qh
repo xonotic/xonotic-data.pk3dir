@@ -7,6 +7,8 @@ REGISTER_NET_TEMP(TE_CSQC_PINGPLREPORT)
 REGISTER_NET_TEMP(TE_CSQC_WEAPONCOMPLAIN)
 REGISTER_NET_TEMP(TE_CSQC_VEHICLESETUP)
 
+REGISTER_NET_TEMP(TE_CSQC_TEAMNAMES)
+
 const int RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const int RACE_NET_CHECKPOINT_CLEAR = 1;
 const int RACE_NET_CHECKPOINT_NEXT_QUALIFYING = 2; // byte nextcheckpoint, short recordtime, string recordholder
