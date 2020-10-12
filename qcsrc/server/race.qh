@@ -8,6 +8,7 @@ float race_teams;
 const float ST_RACE_LAPS = 1;
 
 int autocvar_g_cts_send_rankings_cnt = 15;
+bool autocvar_g_cts_cptimes_onlyself = false;
 
 bool g_race_qualifying;
 
