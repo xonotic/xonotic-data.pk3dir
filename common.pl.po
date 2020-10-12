@@ -25,8 +25,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-09 07:23+0200\n"
-"PO-Revision-Date: 2020-08-09 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2020-10-08 14:36+0000\n"
+"Last-Translator: Karol Kosek\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -5722,7 +5722,7 @@ msgstr "Nazwa:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
-msgstr "Nazwa pod, którą pokażesz się w grze"
+msgstr "Nazwa, pod którą pokażesz się w grze"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
