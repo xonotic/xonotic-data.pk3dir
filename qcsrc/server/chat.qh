@@ -1,0 +1,50 @@
+#pragma once
+
+const float NUM_NEAREST_ENTITIES = 4;
+entity nearest_entity[NUM_NEAREST_ENTITIES];
+float nearest_length[NUM_NEAREST_ENTITIES];
+
+.float floodcontrol_chat;
+.float floodcontrol_chatteam;
+.float floodcontrol_chattell;
+.float floodcontrol_voice;
+.float floodcontrol_voiceteam;
+
+#define CHAT_NOSPECTATORS() ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+
+int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
+
+string NearestLocation(vector p);
+
+string formatmessage(entity this, string msg);
+
+/// \brief Print the string to the client's chat.
+/// \param[in] client Client to print to.
+/// \param[in] text Text to print.
+void PrintToChat(entity client, string text);
+
+/// \brief Print the string to the client's chat if the server cvar "developer"
+/// is not 0.
+/// \param[in] client Client to print to.
+/// \param[in] text Text to print.
+void DebugPrintToChat(entity client, string text);
+
+/// \brief Prints the string to all clients' chat.
+/// \param[in] text Text to print.
+void PrintToChatAll(string text);
+
+/// \brief Prints the string to all clients' chat if the server cvar "developer"
+/// is not 0.
+/// \param[in] text Text to print.
+void DebugPrintToChatAll(string text);
+
+/// \brief Print the string to chat of all clients of the specified team.
+/// \param[in] team_num Team to print to. See NUM_TEAM constants.
+/// \param[in] text Text to print.
+void PrintToChatTeam(int team_num, string text);
+
+/// \brief Print the string to chat of all clients of the specified team if the
+/// server cvar "developer" is not 0.
+/// \param[in] team_num Team to print to. See NUM_TEAM constants.
+/// \param[in] text Text to print.
+void DebugPrintToChatTeam(int team_num, string text);

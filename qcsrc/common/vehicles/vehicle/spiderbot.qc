@@ -1,5 +1,11 @@
 #include "spiderbot.qh"
 
+#if defined(SVQC)
+	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#endif
+
+#ifdef GAMEQC
+
 const int SBRM_FIRST = 1;
 const int SBRM_VOLLY = 1;
 const int SBRM_GUIDE = 2;
@@ -264,7 +270,7 @@ bool spiderbot_frame(entity this, float dt)
 
 			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 			fireBullet(this, weaponentity, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
-				autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
+				autocvar_g_vehicle_spiderbot_minigun_damage, 0, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
 
 			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
 			//trailparticles(this, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
@@ -635,5 +641,7 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
     AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
     AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
 }
+
+#endif
 
 #endif

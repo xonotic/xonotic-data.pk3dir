@@ -1,7 +1,10 @@
 #include "waypoints.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/items/items.qh>
+#include <server/spawnpoints.qh>
+#include <server/weapons/tracing.qh>
 #include "cvars.qh"
 
 #include "bot.qh"
@@ -13,6 +16,7 @@
 
 #include <common/constants.qh>
 #include <common/debug.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
@@ -470,7 +474,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			}
 			else
 			{
-				if(autocvar_developer)
+				if(autocvar_developer > 0)
 				{
 					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin));
 					backtrace("Waypoint stuck");
@@ -1570,6 +1574,46 @@ void waypoint_load_hardwiredlinks()
 	fclose(file);
 
 	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
+}
+
+float waypoint_get_assigned_link_cost(entity w, float i)
+{
+	switch(i)
+	{
+		case  0: return w.wp00mincost;
+		case  1: return w.wp01mincost;
+		case  2: return w.wp02mincost;
+		case  3: return w.wp03mincost;
+		case  4: return w.wp04mincost;
+		case  5: return w.wp05mincost;
+		case  6: return w.wp06mincost;
+		case  7: return w.wp07mincost;
+		case  8: return w.wp08mincost;
+		case  9: return w.wp09mincost;
+		case 10: return w.wp10mincost;
+		case 11: return w.wp11mincost;
+		case 12: return w.wp12mincost;
+		case 13: return w.wp13mincost;
+		case 14: return w.wp14mincost;
+		case 15: return w.wp15mincost;
+		case 16: return w.wp16mincost;
+		case 17: return w.wp17mincost;
+		case 18: return w.wp18mincost;
+		case 19: return w.wp19mincost;
+		case 20: return w.wp20mincost;
+		case 21: return w.wp21mincost;
+		case 22: return w.wp22mincost;
+		case 23: return w.wp23mincost;
+		case 24: return w.wp24mincost;
+		case 25: return w.wp25mincost;
+		case 26: return w.wp26mincost;
+		case 27: return w.wp27mincost;
+		case 28: return w.wp28mincost;
+		case 29: return w.wp29mincost;
+		case 30: return w.wp30mincost;
+		case 31: return w.wp31mincost;
+		default: return -1;
+	}
 }
 
 entity waypoint_get_link(entity w, float i)

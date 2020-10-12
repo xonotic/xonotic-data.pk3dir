@@ -6,6 +6,8 @@
 /** If this global exists, only functions with spawnfunc_ name prefix qualify as spawn functions */
 noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
+/** Not for production use, provides access to a dump of the entity's fields when it is parsed from map data */
+//noref string __fullspawndata;
 
 // Optional type checking; increases compile time too much to be enabled by default
 #if 0
@@ -146,6 +148,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, health) \
 		FIELD_SCALAR(fld, height) \
 		FIELD_SCALAR(fld, impulse) \
+		FIELD_SCALAR(fld, invincible_finished) \
 		FIELD_SCALAR(fld, item_pickupsound) \
 		FIELD_SCALAR(fld, killtarget) \
 		FIELD_SCALAR(fld, lerpfrac) \
@@ -178,6 +181,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, phase) \
 		FIELD_SCALAR(fld, platmovetype) \
 		FIELD_SCALAR(fld, race_place) \
+		FIELD_SCALAR(fld, strength_finished) \
 		FIELD_SCALAR(fld, radius) \
 		FIELD_SCALAR(fld, respawntimestart) \
 		FIELD_SCALAR(fld, respawntimejitter) \

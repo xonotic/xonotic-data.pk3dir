@@ -135,17 +135,17 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 // used for special commands and idle checking, not from the engine
 // TODO: cache
 #define PHYS_INPUT_BUTTON_MASK(s) ( \
-	  (1 <<  0) * PHYS_INPUT_BUTTON_ATCK(s) \
-	| (1 <<  1) * PHYS_INPUT_BUTTON_JUMP(s) \
-	| (1 <<  2) * PHYS_INPUT_BUTTON_ATCK2(s) \
-	| (1 <<  3) * PHYS_INPUT_BUTTON_ZOOM(s) \
-	| (1 <<  4) * PHYS_INPUT_BUTTON_CROUCH(s) \
-	| (1 <<  5) * PHYS_INPUT_BUTTON_HOOK(s) \
-	| (1 <<  6) * PHYS_INPUT_BUTTON_USE(s) \
-	| (1 <<  7) * PHYS_INPUT_BUTTON_BACKWARD(s) \
-	| (1 <<  8) * PHYS_INPUT_BUTTON_FORWARD(s) \
-	| (1 <<  9) * PHYS_INPUT_BUTTON_LEFT(s) \
-	| (1 << 10) * PHYS_INPUT_BUTTON_RIGHT(s) \
+	  ((1 <<  0) * PHYS_INPUT_BUTTON_ATCK(s)) \
+	| ((1 <<  1) * PHYS_INPUT_BUTTON_JUMP(s)) \
+	| ((1 <<  2) * PHYS_INPUT_BUTTON_ATCK2(s)) \
+	| ((1 <<  3) * PHYS_INPUT_BUTTON_ZOOM(s)) \
+	| ((1 <<  4) * PHYS_INPUT_BUTTON_CROUCH(s)) \
+	| ((1 <<  5) * PHYS_INPUT_BUTTON_HOOK(s)) \
+	| ((1 <<  6) * PHYS_INPUT_BUTTON_USE(s)) \
+	| ((1 <<  7) * PHYS_INPUT_BUTTON_BACKWARD(s)) \
+	| ((1 <<  8) * PHYS_INPUT_BUTTON_FORWARD(s)) \
+	| ((1 <<  9) * PHYS_INPUT_BUTTON_LEFT(s)) \
+	| ((1 << 10) * PHYS_INPUT_BUTTON_RIGHT(s)) \
 	)
 
 #define IS_JUMP_HELD(s)                     (!((s).flags & FL_JUMPRELEASED))
@@ -155,13 +155,13 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 #define WAS_ONGROUND(s)                     boolean((s).lastflags & FL_ONGROUND)
 #define WAS_ONSLICK(s)                      boolean((s).lastflags & FL_ONSLICK)
 
+#define IS_DUCKED(s)                        (boolean((s).flags & FL_DUCKED))
+#define SET_DUCKED(s)                       ((s).flags |= FL_DUCKED)
+#define UNSET_DUCKED(s)                     ((s).flags &= ~FL_DUCKED)
+
 #define ITEMS_STAT(s)                       ((s).items)
 
 .float teleport_time;
-#define PHYS_TELEPORT_TIME(s)               ((s).teleport_time)
-
-.float waterjump_time;
-#define PHYS_WATERJUMP_TIME(s)               ((s).waterjump_time)
 
 #ifdef CSQC
 
@@ -169,9 +169,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 
 	string autocvar_cl_jumpspeedcap_min;
 	string autocvar_cl_jumpspeedcap_max;
-
-	const int FL_WATERJUMP = 2048;  // player jumping out of water
-	const int FL_JUMPRELEASED = 4096;  // for jump debouncing
 
 	.float watertype;
 	.float waterlevel;
@@ -193,7 +190,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define IS_CLIENT(s)                        (((s).isplayermodel & ISPLAYER_CLIENT) || (s) == csqcplayer)
 	#define IS_PLAYER(s)                        ((s).isplayermodel & ISPLAYER_PLAYER)
 	#define IS_NOT_A_CLIENT(s)                  (!(s).isplayermodel && (s) != csqcplayer)
-	#define isPushable(s)                       ((s).isplayermodel || (s).pushable || ((s).flags & FL_PROJECTILE))
+	#define IS_DEAD(s)                          (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : (GetResource((s), RES_HEALTH) <= 0))
 
 	//float player_multijump;
 	//float player_jumpheight;
@@ -228,10 +225,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define PHYS_INPUT_BUTTON_BUTTON15(s)       boolean(input_buttons & BIT(17))
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       boolean(input_buttons & BIT(18))
 
-	#define IS_DUCKED(s)                        (boolean((s).flags & FL_DUCKED))
-	#define SET_DUCKED(s)                       ((s).flags |= FL_DUCKED)
-	#define UNSET_DUCKED(s)                     ((s).flags &= ~FL_DUCKED)
-
 	#define PHYS_INVEHICLE(s) 					(boolean(hud != HUD_NORMAL))
 
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_cl_jumpspeedcap_min
@@ -252,6 +245,9 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	/** Not real stats */
 	.string jumpspeedcap_min;
 	.string jumpspeedcap_max;
+
+	// footstep interval
+	.float nextstep;
 
 	#define PHYS_INPUT_ANGLES(s)                ((s).v_angle)
 	#define PHYS_WORLD_ANGLES(s)                ((s).angles)
@@ -281,10 +277,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define PHYS_INPUT_BUTTON_BUTTON14(s)       (CS(s).button14)
 	#define PHYS_INPUT_BUTTON_BUTTON15(s)       (CS(s).button15)
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       (CS(s).button16)
-
-	#define IS_DUCKED(s)                        ((s).crouch)
-	#define SET_DUCKED(s)                       ((s).crouch = true)
-	#define UNSET_DUCKED(s)                     ((s).crouch = false)
 
 	#define PHYS_INVEHICLE(s) 					(boolean((s).vehicle != NULL))
 

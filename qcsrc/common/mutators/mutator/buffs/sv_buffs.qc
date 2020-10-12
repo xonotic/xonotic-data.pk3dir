@@ -2,6 +2,8 @@
 
 #include <common/mapobjects/target/music.qh>
 #include <common/gamemodes/_mod.qh>
+#include <server/items/items.qh>
+#include <server/main.qh>
 
 void buffs_DelayedInit(entity this);
 
@@ -18,20 +20,16 @@ REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 
 bool buffs_BuffModel_Customize(entity this, entity client)
 {
-	entity player, myowner;
-	bool same_team;
+	entity player = WaypointSprite_getviewentity(client);
+	entity myowner = this.owner;
 
-	player = WaypointSprite_getviewentity(client);
-	myowner = this.owner;
-	same_team = (SAME_TEAM(player, myowner) || SAME_TEAM(player, myowner));
-
-	if(myowner.alpha <= 0.5 && !same_team && myowner.alpha != 0)
+	if(myowner.alpha <= 0.5 && DIFF_TEAM(player, myowner) && myowner.alpha != 0)
 		return false;
 
 	if(MUTATOR_CALLHOOK(BuffModel_Customize, this, player))
 		return false;
 
-	if(player == myowner || (IS_SPEC(client) && client.enemy == myowner))
+	if(player == myowner)
 	{
 		// somewhat hide the model, but keep the glow
 		this.effects = 0;
@@ -92,6 +90,8 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 void buff_Waypoint_Spawn(entity e)
 {
+	if(autocvar_g_buffs_waypoint_distance <= 0) return;
+
 	entity buff = buff_FirstFromFlags(STAT(BUFFS, e));
 	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, NULL, e.team, e, buff_waypoint, true, RADARICON_Buff);
 	wp.wp_extra = buff.m_id;
@@ -106,7 +106,9 @@ void buff_SetCooldown(entity this, float cd)
 	if(!this.buff_waypoint)
 		buff_Waypoint_Spawn(this);
 
-	WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + cd);
+	if(this.buff_waypoint)
+		WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + cd);
+
 	this.buff_activetime = cd;
 	this.buff_active = !cd;
 }
@@ -203,6 +205,7 @@ void buff_Touch(entity this, entity toucher)
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
 	STAT(BUFFS, toucher) |= (STAT(BUFFS, this));
+	STAT(LAST_PICKUP, toucher) = time;
 	float bufftime = ((this.count) ? this.count : thebuff.m_time(thebuff));
 	if(bufftime)
 		STAT(BUFF_TIME, toucher) = min(time + bufftime, max(STAT(BUFF_TIME, toucher), time) + bufftime);
@@ -212,7 +215,7 @@ float buff_Available(entity buff)
 {
 	if (buff == BUFF_Null)
 		return false;
-	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
+	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_AMMO) || cvar("g_melee_only")))
 		return false;
 	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
@@ -227,7 +230,8 @@ void buff_NewType(entity ent)
 	FOREACH(Buffs, buff_Available(it),
 	{
 		// if it's already been chosen, give it a lower priority
-		RandomSelection_AddEnt(it, max(0.2, 1 / it.buff_seencount), 1);
+		float myseencount = (it.buff_seencount > 0) ? it.buff_seencount : 1; // no division by zero please!
+		RandomSelection_AddEnt(it, max(0.2, 1 / myseencount), 1);
 	});
 	entity newbuff = RandomSelection_chosen_ent;
 	newbuff.buff_seencount += 1; // lower chances of seeing this buff again soon
@@ -236,6 +240,9 @@ void buff_NewType(entity ent)
 
 void buff_Think(entity this)
 {
+	if(this.buff_waypoint && autocvar_g_buffs_waypoint_distance <= 0)
+		WaypointSprite_Kill(this.buff_waypoint);
+
 	if(STAT(BUFFS, this) != this.oldbuffs)
 	{
 		entity buff = buff_FirstFromFlags(STAT(BUFFS, this));
@@ -259,7 +266,7 @@ void buff_Think(entity this)
 	}
 
 	if(!game_stopped)
-	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
+	if((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
 	if(!this.buff_activetime_updated)
 	{
 		buff_SetCooldown(this, this.buff_activetime);
@@ -271,7 +278,7 @@ void buff_Think(entity this)
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
-		if(autocvar_g_buffs_randomize)
+		if(autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
 			buff_NewType(this);
 
 		if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
@@ -280,7 +287,7 @@ void buff_Think(entity this)
 
 	if(this.buff_activetime)
 	if(!game_stopped)
-	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
+	if((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
 	{
 		this.buff_activetime = max(0, this.buff_activetime - frametime);
 
@@ -297,8 +304,7 @@ void buff_Think(entity this)
 		if(this.team && !this.buff_waypoint)
 			buff_Waypoint_Spawn(this);
 
-		if(this.lifetime)
-		if(time >= this.lifetime)
+		if(this.lifetime && time >= this.lifetime)
 			buff_Respawn(this);
 	}
 
@@ -315,7 +321,7 @@ void buff_Waypoint_Reset(entity this)
 
 void buff_Reset(entity this)
 {
-	if(autocvar_g_buffs_randomize)
+	if(autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
 		buff_NewType(this);
 	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
@@ -576,7 +582,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.oldbuffs = 0;
-	PS(player).buff_shield = time + 0.5; // prevent picking up buffs immediately
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
@@ -918,8 +923,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONADD(BUFF_AMMO)
 		{
-			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_WEAPON_AMMO);
-			player.items |= IT_UNLIMITED_WEAPON_AMMO;
+			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_AMMO);
+			player.items |= IT_UNLIMITED_AMMO;
 
 			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{
@@ -937,9 +942,9 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		BUFF_ONREM(BUFF_AMMO)
 		{
 			if(player.buff_ammo_prev_infitems)
-				player.items |= IT_UNLIMITED_WEAPON_AMMO;
+				player.items |= IT_UNLIMITED_AMMO;
 			else
-				player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
+				player.items &= ~IT_UNLIMITED_AMMO;
 
 			if(STAT(BUFFS, player) & BUFF_AMMO.m_itemid)
 			{
@@ -954,7 +959,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONADD(BUFF_INVISIBLE)
 		{
-			if(time < player.strength_finished && MUTATOR_IS_ENABLED(mutator_instagib))
+			if(time < STAT(STRENGTH_FINISHED, player) && MUTATOR_IS_ENABLED(mutator_instagib))
 				player.buff_invisible_prev_alpha = default_player_alpha; // we don't want to save the powerup's alpha, as player may lose the powerup while holding the buff
 			else
 				player.buff_invisible_prev_alpha = player.alpha;
@@ -963,7 +968,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONREM(BUFF_INVISIBLE)
 		{
-			if(time < player.strength_finished && MUTATOR_IS_ENABLED(mutator_instagib))
+			if(time < STAT(STRENGTH_FINISHED, player) && MUTATOR_IS_ENABLED(mutator_instagib))
 				player.alpha = autocvar_g_instagib_invis_alpha;
 			else
 				player.alpha = player.buff_invisible_prev_alpha;

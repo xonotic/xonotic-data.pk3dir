@@ -1,15 +1,18 @@
 #include "vote.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
+#include <server/client.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/gamelog.qh>
 
 #include <common/command/_mod.qh>
 #include "vote.qh"
 
 #include "common.qh"
 
-#include "../g_damage.qh"
-#include "../g_world.qh"
+#include "../damage.qh"
+#include <server/intermission.qh>
+#include <server/world.qh>
 #include "../teamplay.qh"
 #include "../race.qh"
 #include "../round_handler.qh"
@@ -116,7 +119,7 @@ void Nagger_ReadyCounted()
 // If the vote_caller is still here, return their name, otherwise vote_caller_name
 string OriginalCallerName()
 {
-	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller, false);
+	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller.netname, vote_caller.team, false);
 	return vote_caller_name;
 }
 
@@ -476,8 +479,8 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
-	else localcmd("\nsv_hook_gamerestart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing) localcmd("restart\n");
+	else localcmd("\nsv_hook_readyrestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
@@ -542,11 +545,21 @@ float VoteCommand_checknasty(string vote_command)
 	return true;
 }
 
+// NOTE: requires input to be surrounded by spaces
+string VoteCommand_checkreplacements(string input)
+{
+	string output = input;
+	// allow gotomap replacements
+	output = strreplace(" map ", " gotomap ", output);
+	output = strreplace(" chmap ", " gotomap ", output);
+	return output;
+}
+
 float VoteCommand_checkinlist(string vote_command, string list)
 {
-	string l = strcat(" ", list, " ");
+	string l = VoteCommand_checkreplacements(strcat(" ", list, " "));
 
-	if (strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0) return true;
+	if (strstrofs(l, VoteCommand_checkreplacements(strcat(" ", vote_command, " ")), 0) >= 0) return true;
 
 	return false;
 }
@@ -711,11 +724,28 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
-		case "nextmap": // TODO: replicate the old behaviour of being able to vote for maps from different modes on multimode servers (possibly support it in gotomap too), maybe fallback instead of aborting if map name is invalid?
+		// TODO: replicate the old behaviour of being able to vote for maps from different modes on multimode servers (possibly support it in gotomap too)
+		// maybe fallback instead of aborting if map name is invalid?
+		case "nextmap":
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
 			vote_parsed_command = strcat("nextmap ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+
+			break;
+		}
+
+		case "timelimit": // include restrictions on the maximum votable time limit
+		{
+			float timelimit_vote = stof(argv(startpos + 1));
+			if(timelimit_vote > autocvar_timelimit_max || timelimit_vote < autocvar_timelimit_min)
+			{
+				print_to(caller, strcat("Invalid timelimit vote, accepted values are between ", ftos(autocvar_timelimit_min), " and ", ftos(autocvar_timelimit_max), "."));
+				return -1;
+			}
+			timelimit_vote = bound(autocvar_timelimit_min, timelimit_vote, autocvar_timelimit_max);
+			vote_parsed_command = strcat("timelimit ", ftos(timelimit_vote));
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
 			break;
@@ -808,7 +838,7 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			{
 				print_to(caller, "^1Only connected clients can vote.");
 			}
-			else if (timeout_status)
+			else if (timeout_status && vote_command != "timein")
 			{
 				print_to(caller, "^1You can not call a vote while a timeout is active.");
 			}

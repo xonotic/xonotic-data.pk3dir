@@ -50,7 +50,7 @@ void m_gamestatus()
 	gamestatus = 0;
 	if (isserver()) gamestatus |= GAME_ISSERVER;
 	if (clientstate() == CS_CONNECTED || isdemo()) gamestatus |= GAME_CONNECTED;
-	if (cvar("developer")) gamestatus |= GAME_DEVELOPER;
+	if (cvar("developer") > 0) gamestatus |= GAME_DEVELOPER;
 }
 
 void m_init()
@@ -69,11 +69,11 @@ void m_init()
 	cvar_set("_menu_prvm_language", prvm_language);
 
 #ifdef WATERMARK
-		LOG_INFOF("^4MQC Build information: ^1%s", WATERMARK);
+		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
-	if (cvar("developer"))
+	if (cvar("developer") > 0)
 	{
 		for (int i = 0; ; ++i)
 		{

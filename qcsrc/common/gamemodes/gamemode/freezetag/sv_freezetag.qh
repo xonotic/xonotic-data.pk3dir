@@ -8,6 +8,8 @@ int autocvar_g_freezetag_point_leadlimit;
 bool autocvar_g_freezetag_team_spawns;
 string autocvar_g_freezetag_weaponarena = "most_available";
 
+const int ST_FT_ROUNDS = 1;
+
 void freezetag_Initialize();
 
 REGISTER_MUTATOR(ft, false)

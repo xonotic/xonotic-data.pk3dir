@@ -118,6 +118,12 @@ MUTATOR_HOOKABLE(HUD_Draw_overlay, EV_HUD_Draw_overlay);
 
 MUTATOR_HOOKABLE(HUD_Powerups_add, EV_NO_ARGS);
 
+/** return true to show the physics HUD panel when optional mode is enabled */
+MUTATOR_HOOKABLE(HUD_Physics_showoptional, EV_NO_ARGS);
+
+/** return true to hide the score HUD panel */
+MUTATOR_HOOKABLE(HUD_Score_show, EV_NO_ARGS);
+
 /** Return true to not draw any vortex beam */
 #define EV_Particles_VortexBeam(i, o) \
 	/** beam shot origin */  i(vector, MUTATOR_ARGV_0_vector) \
@@ -163,18 +169,21 @@ MUTATOR_HOOKABLE(DrawCrosshair, EV_NO_ARGS);
 /** Return true to not draw scoreboard */
 MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
 
-/** Called when drawing info messages, allows adding new info messages */
+/** Return true to not draw scoreboard while dead */
+MUTATOR_HOOKABLE(DrawDeathScoreboard, EV_NO_ARGS);
+
+/** Return true to not show accuracy stats in the scoreboard */
+MUTATOR_HOOKABLE(DrawScoreboardAccuracy, EV_NO_ARGS);
+
+/** Called when drawing info messages, allows adding new info messages. Return true to hide the standard join message */
 #define EV_DrawInfoMessages(i, o) \
 	/** pos */ 			    i(vector, MUTATOR_ARGV_0_vector) \
+	/***/ 			    	o(vector, MUTATOR_ARGV_0_vector) \
 	/** mySize */ 			i(vector, MUTATOR_ARGV_1_vector) \
+	/** img_curr_group */ 	i(int, MUTATOR_ARGV_2_int) \
+	/***/ 					o(int, MUTATOR_ARGV_2_int) \
 	/**/
 MUTATOR_HOOKABLE(DrawInfoMessages, EV_DrawInfoMessages);
-
-/** Called when drawing info messages, allows adding new info messages */
-#define EV_HUD_WriteCvars(i, o) \
-	/** file */ 			i(float, MUTATOR_ARGV_0_float) \
-	/**/
-MUTATOR_HOOKABLE(HUD_WriteCvars, EV_HUD_WriteCvars);
 
 /** Called when the view model is being animated (setorigin is called after the hook, so you only need to modify origin here if desired) */
 #define EV_DrawViewModel(i, o) \
@@ -185,12 +194,19 @@ MUTATOR_HOOKABLE(DrawViewModel, EV_DrawViewModel);
 /** Called when updating the view's liquid contents, return true to disable the standard checks and apply your own */
 MUTATOR_HOOKABLE(HUD_Contents, EV_NO_ARGS);
 
-/** Return true to disable player model/color forcing */
+/** Return true to disable player model forcing */
 #define EV_ForcePlayermodels_Skip(i, o) \
 	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
 	/** is local */ 		i(bool, MUTATOR_ARGV_1_bool) \
 	/**/
 MUTATOR_HOOKABLE(ForcePlayermodels_Skip, EV_ForcePlayermodels_Skip);
+
+/** Return true to disable player color forcing */
+#define EV_ForcePlayercolors_Skip(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/** is local */ 		i(bool, MUTATOR_ARGV_1_bool) \
+	/**/
+MUTATOR_HOOKABLE(ForcePlayercolors_Skip, EV_ForcePlayercolors_Skip);
 
 /** Called when damage info is received on the client, useful for playing explosion effects */
 #define EV_DamageInfo(i, o) \
@@ -202,3 +218,23 @@ MUTATOR_HOOKABLE(DamageInfo, EV_DamageInfo);
 
 /** Return true to not draw zoom reticle */
 MUTATOR_HOOKABLE(DrawReticle, EV_NO_ARGS);
+
+/** Return true to show leaderboard rankings, needs title argument set */
+#define EV_ShowRankings(i, o) \
+	/** rankings title */ 	o(string, MUTATOR_ARGV_0_string) \
+	/**/
+MUTATOR_HOOKABLE(ShowRankings, EV_ShowRankings);
+
+/** Called when drawing a player's nameplate, return true to hide it */
+#define EV_ShowNames_Draw(i, o) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
+	/** alpha */     i(float, MUTATOR_ARGV_1_float) \
+	/***/            o(float, MUTATOR_ARGV_1_float) \
+	/**/
+MUTATOR_HOOKABLE(ShowNames_Draw, EV_ShowNames_Draw);
+
+/** Return true to display the race timer HUD panel */
+MUTATOR_HOOKABLE(ShowRaceTimer, EV_NO_ARGS);
+
+/** Return true to force team radar to display entities regardless of their team */
+MUTATOR_HOOKABLE(TeamRadar_Draw, EV_NO_ARGS);

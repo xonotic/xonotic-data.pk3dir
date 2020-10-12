@@ -3,8 +3,9 @@
 #include "weaponsystem.qh"
 #include "../resources.qh"
 #include <server/mutators/_mod.qh>
-#include <common/t_items.qh>
-#include <server/items.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
+#include <server/world.qh>
 #include <common/weapons/_all.qh>
 
 .bool m_isreplaced; ///< Holds whether the weapon has been replaced.
@@ -14,7 +15,7 @@ string W_Apply_Weaponreplace(string in)
 	string out = "";
 	FOREACH_WORD(in, true, {
 		string replacement = "";
-		Weapon w = Weapons_fromstr(it);
+		Weapon w = Weapon_from_name(it);
 		if (w)
 		{
             replacement = w.weaponreplace;
@@ -34,7 +35,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	{
 		if (wpn.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
-			LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
+			//LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
 			startitem_failed = true;
 			return;
 		}
@@ -55,7 +56,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				Weapon wep = Weapons_fromstr(s);
+				Weapon wep = Weapon_from_name(s);
 				if(wep != WEP_Null)
 				{
 					entity replacement = spawn();
@@ -68,7 +69,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
-			wpn = Weapons_fromstr(s);
+			wpn = Weapon_from_name(s);
 		}
 		if (wpn == WEP_Null)
 		{

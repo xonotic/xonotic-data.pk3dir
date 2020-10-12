@@ -443,7 +443,7 @@ void LinkDoors(entity this)
 
 		if (GetResource(this, RES_HEALTH))
 			return;
-		IFTARGETED
+		if(this.targetname && this.targetname != "")
 			return;
 		if (this.items)
 			return;
@@ -511,7 +511,7 @@ void LinkDoors(entity this)
 
 	if (GetResource(this, RES_HEALTH))
 		return;
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 		return;
 	if (this.items)
 		return;
@@ -670,10 +670,15 @@ void door_init_shared(entity this)
 		precache_sound(this.noise2);
 	}
 
-	if (!this.wait)
-	{
-		this.wait = 3;
-	}
+        if(autocvar_sv_doors_always_open)
+        {
+                 this.wait = -1;
+        }
+        else if (!this.wait)
+        {
+              	this.wait = 3;
+        }
+
 	if (!this.lip)
 	{
 		this.lip = 8;
@@ -726,10 +731,17 @@ spawnfunc(func_door)
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
-	if (!this.speed)
-	{
-		this.speed = 100;
-	}
+        if(autocvar_sv_doors_always_open)
+        {
+                this.speed = max(750, this.speed);
+        }
+        else if (!this.speed)
+        {
+		if (autocvar_sv_q3defragcompat)
+			this.speed = 400;
+		else
+	                this.speed = 100;
+        }
 
 	settouch(this, door_touch);
 

@@ -1,6 +1,8 @@
 #include "teamplay.qh"
 
 #include "client.qh"
+#include <server/gamelog.qh>
+#include <server/damage.qh>
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
@@ -464,6 +466,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 		team_ent.m_num_bots = 0;
 	}
 	setthink(balance, TeamBalance_Destroy);
+	balance.nextthink = time;
 
 	int teams_mask = 0;
 	string teament_name = string_null;
@@ -496,8 +499,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if (AvailableTeams() == 2)
-	if (autocvar_bot_vs_human && for_whom)
+	if (autocvar_bot_vs_human && AvailableTeams() == 2 && for_whom)
 	{
 		if (autocvar_bot_vs_human > 0)
 		{

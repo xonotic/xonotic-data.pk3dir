@@ -3,14 +3,19 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
+#include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include "../round_handler.qh"
 #include <server/cheats.qh>
 #include <server/resources.qh>
-#include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
+#include <common/items/_mod.qh>
 #include <common/net_linked.qh>
+#include <common/mapobjects/platforms.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>
@@ -26,8 +31,8 @@
 float W_WeaponRateFactor(entity this)
 {
 	float t = 1;
-	if(g_weaponratefactor > 0)
-		t = 1.0 / g_weaponratefactor;
+	if(autocvar_g_weaponratefactor > 0)
+		t = 1.0 / autocvar_g_weaponratefactor;
 
 	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
 	t = M_ARGV(0, float);
@@ -37,7 +42,7 @@ float W_WeaponRateFactor(entity this)
 
 float W_WeaponSpeedFactor(entity this)
 {
-	float t = 1.0 * g_weaponspeedfactor;
+	float t = 1.0 * autocvar_g_weaponspeedfactor;
 
 	MUTATOR_CALLHOOK(WeaponSpeedFactor, t, this);
 	t = M_ARGV(0, float);
@@ -55,7 +60,7 @@ bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 
 vector CL_Weapon_GetShotOrg(int wpn)
 {
-	entity wi = Weapons_from(wpn);
+	entity wi = REGISTRY_GET(Weapons, wpn);
 	entity e = spawn();
 	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
@@ -224,7 +229,7 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 .float prevwarntime;
 bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary, .entity weaponentity)
 {
-	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
+	if ((actor.items & IT_UNLIMITED_AMMO)) return true;
 	bool ammo = false;
 	if (secondary) ammo = thiswep.wr_checkammo2(thiswep, actor, weaponentity);
 	else ammo = thiswep.wr_checkammo1(thiswep, actor, weaponentity);
@@ -366,6 +371,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
+		// this can happen when the weapon entity is newly spawned, since it has a clear state and no previous weapon frame
+		if (this.wframe == WFRAME_DONTCHANGE)
+			this.wframe = WFRAME_IDLE;
 		fr = this.wframe;
 		restartanim = false;
 	}
@@ -374,22 +382,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		restartanim = fr != WFRAME_IDLE;
 	}
 
-	vector of = v_forward;
-	vector or = v_right;
-	vector ou = v_up;
-
-	vector a = '0 0 0';
     this.wframe = fr;
-    if (fr == WFRAME_IDLE) a = this.anim_idle;
-    else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
-    else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
-    else  // if (fr == WFRAME_RELOAD)
-        a = this.anim_reload;
-    a.z *= g_weaponratefactor;
-
-	v_forward = of;
-	v_right = or;
-	v_up = ou;
 
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
@@ -416,7 +409,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	{
 		FOREACH_CLIENT(true, {
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
-				wframe_send(it, this, a, restartanim);
+				wframe_send(it, this, fr, autocvar_g_weaponratefactor, restartanim);
 		});
 	}
 
@@ -451,6 +444,28 @@ bool weaponLocked(entity player)
 	if (STAT(FROZEN, player)) return true;
 	if (MUTATOR_CALLHOOK(LockWeapon, player)) return true;
 	return false;
+}
+
+void W_ResetGunAlign(entity player, int preferred_alignment)
+{
+	if(W_DualWielding(player))
+		preferred_alignment = 3; // right align, the second gun will default to left
+
+	// clear current weapon slots' alignments so we can redo the calculations!
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = 0;
+	}
+
+	// now set the new values
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = W_GunAlign(player.(weaponentity), preferred_alignment);
+	}
 }
 
 .bool hook_switchweapon;
@@ -508,10 +523,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		return;
 	}
 
-	makevectors(actor.v_angle);
-	vector fo = v_forward;  // save them in case the weapon think functions change it
-	vector ri = v_right;
-	vector up = v_up;
+	vector fo, ri, up;
+	MAKE_VECTORS(actor.v_angle, fo, ri, up);
 
 	// Change weapon
 	if (this.m_weapon != this.m_switchweapon)
@@ -688,7 +701,7 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponentity)
 {
 	if (MUTATOR_CALLHOOK(W_DecreaseAmmo, actor, actor.(weaponentity), ammo_use)) return;
-	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO) && !wep.reloading_ammo) return;
+	if ((actor.items & IT_UNLIMITED_AMMO) && !wep.reloading_ammo) return;
 
 	ammo_use = M_ARGV(2, float);
 
@@ -735,7 +748,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	w_ent.clip_load = w_ent.old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || wpn.ammo_type == RES_NONE)
+	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_AMMO) || wpn.ammo_type == RES_NONE)
 	{
 		w_ent.clip_load = w_ent.reload_ammo_amount;
 	}
@@ -791,8 +804,10 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	{
 		if (!GetResource(actor, e.ammo_type) && this.reload_ammo_min)
 		{
-			if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+			if (!(actor.items & IT_UNLIMITED_AMMO))
 			{
+				if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0)
+					return; // in this case the primary weapon will do the switching when it runs out of ammo (TODO: do this same check but for other slots)
 				if (IS_REAL_CLIENT(actor) && actor.reload_complain < time)
 				{
 					play2(actor, SND(UNAVAILABLE));
@@ -809,7 +824,6 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 			}
 		}
 	}
-
 	if (this)
 	{
 		if (this.wframe == WFRAME_RELOAD) return;
@@ -837,7 +851,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)
 {
-	Weapon w = Weapons_from(weapon_type);
+	Weapon w = REGISTRY_GET(Weapons, weapon_type);
 	weapon_dropevent_item = weapon_item;
 	w.event(w, player, weaponentity);
 }

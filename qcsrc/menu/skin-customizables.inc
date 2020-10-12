@@ -1,4 +1,4 @@
-#if 0
+/*
 "Perl code to convert this to a skinvalues.txt file.";
 print "title Generic\n";
 print "author Morphed\n";
@@ -32,7 +32,7 @@ while(<DATA>)
 	}
 }
 __DATA__
-#endif
+*/
 SKINBEGIN
 	// font sizes (used for everything)
 	SKINFLOAT(FONTSIZE_NORMAL, 12);

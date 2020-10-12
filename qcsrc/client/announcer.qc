@@ -4,6 +4,7 @@
 
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
+#include "hud/panel/centerprint.qh"
 
 bool announcer_1min;
 bool announcer_5min;
@@ -84,7 +85,7 @@ void Announcer_Gamestart()
 	{
 		if(announcer_countdown)
 		{
-			centerprint_kill(ORDINAL(CPID_ROUND));
+			centerprint_Kill(ORDINAL(CPID_ROUND));
 			if(announcer_countdown)
 			{
 				delete(announcer_countdown);

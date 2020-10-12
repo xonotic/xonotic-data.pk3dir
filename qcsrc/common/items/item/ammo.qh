@@ -3,7 +3,7 @@
 #include "pickup.qh"
 #include <common/items/all.qh>
 #ifdef SVQC
-    #include <common/t_items.qh>
+    #include <server/items/items.qh>
     #include <server/resources.qh>
 #endif
 
@@ -67,7 +67,7 @@ REGISTER_ITEM(Bullets, Bullets) {
     this.m_icon     =   "ammo_bullets";
 #ifdef SVQC
     this.m_botvalue =   1500;
-    this.m_itemid   =   IT_NAILS;
+    this.m_itemid   =   IT_RESOURCE;
     this.m_iteminit =   ammo_bullets_init;
 #endif
 }
@@ -97,7 +97,7 @@ REGISTER_ITEM(Cells, Ammo) {
     this.m_icon     =   "ammo_cells";
 #ifdef SVQC
     this.m_botvalue =   1500;
-    this.m_itemid   =   IT_CELLS;
+    this.m_itemid   =   IT_RESOURCE;
     this.m_iteminit =   ammo_cells_init;
 #endif
 }
@@ -127,7 +127,7 @@ REGISTER_ITEM(Plasma, Ammo) {
     this.m_icon     =   "ammo_plasma";
 #ifdef SVQC
     this.m_botvalue =   1500;
-    this.m_itemid   =   IT_PLASMA;
+    this.m_itemid   =   IT_RESOURCE;
     this.m_iteminit =   ammo_plasma_init;
 #endif
 }
@@ -157,7 +157,7 @@ REGISTER_ITEM(Rockets, Ammo) {
     this.m_icon     =   "ammo_rockets";
 #ifdef SVQC
     this.m_botvalue =   1500;
-    this.m_itemid   =   IT_ROCKETS;
+    this.m_itemid   =   IT_RESOURCE;
     this.m_iteminit =   ammo_rockets_init;
 #endif
 }
@@ -191,7 +191,7 @@ REGISTER_ITEM(Shells, Shells) {
     this.m_icon     =   "ammo_shells";
 #ifdef SVQC
     this.m_botvalue =   1000;
-    this.m_itemid   =   IT_SHELLS;
+    this.m_itemid   =   IT_RESOURCE;
     this.m_iteminit =   ammo_shells_init;
 #endif
 }

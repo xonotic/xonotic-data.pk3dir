@@ -1,16 +1,28 @@
 #include "radar.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
+#include <client/main.qh>
 #include <common/ent_cs.qh>
-#include <common/mapinfo.qh>
 #include <client/mapvoting.qh>
 #include <client/resources.qh>
 #include <client/teamradar.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 
 // Radar (#6)
+
+void HUD_Radar_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_radar_foreground_alpha");
+	HUD_Write_Cvar("hud_panel_radar_rotation");
+	HUD_Write_Cvar("hud_panel_radar_zoommode");
+	HUD_Write_Cvar("hud_panel_radar_scale");
+	HUD_Write_Cvar("hud_panel_radar_maximized_scale");
+	HUD_Write_Cvar("hud_panel_radar_maximized_size");
+	HUD_Write_Cvar("hud_panel_radar_maximized_rotation");
+	HUD_Write_Cvar("hud_panel_radar_maximized_zoommode");
+}
 
 bool HUD_Radar_Clickable()
 {
@@ -340,10 +352,12 @@ void HUD_Radar()
 
 	IL_EACH(g_radarlinks, true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(TeamRadar_Draw); // TODO: allow players to show on the radar as well!
+
 	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
 		if ( GetResource(it, RES_HEALTH) >= 0 )
-		if ( it.team == myteam + 1 || ISGAMETYPE(RACE) || !teamplay )
+		if ( it.team == myteam + 1 || mutator_returnvalue || !teamplay )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if(vdist((mousepos - coord), <, 8))
@@ -355,7 +369,7 @@ void HUD_Radar()
 				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
 			}
 		}
-		entity icon = RadarIcons_from(it.teamradar_icon);
+		entity icon = REGISTRY_GET(RadarIcons, it.teamradar_icon);
 		draw_teamradar_icon(it.origin, icon, it, spritelookupcolor(it, icon.netname, it.teamradar_color), panel_fg_alpha);
 	});
 	AL_EACH(_entcs, e, it != NULL, {

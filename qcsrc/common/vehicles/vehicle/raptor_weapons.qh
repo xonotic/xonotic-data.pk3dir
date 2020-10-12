@@ -30,7 +30,7 @@ REGISTER_WEAPON(RAPTOR_FLARE, NEW(RaptorFlare));
 float autocvar_g_vehicle_raptor_cannon_cost = 1;
 float autocvar_g_vehicle_raptor_cannon_damage = 10;
 float autocvar_g_vehicle_raptor_cannon_radius = 60;
-float autocvar_g_vehicle_raptor_cannon_refire = 0.03;
+float autocvar_g_vehicle_raptor_cannon_refire = 0.033333;
 float autocvar_g_vehicle_raptor_cannon_speed = 24000;
 float autocvar_g_vehicle_raptor_cannon_spread = 0.01;
 float autocvar_g_vehicle_raptor_cannon_force = 25;

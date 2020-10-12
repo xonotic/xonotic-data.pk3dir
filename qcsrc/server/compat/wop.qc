@@ -1,8 +1,8 @@
 #include "wop.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <server/items.qh>
+#include <common/weapons/_all.qh>
+#include <common/stats.qh>
+#include <server/items/spawning.qh>
 #include <common/weapons/_all.qh>
 
 spawnfunc(item_haste);

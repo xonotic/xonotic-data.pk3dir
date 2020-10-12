@@ -1,0 +1,8 @@
+#pragma once
+
+entityclass(BGMScript);
+classfield(BGMScript) .string bgmscript;
+classfield(BGMScript) .float bgmscriptattack;
+classfield(BGMScript) .float bgmscriptdecay;
+classfield(BGMScript) .float bgmscriptsustain;
+classfield(BGMScript) .float bgmscriptrelease;

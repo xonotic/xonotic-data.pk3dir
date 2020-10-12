@@ -30,15 +30,11 @@ bool modeleffect_SendEntity(entity this, entity to, int sf)
 	}
 	if(f & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.angles.x);
-		WriteCoord(MSG_ENTITY, this.angles.y);
-		WriteCoord(MSG_ENTITY, this.angles.z);
+		WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 	if(f & 4)
 	{
-		WriteCoord(MSG_ENTITY, this.avelocity.x);
-		WriteCoord(MSG_ENTITY, this.avelocity.y);
-		WriteCoord(MSG_ENTITY, this.avelocity.z);
+		WriteAngleVector(MSG_ENTITY, this.avelocity);
 	}
 	WriteShort(MSG_ENTITY, this.scale * 256.0);
 	WriteShort(MSG_ENTITY, this.scale2 * 256.0);
@@ -128,15 +124,11 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	}
 	if(f & 2)
 	{
-		e.angles_x = ReadAngle();
-		e.angles_y = ReadAngle();
-		e.angles_z = ReadAngle();
+		e.angles = ReadAngleVector();
 	}
 	if(f & 4)
 	{
-		e.avelocity_x = ReadAngle();
-		e.avelocity_y = ReadAngle();
-		e.avelocity_z = ReadAngle();
+		e.avelocity = ReadAngleVector();
 	}
 	e.scale1 = ReadShort() / 256.0;
 	e.scale2 = ReadShort() / 256.0;

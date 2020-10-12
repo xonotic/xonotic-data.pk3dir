@@ -10,6 +10,8 @@ CLASS(Vaporizer, Weapon)
 /* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);
+/* flash mdl */ ATTRIB(Vaporizer, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Vaporizer, m_muzzleeffect, entity, EFFECT_VORTEX_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair, string, "gfx/crosshairminstanex");
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair_size, float, 0.6);

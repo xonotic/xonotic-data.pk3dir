@@ -2,9 +2,10 @@
 
 #include <common/command/_mod.qh>
 REGISTRY(COMMON_COMMANDS, BITS(7))
-#define COMMON_COMMANDS_from(i) _COMMON_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(COMMON_COMMANDS)
 REGISTRY_SORT(COMMON_COMMANDS)
+
+REGISTRY_DEFINE_GET(COMMON_COMMANDS, NULL)
 
 #define COMMON_COMMAND(id, description) \
 	CLASS(commoncommand_##id, Command) \
@@ -53,7 +54,7 @@ float timeout_status;    // (values: 0, 1, 2) contains whether a timeout is not 
 .float allowed_timeouts; // contains the number of allowed timeouts for each player
 .vector lastV_angle;     // used when pausing the game in order to force the player to keep his old view angle fixed
 
-// allow functions to be used in other code like g_world.qc and teamplay.qc
+// allow functions to be used in other code like world.qc and teamplay.qc
 void timeout_handler_think(entity this);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file

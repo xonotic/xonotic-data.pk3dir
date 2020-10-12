@@ -1,6 +1,7 @@
 #include "cl_minigames_hud.qh"
 
 #include <client/autocvars.qh>
+#include <client/draw.qh>
 #include <common/ent_cs.qh>
 
 #include "minigames.qh"
@@ -9,6 +10,26 @@
 
 #include <client/hud/hud_config.qh>
 #include <client/mapvoting.qh>
+
+void HUD_MinigameBoard_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
+void HUD_MinigameStatus_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
+void HUD_MinigameHelp_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
+
+void HUD_MinigameMenu_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+}
 
 // whether the mouse is over the given panel
 bool HUD_mouse_over(entity somepanel)

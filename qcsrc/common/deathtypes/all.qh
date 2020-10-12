@@ -3,9 +3,10 @@
 #include <common/notifications/all.qh>
 
 REGISTRY(Deathtypes, BITS(8))
-#define Deathtypes_from(i) _Deathtypes_from(i, NULL)
 REGISTER_REGISTRY(Deathtypes)
 REGISTRY_CHECK(Deathtypes)
+
+REGISTRY_DEFINE_GET(Deathtypes, NULL)
 
 .entity death_msgself;
 .entity death_msgmurder;
@@ -32,12 +33,12 @@ const int DEATH_HITTYPEMASK = HITTYPE_SECONDARY | HITTYPE_SPLASH | HITTYPE_BOUNC
 const int DT_FIRST = BIT(13);
 
 #define DEATH_ISSPECIAL(t)      (t >= DT_FIRST)
-#define DEATH_IS(t, dt)         (DEATH_ISSPECIAL(t) && (Deathtypes_from(t - DT_FIRST)) == dt)
-#define DEATH_ENT(t)            (DEATH_ISSPECIAL(t) ?  (Deathtypes_from(t - DT_FIRST)) : NULL)
-#define DEATH_ISVEHICLE(t)      (DEATH_ISSPECIAL(t) && (Deathtypes_from(t - DT_FIRST)).death_msgextra == "vehicle")
-#define DEATH_ISTURRET(t)       (DEATH_ISSPECIAL(t) && (Deathtypes_from(t - DT_FIRST)).death_msgextra == "turret")
-#define DEATH_ISMONSTER(t)      (DEATH_ISSPECIAL(t) && (Deathtypes_from(t - DT_FIRST)).death_msgextra == "monster")
-#define DEATH_WEAPONOF(t)       (DEATH_ISSPECIAL(t) ? WEP_Null : Weapons_from((t) & DEATH_WEAPONMASK))
+#define DEATH_IS(t, dt)         (DEATH_ISSPECIAL(t) && (REGISTRY_GET(Deathtypes, t - DT_FIRST)) == dt)
+#define DEATH_ENT(t)            (DEATH_ISSPECIAL(t) ?  (REGISTRY_GET(Deathtypes, t - DT_FIRST)) : NULL)
+#define DEATH_ISVEHICLE(t)      (DEATH_ISSPECIAL(t) && (REGISTRY_GET(Deathtypes, t - DT_FIRST)).death_msgextra == "vehicle")
+#define DEATH_ISTURRET(t)       (DEATH_ISSPECIAL(t) && (REGISTRY_GET(Deathtypes, t - DT_FIRST)).death_msgextra == "turret")
+#define DEATH_ISMONSTER(t)      (DEATH_ISSPECIAL(t) && (REGISTRY_GET(Deathtypes, t - DT_FIRST)).death_msgextra == "monster")
+#define DEATH_WEAPONOF(t)       (DEATH_ISSPECIAL(t) ? WEP_Null : REGISTRY_GET(Weapons, (t) & DEATH_WEAPONMASK))
 #define DEATH_ISWEAPON(t, w)    (DEATH_WEAPONOF(t) == (w))
 
 string Deathtype_Name(int deathtype);

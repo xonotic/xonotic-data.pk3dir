@@ -1,4 +1,5 @@
 // generated file; do not modify
+#include <common/gamemodes/gamemode/assault/assault.qh>
 #ifdef SVQC
     #include <common/gamemodes/gamemode/assault/sv_assault.qh>
 #endif

@@ -6,10 +6,11 @@
 #endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)
-#define EntCSProps_from(i) _EntCSProps_from(i, NULL)
 REGISTER_REGISTRY(EntCSProps)
 REGISTRY_SORT(EntCSProps)
 REGISTRY_CHECK(EntCSProps)
+
+REGISTRY_DEFINE_GET(EntCSProps, NULL)
 STATIC_INIT(EntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
 
 // these entcs_props ids need to be referenced directly
@@ -169,7 +170,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		do {
 			if (IS_PLAYER(player))
 			{
-				if (radar_showennemies) break;
+				if (radar_showenemies) break;
 				if (SAME_TEAM(to, player)) break;
 				if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
 			}

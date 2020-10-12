@@ -1,5 +1,11 @@
 #include "bumblebee.qh"
 
+#ifdef GAMEQC
+
+#ifdef SVQC
+	#include <common/mutators/mutator/instagib/sv_instagib.qh>
+#endif
+
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
 const float BRG_END = 8;
@@ -224,6 +230,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 		WriteByte(MSG_ONE, SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, player);
 
+		// NOTE: engine networked
 		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
 		WriteAngle(MSG_ONE, 0);
 		WriteAngle(MSG_ONE, vehic.angles.y);
@@ -334,6 +341,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 		WriteByte(MSG_ONE, 		SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, 	gunner.vehicle_viewport);
 
+		// NOTE: engine networked
 		WriteByte(MSG_ONE, 		SVC_SETVIEWANGLES);
 		WriteAngle(MSG_ONE, 	gunner.angles_x + vehic.angles_x); // tilt
 		WriteAngle(MSG_ONE, 	gunner.angles_y + vehic.angles_y); // yaw
@@ -568,8 +576,9 @@ bool bumblebee_pilot_frame(entity this, float dt)
 						}
 						else if(IS_CLIENT(trace_ent))
 						{
-							if(GetResource(trace_ent, RES_ARMOR) <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
-								GiveResourceWithLimit(trace_ent, RES_ARMOR, autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax);
+							float maxarmor = ((MUTATOR_IS_ENABLED(mutator_instagib)) ? autocvar_g_instagib_extralives : autocvar_g_vehicle_bumblebee_healgun_amax);
+							if(GetResource(trace_ent, RES_ARMOR) <= maxarmor && autocvar_g_vehicle_bumblebee_healgun_aps)
+								GiveResourceWithLimit(trace_ent, RES_ARMOR, autocvar_g_vehicle_bumblebee_healgun_aps * dt, maxarmor);
 						}
 					}
 				}
@@ -963,5 +972,7 @@ METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
     AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1
     AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
 }
+
+#endif
 
 #endif

@@ -10,7 +10,6 @@
 REGISTER_NET_LINKED(ENT_CLIENT_LASER)
 
 #ifdef SVQC
-.float modelscale;
 void misc_laser_aim(entity this)
 {
 	vector a;
@@ -162,8 +161,7 @@ bool laser_SendEntity(entity this, entity to, float sendflags)
 		}
 		else
 		{
-			WriteAngle(MSG_ENTITY, this.mangle_x);
-			WriteAngle(MSG_ENTITY, this.mangle_y);
+			WriteAngleVector2D(MSG_ENTITY, this.mangle);
 		}
 	}
 	if(sendflags & SF_LASER_UPDATE_ACTIVE)
@@ -280,7 +278,7 @@ spawnfunc(misc_laser)
 
 	this.setactive = laser_setactive;
 
-	IFTARGETED
+	if(this.targetname && this.targetname != "")
 	{
 		// backwards compatibility
 		this.use = laser_use;
@@ -290,19 +288,6 @@ spawnfunc(misc_laser)
 	this.reset(this);
 }
 #elif defined(CSQC)
-
-// a laser goes from origin in direction angles
-// it has color 'beam_color'
-// and stops when something is in the way
-entityclass(Laser);
-classfield(Laser) .int cnt; // end effect
-classfield(Laser) .vector colormod;
-classfield(Laser) .int state; // on-off
-classfield(Laser) .int count; // flags for the laser
-classfield(Laser) .vector velocity; // laser endpoint if it is FINITE
-classfield(Laser) .float alpha;
-classfield(Laser) .float scale; // scaling factor of the thickness
-classfield(Laser) .float modelscale; // scaling factor of the dlight
 
 void Draw_Laser(entity this)
 {
@@ -402,8 +387,7 @@ NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 		}
 		else
 		{
-			this.angles_x = ReadAngle();
-			this.angles_y = ReadAngle();
+			this.angles = ReadAngleVector2D();
 		}
 	}
 	if(sendflags & SF_LASER_UPDATE_ACTIVE)

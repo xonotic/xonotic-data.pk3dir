@@ -6,7 +6,8 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include "autocvars.qh"
-#include "miscfunctions.qh"
+#include <server/mutators/_mod.qh>
+#include <server/world.qh>
 
 float GetResourceLimit(entity e, int res_type)
 {

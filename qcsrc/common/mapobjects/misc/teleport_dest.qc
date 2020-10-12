@@ -14,10 +14,7 @@ bool teleport_dest_send(entity this, entity to, int sendflags)
 		WriteCoord(MSG_ENTITY, this.speed);
 		WriteString(MSG_ENTITY, this.targetname);
 		WriteVector(MSG_ENTITY, this.origin);
-
-		WriteAngle(MSG_ENTITY, this.mangle_x);
-		WriteAngle(MSG_ENTITY, this.mangle_y);
-		WriteAngle(MSG_ENTITY, this.mangle_z);
+		WriteAngleVector(MSG_ENTITY, this.mangle);
 	}
 
 	return true;
@@ -39,10 +36,7 @@ spawnfunc(info_teleport_destination)
 	//setorigin(this, this.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
 	setorigin(this, this.origin);
 
-	IFTARGETED
-	{
-	}
-	else
+	if(!this.targetname || this.targetname == "")
 	{
 		objerror (this, "^3Teleport destination without a targetname");
 		return; // don't link it to CSQC in this case!
@@ -75,10 +69,7 @@ NET_HANDLE(ENT_CLIENT_TELEPORT_DEST, bool isnew)
 		this.speed = ReadCoord();
 		this.targetname = strzone(ReadString());
 		this.origin = ReadVector();
-
-		this.mangle_x = ReadAngle();
-		this.mangle_y = ReadAngle();
-		this.mangle_z = ReadAngle();
+		this.mangle = ReadAngleVector();
 
 		setorigin(this, this.origin);
 

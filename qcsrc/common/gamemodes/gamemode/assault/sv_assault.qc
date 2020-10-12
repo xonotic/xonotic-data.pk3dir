@@ -1,6 +1,12 @@
 #include "sv_assault.qh"
 
+#include <server/command/vote.qh>
 #include <common/mapobjects/func/breakable.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/turrets/sv_turrets.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
+#include <server/spawnpoints.qh>
 
 .entity sprite;
 #define AS_ROUND_DELAY 5
