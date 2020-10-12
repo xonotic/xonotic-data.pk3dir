@@ -34,7 +34,7 @@ float race_completing;
 .entity race_respawn_spotref; // try THIS spawn in case you respawn
 
 // definitions for functions used outside race.qc
-void write_recordmarker(entity pl, float tstart, float dt);
+void write_recordmarker(entity pl, float newpos, float tstart, float dt);
 
 float race_PreviousCheckpoint(float f);
 float race_NextCheckpoint(float f);

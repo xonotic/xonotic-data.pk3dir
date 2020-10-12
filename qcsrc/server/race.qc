@@ -51,15 +51,23 @@ string uid2name(string myuid)
 	return s;
 }
 
-void write_recordmarker(entity pl, float tstart, float dt)
+void write_recordmarker(entity pl, float newpos, float tstart, float dt)
 {
     GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
 
     // also write a marker into demo files for demotc-race-record-extractor to find
-    stuffcmd(pl,
-             strcat(
-                 strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
-                 " ", ftos(tstart), " ", ftos(dt), "\n"));
+    if (pl.crypto_idfp != "") {
+      stuffcmd(pl,
+               strcat(
+                   strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+                   strcat(" ", ftos(tstart), " ", ftos(dt), " ", ftos(newpos), " "),
+                   strcat(pl.crypto_idfp, "\n")));
+    } else {
+      stuffcmd(pl,
+               strcat(
+                   strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+                   strcat(" ", ftos(tstart), " ", ftos(dt), " ", ftos(newpos), " ANONYMOUS")));
+    }
 }
 
 IntrusiveList g_race_targets;
