@@ -218,7 +218,7 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
         float myrecordtime = e.race_checkpoint_record[cp];
         float recordtime;
         string recordholder;
-        if (autocvar_g_cts_cptimes_onlyself) {
+        if (autocvar_g_cts_cptimes_onlyself && (race_CheckpointNetworkID(cp) < 254)) {  // cp 254 - start line, cp 255 - finish line
           recordtime = myrecordtime;
           recordholder = "";
         } else {
@@ -483,7 +483,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		if(tvalid)
 		{
                         float myrecordtime = e.race_checkpoint_record[cp];
-                        if (autocvar_g_cts_cptimes_onlyself) {
+                        if (autocvar_g_cts_cptimes_onlyself && (race_CheckpointNetworkID(cp) < 254)) {  // cp 254 - start line, cp 255 - finish line
                           recordtime = myrecordtime;
                           recordholder = "";
                         } else {
