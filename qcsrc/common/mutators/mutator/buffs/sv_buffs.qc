@@ -57,6 +57,13 @@ void buffs_BuffModel_Spawn(entity player)
 	setcefc(player.buff_model, buffs_BuffModel_Customize);
 }
 
+void buffs_BuffModel_Remove(entity player)
+{
+	if(player.buff_model)
+		delete(player.buff_model);
+	player.buff_model = NULL;
+}
+
 vector buff_GlowColor(entity buff)
 {
 	//if(buff.team) { return Team_ColorRGB(buff.team); }
@@ -581,6 +588,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	buffs_BuffModel_Remove(player);
 	player.oldbuffs = 0;
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
@@ -631,11 +639,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 		STAT(BUFFS, frag_target) = 0;
 		STAT(BUFF_TIME, frag_target) = 0;
 
-		if(frag_target.buff_model)
-		{
-			delete(frag_target.buff_model);
-			frag_target.buff_model = NULL;
-		}
+		buffs_BuffModel_Remove(frag_target);
 	}
 }
 
@@ -741,11 +745,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 
 bool buffs_RemovePlayer(entity player)
 {
-	if(player.buff_model)
-	{
-		delete(player.buff_model);
-		player.buff_model = NULL;
-	}
+	buffs_BuffModel_Remove(player);
 
 	// also reset timers here to prevent them continuing after spectating
 	player.buff_disability_time = 0;
@@ -998,9 +998,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 		else
 		{
-			if(player.buff_model)
-				delete(player.buff_model);
-			player.buff_model = NULL;
+			buffs_BuffModel_Remove(player);
 
 			player.effects &= ~(EF_NOSHADOW);
 		}
