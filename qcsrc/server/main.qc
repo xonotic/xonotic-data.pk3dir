@@ -17,21 +17,21 @@
 #include <server/weapons/common.qh>
 #include <server/compat/quake3.qh>
 
-#include "../common/constants.qh"
+#include <common/constants.qh>
 #include <common/command/generic.qh>
-#include "../common/deathtypes/all.qh"
-#include "../common/debug.qh"
-#include "../common/mapinfo.qh"
-#include "../common/util.qh"
+#include <common/deathtypes/all.qh>
+#include <common/debug.qh>
+#include <common/mapinfo.qh>
+#include <common/util.qh>
 
-#include "../common/vehicles/all.qh"
+#include <common/vehicles/all.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/weapons/_all.qh>
 
-#include "../lib/csqcmodel/sv_model.qh"
+#include <lib/csqcmodel/sv_model.qh>
 
-#include "../lib/warpzone/common.qh"
-#include "../lib/warpzone/server.qh"
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/server.qh>
 
 void CreatureFrame_hotliquids(entity this)
 {

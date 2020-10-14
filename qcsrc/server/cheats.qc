@@ -11,33 +11,33 @@
 #include "clientkill.qh"
 #include "player.qh"
 #include "race.qh"
-#include "../common/mapobjects/teleporters.qh"
+#include <common/mapobjects/teleporters.qh>
 
 #include <server/mutators/_mod.qh>
 
 #include "weapons/tracing.qh"
 
-#include "../common/constants.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/util.qh"
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/util.qh>
 
 #include <common/physics/player.qh>
 
-#include "../common/monsters/_mod.qh"
+#include <common/monsters/_mod.qh>
 
 #include <common/items/_mod.qh>
 
 #include <common/weapons/_all.qh>
 
-#include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 
-#include "../common/mapobjects/func/breakable.qh"
+#include <common/mapobjects/func/breakable.qh>
 
-#include "../lib/csqcmodel/sv_model.qh"
+#include <lib/csqcmodel/sv_model.qh>
 
-#include "../lib/warpzone/anglestransform.qh"
-#include "../lib/warpzone/util_server.qh"
+#include <lib/warpzone/anglestransform.qh>
+#include <lib/warpzone/util_server.qh>
 
 #ifdef NOCHEATS
 

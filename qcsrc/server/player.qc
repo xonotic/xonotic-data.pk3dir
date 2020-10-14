@@ -16,31 +16,31 @@
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "command/vote.qh"
-#include "../common/state.qh"
-#include "../common/anim.qh"
-#include "../common/animdecide.qh"
-#include "../common/csqcmodel_settings.qh"
-#include "../common/gamemodes/sv_rules.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/mapobjects/subs.qh"
+#include <common/state.qh>
+#include <common/anim.qh>
+#include <common/animdecide.qh>
+#include <common/csqcmodel_settings.qh>
+#include <common/gamemodes/sv_rules.qh>
+#include <common/deathtypes/all.qh>
+#include <common/mapobjects/subs.qh>
 #include <common/mapobjects/teleporters.qh>
-#include "../common/playerstats.qh"
-#include "../lib/csqcmodel/sv_model.qh"
+#include <common/playerstats.qh>
+#include <lib/csqcmodel/sv_model.qh>
 
-#include "../common/minigames/sv_minigames.qh"
+#include <common/minigames/sv_minigames.qh>
 
 #include <common/gamemodes/_mod.qh>
 
-#include "../common/physics/player.qh"
-#include "../common/effects/qc/_mod.qh"
-#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/mapobjects/_mod.qh"
-#include "../common/wepent.qh"
+#include <common/physics/player.qh>
+#include <common/effects/qc/_mod.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/mapobjects/_mod.qh>
+#include <common/wepent.qh>
 
 #include "weapons/weaponstats.qh"
 #include <server/weapons/weaponsystem.qh>
 
-#include "../common/animdecide.qh"
+#include <common/animdecide.qh>
 
 void Drop_Special_Items(entity player)
 {

@@ -8,7 +8,7 @@
 #include <server/intermission.qh>
 #include "world.qh"
 
-#include "../common/campaign_common.qh"
+#include <common/campaign_common.qh>
 
 // campaign cvars:
 //   _campaign_index: index of CURRENT map

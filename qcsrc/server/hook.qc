@@ -16,15 +16,15 @@
 #include "command/common.qh"
 #include "command/vote.qh"
 #include "round_handler.qh"
-#include "../common/state.qh"
-#include "../common/physics/player.qh"
-#include "../common/vehicles/all.qh"
-#include "../common/constants.qh"
-#include "../common/util.qh"
+#include <common/state.qh>
+#include <common/physics/player.qh>
+#include <common/vehicles/all.qh>
+#include <common/constants.qh>
+#include <common/util.qh>
 #include <common/net_linked.qh>
 #include <common/weapons/_all.qh>
-#include "../lib/warpzone/common.qh"
-#include "../lib/warpzone/server.qh"
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/server.qh>
 
 /*============================================
 

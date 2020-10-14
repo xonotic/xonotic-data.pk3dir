@@ -16,12 +16,12 @@
 
 #include <common/state.qh>
 
-#include "../common/minigames/sv_minigames.qh"
+#include <common/minigames/sv_minigames.qh>
 
 #include <common/weapons/_all.qh>
-#include "../common/vehicles/sv_vehicles.qh"
+#include <common/vehicles/sv_vehicles.qh>
 
-#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
 
 .entity vehicle;
 

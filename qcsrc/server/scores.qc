@@ -8,8 +8,8 @@
 #include <server/mutators/_mod.qh>
 #include <server/round_handler.qh>
 #include <common/net_linked.qh>
-#include "../common/playerstats.qh"
-#include "../common/teams.qh"
+#include <common/playerstats.qh>
+#include <common/teams.qh>
 #include <common/mapinfo.qh>
 #include <common/mutators/base.qh>
 #include <common/scores.qh>

@@ -12,31 +12,31 @@
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
-#include "../common/state.qh"
-#include "../common/physics/player.qh"
+#include <common/state.qh>
+#include <common/physics/player.qh>
 #include "resources.qh"
-#include "../common/vehicles/all.qh"
-#include "../common/items/_mod.qh"
-#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
-#include "../common/mutators/mutator/instagib/sv_instagib.qh"
-#include "../common/mutators/mutator/buffs/buffs.qh"
+#include <common/vehicles/all.qh>
+#include <common/items/_mod.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
-#include "../common/constants.qh"
-#include "../common/deathtypes/all.qh"
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>
-#include "../common/notifications/all.qh"
-#include "../common/physics/movetypes/movetypes.qh"
-#include "../common/playerstats.qh"
-#include "../common/teams.qh"
-#include "../common/util.qh"
+#include <common/notifications/all.qh>
+#include <common/physics/movetypes/movetypes.qh>
+#include <common/playerstats.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/rules.qh>
 #include <common/weapons/_all.qh>
-#include "../lib/csqcmodel/sv_model.qh"
-#include "../lib/warpzone/common.qh"
+#include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/common.qh>
 
 void UpdateFrags(entity player, int f)
 {
