@@ -17,10 +17,10 @@
 
 #include "xonotic/util.qh"
 
-#include "../common/items/_mod.qh"
+#include <common/items/_mod.qh>
 #include <common/weapons/_all.qh>
-#include "../common/mapinfo.qh"
-#include "../common/mutators/base.qh"
+#include <common/mapinfo.qh>
+#include <common/mutators/base.qh>
 
 int mouseButtonsPressed;
 vector menuMousePos;

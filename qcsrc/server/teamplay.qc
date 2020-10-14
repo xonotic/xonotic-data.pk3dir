@@ -13,9 +13,9 @@
 
 #include <server/mutators/_mod.qh>
 
-#include "../common/deathtypes/all.qh"
+#include <common/deathtypes/all.qh>
 #include <common/gamemodes/_mod.qh>
-#include "../common/teams.qh"
+#include <common/teams.qh>
 
 /// \brief Describes a state of team balance entity.
 enum

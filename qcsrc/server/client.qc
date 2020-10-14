@@ -33,52 +33,52 @@
 
 #include "bot/api.qh"
 
-#include "../common/ent_cs.qh"
-#include "../common/wepent.qh"
+#include <common/ent_cs.qh>
+#include <common/wepent.qh>
 #include <common/state.qh>
 
 #include "compat/quake3.qh"
 
 #include <common/effects/qc/globalsound.qh>
 
-#include "../common/mapobjects/func/conveyor.qh"
+#include <common/mapobjects/func/conveyor.qh>
 #include <common/mapobjects/func/ladder.qh>
-#include "../common/mapobjects/teleporters.qh"
-#include "../common/mapobjects/target/spawnpoint.qh"
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/target/spawnpoint.qh>
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/trigger/swamp.qh>
 
-#include "../common/vehicles/all.qh"
+#include <common/vehicles/all.qh>
 
 #include "weapons/hitplot.qh"
 #include "weapons/selection.qh"
 #include "weapons/weaponsystem.qh"
 
-#include "../common/net_notice.qh"
-#include "../common/net_linked.qh"
-#include "../common/physics/player.qh"
+#include <common/net_notice.qh>
+#include <common/net_linked.qh>
+#include <common/physics/player.qh>
 
 #include <common/vehicles/sv_vehicles.qh>
 
-#include "../common/items/_mod.qh"
+#include <common/items/_mod.qh>
 
 #include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
 
-#include "../common/mutators/mutator/waypoints/all.qh"
-#include "../common/mutators/mutator/instagib/sv_instagib.qh"
+#include <common/mutators/mutator/waypoints/all.qh>
+#include <common/mutators/mutator/instagib/sv_instagib.qh>
 #include <common/gamemodes/_mod.qh>
 
-#include "../common/mapobjects/subs.qh"
-#include "../common/mapobjects/triggers.qh"
-#include "../common/mapobjects/trigger/secret.qh"
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/mapobjects/trigger/secret.qh>
 
-#include "../common/minigames/sv_minigames.qh"
+#include <common/minigames/sv_minigames.qh>
 
-#include "../common/items/inventory.qh"
+#include <common/items/inventory.qh>
 
-#include "../common/monsters/sv_monsters.qh"
+#include <common/monsters/sv_monsters.qh>
 
-#include "../lib/warpzone/server.qh"
+#include <lib/warpzone/server.qh>
 
 #include <common/mutators/mutator/overkill/oknex.qh>
 

@@ -4,7 +4,7 @@
 #include "campaign.qh"
 #include "command/vote.qh"
 #include <common/mapobjects/triggers.qh>
-#include "../common/util.qh"
+#include <common/util.qh>
 
 void round_handler_Think(entity this)
 {

@@ -16,19 +16,19 @@
 #include "spawnpoints.qh"
 #include "bot/api.qh"
 #include "command/getreplies.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/notifications/all.qh"
+#include <common/deathtypes/all.qh>
+#include <common/notifications/all.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/rules.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>
 #include <common/weapons/weapon/porto.qh>
-#include "../common/mapobjects/subs.qh"
+#include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
-#include "../lib/warpzone/util_server.qh"
-#include "../lib/warpzone/common.qh"
+#include <lib/warpzone/util_server.qh>
+#include <lib/warpzone/common.qh>
 #include <common/vehicles/sv_vehicles.qh>
-#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
 
 string uid2name(string myuid)
 {
