@@ -1,8 +1,7 @@
 #include "spawnpoints.qh"
 
 #include <server/mutators/_mod.qh>
-#include "world.qh"
-#include "miscfunctions.qh"
+#include <server/world.qh>
 #include "race.qh"
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
@@ -16,6 +15,7 @@
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
+#include <server/intermission.qh>
 #include <server/utils.qh>
 #include <server/command/vote.qh>
 

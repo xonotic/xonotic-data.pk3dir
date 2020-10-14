@@ -2,8 +2,8 @@
 
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 #include "autocvars.qh"
+#include <server/main.qh>
 #include "command/banning.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"

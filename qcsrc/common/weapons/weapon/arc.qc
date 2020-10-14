@@ -186,10 +186,13 @@ void W_Arc_Beam_Think(entity this)
 
 	Weapon thiswep = WEP_ARC;
 
+	// TODO: use standard weapon use checks here!
 	if(
 		!IS_PLAYER(own)
 		||
 		IS_DEAD(own)
+		||
+		game_stopped
 		||
 		!weapon_prepareattack_check(thiswep, own, weaponentity, this.beam_bursting, -1)
 		||
@@ -931,9 +934,7 @@ void Draw_ArcBeam(entity this)
 		if(!v_shot_idx || this.beam_usevieworigin != 2)
 		{
 			this.beam_shotorigin = wepent.movedir;
-			origin_offset =
-			 	 right * -this.beam_shotorigin.y
-				+ up * this.beam_shotorigin.z;
+			origin_offset = right * -this.beam_shotorigin.y + up * this.beam_shotorigin.z;
 		}
 		else
 			this.beam_shotorigin = '0 0 0';

@@ -1,10 +1,11 @@
 #include "common.qh"
 
+#include <server/chat.qh>
 #include <server/client.qh>
+#include <server/mutators/_mod.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/world.qh>
-#include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
 #include "common.qh"
@@ -31,7 +32,7 @@ string GetCommandPrefix(entity caller)
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return playername(caller, false);
+	if (caller) return playername(caller.netname, caller.team, false);
 	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
 }
 
@@ -720,7 +721,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 				{
 					print_to(caller, "^7Error: You can not call a timeout while a vote is active.");
 				}
-				else if (warmup_stage && !g_warmup_allow_timeout)
+				else if (warmup_stage && !autocvar_g_warmup_allow_timeout)
 				{
 					print_to(caller, "^7Error: You can not call a timeout in warmup-stage.");
 				}

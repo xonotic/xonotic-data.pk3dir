@@ -4,7 +4,8 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/damage.qh>
-#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
+#include <server/world.qh>
 #include <common/effects/all.qh>
 #include "weapons/common.qh"
 #include "weapons/csqcprojectile.qh"
@@ -414,7 +415,8 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
 }
 
-void GrappleHookInit()
+// NOTE: using PRECACHE here to make sure it's called after everything else
+PRECACHE(GrappleHookInit)
 {
 	if(g_grappling_hook)
 	{

@@ -2,9 +2,9 @@
 #include <client/announcer.qc>
 #include <client/bgmscript.qc>
 #include <client/csqcmodel_hooks.qc>
+#include <client/draw.qc>
 #include <client/main.qc>
 #include <client/mapvoting.qc>
-#include <client/miscfunctions.qc>
 #include <client/player_skeleton.qc>
 #include <client/resources.qc>
 #include <client/shownames.qc>

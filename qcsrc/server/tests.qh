@@ -1,6 +1,5 @@
 #pragma once
 
-#include "miscfunctions.qh"
 #include "autocvars.qh"
 #include "client.qh"
 #include "command/_mod.qh"

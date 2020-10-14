@@ -9,6 +9,7 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <server/world.qh>
 
 int accuracy_byte(float n, float d)
 {

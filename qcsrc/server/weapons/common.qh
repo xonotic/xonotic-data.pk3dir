@@ -8,6 +8,10 @@ void W_PlayStrengthSound(entity player);
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception);
 void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) explode);
 
+void adaptor_think2use_hittype_splash(entity this);
+
+bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher);
+
 .float misc_bulletcounter;
 
 .int projectiledeathtype;
@@ -16,6 +20,8 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 .float fade_rate;
 
 .entity realowner;
+
+#define PROJECTILE_TOUCH(e,t) MACRO_BEGIN if (WarpZone_Projectile_Touch(e,t)) return; MACRO_END
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones

@@ -1,11 +1,12 @@
 #include "cmd.qh"
 
+#include <server/chat.qh>
 #include <server/world.qh>
-#include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
 
 #include "common.qh"
+#include "getreplies.qh"
 #include "vote.qh"
 
 #include "../bot/api.qh"
@@ -384,9 +385,9 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 		{
 			if (IS_CLIENT(caller))
 			{
-				if (warmup_stage || sv_ready_restart || g_race_qualifying == 2)
+				if (warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
 				{
-					if (!readyrestart_happened || sv_ready_restart_repeatable)
+					if (!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
 						if (time < game_starttime) // game is already restarting
 							return;
@@ -394,13 +395,13 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 						{
 							caller.ready = false;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -646,10 +647,13 @@ void ClientCommand_spectate(entity caller, int request)
 						int spec_accepted = VerifyClientEntity(client, false, false);
 						if(spec_accepted > 0 && IS_PLAYER(client))
 						{
+							bool caller_is_observer = (IS_OBSERVER(caller));
 							Spectate(caller, client);
+							if (caller_is_observer)
+								TRANSMUTE(Spectator, caller);
 						}
 						else
-							sprint(caller, "can't spectate ", argv(1), "^7\n");
+							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
 					else
 						sprint(caller, "cmd spectate client only works when you are spectator/observer\n");

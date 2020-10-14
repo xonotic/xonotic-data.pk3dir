@@ -4,7 +4,6 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/world.qh>
-#include <server/miscfunctions.qh>
 #include "../antilag.qh"
 #include <common/weapons/_all.qh>
 #include <common/state.qh>
@@ -85,7 +84,7 @@ void W_HitPlotOpen(entity player)
 	if(autocvar_g_hitplots || strhasword(autocvar_g_hitplots_individuals, player.netaddress))
 	{
 		CS(player).hitplotfh = fopen(strcat("hits-", matchid, "-", player.netaddress, "-", ftos(player.playerid), ".plot"), FILE_WRITE);
-		fputs(CS(player).hitplotfh, strcat("#name ", playername(player, false), "\n"));
+		fputs(CS(player).hitplotfh, strcat("#name ", playername(player.netname, player.team, false), "\n"));
 	}
 	else { CS(player).hitplotfh = -1; }
 }

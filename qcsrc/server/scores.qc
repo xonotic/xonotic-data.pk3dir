@@ -3,8 +3,8 @@
 #include "command/common.qh"
 #include <common/weapons/_all.qh>
 #include "client.qh"
+#include <server/intermission.qh>
 #include <server/world.qh>
-#include <server/miscfunctions.qh>
 #include <server/mutators/_mod.qh>
 #include <server/round_handler.qh>
 #include <common/net_linked.qh>
@@ -862,7 +862,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 
 	sk = CS(p).scorekeeper;
 
-	s = strcat(s, playername(p, false));
+	s = strcat(s, playername(p.netname, p.team, false));
 	for (;;)
 	{
 		i = strlennocol(s) - NAMEWIDTH;
@@ -894,7 +894,7 @@ void Score_NicePrint_Spectators(entity to)
 
 void Score_NicePrint_Spectator(entity to, entity p)
 {
-	print_to(to, strcat("  ", playername(p, false)));
+	print_to(to, strcat("  ", playername(p.netname, p.team, false)));
 }
 
 .float score_dummyfield;

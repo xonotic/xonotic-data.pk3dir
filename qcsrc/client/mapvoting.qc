@@ -1,8 +1,8 @@
 #include "mapvoting.qh"
 
 #include "autocvars.qh"
+#include <client/draw.qh>
 #include "main.qh"
-#include "miscfunctions.qh"
 #include "hud/_mod.qh"
 #include "hud/panel/scoreboard.qh"
 
@@ -48,6 +48,19 @@ vector gtv_text_size_small;
 const int NUM_SSDIRS = 4;
 string ssdirs[NUM_SSDIRS];
 int n_ssdirs;
+
+bool PreviewExists(string name)
+{
+	if(autocvar_cl_readpicture_force)
+		return false;
+
+	if (fexists(strcat(name, ".tga"))) return true;
+	if (fexists(strcat(name, ".png"))) return true;
+	if (fexists(strcat(name, ".jpg"))) return true;
+	if (fexists(strcat(name, ".pcx"))) return true;
+
+	return false;
+}
 
 string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, vector fontsize)
 {

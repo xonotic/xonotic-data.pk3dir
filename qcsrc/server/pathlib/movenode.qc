@@ -3,7 +3,6 @@
 #include <common/mapobjects/triggers.qh>
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 #include "pathlib.qh"
 #include "utility.qh"
 

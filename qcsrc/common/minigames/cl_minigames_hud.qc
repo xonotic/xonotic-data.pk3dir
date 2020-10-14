@@ -1,6 +1,7 @@
 #include "cl_minigames_hud.qh"
 
 #include <client/autocvars.qh>
+#include <client/draw.qh>
 #include <common/ent_cs.qh>
 
 #include "minigames.qh"

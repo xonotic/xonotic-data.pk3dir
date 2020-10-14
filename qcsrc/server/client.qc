@@ -2,13 +2,12 @@
 
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
+#include <server/chat.qh>
 #include <common/effects/all.qh>
 #include "anticheat.qh"
 #include "impulse.qh"
 #include "player.qh"
 #include "ipban.qh"
-#include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
 #include "spawnpoints.qh"
@@ -16,6 +15,7 @@
 #include "damage.qh"
 #include "handicap.qh"
 #include "hook.qh"
+#include <server/intermission.qh>
 #include "command/common.qh"
 #include "command/vote.qh"
 #include "clientkill.qh"
@@ -24,6 +24,7 @@
 #include <server/gamelog.qh>
 #include "race.qh"
 #include <server/main.qh>
+#include <server/mutators/_mod.qh>
 #include "antilag.qh"
 #include "campaign.qh"
 #include "command/common.qh"
@@ -242,7 +243,7 @@ void setplayermodel(entity e, string modelname)
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this)
 {
-    bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
 	if (IS_PLAYER(this))
@@ -259,35 +260,33 @@ void PutObserverInServer(entity this)
 			if (vote_called) { VoteCount(false); }
 			ReadyCount();
 		}
-    }
+	}
 
-    {
-        entity spot = SelectSpawnPoint(this, true);
-        if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
-        this.angles = vec2(spot.angles);
-        this.fixangle = true;
-        // offset it so that the spectator spawns higher off the ground, looks better this way
-        setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
-        if (IS_REAL_CLIENT(this))
-        {
-            msg_entity = this;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, this);
-        }
-        // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
-        // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
-        if(!autocvar_g_debug_globalsounds)
-        {
-        	// needed for player sounds
-        	this.model = "";
-	        FixPlayermodel(this);
-        }
-        setmodel(this, MDL_Null);
-        setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
-        this.view_ofs = '0 0 0';
-    }
+	entity spot = SelectSpawnPoint(this, true);
+	if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
+	this.angles = vec2(spot.angles);
+	this.fixangle = true;
+	// offset it so that the spectator spawns higher off the ground, looks better this way
+	setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
+	if (IS_REAL_CLIENT(this))
+	{
+		msg_entity = this;
+		WriteByte(MSG_ONE, SVC_SETVIEW);
+		WriteEntity(MSG_ONE, this);
+	}
+	// give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	// so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+	if(!autocvar_g_debug_globalsounds)
+	{
+		// needed for player sounds
+		this.model = "";
+		FixPlayermodel(this);
+	}
+	setmodel(this, MDL_Null);
+	setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
+	this.view_ofs = '0 0 0';
 
-    RemoveGrapplingHooks(this);
+	RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
 	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
@@ -303,12 +302,8 @@ void PutObserverInServer(entity this)
 
 	WaypointSprite_PlayerDead(this);
 
-	if (CS(this).killcount != FRAGS_SPECTATOR)
-	{
-		if(!game_stopped)
-		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
-	}
+	if (CS(this).killcount != FRAGS_SPECTATOR && !game_stopped && CHAT_NOSPECTATORS())
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 	accuracy_resend(this);
 
@@ -319,7 +314,7 @@ void PutObserverInServer(entity this)
 	if(this.monster_attack)
 		IL_REMOVE(g_monster_targets, this);
 	this.monster_attack = false;
-    STAT(HUD, this) = HUD_NORMAL;
+	STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
@@ -866,7 +861,7 @@ void ClientInit_misc(entity this)
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[2]));
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[3]));
 
-	if(sv_foginterval && world.fog != "")
+	if(autocvar_sv_foginterval && world.fog != "")
 		WriteString(channel, world.fog);
 	else
 		WriteString(channel, "");
@@ -939,7 +934,7 @@ void DecodeLevelParms(entity this)
 		CS(this).parm_idlesince = time;
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
-	CS(this).parm_idlesince = max(CS(this).parm_idlesince, time - sv_maxidle + 60);
+	CS(this).parm_idlesince = max(CS(this).parm_idlesince, time - autocvar_sv_maxidle + 60);
 
 	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
@@ -1052,7 +1047,7 @@ string getwelcomemessage(entity this)
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
-	if(g_jetpack)
+	if(autocvar_g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
 	if(autocvar_g_powerups == 0)
 		modifications = strcat(modifications, ", No powerups");
@@ -1107,9 +1102,6 @@ void ClientConnect(entity this)
 	this.flags |= FL_CLIENT;
 	assert(player_count >= 0, player_count = 0);
 
-#ifdef WATERMARK
-	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
-#endif
 	TRANSMUTE(Client, this);
 	CS(this).version_nagtime = time + 10 + random() * 10;
 
@@ -1130,7 +1122,7 @@ void ClientConnect(entity this)
 		CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this, false)));
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
@@ -1171,7 +1163,7 @@ void ClientConnect(entity this)
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 	}
 
-	if (!sv_foginterval && world.fog != "")
+	if (!autocvar_sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
@@ -1232,7 +1224,7 @@ void ClientDisconnect(entity this)
 	if(IS_SPEC(this))
 		SetSpectatee(this, NULL);
 
-    MUTATOR_CALLHOOK(ClientDisconnect, this);
+	MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	strfree(CS(this).netname_previous); // needs to be before the CS entity is removed!
 	strfree(CS(this).weaponorder_byimpulse);
@@ -1448,60 +1440,6 @@ void respawn(entity this)
 
 	this.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer(this);
-}
-
-ERASEABLE
-void PrintToChat(entity client, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	sprint(client, text);
-}
-
-ERASEABLE
-void DebugPrintToChat(entity client, string text)
-{
-	if (autocvar_developer > 0)
-	{
-		PrintToChat(client, text);
-	}
-}
-
-ERASEABLE
-void PrintToChatAll(string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	bprint(text);
-}
-
-ERASEABLE
-void DebugPrintToChatAll(string text)
-{
-	if (autocvar_developer > 0)
-	{
-		PrintToChatAll(text);
-	}
-}
-
-ERASEABLE
-void PrintToChatTeam(int team_num, string text)
-{
-	text = strcat("\{1}^7", text, "\n");
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		if (it.team == team_num)
-		{
-			sprint(it, text);
-		}
-	});
-}
-
-ERASEABLE
-void DebugPrintToChatTeam(int team_num, string text)
-{
-	if (autocvar_developer > 0)
-	{
-		PrintToChatTeam(team_num, text);
-	}
 }
 
 void play_countdown(entity this, float finished, Sound samp)
@@ -1996,10 +1934,10 @@ bool SpectatePrev(entity this)
 	switch (MUTATOR_CALLHOOK(SpectatePrev, this, ent, first))
 	{
 		case MUT_SPECPREV_FOUND:
-		    ent = M_ARGV(1, entity);
-		    break;
+			ent = M_ARGV(1, entity);
+			break;
 		case MUT_SPECPREV_RETURN:
-		    return true;
+			return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
@@ -2232,7 +2170,7 @@ bool PlayerThink(entity this)
 	}
 
 	if (timeout_status == TIMEOUT_ACTIVE) {
-        // don't allow the player to turn around while game is paused
+		// don't allow the player to turn around while game is paused
 		// FIXME turn this into CSQC stuff
 		this.v_angle = this.lastV_angle;
 		this.angles = this.lastV_angle;
@@ -2537,7 +2475,7 @@ void PlayerPreThink (entity this)
 			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 		}
 		if (!assume_unchanged && autocvar_sv_eventlog)
-			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
+			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this.netname, this.team, false)));
 		strcpy(CS(this).netname_previous, this.netname);
 	}
 
@@ -2758,21 +2696,21 @@ void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
-	if (sv_maxidle > 0)
+	if (autocvar_sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
-	if (IS_PLAYER(this) || sv_maxidle_spectatorsareidle)
+	if (IS_PLAYER(this) || autocvar_sv_maxidle_spectatorsareidle)
 	{
 		int totalClients = 0;
-		if(sv_maxidle_slots > 0)
+		if(autocvar_sv_maxidle_slots > 0)
 		{
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) || sv_maxidle_slots_countbots,
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 			{
 				++totalClients;
 			});
 		}
 
-		if (sv_maxidle_slots > 0 && (maxclients - totalClients) > sv_maxidle_slots)
+		if (autocvar_sv_maxidle_slots > 0 && (maxclients - totalClients) > autocvar_sv_maxidle_slots)
 		{ /* do nothing */ }
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
@@ -2784,8 +2722,8 @@ void PlayerPostThink (entity this)
 		}
 		else
 		{
-			float timeleft = ceil(sv_maxidle - (time - CS(this).parm_idlesince));
-			if (timeleft == min(10, sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
+			float timeleft = ceil(autocvar_sv_maxidle - (time - CS(this).parm_idlesince));
+			if (timeleft == min(10, autocvar_sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
 				if (!CS(this).idlekick_lasttimeleft)
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
@@ -2795,9 +2733,8 @@ void PlayerPostThink (entity this)
 				return;
 			}
 			else if (timeleft <= 10) {
-				if (timeleft != CS(this).idlekick_lasttimeleft) {
-				    Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
-                }
+				if (timeleft != CS(this).idlekick_lasttimeleft)
+					Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
 				CS(this).idlekick_lasttimeleft = timeleft;
 			}
 		}
@@ -2845,337 +2782,6 @@ void PlayerPostThink (entity this)
 	}
 
 	CSQCMODEL_AUTOUPDATE(this);
-}
-
-/**
- * message "": do not say, just test flood control
- * return value:
- *   1 = accept
- *   0 = reject
- *  -1 = fake accept
- */
-int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
-{
-	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
-		msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
-
-	if (source)
-		msgin = formatmessage(source, msgin);
-
-	string colorstr;
-	if (!(IS_PLAYER(source) || source.caplayer))
-		colorstr = "^0"; // black for spectators
-	else if(teamplay)
-		colorstr = Team_ColorCode(source.team);
-	else
-	{
-		colorstr = "";
-		teamsay = false;
-	}
-
-	if (!source) {
-		colorstr = "";
-		teamsay = false;
-	}
-
-	if(msgin != "")
-		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
-
-	/*
-	 * using bprint solves this... me stupid
-	// how can we prevent the message from appearing in a listen server?
-	// for now, just give "say" back and only handle say_team
-	if(!teamsay)
-	{
-		clientcommand(source, strcat("say ", msgin));
-		return;
-	}
-	*/
-
-	string namestr = "";
-	if (source)
-		namestr = playername(source, autocvar_g_chat_teamcolors);
-
-	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
-
-	string msgstr = "", cmsgstr = "";
-	string privatemsgprefix = string_null;
-	int privatemsgprefixlen = 0;
-	if (msgin != "")
-	{
-		bool found_me = false;
-		if(strstrofs(msgin, "/me", 0) >= 0)
-		{
-			string newmsgin = "";
-			string newnamestr = ((teamsay) ? strcat(colorstr, "(", colorprefix, namestr, colorstr, ")", "^7") : strcat(colorprefix, namestr, "^7"));
-			FOREACH_WORD(msgin, true,
-			{
-				if(strdecolorize(it) == "/me")
-				{
-					found_me = true;
-					newmsgin = cons(newmsgin, newnamestr);
-				}
-				else
-					newmsgin = cons(newmsgin, it);
-			});
-			msgin = newmsgin;
-		}
-
-		if(privatesay)
-		{
-			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
-			privatemsgprefixlen = strlen(msgstr);
-			msgstr = strcat(msgstr, msgin);
-			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
-			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay, autocvar_g_chat_teamcolors), ": ^7");
-		}
-		else if(teamsay)
-		{
-			if(found_me)
-			{
-				//msgin = strreplace("/me", "", msgin);
-				//msgin = substring(msgin, 3, strlen(msgin));
-				//msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
-				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
-			}
-			else
-				msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
-			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
-		}
-		else
-		{
-			if(found_me)
-			{
-				//msgin = strreplace("/me", "", msgin);
-				//msgin = substring(msgin, 3, strlen(msgin));
-				//msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
-				msgstr = strcat("\{1}^4* ^7", msgin);
-			}
-			else {
-				msgstr = "\{1}";
-				msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
-				msgstr = strcat(msgstr, msgin);
-			}
-			cmsgstr = "";
-		}
-		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
-	}
-
-	string fullmsgstr = msgstr;
-	string fullcmsgstr = cmsgstr;
-
-	// FLOOD CONTROL
-	int flood = 0;
-	var .float flood_field = floodcontrol_chat;
-	if(floodcontrol && source)
-	{
-		float flood_spl;
-		float flood_burst;
-		float flood_lmax;
-		float lines;
-		if(privatesay)
-		{
-			flood_spl = autocvar_g_chat_flood_spl_tell;
-			flood_burst = autocvar_g_chat_flood_burst_tell;
-			flood_lmax = autocvar_g_chat_flood_lmax_tell;
-			flood_field = floodcontrol_chattell;
-		}
-		else if(teamsay)
-		{
-			flood_spl = autocvar_g_chat_flood_spl_team;
-			flood_burst = autocvar_g_chat_flood_burst_team;
-			flood_lmax = autocvar_g_chat_flood_lmax_team;
-			flood_field = floodcontrol_chatteam;
-		}
-		else
-		{
-			flood_spl = autocvar_g_chat_flood_spl;
-			flood_burst = autocvar_g_chat_flood_burst;
-			flood_lmax = autocvar_g_chat_flood_lmax;
-			flood_field = floodcontrol_chat;
-		}
-		flood_burst = max(0, flood_burst - 1);
-		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
-
-		// do flood control for the default line size
-		if(msgstr != "")
-		{
-			getWrappedLine_remaining = msgstr;
-			msgstr = "";
-			lines = 0;
-			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
-			{
-				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
-				++lines;
-			}
-			msgstr = substring(msgstr, 1, strlen(msgstr) - 1);
-
-			if(getWrappedLine_remaining != "")
-			{
-				msgstr = strcat(msgstr, "\n");
-				flood = 2;
-			}
-
-			if (time >= source.(flood_field))
-			{
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
-			}
-			else
-			{
-				flood = 1;
-				msgstr = fullmsgstr;
-			}
-		}
-		else
-		{
-			if (time >= source.(flood_field))
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
-			else
-				flood = 1;
-		}
-
-		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.(flood_field) = flood = 0;
-	}
-
-	string sourcemsgstr, sourcecmsgstr;
-	if(flood == 2) // cannot happen for empty msgstr
-	{
-		if(autocvar_g_chat_flood_notify_flooder)
-		{
-			sourcemsgstr = strcat(msgstr, "\n^3FLOOD CONTROL: ^7message too long, trimmed\n");
-			sourcecmsgstr = "";
-		}
-		else
-		{
-			sourcemsgstr = fullmsgstr;
-			sourcecmsgstr = fullcmsgstr;
-		}
-		cmsgstr = "";
-	}
-	else
-	{
-		sourcemsgstr = msgstr;
-		sourcecmsgstr = cmsgstr;
-	}
-
-	if (!privatesay && source && !(IS_PLAYER(source) || source.caplayer))
-	{
-		if (!game_stopped)
-		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
-			teamsay = -1; // spectators
-	}
-
-	if(flood)
-		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.");
-
-	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
-	if(privatesay)
-		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
-
-	int ret;
-	if(source && CS(source).muted)
-	{
-		// always fake the message
-		ret = -1;
-	}
-	else if(flood == 1)
-	{
-		if (autocvar_g_chat_flood_notify_flooder)
-		{
-			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
-			ret = 0;
-		}
-		else
-			ret = -1;
-	}
-	else
-	{
-		ret = 1;
-	}
-
-	if (privatesay && source && !(IS_PLAYER(source) || source.caplayer))
-	{
-		if (!game_stopped)
-		if ((privatesay && (IS_PLAYER(privatesay) || privatesay.caplayer)) && ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage)))
-			ret = -1; // just hide the message completely
-	}
-
-	MUTATOR_CALLHOOK(ChatMessage, source, ret);
-	ret = M_ARGV(1, int);
-
-	string event_log_msg = "";
-
-	if(sourcemsgstr != "" && ret != 0)
-	{
-		if(ret < 0) // faked message, because the player is muted
-		{
-			sprint(source, sourcemsgstr);
-			if(sourcecmsgstr != "" && !privatesay)
-				centerprint(source, sourcecmsgstr);
-		}
-		else if(privatesay) // private message, between 2 people only
-		{
-			sprint(source, sourcemsgstr);
-			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
-			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
-			{
-				sprint(privatesay, msgstr);
-				if(cmsgstr != "")
-					centerprint(privatesay, cmsgstr);
-			}
-		}
-		else if ( teamsay && CS(source).active_minigame )
-		{
-			sprint(source, sourcemsgstr);
-			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
-				sprint(it, msgstr);
-			});
-			event_log_msg = sprintf(":chat_minigame:%d:%s:%s", source.playerid, CS(source).active_minigame.netname, msgin);
-
-		}
-		else if(teamsay > 0) // team message, only sent to team mates
-		{
-			sprint(source, sourcemsgstr);
-			dedicated_print(msgstr); // send to server console too
-			if(sourcecmsgstr != "")
-				centerprint(source, sourcecmsgstr);
-			FOREACH_CLIENT((IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
-				sprint(it, msgstr);
-				if(cmsgstr != "")
-					centerprint(it, cmsgstr);
-			});
-			event_log_msg = sprintf(":chat_team:%d:%d:%s", source.playerid, source.team, strreplace("\n", " ", msgin));
-		}
-		else if(teamsay < 0) // spectator message, only sent to spectators
-		{
-			sprint(source, sourcemsgstr);
-			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(!(IS_PLAYER(it) || it.caplayer) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
-				sprint(it, msgstr);
-			});
-			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
-		}
-		else
-		{
-			if (source) {
-				sprint(source, sourcemsgstr);
-				dedicated_print(msgstr); // send to server console too
-				MX_Say(strcat(playername(source, true), "^7: ", msgin));
-			}
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
-				sprint(it, msgstr);
-			});
-			event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
-		}
-	}
-
-	if (autocvar_sv_eventlog && (event_log_msg != "")) {
-		GameLogEcho(event_log_msg);
-	}
-
-	return ret;
 }
 
 // hack to copy the button fields from the client entity to the Client State

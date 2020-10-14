@@ -6,9 +6,9 @@
 #include "client.qh"
 #include "clientkill.qh"
 #include "damage.qh"
+#include <server/mutators/_mod.qh>
 #include "world.qh"
 #include "handicap.qh"
-#include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
 #include <server/main.qh>
@@ -608,4 +608,79 @@ bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);
 	return true;
+}
+
+void precache_playermodel(string m)
+{
+	int globhandle, i, n;
+	string f;
+
+	// remove :<skinnumber> suffix
+	int j = strstrofs(m, ":", 0);
+	if(j >= 0)
+		m = substring(m, 0, j);
+
+	if(substring(m, -9, 5) == "_lod1")
+		return;
+	if(substring(m, -9, 5) == "_lod2")
+		return;
+	precache_model(m);
+	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+
+	globhandle = search_begin(strcat(m, "_*.sounds"), true, false);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		PrecachePlayerSounds(f);
+	}
+	search_end(globhandle);
+}
+void precache_all_playermodels(string pattern)
+{
+	int globhandle = search_begin(pattern, true, false);
+	if (globhandle < 0) return;
+	int n = search_getsize(globhandle);
+	for (int i = 0; i < n; ++i)
+	{
+		string s = search_getfilename(globhandle, i);
+		precache_playermodel(s);
+	}
+	search_end(globhandle);
+}
+
+void precache_playermodels(string s)
+{
+	FOREACH_WORD(s, true, { precache_playermodel(it); });
+}
+
+PRECACHE(PlayerModels)
+{
+    // Precache all player models if desired
+    if (autocvar_sv_precacheplayermodels)
+    {
+        PrecachePlayerSounds("sound/player/default.sounds");
+        precache_all_playermodels("models/player/*.zym");
+        precache_all_playermodels("models/player/*.dpm");
+        precache_all_playermodels("models/player/*.md3");
+        precache_all_playermodels("models/player/*.psk");
+        precache_all_playermodels("models/player/*.iqm");
+    }
+
+    if (autocvar_sv_defaultcharacter)
+    {
+		precache_playermodels(autocvar_sv_defaultplayermodel_red);
+		precache_playermodels(autocvar_sv_defaultplayermodel_blue);
+		precache_playermodels(autocvar_sv_defaultplayermodel_yellow);
+		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
+		precache_playermodels(autocvar_sv_defaultplayermodel);
+    }
 }

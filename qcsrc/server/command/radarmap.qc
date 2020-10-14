@@ -6,6 +6,8 @@
 
 #include "../world.qh"
 
+#include <server/intermission.qh>
+
 #include <common/util.qh>
 
 #include <lib/csqcmodel/sv_model.qh>

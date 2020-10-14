@@ -4,7 +4,6 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/gamelog.qh>
-#include <server/miscfunctions.qh>
 
 #include <common/command/_mod.qh>
 #include "vote.qh"
@@ -12,7 +11,8 @@
 #include "common.qh"
 
 #include "../damage.qh"
-#include "../world.qh"
+#include <server/intermission.qh>
+#include <server/world.qh>
 #include "../teamplay.qh"
 #include "../race.qh"
 #include "../round_handler.qh"
@@ -119,7 +119,7 @@ void Nagger_ReadyCounted()
 // If the vote_caller is still here, return their name, otherwise vote_caller_name
 string OriginalCallerName()
 {
-	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller, false);
+	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller.netname, vote_caller.team, false);
 	return vote_caller_name;
 }
 

@@ -2,7 +2,7 @@
 
 #include "scoreboard.qh"
 #include <common/notifications/all.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 
 // CenterPrint (#16)
 
@@ -281,7 +281,7 @@ void HUD_CenterPrint()
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 
-		if(centerprint_msgID[j] == CPID_TIMEIN)
+		if(centerprint_msgID[j] == ORDINAL(CPID_TIMEIN))
 			a = 1;
 
 		// while counting down show it anyway in order to hold the current message position

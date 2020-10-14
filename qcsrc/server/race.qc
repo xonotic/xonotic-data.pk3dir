@@ -3,8 +3,11 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 #include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/intermission.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
 #include <server/world.qh>
-#include <server/miscfunctions.qh>
 #include <server/weapons/common.qh>
 #include "client.qh"
 #include "cheats.qh"
@@ -26,6 +29,38 @@
 #include "../lib/warpzone/common.qh"
 #include <common/vehicles/sv_vehicles.qh>
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+
+string uid2name(string myuid)
+{
+	string s = db_get(ServerProgsDB, strcat("/uid2name/", myuid));
+
+	// FIXME remove this later after 0.6 release
+	// convert old style broken records to correct style
+	if(s == "")
+	{
+		s = db_get(ServerProgsDB, strcat("uid2name", myuid));
+		if(s != "")
+		{
+			db_put(ServerProgsDB, strcat("/uid2name/", myuid), s);
+			db_remove(ServerProgsDB, strcat("uid2name", myuid));
+		}
+	}
+
+	if(s == "")
+		s = "^1Unregistered Player";
+	return s;
+}
+
+void write_recordmarker(entity pl, float tstart, float dt)
+{
+    GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
+
+    // also write a marker into demo files for demotc-race-record-extractor to find
+    stuffcmd(pl,
+             strcat(
+                 strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+                 " ", ftos(tstart), " ", ftos(dt), "\n"));
+}
 
 IntrusiveList g_race_targets;
 IntrusiveList g_racecheckpoints;

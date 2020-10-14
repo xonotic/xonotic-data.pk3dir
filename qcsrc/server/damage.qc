@@ -8,6 +8,7 @@
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/main.qh>
+#include <server/world.qh>
 #include "teamplay.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
@@ -686,11 +687,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		if (!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= g_weapondamagefactor;
-			mirrordamage *= g_weapondamagefactor;
-			complainteamdamage *= g_weapondamagefactor;
-			force = force * g_weaponforcefactor;
-			mirrorforce *= g_weaponforcefactor;
+			damage *= autocvar_g_weapondamagefactor;
+			mirrordamage *= autocvar_g_weapondamagefactor;
+			complainteamdamage *= autocvar_g_weapondamagefactor;
+			force = force * autocvar_g_weaponforcefactor;
+			mirrorforce *= autocvar_g_weaponforcefactor;
 		}
 
 		// should this be changed at all? If so, in what way?

@@ -5,6 +5,7 @@
 #include "damage.qh"
 #include "world.qh"
 #include "spawnpoints.qh"
+#include <server/ipban.qh>
 #include <server/gamelog.qh>
 
 #include "bot/api.qh"
@@ -17,6 +18,7 @@
 #include <server/compat/quake3.qh>
 
 #include "../common/constants.qh"
+#include <common/command/generic.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
@@ -173,6 +175,62 @@ void SV_PausedTic(float elapsedtime)
 	if (!server_is_dedicated) Pause_TryPause(false);
 }
 
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
+
+void make_safe_for_remove(entity e)
+{
+    if (e.initialize_entity)
+    {
+        entity ent, prev = NULL;
+        for (ent = initialize_entity_first; ent; )
+        {
+            if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
+            {
+                //print("make_safe_for_remove: getting rid of initializer ", etos(ent), "\n");
+                // skip it in linked list
+                if (prev)
+                {
+                    prev.initialize_entity_next = ent.initialize_entity_next;
+                    ent = prev.initialize_entity_next;
+                }
+                else
+                {
+                    initialize_entity_first = ent.initialize_entity_next;
+                    ent = initialize_entity_first;
+                }
+            }
+            else
+            {
+                prev = ent;
+                ent = ent.initialize_entity_next;
+            }
+        }
+    }
+}
+
+void remove_except_protected(entity e)
+{
+	if(e.remove_except_protected_forbidden)
+		error("not allowed to remove this at this point");
+	builtin_remove(e);
+}
+
+void remove_unsafely(entity e)
+{
+    if(e.classname == "spike")
+        error("Removing spikes is forbidden (crylink bug), please report");
+    builtin_remove(e);
+}
+
+void remove_safely(entity e)
+{
+    make_safe_for_remove(e);
+    builtin_remove(e);
+}
+
 /*
 =============
 StartFrame
@@ -266,75 +324,6 @@ void StartFrame()
 .string gametypefilter;
 .string cvarfilter;
 
-/**
- * Evaluate an expression of the form: [+ | -]? [var[op]val | [op]var | val | var] ...
- * +: all must match. this is the default
- * -: one must NOT match
- *
- * var>x
- * var<x
- * var>=x
- * var<=x
- * var==x
- * var!=x
- * var===x
- * var!==x
- */
-bool expr_evaluate(string s)
-{
-    bool ret = false;
-    if (str2chr(s, 0) == '+') {
-        s = substring(s, 1, -1);
-    } else if (str2chr(s, 0) == '-') {
-        ret = true;
-        s = substring(s, 1, -1);
-    }
-    bool expr_fail = false;
-    for (int i = 0, n = tokenize_console(s); i < n; ++i) {
-        int o;
-        string k, v;
-        s = argv(i);
-        #define X(expr) \
-            if (expr) \
-                continue; \
-            expr_fail = true; \
-            break;
-
-        #define BINOP(op, len, expr) \
-            if ((o = strstrofs(s, op, 0)) >= 0) { \
-                k = substring(s, 0, o); \
-                v = substring(s, o + len, -1); \
-                X(expr); \
-            }
-        BINOP(">=", 2, cvar(k) >= stof(v));
-        BINOP("<=", 2, cvar(k) <= stof(v));
-        BINOP(">",  1, cvar(k) >  stof(v));
-        BINOP("<",  1, cvar(k) <  stof(v));
-        BINOP("==", 2, cvar(k) == stof(v));
-        BINOP("!=", 2, cvar(k) != stof(v));
-        BINOP("===", 3, cvar_string(k) == v);
-        BINOP("!==", 3, cvar_string(k) != v);
-        {
-            k = s;
-            bool b = true;
-            if (str2chr(k, 0) == '!') {
-                k = substring(s, 1, -1);
-                b = false;
-            }
-            float f = stof(k);
-            bool isnum = ftos(f) == k;
-            X(boolean(isnum ? f : cvar(k)) == b);
-        }
-        #undef BINOP
-        #undef X
-    }
-    if (!expr_fail) {
-        ret = !ret;
-    }
-    // now ret is true if we want to keep the item, and false if we want to get rid of it
-    return ret;
-}
-
 void SV_OnEntityPreSpawnFunction(entity this)
 {
 	if (this)
@@ -391,6 +380,37 @@ void WarpZone_PostInitialize_Callback()
 	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
 		waypoint_spawnforteleporter_wz(e, tracetest_ent);
 	delete(tracetest_ent);
+}
+
+/** engine callback */
+void URI_Get_Callback(float id, float status, string data)
+{
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
+	{
+		// online ban list
+		OnlineBanList_URI_Get_Callback(id, status, data);
+	}
+	else if (MUTATOR_CALLHOOK(URI_GetCallback, id, status, data))
+	{
+		// handled by a mutator
+	}
+	else
+	{
+		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".");
+	}
 }
 
 /*

@@ -16,6 +16,7 @@
 #include "../world.qh"
 #include "../ipban.qh"
 #include "../teamplay.qh"
+#include <server/intermission.qh>
 
 #include "../bot/api.qh"
 
@@ -133,8 +134,8 @@ void GameCommand_adminmsg(int request, int argc)
 						sprint(client, strcat("\{1}\{13}^3", GetCallerName(NULL), "^7: ", admin_message, "\n"));
 					}
 
-					successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
-					LOG_TRACE("Message sent to ", playername(client, false));
+					successful = strcat(successful, (successful ? ", " : ""), playername(client.netname, client.team, false));
+					LOG_TRACE("Message sent to ", playername(client.netname, client.team, false));
 					continue;
 				}
 
@@ -531,7 +532,7 @@ void GameCommand_defer_clear(int request, int argc)
 				if (accepted > 0)
 				{
 					stuffcmd(client, "defer clear\n");
-					LOG_INFO("defer clear stuffed to ", playername(client, false));
+					LOG_INFO("defer clear stuffed to ", playername(client.netname, client.team, false));
 				}
 				else { LOG_INFO("defer_clear: ", GetClientErrorString(accepted, argv(1)), "."); }
 
@@ -1010,11 +1011,11 @@ void GameCommand_moveplayer(int request, int argc)
 							if (client.caplayer) client.caplayer = 0;
 							PutObserverInServer(client);
 
-							successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
+							successful = strcat(successful, (successful ? ", " : ""), playername(client.netname, client.team, false));
 						}
 						else
 						{
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") is already spectating.");
+							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") is already spectating.");
 						}
 						continue;
 					}
@@ -1034,7 +1035,7 @@ void GameCommand_moveplayer(int request, int argc)
 								if (team_num == client.team)  // already on the destination team
 								{
 									// keep the forcing undone
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7."));
+									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7."));
 									continue;
 								}
 								else if (team_num == 0)  // auto team
@@ -1068,12 +1069,12 @@ void GameCommand_moveplayer(int request, int argc)
 								Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 								if (MoveToTeam(client, team_id, 6))
 								{
-									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
+									successful = strcat(successful, (successful ? ", " : ""), playername(client.netname, client.team, false));
+									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
 								}
 								else
 								{
-									LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ")");
+									LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", playername(client.netname, client.team, false), ")");
 								}
 								continue;
 							}
