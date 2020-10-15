@@ -160,7 +160,7 @@ void GameCommand_adminmsg(int request, int argc)
 	}
 }
 
-void GameCommand_team_name(int request, int argc)
+void GameCommand_teamname(int request, int argc)
 {
 	switch (request)
 	{
@@ -183,9 +183,9 @@ void GameCommand_team_name(int request, int argc)
 				case "yellow":
 				case "pink":
 				{
+					int tm = Team_ColorToTeam(argv(1));
 					if(argv(2) != "") {
 						cvar_set(strcat("g_teamnames_", argv(1)), argv(2));
-						int tm = Team_ColorToTeam(argv(1));
 						bprintf("\{1}%s%s^7 team is now known as %s^7\n", Team_ColorCode(tm), Team_ColorName(tm), argv(2));
 					} else {
 						cvar_set(strcat("g_teamnames_", argv(1)), "");
@@ -1023,6 +1023,37 @@ void GameCommand_make_mapinfo(int request)
 	}
 }
 
+void GameCommand_setflag(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			
+			entity client;
+			float accepted;
+			
+			client = GetFilteredEntity(argv(1));
+			accepted = VerifyClientEntity(client, false, false);
+
+			if (accepted <= 0)
+			{
+				LOG_INFO("setflag error");
+				return;
+			}
+			
+			client.countrycode = stof(argv(2));
+		}
+		default:
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd setflag client countrycode");
+			return;
+		}
+	}
+}
+
 void GameCommand_moveplayer(int request, int argc)
 {
 	switch (request)
@@ -1679,7 +1710,8 @@ void GameCommand_(int request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-SERVER_COMMAND(team_name, "Set team name") { GameCommand_team_name(request, arguments); }
+SERVER_COMMAND(setflag, "Set client flag") { GameCommand_setflag(request, arguments); }
+SERVER_COMMAND(teamname, "Set team name") { GameCommand_teamname(request, arguments); }
 
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
 SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }

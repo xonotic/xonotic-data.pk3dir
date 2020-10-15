@@ -554,6 +554,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
+			LOG_INFOF("%d", f);
 			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])

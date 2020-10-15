@@ -314,6 +314,8 @@ void cvar_changes_init()
 		BADCVAR("g_maplist");
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
+		
+		BADPREFIX("g_teamnames_");
 
 		v = cvar_string(k);
 		d = cvar_defstring(k);
