@@ -53,7 +53,7 @@ string uid2name(string myuid)
 
 void write_recordmarker(entity pl, float newpos, float tstart, float dt)
 {
-    GameLogEcho(strcat(":recordset:", ftos(newpos), ":", ftos(pl.playerid), ":", ftos(dt)));
+    GameLogEcho(strcat(":recordset:", ftos(newpos), ":", ftos(pl.playerid), ":", ftos(etof(pl)), ":", ftos(dt)));
 
     // also write a marker into demo files for demotc-race-record-extractor to find
     if (pl.crypto_idfp != "") {
