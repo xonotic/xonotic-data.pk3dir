@@ -1663,6 +1663,7 @@ vector MapStats_DrawKeyValue(vector pos, string key, string value) {
 	return pos;
 }
 
+/*
 vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	float stat_secrets_found, stat_secrets_total;
 	float stat_monsters_killed, stat_monsters_total;
@@ -1731,7 +1732,7 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 	return end_pos;
 }
-
+*/
 
 vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector rgb, vector bg_size)
 {
@@ -2223,7 +2224,7 @@ void Scoreboard_Draw()
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
 
-	pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
+	//pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
 
 	// List spectators
 	for(pl = players.sort_next; pl; pl = pl.sort_next)

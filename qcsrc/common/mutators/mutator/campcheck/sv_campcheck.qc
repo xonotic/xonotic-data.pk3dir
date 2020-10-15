@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 	bool checked = false;
 
 	if(autocvar_g_campcheck_interval)
-	if(!game_stopped && !warmup_stage && time >= game_starttime)
+	if(!game_stopped && !game_timeout && !warmup_stage && time >= game_starttime)
 	if(IS_PLAYER(player) && !IS_DEAD(player) && !STAT(FROZEN, player))
 	if(autocvar_g_campcheck_typecheck || !PHYS_INPUT_BUTTON_CHAT(player))
 	if(IS_REAL_CLIENT(player)) // only apply to real clients (bots may "camp" due to missing waypoints in the map, but that's no reason to constantly kill them, clones can't move)

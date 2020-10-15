@@ -42,7 +42,7 @@ void sys_phys_pregame_hold(entity this)
 	if (!IS_PLAYER(this)) { return; }
 	// z411
 	//const bool allowed_to_move = (time >= game_starttime && !game_stopped);
-	const bool allowed_to_move = (!game_stopped);
+	const bool allowed_to_move = (!game_stopped && !game_timeout);
 	if (!allowed_to_move) {
 		this.velocity = '0 0 0';
 		set_movetype(this, MOVETYPE_NONE);

@@ -212,7 +212,8 @@ void timeout_handler_think(entity this)
 				if (timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_PREPARE);
 
-				this.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
+				//this.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
+				this.nextthink = time + 1;
 				timeout_time -= 1;                                  // decrease the time counter
 			}
 			else if (timeout_time == -1)  // infinite timer
@@ -224,9 +225,20 @@ void timeout_handler_think(entity this)
 			{
 				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEIN);
 				timeout_status = TIMEOUT_INACTIVE;
+				float total_time = time - timeout_last;
 
 				// reset the slowmo value back to normal
-				cvar_set("slowmo", ftos(orig_slowmo));
+				// z411 TODO
+				//cvar_set("slowmo", ftos(orig_slowmo));
+				
+				// Disable timeout and fix times
+				game_timeout = false;
+				timeout_total_time += total_time;
+				game_starttime += total_time;
+				if(round_handler && round_handler_GetEndTime() > 0)
+					round_handler.round_endtime += total_time;
+					
+				LOG_INFOF("timeout lasted %d secs", total_time);
 
 				// unlock the view for players so they can move around again
 				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
@@ -253,7 +265,11 @@ void timeout_handler_think(entity this)
 				timeout_status = TIMEOUT_ACTIVE;
 
 				// set the slowmo value to the timeout default slowmo value
-				cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
+				//cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
+				game_timeout = true;
+				timeout_last = time;
+				
+				// play timeout sound
 				sound(NULL, CH_INFO, SND_TIMEOUT, VOL_BASE, ATTN_NONE);
 
 				// reset all the flood variables

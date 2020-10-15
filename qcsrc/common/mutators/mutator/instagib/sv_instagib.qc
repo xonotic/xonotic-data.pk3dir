@@ -79,7 +79,7 @@ void instagib_ammocheck(entity this)
 	if(!IS_PLAYER(this))
 		return; // not a player
 
-	if(IS_DEAD(this) || game_stopped)
+	if(IS_DEAD(this) || game_stopped || game_timeout)
 		instagib_stop_countdown(this);
 	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_AMMO) || (this.flags & FL_GODMODE))
 		instagib_stop_countdown(this);

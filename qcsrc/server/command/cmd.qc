@@ -285,7 +285,7 @@ void ClientCommand_join(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
+			if (!game_stopped && !game_timeout && IS_CLIENT(caller) && !IS_PLAYER(caller))
 			{
 				if (joinAllowed(caller))
 					Join(caller);
@@ -636,7 +636,7 @@ void ClientCommand_spectate(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!intermission_running && IS_CLIENT(caller))
+			if (!intermission_running && IS_CLIENT(caller) && !game_timeout)
 			{
 				if(argv(1) != "")
 				{

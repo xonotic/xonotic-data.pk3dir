@@ -119,7 +119,7 @@ void buff_SetCooldown(entity this, float cd)
 
 void buff_Respawn(entity this)
 {
-	if(game_stopped) return;
+	if(game_stopped || game_timeout) return;
 
 	vector oldbufforigin = this.origin;
 	this.velocity = '0 0 200';
@@ -154,7 +154,7 @@ void buff_Respawn(entity this)
 
 void buff_Touch(entity this, entity toucher)
 {
-	if(game_stopped) return;
+	if(game_stopped || game_timeout) return;
 
 	if(ITEM_TOUCH_NEEDKILL())
 	{
@@ -269,7 +269,7 @@ void buff_Think(entity this)
 		this.oldbuffs = STAT(BUFFS, this);
 	}
 
-	if(!game_stopped)
+	if(!game_stopped && !game_timeout)
 	if((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
 	if(!this.buff_activetime_updated)
 	{
@@ -290,7 +290,7 @@ void buff_Think(entity this)
 	}
 
 	if(this.buff_activetime)
-	if(!game_stopped)
+	if(!game_stopped && !game_timeout)
 	if((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
 	{
 		this.buff_activetime = max(0, this.buff_activetime - frametime);
@@ -667,7 +667,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {
-	if(MUTATOR_RETURNVALUE || game_stopped) return;
+	if(MUTATOR_RETURNVALUE || game_stopped || game_timeout) return;
 	entity player = M_ARGV(0, entity);
 
 	if(STAT(BUFFS, player) & BUFF_SWAPPER.m_itemid)
@@ -827,7 +827,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(game_stopped || IS_DEAD(player) || frametime || !IS_PLAYER(player)) return;
+	if(game_stopped || game_timeout || IS_DEAD(player) || frametime || !IS_PLAYER(player)) return;
 
 	if(STAT(BUFFS, player) & BUFF_FLIGHT.m_itemid)
 	{

@@ -481,6 +481,7 @@ void ReadyRestart_force()
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
+	round_handler_Activate(true);
 	if (!sv_ready_restart_after_countdown) reset_map(true);
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }

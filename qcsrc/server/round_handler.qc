@@ -9,6 +9,8 @@
 
 void round_handler_Think(entity this)
 {
+	if (game_timeout) { this.nextthink = time + 1; return; }
+	
 	if (intermission_running)
 	{
 		round_handler_Reset(0);
@@ -96,13 +98,25 @@ void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, voi
 	}
 	entity this = round_handler = new(round_handler);
 
-	setthink(this, round_handler_FirstThink);
+	
 	this.canRoundStart = canRoundStart_func;
 	this.canRoundEnd = canRoundEnd_func;
 	this.roundStart = roundStart_func;
 	this.wait = false;
 	round_handler_Init(5, 5, 180);
-	this.nextthink = time;
+	
+}
+
+void round_handler_Activate(bool active) {
+	if (round_handler) {
+		entity this = round_handler;
+	
+		this.isactive = active;
+		if(active) {
+			setthink(this, round_handler_FirstThink);
+			this.nextthink = time;
+		}
+	}
 }
 
 void round_handler_Reset(float next_think)

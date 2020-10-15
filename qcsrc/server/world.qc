@@ -1017,9 +1017,12 @@ spawnfunc(worldspawn)
 	modname = strzone(modname);
 
 	WinningConditionHelper(this); // set worldstatus
-
+	
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
+	
+	if(!warmup_stage)
+		round_handler_Activate(true);
 }
 
 spawnfunc(light)
@@ -1955,6 +1958,9 @@ void CheckRules_World()
 			// again, but this shouldn't hurt
 		return;
 	}
+	
+	// z411 don't check rules if we're in a timeout
+	if (game_timeout) return;
 
 	float timelimit = autocvar_timelimit * 60;
 	float fraglimit = autocvar_fraglimit;

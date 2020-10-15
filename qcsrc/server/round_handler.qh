@@ -1,6 +1,7 @@
 #pragma once
 
 entity round_handler;
+.bool isactive;
 .float delay; // stores delay from round end to countdown start
 .float count; // stores initial number of the countdown
 .bool wait; // it's set to true when round ends, to false when countdown starts
@@ -15,9 +16,10 @@ entity round_handler;
 void round_handler_Init(float the_delay, float the_count, float the_round_timelimit);
 void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, void() roundStart_func);
 void round_handler_Reset(float next_think);
+void round_handler_Activate(bool active);
 void round_handler_Remove();
 
-#define round_handler_IsActive() (round_handler != NULL)
+#define round_handler_IsActive() (round_handler != NULL && round_handler.isactive)
 #define round_handler_AwaitingNextRound() (round_handler.wait)
 #define round_handler_CountdownRunning() (!round_handler.wait && round_handler.cnt)
 #define round_handler_IsRoundStarted() (!round_handler.wait && !round_handler.cnt)

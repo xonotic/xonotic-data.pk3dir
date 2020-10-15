@@ -31,8 +31,8 @@
 
 void monsters_setstatus(entity this)
 {
-	STAT(MONSTERS_TOTAL, this) = monsters_total;
-	STAT(MONSTERS_KILLED, this) = monsters_killed;
+	//STAT(MONSTERS_TOTAL, this) = monsters_total;
+	//STAT(MONSTERS_KILLED, this) = monsters_killed;
 }
 
 void monster_dropitem(entity this, entity attacker)

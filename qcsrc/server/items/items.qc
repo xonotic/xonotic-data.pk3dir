@@ -280,12 +280,14 @@ void Item_RespawnCountdown(entity this)
 
 void Item_RespawnThink(entity this)
 {
-	this.nextthink = time;
+	this.nextthink = time + 1;
 	if(this.origin != this.oldorigin)
 		ItemUpdate(this);
-
-	if(time >= this.wait)
+	
+	if(!game_timeout && time - timeout_total_time >= this.wait)
 		Item_Respawn(this);
+	
+	//LOG_INFOF("time until respawn %d", (this.wait) - (time - timeout_total_time));
 }
 
 void Item_ScheduleRespawnIn(entity e, float t)
@@ -308,8 +310,8 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	{
 		setthink(e, Item_RespawnThink);
 		e.nextthink = time;
-		e.scheduledrespawntime = time + t;
-		e.wait = time + t;
+		e.scheduledrespawntime = time - timeout_total_time + t;
+		e.wait = time - timeout_total_time + t;
 
 		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 		{
