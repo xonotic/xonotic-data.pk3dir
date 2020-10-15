@@ -221,6 +221,10 @@ void VoteCount(float first_count)
 
 	// add up all the votes from each connected client
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_CLIENT(it), {
+		// z411
+		if(vote_target_type == VOTE_TARGET_TEAM && it.team != vote_caller.team) continue;
+		if(vote_target_type == VOTE_TARGET_SINGLE && it != vote_target) continue;
+		
 		++vote_player_count;
 		if (IS_PLAYER(it))   ++vote_real_player_count;
 		switch (it.vote_selection)
@@ -689,6 +693,8 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		case MUT_VOTEPARSE_UNACCEPTABLE: { return 0; }
 	}
 
+	vote_target_type = VOTE_TARGET_ALL;
+	
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
 		case "kick":
@@ -707,7 +713,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				if (first_command == "kickban")
 					command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
 
-				vote_parsed_command = strcat(first_command, " # ", ftos(etof(victim)), " ", command_arguments);
+				vote_parsed_command = strcat("defer 2 ", first_command, " # ", ftos(etof(victim)), " ", command_arguments);
 				vote_parsed_display = sprintf("^1%s #%d ^7%s^1 %s", first_command, etof(victim), victim.netname, reason);
 			}
 			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return 0; }
@@ -721,9 +727,25 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
-			vote_parsed_command = strcat("gotomap ", vote_command);
+			vote_parsed_command = strcat("defer 2 gotomap ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
+			break;
+		}
+		
+		// z411 team calls
+		case "team_name":
+		{
+			if (teamplay && Team_IsValidTeam(caller.team)) {
+				vote_target_type = VOTE_TARGET_TEAM;
+			
+				string tmname = strtolower(Static_Team_ColorName(caller.team));
+				string newname = argv(startpos + 1);
+				
+				vote_parsed_command = strcat(first_command, " ", tmname, " \"", newname, "\"");
+				vote_parsed_display = strzone(strcat("^3(Team) ^1", first_command, " ^2", newname));
+			} else { print_to(caller, "vcall: Not in a team\n"); return 0; }
+			
 			break;
 		}
 
@@ -755,10 +777,12 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		}
 
 		case "restart":
+		case "shuffleteams":
+		case "endmatch":
 		{
 			// add a delay so that vote result can be seen and announcer can be heard
 			// if the vote is accepted
-			vote_parsed_command = strcat("defer 1 ", vote_command);
+			vote_parsed_command = strcat("defer 2 ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_command));
 
 			break;

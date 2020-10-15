@@ -160,17 +160,52 @@ void GameCommand_adminmsg(int request, int argc)
 	}
 }
 
-void GameCommand_sendteams(int request)
+void GameCommand_team_name(int request, int argc)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (argv(1) == "")
+			{
+				return;
+			}
+			if (!teamplay)
+			{
+				LOG_INFO("selectteam can only be used in teamgames");
+				return;
+			}
+			
+			switch (argv(1))
+			{
+				case "red":
+				case "blue":
+				case "yellow":
+				case "pink":
+				{
+					if(argv(2) != "") {
+						cvar_set(strcat("g_teamnames_", argv(1)), argv(2));
+						int tm = Team_ColorToTeam(argv(1));
+						bprintf("\{1}%s%s^7 team is now known as %s^7\n", Team_ColorCode(tm), Team_ColorName(tm), argv(2));
+					} else {
+						cvar_set(strcat("g_teamnames_", argv(1)), "");
+						bprintf("\{1}%s%s^7 team now doesn't have a team name\n", Team_ColorCode(tm), Team_ColorName(tm), argv(2));
+					}
+					
+					break;
+				}
+				default:
+				{
+					return;
+				}
+			}
+			
 			send_TeamNames(MSG_BROADCAST, NULL);
 			return;
 		}
 
 		default:
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd sendteams");
@@ -179,6 +214,7 @@ void GameCommand_sendteams(int request)
 		}
 	}
 }
+
 void GameCommand_allready(int request)
 {
 	switch (request)
@@ -1643,8 +1679,9 @@ void GameCommand_(int request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
+SERVER_COMMAND(team_name, "Set team name") { GameCommand_team_name(request, arguments); }
+
 SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
-SERVER_COMMAND(sendteams, "Send team names") { GameCommand_sendteams(request); }
 SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
 SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }

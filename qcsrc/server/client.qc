@@ -106,7 +106,6 @@ void send_CSQC_teamnagger() {
 void send_TeamNames(int channel, entity to) {
 	msg_entity = to;
 	
-	LOG_INFOF("Sending team names");
 	WriteHeader(channel, TE_CSQC_TEAMNAMES);
 	WriteString(channel, autocvar_g_teamnames_red);
 	WriteString(channel, autocvar_g_teamnames_blue);
