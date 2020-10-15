@@ -349,6 +349,8 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 		return;
 	}
 
+        write_recordmarker(e, newpos, time - TIME_DECODE(t), TIME_DECODE(t));
+
 	// if we didn't hit a return yet, we have a new record!
 
 	// if the player does not have a UID we can unfortunately not store the record, as the rankings system relies on UIDs
@@ -374,7 +376,6 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 
 	if (showmessage)
 	{
-                write_recordmarker(e, newpos, time - TIME_DECODE(t), TIME_DECODE(t));
 		race_send_recordtime(MSG_ALL);
 	}
 
