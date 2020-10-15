@@ -734,7 +734,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 		}
 		
 		// z411 team calls
-		case "team_name":
+		case "teamname":
 		{
 			if (teamplay && Team_IsValidTeam(caller.team)) {
 				vote_target_type = VOTE_TARGET_TEAM;
