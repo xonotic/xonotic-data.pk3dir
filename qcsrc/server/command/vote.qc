@@ -415,6 +415,7 @@ void ReadyRestart_think(entity this)
 	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
+	Inventory_ClearAll();
 	delete(this);
 }
 
@@ -491,7 +492,10 @@ void ReadyRestart()
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
-	if (!sv_ready_restart_after_countdown) Score_ClearAll();
+	if (!sv_ready_restart_after_countdown) {
+		Score_ClearAll();
+		Inventory_ClearAll();
+	}
 	ReadyRestart_force();
 }
 

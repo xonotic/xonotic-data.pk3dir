@@ -1233,7 +1233,9 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		
 		int weapon_cnt_fired = pl.accuracy_cnt_fired[i - WEP_FIRST];
 		int weapon_cnt_hit   = pl.accuracy_cnt_hit[i - WEP_FIRST];
-		int weapon_acc = floor((weapon_cnt_hit / weapon_cnt_fired) * 100);
+		int weapon_acc = 0;
+		if(weapon_cnt_fired)
+			weapon_acc = floor((weapon_cnt_hit / weapon_cnt_fired) * 100);
 		average_acc += weapon_acc;
 		
 		string draw_str;
@@ -1271,7 +1273,8 @@ void Scoreboard_Duel_DrawTable(vector pos, bool invert, entity pl, entity tm)
 		if(weapon_cnt_fired)
 			total_weapons++;
 	});
-	average_acc = floor((average_acc / total_weapons) + 0.5);
+	if(total_weapons)
+		average_acc = floor((average_acc / total_weapons) + 0.5);
 	
 	// draw total accuracy now
 	tmp_str = sprintf("%d%%", average_acc);
