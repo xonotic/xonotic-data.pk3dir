@@ -3191,7 +3191,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				sprint(it, msgstr);
 			});
 			
-			if(play_chatsound(source, msgin))
+			if(!play_chatsound(source, msgin))
 				event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
 		else
@@ -3205,7 +3205,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				sprint(it, msgstr);
 			});
 			
-			if(play_chatsound(source, msgin))
+			if(!play_chatsound(source, msgin))
 				event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
 		}
 	}
