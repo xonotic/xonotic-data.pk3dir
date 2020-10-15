@@ -67,9 +67,9 @@ void centerprint_SetTitle(string title)
 
 void centerprint_Medal(string icon, float times)
 {
-	LOG_INFOF("centerprint_Medal: icon: %s times: %d", icon, times);
-	
-	centerprint_medal_expire_time = time + autocvar_hud_panel_centerprint_time;
+	//LOG_INFOF("centerprint_Medal: icon: %s times: %d", icon, times);
+	//centerprint_medal_expire_time = time + autocvar_hud_panel_centerprint_time;
+	centerprint_medal_expire_time = time + MSG_MEDAL_TIME;
 	centerprint_medal_times = times;
 	if(centerprint_medal_icon)
 		strunzone(centerprint_medal_icon);
@@ -275,10 +275,10 @@ void HUD_CenterPrint()
 	
 	// z411 draw medals first
 	if (time < centerprint_medal_expire_time) {
-		if(time < centerprint_medal_expire_time - 1)
+		if(time < centerprint_medal_expire_time - MSG_MEDAL_FADE_TIME)
 			a = 1;
 		else
-			a = centerprint_medal_expire_time - time;
+			a = (centerprint_medal_expire_time - time) / MSG_MEDAL_FADE_TIME;
 		
 		vector tmp_in = pos;
 			
@@ -288,7 +288,7 @@ void HUD_CenterPrint()
 		
 		tmp_in.x += (panel_size.x - newsize.x) / 2; // center medal icon
 		
-		if(centerprint_medal_times <= 5) {
+		if(centerprint_medal_times <= MSG_MEDAL_SCREEN) {
 			tmp_in.x -= ((newsize.x * 1.1) * (centerprint_medal_times - 1) / 2);
 			for(int t = 0; t < centerprint_medal_times; t++) {
 				drawpic(tmp_in, centerprint_medal_icon, newsize, '1 1 1', a, DRAWFLAG_NORMAL);

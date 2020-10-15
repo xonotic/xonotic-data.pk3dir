@@ -447,7 +447,8 @@ void Create_Notification_Entity_Annce(entity notif,
 										float channel,
 										string snd,
 										float vol,
-										float position)
+										float position,
+										float queuetime)
 		{
 			// Set MSG_ANNCE information and handle precaching
 			#ifdef CSQC
@@ -463,6 +464,7 @@ void Create_Notification_Entity_Annce(entity notif,
 						notif.nent_snd = strzone(snd);
 						notif.nent_vol = vol;
 						notif.nent_position = position;
+						notif.nent_queuetime = queuetime;
 					}
 				}
 				else
@@ -1221,17 +1223,15 @@ void Local_Notification_Queue_Run(MSG net_type, entity notif, float f1)
 
 void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time, float f1)
 {	
-	if(notif_queue_length >= NOTIF_QUEUE_MAX)
-		return;
-	
 	//LOG_INFOF("Comparison %d > %d", time, notif_queue_next_time);
-	
-	if(time > notif_queue_next_time) {
+	if(queue_time == -1 || time > notif_queue_next_time) {
 		//LOG_INFOF("Running NOW!");
 		Local_Notification_Queue_Run(net_type, notif, f1);
 		notif_queue_next_time = time + queue_time;
 	} else {
 		//LOG_INFOF("Queueing: %d %d", notif_queue_length, notif_queue_next_time);
+		if(notif_queue_length >= NOTIF_QUEUE_MAX) return;
+	
 		notif_queue_type[notif_queue_length] = net_type;
 		notif_queue_entity[notif_queue_length] = notif;
 		notif_queue_time[notif_queue_length] = notif_queue_next_time;
@@ -1341,7 +1341,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 			Local_Notification_Queue_Add(
 				net_type,
 				notif,
-				1,
+				notif.nent_queuetime,
 				f1);
 			#else
 			backtrace("MSG_ANNCE on server?... Please notify Samual immediately!\n");
@@ -1459,7 +1459,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 			Local_Notification_Queue_Add(
 				net_type,
 				notif,
-				3,
+				MSG_MEDAL_TIME,
 				f1);
 			break;
 		}

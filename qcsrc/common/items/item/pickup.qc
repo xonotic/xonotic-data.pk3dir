@@ -15,7 +15,6 @@ METHOD(Pickup, giveTo, bool(Pickup this, entity item, entity player))
         entity store = IS_PLAYER(player) ? PS(player) : player;
         store.inventory.inv_items[this.m_id]++;
         Inventory_update(store);
-		//store.inventory.inventory.inv_items[this.m_id]++;
     }
     return b;
 }

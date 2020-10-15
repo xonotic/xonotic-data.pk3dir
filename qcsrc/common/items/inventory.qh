@@ -46,7 +46,6 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 	
 	float entnum = ReadByte();
 	inventoryslots[entnum-1] = this;
-	LOG_INFO("Got inventory");
 	
     const int majorBits = Readbits(Inventory_groups_major);
     for (int i = 0; i < Inventory_groups_major; ++i) {
