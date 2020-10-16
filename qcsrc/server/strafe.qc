@@ -1,6 +1,8 @@
 #include "strafe.qh"
 
-#include <server/miscfunctions.qh>
+#include <common/physics/movetypes/movetypes.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
 
 .float race_checkpoint;
 
