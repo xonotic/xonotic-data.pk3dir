@@ -2,7 +2,6 @@
 #include "util.qh"
 
 #if defined(CSQC)
-    #include <client/main.qh>
     #include "constants.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)

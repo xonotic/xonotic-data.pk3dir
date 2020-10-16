@@ -2,7 +2,6 @@
 
 #include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <client/main.qh>
 #include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <common/scores.qh>

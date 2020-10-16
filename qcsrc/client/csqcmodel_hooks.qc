@@ -1,8 +1,6 @@
 #include "csqcmodel_hooks.qh"
 #include "autocvars.qh"
-#include "main.qh"
 #include <client/mutators/_mod.qh>
-#include <client/main.qh>
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>
