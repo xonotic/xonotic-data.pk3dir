@@ -1,8 +1,13 @@
 #include "ent_cs.qh"
-#include <common/gamemodes/_mod.qh>
-#include <common/resources.qh>
-#ifdef SVQC
-#include <server/resources.qh>
+
+#if defined(CSQC)
+	#include <common/gamemodes/_mod.qh>
+	#include <common/resources.qh>
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include <common/gamemodes/_mod.qh>
+	#include <common/resources.qh>
+	#include <server/resources.qh>
 #endif
 
 REGISTRY(EntCSProps, BITS(16) - 1)

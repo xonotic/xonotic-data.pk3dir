@@ -1,12 +1,12 @@
 #include "viewloc.qh"
-#include "util.qh"
 
 #if defined(CSQC)
-    #include "constants.qh"
+	#include <common/util.qh>
+	#include <common/constants.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include <common/weapons/_all.qh>
 	#include <common/stats.qh>
+	#include <common/weapons/_all.qh>
 #endif
 
 // client movement

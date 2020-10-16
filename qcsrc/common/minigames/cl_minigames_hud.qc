@@ -2,14 +2,12 @@
 
 #include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <common/ent_cs.qh>
-
-#include "minigames.qh"
-
-.vector colormod;
-
 #include <client/hud/hud_config.qh>
 #include <client/mapvoting.qh>
+#include <common/ent_cs.qh>
+#include <common/minigames/minigames.qh>
+
+.vector colormod;
 
 void HUD_MinigameBoard_Export(int fh)
 {

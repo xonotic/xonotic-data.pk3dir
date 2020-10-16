@@ -1,4 +1,5 @@
 #include "platforms.qh"
+
 void generic_plat_blocked(entity this, entity blocker)
 {
 #ifdef SVQC
