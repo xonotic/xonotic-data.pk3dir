@@ -6,14 +6,8 @@
 
 .float race_checkpoint;
 
-.float strafe_efficiency_average;
-.float strafe_efficiency_tics;
-.float strafe_efficiency_best;
-
-void calculate_strafe_efficiency(entity strafeplayer, vector movement)
+float calculate_strafe_efficiency(entity strafeplayer, vector movement)
 {
-    float efficiency = 0;
-
     if(strafeplayer)
     {
         // physics
@@ -30,9 +24,7 @@ void calculate_strafe_efficiency(entity strafeplayer, vector movement)
         int    direction;
         int    keys_fwd;
         float  wishangle                     = 0;
-        float  moveangle;
         bool   fwd                           = true;
-        float  bestangle;
 
         // determine whether the player is pressing forwards or backwards keys
         if(movement.x > 0)
@@ -152,13 +144,12 @@ void calculate_strafe_efficiency(entity strafeplayer, vector movement)
             wishangle = -wishangle;
         }
 
-        moveangle = angle + wishangle;
-
-        // best angle to strafe at
-        bestangle = (speed > maxspeed ? acos(maxspeed / speed) : 0) * RAD2DEG;
-
         if(speed > 0 && !swimming && strafeplayer.race_checkpoint > 0) // only calculate a new average if all conditions are met
         {
+            float efficiency = 0;
+            float moveangle = angle + wishangle;
+            float bestangle = (speed > maxspeed ? acos(maxspeed / speed) : 0) * RAD2DEG; // best angle to strafe at
+
             ++strafeplayer.strafe_efficiency_tics;
             if(fabs(vlen(vec2(movement))) > 0)
             {
@@ -169,18 +160,18 @@ void calculate_strafe_efficiency(entity strafeplayer, vector movement)
                 }
                 else
                 {
-                    if((moveangle) >= bestangle)
+                    if(moveangle >= bestangle)
                     {
                         efficiency = 1 - (moveangle - bestangle) / (90 - bestangle);
                     }
-                    else if((moveangle) <= -bestangle)
+                    else if(moveangle <= -bestangle)
                     {
                         efficiency = 1 - (moveangle + bestangle) / (-90 + bestangle);
                     }
                 }
             }
+            return efficiency;
         }
-
-        strafeplayer.strafe_efficiency_average += efficiency;
     }
+    return 0;
 }

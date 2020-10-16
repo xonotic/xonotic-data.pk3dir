@@ -141,7 +141,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 				CS(player).movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-	calculate_strafe_efficiency(player, CS(player).movement);
+	player.strafe_efficiency_average += calculate_strafe_efficiency(player, CS(player).movement);
 }
 
 MUTATOR_HOOKFUNCTION(cts, reset_map_global)
@@ -155,7 +155,7 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 
 	FOREACH_CLIENT(true, {
 		it.strafe_efficiency_best = -2;
-		PlayerScore_Set(it, SP_CTS_STRAFE, it.strafe_efficiency_best * 10000);
+		PlayerScore_Set(it, SP_CTS_STRAFE, -20000);
 
 		if(it.race_place)
 		{
@@ -206,7 +206,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 
 		player.strafe_efficiency_average = player.strafe_efficiency_tics = 0;
 		player.strafe_efficiency_best = -2;
-		PlayerScore_Set(player, SP_CTS_STRAFE, player.strafe_efficiency_best * 10000);
+		PlayerScore_Set(player, SP_CTS_STRAFE, -20000);
 	}
 }
 
