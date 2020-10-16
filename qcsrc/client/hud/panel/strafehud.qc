@@ -627,7 +627,7 @@ void HUD_StrafeHUD()
         if(autocvar_hud_panel_strafehud_startspeed_fade > 0)
         {
             float text_alpha = 0;
-            if(race_checkpoint == 254) // checkpoint 254 is the start trigger
+            if(race_nextcheckpoint == 1) // check if the start trigger was hit since the checkpoint after the start trigger is always checkpoint 1
             {
                 if(starttime != race_checkpointtime)
                 {
