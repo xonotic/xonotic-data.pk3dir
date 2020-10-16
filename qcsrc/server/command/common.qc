@@ -1,9 +1,11 @@
 #include "common.qh"
 
 #include <common/command/_mod.qh>
+#include <common/deathtypes/all.qh>
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
+#include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
 #include <lib/warpzone/common.qh>
 #include <server/chat.qh>

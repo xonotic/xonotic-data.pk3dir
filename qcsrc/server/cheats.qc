@@ -17,6 +17,7 @@
 #include <common/weapons/_all.qh>
 #include <lib/csqcmodel/sv_model.qh>
 #include <lib/warpzone/anglestransform.qh>
+#include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 #include <server/clientkill.qh>
 #include <server/damage.qh>

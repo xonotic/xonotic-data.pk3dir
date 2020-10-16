@@ -1,5 +1,7 @@
 #include "client.qh"
 
+#include <common/csqcmodel_settings.qh>
+#include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
@@ -23,14 +25,19 @@
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
+#include <common/notifications/all.qh>
 #include <common/physics/player.qh>
+#include <common/playerstats.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
 #include <common/vehicles/all.qh>
 #include <common/vehicles/sv_vehicles.qh>
+#include <common/viewloc.qh>
 #include <common/weapons/_all.qh>
 #include <common/weapons/weapon/vortex.qh>
 #include <common/wepent.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/common.qh>
 #include <lib/warpzone/server.qh>
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
@@ -56,9 +63,11 @@
 #include <server/portals.qh>
 #include <server/race.qh>
 #include <server/resources.qh>
+#include <server/scores.qh>
 #include <server/scores_rules.qh>
 #include <server/spawnpoints.qh>
 #include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/hitplot.qh>
 #include <server/weapons/selection.qh>

@@ -1,5 +1,7 @@
 #include "clientkill.qh"
 
+#include <common/csqcmodel_settings.qh>
+#include <common/deathtypes/all.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>

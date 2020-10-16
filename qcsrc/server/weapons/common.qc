@@ -9,12 +9,13 @@
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
-#include <common/weapons/_all.qh>
 #include <common/wepent.qh>
 #include <server/command/common.qh>
 #include <server/damage.qh>
+#include <server/hook.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
+#include <server/weapons/csqcprojectile.qh>
 
 bool W_DualWielding(entity player)
 {

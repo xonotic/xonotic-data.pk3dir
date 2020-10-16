@@ -5,6 +5,8 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/monsters/_mod.qh>
 #include <common/net_linked.qh>
+#include <common/notifications/all.qh>
+#include <common/playerstats.qh>
 #include <common/stats.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
@@ -14,6 +16,7 @@
 #include <server/main.qh>
 #include <server/mutators/_mod.qh>
 #include <server/race.qh>
+#include <server/weapons/selection.qh>
 #include <server/world.qh>
 
 // =========================================================

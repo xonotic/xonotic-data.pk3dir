@@ -9,6 +9,7 @@
 #include <common/notifications/all.qh>
 #include <common/state.qh>
 #include <common/util.qh>
+#include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>
 #include <lib/csqcmodel/sv_model.qh>
@@ -17,6 +18,7 @@
 #include <server/command/common.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
+#include <server/hook.qh>
 #include <server/mutators/_mod.qh>
 #include <server/resources.qh>
 #include <server/round_handler.qh>

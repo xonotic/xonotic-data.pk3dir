@@ -12,6 +12,7 @@
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
 #include <common/wepent.qh>
+#include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 #include <server/bot/api.qh>
 #include <server/command/vote.qh>

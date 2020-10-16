@@ -13,6 +13,7 @@
 #include <server/items/spawning.qh>
 #include <server/mutators/_mod.qh>
 #include <server/resources.qh>
+#include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 

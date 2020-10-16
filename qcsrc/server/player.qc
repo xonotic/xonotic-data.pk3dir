@@ -27,10 +27,12 @@
 #include <server/command/vote.qh>
 #include <server/damage.qh>
 #include <server/handicap.qh>
+#include <server/hook.qh>
 #include <server/main.qh>
 #include <server/mutators/_mod.qh>
 #include <server/portals.qh>
 #include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/throwing.qh>
 #include <server/weapons/weaponstats.qh>

@@ -1,6 +1,7 @@
 #include "tracing.qh"
 
 #include <common/constants.qh>
+#include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>
