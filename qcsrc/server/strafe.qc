@@ -4,7 +4,7 @@
 #include <common/physics/player.qh>
 #include <common/stats.qh>
 
-.float race_checkpoint;
+.float race_started;
 
 float calculate_strafe_efficiency(entity strafeplayer, vector movement)
 {
@@ -144,7 +144,8 @@ float calculate_strafe_efficiency(entity strafeplayer, vector movement)
             wishangle = -wishangle;
         }
 
-        if(speed > 0 && !swimming && strafeplayer.race_checkpoint > 0) // only calculate a new average if all conditions are met
+        // note about accuracy: a few ticks after dying do still have race_started set to true causing minimal interference (most likely <0.1%) in the efficiency total
+        if(speed > 0 && !swimming && strafeplayer.race_started) // only calculate the efficiency if all conditions are met
         {
             float efficiency = 0;
             float moveangle = angle + wishangle;
