@@ -180,10 +180,6 @@ void calculate_strafe_efficiency(entity strafeplayer, vector movement)
                 }
             }
         }
-        else if(strafeplayer.race_checkpoint <= 0)
-        {
-            strafeplayer.strafe_efficiency_average = strafeplayer.strafe_efficiency_tics = 0;
-        }
 
         strafeplayer.strafe_efficiency_average += efficiency;
     }
