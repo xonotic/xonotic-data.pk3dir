@@ -376,13 +376,13 @@ void ClientCommand_physics(entity caller, int request, int argc)
 	}
 }
 
-void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for toggling readyness
+void ClientCommand_ready(entity caller, int request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
+			if (IS_CLIENT(caller) && caller.last_ready < time - 3) // anti-spam
 			{
 				if (warmup_stage || sv_ready_restart || g_race_qualifying == 2)
 				{
@@ -402,6 +402,8 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
 								bprint("\{1}", playername(caller, false), "^2 is ready\n");
 						}
+						
+						caller.last_ready = time;
 
 						// cannot reset the game while a timeout is active!
 						if (!timeout_status) ReadyCount();

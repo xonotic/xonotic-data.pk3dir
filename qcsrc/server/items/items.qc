@@ -222,6 +222,8 @@ void Item_Respawn(entity this)
 
 void Item_RespawnCountdown(entity this)
 {
+	if(game_timeout) { this.nextthink = time + 1; return; }
+	
 	if(this.item_respawncounter >= ITEM_RESPAWN_TICKS)
 	{
 		if(this.waypointsprite_attached)
@@ -231,7 +233,11 @@ void Item_RespawnCountdown(entity this)
 	else
 	{
 		this.nextthink = time + 1;
-		this.item_respawncounter += 1;
+		this.item_respawncounter = floor((time - timeout_total_time) - (this.scheduledrespawntime - ITEM_RESPAWN_TICKS)) + 1;
+		//this.item_respawncounter += 1;
+		//LOG_INFOF("Respawncounter: %d", this.item_respawncounter);
+		if(this.item_respawncounter < 1) return;
+		
 		if(this.item_respawncounter == 1)
 		{
 			do {
@@ -296,9 +302,12 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	if ((Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS) || MUTATOR_CALLHOOK(Item_ScheduleRespawn, e, t)) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
 		setthink(e, Item_RespawnCountdown);
-		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
-		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
+		//e.nextthink = time - timeout_total_time + max(0, t - ITEM_RESPAWN_TICKS);
+		//e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
+		e.nextthink = time;
+		e.scheduledrespawntime = time - timeout_total_time + t;
 		e.item_respawncounter = 0;
+		
 		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 		{
 			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
