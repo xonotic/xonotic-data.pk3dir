@@ -1,50 +1,38 @@
 #include "cmd.qh"
 
-#include <server/chat.qh>
-#include <server/world.qh>
-
 #include <common/command/_mod.qh>
-
-#include "common.qh"
-#include "getreplies.qh"
-#include "vote.qh"
-
-#include "../bot/api.qh"
-
-#include "../campaign.qh"
-#include "../cheats.qh"
-#include "../client.qh"
-#include "../clientkill.qh"
-#include "../player.qh"
-#include "../ipban.qh"
-#include "../mapvoting.qh"
-#include "../scores.qh"
-#include "../teamplay.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-
-#ifdef SVQC
-	#include <common/vehicles/all.qh>
-#endif
-
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/minigames/sv_minigames.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/mapobjects/triggers.qh>
-
-#include <common/minigames/sv_minigames.qh>
-
-#include <common/monsters/_mod.qh>
-#include <common/monsters/sv_spawn.qh>
-#include <common/monsters/sv_monsters.qh>
-
+#include <common/vehicles/all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/bot/api.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/vote.qh>
+#include <server/ipban.qh>
+#include <server/mapvoting.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual

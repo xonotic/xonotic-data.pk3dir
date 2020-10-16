@@ -1,10 +1,10 @@
 #include "round_handler.qh"
 
-#include <server/world.qh>
-#include "campaign.qh"
-#include "command/vote.qh"
 #include <common/mapobjects/triggers.qh>
 #include <common/util.qh>
+#include <server/campaign.qh>
+#include <server/command/vote.qh>
+#include <server/world.qh>
 
 void round_handler_Think(entity this)
 {

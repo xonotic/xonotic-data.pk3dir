@@ -1,38 +1,27 @@
 #include "items.qh"
 
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
-
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/buffs/buffs.qh>
+#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/notifications/all.qh>
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <common/wepent.qh>
+#include <lib/warpzone/util_server.qh>
 #include <server/bot/api.qh>
-
 #include <server/command/vote.qh>
-
 #include <server/damage.qh>
-
 #include <server/mutators/_mod.qh>
-
 #include <server/teamplay.qh>
-#include <server/world.qh>
-
 #include <server/weapons/common.qh>
 #include <server/weapons/selection.qh>
 #include <server/weapons/weaponsystem.qh>
-
-#include <common/constants.qh>
-#include <common/deathtypes/all.qh>
-#include <common/notifications/all.qh>
-#include <common/mapobjects/subs.qh>
-#include <common/mapobjects/triggers.qh>
-#include <common/util.qh>
-
-#include <common/monsters/_mod.qh>
-
-#include <common/wepent.qh>
-#include <common/weapons/_all.qh>
-
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/mutators/mutator/buffs/sv_buffs.qh>
-
-#include <lib/warpzone/util_server.qh>
+#include <server/world.qh>
 
 bool ItemSend(entity this, entity to, int sf)
 {

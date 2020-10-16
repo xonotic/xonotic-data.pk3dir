@@ -1,46 +1,41 @@
 #include "player.qh"
 
-#include <common/effects/all.qh>
-#include "bot/api.qh"
-#include "cheats.qh"
-#include "client.qh"
-#include "clientkill.qh"
-#include "damage.qh"
-#include <server/mutators/_mod.qh>
-#include "world.qh"
-#include "handicap.qh"
-#include "portals.qh"
-#include "teamplay.qh"
-#include <server/main.qh>
-#include "weapons/common.qh"
-#include "weapons/throwing.qh"
-#include "command/common.qh"
-#include "command/vote.qh"
-#include <common/state.qh>
 #include <common/anim.qh>
 #include <common/animdecide.qh>
+#include <common/animdecide.qh>
 #include <common/csqcmodel_settings.qh>
-#include <common/gamemodes/sv_rules.qh>
 #include <common/deathtypes/all.qh>
+#include <common/effects/all.qh>
+#include <common/effects/qc/_mod.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/gamemodes/sv_rules.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/teleporters.qh>
-#include <common/playerstats.qh>
-#include <lib/csqcmodel/sv_model.qh>
-
 #include <common/minigames/sv_minigames.qh>
-
-#include <common/gamemodes/_mod.qh>
-
-#include <common/physics/player.qh>
-#include <common/effects/qc/_mod.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
-#include <common/mapobjects/_mod.qh>
+#include <common/physics/player.qh>
+#include <common/playerstats.qh>
+#include <common/state.qh>
 #include <common/wepent.qh>
-
-#include "weapons/weaponstats.qh"
+#include <lib/csqcmodel/sv_model.qh>
+#include <server/bot/api.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/handicap.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/portals.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/throwing.qh>
+#include <server/weapons/weaponstats.qh>
 #include <server/weapons/weaponsystem.qh>
-
-#include <common/animdecide.qh>
+#include <server/world.qh>
 
 void Drop_Special_Items(entity player)
 {

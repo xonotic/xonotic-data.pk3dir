@@ -1,20 +1,20 @@
 #include "common.qh"
 
-#include <server/command/common.qh>
-#include <common/weapons/_all.qh>
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/items/_mod.qh>
+#include <common/net_linked.qh>
+#include <common/notifications/all.qh>
+#include <common/state.qh>
 #include <common/stats.qh>
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/_all.qh>
+#include <common/wepent.qh>
+#include <server/command/common.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
-#include <common/constants.qh>
-#include <common/net_linked.qh>
-#include <common/deathtypes/all.qh>
-#include <common/notifications/all.qh>
-#include <common/state.qh>
-#include <common/util.qh>
-#include <common/weapons/_all.qh>
-#include <common/wepent.qh>
-#include <common/items/_mod.qh>
 
 bool W_DualWielding(entity player)
 {

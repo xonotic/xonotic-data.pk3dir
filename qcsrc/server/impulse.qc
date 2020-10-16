@@ -1,27 +1,22 @@
 #include "impulse.qh"
-#include "round_handler.qh"
-
-#include "weapons/throwing.qh"
-#include "command/common.qh"
-#include "cheats.qh"
-#include "client.qh"
-#include "clientkill.qh"
-#include "damage.qh"
-#include <server/mutators/_mod.qh>
-#include "weapons/selection.qh"
-#include "weapons/tracing.qh"
-#include "weapons/weaponsystem.qh"
 
 #include <common/gamemodes/_mod.qh>
-
-#include <common/state.qh>
-
 #include <common/minigames/sv_minigames.qh>
-
-#include <common/weapons/_all.qh>
-#include <common/vehicles/sv_vehicles.qh>
-
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/state.qh>
+#include <common/vehicles/sv_vehicles.qh>
+#include <common/weapons/_all.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/damage.qh>
+#include <server/mutators/_mod.qh>
+#include <server/round_handler.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/throwing.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
 
 .entity vehicle;
 
