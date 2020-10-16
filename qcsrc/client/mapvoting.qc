@@ -2,7 +2,6 @@
 
 #include "autocvars.qh"
 #include <client/draw.qh>
-#include "main.qh"
 #include "hud/_mod.qh"
 #include "hud/panel/scoreboard.qh"
 

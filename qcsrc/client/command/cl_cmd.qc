@@ -14,7 +14,6 @@
 #include <client/hud/panel/radar.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/hud/panel/vote.qh>
-#include "../main.qh"
 #include "../mapvoting.qh"
 #include <client/view.qh>
 

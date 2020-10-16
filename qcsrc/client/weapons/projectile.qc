@@ -1,7 +1,6 @@
 #include "projectile.qh"
 
 #include "../autocvars.qh"
-#include "../main.qh"
 #include <client/mutators/_mod.qh>
 
 #include <common/constants.qh>

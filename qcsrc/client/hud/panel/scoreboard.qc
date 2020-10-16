@@ -2,7 +2,6 @@
 
 #include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <client/main.qh>
 #include <client/hud/panel/racetimer.qh>
 #include <client/hud/panel/weapons.qh>
 #include "quickmenu.qh"

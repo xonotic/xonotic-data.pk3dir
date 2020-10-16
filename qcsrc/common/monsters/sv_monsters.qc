@@ -15,7 +15,6 @@
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/steerlib.qh>
-#include <server/main.qh>
 #include "../turrets/sv_turrets.qh"
 #include "../turrets/util.qh"
 #include "../vehicles/all.qh"

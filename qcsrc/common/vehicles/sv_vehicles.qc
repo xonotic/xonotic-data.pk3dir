@@ -8,7 +8,6 @@
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
-#include <server/main.qh>
 #include <server/weapons/common.qh>
 
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
