@@ -1,10 +1,9 @@
 #include "mapvoting.qh"
 
-#include "autocvars.qh"
+#include <client/autocvars.qh>
 #include <client/draw.qh>
-#include "hud/_mod.qh"
-#include "hud/panel/scoreboard.qh"
-
+#include <client/hud/_mod.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <common/mapinfo.qh>
 #include <common/util.qh>
 

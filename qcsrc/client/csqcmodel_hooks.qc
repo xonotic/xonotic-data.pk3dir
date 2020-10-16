@@ -1,17 +1,18 @@
 #include "csqcmodel_hooks.qh"
-#include "autocvars.qh"
+
+#include <client/autocvars.qh>
 #include <client/mutators/_mod.qh>
-#include "player_skeleton.qh"
-#include "weapons/projectile.qh"
+#include <client/player_skeleton.qh>
+#include <client/weapons/projectile.qh>
 #include <common/animdecide.qh>
+#include <common/effects/all.inc>
+#include <common/effects/all.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
 #include <common/viewloc.qh>
-#include <common/effects/all.qh>
-#include <common/effects/all.inc>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>

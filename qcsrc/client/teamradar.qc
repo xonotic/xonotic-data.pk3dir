@@ -1,10 +1,8 @@
 #include "teamradar.qh"
 
-#include "autocvars.qh"
-#include "hud/_mod.qh"
-
+#include <client/autocvars.qh>
+#include <client/hud/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
-
 #include <lib/csqcmodel/interpolate.qh>
 
 vector teamradar_3dcoord_to_texcoord(vector in)
