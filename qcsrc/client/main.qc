@@ -957,6 +957,17 @@ NET_HANDLE(TE_CSQC_TEAMNAMES, bool isNew)
 	return = true;
 }
 
+NET_HANDLE(TE_CSQC_CHATSOUND, bool isNew)
+{
+	string snd = ReadString();
+	snd = strcat("chat/", snd, ".ogg");
+	
+	precache_sound(snd);
+	_sound(NULL, CH_INFO, snd, VOL_BASE, ATTN_NONE);
+
+	return = true;
+}
+
 float GetSpeedUnitFactor(int speed_unit)
 {
 	switch(speed_unit)

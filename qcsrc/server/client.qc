@@ -3219,9 +3219,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 bool play_chatsound(entity source, string msgin)
 {
-	//bprintf("Source (%s) has cl_chat_sounds = %d\n", source.netname, CS(source).cvar_cl_chat_sounds);
-	//if(autocvar_sv_chat_sounds && CS(source).cvar_cl_chat_sounds) {
-	if(autocvar_sv_chat_sounds) {
+	if(autocvar_sv_chat_sounds && CS(source).cvar_cl_chat_sounds) {
 		var .float flood_sound = floodcontrol_chatsound;
 		
 		if (source.(flood_sound) < time - autocvar_sv_chat_sounds_flood) {
@@ -3229,21 +3227,11 @@ bool play_chatsound(entity source, string msgin)
 			rawmsg = strreplace("\n", " ", msgin);
 			
 			if (findinlist_abbrev(rawmsg, autocvar_sv_chat_sounds_list)) {
-				string sndname = strcat("sound/chat/", rawmsg, ".ogg");
-				
-				/*FOREACH_CLIENT(true, {
-					if(IS_REAL_CLIENT(it)) {
-						bprintf("Destination (%s) has cl_chat_sounds = %d\n", it.netname, CS(it).cvar_cl_chat_sounds);
-						if(CS(it).cvar_cl_chat_sounds) {
-							precache_sound(sndname);
-							play2(it, sndname);
-						}
-					} else {
-						bprintf("Destination (%s) has cl_chat_sounds = %d but it's not a real client\n", it.netname, CS(it).cvar_cl_chat_sounds);
-					}
-				});*/
-				play2all(sndname);
-				
+				FOREACH_CLIENT(IS_REAL_CLIENT(it) && CS(it).cvar_cl_chat_sounds, {
+					msg_entity = it;
+					WriteHeader(MSG_ONE, TE_CSQC_CHATSOUND);
+					WriteString(MSG_ONE, rawmsg);
+				});
 				source.(flood_sound) = time;
 				return true;
 			}

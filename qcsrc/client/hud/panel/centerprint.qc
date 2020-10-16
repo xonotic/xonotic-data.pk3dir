@@ -288,7 +288,7 @@ void HUD_CenterPrint()
 		
 		tmp_in.x += (panel_size.x - newsize.x) / 2; // center medal icon
 		
-		if(centerprint_medal_times <= MSG_MEDAL_SCREEN) {
+		if(centerprint_medal_times < MSG_MEDAL_SCREEN) {
 			tmp_in.x -= ((newsize.x * 1.1) * (centerprint_medal_times - 1) / 2);
 			for(int t = 0; t < centerprint_medal_times; t++) {
 				drawpic(tmp_in, centerprint_medal_icon, newsize, '1 1 1', a, DRAWFLAG_NORMAL);
