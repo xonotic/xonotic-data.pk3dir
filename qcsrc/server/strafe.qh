@@ -1,6 +1,6 @@
 #pragma once
 
-.float strafe_efficiency_average;
+.float strafe_efficiency_sum;
 .float strafe_efficiency_tics;
 .float strafe_efficiency_best;
 
