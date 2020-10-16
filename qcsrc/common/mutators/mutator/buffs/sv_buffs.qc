@@ -20,20 +20,16 @@ REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 
 bool buffs_BuffModel_Customize(entity this, entity client)
 {
-	entity player, myowner;
-	bool same_team;
+	entity player = WaypointSprite_getviewentity(client);
+	entity myowner = this.owner;
 
-	player = WaypointSprite_getviewentity(client);
-	myowner = this.owner;
-	same_team = (SAME_TEAM(player, myowner) || SAME_TEAM(player, myowner));
-
-	if(myowner.alpha <= 0.5 && !same_team && myowner.alpha != 0)
+	if(myowner.alpha <= 0.5 && DIFF_TEAM(player, myowner) && myowner.alpha != 0)
 		return false;
 
 	if(MUTATOR_CALLHOOK(BuffModel_Customize, this, player))
 		return false;
 
-	if(player == myowner || (IS_SPEC(client) && client.enemy == myowner))
+	if(player == myowner)
 	{
 		// somewhat hide the model, but keep the glow
 		this.effects = 0;
@@ -59,6 +55,13 @@ void buffs_BuffModel_Spawn(entity player)
 	player.buff_model.pflags = PFLAGS_FULLDYNAMIC;
 	player.buff_model.light_lev = 200;
 	setcefc(player.buff_model, buffs_BuffModel_Customize);
+}
+
+void buffs_BuffModel_Remove(entity player)
+{
+	if(player.buff_model)
+		delete(player.buff_model);
+	player.buff_model = NULL;
 }
 
 vector buff_GlowColor(entity buff)
@@ -308,8 +311,7 @@ void buff_Think(entity this)
 		if(this.team && !this.buff_waypoint)
 			buff_Waypoint_Spawn(this);
 
-		if(this.lifetime)
-		if(time >= this.lifetime)
+		if(this.lifetime && time >= this.lifetime)
 			buff_Respawn(this);
 	}
 
@@ -586,6 +588,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	buffs_BuffModel_Remove(player);
 	player.oldbuffs = 0;
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
@@ -636,11 +639,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 		STAT(BUFFS, frag_target) = 0;
 		STAT(BUFF_TIME, frag_target) = 0;
 
-		if(frag_target.buff_model)
-		{
-			delete(frag_target.buff_model);
-			frag_target.buff_model = NULL;
-		}
+		buffs_BuffModel_Remove(frag_target);
 	}
 }
 
@@ -746,11 +745,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 
 bool buffs_RemovePlayer(entity player)
 {
-	if(player.buff_model)
-	{
-		delete(player.buff_model);
-		player.buff_model = NULL;
-	}
+	buffs_BuffModel_Remove(player);
 
 	// also reset timers here to prevent them continuing after spectating
 	player.buff_disability_time = 0;
@@ -1003,9 +998,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 		else
 		{
-			if(player.buff_model)
-				delete(player.buff_model);
-			player.buff_model = NULL;
+			buffs_BuffModel_Remove(player);
 
 			player.effects &= ~(EF_NOSHADOW);
 		}

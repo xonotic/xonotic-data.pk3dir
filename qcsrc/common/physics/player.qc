@@ -5,7 +5,6 @@
 #ifdef SVQC
 
 #include <server/client.qh>
-#include <server/miscfunctions.qh>
 #include <common/mapobjects/defs.qh>
 #include "../mapobjects/trigger/viewloc.qh"
 #include <server/main.qh>
@@ -424,9 +423,6 @@ bool PlayerJump(entity this)
 	SET_JUMP_HELD(this);
 
 #ifdef SVQC
-
-	this.oldvelocity_z = this.velocity_z;
-
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
@@ -653,7 +649,7 @@ void PM_check_hitground(entity this)
 void PM_Footsteps(entity this)
 {
 #ifdef SVQC
-	if (!g_footsteps) return;
+	if (!autocvar_g_footsteps) return;
 	if (IS_DUCKED(this)) return;
 	if (time >= this.lastground + 0.2) return;
 	if (vdist(this.velocity, <=, autocvar_sv_maxspeed * 0.6)) return;

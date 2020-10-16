@@ -1,5 +1,6 @@
 #include "cl_domination.qh"
 
+#include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
 
 void HUD_Mod_Dom_Export(int fh)

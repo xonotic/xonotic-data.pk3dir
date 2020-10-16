@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils.qh"
+#include <server/intermission.qh>
 #include <common/replicate.qh>
 #include <common/sounds/all.qh>
 
@@ -267,11 +268,6 @@ bool independent_players;
 //flood fields
 .float nickspamtime; // time of last nick change
 .float nickspamcount;
-.float floodcontrol_chat;
-.float floodcontrol_chatteam;
-.float floodcontrol_chattell;
-.float floodcontrol_voice;
-.float floodcontrol_voiceteam;
 
 // respawning
 .int respawn_flags;
@@ -297,12 +293,6 @@ const int SVC_SETVIEW = 5; // TODO: move to dpdefs where this belongs!
 .float pauserotarmor_finished;
 .float pauserotfuel_finished;
 
-// idle kicking
-float sv_maxidle;
-float sv_maxidle_spectatorsareidle;
-int sv_maxidle_slots;
-bool sv_maxidle_slots_countbots;
-
 // g_<gametype>_str:
 // If 0, default is used.
 // If <0, 0 is used.
@@ -322,8 +312,6 @@ void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);
 
-void FixIntermissionClient(entity e);
-
 void checkSpectatorBlock(entity this);
 
 void PlayerUseKey(entity this);
@@ -335,37 +323,6 @@ void FixClientCvars(entity e);
 
 IntrusiveList g_initforplayer;
 STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
-
-/// \brief Print the string to the client's chat.
-/// \param[in] client Client to print to.
-/// \param[in] text Text to print.
-void PrintToChat(entity client, string text);
-
-/// \brief Print the string to the client's chat if the server cvar "developer"
-/// is not 0.
-/// \param[in] client Client to print to.
-/// \param[in] text Text to print.
-void DebugPrintToChat(entity client, string text);
-
-/// \brief Prints the string to all clients' chat.
-/// \param[in] text Text to print.
-void PrintToChatAll(string text);
-
-/// \brief Prints the string to all clients' chat if the server cvar "developer"
-/// is not 0.
-/// \param[in] text Text to print.
-void DebugPrintToChatAll(string text);
-
-/// \brief Print the string to chat of all clients of the specified team.
-/// \param[in] team_num Team to print to. See NUM_TEAM constants.
-/// \param[in] text Text to print.
-void PrintToChatTeam(int team_num, string text);
-
-/// \brief Print the string to chat of all clients of the specified team if the
-/// server cvar "developer" is not 0.
-/// \param[in] team_num Team to print to. See NUM_TEAM constants.
-/// \param[in] text Text to print.
-void DebugPrintToChatTeam(int team_num, string text);
 
 void play_countdown(entity this, float finished, Sound samp);
 
@@ -392,7 +349,5 @@ void Join(entity this);
 
 #define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
-
-int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 
 const int MAX_SPECTATORS = 7;

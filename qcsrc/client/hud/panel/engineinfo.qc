@@ -1,7 +1,7 @@
 #include "engineinfo.qh"
 
 #include <client/autocvars.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 
 // Engine info (#13)
 
@@ -43,7 +43,7 @@ void HUD_EngineInfo()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
 	if(autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage)
 	{
 		float currentframetime = currentTime - prevfps_time;

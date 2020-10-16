@@ -1,7 +1,7 @@
 #include "view.qh"
 
 #include "autocvars.qh"
-#include "miscfunctions.qh"
+#include <client/draw.qh>
 #include "announcer.qh"
 #include "hud/_mod.qh"
 #include "main.qh"
@@ -363,6 +363,33 @@ STATIC_INIT(viewmodel) {
     	viewmodels[slot] = new(viewmodel);
 }
 
+vector project_3d_to_2d(vector vec)
+{
+	vec = cs_project(vec);
+	if(cs_project_is_b0rked > 0)
+	{
+		vec.x *= vid_conwidth / vid_width;
+		vec.y *= vid_conheight / vid_height;
+	}
+	return vec;
+}
+
+bool projected_on_screen(vector screen_pos)
+{
+	return screen_pos.z >= 0
+		&& screen_pos.x >= 0
+		&& screen_pos.y >= 0
+		&& screen_pos.x < vid_conwidth
+		&& screen_pos.y < vid_conheight;
+}
+
+void update_mousepos()
+{
+	mousepos += getmousepos() * autocvar_menu_mouse_speed;
+	mousepos.x = bound(0, mousepos.x, vid_conwidth);
+	mousepos.y = bound(0, mousepos.y, vid_conheight);
+}
+
 float showfps_prevfps;
 float showfps_prevfps_time;
 int showfps_framecounter;
@@ -372,7 +399,8 @@ void fpscounter_update()
 	if(!STAT(SHOWFPS))
 		return;
 
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
+
 	showfps_framecounter += 1;
 	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
 	{
@@ -388,7 +416,7 @@ void fpscounter_update()
 
 STATIC_INIT(fpscounter_init)
 {
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
@@ -1307,9 +1335,17 @@ void View_PostProcessing()
 
 void View_Lock()
 {
-	int lock_type = (!autocvar_hud_cursormode && ((autocvar__hud_configure && spectatee_status <= 0) || intermission > 1 || QuickMenu_IsOpened()));
-	if (lock_type == 0)
-		lock_type = autocvar_cl_lockview;
+	int lock_type = autocvar_cl_lockview;
+
+	if (!autocvar_hud_cursormode
+		&& ((autocvar__hud_configure && spectatee_status <= 0)
+			|| intermission > 1
+			|| HUD_Radar_Clickable()
+			|| HUD_MinigameMenu_IsOpened()
+			|| QuickMenu_IsOpened()
+		)
+	)
+		lock_type = 1;
 
 	// lock_type 1: lock origin and angles
 	// lock_type 2: lock only origin

@@ -2,6 +2,8 @@
 
 #include "ctf.qh"
 
+#include <common/items/item/pickup.qh>
+#include <common/mutators/base.qh>
 #include <common/gamemodes/sv_rules.qh>
 
 void ctf_Initialize();

@@ -2,20 +2,21 @@
 #include <server/anticheat.qh>
 #include <server/antilag.qh>
 #include <server/campaign.qh>
+#include <server/chat.qh>
 #include <server/cheats.qh>
 #include <server/client.qh>
 #include <server/clientkill.qh>
 #include <server/damage.qh>
-#include <server/hook.qh>
-#include <server/world.qh>
+#include <server/elimination.qh>
 #include <server/gamelog.qh>
 #include <server/handicap.qh>
+#include <server/hook.qh>
 #include <server/impulse.qh>
+#include <server/intermission.qh>
 #include <server/ipban.qh>
 #include <server/main.qh>
 #include <server/mapvoting.qh>
 #include <server/matrix.qh>
-#include <server/miscfunctions.qh>
 #include <server/player.qh>
 #include <server/portals.qh>
 #include <server/race.qh>
@@ -28,6 +29,7 @@
 #include <server/strafe.qh>
 #include <server/teamplay.qh>
 #include <server/tests.qh>
+#include <server/world.qh>
 
 #include <server/bot/_mod.qh>
 #include <server/command/_mod.qh>

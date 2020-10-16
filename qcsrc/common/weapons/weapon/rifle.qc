@@ -22,10 +22,10 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pHeadshotDamage, pForce, deathtype, (pTracer ? EFFECT_RIFLE : EFFECT_RIFLE_WEAK));
 
 	if(autocvar_g_casings >= 2)
-    {
-        makevectors(actor.v_angle); // for some reason, this is lost
+	{
+		makevectors(actor.v_angle); // for some reason, this is lost
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor, weaponentity);
-    }
+	}
 }
 
 void W_Rifle_Attack(Weapon thiswep, entity actor, .entity weaponentity)

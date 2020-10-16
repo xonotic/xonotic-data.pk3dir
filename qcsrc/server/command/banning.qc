@@ -2,7 +2,6 @@
 
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
-#include <server/miscfunctions.qh>
 #include <common/state.qh>
 #include <common/command/_mod.qh>
 #include "banning.qh"
