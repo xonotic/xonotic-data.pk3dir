@@ -2,7 +2,6 @@
 
 #include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <client/main.qh>
 #include <common/items/_mod.qh>
 #include <common/util.qh>
 

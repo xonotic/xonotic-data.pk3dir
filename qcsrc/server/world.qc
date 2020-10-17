@@ -1,52 +1,52 @@
 #include "world.qh"
 
-#include "anticheat.qh"
-#include "antilag.qh"
-#include "bot/api.qh"
-#include "campaign.qh"
-#include "cheats.qh"
-#include "client.qh"
-#include "command/common.qh"
-#include "command/getreplies.qh"
-#include "command/sv_cmd.qh"
-#include "command/vote.qh"
-#include "hook.qh"
-#include <server/gamelog.qh>
-#include <server/damage.qh>
-#include "ipban.qh"
-#include <server/intermission.qh>
-#include <server/main.qh>
-#include "mapvoting.qh"
-#include <server/mutators/_mod.qh>
-#include "race.qh"
-#include "scores.qh"
-#include "scores_rules.qh"
-#include "spawnpoints.qh"
-#include "teamplay.qh"
-#include "weapons/weaponstats.qh"
-#include <server/weapons/common.qh>
-#include "../common/constants.qh"
-#include <common/net_linked.qh>
-#include "../common/deathtypes/all.qh"
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
 #include <common/gamemodes/_mod.qh>
-#include "../common/gamemodes/sv_rules.qh"
-#include "../common/mapinfo.qh"
-#include "../common/monsters/_mod.qh"
-#include "../common/monsters/sv_monsters.qh"
-#include "../common/vehicles/all.qh"
-#include "../common/notifications/all.qh"
-#include "../common/physics/player.qh"
-#include "../common/playerstats.qh"
-#include "../common/stats.qh"
-#include "../common/teams.qh"
-#include <common/mapobjects/triggers.qh>
+#include <common/gamemodes/sv_rules.qh>
+#include <common/items/_mod.qh>
+#include <common/mapinfo.qh>
+#include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/hurt.qh>
-#include "../common/mapobjects/trigger/secret.qh"
-#include "../common/mapobjects/target/music.qh"
-#include "../common/util.qh"
-#include "../common/items/_mod.qh"
+#include <common/mapobjects/trigger/secret.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/net_linked.qh>
+#include <common/notifications/all.qh>
+#include <common/physics/player.qh>
+#include <common/playerstats.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
+#include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
-#include "../common/state.qh"
+#include <server/anticheat.qh>
+#include <server/antilag.qh>
+#include <server/bot/api.qh>
+#include <server/campaign.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/sv_cmd.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/hook.qh>
+#include <server/intermission.qh>
+#include <server/ipban.qh>
+#include <server/main.qh>
+#include <server/mapvoting.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
+#include <server/spawnpoints.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/weaponstats.qh>
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -296,7 +296,7 @@ void cvar_changes_init()
 		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
 		BADCVAR("g_survival");
-		BADCVAR("g_survival_not_lms_maps");
+		BADCVAR("g_survival_not_dm_maps");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");

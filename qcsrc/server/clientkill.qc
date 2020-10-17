@@ -1,18 +1,18 @@
 #include "clientkill.qh"
 
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/client.qh>
-#include <server/player.qh>
-#include <server/mutators/_mod.qh>
-
-#include "damage.qh"
-#include "teamplay.qh"
-
-#include <common/vehicles/sv_vehicles.qh>
+#include <common/csqcmodel_settings.qh>
+#include <common/deathtypes/all.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
+#include <common/stats.qh>
+#include <common/vehicles/sv_vehicles.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/teamplay.qh>
 
 void ClientKill_Now_TeamChange(entity this)
 {

@@ -1,0 +1,8 @@
+#pragma once
+#include "../panel.qh"
+
+void HUD_Panel_DrawStrafeHUD(float, float, vector, float, int, int);
+vector StrafeHUD_mixColors(vector, vector, float);
+void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
+float GetLengthUnitFactor(int);
+string GetLengthUnit(int);

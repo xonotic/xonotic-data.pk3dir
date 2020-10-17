@@ -1,32 +1,27 @@
 #include "vote.qh"
 
-#include <server/client.qh>
-#include <common/weapons/_all.qh>
-#include <common/stats.qh>
-#include <server/gamelog.qh>
-
 #include <common/command/_mod.qh>
-#include "vote.qh"
-
-#include "common.qh"
-
-#include "../damage.qh"
-#include <server/intermission.qh>
-#include <server/world.qh>
-#include "../teamplay.qh"
-#include "../race.qh"
-#include "../round_handler.qh"
-#include "../scores.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/playerstats.qh>
+#include <common/stats.qh>
 #include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/command/vote.qh>
+#include <server/damage.qh>
+#include <server/gamelog.qh>
+#include <server/intermission.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/round_handler.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 // =============================================
 //  Server side voting code, reworked by Samual

@@ -2,15 +2,14 @@
 
 #include <client/autocvars.qh>
 #include <client/draw.qh>
-#include <client/main.qh>
+#include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/racetimer.qh>
 #include <client/hud/panel/weapons.qh>
-#include "quickmenu.qh"
-#include <common/ent_cs.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
+#include <common/net_linked.qh>
 #include <common/scores.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
@@ -117,7 +116,6 @@ string Label_getInfo(string label, int mode)
 		case "fps":          if (!mode) return CTX(_("SCO^fps"));          else LOG_HELP(strcat("^3", "fps", "                ^7", _("FPS")));
 		case "frags":        if (!mode) return CTX(_("SCO^frags"));        else LOG_HELP(strcat("^3", "frags", "              ^7", _("Number of kills minus suicides")));
 		case "goals":        if (!mode) return CTX(_("SCO^goals"));        else LOG_HELP(strcat("^3", "goals", "              ^7", _("Number of goals scored")));
-		case "hunts":        if (!mode) return CTX(_("SCO^hunts"));        else LOG_HELP(strcat("^3", "hunts", "              ^7", _("Number of successful hunter rounds (Survival)")));
 		case "kckills":      if (!mode) return CTX(_("SCO^kckills"));      else LOG_HELP(strcat("^3", "kckills", "            ^7", _("Number of keys carrier kills")));
 		case "kd":           if (!mode) return CTX(_("SCO^k/d"));          else LOG_HELP(strcat("^3", "kd", "                 ^7", _("The kill-death ratio")));
 		case "kdr":          if (!mode) return CTX(_("SCO^kdr"));          else LOG_HELP(strcat("^3", "kdr", "                ^7", _("The kill-death ratio")));
@@ -140,7 +138,6 @@ string Label_getInfo(string label, int mode)
 		case "score":        if (!mode) return CTX(_("SCO^score"));        else LOG_HELP(strcat("^3", "score", "              ^7", _("Total score")));
 		case "suicides":     if (!mode) return CTX(_("SCO^suicides"));     else LOG_HELP(strcat("^3", "suicides", "           ^7", _("Number of suicides")));
 		case "sum":          if (!mode) return CTX(_("SCO^sum"));          else LOG_HELP(strcat("^3", "sum", "                ^7", _("Number of kills minus deaths")));
-		case "survivals":    if (!mode) return CTX(_("SCO^survivals"));    else LOG_HELP(strcat("^3", "survivals", "          ^7", _("Number of rounds survived (Survival)")));
 		case "takes":        if (!mode) return CTX(_("SCO^takes"));        else LOG_HELP(strcat("^3", "takes", "              ^7", _("Number of domination points taken (Domination)")));
 		case "teamkills":    if (!mode) return CTX(_("SCO^teamkills"));    else LOG_HELP(strcat("^3", "teamkills", "          ^7", _("Number of teamkills")));
 		case "ticks":        if (!mode) return CTX(_("SCO^ticks"));        else LOG_HELP(strcat("^3", "ticks", "              ^7", _("Number of ticks (Domination)")));
@@ -365,13 +362,13 @@ void Cmd_Scoreboard_Help()
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
 "ping pl fps name |" \
-" -teams,rc,cts,inv,lms,sv/kills +ft,tdm/kills ?+rc,inv/kills" \
-" -teams,lms,sv/deaths +ft,tdm/deaths" \
+" -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
+" -teams,lms/deaths +ft,tdm/deaths" \
 " +tdm/sum" \
-" -teams,lms,rc,cts,inv,ka,sv/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
-" -cts,dm,tdm,ka,ft,sv/frags" /* tdm already has this in "score" */ \
+" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
+" -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
 " +tdm,ft,dom,ons,as/teamkills"\
-" -rc,cts,nb,sv/dmg -rc,cts,nb,sv/dmgtaken" \
+" -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
 " +ctf/pickups +ctf/fckills +ctf/returns +ctf/caps +ons/takes +ons/caps" \
 " +lms/lives +lms/rank" \
 " +kh/kckills +kh/losses +kh/caps" \
@@ -379,7 +376,6 @@ void Cmd_Scoreboard_Help()
 " +as/objectives +nb/faults +nb/goals" \
 " +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
 " +dom/ticks +dom/takes" \
-" +sv/survivals +sv/hunts" \
 " -lms,rc,cts,inv,nb/score"
 
 void Cmd_Scoreboard_SetFields(int argc)

@@ -5,7 +5,7 @@
 /// \author Lyberta
 /// \copyright GNU GPLv2 or any later version.
 
-#include "autocvars.qh"
+#include <server/autocvars.qh>
 #include <server/mutators/_mod.qh>
 #include <server/world.qh>
 

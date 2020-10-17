@@ -1,16 +1,13 @@
 #include "antilag.qh"
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include <common/weapons/_all.qh>
-    #include <common/stats.qh>
-    #include <server/weapons/common.qh>
-    #include <common/state.qh>
-    #include <common/monsters/sv_monsters.qh>
-    #include <common/vehicles/all.qh>
-	#include <lib/warpzone/common.qh>
-    #include "antilag.qh"
-#endif
+
+#include <common/monsters/sv_monsters.qh>
+#include <common/state.qh>
+#include <common/stats.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/_all.qh>
+#include <lib/warpzone/common.qh>
+#include <server/antilag.qh>
+#include <server/weapons/common.qh>
 
 const int ANTILAG_MAX_ORIGINS = 64;
 .vector antilag_origins[ANTILAG_MAX_ORIGINS];

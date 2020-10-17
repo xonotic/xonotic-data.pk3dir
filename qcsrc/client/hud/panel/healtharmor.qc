@@ -1,8 +1,6 @@
 #include "healtharmor.qh"
 
 #include <client/draw.qh>
-#include <client/main.qh>
-
 #include <common/deathtypes/all.qh>
 
 // Health/armor (#3)
