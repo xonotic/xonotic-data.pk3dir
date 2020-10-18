@@ -1,7 +1,7 @@
 #include "sv_breakablehook.qh"
 
 #include <common/deathtypes/all.qh>
-#include <server/hook.qh>
+#include <server/g_hook.qh>
 
 REGISTER_MUTATOR(breakablehook, cvar("g_breakablehook"));
 

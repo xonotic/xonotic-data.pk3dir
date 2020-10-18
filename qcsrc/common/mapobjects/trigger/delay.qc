@@ -1,5 +1,4 @@
 #include "delay.qh"
-
 #ifdef SVQC
 void delay_delayeduse(entity this)
 {
@@ -9,9 +8,6 @@ void delay_delayeduse(entity this)
 
 void delay_use(entity this, entity actor, entity trigger)
 {
-	if(this.active != ACTIVE_ACTIVE)
-		return;
-
 	this.enemy = actor;
 	this.goalentity = trigger;
 	setthink(this, delay_delayeduse);
@@ -23,7 +19,6 @@ void delay_reset(entity this)
 	this.enemy = this.goalentity = NULL;
 	setthink(this, func_null);
 	this.nextthink = 0;
-	this.active = ACTIVE_ACTIVE;
 }
 
 spawnfunc(trigger_delay)
@@ -33,6 +28,5 @@ spawnfunc(trigger_delay)
 
     this.use = delay_use;
     this.reset = delay_reset;
-    this.active = ACTIVE_ACTIVE;
 }
 #endif

@@ -20,17 +20,15 @@ REGISTER_MUTATOR(multijump, true);
 #define PHYS_MULTIJUMP_MAXSPEED(s) 		STAT(MULTIJUMP_MAXSPEED, s)
 #define PHYS_MULTIJUMP_DODGING(s) 		STAT(MULTIJUMP_DODGING, s)
 #define PHYS_MULTIJUMP_COUNT(s) 		STAT(MULTIJUMP_COUNT, s)
-#define PHYS_MULTIJUMP_CLIENTDEFAULT(s)	STAT(MULTIJUMP_CLIENT, s)
 
 .bool multijump_ready;
 
 #ifdef CSQC
-int cvar_cl_multijump;
-int autocvar_cl_multijump = -1;
+bool autocvar_cl_multijump = true;
 
 	#define PHYS_MULTIJUMP_CLIENT(s)	autocvar_cl_multijump
 #elif defined(SVQC)
-.int cvar_cl_multijump;
+.bool cvar_cl_multijump;
 
 	#define PHYS_MULTIJUMP_CLIENT(s)	CS(s).cvar_cl_multijump
 #endif
@@ -55,8 +53,6 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 	if(!PHYS_MULTIJUMP(player)) { return; }
 
 	int client_multijump = PHYS_MULTIJUMP_CLIENT(player);
-	if(client_multijump == -1)
-		client_multijump = PHYS_MULTIJUMP_CLIENTDEFAULT(player);
 	if(client_multijump > 1)
 		return; // nope
 
@@ -118,9 +114,9 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 	}
 }
 
-REPLICATE(cvar_cl_multijump, int, "cl_multijump");
-
 #ifdef SVQC
+
+REPLICATE(cvar_cl_multijump, bool, "cl_multijump");
 
 MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsString)
 {

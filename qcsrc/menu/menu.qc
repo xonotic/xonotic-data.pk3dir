@@ -17,10 +17,10 @@
 
 #include "xonotic/util.qh"
 
-#include <common/items/_mod.qh>
+#include "../common/items/_mod.qh"
 #include <common/weapons/_all.qh>
-#include <common/mapinfo.qh>
-#include <common/mutators/base.qh>
+#include "../common/mapinfo.qh"
+#include "../common/mutators/base.qh"
 
 int mouseButtonsPressed;
 vector menuMousePos;
@@ -50,7 +50,7 @@ void m_gamestatus()
 	gamestatus = 0;
 	if (isserver()) gamestatus |= GAME_ISSERVER;
 	if (clientstate() == CS_CONNECTED || isdemo()) gamestatus |= GAME_CONNECTED;
-	if (cvar("developer") > 0) gamestatus |= GAME_DEVELOPER;
+	if (cvar("developer")) gamestatus |= GAME_DEVELOPER;
 }
 
 void m_init()
@@ -69,11 +69,11 @@ void m_init()
 	cvar_set("_menu_prvm_language", prvm_language);
 
 #ifdef WATERMARK
-		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
+		LOG_INFOF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
-	if (cvar("developer") > 0)
+	if (cvar("developer"))
 	{
 		for (int i = 0; ; ++i)
 		{
@@ -335,8 +335,7 @@ void drawBackground(string img, float a, string algn, float force1)
 	if (main.mainNexposee.ModalController_state == 0) return;
 	vector v = '0 0 0';
 	int scalemode = SCALEMODE_CROP;
-	int len = strlen(algn);
-	for (int i = 0, l = 0; i < len; ++i)
+	for (int i = 0, l = 0; i < strlen(algn); ++i)
 	{
 		string c = substring(algn, i, 1);
 		switch (c)

@@ -4,19 +4,19 @@
 
 METHOD(SettingSource, getEntry, entity(entity this, int i, void(string name, string icon) returns))
 {
-    Lazy l = REGISTRY_GET(Settings, i);
+    Lazy l = Settings_from(i);
     entity it = l.m_get();
     if (returns) returns(it.title, string_null);
     return it;
 }
 METHOD(SettingSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns))
 {
-    Lazy l = REGISTRY_GET(Settings, i);
+    Lazy l = Settings_from(i);
     entity it = l.m_get();
     if (returns) returns(it.titleTooltip);
     return it;
 }
-METHOD(SettingSource, reload, int(entity this, string filter)) { return REGISTRY_COUNT(Settings); }
+METHOD(SettingSource, reload, int(entity this, string filter)) { return Settings_COUNT; }
 
 string XonoticRegisteredSettingsList_cb_name;
 string XonoticRegisteredSettingsList_cb_tooltip;
@@ -94,15 +94,9 @@ CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source) {
 
 METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this))
 {
-	entity s = NULL;
-	entity c = this.currentPanel;
-	if (c.classname == "XonoticScrollPanel")
-	{
-		s = this.currentPanel;
-		s.viewportHeight = 15.5;
-		c = s.currentPanel;
-	}
-
+    entity s = this.currentPanel;
+    s.viewportHeight = 15.5;
+    entity c = s.currentPanel;
     entity removing = this.currentItem;
     DataSource data = this.topicList.source;
     entity adding = data.getEntry(data, this.topicList.selectedItem, func_null);
@@ -115,8 +109,7 @@ METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this))
         this.currentItem = adding;
         adding.resizeNotify(adding, '0 0 0', c.size, '0 0 0', c.size);
         c.addItem(c, adding, '0 0 0', '1 1 0', 1);
-		if (s)
-			s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
+		s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
     }
 }
 METHOD(XonoticGameSettingsTab, fill, void(entity this))

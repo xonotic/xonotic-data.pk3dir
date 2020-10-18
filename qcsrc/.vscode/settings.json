@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.qc": "c",
-        "*.qh": "c",
-        "*.inc": "c"
-    },
-    "C_Cpp.errorSquiggles": "Disabled",
-    "C_Cpp.dimInactiveRegions": false
-}

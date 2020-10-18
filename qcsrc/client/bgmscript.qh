@@ -1,10 +1,15 @@
 #pragma once
 
-#include <common/mapobjects/bgmscript.qh>
+entityclass(BGMScript);
+classfield(BGMScript) .string bgmscript;
+classfield(BGMScript) .float bgmscriptattack;
+classfield(BGMScript) .float bgmscriptdecay;
+classfield(BGMScript) .float bgmscriptsustain;
+classfield(BGMScript) .float bgmscriptrelease;
 
 classfield(BGMScript) .float just_toggled;
 
-float bgmtime;
-
+#ifdef CSQC
 void BGMScript_InitEntity(entity e);
 float doBGMScript(entity e);
+#endif

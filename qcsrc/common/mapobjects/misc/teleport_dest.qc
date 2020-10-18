@@ -14,7 +14,10 @@ bool teleport_dest_send(entity this, entity to, int sendflags)
 		WriteCoord(MSG_ENTITY, this.speed);
 		WriteString(MSG_ENTITY, this.targetname);
 		WriteVector(MSG_ENTITY, this.origin);
-		WriteAngleVector(MSG_ENTITY, this.mangle);
+
+		WriteAngle(MSG_ENTITY, this.mangle_x);
+		WriteAngle(MSG_ENTITY, this.mangle_y);
+		WriteAngle(MSG_ENTITY, this.mangle_z);
 	}
 
 	return true;
@@ -28,17 +31,19 @@ void teleport_dest_link(entity this)
 
 spawnfunc(info_teleport_destination)
 {
+	this.classname = "info_teleport_destination";
+
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 
 	//setorigin(this, this.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
 	setorigin(this, this.origin);
 
-	if(!this.targetname || this.targetname == "")
+	IFTARGETED
 	{
-		objerror (this, "^3Teleport destination without a targetname");
-		return; // don't link it to CSQC in this case!
 	}
+	else
+		objerror (this, "^3Teleport destination without a targetname");
 
 	teleport_dest_link(this);
 }
@@ -67,7 +72,10 @@ NET_HANDLE(ENT_CLIENT_TELEPORT_DEST, bool isnew)
 		this.speed = ReadCoord();
 		this.targetname = strzone(ReadString());
 		this.origin = ReadVector();
-		this.mangle = ReadAngleVector();
+
+		this.mangle_x = ReadAngle();
+		this.mangle_y = ReadAngle();
+		this.mangle_z = ReadAngle();
 
 		setorigin(this, this.origin);
 

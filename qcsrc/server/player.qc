@@ -1,43 +1,39 @@
 #include "player.qh"
 
-#include <common/anim.qh>
-#include <common/animdecide.qh>
-#include <common/animdecide.qh>
-#include <common/csqcmodel_settings.qh>
-#include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include <common/effects/qc/_mod.qh>
+#include "bot/api.qh"
+#include "cheats.qh"
+#include "clientkill.qh"
+#include "g_damage.qh"
+#include "handicap.qh"
+#include "miscfunctions.qh"
+#include "portals.qh"
+#include "teamplay.qh"
+#include "weapons/throwing.qh"
+#include "command/common.qh"
+#include "../common/state.qh"
+#include "../common/anim.qh"
+#include "../common/animdecide.qh"
+#include "../common/csqcmodel_settings.qh"
+#include "../common/gamemodes/sv_rules.qh"
+#include "../common/deathtypes/all.qh"
+#include "../common/mapobjects/subs.qh"
+#include "../common/playerstats.qh"
+#include "../lib/csqcmodel/sv_model.qh"
+
+#include "../common/minigames/sv_minigames.qh"
+
 #include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/sv_rules.qh>
-#include <common/mapobjects/_mod.qh>
-#include <common/mapobjects/subs.qh>
-#include <common/mapobjects/teleporters.qh>
-#include <common/minigames/sv_minigames.qh>
-#include <common/mutators/mutator/waypoints/waypointsprites.qh>
-#include <common/physics/player.qh>
-#include <common/playerstats.qh>
-#include <common/state.qh>
-#include <common/wepent.qh>
-#include <lib/csqcmodel/sv_model.qh>
-#include <server/bot/api.qh>
-#include <server/cheats.qh>
-#include <server/client.qh>
-#include <server/clientkill.qh>
-#include <server/command/common.qh>
-#include <server/command/vote.qh>
-#include <server/damage.qh>
-#include <server/handicap.qh>
-#include <server/hook.qh>
-#include <server/main.qh>
-#include <server/mutators/_mod.qh>
-#include <server/portals.qh>
-#include <server/teamplay.qh>
-#include <server/weapons/accuracy.qh>
-#include <server/weapons/common.qh>
-#include <server/weapons/throwing.qh>
-#include <server/weapons/weaponstats.qh>
-#include <server/weapons/weaponsystem.qh>
-#include <server/world.qh>
+
+#include "../common/physics/player.qh"
+#include "../common/effects/qc/_mod.qh"
+#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include "../common/mapobjects/_mod.qh"
+#include "../common/wepent.qh"
+
+#include "weapons/weaponstats.qh"
+
+#include "../common/animdecide.qh"
 
 void Drop_Special_Items(entity player)
 {
@@ -97,8 +93,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.dphitcontentsmask = this.dphitcontentsmask;
 	clone.death_time = this.death_time;
 	clone.pain_finished = this.pain_finished;
-	SetResourceExplicit(clone, RES_HEALTH, GetResource(this, RES_HEALTH));
-	SetResourceExplicit(clone, RES_ARMOR, GetResource(this, RES_ARMOR));
+	SetResourceAmountExplicit(clone, RESOURCE_HEALTH, GetResourceAmount(this, RESOURCE_HEALTH));
+	SetResourceAmountExplicit(clone, RESOURCE_ARMOR, GetResourceAmount(this, RESOURCE_ARMOR));
 	clone.armortype = this.armortype;
 	clone.model = this.model;
 	clone.modelindex = this.modelindex;
@@ -169,7 +165,7 @@ void player_anim(entity this)
 		animbits |= ANIMSTATE_FROZEN;
 	if(this.move_movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
-	if(IS_DUCKED(this))
+	if(this.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, IS_ONGROUND(this));
@@ -181,7 +177,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -200,8 +196,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	TakeResource(this, RES_ARMOR, save);
-	TakeResource(this, RES_HEALTH, take);
+	TakeResource(this, RESOURCE_ARMOR, save);
+	TakeResource(this, RESOURCE_HEALTH, take);
 	// pause regeneration for 5 seconds
 	this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
@@ -209,7 +205,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
-	if (GetResource(this, RES_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
 	{
 		// don't use any animations as a gib
 		this.frame = 0;
@@ -226,68 +222,154 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	}
 }
 
+void calculate_player_respawn_time(entity this)
+{
+	if(MUTATOR_CALLHOOK(CalculateRespawnTime, this))
+		return;
+
+	float gametype_setting_tmp;
+	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
+	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
+	float sdelay_large = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large);
+	float sdelay_small_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small_count);
+	float sdelay_large_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large_count);
+	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
+
+	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
+	if (teamplay)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
+			if(it.team == this.team)
+				++pcount;
+		});
+		if (sdelay_small_count == 0)
+			sdelay_small_count = 1;
+		if (sdelay_large_count == 0)
+			sdelay_large_count = 1;
+	}
+	else
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
+			++pcount;
+		});
+		if (sdelay_small_count == 0)
+		{
+			if (IS_INDEPENDENT_PLAYER(this))
+			{
+				// Players play independently. No point in requiring enemies.
+				sdelay_small_count = 1;
+			}
+			else
+			{
+				// Players play AGAINST each other. Enemies required.
+				sdelay_small_count = 2;
+			}
+		}
+		if (sdelay_large_count == 0)
+		{
+			if (IS_INDEPENDENT_PLAYER(this))
+			{
+				// Players play independently. No point in requiring enemies.
+				sdelay_large_count = 1;
+			}
+			else
+			{
+				// Players play AGAINST each other. Enemies required.
+				sdelay_large_count = 2;
+			}
+		}
+	}
+
+	float sdelay;
+
+	if (pcount <= sdelay_small_count)
+		sdelay = sdelay_small;
+	else if (pcount >= sdelay_large_count)
+		sdelay = sdelay_large;
+	else  // NOTE: this case implies sdelay_large_count > sdelay_small_count.
+		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
+
+	if(waves)
+		this.respawn_time = ceil((time + sdelay) / waves) * waves;
+	else
+		this.respawn_time = time + sdelay;
+
+	if(sdelay < sdelay_max)
+		this.respawn_time_max = time + sdelay_max;
+	else
+		this.respawn_time_max = this.respawn_time;
+
+	if((sdelay + waves >= 5.0) && (this.respawn_time - time > 1.75))
+		this.respawn_countdown = 10; // first number to count down from is 10
+	else
+		this.respawn_countdown = -1; // do not count down
+
+	if(autocvar_g_forced_respawn)
+		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
+}
+
 void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
+	float take, save, dh, da;
 	vector v;
-	float dh = max(GetResource(this, RES_HEALTH), 0);
-	float da = max(GetResource(this, RES_ARMOR), 0);
-	float take = 0, save = 0;
+	float excess;
 
-	if (damage)
+	dh = max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
+	da = max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
+
+	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		if(!DEATH_ISSPECIAL(deathtype))
+		damage *= Handicap_GetTotalHandicap(this);
+		if (this != attacker && IS_PLAYER(attacker))
 		{
-			damage *= Handicap_GetTotalHandicap(this);
-			if (this != attacker && IS_PLAYER(attacker))
-			{
-				damage /= Handicap_GetTotalHandicap(attacker);
-			}
+			damage /= Handicap_GetTotalHandicap(attacker);
 		}
+	}
 
-		if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
-			damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
+	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+		damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
 
-		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
+	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
+	{
+		// tuba causes blood to come out of the ears
+		vector ear1, ear2;
+		vector d;
+		float f;
+		ear1 = this.origin;
+		ear1_z += 0.125 * this.view_ofs.z + 0.875 * this.maxs.z; // 7/8
+		ear2 = ear1;
+		makevectors(this.angles);
+		ear1 += v_right * -10;
+		ear2 += v_right * +10;
+		d = inflictor.origin - this.origin;
+		if (d)
+			f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		else
+			f = 0;  // Assum ecenter.
+		force = v_right * vlen(force);
+		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), this, attacker);
+		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), this, attacker);
+		if(f > 0)
 		{
-			vector ear1, ear2;
-			vector d;
-			float f;
-			ear1 = this.origin;
-			ear1_z += 0.125 * this.view_ofs.z + 0.875 * this.maxs.z; // 7/8
-			ear2 = ear1;
-			makevectors(this.angles);
-			ear1 += v_right * -10;
-			ear2 += v_right * +10;
-			d = inflictor.origin - this.origin;
-			if (d)
-				f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
-			else
-				f = 0;  // Assum ecenter.
-			force = v_right * vlen(force);
-			Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), this, attacker);
-			Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), this, attacker);
-			if(f > 0)
-			{
-				hitloc = ear1;
-				force = force * -1;
-			}
-			else
-			{
-				hitloc = ear2;
-				// force is already good
-			}
+			hitloc = ear1;
+			force = force * -1;
 		}
 		else
-			Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
-
-		v = healtharmor_applydamage(GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
-		take = v.x;
-		save = v.y;
+		{
+			hitloc = ear2;
+			// force is already good
+		}
 	}
+	else
+		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
+
+	v = healtharmor_applydamage(GetResourceAmount(this, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	take = v.x;
+	save = v.y;
 
 	if(attacker == this)
 	{
-		// don't reset pushltime for self damage as it may be an attempt to
+		// don't reset pushltime for this damage as it may be an attempt to
 		// escape a lava pit or similar
 		//this.pushltime = 0;
 		this.istypefrag = 0;
@@ -310,13 +392,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
-	take = bound(0, M_ARGV(4, float), GetResource(this, RES_HEALTH));
-	save = bound(0, M_ARGV(5, float), GetResource(this, RES_ARMOR));
-	float excess = max(0, damage - take - save);
+	take = bound(0, M_ARGV(4, float), GetResourceAmount(this, RESOURCE_HEALTH));
+	save = bound(0, M_ARGV(5, float), GetResourceAmount(this, RESOURCE_ARMOR));
+	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
-		if (save > 10 && (dh - take) > 0) // don't play armor sound if the attack is fatal
+		if (save > 10)
 			sound (this, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
 			sound (this, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
@@ -333,8 +415,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
-			TakeResource(this, RES_ARMOR, save);
-			TakeResource(this, RES_HEALTH, take);
+			TakeResource(this, RESOURCE_ARMOR, save);
+			TakeResource(this, RESOURCE_HEALTH, take);
 			// pause regeneration for 5 seconds
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
@@ -354,7 +436,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 								animdecide_setaction(this, ANIMACTION_PAIN2, true);
 						}
 					}
-					float myhp = GetResource(this, RES_HEALTH);
+					float myhp = GetResourceAmount(this, RESOURCE_HEALTH);
 					if(myhp > 1)
 					if(myhp < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
 					if(sound_allowed(MSG_BROADCAST, attacker))
@@ -376,7 +458,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 			// throw off bot aim temporarily
 			float shake;
-			if(IS_BOT_CLIENT(this) && GetResource(this, RES_HEALTH) >= 1)
+			if(IS_BOT_CLIENT(this) && GetResourceAmount(this, RESOURCE_HEALTH) >= 1)
 			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				this.v_angle_x = this.v_angle.x + (random() * 2 - 1) * shake;
@@ -384,10 +466,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
 
-			float realdmg = damage - excess;
-			if (this != attacker && realdmg)
-			if (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime)
-			{
+			if (this != attacker) {
+				float realdmg = damage - excess;
 				if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this)) {
 					GameRules_scoring_add(attacker, DMG, realdmg);
 				}
@@ -409,7 +489,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	bool valid_damage_for_weaponstats = false;
 	Weapon awep = WEP_Null;
 
-	if (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime)
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && this != attacker)
@@ -422,8 +501,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = true;
 	}
 
-	dh = dh - max(GetResource(this, RES_HEALTH), 0);
-	da = da - max(GetResource(this, RES_ARMOR), 0);
+	dh = dh - max(GetResourceAmount(this, RESOURCE_HEALTH), 0);
+	da = da - max(GetResourceAmount(this, RESOURCE_ARMOR), 0);
 	if(valid_damage_for_weaponstats)
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
@@ -431,7 +510,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
-	if (GetResource(this, RES_HEALTH) < 1)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) < 1)
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = false;
@@ -472,7 +551,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// print an obituary message
 		if(this.classname != "body")
-			Obituary(attacker, inflictor, this, deathtype, weaponentity);
+			Obituary (attacker, inflictor, this, deathtype, weaponentity);
 
 		// increment frag counter for used weapon type
 		Weapon w = DEATH_WEAPONOF(deathtype);
@@ -505,7 +584,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die
-		if(GetResource(this, RES_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
+		if(GetResourceAmount(this, RESOURCE_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
 
 		if (!this.respawn_time) // can be set in the mutator hook PlayerDies
@@ -533,17 +612,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.avelocity = '0 0 0';
 		// view from the floor
 		this.view_ofs = '0 0 -8';
-		if(this.move_movetype == MOVETYPE_NOCLIP)
-		{
-			// don't toss the corpse in this case, it can get stuck in solid (causing low fps)
-			// or fall indefinitely into the void if out of the map
-			this.velocity = '0 0 0';
-		}
-		else
-		{
-			// toss the corpse
-			set_movetype(this, MOVETYPE_TOSS);
-		}
+		// toss the corpse
+		set_movetype(this, MOVETYPE_TOSS);
 		// shootable corpse
 		this.solid = SOLID_CORPSE;
 		PS(this).ballistics_density = autocvar_g_ballistics_density_corpse;
@@ -600,84 +670,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= limit)
+	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || GetResourceAmount(targ, RESOURCE_HEALTH) >= limit)
 		return false;
 
-	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, limit);
 	return true;
-}
-
-void precache_playermodel(string m)
-{
-	int globhandle, i, n;
-	string f;
-
-	// remove :<skinnumber> suffix
-	int j = strstrofs(m, ":", 0);
-	if(j >= 0)
-		m = substring(m, 0, j);
-
-	if(substring(m, -9, 5) == "_lod1")
-		return;
-	if(substring(m, -9, 5) == "_lod2")
-		return;
-	precache_model(m);
-	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
-	if(fexists(f))
-		precache_model(f);
-	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
-	if(fexists(f))
-		precache_model(f);
-
-	globhandle = search_begin(strcat(m, "_*.sounds"), true, false);
-	if (globhandle < 0)
-		return;
-	n = search_getsize(globhandle);
-	for (i = 0; i < n; ++i)
-	{
-		//print(search_getfilename(globhandle, i), "\n");
-		f = search_getfilename(globhandle, i);
-		PrecachePlayerSounds(f);
-	}
-	search_end(globhandle);
-}
-void precache_all_playermodels(string pattern)
-{
-	int globhandle = search_begin(pattern, true, false);
-	if (globhandle < 0) return;
-	int n = search_getsize(globhandle);
-	for (int i = 0; i < n; ++i)
-	{
-		string s = search_getfilename(globhandle, i);
-		precache_playermodel(s);
-	}
-	search_end(globhandle);
-}
-
-void precache_playermodels(string s)
-{
-	FOREACH_WORD(s, true, { precache_playermodel(it); });
-}
-
-PRECACHE(PlayerModels)
-{
-    // Precache all player models if desired
-    if (autocvar_sv_precacheplayermodels)
-    {
-        PrecachePlayerSounds("sound/player/default.sounds");
-        precache_all_playermodels("models/player/*.zym");
-        precache_all_playermodels("models/player/*.dpm");
-        precache_all_playermodels("models/player/*.md3");
-        precache_all_playermodels("models/player/*.psk");
-        precache_all_playermodels("models/player/*.iqm");
-    }
-
-    if (autocvar_sv_defaultcharacter)
-    {
-		precache_playermodels(autocvar_sv_defaultplayermodel_red);
-		precache_playermodels(autocvar_sv_defaultplayermodel_blue);
-		precache_playermodels(autocvar_sv_defaultplayermodel_yellow);
-		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
-		precache_playermodels(autocvar_sv_defaultplayermodel);
-    }
 }

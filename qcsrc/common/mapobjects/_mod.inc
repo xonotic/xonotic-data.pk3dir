@@ -1,5 +1,4 @@
 // generated file; do not modify
-#include <common/mapobjects/bgmscript.qc>
 #include <common/mapobjects/models.qc>
 #include <common/mapobjects/platforms.qc>
 #include <common/mapobjects/subs.qc>

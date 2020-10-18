@@ -1,6 +1,5 @@
 #include "markup.qh"
-
-#include <common/command/command.qh>
+#include "command.qh"
 
 // =========================================================
 //  Markup chat characters command code, reworked by Samual
@@ -67,8 +66,7 @@ string GenericCommand_markup(string s2)
 
 	red = 0;
 	ccase = 0;
-	int len = strlen(s2);
-	for (i = 0; i < len; ++i)
+	for(i = 0; i < strlen(s2); ++i)
 	{
 		for(j = 0; j < NUM_MARKUPS; ++j)
 		{

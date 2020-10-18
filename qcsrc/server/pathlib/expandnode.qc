@@ -1,9 +1,7 @@
 #include "expandnode.qh"
+#include "pathlib.qh"
+#include "utility.qh"
 
-#include <server/pathlib/pathlib.qh>
-#include <server/pathlib/utility.qh>
-
-/*
 vector plib_points2[8];
 vector plib_points[8];
 float  plib_fvals[8];
@@ -75,11 +73,13 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
             ++fc2;
         }
 
-        //nap = pathlib_nodeatpoint(plib_points[i]);
-        //if(nap)
-        //if not nap.owner == closedlist)
-        //{
-        //}
+        /*
+        nap = pathlib_nodeatpoint(plib_points[i]);
+        if(nap)
+        if not nap.owner == closedlist)
+        {
+        }
+        */
     }
 
     pathlib_makenode(node, start, bp, goal, pathlib_gridsize);
@@ -91,7 +91,6 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
 
     return pathlib_open_cnt;
 }
-*/
 
 float pathlib_expandnode_star(entity node, vector start, vector goal)
 {
@@ -172,7 +171,6 @@ float pathlib_expandnode_star(entity node, vector start, vector goal)
     return pathlib_open_cnt;
 }
 
-/*
 float pathlib_expandnode_octagon(entity node, vector start, vector goal)
 {
     vector point;
@@ -205,9 +203,11 @@ float pathlib_expandnode_octagon(entity node, vector start, vector goal)
     point = where + f + r;
     pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
+
     // Forward-left
     point = where + f - r;
     pathlib_makenode(node, start, point, goal, pathlib_movecost);
+
 
     // Back-right
     point = where - f + r;
@@ -219,7 +219,6 @@ float pathlib_expandnode_octagon(entity node, vector start, vector goal)
 
     return pathlib_open_cnt;
 }
-*/
 
 float pathlib_expandnode_box(entity node, vector start, vector goal)
 {

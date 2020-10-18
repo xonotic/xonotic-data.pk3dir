@@ -3,8 +3,7 @@
 // this must be included BEFORE campaign_common.h to make this a memory saving
 #define CAMPAIGN_MAX_ENTRIES 2
 
-int Campaign_GetLevelNum();
-string Campaign_GetMessage();
+string campaign_message;
 
 void CampaignPreInit();
 void CampaignPostInit();
@@ -18,5 +17,3 @@ void CampaignLevelWarp(float n);
  * in other game modes, this is ignored
  */
 bool campaign_bots_may_start;
-
-bool campaign_forcewin;

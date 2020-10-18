@@ -1,5 +1,4 @@
 #include "cl_vehicles.qh"
-
 const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
 const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
 const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
@@ -119,7 +118,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		if(axh != NULL && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 			delete(axh);
 
-		axh              = new(AuxiliaryXhair);
+		axh              = spawn();
 		axh.draw2d       = func_null;
 		axh.drawmask     = MASK_NORMAL;
 		axh.axh_drawflag = DRAWFLAG_NORMAL;
@@ -135,7 +134,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		AuxiliaryXhair[0].axh_image = vCROSS_BURST; // Plasma cannons
 		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
 	} else {
-		Vehicle info = REGISTRY_GET(Vehicles, hud_id);
+		Vehicle info = Vehicles_from(hud_id);
     	info.vr_setup(info, NULL);
 	}
 }

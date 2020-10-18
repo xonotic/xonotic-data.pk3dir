@@ -1,5 +1,0 @@
-#pragma once
-
-void HUD_Mod_NexBall(vector pos, vector mySize);
-
-float nb_pb_period;

@@ -8,16 +8,18 @@
 
 vector func_vectormamamam_origin(entity o, float timestep)
 {
-	vector p;
+	vector v, p;
+	float flags;
 	entity e;
-	int myflags = o.spawnflags;
-	vector v = '0 0 0';
+
+	flags = o.spawnflags;
+	v = '0 0 0';
 
 	e = o.wp00;
 	if(e)
 	{
 		p = e.origin + timestep * e.velocity;
-		if(myflags & PROJECT_ON_TARGETNORMAL)
+		if(flags & PROJECT_ON_TARGETNORMAL)
 			v = v + (p * o.targetnormal) * o.targetnormal * o.targetfactor;
 		else
 			v = v + (p - (p * o.targetnormal) * o.targetnormal) * o.targetfactor;
@@ -27,7 +29,7 @@ vector func_vectormamamam_origin(entity o, float timestep)
 	if(e)
 	{
 		p = e.origin + timestep * e.velocity;
-		if(myflags & PROJECT_ON_TARGET2NORMAL)
+		if(flags & PROJECT_ON_TARGET2NORMAL)
 			v = v + (p * o.target2normal) * o.target2normal * o.target2factor;
 		else
 			v = v + (p - (p * o.target2normal) * o.target2normal) * o.target2factor;
@@ -37,7 +39,7 @@ vector func_vectormamamam_origin(entity o, float timestep)
 	if(e)
 	{
 		p = e.origin + timestep * e.velocity;
-		if(myflags & PROJECT_ON_TARGET3NORMAL)
+		if(flags & PROJECT_ON_TARGET3NORMAL)
 			v = v + (p * o.target3normal) * o.target3normal * o.target3factor;
 		else
 			v = v + (p - (p * o.target3normal) * o.target3normal) * o.target3factor;
@@ -47,7 +49,7 @@ vector func_vectormamamam_origin(entity o, float timestep)
 	if(e)
 	{
 		p = e.origin + timestep * e.velocity;
-		if(myflags & PROJECT_ON_TARGET4NORMAL)
+		if(flags & PROJECT_ON_TARGET4NORMAL)
 			v = v + (p * o.target4normal) * o.target4normal * o.target4factor;
 		else
 			v = v + (p - (p * o.target4normal) * o.target4normal) * o.target4factor;
@@ -58,7 +60,7 @@ vector func_vectormamamam_origin(entity o, float timestep)
 
 void func_vectormamamam_controller_think(entity this)
 {
-	this.nextthink = time + VECTORMAMAMAM_TIMESTEP;
+	this.nextthink = time + vectormamamam_timestep;
 
 	if(this.owner.active != ACTIVE_ACTIVE)
 	{
@@ -67,21 +69,21 @@ void func_vectormamamam_controller_think(entity this)
 	}
 
 	if(this.owner.classname == "func_vectormamamam") // don't brake stuff if the func_vectormamamam was killtarget'ed
-		this.owner.velocity = (this.owner.destvec + func_vectormamamam_origin(this.owner, VECTORMAMAMAM_TIMESTEP) - this.owner.origin) * 10;
+		this.owner.velocity = (this.owner.destvec + func_vectormamamam_origin(this.owner, vectormamamam_timestep) - this.owner.origin) * 10;
 }
 
 void func_vectormamamam_findtarget(entity this)
 {
-	if(this.target && this.target != "")
+	if(this.target != "")
 		this.wp00 = find(NULL, targetname, this.target);
 
-	if(this.target2 && this.target2 != "")
+	if(this.target2 != "")
 		this.wp01 = find(NULL, targetname, this.target2);
 
-	if(this.target3 && this.target3 != "")
+	if(this.target3 != "")
 		this.wp02 = find(NULL, targetname, this.target3);
 
-	if(this.target4 && this.target4 != "")
+	if(this.target4 != "")
 		this.wp03 = find(NULL, targetname, this.target4);
 
 	if(!this.wp00 && !this.wp01 && !this.wp02 && !this.wp03)
@@ -89,7 +91,8 @@ void func_vectormamamam_findtarget(entity this)
 
 	this.destvec = this.origin - func_vectormamamam_origin(this, 0);
 
-	entity controller = new(func_vectormamamam_controller);
+	entity controller;
+	controller = new(func_vectormamamam_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
 	setthink(controller, func_vectormamamam_controller_think);
@@ -125,7 +128,7 @@ void func_vectormamamam_init_for_player(entity this, entity player)
 	if (this.noise && this.noise != "" && this.active == ACTIVE_ACTIVE && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
-		soundto(MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE, 0);
+		soundto(MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 }
 
@@ -161,9 +164,9 @@ spawnfunc(func_vectormamamam)
 		this.target4normal = normalize(this.target4normal);
 
 	setblocked(this, generic_plat_blocked);
-	if(this.dmg && (!this.message || this.message == ""))
+	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
-    if(this.dmg && (!this.message2 || this.message2 == ""))
+    if(this.dmg && (this.message == ""))
 		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;

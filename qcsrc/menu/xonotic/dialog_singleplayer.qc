@@ -1,6 +1,6 @@
 #include "dialog_singleplayer.qh"
 
-#include <common/gamemodes/_mod.qh>
+#include <common/mapinfo.qh>
 #include "bigbutton.qh"
 #include "radiobutton.qh"
 #include "textlabel.qh"
@@ -11,6 +11,7 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	float pmin = 2, pmax = 16, pstep = 1;
 
 	cvar_set("timelimit_override", "10");
+	cvar_set("g_lms_lives_override", "9");
 
 	if(random() < 0.4) // 40% are DM
 	{
@@ -128,8 +129,8 @@ void XonoticSingleplayerDialog_fill(entity me)
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Campaign Difficulty:")));
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "-2", ZCTX(_("CSKL^Easy"))));
-		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "0", ZCTX(_("CSKL^Medium"))));
-		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "2", ZCTX(_("CSKL^Hard"))));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "-1", ZCTX(_("CSKL^Medium"))));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "0", ZCTX(_("CSKL^Hard"))));
 		me.TR(me);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Singleplayer!"), '0 0 0'));
 			e.onClick = CampaignList_LoadMap;

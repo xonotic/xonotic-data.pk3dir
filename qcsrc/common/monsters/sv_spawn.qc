@@ -1,18 +1,14 @@
 #include "sv_spawn.qh"
-
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include <common/monsters/all.qh>
-	#include <common/monsters/sv_monsters.qh>
-	#include <common/stats.qh>
-	#include <common/util.qh>
-	#include <common/weapons/_all.qh>
-	#include <server/autocvars.qh>
-	#include <server/weapons/common.qh>
+    #include "../util.qh"
+    #include "all.qh"
+    #include "sv_monsters.qh"
+    #include <server/autocvars.qh>
+    #include <server/defs.qh>
 #endif
-
-entity spawnmonster (entity e, string monster, Monster monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
+entity spawnmonster (entity e, string monster, int monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
 {
 	e.spawnflags = MONSTERFLAG_SPAWNED;
 
@@ -30,7 +26,7 @@ entity spawnmonster (entity e, string monster, Monster monster_id, entity spawne
 			RandomSelection_AddEnt(it, 1, 1);
 		});
 
-		monster_id = RandomSelection_chosen_ent;
+		monster_id = RandomSelection_chosen_ent.monsterid;
 	}
 	else if(monster != "")
 	{
@@ -40,12 +36,12 @@ entity spawnmonster (entity e, string monster, Monster monster_id, entity spawne
 			if(it.netname == monster)
 			{
 				found = true;
-				monster_id = it; // we have the monster, old monster id is no longer required
+				monster_id = it.monsterid; // we have the monster, old monster id is no longer required
 				break;
 			}
 		});
 
-		if(!found && monster_id == MON_Null)
+		if(!found && !monster_id)
 		{
 			if(removeifinvalid)
 			{
@@ -53,10 +49,7 @@ entity spawnmonster (entity e, string monster, Monster monster_id, entity spawne
 				return NULL; // no good
 			}
 			else
-			{
-				// select a random valid monster type if no valid monster was provided
-				return spawnmonster(e, "random", MON_Null, spawnedby, own, orig, respwn, removeifinvalid, moveflag);
-			}
+				monster_id = MON_FIRST;
 		}
 	}
 

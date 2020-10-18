@@ -1,7 +1,5 @@
 #include "onslaught.qh"
 
-#include <common/mutators/base.qh>
-
 #ifdef GAMEQC
 REGISTER_NET_LINKED(ENT_ONSCAMERA)
 #endif
@@ -14,7 +12,9 @@ NET_HANDLE(ENT_ONSCAMERA, bool isnew)
 	this.origin = ReadVector();
 	setorigin(this, this.origin);
 
-	this.angles = ReadAngleVector();
+	this.angles_x = ReadAngle();
+	this.angles_y = ReadAngle();
+	this.angles_z = ReadAngle();
 
 	this.drawmask  = MASK_NORMAL;
 	setmodel(this, MDL_Null); // give it a size for clientcamera
@@ -36,7 +36,7 @@ MUTATOR_HOOKFUNCTION(cl_ons, WantEventchase)
 	entity gen = NULL;
 	if(ons_roundlost)
 	{
-		IL_EACH(g_onsgenerators, GetResource(it, RES_HEALTH) <= 0,
+		IL_EACH(g_onsgenerators, GetResourceAmount(it, RESOURCE_HEALTH) <= 0,
 		{
 			gen = it;
 			break;

@@ -32,14 +32,9 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 	noref bool islocalplayer = (this == to);
 	noref bool isnolocalplayer = (isplayer && (this != to));
 
-	int psf = 0;
-	psf = BITSET(psf, ISPLAYER_CLIENT, isplayer);
-	psf = BITSET(psf, ISPLAYER_LOCAL, islocalplayer);
-	psf = BITSET(psf, ISPLAYER_PLAYER, IS_PLAYER(this));
-
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_MODEL);
 	WriteInt24_t(MSG_ENTITY, sf);
-	WriteByte(MSG_ENTITY, psf);
+	WriteByte(MSG_ENTITY, isplayer);
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
@@ -48,11 +43,7 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 	{ \
 		w(MSG_ENTITY, this.csqcmodel_##f); \
 	}
-#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
-	if(sf & flag) \
-	{ \
-		w(MSG_ENTITY, this.csqcmodel_##f); \
-	}
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY

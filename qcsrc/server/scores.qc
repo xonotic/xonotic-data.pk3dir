@@ -1,20 +1,18 @@
 #include "scores.qh"
 
+#include "command/common.qh"
+#include "defs.qh"
+#include <server/g_world.qh>
+#include <server/miscfunctions.qh>
+#include <server/mutators/_mod.qh>
+#include <common/net_linked.qh>
+#include "../common/playerstats.qh"
+#include "../common/teams.qh"
 #include <common/mapinfo.qh>
 #include <common/mutators/base.qh>
-#include <common/net_linked.qh>
-#include <common/playerstats.qh>
 #include <common/scores.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
-#include <common/teams.qh>
-#include <common/weapons/_all.qh>
-#include <server/client.qh>
-#include <server/command/common.qh>
-#include <server/intermission.qh>
-#include <server/mutators/_mod.qh>
-#include <server/round_handler.qh>
-#include <server/world.qh>
 
 .entity scorekeeper;
 entity teamscorekeepers[16];
@@ -110,9 +108,7 @@ float TeamScore_AddToTeam(int t, float scorefield, float score)
 	entity s;
 
 	if(game_stopped)
-	{
 		score = 0;
-	}
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
 	if(t <= 0 || t >= 16)
@@ -338,10 +334,9 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score, player);
 	score = M_ARGV(1, float);
 
-	if(!mutator_returnvalue && game_stopped)
-	{
+	if(game_stopped)
+	if(!mutator_returnvalue)
 		score = 0;
-	}
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
 	entity s = CS(player).scorekeeper;
@@ -862,7 +857,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 
 	sk = CS(p).scorekeeper;
 
-	s = strcat(s, playername(p.netname, p.team, false));
+	s = strcat(s, playername(p, false));
 	for (;;)
 	{
 		i = strlennocol(s) - NAMEWIDTH;
@@ -894,7 +889,7 @@ void Score_NicePrint_Spectators(entity to)
 
 void Score_NicePrint_Spectator(entity to, entity p)
 {
-	print_to(to, strcat("  ", playername(p.netname, p.team, false)));
+	print_to(to, strcat("  ", playername(p, false)));
 }
 
 .float score_dummyfield;

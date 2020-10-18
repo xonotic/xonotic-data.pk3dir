@@ -1,24 +1,24 @@
 #include "generic.qh"
+#include "_mod.qh"
+#include "reg.qh"
 
-#if defined(CSQC)
-	#include <client/command/cl_cmd.qh>
-	#include <common/command/_mod.qh>
-	#include <common/command/markup.qh>
-	#include <common/command/reg.qh>
-	#include <common/command/rpn.qh>
-	#include <common/mapinfo.qh>
-	#include <common/notifications/all.qh>
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include <common/command/_mod.qh>
-	#include <common/command/markup.qh>
-	#include <common/command/reg.qh>
-	#include <common/command/rpn.qh>
-	#include <common/mapinfo.qh>
-	#include <common/notifications/all.qh>
+#include "markup.qh"
+#include "rpn.qh"
+
+#include "../mapinfo.qh"
+
+#ifdef GAMEQC
+	#include "../notifications/all.qh"
+#endif
+
+#ifdef CSQC
+	#include <client/commands/cl_cmd.qh>
+#endif
+
+#ifdef SVQC
+	#include <server/command/_mod.qh>
 	#include <common/turrets/config.qh>
 	#include <common/weapons/config.qh>
-	#include <server/command/_mod.qh>
 #endif
 
 // =========================================================
@@ -86,12 +86,12 @@ void GenericCommand_addtolist(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_INFO("Incorrect parameters for ^2addtolist^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " addtolist variable value");
-			LOG_HELP("  Where 'variable' is what to add 'value' to.");
-			LOG_HELP("See also: ^2removefromlist^7");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " addtolist variable value");
+			LOG_INFO("  Where 'variable' is what to add 'value' to.");
+			LOG_INFO("See also: ^2removefromlist^7");
 			return;
 		}
 	}
@@ -163,13 +163,13 @@ void GenericCommand_qc_curl(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]");
 			return;
 		}
 	}
 }
 
-GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd_dump.txt", false)
+GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd_dump.txt")
 {
 	switch(request)
 	{
@@ -222,8 +222,8 @@ GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpcommands");
-			LOG_HELP("  No arguments required.");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpcommands");
+			LOG_INFO("  No arguments required.");
 			return;
 		}
 	}
@@ -300,13 +300,13 @@ void GenericCommand_maplist(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_INFO("Incorrect parameters for ^2maplist^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " maplist action [map]");
-			LOG_HELP("  Where 'action' is the command to complete,");
-			LOG_HELP("  and 'map' is what it acts upon (if required).");
-			LOG_HELP("  Full list of commands here: \"add, cleanup, remove, shuffle.\"");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " maplist action [map]");
+			LOG_INFO("  Where 'action' is the command to complete,");
+			LOG_INFO("  and 'map' is what it acts upon (if required).");
+			LOG_INFO("  Full list of commands here: \"add, cleanup, remove, shuffle.\"");
 			return;
 		}
 	}
@@ -325,8 +325,8 @@ void GenericCommand_nextframe(int request, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " nextframe command...");
-			LOG_HELP("  Where command will be executed next frame of this VM");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " nextframe command...");
+			LOG_INFO("  Where command will be executed next frame of this VM");
 			return;
 		}
 	}
@@ -356,12 +356,12 @@ void GenericCommand_removefromlist(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_INFO("Incorrect parameters for ^2removefromlist^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value");
-			LOG_HELP("  Where 'variable' is what cvar to remove 'value' from.");
-			LOG_HELP("See also: ^2addtolist^7");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value");
+			LOG_INFO("  Where 'variable' is what cvar to remove 'value' from.");
+			LOG_INFO("See also: ^2addtolist^7");
 			return;
 		}
 	}
@@ -374,25 +374,16 @@ void GenericCommand_restartnotifs(int request)
 		case CMD_REQUEST_COMMAND:
 		{
 			#ifdef GAMEQC
-			int NOTIF_ANNCE_COUNT = 0;
-			int NOTIF_INFO_COUNT = 0;
-			int NOTIF_CENTER_COUNT = 0;
-			int NOTIF_MULTI_COUNT = 0;
-			int NOTIF_CHOICE_COUNT = 0;
-			FOREACH(Notifications, true, {
-				switch (it.nent_type)
-				{
-					case MSG_ANNCE: ++NOTIF_ANNCE_COUNT; break;
-					case MSG_INFO: ++NOTIF_INFO_COUNT; break;
-					case MSG_CENTER: ++NOTIF_CENTER_COUNT; break;
-					case MSG_MULTI: ++NOTIF_MULTI_COUNT; break;
-					case MSG_CHOICE: ++NOTIF_CHOICE_COUNT; break;
-				}
-			});
-
+			int NOTIF_ANNCE_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE,   { ++NOTIF_ANNCE_COUNT;  });
+			int NOTIF_INFO_COUNT    = 0; FOREACH(Notifications, it.nent_type == MSG_INFO,    { ++NOTIF_INFO_COUNT;   });
+			int NOTIF_CENTER_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER,  { ++NOTIF_CENTER_COUNT; });
+			int NOTIF_MULTI_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_MULTI,   { ++NOTIF_MULTI_COUNT;  });
+			int NOTIF_CHOICE_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CHOICE,  { ++NOTIF_CHOICE_COUNT; });
 			LOG_INFOF(
-				"Restart_Notifications(): Restarting %d notifications... "
-				"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d",
+			    (
+                    "Restart_Notifications(): Restarting %d notifications... "
+                    "Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d"
+                ),
 				(
 					NOTIF_ANNCE_COUNT +
 					NOTIF_INFO_COUNT +
@@ -417,8 +408,8 @@ void GenericCommand_restartnotifs(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " restartnotifs");
-			LOG_HELP("  No arguments required.");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " restartnotifs");
+			LOG_INFO("  No arguments required.");
 			return;
 		}
 	}
@@ -444,12 +435,12 @@ void GenericCommand_settemp(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_INFO("Incorrect parameters for ^2settemp^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"");
-			LOG_HELP("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.");
-			LOG_HELP("See also: ^2settemp_restore^7");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"");
+			LOG_INFO("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.");
+			LOG_INFO("See also: ^2settemp_restore^7");
 			return;
 		}
 	}
@@ -474,9 +465,9 @@ void GenericCommand_settemp_restore(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " settemp_restore");
-			LOG_HELP("  No arguments required.");
-			LOG_HELP("See also: ^2settemp^7");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " settemp_restore");
+			LOG_INFO("  No arguments required.");
+			LOG_INFO("See also: ^2settemp^7");
 			return;
 		}
 	}
@@ -502,7 +493,7 @@ void GenericCommand_runtest(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " [function to run]");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " [function to run]");
 			return;
 		}
 	}
@@ -523,8 +514,8 @@ void GenericCommand_(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " ");
-			LOG_HELP("  No arguments required.");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
+			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -532,20 +523,20 @@ void GenericCommand_(int request)
 */
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-GENERIC_COMMAND(addtolist, "Add a string to a cvar", true) { GenericCommand_addtolist(request, arguments); }
-GENERIC_COMMAND(maplist, "Automatic control of maplist", true) { GenericCommand_maplist(request, arguments); }
-GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM", true) { GenericCommand_nextframe(request, command); }
-GENERIC_COMMAND(qc_curl, "Queries a URL", true) { GenericCommand_qc_curl(request, arguments); }
-GENERIC_COMMAND(removefromlist, "Remove a string from a cvar", true) { GenericCommand_removefromlist(request, arguments); }
-GENERIC_COMMAND(restartnotifs, "Re-initialize all notifications", false) { GenericCommand_restartnotifs(request); }
-GENERIC_COMMAND(rpn, "RPN calculator", true) { GenericCommand_rpn(request, arguments, command); }
-GENERIC_COMMAND(settemp, "Temporarily set a value to a cvar which is restored later", false) { GenericCommand_settemp(request, arguments); }
-GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command", false) { GenericCommand_settemp_restore(request); }
-GENERIC_COMMAND(runtest, "Run unit tests", false) { GenericCommand_runtest(request, arguments); }
+GENERIC_COMMAND(addtolist, "Add a string to a cvar") { GenericCommand_addtolist(request, arguments); }
+GENERIC_COMMAND(maplist, "Automatic control of maplist") { GenericCommand_maplist(request, arguments); }
+GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM") { GenericCommand_nextframe(request, command); }
+GENERIC_COMMAND(qc_curl, "Queries a URL") { GenericCommand_qc_curl(request, arguments); }
+GENERIC_COMMAND(removefromlist, "Remove a string from a cvar") { GenericCommand_removefromlist(request, arguments); }
+GENERIC_COMMAND(restartnotifs, "Re-initialize all notifications") { GenericCommand_restartnotifs(request); }
+GENERIC_COMMAND(rpn, "RPN calculator") { GenericCommand_rpn(request, arguments, command); }
+GENERIC_COMMAND(settemp, "Temporarily set a value to a cvar which is restored later") { GenericCommand_settemp(request, arguments); }
+GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command") { GenericCommand_settemp_restore(request); }
+GENERIC_COMMAND(runtest, "Run unit tests") { GenericCommand_runtest(request, arguments); }
 
 void GenericCommand_macro_help()
 {
-	FOREACH(GENERIC_COMMANDS, true, LOG_HELPF("  ^2%s^7: %s", it.m_name, it.m_description));
+	FOREACH(GENERIC_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s", it.m_name, it.m_description));
 }
 
 float GenericCommand_macro_command(int argc, string command)

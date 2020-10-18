@@ -1,15 +1,14 @@
 #include "scripting.qh"
 
-#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
-#include <common/physics/player.qh>
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include "cvars.qh"
+
 #include <common/state.qh>
-#include <common/stats.qh>
-#include <common/weapons/_all.qh>
+#include <common/physics/player.qh>
 #include <common/wepent.qh>
-#include <server/bot/default/bot.qh>
-#include <server/bot/default/cvars.qh>
-#include <server/weapons/selection.qh>
-#include <server/weapons/weaponsystem.qh>
+
+#include "bot.qh"
 
 .int state;
 
@@ -359,85 +358,90 @@ void bot_cmdhelp(string scmd)
 				break;
 		}
 
-		string desc = "";
+		string prelude = strcat(
+		    "Command: ", bot_cmd_string[i], "\n",
+		    "Parameter: <", stype, ">", "\n",
+		    "Description: "
+        );
 		switch(i)
 		{
 			case BOT_CMD_PAUSE:
-				desc = "Stops the bot completely. Any command other than 'continue' will be ignored.";
+				LOG_INFO(prelude, "Stops the bot completely. Any command other than 'continue' will be ignored.");
 				break;
 			case BOT_CMD_CONTINUE:
-				desc = "Disable paused status";
+				LOG_INFO(prelude, "Disable paused status");
 				break;
 			case BOT_CMD_WAIT:
-				desc = "Pause command parsing and bot ai for N seconds. Pressed key will remain pressed";
+				LOG_INFO(prelude, "Pause command parsing and bot ai for N seconds. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_WAIT_UNTIL:
-				desc = "Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed";
+				LOG_INFO(prelude, "Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_BARRIER:
-				desc = "Waits till all bots that have a command queue reach this command. Pressed key will remain pressed";
+				LOG_INFO(prelude, "Waits till all bots that have a command queue reach this command. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_TURN:
-				desc = "Look to the right or left N degrees. For turning to the left use positive numbers.";
+				LOG_INFO(prelude, "Look to the right or left N degrees. For turning to the left use positive numbers.");
 				break;
 			case BOT_CMD_MOVETO:
-				desc = "Walk to an specific coordinate on the map. Usage: moveto \'x y z\'";
+				LOG_INFO(prelude, "Walk to an specific coordinate on the map. Usage: moveto \'x y z\'");
 				break;
 			case BOT_CMD_MOVETOTARGET:
-				desc = "Walk to the specific target on the map";
+				LOG_INFO(prelude, "Walk to the specific target on the map");
 				break;
 			case BOT_CMD_RESETGOAL:
-				desc = "Resets the goal stack";
+				LOG_INFO(prelude, "Resets the goal stack");
 				break;
 			case BOT_CMD_CC:
-				desc = "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;";
+				LOG_INFO(prelude, "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;");
 				break;
 			case BOT_CMD_IF:
-				desc = "Perform simple conditional execution.\n"
-					"Syntax: \n"
-					"        sv_cmd .. if \"condition\"\n"
-					"        sv_cmd .. 	<instruction if true>\n"
-					"        sv_cmd .. 	<instruction if true>\n"
-					"        sv_cmd .. else\n"
-					"        sv_cmd .. 	<instruction if false>\n"
-					"        sv_cmd .. 	<instruction if false>\n"
-					"        sv_cmd .. fi\n"
-					"Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n"
-					"            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n"
-					"Fields: health, speed, flagcarrier\n"
-					"Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;";
+				LOG_INFO(prelude, "Perform simple conditional execution.\n"
+                    "Syntax: \n"
+                    "        sv_cmd .. if \"condition\"\n"
+                    "        sv_cmd .. 	<instruction if true>\n"
+                    "        sv_cmd .. 	<instruction if true>\n"
+                    "        sv_cmd .. else\n"
+                    "        sv_cmd .. 	<instruction if false>\n"
+                    "        sv_cmd .. 	<instruction if false>\n"
+                    "        sv_cmd .. fi\n"
+                    "Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n"
+                    "            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n"
+                    "Fields: health, speed, flagcarrier\n"
+                    "Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;"
+				);
 				break;
 			case BOT_CMD_RESETAIM:
-				desc = "Points the aim to the coordinates x,y 0,0";
+				LOG_INFO(prelude, "Points the aim to the coordinates x,y 0,0");
 				break;
 			case BOT_CMD_AIM:
-				desc = "Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n"
+				LOG_INFO(prelude, "Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n"
 					"There is a 3rd optional parameter telling in how many seconds the aim has to reach the new position\n"
 					"Examples: aim \"90 0\"	// Turn 90 degrees inmediately (positive numbers move to the left/up)\n"
-					"          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds";
+					"          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds"
+				);
 				break;
 			case BOT_CMD_AIMTARGET:
-				desc = "Points the aim to given target";
+				LOG_INFO(prelude, "Points the aim to given target");
 				break;
 			case BOT_CMD_PRESSKEY:
-				desc = "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use"
-					"Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called"
-					"Note: The script will not return the control to the bot ai until all keys are released";
+				LOG_INFO(prelude, "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use");
+				LOG_INFO("Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called");
+				LOG_INFO("Note: The script will not return the control to the bot ai until all keys are released");
 				break;
 			case BOT_CMD_RELEASEKEY:
-				desc = "Release previoulsy used keys. Use the parameter \"all\" to release all keys";
+				LOG_INFO(prelude, "Release previoulsy used keys. Use the parameter \"all\" to release all keys");
 				break;
 			case BOT_CMD_SOUND:
-				desc = "play sound file at bot location";
+				LOG_INFO(prelude, "play sound file at bot location");
 				break;
 			case BOT_CMD_DEBUG_ASSERT_CANFIRE:
-				desc = "verify the state of the weapon entity";
+				LOG_INFO(prelude, "verify the state of the weapon entity");
 				break;
 			default:
-				desc = "This command has no description yet.";
+				LOG_INFO(prelude, "This command has no description yet.");
 				break;
 		}
-		LOG_HELP("Command: ", bot_cmd_string[i], "\nParameter: <", stype, ">", "\nDescription: ", desc);
 	}
 }
 
@@ -584,10 +588,10 @@ float bot_cmd_select_weapon(entity this)
 		if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
 			continue;
 
-		if(client_hasweapon(this, REGISTRY_GET(Weapons, id), weaponentity, true, false))
+		if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
 		{
 			success = true;
-			this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, id);
+			this.(weaponentity).m_switchweapon = Weapons_from(id);
 		}
 	}
 
@@ -620,7 +624,7 @@ float bot_cmd_eval(entity this, string expr)
 	switch(expr)
 	{
 		case "health":
-			return GetResource(this, RES_HEALTH);
+			return GetResourceAmount(this, RESOURCE_HEALTH);
 		case "speed":
 			return vlen(this.velocity);
 		case "flagcarrier":
@@ -1207,12 +1211,12 @@ float bot_execute_commands_once(entity this)
 
 	// Handle conditions
 	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
-	if((this.bot_cmd_condition_status & CMD_CONDITION_true) && this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
+	if(this.bot_cmd_condition_status & CMD_CONDITION_true && this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
 	{
 		bot_command_executed(this, true);
 		return -1;
 	}
-	else if((this.bot_cmd_condition_status & CMD_CONDITION_false) && this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
+	else if(this.bot_cmd_condition_status & CMD_CONDITION_false && this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
 	{
 		bot_command_executed(this, true);
 		return -1;

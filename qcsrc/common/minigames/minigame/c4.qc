@@ -1,5 +1,5 @@
 #include "c4.qh"
-REGISTER_MINIGAME(c4, _("Connect Four"));
+REGISTER_MINIGAME(c4, "Connect Four");
 
 const float C4_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const float C4_TURN_WIN   = 0x0200; // player has won
@@ -163,7 +163,7 @@ void c4_move(entity minigame, entity player, string pos )
 		if ( c4_valid_tile(pos) )
 		if ( !c4_find_piece(minigame,pos) )
 		{
-			entity piece = msle_spawn(minigame,new(minigame_board_piece));
+			entity piece = msle_spawn(minigame,"minigame_board_piece");
 			piece.team = player.team;
 			piece.netname = strzone(pos);
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
@@ -308,13 +308,13 @@ void c4_hud_board(vector pos, vector mySize)
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf(_("%s^7 won the game!"), pname),
+			sprintf("%s^7 won the game!",pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf(_("%s^7 won the game!"), pname),
+			sprintf("%s^7 won the game!",pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -413,12 +413,7 @@ int c4_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			c4_set_curr_pos("");
-			strcpy(minigame.message, c4_turn_to_string(minigame.minigame_flags));
-			return false;
-		}
-		case "deactivate":
-		{
-			strfree(minigame.message);
+			minigame.message = c4_turn_to_string(minigame.minigame_flags);
 			return false;
 		}
 		case "key_pressed":
@@ -495,7 +490,7 @@ int c4_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					strcpy(sent.message, c4_turn_to_string(sent.minigame_flags));
+					sent.message = c4_turn_to_string(sent.minigame_flags);
 					if ( sent.minigame_flags & minigame_self.team )
 						minigame_prompt();
 				}

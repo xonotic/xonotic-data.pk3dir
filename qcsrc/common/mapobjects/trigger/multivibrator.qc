@@ -72,7 +72,7 @@ spawnfunc(trigger_multivibrator)
 	setthink(this, multivibrator_send_think);
 	this.nextthink = max(1, time);
 
-	if(this.targetname && this.targetname != "")
+	IFTARGETED
 		multivibrator_reset(this);
 }
 #endif

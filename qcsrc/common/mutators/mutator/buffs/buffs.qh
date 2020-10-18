@@ -4,15 +4,12 @@
 #include <common/util.qh>
 
 #ifdef GAMEQC
-#include <common/mutators/mutator/waypoints/all.qh>
-#endif
-
-#ifdef GAMEQC
 REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
 #endif
 
 REGISTRY(Buffs, BITS(5))
+#define Buffs_from(i) _Buffs_from(i, BUFF_Null)
 REGISTER_REGISTRY(Buffs)
 REGISTRY_CHECK(Buffs)
 
@@ -38,10 +35,10 @@ CLASS(Buff, Pickup)
 ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {
-	FOREACH(Buffs, true, {
-		it.m_itemid = BIT(it.m_id - 1);
-		it.m_sprite = strzone(strcat("buff-", it.netname));
-	});
+    FOREACH(Buffs, true, {
+        it.m_itemid = BIT(it.m_id - 1); \
+        it.m_sprite = strzone(strcat("buff-", it.netname)); \
+    });
 }
 
 #ifdef SVQC
@@ -71,5 +68,4 @@ entity buff_FirstFromFlags(int _buffs);
 REGISTER_BUFF(Null);
 BUFF_SPAWNFUNCS(random, BUFF_Null)
 
-REGISTRY_DEFINE_GET(Buffs, BUFF_Null)
 #include "all.inc"

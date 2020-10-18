@@ -1,10 +1,14 @@
 #include "gamestart.qh"
-
 #ifdef SVQC
 void gamestart_use(entity this, entity actor, entity trigger)
 {
 	SUB_UseTargets(this, this, trigger);
-	delete(this); // TODO: deleting this means it can't be used upon map reset!
+	delete(this);
+}
+
+void gamestart_use_this(entity this)
+{
+	gamestart_use(this, NULL, NULL);
 }
 
 spawnfunc(trigger_gamestart)
@@ -18,6 +22,7 @@ spawnfunc(trigger_gamestart)
 		this.nextthink = game_starttime + this.wait;
 	}
 	else
-		InitializeEntity(this, adaptor_think2use, INITPRIO_FINDTARGET);
+		InitializeEntity(this, gamestart_use_this, INITPRIO_FINDTARGET);
 }
+
 #endif

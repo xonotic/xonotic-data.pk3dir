@@ -8,6 +8,7 @@
 		PERSON(Merlijn Hofstra) \
 		PERSON(Peter "Morphed" Pielak) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
+		PERSON(Samual "Ares" Lenks) \
 		PERSON(TimePath) \
 		PERSON(Tyler "-z-" Mulligan) \
 		PERSON(Zac "Mario" Jardine) \
@@ -17,14 +18,15 @@
 		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Archer) \
 		PERSON(BuddyFriendGuy) \
-		PERSON(David "Cloudwalk" Knapp) \
 		PERSON(Debugger) \
 		PERSON(Diomedes) \
 		PERSON(Freddy) \
 		PERSON(GATTS) \
 		PERSON(Halogene) \
+		PERSON(IDWMaster) \
 		PERSON(Jan "zykure" Behrens) \
 		PERSON(JH0nny) \
+		PERSON(Jubilant) \
 		PERSON(Łukasz "kuniu the frogg" Polek) \
 		PERSON(martin-t) \
 		PERSON(Matthias "matthiaskrgr" Krüger) \
@@ -124,10 +126,9 @@
 	NL() \
 	TITLE(_("Game Engine")) \
 		FUNCTION("DarkPlaces") \
-			PERSON(Ashley Rose "LadyHavoc" Hale) \
+			PERSON(Forest "LordHavoc" Hale) \
 		NL() \
 		FUNCTION(_("Engine Additions")) \
-			PERSON(David "Cloudwalk" Knapp) \
 			PERSON(Rudolf "divVerent" Polzer) \
 			PERSON(Samual "Ares" Lenks) \
 		NL() \
@@ -340,7 +341,6 @@
 		PERSON(Jitspoe) \
 		PERSON(Jody Gallagher) \
 		PERSON(Jope "Sless" Withers) \
-		PERSON(Jubilant) \
 		PERSON(Juergen "LowDragon" Timm) \
 		PERSON(KadaverJack) \
 		PERSON(Kevin "Tyrann" Shanahan) \
@@ -377,7 +377,6 @@
 		PERSON(Robert "ai" Kuroto) \
 		PERSON(Ronan) \
 		PERSON(Sajt) \
-		PERSON(Samual "Ares" Lenks) \
 		PERSON(Saulo "mand1nga" Gil) \
 		PERSON(Shaggy) \
 		PERSON(Shank) \
@@ -398,7 +397,6 @@
 		PERSON(William "Willis" Weilep) \
 		PERSON(Yves "EviLair" Allaire) \
 		PERSON(Zenex) \
-		PERSON(... and a goat) \
 		/**/
 
 int credits_get()

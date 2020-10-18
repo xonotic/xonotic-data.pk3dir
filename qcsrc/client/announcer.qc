@@ -1,7 +1,7 @@
 #include "announcer.qh"
 
-#include <client/hud/panel/centerprint.qh>
 #include <client/mutators/_mod.qh>
+
 #include <common/notifications/all.qh>
 #include <common/stats.qh>
 
@@ -84,7 +84,7 @@ void Announcer_Gamestart()
 	{
 		if(announcer_countdown)
 		{
-			centerprint_Kill(ORDINAL(CPID_ROUND));
+			centerprint_kill(ORDINAL(CPID_ROUND));
 			if(announcer_countdown)
 			{
 				delete(announcer_countdown);
@@ -115,7 +115,7 @@ void Announcer_Gamestart()
 	previous_game_starttime = startTime;
 }
 
-#define ANNOUNCER_CHECKMINUTE(minute) MACRO_BEGIN \
+#define ANNOUNCER_CHECKMINUTE(minute) MACRO_BEGIN { \
 	if(announcer_##minute##min) { \
 		if(timeleft > minute * 60) \
 			announcer_##minute##min = false; \
@@ -125,7 +125,7 @@ void Announcer_Gamestart()
 			Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_##minute); \
 		} \
 	} \
-MACRO_END
+} MACRO_END
 
 void Announcer_Time()
 {

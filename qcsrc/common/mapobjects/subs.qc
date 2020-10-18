@@ -1,5 +1,4 @@
 #include "subs.qh"
-
 void SUB_NullThink(entity this) { }
 
 void SUB_CalcMoveDone(entity this);
@@ -71,16 +70,14 @@ void SUB_SetFade_Think (entity this)
 ==================
 SUB_SetFade
 
-Fade ent out when time >= vanish_time
+Fade 'ent' out when time >= 'when'
 ==================
 */
-void SUB_SetFade(entity ent, float vanish_time, float fading_time)
+void SUB_SetFade (entity ent, float when, float fading_time)
 {
-	if (fading_time <= 0)
-		fading_time = 0.01;
 	ent.fade_rate = 1/fading_time;
 	setthink(ent, SUB_SetFade_Think);
-	ent.nextthink = vanish_time;
+	ent.nextthink = when;
 }
 
 /*
@@ -290,7 +287,7 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
-	// The only currently implemented alternative movement is linear (value 1)
+        // The only currently implemented alternative movement is linear (value 1)
 	if (traveltime < 0.15 || (this.platmovetype_start == 1 && this.platmovetype_end == 1)) // is this correct?
 	{
 		this.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
@@ -401,11 +398,11 @@ void ApplyMinMaxScaleAngles(entity e)
 		setsize(e, e.mins, e.maxs);
 }
 
-void SetBrushEntityModel(entity this, bool with_lod)
+void SetBrushEntityModel(entity this)
 {
-	if(this.model != "")
-	{
-		precache_model(this.model);
+ 	if(this.model != "")
+ 	{
+ 		precache_model(this.model);
 		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
 			vector mi = this.mins;
@@ -415,12 +412,27 @@ void SetBrushEntityModel(entity this, bool with_lod)
 		}
 		else
 			_setmodel(this, this.model); // no precision needed
-		if(with_lod)
-			InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
+		InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
+ 	}
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
+}
 
-		if(endsWith(this.model, ".obj")) // WORKAROUND: darkplaces currently rotates .obj models on entities incorrectly, we need to add 180 degrees to the Y axis
-			this.angles_y = anglemods(this.angles_y - 180);
-	}
+void SetBrushEntityModelNoLOD(entity this)
+{
+ 	if(this.model != "")
+ 	{
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
+		{
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
+		}
+		else
+			_setmodel(this, this.model); // no precision needed
+ 	}
 	setorigin(this, this.origin);
 	ApplyMinMaxScaleAngles(this);
 }
@@ -541,7 +553,7 @@ void InitTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
-	SetBrushEntityModel(this, false);
+	SetBrushEntityModelNoLOD(this);
 	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
@@ -553,7 +565,7 @@ void InitSolidBSPTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir(this);
 	this.solid = SOLID_BSP;
-	SetBrushEntityModel(this, false);
+	SetBrushEntityModelNoLOD(this);
 	set_movetype(this, MOVETYPE_NONE); // why was this PUSH? -div0
 //	this.modelindex = 0;
 	this.model = "";
@@ -564,7 +576,7 @@ bool InitMovingBrushTrigger(entity this)
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	this.solid = SOLID_BSP;
-	SetBrushEntityModel(this, true);
+	SetBrushEntityModel(this);
 	set_movetype(this, MOVETYPE_PUSH);
 	if(this.modelindex == 0)
 	{

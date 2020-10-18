@@ -8,19 +8,15 @@ void W_Blaster_Touch(entity this, entity toucher)
 
 	this.event_damage = func_null;
 
-	RadiusDamageForSource(
+	RadiusDamage(
 		this,
-		(this.origin + (this.mins + this.maxs) * 0.5),
-		this.velocity,
 		this.realowner,
 		this.blaster_damage,
 		this.blaster_edgedamage,
 		this.blaster_radius,
 		NULL,
 		NULL,
-		false,
 		this.blaster_force,
-		this.blaster_force_zscale,
 		this.projectiledeathtype,
 		this.weaponentity_fld,
 		toucher
@@ -46,7 +42,6 @@ void W_Blaster_Attack(
 	float atk_edgedamage,
 	float atk_radius,
 	float atk_force,
-	float atk_force_zscale,
 	float atk_speed,
 	float atk_spread,
 	float atk_delay,
@@ -55,7 +50,7 @@ void W_Blaster_Attack(
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
 	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage, atk_deathtype);
-	W_MuzzleFlash(WEP_BLASTER, actor, weaponentity, w_shotorg, w_shotdir);
+	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = new(blasterbolt);
 	missile.owner = missile.realowner = actor;
@@ -67,7 +62,6 @@ void W_Blaster_Attack(
 	missile.blaster_edgedamage = atk_edgedamage;
 	missile.blaster_radius = atk_radius;
 	missile.blaster_force = atk_force;
-	missile.blaster_force_zscale = atk_force_zscale;
 	missile.blaster_lifetime = atk_lifetime;
 
 	setorigin(missile, w_shotorg);
@@ -135,7 +129,6 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
                 WEP_CVAR_PRI(blaster, edgedamage),
                 WEP_CVAR_PRI(blaster, radius),
                 WEP_CVAR_PRI(blaster, force),
-                WEP_CVAR_PRI(blaster, force_zscale),
                 WEP_CVAR_PRI(blaster, speed),
                 WEP_CVAR_PRI(blaster, spread),
                 WEP_CVAR_PRI(blaster, delay),
@@ -168,7 +161,6 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
                         WEP_CVAR_SEC(blaster, edgedamage),
                         WEP_CVAR_SEC(blaster, radius),
                         WEP_CVAR_SEC(blaster, force),
-                        WEP_CVAR_SEC(blaster, force_zscale),
                         WEP_CVAR_SEC(blaster, speed),
                         WEP_CVAR_SEC(blaster, spread),
                         WEP_CVAR_SEC(blaster, delay),

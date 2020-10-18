@@ -3,9 +3,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/util.qh>
-    #include <common/weapons/_all.qh>
-    #include <common/stats.qh>
-    #include <server/world.qh>
+    #include <server/defs.qh>
 #endif
 
 #ifdef SVQC

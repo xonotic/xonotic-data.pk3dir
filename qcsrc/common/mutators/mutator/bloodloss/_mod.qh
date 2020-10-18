@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/bloodloss/bloodloss.qh>
+#ifdef SVQC
+    #include <common/mutators/mutator/bloodloss/sv_bloodloss.qh>
+#endif

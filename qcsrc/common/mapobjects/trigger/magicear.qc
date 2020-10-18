@@ -1,7 +1,7 @@
 #include "magicear.qh"
 #ifdef SVQC
-#include <common/weapons/weapon/tuba.qh>
-bool magicear_matched;
+float magicear_matched;
+float W_Tuba_HasPlayed(entity pl, .entity weaponentity, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
 string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin)
 {
 	float domatch, dotrigger, matchstart, l;

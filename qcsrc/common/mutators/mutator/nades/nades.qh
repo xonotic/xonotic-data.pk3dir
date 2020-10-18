@@ -22,6 +22,7 @@ const int PROJECTILE_NADE_VEIL = 86;
 const int PROJECTILE_NADE_VEIL_BURN = 87;
 
 REGISTRY(Nades, BITS(4))
+#define Nades_from(i) _Nades_from(i, NADE_TYPE_Null)
 REGISTER_REGISTRY(Nades)
 REGISTRY_CHECK(Nades)
 
@@ -41,7 +42,6 @@ CLASS(Nade, Object)
 ENDCLASS(Nade)
 
 REGISTER_NADE(Null);
-REGISTRY_DEFINE_GET(Nades, NADE_TYPE_Null)
 
 Nade Nade_FromProjectile(int proj)
 {
@@ -101,8 +101,6 @@ MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 #endif
 
 #ifdef CSQC
-float cvar_cl_nade_type;
-string cvar_cl_pokenade_type;
 bool Projectile_isnade(int proj); // TODO: remove
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
