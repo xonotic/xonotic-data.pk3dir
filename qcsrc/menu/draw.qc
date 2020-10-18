@@ -1,6 +1,6 @@
 #include "draw.qh"
-#include "../common/util.qh"
-#include "../common/constants.qh"
+#include <common/util.qh>
+#include <common/constants.qh>
 
 string draw_mousepointer;
 vector draw_mousepointer_offset;

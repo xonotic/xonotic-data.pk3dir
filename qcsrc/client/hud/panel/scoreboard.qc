@@ -1,15 +1,15 @@
 #include "scoreboard.qh"
 
 #include <client/autocvars.qh>
-#include <client/main.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
+#include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/racetimer.qh>
-#include "quickmenu.qh"
-#include <common/ent_cs.qh>
+#include <client/hud/panel/weapons.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
+#include <common/net_linked.qh>
 #include <common/scores.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>

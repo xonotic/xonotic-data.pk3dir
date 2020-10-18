@@ -1,7 +1,9 @@
 #pragma once
 
 #ifdef CSQC
+#include <client/draw.qh>
 #include <client/resources.qh>
+#include <client/view.qh>
 #endif
 
 

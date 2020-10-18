@@ -1,5 +1,8 @@
 #include "cl_race.qh"
 
+#include <client/draw.qh>
+#include <common/mutators/base.qh>
+
 // Race/CTS HUD mod icons
 float crecordtime_prev; // last remembered crecordtime
 float crecordtime_change_time; // time when crecordtime last changed
@@ -151,6 +154,11 @@ REGISTER_MUTATOR(cl_race, true);
 MUTATOR_HOOKFUNCTION(cl_race, HUD_Physics_showoptional)
 {
 	return ISGAMETYPE(RACE); // show the optional physics panel
+}
+
+MUTATOR_HOOKFUNCTION(cl_race, HUD_StrafeHUD_showoptional)
+{
+	return ISGAMETYPE(RACE); // show the optional strafehud
 }
 
 MUTATOR_HOOKFUNCTION(cl_race, HUD_Score_show)

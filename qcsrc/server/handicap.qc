@@ -6,7 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include <common/state.qh>
-#include "client.qh"
+#include <server/client.qh>
 
 .float m_handicap; ///< Holds the handicap value.
 

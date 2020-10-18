@@ -113,7 +113,7 @@ void cpicon_construct(entity this, bool isnew)
 
 	if(this.icon_realmodel == NULL)
 	{
-		this.icon_realmodel = spawn();
+		this.icon_realmodel = new(cpicon_model);
 		setmodel(this.icon_realmodel, MDL_Null);
 		setorigin(this.icon_realmodel, this.origin);
 		setsize(this.icon_realmodel, CPICON_MIN, CPICON_MAX);

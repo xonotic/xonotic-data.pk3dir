@@ -1,11 +1,11 @@
 #include "mapinfo.qh"
 #if defined(CSQC)
-    #include "util.qh"
-    #include <common/weapons/_all.qh>
+	#include <common/util.qh>
+	#include <common/weapons/_all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "util.qh"
-    #include <common/monsters/_mod.qh>
+	#include <common/util.qh>
+	#include <common/monsters/_mod.qh>
 #endif
 
 bool autocvar_g_mapinfo_arena_compat = true;

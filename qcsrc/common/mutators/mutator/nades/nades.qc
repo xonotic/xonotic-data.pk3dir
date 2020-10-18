@@ -355,13 +355,10 @@ void napalm_fountain_think(entity this)
 
 void nade_napalm_boom(entity this)
 {
-	entity fountain;
-	int c;
-	for (c = 0; c < autocvar_g_nades_napalm_ball_count; c++)
+	for (int c = 0; c < autocvar_g_nades_napalm_ball_count; c++)
 		nade_napalm_ball(this);
 
-
-	fountain = spawn();
+	entity fountain = new(nade_napalm_fountain);
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
@@ -455,8 +452,7 @@ void nade_ice_think(entity this)
 
 void nade_ice_boom(entity this)
 {
-	entity fountain;
-	fountain = spawn();
+	entity fountain = new(nade_ice_fountain);
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
@@ -509,7 +505,7 @@ void nade_translocate_boom(entity this)
 
 void nade_spawn_boom(entity this)
 {
-	entity spawnloc = spawn();
+	entity spawnloc = new(nade_spawn_loc);
 	setorigin(spawnloc, this.origin);
 	setsize(spawnloc, this.realowner.mins, this.realowner.maxs);
 	set_movetype(spawnloc, MOVETYPE_NONE);
@@ -551,7 +547,7 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	// NOTE: this function merely places an orb
 	// you must add a custom touch function to the returned entity if desired
 	// also set .colormod if you wish to have it colorized
-	entity orb = spawn(); // Net_LinkEntity sets the classname (TODO)
+	entity orb = new(nades_spawn_orb);
 	orb.owner = own;
 	orb.realowner = realown;
 	setorigin(orb, org);
@@ -1208,7 +1204,7 @@ void nades_CheckThrow(entity this)
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
 			vector dir = (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05);
-			dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+			dir = W_CalculateSpread(dir, autocvar_g_nades_spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
 			toss_nade(this, true, dir * _force, 0);
 		}
 	}
@@ -1252,7 +1248,7 @@ CLASS(NadeOffhand, OffhandWeapon)
 				_force /= autocvar_g_nades_nade_lifetime;
 				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
 				vector dir = (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1);
-				dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+				dir = W_CalculateSpread(dir, autocvar_g_nades_spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
 				toss_nade(player, false, dir * _force, 0);
 			}
 		}

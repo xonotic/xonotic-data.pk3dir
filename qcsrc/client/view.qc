@@ -1,47 +1,40 @@
 #include "view.qh"
 
-#include "autocvars.qh"
-#include "miscfunctions.qh"
-#include "announcer.qh"
-#include "hud/_mod.qh"
-#include "main.qh"
-#include "mapvoting.qh"
-#include "shownames.qh"
-#include "hud/panel/scoreboard.qh"
-#include "hud/panel/quickmenu.qh"
-
+#include <client/announcer.qh>
+#include <client/autocvars.qh>
+#include <client/csqcmodel_hooks.qh>
+#include <client/draw.qh>
+#include <client/hud/_mod.qh>
+#include <client/hud/panel/quickmenu.qh>
+#include <client/hud/panel/scoreboard.qh>
+#include <client/mapvoting.qh>
 #include <client/mutators/_mod.qh>
-
-#include <common/animdecide.qh>
-#include <common/deathtypes/all.qh>
-#include <common/ent_cs.qh>
+#include <client/shownames.qh>
 #include <common/anim.qh>
+#include <common/animdecide.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
-#include <common/net_notice.qh>
+#include <common/deathtypes/all.qh>
 #include <common/debug.qh>
-#include <common/mapinfo.qh>
+#include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
-#include <common/physics/player.qh>
-#include <common/stats.qh>
+#include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
-#include <common/teams.qh>
-#include <common/wepent.qh>
-
-#include <common/weapons/weapon/tuba.qh>
-
-#include <common/vehicles/all.qh>
-#include <common/weapons/_all.qh>
-#include <common/mutators/mutator/waypoints/all.qh>
-#include <common/viewloc.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
-
-#include <lib/csqcmodel/cl_player.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
+#include <common/net_linked.qh>
+#include <common/net_notice.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
+#include <common/vehicles/all.qh>
+#include <common/viewloc.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/weapon/tuba.qh>
+#include <common/wepent.qh>
 #include <lib/csqcmodel/cl_model.qh>
-#include "csqcmodel_hooks.qh"
-
+#include <lib/csqcmodel/cl_player.qh>
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
 
@@ -363,6 +356,33 @@ STATIC_INIT(viewmodel) {
     	viewmodels[slot] = new(viewmodel);
 }
 
+vector project_3d_to_2d(vector vec)
+{
+	vec = cs_project(vec);
+	if(cs_project_is_b0rked > 0)
+	{
+		vec.x *= vid_conwidth / vid_width;
+		vec.y *= vid_conheight / vid_height;
+	}
+	return vec;
+}
+
+bool projected_on_screen(vector screen_pos)
+{
+	return screen_pos.z >= 0
+		&& screen_pos.x >= 0
+		&& screen_pos.y >= 0
+		&& screen_pos.x < vid_conwidth
+		&& screen_pos.y < vid_conheight;
+}
+
+void update_mousepos()
+{
+	mousepos += getmousepos() * autocvar_menu_mouse_speed;
+	mousepos.x = bound(0, mousepos.x, vid_conwidth);
+	mousepos.y = bound(0, mousepos.y, vid_conheight);
+}
+
 float showfps_prevfps;
 float showfps_prevfps_time;
 int showfps_framecounter;
@@ -372,7 +392,8 @@ void fpscounter_update()
 	if(!STAT(SHOWFPS))
 		return;
 
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
+
 	showfps_framecounter += 1;
 	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
 	{
@@ -388,7 +409,7 @@ void fpscounter_update()
 
 STATIC_INIT(fpscounter_init)
 {
-	float currentTime = gettime(GETTIME_REALTIME);
+	float currentTime = gettime(GETTIME_FRAMESTART);
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
@@ -1307,9 +1328,17 @@ void View_PostProcessing()
 
 void View_Lock()
 {
-	int lock_type = (!autocvar_hud_cursormode && ((autocvar__hud_configure && spectatee_status <= 0) || intermission > 1 || QuickMenu_IsOpened()));
-	if (lock_type == 0)
-		lock_type = autocvar_cl_lockview;
+	int lock_type = autocvar_cl_lockview;
+
+	if (!autocvar_hud_cursormode
+		&& ((autocvar__hud_configure && spectatee_status <= 0)
+			|| intermission > 1
+			|| HUD_Radar_Clickable()
+			|| HUD_MinigameMenu_IsOpened()
+			|| QuickMenu_IsOpened()
+		)
+	)
+		lock_type = 1;
 
 	// lock_type 1: lock origin and angles
 	// lock_type 2: lock only origin

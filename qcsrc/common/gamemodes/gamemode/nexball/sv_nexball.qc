@@ -3,8 +3,10 @@
 #include <server/client.qh>
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
+#include <server/world.qh>
 #include <common/ent_cs.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mutators/base.qh>
 
 .entity ballcarried;
 
@@ -580,7 +582,6 @@ void SpawnBall(entity this)
 spawnfunc(nexball_basketball)
 {
 	nexball_mode |= NBM_BASKETBALL;
-	this.classname = "nexball_basketball";
 	if (!(balls & BALL_BASKET))
 	{
 		/*
@@ -604,7 +605,6 @@ spawnfunc(nexball_basketball)
 spawnfunc(nexball_football)
 {
 	nexball_mode |= NBM_FOOTBALL;
-	this.classname = "nexball_football";
 	this.solid = SOLID_TRIGGER;
 	balls |= BALL_FOOT;
 	this.pushable = autocvar_g_nexball_football_jumppad;

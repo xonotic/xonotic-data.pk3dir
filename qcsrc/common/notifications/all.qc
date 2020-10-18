@@ -1,4 +1,5 @@
 #include "all.qh"
+
 #if defined(CSQC)
 	#include <client/announcer.qh>
 #elif defined(MENUQC)
@@ -7,8 +8,9 @@
 	#include <common/net_linked.qh>
 	#include <common/teams.qh>
 	#include <server/autocvars.qh>
-	#include <server/world.qh>
+	#include <server/command/getreplies.qh>
 	#include <server/mutators/_mod.qh>
+	#include <server/world.qh>
 #endif
 
 // ================================================

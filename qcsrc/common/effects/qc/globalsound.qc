@@ -4,13 +4,6 @@
 
 	#include <common/animdecide.qh>
 
-	#ifdef SVQC
-		#include <server/player.qh>
-	#endif
-	#ifdef CSQC
-		#include <client/main.qh>
-	#endif
-
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
 
@@ -380,12 +373,12 @@
 				{
 					if (voicetype == VOICETYPE_AUTOTAUNT)
 					{
-						if (!sv_autotaunt) break;
+						if (!autocvar_sv_autotaunt) break;
 					}
 					else if (IS_PLAYER(this) && !IS_DEAD(this))
 						animdecide_setaction(this, ANIMACTION_TAUNT, true);
 
-					if (!sv_taunt) break;
+					if (!autocvar_sv_taunt) break;
 					if (autocvar_sv_gentle) break;
 					float tauntrand = 0;
 					if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();

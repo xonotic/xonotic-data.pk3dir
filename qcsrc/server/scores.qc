@@ -1,20 +1,20 @@
 #include "scores.qh"
 
-#include "command/common.qh"
-#include <common/weapons/_all.qh>
-#include "client.qh"
-#include <server/world.qh>
-#include <server/miscfunctions.qh>
-#include <server/mutators/_mod.qh>
-#include <server/round_handler.qh>
-#include <common/net_linked.qh>
-#include "../common/playerstats.qh"
-#include "../common/teams.qh"
 #include <common/mapinfo.qh>
 #include <common/mutators/base.qh>
+#include <common/net_linked.qh>
+#include <common/playerstats.qh>
 #include <common/scores.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
+#include <common/teams.qh>
+#include <common/weapons/_all.qh>
+#include <server/client.qh>
+#include <server/command/common.qh>
+#include <server/intermission.qh>
+#include <server/mutators/_mod.qh>
+#include <server/round_handler.qh>
+#include <server/world.qh>
 
 .entity scorekeeper;
 entity teamscorekeepers[16];
@@ -862,7 +862,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 
 	sk = CS(p).scorekeeper;
 
-	s = strcat(s, playername(p, false));
+	s = strcat(s, playername(p.netname, p.team, false));
 	for (;;)
 	{
 		i = strlennocol(s) - NAMEWIDTH;
@@ -894,7 +894,7 @@ void Score_NicePrint_Spectators(entity to)
 
 void Score_NicePrint_Spectator(entity to, entity p)
 {
-	print_to(to, strcat("  ", playername(p, false)));
+	print_to(to, strcat("  ", playername(p.netname, p.team, false)));
 }
 
 .float score_dummyfield;

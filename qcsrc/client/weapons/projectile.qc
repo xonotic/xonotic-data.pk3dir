@@ -1,19 +1,14 @@
 #include "projectile.qh"
 
-#include "../autocvars.qh"
-#include "../main.qh"
+#include <client/autocvars.qh>
 #include <client/mutators/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/effects/effect.qh>
 #include <common/effects/all.qh>
+#include <common/effects/effect.qh>
+#include <common/mutators/mutator/nades/nades.qh>
 #include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
-
-#include <common/mutators/mutator/nades/nades.qh>
-
 #include <lib/csqcmodel/interpolate.qh>
-
 #include <lib/warpzone/anglestransform.qh>
 
 .float alpha;
@@ -496,7 +491,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	if (!(this.count & 0x80))
 		InterpolateOrigin_Note(this);
 
-	this.classname = "csqcprojectile";
 	this.draw = Projectile_Draw;
 	if (isnew) IL_PUSH(g_drawables, this);
 	this.entremove = Ent_RemoveProjectile;
