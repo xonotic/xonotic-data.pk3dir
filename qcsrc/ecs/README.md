@@ -21,7 +21,6 @@
 ## entities
 
     entity e = new(foo);
-    IL_PUSH(g_components, e);
     e.com_$component = true;
     e.com_$component_$property = 42;
 

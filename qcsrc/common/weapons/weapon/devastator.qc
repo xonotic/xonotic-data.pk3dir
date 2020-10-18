@@ -46,8 +46,8 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
-		if(!(this.realowner.items & IT_UNLIMITED_AMMO))
+		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
+		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = thiswep.m_id;
 			ATTACK_FINISHED(this.realowner, weaponentity) = time;
@@ -71,11 +71,8 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 
 	bool handled_as_rocketjump = false;
 	entity head = NULL;
-	bool allow_rocketjump = WEP_CVAR(devastator, remote_jump);
-	MUTATOR_CALLHOOK(AllowRocketJumping, allow_rocketjump);
-	allow_rocketjump = M_ARGV(0, bool);
 
-	if(allow_rocketjump && WEP_CVAR(devastator, remote_jump_radius))
+	if(WEP_CVAR(devastator, remote_jump_radius))
 	{
 		head = WarpZone_FindRadius(
 			this.origin,
@@ -142,8 +139,8 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	Weapon thiswep = WEP_DEVASTATOR;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
-		if(!(this.realowner.items & IT_UNLIMITED_AMMO))
+		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
+		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = thiswep.m_id;
 			ATTACK_FINISHED(this.realowner, weaponentity) = time;
@@ -290,16 +287,16 @@ void W_Devastator_Touch(entity this, entity toucher)
 
 void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResource(this, RES_HEALTH) <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RES_HEALTH, damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(GetResource(this, RES_HEALTH) <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode_think);
 }
 
@@ -308,7 +305,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), thiswep.m_id);
-	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
+	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.weaponentity_fld = weaponentity;
@@ -317,7 +314,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	if(WEP_CVAR(devastator, detonatedelay) >= 0)
 		missile.spawnshieldtime = time + WEP_CVAR(devastator, detonatedelay);
 	else
-		missile.spawnshieldtime = -1; // NOTE: proximity based when rocket jumping
+		missile.spawnshieldtime = -1;
 	missile.pushltime = time + WEP_CVAR(devastator, guidedelay);
 	missile.classname = "rocket";
 	missile.bot_dodge = true;
@@ -325,7 +322,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR(devastator, damageforcescale);
-	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(devastator, health));
+	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(devastator, health));
 	missile.event_damage = W_Devastator_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -350,6 +347,13 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, WEP_CVAR(devastator, guiderate) == 0 && WEP_CVAR(devastator, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound
+
+	// muzzle flash for 1st person view
+	entity flash = spawn();
+	setmodel(flash, MDL_DEVASTATOR_MUZZLEFLASH); // precision set below
+	SUB_SetFade(flash, time, 0.1);
+	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
@@ -394,7 +398,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
         });
         float desirabledamage;
         desirabledamage = enemydamage;
-        if(time > STAT(INVINCIBLE_FINISHED, actor) && time > actor.spawnshieldtime)
+        if(time > actor.invincible_finished && time > actor.spawnshieldtime)
             desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
         if(teamplay && actor.team)
             desirabledamage = desirabledamage - teamdamage;
@@ -431,7 +435,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
         // but don't fire a new shot at the same time!
         if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-        if((skill > 6.5) && (selfdamage > GetResource(actor, RES_HEALTH)))
+        if((skill > 6.5) && (selfdamage > GetResourceAmount(actor, RESOURCE_HEALTH)))
             PHYS_INPUT_BUTTON_ATCK2(actor) = false;
         //if(PHYS_INPUT_BUTTON_ATCK2(actor) == true)
         //	dprint(ftos(desirabledamage),"\n");
@@ -487,10 +491,10 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
         ammo_amount = false;
         if(WEP_CVAR(devastator, reload_ammo))
         {
-            if(GetResource(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo) && actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
+            if(GetResourceAmount(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo) && actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
                 ammo_amount = true;
         }
-        else if(GetResource(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
+        else if(GetResourceAmount(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
             ammo_amount = true;
         return !ammo_amount;
     }
@@ -498,18 +502,18 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
     #if 0
     if(actor.rl_release == 0)
     {
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE", actor.rl_release, GetResource(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE", actor.rl_release, GetResourceAmount(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo));
         return true;
     }
     else
     {
-        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s", actor.rl_release, GetResource(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s", actor.rl_release, GetResourceAmount(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
         return ammo_amount;
     }
     #else
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(devastator, ammo);
     return ammo_amount;
     #endif

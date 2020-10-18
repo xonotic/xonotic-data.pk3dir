@@ -41,13 +41,12 @@ string XonoticStatsList_convertDate(string input)
 		default: return input; // failed, why?
 	}
 
-	// without no-c-format this string looks messed up in Transifex since only %d is a valid c placeholder
-	/* xgettext:no-c-format */
-	string date = ZCTX(_("DATE^%m %d, %Y"));
-	date = strreplace("%Y", substring(input, 0, 4), date);
-	date = strreplace("%d", ftos(stof(substring(input, 8, 2))), date); // ftos-stof removes leading 0
-	date = strreplace("%m", monthname, date);
-	return date;
+	return sprintf(
+		"%s %s, %d",
+		monthname,
+		count_ordinal(stof(substring(input, 8, 2))),
+		stof(substring(input, 0, 4))
+	);
 }
 
 void XonoticStatsList_getStats(entity me)

@@ -1,6 +1,6 @@
 #include "all.qh"
-
 #ifdef SVQC
+
 #include <server/utils.qh>
 
 bool autocvar_bot_sound_monopoly;
@@ -34,9 +34,8 @@ const int SND_VOLUME = BIT(0);
 const int SND_ATTENUATION = BIT(1);
 const int SND_LARGEENTITY = BIT(3);
 const int SND_LARGESOUND = BIT(4);
-const int SND_SPEEDUSHORT4000 = BIT(5);
 
-void soundtoat(int to, entity e, vector o, int chan, string samp, float vol, float attenu, float _pitch)
+void soundtoat(int to, entity e, vector o, int chan, string samp, float vol, float attenu)
 {
 	if (!sound_allowed(to, e)) return;
 	int entno = etof(e);
@@ -44,17 +43,14 @@ void soundtoat(int to, entity e, vector o, int chan, string samp, float vol, flo
 	attenu = floor(attenu * 64);
 	vol = floor(vol * 255);
 	int sflags = 0;
-	int speed4000 = floor((_pitch * 0.01) * 4000 + 0.5);
 	if (vol != 255) sflags |= SND_VOLUME;
 	if (attenu != 64) sflags |= SND_ATTENUATION;
 	if (entno >= 8192 || chan < 0 || chan > 7) sflags |= SND_LARGEENTITY;
 	if (idx >= 256) sflags |= SND_LARGESOUND;
-	if (speed4000 && speed4000 != 4000) sflags |= SND_SPEEDUSHORT4000;
 	WriteByte(to, SVC_SOUND);
 	WriteByte(to, sflags);
 	if (sflags & SND_VOLUME) WriteByte(to, vol);
 	if (sflags & SND_ATTENUATION) WriteByte(to, attenu);
-	if (sflags & SND_SPEEDUSHORT4000) WriteShort(to, speed4000);
 	if (sflags & SND_LARGEENTITY)
 	{
 		WriteShort(to, entno);
@@ -71,15 +67,15 @@ void soundtoat(int to, entity e, vector o, int chan, string samp, float vol, flo
 	WriteCoord(to, o.z);
 }
 
-void soundto(int _dest, entity e, int chan, string samp, float vol, float _atten, float _pitch)
+void soundto(int _dest, entity e, int chan, string samp, float vol, float _atten)
 {
 	if (!sound_allowed(_dest, e)) return;
 	vector o = e.origin + 0.5 * (e.mins + e.maxs);
-	soundtoat(_dest, e, o, chan, samp, vol, _atten, _pitch);
+	soundtoat(_dest, e, o, chan, samp, vol, _atten);
 }
 void soundat(entity e, vector o, int chan, string samp, float vol, float _atten)
 {
-	soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, _atten, 0);
+	soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, _atten);
 }
 void stopsoundto(int _dest, entity e, int chan)
 {
@@ -116,7 +112,7 @@ void stopsound(entity e, int chan)
 void play2(entity e, string filename)
 {
 	msg_entity = e;
-	soundtoat(MSG_ONE, NULL, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE, 0);
+	soundtoat(MSG_ONE, NULL, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
 }
 
 .float spamtime;

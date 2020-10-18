@@ -115,7 +115,7 @@ spawnfunc(func_pointparticles)
 
 	Net_LinkEntity(this, (this.spawnflags & PARTICLES_VISCULLING), 0, pointparticles_SendEntity);
 
-	if(this.targetname && this.targetname != "")
+	IFTARGETED
 	{
 		// backwards compatibility
 		this.use = generic_netlinked_legacy_use;

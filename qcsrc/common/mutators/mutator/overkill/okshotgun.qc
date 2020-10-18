@@ -24,11 +24,14 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
 			// Set secondary fire animation.
+			vector a = '0 0 0';
 			actor.(weaponentity).wframe = WFRAME_FIRE2;
+			a = actor.(weaponentity).anim_fire2;
+			a.z *= g_weaponratefactor;
 			FOREACH_CLIENT(true, LAMBDA(
 				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
 				{
-					wframe_send(it, actor.(weaponentity), WFRAME_FIRE2, autocvar_g_weaponratefactor, true);
+					wframe_send(it, actor.(weaponentity), a, true);
 				}
 			));
 			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
@@ -70,7 +73,7 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 
 METHOD(OverkillShotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okshotgun, ammo);
+	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okshotgun, ammo);
 	ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_SHOTGUN.m_id]) >= WEP_CVAR_PRI(okshotgun, ammo);
 	return ammo_amount;
 }

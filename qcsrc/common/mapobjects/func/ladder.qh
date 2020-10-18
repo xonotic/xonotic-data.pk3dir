@@ -1,11 +1,4 @@
 #pragma once
 
-IntrusiveList g_ladderents;
-STATIC_INIT(g_ladderents) { g_ladderents = IL_NEW(); }
-
-#ifdef SVQC
-IntrusiveList g_ladders;
-STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }
-#endif
-
+.float ladder_time;
 .entity ladder_entity;

@@ -1,6 +1,6 @@
 #include "matrix.qh"
 
-#include <server/chat.qh>
+#include "client.qh"
 
 var void MX_Handle(int buf, string ancestor)
 {

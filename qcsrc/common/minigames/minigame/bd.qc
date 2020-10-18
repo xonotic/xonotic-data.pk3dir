@@ -1,5 +1,5 @@
 #include "bd.qh"
-REGISTER_MINIGAME(bd, _("Bulldozer"));
+REGISTER_MINIGAME(bd, "Bulldozer");
 
 REGISTER_NET_LINKED(ENT_CLIENT_BD_CONTROLLER)
 
@@ -437,7 +437,7 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 			}
 			else
 			{
-				entity piece = msle_spawn(minigame,new(minigame_board_piece));
+				entity piece = msle_spawn(minigame,"minigame_board_piece");
 				piece.team = 1;
 				piece.netname = strzone(pos);
 				piece.bd_tiletype = thetile;
@@ -711,7 +711,7 @@ void bd_load_piece(entity minigame, string s)
 	}
 	else
 	{
-		entity e = msle_spawn(minigame,new(minigame_board_piece));
+		entity e = msle_spawn(minigame,"minigame_board_piece");
 		e.netname = tilename;
 		e.team = 1;
 		e.bd_dir = dir;
@@ -727,13 +727,11 @@ bool bd_save_level(entity minigame)
 		int target_count = 0, boulder_count = 0;
 		entity piece = NULL;
 		while((piece = findentity(piece,owner,minigame)))
-			if(piece.classname == "minigame_board_piece")
-			{
-				if(piece.bd_tiletype == BD_TILE_BOULDER)
-					++boulder_count;
-				else if(piece.bd_tiletype == BD_TILE_TARGET)
-					++target_count;
-			}
+		if(piece.classname == "minigame_board_piece")
+			if(piece.bd_tiletype == BD_TILE_BOULDER)
+				++boulder_count;
+			else if(piece.bd_tiletype == BD_TILE_TARGET)
+				++target_count;
 
 		if(boulder_count != target_count)
 		{
@@ -1089,20 +1087,22 @@ void bd_hud_board(vector pos, vector mySize)
 	if ( (active_minigame.minigame_flags & BD_TURN_LOSS) || (active_minigame.minigame_flags & BD_TURN_WIN) )
 	{
 		vector winfs = hud_fontsize*2;
-		string victory_text = _("Game over!");
+		string victory_text = "Game over!";
 
 		if(active_minigame.minigame_flags & BD_TURN_WIN)
-			victory_text = _("Well done! Click 'Next Level' to continue");
+			victory_text = "Well done! Click 'Next Level' to continue";
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			victory_text, winfs, 0, DRAWFLAG_NORMAL, 0.5);
+			sprintf("%s", victory_text),
+			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'0.3 0.3 1',0.8,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			victory_text, winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
+			sprintf("%s", victory_text),
+			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
 
@@ -1162,12 +1162,10 @@ string bd_turn_to_string(int turnflags)
 		return _("Better luck next time!");
 
 	if ( turnflags & BD_TURN_WIN )
-	{
 		if(random() > 0.5)
 			return _("Tubular! Press \"Next Level\" to continue!");
 		else
 			return _("Wicked! Press \"Next Level\" to continue!");
-	}
 
 	if( turnflags & BD_TURN_EDIT )
 		return _("Press the space bar to change your currently selected tile");
@@ -1311,14 +1309,9 @@ int bd_client_event(entity minigame, string event, ...)
 	{
 		case "activate":
 		{
-			strcpy(minigame.message, bd_turn_to_string(minigame.minigame_flags));
+			minigame.message = bd_turn_to_string(minigame.minigame_flags);
 			bd_set_curr_pos("");
 			bd_curr_tile = BD_TILE_BRICK1;
-			return false;
-		}
-		case "deactivate":
-		{
-			strfree(minigame.message);
 			return false;
 		}
 		case "key_pressed":
@@ -1375,7 +1368,7 @@ int bd_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					strcpy(sent.message, bd_turn_to_string(sent.minigame_flags));
+					sent.message = bd_turn_to_string(sent.minigame_flags);
 					//if ( sent.minigame_flags & minigame_self.team )
 						//minigame_prompt();
 				}

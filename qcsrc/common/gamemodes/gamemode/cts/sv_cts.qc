@@ -1,13 +1,7 @@
 #include "sv_cts.qh"
 
-#include <server/client.qh>
 #include <server/race.qh>
-#include <server/world.qh>
-#include <server/gamelog.qh>
-#include <server/intermission.qh>
-#include <server/items/spawning.qh>
-#include <server/weapons/common.qh>
-#include <common/mapobjects/triggers.qh>
+#include <server/items.qh>
 
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;
@@ -214,7 +208,7 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+		player.frags = FRAGS_LMS_LOSER;
 	else
 		player.frags = FRAGS_SPECTATOR;
 

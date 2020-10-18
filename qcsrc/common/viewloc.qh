@@ -1,8 +1,6 @@
 #pragma once
 
-// view location map object, intended for side-scrolling stages with a fixed camera position
-
-.entity viewloc; // points to the trigger_viewlocation networked entity
+.entity viewloc;
 
 void viewloc_PlayerPhysics(entity this);
 

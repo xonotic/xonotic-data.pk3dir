@@ -50,8 +50,10 @@ CLASS(Turret, Object)
         w.wr_think(w, it, weaponentity, 1);
     }
 #endif
-	/** (SERVER) dump turret cvars to config in data directory (see: sv_cmd dumpturrets) */
-	METHOD(Turret, tr_config, void(Turret this)) { }
+    /** (ALL) */
+    METHOD(Turret, tr_config, void(Turret this)) {
+        // TODO
+    }
 ENDCLASS(Turret)
 
 // fields:

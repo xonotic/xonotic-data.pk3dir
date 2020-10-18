@@ -1,19 +1,16 @@
 #include "common.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 #include <common/command/_mod.qh>
-#include <common/deathtypes/all.qh>
+#include "common.qh"
+
+#include "../scores.qh"
+
 #include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
-#include <common/stats.qh>
-#include <common/vehicles/all.qh>
-#include <common/weapons/_all.qh>
 #include <lib/warpzone/common.qh>
-#include <server/chat.qh>
-#include <server/client.qh>
-#include <server/command/common.qh>
-#include <server/mutators/_mod.qh>
-#include <server/scores.qh>
-#include <server/world.qh>
 
 
 // ====================================================
@@ -31,7 +28,7 @@ string GetCommandPrefix(entity caller)
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return playername(caller.netname, caller.team, false);
+	if (caller) return playername(caller, false);
 	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
 }
 
@@ -398,7 +395,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
-					mon = spawnmonster(spawn(), arg_lower, MON_Null, caller, caller, trace_endpos, false, false, moveflag);
+					mon = spawnmonster(spawn(), arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
 					print_to(caller, strcat("Spawned ", mon.monster_name));
 					return;
 				}
@@ -408,7 +405,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
-					Damage(mon, NULL, NULL, GetResource(mon, RES_HEALTH) + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
+					Damage(mon, NULL, NULL, GetResourceAmount(mon, RESOURCE_HEALTH) + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
 					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
 					return;
 				}
@@ -419,7 +416,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
-					if (mon.monsterdef == MON_MAGE) { print_to(caller, "Mage skins can't be changed"); return; }  // TODO
+					if (mon.monsterid == MON_MAGE.monsterid) { print_to(caller, "Mage skins can't be changed"); return; }  // TODO
 
 					mon.skin = stof(argument);
 					print_to(caller, strcat("Monster skin successfully changed to ", ftos(mon.skin)));
@@ -440,7 +437,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 				case "butcher":
 				{
 					if (caller) { print_to(caller, "This command is not available to players"); return; }
-					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(M_ARGV(0, string)); return; }
+					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFOF("%s", M_ARGV(0, string)); return; }
 
 					int tmp_remcount = 0;
 
@@ -478,7 +475,7 @@ void CommonCommand_info(int request, entity caller, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string command = cvar_string(strcat("sv_info_", argv(1)));
+			string command = builtin_cvar_string(strcat("sv_info_", argv(1)));
 
 			if (command) wordwrap_sprint(caller, command, 1000);
 			else print_to(caller, "ERROR: unsupported info command");
@@ -720,7 +717,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 				{
 					print_to(caller, "^7Error: You can not call a timeout while a vote is active.");
 				}
-				else if (warmup_stage && !autocvar_g_warmup_allow_timeout)
+				else if (warmup_stage && !g_warmup_allow_timeout)
 				{
 					print_to(caller, "^7Error: You can not call a timeout in warmup-stage.");
 				}
@@ -752,7 +749,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 					timeout_time = autocvar_sv_timeout_length;
 					timeout_leadtime = autocvar_sv_timeout_leadtime;
 
-					timeout_handler = new(timeout_handler);
+					timeout_handler = spawn();
 					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 

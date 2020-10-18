@@ -4,8 +4,8 @@
 #elif defined(SVQC)
     #include <common/constants.qh>
     #include <common/net_linked.qh>
-    #include <common/weapons/_all.qh>
-    #include <common/stats.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
 #endif
 
 REGISTER_NET_TEMP(TE_CSQC_TARGET_MUSIC)
@@ -272,7 +272,7 @@ void Net_TargetMusic()
 
 void Ent_TriggerMusic_Think(entity this)
 {
-	if(this.active == ACTIVE_NOT || intermission)
+	if(this.active == ACTIVE_NOT)
 	{
 		return;
 	}

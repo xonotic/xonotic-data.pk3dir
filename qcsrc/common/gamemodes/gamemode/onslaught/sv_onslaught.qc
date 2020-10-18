@@ -2,14 +2,6 @@
 #include "sv_controlpoint.qh"
 #include "sv_generator.qh"
 
-#include <server/bot/api.qh>
-#include <server/command/vote.qh>
-#include <server/damage.qh>
-#include <server/items/items.qh>
-#include <server/world.qh>
-#include <common/mapobjects/defs.qh>
-#include <common/mapobjects/triggers.qh>
-
 bool g_onslaught;
 
 float autocvar_g_onslaught_teleport_wait;
@@ -47,7 +39,9 @@ bool clientcamera_send(entity this, entity to, int sf)
 
 	WriteVector(MSG_ENTITY, this.origin);
 
-	WriteAngleVector(MSG_ENTITY, this.angles);
+	WriteAngle(MSG_ENTITY, this.angles_x);
+	WriteAngle(MSG_ENTITY, this.angles_y);
+	WriteAngle(MSG_ENTITY, this.angles_z);
 
 	return true;
 }
@@ -90,14 +84,14 @@ void ons_CaptureShield_Reset(entity this)
 	this.team = this.enemy.team;
 }
 
-void ons_CaptureShield_Spawn(entity this, Model shield_model)
+void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 {
 	entity shield = new(ons_captureshield);
 	IL_PUSH(g_onsshields, shield);
 
-	shield.enemy = this;
-	shield.team = this.team;
-	shield.colormap = this.colormap;
+	shield.enemy = generator;
+	shield.team = generator.team;
+	shield.colormap = generator.colormap;
 	shield.reset = ons_CaptureShield_Reset;
 	settouch(shield, ons_CaptureShield_Touch);
 	setcefc(shield, ons_CaptureShield_Customize);
@@ -105,12 +99,13 @@ void ons_CaptureShield_Spawn(entity this, Model shield_model)
 	set_movetype(shield, MOVETYPE_NOCLIP);
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
-	shield.scale = this.scale;
+	shield.scale = 1;
+	shield.model = ((is_generator) ? "models/onslaught/generator_shield.md3" : "models/onslaught/controlpoint_shield.md3");
 
-	float shield_extra_size = 1.20; // hitbox is 20% larger than the object itself
-	setorigin(shield, this.origin);
-	setmodel(shield, shield_model);
-	setsize(shield, shield_extra_size * this.mins, shield_extra_size * this.maxs);
+	precache_model(shield.model);
+	setorigin(shield, generator.origin);
+	_setmodel(shield, shield.model);
+	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
 
@@ -318,15 +313,15 @@ void ons_DelayedLinkSetup(entity this)
 // Main Control Point Functions
 // =============================
 
-int ons_ControlPoint_CanBeLinked(entity cp, int teamnum)
+int ons_ControlPoint_CanBeLinked(entity cp, int teamnumber)
 {
-	if(cp.aregensneighbor & BIT(teamnum)) return 2;
-	if(cp.arecpsneighbor & BIT(teamnum)) return 1;
+	if(cp.aregensneighbor & BIT(teamnumber)) return 2;
+	if(cp.arecpsneighbor & BIT(teamnumber)) return 1;
 
 	return 0;
 }
 
-int ons_ControlPoint_Attackable(entity cp, int teamnum)
+int ons_ControlPoint_Attackable(entity cp, int teamnumber)
 	// -2: SAME TEAM, attackable by enemy!
 	// -1: SAME TEAM!
 	// 0: off limits
@@ -344,16 +339,16 @@ int ons_ControlPoint_Attackable(entity cp, int teamnum)
 	else if(cp.goalentity)
 	{
 		// if there's already an icon built, nothing happens
-		if(cp.team == teamnum)
+		if(cp.team == teamnumber)
 		{
-			a = ons_ControlPoint_CanBeLinked(cp, teamnum);
+			a = ons_ControlPoint_CanBeLinked(cp, teamnumber);
 			if(a) // attackable by enemy?
 				return -2; // EMERGENCY!
 			return -1;
 		}
 		// we know it can be linked, so no need to check
 		// but...
-		a = ons_ControlPoint_CanBeLinked(cp, teamnum);
+		a = ons_ControlPoint_CanBeLinked(cp, teamnumber);
 		if(a == 2) // near our generator?
 			return 3; // EMERGENCY!
 		return 1;
@@ -361,9 +356,9 @@ int ons_ControlPoint_Attackable(entity cp, int teamnum)
 	else
 	{
 		// free point
-		if(ons_ControlPoint_CanBeLinked(cp, teamnum))
+		if(ons_ControlPoint_CanBeLinked(cp, teamnumber))
 		{
-			a = ons_ControlPoint_CanBeLinked(cp, teamnum); // why was this here NUM_TEAM_1 + NUM_TEAM_2 - t
+			a = ons_ControlPoint_CanBeLinked(cp, teamnumber); // why was this here NUM_TEAM_1 + NUM_TEAM_2 - t
 			if(a == 2)
 				return 4; // GET THIS ONE NOW!
 			else
@@ -398,11 +393,11 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		ons_notification_time[this.team] = time;
 	}
 
-	TakeResource(this, RES_HEALTH, damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	if(this.owner.iscaptured)
-		WaypointSprite_UpdateHealth(this.owner.sprite, GetResource(this, RES_HEALTH));
+		WaypointSprite_UpdateHealth(this.owner.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	else
-		WaypointSprite_UpdateBuildFinished(this.owner.sprite, time + (this.max_health - GetResource(this, RES_HEALTH)) / (this.count / ONS_CP_THINKRATE));
+		WaypointSprite_UpdateBuildFinished(this.owner.sprite, time + (this.max_health - GetResourceAmount(this, RESOURCE_HEALTH)) / (this.count / ONS_CP_THINKRATE));
 	this.pain_finished = time + 1;
 	// particles on every hit
 	pointparticles(EFFECT_SPARKS, hitloc, force*-1, 1);
@@ -412,14 +407,11 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	else
 		sound(this, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE+0.3, ATTEN_NORM);
 
-	if (GetResource(this, RES_HEALTH) < 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) < 0)
 	{
 		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
-		if (this.owner.message != "")
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
-		else
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED_NONAME), attacker.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
 
 		GameRules_scoring_add(attacker, ONS_TAKES, 1);
 		GameRules_scoring_add(attacker, SCORE, 10);
@@ -450,13 +442,13 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 
 bool ons_ControlPoint_Icon_Heal(entity targ, entity inflictor, float amount, float limit)
 {
-	float hlth = GetResource(targ, RES_HEALTH);
-	float true_limit = ((limit != RES_LIMIT_NONE) ? limit : targ.max_health);
+	float hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
 	if (hlth <= 0 || hlth >= true_limit)
 		return false;
 
-	GiveResourceWithLimit(targ, RES_HEALTH, amount, true_limit);
-	hlth = GetResource(targ, RES_HEALTH);
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
 	if(targ.owner.iscaptured)
 		WaypointSprite_UpdateHealth(targ.owner.sprite, hlth);
 	else
@@ -487,9 +479,9 @@ void ons_ControlPoint_Icon_Think(entity this)
 		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 
-		GiveResourceWithLimit(this, RES_HEALTH, (_friendly_count - _enemy_count), this.max_health);
+		GiveResourceWithLimit(this, RESOURCE_HEALTH, (_friendly_count - _enemy_count), this.max_health);
 		this.SendFlags |= CPSF_STATUS;
-		if(GetResource(this, RES_HEALTH) <= 0)
+		if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		{
 			ons_ControlPoint_Icon_Damage(this, this, this, 1, 0, DMG_NOWEP, this.origin, '0 0 0');
 			return;
@@ -498,10 +490,10 @@ void ons_ControlPoint_Icon_Think(entity this)
 
 	if (time > this.pain_finished + 5)
 	{
-		if(GetResource(this, RES_HEALTH) < this.max_health)
+		if(GetResourceAmount(this, RESOURCE_HEALTH) < this.max_health)
 		{
-			GiveResourceWithLimit(this, RES_HEALTH, this.count, this.max_health);
-			WaypointSprite_UpdateHealth(this.owner.sprite, GetResource(this, RES_HEALTH));
+			GiveResourceWithLimit(this, RESOURCE_HEALTH, this.count, this.max_health);
+			WaypointSprite_UpdateHealth(this.owner.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 		}
 	}
 
@@ -520,7 +512,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 	}
 
 	// damaged fx
-	if(random() < 0.6 - GetResource(this, RES_HEALTH) / this.max_health)
+	if(random() < 0.6 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health)
 	{
 		Send_Effect(EFFECT_ELECTRIC_SPARKS, this.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
@@ -542,13 +534,13 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 	if(!a)
 		return;
 
-	GiveResource(this, RES_HEALTH, this.count);
+	GiveResource(this, RESOURCE_HEALTH, this.count);
 
 	this.SendFlags |= CPSF_STATUS;
 
-	if (GetResource(this, RES_HEALTH) >= this.max_health)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) >= this.max_health)
 	{
-		SetResourceExplicit(this, RES_HEALTH, this.max_health);
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 		this.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
 		setthink(this, ons_ControlPoint_Icon_Think);
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
@@ -558,22 +550,13 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		Send_Effect(EFFECT_CAP(this.owner.team), this.owner.origin, '0 0 0', 1);
 
 		WaypointSprite_UpdateMaxHealth(this.owner.sprite, this.max_health);
-		WaypointSprite_UpdateHealth(this.owner.sprite, GetResource(this, RES_HEALTH));
+		WaypointSprite_UpdateHealth(this.owner.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 
 		if(IS_PLAYER(this.owner.ons_toucher))
 		{
-			if(this.owner.message != "")
-			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
-				Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM), this.owner.message);
-				Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
-			}
-			else
-			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE_NONAME, this.owner.ons_toucher.netname);
-				Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM_NONAME));
-				Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE_NONAME);
-			}
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
+			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM), this.owner.message);
+			Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
 			GameRules_scoring_add(this.owner.ons_toucher, ONS_CAPS, 1);
 			GameRules_scoring_add_team(this.owner.ons_toucher, SCORE, 10);
 		}
@@ -590,7 +573,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 	if(this.owner.model != MDL_ONS_CP_PAD2.model_str())
 		setmodel(this.owner, MDL_ONS_CP_PAD2);
 
-	if(random() < 0.9 - GetResource(this, RES_HEALTH) / this.max_health)
+	if(random() < 0.9 - GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health)
 		Send_Effect(EFFECT_RAGE, this.origin + 10 * randomvec(), '0 0 -1', 1);
 }
 
@@ -605,7 +588,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
-	SetResourceExplicit(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
+	SetResourceAmountExplicit(e, RESOURCE_HEALTH, autocvar_g_onslaught_cp_buildhealth);
 	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
@@ -614,7 +597,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	e.event_heal = ons_ControlPoint_Icon_Heal;
 	e.team = player.team;
 	e.colormap = 1024 + (e.team - 1) * 17;
-	e.count = (e.max_health - GetResource(e, RES_HEALTH)) * ONS_CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
+	e.count = (e.max_health - GetResourceAmount(e, RESOURCE_HEALTH)) * ONS_CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
 
 	sound(e, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILD, VOL_BASE, ATTEN_NORM);
 
@@ -624,7 +607,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 
 	Send_Effect(EFFECT_FLAG_TOUCH(player.team), e.origin, '0 0 0', 1);
 
-	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - GetResource(e, RES_HEALTH)) / (e.count / ONS_CP_THINKRATE));
+	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - GetResourceAmount(e, RESOURCE_HEALTH)) / (e.count / ONS_CP_THINKRATE));
 	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
 	cp.sprite.SendFlags |= 16;
 
@@ -666,7 +649,7 @@ void ons_ControlPoint_UpdateSprite(entity e)
 			else
 			{
 				WaypointSprite_UpdateMaxHealth(e.sprite, e.goalentity.max_health);
-				WaypointSprite_UpdateHealth(e.sprite, GetResource(e.goalentity, RES_HEALTH));
+				WaypointSprite_UpdateHealth(e.sprite, GetResourceAmount(e.goalentity, RESOURCE_HEALTH));
 			}
 		}
 		if(e.lastshielded)
@@ -696,11 +679,10 @@ void ons_ControlPoint_Touch(entity this, entity toucher)
 	int attackable;
 
 	if(IS_VEHICLE(toucher) && toucher.owner)
-	{
-		if (!autocvar_g_onslaught_allow_vehicle_touch)
-			return;
+	if(autocvar_g_onslaught_allow_vehicle_touch)
 		toucher = toucher.owner;
-	}
+	else
+		return;
 
 	if(!IS_PLAYER(toucher)) { return; }
 	if(STAT(FROZEN, toucher)) { return; }
@@ -765,7 +747,7 @@ void ons_DelayedControlPoint_Setup(entity this)
 	onslaught_updatelinks();
 
 	// captureshield setup
-	ons_CaptureShield_Spawn(this, MDL_ONS_CP_SHIELD);
+	ons_CaptureShield_Spawn(this, false);
 
 	CSQCMODEL_AUTOINIT(this);
 }
@@ -788,6 +770,8 @@ void ons_ControlPoint_Setup(entity cp)
 	cp.iscaptured = false;
 	cp.islinked = false;
 	cp.isshielded = true;
+
+	if(cp.message == "") { cp.message = "a"; }
 
 	// appearence
 	setmodel(cp, MDL_ONS_CP_PAD1);
@@ -881,7 +865,6 @@ void ons_camSetup(entity this)
 
 	FOREACH_CLIENT(true, it.clientcamera = cam;);
 
-	// NOTE: engine networked
 	WriteByte(MSG_ALL, SVC_SETVIEWANGLES);
 	WriteAngle(MSG_ALL, cam.angles_x);
 	WriteAngle(MSG_ALL, cam.angles_y);
@@ -915,8 +898,8 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 			play2team(this.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
-	TakeResource(this, RES_HEALTH, damage);
-	float hlth = GetResource(this, RES_HEALTH);
+	TakeResource(this, RESOURCE_HEALTH, damage);
+	float hlth = GetResourceAmount(this, RESOURCE_HEALTH);
 	WaypointSprite_UpdateHealth(this.sprite, hlth);
 	// choose an animation frame based on health
 	this.frame = 10 * bound(0, (1 - hlth / this.max_health), 1);
@@ -976,13 +959,13 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 
 bool ons_GeneratorHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	float true_limit = ((limit != RES_LIMIT_NONE) ? limit : targ.max_health);
-	float hlth = GetResource(targ, RES_HEALTH);
+	float true_limit = ((limit != RESOURCE_LIMIT_NONE) ? limit : targ.max_health);
+	float hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
 	if (hlth <= 0 || hlth >= true_limit)
 		return false;
 
-	GiveResourceWithLimit(targ, RES_HEALTH, amount, true_limit);
-	hlth = GetResource(targ, RES_HEALTH);
+	GiveResourceWithLimit(targ, RESOURCE_HEALTH, amount, true_limit);
+	hlth = GetResourceAmount(targ, RESOURCE_HEALTH);
 	WaypointSprite_UpdateHealth(targ.sprite, hlth);
 	targ.frame = 10 * bound(0, (1 - hlth / targ.max_health), 1);
 	targ.lasthealth = hlth;
@@ -1004,7 +987,7 @@ void ons_GeneratorThink(entity this)
 		{
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
 			msg_entity = it;
-			soundto(MSG_ONE, this, CHAN_AUTO, SND(ONS_GENERATOR_ALARM), VOL_BASE, ATTEN_NONE, 0);
+			soundto(MSG_ONE, this, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE); // FIXME: unique sound?
 		}
 		else
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_ONS_NOTSHIELDED));
@@ -1014,7 +997,7 @@ void ons_GeneratorThink(entity this)
 void ons_GeneratorReset(entity this)
 {
 	this.team = this.team_saved;
-	SetResourceExplicit(this, RES_HEALTH, autocvar_g_onslaught_gen_health);
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_onslaught_gen_health);
 	this.lasthealth = this.max_health = autocvar_g_onslaught_gen_health;
 	this.takedamage = DAMAGE_AIM;
 	this.bot_attack = true;
@@ -1034,7 +1017,7 @@ void ons_GeneratorReset(entity this)
 	this.SendFlags |= GSF_STATUS;
 
 	WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
-	WaypointSprite_UpdateHealth(this.sprite, GetResource(this, RES_HEALTH));
+	WaypointSprite_UpdateHealth(this.sprite, GetResourceAmount(this, RESOURCE_HEALTH));
 	WaypointSprite_UpdateRule(this.sprite,this.team,SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
@@ -1048,7 +1031,7 @@ void ons_DelayedGeneratorSetup(entity this)
 	this.bot_basewaypoint = this.nearestwaypoint;
 
 	// captureshield setup
-	ons_CaptureShield_Spawn(this, MDL_ONS_GEN_SHIELD);
+	ons_CaptureShield_Spawn(this, true);
 
 	onslaught_updatelinks();
 
@@ -1069,19 +1052,20 @@ void onslaught_generator_touch(entity this, entity toucher)
 void ons_GeneratorSetup(entity gen) // called when spawning a generator entity on the map as a spawnfunc
 {
 	// declarations
-	int teamnum = gen.team;
+	int teamnumber = gen.team;
 
 	// main setup
 	gen.ons_worldgeneratornext = ons_worldgeneratorlist; // link generator into ons_worldgeneratorlist
 	ons_worldgeneratorlist = gen;
 
-	gen.netname = sprintf("%s generator", Team_ColoredFullName(teamnum));
+	gen.netname = sprintf("%s generator", Team_ColoredFullName(teamnumber));
+	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
-	gen.team_saved = teamnum;
+	gen.team_saved = teamnumber;
 	IL_PUSH(g_saved_team, gen);
 	set_movetype(gen, MOVETYPE_NONE);
 	gen.lasthealth = gen.max_health = autocvar_g_onslaught_gen_health;
-	SetResourceExplicit(gen, RES_HEALTH, autocvar_g_onslaught_gen_health);
+	SetResourceAmountExplicit(gen, RESOURCE_HEALTH, autocvar_g_onslaught_gen_health);
 	gen.takedamage = DAMAGE_AIM;
 	gen.bot_attack = true;
 	IL_PUSH(g_bot_targets, gen);
@@ -1099,7 +1083,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	// model handled by CSQC
 	setsize(gen, GENERATOR_MIN, GENERATOR_MAX);
 	setorigin(gen, (gen.origin + CPGEN_SPAWN_OFFSET));
-	gen.colormap = 1024 + (teamnum - 1) * 17;
+	gen.colormap = 1024 + (teamnumber - 1) * 17;
 
 	// generator placement
 	droptofloor(gen);
@@ -1108,7 +1092,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	WaypointSprite_SpawnFixed(WP_Null, gen.origin + CPGEN_WAYPOINT_OFFSET, gen, sprite, RADARICON_NONE);
 	WaypointSprite_UpdateRule(gen.sprite, gen.team, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(gen.sprite, gen.max_health);
-	WaypointSprite_UpdateHealth(gen.sprite, GetResource(gen, RES_HEALTH));
+	WaypointSprite_UpdateHealth(gen.sprite, GetResourceAmount(gen, RESOURCE_HEALTH));
 
 	InitializeEntity(gen, ons_DelayedGeneratorSetup, INITPRIO_SETLOCATION);
 }
@@ -1130,7 +1114,7 @@ void Onslaught_count_generators()
 	for(e = ons_worldgeneratorlist; e; e = e.ons_worldgeneratornext)
 	{
 		++total_generators;
-		if (GetResource(e, RES_HEALTH) < 1)
+		if (GetResourceAmount(e, RESOURCE_HEALTH) < 1)
 		{
 			continue;
 		}
@@ -1641,11 +1625,6 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 				player.angles = '0 1 0' * ( theta * RAD2DEG + 180 );
 				makevectors(player.angles);
 				player.fixangle = true;
-				if (IS_BOT_CLIENT(player))
-				{
-					player.v_angle = player.angles;
-					bot_aim_reset(player);
-				}
 				player.teleport_antispam = time + autocvar_g_onslaught_teleport_wait;
 
 				if ( tele_effects )
@@ -1732,12 +1711,10 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 		for(tmp_entity = ons_worldcplist; tmp_entity; tmp_entity = tmp_entity.ons_worldcpnext)
 		{
 			if(SAME_TEAM(tmp_entity, player))
-			{
-				if(random_target)
-					RandomSelection_AddEnt(tmp_entity, 1, 1);
-				else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
-					closest_target = tmp_entity;
-			}
+			if(random_target)
+				RandomSelection_AddEnt(tmp_entity, 1, 1);
+			else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
+				closest_target = tmp_entity;
 		}
 
 		if(random_target) { closest_target = RandomSelection_chosen_ent; }
@@ -1968,7 +1945,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 			{
 				entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
 
-				if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
+				if ( !source_point && GetResourceAmount(player, RESOURCE_HEALTH) > 0 )
 				{
 					sprint(player, "\nYou need to be next to a control point\n");
 					return true;
@@ -1983,7 +1960,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 					return true;
 				}
 
-				if ( GetResource(player, RES_HEALTH) <= 0 )
+				if ( GetResourceAmount(player, RESOURCE_HEALTH) <= 0 )
 				{
 					player.ons_spawn_by = closest_target;
 					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
@@ -2049,14 +2026,14 @@ MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
 		{
 			entity wp_owner = wp.owner;
 			entity e = WaypointSprite_getviewentity(to);
-			if(SAME_TEAM(e, wp_owner) && GetResource(wp_owner.goalentity, RES_HEALTH) >= wp_owner.goalentity.max_health) { wp_flag |= 2; }
+			if(SAME_TEAM(e, wp_owner) && GetResourceAmount(wp_owner.goalentity, RESOURCE_HEALTH) >= wp_owner.goalentity.max_health) { wp_flag |= 2; }
 			if(!ons_ControlPoint_Attackable(wp_owner, e.team)) { wp_flag |= 2; }
 		}
 		if(wp.owner.classname == "onslaught_generator")
 		{
 			entity wp_owner = wp.owner;
-			if(wp_owner.isshielded && GetResource(wp_owner, RES_HEALTH) >= wp_owner.max_health) { wp_flag |= 2; }
-			if(GetResource(wp_owner, RES_HEALTH) <= 0) { wp_flag |= 2; }
+			if(wp_owner.isshielded && GetResourceAmount(wp_owner, RESOURCE_HEALTH) >= wp_owner.max_health) { wp_flag |= 2; }
+			if(GetResourceAmount(wp_owner, RESOURCE_HEALTH) <= 0) { wp_flag |= 2; }
 		}
 	}
 

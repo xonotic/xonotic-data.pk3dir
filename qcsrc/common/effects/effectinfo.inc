@@ -2,7 +2,6 @@
 // use `cl_particles_reloadeffects` to reload effects without restarting engine
 // use `chase_active 1` and `cl_lockview 1` to see effects from different perspectives
 // `dumpeffectinfo` currently doesn't work so edit effectinfo.txt manually, just try to keep the files in sync
-// always add new effects to the bottom of the list
 
 // `tex` are indices into particles/particlefont.tga (see particles/particlefont-template.tga for numbers)
 // the first index is inclusive, second exclusive (so `tex 0 8` will use images 0 though 7)
@@ -7151,8 +7150,8 @@ SUB(tr_hagar) {
 }
 
 // laser damage effect
-DEF(damage_blaster);
-SUB(damage_blaster) {
+DEF(damage_laser);
+SUB(damage_laser) {
 	MY(airfriction) = -0.350000;
 	MY(alpha_min) = 128;
 	MY(alpha_max) = 16;
@@ -7213,8 +7212,8 @@ SUB(damage_shotgun) {
 }
 
 // shotgun damage effect, alien blood
-DEF(alien_damage_shotgun);
-SUB(alien_damage_shotgun) {
+DEF(damage_shotgun_alien);
+SUB(damage_shotgun_alien) {
 	MY(airfriction) = 1;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
@@ -7237,7 +7236,7 @@ SUB(alien_damage_shotgun) {
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
-SUB(alien_damage_shotgun) {
+SUB(damage_shotgun_alien) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 400;
@@ -7252,8 +7251,8 @@ SUB(alien_damage_shotgun) {
 }
 
 // shotgun damage effect, robot blood
-DEF(robot_damage_shotgun);
-SUB(robot_damage_shotgun) {
+DEF(damage_shotgun_robot);
+SUB(damage_shotgun_robot) {
 	MY(airfriction) = 1;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
@@ -7276,7 +7275,7 @@ SUB(robot_damage_shotgun) {
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
-SUB(robot_damage_shotgun) {
+SUB(damage_shotgun_robot) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 400;
@@ -7291,8 +7290,8 @@ SUB(robot_damage_shotgun) {
 }
 
 // machinegun damage effect, normal blood
-DEF(damage_machinegun);
-SUB(damage_machinegun) {
+DEF(damage_uzi);
+SUB(damage_uzi) {
 	MY(airfriction) = 1;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
@@ -7315,7 +7314,7 @@ SUB(damage_machinegun) {
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
-SUB(damage_machinegun) {
+SUB(damage_uzi) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 400;
@@ -7329,8 +7328,8 @@ SUB(damage_machinegun) {
 }
 
 // machinegun damage effect, alien blood
-DEF(alien_damage_machinegun);
-SUB(alien_damage_machinegun) {
+DEF(damage_uzi_alien);
+SUB(damage_uzi_alien) {
 	MY(airfriction) = 1;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
@@ -7353,7 +7352,7 @@ SUB(alien_damage_machinegun) {
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
-SUB(alien_damage_machinegun) {
+SUB(damage_uzi_alien) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 400;
@@ -7367,8 +7366,8 @@ SUB(alien_damage_machinegun) {
 }
 
 // machinegun damage effect, robot blood
-DEF(robot_damage_machinegun);
-SUB(robot_damage_machinegun) {
+DEF(damage_uzi_robot);
+SUB(damage_uzi_robot) {
 	MY(airfriction) = 1;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
@@ -7391,7 +7390,7 @@ SUB(robot_damage_machinegun) {
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
-SUB(robot_damage_machinegun) {
+SUB(damage_uzi_robot) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 400;
@@ -7444,8 +7443,8 @@ SUB(damage_minelayer) {
 }
 
 // mortar damage effect
-DEF(damage_mortar);
-SUB(damage_mortar) {
+DEF(damage_grenadelauncher);
+SUB(damage_grenadelauncher) {
 	MY(alpha_min) = 512;
 	MY(alpha_max) = 64;
 	MY(alpha_fade) = 1024;
@@ -7464,7 +7463,7 @@ SUB(damage_mortar) {
 	MY(velocityjitter) = '22.0 22.0 50.0';
 }
 // smoke
-SUB(damage_mortar) {
+SUB(damage_grenadelauncher) {
 	MY(alpha_min) = 128;
 	MY(alpha_max) = 32;
 	MY(alpha_fade) = 128;
@@ -7480,73 +7479,6 @@ SUB(damage_mortar) {
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
 	MY(velocityjitter) = '11.0 11.0 50.0';
-}
-
-// arc damage effect
-DEF(damage_arc);
-SUB(damage_arc) {
-	MY(airfriction) = -0.650000;
-	MY(alpha_min) = 48;
-	MY(alpha_max) = 8;
-	MY(alpha_fade) = 48;
-	MY(color_min) = "0x66ffff";
-	MY(color_max) = "0x2288ff";
-	MY(count) = 2;
-	MY(gravity) = -0.000100;
-	MY(liquidfriction) = 0.600000;
-	MY(notunderwater) = true;
-	MY(originjitter) = '2.0 2.0 2.0';
-	MY(startangle_min) = 180;
-	MY(startangle_max) = 360;
-	MY(spin_min) = -30;
-	MY(spin_max) = 30;
-	MY(sizeincrease) = -14;
-	MY(size_min) = 4;
-	MY(size_max) = 8;
-	MY(tex_min) = 47;
-	MY(tex_max) = 47;
-	MY(type) = "static";
-	MY(velocityjitter) = '6.0 6.0 12.0';
-}
-// plasma smoke
-SUB(damage_arc) {
-	MY(airfriction) = -0.500000;
-	MY(alpha_min) = 64;
-	MY(alpha_max) = 16;
-	MY(alpha_fade) = 64;
-	MY(color_min) = "0x2244ff";
-	MY(color_max) = "0x002266";
-	MY(count) = 4;
-	MY(notunderwater) = true;
-	MY(originjitter) = '3.0 3.0 3.0';
-	MY(startangle_max) = 180;
-	MY(spin_min) = -30;
-	MY(spin_max) = 30;
-	MY(sizeincrease) = 10;
-	MY(size_min) = 3;
-	MY(size_max) = 6;
-	MY(tex_max) = 8;
-	MY(type) = "smoke";
-	MY(velocityjitter) = '0.3 0.3 0.5';
-}
-// bouncing sparks
-SUB(damage_arc) {
-	MY(airfriction) = 1;
-	MY(alpha_min) = 768;
-	MY(alpha_max) = 64;
-	MY(alpha_fade) = 256;
-	MY(bounce) = 1.500000;
-	MY(color_min) = "0x003090";
-	MY(color_max) = "0x00CCFF";
-	MY(count) = 0.500000;
-	MY(gravity) = 0.150000;
-	MY(liquidfriction) = 0.600000;
-	MY(size_min) = 1;
-	MY(size_max) = 1;
-	MY(tex_min) = 66;
-	MY(tex_max) = 68;
-	MY(type) = "spark";
-	MY(velocityjitter) = '24.0 24.0 24.0';
 }
 
 // electro damage effect
@@ -7705,8 +7637,8 @@ SUB(damage_hlac) {
 }
 
 // vortex damage effect
-DEF(damage_vortex);
-SUB(damage_vortex) {
+DEF(damage_nex);
+SUB(damage_nex) {
 	MY(airfriction) = -0.500000;
 	MY(alpha_min) = 64;
 	MY(alpha_max) = 8;
@@ -7730,7 +7662,7 @@ SUB(damage_vortex) {
 	MY(velocityjitter) = '8.0 8.0 16.0';
 }
 // plasma smoke
-SUB(damage_vortex) {
+SUB(damage_nex) {
 	MY(airfriction) = -0.350000;
 	MY(alpha_min) = 64;
 	MY(alpha_max) = 16;
@@ -7750,7 +7682,7 @@ SUB(damage_vortex) {
 	MY(velocityjitter) = '0.5 0.5 0.8';
 }
 // bouncing sparks
-SUB(damage_vortex) {
+SUB(damage_nex) {
 	MY(airfriction) = 2;
 	MY(alpha_min) = 255;
 	MY(alpha_max) = 255;
@@ -7771,8 +7703,8 @@ SUB(damage_vortex) {
 }
 
 // vaporizer damage effect
-DEF(damage_vaporizer);
-SUB(damage_vaporizer) {
+DEF(damage_minstanex);
+SUB(damage_minstanex) {
 	MY(airfriction) = -0.500000;
 	MY(alpha_min) = 64;
 	MY(alpha_max) = 8;
@@ -7796,7 +7728,7 @@ SUB(damage_vaporizer) {
 	MY(velocityjitter) = '8.0 8.0 16.0';
 }
 // plasma smoke
-SUB(damage_vaporizer) {
+SUB(damage_minstanex) {
 	MY(airfriction) = -0.350000;
 	MY(alpha_min) = 64;
 	MY(alpha_max) = 16;
@@ -7816,7 +7748,7 @@ SUB(damage_vaporizer) {
 	MY(velocityjitter) = '0.5 0.5 0.8';
 }
 // bouncing sparks
-SUB(damage_vaporizer) {
+SUB(damage_minstanex) {
 	MY(airfriction) = 2;
 	MY(alpha_min) = 255;
 	MY(alpha_max) = 255;
@@ -8068,8 +8000,8 @@ SUB(damage_fireball) {
 }
 
 // rocketlauncher damage effect
-DEF(damage_devastator);
-SUB(damage_devastator) {
+DEF(damage_rocketlauncher);
+SUB(damage_rocketlauncher) {
 	MY(alpha_min) = 512;
 	MY(alpha_max) = 64;
 	MY(alpha_fade) = 1024;
@@ -8088,7 +8020,7 @@ SUB(damage_devastator) {
 	MY(velocityjitter) = '22.0 22.0 30.0';
 }
 // smoke
-SUB(damage_devastator) {
+SUB(damage_rocketlauncher) {
 	MY(alpha_min) = 128;
 	MY(alpha_max) = 32;
 	MY(alpha_fade) = 128;
@@ -9044,67 +8976,3 @@ SUB(tr_bullet_weak) {
 	MY(underwater) = true;
 	MY(velocityjitter) = '16.0 16.0 16.0';
 }
-
-// Vaporizer hit effect
-DEF(TE_TEI_G3_HIT);
-SUB(TE_TEI_G3_HIT) {
-	MY(alpha_min) = 128;
-	MY(alpha_max) = 128;
-	MY(alpha_fade) = 256;
-	MY(color_min) = "0xFFFFFF";
-	MY(color_max) = "0xFFFFFF";
-	MY(countabsolute) = 1;
-	MY(size_min) = 8;
-	MY(size_max) = 8;
-	MY(tex_min) = 200;
-	MY(tex_max) = 200;
-	MY(type) = "beam";
-}
-SUB(TE_TEI_G3_HIT) /* rings */ {
-	MY(airfriction) = -4;
-	MY(alpha_min) = 256;
-	MY(alpha_max) = 256;
-	MY(alpha_fade) = 512;
-	MY(color_min) = "0xFFFFFF";
-	MY(color_max) = "0xFFFFFF";
-	MY(sizeincrease) = -2;
-	MY(size_min) = 2;
-	MY(size_max) = 2;
-	MY(trailspacing) = 20;
-	MY(type) = "smoke";
-	MY(velocityjitter) = '2.0 2.0 2.0';
-}
-SUB(TE_TEI_G3_HIT) {
-	MY(airfriction) = -4;
-	MY(alpha_min) = 256;
-	MY(alpha_max) = 256;
-	MY(alpha_fade) = 512;
-	MY(color_min) = "0xFFFFFF";
-	MY(color_max) = "0xFFFFFF";
-	MY(sizeincrease) = -6;
-	MY(size_min) = 10;
-	MY(size_max) = 10;
-	MY(trailspacing) = 40;
-	MY(type) = "smoke";
-}
-
-// respawn ghosts effect
-DEF(respawn_ghost);
-SUB(respawn_ghost) {
-	MY(count) = 75;
-	MY(type) = "static";
-	MY(color_min) = "0xA0A0A0";
-	MY(color_max) = "0xFFFFFF";
-	MY(size_min) = 2;
-	MY(size_max) = 2;
-	MY(alpha_min) = 32;
-	MY(alpha_max) = 64;
-	MY(alpha_fade) = 128;
-	MY(airfriction) = 1;
-	MY(liquidfriction) = 4;
-	MY(originoffset) = '0 0 -8';
-	MY(originjitter) = '28 28 16';
-	MY(velocityjitter) = '0 0 256';
-}
-
-// always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!

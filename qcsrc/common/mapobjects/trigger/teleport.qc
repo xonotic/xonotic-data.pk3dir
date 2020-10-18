@@ -88,8 +88,7 @@ void target_teleport_use(entity this, entity actor, entity trigger)
 		this.target = s;
 	}
 
-	if(e != this) // only activate the target teleporter if target is different
-		SUB_UseTargets(e, player, player);
+	SUB_UseTargets(e, player, player);
 }
 #endif
 
@@ -128,7 +127,7 @@ spawnfunc(trigger_teleport)
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(this, teleport_findtarget, INITPRIO_FINDTARGET);
 
-	if (!this.target || this.target == "")
+	if (this.target == "")
 	{
 		objerror (this, "Teleporter with no target");
 		return;
@@ -137,54 +136,23 @@ spawnfunc(trigger_teleport)
 	IL_PUSH(g_teleporters, this);
 }
 
-void target_teleporter_checktarget(entity this)
-{
-	// target_teleporter is used in many strange ways
-	// we must attempt to figure out which way it is being used for in this instance
-
-	if(!this.target || this.target == "")
-	{
-		// this target_teleporter has no target
-		// so it must be either a destination for a teleporter or a teleporter itself
-		bool is_teleporter_target = false;
-		// NOTE: target2, target3, target4 unsupported, this may not be necessary as DeFrag maps have no such targets
-		FOREACH_ENTITY_STRING(target, this.targetname,
-		{
-			if(it.classname == "trigger_teleport" || it.classname == "target_teleporter")
-			{
-				is_teleporter_target = true;
-				break; // no need to keep looping once a valid target is found
-			}
-		});
-
-		if(is_teleporter_target)
-		{
-			// there were teleporters found targeting this, so it must be a destination!
-			spawnfunc_info_teleport_destination(this);
-			return;
-		}
-
-		// set this entity up to be a teleporter, since it can be activated as one
-		this.enemy = this;
-		this.mangle = this.angles;
-		this.angles = '0 0 0';
-	}
-
-	// seeing as this entity isn't targeted by a teleporter, it must be a teleporter itself
-
-	this.active = ACTIVE_ACTIVE;
-	this.use = target_teleport_use;
-
-	if(this.noise && this.noise != "")
-		FOREACH_WORD(this.noise, true, precache_sound(it));
-
-	if(this.target && this.target != "") // no need to find a target on this entity, as it does not have one and .enemy is already set as required
-		teleport_findtarget(this);
-}
-
 spawnfunc(target_teleporter)
 {
-	InitializeEntity(this, target_teleporter_checktarget, INITPRIO_FINDTARGET);
+	if(this.target == "")
+	{
+		// actually a destination!
+		spawnfunc_info_teleport_destination(this);
+		return;
+	}
+
+	this.active = ACTIVE_ACTIVE;
+
+	this.use = target_teleport_use;
+
+	if(this.noise != "")
+		FOREACH_WORD(this.noise, true, precache_sound(it));
+
+	InitializeEntity(this, teleport_findtarget, INITPRIO_FINDTARGET);
 }
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)

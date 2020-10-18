@@ -43,15 +43,9 @@ void W_Crylink_Dequeue(entity e)
 	W_Crylink_Dequeue_Raw(e.crylink_owner, e.queueprev, e, e.queuenext);
 }
 
-void W_Crylink_DeleteLink(entity this)
-{
-	if(this.classname != "spike_oktoremove")
-		W_Crylink_Dequeue(this);
-	delete_fn(this);
-}
-
 void W_Crylink_Reset(entity this)
 {
+	W_Crylink_Dequeue(this);
 	delete(this);
 }
 
@@ -269,6 +263,7 @@ void W_Crylink_Touch(entity this, entity toucher)
 	else if(finalhit)
 	{
 		// just unlink
+		W_Crylink_Dequeue(this);
 		delete(this);
 		return;
 	}
@@ -283,6 +278,7 @@ void W_Crylink_Touch(entity this, entity toucher)
 
 void W_Crylink_Fadethink(entity this)
 {
+	W_Crylink_Dequeue(this);
 	delete(this);
 }
 
@@ -307,12 +303,11 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
-		proj.dtor = W_Crylink_DeleteLink;
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
 		proj.crylink_owner = actor;
@@ -357,7 +352,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 			s.y = v_forward.x;
 			s.z = v_forward.y;
 		}
-		s = s * WEP_CVAR_PRI(crylink, spread) * autocvar_g_weaponspreadfactor;
+		s = s * WEP_CVAR_PRI(crylink, spread) * g_weaponspreadfactor;
 		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, false);
 		settouch(proj, W_Crylink_Touch);
 
@@ -420,12 +415,11 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
-		proj.dtor = W_Crylink_DeleteLink;
 		proj.weaponentity_fld = weaponentity;
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
@@ -471,12 +465,12 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 				s.y = v_forward.x;
 				s.z = v_forward.y;
 			}
-			s = s * WEP_CVAR_SEC(crylink, spread) * autocvar_g_weaponspreadfactor;
+			s = s * WEP_CVAR_SEC(crylink, spread) * g_weaponspreadfactor;
 			s = w_shotdir + right * s.y + up * s.z;
 		}
 		else
 		{
-			s = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * WEP_CVAR_SEC(crylink, spread) * autocvar_g_weaponspreadfactor);
+			s = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * WEP_CVAR_SEC(crylink, spread) * g_weaponspreadfactor);
 		}
 
 		W_SetupProjVelocity_Explicit(proj, s, v_up, WEP_CVAR_SEC(crylink, speed), 0, 0, 0, false);
@@ -505,7 +499,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 		proj.flags = FL_PROJECTILE;
 		IL_PUSH(g_projectiles, proj);
 		IL_PUSH(g_bot_dodge, proj);
-		proj.missile_flags = MIF_SPLASH;
+        proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
@@ -574,7 +568,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             }
             actor.(weaponentity).crylink_waitrelease = 0;
             if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-            if(!(actor.items & IT_UNLIMITED_AMMO))
+            if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
             {
                 // ran out of ammo!
                 actor.cnt = thiswep.m_id;
@@ -589,7 +583,7 @@ METHOD(Crylink, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapon
     if(actor.(weaponentity).crylink_lastgroup && actor.(weaponentity).crylink_waitrelease)
         return true;
 
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(crylink, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(crylink, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
     return ammo_amount;
 }
@@ -599,7 +593,7 @@ METHOD(Crylink, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
     if(actor.(weaponentity).crylink_lastgroup && actor.(weaponentity).crylink_waitrelease)
         return true;
 
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(crylink, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(crylink, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
     return ammo_amount;
 }

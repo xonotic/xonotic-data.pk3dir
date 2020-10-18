@@ -1,6 +1,5 @@
 #include "sv_freezetag.qh"
 
-#include <server/elimination.qh>
 #include <server/resources.qh>
 
 float autocvar_g_freezetag_frozen_maxtime;
@@ -20,7 +19,7 @@ void freezetag_count_alive_players()
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
-		if (GetResource(it, RES_HEALTH) < 1 || STAT(FROZEN, it) == FROZEN_NORMAL)
+		if (GetResourceAmount(it, RESOURCE_HEALTH) < 1 || STAT(FROZEN, it) == FROZEN_NORMAL)
 		{
 			continue;
 		}
@@ -44,10 +43,12 @@ void freezetag_count_alive_players()
 	eliminatedPlayers.SendFlags |= 1;
 }
 
+#define FREEZETAG_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
+
 bool freezetag_CheckTeams()
 {
 	static float prev_missing_teams_mask;
-	if (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
+	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
@@ -131,7 +132,7 @@ bool freezetag_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		TeamScore_AddToTeam(winner_team, ST_FT_ROUNDS, +1);
+		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
 	}
 	else if(winner_team == -1)
 	{
@@ -153,7 +154,7 @@ entity freezetag_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), {
-		if (STAT(FROZEN, it) != FROZEN_NORMAL && GetResource(it, RES_HEALTH) >= 1)
+		if (STAT(FROZEN, it) != FROZEN_NORMAL && GetResourceAmount(it, RESOURCE_HEALTH) >= 1)
 		{
 			if (!last_pl)
 				last_pl = it;
@@ -236,7 +237,7 @@ void havocbot_goalrating_ft_freeplayers(entity this, float ratingscale, vector o
 			navigation_routerating(this, it, ratingscale, 2000);
 		}
 		else if (best_dist2
-			&& GetResource(it, RES_HEALTH) < GetResource(this, RES_HEALTH) + 30
+			&& GetResourceAmount(it, RESOURCE_HEALTH) < GetResourceAmount(this, RESOURCE_HEALTH) + 30
 			&& vlen2(it.origin - org) < best_dist2)
 		{
 			// If teamate is not frozen still seek them out as fight better
@@ -331,7 +332,7 @@ void ft_RemovePlayer(entity this)
 		freezetag_LastPlayerForTeam_Notify(this);
 	Unfreeze(this, false);
 
-	SetResourceExplicit(this, RES_HEALTH, 0); // neccessary to correctly count alive players
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0); // neccessary to correctly count alive players
 	freezetag_count_alive_players();
 }
 
@@ -362,13 +363,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
 			Unfreeze(frag_target, true);
 		freezetag_count_alive_players();
-		frag_target.respawn_time = time;
-		frag_target.respawn_flags |= RESPAWN_FORCE;
-		return true;
+		return true; // let the player die so that he can respawn whenever he wants
 	}
-
-	frag_target.respawn_time = time + 1;
-	frag_target.respawn_flags |= RESPAWN_FORCE;
 
 	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
 	// you succeed changing team through the menu: you both really die (gibbing) and get frozen
@@ -476,41 +472,34 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if(!round_handler_IsRoundStarted())
 		return true;
 
+	int n;
 	entity player = M_ARGV(0, entity);
 	//if (STAT(FROZEN, player) == FROZEN_NORMAL)
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
 
-	if (!(frametime && IS_PLAYER(player)))
-		return true;
+	IntrusiveList reviving_players = NULL;
 
-	entity reviving_players_last = NULL;
-	entity reviving_players_first = NULL;
-
-	int n = 0;
-	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
-		if (reviving_players_last)
-			reviving_players_last.chain = it;
-		reviving_players_last = it;
-		if (!reviving_players_first)
-			reviving_players_first = it;
-		++n;
-	});
-	if (reviving_players_last)
-		reviving_players_last.chain = NULL;
-
-	// allow normal revival during automatic revival
-	// (not allowing it IS_REVIVING should check freezetag_frozen_timeout too)
-	if (!n && player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
+	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
+	else
+	{
+		n = 0;
+		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+			if (!reviving_players)
+				reviving_players = IL_NEW();
+			IL_PUSH(reviving_players, it);
+			++n;
+		});
+	}
 
 	if (!n) // no teammate nearby
 	{
 		if (STAT(FROZEN, player) == FROZEN_NORMAL)
 		{
 			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-			SetResourceExplicit(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
+			SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 		}
 		else if (!STAT(FROZEN, player))
 			STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
@@ -518,7 +507,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	else if (STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
 	{
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		SetResourceExplicit(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
+		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health)));
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
@@ -533,29 +522,31 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			for(entity it = reviving_players_first; it; it = it.chain)
-			{
+			IL_EACH(reviving_players, true, {
 				GameRules_scoring_add(it, FREEZETAG_REVIVALS, +1);
 				GameRules_scoring_add(it, SCORE, +1);
 				nades_GiveBonus(it, autocvar_g_nades_bonus_score_low);
-			}
+			});
 
-			entity first = reviving_players_first;
+			entity first = IL_FIRST(reviving_players);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, first.netname);
 			Send_Notification(NOTIF_ONE, first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, first.netname);
 		}
 
-		for(entity it = reviving_players_first; it; it = it.chain)
+		IL_EACH(reviving_players, true, {
 			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
+		});
 	}
 
+	if (reviving_players)
+		IL_DELETE(reviving_players);
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
-	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
+	start_items &= ~IT_UNLIMITED_AMMO;
 	//start_health       = warmup_start_health       = cvar("g_lms_start_health");
 	//start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
@@ -593,8 +584,9 @@ MUTATOR_HOOKFUNCTION(ft, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
 {
+	// most weapons arena
 	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
-		M_ARGV(0, string) = autocvar_g_freezetag_weaponarena;
+		M_ARGV(0, string) = "most";
 }
 
 MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
@@ -610,22 +602,8 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 
 	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : CS(frag_target).ping));
 	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target,
-		GetResource(frag_attacker, RES_HEALTH), GetResource(frag_attacker, RES_ARMOR), (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
+		GetResourceAmount(frag_attacker, RESOURCE_HEALTH), GetResourceAmount(frag_attacker, RESOURCE_ARMOR), (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
 
-	return true;
-}
-
-MUTATOR_HOOKFUNCTION(ft, SV_ParseServerCommand)
-{
-	string cmd_name = M_ARGV(0, string);
-	if (cmd_name == "shuffleteams")
-		shuffleteams_on_reset_map = !(round_handler_IsActive() && !round_handler_IsRoundStarted());
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(ft, Scores_CountFragsRemaining)
-{
-	// announce remaining frags
 	return true;
 }
 
@@ -637,7 +615,6 @@ void freezetag_Initialize()
 
 	freezetag_teams = BITS(bound(2, freezetag_teams, 4));
 	GameRules_scoring(freezetag_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
-		field_team(ST_FT_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 		field(SP_FREEZETAG_REVIVALS, "revivals", 0);
 	});
 

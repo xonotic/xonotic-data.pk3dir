@@ -1,13 +1,13 @@
 #include "antilag.qh"
-
-#include <common/monsters/sv_monsters.qh>
-#include <common/state.qh>
-#include <common/stats.qh>
-#include <common/vehicles/all.qh>
-#include <common/weapons/_all.qh>
-#include <lib/warpzone/common.qh>
-#include <server/antilag.qh>
-#include <server/weapons/common.qh>
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include <server/defs.qh>
+    #include <common/state.qh>
+    #include <common/vehicles/all.qh>
+	#include <lib/warpzone/common.qh>
+    #include "antilag.qh"
+#endif
 
 const int ANTILAG_MAX_ORIGINS = 64;
 .vector antilag_origins[ANTILAG_MAX_ORIGINS];
@@ -146,16 +146,6 @@ void antilag_restore_all(entity ignore)
 	{
 		antilag_restore(it, it);
 	});
-}
-
-float antilag_getlag(entity e)
-{
-	float lag = ((IS_REAL_CLIENT(e)) ? ANTILAG_LATENCY(e) : 0);
-	bool noantilag = ((IS_CLIENT(e)) ? CS(e).cvar_cl_noantilag : false);
-	if(autocvar_g_antilag == 0 || noantilag || lag < 0.001)
-		lag = 0;
-
-	return lag;
 }
 
 /*

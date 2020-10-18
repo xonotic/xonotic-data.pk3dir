@@ -23,10 +23,6 @@ const int MF_TRACER3 =  BIT(7);  // purple trail
 .int csqcmodel_modelflags;
 .int csqcmodel_traileffect;
 
-.bool csqcmodel_isdead; // used by shownames and miscfunctions (entcs_IsDead) to know when a player is dead
-
-.int isplayermodel;
-
 void CSQCModel_Effects_Apply(entity this);
 
 void CSQCModel_Hook_PreDraw(entity this, bool isplayer);

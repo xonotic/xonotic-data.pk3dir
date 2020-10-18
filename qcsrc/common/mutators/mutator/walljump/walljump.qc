@@ -23,12 +23,10 @@ vector PlayerTouchWall(entity this)
 
 	float dist = 10, max_normal = 0.2, scaler = 100;
 	vector start = this.origin;
-	vector forward, right, _up;
-	MAKE_VECTORS(this.angles, forward, right, _up);
-	TRACE(start + forward * scaler)
-	TRACE(start - forward * scaler)
-	TRACE(start + right * scaler)
-	TRACE(start - right * scaler)
+	TRACE(start + v_forward * scaler)
+	TRACE(start - v_forward * scaler)
+	TRACE(start + v_right * scaler)
+	TRACE(start - v_right * scaler)
 #undef TRACE
 	return '0 0 0';
 }

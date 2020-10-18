@@ -1,15 +1,10 @@
 #include "timer.qh"
 
 #include <client/autocvars.qh>
-#include <client/draw.qh>
-#include <client/view.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 
 // Timer (#5)
-
-void HUD_Timer_Export(int fh)
-{
-	// allow saving cvars that aesthetically change the panel into hud skin files
-}
 
 void HUD_Timer()
 {

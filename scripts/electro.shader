@@ -10,7 +10,7 @@ electro_plasma_hull
 {
         {
 	map textures/electro_plasma_hull.tga
-	alphaFunc GE128
+	alphaFunc GT0
 	rgbGen Vertex
         }
 }

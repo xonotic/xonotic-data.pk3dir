@@ -1,7 +1,6 @@
 #include "gametypelist.qh"
 
 #include "dialog_multiplayer_create.qh"
-#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
 
 entity makeXonoticGametypeList()
@@ -32,17 +31,16 @@ void XonoticGametypeList_setSelected(entity me, float i)
 void XonoticGametypeList_loadCvars(entity me)
 {
 	Gametype t = MapInfo_CurrentGametype();
-	int cnt = GameType_GetCount();
 	float i;
-	for(i = 0; i < cnt; ++i)
+	for(i = 0; i < GameType_GetCount(); ++i)
 		if(t == GameType_GetID(i))
 			break;
-	if(i >= cnt)
+	if(i >= GameType_GetCount())
 	{
-		for(i = 0; i < cnt; ++i)
+		for(i = 0; i < GameType_GetCount(); ++i)
 			if(t == MAPINFO_TYPE_DEATHMATCH)
 				break;
-		if(i >= cnt)
+		if(i >= GameType_GetCount())
 			i = 0;
 	}
 	me.setSelected(me, i);

@@ -1,10 +1,9 @@
 #include "campaign_setup.qh"
-
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include <common/campaign_common.qh>
-	#include <common/mapinfo.qh>
+    #include "campaign_common.qh"
+    #include "mapinfo.qh"
 #endif
 
 void CampaignSetup(int n)

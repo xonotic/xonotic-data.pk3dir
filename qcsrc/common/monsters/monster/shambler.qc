@@ -85,15 +85,15 @@ void M_Shambler_Attack_Lightning_Explode_use(entity this, entity actor, entity t
 
 void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if (GetResource(this, RES_HEALTH) <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RES_HEALTH, damage);
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if (GetResource(this, RES_HEALTH) <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
@@ -116,6 +116,8 @@ void M_Shambler_Attack_Lightning_Think(entity this)
 
 void M_Shambler_Attack_Lightning(entity this)
 {
+	monster_makevectors(this, this.enemy);
+
 	entity gren = new(grenade);
 	gren.owner = gren.realowner = this;
 	gren.bot_dodge = true;
@@ -134,7 +136,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	settouch(gren, M_Shambler_Attack_Lightning_Touch);
 
 	gren.takedamage = DAMAGE_YES;
-	SetResourceExplicit(gren, RES_HEALTH, 50);
+	SetResourceAmountExplicit(gren, RESOURCE_HEALTH, 50);
 	gren.damageforcescale = 0;
 	gren.event_damage = M_Shambler_Attack_Lightning_Damage;
 	gren.damagedbycontents = true;
@@ -197,7 +199,7 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ, .entity weapo
 	return false;
 }
 
-spawnfunc(monster_shambler) { Monster_Spawn(this, true, MON_SHAMBLER); }
+spawnfunc(monster_shambler) { Monster_Spawn(this, true, MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -244,7 +246,7 @@ METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
 METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 {
     TC(Shambler, this);
-    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_shambler_health);
+    if(!GetResourceAmount(this, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_shambler_health);
     if(!actor.attack_range) actor.attack_range = 150;
     if(!actor.speed) { actor.speed = (autocvar_g_monster_shambler_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_shambler_speed_run); }

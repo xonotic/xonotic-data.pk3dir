@@ -21,16 +21,17 @@ void W_HLAC_Touch(entity this, entity toucher)
 void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
+    float spread;
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hlac, ammo), weaponentity);
 
-	float spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.(weaponentity).misc_bulletcounter);
-	spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
-	if(IS_DUCKED(actor))
-		spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
+    spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.(weaponentity).misc_bulletcounter);
+    spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
+    if(actor.crouch)
+        spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage), thiswep.m_id);
-	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
+	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
@@ -41,7 +42,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 
-	missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
+    missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
 
 	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
@@ -55,7 +56,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(missile, W_HLAC_Touch);
 	setthink(missile, SUB_Remove);
 
-	missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
+    missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
@@ -71,19 +72,22 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
-	float spread = WEP_CVAR_SEC(hlac, spread);
+    float spread;
 
-	if(IS_DUCKED(actor))
-		spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
+    spread = WEP_CVAR_SEC(hlac, spread);
+
+
+    if(actor.crouch)
+        spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage), thiswep.m_id | HITTYPE_SECONDARY);
-	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
+	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = new(hlacbolt);
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 
-	missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
+    missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
 
 	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
@@ -97,7 +101,7 @@ void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	settouch(missile, W_HLAC_Touch);
 	setthink(missile, SUB_Remove);
 
-	missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
+    missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
@@ -123,7 +127,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-		if(!(actor.items & IT_UNLIMITED_AMMO))
+		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w_ready(thiswep, actor, weaponentity, fire);
@@ -133,7 +137,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor(actor);
 		W_HLAC_Attack(thiswep, actor, weaponentity);
 		actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
-		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
 	else
 	{
@@ -143,10 +147,12 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 
 void W_HLAC_Attack2_Frame(Weapon thiswep, entity actor, .entity weaponentity)
 {
+    float i;
+
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo), weaponentity);
 
-	for(float i = WEP_CVAR_SEC(hlac, shots); i > 0; --i)
-		W_HLAC_Attack2(thiswep, actor, weaponentity);
+    for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
+        W_HLAC_Attack2(thiswep, actor, weaponentity);
 
 	if(!autocvar_g_norecoil)
 	{
@@ -184,13 +190,13 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(HLAC, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hlac, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hlac, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
     return ammo_amount;
 }
 METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hlac, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hlac, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
     return ammo_amount;
 }

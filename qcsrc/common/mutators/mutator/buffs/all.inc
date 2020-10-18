@@ -4,8 +4,7 @@ string Buff_UndeprecateName(string buffname)
     {
         case "ammoregen": return "ammo";
         case "haste": case "scout": return "speed";
-        case "guard": return "resistance";
-        case "revival": case "regen": return "medic";
+        case "guard": case "revival": case "regen": return "medic";
         case "invis": return "invisible";
         case "jumper": return "jump";
         default: return buffname;
@@ -28,7 +27,7 @@ REGISTER_BUFF(RESISTANCE) {
     this.m_color = '0.36 1 0.07';
 }
 BUFF_SPAWNFUNCS(resistance, BUFF_RESISTANCE)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(guard, BUFF_RESISTANCE)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(resistance, BUFF_RESISTANCE)
 
 REGISTER_BUFF(SPEED) {
     this.m_name = _("Speed");
@@ -47,6 +46,7 @@ REGISTER_BUFF(MEDIC) {
     this.m_color = '1 0.12 0';
 }
 BUFF_SPAWNFUNCS(medic, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(guard, BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(regen, BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(revival, BUFF_MEDIC)
 
@@ -57,7 +57,6 @@ REGISTER_BUFF(BASH) {
     this.m_color = '1 0.39 0';
 }
 BUFF_SPAWNFUNCS(bash, BUFF_BASH)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler, BUFF_BASH)
 
 REGISTER_BUFF(VAMPIRE) {
     this.m_name = _("Vampire");

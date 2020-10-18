@@ -36,10 +36,17 @@ void XonoticMiscSettingsTab_fill(entity me)
 			_("Specify your network speed")));
 			e.addValue(e, _("56k"), "4000");
 			e.addValue(e, _("ISDN"), "7000");
-			e.addValue(e, _("Slow ADSL"), "20000");
-			e.addValue(e, _("Fast ADSL"), "40000");
+			e.addValue(e, _("Slow ADSL"), "15000");
+			e.addValue(e, _("Fast ADSL"), "20000");
 			e.addValue(e, _("Broadband"), "66666");
 			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Input packets/s:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(30, 180, 5, "cl_netfps",
+			_("How many input packets to send to the server each second")));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Server queries/s:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(20, 100, 10, "net_slist_queriespersecond"));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Downloads:")));
@@ -57,7 +64,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		e.addValue(e, strzone(_("Unlimited")), "0");
 		e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		if(cvar("developer") > 0)
+		if(cvar("developer"))
 		{
 			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Local latency:")));
 			me.TD(me, 1, 2, e = makeXonoticSlider(0, 1000, 25, "cl_netlocalping"));
@@ -80,13 +87,15 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxfps"));
 			ADDVALUE_FPS(30);
+			ADDVALUE_FPS(40);
+			ADDVALUE_FPS(50);
 			ADDVALUE_FPS(60);
+			ADDVALUE_FPS(70);
+			ADDVALUE_FPS(80);
 			ADDVALUE_FPS(100);
 			ADDVALUE_FPS(125);
 			ADDVALUE_FPS(150);
 			ADDVALUE_FPS(200);
-			ADDVALUE_FPS(250);
-			ADDVALUE_FPS(400);
 			e.addValue(e, ZCTX(_("MAXFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
@@ -94,13 +103,14 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_minfps"));
 			e.addValue(e, ZCTX(_("TRGT^Disabled")), "0");
 			ADDVALUE_FPS(30);
+			ADDVALUE_FPS(40);
+			ADDVALUE_FPS(50);
 			ADDVALUE_FPS(60);
+			ADDVALUE_FPS(80);
 			ADDVALUE_FPS(100);
 			ADDVALUE_FPS(125);
 			ADDVALUE_FPS(150);
 			ADDVALUE_FPS(200);
-			ADDVALUE_FPS(250);
-			ADDVALUE_FPS(400);
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Idle limit:")));

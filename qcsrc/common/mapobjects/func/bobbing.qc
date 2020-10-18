@@ -35,7 +35,7 @@ spawnfunc(func_bobbing)
 	if (this.noise != "")
 	{
 		precache_sound(this.noise);
-		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE, 0);
+		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 	if (!this.speed)
 		this.speed = 4;

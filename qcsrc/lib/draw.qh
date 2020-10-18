@@ -5,8 +5,7 @@
 	#include "i18n.qh"
 	#include "vector.qh"
 
-	noref float vid_conwidth;
-	noref float vid_conheight;
+	float vid_conwidth;
 
 	void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 	{
@@ -27,7 +26,7 @@
 		C = to + thickdir * (thickness / 2);
 		D = to - thickdir * (thickness / 2);
 
-		R_BeginPolygon(texture, drawflag, false);
+		R_BeginPolygon(texture, drawflag);
 		R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
 		R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, theAlpha);
 		R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);

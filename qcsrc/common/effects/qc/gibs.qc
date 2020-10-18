@@ -16,7 +16,7 @@ bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 	WriteShort(channel, floor(this.origin.x / 4)); // not using a coord here, as gibs don't need this accuracy
 	WriteShort(channel, floor(this.origin.y / 4)); // not using a coord here, as gibs don't need this accuracy
 	WriteShort(channel, floor(this.origin.z / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(channel, this.oldorigin.x); // actually compressed velocity
+	WriteShort(channel, this.oldorigin.x); // acrually compressed velocity
 	return true;
 }
 
@@ -168,7 +168,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	entity gib;
 
 	// TODO remove some gibs according to cl_nogibs
-	gib = RubbleNew(new(gib));
+	gib = RubbleNew("gib");
 	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;

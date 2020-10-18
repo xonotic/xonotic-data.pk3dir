@@ -1,5 +1,4 @@
 #include "platforms.qh"
-
 void generic_plat_blocked(entity this, entity blocker)
 {
 #ifdef SVQC
@@ -20,9 +19,10 @@ void generic_plat_blocked(entity this, entity blocker)
 
 void plat_spawn_inside_trigger(entity this)
 {
+	entity trigger;
 	vector tmin, tmax;
 
-	entity trigger = spawn();
+	trigger = spawn();
 	settouch(trigger, plat_center_touch);
 	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
@@ -93,7 +93,7 @@ void plat_center_touch(entity this, entity toucher)
 	if (!toucher.iscreature)
 		return;
 
-	if (GetResource(toucher, RES_HEALTH) <= 0)
+	if (GetResourceAmount(toucher, RESOURCE_HEALTH) <= 0)
 		return;
 #elif defined(CSQC)
 	if (!IS_PLAYER(toucher))
@@ -114,7 +114,7 @@ void plat_outside_touch(entity this, entity toucher)
 	if (!toucher.iscreature)
 		return;
 
-	if (GetResource(toucher, RES_HEALTH) <= 0)
+	if (GetResourceAmount(toucher, RESOURCE_HEALTH) <= 0)
 		return;
 #elif defined(CSQC)
 	if (!IS_PLAYER(toucher))
@@ -179,7 +179,7 @@ void plat_use(entity this, entity actor, entity trigger)
 
 void plat_reset(entity this)
 {
-	if(this.targetname && this.targetname != "")
+	IFTARGETED
 	{
 		setorigin(this, this.pos1);
 		this.state = STATE_UP;

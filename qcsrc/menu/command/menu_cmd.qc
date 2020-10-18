@@ -45,12 +45,13 @@ void GameCommand(string theCommand)
 
 	if (argv(0) == "help" || argc == 0)
 	{
-		LOG_HELP(_("Usage: menu_cmd command..., where possible commands are:"));
-		LOG_HELP(_("  sync - reloads all cvars on the current menu page"));
-		LOG_HELP(_("  directmenu ITEM - select a menu item as main item"));
-		LOG_HELP(_("  dumptree - dump the state of the menu as a tree to the console"));
+		LOG_INFO(_("Usage: menu_cmd command..., where possible commands are:"));
+		LOG_INFO(_("  sync - reloads all cvars on the current menu page"));
+		LOG_INFO(_("  directmenu ITEM - select a menu item as main item"));
+		LOG_INFO(_("  dumptree - dump the state of the menu as a tree to the console"));
+		LOG_INFO("\n");
 
-		LOG_HELP("\nGeneric commands shared by all programs:");
+		LOG_INFO("Generic commands shared by all programs:");
 		GenericCommand_macro_help();
 
 		return;
@@ -77,7 +78,7 @@ void GameCommand(string theCommand)
 
 		if (argc == 1)
 		{
-			LOG_HELP(_("Available options:"));
+			LOG_INFO(_("Available options:"));
 
 			FOREACH_ENTITY_ORDERED(it.name != "", {
 				if (it.classname == "vtbl") continue;
@@ -87,7 +88,7 @@ void GameCommand(string theCommand)
 					if (!startsWith(s, filter)) continue;
 					s = substring(s, strlen(filter), strlen(s) - strlen(filter));
 				}
-				LOG_HELP(" ", s);
+				LOG_INFOF(" %s", s);
 			});
 		}
 		else if (argc == 2 && !isdemo())     // don't allow this command in demos

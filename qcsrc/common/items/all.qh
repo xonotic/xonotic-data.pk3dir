@@ -4,8 +4,8 @@
 
 #include "item.qh"
 
-// NOTE: 24 is the limit for the .items field
-REGISTRY(Items, 32)
+REGISTRY(Items, BITS(7))
+#define Items_from(i) _Items_from(i, NULL)
 #ifdef GAMEQC
 REGISTRY_DEPENDS(Items, Models)
 #endif
@@ -14,13 +14,11 @@ REGISTER_REGISTRY(Items)
 
 REGISTRY_SORT(Items)
 REGISTRY_CHECK(Items)
-
-REGISTRY_DEFINE_GET(Items, NULL)
 STATIC_INIT(Items) { FOREACH(Items, true, it.m_id = i); }
 
 void Dump_Items();
 
-GENERIC_COMMAND(dumpitems, "Dump all items to the console", false) {
+GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
     switch (request) {
         case CMD_REQUEST_COMMAND: {
             Dump_Items();
@@ -28,7 +26,7 @@ GENERIC_COMMAND(dumpitems, "Dump all items to the console", false) {
         }
         default:
         case CMD_REQUEST_USAGE: {
-            LOG_HELPF("Usage:^3 %s dumpitems", GetProgramCommandPrefix());
+            LOG_INFOF("Usage:^3 %s dumpitems", GetProgramCommandPrefix());
             return;
         }
     }

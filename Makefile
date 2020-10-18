@@ -7,9 +7,7 @@ DIFF ?= diff
 # xonotic build system overrides this by command line argument to turn off the check-cvars step
 XON_BUILDSYSTEM =
 
-.PHONY: all
-all: check-cvars
-	$(MAKE) -C qcsrc all
+all: qc
 
 .PHONY: check-cvars
 check-cvars:
@@ -18,7 +16,7 @@ check-cvars:
 
 .PHONY: qc
 qc: check-cvars
-	$(MAKE) -C qcsrc qc
+	$(MAKE) -C qcsrc
 
 .PHONY: skin
 skin: gfx/menu/default/skinvalues.txt
@@ -29,11 +27,3 @@ clean:
 
 gfx/menu/default/skinvalues.txt: qcsrc/menu/skin-customizables.inc
 	$(PERL) qcsrc/menu/skin-customizables.inc > gfx/menu/default/skinvalues.txt
-
-.PHONY: sv
-sv:
-	$(MAKE) -C qcsrc sv
-
-.PHONY: pk3
-pk3:
-	$(MAKE) -C qcsrc pk3

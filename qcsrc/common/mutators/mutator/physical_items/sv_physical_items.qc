@@ -100,7 +100,8 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
-	entity wep = spawn();
+	entity wep;
+	wep = spawn();
 	_setmodel(wep, item.model);
 	setsize(wep, item.mins, item.maxs);
 	setorigin(wep, item.origin);

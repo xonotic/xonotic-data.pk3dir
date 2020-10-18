@@ -1,14 +1,23 @@
 #include "models.qh"
 
 #ifdef SVQC
-#include <common/constants.qh>
-#include <common/mapobjects/bgmscript.qh>
-#include <common/mapobjects/subs.qh>
-#include <common/mapobjects/triggers.qh>
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include <common/net_linked.qh>
-#include <common/stats.qh>
-#include <common/weapons/_all.qh>
-#include <lib/csqcmodel/sv_model.qh>
+#include "subs.qh"
+#include "triggers.qh"
+
+entityclass(BGMScript);
+classfield(BGMScript) .string bgmscript;
+classfield(BGMScript) .float bgmscriptattack;
+classfield(BGMScript) .float bgmscriptdecay;
+classfield(BGMScript) .float bgmscriptsustain;
+classfield(BGMScript) .float bgmscriptrelease;
+
+#include <common/constants.qh>
+#include "../../lib/csqcmodel/sv_model.qh"
+
+.float modelscale;
 
 void g_model_setcolormaptoactivator(entity this, entity actor, entity trigger)
 {
@@ -108,7 +117,11 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(sf & BIT(2))
 	{
 		if(sf & 0x10)
-			WriteAngleVector(MSG_ENTITY, this.angles);
+		{
+			WriteAngle(MSG_ENTITY, this.angles.x);
+			WriteAngle(MSG_ENTITY, this.angles.y);
+			WriteAngle(MSG_ENTITY, this.angles.z);
+		}
 	}
 
 	if(sf & BIT(3))
@@ -153,24 +166,21 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 
 
 #define G_MODEL_INIT(ent,sol) \
-	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
+	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent,true); \
+	SetBrushEntityModel(ent); \
 	ent.use = g_model_setcolormaptoactivator; \
 	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); \
-	else if(ent.solid < 0) ent.solid = SOLID_NOT;
+	if(!ent.solid) ent.solid = (sol); else if(ent.solid < 0) ent.solid = SOLID_NOT;
 
 #define G_CLIENTMODEL_INIT(ent,sol) \
-	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
+	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
-	SetBrushEntityModel(ent,true); \
+	SetBrushEntityModel(ent); \
 	ent.use = g_clientmodel_use; \
 	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!ent.solid) ent.solid = (sol); \
-	else if(ent.solid < 0) ent.solid = SOLID_NOT; \
-	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; \
-	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
+	if(!ent.solid) ent.solid = (sol); else if(ent.solid < 0) ent.solid = SOLID_NOT; \
+	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1; else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0; \
 	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity); \
 	ent.default_solid = sol;
 
@@ -182,11 +192,11 @@ spawnfunc(misc_models)            { this.angles_x = -this.angles.x; G_MODEL_INIT
 // non-solid brush entities:
 spawnfunc(func_illusionary)       { G_MODEL_INIT      (this, SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
 spawnfunc(func_clientillusionary) { G_CLIENTMODEL_INIT(this, SOLID_NOT) } // brush entity
+spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_NOT) } // DEPRECATED old alias name from some other game
 
 // solid brush entities
 spawnfunc(func_wall)              { G_MODEL_INIT      (this, SOLID_BSP) } // Q1 name
 spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
-spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_BSP) } // DEPRECATED old alias name from some other game
 #elif defined(CSQC)
 .float alpha;
 .float scale;
@@ -329,7 +339,11 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 	if(f & 4)
 	{
 		if(f & 0x10)
-			this.angles = ReadAngleVector();
+		{
+			this.angles_x = ReadAngle();
+			this.angles_y = ReadAngle();
+			this.angles_z = ReadAngle();
+		}
 		else
 			this.angles = '0 0 0';
 	}

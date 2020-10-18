@@ -1,12 +1,12 @@
 #include "ipban.qh"
 
-#include <common/constants.qh>
-#include <common/stats.qh>
-#include <common/util.qh>
-#include <common/weapons/_all.qh>
-#include <server/autocvars.qh>
-#include <server/command/banning.qh>
-#include <server/main.qh>
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include "autocvars.qh"
+#include "command/banning.qh"
+#include "defs.qh"
+#include "../common/constants.qh"
+#include "../common/util.qh"
 
 /*
  * Protocol of online ban list:
@@ -202,21 +202,12 @@ void OnlineBanList_Think(entity this)
 	float i, n;
 
 	if(autocvar_g_ban_sync_uri == "")
-	{
-		delete(this);
-		return;
-	}
+		goto killme;
 	if(autocvar_g_ban_sync_interval == 0) // < 0 is okay, it means "sync on level start only"
-	{
-		delete(this);
-		return;
-	}
+		goto killme;
 	argc = tokenize_console(autocvar_g_ban_sync_trusted_servers);
 	if(argc == 0)
-	{
-		delete(this);
-		return;
-	}
+		goto killme;
 
 	string s = argv(0); for(i = 1; i < argc; ++i) s = strcat(s, ";", argv(i));
 	strcpy(OnlineBanList_Servers, s);
@@ -240,13 +231,14 @@ void OnlineBanList_Think(entity this)
 			uri_get(strcat(argv(i), "?", uri), URI_GET_IPBAN + i); // 1000 = "banlist" callback target
 	}
 
-	if(autocvar_g_ban_sync_interval <= 0)
-	{
-		delete(this);
-		return;
-	}
+	if(autocvar_g_ban_sync_interval > 0)
+		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
+	else
+		goto killme;
+	return;
 
-	this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
+LABEL(killme)
+	delete(this);
 }
 
 const float BAN_MAX = 256;
@@ -453,16 +445,11 @@ bool Ban_MaybeEnforceBan(entity client)
 {
 	if (Ban_IsClientBanned(client, -1))
 	{
-		if (!client.crypto_idfp)
-			LOG_INFOF("^1NOTE:^7 banned client %s just tried to enter\n",
-				client.netaddress);
-		else
-			LOG_INFOF("^1NOTE:^7 banned client %s (%s) just tried to enter\n",
-				client.netaddress, client.crypto_idfp);
-
+		string s = sprintf("^1NOTE:^7 banned client %s just tried to enter\n", client.netaddress);
 		if(autocvar_g_ban_telluser)
 			sprint(client, "You are banned from this server.\n");
 		dropclient(client);
+		bprint(s);
 		return true;
 	}
 	return false;
@@ -494,7 +481,7 @@ string Ban_Enforce(float j, string reason)
 					reason = strcat(reason, ", ");
 				reason = strcat(reason, it.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", it.netname, "^7 has to go\n");
+			s = strcat(s, "^1NOTE:^7 banned client ", it.netaddress, "^7 has to go\n");
 			dropclient(it);
 		}
 	});

@@ -84,8 +84,10 @@ void minigame_server_sendflags(entity ent, int mgflags)
 
 // Spawn linked entity on the server or local entity on the client
 // This entity will be removed automatically when the minigame ends
-entity msle_spawn(entity minigame_session, entity e)
+entity msle_spawn(entity minigame_session, string class_name)
 {
+	entity e = spawn();
+	e.classname = class_name;
 	e.owner = minigame_session;
 	e.minigame_autoclean = 1;
 	#ifdef SVQC

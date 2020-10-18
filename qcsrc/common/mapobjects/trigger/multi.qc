@@ -7,7 +7,7 @@ void multi_wait(entity this)
 {
 	if (this.max_health)
 	{
-		SetResourceExplicit(this, RES_HEALTH, this.max_health);
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
 	}
@@ -24,12 +24,21 @@ void multi_trigger(entity this)
 		return;		// allready been triggered
 	}
 
-	if((this.spawnflags & ONLY_PLAYERS) && !IS_PLAYER(this.enemy))
+	if(this.spawnflags & ONLY_PLAYERS && !IS_PLAYER(this.enemy))
 	{
 		return; // only players
 	}
 
-	if (this.noise && this.noise != "")
+	// TODO: restructure this so that trigger_secret is more independent
+	if (this.classname == "trigger_secret")
+	{
+		if (!IS_PLAYER(this.enemy))
+			return;
+		found_secrets = found_secrets + 1;
+		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
+	}
+
+	if (this.noise)
 	{
 		_sound (this.enemy, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 	}
@@ -111,8 +120,8 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 	if(this.team)
 		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != attacker.team))
 			return;
-	TakeResource(this, RES_HEALTH, damage);
-	if (GetResource(this, RES_HEALTH) <= 0)
+	TakeResource(this, RESOURCE_HEALTH, damage);
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		this.enemy = attacker;
 		this.goalentity = inflictor;
@@ -126,7 +135,7 @@ void multi_reset(entity this)
 		settouch(this, multi_touch);
 	if (this.max_health)
 	{
-		SetResourceExplicit(this, RES_HEALTH, this.max_health);
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
 	}
@@ -158,7 +167,7 @@ spawnfunc(trigger_multiple)
 	else if (this.sounds == 3)
 		this.noise = "misc/trigger1.wav";
 
-	if(this.noise && this.noise != "")
+	if(this.noise)
 		precache_sound(this.noise);
 
 	if (!this.wait)
@@ -167,20 +176,17 @@ spawnfunc(trigger_multiple)
 		this.wait = 0;
 	this.use = multi_use;
 
-	if(this.wait == -1 && autocvar_sv_q3defragcompat)
-		this.wait = 0.1; // compatibility for q3df: "instant" return
-
 	EXACTTRIGGER_INIT;
 
 	this.team_saved = this.team;
 	IL_PUSH(g_saved_team, this);
 
-	if (GetResource(this, RES_HEALTH))
+	if (GetResourceAmount(this, RESOURCE_HEALTH))
 	{
 		if (this.spawnflags & SPAWNFLAG_NOTOUCH)
 			objerror (this, "health and notouch don't make sense\n");
 		this.canteamdamage = true;
-		this.max_health = GetResource(this, RES_HEALTH);
+		this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
 		this.event_damage = multi_eventdamage;
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
