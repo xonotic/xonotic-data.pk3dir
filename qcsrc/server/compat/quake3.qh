@@ -11,7 +11,7 @@ bool DoesQ3ARemoveThisEntity(entity this);
 // The ammo spawnfunc knows which weapon will use the ammo so it can look up the type
 // and calculate the amount required for the number of shots in the count field.
 #define _SPAWNFUNC_Q3AMMO(ammo_classname, xonwep) \
-	if(this.count) \
+	if(this.count && xonwep.ammo_type) \
 		SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumptionPrimary(xonwep.netname)); \
 	spawnfunc_body(GetAmmoItem(xonwep.ammo_type));
 
