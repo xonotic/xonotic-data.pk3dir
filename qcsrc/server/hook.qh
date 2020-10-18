@@ -1,7 +1,7 @@
 #pragma once
 
 // Wazat's grappling hook
-.entity		hook;
+.entity hook;
 void GrapplingHookThink(entity this);
 void RemoveGrapplingHooks(entity pl);
 void RemoveHook(entity this);

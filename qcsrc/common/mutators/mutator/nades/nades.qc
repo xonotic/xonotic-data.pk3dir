@@ -355,13 +355,10 @@ void napalm_fountain_think(entity this)
 
 void nade_napalm_boom(entity this)
 {
-	entity fountain;
-	int c;
-	for (c = 0; c < autocvar_g_nades_napalm_ball_count; c++)
+	for (int c = 0; c < autocvar_g_nades_napalm_ball_count; c++)
 		nade_napalm_ball(this);
 
-
-	fountain = spawn();
+	entity fountain = new(nade_napalm_fountain);
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
@@ -455,8 +452,7 @@ void nade_ice_think(entity this)
 
 void nade_ice_boom(entity this)
 {
-	entity fountain;
-	fountain = spawn();
+	entity fountain = new(nade_ice_fountain);
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
@@ -509,22 +505,20 @@ void nade_translocate_boom(entity this)
 
 void nade_spawn_boom(entity this)
 {
-	entity spawnloc = spawn();
+	entity player = this.realowner;
+	entity spawnloc = new(nade_spawn_loc);
 	setorigin(spawnloc, this.origin);
-	setsize(spawnloc, this.realowner.mins, this.realowner.maxs);
+	setsize(spawnloc, player.mins, player.maxs);
 	set_movetype(spawnloc, MOVETYPE_NONE);
 	spawnloc.solid = SOLID_NOT;
-	spawnloc.drawonlytoclient = this.realowner;
+	spawnloc.drawonlytoclient = player;
 	spawnloc.effects = EF_STARDUST;
 	spawnloc.cnt = autocvar_g_nades_spawn_count;
 
-	if(this.realowner.nade_spawnloc)
-	{
-		delete(this.realowner.nade_spawnloc);
-		this.realowner.nade_spawnloc = NULL;
-	}
+	if(player.nade_spawnloc)
+		delete(player.nade_spawnloc);
 
-	this.realowner.nade_spawnloc = spawnloc;
+	player.nade_spawnloc = spawnloc;
 }
 
 void nades_orb_think(entity this)
@@ -551,7 +545,7 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	// NOTE: this function merely places an orb
 	// you must add a custom touch function to the returned entity if desired
 	// also set .colormod if you wish to have it colorized
-	entity orb = spawn(); // Net_LinkEntity sets the classname (TODO)
+	entity orb = new(nades_spawn_orb);
 	orb.owner = own;
 	orb.realowner = realown;
 	setorigin(orb, org);
@@ -944,7 +938,8 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	entity _nade = e.nade;
 	e.nade = NULL;
 
-	delete(e.fake_nade);
+	if(e.fake_nade)
+		delete(e.fake_nade);
 	e.fake_nade = NULL;
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
@@ -1132,15 +1127,17 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 
 void nade_prime(entity this)
 {
-	if(autocvar_g_nades_bonus_only)
-	if(!STAT(NADE_BONUS, this))
+	if(autocvar_g_nades_bonus_only && !STAT(NADE_BONUS, this))
 		return; // only allow bonus nades
 
+	// TODO: handle old nade if it exists?
 	if(this.nade)
 		delete(this.nade);
+	this.nade = NULL;
 
 	if(this.fake_nade)
 		delete(this.fake_nade);
+	this.fake_nade = NULL;
 
 	int ntype;
 	string pntype = this.pokenade_type;
@@ -1164,22 +1161,7 @@ void nade_prime(entity this)
 
 bool CanThrowNade(entity this)
 {
-	if(this.vehicle)
-		return false;
-
-	if(IS_DEAD(this))
-		return false;
-
-	if (!autocvar_g_nades)
-		return false; // allow turning them off mid match
-
-	if (weaponLocked(this))
-		return false;
-
-	if (!IS_PLAYER(this))
-		return false;
-
-	return true;
+	return !(this.vehicle || !autocvar_g_nades || IS_DEAD(this) || !IS_PLAYER(this) || weaponLocked(this));
 }
 
 .bool nade_altbutton;

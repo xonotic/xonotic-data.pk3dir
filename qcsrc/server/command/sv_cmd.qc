@@ -1,36 +1,30 @@
 #include "sv_cmd.qh"
-#include "_mod.qh"
-
-#include <common/effects/all.qh>
-
-#include "banning.qh"
-#include "cmd.qh"
-#include "common.qh"
-#include "getreplies.qh"
-#include "radarmap.qh"
-
-#include "../anticheat.qh"
-#include "../campaign.qh"
-#include "../client.qh"
-#include "../player.qh"
-#include "../world.qh"
-#include "../ipban.qh"
-#include "../teamplay.qh"
-#include <server/intermission.qh>
-
-#include "../bot/api.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
 
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/effects/all.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-
-#include <common/monsters/sv_monsters.qh>
+#include <server/anticheat.qh>
+#include <server/bot/api.qh>
+#include <server/campaign.qh>
+#include <server/client.qh>
+#include <server/command/_mod.qh>
+#include <server/command/banning.qh>
+#include <server/command/cmd.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/radarmap.qh>
+#include <server/intermission.qh>
+#include <server/ipban.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think(entity this)

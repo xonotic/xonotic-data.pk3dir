@@ -1,13 +1,12 @@
 #include "player.qh"
-#include "../mapobjects/_mod.qh"
-#include "../viewloc.qh"
+
+#include <common/mapobjects/_mod.qh>
+#include <common/viewloc.qh>
 
 #ifdef SVQC
-
-#include <server/client.qh>
 #include <common/mapobjects/defs.qh>
-#include "../mapobjects/trigger/viewloc.qh"
-#include <server/main.qh>
+#include <common/mapobjects/trigger/viewloc.qh>
+#include <server/client.qh>
 
 // client side physics
 bool Physics_Valid(string thecvar)

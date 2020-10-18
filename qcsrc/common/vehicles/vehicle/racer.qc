@@ -2,13 +2,12 @@
 
 #if defined(SVQC)
 	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+	#include <common/mapobjects/trigger/impulse.qh>
 #endif
 
 #ifdef GAMEQC
 
 #ifdef SVQC
-#include <common/mapobjects/trigger/impulse.qh>
-
 bool autocvar_g_vehicle_racer = true;
 
 float autocvar_g_vehicle_racer_thinkrate = 0.05; // TODO: any higher causes it to sink in liquids

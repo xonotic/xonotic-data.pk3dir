@@ -437,7 +437,7 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 			}
 			else
 			{
-				entity piece = msle_spawn(minigame,"minigame_board_piece");
+				entity piece = msle_spawn(minigame,new(minigame_board_piece));
 				piece.team = 1;
 				piece.netname = strzone(pos);
 				piece.bd_tiletype = thetile;
@@ -711,7 +711,7 @@ void bd_load_piece(entity minigame, string s)
 	}
 	else
 	{
-		entity e = msle_spawn(minigame,"minigame_board_piece");
+		entity e = msle_spawn(minigame,new(minigame_board_piece));
 		e.netname = tilename;
 		e.team = 1;
 		e.bd_dir = dir;

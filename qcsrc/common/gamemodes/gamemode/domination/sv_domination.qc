@@ -556,7 +556,6 @@ spawnfunc(dom_team)
 		precache_sound(this.noise);
 	if (this.noise1 != "")
 		precache_sound(this.noise1);
-	this.classname = "dom_team";
 	_setmodel(this, this.model); // precision not needed
 	this.mdl = this.model;
 	this.dmg = this.modelindex;
@@ -621,7 +620,6 @@ void dom_spawnteam(string teamname, float teamcolor, string pointmodel, float po
 void dom_spawnpoint(vector org)
 {
 	entity e = spawn();
-	e.classname = "dom_controlpoint";
 	setthink(e, spawnfunc_dom_controlpoint);
 	e.nextthink = time;
 	setorigin(e, org);

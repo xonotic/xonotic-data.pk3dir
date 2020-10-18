@@ -5,11 +5,11 @@
 /// creation of game items.
 /// \copyright GNU GPLv2 or any later version.
 
+#include <common/mapobjects/subs.qh>
+#include <common/weapons/all.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
 #include <server/weapons/spawning.qh>
-#include <common/weapons/all.qh>
-#include <common/mapobjects/subs.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
 /// \brief Holds whether strength, shield or superweapon timers expire while

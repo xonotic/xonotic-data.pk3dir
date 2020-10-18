@@ -747,8 +747,7 @@ NET_HANDLE(TE_CSQC_SHOCKWAVEPARTICLE, bool isNew)
 
 void Net_ReadShockwaveParticle()
 {
-	entity shockwave;
-	shockwave = spawn();
+	entity shockwave = new(shockwave_cone);
 	shockwave.draw = Draw_Shockwave;
 	IL_PUSH(g_drawables, shockwave);
 

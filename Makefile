@@ -29,3 +29,11 @@ clean:
 
 gfx/menu/default/skinvalues.txt: qcsrc/menu/skin-customizables.inc
 	$(PERL) qcsrc/menu/skin-customizables.inc > gfx/menu/default/skinvalues.txt
+
+.PHONY: sv
+sv:
+	$(MAKE) -C qcsrc sv
+
+.PHONY: pk3
+pk3:
+	$(MAKE) -C qcsrc pk3

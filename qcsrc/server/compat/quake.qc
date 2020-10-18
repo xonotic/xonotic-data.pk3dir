@@ -1,7 +1,7 @@
 #include "quake.qh"
 
-#include <common/weapons/_all.qh>
 #include <common/stats.qh>
+#include <common/weapons/_all.qh>
 #include <common/weapons/_all.qh>
 
 /***********************
