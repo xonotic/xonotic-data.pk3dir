@@ -1,9 +1,10 @@
 #include "config.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
+	#include <common/turrets/all.qh>
 	#include <common/util.qh>
-	#include "all.qh"
 #endif
 
 // ==========================

@@ -84,7 +84,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	if(s != "data")
 		modname = sprintf("%s (%s)", modname, s);
 
-	Gametype j = MapInfo_Type_FromString(typestr); // try and get the real name of the game type
+	Gametype j = MapInfo_Type_FromString(typestr, false); // try and get the real name of the game type
 	if(j) { typestr = MapInfo_Type_ToText(j); } // only set it if we actually found it
 
 	me.currentServerType = strzone(typestr);

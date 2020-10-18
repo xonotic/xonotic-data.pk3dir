@@ -10,6 +10,8 @@ CLASS(Arc, Weapon)
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);
+/* flash mdl */ ATTRIB(Arc, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Arc, m_muzzleeffect, entity, EFFECT_ARC_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Arc, w_crosshair, string, "gfx/crosshairhlac");
 /* crosshair */ ATTRIB(Arc, w_crosshair_size, float, 0.7);

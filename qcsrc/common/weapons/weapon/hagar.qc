@@ -83,7 +83,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage), thiswep.m_id);
 
-	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	missile = new(missile);
 	missile.owner = missile.realowner = actor;
@@ -129,7 +129,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage), thiswep.m_id | HITTYPE_SECONDARY);
 
-	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	missile = new(missile);
 	missile.owner = missile.realowner = actor;
@@ -185,7 +185,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 
 	shots = actor.(weaponentity).hagar_load;
 	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage) * shots, thiswep.m_id | HITTYPE_SECONDARY);
-	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	forward = v_forward;
 	right = v_right;
@@ -221,7 +221,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 		// per-shot spread calculation: the more shots there are, the less spread is applied (based on the bias cvar)
 		spread_pershot = ((shots - 1) / (WEP_CVAR_SEC(hagar, load_max) - 1));
 		spread_pershot = (1 - (spread_pershot * WEP_CVAR_SEC(hagar, load_spread_bias)));
-		spread_pershot = (WEP_CVAR_SEC(hagar, spread) * spread_pershot * g_weaponspreadfactor);
+		spread_pershot = (WEP_CVAR_SEC(hagar, spread) * spread_pershot * autocvar_g_weaponspreadfactor);
 
 		// pattern spread calculation
 		s = '0 0 0';
@@ -233,7 +233,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 			s.y = v_forward.x;
 			s.z = v_forward.y;
 		}
-		s = s * WEP_CVAR_SEC(hagar, load_spread) * g_weaponspreadfactor;
+		s = s * WEP_CVAR_SEC(hagar, load_spread) * autocvar_g_weaponspreadfactor;
 
 		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_SEC(hagar, speed), 0, 0, spread_pershot, false);
 

@@ -1,49 +1,38 @@
 #include "cmd.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-
 #include <common/command/_mod.qh>
-
-#include "common.qh"
-#include "vote.qh"
-
-#include "../bot/api.qh"
-
-#include "../campaign.qh"
-#include "../cheats.qh"
-#include "../client.qh"
-#include "../clientkill.qh"
-#include "../player.qh"
-#include "../ipban.qh"
-#include "../mapvoting.qh"
-#include "../scores.qh"
-#include "../teamplay.qh"
-
-#include <server/mutators/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-
-#ifdef SVQC
-	#include <common/vehicles/all.qh>
-#endif
-
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/minigames/sv_minigames.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/mapobjects/triggers.qh>
-
-#include <common/minigames/sv_minigames.qh>
-
-#include <common/monsters/_mod.qh>
-#include <common/monsters/sv_spawn.qh>
-#include <common/monsters/sv_monsters.qh>
-
+#include <common/vehicles/all.qh>
 #include <lib/warpzone/common.qh>
+#include <server/bot/api.qh>
+#include <server/campaign.qh>
+#include <server/chat.qh>
+#include <server/cheats.qh>
+#include <server/client.qh>
+#include <server/clientkill.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/vote.qh>
+#include <server/ipban.qh>
+#include <server/mapvoting.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/scores.qh>
+#include <server/teamplay.qh>
+#include <server/world.qh>
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual
@@ -90,7 +79,7 @@ void ClientCommand_autoswitch(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2autoswitch^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd autoswitch selection\n");
@@ -133,7 +122,7 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2clientversion^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd clientversion version\n");
@@ -158,7 +147,7 @@ void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // inter
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2mv_getpicture^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd mv_getpicture mapid\n");
@@ -248,7 +237,7 @@ void ClientCommand_wpeditor(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2wpeditor^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd wpeditor action\n");
@@ -384,9 +373,9 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 		{
 			if (IS_CLIENT(caller))
 			{
-				if (warmup_stage || sv_ready_restart || g_race_qualifying == 2)
+				if (warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
 				{
-					if (!readyrestart_happened || sv_ready_restart_repeatable)
+					if (!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
 						if (time < game_starttime) // game is already restarting
 							return;
@@ -394,13 +383,13 @@ void ClientCommand_ready(entity caller, int request)  // todo: anti-spam for tog
 						{
 							caller.ready = false;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
 							if(IS_PLAYER(caller) || caller.caplayer == 1)
-								bprint(playername(caller, false), "^2 is ready\n");
+								bprint(playername(caller.netname, caller.team, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -561,7 +550,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			return;
 		}
 		default:
-			sprint(caller, "Incorrect parameters for ^2selectteam^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selectteam team\n");
@@ -586,7 +575,7 @@ void ClientCommand_selfstuff(entity caller, int request, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2selfstuff^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd selfstuff <command>\n");
@@ -620,7 +609,7 @@ void ClientCommand_sentcvar(entity caller, int request, int argc, string command
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2sentcvar^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd sentcvar <cvar>\n");
@@ -646,10 +635,13 @@ void ClientCommand_spectate(entity caller, int request)
 						int spec_accepted = VerifyClientEntity(client, false, false);
 						if(spec_accepted > 0 && IS_PLAYER(client))
 						{
+							bool caller_is_observer = (IS_OBSERVER(caller));
 							Spectate(caller, client);
+							if (caller_is_observer)
+								TRANSMUTE(Spectator, caller);
 						}
 						else
-							sprint(caller, "can't spectate ", argv(1), "^7\n");
+							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
 					else
 						sprint(caller, "cmd spectate client only works when you are spectator/observer\n");
@@ -691,7 +683,7 @@ void ClientCommand_suggestmap(entity caller, int request, int argc)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2suggestmap^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd suggestmap map\n");
@@ -748,7 +740,7 @@ void ClientCommand_tell(entity caller, int request, int argc, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2tell^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd tell client <message>\n");
@@ -794,7 +786,7 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 		}
 
 		default:
-			sprint(caller, "Incorrect parameters for ^2voice^7\n");
+			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd voice messagetype <soundname>\n");

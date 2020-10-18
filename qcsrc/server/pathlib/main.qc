@@ -1,11 +1,11 @@
 #include "main.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "pathlib.qh"
-#include "utility.qh"
+#include <common/stats.qh>
 #include <common/turrets/util.qh>
-#include "../command/common.qh"
+#include <common/weapons/_all.qh>
+#include <server/command/common.qh>
+#include <server/pathlib/pathlib.qh>
+#include <server/pathlib/utility.qh>
 
 void pathlib_deletepath(entity start)
 {

@@ -1,5 +1,6 @@
 #include "sv_freezetag.qh"
 
+#include <server/elimination.qh>
 #include <server/resources.qh>
 
 float autocvar_g_freezetag_frozen_maxtime;

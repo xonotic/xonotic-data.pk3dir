@@ -1,14 +1,12 @@
 #include "csqcprojectile.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/t_items.qh>
-
-#include "../command/common.qh"
-
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/stats.qh>
 #include <common/weapons/_all.qh>
+#include <common/weapons/_all.qh>
+#include <server/command/common.qh>
+#include <server/items/items.qh>
 
 .float csqcprojectile_type;
 

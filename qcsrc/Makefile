@@ -1,5 +1,5 @@
 CPP := cc -xc -E
-QCC ?= gmqcc
+QCC ?= ../../../../gmqcc/gmqcc
 
 PROGS_OUT ?= ..
 WORKDIR ?= ../.tmp
@@ -15,13 +15,13 @@ BUILD_MOD ?=
 
 ifndef ZIP
 	ifneq ($(shell which zip 2>/dev/null),)
-		ZIP := zip -9
+		ZIP := zip -9mD
 	endif
 	ifneq ($(shell which 7z 2>/dev/null),)
-		ZIP := 7z a -tzip -mx=9
+		ZIP := 7z a -tzip -mx=9 -sdel
 	endif
 	ifneq ($(shell which 7za 2>/dev/null),)
-		ZIP := 7za a -tzip -mx=9
+		ZIP := 7za a -tzip -mx=9 -sdel
 	endif
     ifndef ZIP
         $(warning "No zip / 7z / 7za in ($(PATH))")
@@ -72,12 +72,22 @@ clean: | $(WORKDIR)
 	$(RM) $(PROGS_OUT)/csprogs.dat
 	$(RM) $(PROGS_OUT)/menu.dat
 	$(RM) $(PROGS_OUT)/progs.dat
+	$(RM) $(PROGS_OUT)/csprogs.lno
+	$(RM) $(PROGS_OUT)/menu.lno
+	$(RM) $(PROGS_OUT)/progs.lno
 	$(RM) $(WORKDIR)/*.d
 	$(RM) $(WORKDIR)/*.qc
 	$(RM) $(WORKDIR)/*.txt
+	$(RM) $(WORKDIR)/qccversion.*
+	$(RM) $(WORKDIR)/csprogs-*
+	$(RM) $(WORKDIR)/autoexec/csprogs-*.cfg
+	$(RM) csprogs-*.pk3
 
 .PHONY: qc
 qc: $(PROGS_OUT)/csprogs.dat $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat
+
+.PHONY: sv
+sv: $(PROGS_OUT)/csprogs.dat $(PROGS_OUT)/progs.dat
 
 .PHONY: pk3
 pk3: csprogs-$(VER).pk3
@@ -89,15 +99,16 @@ pk3: csprogs-$(VER).pk3
 %-$(VER).pk3: $(PROGS_OUT)/%.dat
 	$(eval PROG=$*)
 	$(eval PK3=$(PROG)-$(VER).pk3)
-	$(eval TXT=$(PROG)-$(VER).txt)
+	$(eval CFG=autoexec/$(PROG)-$(VER).cfg)
 	$(eval DAT=$(PROG)-$(VER).dat)
 	$(eval LNO=$(PROG)-$(VER).lno)
-	@ echo "http://xonotic.org" > $(TXT)
-	@ cp -f $(PROGS_OUT)/$(PROG).dat $(DAT)
-	@ cp -f $(PROGS_OUT)/$(PROG).lno $(LNO)
-	@ $(RM) *.pk3
-	$(ZIP) $(PK3) $(TXT) $(DAT) $(LNO)
-	@ $(RM) $(TXT) $(DAT) $(LNO)
+	@ mkdir -p $(WORKDIR)/autoexec
+	@ echo "// http://xonotic.org" > $(WORKDIR)/$(CFG)
+	@ echo "set csqc_progname $(DAT)" >> $(WORKDIR)/$(CFG)
+	@ cp -f $(PROGS_OUT)/$(PROG).dat $(WORKDIR)/$(DAT)
+	@ cp -f $(PROGS_OUT)/$(PROG).lno $(WORKDIR)/$(LNO)
+	@ $(RM) $(PROG)-*.pk3
+	cd $(WORKDIR) && $(ZIP) $(CURDIR)/$(PK3) $(CFG) $(DAT) $(LNO)
 
 QCCVERSION := $(shell cd lib && $(QCC) --version)
 QCCVERSIONFILE := $(WORKDIR)/qccversion.$(shell echo ${QCCVERSION} | git hash-object --stdin)

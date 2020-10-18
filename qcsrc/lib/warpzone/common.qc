@@ -1,7 +1,7 @@
 #include "common.qh"
 
 #if defined(CSQC)
-    #include <common/t_items.qh>
+    #include <client/items/items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/weapons/_all.qh>
@@ -778,8 +778,7 @@ void WarpZone_RefSys_Copy(entity me, entity from)
 }
 entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 {
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	WarpZone_RefSys_Copy(e, me);
 	return e;
 }

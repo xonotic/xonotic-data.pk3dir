@@ -1,10 +1,10 @@
 #include "player_skeleton.qh"
 
+#include <client/mutators/_mod.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
-#include <client/mutators/_mod.qh>
-#include "../lib/csqcmodel/cl_player.qh"
-#include "../lib/warpzone/anglestransform.qh"
+#include <lib/csqcmodel/cl_player.qh>
+#include <lib/warpzone/anglestransform.qh>
 
 .float v_angle_save_x;
 

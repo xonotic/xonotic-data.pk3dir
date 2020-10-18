@@ -1,4 +1,5 @@
 #include "platforms.qh"
+
 void generic_plat_blocked(entity this, entity blocker)
 {
 #ifdef SVQC
@@ -19,10 +20,9 @@ void generic_plat_blocked(entity this, entity blocker)
 
 void plat_spawn_inside_trigger(entity this)
 {
-	entity trigger;
 	vector tmin, tmax;
 
-	trigger = spawn();
+	entity trigger = spawn();
 	settouch(trigger, plat_center_touch);
 	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;

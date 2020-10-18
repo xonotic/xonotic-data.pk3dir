@@ -307,7 +307,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -357,7 +357,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 			s.y = v_forward.x;
 			s.z = v_forward.y;
 		}
-		s = s * WEP_CVAR_PRI(crylink, spread) * g_weaponspreadfactor;
+		s = s * WEP_CVAR_PRI(crylink, spread) * autocvar_g_weaponspreadfactor;
 		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, false);
 		settouch(proj, W_Crylink_Touch);
 
@@ -420,7 +420,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -471,12 +471,12 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 				s.y = v_forward.x;
 				s.z = v_forward.y;
 			}
-			s = s * WEP_CVAR_SEC(crylink, spread) * g_weaponspreadfactor;
+			s = s * WEP_CVAR_SEC(crylink, spread) * autocvar_g_weaponspreadfactor;
 			s = w_shotdir + right * s.y + up * s.z;
 		}
 		else
 		{
-			s = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * WEP_CVAR_SEC(crylink, spread) * g_weaponspreadfactor);
+			s = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * WEP_CVAR_SEC(crylink, spread) * autocvar_g_weaponspreadfactor);
 		}
 
 		W_SetupProjVelocity_Explicit(proj, s, v_up, WEP_CVAR_SEC(crylink, speed), 0, 0, 0, false);
@@ -505,7 +505,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 		proj.flags = FL_PROJECTILE;
 		IL_PUSH(g_projectiles, proj);
 		IL_PUSH(g_bot_dodge, proj);
-        proj.missile_flags = MIF_SPLASH;
+		proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 

@@ -479,7 +479,7 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 			//  BLAST CONE CALCULATION
 			// ========================
 
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 			center = CENTER_OR_VIEWOFS(head);
 
 			// find the closest point on the enemy to the center of the attack
@@ -759,8 +759,7 @@ NET_HANDLE(TE_CSQC_SHOCKWAVEPARTICLE, bool isNew)
 
 void Net_ReadShockwaveParticle()
 {
-	entity shockwave;
-	shockwave = spawn();
+	entity shockwave = new(shockwave_cone);
 	shockwave.draw = Draw_Shockwave;
 	IL_PUSH(g_drawables, shockwave);
 

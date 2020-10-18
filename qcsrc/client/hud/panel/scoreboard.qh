@@ -1,6 +1,8 @@
 #pragma once
 #include "../panel.qh"
 
+bool scoreboard_showscores;
+
 bool scoreboard_active;
 float scoreboard_fade_alpha;
 float scoreboard_acc_fade_alpha;

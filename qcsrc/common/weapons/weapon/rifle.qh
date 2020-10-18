@@ -10,6 +10,8 @@ CLASS(Rifle, Weapon)
 /* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);
+/* flash mdl */ ATTRIB(Rifle, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Rifle, m_muzzleeffect, entity, EFFECT_RIFLE_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");
 /* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
@@ -27,6 +29,7 @@ CLASS(Rifle, Weapon)
 		P(class, prefix, bursttime, float, NONE) \
 		P(class, prefix, damage, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, headshot_multiplier, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \

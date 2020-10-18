@@ -3,6 +3,7 @@
 #ifdef SVQC
 #include <server/autocvars.qh>
 #include <server/client.qh>
+#include <common/mapobjects/trigger/secret.qh>
 #endif
 
 // Full list of all stat constants, included in a single location for easy reference
@@ -63,8 +64,8 @@ REGISTER_STAT(KH_KEYS, int)
 #ifdef SVQC
 float W_WeaponRateFactor(entity this);
 float game_stopped;
-float game_starttime;
-float round_starttime;
+float game_starttime; //point in time when the countdown to game start is over
+float round_starttime; //point in time when the countdown to round start is over
 bool autocvar_g_allow_oldvortexbeam;
 int autocvar_leadlimit;
 #endif
@@ -100,8 +101,8 @@ REGISTER_STAT(VEHICLESTAT_AMMO2, int)
 REGISTER_STAT(VEHICLESTAT_RELOAD2, int)
 REGISTER_STAT(VEHICLESTAT_W2MODE, int)
 REGISTER_STAT(NADE_TIMER, float)
-REGISTER_STAT(SECRETS_TOTAL, float)
-REGISTER_STAT(SECRETS_FOUND, float)
+REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
+REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 REGISTER_STAT(RESPAWN_TIME, float)
 REGISTER_STAT(ROUNDSTARTTIME, float, round_starttime)
 REGISTER_STAT(MONSTERS_TOTAL, int)
@@ -193,12 +194,13 @@ int autocvar_sv_gameplayfix_easierwaterjump = 1;
 int autocvar_sv_gameplayfix_stepdown = 2;
 float autocvar_sv_gameplayfix_stepdown_maxspeed = 0;
 int autocvar_sv_gameplayfix_stepmultipletimes = 1;
-int autocvar_sv_gameplayfix_unstickplayers = 1;
+int autocvar_sv_gameplayfix_unstickplayers = 2;
 int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
 int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
 int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;
 int autocvar_sv_gameplayfix_noairborncorpse = 1;
 int autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems = 1;
+int autocvar_sv_gameplayfix_delayprojectiles = 0;
 #endif
 REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
@@ -212,6 +214,7 @@ REGISTER_STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES, int, autocvar_sv_gameplayfix_sli
 REGISTER_STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES, int, autocvar_sv_gameplayfix_grenadebouncedownslopes)
 REGISTER_STAT(GAMEPLAYFIX_NOAIRBORNCORPSE, int, autocvar_sv_gameplayfix_noairborncorpse)
 REGISTER_STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED, int, autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems)
+REGISTER_STAT(GAMEPLAYFIX_DELAYPROJECTILES, int, autocvar_sv_gameplayfix_delayprojectiles)
 
 REGISTER_STAT(MOVEVARS_JUMPSTEP, int, cvar("sv_jumpstep"))
 REGISTER_STAT(NOSTEP, int, cvar("sv_nostep"))

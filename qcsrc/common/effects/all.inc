@@ -122,7 +122,7 @@ EFFECT(0, RACER_BOOSTER,            "wakizashi_booster_smoke")
 EFFECT(0, RACER_IMPACT,             "wakizashi_gun_impact")
 EFFECT(0, RACER_MUZZLEFLASH,        "wakizashi_gun_muzzleflash")
 EFFECT(0, RACER_ROCKETLAUNCH,       "wakizashi_rocket_launch")
-EFFECT(0, RACER_ROCKET_EXPLODE,     "wakizashi_rocket_launch")
+EFFECT(0, RACER_ROCKET_EXPLODE,     "wakizashi_rocket_explode")
 EFFECT(1, RACER_ROCKET_TRAIL,       "wakizashi_rocket_thrust")
 
 EFFECT(0, SPIDERBOT_ROCKETLAUNCH,           "spiderbot_rocket_launch")

@@ -28,7 +28,7 @@ void target_speaker_use_activator(entity this, entity actor, entity trigger)
 	else
 		snd = this.noise;
 	msg_entity = actor;
-	soundto(MSG_ONE, this, CH_TRIGGER, snd, VOL_BASE * this.volume, this.atten);
+	soundto(MSG_ONE, this, CH_TRIGGER, snd, VOL_BASE * this.volume, this.atten, 0);
 }
 void target_speaker_use_on(entity this, entity actor, entity trigger)
 {
@@ -83,7 +83,7 @@ spawnfunc(target_speaker)
 	if(this.noise)
 		precache_sound (this.noise);
 
-	if(!this.atten && (this.spawnflags & SPEAKER_GLOBAL))
+	if(!this.atten && (this.spawnflags & SPEAKER_GLOBAL) && !(this.spawnflags & 3)) // special check for quake 3: looped sounds are never global
 	{
 		LOG_WARN("target_speaker uses legacy spawnflag GLOBAL (BIT(2)), please set atten to -1 instead");
 		this.atten = -1;

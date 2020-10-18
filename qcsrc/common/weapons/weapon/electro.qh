@@ -10,6 +10,8 @@ CLASS(Electro, Weapon)
 /* modelname */ ATTRIB(Electro, mdl, string, "electro");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Electro, m_model, Model, MDL_ELECTRO_ITEM);
+/* flash mdl */ ATTRIB(Electro, m_muzzlemodel, Model, MDL_Null);
+/* flash eff */ ATTRIB(Electro, m_muzzleeffect, entity, EFFECT_ELECTRO_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Electro, w_crosshair, string, "gfx/crosshairelectro");
 /* crosshair */ ATTRIB(Electro, w_crosshair_size, float, 0.6);

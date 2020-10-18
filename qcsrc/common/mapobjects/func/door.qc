@@ -361,7 +361,7 @@ void door_trigger_touch(entity this, entity toucher)
 #ifdef SVQC
 		if (!((toucher.iscreature || (toucher.flags & FL_PROJECTILE)) && !IS_DEAD(toucher)))
 #elif defined(CSQC)
-		if(!((IS_CLIENT(toucher) || toucher.classname == "csqcprojectile") && !IS_DEAD(toucher)))
+		if(!((IS_CLIENT(toucher) || toucher.classname == "ENT_CLIENT_PROJECTILE") && !IS_DEAD(toucher)))
 #endif
 			return;
 
@@ -737,7 +737,10 @@ spawnfunc(func_door)
         }
         else if (!this.speed)
         {
-                this.speed = 100;
+		if (autocvar_sv_q3defragcompat)
+			this.speed = 400;
+		else
+	                this.speed = 100;
         }
 
 	settouch(this, door_touch);

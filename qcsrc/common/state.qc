@@ -1,5 +1,7 @@
 #include "state.qh"
 
+#include <server/command/getreplies.qh>
+
 void Inventory_new(PlayerState this);
 void Inventory_delete(entity this);
 
@@ -27,7 +29,6 @@ void PlayerState_detach(entity this)
 	delete(ps);
 }
 
-void GetCvars(entity this, entity store, int);
 void DecodeLevelParms(entity this);
 void PlayerScore_Attach(entity this);
 void ClientData_Attach(entity this);

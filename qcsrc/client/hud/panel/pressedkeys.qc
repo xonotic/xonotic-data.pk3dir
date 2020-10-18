@@ -1,8 +1,7 @@
 #include "pressedkeys.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 
 // Pressed keys (#11)
 

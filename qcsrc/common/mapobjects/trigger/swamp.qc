@@ -4,7 +4,8 @@
 #elif defined(SVQC)
     #include <lib/warpzone/util_server.qh>
     #include <common/weapons/_all.qh>
-    #include <server/defs.qh>
+    #include <common/weapons/_all.qh>
+    #include <common/stats.qh>
     #include <common/deathtypes/all.qh>
 #endif
 
