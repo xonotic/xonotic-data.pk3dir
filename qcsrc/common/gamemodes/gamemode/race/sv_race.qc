@@ -1,6 +1,12 @@
 #include "sv_race.qh"
 
+#include <server/client.qh>
+#include <server/world.qh>
+#include <server/gamelog.qh>
+#include <server/intermission.qh>
 #include <server/race.qh>
+#include <common/ent_cs.qh>
+#include <common/mapobjects/triggers.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
 float autocvar_g_race_qualifying_timelimit;
@@ -259,10 +265,12 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	if(g_race_qualifying)
-	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-		player.frags = FRAGS_LMS_LOSER;
-	else
-		player.frags = FRAGS_SPECTATOR;
+	{
+		if(GameRules_scoring_add(player, RACE_FASTEST, 0))
+			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+		else
+			player.frags = FRAGS_SPECTATOR;
+	}
 
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
@@ -442,6 +450,7 @@ void race_Initialize()
 	race_ScoreRules();
 	if(g_race_qualifying == 2)
 		warmup_stage = 0;
+	radar_showenemies = true;
 }
 
 void rc_SetLimits()

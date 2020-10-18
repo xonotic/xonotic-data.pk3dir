@@ -1,20 +1,18 @@
 #include "navigation.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include "cvars.qh"
-
-#include "bot.qh"
-#include "waypoints.qh"
-
-#include <common/t_items.qh>
-
-#include <common/items/_mod.qh>
-
 #include <common/constants.qh>
-#include <common/net_linked.qh>
+#include <common/items/_mod.qh>
 #include <common/mapobjects/func/ladder.qh>
+#include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
+#include <common/net_linked.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/bot/api.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/items/items.qh>
 
 .float speed;
 
@@ -45,6 +43,12 @@ void navigation_goalrating_timeout_expire(entity this, float seconds)
 bool navigation_goalrating_timeout(entity this)
 {
 	return this.bot_strategytime < time;
+}
+
+ERASEABLE
+void navigation_goalrating_timeout_extend_if_needed(entity this, float seconds)
+{
+	this.bot_strategytime = max(this.bot_strategytime, time + seconds);
 }
 
 #define MAX_CHASE_DISTANCE 700
@@ -218,7 +222,7 @@ bool navigation_check_submerged_state(entity ent, vector pos)
 
 bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector end, vector end2, int movemode)
 {
-	IL_EACH(g_ladders, it.classname == "func_ladder",
+	IL_EACH(g_ladders, true,
 	{
 		if(it.bot_pickup)
 		if(boxesoverlap(org + m1 + '-1 -1 -1', org + m2 + '1 1 1', it.absmin, it.absmax))
@@ -234,6 +238,9 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 	return false;
 }
 
+// Unfortuntely we can't use trace_inwater since it doesn't hold the fraction of the total
+// distance that was traveled before impact as the description in the engine (collision.h) says.
+// It would have helped to speed up tracewalk underwater
 vector resurface_limited(vector org, float lim, vector m1)
 {
 	if (WETFEET(org + eZ * (lim - org.z)))
@@ -742,6 +749,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 // completely empty the goal stack, used when deciding where to go
 void navigation_clearroute(entity this)
 {
+	this.lastteleporttime = 0;
 	this.goalcurrent_prev = this.goalcurrent;
 	this.goalcurrent_distance_2d = FLOAT_MAX;
 	this.goalcurrent_distance_z = FLOAT_MAX;
@@ -915,19 +923,30 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector pm1 = ent.origin + ent.mins;
 	vector pm2 = ent.origin + ent.maxs;
 
-	// do two scans, because box test is cheaper
-	IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+	if (autocvar_g_waypointeditor && !IS_BOT_CLIENT(ent))
 	{
-		if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+		// this code allows removing waypoints in the air and seeing jumppad/telepport waypoint links
+		// FIXME it causes a bug where a waypoint spawned really close to another one (max 16 qu)
+		// isn't detected as the nearest waypoint
+		IL_EACH(g_waypoints, it != ent && it != except,
 		{
-			if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
+			if (boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+				return it;
+		});
+	}
+	else
+	{
+		// do two scans, because box test is cheaper
+		IL_EACH(g_waypoints, it != ent && it != except && !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
+		{
+			if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
 			{
-				waypoint_clearlinks(ent); // initialize wpXXmincost fields
-				navigation_item_addlink(it, ent);
+				if(walkfromwp && !ent.navigation_dynamicgoal)
+					waypoint_clearlinks(ent); // initialize wpXXmincost fields
+				return it;
 			}
-			return it;
-		}
-	});
+		});
+	}
 
 	vector org = ent.origin;
 	if (navigation_testtracewalk)
@@ -942,28 +961,10 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 		org.z = ent.origin.z + ent.mins.z - PL_MIN_CONST.z; // player height
 	}
 
-	if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
-	{
-		waypoint_clearlinks(ent); // initialize wpXXmincost fields
-		IL_EACH(g_waypoints, it != ent,
-		{
-			if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
-				continue;
-
-			set_tracewalk_dest(ent, it.origin, false);
-			if (vdist(tracewalk_dest - it.origin, <, 1050)
-				&& tracewalk(ent, it.origin, PL_MIN_CONST, PL_MAX_CONST,
-				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
-			{
-				navigation_item_addlink(it, ent);
-			}
-		});
-	}
-
 	// box check failed, try walk
 	IL_EACH(g_waypoints, it != ent,
 	{
-		if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
+		if (walkfromwp && (it.wpflags & WPFLAGMASK_NORELINK))
 			continue;
 		v = it.origin;
 
@@ -1331,10 +1332,10 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
-			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResourceAmount(this, RESOURCE_FUEL)));
+			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), ", have ", ftos(GetResource(this, RES_FUEL)));
 
 			// enough fuel ?
-			if(GetResourceAmount(this, RESOURCE_FUEL) > fuel || (this.items & IT_UNLIMITED_WEAPON_AMMO))
+			if(GetResource(this, RES_FUEL) > fuel || (this.items & IT_UNLIMITED_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship
@@ -1456,8 +1457,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		this.wp_goal_prev0 = e;
 	}
 
-	if(g_jetpack)
-	if(e==this.navigation_jetpack_goal)
+	if((this.items & IT_JETPACK) && e == this.navigation_jetpack_goal)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
@@ -1484,7 +1484,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if(e == NULL)
 		return false;
 
-	if(nearest_wp && nearest_wp.enemy)
+	if(nearest_wp && nearest_wp.enemy && !(nearest_wp.enemy.wpflags & WPFLAGMASK_NORELINK))
 	{
 		// often path can be optimized by not adding the nearest waypoint
 		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
@@ -1506,8 +1506,35 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 				}
 			}
 		}
-		else if(navigation_item_islinked(nearest_wp.enemy, this.goalentity))
-			e = nearest_wp.enemy;
+		else
+		{
+			// NOTE unlike waypoints, items hold incoming links
+			navigation_item_initlinks_ifneeded(this.goalentity);
+			int link_num = navigation_item_getlinknum(this.goalentity, nearest_wp.enemy);
+			if (link_num >= 0)
+			{
+				if (navigation_item_iswalkablelink(this.goalentity, link_num))
+					e = nearest_wp.enemy;
+			}
+			else // untested link
+			{
+				entity wp = nearest_wp.enemy;
+				entity goal = this.goalentity;
+				bool walkable = false;
+				if (checkpvs(wp.origin, goal))
+				{
+					set_tracewalk_dest(goal, wp.origin, false);
+					if (vdist(tracewalk_dest - wp.origin, <, 1050)
+						&& tracewalk(goal, wp.origin, PL_MIN_CONST, PL_MAX_CONST,
+						tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+					{
+						walkable = true;
+						e = nearest_wp.enemy;
+					}
+				}
+				navigation_item_add_link(wp, goal, walkable);
+			}
+		}
 	}
 
 	for (;;)
@@ -1576,7 +1603,7 @@ bool navigation_shortenpath(entity this)
 
 	next = this.goalstack01;
 	// if for some reason the bot is closer to the next goal, pop the current one
-	if (!IS_MOVABLE(next) // already checked in the previous case
+	if (!IS_MOVABLE(next) && !(this.goalcurrent.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP))
 		&& vlen2(this.goalcurrent.origin - next.origin) > vlen2(next.origin - this.origin)
 		&& checkpvs(this.origin + this.view_ofs, next))
 	{
@@ -1608,12 +1635,23 @@ int navigation_poptouchedgoals(entity this)
 
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
+		if (!this.goalcurrent.wpisbox // warpzone
+			&& vlen2(this.origin - this.goalstack01.origin) < vlen2(this.origin - this.goalcurrent.origin))
+		{
+			// immediately remove origin and destination waypoints
+			navigation_poproute(this);
+			++removed_goals;
+			navigation_poproute(this);
+			++removed_goals;
+			this.lastteleporttime = 0;
+		}
+
 		// make sure jumppad is really hit, don't rely on distance based checks
 		// as they may report a touch even if it didn't really happen
 		if(this.lastteleporttime > 0 && TELEPORT_USED(this, this.goalcurrent))
 		{
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+			if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 			{
 				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1628,12 +1666,17 @@ int navigation_poptouchedgoals(entity this)
 				if (time - this.lastteleporttime < random() * max_delay)
 					return removed_goals;
 			}
+			else if (this.goalcurrent.wpisbox) // teleport
+			{
+				// immediately remove origin and destination waypoints
+				navigation_poproute(this);
+				++removed_goals;
+			}
 			navigation_poproute(this);
 			this.lastteleporttime = 0;
 			++removed_goals;
 		}
-		else
-			return removed_goals;
+		return removed_goals;
 	}
 	else if (this.lastteleporttime > 0)
 	{
@@ -1650,7 +1693,7 @@ int navigation_poptouchedgoals(entity this)
 		if (tele_ent && TELEPORT_USED(this, tele_ent))
 		{
 			if (this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-			if (tele_ent.wpflags & WAYPOINTFLAG_PERSONAL && tele_ent.owner == this)
+			if ((tele_ent.wpflags & WAYPOINTFLAG_PERSONAL) && tele_ent.owner == this)
 			{
 				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1665,21 +1708,29 @@ int navigation_poptouchedgoals(entity this)
 			++removed_goals;
 			return removed_goals;
 		}
+		// reset of lastteleporttime can be overriden by a jumppad when it's set
+		// in more than one frame: make sure it's reset
+		this.lastteleporttime = 0;
 	}
 
 	// Loose goal touching check when running
-	if(this.aistatus & AI_STATUS_RUNNING)
-	if(this.goalcurrent.classname=="waypoint")
-	if(vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed)) // if -really- running
+	// check goalstack01 to make sure waypoint isn't the final goal
+	if((this.aistatus & AI_STATUS_RUNNING) && this.goalcurrent.classname == "waypoint" && !(this.goalcurrent.wpflags & WAYPOINTFLAG_JUMP)
+		&& this.goalstack01 && !wasfreed(this.goalstack01) && vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed))
 	{
-		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
+		vector gco = this.goalcurrent.origin;
+		float min_dist = BOT_BUNNYHOP_WP_DETECTION_RANGE;
+		// also detect waypoints when bot is way above them but with a narrower horizontal range
+		// so to increase chances bot ends up in the standard range (optimizes nearest waypoint finding)
+		if(vdist(this.origin - gco, <, min_dist)
+			|| (vdist(vec2(this.origin - gco), <, min_dist * 0.5) && vdist(this.origin - eZ * 1.5 * min_dist - gco, <, min_dist)))
 		{
 			traceline(this.origin + this.view_ofs , this.goalcurrent.origin, true, NULL);
 			if(trace_fraction==1)
 			{
 				// Detect personal waypoints
 				if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-				if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+				if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 				{
 					this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 					this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1700,9 +1751,9 @@ int navigation_poptouchedgoals(entity this)
 		if(this.goalcurrent.classname == "waypoint" && !this.goalcurrent.wpisbox)
 		{
 			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
-			gc_max = this.goalcurrent.origin + '1 1 1' * 12;
+			gc_max = this.goalcurrent.origin + '1 1 1' * 12 + eZ * (jumpheight_vec.z + STAT(PL_MIN, this).z);
 		}
-		if (time < this.ladder_time)
+		if (this.ladder_entity)
 		{
 			if (!boxesoverlap(this.absmin, this.absmax - eZ * STAT(PL_MAX, this).z, gc_min, gc_max))
 				break;
@@ -1715,7 +1766,7 @@ int navigation_poptouchedgoals(entity this)
 
 		// Detect personal waypoints
 		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-		if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
+		if((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && this.goalcurrent.owner==this)
 		{
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
@@ -1736,7 +1787,8 @@ entity navigation_get_really_close_waypoint(entity this)
 		wp = this.goalcurrent_prev;
 	if(!wp)
 		return NULL;
-	if(wp != this.goalcurrent_prev && vdist(wp.origin - this.origin, >, 50))
+	float min_dist = ((this.aistatus & AI_STATUS_RUNNING) ? BOT_BUNNYHOP_WP_DETECTION_RANGE : 50);
+	if(wp != this.goalcurrent_prev && vdist(wp.origin - this.origin, >, min_dist))
 	{
 		wp = this.goalcurrent_prev;
 		if(!wp)
@@ -1748,12 +1800,12 @@ entity navigation_get_really_close_waypoint(entity this)
 		if(!wp)
 			return NULL;
 	}
-	if(vdist(wp.origin - this.origin, >, 50))
+	if(vdist(wp.origin - this.origin, >, min_dist))
 	{
 		wp = NULL;
-		IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+		IL_EACH(g_waypoints, !(it.wpflags & (WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_JUMP)),
 		{
-			if(vdist(it.origin - this.origin, <, 50))
+			if(vdist(it.origin - this.origin, <, min_dist))
 			{
 				wp = it;
 				break;
@@ -1786,6 +1838,7 @@ void navigation_goalrating_start(entity this)
 	navigation_clearroute(this);
 	navigation_bestgoal = NULL;
 	navigation_markroutes(this, wp);
+	this.goalstack31 = wp; // temporarly save the really close waypoint
 }
 
 // ends a goal selection session (updates goal stack to the best goal)
@@ -1794,19 +1847,27 @@ void navigation_goalrating_end(entity this)
 	if(this.aistatus & AI_STATUS_STUCK)
 		return;
 
+	entity wp = this.goalstack31; // save to wp as this.goalstack31 is set by navigation_routetogoal
+	this.goalstack31 = NULL;
+
 	navigation_routetogoal(this, navigation_bestgoal, this.origin);
-	LOG_DEBUG("best goal ", this.goalcurrent.classname);
+	LOG_DEBUG("best goal ", navigation_bestgoal.classname);
+
+	if (wp && this.goalcurrent == wp)
+		navigation_poproute(this);
 
 	// If the bot got stuck then try to reach the farthest waypoint
-	if (!this.goalentity && autocvar_bot_wander_enable)
+	if (!this.goalentity)
 	{
-		if (!(this.aistatus & AI_STATUS_STUCK))
+		if (autocvar_bot_wander_enable && !(this.aistatus & AI_STATUS_STUCK))
 		{
 			LOG_DEBUG(this.netname, " cannot walk to any goal");
 			this.aistatus |= AI_STATUS_STUCK;
 		}
+		this.goalentity_shouldbefrozen = false;
 	}
-	this.goalentity_shouldbefrozen = boolean(STAT(FROZEN, this.goalentity));
+	else
+		this.goalentity_shouldbefrozen = boolean(STAT(FROZEN, this.goalentity));
 }
 
 void botframe_updatedangerousobjects(float maxupdate)
@@ -1874,7 +1935,7 @@ void navigation_unstuck(entity this)
 	{
 		// evaluate the next goal on the queue
 		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
-		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
+		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with squared distance ", ftos(d));
 		set_tracewalk_dest(bot_waypoint_queue_goal, this.origin, false);
 		if (tracewalk(this, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
 			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))

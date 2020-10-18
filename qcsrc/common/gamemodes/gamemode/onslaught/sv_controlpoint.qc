@@ -12,7 +12,7 @@ bool cpicon_send(entity this, entity to, int sf)
 	{
 		WriteVector(MSG_ENTITY, this.origin);
 
-		WriteByte(MSG_ENTITY, GetResourceAmount(this, RESOURCE_HEALTH));
+		WriteByte(MSG_ENTITY, GetResource(this, RES_HEALTH));
 		WriteByte(MSG_ENTITY, this.max_health);
 		WriteByte(MSG_ENTITY, this.count);
 		WriteByte(MSG_ENTITY, this.team);
@@ -23,10 +23,10 @@ bool cpicon_send(entity this, entity to, int sf)
 	{
 		WriteByte(MSG_ENTITY, this.team);
 
-		if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+		if(GetResource(this, RES_HEALTH) <= 0)
 			WriteByte(MSG_ENTITY, 0);
 		else
-			WriteByte(MSG_ENTITY, ceil((GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health) * 255));
+			WriteByte(MSG_ENTITY, ceil((GetResource(this, RES_HEALTH) / this.max_health) * 255));
 	}
 
 	return true;
@@ -36,5 +36,5 @@ void onslaught_controlpoint_icon_link(entity e, void(entity this) spawnproc)
 {
 	Net_LinkEntity(e, true, 0, cpicon_send);
 	setthink(e, spawnproc);
-	e.nextthink	= time * sys_frametime;
+	e.nextthink	= time + sys_frametime;
 }

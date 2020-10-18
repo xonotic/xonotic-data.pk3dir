@@ -1,10 +1,6 @@
 #include "nmm.qh"
 
-#ifdef CSQC
-#include <client/miscfunctions.qh>
-#endif
-
-REGISTER_MINIGAME(nmm, "Nine Men's Morris");
+REGISTER_MINIGAME(nmm, _("Nine Men's Morris"));
 
 const int NMM_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int NMM_TURN_MOVE  = 0x0200; // player has to move a piece by one tile
@@ -227,10 +223,10 @@ int nmm_server_event(entity minigame, string event, ...)
 		entity e;
 		for ( int i = 0; i < 7; i++ )
 		{
-			e = msle_spawn(minigame,"minigame_board_piece");
+			e = msle_spawn(minigame,new(minigame_board_piece));
 			e.team = 1;
 			e.minigame_flags = NMM_PIECE_HOME;
-			e = msle_spawn(minigame,"minigame_board_piece");
+			e = msle_spawn(minigame,new(minigame_board_piece));
 			e.team = 2;
 			e.minigame_flags = NMM_PIECE_HOME;
 		}
@@ -488,13 +484,13 @@ void nmm_hud_board(vector pos, vector mySize)
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",pname),
+			sprintf(_("%s^7 won the game!"), pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",pname),
+			sprintf(_("%s^7 won the game!"), pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -628,12 +624,13 @@ int nmm_client_event(entity minigame, string event, ...)
 	{
 		nmm_fromtile = NULL;
 		nmm_init_tiles(minigame);
-		minigame.message = nmm_turn_to_string(minigame.minigame_flags);
+		strcpy(minigame.message, nmm_turn_to_string(minigame.minigame_flags));
 	}
 	else if ( event == "deactivate" )
 	{
 		nmm_fromtile = NULL;
 		nmm_kill_tiles(minigame);
+		strfree(minigame.message);
 	}
 	else if ( event == "key_pressed" && (minigame.minigame_flags&NMM_TURN_TEAM) == minigame_self.team )
 	{
@@ -755,7 +752,7 @@ int nmm_client_event(entity minigame, string event, ...)
 		}
 		else if ( sent.classname == "minigame" && ( ...(1,int) & MINIG_SF_UPDATE ) )
 		{
-			sent.message = nmm_turn_to_string(sent.minigame_flags);
+			strcpy(sent.message, nmm_turn_to_string(sent.minigame_flags));
 			if ( sent.minigame_flags & minigame_self.team )
 				minigame_prompt();
 		}

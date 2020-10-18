@@ -1,10 +1,15 @@
 #include "state.qh"
 
-void Inventory_new(entity this);
+#include <server/command/getreplies.qh>
+
+void Inventory_new(PlayerState this);
 void Inventory_delete(entity this);
 
 void PlayerState_attach(entity this)
 {
+	if (PS(this) && PS(this).m_client == this)
+		return;
+
 	this._ps = NEW(PlayerState, this);
 
 	Inventory_new(PS(this));
@@ -24,7 +29,6 @@ void PlayerState_detach(entity this)
 	delete(ps);
 }
 
-void GetCvars(entity this, entity store, int);
 void DecodeLevelParms(entity this);
 void PlayerScore_Attach(entity this);
 void ClientData_Attach(entity this);
@@ -37,8 +41,6 @@ void bot_clientconnect(entity this);
 void ClientState_attach(entity this)
 {
 	this._cs = NEW(ClientState, this);
-
-    GetCvars(this, CS(this), 0);  // get other cvars from player
 
 	// TODO: fold all of these into ClientState
 
@@ -68,12 +70,11 @@ void ClientState_detach(entity this)
     PlayerScore_Detach(this); // what ^they^ said
     W_HitPlotClose(this);
     ClientData_Detach(this);
+    entcs_detach(this);
 	delete(CS(this));
 	this._cs = NULL;
-
 
     bot_clientdisconnect(this);
 
     anticheat_report_to_eventlog(this);
-    entcs_detach(this);
 }

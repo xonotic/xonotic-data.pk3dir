@@ -23,4 +23,13 @@ spawnfunc(target_relay)
 {
 	spawnfunc_trigger_relay(this);
 }
+
+spawnfunc(target_delay)
+{
+	if(!this.wait)
+		this.wait = 1;
+	if(!this.delay)
+		this.delay = this.wait; // fall back to quake 3 field
+	spawnfunc_trigger_relay(this);
+}
 #endif

@@ -1,7 +1,17 @@
 #include "sv_ctf.qh"
 
 #include <common/effects/all.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
 #include <common/vehicles/all.qh>
+#include <server/command/vote.qh>
+#include <server/client.qh>
+#include <server/gamelog.qh>
+#include <server/intermission.qh>
+#include <server/damage.qh>
+#include <server/world.qh>
+#include <server/items/items.qh>
+#include <server/race.qh>
 #include <server/teamplay.qh>
 
 #include <lib/warpzone/common.qh>
@@ -48,6 +58,8 @@ bool autocvar_g_ctf_flag_return_when_unreachable;
 float autocvar_g_ctf_flag_return_damage;
 float autocvar_g_ctf_flag_return_damage_delay;
 float autocvar_g_ctf_flag_return_dropped;
+bool autocvar_g_ctf_flag_waypoint = true;
+float autocvar_g_ctf_flag_waypoint_maxdistance;
 float autocvar_g_ctf_flagcarrier_auto_helpme_damage;
 float autocvar_g_ctf_flagcarrier_auto_helpme_time;
 float autocvar_g_ctf_flagcarrier_selfdamagefactor;
@@ -144,8 +156,8 @@ bool ctf_Return_Customize(entity this, entity client)
 void ctf_FlagcarrierWaypoints(entity player)
 {
 	WaypointSprite_Spawn(WP_FlagCarrier, 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL, player.team, player, wps_flagcarrier, true, RADARICON_FLAG);
-	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
-	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
+	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, 2 * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
+	WaypointSprite_UpdateHealth(player.wps_flagcarrier, healtharmor_maxdamage(GetResource(player, RES_HEALTH), GetResource(player, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, WPCOLOR_FLAGCARRIER(player.team));
 
 	if(player.flagcarried && CTF_SAMETEAM(player, player.flagcarried))
@@ -341,7 +353,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	set_movetype(flag, MOVETYPE_TOSS);
 	flag.takedamage = DAMAGE_YES;
 	flag.angles = '0 0 0';
-	SetResourceAmountExplicit(flag, RESOURCE_HEALTH, flag.max_flag_health);
+	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
 	flag.ctf_droptime = time;
 	flag.ctf_dropper = player;
 	flag.ctf_status = FLAG_DROPPED;
@@ -363,8 +375,8 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 
 	if(autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health))
 	{
-		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_flag_health);
-		WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResourceAmount(flag, RESOURCE_HEALTH));
+		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_health);
+		WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH));
 	}
 
 	player.throw_antispam = time + autocvar_g_ctf_pass_wait;
@@ -436,11 +448,24 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	if(!flag) { return; }
 	if((droptype == DROP_PASS) && !receiver) { return; }
 
-	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
+	if(flag.speedrunning)
+	{
+		// ensure old waypoints are removed before resetting the flag
+		WaypointSprite_Kill(player.wps_flagcarrier);
+
+		if(player.wps_enemyflagcarrier)
+			WaypointSprite_Kill(player.wps_enemyflagcarrier);
+
+		if(player.wps_flagreturn)
+			WaypointSprite_Kill(player.wps_flagreturn);
+		ctf_RespawnFlag(flag);
+		return;
+	}
 
 	// reset the flag
 	setattachment(flag, NULL, "");
-	setorigin(flag, player.origin + FLAG_DROP_OFFSET);
+	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+	setorigin(flag, trace_endpos);
 	flag.owner.flagcarried = NULL;
 	GameRules_scoring_vip(flag.owner, false);
 	flag.owner = NULL;
@@ -519,10 +544,12 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	ctf_CaptureShield_Update(player, 0); // shield player from picking up flag
 }
 
+#if 0
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 {
 	return modeleffect_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
 }
+#endif
 
 // ==============
 // Event Handlers
@@ -586,7 +613,9 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 
 	// effects
 	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
-	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+#if 0
+	shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+#endif
 
 	// other
 	if(capturetype == CAPTURE_NORMAL)
@@ -679,7 +708,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	switch(pickuptype)
 	{
 		case PICKUP_BASE: flag.ctf_pickuptime = time; break; // used for timing runs
-		case PICKUP_DROPPED: SetResourceAmountExplicit(flag, RESOURCE_HEALTH, flag.max_flag_health); break; // reset health/return timelimit
+		case PICKUP_DROPPED: SetResourceExplicit(flag, RES_HEALTH, flag.max_health); break; // reset health/return timelimit
 		default: break;
 	}
 
@@ -702,10 +731,12 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	if(flag.team)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(CTF_SAMETEAM(flag, it))
-			if(SAME_TEAM(player, it))
-				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
-			else
-				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
+			{
+				if(SAME_TEAM(player, it))
+					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
+				else
+					Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
+			}
 		});
 
 	_sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
@@ -761,9 +792,9 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 {
 	if((flag.ctf_status == FLAG_DROPPED) || (flag.ctf_status == FLAG_PASSING))
 	{
-		if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResourceAmount(flag, RESOURCE_HEALTH)); }
+		if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH)); }
 
-		if((GetResourceAmount(flag, RESOURCE_HEALTH) <= 0) || (time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
+		if((GetResource(flag, RES_HEALTH) <= 0) || (time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
 		{
 			switch(returntype)
 			{
@@ -874,7 +905,7 @@ void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage
 			this.ctf_flagdamaged_byworld = true;
 		else
 		{
-			SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
+			SetResourceExplicit(this, RES_HEALTH, 0);
 			ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
 		}
 		return;
@@ -882,7 +913,7 @@ void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage
 	if(autocvar_g_ctf_flag_return_damage)
 	{
 		// reduce health and check if it should be returned
-		TakeResource(this, RESOURCE_HEALTH, damage);
+		TakeResource(this, RES_HEALTH, damage);
 		ctf_CheckFlagReturn(this, RETURN_DAMAGE);
 		return;
 	}
@@ -945,20 +976,20 @@ void ctf_FlagThink(entity this)
 			{
 				if((vdist(this.origin - this.ctf_spawnorigin, <=, autocvar_g_ctf_flag_return_dropped)) || (autocvar_g_ctf_flag_return_dropped == -1))
 				{
-					SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
+					SetResourceExplicit(this, RES_HEALTH, 0);
 					ctf_CheckFlagReturn(this, RETURN_DROPPED);
 					return;
 				}
 			}
 			if(this.ctf_flagdamaged_byworld)
 			{
-				TakeResource(this, RESOURCE_HEALTH, ((this.max_flag_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE));
+				TakeResource(this, RES_HEALTH, (this.max_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
 				return;
 			}
 			else if(autocvar_g_ctf_flag_return_time)
 			{
-				TakeResource(this, RESOURCE_HEALTH, ((this.max_flag_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE));
+				TakeResource(this, RES_HEALTH, (this.max_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_TIMEOUT);
 				return;
 			}
@@ -969,7 +1000,7 @@ void ctf_FlagThink(entity this)
 		{
 			if(this.speedrunning && ctf_captimerecord && (time >= this.ctf_pickuptime + ctf_captimerecord))
 			{
-				SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
+				SetResourceExplicit(this, RES_HEALTH, 0);
 				ctf_CheckFlagReturn(this, RETURN_SPEEDRUN);
 
 				CS(this.owner).impulse = CHIMPULSE_SPEEDRUN.impulse; // move the player back to the waypoint they set
@@ -1038,7 +1069,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	{
 		if(!autocvar_g_ctf_flag_return_damage_delay)
 		{
-			SetResourceAmountExplicit(flag, RESOURCE_HEALTH, 0);
+			SetResourceExplicit(flag, RES_HEALTH, 0);
 			ctf_CheckFlagReturn(flag, RETURN_NEEDKILL);
 		}
 		if(!flag.ctf_flagdamaged_byworld) { return; }
@@ -1130,6 +1161,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 .float last_respawn;
 void ctf_RespawnFlag(entity flag)
 {
+	flag.watertype = CONTENT_EMPTY; // TODO: it is unclear why this workaround is needed, likely many other potential breakage points!!
 	// check for flag respawn being called twice in a row
 	if(flag.last_respawn > time - 0.5)
 		{ backtrace("flag respawn called twice quickly! please notify Samual about this..."); }
@@ -1160,9 +1192,10 @@ void ctf_RespawnFlag(entity flag)
 	setattachment(flag, NULL, "");
 	setorigin(flag, flag.ctf_spawnorigin);
 
-	set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS));
+	//set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS)); // would be desired, except maps that want floating flags have it set to fall!
+	set_movetype(flag, MOVETYPE_NONE); // match the initial setup handling (flag doesn't move when spawned)
 	flag.takedamage = DAMAGE_NO;
-	SetResourceAmountExplicit(flag, RESOURCE_HEALTH, flag.max_flag_health);
+	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
 	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.angles = flag.mangle;
@@ -1220,10 +1253,14 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 		default: basename = WP_FlagBaseNeutral; break;
 	}
 
-	entity wp = WaypointSprite_SpawnFixed(basename, this.origin + FLAG_WAYPOINT_OFFSET, this, wps_flagbase, RADARICON_FLAG);
-	wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
-	WaypointSprite_UpdateTeamRadar(this.wps_flagbase, RADARICON_FLAG, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
-	setcefc(wp, ctf_FlagBase_Customize);
+	if(autocvar_g_ctf_flag_waypoint)
+	{
+		entity wp = WaypointSprite_SpawnFixed(basename, this.origin + FLAG_WAYPOINT_OFFSET, this, wps_flagbase, RADARICON_FLAG);
+		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
+		wp.fade_rate = autocvar_g_ctf_flag_waypoint_maxdistance;
+		WaypointSprite_UpdateTeamRadar(this.wps_flagbase, RADARICON_FLAG, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
+		setcefc(wp, ctf_FlagBase_Customize);
+	}
 
 	// captureshield setup
 	ctf_CaptureShield_Spawn(this);
@@ -1231,7 +1268,7 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 
 .bool pushable;
 
-void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
+void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {
 	// main setup
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
@@ -1239,8 +1276,8 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	setattachment(flag, NULL, "");
 
-	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber)));
-	flag.team = teamnumber;
+	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnum), Team_ColorName_Upper(teamnum)));
+	flag.team = teamnum;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // for finding the nearest item using findnearest
 	flag.flags = FL_ITEM | FL_NOTARGET;
@@ -1248,8 +1285,8 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_NO;
 	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;
-	flag.max_flag_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
-	SetResourceAmountExplicit(flag, RESOURCE_HEALTH, flag.max_flag_health);
+	flag.max_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
+	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = true;
 	flag.teleportable = TELEPORT_NORMAL;
@@ -1270,24 +1307,24 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	if(autocvar_g_ctf_score_ignore_fields)
 		flag.cnt = flag.score_assist = flag.score_team_capture = flag.score_capture = flag.score_drop = flag.score_pickup = flag.score_return = 0;
 
-	string teamname = Static_Team_ColorName_Lower(teamnumber);
+	string teamname = Static_Team_ColorName_Lower(teamnum);
 	// appearence
 	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
 	if(flag.skin == 0)			{ flag.skin = cvar(sprintf("g_ctf_flag_%s_skin", teamname)); }
 	if(flag.model == "")		{ flag.model = cvar_string(sprintf("g_ctf_flag_%s_model", teamname)); }
-	if (flag.toucheffect == "") { flag.toucheffect = EFFECT_FLAG_TOUCH(teamnumber).eent_eff_name; }
-	if (flag.passeffect == "") 	{ flag.passeffect = EFFECT_PASS(teamnumber).eent_eff_name; }
-	if (flag.capeffect == "") 	{ flag.capeffect = EFFECT_CAP(teamnumber).eent_eff_name; }
+	if (flag.toucheffect == "") { flag.toucheffect = EFFECT_FLAG_TOUCH(teamnum).eent_eff_name; }
+	if (flag.passeffect == "") 	{ flag.passeffect = EFFECT_PASS(teamnum).eent_eff_name; }
+	if (flag.capeffect == "") 	{ flag.capeffect = EFFECT_CAP(teamnum).eent_eff_name; }
 
 	// sounds
 #define X(s,b) \
 		if(flag.s == "") flag.s = b; \
 		precache_sound(flag.s);
 
-	X(snd_flag_taken, 		strzone(SND(CTF_TAKEN(teamnumber))))
-	X(snd_flag_returned, 	strzone(SND(CTF_RETURNED(teamnumber))))
-	X(snd_flag_capture, 	strzone(SND(CTF_CAPTURE(teamnumber))))
-	X(snd_flag_dropped, 	strzone(SND(CTF_DROPPED(teamnumber))))
+	X(snd_flag_taken, 		strzone(SND(CTF_TAKEN(teamnum))))
+	X(snd_flag_returned, 	strzone(SND(CTF_RETURNED(teamnum))))
+	X(snd_flag_capture, 	strzone(SND(CTF_CAPTURE(teamnum))))
+	X(snd_flag_dropped, 	strzone(SND(CTF_DROPPED(teamnum))))
 	X(snd_flag_respawn, 	strzone(SND(CTF_RESPAWN)))
 	X(snd_flag_touch, 		strzone(SND(CTF_TOUCH)))
 	X(snd_flag_pass, 		strzone(SND(CTF_PASS)))
@@ -1305,7 +1342,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	if(autocvar_g_ctf_flag_glowtrails)
 	{
-		switch(teamnumber)
+		switch(teamnum)
 		{
 			case NUM_TEAM_1: flag.glow_color = 251; break;
 			case NUM_TEAM_2: flag.glow_color = 210; break;
@@ -1321,7 +1358,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	if(autocvar_g_ctf_fullbrightflags) { flag.effects |= EF_FULLBRIGHT; }
 	if(autocvar_g_ctf_dynamiclights)
 	{
-		switch(teamnumber)
+		switch(teamnum)
 		{
 			case NUM_TEAM_1: flag.effects |= EF_RED; break;
 			case NUM_TEAM_2: flag.effects |= EF_BLUE; break;
@@ -1383,7 +1420,7 @@ void havocbot_ctf_calculate_middlepoint()
 		// for symmetrical editing of waypoints
 		entity f1 = ctf_worldflaglist;
 		entity f2 = f1.ctf_worldflagnext;
-		float m = -(f1.origin.y - f2.origin.y) / (f1.origin.x - f2.origin.x);
+		float m = -(f1.origin.y - f2.origin.y) / (max(f1.origin.x - f2.origin.x, FLOAT_EPSILON));
 		float q = havocbot_middlepoint.y - m * havocbot_middlepoint.x;
 		havocbot_symmetry_axis_m = m;
 		havocbot_symmetry_axis_q = q;
@@ -1519,7 +1556,7 @@ void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 		{
 			// adjust rating of our flag carrier depending on his health
 			head = head.tag_entity;
-			float f = bound(0, (GetResourceAmount(head, RESOURCE_HEALTH) + GetResourceAmount(head, RESOURCE_ARMOR)) / 100, 2) - 1;
+			float f = bound(0, (GetResource(head, RES_HEALTH) + GetResource(head, RES_ARMOR)) / 100, 2) - 1;
 			ratingscale += ratingscale * f * 0.1;
 		}
 		navigation_routerating(this, head, ratingscale, 10000);
@@ -2166,10 +2203,10 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 
 	// update the health of the flag carrier waypointsprite
 	if(player.wps_flagcarrier)
-		WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
+		WaypointSprite_UpdateHealth(player.wps_flagcarrier, healtharmor_maxdamage(GetResource(player, RES_HEALTH), GetResource(player, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x);
 }
 
-MUTATOR_HOOKFUNCTION(ctf, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ctf, Damage_Calculate) // for changing damage and force values that are applied to players in damage.qc
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -2194,8 +2231,8 @@ MUTATOR_HOOKFUNCTION(ctf, Damage_Calculate) // for changing damage and force val
 	}
 	else if(frag_target.flagcarried && !IS_DEAD(frag_target) && CTF_DIFFTEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
-		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(GetResourceAmount(frag_target, RESOURCE_HEALTH), GetResourceAmount(frag_target, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)))
-		if(time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
+		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > healtharmor_maxdamage(GetResource(frag_target, RES_HEALTH), GetResource(frag_target, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x
+			&& time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
 		{
 			frag_target.wps_helpme_time = time;
 			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier);
@@ -2322,7 +2359,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 				if(head != player && SAME_TEAM(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{
-					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 					vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
 					vector passer_center = CENTER_OR_VIEWOFS(player);
 
@@ -2590,6 +2627,13 @@ MUTATOR_HOOKFUNCTION(ctf, DropSpecialItems)
 		ctf_Handle_Throw(frag_target, NULL, DROP_THROW);
 }
 
+MUTATOR_HOOKFUNCTION(ctf, LogDeath_AppendItemCodes)
+{
+	entity player = M_ARGV(0, entity);
+	if(player.flagcarried)
+		M_ARGV(1, string) = strcat(M_ARGV(1, string), "F"); // item codes
+}
+
 
 // ==========
 // Spawnfuncs
@@ -2696,7 +2740,6 @@ spawnfunc(ctf_team)
 {
 	if(!g_ctf) { delete(this); return; }
 
-	this.classname = "ctf_team";
 	this.team = this.cnt + 1;
 }
 

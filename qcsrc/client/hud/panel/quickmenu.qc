@@ -1,14 +1,19 @@
 #include "quickmenu.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
-#include <common/ent_cs.qh>
-#include <common/minigames/cl_minigames.qh>
+#include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
+#include <common/ent_cs.qh>
+#include <common/minigames/cl_minigames.qh>
 
 // QuickMenu (#23)
+
+void HUD_QuickMenu_Export(int fh)
+{
+	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_quickmenu_align");
+}
 
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
@@ -259,6 +264,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 	TC(bool, new_page);
 	string s = string_null, cmd = string_null, z_submenu;
 
+	QuickMenu_Page_ActivatedEntry = -1;
 	if (new_page == 0)
 		QuickMenu_Page = 0;
 	else
@@ -384,6 +390,7 @@ bool QuickMenu_ActionForNumber(int num)
 
 	if (QuickMenu_Page_Command[num] != "")
 	{
+		QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
 		QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
 		return true;
@@ -397,7 +404,6 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 {
 	TC(int, entry_num);
 	QuickMenu_Page_ActivatedEntry = entry_num;
-	QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 	if(QuickMenu_Page_Command[QuickMenu_Page_ActivatedEntry])
 	{
 		bool f = QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
@@ -513,19 +519,22 @@ void QuickMenu_Mouse()
 		int entry_num = min(QuickMenu_Page_Entries - 1, floor((mousepos.y - first_entry_pos) / fontsize.y));
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
-			// recycling panel_pos as entry_pos
-			panel_pos.y = first_entry_pos + entry_num * fontsize.y;
-			vector color;
-			if(mouseClicked & S_MOUSE1)
-				color = '0.5 1 0.5';
-			else if(hudShiftState & S_CTRL)
-				color = '1 1 0.3';
-			else
-				color = '1 1 1';
-			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), color, .2, DRAWFLAG_NORMAL);
-
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
 				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
+
+			if (time > QuickMenu_Page_ActivatedEntry_Time)
+			{
+				vector entry_pos = panel_pos;
+				entry_pos.y = first_entry_pos + entry_num * fontsize.y;
+				vector color;
+				if (mouseClicked & S_MOUSE1)
+					color = '0.5 1 0.5';
+				else if (hudShiftState & S_CTRL)
+					color = '1 1 0.3';
+				else
+					color = '1 1 1';
+				drawfill(entry_pos, vec2(panel_size.x, fontsize.y), color, .2, DRAWFLAG_NORMAL);
+			}
 		}
 	}
 }
@@ -664,8 +673,7 @@ void HUD_QuickMenu()
 		}
 		HUD_Quickmenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Page_Description[i]), option, fontsize);
 
-		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
-			&& QuickMenu_Page_ActivatedEntry == i)
+		if (time < QuickMenu_Page_ActivatedEntry_Time && QuickMenu_Page_ActivatedEntry == i)
 			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
 
 		panel_pos.y += fontsize.y;
@@ -776,6 +784,7 @@ void QuickMenu_Default(string target_submenu)
 	string tc_cmd;
 
 	QUICKMENU_SMENU(_("Chat"), "Chat")
+		QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send public message to")), "Send public message to", "commandmode say %s:^7", 0, 1)
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
@@ -786,7 +795,7 @@ void QuickMenu_Default(string target_submenu)
 	if(teamplay)
 	{
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
-		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^strength soon")), "say_team %s", "strength soon", CTX(_("QMCMD^strength soon")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^took item, icon")), "say_team %s; g_waypointsprite_team_here", "took item (l:%l^7)", CTX(_("QMCMD^took item (l:%l^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^negative")), "say_team %s", "negative", CTX(_("QMCMD^negative")))
@@ -823,11 +832,7 @@ void QuickMenu_Default(string target_submenu)
 
 		if(spectatee_status > 0)
 		{
-		QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^1st person")), "chase_active 0; -use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person around player")), "chase_active 1; +use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person behind")), "chase_active 1; -use")
-		QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Change spectator camera")), "dropweapon")
 		}
 
 		if(spectatee_status == -1)
@@ -835,8 +840,7 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "+use")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "-use")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision")), "toggle cl_clippedspectating")
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 		}
 
@@ -855,11 +859,16 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 
+	if(spectatee_status != 0)
+	{
+	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Spectate a player")), "Spectate a player", "spectate \"%s^7\"", 0, 1)
+	}
+
 	if(target_submenu != "" && !target_submenu_found)
 	{
 		LOG_INFOF("Couldn't find submenu \"%s\"", target_submenu);
 		if(prvm_language != "en")
-			LOG_INFOF("^3Warning: submenu title must be in English", target_submenu);
+			LOG_INFO("^3Warning: submenu title must be in English");
 		QuickMenu_Buffer_Size = 0;
 	}
 }

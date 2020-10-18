@@ -1,5 +1,5 @@
 #include "pong.qh"
-REGISTER_MINIGAME(pong, "Pong");
+REGISTER_MINIGAME(pong, _("Pong"));
 
 // minigame flags
 const int PONG_STATUS_WAIT = 0x0010; // waiting for players to join
@@ -259,7 +259,7 @@ void pong_ai_think(entity this)
 
 entity pong_ai_spawn(entity paddle)
 {
-	entity ai = msle_spawn(paddle.owner,"pong_ai");
+	entity ai = msle_spawn(paddle.owner,new(pong_ai));
 	ai.minigame_players = ai;
 	ai.team = paddle.team;
 	setthink(ai, pong_ai_think);
@@ -318,7 +318,7 @@ vector pong_team_to_paddlepos(int nteam)
 // if real_player is NULL, the paddle is controlled by AI
 entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 {
-	entity paddle = msle_spawn(minigame,"pong_paddle");
+	entity paddle = msle_spawn(minigame,new(pong_paddle));
 	paddle.pong_length = autocvar_sv_minigames_pong_paddle_size;
 	paddle.origin = pong_team_to_paddlepos(pl_team);
 	setthink(paddle, pong_paddle_think);
@@ -401,7 +401,7 @@ int pong_server_event(entity minigame, string event, ...)
 						entity ball;
 						for ( int j = 0; j < autocvar_sv_minigames_pong_ball_number; j++ )
 						{
-							ball = msle_spawn(minigame,"pong_ball");
+							ball = msle_spawn(minigame,new(pong_ball));
 							ball.pong_length = autocvar_sv_minigames_pong_ball_radius;
 							ball.m_mins = vec2(-ball.pong_length, -ball.pong_length);
 							ball.m_maxs = vec2(ball.pong_length, ball.pong_length);
@@ -614,6 +614,11 @@ int pong_client_event(entity minigame, string event, ...)
 	{
 		case "activate":
 			return false;
+		case "deactivate":
+		{
+			strfree(minigame.message);
+			return false;
+		}
 		case "key_pressed":
 			switch ( ...(0,int) )
 			{
@@ -664,7 +669,7 @@ int pong_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
-					sent.message = pong_message(sent.minigame_flags);
+					strcpy(sent.message, pong_message(sent.minigame_flags));
 				}
 			}
 			return false;

@@ -1,9 +1,10 @@
 #include "campaign_file.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "util.qh"
-    #include "campaign_common.qh"
+	#include <common/util.qh>
+	#include <common/campaign_common.qh>
 #endif
 
 // CampaignFileLoad(offset, n)
@@ -58,8 +59,8 @@ float CampaignFile_Load(int offset, float n)
 				CAMPAIGN_GETARG; campaign_mapname[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_bots[campaign_entries] = stof(a);
 				CAMPAIGN_GETARG; campaign_botskill[campaign_entries] = stof(a);
-				CAMPAIGN_GETARG; campaign_fraglimit[campaign_entries] = stof(a);
-				CAMPAIGN_GETARG; campaign_timelimit[campaign_entries] = stof(a);
+				CAMPAIGN_GETARG; campaign_fraglimit[campaign_entries] = strzone(a);
+				CAMPAIGN_GETARG; campaign_timelimit[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_mutators[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_shortdesc[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_longdesc[campaign_entries] = strzone(strreplace("\\n", "\n", a));
@@ -91,6 +92,8 @@ void CampaignFile_Unload()
 		{
 			strfree(campaign_gametype[i]);
 			strfree(campaign_mapname[i]);
+			strfree(campaign_fraglimit[i]);
+			strfree(campaign_timelimit[i]);
 			strfree(campaign_mutators[i]);
 			strfree(campaign_shortdesc[i]);
 			strfree(campaign_longdesc[i]);

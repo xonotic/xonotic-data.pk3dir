@@ -3,6 +3,8 @@
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 
 #ifdef SVQC
+// enable when shockwave replaces shotgun
+#if 0
 METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 {
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
@@ -12,6 +14,7 @@ METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 	}
 	return this;
 }
+#endif
 
 const float MAX_SHOCKWAVE_HITS = 10;
 //#define DEBUG_SHOCKWAVE
@@ -476,7 +479,7 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 			//  BLAST CONE CALCULATION
 			// ========================
 
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
 			center = CENTER_OR_VIEWOFS(head);
 
 			// find the closest point on the enemy to the center of the attack
@@ -658,14 +661,13 @@ void Draw_Shockwave(entity this)
 	if(a < ALPHA_MIN_VISIBLE) { delete(this); }
 
 	// WEAPONTODO: save this only once when creating the entity
-	vector sw_color = entcs_GetColor(this.sv_entnum - 1); // GetTeamRGB(entcs_GetTeam(this.sv_entnum));
+	vector sw_color = entcs_GetColor(this.sv_entnum - 1); // Team_ColorRGB(entcs_GetTeam(this.sv_entnum));
 
 	// WEAPONTODO: trace to find what we actually hit
 	vector endpos = (this.sw_shotorg + (this.sw_shotdir * this.sw_distance));
 
-	vectorvectors(this.sw_shotdir);
-	vector right = v_right; // save this for when we do makevectors later
-	vector up = v_up; // save this for when we do makevectors later
+	vector _forward, right, up;
+	VECTOR_VECTORS(this.sw_shotdir, _forward, right, up);
 
 	// WEAPONTODO: combine and simplify these calculations
 	vector min_end = ((this.sw_shotorg + (this.sw_shotdir * SW_DISTTOMIN)) + (up * this.sw_spread_min));
@@ -710,14 +712,14 @@ void Draw_Shockwave(entity this)
 		if(counter >= 1)
 		{
 			// draw from shot origin to min spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
@@ -732,14 +734,14 @@ void Draw_Shockwave(entity this)
 		if((counter + 1) == divisions)
 		{
 			// draw from shot origin to min spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_BeginPolygon("", DRAWFLAG_NORMAL, false);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
@@ -757,8 +759,7 @@ NET_HANDLE(TE_CSQC_SHOCKWAVEPARTICLE, bool isNew)
 
 void Net_ReadShockwaveParticle()
 {
-	entity shockwave;
-	shockwave = spawn();
+	entity shockwave = new(shockwave_cone);
 	shockwave.draw = Draw_Shockwave;
 	IL_PUSH(g_drawables, shockwave);
 

@@ -6,7 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include <common/state.qh>
-#include "client.qh"
+#include <server/client.qh>
 
 .float m_handicap; ///< Holds the handicap value.
 
@@ -22,7 +22,7 @@ float Handicap_GetVoluntaryHandicap(entity player)
 
 float Handicap_GetForcedHandicap(entity player)
 {
-	return CS(player).m_handicap;
+	return (CS(player)) ? CS(player).m_handicap : 1;
 }
 
 void Handicap_SetForcedHandicap(entity player, float value)

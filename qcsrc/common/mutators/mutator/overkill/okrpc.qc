@@ -36,15 +36,15 @@ void W_OverkillRocketPropelledChainsaw_Touch (entity this, entity toucher)
 
 void W_OverkillRocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_OverkillRocketPropelledChainsaw_Explode_think);
 }
 
@@ -87,11 +87,10 @@ void W_OverkillRocketPropelledChainsaw_Think(entity this)
 void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
-	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(okrpc, ammo), weaponentity);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okrpc, damage), thiswep.m_id);
-	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	missile.owner = missile.realowner = actor;
@@ -100,7 +99,7 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR_PRI(okrpc, damageforcescale);
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR_PRI(okrpc, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR_PRI(okrpc, health));
 	missile.event_damage = W_OverkillRocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -124,10 +123,6 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 
 	CSQCProjectile(missile, true, PROJECTILE_RPC, false);
 
-	setmodel(flash, MDL_RPC_MUZZLEFLASH); // precision set below
-	SUB_SetFade (flash, time, 0.1);
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 	missile.m_chainsaw_damage = 0;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
@@ -149,14 +144,11 @@ METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity ac
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
 			// Set secondary fire animation.
-			vector a = '0 0 0';
 			actor.(weaponentity).wframe = WFRAME_FIRE2;
-			a = actor.(weaponentity).anim_fire2;
-			a.z *= g_weaponratefactor;
 			FOREACH_CLIENT(true, LAMBDA(
 				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
 				{
-					wframe_send(it, actor.(weaponentity), a, true);
+					wframe_send(it, actor.(weaponentity), WFRAME_FIRE2, autocvar_g_weaponratefactor, true);
 				}
 			));
 			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
@@ -191,14 +183,14 @@ METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity ac
 
 METHOD(OverkillRocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okrpc, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okrpc, ammo);
 	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(okrpc, ammo);
 	return ammo_amount;
 }
 
 METHOD(OverkillRocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okrpc, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okrpc, ammo);
 	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(okrpc, ammo);
 	return ammo_amount;
 }

@@ -157,8 +157,12 @@
 				// handle dragging
 				me.pressed = 2;
 
-				v = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
-				if (me.valueStep) v = floor(0.5 + v / me.valueStep) * me.valueStep;
+				float f = bound(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1);
+				v = f * (me.valueMax - me.valueMin) + me.valueMin;
+				// there's no need to round min and max value... also if we did, v could be set
+				// to an out of bounds value due to precision errors
+				if (f > 0 && f < 1 && me.valueStep)
+					v = floor(0.5 + v / me.valueStep) * me.valueStep;
 				me.setValue_noAnim(me, v);
 				if(me.applyButton)
 				if(me.previousValue != me.value)

@@ -1,0 +1,39 @@
+#pragma once
+
+/** print(), but only print if the server is not local */
+void dedicated_print(string input);
+
+.float remove_except_protected_forbidden;
+void remove_except_protected(entity e);
+
+void remove_safely(entity e);
+
+void remove_unsafely(entity e);
+
+// copies a string to a tempstring (so one can strunzone it)
+string strcat1(string s) = #115; // FRIK_FILE
+
+#ifdef PROFILING
+float client_cefc_accumulator;
+float client_cefc_accumulatortime;
+#endif
+
+float servertime, serverprevtime, serverframetime;
+
+.vector oldvelocity; // for fall damage
+
+.float watersound_finished;
+
+.bool iscreature;
+.float species;
+
+.float contents_damagetime;
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main ();
