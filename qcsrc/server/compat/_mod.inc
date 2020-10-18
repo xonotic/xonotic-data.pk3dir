@@ -3,4 +3,5 @@
 #include <server/compat/quake.qc>
 #include <server/compat/quake2.qc>
 #include <server/compat/quake3.qc>
+#include <server/compat/unvanquished.qc>
 #include <server/compat/wop.qc>
