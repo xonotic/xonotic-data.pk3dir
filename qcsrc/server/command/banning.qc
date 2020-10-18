@@ -1,17 +1,14 @@
 #include "banning.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/state.qh>
 #include <common/command/_mod.qh>
-#include "banning.qh"
-
-#include "common.qh"
-
-#include "../player.qh"
-#include "../ipban.qh"
-
+#include <common/state.qh>
+#include <common/stats.qh>
 #include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <server/command/banning.qh>
+#include <server/command/common.qh>
+#include <server/ipban.qh>
+#include <server/player.qh>
 
 // =====================================================
 //  Banning and kicking command code, written by Samual

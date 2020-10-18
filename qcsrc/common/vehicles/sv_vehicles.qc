@@ -1,5 +1,15 @@
 #include "sv_vehicles.qh"
 
+#include <common/items/_mod.qh>
+#include <common/mapobjects/defs.qh>
+#include <common/mapobjects/teleporters.qh>
+#include <common/mapobjects/triggers.qh>
+#include <server/bot/api.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/weapons/common.qh>
+#include <server/world.qh>
+
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
@@ -230,7 +240,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, DMG_NOWEP, toucher);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.projectiledeathtype, DMG_NOWEP, toucher);
 
 	delete(this);
 }
@@ -251,10 +261,8 @@ entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
 {
-	TC(Sound, _mzlsound);
-	entity proj;
-
-	proj = spawn();
+    TC(Sound, _mzlsound);
+	entity proj = new(vehicles_projectile);
 
 	PROJECTILE_MAKETRIGGER(proj);
 	setorigin(proj, _org);
@@ -262,7 +270,7 @@ entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 	proj.shot_dmg		 = _dmg;
 	proj.shot_radius	  = _radi;
 	proj.shot_force	   = _force;
-	proj.totalfrags	   = _deahtype;
+	proj.projectiledeathtype	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.flags = FL_PROJECTILE;
@@ -324,7 +332,7 @@ void vehicles_gib_think(entity this)
 
 entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, bool _burn, bool _explode, float _maxtime, vector _rot)
 {
-	entity _gib = spawn();
+	entity _gib = new(vehicle_gib);
 	_setmodel(_gib, _template.model);
 	vector org = gettaginfo(this, gettagindex(this, _tag));
 	setorigin(_gib, org);
@@ -369,8 +377,8 @@ bool vehicle_addplayerslot(	entity _owner,
 	_slot.vehicle_enter = _enterfunc;
 	STAT(HUD, _slot) = _hud;
 	_slot.vehicle_flags = VHF_PLAYERSLOT;
-	_slot.vehicle_viewport = spawn();
-	_slot.vehicle_hudmodel = spawn();
+	_slot.vehicle_viewport = new(vehicle_viewport);
+	_slot.vehicle_hudmodel = new(vehicle_hudmodel);
 	_slot.vehicle_hudmodel.viewmodelforclient = _slot;
 	_slot.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
 
@@ -683,7 +691,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	{
 		if (wasfreed(this.vehicle_shieldent) || this.vehicle_shieldent == NULL)
 		{
-			this.vehicle_shieldent = spawn();
+			this.vehicle_shieldent = new(vehicle_shieldent);
 			this.vehicle_shieldent.effects = EF_LOWPRECISION;
 
 			setmodel(this.vehicle_shieldent, MDL_VEH_SHIELD);
@@ -839,6 +847,7 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteByte (MSG_ONE, SVC_SETVIEWPORT);
 			WriteEntity( MSG_ONE, player);
 
+			// NOTE: engine networked
 			WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 			WriteAngle(MSG_ONE, 0);
 			WriteAngle(MSG_ONE, vehic.angles_y);
@@ -1026,7 +1035,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	pl.crouch = false;
+	UNSET_DUCKED(pl);
 	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
 	setsize(pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
@@ -1081,6 +1090,7 @@ void vehicles_enter(entity pl, entity veh)
 		WriteByte (MSG_ONE, SVC_SETVIEWPORT);
 		WriteEntity(MSG_ONE, veh.vehicle_viewport);
 
+		// NOTE: engine networked
 		WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 		if(veh.tur_head)
 		{
@@ -1205,10 +1215,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		return false;
 
 	if(!this.tur_head)
-	{
 		info.vr_precache(info);
-		IL_PUSH(g_vehicles, this);
-	}
 
 	if(this.targetname && this.targetname != "")
 	{

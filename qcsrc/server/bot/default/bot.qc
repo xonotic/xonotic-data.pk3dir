@@ -1,45 +1,35 @@
 #include "bot.qh"
 
-#include "cvars.qh"
-
-#include "aim.qh"
-#include "navigation.qh"
-#include "scripting.qh"
-#include "waypoints.qh"
-
-#include "havocbot/havocbot.qh"
-#include "havocbot/scripting.qh"
-
-#include "../../teamplay.qh"
-
-#include "../../antilag.qh"
-#include "../../autocvars.qh"
-#include "../../campaign.qh"
-#include "../../client.qh"
-#include "../../constants.qh"
-#include "../../defs.qh"
-#include "../../race.qh"
-#include <common/t_items.qh>
-
-#include <server/mutators/_mod.qh>
-
-#include "../../weapons/accuracy.qh"
-
-#include <common/physics/player.qh>
 #include <common/constants.qh>
-#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
+#include <common/net_linked.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-
-#include <server/scores_rules.qh>
-
 #include <common/weapons/_all.qh>
-
 #include <lib/csqcmodel/sv_model.qh>
-
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
+#include <server/antilag.qh>
+#include <server/autocvars.qh>
+#include <server/bot/default/aim.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/havocbot/havocbot.qh>
+#include <server/bot/default/havocbot/scripting.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/bot/default/scripting.qh>
+#include <server/bot/default/waypoints.qh>
+#include <server/campaign.qh>
+#include <server/client.qh>
+#include <server/damage.qh>
+#include <server/items/items.qh>
+#include <server/mutators/_mod.qh>
+#include <server/race.qh>
+#include <server/scores_rules.qh>
+#include <server/teamplay.qh>
+#include <server/weapons/accuracy.qh>
+#include <server/world.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "all.qh"
+
 // stats networking
 int monsters_total;
 int monsters_killed;
@@ -70,7 +72,7 @@ void Monster_Remove(entity this);
 
 void monsters_setstatus(entity this);
 
-bool Monster_Spawn(entity this, bool check_appear, int mon_id);
+bool Monster_Spawn(entity this, bool check_appear, Monster mon);
 
 void monster_setupcolors(entity this);
 
@@ -110,3 +112,9 @@ ALLMONSTERSOUNDS
 #undef _MSOUND
 
 float GetMonsterSoundSampleField_notFound;
+
+IntrusiveList g_monsters;
+STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
+
+IntrusiveList g_monster_targets;
+STATIC_INIT(g_monster_targets) { g_monster_targets = IL_NEW(); }

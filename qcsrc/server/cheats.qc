@@ -1,39 +1,32 @@
 #include "cheats.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/effects/all.qh>
-#include <server/resources.qh>
-
-#include "g_damage.qh"
-#include "clientkill.qh"
-#include "player.qh"
-#include "race.qh"
-#include "../common/mapobjects/teleporters.qh"
-
-#include <server/mutators/_mod.qh>
-
 #include "weapons/tracing.qh"
-
-#include "../common/constants.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/util.qh"
-
-#include <common/physics/player.qh>
-
-#include "../common/monsters/_mod.qh"
-
-#include <common/weapons/_all.qh>
-
-#include "../common/mapobjects/subs.qh"
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/effects/all.qh>
+#include <common/items/_mod.qh>
+#include <common/mapobjects/func/breakable.qh>
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
-
-#include "../common/mapobjects/func/breakable.qh"
-
-#include "../lib/csqcmodel/sv_model.qh"
-
-#include "../lib/warpzone/anglestransform.qh"
-#include "../lib/warpzone/util_server.qh"
+#include <common/monsters/_mod.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
+#include <common/util.qh>
+#include <common/weapons/_all.qh>
+#include <common/weapons/_all.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <lib/warpzone/anglestransform.qh>
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/util_server.qh>
+#include <server/clientkill.qh>
+#include <server/damage.qh>
+#include <server/main.qh>
+#include <server/mutators/_mod.qh>
+#include <server/player.qh>
+#include <server/race.qh>
+#include <server/resources.qh>
+#include <server/world.qh>
 
 #ifdef NOCHEATS
 
@@ -68,7 +61,7 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 		return 0;
 
 	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
-		if(this.lip < sv_clones)
+		if(this.lip < autocvar_sv_clones)
 			return 1;
 
 	// haha
@@ -80,13 +73,13 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this, false), i);
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this.netname, this.team, false), i);
 	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this, false), argv(0));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this.netname, this.team, false), argv(0));
 	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this, false), fr);
+		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this.netname, this.team, false), fr);
 	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this, false));
+		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this.netname, this.team, false));
 
 	return 0;
 }

@@ -1,8 +1,7 @@
 #include "chat.qh"
 
 #include <client/autocvars.qh>
-#include <client/defs.qh>
-#include <client/miscfunctions.qh>
+#include <client/draw.qh>
 
 // Chat (#12)
 

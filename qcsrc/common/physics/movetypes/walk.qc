@@ -1,11 +1,12 @@
 #include "walk.qh"
+
 void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 {
 	// if frametime is 0 (due to client sending the same timestamp twice), don't move
 	if (dt <= 0)
 		return;
 
-	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
+	if (GAMEPLAYFIX_UNSTICKPLAYERS(this) == 1)
 		_Movetype_CheckStuck(this);
 
 	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.flags & FL_WATERJUMP));

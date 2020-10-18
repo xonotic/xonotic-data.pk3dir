@@ -1,5 +1,13 @@
 #include "sv_nexball.qh"
 
+#include <server/client.qh>
+#include <server/command/vote.qh>
+#include <server/gamelog.qh>
+#include <server/world.qh>
+#include <common/ent_cs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/mutators/base.qh>
+
 .entity ballcarried;
 
 int autocvar_g_nexball_goalleadlimit;
@@ -574,7 +582,6 @@ void SpawnBall(entity this)
 spawnfunc(nexball_basketball)
 {
 	nexball_mode |= NBM_BASKETBALL;
-	this.classname = "nexball_basketball";
 	if (!(balls & BALL_BASKET))
 	{
 		/*
@@ -598,7 +605,6 @@ spawnfunc(nexball_basketball)
 spawnfunc(nexball_football)
 {
 	nexball_mode |= NBM_FOOTBALL;
-	this.classname = "nexball_football";
 	this.solid = SOLID_TRIGGER;
 	balls |= BALL_FOOT;
 	this.pushable = autocvar_g_nexball_football_jumppad;
@@ -951,7 +957,7 @@ REGISTER_MUTATOR(nb, false)
 		CVTOV(g_nexball_delay_idle);			   //10
 		CVTOV(g_nexball_football_physics);		 //0
 		*/
-		radar_showennemies = autocvar_g_nexball_radar_showallplayers;
+		radar_showenemies = autocvar_g_nexball_radar_showallplayers;
 
 		InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;

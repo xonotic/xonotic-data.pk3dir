@@ -1,15 +1,15 @@
 #include "roles.qh"
 
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <server/items.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <server/bot/default/bot.qh>
+#include <server/bot/default/cvars.qh>
+#include <server/bot/default/havocbot/havocbot.qh>
+#include <server/bot/default/navigation.qh>
+#include <server/items/items.qh>
+#include <server/items/spawning.qh>
+#include <server/mutators/_mod.qh>
 #include <server/resources.qh>
-#include "havocbot.qh"
-
-#include "../cvars.qh"
-
-#include "../bot.qh"
-#include "../navigation.qh"
 
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius)
 {

@@ -1,24 +1,24 @@
 #include "generic.qh"
-#include "_mod.qh"
-#include "reg.qh"
 
-#include "markup.qh"
-#include "rpn.qh"
-
-#include "../mapinfo.qh"
-
-#ifdef GAMEQC
-	#include "../notifications/all.qh"
-#endif
-
-#ifdef CSQC
-	#include <client/commands/cl_cmd.qh>
-#endif
-
-#ifdef SVQC
-	#include <server/command/_mod.qh>
+#if defined(CSQC)
+	#include <client/command/cl_cmd.qh>
+	#include <common/command/_mod.qh>
+	#include <common/command/markup.qh>
+	#include <common/command/reg.qh>
+	#include <common/command/rpn.qh>
+	#include <common/mapinfo.qh>
+	#include <common/notifications/all.qh>
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include <common/command/_mod.qh>
+	#include <common/command/markup.qh>
+	#include <common/command/reg.qh>
+	#include <common/command/rpn.qh>
+	#include <common/mapinfo.qh>
+	#include <common/notifications/all.qh>
 	#include <common/turrets/config.qh>
 	#include <common/weapons/config.qh>
+	#include <server/command/_mod.qh>
 #endif
 
 // =========================================================

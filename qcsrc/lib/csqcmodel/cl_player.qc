@@ -219,7 +219,7 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 	float smoothtime = bound(0, time - smooth_prevtime, 0.1);
 	smooth_prevtime = max(smooth_prevtime, drawtime); // drawtime is the previous frame's time at this point
 
-	if(this.csqcmodel_teleported || !(this.pmove_flags & PMF_ONGROUND) || autocvar_cl_stairsmoothspeed <= 0)
+	if(this.csqcmodel_teleported || !(this.pmove_flags & PMF_ONGROUND) || autocvar_cl_stairsmoothspeed <= 0 || this.ground_networkentity)
 		stairsmoothz = v.z;
 	else
 	{

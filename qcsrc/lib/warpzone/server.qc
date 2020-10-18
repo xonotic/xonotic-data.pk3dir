@@ -7,10 +7,12 @@
 	#include <common/constants.qh>
 	#include <common/net_linked.qh>
 	#include <common/mapobjects/subs.qh>
+	#include <common/mapobjects/teleporters.qh>
 	#include <common/util.qh>
-	#include <server/constants.qh>
-	#include <server/defs.qh>
+	#include <common/weapons/_all.qh>
+	#include <common/stats.qh>
 	#include <server/utils.qh>
+	#include <server/weapons/common.qh>
 #endif
 
 #ifdef SVQC

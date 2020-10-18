@@ -1,23 +1,14 @@
 #include "models.qh"
 
 #ifdef SVQC
-#include <server/defs.qh>
-#include <server/miscfunctions.qh>
-#include <common/net_linked.qh>
-#include "subs.qh"
-#include "triggers.qh"
-
-entityclass(BGMScript);
-classfield(BGMScript) .string bgmscript;
-classfield(BGMScript) .float bgmscriptattack;
-classfield(BGMScript) .float bgmscriptdecay;
-classfield(BGMScript) .float bgmscriptsustain;
-classfield(BGMScript) .float bgmscriptrelease;
-
 #include <common/constants.qh>
-#include "../../lib/csqcmodel/sv_model.qh"
-
-.float modelscale;
+#include <common/mapobjects/bgmscript.qh>
+#include <common/mapobjects/subs.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/net_linked.qh>
+#include <common/stats.qh>
+#include <common/weapons/_all.qh>
+#include <lib/csqcmodel/sv_model.qh>
 
 void g_model_setcolormaptoactivator(entity this, entity actor, entity trigger)
 {
@@ -117,11 +108,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(sf & BIT(2))
 	{
 		if(sf & 0x10)
-		{
-			WriteAngle(MSG_ENTITY, this.angles.x);
-			WriteAngle(MSG_ENTITY, this.angles.y);
-			WriteAngle(MSG_ENTITY, this.angles.z);
-		}
+			WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
 	if(sf & BIT(3))
@@ -195,11 +182,11 @@ spawnfunc(misc_models)            { this.angles_x = -this.angles.x; G_MODEL_INIT
 // non-solid brush entities:
 spawnfunc(func_illusionary)       { G_MODEL_INIT      (this, SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
 spawnfunc(func_clientillusionary) { G_CLIENTMODEL_INIT(this, SOLID_NOT) } // brush entity
-spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_NOT) } // DEPRECATED old alias name from some other game
 
 // solid brush entities
 spawnfunc(func_wall)              { G_MODEL_INIT      (this, SOLID_BSP) } // Q1 name
 spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(this, SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+spawnfunc(func_static)            { G_MODEL_INIT      (this, SOLID_BSP) } // DEPRECATED old alias name from some other game
 #elif defined(CSQC)
 .float alpha;
 .float scale;
@@ -342,11 +329,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 	if(f & 4)
 	{
 		if(f & 0x10)
-		{
-			this.angles_x = ReadAngle();
-			this.angles_y = ReadAngle();
-			this.angles_z = ReadAngle();
-		}
+			this.angles = ReadAngleVector();
 		else
 			this.angles = '0 0 0';
 	}
